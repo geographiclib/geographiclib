@@ -6,6 +6,7 @@
  **********************************************************************/
 
 #include "GeographicLib/MGRS.hpp"
+#include "GeographicLib/UTMUPS.hpp"
 #include <stdexcept>
 #include <iostream>
 #include <cmath>
@@ -43,8 +44,12 @@ namespace GeographicLib {
 
   void MGRS::Forward(int zone, bool northp, double x, double y, double lat,
 		     int prec, std::string& mgrs) {
-    bool utmp = zone;
+    bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
+    if (!(zone >= 0 || zone <= 60))
+      throw std::out_of_range("Illegal zone");
+    if (!(prec >= 0 || zone <= 12))
+      throw std::out_of_range("Illegal precision");
     int
       zone1 = zone - 1,
       z = utmp ? 2 : 0;
@@ -87,12 +92,23 @@ namespace GeographicLib {
     }
   }
 
+  void MGRS::Forward(int zone, bool northp, double x, double y,
+		     int prec, std::string& mgrs) {
+    double lat, lon;
+    if (zone)
+      UTMUPS::Reverse(zone, northp, x, y, lat, lon);
+    else
+      // Latitude isn't needed for UPS specs.
+      lat = 0;
+    Forward(zone, northp, x, y, lat, prec, mgrs);
+  }
+
   void MGRS::Reverse(const std::string& mgrs,
 		     int& zone, bool& northp, double& x, double& y,
 		     int& prec) {
     int
       p = 0,
-      len = mgrs.size();
+      len = int(mgrs.size());
     zone = 0;
     while (p < len) {
       int i = lookup(digits, mgrs[p]);
@@ -107,7 +123,7 @@ namespace GeographicLib {
       throw std::out_of_range("No more than 2 digits at start");
     if (len - p < 3)
       throw std::out_of_range("MGRS string too short");
-    bool utmp = zone;
+    bool utmp = zone != 0;
     int zone1 = zone - 1;
     const std::string& band = utmp ? latband : upsband;
     int iband = lookup(band, mgrs[p++]);

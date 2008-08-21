@@ -8,6 +8,7 @@
 #include "GeographicLib/ECEF.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <cmath>
+#include <limits>
 
 namespace {
   char RCSID[] = "$Id$";
