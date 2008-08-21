@@ -39,6 +39,9 @@ namespace GeographicLib {
       return r == std::string::npos ? -1 : int(r);
     }
   public:
+    static void Forward(int zone, bool northp, double x, double y,
+			int prec, std::string& mgrs);
+    // In case latitude is already known
     static void Forward(int zone, bool northp, double x, double y, double lat,
 			int prec, std::string& mgrs);
     static void Reverse(const std::string& mgrs,
