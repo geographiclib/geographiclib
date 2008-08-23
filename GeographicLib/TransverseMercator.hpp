@@ -45,6 +45,6 @@ namespace GeographicLib {
     const static TransverseMercator UTM;
   };
 
-}
+} // namespace GeographicLib
 
 #endif
