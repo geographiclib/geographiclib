@@ -14,7 +14,7 @@ namespace GeographicLib {
 
   class TransverseMercator {
   private:
-    const double _a, _f, _k0, _e2, _e, _e2m, _e1,  _n, _a1,
+    const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n, _a1,
       _h1, _h2, _h3, _h4,
       _h1p, _h2p, _h3p, _h4p,
       _tol;
@@ -33,8 +33,7 @@ namespace GeographicLib {
     static inline double asinh(double x) { return log(x + sqrt(1 + x * x)); }
     static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
 #endif
-    double Convergence(double phi, double l) const;
-    double Scale(double phi, double l) const;
+    void Scale(double phi, double l, double& gamma, double& k) const;
   public:
     TransverseMercator(double a, double f, double k0);
     void Forward(double lon0, double lat, double lon,
