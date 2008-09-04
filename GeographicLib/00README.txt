@@ -9,3 +9,7 @@ tm.mac -- maxima code for arbitrary precision transverse Mercator
 
 ellint.mac -- maxima code various elliptic integrals, etc. (used by
     tm.mac).
+
+UTM-fi.txt -- extend method for transverse Mercator projection given in
+    JHS 154 include higher order terms and improve the formulas for
+    meridian convergence and scale.
