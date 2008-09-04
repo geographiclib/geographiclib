@@ -1,0 +1,217 @@
+/*
+
+Written by Charles Karney <charles@karney.com>
+http://charles.karney.info/geographic
+
+$Id$
+
+*/
+
+/* Implementation of methods given in
+
+B. C. Carlson
+Computation of elliptic integrals
+Numerical Algorithms 10, 13-26 (1995)
+
+*/
+
+fpprec:120$
+ca:etol:1.b-60$
+eps:0.1b0^fpprec$
+pi:bfloat(%pi)$
+ratprint:false$
+rf(x,y,z) := block(
+  [a0:rectform ((x+y+z)/3), q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,n,e2,e3],
+  q:(3*etol)^(-1/6)*max(abs(a0-x),abs(a0-y),abs(a0-z)),
+  an:a0,
+  n:0,
+  while q >= abs(an) do (
+    n:n+1,
+    ln:rectform (sqrt(x0)*sqrt(y0)+sqrt(y0)*sqrt(z0)+sqrt(z0)*sqrt(x0)),
+    an:rectform ((an+ln)/4),
+    x0:rectform ((x0+ln)/4),
+    y0:rectform ((y0+ln)/4),
+    z0:rectform ((z0+ln)/4),
+    q:q/4),
+  xx:rectform ((a0-x)/(4^n*an)),
+  yy:rectform ((a0-y)/(4^n*an)),
+  zz:-xx-yy,
+  e2:rectform (xx*yy-zz^2),
+  e3:rectform (xx*yy*zz),
+  return(rectform ((1-e2/10+e3/14+e2^2/24-3*e2*e2/44) / sqrt(an))))$
+rd(x,y,z) := block(
+  [a0:rectform ((x+y+3*z)/5), q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,n,e2,e3,e4,e5,s],
+  q:(etol/4)^(-1/6)*max(abs(a0-x),abs(a0-y),abs(a0-z)),
+  an:a0,
+  n:0,
+  s:0,
+  while q >= abs(an) do (
+    ln:rectform (sqrt(x0)*sqrt(y0)+sqrt(y0)*sqrt(z0)+sqrt(z0)*sqrt(x0)),
+    s:s+rectform (1/(4^n*sqrt(z0)*(z0+ln))),
+    n:n+1,
+    an:rectform ((an+ln)/4),
+    x0:rectform ((x0+ln)/4),
+    y0:rectform ((y0+ln)/4),
+    z0:rectform ((z0+ln)/4),
+    q:q/4),
+  xx:rectform ((a0-x)/(4^n*an)),
+  yy:rectform ((a0-y)/(4^n*an)),
+  zz:rectform (-(xx+yy)/3),
+  e2:rectform (xx*yy-6*zz^2),
+  e3:rectform ((3*xx*yy-8*zz^2)*zz),
+  e4:rectform (3*(xx*yy-zz^2)*zz^2),
+  e5:rectform (xx*yy*zz^3),
+  return(rectform (
+      (1-3*e2/14+e3/6+9*e2^2/88-3*e4/22-9*e2*e3/52+3*e5/26)/(4^n*an*sqrt(an))
+      +3*s)))$
+
+/* R_G(x,y,0) */
+rg0(x,y) := block(
+  [x0:sqrt(x),y0:sqrt(y),xn,yn,t,s,n],
+  xn:x0,
+  yn:y0,
+  n:0,
+  s:0,
+  while abs(xn-yn) >= 2.7b0 * sqrt(etol) * abs(xn) do (
+    t:rectform ((xn+yn)/2),
+    yn:sqrt(rectform (xn*yn)),
+    xn:t,
+    n:n+1,
+    s:s+rectform ((xn-yn)^2*2^(n-2))),
+  rectform ( ((x0+y0)^2/4 - s)*pi/(2*(xn+yn)) ))$
+
+/* k^2 = m */
+ec(m):=2*rg0(1b0-m,1b0)$
+kc(m):=rf(0b0,1b0-m,1b0)$
+
+/* Versions of incomplete functions with phi real and in [0,pi/2] */
+eir(phi,m):=if abs(phi) < eps then phi else
+block([c:csc(phi)^2], rf(c-1b0,c-m,c)-m/3b0*rd(c-1b0,c-m,c))$
+fir(phi,m):=if abs(phi) < eps then phi else
+block([c:csc(phi)^2], rf(c-1b0,c-m,c))$
+
+/*
+ei has the following properties
+singularities at (n+1/2)*pi +/- i * acosh(1/m)
+ei(-z, m) = -ei(z, m)
+ei(z + n*pi, m) = 2*n*ec(m) + ei(z, m)
+*/
+
+/* This is a complex version of eir.  Unfortunately the branch
+cuts come out wrong ... */
+
+ei2(phi,m):=block([c,n:-entier(-realpart(phi)/pi+1/2),s:1,res:0,conj:false],
+  /* phi in (-pi/2, pi/2] */
+  phi : phi - n * pi,
+  if n # 0 then res:2*n*ec(m),
+  if realpart(phi) < 0 then (s:-1, phi:-phi),
+  if abs(phi) < etol^2 then return(res),
+  /* Re(phi) in [0,pi/2] excluding phi = 0 */
+  if realpart(phi) < pi/2 * (1- sqrt(eps)) then (
+    c:rectform(csc(phi)^2),
+    if imagpart(c) < 0 then (c:conjugate(c), conj:true) )
+  else (
+    c:rectform(sech(imagpart(phi))^2),
+    if s>0 then conj:true),
+  res:res+s*rectform(rf(c-1,c-m,c)-m/3*rd(c-1,c-m,c)),
+  if conj then res:conjugate(res),
+  res
+  )$
+
+
+/* Instead, implement Complex E with A&S 17.4.12 */
+
+ei(zphi,m):=block([phi:bfloat(realpart(zphi)),psi:bfloat(imagpart(zphi)),lam,mu,
+  b1,b2,b3,m1:1-m,n,s:1,res:0,cs:1],
+  n:-entier(-realpart(phi)/pi+1/2),
+  phi : phi - n * pi,
+  if n # 0 then res:2*n*ec(m),
+  if phi < 0b0 then (s:-1, phi:-phi,psi:-psi),
+  if psi < 0b0 then (cs:-1,psi:-psi),
+  if psi = 0b0 then return(res + s * eir(phi,m)),
+  if phi > eps then block([h,c,cotl2],
+    h:-(cot(phi)^2 + m * sinh(psi)^2 *csc(phi)^2 - m1)/2,
+    c:-m1*cot(phi)^2,
+    cotl2:-h+sqrt(h^2-c),
+    lam:if cotl2 = 0b0 then pi/2 else acot(sqrt(cotl2)),
+    mu:if phi < pi/2*(1 - eps) and cotl2 # 0b0
+    then atan(sqrt(
+        if m < eps then csc(phi)^2*sinh(psi)^2/(cot(phi)^2+1)
+        else  (tan(phi)^2 * cotl2 - 1)/m 
+        ))
+    else if 1-m*cosh(psi)^2 > 0b0 then atan(sinh(psi)/sqrt(1-m*cosh(psi)^2))
+    else pi/2)
+  else (
+    lam:phi/sqrt(m*sinh(psi)^2+1),
+    mu:atan( sinh(psi) )
+    ),
+  b1:m*sin(lam)*cos(lam)*sin(mu)^2 * sqrt(1-m*sin(lam)^2),
+  b2:(1-m*sin(lam)^2)*sqrt(1-m1*sin(mu)^2)*sin(mu)*cos(mu),
+  b3:cos(mu)^2+m*sin(lam)^2*sin(mu)^2,
+  res + s * ( eir(lam,m) - %i*cs*eir(mu,m1) +
+    %i*cs*fir(mu,m1) + b1/b3 + %i*cs*b2/b3 )
+  )$
+
+/* Implementation of methods given in
+
+Roland Bulirsch
+Numerical Calculation of Elliptic Integrals and Elliptic Functions
+Numericshe Mathematik 7, 78-90 (1965)
+
+*/
+
+sncndn(x,mc):=block([bo, a, b, c, d, l, sn, cn, dn],
+  if mc # 0 then (
+    bo:is(mc < 0b0),
+    if bo then (
+      d:1-mc,
+      mc:-mc/d,
+      d:sqrt(d),
+      x:d*x),
+    dn:a:1,
+    for i:0 thru 12 do (
+      l:i,
+      m[i]:a,
+      n[i]:mc:sqrt(mc),
+      c:(a+mc)/2,
+      if abs(a-mc)<=ca*a then return(false),
+      mc:a*mc,
+      a:c
+      ),
+    x:c*x,
+    sn:sin(x),
+    cn:sin(pi/2-x),
+    if sn#0b0 then (
+      a:cn/sn,
+      c:a*c,
+      for i:l step -1 thru 0 do (
+        b:m[i],
+        a:c*a,
+        c:dn*c,
+        dn:(n[i]+a)/(b+a),
+        a:c/b
+        ),
+      a:1/sqrt(c*c+1b0),
+      sn:if sn<0b0 then -a else a,
+      cn:c*sn
+      ),
+    if bo then (
+      a:dn,
+      dn:cn,
+      cn:a,
+      sn:sn/d
+      )
+    ) else (
+    sn:tanh(x),
+    dn:cn:sech(x)
+/*    d:exp(x), a:1/d, b:a+d, cn:dn:2/b,
+    if x < 0.3b0 then (
+      d:x*x*x*x,
+      d:(d*(d*(d*(d+93024b0)+3047466240b0)+24135932620800b0)+
+        20274183401472000b0)/60822550204416000b0,
+      sn:cn*(x*x*x*d+sin(x))
+      ) else
+    sn:(d-a)/b */
+    ),
+  [sn,cn,dn]
+  )$
