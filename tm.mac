@@ -7,6 +7,70 @@ $Id$
 
 */
 
+/*
+
+The file starts off with a bunch of elementary transformations between
+various latitudes.
+
+Then 3 different ways of computing Transverse Mercator are given using
+different intermediate conformal transformations:
+
+Polar stereographic: tm1(lat,lon) and ll1(x,y)
+Mercator: tm2(lat,lon) and ll2(x,y) (and tm2a(lat,lon))
+Spheroidal transverse Mercator: tm2(lat,lon)
+
+In carrying out the forward transformations, the compounded derivative
+is computed and used to compute the convergence and scale of the
+transformation.
+
+tm[123] take lat and lon args (in degrees) and return [x, y,
+    convergence, scale].  [x, y] do not include false
+    eastings/northings but do include the scale factor k0.
+    convergence is in degrees.
+
+ll[12] take x and y args (in meters) and return [lat, lon] in degrees.
+
+Thus
+
+    r:tm1(10b0,20b0)$
+    ll1(r[1],r[2]);
+
+should return close to [10b0, 20b0].
+
+The basic idea in tm1 is outlined in an Email to the Proj mailing list
+From: Strebe@aol.com
+Date: Wed Oct 15 00:10:38 EDT 2003
+
+phic_rho (resp. phi_psi) uses Newton's method with phic0 (resp. phi0) as
+an initial guess and sets nphic0 (nphi0) as the returned result.
+
+This allows you to track a solution in case the root finding fails or
+there are multiple roots.  For example the following code find two
+distinct results for tm1 by going different ways around the singularity
+at 0N 90*(1-e)E.
+
+    lat0:0b0;
+    lon0:82.636b0;
+    del:0.1b0$
+    phic0:0b0;
+    for i:-10 thru 3 do (
+      c:[lat0+del*sin(i/10*pi),lon0+del*cos(i/10*pi)],
+      res:apply(tm1,c),
+      phic0:nphic0)$
+    (ca:c,resa:res)$
+    phic0:0b0;
+    for i:10 step -1 thru 3 do (
+      c:[lat0+del*sin(i/10*pi),lon0+del*cos(i/10*pi)],
+      res:apply(tm1,c),
+      phic0:nphic0)$
+    (cb:c,resb:res)$
+
+[chic_muc also uses Newton's method but with the argument as the initial
+guess.]
+
+*/
+
+
 load("ellint.mac")$
 
 fpprec:120$
@@ -17,10 +81,9 @@ degree:pi/180$
 ratprint:false$
 
 setparams(a1,invf,k1):=(a:bfloat(a1),f:1/bfloat(invf),k0:bfloat(k1),
-  e:sqrt(f*(2-f)),
-  ep2:e^2/(1-e^2))$
-setparams(6378137b0, 298.257223563b0, 0.9996b0)$
-/* setparams(6378388b0, 297b0, 0.9996b0)$ */
+  e:sqrt(f*(2-f)))$
+setparams(6378137b0, 298.257223563b0, 0.9996b0)$  /* WGS 84 */
+/* setparams(6378388b0, 297b0, 0.9996b0)$  International */
 
 /*
 Interpret x_y(y) as x <- y, i.e., "transform quantity y to quantity x"
@@ -45,29 +108,29 @@ scale = dproj/ds, ds = physical distance.
 
 complement(theta):=pi/2-theta$
 
-xxbetac_rho(rho):=rectform(2 * atan(rho/2))$
-rho_xxbetac(betac):=rectform(2 * tan(betac/2))$
-diff_xxbetac_rho(rho):=1/( (rho/2)^2+1 )$
-diff_rho_xxbetac(betac):=rectform(sec(betac/2)^2)$
+betac_rho(rho):=rectform(2 * atan(rho/2))$
+rho_betac(betac):=rectform(2 * tan(betac/2))$
+diff_betac_rho(rho):=1/( (rho/2)^2+1 )$
+diff_rho_betac(betac):=rectform(sec(betac/2)^2)$
 
-rho_xxphic(phic):=rectform(
+rho_phic(phic):=rectform(
   2 * tan(phic/2) *
   ((1 + e * cos(phic))/(1-e * cos(phic)))^(e/2) )$
 
-diff_muc_xxphic(phic) := (1-e^2)/(1-e^2*cos(phic)^2)^(3/2)$
+diff_muc_phic(phic) := (1-e^2)/(1-e^2*cos(phic)^2)^(3/2)$
 
-diff_rho_xxphic(phic):=rectform(
+diff_rho_phic(phic):=rectform(
   (1-e^2)/
   ((1-e*cos(phic))^(1+e/2) * (1+e*cos(phic))^(1-e/2) * cos(phic/2)^2 ) )$
 
 phic0:0b0$
-xxphic_rho(z):=block([
-  phic:phic0 /* xxbetac_rho(z) */,
+phic_rho(z):=block([
+  phic:phic0 /* betac_rho(z) */,
   dphic,v,temp],
   for i do (
     if i > 100 then error("too many iterations"),
-    v:rho_xxphic(phic),
-    temp:-rectform((v-z)/diff_rho_xxphic(phic)),
+    v:rho_phic(phic),
+    temp:-rectform((v-z)/diff_rho_phic(phic)),
     if i>10 and abs(temp) > abs(dphic) then error("not converging"),
     dphic:temp,
     phic:phic+dphic,
@@ -79,41 +142,41 @@ xxphic_rho(z):=block([
   )$
 
 
-xxbetac_xxphic(phic):=xxbetac_rho(rho_xxphic(phic))$
-xxphic_xxbetac(betac):=xxphic_rho(rho_xxbetac(betac))$
+betac_phic(phic):=betac_rho(rho_phic(phic))$
+phic_betac(betac):=phic_rho(rho_betac(betac))$
 
-xxpsi_xxbetac(betac):=-log(tan(rectform(betac/2)))$
-xxbetac_xxpsi(psi):=rectform(2*atan(exp(-psi)))$
-diff_xxpsi_xxbetac(betac):=rectform(-csc(betac))$
-diff_xxbetac_xxpsi(psi):=rectform(-sech(psi))$
+psi_betac(betac):=-log(tan(rectform(betac/2)))$
+betac_psi(psi):=rectform(2*atan(exp(-psi)))$
+diff_psi_betac(betac):=rectform(-csc(betac))$
+diff_betac_psi(psi):=rectform(-sech(psi))$
 
-xxbeta_xxpsi(psi):=rectform(atan(sinh(psi)))$
-xxpsi_beta(phi):=rectform(asinh(tan(phi)))$
-diff_xxbeta_xxpsi(psi):=rectform(sech(psi))$
-diff_xxpsi_beta(phi):=rectform(sec(phi))$
+beta_psi(psi):=rectform(atan(sinh(psi)))$
+psi_beta(phi):=rectform(asinh(tan(phi)))$
+diff_beta_psi(psi):=rectform(sech(psi))$
+diff_psi_beta(phi):=rectform(sec(phi))$
 
-/* xxchic_xxphic(phic):=atan(rectform(tan(phic)/sqrt(1-e^2)))$ */
-/* xxphic_xxchic(chic):=atan(rectform(tan(chic)*sqrt(1-e^2)))$ */
+/* chic_phic(phic):=atan(rectform(tan(phic)/sqrt(1-e^2)))$ */
+/* phic_chic(chic):=atan(rectform(tan(chic)*sqrt(1-e^2)))$ */
 /* Need to make this odd */
-xxchic_xxphic(phic):=(if realpart(phic) < 0.b0 then -1 else 1)*
+chic_phic(phic):=(if realpart(phic) < 0.b0 then -1 else 1)*
 acos(rectform(cos(phic)*sqrt((1-e^2)/(1-e^2*cos(phic)^2))))$
-xxphic_xxchic(chic):=(if realpart(chic) < 0.b0 then -1 else 1)*
+phic_chic(chic):=(if realpart(chic) < 0.b0 then -1 else 1)*
 acos(rectform(cos(chic)/sqrt(1-e^2*sin(chic)^2)))$
 
-diff_xxphic_xxchic(chic):=rectform(sqrt(1-e^2)/(1-e^2*sin(chic)^2))$
+diff_phic_chic(chic):=rectform(sqrt(1-e^2)/(1-e^2*sin(chic)^2))$
 
 atnh(x):=rectform(log((1+x)/(1-x))/2)$
-xxpsi_xxphi(phi):=rectform( atnh(sin(phi)) - e * atnh(e * sin(phi)) )$
+psi_phi(phi):=rectform( atnh(sin(phi)) - e * atnh(e * sin(phi)) )$
 
-diff_xxpsi_xxphi(phi):=rectform(
+diff_psi_phi(phi):=rectform(
   1/cos(phi)-e^2*cos(phi)/(1-e^2*sin(phi)^2) )$
 phi0:1b0$
-xxphi_xxpsi(psi):=block([phi,dphi,v],
+phi_psi(psi):=block([phi,dphi,v],
   phi:phi0,
   for i do (
     if i > 100 then error("too many iterations"),
-    v:xxpsi_xxphi(phi),
-    dphi:-rectform((v-psi)/diff_xxpsi_xxphi(phi)),
+    v:psi_phi(phi),
+    dphi:-rectform((v-psi)/diff_psi_phi(phi)),
     phi:phi+dphi,
     dphi:abs(dphi),
     /* error is approx dphi^2/2 */
@@ -122,13 +185,13 @@ xxphi_xxpsi(psi):=block([phi,dphi,v],
   nphi0:phi
   )$
 
-xxmuc_xxchic(chic):=ei(chic,e^2)$
-diff_xxmuc_xxchic(chic):=rectform( sqrt(rectform(1-e^2*sin(chic)^2)) )$
-xxchic_xxmuc(muc):=block([chic:muc,dchic,v],
+muc_chic(chic):=ei(chic,e^2)$
+diff_muc_chic(chic):=rectform( sqrt(rectform(1-e^2*sin(chic)^2)) )$
+chic_muc(muc):=block([chic:muc,dchic,v],
   for i do (
     if i > 100 then error("too many iterations"),
-    v:xxmuc_xxchic(chic),
-    dchic:-rectform((v-muc)/diff_xxmuc_xxchic(chic)),
+    v:muc_chic(chic),
+    dchic:-rectform((v-muc)/diff_muc_chic(chic)),
     chic:chic+dchic,
     dchic:abs(dchic),
     /* print(dchic), */
@@ -138,113 +201,151 @@ xxchic_xxmuc(muc):=block([chic:muc,dchic,v],
   chic
   )$
 
+/*
+intermediate conformal transformation is polar stereographic
+
+phi -> phic -> rho -> zrho -> zphic -> zchic -> zmuc -> [x,y]
+               lam /
+*/
 tm1(phi,lam):=block([zrho,zphic,zchic,zmuc,zz,scale,phic],
   phic:(90-phi)*degree,
   lam:lam*degree,
   /* origin = 90,0 (N pole), real = long0, imag = long90 */
-  zrho:rectform( rho_xxphic(phic)*exp(%i*lam) ),
+  zrho:rectform( rho_phic(phic)*exp(%i*lam) ),
   scale:rectform(
-    diff_rho_xxphic(phic)/diff_muc_xxphic(phic)*
+    diff_rho_phic(phic)/diff_muc_phic(phic)*
     exp(%i*(lam+90*degree))),
-  zphic:xxphic_rho(zrho),
-  scale:rectform(scale/diff_rho_xxphic(zphic)),
-  zchic:xxchic_xxphic(zphic),
-  scale:rectform(scale/diff_xxphic_xxchic(zchic)),
-  zmuc:xxmuc_xxchic(zchic),
-  scale:rectform(scale*diff_xxmuc_xxchic(zchic)),
+  zphic:phic_rho(zrho),
+  scale:rectform(scale/diff_rho_phic(zphic)),
+  zchic:chic_phic(zphic),
+  scale:rectform(scale/diff_phic_chic(zchic)),
+  zmuc:muc_chic(zchic),
+  scale:rectform(scale*diff_muc_chic(zchic)),
   zz:rectform(-%i*zmuc + %i * ec(e^2) ),
   scale:rectform(-%i*scale),
   zz:rectform(zz*a*k0),
   [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
 
-tm2(phi,lam):=block([z,zphic,zchic,zmuc,zz,scale,r,zphi],
+/* reverse steps of tm1 */
+
+ll1(x,y):=block([zrho,zphic,zchic,zmuc,scale,phic,lam,rho],
+  zmuc:rectform(%i*(x+%i*y)/(a*k0) + ec(e^2)),
+  zchic:chic_muc(zmuc),
+  zphic:phic_chic(zchic),
+  zrho:rho_phic(zphic),
+  rho:abs(zrho),
+  lam:carg(zrho),
+  phic:phic_rho(rho),
+  [90-phic/degree,lam/degree])$
+
+/*
+intermediate conformal transformation is Mercator
+
+phi -> psi -> zpsi -> zphi -> zphic -> zchic -> zmuc -> [x,y]
+       lam /
+*/
+
+tm2(phi,lam):=block([zpsi,zphic,zchic,zmuc,zz,scale,r,zphi],
   phi:phi*degree,
   lam:lam*degree,
-  scale:1/diff_muc_xxphic(complement(phi)),
+  scale:1/diff_muc_phic(complement(phi)),
   /* origin = 0,0, real = N, imag = W */
-  z:xxpsi_xxphi(phi) - %i * lam,
-  scale:-%i * scale*diff_xxpsi_xxphi(phi),
-  zphi:xxphi_xxpsi(z),
-  scale:scale/diff_xxpsi_xxphi(zphi),
+  zpsi:psi_phi(phi) - %i * lam,
+  scale:-%i * scale*diff_psi_phi(phi),
+  zphi:phi_psi(zpsi),
+  scale:scale/diff_psi_phi(zphi),
   zphic:complement(zphi),
   scale:-scale,
-  zchic:xxchic_xxphic(zphic),
-  scale:rectform(scale/diff_xxphic_xxchic(zchic)),
-  zmuc:xxmuc_xxchic(zchic),
-  scale:rectform(scale*diff_xxmuc_xxchic(zchic)),
+  zchic:chic_phic(zphic),
+  scale:rectform(scale/diff_phic_chic(zchic)),
+  zmuc:muc_chic(zchic),
+  scale:rectform(scale*diff_muc_chic(zchic)),
   zz:rectform(-%i*zmuc + %i * ec(e^2) ),
   scale:rectform(-%i*scale),
   zz:rectform(zz*a*k0),
   [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
 
-tm2a(phi,lam):=block([z,zphic,zchic,zmuc,zz,scale,phic,theta1,theta2,z2,r],
+/* reverse steps in tm2 */
+
+ll2(x,y):=block([zmuc,zchic,zphic,zphi,lam,zpsi,phi,psi],
+  zmuc:rectform(%i*(x+%i*y)/(a*k0) + ec(e^2)),
+  zchic:chic_muc(zmuc),
+  zphic:phic_chic(zchic),
+  zphi:complement(zphic),
+  zpsi:psi_phi(zphi),
+  psi:realpart(zpsi),
+  lam:-imagpart(zpsi),
+  phi:phi_psi(psi),
+  [phi/degree, lam/degree])$
+
+/*
+intermediate conformal transformation is Mercator (alternate route)
+
+phi -> phic -> rho -> betac -> psi -> zpsi -> zbetac -> zrho -> zphic
+                               lam /
+                                            -> zchic -> zmuc -> [x,y]
+*/
+
+tm2a(phi,lam):=block([zpsi,zphic,zchic,zmuc,zz,scale,phic,betac,zbetac,zrho,rho],
   phic:(90-phi)*degree,
   lam:lam*degree,
-  r:rho_xxphic(phic),
-  scale:-diff_rho_xxphic(phic)/diff_muc_xxphic(phic),
-  theta1:xxbetac_rho(r),
-  scale:scale*diff_xxbetac_rho(r),
+  rho:rho_phic(phic),
+  scale:-diff_rho_phic(phic)/diff_muc_phic(phic),
+  betac:betac_rho(rho),
+  scale:scale*diff_betac_rho(rho),
   /* origin = 0,0, real = N, imag = W */
-  z:xxpsi_xxbetac(theta1) - %i * lam,
-  scale:-%i*scale * diff_xxpsi_xxbetac(theta1),
-  theta2:xxbetac_xxpsi(z),
-  scale:rectform(scale*diff_xxbetac_xxpsi(z)),
-  z2:rho_xxbetac(theta2),
-  scale:rectform(scale/diff_xxbetac_rho(z2)),
-  zphic:xxphic_rho(z2),
-  scale:rectform(scale/diff_rho_xxphic(zphic)),
-  zchic:xxchic_xxphic(zphic),
-  scale:rectform(scale/diff_xxphic_xxchic(zchic)),
-  zmuc:xxmuc_xxchic(zchic),
-  scale:rectform(scale*diff_xxmuc_xxchic(zchic)),
+  zpsi:psi_betac(betac) - %i * lam,
+  scale:-%i*scale * diff_psi_betac(betac),
+  zbetac:betac_psi(zpsi),
+  scale:rectform(scale*diff_betac_psi(zpsi)),
+  zrho:rho_betac(zbetac),
+  scale:rectform(scale/diff_betac_rho(zrho)),
+  zphic:phic_rho(zrho),
+  scale:rectform(scale/diff_rho_phic(zphic)),
+  zchic:chic_phic(zphic),
+  scale:rectform(scale/diff_phic_chic(zchic)),
+  zmuc:muc_chic(zchic),
+  scale:rectform(scale*diff_muc_chic(zchic)),
   zz:rectform(-%i*zmuc + %i * ec(e^2) ),
   scale:rectform(-%i*scale),
   zz:rectform(zz*a*k0),
   [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
  
-tmfi(phi,lam):=block([scale, q, bet, z, zc, r, phic, zchic, zmuc, zz],
+/*
+
+intermediate conformal transformation is spheroidal transverse Mercator
+
+phi -> psi -> beta -> zbeta -> zbetac -> zrho -> zphic
+               lam /
+                               -> zchic -> zmuc -> [x,y]
+*/
+
+tm3(phi,lam):=block([scale, psi, beta, zbeta, zbetac,
+  zrho, zphic, zchic, zmuc, zz],
   phi:phi*degree,
   lam:lam*degree,
-  scale:1/diff_muc_xxphic(complement(phi)),
-  q:xxpsi_xxphi(phi),
-  scale:scale*diff_xxpsi_xxphi(phi),
-  bet:xxbeta_xxpsi(q),
-  scale:scale*diff_xxbeta_xxpsi(q),
-  z:-atnh(cos(bet)*sin(lam)),
-  z:asin(sin(bet)*cosh(z))+%i*z,
-  scale:rectform(scale*(-%i)/(cos(lam)-%i*sin(bet)*sin(lam))),
-  zc:complement(z),
+  scale:1/diff_muc_phic(complement(phi)),
+  psi:psi_phi(phi),
+  scale:scale*diff_psi_phi(phi),
+  beta:beta_psi(psi),
+  scale:scale*diff_beta_psi(psi),
+  zbeta:-atnh(cos(beta)*sin(lam)),
+  zbeta:asin(sin(beta)*cosh(zbeta))+%i*zbeta,
+  scale:rectform(scale*(-%i)/(cos(lam)-%i*sin(beta)*sin(lam))),
+  zbetac:complement(zbeta),
   scale:-scale,
-  r:rho_xxbetac(zc),
-  scale:rectform(scale*diff_rho_xxbetac(zc)),
-  phic:xxphic_rho(r),
-  scale:rectform(scale/diff_rho_xxphic(phic)),
-  zchic:xxchic_xxphic(phic),
-  scale:rectform(scale/diff_xxphic_xxchic(zchic)),
-  zmuc:xxmuc_xxchic(zchic),
-  scale:rectform(scale*diff_xxmuc_xxchic(zchic)),
+  zrho:rho_betac(zbetac),
+  scale:rectform(scale*diff_rho_betac(zbetac)),
+  zphic:phic_rho(zrho),
+  scale:rectform(scale/diff_rho_phic(zphic)),
+  zchic:chic_phic(zphic),
+  scale:rectform(scale/diff_phic_chic(zchic)),
+  zmuc:muc_chic(zchic),
+  scale:rectform(scale*diff_muc_chic(zchic)),
   zz:rectform(-%i*zmuc + %i * ec(e^2) ),
   scale:rectform(-%i*scale),
   zz:rectform(zz*a*k0),
   [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
 
-ll1(x,y):=block([zrho,zphic,zchic,zmuc,scale,phic,lam,rho],
-  zmuc:rectform(%i*(x+%i*y)/(a*k0) + ec(e^2)),
-  zchic:xxchic_xxmuc(zmuc),
-  zphic:xxphic_xxchic(zchic),
-  zrho:rho_xxphic(zphic),
-  rho:abs(zrho),
-  lam:carg(zrho),
-  phic:xxphic_rho(rho),
-  [90-phic/degree,lam/degree])$
 
-ll2(x,y):=block([zmuc,zchic,zphic,zphi,lam,zpsi,phi,psi],
-  zmuc:rectform(%i*(x+%i*y)/(a*k0) + ec(e^2)),
-  zchic:xxchic_xxmuc(zmuc),
-  zphic:xxphic_xxchic(zchic),
-  zphi:complement(zphic),
-  zpsi:xxpsi_xxphi(zphi),
-  psi:realpart(zpsi),
-  lam:-imagpart(zpsi),
-  phi:xxphi_xxpsi(psi),
-  [phi/degree, lam/degree])$
+

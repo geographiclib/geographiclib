@@ -92,7 +92,7 @@ block([c:csc(phi)^2], rf(c-1b0,c-m,c))$
 
 /*
 ei has the following properties
-singularities at (n+1/2)*pi +/- i * acosh(1/m)
+singularities at (n+1/2)*pi +/- i * acosh(1/sqrt(m))
 ei(-z, m) = -ei(z, m)
 ei(z + n*pi, m) = 2*n*ec(m) + ei(z, m)
 */
