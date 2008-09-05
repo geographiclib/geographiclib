@@ -50,14 +50,41 @@
  * Max relative error in scale is 0.08%%
  * Max relative in convergence is 0.23"
  *
- * UTM subsets:
+ * Error as function of angular distance from the central meridian.
+ *
+ *  angle   dx(4-term)    dx(8-term)  dgam   dk
+ *  10      0.4um         roundoff    5e-6"  3e-5%%
+ *  15      0.8um         roundoff    4e-5"  2e-4%%
+ *  20      2um           roundoff    2e-4"  5e-4%%
+ *  25      4um           roundoff    7e-4"  2e-3%%
+ *  30      9um           roundoff    3e-3"  3e-3%%
+ *  35      25um          roundoff    7e-3"  6e-3%%
+ *  40      65um          roundoff    0.02"  0.02%%
+ *  45      0.2mm         roundoff    0.05"  0.03%%
+ *  50      0.7mm         roundoff    0.2"   0.05%%
+ *  55      3mm           roundoff    0.4"   0.1%%
+ *  60      12mm          roundoff    1"     0.3%%
+ *  65      80mm          0.9um       4"     0.6%%
+ *  70      0.7m          50um        18"    1.5%%
+ *  72      2m            0.4mm       35"    2.4%%
+ *  74      7m            3mm         76"    3.9%%
+ *  76      30m           40mm        3'     7.1%%
+ *  78      140m          0.7m        8'     1.4%
+ *  80      1km           30m         28'    3.3%
+ *  82      14km          2km         2.4d   10%
+ *  84      280km         300km       14d    15%
+ *
+ * Other subsets:
  *
  * dx = max |F(ll)-F_e(ll)| + |ll-F^-1(F(ll))| expressed as a distance
- * dang = max discrepancy in meridan convergence
- * dscale = max relative error in scale
- * set                       dx     dang  dscale
- * x<5e5, y<96e5             0.22um 9e-8" 1e-6%%
- * x<4e5, y<95e5             0.21um 3e-8" 4e-7%%
+ * dgam = max discrepancy in meridian convergence
+ * dk = max relative error in scale
+ *
+ *   set             dx      dgam   dk
+ *   x<50e5          74um    0.02"  0.02%%
+ *   x<20e5, y<99e5  1.1um   1.e-4" 3e-4%%
+ *   x<5e5, y<96e5   0.22um  9e-8"  1e-6%%
+ *   x<4e5, y<95e5   0.21um  3e-8"  4e-7%%
  *
  */
 
@@ -89,9 +116,16 @@ namespace GeographicLib {
     , _h3p((427 - 1236 * _n) * _n * _n * _n / 1680)
     , _h4p(49561 * _n * _n * _n * _n / 161280)
 #if 0
-      // Here are order _n^8 terms with ^ indicating exponentiation.  These
-      // need to be converted to Horner form, but are here left in expanded
-      // form so that they can be easily truncated to lower order in _n.
+      // Here are order _n^8 terms.  These are in expanded form so that they
+      // can be easily truncated to lower order in _n.  A few steps should be
+      // taken when activating these statements:
+      //
+      //  * Convert to Horner form and replace remaining exponentiations by
+      //    multiplications (e.g., _n^2 -> _n * _n)
+      //
+      //  * Ensure that any integer literals are representable; if not, convert
+      //    to double literals.
+      //
     , _a1( _a*(1+_n^2/4+_n^4/64+_n^6/256+25*_n^8/16384)/(1+_n) )
     , _h1( _n/2-2*_n^2/3+37*_n^3/96-_n^4/360-81*_n^5/512+96199*_n^6/604800-
 	  5406467*_n^7/38707200+7944359*_n^8/67737600 )
@@ -132,6 +166,10 @@ namespace GeographicLib {
 
   void TransverseMercator::Scale(double phi, double l,
 				 double& gamma, double& k) const {
+    // This returns approximations to the convergence and scale for the EXACT
+    // transverse Mercator projection.  Thus this routine returns a constant
+    // scale on the central meridian even though the approximate transverse
+    // Mercator projection has a (slightly) varying scale.
     double
       c = cos(phi),
       s = sin(l),
@@ -259,7 +297,6 @@ namespace GeographicLib {
       eta4 = _h4p * cos(8 * xip) * sinh(8 * etap),
       xi = xip + xi1 + xi2 + xi3 + xi4,
       eta = etap + eta1 + eta2 + eta3 + eta4;
-
     y = _a1 * _k0 * (backside ? Constants::pi - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     Scale(phi, l, gamma, k);
