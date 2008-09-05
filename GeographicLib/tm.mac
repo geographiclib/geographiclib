@@ -1,16 +1,18 @@
 /*
 
+Arbitrary precision Transverse Mercator Projection
+
 Written by Charles Karney <charles@karney.com>
 http://charles.karney.info/geographic
 
 $Id$
 
-*/
+The parameters for the transformation are set by
 
-/*
-
-The file starts off with a bunch of elementary transformations between
-various latitudes.
+setparams(a,invf,k0)$ sets the major radius, inverse flattening, and
+    central scale factor. The default is
+      setparams(6378137b0, 298.257223563b0, 0.9996b0)$
+    appropriate for UTM applications.
 
 Then 3 different ways of computing Transverse Mercator are given using
 different intermediate conformal transformations:
@@ -30,7 +32,7 @@ tm[123] take lat and lon args (in degrees) and return [x, y,
 
 ll[12] take x and y args (in meters) and return [lat, lon] in degrees.
 
-Thus
+Thus:
 
     r:tm1(10b0,20b0)$
     ll1(r[1],r[2]);
@@ -38,8 +40,7 @@ Thus
 should return close to [10b0, 20b0].
 
 The basic idea in tm1 is outlined in an Email to the Proj mailing list
-From: Strebe@aol.com
-Date: Wed Oct 15 00:10:38 EDT 2003
+from Strebe@aol.com dated Wed Oct 15 00:10:38 EDT 2003.
 
 phic_rho (resp. phi_psi) uses Newton's method with phic0 (resp. phi0) as
 an initial guess and sets nphic0 (nphi0) as the returned result.
@@ -70,7 +71,6 @@ guess.]
 
 */
 
-
 load("ellint.mac")$
 
 fpprec:120$
@@ -81,7 +81,7 @@ degree:pi/180$
 ratprint:false$
 
 setparams(a1,invf,k1):=(a:bfloat(a1),f:1/bfloat(invf),k0:bfloat(k1),
-  e:sqrt(f*(2-f)))$
+  e:sqrt(f*(2-f)),'done)$
 setparams(6378137b0, 298.257223563b0, 0.9996b0)$  /* WGS 84 */
 /* setparams(6378388b0, 297b0, 0.9996b0)$  International */
 
@@ -140,7 +140,6 @@ phic_rho(z):=block([
     ),
   nphic0:phic
   )$
-
 
 betac_phic(phic):=betac_rho(rho_phic(phic))$
 phic_betac(betac):=phic_rho(rho_betac(betac))$
@@ -346,6 +345,3 @@ tm3(phi,lam):=block([scale, psi, beta, zbeta, zbetac,
   scale:rectform(-%i*scale),
   zz:rectform(zz*a*k0),
   [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
-
-
-
