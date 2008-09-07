@@ -35,56 +35,44 @@
 
 /*
  *
- * Transformation errors are primarly a function of x and rapidly increase for
- * x > 70e5
+ * Define mu = asin(sin(lam) * cos(phi))
+ *           = angular distance from meridian
  *
- * For x < 70e5
+ * Errors are primarly a function of mu (or x).
  *
- * Error < 1.4mm for forward tx: F(ll) - F_e(ll) - this method - exact
- * Error < 0.9mm for round trip: ll-F^-1(F(ll)) converted to a distance
+ * For each set, define
  *
- * For reverse tx restrict inputs to |x| < 70e5
- * For forward tx restrict inputs to (90-lam)^2 + phi^2 > 36^2 and
- * require output |x| < 70e5
+ *    dxn  = max(error in forward transformation,
+ *               discrepancy in forward and reverse transformations)
+ *           for nth order method (order e^(2*n))
  *
- * Max relative error in scale is 0.08%%
- * Max relative in convergence is 0.23"
+ *    dgam = max error in meridian convergence using the O(ep2^2) formula
  *
- * Error as function of angular distance from the central meridian.
+ *    dk   = max relative error in scale using the O(ep2) formula
  *
- *  angle   dx(4-term)    dx(8-term)  dgam   dk
- *  10      0.4um         roundoff    5e-6"  3e-5%%
- *  15      0.8um         roundoff    4e-5"  2e-4%%
- *  20      2um           roundoff    2e-4"  5e-4%%
- *  25      4um           roundoff    7e-4"  2e-3%%
- *  30      9um           roundoff    3e-3"  3e-3%%
- *  35      25um          roundoff    7e-3"  6e-3%%
- *  40      65um          roundoff    0.02"  0.02%%
- *  45      0.2mm         roundoff    0.05"  0.03%%
- *  50      0.7mm         roundoff    0.2"   0.05%%
- *  55      3mm           roundoff    0.4"   0.1%%
- *  60      12mm          roundoff    1"     0.3%%
- *  65      80mm          0.9um       4"     0.6%%
- *  70      0.7m          50um        18"    1.5%%
- *  72      2m            0.4mm       35"    2.4%%
- *  74      7m            3mm         76"    3.9%%
- *  76      30m           40mm        3'     7.1%%
- *  78      140m          0.7m        8'     1.4%
- *  80      1km           30m         28'    3.3%
- *  82      14km          2km         2.4d   10%
- *  84      280km         300km       14d    15%
- *
- * Other subsets:
- *
- * dx = max |F(ll)-F_e(ll)| + |ll-F^-1(F(ll))| expressed as a distance
- * dgam = max discrepancy in meridian convergence
- * dk = max relative error in scale
- *
- *   set             dx      dgam   dk
- *   x<50e5          74um    0.02"  0.02%%
- *   x<20e5, y<99e5  1.1um   1.e-4" 3e-4%%
- *   x<5e5, y<96e5   0.22um  9e-8"  1e-6%%
- *   x<4e5, y<95e5   0.21um  3e-8"  4e-7%%
+ *      set         dx4     dx5     dx6     dx7     dx8   dgam   dk
+ * x<4e5, y<95e5 .21um     4nm     4nm     4nm     4nm   3e-8"  4e-7%%
+ * x<5e5, y<96e5 .22um     4nm     4nm     4nm     4nm   9e-8"  1e-6%%
+ *     mu<10     .35um     5nm     4nm     4nm     4nm   5e-6"  3e-5%%
+ *     mu<15     .70um     6nm     4nm     4nm     4nm   4e-5"  2e-4%%
+ *     mu<20     1.5um    11nm     4nm     4nm     4nm   2e-4"  5e-4%%
+ *     mu<25     3.6um    25nm     4nm     4nm     4nm   7e-4"  2e-3%%
+ *     mu<30     8.7um    71nm     4nm     4nm     4nm   3e-3"  3e-3%%
+ *     mu<35      22um   .22um     6nm     4nm     4nm   7e-3"  6e-3%%
+ *     mu<40      61um   .75um    11nm     4nm     4nm   0.02"  0.02%%
+ *     mu<45     .18mm   2.8um    49nm     5nm     5nm   0.05"  0.03%%
+ *     mu<50     .62mm    12um   .27um    10nm     6nm   0.2"   0.05%%
+ *     mu<55     2.4mm    64um   1.8um    58nm     7nm   0.4"   0.1%%
+ *     mu<60      12mm   .42mm    17um   .69um    34nm   1"     0.3%%
+ *     mu<65      72mm   3.8mm   .22mm    13um   .83um   4"     0.6%%
+ *     mu<70     .67m     56mm   5.1mm   .48mm    48um   18"    1.5%%
+ *     mu<72     1.9m    .20m     22mm   2.6mm   .32mm   35"    2.4%%
+ *     mu<74     6.6m    .88m    .12m     18mm   2.8mm   76"    3.9%%
+ *     mu<76      27m    4.7m    .87m    .17m     35mm   3'     7.1%%
+ *     mu<78     .14km    33m    8.4m    2.2m    .62m    8'     1.4%
+ *     mu<80     1.0km   .36km   .13km    52m     21m    28'    3.3%
+ *     mu<82      14km   8.1km   4.8km   3.0km   2.0km   2.4d   10%
+ *     mu<84     390km   380km   390km   410km   440km   14d    15%
  *
  */
 
@@ -106,55 +94,76 @@ namespace GeographicLib {
     , _n(_f / (2 - _f))
       // _a1 is the equivalent radius for computing the circumference of
       // ellipse.  Relative error is f^6/16384 = 8.8e-20 for WGS84.
-    , _a1(_a / (1 + _n) * (_n * _n * (_n * _n + 16) + 64) / 64)
-    , _h1(_n * (_n * ((555 - 4 * _n) * _n - 960) + 720) / 1440)
-    , _h2(_n * _n * ((96 - 437 * _n) * _n + 30) / 1440)
-    , _h3((119 - 148 * _n) * _n * _n * _n / 3360)
-    , _h4(4397 * _n * _n * _n * _n / 161280)
-    , _h1p(_n * (_n * (_n * (164 * _n + 225) - 480) + 360) / 720)
-    , _h2p(_n * _n * (_n * (557 * _n - 864) + 390) / 1440)
-    , _h3p((427 - 1236 * _n) * _n * _n * _n / 1680)
-    , _h4p(49561 * _n * _n * _n * _n / 161280)
-#if 0
-      // Here are order _n^8 terms.  These are in expanded form so that they
-      // can be easily truncated to lower order in _n.  A few steps should be
-      // taken when activating these statements:
-      //
-      //  * Convert to Horner form and replace remaining exponentiations by
-      //    multiplications (e.g., _n^2 -> _n * _n)
-      //
-      //  * Ensure that any integer literals are representable; if not, convert
-      //    to double literals.
-      //
-    , _a1( _a*(1+_n^2/4+_n^4/64+_n^6/256+25*_n^8/16384)/(1+_n) )
-    , _h1( _n/2-2*_n^2/3+37*_n^3/96-_n^4/360-81*_n^5/512+96199*_n^6/604800-
-	  5406467*_n^7/38707200+7944359*_n^8/67737600 )
-    , _h2( _n^2/48+_n^3/15-437*_n^4/1440+46*_n^5/105-1118711*_n^6/3870720+
-	  51841*_n^7/1209600+24749483*_n^8/348364800 )
-    , _h3( 17*_n^3/480-37*_n^4/840-209*_n^5/4480+5569*_n^6/90720+9261899*
-	  _n^7/58060800-6457463*_n^8/17740800 )
-    , _h4( 4397*_n^4/161280-11*_n^5/504-830251*_n^6/7257600+
-	   466511*_n^7/2494800+324154477*_n^8/7664025600 )
-    , _h5( 4583*_n^5/161280-108847*_n^6/3991680-8005831*_n^7/63866880+
-	  22894433*_n^8/124540416 )
-    , _h6( 20648693*_n^6/638668800-16363163*_n^7/518918400-
-	  2204645983*_n^8/12915302400 )
-    , _h7( 219941297*_n^7/5535129600-497323811*_n^8/12454041600 )
-    , _h8( 191773887257*_n^8/3719607091200 )
-    , _h1p( _n/2-2*_n^2/3+5*_n^3/16+41*_n^4/180-127*_n^5/288+7891*_n^6/37800+
-	   72161*_n^7/387072-18975107*_n^8/50803200 )
-    , _h2p( 13*_n^2/48-3*_n^3/5+557*_n^4/1440+281*_n^5/630-
-	    1983433*_n^6/1935360+13769*_n^7/28800+148003883*_n^8/174182400 )
-    , _h3p( 61*_n^3/240-103*_n^4/140+15061*_n^5/26880+167603*_n^6/181440-
-	   67102379*_n^7/29030400+79682431*_n^8/79833600 )
-    , _h4p( 49561*_n^4/161280-179*_n^5/168+6601661*_n^6/7257600+
-	    97445*_n^7/49896-40176129013*_n^8/7664025600 )
-    , _h5p( 34729*_n^5/80640-3418889*_n^6/1995840+14644087*_n^7/9123840+
-	   2605413599*_n^8/622702080 )
-    , _h6p( 212378941*_n^6/319334400-30705481*_n^7/10378368+
-	   175214326799*_n^8/58118860800 )
-    , _h7p( 1522256789*_n^7/1383782400-16759934899*_n^8/3113510400 )
-    , _h8p( 1424729850961*_n^8/743921418240 )
+#if TM_MAXPOW <= 4
+    , _a1 (_a/(1+_n)*(_n*_n*(_n*_n+16)+64)/64)
+    , _h1 (_n*(_n*((555-4*_n)*_n-960)+720)/1440)
+    , _h1p(_n*(_n*(_n*(164*_n+225)-480)+360)/720)
+    , _h2 (_n*_n*((96-437*_n)*_n+30)/1440)
+    , _h2p(_n*_n*(_n*(557*_n-864)+390)/1440)
+    , _h3 ((119-148*_n)*_n*_n*_n/3360)
+    , _h3p((427-1236*_n)*_n*_n*_n/1680)
+    , _h4 (4397*_n*_n*_n*_n/161280)
+    , _h4p(49561*_n*_n*_n*_n/161280)
+#elif TM_MAXPOW == 5
+    , _a1 (_a/(1+_n)*(_n*_n*(_n*_n+16)+64)/64)
+    , _h1 (_n*(_n*(_n*((-3645*_n-64)*_n+8880)-15360)+11520)/23040)
+    , _h1p(_n*(_n*(_n*((328-635*_n)*_n+450)-960)+720)/1440)
+    , _h2 (_n*_n*(_n*(_n*(4416*_n-3059)+672)+210)/10080)
+    , _h2p(_n*_n*(_n*(_n*(4496*_n+3899)-6048)+2730)/10080)
+    , _h3 (_n*_n*_n*((-627*_n-592)*_n+476)/13440)
+    , _h3p(_n*_n*_n*(_n*(15061*_n-19776)+6832)/26880)
+    , _h4 ((4397-3520*_n)*_n*_n*_n*_n/161280)
+    , _h4p((49561-171840*_n)*_n*_n*_n*_n/161280)
+    , _h5 (4583*_n*_n*_n*_n*_n/161280)
+    , _h5p(34729*_n*_n*_n*_n*_n/80640)
+#elif TM_MAXPOW == 6
+    , _a1 (_a/(1+_n)*(_n*_n*(_n*_n*(_n*_n+4)+64)+256)/256)
+    , _h1 (_n*(_n*(_n*(_n*(_n*(384796*_n-382725)-6720)+932400)-1612800)+1209600)/2419200)
+    , _h1p(_n*(_n*(_n*(_n*(_n*(31564*_n-66675)+34440)+47250)-100800)+75600)/151200)
+    , _h2 (_n*_n*(_n*(_n*((1695744-1118711*_n)*_n-1174656)+258048)+80640)/3870720)
+    , _h2p(_n*_n*(_n*(_n*((863232-1983433*_n)*_n+748608)-1161216)+524160)/1935360)
+    , _h3 (_n*_n*_n*(_n*(_n*(22276*_n-16929)-15984)+12852)/362880)
+    , _h3p(_n*_n*_n*(_n*(_n*(670412*_n+406647)-533952)+184464)/725760)
+    , _h4 (_n*_n*_n*_n*((-830251*_n-158400)*_n+197865)/7257600)
+    , _h4p(_n*_n*_n*_n*(_n*(6601661*_n-7732800)+2230245)/7257600)
+    , _h5 ((453717-435388*_n)*_n*_n*_n*_n*_n/15966720)
+    , _h5p((3438171-13675556*_n)*_n*_n*_n*_n*_n/7983360)
+    , _h6 (20648693*_n*_n*_n*_n*_n*_n/638668800)
+    , _h6p(212378941*_n*_n*_n*_n*_n*_n/319334400)
+#elif TM_MAXPOW == 7
+    , _a1 (_a/(1+_n)*(_n*_n*(_n*_n*(_n*_n+4)+64)+256)/256)
+    , _h1 (_n*(_n*(_n*(_n*(_n*((6156736-5406467*_n)*_n-6123600)-107520)+14918400)-25804800)+19353600)/38707200)
+    , _h1p(_n*(_n*(_n*(_n*(_n*(_n*(1804025*_n+2020096)-4267200)+2204160)+3024000)-6451200)+4838400)/9676800)
+    , _h2 (_n*_n*(_n*(_n*(_n*(_n*(829456*_n-5593555)+8478720)-5873280)+1290240)+403200)/19353600)
+    , _h2p(_n*_n*(_n*(_n*(_n*(_n*(4626384*_n-9917165)+4316160)+3743040)-5806080)+2620800)/9676800)
+    , _h3 (_n*_n*_n*(_n*(_n*(_n*(9261899*_n+3564160)-2708640)-2557440)+2056320)/58060800)
+    , _h3p(_n*_n*_n*(_n*(_n*((26816480-67102379*_n)*_n+16265880)-21358080)+7378560)/29030400)
+    , _h4 (_n*_n*_n*_n*(_n*(_n*(14928352*_n-9132761)-1742400)+2176515)/79833600)
+    , _h4p(_n*_n*_n*_n*(_n*(_n*(155912000*_n+72618271)-85060800)+24532695)/79833600)
+    , _h5 (_n*_n*_n*_n*_n*((-8005831*_n-1741552)*_n+1814868)/63866880)
+    , _h5p(_n*_n*_n*_n*_n*(_n*(102508609*_n-109404448)+27505368)/63866880)
+    , _h6 ((268433009-261810608*_n)*_n*_n*_n*_n*_n*_n/8302694400.)
+    , _h6p((2760926233.-12282192400.*_n)*_n*_n*_n*_n*_n*_n/4151347200.)
+    , _h7 (219941297*_n*_n*_n*_n*_n*_n*_n/5535129600.)
+    , _h7p(1522256789.*_n*_n*_n*_n*_n*_n*_n/1383782400.)
+#elif TM_MAXPOW >= 8
+    , _a1 (_a/(1+_n)*(_n*_n*(_n*_n*(_n*_n*(25*_n*_n+64)+256)+4096)+16384)/16384)
+    , _h1 (_n*(_n*(_n*(_n*(_n*(_n*(_n*(31777436*_n-37845269)+43097152)-42865200)-752640)+104428800)-180633600)+135475200)/270950400)
+    , _h1p(_n*(_n*(_n*(_n*(_n*(_n*((37884525-75900428*_n)*_n+42422016)-89611200)+46287360)+63504000)-135475200)+101606400)/203212800)
+    , _h2 (_n*_n*(_n*(_n*(_n*(_n*(_n*(24749483*_n+14930208)-100683990)+152616960)-105719040)+23224320)+7257600)/348364800)
+    , _h2p(_n*_n*(_n*(_n*(_n*(_n*(_n*(148003883*_n+83274912)-178508970)+77690880)+67374720)-104509440)+47174400)/174182400)
+    , _h3 (_n*_n*_n*(_n*(_n*(_n*((101880889-232468668*_n)*_n+39205760)-29795040)-28131840)+22619520)/638668800)
+    , _h3p(_n*_n*_n*(_n*(_n*(_n*(_n*(318729724*_n-738126169)+294981280)+178924680)-234938880)+81164160)/319334400)
+    , _h4 (_n*_n*_n*_n*(_n*(_n*(_n*(324154477*_n+1433121792.)-876745056)-167270400)+208945440)/7664025600.)
+    , _h4p(_n*_n*_n*_n*(_n*(_n*((14967552000.-40176129013.*_n)*_n+6971354016.)-8165836800.)+2355138720.)/7664025600.)
+    , _h5 (_n*_n*_n*_n*_n*(_n*(_n*(457888660*_n-312227409)-67920528)+70779852)/2490808320.)
+    , _h5p(_n*_n*_n*_n*_n*(_n*(_n*(10421654396.*_n+3997835751.)-4266773472.)+1072709352.)/2490808320.)
+    , _h6 (_n*_n*_n*_n*_n*_n*((-19841813847.*_n-3665348512.)*_n+3758062126.)/116237721600.)
+    , _h6p(_n*_n*_n*_n*_n*_n*(_n*(175214326799.*_n-171950693600.)+38652967262.)/58118860800.)
+    , _h7 ((1979471673.-1989295244.*_n)*_n*_n*_n*_n*_n*_n*_n/49816166400.)
+    , _h7p((13700311101.-67039739596.*_n)*_n*_n*_n*_n*_n*_n*_n/12454041600.)
+    , _h8 (191773887257.*_n*_n*_n*_n*_n*_n*_n*_n/3719607091200.)
+    , _h8p(1424729850961.*_n*_n*_n*_n*_n*_n*_n*_n/743921418240.)
 #endif
     , _tol(0.1*sqrt(std::numeric_limits<double>::epsilon()))
     , _numit(5)
@@ -249,18 +258,35 @@ namespace GeographicLib {
     double
       phi = lat * Constants::degree,
       l = lon * Constants::degree;
+    // q is isometric latitude
+    // JHS 154 has
+    //
+    //   beta = atan(sinh(q)) = conformal latitude
+    //   [xi', eta'] = spheroidal TM coordinates
+    //   eta' = atanh(cos(beta) * sin(l))
+    //   xi' = asin(sin(beta)*cosh(eta')
+    //
+    // We use
+    //
+    //   tan(beta) = sinh(q)
+    //   sin(beta) = tanh(q)
+    //   cos(beta) = sech(q)
+    //   denom^2 = 1-cos(beta)^2*sin(l)^2   = 1-sech(q)^2*sin(l)^2)
+    //   sin(xip)   = sin(beta)/denom        = tanh(q)/denom
+    //   cos(xip)   = cos(beta)*cos(l)/denom = sech(q)*cos(l)/denom
+    //   cosh(etap) = 1/denom                = 1/denom
+    //   sinh(etap) = cos(beta)*sin(l)/denom = sech(q)*sin(l)/denom
+    //
+    // to eliminate beta and derive more stable expressions for xi',eta'
     double etap, xip;
     if (lat < 90) {
-      // {q,bet} is {isometric,conformal} latitude
       double
 	qp = asinh(tan(phi)),
 	qpp = atanh(_e * sin(phi)),
-	q = qp - _e * qpp,
-	bet = atan(sinh(q));
-      etap = cos(bet) * sin(l);
-      etap = atanh(etap);
+	q = qp - _e * qpp;
+      etap = atanh(sin(l) / cosh(q));
       if (lon < 90)
-	xip = asin(sin(bet) * cosh(etap));
+	xip = atan2(sinh(q), cos(l));
       else
 	xip = Constants::pi/2;
     } else {
@@ -286,17 +312,33 @@ namespace GeographicLib {
     //
     // which is used in Reverse.  Extensions of these series to order _n^8 are
     // given above.
-    double
-      xi1  = _h1p * sin(2 * xip) * cosh(2 * etap),
-      xi2  = _h2p * sin(4 * xip) * cosh(4 * etap),
-      xi3  = _h3p * sin(6 * xip) * cosh(6 * etap),
-      xi4  = _h4p * sin(8 * xip) * cosh(8 * etap),
-      eta1 = _h1p * cos(2 * xip) * sinh(2 * etap),
-      eta2 = _h2p * cos(4 * xip) * sinh(4 * etap),
-      eta3 = _h3p * cos(6 * xip) * sinh(6 * etap),
-      eta4 = _h4p * cos(8 * xip) * sinh(8 * etap),
-      xi = xip + xi1 + xi2 + xi3 + xi4,
-      eta = etap + eta1 + eta2 + eta3 + eta4;
+    double xi = 0, eta = 0;
+#if TM_MAXPOW >= 8
+    xi  += _h8p * sin(16 * xip) * cosh(16 * etap);
+    eta += _h8p * cos(16 * xip) * sinh(16 * etap);
+#endif
+#if TM_MAXPOW >= 7
+    xi  += _h7p * sin(14 * xip) * cosh(14 * etap);
+    eta += _h7p * cos(14 * xip) * sinh(14 * etap);
+#endif
+#if TM_MAXPOW >= 6
+    xi  += _h6p * sin(12 * xip) * cosh(12 * etap);
+    eta += _h6p * cos(12 * xip) * sinh(12 * etap);
+#endif
+#if TM_MAXPOW >= 5
+    xi  += _h5p * sin(10 * xip) * cosh(10 * etap);
+    eta += _h5p * cos(10 * xip) * sinh(10 * etap);
+#endif
+    xi  += _h4p * sin(8 * xip) * cosh(8 * etap);
+    eta += _h4p * cos(8 * xip) * sinh(8 * etap);
+    xi  += _h3p * sin(6 * xip) * cosh(6 * etap);
+    eta += _h3p * cos(6 * xip) * sinh(6 * etap);
+    xi  += _h2p * sin(4 * xip) * cosh(4 * etap);
+    eta += _h2p * cos(4 * xip) * sinh(4 * etap);
+    xi  += _h1p * sin(2 * xip) * cosh(2 * etap);
+    eta += _h1p * cos(2 * xip) * sinh(2 * etap);
+    xi  += xip;
+    eta += etap;
     y = _a1 * _k0 * (backside ? Constants::pi - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     Scale(phi, l, gamma, k);
@@ -326,23 +368,50 @@ namespace GeographicLib {
     if (backside) {
       xi = Constants::pi - xi;
     }
-    double
-      xi1p  = _h1 * sin(2 * xi) * cosh(2 * eta),
-      xi2p  = _h2 * sin(4 * xi) * cosh(4 * eta),
-      xi3p  = _h3 * sin(6 * xi) * cosh(6 * eta),
-      xi4p  = _h4 * sin(8 * xi) * cosh(8 * eta),
-      eta1p = _h1 * cos(2 * xi) * sinh(2 * eta),
-      eta2p = _h2 * cos(4 * xi) * sinh(4 * eta),
-      eta3p = _h3 * cos(6 * xi) * sinh(6 * eta),
-      eta4p = _h4 * cos(8 * xi) * sinh(8 * eta),
-      xip = xi - (xi1p + xi2p + xi3p + xi4p),
-      etap = eta - (eta1p + eta2p + eta3p + eta4p),
-      bet = asin(sin(xip) / cosh(etap));
+    double xip = 0, etap = 0;
+#if TM_MAXPOW >= 8
+    xip  -= _h8 * sin(16 * xi) * cosh(16 * eta);
+    etap -= _h8 * cos(16 * xi) * sinh(16 * eta);
+#endif
+#if TM_MAXPOW >= 7
+    xip  -= _h7 * sin(14 * xi) * cosh(14 * eta);
+    etap -= _h7 * cos(14 * xi) * sinh(14 * eta);
+#endif
+#if TM_MAXPOW >= 6
+    xip  -= _h6 * sin(12 * xi) * cosh(12 * eta);
+    etap -= _h6 * cos(12 * xi) * sinh(12 * eta);
+#endif
+#if TM_MAXPOW >= 5
+    xip  -= _h5 * sin(10 * xi) * cosh(10 * eta);
+    etap -= _h5 * cos(10 * xi) * sinh(10 * eta);
+#endif
+    xip  -= _h4 * sin(8 * xi) * cosh(8 * eta);
+    etap -= _h4 * cos(8 * xi) * sinh(8 * eta);
+    xip  -= _h3 * sin(6 * xi) * cosh(6 * eta);
+    etap -= _h3 * cos(6 * xi) * sinh(6 * eta);
+    xip  -= _h2 * sin(4 * xi) * cosh(4 * eta);
+    etap -= _h2 * cos(4 * xi) * sinh(4 * eta);
+    xip  -= _h1 * sin(2 * xi) * cosh(2 * eta);
+    etap -= _h1 * cos(2 * xi) * sinh(2 * eta);
+    xip  += xi;
+    etap += eta;
+    // JHS has
+    //
+    // 	 beta = asin(sin(xip) / cosh(etap))
+    // 	 l = asin(tanh(etap) / cos(beta)
+    // 	 q = asinh(tan(beta))
+    //
+    // the following eliminates beta and is more stable
+
     double l, phi;
-    if (bet < Constants::pi/2) {
-      l = asin(tanh(etap) / cos(bet));
+    double
+      s = sinh(etap),
+      c = cos(xip),
+      r = hypot(s, c);
+    if (r > 0) {
+      l = atan2(s, c);
       double
-	q = asinh(tan(bet)),
+	q = asinh(sin(xip)/r),
 	qp = q;
       for (int i = 0; i < _numit; ++i) {
 	double
