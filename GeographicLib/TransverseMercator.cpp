@@ -38,7 +38,7 @@
  * Define mu = asin(sin(lam) * cos(phi))
  *           = angular distance from meridian
  *
- * Errors are primarly a function of mu (or x).
+ * Errors are primarily a function of mu (or x).
  *
  * For each set, define
  *
