@@ -10,13 +10,28 @@
 
 #include <cmath>
 
+#if !defined(TM_MAXPOW)
+#define TM_MAXPOW 6
+#endif
+
 namespace GeographicLib {
 
   class TransverseMercator {
   private:
     const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n, _a1,
-      _h1, _h2, _h3, _h4,
-      _h1p, _h2p, _h3p, _h4p,
+      _h1, _h1p, _h2, _h2p, _h3, _h3p, _h4, _h4p,
+#if TM_MAXPOW >= 5
+      _h5, _h5p,
+#endif
+#if TM_MAXPOW >= 6
+      _h6, _h6p,
+#endif
+#if TM_MAXPOW >= 7
+      _h7, _h7p,
+#endif
+#if TM_MAXPOW >= 8
+      _h8, _h8p,
+#endif
       _tol;
     const int _numit;
 #if defined(_MSC_VER)
