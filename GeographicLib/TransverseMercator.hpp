@@ -16,23 +16,13 @@
 
 namespace GeographicLib {
 
+  static const int maxpow =
+    TM_MAXPOW > 8 ? 8 : (TM_MAXPOW < 4 ? 4 : TM_MAXPOW);
   class TransverseMercator {
   private:
-    const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n, _a1,
-      _h1, _h1p, _h2, _h2p, _h3, _h3p, _h4, _h4p,
-#if TM_MAXPOW >= 5
-      _h5, _h5p,
-#endif
-#if TM_MAXPOW >= 6
-      _h6, _h6p,
-#endif
-#if TM_MAXPOW >= 7
-      _h7, _h7p,
-#endif
-#if TM_MAXPOW >= 8
-      _h8, _h8p,
-#endif
+    const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n,
       _tol;
+    double _a1, _h[maxpow], _hp[maxpow];
     const int _numit;
 #if defined(_MSC_VER)
     // These have poor relative accuracy near x = 0.  However, for mapping
