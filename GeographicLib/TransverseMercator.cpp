@@ -363,14 +363,14 @@ namespace GeographicLib {
     //    F[n](x) = sin(n * x)
     //    a(n, x) = 2 * cos(x)
     //    b(n, x) = -1
+    //    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = n*x, B = x ]
     //    N = maxpow
     //    c[k] = _hp[k-1]
     //    S = y[1] * sin(x)
     double
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
-      ar =  2 * c0 * ch0,
-      ai = -2 * s0 * sh0;
+      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta')
     double
       xi0 = _hp[maxpow - 1], eta0 = 0,
       xi1 = 0, eta1 = 0,
@@ -381,7 +381,7 @@ namespace GeographicLib {
       xi0  = ar * xi1 - ai * eta1 - xi2 + _hp[j];
       eta0 = ai * xi1 + ar * eta1 - eta2;
     }
-    ar = s0 * ch0; ai = c0 * sh0;
+    ar = s0 * ch0; ai = c0 * sh0; // sin(2* zeta')
     double
       xi  = xip  + ar * xi0 - ai * eta0,
       eta = etap + ai * xi0 + ar * eta0;
@@ -417,8 +417,7 @@ namespace GeographicLib {
     double
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
-      ar =  2 * c0 * ch0,
-      ai = -2 * s0 * sh0;
+      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2* zeta')
     double
       xip0 = -_h[maxpow - 1], etap0 = 0,
       xip1 = 0, etap1 = 0,
@@ -429,7 +428,7 @@ namespace GeographicLib {
       xip0  = ar * xip1 - ai * etap1 - xip2 - _h[j];
       etap0 = ai * xip1 + ar * etap1 - etap2;
     }
-    ar = s0 * ch0; ai = c0 * sh0;
+    ar = s0 * ch0; ai = c0 * sh0; // sin(2* zeta)
     double
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
