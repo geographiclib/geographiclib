@@ -343,22 +343,34 @@ namespace GeographicLib {
     //
     // which is used in Reverse.
     //
-    // We evaluate
+    // Evaluate sums via Clenshaw method.  See
+    //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
     //
-    //   s = sum(a[j-1] * sin(j * x), j = 1..maxpow)
+    // Let
     //
-    // via the Clenshaw recursion
+    //    S = sum(c[k] * F[k](x), k = 0..N)
+    //    F[n+1](x) = alpha(n,x) * F[n](x) + beta(n,x) * F[n-1](x)
     //
-    //   y[maxpow+1] = 0
-    //   y[maxpow]   = 0
-    //   y[k] = -y[k+2] + 2 * cos(x) * y[k+1] + a[k], for k = maxpow-1..0
-    //   s = sin(x) * y[0]
+    // Evaluate S with
     //
+    //    y[N+2] = y[N+1] = 0
+    //    y[k] = alpha(k,x) * y[k+1] + beta(k+1,x) * y[k+2] + c[k]
+    //    S = c[0] * F[0](x) + y[1] * F[1](x) + beta(1,x) * F[0](x) * y[2]
+    //
+    // Here we have
+    //
+    //    x = 2 * zeta'
+    //    F[n](x) = sin(n * x)
+    //    a(n, x) = 2 * cos(x)
+    //    b(n, x) = -1
+    //    N = maxpow
+    //    c[k] = _hp[k-1]
+    //    S = y[1] * sin(x)
     double
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
-      cr = 2 * c0 * ch0,
-      ci = -2 * s0 * sh0;
+      ar =  2 * c0 * ch0,
+      ai = -2 * s0 * sh0;
     double
       xi0 = _hp[maxpow - 1], eta0 = 0,
       xi1 = 0, eta1 = 0,
@@ -366,13 +378,13 @@ namespace GeographicLib {
     for (int j = maxpow - 1; j--;) {
       xi2 = xi1; eta2 = eta1;
       xi1 = xi0; eta1 = eta0;
-      xi0 = -xi2 + cr * xi1 - ci * eta1 + _hp[j];
-      eta0 = -eta2 + ci * xi1 + cr * eta1;
+      xi0  = ar * xi1 - ai * eta1 - xi2 + _hp[j];
+      eta0 = ai * xi1 + ar * eta1 - eta2;
     }
-    cr = s0 * ch0; ci = c0 * sh0;
+    ar = s0 * ch0; ai = c0 * sh0;
     double
-      xi  = xip + cr * xi0 - ci * eta0,
-      eta = etap + ci * xi0 + cr * eta0;
+      xi  = xip  + ar * xi0 - ai * eta0,
+      eta = etap + ai * xi0 + ar * eta0;
     y = _a1 * _k0 * (backside ? Constants::pi - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     Scale(phi, l, gamma, k);
@@ -405,8 +417,8 @@ namespace GeographicLib {
     double
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
-      cr = 2 * c0 * ch0,
-      ci = -2 * s0 * sh0;
+      ar =  2 * c0 * ch0,
+      ai = -2 * s0 * sh0;
     double
       xip0 = -_h[maxpow - 1], etap0 = 0,
       xip1 = 0, etap1 = 0,
@@ -414,13 +426,13 @@ namespace GeographicLib {
     for (int j = maxpow - 1; j--;) {
       xip2 = xip1; etap2 = etap1;
       xip1 = xip0; etap1 = etap0;
-      xip0 = -xip2 + cr * xip1 - ci * etap1 - _h[j];
-      etap0 = -etap2 + ci * xip1 + cr * etap1;
+      xip0  = ar * xip1 - ai * etap1 - xip2 - _h[j];
+      etap0 = ai * xip1 + ar * etap1 - etap2;
     }
-    cr = s0 * ch0; ci = c0 * sh0;
+    ar = s0 * ch0; ai = c0 * sh0;
     double
-      xip  = xi + cr * xip0 - ci * etap0,
-      etap = eta + ci * xip0 + cr * etap0;
+      xip  = xi  + ar * xip0 - ai * etap0,
+      etap = eta + ai * xip0 + ar * etap0;
     // JHS has
     //
     // 	 beta = asin(sin(xip) / cosh(etap))
