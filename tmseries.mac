@@ -1,0 +1,76 @@
+/*
+
+Compute series approximations for Transverse Mercator Projection
+
+Written by Charles Karney <charles@karney.com>
+http://charles.karney.info/geographic
+
+$Id$
+
+Compute coefficient for forward and inverse trigonometric series for
+conversion from conformal latitude to rectifying latitude.  This prints
+out assignments which with minor editing are suitable for insertion into
+C++ code.  (N.B. n^3 in the output means n*n*n.)
+
+To run, start maxima and enter
+
+    writefile("tmseries.out")$
+    load("tmseries.mac")$
+    closefile()$
+
+Notation of output matches that of
+
+ JHS 154, ETRS89 - Map projections, plane coordinates,
+ and map sheet index for ETRS89, Published by JUHTA, Finnish Geodetic
+ Institute, and the National Land Survey of Finland, 34 p (2006).
+ http://www.jhs-suositukset.fi/suomi/jhs154
+ http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154.pdf
+
+Alter maxpow to generate more or less terms (tested out to maxpow:12).
+
+Redefine dispnormalize as
+
+    dispnormalize(expr):=horner(ratsimp(expr))$
+
+to get the coefficients converted to Horner form.
+
+Coefficients for maxpow = 12 are given in
+
+    http://charles.karney.info/geographic/UTM-fi.txt
+
+*/
+
+maxpow:6$
+dispnormalize(expr):=taylor(expr,n,0,maxpow)$
+
+e:sqrt(n)*2/(1+n)$
+load("revert.mac")$
+integrand:(1-e^2)/(1-e^2*sin(phi)^2)^(3/2)$
+expintegrand:ratdisrep(taylor(integrand,n,0,maxpow))$
+rectlat:ratsimp(trigreduce(ratsimp(integrate(expintegrand,phi))))$
+
+mult:((1 + e*cos(phic))/(1 - e*cos(phic)))^(e/2)$
+expmult:ratdisrep(taylor(mult,n,0,maxpow))$
+
+betc:2*atan(tan(phic/2)*(1+eps))$
+expbetc:ratdisrep(taylor(betc,eps,0,maxpow))$
+expbetc:expbetc+phic-subst([eps=0],ratdisrep(expbetc))$
+expbetc:subst([tan=t],expbetc)$
+expbetc:ratsimp(trigreduce(ratsimp(ev(expbetc,t(x):=sin(x)/cos(x)))))$
+
+betc1:subst([eps=expmult-1],expbetc)$
+betc1:ratsimp(trigreduce(ratsimp(ratdisrep(taylor(betc1,n,0,maxpow)))))$
+bet:ratsimp(%pi/2-subst([phic=%pi/2-phi],betc1))$
+phibet:reverta(bet,phi,beta,n,maxpow)$
+phibet:ratsimp(trigreduce(ratsimp(phibet)))$
+rectbet:subst([phi=phibet],rectlat)$
+rectbet:ratsimp(trigreduce(ratsimp(taylor(rectbet,n,0,maxpow))))$
+dc:ratdisrep(taylor(subst([beta=%pi],rectbet)/%pi*(n+1),n,0,maxpow))$
+rectbetscale:expand(taylor(rectbet*(n+1)/dc,n,0,maxpow))$
+betrectscale:expand(trigreduce(
+    ratsimp(reverta(rectbetscale,beta,phi,n,maxpow))))$
+print("a1=", string(a/(1+n)),"*(",string(dispnormalize(dc)),");")$
+for i:1 thru maxpow do print(string(h[i]),"=",
+  string(dispnormalize(-coeff(betrectscale,sin(2*i*phi)))),";")$
+for i:1 thru maxpow do print(string(hp[i]),"=",
+  string(dispnormalize(coeff(rectbetscale,sin(2*i*beta)))),";")$

@@ -16,7 +16,7 @@ Numerical Algorithms 10, 13-26 (1995)
 */
 
 fpprec:120$
-ca:etol:1.b-60$
+ca:etol:1.b-90$
 eps:0.1b0^fpprec$
 pi:bfloat(%pi)$
 ratprint:false$
@@ -215,3 +215,12 @@ sncndn(x,mc):=block([bo, a, b, c, d, l, sn, cn, dn],
     ),
   [sn,cn,dn]
   )$
+
+/* Jacobi Elliptic functions for complex z using A+S 16.21*/
+csncndn(z,mc):=block([m:1-mc,re,im,x:bfloat(realpart(z)),y:bfloat(imagpart(z)),d],
+  re:sncndn(x,mc),
+  im:sncndn(y,m),
+  d:im[2]^2+m*(re[1]*im[1])^2,
+  [rectform( (re[1]*im[3] + %i*re[2]*re[3]*im[1]*im[2])/d),
+  rectform( (re[2]*im[2] - %i*re[1]*re[3]*im[1]*im[3])/d),
+  rectform( (re[3]*im[2]*im[3] - %i*m*re[1]*re[2]*im[1])/d)])$

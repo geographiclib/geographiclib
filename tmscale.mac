@@ -1,0 +1,179 @@
+/*
+
+Scale and convergence for Transverse Mercator Projection
+
+Written by Charles Karney <charles@karney.com>
+http://charles.karney.info/geographic
+
+$Id$
+
+Compute approximations for scale and convergence for Transverse Mercator
+Projection as series in ep2 = e'^2 = e^2/(1-e^2).
+
+To run, start maxima and enter
+
+    writefile("tmscale")$
+    load("tmscale")$
+    closefile()$
+
+The output is a set of assignments which convert
+
+    phi = latitude (radians)
+    lam = longitude from central meridian (radians)
+
+into
+
+    gam = convergence (radians)
+    k = scale (assuming scale on central meridian is 1)
+
+Alter maxpow to generate more or less terms (tested out to maxpow:4).
+
+The output from tmseries (run with maxpow at least as big as the setting
+in this file) needs to be inserted into this file.  (Here the maxpow=10
+results are included.)
+
+Leading term O(ep2^0) gives the results for a sphere.
+
+Results for maxpow = 4 are given in
+
+    http://charles.karney.info/geographic/UTM-fi.txt
+
+*/
+
+maxpow:4$
+
+tay1(x):=ratdisrep(taylor1(x,ep2,0,maxpow))$
+taylor1(expr,var,val,pow):=sum(subst([var=val],
+    diff(expr,var,i))*var^i/i!,i,0,pow)$
+e2:tay1(ep2/(1+ep2))$
+f:tay1(1-sqrt(1-e2))$
+
+( n:tay1(f / (2 - f)),
+  /* Output from tmseries.mac */
+  a1 : tay1(a/(n+1) *( 1+n^2/4+n^4/64+n^6/256+25*n^8/16384+49*n^10/65536 )),
+  hp[1] : tay1(n/2-2*n^2/3+5*n^3/16+41*n^4/180-127*n^5/288+7891*n^6/37800+
+    72161*n^7/387072-18975107*n^8/50803200+60193001*n^9/290304000+
+    134592031*n^10/1026432000),
+  hp[2] : tay1(13*n^2/48-3*n^3/5+557*n^4/1440+281*n^5/630-1983433*n^6/1935360+
+    13769*n^7/28800+148003883*n^8/174182400-705286231*n^9/465696000+
+    1703267974087*n^10/3218890752000),
+  hp[3] : tay1(61*n^3/240-103*n^4/140+15061*n^5/26880+167603*n^6/181440-
+    67102379*n^7/29030400+79682431*n^8/79833600+6304945039*n^9/2128896000-
+    6601904925257*n^10/1307674368000),
+  hp[4] : tay1(49561*n^4/161280-179*n^5/168+6601661*n^6/7257600+97445*n^7/49896-
+    40176129013*n^8/7664025600+138471097*n^9/66528000+
+    48087451385201*n^10/5230697472000),
+  hp[5] : tay1(34729*n^5/80640-3418889*n^6/1995840+14644087*n^7/9123840+
+    2605413599*n^8/622702080-31015475399*n^9/2583060480+
+    5820486440369*n^10/1307674368000),
+  hp[6] : tay1(212378941*n^6/319334400-30705481*n^7/10378368+
+    175214326799*n^8/58118860800+870492877*n^9/96096000-
+    1328004581729009*n^10/47823519744000),
+  hp[7] : tay1(1522256789*n^7/1383782400-16759934899*n^8/3113510400+
+    1315149374443*n^9/221405184000+71809987837451*n^10/3629463552000),
+  hp[8] : tay1(1424729850961*n^8/743921418240-256783708069*n^9/25204608000+
+    2468749292989891*n^10/203249958912000),
+  hp[9] : tay1(21091646195357*n^9/6080126976000-
+    67196182138355857*n^10/3379030566912000),
+  hp[10] : tay1(77911515623232821*n^10/12014330904576000)
+)$
+
+(a:1,k0:1)$
+diff_s_geodcolat(theta) := (1-e2)/(1-e2*cos(theta)^2)^(3/2)$
+complement(theta):=%pi/2-theta$
+degree:1$
+isolat_geodlat(phi):=tay1( atanh(sin(phi)) - e * atanh(e * sin(phi)) )$
+diff_isolat_geodlat(phi):=tay1(
+  1/cos(phi)-e2*cos(phi)/(1-e2*sin(phi)^2) )$
+/* conflat_isolat(y):=tay1(atan(tay1(sinh(y))))$ */
+conflat_isolat(y):=tay1(asin(tay1(tanh(y))))$
+diff_conflat_isolat(y):=tay1(sech(y))$
+
+(
+  scale:[],
+  phi:phi*degree,
+  lam:lam*degree,
+  scale:endcons(tay1(1/diff_s_geodcolat(complement(phi))),scale),
+  q:isolat_geodlat(phi),
+  scale:endcons(tay1(diff_isolat_geodlat(phi)),scale),
+  bet:conflat_isolat(q),
+  scale:endcons(tay1(diff_conflat_isolat(q)),scale),
+  z:tay1(-atanh(tay1(cos(bet)*sin(lam)))),
+  z:tay1(asin(tay1(sin(bet)*cosh(z)))+%i*z),
+  z:xi+%i*eta,
+  scale:endcons(tay1((-%i)/(cos(lam)-%i*sin(betx)*sin(lam))),scale),
+  zz:tay1(z+sum(hp[i]*sin(2*i*z),i,1,maxpow)),
+  scale:endcons(tay1(1+sum(hp[i]*2*i*cos(2*i*z),i,1,maxpow)),scale),
+  zz:(%i*zz*a1*k0),
+  scale:endcons(tay1(%i*a1/a*k0),scale)
+)$
+
+tt:subst(sin(phi)=s,scale[3])/sqrt(1-s^2)$
+tt:taylor(tt,e,0,2*maxpow)$
+tt:ev(tt,logarc,exponentialize,ratsimp,radcan)$
+tt:subst(e=sqrt(e2),tt)$
+tt:ratdisrep(taylor(tt,ep2,0,maxpow))$
+tt:ratsimp(trigreduce(subst(s=sin(phi),tt)))$
+tt:cos(phi)*tt$
+scale[3]:tt$
+ss:scale[1]*scale[2]*scale[3]*scale[6]/%i$
+ss:ratsimp(trigreduce(taylor(ss,ep2,0,maxpow)))$
+
+tt:ev(sin(bet),sin(phi)=s)$
+tt:sin(phi)*ratsimp(trigreduce(subst(s=sin(phi),taylor(subst(e=sqrt(e2),ratdisrep(taylor(tt/s,e,0,2*maxpow))),ep2,0,maxpow))))$
+sinbet:tt$
+scale[4]:%i*subst(sin(betx)=sinbet,scale[4])$
+
+denom=sqrt(1-cos(betx)^2*sin(lam)^2)$
+eqs:[
+sin(xi)=sin(betx)/denom,
+cos(xi)=cos(betx)*cos(lam)/denom,
+cosh(eta)=1/denom,
+sinh(eta)=-cos(betx)*sin(lam)/denom]$
+tt:subst(eqs,trigexpand(trigexpand(expand(scale[5]))))$
+tt:ratsimp(tt)$
+tt:subst(denom=sqrt(1-cos(betx)^2*sin(lam)^2),tt)$
+tt:subst(cos(betx)=sqrt(1-sin(betx)^2),tt)$
+tt:subst(sin(betx)=trigexpand(sinbet),tt)$
+tt:taylor(tt,ep2,0,maxpow)$
+ttr:realpart(tt)$
+tti:imagpart(tt)$
+tta:taylor(ttr^2,ep2,0,maxpow)+taylor(tti^2,ep2,0,maxpow)$
+tta:taylor(sqrt(tta),ep2,0,maxpow)$
+
+s4a2:abs(1/trigexpand(scale[4]))^2$
+s4a20:ev(s4a2,ep2=0)$
+s4a:taylor(s4a2/s4a20,ep2,0,maxpow)$
+s4a:taylor(1/sqrt(
+    subst([sin(phi)=sqrt(1-cos(phi)^2),cos(lam)=sqrt(1-sin(lam)^2)],
+      ratdisrep(s4a))),ep2,0,maxpow)$
+
+ss:ratsimp(subst([sin(phi)=sqrt(1-cos(phi)^2),cos(lam)=sqrt(1-sin(lam)^2)],ratsimp(trigexpand(ss))))$
+
+aa:taylor(tta*s4a*ss,ep2,0,maxpow)$
+aa:ratsimp(subst([sin(phi)=sqrt(1-cos(phi)^2),cos(lam)=sqrt(1-sin(lam)^2)],
+    ratdisrep(aa)))$
+
+bb:trigexpand(scale[4])*ratdisrep(tt)$
+tangam:imagpart(bb)/realpart(bb)*cos(lam)/(sin(lam)*sin(phi))$
+tangam:taylor(tangam,ep2,0,maxpow)$
+
+
+tangam:ratsimp(subst([sin(phi)=sqrt(1-cos(phi)^2),cos(lam)=sqrt(1-sin(lam)^2)],
+    ratdisrep(tangam)))$
+
+dx:(1-s2*c2)$
+tangam:subst([sin(lam)=sqrt(s2),cos(phi)=sqrt(c2)],tangam)$
+tangam:taylor(subst(ep2=ep2*dx^2/d^2,(d/dx)*(tangam-1)+1),ep2,0,maxpow)$
+aa:subst([sin(lam)=sqrt(s2),cos(phi)=sqrt(c2)],aa)$
+aa:taylor(subst(ep2=ep2*dx^2/d^2,aa),ep2,0,maxpow)$
+
+(
+print("c2=",string(cos(phi)^2),";"),
+print("s2=",string(sin(lam)^2),";"),
+print("d=",string(dx),";"),
+print("carg=",string(tangam),";"),
+print("cabs=",string(aa),";"),
+print("gamma=",string(atan2(sin(lam)*sin(phi)*carg,cos(lam))),";"),
+print("k=",string(cabs/sqrt(d)),";")
+)$
