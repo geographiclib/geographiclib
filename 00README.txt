@@ -20,7 +20,7 @@ tmseries.mac -- maxima code to generate the coefficients for the series
 tmscale.mac -- maxima code to generate series approximations for the
     scale and meridian convergence in UTM-fi.txt.
 
-revert.mac -- maxima code for the reverse of a series (used by
+revert.mac -- maxima code for the reversion of a series (used by
     tmseries.mac).
 
 TMcoords.dat.gz -- set of about 1/4 million test points as gzipped text
