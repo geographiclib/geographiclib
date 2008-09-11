@@ -10,7 +10,7 @@ $Id$
 Compute coefficient for forward and inverse trigonometric series for
 conversion from conformal latitude to rectifying latitude.  This prints
 out assignments which with minor editing are suitable for insertion into
-C++ code.  (N.B. n^3 in the output means n*n*n.)
+C++ code.  (N.B. n^3 in the output means n*n*n; 3/5 means 0.6.)
 
 To run, start maxima and enter
 
