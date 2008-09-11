@@ -12,8 +12,8 @@ Projection as series in ep2 = e'^2 = e^2/(1-e^2).
 
 To run, start maxima and enter
 
-    writefile("tmscale")$
-    load("tmscale")$
+    writefile("tmscale.out")$
+    load("tmscale.mac")$
     closefile()$
 
 The output is a set of assignments which convert
@@ -25,6 +25,8 @@ into
 
     gam = convergence (radians)
     k = scale (assuming scale on central meridian is 1)
+
+(N.B. ep2^2 in the output means ep2*ep2; 3/5 means 0.6.)
 
 Alter maxpow to generate more or less terms (tested out to maxpow:4).
 
@@ -85,7 +87,6 @@ degree:1$
 isolat_geodlat(phi):=tay1( atanh(sin(phi)) - e * atanh(e * sin(phi)) )$
 diff_isolat_geodlat(phi):=tay1(
   1/cos(phi)-e2*cos(phi)/(1-e2*sin(phi)^2) )$
-/* conflat_isolat(y):=tay1(atan(tay1(sinh(y))))$ */
 conflat_isolat(y):=tay1(asin(tay1(tanh(y))))$
 diff_conflat_isolat(y):=tay1(sech(y))$
 
