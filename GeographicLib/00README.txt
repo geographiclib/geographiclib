@@ -14,6 +14,15 @@ UTM-fi.txt -- extend method for transverse Mercator projection given in
     JHS 154 include higher order terms and improve the formulas for
     meridian convergence and scale.
 
+tmseries.mac -- maxima code to generate the coefficients for the series
+    in UTM-fi.txt.
+
+tmscale.mac -- maxima code to generate series approximations for the
+    scale and meridian convergence in UTM-fi.txt.
+
+revert.mac -- maxima code for the reverse of a series (used by
+    tmseries.mac).
+
 TMcoords.dat.gz -- set of about 1/4 million test points as gzipped text
     file.  The columns are:
 
