@@ -38,7 +38,7 @@ rf(x,y,z) := block(
   zz:-xx-yy,
   e2:rectform (xx*yy-zz^2),
   e3:rectform (xx*yy*zz),
-  return(rectform ((1-e2/10+e3/14+e2^2/24-3*e2*e2/44) / sqrt(an))))$
+  return(rectform ((1-e2/10+e3/14+e2^2/24-3*e2*e3/44) / sqrt(an))))$
 rd(x,y,z) := block(
   [a0:rectform ((x+y+3*z)/5), q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,n,e2,e3,e4,e5,s],
   q:(etol/4)^(-1/6)*max(abs(a0-x),abs(a0-y),abs(a0-z)),
@@ -201,7 +201,7 @@ sncndn(x,mc):=block([bo, a, b, c, d, l, sn, cn, dn],
       cn:a,
       sn:sn/d
       )
-    ) else (
+    ) else /* mc = 0 */ (
     sn:tanh(x),
     dn:cn:sech(x)
 /*    d:exp(x), a:1/d, b:a+d, cn:dn:2/b,
