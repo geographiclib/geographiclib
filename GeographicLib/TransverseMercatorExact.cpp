@@ -30,7 +30,7 @@
  *
  *   J. Dozier,
  *   Improved Algorithm for Calculation of UTM and Geodetic Coordinates
- *   NOAA Technical Resport NESS 81, Sept. 1980
+ *   NOAA Technical Report NESS 81, Sept. 1980
  *
  * The differences here are:
  *
@@ -66,7 +66,7 @@
  *     x      y       Northing
  *     k      e       eccentricity
  *     k^2    mu      elliptic function parameter
- *     k'^2   mv      elliptic function complemeter parameter
+ *     k'^2   mv      elliptic function complementary parameter
  *     m      k       scale
  *
  * Minor alterations have been made in some of Lee's expressions in an attempt
@@ -97,7 +97,7 @@
  * An analysis of the reverse transformation of "out-of-bounds" points has not
  * been done.  In particular it would be nice to determine the limits of the
  * correct reverse transformation.  These limits will of course depend
- * sensitively onthe initial guess for Newton's method for the reverse
+ * sensitively on the initial guess for Newton's method for the reverse
  * transformation.  (The out-of-bounds points in the "opposite" hemisphere.)
  * 
  */
