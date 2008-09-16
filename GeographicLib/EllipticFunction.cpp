@@ -13,7 +13,7 @@
 #include <algorithm>
 
 namespace {
-  char RCSID[] = "$Id: EllipticFunction.cpp 6450 2008-09-08 15:23:15Z ckarney $";
+  char RCSID[] = "$Id$";
   char RCSID_H[] = ELLIPTICFUNCTION_HPP;
 }
 
