@@ -46,3 +46,8 @@ TMcoords.dat.gz -- set of about 1/4 million test points as gzipped text
        False Easting = 0 m
        False Northing = 0 m
 
+TransverseMercatorExact.tgz -- C++ routine for "exact" Transverse
+    Mercator Projection.  Accuracy is about 12 nm.  Unpack the tar file
+    somewhere convenient, change to the GeographicLib directory, and
+    read the comment at the top of TransverseMercatorTest.cpp for
+    how to compile the test program.
