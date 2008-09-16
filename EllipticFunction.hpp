@@ -6,7 +6,7 @@
  **********************************************************************/
 
 #if !defined(ELLIPTICFUNCTION_HPP)
-#define ELLIPTICFUNCTION_HPP "$Id: TransverseMercator.hpp 6448 2008-09-08 02:09:51Z ckarney $"
+#define ELLIPTICFUNCTION_HPP "$Id$"
 
 
 namespace GeographicLib {
