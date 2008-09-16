@@ -2,6 +2,7 @@
  * \file Constants.cpp
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
+ * http://charles.karney.info/geographic
  * and licensed under the LGPL.
  **********************************************************************/
 

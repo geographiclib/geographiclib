@@ -316,10 +316,7 @@ namespace GeographicLib {
 	qpp = atanh(_e * sin(phi)),
 	q = qp - _e * qpp;
       etap = atanh(sin(l) / cosh(q));
-      if (lon < 90)
-	xip = atan2(sinh(q), cos(l));
-      else
-	xip = Constants::pi/2;
+      xip = atan2(sinh(q), cos(l));
     } else {
       xip = Constants::pi/2;
       etap = 0;
@@ -411,9 +408,8 @@ namespace GeographicLib {
     xi *= xisign;
     eta *= etasign;
     bool backside = xi > Constants::pi/2;
-    if (backside) {
+    if (backside)
       xi = Constants::pi - xi;
-    }
     double
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
