@@ -123,7 +123,7 @@ namespace GeographicLib {
     , _mu(_f * (2 - _f))
     , _mv(1 - _mu)
     , _e(sqrt(_mu))
-    , _tol(0.1*std::numeric_limits<double>::epsilon())
+    , _tol(std::numeric_limits<double>::epsilon())
     , _tol1(0.1*sqrt(_tol))
     , Eu(_mu)
     , Ev(_mv)
