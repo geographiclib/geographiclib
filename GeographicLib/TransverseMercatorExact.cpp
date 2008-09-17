@@ -55,6 +55,10 @@
  * round-off limit and that no changes are needed in the algorithms for them to
  * be used with reals of a higher precision (e.g., long double).
  *
+ * This algorithm is about 2.5 times slower than the 6th-order series method
+ * taking about 12us for a combined forward and reverse projection on a 2.6GHz
+ * Intel machine (g++, version 4.3.0, -O3).
+ *
  * This implementation and notation closely follows Lee, with the following
  * exceptions:
  *
@@ -98,7 +102,8 @@
  * been done.  In particular it would be nice to determine the limits of the
  * correct reverse transformation.  These limits will of course depend
  * sensitively on the initial guess for Newton's method for the reverse
- * transformation.  (The out-of-bounds points in the "opposite" hemisphere.)
+ * transformation.  (The out-of-bounds points are in the "opposite"
+ * hemisphere.)
  * 
  */
 
@@ -228,6 +233,8 @@ namespace GeographicLib {
 	// Lee 9.4, replace atanh(sin(phi)) by more accurate asinh(tan(phi))
 	psi = asinh(tan(phi)) - _e * atanh(_e * sin(phi));
 
+      // Starting point for Newton's method to invert zeta(w).  Probably should
+      // break this bit of magic into a separate function.
       if (psi < _e * Constants::pi && lam > (1 - 2 * _e) * Constants::pi/2) {
 	// Expand about psi = 0, lam = (1 - _e) * pi/2
 	// zeta - i*(lam - (1 - _e) *pi/2) = -(_mv * _e) / 3 * (w - i Ev.K())^3
@@ -291,9 +298,7 @@ namespace GeographicLib {
   void TransverseMercatorExact::Reverse(double lon0, double x, double y,
 					double& lat, double& lon,
 					double& gamma, double& k) const {
-    // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
-    // reverted series to express zeta' in terms of zeta. (2) Newton's method
-    // to solve for phi in terms of psi.
+    // This undoes the steps in Forward.
     double
       xi = y / (_a * _k0),
       eta = x / (_a * _k0);
@@ -310,6 +315,8 @@ namespace GeographicLib {
     // u,v = coordinates for the Thompson TM, Lee 54
     double u, snu, cnu, dnu, v, snv, cnv, dnv;
 
+    // Starting point for Newton's method to invert sigma(w).  Probably should
+    // break this bit of magic into a separate function.
     if ((eta > 0.75 * Ev.KE() && xi < 0.25 * Eu.E())
 	|| (eta > Ev.KE())) {
       // Expand about xi = 0, eta = Ev.KE
