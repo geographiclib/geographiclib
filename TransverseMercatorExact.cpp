@@ -123,7 +123,7 @@ namespace GeographicLib {
     , _mu(_f * (2 - _f))
     , _mv(1 - _mu)
     , _e(sqrt(_mu))
-    , _tol(std::numeric_limits<double>::epsilon())
+    , _tol(0.1*std::numeric_limits<double>::epsilon())
     , _tol1(0.1*sqrt(_tol))
     , Eu(_mu)
     , Ev(_mv)
@@ -390,11 +390,6 @@ namespace GeographicLib {
     else
       lon += lon0;
     Scale(phi, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Constants::degree;
-    if (backside)
-      gamma = 180 - gamma;
-    gamma *= latsign * lonsign;
-    k *= _k0;
     if (backside)
       y = 2 * Eu.E() - y;
     y *= _a * _k0 * latsign;
