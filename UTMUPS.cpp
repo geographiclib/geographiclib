@@ -8,6 +8,7 @@
 #include <cmath>
 #include <algorithm>
 #include <stdexcept>
+#include <limits>
 #include "GeographicLib/UTMUPS.hpp"
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/PolarStereographic.hpp"
@@ -20,7 +21,9 @@ namespace {
 
 namespace GeographicLib {
 
-  const double UTMUPS::eps = std::pow(0.5, 29);
+  const double UTMUPS::eps =
+    // 24 = ceil(log_2(10^7))
+    std::pow(0.5, std::numeric_limits<double>::digits - 24);
   const double UTMUPS::falseeasting[4] =
     { MGRS::upseasting * MGRS::tile, MGRS::upseasting * MGRS::tile,
       MGRS::utmeasting * MGRS::tile, MGRS::utmeasting* MGRS::tile };
@@ -61,10 +64,14 @@ namespace GeographicLib {
   }
 
   void UTMUPS::Forward(int setzone, double lat, double lon,
-		       int& zone, bool& northp, double& x, double& y) {
+		       int& zone, bool& northp, double& x, double& y,
+		       double& gamma, double& k) {
+    CheckLatLon(lat, lon);
     northp = lat >= 0;
     zone = setzone >= 0 ? setzone : StandardZone(lat, lon);
-    double gamma, k, x1, y1;
+    if (setzone > 60)
+      throw std::out_of_range("Illegal UTM zone");
+    double x1, y1;
     bool utmp = zone > 0;
     if (utmp)
       TransverseMercator::UTM.Forward(CentralMeridian(zone),
@@ -81,9 +88,11 @@ namespace GeographicLib {
   }
 
   void UTMUPS::Reverse(int zone, bool northp, double x, double y,
-		       double& lat, double& lon) {
+		       double& lat, double& lon, double& gamma, double& k) {
+    if (! (zone > 0 && zone <= 60))
+      throw std::out_of_range("Illegal UTM zone");
     CheckCoords(zone > 0, northp, false, x, y);
-    double gamma, k;
+    CheckLatLon(lat, 0.0);
     bool utmp = zone > 0;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     x -= falseeasting[ind];
@@ -94,6 +103,13 @@ namespace GeographicLib {
     else
       PolarStereographic::UPS.Reverse(northp, x, y, lat, lon, gamma, k);
   }
+
+  void UTMUPS::CheckLatLon(double lat, double lon) {
+    if (! (lat >= -90 && lat <= 90))
+      throw std::out_of_range("Latitude not in [-90, 90]");
+    if (! (lon >= -180 && lon <= 360))
+      throw std::out_of_range("Latitude not in [-180, 360]");
+    }
 
   void UTMUPS::CheckCoords(bool utmp, bool northp, bool strict,
 			   double x, double y) {
