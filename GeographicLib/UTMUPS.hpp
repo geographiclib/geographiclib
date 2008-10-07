@@ -24,10 +24,31 @@ namespace GeographicLib {
   public:
     static int StandardZone(double lat, double lon);
 
+    // Lat/Long -> UTM/UPS.  If setzone < 0 then use standard zone, else if
+    // setzone == 0 use UPS else use specified UTM zone.  zone and northp give
+    // resulting zone (0 => UPS) and hemisphere, x and y are returned easting
+    // and northing; gamma and k give convergence and scale.
     static void Forward(int setzone, double lat, double lon,
-			int& zone, bool& northp, double& x, double& y);
+			int& zone, bool& northp, double& x, double& y,
+			double& gamma, double& k);
+    // UTM/UPS -> Lat/Long reversing Forward.
     static void Reverse(int zone, bool northp, double x, double y,
-			double& lat, double& lon);
+			double& lat, double& lon, double& gamma, double& k);
+    // Forward without convergence and scale
+    static void Forward(int setzone, double lat, double lon,
+			int& zone, bool& northp, double& x, double& y) {
+      double gamma, k;
+      Forward(setzone, lat, lon, zone, northp, x, y, gamma, k);
+    }
+    // Reverse without convergence and scale
+    static void Reverse(int zone, bool northp, double x, double y,
+			double& lat, double& lon) {
+      double gamma, k;
+      Reverse(zone, northp, x, y, lat, lon, gamma, k);
+    }
+    static void CheckLatLon(double lat, double lon);
+    // Throw an error if easting or northing are outside standard ranges.  If
+    // strict, restrict to MSGS subset.  Otherwise allow an extra 100km.
     static void CheckCoords(bool utmp, bool northp, bool strict,
 			    double x, double y);
   };
