@@ -11,18 +11,23 @@
 #include <cmath>
 
 #if !defined(TM_MAXPOW)
-#define TM_MAXPOW 6
+#define TM_TX_MAXPOW 6
+#endif
+#if !defined(TM_SC_MAXPOW)
+#define TM_SC_MAXPOW 4
 #endif
 
 namespace GeographicLib {
 
   static const int maxpow =
-    TM_MAXPOW > 8 ? 8 : (TM_MAXPOW < 4 ? 4 : TM_MAXPOW);
+    TM_TX_MAXPOW > 8 ? 8 : (TM_TX_MAXPOW < 4 ? 4 : TM_TX_MAXPOW);
+  static const int scpow =
+    TM_SC_MAXPOW > 8 ? 8 : (TM_SC_MAXPOW < 4 ? 4 : TM_SC_MAXPOW);
   class TransverseMercator {
   private:
     const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n,
       _tol;
-    double _a1, _h[maxpow], _hp[maxpow];
+    double _a1, _h[maxpow], _hp[maxpow], _s[scpow+1];
     const int _numit;
 #if defined(_MSC_VER)
     // These have poor relative accuracy near x = 0.  However, for mapping
@@ -38,7 +43,8 @@ namespace GeographicLib {
     static inline double asinh(double x) { return log(x + sqrt(1 + x * x)); }
     static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
 #endif
-    void Scale(double phi, double l, double& gamma, double& k) const;
+    void Scale(double phi, double l, double xi, double eta,
+	       double& gamma, double& k) const;
   public:
     TransverseMercator(double a, double f, double k0);
     void Forward(double lon0, double lat, double lon,

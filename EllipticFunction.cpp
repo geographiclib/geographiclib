@@ -19,15 +19,6 @@ namespace {
 
 namespace GeographicLib {
 
-/*
- * Implementation of methods given in
- *
- *   B. C. Carlson
- *   Computation of elliptic integrals
- *   Numerical Algorithms 10, 13-26 (1995)
- *
- */
-
   const double EllipticFunction::tol = std::numeric_limits<double>::epsilon();
   const double EllipticFunction::tolRF = std::pow(3 * EllipticFunction::tol,
 						  1/6.0);
@@ -36,6 +27,15 @@ namespace GeographicLib {
   const double EllipticFunction::tolRG0 = 2.7 * sqrt(EllipticFunction::tol);
   const double EllipticFunction::tolJAC = sqrt(EllipticFunction::tol);
   const double EllipticFunction::tolJAC1 = sqrt(6 * EllipticFunction::tol);
+
+  /*
+   * Implementation of methods given in
+   *
+   *   B. C. Carlson
+   *   Computation of elliptic integrals
+   *   Numerical Algorithms 10, 13-26 (1995)
+   *
+   */
 
   double EllipticFunction::RF(double x, double y, double z) {
     double
@@ -123,28 +123,35 @@ namespace GeographicLib {
   EllipticFunction::EllipticFunction(double m)
     : _m(m)
     , _m1(1 - m)
-      // Complete elliptic integral K(m), Carlson eq. 4.1
-    , _kc( RF(0.0, 1 - m, 1.0) )
-      // Complete elliptic integral E(m), Carlson eq. 4.2
-    , _ec( 2 * RG0(1 - m, 1.0) )
-      // K - E, Carlson eq.4.3
-    , _kec( m / 3 * RD(0.0, 1 - m, 1.0) )
+      // Don't initialize _kc, _ec, _kec since this constructor might be called
+      // before the static double constants tolRF, etc., are initialized.
+    , _init(false)
   {}
 
-/*
- *
- * Implementation of methods given in
- *
- *   Roland Bulirsch
- *   Numerical Calculation of Elliptic Integrals and Elliptic Functions
- *   Numericshe Mathematik 7, 78-90 (1965)
- *
- */
+  bool EllipticFunction::Init() const {
+    // Complete elliptic integral K(m), Carlson eq. 4.1
+    _kc = RF(0.0, _m1, 1.0);
+    // Complete elliptic integral E(m), Carlson eq. 4.2
+    _ec = 2 * RG0(_m1, 1.0);
+    // K - E, Carlson eq.4.3
+    _kec = _m / 3 * RD(0.0, _m1, 1.0);
+    return _init = true;
+  }
+
+  /*
+   *
+   * Implementation of methods given in
+   *
+   *   Roland Bulirsch
+   *   Numerical Calculation of Elliptic Integrals and Elliptic Functions
+   *   Numericshe Mathematik 7, 78-90 (1965)
+   *
+   */
 
   void EllipticFunction::sncndn(double x,
 				double& sn, double& cn, double& dn) const {
-    // mc = 1 - m;
-    // Assume _m1 is in [0, 1]
+    // Assume _m1 is in [0, 1].  See Bulirsch article for code to treat
+    // negative _m1.
     if (_m1 != 0) {
       double mc = _m1;
       double c;
@@ -207,8 +214,9 @@ namespace GeographicLib {
       //    approx sn,  for sn < sqrt(6 * eps)
       ei = std::abs(sn);
     // Enforce usual trig-like symmetries
-    if (cn < 0)
-      ei = 2 * _ec - ei;
+    if (cn < 0) {
+      ei = 2 * E() - ei;
+    }
     if (sn < 0)
       ei = -ei;
     return ei;
