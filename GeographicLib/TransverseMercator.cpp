@@ -41,38 +41,52 @@
  * Errors are primarily a function of mu (or x).
  *
  * For each set, define
- *
- *    dxn  = max(error in forward transformation,
- *               discrepancy in forward and reverse transformations)
- *           for nth order method (order e^(2*n))
- *
- *    dgam = max error in meridian convergence using the O(ep2^2) formula
- *
- *    dk   = max relative error in scale using the O(ep2) formula
- *
- *      set         dx4     dx5     dx6     dx7     dx8   dgam   dk
- * x<4e5, y<95e5 .21um     4nm     4nm     4nm     4nm   3e-8"  4e-7%%
- * x<5e5, y<96e5 .22um     4nm     4nm     4nm     4nm   9e-8"  1e-6%%
- *     mu<10     .35um     5nm     4nm     4nm     4nm   5e-6"  3e-5%%
- *     mu<15     .70um     6nm     4nm     4nm     4nm   4e-5"  2e-4%%
- *     mu<20     1.5um    11nm     4nm     4nm     4nm   2e-4"  5e-4%%
- *     mu<25     3.6um    25nm     4nm     4nm     4nm   7e-4"  2e-3%%
- *     mu<30     8.7um    71nm     4nm     4nm     4nm   3e-3"  3e-3%%
- *     mu<35      22um   .22um     6nm     4nm     4nm   7e-3"  6e-3%%
- *     mu<40      61um   .75um    11nm     4nm     4nm   0.02"  0.02%%
- *     mu<45     .18mm   2.8um    49nm     5nm     5nm   0.05"  0.03%%
- *     mu<50     .62mm    12um   .27um    10nm     6nm   0.2"   0.05%%
- *     mu<55     2.4mm    64um   1.8um    58nm     7nm   0.4"   0.1%%
- *     mu<60      12mm   .42mm    17um   .69um    34nm   1"     0.3%%
- *     mu<65      72mm   3.8mm   .22mm    13um   .83um   4"     0.6%%
- *     mu<70     .67m     56mm   5.1mm   .48mm    48um   18"    1.5%%
- *     mu<72     1.9m    .20m     22mm   2.6mm   .32mm   35"    2.4%%
- *     mu<74     6.6m    .88m    .12m     18mm   2.8mm   76"    3.9%%
- *     mu<76      27m    4.7m    .87m    .17m     35mm   3'     7.1%%
- *     mu<78     .14km    33m    8.4m    2.2m    .62m    8'     1.4%
- *     mu<80     1.0km   .36km   .13km    52m     21m    28'    3.3%
- *     mu<82      14km   8.1km   4.8km   3.0km   2.0km   2.4d   10%
- *     mu<84     390km   380km   390km   410km   440km   14d    15%
+ * 
+ *    dxm  = max(erra, errb)
+ *           for mth order method (order n^m or e^(2*m)), where
+ * 
+ *           erra = the error in the forward transformation scaled to
+ *                  distance on the ground with the scale factor k
+ * 
+ *           errb = the discrepancy in applying the forward transformation
+ *                  followed by the reverse transformation and converting
+ *                  the result to a distance
+ * 
+ *    dgam = max error in meridian convergence using the 6th order method
+ *           for transformation and 4th order formula for the convergence
+ * 
+ *    dk   = max relative error in scale using the 6th order method for
+ *           transformation and 4th order formula for the scale
+ * 
+ * Units:
+ * 
+ *    1um = 1e-6 m
+ *    d = degrees, ' = minutes, " = seconds
+ *    % = 0.01, %% = 0.001
+ * 
+ *     set         dx4     dx5     dx6     dx7     dx8   dgam   dk
+ * x<4e5, y<95e5 200nm   5.0nm   5.0nm   5.0nm   5.0nm   2e-8" 3e-10%%
+ * x<5e5, y<96e5 210nm   5.0nm   5.0nm   5.0nm   5.0nm   2e-8" 3e-10%%
+ *     mu<10     350nm   5.1nm   5.0nm   5.0nm   5.0nm   4e-8" 4e-10%%
+ *     mu<15     700nm   6.5nm   5.0nm   5.0nm   5.0nm   8e-8" 5e-10%%
+ *     mu<20     1.5um    11nm   5.0nm   5.0nm   5.0nm   2e-7" 8e-10%%
+ *     mu<25     3.3um    23nm   5.0nm   5.0nm   5.0nm   4e-7" 2e-9%%
+ *     mu<30     7.6um    62nm   5.0nm   5.0nm   5.0nm   7e-7" 4e-9%%
+ *     mu<35      18um   180nm   5.0nm   5.0nm   5.0nm   2e-6" 8e-9%%
+ *     mu<40      47um   570nm    10nm   5.0nm   5.0nm   4e-6" 2e-8%%
+ *     mu<45     130um   2.0um    35nm   5.0nm   5.0nm   2e-5" 6e-8%%
+ *     mu<50     400um   8.0um   170nm   6.3nm   5.0nm   4e-5" 2e-7%%
+ *     mu<55     1.4mm    37um   1.1um    33nm   5.0nm   2e-4" 7e-7%%
+ *     mu<60     5.8mm   210um   8.4um   350nm    17nm   7e-4" 3e-6%%
+ *     mu<65      31mm   1.6mm    94um   5.7um   360nm   4e-3" 2e-5%%
+ *     mu<70     230mm    20mm   1.8mm   170um    17um   0.04" 2e-4%%
+ *     mu<72     600mm    62mm   6.9mm   820um   100um   0.2"  6e-4%%
+ *     mu<74     1.8m    230mm    33mm   4.9mm   750um   0.5"  2e-3%%
+ *     mu<76     6.2m    1.1m    200mm    39mm   7.9mm   2"    9e-3%%
+ *     mu<78      27m    6.3m    1.6m    430mm   .12m    10"   0.05%%
+ *     mu<80     160m     55m     20m    7.9m    3.2m    84"   0.5%%
+ *     mu<82     1.5km   870m    520m    330m    210m    32'   8%%
+ *     mu<84      27km    28km    37km    53km    81km   17d   54%
  *
  */
 
@@ -97,7 +111,7 @@ namespace GeographicLib {
     , _tol(0.1*sqrt(std::numeric_limits<double>::epsilon()))
     , _numit(5)
   {
-#if TM_MAXPOW <= 4
+#if TM_TX_MAXPOW <= 4
     _a1 =_a/(1+_n)*(_n*_n*(_n*_n+16)+64)/64;
     _h[0] =_n*(_n*((555-4*_n)*_n-960)+720)/1440;
     _h[1] =_n*_n*((96-437*_n)*_n+30)/1440;
@@ -107,7 +121,7 @@ namespace GeographicLib {
     _hp[1]=_n*_n*(_n*(557*_n-864)+390)/1440;
     _hp[2]=(427-1236*_n)*_n*_n*_n/1680;
     _hp[3]=49561*_n*_n*_n*_n/161280;
-#elif TM_MAXPOW == 5
+#elif TM_TX_MAXPOW == 5
     _a1 =_a/(1+_n)*(_n*_n*(_n*_n+16)+64)/64;
     _h[0] =_n*(_n*(_n*((-3645*_n-64)*_n+8880)-15360)+11520)/23040;
     _h[1] =_n*_n*(_n*(_n*(4416*_n-3059)+672)+210)/10080;
@@ -119,7 +133,7 @@ namespace GeographicLib {
     _hp[2]=_n*_n*_n*(_n*(15061*_n-19776)+6832)/26880;
     _hp[3]=(49561-171840*_n)*_n*_n*_n*_n/161280;
     _hp[4]=34729*_n*_n*_n*_n*_n/80640;
-#elif TM_MAXPOW == 6
+#elif TM_TX_MAXPOW == 6
     _a1 =_a/(1+_n)*(_n*_n*(_n*_n*(_n*_n+4)+64)+256)/256;
     _h[0] =_n*(_n*(_n*(_n*(_n*(384796*_n-382725)-6720)+932400)-1612800)+
 	       1209600)/2419200;
@@ -137,7 +151,7 @@ namespace GeographicLib {
     _hp[3]=_n*_n*_n*_n*(_n*(6601661*_n-7732800)+2230245)/7257600;
     _hp[4]=(3438171-13675556*_n)*_n*_n*_n*_n*_n/7983360;
     _hp[5]=212378941*_n*_n*_n*_n*_n*_n/319334400;
-#elif TM_MAXPOW == 7
+#elif TM_TX_MAXPOW == 7
     _a1 =_a/(1+_n)*(_n*_n*(_n*_n*(_n*_n+4)+64)+256)/256;
     _h[0] =_n*(_n*(_n*(_n*(_n*((6156736-5406467*_n)*_n-6123600)-107520)+
 		       14918400)-25804800)+19353600)/38707200;
@@ -161,7 +175,7 @@ namespace GeographicLib {
     _hp[4]=_n*_n*_n*_n*_n*(_n*(102508609*_n-109404448)+27505368)/63866880;
     _hp[5]=(2760926233.-12282192400.*_n)*_n*_n*_n*_n*_n*_n/4151347200.;
     _hp[6]=1522256789.*_n*_n*_n*_n*_n*_n*_n/1383782400.;
-#elif TM_MAXPOW >= 8
+#elif TM_TX_MAXPOW >= 8
     _a1 =_a/(1+_n)*(_n*_n*(_n*_n*(_n*_n*(25*_n*_n+64)+256)+4096)+16384)/
       16384;
     _h[0] =_n*(_n*(_n*(_n*(_n*(_n*(_n*(31777436*_n-37845269)+43097152)-
@@ -198,69 +212,123 @@ namespace GeographicLib {
     _hp[6]=(13700311101.-67039739596.*_n)*_n*_n*_n*_n*_n*_n*_n/12454041600.;
     _hp[7]=1424729850961.*_n*_n*_n*_n*_n*_n*_n*_n/743921418240.;
 #endif
+#if TM_SC_MAXPOW <= 4
+    _s[0] = (_e2*(_e2*((-1367*_e2-2320)*_e2-4608)-12288)+98304)/98304;
+    _s[1] = _e2*(_e2*((184-43*_e2)*_e2+1152)+6144)/49152;
+    _s[2] = _e2*_e2*(_e2*(665*_e2+1360)+2304)/98304;
+    _s[3] = _e2*_e2*_e2*(611*_e2+592)/98304;
+    _s[4] = 59*_e2*_e2*_e2*_e2/32768;
+#elif TM_SC_MAXPOW == 5
+    _s[0] = (_e2*(_e2*(_e2*((-35577*_e2-54680)*_e2-92800)-184320)-491520)+
+	     3932160)/3932160;
+    _s[1] = _e2*(_e2*(_e2*((-3603*_e2-1720)*_e2+7360)+46080)+245760)/1966080;
+    _s[2] = _e2*_e2*(_e2*(_e2*(23547*_e2+53200)+108800)+184320)/7864320;
+    _s[3] = _e2*_e2*_e2*(_e2*(36243*_e2+48880)+47360)/7864320;
+    _s[4] = _e2*_e2*_e2*_e2*(7049*_e2+4720)/2621440;
+    _s[5] = 1543*_e2*_e2*_e2*_e2*_e2/2621440;
+#elif TM_SC_MAXPOW == 6
+    _s[0] = (_e2*(_e2*(_e2*(_e2*((-594943*_e2-853848)*_e2-1312320)-2227200)-
+		       4423680)-11796480)+94371840)/94371840;
+    _s[1] = _e2*(_e2*(_e2*(_e2*((-114471*_e2-115296)*_e2-55040)+235520)+
+		      1474560)+7864320)/62914560;
+    _s[2] = _e2*_e2*(_e2*(_e2*(_e2*(71271*_e2+188376)+425600)+870400)+
+		     1474560)/62914560;
+    _s[3] = _e2*_e2*_e2*(_e2*(_e2*(374403*_e2+579888)+782080)+757760)/125829120;
+    _s[4] = _e2*_e2*_e2*_e2*(_e2*(111325*_e2+112784)+75520)/41943040;
+    _s[5] = _e2*_e2*_e2*_e2*_e2*(48533*_e2+24688)/41943040;
+    _s[6] = 77041*_e2*_e2*_e2*_e2*_e2*_e2/377487360;
+#elif TM_SC_MAXPOW == 7
+    _s[0] = (_e2*(_e2*(_e2*(_e2*(_e2*((-195279827*_e2-266534464)*_e2-
+				      382523904)-587919360)-997785600)-
+		       1981808640.)-5284823040.)+42278584320.)/42278584320.;
+    _s[1] = _e2*(_e2*(_e2*(_e2*(_e2*((-5538513*_e2-6410376)*_e2-6456576)-
+				3082240)+13189120)+82575360)+
+		 440401920)/3523215360.;
+    _s[2] = _e2*_e2*(_e2*(_e2*(_e2*(_e2*(3546477*_e2+15964704)+42196224)+
+			       95334400)+194969600)+330301440)/14092861440.;
+    _s[3] = _e2*_e2*_e2*(_e2*(_e2*(_e2*(1550463*_e2+2620821)+4059216)+5474560)+
+			 5304320)/880803840;
+    _s[4] = _e2*_e2*_e2*_e2*(_e2*(_e2*(10243421*_e2+12468400)+12631808)+
+			     8458240)/4697620480.;
+    _s[5] = _e2*_e2*_e2*_e2*_e2*(_e2*(6696873*_e2+5435696)+2765056)/4697620480.;
+    _s[6] = _e2*_e2*_e2*_e2*_e2*_e2*(21098327*_e2+8628592)/42278584320.;
+    _s[7] = 69319*_e2*_e2*_e2*_e2*_e2*_e2*_e2/939524096;
+#elif TM_SC_MAXPOW >= 8
+    _s[0] = (_e2*(_e2*(_e2*(_e2*(_e2*(_e2*((-2378730735.*_e2-3124477232.)*_e2-
+					   4264551424.)-6120382464.)-
+				 9406709760.)-15964569600.)-31708938240.)-
+		  84557168640.)+676457349120.)/676457349120.;
+    _s[1] = _e2*(_e2*(_e2*(_e2*(_e2*(_e2*((-293610175*_e2-354464832)*_e2-
+					  410264064)-413220864)-197263360)+
+			   844103680)+5284823040.)+28185722880.)/225485783040.;
+    _s[2] = _e2*_e2*(_e2*(_e2*(_e2*(_e2*((28371816-16236487*_e2)*_e2+
+					 127717632)+337569792)+762675200)+
+			  1559756800.)+2642411520.)/112742891520.;
+    _s[3] = _e2*_e2*_e2*(_e2*(_e2*(_e2*(_e2*(108089577*_e2+198459264)+
+					335465088)+519579648)+700743680)+
+			 678952960)/112742891520.;
+    _s[4] = _e2*_e2*_e2*_e2*(_e2*(_e2*(_e2*(22691857*_e2+30730263)+37405200)+
+				  37895424)+25374720)/14092861440.;
+    _s[5] = _e2*_e2*_e2*_e2*_e2*(_e2*(_e2*(318566285*_e2+321449904)+260913408)+
+				 132722688)/225485783040.;
+    _s[6] = _e2*_e2*_e2*_e2*_e2*_e2*(_e2*(498732939*_e2+337573232)+
+				     138057472)/676457349120.;
+    _s[7] = _e2*_e2*_e2*_e2*_e2*_e2*_e2*(48729311*_e2+16636560)/225485783040.;
+    _s[8] = 6204619*_e2*_e2*_e2*_e2*_e2*_e2*_e2*_e2/225485783040.;
+#endif
   }
 
   const TransverseMercator
   TransverseMercator::UTM(Constants::WGS84_a, Constants::WGS84_invf,
 			  Constants::UTM_k0);
 
-  void TransverseMercator::Scale(double phi, double l,
+  void TransverseMercator::Scale(double phi, double lam, double xi, double eta,
 				 double& gamma, double& k) const {
-    // This returns approximations to the convergence and scale for the EXACT
-    // transverse Mercator projection.  Thus this routine returns a constant
-    // scale on the central meridian even though the approximate transverse
-    // Mercator projection has a (slightly) varying scale.
-    double
-      c = cos(phi),
-      s = sin(l),
-      c2 = c * c,
-      s2 = s * s,
-      d = 1 - s2 * c2,
-      // Accurate to order _ep2^2
-      carg = 1 + c2 * c2 * s2 / d * _ep2 *
-      (1 + c2 / (3 * d * d) *
-       (2 - s2 * (c2 * ((4 * c2 - 1) * s2 - 9) + 8)) * _ep2),
-      // Accurate to order _ep2
-      cabs = 1 + c2 * c2 * s2 * ((c2 - 2) * s2 + 1) / (2 * d * d) * _ep2;
-#if 0
-    // To order _ep2^4
-    carg = 1+c2^2*s2*_ep2/d-
-      ((4*c2^5-c2^4)*s2^3+(-9*c2^4+8*c2^3)*s2^2-2*c2^3*s2)*_ep2^2/(3*d^3)+
-      ((28*c2^8-11*c2^7-2*c2^6)*s2^5+(-120*c2^7+75*c2^6+48*c2^5)*s2^4+
-       (165*c2^6-336*c2^5+120*c2^4)*s2^3+
-       (93*c2^5-60*c2^4)*s2^2)*_ep2^3/(15*d^5)-
-      ((836*c2^11-429*c2^10-75*c2^9-17*c2^8)*s2^7+
-       (-5264*c2^10+3472*c2^9+1106*c2^8+1264*c2^7)*s2^6+
-       (13097*c2^9-13566*c2^8-14460*c2^7+11536*c2^6)*s2^5+
-       (-13727*c2^8+52288*c2^7-43064*c2^6+8064*c2^5)*s2^4+
-       (-15054*c2^7+20272*c2^6-6048*c2^5)*s2^3+
-       (-735*c2^6+504*c2^5)*s2^2)*_ep2^4/(315*d^7);
-    // To order _ep2^4
-    cabs = 1+((c2^3-2*c2^2)*s2^2+c2^2*s2)*_ep2/(2*d^2)-
-      ((3*c2^6+12*c2^5-28*c2^4)*s2^4+(-34*c2^5+124*c2^4-64*c2^3)*s2^3+
-       (-61*c2^4+48*c2^3)*s2^2)*_ep2^2/(24*d^4)+
-      ((15*c2^9+30*c2^8+140*c2^7-328*c2^6)*s2^6+
-       (-147*c2^8-1044*c2^7+4268*c2^6-2688*c2^5)*s2^5+
-       (1405*c2^7-8274*c2^6+8480*c2^5-1920*c2^4)*s2^4+
-       (3383*c2^6-5280*c2^5+1920*c2^4)*s2^3+
-       (280*c2^5-240*c2^4)*s2^2)*_ep2^3/(240*d^6)-
-      ((1575*c2^12+2520*c2^11+5880*c2^10+27552*c2^9-64016*c2^8)*s2^8+
-       (-17396*c2^11-54680*c2^10-457680*c2^9+1860384*c2^8-1247744*c2^7)*s2^7+
-       (114506*c2^10+1432424*c2^9-8037000*c2^8+9297792*c2^7-2874368*c2^6)*s2^6+
-       (-1212372*c2^9+10085240*c2^8-16270464*c2^7+
-	8397312*c2^6-1032192*c2^5)*s2^5+
-       (-3418969*c2^8+8422624*c2^7-6228096*c2^6+1290240*c2^5)*s2^4+
-       (-685664*c2^7+985152*c2^6-322560*c2^5)*s2^3)*_ep2^4/(40320*d^8);
-#endif
-    gamma = atan2(sin(phi) * s * carg, cos(l));
-    k = cabs/sqrt(d);
-    // Old expressions from JHS 154.  These are Taylor expansions in l as well
-    // as ep2.
-    // double v2 = 1 + _ep2 * c2;
-    // Accurate to _ep2^2 and l^3
-    // gamma = l * sin(phi) * (1 + v2 * (2 * v2 - 1) * c2 * l * l / 3)
-    // Accurate to _ep2^0 and l^2
-    // k = ( 1 + c2 * l * l / 2);
+    // This returns approximations to the convergence and scale for the
+    // transverse Mercator projection.
+    double c = cos(phi);
+    if (c < _tol) {
+      gamma = lam;
+      k = 1;
+    } else {
+      // Evaluate
+      //
+      //    S = cos(zeta) * sum(s[0] * cos(2*k*zeta), k = 0..scpow)
+      //
+      // via Clenshaw summation with
+      //
+      //    x = 2 * zeta
+      //    F[n](x) = cos(n * x)
+      //    a(n, x) = 2 * cos(x)
+      //    b(n, x) = -1
+      //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = n*x, B = x ]
+      //    S/cos(zeta) = (s[0] - y[2])  + y[1] * cos(x)
+      double
+	c0 = cos(2 * xi), ch0 = cosh(2 * eta),
+	s0 = sin(2 * xi), sh0 = sinh(2 * eta),
+	ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
+      double
+	yr0 = _s[scpow], yi0 = 0,
+	yr1 = 0, yi1 = 0,
+	yr2, yi2;
+      for (int j = scpow; --j;) { // j = scpow-1 .. 1
+	yr2 = yr1; yi2 = yi1;
+	yr1 = yr0; yi1 = yi0;
+	yr0 = ar * yr1 - ai * yi1 - yr2 + _s[j];
+	yi0 = ai * yr1 + ar * yi1 - yi2;
+      }
+      ar /= 2; ai /= 2;		// cos(2*zeta)
+      yr2 = _s[0] - yr1 + ar * yr0 - ai * yi0;
+      yi2 =       - yi1 + ai * yr0 + ar * yi0;
+      c0 = cos(xi), ch0 = cosh(eta);
+      s0 = sin(xi), sh0 = sinh(eta);
+      ar = c0 * ch0, ai = -s0 * sh0; // cos(zeta)
+      double
+	sr = ar * yr2 - ai * yi2,
+	si = ai * yr2 + ar * yi2;
+      gamma = -atan2(si, sr);
+      k = sqrt(_e2m + _e2 * c * c) / c * hypot(sr, si);
+    }
   }
 
   void TransverseMercator::Forward(double lon0, double lat, double lon,
@@ -302,7 +370,7 @@ namespace GeographicLib {
     //   tan(beta) = sinh(q)
     //   sin(beta) = tanh(q)
     //   cos(beta) = sech(q)
-    //   denom^2 = 1-cos(beta)^2*sin(l)^2   = 1-sech(q)^2*sin(l)^2)
+    //   denom^2    = 1-cos(beta)^2*sin(l)^2 = 1-sech(q)^2*sin(l)^2
     //   sin(xip)   = sin(beta)/denom        = tanh(q)/denom
     //   cos(xip)   = cos(beta)*cos(l)/denom = sech(q)*cos(l)/denom
     //   cosh(etap) = 1/denom                = 1/denom
@@ -378,14 +446,14 @@ namespace GeographicLib {
       xi0  = ar * xi1 - ai * eta1 - xi2 + _hp[j];
       eta0 = ai * xi1 + ar * eta1 - eta2;
     }
-    ar = s0 * ch0; ai = c0 * sh0; // sin(2* zeta')
+    ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta')
     double
       xi  = xip  + ar * xi0 - ai * eta0,
       eta = etap + ai * xi0 + ar * eta0;
+    Scale(phi, l, xi, eta, gamma, k);
+    gamma /= Constants::degree;
     y = _a1 * _k0 * (backside ? Constants::pi - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
-    Scale(phi, l, gamma, k);
-    gamma /= Constants::degree;
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
@@ -413,7 +481,7 @@ namespace GeographicLib {
     double
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
-      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2* zeta')
+      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
     double
       xip0 = -_h[maxpow - 1], etap0 = 0,
       xip1 = 0, etap1 = 0,
@@ -424,11 +492,11 @@ namespace GeographicLib {
       xip0  = ar * xip1 - ai * etap1 - xip2 - _h[j];
       etap0 = ai * xip1 + ar * etap1 - etap2;
     }
-    ar = s0 * ch0; ai = c0 * sh0; // sin(2* zeta)
+    ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta)
     double
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
-    // JHS has
+    // JHS 154 has
     //
     // 	 beta = asin(sin(xip) / cosh(etap))
     // 	 l = asin(tanh(etap) / cos(beta)
@@ -443,6 +511,9 @@ namespace GeographicLib {
       r = hypot(s, c);
     if (r > 0) {
       l = atan2(s, c);
+      // Solve
+      // q = qp - e * atanh(e * tanh(qp))
+      // for qp = asinh(tan(phi))
       double
 	q = asinh(sin(xip)/r),
 	qp = q;
@@ -472,7 +543,7 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    Scale(phi, l, gamma, k);
+    Scale(phi, l, xi, eta, gamma, k);
     gamma /= Constants::degree;
     if (backside)
       gamma = 180 - gamma;
