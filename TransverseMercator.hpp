@@ -13,22 +13,18 @@
 #if !defined(TM_MAXPOW)
 #define TM_TX_MAXPOW 6
 #endif
-#if !defined(TM_SC_MAXPOW)
-#define TM_SC_MAXPOW 4
-#endif
 
 namespace GeographicLib {
 
   static const int maxpow =
     TM_TX_MAXPOW > 8 ? 8 : (TM_TX_MAXPOW < 4 ? 4 : TM_TX_MAXPOW);
-  static const int scpow =
-    TM_SC_MAXPOW > 8 ? 8 : (TM_SC_MAXPOW < 4 ? 4 : TM_SC_MAXPOW);
   class TransverseMercator {
   private:
     const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n,
       _tol;
-    double _a1, _h[maxpow], _hp[maxpow], _s[scpow+1];
+    double _a1, _b1, _h[maxpow], _hp[maxpow];
     const int _numit;
+    static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.  
@@ -40,11 +36,9 @@ namespace GeographicLib {
     // The accuracy of asinh is also bad for large negative arguments.  This is
     // easy to fix in the definition of asinh.  Instead we call these functions
     // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) { return log(x + sqrt(1 + x * x)); }
+    static inline double asinh(double x) { return log(x + sqrt(1 + sq(x))); }
     static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
 #endif
-    void Scale(double phi, double l, double xi, double eta,
-	       double& gamma, double& k) const;
   public:
     TransverseMercator(double a, double f, double k0);
     void Forward(double lon0, double lat, double lon,

@@ -14,6 +14,7 @@ namespace GeographicLib {
   private:
     const double _a, _f, _k0, _e, _e2m, _c, _tol;
     const int _numit;
+    static inline double sq(double x) { return x * x; }
   public:
     PolarStereographic(double a, double f, double k0);
     void Forward(bool northp, double lat, double lon,
