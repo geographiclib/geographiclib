@@ -372,9 +372,6 @@ namespace GeographicLib {
     // Fold in change in convergence and scale for spheroidal TM to UTM.
     gamma -= atan2(yi2, yr2);
     k *= _b1 * hypot(yr2, yi2);
-    // Scale(phi, lam, xi, eta, gamma, k);
-    // ScaleA(phi, lam, q, xip, etap, gamma, k);
-    // ScaleB(phi, lam, q, xi, eta, xip, etap, gamma, k);
     gamma /= Constants::degree;
     y = _a1 * _k0 * (backside ? Constants::pi - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
@@ -482,7 +479,6 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    //    Scale(phi, lam, xi, eta, gamma, k);
     gamma /= Constants::degree;
     if (backside)
       gamma = 180 - gamma;
