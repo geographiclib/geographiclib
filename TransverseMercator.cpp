@@ -280,7 +280,7 @@ namespace GeographicLib {
       gamma = atan(tan(lam) * tanh(q));
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(beta) / cos(phi)) * cosh(etap)
       // Note 1/cos(phi) = cosh(qp);
-      // and cos(beta) * cosh(eta) = 1/hypot(sinh(q), cos(lam))
+      // and cos(beta) * cosh(etap) = 1/hypot(sinh(q), cos(lam))
       k = sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) / hypot(sinh(q), cos(lam));
     } else {
       xip = Constants::pi/2;
@@ -460,7 +460,7 @@ namespace GeographicLib {
       }
       phi = atan(sinh(qp));
       gamma += atan(tan(xip) * tanh(etap));
-      // Note cos(beta) * cosh(eta) = r
+      // Note cos(beta) * cosh(etap) = r
       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) * r;
     } else {
       phi = Constants::pi/2;
