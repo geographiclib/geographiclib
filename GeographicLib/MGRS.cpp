@@ -196,7 +196,7 @@ namespace GeographicLib {
 
   void MGRS::CheckCoords(bool utmp, bool northp, double x, double y) {
     // Limits are all multiples of 100km and are all closed on the lower end and
-    // open on the upper end.  This allows compatibility with the MGRS system.
+    // open on the upper end.
     int
       ix = int(floor(x / MGRS::tile)),
       iy = int(floor(y / MGRS::tile)),

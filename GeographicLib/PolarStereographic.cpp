@@ -24,6 +24,10 @@ namespace {
   char RCSID_H[] = POLARSTEREOGRAPHIC_HPP;
 }
 
+#if defined(_MSC_VER)
+#define hypot _hypot
+#endif
+
 namespace GeographicLib {
 
   PolarStereographic::PolarStereographic(double a, double invf, double k0)
@@ -31,7 +35,7 @@ namespace GeographicLib {
     , _f(1 / invf)
     , _k0(k0)
     , _e(sqrt(_f * (2 - _f)))
-    , _e2m(1 - _e * _e)
+    , _e2m(1 - sq(_e))
     , _c(sqrt( std::pow(1 + _e, 1 + _e) * std::pow(1 - _e, 1 - _e) ))
     , _tol(0.1*sqrt(std::numeric_limits<double>::epsilon()))
     , _numit(5)
@@ -53,7 +57,7 @@ namespace GeographicLib {
       ecos = _e * cos(theta),
       f = std::pow((1 + ecos)/(1 - ecos), _e/2),
       t = 2 * tan(theta/2) * f,
-      m = sin(theta) / sqrt(1 - ecos * ecos);
+      m = sin(theta) / sqrt(1 - sq(ecos));
     rho = _a * _k0 * t / _c;
     k = m < std::numeric_limits<double>::epsilon() ? _k0 : rho / (_a * m);
     double
@@ -76,7 +80,7 @@ namespace GeographicLib {
 	f = std::pow((1 + ecos)/(1 - ecos), _e/2),
 	c2 = cos(theta/2),
 	v = 2 * tan(theta/2) * f - t,
-	dv = _e2m * f / ((1 - ecos * ecos) * c2 * c2),
+	dv = _e2m * f / ((1 - sq(ecos)) * sq(c2)),
 	dtheta = -v/dv;
       theta += dtheta;
       ecos = _e * cos(theta);
@@ -87,7 +91,7 @@ namespace GeographicLib {
     // Result is in [-180, 180)
     lon = rho == 0 ? 0 : -atan2( -x, northp ? -y : y ) / Constants::degree;
     double
-      m = sin(theta) / sqrt(1 - ecos * ecos);
+      m = sin(theta) / sqrt(1 - sq(ecos));
     k = m == 0 ? _k0 : rho / (_a * m);
     gamma = lon;
   }

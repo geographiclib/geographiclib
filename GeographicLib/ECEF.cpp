@@ -15,6 +15,10 @@ namespace {
   char RCSID_H[] = ECEF_HPP;
 }
 
+#if defined(_MSC_VER)
+#define hypot _hypot
+#endif
+
 namespace GeographicLib {
 
   ECEF::ECEF(double a, double invf)
