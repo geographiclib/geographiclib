@@ -131,14 +131,14 @@ namespace GeographicLib {
     /log(double(std::numeric_limits<double>::radix)) + 2;
 
   TransverseMercatorExact::TransverseMercatorExact(double a, double invf,
-						   double k0, bool fold)
+						   double k0, bool foldp)
     : _a(a)
     , _f(1 / invf)
     , _k0(k0)
     , _mu(_f * (2 - _f))
     , _mv(1 - _mu)
     , _e(sqrt(_mu))
-    , _fold(fold)
+    , _foldp(foldp)
     , Eu(_mu)
     , Ev(_mv)
   {}
@@ -473,11 +473,11 @@ namespace GeographicLib {
     // Now lon in (-180, 180]
     // Explicitly enforce the parity
     int
-      latsign = _fold && lat < 0 ? -1 : 1,
-      lonsign = _fold && lon < 0 ? -1 : 1;
+      latsign = _foldp && lat < 0 ? -1 : 1,
+      lonsign = _foldp && lon < 0 ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
-    bool backside = _fold && lon > 90;
+    bool backside = _foldp && lon > 90;
     if (backside) {
       if (lat == 0)
 	latsign = -1;
@@ -525,11 +525,11 @@ namespace GeographicLib {
       eta = x / (_a * _k0);
     // Explicitly enforce the parity
     int
-      latsign = _fold && y < 0 ? -1 : 1,
-      lonsign = _fold && x < 0 ? -1 : 1;
+      latsign = _foldp && y < 0 ? -1 : 1,
+      lonsign = _foldp && x < 0 ? -1 : 1;
     xi *= latsign;
     eta *= lonsign;
-    bool backside = _fold && xi > Eu.E();
+    bool backside = _foldp && xi > Eu.E();
     if (backside)
       xi = 2 * Eu.E()- xi;
 
