@@ -77,6 +77,10 @@ namespace GeographicLib {
 		 double& x, double& y, double& gamma, double& k) const;
     void Reverse(double lon0, double x, double y,
 		 double& lat, double& lon, double& gamma, double& k) const;
+    void ForwardA(double lon0, double lat, double lon,
+		  double& u, double& v) const;
+    void ReverseA(double lon0, double x, double y,
+		  double& u, double& v) const;
     // Specialization for WGS84 ellipsoid and UTM scale factor
     const static TransverseMercatorExact UTM;
     void dumpdata() const;

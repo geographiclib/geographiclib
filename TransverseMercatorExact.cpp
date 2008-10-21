@@ -612,4 +612,66 @@ namespace GeographicLib {
     k *= _k0;
   }
 
+  void TransverseMercatorExact::ForwardA(double lon0, double lat, double lon,
+					 double& u, double& v) const {
+    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
+    if (lon - lon0 > 180)
+      lon -= lon0 - 360;
+    else if (lon - lon0 <= -180)
+      lon -= lon0 + 360;
+    else
+      lon -= lon0;
+    // Now lon in (-180, 180]
+    // Explicitly enforce the parity
+    int
+      latsign = _fold && lat < 0 ? -1 : 1,
+      lonsign = _fold && lon < 0 ? -1 : 1;
+    lon *= lonsign;
+    lat *= latsign;
+    bool backside = _fold && lon > 90;
+    if (backside) {
+      if (lat == 0)
+	latsign = -1;
+      lon = 180 - lon;
+    }
+    double
+      phi = lat * Constants::degree,
+      lam = lon * Constants::degree;
+
+    // u,v = coordinates for the Thompson TM, Lee 54
+    if (lat == 90) {
+      u = Eu.K();
+      v = 0;
+    } else if (lat == 0 && lon == 90 * (1 - _e)) {
+      u = 0;
+      v = Ev.K();
+    } else
+      zetainv(psi(phi), lam, u, v);
+
+  }
+
+  void TransverseMercatorExact::ReverseA(double lon0, double x, double y,
+					 double& u, double& v) const {
+    // This undoes the steps in Forward.
+    double
+      xi = y / (_a * _k0),
+      eta = x / (_a * _k0);
+    // Explicitly enforce the parity
+    int
+      latsign = _fold && y < 0 ? -1 : 1,
+      lonsign = _fold && x < 0 ? -1 : 1;
+    xi *= latsign;
+    eta *= lonsign;
+    bool backside = _fold && xi > Eu.E();
+    if (backside)
+      xi = 2 * Eu.E()- xi;
+
+    // u,v = coordinates for the Thompson TM, Lee 54
+    if (xi == 0 && eta == Ev.KE()) {
+      u = 0;
+      v = Ev.K();
+    } else
+      sigmainv(xi, eta, u, v);
+  }
+
 } // namespace GeographicLib
