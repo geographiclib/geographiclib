@@ -29,7 +29,7 @@ namespace GeographicLib {
     double sign = 1;
     unsigned
       beg = 0,
-      end = dms.size();
+      end = unsigned(dms.size());
     while (beg < end && isspace(dms[beg]))
       ++beg;
     while (beg < end && isspace(dms[end - 1]))
