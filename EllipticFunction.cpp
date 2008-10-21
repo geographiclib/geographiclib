@@ -41,8 +41,8 @@ namespace GeographicLib {
     double
       a0 = (x + y + z)/3,
       an = a0,
-      q = std::max(std::max(std::abs(a0-x), std::abs(a0-y)), std::abs(a0-z))
-      / tolRF,
+      q = (std::max)((std::max)(std::abs(a0-x), std::abs(a0-y)),
+		     std::abs(a0-z)) / tolRF,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -70,7 +70,8 @@ namespace GeographicLib {
     double
       a0 = (x + y + 3 * z)/5,
       an = a0,
-      q = std::max(std::max(std::abs(a0-x), std::abs(a0-y)), std::abs(a0-z)) / tolRD,
+      q = (std::max)((std::max)(std::abs(a0-x), std::abs(a0-y)),
+		     std::abs(a0-z)) / tolRD,
       x0 = x,
       y0 = y,
       z0 = z,

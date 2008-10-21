@@ -70,7 +70,7 @@ namespace GeographicLib {
     northp = lat >= 0;
     zone = setzone >= 0 ? setzone : StandardZone(lat, lon);
     if (setzone > 60)
-      throw std::out_of_range("Illegal UTM zone");
+      throw std::out_of_range("Illegal UTM zone requested " + setzone);
     double x1, y1;
     bool utmp = zone > 0;
     if (utmp)
@@ -90,7 +90,7 @@ namespace GeographicLib {
   void UTMUPS::Reverse(int zone, bool northp, double x, double y,
 		       double& lat, double& lon, double& gamma, double& k) {
     if (! (zone > 0 && zone <= 60))
-      throw std::out_of_range("Illegal UTM zone");
+      throw std::out_of_range("Illegal UTM zone " + str(zone));
     CheckCoords(zone > 0, northp, false, x, y);
     CheckLatLon(lat, 0.0);
     bool utmp = zone > 0;
@@ -106,9 +106,11 @@ namespace GeographicLib {
 
   void UTMUPS::CheckLatLon(double lat, double lon) {
     if (! (lat >= -90 && lat <= 90))
-      throw std::out_of_range("Latitude not in [-90, 90]");
+      throw std::out_of_range("Latitude " + str(lat) +
+			      "d not in [-90d, 90d]");
     if (! (lon >= -180 && lon <= 360))
-      throw std::out_of_range("Latitude not in [-180, 360]");
+      throw std::out_of_range("Latitude " + str(lon) +
+			      "d not in [-180d, 360d]");
     }
 
   void UTMUPS::CheckCoords(bool utmp, bool northp, bool strict,
@@ -122,9 +124,13 @@ namespace GeographicLib {
       slopS = utmp && northp ? 0 : slop;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (x >= mineasting[ind] - slop && x < maxeasting[ind] + slop) )
-      throw std::out_of_range("Easting out of range");
+      throw std::out_of_range("Easting " + str(x/1000) + "km not in ["
+			      + str((mineasting[ind] - slop)/1000) + "km, "
+			      + str((maxeasting[ind] + slop)/1000) + "km)");
     if (! (y >= minnorthing[ind] - slopS && x < maxnorthing[ind] + slopN) )
-      throw std::out_of_range("Northing out of range");
+      throw std::out_of_range("Northing " + str(y/1000) + "km not in ["
+			      + str((minnorthing[ind] - slopS)/1000) + "km, "
+			      + str((maxnorthing[ind] + slopN)/1000) + "km)");
   }
 
 } // namespace GeographicLib
