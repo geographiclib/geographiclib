@@ -12,11 +12,11 @@
  **********************************************************************/
 
 #include <iostream>
-#include "GeoCoords.hpp"
 #include <sstream>
 #include <string>
 #include <stdexcept>
 #include <iomanip>
+#include "GeoGraphicLib/GeoCoords.hpp"
 
 int main(int argc, char* argv[]) {
   int outputmode = 0;		// Lat/Lon; 1 = DMS; 2 = UTM/UPS; 3 = MGRS
