@@ -8,6 +8,9 @@
 #if !defined(UTMUPS_HPP)
 #define UTMUPS_HPP "$Id$"
 
+#include <string>
+#include <sstream>
+
 namespace GeographicLib {
 
   class UTMUPS {
@@ -21,6 +24,9 @@ namespace GeographicLib {
     static const double minnorthing[4];
     static const double maxnorthing[4];
     static double CentralMeridian(int zone) { return 6 * zone - 183.0; }
+    template<typename T> static std::string str(T x) {
+      std::ostringstream s; s << x; return s.str();
+    }
   public:
     static int StandardZone(double lat, double lon);
 
