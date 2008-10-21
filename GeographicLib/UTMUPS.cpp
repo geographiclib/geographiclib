@@ -92,7 +92,6 @@ namespace GeographicLib {
     if (! (zone > 0 && zone <= 60))
       throw std::out_of_range("Illegal UTM zone " + str(zone));
     CheckCoords(zone > 0, northp, false, x, y);
-    CheckLatLon(lat, 0.0);
     bool utmp = zone > 0;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     x -= falseeasting[ind];
