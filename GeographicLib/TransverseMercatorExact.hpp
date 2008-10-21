@@ -23,7 +23,7 @@ namespace GeographicLib {
     static const double tol, tol1, taytol, ahypover;
     static const int numit = 10;
     const double _a, _f, _k0, _mu, _mv, _e;
-    const bool _fold;
+    const bool _foldp;
     const EllipticFunction Eu, Ev;
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
@@ -72,7 +72,23 @@ namespace GeographicLib {
 	       double& gamma, double& k) const;
 
   public:
-    TransverseMercatorExact(double a, double f, double k0, bool fold = true);
+    // With foldp, the "standard" conventions for cutting the TM space are
+    // followed.  Forward can be called with any latitude and longitude then
+    // produces the transformation shown in Lee Fig 46.  Reverse analytically
+    // continues this in the +/- x direction (with a cut at y = 0).
+    //
+    // With not(foldp), the domains of latitude, longitude, x, and y are
+    // restricted to
+    //
+    //   latitude in [0,90] and longitude-lon0 in [0,90]
+    //   latitude in (-90,0] and longitude-lon0 in [90*(1-e),90]
+    //
+    //   x/(k0*a) in [0,inf) and y/(k0*a) in [0,E(e^2)]
+    //   x/(k0*a) in [K(1-e^2)-E(1-e^2),inf) and y/(k0*a) in (-inf,0]
+    //
+    // This allows the multi-valued nature of the projection to be explored
+    // using its symmetries.
+    TransverseMercatorExact(double a, double f, double k0, bool foldp = true);
     void Forward(double lon0, double lat, double lon,
 		 double& x, double& y, double& gamma, double& k) const;
     void Reverse(double lon0, double x, double y,
