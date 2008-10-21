@@ -147,35 +147,6 @@ namespace GeographicLib {
   TransverseMercatorExact::UTM(Constants::WGS84_a, Constants::WGS84_invf,
 			       Constants::UTM_k0);
 
-  void TransverseMercatorExact::dumpdata() const {
-    std::cout << std::setprecision(16);
-    for (int i = -50; i <= 200; ++i) {
-      double u = 0.01*i;
-      double snu, cnu, dnu;
-      Eu.sncndn(u, snu, cnu, dnu);
-      for (int j = -50; j <= 400; ++j) {
-	double v = 0.01*j;
-	double snv, cnv, dnv;
-	Ev.sncndn(v, snv, cnv, dnv);
-	double psi, lam, du1, dv1;
-	zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi, lam);
-	dwdzeta(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
-	double xi, eta, du2, dv2;
-	sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi, eta);
-	dwdsigma(u, snu, cnu, dnu, v, snv, cnv, dnv, du2, dv2);
-	double gamma, k;
-	double phi = psiinv(psi);
-	Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-	std::cout << u << " " << v << " "
-		  << psi << " " << lam << " " << du1 << " " << dv1 << " "
-		  << xi << " " << eta << " " << du2 << " " << dv2 << " "
-		  << phi/Constants::degree  << " "
-		  << lam/Constants::degree << " "
-		  << gamma/Constants::degree << " " << k << "\n";
-      }
-    }
-  }
-
   double  TransverseMercatorExact::psi0(double phi) {
     // Rewrite asinh(tan(phi)) = atanh(sin(phi)) which is more accurate.
     // Write tan(phi) this way to ensure that sign(tan(phi)) = sign(phi)
@@ -326,10 +297,8 @@ namespace GeographicLib {
       u -= delu;
       v -= delv;
       double delw2 = sq(delu) + sq(delv);
-      if (delw2 < tol) {
-	itcnt = ++i;
+      if (delw2 < tol)
 	break;
-      }
     }
   }
 
@@ -449,10 +418,8 @@ namespace GeographicLib {
       u -= delu;
       v -= delv;
       double delw2 = sq(delu) + sq(delv);
-      if (delw2 < tol) {
-	itcnt = ++i;
+      if (delw2 < tol)
 	break;
-      }
     }
   }
   
@@ -610,68 +577,6 @@ namespace GeographicLib {
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
     k *= _k0;
-  }
-
-  void TransverseMercatorExact::ForwardA(double lon0, double lat, double lon,
-					 double& u, double& v) const {
-    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
-    if (lon - lon0 > 180)
-      lon -= lon0 - 360;
-    else if (lon - lon0 <= -180)
-      lon -= lon0 + 360;
-    else
-      lon -= lon0;
-    // Now lon in (-180, 180]
-    // Explicitly enforce the parity
-    int
-      latsign = _fold && lat < 0 ? -1 : 1,
-      lonsign = _fold && lon < 0 ? -1 : 1;
-    lon *= lonsign;
-    lat *= latsign;
-    bool backside = _fold && lon > 90;
-    if (backside) {
-      if (lat == 0)
-	latsign = -1;
-      lon = 180 - lon;
-    }
-    double
-      phi = lat * Constants::degree,
-      lam = lon * Constants::degree;
-
-    // u,v = coordinates for the Thompson TM, Lee 54
-    if (lat == 90) {
-      u = Eu.K();
-      v = 0;
-    } else if (lat == 0 && lon == 90 * (1 - _e)) {
-      u = 0;
-      v = Ev.K();
-    } else
-      zetainv(psi(phi), lam, u, v);
-
-  }
-
-  void TransverseMercatorExact::ReverseA(double lon0, double x, double y,
-					 double& u, double& v) const {
-    // This undoes the steps in Forward.
-    double
-      xi = y / (_a * _k0),
-      eta = x / (_a * _k0);
-    // Explicitly enforce the parity
-    int
-      latsign = _fold && y < 0 ? -1 : 1,
-      lonsign = _fold && x < 0 ? -1 : 1;
-    xi *= latsign;
-    eta *= lonsign;
-    bool backside = _fold && xi > Eu.E();
-    if (backside)
-      xi = 2 * Eu.E()- xi;
-
-    // u,v = coordinates for the Thompson TM, Lee 54
-    if (xi == 0 && eta == Ev.KE()) {
-      u = 0;
-      v = Ev.K();
-    } else
-      sigmainv(xi, eta, u, v);
   }
 
 } // namespace GeographicLib

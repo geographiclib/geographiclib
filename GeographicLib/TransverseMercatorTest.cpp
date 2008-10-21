@@ -21,11 +21,6 @@ namespace {
 }
 
 int main(int argc, char* argv[]) {
-  /*
-  GeographicLib::TransverseMercatorExact temp(1.0,100.0,1.0);
-  temp.dumpdata();
-  return 0;
-  */
   bool reverse = false, testing = false;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
