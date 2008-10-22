@@ -86,7 +86,7 @@ namespace GeographicLib {
       mgrs[z++] = utmrow[(yh + (zone1 & 1 ? utmevenrowshift : 0))
 			 % utmrowperiod];
     } else {
-      bool eastp = x >= upseasting * tile;
+      bool eastp = xh >= upseasting;
       int iband = (northp ? 2 : 0) + (eastp ? 1 : 0);
       mgrs[z++] = upsband[iband];
       mgrs[z++] = upscols[iband][xh - (eastp ? upseasting :
@@ -227,7 +227,7 @@ namespace GeographicLib {
 			      + "km not in ["
 			      + str(mineasting[ind]*tile/1000) + "km, "
 			      + str(maxeasting[ind]*tile/1000) + "km)");
-    if (! (iy >= minnorthing[ind] && ix < maxnorthing[ind]) )
+    if (! (iy >= minnorthing[ind] && iy < maxnorthing[ind]) )
       throw std::out_of_range("Northing " + str(int(floor(y/1000)))
 			      + "km not in ["
 			      + str(minnorthing[ind]*tile/1000) + "km, "

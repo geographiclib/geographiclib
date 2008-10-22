@@ -126,7 +126,7 @@ namespace GeographicLib {
       throw std::out_of_range("Easting " + str(x/1000) + "km not in ["
 			      + str((mineasting[ind] - slop)/1000) + "km, "
 			      + str((maxeasting[ind] + slop)/1000) + "km)");
-    if (! (y >= minnorthing[ind] - slopS && x < maxnorthing[ind] + slopN) )
+    if (! (y >= minnorthing[ind] - slopS && y < maxnorthing[ind] + slopN) )
       throw std::out_of_range("Northing " + str(y/1000) + "km not in ["
 			      + str((minnorthing[ind] - slopS)/1000) + "km, "
 			      + str((maxnorthing[ind] + slopN)/1000) + "km)");
