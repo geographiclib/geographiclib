@@ -89,7 +89,7 @@ namespace GeographicLib {
 
   void UTMUPS::Reverse(int zone, bool northp, double x, double y,
 		       double& lat, double& lon, double& gamma, double& k) {
-    if (! (zone > 0 && zone <= 60))
+    if (! (zone >= 0 && zone <= 60))
       throw std::out_of_range("Illegal UTM zone " + str(zone));
     CheckCoords(zone > 0, northp, false, x, y);
     bool utmp = zone > 0;
