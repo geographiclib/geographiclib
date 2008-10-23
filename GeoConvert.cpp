@@ -18,35 +18,8 @@
 #include <iomanip>
 #include "GeographicLib/GeoCoords.hpp"
 
-int main(int argc, char* argv[]) {
-  int outputmode = 0;		// Lat/Lon; 1 = DMS; 2 = UTM/UPS; 3 = MGRS
-  int prec = 0;
-  int zone = -2;		// -2 = track input, -1 = standard
-
-  for (int m = 1; m < argc; ++m) {
-    std::string arg = std::string(argv[m]);
-    if (arg == "-g")
-      outputmode = 0;
-    else if (arg == "-d")
-      outputmode = 1;
-    else if (arg == "-u")
-      outputmode = 2;
-    else if (arg == "-m")
-      outputmode = 3;
-    else if (arg == "-c")
-      outputmode = 4;
-    else if (arg == "-p") {
-      std::string a = std::string(argv[++m]);
-      std::istringstream str(a);
-      str >> prec;
-    } else if (arg == "-z") {
-      std::string a = std::string(argv[++m]);
-      std::istringstream str(a);
-      str >> zone;
-    } else if (arg == "-s")
-      zone = -1;
-    else {
-      ( arg == "-h" ? std::cout : std::cerr )	<<
+void usage(bool succeed) {
+  ( succeed ? std::cout : std::cerr ) <<
 "Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]\n\
 $Id$\n\
 \n\
@@ -113,8 +86,40 @@ then\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917\n\
 \n\
 -h prints this help\n";
-      return arg == "-h" ? 0 : 1;
-    }
+  exit(succeed ? 0 : 1);
+}
+
+int main(int argc, char* argv[]) {
+  int outputmode = 0;		// Lat/Lon; 1 = DMS; 2 = UTM/UPS; 3 = MGRS
+  int prec = 0;
+  int zone = -2;		// -2 = track input, -1 = standard
+
+  for (int m = 1; m < argc; ++m) {
+    std::string arg = std::string(argv[m]);
+    if (arg == "-g")
+      outputmode = 0;
+    else if (arg == "-d")
+      outputmode = 1;
+    else if (arg == "-u")
+      outputmode = 2;
+    else if (arg == "-m")
+      outputmode = 3;
+    else if (arg == "-c")
+      outputmode = 4;
+    else if (arg == "-p") {
+      if (++m == argc) usage(false);
+      std::string a = std::string(argv[m]);
+      std::istringstream str(a);
+      if (!(str >> prec)) usage(false);
+    } else if (arg == "-z") {
+      if (++m == argc) usage(false);
+      std::string a = std::string(argv[m]);
+      std::istringstream str(a);
+      if (!(str >> zone)) usage(false);
+    } else if (arg == "-s")
+      zone = -1;
+    else
+      usage(arg == "-h");
   }
 
   GeographicLib::GeoCoords p;
