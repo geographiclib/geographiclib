@@ -20,6 +20,9 @@ namespace {
 namespace GeographicLib {
 
   const double MGRS::eps =
+    // 24 = ceil(log_2(10^7))
+    std::pow(0.5, std::numeric_limits<double>::digits - 24);
+  const double MGRS::angeps =
     // 7 = ceil(log_2(90))
     std::pow(0.5, std::numeric_limits<double>::digits - 7);
   const std::string MGRS::utmcols[3] =
@@ -75,7 +78,7 @@ namespace GeographicLib {
     if (utmp) {
       int
 	// Correct fuzziness in latitude near equator
-	iband = std::abs(lat) > eps ? LatitudeBand(lat) : (northp ? 0 : -1),
+	iband = std::abs(lat) > angeps ? LatitudeBand(lat) : (northp ? 0 : -1),
 	icol = xh - minutmcol,
 	irow = UTMRow(iband, icol, yh % utmrowperiod);
       if (irow != yh - (northp ? 0 : maxutmSrow))
@@ -215,23 +218,33 @@ namespace GeographicLib {
     }
   }
 
-  void MGRS::CheckCoords(bool utmp, bool northp, double x, double y) {
-    // Limits are all multiples of 100km and are all closed on the lower end and
-    // open on the upper end.
+  void MGRS::CheckCoords(bool utmp, bool northp, double& x, double& y) {
+    // Limits are all multiples of 100km and are all closed on the lower end
+    // and open on the upper end -- and this is reflected in the error
+    // messages.  However if a coordinate lies on the excluded upper end (e.g.,
+    // after rounding), it is shifted down by eps.
     int
       ix = int(floor(x / tile)),
       iy = int(floor(y / tile)),
       ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-    if (! (ix >= mineasting[ind] && ix < maxeasting[ind]) )
-      throw std::out_of_range("Easting " + str(int(floor(x/1000)))
-			      + "km not in ["
-			      + str(mineasting[ind]*tile/1000) + "km, "
-			      + str(maxeasting[ind]*tile/1000) + "km)");
-    if (! (iy >= minnorthing[ind] && iy < maxnorthing[ind]) )
-      throw std::out_of_range("Northing " + str(int(floor(y/1000)))
-			      + "km not in ["
-			      + str(minnorthing[ind]*tile/1000) + "km, "
-			      + str(maxnorthing[ind]*tile/1000) + "km)");
+    if (! (ix >= mineasting[ind] && ix < maxeasting[ind]) ) {
+      if (ix == maxeasting[ind] && x == maxeasting[ind] * tile)
+	x -= eps;
+      else
+	throw std::out_of_range("Easting " + str(int(floor(x/1000)))
+				+ "km not in ["
+				+ str(mineasting[ind]*tile/1000) + "km, "
+				+ str(maxeasting[ind]*tile/1000) + "km)");
+    }
+    if (! (iy >= minnorthing[ind] && iy < maxnorthing[ind]) ) {
+      if (iy == maxnorthing[ind] && y == maxnorthing[ind] * tile)
+	y -= eps;
+      else
+	throw std::out_of_range("Northing " + str(int(floor(y/1000)))
+				+ "km not in ["
+				+ str(minnorthing[ind]*tile/1000) + "km, "
+				+ str(maxnorthing[ind]*tile/1000) + "km)");
+    }
   }
 
   int MGRS::UTMRow(int iband, int icol, int irow) {

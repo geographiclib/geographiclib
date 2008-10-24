@@ -89,7 +89,7 @@ namespace GeographicLib {
 				" (ex: 38N, 09S, N)");
       char hemi = toupper(sa[zoneind][sa[zoneind].size() - 1]);
       _northp = hemi == 'N';
-      if (! (_northp || hemi != 'S'))
+      if (! (_northp || hemi == 'S'))
 	throw std::out_of_range(std::string("Illegal hemisphere letter ") + hemi
 				+ " in " + sa[zoneind]);
       const char* c = sa[zoneind].c_str();
@@ -172,12 +172,12 @@ namespace GeographicLib {
     os << (_northp ? 'N' : 'S') << " "
        << std::setprecision((std::max)(0, prec))
        << easting / scale;
-    if (prec < 0)
+    if (prec < 0 && std::abs(easting / scale) > 0.5)
       os << std::setw(-prec) << 0;
     os << " "
        << std::setprecision((std::max)(0, prec))
        << northing / scale;
-    if (prec < 0)
+    if (prec < 0 && std::abs(northing / scale) > 0.5)
       os << std::setw(-prec) << 0;
     utm = os.str();
   }

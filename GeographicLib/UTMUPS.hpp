@@ -53,10 +53,9 @@ namespace GeographicLib {
       Reverse(zone, northp, x, y, lat, lon, gamma, k);
     }
     static void CheckLatLon(double lat, double lon);
-    // Throw an error if easting or northing are outside standard ranges.  If
-    // strict, restrict to MSGS subset.  Otherwise allow an extra 100km.
-    static void CheckCoords(bool utmp, bool northp, bool strict,
-			    double x, double y);
+    // Throw an error if easting or northing are outside standard ranges.
+    // Range is MSGS range + an extra 100km on all sides.
+    static void CheckCoords(bool utmp, bool northp, double x, double y);
   };
 
 } // namespace GeographicLib
