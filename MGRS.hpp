@@ -37,6 +37,7 @@ namespace GeographicLib {
   class MGRS {
   private:
     static const double eps;
+    static const double angeps;
     static const std::string utmcols[3];
     static const std::string utmrow;
     static const std::string upscols[4];
@@ -59,7 +60,7 @@ namespace GeographicLib {
       // Maximum precision is um
       maxprec = 5 + 6,
     };
-    static void CheckCoords(bool utmp, bool northp, double x, double y);
+    static void CheckCoords(bool utmp, bool northp, double& x, double& y);
     static int lookup(const std::string& s, char c) {
       std::string::size_type r = s.find(toupper(c));
       return r == std::string::npos ? -1 : int(r);

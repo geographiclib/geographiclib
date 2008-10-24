@@ -18,8 +18,8 @@
 #include <iomanip>
 #include "GeographicLib/GeoCoords.hpp"
 
-void usage(bool succeed) {
-  ( succeed ? std::cout : std::cerr ) <<
+int usage(int retval) {
+  ( retval ? std::cerr : std::cout ) <<
 "Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]\n\
 $Id$\n\
 \n\
@@ -86,7 +86,7 @@ then\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917\n\
 \n\
 -h prints this help\n";
-  exit(succeed ? 0 : 1);
+  return retval;
 }
 
 int main(int argc, char* argv[]) {
@@ -107,19 +107,19 @@ int main(int argc, char* argv[]) {
     else if (arg == "-c")
       outputmode = 4;
     else if (arg == "-p") {
-      if (++m == argc) usage(false);
+      if (++m == argc) return usage(1);
       std::string a = std::string(argv[m]);
       std::istringstream str(a);
-      if (!(str >> prec)) usage(false);
+      if (!(str >> prec)) return usage(1);
     } else if (arg == "-z") {
-      if (++m == argc) usage(false);
+      if (++m == argc) return usage(1);
       std::string a = std::string(argv[m]);
       std::istringstream str(a);
-      if (!(str >> zone)) usage(false);
+      if (!(str >> zone)) return usage(1);
     } else if (arg == "-s")
       zone = -1;
     else
-      usage(arg == "-h");
+      return usage(arg != "-h");
   }
 
   GeographicLib::GeoCoords p;
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
   std::string os;
   int retval = 0;
   if (!(zone >= -2 && zone <= 60)) {
-    std::cerr << "Illegal zone " << zone << "\n";
+    std::cerr << "Zone " << zone << "not in [0, 60]\n";
     return 1;
   }
   while (true) {
