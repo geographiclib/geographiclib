@@ -19,7 +19,7 @@
 //
 // All MGRS coordinates truncate to legal 100km blocks.  All MGRS coordinates
 // with a legal 100km block prefix are legal (even though the band letter may
-// now belong to a neigboring band).
+// now belong to a neighboring band).
 //
 // The range of UTM/UPS coordinates allowed for conversion to MGRS coordinates
 // is the maximum consistent with staying within the letter ranges of the MGRS
@@ -89,7 +89,7 @@ namespace GeographicLib {
     // The ranges are 100km more restrictive that for the conversion between
     // geographic coordinates and UTM and UPS.  These restrictions are dictated
     // by the allowed letters in MGRS coordinates.  The choice of 9500km for
-    // the maximum northing for northerm hemisphere and of 1000km as the
+    // the maximum northing for northern hemisphere and of 1000km as the
     // minimum northing for southern hemisphere provide at least 0.5 degree
     // extension into standard UPS zones.  The upper ends of the ranges for the
     // UPS coordinates is dictated by requiring symmetry about 0E and 90E.
