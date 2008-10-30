@@ -21,9 +21,6 @@ namespace {
 
 namespace GeographicLib {
 
-  const double UTMUPS::eps =
-    // 24 = ceil(log_2(10^7))
-    std::pow(0.5, std::numeric_limits<double>::digits - 24);
   const double UTMUPS::falseeasting[4] =
     { MGRS::upseasting * MGRS::tile, MGRS::upseasting * MGRS::tile,
       MGRS::utmeasting * MGRS::tile, MGRS::utmeasting* MGRS::tile };
@@ -73,18 +70,30 @@ namespace GeographicLib {
       throw std::out_of_range("Illegal UTM zone requested " + setzone);
     double x1, y1;
     bool utmp = zone > 0;
-    if (utmp)
-      TransverseMercator::UTM.Forward(CentralMeridian(zone),
-				      lat, lon, x1, y1, gamma, k);
-    else
+    if (utmp) {
+      double
+	lon0 = CentralMeridian(zone),
+	dlon = lon - lon0;
+      dlon = std::abs(dlon - 360 * floor((dlon + 180)/360));
+      if (dlon > 60)
+	// Check isn't really necessary because CheckCoords catches this case.
+	// But this allows a more meaningful error message to be given.
+	throw std::out_of_range("Longitude " + str(lon)
+				+ "d more than 60d from central meridian "
+				+ str(lon0) + "d");
+      TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma, k);
+    } else {
+      if (std::abs(lat) < 70)
+	// Check isn't really necessary ... (see above).
+	throw std::out_of_range("Latitude " + str(lat)
+				+ "d more than 20d from "
+				+ (northp ? "N" : "S") + " pole");
       PolarStereographic::UPS.Forward(northp, lat, lon, x1, y1, gamma, k);
+    }
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     x = x1 + falseeasting[ind];
     y = y1 + falsenorthing[ind];
-    if (x1 < 0 && x == falseeasting[ind])
-      x -= eps;
-    if (y1 < 0 && y == falsenorthing[ind])
-      y -= eps;
+    CheckCoords(zone > 0, northp, x, y);
   }
 
   void UTMUPS::Reverse(int zone, bool northp, double x, double y,

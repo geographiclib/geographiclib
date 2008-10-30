@@ -24,7 +24,7 @@ namespace GeographicLib {
     static const int numit = 10;
     const double _a, _f, _k0, _mu, _mv, _e;
     const bool _foldp;
-    const EllipticFunction Eu, Ev;
+    const EllipticFunction _Eu, _Ev;
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
     // These have poor relative accuracy near x = 0.  However, for mapping
