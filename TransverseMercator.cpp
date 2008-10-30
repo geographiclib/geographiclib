@@ -99,6 +99,9 @@ namespace {
 
 namespace GeographicLib {
 
+  const double TransverseMercator::tol =
+    0.1*sqrt(std::numeric_limits<double>::epsilon());
+
   TransverseMercator::TransverseMercator(double a, double invf, double k0)
     : _a(a)
     , _f(1 / invf)
@@ -108,8 +111,6 @@ namespace GeographicLib {
     , _e2m(1 - _e2)
     , _ep2(_e2 / _e2m)
     , _n(_f / (2 - _f))
-    , _tol(0.1*sqrt(std::numeric_limits<double>::epsilon()))
-    , _numit(5)
   {
 #if TM_TX_MAXPOW <= 4
     _b1 = 1/(1+_n)*(sq(_n)*(sq(_n)+16)+64)/64;
@@ -449,13 +450,13 @@ namespace GeographicLib {
       double
 	q = asinh(sin(xip)/r),
 	qp = q;
-      for (int i = 0; i < _numit; ++i) {
+      for (int i = 0; i < numit; ++i) {
 	double
 	  t = tanh(qp),
 	  dqp = -(qp - _e * atanh(_e * t) - q) *
 	  (1 - _e2 * sq(t)) / _e2m;
 	qp += dqp;
-	if (std::abs(dqp) < _tol)
+	if (std::abs(dqp) < tol)
 	  break;
       }
       phi = atan(sinh(qp));

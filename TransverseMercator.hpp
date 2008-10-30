@@ -20,10 +20,10 @@ namespace GeographicLib {
     TM_TX_MAXPOW > 8 ? 8 : (TM_TX_MAXPOW < 4 ? 4 : TM_TX_MAXPOW);
   class TransverseMercator {
   private:
-    const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n,
-      _tol;
+    static const double tol;
+    static const int numit = 5;
+    const double _a, _f, _k0, _e2, _e, _e2m, _ep2,  _n;
     double _a1, _b1, _h[maxpow], _hp[maxpow];
-    const int _numit;
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
     // These have poor relative accuracy near x = 0.  However, for mapping

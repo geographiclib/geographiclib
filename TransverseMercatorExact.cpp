@@ -139,8 +139,8 @@ namespace GeographicLib {
     , _mv(1 - _mu)
     , _e(sqrt(_mu))
     , _foldp(foldp)
-    , Eu(_mu)
-    , Ev(_mv)
+    , _Eu(_mu)
+    , _Ev(_mv)
   {}
 
   const TransverseMercatorExact
@@ -154,8 +154,7 @@ namespace GeographicLib {
   }
 
   double  TransverseMercatorExact::psi(double phi) const {
-    // Lee 9.4, replace atanh(sin(phi)) by more accurate asinh(tan(phi))
-    // Write tan(phi) this way to ensure that sign(tan(phi)) = sign(phi)
+    // Lee 9.4
     return psi0(phi) - _e * atanh(_e * sin(phi));
   }
 
@@ -232,8 +231,8 @@ namespace GeographicLib {
 	lamx = (Constants::pi/2 - lam) / _e;
       u = asinh(sin(lamx) / hypot(cos(lamx), sinh(psix))) * (1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
-      u = Eu.K() - u;
-      v = Ev.K() - v;
+      u = _Eu.K() - u;
+      v = _Ev.K() - v;
     } else if (psi < _e * Constants::pi/2 &&
 	       lam > (1 - 2 * _e) * Constants::pi/2) {
       // At w = w0 = i * Ev.K(), we have
@@ -261,7 +260,7 @@ namespace GeographicLib {
       rad = std::pow(3 / (_mv * _e) * rad, 1/3.0);
       ang /= 3;
       u = rad * cos(ang);
-      v = rad * sin(ang) + Ev.K();
+      v = rad * sin(ang) + _Ev.K();
     } else {
       // Use spherical TM, Lee 12.6 -- writing atanh(sin(lam) / cosh(psi)) =
       // asinh(sin(lam) / hypot(cos(lam), sinh(psi))).  This takes care of the
@@ -269,8 +268,8 @@ namespace GeographicLib {
       v = asinh(sin(lam) / hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
-      u *= Eu.K() / (Constants::pi/2);
-      v *= Eu.K() / (Constants::pi/2);
+      u *= _Eu.K() / (Constants::pi/2);
+      v *= _Eu.K() / (Constants::pi/2);
     }
     return retval;
   }
@@ -284,8 +283,8 @@ namespace GeographicLib {
     // Min iterations = 2, max iterations = 4; mean = 3.1
     for (int i = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
-      Eu.sncndn(u, snu, cnu, dnu);
-      Ev.sncndn(v, snv, cnv, dnv);
+      _Eu.sncndn(u, snu, cnu, dnu);
+      _Ev.sncndn(v, snv, cnv, dnv);
       double psi1, lam1, du1, dv1;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi1, lam1);
       dwdzeta(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
@@ -310,8 +309,8 @@ namespace GeographicLib {
     // Lee 55.4 writing
     // dnu^2 + dnv^2 - 1 = _mu * cnu^2 + _mv * cnv^2
     double d = _mu * sq(cnu) + _mv * sq(cnv);
-    xi = Eu.E(snu, cnu, dnu) - _mu * snu * cnu * dnu / d;
-    eta = v - Ev.E(snv, cnv, dnv) + _mv * snv * cnv * dnv / d;
+    xi = _Eu.E(snu, cnu, dnu) - _mu * snu * cnu * dnu / d;
+    eta = v - _Ev.E(snv, cnv, dnv) + _mv * snv * cnv * dnv / d;
   }
 
   void TransverseMercatorExact::dwdsigma(double u,
@@ -333,20 +332,20 @@ namespace GeographicLib {
   bool  TransverseMercatorExact::sigmainv0(double xi, double eta,
 					   double& u, double& v) const {
     bool retval = false;
-    if (eta > 1.25 * Ev.KE() ||
-	(xi < -0.25 * Eu.E() && xi < eta - Ev.KE())) {
+    if (eta > 1.25 * _Ev.KE() ||
+	(xi < -0.25 * _Eu.E() && xi < eta - _Ev.KE())) {
       // sigma as a simple pole at w = w0 = Eu.K() + i * Ev.K() and sigma is
       // approximated by
       // 
       // sigma = (Eu.E() + i * Ev.KE()) + 1/(w - w0)
       double
-	x = xi - Eu.E(),
-	y = eta - Ev.KE(),
+	x = xi - _Eu.E(),
+	y = eta - _Ev.KE(),
 	r2 = sq(x) + sq(y);
-      u = Eu.K() + x/r2;
-      v = Ev.K() - y/r2;      
-    } else if ((eta > 0.75 * Ev.KE() && xi < 0.25 * Eu.E())
-	       || eta > Ev.KE()) {
+      u = _Eu.K() + x/r2;
+      v = _Ev.K() - y/r2;      
+    } else if ((eta > 0.75 * _Ev.KE() && xi < 0.25 * _Eu.E())
+	       || eta > _Ev.KE()) {
       // At w = w0 = i * Ev.K(), we have
       //
       //     sigma = sigma0 = i * Ev.KE()
@@ -360,7 +359,7 @@ namespace GeographicLib {
       // arg(sigma - sigma0) = [-pi/2, pi/2]
       // mapping arg = [-pi/2, -pi/6] to [-pi/2, pi/2]
       double
-	deta = eta - Ev.KE(),
+	deta = eta - _Ev.KE(),
 	rad = hypot(xi, deta),
 	// Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
 	// discussion in zetainv0 on the cut for ang.
@@ -370,7 +369,7 @@ namespace GeographicLib {
       rad = std::pow(3 / _mv * rad, 1/3.0);
       ang /= 3;
       u = rad * cos(ang);
-      v = rad * sin(ang) + Ev.K();
+      v = rad * sin(ang) + _Ev.K();
       /*
       double
 	rad = hypot(xi, eta - Ev.KE()),
@@ -390,8 +389,8 @@ namespace GeographicLib {
       */
     } else {
       // Else use w = sigma * Eu.K/Eu.E (which is correct in the limit _e -> 0)
-      u = xi * Eu.K()/Eu.E();
-      v = eta * Eu.K()/Eu.E();
+      u = xi * _Eu.K()/_Eu.E();
+      v = eta * _Eu.K()/_Eu.E();
     }
     return retval;
   }
@@ -405,8 +404,8 @@ namespace GeographicLib {
     // Min iterations = 2, max iterations = 6; mean = 2.7
     for (int i = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
-      Eu.sncndn(u, snu, cnu, dnu);
-      Ev.sncndn(v, snv, cnv, dnv);
+      _Eu.sncndn(u, snu, cnu, dnu);
+      _Ev.sncndn(v, snv, cnv, dnv);
       double xi1, eta1, du1, dv1;
       sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi1, eta1);
       dwdsigma(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
@@ -490,22 +489,22 @@ namespace GeographicLib {
     // u,v = coordinates for the Thompson TM, Lee 54
     double u, v;
     if (lat == 90) {
-      u = Eu.K();
+      u = _Eu.K();
       v = 0;
     } else if (lat == 0 && lon == 90 * (1 - _e)) {
       u = 0;
-      v = Ev.K();
+      v = _Ev.K();
     } else
       zetainv(psi(phi), lam, u, v);
 
     double snu, cnu, dnu, snv, cnv, dnv;
-    Eu.sncndn(u, snu, cnu, dnu);
-    Ev.sncndn(v, snv, cnv, dnv);
+    _Eu.sncndn(u, snu, cnu, dnu);
+    _Ev.sncndn(v, snv, cnv, dnv);
 
     double xi, eta;
     sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi, eta);
     if (backside)
-      xi = 2 * Eu.E() - xi;
+      xi = 2 * _Eu.E() - xi;
     y = xi * _a * _k0 * latsign;
     x = eta * _a * _k0 * lonsign;
     Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
@@ -529,23 +528,23 @@ namespace GeographicLib {
       lonsign = _foldp && x < 0 ? -1 : 1;
     xi *= latsign;
     eta *= lonsign;
-    bool backside = _foldp && xi > Eu.E();
+    bool backside = _foldp && xi > _Eu.E();
     if (backside)
-      xi = 2 * Eu.E()- xi;
+      xi = 2 * _Eu.E()- xi;
 
     // u,v = coordinates for the Thompson TM, Lee 54
     double u, v;
-    if (xi == 0 && eta == Ev.KE()) {
+    if (xi == 0 && eta == _Ev.KE()) {
       u = 0;
-      v = Ev.K();
+      v = _Ev.K();
     } else
       sigmainv(xi, eta, u, v);
 
     double snu, cnu, dnu, snv, cnv, dnv;
-    Eu.sncndn(u, snu, cnu, dnu);
-    Ev.sncndn(v, snv, cnv, dnv);
+    _Eu.sncndn(u, snu, cnu, dnu);
+    _Ev.sncndn(v, snv, cnv, dnv);
     double phi, lam;
-    if (v != 0 || u != Eu.K()) {
+    if (v != 0 || u != _Eu.K()) {
       double psi;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi, lam);
       phi = psiinv(psi);
@@ -570,7 +569,7 @@ namespace GeographicLib {
       lon += lon0;
     lat *= latsign;
     if (backside)
-      y = 2 * Eu.E() - y;
+      y = 2 * _Eu.E() - y;
     y *= _a * _k0 * latsign;
     x *= _a * _k0 * lonsign;
     if (backside)
