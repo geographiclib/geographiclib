@@ -25,7 +25,7 @@ The code is available for download at
 http://charles.karney.info/geographic/Geographic.tgz
 
 It is licensed under the LGPL.  For more information, see
-http://charles.karney.info/random/
+http://charles.karney.info/geographic/
 
 \section contents Contents
  - \ref intro
@@ -142,100 +142,7 @@ Forward to \ref intro.
 Forward to \ref example.  Up to \ref contents.
 </center>
 
-Random is a C++ class which implements the Mersenne Twister random
-number generator,
-<a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">
-MT19937</a>
-and the SIMD-oriented Fast Mersenne Twister random number generator,
-<a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/index.html">
-SFMT19937</a>.  For a description of MT19937 see\n
-<a href="mailto:m-mat@math.sci.hiroshima-u.ac.jp">Makoto Matsumoto</a> and
-Takuji Nishimura,\n
-<a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/ARTICLES/mt.pdf">
-Mersenne Twister: A 623-Dimensionally Equidistributed Uniform
-Pseudo-Random Number Generator</a>,\n
-<a href="http://dx.doi.org/10.1145/272991.272995">
-ACM TOMACS 8, 3--30 (1998)</a>.\n
-For a description of SFMT19937 see\n
-<a href="mailto:saito@math.sci.hiroshima-u.ac.jp">Mutsuo Saito</a>,\n
-<a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/M062821.pdf">
-An Application of Finite Field: Design and Implementation of 128-bit
-Instruction-Based Fast Pseudorandom Number Generator</a>,
-\n Master's Thesis, Dept. of Math., Hiroshima University (Feb. 2007),\n
-<a href="mailto:saito@math.sci.hiroshima-u.ac.jp">Mutsuo Saito</a> and
-<a href="mailto:m-mat@math.sci.hiroshima-u.ac.jp">Makoto
-Matsumoto</a>,\n
-<a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/ARTICLES/sfmt.pdf">
-SIMD-oriented Fast Mersenne Twister: a 128-bit Pseudorandom Number
-Generator</a>,\n
-accepted in the proceedings of MCQMC2006.
-
-MT19937 and SFMT19937 are high-quality random number generators with an
-exceptionally large period 2<sup>19937</sup> - 1 or about
-10<sup>6001</sup>; it passes all current tests for randomness.
-
-The library was written by <a href="http://charles.karney.info/">Charles
-Karney</a> <charles@karney.com> and is licensed under the LGPL.  For
-more information, see http://charles.karney.info/random/  The code is
-available for download at
-http://charles.karney.info/random/Random.tgz
-
-The emphasis in this implementation is on providing a reliable source
-of random numbers for scientific applications where there's a premium
-on
-- accuracy --- all the results from Random are exact assuming that the
-  underlying generators are perfect.  Thus a random integer in [0, \e n)
-  is given by Integer(\e n) which guarantees that all possible results
-  are equally likely.  Similarly FloatN() is equivalent to sampling a
-  random number in (0,1) and exactly rounding it to the nearest
-  representable double.
-- repeatability --- extensive facilities for managing the seed for the
-  generator.  It's easy to seed the generators in a parallel application
-  in a systematic way to give repeatable results.
-- portability --- the same results are obtained on different platforms.
-- efficiency --- template functions provide fast general code.
-- ease of use --- the interface makes it difficult to misuse the
-  generator with most usage errors being caught at compile time.
-
-Random provides the basic functionality of the MT19937 and SFMT19937
-random generator, converting the random data into various formats.  It
-provides methods for returning random integers of various sizes (short
-int, int, long int, etc.), for returning random integers in the
-semi-closed interval [0,\e n) and the closed interval [\e m,\e n].
-
-You can obtain uniform random reals at various precisions; these are
-defined by rounding an random number uniformly sampled in (0,1) and
-exactly rounding it (down, up, or nearest) to a subset of representable
-reals.  Thus Float() is the result of rounding a random number in (0,1)
-down to the nearest representable double.
-
-Boolean() returns true with probability 1/2.  Prob(\e x) returns true
-with probability \e x.  Prob(\e a, \e b) returns true with probability
-<i>a</i>/\e b.
-
-Bits<\e n>() returns \e n bits of randomness in a bitset<\e n>.
-
-In addition, Random provides facilities for setting seeds, for selecting
-a "random" seed, for saving and restoring its state, and for jumping the
-generator forwards and backwards.
-
-Finally, NormalDistribution and ExponentialDistribution are classes
-which sample from the normal and exponential distributions.
-RandomSelect selected from an arbitrary discrete distribution.
-
-Both 32-bit and 64-bit versions of MT19937 and SFMT19937 are provided
-with the 32-bit version of SFMT19937 being the default generator.  See
-\ref switch for a comparison between the various generators and how to
-change the default generator.
-
-My interest in random number generators extends back through much of my
-professional career in plasma physics, chaos theory, and computational
-chemistry.  I wrote a random number library for Fortran 77 and Fortran
-90 which implemented one of Knuth's recommended random number generators
-(see http://w3.pppl.gov/ntcc/RNG/).  With the current C++ random number
-library, I switched to a more robust underlying generator, SFMT19937,
-provided more flexible seeding options, and provided exact
-implementations for uniform real and integer distributions.
+Text here
 
 <center>
 Forward to \ref example.  Up to \ref contents.
@@ -248,69 +155,341 @@ Forward to \ref example.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 </center>
 
-The following gives a quick idea of the capabilities of the library.
-Note that the classes are all defined in the RandomLib namespace.
-\code
-  #include "RandomLib/Random.hpp"
-
-  unsigned u; unsigned long long l;
-  float f; double d; long double e; bool b;
-  RandomLib::Random r;
-  std::cout << "Seed set to: " << r.SeedString() << std::endl;
-
-  f = r.FixedU<float>();      // result in (0,1] with 24 bits of randomness
-  d = r.Fixed();              // result in [0,1) with 53 bits of randomness
-  e = r.FixedN<long double>(); // result in [0,1] with 64 bits of randomness
-  d = r.FloatN();   // a random in [0,1] rounded to the nearest double
-  u = r.Integer();            // a random unsigned in [0,2^32)
-  l = r.Integer<unsigned long long>(); // a random unsigned long long
-  u = r.Integer<16>();        // a random unsigned in [0,2^16)
-  u = r.Integer(52U);         // a random unsigned in [0,52)
-  u = r(52);     // the same, enables passing r to std::random_shuffle
-  u = r.IntegerC(1,6);        // a random integer in [1,6]
-  b = r.Boolean();            // true with prob 1/2
-  b = r.Prob(4, 7);           // true with prob 4/7
-  b = r.Prob(0.34);           // true with prob 0.34
-
-  #include "RandomLib/NormalDistribution.hpp"
-
-  RandomLib::NormalDistribution<> g;
-  d = g(r);                   // sample from normal distribution
-
-  #include "RandomLib/ExponentialDistribution.hpp"
-
-  RandomLib::ExponentialDistribution<> x;
-  d = x(r);                   // sample from exponential distribution
-\endcode
-
-Here is a more fleshed out example.  Compile, link, and run this with,
-for example
-
-g++ -I.. -O2 -funroll-loops -o RandomExample RandomExample.cpp Random.cpp\n
-./RandomExample
-
-(Note that the -funroll-loops is important!)  This example also
-compiles and runs under Windows with Visual C++.
-
-\include Constants.cpp
-
-Typical output from this program is:
 \verbatim
-Using RandomEngine<SFMT19937<Random_u32>,MixerSFMT>
-with seed [360536,1209342001,31919,562196172,2008]
-Estimate pi = 3.1384
-Tossing a coin 20 times: HTHTTHHHHHHHHTTHTTTH
-Throwing a pair of dice 15 times: 8 5 2 11 5 10 8 3 5 2 9 6 11 7 12
-Another 20 throws: 7 7 8 8 9 10 8 9 10 11 9 4 5 4 9 4 11 6 5 8
-Draw balls from urn containing 5 red and 5 white balls: RWWWWRRWRR
-Shuffling the digits 0..9: 3804916527
-Estimate mean and variance of normal distribution: 0.00602807, 0.975485
-Some low precision reals (1/16):  0.1875 0.75 0.4375 0.4375 0.9375
-Used 94943 random numbers
-Self test of RandomEngine<MT19937<Random_u32>,MixerSFMT> passed
-Self test of RandomEngine<MT19937<Random_u64>,MixerSFMT> passed
-Self test of RandomEngine<SFMT19937<Random_u32>,MixerSFMT> passed
-Self test of RandomEngine<SFMT19937<Random_u64>,MixerSFMT> passed
+I give here higher order terms for computing the Transverse Mercator
+Projection and improved formulas for convergence and scale following the
+methods given in
+
+  JHS 154, ETRS89 - ja"rjestelma"a"n liittyva"t karttaprojektiot,
+  tasokoordinaatistot ja karttalehtijako (Map projections, plane
+  coordinates, and map sheet index for ETRS89), Published by JUHTA,
+  Finnish Geodetic Institute, and the National Land Survey of Finland,
+  34 p (2006).
+
+  http://www.jhs-suositukset.fi/suomi/jhs154
+  http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154.pdf
+
+This method is the same as Krueger's 1912 paper
+
+   L. Krueger, Konforme Abbildung des Erdellipsoids in der Ebene
+   (Conformal mpping of the Earth ellipsoid to the plane),
+   Royal Prussian Geodetic Institute, New Series 52, 172 p (1912)
+
+   DOI: 10.2312/GFZ.b103-krueger28
+   http://www.gfz-potsdam.de/bib/pub/digi/krueger2.pdf
+
+and I've noted where the higher order terms appear in this paper.
+
+Here ^ indicates exponentiation (n^3 = n*n*n) and / indicates real
+division (3/5 = 0.6).  The equations need to be converted to Horner
+form, but are here left in expanded form so that they can be easily
+truncated to lower order in n.  Some of the integers here are not
+representable as 32-bit integers and will need to be included as double
+literals.
+
+Twelfth order terms for the forward and backwards transformations:
+
+eq (01) [A in Krueger, p 12, eq (5)]
+  A1 = a/(n + 1) * (1 + 1/4 * n^2
+       	      	      + 1/64 * n^4
+		      + 1/256 * n^6
+		      + 25/16384 * n^8
+                      + 49/65536 * n^10
+		      + 441/1048576 * n^12);
+
+eqs (06) [beta in Krueger, p 18, eq (26*)]
+  h[1]   =   1/2 * n
+           - 2/3 * n^2
+           + 37/96 * n^3
+           - 1/360 * n^4
+           - 81/512 * n^5
+           + 96199/604800 * n^6
+           - 5406467/38707200 * n^7
+           + 7944359/67737600 * n^8
+           - 7378753979/97542144000 * n^9
+           + 25123531261/804722688000 * n^10
+           - 9280258847/6437781504000 * n^11
+           - 1628053924171/99584432640000 * n^12;
+  h[2]   =   1/48 * n^2
+           + 1/15 * n^3
+           - 437/1440 * n^4
+           + 46/105 * n^5
+           - 1118711/3870720 * n^6
+           + 51841/1209600 * n^7
+           + 24749483/348364800 * n^8
+           - 115295683/1397088000 * n^9
+           + 5487737251099/51502252032000 * n^10
+           - 5845886411021/41845579776000 * n^11
+           + 6339155669701909/46867049349120000 * n^12;
+  h[3]   =   17/480 * n^3
+           - 37/840 * n^4
+           - 209/4480 * n^5
+           + 5569/90720 * n^6
+           + 9261899/58060800 * n^7
+           - 6457463/17740800 * n^8
+           + 2473691167/9289728000 * n^9
+           - 852549456029/20922789888000 * n^10
+           - 2673218294321/191294078976000 * n^11
+           - 1619588070701683/35150287011840000 * n^12;
+  h[4]   =   4397/161280 * n^4
+           - 11/504 * n^5
+           - 830251/7257600 * n^6
+           + 466511/2494800 * n^7
+           + 324154477/7664025600 * n^8
+           - 937932223/3891888000 * n^9
+           - 89112264211/5230697472000 * n^10
+           + 12003335387/32691859200 * n^11
+           - 537877266968267441/2249618368757760000 * n^12;
+  h[5]   =   4583/161280 * n^5
+           - 108847/3991680 * n^6
+           - 8005831/63866880 * n^7
+           + 22894433/124540416 * n^8
+           + 112731569449/557941063680 * n^9
+           - 5391039814733/10461394944000 * n^10
+           + 4863559943251/167382319104000 * n^11
+           + 37588208648677/67596705792000 * n^12;
+  h[6]   =   20648693/638668800 * n^6
+           - 16363163/518918400 * n^7
+           - 2204645983/12915302400 * n^8
+           + 4543317553/18162144000 * n^9
+           + 54894890298749/167382319104000 * n^10
+           - 132058444054073/177843714048000 * n^11
+           - 21678380925301381/85364982743040000 * n^12;
+  h[7]   =   219941297/5535129600 * n^7
+           - 497323811/12454041600 * n^8
+           - 79431132943/332107776000 * n^9
+           + 4346429528407/12703122432000 * n^10
+           + 947319776978297/1625999671296000 * n^11
+           - 139564766909992667/115852476579840000 * n^12;
+  h[8]   =   191773887257/3719607091200 * n^8
+           - 17822319343/336825216000 * n^9
+           - 497155444501631/1422749712384000 * n^10
+           + 4081516004323/8281937664000 * n^11
+           + 3016420810780677019/2994340933140480000 * n^12;
+  h[9]   =   11025641854267/158083301376000 * n^9
+           - 492293158444691/6758061133824000 * n^10
+           - 3340781295639871/6360528125952000 * n^11
+           + 230755947172792843/315376186245120000 * n^12;
+  h[10]  =   7028504530429621/72085985427456000 * n^10
+           - 1396721719354981/13516122267648000 * n^11
+           - 242069739433316973869/299733527407362048000 * n^12;
+  h[11]  =   20180430688893997/144171970854912000 * n^11
+           - 39227670225311092139/261131482210959360000 * n^12;
+  h[12]  =   170866240186706518133/831839653739888640000 * n^12;
+
+eqs (07) [gamma in Krueger, p 21, eq (41)]
+  h'[1]  =   1/2 * n
+           - 2/3 * n^2
+           + 5/16 * n^3
+           + 41/180 * n^4
+           - 127/288 * n^5
+           + 7891/37800 * n^6
+           + 72161/387072 * n^7
+           - 18975107/50803200 * n^8
+           + 60193001/290304000 * n^9
+           + 134592031/1026432000 * n^10
+           - 1043934033787/3218890752000 * n^11
+           + 1107802529272207/5178390497280000 * n^12;
+  h'[2]  =   13/48 * n^2
+           - 3/5 * n^3
+           + 557/1440 * n^4
+           + 281/630 * n^5
+           - 1983433/1935360 * n^6
+           + 13769/28800 * n^7
+           + 148003883/174182400 * n^8
+           - 705286231/465696000 * n^9
+           + 1703267974087/3218890752000 * n^10
+           + 490493610499/373621248000 * n^11
+           - 1975809888712343/976396861440000 * n^12;
+  h'[3]  =   61/240 * n^3
+           - 103/140 * n^4
+           + 15061/26880 * n^5
+           + 167603/181440 * n^6
+           - 67102379/29030400 * n^7
+           + 79682431/79833600 * n^8
+           + 6304945039/2128896000 * n^9
+           - 6601904925257/1307674368000 * n^10
+           + 35472608886503/41845579776000 * n^11
+           + 7660808256523559/1098446469120000 * n^12;
+  h'[4]  =   49561/161280 * n^4
+           - 179/168 * n^5
+           + 6601661/7257600 * n^6
+           + 97445/49896 * n^7
+           - 40176129013/7664025600 * n^8
+           + 138471097/66528000 * n^9
+           + 48087451385201/5230697472000 * n^10
+           - 634613396309/40864824000 * n^11
+           + 152161926556090753/1124809184378880000 * n^12;
+  h'[5]  =   34729/80640 * n^5
+           - 3418889/1995840 * n^6
+           + 14644087/9123840 * n^7
+           + 2605413599/622702080 * n^8
+           - 31015475399/2583060480 * n^9
+           + 5820486440369/1307674368000 * n^10
+           + 98568244458947/3678732288000 * n^11
+           - 1367520624030470251/29877743960064000 * n^12;
+  h'[6]  =   212378941/319334400 * n^6
+           - 30705481/10378368 * n^7
+           + 175214326799/58118860800 * n^8
+           + 870492877/96096000 * n^9
+           - 1328004581729009/47823519744000 * n^10
+           + 3512873113922087/355687428096000 * n^11
+           + 986615629722639449/13133074268160000 * n^12;
+  h'[7]  =   1522256789/1383782400 * n^7
+           - 16759934899/3113510400 * n^8
+           + 1315149374443/221405184000 * n^9
+           + 71809987837451/3629463552000 * n^10
+           - 52653013293696143/812999835648000 * n^11
+           + 101784256296129577/4455864483840000 * n^12;
+  h'[8]  =   1424729850961/743921418240 * n^8
+           - 256783708069/25204608000 * n^9
+           + 2468749292989891/203249958912000 * n^10
+           + 117880637749661/2707556544000 * n^11
+           - 5921832934345276446697/38926432130826240000 * n^12;
+  h'[9]  =   21091646195357/6080126976000 * n^9
+           - 67196182138355857/3379030566912000 * n^10
+           + 395018924202597949/15446996877312000 * n^11
+           + 91220875613845291081/946128558735360000 * n^12;
+  h'[10] =   77911515623232821/12014330904576000 * n^10
+           - 268897530802721453/6758061133824000 * n^11
+           + 8257746726303249815683/149866763703681024000 * n^12;
+  h'[11] =   12809767642647461/1029799791820800 * n^11
+           - 5303630969873795374429/65282870552739840000 * n^12;
+  h'[12] =   2240624428311897034834681/91918281738257694720000 * n^12;
+
+eqs (15), (16), (17), (18), (23), (24), (25), (26) are extended in the
+obvious way.
+
+The formulas for meridian convergence (34) and scale (35) are only good
+for small l.  More accurate expressions are given here where ep2 = e'^2
+(eq. 04).
+
+    double
+      c = cos(phi),
+      s = sin(l),
+      c2 = c * c,
+      s2 = s * s,
+      d = 1 - s2 * c2,
+      // Accurate to order ep2^2
+      carg = 1 + c2 * c2 * s2 / d * ep2 *
+      (1 + c2 / (3 * d * d) *
+       (2 - s2 * (c2 * ((4 * c2 - 1) * s2 - 9) + 8)) * ep2),
+      // Accurate to order ep2
+      cabs = 1 + c2 * c2 * s2 * ((c2 - 2) * s2 + 1) / (2 * d * d) * ep2;
+    // This replaces (34)
+    gamma = atan2(sin(phi) * s * carg, cos(l));
+    // This replaces (35)
+    k = cabs/sqrt(d);
+
+For more accuracy, directly differentiate the series involving h' or h.
+The accumulation of the sum can be carried out at the same time as the
+transformation itself (and the calculation slots into a Clenshaw
+summation very easily).  The derivates give the convergence, gamma'',
+and scale, k'', of the [xi, eta] system relative to [xi', eta'] and vice
+versa.  For the full convergence and scale these need to be compounded
+with the convergence, gamma', and scale, k', of the [xi', eta'] system
+with
+
+    gamma = gamma' + gamma''
+        k = k' + k''
+
+gamma' and k' are conveniently expressed as
+
+    gamma' = atan(tan(lam) * sin(beta))
+    	   = atan(tan(lam) * tanh(Q))
+    	   = atan(tan(xi') * tanh(eta'))
+        k' = sqrt(1 - e^2 * sin(phi)^2)
+             * (cos(beta) / cos(phi)) * cosh(eta')
+
+where the factors on the last line are can be computed accurately with
+
+   (cos(beta) / cos(phi)) * cosh(eta')
+           = cosh(Q') / hypot(sinh(Q), cos(lam))
+	   = cosh(Q') * hypot(sinh(eta'), cos(xi'))
+
+These last two expressions preserve accuracy near the pole.  See also
+Krueger, pp 19-20, eqs (19) to (33*) and pp 21-22, eqs (43) to (47).
+
+Finally here is a summary of the errors in this implementation of the
+Transverse Mercator projection.  Errors are relative to an arbitrary
+precision formulation (see tm.mac).
+
+Define mu = asin(sin(l) * cos(phi))
+          = angular distance from meridian
+
+Errors are primarily a function of mu (or x).
+
+For each set, define
+
+   dxm  = max(erra, errb)
+          for mth order method (order n^m or e^(2*m)), where
+
+          erra = the error in the forward transformation scaled to
+                 distance on the ground with the scale factor k
+
+          errb = the discrepancy in applying the forward transformation
+                 followed by the reverse transformation and converting
+                 the result to a distance
+
+   dgam = max error in meridian convergence using the 6th order series
+
+   dk   = max relative error in scale using the 6th order series
+
+Units:
+
+   1um = 1e-6 m
+   d = degrees, ' = minutes, " = seconds
+   % = 0.01, %% = 0.001
+
+    set         dx4     dx5     dx6     dx7     dx8      dgam        dk
+x<4e5, y<95e5 200nm   5.0nm   5.0nm   5.0nm   5.0nm    6e-11"   2e-12%%
+x<5e5, y<96e5 210nm   5.0nm   5.0nm   5.0nm   5.0nm    6e-11"   2e-12%%
+    mu<10     350nm   5.1nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
+    mu<15     700nm   6.5nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
+    mu<20     1.5um    11nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
+    mu<25     3.3um    23nm   5.0nm   5.0nm   5.0nm    2e-10"   2e-12%%
+    mu<30     7.6um    62nm   5.0nm   5.0nm   5.0nm    4e-10"   2e-12%%
+    mu<35      18um   180nm   5.0nm   5.0nm   5.0nm   1.0e-9"   6e-12%%
+    mu<40      47um   570nm    10nm   5.0nm   5.0nm   4.1e-9"   2e-11%%
+    mu<45     130um   2.0um    35nm   5.0nm   5.0nm   2.0e-8"   1e-10%%
+    mu<50     400um   8.0um   170nm   6.3nm   5.0nm   1.1e-7"   6e-10%%
+    mu<55     1.4mm    37um   1.1um    33nm   5.0nm   8.0e-7"  3.8e-9%%
+    mu<60     5.8mm   210um   8.4um   350nm    17nm   7.1e-6"  3.5e-8%%
+    mu<65      31mm   1.6mm    94um   5.7um   360nm   9.8e-5"  4.7e-7%%
+    mu<70     230mm    20mm   1.8mm   170um    17um   2.2e-3"  1.1e-5%%
+    mu<72     600mm    62mm   6.9mm   820um   100um    0.010"  4.8e-5%%
+    mu<74     1.8m    230mm    33mm   4.9mm   750um    0.055"  2.7e-4%%
+    mu<76     6.2m    1.1m    200mm    39mm   7.9mm     0.39"  1.8e-3%%
+    mu<78      27m    6.3m    1.6m    430mm   .12m       3.7"   0.017%%
+    mu<80     160m     55m     20m    7.9m    3.2m        55"    0.28%%
+    mu<82     1.5km   870m    520m    330m    210m        35'     7.9%%
+    mu<84      27km    28km    37km    53km    81km       19d      39%
+
+Convergence and scale errors using O(ep2^2) and O(ep2) formulas
+
+    set         dgam   dk
+x<4e5, y<95e5   3e-8"  4e-7%%
+x<5e5, y<96e5   9e-8"  1e-6%%
+    mu<10       5e-6"  3e-5%%
+    mu<15       4e-5"  2e-4%%
+    mu<20       2e-4"  5e-4%%
+    mu<25       7e-4"  2e-3%%
+    mu<30       3e-3"  3e-3%%
+    mu<35       7e-3"  6e-3%%
+    mu<40       0.02"  0.02%%
+    mu<45       0.05"  0.03%%
+    mu<50       0.2"   0.05%%
+    mu<55       0.4"   0.1%%
+    mu<60       1"     0.3%%
+    mu<65       4"     0.6%%
+    mu<70       18"    1.5%%
+    mu<72       35"    2.4%%
+    mu<74       76"    3.9%%
+    mu<76       3'     7.1%%
+    mu<78       8'     1.4%
+    mu<80       28'    3.3%
+    mu<82       2.4d   10%
+    mu<84       14d    15%
 \endverbatim
 
 <center>
@@ -324,103 +503,7 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 Back to \ref example.  Forward to \ref seeds.  Up to \ref contents.
 </center>
 
-Random manipulates one data arrays, the seed and the state.  These are
-manages by the following classes:
-
- - RandomSeed.  This provides low-level facilities for changing and
-   reporting the seed.
-
- - RandomEngine<Algorithm, Mixer>. This is derived from RandomSeed.  This
-   provides facilities for managing the state, returning the next random
-   number, stepping the state, saving and restoring the state and the
-   seed.  It uses two classes specified as template parameters Algorithm
-   and Mixer.  These classes contain no state and are invoked through
-   static methods.
-     - Algorithm.  This provides a mechanism for producing the next batch
-       of state given the current state.  This is what most people
-       understand by a random number algorithm.  In addition, it
-       provides a facility to convert an arbitrary state (as given by
-       Mixer) into a legal state and to "temper" the state immediately
-       prior to being returned by RandomEngine.  This package provides
-       definitions of the following Algorithms
-	 - MT19937<Random_u32> -- 32-bit version of MT19937
-	 - MT19937<Random_u64> -- 64-bit version of MT19937
-	 - SFMT19937<Random_u32> -- 32-bit version of SFMT19937
-	 - SFMT19937<Random_u64> -- 64-bit version of SFMT19937
-     - Mixer.  This converts the current seed into an initial state by
-       some suitable mixing procedure.  For more details see \ref seeds.
-       This package provides the following definitions of the following
-       Mixers:
-	 - MixerMT0<Random_u32> -- init_by_array from 32-bit version of
-	   MT19937
-	 - MixerMT0<Random_u64> -- init_by_array from 64-bit version of
-	   MT19937
-	 - MixerMT1<Random_u32> -- improved version of
-	   MixerMT0<Random_u32>
-	 - MixerMT1<Random_u64> -- improved version of
-	   MixerMT0<Random_u64>
-	 - MixerSFMT -- init_by_array from SFMT19937
-	 .
-       by default only MixerSFMT is instantiated.
-
- - RandomGenerator is defined by
-     - typedef RandomEngine<SFMT19937<Random_u32>, MixerSFMT> RandomGenerator;
-     .
-   This is the standard user interface for accessing the random number
-   generator to provide random numbers in 32-bit and 64-bit chunks.  See
-   \ref switch for how to access the MT19937 generator or the 64-bit
-   versions of these generators.
-
- - RandomCanonical.  This accepts a random generator as a template
-   parameter and is a derived class of that generator.  RandomCanonical
-   converts the random bits from the underlying generator into usable
-   data: integers in specific ranges, real numbers at various
-   resolutions, etc.
-
- - Random is defined by
-     - typedef RandomCanonical<RandomGenerator> Random;
-
- - RandomType is a utility template class which is used to couple a
-   bit-width and an unsigned C++ type.  The following typedefs are
-   included
-      - typedef RandomType<32, uint32_t> Random_u32;
-      - typedef RandomType<64, uint64_t> Random_u64;
-
-For most purposes, users should ignore the existence of RandomSeed,
-RandomGenerator/RandomEngine, and RandomCanonical and access all the
-capabilities of these classes via thru the class Random which inherits
-all the needed functionality of its bases classes.  This documentation
-reflects this recommendation.  (In restricted applications, a user might
-wish to interface to the library via the lower-level RandomGenerator
-class as a source of random words.)
-
-Unfortunately the relation between this classes is sufficiently
-complicated to defeat doxygen's indexing capabilities; if you need to
-look up the definition of one of Random's member functions, you can
-refer to the brief index in \ref function.
-
-Finally, distributions such as the normal and exponential distribution
-are provided by the classes NormalDistribution and
-ExponentialDistribution.  They access the random data by being passed a
-Random object as an argument to operator().
-
-These routines have been developed and tested with g++ version 3.4.x and
-4.x under Linux 2.6.x on 32-bit Intel and 64-bit AMD CPUs, MS Visual
-Studio 2005, under Windows 2000, and g++ 4.x under Darwin on a PowerPC.
-Earlier versions of this library were tested with g++ on 64-bit SPARC
-platforms.  Porting to other platforms with a standard C++ compiler and
-template library should be straightforward provided that the radix for
-integer and real types is 2.
-
-(g++ 3.3.x cannot handle the overloaded template definitions properly.
-Contact me for possible workarounds for this version of g++.)
-
-A note about portability.  For the most part, the code uses portable
-C++.  System dependencies creep into the computation of SeedVector and
-SeedWord (e.g., to access the PID and the high-precision clock).  In
-addition, it's assumed that unsigned integers can be cast into signed
-integers preserving the bit pattern (assuming a twos-complement
-convention for signed numbers).
+Text here
 
 <center>
 Back to \ref example.  Forward to \ref seeds.  Up to \ref contents.
@@ -433,137 +516,7 @@ Back to \ref example.  Forward to \ref seeds.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref integer.  Up to \ref contents.
 </center>
 
-The state of MT19937 is given by a set of 19937 bits.  (The discussion
-here is illustrated with the MT19937 generator.  The properties of the
-SFMT19937 generator are similar.)  Over the course of the period of the
-generator all possible states are visited.  (The state consisting of all
-zeros is disallowed.)  Thus the sequence consists of \e
-X<sub><i>i</i></sub> where \e X<sub><i>i</i> + <i>L</i></sub> = \e
-X<sub><i>i</i></sub> and \e L = 2<sup>19937</sup> - 1.  When using the
-generator we need to specify a starting state \e j so that the sequence
-is then \e Y<sub><i>i</i>; <i>j</i></sub> = \e X<sub><i>i</i> +
-<i>j</i></sub>
-
-However, rather than specified an unwieldy set of 19937 bits, we instead
-specify a vector \e s of 32-bit integers.  The length of \e s is
-arbitrary (it can even be zero), however in most applications, its
-length will be small --- often a length of 1 provides sufficient "seed
-space".  The process of seeding MT19937 consists of "mixing" the \e s in
-some way to provide the necessary starting state \e j.  Thus the random
-sequence is now viewed as \e Z<sub><i>i</i>; <i>s</i></sub> = \e
-Y<sub><i>i</i>; <i>j</i>(<i>s</i>)</sub> = \e X<sub><i>i</i> +
-<i>j</i>(<i>s</i>)</sub>.
-
-Now the user's view of a typical random number generator is that \e
-Z<sub><i>i</i>; <i>s</i></sub> and \e Z<sub><i>i</i>; <i>s</i>'</sub>
-are \e independent provided \e s and \e s' are distinct.  A necessary
-condition for independence is that |\e j(\e s) - \e j(\e s')| > \e R
-where \e R is the maximum number of random numbers needed for a
-particular seed.  If we assume that the seeding function \e j(\e s)
-produces randomly distributed starting positions and if maximum number
-of seeds we might use is \e S, then the probability of overlapping
-sequences, i.e., that |\e j(\e s) - \e j(\e s')| < \e R for some \e s
-and \e s' is \e S<sup>2</sup>\e R / \e L.
-
-Suppose we take \e R = 10<sup>200</sup> and \e S = 10<sup>100</sup>,
-then the probability of overlap is a tiny 10<sup>-5600</sup>.  (On the
-other hand with rand() for which the period \e L is 2<sup>32</sup>, we
-have an appreciable probability of overlap with \e R = 2000 and \e S =
-1000.)  This means that we can safely assume that the sequences \e
-Z<sub><i>i</i>; <i>s</i></sub> as independent and this then means that
-from the user's perspective the most useful representation of the state
-of the generator is [\e i, \e s] which is given by [Count(), Seed()].
-
-It's frequently desirable to start each run of a code with a different
-"arbitrary" seed.  The current time (in seconds) is frequently used for
-this purpose.  However, if many runs are starts simultaneously, they are
-likely to use the same seed.  Random::SeedWord() can instead be called.
-This returns an unsigned long generated from various sources
-(/dev/urandom, the microsecond clock, etc.).
-
-Because Random::SeedWord() returns a result in [0, 2<sup>32</sup>),
-there's a strong probability of collisions after 2<sup>16</sup>
-invocations.  If you expect that your code will be invoked more often
-than that, then instead use Random::SeedVector() to seed the generator.
-This returns a vector of unsigned longs which is almost certainly
-unique.  However successive calls to Random::SeedVector() may return the
-same result.  If multiple random number sequences are required, for
-example in a multi-threaded application, then Random::SeedVector() can
-be called once by the master thread to define a master seed and each
-slave thread would set its seed to a vector obtained by appending a
-thread index to the master seed.  The default constructor
-for Random sets the seed to the vector [Random::SeedVector()].
-
-Whenever random numbers are used it is important to record the seed
-used.  Without this information, it will be impossible to repeated
-(e.g., to track down a bug).  Random::SeedString() returns
-the seed vector as a string allowing it to be printed on standard
-output easily.  Thus
-\code
-  RandomLib::Random r;   // sets seed to [Random::SeedVector()]
-  std::cout << "Random seed set to " << r.SeedString() << std::endl;
-\endcode
-
-In general, the seed may be set either with the constructor or with
-Reseed(...).  If you expect to have to reseed a Random object prior to
-using it, instantiate it with Random(unsigned long) to avoid the
-overhead of the call to Random::SeedVector(); for example
-\code
-  RandomLib::Random r(0);
-  if (debug)
-    r.Reseed(1234);  // sets seed to [1234]
-  else
-    r.Reseed();      // sets seed to [Random::SeedVector()]
-  std::cout << "Random seed set to " << r.SeedString() << std::endl;
-\endcode
-
-There are several ways to set the seed to a vector.  For example the
-seed can be set to [1,2,3,4] via Reseed as follows
-\code
-  RandomLib::Random r(0);
-  r.Reseed("[1,2,3,4]");        // via a string
-  unsigned v[] = {1,2,3,4};
-  r.Reseed(v, v+4);             // via iterators
-  r.Reseed(vector<unsigned>(v, v+4)); // via vector
-\endcode
-The seed may be similarly set via constructors of Random.
-
-The original C interface for the Mersenne Twister provided two
-seed-setting interfaces: (a) init_genrand, which took a single unscaled
-long as argument and (b) init_by_array, which took an array (length > 0)
-of unsigned longs as an argument.  Thus, the set of allowed seeds was
-{\e a, [\e a], [\e a, \e b], [\e a, \e b, \e c], ...}, where \e a and
-[\e a] were distinct.  But this then presents a confusing interface to
-the user.  In addition, it's not clear how best to report back the seed
-to the user.
-
-In this implementation, seeds are always vectors (of arbitrary length,
-including zero).  Thus the set of allowable seeds is {[], [\e a], [\e a,
-\e b], [\e a, \e b, \e c], ...}  which is easily and unambiguously
-represented by the STL vector container.  Note also that [], [0], [0,
-0], etc. are all distinct as are [\e a], [\e a, 0], [\e a, 0, 0].
-Seeding with Reseed(\e n) merely sets the seed to a vector of length
-one, [\e n].
-
-Also, since the init_by_array routine in the original MT19937
-implementation has some weaknesses (the most serious of which is
-distinct short seeds can result in the same state, this library uses, by
-default, SFMT's method for mixing the seed into the random generator
-state.  (This method has been adopted by the proposed C++0X standard,
-see
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2461.pdf">
-P. Becker, Working Draft, Standard for Programming Language C++,
-Oct. 2007, Sec. 26.4.7.1</a>.)  In this implementation, this mixing
-class is called MixerSFMT.
-
-If the symbol RANDOM_LEGACY is defined, addition mixing classes MixerMT0
-and MixerMT1 are provided.  MixerMT0 implements the mixing methods in
-MT19937 and MT19937_64.  These methods have some defects which are
-partially corrected by the MixerMT1 classes with are described in the
-(superceded) proposal to the C++0X standards, Brown, et al.,
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2079.pdf">
-Random Number Generation in C++0X: A Comprehensive Proposal, version
-3</a>.
+Text here
 
 <center>
 Back to \ref organization.  Forward to \ref integer.  Up to \ref contents.
@@ -576,77 +529,7 @@ Back to \ref organization.  Forward to \ref integer.  Up to \ref contents.
 Back to \ref seeds.  Forward to \ref real.  Up to \ref contents.
 </center>
 
-The following routines return random integers of the given type
-uniformly distributed in [min, max].  These are member functions of
-Random.
-
-<center>
-<table>
-<caption>Definitions of routines returning integers</caption>
-<tr>
-  <th>routine
-  <th>type
-  <th>min
-  <th>max
-<tr>
-  <td>Integer<IntType, b>()
-  <td>IntType
-  <td>0
-  <td>2<sup><i>b</i></sup> - 1
-<tr>
-  <td>Integer<b>()
-  <td>unsigned
-  <td>0
-  <td>2<sup><i>b</i></sup> - 1
-<tr>
-  <td>Integer();
-  <td>unsigned
-  <td>0
-  <td>std::numeric_limits<unsigned>::max()
-<tr>
-  <td>Integer<IntType>()
-  <td>IntType
-  <td>std::numeric_limits<IntType>::min()
-  <td>std::numeric_limits<IntType>::max()
-<tr>
-  <td>Boolean()
-  <td>bool
-  <td>false
-  <td>true
-<tr>
-  <td>Integer<IntType>(IntType \a n)
-  <td>IntType
-  <td>0
-  <td>\a n - 1\n
-  (if \a n == 0, std::numeric_limits<IntType>::max();\n
-   if \a n < 0, 0)
-<tr>
-  <td>IntegerC<IntType>(IntType \a n)
-  <td>IntType
-  <td>0
-  <td>\a n \n
-  (if \a n < 0, 0)
-<tr>
-  <td>IntegerC<IntType>(IntType \a m, IntType \a n)
-  <td>IntType
-  <td>\a m
-  <td>\a n \n
-  (if \a n < \a m, \a m)
-<tr>
-  <td>operator()()
-  <td>Random::result_type
-  <td>0
-  <td>2<sup><i>w</i></sup> - 1
-<tr>
-  <td>operator()(result_type n)
-  <td>Random::result_type
-  <td>0
-  <td>\a n - 1\n(if \a n == 0, std::numeric_limits<result_type>::max())
-</table>
-</center>
-
-Here \a w = Random::width.  For the default random generator,
-result_type is an unsigned int and \a w = 32.
+Text here
 
 <center>
 Back to \ref seeds.  Forward to \ref real.  Up to \ref contents.
@@ -659,407 +542,17 @@ Back to \ref seeds.  Forward to \ref real.  Up to \ref contents.
 Back to \ref integer.  Forward to \ref other.  Up to \ref contents.
 </center>
 
-The Random class generates two classes of uniform real results: \ref
-fixed "fixed" point numbers (where the spacing between possible results
-is a constant) and \ref floating "floating" point numbers (where the
-spacing between possible results varies).
+Text here
 
 \section fixed Fixed-point real numbers
 
-The results returned by Fixed(), FixedU(), FixedN(), FixedW(), FixedO(),
-and FixedC() are "fixed-point reals" with precision \e p.  These are of
-the form \e i / 2<sup><i>p</i></sup> where \e i is an integer.  If, for
-real data type RealType, we restrict \e p > 0 and \e p <=
-std::numeric_limits<RealType>::digits, then all such numbers in [-1,1]
-are representable.  For \e p = 3, the set of numbers in [0,1] is {0,
-1/8, 1/4, 3/8, 1/2, 5/8, 3/4, 7/8, 1}.
-
-The results returned FixedS() are of "offset fixed-point reals" with
-precision \e p.  These are of the form (\e i + 1/2) /
-2<sup><i>p</i></sup> where \e i is an integer.  If, for real data type
-RealType, we restrict \e p > 0 and \e p <=
-std::numeric_limits<RealType>::digits, then all such numbers in
-(-1/2,1/2) are representable.  (This only "works" for radix 2 systems;
-with larger bases, the results can't be represented exactly.)  Note that
-possibly "exceptional" numbers, -1/2, 0, and 1/2, are not included in
-this set.  For \e p = 3, the set of numbers in (-1/2,1/2) is {-7/16,
--5/16, -3/16, -1/16, 1/16, 3/16, 5/16, 7/16}.
+Text here
 
 \section floating Floating-point real numbers
 
-The results returned by Float(), FloatU(), FloatN(), FloatW() are
-"floating-point reals" with precision \e p and exponent range \e e.  The
-possible results for such floating numbers in [-1,1] consist of
- - \e f / 2<sup><i>p</i> + <i>s</i></sup> for \e f in (2<sup><i>p</i> -
-   1</sup>, 2<sup><i>p</i></sup>] and \e s in [0,\e e],
- - \e f / 2<sup><i>p</i> + <i>s</i></sup> for \e f in
-   [-2<sup><i>p</i></sup>, -2<sup><i>p</i> - 1</sup>) and \e s in [0,\e
-   e],
- - \e f / 2<sup><i>p</i> + <i>e</i></sup> for \e f in
-   [-2<sup><i>p</i> - 1</sup>, 2<sup><i>p</i> - 1</sup>].
-
-For real data type RealType, such numbers are representable if
- - \e p > 0
- - \e e >= 0
- - \e p <= std::numeric_limits<RealType>::digits
- - \e p + \e e <= std::numeric_limits<RealType>::digits -
-   std::numeric_limits<RealType>::min_exponent
-
-For \e e = 0, the numbers become the \ref fixed "fixed" point numbers
-with precision \e p.
-
-Here is an example of the floating point points with \e p = 3 and \e e =
-2 together with the probabilities yielded by Float(), FloatU(),
-FloatN().
-
-<center>
-<table>
-<caption>Floats with \e p = 3, \e e = 2</caption>
-<tr><td>\e X
-    <td>prob(Float() = \e X)
-    <td>prob(FloatU() = \e X)
-    <td>prob(FloatN() = \e X)
-<tr><td>   0   <td>      1/32  <td>   0    <td>     0.5/32
-<tr><td>   1/32<td>      1/32  <td>   1/32 <td>      1/32
-<tr><td>   2/32<td>      1/32  <td>   1/32 <td>      1/32
-<tr><td>   3/32<td>      1/32  <td>   1/32 <td>      1/32
-<tr><td>   4/32<td>      1/32  <td>   1/32 <td>      1/32
-<tr><td>   5/32<td>      1/32  <td>   1/32 <td>      1/32
-<tr><td>   6/32<td>      1/32  <td>   1/32 <td>      1/32
-<tr><td>   7/32<td>      1/32  <td>   1/32 <td>      1/32
-<tr><td>   4/16<td>      1/16  <td>   1/32 <td>     1.5/32
-<tr><td>   5/16<td>      1/16  <td>   1/16 <td>      1/16
-<tr><td>   6/16<td>      1/16  <td>   1/16 <td>      1/16
-<tr><td>   7/16<td>      1/16  <td>   1/16 <td>      1/16
-<tr><td>   4/8 <td>      1/8   <td>   1/16 <td>     1.5/16
-<tr><td>   5/8 <td>      1/8   <td>   1/8  <td>      1/8
-<tr><td>   6/8 <td>      1/8   <td>   1/8  <td>      1/8
-<tr><td>   7/8 <td>      1/8   <td>   1/8  <td>      1/8
-<tr><td>   1   <td>      0     <td>   1/8  <td>     0.5/8
-</table>
-</center>
-
-The description of floating-point numbers assumes that the underlying
-hardware supports denormalized numbers.  This is the case with most
-modern computers.  The code attempts to deal also with older hardware
-where there's a gap between 0 and 1/2<sup><i>e</i> + 1</sup>, but this
-has not been tested.
+Text here
 
 \section reals Summary of real number routines
-
-The following table provides a succinct definition of each of the member
-functions of Random routines that return a real result.  Here \e u is a
-uniformly distributed random number in (0,1).  This is drawn from a
-continuous distribution; i.e., it may be thought of as consisting of a
-binary point followed by an infinite sequence of random binary bits.
-(This is just a useful conceptual framework.  None of the
-implementations of these functions require an explicit realization of \e
-u.)
-
-The term "fixed" means a fixed-point real with precision \e p, and we
-have \e h = 1/2<sup><i>p</i></sup> (the smallest positive fixed-point
-number).  The term "float" means a floating-point real with precision \e
-p and exponent range \e e.
-
-<center>
-<table>
-<caption>Definitions of routines returning reals</caption>
-<tr>
-  <th>routine
-  <th>mnemonic
-  <th>definition
-<tr>
-  <td>Fixed()
-  <td>default (down)
-  <td>round \e u down to previous fixed
-<tr>
-  <td>FixedU()
-  <td>upper
-  <td>round \e u up to next fixed
-<tr>
-  <td>FixedN()
-  <td>nearest
-  <td>round \e u to nearest fixed
-<tr>
-  <td>FixedW()
-  <td>wide
-  <td>round 2\e u - 1 to nearest fixed
-<tr>
-  <td>FixedS()
-  <td>symmetric
-  <td>round \e u - 1/2 to nearest offset fixed
-<tr>
-  <td>FixedO()
-  <td>open
-  <td>round (1 - \e h)\e u up to nearest fixed
-<tr>
-  <td>FixedC()
-  <td>closed
-  <td>round (1 + \e h)\e u down to nearest fixed
-<tr>
-  <td>Float()
-  <td>default (down)
-  <td>round \e u down to previous float
-<tr>
-  <td>FloatU()
-  <td>upper
-  <td>round \e u up to next float
-<tr>
-  <td>FloatN()
-  <td>nearest
-  <td>round \e u to nearest float
-<tr>
-  <td>FloatW()
-  <td>wide
-  <td>round 2\e u - 1 to nearest float
-</table>
-</center>
-
-The precision and exponent range are determined as follows.  Each of
-the fixed-point routines comes in 3 variants, for example,
- - Fixed<RealType,p>() --- return fixed-point real of type RealType,
-   precision \e p;
- - Fixed<RealType>() --- as above with \e p =
-   std::numeric_limits<RealType>::digits;
- - Fixed() --- as above with RealType = double.
-
-Similarly each of the floating-point routines comes in 3 variants, for
-example,
- - Float<RealType,p,e>() --- return floating-point real of type
-   RealType, precision \e p, exponent range \e e;
- - Float<RealType>() --- as above with \e p =
-   std::numeric_limits<RealType>::digits and \e e =
-   -std::numeric_limits<RealType>::min_exponent;
- - Float() --- as above with RealType = double.
-
-Typical values of digits and min_exponent are given by
-<center>
-<table>
-<caption>Typical parameters for real types</caption>
-<tr>
-  <th>type
-  <th>digits
-  <th>-min_exponent
-<tr>
-  <td>float            <td>24     <td>125
-<tr>
-  <td>double           <td>53     <td>1021
-<tr>
-  <td>long double      <td>64     <td>16381
-<tr>
-  <td>long double (Power PC)<td>106<td>968
-<tr>
-  <td>long double (Sun)<td>113    <td>16494
-</table>
-</center>
-
-In the following tables, the columns have the following meanings
- - "min" and "max" give the bounds on the
-returned results;
- - "num" gives the number of distinct
-results;
- - "prob" gives the probability of each result.
-
-next(X) is the next representable float following X.
-prev(X) is the previous representable float preceding X.
-
-<center>
-<table>
-<caption>Properties of routines returning reals</caption>
-<tr>
-  <th>routine
-  <th>min
-  <th>max
-  <th>num
-  <th>prob
-<tr>
-  <td>Fixed()
-  <td>0
-  <td>1-<i>h</i>
-  <td>2<sup><i>p</i></sup>
-  <td><i>h</i>
-<tr>
-  <td>FixedU()
-  <td><i>h</i>
-  <td>1
-  <td>2<sup><i>p</i></sup>
-  <td><i>h</i>
-<tr>
-  <td>FixedN()
-  <td>0
-  <td>1
-  <td>2<sup><i>p</i></sup> + 1
-  <td><i>h</i> (<i>h</i>/2 at endpoints)
-<tr>
-  <td>FixedW()
-  <td>-1
-  <td>1
-  <td>2<sup><i>p</i>+1</sup> + 1
-  <td><i>h</i>/2 (<i>h</i>/4 at endpoints)
-<tr>
-  <td>FixedS()
-  <td>-(1-<i>h</i>)/2
-  <td>(1-<i>h</i>)/2
-  <td>2<sup><i>p</i></sup>
-  <td><i>h</i>
-<tr>
-  <td>FixedO()
-  <td><i>h</i>
-  <td>1-<i>h</i>
-  <td>2<sup><i>p</i></sup>-1
-  <td><i>h</i>/(1-<i>h</i>)
-<tr>
-  <td>FixedC()
-  <td>0
-  <td>1
-  <td>2<sup><i>p</i></sup>+1
-  <td><i>h</i>/(1+<i>h</i>)
-<tr>
-  <td>Float()
-  <td>0
-  <td>1-<i>h</i>
-  <td>2<sup><i>p</i></sup>(1+<i>e</i>/2)
-  <td>min(1,next(<i>X</i>))-<i>X</i>
-<tr>
-  <td>FloatU()
-  <td>1/2<sup><i>p</i>+<i>e</i></sup>
-  <td>1
-  <td>2<sup><i>p</i></sup>(1+<i>e</i>/2)
-  <td><i>X</i>-max(0,prev(<i>X</i>))
-<tr>
-  <td>FloatN()
-  <td>0
-  <td>1
-  <td>2<sup><i>p</i></sup>(1+<i>e</i>/2)+1
-  <td>(min(1,next(<i>X</i>))-max(0,prev(<i>X</i>)))/2
-<tr>
-  <td>FloatW()
-  <td>-1
-  <td>1
-  <td>2<sup><i>p</i>+1</sup>(1+<i>e</i>/2)+1
-  <td>(min(1,next(<i>X</i>))-max(-1,prev(<i>X</i>)))/4
-</table>
-</center>
-
-From these definitions, we can show that:
-- probability(Fixed() < \e X) = \e X) for all representable
-  fixed-point numbers \e X in [0,1];
-- probability(Float() < \e X) = \e X) for all representable
-  floating-point numbers \e X in [0,1];
-- probability(FixedU() <= \e X) = \e X) for all representable
-  fixed-point numbers \e X in [0,1];
-- probability(FloatU() <= \e X) = \e X) for all representable
-  floating-point numbers \e X in [0,1];
-- probability(FixedN() < \e X) = \e X) for all \e X in (0,1)
-  midway between representable fixed-point numbers \e X in [0,1];
-- probability(FloatN() < \e X) = \e X) for all \e X in (0,1)
-  midway between representable floating-point numbers \e X in [0,1].
-
-We can easily show that certain distributions are equivalent:
-<center>
-<table>
-<caption>Equivalences between routines returning reals</caption>
-<tr>
-  <th>Function
-  <th>Equivalent
-<tr>
-  <td>FixedU<RealType,p>()
-  <td>Fixed<RealType,p>() + h
-<tr>
-  <td>FixedU<RealType,p>()
-  <td>1 - Fixed<RealType,p>()
-<tr>
-  <td>FixedN<RealType,p>()
-  <td>Boolean() ? Fixed<RealType,p>() : FixedU<RealType,p>()
-<tr>
-  <td>FixedN<RealType,p>()
-  <td>1 - FixedN<RealType,p>()
-<tr>
-  <td>FixedO<RealType,p>()
-  <td>1 - FixedO<RealType,p>()
-<tr>
-  <td>FixedC<RealType,p>()
-  <td>1 - FixedC<RealType,p>()
-<tr>
-  <td>FixedS<RealType,p>()
-  <td>Fixed<RealType,p>() - (1-h)/2
-<tr>
-  <td>FixedS<RealType,p>()
-  <td>- FixedS<RealType,p>()
-<tr>
-  <td>FixedW<RealType,p>()
-  <td>(Boolean() ? 1 : -1) FixedN<RealType,p>()
-<tr>
-  <td>FixedW<RealType,p>()
-  <td>- FixedW<RealType,p>()
-<tr>
-  <td>FixedW<RealType,p-1>()
-  <td>2 FixedN<RealType,p>() - 1
-<tr>
-  <td>FloatN<RealType,p,e>()
-  <td>Boolean() ? Float<RealType,p,e>() : FloatU<RealType,p,e>()
-<tr>
-  <td>FloatW<RealType,p,e>()
-  <td>(Boolean() ? 1 : -1) FloatN<RealType,p,e>()
-<tr>
-  <td>FloatW<RealType,p,e>()
-  <td>- FloatW<RealType,p,e>()
-<tr>
-  <td>Float<RealType,p,0>()
-  <td>Fixed<RealType,p>()
-<tr>
-  <td>FloatU<RealType,p,0>()
-  <td>FixedU<RealType,p>()
-<tr>
-  <td>FloatN<RealType,p,0>()
-  <td>FixedN<RealType,p>()
-<tr>
-  <td>FloatW<RealType,p,0>()
-  <td>FixedW<RealType,p>()
-</table>
-</center>
-
-A caution about FixedO() and FixedC().  All four of
-FixedS(), FixedN() - 0.5, FixedO() - 0.5, and
-FixedC() - 0.5 produce results which are strictly symmetric
-about 0 and would thus be suitable for an unbiased random walk.  The
-variances of the first two distributions are 1/12 +
-O(<i>h</i><sup>2</sup>), close to the ideal value.  On the other hand
-the variances of the distributions of FixedO() and
-FixedC() are 1/12 + O(\e h), significantly further from the
-ideal value.  (In practice, using a strictly symmetric normal
-distribution is preferable for simulating a random walk.)
-
-Similarly, consider estimating the value of pi by randomly selecting
-points in a unit square and determining what fraction lie in a circle of
-diameter 1.  Sampling in the square using FixedO() or
-FixedC() gives poorer results than FixedN(), and
-FixedS() gives slightly better results.
-
-Because of their definitions in terms of \e u, any of Fixed(),
-FixedU(), FixedN(), or FixedS() can be used to
-cover the periodic unit interval in an unbiased way.  Thus to sample an
-angle uniformly, use 2.0 * M_PI * Fixed() or 2.0 * M_PI *
-FixedS().  The latter has the advantage that it is strictly
-symmetric about zero.  In addition, angles which are multiples of pi/2
-are avoided (which may obviate the need to check for special cases).
-
-Usually, these real routines would be invoked by specifying the type and
-allowing the precision to be determined from the type, e.g.,
-Real<double>().  However, in some cases it might be useful to
-specify a lower precision:
- - to match the precision on another platform and thereby to ensure
-   portability, e.g., Real<double, 48>() to match the precision
-   of the Cray 1 computers.
- - for debugging to explore boundary cases or to allow a thorough
-   exploration of possible results, e.g., Real<real, 4>().
- - to control rounding errors, e.g.,
-   1.0 + Real<double, 52>() samples the doubles in [1, 2)
-   uniformly (while 1.0 + Real<double>() does not).
- - for economy, e.g., Real<double, 32>() consumes 1 random
-   number from RandomGenerator instead of 2.  (This is the weakest
-   reason.  The overall speedup is likely to be small; and, in any case,
-   accuracy should trump speed.)
 
 <center>
 Back to \ref integer.  Forward to \ref other.  Up to \ref contents.
@@ -1072,61 +565,7 @@ Back to \ref integer.  Forward to \ref other.  Up to \ref contents.
 Back to \ref real.  Forward to \ref otherdist.  Up to \ref contents.
 </center>
 
-The following routines return true with the given probability
-
-<center>
-<table>
-<caption>Definitions of routines returning booleans</caption>
-<tr>
-  <th>routine
-  <th>probability
-<tr>
-  <td>Boolean()
-  <td>1/2
-<tr>
-  <td>Prob<NumericType>(NumericType p)
-  <td>\a p
-<tr>
-  <td>Prob<NumericType>(NumericType m, NumericType n)
-  <td><i>m</i>/<i>n</i>
-</table>
-</center>
-
-Prob accepts both real and integer types.  However, typically the
-one-argument version (the Bernoulli distribution) would be used with a
-real argument and the two-argument version would be used with integer
-arguments.  Prob<NumericType>(NumericType p) is false if \a p <= 0 and
-true if \a p >= 1.  Prob<NumericType>(NumericType m, NumericType n)
-returns false if \a m <= 0 or \a n < 0 and true if \a m >= \a n.  The
-results of Prob are \e exact.  In particular, Prob<double>(x, y) returns
-true with probability <i>x</i>/<i>y</i> even if <i>x</i>/<i>y</i> cannot
-be exactly represented as a double (e.g., it underflows to zero).
-
-<center>
-<table>
-<caption>Equivalences between routines returning booleans</caption>
-<tr>
-  <th>Function
-  <th>Equivalent
-<tr>
-  <td>Boolean()
-  <td>Integer<bool>()
-<tr>
-  <td>Boolean()
-  <td>Prob(1, 2)
-<tr>
-  <td>Boolean()
-  <td>Prob(0.5)
-<tr>
-  <td>Prob<RealType>(x)
-  <td>Float<RealType>() < x
-<tr>
-  <td>Prob<RealType>(x)
-  <td>FloatU<RealType>() <= x
-</table>
-</center>
-
-Finally, Bits<n>() returns \a n random bits in a std::bitset<n>.
+Text here
 
 <center>
 Back to \ref real.  Forward to \ref otherdist.  Up to \ref contents.
@@ -1139,62 +578,7 @@ Back to \ref real.  Forward to \ref otherdist.  Up to \ref contents.
 Back to \ref other.  Forward to \ref save.  Up to \ref contents.
 </center>
 
-This library includes implementation of a few other random distributions
-- RandomLib::NormalDistribution samples from a Gaussian.  This uses the
-  ratio method with Leva's modifications to avoid computing logarithms
-  too frequently.
-- RandomLib::ExponentialDistribution samples from an exponential
-  distribution.  This is uses FloatU to avoid log(0) and to allow rare
-  large values to be returned.
-- RandomLib::RandomSelect selects for a discrete set with specified
-  weights using the Walker algorithm.  With integer weights this is an
-  exact implementation.
-- RandomLib::LeadingZeros returns the number of zero bits after the
-  binary point of a uniform random number in (0,1).  This is exact.
-- RandomLib::ExponentialProb returns true with probability exp(-\e p)
-  using von Neumann's algorithm.  This is exact.
-
-These provide fast, reasonably accurate (or, where noted, exact)
-implementations of these distributions.
-
-In general, it is difficult to sample from an distribution and round the
-result exactly to the nearest representable real number.  However, for
-some simple distributions, the exact distribution is given by a series
-of uniform distributions and this provides a method for sampling
-exactly.  The class which represents the result of sampling from such
-distributions is RandomLib::RandomNumber.  It can be thought of as an
-infinite precision random number.  At any time only some of the leading
-digits have been computed and the result then stands for any number
-obtained by filling in the remaining digits uniformly and randomly.  The
-following are distributions with return a RandomNumber
-- RandomLib::ExactExponential samples exactly from an exponential
-  distribution.  The surprisingly simple algorithm is due to von Neumann
-  but adapted here to use infinite precision.
-- RandomLib::ExactPower samples exactly from a power distribution
-  (<i>n</i> + 1) <i>x</i><sup><i>n</i></sup> for \e x in (0,1) and
-  integer \e n >= 0.
-
-No attempt has been to optimize these exact distributions for speed.
-However, with base = 2, ExactExponential delivers \e k bits of accuracy
-consuming, on average, only about 8 + \e k bits of randomness; so a fast
-implementation is possible.  (Similarly it's possible to return true
-with probability 1/\e e consuming 6 bits of randomness.)
-
-The following code samples from the exponential distribution, rounding
-the results exactly to the nearest double.  Thus the probability that
-0.75 is returned is exactly 2 exp(-3/4) sinh(2<sup>-54</sup>) (with no
-error in the evaluation of exp and sinh).  (This assumes, of course,
-that the underlying random number generator is perfect.)
-\code
-  RandomLib::Random r;
-  const int b = 32;
-  RandomLib::ExactExponential<b> edist;
-  for (size_t i = 0; i < 10; ++i) {
-    RandomLib::RandomNumber<b> x = edist(r);  // Sample exactly
-    double y = x.Value<double>(r); // Round exactly to nearest double
-    std::cout << y << std::endl;
-  }
-\endcode
+Text here
 
 <center>
 Back to \ref other.  Forward to \ref save.  Up to \ref contents.
@@ -1207,85 +591,7 @@ Back to \ref other.  Forward to \ref save.  Up to \ref contents.
 Back to \ref otherdist.  Forward to \ref programming.  Up to \ref contents.
 </center>
 
-A Random can be copied, saved, and restored in a variety of
-ways as illustrated here.
-\code
-  #if HAVE_BOOST_SERIALIZATION
-  // With some versions of boost, these includes need to precede the
-  // inclusion of RandomLib/Random.hpp
-  #include <boost/archive/xml_iarchive.hpp>
-  #include <boost/archive/xml_oarchive.hpp>
-  #endif
-
-  #include "RandomLib/Random.hpp"
-
-  unsigned long l = 0;
-  double d = 0;
-  bool b = false;
-  RandomLib::Random r;
-  std::cout << "Seed set to: " << r.SeedString() << std::endl;
-  d += r.Fixed();               // use r
-
-  // Saving and restoring with a copy of r
-  RandomLib::Random s(r);       // copy r's state into s via copy constructor
-  l += r.Integer();             // use r some more
-  r = s;               // restore r's state from s via copy assignment
-
-  // Saving and restoring with Count()
-  long long c = r.Count();      // save position in r's stream
-  b ^= r.Boolean();             // use r
-  r.SetCount(c);                // restore r from saved count
-
-  // Saving and restoring to file
-  {
-    std::ofstream f("rand.bin", std::ios::binary);
-    r.Save(f);                  // save r in binary mode to rand.bin
-  }
-  {
-    std::ifstream f("rand.bin", std::ios::binary);
-    s.Load(f);                  // load saved state to s
-  }
-  // Saving as text
-  {
-    std::ofstream f("rand.txt");
-    f << "Random number state:\n" << r << std::endl; // operator<<
-  }
-  #if HAVE_BOOST_SERIALIZATION
-  // Saving and restoring the state using boost serialization
-  {
-    std::ofstream f("rand.xml");
-    boost::archive::xml_oarchive oa(f);
-    oa << BOOST_SERIALIZATION_NVP(r);   // save r to xml file rand.xml
-  }
-  {
-    std::ifstream f("rand.xml");
-    boost::archive::xml_iarchive ia(f);
-    ia >> BOOST_SERIALIZATION_NVP(s);   // load saved state to s
-  }
-  #endif
-  // Initializing with copy or modification of seed
-  s.Reseed(r.Seed());           // s reseeded with r's seed
-  {
-    std::vector<unsigned long> v(r.Seed());
-    v.push_back(1);
-    s.Reseed(v);                // s reseeded with 1 appended to r's seed
-  }
-\endcode
-
-As you can see in this example, you can use Boost serialization to save
-and restore the state of a Random object to various types of archives
-provided you have the Boost serialization library installed (see
-http://www.boost.org).  To turn this feature on, compile any code which
-includes RandomLib/Random.hpp with HAVE_BOOST_SERIALIZATION defined to
-be 1, and link the resulting code with libboost_serialization.  In order
-to declare the boost archives, you will need to include the appropriate
-header file, e.g.,
-\code
-  #include <boost/archive/xml_iarchive.hpp>
-  #include <boost/archive/xml_oarchive.hpp>
-\endcode
-With some versions of Boost, it is apparently necessary for these
-includes to precede the inclusion of Randomlib/Random.hpp.
+Text here.
 
 <center>
 Back to \ref otherdist.  Forward to \ref programming.  Up to \ref contents.
@@ -1300,446 +606,27 @@ Back to \ref save.  Forward to \ref parallel.  Up to \ref contents.
 
 \section conversion Conversion from std::rand()
 
-Here are simple steps to convert a code using rand() to Random:
-- Change \#include &lt;cstdlib&gt; to \#include "RandomLib/Random.hpp".
-- Change std::srand(unsigned int) to
-  RandomLib::Random::Global.Reseed(unsigned long); change
-  std::srand(time(0)) to RandomLib::Random::Global.Reseed().  (Reseed()
-  uses a more "random" seed than the current time in seconds.)
-- As a stop-gap, change std::rand() to RandomLib::Random::Global() and
-  change RAND_MAX to RandomLib::Random::max.  Preferably, you should see
-  how std::rand() is being used and substitute the appropriate member
-  function of Random.  For example:
- - To obtain a random real in [0,1), change
-   double(std::rand())/(RAND_MAX + 1.0) to
-   RandomLib::Random::Global.Fixed<double>().
- - To generate a random real in (0,1], to avoid a singularity at 0, use
-   RandomLib::Random::Global.FixedU<double>().
- - To generate a real symmetrically distributed in (-1/2,1/2), use
-   RandomLib::Random::Global.FixedS<double>().
- - To obtain a random integer in [0,n), change int(n *
-   double(std::rand())/(RAND_MAX + 1.0)) to
-   RandomLib::Random::Global.Integer(n).
- - To select a random integer in [m,n], use
-   RandomLib::Random::Global.IntegerC(m,n).
-- Change std::random_shuffle(first, last) to std::random_shuffle(first,
-  last, RandomLib::Random::Global).
-- Change std::generate(first, last, std::rand) to pass
-  RandomLib::Random::Global by reference.  See section on using the \ref
-  stl "standard template library".
-
-These examples use Random::Global which is a globally defined Random
-object.  In many cases this suffices.  However, if different parts of
-your code need independent random number streams, you can create your
-own Random objects.  In these cases, you might want to vary the seeds
-used to initialize the separate streams in a systematic way and, in that
-case, you can seed Random with a vector.  When you pass Random objects
-to other routines you should usually (always?) pass them by reference,
-Random&, to ensure that that the change in the state of the generator is
-seen by the parent routine.
+Text here
 
 \section stl Interaction with the standard template library
 
-Do not pass a Random object to std::generate to fill an vector with
-random integers.  Even though operator()() is defined to produce an
-random integer in [0,2<sup>32</sup>), generate makes a \e copy of its
-operator argument.  Thus
-\code
-  RandomLib::Random r;
-  std::vector<unsigned> a(10);
-  std::vector<unsigned> b(10);
-  std::generate(a.begin(), a.end(), r);
-  std::generate(b.begin(), b.end(), r);
-\endcode
-results in \e a and \e b having the same contents and r.Count() == 0.
-You should instead pass the Random object by reference as in
-\code
-  std::generate<std::vector<unsigned>::iterator, RandomLib::Random&>
-    (a.begin(), a.end(), r);
-  std::generate<std::vector<unsigned>::iterator, RandomLib::Random&>
-    (b.begin(), b.end(), r);
-\endcode
-Alternatively (and more flexibly) you can define function objects which
-accept the Random by reference in the constructor as follows:
-\code
-template<typename IntType = int> class RandomInteger {
-private:
-  RandomLib::Random& _r;
-  const IntType _m, _n;
-public:
-  RandomInteger(RandomLib::Random& r, IntType m, IntType n)
-    : _r(r), _m(m), _n(n) {}
-  IntType operator()() { return _r.IntegerC<IntType>(_m, _n); }
-};
-
-template<typename RealType = double> class RandomNormal {
-private:
-  RandomLib::Random& _r;
-  const RandomLib::NormalDistribution<RealType> _n;
-  const RealType _mean, _sigma;
-public:
-  RandomNormal(RandomLib::Random& r,
-               RealType mean = RealType(0), RealType sigma = RealType(1))
-    : _r(r), _n(RandomLib::NormalDistribution<RealType>())
-    , _mean(mean), _sigma(sigma) {}
-  RealType operator()() { return _n(_r, _mean, _sigma); }
-};
-\endcode
-Now, you can use
-\code
-  RandomLib::Random r;
-  std::vector<int> a(10);     // Fill with integers in [-10,10]
-  std::generate(a.begin(), a.end(), RandomInteger<>(r,-10,10));
-  std::vector<double> b(10);       // Fill with normal deviates
-  std::generate(b.begin(), b.end(), RandomNormal<>(r,1.0,2.0));
-\endcode
-
-On the other hand, std::random_shuffle does pass its operator argument by
-reference.  Thus a vector can be shuffled with
-\code
-  RandomLib::Random r;
-  std::vector<unsigned> a(100);
-  for (unsigned i = 0; i < 100; ++i)
-    a[i] = i;
-  // create a random permutation of [0,100)
-  std::random_shuffle(a.begin(), a.end(), r);
-\endcode
-This shuffles because operator()(unsigned n) is defined to produce an
-random integer in [0,\e n).  This shuffling can result in all possible
-permutations of vectors of lengths up to 2000 (because 2000! <
-2<sup>19937</sup>), whereas the built-in random number generator
-(invoked when the last argument to random_shuffle is omitted) can
-typically only produce all the permutations of 12 or fewer objects.
+Text here
 
 \section misc Miscellaneous
 
-When saving the state of a program in a restart file, it is usually
-necessary to save only the Random objects with Save(...).  (In fact,
-Random contains no additional state beyond the state of RandomGenerator.
-And thus Save just calls the underlying RandomGenerator::Save.)
-
-RandomSelect has state which is derivable from its input weights.
-However, neither it nor the other distributions contain state which
-depends on the Random argument to operator()(Random& r) (which is a
-const member function).
-
-For speed and for better control over round-off errors, the real
-routines FixedX are preferred over FloatX.  In a few cases, FloatX gives
-better results, e.g., in the implementation of ExponentialDistribution
-where it provides finer granularity in the results.
-
-Fixed, FixedU, FixedN, FixedW, FixedS are all obtained by rounding an
-ideal uniform deviate and so can all be used to sample periodic
-intervals uniformly.  If possible, avoid using FixedC and FixedO since
-they can introduce bias into your simulations.  Instead of FixedC,
-consider FixedN.  Instead of FixedO, consider FixedU (to avoid 0) or
-shift interval to (-1/2,1/2) and use FixedS.  You can also generate
-results in (0,1) by invoking FixedS with a smaller precision and
-shifting the result, for example
-\code
-  RandomLib::Random r;
-  double y =              // result in (0,1)
-    r.FixedS<double, std::numeric_limits<double>::digits - 1>() + 0.5;
-\endcode
-
-This library defines a STATIC_ASSERT to check template parameters and
-the values of some constants at compile time.  For example, this will
-prevent you from requesting 100 bits of accuracy in a float, e.g.,
-Fixed<float,100>().  The error message you get from the compiler
-may not be very informative.  However if you look at the corresponding
-line of source code in the header file, you should be able to figure out
-the problem.
+Text here
 
 \section switch Selection of default generator
 
-RandomLib provides 4 typedefs:
- - MRandomGenerator32 =
-   RandomEngine<MT19937<Random_u32>, MixerSFMT>,
-   the 32-bit version of MT19937 with SFMT19937's mixer;
- - MRandomGenerator64 =
-   RandomEngine<MT19937<Random_u64>, MixerSFMT>,
-   the 64-bit version of MT19937 with SFMT19937's mixer;
- - SRandomGenerator32 =
-   RandomEngine<SFMT19937<Random_u32>, MixerSFMT>,
-   the 32-bit version of SFMT19937;
- - SRandomGenerator64 =
-   RandomEngine<SFMT19937<Random_u64>, MixerSFMT>,
-   the 64-bit version of SFMT19937;
- .
-Thus {M,S}RandomGenerator{32,64} gives access to the 32-bit and 64-bit versions
-of MT19937 and SFMT19937 generators.
-
-Normally, an additional typedefs is provided
- - RandomGenerator = SRandomGenerator32;
- .
-However if the preprocessor symbol DEFAULT_GENERATOR is defined to be
-one of {M,S}RandomGenerator{32,64} when compiling files that include
-Random.hpp, then RandomGenerator is defined to be this instead.  This
-can be defined by supplying -DDEFAULT_GENERATOR=MRandomGenerator32 on the
-command line for the compiler or by specifying the value when invoking
-make, e.g., make DEFAULT_GENERATOR=MRandomGenerator32 RandomExample.
-
-Finally, we define
- - Random = RandomCanonical<RandomGenerator>
- .
-In normal use, all the functions of RandomLib should be accessed via the
-Random class (or occasionally via the underlying generator
-RandomGenerator).
-
-The SIMD-oriented Fast Mersenne Twister random number generator,
-<a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/index.html">
-SFMT19937</a> was developed in 2006 as an improvement on the
-<a href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html">
-MT19937</a>.  By and large these two generators have very similar
-properties and can be regarded as strong enough for nearly all applications.
-However the SFMT19937 generator does have some advantages:
- - SFMT19937 can be implemented efficiently on a machine supporting SSE2
-   or AltiVec instructions.
- - SFMT19937 recovered from a state with a preponderance of 0s more
-   quickly (this is unlikely to occur in practice).
- - SFMT19937 has better equidistribution properties.  But this is
-   unlikely to be observable.
- .
-In addition, SFMT19937 adopted an improved scheme for converting the
-seed into the state (via MixerSFMT) and, by default, this is used for
-the MT19937 generator in this library.  Because of these advantages,
-Random is typedef'ed to the SFMT19937 generator, by default.
-
-The 32-bit and 64-bit versions are comparable in strength.  Indeed with
-the SFMT19937 generator these are essentially the same (the underlying
-algorithm manipulates 128-bit words in both cases).  For example, after
- - SRandomGenerator32 a("1 2 3"); a.StepCount(1000000);
- - SRandomGenerator64 b("1 2 3"); b.StepCount(500000);
- .
-we have a.Ran64() == b.Ran64().
-
-The implementations of these is portable across 32-bit and 64-bit
-architectures.  Thus the choice of between these is probably best made
-on the basis of the speed on the target platform.  A glance at the
-timing data in the \ref timing "next section" shows that the 64-bit
-versions are \e slower than the 32-bit version on a 32-bit architecture
-(i686) and is about the same speed on a 64-bit machine (x86_64).
-However on a 64-bit machine, random routines which can consume 64-bits
-random results in one piece, e.g., r.Integer<unsigned long long>() and
-r.Fixed<double>, are faster with 64-bit versions of the generator.  In
-practise, the 32-bit versions are more likely to perform well on a wide
-range of CPUs.  However, it's likely that the 64-bit version will be a
-better choice in a few years (particularly if double-precision floating
-point random numbers are used).
-
-I recommend against mixing generators withing a single code.  This will
-merely result in a more complicated code.  However, while you are
-experimenting with different generators, I suggest printing out the type
-of generator being used, given by Name(), together with the seed.  For
-example:
-\code
-  RandomLib::RandomCanonical<SRandomGenerator64> r;
-  std::cout << "Using " << r.Name()
-            << " with seed " << r.SeedString() << std::endl;
-\endcode
+Text here
 
 \section timing Timing results
 
-The following times were obtained on Linux systems running Fedora 7 or
-8, kernel version 2.6.23, and compiling with g++ version 4.1.2 with
-optimization flags "-O3 -funroll-loops -finline-functions
--fomit-frame-pointer".  The random objects {M,S}Random{32,64} are here
-abbreviated {MT,SFMT}{32,64}.  Here \a r is a Random object, \a n is a
-unsigned variable with value 0 (but the compiler doesn't know its
-value), \a N is a large positive integer, and all times are in ns
-(unless another time unit is given)
-
-<center>
-<table>
-<caption>Times (ns) for various operations</caption>
-<tr><th rowspan="2">operation</th>
-<th colspan="4">Pentium III, i686, 864MHz
-</th><th colspan="4">Intel Xeon, x86_64 3.6GHz (SSE2)</th></tr>
-<tr><th>MT32</th><th>MT64</th><th>SFMT32</th><th>SFMT64</th>
-<th>MT32</th><th>MT64</th><th>SFMT32</th><th>SFMT64</th></tr>
-<tr><td>std::rand()
-</td><td colspan="4">86</td><td colspan="4">18</td></tr>
-<tr><td>r()
-</td><td>25    </td><td>66    </td><td>19    </td><td>48    
-</td><td>6.0   </td><td>8.8   </td><td>2.5   </td><td>3.8  </td></tr>
-<tr><td>r.Integer<unsigned>()
-</td><td>25    </td><td>64    </td><td>20    </td><td>47    
-</td><td>6.0   </td><td>8.8   </td><td>2.5   </td><td>3.8  </td></tr>
-<tr><td>r.Integer<unsigned long long>()
-</td><td>51    </td><td>66    </td><td>43    </td><td>48    
-</td><td>12    </td><td>8.8   </td><td>5.0   </td><td>3.8  </td></tr>
-<tr><td>r.Integer<unsigned,6>()
-</td><td>26    </td><td>65    </td><td>20    </td><td>48    
-</td><td>6.1   </td><td>9.3   </td><td>2.7   </td><td>3.9  </td></tr>
-<tr><td>r.Integer<unsigned>(52u)
-</td><td>35    </td><td>73    </td><td>27    </td><td>54    
-</td><td>8.2   </td><td>11    </td><td>4.4   </td><td>6.1  </td></tr>
-<tr><td>r.Integer<unsigned>(52u+n)
-</td><td>98    </td><td>140   </td><td>110   </td><td>140   
-</td><td>29    </td><td>31    </td><td>29    </td><td>31   </td></tr>
-<tr><td>r.Fixed<float>()
-</td><td>47    </td><td>92    </td><td>46    </td><td>80    
-</td><td>9.6   </td><td>12    </td><td>6.0   </td><td>7.5  </td></tr>
-<tr><td>r.Fixed<double>()
-</td><td>110   </td><td>90    </td><td>110   </td><td>80    
-</td><td>24    </td><td>13    </td><td>19    </td><td>7.9  </td></tr>
-<tr><td>r.Float<float>()
-</td><td>100   </td><td>160   </td><td>90    </td><td>140   
-</td><td>37    </td><td>44    </td><td>32    </td><td>35   </td></tr>
-<tr><td>r.Float<double>()
-</td><td>170   </td><td>170   </td><td>150   </td><td>140   
-</td><td>52    </td><td>43    </td><td>45    </td><td>34   </td></tr>
-<tr><td>r.Prob<float>(0.28f)
-</td><td>67    </td><td>110   </td><td>62    </td><td>94    
-</td><td>18    </td><td>22    </td><td>15    </td><td>16   </td></tr>
-<tr><td>r.Prob<double>(0.28)
-</td><td>74    </td><td>120   </td><td>71    </td><td>100   
-</td><td>19    </td><td>22    </td><td>16    </td><td>17   </td></tr>
-<tr><td>NormalDistribution<float>()(r)
-</td><td>250   </td><td>370   </td><td>240   </td><td>340   
-</td><td>80    </td><td>90    </td><td>73    </td><td>80   </td></tr>
-<tr><td>NormalDistribution<double>()(r)
-</td><td>380   </td><td>370   </td><td>370   </td><td>340   
-</td><td>110   </td><td>87    </td><td>92    </td><td>80   </td></tr>
-<tr><td>SeedWord()
-</td><td colspan="4">6.1 ms</td><td colspan="4">1.4 ms</td></tr>
-<tr><td>SeedVector()
-</td><td colspan="4">80 us</td><td colspan="4">25 us</td></tr>
-<tr><td>r.Reset(), r.SetCount(0)
-</td><td colspan="4">45 us</td><td colspan="4">10 us</td></tr>
-<tr><td>r.StepCount(N)
-</td><td>8.8 N </td><td>34 N  </td><td>13 N  </td><td>40 N  
-</td><td>2.3 N </td><td>3.1 N </td><td>1.3 N </td><td>2.6 N</td></tr>
-<tr><td>r.StepCount(-N)
-</td><td>13 N  </td><td>40 N  </td><td>15 N  </td><td>43 N  
-</td><td>3.1 N </td><td>4.7 N </td><td>1.9 N </td><td>3.9 N</td></tr>
-</table>
-</center>
-
-Loop unrolling is critical in the performance of, e.g., Fixed<double>().
-If your compiler doesn't unroll the loops in Fixed<RealType,p>(), you
-can provide specializations with the loops unrolled by hand.  Much of
-the speed of this implementation comes from extensive use of inlined
-procedures.  This also make the timing results sensitive to the context
-in which Random is called.  Compare the results for
-r.Integer<unsigned>(52u) (typical if drawing a card from a deck) and
-r.Integer<unsigned>(52u+n) (as typical called by std::random_shuffle).
-In the first case the compiler can precompute some of the variables used
-resulting is a much faster execution.  The best way of gauging the speed
-is to time or to profile your own application.
-
-The time quoted for r.Reset(), r.SetCount() gives the time to reset the
-generator and to convert the seed to the initial state.  Note that
-r.Reseed(...) merely stores the seed and does not update the state and
-r.Reset() also similarly does not reinitialize the generator state.  The
-random generator state is produced from the seed by calling the mixer
-when the first random number is requested or when SetCount is called.
-
-Beware of the compiler optimizing too much code away when doing timing
-studies.  Timing this section of code
-\code
-  RandomLib::Random r;
-  const size_t n = 100000000;
-  for (size_t i = n; i; --i) r.Fixed<double>();
-\endcode
-will usually result is an unrealistically short time (by up to a factor
-of \e three!) because the compiler skips over a lot of the computation
-(the tempering of the random results and all the real multiplications).
-You can prevent the compiler from "cheating" in this way by using the
-results from the timed functions.  Thus
-\code
-  RandomLib::Random r;
-  const size_t n = 100000000;
-  double d = 0;
-  for (size_t i = n; i; --i) d += r.Fixed<double>();
-  std::cout << "Sum: " << d << std::endl;
-\endcode
-More simply, you can  store the results in a variable which is declared
-volatile
-\code
-  RandomLib::Random r;
-  const size_t n = 100000000;
-  volatile double d;
-  for (size_t i = n; i; --i) d = r.Fixed<double>();
-\endcode
-As of 2006-11-03, at least one implementor of the Mersenne Twister makes
-a bogus speed claim for his implementations because of a poorly designed
-timing test:
- - <a href="http://www-personal.engin.umich.edu/~wagnerr/MersenneTwister.html">
-   MersenneTwister-1.0</a> by <a href="mailto:rjwagner@writeme.com">
-   Rick Wagner</a> (problem reported to author on 2005-10-17).
-
-There's nothing the matter with this implementation.  It's just that it
-isn't as fast as claimed.
+Text here
 
 \section checking Checking the engines
 
-Compile the following code (and Random.cpp) with -DRANDOM_LEGACY
-\code
-    using namespace RandomLib;
-#if RANDOM_LEGACY
-    {
-      RandomEngine<MT19937<Random_u32>,MixerMT0<Random_u32> >
-	s("0x123,0x234,0x345,0x456");
-      s.SetCount(999);
-      uint32_t x = s();
-      std::cout << "Generator: " << s.Name() << "\n"
-		<< "Seed: " << s.SeedString() << "\n"
-		<< s.Count() << "th result: " << x
-		<< " (should be 3460025646)"<< "\n\n";
-    }
-    {
-      RandomEngine<MT19937<Random_u64>,MixerMT0<Random_u64> >
-	s("0x12345,0,0x23456,0,0x34567,0,0x45678,0");
-      s.SetCount(999);
-      uint64_t x = s();
-      std::cout << "Generator: " << s.Name() << "\n"
-		<< "Seed: " << s.SeedString() << "\n"
-		<< s.Count() << "th result: " << x
-		<< " (should be 994412663058993407)"<< "\n\n";
-    }
-#endif
-    {
-      SRandomGenerator32 s("0x1234,0x5678,0x9abc,0xdef0");
-      s.SetCount(999);
-      uint32_t x = s();
-      std::cout << "Generator: " << s.Name() << "\n"
-		<< "Seed: " << s.SeedString() << "\n"
-		<< s.Count() << "th result: " << x
-		<< " (should be 788493625)"<< "\n\n";
-    }
-    {
-      SRandomGenerator64 s("5,4,3,2,1");
-      s.SetCount(999);
-      uint64_t x = s();
-      std::cout << "Generator: " << s.Name() << "\n"
-		<< "Seed: " << s.SeedString() << "\n"
-		<< s.Count() << "th result: " << x
-		<< " (should be 13356980519185762498)"<< "\n\n";
-    }
-\endcode
-This checks the current implementations of MT19937 and SFMT19937 against
-their original implementations.  The original 64-bit implementation of
-MT19937 used a vector of 64-bit integers for the seed.  So for the check
-above it is necessary to recast these as a vector of 32-bit integers (by
-inserting 0 elements).  This should produce the following output:
-\verbatim
-Generator: RandomEngine<MT19937<Random_u32>,MixerMT0<Random_u32>>
-Seed: [291,564,837,1110]
-1000th result: 3460025646 (should be 3460025646)
-
-Generator: RandomEngine<MT19937<Random_u64>,MixerMT0<Random_u64>>
-Seed: [74565,0,144470,0,214375,0,284280,0]
-1000th result: 994412663058993407 (should be 994412663058993407)
-
-Generator: RandomEngine<SFMT19937<Random_u32>,MixerSFMT>
-Seed: [4660,22136,39612,57072]
-1000th result: 788493625 (should be 788493625)
-
-Generator: RandomEngine<SFMT19937<Random_u64>,MixerSFMT>
-Seed: [5,4,3,2,1]
-1000th result: 13356980519185762498 (should be 13356980519185762498)
-\endverbatim
+Text here.
 
 <center>
 Back to \ref save.  Forward to \ref parallel.  Up to \ref contents.
@@ -1752,358 +639,10 @@ Back to \ref save.  Forward to \ref parallel.  Up to \ref contents.
 Back to \ref programming.  Forward to \ref function.  Up to \ref contents.
 </center>
 
-Many large codes are designed to run in parallel environments.  Each
-program thread then needs its own private Random which needs to
-be uniquely seeded.  In a message passing environment the code would
-look  like
-\code
-  // Parallel code where each thread gets a unique seed
-  RandomLib::Random r(0);             // Thread local Random
-  std::vector<unsigned long> seed;    // Thread local seed
-  if (comm.Id() == 0) {               // On master node
-    if (debug)
-      seed.push_back(314159265UL);
-    else
-      seed = RandomLib::Random::SeedVector();
-    logfile << "Master seed: " << RandomLib::Random::VectorToString(seed)
-            << std::endl;
-    comm.Send(slaveIds, seed);       // Send seed to slaves
-  } else                             // On slave nodes
-    comm.Receive(seed);              // Receive seed from master
-  seed.push_back(comm.Id());         // Make seed unique to this process
-  r.Reseed(seed);                    // Reseed Random
-  ...                                // The work goes here
-\endcode
-
-This approach has the disadvantage that the results of the code will
-depend on the number of processors (assuming that debug is true, so that
-the master seed is fixed).  If your code divides the computation out
-amongst the threads in a way that depends on how quickly each thread
-completes a unit of work, then the results will vary from run to run
-even with a fixed number of threads.  This is a huge problem when
-developing a code: debugging a multi-threaded code is difficult enough;
-debugging a code where the results aren't repeatable just increases the
-difficulty.  The solution is to require that the results be independent
-of the number of processors.  This would allow the algorithms and basic
-code to be debugged with a non-parallel version of the code.  When
-moving to the parallel version, we require that the results stay the
-same, and any deviation from this signals a bug in the parallelization.
-This can be accomplished by having the seed depend on the the data
-(e.g., a loop index) rather than on processor.  Here's how this might be
-done:
-\code
-  // Parallel code where each loop iteration gets a unique seed
-  RandomLib::Random r(0);                        // Thread local Random
-  std::vector<unsigned long> seed;    // Thread local seed
-  if (comm.Id() == 0) {
-    // On master node
-    if (debug)
-      seed.push_back(314159265UL);
-    else
-      seed = RandomLib::Random::SeedVector();
-    logfile << "Master seed: " << RandomLib::Random::VectorToString(seed)
-            << std::endl;
-    comm.Send(slaveIds, seed);       // Send seed to slaves
-  } else
-    comm.Receive(seed);              // Receive seed from master
-  seed.push_back(0);                 // Increase the seed size by 1
-  // Num units are work are to be divided between nproc processes.
-  // Assume comm.Id() is in [0,nproc).
-  for (size_t i = 0; i < num; ++i) {
-    if (i % nproc != comm.Id())     // Handle this index?
-      continue;
-    seed.back() = i;                 // Make seed unique to this index
-    r.Reseed(seed);                  // Reseed Random
-    ...                              // The work goes here
-  }
-\endcode
-
-This code will satisfy the goal of producing results which are
-independent on the number of processors.  However, if \e num is large
-(say 10<sup>8</sup>), and if each iteration through the loop consumes
-only a small number of random numbers (say, at most, 100).  Then we are
-abusing the SFMT19937 random number generator.  There are two potential
-problems.
- - Efficiency: We can see from the following table that reseeding the
-   generator is roughly as expensive as consuming 2000 random numbers
-   from the generator.
- - Statistical accuracy: A sequence of numbers produced by MT19937 with
-   a given seed has some proven good statistical properties.  Little is
-   known about the properties of the sequence of numbers obtained when
-   SFMT19937 is frequently reseeded.
-
-<center>
-<table>
-<caption>Approximate relative times for basic seeding operations</caption>
-<tr>
-  <th>Function
-  <th>Relative time
-<tr>
-  <td>s = Random::SeedWord();
-  <td>500000
-<tr>
-  <td>v = Random::SeedVector();
-  <td>10000
-<tr>
-  <td>r.Reseed(v), r.SetCount(0)
-  <td>4000
-<tr>
-  <td>i = r();
-  <td>1
-<tr>
-  <td>r.StepCount(N);
-  <td>abs(N)/2
-</table>
-</center>
-In order to address efficiency, we should use at least 10<sup>4</sup>
-random numbers for each seed.  In order to preserve the statistical
-properties of SFMT19937, we should consume at least 10<sup>5</sup> random
-numbers for each seed.  (Incidentally, this table also shows the high
-cost of Random::SeedWord().  This is mainly because of accessing
-/dev/urandom.  Typically you should call Random::SeedWord() at most once
-per code run.)
-
-A way to ameliorate this problem is to change the loop into a double
-loop and do the parallelization and reseeding at the level of the outer
-loop.  Here we choose the block size so that maxrandoms * blocksize is
-at least 10<sup>5</sup> where maxrandoms is the maximum number of random
-numbers consumed per iteration (100 in this example) and blocksize is
-the number of iterations in the inner loop.  It's easy to estimate
-maxrandoms with calls to Count() at the beginning and end of the
-body of the loop.  Thus:
-\code
-  // Parallel code where each block gets a unique seed
-  ...                                // Get the master seed as above
-  // Num units are work are to be divided between nproc processes in
-  // blocks of size blocksize.
-  const size_t blocksize = 1000;
-  for (size_t i = 0, j = 0; i < num; ++j) { // j is block index
-    if (j % nproc != comm.Id())     // Handle this block?
-      continue;
-    seed.back() = j;                 // Make seed unique to this block
-    r.Reseed(seed);                  // Reseed Random
-    do {
-      ...                            // A block of work goes here
-    } while ((++i) % blocksize && i < num);
-  }
-\endcode
-
-With this splitting of the code into block you loose some flexibility in
-parallelization.  We can overcome this by letting the reseeding be
-interspersed with the assignment to processors.  To do this we need an
-estimate of the maximum number of random numbers consumed by one
-iteration of the inner loop.  We then use SetCount(\e n) to position
-the random number sequence to a definite position at the beginning of
-each loop.  (We saw in the table above that SetCount is relatively
-cheap.)  In this example, we avoid unnecessary reseeding by having a
-given processor to deal with a consecutive set of loop iterations.
-\code
-  // Parallel code where each iteration gets a unique (seed, count)
-  ...                                // Get the master seed as above
-  // Num units are work are to be divided between nproc processes.
-  // Assignment to processes and seeding are treated independently.
-  const size_t blocksize = 1000;
-  const long long int maxrandoms = 100; // Max # of randoms per loop
-  long long int checkmaxrandoms = 0;
-  size_t ibeg = (comm.Id() * num)/nproc,  // The index range
-         iend = ((comm.Id() + 1) * num)/nproc;
-  for (size_t i = ibeg, b = num; i < iend; ++i) { // b is block
-    size_t newb = i/blocksize;       // Which block?
-    if (newb != b) {                 // in a new block?
-      b = newb;
-      seed.back() = b;
-      r.Reseed(seed);                // then reseed
-    }
-    size_t k = i % blocksize;        // index within block
-    r.SetCount(k * maxrandoms);      // step to starting point
-      ...                            // The work goes here
-    checkmaxrandoms =                // How many randoms used
-      std::max(checkmaxrandoms, r.Count() - k * maxrandoms);
-  }
-  if (checkmaxrandoms > maxrandoms) {
-    ... // flag a warning that maxrandoms needs to be increased
-  }
-\endcode
-If more that maxrandoms numbers are used in a loop, you will have reused
-some random numbers and the results should be treated with some
-suspicion.  In this case, you should set maxrandoms to, say, double the
-value of checkmaxrandoms and try again.  The number of randoms consumed
-will usually be normally distributed and it should be easy to pick a
-value of maxrandoms which is safe.  Typically, you should adjust
-blocksize so that maxrandoms * blocksize lies between 10<sup>5</sup> and
-10<sup>7</sup> resulting in a reasonably long sequence of random numbers
-per seed.
-
-In the example above, the call to SetCount will typically step the
-Random by less than maxrandoms.  On the first iteration of the loop for
-a particular process, SetCount might step the Random by as much as
-maxrandoms * blocksize = 10<sup>5</sup>; but this typically takes less
-than 1 ms on a 2 GHz machine.  So the cost of this strategy will be
-small.
-
-There are two other applications where this technique of resetting the
-count can be useful.
- - We are running the code on two different platforms were the
-   arithmetic operations are done in different orders yielding slightly
-   different results.  The concern is at an early iteration of the loop
-   will consume one more random number on one platform compared to the
-   other (e.g., due to the use of a rejection method in
-   NormalDistribution).  This results in a cascade of completely
-   different results for the rest of the calculation.  Presumably both
-   results are valid.  However, in tracking down bugs, we have wish the
-   two versions to stay closer together.  By resetting the count on each
-   iteration, we prevent this cascading effect.
- - Correlated sampling is a variance reduction technique where a Monte
-   Carlo code is run twice with slightly different parameters in order,
-   for example, to determine the change in neutron diffusion as the
-   temperature of the moderator varies in a fission reactor.  Such
-   calculations are important since they determine the stability of the
-   reactor.  Since the results from Monte Carlo codes are intrinsically
-   noisy, it's very inaccurate to "numerically differentiate" by running
-   the code twice with slightly changed parameters.  With correlated
-   sampling the two runs of the code use the same seeds and hence random
-   number sequence, so that main component of the noise cancels when
-   numerically differentiating.  But here again we would need to
-   resynchronize the random number streams, e.g., on the start of each
-   neutron flight, in order to avoid a cascading of discrepancies.  In
-   this case one or two neutrons may have completely different histories
-   (e.g., be captured instead of escaping), but most of the neutrons
-   have histories which are close.
 
 \section leapfrog Leapfrogging
 
-In the method described above, the use of SetCount() to reset the
-position in the random number stream depends on knowing in advance the
-bound on the number of random numbers generated in each iteration of the
-loop.  In the absence of this a priori knowledge, we can use
-leapfrogging.  In this technique, one iteration through the loop might
-use random numbers with indices 30, 40, 50, ..., the next will use 31,
-41, 51, ..., and so on.  Consider a program with a compute intensive
-loop which we wish to execute in parallel.  Here's the starting code:
-\code
-  #include "RandomLib/Random.hpp"
-
-  RandomLib::Random r;
-  // Use r
-  size_t n = 20;
-  // The following loop has dependencies through r and cannot be
-  // parallelized
-  for (size_t i = 0; i < n; ++i) {
-    // Use r some more.
-  }
-  // Use r again
-\endcode
-
-We give 3 techniques for removing the dependency:
-  - Random number streams with different seeds
-  - Block skipping with SetCount()
-  - Leapfrogging with SetStride()
-
-Random number streams with different seeds
-\code
-  #include "RandomLib/Random.hpp"
-  #include <vector>
-
-  RandomLib::Random r;
-  // Use r
-  size_t n = 20;
-  {
-    // Create independent random number streams.  In this example, each stream
-    // will use a unique seed.
-    std::vector<RandomLib::Random> s(n, r);
-    // The dependencies through r have been eliminated and this loop is now a
-    // candidate for parallelization.
-    for (size_t i = 0; i < n; ++i) {
-      {
-        // Base the seed for each new random object on the main seed.
-        std::vector<RandomLib::seed_type> seed = s[i].Seed();
-        // Add a loop identifier (123 in this example) to the seed, in case
-        // several loops need to be parallelizeed with this technique.
-        seed.push_back(123);
-        // Add a loop index to the seed to make is unique to this iteration
-        seed.push_back(i);
-        s[i].Reseed(seed);      // Initialize stream with new seed
-      }
-      // Use s[i] instead of r
-    }
-  }
-  // Use r again
-\endcode
-
-Block skipping with SetCount()
-\code
-  #include "RandomLib/Random.hpp"
-  #include <vector>
-
-  RandomLib::Random r;
-  // Use r
-  size_t n = 20;
-  {
-    const size_t maxrandom = 1000;
-    const long long base = r.Count();
-    // Create independent random number streams.  In this example, each stream
-    // will use a block of maxrandom consecutive random numbers in base + [i *
-    // maxrandom, (i+1) * maxrandom).
-    std::vector<RandomLib::Random> s(n, r)
-    // The dependencies through r have been eliminated and this loop is now a
-    // candidate for parallelization.
-    for (size_t i = 0; i < n; ++i) {
-      s[i].SetCount(base + i * maxrandom);
-      // Use s[i] instead of r
-      if (s[i].Count() > base + (i+1) * maxrandom) {
-        // Issue a warning that maxrandom is too small
-      }
-    }
-    if (n > 0)
-      // s[n-1] is already stepped nearly to the end of the n blocks
-      r = s[n-1];
-    // Step r past the n blocks.
-    r.SetCount(base + n * maxrandom);
-  }
-  // Use r again
-\endcode
-
-Leapfrogging with SetStride()
-\code
-  #include "RandomLib/Random.hpp"
-  #include <vector>
-
-  RandomLib::Random r;
-  // Use r
-  size_t n = 20;
-  {
-    // Create independent random number streams.  In this example, each stream
-    // will random numbers with indices, base + i + n * [0, 1, 2, 3, ...].
-    std::vector<RandomLib::Random> s(n, r);
-    // The dependencies through r have been eliminated and this loop is now a
-    // candidate for parallelization.
-    for (size_t i = 0; i < n; ++i) {
-      // Set up leapfrogging
-      s[i].SetStride(n, i);
-      // Use s[i] instead of r
-    }
-    // Advance r to the high-water mark of s[i].
-    if (n > 0) {
-      r = s[0];
-      // Turn off leapfrogging
-      r.SetStride();
-    }
-    for (size_t i = 1; i < n; ++i)
-      if (s[i].Count() > r.Count())
-        r.SetCount(s[i].Count());
-  }
-  // Use r again
-\endcode
-
-Leapfrogging slows down the generation of raw random numbers by a factor
-of approximately 1 + (stride - 1)/2.  Thus, in normal use, the stride
-should less than 100 or so.  (However this will of course depend on what
-other work in done in the loops.)  If the loop count is large, we might
-be able to reduce the stride by partially unrolling the loop.
-Alternatively, we could replace the loop by a double loop and then the
-stride would be the loop count on the inner loop.  The choice of the
-strategy will naturally depend on how parallelization is being
-implemented.
+Text here.
 
 <center>
 Back to \ref programming.  Forward to \ref function.  Up to \ref contents.
@@ -2116,129 +655,33 @@ Back to \ref programming.  Forward to \ref function.  Up to \ref contents.
 Back to \ref parallel.  Forward to \ref old.  Up to \ref contents.
 </center>
 
-The relation between Random and its base classes is through template
-arguments and this defeats doxygen's indexing capabilities.  Here you
-will all the public elements of Random listed together with a more basic
-declaration that doxygen can provide a link for.
-
-These problems with doxygen do not extend to the documentation for
-distributions for which you can follow the links in \ref otherdist.
-
-Here is the key to the types of the the variables
- - r: RandomLib::Random
- - g, g1, g2: RandomLib::Random (or RandomLib::RandomGenerator)
-
 typedefs and consts
  - Random::seed_type; &nbsp; &nbsp;
    RandomLib::RandomSeed::seed_type
- - Random::result_type; &nbsp; &nbsp;
-   RandomLib::RandomEngine::result_type
- - Random::width; &nbsp; &nbsp;
-   RandomLib::RandomEngine::width
- - Random::min; &nbsp; &nbsp;
-   RandomLib::RandomEngine::min
- - Random::max; &nbsp; &nbsp;
-   RandomLib::RandomEngine::max
 
 Setting and examining the seed
  - Random g(v); &nbsp; &nbsp;
    RandomLib::RandomEngine::RandomEngine(const std::vector<IntType>&)
- - Random g(a, b); &nbsp; &nbsp;
-   RandomLib::RandomEngine::RandomEngine(InputIterator, InputIterator)
- - Random g(n); &nbsp; &nbsp;
-   RandomLib::RandomEngine::RandomEngine(seed_type)
- - Random g; &nbsp; &nbsp;
-   RandomLib::RandomEngine::RandomEngine()
- - Random g(s); &nbsp; &nbsp;
-   RandomLib::RandomEngine::RandomEngine(const std::string&)
- - g.Reseed(v); &nbsp; &nbsp;
-   RandomLib::RandomSeed::Reseed(const std::vector<IntType>&)
- - g.Reseed(a,b); &nbsp; &nbsp;
-   RandomLib::RandomSeed::Reseed(InputIterator a, InputIterator b)
- - g.Reseed(n); &nbsp; &nbsp;
-   RandomLib::RandomSeed::Reseed(seed_type n)
- - g.Reseed(); &nbsp; &nbsp;
-   RandomLib::RandomSeed::Reseed()
- - g.Reseed(s); &nbsp; &nbsp;
-   RandomLib::RandomSeed::Reseed(const std::string& s)
- - g.Seed(); &nbsp; &nbsp;
-   RandomLib::RandomSeed::Seed()
- - g.SeedString(); &nbsp; &nbsp;
-   RandomLib::RandomSeed::SeedString()
 
 Static functions for seed management
  - Random::SeedWord(); &nbsp; &nbsp;
    RandomLib::RandomSeed::SeedWord();
- - Random::SeedVector(); &nbsp; &nbsp;
-   RandomLib::RandomSeed::SeedVector();
- - Random::VectorToString(v); &nbsp; &nbsp;
-   RandomLib::RandomSeed::VectorToString(const std::vector<IntType>&)
- - Random::StringToVector(s); &nbsp; &nbsp;
-   RandomLib::RandomSeed::StringToVector(const std::string&)
 
 I/O
  - g.Save(os, bin); &nbsp; &nbsp;
    RandomLib::RandomEngine::Save(std::ostream&, bool) const
- - g.Load(os, bin); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Load(std::istream&, bool)
- - os << g; &nbsp; &nbsp;
-   RandomLib::RandomEngine::operator<<()
- - is >> g; &nbsp; &nbsp;
-   RandomLib::RandomEngine::operator>>()
 
 Functions returning random integers
  - g(); &nbsp; &nbsp;
    RandomLib::RandomEngine::operator()()
- - Ran(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Ran()
- - Ran32(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Ran32()
- - Ran64(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Ran64()
- - r(n); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::operator()(result_type n)
- - r.Integer(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Integer()
- - r.Integer(n); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Integer(IntType n)
- - r.IntegerC(n); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::IntegerC(IntType n)
- - r.IntegerC(m, n); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::IntegerC(IntType m, IntType n)
 
 Functions returning random reals
  - r.Fixed(); &nbsp; &nbsp;
    RandomLib::RandomCanonical::Fixed()
- - r.Real(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Real()
- - r.FixedU(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FixedU()
- - r.FixedN(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FixedN()
- - r.FixedW(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FixedW()
- - r.FixedS(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FixedS()
- - r.FixedO(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FixedO()
- - r.FixedC(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FixedC()
- - r.Float(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Float()
- - r.FloatU(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FloatU()
- - r.FloatN(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FloatN()
- - r.FloatW(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::FloatW()
 
 Functions returning random booleans
  - r.Boolean(); &nbsp; &nbsp;
    RandomLib::RandomCanonical::Boolean()
- - r.Prob(p); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Prob(NumericType)
- - r.Prob(p, q); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Prob(NumericType, NumericType)
 
 Function returning random bits
  - r.Bits<n>(); &nbsp; &nbsp;
@@ -2247,32 +690,10 @@ Function returning random bits
 Setting position in sequence
  - g.Count(); &nbsp; &nbsp;
    RandomLib::RandomEngine::Count()
- - g.SetCount(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::SetCount(long long)
- - g.StepCount(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::StepCount(long long)
- - g.Reset(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Reset()
- - g.SetStride(n, k); &nbsp; &nbsp;
-   RandomLib::RandomEngine::SetStride(unsigned, unsigned)
- - g.GetStride(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::GetStride()
 
 Other
  - Random::Global; &nbsp; &nbsp;
    RandomLib::Random::Global
- - Random g2(g1); &nbsp; &nbsp;
-   default copy constructor
- - g2 = g1; &nbsp; &nbsp;
-   default copy assignment
- - g1 == g2; &nbsp; &nbsp;
-   RandomLib::RandomEngine::operator==()
- - g1 != g2; &nbsp; &nbsp;
-   RandomLib::RandomEngine::operator!=()
- - RandomGenerator::Name(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Name()
- - RandomGenerator::SelfTest(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::SelfTest()
 
 <center>
 Back to \ref parallel.  Forward to \ref old.  Up to \ref contents.
@@ -2285,97 +706,7 @@ Back to \ref parallel.  Forward to \ref old.  Up to \ref contents.
 Back to \ref function.  Up to \ref contents.
 </center>
 
-List of versions in reverse chronological order together with a brief
-list of changes.
-
-- <a href="http://charles.karney.info/random/Random.tgz">2008-04 (current)</a>
-
-   - Reorganized so random algorithm and mixer can be selected
-     independently.  This eliminated a lot of duplicate code.
-
-   - This requires a new, incompatible, output format.  Format is now
-     independent of the current base of the stream.
-
-   - Name() now returns more informative name.
-
-   - SFMT19937 init_by_array mixer adopted for MT19937 generators.  This
-     is an incompatible change for the MT19937 generators.  However it
-     is possible to hook the MT19937 engine with the MixerMT1 mixers to
-     recover the previous functionality using
-     - RandomEngine<MT19937<Random_u32>,&nbsp;MixerMT1<Random_u32>&nbsp;>
-     - RandomEngine<MT19937<Random_u64>,&nbsp;MixerMT1<Random_u64>&nbsp;>
-
-   - The way 32-bit results are glued together for to provide the
-     Ran64() result is now LSB ordered.  Previously the 32-bit version
-     of MT19937 used MSB ordering here.  This means that certain large
-     integer results will be different for
-     RandomEngine<MT19937<Random_u32>,&nbsp;MixerMT1<Random_u32>&nbsp;>
-
-   - Support Altivec instructions on PowerPC for SFTM19937.  Also use
-     longer long double on PowerPC.
-
-   - Add -s seed option to shuffle and RandomPermutation.
-
-   - Use strtoull (where available) instead of strtoul in convert a
-     string seed to numeric form.
-
-   - Switch project files to MS Visual Studio 2005.
-
-   - Use SeedVector() instead of SeedWord() for the default constructor
-     for Random.
-
-   - Make 32-bit version of SFMT19937 the default generator.
-
-- <a href="http://charles.karney.info/random/Random-2008-01.tgz">2008-01</a>
-   - This is a maintenance release in anticipation of a forthcoming
-     major restructuring of the code.
-   - Use table of powers of two for g++ 4.1.
-   - Minor documentation fixes.
-
-- <a href="http://charles.karney.info/random/Random-2007-05.tgz">2007-05</a>
-   - Add SFMT19937 generators.
-   - Introduce RandomGenerator::Name() to identify generator.
-   - Change define used to make 64-bit generator the default.
-   - Add RandomSelect::Weight.
-   - Ensure portability to systems where uint32_t is longer than 32
-     bits.
-
-- <a href="http://charles.karney.info/random/Random-2007-04.tgz">2007-04</a>
-   - Add utilities RandomPermutation and shuffle.
-   - Implement MSB ordering on binary I/O in a portable way.
-
-- <a href="http://charles.karney.info/random/Random-2006-12.tgz">2006-12</a>
-   - Add leapfrogging.  The output format needed to be changed to
-     accommodate an extra word of data.  However, I/O routines can still
-     read the 2006-11 version.
-
-- <a href="http://charles.karney.info/random/Random-2006-11.tgz">2006-11</a>
-   - Introduce RandomCanonical class which accepts the random generator
-     as a template argument.
-   - This allows the inclusion of 32-bit and 64-bit versions of mt19937.
-   - Include checksum in I/O.
-   - Include boost serialization.
-
-- <a href="http://charles.karney.info/random/Random-2006-10.tgz">2006-10</a>
-   - Make 64-bit ready so a 64-bit version of mt19937 can be dropped in.
-   - Fix a bug in the seeding.  (This bug was trigged by seed length of
-     624 or greater; so it was unlikely to have been encountered in
-     practice.)
-   - Stop the special case treatment for
-     Random::IntegerC<T>(numeric_limits<T>::max()).  In some cases (e.g.,
-     T = int) this now gives different (but equivalent) results.
-
-- 2006-09
-   - Add ExponentialProb, ExactExponential, ExactPower, and RandomNumber.
-   - Fix weakness in the seeding algorithm.  A given seed now gives a
-     random sequence different from previous version; so this is an
-     incompatible change.
-   - Restructure the documentation.
-   - Allow constructors to accept vectors of any integral type and
-     constructors with a pair of iterators.
-
-- <a href="http://charles.karney.info/random/Random-2006-08.tgz">2006-08</a>
-   - Improve efficiency of Integer(n) where n is a power of two.
+Text here.
 
 <center>
 Back to \ref function.  Up to \ref contents.

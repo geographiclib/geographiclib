@@ -158,14 +158,14 @@ namespace GeographicLib {
      * With !\e foldp, the domains of \e lat, \e lon, \e x, and \e y are
      * restricted to
      * - the union of
-     * 	 - \e lat in [0, 90] and \e lon - \e lon0 in [0, 90]
-     * 	 - \e lat in (-90, 0] and \e lon - \e lon0 in [90 (1 - \e e), 90]
+     *   - \e lat in [0, 90] and \e lon - \e lon0 in [0, 90]
+     *   - \e lat in (-90, 0] and \e lon - \e lon0 in [90 (1 - \e e), 90]
      * - the union of
-     * 	 - \e x/(\e k0 \e a) in [0, inf) and
+     *   - \e x/(\e k0 \e a) in [0, inf) and
      *     \e y/(\e k0 \e a) in [0, E(\e e^2)]
      *   - \e x/(\e k0 \e a) in [K(1 - \e e^2) - E(1 - \e e^2), inf) and
      *     \e y/(\e k0 \e a) in (-inf, 0]
-     *
+     * .
      * This allows the multi-valued nature of the projection to be explored
      * using its symmetries.
      **********************************************************************/
