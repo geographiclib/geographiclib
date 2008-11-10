@@ -14,6 +14,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include "GeographicLib/EllipticFunction.hpp"
 #include "GeographicLib/TransverseMercatorExact.hpp"
 
 namespace {
@@ -44,15 +45,15 @@ are zero.  With [-t] ellipsoid of eccentricity 0.1 is using, central scale = 1,\
   double e, a;
   if (testing) {
     e = 0.1;
-    GeographicLib::EllipticFunction temp(e*e);
+    GeographicLib::EllipticFunction temp(e * e);
     a = 1/temp.E();
   }
   const GeographicLib::TransverseMercatorExact& TM = testing ?
-    GeographicLib::TransverseMercatorExact(a,(sqrt(1-e*e)+1)/(e*e),1.0,false) :
+    GeographicLib::TransverseMercatorExact
+    (a, (sqrt(1 - e * e) + 1) / (e * e), 1.0, false) :
     GeographicLib::TransverseMercatorExact::UTM;
 
   std::cout << std::setprecision(16);
-
   while (true) {
     double lat, lon, x, y;
     if (reverse)

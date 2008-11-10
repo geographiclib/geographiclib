@@ -101,7 +101,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..X"
+				AdditionalIncludeDirectories=".."
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;VP_WIN32"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -151,18 +151,6 @@
 				>
 			</File>
 			<File
-				RelativePath="ECEF.cpp"
-				>
-			</File>
-			<File
-				RelativePath="LocalCartesian.cpp"
-				>
-			</File>
-			<File
-				RelativePath="Mercator.cpp"
-				>
-			</File>
-			<File
 				RelativePath="MGRS.cpp"
 				>
 			</File>
@@ -202,18 +190,6 @@
 			>
 			<File
 				RelativePath="Constants.hpp"
-				>
-			</File>
-			<File
-				RelativePath="ECEF.hpp"
-				>
-			</File>
-			<File
-				RelativePath="LocalCartesian.hpp"
-				>
-			</File>
-			<File
-				RelativePath="Mercator.hpp"
 				>
 			</File>
 			<File

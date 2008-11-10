@@ -9,106 +9,7 @@
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <limits>
-
-#include <iostream>
-#include <iomanip>
-
-/*
- * Implementation of the Transverse Mercator Projection given in
- *
- *    L. P. Lee,
- *    Conformal Projections Based on Elliptic Functions,
- *    (B. V. Gutsell, Toronto, 1976), 128pp.,
- *    ISBN: 0919870163.
- *
- *    [Also appeared as:
- *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13.]
- *
- * The method entails using the Thompson Transverse Mercator as an intermediate
- * projection.  The projections from the intermediate coordinates to [phi, lam]
- * and [x, y] are given by elliptic functions.  The inverse of these
- * projections are found by Newton's method with a suitable starting guess.
- *
- * The same basic technique was used by
- *
- *   J. Dozier,
- *   Improved Algorithm for Calculation of UTM and Geodetic Coordinates
- *   NOAA Technical Report NESS 81, Sept. 1980
- *
- * The differences here are:
- *
- * * Use of real instead of complex arithmetic.  This uses the separation into
- *   real and imaginary parts given by Lee and allows better control over
- *   branch cuts.
- *
- * * Different (and possibly better?) algorithms for certain elliptic
- *   functions.
- *
- * * Better starting guesses for Newton's method.  Dozier's guesses lead to the
- *   wrong solution is some cases.  This disqualifies his method for routine
- *   use.
- *
- * This method gives the correct results for forward and reverse
- * transformations with the proviso that the reverse transformation may not
- * yield a sensible result if the input [x,y] is far outside the set of [x,y]
- * obtained from the forward transformation.  The maximum error is about 12nm
- * (ground distance) for the forward and reverse transformations.  The error in
- * the convergence is 3e-9", the relative error in the scale is 1e-11.  The
- * method is "exact" in the sense that the errors are close to the round-off
- * limit and that no changes are needed in the algorithms for them to be used
- * with reals of a higher precision (e.g., long double).
- *
- * This algorithm is about 2.5 times slower than the 6th-order Krueger method
- * taking about 12us for a combined forward and reverse projection on a 2.6GHz
- * Intel machine (g++, version 4.3.0, -O3).
- *
- * This implementation and notation closely follows Lee, with the following
- * exceptions:
- *
- *     Lee    here    Description
- *     x/a    xi      Northing (unit Earth)
- *     y/a    eta     Easting (unit Earth)
- *     s/a    sigma   xi + i * eta
- *     y      x       Easting
- *     x      y       Northing
- *     k      e       eccentricity
- *     k^2    mu      elliptic function parameter
- *     k'^2   mv      elliptic function complementary parameter
- *     m      k       scale
- *
- * Minor alterations have been made in some of Lee's expressions in an attempt
- * to control round-off.  For example atanh(sin(phi)) is replaced by
- * asinh(tan(phi)) which maintains accuracy near phi = pi/2.  Such changes are
- * noted in the code.
- *
- * Loose ends:
- *
- * Testing only done for WGS84 eccentricity.  Things that might go wrong are
- * other eccentricities: (1) Failure to converge most likely for much higher
- * eccentricity.  This will require refining the starting guesses for the
- * Newton's iterations.  (2) Failure with a sphere.  The basic formulation
- * carries over to the sphere with no problem.  Some attention might need to be
- * paid to the treatment of the singularity for phi=0, lam=90.
- *
- * The singularity at phi=90 is handled safely.  There's another singularity
- * (with the intermediate projection) at phi=0, lam=90*(1-e).  This is handled
- * by using a Taylor expansion about the singularity.  This gives a good enough
- * starting guess for Newton's method to converge.  However detailed testing in
- * the immediate neighborhood of the singularity has not been done.  If there
- * is a problem it can be handled easily by treating the singularity specially.
- *
- * The initial guesses for Newton's method are a little ad hoc.  Probably
- * better guesses can be used and so one or more iterations of Newton's method
- * can be skipped.
- *
- * The reverse transformation of points outside the curved portion of the
- * equator, i.e., phi = 0, +/-lam in [90 * (1 - e), 90 * (1 + e)], correctly
- * transform to points in the opposite hemisphere in a narrow strip about lam =
- * +/- 90.  No attempt has been made to gauge the accuracy of the reverse
- * transformation of these points.
- * 
- */
-
+#include <algorithm>
 
 namespace {
   char RCSID[] = "$Id$";
@@ -123,7 +24,8 @@ namespace GeographicLib {
 
   const double TransverseMercatorExact::tol =
     std::numeric_limits<double>::epsilon();
-  const double TransverseMercatorExact::tol1 = 0.1*sqrt(tol);
+  const double TransverseMercatorExact::tol1 = 0.1 * sqrt(tol);
+  const double TransverseMercatorExact::tol2 = 0.01 * tol * tol1;
   const double TransverseMercatorExact::taytol = std::pow(tol, 0.6);
       // Overflow value for asinh(tan(pi/2)) etc.
   const double TransverseMercatorExact::ahypover =
@@ -279,7 +181,6 @@ namespace GeographicLib {
 					 double& u, double& v) const {
     if (zetainv0(psi, lam, u, v))
       return;
-
     // Min iterations = 2, max iterations = 4; mean = 3.1
     for (int i = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
@@ -296,7 +197,7 @@ namespace GeographicLib {
       u -= delu;
       v -= delv;
       double delw2 = sq(delu) + sq(delv);
-      if (delw2 < tol)
+      if (delw2 < tol2)
 	break;
     }
   }
@@ -370,23 +271,6 @@ namespace GeographicLib {
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();
-      /*
-      double
-	rad = hypot(xi, eta - Ev.KE()),
-	//ang = atan2(xi, -(eta - Ev.KE())),
-	// Subtract pi because the multiplier of the cube term is negative
-	ang = atan2(eta - Ev.KE(), xi) - Constants::pi;
-      rad = std::pow(3 / _mv * rad, 1/3.0);
-      ang /= 3;
-      //ang1 /= 3;
-      u = rad * cos(ang);
-      v = rad * sin(ang) + Ev.K();
-      //u = rad * sin(ang);
-      //v = -rad * cos(ang) + Ev.K();
-      // std::cerr << std::setprecision(18);
-      // std::cerr << sin(ang) << " " << cos(ang1) << " "
-      // << -cos(ang) << " " << sin(ang1) << std::endl;
-      */
     } else {
       // Else use w = sigma * Eu.K/Eu.E (which is correct in the limit _e -> 0)
       u = xi * _Eu.K()/_Eu.E();
@@ -417,7 +301,7 @@ namespace GeographicLib {
       u -= delu;
       v -= delv;
       double delw2 = sq(delu) + sq(delv);
-      if (delw2 < tol)
+      if (delw2 < tol2)
 	break;
     }
   }
@@ -507,6 +391,7 @@ namespace GeographicLib {
       xi = 2 * _Eu.E() - xi;
     y = xi * _a * _k0 * latsign;
     x = eta * _a * _k0 * lonsign;
+
     Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
     gamma /= Constants::degree;
     if (backside)

@@ -11,9 +11,9 @@
 #include <stdexcept>
 #include <iomanip>
 #include <cerrno>
-#include "GeoCoords.hpp"
-#include "MGRS.hpp"
-#include "DMS.hpp"
+#include "GeographicLib/GeoCoords.hpp"
+#include "GeographicLib/MGRS.hpp"
+#include "GeographicLib/DMS.hpp"
 
 namespace {
   char RCSID[] = "$Id$";
@@ -127,7 +127,7 @@ namespace GeographicLib {
 
 
   std::string GeoCoords::GeoRepresentation(int prec) const {
-    prec = (std::max)(0, (std::min)(10, prec) + 5);
+    prec = (std::max)(0, (std::min)(9, prec) + 5);
     std::ostringstream os;
     os << std::fixed << std::setprecision(prec)
        << _lat << " " << _long;
@@ -136,12 +136,8 @@ namespace GeographicLib {
 
   std::string GeoCoords::DMSRepresentation(int prec) const {
     prec = (std::max)(0, (std::min)(10, prec) + 5);
-    std::ostringstream os;
-    DMS::component trailing = DMS::component((std::min)(prec/2, 2));
-    prec -= 2 * trailing;
-    os << DMS::Encode(_lat, trailing, unsigned(prec), DMS::LATITUDE) << " "
-       << DMS::Encode(_long, trailing, unsigned(prec), DMS::LONGITUDE);
-    return os.str();
+    return DMS::Encode(_lat, unsigned(prec), DMS::LATITUDE) +
+      " " + DMS::Encode(_long, unsigned(prec), DMS::LONGITUDE);
   }
 
   std::string GeoCoords::MGRSRepresentation(int prec) const {
