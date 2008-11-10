@@ -1,3 +1,13 @@
+% Use Graticule.cpp to generate list of points on graticule-points.m
+% Read in graticule-points.m
+% Use print to file, landscape, 0.25in margins all round
+% fig 1 -> gauss-krueger-graticule.ps
+% fig 2 -> thompson-tm-graticule.ps
+% fig 3 -> gauss-krueger-convergence-scale.ps
+% for i in gauss-krueger-graticule thompson-tm-graticule gauss-krueger-convergence-scale; do sed -e 's/^\(%%Creator:.*\.\) .*$/\1/' -e 's&^%%Title: .*/&%%Title: &' $i.ps > $i.eps;done
+% for i in gauss-krueger-graticule thompson-tm-graticule gauss-krueger-convergence-scale; do ps2pdf $i.eps;done
+% for i in gauss-krueger-graticule thompson-tm-graticule gauss-krueger-convergence-scale; do pstopnm -stdout -dpi 600 -pgm $i.eps | pnmcrop | pnmscale 0.15 | pnmflip -cw | pnmpad -white -left 10 -top 20 -bottom 20 -right 20 | pnmtopng -compress 9 > $i.png;done
+
 figure(1);hold off;
 for i=1:size(lons,2),
   plot(lonline{i}(:,1),lonline{i}(:,2),'k-');
