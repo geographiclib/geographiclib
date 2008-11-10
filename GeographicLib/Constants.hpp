@@ -11,6 +11,9 @@
 
 namespace GeographicLib {
 
+  /**
+   * \brief Constants needed by GeographicLib
+   **********************************************************************/
   class Constants {
   public:
     static const double pi, degree, huge, WGS84_a, WGS84_invf, UPS_k0, UTM_k0;

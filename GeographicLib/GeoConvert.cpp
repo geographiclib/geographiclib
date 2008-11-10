@@ -59,8 +59,8 @@ per coordinate for MGRS is 5 + prec.  For decimal degrees, the number\n\
 of digits after the decimal point is 5 + prec.  For DMS (degree,\n\
 minute, seconds) output, the number of digits after the decimal point\n\
 in the seconds components is 1 + prec.  The minimum value of prec is -5\n\
-and the maximum is 9 for UTM/UPS, 10 for decimal degrees and DMS, and 6 for\n\
-MGRS.\n\
+and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10 for DMS, and 6\n\
+for MGRS.\n\
 \n\
 UTM/UPS and MGS are given in zone of the input if applicable, otherwise\n\
 in the standard zone.\n\

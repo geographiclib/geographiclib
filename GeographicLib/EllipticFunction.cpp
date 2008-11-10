@@ -6,8 +6,8 @@
  * and licensed under the LGPL.
  **********************************************************************/
 
-#include "EllipticFunction.hpp"
-#include "Constants.hpp"
+#include "GeographicLib/EllipticFunction.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <limits>
 #include <cmath>
 #include <algorithm>
@@ -19,14 +19,12 @@ namespace {
 
 namespace GeographicLib {
 
-  const double EllipticFunction::tol = std::numeric_limits<double>::epsilon();
-  const double EllipticFunction::tolRF = std::pow(3 * EllipticFunction::tol,
-						  1/6.0);
-  const double EllipticFunction::tolRD = std::pow(0.25 * EllipticFunction::tol,
-						  1/6.0);
-  const double EllipticFunction::tolRG0 = 2.7 * sqrt(EllipticFunction::tol);
-  const double EllipticFunction::tolJAC = sqrt(EllipticFunction::tol);
-  const double EllipticFunction::tolJAC1 = sqrt(6 * EllipticFunction::tol);
+  const double EllipticFunction::tol = std::numeric_limits<double>::epsilon()*0.0001;
+  const double EllipticFunction::tolRF = std::pow(3 * tol, 1/6.0);
+  const double EllipticFunction::tolRD = std::pow(0.25 * tol, 1/6.0);
+  const double EllipticFunction::tolRG0 = 2.7 * sqrt(tol);
+  const double EllipticFunction::tolJAC = sqrt(tol);
+  const double EllipticFunction::tolJAC1 = sqrt(6 * tol);
 
   /*
    * Implementation of methods given in
