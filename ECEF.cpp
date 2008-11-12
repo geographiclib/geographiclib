@@ -58,7 +58,7 @@ namespace GeographicLib {
       for (int i = 0; i < _numit; ++i) {
 	double
 	  t = _b / _a * (z + _e12 * z0) / p,
-	  tsq = 1/hypot(1.0, t),
+	  tsq = hypot(1.0, t),
 	  dz0 = - (_b * t / tsq - z0) / 
 	  (_b * _b * _e12/(_a * p  * tsq * tsq * tsq) - 1);
 	z0 = z0 + dz0;
@@ -66,7 +66,7 @@ namespace GeographicLib {
 	  break;
       }
       double
-	phi = atan2(z + _e12, p),
+	phi = atan2(z + _e12 * z0, p),
 	sphi = sin(phi);
       h = p * cos(phi) + z * sphi - _a * sqrt(1 - _e2 * sphi * sphi);
       lat = phi / Constants::degree;
