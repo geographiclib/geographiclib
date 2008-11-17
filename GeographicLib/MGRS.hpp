@@ -36,7 +36,7 @@ namespace GeographicLib {
    **********************************************************************/
   class MGRS {
   private:
-    // The smallest length s.t., 1.0e7 - eps < 1.07 (approx 1.9 nm)
+    // The smallest length s.t., 1.0e7 - eps < 1.0e7 (approx 1.9 nm)
     static const double eps;
     // The smallest angle s.t., 90 - eps < 90 (approx 50e-12 arcsec)
     static const double angeps;

@@ -40,6 +40,7 @@ namespace GeographicLib {
     , _mu(_f * (2 - _f))
     , _mv(1 - _mu)
     , _e(sqrt(_mu))
+    , _ep2(_mu/_mv)
     , _foldp(foldp)
     , _Eu(_mu)
     , _Ev(_mv)
@@ -49,15 +50,12 @@ namespace GeographicLib {
   TransverseMercatorExact::UTM(Constants::WGS84_a, Constants::WGS84_invf,
 			       Constants::UTM_k0);
 
-  double  TransverseMercatorExact::psi0(double phi) {
-    // Rewrite asinh(tan(phi)) = atanh(sin(phi)) which is more accurate.
-    // Write tan(phi) this way to ensure that sign(tan(phi)) = sign(phi)
-    return asinh(sin(phi) / std::max(cos(phi), 0.1 * tol));
-  }
-
   double  TransverseMercatorExact::psi(double phi) const {
-    // Lee 9.4
-    return psi0(phi) - _e * atanh(_e * sin(phi));
+    double s = sin(phi);
+    // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
+    // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
+    // sign(phi)
+    return asinh(s / std::max(cos(phi), 0.1 * tol)) - _e * atanh(_e * s);
   }
 
   double TransverseMercatorExact::psiinv(double psi) const {
@@ -181,6 +179,7 @@ namespace GeographicLib {
 					 double& u, double& v) const {
     if (zetainv0(psi, lam, u, v))
       return;
+    double stol2 = tol2 / sq((std::max)(psi, 1.0));
     // Min iterations = 2, max iterations = 4; mean = 3.1
     for (int i = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
@@ -197,7 +196,7 @@ namespace GeographicLib {
       u -= delu;
       v -= delv;
       double delw2 = sq(delu) + sq(delv);
-      if (delw2 < tol2)
+      if (delw2 < stol2)
 	break;
     }
   }
@@ -311,8 +310,14 @@ namespace GeographicLib {
 				      double snu, double cnu, double dnu,
 				      double snv, double cnv, double dnv,
 				      double& gamma, double& k) const {
-    double c = cos(phi);
-    if (c > tol1) {
+    double
+      c = cos(phi),
+      s = sin(lam),
+      c2 = sq(c),
+      s2 = sq(s),
+      d = 1 - s2 * c2;
+    // See comment after else clause for a discussion.
+    if ( !( phi > 0 && d > 0.75 && c2 * sq(c2 * _ep2) * s2 < tol ) ) {
       // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
       // (clockwise from true north) of grid north
       gamma = atan2(_mv * snu * snv * cnv, cnu * dnu * dnv);
@@ -329,17 +334,21 @@ namespace GeographicLib {
       // rewrite sqrt term in 9.1 as
       //
       //    _mv + _mu * c^2 instead of 1 - _mu * sin(phi)^2
-      //
-      // Finally replace 1/cos(phi) by cosh(psi0(phi)) which, near phi = pi/2,
-      // behaves in a manner consistent with the last sqrt term.  (At least
-      // that's the idea.)
-      k = sqrt(_mv + _mu * sq(c)) * cosh(psi0(phi)) *
+      k = sqrt(_mv + _mu * sq(c)) / c *
 	sqrt( (_mv * sq(snv) + sq(cnu * dnv)) /
 	      (_mu * sq(cnu) + _mv * sq(cnv)) );
-    } else {
-      // Near the pole
-      gamma = lam;
-      k = 1;
+    } else {	      //  phi > 0 && d > 0.75 && c2 * sq(c2 * _ep2) * s2 < tol 
+      // Use series approximations for gamma and k accurate to ep2.  Ignored
+      // O(ep2^2) are shown here as gam2 and k2.  So only use these series if
+      // the larger O(ep2^2) term (gam2) is less that tol.
+      double
+	// gam2 = c2^3*s2*((4*c2^2-c2)*s2^2+(8-9*c2)*s2-2)/(3*d^3)*ep2^2
+	gam1 = sq(c2) * s2 / d * _ep2,
+	// k2 = c2^3*s2^2*((3*c2^3+12*c2^2-28*c2)*s2^2+
+	// (-34*c2^2+124*c2-64)*s2-61*c2+48)/(24*d^4)*ep2^2
+	k1 = gam1 * ((c2 - 2) * s2 + 1) / (2 * d);
+      gamma = atan2(sin(phi) * s * (1 + gam1), cos(lam));
+      k = (1 + k1) / sqrt(d);
     }
   }
 
