@@ -2,6 +2,8 @@
 TARGET = GeoConvert TransverseMercatorTest
 all: $(TARGET)
 
+test: test.o LocalCartesian.o ECEF.o Constants.o
+
 CC = g++
 CPPFLAGS = -I..
 CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer

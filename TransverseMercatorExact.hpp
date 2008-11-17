@@ -97,7 +97,7 @@ namespace GeographicLib {
   private:
     static const double tol, tol1, tol2, taytol, ahypover;
     static const int numit = 10;
-    const double _a, _f, _k0, _mu, _mv, _e;
+    const double _a, _f, _k0, _mu, _mv, _e, _ep2;
     const bool _foldp;
     const EllipticFunction _Eu, _Ev;
     static inline double sq(double x) { return x * x; }
@@ -115,7 +115,6 @@ namespace GeographicLib {
     static inline double asinh(double x) { return log(x + sqrt(1 + sq(x))); }
     static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
 #endif
-    static double psi0(double phi);
     double psi(double phi) const;
     double psiinv(double psi) const;
 

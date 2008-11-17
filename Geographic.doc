@@ -17,7 +17,9 @@
 \section abstract Abstract
 
 A small set of C++ classes to perform conversions between geographic,
-UTM, UPS, and MGRS coordinates.
+UTM, UPS, and MGRS coordinates.  In this application the errors are
+close to round-off (about 10nm).  It is specialized for use with the
+WGS-84 but is easily adapted for use with other ellipsoids.
 
 \section download Download
 
@@ -142,7 +144,30 @@ Forward to \ref intro.
 Forward to \ref example.  Up to \ref contents.
 </center>
 
-Text here
+The work grew out of a need to perform conversions from MGRS to
+geographic coordinates (latitude and longitude).  At first, I used the
+<a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
+package.  Unfortunately, this package rounds UTM coordinates to the
+nearest corned of a MGRS grid square.  This leads to the generation of
+illegal MGRS coordinates and other inconsistencies.  In addition, this
+package makes use of global variables and so it is not thread safe.
+
+The goals of this package are:
+
+ - Accuracy.  In most applications the accuracy is about 10nm or better.
+   A series solution is used for the transverse Mercator projection and
+   this accuracy guarantee breaks down at distances of more than 40d
+   from the central meridian.  The package also provides a class to
+   perform the transverse Mercator projection over the whole ellipsoid.
+
+ - C++ interface.  For the projection method, this allows encapsulation
+   of the ellipsoid parameters.  In addition a GeoCoords class is
+   provided which holds the coordinates of a point and allows
+   conversions to other coordinate systems.
+
+ - Uniform treatment of UTM/UPS.  
+
+ - Well defined and stable conventions for the conversion between UTM/UPS to MGRS coordinates.
 
 <center>
 Forward to \ref example.  Up to \ref contents.
