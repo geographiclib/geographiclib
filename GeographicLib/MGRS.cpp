@@ -25,6 +25,7 @@ namespace GeographicLib {
   const double MGRS::angeps =
     // 7 = ceil(log_2(90))
     std::pow(0.5, std::numeric_limits<double>::digits - 7);
+  const std::string MGRS::hemispheres = "SN";
   const std::string MGRS::utmcols[3] =
     { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
   const std::string MGRS::utmrow  = "ABCDEFGHJKLMNPQRSTUV";
@@ -160,18 +161,25 @@ namespace GeographicLib {
     int iband = lookup(band, mgrs[p++]);
     if (iband < 0)
       throw std::out_of_range("Band letter " + str(mgrs[p-1])
-			      + " not in " + band);
+			      + " not in " + (utmp ? "UTM" : "UPS")
+			      + " set " + band);
     northp = iband >= (utmp ? 10 : 2);
     const std::string& col = utmp ? utmcols[zone1 % 3] : upscols[iband];
     const std::string& row = utmp ? utmrow : upsrows[northp];
     int icol = lookup(col, mgrs[p++]);
     if (icol < 0)
       throw std::out_of_range("Column letter " + str(mgrs[p-1])
-			      + " not in " + col);
+			      + " not in "
+			      + (utmp ? "zone " + mgrs.substr(0, p-2) :
+				 "UPS band " + str(mgrs[p-2]))
+			      + " set " + col );
     int irow = lookup(row, mgrs[p++]);
     if (irow < 0)
       throw std::out_of_range("Row letter " + str(mgrs[p-1])
-			      + " not in " + row);
+			      + " not in "
+			      + (utmp ? "UTM" :
+				 "UPS " + str(hemispheres[northp]))
+			      + " set " + row);
     if (utmp) {
       if (zone1 & 1)
 	irow = (irow + utmrowperiod - utmevenrowshift) % utmrowperiod;
