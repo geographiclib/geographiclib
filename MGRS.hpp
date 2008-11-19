@@ -40,6 +40,7 @@ namespace GeographicLib {
     static const double eps;
     // The smallest angle s.t., 90 - eps < 90 (approx 50e-12 arcsec)
     static const double angeps;
+    static const std::string hemispheres;
     static const std::string utmcols[3];
     static const std::string utmrow;
     static const std::string upscols[4];
