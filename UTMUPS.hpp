@@ -51,6 +51,7 @@ namespace GeographicLib {
     // Throw an error if easting or northing are outside standard ranges.
     static void CheckCoords(bool utmp, bool northp, double x, double y);
   public:
+
     /**
      * Return the standard zone for latitude \e lat (degrees) and longitude \e
      * lon (degrees).  Return 0 if in the standard regions for UPS otherwise
@@ -90,7 +91,10 @@ namespace GeographicLib {
      *
      * UTM eastings are allowed to be in the range [0km, 1000km], northings are
      * allowed to be in in [0km, 9600km] for the northern hemisphere and in
-     * [900km, 10000km] for the southern hemisphere.
+     * [900km, 10000km] for the southern hemisphere.  (However UTM northings
+     * can be continued across the equator.  So the actual limits on the
+     * northings are [-9100km, 9600km] for the "northern" hemisphere and
+     * [900km, 19600km] for the "southern" hemisphere.)
      *
      * UPS eastings and northings are allowed to be in the range [1200km,
      * 2800km] in the northern hemisphere and in [700km, 3100km] in the

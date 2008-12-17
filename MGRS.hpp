@@ -63,7 +63,7 @@ namespace GeographicLib {
       // Maximum precision is um
       maxprec = 5 + 6,
     };
-    static void CheckCoords(bool utmp, bool northp, double& x, double& y);
+    static void CheckCoords(bool utmp, bool& northp, double& x, double& y);
     static int lookup(const std::string& s, char c) {
       std::string::size_type r = s.find(toupper(c));
       return r == std::string::npos ? -1 : int(r);
@@ -81,9 +81,12 @@ namespace GeographicLib {
      * precision with prec == 0 (the minimum) meaning 100km, prec == 5 meaning
      * 1m, and prec == 11 (the maximum) meaning 1um.
      *
-     * UTM eastings are allowed to be in the range [100km, 900km], northings are
-     * allowed to be in in [0km, 9500km] for the northern hemisphere and in
-     * [1000km, 10000km] for the southern hemisphere.
+     * UTM eastings are allowed to be in the range [100km, 900km], northings
+     * are allowed to be in in [0km, 9500km] for the northern hemisphere and in
+     * [1000km, 10000km] for the southern hemisphere.  (However UTM northings
+     * can be continued across the equator.  So the actual limits on the
+     * northings are [-9000km, 9500km] for the "northern" hemisphere and
+     * [1000km, 19500km] for the "southern" hemisphere.)
      *
      * UPS eastings/northings are allowed to be in the range [1300km, 2700km]
      * in the northern hemisphere and in [800km, 3200km] in the southern
@@ -99,12 +102,13 @@ namespace GeographicLib {
      *
      * All allowed UTM and UPS coordinates may now be converted to legal MGRS
      * coordinates with the proviso that eastings and northings on the upper
-     * boundaries are silently reduced by about 2nm to place them WITHIN the
-     * allowed range.  The UTM or UPS coordinates are truncated to requested
-     * precision to determine the MGRS coordinate.  Thus in UTM zone 38N, the
-     * square area with easting in [444km, 445km) and northing in [3688km,
-     * 3689km) maps to MGRS coordinate 38SMB4488 (at prec = 2, 1km), Kulani
-     * Sq., Baghdad.
+     * boundaries are silently reduced by about 4nm to place them WITHIN the
+     * allowed range.  (This includes reducing a southern hemisphere northing
+     * of 10000km by 4nm so that it is placed in latitude band M.)  The UTM or
+     * UPS coordinates are truncated to requested precision to determine the
+     * MGRS coordinate.  Thus in UTM zone 38N, the square area with easting in
+     * [444km, 445km) and northing in [3688km, 3689km) maps to MGRS coordinate
+     * 38SMB4488 (at prec = 2, 1km), Kulani Sq., Baghdad.
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion to
      * MGRS coordinate.  Thus for zone > 0, the MGRS coordinate begins with the
@@ -121,6 +125,7 @@ namespace GeographicLib {
      **********************************************************************/
     static void Forward(int zone, bool northp, double x, double y,
 			int prec, std::string& mgrs);
+
     /**
      * Convert UTM or UPS coordinates to an MGRS coordinate in case that
      * latitude is already known.  The latitude is ignored for zone == 0 (UPS);
@@ -129,6 +134,7 @@ namespace GeographicLib {
      **********************************************************************/
     static void Forward(int zone, bool northp, double x, double y, double lat,
 			int prec, std::string& mgrs);
+
     /**
      * Convert a MGRS coordinate to UTM or UPS coordinates.  Also return the
      * precision of the MGRS string (see Forward).  If centerp (default),
@@ -156,16 +162,15 @@ namespace GeographicLib {
      * centerp the conversion from MGRS to geographic and back is stable.  This
      * is not assured if !centerp.
      **********************************************************************/
-
     static void Reverse(const std::string& mgrs,
 			int& zone, bool& northp, double& x, double& y,
 			int& prec, bool centerp = true);
+
     /**
      * Return the latitude band number [-10, 10) for the give latitude
      * (degrees).  The bands are reckoned in include their southern edges.
      * This is exact.  Public because UTMUPS::StandardZone needs to use this.
      **********************************************************************/
-
     static int LatitudeBand(double lat) {
       int ilat = int(floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
@@ -185,6 +190,8 @@ namespace GeographicLib {
       maxupsNind = 27,
       upseasting = 20,		// Also used for UPS false northing
       utmeasting = 5,		// UTM false easting
+      // Difference between S hemisphere northing and N hemisphere northing
+      utmNshift = (maxutmSrow - minutmNrow) * tile,
     };
   };
 

@@ -8,7 +8,6 @@
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/UTMUPS.hpp"
 #include <stdexcept>
-#include <iostream>
 #include <cmath>
 #include <limits>
 
@@ -20,8 +19,9 @@ namespace {
 namespace GeographicLib {
 
   const double MGRS::eps =
-    // 24 = ceil(log_2(10^7))
-    std::pow(0.5, std::numeric_limits<double>::digits - 24);
+    // 25 = ceil(log_2(2e7)) -- use half circumference here because northing
+    // 195e5 is a legal in the "southern" hemisphere.
+    std::pow(0.5, std::numeric_limits<double>::digits - 25);
   const double MGRS::angeps =
     // 7 = ceil(log_2(90))
     std::pow(0.5, std::numeric_limits<double>::digits - 7);
@@ -38,17 +38,15 @@ namespace GeographicLib {
   const std::string MGRS::digits  = "0123456789";
 
   const int MGRS::mineasting[4] =
-    { MGRS::minupsSind,  MGRS::minupsNind,
-      MGRS::minutmcol,  MGRS::minutmcol };
+    { minupsSind, minupsNind, minutmcol, minutmcol };
   const int MGRS::maxeasting[4] =
-    { MGRS::maxupsSind,  MGRS::maxupsNind,
-      MGRS::maxutmcol,  MGRS::maxutmcol };
+    { maxupsSind, maxupsNind, maxutmcol, maxutmcol };
   const int MGRS::minnorthing[4] =
-    { MGRS::minupsSind,  MGRS::minupsNind,
-      MGRS::minutmSrow,  MGRS::minutmNrow };
+    { minupsSind, minupsNind,
+      minutmSrow,  minutmSrow - (maxutmSrow - minutmNrow) };
   const int MGRS::maxnorthing[4] =
-    { MGRS::maxupsSind,  MGRS::maxupsNind,
-      MGRS::maxutmSrow,  MGRS::maxutmNrow };
+    { maxupsSind, maxupsNind,
+      maxutmNrow + (maxutmSrow - minutmNrow), maxutmNrow };
 
   void MGRS::Forward(int zone, bool northp, double x, double y, double lat,
 		     int prec, std::string& mgrs) {
@@ -82,7 +80,7 @@ namespace GeographicLib {
 	iband = std::abs(lat) > angeps ? LatitudeBand(lat) : (northp ? 0 : -1),
 	icol = xh - minutmcol,
 	irow = UTMRow(iband, icol, yh % utmrowperiod);
-      if (irow != yh - (northp ? 0 : maxutmSrow))
+      if (irow != yh - (northp ? minutmNrow : maxutmSrow))
 	throw std::out_of_range("Latitude " + str(lat)
 				+ " is inconsistent with UTM coordinates");
       mgrs[z++] = latband[10 + iband];
@@ -226,11 +224,12 @@ namespace GeographicLib {
     }
   }
 
-  void MGRS::CheckCoords(bool utmp, bool northp, double& x, double& y) {
+  void MGRS::CheckCoords(bool utmp, bool& northp, double& x, double& y) {
     // Limits are all multiples of 100km and are all closed on the lower end
     // and open on the upper end -- and this is reflected in the error
     // messages.  However if a coordinate lies on the excluded upper end (e.g.,
-    // after rounding), it is shifted down by eps.
+    // after rounding), it is shifted down by eps.  This also folds UTM
+    // northings to the correct N/S hemisphere.
     int
       ix = int(floor(x / tile)),
       iy = int(floor(y / tile)),
@@ -240,7 +239,10 @@ namespace GeographicLib {
 	x -= eps;
       else
 	throw std::out_of_range("Easting " + str(int(floor(x/1000)))
-				+ "km not in ["
+				+ "km not in "
+				+ (utmp ? "UTM" : "UPS") + " range for "
+				+ (northp ? "N" : "S" )
+				+ " hemisphere ["
 				+ str(mineasting[ind]*tile/1000) + "km, "
 				+ str(maxeasting[ind]*tile/1000) + "km)");
     }
@@ -249,10 +251,30 @@ namespace GeographicLib {
 	y -= eps;
       else
 	throw std::out_of_range("Northing " + str(int(floor(y/1000)))
-				+ "km not in ["
+				+ "km not in "
+				+ (utmp ? "UTM" : "UPS") + " range for "
+				+ (northp ? "N" : "S" )
+				+ " hemisphere ["
 				+ str(minnorthing[ind]*tile/1000) + "km, "
 				+ str(maxnorthing[ind]*tile/1000) + "km)");
     }
+
+    // Correct the UTM northing and hemisphere if necessary
+    if (utmp) {
+      if (northp && iy < minutmNrow) {
+	northp = false;
+	y += utmNshift;
+      } else if (!northp && iy >= maxutmSrow) {
+	if (y == maxutmSrow * tile)
+	  // If on equator retain S hemisphere
+	  y -= eps;
+	else {
+	  northp = true;
+	  y -= utmNshift;
+	}
+      }
+    }
+	  
   }
 
   int MGRS::UTMRow(int iband, int icol, int irow) {

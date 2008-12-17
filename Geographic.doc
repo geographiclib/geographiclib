@@ -165,9 +165,11 @@ The goals of this package are:
    provided which holds the coordinates of a point and allows
    conversions to other coordinate systems.
 
- - Uniform treatment of UTM/UPS.  
+ - Uniform treatment of UTM/UPS.  The UTMUPS class treats UPS as zone 0.
+   This simplifies conversions between UTM and UPS coordinates, etc.
 
- - Well defined and stable conventions for the conversion between UTM/UPS to MGRS coordinates.
+ - Well defined and stable conventions for the conversion between
+   UTM/UPS to MGRS coordinates.
 
 <center>
 Forward to \ref example.  Up to \ref contents.
@@ -515,6 +517,57 @@ x<5e5, y<96e5   9e-8"  1e-6%%
     mu<80       28'    3.3%
     mu<82       2.4d   10%
     mu<84       14d    15%
+
+250000 lat in [0,90] lon in [0,90]
+25000 lat in [-89,0] lon in [90*(1-e),90]
+1000 lon=0 lat in [0,90]
+1000 lat = 0 lon in [0,90]
+1000 lon=90 lat in [0,90]
+1000 lon=90 lat in [-89,0]
+1000 lon=90*(1-e) lat in [-89,0]
+1000 near [90,0]
+1000 near [0,0]
+1000 near [0+,90]
+1000 near [0-,90]
+2000 near [0+,90*(1-e)]
+1000 near [0-,90*(1-e)]
+
+exact errne
+err  min lat max k
+10nm  -13.6 310
+100nm -24.3 3700
+1um   -35.0 56000
+10um  -42.7 510000
+100um -50.9 7700000
+1mm   -57.3 92000000
+10mm  -62.8 1100000000
+100mm -67.9 19000000000
+1m    -72.0 300000000000
+10m   -75.3 4400000000000
+100m  -78.1 74000000000000
+1km   -80.0 750000000000000
+
+for lat > -13.6
+uncertainty rad(nm), residual dgam("), residual dk(rel, %%)
+0 2.9e-6 2.3e-8
+1 1.2e-6 7.0e-9
+2 1.9e-9 2.8e-10
+3 1.5e-9 5.8e-12
+4 1.1e-9 5.8e-12
+5 6.9e-10
+6 2.8e-10
+7 1.8e-15
+
+for interior (1:250k) points with lat > 0
+max(dgam) = 1.3e-9", max(dk)= 5.8e-12
+
+Summary:
+
+err = max(forward error/k, forward-backward discrepancy)
+for lat > -13.6, max(err) = 10nm.
+max(dgam) = 7e-10" + 5nm . grad(gamma)
+max(dk/k) = 6e-12%% + 5nm . grad(k)/k
+
 \endverbatim
 
 <center>

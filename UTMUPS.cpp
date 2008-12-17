@@ -35,10 +35,12 @@ namespace GeographicLib {
       MGRS::maxutmcol * MGRS::tile,  MGRS::maxutmcol * MGRS::tile };
   const double UTMUPS::minnorthing[4] =
     { MGRS::minupsSind * MGRS::tile,  MGRS::minupsNind * MGRS::tile,
-      MGRS::minutmSrow * MGRS::tile,  MGRS::minutmNrow * MGRS::tile };
+      MGRS::minutmSrow * MGRS::tile,
+      (MGRS::minutmNrow + MGRS::minutmSrow - MGRS::maxutmSrow) * MGRS::tile };
   const double UTMUPS::maxnorthing[4] =
     { MGRS::maxupsSind * MGRS::tile,  MGRS::maxupsNind * MGRS::tile,
-      MGRS::maxutmSrow * MGRS::tile,  MGRS::maxutmNrow * MGRS::tile };
+      (MGRS::maxutmSrow + MGRS::maxutmNrow - MGRS::minutmNrow) * MGRS::tile,
+      MGRS::maxutmNrow * MGRS::tile };
 
   int UTMUPS::StandardZone(double lat, double lon) {
     // Assume lon is in [-180, 360].
@@ -123,21 +125,25 @@ namespace GeographicLib {
 
   void UTMUPS::CheckCoords(bool utmp, bool northp, double x, double y) {
     // Limits are all multiples of 100km and are all closed on the both ends.
-    // (Compare with MGRS:CheckCoords).  Failure tests are all negated success
-    // tests so that NaNs fail.
-    double
-      slop = MGRS::tile,
-      slopN = utmp && !northp ? 0 : slop,
-      slopS = utmp && northp ? 0 : slop;
+    // Failure tests are all negated success tests so that NaNs fail.
+    double slop = MGRS::tile;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (x >= mineasting[ind] - slop && x <= maxeasting[ind] + slop) )
-      throw std::out_of_range("Easting " + str(x/1000) + "km not in ["
+      throw std::out_of_range("Easting " + str(x/1000)
+			      + "km not in "
+			      + (utmp ? "UTM" : "UPS") + " range for "
+			      + (northp ? "N" : "S" )
+			      + " hemisphere ["
 			      + str((mineasting[ind] - slop)/1000) + "km, "
 			      + str((maxeasting[ind] + slop)/1000) + "km]");
-    if (! (y >= minnorthing[ind] - slopS && y <= maxnorthing[ind] + slopN) )
-      throw std::out_of_range("Northing " + str(y/1000) + "km not in ["
-			      + str((minnorthing[ind] - slopS)/1000) + "km, "
-			      + str((maxnorthing[ind] + slopN)/1000) + "km]");
+    if (! (y >= minnorthing[ind] - slop && y <= maxnorthing[ind] + slop) )
+      throw std::out_of_range("Northing " + str(y/1000)
+			      + "km not in "
+			      + (utmp ? "UTM" : "UPS") + " range for "
+			      + (northp ? "N" : "S" )
+			      + " hemisphere ["
+			      + str((minnorthing[ind] - slop)/1000) + "km, "
+			      + str((maxnorthing[ind] + slop)/1000) + "km]");
   }
 
 } // namespace GeographicLib

@@ -59,6 +59,7 @@ namespace GeographicLib {
     }      
     void UTMUPSString(int zone, double easting, double northing,
 		   int prec, std::string& utm) const;
+    void FixHemisphere();
   public:
     GeoCoords()
       // This is the N pole
@@ -172,6 +173,7 @@ namespace GeographicLib {
       _northing = northing;
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
 		      _lat, _long, _gamma, _k);
+      FixHemisphere();
       CopyToAlt();
     }
     /**

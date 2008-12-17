@@ -120,6 +120,7 @@ namespace GeographicLib {
       }
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
 		      _lat, _long, _gamma, _k);
+      FixHemisphere();
     } else
       throw std::out_of_range("Coordinate requires 1, 2, or 3 elements");
     CopyToAlt();
@@ -188,6 +189,17 @@ namespace GeographicLib {
     std::string utm;
     UTMUPSString(_alt_zone, _alt_easting, _alt_northing, prec, utm);
     return utm;
+  }
+
+  void GeoCoords::FixHemisphere() {
+    if (_lat == 0 || (_northp && _lat > 0) || (!_northp && _lat < 0))
+      // Allow either hemisphere for equator
+      return;
+    if (_zone > 0) {
+      _northing += (_northp ? 1 : -1) * MGRS::utmNshift;
+      _northp = !_northp;
+    } else
+      throw std::out_of_range("Hemisphere mixup");
   }
 
 } // namespace GeographicLib
