@@ -64,7 +64,7 @@ namespace GeographicLib {
       lam = lon * Constants::degree;
     x = rho * sin(lam);
     y = (northp ? -rho : rho) * cos(lam);
-    gamma = lon;
+    gamma = northp ? lon : -lon;
   }
 
   void PolarStereographic::Reverse(bool northp, double x, double y,
@@ -93,7 +93,7 @@ namespace GeographicLib {
     double
       m = sin(theta) / sqrt(1 - sq(ecos));
     k = m == 0 ? _k0 : rho / (_a * m);
-    gamma = lon;
+    gamma = northp ? lon : -lon;
   }
 
 } // namespace GeographicLib

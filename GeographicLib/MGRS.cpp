@@ -239,7 +239,7 @@ namespace GeographicLib {
 	x -= eps;
       else
 	throw std::out_of_range("Easting " + str(int(floor(x/1000)))
-				+ "km not in "
+				+ "km not in MGRS/"
 				+ (utmp ? "UTM" : "UPS") + " range for "
 				+ (northp ? "N" : "S" )
 				+ " hemisphere ["
@@ -251,7 +251,7 @@ namespace GeographicLib {
 	y -= eps;
       else
 	throw std::out_of_range("Northing " + str(int(floor(y/1000)))
-				+ "km not in "
+				+ "km not in MGRS/"
 				+ (utmp ? "UTM" : "UPS") + " range for "
 				+ (northp ? "N" : "S" )
 				+ " hemisphere ["
