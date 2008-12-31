@@ -31,14 +31,17 @@ Convert geographic coordinates to\n\
     -m MGRS\n\
     -c meridian convergence and scale\n\
 \n\
-Geographic coordinates are given on standard input as\n\
+Geographic coordinates are given on standard input as:\n\
 \n\
-latitude and longitude (decimal degrees or degrees minutes seconds).\n\
-Latitude is given first unless hemisphere is specified, e.g.,\n\
+Latitude and longitude (decimal degrees or degrees minutes seconds).  d, \',\n\
+and \" are used to denote degrees, minutes, and seconds, with the least\n\
+significant designator optional.  Latitude is given first unless a hemisphere\n\
+is specified, e.g., the following are all equivalent\n\
 \n\
     33.3 44.4\n\
     E44.4 N33.3\n\
     33d18'N 44d24'E\n\
+    44d24 33d18N \n\
 \n\
 UTM or UPS given as zone+hemisphere easting northing or easting northing\n\
 zone+hemisphere.  The zone is absent for a UPS specification.  E.g.,\n\
@@ -53,20 +56,28 @@ MRGS is used to specify the center of a grid square, e.g.,\n\
     38SMB4484\n\
     38SMB44140847064\n\
 \n\
--p prec (default 0) sets the precision relative to 1m.  This gives the\n\
-number of digits after the decimal point for UTM/UPS.  The number of digits\n\
-per coordinate for MGRS is 5 + prec.  For decimal degrees, the number\n\
-of digits after the decimal point is 5 + prec.  For DMS (degree,\n\
-minute, seconds) output, the number of digits after the decimal point\n\
-in the seconds components is 1 + prec.  The minimum value of prec is -5\n\
-and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10 for DMS, and 6\n\
-for MGRS.\n\
+-p prec (default 0) sets the precision relative to 1m.  This gives the number\n\
+of digits after the decimal point for UTM/UPS.  The number of digits per\n\
+coordinate for MGRS is 5 + prec.  For decimal degrees, the number of digits\n\
+after the decimal point is 5 + prec.  For DMS (degree, minute, seconds) output,\n\
+the number of digits after the decimal point in the seconds components is 1 +\n\
+prec; if this is negative then use minutes (prec = -2 or -3) or degrees (prec\n\
+<= -4) as the least significant component.  Print convergence, resp. scale,\n\
+with 5 + prec, resp. 7 + prec, digits after the decimal point.  The minimum\n\
+value of prec is -5 and the maximum is 9 for UTM/UPS, 9 for decimal degrees, 10\n\
+for DMS, 6 for MGRS, and 8 for convergence and scale.\n\
 \n\
-UTM/UPS and MGS are given in zone of the input if applicable, otherwise\n\
-in the standard zone.\n\
+MGRS coordinates are given by truncating (instead of rounding) the coordinates\n\
+to the requested precision.  For example is prec = -3, the result is the 1km\n\
+square enclosing the position.\n\
 \n\
--z zone sets the zone for output.  Use zone = 0 to specify a UPS (polar)\n\
-zone.\n\
+Convergence is the bearing of grid north given as degrees clockwise from true\n\
+north.\n\
+\n\
+UTM/UPS and MGRS are given in zone of the input if applicable, otherwise in the\n\
+standard zone.\n\
+\n\
+-z zone sets the zone for output.  Use zone = 0 to specify a UPS (polar) zone.\n\
 \n\
 -s uses the standard zone\n\
 \n\
@@ -81,6 +92,7 @@ corresponds to 3 possible MGRS coordinates\n\
       BBZ1945517770 (neighboring UPS zone)\n\
 \n\
 then\n\
+    echo 79.9S 6.1E      | GeoConvert -p -3 -m       ==> 32CMS4328\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m       ==> 31CEM6027\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -s    ==> 32CMS4328\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917\n\
@@ -90,22 +102,23 @@ then\n\
 }
 
 int main(int argc, char* argv[]) {
-  int outputmode = 0;		// Lat/Lon; 1 = DMS; 2 = UTM/UPS; 3 = MGRS
+  enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE, };
+  int outputmode = GEOGRAPHIC;
   int prec = 0;
   int zone = -2;		// -2 = track input, -1 = standard
 
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-g")
-      outputmode = 0;
+      outputmode = GEOGRAPHIC;
     else if (arg == "-d")
-      outputmode = 1;
+      outputmode = DMS;
     else if (arg == "-u")
-      outputmode = 2;
+      outputmode = UTMUPS;
     else if (arg == "-m")
-      outputmode = 3;
+      outputmode = MGRS;
     else if (arg == "-c")
-      outputmode = 4;
+      outputmode = CONVERGENCE;
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
       std::string a = std::string(argv[m]);
@@ -139,28 +152,28 @@ int main(int argc, char* argv[]) {
       if (zone != -2)
 	p.SetAltZone(zone);
       switch (outputmode) {
-      case 0:
+      case GEOGRAPHIC:
 	os = p.GeoRepresentation(prec);
 	break;
-      case 1:
+      case DMS:
 	os = p.DMSRepresentation(prec);
 	break;
-      case 2:
+      case UTMUPS:
 	os = p.AltUTMUPSRepresentation(prec);
 	break;
-      case 3:
+      case MGRS:
 	os = p.AltMGRSRepresentation(prec);
 	break;
-      case 4:
+      case CONVERGENCE:
 	{
 	  double
 	    gamma = p.AltConvergence(),
 	    k = p.AltScale();
 	  std::ostringstream ss;
 	  ss << std::fixed
-	     << std::setprecision(std::max(0, std::min(8, prec) + 5)) << gamma
+	     << std::setprecision(std::max(-5, std::min(8, prec)) + 5) << gamma
 	     << " "
-	     << std::setprecision(std::max(0, std::min(8, prec) + 7)) << k;
+	     << std::setprecision(std::max(-5, std::min(8, prec)) + 7) << k;
 	  os = ss.str();
 	}
       }
