@@ -23,7 +23,7 @@ namespace GeographicLib {
    * inverse in terms of a series.  See L. Kr&uuml;ger, <a
    * href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    * Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
-   * Earth ellipsoid to the plane), Royal Prussian Geodetic Institute, New
+   * ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
    * Series 52, 172 p (1912).
    *
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum

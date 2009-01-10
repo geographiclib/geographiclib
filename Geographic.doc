@@ -63,7 +63,6 @@ illegal MGRS coordinates and other inconsistencies.  In addition, this
 package makes use of global variables and so it is not thread safe.
 
 The goals of this package are:
-
  - Accuracy.  In most applications the accuracy is about 5 nm.  A series
    solution is used for the transverse Mercator projection and this
    accuracy guarantee breaks down at distances of more than about
@@ -82,7 +81,7 @@ The goals of this package are:
  - GeoConvert (GeoConvert.cpp), a command-line utility to provide quick
    and accurate conversions between geographic, UTM/UPS, and MGRS.
 
-In the we document in \ref transversemercator various properies of this
+We document in \ref transversemercator various properies of this
 projection.
 
 <center>
@@ -120,6 +119,17 @@ The following steps will get you started:
  - Read \ref organization for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation.
  - Read \ref transversemercator for more information on this projection.
+
+Here's a list of some of the abbreviations used here with links to the
+corresponding Wikipedia articles:
+ - <a href="http://en.wikipedia.org/wiki/WGS84">
+   WGS84</a>, World Geodetic System 1984.
+ - <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
+   UTM</a>, Universal Transverse Mercator coordinate system.
+ - <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
+   UPS</a>, Universal Polar Stereographic coordinate system.
+ - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
+   MGRS</a>, Military Grid Reference System.
 
 <center>
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
@@ -182,8 +192,8 @@ internally by the library.
 In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the
 GeographicLib/ directory prefix.  If compiling within the GeographicLib
-directory, .. should be included in the header search path (e.g., with
--I..).
+directory, .. should be included in the header search path (e.g.,
+with -I..).
 
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
@@ -202,17 +212,58 @@ link beneath each figure points to a PDF version of the figure.  These
 are in vector format and allow the figures to be magnified to show the
 details more clearly.
 
-\section tmvarious Survey of transverse Mercator projections
-
-The following is adapted from
+The primary sources for the material presented here are:
+ - J. P.Snyder,
+   <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395">Map Projections: A
+   Working Manual</a>,
+   USGS Professional Paper 1395 (1987), pp. 48&ndash;66.
+   This contains an overview of the transverse Mercator projection (and
+   many other projections). However, the approximations given for
+   this projection are rather crude.
+ - L. Kr&uuml;ger, <a
+   href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
+   the ellispoidal earth to the plane), Royal Prussian Geodetic Institute,
+   New Series 52, 172 p (1912).
+   The derives the series solution for the transverse Mercator
+   projection of an ellipsoid.  This gives very good accuracy and this
+   method or an extension of it to higher-order provide the most accurate
+   algorithms for the projection valid in some zone near the central
+   meridian.  It is also of interest to see the systematic use of
+   logarithms in the pre-electronic and pre-mechanical age (when
+   computers were human).
+ - <a href="http://www.jhs-suositukset.fi/suomi/jhs154">JHS 154, ETRS89 -
+   j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
+   tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
+   coordinates, and map sheet index for ETRS89), Published by JUHTA, Finnish
+   Geodetic Institute, and the National Land Survey of Finland (2006).
+   A concise summary of Kr&uuml;ger's method is given in
+   <a href="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154_liite1.pdf">
+   Appendix 1</a>.
  - L. P. Lee,
    Conformal Projections Based on Elliptic Functions,
    (B. V. Gutsell, Toronto, 1976), 128pp.,
    ISBN: 0919870163.
    [Also appeared as:
-   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13.]
+   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13].
+   Part V, pp. 67&ndash;101,
+   <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+   Projections Based On Jacobian Elliptic Functions</a>, gives closed
+   form expressions for the transverse Mercator projection base on work
+   by Thompson.  This may be purchased for a modest sum.  Other useful
+   sections are Parts I, pp. 1&ndash;3 and II, pp. 4&ndash;14.
+ - M. Abramowitz and I. A. Stegun,
+   Handbook of Mathematical Functions
+   (Dover, 1965).
+   This is the bible for special functions.  It is easily accessible on
+   the web.  Chapter 16 covers elliptic functions and Chapter 17 covers
+   ellipic integrals.
  .
-particularly pp. 92&ndash;101.
+
+
+\section tmvarious Survey of transverse Mercator projections
+
+The following is adapted from Lee (1976) particularly pp. 92&ndash;101.
 
 The transverse Mercator projection is a conformal projection of the
 ellipsoid in which the central meridian is straight.  Within these
@@ -444,7 +495,7 @@ same projected position.  In the extended domain, the Thompson and the
 Gauss-Kr&uuml;ger projections are not tightly tied to the globe but can
 slip around it longitudinally.
 
-\section testset Test data for the transverse Mercator
+\section testset Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
  - http://charles.karney.info/geographic-new/TMcoords.dat.gz
@@ -554,21 +605,16 @@ for |x| <= 500 km (the region used for UTM coordinates).
 
 \section series Series approximation for transverse Mercator
 
-Kr&uuml;ger gives a 4th-order approximation to the  transverse Mercator
-projection in
- - L. Kr&uuml;ger, <a
-   href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
-   Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
-   the Earth ellipsoid to the plane), Royal Prussian Geodetic Institute,
-   New Series 52, 172 p (1912).
- .
+Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
+Mercator projection.  The method entails performing first a
+Gauss-Laborde projection and approximating the warp of this to
+Gauss-Kr&uuml;ger projection as a series in (\e a - \e b)/(\e a + \e b).
 This is accurate to about 200 nm within the UTM domain.  Here we present
-the series extended to 12th order.  We follow the notation of
- - <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
-   j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
-   tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
-   coordinates, and map sheet index for ETRS89), Published by JUHTA, Finnish
-   Geodetic Institute, and the National Land Survey of Finland, 34 p (2006).
+the series extended to 12th order.  We follow the notation of JHS 154.
+Note that JHS 154 presents rather crude formulas for the convergence and
+scale.  GeographicLib::TransverseMercator instead differentiates the
+series approximation (following Kr&uuml;ger) since this is easy to
+extend to high order (and is easily implemented).
 
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
 n) and / indicates real division (3/5 = 0.6).  The equations need to be
