@@ -1,92 +1,46 @@
 /**
  * \file TransverseMercator.cpp
+ * \brief Implementation for GeographicLib::TransverseMercator class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
+ *
+ * This implementation follows closely
+ * <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
+ * j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
+ * tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
+ * coordinates, and map sheet index for ETRS89), Published by JUHTA, Finnish
+ * Geodetic Institute, and the National Land Survey of Finland, 34 p (2006).
+ *
+ * The relevant section is available as the 2008 PDF file
+ * http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154_liite1.pdf
+ *
+ * This is a straight transcription of the formulas in this paper with the
+ * following exceptions:
+ *  - use of 6th order series instead of 4th order series.  This reduces the
+ *    error to about 5nm for the UTM range of coordinates (instead of 200nm),
+ *    with a speed penalty of only 1%;
+ *  - use Newton's method instead of plain iteration to solve for latitude in
+ *    terms of isometric latitude in the Reverse method;
+ *  - use of Horner's representation for evaluating polynomials and Clenshaw's
+ *    method for summing trigonometric series;
+ *  - several modifications of the formulas to improve the numerical accuracy;
+ *  - evaluating the convergence and scale using the expression for the
+ *    projection or its inverse.
+ *
+ * If the preprocessor variable TM_TX_MAXPOW is set to an integer between 4 and
+ * 8, then this specifies the order of the series used for the forward and
+ * reverse transformations.  The default value is 6.  (TODO: say where the 12th
+ * order expressions are.)
+ *
+ * Other equivalent implementations are given in
+ *  - http://www.ign.fr/telechargement/MPro/geodesie/CIRCE/NTG_76.pdf
+ *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
  **********************************************************************/
 
 #include "GeographicLib/TransverseMercator.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <limits>
-
-/*
- * Implementation taken from the report:
- *
- * JHS 154, ETRS89 - j‰rjestelm‰‰n liittyv‰t karttaprojektiot,
- * tasokoordinaatistot ja karttalehtijako (Map projections, plane coordinates,
- * and map sheet index for ETRS89), Published by JUHTA, Finnish Geodetic
- * Institute, and the National Land Survey of Finland, 34 p (2006).
- *
- * http://www.jhs-suositukset.fi/suomi/jhs154
- * http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154.pdf
- *
- * This achieves approximately 1um accuracy.  This is a straight transcription
- * of the formulas in this paper with the following exceptions:
- *
- *  * use Newton's method instead of plain iteration to solve for latitude in
- *    terms of isometric latitude in the Reverse method
- *
- *  * use more accurate expressions for the convergence and scale.
- *
- * Other accurate implementations are given in
- * http://www.ign.fr/telechargement/MPro/geodesie/CIRCE/NTG_76.pdf
- * http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
- */
-
-/*
- *
- * Define mu = asin(sin(lam) * cos(phi))
- *           = angular distance from meridian
- *
- * Errors are primarily a function of mu (or x).
- *
- * For each set, define
- *
- *    dxm  = max(erra, errb)
- *           for mth order method (order n^m or e^(2*m)), where
- *
- *           erra = the error in the forward transformation scaled to
- *                  distance on the ground with the scale factor k
- *
- *           errb = the discrepancy in applying the forward transformation
- *                  followed by the reverse transformation and converting
- *                  the result to a distance
- *
- *    dgam = max error in meridian convergence using the 6th order method
- *
- *    dk   = max relative error in scale using the 6th order method
- *
- * Units:
- *
- *    1um = 1e-6 m
- *    d = degrees, ' = minutes, " = seconds
- *    % = 0.01, %% = 0.001
- *
- *     set         dx4     dx5     dx6     dx7     dx8      dgam        dk
- * x<4e5, y<95e5 200nm   5.0nm   5.0nm   5.0nm   5.0nm    6e-11"   2e-12%%
- * x<5e5, y<96e5 210nm   5.0nm   5.0nm   5.0nm   5.0nm    6e-11"   2e-12%%
- *     mu<10     350nm   5.1nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
- *     mu<15     700nm   6.5nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
- *     mu<20     1.5um    11nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
- *     mu<25     3.3um    23nm   5.0nm   5.0nm   5.0nm    2e-10"   2e-12%%
- *     mu<30     7.6um    62nm   5.0nm   5.0nm   5.0nm    4e-10"   2e-12%%
- *     mu<35      18um   180nm   5.0nm   5.0nm   5.0nm   1.0e-9"   6e-12%%
- *     mu<40      47um   570nm    10nm   5.0nm   5.0nm   4.1e-9"   2e-11%%
- *     mu<45     130um   2.0um    35nm   5.0nm   5.0nm   2.0e-8"   1e-10%%
- *     mu<50     400um   8.0um   170nm   6.3nm   5.0nm   1.1e-7"   6e-10%%
- *     mu<55     1.4mm    37um   1.1um    33nm   5.0nm   8.0e-7"  3.8e-9%%
- *     mu<60     5.8mm   210um   8.4um   350nm    17nm   7.1e-6"  3.5e-8%%
- *     mu<65      31mm   1.6mm    94um   5.7um   360nm   9.8e-5"  4.7e-7%%
- *     mu<70     230mm    20mm   1.8mm   170um    17um   2.2e-3"  1.1e-5%%
- *     mu<72     600mm    62mm   6.9mm   820um   100um    0.010"  4.8e-5%%
- *     mu<74     1.8m    230mm    33mm   4.9mm   750um    0.055"  2.7e-4%%
- *     mu<76     6.2m    1.1m    200mm    39mm   7.9mm     0.39"  1.8e-3%%
- *     mu<78      27m    6.3m    1.6m    430mm   .12m       3.7"   0.017%%
- *     mu<80     160m     55m     20m    7.9m    3.2m        55"    0.28%%
- *     mu<82     1.5km   870m    520m    330m    210m        35'     7.9%%
- *     mu<84      27km    28km    37km    53km    81km       19d      39%
- *
- */
 
 namespace {
   char RCSID[] = "$Id$";
@@ -450,11 +404,11 @@ namespace GeographicLib {
       double
 	q = asinh(sin(xip)/r),
 	qp = q;
+      // min iterations = 1, max iterations = 3; mean = 2.8
       for (int i = 0; i < numit; ++i) {
 	double
 	  t = tanh(qp),
-	  dqp = -(qp - _e * atanh(_e * t) - q) *
-	  (1 - _e2 * sq(t)) / _e2m;
+	  dqp = -(qp - _e * atanh(_e * t) - q) * (1 - _e2 * sq(t)) / _e2m;
 	qp += dqp;
 	if (std::abs(dqp) < tol)
 	  break;

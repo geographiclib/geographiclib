@@ -1,15 +1,52 @@
 /**
  * \file TransverseMercatorExact.cpp
+ * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * http://charles.karney.info/geographic
  * and licensed under the LGPL.
+ *
+ * The relevant section of Lee's paper is part V, pp 67&ndash;101,
+ * <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+ * Projections Based On Jacobian Elliptic Functions</a>.
+ *
+ * The method entails using the Thompson Transverse Mercator as an
+ * intermediate projection.  The projections from the intermediate
+ * coordinates to [\e phi, \e lam] and [\e x, \e y] are given by elliptic
+ * functions.  The inverse of these projections are found by Newton's method
+ * with a suitable starting guess.
+ *
+ * This implementation and notation closely follows Lee, with the following
+ * exceptions:
+ * <center><table>
+ * <tr><th>Lee    <th>here    <th>Description
+ * <tr><td>x/a    <td>xi      <td>Northing (unit Earth)
+ * <tr><td>y/a    <td>eta     <td>Easting (unit Earth)
+ * <tr><td>s/a    <td>sigma   <td>xi + i * eta
+ * <tr><td>y      <td>x       <td>Easting
+ * <tr><td>x      <td>y       <td>Northing
+ * <tr><td>k      <td>e       <td>eccentricity
+ * <tr><td>k^2    <td>mu      <td>elliptic function parameter
+ * <tr><td>k'^2   <td>mv      <td>elliptic function complementary parameter
+ * <tr><td>m      <td>k       <td>scale
+ * </table></center>
+ *
+ * Minor alterations have been made in some of Lee's expressions in an
+ * attempt to control round-off.  For example atanh(sin(phi)) is replaced by
+ * asinh(tan(phi)) which maintains accuracy near phi = pi/2.  Such changes
+ * are noted in the code.
  **********************************************************************/
 
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <limits>
 #include <algorithm>
+
+#define DEBUG 0
+#if DEBUG
+#include <iostream>
+#include <iomanip>
+#endif
 
 namespace {
   char RCSID[] = "$Id$";
@@ -25,7 +62,7 @@ namespace GeographicLib {
   const double TransverseMercatorExact::tol =
     std::numeric_limits<double>::epsilon();
   const double TransverseMercatorExact::tol1 = 0.1 * sqrt(tol);
-  const double TransverseMercatorExact::tol2 = 0.01 * tol * tol1;
+  const double TransverseMercatorExact::tol2 = 0.1 * tol;
   const double TransverseMercatorExact::taytol = std::pow(tol, 0.6);
       // Overflow value for asinh(tan(pi/2)) etc.
   const double TransverseMercatorExact::ahypover =
@@ -33,7 +70,7 @@ namespace GeographicLib {
     /log(double(std::numeric_limits<double>::radix)) + 2;
 
   TransverseMercatorExact::TransverseMercatorExact(double a, double invf,
-						   double k0, bool foldp)
+						   double k0, bool extendp)
     : _a(a)
     , _f(1 / invf)
     , _k0(k0)
@@ -41,7 +78,7 @@ namespace GeographicLib {
     , _mv(1 - _mu)
     , _e(sqrt(_mu))
     , _ep2(_mu/_mv)
-    , _foldp(foldp)
+    , _extendp(extendp)
     , _Eu(_mu)
     , _Ev(_mv)
   {}
@@ -67,13 +104,17 @@ namespace GeographicLib {
     // dpsi/dq = (1 - e^2)/(1 - e^2 * tanh(q)^2)
     double q = psi;		// Initial guess
     for (int i = 0; i < numit; ++i) {
-      // Max 3 trips through for double precision
+      // min iterations = 1, max iterations = 3; mean = 2.8
       double
 	t = tanh(q),
 	dq = -(q - _e * atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
       q += dq;
-      if (std::abs(dq) < tol1)
+      if (std::abs(dq) < tol1) {
+#if DEBUG
+	std::cerr << "psiinv " << i+1 << "\n";
+#endif
 	break;
+      }
     }
     return atan(sinh(q));
   }
@@ -180,8 +221,8 @@ namespace GeographicLib {
     if (zetainv0(psi, lam, u, v))
       return;
     double stol2 = tol2 / sq((std::max)(psi, 1.0));
-    // Min iterations = 2, max iterations = 4; mean = 3.1
-    for (int i = 0; i < numit; ++i) {
+    // min iterations = 2, max iterations = 6; mean = 4.0
+    for (int i = 0, trip = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
@@ -195,9 +236,18 @@ namespace GeographicLib {
 	delv = psi1 * dv1 + lam1 * du1;
       u -= delu;
       v -= delv;
-      double delw2 = sq(delu) + sq(delv);
-      if (delw2 < stol2)
+      if (trip) {
+#if DEBUG
+	std::cerr << "zetainv " << i+1 << "\n";
+#endif
 	break;
+      }
+      double delw2 = sq(delu) + sq(delv);
+#if DEBUG
+      std::cerr << std::setprecision(10) << "delw2 "<< delw2 << " " << stol2 << "\n";
+#endif
+      if (delw2 < stol2)
+	++trip;
     }
   }
 
@@ -236,14 +286,14 @@ namespace GeographicLib {
 	(xi < -0.25 * _Eu.E() && xi < eta - _Ev.KE())) {
       // sigma as a simple pole at w = w0 = Eu.K() + i * Ev.K() and sigma is
       // approximated by
-      // 
+      //
       // sigma = (Eu.E() + i * Ev.KE()) + 1/(w - w0)
       double
 	x = xi - _Eu.E(),
 	y = eta - _Ev.KE(),
 	r2 = sq(x) + sq(y);
       u = _Eu.K() + x/r2;
-      v = _Ev.K() - y/r2;      
+      v = _Ev.K() - y/r2;
     } else if ((eta > 0.75 * _Ev.KE() && xi < 0.25 * _Eu.E())
 	       || eta > _Ev.KE()) {
       // At w = w0 = i * Ev.K(), we have
@@ -283,9 +333,8 @@ namespace GeographicLib {
 					  double& u, double& v) const {
     if (sigmainv0(xi, eta, u, v))
       return;
-
-    // Min iterations = 2, max iterations = 6; mean = 2.7
-    for (int i = 0; i < numit; ++i) {
+    // min iterations = 2, max iterations = 7; mean = 3.9
+    for (int i = 0, trip = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
@@ -299,12 +348,22 @@ namespace GeographicLib {
 	delv = xi1 * dv1 + eta1 * du1;
       u -= delu;
       v -= delv;
-      double delw2 = sq(delu) + sq(delv);
-      if (delw2 < tol2)
+      if (trip) {
+#if DEBUG
+	std::cerr << "sigmainv " << i+1 << "\n";
+#endif
 	break;
+      }
+      double delw2 = sq(delu) + sq(delv);
+#if DEBUG
+      // std::cerr << std::setprecision(16) << "delw2 "<< delw2 << " " << tol2 << "\n";
+      // std::cerr << std::setprecision(16) << "u,v "<< u << " " << v << "\n";
+#endif
+      if (delw2 < tol2)
+	++trip;
     }
   }
-  
+
 
   void TransverseMercatorExact::Scale(double phi, double lam,
 				      double snu, double cnu, double dnu,
@@ -337,7 +396,7 @@ namespace GeographicLib {
       k = sqrt(_mv + _mu * sq(c)) / c *
 	sqrt( (_mv * sq(snv) + sq(cnu * dnv)) /
 	      (_mu * sq(cnu) + _mv * sq(cnv)) );
-    } else {	      //  phi > 0 && d > 0.75 && c2 * sq(c2 * _ep2) * s2 < tol 
+    } else {	       //  phi > 0 && d > 0.75 && c2 * sq(c2 * _ep2) * s2 < tol
       // Use series approximations for gamma and k accurate to ep2.  Ignored
       // O(ep2^2) are shown here as gam2 and k2.  So only use these series if
       // the larger O(ep2^2) term (gam2) is less that tol.
@@ -365,11 +424,11 @@ namespace GeographicLib {
     // Now lon in (-180, 180]
     // Explicitly enforce the parity
     int
-      latsign = _foldp && lat < 0 ? -1 : 1,
-      lonsign = _foldp && lon < 0 ? -1 : 1;
+      latsign = !_extendp && lat < 0 ? -1 : 1,
+      lonsign = !_extendp && lon < 0 ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
-    bool backside = _foldp && lon > 90;
+    bool backside = !_extendp && lon > 90;
     if (backside) {
       if (lat == 0)
 	latsign = -1;
@@ -418,11 +477,11 @@ namespace GeographicLib {
       eta = x / (_a * _k0);
     // Explicitly enforce the parity
     int
-      latsign = _foldp && y < 0 ? -1 : 1,
-      lonsign = _foldp && x < 0 ? -1 : 1;
+      latsign = !_extendp && y < 0 ? -1 : 1,
+      lonsign = !_extendp && x < 0 ? -1 : 1;
     xi *= latsign;
     eta *= lonsign;
-    bool backside = _foldp && xi > _Eu.E();
+    bool backside = !_extendp && xi > _Eu.E();
     if (backside)
       xi = 2 * _Eu.E()- xi;
 

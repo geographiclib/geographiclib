@@ -1,5 +1,6 @@
 /**
- * \file GeoCoords.cpp
+ * \file GeoCoords.hpp
+ * \brief Header for GeographicLib::GeoCoords class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * http://charles.karney.info/geographic
@@ -56,7 +57,7 @@ namespace GeographicLib {
       _alt_gamma = _gamma;
       _alt_k = _k;
       _alt_zone = _zone;
-    }      
+    }
     void UTMUPSString(int zone, double easting, double northing,
 		   int prec, std::string& utm) const;
     void FixHemisphere();
@@ -91,7 +92,7 @@ namespace GeographicLib {
      * - UTM
      *   -  38N 339188 3701405
      *   -  897039 3708229 37N
-     * 
+     *
      * Latitude and Longitude parsing.  Latitude precedes longitude, unless a
      * N, S, E, W hemisphere designator is used on one or both coordinates.
      * Thus
@@ -140,7 +141,7 @@ namespace GeographicLib {
     /**
      * Specify the location in terms of UPS/UPS \e zone (zero means UPS),
      * hemisphere \e northp (false means south, true means north), \e easting
-     * (meters) and \n northing (meters).
+     * (meters) and \e northing (meters).
      **********************************************************************/
     GeoCoords(int zone, bool northp, double easting, double northing) {
       Reset(zone, northp, easting, northing);
@@ -157,8 +158,9 @@ namespace GeographicLib {
     void Reset(double latitude, double longitude, int zone = -1) {
       _lat = latitude;
       _long = longitude;
-      UTMUPS::Forward(zone, _lat, _long,
-		      _zone, _northp, _easting, _northing, _gamma, _k);
+      UTMUPS::Forward(_lat, _long,
+		      _zone, _northp, _easting, _northing, _gamma, _k,
+		      zone);
       CopyToAlt();
     }
     /**
@@ -223,9 +225,10 @@ namespace GeographicLib {
 	CopyToAlt();
       else {
 	bool northp;
-	UTMUPS::Forward(zone, _lat, _long,
+	UTMUPS::Forward(_lat, _long,
 			_alt_zone, northp,
-			_alt_easting, _alt_northing, _alt_gamma, _alt_k);
+			_alt_easting, _alt_northing, _alt_gamma, _alt_k,
+			zone);
       }
     }
     /**
@@ -299,7 +302,7 @@ namespace GeographicLib {
      * - prec = 6, 1um
      * - prec = 9 (max), 1nm
      **********************************************************************/
-    std::string UTMUPSRepresentation(int prec = 0) const; 
+    std::string UTMUPSRepresentation(int prec = 0) const;
     /**
      * Return MGRS string using alternative zone.  See MGRSRepresentation for
      * the interpretation of \e prec.
