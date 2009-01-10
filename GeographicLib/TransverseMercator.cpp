@@ -10,7 +10,7 @@
  * j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
  * tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
  * coordinates, and map sheet index for ETRS89), Published by JUHTA, Finnish
- * Geodetic Institute, and the National Land Survey of Finland, 34 p (2006).
+ * Geodetic Institute, and the National Land Survey of Finland (2006).
  *
  * The relevant section is available as the 2008 PDF file
  * http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154_liite1.pdf
@@ -206,7 +206,7 @@ namespace GeographicLib {
     // JHS 154 has
     //
     //   beta = atan(sinh(q)) = conformal latitude
-    //   [xi', eta'] = spheroidal TM coordinates
+    //   [xi', eta'] = Gauss-Laborde TM coordinates
     //   eta' = atanh(cos(beta) * sin(lam))
     //   xi' = asin(sin(beta)*cosh(eta')
     //
@@ -230,7 +230,7 @@ namespace GeographicLib {
 	q = qp - _e * qpp;
       xip = atan2(sinh(q), cos(lam));
       etap = atanh(sin(lam) / cosh(q));
-      // convergence and scale for speroidal TM (xip, etap) -- gamma0 =
+      // convergence and scale for Gauss-Laborde TM (xip, etap) -- gamma0 =
       // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(beta))
       gamma = atan(tan(lam) * tanh(q));
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(beta) / cos(phi)) * cosh(etap)
@@ -244,8 +244,8 @@ namespace GeographicLib {
       // See, for example, Lee (1976), p 100.
       k = sqrt( std::pow(1 + _e, 1 + _e) * std::pow(1 - _e, 1 - _e) );
     }
-    // {xi',eta'} is {northing,easting} for spheroidal transverse mercator (for
-    // eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
+    // {xi',eta'} is {northing,easting} for Gauss-Laborde transverse mercator
+    // (for eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
     // mercator with constant scale on the central meridian (for eta = 0, xip =
     // rectifying latitude).  Define
     //
@@ -324,7 +324,8 @@ namespace GeographicLib {
     double
       xi  = xip  + ar * xi0 - ai * eta0,
       eta = etap + ai * xi0 + ar * eta0;
-    // Fold in change in convergence and scale for spheroidal TM to UTM.
+    // Fold in change in convergence and scale for Gauss-Laborde TM to
+    // Gauss-Krueger TM.
     gamma -= atan2(yi2, yr2);
     k *= _b1 * hypot(yr2, yi2);
     gamma /= Constants::degree;
@@ -381,7 +382,7 @@ namespace GeographicLib {
     double
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
-    // Convergence and scale for spheroidal TM to UTM.
+    // Convergence and scale for Gauss-Laborde TM to Gauss-Krueger TM.
     gamma = atan2(yi2, yr2);
     k = _b1 / hypot(yr2, yi2);
     // JHS 154 has

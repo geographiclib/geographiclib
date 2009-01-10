@@ -1,53 +1,43 @@
 # $Id$
 
-Miscellaneous code for transformed geographic information.
-                                Charles Karney <charles@karney.com>
-                                http://charles.karney.info/geographic
+A library for geographic projections.
 
-tm.mac -- maxima code for arbitrary precision transverse Mercator
-    projection.
+Written by Charles Karney <charles@karney.com> and licensed under
+the LGPL.  For more information, see
 
-ellint.mac -- maxima code various elliptic integrals, etc. (used by
-    tm.mac).
+    http://charles.karney.info/geographic/
 
-UTM-fi.txt -- extend method for transverse Mercator projection given in
-    JHS 154 include higher order terms and improve the formulas for
-    meridian convergence and scale.
+Files
 
-tmseries.mac -- maxima code to generate the coefficients for the series
-    in UTM-fi.txt.
+    00README.txt  -- this file
+    Doxyfile -- Doxygen config file
+    Geographic.doc -- main page of Doxygen documentation
 
-tmscale.mac -- maxima code to generate series approximations for the
-    scale and meridian convergence in UTM-fi.txt.
+    PolarStereographic.[ch]pp -- polar stereographic projection
+    TransverseMercator.[ch]pp -- transverse Mercator projection
+    UTMUPS.[ch]pp -- UTM and UPS
+    MGRS.[ch]pp -- MGRS
+    Constants.[ch]pp -- WGS84 constants
+    TransverseMercatorExact.[ch]pp -- exact TM projection
+    EllipticFunction.[ch]pp -- elliptic functions
+    GeoCoords.[ch]pp -- hold geographic location
+    DMS.[ch]pp -- handle degrees minutes seconds
 
-revert.mac -- maxima code for the reversion of a series (used by
-    tmseries.mac).
+    GeoConvert.cpp -- geographic conversion utility
+    TransverseMercatorTest.cpp -- TM tester
 
-TMcoords.dat.gz -- set of about 1/4 million test points as gzipped text
-    file.  The columns are:
+    Makefile -- Unix/Linux makefile
 
-      1 Latitude (deg)
-      2 Longitude (deg)
-      3 Transverse Mercator Easting (m)
-      4 Transverse Mercator Northing (m)
-      5 Meridian convergence (deg)
-      6 Scale
+    GeographicLib.sln -- MS Studio 2005 solution
+    GeographicLib.vcproj -- project for library
+    GeoConvert.vcproj -- project for GeoConvert
+    TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
 
-    Latitude and Longitude are randomly and uniformly sampled from an
-    octant of a sphere and then rounded to the nearest 10^-12 degrees.
-    Columns 3-4 are determined by the function tm1 in tm.mac and
-    rounding the nearest doubles.  The parameters for the transverse
-    Mercator projection are:
+    gauss-laborde-graticule-a.{png,pdf} -- Fig. 1
+    gauss-krueger-graticule-a.{png,pdf} -- Fig. 2
+    thompson-tm-graticule-a.{png,pdf} -- Fig. 3
+    gauss-krueger-graticule.{png,pdf} -- Fig. 4
+    gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
+    thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-       a = 6378137 m
-       f = 1/298.257223563
-       k0 = 0.9996
-       Central Meridian = 0 deg
-       False Easting = 0 m
-       False Northing = 0 m
-
-TransverseMercatorExact.tgz -- C++ routine for "exact" Transverse
-    Mercator Projection.  Accuracy is about 12 nm.  Unpack the tar file
-    somewhere convenient, change to the GeographicLib directory, and
-    read the comment at the top of TransverseMercatorTest.cpp for
-    how to compile the test program.
+This is the 2009-01 version of the library (its first release).

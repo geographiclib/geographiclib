@@ -23,8 +23,8 @@ namespace GeographicLib {
    *    Conformal Projections Based on Elliptic Functions,
    *    (B. V. Gutsell, Toronto, 1976), 128pp.,
    *    ISBN: 0919870163.
-   *    [Also appeared as:
-   *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13.]
+   *    [also appeared as:
+   *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13].
    *
    * This method gives the correct results for forward and reverse
    * transformations subject to the branch cut rules (see the description of
