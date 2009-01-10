@@ -1,5 +1,6 @@
 /**
- * \file UTMUPS.hpp
+ * \file UTMUPS.cpp
+ * \brief Implementation for GeographicLib::UTMUPS class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -62,9 +63,10 @@ namespace GeographicLib {
     return zone;
   }
 
-  void UTMUPS::Forward(int setzone, double lat, double lon,
+  void UTMUPS::Forward(double lat, double lon,
 		       int& zone, bool& northp, double& x, double& y,
-		       double& gamma, double& k) {
+		       double& gamma, double& k,
+		       int setzone) {
     CheckLatLon(lat, lon);
     northp = lat >= 0;
     zone = setzone >= 0 ? setzone : StandardZone(lat, lon);
@@ -81,8 +83,8 @@ namespace GeographicLib {
 	// Check isn't really necessary because CheckCoords catches this case.
 	// But this allows a more meaningful error message to be given.
 	throw std::out_of_range("Longitude " + str(lon)
-				+ "d more than 60d from central meridian "
-				+ str(lon0) + "d");
+				+ "d more than 60d from center of UTM zone "
+				+ str(zone));
       TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma, k);
     } else {
       if (std::abs(lat) < 70)
@@ -95,7 +97,11 @@ namespace GeographicLib {
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     x = x1 + falseeasting[ind];
     y = y1 + falsenorthing[ind];
-    CheckCoords(zone > 0, northp, x, y);
+    if (! CheckCoords(zone > 0, northp, x, y, false) )
+      throw std::out_of_range("Latitude " + str(lat) +
+			      ", longitude " + str(lon) +
+			      " out of legal range for " +
+			      (utmp ? "UTM zone " + str(zone) : "UPS"));
   }
 
   void UTMUPS::Reverse(int zone, bool northp, double x, double y,
@@ -123,12 +129,14 @@ namespace GeographicLib {
 			      "d not in [-180d, 360d]");
     }
 
-  void UTMUPS::CheckCoords(bool utmp, bool northp, double x, double y) {
+  bool UTMUPS::CheckCoords(bool utmp, bool northp, double x, double y,
+			   bool throwp) {
     // Limits are all multiples of 100km and are all closed on the both ends.
     // Failure tests are all negated success tests so that NaNs fail.
     double slop = MGRS::tile;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-    if (! (x >= mineasting[ind] - slop && x <= maxeasting[ind] + slop) )
+    if (! (x >= mineasting[ind] - slop && x <= maxeasting[ind] + slop) ) {
+      if (!throwp) return false;
       throw std::out_of_range("Easting " + str(x/1000)
 			      + "km not in "
 			      + (utmp ? "UTM" : "UPS") + " range for "
@@ -136,7 +144,9 @@ namespace GeographicLib {
 			      + " hemisphere ["
 			      + str((mineasting[ind] - slop)/1000) + "km, "
 			      + str((maxeasting[ind] + slop)/1000) + "km]");
-    if (! (y >= minnorthing[ind] - slop && y <= maxnorthing[ind] + slop) )
+    }
+    if (! (y >= minnorthing[ind] - slop && y <= maxnorthing[ind] + slop) ) {
+      if (!throwp) return false;
       throw std::out_of_range("Northing " + str(y/1000)
 			      + "km not in "
 			      + (utmp ? "UTM" : "UPS") + " range for "
@@ -144,6 +154,8 @@ namespace GeographicLib {
 			      + " hemisphere ["
 			      + str((minnorthing[ind] - slop)/1000) + "km, "
 			      + str((maxnorthing[ind] + slop)/1000) + "km]");
+    }
+    return true;
   }
 
 } // namespace GeographicLib

@@ -1,5 +1,6 @@
 /**
  * \file PolarStereographic.cpp
+ * \brief Implementation for GeographicLib::PolarStereographic class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -75,6 +76,8 @@ namespace GeographicLib {
       t = rho * _c / (_a * _k0),
       theta = Constants::pi/2,	// initial estimate of colatitude
       ecos = _e * cos(theta);
+    // Solve using Newton's method which converges more rapidly than the
+    // iteration procedure given by Snyder.
     for (int i = 0; i < _numit; ++i) {
       double
 	f = std::pow((1 + ecos)/(1 - ecos), _e/2),

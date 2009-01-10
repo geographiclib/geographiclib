@@ -1,5 +1,6 @@
 /**
  * \file DMS.cpp
+ * \brief Implementation for GeographicLib::DMS class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * http://charles.karney.info/geographic

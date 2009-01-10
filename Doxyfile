@@ -463,8 +463,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = GeoConvert.cpp \
-TransverseMercatorTest.cpp \
+INPUT                  = GeoConvert.cpp TransverseMercatorTest.cpp \
 GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp Constants.cpp TransverseMercator.cpp PolarStereographic.cpp TransverseMercatorExact.cpp EllipticFunction.cpp \
 GeoCoords.hpp MGRS.hpp UTMUPS.hpp DMS.hpp Constants.hpp TransverseMercator.hpp PolarStereographic.hpp TransverseMercatorExact.hpp EllipticFunction.hpp \
 Geographic.doc

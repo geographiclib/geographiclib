@@ -4,132 +4,42 @@
  * \brief Documentation for GeographicLib
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
- * LGPL.  For more information, see http://charles.karney.info/geographic/
+ * LGPL.  For more information, see http://charles.karney.info/geographic-new/
  **********************************************************************/
 // $Id$
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2008-04
-\date 2008-04-28
+\version 2009-01
+\date 2009-01-15
 
 \section abstract Abstract
 
 A small set of C++ classes to perform conversions between geographic,
 UTM, UPS, and MGRS coordinates.  In this application the errors are
-close to round-off (about 10nm).  It is specialized for use with the
+close to round-off (about 5 nm).  It is specialized for use with the
 WGS-84 but is easily adapted for use with other ellipsoids.
 
 \section download Download
 
 The code is available for download at
-http://charles.karney.info/geographic/Geographic.tgz
+http://charles.karney.info/geographic-new/Geographic.tgz
 
 It is licensed under the LGPL.  For more information, see
-http://charles.karney.info/geographic/
+http://charles.karney.info/geographic-new/
 
 \section contents Contents
  - \ref intro
- - \ref example
+ - \ref start
  - \ref organization
- - \ref seeds
- - \ref integer
- - \ref real
-   - \ref fixed
-   - \ref floating
-   - \ref reals
- - \ref other
- - \ref otherdist
- - \ref save
- - \ref programming
-   - \ref conversion
-   - \ref stl
-   - \ref misc
-   - \ref switch
-   - \ref timing
-   - \ref checking
- - \ref parallel
-   - \ref leapfrog
- - \ref function
+ - \ref transversemercator
+   - \ref tmvarious
+   - \ref extend
+   - \ref testset
+   - \ref errors
+   - \ref series
  - \ref old
-
-
-Define mu = asin(sin(lam) * cos(phi))
-          = angular distance from meridian
-
-Errors are primarily a function of mu (or x).
-
-For each set, define
-
- - dxm  = max(erra, errb)
-          for mth order method (order n^m or e^(2*m)), where
-        - erra = the error in the forward transformation scaled to
-                 distance on the ground with the scale factor k
-        - errb = the discrepancy in applying the forward transformation
-                 followed by the reverse transformation and converting
-                 the result to a distance
- - dgam = max error in meridian convergence using the 6th order method
- - dk   = max relative error in scale using the 6th order method
-
-Units:
-
-   1um = 1e-6 m
-   d = degrees, ' = minutes, " = seconds
-   % = 0.01, %% = 0.001
-
-<center>
-<table>
-<caption>Errors</caption>
-<tr><th>     set      <th>   dx4<th>     dx5<th>     dx6<th> 
-   dx7<th>     dx8<th>      dgam<th>        dk
-<tr><td> x<4e5, y<95e5<td> 200nm<td>   5.0nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>    6e-11"<td>   2e-12%%
-<tr><td> x<5e5, y<96e5<td> 210nm<td>   5.0nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>    6e-11"<td>   2e-12%%
-<tr><td>     mu<10    <td> 350nm<td>   5.1nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>    1e-10"<td>   2e-12%%
-<tr><td>     mu<15    <td> 700nm<td>   6.5nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>    1e-10"<td>   2e-12%%
-<tr><td>     mu<20    <td> 1.5um<td>    11nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>    1e-10"<td>   2e-12%%
-<tr><td>     mu<25    <td> 3.3um<td>    23nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>    2e-10"<td>   2e-12%%
-<tr><td>     mu<30    <td> 7.6um<td>    62nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>    4e-10"<td>   2e-12%%
-<tr><td>     mu<35    <td>  18um<td>   180nm<td>   5.0nm<td> 
- 5.0nm<td>   5.0nm<td>   1.0e-9"<td>   6e-12%%
-<tr><td>     mu<40    <td>  47um<td>   570nm<td>    10nm<td> 
- 5.0nm<td>   5.0nm<td>   4.1e-9"<td>   2e-11%%
-<tr><td>     mu<45    <td> 130um<td>   2.0um<td>    35nm<td> 
- 5.0nm<td>   5.0nm<td>   2.0e-8"<td>   1e-10%%
-<tr><td>     mu<50    <td> 400um<td>   8.0um<td>   170nm<td> 
- 6.3nm<td>   5.0nm<td>   1.1e-7"<td>   6e-10%%
-<tr><td>     mu<55    <td> 1.4mm<td>    37um<td>   1.1um<td> 
-  33nm<td>   5.0nm<td>   8.0e-7"<td>  3.8e-9%%
-<tr><td>     mu<60    <td> 5.8mm<td>   210um<td>   8.4um<td> 
- 350nm<td>    17nm<td>   7.1e-6"<td>  3.5e-8%%
-<tr><td>     mu<65    <td>  31mm<td>   1.6mm<td>    94um<td> 
- 5.7um<td>   360nm<td>   9.8e-5"<td>  4.7e-7%%
-<tr><td>     mu<70    <td> 230mm<td>    20mm<td>   1.8mm<td> 
- 170um<td>    17um<td>   2.2e-3"<td>  1.1e-5%%
-<tr><td>     mu<72    <td> 600mm<td>    62mm<td>   6.9mm<td> 
- 820um<td>   100um<td>    0.010"<td>  4.8e-5%%
-<tr><td>     mu<74    <td> 1.8m <td>   230mm<td>    33mm<td> 
- 4.9mm<td>   750um<td>    0.055"<td>  2.7e-4%%
-<tr><td>     mu<76    <td> 6.2m <td>   1.1m <td>   200mm<td> 
-  39mm<td>   7.9mm<td>     0.39"<td>  1.8e-3%%
-<tr><td>     mu<78    <td>  27m <td>   6.3m <td>   1.6m <td> 
- 430mm<td>   .12m <td>      3.7"<td>   0.017%%
-<tr><td>     mu<80    <td> 160m <td>    55m <td>    20m <td> 
- 7.9m <td>   3.2m <td>       55"<td>    0.28%%
-<tr><td>     mu<82    <td> 1.5km<td>   870m <td>   520m <td> 
- 330m <td>   210m <td>       35'<td>     7.9%%
-<tr><td>     mu<84    <td>  27km<td>    28km<td>    37km<td> 
-  53km<td>    81km<td>       19d<td>      39%
-</table>
-</center>
-
 
 <center>
 Forward to \ref intro.
@@ -141,90 +51,544 @@ Forward to \ref intro.
 
 
 <center>
-Forward to \ref example.  Up to \ref contents.
+Forward to \ref organization.  Up to \ref contents.
 </center>
 
 The work grew out of a need to perform conversions from MGRS to
 geographic coordinates (latitude and longitude).  At first, I used the
 <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package.  Unfortunately, this package rounds UTM coordinates to the
-nearest corned of a MGRS grid square.  This leads to the generation of
+nearest corner of a MGRS grid square.  This leads to the generation of
 illegal MGRS coordinates and other inconsistencies.  In addition, this
 package makes use of global variables and so it is not thread safe.
 
 The goals of this package are:
 
- - Accuracy.  In most applications the accuracy is about 10nm or better.
-   A series solution is used for the transverse Mercator projection and
-   this accuracy guarantee breaks down at distances of more than 40d
-   from the central meridian.  The package also provides a class to
-   perform the transverse Mercator projection over the whole ellipsoid.
-
+ - Accuracy.  In most applications the accuracy is about 5 nm.  A series
+   solution is used for the transverse Mercator projection and this
+   accuracy guarantee breaks down at distances of more than about
+   35<sup>o</sup> from the central meridian.  The package also provides
+   a class to perform the transverse Mercator projection over the whole
+   ellipsoid.
  - C++ interface.  For the projection method, this allows encapsulation
-   of the ellipsoid parameters.  In addition a GeoCoords class is
-   provided which holds the coordinates of a point and allows
+   of the ellipsoid parameters.  In addition a GeographicLib::GeoCoords
+   class is provided which holds the coordinates of a point and allows
    conversions to other coordinate systems.
-
- - Uniform treatment of UTM/UPS.  The UTMUPS class treats UPS as zone 0.
-   This simplifies conversions between UTM and UPS coordinates, etc.
-
+ - Uniform treatment of UTM/UPS.  The GeographicLib::UTMUPS class treats
+   UPS as zone 0.  This simplifies conversions between UTM and UPS
+   coordinates, etc.
  - Well defined and stable conventions for the conversion between
    UTM/UPS to MGRS coordinates.
+ - GeoConvert (GeoConvert.cpp), a command-line utility to provide quick
+   and accurate conversions between geographic, UTM/UPS, and MGRS.
+
+In the we document in \ref transversemercator various properies of this
+projection.
 
 <center>
-Forward to \ref example.  Up to \ref contents.
+Forward to \ref start.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page example Example
+\page start Getting Started
 
 <center>
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 </center>
 
+The following steps will get you started:
+ - Download the <a
+   href="http://charles.karney.info/geographic-new/Geographic.tgz">source</a>.
+ - Unpack the tar file somewhere convenient with, e.g.,
+   - tar xfpz Geographic.tgz
+   .
+   This will create a GeographicLib directory.
+ - Change to the GeographicLib directory
+   - cd GeographicLib
+ - Create the utility programs and (optionally) the documentation
+   - make
+   - make doc
+ - GeographicLib.sln is MS Visual Studio 2005 solution file which
+   compiles the library and the two utility programs.
+ - Try out GeoConvert (for help, type ./GeoConvert -h)
+   - echo 33.3 44.4 | ./GeoConvert -m -p 3
+   - echo 38SMB4484 | ./GoeConvert
+   .
+ - Try out TranverseMercatorTest (for help, type ./TransverseMercatorTest -h)
+   - echo 0 90 | ./TransverseMercatorTest
+   - echo 260e5 100e5 | ./TransverseMercatorTest -r
+ - Read \ref organization for an overview of the library.
+ - Browse the <a href="annotated.html">Class List</a> for full documentation.
+ - Read \ref transversemercator for more information on this projection.
+
+<center>
+Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page organization Code organization
+
+<center>
+Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
+</center>
+
+GeographicLib::TransverseMercator and
+GeographicLib::PolarStereographic provide the basic projections.
+The constructors for these classes specify the ellipsoid and the forward
+and and reverse projections are implemented as const member functions.
+GeographicLib::TransverseMercator uses Kr&uuml;ger's series which have
+been extended to sixth order in the square of the eccentricity.
+GeographicLib::PolarStereographic use the exact formulas for the
+projection (from Snyder).
+
+GeographicLib::TransverseMercator::UTM and
+GeographicLib::PolarStereographic::UPS are const static instantiations
+specific for the WGS84 ellipsoid with the UTM and UPS scale factors.
+(But these do not add the standard false eastings or false northings for
+UTM and UPS.)
+
+GeographicLib::UTMUPS uses GeographicLib::TransverseMercator::UTM and
+GeographicLib::PolarStereographic::UPS to perform the UTM and UPS
+projections.  The class offers a uniform interface to UTM and UPS by
+treating UPS as UTM zone 0.  This class stores no internal state and the
+forward and reverse projections are provided via static member
+functions.  The forward projection offers the ability to override the
+standard UTM/UPS choice and the UTM zone.
+
+GeographicLib::MGRS transforms between UTM/UPS coordinates and MGRS.
+UPS coordinates are handled as UTM zone 0.  This class stores no
+internal state and the forward (UTM/UPS to MGRS) and reverse (MGRS to
+UTM/UPS) conversions are provided via static member functions.
+
+GeographicLib::GeoCoords holds a single geographic location which may be
+specified as latitude and longitude, UTM or UPS, or MGRS.  Member
+functions are provided to convert between coordinate systems and to
+provide formatted representations of them.
+
+GeoConvert (GeoConvert.cpp) is a simple command line utility to provide
+access to the GeographicLib::GeoCoords class.
+
+GeographicLib::TransverseMercatorExact is a drop in replacement for
+GeographicLib::TransverseMercator which uses the exact formulas, based
+on elliptic functions, for the projection as given by Lee.
+TransverseMercatorTest (TransverseMercatorTest.cpp) is a simple command
+line utility to test to the GeographicLib::TransverseMercator and
+GeographicLib::TransverseMercatorExact.
+
+GeographicLib::Constants, GeographicLib::DMS, and
+GeographicLib::EllipticFunction are utility classes with are used
+internally by the library.
+
+In order to avoid name clashes, all there classes are in the
+GeographicLib namespace.  The header files are included with the
+GeographicLib/ directory prefix.  If compiling within the GeographicLib
+directory, .. should be included in the header search path (e.g., with
+-I..).
+
+<center>
+Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page transversemercator Transverse Mercator Projection
+
+<center>
+Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
+</center>
+
+\b NOTE: The figures in this section are relatively small in order to
+allow them to be displayed easily in most browsers.  The "Fig. N"
+link beneath each figure points to a PDF version of the figure.  These
+are in vector format and allow the figures to be magnified to show the
+details more clearly.
+
+\section tmvarious Survey of transverse Mercator projections
+
+The following is adapted from
+ - L. P. Lee,
+   Conformal Projections Based on Elliptic Functions,
+   (B. V. Gutsell, Toronto, 1976), 128pp.,
+   ISBN: 0919870163.
+   [Also appeared as:
+   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13.]
+ .
+particularly pp. 92&ndash;101.
+
+The transverse Mercator projection is a conformal projection of the
+ellipsoid in which the central meridian is straight.  Within these
+constrains there are various projections that differ in how the scale
+varies along the central meridian.  The simplest such projection from an
+algorithmic point of view is the Gauss-Laborde projection which consists
+of a conformal projection from the ellipsoid to a sphere followed by the
+spherical transverse Mercator projection.  This results in a projection
+whose scale on the central meridian increases from the equator to the
+pole (by an amount proportional to the flattening).  In the
+Gauss-Kr&uuml;ger projection, the scale along the central meridian is
+held constant.  This projection is usually expressed as a series which
+is valid only sufficiently close to the central meridian.  The
+projection can however be expressed in closed form in terms of the
+Thompson transverse Mercator projection (where the scale along the
+central meridian decreases from the equator to the pole by an amount
+proportional to the flattening).
+
+The graticules (lines of constant latitude and longitude) for all these
+projections are shown in Figs. 1&ndash;3.  These figures all use an
+ellipsoid with eccentricity 1/10 (inverse flattening = 10 (3 sqrt(11) +
+10) = 199.5, i.e., somewhat flatter than the WGS84 ellipsoid) and
+the projections have all been scaled so that the distance from the
+equator to the north pole is unity.  One eighth of the ellipsoid is
+shown in these figures, 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
+0<sup>o</sup> <= longitude <= 90<sup>o</sup>.  To obtain the graticule
+for the entire ellipsoid reflect these figures in \e x = 0, \e y = 0,
+and \e y = 1.  The blue lines show latitude and longitude at multiples
+of 10<sup>o</sup>.  The green lines show 1<sup>o</sup> intervals for
+longitude in [80, 90] and latitude in [0, 10].  In all three figures,
+longitude = 0<sup>o</sup> lies on \e x = 0 and longitude =
+90<sup>o</sup> lies on \e y = 1.
+
+<center>
+<img src="gauss-laborde-graticule-a.png"
+width=667 height=305 alt="Gauss-Laborde transverse Mercator graticule
+(scaled)">
+<a href="gauss-laborde-graticule-a.pdf">Fig. 1</a>
+</center>\n
+The graticule for the Gauss-Laborde transverse Mercator projection.
+The equator lies on \e y = 0.
+Compare this with Lee, Fig. 1 (right), which shows the graticule for
+half a sphere, but note that in his notation \e x and \e y have switched
+meanings.  The graticule for the ellipsoid differs from that for a
+sphere only in that the latitude lines have shifted slightly.  (The
+conformal transformation from an ellipsoid to a sphere merely relabels
+the lines of latitude.)  This projection places the point latitude =
+0<sup>o</sup>, longitude = 90<sup>o</sup> at infinity.
+
+<center>
+<img src="gauss-krueger-graticule-a.png"
+width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
+(scaled)">
+<a href="gauss-krueger-graticule-a.pdf">Fig. 2</a>
+</center>\n
+The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
+The equator lies on \e y = 0 for longitude < 81<sup>o</sup>; beyond
+this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
+(upper), which shows the graticule for the International Spheroid.  Lee,
+Fig. 46, shows the graticule for the entire ellipsoid.  This projection
+(like the Thompson projection) projects the ellipsoid to a finite area.
+
+<center>
+<img src="thompson-tm-graticule-a.png"
+width=667 height=305 alt="Thompson transverse Mercator graticule
+(scaled)">
+<a href="thompson-tm-graticule-a.pdf">Fig. 3</a>
+</center>\n
+The graticule for the Thompson transverse Mercator projection.  The
+equator lies on \e y = 0 for longitude < 81<sup>o</sup>; at longitude =
+81<sup>o</sup>, it turns by 120<sup>o</sup> and heads for \e y = 1.
+Compare this with Lee, Fig. 43, which shows the graticule for the
+International Spheroid.  Lee, Fig. 44, shows the graticule for the
+entire ellipsoid.  This projection (like the Gauss-Kr&uuml;ger
+projection) projects the ellipsoid to a finite area.
+
+Of the three transverse Mercator projections given here the
+Gauss-Kr&uuml;ger projection is by far the most important.  It is the
+basis of the UTM system.  If "transverse Mercator projection" is used
+without further elaboration, then, nearly always, it refers to
+the Gauss-Kr&uuml;ger projection.
+
+\section extend Properties far from the central meridian
+
+The divergent behavior of the Gauss-Laborde projection as latitude =
+0<sup>o</sup>, longitude = 90<sup>o</sup> is approached is unsurprising
+given the behavior of the standard Mercator projection at the poles.  On
+the other hand, the lack of divergence in the Gauss-Kr&uuml;ger
+projection (and similiarly in the Thompson projection) is perhaps
+puzzling.  We explore the behavior more carefully in this section.
+
+Firstly, the Gauss-Kr&uuml;ger projection \e does have a singularity at
+latitude = 0<sup>o</sup> and longitude < 90<sup>o</sup>(1 - \e e), where
+\e e is the eccentricity of the ellipsoid.  The choice of \e e = 1/10
+for Figs. 1&ndash;3 was made to ensure that one of the graticule lines
+(longitude = 81<sup>o</sup>) covered this singularly.  The singularly is
+relatively benign.  The Thompson projection contains a cube root
+singularity with causes the corner in the equator.  The transformation
+from Thompson to Gauss-Kr&uuml;ger "repairs" this to lowest order so
+that there's no kink in the equation.  Nevertheless, a weaker
+singularity remains (causing a discontinuous change in the radius of
+curvature for the equator).  Thus Gauss-Kr&uuml;ger has a branch point
+at latitude = 0<sup>o</sup> and longitude < 90<sup>o</sup>(1 - \e e) and
+the projection is analytic provided this point is avoided.  However the
+results obtained for the projection will depend on which sheet of the
+projection is used or which route around the branch point is taken.
+
+The "standard" convention for projecting a geographic position is to
+follow the central meridian from the equator to the target latitiude,
+then to follow the line of constant latitude to the target longitude.
+This is equivalent to placing two branch cuts on the equator in the
+longitude ranges +/- [90<sup>o</sup>(1 - \e e), 90<sup>o</sup>(1 + \e
+e)].  For points on equator for |longitude| > 90<sup>o</sup>(1 - \e e),
+the path should go to the north of branch point.  This convention
+corresponds to Fig. 2, above, after suitable reflections to cover the
+ellipsoid and to Lee, Fig. 46.
+
+In order to explore the behavior to the right of the equator in Fig. 2,
+we define an "extended" domain for the projection, this consists of the
+union of
+ - 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
+   0<sup>o</sup> <= longitude <= 90<sup>o</sup>
+ - -90<sup>o</sup> < latitude <= 0<sup>o</sup> and
+   90<sup>o</sup>(1 - \e e) <= longitude <= 90<sup>o</sup>
+ .
+The rule for reaching the second area here is to move on the central
+meridian to a small positive latitude, move at constant latitude to the
+target longitude and then to move on a meridian to the target latitude.
+In this case, the branch cut emanates in a south-westerly direction from
+the branch point.  Following this prescription the range of the
+projection now consists of the union of
+ - 0 <= \e x and
+   0 <= \e y/(\e k<sub>0</sub> \e a) <= E(\e e<sup>2</sup>)
+ - K(1 - \e e<sup>2</sup>) - E(1 - \e e<sup>2</sup>)
+   <= \e x/(\e k<sub>0</sub> \e a) and \e y <= 0
+ .
+where \e k<sub>0</sub> is the central scale factor, \e a is the major
+radius of the ellipsoid, K and E are complete elliptic integrals.
+Setting the optional argument \e extendp = true in the constructor for
+GeographicLib::TransverseMercatorExact provides access to this extended
+domain.
+
+Figures 4&ndash;5 illustrate the properties of the Gauss-Kr&uuml;ger
+transverse Mercator projection in this extended domain.  These figures
+use an ellipsoid with eccentricity 1/10 (as in Figs. 1&ndash;3) and with
+\e a = 1/E(0.01) = 0.6382 and \e k<sub>0</sub> = 1.  The branch point in
+this case lies at lat = 0<sup>o</sup>, lon = 81<sup>o</sup> or x =
+(K(0.99) - E(0.99))/E(0.01) = 1.71, y = 0.
+
+<center>
+<img src="gauss-krueger-graticule.png"
+width=673 height=323 alt="Gauss-Krueger transverse Mercator
+graticule">\n
+<a href="gauss-krueger-graticule.pdf">Fig. 4</a>
+</center>
+Figure 4 shows the graticule the extended domain.  The blue lines show
+latitude and longitude at multiples of 10<sup>o</sup>.  The green lines
+show 1<sup>o</sup> intervals for longitude in [80, 90] and latitude in
+[-5, 10].
+
+<center>
+<img src="gauss-krueger-convergence-scale.png"
+width=673 height=323 alt="Gauss-Krueger transverse Mercator
+convergence and scale">
+<a href="gauss-krueger-convergence-scale.pdf">Fig. 5</a>
+</center>\n
+Figure 5 shows the convergence and scale for the Gauss-Kr&uuml;ger
+transverse Mercator projection in the extended domain.  The blue lines
+emanating from the top left corner (the north pole) are lines of
+constant convergence.  Convergence = 0<sup>o</sup> is given by the
+dog-legged line joining the points (0,1), (0,0), (1.71,0), (1.71,-inf).
+Convergence = 90<sup>o</sup> is given by the line y = 1.  The other
+lines show multiples of 10<sup>o</sup> between 0<sup>o</sup> and
+90<sup>o</sup>.  The other blue, the green and the black lines show
+scale = 1 thru 2 at intervals of 0.1, 2 thru 15 at intervals of 1, and
+15 thru 35 at intervals of 5.  Multiples of 5 are shown in black,
+multiples of 1 are shown in blue, and the rest are shown in green.
+Scale = 1 is given by the line segment (0,0) to (0,1).  The red line
+shows the equator between lon = 81<sup>o</sup> and 90<sup>o</sup>.  The
+scale and convergence at the branch point are 1/\e e = 10 and
+0<sup>o</sup>, respectively.
+
+Symmetries in the projection can now be employed to extend the
+Gauss-Kr&uuml;ger transverse Mercator projection with arbitrary rules
+for how to circumvent the branch point.  The symmetries are equivalent
+to placing mirrors on the lines segments
+ - 0 <= x, y = 1
+ - x = 0, 0 <= y <= 1
+ - 0 <= x <= 1.71, y = 0
+ - x = 1.71, y <= 0
+ 
+In order to understand the projection better, it is instructive to
+examine the Thompson projection in the extended domain.
+<center>
+<img src="thompson-tm-graticule.png"
+width=661 height=321 alt="Thompson transverse Mercator graticule">
+<a href="thompson-tm-graticule.pdf">Fig. 6</a>
+</center>\n
+Figure 6 shows the graticule for the Thompson transverse Mercator
+projection for the extended domain.  The range of the projection is the
+rectangular region shown
+ - 0 <= \e u <= K(\e e<sup>2</sup>),
+   0 <= \e v <= K(1 - \e e<sup>2</sup>)
+ .
+The coloring of the lines is the same as Fig. 4, except that latitude
+lines extended down to -10<sup>o</sup> and a red line has been added
+showing the line y = 0 for x > 1.71 in the Gauss-Kr&uuml;ger projection
+(Fig. 4).  The extendend Thompson projection figure has reflection
+symmetry on all the four sides of Fig. 6.
+
+In transforming from Thompson to Gauss-Kr&uuml;ger, the right angle at
+lower right corner of Fig. 6 expands by 3 to 270<sup>o</sup> to produce
+the outside corner at x = 1.71 and y = 0 in Fig. 4.  The top right
+corner of Fig. 6 represents the south pole and this is transformed to
+infinity in the extended Gauss-Kr&uuml;ger projection.  Despite the
+apparent similarities, the behavior of north and south poles in the
+extended Thompson projection (top left and top right corners in Fig. 6)
+is rather different.  The singularity for the north pole is merely the
+result of the singularity of a polar coordinate system (e.g., longitude
+is undefined at the north pole).  Encircling the north pole, causes
+longitude to increase by 360<sup>o</sup>, as expected.  On the other
+hand, encircling the south pole in increasing the longitude by
+360<sup>o</sup> \e e = 36<sup>o</sup>.  The same behavior is exhibited
+by the extended Gauss-Kr&uuml;ger projection.  The point latitude =
+-1<sup>o</sup>, longitude = 90<sup>o</sup> projects to a point [2.65,1]
+in Fig. 4.  If we now travel along this latitude line to longitude =
+54<sup>o</sup> = 90<sup>o</sup> - 36<sup>o</sup> we arrive back at the
+same projected position.  In the extended domain, the Thompson and the
+Gauss-Kr&uuml;ger projections are not tightly tied to the globe but can
+slip around it longitudinally.
+
+\section testset Test data for the transverse Mercator
+
+A test set for the transverse Mercator projection is available at
+ - http://charles.karney.info/geographic-new/TMcoords.dat.gz
+
+This test set consists of a set of geographic coordinates together with
+the corresponding transverse Mercator coordinates.  The WGS84 ellispoid
+is used, with central meridian 0<sup>o</sup>, central scale factor
+0.9996 (the UTM value), false easting = false northing = 0 m.
+
+Each line of the test set gives 6 space delimited numbers
+ - latitude (degrees, exact)
+ - longitude (degrees, exact &mdash; see below)
+ - easting (meters, accurate to 0.1 pm)
+ - northing (meters, accurate to 0.1 pm)
+ - meridian convergence (degrees, accurate to 10<sup>-18</sup> deg)
+ - scale (accurate to 10<sup>-20</sup>)
+ .
+The latitude and longitude are all multiples of 10<sup>-12</sup> deg
+and should be regarded as exact, except that longitude =
+82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
+degrees.  These results are computed using Lee's formulas with 
+<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s
+bfloats and fpprec set to 80 (so the errors in the data are probably
+1/2 of the values quoted above).
+
+The contents of the file are as follows:
+ - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
+ - 1000 entries randomly distributed on lat in [0, 90], lon = 0;
+ - 1000 entries randomly distributed on lat = 0, lon in [0, 90];
+ - 1000 entries randomly distributed on lat in [0, 90], lon = 90;
+ - 1000 entries close to lat = 90 with lon in [0, 90];
+ - 1000 entries close to lat = 0, lon = 0 with lat >= 0, lon >= 0;
+ - 1000 entries close to lat = 0, lon = 90 with lat >= 0, lon <= 90;
+ - 2000 entries close to lat = 0, lon = 90 (1 - \e e) with lat >= 0;
+ - 25000 entries randomly distributed in lat
+   in [-89, 0], lon in [90 (1 - \e e), 90];
+ - 1000 entries randomly distributed on lat in [-89, 0], lon = 90;
+ - 1000 entries randomly distributed on lat in [-89, 0], lon = 90 (1 - \e e);
+ - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon <= 90);
+ - 1000 entries close to lat = 0, lon = 90 (1 - \e e)
+   (lat < 0, lon <= 90 (1 - \e e));
+ .
+(a total of 287000 entries).  The entries for lat < 0<sup>o</sup> and
+lon in [90<sup>o</sup> (1 - \e e), 90<sup>o</sup>] use the "extended"
+domain for the transverse Mercator projection explained in \ref extend.
+The first 258000 entries have lat >= 0<sup>o</sup> and are suitable for
+testing implementations following the standard convention.
+
+The errors in the forward and reverse projections are converted into a
+ground distance (e.g., by dividing the error in the projection by the
+scale factor).  The errors in the convergence and in the scale may be
+large because these quantities vary rapidly near singular points (for
+convergence at the lat = 90<sup>o</sup> and for both convergence and
+scale at lat = 0<sup>o</sup>, lon = 90<sup>o</sup> (1 - \e e)).  We
+account for this by expressing the error as the sum of a constant and a
+term proportional to the gradient of the quantity being measured.
+
+\section errors Numerical errors
+
+Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
+Reverse projections
+ - error in position < 8 nm
+ - error in convergence, d(gamma) < 2e-15" + 8 nm . grad(gamma)
+ - relative error in scale, dk/k < 7e-12%% + 3 nm . grad(k)/k
+ .
+These errors apply with the standard convention for the transverse
+Mercator projection.  In this case, we use only test samples with
+non-negative values of latitude.
+
+For the extended transverse Mercator projection (Fig. 4), the errors
+given above apply only for latitude >= -15<sup>o</sup>.  For more negative
+latitudes, the errors become large.  For example for latitude >=
+-58<sup>o</sup>, the maximum error is 1 mm (and the scale has become 124
+million).  This increase in the error is due to the use of the Thompson
+projection in the computation.  Looking at the graticule for this
+projection (Fig. 6), we see that the Thompson scale becomes small close
+to the south pole resulting in errors (measured as a ground distance)
+which diverges (the errors vary inversely with scale).  For example at
+lat = -58<sup>o</sup>, the scale for the Thompson projection is about
+240000 times smaller than on the central meridian and the errors have
+increased by about the same factor.  If necessary, this problem could be
+avoided by reformulating the Thompson projection to place the origin at
+the South pole.
+
+Errors in GeographicLib::TransverseMercator.  For both Forward and
+Reverse projections with easting |x| <= 4200 km (approximately within
+35<sup>o</sup> of the central meridian) using the 6th-order series (the
+default)
+ - error in position < 5 nm
+ - error in convergence, d(gamma) < 7e-10" + 5 nm . grad(gamma)
+ - relative error in scale, dk/k < 6e-12%%
+ .
+The error in the scale does not need to include a grad(k) term because
+the scale varies smoothly within this region.  If instead we restrict x
+<= 3400 km (approximately within 29<sup>o</sup> of the central meridan),
+we get a tighter bound on the convergence
+ - error in convergence, d(gamma) < 2e-15" + 5 nm . grad(gamma)
+ .
+Further from the central meridian, the errors grow rapidly.  For |x| =
+10700 km (approx 68<sup>o</sup> from the central median), the error in
+position is about 1 mm.  When used in the UTM system, x is typically
+restricted to |x| <= 500 km.
+
+If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
+to give the 4th-order approximation, then the error is about 210 nm
+for |x| <= 500 km (the region used for UTM coordinates).
+
+\section series Series approximation for transverse Mercator
+
+Kr&uuml;ger gives a 4th-order approximation to the  transverse Mercator
+projection in
+ - L. Kr&uuml;ger, <a
+   href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
+   the Earth ellipsoid to the plane), Royal Prussian Geodetic Institute,
+   New Series 52, 172 p (1912).
+ .
+This is accurate to about 200 nm within the UTM domain.  Here we present
+the series extended to 12th order.  We follow the notation of
+ - <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
+   j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
+   tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
+   coordinates, and map sheet index for ETRS89), Published by JUHTA, Finnish
+   Geodetic Institute, and the National Land Survey of Finland, 34 p (2006).
+
+In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
+n) and / indicates real division (3/5 = 0.6).  The equations need to be
+converted to Horner form, but are here left in expanded form so that
+they can be easily truncated to lower order in n.  Some of the integers
+here are not representable as 32-bit integers and will need to be
+included as double literals.
+
+Eq. (01) [A in Kr&uuml;ger, p. 12, eq. (5)]
 \verbatim
-I give here higher order terms for computing the Transverse Mercator
-Projection and improved formulas for convergence and scale following the
-methods given in
-
-  JHS 154, ETRS89 - ja"rjestelma"a"n liittyva"t karttaprojektiot,
-  tasokoordinaatistot ja karttalehtijako (Map projections, plane
-  coordinates, and map sheet index for ETRS89), Published by JUHTA,
-  Finnish Geodetic Institute, and the National Land Survey of Finland,
-  34 p (2006).
-
-  http://www.jhs-suositukset.fi/suomi/jhs154
-  http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154.pdf
-
-This method is the same as Krueger's 1912 paper
-
-   L. Krueger, Konforme Abbildung des Erdellipsoids in der Ebene
-   (Conformal mpping of the Earth ellipsoid to the plane),
-   Royal Prussian Geodetic Institute, New Series 52, 172 p (1912)
-
-   DOI: 10.2312/GFZ.b103-krueger28
-   http://www.gfz-potsdam.de/bib/pub/digi/krueger2.pdf
-
-and I've noted where the higher order terms appear in this paper.
-
-Here ^ indicates exponentiation (n^3 = n*n*n) and / indicates real
-division (3/5 = 0.6).  The equations need to be converted to Horner
-form, but are here left in expanded form so that they can be easily
-truncated to lower order in n.  Some of the integers here are not
-representable as 32-bit integers and will need to be included as double
-literals.
-
-Twelfth order terms for the forward and backwards transformations:
-
-eq (01) [A in Krueger, p 12, eq (5)]
   A1 = a/(n + 1) * (1 + 1/4 * n^2
-       	      	      + 1/64 * n^4
-		      + 1/256 * n^6
-		      + 25/16384 * n^8
+                      + 1/64 * n^4
+                      + 1/256 * n^6
+                      + 25/16384 * n^8
                       + 49/65536 * n^10
-		      + 441/1048576 * n^12);
+                      + 441/1048576 * n^12);
+\endverbatim
 
-eqs (06) [beta in Krueger, p 18, eq (26*)]
+Eqs. (06) [beta in Kr&uuml;ger, p. 18, eq. (26*)]
+\verbatim
   h[1]   =   1/2 * n
            - 2/3 * n^2
            + 37/96 * n^3
@@ -303,8 +667,10 @@ eqs (06) [beta in Krueger, p 18, eq (26*)]
   h[11]  =   20180430688893997/144171970854912000 * n^11
            - 39227670225311092139/261131482210959360000 * n^12;
   h[12]  =   170866240186706518133/831839653739888640000 * n^12;
+\endverbatim
 
-eqs (07) [gamma in Krueger, p 21, eq (41)]
+Eqs. (07) [gamma in Kr&uuml;ger, p. 21, eq. (41)]
+\verbatim
   h'[1]  =   1/2 * n
            - 2/3 * n^2
            + 5/16 * n^3
@@ -383,611 +749,33 @@ eqs (07) [gamma in Krueger, p 21, eq (41)]
   h'[11] =   12809767642647461/1029799791820800 * n^11
            - 5303630969873795374429/65282870552739840000 * n^12;
   h'[12] =   2240624428311897034834681/91918281738257694720000 * n^12;
-
-eqs (15), (16), (17), (18), (23), (24), (25), (26) are extended in the
-obvious way.
-
-The formulas for meridian convergence (34) and scale (35) are only good
-for small l.  More accurate expressions are given here where ep2 = e'^2
-(eq. 04).
-
-    double
-      c = cos(phi),
-      s = sin(l),
-      c2 = c * c,
-      s2 = s * s,
-      d = 1 - s2 * c2,
-      // Accurate to order ep2^2
-      carg = 1 + c2 * c2 * s2 / d * ep2 *
-      (1 + c2 / (3 * d * d) *
-       (2 - s2 * (c2 * ((4 * c2 - 1) * s2 - 9) + 8)) * ep2),
-      // Accurate to order ep2
-      cabs = 1 + c2 * c2 * s2 * ((c2 - 2) * s2 + 1) / (2 * d * d) * ep2;
-    // This replaces (34)
-    gamma = atan2(sin(phi) * s * carg, cos(l));
-    // This replaces (35)
-    k = cabs/sqrt(d);
-
-For more accuracy, directly differentiate the series involving h' or h.
-The accumulation of the sum can be carried out at the same time as the
-transformation itself (and the calculation slots into a Clenshaw
-summation very easily).  The derivates give the convergence, gamma'',
-and scale, k'', of the [xi, eta] system relative to [xi', eta'] and vice
-versa.  For the full convergence and scale these need to be compounded
-with the convergence, gamma', and scale, k', of the [xi', eta'] system
-with
-
-    gamma = gamma' + gamma''
-        k = k' + k''
-
-gamma' and k' are conveniently expressed as
-
-    gamma' = atan(tan(lam) * sin(beta))
-    	   = atan(tan(lam) * tanh(Q))
-    	   = atan(tan(xi') * tanh(eta'))
-        k' = sqrt(1 - e^2 * sin(phi)^2)
-             * (cos(beta) / cos(phi)) * cosh(eta')
-
-where the factors on the last line are can be computed accurately with
-
-   (cos(beta) / cos(phi)) * cosh(eta')
-           = cosh(Q') / hypot(sinh(Q), cos(lam))
-	   = cosh(Q') * hypot(sinh(eta'), cos(xi'))
-
-These last two expressions preserve accuracy near the pole.  See also
-Krueger, pp 19-20, eqs (19) to (33*) and pp 21-22, eqs (43) to (47).
-
-Finally here is a summary of the errors in this implementation of the
-Transverse Mercator projection.  Errors are relative to an arbitrary
-precision formulation (see tm.mac).
-
-Define mu = asin(sin(l) * cos(phi))
-          = angular distance from meridian
-
-Errors are primarily a function of mu (or x).
-
-For each set, define
-
-   dxm  = max(erra, errb)
-          for mth order method (order n^m or e^(2*m)), where
-
-          erra = the error in the forward transformation scaled to
-                 distance on the ground with the scale factor k
-
-          errb = the discrepancy in applying the forward transformation
-                 followed by the reverse transformation and converting
-                 the result to a distance
-
-   dgam = max error in meridian convergence using the 6th order series
-
-   dk   = max relative error in scale using the 6th order series
-
-Units:
-
-   1um = 1e-6 m
-   d = degrees, ' = minutes, " = seconds
-   % = 0.01, %% = 0.001
-
-    set         dx4     dx5     dx6     dx7     dx8      dgam        dk
-x<4e5, y<95e5 200nm   5.0nm   5.0nm   5.0nm   5.0nm    6e-11"   2e-12%%
-x<5e5, y<96e5 210nm   5.0nm   5.0nm   5.0nm   5.0nm    6e-11"   2e-12%%
-    mu<10     350nm   5.1nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
-    mu<15     700nm   6.5nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
-    mu<20     1.5um    11nm   5.0nm   5.0nm   5.0nm    1e-10"   2e-12%%
-    mu<25     3.3um    23nm   5.0nm   5.0nm   5.0nm    2e-10"   2e-12%%
-    mu<30     7.6um    62nm   5.0nm   5.0nm   5.0nm    4e-10"   2e-12%%
-    mu<35      18um   180nm   5.0nm   5.0nm   5.0nm   1.0e-9"   6e-12%%
-    mu<40      47um   570nm    10nm   5.0nm   5.0nm   4.1e-9"   2e-11%%
-    mu<45     130um   2.0um    35nm   5.0nm   5.0nm   2.0e-8"   1e-10%%
-    mu<50     400um   8.0um   170nm   6.3nm   5.0nm   1.1e-7"   6e-10%%
-    mu<55     1.4mm    37um   1.1um    33nm   5.0nm   8.0e-7"  3.8e-9%%
-    mu<60     5.8mm   210um   8.4um   350nm    17nm   7.1e-6"  3.5e-8%%
-    mu<65      31mm   1.6mm    94um   5.7um   360nm   9.8e-5"  4.7e-7%%
-    mu<70     230mm    20mm   1.8mm   170um    17um   2.2e-3"  1.1e-5%%
-    mu<72     600mm    62mm   6.9mm   820um   100um    0.010"  4.8e-5%%
-    mu<74     1.8m    230mm    33mm   4.9mm   750um    0.055"  2.7e-4%%
-    mu<76     6.2m    1.1m    200mm    39mm   7.9mm     0.39"  1.8e-3%%
-    mu<78      27m    6.3m    1.6m    430mm   .12m       3.7"   0.017%%
-    mu<80     160m     55m     20m    7.9m    3.2m        55"    0.28%%
-    mu<82     1.5km   870m    520m    330m    210m        35'     7.9%%
-    mu<84      27km    28km    37km    53km    81km       19d      39%
-
-Convergence and scale errors using O(ep2^2) and O(ep2) formulas
-
-    set         dgam   dk
-x<4e5, y<95e5   3e-8"  4e-7%%
-x<5e5, y<96e5   9e-8"  1e-6%%
-    mu<10       5e-6"  3e-5%%
-    mu<15       4e-5"  2e-4%%
-    mu<20       2e-4"  5e-4%%
-    mu<25       7e-4"  2e-3%%
-    mu<30       3e-3"  3e-3%%
-    mu<35       7e-3"  6e-3%%
-    mu<40       0.02"  0.02%%
-    mu<45       0.05"  0.03%%
-    mu<50       0.2"   0.05%%
-    mu<55       0.4"   0.1%%
-    mu<60       1"     0.3%%
-    mu<65       4"     0.6%%
-    mu<70       18"    1.5%%
-    mu<72       35"    2.4%%
-    mu<74       76"    3.9%%
-    mu<76       3'     7.1%%
-    mu<78       8'     1.4%
-    mu<80       28'    3.3%
-    mu<82       2.4d   10%
-    mu<84       14d    15%
-
-250000 lat in [0,90] lon in [0,90]
-25000 lat in [-89,0] lon in [90*(1-e),90]
-1000 lon=0 lat in [0,90]
-1000 lat = 0 lon in [0,90]
-1000 lon=90 lat in [0,90]
-1000 lon=90 lat in [-89,0]
-1000 lon=90*(1-e) lat in [-89,0]
-1000 near [90,0]
-1000 near [0,0]
-1000 near [0+,90]
-1000 near [0-,90]
-2000 near [0+,90*(1-e)]
-1000 near [0-,90*(1-e)]
-
-exact errne
-err  min lat max k
-10nm  -13.6 310
-100nm -24.3 3700
-1um   -35.0 56000
-10um  -42.7 510000
-100um -50.9 7700000
-1mm   -57.3 92000000
-10mm  -62.8 1100000000
-100mm -67.9 19000000000
-1m    -72.0 300000000000
-10m   -75.3 4400000000000
-100m  -78.1 74000000000000
-1km   -80.0 750000000000000
-
-for lon=90
-lat v x dlat dv dx (for 1m ground dist)
-90.0 5.235776463681646E-81 3.338114178690237E-74 8.953034030546154E-6 1.5678559428873978E-7 0.9996
-89.0 .01751286614464876 111654.8561695355 8.953061584838968E-6 1.5680915509045293E-7 .9997522668000518
-88.0 .03503088890203572 223343.047669862 8.953144241015507E-6 1.5687987194813652E-7 1.000209295475117
-87.0 .05255923252443782 335097.9604583124 8.95328189885519E-6 1.5699784832146446E-7 1.000971771684849
-86.0 .07010307657006071 446953.081930086 8.953474391462322E-6 1.5716325704849207E-7 1.002040840984061
-85.0 .08766762362330409 558942.0521003888 8.953721485465265E-6 1.573763409562812E-7 1.003418113025652
-84.0 .1052581070962738 671098.7153459431 8.954022881294996E-6 1.576374137212802E-7 1.005105667484609
-83.0 .1228797991394374 783457.1728982276 8.954378213542726E-6 1.579468609850298E-7 1.007106061743501
-82.0 .1405380186900289 896051.836285957 8.954787051396175E-6 1.583051417324545E-7 1.009422340392192
-81.0 0.158238139687707 1008917.481930844 8.955248899154011E-6 1.5871278994176302E-7 1.01205804660737
-80.0 .1759855994880732 1122089.307108689 8.955763196817889E-6 1.591704165168368E-7 1.015017235491115
-79.0 .1937859075059619 1235602.987497389 8.956329320761429E-6 1.5967871151495514E-7 1.018304489462202
-78.0 .2116446541219557 1349494.736544677 8.956946584475365E-6 1.602384466848114E-7 1.021924935809414
-77.0 .2295675198873532 1463801.366901391 8.95761423938803E-6 1.6085047833203775E-7 1.025884266532931
-76.0 .2475602850648543 1578560.354181028 8.958331475760296E-6 1.61515750531905E-7 1.030188760618149
-75.0 .2656288395445476 1693809.903323356 8.959097423653889E-6 1.6223529871152936E-7 1.034845308906273
-74.0 .2837791931774137 1809589.01785926 8.959911153972056E-6 1.6301025362682692E-7 1.039861441747934
-73.0 .3020174865715214 1925937.572395885 8.960771679571365E-6 1.6384184576265287E-7 1.045245359650374
-72.0 .3203500023994291 2042896.388665892 8.96167795644342E-6 1.6473141018808082E-7 1.051005967155526
-71.0 .3387831772690506 2160507.315512487 8.962628884965103E-6 1.6568039190266765E-7 1.057152910216201
-70.0 .3573236142144398 2278813.313213278 8.96362331121598E-6 1.6669035171386437E-7 1.06369661737091
-69.0 .3759780958676517 2397858.542581208 8.964660028361332E-6 1.677629726905299E-7 1.070648345055131
-68.0 .3947535983780963 2517688.459320507 8.965737778099259E-6 1.6890006724285558E-7 1.078020227428694
-67.0 .4136573061516912 2638349.914160069 8.966855252170204E-6 1.7010358488498675E-7 1.085825331146091
-66.0 .4326966274887034 2759891.259336796 8.968011093927173E-6 1.7137562074332746E-7 1.094077715549688
-65.0 .4518792112065448 2882362.462057733 8.969203899964828E-6 1.7271842488103584E-7 1.102792498825967
-64.0 .4712129643420369 3005815.225633277 8.970432221805644E-6 1.741344125176784E-7 1.111985930733165
-63.0 .4907060710369123 3130303.119045159 8.971694567641098E-6 1.756261752325507E-7 1.12167547258619
-62.0 .5103670127206882 3255881.715793563 8.97298940412599E-6 1.7719649325094225E-7 1.131879885273039
-61.0 .5302045897166813 3382608.742958766 8.974315158223733E-6 1.7884834892481175E-7 1.142619326177779
-60.0 .5502279444100107 3510544.241515712 8.97567021910052E-6 1.8058494153315124E-7 1.15391545600055
-59.0 .5704465861311309 3639750.739056548 8.977052940066148E-6 1.8240970354300182E-7 1.165791556597416
-58.0 .5908704179249895 3770293.436208596 8.978461640559261E-6 1.8432631848992093E-7 1.178272661115024
-57.0 0.611509765394562 3902240.408185586 8.979894608174672E-6 1.8633874065702472E-7 1.191385697870302
-56.0 0.632375407828572 4035662.823081314 8.9813501007304E-6 1.8845121675492105E-7 1.205159649627902
-55.0 .6534786118470118 4170635.178710237 8.982826348371984E-6 1.9066830983136068E-7 1.219625730162391
-54.0 .6748311678250117 4307235.560022836 8.984321555711623E-6 1.9299492566979096E-7 1.234817580264163
-53.0 .6964454293861535 4445545.919379353 8.98583390399959E-6 1.9543634197081003E-7 1.250771485664363
-52.0 .7183343562909787 4585652.382259048 8.987361553325361E-6 1.9799824065051447E-7 1.267526619723109
-51.0 .7405115610858641 4727645.581319883 8.988902644845835E-6 2.0068674363574449E-7 1.285125314156709
-50.0 .7629913599223055 4871621.022112926 8.990455303038015E-6 2.0350845258925748E-7 1.303613361585495
-49.0 .7857888280078391 5017679.484205934 8.992017637973435E-6 2.0647049305905435E-7 1.323040354278693
-48.0 .8089198602082823 5165927.461992133 8.993587747611613E-6 2.0958056361681085E-7 1.343460064174183
-47.0 0.83240123738786 5316477.650066312 8.995163720109788E-6 2.1284699063222878E-7 1.36493087008051
-46.0 .8562506991504104 5469449.478756323 8.996743636146143E-6 2.1627878942499104E-7 1.387516238952611
-45.0 .8804870237328065 5624969.706222963 8.998325571253701E-6 2.1988573264608366E-7 1.411285269303815
-44.0 .9051301159027939 5783173.074507672 8.999907598162098E-6 2.2367842686810818E-7 1.436313306214904
-43.0 .9302011038297714 5944203.038043419 9.001487789144315E-6 2.2766839851284906E-7 1.462682639076109
-42.0 .9557224460311091 6108212.574483265 9.003064218365591E-6 2.318681904172757E-7 1.490483295211665
-41.0 .9817180496513039 6275365.089285247 9.004634964231564E-6 2.3629147054037275E-7 1.519813944966298
-40.0 1.00821340151001 6445835.427372219 9.006198111732806E-6 2.4095315454733407E-7 1.550782936775655
-39.0 1.035235713561657 6619811.007424662 9.007751754782825E-6 2.458695442799587E-7 1.583509484320503
-38.0 1.062814084648543 6797493.0970414 9.009293998546661E-6 2.510584844384039E-7 1.618125032232143
-37.0 1.09097968070614 6979098.250215622 9.01082296175718E-6 2.5653954016613856E-7 1.654774832170776
-36.0 1.119765935899864 7164859.932443857 9.012336779016177E-6 2.6233419865368135E-7 1.693619767690952
-35.0 1.149208777543379 7355030.363467769 9.01383360307738E-6 2.684660983640702E-7 1.734838474461961
-34.0 1.179346878076977 7549882.613337371 9.015311607108535E-6 2.7496129003969816E-7 1.778629812543215
-33.0 1.210221937878663 7749712.994427065 9.016768986929646E-6 2.818485342797334E-7 1.825215760067026
-32.0 1.241879003248249 7954843.80054865 9.018203963224581E-6 2.891596411790384E-7 1.874844813560852
-31.0 1.274366824553724 8165626.45479406 9.019614783723174E-6 2.9692985828470553E-7 1.927796000176317
-30.0 1.307738260265261 8382445.1407291 9.020999725351024E-6 3.0519831393278135E-7 1.984383632509254
-29.0 1.342050733427906 8605721.007728754 9.022357096344209E-6 3.1400852383041683E-7 2.044962969122554
-28.0 1.37736674803464 8835917.061484376 9.023685238326127E-6 3.234089694649247E-7 2.109936985499553
-27.0 1.413754473740359 9073543.876193205 9.024982528343712E-6 3.334537574073614E-7 2.179764513890126
-26.0 1.451288408366695 9319166.297209352 9.026247380860309E-6 3.4420336859205153E-7 2.254970080332345
-25.0 1.490050128615042 9573411.344054734 9.027478249702464E-6 3.557255057944695E-7 2.336155858447744
-24.0 1.530129140200786 9836977.576423762 9.028673629957957E-6 3.6809604514407473E-7 2.424016279838696
-23.0 1.571623839023133 1.0110646253899953E+7 9.029832059822368E-6 3.8140009253630885E-7 2.519356000310734
-22.0 1.614642594618888 1.0395294708610751E+7 9.030952122391511E-6 3.9573313653997527E-7 2.623112133947658
-21.0 1.659304965400489 1.069191246592434E+7 9.032032447397059E-6 4.112022730846403E-7 2.73638195320969
-20.0 1.705743051045082 1.1001620801109609E+7 9.033071712882702E-6 4.2792744944725297E-7 2.860457640738696
-19.0 1.754102979256172 1.1325696622911803E+7 9.03406864681819E-6 4.4604262877125217E-7 2.996870207079025
-18.0 1.804546509338961 1.166560184676327E+7 9.035022028648693E-6 4.656967002469526E-7 3.147445414333633
-17.0 1.857252709400227 1.2023019786834677E+7 9.035930690776984E-6 4.8705383616442244E-7 3.314375548957998
-16.0 1.912419620762737 1.2399900593940945E+7 9.036793519976223E-6 5.10292796856611E-7 3.500312281410669
-15.0 1.970265751661197 1.2798518447140486E+7 9.037609458731565E-6 5.356043636104347E-7 3.70848779778007
-14.0 2.031031125609808 1.322154414369334E+7 9.038377506509747E-6 5.631855699411527E-7 3.942874115598816
-13.0 2.094977421935701 1.367213802748465E+7 9.039096720957507E-6 5.932286031650771E-7 4.208394315183751
-12.0 2.1623864476944 1.415406999279647E+7 9.039766219032634E-6 6.259010241094889E-7 4.511204743945961
-11.0 2.233555715660411 1.4671875792763175E+7 9.040385178076887E-6 6.61312143182156E-7 4.859074598891257
-10.0 2.308789200339144 1.523106232433203E+7 9.04095283684886E-6 6.994578847556087E-7 5.261899213141264
-9.0 2.388380330510471 1.5838379262780905E+7 9.041468496549405E-6 7.401334290664537E-7 5.732396241718011
-8.0 2.472582936494716 1.650218069729231E+7 9.041931521893822E-6 7.828003367199969E-7 6.287049431292534
-7.0 2.561564394951542 1.7232908470223882E+7 9.04234134231303E-6 8.263957772682564E-7 6.947380617329954
-6.0 2.655334337092981 1.8043738517251556E+7 9.042697453391597E-6 8.690830620801999E-7 7.741641082180789
-5.0 2.753643861932043 1.8951441432023378E+7 9.042999418644749E-6 9.079781960865769E-7 8.707006210282465
-4.0 2.855857792181241 1.9977515779909108E+7 9.043246871636684E-6 9.38962815623215E-7 9.892313497743952
-3.0 2.960820794128054 2.1149652263169597E+7 9.043439518157316E-6 9.568073009891374E-7 11.36128657955198
-2.0 3.066768225471228 2.250357311463608E+7 9.043577137677407E-6 9.559054771725692E-7 13.19605229516668
-1.0 3.171360980528103 2.408526418203823E+7 9.043659582855794E-6 9.31776582813348E-7 15.50067915053202
-0.0 3.27191465827935 2.595359284541359E+7 9.04368677617263E-6 8.8295339918521E-7 18.40462279198669
--1.0 3.365812461480683 2.818331721187742E+7 9.043658704353204E-6 8.122112221937176E-7 22.0664668687469
--2.0 3.450966983789321 3.0868570902991765E+7 9.043575413223871E-6 7.261195095020773E-7 26.67897901280489
--3.0 3.526136956849453 3.4127040636220024E+7 9.043437005808207E-6 6.330003852067375E-7 32.4767670326138
--4.0 3.590985288736871 3.8105182810414195E+7 9.043243644195887E-6 5.405393340334282E-7 39.74750182497824
--5.0 3.645914253606382 4.298490328161734E+7 9.042995553300638E-6 4.542818728311502E-7 48.84717034635692
--6.0 3.691802179921275 4.8992163202319483E+7 9.042693024227209E-6 3.7732611730901744E-7 60.21967618170242
--7.0 3.72975404369736 5.64080236530975E+7 9.042336416133618E-6 3.107842052443268E-7 74.42143001978572
--8.0 3.760919850555439 6.558274347986955E+7 9.041926156638885E-6 2.544717945892525E-7 92.15213856287559
--9.0 3.786385962181374 7.695371269681541E+7 9.041462741293562E-6 2.075065293874022E-7 114.2936125884294
--10.0 3.807122398692885 9.106824045490429E+7 9.040946732593437E-6 1.687190319044749E-7 141.9590496209909
--11.0 3.823965821530138 1.0861252828593396E+8 9.040378758827734E-6 1.3689495529022566E-7 176.5559815468238
--12.0 3.837622271559026 1.3044856278995184E+8 9.039759512894207E-6 1.1089901679535873E-7 219.86701263677
--13.0 3.848679290855394 1.5766118494878045E+8 9.0390897511217E-6 8.97273400180223E-8 274.1537095027468
--14.0 3.857621422156728 1.9161827524808123E+8 9.038370292099398E-6 7.252046762596841E-8 342.2906529530133
--15.0 3.864845932807393 2.3404788801163265E+8 9.037602015498069E-6 5.855688474679523E-8 427.9388627587739
--16.0 3.870677289465048 2.8713734607308516E+8 9.036785860867147E-6 4.723823615112605E-8 535.7707476927568
--17.0 3.8753798270666 3.536608638583268E+8 9.035922826394216E-6 3.8072117722243765E-8 671.7626709502036
--18.0 3.879168522255771 4.3714433232328653E+8 9.035013967617199E-6 3.065530221340472E-8 843.5765065482399
--19.0 3.882217997879749 5.420786481775556E+8 9.034060396082857E-6 2.465862825446435E-8 1061.058678856303
--20.0 3.88466996938006 6.741966409896083E+8 9.033063277947717E-6 1.9813944107671114E-8 1336.89479195394
--21.0 3.886639362002633 8.408335712947563E+8 9.032023832519436E-6 1.5903094084364952E-8 1687.470991472849
--22.0 3.888219315261426 1.0513977884622212E+9 9.03094333073793E-6 1.2748760643971355E-8 2134.01094249961
--23.0 3.889485266422668 1.317987065933401E+9 9.029823093596554E-6 1.0206916219090915E-8 2704.081544416804
--24.0 3.890498277061902 1.6561982275626316E+9 9.02866449050417E-6 8.160635486263565E-9 3433.593748250944
--25.0 3.891307740211246 2.0861941291345282E+9 9.02746893758958E-6 6.51503979515703E-9 4369.470629487646
--26.0 3.891953581973395 2.634114520564459E+9 9.026237895949857E-6 5.193175005780895E-9 5573.218199768565
--27.0 3.892468051204209 3.333948110045338E+9 9.024972869844636E-6 4.1326544969054774E-9 7125.722420526434
--28.0 3.892877173853582 4.230025554253576E+9 9.023675404838363E-6 3.282927267531076E-9 9133.718658628313
--29.0 3.893201934464 5.380351741214546E+9 9.022347085892767E-6 2.603055649799523E-9 11738.5519643427
--30.0 3.893459235747086 6.861077204385074E+9 9.020989535411872E-6 2.059907998556011E-9 15128.08907130792
--31.0 3.893662677687958 8.772522230108004E+9 9.019604411241989E-6 1.6266890841304524E-9 19552.98640246272
--32.0 3.893823189903013 1.124732673913196E+10 9.018193404629138E-6 1.2817452227270454E-9 25349.00708482105
--33.0 3.893949544686804 1.44615239100924E+10 9.016758238136477E-6 1.0075928960968521E-9 32967.77927189254
--34.0 3.894048773065979 1.864965421858356E+10 9.015300663524322E-6 7.901291721838347E-10 43019.39423513132
--35.0 3.894126502015782 2.412549068376923E+10 9.013822459595409E-6 6.179900217225538E-10 56331.69870468422
--36.0 3.894187227609424 3.13105968264996E+10 9.01232543000806E-6 4.820289553748848E-10 74033.25551238802
--37.0 3.894234536117197 4.0773876708167E+10 9.01081140105998E-6 3.748935508513763E-10 97670.05120378424
--38.0 3.89427128283238 5.328663635990528E+10 9.009282219445429E-6 2.906816208630529E-10 129370.6059119694
--39.0 3.894299736578469 6.989966030725498E+10 9.007739749988495E-6 2.246621715341676E-10 172080.9323204003
--40.0 3.894321696369033 9.205172145075017E+10 9.006185873355288E-6 1.730490642655523E-10 229900.9386930432
--41.0 3.894338585484134 1.217232524393433E+11 9.004622483747825E-6 1.328175415010617E-10 308569.1438251011
--42.0 3.894351527244322 1.616553250475926E+11 9.003051486582376E-6 1.015556053725305E-10 416165.7294219777
--43.0 3.894361405962863 2.156637130220933E+11 9.001474796155129E-6 7.734372639427068E-11 564139.3421677254
--44.0 3.894368915905164 2.890923704972764E+11 8.999894333297881E-6 5.865757098650124E-11 768817.570694712
--45.0 3.894374600553697 3.894728406870162E+11 8.998312023026618E-6 4.42894233241923E-11 1053645.710407189
--46.0 3.894378884044637 5.274901962485239E+11 8.996729792185688E-6 3.328478077979916E-11 1452531.156869113
--47.0 3.894382096290661 7.18408949741392E+11 8.995149567090326E-6 2.489125710863892E-11 2014880.706908475
--48.0 3.894384493018034 9.841950228855665E+11 8.993573271170223E-6 1.851746117579514E-11 2813253.31369404
--49.0 3.894386271713109 1.356700385823356E+12 8.99200282261683E-6 1.369995392614895E-11 3955091.65930989
--50.0 3.894387584283838 1.882485166105615E+12 8.990440132036961E-6 1.007674073847309E-11 5600877.517155468
--51.0 3.894388547087794 2.630187585039634E+12 8.988887100115255E-6 7.366045158287359E-12 7992508.946977814
--52.0 3.89438924885298 3.701898895653574E+12 8.987345615287965E-6 5.349345384900018E-12 1.149812017006212E+7
--53.0 3.894389756915982 5.250901902032596E+12 8.985817551430442E-6 3.857846661885874E-12 1.6683654039091966E+7
--54.0 3.894390122119497 7.509635689350056E+12 8.984304765560519E-6 2.761718927202577E-12 2.442848700766505E+7
--55.0 3.894390382644347 1.083429102687953E+13 8.982809095559928E-6 1.961556273847878E-12 3.611451720734229E+7
--56.0 3.894390566996863 1.577679478934759E+13 8.981332357915651E-6 1.381618300048793E-12 5.393940861639114E+7
--57.0 3.894390696328666 2.320250621075225E+13 8.979876345482878E-6 9.644976505066617E-13 8.144264838400014E+7
--58.0 3.894390786230414 3.448528935572397E+13 8.978442825271015E-6 6.669265260024225E-13 1.2440187637260088E+8
--59.0 3.894390848112456 5.183553448593489E+13 8.977033536253763E-6 4.564905724775308E-13 1.9238374358261315E+8
--60.0 3.894390890262304 7.886027470157786E+13 8.975650187203896E-6 3.090637239124179E-13 3.014714297024599E+8
--61.0 3.894390918650249 1.215353971126218E+14 8.97429445455276E-6 2.068142020527662E-13 4.791457198451116E+8
--62.0 3.894390937539586 1.899228687630817E+14 8.972967980273787E-6 1.366615511494259E-13 7.731836548250485E+8
--63.0 3.894390949945938 3.012610833052686E+14 8.971672369788299E-6 8.908859816985213E-14 1.268206824767804E+9
--64.0 3.894390957980684 4.856387987335239E+14 8.970409189890621E-6 5.723163227885397E-14 2.1171170588468616E+9
--65.0 3.894390963105828 7.96639239961027E+14 8.969179966687693E-6 3.618775209891499E-14 3.60219379845034E+9
--66.0 3.894390966321652 1.331776533011144E+15 8.967986183546037E-6 2.249093752603522E-14 6.256802514650865E+9
--67.0 3.894390968303675 2.272728881097716E+15 8.966829279035547E-6 1.371853764278677E-14 1.111438282435774E+10
--68.0 3.894390969501665 3.966726492082727E+15 8.965710644854961E-6 8.197994866390858E-15 2.023273209950914E+10
--69.0 3.894390970210471 7.096127934035651E+15 8.964631623717189E-6 4.79012890985883E-15 3.783315538534204E+10
--70.0 3.89439097062013 1.304332146177423E+16 8.96359350716315E-6 2.730492892174542E-15 7.286182760356935E+10
--71.0 3.894390970850854 2.470418342885798E+16 8.962597533258598E-6 1.514440841863152E-15 1.449693099974587E+11
--72.0 3.894390970977132 4.837343954930303E+16 8.961644884107325E-6 8.148166379638363E-16 2.99058899164635E+11
--73.0 3.894390971044077 9.83066277243265E+16 8.96073668308191E-6 4.237564005718996E-16 6.423399648993512E+11
--74.0 3.894390971078323 2.083001894858935E+17 8.959873991622723E-6 2.121253509281713E-16 1.443627585244473E+12
--75.0 3.894390971095152 4.627057925302922E+17 8.959057805375413E-6 1.016964470181866E-16 3.41506630227184E+12
--76.0 3.894390971103053 1.08467163092389E+18 8.958289049304801E-6 4.641099308990453E-17 8.564483193125116E+12
--77.0 3.894390971106574 2.705065904203365E+18 8.957568571199228E-6 2.00132009560835E-17 2.296975076989091E+13
--78.0 3.894390971108051 7.249283498348376E+18 8.956897132587889E-6 8.079738721778879E-18 6.65996349583259E+13
--79.0 3.89439097110863 2.114164878368137E+19 8.95627539538155E-6 3.018722808421396E-18 2.116341298326095E+14
--80.0 3.894390971108837 6.819777236096517E+19 8.955703901194483E-6 1.028278807083943E-18 7.50129950445258E+14
--81.0 3.894390971108905 2.48591820697108E+20 8.955183037600014E-6 3.131288813761597E-19 3.035167246680064E+15
--82.0 3.894390971108925 1.054097730040187E+21 8.954712979823443E-6 8.300380854122397E-20 1.446592939049874E+16
--83.0 3.89439097110893 5.415097859097338E+21 8.954293583236204E-6 1.84512531082754E-20 8.486448796475549E+16
--84.0 3.89439097110893 3.576995386388597E+22 8.953924169165923E-6 3.256617072495064E-21 6.535701766821963E+17
--85.0 3.894390971108931 3.331970605316544E+23 8.953603054559184E-6 4.192912808114656E-22 7.301442880963125E+18
--86.0 3.894390971108931 5.108658190494785E+24 8.95332637710742E-6 3.416764057611216E-23 1.398691292297221E+20
--87.0 3.894390971108931 1.722751015929208E+26 8.95308457174636E-6 1.350442641129143E-24 6.286642759600934E+21
--88.0 3.894390971108931 2.449452961833881E+28 8.952848278140138E-6 1.424293469903511E-26 1.340430018287029E+24
--89.0 3.894390971108931 1.17129732263694E+32 8.952469696876462E-6 5.955763004688588E-30 1.28175405643569E+28
-
-
-for lat > -13.6
-uncertainty rad(nm), residual dgam("), residual dk(rel, %%)
-0 2.9e-6 2.3e-8
-1 1.2e-6 7.0e-9
-2 1.9e-9 2.8e-10
-3 1.5e-9 5.8e-12
-4 1.1e-9 5.8e-12
-5 6.9e-10
-6 2.8e-10
-7 1.8e-15
-
-for interior (1:250k) points with lat > 0
-max(dgam) = 1.3e-9", max(dk)= 5.8e-12
-
-Summary:
-
-err = max(forward error/k, forward-backward discrepancy)
-for lat > -13.6, max(err) = 10nm.
-max(dgam) = 7e-10" + 5nm . grad(gamma)
-max(dk/k) = 6e-12%% + 5nm . grad(k)/k
-
-for lat > -13.6
-
-errs = max(forward, backwark)
-
-err = 8nm
-dgam = 1.8e-15" + 8nm . grad(gamma)
-dk/k = 6.8e-12%% + 3nm . grad(k)/k
-
-Series lat >= 0 & x < 42e5
-err = 4.9nm
-dk = 5.5e-12%% + 0nm . grad(k)
-dgam = 6.9e-10" + 5nm . grad(gamma)
-
-lat >=0 & x < 34e5
-dgam = 1.8e-15" + 5nm . grad(gamma)
-
-
 \endverbatim
 
-<center>
-Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page organization Code organization
+Eqs. (15), (16), (17), (18), (23), (24), (25), (26) of JHS 154 are
+extended in the obvious way.
 
 <center>
-Back to \ref example.  Forward to \ref seeds.  Up to \ref contents.
-</center>
-
-Text here
-
-<center>
-Back to \ref example.  Forward to \ref seeds.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page seeds The seed
-
-<center>
-Back to \ref organization.  Forward to \ref integer.  Up to \ref contents.
-</center>
-
-Text here
-
-<center>
-Back to \ref organization.  Forward to \ref integer.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page integer Random integers
-
-<center>
-Back to \ref seeds.  Forward to \ref real.  Up to \ref contents.
-</center>
-
-Text here
-
-<center>
-Back to \ref seeds.  Forward to \ref real.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page real Random real numbers
-
-<center>
-Back to \ref integer.  Forward to \ref other.  Up to \ref contents.
-</center>
-
-Text here
-
-\section fixed Fixed-point real numbers
-
-Text here
-
-\section floating Floating-point real numbers
-
-Text here
-
-\section reals Summary of real number routines
-
-<center>
-Back to \ref integer.  Forward to \ref other.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page other Other random results
-
-<center>
-Back to \ref real.  Forward to \ref otherdist.  Up to \ref contents.
-</center>
-
-Text here
-
-<center>
-Back to \ref real.  Forward to \ref otherdist.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page otherdist Other random distributions
-
-<center>
-Back to \ref other.  Forward to \ref save.  Up to \ref contents.
-</center>
-
-Text here
-
-<center>
-Back to \ref other.  Forward to \ref save.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page save Saving and restoring the state
-
-<center>
-Back to \ref otherdist.  Forward to \ref programming.  Up to \ref contents.
-</center>
-
-Text here.
-
-<center>
-Back to \ref otherdist.  Forward to \ref programming.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page programming Programming tips
-
-<center>
-Back to \ref save.  Forward to \ref parallel.  Up to \ref contents.
-</center>
-
-\section conversion Conversion from std::rand()
-
-Text here
-
-\section stl Interaction with the standard template library
-
-Text here
-
-\section misc Miscellaneous
-
-Text here
-
-\section switch Selection of default generator
-
-Text here
-
-\section timing Timing results
-
-Text here
-
-\section checking Checking the engines
-
-Text here.
-
-<center>
-Back to \ref save.  Forward to \ref parallel.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page parallel Parallelization
-
-<center>
-Back to \ref programming.  Forward to \ref function.  Up to \ref contents.
-</center>
-
-
-\section leapfrog Leapfrogging
-
-Text here.
-
-<center>
-Back to \ref programming.  Forward to \ref function.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page function Function index
-
-<center>
-Back to \ref parallel.  Forward to \ref old.  Up to \ref contents.
-</center>
-
-typedefs and consts
- - Random::seed_type; &nbsp; &nbsp;
-   RandomLib::RandomSeed::seed_type
-
-Setting and examining the seed
- - Random g(v); &nbsp; &nbsp;
-   RandomLib::RandomEngine::RandomEngine(const std::vector<IntType>&)
-
-Static functions for seed management
- - Random::SeedWord(); &nbsp; &nbsp;
-   RandomLib::RandomSeed::SeedWord();
-
-I/O
- - g.Save(os, bin); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Save(std::ostream&, bool) const
-
-Functions returning random integers
- - g(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::operator()()
-
-Functions returning random reals
- - r.Fixed(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Fixed()
-
-Functions returning random booleans
- - r.Boolean(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Boolean()
-
-Function returning random bits
- - r.Bits<n>(); &nbsp; &nbsp;
-   RandomLib::RandomCanonical::Bits<nbits>()
-
-Setting position in sequence
- - g.Count(); &nbsp; &nbsp;
-   RandomLib::RandomEngine::Count()
-
-Other
- - Random::Global; &nbsp; &nbsp;
-   RandomLib::Random::Global
-
-<center>
-Back to \ref parallel.  Forward to \ref old.  Up to \ref contents.
+Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page old Old versions
 
-<center>
-Back to \ref function.  Up to \ref contents.
-</center>
+List of versions in reverse chronological order together with a brief
+list of changes.
 
-Text here.
+ - <a href="http://charles.karney.info/geographic-new/Geographic.tgz">2009-01</a>
+   (current)
+    - First proper release of library
+    - More robust GeographicLib::TransverseMercatorExact
+    - Documentation on transverse Mercator projection
+    - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
+
+ - <a href="http://charles.karney.info/geographic-old/">2008-09</a>
+    - Ad hoc posting of information on the transverse Mercator
+      projection
 
 <center>
-Back to \ref function.  Up to \ref contents.
+Back to \ref transversemercator.  Up to \ref contents.
 </center>
 **********************************************************************/

@@ -1,5 +1,6 @@
 /**
  * \file Constants.cpp
+ * \brief Implementation for GeographicLib::Constants class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * http://charles.karney.info/geographic
@@ -28,8 +29,8 @@ namespace GeographicLib {
   const double Constants::meter = 1.0;
   const double Constants::WGS84_a = 6378137.0 * meter;
   const double Constants::WGS84_invf = 298.257223563;
-  const double Constants::UPS_k0 = 0.994;
   const double Constants::UTM_k0 = 0.9996;
+  const double Constants::UPS_k0 = 0.994;
 
   const double Constants::kilometer = 1000.0 * meter;
   const double Constants::nauticalmile = 1.852 * kilometer;

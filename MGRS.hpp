@@ -1,5 +1,6 @@
 /**
  * \file MGRS.hpp
+ * \brief Header for GeographicLib::MGRS class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -14,9 +15,7 @@
 
 namespace GeographicLib {
   /**
-   * \brief Convert between UTM/UPS and MSGS
-   *
-   * Properties
+   * \brief Convert between UTM/UPS and MGRS
    *
    * The conversions are closed, i.e., output from Forward is legal input for
    * Reverse and vice versa.  Conversion in both directions preserve the
@@ -27,8 +26,8 @@ namespace GeographicLib {
    * latitude band and by loss of precision in the MGRS coordinates.)
    *
    * All MGRS coordinates truncate to legal 100km blocks.  All MGRS coordinates
-   * with a legal 100km block prefix are legal (even though the band letter may
-   * now belong to a neighboring band).
+   * with a legal 100km block prefix are legal (even though the latitude band
+   * letter may now belong to a neighboring band).
    *
    * The range of UTM/UPS coordinates allowed for conversion to MGRS
    * coordinates is the maximum consistent with staying within the letter
@@ -75,92 +74,92 @@ namespace GeographicLib {
   public:
 
     /**
-     * Convert UTM or UPS coordinate to an MGRS coordinate.  zone and northp
-     * give resulting zone (with zone == 0 indicating UPS) and hemisphere, x
-     * and y are the easting and northing (meters).  prec indicates the desired
-     * precision with prec == 0 (the minimum) meaning 100km, prec == 5 meaning
-     * 1m, and prec == 11 (the maximum) meaning 1um.
+     * Convert UTM or UPS coordinate to an MGRS coordinate.  \e zone and \e
+     * northp give input zone (with \e zone = 0 indicating UPS) and hemisphere,
+     * \e x and \e y are the easting and northing (meters).  \e prec indicates
+     * the desired precision with \e prec = 0 (the minimum) meaning 100 km, \e
+     * prec = 5 meaning 1 m, and \e prec == 11 (the maximum) meaning 1 um.
      *
-     * UTM eastings are allowed to be in the range [100km, 900km], northings
-     * are allowed to be in in [0km, 9500km] for the northern hemisphere and in
-     * [1000km, 10000km] for the southern hemisphere.  (However UTM northings
-     * can be continued across the equator.  So the actual limits on the
-     * northings are [-9000km, 9500km] for the "northern" hemisphere and
-     * [1000km, 19500km] for the "southern" hemisphere.)
+     * UTM eastings are allowed to be in the range [100 km, 900 km], northings
+     * are allowed to be in in [0 km, 9500 km] for the northern hemisphere and
+     * in [1000 km, 10000 km] for the southern hemisphere.  (However UTM
+     * northings can be continued across the equator.  So the actual limits on
+     * the northings are [-9000 km, 9500 km] for the "northern" hemisphere and
+     * [1000 km, 19500 km] for the "southern" hemisphere.)
      *
-     * UPS eastings/northings are allowed to be in the range [1300km, 2700km]
-     * in the northern hemisphere and in [800km, 3200km] in the southern
+     * UPS eastings/northings are allowed to be in the range [1300 km, 2700 km]
+     * in the northern hemisphere and in [800 km, 3200 km] in the southern
      * hemisphere.
      *
-     * The ranges are 100km more restrictive that for the conversion between
-     * geographic coordinates and UTM and UPS.  These restrictions are dictated
-     * by the allowed letters in MGRS coordinates.  The choice of 9500km for
-     * the maximum northing for northern hemisphere and of 1000km as the
-     * minimum northing for southern hemisphere provide at least 0.5 degree
-     * extension into standard UPS zones.  The upper ends of the ranges for the
-     * UPS coordinates is dictated by requiring symmetry about 0E and 90E.
+     * The ranges are 100 km more restrictive that for the conversion between
+     * geographic coordinates and UTM and UPS given by UTMUPS.  These
+     * restrictions are dictated by the allowed letters in MGRS coordinates.
+     * The choice of 9500 km for the maximum northing for northern hemisphere
+     * and of 1000 km as the minimum northing for southern hemisphere provide
+     * at least 0.5 degree extension into standard UPS zones.  The upper ends
+     * of the ranges for the UPS coordinates is dictated by requiring symmetry
+     * about the meridans 0E and 90E.
      *
      * All allowed UTM and UPS coordinates may now be converted to legal MGRS
      * coordinates with the proviso that eastings and northings on the upper
-     * boundaries are silently reduced by about 4nm to place them WITHIN the
+     * boundaries are silently reduced by about 4nm to place them \e within the
      * allowed range.  (This includes reducing a southern hemisphere northing
      * of 10000km by 4nm so that it is placed in latitude band M.)  The UTM or
      * UPS coordinates are truncated to requested precision to determine the
      * MGRS coordinate.  Thus in UTM zone 38N, the square area with easting in
-     * [444km, 445km) and northing in [3688km, 3689km) maps to MGRS coordinate
-     * 38SMB4488 (at prec = 2, 1km), Kulani Sq., Baghdad.
+     * [444 km, 445 km) and northing in [3688 km, 3689 km) maps to MGRS
+     * coordinate 38SMB4488 (at \e prec = 2, 1km), Kulani Sq., Baghdad.
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion to
-     * MGRS coordinate.  Thus for zone > 0, the MGRS coordinate begins with the
-     * zone number followed by one of [C-M] for the southern hemisphere and
-     * [N-X] for the northern hemisphere.  For zone == 0, the MGRS coordinates
-     * begins with one of [AB] for the southern hemisphere and [XY] for the
-     * northern hemisphere.
+     * MGRS coordinate.  Thus for \e zone > 0, the MGRS coordinate begins with
+     * the zone number followed by one of [C&ndash;M] for the southern
+     * hemisphere and [N&ndash;X] for the northern hemisphere.  For \e zone =
+     * 0, the MGRS coordinates begins with one of [AB] for the southern
+     * hemisphere and [XY] for the northern hemisphere.
      *
      * The conversion to the MGRS is exact for prec in [0, 5] except that a
      * neighboring latitude band letter may be given if the point is within 5nm
      * of a band boundary.  For prec in [6, 11], the conversion is accurate to
      * roundoff.
-     * 
+     *
      **********************************************************************/
     static void Forward(int zone, bool northp, double x, double y,
 			int prec, std::string& mgrs);
 
     /**
      * Convert UTM or UPS coordinates to an MGRS coordinate in case that
-     * latitude is already known.  The latitude is ignored for zone == 0 (UPS);
-     * otherwise the latitude is used to determine the latitude band and this
-     * is checked for consistency using the same tests as Reverse.
+     * latitude is already known.  The latitude is ignored for \e zone = 0
+     * (UPS); otherwise the latitude is used to determine the latitude band and
+     * this is checked for consistency using the same tests as Reverse.
      **********************************************************************/
     static void Forward(int zone, bool northp, double x, double y, double lat,
 			int prec, std::string& mgrs);
 
     /**
-     * Convert a MGRS coordinate to UTM or UPS coordinates.  Also return the
-     * precision of the MGRS string (see Forward).  If centerp (default),
-     * return center of the MGRS square, else return SW (lower left) corner.
+     * Convert a MGRS coordinate to UTM or UPS coordinates returning zone \e
+     * zone, hemisphere \e northp, easting \e x (meters), northing \e y
+     * (meters) .  Also return the precision of the MGRS string (see Forward).
+     * If \e centerp = true (default), return center of the MGRS square, else
+     * return SW (lower left) corner.
      *
      * All conversions from MGRS to UTM/UPS are permitted provided the MGRS
      * coordinate is a possible result of a conversion in the other direction.
      * (The leading 0 may be dropped from an input MGRS coordinate for UTM
-     * zones 1-9.)  In addition, MGRS coordinates with a neighboring latitude
+     * zones 1&ndash;9.)  In addition, MGRS coordinates with a neighboring latitude
      * band letter are permitted provided that some portion of the 100km block
      * is within the given latitude band.  Thus
-     *
-     *     38VLS and 38WLS are allowed (latitude 64N intersects the square
+     *   - 38VLS and 38WLS are allowed (latitude 64N intersects the square
      *     38[VW]LS); but 38VMS is not permitted (all of 38VMS is north of 64N)
-     *
-     *     38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
+     *   - 38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
      *     and 38MPF are not permitted (the equator does not intersect either
      *     block).
-     *
-     *     Similarly ZAB and YZB are permitted (they straddle 0E); but YAB and
+     *   - Similarly ZAB and YZB are permitted (they straddle 0E); but YAB and
      *     ZZB are not (0E does not intersect either block).
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion
      * from MGRS coordinate.  The conversion is exact for prec in [0, 5].  With
-     * centerp the conversion from MGRS to geographic and back is stable.  This
-     * is not assured if !centerp.
+     * centerp = true the conversion from MGRS to geographic and back is
+     * stable.  This is not assured if \e centerp = false.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
 			int& zone, bool& northp, double& x, double& y,
@@ -169,7 +168,8 @@ namespace GeographicLib {
     /**
      * Return the latitude band number [-10, 10) for the give latitude
      * (degrees).  The bands are reckoned in include their southern edges.
-     * This is exact.  Public because UTMUPS::StandardZone needs to use this.
+     * This is exact.  This is public because UTMUPS::StandardZone needs to use
+     * this.
      **********************************************************************/
     static int LatitudeBand(double lat) {
       int ilat = int(floor(lat));

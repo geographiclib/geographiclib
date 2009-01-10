@@ -1,5 +1,6 @@
 /**
  * \file UTMUPS.hpp
+ * \brief Header for GeographicLib::UTMUPS class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -48,8 +49,10 @@ namespace GeographicLib {
       std::ostringstream s; s << x; return s.str();
     }
     static void CheckLatLon(double lat, double lon);
-    // Throw an error if easting or northing are outside standard ranges.
-    static void CheckCoords(bool utmp, bool northp, double x, double y);
+    // Throw an error if easting or northing are outside standard ranges.  If
+    // throwp = false, return bool instead.
+    static bool CheckCoords(bool utmp, bool northp, double x, double y,
+			    bool throwp = true);
   public:
 
     /**
@@ -63,22 +66,24 @@ namespace GeographicLib {
     static int StandardZone(double lat, double lon);
 
     /**
-     * Convert geographic coordinates to UTM or UPS coordinate.  Given zone
-     * preference \e setzone (negative means result of UTMUPS::StandardZone,
-     * zero means UPS, positive means a particular UTM zone), latitude \e lat
-     * (degrees), and longitude \e lon (degrees), return \e zone (zero
+     * Convert geographic coordinates to UTM or UPS coordinate.  Given latitude
+     * \e lat (degrees), and longitude \e lon (degrees), return \e zone (zero
      * indicates UPS), hemisphere \e northp (false means south, true means
-     * north), easting \e x (meters), and northing \e y (meters).  Throw error
-     * if the resulting easting or northing is outside the allowed range (see
-     * Reverse). This also returns meridian convergence \e gamma (degrees) and
-     * scale \e k.  The accuracy of the conversion is about 5nm.
+     * north), easting \e x (meters), and northing \e y (meters).  The prefered
+     * zone for the result can be specified with \e setzone (negative means
+     * result of UTMUPS::StandardZone, zero means UPS, positive means a
+     * particular UTM zone), Throw error if the resulting easting or northing
+     * is outside the allowed range (see Reverse). This also returns meridian
+     * convergence \e gamma (degrees) and scale \e k.  The accuracy of the
+     * conversion is about 5nm.
      *
      * To extent the standard UTM zones into the UPS regions use \e setzone =
      * UTMUPS::StandardZone(max(-80.0, min(80.0, \e lat))).
      **********************************************************************/
-    static void Forward(int setzone, double lat, double lon,
+    static void Forward(double lat, double lon,
 			int& zone, bool& northp, double& x, double& y,
-			double& gamma, double& k);
+			double& gamma, double& k,
+			int setzone = -1);
 
     /**
      * Convert UTM or UPS coordinate to geographic coordinates .  Given zone \e
@@ -112,10 +117,11 @@ namespace GeographicLib {
     /**
      * Forward without returning convergence and scale.
      **********************************************************************/
-    static void Forward(int setzone, double lat, double lon,
-			int& zone, bool& northp, double& x, double& y) {
+    static void Forward(double lat, double lon,
+			int& zone, bool& northp, double& x, double& y,
+			int setzone = -1) {
       double gamma, k;
-      Forward(setzone, lat, lon, zone, northp, x, y, gamma, k);
+      Forward(lat, lon, zone, northp, x, y, gamma, k, setzone);
     }
 
     /**

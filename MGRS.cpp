@@ -1,5 +1,6 @@
 /**
  * \file MGRS.cpp
+ * \brief Implementation for GeographicLib::MGRS class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -118,7 +119,6 @@ namespace GeographicLib {
 	iy /= base;
       }
     }
-      
   }
 
   void MGRS::Forward(int zone, bool northp, double x, double y,
@@ -274,7 +274,6 @@ namespace GeographicLib {
 	}
       }
     }
-	  
   }
 
   int MGRS::UTMRow(int iband, int icol, int irow) {

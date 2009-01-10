@@ -1,5 +1,6 @@
 /**
  * \file EllipticFunction.hpp
+ * \brief Header for GeographicLib::EllipticFunction class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -12,7 +13,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Elliptic functions needed for TransverseMercatorExact.
+   * \brief Elliptic functions needed for TransverseMercatorExact
    *
    * This provides the subset of elliptic functions needed for
    * TransverseMercatorExact.  For a given ellipsoid, only parameters \e
@@ -25,13 +26,13 @@ namespace GeographicLib {
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
    *   Computation of elliptic integrals,
-   *   Numerical Algorithms 10, 13-26 (1995).
+   *   Numerical Algorithms 10, 13&ndash;26 (1995).
    * .
    * The computation of the Jacobi elliptic functions uses the algorithm given
    * in
    * - Roland Bulirsch,
    *   Numerical Calculation of Elliptic Integrals and Elliptic Functions,
-   *   Numericshe Mathematik 7, 78-90 (1965).
+   *   Numericshe Mathematik 7, 78&ndash;90 (1965).
    * .
    * The notation follows Abramowitz and Stegun, Chapters 16 and 17.
    **********************************************************************/

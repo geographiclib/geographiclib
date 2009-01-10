@@ -1,5 +1,6 @@
 /**
  * \file EllipticFunction.cpp
+ * \brief Implementation for GeographicLib::EllipticFunction class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * http://charles.karney.info/geographic
@@ -19,7 +20,8 @@ namespace {
 
 namespace GeographicLib {
 
-  const double EllipticFunction::tol = std::numeric_limits<double>::epsilon()*0.0001;
+  const double EllipticFunction::tol =
+    std::numeric_limits<double>::epsilon() * 0.01;
   const double EllipticFunction::tolRF = std::pow(3 * tol, 1/6.0);
   const double EllipticFunction::tolRD = std::pow(0.25 * tol, 1/6.0);
   const double EllipticFunction::tolRG0 = 2.7 * sqrt(tol);
@@ -175,7 +177,7 @@ namespace GeographicLib {
       if (sn != 0) {
 	double a = cn / sn;
 	c = a * c;
-	for (; l--;) {
+	while (l--) {
 	  double b = m[l];
 	  a = c * a;
 	  c = dn * c;

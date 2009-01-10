@@ -1,5 +1,6 @@
 /**
  * \file PolarStereographic.hpp
+ * \brief Header for GeographicLib::Polarstereographic class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -16,6 +17,9 @@ namespace GeographicLib {
    * Implementation taken from the report, J. P.Snyder, <a
    * href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395"> Map Projections: A
    * Working Manual</a>, USGS Professional Paper 1395 (1987), pp. 160&ndash;163.
+   *
+   * This is a straightforward implementation of the equations in Snyder except
+   * that Newton's method is used to invert the projection.
    **********************************************************************/
   class PolarStereographic {
   private:
@@ -47,8 +51,9 @@ namespace GeographicLib {
     void Reverse(bool northp, double x, double y,
 		 double& lat, double& lon, double& gamma, double& k) const;
     /**
-     * A global instantiation of PolarStereographic with thw WGS84 ellipsoid
-     * and the UPS scale factor.
+     * A global instantiation of PolarStereographic with the WGS84 ellipsoid
+     * and the UPS scale factor.  However, unlike UPS, no false easting or
+     * northing is added.
      **********************************************************************/
     const static PolarStereographic UPS;
   };

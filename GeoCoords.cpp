@@ -1,5 +1,6 @@
 /**
  * \file GeoCoords.cpp
+ * \brief Implementation for GeographicLib::GeoCoords class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * http://charles.karney.info/geographic
@@ -73,7 +74,7 @@ namespace GeographicLib {
 	_lat = b;
 	_long = a;
       }
-      UTMUPS::Forward(-1, _lat, _long,
+      UTMUPS::Forward( _lat, _long,
 		      _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {
       unsigned zoneind, coordind;
