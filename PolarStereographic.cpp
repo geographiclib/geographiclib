@@ -11,15 +11,6 @@
 #include <cmath>
 #include <limits>
 
-/*
- * Implementation taken from the report:
- *
- * J. P.Snyder, Map Projections: A Working Manual,
- * USGS Professional Paper 1395 (1987), pp. 160 - 163
- *
- * http://pubs.er.usgs.gov/usgspubs/pp/pp1395
- */
-
 namespace {
   char RCSID[] = "$Id$";
   char RCSID_H[] = POLARSTEREOGRAPHIC_HPP;
@@ -57,9 +48,9 @@ namespace GeographicLib {
     double
       ecos = _e * cos(theta),
       f = std::pow((1 + ecos)/(1 - ecos), _e/2),
-      t = 2 * tan(theta/2) * f,
-      m = sin(theta) / sqrt(1 - sq(ecos));
-    rho = _a * _k0 * t / _c;
+      t2 = 2 * tan(theta/2) * f,	   // Snyder (15-9) (t2 = 2 * t)
+      m = sin(theta) / sqrt(1 - sq(ecos)); // Snyder (14-15)
+    rho = _a * _k0 * t2 / _c;		   // Snyder (21-33)
     k = m < std::numeric_limits<double>::epsilon() ? _k0 : rho / (_a * m);
     double
       lam = lon * Constants::degree;
@@ -73,17 +64,19 @@ namespace GeographicLib {
 				   double& gamma, double& k) const {
     double
       rho = hypot(x, y),
-      t = rho * _c / (_a * _k0),
+      t2 = rho * _c / (_a * _k0),
       theta = Constants::pi/2,	// initial estimate of colatitude
       ecos = _e * cos(theta);
-    // Solve using Newton's method which converges more rapidly than the
-    // iteration procedure given by Snyder.
+    // Solve from theta using Newton's method on Snyder (15-9) which converges
+    // more rapidly than the iteration procedure given by Snyder (7-9).  First
+    // rewrite as
+    // v(theta) = 2 * tan(theta/2) * f - t2 = 0
     for (int i = 0; i < _numit; ++i) {
       double
 	f = std::pow((1 + ecos)/(1 - ecos), _e/2),
 	c2 = cos(theta/2),
-	v = 2 * tan(theta/2) * f - t,
-	dv = _e2m * f / ((1 - sq(ecos)) * sq(c2)),
+	v = 2 * tan(theta/2) * f - t2,
+	dv = _e2m * f / ((1 - sq(ecos)) * sq(c2)), // dv/dtheta
 	dtheta = -v/dv;
       theta += dtheta;
       ecos = _e * cos(theta);

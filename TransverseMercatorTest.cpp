@@ -120,6 +120,12 @@ int main(int argc, char* argv[]) {
   const GeographicLib::TransverseMercator& TMS =
     GeographicLib::TransverseMercator::UTM;
 
+  {
+    double r, n;
+    n = 0.0001;
+    r = 8796093022209 * n;
+    std::cout << r << std::endl;
+  }
   std::cout << std::setprecision(16);
   while (true) {
     double lat, lon, x, y;

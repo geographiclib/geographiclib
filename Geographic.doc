@@ -49,7 +49,6 @@ Forward to \ref intro.
 /**
 \page intro Introduction
 
-
 <center>
 Forward to \ref organization.  Up to \ref contents.
 </center>
@@ -81,8 +80,11 @@ The goals of this package are:
  - GeoConvert (GeoConvert.cpp), a command-line utility to provide quick
    and accurate conversions between geographic, UTM/UPS, and MGRS.
 
-We document in \ref transversemercator various properies of this
+The section \ref transversemercator documents various properies of this
 projection.
+
+Undoubtedly, bugs lurk in this code and in the documentation.  Please
+report any you find to <charles@karney.com>.
 
 <center>
 Forward to \ref start.  Up to \ref contents.
@@ -243,9 +245,9 @@ The primary sources for the material presented here are:
  - L. P. Lee,
    Conformal Projections Based on Elliptic Functions,
    (B. V. Gutsell, Toronto, 1976), 128pp.,
-   ISBN: 0919870163.
-   [Also appeared as:
-   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13].
+   ISBN: 0919870163
+   (Also appeared as:
+   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    Part V, pp. 67&ndash;101,
    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
    Projections Based On Jacobian Elliptic Functions</a>, gives closed
@@ -259,7 +261,6 @@ The primary sources for the material presented here are:
    the web.  Chapter 16 covers elliptic functions and Chapter 17 covers
    ellipic integrals.
  .
-
 
 \section tmvarious Survey of transverse Mercator projections
 
@@ -276,11 +277,13 @@ whose scale on the central meridian increases from the equator to the
 pole (by an amount proportional to the flattening).  In the
 Gauss-Kr&uuml;ger projection, the scale along the central meridian is
 held constant.  This projection is usually expressed as a series which
-is valid only sufficiently close to the central meridian.  The
-projection can however be expressed in closed form in terms of the
-Thompson transverse Mercator projection (where the scale along the
-central meridian decreases from the equator to the pole by an amount
-proportional to the flattening).
+is valid only sufficiently close to the central meridian.  (This is
+implemented by GeographicLib::TransverseMercator.)  The projection can
+however be expressed in closed form in terms of the Thompson transverse
+Mercator projection (where the scale along the central meridian
+decreases from the equator to the pole by an amount proportional to the
+flattening).  (This method of computing the Gauss-Kr&uuml;ger projection
+is implemented by GeographicLib::TransverseMercatorExact.)
 
 The graticules (lines of constant latitude and longitude) for all these
 projections are shown in Figs. 1&ndash;3.  These figures all use an
@@ -513,13 +516,16 @@ Each line of the test set gives 6 space delimited numbers
  - meridian convergence (degrees, accurate to 10<sup>-18</sup> deg)
  - scale (accurate to 10<sup>-20</sup>)
  .
-The latitude and longitude are all multiples of 10<sup>-12</sup> deg
-and should be regarded as exact, except that longitude =
+The latitude and longitude are all multiples of 10<sup>-12</sup> deg and
+should be regarded as exact, except that longitude =
 82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
-degrees.  These results are computed using Lee's formulas with 
-<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s
-bfloats and fpprec set to 80 (so the errors in the data are probably
-1/2 of the values quoted above).
+degrees.  These results are computed using Lee's formulas with
+<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
+fpprec set to 80 (so the errors in the data are probably 1/2 of the
+values quoted above).  The Maxima code, tm.mac and ellint.mac, used to
+prepare this data set is included in the distribution.  You will need to
+have Maxima installed to use this code.  The top of tm.mac illustrates
+how to run it.
 
 The contents of the file are as follows:
  - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
@@ -611,10 +617,6 @@ Gauss-Laborde projection and approximating the warp of this to
 Gauss-Kr&uuml;ger projection as a series in (\e a - \e b)/(\e a + \e b).
 This is accurate to about 200 nm within the UTM domain.  Here we present
 the series extended to 12th order.  We follow the notation of JHS 154.
-Note that JHS 154 presents rather crude formulas for the convergence and
-scale.  GeographicLib::TransverseMercator instead differentiates the
-series approximation (following Kr&uuml;ger) since this is easy to
-extend to high order (and is easily implemented).
 
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
 n) and / indicates real division (3/5 = 0.6).  The equations need to be
@@ -800,12 +802,73 @@ Eqs. (07) [gamma in Kr&uuml;ger, p. 21, eq. (41)]
 Eqs. (15), (16), (17), (18), (23), (24), (25), (26) of JHS 154 are
 extended in the obvious way.
 
+The formulas for meridian convergence (34) and scale (35) are only good
+for small lam (l in the notation of JHS 154).  More accurate expressions
+are given here where ep2 = e'<sup>2</sup> = e<sup>2</sup>2/(1 -
+e<sup>2</sup>) (eq. 04).
+\verbatim
+  double
+    c = cos(phi),
+    s = sin(lam),
+    c2 = c * c,
+    s2 = s * s,
+    d = 1 - s2 * c2,
+    // Accurate to order ep2^2
+    carg = 1 + c2 * c2 * s2 / d * ep2 *
+    (1 + c2 / (3 * d * d) *
+     (2 - s2 * (c2 * ((4 * c2 - 1) * s2 - 9) + 8)) * ep2),
+    // Accurate to order ep2
+    cabs = 1 + c2 * c2 * s2 * ((c2 - 2) * s2 + 1) / (2 * d * d) * ep2;
+  // This replaces (34)
+  gamma = atan2(sin(phi) * s * carg, cos(lam));
+  // This replaces (35)
+  k = cabs/sqrt(d);
+\endverbatim
+
+Unfortunately, expansions of this type can much more messy at higher
+order.  So for greater accuracy, directly differentiate the series
+involving h' or h.  The accumulation of the sum can be carried out at
+the same time as the transformation itself (and the calculation slots
+into a Clenshaw summation very easily).  The derivates give the
+convergence, gamma'', and scale, k'', of the [xi, eta]
+(Gauss-Kr&uuml;ger) projection relative to [xi', eta'] (Gauss-Laborde)
+projection and vice versa.  For the full convergence and scale these
+need to be compounded with the convergence, gamma', and scale, k', of
+the Gauss-Laborde projection.
+\verbatim
+  gamma = gamma' + gamma''
+       k = k' * k''
+ \endverbatim
+gamma' and k' are conveniently expressed as
+\verbatim
+  gamma' = atan(tan(lam) * sin(beta))
+	 = atan(tan(lam) * tanh(Q))
+	 = atan(tan(xi') * tanh(eta'))
+      k' = sqrt(1 - e^2 * sin(phi)^2)
+	   * (cos(beta) / cos(phi)) * cosh(eta')
+\endverbatim
+where the factors on the last line are can be computed accurately with
+\verbatim
+ (cos(beta) / cos(phi)) * cosh(eta')
+	 = cosh(Q') / hypot(sinh(Q), cos(lam))
+	 = cosh(Q') * hypot(sinh(eta'), cos(xi'))
+\endverbatim
+These last two expressions preserve accuracy near the pole.  See also
+Krueger, pp. 19&ndash;20, eqs. (19) to (33*) and pp 21&ndash;22,
+eqs. (43) to (47).
+
+The high-order expansions for h and h' and the expansions in
+e'<sup>2</sup> for the convergence and scale were produced by the Maxima
+program tmseries.mac.  To run, start Maxima and enter
+load("tmseries.mac")$ Further instructions are included at the top of
+the file.
+
 <center>
 Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page old Old versions
+\page old Old Versions
 
 List of versions in reverse chronological order together with a brief
 list of changes.
@@ -817,7 +880,7 @@ list of changes.
     - Documentation on transverse Mercator projection
     - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
 
- - <a href="http://charles.karney.info/geographic-old/">2008-09</a>
+ - <a href="http://charles.karney.info/geographic-2008/">2008-09</a>
     - Ad hoc posting of information on the transverse Mercator
       projection
 

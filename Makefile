@@ -44,7 +44,7 @@ doc: Doxyfile Geographic.doc \
 	$(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES))
 	rm -rf html/*
 	doxygen
-	for f in $(FIGURES); do cp $$f.pdf $$f.png html/;done
+	for f in $(FIGURES); do cp -p $$f.pdf $$f.png html/;done
 	touch $@
 
 clean:
