@@ -9,81 +9,78 @@ $Id$
 
 The parameters for the transformation are set by
 
-setparams(a,invf,k0)$ sets the major radius, inverse flattening, and
-    central scale factor. The default is
+setparams(a,invf,k0)$
+    sets the major radius, inverse flattening, and central scale
+    factor. The default is
       setparams(6378137b0, 298.257223563b0, 0.9996b0)$
     appropriate for UTM applications.
 
-Then 3 different ways of computing Transverse Mercator are given using
-different intermediate conformal transformations:
+tm(lat,lon);
+    takes lat and lon args (in degrees) and returns
+      [x, y, convergence, scale]
+    [x, y] do not include false eastings/northings but do include the
+    scale factor k0.  convergence is in degrees.
 
-Polar stereographic: tm1(lat,lon) and ll1(x,y)
-Mercator: tm2(lat,lon) and ll2(x,y) (and tm2a(lat,lon))
-Spheroidal transverse Mercator: tm2(lat,lon)
+ll(x,y);
+    takes x and y args (in meters) and returns
+      [lat, lon, convergence, scale].
 
-In carrying out the forward transformations, the compounded derivative
-is computed and used to compute the convergence and scale of the
-transformation.
+Example:
 
-tm[123] take lat and lon args (in degrees) and return [x, y,
-    convergence, scale].  [x, y] do not include false
-    eastings/northings but do include the scale factor k0.
-    convergence is in degrees.
+$ maxima
+Maxima 5.15.0 http://maxima.sourceforge.net
+Using Lisp CLISP 2.43 (2007-11-18)
+Distributed under the GNU Public License. See the file COPYING.
+Dedicated to the memory of William Schelter.
+The function bug_report() provides bug reporting information.
+(%i1) load("tm.mac")$
+(%i2) tm(10b0,20b0);
+(%o2) [2.235209504622466691587930831718465965864199221939781808953597771095103\
+6690000464b6, 1.17529734503138466792126931904154130080533935727351398258511134\
+68541970512119385b6, 3.6194756227592979778565787394402350354250845160819430786\
+093514889500602612857052b0, 1.062074627142564335518604915718789933200854739344\
+8664109599248189291146283796933b0]
+(%i3) ll(%[1],%[2]);
+(%o3) [1.0b1, 2.0b1, 3.6194756227592979778565787394402350354250845160819430786\
+093514889500602612857053b0, 1.062074627142564335518604915718789933200854739344\
+8664109599248189291146283796933b0]
+(%i4) float(%o2);
+(%o4) [2235209.504622467, 1175297.345031385, 3.619475622759298,
+                                                             1.062074627142564]
+(%i5) float(%o3);
+(%o5)         [10.0, 20.0, 3.619475622759298, 1.062074627142564]
 
-ll[12] take x and y args (in meters) and return [lat, lon] in degrees.
+This implements GeographicLib::TransverseMercatorExact (i.e., Lee, 1976)
+using bfloats.  However fewer changes from Lee 1976 have been made since
+we rely more heavily on the high precision to deal with problem cases.
 
-Thus:
-
-    r:tm1(10b0,20b0)$
-    ll1(r[1],r[2]);
-
-should return close to [10b0, 20b0].
-
-The basic idea in tm1 is outlined in an Email to the Proj mailing list
-from Strebe@aol.com dated Wed Oct 15 00:10:38 EDT 2003.
-
-phic_rho (resp. phi_psi) uses Newton's method with phic0 (resp. phi0) as
-an initial guess and sets nphic0 (nphi0) as the returned result.
-
-This allows you to track a solution in case the root finding fails or
-there are multiple roots.  For example the following code find two
-distinct results for tm1 by going different ways around the singularity
-at 0N 90*(1-e)E.
-
-    lat0:0b0;
-    lon0:82.636b0;
-    del:0.1b0$
-    phic0:0b0;
-    for i:-10 thru 3 do (
-      c:[lat0+del*sin(i/10*pi),lon0+del*cos(i/10*pi)],
-      res:apply(tm1,c),
-      phic0:nphic0)$
-    (ca:c,resa:res)$
-    phic0:0b0;
-    for i:10 step -1 thru 3 do (
-      c:[lat0+del*sin(i/10*pi),lon0+del*cos(i/10*pi)],
-      res:apply(tm1,c),
-      phic0:nphic0)$
-    (cb:c,resb:res)$
-
-[chic_muc also uses Newton's method but with the argument as the initial
-guess.]
+To change the precision, change fpprec below and reload.
 
 */
 
-load("ellint.mac")$
+fpprec:80$
+load("ellint.mac")$ /* Load elliptic functions */
 
-fpprec:120$
-tol:1.b-60$
+tol:0.1b0^fpprec$
+tol1:0.1b0*sqrt(tol)$ /* For Newton's method */
+tol2:sqrt(0.01*tol*tol1)$ /* Also for Newton's method but more conservative */
+ahypover:log(10b0^fpprec)+2$
 
 pi:bfloat(%pi)$
 degree:pi/180$
 ratprint:false$
-
+debugprint:false$
 setparams(a1,invf,k1):=(a:bfloat(a1),f:1/bfloat(invf),k0:bfloat(k1),
-  e:sqrt(f*(2-f)),'done)$
+  e2:f*(2-f),
+  e:sqrt(e2),
+  kcu:kc(e2),
+  kcv:kc(1-e2),
+  ecu:ec(e2),
+  ecv:ec(1-e2),
+  'done)$
 setparams(6378137b0, 298.257223563b0, 0.9996b0)$  /* WGS 84 */
-/* setparams(6378388b0, 297b0, 0.9996b0)$  International */
+/* setparams(6378388b0, 297b0, 0.9996b0)$ International */
+/* setparams(1/ec(0.01b0), 30*sqrt(11b0)+100, 1b0)$ testing, eps = 0.1*/
 
 /*
 Interpret x_y(y) as x <- y, i.e., "transform quantity y to quantity x"
@@ -91,257 +88,169 @@ Interpret x_y(y) as x <- y, i.e., "transform quantity y to quantity x"
 Let
 
 phi = geodetic latitude
-beta = conformal latitude
-psi = isometric latitude
-chi = reduced latitude
-mu = rectifying latitude (unnormalized)
+psi = isometric latitude ( + i * lambda )
+sigma = TM coords
+thom = Thompson coords
 
-Add "c" suffix for complement.  Note that
-muc = rectifying colatitude s.t. muc*a is distance from pole along meridian
-rho = radius of polar stereographic coord * c
-  [c = sqrt( (1 + e)^(1 + e) * (1 - e)^(1 - e) )]
-
-Usually add "z" prefix to denote complex
-
-scale = dproj/ds, ds = physical distance.
 */
 
-complement(theta):=pi/2-theta$
+/* Real only */
+atnh(x):=log((1+x)/(1-x))/2$
 
-betac_rho(rho):=rectform(2 * atan(rho/2))$
-rho_betac(betac):=rectform(2 * tan(betac/2))$
-diff_betac_rho(rho):=1/( (rho/2)^2+1 )$
-diff_rho_betac(betac):=rectform(sec(betac/2)^2)$
+/* Real only */
+psi_phi(phi):=block([s:sin(phi)],
+  asinh(s/max(cos(phi),0.1b0*tol)) - e * atnh(e * s))$
 
-rho_phic(phic):=rectform(
-  2 * tan(phic/2) *
-  ((1 + e * cos(phic))/(1-e * cos(phic)))^(e/2) )$
+/* Real only */
+phi_psi(psi):=block([q:psi,t,dq],
+  for i do (
+    t:tanh(q),
+    dq : -(q - e * atnh(e * t) - psi) * (1 - e2 * t^2) / (1 - e2),
+    q : q + dq,
+    if debugprint then print(float(q), float(dq)),
+    if abs(dq) < tol1 then return(false)),
+  atan(sinh(q)))$
 
-diff_muc_phic(phic) := (1-e^2)/(1-e^2*cos(phic)^2)^(3/2)$
+psi_thom_comb(w):=block([jacr:sncndn(bfloat(realpart(w)),1-e2),
+  jaci:sncndn(bfloat(imagpart(w)),e2),d,d1,d2],
+  d:(1-e2)*(jaci[2]^2 + e2 * (jacr[1] * jaci[1])^2)^2,
+  d1:sqrt(jacr[2]^2 + (1-e2) * (jacr[1] * jaci[1])^2),
+  d2:sqrt(e2 * jacr[2]^2 + (1-e2) * jaci[2]^2),
+[
+  (if d1 > 0b0 then asinh(jacr[1]*jaci[3]/ d1) else signnum(snu) * ahypover)
+  - (if d2 > 0b0 then e * asinh(e * jacr[1] / d2) else signnum(snu) * ahypover)
+  + %i * (if d1 > 0b0 and d2 > 0b0 then
+    atan2(jacr[3]*jaci[1],jacr[2]*jaci[2])
+    - e * atan2(e*jacr[2]*jaci[1],jacr[3]*jaci[2]) else 0),
+  jacr[2]*jacr[3]*jaci[3]*(jaci[2]^2-e2*(jacr[1]*jaci[1])^2)/d
+  -%i * jacr[1]*jaci[1]*jaci[2]*((jacr[3]*jaci[3])^2+e2*jacr[2]^2)/d]
+)$
 
-diff_rho_phic(phic):=rectform(
-  (1-e^2)/
-  ((1-e*cos(phic))^(1+e/2) * (1+e*cos(phic))^(1-e/2) * cos(phic/2)^2 ) )$
+psi_thom(w):=block([tt:psi_thom_comb(w)],tt[1])$
+inv_diff_psi_thom(w):=block([tt:psi_thom_comb(w)],tt[2])$
 
-phic0:0b0$
-phic_rho(z):=block([
-  phic:phic0 /* betac_rho(z) */,
-  dphic,v,temp],
+w0a(psi):=block([lam:bfloat(imagpart(psi)),psia:bfloat(realpart(psi))],
+  rectform(kcu/(pi/2)*( atan2(sinh(psia),cos(lam))
+      +%i*asinh(sin(lam)/sqrt(cos(lam)^2 + sinh(psia)^2)))))$
+
+w0c(psi):=block([m,a,dlam],
+  dlam:bfloat(imagpart(psi))-pi/2*(1-e),
+  psi:bfloat(realpart(psi)),
+  m:sqrt(psi^2+dlam^2)*3/(1-e2)/e,
+  a:if m = 0b0 then 0 else atan2(dlam-psi, psi+dlam) - 0.75b0*pi,
+  m:m^(1/3), a:a/3,
+  m*cos(a)+%i*(m*sin(a)+kcv))$
+
+w0d(psi):=block([psir:-realpart(psi)/e+1b0,lam:(pi/2-imagpart(psi))/e,uu,vv],
+  uu:asinh(sin(lam)/sqrt(cos(lam)^2+sinh(psir)^2))*(1+e2/2),
+  vv:atan2(cos(lam), sinh(psir)) *(1+e2/2),
+  (-uu+kcu) + %i * (-vv+kcv))$
+
+w0m(psi):=if realpart(psi)<-e/2*pi/2 and
+imagpart(psi)>pi/2*(1-2*e) and
+realpart(psi) < imagpart(psi)-(pi/2*(1-e)) then w0d(psi) else
+if realpart(psi)<e*pi/2 and imagpart(psi)>pi/2*(1-2*e)
+then w0c(psi) else w0a(psi)$
+w0(psi):=w0m(psi)$
+
+thom_psi(psi):=block([w:w0(psi),dw,v,vv],
+if not(abs(psi-pi/2*(1-e)*%i) < e * tol^0.6b0) then
   for i do (
     if i > 100 then error("too many iterations"),
-    v:rho_phic(phic),
-    temp:-rectform((v-z)/diff_rho_phic(phic)),
-    if i>10 and abs(temp) > abs(dphic) then error("not converging"),
-    dphic:temp,
-    phic:phic+dphic,
-    dphic:abs(dphic),
-    /* error is approx dphic^2/2 */
-    if dphic < sqrt(tol) then return(false)
+    vv:psi_thom_comb(w),
+    v:vv[1],
+    dw:-rectform((v-psi)*vv[2]),
+    w:w+dw,
+    dw:abs(dw),
+    if debugprint then print(float(w),float(dw)),
+    /* error is approx dw^2/2 */
+    if dw < tol2 then return(false)
     ),
-  nphic0:phic
+  w
   )$
 
-betac_phic(phic):=betac_rho(rho_phic(phic))$
-phic_betac(betac):=phic_rho(rho_betac(betac))$
+sigma_thom_comb(w):=block([u:bfloat(realpart(w)),v:bfloat(imagpart(w)),
+  jacr,jaci,phi,iu,iv,den,den1,er,ei,dnr,dni],
+  jacr:sncndn(u,1-e2),jaci:sncndn(v,e2),
+  er:eirx(jacr[1],jacr[2],jacr[3],e2,ecu),
+  ei:eirx(jaci[1],jaci[2],jaci[3],1-e2,ecv),
+  den:e2*jacr[2]^2+(1-e2)*jaci[2]^2,
+  den1:(1-e2)*(jaci[2]^2 + e2 * (jacr[1] * jaci[1])^2)^2,
+  dnr:jacr[3]*jaci[2]*jaci[3],
+  dni:-e2*jacr[1]*jacr[2]*jaci[1],
+[  er - e2*jacr[1]*jacr[2]*jacr[3]/den
+  + %i*(v - ei + (1-e2)*jaci[1]*jaci[2]*jaci[3]/den),
+  (dnr^2-dni^2)/den1 + %i * 2*dnr*dni/den1])$
 
-psi_betac(betac):=-log(tan(rectform(betac/2)))$
-betac_psi(psi):=rectform(2*atan(exp(-psi)))$
-diff_psi_betac(betac):=rectform(-csc(betac))$
-diff_betac_psi(psi):=rectform(-sech(psi))$
+sigma_thom(w):=block([tt:sigma_thom_comb(w)],tt[1])$
+inv_diff_sigma_thom(w):=block([tt:sigma_thom_comb(w)],tt[2])$
 
-beta_psi(psi):=rectform(atan(sinh(psi)))$
-psi_beta(phi):=rectform(asinh(tan(phi)))$
-diff_beta_psi(psi):=rectform(sech(psi))$
-diff_psi_beta(phi):=rectform(sec(phi))$
-
-/* chic_phic(phic):=atan(rectform(tan(phic)/sqrt(1-e^2)))$ */
-/* phic_chic(chic):=atan(rectform(tan(chic)*sqrt(1-e^2)))$ */
-/* Need to make this odd */
-chic_phic(phic):=(if realpart(phic) < 0.b0 then -1 else 1)*
-acos(rectform(cos(phic)*sqrt((1-e^2)/(1-e^2*cos(phic)^2))))$
-phic_chic(chic):=(if realpart(chic) < 0.b0 then -1 else 1)*
-acos(rectform(cos(chic)/sqrt(1-e^2*sin(chic)^2)))$
-
-diff_phic_chic(chic):=rectform(sqrt(1-e^2)/(1-e^2*sin(chic)^2))$
-
-atnh(x):=rectform(log((1+x)/(1-x))/2)$
-psi_phi(phi):=rectform( atnh(sin(phi)) - e * atnh(e * sin(phi)) )$
-
-diff_psi_phi(phi):=rectform(
-  1/cos(phi)-e^2*cos(phi)/(1-e^2*sin(phi)^2) )$
-phi0:1b0$
-phi_psi(psi):=block([phi,dphi,v],
-  phi:phi0,
+wx0a(sigma):=rectform(sigma*kcu/ecu)$
+wx0b(sigma):=block([m,aa],
+  sigma:rectform(sigma-%i*(kcv-ecv)),
+  m:abs(sigma)*3/(1-e2),
+  aa:atan2(imagpart(sigma),realpart(sigma)),
+  if aa<-pi/2 then aa:aa+2*pi,
+  aa:aa-pi,
+  rectform(m^(1/3)*(cos(aa/3b0)+%i*sin(aa/3b0))+%i*kcv))$
+wx0c(sigma):=rectform(1/(sigma-(ecu+%i*(kcv-ecv))) + kcu+%i*kcv)$
+wx0m(sigma):=block([eta:bfloat(imagpart(sigma)),
+  xi:bfloat(realpart(sigma))],
+  if eta > 1.25b0 * (kcv-ecv) or (xi < -0.25*ecu and xi < eta-(kcv-ecv)) then
+  wx0c(sigma) else
+  if (eta > 0.75b0 * (kcv-ecv) and xi < 0.25b0 * ecu) or
+  eta > kcv-ecv or xi < 0 then wx0b(sigma) else wx0a(sigma))$
+wx0(sigma):=wx0m(sigma)$
+thom_sigma(sigma):=block([w:wx0(sigma),dw,v,vv],
   for i do (
     if i > 100 then error("too many iterations"),
-    v:psi_phi(phi),
-    dphi:-rectform((v-psi)/diff_psi_phi(phi)),
-    phi:phi+dphi,
-    dphi:abs(dphi),
-    /* error is approx dphi^2/2 */
-    if dphi < sqrt(tol) then return(false)
+    vv:sigma_thom_comb(w),
+    v:vv[1],
+    dw:-rectform((v-sigma)*vv[2]),
+    w:w+dw,
+    dw:abs(dw),
+    if debugprint then print(float(w),float(dw)),
+    /* error is approx dw^2/2 */
+    if dw < tol2 then return(false)
     ),
-  nphi0:phi
+  w
   )$
 
-muc_chic(chic):=ei(chic,e^2)$
-diff_muc_chic(chic):=rectform( sqrt(rectform(1-e^2*sin(chic)^2)) )$
-chic_muc(muc):=block([chic:muc,dchic,v],
-  for i do (
-    if i > 100 then error("too many iterations"),
-    v:muc_chic(chic),
-    dchic:-rectform((v-muc)/diff_muc_chic(chic)),
-    chic:chic+dchic,
-    dchic:abs(dchic),
-    /* print(dchic), */
-    /* error is approx dchic^2/2 */
-    if dchic < sqrt(tol) then return(false)
-    ),
-  chic
-  )$
+/* Lee/Thompson's method */
 
-/*
-intermediate conformal transformation is polar stereographic
-
-phi -> phic -> rho -> zrho -> zphic -> zchic -> zmuc -> [x,y]
-               lam /
-*/
-tm1(phi,lam):=block([zrho,zphic,zchic,zmuc,zz,scale,phic],
-  phic:(90-phi)*degree,
-  lam:lam*degree,
-  /* origin = 90,0 (N pole), real = long0, imag = long90 */
-  zrho:rectform( rho_phic(phic)*exp(%i*lam) ),
-  scale:rectform(
-    diff_rho_phic(phic)/diff_muc_phic(phic)*
-    exp(%i*(lam+90*degree))),
-  zphic:phic_rho(zrho),
-  scale:rectform(scale/diff_rho_phic(zphic)),
-  zchic:chic_phic(zphic),
-  scale:rectform(scale/diff_phic_chic(zchic)),
-  zmuc:muc_chic(zchic),
-  scale:rectform(scale*diff_muc_chic(zchic)),
-  zz:rectform(-%i*zmuc + %i * ec(e^2) ),
-  scale:rectform(-%i*scale),
-  zz:rectform(zz*a*k0),
-  [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
-
-/* reverse steps of tm1 */
-
-ll1(x,y):=block([zrho,zphic,zchic,zmuc,scale,phic,lam,rho],
-  zmuc:rectform(%i*(x+%i*y)/(a*k0) + ec(e^2)),
-  zchic:chic_muc(zmuc),
-  zphic:phic_chic(zchic),
-  zrho:rho_phic(zphic),
-  rho:abs(zrho),
-  lam:carg(zrho),
-  phic:phic_rho(rho),
-  [90-phic/degree,lam/degree])$
-
-/*
-intermediate conformal transformation is Mercator
-
-phi -> psi -> zpsi -> zphi -> zphic -> zchic -> zmuc -> [x,y]
-       lam /
-*/
-
-tm2(phi,lam):=block([zpsi,zphic,zchic,zmuc,zz,scale,r,zphi],
+tm(phi,lam):=block([psi,thom,jacr,jaci,sigma,gam,scale,c],
   phi:phi*degree,
   lam:lam*degree,
-  scale:1/diff_muc_phic(complement(phi)),
-  /* origin = 0,0, real = N, imag = W */
-  zpsi:psi_phi(phi) - %i * lam,
-  scale:-%i * scale*diff_psi_phi(phi),
-  zphi:phi_psi(zpsi),
-  scale:scale/diff_psi_phi(zphi),
-  zphic:complement(zphi),
-  scale:-scale,
-  zchic:chic_phic(zphic),
-  scale:rectform(scale/diff_phic_chic(zchic)),
-  zmuc:muc_chic(zchic),
-  scale:rectform(scale*diff_muc_chic(zchic)),
-  zz:rectform(-%i*zmuc + %i * ec(e^2) ),
-  scale:rectform(-%i*scale),
-  zz:rectform(zz*a*k0),
-  [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
-
-/* reverse steps in tm2 */
-
-ll2(x,y):=block([zmuc,zchic,zphic,zphi,lam,zpsi,phi,psi],
-  zmuc:rectform(%i*(x+%i*y)/(a*k0) + ec(e^2)),
-  zchic:chic_muc(zmuc),
-  zphic:phic_chic(zchic),
-  zphi:complement(zphic),
-  zpsi:psi_phi(zphi),
-  psi:realpart(zpsi),
-  lam:-imagpart(zpsi),
-  phi:phi_psi(psi),
-  [phi/degree, lam/degree])$
-
-/*
-intermediate conformal transformation is Mercator (alternate route)
-
-phi -> phic -> rho -> betac -> psi -> zpsi -> zbetac -> zrho -> zphic
-                               lam /
-                                            -> zchic -> zmuc -> [x,y]
-*/
-
-tm2a(phi,lam):=block([zpsi,zphic,zchic,zmuc,zz,scale,phic,betac,zbetac,zrho,rho],
-  phic:(90-phi)*degree,
-  lam:lam*degree,
-  rho:rho_phic(phic),
-  scale:-diff_rho_phic(phic)/diff_muc_phic(phic),
-  betac:betac_rho(rho),
-  scale:scale*diff_betac_rho(rho),
-  /* origin = 0,0, real = N, imag = W */
-  zpsi:psi_betac(betac) - %i * lam,
-  scale:-%i*scale * diff_psi_betac(betac),
-  zbetac:betac_psi(zpsi),
-  scale:rectform(scale*diff_betac_psi(zpsi)),
-  zrho:rho_betac(zbetac),
-  scale:rectform(scale/diff_betac_rho(zrho)),
-  zphic:phic_rho(zrho),
-  scale:rectform(scale/diff_rho_phic(zphic)),
-  zchic:chic_phic(zphic),
-  scale:rectform(scale/diff_phic_chic(zchic)),
-  zmuc:muc_chic(zchic),
-  scale:rectform(scale*diff_muc_chic(zchic)),
-  zz:rectform(-%i*zmuc + %i * ec(e^2) ),
-  scale:rectform(-%i*scale),
-  zz:rectform(zz*a*k0),
-  [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
- 
-/*
-
-intermediate conformal transformation is spheroidal transverse Mercator
-
-phi -> psi -> beta -> zbeta -> zbetac -> zrho -> zphic
-               lam /
-                               -> zchic -> zmuc -> [x,y]
-*/
-
-tm3(phi,lam):=block([scale, psi, beta, zbeta, zbetac,
-  zrho, zphic, zchic, zmuc, zz],
-  phi:phi*degree,
-  lam:lam*degree,
-  scale:1/diff_muc_phic(complement(phi)),
   psi:psi_phi(phi),
-  scale:scale*diff_psi_phi(phi),
-  beta:beta_psi(psi),
-  scale:scale*diff_beta_psi(psi),
-  zbeta:-atnh(cos(beta)*sin(lam)),
-  zbeta:asin(sin(beta)*cosh(zbeta))+%i*zbeta,
-  scale:rectform(scale*(-%i)/(cos(lam)-%i*sin(beta)*sin(lam))),
-  zbetac:complement(zbeta),
-  scale:-scale,
-  zrho:rho_betac(zbetac),
-  scale:rectform(scale*diff_rho_betac(zbetac)),
-  zphic:phic_rho(zrho),
-  scale:rectform(scale/diff_rho_phic(zphic)),
-  zchic:chic_phic(zphic),
-  scale:rectform(scale/diff_phic_chic(zchic)),
-  zmuc:muc_chic(zchic),
-  scale:rectform(scale*diff_muc_chic(zchic)),
-  zz:rectform(-%i*zmuc + %i * ec(e^2) ),
-  scale:rectform(-%i*scale),
-  zz:rectform(zz*a*k0),
-  [realpart(zz),imagpart(zz),bfloat(carg(scale))/degree,k0*abs(scale)])$
+  thom:thom_psi(psi+%i*lam),
+  jacr:sncndn(bfloat(realpart(thom)),1-e2),
+  jaci:sncndn(bfloat(imagpart(thom)),e2),
+  sigma:sigma_thom(thom),
+  c:cos(phi),
+  if c > tol1 then (
+    gam:atan2((1-e2)*jacr[1]*jaci[1]*jaci[2],
+      jacr[2]*jacr[3]*jaci[3]),
+    scale:sqrt(1-e2 + e2 * c^2)/c*
+    sqrt(((1-e2)*jaci[1]^2 + (jacr[2]*jaci[3])^2)/
+      (e2*jacr[2]^2 + (1-e2)*jaci[2]^2)))
+  else (gam : lam, scale : 1b0),
+  [imagpart(sigma)*k0*a,realpart(sigma)*k0*a,gam/degree,k0*scale])$
+
+ll(x,y):=block([sigma,thom,jacr,jaci,psi,lam,phi,gam,scale,c],
+  sigma:y/(a*k0)+%i*x/(a*k0),
+  thom:thom_sigma(sigma),
+  jacr:sncndn(bfloat(realpart(thom)),1-e2),
+  jaci:sncndn(bfloat(imagpart(thom)),e2),
+  psi:psi_thom(thom),
+  lam:bfloat(imagpart(psi)),
+  psi:bfloat(realpart(psi)),
+  phi:phi_psi(psi),
+  c:cos(phi),
+  if c > tol1 then (
+    gam:atan2((1-e2)*jacr[1]*jaci[1]*jaci[2],
+      jacr[2]*jacr[3]*jaci[3]),
+    scale:sqrt(1-e2 + e2 * c^2)/c*
+    sqrt(((1-e2)*jaci[1]^2 + (jacr[2]*jaci[3])^2)/
+      (e2*jacr[2]^2 + (1-e2)*jaci[2]^2)))
+  else (gam : lam, scale : 1b0),
+  [phi/degree,lam/degree,gam/degree,k0*scale])$

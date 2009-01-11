@@ -22,9 +22,9 @@ namespace GeographicLib {
    *  - L. P. Lee,
    *    Conformal Projections Based on Elliptic Functions,
    *    (B. V. Gutsell, Toronto, 1976), 128pp.,
-   *    ISBN: 0919870163.
-   *    [also appeared as:
-   *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13].
+   *    ISBN: 0919870163
+   *    (also appeared as:
+   *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    *
    * This method gives the correct results for forward and reverse
    * transformations subject to the branch cut rules (see the description of
@@ -112,8 +112,8 @@ namespace GeographicLib {
      * 22051449.037349 m, \e y = -7131237.022729 m and \e x = 29735142.378357 m
      * , \e y = 4235043.607933 m both map to \e lat = -2 deg, \e lon = 88 deg.
      *
-     * With \e extendp = true, the branch cut it moved to the lower left
-     * quandrant.  The various symmetries of the transverse Mercator projection
+     * With \e extendp = true, the branch cut is moved to the lower left
+     * quadrant.  The various symmetries of the transverse Mercator projection
      * can be used to explore the projection on any sheet.  In this mode the
      * domains of \e lat, \e lon, \e x, and \e y are restricted to
      * - the union of
@@ -125,6 +125,8 @@ namespace GeographicLib {
      *   - \e x/(\e k0 \e a) in [K(1 - \e e^2) - E(1 - \e e^2), inf) and
      *     \e y/(\e k0 \e a) in (-inf, 0]
      * .
+     * See \ref extend for a full discussion of the treatment of the branch
+     * cut.
      **********************************************************************/
     TransverseMercatorExact(double a, double f, double k0,
 			    bool extendp = false);
