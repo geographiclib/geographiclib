@@ -12,6 +12,11 @@
 #include <cmath>
 
 #if !defined(TM_TX_MAXPOW)
+/**
+ * The order of the series approximation used in
+ * GeographicLib::TransverseMercator.  TM_TX_MAXPOW can be set to any integer
+ * in [4, 8].
+ **********************************************************************/
 #define TM_TX_MAXPOW 6
 #endif
 

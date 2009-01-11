@@ -19,7 +19,7 @@
 A small set of C++ classes to perform conversions between geographic,
 UTM, UPS, and MGRS coordinates.  In this application the errors are
 close to round-off (about 5 nm).  It is specialized for use with the
-WGS-84 but is easily adapted for use with other ellipsoids.
+WGS84 but is easily adapted for use with other ellipsoids.
 
 \section download Download
 
@@ -80,7 +80,7 @@ The goals of this package are:
  - GeoConvert (GeoConvert.cpp), a command-line utility to provide quick
    and accurate conversions between geographic, UTM/UPS, and MGRS.
 
-The section \ref transversemercator documents various properies of this
+The section \ref transversemercator documents various properties of this
 projection.
 
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
@@ -225,7 +225,7 @@ The primary sources for the material presented here are:
  - L. Kr&uuml;ger, <a
    href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
-   the ellispoidal earth to the plane), Royal Prussian Geodetic Institute,
+   the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 p (1912).
    The derives the series solution for the transverse Mercator
    projection of an ellipsoid.  This gives very good accuracy and this
@@ -259,7 +259,7 @@ The primary sources for the material presented here are:
    (Dover, 1965).
    This is the bible for special functions.  It is easily accessible on
    the web.  Chapter 16 covers elliptic functions and Chapter 17 covers
-   ellipic integrals.
+   elliptic integrals.
  .
 
 \section tmvarious Survey of transverse Mercator projections
@@ -355,7 +355,7 @@ The divergent behavior of the Gauss-Laborde projection as latitude =
 0<sup>o</sup>, longitude = 90<sup>o</sup> is approached is unsurprising
 given the behavior of the standard Mercator projection at the poles.  On
 the other hand, the lack of divergence in the Gauss-Kr&uuml;ger
-projection (and similiarly in the Thompson projection) is perhaps
+projection (and similarly in the Thompson projection) is perhaps
 puzzling.  We explore the behavior more carefully in this section.
 
 Firstly, the Gauss-Kr&uuml;ger projection \e does have a singularity at
@@ -375,7 +375,7 @@ results obtained for the projection will depend on which sheet of the
 projection is used or which route around the branch point is taken.
 
 The "standard" convention for projecting a geographic position is to
-follow the central meridian from the equator to the target latitiude,
+follow the central meridian from the equator to the target latitude,
 then to follow the line of constant latitude to the target longitude.
 This is equivalent to placing two branch cuts on the equator in the
 longitude ranges +/- [90<sup>o</sup>(1 - \e e), 90<sup>o</sup>(1 + \e
@@ -474,7 +474,7 @@ rectangular region shown
 The coloring of the lines is the same as Fig. 4, except that latitude
 lines extended down to -10<sup>o</sup> and a red line has been added
 showing the line y = 0 for x > 1.71 in the Gauss-Kr&uuml;ger projection
-(Fig. 4).  The extendend Thompson projection figure has reflection
+(Fig. 4).  The extended Thompson projection figure has reflection
 symmetry on all the four sides of Fig. 6.
 
 In transforming from Thompson to Gauss-Kr&uuml;ger, the right angle at
@@ -504,7 +504,7 @@ A test set for the transverse Mercator projection is available at
  - http://charles.karney.info/geographic-new/TMcoords.dat.gz
 
 This test set consists of a set of geographic coordinates together with
-the corresponding transverse Mercator coordinates.  The WGS84 ellispoid
+the corresponding transverse Mercator coordinates.  The WGS84 ellipsoid
 is used, with central meridian 0<sup>o</sup>, central scale factor
 0.9996 (the UTM value), false easting = false northing = 0 m.
 
@@ -522,10 +522,11 @@ should be regarded as exact, except that longitude =
 degrees.  These results are computed using Lee's formulas with
 <a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
 fpprec set to 80 (so the errors in the data are probably 1/2 of the
-values quoted above).  The Maxima code, tm.mac and ellint.mac, used to
-prepare this data set is included in the distribution.  You will need to
-have Maxima installed to use this code.  The top of tm.mac illustrates
-how to run it.
+values quoted above).  The Maxima code, <a href="tm.mac">tm.mac</a> and
+<a href="ellint.mac">ellint.mac</a>, used to prepare this data set is
+included in the distribution.  You will need to have Maxima installed to
+use this code.  The comments at the top of <a href="tm.mac">tm.mac</a>
+illustrate how to run it.
 
 The contents of the file are as follows:
  - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
@@ -588,15 +589,15 @@ the South pole.
 
 Errors in GeographicLib::TransverseMercator.  For both Forward and
 Reverse projections with easting |x| <= 4200 km (approximately within
-35<sup>o</sup> of the central meridian) using the 6th-order series (the
-default)
+35<sup>o</sup> of the central meridian) using the 6th-order series
+(TM_TX_MAXPOW = 6, the default)
  - error in position < 5 nm
  - error in convergence, d(gamma) < 7e-10" + 5 nm . grad(gamma)
  - relative error in scale, dk/k < 6e-12%%
  .
 The error in the scale does not need to include a grad(k) term because
 the scale varies smoothly within this region.  If instead we restrict x
-<= 3400 km (approximately within 29<sup>o</sup> of the central meridan),
+<= 3400 km (approximately within 29<sup>o</sup> of the central meridian),
 we get a tighter bound on the convergence
  - error in convergence, d(gamma) < 2e-15" + 5 nm . grad(gamma)
  .
@@ -617,6 +618,10 @@ Gauss-Laborde projection and approximating the warp of this to
 Gauss-Kr&uuml;ger projection as a series in (\e a - \e b)/(\e a + \e b).
 This is accurate to about 200 nm within the UTM domain.  Here we present
 the series extended to 12th order.  We follow the notation of JHS 154.
+
+By default, GeographicLib::TransverseMercator uses the 6th-order
+approximation. The preprocessor variable TM_TX_MAXPOW can be used to
+select an order from 4 thru 8.
 
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
 n) and / indicates real division (3/5 = 0.6).  The equations need to be
@@ -804,7 +809,7 @@ extended in the obvious way.
 
 The formulas for meridian convergence (34) and scale (35) are only good
 for small lam (l in the notation of JHS 154).  More accurate expressions
-are given here where ep2 = e'<sup>2</sup> = e<sup>2</sup>2/(1 -
+are given here where ep2 = e'<sup>2</sup> = e<sup>2</sup>/(1 -
 e<sup>2</sup>) (eq. 04).
 \verbatim
   double
@@ -825,11 +830,11 @@ e<sup>2</sup>) (eq. 04).
   k = cabs/sqrt(d);
 \endverbatim
 
-Unfortunately, expansions of this type can much more messy at higher
-order.  So for greater accuracy, directly differentiate the series
-involving h' or h.  The accumulation of the sum can be carried out at
-the same time as the transformation itself (and the calculation slots
-into a Clenshaw summation very easily).  The derivates give the
+Unfortunately, expansions of this type are much more messy at higher
+order.  Therefore, For greater accuracy, directly differentiate the
+series involving h' or h.  The accumulation of the sum can be carried
+out at the same time as the transformation itself (and the calculation
+slots into a Clenshaw summation very easily).  The derivatives give the
 convergence, gamma'', and scale, k'', of the [xi, eta]
 (Gauss-Kr&uuml;ger) projection relative to [xi', eta'] (Gauss-Laborde)
 projection and vice versa.  For the full convergence and scale these
@@ -860,9 +865,12 @@ to compute the convergence and the scale.
 
 The high-order expansions for h and h' and the expansions in
 e'<sup>2</sup> for the convergence and scale were produced by the Maxima
-program tmseries.mac (included in the distribution).  To run, start
-Maxima and enter load("tmseries.mac")$ Further instructions are included
-at the top of the file.
+program <a href="tmseries.mac">tmseries.mac</a> (included in the
+distribution).  To run, start Maxima and enter
+\verbatim
+  load("tmseries.mac")$
+\endverbatim
+Further instructions are included at the top of the file.
 
 <center>
 Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
