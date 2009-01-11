@@ -30,8 +30,8 @@
  *
  * If the preprocessor variable TM_TX_MAXPOW is set to an integer between 4 and
  * 8, then this specifies the order of the series used for the forward and
- * reverse transformations.  The default value is 6.  (TODO: say where the 12th
- * order expressions are.)
+ * reverse transformations.  The default value is 6.  (The series accuracte to
+ * 12th order is given in \ref series.)
  *
  * Other equivalent implementations are given in
  *  - http://www.ign.fr/telechargement/MPro/geodesie/CIRCE/NTG_76.pdf

@@ -39,12 +39,15 @@ FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-laborde-graticule-a \
 	gauss-krueger-graticule-a thompson-tm-graticule-a
 
+MAXIMASOURCES = tm.mac ellint.mac tmseries.mac
+
 doc: Doxyfile Geographic.doc \
 	$(HEADERS) $(SOURCES) \
 	$(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES))
 	rm -rf html/*
 	doxygen
 	for f in $(FIGURES); do cp -p $$f.pdf $$f.png html/;done
+	for f in $(MAXIMASOURCES); do cp -p $$f html/;done
 	touch $@
 
 clean:
