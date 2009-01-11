@@ -836,32 +836,33 @@ projection and vice versa.  For the full convergence and scale these
 need to be compounded with the convergence, gamma', and scale, k', of
 the Gauss-Laborde projection.
 \verbatim
-  gamma = gamma' + gamma''
+   gamma = gamma' + gamma''
        k = k' * k''
  \endverbatim
 gamma' and k' are conveniently expressed as
 \verbatim
   gamma' = atan(tan(lam) * sin(beta))
-	 = atan(tan(lam) * tanh(Q))
-	 = atan(tan(xi') * tanh(eta'))
+         = atan(tan(lam) * tanh(Q))
+         = atan(tan(xi') * tanh(eta'))
       k' = sqrt(1 - e^2 * sin(phi)^2)
-	   * (cos(beta) / cos(phi)) * cosh(eta')
+           * (cos(beta) / cos(phi)) * cosh(eta')
 \endverbatim
 where the factors on the last line are can be computed accurately with
 \verbatim
  (cos(beta) / cos(phi)) * cosh(eta')
-	 = cosh(Q') / hypot(sinh(Q), cos(lam))
-	 = cosh(Q') * hypot(sinh(eta'), cos(xi'))
+         = cosh(Q') / hypot(sinh(Q), cos(lam))
+         = cosh(Q') * hypot(sinh(eta'), cos(xi'))
 \endverbatim
 These last two expressions preserve accuracy near the pole.  See also
 Krueger, pp. 19&ndash;20, eqs. (19) to (33*) and pp 21&ndash;22,
-eqs. (43) to (47).
+eqs. (43) to (47).  GeographicLib::TransverseMercator uses this approach
+to compute the convergence and the scale.
 
 The high-order expansions for h and h' and the expansions in
 e'<sup>2</sup> for the convergence and scale were produced by the Maxima
-program tmseries.mac.  To run, start Maxima and enter
-load("tmseries.mac")$ Further instructions are included at the top of
-the file.
+program tmseries.mac (included in the distribution).  To run, start
+Maxima and enter load("tmseries.mac")$ Further instructions are included
+at the top of the file.
 
 <center>
 Back to \ref organization.  Forward to \ref old.  Up to \ref contents.

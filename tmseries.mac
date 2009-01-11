@@ -77,7 +77,6 @@ load("revert.mac")$
 
 */
 
-
 /*
     revert
        var2 = expr(var1) = series in eps
@@ -111,7 +110,6 @@ q(m):=''(block([qtemp,etemp,eqs,m],local(cof,a),
     for i:2 thru maxpow+1 do block([t],
       cof[i],t:subst(eqs,cof[i]),eqs:cons(solve(t,a[i])[1],eqs)),
     subst(eqs,qtemp)))$
-
 
 /* Elliptic functions in terms of v = %pi*u/(2*kc) */
 /* sn -- A+S 16.23.1 */
@@ -210,7 +208,6 @@ s_z(z,n):=''(expand(trigreduce(ratdisrep(
 /* z in terms of s */
 z_s(s,n):=''(expand(trigreduce(ratdisrep(
         taylor(z_w_a(w_s_a(s,n),n),n,0,maxpow)))))$
-
 
 a1(n):=''(ratdisrep(taylor(ec(e2_n(n))*(1+n)/(%pi/2),n,0,maxpow))/(1+n))$
 
