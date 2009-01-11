@@ -42,12 +42,6 @@
 #include <limits>
 #include <algorithm>
 
-#define DEBUG 0
-#if DEBUG
-#include <iostream>
-#include <iomanip>
-#endif
-
 namespace {
   char RCSID[] = "$Id$";
   char RCSID_H[] = TRANSVERSEMERCATOREXACT_HPP;
@@ -109,12 +103,8 @@ namespace GeographicLib {
 	t = tanh(q),
 	dq = -(q - _e * atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
       q += dq;
-      if (std::abs(dq) < tol1) {
-#if DEBUG
-	std::cerr << "psiinv " << i+1 << "\n";
-#endif
+      if (std::abs(dq) < tol1)
 	break;
-      }
     }
     return atan(sinh(q));
   }
@@ -149,7 +139,6 @@ namespace GeographicLib {
     du =  cnu * dnu * dnv * (sq(cnv) - _mu * sq(snu * snv)) / d;
     dv = -snu * snv * cnv * (sq(dnu * dnv) + _mu * sq(cnu)) / d;
   }
-
 
   // Starting point for zetainv
   bool TransverseMercatorExact::zetainv0(double psi, double lam,
@@ -236,16 +225,9 @@ namespace GeographicLib {
 	delv = psi1 * dv1 + lam1 * du1;
       u -= delu;
       v -= delv;
-      if (trip) {
-#if DEBUG
-	std::cerr << "zetainv " << i+1 << "\n";
-#endif
+      if (trip)
 	break;
-      }
       double delw2 = sq(delu) + sq(delv);
-#if DEBUG
-      std::cerr << std::setprecision(10) << "delw2 "<< delw2 << " " << stol2 << "\n";
-#endif
       if (delw2 < stol2)
 	++trip;
     }
@@ -348,22 +330,13 @@ namespace GeographicLib {
 	delv = xi1 * dv1 + eta1 * du1;
       u -= delu;
       v -= delv;
-      if (trip) {
-#if DEBUG
-	std::cerr << "sigmainv " << i+1 << "\n";
-#endif
+      if (trip)
 	break;
-      }
       double delw2 = sq(delu) + sq(delv);
-#if DEBUG
-      // std::cerr << std::setprecision(16) << "delw2 "<< delw2 << " " << tol2 << "\n";
-      // std::cerr << std::setprecision(16) << "u,v "<< u << " " << v << "\n";
-#endif
       if (delw2 < tol2)
 	++trip;
     }
   }
-
 
   void TransverseMercatorExact::Scale(double phi, double lam,
 				      double snu, double cnu, double dnu,

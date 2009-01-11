@@ -399,7 +399,7 @@ namespace GeographicLib {
       r = hypot(s, c);
     if (r > 0) {
       lam = atan2(s, c);
-      // Solve
+      // Use Newton's method to solve
       // q = qp - e * atanh(e * tanh(qp))
       // for qp = asinh(tan(phi))
       double
