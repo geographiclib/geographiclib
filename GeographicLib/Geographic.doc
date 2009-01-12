@@ -290,9 +290,9 @@ is implemented by GeographicLib::TransverseMercatorExact.)
 
 The graticules (lines of constant latitude and longitude) for all these
 projections are shown in Figs. 1&ndash;3.  These figures all use an
-ellipsoid with eccentricity 1/10 (inverse flattening = 10 (3 sqrt(11) +
-10) = 199.5, i.e., somewhat flatter than the WGS84 ellipsoid) and
-the projections have all been scaled so that the distance from the
+ellipsoid with eccentricity \e e = 1/10 (inverse flattening = 10 (3
+sqrt(11) + 10) = 199.5, i.e., somewhat flatter than the WGS84 ellipsoid)
+and the projections have all been scaled so that the distance from the
 equator to the north pole is unity.  One eighth of the ellipsoid is
 shown in these figures, 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
 0<sup>o</sup> <= longitude <= 90<sup>o</sup>.  To obtain the graticule
@@ -416,8 +416,8 @@ Figures 4&ndash;5 illustrate the properties of the Gauss-Kr&uuml;ger
 transverse Mercator projection in this extended domain.  These figures
 use an ellipsoid with eccentricity 1/10 (as in Figs. 1&ndash;3) and with
 \e a = 1/E(0.01) = 0.6382 and \e k<sub>0</sub> = 1.  The branch point in
-this case lies at lat = 0<sup>o</sup>, lon = 81<sup>o</sup> or x =
-(K(0.99) - E(0.99))/E(0.01) = 1.71, y = 0.
+this case lies at lat = 0<sup>o</sup>, lon = 81<sup>o</sup> or \e x =
+(K(0.99) - E(0.99))/E(0.01) = 1.71, \e y = 0.
 
 <center>
 <img src="gauss-krueger-graticule.png"
@@ -456,10 +456,10 @@ Symmetries in the projection can now be employed to extend the
 Gauss-Kr&uuml;ger transverse Mercator projection with arbitrary rules
 for how to circumvent the branch point.  The symmetries are equivalent
 to placing mirrors on the lines segments
- - 0 <= x, y = 1
- - x = 0, 0 <= y <= 1
- - 0 <= x <= 1.71, y = 0
- - x = 1.71, y <= 0
+ - 0 <= \e x, \e y = 1
+ - \e x = 0, 0 <= \e y <= 1
+ - 0 <= \e x <= 1.71, \e y = 0
+ - \e x = 1.71, \e y <= 0
  
 In order to understand the projection better, it is instructive to
 examine the Thompson projection in the extended domain.
@@ -476,13 +476,13 @@ rectangular region shown
  .
 The coloring of the lines is the same as Fig. 4, except that latitude
 lines extended down to -10<sup>o</sup> and a red line has been added
-showing the line y = 0 for x > 1.71 in the Gauss-Kr&uuml;ger projection
-(Fig. 4).  The extended Thompson projection figure has reflection
-symmetry on all the four sides of Fig. 6.
+showing the line \e y = 0 for \e x > 1.71 in the Gauss-Kr&uuml;ger
+projection (Fig. 4).  The extended Thompson projection figure has
+reflection symmetry on all the four sides of Fig. 6.
 
 In transforming from Thompson to Gauss-Kr&uuml;ger, the right angle at
 lower right corner of Fig. 6 expands by 3 to 270<sup>o</sup> to produce
-the outside corner at x = 1.71 and y = 0 in Fig. 4.  The top right
+the outside corner at \e x = 1.71 and \e y = 0 in Fig. 4.  The top right
 corner of Fig. 6 represents the south pole and this is transformed to
 infinity in the extended Gauss-Kr&uuml;ger projection.  Despite the
 apparent similarities, the behavior of north and south poles in the
@@ -568,8 +568,8 @@ term proportional to the gradient of the quantity being measured.
 Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
 Reverse projections
  - error in position < 8 nm
- - error in convergence, d(gamma) < 2e-15" + 8 nm . grad(gamma)
- - relative error in scale, dk/k < 7e-12%% + 3 nm . grad(k)/k
+ - error in convergence, \e d(\e gamma) < 2e-15" + 8 nm . grad(\e gamma)
+ - relative error in scale, \e dk/\e k < 7e-12%% + 3 nm . grad(\e k)/\e k
  .
 These errors apply with the standard convention for the transverse
 Mercator projection.  In this case, we use only test samples with
@@ -591,36 +591,37 @@ avoided by reformulating the Thompson projection to place the origin at
 the South pole.
 
 Errors in GeographicLib::TransverseMercator.  For both Forward and
-Reverse projections with easting |x| <= 4200 km (approximately within
+Reverse projections with easting |\e x| <= 4200 km (approximately within
 35<sup>o</sup> of the central meridian) using the 6th-order series
 (TM_TX_MAXPOW = 6, the default)
  - error in position < 5 nm
- - error in convergence, d(gamma) < 7e-10" + 5 nm . grad(gamma)
- - relative error in scale, dk/k < 6e-12%%
+ - error in convergence, \e d(\e gamma) < 7e-10" + 5 nm . grad(\e gamma)
+ - relative error in scale, \e dk/\e k < 6e-12%%
  .
-The error in the scale does not need to include a grad(k) term because
-the scale varies smoothly within this region.  If instead we restrict x
-<= 3400 km (approximately within 29<sup>o</sup> of the central meridian),
-we get a tighter bound on the convergence
- - error in convergence, d(gamma) < 2e-15" + 5 nm . grad(gamma)
+The error in the scale does not need to include a grad(\e k) term
+because the scale varies smoothly within this region.  If instead we
+restrict |\e x| <= 3400 km (approximately within 29<sup>o</sup> of the
+central meridian), we get a tighter bound on the convergence
+ - error in convergence, \e d(\e gamma) < 2e-15" + 5 nm . grad(\e gamma)
  .
-Further from the central meridian, the errors grow rapidly.  For |x| =
+Further from the central meridian, the errors grow rapidly.  For |\e x| =
 10700 km (approx 68<sup>o</sup> from the central median), the error in
-position is about 1 mm.  When used in the UTM system, x is typically
-restricted to |x| <= 500 km.
+position is about 1 mm.  When used in the UTM system, \e x is typically
+restricted to |\e x| <= 500 km.
 
 If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
 to give the 4th-order approximation, then the error is about 210 nm
-for |x| <= 500 km (the region used for UTM coordinates).
+for |\e x| <= 500 km (the region used for UTM coordinates).
 
 \section series Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
 Mercator projection.  The method entails performing first a
 Gauss-Laborde projection and approximating the warp of this to
-Gauss-Kr&uuml;ger projection as a series in (\e a - \e b)/(\e a + \e b).
-This is accurate to about 200 nm within the UTM domain.  Here we present
-the series extended to 12th order.  We follow the notation of JHS 154.
+Gauss-Kr&uuml;ger projection as a series in \e n = (\e a - \e b)/(\e a +
+\e b).  This is accurate to about 200 nm within the UTM domain.  Here we
+present the series extended to 12th order.  We follow the notation of
+JHS 154.
 
 By default, GeographicLib::TransverseMercator uses the 6th-order
 approximation. The preprocessor variable TM_TX_MAXPOW can be used to
@@ -633,7 +634,7 @@ they can be easily truncated to lower order in n.  Some of the integers
 here are not representable as 32-bit integers and will need to be
 included as double literals.
 
-Eq. (01) [A in Kr&uuml;ger, p. 12, eq. (5)]
+Eq. (01) [\e A in Kr&uuml;ger, p. 12, eq. (5)]
 \verbatim
   A1 = a/(n + 1) * (1 + 1/4 * n^2
                       + 1/64 * n^4
@@ -643,7 +644,7 @@ Eq. (01) [A in Kr&uuml;ger, p. 12, eq. (5)]
                       + 441/1048576 * n^12);
 \endverbatim
 
-Eqs. (06) [beta in Kr&uuml;ger, p. 18, eq. (26*)]
+Eqs. (06) [\e beta in Kr&uuml;ger, p. 18, eq. (26*)]
 \verbatim
   h[1]   =   1/2 * n
            - 2/3 * n^2
@@ -725,7 +726,7 @@ Eqs. (06) [beta in Kr&uuml;ger, p. 18, eq. (26*)]
   h[12]  =   170866240186706518133/831839653739888640000 * n^12;
 \endverbatim
 
-Eqs. (07) [gamma in Kr&uuml;ger, p. 21, eq. (41)]
+Eqs. (07) [\e gamma in Kr&uuml;ger, p. 21, eq. (41)]
 \verbatim
   h'[1]  =   1/2 * n
            - 2/3 * n^2
@@ -812,8 +813,8 @@ extended in the obvious way.
 
 The formulas for meridian convergence (34) and scale (35) are only good
 for small lam (l in the notation of JHS 154).  More accurate expressions
-are given here where ep2 = e'<sup>2</sup> = e<sup>2</sup>/(1 -
-e<sup>2</sup>) (eq. 04).
+are given here where \e ep2 = \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 -
+\e e<sup>2</sup>) (eq. 04).
 \verbatim
   double
     c = cos(phi),
@@ -835,14 +836,14 @@ e<sup>2</sup>) (eq. 04).
 
 Unfortunately, expansions of this type are much more messy at higher
 order.  Therefore, For greater accuracy, directly differentiate the
-series involving h' or h.  The accumulation of the sum can be carried
-out at the same time as the transformation itself (and the calculation
-slots into a Clenshaw summation very easily).  The derivatives give the
-convergence, gamma'', and scale, k'', of the [xi, eta]
-(Gauss-Kr&uuml;ger) projection relative to [xi', eta'] (Gauss-Laborde)
-projection and vice versa.  For the full convergence and scale these
-need to be compounded with the convergence, gamma', and scale, k', of
-the Gauss-Laborde projection.
+series involving \e h' or \e h.  The accumulation of the sum can be
+carried out at the same time as the transformation itself (and the
+calculation slots into a Clenshaw summation very easily).  The
+derivatives give the convergence, \e gamma'', and scale, \e k'', of the
+[\e xi, \e eta] (Gauss-Kr&uuml;ger) projection relative to [\e xi', \e
+eta'] (Gauss-Laborde) projection and vice versa.  For the full
+convergence and scale these need to be compounded with the convergence,
+\e gamma', and scale, \e k', of the Gauss-Laborde projection.
 \verbatim
    gamma = gamma' + gamma''
        k = k' * k''
@@ -862,11 +863,11 @@ where the factors on the last line are can be computed accurately with
          = cosh(Q') * hypot(sinh(eta'), cos(xi'))
 \endverbatim
 These last two expressions preserve accuracy near the pole.  See also
-Krueger, pp. 19&ndash;20, eqs. (19) to (33*) and pp 21&ndash;22,
+Kr&uuml;ger, pp. 19&ndash;20, eqs. (19) to (33*) and pp 21&ndash;22,
 eqs. (43) to (47).  GeographicLib::TransverseMercator uses this approach
 to compute the convergence and the scale.
 
-The high-order expansions for h and h' and the expansions in
+The high-order expansions for \e h and \e h' and the expansions in \e
 e'<sup>2</sup> for the convergence and scale were produced by the Maxima
 program <a href="tmseries.mac">tmseries.mac</a> (included in the
 distribution).  To run, start Maxima and enter
