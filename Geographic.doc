@@ -212,10 +212,10 @@ Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
 </center>
 
 \b NOTE: The figures in this section are relatively small in order to
-allow them to be displayed easily in most browsers.  The "Fig. N"
-link beneath each figure points to a PDF version of the figure.  These
-are in vector format and allow the figures to be magnified to show the
-details more clearly.
+allow them to be displayed quickly.  The "Fig. N" link beneath each
+figure points to a PDF version of the figure.  These are in vector
+format and allow the figures to be magnified to show the details more
+clearly.
 
 The primary sources for the material presented here are:
  - J. P.Snyder,
@@ -254,9 +254,9 @@ The primary sources for the material presented here are:
    Part V, pp. 67&ndash;101,
    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
    Projections Based On Jacobian Elliptic Functions</a>, gives closed
-   form expressions for the transverse Mercator projection base on work
-   by Thompson.  This may be purchased for a modest sum.  Other useful
-   sections are Parts I, pp. 1&ndash;3 and II, pp. 4&ndash;14.
+   form expressions for the transverse Mercator projection based on work
+   by Thompson (1945).  This may be purchased for a modest sum.  Other
+   useful sections are Part I, pp. 1&ndash;3 and Part II, pp. 4&ndash;14.
  - M. Abramowitz and I. A. Stegun,
    Handbook of Mathematical Functions
    (Dover, 1965).
