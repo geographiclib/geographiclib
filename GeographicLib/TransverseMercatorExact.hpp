@@ -41,7 +41,10 @@ namespace GeographicLib {
    * combined forward and reverse projection on a 2.6GHz Intel machine (g++,
    * version 4.3.0, -O3).
    *
-   * See TransverseMercatorExact.cpp for more information on the implementation.
+   * See TransverseMercatorExact.cpp for more information on the
+   * implementation.
+   *
+   * See \ref transversemercator for a discussion of this projection.
    **********************************************************************/
 
   class TransverseMercatorExact {
