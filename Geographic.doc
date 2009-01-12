@@ -193,8 +193,14 @@ internally by the library.
 In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the
 GeographicLib/ directory prefix.  If compiling within the GeographicLib
-directory, .. should be included in the header search path (e.g.,
+directory, ".." should be included in the header search path (e.g.,
 with -I..).
+
+The low level projection classes, TransverseMercator and
+PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
+GeoCoords all check their arguments and throw exceptions with a
+explanatory message.  See GeoConvert for an example of how exceptions
+can be handled.
 
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
@@ -893,6 +899,7 @@ list of changes.
       - Test against extended test data
       - Optimize starting positions for Newton's method
       - Fix behavoir near all singularities
+      - Fix order dependence in C++ start-up code
     - Documentation on transverse Mercator projection
       - Improved method of computing scale and convergence
     - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
