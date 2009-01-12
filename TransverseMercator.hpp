@@ -36,8 +36,13 @@ namespace GeographicLib {
    * the central meridian.  The error in the convergence is 2e-15" and the
    * relative error in the scale is 6e-12%%.  (See \ref errors for the weasel
    * words.)  The speed penalty in going to 6th order is only about 1%.
+   * GeographicLib::TransverseMercatorExact is an alternative implementation of
+   * the projection using exact formulas which yield accurate (to 8 nm)
+   * results over the entire ellipsoid.
    *
    * See TransverseMercator.cpp for more information on the implementation.
+   *
+   * See \ref transversemercator for a discussion of this projection.
    **********************************************************************/
 
   class TransverseMercator {
