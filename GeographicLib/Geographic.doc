@@ -903,7 +903,7 @@ list of changes.
       - Improved method of computing scale and convergence
     - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
 
- - 2008-09
+ -  <a href="http://charles.karney.info/geographic-2008/00README.txt">2008-09</a>
     - Ad hoc posting of information on the transverse Mercator
       projection
 
