@@ -9,7 +9,7 @@
  * <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
  * j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
  * tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
- * coordinates, and map sheet index for ETRS89), Published by JUHTA, Finnish
+ * coordinates, and map sheet index for ETRS89), published by JUHTA, Finnish
  * Geodetic Institute, and the National Land Survey of Finland (2006).
  *
  * The relevant section is available as the 2008 PDF file
