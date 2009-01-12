@@ -19,7 +19,8 @@
 A small set of C++ classes to perform conversions between geographic,
 UTM, UPS, and MGRS coordinates.  In this application the errors are
 close to round-off (about 5 nm).  It is specialized for use with the
-WGS84 but is easily adapted for use with other ellipsoids.
+WGS84 but is easily adapted for use with other ellipsoids.  In addition,
+various properties of the transverse Mercator projection are described.
 
 \section download Download
 
@@ -107,14 +108,12 @@ The following steps will get you started:
  - Change to the GeographicLib directory
    - cd GeographicLib
  - Create the utility programs and (optionally) the documentation
-   - make
-   - make doc
+   - make all doc
  - GeographicLib.sln is MS Visual Studio 2005 solution file which
    compiles the library and the two utility programs.
  - Try out GeoConvert (for help, type ./GeoConvert -h)
-   - echo 33.3 44.4 | ./GeoConvert -m -p 3
-   - echo 38SMB4484 | ./GoeConvert
-   .
+   - echo 33.3 44.4 | ./GeoConvert -m -p -3
+   - echo 38SMB4484 | ./GeoConvert -d
  - Try out TranverseMercatorTest (for help, type ./TransverseMercatorTest -h)
    - echo 0 90 | ./TransverseMercatorTest
    - echo 260e5 100e5 | ./TransverseMercatorTest -r
@@ -150,13 +149,13 @@ The constructors for these classes specify the ellipsoid and the forward
 and and reverse projections are implemented as const member functions.
 GeographicLib::TransverseMercator uses Kr&uuml;ger's series which have
 been extended to sixth order in the square of the eccentricity.
-GeographicLib::PolarStereographic use the exact formulas for the
+GeographicLib::PolarStereographic uses the exact formulas for the
 projection (from Snyder).
 
 GeographicLib::TransverseMercator::UTM and
 GeographicLib::PolarStereographic::UPS are const static instantiations
 specific for the WGS84 ellipsoid with the UTM and UPS scale factors.
-(But these do not add the standard false eastings or false northings for
+(These do \e not add the standard false eastings or false northings for
 UTM and UPS.)
 
 GeographicLib::UTMUPS uses GeographicLib::TransverseMercator::UTM and
@@ -879,6 +878,10 @@ Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
 /**
 \page old Old Versions
 
+<center>
+Back to \ref transversemercator.  Up to \ref contents.
+</center>
+
 List of versions in reverse chronological order together with a brief
 list of changes.
 
@@ -886,10 +889,15 @@ list of changes.
    (current)
     - First proper release of library
     - More robust GeographicLib::TransverseMercatorExact
+      - Introduce \e extendp version of constructor
+      - Test against extended test data
+      - Optimize starting positions for Newton's method
+      - Fix behavoir near all singularities
     - Documentation on transverse Mercator projection
+      - Improved method of computing scale and convergence
     - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
 
- - <a href="http://charles.karney.info/geographic-2008/">2008-09</a>
+ - 2008-09
     - Ad hoc posting of information on the transverse Mercator
       projection
 
