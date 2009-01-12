@@ -33,6 +33,10 @@ Files
     GeoConvert.vcproj -- project for GeoConvert
     TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
 
+    tm.mac -- Maxima code for high precision TM
+    ellint.mac -- Maxima code for elliptic functions needed by tm.mac
+    tmseries.mac -- Maxima code for series approximations for TM
+
     gauss-laborde-graticule-a.{png,pdf} -- Fig. 1
     gauss-krueger-graticule-a.{png,pdf} -- Fig. 2
     thompson-tm-graticule-a.{png,pdf} -- Fig. 3

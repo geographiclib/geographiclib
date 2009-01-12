@@ -4,7 +4,7 @@
  * \brief Documentation for GeographicLib
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
- * LGPL.  For more information, see http://charles.karney.info/geographic-new/
+ * LGPL.  For more information, see http://charles.karney.info/geographic/
  **********************************************************************/
 // $Id$
 /**
@@ -12,7 +12,7 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 2009-01
-\date 2009-01-15
+\date 2009-01-12
 
 \section abstract Abstract
 
@@ -25,10 +25,10 @@ various properties of the transverse Mercator projection are described.
 \section download Download
 
 The code is available for download at
-http://charles.karney.info/geographic-new/Geographic.tgz
+http://charles.karney.info/geographic/Geographic.tgz
 
 It is licensed under the LGPL.  For more information, see
-http://charles.karney.info/geographic-new/
+http://charles.karney.info/geographic/
 
 \section contents Contents
  - \ref intro
@@ -100,7 +100,7 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started:
  - Download the <a
-   href="http://charles.karney.info/geographic-new/Geographic.tgz">source</a>.
+   href="http://charles.karney.info/geographic/Geographic.tgz">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
    - tar xfpz Geographic.tgz
    .
@@ -143,14 +143,13 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
 
-GeographicLib::TransverseMercator and
-GeographicLib::PolarStereographic provide the basic projections.
-The constructors for these classes specify the ellipsoid and the forward
-and and reverse projections are implemented as const member functions.
-GeographicLib::TransverseMercator uses Kr&uuml;ger's series which have
-been extended to sixth order in the square of the eccentricity.
-GeographicLib::PolarStereographic uses the exact formulas for the
-projection (from Snyder).
+GeographicLib::TransverseMercator and GeographicLib::PolarStereographic
+provide the basic projections.  The constructors for these classes
+specify the ellipsoid and the forward and and reverse projections are
+implemented as const member functions.  TransverseMercator uses
+Kr&uuml;ger's series which have been extended to sixth order in the
+square of the eccentricity.  PolarStereographic uses the exact formulas
+for the projection (from Snyder).
 
 GeographicLib::TransverseMercator::UTM and
 GeographicLib::PolarStereographic::UPS are const static instantiations
@@ -158,8 +157,8 @@ specific for the WGS84 ellipsoid with the UTM and UPS scale factors.
 (These do \e not add the standard false eastings or false northings for
 UTM and UPS.)
 
-GeographicLib::UTMUPS uses GeographicLib::TransverseMercator::UTM and
-GeographicLib::PolarStereographic::UPS to perform the UTM and UPS
+GeographicLib::UTMUPS uses TransverseMercator::UTM and
+PolarStereographic::UPS to perform the UTM and UPS
 projections.  The class offers a uniform interface to UTM and UPS by
 treating UPS as UTM zone 0.  This class stores no internal state and the
 forward and reverse projections are provided via static member
@@ -177,14 +176,13 @@ functions are provided to convert between coordinate systems and to
 provide formatted representations of them.
 
 GeoConvert (GeoConvert.cpp) is a simple command line utility to provide
-access to the GeographicLib::GeoCoords class.
+access to the GeoCoords class.
 
 GeographicLib::TransverseMercatorExact is a drop in replacement for
-GeographicLib::TransverseMercator which uses the exact formulas, based
-on elliptic functions, for the projection as given by Lee.
-TransverseMercatorTest (TransverseMercatorTest.cpp) is a simple command
-line utility to test to the GeographicLib::TransverseMercator and
-GeographicLib::TransverseMercatorExact.
+TransverseMercator which uses the exact formulas, based on elliptic
+functions, for the projection as given by Lee.  TransverseMercatorTest
+(TransverseMercatorTest.cpp) is a simple command line utility to test to
+the TransverseMercator and TransverseMercatorExact.
 
 GeographicLib::Constants, GeographicLib::DMS, and
 GeographicLib::EllipticFunction are utility classes with are used
@@ -506,7 +504,7 @@ slip around it longitudinally.
 \section testset Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
- - http://charles.karney.info/geographic-new/TMcoords.dat.gz
+ - http://charles.karney.info/geographic/TMcoords.dat.gz
 
 This test set consists of a set of geographic coordinates together with
 the corresponding transverse Mercator coordinates.  The WGS84 ellipsoid
@@ -891,7 +889,7 @@ Back to \ref transversemercator.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic-new/Geographic.tgz">2009-01</a>
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-01</a>
    (current)
     - First proper release of library
     - More robust GeographicLib::TransverseMercatorExact
