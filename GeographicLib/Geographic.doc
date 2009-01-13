@@ -12,7 +12,7 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 2009-01
-\date 2009-01-13
+\date 2009-01-12
 
 \section abstract Abstract
 
@@ -229,7 +229,9 @@ The primary sources for the material presented here are:
    USGS Professional Paper 1395 (1987), pp. 48&ndash;66.
    This contains an overview of the transverse Mercator projection (and
    many other projections). However, the approximations given for
-   this projection are rather crude.
+   this projection are rather crude.  The terminology for the various
+   transverse Mercator map projections is taken form J. P. Snyder,
+   Flattening the Earth (Chicago Univ. Press, 1993).
  - L. Kr&uuml;ger, <a
    href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
@@ -273,12 +275,13 @@ The primary sources for the material presented here are:
 \section tmvarious Survey of transverse Mercator projections
 
 The following is adapted from Lee (1976) particularly pp. 92&ndash;101.
+The terminology is from Snyder (1993) pp. 159&ndash;161.
 
 The transverse Mercator projection is a conformal projection of the
 ellipsoid in which the central meridian is straight.  Within these
 constrains there are various projections that differ in how the scale
 varies along the central meridian.  The simplest such projection from an
-algorithmic point of view is the Gauss-Laborde projection which consists
+algorithmic point of view is the Gauss-Schreiber projection which consists
 of a conformal projection from the ellipsoid to a sphere followed by the
 spherical transverse Mercator projection.  This results in a projection
 whose scale on the central meridian increases from the equator to the
@@ -309,12 +312,12 @@ longitude = 0<sup>o</sup> lies on \e x = 0 and longitude =
 90<sup>o</sup> lies on \e y = 1.
 
 <center>
-<img src="gauss-laborde-graticule-a.png"
-width=667 height=305 alt="Gauss-Laborde transverse Mercator graticule
+<img src="gauss-schreiber-graticule-a.png"
+width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
 (scaled)">
-<a href="gauss-laborde-graticule-a.pdf">Fig. 1</a>
+<a href="gauss-schreiber-graticule-a.pdf">Fig. 1</a>
 </center>\n
-The graticule for the Gauss-Laborde transverse Mercator projection.
+The graticule for the Gauss-Schreiber transverse Mercator projection.
 The equator lies on \e y = 0.
 Compare this with Lee, Fig. 1 (right), which shows the graticule for
 half a sphere, but note that in his notation \e x and \e y have switched
@@ -359,7 +362,7 @@ the Gauss-Kr&uuml;ger projection.
 
 \section extend Properties far from the central meridian
 
-The divergent behavior of the Gauss-Laborde projection as latitude =
+The divergent behavior of the Gauss-Schreiber projection as latitude =
 0<sup>o</sup>, longitude = 90<sup>o</sup> is approached is unsurprising
 given the behavior of the standard Mercator projection at the poles.  On
 the other hand, the lack of divergence in the Gauss-Kr&uuml;ger
@@ -622,7 +625,7 @@ for |\e x| <= 500 km (the region used for UTM coordinates).
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
 Mercator projection.  The method entails performing first a
-Gauss-Laborde projection and approximating the warp of this to
+Gauss-Schreiber projection and approximating the warp of this to
 Gauss-Kr&uuml;ger projection as a series in \e n = (\e a - \e b)/(\e a +
 \e b).  This is accurate to about 200 nm within the UTM domain.  Here we
 present the series extended to 12th order.  We follow the notation of
@@ -846,9 +849,9 @@ carried out at the same time as the transformation itself (and the
 calculation slots into a Clenshaw summation very easily).  The
 derivatives give the convergence, \e gamma'', and scale, \e k'', of the
 [\e xi, \e eta] (Gauss-Kr&uuml;ger) projection relative to [\e xi', \e
-eta'] (Gauss-Laborde) projection and vice versa.  For the full
+eta'] (Gauss-Schreiber) projection and vice versa.  For the full
 convergence and scale these need to be compounded with the convergence,
-\e gamma', and scale, \e k', of the Gauss-Laborde projection.
+\e gamma', and scale, \e k', of the Gauss-Schreiber projection.
 \verbatim
    gamma = gamma' + gamma''
        k = k' * k''
