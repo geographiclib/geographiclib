@@ -1,12 +1,12 @@
 % Use Graticule.cpp to generate list of points on graticulepoints.m
 % Read in graticulepoints.m
-% for i in gauss-krueger-graticule thompson-tm-graticule gauss-krueger-convergence-scale gauss-laborde-graticule-a gauss-krueger-graticule-a thompson-tm-graticule-a; do pstopnm -stdout -dpi 600 -ppm $i.eps | pnmcrop | pnmscale 0.125 | pnmflip -cw | pnmpad -white -left 10 -top 10 -bottom 10 -right 10 | pnmquant 256 | pnmtopng -compress 9 -interlace > $i.png;done
+% for i in gauss-krueger-graticule thompson-tm-graticule gauss-krueger-convergence-scale gauss-schreiber-graticule-a gauss-krueger-graticule-a thompson-tm-graticule-a; do pstopnm -stdout -dpi 600 -ppm $i.eps | pnmcrop | pnmscale 0.125 | pnmflip -cw | pnmpad -white -left 10 -top 10 -bottom 10 -right 10 | pnmquant 256 | pnmtopng -compress 9 -interlace > $i.png;done
 
 lonline{19}=[lonline{19}(1,:); latline{11}(end,:); 0 1];
 wlonline{1}=[0 0; ku 0];
 wlonline{19}=[ku 0; wlatline{11}(end,:); ku kv];
 
-printp=1;
+printp=0;
 figure(1);hold off;
 for i=1:size(lons,2),
   if mod(lons(i),10) == 0,
@@ -218,7 +218,7 @@ for lat=[0:1:10 20:10:80],
   hold on;
 end
 hold off;
-title('Gauss-Laborde transverse Mercator graticule (scaled)');
+title('Gauss-Schreiber transverse Mercator graticule (scaled)');
 xlabel x;
 ylabel y;
 axis image; axis([0 2.5 0 1]);
@@ -227,8 +227,8 @@ set(gca,'YTick',0:0.5:1.0);
 set(gcf,'position',[300,300,800,700]);
 if printp,
   orient landscape;
-  print -dpdf gauss-laborde-graticule-a.pdf;
-  print -depsc gauss-laborde-graticule-a.eps;
+  print -dpdf gauss-schreiber-graticule-a.pdf;
+  print -depsc gauss-schreiber-graticule-a.eps;
 end
 
 figure(5);hold off;
