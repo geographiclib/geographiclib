@@ -12,15 +12,16 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 2009-01
-\date 2009-01-12
+\date 2009-01-13
 
 \section abstract Abstract
 
-A small set of C++ classes to perform conversions between geographic,
-UTM, UPS, and MGRS coordinates.  In this application the errors are
-close to round-off (about 5 nm).  It is specialized for use with the
-WGS84 but is easily adapted for use with other ellipsoids.  In addition,
-various properties of the transverse Mercator projection are described.
+GeographicLib is a small set of C++ classes to perform conversions
+between geographic, UTM, UPS, and MGRS coordinates.  In this application
+the errors are close to round-off (about 5 nm).  It is specialized for
+use with the WGS84 but is easily adapted for use with other ellipsoids.
+In addition, various properties of the transverse Mercator projection
+are described.
 
 \section download Download
 
@@ -54,15 +55,16 @@ Forward to \ref intro.
 Forward to \ref organization.  Up to \ref contents.
 </center>
 
-The work grew out of a need to perform conversions from MGRS to
+GeographicLib grew out of a need to perform conversions from MGRS to
 geographic coordinates (latitude and longitude).  At first, I used the
 <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
-package.  Unfortunately, this package rounds UTM coordinates to the
-nearest corner of a MGRS grid square.  This leads to the generation of
-illegal MGRS coordinates and other inconsistencies.  In addition, this
-package makes use of global variables and so it is not thread safe.
+package (versions 2.4.1 and 2.4.2).  Unfortunately, geotrans rounds UTM
+coordinates to the nearest corner of a MGRS grid square.  This leads to
+the generation of illegal MGRS coordinates and other inconsistencies.
+In addition, geotrans makes use of global variables and so it is not
+thread safe.
 
-The goals of this package are:
+The goals of GeographicLib are:
  - Accuracy.  In most applications the accuracy is about 5 nm.  A series
    solution is used for the transverse Mercator projection and this
    accuracy guarantee breaks down at distances of more than about
@@ -98,7 +100,7 @@ Forward to \ref start.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 </center>
 
-The following steps will get you started:
+The following steps will get you started with GeographicLib:
  - Download the <a
    href="http://charles.karney.info/geographic/Geographic.tgz">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
@@ -142,6 +144,9 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
+
+Here is a brief description of the relationship between the various
+components of GeographicLib.
 
 GeographicLib::TransverseMercator and GeographicLib::PolarStereographic
 provide the basic projections.  The constructors for these classes
