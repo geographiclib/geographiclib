@@ -14,7 +14,7 @@ namespace GeographicLib {
   /**
    * \brief Polar Stereographic Projection
    *
-   * Implementation taken from the report, J. P.Snyder, <a
+   * Implementation taken from the report, J. P. Snyder, <a
    * href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395"> Map Projections: A
    * Working Manual</a>, USGS Professional Paper 1395 (1987), pp. 160&ndash;163.
    *

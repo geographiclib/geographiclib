@@ -206,7 +206,7 @@ namespace GeographicLib {
     // JHS 154 has
     //
     //   beta = atan(sinh(q)) = conformal latitude
-    //   [xi', eta'] = Gauss-Laborde TM coordinates
+    //   [xi', eta'] = Gauss-Schreiber TM coordinates
     //   eta' = atanh(cos(beta) * sin(lam))
     //   xi' = asin(sin(beta)*cosh(eta')
     //
@@ -230,7 +230,7 @@ namespace GeographicLib {
 	q = qp - _e * qpp;
       xip = atan2(sinh(q), cos(lam));
       etap = atanh(sin(lam) / cosh(q));
-      // convergence and scale for Gauss-Laborde TM (xip, etap) -- gamma0 =
+      // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
       // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(beta))
       gamma = atan(tan(lam) * tanh(q));
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(beta) / cos(phi)) * cosh(etap)
@@ -244,7 +244,7 @@ namespace GeographicLib {
       // See, for example, Lee (1976), p 100.
       k = sqrt( std::pow(1 + _e, 1 + _e) * std::pow(1 - _e, 1 - _e) );
     }
-    // {xi',eta'} is {northing,easting} for Gauss-Laborde transverse mercator
+    // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse mercator
     // (for eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
     // mercator with constant scale on the central meridian (for eta = 0, xip =
     // rectifying latitude).  Define
@@ -324,7 +324,7 @@ namespace GeographicLib {
     double
       xi  = xip  + ar * xi0 - ai * eta0,
       eta = etap + ai * xi0 + ar * eta0;
-    // Fold in change in convergence and scale for Gauss-Laborde TM to
+    // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
     gamma -= atan2(yi2, yr2);
     k *= _b1 * hypot(yr2, yi2);
@@ -382,7 +382,7 @@ namespace GeographicLib {
     double
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
-    // Convergence and scale for Gauss-Laborde TM to Gauss-Krueger TM.
+    // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
     gamma = atan2(yi2, yr2);
     k = _b1 / hypot(yr2, yi2);
     // JHS 154 has
