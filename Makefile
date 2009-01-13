@@ -36,7 +36,7 @@ TransverseMercatorTest.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
 UTMUPS.o: UTMUPS.hpp MGRS.hpp PolarStereographic.hpp TransverseMercator.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
-	gauss-krueger-convergence-scale gauss-laborde-graticule-a \
+	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
 	gauss-krueger-graticule-a thompson-tm-graticule-a
 
 MAXIMASOURCES = tm.mac ellint.mac tmseries.mac
