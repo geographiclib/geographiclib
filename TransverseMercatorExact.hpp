@@ -34,7 +34,8 @@ namespace GeographicLib {
    * 7e-12%%.  (See \ref errors for the weasel words.)  The method is "exact"
    * in the sense that the errors are close to the round-off limit and that no
    * changes are needed in the algorithms for them to be used with reals of a
-   * higher precision (e.g., long double).
+   * higher precision.  Thus the errors using long double are about 2000 times
+   * smaller than using double.
    *
    * This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger
    * method, GeographicLib::TransverseMercator, taking about 11 us for a
@@ -66,8 +67,12 @@ namespace GeographicLib {
     // The accuracy of asinh is also bad for large negative arguments.  This is
     // easy to fix in the definition of asinh.  Instead we call these functions
     // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) { return log(x + sqrt(1 + sq(x))); }
-    static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
+    static inline double asinh(double x) {
+      return std::log(x + std::sqrt(1 + sq(x)));
+    }
+    static inline double atanh(double x) {
+      return std::log((1 + x)/(1 - x))/2;
+    }
 #endif
     double psi(double phi) const;
     double psiinv(double psi) const;

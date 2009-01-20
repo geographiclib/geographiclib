@@ -165,8 +165,8 @@ namespace GeographicLib {
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
     double
-      idegree = floor(angle),
-      fdegree = floor((angle - idegree) * scale + 0.5) / scale;
+      idegree = std::floor(angle),
+      fdegree = std::floor((angle - idegree) * scale + 0.5) / scale;
     if (fdegree >= 1) {
       idegree += 1;
       fdegree -= 1;
@@ -174,7 +174,7 @@ namespace GeographicLib {
     double pieces[3] = {fdegree, 0, 0};
     for (unsigned i = 1; i <= unsigned(trailing); ++i) {
       double
-	ip = floor(pieces[i - 1]),
+	ip = std::floor(pieces[i - 1]),
 	fp = pieces[i - 1] - ip;
       pieces[i] = fp * 60;
       pieces[i - 1] = ip;

@@ -1,6 +1,6 @@
 /**
  * \file ECEFConvert.cpp
- * \brief Command line utility for geographic coordinate conversions
+ * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * http://charles.karney.info/geographic
@@ -10,25 +10,7 @@
  *
  *   g++ -g -O3 -I.. -o ECEFConvert ECEFConvert.cpp ECEF.cpp LocalCartesian.cpp Constants.cpp
  *
- * Here is the usage (obtained from "TranverseMercatorTest -h")
-\verbatim
-Usage: ECEFConvert [-r] [-l lat0 lon0] [-h]
-
-Convert geodetic coordinates to either earth centered earth fixed (ECEF) or
-local cartesian coordinates.  By default conversion is to ECEF coordinates.
-Specifying -l lat0 lon0 causes a local coordinate system to be used with
-the origin at latitude = lat0, longitude = lon0, height = 0, z normal to
-the ellipsoid and y due north.
-
-Geodetic coordinates are provided on standard input as a set of lines
-containing (blank separated) latitude, longitude (decimal degrees), and
-height (meters).  For each set of geodetic coordinate, the corresponding
-cartesian coordinates x, y, z (meters) are printed on standard output.
-
-If -r is given the reverse transformation is performed.
-
--h prints this help
-\endverbatim
+ * See \ref ecefconvert for usage information.
  **********************************************************************/
 
 #include <string>
@@ -51,7 +33,7 @@ the ellipsoid and y due north.\n\
 \n\
 Geodetic coordinates are provided on standard input as a set of lines\n\
 containing (blank separated) latitude, longitude (decimal degrees), and\n\
-height (meters).  For each set of geodetic coordinate, the corresponding\n\
+height (meters).  For each set of geodetic coordinates, the corresponding\n\
 cartesian coordinates x, y, z (meters) are printed on standard output.\n\
 \n\
 If -r is given the reverse transformation is performed.\n\

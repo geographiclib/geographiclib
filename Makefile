@@ -1,25 +1,24 @@
 # $Id$
-TARGET = GeoConvert TransverseMercatorTest
+TARGET = GeoConvert TransverseMercatorTest ECEFConvert
 all: $(TARGET)
 
 CC = g++
 CPPFLAGS = -I..
 CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 
-
 HEADERS = Constants.hpp DMS.hpp EllipticFunction.hpp GeoCoords.hpp MGRS.hpp \
 	PolarStereographic.hpp TransverseMercator.hpp \
-	TransverseMercatorExact.hpp UTMUPS.hpp
+	TransverseMercatorExact.hpp UTMUPS.hpp ECEF.hpp LocalCartesian.hpp
 
-SOURCES = Constants.cpp DMS.cpp EllipticFunction.cpp GeoCoords.cpp MGRS.cpp \
-	PolarStereographic.cpp TransverseMercator.cpp \
-	TransverseMercatorExact.cpp UTMUPS.cpp \
-	GeoConvert.cpp TransverseMercatorTest.cpp
+SOURCES = $(patsubst %.hpp,%.cpp,$(HEADERS)) \
+	GeoConvert.cpp TransverseMercatorTest.cpp ECEFConvert.cpp
 
 GeoConvert: GeoConvert.o GeoCoords.o MGRS.o UTMUPS.o DMS.o Constants.o \
 	TransverseMercator.o PolarStereographic.o
 TransverseMercatorTest: TransverseMercatorTest.o TransverseMercatorExact.o \
 	Constants.o EllipticFunction.o TransverseMercator.o
+ECEFConvert: ECEFConvert.o ECEF.o LocalCartesian.o \
+	Constants.o
 
 Constants.o: Constants.hpp
 DMS.o: DMS.hpp

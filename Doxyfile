@@ -463,9 +463,9 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = GeoConvert.cpp TransverseMercatorTest.cpp \
-GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp Constants.cpp TransverseMercator.cpp PolarStereographic.cpp TransverseMercatorExact.cpp EllipticFunction.cpp \
-GeoCoords.hpp MGRS.hpp UTMUPS.hpp DMS.hpp Constants.hpp TransverseMercator.hpp PolarStereographic.hpp TransverseMercatorExact.hpp EllipticFunction.hpp \
+INPUT                  = GeoConvert.cpp TransverseMercatorTest.cpp ECEFConvert.cpp \
+GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp Constants.cpp TransverseMercator.cpp PolarStereographic.cpp TransverseMercatorExact.cpp EllipticFunction.cpp ECEF.cpp LocalCartesian.cpp \
+GeoCoords.hpp MGRS.hpp UTMUPS.hpp DMS.hpp Constants.hpp TransverseMercator.hpp PolarStereographic.hpp TransverseMercatorExact.hpp EllipticFunction.hpp ECEF.hpp LocalCartesian.hpp \
 Geographic.doc
 
 # This tag can be used to specify the character encoding of the source files that 

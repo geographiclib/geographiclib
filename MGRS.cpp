@@ -70,8 +70,8 @@ namespace GeographicLib {
       // if (!northp) y -= maxutmSrow * tile;
     }
     int
-      xh = int(floor(x)) / tile,
-      yh = int(floor(y)) / tile;
+      xh = int(std::floor(x)) / tile,
+      yh = int(std::floor(y)) / tile;
     double
       xf = x - tile * xh,
       yf = y - tile * yh;
@@ -98,8 +98,8 @@ namespace GeographicLib {
     }
     double mult = std::pow(double(base), (std::min)(prec - tilelevel, 0));
     int
-      ix = int(floor(xf * mult)),
-      iy = int(floor(yf * mult));
+      ix = int(std::floor(xf * mult)),
+      iy = int(std::floor(yf * mult));
     for (int c = (std::min)(prec, int(tilelevel)); c--;) {
       mgrs[z + c] = digits[ ix % base ];
       ix /= base;
@@ -107,11 +107,11 @@ namespace GeographicLib {
       iy /= base;
     }
     if (prec > tilelevel) {
-      xf -= floor(xf * mult);
-      yf -= floor(yf * mult);
+      xf -= std::floor(xf * mult);
+      yf -= std::floor(yf * mult);
       mult = std::pow(double(base), prec - tilelevel);
-      ix = int(floor(xf * mult));
-      iy = int(floor(yf * mult));
+      ix = int(std::floor(xf * mult));
+      iy = int(std::floor(yf * mult));
       for (int c = prec - tilelevel; c--;) {
 	mgrs[z + c + tilelevel] = digits[ ix % base ];
 	ix /= base;
@@ -231,14 +231,14 @@ namespace GeographicLib {
     // after rounding), it is shifted down by eps.  This also folds UTM
     // northings to the correct N/S hemisphere.
     int
-      ix = int(floor(x / tile)),
-      iy = int(floor(y / tile)),
+      ix = int(std::floor(x / tile)),
+      iy = int(std::floor(y / tile)),
       ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (ix >= mineasting[ind] && ix < maxeasting[ind]) ) {
       if (ix == maxeasting[ind] && x == maxeasting[ind] * tile)
 	x -= eps;
       else
-	throw std::out_of_range("Easting " + str(int(floor(x/1000)))
+	throw std::out_of_range("Easting " + str(int(std::floor(x/1000)))
 				+ "km not in MGRS/"
 				+ (utmp ? "UTM" : "UPS") + " range for "
 				+ (northp ? "N" : "S" )
@@ -250,7 +250,7 @@ namespace GeographicLib {
       if (iy == maxnorthing[ind] && y == maxnorthing[ind] * tile)
 	y -= eps;
       else
-	throw std::out_of_range("Northing " + str(int(floor(y/1000)))
+	throw std::out_of_range("Northing " + str(int(std::floor(y/1000)))
 				+ "km not in MGRS/"
 				+ (utmp ? "UTM" : "UPS") + " range for "
 				+ (northp ? "N" : "S" )
@@ -287,8 +287,8 @@ namespace GeographicLib {
     double c = 100 * (8 * iband + 4)/90.0;
     bool northp = iband >= 0;
     int
-      minrow = iband > -10 ? int(floor(c - 4.3 - 0.1 * northp)) : -90,
-      maxrow = iband < 9 ? int(floor(c + 4.4 - 0.1 * northp)) : 94,
+      minrow = iband > -10 ? int(std::floor(c - 4.3 - 0.1 * northp)) : -90,
+      maxrow = iband < 9 ? int(std::floor(c + 4.4 - 0.1 * northp)) : 94,
       baserow = (minrow + maxrow) / 2 - utmrowperiod / 2;
     // Add maxutmSrow = 5 * utmrowperiod to ensure operand is positive
     irow = (irow - baserow + maxutmSrow) % utmrowperiod + baserow;
