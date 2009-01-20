@@ -10,87 +10,8 @@
  *
  *   g++ -g -O3 -I.. -o GeoConvert GeoConvert.cpp GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp Constants.cpp TransverseMercator.cpp PolarStereographic.cpp
  *
- * Here is the usage (obtained from "GeoConvert -h")
-\verbatim
-Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]
-
-Convert geographic coordinates to
-
-    -g latitude and longitude (decimal degrees), default output
-    -d latitude and longitude (degrees mins secs)
-    -u UTM or UPS
-    -m MGRS
-    -c meridian convergence and scale
-
-Geographic coordinates are given on standard input as:
-
-Latitude and longitude (decimal degrees or degrees minutes seconds).  d,
-', and " are used to denote degrees, minutes, and seconds, with the least
-significant designator optional.  Latitude is given first unless a
-hemisphere is specified, e.g., the following are all equivalent
-
-    33.3 44.4
-    E44.4 N33.3
-    33d18'N 44d24'E
-    44d24 33d18N
-
-UTM or UPS given as zone+hemisphere easting northing or easting northing
-zone+hemisphere.  The zone is absent for a UPS specification.  E.g.,
-
-    38N 444140.54 3684706.36
-    444140.54 3684706.36 38N
-    S 2173854.98 2985980.58
-    2173854.98 2985980.58 S
-
-MRGS is used to specify the center of a grid square, e.g.,
-
-    38SMB4484
-    38SMB44140847064
-
--p prec (default 0) sets the precision relative to 1m.  This gives the
-number of digits after the decimal point for UTM/UPS.  The number of digits
-per coordinate for MGRS is 5 + prec.  For decimal degrees, the number of
-digits after the decimal point is 5 + prec.  For DMS (degree, minute,
-seconds) output, the number of digits after the decimal point in the
-seconds components is 1 + prec; if this is negative then use minutes (prec
-= -2 or -3) or degrees (prec <= -4) as the least significant component.
-Print convergence, resp. scale, with 5 + prec, resp. 7 + prec, digits after
-the decimal point.  The minimum value of prec is -5 and the maximum is 9
-for UTM/UPS, 9 for decimal degrees, 10 for DMS, 6 for MGRS, and 8 for
-convergence and scale.
-
-MGRS coordinates are given by truncating (instead of rounding) the
-coordinates to the requested precision.  For example is prec = -3, the
-result is the 1km square enclosing the position.
-
-Convergence is the bearing of grid north given as degrees clockwise from
-true north.
-
-UTM/UPS and MGRS are given in zone of the input if applicable, otherwise in
-the standard zone.
-
--z zone sets the zone for output.  Use zone = 0 to specify UPS.
-
--s uses the standard zone
-
-For example, the point
-
-    79.9S 6.1E
-
-corresponds to possible MGRS coordinates
-
-    32CMS4324728161 (standard UTM zone = 32)
-    31CEM6066227959 (neighboring UTM zone = 31)
-      BBZ1945517770 (neighboring UPS zone)
-
-then
-    echo 79.9S 6.1E      | GeoConvert -p -3 -m       ==> 32CMS4328
-    echo 31CEM6066227959 | GeoConvert -p -3 -m       ==> 31CEM6027
-    echo 31CEM6066227959 | GeoConvert -p -3 -m -s    ==> 32CMS4328
-    echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917
-
--h prints this help
-\endverbatim
+ *
+ * See \ref geoconvert for usage information.
  **********************************************************************/
 
 #include <iostream>

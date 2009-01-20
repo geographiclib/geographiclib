@@ -182,6 +182,14 @@
 				RelativePath="EllipticFunction.cpp"
 				>
 			</File>
+			<File
+				RelativePath="ECEF.cpp"
+				>
+			</File>
+			<File
+				RelativePath="LocalCartesian.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -222,6 +230,14 @@
 			</File>
 			<File
 				RelativePath="EllipticFunction.hpp"
+				>
+			</File>
+			<File
+				RelativePath="ECEF.hpp"
+				>
+			</File>
+			<File
+				RelativePath="LocalCartesian.hpp"
 				>
 			</File>
 		</Filter>

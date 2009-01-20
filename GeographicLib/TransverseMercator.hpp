@@ -65,8 +65,12 @@ namespace GeographicLib {
     // The accuracy of asinh is also bad for large negative arguments.  This is
     // easy to fix in the definition of asinh.  Instead we call these functions
     // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) { return log(x + sqrt(1 + sq(x))); }
-    static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
+    static inline double asinh(double x) {
+      return std::log(x + std::sqrt(1 + sq(x)));
+    }
+    static inline double atanh(double x) {
+      return std::log((1 + x)/(1 - x))/2;
+    }
 #endif
   public:
     /**

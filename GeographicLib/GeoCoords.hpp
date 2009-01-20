@@ -148,7 +148,7 @@ namespace GeographicLib {
     }
     /**
      * Reset the location as a 1-element, 2-element, or 3-element string.  See
-     * GeoCoords(const std::string& s).
+     * GeoCoords(const string& s).
      **********************************************************************/
     void Reset(const std::string& s);
     /**

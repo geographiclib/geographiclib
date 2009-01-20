@@ -20,9 +20,9 @@ namespace GeographicLib {
 #if defined(M_PI)
   const double Constants::pi = M_PI;
 #else
-  const double Constants::pi = atan2(0.0, -1.0);
+  const double Constants::pi = std::atan2(0.0, -1.0);
 #endif
-  const double Constants::degree = Constants::pi / 180;
+  const double Constants::degree = pi / 180;
 
   // All these constants are exact
 

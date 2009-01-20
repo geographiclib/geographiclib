@@ -172,7 +172,7 @@ namespace GeographicLib {
      * this.
      **********************************************************************/
     static int LatitudeBand(double lat) {
-      int ilat = int(floor(lat));
+      int ilat = int(std::floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
     // These are public also so that UTMUPS can access them.

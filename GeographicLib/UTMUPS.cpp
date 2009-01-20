@@ -46,11 +46,11 @@ namespace GeographicLib {
   int UTMUPS::StandardZone(double lat, double lon) {
     // Assume lon is in [-180, 360].
     int zone;
-    int ilat = int(floor(lat));
+    int ilat = int(std::floor(lat));
     if (ilat >= 84 || ilat < -80)
       zone = 0;
     else {
-      int ilon = int(floor(lon));
+      int ilon = int(std::floor(lon));
       if (ilon >= 180)
 	ilon -= 360;
       zone = (ilon + 186)/6;
@@ -78,7 +78,7 @@ namespace GeographicLib {
       double
 	lon0 = CentralMeridian(zone),
 	dlon = lon - lon0;
-      dlon = std::abs(dlon - 360 * floor((dlon + 180)/360));
+      dlon = std::abs(dlon - 360 * std::floor((dlon + 180)/360));
       if (dlon > 60)
 	// Check isn't really necessary because CheckCoords catches this case.
 	// But this allows a more meaningful error message to be given.

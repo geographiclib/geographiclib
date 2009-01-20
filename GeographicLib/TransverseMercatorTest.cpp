@@ -10,40 +10,7 @@
  *
  *   g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp TransverseMercatorExact.cpp Constants.cpp EllipticFunction.cpp TransverseMercator.cpp
  *
- * Here is the usage (obtained from "TranverseMercatorTest -h")
-\verbatim
-TransverseMercatorTest [-r] [-t|-s]
-
-Convert between geographic coordinates and transverse Mercator coordinates.
-
-Read lines with latitude and longitude (or easting and northing if -r is
-specified) from standard input and print latitude, longitude, easting,
-northing, convergence, and scale.  Units are degrees and meters.
-
-By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM
-central scale, and false easting and false northing are zero.
-
-If -r is given, the reverse projection is performed (the inputs are easting
-and northing).
-
-If -s is given, the sixth-order Krueger series approximation to the
-transverse Mercator projection is used instead of the exact projection.
-
-If -t is specified, an ellipsoid of eccentricity 0.1 is used, central scale
-= 1, 1/4 meridian distance = 1.  In addition, the cut in the exact
-transverse Mercator projection at northing = 0 is removed.  The domain of
-latitude (lat) and longitude (lon) is the union of
-    lat in [0, 90]  and lon in [0, 90]
-    lat in (-90, 0] and lon in [81, 90]
-The domain of easting (x) and northing (x) is the union of
-    x in [0, inf)       and y in [0, 1]
-    x in [1.71..., inf) and y in (-inf, 0]
-
--s and -t are mutually exclusive (the last flag specified is the operative
-one).
-
--h prints this help
-\endverbatim
+ * See \ref transversemercatortest for usage information.
  **********************************************************************/
 
 #include <string>
@@ -114,7 +81,7 @@ int main(int argc, char* argv[]) {
   }
   const GeographicLib::TransverseMercatorExact& TME = testing ?
     GeographicLib::TransverseMercatorExact
-    (a, (sqrt(1 - e * e) + 1) / (e * e), 1.0, true) :
+    (a, (std::sqrt(1 - e * e) + 1) / (e * e), 1.0, true) :
     GeographicLib::TransverseMercatorExact::UTM;
 
   const GeographicLib::TransverseMercator& TMS =
