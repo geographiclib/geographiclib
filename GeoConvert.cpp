@@ -10,7 +10,6 @@
  *
  *   g++ -g -O3 -I.. -o GeoConvert GeoConvert.cpp GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp Constants.cpp TransverseMercator.cpp PolarStereographic.cpp
  *
- *
  * See \ref geoconvert for usage information.
  **********************************************************************/
 
