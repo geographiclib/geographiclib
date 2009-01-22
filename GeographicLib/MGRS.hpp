@@ -10,6 +10,7 @@
 #define MGRS_HPP "$Id$"
 
 #include <cmath>
+#include <algorithm>
 #include <string>
 #include <sstream>
 

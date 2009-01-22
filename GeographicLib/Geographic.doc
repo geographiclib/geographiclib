@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-01
-\date 2009-01-12
+\version 2009-02
+\date 2009-02-xx
 
 \section abstract Abstract
 
@@ -207,7 +207,9 @@ In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the
 GeographicLib/ directory prefix.  If compiling within the GeographicLib
 directory, ".." should be included in the header search path (e.g.,
-with -I..).
+with -I..).  The cpp files implementing the classes include "using
+namespace std;", however, for portability, the headers files and the
+test programs do not.
 
 The low level projection classes, TransverseMercator and
 PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
@@ -920,8 +922,8 @@ GeoConvert is a command line utility for geographic coordinate
 conversions via GeographicLib::GeoCoords.
 
 Examples:
- - echo 33.3 44.4 | ./GeoConvert -u => 38N 444141 368470
- - echo 33.3 44.4 | ./GeoConvert -m -p -3 => 38SMB4484
+ - echo 33.3 44.4 | ./GeoConvert -u\n=> 38N 444141 368470
+ - echo 33.3 44.4 | ./GeoConvert -m -p -3\n=> 38SMB4484
 
 Compile with "make GeoConvert" or with
 
@@ -1018,9 +1020,9 @@ GeographicLib::TransverseMercatorExact and
 GeographicLib::TransverseMercator.
 
 Examples:
- - echo 0 90 | ./TransverseMercatorTest =>
+ - echo 0 90 | ./TransverseMercatorTest\n=>
    0 90 25953592.84 9997964.94 90 18.40
- - echo 260e5 100e5 | ./TransverseMercatorTest -r =>
+ - echo 260e5 100e5 | ./TransverseMercatorTest -r\n=>
    -0.02 90.00 26000000 10000000 90.01 18.47
 
 Compile with "make TransverseMercatorTest" or with
@@ -1071,9 +1073,9 @@ coordinate conversions via GeographicLib::ECEF and
 GeographicLib::LocalCartesian.
 
 Examples:
- - echo 33.3 44.4 6000 | ./ECEFConvert =>
+ - echo 33.3 44.4 6000 | ./ECEFConvert\n=>
    3816209.60 3737108.55 3485109.57
- - echo 33.3 44.4 6000 | ./ECEFConvert -l 33 44 =>
+ - echo 33.3 44.4 6000 | ./ECEFConvert -l 33 44\n=>
    37288.97 33374.29 5803.64
 
 Compile with "make ECEFConvert" or with
@@ -1115,8 +1117,16 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-01</a>
-   (current)
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-02
+   (current)</a>
+  - Fix documentation of constructors (flattening -> inverse
+    flattening).
+  - Use std versions of math functions.
+  - Add GeographicLib::ECEF and GeographicLib::LocalCartesian classes
+    and \ref ecefconvert utility.
+  - Gather the documentation on the utility programs onto one page.
+
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-01.tgz">2009-01</a>
     - First proper release of library
     - More robust GeographicLib::TransverseMercatorExact
       - Introduce \e extendp version of constructor

@@ -9,6 +9,8 @@
 #if !defined(POLARSTEREOGRAPHIC_HPP)
 #define POLARSTEREOGRAPHIC_HPP "$Id$"
 
+#include <cmath>
+
 namespace GeographicLib {
 
   /**
@@ -26,12 +28,17 @@ namespace GeographicLib {
     const double _a, _f, _k0, _e, _e2m, _c, _tol;
     const int _numit;
     static inline double sq(double x) { return x * x; }
+#if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+#endif
   public:
     /**
-     * Constructor for a ellipsoid radius \e a (meters), flattening \e f,
-     * and central scale factor \e k0.
+     * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
+     * invf, and central scale factor \e k0.
      **********************************************************************/
-    PolarStereographic(double a, double f, double k0);
+    PolarStereographic(double a, double invf, double k0);
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
      * polar stereographic easting \e x (meters) and northing \e y (meters).

@@ -17,8 +17,7 @@ GeoConvert: GeoConvert.o GeoCoords.o MGRS.o UTMUPS.o DMS.o Constants.o \
 	TransverseMercator.o PolarStereographic.o
 TransverseMercatorTest: TransverseMercatorTest.o TransverseMercatorExact.o \
 	Constants.o EllipticFunction.o TransverseMercator.o
-ECEFConvert: ECEFConvert.o ECEF.o LocalCartesian.o \
-	Constants.o
+ECEFConvert: ECEFConvert.o ECEF.o LocalCartesian.o Constants.o
 
 Constants.o: Constants.hpp
 DMS.o: DMS.hpp

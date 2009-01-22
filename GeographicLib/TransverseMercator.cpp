@@ -47,21 +47,19 @@ namespace {
   char RCSID_H[] = TRANSVERSEMERCATOR_HPP;
 }
 
-#if defined(_MSC_VER)
-#define hypot _hypot
-#endif
-
 namespace GeographicLib {
 
+  using namespace std;
+
   const double TransverseMercator::tol =
-    0.1*std::sqrt(std::numeric_limits<double>::epsilon());
+    0.1*sqrt(numeric_limits<double>::epsilon());
 
   TransverseMercator::TransverseMercator(double a, double invf, double k0)
     : _a(a)
     , _f(1 / invf)
     , _k0(k0)
     , _e2(_f * (2 - _f))
-    , _e(std::sqrt(_e2))
+    , _e(sqrt(_e2))
     , _e2m(1 - _e2)
     , _ep2(_e2 / _e2m)
     , _n(_f / (2 - _f))
@@ -225,25 +223,24 @@ namespace GeographicLib {
     double etap, xip;
     if (lat < 90) {
       double
-	qp = asinh(std::tan(phi)),
-	qpp = atanh(_e * std::sin(phi)),
+	qp = asinh(tan(phi)),
+	qpp = atanh(_e * sin(phi)),
 	q = qp - _e * qpp;
-      xip = std::atan2(std::sinh(q), std::cos(lam));
-      etap = atanh(std::sin(lam) / std::cosh(q));
+      xip = atan2(sinh(q), cos(lam));
+      etap = atanh(sin(lam) / cosh(q));
       // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
-      // atan(std::tan(xip) * tanh(etap)) = atan(tan(lam) * sin(beta))
-      gamma = std::atan(std::tan(lam) * std::tanh(q));
+      // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(beta))
+      gamma = atan(tan(lam) * tanh(q));
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(beta) / cos(phi)) * cosh(etap)
       // Note 1/cos(phi) = cosh(qp);
       // and cos(beta) * cosh(etap) = 1/hypot(sinh(q), cos(lam))
-      k = std::sqrt(_e2m + _e2 * sq(std::cos(phi))) * std::cosh(qp) /
-	hypot(std::sinh(q), std::cos(lam));
+      k = sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) / hypot(sinh(q), cos(lam));
     } else {
       xip = Constants::pi/2;
       etap = 0;
       gamma = lam;
       // See, for example, Lee (1976), p 100.
-      k = std::sqrt( std::pow(1 + _e, 1 + _e) * std::pow(1 - _e, 1 - _e) );
+      k = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) );
     }
     // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse mercator
     // (for eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
@@ -299,8 +296,8 @@ namespace GeographicLib {
     //    c[0] = 1; c[k] = 2*k*_hp[k-1]
     //    S = (c[0] - y[2])  + y[1] * cos(x)
     double
-      c0 = std::cos(2 * xip), ch0 = std::cosh(2 * etap),
-      s0 = std::sin(2 * xip), sh0 = std::sinh(2 * etap),
+      c0 = cos(2 * xip), ch0 = cosh(2 * etap),
+      s0 = sin(2 * xip), sh0 = sinh(2 * etap),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta')
     double			// Accumulators for zeta
       xi0 = _hp[maxpow - 1], eta0 = 0,
@@ -327,7 +324,7 @@ namespace GeographicLib {
       eta = etap + ai * xi0 + ar * eta0;
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
-    gamma -= std::atan2(yi2, yr2);
+    gamma -= atan2(yi2, yr2);
     k *= _b1 * hypot(yr2, yi2);
     gamma /= Constants::degree;
     y = _a1 * _k0 * (backside ? Constants::pi - xi : xi) * latsign;
@@ -357,8 +354,8 @@ namespace GeographicLib {
     if (backside)
       xi = Constants::pi - xi;
     double
-      c0 = std::cos(2 * xi), ch0 = std::cosh(2 * eta),
-      s0 = std::sin(2 * xi), sh0 = std::sinh(2 * eta),
+      c0 = cos(2 * xi), ch0 = cosh(2 * eta),
+      s0 = sin(2 * xi), sh0 = sinh(2 * eta),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
     double			// Accumulators for zeta'
       xip0 = -_h[maxpow - 1], etap0 = 0,
@@ -384,7 +381,7 @@ namespace GeographicLib {
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
-    gamma = std::atan2(yi2, yr2);
+    gamma = atan2(yi2, yr2);
     k = _b1 / hypot(yr2, yi2);
     // JHS 154 has
     //
@@ -395,34 +392,34 @@ namespace GeographicLib {
     // the following eliminates beta and is more stable
     double lam, phi;
     double
-      s = std::sinh(etap),
-      c = std::cos(xip),
+      s = sinh(etap),
+      c = cos(xip),
       r = hypot(s, c);
     if (r > 0) {
-      lam = std::atan2(s, c);
+      lam = atan2(s, c);
       // Use Newton's method to solve
       // q = qp - e * atanh(e * tanh(qp))
       // for qp = asinh(tan(phi))
       double
-	q = asinh(std::sin(xip)/r),
+	q = asinh(sin(xip)/r),
 	qp = q;
       // min iterations = 1, max iterations = 3; mean = 2.8
       for (int i = 0; i < numit; ++i) {
 	double
-	  t = std::tanh(qp),
+	  t = tanh(qp),
 	  dqp = -(qp - _e * atanh(_e * t) - q) * (1 - _e2 * sq(t)) / _e2m;
 	qp += dqp;
-	if (std::abs(dqp) < tol)
+	if (abs(dqp) < tol)
 	  break;
       }
-      phi = std::atan(std::sinh(qp));
-      gamma += std::atan(std::tan(xip) * std::tanh(etap));
+      phi = atan(sinh(qp));
+      gamma += atan(tan(xip) * tanh(etap));
       // Note cos(beta) * cosh(etap) = r
-      k *= std::sqrt(_e2m + _e2 * sq(std::cos(phi))) * std::cosh(qp) * r;
+      k *= sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) * r;
     } else {
       phi = Constants::pi/2;
       lam = 0;
-      k *= std::sqrt( std::pow(1 + _e, 1 + _e) * std::pow(1 - _e, 1 - _e) );
+      k *= sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) );
     }
     lat = phi / Constants::degree * xisign;
     lon = lam / Constants::degree;

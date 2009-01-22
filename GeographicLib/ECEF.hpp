@@ -9,6 +9,8 @@
 #if !defined(ECEF_HPP)
 #define ECEF_HPP "$Id$"
 
+#include <cmath>
+
 namespace GeographicLib {
 
   /**
@@ -20,48 +22,41 @@ namespace GeographicLib {
    * origin of ECEF coordinates is at the center of the earth.  The \e z axis
    * goes thru the north pole, \e lat = 90<sup>o</sup>.  The \e x axis goes
    * thru \e lat = 0, \e lon = 0.
-
+   *
    * The conversion from geographic to ECEF coordinates is straightforward.
-   * For the reverse transformation we use
-   * H. Vermeille, <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
+   * For the reverse transformation we use H. Vermeille,
+   * <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
    * Direct transformation from geocentric coordinates to geodetic
    * coordinates</a>, J. Geodesy 76, 451&ndash;454 (2002).  Several changes
    * have been made to ensure that the method returns accurate results for all
-   * inputs (provided that \e h is finite).
+   * inputs (provided that \e h is finite).  See ECEF.cpp for details.
    * 
-   * There's a cube-root singularity in the reverse transformation at sqrt(\e
-   * x<sup>2</sup> + \e y<sup>2</sup>) = \e a\e e<sup>2</sup>, \e z = 0.  This
-   * point maps to the equator.  However (for the WGS84 ellipsoid), changing \e
-   * z = 1 nm, changes the latitude to 7.5" or a distance of 229 m from the
-   * equator.  Because of this, when measuring the error in the reverse
-   * trasnformation, we distinguish the error in \e h (which is well behaved)
-   * from the error in the latitude and longitude.  For the latter, we further
-   * distinguish points outside the ellipsoid, in which case we convert the
-   * error in the latitude and longitude into a distance on the surface of the
-   * ellipsoid, from points inside the ellipsoid, where we instead apply the
-   * forward transformation on the result and measure the discrepancy in ECEF
-   * coordinates.  The error in the height is bounded by 8 nm max(1, \e h/\e
-   * a).  The error in the footprint position (for points outside the
-   * ellipsoid) is bounded by 4 nm and the reverse-forward discrepancy (for
-   * points inside the ellipsoid) is bounded by 6 nm.
+   * The errors in these routines are close to round-off.  Specifically, for
+   * points within 5000 km of the surface of the ellipsoid (either inside or
+   * outside the ellipsoid), the error is bounded by 7 nm.  See ECEF.cpp for
+   * further information on the errors.
    **********************************************************************/
 
   class ECEF {
   private:
     const double _a, _f, _e2, _e12, _b, _tol, _maxrad;
-    const int _numit;
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
     static inline double cbrt(double x) {
       double y = std::pow(std::abs(x), 1/3.0);
       return x < 0 ? -y : y;
     }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+    static inline double cbrt(double x) { return ::cbrt(x); }
 #endif
   public:
     /**
-     * Constructor for a ellipsoid radius \e a (meters) and flattening \e f.
+     * Constructor for a ellipsoid radius \e a (meters) and inverse flattening
+     * \e invf.
      **********************************************************************/
-    ECEF(double a, double f);
+    ECEF(double a, double invf);
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
      * (meters) to ECEF \e x, \e y, \e z (meters).

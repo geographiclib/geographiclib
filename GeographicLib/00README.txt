@@ -22,9 +22,12 @@ Files
     EllipticFunction.[ch]pp -- elliptic functions
     GeoCoords.[ch]pp -- hold geographic location
     DMS.[ch]pp -- handle degrees minutes seconds
+    ECEF.[ch]pp -- ECEF coordinates
+    LocalCartesian.[ch]pp -- local cartesian coordinates
 
     GeoConvert.cpp -- geographic conversion utility
     TransverseMercatorTest.cpp -- TM tester
+    ECEFConvert.cpp -- convert to ECEF and local cartesian
 
     Makefile -- Unix/Linux makefile
 
@@ -32,6 +35,7 @@ Files
     GeographicLib.vcproj -- project for library
     GeoConvert.vcproj -- project for GeoConvert
     TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
+    ECEFConvert.vcproj -- project for ECEFConvert
 
     tm.mac -- Maxima code for high precision TM
     ellint.mac -- Maxima code for elliptic functions needed by tm.mac
@@ -44,4 +48,15 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-01 version of the library (its first release).
+This is the 2009-02 version of the library.
+
+Changes between 2009-02 and 2009-01 versions:
+
+  * Fix documentation of constructors (flattening -> inverse
+    flattening).
+
+  * Use std versions of math functions.
+
+  * Add ECEF and LocalCartesian classes and ECEFConvert utility.
+
+  * Gather the documentation on the utility programs onto one page.
