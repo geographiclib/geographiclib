@@ -13,6 +13,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransverseMercatorTest", "T
 		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ECEFConvert", "ECEFConvert.vcproj", "{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +36,10 @@ Global
 		{73FED050-34B7-40EE-96FA-6EABA84F6F9B}.Debug|Win32.Build.0 = Debug|Win32
 		{73FED050-34B7-40EE-96FA-6EABA84F6F9B}.Release|Win32.ActiveCfg = Release|Win32
 		{73FED050-34B7-40EE-96FA-6EABA84F6F9B}.Release|Win32.Build.0 = Release|Win32
+		{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}.Debug|Win32.ActiveCfg = Debug|Win32
+		{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}.Debug|Win32.Build.0 = Debug|Win32
+		{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}.Release|Win32.ActiveCfg = Release|Win32
+		{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

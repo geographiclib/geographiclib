@@ -20,13 +20,15 @@ namespace {
 
 namespace GeographicLib {
 
+  using namespace std;
+
   const double EllipticFunction::tol =
-    std::numeric_limits<double>::epsilon() * 0.01;
-  const double EllipticFunction::tolRF = std::pow(3 * tol, 1/6.0);
-  const double EllipticFunction::tolRD = std::pow(0.25 * tol, 1/6.0);
-  const double EllipticFunction::tolRG0 = 2.7 * std::sqrt(tol);
-  const double EllipticFunction::tolJAC = std::sqrt(tol);
-  const double EllipticFunction::tolJAC1 = std::sqrt(6 * tol);
+    numeric_limits<double>::epsilon() * 0.01;
+  const double EllipticFunction::tolRF = pow(3 * tol, 1/6.0);
+  const double EllipticFunction::tolRD = pow(0.25 * tol, 1/6.0);
+  const double EllipticFunction::tolRG0 = 2.7 * sqrt(tol);
+  const double EllipticFunction::tolJAC = sqrt(tol);
+  const double EllipticFunction::tolJAC1 = sqrt(6 * tol);
 
   /*
    * Implementation of methods given in
@@ -41,17 +43,14 @@ namespace GeographicLib {
     double
       a0 = (x + y + z)/3,
       an = a0,
-      q = (std::max)((std::max)(std::abs(a0-x), std::abs(a0-y)),
-		     std::abs(a0-z)) / tolRF,
+      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRF,
       x0 = x,
       y0 = y,
       z0 = z,
       mul = 1;
-    while (q >= mul * std::abs(an)) {
+    while (q >= mul * abs(an)) {
       // Max 6 trips
-      double ln = std::sqrt(x0)*std::sqrt(y0) +
-	std::sqrt(y0)*std::sqrt(z0) +
-	std::sqrt(z0)*std::sqrt(x0);
+      double ln = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
       an = (an + ln)/4;
       x0 = (x0 + ln)/4;
       y0 = (y0 + ln)/4;
@@ -64,8 +63,7 @@ namespace GeographicLib {
       zz = - xx - yy,
       e2 = xx * yy - zz * zz,
       e3 = xx * yy * zz;
-    return (1 - e2 / 10 + e3 / 14 + e2 * e2 / 24 - 3 * e2 * e3 / 44) /
-      std::sqrt(an);
+    return (1 - e2 / 10 + e3 / 14 + e2 * e2 / 24 - 3 * e2 * e3 / 44) / sqrt(an);
   }
 
 
@@ -73,19 +71,18 @@ namespace GeographicLib {
     double
       a0 = (x + y + 3 * z)/5,
       an = a0,
-      q = (std::max)((std::max)(std::abs(a0-x), std::abs(a0-y)),
-		     std::abs(a0-z)) / tolRD,
+      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRD,
       x0 = x,
       y0 = y,
       z0 = z,
       mul = 1,
       s = 0;
-    while (q >= mul * std::abs(an)) {
+    while (q >= mul * abs(an)) {
       // Max 7 trips
-      double ln = std::sqrt(x0)*std::sqrt(y0) +
-	std::sqrt(y0)*std::sqrt(z0) +
-	std::sqrt(z0)*std::sqrt(x0);
-      s += 1/(mul * std::sqrt(z0) * (z0 + ln ));
+      double ln = sqrt(x0)*sqrt(y0) +
+	sqrt(y0)*sqrt(z0) +
+	sqrt(z0)*sqrt(x0);
+      s += 1/(mul * sqrt(z0) * (z0 + ln ));
       an = (an + ln)/4;
       x0 = (x0 + ln)/4;
       y0 = (y0 + ln)/4;
@@ -101,22 +98,22 @@ namespace GeographicLib {
       e4 = 3 * (xx * yy - zz * zz) * zz * zz,
       e5 = xx * yy * zz * zz * zz;
     return (1 - 3 * e2 / 14 + e3 / 6 + 9 * e2 * e2 / 88 - 3 * e4 / 22
-	    - 9 * e2 * e3 / 52 + 3 * e5 / 26) / (mul * an * std::sqrt(an))
+	    - 9 * e2 * e3 / 52 + 3 * e5 / 26) / (mul * an * sqrt(an))
       + 3 * s;
   }
 
   double EllipticFunction::RG0(double x, double y) {
     double
-      x0 = std::sqrt(x),
-      y0 = std::sqrt(y),
+      x0 = sqrt(x),
+      y0 = sqrt(y),
       xn = x0,
       yn = y0,
       s = 0,
       mul = 0.25;
-    while (std::abs(xn-yn) >= tolRG0 * std::abs(xn)) {
+    while (abs(xn-yn) >= tolRG0 * abs(xn)) {
       // Max 4 trips
       double t = (xn + yn) /2;
-      yn = std::sqrt(xn * yn);
+      yn = sqrt(xn * yn);
       xn = t;
       mul *= 2;
       t = xn - yn;
@@ -166,9 +163,9 @@ namespace GeographicLib {
       for (double a = 1; l < num; ++l) {
 	// Max 5 trips
 	m[l] = a;
-	n[l] = mc = std::sqrt(mc);
+	n[l] = mc = sqrt(mc);
 	c = (a + mc) / 2;
-	if (std::abs(a - mc) <= tolJAC * a) {
+	if (abs(a - mc) <= tolJAC * a) {
 	  ++l;
 	  break;
 	}
@@ -176,8 +173,8 @@ namespace GeographicLib {
 	a = c;
       }
       x = c * x;
-      sn = std::sin(x);
-      cn = std::cos(x);
+      sn = sin(x);
+      cn = cos(x);
       dn = 1;
       if (sn != 0) {
 	double a = cn / sn;
@@ -189,19 +186,19 @@ namespace GeographicLib {
 	  dn = (n[l] + a) / (b + a);
 	  a = c / b;
 	}
-	a = 1 / std::sqrt(c * c + 1);
+	a = 1 / sqrt(c * c + 1);
 	sn = sn < 0 ? -a : a;
 	cn = c * sn;
       }
     } else {
-      sn = std::tanh(x);
-      dn = cn = 1 / std::cosh(x);
+      sn = tanh(x);
+      dn = cn = 1 / cosh(x);
     }
   }
 
   double EllipticFunction::E(double sn, double cn, double dn) const {
     double ei;
-    if (std::abs(sn) > tolJAC1) {
+    if (abs(sn) > tolJAC1) {
       double
 	s = 1 / sn,
 	c = cn * s,
@@ -218,7 +215,7 @@ namespace GeographicLib {
       //      - (m^2+2*m-3)*sn^5/40
       //      - (m^3+m^2+3*m-5)*sn^7/112
       //    approx sn,  for sn < sqrt(6 * eps)
-      ei = std::abs(sn);
+      ei = abs(sn);
     // Enforce usual trig-like symmetries
     if (cn < 0) {
       ei = 2 * E() - ei;

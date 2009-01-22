@@ -18,17 +18,19 @@ namespace {
 
 namespace GeographicLib {
 
+  using namespace std;
+
   void LocalCartesian::Reset(double lat0, double lon0) {
     _lat0 = lat0;
     _lon0 = lon0;
     ECEF::WGS84.Forward(lat0, lon0, 0.0, _x0, _y0, _z0);
     double
       phi = lat0 * Constants::degree,
-      sphi = std::sin(phi),
-      cphi = std::cos(phi),
+      sphi = sin(phi),
+      cphi = cos(phi),
       lam = lon0 * Constants::degree,
-      slam = std::sin(lam),
-      clam = std::cos(lam);
+      slam = sin(lam),
+      clam = cos(lam);
     // Local x axis in ECEF coords
     _rxx = -slam; _rxy = clam; _rxz = 0;
     // Local y axis in ECEF coords

@@ -47,21 +47,18 @@ namespace {
   char RCSID_H[] = TRANSVERSEMERCATOREXACT_HPP;
 }
 
-#if defined(_MSC_VER)
-#define hypot _hypot
-#endif
-
 namespace GeographicLib {
 
-  const double TransverseMercatorExact::tol =
-    std::numeric_limits<double>::epsilon();
-  const double TransverseMercatorExact::tol1 = 0.1 * std::sqrt(tol);
+  using namespace std;
+
+  const double TransverseMercatorExact::tol = numeric_limits<double>::epsilon();
+  const double TransverseMercatorExact::tol1 = 0.1 * sqrt(tol);
   const double TransverseMercatorExact::tol2 = 0.1 * tol;
-  const double TransverseMercatorExact::taytol = std::pow(tol, 0.6);
+  const double TransverseMercatorExact::taytol = pow(tol, 0.6);
       // Overflow value for asinh(tan(pi/2)) etc.
   const double TransverseMercatorExact::ahypover =
-    (double)(std::numeric_limits<double>::digits)
-    /std::log((double)(std::numeric_limits<double>::radix)) + 2;
+    (double)(numeric_limits<double>::digits)
+    /log((double)(numeric_limits<double>::radix)) + 2;
 
   TransverseMercatorExact::TransverseMercatorExact(double a, double invf,
 						   double k0, bool extendp)
@@ -70,7 +67,7 @@ namespace GeographicLib {
     , _k0(k0)
     , _mu(_f * (2 - _f))
     , _mv(1 - _mu)
-    , _e(std::sqrt(_mu))
+    , _e(sqrt(_mu))
     , _ep2(_mu/_mv)
     , _extendp(extendp)
     , _Eu(_mu)
@@ -82,11 +79,11 @@ namespace GeographicLib {
 			       Constants::UTM_k0);
 
   double  TransverseMercatorExact::psi(double phi) const {
-    double s = std::sin(phi);
+    double s = sin(phi);
     // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
     // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
     // sign(phi)
-    return asinh(s / std::max(std::cos(phi), 0.1 * tol)) - _e * atanh(_e * s);
+    return asinh(s / max(cos(phi), 0.1 * tol)) - _e * atanh(_e * s);
   }
 
   double TransverseMercatorExact::psiinv(double psi) const {
@@ -100,13 +97,13 @@ namespace GeographicLib {
     for (int i = 0; i < numit; ++i) {
       // min iterations = 1, max iterations = 3; mean = 2.8
       double
-	t = std::tanh(q),
+	t = tanh(q),
 	dq = -(q - _e * atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
       q += dq;
-      if (std::abs(dq) < tol1)
+      if (abs(dq) < tol1)
 	break;
     }
-    return std::atan(std::sinh(q));
+    return atan(sinh(q));
   }
 
   void TransverseMercatorExact::zeta(double u,
@@ -118,15 +115,14 @@ namespace GeographicLib {
     // atanh(snu * dnv) = asinh(snu * dnv / sqrt(cnu^2 + _mv * snu^2 * snv^2))
     // atanh(_e * snu / dnv) = asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
     double
-      d1 = std::sqrt(sq(cnu) + _mv * sq(snu * snv)),
-      d2 = std::sqrt(_mu * sq(cnu) + _mv * sq(cnv));
+      d1 = sqrt(sq(cnu) + _mv * sq(snu * snv)),
+      d2 = sqrt(_mu * sq(cnu) + _mv * sq(cnv));
     psi =
       // Overflow to values s.t. tanh = 1.
       (d1 ? asinh(snu * dnv / d1) : snu < 0 ? -ahypover : ahypover)
       - (d2 ? _e * asinh(_e * snu / d2) : snu < 0 ? -ahypover : ahypover);
     lam = (d1 != 0 && d2 != 0) ?
-      std::atan2(dnu * snv, cnu * cnv) - _e *
-      std::atan2(_e * cnu * snv, dnu * cnv) :
+      atan2(dnu * snv, cnu * cnv) - _e * atan2(_e * cnu * snv, dnu * cnv) :
       0;
   }
 
@@ -161,9 +157,8 @@ namespace GeographicLib {
       double
 	psix = 1 - psi / _e,
 	lamx = (Constants::pi/2 - lam) / _e;
-      u = asinh(std::sin(lamx) / hypot(std::cos(lamx), std::sinh(psix))) *
-	(1 + _mu/2);
-      v = std::atan2(std::cos(lamx), std::sinh(psix)) * (1 + _mu/2);
+      u = asinh(sin(lamx) / hypot(cos(lamx), sinh(psix))) * (1 + _mu/2);
+      v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
       u = _Eu.K() - u;
       v = _Ev.K() - v;
     } else if (psi < _e * Constants::pi/2 &&
@@ -187,19 +182,19 @@ namespace GeographicLib {
 	// range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
 	// [-105, 15).  In particular the range [-90, 180] in zeta space maps
 	// to [-90, 0] in w space as required.
-	ang = std::atan2(dlam-psi, psi+dlam) - 0.75 * Constants::pi;
+	ang = atan2(dlam-psi, psi+dlam) - 0.75 * Constants::pi;
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol;
-      rad = std::pow(3 / (_mv * _e) * rad, 1/3.0);
+      rad = pow(3 / (_mv * _e) * rad, 1/3.0);
       ang /= 3;
-      u = rad * std::cos(ang);
-      v = rad * std::sin(ang) + _Ev.K();
+      u = rad * cos(ang);
+      v = rad * sin(ang) + _Ev.K();
     } else {
       // Use spherical TM, Lee 12.6 -- writing atanh(sin(lam) / cosh(psi)) =
       // asinh(sin(lam) / hypot(cos(lam), sinh(psi))).  This takes care of the
       // log singularity at zeta = Eu.K() (corresponding to the north pole)
-      v = asinh(std::sin(lam) / hypot(std::cos(lam), std::sinh(psi)));
-      u = std::atan2(std::sinh(psi), std::cos(lam));
+      v = asinh(sin(lam) / hypot(cos(lam), sinh(psi)));
+      u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
       u *= _Eu.K() / (Constants::pi/2);
       v *= _Eu.K() / (Constants::pi/2);
@@ -212,7 +207,7 @@ namespace GeographicLib {
 					 double& u, double& v) const {
     if (zetainv0(psi, lam, u, v))
       return;
-    double stol2 = tol2 / sq((std::max)(psi, 1.0));
+    double stol2 = tol2 / sq(max(psi, 1.0));
     // min iterations = 2, max iterations = 6; mean = 4.0
     for (int i = 0, trip = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
@@ -298,13 +293,13 @@ namespace GeographicLib {
 	rad = hypot(xi, deta),
 	// Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
 	// discussion in zetainv0 on the cut for ang.
-	ang = std::atan2(deta-xi, xi+deta) - 0.75 * Constants::pi;
+	ang = atan2(deta-xi, xi+deta) - 0.75 * Constants::pi;
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol;
-      rad = std::pow(3 / _mv * rad, 1/3.0);
+      rad = pow(3 / _mv * rad, 1/3.0);
       ang /= 3;
-      u = rad * std::cos(ang);
-      v = rad * std::sin(ang) + _Ev.K();
+      u = rad * cos(ang);
+      v = rad * sin(ang) + _Ev.K();
     } else {
       // Else use w = sigma * Eu.K/Eu.E (which is correct in the limit _e -> 0)
       u = xi * _Eu.K()/_Eu.E();
@@ -346,8 +341,8 @@ namespace GeographicLib {
 				      double snv, double cnv, double dnv,
 				      double& gamma, double& k) const {
     double
-      c = std::cos(phi),
-      s = std::sin(lam),
+      c = cos(phi),
+      s = sin(lam),
       c2 = sq(c),
       s2 = sq(s),
       d = 1 - s2 * c2;
@@ -355,7 +350,7 @@ namespace GeographicLib {
     if ( !( phi > 0 && d > 0.75 && c2 * sq(c2 * _ep2) * s2 < tol ) ) {
       // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
       // (clockwise from true north) of grid north
-      gamma = std::atan2(_mv * snu * snv * cnv, cnu * dnu * dnv);
+      gamma = atan2(_mv * snu * snv * cnv, cnu * dnu * dnv);
       // Lee 55.13 with nu given by Lee 9.1 -- in sqrt change the numerator
       // from
       //
@@ -369,8 +364,8 @@ namespace GeographicLib {
       // rewrite sqrt term in 9.1 as
       //
       //    _mv + _mu * c^2 instead of 1 - _mu * sin(phi)^2
-      k = std::sqrt(_mv + _mu * sq(c)) / c *
-	std::sqrt( (_mv * sq(snv) + sq(cnu * dnv)) /
+      k = sqrt(_mv + _mu * sq(c)) / c *
+	sqrt( (_mv * sq(snv) + sq(cnu * dnv)) /
 	      (_mu * sq(cnu) + _mv * sq(cnv)) );
     } else {	       //  phi > 0 && d > 0.75 && c2 * sq(c2 * _ep2) * s2 < tol
       // Use series approximations for gamma and k accurate to ep2.  Ignored
@@ -382,8 +377,8 @@ namespace GeographicLib {
 	// k2 = c2^3*s2^2*((3*c2^3+12*c2^2-28*c2)*s2^2+
 	// (-34*c2^2+124*c2-64)*s2-61*c2+48)/(24*d^4)*ep2^2
 	k1 = gam1 * ((c2 - 2) * s2 + 1) / (2 * d);
-      gamma = std::atan2(std::sin(phi) * s * (1 + gam1), std::cos(lam));
-      k = (1 + k1) / std::sqrt(d);
+      gamma = atan2(sin(phi) * s * (1 + gam1), cos(lam));
+      k = (1 + k1) / sqrt(d);
     }
   }
 

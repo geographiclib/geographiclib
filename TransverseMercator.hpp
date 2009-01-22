@@ -55,6 +55,7 @@ namespace GeographicLib {
     double _a1, _b1, _h[maxpow], _hp[maxpow];
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.
     // For small arguments we would write
@@ -71,13 +72,17 @@ namespace GeographicLib {
     static inline double atanh(double x) {
       return std::log((1 + x)/(1 - x))/2;
     }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+    static inline double asinh(double x) { return ::asinh(x); }
+    static inline double atanh(double x) { return ::atanh(x); }
 #endif
   public:
     /**
-     * Constructor for a ellipsoid radius \e a (meters), flattening \e f,
-     * and central scale factor \e k0.
+     * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
+     * invf, and central scale factor \e k0.
      **********************************************************************/
-    TransverseMercator(double a, double f, double k0);
+    TransverseMercator(double a, double invf, double k0);
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
      * transverse Mercator easting \e x (meters) and northing \e y (meters).
