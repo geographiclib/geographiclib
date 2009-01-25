@@ -33,8 +33,8 @@ namespace GeographicLib {
    * 
    * The errors in these routines are close to round-off.  Specifically, for
    * points within 5000 km of the surface of the ellipsoid (either inside or
-   * outside the ellipsoid), the error is bounded by 7 nm.  See ECEF.cpp for
-   * further information on the errors.
+   * outside the ellipsoid), the error is bounded by 7 nm for the WGS84
+   * ellipsoid.  See ECEF.cpp for further information on the errors.
    **********************************************************************/
 
   class ECEF {

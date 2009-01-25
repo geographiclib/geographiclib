@@ -34,8 +34,9 @@ namespace GeographicLib {
    * 7e-12%%.  (See \ref errors for the weasel words.)  The method is "exact"
    * in the sense that the errors are close to the round-off limit and that no
    * changes are needed in the algorithms for them to be used with reals of a
-   * higher precision.  Thus the errors using long double are about 2000 times
-   * smaller than using double.
+   * higher precision.  Thus the errors using long double (with a 64-bit
+   * fraction) are about 2000 times smaller than using double (with a 53-bit
+   * fraction).
    *
    * This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger
    * method, GeographicLib::TransverseMercator, taking about 11 us for a
