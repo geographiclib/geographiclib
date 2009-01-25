@@ -69,6 +69,12 @@
  * .
  * We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
  * and <i>err</i><sub>in</sub> < 7 nm.
+ *
+ * The testing has been confined to the WGS84 ellipsoid.  The method will work
+ * for all ellipsoids used in terrestial geodesy.  However, the central region,
+ * which leads to multiple real roots for the cubic equation in Reverse, pokes
+ * outside the ellipsoid (at the poles) for ellipsoids with \e e > 1/sqrt(2).
+ * Reverse has not been analysed for this case.
  **********************************************************************/
 
 #include "GeographicLib/ECEF.hpp"
@@ -132,7 +138,7 @@ namespace GeographicLib {
       phi = atan2(z/_maxrad, rad1);
     }
     else if ( !(e4 * q == 0 && r <= 0) ) {
-      double 
+      double
 	// Avoid possible division by zero when r = 0 by multiplying equations
 	// for s and t by r^3 and r, resp.
 	S = e4 * p * q / 4,	// S = r^3 * s
