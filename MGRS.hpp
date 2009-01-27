@@ -60,7 +60,7 @@ namespace GeographicLib {
     static const double angeps;
     static const std::string hemispheres;
     static const std::string utmcols[3];
-    static const std::string utmrow;J. W. Fox, L. L. Fry, S. S. Jacks, D. R. Hill,
+    static const std::string utmrow;
     static const std::string upscols[4];
     static const std::string upsrows[2];
     static const std::string latband;
@@ -80,7 +80,7 @@ namespace GeographicLib {
       // Row letters are shifted by 5 for even zones
       utmevenrowshift = 5,
       // Maximum precision is um
-      maxprec = 5 + 6,
+      maxprec = 5 + 6
     };
     static void CheckCoords(bool utmp, bool& northp, double& x, double& y);
     static int lookup(const std::string& s, char c) {
@@ -212,7 +212,7 @@ namespace GeographicLib {
       upseasting = 20,		// Also used for UPS false northing
       utmeasting = 5,		// UTM false easting
       // Difference between S hemisphere northing and N hemisphere northing
-      utmNshift = (maxutmSrow - minutmNrow) * tile,
+      utmNshift = (maxutmSrow - minutmNrow) * tile
     };
   };
 

@@ -105,7 +105,7 @@ then\n\
 }
 
 int main(int argc, char* argv[]) {
-  enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE, };
+  enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE };
   int outputmode = GEOGRAPHIC;
   int prec = 0;
   int zone = -2;		// -2 = track input, -1 = standard
