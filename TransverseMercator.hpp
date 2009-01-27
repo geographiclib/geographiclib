@@ -25,11 +25,12 @@ namespace GeographicLib {
    * \brief Transverse Mercator Projection
    *
    * This uses Kr&uuml;ger's method which evaluates the projection and its
-   * inverse in terms of a series.  See L. Kr&uuml;ger, <a
-   * href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
-   * Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
-   * ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
-   * Series 52, 172 pp. (1912).
+   * inverse in terms of a series.  See
+   *  - L. Kr&uuml;ger,
+   *    <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   *    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
+   *    ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
+   *    Series 52, 172 pp. (1912).
    *
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum
    * errors is 5 nm (ground distance) for all positions within 35 degrees of

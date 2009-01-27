@@ -25,14 +25,15 @@ namespace GeographicLib {
    *
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
-   *   Computation of elliptic integrals,
-   *   Numerical Algorithms 10, 13&ndash;26 (1995).
+   *   <a href="http://dx.doi.org/10.1007/BF02198293"> Computation of elliptic
+   *   integrals</a>, Numerical Algorithms 10, 13&ndash;26 (1995).
    * .
    * The computation of the Jacobi elliptic functions uses the algorithm given
    * in
-   * - Roland Bulirsch,
-   *   Numerical Calculation of Elliptic Integrals and Elliptic Functions,
-   *   Numericshe Mathematik 7, 78&ndash;90 (1965).
+   * - R. Bulirsch,
+   *   <a href="http://dx.doi.org/10.1007/BF01397975"> Numerical Calculation of
+   *   Elliptic Integrals and Elliptic Functions</a>, Numericshe Mathematik 7,
+   *   78&ndash;90 (1965).
    * .
    * The notation follows Abramowitz and Stegun, Chapters 16 and 17.
    **********************************************************************/
@@ -53,34 +54,36 @@ namespace GeographicLib {
      **********************************************************************/
     EllipticFunction(double m);
     /**
-     * The parameter.
+     * The parameter \e m.
      **********************************************************************/
     double m() const { return _m; }
     /**
-     * The complementary parameter.
+     * The complementary parameter \e m' = (1 - \e m).
      **********************************************************************/
     double m1() const { return _m1; }
     /**
-     * The complete integral of first kind, K(m).
+     * The complete integral of first kind, \e K(\e m).
      **********************************************************************/
     double K() const { _init || Init(); return _kc; }
     /**
-     * The complete integral of second kind, E(m).
+     * The complete integral of second kind, \e E(\e m).
      **********************************************************************/
     double E() const { _init || Init(); return _ec; }
     /**
-     * The difference K(m) - E(m) (which can be computed directly).
+     * The difference \e K(\e m) - \e E(\e m) (which can be computed directly).
      **********************************************************************/
     double KE() const { _init || Init(); return _kec; }
     /**
-     * The Jacobi elliptic functions sn(x|m), cn(x|m), and dn(x|m) with
-     * argument \e x.  The results are returned in \e sn, \e cn, and \e dn.
+     * The Jacobi elliptic functions sn(<i>x</i>|<i>m</i>),
+     * cn(<i>x</i>|<i>m</i>), and dn(<i>x</i>|<i>m</i>) with argument \e x.
+     * The results are returned in \e sn, \e cn, and \e dn.
      **********************************************************************/
     void sncndn(double x, double& sn, double& cn, double& dn) const;
     /**
-     * The incomplete integral of the second kind = int dn(w)^2 (A+S 17.2.10).
-     * Instead of specifying the ampltiude phi, we provide \e sn = sin(phi), \e
-     * cn = cos(phi), \e dn = sqrt(1 - m sin(phi)^2).
+     * The incomplete integral of the second kind = int dn(\e w)<sup>2</sup> \e
+     * dw (A+S 17.2.10).  Instead of specifying the ampltiude \e phi, we
+     * provide \e sn = sin(\e phi), \e cn = cos(\e phi), \e dn = sqrt(1 - \e m
+     * sin<sup>2</sup>(\e phi)).
      **********************************************************************/
     double E(double sn, double cn, double dn) const;
   };

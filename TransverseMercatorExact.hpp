@@ -20,6 +20,8 @@ namespace GeographicLib {
    *
    * Implementation of the Transverse Mercator Projection given in
    *  - L. P. Lee,
+   *    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62"> Conformal
+   *    Projections Based On Jacobian Elliptic Functions</a>, Part V of
    *    Conformal Projections Based on Elliptic Functions,
    *    (B. V. Gutsell, Toronto, 1976), 128pp.,
    *    ISBN: 0919870163

@@ -38,7 +38,7 @@
  * e<sup>2</sup> sin<sup>2</sup>\e lat0), which ensures that (\e lat0, \e lon0,
  * \e h0) is the principal geodetic inverse of (\e x0, \e y0, \e z0).]  Because
  * the forward calculation is numerically stable and because long doubles (on
- * Linux systems using G++) provide 11 bits additional accuracy (about 3.3
+ * Linux systems using g++) provide 11 bits additional accuracy (about 3.3
  * decimal digits), we regard this set of test data as exact.
  *
  * Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
@@ -50,14 +50,16 @@
  * This methodology is not very useful very far from the globe, because the
  * absolute errors in the approximate geodetic height become large, or within
  * 50 km of the center of the earth, because of errors in computing the
- * approximate geodetic latitude.  To illustrate the second issue, consider
- * points with ECEF coordinates satisfying hypot(\e x, \e y) = \e a \e
+ * approximate geodetic latitude.  To illustrate the second issue, the maximum
+ * value of \e err for \e h0 < 0 is about 80 mm.  The error is maximum close to
+ * the circle given by ECEF coordinates satisfying hypot(\e x, \e y) = \e a \e
  * e<sup>2</sup> (= 42.7 km), \e z = 0.  (This is the center of meridional
  * curvature for \e lat = 0.)  The geodetic latitude for these points is \e lat
  * = 0.  However, if we move 1 nm towards the center of the earth, the geodetic
  * latitude becomes 0.04", a distance of 1.4 m from the equator.  If, instead,
  * we move 1 nm up, the geodetic latitude becomes 7.45", a distance of 229 m
- * from the equator.
+ * from the equator.  In light of this, Reverse does quite well in this
+ * vicinity.
  *
  * To obtain a practical measure of the error for the general case we define
  * - <i>err</i><sub>h</sub> = |\e h1 - \e h0| / max(1, \e h0 / \e a)
@@ -75,12 +77,23 @@
  * which leads to multiple real roots for the cubic equation in Reverse, pokes
  * outside the ellipsoid (at the poles) for ellipsoids with \e e > 1/sqrt(2).
  * Reverse has not been analysed for this case.
+ *
+ * Another comparable method is T. Fukushima,
+ * <a href="http://dx.doi.org/10.1007/s001900050271"> Fast transform from
+ * geocentric to geodetic coordinates</a>, J. Geodesy 73, 603&ndash;610 (2003).
+ * This is an iterative method and is somewhat faster than ECEF.Reverse.
+ * However, because of the choice of independent variable in Newton's
+ * iteration, accuracy is lost for points near the equatorial plane.  As a
+ * consequence, the maximum error \e err near the center of meridional
+ * curvature for \e lat = 0 is about 50 m (as opposed to 8 mm for
+ * WGS84.Reverse).
  **********************************************************************/
 
 #include "GeographicLib/ECEF.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
+#include <iostream>
 
 namespace {
   char RCSID[] = "$Id$";
@@ -97,8 +110,11 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _e12(_e2 / (1 - _e2))
     , _b(_a * (1 - _f))
-    , _tol(_a * numeric_limits<double>::epsilon())
     , _maxrad(2 * _a / numeric_limits<double>::epsilon())
+    , _ep(sqrt(1-_e2))
+    , _c(_a * _e2)
+    , _tol(0.1 * sqrt(numeric_limits<double>::epsilon()))
+    , _numit(100)
   {}
 
   const ECEF ECEF::WGS84(Constants::WGS84_a, Constants::WGS84_invf);
@@ -132,10 +148,8 @@ namespace GeographicLib {
       // This avoids overflow, e.g., in the computation of disc below.  It's
       // possible that h has overflowed to inf; but that's OK.
       //
-      // Treat the case x, y finite, but rad overflows to +inf.  Fix by scaling
-      // by _maxrad.
-      double rad1 = hypot(x/_maxrad, y/_maxrad);
-      phi = atan2(z/_maxrad, rad1);
+      // Treat the case x, y finite, but rad overflows to +inf by scaling by 2.
+      phi = atan2(z/2, hypot(x/2, y/2));
     }
     else if ( !(e4 * q == 0 && r <= 0) ) {
       double
@@ -195,6 +209,44 @@ namespace GeographicLib {
     lat = phi / Constants::degree;
     // Negative signs return lon in [-180, 180)
     lon = (rad != 0 ? -atan2(-y, x) : 0) / Constants::degree;
+  }
+
+  void ECEF::ReverseFukushima(double x, double y, double z,
+			      double& lat, double& lon, double& h) const {
+    double
+      p = hypot(x, y),
+      zp = _ep * z,
+      u = 2 * (zp - _c),
+      v = 2 * (zp + _c),
+      tm = - u / (2 * p);
+    double t;
+    if (tm <= 0)		// u >= 0
+      t = 2 * (2 * p + u)/(4 * p + 3 * u + v);
+    else if (tm >= 1)		// -u >= 2 * p
+      t = p / v;
+    else {
+      if (tm * (sq(tm) * (p * tm + u) + v) - p >= 0)
+	t = p / v;
+      else
+	t = 2 * (2 * p + u)/(4 * p + 3 * u + v);
+    }
+    double t2 = t * t;
+    for (int i = 0; i < _numit; ++i) {
+      double dt = -  (t * (t2 * (p * t + u) + v) - p)/
+	(t2 *(4 * p * t + 3 * u) + v);
+      t += dt;
+      t2 = t * t;
+      // std::cerr << t << " " << abs(dt) << "\n";
+      if (abs(dt) < _tol) {
+	// std::cerr << ++i << "\n";
+	break;
+      }
+    }
+    lat = atan2(1 - t2, 2 * _ep * t) / Constants::degree;
+    h = (2 * p * _ep * t + z * (1 - t2) - _a * _ep * (1 + t2)) /
+      sqrt( sq(1 + t2) - 4 * _e2 * t2);
+    // Negative signs return lon in [-180, 180)
+    lon = (p != 0 ? -atan2(-y, x) : 0) / Constants::degree;
   }
 
 } // namespace GeographicLib

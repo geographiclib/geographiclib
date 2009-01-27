@@ -24,12 +24,15 @@ namespace GeographicLib {
    * thru \e lat = 0, \e lon = 0.
    *
    * The conversion from geographic to ECEF coordinates is straightforward.
-   * For the reverse transformation we use H. Vermeille,
-   * <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
-   * Direct transformation from geocentric coordinates to geodetic
-   * coordinates</a>, J. Geodesy 76, 451&ndash;454 (2002).  Several changes
-   * have been made to ensure that the method returns accurate results for all
-   * inputs (provided that \e h is finite).  See ECEF.cpp for details.
+   * For the reverse transformation we use
+   * - H. Vermeille,
+   *   <a href="http://dx.doi.org/10.1007/s00190-002-0273-6"> Direct
+   *   transformation from geocentric coordinates to geodetic coordinates</a>,
+   *   J. Geodesy 76, 451&ndash;454 (2002).
+   * .
+   * Several changes have been made to ensure that the method returns accurate
+   * results for all finite inputs (even if \e h is infinite).  See ECEF.cpp
+   * for details.
    * 
    * The errors in these routines are close to round-off.  Specifically, for
    * points within 5000 km of the surface of the ellipsoid (either inside or
@@ -39,7 +42,9 @@ namespace GeographicLib {
 
   class ECEF {
   private:
-    const double _a, _f, _e2, _e12, _b, _tol, _maxrad;
+    const double _a, _f, _e2, _e12, _b, _maxrad;
+    const double _ep, _c, _tol;
+    const int _numit;
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
     static inline double hypot(double x, double y) { return _hypot(x, y); }
@@ -75,6 +80,9 @@ namespace GeographicLib {
      * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).
      **********************************************************************/
     void Reverse(double x, double y, double z,
+		 double& lat, double& lon, double& h) const;
+
+    void ReverseFukushima(double x, double y, double z,
 		 double& lat, double& lon, double& h) const;
 
     /**

@@ -18,21 +18,39 @@ namespace GeographicLib {
   /**
    * \brief Convert between UTM/UPS and MGRS
    *
-   * The conversions are closed, i.e., output from Forward is legal input for
-   * Reverse and vice versa.  Conversion in both directions preserve the
-   * UTM/UPS selection and the UTM zone.
+   * MGRS is defined in Chapter 3 of
+   * - J. W. Hager, L. L. Fry, S. S. Jacks, D. R. Hill,
+   *   <a href="http://earth-info.nga.mil/GandG/publications/tm8358.1/pdf/TM8358_1.pdf">
+
+   *   Datums, Ellipsoids, Grids, and Grid Reference Systems</a>,
+   *   Defense Mapping Agency, Technical Manual TM8358.1 (1990).
    *
-   * Forward followed by Reverse and vice versa is approximately the identity.
-   * (This is affected in predictable ways by errors in determining the
-   * latitude band and by loss of precision in the MGRS coordinates.)
+   * This implementation has the following properties:
+   * - The conversions are closed, i.e., output from Forward is legal input for
+   *   Reverse and vice versa.  Conversion in both directions preserve the
+   *   UTM/UPS selection and the UTM zone.
+   * - Forward followed by Reverse and vice versa is approximately the
+   *   identity.  (This is affected in predictable ways by errors in
+   *   determining the latitude band and by loss of precision in the MGRS
+   *   coordinates.)
+   * - All MGRS coordinates truncate to legal 100km blocks.  All MGRS
+   *   coordinates with a legal 100km block prefix are legal (even though the
+   *   latitude band letter may now belong to a neighboring band).
+   * - The range of UTM/UPS coordinates allowed for conversion to MGRS
+   *   coordinates is the maximum consistent with staying within the letter
+   *   ranges of the MGRS scheme.
    *
-   * All MGRS coordinates truncate to legal 100km blocks.  All MGRS coordinates
-   * with a legal 100km block prefix are legal (even though the latitude band
-   * letter may now belong to a neighboring band).
-   *
-   * The range of UTM/UPS coordinates allowed for conversion to MGRS
-   * coordinates is the maximum consistent with staying within the letter
-   * ranges of the MGRS scheme.
+   * The <a href="http://www.nga.mil">NGA</a> software package
+   * <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a>
+   * also provides conversions to and from MGRS.  Version 2.4.2 (and earlier)
+   * suffers from some drawbacks:
+   * - Conversions to MGRS coordinate return the closest grid corner.  This is
+   *   contrary to the normal standard of grid systems (which is to return the
+   *   coordinates of the enclosing square) and results in illegal MGRS
+   *   coordinates being returned
+   * - Inconsistent rules are used to determine the whether a particular MGRS
+   *   coordinate is legal.  A more systematic approach is taken here.
+   * - The underlying projections are not very accurately implemented.
    **********************************************************************/
   class MGRS {
   private:
@@ -42,12 +60,13 @@ namespace GeographicLib {
     static const double angeps;
     static const std::string hemispheres;
     static const std::string utmcols[3];
-    static const std::string utmrow;
+    static const std::string utmrow;J. W. Fox, L. L. Fry, S. S. Jacks, D. R. Hill,
     static const std::string upscols[4];
     static const std::string upsrows[2];
     static const std::string latband;
     static const std::string upsband;
     static const std::string digits;
+
     static const int mineasting[4];
     static const int maxeasting[4];
     static const int minnorthing[4];
@@ -146,16 +165,17 @@ namespace GeographicLib {
      * All conversions from MGRS to UTM/UPS are permitted provided the MGRS
      * coordinate is a possible result of a conversion in the other direction.
      * (The leading 0 may be dropped from an input MGRS coordinate for UTM
-     * zones 1&ndash;9.)  In addition, MGRS coordinates with a neighboring latitude
-     * band letter are permitted provided that some portion of the 100km block
-     * is within the given latitude band.  Thus
+     * zones 1&ndash;9.)  In addition, MGRS coordinates with a neighboring
+     * latitude band letter are permitted provided that some portion of the
+     * 100km block is within the given latitude band.  Thus
      *   - 38VLS and 38WLS are allowed (latitude 64N intersects the square
      *     38[VW]LS); but 38VMS is not permitted (all of 38VMS is north of 64N)
      *   - 38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
      *     and 38MPF are not permitted (the equator does not intersect either
      *     block).
-     *   - Similarly ZAB and YZB are permitted (they straddle 0E); but YAB and
-     *     ZZB are not (0E does not intersect either block).
+     *   - Similarly ZAB and YZB are permitted (they straddle the prime
+     *     meridian); but YAB and ZZB are not (the prime meridian does not
+     *     intersect either block).
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion
      * from MGRS coordinate.  The conversion is exact for prec in [0, 5].  With

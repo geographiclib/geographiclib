@@ -70,7 +70,9 @@ The goals of GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
    about 5 nm.  Even though in many geographic applications 1 cm is
    considered "accurate enough", there is little penalty in providing
-   much better accuracy.
+   much better accuracy.  If situations where a faster approximate
+   algorithm is necessary, GeographicLib offers an accurate benchmark to
+   guide the development.
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
    GeographicLib::ECEF.Reverse will return accurate geodetic coordinates
