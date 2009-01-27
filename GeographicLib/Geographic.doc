@@ -115,7 +115,7 @@ The following steps will get you started with GeographicLib:
  - Download the <a
    href="http://charles.karney.info/geographic/Geographic.tgz">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpz Geographic.tgz
+   - tar xfpvz Geographic.tgz
    .
    This will create a GeographicLib directory.
  - Change to the GeographicLib directory
