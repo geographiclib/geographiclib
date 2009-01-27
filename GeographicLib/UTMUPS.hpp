@@ -17,13 +17,24 @@ namespace GeographicLib {
   /**
    * \brief Convert between Geographic coordinates and UTM/UPS
    *
-   * Properties
+   * UTM and UPS are defined
+   * - <a href="http://earth-info.nga.mil/GandG/publications/tm8358.2/TM8358_2.pdf">
+   *   The Universal Grids: Universal Transverse Mercator (UTM) and Universal
+   *   Polar Stereographic (UPS)</a>, Defense Mapping Agency, Technical Manual
+   *   TM8358.2 (1989).
+   * .
+   * Section 2-3 defines UTM and section 3-2.4 defines UPS.  This document also
+   * includes approximate algorithms for the computation of the underlying
+   * transverse Mercator and polar stereographic projections.  Here we
+   * substitute much more accurate algorithms given by
+   * GeographicLib:TransverseMercator and GeographicLib:PolarStereographic.
    *
-   * The conversions are closed, i.e., output from Forward is legal input for
-   * Reverse and vice versa.  The error is about 5nm in each direction.
-   * However, the conversion from legal UTM/UPS coordinates to geographic
-   * coordinates and back might throw an error if the initial point is within
-   * 5nm of the edge of the allowed range for the UTM/UPS coordinates.
+   * In this implementation, the conversions are closed, i.e., output from
+   * Forward is legal input for Reverse and vice versa.  The error is about 5nm
+   * in each direction.  However, the conversion from legal UTM/UPS coordinates
+   * to geographic coordinates and back might throw an error if the initial
+   * point is within 5nm of the edge of the allowed range for the UTM/UPS
+   * coordinates.
    *
    * The simplest way to guarantee the closed property is to define allowed
    * ranges for the eastings and northings for UTM and UPS coordinates.  The
@@ -35,6 +46,13 @@ namespace GeographicLib {
    * coordinates these ranges have been extended by 100km in order to provide a
    * generous overlap between UTM and UPS and between UTM zones.
    *
+   * The <a href="http://www.nga.mil">NGA</a> software package
+   * <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a>
+   * also provides conversions to and from UTM and UPS.  Version 2.4.2 (and
+   * earlier) suffers from some drawbacks:
+   * - Inconsistent rules are used to determine the whether a particular UTM or
+   *   UPS coordinate is legal.  A more systematic approach is taken here.
+   * - The underlying projections are not very accurately implemented.
    **********************************************************************/
   class UTMUPS {
   private:

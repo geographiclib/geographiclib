@@ -36,10 +36,10 @@ namespace GeographicLib {
    *   B. C. Carlson
    *   Computation of elliptic integrals
    *   Numerical Algorithms 10, 13-26 (1995)
-   *
    */
 
   double EllipticFunction::RF(double x, double y, double z) {
+    // Carlson, eqs 2.2 - 2.7
     double
       a0 = (x + y + z)/3,
       an = a0,
@@ -68,6 +68,7 @@ namespace GeographicLib {
 
 
   double EllipticFunction::RD(double x, double y, double z) {
+    // Carlson, eqs 2.28 - 2.34
     double
       a0 = (x + y + 3 * z)/5,
       an = a0,
@@ -103,6 +104,7 @@ namespace GeographicLib {
   }
 
   double EllipticFunction::RG0(double x, double y) {
+    // Carlson, eqs 2.36 - 2.39
     double
       x0 = sqrt(x),
       y0 = sqrt(y),
@@ -142,17 +144,17 @@ namespace GeographicLib {
   }
 
   /*
-   *
    * Implementation of methods given in
    *
-   *   Roland Bulirsch
+   *   R. Bulirsch
    *   Numerical Calculation of Elliptic Integrals and Elliptic Functions
    *   Numericshe Mathematik 7, 78-90 (1965)
-   *
    */
 
   void EllipticFunction::sncndn(double x,
 				double& sn, double& cn, double& dn) const {
+    // Bulirsch's sncndn routine, p 89.
+    //
     // Assume _m1 is in [0, 1].  See Bulirsch article for code to treat
     // negative _m1.
     if (_m1 != 0) {
