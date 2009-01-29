@@ -87,12 +87,13 @@ The goals of GeographicLib are:
    UTM/UPS to MGRS coordinates.
  - Detailed internal documentation on the algorithms.  For the most part
    GeographicLib uses published algorithms and references are given.  If
-   changes are made (usually to improve the numerical accuracy), these
-   are described in the code.
+   changes have been made (usually to improve the numerical accuracy),
+   these are described in the code.
 
 Various \ref utilities are provided with the library.  These illustrate
-the use of the library and are useful in their own right.  These compile
-with g++ 4.3 under Linux and with MS Visual Studio 2005
+the use of the library and are useful in their own right.  This library
+and the utilities have been tested with g++ 4.3 under Linux and with MS
+Visual Studio 2005
 
 The section \ref transversemercator documents various properties of this
 projection.
