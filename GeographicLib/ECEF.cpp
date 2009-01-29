@@ -93,7 +93,6 @@
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
-#include <iostream>
 
 namespace {
   char RCSID[] = "$Id$";
@@ -209,44 +208,6 @@ namespace GeographicLib {
     lat = phi / Constants::degree;
     // Negative signs return lon in [-180, 180)
     lon = (rad != 0 ? -atan2(-y, x) : 0) / Constants::degree;
-  }
-
-  void ECEF::ReverseFukushima(double x, double y, double z,
-			      double& lat, double& lon, double& h) const {
-    double
-      p = hypot(x, y),
-      zp = _ep * z,
-      u = 2 * (zp - _c),
-      v = 2 * (zp + _c),
-      tm = - u / (2 * p);
-    double t;
-    if (tm <= 0)		// u >= 0
-      t = 2 * (2 * p + u)/(4 * p + 3 * u + v);
-    else if (tm >= 1)		// -u >= 2 * p
-      t = p / v;
-    else {
-      if (tm * (sq(tm) * (p * tm + u) + v) - p >= 0)
-	t = p / v;
-      else
-	t = 2 * (2 * p + u)/(4 * p + 3 * u + v);
-    }
-    double t2 = t * t;
-    for (int i = 0; i < _numit; ++i) {
-      double dt = -  (t * (t2 * (p * t + u) + v) - p)/
-	(t2 *(4 * p * t + 3 * u) + v);
-      t += dt;
-      t2 = t * t;
-      // std::cerr << t << " " << abs(dt) << "\n";
-      if (abs(dt) < _tol) {
-	// std::cerr << ++i << "\n";
-	break;
-      }
-    }
-    lat = atan2(1 - t2, 2 * _ep * t) / Constants::degree;
-    h = (2 * p * _ep * t + z * (1 - t2) - _a * _ep * (1 + t2)) /
-      sqrt( sq(1 + t2) - 4 * _e2 * t2);
-    // Negative signs return lon in [-180, 180)
-    lon = (p != 0 ? -atan2(-y, x) : 0) / Constants::degree;
   }
 
 } // namespace GeographicLib

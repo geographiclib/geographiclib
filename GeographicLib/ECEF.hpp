@@ -82,9 +82,6 @@ namespace GeographicLib {
     void Reverse(double x, double y, double z,
 		 double& lat, double& lon, double& h) const;
 
-    void ReverseFukushima(double x, double y, double z,
-		 double& lat, double& lon, double& h) const;
-
     /**
      * A global instantiation of ECEF with the parameters for the WGS84
      * ellipsoid.

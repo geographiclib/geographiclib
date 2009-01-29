@@ -44,14 +44,11 @@ If -r is given the reverse transformation is performed.\n\
 
 int main(int argc, char* argv[]) {
   bool localcartesian = false, reverse = false;
-  bool fuk = false;
   double latlon0[2] = {0, 0};
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-r")
       reverse = true;
-    else if (arg == "-f")
-      fuk = true;
     else if (arg == "-l") {
       localcartesian = true;
       for (unsigned i = 0; i < 2; ++i) {
@@ -78,12 +75,8 @@ int main(int argc, char* argv[]) {
     if (reverse) {
       if (localcartesian)
 	lc.Reverse(x, y, z, lat, lon, h);
-      else {
-	if (fuk)
-	  ec.ReverseFukushima(x, y, z, lat, lon, h);
-	else
-	  ec.Reverse(x, y, z, lat, lon, h);
-      }
+      else
+	ec.Reverse(x, y, z, lat, lon, h);
       std::cout << lat << " " << lon << " " << h << "\n";
     } else {
       if (localcartesian)

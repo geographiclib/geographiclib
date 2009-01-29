@@ -1042,6 +1042,10 @@ g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp
 TransverseMercatorExact.cpp Constants.cpp EllipticFunction.cpp
 TransverseMercator.cpp
 
+Note that, unlike \ref geoconvert, TransverseMercatorTest has no
+facility for dealing with angles in degrees, minutes, and seconds, and
+no ability to change the precision of the output.
+
 Here is the usage (obtained from "TranverseMercatorTest -h")
 \verbatim
 TransverseMercatorTest [-r] [-t|-s]
@@ -1095,6 +1099,10 @@ Compile with "make ECEFConvert" or with
 
 g++ -g -O3 -I.. -o ECEFConvert ECEFConvert.cpp ECEF.cpp
 LocalCartesian.cpp Constants.cpp
+
+Note that, unlike \ref geoconvert, ECEFConvert has no
+facility for dealing with angles in degrees, minutes, and seconds, and
+no ability to change the precision of the output.
 
 Here is the usage (obtained from "ECEFConvert -h")
 \verbatim
