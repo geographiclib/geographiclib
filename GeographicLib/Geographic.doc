@@ -25,8 +25,12 @@ of the transverse Mercator projection are described.
 
 \section download Download
 
-The code is available for download at
-http://charles.karney.info/geographic/Geographic.tgz
+The code is available for download at either of
+- http://charles.karney.info/geographic/Geographic.tgz
+- http://charles.karney.info/geographic/Geographic.zip
+.
+(The two archives have identical contents; however, the text files in
+the zip achive have Windows-style line endings.)
 
 It is licensed under the LGPL.  For more information, see
 http://charles.karney.info/geographic/
