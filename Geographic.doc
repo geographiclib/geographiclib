@@ -12,7 +12,7 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 2009-02
-\date 2009-02-xx
+\date 2009-01-30
 
 \section abstract Abstract
 
@@ -226,8 +226,8 @@ test programs do not.
 The low level projection classes, TransverseMercator and
 PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
 GeoCoords all check their arguments and throw std::out_of_range
-exceptions with a explanatory message.  See GeoConvert for an example of
-how exceptions can be handled.
+exceptions with a explanatory message.  See GeoConvert.cpp for an
+example of how exceptions can be handled.
 
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
@@ -1160,7 +1160,7 @@ list of changes.
       - Improved method of computing scale and convergence
     - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
 
- -  <a href="http://charles.karney.info/geographic-2008/00README.txt">2008-09</a>
+ - 2008-09
     - Ad hoc posting of information on the transverse Mercator
       projection
 
