@@ -1,6 +1,6 @@
 /**
  * \file PolarStereographic.hpp
- * \brief Header for GeographicLib::Polarstereographic class
+ * \brief Header for GeographicLib::PolarStereographic class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.

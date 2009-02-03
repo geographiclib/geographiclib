@@ -22,13 +22,13 @@
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: ECEFConvert [-r] [-l lat0 lon0] [-h]\n\
+"Usage: ECEFConvert [-r] [-l lat0 lon0 h0] [-h]\n\
 $Id$\n\
 \n\
 Convert geodetic coordinates to either earth centered earth fixed (ECEF) or\n\
 local cartesian coordinates.  By default conversion is to ECEF coordinates.\n\
-Specifying -l lat0 lon0 causes a local coordinate system to be used with\n\
-the origin at latitude = lat0, longitude = lon0, height = 0, z normal to\n\
+Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with\n\
+the origin at latitude = lat0, longitude = lon0, height = h0, z normal to\n\
 the ellipsoid and y due north.\n\
 \n\
 Geodetic coordinates are provided on standard input as a set of lines\n\
@@ -44,23 +44,23 @@ If -r is given the reverse transformation is performed.\n\
 
 int main(int argc, char* argv[]) {
   bool localcartesian = false, reverse = false;
-  double latlon0[2] = {0, 0};
+  double latlonh0[3] = {0, 0, 0};
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-r")
       reverse = true;
     else if (arg == "-l") {
       localcartesian = true;
-      for (unsigned i = 0; i < 2; ++i) {
+      for (unsigned i = 0; i < 3; ++i) {
 	if (++m == argc) return usage(1);
 	std::string a = std::string(argv[m]);
 	std::istringstream str(a);
-	if (!(str >> latlon0[i])) return usage(1);
+	if (!(str >> latlonh0[i])) return usage(1);
       }
     } else
       return usage(arg != "-h");
   }
-  const GeographicLib::LocalCartesian lc(latlon0[0], latlon0[1]);
+  const GeographicLib::LocalCartesian lc(latlonh0[0], latlonh0[1], latlonh0[2]);
   const GeographicLib::ECEF& ec = GeographicLib::ECEF::WGS84;
 
   std::cout << std::setprecision(16);
