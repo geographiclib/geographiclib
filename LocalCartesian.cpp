@@ -20,10 +20,11 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void LocalCartesian::Reset(double lat0, double lon0) {
+  void LocalCartesian::Reset(double lat0, double lon0, double h0) {
     _lat0 = lat0;
     _lon0 = lon0;
-    ECEF::WGS84.Forward(lat0, lon0, 0.0, _x0, _y0, _z0);
+    _h0 = h0;
+    ECEF::WGS84.Forward(lat0, lon0, h0, _x0, _y0, _z0);
     double
       phi = lat0 * Constants::degree,
       sphi = sin(phi),

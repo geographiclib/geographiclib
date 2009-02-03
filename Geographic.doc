@@ -16,12 +16,12 @@
 
 \section abstract Abstract
 
-GeographicLib is a small set of C++ classes to perform conversions
-between geographic, UTM, UPS, MGRS, ECEF, and local cartesian
-coordinates.  In this application, the errors are close to round-off
-(about 5 nm).  It is specialized for use with the WGS84 but can be
-adapted for use with other ellipsoids.  In addition, various properties
-of the transverse Mercator projection are described.
+%GeographicLib is a small set of <a href="annotated.html">C++ classes</a>
+to perform conversions between geographic, UTM, UPS, MGRS, ECEF, and
+local cartesian coordinates.  In this application, the errors are close
+to round-off (about 5 nm).  It is specialized for use with the WGS84 but
+can be adapted for use with other ellipsoids.  In addition, various
+properties of the \ref transversemercator are described.
 
 \section download Download
 
@@ -63,19 +63,19 @@ Forward to \ref intro.
 Forward to \ref organization.  Up to \ref contents.
 </center>
 
-GeographicLib offers a C++ interfaces to a small (but important!) set of
+%GeographicLib offers a C++ interfaces to a small (but important!) set of
 geographic transformations.  It grew out of a desire to improve on the
 <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
-present, GeographicLib provides UTM, UPS, MGRS, ECEF, and local
+present, %GeographicLib provides UTM, UPS, MGRS, ECEF, and local
 cartesian projections.
 
-The goals of GeographicLib are:
+The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
    about 5 nm.  Even though in many geographic applications 1 cm is
    considered "accurate enough", there is little penalty in providing
    much better accuracy.  If situations where a faster approximate
-   algorithm is necessary, GeographicLib offers an accurate benchmark to
+   algorithm is necessary, %GeographicLib offers an accurate benchmark to
    guide the development.
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
@@ -116,15 +116,15 @@ Forward to \ref start.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 </center>
 
-The following steps will get you started with GeographicLib:
+The following steps will get you started with %GeographicLib:
  - Download the <a
    href="http://charles.karney.info/geographic/Geographic.tgz">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
    - tar xfpvz Geographic.tgz
    .
-   This will create a GeographicLib directory.
- - Change to the GeographicLib directory
-   - cd GeographicLib
+   This will create a %GeographicLib directory.
+ - Change to the %GeographicLib directory
+   - cd %GeographicLib
  - Create the utility programs and (optionally) the documentation
    - make all doc
  - GeographicLib.sln is MS Visual Studio 2005 solution file which
@@ -164,7 +164,7 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
 
 Here is a brief description of the relationship between the various
-components of GeographicLib.
+components of %GeographicLib.
 
 GeographicLib::TransverseMercator and GeographicLib::PolarStereographic
 provide the basic projections.  The constructors for these classes
@@ -221,7 +221,7 @@ internally by the library.
 
 In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the
-GeographicLib/ directory prefix.  If compiling within the GeographicLib
+GeographicLib/ directory prefix.  If compiling within the %GeographicLib
 directory, ".." should be included in the header search path (e.g.,
 with -I..).  The cpp files implementing the classes include "using
 namespace std;", however, for portability, the headers files and the
@@ -1095,8 +1095,8 @@ GeographicLib::LocalCartesian.
 Examples:
  - echo 33.3 44.4 6000 | ./ECEFConvert\n=>
    3816209.60 3737108.55 3485109.57
- - echo 33.3 44.4 6000 | ./ECEFConvert -l 33 44\n=>
-   37288.97 33374.29 5803.64
+ - echo 33.3 44.4 6000 | ./ECEFConvert -l 33 44 20\n=>
+   37288.97 33374.29 5783.64
  - echo 30000 30000 0 | ./ECEFConvert -r\n=>
    6.483 45 -6335709.73
 
@@ -1111,12 +1111,12 @@ no ability to change the precision of the output.
 
 Here is the usage (obtained from "ECEFConvert -h")
 \verbatim
-Usage: ECEFConvert [-r] [-l lat0 lon0] [-h]
+Usage: ECEFConvert [-r] [-l lat0 lon0 h0] [-h]
 
 Convert geodetic coordinates to either earth centered earth fixed (ECEF) or
 local cartesian coordinates.  By default conversion is to ECEF coordinates.
-Specifying -l lat0 lon0 causes a local coordinate system to be used with
-the origin at latitude = lat0, longitude = lon0, height = 0, z normal to
+Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with
+the origin at latitude = lat0, longitude = lon0, height = h0, z normal to
 the ellipsoid and y due north.
 
 Geodetic coordinates are provided on standard input as a set of lines

@@ -18,8 +18,8 @@ namespace GeographicLib {
    * lon, height = \e h (measured vertically from the surface of the ellipsoid)
    * to local cartesian coordinates (\e x, \e y, \e z).  The origin of local
    * cartesian coordinate system is at \e lat = \e lat0, \e lon = \e lon0, \e h
-   * = 0. The \e z axis is normal to the ellipsoid; the \e y axis points due
-   * north.
+   * = \e h0. The \e z axis is normal to the ellipsoid; the \e y axis points due
+   * north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
    *
    * The conversions all take place via ECEF coordinates using
    * GeographicLib::ECEF::WGS84.  (As presently written, there's no provision
@@ -28,7 +28,7 @@ namespace GeographicLib {
 
   class LocalCartesian {
   private:
-    double _lat0, _lon0;
+    double _lat0, _lon0, _h0;
     double _x0, _y0, _z0,
       _rxx, _rxy, _rxz,
       _ryx, _ryy, _ryz,
@@ -36,19 +36,21 @@ namespace GeographicLib {
   public:
     /**
      * Constructor setting the origin to latitude = \e lat0, longitude = \e
-     * lon0 (degrees).
+     * lon0 (degrees), height = \e h0 (meters)
      **********************************************************************/
-    LocalCartesian(double lat0, double lon0) {
-      Reset(lat0, lon0);
+    LocalCartesian(double lat0, double lon0, double h0 = 0) {
+      Reset(lat0, lon0, h0);
     }
     /**
-     * Default constructor sets the origin to \e lat0 = 0, \e lon0 = 0.
+     * Default constructor sets the origin to \e lat0 = 0, \e lon0 = 0, \e h0 =
+     * 0.
      **********************************************************************/
-    LocalCartesian() { Reset(0.0, 0.0); }
+    LocalCartesian() { Reset(0.0, 0.0, 0.0); }
     /**
-     * Change the origin to latitude = \e lat0, longitude = \e lon0 (degrees).
+     * Change the origin to latitude = \e lat0, longitude = \e lon0 (degrees),
+     * height = \e h0 (meters).
      **********************************************************************/
-    void Reset(double lat0, double lon0);
+    void Reset(double lat0, double lon0, double h0 = 0);
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
      * (meters) to local cartesian \e x, \e y, \e z (meters).
@@ -69,6 +71,10 @@ namespace GeographicLib {
      * Return the longitude of the origin (degrees).
      **********************************************************************/
     double LongitudeOrigin() const { return _lon0; }
+    /**
+     * Return the height of the origin (meters).
+     **********************************************************************/
+    double HeightOrigin() const { return _h0; }
   };
 
 } // namespace GeographicLib
