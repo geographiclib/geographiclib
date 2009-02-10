@@ -4,7 +4,7 @@ all: $(TARGET)
 
 CC = g++
 CPPFLAGS = -I..
-CXXFLAGS = -g -Wall -pedantic -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+CXXFLAGS = -g -Wall -O0 -funroll-loops -finline-functions -fomit-frame-pointer
 
 HEADERS = Constants.hpp DMS.hpp EllipticFunction.hpp GeoCoords.hpp MGRS.hpp \
 	PolarStereographic.hpp TransverseMercator.hpp \

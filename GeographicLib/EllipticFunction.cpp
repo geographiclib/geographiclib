@@ -38,7 +38,7 @@ namespace GeographicLib {
    *   Numerical Algorithms 10, 13-26 (1995)
    */
 
-  double EllipticFunction::RF(double x, double y, double z) {
+  double EllipticFunction::RF(double x, double y, double z) throw() {
     // Carlson, eqs 2.2 - 2.7
     double
       a0 = (x + y + z)/3,
@@ -67,7 +67,7 @@ namespace GeographicLib {
   }
 
 
-  double EllipticFunction::RD(double x, double y, double z) {
+  double EllipticFunction::RD(double x, double y, double z) throw() {
     // Carlson, eqs 2.28 - 2.34
     double
       a0 = (x + y + 3 * z)/5,
@@ -103,7 +103,7 @@ namespace GeographicLib {
       + 3 * s;
   }
 
-  double EllipticFunction::RG0(double x, double y) {
+  double EllipticFunction::RG0(double x, double y) throw() {
     // Carlson, eqs 2.36 - 2.39
     double
       x0 = sqrt(x),
@@ -125,7 +125,7 @@ namespace GeographicLib {
     return  (x0 * x0 - s) * Constants::pi / (2 * (xn + yn));
   }
 
-  EllipticFunction::EllipticFunction(double m)
+  EllipticFunction::EllipticFunction(double m) throw()
     : _m(m)
     , _m1(1 - m)
       // Don't initialize _kc, _ec, _kec since this constructor might be called
@@ -133,7 +133,7 @@ namespace GeographicLib {
     , _init(false)
   {}
 
-  bool EllipticFunction::Init() const {
+  bool EllipticFunction::Init() const throw() {
     // Complete elliptic integral K(m), Carlson eq. 4.1
     _kc = RF(0.0, _m1, 1.0);
     // Complete elliptic integral E(m), Carlson eq. 4.2
@@ -152,7 +152,8 @@ namespace GeographicLib {
    */
 
   void EllipticFunction::sncndn(double x,
-				double& sn, double& cn, double& dn) const {
+				double& sn, double& cn, double& dn)
+    const throw() {
     // Bulirsch's sncndn routine, p 89.
     //
     // Assume _m1 is in [0, 1].  See Bulirsch article for code to treat
@@ -198,7 +199,7 @@ namespace GeographicLib {
     }
   }
 
-  double EllipticFunction::E(double sn, double cn, double dn) const {
+  double EllipticFunction::E(double sn, double cn, double dn) const throw() {
     double ei;
     if (abs(sn) > tolJAC1) {
       double

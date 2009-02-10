@@ -15,6 +15,7 @@
 #include <sstream>
 
 namespace GeographicLib {
+
   /**
    * \brief Convert between UTM/UPS and MGRS
    *
@@ -83,14 +84,42 @@ namespace GeographicLib {
       maxprec = 5 + 6
     };
     static void CheckCoords(bool utmp, bool& northp, double& x, double& y);
-    static int lookup(const std::string& s, char c) {
+    static int lookup(const std::string& s, char c) throw() {
       std::string::size_type r = s.find(toupper(c));
       return r == std::string::npos ? -1 : int(r);
     }
     template<typename T> static std::string str(T x) {
       std::ostringstream s; s << x; return s.str();
     }
-    static int UTMRow(int iband, int icol, int irow);
+    static int UTMRow(int iband, int icol, int irow) throw();
+
+  protected:
+    friend class UTMUPS;	// UTMUPS::StandardZone calls LatitudeBand
+    // Return latitude band number [-10, 10) for the give latitude (degrees).
+    // The bands are reckoned in include their southern edges.
+    static int LatitudeBand(double lat) throw() {
+      int ilat = int(std::floor(lat));
+      return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
+    }
+    // These are protected also so that UTMUPS can access them.
+    friend class GeoCoords;	// GeoCoords accesses utmNshift
+    enum {
+      tile = 100000,		// Size MGRS blocks
+      minutmcol = 1,
+      maxutmcol = 9,
+      minutmSrow = 10,
+      maxutmSrow = 100,		// Also used for UTM S false northing
+      minutmNrow = 0,		// Also used for UTM N false northing
+      maxutmNrow = 95,
+      minupsSind = 8,		// These 4 ind's apply to easting and northing
+      maxupsSind = 32,
+      minupsNind = 13,
+      maxupsNind = 27,
+      upseasting = 20,		// Also used for UPS false northing
+      utmeasting = 5,		// UTM false easting
+      // Difference between S hemisphere northing and N hemisphere northing
+      utmNshift = (maxutmSrow - minutmNrow) * tile
+    };
   public:
 
     /**
@@ -186,34 +215,6 @@ namespace GeographicLib {
 			int& zone, bool& northp, double& x, double& y,
 			int& prec, bool centerp = true);
 
-    /**
-     * Return the latitude band number [-10, 10) for the give latitude
-     * (degrees).  The bands are reckoned in include their southern edges.
-     * This is exact.  This is public because UTMUPS::StandardZone needs to use
-     * this.
-     **********************************************************************/
-    static int LatitudeBand(double lat) {
-      int ilat = int(std::floor(lat));
-      return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
-    }
-    // These are public also so that UTMUPS can access them.
-    enum {
-      tile = 100000,		// Size MGRS blocks
-      minutmcol = 1,
-      maxutmcol = 9,
-      minutmSrow = 10,
-      maxutmSrow = 100,		// Also used for UTM S false northing
-      minutmNrow = 0,		// Also used for UTM N false northing
-      maxutmNrow = 95,
-      minupsSind = 8,		// These 4 ind's apply to easting and northing
-      maxupsSind = 32,
-      minupsNind = 13,
-      maxupsNind = 27,
-      upseasting = 20,		// Also used for UPS false northing
-      utmeasting = 5,		// UTM false easting
-      // Difference between S hemisphere northing and N hemisphere northing
-      utmNshift = (maxutmSrow - minutmNrow) * tile
-    };
   };
 
 } // namespace GeographicLib

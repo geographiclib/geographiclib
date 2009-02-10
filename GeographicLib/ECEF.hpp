@@ -42,32 +42,36 @@ namespace GeographicLib {
 
   class ECEF {
   private:
-    const double _a, _f, _e2, _e12, _b, _maxrad;
-    const double _ep, _c, _tol;
-    const int _numit;
-    static inline double sq(double x) { return x * x; }
+    const double _a, _f, _e2, _e4, _e2m, _maxrad;
+    static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
-    static inline double hypot(double x, double y) { return _hypot(x, y); }
-    static inline double cbrt(double x) {
+    static inline double hypot(double x, double y) throw()
+    { return _hypot(x, y); }
+    static inline double cbrt(double x) throw() {
       double y = std::pow(std::abs(x), 1/3.0);
       return x < 0 ? -y : y;
     }
 #else
-    static inline double hypot(double x, double y) { return ::hypot(x, y); }
-    static inline double cbrt(double x) { return ::cbrt(x); }
+    static inline double hypot(double x, double y) throw()
+    { return ::hypot(x, y); }
+    static inline double cbrt(double x) throw() { return ::cbrt(x); }
 #endif
   public:
+
     /**
      * Constructor for a ellipsoid radius \e a (meters) and inverse flattening
-     * \e invf.
+     * \e invf.  Setting \e invf <= 0 implies \e invf = inf or flattening = 0
+     * (i.e., a sphere).
      **********************************************************************/
-    ECEF(double a, double invf);
+    ECEF(double a, double invf) throw();
+
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
      * (meters) to ECEF \e x, \e y, \e z (meters).
      **********************************************************************/
     void Forward(double lat, double lon, double h,
-		 double& x, double& y, double& z) const;
+		 double& x, double& y, double& z) const throw();
+
     /**
      * Convert from ECEF coordinates \e x, \e y, \e z (meters) to geodetic \e
      * lat, \e lon (degrees), \e h (meters).  In general there are multiple
@@ -80,7 +84,7 @@ namespace GeographicLib {
      * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).
      **********************************************************************/
     void Reverse(double x, double y, double z,
-		 double& lat, double& lon, double& h) const;
+		 double& lat, double& lon, double& h) const throw();
 
     /**
      * A global instantiation of ECEF with the parameters for the WGS84

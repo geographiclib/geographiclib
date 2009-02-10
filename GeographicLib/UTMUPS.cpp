@@ -45,7 +45,7 @@ namespace GeographicLib {
       (MGRS::maxutmSrow + MGRS::maxutmNrow - MGRS::minutmNrow) * MGRS::tile,
       MGRS::maxutmNrow * MGRS::tile };
 
-  int UTMUPS::StandardZone(double lat, double lon) {
+  int UTMUPS::StandardZone(double lat, double lon)  throw() {
     // Assume lon is in [-180, 360].
     int zone;
     int ilat = int(floor(lat));

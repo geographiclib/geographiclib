@@ -90,7 +90,7 @@ The goals of %GeographicLib are:
  - Well defined and stable conventions for the conversion between
    UTM/UPS to MGRS coordinates.
  - Detailed internal documentation on the algorithms.  For the most part
-   GeographicLib uses published algorithms and references are given.  If
+   %GeographicLib uses published algorithms and references are given.  If
    changes have been made (usually to improve the numerical accuracy),
    these are described in the code.
 

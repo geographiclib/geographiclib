@@ -19,6 +19,8 @@
 #include <sstream>
 #include "GeographicLib/ECEF.hpp"
 #include "GeographicLib/LocalCartesian.hpp"
+#include "GeographicLib/Constants.hpp"
+#include <errno.h>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -62,6 +64,7 @@ int main(int argc, char* argv[]) {
   }
   const GeographicLib::LocalCartesian lc(latlonh0[0], latlonh0[1], latlonh0[2]);
   const GeographicLib::ECEF& ec = GeographicLib::ECEF::WGS84;
+  // const GeographicLib::ECEF ec(GeographicLib::Constants::WGS84_a,0);
 
   std::cout << std::setprecision(16);
   while (true) {
@@ -77,6 +80,7 @@ int main(int argc, char* argv[]) {
 	lc.Reverse(x, y, z, lat, lon, h);
       else
 	ec.Reverse(x, y, z, lat, lon, h);
+      std::cout << errno << std::endl;
       std::cout << lat << " " << lon << " " << h << "\n";
     } else {
       if (localcartesian)
