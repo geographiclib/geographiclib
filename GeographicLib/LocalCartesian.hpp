@@ -9,7 +9,7 @@
 #if !defined(LOCALCARTESIAN_HPP)
 #define LOCALCARTESIAN_HPP "$Id$"
 
-#include "GeographicLib/ECEF.hpp"
+#include "GeographicLib/Geocentric.hpp"
 
 namespace GeographicLib {
 
@@ -23,14 +23,14 @@ namespace GeographicLib {
    * = \e h0. The \e z axis is normal to the ellipsoid; the \e y axis points due
    * north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
    *
-   * The conversions all take place via ECEF coordinates using
-   * GeographicLib::ECEF::WGS84.  (As presently written, there's no provision
-   * for changing the ellipsoid.)
+   * The conversions all take place via geocentric coordinates using a
+   * GeographicLib::GeoCentric object (by default
+   * GeographicLib::Geocentric::WGS84).
    **********************************************************************/
 
   class LocalCartesian {
   private:
-    const ECEF& _earth;
+    const Geocentric& _earth;
     double _lat0, _lon0, _h0;
     double _x0, _y0, _z0,
       _rxx, _rxy, _rxz,
@@ -40,18 +40,21 @@ namespace GeographicLib {
 
     /**
      * Constructor setting the origin to latitude = \e lat0, longitude = \e
-     * lon0 (degrees), height = \e h0 (meters)
+     * lon0 (degrees), height = \e h0 (meters).  The optional \e earth argument
+     * (default Geocentric::WGS84) specifies the Geocentric object to use for
+     * the transformation.
      **********************************************************************/
     LocalCartesian(double lat0, double lon0, double h0 = 0,
-		   const ECEF& earth = ECEF::WGS84) throw()
+		   const Geocentric& earth = Geocentric::WGS84) throw()
       : _earth(earth)
     { Reset(lat0, lon0, h0); }
 
     /**
      * Default constructor sets the origin to \e lat0 = 0, \e lon0 = 0, \e h0 =
-     * 0.
+     * 0.  The optional \e earth argument (default Geocentric::WGS84) specifies
+     * the Geocentric object to use for the transformation.
      **********************************************************************/
-    LocalCartesian(const ECEF& earth = ECEF::WGS84) throw()
+    LocalCartesian(const Geocentric& earth = Geocentric::WGS84) throw()
       : _earth(earth)
     { Reset(0.0, 0.0, 0.0); }
 
