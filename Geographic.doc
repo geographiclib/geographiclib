@@ -48,7 +48,7 @@ http://charles.karney.info/geographic/
  - \ref utilities
    - \ref geoconvert
    - \ref transversemercatortest
-   - \ref ecefconvert
+   - \ref cartconvert
  - \ref old
 
 <center>
@@ -132,7 +132,7 @@ The following steps will get you started with %GeographicLib:
  - Try out \ref geoconvert (for help, type ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
- - Similarly, try out \ref transversemercatortest and \ref ecefconvert.
+ - Similarly, try out \ref transversemercatortest and \ref cartconvert.
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
    on the library.
@@ -212,7 +212,7 @@ geodetic and ECEF or a local cartesian system.  The constructor for ECEF
 specifies the ellipsoid and the forward and reverse projections are
 implemented as const member functions.  GeographicLib::ECEF::WGS84 is a
 const static instantiation of ECEF specific for the WGS84 ellipsoid.
-\ref ecefconvert is a simple command line utility to provide access to
+\ref cartconvert is a simple command line utility to provide access to
 these classes.
 
 GeographicLib::Constants, GeographicLib::DMS, and
@@ -959,7 +959,8 @@ Convert geographic coordinates to
     -m MGRS
     -c meridian convergence and scale
 
-Geographic coordinates are given on standard input as:
+The WGS84 model of the earth is used.  Geographic coordinates are given on
+standard input as:
 
 Latitude and longitude (decimal degrees or degrees minutes seconds).  d,
 ', and " are used to denote degrees, minutes, and seconds, with the least
@@ -1086,38 +1087,40 @@ one).
 -h prints this help
 \endverbatim
 
-\section ecefconvert ECEFConvert
+\section cartconvert CartConvert
 
-ECEFConvert is a command line utility for geodetic to cartesian
+CartConvert is a command line utility for geodetic to cartesian
 coordinate conversions via GeographicLib::ECEF and
 GeographicLib::LocalCartesian.
 
 Examples:
- - echo 33.3 44.4 6000 | ./ECEFConvert\n=>
+ - echo 33.3 44.4 6000 | ./CartConvert\n=>
    3816209.60 3737108.55 3485109.57
- - echo 33.3 44.4 6000 | ./ECEFConvert -l 33 44 20\n=>
+ - echo 33.3 44.4 6000 | ./CartConvert -l 33 44 20\n=>
    37288.97 33374.29 5783.64
- - echo 30000 30000 0 | ./ECEFConvert -r\n=>
+ - echo 30000 30000 0 | ./CartConvert -r\n=>
    6.483 45 -6335709.73
 
-Compile with "make ECEFConvert" or with
+Compile with "make CartConvert" or with
 
-g++ -g -O3 -I.. -o ECEFConvert ECEFConvert.cpp ECEF.cpp
+g++ -g -O3 -I.. -o CartConvert CartConvert.cpp ECEF.cpp
 LocalCartesian.cpp Constants.cpp
 
-Note that, unlike \ref geoconvert, ECEFConvert has no
+Note that, unlike \ref geoconvert, CartConvert has no
 facility for dealing with angles in degrees, minutes, and seconds, and
 no ability to change the precision of the output.
 
-Here is the usage (obtained from "ECEFConvert -h")
+Here is the usage (obtained from "CartConvert -h")
 \verbatim
-Usage: ECEFConvert [-r] [-l lat0 lon0 h0] [-h]
+Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]
 
-Convert geodetic coordinates to either earth centered earth fixed (ECEF) or
-local cartesian coordinates.  By default conversion is to ECEF coordinates.
+Convert geodetic coordinates to either geocentric or local cartesian
+coordinates.  Geocentric coordinates have the origin at the center of the
+earth, with the z axis going thru the north pole, and the x axis thru lat =
+0, lon = 0.  By default, the conversion is to geocentric coordinates.
 Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with
 the origin at latitude = lat0, longitude = lon0, height = h0, z normal to
-the ellipsoid and y due north.
+the ellipsoid and y due north.  The WGS84 model of the earth is used.
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) latitude, longitude (decimal degrees), and
@@ -1149,7 +1152,7 @@ list of changes.
     flattening).
   - Use std versions of math functions.
   - Add GeographicLib::ECEF and GeographicLib::LocalCartesian classes
-    and \ref ecefconvert utility.
+    and \ref cartconvert utility.
   - Gather the documentation on the utility programs onto one page.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-01.tgz">2009-01</a>

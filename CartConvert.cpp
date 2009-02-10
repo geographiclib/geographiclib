@@ -1,5 +1,5 @@
 /**
- * \file ECEFConvert.cpp
+ * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
@@ -8,7 +8,7 @@
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o ECEFConvert ECEFConvert.cpp ECEF.cpp LocalCartesian.cpp Constants.cpp
+ *   g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp LocalCartesian.cpp Constants.cpp
  *
  * See \ref ecefconvert for usage information.
  **********************************************************************/
@@ -17,21 +17,23 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include "GeographicLib/ECEF.hpp"
+#include "GeographicLib/Geocentric.hpp"
 #include "GeographicLib/LocalCartesian.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <errno.h>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: ECEFConvert [-r] [-l lat0 lon0 h0] [-h]\n\
+"Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]\n\
 $Id$\n\
 \n\
-Convert geodetic coordinates to either earth centered earth fixed (ECEF) or\n\
-local cartesian coordinates.  By default conversion is to ECEF coordinates.\n\
+Convert geodetic coordinates to either geocentric or local cartesian\n\
+coordinates.  Geocentric coordinates have the origin at the center of the\n\
+earth, with the z axis going thru the north pole, and the x axis thru lat =\n\
+0, lon = 0.  By default, the conversion is to geocentric coordinates.\n\
 Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with\n\
 the origin at latitude = lat0, longitude = lon0, height = h0, z normal to\n\
-the ellipsoid and y due north.\n\
+the ellipsoid and y due north.  The WGS84 model of the earth is used.\n\
 \n\
 Geodetic coordinates are provided on standard input as a set of lines\n\
 containing (blank separated) latitude, longitude (decimal degrees), and\n\
@@ -63,8 +65,7 @@ int main(int argc, char* argv[]) {
       return usage(arg != "-h");
   }
   const GeographicLib::LocalCartesian lc(latlonh0[0], latlonh0[1], latlonh0[2]);
-  const GeographicLib::ECEF& ec = GeographicLib::ECEF::WGS84;
-  // const GeographicLib::ECEF ec(GeographicLib::Constants::WGS84_a,0);
+  const GeographicLib::Geocentric& ec = GeographicLib::Geocentric::WGS84;
 
   std::cout << std::setprecision(16);
   while (true) {

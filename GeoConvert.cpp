@@ -33,7 +33,8 @@ Convert geographic coordinates to\n\
     -m MGRS\n\
     -c meridian convergence and scale\n\
 \n\
-Geographic coordinates are given on standard input as:\n\
+The WGS84 model of the earth is used.  Geographic coordinates are given on\n\
+standard input as:\n\
 \n\
 Latitude and longitude (decimal degrees or degrees minutes seconds).  d,\n\
 \', and \" are used to denote degrees, minutes, and seconds, with the least\n\

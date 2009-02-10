@@ -1,6 +1,6 @@
 /**
- * \file ECEF.cpp
- * \brief Implementation for GeographicLib::ECEF class
+ * \file Geocentric.cpp
+ * \brief Implementation for GeographicLib::Geocentric class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -29,17 +29,18 @@
  *   this by writing \e k = (\e u + \e v)/(sqrt(\e u + \e v + \e w<sup>2</sup>)
  *   + \e w).
  *
- * The error is computed as follows.  Write a version of ECEF::WGS84.Forward
- * which uses long doubles (including using long doubles for the WGS84
- * parameters).  Generate random (long double) geodetic coordinates (\e lat0,
- * \e lon0, \e h0) and use the "long double" WGS84.Forward to obtain the
- * corresponding (long double) ECEF coordinates (\e x0, \e y0, \e z0).  [We
- * restrict \e h0 so that \e h0 >= - \e a (1 - \e e<sup>2</sup>) / sqrt(1 - \e
- * e<sup>2</sup> sin<sup>2</sup>\e lat0), which ensures that (\e lat0, \e lon0,
- * \e h0) is the principal geodetic inverse of (\e x0, \e y0, \e z0).]  Because
- * the forward calculation is numerically stable and because long doubles (on
- * Linux systems using g++) provide 11 bits additional accuracy (about 3.3
- * decimal digits), we regard this set of test data as exact.
+ * The error is computed as follows.  Write a version of
+ * Geocentric::WGS84.Forward which uses long doubles (including using long
+ * doubles for the WGS84 parameters).  Generate random (long double) geodetic
+ * coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
+ * WGS84.Forward to obtain the corresponding (long double) geocentric
+ * coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that \e h0 >= - \e
+ * a (1 - \e e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e
+ * lat0), which ensures that (\e lat0, \e lon0, \e h0) is the principal
+ * geodetic inverse of (\e x0, \e y0, \e z0).]  Because the forward calculation
+ * is numerically stable and because long doubles (on Linux systems using g++)
+ * provide 11 bits additional accuracy (about 3.3 decimal digits), we regard
+ * this set of test data as exact.
  *
  * Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
  * compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
@@ -52,8 +53,8 @@
  * 50 km of the center of the earth, because of errors in computing the
  * approximate geodetic latitude.  To illustrate the second issue, the maximum
  * value of \e err for \e h0 < 0 is about 80 mm.  The error is maximum close to
- * the circle given by ECEF coordinates satisfying hypot(\e x, \e y) = \e a \e
- * e<sup>2</sup> (= 42.7 km), \e z = 0.  (This is the center of meridional
+ * the circle given by geocentric coordinates satisfying hypot(\e x, \e y) = \e
+ * a \e e<sup>2</sup> (= 42.7 km), \e z = 0.  (This is the center of meridional
  * curvature for \e lat = 0.)  The geodetic latitude for these points is \e lat
  * = 0.  However, if we move 1 nm towards the center of the earth, the geodetic
  * latitude becomes 0.04", a distance of 1.4 m from the equator.  If, instead,
@@ -84,7 +85,7 @@
  * Another comparable method is T. Fukushima,
  * <a href="http://dx.doi.org/10.1007/s001900050271"> Fast transform from
  * geocentric to geodetic coordinates</a>, J. Geodesy 73, 603&ndash;610 (2003).
- * This is an iterative method and is somewhat faster than ECEF.Reverse.
+ * This is an iterative method and is somewhat faster than Geocentric.Reverse.
  * However, because of the choice of independent variable in Newton's
  * iteration, accuracy is lost for points near the equatorial plane.  As a
  * consequence, the maximum error \e err near the center of meridional
@@ -92,21 +93,21 @@
  * WGS84.Reverse).
  **********************************************************************/
 
-#include "GeographicLib/ECEF.hpp"
+#include "GeographicLib/Geocentric.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
 
 namespace {
   char RCSID[] = "$Id$";
-  char RCSID_H[] = ECEF_HPP;
+  char RCSID_H[] = GEOCENTRIC_HPP;
 }
 
 namespace GeographicLib {
 
   using namespace std;
 
-  ECEF::ECEF(double a, double invf)
+  Geocentric::Geocentric(double a, double invf)
     throw()
     : _a(a)
     , _f(invf > 0 ? 1 / invf : 0)
@@ -116,10 +117,10 @@ namespace GeographicLib {
     , _maxrad(2 * _a / numeric_limits<double>::epsilon())
   {}
 
-  const ECEF ECEF::WGS84(Constants::WGS84_a, Constants::WGS84_invf);
+  const Geocentric Geocentric::WGS84(Constants::WGS84_a, Constants::WGS84_invf);
 
-  void ECEF::Forward(double lat, double lon, double h,
-		     double& x, double& y, double& z) const throw() {
+  void Geocentric::Forward(double lat, double lon, double h,
+			   double& x, double& y, double& z) const throw() {
     double
       phi = lat * Constants::degree,
       lam = lon * Constants::degree,
@@ -131,8 +132,8 @@ namespace GeographicLib {
     x *= cos(lam);
   }
 
-  void ECEF::Reverse(double x, double y, double z,
-		     double& lat, double& lon, double& h) const throw() {
+  void Geocentric::Reverse(double x, double y, double z,
+			   double& lat, double& lon, double& h) const throw() {
     double rad = hypot(x, y);
     h = hypot(rad, z);		// Distance to center of earth
     double phi;
