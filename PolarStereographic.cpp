@@ -20,8 +20,9 @@ namespace GeographicLib {
   using namespace std;
 
   PolarStereographic::PolarStereographic(double a, double invf, double k0)
+    throw()
     : _a(a)
-    , _f(1 / invf)
+    , _f(invf > 0 ? 1 / invf : 0)
     , _k0(k0)
     , _e(sqrt(_f * (2 - _f)))
     , _e2m(1 - sq(_e))
@@ -36,7 +37,7 @@ namespace GeographicLib {
 
   void PolarStereographic::Forward(bool northp, double lat, double lon,
 				   double& x, double& y,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     double theta = 90 - (northp ? lat : -lat); //  the colatitude
     double rho;
     theta *= Constants::degree;
@@ -56,7 +57,7 @@ namespace GeographicLib {
 
   void PolarStereographic::Reverse(bool northp, double x, double y,
 				   double& lat, double& lon,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     double
       rho = hypot(x, y),
       t2 = rho * _c / (_a * _k0),

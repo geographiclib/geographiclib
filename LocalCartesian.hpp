@@ -9,6 +9,8 @@
 #if !defined(LOCALCARTESIAN_HPP)
 #define LOCALCARTESIAN_HPP "$Id$"
 
+#include "GeographicLib/ECEF.hpp"
+
 namespace GeographicLib {
 
   /**
@@ -28,53 +30,65 @@ namespace GeographicLib {
 
   class LocalCartesian {
   private:
+    const ECEF& _earth;
     double _lat0, _lon0, _h0;
     double _x0, _y0, _z0,
       _rxx, _rxy, _rxz,
       _ryx, _ryy, _ryz,
       _rzx, _rzy, _rzz;
   public:
+
     /**
      * Constructor setting the origin to latitude = \e lat0, longitude = \e
      * lon0 (degrees), height = \e h0 (meters)
      **********************************************************************/
-    LocalCartesian(double lat0, double lon0, double h0 = 0) {
-      Reset(lat0, lon0, h0);
-    }
+    LocalCartesian(double lat0, double lon0, double h0 = 0,
+		   const ECEF& earth = ECEF::WGS84) throw()
+      : _earth(earth)
+    { Reset(lat0, lon0, h0); }
+
     /**
      * Default constructor sets the origin to \e lat0 = 0, \e lon0 = 0, \e h0 =
      * 0.
      **********************************************************************/
-    LocalCartesian() { Reset(0.0, 0.0, 0.0); }
+    LocalCartesian(const ECEF& earth = ECEF::WGS84) throw()
+      : _earth(earth)
+    { Reset(0.0, 0.0, 0.0); }
+
     /**
      * Change the origin to latitude = \e lat0, longitude = \e lon0 (degrees),
      * height = \e h0 (meters).
      **********************************************************************/
-    void Reset(double lat0, double lon0, double h0 = 0);
+    void Reset(double lat0, double lon0, double h0 = 0) throw();
+
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
      * (meters) to local cartesian \e x, \e y, \e z (meters).
      **********************************************************************/
     void Forward(double lat, double lon, double h,
-		 double& x, double& y, double& z) const;
+		 double& x, double& y, double& z) const throw();
+
     /**
      * Convert from local cartesian \e x, \e y, \e z (meters) to geodetic
      * coordinates \e lat, \e lon (degrees), \e h (meters).
      **********************************************************************/
     void Reverse(double x, double y, double z,
-		 double& lat, double& lon, double& h) const;
+		 double& lat, double& lon, double& h) const throw();
+
     /**
      * Return the latitude of the origin (degrees).
      **********************************************************************/
-    double LatitudeOrigin() const { return _lat0; }
+    double LatitudeOrigin() const throw() { return _lat0; }
+
     /**
      * Return the longitude of the origin (degrees).
      **********************************************************************/
-    double LongitudeOrigin() const { return _lon0; }
+    double LongitudeOrigin() const throw() { return _lon0; }
+
     /**
      * Return the height of the origin (meters).
      **********************************************************************/
-    double HeightOrigin() const { return _h0; }
+    double HeightOrigin() const throw() { return _h0; }
   };
 
 } // namespace GeographicLib

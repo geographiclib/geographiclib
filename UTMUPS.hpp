@@ -14,6 +14,7 @@
 #include <sstream>
 
 namespace GeographicLib {
+
   /**
    * \brief Convert between Geographic coordinates and UTM/UPS
    *
@@ -62,7 +63,7 @@ namespace GeographicLib {
     static const double maxeasting[4];
     static const double minnorthing[4];
     static const double maxnorthing[4];
-    static double CentralMeridian(int zone) { return 6 * zone - 183.0; }
+    static double CentralMeridian(int zone) throw() { return 6 * zone - 183.0; }
     template<typename T> static std::string str(T x) {
       std::ostringstream s; s << x; return s.str();
     }
@@ -81,7 +82,7 @@ namespace GeographicLib {
      * open on the upper.  Thus for UTM zone 38, latitude is in [-80, 84) and
      * longitude is in [42, 48).  This is exact.
      **********************************************************************/
-    static int StandardZone(double lat, double lon);
+    static int StandardZone(double lat, double lon) throw();
 
     /**
      * Convert geographic coordinates to UTM or UPS coordinate.  Given latitude

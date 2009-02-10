@@ -58,9 +58,10 @@ namespace GeographicLib {
     const double _a, _f, _k0, _mu, _mv, _e, _ep2;
     const bool _extendp;
     const EllipticFunction _Eu, _Ev;
-    static inline double sq(double x) { return x * x; }
+    static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
-    static inline double hypot(double x, double y) { return _hypot(x, y); }
+    static inline double hypot(double x, double y) throw()
+    { return _hypot(x, y); }
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.
     // For small arguments we would write
@@ -71,48 +72,50 @@ namespace GeographicLib {
     // The accuracy of asinh is also bad for large negative arguments.  This is
     // easy to fix in the definition of asinh.  Instead we call these functions
     // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) {
+    static inline double asinh(double x) throw() {
       return std::log(x + std::sqrt(1 + sq(x)));
     }
-    static inline double atanh(double x) {
+    static inline double atanh(double x) throw() {
       return std::log((1 + x)/(1 - x))/2;
     }
 #else
-    static inline double hypot(double x, double y) { return ::hypot(x, y); }
-    static inline double asinh(double x) { return ::asinh(x); }
-    static inline double atanh(double x) { return ::atanh(x); }
+    static inline double hypot(double x, double y) throw()
+    { return ::hypot(x, y); }
+    static inline double asinh(double x) throw() { return ::asinh(x); }
+    static inline double atanh(double x) throw() { return ::atanh(x); }
 #endif
-    double psi(double phi) const;
-    double psiinv(double psi) const;
+    double psi(double phi) const throw();
+    double psiinv(double psi) const throw();
 
     void zeta(double u, double snu, double cnu, double dnu,
 	      double v, double snv, double cnv, double dnv,
-	      double& psi, double& lam) const;
+	      double& psi, double& lam) const throw();
 
     void dwdzeta(double u, double snu, double cnu, double dnu,
 		 double v, double snv, double cnv, double dnv,
-		 double& du, double& dv) const;
+		 double& du, double& dv) const throw();
 
-    bool zetainv0(double psi, double lam, double& u, double& v) const;
-    void zetainv(double psi, double lam, double& u, double& v) const;
+    bool zetainv0(double psi, double lam, double& u, double& v) const throw();
+    void zetainv(double psi, double lam, double& u, double& v) const throw();
 
     void sigma(double u, double snu, double cnu, double dnu,
 	       double v, double snv, double cnv, double dnv,
-	       double& xi, double& eta) const;
+	       double& xi, double& eta) const throw();
 
     void dwdsigma(double u, double snu, double cnu, double dnu,
 		  double v, double snv, double cnv, double dnv,
-		  double& du, double& dv) const;
+		  double& du, double& dv) const throw();
 
-    bool sigmainv0(double xi, double eta, double& u, double& v) const;
-    void sigmainv(double xi, double eta, double& u, double& v) const;
+    bool sigmainv0(double xi, double eta, double& u, double& v) const throw();
+    void sigmainv(double xi, double eta, double& u, double& v) const throw();
 
     void Scale(double phi, double lam,
 	       double snu, double cnu, double dnu,
 	       double snv, double cnv, double dnv,
-	       double& gamma, double& k) const;
+	       double& gamma, double& k) const throw();
 
   public:
+
     /**
      * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
      * invf, and central scale factor \e k0.  The transverse Mercator
@@ -144,9 +147,16 @@ namespace GeographicLib {
      * .
      * See \ref extend for a full discussion of the treatment of the branch
      * cut.
+     *
+     * The method will work for all ellipsoids used in terrestial geodesy.  The
+     * method cannot be applied directly to the case of a sphere (\e invf =
+     * inf) because some the constants characterizing this method diverge in
+     * that limit.  However, GeographicLib::TransverseMercator treats the
+     * sphere exactly.
      **********************************************************************/
     TransverseMercatorExact(double a, double invf, double k0,
-			    bool extendp = false);
+			    bool extendp = false) throw();
+
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
      * transverse Mercator easting \e x (meters) and northing \e y (meters).
@@ -155,7 +165,9 @@ namespace GeographicLib {
      * No false easting or northing is added.
      **********************************************************************/
     void Forward(double lon0, double lat, double lon,
-		 double& x, double& y, double& gamma, double& k) const;
+		 double& x, double& y,
+		 double& gamma, double& k) const throw();
+
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
      * (meters) to latitude \e lat (degrees) and longitude \e lon (degrees) .
@@ -164,7 +176,9 @@ namespace GeographicLib {
      * No false easting or northing is added.
      **********************************************************************/
     void Reverse(double lon0, double x, double y,
-		 double& lat, double& lon, double& gamma, double& k) const;
+		 double& lat, double& lon,
+		 double& gamma, double& k) const throw();
+
     /**
      * A global instantiation of TransverseMercatorExact with the WGS84
      * ellipsoid and the UTM scale factor.  However, unlike UTM, no false

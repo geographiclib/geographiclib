@@ -55,13 +55,13 @@ namespace GeographicLib {
     0.1*sqrt(numeric_limits<double>::epsilon());
 
   TransverseMercator::TransverseMercator(double a, double invf, double k0)
+    throw()
     : _a(a)
-    , _f(1 / invf)
+    , _f(invf > 0 ? 1 / invf : 0)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(_e2))
     , _e2m(1 - _e2)
-    , _ep2(_e2 / _e2m)
     , _n(_f / (2 - _f))
   {
 #if TM_TX_MAXPOW <= 4
@@ -176,7 +176,7 @@ namespace GeographicLib {
 
   void TransverseMercator::Forward(double lon0, double lat, double lon,
 				   double& x, double& y,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
       lon -= lon0 - 360;
@@ -337,7 +337,7 @@ namespace GeographicLib {
 
   void TransverseMercator::Reverse(double lon0, double x, double y,
 				   double& lat, double& lon,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of q.
