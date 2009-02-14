@@ -14,6 +14,9 @@
 #include <string>
 #include <cstdlib>
 #include "GeographicLib/UTMUPS.hpp"
+#if defined(_MSC_VER)
+#include <float.h>		// For _finite
+#endif
 
 namespace GeographicLib {
 
@@ -61,9 +64,9 @@ namespace GeographicLib {
 		   int prec, std::string& utm) const;
     void FixHemisphere();
 #if defined(_MSC_VER)
-    static inline int isnan(double x) throw() { return 0; }
-    static inline int isinf(double x) throw() { return 0; }
+    static inline int isfinite(double x) throw() { return _finite(x); }
 #else
+    static inline int isfinite(double x) throw() { return std::isfinite(x); }
     static inline int isnan(double x) throw() { return std::isnan(x); }
     static inline int isinf(double x) throw() { return std::isinf(x); }
 #endif

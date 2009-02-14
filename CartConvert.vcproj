@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="ECEFConvert"
+	Name="CartConvert"
 	ProjectGUID="{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}"
-	RootNamespace="ECEFConvert"
+	RootNamespace="CartConvert"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -181,7 +181,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="ECEFConvert.cpp"
+				RelativePath="CartConvert.cpp"
 				>
 			</File>
 		</Filter>

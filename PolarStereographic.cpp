@@ -80,8 +80,8 @@ namespace GeographicLib {
 	break;
     }
     lat = (northp ? 1 : -1) * (90 - theta / Constants::degree);
-    // Result is in [-180, 180)
-    lon = rho == 0 ? 0 : -atan2( -x, northp ? -y : y ) / Constants::degree;
+    // Result is in [-180, 180).  Assume atan2(0,0) = 0.
+    lon = -atan2( -x, northp ? -y : y ) / Constants::degree;
     double m = sin(theta) / sqrt(1 - sq(ecos));
     k = m == 0 ? _k0 : rho / (_a * m);
     gamma = northp ? lon : -lon;
