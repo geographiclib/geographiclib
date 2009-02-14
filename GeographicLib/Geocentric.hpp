@@ -14,7 +14,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Geocentric coordinates
+   * \brief %Geocentric coordinates
    *
    * Convert between geodetic coordinates latitude = \e lat, longitude = \e
    * lon, height = \e h (measured vertically from the surface of the ellipsoid)

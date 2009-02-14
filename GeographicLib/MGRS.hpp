@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between UTM/UPS and MGRS
+   * \brief Convert between UTM/UPS and %MGRS
    *
    * MGRS is defined in Chapter 3 of
    * - J. W. Hager, L. L. Fry, S. S. Jacks, D. R. Hill,
