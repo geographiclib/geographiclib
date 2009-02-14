@@ -17,7 +17,7 @@
 \section abstract Abstract
 
 %GeographicLib is a small set of <a href="annotated.html">C++ classes</a>
-to perform conversions between geographic, UTM, UPS, MGRS, ECEF, and
+to perform conversions between geographic, UTM, UPS, MGRS, geocentric, and
 local cartesian coordinates.  In this application, the errors are close
 to round-off (about 5 nm).  It is specialized for use with the WGS84 but
 can be adapted for use with other ellipsoids.  In addition, various
@@ -67,7 +67,7 @@ Forward to \ref organization.  Up to \ref contents.
 geographic transformations.  It grew out of a desire to improve on the
 <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
-present, %GeographicLib provides UTM, UPS, MGRS, ECEF, and local
+present, %GeographicLib provides UTM, UPS, MGRS, geocentric, and local
 cartesian projections.
 
 The goals of %GeographicLib are:
@@ -79,7 +79,7 @@ The goals of %GeographicLib are:
    guide the development.
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
-   GeographicLib::ECEF.Reverse will return accurate geodetic coordinates
+   GeographicLib::Geocentric.Reverse will return accurate geodetic coordinates
    even for points close to the center of the earth.
  - C++ interface.  For the projection methods, this allows encapsulation
    of the ellipsoid parameters.
@@ -149,8 +149,6 @@ corresponding Wikipedia articles:
    UPS</a>, Universal Polar Stereographic coordinate system.
  - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
    MGRS</a>, Military Grid Reference System.
- - <a href="http://en.wikipedia.org/wiki/ECEF">
-   ECEF</a>, Earth-Centered, Earth-Fixed coordinate system.
 
 <center>
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
@@ -207,11 +205,11 @@ functions, for the projection as given by Lee.  \ref
 transversemercatortest is a simple command-line utility to test to the
 TransverseMercator and TransverseMercatorExact.
 
-GeographicLib::ECEF and GeographicLib::LocalCartesian convert between
-geodetic and ECEF or a local cartesian system.  The constructor for ECEF
+GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
+geodetic and geocentric or a local cartesian system.  The constructor for 
 specifies the ellipsoid and the forward and reverse projections are
-implemented as const member functions.  GeographicLib::ECEF::WGS84 is a
-const static instantiation of ECEF specific for the WGS84 ellipsoid.
+implemented as const member functions.  GeographicLib::Geocentric::WGS84 is a
+const static instantiation of Geocentric specific for the WGS84 ellipsoid.
 \ref cartconvert is a simple command line utility to provide access to
 these classes.
 
@@ -1090,7 +1088,7 @@ one).
 \section cartconvert CartConvert
 
 CartConvert is a command line utility for geodetic to cartesian
-coordinate conversions via GeographicLib::ECEF and
+coordinate conversions via GeographicLib::Geocentric and
 GeographicLib::LocalCartesian.
 
 Examples:
@@ -1103,7 +1101,7 @@ Examples:
 
 Compile with "make CartConvert" or with
 
-g++ -g -O3 -I.. -o CartConvert CartConvert.cpp ECEF.cpp
+g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp
 LocalCartesian.cpp Constants.cpp
 
 Note that, unlike \ref geoconvert, CartConvert has no

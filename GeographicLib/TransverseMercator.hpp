@@ -95,7 +95,8 @@ namespace GeographicLib {
      * transverse Mercator easting \e x (meters) and northing \e y (meters).
      * The central meridian of the transformation is \e lon0 (degrees).  Also
      * return the meridian convergence \e gamma (degrees) and the scale \e k.
-     * No false easting or northing is added.
+     * No false easting or northing is added. \e lat should be in the range
+     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
     void Forward(double lon0, double lat, double lon,
 		 double& x, double& y,
@@ -106,7 +107,8 @@ namespace GeographicLib {
      * (meters) to latitude \e lat (degrees) and longitude \e lon (degrees) .
      * The central meridian of the transformation is \e lon0 (degrees).  Also
      * return the meridian convergence \e gamma (degrees) and the scale \e k.
-     * No false easting or northing is added.
+     * No false easting or northing is added.  The value of \e lon returned is
+     * in the range [-180, 180).
      **********************************************************************/
     void Reverse(double lon0, double x, double y,
 		 double& lat, double& lon,

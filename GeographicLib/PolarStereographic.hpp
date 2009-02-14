@@ -52,6 +52,9 @@ namespace GeographicLib {
      * The projection is about the pole given by \e northp (false means south,
      * true means north).  Also return the meridian convergence \e gamma
      * (degrees) and the scale \e k.  No false easting or northing is added.
+     * \e lat should be in the range (-90, 90] for \e northp = true and in the
+     * range [-90, 90) for \e northp = false; \e lon should be in the range
+     * [-180, 360].
      **********************************************************************/
     void Forward(bool northp, double lat, double lon,
 		 double& x, double& y,
@@ -62,7 +65,8 @@ namespace GeographicLib {
      * (meters) to latitude \e lat (degrees) and longitude \e lon (degrees) .
      * The hemisphere is given by \e northp (false means south, true means
      * north).  Also return the meridian convergence \e gamma (degrees) and the
-     * scale \e k.  No false easting or northing is added.
+     * scale \e k.  No false easting or northing is added.  The value of \e lon
+     * returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(bool northp, double x, double y,
 		 double& lat, double& lon,

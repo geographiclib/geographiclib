@@ -183,7 +183,7 @@
 				>
 			</File>
 			<File
-				RelativePath="ECEF.cpp"
+				RelativePath="Geocentric.cpp"
 				>
 			</File>
 			<File
@@ -233,7 +233,7 @@
 				>
 			</File>
 			<File
-				RelativePath="ECEF.hpp"
+				RelativePath="Geocentric.hpp"
 				>
 			</File>
 			<File

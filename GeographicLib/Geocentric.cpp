@@ -214,8 +214,8 @@ namespace GeographicLib {
       }
     }
     lat = phi / Constants::degree;
-    // Negative signs return lon in [-180, 180)
-    lon = (rad != 0 ? -atan2(-y, x) : 0) / Constants::degree;
+    // Negative signs return lon in [-180, 180).  Assume atan2(0,0) = 0.
+    lon = -atan2(-y, x) / Constants::degree;
   }
 
 } // namespace GeographicLib

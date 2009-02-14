@@ -101,7 +101,7 @@ namespace GeographicLib {
 	const char* c = sa[coordind + i].c_str();
 	errno = 0;
 	double x = strtod(c, &q);
-	if (errno ==  ERANGE || isnan(x) || isinf(x))
+	if (errno ==  ERANGE || !isfinite(x))
 	  throw out_of_range("Number " + sa[coordind + i] + " out of range");
 	if (q - c != int(sa[coordind + i].size()))
 	  throw out_of_range(string("Extra text in UTM/UPS ") +
