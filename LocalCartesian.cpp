@@ -22,9 +22,9 @@ namespace GeographicLib {
 
   void LocalCartesian::Reset(double lat0, double lon0, double h0) throw() {
     _lat0 = lat0;
-    _lon0 = lon0;
+    _lon0 = lon0 >= 180 ? lon0 - 360 : lon0 < -180 ? lon0 + 360 : lon0;
     _h0 = h0;
-    _earth.Forward(lat0, lon0, h0, _x0, _y0, _z0);
+    _earth.Forward(_lat0, _lon0, _h0, _x0, _y0, _z0);
     double
       phi = lat0 * Constants::degree,
       sphi = sin(phi),

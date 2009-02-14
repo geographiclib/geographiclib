@@ -66,14 +66,17 @@ namespace GeographicLib {
 
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
-     * (meters) to local cartesian \e x, \e y, \e z (meters).
+     * (meters) to local cartesian coordinates \e x, \e y, \e z (meters).  \e
+     * lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
+     * the range [-180, 360].
      **********************************************************************/
     void Forward(double lat, double lon, double h,
 		 double& x, double& y, double& z) const throw();
 
     /**
      * Convert from local cartesian \e x, \e y, \e z (meters) to geodetic
-     * coordinates \e lat, \e lon (degrees), \e h (meters).
+     * coordinates \e lat, \e lon (degrees), \e h (meters).  The value of \e
+     * lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(double x, double y, double z,
 		 double& lat, double& lon, double& h) const throw();

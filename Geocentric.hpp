@@ -68,7 +68,9 @@ namespace GeographicLib {
 
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
-     * (meters) to geocentric \e x, \e y, \e z (meters).
+     * (meters) to geocentric coordinates \e x, \e y, \e z (meters).  \e lat
+     * should be in the range [-90, 90]; \e lon and \e lon0 should be in the
+     * range [-180, 360].
      **********************************************************************/
     void Forward(double lat, double lon, double h,
 		 double& x, double& y, double& z) const throw();
@@ -82,7 +84,8 @@ namespace GeographicLib {
      * is returned.  If there are still multiple solutions with different
      * longitudes (applies only if \e x = \e y = 0) then \e lon = 0 is
      * returned.  The value of \e h returned satisfies \e h >= - \e a (1 - \e
-     * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).
+     * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).  The
+     * value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(double x, double y, double z,
 		 double& lat, double& lon, double& h) const throw();
