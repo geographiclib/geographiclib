@@ -1130,6 +1130,39 @@ If -r is given the reverse transformation is performed.
 -h prints this help
 \endverbatim
 
+\section geod Geod
+
+Geod is a command line utility for geodetic to cartesian
+coordinate conversions via GeographicLib::Geocentric and
+GeographicLib::LocalCartesian.
+
+Examples:
+ - echo 33.3 44.4 6000 | ./Geod\n=>
+   3816209.60 3737108.55 3485109.57
+ - echo 33.3 44.4 6000 | ./Geod -l 33 44 20\n=>
+   37288.97 33374.29 5783.64
+ - echo 30000 30000 0 | ./Geod -r\n=>
+   6.483 45 -6335709.73
+
+Compile with "make Geod" or with
+
+g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp Constants.cpp
+
+Note that, unlike \ref geoconvert, Geod has no
+facility for dealing with angles in degrees, minutes, and seconds, and
+no ability to change the precision of the output.
+
+Here is the usage (obtained from "Geod -h")
+\verbatim
+Usage: Geod [-r] [-l lat0 lon0 h0] [-h]
+
+TODO
+
+If -r is given the reverse transformation is performed.
+
+-h prints this help
+\endverbatim
+
 <center>
 Back to \ref  transversemercator.  Forward to \ref old.  Up to \ref contents.
 </center>
