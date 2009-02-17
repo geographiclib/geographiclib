@@ -1,5 +1,5 @@
 # $Id$
-TARGET = GeoConvert TransverseMercatorTest CartConvert
+TARGET = GeoConvert TransverseMercatorTest CartConvert Geod
 all: $(TARGET)
 
 CC = g++
@@ -18,6 +18,7 @@ GeoConvert: GeoConvert.o GeoCoords.o MGRS.o UTMUPS.o DMS.o Constants.o \
 TransverseMercatorTest: TransverseMercatorTest.o TransverseMercatorExact.o \
 	Constants.o EllipticFunction.o TransverseMercator.o
 CartConvert: CartConvert.o Geocentric.o LocalCartesian.o Constants.o
+Geod: Geod.o Geodesic.o Constants.o
 
 Constants.o: Constants.hpp
 DMS.o: DMS.hpp
@@ -31,10 +32,12 @@ TransverseMercatorExact.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
 UTMUPS.o: UTMUPS.hpp MGRS.hpp PolarStereographic.hpp TransverseMercator.hpp
 Geocentric.o: Geocentric.hpp Constants.hpp
 LocalCartesian.o: LocalCartesian.hpp Geocentric.hpp Constants.hpp
-CartConvert.o: Geocentric.hpp LocalCartesian.hpp Constants.hpp
+CartConvert.o: Geocentric.hpp LocalCartesian.hpp
 GeoConvert.o: GeoCoords.hpp UTMUPS.hpp
 TransverseMercatorTest.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
 	TransverseMercator.hpp Constants.hpp
+Geod.o: Geodesic.hpp
+Geodesic.o: Geodesic.hpp Constants.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \

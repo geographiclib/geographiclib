@@ -19,8 +19,6 @@
 #include <sstream>
 #include "GeographicLib/Geocentric.hpp"
 #include "GeographicLib/LocalCartesian.hpp"
-#include "GeographicLib/Constants.hpp"
-#include <errno.h>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -74,14 +72,13 @@ int main(int argc, char* argv[]) {
       std::cin >> x >> y >> z;
     else
       std::cin >> lat >> lon >> h;
-    if ( !std::cin.good())
+    if (!std::cin.good())
       break;
     if (reverse) {
       if (localcartesian)
 	lc.Reverse(x, y, z, lat, lon, h);
       else
 	ec.Reverse(x, y, z, lat, lon, h);
-      std::cout << errno << std::endl;
       std::cout << lat << " " << lon << " " << h << "\n";
     } else {
       if (localcartesian)

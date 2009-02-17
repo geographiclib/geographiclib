@@ -70,6 +70,8 @@ namespace GeographicLib {
       }
       UTMUPS::Forward( _lat, _long,
 		       _zone, _northp, _easting, _northing, _gamma, _k);
+      if (_long >= 180)
+	_long -= 360;
     } else if (sa.size() == 3) {
       unsigned zoneind, coordind;
       if (sa[0].size() > 0 && isalpha(sa[0][sa[0].size() - 1])) {
