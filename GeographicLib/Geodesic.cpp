@@ -7,7 +7,7 @@
  *
  **********************************************************************/
 
-#define REVBEARING 1
+#define REVHEADING 1
 #define DEBUG 0
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/Constants.hpp"
@@ -58,12 +58,27 @@ namespace GeographicLib {
     return sin(2 * x) * y0;
   }
 
-  // s = b * q(u2) * ( sigma + t(sigma, u2) )
-  double Geodesic::sigmaScale(double u2) throw() {
+  double Geodesic::SinSeries(double sinx, double cosx,
+			     const double c[], int n) throw() {
+    // Evaluate y = sum(c[i - 1] * sin(2 * i * x), i, 1, n) using Clenshaw
+    // summation
+    double
+      ar = 2 * (sq(cosx) - sq(sinx)),	// cos(2 * x)
+      y0 = c[n - 1], y1 = 0;	// Accumulators for sum
+    for (int j = n; --j;) {	// j = n-1 .. 1
+      double y2 = y1;
+      y1 = y0;
+      y0  = ar * y1 - y2 + c[j - 1];
+    }
+    return 2 * sinx * cosx * y0; // sin(2 * x) * y0
+  }
+
+  // s = b * q(u2) * ( sig + t(sig, u2) )
+  double Geodesic::sigScale(double u2) throw() {
     return (u2*(u2*(u2*(u2*(u2*(u2*((3624192-2760615*u2)*u2-4967424)+7225344)-11468800)+20971520)-50331648)+268435456)+1073741824.)/1073741824.;
   }
 
-  void Geodesic::sigmaCoeffSet(double u2, double c[]) throw()  {
+  void Geodesic::sigCoeffSet(double u2, double c[]) throw()  {
     double t = u2;
     c[0]=t*(u2*(u2*(u2*(u2*(u2*(u2*(428731*u2-557402)+748544)-1046528)+1540096)-2424832)+4194304)-8388608)/67108864;
     t *= u2;
@@ -101,11 +116,11 @@ namespace GeographicLib {
     d[7]=109167851*t/5411658792960.;
   }
     
-  double Geodesic::dlambdaScale(double f, double mu) throw() {
+  double Geodesic::dlamScale(double f, double mu) throw() {
     return  f*(f*(f*(f*(f*(f*(f*(f*mu*(mu*(mu*(mu*(mu*(mu*(184041*mu-960498)+2063880)-2332400)+1459200)-479232)+65536)+mu*(mu*(mu*(mu*((544320-121968*mu)*mu-963200)+844800)-368640)+65536))+mu*(mu*(mu*(mu*(84672*mu-313600)+435200)-270336)+65536))+mu*(mu*((184320-62720*mu)*mu-184320)+65536))+mu*(mu*(51200*mu-110592)+65536))+(65536-49152*mu)*mu)+65536*mu)-262144)/262144;
   }
 
-  void Geodesic::dlambdaCoeffSet(double f, double mu, double e[]) throw() {
+  void Geodesic::dlamCoeffSet(double f, double mu, double e[]) throw() {
     double s = f*mu, t = s;
     e[0] = (f*(f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*((30816920-5080225*mu)*mu-79065664)+110840000)-91205632)+43638784)-11010048)+1048576)+mu*(mu*(mu*(mu*(mu*(3213004*mu-17049088)+37224832)-42637312)+26828800)-8650752)+1048576)+mu*(mu*(mu*((9543424-2100608*mu)*mu-17160192)+15196160)-6553600)+1048576)+mu*(mu*(mu*(1435648*mu-5419008)+7626752)-4718592)+1048576)+mu*((3129344-1044480*mu)*mu-3145728)+1048576)+mu*(835584*mu-1835008)+1048576)-786432*mu+1048576)+1048576)*t/8388608; 
     t *= s; 
@@ -124,20 +139,20 @@ namespace GeographicLib {
     e[7] = 715*t/67108864;
   }
 
-  GeodesicLine Geodesic::Line(double lat1, double lon1, double bearing1)
+  GeodesicLine Geodesic::Line(double lat1, double lon1, double head1)
     const throw() {
-    return GeodesicLine(*this, lat1, lon1, bearing1);
+    return GeodesicLine(*this, lat1, lon1, head1);
   }
  
-  void Geodesic::Direct(double lat1, double lon1, double bearing1, double s12,
-			double& lat2, double& lon2, double& bearing2)
+  void Geodesic::Direct(double lat1, double lon1, double head1, double s12,
+			double& lat2, double& lon2, double& head2)
     const throw() {
-    GeodesicLine l(*this, lat1, lon1, bearing1);
-    l.Position(s12, lat2, lon2, bearing2);
+    GeodesicLine l(*this, lat1, lon1, head1);
+    l.Position(s12, lat2, lon2, head2);
   }
 
   void Geodesic::Inverse(double lat1, double lon1, double lat2, double lon2,
-		 double& s12, double& bearing1, double& bearing2)
+		 double& s12, double& head1, double& head2)
     const throw() {
     lon1 = AngNormalize(lon1);
     double lon12 = AngNormalize(AngNormalize(lon2) - lon1);
@@ -172,309 +187,346 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    double cosbeta1, sinbeta1;
+    double cbet1, sbet1;
     {
       double
 	phi = lat1 * Constants::degree,
-	// Ensure cosbeta1 = +eps at poles
+	// Ensure cbet1 = +eps at poles
 	c = lat1 == -90 ? eps2 : cos(phi), s = _f1 * sin(phi),
 	r = hypot(s, c);
-      cosbeta1 = c/r, sinbeta1 = s/r;
+      cbet1 = c/r, sbet1 = s/r;
     }
-    double cosbeta2, sinbeta2;
+    double cbet2, sbet2;
     {
       double
 	phi = lat2 * Constants::degree,
-	// Ensure cosbeta2 = +eps at poles
+	// Ensure cbet2 = +eps at poles
 	c = abs(lat2) == 90 ? eps2 : cos(phi), s = _f1 * sin(phi),
 	r = hypot(s, c);
-      cosbeta2 = c/r, sinbeta2 = s/r;
+      cbet2 = c/r, sbet2 = s/r;
     }
 
     double
       chi12 = lon12 * Constants::degree,
-      coschi12 = cos(chi12),	// lon12 == 90 isn't interesting
-      sinchi12 = lon12 == 180 ? 0 :sin(chi12);
+      cchi12 = cos(chi12),	// lon12 == 90 isn't interesting
+      schi12 = lon12 == 180 ? 0 :sin(chi12);
 
-    double cosalpha1, sinalpha1, cosalpha2, sinalpha2;
+    double calp1, salp1, calp2, salp2;
     double c[maxpow];
     // Enumerate all the cases where the geodesic is a meridian.  This includes
     // coincident points.
-    if (sinchi12 == 0 || lat1 == -90) {
-      cosalpha1 = lon12 == 0 || lat1 == -90 ? 1 : -1;
-      sinalpha1 = 0;
-      // cos(alpha)=cos(lam)*cos(alpha0)
-      // cos(alpha0) = 1
-      // lam1 = cosalpha1 > 0 ? 0 : pi
-      // cos(lam2) = cosalpha1 * cos(chi12)
-      cosalpha2 = coschi12 * cosalpha1;
-      // We assume alpha in [0, pi], like chi12, so no sign change here.
-      sinalpha2 = sinchi12;
+    if (schi12 == 0 || lat1 == -90) {
+      calp1 = lon12 == 0 || lat1 == -90 ? 1 : -1;
+      salp1 = 0;
+      // cos(alp)=cos(lam)*cos(alp0)
+      // cos(alp0) = 1
+      // lam1 = calp1 > 0 ? 0 : pi
+      // cos(lam2) = calp1 * cos(chi12)
+      calp2 = cchi12 * calp1;
+      // We assume alp in [0, pi], like chi12, so no sign change here.
+      salp2 = schi12;
 
       double
-	// tan(beta) = tan(sigma)*cos(alpha),
-	sigma1 = atan2(sinbeta1, cosalpha1 * cosbeta1),
-	sigma2 = atan2(sinbeta2, cosalpha2 * cosbeta2);
+	// tan(bet) = tan(sig)*cos(alp),
+	sig1 = atan2(sbet1, calp1 * cbet1),
+	sig2 = atan2(sbet2, calp2 * cbet2);
 
-      sigmaCoeffSet(_ep2, c);
-      s12 = _b * sigmaScale(_ep2) *
-	((sigma2 - sigma1) +
-	 (SinSeries(sigma2, c, maxpow) - SinSeries(sigma1, c, maxpow)));
-    } else if (sinbeta1 == 0 && lon12 <= _f1 * 180) { // and sinbeta2 == 0
+      sigCoeffSet(_ep2, c);
+      s12 = _b * sigScale(_ep2) *
+	((sig2 - sig1) +
+	 (SinSeries(sig2, c, maxpow) - SinSeries(sig1, c, maxpow)));
+    } else if (sbet1 == 0 && lon12 <= _f1 * 180) { // and sbet2 == 0
       // Geodesic runs along equator
-      cosalpha1 = cosalpha2 = 0;
-      sinalpha1 = sinalpha2 = 1;
+      calp1 = calp2 = 0;
+      salp1 = salp2 = 1;
       s12 = _a * chi12;
     } else {
 
       // Now point1 and point2 belong within a hemisphere bounded by a line of
-      // longitude (lon = lon12/2 +/- 90).  Possible singular cases left to
+      // longitude (lon = lon12/2 +/- 90).  Possible sgular cases left to
       // worry about are:
 
-      if (sinbeta1 == 0) { 	// and sinbeta2 == 0 and lon12 > _f1 * 180
-	// Break degeneracy of points on equator.  This gets sigma1 into the
+      if (sbet1 == 0) { 	// and sbet2 == 0 and lon12 > _f1 * 180
+	// Break degeneracy of points on equator.  This gets sig1 into the
 	// right quadrant.
-	sinbeta1 = 0 * -eps2;
+	sbet1 = 0 * -eps2;
       }
 
-      double sigma1, sigma2, u2;
+      double sig12, ssig1, csig1, ssig2, csig2, u2;
 #if DEBUG
       std::cerr << setprecision(20);
 #endif
       double
-	sinalpha1a = 0, cosalpha1a = 1,
-	sinalpha1c = 0, cosalpha1c = -1;
+	salp1a = 0, calp1a = 1,
+	salp1b = 0, calp1b = -1;
       double
-	chidiffa = ChiDiff(sinbeta1, cosbeta1,
-			   sinbeta2, cosbeta2,
-			   sinalpha1a, cosalpha1a,
-			   sinalpha2, cosalpha2,
-			   sigma1, sigma2, u2, c) - chi12,
-	chidiffc = ChiDiff(sinbeta1, cosbeta1,
-			   sinbeta2, cosbeta2,
-			   sinalpha1c, cosalpha1c,
-			   sinalpha2, cosalpha2,
-			   sigma1, sigma2, u2, c) - chi12;
+	chidiffa = ChiDiff(sbet1, cbet1,
+			   sbet2, cbet2,
+			   salp1a, calp1a,
+			   salp2, calp2,
+			   sig12,
+			   ssig1, csig1,
+			   ssig2, csig2,
+			   u2, c) - chi12,
+	chidiffc = ChiDiff(sbet1, cbet1,
+			   sbet2, cbet2,
+			   salp1b, calp1b,
+			   salp2, calp2,
+			   sig12,
+			   ssig1, csig1,
+			   ssig2, csig2,
+			   u2, c) - chi12;
       double chidiff;
 
       for (int i = 0; i < 128; ++i) {
-	sinalpha1 = 0.5 * (sinalpha1a + sinalpha1c);
-	cosalpha1 = 0.5 * (cosalpha1a + cosalpha1c);
-	if (sinalpha1 == 0)
-	  sinalpha1 = 1;
-	double r = hypot(sinalpha1, cosalpha1);
-	//	sinalpha1 /= r;
-	//	cosalpha1 /= r;
-	// cerr << i << " ";
-	chidiff = ChiDiff(sinbeta1, cosbeta1,
-			   sinbeta2, cosbeta2,
-			   sinalpha1/r, cosalpha1/r,
-			   sinalpha2, cosalpha2,
-			   sigma1, sigma2, u2, c) - chi12;
-	//      cerr << "x " << cosalpha1 << " " << chidiff << "\n";
+	salp1 = 0.5 * (salp1a + salp1b);
+	calp1 = 0.5 * (calp1a + calp1b);
+	if (salp1 == 0)
+	  salp1 = 1;
+	double r = hypot(salp1, calp1);
+	salp1 /= r;
+	calp1 /= r;
+
+	chidiff = ChiDiff(sbet1, cbet1,
+			  sbet2, cbet2,
+			  salp1, calp1,
+			  salp2, calp2,
+			  sig12,
+			  ssig1, csig1,
+			  ssig2, csig2,
+			  u2, c) - chi12;
+	//      cerr << "x " << calp1 << " " << chidiff << "\n";
 	if (chidiff == 0)
 	  break;
 	if (chidiff < 0) {
-	  //	  if (cosalpha1a == cosalpha1 && sinalpha1a == sinalpha1)
-	  //	    break;
-	  cosalpha1a = cosalpha1;
-	  sinalpha1a = sinalpha1;
+	  if (calp1a == calp1 && salp1a == salp1)
+	    break;
+	  calp1a = calp1;
+	  salp1a = salp1;
 	  chidiffa = chidiff;
 	} else {
-	  //	  if (cosalpha1c == cosalpha1 && sinalpha1c == sinalpha1)
-	  //	    break;
-	  cosalpha1c = cosalpha1;
-	  sinalpha1c = sinalpha1;
+	  if (calp1b == calp1 && salp1b == salp1)
+	    break;
+	  calp1b = calp1;
+	  salp1b = salp1;
 	  chidiffc = chidiff;
 	}
       }
 	
       {
-	double r = hypot(sinalpha1, cosalpha1);
-	sinalpha1 /= r;
-	cosalpha1 /= r;
+	double r = hypot(salp1, calp1);
+	salp1 /= r;
+	calp1 /= r;
       }
 
-      sigmaCoeffSet(u2, c);      
-      s12 =  _b * sigmaScale(u2) *
-	((sigma2 - sigma1) +
-	 (SinSeries(sigma2, c, maxpow) - SinSeries(sigma1, c, maxpow)));
-      cerr << chidiff*cosbeta2*_a << "\n";
+      sigCoeffSet(u2, c);      
+      s12 =  _b * sigScale(u2) *
+	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
+		    SinSeries(ssig1, csig1, c, maxpow)));
+      cerr << chidiff*cbet2*_a << "\n";
     }
 #if DEBUG
     cerr << lonsign << " " << latsign << " " << swapp << "\n";
 #endif
-    // Convert cosalpha[12], sinalpha[12] to bearing[12] accounting for
+    // Convert calp[12], salp[12] to head[12] accounting for
     // lonsign, swapp, latsign.  The minus signs up result in [-180, 180).
-#if REVBEARING
-    bearing1 = -atan2(- lonsign * sinalpha1,
-		      + latsign * cosalpha1) / Constants::degree;
-    bearing2 = -atan2(+ lonsign * sinalpha2,
-		      - latsign * cosalpha2) / Constants::degree;
+#if REVHEADING
+    head1 = -atan2(- lonsign * salp1,
+		      + latsign * calp1) / Constants::degree;
+    head2 = -atan2(+ lonsign * salp2,
+		      - latsign * calp2) / Constants::degree;
 #else
-    bearing1 = -atan2(- swapp * lonsign * sinalpha1,
-		      + swapp * latsign * cosalpha1) / Constants::degree;
-    bearing2 = -atan2(- swapp * lonsign * sinalpha2,
-		      + swapp * latsign * cosalpha2) / Constants::degree;
+    head1 = -atan2(- swapp * lonsign * salp1,
+		      + swapp * latsign * calp1) / Constants::degree;
+    head2 = -atan2(- swapp * lonsign * salp2,
+		      + swapp * latsign * calp2) / Constants::degree;
 #endif
     if (swapp < 0)
-      swap(bearing1, bearing2);
+      swap(head1, head2);
     return;
   }
 
-  double Geodesic::ChiDiff(double sinbeta1, double cosbeta1,
-			   double sinbeta2, double cosbeta2,
-			   double sinalpha1, double cosalpha1,
-			   double& sinalpha2, double& cosalpha2,
-			   double& sigma1, double& sigma2,
+  double Geodesic::ChiDiff(double sbet1, double cbet1,
+			   double sbet2, double cbet2,
+			   double salp1, double calp1,
+			   double& salp2, double& calp2,
+			   double& sig12,
+			   double& ssig1, double& csig1,
+			   double& ssig2, double& csig2,
 			   double& u2,
 			   double c[]) const throw() {
-      // Pick sinalpha1 > 0 cosalpha1 in (-1, 1), i.e., alpha1 in (0, pi).  If
-      // sinbeta1 == 0, we pick cosalpha1 in (-1, 0), i.e., alpha in (pi/2, pi)
+      // Pick salp1 > 0 calp1 in (-1, 1), i.e., alp1 in (0, pi).  If
+      // sbet1 == 0, we pick calp1 in (-1, 0), i.e., alp in (pi/2, pi)
 
-	if (cosalpha1 == 0)
-	  // If sinbeta1 = sinbeta2 = 0, and cosalpha1 = cosalpha2 = 0, we want
-	  // to ensure that lambda1 = -pi, lambda2 = 0.
-	  cosalpha1 = 0 * sqrt(eps2);
+	if (calp1 == 0)
+	  // If sbet1 = sbet2 = 0, and calp1 = calp2 = 0, we want
+	  // to ensure that lam1 = -pi, lam2 = 0.
+	  calp1 = 0 * sqrt(eps2);
 
       double
 	// Follow GeodesicLine constructor
-	sinalpha0 = sinalpha1 * cosbeta1,
-	cosalpha0 = hypot(cosalpha1, sinalpha1 * sinbeta1);
+	salp0 = salp1 * cbet1,
+	calp0 = hypot(calp1, salp1 * sbet1);
       
-      double lambda1;
-      if (sinbeta1 == 0 && cosalpha1 <= 0)
-	  sigma1 = lambda1 = -Constants::pi;
-      else {
-	sigma1 = atan2(sinbeta1, cosbeta1 * cosalpha1);
-	lambda1 = atan2(sinalpha0 * sinbeta1, cosbeta1 * cosalpha1);
+      double slam1, clam1, slam2, clam2, r;
+      if (sbet1 == 0 && calp1 <= 0) {
+	ssig1 = slam1 = 0;
+	csig1 = clam1 = -1;
+      } else {
+	ssig1 = sbet1; csig1 = clam1 = calp1 * cbet1;
+	slam1 = salp0 * sbet1;
+	r = hypot(ssig1, csig1);
+	ssig1 /= r; csig1 /= r;
+	r = hypot(slam1, clam1);
+	slam1 /= r; clam1 /= r;
       }
 
-      sinalpha2 = sinalpha0 / cosbeta2;
-      // cosalpha2 = sqrt(1 - sq(sinalpha2))
-      //           = sqrt(sq(cosalpha0) - sq(sinbeta2)) / cosbeta2
-      // and subst for cosalpha0 and rearrange to give (choose positive sqrt
-      // to give alpha2 in [0, pi/2])
-      cosalpha2 = sqrt(sq(cosalpha1 * cosbeta1) +
-		       sq(sinbeta1) - sq(sinbeta2)) / cosbeta2;
-      sigma2 = atan2(sinbeta2, cosbeta2 * cosalpha2);
-      double lambda2 = atan2(sinalpha0 * sinbeta2, cosbeta2 * cosalpha2);
+      salp2 = salp0 / cbet2;
+      // calp2 = sqrt(1 - sq(salp2))
+      //           = sqrt(sq(calp0) - sq(sbet2)) / cbet2
+      // and subst for calp0 and rearrange to give (choose positive sqrt
+      // to give alp2 in [0, pi/2]).  N.B. parens around
+      //    sq(sbet1) - sq(sbet2)
+      // are needed to maintain accuracy when calph1 is small.
+      calp2 = sqrt(sq(calp1 * cbet1) +
+		       (sq(sbet1) - sq(sbet2))) / cbet2;
+      ssig2 = sbet2; csig2 = clam2 = calp2 * cbet2;
+      slam2 = salp0 * sbet2;
+      r = hypot(ssig2, csig2);
+      ssig2 /= r; csig2 /= r;
+      r = hypot(slam2, clam2);
+      slam2 /= r; clam2 /= r;
 
-      double mu = sq(cosalpha0);
+      sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
+		      csig1 * csig2 + ssig1 * ssig2);
+
+      double lam12 =
+	atan2(max(clam1 * slam2 - slam1 * clam2, 0.0),
+	      clam1 * clam2 + slam1 * slam2);
+      double mu = sq(calp0);
       u2 = mu * _ep2;
-      dlambdaCoeffSet(_f, mu, c);
+      dlamCoeffSet(_f, mu, c);
       double 
-	xchi12 = lambda2 - lambda1 +
-	sinalpha0 * dlambdaScale(_f, mu) *
-	((sigma2 - sigma1) +
-	 (SinSeries(sigma2, c, maxpow) - SinSeries(sigma1, c, maxpow)));
+	xchi12 = lam12 +
+	salp0 * dlamScale(_f, mu) *
+	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
+		    SinSeries(ssig1, csig1, c, maxpow)));
 
 #if DEBUG
-      std::cerr << sinalpha1 << " " << cosalpha1 << " "
-		<< atan2(sinalpha1, cosalpha1)/Constants::degree << " "
+      /*
+      std::cerr << salp0 << "\n" << calp0 << "\n"
+		<< salp1 << "\n" << calp1 << "\n"
+		<< salp2 << "\n" << calp2 << "\n"
+		<< ssig1 << "\n" << csig1 << "\n"
+		<< ssig2 << "\n" << csig2 << "\n"
+		<< slam1 << "\n" << clam1 << "\n"
+		<< slam2 << "\n" << clam2 << "\n";
+      */
+      std::cerr << salp1 << " " << calp1 << " "
+		<< atan2(salp1, calp1)/Constants::degree << " "
 		<< xchi12/Constants::degree << " "
-		<< (sigma2 - sigma1)/Constants::degree << " "
-		<< (lambda2 - lambda1)/Constants::degree << "\n";
+		<< sig12/Constants::degree << " "
+		<< lam12/Constants::degree << "\n";
 #endif
       // Compare xchi12 to chi12
       return xchi12;
   }
   
   GeodesicLine::GeodesicLine(const Geodesic& g,
-			     double lat1, double lon1, double bearing1) {
-    bearing1 = Geodesic::AngNormalize(bearing1);
-    // Normalize bearing at poles.  Evaluate bearings at lat = +/- (90 - eps).
+			     double lat1, double lon1, double head1) {
+    head1 = Geodesic::AngNormalize(head1);
+    // Normalize head at poles.  Evaluate heads at lat = +/- (90 - eps).
     if (lat1 == 90) {
-      lon1 -= bearing1 - (bearing1 >= 0 ? 180 : -180);
-      bearing1 = -180;
+      lon1 -= head1 - (head1 >= 0 ? 180 : -180);
+      head1 = -180;
     } else if (lat1 == -90) {
-      lon1 += bearing1;
-      bearing1 = 0;
+      lon1 += head1;
+      head1 = 0;
     }
-    // Guard against underflow in sinalpha0
-    bearing1 = Geodesic::AngRound(bearing1);
+    // Guard against underflow in salp0
+    head1 = Geodesic::AngRound(head1);
     lon1 = Geodesic::AngNormalize(lon1);
-    _bsign = bearing1 >= 0 ? 1 : -1;
-    bearing1 *= _bsign;
+    _bsign = head1 >= 0 ? 1 : -1;
+    head1 *= _bsign;
     _lat1 = lat1;
     _lon1 = lon1;
-    _bearing1 = bearing1;
+    _head1 = head1;
     _f1 = g._f1;
-    // alpha1 is in [0, pi]
+    // alp1 is in [0, pi]
     double
-      alpha1 = bearing1 * Constants::degree,
+      alp1 = head1 * Constants::degree,
       // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
       // problems directly than to skirt them.
-      sinalpha1 = bearing1 == 180 ? 0 : sin(alpha1),
-      cosalpha1 = bearing1 ==  90 ? 0 : cos(alpha1);
-    double cosbeta1, sinbeta1;
+      salp1 = head1 == 180 ? 0 : sin(alp1),
+      calp1 = head1 ==  90 ? 0 : cos(alp1);
+    double cbet1, sbet1;
     {
       double
 	phi = lat1 * Constants::degree,
-	// Ensure cosbeta1 = +eps at poles
+	// Ensure cbet1 = +eps at poles
 	c = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi), s = _f1 * sin(phi),
 	r = hypot(s, c);
-      cosbeta1 = c/r, sinbeta1 = s/r;
+      cbet1 = c/r, sbet1 = s/r;
     }
-    _sinalpha0 = sinalpha1 * cosbeta1; // alpha0 in [0, pi/2 - |beta1|]
-    // Alt: cosalpha0 = hypot(sinbeta1, cosalpha1 * cosbeta1).  The following
-    // is slightly better (consider the case sinalpha1 = 0).
-    _cosalpha0 = hypot(cosalpha1, sinalpha1 * sinbeta1);
+    _salp0 = salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
+    // Alt: calp0 = hypot(sbet1, calp1 * cbet1).  The following
+    // is slightly better (consider the case salp1 = 0).
+    _calp0 = hypot(calp1, salp1 * sbet1);
     double
-      // Evaluate sigma with tan(beta1) = tan(sigma1) * cos(alpha1).
-      // sigma = 0 is nearest northward crossing of equator.
-      // With beta1 = 0, alpha1 = pi/2, we have sigma1 = 0 (equatorial line).
-      // With beta1 =  pi/2, alpha1 = -pi, sigma1 =  pi/2
-      // With beta1 = -pi/2, alpha1 =  0 , sigma1 = -pi/2
-      sigma1 = atan2(sinbeta1, cosbeta1 * cosalpha1), // sigma1 in (-pi, pi]
-      // Evaluate lam1 with tan(lam1) = sin(alpha0) * tan(sigma1).
-      // With alpha0 in (0, pi/2], quadrants for sigma and lam coincide.
-      // No atan2(0,0) ambiguity at poles since cosbeta1 = +eps.
-      // With alpha0 = 0, lam1 = 0 for alpha1 = 0, lam1 = pi for alpha1 = pi.
-      lambda1 = atan2(_sinalpha0 * sinbeta1, cosbeta1 * cosalpha1),
-      mu = Geodesic::sq(_cosalpha0),
+      // Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
+      // sig = 0 is nearest northward crossing of equator.
+      // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
+      // With bet1 =  pi/2, alp1 = -pi, sig1 =  pi/2
+      // With bet1 = -pi/2, alp1 =  0 , sig1 = -pi/2
+      sig1 = atan2(sbet1, cbet1 * calp1), // sig1 in (-pi, pi]
+      // Evaluate lam1 with tan(lam1) = sin(alp0) * tan(sig1).
+      // With alp0 in (0, pi/2], quadrants for sig and lam coincide.
+      // No atan2(0,0) ambiguity at poles sce cbet1 = +eps.
+      // With alp0 = 0, lam1 = 0 for alp1 = 0, lam1 = pi for alp1 = pi.
+      lam1 = atan2(_salp0 * sbet1, cbet1 * calp1),
+      mu = Geodesic::sq(_calp0),
       u2 = mu * g._ep2;
 
-    _sScale =  g._b * Geodesic::sigmaScale(u2);
-    Geodesic::sigmaCoeffSet(u2, _sigmaCoeff);
-    _S1 = sigma1 + Geodesic::SinSeries(sigma1, _sigmaCoeff, maxpow);
-    Geodesic::sCoeffSet(u2, _sigmaCoeff);
+    _sScale =  g._b * Geodesic::sigScale(u2);
+    Geodesic::sigCoeffSet(u2, _sigCoeff);
+    _S1 = sig1 + Geodesic::SinSeries(sig1, _sigCoeff, maxpow);
+    Geodesic::sCoeffSet(u2, _sigCoeff);
 
-    _dlambdaScale = _sinalpha0 * Geodesic::dlambdaScale(g._f, mu);
-    Geodesic::dlambdaCoeffSet(g._f, mu, _dlambdaCoeff);
-    _chi1 = lambda1 +
-      _dlambdaScale * (sigma1 +
-		       Geodesic::SinSeries(sigma1, _dlambdaCoeff, maxpow));
+    _dlamScale = _salp0 * Geodesic::dlamScale(g._f, mu);
+    Geodesic::dlamCoeffSet(g._f, mu, _dlamCoeff);
+    _chi1 = lam1 +
+      _dlamScale * (sig1 +
+		       Geodesic::SinSeries(sig1, _dlamCoeff, maxpow));
   }
 
   void GeodesicLine::Position(double s12,
-			      double& lat2, double& lon2, double& bearing2)
+			      double& lat2, double& lon2, double& head2)
   const throw() {
     if (_sScale == 0)
       // Uninitialized
       return;
     double
       S2 = _S1 + s12 / _sScale,
-      sigma2 = S2 +  Geodesic::SinSeries(S2, _sigmaCoeff, maxpow),
-      sinsigma2 = sin(sigma2),
-      cossigma2 = cos(sigma2),
-      sinbeta2 = _cosalpha0 * sinsigma2,
-      // Alt: cosbeta2 = hypot(cossigma2, sinalpha0 * sinsigma2);
-      cosbeta2 = hypot(_sinalpha0, _cosalpha0 * cossigma2),
-      // tan(lambda2)=sin(alpha0)*tan(sigma2)
-      lambda2 = atan2(_sinalpha0 * sinsigma2, cossigma2),
-      // tan(alpha0)=cos(sigma2)*tan(alpha2)
-      alpha2 = atan2(_sinalpha0, _cosalpha0 * cossigma2),
-      chi2 = lambda2 +
-      _dlambdaScale * (sigma2 +
-		       Geodesic::SinSeries(sigma2, _dlambdaCoeff, maxpow));
-    lat2 = atan2(sinbeta2, _f1 * cosbeta2) / Constants::degree;
+      sig2 = S2 +  Geodesic::SinSeries(S2, _sigCoeff, maxpow),
+      ssig2 = sin(sig2),
+      csig2 = cos(sig2),
+      sbet2 = _calp0 * ssig2,
+      // Alt: cbet2 = hypot(csig2, salp0 * ssig2);
+      cbet2 = hypot(_salp0, _calp0 * csig2),
+      // tan(lam2)=sin(alp0)*tan(sig2)
+      lam2 = atan2(_salp0 * ssig2, csig2),
+      // tan(alp0)=cos(sig2)*tan(alp2)
+      alp2 = atan2(_salp0, _calp0 * csig2),
+      chi2 = lam2 +
+      _dlamScale * (sig2 +
+		       Geodesic::SinSeries(sig2, _dlamCoeff, maxpow));
+    lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree;
     lon2 = Geodesic::AngNormalize(_lon1 +
 				  _bsign * (chi2 - _chi1) / Constants::degree);
-#if REVBEARING
-    bearing2 = Geodesic::AngNormalize(_bsign * alpha2 / Constants::degree + 180);
+#if REVHEADING
+    head2 = Geodesic::AngNormalize(_bsign * alp2 / Constants::degree + 180);
 #else
-    bearing2 = Geodesic::AngNormalize(_bsign * alpha2 / Constants::degree);
+    head2 = Geodesic::AngNormalize(_bsign * alp2 / Constants::degree);
 #endif
   }
  
