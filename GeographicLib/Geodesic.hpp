@@ -26,12 +26,6 @@ namespace GeographicLib {
     static const double eps2, tol;
     const double _a, _f, _f1, _e2, _ep2, _b;
     static const int maxpow = 8;
-    static inline double sq(double x) { return x * x; }
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) { return _hypot(x, y); }
-#else
-    static inline double hypot(double x, double y) { return ::hypot(x, y); }
-#endif
     static double SinSeries(double x, const double c[], int n) throw();
     static double SinSeries(double sinx, double cosx, const double c[], int n)
       throw();
@@ -58,15 +52,21 @@ namespace GeographicLib {
     static double dlamScale(double f, double mu) throw();
     static void dlamCoeffSet(double f, double mu, double e[]) throw();
   private:
-  double ChiDiff(double sbet1, double cbet1,
-		 double sbet2, double cbet2,
-		 double salp1, double calp1,
-		 double& salp2, double& calp2,
-		 double& sig12,
-		 double& ssig1, double& csig1,
-		 double& ssig2, double& csig2,
-		 double& u2,
-		 double c[]) const throw();
+    static inline double sq(double x) { return x * x; }
+#if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+#endif
+    double ChiDiff(double sbet1, double cbet1,
+		   double sbet2, double cbet2,
+		   double salp1, double calp1,
+		   double& salp2, double& calp2,
+		   double& sig12,
+		   double& ssig1, double& csig1,
+		   double& ssig2, double& csig2,
+		   double& u2,
+		   double c[]) const throw();
 
   public:
     /**
@@ -105,15 +105,21 @@ namespace GeographicLib {
     double _lat1, _lon1, _head1;
     double _sScale, _S1, _calp0, _salp0, _f1, _dlamScale, _chi1;
     double _sigCoeff[maxpow], _dlamCoeff[maxpow];
+    static inline double sq(double x) { return x * x; }
+#if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+#endif
 
   protected:
     friend class Geodesic;
     GeodesicLine(const Geodesic& g,
-		 double lat, double lon, double head);
+		 double lat1, double lon1, double head1);
   public:
     // A default public constuctor
     GeodesicLine() : _sScale(0) {};
-    void Position(double s, double& lat, double& lon, double& head)
+    void Position(double s12, double& lat2, double& lon2, double& head2)
       const throw();
     double Longitude() const throw() { return _lon1; }
     double Latitude() const throw() { return _lat1; }
