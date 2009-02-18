@@ -55,6 +55,14 @@ namespace GeographicLib {
     static void sCoeffSet(double u2, double c[]) throw();
     static double dlambdaScale(double f, double mu) throw();
     static void dlambdaCoeffSet(double f, double mu, double e[]) throw();
+  private:
+  double ChiDiff(double sinbeta1, double cosbeta1,
+		 double sinbeta2, double cosbeta2,
+		 double sinalpha1, double cosalpha1,
+		 double& sinalpha2, double& cosalpha2,
+		 double& sigma1, double& sigma2,
+		 double& u2,
+		 double c[]) const throw();
 
   public:
     /**
