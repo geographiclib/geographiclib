@@ -313,12 +313,6 @@ namespace GeographicLib {
 	}
       }
 	
-      {
-	double r = hypot(salp1, calp1);
-	salp1 /= r;
-	calp1 /= r;
-      }
-
       sigCoeffSet(u2, c);      
       s12 =  _b * sigScale(u2) *
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
@@ -393,9 +387,17 @@ namespace GeographicLib {
       ssig2 = sbet2; csig2 = clam2 = calp2 * cbet2;
       slam2 = salp0 * sbet2;
       r = hypot(ssig2, csig2);
-      ssig2 /= r; csig2 /= r;
+      if (r > 0) {
+	ssig2 /= r; csig2 /= r;
+      } else {
+	ssig2 = 0; csig2 = 1;
+      }
       r = hypot(slam2, clam2);
-      slam2 /= r; clam2 /= r;
+      if (r > 0) {
+	slam2 /= r; clam2 /= r;
+      } else {
+	slam2 = 0; clam2 = 1;
+      }
 
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		      csig1 * csig2 + ssig1 * ssig2);
