@@ -363,17 +363,13 @@ namespace GeographicLib {
 	calp0 = hypot(calp1, salp1 * sbet1);
       
       double slam1, clam1, slam2, clam2, r;
-      if (sbet1 == 0 && calp1 <= 0) {
-	ssig1 = slam1 = 0;
-	csig1 = clam1 = -1;
-      } else {
-	ssig1 = sbet1; csig1 = clam1 = calp1 * cbet1;
-	slam1 = salp0 * sbet1;
-	r = hypot(ssig1, csig1);
-	ssig1 /= r; csig1 /= r;
-	r = hypot(slam1, clam1);
-	slam1 /= r; clam1 /= r;
-      }
+      ssig1 = sbet1;
+      csig1 = clam1 = sbet1 != 0 || calp1 > 0 ? calp1 * cbet1 : -1;
+      slam1 = salp0 * sbet1;
+      r = hypot(ssig1, csig1);
+      ssig1 /= r; csig1 /= r;
+      r = hypot(slam1, clam1);
+      slam1 /= r; clam1 /= r;
 
       salp2 = salp0 / cbet2;
       // calp2 = sqrt(1 - sq(salp2))
@@ -383,21 +379,14 @@ namespace GeographicLib {
       //    sq(sbet1) - sq(sbet2)
       // are needed to maintain accuracy when calph1 is small.
       calp2 = sqrt(sq(calp1 * cbet1) +
-		       (sq(sbet1) - sq(sbet2))) / cbet2;
-      ssig2 = sbet2; csig2 = clam2 = calp2 * cbet2;
+		   (sbet1 - sbet2) * (sbet1 + sbet2)) / cbet2;
+      ssig2 = sbet2;
+      csig2 = clam2 = sbet2 != 0 || calp2 != 0 ? calp2 * cbet2 : 1;
       slam2 = salp0 * sbet2;
       r = hypot(ssig2, csig2);
-      if (r > 0) {
-	ssig2 /= r; csig2 /= r;
-      } else {
-	ssig2 = 0; csig2 = 1;
-      }
+      ssig2 /= r; csig2 /= r;
       r = hypot(slam2, clam2);
-      if (r > 0) {
-	slam2 /= r; clam2 /= r;
-      } else {
-	slam2 = 0; clam2 = 1;
-      }
+      slam2 /= r; clam2 /= r;
 
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		      csig1 * csig2 + ssig1 * ssig2);
