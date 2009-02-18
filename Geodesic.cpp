@@ -7,12 +7,13 @@
  *
  **********************************************************************/
 
-#define DEBUG 1
+#define REVBEARING 1
+#define DEBUG 0
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
-#if DEBUG
+#if 1
 #include <iostream>
 #include <iomanip>
 #endif
@@ -144,17 +145,19 @@ namespace GeographicLib {
     // Not sure this is necessary...
     lon12 = AngRound(lon12);
     // Make longitude difference positive
-    int lonsign = lon2 >= 0 ? 1 : -1;
+    int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
     // If really close to the equator, treat as on equator
     lat1 = AngRound(lat1);
     lat2 = AngRound(lat2);
     // Swap points so that point with higher (abs) latitude is point 1
     int swapp = abs(lat1) >= abs(lat2) ? 1 : -1;
-    if (swapp < 0)
+    if (swapp < 0) {
+      lonsign *= -1;
       swap(lat1, lat2);
+    }
     // Make lat1 <= 0
-    int latsign = lat1 <= 0 ? 1 : -1;
+    int latsign = lat1 < 0 ? 1 : -1;
     lat1 *= latsign;
     lat2 *= latsign;
     // Now we have
@@ -236,13 +239,96 @@ namespace GeographicLib {
 
       double sigma1, sigma2, u2;
 #if DEBUG
-      std::cerr << setprecision(6);
+      std::cerr << setprecision(20);
 #endif
-      for (int iang = 0; iang <= 180; iang += 1) {
-	double alpha1 = iang * Constants::degree;
-	sinalpha1 = sin(alpha1);
-	cosalpha1 = iang == 90 ? 0 : cos(alpha1);
+      double
+	sinalpha1a = 0, cosalpha1a = 1,
+	sinalpha1c = 0, cosalpha1c = -1;
+      double
+	chidiffa = ChiDiff(sinbeta1, cosbeta1,
+			   sinbeta2, cosbeta2,
+			   sinalpha1a, cosalpha1a,
+			   sinalpha2, cosalpha2,
+			   sigma1, sigma2, u2, c) - chi12,
+	chidiffc = ChiDiff(sinbeta1, cosbeta1,
+			   sinbeta2, cosbeta2,
+			   sinalpha1c, cosalpha1c,
+			   sinalpha2, cosalpha2,
+			   sigma1, sigma2, u2, c) - chi12;
+      double chidiff;
 
+      for (int i = 0; i < 128; ++i) {
+	sinalpha1 = 0.5 * (sinalpha1a + sinalpha1c);
+	cosalpha1 = 0.5 * (cosalpha1a + cosalpha1c);
+	if (sinalpha1 == 0)
+	  sinalpha1 = 1;
+	double r = hypot(sinalpha1, cosalpha1);
+	//	sinalpha1 /= r;
+	//	cosalpha1 /= r;
+	// cerr << i << " ";
+	chidiff = ChiDiff(sinbeta1, cosbeta1,
+			   sinbeta2, cosbeta2,
+			   sinalpha1/r, cosalpha1/r,
+			   sinalpha2, cosalpha2,
+			   sigma1, sigma2, u2, c) - chi12;
+	//      cerr << "x " << cosalpha1 << " " << chidiff << "\n";
+	if (chidiff == 0)
+	  break;
+	if (chidiff < 0) {
+	  //	  if (cosalpha1a == cosalpha1 && sinalpha1a == sinalpha1)
+	  //	    break;
+	  cosalpha1a = cosalpha1;
+	  sinalpha1a = sinalpha1;
+	  chidiffa = chidiff;
+	} else {
+	  //	  if (cosalpha1c == cosalpha1 && sinalpha1c == sinalpha1)
+	  //	    break;
+	  cosalpha1c = cosalpha1;
+	  sinalpha1c = sinalpha1;
+	  chidiffc = chidiff;
+	}
+      }
+	
+      {
+	double r = hypot(sinalpha1, cosalpha1);
+	sinalpha1 /= r;
+	cosalpha1 /= r;
+      }
+
+      sigmaCoeffSet(u2, c);      
+      s12 =  _b * sigmaScale(u2) *
+	((sigma2 - sigma1) +
+	 (SinSeries(sigma2, c, maxpow) - SinSeries(sigma1, c, maxpow)));
+      cerr << chidiff*cosbeta2*_a << "\n";
+    }
+#if DEBUG
+    cerr << lonsign << " " << latsign << " " << swapp << "\n";
+#endif
+    // Convert cosalpha[12], sinalpha[12] to bearing[12] accounting for
+    // lonsign, swapp, latsign.  The minus signs up result in [-180, 180).
+#if REVBEARING
+    bearing1 = -atan2(- lonsign * sinalpha1,
+		      + latsign * cosalpha1) / Constants::degree;
+    bearing2 = -atan2(+ lonsign * sinalpha2,
+		      - latsign * cosalpha2) / Constants::degree;
+#else
+    bearing1 = -atan2(- swapp * lonsign * sinalpha1,
+		      + swapp * latsign * cosalpha1) / Constants::degree;
+    bearing2 = -atan2(- swapp * lonsign * sinalpha2,
+		      + swapp * latsign * cosalpha2) / Constants::degree;
+#endif
+    if (swapp < 0)
+      swap(bearing1, bearing2);
+    return;
+  }
+
+  double Geodesic::ChiDiff(double sinbeta1, double cosbeta1,
+			   double sinbeta2, double cosbeta2,
+			   double sinalpha1, double cosalpha1,
+			   double& sinalpha2, double& cosalpha2,
+			   double& sigma1, double& sigma2,
+			   double& u2,
+			   double c[]) const throw() {
       // Pick sinalpha1 > 0 cosalpha1 in (-1, 1), i.e., alpha1 in (0, pi).  If
       // sinbeta1 == 0, we pick cosalpha1 in (-1, 0), i.e., alpha in (pi/2, pi)
 
@@ -274,13 +360,6 @@ namespace GeographicLib {
       sigma2 = atan2(sinbeta2, cosbeta2 * cosalpha2);
       double lambda2 = atan2(sinalpha0 * sinbeta2, cosbeta2 * cosalpha2);
 
-#if DEBUG
-      if (false && iang == 90) {
-	cerr << sinbeta1 << " " << cosbeta1 << " " << cosalpha1 << "\n";
-	cerr << sigma1/Constants::degree << " " << lambda1/Constants::degree << " "
-	     << sigma2/Constants::degree << " " << lambda2/Constants::degree << "\n";
-      }
-#endif
       double mu = sq(cosalpha0);
       u2 = mu * _ep2;
       dlambdaCoeffSet(_f, mu, c);
@@ -291,32 +370,16 @@ namespace GeographicLib {
 	 (SinSeries(sigma2, c, maxpow) - SinSeries(sigma1, c, maxpow)));
 
 #if DEBUG
-      if (false && iang == 85)
-	std::cerr << SinSeries(sigma2, c, maxpow) << " "
-		  << SinSeries(sigma1, c, maxpow) << "\n";
-      std::cerr << iang << " " << xchi12/Constants::degree << " "
+      std::cerr << sinalpha1 << " " << cosalpha1 << " "
+		<< atan2(sinalpha1, cosalpha1)/Constants::degree << " "
+		<< xchi12/Constants::degree << " "
 		<< (sigma2 - sigma1)/Constants::degree << " "
 		<< (lambda2 - lambda1)/Constants::degree << "\n";
 #endif
       // Compare xchi12 to chi12
-      }
-      sigmaCoeffSet(u2, c);      
-      s12 =  _b * sigmaScale(u2) *
-	((sigma2 - sigma1) +
-	 (SinSeries(sigma2, c, maxpow) - SinSeries(sigma1, c, maxpow)));
-    }
-    // Convert cosalpha[12], sinalpha[12] to bearing[12] accounting for
-    // lonsign, swapp, latsign.  The minus signs up result in [-180, 180).
-    bearing1 = -atan2(- lonsign * sinalpha1, latsign * cosalpha1) /
-      Constants::degree;
-    bearing2 = -atan2(- lonsign * sinalpha2, latsign * cosalpha2) /
-      Constants::degree;
-    if (swapp)
-      swap(bearing1, bearing2);
-    return;
+      return xchi12;
   }
-
-
+  
   GeodesicLine::GeodesicLine(const Geodesic& g,
 			     double lat1, double lon1, double bearing1) {
     bearing1 = Geodesic::AngNormalize(bearing1);
@@ -408,7 +471,11 @@ namespace GeographicLib {
     lat2 = atan2(sinbeta2, _f1 * cosbeta2) / Constants::degree;
     lon2 = Geodesic::AngNormalize(_lon1 +
 				  _bsign * (chi2 - _chi1) / Constants::degree);
+#if REVBEARING
+    bearing2 = Geodesic::AngNormalize(_bsign * alpha2 / Constants::degree + 180);
+#else
     bearing2 = Geodesic::AngNormalize(_bsign * alpha2 / Constants::degree);
+#endif
   }
  
 } // namespace GeographicLib
