@@ -21,12 +21,29 @@ namespace GeographicLib {
   class GeodesicLine;
 
   class Geodesic {
+  private:
+    static const int maxpow = 8;
+    static const int head2sense = -1;
+    static inline double sq(double x) { return x * x; }
+#if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+#endif
+    double ChiDiff(double sbet1, double cbet1,
+		   double sbet2, double cbet2,
+		   double salp1, double calp1,
+		   double& salp2, double& calp2,
+		   double& sig12,
+		   double& ssig1, double& csig1,
+		   double& ssig2, double& csig2,
+		   double& u2,
+		   double c[]) const throw();
+
   protected:
     friend class GeodesicLine;
     static const double eps2, tol;
     const double _a, _f, _f1, _e2, _ep2, _b;
-    static const int maxpow = 8;
-    static double SinSeries(double x, const double c[], int n) throw();
     static double SinSeries(double sinx, double cosx, const double c[], int n)
       throw();
     static inline double AngNormalize(double x) throw() {
@@ -45,29 +62,17 @@ namespace GeographicLib {
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;
     }
+    static inline void SinCosNorm(double& sinx, double& cosx) throw() {
+      double r = hypot(sinx, cosx);
+      sinx /= r;
+      cosx /= r;
+    }
 
     static double sigScale(double u2) throw();
     static void sigCoeffSet(double u2, double c[]) throw();
     static void sCoeffSet(double u2, double c[]) throw();
     static double dlamScale(double f, double mu) throw();
     static void dlamCoeffSet(double f, double mu, double e[]) throw();
-  private:
-    static inline double sq(double x) { return x * x; }
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) { return _hypot(x, y); }
-#else
-    static inline double hypot(double x, double y) { return ::hypot(x, y); }
-#endif
-    double ChiDiff(double sbet1, double cbet1,
-		   double sbet2, double cbet2,
-		   double salp1, double calp1,
-		   double& salp2, double& calp2,
-		   double& sig12,
-		   double& ssig1, double& csig1,
-		   double& ssig2, double& csig2,
-		   double& u2,
-		   double c[]) const throw();
-
   public:
     /**
      * Constructor for a ellipsoid radius \e a (meters) and inverse flattening
@@ -103,15 +108,18 @@ namespace GeographicLib {
 
     int _bsign;
     double _lat1, _lon1, _head1;
-    double _sScale, _S1, _calp0, _salp0, _f1, _dlamScale, _chi1;
+    double  _f1, _salp0, _calp0,
+      _ssig1, _csig1, _stau1, _ctau1, _slam1, _clam1,
+      _sScale, _dlamScale, _dtau1, _dchi1;
     double _sigCoeff[maxpow], _dlamCoeff[maxpow];
+    /*
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
     static inline double hypot(double x, double y) { return _hypot(x, y); }
 #else
     static inline double hypot(double x, double y) { return ::hypot(x, y); }
 #endif
-
+    */
   protected:
     friend class Geodesic;
     GeodesicLine(const Geodesic& g,
