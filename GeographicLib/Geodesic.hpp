@@ -30,15 +30,11 @@ namespace GeographicLib {
 #else
     static inline double hypot(double x, double y) { return ::hypot(x, y); }
 #endif
-    double ChiDiff(double sbet1, double cbet1,
-		   double sbet2, double cbet2,
-		   double salp1, double calp1,
-		   double& salp2, double& calp2,
-		   double& sig12,
-		   double& ssig1, double& csig1,
-		   double& ssig2, double& csig2,
-		   double& u2,
-		   double c[]) const throw();
+    double Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
+		 double salp1, double calp1, double& salp2, double& calp2,
+		 double& sig12,
+		 double& ssig1, double& csig1, double& ssig2, double& csig2,
+		 double& u2, double c[]) const throw();
 
   protected:
     friend class GeodesicLine;
@@ -46,6 +42,8 @@ namespace GeographicLib {
     const double _a, _f, _f1, _e2, _ep2, _b;
     static double SinSeries(double sinx, double cosx, const double c[], int n)
       throw();
+    static double SinSeriesDiff(double sinx, double cosx,
+				const double c[], int n, double& diff) throw();
     static inline double AngNormalize(double x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
       return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
@@ -68,11 +66,11 @@ namespace GeographicLib {
       cosx /= r;
     }
 
-    static double sigScale(double u2) throw();
-    static void sigCoeffSet(double u2, double c[]) throw();
-    static void sCoeffSet(double u2, double c[]) throw();
+    static double tauScale(double u2) throw();
+    static void tauCoeff(double u2, double c[]) throw();
+    static void sigCoeff(double u2, double c[]) throw();
     static double dlamScale(double f, double mu) throw();
-    static void dlamCoeffSet(double f, double mu, double e[]) throw();
+    static void dlamCoeff(double f, double mu, double e[]) throw();
   public:
     /**
      * Constructor for a ellipsoid radius \e a (meters) and inverse flattening

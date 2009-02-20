@@ -46,24 +46,43 @@ namespace GeographicLib {
   double Geodesic::SinSeries(double sinx, double cosx,
 			     const double c[], int n) throw() {
     // Evaluate y = sum(c[i - 1] * sin(2 * i * x), i, 1, n) using Clenshaw
-    // summation
+    // summation.  (Indices into c offset by 1.)
     double
       ar = 2 * (sq(cosx) - sq(sinx)),	// cos(2 * x)
       y0 = c[n - 1], y1 = 0;	// Accumulators for sum
     for (int j = n; --j;) {	// j = n-1 .. 1
       double y2 = y1;
-      y1 = y0;
-      y0  = ar * y1 - y2 + c[j - 1];
+      y1 = y0; y0  = ar * y1 - y2 + c[j - 1];
     }
     return 2 * sinx * cosx * y0; // sin(2 * x) * y0
   }
 
-  // s = b * q(u2) * ( sig + t(sig, u2) )
-  double Geodesic::sigScale(double u2) throw() {
+  double Geodesic::SinSeriesDiff(double sinx, double cosx,
+				 const double c[], int n,
+				 double& diff) throw() {
+    // Evaluate y = sum(c[i] * sin(2 * i * x), i, 1, n) and z = dy/dx using
+    // Clenshaw summation.  (Indices into c offset by 1.)
+    double
+      ar = 2 * (sq(cosx) - sq(sinx)),	// cos(2 * x)
+      y0 = c[n - 1], y1 = 0,	// Accumulators for sum
+      z0 = 2 * n * c[n - 1], z1 = 0;
+    for (int j = n; --j;) {	// j = n-1 .. 1
+      double y2 = y1, z2 = z1;
+      y1 = y0; y0 = ar * y1 - y2 + c[j - 1];
+      z1 = z0; z0 = ar * z1 - z2 + 2 * j * c[j - 1];
+    }
+    diff = - y1 + y0 * ar / 2;	   // - y[2] + y[1] * cos(2 * x)
+    return 2 * sinx * cosx * y0;   // sin(2 * x) * y[1]
+  }
+
+  // The scale factor to convert tau to s/b
+  double Geodesic::tauScale(double u2) throw() {
     return (u2*(u2*(u2*(u2*(u2*(u2*((3624192-2760615*u2)*u2-4967424)+7225344)-11468800)+20971520)-50331648)+268435456)+1073741824.)/1073741824.;
   }
 
-  void Geodesic::sigCoeffSet(double u2, double c[]) throw()  {
+  // Coefficients of sine series to convert sigma to tau (a reversion of
+  // tauCoeff).
+  void Geodesic::tauCoeff(double u2, double c[]) throw()  {
     double t = u2;
     c[0]=t*(u2*(u2*(u2*(u2*(u2*(u2*(428731*u2-557402)+748544)-1046528)+1540096)-2424832)+4194304)-8388608)/67108864;
     t *= u2;
@@ -82,7 +101,9 @@ namespace GeographicLib {
     c[7]=-429*t/17179869184.;
   }
 
-  void Geodesic::sCoeffSet(double u2, double d[]) throw() {
+  // Coefficients of sine series to convert tau to sigma (a reversion of
+  // tauCoeff).
+  void Geodesic::sigCoeff(double u2, double d[]) throw() {
     double t = u2;
     d[0]=t*(u2*(u2*(u2*(u2*(u2*((15107266-11062823*u2)*u2-21467904)+31944192)-50135040)+83755008)-150994944)+301989888)/2415919104.;
     t *= u2;
@@ -105,7 +126,7 @@ namespace GeographicLib {
     return  f*(f*(f*(f*(f*(f*(f*(f*mu*(mu*(mu*(mu*(mu*(mu*(184041*mu-960498)+2063880)-2332400)+1459200)-479232)+65536)+mu*(mu*(mu*(mu*((544320-121968*mu)*mu-963200)+844800)-368640)+65536))+mu*(mu*(mu*(mu*(84672*mu-313600)+435200)-270336)+65536))+mu*(mu*((184320-62720*mu)*mu-184320)+65536))+mu*(mu*(51200*mu-110592)+65536))+(65536-49152*mu)*mu)+65536*mu)-262144)/262144;
   }
 
-  void Geodesic::dlamCoeffSet(double f, double mu, double e[]) throw() {
+  void Geodesic::dlamCoeff(double f, double mu, double e[]) throw() {
     double s = f*mu, t = s;
     e[0] = (f*(f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*((30816920-5080225*mu)*mu-79065664)+110840000)-91205632)+43638784)-11010048)+1048576)+mu*(mu*(mu*(mu*(mu*(3213004*mu-17049088)+37224832)-42637312)+26828800)-8650752)+1048576)+mu*(mu*(mu*((9543424-2100608*mu)*mu-17160192)+15196160)-6553600)+1048576)+mu*(mu*(mu*(1435648*mu-5419008)+7626752)-4718592)+1048576)+mu*((3129344-1044480*mu)*mu-3145728)+1048576)+mu*(835584*mu-1835008)+1048576)-786432*mu+1048576)+1048576)*t/8388608; 
     t *= s; 
@@ -191,39 +212,35 @@ namespace GeographicLib {
       cchi12 = cos(chi12),	// lon12 == 90 isn't interesting
       schi12 = lon12 == 180 ? 0 :sin(chi12);
 
-    double calp1, salp1, calp2, salp2;
-    double c[maxpow];
+    double calp1, salp1, calp2, salp2, c[maxpow];
     // Enumerate all the cases where the geodesic is a meridian.  This includes
     // coincident points.
     if (schi12 == 0 || lat1 == -90) {
-      calp1 = lon12 == 0 || lat1 == -90 ? 1 : -1;
-      salp1 = 0;
-      // cos(alp)=cos(lam)*cos(alp0)
-      // cos(alp0) = 1
-      // lam1 = calp1 > 0 ? 0 : pi
-      // cos(lam2) = calp1 * cos(chi12)
-      calp2 = cchi12 * calp1;
-      // We assume alp in [0, pi], like chi12, so no sign change here.
-      salp2 = schi12;
+      // Head to the target longitude
+      calp1 = cchi12; salp1 = schi12;
+      // At the target we're heading north
+      calp2 = 1; salp2 = 0;
 
       double
-	// tan(bet) = tan(sig)*cos(alp),
+	// tan(bet) = tan(sig) * cos(alp),
 	ssig1 = sbet1, csig1 = calp1 * cbet1,
 	ssig2 = sbet2, csig2 = calp2 * cbet2;
       SinCosNorm(ssig1, csig1);
       SinCosNorm(ssig2, csig2);
 	
+      // sig12 = sig2 - sig1
       double sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 			   csig1 * csig2 + ssig1 * ssig2);
 
-      sigCoeffSet(_ep2, c);
-      s12 = _b * sigScale(_ep2) *
+      tauCoeff(_ep2, c);
+      s12 = _b * tauScale(_ep2) *
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
 		  SinSeries(ssig1, csig1, c, maxpow)));
-    } else if (sbet1 == 0 && lon12 <= _f1 * 180) { // and sbet2 == 0
+    } else if (sbet1 == 0 &&	// and sbet2 == 0
+	       // Mimic the way Chi12 works with calp1 = 0
+	       chi12 <= Constants::pi - _f * Constants::pi) {
       // Geodesic runs along equator
-      calp1 = calp2 = 0;
-      salp1 = salp2 = 1;
+      calp1 = calp2 = 0; salp1 = salp2 = 1;
       s12 = _a * chi12;
     } else {
 
@@ -242,10 +259,9 @@ namespace GeographicLib {
       std::cerr << setprecision(20);
 #endif
       double
-	salp1a = 0, calp1a = 1,
-	salp1b = 0, calp1b = -1;
+	salp1a = 0, calp1a = 1, salp1b = 0, calp1b = -1;
       double
-	chidiffa = ChiDiff(sbet1, cbet1,
+	chidiffa = Chi12(sbet1, cbet1,
 			   sbet2, cbet2,
 			   salp1a, calp1a,
 			   salp2, calp2,
@@ -253,7 +269,7 @@ namespace GeographicLib {
 			   ssig1, csig1,
 			   ssig2, csig2,
 			   u2, c) - chi12,
-	chidiffc = ChiDiff(sbet1, cbet1,
+	chidiffc = Chi12(sbet1, cbet1,
 			   sbet2, cbet2,
 			   salp1b, calp1b,
 			   salp2, calp2,
@@ -270,7 +286,7 @@ namespace GeographicLib {
 	  salp1 = 1;
 	SinCosNorm(salp1, calp1);
 
-	chidiff = ChiDiff(sbet1, cbet1,
+	chidiff = Chi12(sbet1, cbet1,
 			  sbet2, cbet2,
 			  salp1, calp1,
 			  salp2, calp2,
@@ -296,8 +312,8 @@ namespace GeographicLib {
 	}
       }
 	
-      sigCoeffSet(u2, c);      
-      s12 =  _b * sigScale(u2) *
+      tauCoeff(u2, c);      
+      s12 =  _b * tauScale(u2) *
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
 		  SinSeries(ssig1, csig1, c, maxpow)));
       cerr << chidiff*cbet2*_a << "\n";
@@ -320,7 +336,7 @@ namespace GeographicLib {
     return;
   }
 
-  double Geodesic::ChiDiff(double sbet1, double cbet1,
+  double Geodesic::Chi12(double sbet1, double cbet1,
 			   double sbet2, double cbet2,
 			   double salp1, double calp1,
 			   double& salp2, double& calp2,
@@ -342,39 +358,39 @@ namespace GeographicLib {
 	salp0 = salp1 * cbet1,
 	calp0 = hypot(calp1, salp1 * sbet1);
       
-      double slam1, clam1, slam2, clam2;
-      ssig1 = sbet1;
+      double slam1, clam1, slam2, clam2, lam12, chi12, mu;
+      ssig1 = sbet1; slam1 = salp0 * sbet1;
       csig1 = clam1 = sbet1 != 0 || calp1 > 0 ? calp1 * cbet1 : -1;
-      slam1 = salp0 * sbet1;
       SinCosNorm(ssig1, csig1);
       SinCosNorm(slam1, clam1);
 
-      salp2 = salp0 / cbet2;
+      // Enforce symmetries in the case abs(bet2) = -bet1
+      salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
       // calp2 = sqrt(1 - sq(salp2))
-      //           = sqrt(sq(calp0) - sq(sbet2)) / cbet2
+      //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
       // and subst for calp0 and rearrange to give (choose positive sqrt
       // to give alp2 in [0, pi/2]).  N.B. parens around
       //    sq(sbet1) - sq(sbet2)
       // are needed to maintain accuracy when calph1 is small.
-      calp2 = sqrt(sq(calp1 * cbet1) +
-		   (sbet1 - sbet2) * (sbet1 + sbet2)) / cbet2;
-      ssig2 = sbet2;
+      calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
+	sqrt(sq(calp1 * cbet1) +
+	     (sbet1 - sbet2) * (sbet1 + sbet2)) / cbet2 :
+	abs(calp1);
+      ssig2 = sbet2; slam2 = salp0 * sbet2;
       csig2 = clam2 = sbet2 != 0 || calp2 != 0 ? calp2 * cbet2 : 1;
-      slam2 = salp0 * sbet2;
       SinCosNorm(ssig2, csig2);
       SinCosNorm(slam2, clam2);
 
+      // sig12 = sig2 - sig1
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
-		      csig1 * csig2 + ssig1 * ssig2);
+		    csig1 * csig2 + ssig1 * ssig2);
 
-      double lam12 =
-	atan2(max(clam1 * slam2 - slam1 * clam2, 0.0),
-	      clam1 * clam2 + slam1 * slam2);
-      double mu = sq(calp0);
-      u2 = mu * _ep2;
-      dlamCoeffSet(_f, mu, c);
-      double 
-	xchi12 = lam12 +
+      // lam12 = lam2 - lam1
+      lam12 = atan2(max(clam1 * slam2 - slam1 * clam2, 0.0),
+		    clam1 * clam2 + slam1 * slam2);
+      mu = sq(calp0);
+      dlamCoeff(_f, mu, c);
+      chi12 = lam12 +
 	salp0 * dlamScale(_f, mu) *
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
 		  SinSeries(ssig1, csig1, c, maxpow)));
@@ -391,18 +407,18 @@ namespace GeographicLib {
       */
       std::cerr << salp1 << " " << calp1 << " "
 		<< atan2(salp1, calp1)/Constants::degree << " "
-		<< xchi12/Constants::degree << " "
+		<< chi12/Constants::degree << " "
 		<< sig12/Constants::degree << " "
 		<< lam12/Constants::degree << "\n";
 #endif
-      // Compare xchi12 to chi12
-      return xchi12;
+      u2 = mu * _ep2;
+      return chi12;
   }
   
   GeodesicLine::GeodesicLine(const Geodesic& g,
 			     double lat1, double lon1, double head1) {
     head1 = Geodesic::AngNormalize(head1);
-    // Normalize head at poles.  Evaluate heads at lat = +/- (90 - eps).
+    // Normalize heading at poles.  Evaluate heads at lat = +/- (90 - eps).
     if (lat1 == 90) {
       lon1 -= head1 - (head1 >= 0 ? 180 : -180);
       head1 = -180;
@@ -433,11 +449,11 @@ namespace GeographicLib {
     cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
     Geodesic::SinCosNorm(sbet1, cbet1);
 
+    // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
     _salp0 = salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
     // Alt: calp0 = hypot(sbet1, calp1 * cbet1).  The following
     // is slightly better (consider the case salp1 = 0).
     _calp0 = hypot(calp1, salp1 * sbet1);
-    double ssig1, csig1, slam1, clam1;
     // Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
     // sig = 0 is nearest northward crossing of equator.
     // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
@@ -447,31 +463,30 @@ namespace GeographicLib {
     // With alp0 in (0, pi/2], quadrants for sig and lam coincide.
     // No atan2(0,0) ambiguity at poles sce cbet1 = +eps.
     // With alp0 = 0, lam1 = 0 for alp1 = 0, lam1 = pi for alp1 = pi.
-    ssig1 = sbet1; slam1 = _salp0 * sbet1;
-    csig1 = clam1 = sbet1 != 0 || calp1 != 0 ? cbet1 * calp1 : 0;
-    Geodesic::SinCosNorm(ssig1, csig1); // sig1 in (-pi, pi]
-    Geodesic::SinCosNorm(slam1, clam1);
+    _ssig1 = sbet1; _slam1 = _salp0 * sbet1;
+    _csig1 = _clam1 = sbet1 != 0 || calp1 != 0 ? cbet1 * calp1 : 0;
+    Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
+    Geodesic::SinCosNorm(_slam1, _clam1);
     double
       mu = Geodesic::sq(_calp0),
       u2 = mu * g._ep2;
 
-    _sScale =  g._b * Geodesic::sigScale(u2);
-    Geodesic::sigCoeffSet(u2, _sigCoeff);
+    _sScale =  g._b * Geodesic::tauScale(u2);
+    Geodesic::tauCoeff(u2, _sigCoeff);
+    _dtau1 = Geodesic::SinSeries(_ssig1, _csig1, _sigCoeff, maxpow);
     {
-      double
-	t = Geodesic::SinSeries(ssig1, csig1, _sigCoeff, maxpow),
-	st = sin(t), ct = cos(t);
-      _stau1 = ssig1 * ct + csig1 * st;
-      _ctau1 = csig1 * ct - ssig1 * st;
-      _dtau1 = t;
+      double s = sin(_dtau1), c = cos(_dtau1);
+      // tau1 = sig1 + dtau1
+      _stau1 = _ssig1 * c + _csig1 * s;
+      _ctau1 = _csig1 * c - _ssig1 * s;
     }
-    _ssig1 = ssig1; _csig1 = csig1;
-    Geodesic::sCoeffSet(u2, _sigCoeff);
+    Geodesic::sigCoeff(u2, _sigCoeff);
+    // Not necessary because sigCoeff reverts tauCoeff
+    //    _dtau1 = -SinSeries(_stau1, _ctau1, _sigCoeff, maxpow);
 
     _dlamScale = _salp0 * Geodesic::dlamScale(g._f, mu);
-    Geodesic::dlamCoeffSet(g._f, mu, _dlamCoeff);
-    _dchi1 = Geodesic::SinSeries(ssig1, csig1, _dlamCoeff, maxpow);
-    _slam1 = slam1; _clam1 = clam1;
+    Geodesic::dlamCoeff(g._f, mu, _dlamCoeff);
+    _dchi1 = Geodesic::SinSeries(_ssig1, _csig1, _dlamCoeff, maxpow);
   }
 
   void GeodesicLine::Position(double s12,
@@ -484,11 +499,13 @@ namespace GeographicLib {
     double ssig2, csig2, sbet2, cbet2, slam2, clam2, salp2, calp2;
     tau12 = s12 / _sScale;
     s = sin(tau12); c = cos(tau12);
-    sig12 = tau12 + _dtau1 +
-      Geodesic::SinSeries(_stau1 * c + _ctau1 * s,
-			  _ctau1 * c - _stau1 * s,
-			  _sigCoeff, maxpow);
+    sig12 = tau12 + (_dtau1 +
+		     // tau2 = tau1 + tau12
+		     Geodesic::SinSeries(_stau1 * c + _ctau1 * s,
+					 _ctau1 * c - _stau1 * s,
+					 _sigCoeff, maxpow));
     s = sin(sig12); c = cos(sig12);
+    // sig2 = sig1 + sig12
     ssig2 = _ssig1 * c + _csig1 * s;
     csig2 = _csig1 * c - _ssig1 * s;
     sbet2 = _calp0 * ssig2;
@@ -496,14 +513,18 @@ namespace GeographicLib {
     cbet2 = Geodesic::hypot(_salp0, _calp0 * csig2);
     // tan(lam2)=sin(alp0)*tan(sig2)
     slam2 = _salp0 * ssig2; clam2 = csig2;  // No need to normalize
+    // Geodesic::SinCosNorm(slam2, clam2);	    // Not necessary
     // tan(alp0)=cos(sig2)*tan(alp2)
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
+    // lam12 = lam2 - lam1
     lam12 = atan2(slam2 * _clam1 - clam2 * _slam1,
 		  clam2 * _clam1 + slam2 * _slam1);
     chi12 = lam12 + _dlamScale *
       ( sig12 +
 	(Geodesic::SinSeries(ssig2, csig2, _dlamCoeff, maxpow)  - _dchi1));
     lon12 = _bsign * chi12 / Constants::degree;
+    // Can't use AngNormalize because longitude might have wrapped multiple
+    // times.
     lon12 = lon12 - 360 * floor(lon12/360 + 0.5);
     lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree;
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);

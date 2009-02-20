@@ -294,7 +294,7 @@ namespace GeographicLib {
     //    b(n, x) = -1
     //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = n*x, B = x ]
     //    c[0] = 1; c[k] = 2*k*_hp[k-1]
-    //    S = (c[0] - y[2])  + y[1] * cos(x)
+    //    S = (c[0] - y[2]) + y[1] * cos(x)
     double
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
