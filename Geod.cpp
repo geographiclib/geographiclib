@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
   }
 
   const GeographicLib::Geodesic& geod = GeographicLib::Geodesic::WGS84;
+  // const GeographicLib::Geodesic geod(6378388.0, 297.0);
   GeographicLib::GeodesicLine l;
 
   std::cout << std::setprecision(16);

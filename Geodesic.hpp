@@ -34,7 +34,7 @@ namespace GeographicLib {
 		 double salp1, double calp1, double& salp2, double& calp2,
 		 double& sig12,
 		 double& ssig1, double& csig1, double& ssig2, double& csig2,
-		 double& u2, double c[]) const throw();
+		 double& u2, double& dchi12, double c[]) const throw();
 
   protected:
     friend class GeodesicLine;
@@ -70,7 +70,9 @@ namespace GeographicLib {
     static void tauCoeff(double u2, double c[]) throw();
     static void sigCoeff(double u2, double c[]) throw();
     static double dlamScale(double f, double mu) throw();
+    static double dlamScalemu(double f, double mu) throw();
     static void dlamCoeff(double f, double mu, double e[]) throw();
+    static void dlamCoeffmu(double f, double mu, double e[]) throw();
   public:
     /**
      * Constructor for a ellipsoid radius \e a (meters) and inverse flattening

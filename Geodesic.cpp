@@ -48,9 +48,9 @@ namespace GeographicLib {
     // Evaluate y = sum(c[i - 1] * sin(2 * i * x), i, 1, n) using Clenshaw
     // summation.  (Indices into c offset by 1.)
     double
-      ar = 2 * (sq(cosx) - sq(sinx)),	// cos(2 * x)
-      y0 = c[n - 1], y1 = 0;	// Accumulators for sum
-    for (int j = n; --j;) {	// j = n-1 .. 1
+      ar = 2 * (sq(cosx) - sq(sinx)), // 2 * cos(2 * x)
+      y0 = c[n - 1], y1 = 0;	      // Accumulators for sum
+    for (int j = n; --j;) {	      // j = n-1 .. 1
       double y2 = y1;
       y1 = y0; y0  = ar * y1 - y2 + c[j - 1];
     }
@@ -63,15 +63,15 @@ namespace GeographicLib {
     // Evaluate y = sum(c[i] * sin(2 * i * x), i, 1, n) and z = dy/dx using
     // Clenshaw summation.  (Indices into c offset by 1.)
     double
-      ar = 2 * (sq(cosx) - sq(sinx)),	// cos(2 * x)
-      y0 = c[n - 1], y1 = 0,	// Accumulators for sum
+      ar = 2 * (sq(cosx) - sq(sinx)), // 2 * cos(2 * x)
+      y0 = c[n - 1], y1 = 0,	      // Accumulators for sum
       z0 = 2 * n * c[n - 1], z1 = 0;
     for (int j = n; --j;) {	// j = n-1 .. 1
       double y2 = y1, z2 = z1;
       y1 = y0; y0 = ar * y1 - y2 + c[j - 1];
       z1 = z0; z0 = ar * z1 - z2 + 2 * j * c[j - 1];
     }
-    diff = - y1 + y0 * ar / 2;	   // - y[2] + y[1] * cos(2 * x)
+    diff = - z1 + z0 * ar / 2;	   // - y[2] + y[1] * cos(2 * x)
     return 2 * sinx * cosx * y0;   // sin(2 * x) * y[1]
   }
 
@@ -121,35 +121,60 @@ namespace GeographicLib {
     t *= u2;
     d[7]=109167851*t/5411658792960.;
   }
-    
+
   double Geodesic::dlamScale(double f, double mu) throw() {
-    return  f*(f*(f*(f*(f*(f*(f*(f*mu*(mu*(mu*(mu*(mu*(mu*(184041*mu-960498)+2063880)-2332400)+1459200)-479232)+65536)+mu*(mu*(mu*(mu*((544320-121968*mu)*mu-963200)+844800)-368640)+65536))+mu*(mu*(mu*(mu*(84672*mu-313600)+435200)-270336)+65536))+mu*(mu*((184320-62720*mu)*mu-184320)+65536))+mu*(mu*(51200*mu-110592)+65536))+(65536-49152*mu)*mu)+65536*mu)-262144)/262144;
+    double g = (f*(f*(f*(f*(f*(f*(f*mu*(mu*(mu*(mu*(mu*(mu*(184041*mu-960498)+2063880)-2332400)+1459200)-479232)+65536)+mu*(mu*(mu*(mu*((544320-121968*mu)*mu-963200)+844800)-368640)+65536))+mu*(mu*(mu*(mu*(84672*mu-313600)+435200)-270336)+65536))+mu*(mu*((184320-62720*mu)*mu-184320)+65536))+mu*(mu*(51200*mu-110592)+65536))+(65536-49152*mu)*mu)+65536*mu)-262144)/262144;
+    return f * g;
+  }
+
+  double Geodesic::dlamScalemu(double f, double mu) throw() {
+    double h = (f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*(1288287*mu-5762988)+10319400)-9329600)+4377600)-958464)+65536)+mu*(mu*(mu*((2721600-731808*mu)*mu-3852800)+2534400)-737280)+65536)+mu*(mu*(mu*(423360*mu-1254400)+1305600)-540672)+65536)+mu*((552960-250880*mu)*mu-368640)+65536)+mu*(153600*mu-221184)+65536)-98304*mu+65536)+65536)/262144;
+    return h * sq(f);
   }
 
   void Geodesic::dlamCoeff(double f, double mu, double e[]) throw() {
     double s = f*mu, t = s;
-    e[0] = (f*(f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*((30816920-5080225*mu)*mu-79065664)+110840000)-91205632)+43638784)-11010048)+1048576)+mu*(mu*(mu*(mu*(mu*(3213004*mu-17049088)+37224832)-42637312)+26828800)-8650752)+1048576)+mu*(mu*(mu*((9543424-2100608*mu)*mu-17160192)+15196160)-6553600)+1048576)+mu*(mu*(mu*(1435648*mu-5419008)+7626752)-4718592)+1048576)+mu*((3129344-1044480*mu)*mu-3145728)+1048576)+mu*(835584*mu-1835008)+1048576)-786432*mu+1048576)+1048576)*t/8388608; 
-    t *= s; 
-    e[1] = (f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*(2092939*mu-12074982)+29005488)-37129344)+26700800)-10207232)+1605632)+mu*(mu*(mu*((6316264-1270932*mu)*mu-12598272)+12618240)-6348800)+1277952)+mu*(mu*(mu*(787136*mu-3268608)+5143040)-3645440)+983040)+mu*((1648640-498688*mu)*mu-1859584)+720896)+mu*(323584*mu-778240)+491520)-212992*mu+294912)+131072)*t/8388608; 
-    t *= s; 
-    e[2] = (f*(f*(f*(f*(f*(mu*(mu*(mu*((13101384-2474307*mu)*mu-28018000)+30323072)-16658432)+3727360)+mu*(mu*(mu*(1386756*mu-6137024)+10352064)-7923712)+2334720)+mu*((2705152-770048*mu)*mu-3254272)+1351680)+mu*(416256*mu-1052672)+696320)-208896*mu+294912)+81920)*t/25165824; 
-    t *= s; 
-    e[3] = (f*(f*(f*(f*(mu*(mu*(mu*(273437*mu-1265846)+2238200)-1799088)+557760)+mu*((492328-134532*mu)*mu-616928)+266560)+mu*(62080*mu-162048)+110080)-25088*mu+35840)+7168)*t/8388608; 
-    t *= s; 
-    e[4] = (f*(f*(f*(mu*((1333160-353765*mu)*mu-1718160)+761600)+mu*(142140*mu-379200)+262080)-48000*mu+69120)+10752)*t/41943040; 
-    t *= s; 
-    e[5] = (f*(f*(mu*(39633*mu-107426)+75152)-11484*mu+16632)+2112)*t/25165824; 
-    t *= s; 
-    e[6] = (f*(16016-11011*mu)+1716)*t/58720256; 
-    t *= s; 
+    e[0] = (f*(f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*((30816920-5080225*mu)*mu-79065664)+110840000)-91205632)+43638784)-11010048)+1048576)+mu*(mu*(mu*(mu*(mu*(3213004*mu-17049088)+37224832)-42637312)+26828800)-8650752)+1048576)+mu*(mu*(mu*((9543424-2100608*mu)*mu-17160192)+15196160)-6553600)+1048576)+mu*(mu*(mu*(1435648*mu-5419008)+7626752)-4718592)+1048576)+mu*((3129344-1044480*mu)*mu-3145728)+1048576)+mu*(835584*mu-1835008)+1048576)-786432*mu+1048576)+1048576)*t/8388608;
+    t *= s;
+    e[1] = (f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*(2092939*mu-12074982)+29005488)-37129344)+26700800)-10207232)+1605632)+mu*(mu*(mu*((6316264-1270932*mu)*mu-12598272)+12618240)-6348800)+1277952)+mu*(mu*(mu*(787136*mu-3268608)+5143040)-3645440)+983040)+mu*((1648640-498688*mu)*mu-1859584)+720896)+mu*(323584*mu-778240)+491520)-212992*mu+294912)+131072)*t/8388608;
+    t *= s;
+    e[2] = (f*(f*(f*(f*(f*(mu*(mu*(mu*((13101384-2474307*mu)*mu-28018000)+30323072)-16658432)+3727360)+mu*(mu*(mu*(1386756*mu-6137024)+10352064)-7923712)+2334720)+mu*((2705152-770048*mu)*mu-3254272)+1351680)+mu*(416256*mu-1052672)+696320)-208896*mu+294912)+81920)*t/25165824;
+    t *= s;
+    e[3] = (f*(f*(f*(f*(mu*(mu*(mu*(273437*mu-1265846)+2238200)-1799088)+557760)+mu*((492328-134532*mu)*mu-616928)+266560)+mu*(62080*mu-162048)+110080)-25088*mu+35840)+7168)*t/8388608;
+    t *= s;
+    e[4] = (f*(f*(f*(mu*((1333160-353765*mu)*mu-1718160)+761600)+mu*(142140*mu-379200)+262080)-48000*mu+69120)+10752)*t/41943040;
+    t *= s;
+    e[5] = (f*(f*(mu*(39633*mu-107426)+75152)-11484*mu+16632)+2112)*t/25165824;
+    t *= s;
+    e[6] = (f*(16016-11011*mu)+1716)*t/58720256;
+    t *= s;
     e[7] = 715*t/67108864;
   }
+
+  void Geodesic::dlamCoeffmu(double f, double mu, double h[]) throw() {
+    double s = f*mu, t = f;
+    h[0] = (f*(f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*((53929610-10160450*mu)*mu-118598496)+138550000)-91205632)+32729088)-5505024)+262144)+mu*(mu*(mu*(mu*(mu*(5622757*mu-25573632)+46531040)-42637312)+20121600)-4325376)+262144)+mu*(mu*(mu*((11929280-3150912*mu)*mu-17160192)+11397120)-3276800)+262144)+mu*(mu*(mu*(1794560*mu-5419008)+5720064)-2359296)+262144)+mu*((2347008-1044480*mu)*mu-1572864)+262144)+mu*(626688*mu-917504)+262144)-393216*mu+262144)+262144)*t/2097152;
+    t *= s;
+    h[1] = (f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*(8371756*mu-42262437)+87016464)-92823360)+53401600)-15310848)+1605632)+mu*(mu*(mu*((18948792-4448262*mu)*mu-31495680)+25236480)-9523200)+1277952)+mu*(mu*(mu*(2361408*mu-8171520)+10286080)-5468160)+983040)+mu*((3297280-1246720*mu)*mu-2789376)+720896)+mu*(647168*mu-1167360)+491520)-319488*mu+294912)+131072)*t/4194304;
+    t *= s;
+    h[2] = (f*(f*(f*(f*(f*(mu*(mu*(mu*((22927422-4948614*mu)*mu-42027000)+37903840)-16658432)+2795520)+mu*(mu*(mu*(2426823*mu-9205536)+12940080)-7923712)+1751040)+mu*((3381440-1155072*mu)*mu-3254272)+1013760)+mu*(520320*mu-1052672)+522240)-208896*mu+221184)+61440)*t/6291456;
+    t *= s;
+    h[3] = (f*(f*(f*(f*(mu*(mu*(mu*(1093748*mu-4430461)+6714600)-4497720)+1115520)+mu*((1476984-470862*mu)*mu-1542320)+533120)+mu*(186240*mu-405120)+220160)-62720*mu+71680)+14336)*t/4194304;
+    t *= s;
+    h[4] = (f*(f*(f*(mu*((466606-141506*mu)*mu-515448)+190400)+mu*(49749*mu-113760)+65520)-14400*mu+17280)+2688)*t/2097152;
+    t *= s;
+    h[5] = (f*(f*(mu*(158532*mu-375991)+225456)-40194*mu+49896)+6336)*t/12582912;
+    t *= s;
+    h[6] = (f*(4004-3146*mu)+429)*t/2097152;
+    t *= s;
+    h[7] = 715*t/8388608;
+}
 
   GeodesicLine Geodesic::Line(double lat1, double lon1, double head1)
     const throw() {
     return GeodesicLine(*this, lat1, lon1, head1);
   }
- 
+
   void Geodesic::Direct(double lat1, double lon1, double head1, double s12,
 			double& lat2, double& lon2, double& head2)
     const throw() {
@@ -208,6 +233,7 @@ namespace GeographicLib {
     SinCosNorm(sbet2, cbet2);
 
     double
+      phi12a = (lat2 + lat1) * Constants::degree, // How close to antipodal lat?
       chi12 = lon12 * Constants::degree,
       cchi12 = cos(chi12),	// lon12 == 90 isn't interesting
       schi12 = lon12 == 180 ? 0 :sin(chi12);
@@ -245,19 +271,132 @@ namespace GeographicLib {
     } else {
 
       // Now point1 and point2 belong within a hemisphere bounded by a line of
-      // longitude (lon = lon12/2 +/- 90).  Possible sgular cases left to
-      // worry about are:
-
-      if (sbet1 == 0) { 	// and sbet2 == 0 and lon12 > _f1 * 180
-	// Break degeneracy of points on equator.  This gets sig1 into the
-	// right quadrant.
-	sbet1 = 0 * -eps2;
-      }
+      // longitude (lon = lon12/2 +/- 90).
 
       double sig12, ssig1, csig1, ssig2, csig2, u2;
-#if DEBUG
+
+      double
+	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi,
+	chicrit = Constants::pi - chicrita;
+      cerr << setprecision(20);
+      cerr << chicrit / Constants::degree << " ";
+      cerr << chi12 - chicrit << "\n";
+      if (chi12 == chicrit && cbet1 == cbet2 && sbet2 == -sbet1) {
+	sig12 = Constants::pi;
+	ssig1 = -1; salp1 = salp2 =ssig2 = 1;
+	calp1 = calp2 = csig1 = csig2 = 0;
+	u2 = sq(sbet1) * _ep2;
+      } else {
+	if (chi12 > chicrit && phi12a > - chicrita) {
+	  salp1 = min(1.0, (Constants::pi - chi12) / chicrita);
+	  calp1 = - sqrt(1 - sq(salp1));
+	} else {
+	  salp1 = 1;
+	  calp1 = sbet2 <= 0 ? -eps2 : eps2;
+	}
+
+      //  Possible singular cases left to
+      // worry about are ...
+	if (false) {
+      salp1 = 1; calp1 = 0;
+      if (cbet2 == cbet1) {
+	if (sbet2 == -sbet1)
+	  calp1 = 0 * eps2;
+	else if (sbet2 == sbet1)
+	  calp1 = -eps2;
+      }
+	}
       std::cerr << setprecision(20);
-#endif
+
+	if (false) {
+	double dv;
+      Chi12(sbet1, cbet1, sbet2, cbet2,
+	    1.0, eps2, salp2, calp2,
+	    sig12, ssig1, csig1, ssig2, csig2,
+	    u2, dv, c);
+      Chi12(sbet1, cbet1, sbet2, cbet2,
+	    1.0, -eps2, salp2, calp2,
+	    sig12, ssig1, csig1, ssig2, csig2,
+	    u2, dv, c);
+      Chi12(sbet1, cbet1, sbet2, cbet2,
+	    1.0, 0.0, salp2, calp2,
+	    sig12, ssig1, csig1, ssig2, csig2,
+	    u2, dv, c);
+      return;
+	}
+
+	if (false) {
+	double dchi12;
+      for (unsigned ia = 0; ia <= 1800; ++ia) {
+	double
+	  ang1 = ia * 0.1,
+	  alp1 = ang1 * Constants::degree,
+	  salp1 = sin(alp1), calp1 = cos(alp1),
+	  chi12 = 
+	Chi12(sbet1, cbet1,
+			   sbet2, cbet2,
+			   salp1, calp1,
+			   salp2, calp2,
+			   sig12,
+			   ssig1, csig1,
+			   ssig2, csig2,
+	      u2, dchi12, c);
+	cerr << ang1 << " " << chi12 << " " << dchi12 << "\n";
+      }
+      return;
+	}
+
+	int trip = 0;
+	cerr << "S "
+	     << atan2(salp1, calp1) / Constants::degree << " "
+	     << atan2(-calp1, salp1) / Constants::degree << "\n";
+
+      for (unsigned i = 0; i < 60; ++i) {
+	double dv;
+	double v = Chi12(sbet1, cbet1, sbet2, cbet2,
+			      salp1, calp1, salp2, calp2,
+			      sig12, ssig1, csig1, ssig2, csig2,
+			      u2, dv, c) - chi12;
+	if (false && i == 0 && v < 0) {
+	  cerr << "flip\n";
+	  salp1 = 0; calp1 = -1;
+	} else {
+	double
+	  dalp1 = -v/dv,
+	  sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
+	  nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+	calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+	salp1 = max(0.0, nsalp1);
+	SinCosNorm(salp1, calp1);
+	cerr << i << " "
+	     << atan2(salp1, calp1) / Constants::degree << " "
+	     << atan2(-calp1, salp1) / Constants::degree << " "
+	     << v << "\n";
+	if (abs(v) < tol) ++trip;
+	if (v == 0 || trip > 20) break;
+	}
+      }
+	
+      if (false) {
+	double dchi12;
+      for (unsigned ia = 0; ia <= 1800; ++ia) {
+	double
+	  ang1 = ia * 0.1,
+	  alp1 = ang1 * Constants::degree,
+	  salp1 = sin(alp1), calp1 = cos(alp1),
+	  chi12 = 
+	Chi12(sbet1, cbet1,
+			   sbet2, cbet2,
+			   salp1, calp1,
+			   salp2, calp2,
+			   sig12,
+			   ssig1, csig1,
+			   ssig2, csig2,
+	      u2, dchi12, c);
+	cerr << ang1 << " " << chi12 << " " << dchi12 << "\n";
+      }
+      return;
+
       double
 	salp1a = 0, calp1a = 1, salp1b = 0, calp1b = -1;
       double
@@ -268,7 +407,7 @@ namespace GeographicLib {
 			   sig12,
 			   ssig1, csig1,
 			   ssig2, csig2,
-			   u2, c) - chi12,
+			   u2, dchi12, c) - chi12,
 	chidiffc = Chi12(sbet1, cbet1,
 			   sbet2, cbet2,
 			   salp1b, calp1b,
@@ -276,7 +415,7 @@ namespace GeographicLib {
 			   sig12,
 			   ssig1, csig1,
 			   ssig2, csig2,
-			   u2, c) - chi12;
+			   u2, dchi12, c) - chi12;
       double chidiff;
 
       for (int i = 0; i < 128; ++i) {
@@ -293,7 +432,7 @@ namespace GeographicLib {
 			  sig12,
 			  ssig1, csig1,
 			  ssig2, csig2,
-			  u2, c) - chi12;
+			  u2, dchi12, c) - chi12;
 	//      cerr << "x " << calp1 << " " << chidiff << "\n";
 	if (chidiff == 0)
 	  break;
@@ -311,12 +450,13 @@ namespace GeographicLib {
 	  chidiffc = chidiff;
 	}
       }
-	
-      tauCoeff(u2, c);      
+      }
+      }	
+      tauCoeff(u2, c);
       s12 =  _b * tauScale(u2) *
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
 		  SinSeries(ssig1, csig1, c, maxpow)));
-      cerr << chidiff*cbet2*_a << "\n";
+      //      cerr << chidiff*cbet2*_a << "\n";
     }
 #if DEBUG
     cerr << lonsign << " " << latsign << " " << swapp << "\n";
@@ -336,15 +476,14 @@ namespace GeographicLib {
     return;
   }
 
-  double Geodesic::Chi12(double sbet1, double cbet1,
-			   double sbet2, double cbet2,
-			   double salp1, double calp1,
-			   double& salp2, double& calp2,
-			   double& sig12,
-			   double& ssig1, double& csig1,
-			   double& ssig2, double& csig2,
-			   double& u2,
-			   double c[]) const throw() {
+  double Geodesic::Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
+			 double salp1, double calp1,
+			 double& salp2, double& calp2,
+			 double& sig12,
+			 double& ssig1, double& csig1,
+			 double& ssig2, double& csig2,
+			 double& u2, double& dchi12,
+			 double c[]) const throw() {
       // Pick salp1 > 0 calp1 in (-1, 1), i.e., alp1 in (0, pi).  If
       // sbet1 == 0, we pick calp1 in (-1, 0), i.e., alp in (pi/2, pi)
 
@@ -357,14 +496,16 @@ namespace GeographicLib {
 	// Follow GeodesicLine constructor
 	salp0 = salp1 * cbet1,
 	calp0 = hypot(calp1, salp1 * sbet1);
-      
+
       double slam1, clam1, slam2, clam2, lam12, chi12, mu;
       ssig1 = sbet1; slam1 = salp0 * sbet1;
       csig1 = clam1 = sbet1 != 0 || calp1 > 0 ? calp1 * cbet1 : -1;
       SinCosNorm(ssig1, csig1);
       SinCosNorm(slam1, clam1);
 
-      // Enforce symmetries in the case abs(bet2) = -bet1
+      // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
+      // about this case, since this can yield singularities in the Newton
+      // iteration.
       salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
       // calp2 = sqrt(1 - sq(salp2))
       //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
@@ -381,30 +522,111 @@ namespace GeographicLib {
       SinCosNorm(ssig2, csig2);
       SinCosNorm(slam2, clam2);
 
-      // sig12 = sig2 - sig1
+      // Derivatives with respect to alp1
+      double dalp0, dsig1, dlam1, dalp2, dsig2, dlam2;
+      dalp0 = cbet1 * calp1 / calp0;
+      dalp2 = calp2 != 0 ? calp1 * cbet1/ (calp2 * cbet2) : calp1 >= 0 ? 1 : -1;
+      // dsig1 = ssig1 * csig1 * salp1 / calp1;
+      // dsig2 = ssig2 * csig2 * salp2 / calp2 * dalp2;
+      dsig1 = ssig1 * salp0 / calp0;
+      dsig2 = ssig2 * salp0 / calp0 * dalp2;
+      // dlam1 = clam1 * (sbet1 * clam1 + slam1 * salp1 / calp1);
+      // dlam2 = clam2 * (sbet2 * clam2 + slam2 * salp2 / calp2) * dalp2;
+      dlam1 = (sbet1 * sq(clam1) + slam1 * salp0 / (calp0 * cbet1));
+      dlam2 = (sbet2 * sq(clam2) + slam2 * salp0 / (calp0 * cbet2)) * dalp2;
+
+      if (false)
+      cerr << dlam2 - (clam2 * (sbet2 * clam2 + slam2 * salp2 / calp2) * dalp2) << " "
+
+	   << dlam1 - (clam1 * (sbet1 * clam1 + slam1 * salp1 / calp1)) << " "
+	   << dsig2 - (ssig2 * csig2 * salp2 / calp2 * dalp2) << " "
+	   << dsig1 - (ssig1 * salp0 / calp0) << "\n";
+
+      // sig12 = sig2 - sig1, limit to [0, pi]
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		    csig1 * csig2 + ssig1 * ssig2);
 
-      // lam12 = lam2 - lam1
+      // lam12 = lam2 - lam1, limit to [0, pi]
       lam12 = atan2(max(clam1 * slam2 - slam1 * clam2, 0.0),
 		    clam1 * clam2 + slam1 * slam2);
       mu = sq(calp0);
       dlamCoeff(_f, mu, c);
-      chi12 = lam12 +
-	salp0 * dlamScale(_f, mu) *
-	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
-		  SinSeries(ssig1, csig1, c, maxpow)));
+      double eta12, deta12, dmu;
+      eta12 = SinSeries(ssig2, csig2, c, maxpow) -
+	SinSeries(ssig1, csig1, c, maxpow);
+
+      dlamCoeffmu(_f, mu, c);
+      dmu = - 2 * calp0 * salp0 * dalp0;
+      deta12 = dmu * (SinSeries(ssig2, csig2, c, maxpow) -
+		      SinSeries(ssig1, csig1, c, maxpow));
+      double
+	lamscale = dlamScale(_f, mu),
+	dlamscale = dlamScalemu(_f, mu) * dmu;
+      
+      chi12 = lam12 + salp0 * lamscale * (sig12 + eta12);
+      double dchisig =  - _e2 * salp0 *
+	(dsig2 / (sqrt(1 - _e2 * (1 - mu * sq(ssig2))) + 1) -
+	 dsig1 / (sqrt(1 - _e2 * (1 - mu * sq(ssig1))) + 1)) ;
+
+      dchi12 =
+	(dlam2 - dlam1) + dchisig +
+	(dalp0 * calp0 * lamscale + salp0 * dlamscale) * (sig12 + eta12) +
+	salp0 * lamscale * deta12;
+
+      if (false)
+      {
+	dlamCoeff(_f, mu, c);
+	double eps = 0.0001;
+	double sum2 = SinSeries(ssig2, csig2, c, maxpow);
+	double sum2a, dser2a;
+	sum2a = SinSeriesDiff(ssig2, csig2, c, maxpow,dser2a);
+	double sig2 = atan2(ssig2, csig2);
+	double dser2b =
+	  (SinSeries(sin(sig2+eps/2), cos(sig2+eps/2), c, maxpow)-
+	   SinSeries(sin(sig2-eps/2), cos(sig2-eps/2), c, maxpow))/eps;
+	cerr << sum2 << " " << sum2a << "\n";
+	cerr << dser2a << " " << dser2b << "\n";
+      }
 
 #if DEBUG
-      /*
+      std::cerr << dalp0 << "\n"
+		<< dalp2 << "\n"
+		<< dsig1 << "\n"
+		<< dsig2 << "\n"
+		<< dlam1 << "\n"
+		<< dlam2 << "\n\n";
+      std::cerr << ssig2 << "\n"
+		<< csig2 << "\n"
+		<< salp2 << "\n"
+		<< calp2 << "\n\n";
+
       std::cerr << salp0 << "\n" << calp0 << "\n"
 		<< salp1 << "\n" << calp1 << "\n"
 		<< salp2 << "\n" << calp2 << "\n"
 		<< ssig1 << "\n" << csig1 << "\n"
 		<< ssig2 << "\n" << csig2 << "\n"
 		<< slam1 << "\n" << clam1 << "\n"
-		<< slam2 << "\n" << clam2 << "\n";
-      */
+		<< slam2 << "\n" << clam2 << "\n"
+		<< sig12 << "\n" << lam12 << "\n"
+		<< mu << "\n" << dlamScale(_f, mu) << "\n"
+		<< SinSeries(ssig1, csig1, c, maxpow) << "\n"
+		<< SinSeries(ssig2, csig2, c, maxpow) << "\n"
+		<< chi12 << "\n";
+      std::cerr << "\n";
+
+      double dalp1 = 1;
+      std::cerr << calp0*dalp0 << "\n" << -salp0*dalp0 << "\n"
+		<< calp1*dalp1 << "\n" << -salp1*dalp1 << "\n"
+		<< calp2*dalp2 << "\n" << -salp2*dalp2 << "\n"
+		<< csig1*dsig1 << "\n" << -ssig1*dsig1 << "\n"
+		<< csig2*dsig2 << "\n" << -ssig2*dsig2 << "\n"
+		<< clam1*dlam1 << "\n" << -slam1*dlam1 << "\n"
+		<< clam2*dlam2 << "\n" << -slam2*dlam2 << "\n"
+		<< dsig2-dsig1 << "\n" << dlam2-dlam1 << "\n"
+		<< dmu << "\n" << dlamscale << "\n"
+		<< deta1 << "\n" << deta2 << "\n"
+		<< dchi12 << "\n";
+      std::cerr << "\n";
       std::cerr << salp1 << " " << calp1 << " "
 		<< atan2(salp1, calp1)/Constants::degree << " "
 		<< chi12/Constants::degree << " "
@@ -414,7 +636,7 @@ namespace GeographicLib {
       u2 = mu * _ep2;
       return chi12;
   }
-  
+
   GeodesicLine::GeodesicLine(const Geodesic& g,
 			     double lat1, double lon1, double head1) {
     head1 = Geodesic::AngNormalize(head1);
@@ -531,6 +753,6 @@ namespace GeographicLib {
     head2 = -atan2(- Geodesic::head2sense * _bsign * salp2,
 		   + Geodesic::head2sense * calp2) / Constants::degree;
   }
- 
+
 } // namespace GeographicLib
 
