@@ -8,10 +8,11 @@ CXXFLAGS = -g -Wall -O0 -funroll-loops -finline-functions -fomit-frame-pointer
 
 HEADERS = Constants.hpp DMS.hpp EllipticFunction.hpp GeoCoords.hpp MGRS.hpp \
 	PolarStereographic.hpp TransverseMercator.hpp \
-	TransverseMercatorExact.hpp UTMUPS.hpp Geocentric.hpp LocalCartesian.hpp
+	TransverseMercatorExact.hpp UTMUPS.hpp Geocentric.hpp \
+	LocalCartesian.hpp Geodesic.hpp
 
 SOURCES = $(patsubst %.hpp,%.cpp,$(HEADERS)) \
-	GeoConvert.cpp TransverseMercatorTest.cpp CartConvert.cpp
+	GeoConvert.cpp TransverseMercatorTest.cpp CartConvert.cpp Geod.cpp
 
 GeoConvert: GeoConvert.o GeoCoords.o MGRS.o UTMUPS.o DMS.o Constants.o \
 	TransverseMercator.o PolarStereographic.o

@@ -83,7 +83,7 @@ namespace GeographicLib {
       if ((k = lookup(digits, x)) >= 0) {
 	++ncurrent;
 	if (pointseen) {
-	  mult *= 0.1;
+	  mult /= 10;
 	  fcurrent += k * mult;
 	} else
 	  icurrent = 10 * icurrent + k;
