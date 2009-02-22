@@ -42,8 +42,6 @@ namespace GeographicLib {
     const double _a, _f, _f1, _e2, _ep2, _b;
     static double SinSeries(double sinx, double cosx, const double c[], int n)
       throw();
-    static double SinSeriesDiff(double sinx, double cosx,
-				const double c[], int n, double& diff) throw();
     static inline double AngNormalize(double x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
       return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
@@ -73,6 +71,13 @@ namespace GeographicLib {
     static double dlamScalemu(double f, double mu) throw();
     static void dlamCoeff(double f, double mu, double e[]) throw();
     static void dlamCoeffmu(double f, double mu, double e[]) throw();
+
+    void CheckInverse(double lat1, double lon1, double head1,
+		      double lat2, double lon2, double head2,
+		      double s12) const throw();
+    double Distance(double lat0, double lon0, double lat1, double lon1)
+      const throw();
+
   public:
     /**
      * Constructor for a ellipsoid radius \e a (meters) and inverse flattening

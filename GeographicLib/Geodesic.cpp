@@ -7,12 +7,13 @@
  *
  **********************************************************************/
 
-#define DEBUG 0
+#define CHECK 1
+#define DEBUG 1
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
-#if 1
+#if DEBUG || CHECK
 #include <iostream>
 #include <iomanip>
 #endif
@@ -30,7 +31,7 @@ namespace GeographicLib {
   //   eps2 * epsilon() > 0
   //   eps2 + epsilon() == epsilon()
   const double Geodesic::eps2 = sqrt(numeric_limits<double>::min());
-  const double Geodesic::tol = 0.1 * sqrt(numeric_limits<double>::epsilon());
+  const double Geodesic::tol = 100 * numeric_limits<double>::epsilon();
 
   Geodesic::Geodesic(double a, double invf)
     : _a(a)
@@ -55,24 +56,6 @@ namespace GeographicLib {
       y1 = y0; y0  = ar * y1 - y2 + c[j - 1];
     }
     return 2 * sinx * cosx * y0; // sin(2 * x) * y0
-  }
-
-  double Geodesic::SinSeriesDiff(double sinx, double cosx,
-				 const double c[], int n,
-				 double& diff) throw() {
-    // Evaluate y = sum(c[i] * sin(2 * i * x), i, 1, n) and z = dy/dx using
-    // Clenshaw summation.  (Indices into c offset by 1.)
-    double
-      ar = 2 * (sq(cosx) - sq(sinx)), // 2 * cos(2 * x)
-      y0 = c[n - 1], y1 = 0,	      // Accumulators for sum
-      z0 = 2 * n * c[n - 1], z1 = 0;
-    for (int j = n; --j;) {	// j = n-1 .. 1
-      double y2 = y1, z2 = z1;
-      y1 = y0; y0 = ar * y1 - y2 + c[j - 1];
-      z1 = z0; z0 = ar * z1 - z2 + 2 * j * c[j - 1];
-    }
-    diff = - z1 + z0 * ar / 2;	   // - y[2] + y[1] * cos(2 * x)
-    return 2 * sinx * cosx * y0;   // sin(2 * x) * y[1]
   }
 
   // The scale factor to convert tau to s/b
@@ -278,9 +261,11 @@ namespace GeographicLib {
       double
 	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi,
 	chicrit = Constants::pi - chicrita;
+#if DEBUG
       cerr << setprecision(20);
       cerr << chicrit / Constants::degree << " ";
       cerr << chi12 - chicrit << "\n";
+#endif
       if (chi12 == chicrit && cbet1 == cbet2 && sbet2 == -sbet1) {
 	sig12 = Constants::pi;
 	ssig1 = -1; salp1 = salp2 =ssig2 = 1;
@@ -295,171 +280,47 @@ namespace GeographicLib {
 	  calp1 = sbet2 <= 0 ? -eps2 : eps2;
 	}
 
-      //  Possible singular cases left to
-      // worry about are ...
-	if (false) {
-      salp1 = 1; calp1 = 0;
-      if (cbet2 == cbet1) {
-	if (sbet2 == -sbet1)
-	  calp1 = 0 * eps2;
-	else if (sbet2 == sbet1)
-	  calp1 = -eps2;
-      }
-	}
-      std::cerr << setprecision(20);
-
-	if (false) {
-	double dv;
-      Chi12(sbet1, cbet1, sbet2, cbet2,
-	    1.0, eps2, salp2, calp2,
-	    sig12, ssig1, csig1, ssig2, csig2,
-	    u2, dv, c);
-      Chi12(sbet1, cbet1, sbet2, cbet2,
-	    1.0, -eps2, salp2, calp2,
-	    sig12, ssig1, csig1, ssig2, csig2,
-	    u2, dv, c);
-      Chi12(sbet1, cbet1, sbet2, cbet2,
-	    1.0, 0.0, salp2, calp2,
-	    sig12, ssig1, csig1, ssig2, csig2,
-	    u2, dv, c);
-      return;
-	}
-
-	if (false) {
-	double dchi12;
-      for (unsigned ia = 0; ia <= 1800; ++ia) {
-	double
-	  ang1 = ia * 0.1,
-	  alp1 = ang1 * Constants::degree,
-	  salp1 = sin(alp1), calp1 = cos(alp1),
-	  chi12 = 
-	Chi12(sbet1, cbet1,
-			   sbet2, cbet2,
-			   salp1, calp1,
-			   salp2, calp2,
-			   sig12,
-			   ssig1, csig1,
-			   ssig2, csig2,
-	      u2, dchi12, c);
-	cerr << ang1 << " " << chi12 << " " << dchi12 << "\n";
-      }
-      return;
-	}
-
-	int trip = 0;
+#if DEBUG
 	cerr << "S "
 	     << atan2(salp1, calp1) / Constants::degree << " "
 	     << atan2(-calp1, salp1) / Constants::degree << "\n";
+#endif
 
-      for (unsigned i = 0; i < 60; ++i) {
-	double dv;
-	double v = Chi12(sbet1, cbet1, sbet2, cbet2,
-			      salp1, calp1, salp2, calp2,
-			      sig12, ssig1, csig1, ssig2, csig2,
-			      u2, dv, c) - chi12;
-	if (false && i == 0 && v < 0) {
-	  cerr << "flip\n";
-	  salp1 = 0; calp1 = -1;
-	} else {
-	double
-	  dalp1 = -v/dv,
-	  sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
-	  nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-	calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-	salp1 = max(0.0, nsalp1);
-	SinCosNorm(salp1, calp1);
-	cerr << i << " "
-	     << atan2(salp1, calp1) / Constants::degree << " "
-	     << atan2(-calp1, salp1) / Constants::degree << " "
-	     << v << "\n";
-	if (abs(v) < tol) ++trip;
-	if (v == 0 || trip > 20) break;
+	for (unsigned i = 0, trip = 0; i < 100; ++i) {
+	  double dv;
+	  double v = Chi12(sbet1, cbet1, sbet2, cbet2,
+			   salp1, calp1, salp2, calp2,
+			   sig12, ssig1, csig1, ssig2, csig2,
+			   u2, dv, c) - chi12;
+	  if (trip == 0 && v != 0) {
+	    double
+	      dalp1 = -v/dv,
+	      sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
+	      nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+	    calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+	    salp1 = max(0.0, nsalp1);
+	    SinCosNorm(salp1, calp1);
+	  }
+#if DEBUG
+	  cerr << i << " "
+	       << atan2(salp1, calp1) / Constants::degree << " "
+	       << atan2(-calp1, salp1) / Constants::degree << " "
+	       << v << "\n";
+#endif
+	  if (v == 0 || trip) break;
+	  if (abs(v) < tol) ++trip;
 	}
-      }
-	
-      if (false) {
-	double dchi12;
-      for (unsigned ia = 0; ia <= 1800; ++ia) {
-	double
-	  ang1 = ia * 0.1,
-	  alp1 = ang1 * Constants::degree,
-	  salp1 = sin(alp1), calp1 = cos(alp1),
-	  chi12 = 
-	Chi12(sbet1, cbet1,
-			   sbet2, cbet2,
-			   salp1, calp1,
-			   salp2, calp2,
-			   sig12,
-			   ssig1, csig1,
-			   ssig2, csig2,
-	      u2, dchi12, c);
-	cerr << ang1 << " " << chi12 << " " << dchi12 << "\n";
-      }
-      return;
-
-      double
-	salp1a = 0, calp1a = 1, salp1b = 0, calp1b = -1;
-      double
-	chidiffa = Chi12(sbet1, cbet1,
-			   sbet2, cbet2,
-			   salp1a, calp1a,
-			   salp2, calp2,
-			   sig12,
-			   ssig1, csig1,
-			   ssig2, csig2,
-			   u2, dchi12, c) - chi12,
-	chidiffc = Chi12(sbet1, cbet1,
-			   sbet2, cbet2,
-			   salp1b, calp1b,
-			   salp2, calp2,
-			   sig12,
-			   ssig1, csig1,
-			   ssig2, csig2,
-			   u2, dchi12, c) - chi12;
-      double chidiff;
-
-      for (int i = 0; i < 128; ++i) {
-	salp1 = 0.5 * (salp1a + salp1b);
-	calp1 = 0.5 * (calp1a + calp1b);
-	if (salp1 == 0)
-	  salp1 = 1;
-	SinCosNorm(salp1, calp1);
-
-	chidiff = Chi12(sbet1, cbet1,
-			  sbet2, cbet2,
-			  salp1, calp1,
-			  salp2, calp2,
-			  sig12,
-			  ssig1, csig1,
-			  ssig2, csig2,
-			  u2, dchi12, c) - chi12;
-	//      cerr << "x " << calp1 << " " << chidiff << "\n";
-	if (chidiff == 0)
-	  break;
-	if (chidiff < 0) {
-	  if (calp1a == calp1 && salp1a == salp1)
-	    break;
-	  calp1a = calp1;
-	  salp1a = salp1;
-	  chidiffa = chidiff;
-	} else {
-	  if (calp1b == calp1 && salp1b == salp1)
-	    break;
-	  calp1b = calp1;
-	  salp1b = salp1;
-	  chidiffc = chidiff;
-	}
-      }
-      }
       }	
       tauCoeff(u2, c);
       s12 =  _b * tauScale(u2) *
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
 		  SinSeries(ssig1, csig1, c, maxpow)));
-      //      cerr << chidiff*cbet2*_a << "\n";
     }
-#if DEBUG
-    cerr << lonsign << " " << latsign << " " << swapp << "\n";
+
+#if CHECK
+    CheckInverse(lat1, lon1, atan2(salp1, calp1) / Constants::degree,
+		 lat2, lon2, atan2(salp2, calp2) / Constants::degree,
+		 s12);
 #endif
     // Convert calp[12], salp[12] to head[12] accounting for
     // lonsign, swapp, latsign.  The minus signs up result in [-180, 180).
@@ -535,13 +396,6 @@ namespace GeographicLib {
       dlam1 = (sbet1 * sq(clam1) + slam1 * salp0 / (calp0 * cbet1));
       dlam2 = (sbet2 * sq(clam2) + slam2 * salp0 / (calp0 * cbet2)) * dalp2;
 
-      if (false)
-      cerr << dlam2 - (clam2 * (sbet2 * clam2 + slam2 * salp2 / calp2) * dalp2) << " "
-
-	   << dlam1 - (clam1 * (sbet1 * clam1 + slam1 * salp1 / calp1)) << " "
-	   << dsig2 - (ssig2 * csig2 * salp2 / calp2 * dalp2) << " "
-	   << dsig1 - (ssig1 * salp0 / calp0) << "\n";
-
       // sig12 = sig2 - sig1, limit to [0, pi]
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		    csig1 * csig2 + ssig1 * ssig2);
@@ -573,68 +427,31 @@ namespace GeographicLib {
 	(dalp0 * calp0 * lamscale + salp0 * dlamscale) * (sig12 + eta12) +
 	salp0 * lamscale * deta12;
 
-      if (false)
-      {
-	dlamCoeff(_f, mu, c);
-	double eps = 0.0001;
-	double sum2 = SinSeries(ssig2, csig2, c, maxpow);
-	double sum2a, dser2a;
-	sum2a = SinSeriesDiff(ssig2, csig2, c, maxpow,dser2a);
-	double sig2 = atan2(ssig2, csig2);
-	double dser2b =
-	  (SinSeries(sin(sig2+eps/2), cos(sig2+eps/2), c, maxpow)-
-	   SinSeries(sin(sig2-eps/2), cos(sig2-eps/2), c, maxpow))/eps;
-	cerr << sum2 << " " << sum2a << "\n";
-	cerr << dser2a << " " << dser2b << "\n";
-      }
-
-#if DEBUG
-      std::cerr << dalp0 << "\n"
-		<< dalp2 << "\n"
-		<< dsig1 << "\n"
-		<< dsig2 << "\n"
-		<< dlam1 << "\n"
-		<< dlam2 << "\n\n";
-      std::cerr << ssig2 << "\n"
-		<< csig2 << "\n"
-		<< salp2 << "\n"
-		<< calp2 << "\n\n";
-
-      std::cerr << salp0 << "\n" << calp0 << "\n"
-		<< salp1 << "\n" << calp1 << "\n"
-		<< salp2 << "\n" << calp2 << "\n"
-		<< ssig1 << "\n" << csig1 << "\n"
-		<< ssig2 << "\n" << csig2 << "\n"
-		<< slam1 << "\n" << clam1 << "\n"
-		<< slam2 << "\n" << clam2 << "\n"
-		<< sig12 << "\n" << lam12 << "\n"
-		<< mu << "\n" << dlamScale(_f, mu) << "\n"
-		<< SinSeries(ssig1, csig1, c, maxpow) << "\n"
-		<< SinSeries(ssig2, csig2, c, maxpow) << "\n"
-		<< chi12 << "\n";
-      std::cerr << "\n";
-
-      double dalp1 = 1;
-      std::cerr << calp0*dalp0 << "\n" << -salp0*dalp0 << "\n"
-		<< calp1*dalp1 << "\n" << -salp1*dalp1 << "\n"
-		<< calp2*dalp2 << "\n" << -salp2*dalp2 << "\n"
-		<< csig1*dsig1 << "\n" << -ssig1*dsig1 << "\n"
-		<< csig2*dsig2 << "\n" << -ssig2*dsig2 << "\n"
-		<< clam1*dlam1 << "\n" << -slam1*dlam1 << "\n"
-		<< clam2*dlam2 << "\n" << -slam2*dlam2 << "\n"
-		<< dsig2-dsig1 << "\n" << dlam2-dlam1 << "\n"
-		<< dmu << "\n" << dlamscale << "\n"
-		<< deta1 << "\n" << deta2 << "\n"
-		<< dchi12 << "\n";
-      std::cerr << "\n";
-      std::cerr << salp1 << " " << calp1 << " "
-		<< atan2(salp1, calp1)/Constants::degree << " "
-		<< chi12/Constants::degree << " "
-		<< sig12/Constants::degree << " "
-		<< lam12/Constants::degree << "\n";
-#endif
       u2 = mu * _ep2;
       return chi12;
+  }
+
+  void Geodesic::CheckInverse(double lat1, double lon1, double head1,
+			      double lat2, double lon2, double head2,
+			      double s12) const throw() {
+    double lat1a, lon1a, head1a, lat2a, lon2a, head2a;
+    Direct(lat1, lon1, head1, s12, lat2a, lon2a, head2a);
+    Direct(lat2, lon2, head2, -s12, lat1a, lon1a, head1a);
+    cerr << "Error: " << Distance(lat2, lon2, lat2a, lon2a) << " "
+	 << Distance(lat1, lon1, lat1a, lon1a) << "\n";
+  }
+
+  double Geodesic::Distance(double lat0, double lon0, double lat1, double lon1)
+    const throw() {
+    double
+      phi = lat0 * GeographicLib::Constants::degree,
+      sinphi = std::sin(double(phi)),
+      n = 1/std::sqrt(1 - _e2 * sinphi * sinphi),
+      // See Wikipedia article on latitude
+      degreeLon = _a * GeographicLib::Constants::degree * std::cos(phi) * n,
+      degreeLat = _a * GeographicLib::Constants::degree * (1 - _e2) * n * n * n;
+    return hypot((lat1 - lat0) * degreeLat,
+		 AngNormalize(lon1 - lon0) * degreeLon);
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
