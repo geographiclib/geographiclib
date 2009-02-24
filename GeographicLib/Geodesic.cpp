@@ -6,16 +6,10 @@
  * and licensed under the LGPL.
  **********************************************************************/
 
-#define CHECK 0
-#define DEBUG 0
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
-#if DEBUG || CHECK
-#include <iostream>
-#include <iomanip>
-#endif
 
 namespace {
   char RCSID[] = "$Id$";
@@ -260,11 +254,6 @@ namespace GeographicLib {
       double
 	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi,
 	chicrit = Constants::pi - chicrita;
-#if DEBUG
-      cerr << setprecision(20);
-      cerr << chicrit / Constants::degree << " ";
-      cerr << chi12 - chicrit << "\n";
-#endif
       if (chi12 == chicrit && cbet1 == cbet2 && sbet2 == -sbet1) {
 	sig12 = Constants::pi;
 	ssig1 = -1; salp1 = salp2 =ssig2 = 1;
@@ -279,34 +268,21 @@ namespace GeographicLib {
 	  calp1 = sbet2 <= 0 ? -eps2 : eps2;
 	}
 
-#if DEBUG
-	cerr << "S "
-	     << atan2(salp1, calp1) / Constants::degree << " "
-	     << atan2(-calp1, salp1) / Constants::degree << "\n";
-#endif
-
 	for (unsigned i = 0, trip = 0; i < 100; ++i) {
 	  double dv;
 	  double v = Chi12(sbet1, cbet1, sbet2, cbet2,
 			   salp1, calp1, salp2, calp2,
 			   sig12, ssig1, csig1, ssig2, csig2,
-			   u2, dv, c) - chi12;
-	  if (trip == 0 && v != 0) {
-	    double
-	      dalp1 = -v/dv,
-	      sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
-	      nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-	    calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-	    salp1 = max(0.0, nsalp1);
-	    SinCosNorm(salp1, calp1);
-	  }
-#if DEBUG
-	  cerr << i << " "
-	       << atan2(salp1, calp1) / Constants::degree << " "
-	       << atan2(-calp1, salp1) / Constants::degree << " "
-	       << v << "\n";
-#endif
-	  if (v == 0 || trip) break;
+			   u2, trip == 0, dv, c) - chi12;
+	  if (v == 0 || trip > 0)
+	    break;
+	  double
+	    dalp1 = -v/dv,
+	    sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
+	    nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+	  calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+	  salp1 = max(0.0, nsalp1);
+	  SinCosNorm(salp1, calp1);
 	  if (abs(v) < tol) ++trip;
 	}
       }	
@@ -316,12 +292,7 @@ namespace GeographicLib {
 		  SinSeries(ssig1, csig1, c, maxpow)));
     }
 
-#if CHECK
-    CheckInverse(lat1, lon1, atan2(salp1, calp1) / Constants::degree,
-		 lat2, lon2, atan2(salp2, calp2) / Constants::degree,
-		 s12);
-#endif
-    // Convert calp[12], salp[12] to head[12] accounting for
+    // Convert calp, salp to head accounting for
     // lonsign, swapp, latsign.  The minus signs up result in [-180, 180).
 
     if (swapp < 0) {
@@ -337,124 +308,106 @@ namespace GeographicLib {
   }
 
   double Geodesic::Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
-			 double salp1, double calp1,
-			 double& salp2, double& calp2,
+			 double salp1, double calp1, double& salp2, double& calp2,
 			 double& sig12,
-			 double& ssig1, double& csig1,
-			 double& ssig2, double& csig2,
-			 double& u2, double& dchi12,
-			 double c[]) const throw() {
-      // Pick salp1 > 0 calp1 in (-1, 1), i.e., alp1 in (0, pi).  If
-      // sbet1 == 0, we pick calp1 in (-1, 0), i.e., alp in (pi/2, pi)
+			 double& ssig1, double& csig1, double& ssig2, double& csig2,
+			 double& u2,
+			 bool diffp, double& dchi12, double c[]) const throw() {
 
-	if (calp1 == 0)
-	  // If sbet1 = sbet2 = 0, and calp1 = calp2 = 0, we want
-	  // to ensure that lam1 = -pi, lam2 = 0.
-	  calp1 = 0 * sqrt(eps2);
+    if (sbet1 == 0 && calp1 == 0)
+      // Break degeneracy of equatorial line.  This cases has already been
+      // handled.
+      calp1 = -eps2;
 
-      double
-	// Follow GeodesicLine constructor
-	salp0 = salp1 * cbet1,
-	calp0 = hypot(calp1, salp1 * sbet1);
+    double
+      // sin(alp1) * cos(bet1) = sin(alp0),
+      salp0 = salp1 * cbet1,
+      calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-      double slam1, clam1, slam2, clam2, lam12, chi12, mu;
-      ssig1 = sbet1; slam1 = salp0 * sbet1;
-      csig1 = clam1 = sbet1 != 0 || calp1 > 0 ? calp1 * cbet1 : -1;
-      SinCosNorm(ssig1, csig1);
-      SinCosNorm(slam1, clam1);
+    double slam1, clam1, slam2, clam2, lam12, chi12, mu;
+    // tan(bet1) = tan(sig1) * cos(alp1)
+    // tan(lam1) = sin(alp0) * tan(sig1).
+    ssig1 = sbet1; slam1 = salp0 * sbet1;
+    csig1 = clam1 = calp1 * cbet1;
+    SinCosNorm(ssig1, csig1);
+    SinCosNorm(slam1, clam1);
 
-      // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
-      // about this case, since this can yield singularities in the Newton
-      // iteration.
-      salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
-      // calp2 = sqrt(1 - sq(salp2))
-      //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
-      // and subst for calp0 and rearrange to give (choose positive sqrt
-      // to give alp2 in [0, pi/2]).  N.B. parens around
-      //    sq(sbet1) - sq(sbet2)
-      // are needed to maintain accuracy when calp1 is small.
-      calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
-	sqrt(sq(calp1 * cbet1) +
-	     (cbet1 < -sbet1 ?
-	      (cbet2 - cbet1) * (cbet1 + cbet2) :
-	      (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
-	abs(calp1);
-      ssig2 = sbet2; slam2 = salp0 * sbet2;
-      csig2 = clam2 = sbet2 != 0 || calp2 != 0 ? calp2 * cbet2 : 1;
-      SinCosNorm(ssig2, csig2);
-      SinCosNorm(slam2, clam2);
+    // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
+    // about this case, since this can yield singularities in the Newton
+    // iteration.
+    // sin(alp2) * cos(bet2) = sin(alp0),
+    salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
+    // calp2 = sqrt(1 - sq(salp2))
+    //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
+    // and subst for calp0 and rearrange to give (choose positive sqrt
+    // to give alp2 in [0, pi/2]).
+    calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
+      sqrt(sq(calp1 * cbet1) + (cbet1 < -sbet1 ?
+				(cbet2 - cbet1) * (cbet1 + cbet2) :
+				(sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
+      abs(calp1);
+    // tan(bet2) = tan(sig2) * cos(alp2)
+    // tan(lam2) = sin(alp0) * tan(sig2).
+    ssig2 = sbet2; slam2 = salp0 * sbet2;
+    csig2 = clam2 = calp2 * cbet2;
+    SinCosNorm(ssig2, csig2);
+    SinCosNorm(slam2, clam2);
 
-      // Derivatives with respect to alp1
-      double dalp0, dsig1, dlam1, dalp2, dsig2, dlam2;
+    // Derivatives with respect to alp1
+    double dalp0, dsig1, dlam1, dalp2, dsig2, dlam2;
+    if (diffp) {
+      // Differentiate sin(alp) * cos(bet) = sin(alp0),
       dalp0 = cbet1 * calp1 / calp0;
       dalp2 = calp2 != 0 ? calp1 * cbet1/ (calp2 * cbet2) : calp1 >= 0 ? 1 : -1;
-      // dsig1 = ssig1 * csig1 * salp1 / calp1;
-      // dsig2 = ssig2 * csig2 * salp2 / calp2 * dalp2;
+      // Differentiate tan(bet) = tan(sig) * cos(alp) and clear
+      // calp from the denominator with tan(alp0)=cos(sig)*tan(alp),
       dsig1 = ssig1 * salp0 / calp0;
       dsig2 = ssig2 * salp0 / calp0 * dalp2;
-      // dlam1 = clam1 * (sbet1 * clam1 + slam1 * salp1 / calp1);
-      // dlam2 = clam2 * (sbet2 * clam2 + slam2 * salp2 / calp2) * dalp2;
+      // Differentiate tan(lam) = sin(alp0) * tan(sig).  Substitute
+      //   tan(sig) = tan(bet) / cos(alp) = tan(lam) / sin(alp0)
+      //   cos(lam) / cos(sig) = 1 / cos(bet)
+      // to give
       dlam1 = (sbet1 * sq(clam1) + slam1 * salp0 / (calp0 * cbet1));
       dlam2 = (sbet2 * sq(clam2) + slam2 * salp0 / (calp0 * cbet2)) * dalp2;
+    }
+    // sig12 = sig2 - sig1, limit to [0, pi]
+    sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
+		  csig1 * csig2 + ssig1 * ssig2);
 
-      // sig12 = sig2 - sig1, limit to [0, pi]
-      sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
-		    csig1 * csig2 + ssig1 * ssig2);
+    // lam12 = lam2 - lam1, limit to [0, pi]
+    lam12 = atan2(max(clam1 * slam2 - slam1 * clam2, 0.0),
+		  clam1 * clam2 + slam1 * slam2);
 
-      // lam12 = lam2 - lam1, limit to [0, pi]
-      lam12 = atan2(max(clam1 * slam2 - slam1 * clam2, 0.0),
-		    clam1 * clam2 + slam1 * slam2);
-      mu = sq(calp0);
-      dlamCoeff(_f, mu, c);
-      double eta12, deta12, dmu;
-      eta12 = SinSeries(ssig2, csig2, c, maxpow) -
-	SinSeries(ssig1, csig1, c, maxpow);
+    double eta12, lamscale;
+    mu = sq(calp0);
+    dlamCoeff(_f, mu, c);
+    eta12 = SinSeries(ssig2, csig2, c, maxpow) - SinSeries(ssig1, csig1, c, maxpow);
+    lamscale = dlamScale(_f, mu),
+    chi12 = lam12 + salp0 * lamscale * (sig12 + eta12);
 
+    if (diffp) {
+      double deta12, dmu, dlamscale, dchisig;
       dlamCoeffmu(_f, mu, c);
       dmu = - 2 * calp0 * salp0 * dalp0;
       deta12 = dmu * (SinSeries(ssig2, csig2, c, maxpow) -
 		      SinSeries(ssig1, csig1, c, maxpow));
-      double
-	lamscale = dlamScale(_f, mu),
-	dlamscale = dlamScalemu(_f, mu) * dmu;
+      dlamscale = dlamScalemu(_f, mu) * dmu;
 
-      chi12 = lam12 + salp0 * lamscale * (sig12 + eta12);
-      double dchisig =  - _e2 * salp0 *
+      // Derivative of salp0 * lamscale * (sig + eta) wrt sig.  This
+      // is from integral form of this expression.
+      dchisig =  - _e2 * salp0 *
 	(dsig2 / (sqrt(1 - _e2 * (1 - mu * sq(ssig2))) + 1) -
 	 dsig1 / (sqrt(1 - _e2 * (1 - mu * sq(ssig1))) + 1)) ;
 
       dchi12 =
 	(dlam2 - dlam1) + dchisig +
+	// Derivative wrt mu
 	(dalp0 * calp0 * lamscale + salp0 * dlamscale) * (sig12 + eta12) +
 	salp0 * lamscale * deta12;
+    }
 
-      u2 = mu * _ep2;
-      return chi12;
-  }
-
-  void Geodesic::CheckInverse(double lat1, double lon1, double head1,
-			      double lat2, double lon2, double head2,
-			      double s12) const throw() {
-    double lat1a, lon1a, head1a, lat2a, lon2a, head2a;
-    Direct(lat1, lon1, head1, s12, lat2a, lon2a, head2a);
-    Direct(lat2, lon2, head2, -s12, lat1a, lon1a, head1a);
-#if CHECK
-    cerr << "Error: " << Distance(lat2, lon2, lat2a, lon2a) << " "
-	 << Distance(lat1, lon1, lat1a, lon1a) << "\n";
-#endif
-  }
-
-  double Geodesic::Distance(double lat0, double lon0, double lat1, double lon1)
-    const throw() {
-    double
-      phi = lat0 * GeographicLib::Constants::degree,
-      sinphi = std::sin(phi),
-      n = 1/std::sqrt(1 - _e2 * sinphi * sinphi),
-      // See Wikipedia article on latitude
-      degreeLon = _a * GeographicLib::Constants::degree * std::cos(phi) * n,
-      degreeLat = _a * GeographicLib::Constants::degree * (1 - _e2) * n * n * n;
-    return hypot((lat1 - lat0) * degreeLat,
-		 AngNormalize(lon1 - lon0) * degreeLon);
+    u2 = mu * _ep2;
+    return chi12;
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,

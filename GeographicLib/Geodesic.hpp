@@ -36,7 +36,7 @@ namespace GeographicLib {
 		 double salp1, double calp1, double& salp2, double& calp2,
 		 double& sig12,
 		 double& ssig1, double& csig1, double& ssig2, double& csig2,
-		 double& u2, double& dchi12, double c[]) const throw();
+		 double& u2, bool diffp, double& dchi12, double c[]) const throw();
 
     static const double eps2, tol;
     const double _a, _f, _f1, _e2, _ep2, _b;
@@ -72,11 +72,6 @@ namespace GeographicLib {
     static void dlamCoeff(double f, double mu, double e[]) throw();
     static double dlamScalemu(double f, double mu) throw();
     static void dlamCoeffmu(double f, double mu, double e[]) throw();
-    void CheckInverse(double lat1, double lon1, double head1,
-		      double lat2, double lon2, double head2,
-		      double s12) const throw();
-    double Distance(double lat0, double lon0, double lat1, double lon1)
-      const throw();
 
   public:
     /**
@@ -159,7 +154,8 @@ namespace GeographicLib {
     /**
      * A default constructor.  If Position is called on the resulting object,
      * it returns immediately (without doing any calculations).  The object
-     * should be set with a call to Geodesic::Line.
+     * should be set with a call to Geodesic::Line.  Use Init() to test whether
+     * object is still in this uninitialized state.
      **********************************************************************/
     GeodesicLine() : _sScale(0) {};
 
@@ -172,7 +168,7 @@ namespace GeographicLib {
       const throw();
 
     /**
-     * Return the latitude of point 1 (in degrees).
+     * Has this object been initialize so that Position can be called?
      **********************************************************************/
     bool Init() const throw() { return _sScale > 0; }
     /**
