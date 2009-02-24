@@ -28,7 +28,7 @@ namespace GeographicLib {
   const string DMS::dmsindicators = "D'\"";
   const string DMS::components[] = {"degrees", "minutes", "seconds"};
 
-  double DMS::Decode(const string& dms, flag& ind) {
+  double DMS::Decode(const std::string& dms, flag& ind) {
     double sign = 1;
     unsigned
       beg = 0,

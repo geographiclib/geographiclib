@@ -42,12 +42,15 @@ http://charles.karney.info/geographic/
  - \ref transversemercator
    - \ref tmvarious
    - \ref extend
-   - \ref testset
+   - \ref testmerc
    - \ref errors
    - \ref series
+ - \ref geodesic
+   - \ref testgeod
  - \ref utilities
    - \ref geoconvert
    - \ref transversemercatortest
+   - \ref geod
    - \ref cartconvert
  - \ref old
 
@@ -239,7 +242,7 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 \page transversemercator Transverse Mercator Projection
 
 <center>
-Back to \ref organization.  Forward to \ref utilities.  Up to \ref contents.
+Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 \b NOTE: The figures in this section are relatively small in order to
@@ -535,7 +538,7 @@ same projected position.  In the extended domain, the Thompson and the
 Gauss-Kr&uuml;ger projections are not tightly tied to the globe but can
 slip around it longitudinally.
 
-\section testset Test data for the transverse Mercator projection
+\section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
  - http://charles.karney.info/geographic/TMcoords.dat.gz
@@ -920,14 +923,82 @@ distribution).  To run, start Maxima and enter
 Further instructions are included at the top of the file.
 
 <center>
-Back to \ref organization.  Forward to \ref utilities.  Up to \ref contents.
+Back to \ref start.  Forward to \ref geodesic.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page geodesic Geodesics on the Ellipsoid
+
+<center>
+Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
+</center>
+
+References
+ - T. Vincenty,
+   <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">Direct and Inverse
+   Solutions of Geodescics on the Ellipsoid with Application of Nested
+   Equations</a>,
+   Survey Review 22 (176), 88&ndash;93 (1975).
+ - E. A. Williams,
+   <a href="http://williams.best.vwh.net/ellipsoid/ellipsoid.html">
+   Navigation on the Spherioidal Earth Equations</a> (March 2002).
+
+text here
+
+\section testgeod Test data for the geodesics
+
+A test set for the transverse Mercator projection is available at
+ - http://charles.karney.info/geographic/GeodTest.dat.gz
+
+This test set consists of a set of geodestics for the WGS84 ellipsoid.
+
+Each line of the test set gives 7 space delimited numbers
+ - latitude for point 1, \e lat1 (degrees, exact)
+ - longitude for point 1, \e lon1 (degrees, always 0)
+ - heading for point 1, \e head1 (degrees, exact)
+ - latitude for point 2, \e lat2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - longitude for point 2, \e lon2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - heading for point 2, \e head2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
+ .
+These are computed using as direct geodesic calculations with the give
+\e lat1, \e lon1, \e head1, and \e s12.  The distance \e s12 always
+corresponds to an arc length on the auxilliary sphere of pi or less, so
+the given geodesics give the shortest paths from point 1 to point 2.
+For simplicity and without loss of generality, \e lat1 is chosen in
+[0<sup>o</sup>, 90<sup>o</sup>], \e lon2 is taken to be zero, \e head1
+is chosen in [0<sup>o</sup>, 180<sup>o</sup>].  Furthermore, \e lat1 and
+\e head1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is
+a multiple of 0.1 um.  The direct calculation uses an expansion of the
+geodesic equations accurate to \e f<sup>20</sup> (approximately 1 part
+in 10<sup>50</sup>) and is computed with with
+<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
+fpprec set to 100 (so the errors in the data are probably 1/2 of the
+values quoted above).
+
+The contents of the file are as follows:
+ - 50000 entries randomly distributed
+ - 50000 entries which are nearly antipodal
+ - 50000 entries short
+ - 50000 entries with one end near a pole
+ - 50000 entries with both ends near opposite poles
+ - 50000 entries which are nearly meridional
+ - 50000 entries which are nearly equatorial
+ .
+(a total of 350000 entries).
+
+The errors in the direct and inverse geodesic calculations are computed
+as follows.
+
+<center>
+Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page utilities Utility Programs
 
 <center>
-Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
+Back to \ref geodesic.  Forward to \ref old.  Up to \ref contents.
 </center>
 
 \section geoconvert GeoConvert
@@ -1085,6 +1156,10 @@ one).
 -h prints this help
 \endverbatim
 
+\section geod Geod
+
+Geod is a command line utility for geodesic calculations.
+
 \section cartconvert CartConvert
 
 CartConvert is a command line utility for geodetic to cartesian
@@ -1180,7 +1255,7 @@ list of changes.
  - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-03
    (current)</a>
   - Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
-    \ref catconvert.
+    \ref cartconvert.
   - Add Geographic::Geodesic and the \ref geod utility.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-02.tgz">2009-02</a>
