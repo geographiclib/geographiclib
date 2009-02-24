@@ -25,7 +25,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void GeoCoords::Reset(const string& s) {
+  void GeoCoords::Reset(const std::string& s) {
     vector<string> sa;
     bool in = false;
     for (unsigned i = 0; i < s.size(); ++i) {
@@ -155,7 +155,7 @@ namespace GeographicLib {
   }
 
   void GeoCoords::UTMUPSString(int zone, double easting, double northing,
-			       int prec, string& utm) const {
+			       int prec, std::string& utm) const {
     ostringstream os;
     os << fixed << setfill('0');
     if (zone)

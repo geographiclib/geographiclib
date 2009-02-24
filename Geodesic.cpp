@@ -1,14 +1,13 @@
 /**
  * \file Geodesic.cpp
- * \brief Implementation for GeographicLib::Geodesic class
+ * \brief Implementation for GeographicLib::Geodesic and GeographicLib::GeodesicLine classes
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
- *
  **********************************************************************/
 
-#define CHECK 1
-#define DEBUG 1
+#define CHECK 0
+#define DEBUG 0
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
@@ -373,10 +372,12 @@ namespace GeographicLib {
       // and subst for calp0 and rearrange to give (choose positive sqrt
       // to give alp2 in [0, pi/2]).  N.B. parens around
       //    sq(sbet1) - sq(sbet2)
-      // are needed to maintain accuracy when calph1 is small.
+      // are needed to maintain accuracy when calp1 is small.
       calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
 	sqrt(sq(calp1 * cbet1) +
-	     (sbet1 - sbet2) * (sbet1 + sbet2)) / cbet2 :
+	     (cbet1 < -sbet1 ?
+	      (cbet2 - cbet1) * (cbet1 + cbet2) :
+	      (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
 	abs(calp1);
       ssig2 = sbet2; slam2 = salp0 * sbet2;
       csig2 = clam2 = sbet2 != 0 || calp2 != 0 ? calp2 * cbet2 : 1;
@@ -416,7 +417,7 @@ namespace GeographicLib {
       double
 	lamscale = dlamScale(_f, mu),
 	dlamscale = dlamScalemu(_f, mu) * dmu;
-      
+
       chi12 = lam12 + salp0 * lamscale * (sig12 + eta12);
       double dchisig =  - _e2 * salp0 *
 	(dsig2 / (sqrt(1 - _e2 * (1 - mu * sq(ssig2))) + 1) -
@@ -437,15 +438,17 @@ namespace GeographicLib {
     double lat1a, lon1a, head1a, lat2a, lon2a, head2a;
     Direct(lat1, lon1, head1, s12, lat2a, lon2a, head2a);
     Direct(lat2, lon2, head2, -s12, lat1a, lon1a, head1a);
+#if CHECK
     cerr << "Error: " << Distance(lat2, lon2, lat2a, lon2a) << " "
 	 << Distance(lat1, lon1, lat1a, lon1a) << "\n";
+#endif
   }
 
   double Geodesic::Distance(double lat0, double lon0, double lat1, double lon1)
     const throw() {
     double
       phi = lat0 * GeographicLib::Constants::degree,
-      sinphi = std::sin(double(phi)),
+      sinphi = std::sin(phi),
       n = 1/std::sqrt(1 - _e2 * sinphi * sinphi),
       // See Wikipedia article on latitude
       degreeLon = _a * GeographicLib::Constants::degree * std::cos(phi) * n,
@@ -492,7 +495,7 @@ namespace GeographicLib {
     _salp0 = salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
     // Alt: calp0 = hypot(sbet1, calp1 * cbet1).  The following
     // is slightly better (consider the case salp1 = 0).
-    _calp0 = hypot(calp1, salp1 * sbet1);
+    _calp0 = Geodesic::hypot(calp1, salp1 * sbet1);
     // Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
     // sig = 0 is nearest northward crossing of equator.
     // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).

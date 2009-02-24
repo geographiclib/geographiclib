@@ -51,7 +51,7 @@ namespace GeographicLib {
       maxutmNrow + (maxutmSrow - minutmNrow), maxutmNrow };
 
   void MGRS::Forward(int zone, bool northp, double x, double y, double lat,
-		     int prec, string& mgrs) {
+		     int prec, std::string& mgrs) {
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
     if (!(zone >= 0 || zone <= 60))
@@ -123,7 +123,7 @@ namespace GeographicLib {
   }
 
   void MGRS::Forward(int zone, bool northp, double x, double y,
-		     int prec, string& mgrs) {
+		     int prec, std::string& mgrs) {
     double lat, lon;
     if (zone)
       UTMUPS::Reverse(zone, northp, x, y, lat, lon);
@@ -133,7 +133,7 @@ namespace GeographicLib {
     Forward(zone, northp, x, y, lat, prec, mgrs);
   }
 
-  void MGRS::Reverse(const string& mgrs,
+  void MGRS::Reverse(const std::string& mgrs,
 		     int& zone, bool& northp, double& x, double& y,
 		     int& prec, bool centerp) {
     int

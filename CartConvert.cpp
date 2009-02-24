@@ -10,7 +10,7 @@
  *
  *   g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp LocalCartesian.cpp Constants.cpp
  *
- * See \ref ecefconvert for usage information.
+ * See \ref cartconvert for usage information.
  **********************************************************************/
 
 #include <string>
