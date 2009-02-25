@@ -44,34 +44,9 @@ namespace GeographicLib {
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
 		      _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
-      double a, b;
-      DMS::flag ia, ib;
-      a = DMS::Decode(sa[0], ia);
-      b = DMS::Decode(sa[1], ib);
-      if (ia == DMS::NONE && ib == DMS::NONE) {
-	// Default to lat, long
-	ia = DMS::LATITUDE;
-	ib = DMS::LONGITUDE;
-      } else if (ia == DMS::NONE)
-	ia = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ib);
-      else if (ib == DMS::NONE)
-	ib = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ia);
-      if (ia == ib)
-	throw out_of_range("Both " + sa[0] + " and " + sa[1] +
-			   " interpreted as "
-			   + (ia == DMS::LATITUDE ? "latitudes"
-			      : "longitudes"));
-      if (ia == DMS::LATITUDE) {
-	_lat = a;
-	_long = b;
-      } else {
-	_lat = b;
-	_long = a;
-      }
+      DMS::DecodeLatLon(sa[0], sa[1], _lat, _long);
       UTMUPS::Forward( _lat, _long,
 		       _zone, _northp, _easting, _northing, _gamma, _k);
-      if (_long >= 180)
-	_long -= 360;
     } else if (sa.size() == 3) {
       unsigned zoneind, coordind;
       if (sa[0].size() > 0 && isalpha(sa[0][sa[0].size() - 1])) {

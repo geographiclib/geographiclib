@@ -19,7 +19,7 @@ GeoConvert: GeoConvert.o GeoCoords.o MGRS.o UTMUPS.o DMS.o Constants.o \
 TransverseMercatorTest: TransverseMercatorTest.o TransverseMercatorExact.o \
 	Constants.o EllipticFunction.o TransverseMercator.o
 CartConvert: CartConvert.o Geocentric.o LocalCartesian.o Constants.o
-Geod: Geod.o Geodesic.o Constants.o
+Geod: Geod.o Geodesic.o DMS.o Constants.o
 
 Constants.o: Constants.hpp
 DMS.o: DMS.hpp
@@ -37,7 +37,7 @@ CartConvert.o: Geocentric.hpp LocalCartesian.hpp
 GeoConvert.o: GeoCoords.hpp UTMUPS.hpp
 TransverseMercatorTest.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
 	TransverseMercator.hpp Constants.hpp
-Geod.o: Geodesic.hpp
+Geod.o: Geodesic.hpp DMS.hpp
 Geodesic.o: Geodesic.hpp Constants.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \

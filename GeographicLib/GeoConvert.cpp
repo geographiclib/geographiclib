@@ -147,10 +147,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "Zone " << zone << "not in [0, 60]\n";
     return 1;
   }
-  while (true) {
-    std::getline(std::cin, s);
-    if (!std::cin.good())
-      break;
+  while (std::getline(std::cin, s)) {
     try {
       p.Reset(s);
       if (zone != -2)
@@ -183,6 +180,7 @@ int main(int argc, char* argv[]) {
       }
     }
     catch (std::out_of_range& e) {
+      // Write error message cout so output lines match input lines
       os = std::string("ERROR: ") + e.what();
       retval = 1;
     }
