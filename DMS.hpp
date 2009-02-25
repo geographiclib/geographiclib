@@ -69,6 +69,16 @@ namespace GeographicLib {
     static double Decode(const std::string& dms, flag& ind);
 
     /**
+     * Convert two strings \e dmsa and \e dmsb to a latitude, \e lat, and
+     * longitude, \e lon.  By default, the \e lat (resp., \e lon) is assigned
+     * to the results of decoding \e dmsa (resp., \e dmsb).  However this is
+     * overridden if either \e dmsa or \e dmsb contain a latitude or longitude
+     * hemisphere designator (N, S, E, W).
+     **********************************************************************/
+    static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
+			     double& lat, double& lon);
+
+    /**
      * Convert \e degree into a DMS string.  \e trailing indicates the least
      * significant component of the string (and this component is given as a
      * decimal number if necessary).  \e prec indicates the number of digits
