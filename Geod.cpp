@@ -51,7 +51,7 @@ std::string LatLonString(double lat, double lon, int prec, bool dms) {
   }
 }
 
-std::string HeadingString(double head, int prec, bool dms) {
+std::string AzimuthString(double head, int prec, bool dms) {
   using namespace GeographicLib;
   if (dms)
     return DMS::Encode(head, prec + 5, DMS::LONGITUDE);
@@ -63,15 +63,15 @@ std::string HeadingString(double head, int prec, bool dms) {
   }
 }
 
-double ReadHeading(const std::string& s) {
+double ReadAzimuth(const std::string& s) {
   using namespace GeographicLib;
   DMS::flag ind;
   double head = DMS::Decode(s, ind);
   if (!(head >= -180 && head <= 360))
-    throw std::out_of_range("Heading " + s + " not in range [-180,360]");
+    throw std::out_of_range("Azimuth " + s + " not in range [-180,360]");
   if (head >= 180) head -= 360;
   if (ind == DMS::LATITUDE)
-    throw std::out_of_range("Heading " + s +
+    throw std::out_of_range("Azimuth " + s +
 			    " has a latitude hemisphere, N/S");
   return head;
 }
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
 	GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
 					 std::string(argv[m + 2]),
 					 lat1, lon1);
-	head1 = ReadHeading(std::string(argv[m + 3]));
+	head1 = ReadAzimuth(std::string(argv[m + 3]));
 	m += 3;
       }
       catch (std::out_of_range& e) {
@@ -123,7 +123,9 @@ int main(int argc, char* argv[]) {
   if (linecalc)
     l = geod.Line(lat1, lon1, head1);
 
-  prec = std::min(10, std::max(0, prec));
+  // Max precision = 9: 1 nm in distance, 10^-14 deg (= 1.1 nm),
+  // 10^-10 sec (= 3 nm).
+  prec = std::min(9, std::max(0, prec));
   std::cout << std::fixed << std::setprecision(prec);
   std::string s;
   int retval = 0;
@@ -136,9 +138,9 @@ int main(int argc, char* argv[]) {
 	l.Position(s12, lat2, lon2, head2);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
-	    HeadingString(head1, prec, dms) << " ";
+	    AzimuthString(head1, prec, dms) << " ";
 	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
-	  HeadingString(head2, prec, dms);
+	  AzimuthString(head2, prec, dms);
 	if (full)
 	  std::cout << " " << s12;
 	std::cout << "\n";
@@ -151,22 +153,22 @@ int main(int argc, char* argv[]) {
 	geod.Inverse(lat1, lon1, lat2, lon2, s12, head1, head2);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
-	std::cout << HeadingString(head1, prec, dms) << " ";
+	std::cout << AzimuthString(head1, prec, dms) << " ";
 	if (full)
 	  std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
-	std::cout << HeadingString(head2, prec, dms) << " " << s12 << "\n";
+	std::cout << AzimuthString(head2, prec, dms) << " " << s12 << "\n";
       } else {
 	std::string slat1, slon1, shead1;
 	if (!(str >> slat1 >> slon1 >> shead1 >> s12))
 	  throw std::out_of_range("Incomplete input: " + s);
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
-	head1 = ReadHeading(shead1);
+	head1 = ReadAzimuth(shead1);
 	geod.Direct(lat1, lon1, head1, s12, lat2, lon2, head2);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
-	    HeadingString(head1, prec, dms) << " ";
+	    AzimuthString(head1, prec, dms) << " ";
 	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
-	  HeadingString(head2, prec, dms);
+	  AzimuthString(head2, prec, dms);
 	if (full)
 	  std::cout << " " << s12;
 	std::cout << "\n";

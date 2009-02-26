@@ -33,7 +33,7 @@ namespace GeographicLib {
    * the \e extendp argument to the constructor)..  The maximum error is about
    * 8 nm (ground distance) for the forward and reverse transformations.  The
    * error in the convergence is 2e-15", the relative error in the scale is
-   * 7e-12%%.  (See \ref errors for the weasel words.)  The method is "exact"
+   * 7e-12%%.  (See \ref tmerrors for the weasel words.)  The method is "exact"
    * in the sense that the errors are close to the round-off limit and that no
    * changes are needed in the algorithms for them to be used with reals of a
    * higher precision.  Thus the errors using long double (with a 64-bit

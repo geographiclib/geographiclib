@@ -43,10 +43,13 @@ http://charles.karney.info/geographic/
    - \ref tmvarious
    - \ref extend
    - \ref testmerc
-   - \ref errors
-   - \ref series
+   - \ref tmerrors
+   - \ref tmseries
  - \ref geodesic
+   - \ref geoddesc
    - \ref testgeod
+   - \ref geoderrors
+   - \ref geodtodo
  - \ref utilities
    - \ref geoconvert
    - \ref transversemercatortest
@@ -600,7 +603,7 @@ scale at lat = 0<sup>o</sup>, lon = 90<sup>o</sup> (1 - \e e)).  We
 account for this by expressing the error as the sum of a constant and a
 term proportional to the gradient of the quantity being measured.
 
-\section errors Numerical errors
+\section tmerrors Accuracy of transverse Mercator projection
 
 Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
 Reverse projections
@@ -659,7 +662,7 @@ If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
 to give the 4th-order approximation, then the error is about 210 nm
 for |\e x| <= 500 km (the region used for UTM coordinates).
 
-\section series Series approximation for transverse Mercator
+\section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
 Mercator projection.  The method entails performing first a
@@ -943,11 +946,74 @@ References
    <a href="http://williams.best.vwh.net/ellipsoid/ellipsoid.html">
    Navigation on the Spherioidal Earth Equations</a> (March 2002).
 
-text here
+\section geoddesc Description of algorithm
+
+A geodesic is the shortest path between two points on the earth,
+represented here by an ellipsoid.  The "inverse" problem is formulated
+as follows
+ - Given two points, 1 and 2, determine the length of the geodesic and
+   the azimuths of the geodesic at the two end points.
+ .
+The "direct" problem is
+ - Given a geodesic passing through point 1 at with a particular
+   azimuth, determine the position of point 2 a particular distance away
+   and the azimuth of the geodesic at that point.
+
+On a sphere, the geodesic is a great circle.  On the ellipsoid, the
+problem is usually solved by transferring the geodesic to an "auxilliary
+sphere" where the latitude phi has been replaced by the reduced latitude
+beta where tan(beta) = (1 - f) tan(phi).  On this sphere, the geodesic
+is again a great circle and the azimuth is the same as on the ellipsoid.
+However, the ellipsoidal distance is related to the great circle
+distance by an integral; and the ellipsoidal longitude is similarly
+related to the longitude on the auxiliary sphere.
+
+A popular method of doing geodesic calculations is due to Vincenty
+(1975).  This entails expanding the integrals in powers of the ellipsoid
+flattening, and then solving both the direct and inverse problems by
+iteration.  This approach has three drawbacks:
+ - The series are cast into a "nested" form which makes them difficult
+   to extend to higher order.  This limits the accuracy of this method
+   to about 1 mm.
+ - A simple minded iteration scheme is employed to solve the equations.
+   This is inelegant and slow.
+ - The iteration scheme for the inverse problem is unstable for near
+   anti-podal points.  Thus the method yields no solution in this case.
+ .
+Here we reformulate the geodesic problem with three goals:
+ - Accuracy to round-off.  In practice this means about 10 nm using
+   doubles.
+ - Always yields a solution.  The direct problem is trivial.  In the
+   case of inverse problem, the geodesic is returned.  (And in the event
+   that there are multiple geodesics &mdash; of equal length, obviously
+   &mdash; one of them is returned.)
+ - Uses a non-iterative or rapidly converging iterative scheme.
+
+We derive higher-order series for the distance and longitude using
+Maxima.  In this release, we use an 8th-order expansion which is
+probably overkill.  (I will replace this with a lower-order series
+following more testing.)  The series is evaluated by a mixture of
+Horner's method and Clenshaw summation.  For the direct problem, we use
+a reversion of the series for the distance to compute the spherical arc
+length and thereby complete the solution without resorting to iterative
+methods.
+
+For the inverse problem, we rearrange the points so that the point 1 is
+the one closest to a pole and is in the southern hemisphere and the
+point 2 is to the north and east of this.  We consider geodesics leaving
+point 1 with azimuth \e alpha1 in [0, 180] and we determine the
+longitude where these geodesics first intersect the latitude = \e lat2.
+The longitude is an increasing function of \e alpha1 and we use Newton's
+method to determine the value of \e alpha1 for which the longitude
+matches \e lon2.  This then gives the desired geodesic.
+
+In order to maintain accuracy, we represent angles internally with the
+pair [sin(\e theta), cos(\e theta)].  This allows angles very close to
+all the cardinal points to be resolved.
 
 \section testgeod Test data for the geodesics
 
-A test set for the transverse Mercator projection is available at
+A test set a geodesics is available at
  - http://charles.karney.info/geographic/GeodTest.dat.gz
 
 This test set consists of a set of geodestics for the WGS84 ellipsoid.
@@ -955,20 +1021,20 @@ This test set consists of a set of geodestics for the WGS84 ellipsoid.
 Each line of the test set gives 7 space delimited numbers
  - latitude for point 1, \e lat1 (degrees, exact)
  - longitude for point 1, \e lon1 (degrees, always 0)
- - heading for point 1, \e head1 (degrees, exact)
+ - azimuth for point 1, \e azi1 (clockwise from north in degrees, exact)
  - latitude for point 2, \e lat2 (degrees, accurate to 10<sup>-18</sup> deg)
  - longitude for point 2, \e lon2 (degrees, accurate to 10<sup>-18</sup> deg)
- - heading for point 2, \e head2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - azimuth for point 2, \e azi2 (degrees, accurate to 10<sup>-18</sup> deg)
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
  .
 These are computed using as direct geodesic calculations with the give
-\e lat1, \e lon1, \e head1, and \e s12.  The distance \e s12 always
+\e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
 corresponds to an arc length on the auxilliary sphere of pi or less, so
 the given geodesics give the shortest paths from point 1 to point 2.
 For simplicity and without loss of generality, \e lat1 is chosen in
-[0<sup>o</sup>, 90<sup>o</sup>], \e lon2 is taken to be zero, \e head1
+[0<sup>o</sup>, 90<sup>o</sup>], \e lon2 is taken to be zero, \e azi1
 is chosen in [0<sup>o</sup>, 180<sup>o</sup>].  Furthermore, \e lat1 and
-\e head1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is
+\e azi1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is
 a multiple of 0.1 um.  The direct calculation uses an expansion of the
 geodesic equations accurate to \e f<sup>20</sup> (approximately 1 part
 in 10<sup>50</sup>) and is computed with with
@@ -987,8 +1053,117 @@ The contents of the file are as follows:
  .
 (a total of 350000 entries).
 
+A small set of test points has been culled from the literature on
+geodesics.  These are all for the International Ellispoid (\e a =
+6378388m \e f = 1/297.0).  The endpoints are taken from
+ - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
+   geodesy</a>, Part II, Ohio State Univ. (March 1993)
+ - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
+   computation of long geodesics on the ellipsoid through Gaussian
+   quadrature</a>,
+   Journal of Geodesy 53, 165-177 (1979)
+ - B.K. Meade, Discussion of results obtained from the Bowring formulas
+   developed for solutions of the geodetic inverse and great elliptic
+   inverse, Survey Review 33 (261) 477-487 (1996)
+ .
+However some of the results quoted for the inverse problem in these
+papers are inaccurate.  Accurate data are given here.  The end points
+are
+\verbatim
+No lat1		     lat2             lon2 - lon1
+
+00 37d19'54.95367"   26d07'42.83946"   41d28'35.50729"
+01 35d16'11.24862"   67d22'14.77638"  137d47'28.31435"
+02  1d00'00"         -0d59'53.83076"  179d17'48.02997"
+03  1d00'00"          1d01'15.18952"  179d46'17.84244"
+04 41d41'45.88"     -41d41'46.20"     179d59'59.44"
+05  0d00'00"          0d00'00"        179d41'49.78063"
+06 30d00'00"        -30d00'00"        179d40'00"
+07 60d00'00"        -59d59'00"        179d50'00"
+08 30d00'00"        -29d50'00"        179d48'00"
+09 30d00'00"        -29d55'00"        179d48'00"
+10 34d28'44.76421"  -34d28'44.76421"  179d30'00"
+11  0d00'00"          0d00'00"        179d23'38.18182"
+12 34d28'44.764213" -34d28'44.764213" 179d30'00"
+13 56d41'58.297496" -56d41'58.297496" 179d40'00"
+14 29d45'00"         29d45'00.23848"    0d00'00.25626"
+15 41d41'45.88"      41d41'46.2"        0d00'00.56"
+16 46d00'00"         46d00'01"          0d00'01.816"
+17 40d00'00"         40d00'02"          0d00'04.75"
+18 38d00'00"         38d00'04.765"      0d00'05.554"
+19 30d00'00"         37d53'32.46584"  116d19'16.68843"
+20 30d19'54.95367"  -30d11'50.15681"  179d58'17.84244"
+21  0d39'49.12586"   -0d45'14.13112"  179d58'17.84244"
+22  0d00'54.95367"    0d00'42.83946"  179d28'17.84244"
+23 40d00'00"        -40d00'05.75932"  179d55'15.59578"
+24 37d00'00"         28d15'36.69535"    2d37'39.52918"
+25 38d30'45"        -35d25'35"        179d45'00"
+26 60d00'00"        -60d00'00"        179d41'47"
+\endverbatim
+and the geodesics are given by
+\verbatim
+No  azi1                     azi2                     s12
+
+00  95d27'59.63088905553491" 118d05'58.96160858886728"  4085966.7025902201825
+01  15d44'23.74849770324814" 144d55'39.92147266777383"  8084823.8382961415712
+02  88d59'59.99897053696689"  91d00'06.11835637659787" 19959999.9998034962728
+03   4d59'59.9999565312182"  174d59'59.88480004914149" 19780006.5587880182731
+04 179d58'49.16247860972594"   0d01'10.83761892414861" 20004566.7228054132931
+05  30d00'00.00002084815889" 149d59'59.99997915184111" 19996147.416826781925
+06  39d24'51.80601183179472" 140d35'08.19398816820528" 19994364.6068583984182
+07  29d11'51.07006518417487" 150d49'06.86792886226858" 20000433.9629039632049
+08  16d02'28.33895348073478" 163d59'10.33689436714454" 19983420.1535833515076
+09  18d38'12.55689701007199" 161d22'45.43724069005652" 19992241.7634404403113
+10  89d59'59.78608904242135"  90d00'00.21391095757865" 19981603.2781440234735
+11  89d59'51.5863776476884"   90d00'08.4136223523116"  19970827.8695289752144
+12  90d00'00.00000000479721"  90d00'00.00000000479721" 19981603.2781440234735
+13  90d00'00.0000006754891"   90d00'00.0000006754891"  19994364.6068583984183
+14  43d09'29.0634310812721"   43d09'29.19059165112047"       10.0665488514951
+15  52d40'39.39067110974434"  52d40'39.76317180931766"       16.2839750636094
+16  51d41'11.54166708300919"  51d41'12.8479912183896"        49.8037586266135
+17  61d18'00.21784992705284"  61d18'03.27110871411274"      128.4581417556041
+18  42d41'10.35602545797828"  42d41'13.77545984493403"      199.8717376568129
+19  45d00'00.00000438165649" 129d08'12.32600911217221" 10002499.999860115911
+20   2d23'52.10812966032674" 177d36'19.67010864697937" 19989590.5480170316779
+21 177d39'39.01010365081902"   2d20'21.15303599834387" 19994529.4454322340309
+22  54d08'27.73161935117439" 125d51'32.27232710890937" 19977290.7711390609949
+23 170d15'10.8812277902834"    9d44'49.94565915545135" 20003827.8511392345191
+24 164d59'59.99997936397788" 166d25'16.2593819478948"   1000000.0001515200393
+25   3d22'19.5694402667547"  176d45'41.43721792855263" 19661438.0251956080829
+26  90d00'00.00891264563132"  90d00'00.00891264563132" 19996104.3689008382234
+\endverbatim
+
+\section geoderrors Accuracy of geodesic calculation
+
+WGS84
+30 0 89.999999921314210986 -30 179.477019999756654402 90.000000078685789014 19978693.3090370851559
+30 0 89.999984164145203661 -30 179.477019999756674402 90.000015835854796339 19978693.3090370870856
+diff -0.000016                   0.00000000000002      0.000016                    0.0000000019
+
+lat1 = -lon1 (not at pole), azi1 != azi2, interchange azi1 and az2
+gives second geodesic
+
+lat1 = -lon1 (two poles), change az1 and az2 ensuring that (az1 + az2)
+is constant (mod 360).
+
+coincident points (including at either pole with lon1 != lon2)...
+
+Timing: Direct 1.1 us
+	Inverse 5.1 us
+
 The errors in the direct and inverse geodesic calculations are computed
-as follows.
+as follows.  The test data is read in
+
+\section geodtodo Remaining work on geodesic algorithm
+
+TODO:
+
+Tune order of series.
+Allow use of different orders via CPPFLAGS
+
+Tune starting point and  exit condition for Newton's iteraction.
+
+More detailed write up.
 
 <center>
 Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
