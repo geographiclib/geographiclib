@@ -1,6 +1,6 @@
 /**
  * \file Geodesic.hpp
- * \brief Header for GeographicLib::Geodesic and GeographicLib::GeodesicLine classes
+ * \brief Header for GeographicLib::Geodesic class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -24,7 +24,7 @@ namespace GeographicLib {
   class Geodesic {
   private:
     friend class GeodesicLine;
-    static const int maxpow = 8, head2sense = 1;
+    static const int maxpow = 8, azi2sense = 1;
 
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
@@ -36,7 +36,8 @@ namespace GeographicLib {
 		 double salp1, double calp1, double& salp2, double& calp2,
 		 double& sig12,
 		 double& ssig1, double& csig1, double& ssig2, double& csig2,
-		 double& u2, bool diffp, double& dchi12, double c[]) const throw();
+		 double& u2, bool diffp, double& dchi12, double c[])
+      const throw();
 
     static const double eps2, tol;
     const double _a, _f, _f1, _e2, _ep2, _b;
@@ -82,29 +83,29 @@ namespace GeographicLib {
     Geodesic(double a, double invf);
     /**
      * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
-     * longitude, \e lon1, and heading \e head1 (in degrees) for point 1 and a
+     * longitude, \e lon1, and azimuth \e azi1 (in degrees) for point 1 and a
      * range, \e s12 (in meters) from point 1 to point 2, return the latitude,
-     * \e lat2, longitude, \e lon2, and forward heading, \e head2 (in degees)
+     * \e lat2, longitude, \e lon2, and forward azimuth, \e azi2 (in degees)
      * for point 2.
      **********************************************************************/
-    void Direct(double lat1, double lon1, double head1, double s12,
-		double& lat2, double& lon2, double& head2) const throw();
+    void Direct(double lat1, double lon1, double azi1, double s12,
+		double& lat2, double& lon2, double& azi2) const throw();
     /**
      * Set up to do a series of ranges.  This returns a GeodesicLine object
-     * with point 1 given by latitude, \e lat1, longitude, \e lon1, and heading
-     * \e head1 (in degrees).  Calls to GeodesicLine::Position return the
-     * position and heading for point 2 a specified distance away.
+     * with point 1 given by latitude, \e lat1, longitude, \e lon1, and azimuth
+     * \e azi1 (in degrees).  Calls to GeodesicLine::Position return the
+     * position and azimuth for point 2 a specified distance away.
      **********************************************************************/
-    GeodesicLine Line(double lat1, double lon1, double head1) const throw();
+    GeodesicLine Line(double lat1, double lon1, double azi1) const throw();
     /**
      * Perform the inverse geodesic calculation.  Given a latitude, \e lat1,
      * longitude, \e lon1, for point 1 and a latitude, \e lat2, longitude, \e
      * lon2, for point 2 (all in degrees), return the geodesic distance, \e s12
-     * (in meters), and the forward headings, \e head1 and \e head2 (in
+     * (in meters), and the forward azimuths, \e azi1 and \e azi2 (in
      * degrees), at points 1 and 2.
      **********************************************************************/
     void Inverse(double lat1, double lon1, double lat2, double lon2,
-		 double& s12, double& head1, double& head2) const throw();
+		 double& s12, double& azi1, double& azi2) const throw();
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
@@ -117,21 +118,21 @@ namespace GeographicLib {
    * \brief A geodesic line.
    *
    * Calculate multiple points on a single geodesic line specified by a point 1
-   * and a heading at that point.  Geodesic.Line allows point 1 and the heading
+   * and a azimuth at that point.  Geodesic.Line allows point 1 and the azimuth
    * to be specified and returns a GeodesicLine object.  GeodesicLine.Position
    * returns the position and head at point 2 a give distance away.  An example
    * of use of this class is:
    \verbatim
    // Print positions on a geodesic going through latitude 30,
-   // longitude 10 at heading 80.  Points at intervals of 10km
+   // longitude 10 at azimuth 80.  Points at intervals of 10km
    // in the range [-1000km, 1000km] are given.
    GeodesicLine line(Geodesic::WGS84.Line(30.0, 10.0, 80.0));
    double step = 10e3;
    for (int s = -100; s <= 100; ++s) {
-     double lat2, lon2, head2;
+     double lat2, lon2, azi2;
      double s12 = s * step;
-     line.Position(s12, lat2, lon2, head2);
-     cout << s12 << " " << lat2 << " " << lon2 << " " << head2 << "\n";
+     line.Position(s12, lat2, lon2, azi2);
+     cout << s12 << " " << lat2 << " " << lon2 << " " << azi2 << "\n";
    }
    \endverbatim
    **********************************************************************/
@@ -142,14 +143,14 @@ namespace GeographicLib {
     static const int maxpow = 8;
 
     int _bsign;
-    double _lat1, _lon1, _head1;
+    double _lat1, _lon1, _azi1;
     double  _f1, _salp0, _calp0,
       _ssig1, _csig1, _stau1, _ctau1, _slam1, _clam1,
       _sScale, _dlamScale, _dtau1, _dchi1;
     double _sigCoeff[maxpow], _dlamCoeff[maxpow];
 
     GeodesicLine(const Geodesic& g,
-		 double lat1, double lon1, double head1);
+		 double lat1, double lon1, double azi1);
   public:
     /**
      * A default constructor.  If Position is called on the resulting object,
@@ -160,11 +161,11 @@ namespace GeographicLib {
     GeodesicLine() : _sScale(0) {};
 
     /**
-     * Return the latitude, \e lat2, longitude, \e lon2, and forward heading,
-     * \e head2 (in degrees) of the point 2 which is a distance, \e s12
+     * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
+     * \e azi2 (in degrees) of the point 2 which is a distance, \e s12
      * (meters), from point 1.  \e s12 can be signed.
      **********************************************************************/
-    void Position(double s12, double& lat2, double& lon2, double& head2)
+    void Position(double s12, double& lat2, double& lon2, double& azi2)
       const throw();
 
     /**
@@ -180,9 +181,9 @@ namespace GeographicLib {
      **********************************************************************/
     double Longitude() const throw() { return _lon1; }
     /**
-     * Return the heading of the geodesic line as it passes through point 1.
+     * Return the azimuth of the geodesic line as it passes through point 1.
      **********************************************************************/
-    double Heading() const throw() { return _bsign * _head1; }
+    double Azimuth() const throw() { return _bsign * _azi1; }
   };
 
 } //namespace GeographicLib

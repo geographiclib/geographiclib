@@ -1,6 +1,6 @@
 /**
  * \file Geodesic.cpp
- * \brief Implementation for GeographicLib::Geodesic and GeographicLib::GeodesicLine classes
+ * \brief Implementation for GeographicLib::Geodesic class
  *
  * Copyright (c) Charles Karney (2008) <charles@karney.com>
  * and licensed under the LGPL.
@@ -51,125 +51,126 @@ namespace GeographicLib {
     return 2 * sinx * cosx * y0; // sin(2 * x) * y0
   }
 
-  // The scale factor to convert tau to s/b
+  // The scale factor to convert tau to s / b
   double Geodesic::tauScale(double u2) throw() {
-    return (u2*(u2*(u2*(u2*(u2*(u2*((3624192-2760615*u2)*u2-4967424)+7225344)-11468800)+20971520)-50331648)+268435456)+1073741824.)/1073741824.;
+    return (u2 * (u2 * (u2 * (u2 * (u2 * (u2 * ((3624192 - 2760615 * u2) * u2 - 4967424) + 7225344) - 11468800) + 20971520) - 50331648) + 268435456) + 1073741824.0) / 1073741824.0;
   }
 
   // Coefficients of sine series to convert sigma to tau (a reversion of
   // tauCoeff).
-  void Geodesic::tauCoeff(double u2, double c[]) throw()  {
+  void Geodesic::tauCoeff(double u2, double c[]) throw() {
     double t = u2;
-    c[0]=t*(u2*(u2*(u2*(u2*(u2*(u2*(428731*u2-557402)+748544)-1046528)+1540096)-2424832)+4194304)-8388608)/67108864;
-    t *= u2;
-    c[1]=t*(u2*(u2*(u2*(u2*((480096-397645*u2)*u2-586016)+720896)-884736)+1048576)-1048576)/268435456;
-    t *= u2;
-    c[2]=t*(u2*(u2*(u2*(u2*(92295*u2-100482)+106880)-108288)+98304)-65536)/201326592;
-    t *= u2;
-    c[3]=t*(u2*(u2*((128512-136971*u2)*u2-111104)+81920)-40960)/1073741824.;
-    t *= u2;
-    c[4]=t*(u2*(u2*(9555*u2-7210)+4480)-1792)/335544320;
-    t *= u2;
-    c[5]=t*((672-1251*u2)*u2-224)/268435456;
-    t *= u2;
-    c[6]=t*(231*u2-66)/469762048;
-    t *= u2;
-    c[7]=-429*t/17179869184.;
+    c[0] = t * (u2 * (u2 * (u2 * (u2 * (u2 * (u2 * (428731 * u2 - 557402) + 748544) - 1046528) + 1540096) - 2424832) + 4194304) - 8388608) / 67108864;
+    t  *= u2;
+    c[1] = t * (u2 * (u2 * (u2 * (u2 * ((480096 - 397645 * u2) * u2 - 586016) + 720896) - 884736) + 1048576) - 1048576) / 268435456;
+    t  *= u2;
+    c[2] = t * (u2 * (u2 * (u2 * (u2 * (92295 * u2 - 100482) + 106880) - 108288) + 98304) - 65536) / 201326592;
+    t  *= u2;
+    c[3] = t * (u2 * (u2 * ((128512 - 136971 * u2) * u2 - 111104) + 81920) - 40960) / 1073741824.0;
+    t  *= u2;
+    c[4] = t * (u2 * (u2 * (9555 * u2 - 7210) + 4480) - 1792) / 335544320;
+    t  *= u2;
+    c[5] = t * ((672 - 1251 * u2) * u2 - 224) / 268435456;
+    t  *= u2;
+    c[6] = t * (231 * u2 - 66) / 469762048;
+    t  *= u2;
+    c[7] = -429 * t / 17179869184.0;
   }
 
   // Coefficients of sine series to convert tau to sigma (a reversion of
   // tauCoeff).
   void Geodesic::sigCoeff(double u2, double d[]) throw() {
     double t = u2;
-    d[0]=t*(u2*(u2*(u2*(u2*(u2*((15107266-11062823*u2)*u2-21467904)+31944192)-50135040)+83755008)-150994944)+301989888)/2415919104.;
-    t *= u2;
-    d[1]=t*(u2*(u2*(u2*(u2*(u2*(112064929*u2-151134240)+206026080)-281149440)+376504320)-471859200)+471859200)/24159191040.;
-    t *= u2;
-    d[2]=t*(u2*(u2*(u2*((2266302-1841049*u2)*u2-2690560)+2976768)-2850816)+1900544)/402653184;
-    t *= u2;
-    d[3]=t*(u2*(u2*(u2*(174543337*u2-182201856)+171121152)-132464640)+66232320)/48318382080.;
-    t *= u2;
-    d[4]=t*(u2*((5126290-6292895*u2)*u2-3328320)+1331328)/3019898880.;
-    t *= u2;
-    d[5]=t*(u2*(45781749*u2-25590432)+8530144)/56371445760.;
-    t *= u2;
-    d[6]=(918970-3216395*u2)*t/16911433728.;
-    t *= u2;
-    d[7]=109167851*t/5411658792960.;
+    d[0] = t * (u2 * (u2 * (u2 * (u2 * (u2 * ((15107266 - 11062823 * u2) * u2 - 21467904) + 31944192) - 50135040) + 83755008) - 150994944) + 301989888) / 2415919104.0;
+    t  *= u2;
+    d[1] = t * (u2 * (u2 * (u2 * (u2 * (u2 * (112064929 * u2 - 151134240) + 206026080) - 281149440) + 376504320) - 471859200) + 471859200) / 24159191040.0;
+    t  *= u2;
+    d[2] = t * (u2 * (u2 * (u2 * ((2266302 - 1841049 * u2) * u2 - 2690560) + 2976768) - 2850816) + 1900544) / 402653184;
+    t  *= u2;
+    d[3] = t * (u2 * (u2 * (u2 * (174543337 * u2 - 182201856) + 171121152) - 132464640) + 66232320) / 48318382080.0;
+    t  *= u2;
+    d[4] = t * (u2 * ((5126290 - 6292895 * u2) * u2 - 3328320) + 1331328) / 3019898880.0;
+    t  *= u2;
+    d[5] = t * (u2 * (45781749 * u2 - 25590432) + 8530144) / 56371445760.0;
+    t  *= u2;
+    d[6] = (918970 - 3216395 * u2) * t / 16911433728.0;
+    t  *= u2;
+    d[7] = 109167851 * t / 5411658792960.0;
   }
 
   double Geodesic::dlamScale(double f, double mu) throw() {
-    double g = (f*(f*(f*(f*(f*(f*(f*mu*(mu*(mu*(mu*(mu*(mu*(184041*mu-960498)+2063880)-2332400)+1459200)-479232)+65536)+mu*(mu*(mu*(mu*((544320-121968*mu)*mu-963200)+844800)-368640)+65536))+mu*(mu*(mu*(mu*(84672*mu-313600)+435200)-270336)+65536))+mu*(mu*((184320-62720*mu)*mu-184320)+65536))+mu*(mu*(51200*mu-110592)+65536))+(65536-49152*mu)*mu)+65536*mu)-262144)/262144;
+    double g =
+      (f * (f * (f * (f * (f * (f * (f * mu * (mu * (mu * (mu * (mu * (mu * (184041 * mu - 960498) + 2063880) - 2332400) + 1459200) - 479232) + 65536) + mu * (mu * (mu * (mu * ((544320 - 121968 * mu) * mu - 963200) + 844800) - 368640) + 65536)) + mu * (mu * (mu * (mu * (84672 * mu - 313600) + 435200) - 270336) + 65536)) + mu * (mu * ((184320 - 62720 * mu) * mu - 184320) + 65536)) + mu * (mu * (51200 * mu - 110592) + 65536)) + (65536 - 49152 * mu) * mu) + 65536 * mu) - 262144) / 262144;
     return f * g;
   }
 
   double Geodesic::dlamScalemu(double f, double mu) throw() {
-    double h = (f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*(1288287*mu-5762988)+10319400)-9329600)+4377600)-958464)+65536)+mu*(mu*(mu*((2721600-731808*mu)*mu-3852800)+2534400)-737280)+65536)+mu*(mu*(mu*(423360*mu-1254400)+1305600)-540672)+65536)+mu*((552960-250880*mu)*mu-368640)+65536)+mu*(153600*mu-221184)+65536)-98304*mu+65536)+65536)/262144;
+    double h = (f * (f * (f * (f * (f * (f * (mu * (mu * (mu * (mu * (mu * (1288287 * mu - 5762988) + 10319400) - 9329600) + 4377600) - 958464) + 65536) + mu * (mu * (mu * ((2721600 - 731808 * mu) * mu - 3852800) + 2534400) - 737280) + 65536) + mu * (mu * (mu * (423360 * mu - 1254400) + 1305600) - 540672) + 65536) + mu * ((552960 - 250880 * mu) * mu - 368640) + 65536) + mu * (153600 * mu - 221184) + 65536) - 98304 * mu + 65536) + 65536) / 262144;
     return h * sq(f);
   }
 
   void Geodesic::dlamCoeff(double f, double mu, double e[]) throw() {
-    double s = f*mu, t = s;
-    e[0] = (f*(f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*((30816920-5080225*mu)*mu-79065664)+110840000)-91205632)+43638784)-11010048)+1048576)+mu*(mu*(mu*(mu*(mu*(3213004*mu-17049088)+37224832)-42637312)+26828800)-8650752)+1048576)+mu*(mu*(mu*((9543424-2100608*mu)*mu-17160192)+15196160)-6553600)+1048576)+mu*(mu*(mu*(1435648*mu-5419008)+7626752)-4718592)+1048576)+mu*((3129344-1044480*mu)*mu-3145728)+1048576)+mu*(835584*mu-1835008)+1048576)-786432*mu+1048576)+1048576)*t/8388608;
+    double s = f * mu, t = s;
+    e[0] = (f * (f * (f * (f * (f * (f * (f * (mu * (mu * (mu * (mu * (mu * ((30816920 - 5080225 * mu) * mu - 79065664) + 110840000) - 91205632) + 43638784) - 11010048) + 1048576) + mu * (mu * (mu * (mu * (mu * (3213004 * mu - 17049088) + 37224832) - 42637312) + 26828800) - 8650752) + 1048576) + mu * (mu * (mu * ((9543424 - 2100608 * mu) * mu - 17160192) + 15196160) - 6553600) + 1048576) + mu * (mu * (mu * (1435648 * mu - 5419008) + 7626752) - 4718592) + 1048576) + mu * ((3129344 - 1044480 * mu) * mu - 3145728) + 1048576) + mu * (835584 * mu - 1835008) + 1048576) - 786432 * mu + 1048576) + 1048576) * t / 8388608;
     t *= s;
-    e[1] = (f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*(2092939*mu-12074982)+29005488)-37129344)+26700800)-10207232)+1605632)+mu*(mu*(mu*((6316264-1270932*mu)*mu-12598272)+12618240)-6348800)+1277952)+mu*(mu*(mu*(787136*mu-3268608)+5143040)-3645440)+983040)+mu*((1648640-498688*mu)*mu-1859584)+720896)+mu*(323584*mu-778240)+491520)-212992*mu+294912)+131072)*t/8388608;
+    e[1] = (f * (f * (f * (f * (f * (f * (mu * (mu * (mu * (mu * (mu * (2092939 * mu - 12074982) + 29005488) - 37129344) + 26700800) - 10207232) + 1605632) + mu * (mu * (mu * ((6316264 - 1270932 * mu) * mu - 12598272) + 12618240) - 6348800) + 1277952) + mu * (mu * (mu * (787136 * mu - 3268608) + 5143040) - 3645440) + 983040) + mu * ((1648640 - 498688 * mu) * mu - 1859584) + 720896) + mu * (323584 * mu - 778240) + 491520) - 212992 * mu + 294912) + 131072) * t / 8388608;
     t *= s;
-    e[2] = (f*(f*(f*(f*(f*(mu*(mu*(mu*((13101384-2474307*mu)*mu-28018000)+30323072)-16658432)+3727360)+mu*(mu*(mu*(1386756*mu-6137024)+10352064)-7923712)+2334720)+mu*((2705152-770048*mu)*mu-3254272)+1351680)+mu*(416256*mu-1052672)+696320)-208896*mu+294912)+81920)*t/25165824;
+    e[2] = (f * (f * (f * (f * (f * (mu * (mu * (mu * ((13101384 - 2474307 * mu) * mu - 28018000) + 30323072) - 16658432) + 3727360) + mu * (mu * (mu * (1386756 * mu - 6137024) + 10352064) - 7923712) + 2334720) + mu * ((2705152 - 770048 * mu) * mu - 3254272) + 1351680) + mu * (416256 * mu - 1052672) + 696320) - 208896 * mu + 294912) + 81920) * t / 25165824;
     t *= s;
-    e[3] = (f*(f*(f*(f*(mu*(mu*(mu*(273437*mu-1265846)+2238200)-1799088)+557760)+mu*((492328-134532*mu)*mu-616928)+266560)+mu*(62080*mu-162048)+110080)-25088*mu+35840)+7168)*t/8388608;
+    e[3] = (f * (f * (f * (f * (mu * (mu * (mu * (273437 * mu - 1265846) + 2238200) - 1799088) + 557760) + mu * ((492328 - 134532 * mu) * mu - 616928) + 266560) + mu * (62080 * mu - 162048) + 110080) - 25088 * mu + 35840) + 7168) * t / 8388608;
     t *= s;
-    e[4] = (f*(f*(f*(mu*((1333160-353765*mu)*mu-1718160)+761600)+mu*(142140*mu-379200)+262080)-48000*mu+69120)+10752)*t/41943040;
+    e[4] = (f * (f * (f * (mu * ((1333160 - 353765 * mu) * mu - 1718160) + 761600) + mu * (142140 * mu - 379200) + 262080) - 48000 * mu + 69120) + 10752) * t / 41943040;
     t *= s;
-    e[5] = (f*(f*(mu*(39633*mu-107426)+75152)-11484*mu+16632)+2112)*t/25165824;
+    e[5] = (f * (f * (mu * (39633 * mu - 107426) + 75152) - 11484 * mu + 16632) + 2112) * t / 25165824;
     t *= s;
-    e[6] = (f*(16016-11011*mu)+1716)*t/58720256;
+    e[6] = (f * (16016 - 11011 * mu) + 1716) * t / 58720256;
     t *= s;
-    e[7] = 715*t/67108864;
+    e[7] = 715 * t / 67108864;
   }
 
   void Geodesic::dlamCoeffmu(double f, double mu, double h[]) throw() {
-    double s = f*mu, t = f;
-    h[0] = (f*(f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*((53929610-10160450*mu)*mu-118598496)+138550000)-91205632)+32729088)-5505024)+262144)+mu*(mu*(mu*(mu*(mu*(5622757*mu-25573632)+46531040)-42637312)+20121600)-4325376)+262144)+mu*(mu*(mu*((11929280-3150912*mu)*mu-17160192)+11397120)-3276800)+262144)+mu*(mu*(mu*(1794560*mu-5419008)+5720064)-2359296)+262144)+mu*((2347008-1044480*mu)*mu-1572864)+262144)+mu*(626688*mu-917504)+262144)-393216*mu+262144)+262144)*t/2097152;
+    double s = f * mu, t = f;
+    h[0] = (f * (f * (f * (f * (f * (f * (f * (mu * (mu * (mu * (mu * (mu * ((53929610 - 10160450 * mu) * mu - 118598496) + 138550000) - 91205632) + 32729088) - 5505024) + 262144) + mu * (mu * (mu * (mu * (mu * (5622757 * mu - 25573632) + 46531040) - 42637312) + 20121600) - 4325376) + 262144) + mu * (mu * (mu * ((11929280 - 3150912 * mu) * mu - 17160192) + 11397120) - 3276800) + 262144) + mu * (mu * (mu * (1794560 * mu - 5419008) + 5720064) - 2359296) + 262144) + mu * ((2347008 - 1044480 * mu) * mu - 1572864) + 262144) + mu * (626688 * mu - 917504) + 262144) - 393216 * mu + 262144) + 262144) * t / 2097152;
     t *= s;
-    h[1] = (f*(f*(f*(f*(f*(f*(mu*(mu*(mu*(mu*(mu*(8371756*mu-42262437)+87016464)-92823360)+53401600)-15310848)+1605632)+mu*(mu*(mu*((18948792-4448262*mu)*mu-31495680)+25236480)-9523200)+1277952)+mu*(mu*(mu*(2361408*mu-8171520)+10286080)-5468160)+983040)+mu*((3297280-1246720*mu)*mu-2789376)+720896)+mu*(647168*mu-1167360)+491520)-319488*mu+294912)+131072)*t/4194304;
+    h[1] = (f * (f * (f * (f * (f * (f * (mu * (mu * (mu * (mu * (mu * (8371756 * mu - 42262437) + 87016464) - 92823360) + 53401600) - 15310848) + 1605632) + mu * (mu * (mu * ((18948792 - 4448262 * mu) * mu - 31495680) + 25236480) - 9523200) + 1277952) + mu * (mu * (mu * (2361408 * mu - 8171520) + 10286080) - 5468160) + 983040) + mu * ((3297280 - 1246720 * mu) * mu - 2789376) + 720896) + mu * (647168 * mu - 1167360) + 491520) - 319488 * mu + 294912) + 131072) * t / 4194304;
     t *= s;
-    h[2] = (f*(f*(f*(f*(f*(mu*(mu*(mu*((22927422-4948614*mu)*mu-42027000)+37903840)-16658432)+2795520)+mu*(mu*(mu*(2426823*mu-9205536)+12940080)-7923712)+1751040)+mu*((3381440-1155072*mu)*mu-3254272)+1013760)+mu*(520320*mu-1052672)+522240)-208896*mu+221184)+61440)*t/6291456;
+    h[2] = (f * (f * (f * (f * (f * (mu * (mu * (mu * ((22927422 - 4948614 * mu) * mu - 42027000) + 37903840) - 16658432) + 2795520) + mu * (mu * (mu * (2426823 * mu - 9205536) + 12940080) - 7923712) + 1751040) + mu * ((3381440 - 1155072 * mu) * mu - 3254272) + 1013760) + mu * (520320 * mu - 1052672) + 522240) - 208896 * mu + 221184) + 61440) * t / 6291456;
     t *= s;
-    h[3] = (f*(f*(f*(f*(mu*(mu*(mu*(1093748*mu-4430461)+6714600)-4497720)+1115520)+mu*((1476984-470862*mu)*mu-1542320)+533120)+mu*(186240*mu-405120)+220160)-62720*mu+71680)+14336)*t/4194304;
+    h[3] = (f * (f * (f * (f * (mu * (mu * (mu * (1093748 * mu - 4430461) + 6714600) - 4497720) + 1115520) + mu * ((1476984 - 470862 * mu) * mu - 1542320) + 533120) + mu * (186240 * mu - 405120) + 220160) - 62720 * mu + 71680) + 14336) * t / 4194304;
     t *= s;
-    h[4] = (f*(f*(f*(mu*((466606-141506*mu)*mu-515448)+190400)+mu*(49749*mu-113760)+65520)-14400*mu+17280)+2688)*t/2097152;
+    h[4] = (f * (f * (f * (mu * ((466606 - 141506 * mu) * mu - 515448) + 190400) + mu * (49749 * mu - 113760) + 65520) - 14400 * mu + 17280) + 2688) * t / 2097152;
     t *= s;
-    h[5] = (f*(f*(mu*(158532*mu-375991)+225456)-40194*mu+49896)+6336)*t/12582912;
+    h[5] = (f * (f * (mu * (158532 * mu - 375991) + 225456) - 40194 * mu + 49896) + 6336) * t / 12582912;
     t *= s;
-    h[6] = (f*(4004-3146*mu)+429)*t/2097152;
+    h[6] = (f * (4004 - 3146 * mu) + 429) * t / 2097152;
     t *= s;
-    h[7] = 715*t/8388608;
-}
-
-  GeodesicLine Geodesic::Line(double lat1, double lon1, double head1)
-    const throw() {
-    return GeodesicLine(*this, lat1, lon1, head1);
+    h[7] = 715 * t / 8388608;
   }
 
-  void Geodesic::Direct(double lat1, double lon1, double head1, double s12,
-			double& lat2, double& lon2, double& head2)
+  GeodesicLine Geodesic::Line(double lat1, double lon1, double azi1)
     const throw() {
-    GeodesicLine l(*this, lat1, lon1, head1);
-    l.Position(s12, lat2, lon2, head2);
+    return GeodesicLine(*this, lat1, lon1, azi1);
+  }
+
+  void Geodesic::Direct(double lat1, double lon1, double azi1, double s12,
+			double& lat2, double& lon2, double& azi2)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1);
+    l.Position(s12, lat2, lon2, azi2);
   }
 
   void Geodesic::Inverse(double lat1, double lon1, double lat2, double lon2,
-		 double& s12, double& head1, double& head2)
+		 double& s12, double& azi1, double& azi2)
     const throw() {
     lon1 = AngNormalize(lon1);
     double lon12 = AngNormalize(AngNormalize(lon2) - lon1);
-    // If very close to being on the same meridian, then make it so
+    // If very close to being on the same meridian, then make it so.
     // Not sure this is necessary...
     lon12 = AngRound(lon12);
-    // Make longitude difference positive
+    // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
-    // If really close to the equator, treat as on equator
+    // If really close to the equator, treat as on equator.
     lat1 = AngRound(lat1);
     lat2 = AngRound(lat2);
     // Swap points so that point with higher (abs) latitude is point 1
@@ -209,7 +210,8 @@ namespace GeographicLib {
     SinCosNorm(sbet2, cbet2);
 
     double
-      phi12a = (lat2 + lat1) * Constants::degree, // How close to antipodal lat?
+      // How close to antipodal lat?
+      phi12a = (lat2 + lat1) * Constants::degree,
       chi12 = lon12 * Constants::degree,
       cchi12 = cos(chi12),	// lon12 == 90 isn't interesting
       schi12 = lon12 == 180 ? 0 :sin(chi12);
@@ -300,19 +302,23 @@ namespace GeographicLib {
       swap(calp1, calp2);
     }
 
-    head1 = -atan2(- swapp * lonsign * salp1,
+    azi1 = -atan2(- swapp * lonsign * salp1,
 		   + swapp * latsign * calp1) / Constants::degree;
-    head2 = -atan2(- head2sense * swapp * lonsign * salp2,
-		   + head2sense * swapp * latsign * calp2) / Constants::degree;
+    azi2 = -atan2(- azi2sense * swapp * lonsign * salp2,
+		   + azi2sense * swapp * latsign * calp2) / Constants::degree;
     return;
   }
 
-  double Geodesic::Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
-			 double salp1, double calp1, double& salp2, double& calp2,
+  double Geodesic::Chi12(double sbet1, double cbet1,
+			 double sbet2, double cbet2,
+			 double salp1, double calp1,
+			 double& salp2, double& calp2,
 			 double& sig12,
-			 double& ssig1, double& csig1, double& ssig2, double& csig2,
+			 double& ssig1, double& csig1,
+			 double& ssig2, double& csig2,
 			 double& u2,
-			 bool diffp, double& dchi12, double c[]) const throw() {
+			 bool diffp, double& dchi12, double c[])
+    const throw() {
 
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This cases has already been
@@ -353,23 +359,6 @@ namespace GeographicLib {
     SinCosNorm(ssig2, csig2);
     SinCosNorm(slam2, clam2);
 
-    // Derivatives with respect to alp1
-    double dalp0, dsig1, dlam1, dalp2, dsig2, dlam2;
-    if (diffp) {
-      // Differentiate sin(alp) * cos(bet) = sin(alp0),
-      dalp0 = cbet1 * calp1 / calp0;
-      dalp2 = calp2 != 0 ? calp1 * cbet1/ (calp2 * cbet2) : calp1 >= 0 ? 1 : -1;
-      // Differentiate tan(bet) = tan(sig) * cos(alp) and clear
-      // calp from the denominator with tan(alp0)=cos(sig)*tan(alp),
-      dsig1 = ssig1 * salp0 / calp0;
-      dsig2 = ssig2 * salp0 / calp0 * dalp2;
-      // Differentiate tan(lam) = sin(alp0) * tan(sig).  Substitute
-      //   tan(sig) = tan(bet) / cos(alp) = tan(lam) / sin(alp0)
-      //   cos(lam) / cos(sig) = 1 / cos(bet)
-      // to give
-      dlam1 = (sbet1 * sq(clam1) + slam1 * salp0 / (calp0 * cbet1));
-      dlam2 = (sbet2 * sq(clam2) + slam2 * salp0 / (calp0 * cbet2)) * dalp2;
-    }
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		  csig1 * csig2 + ssig1 * ssig2);
@@ -381,11 +370,28 @@ namespace GeographicLib {
     double eta12, lamscale;
     mu = sq(calp0);
     dlamCoeff(_f, mu, c);
-    eta12 = SinSeries(ssig2, csig2, c, maxpow) - SinSeries(ssig1, csig1, c, maxpow);
+    eta12 = SinSeries(ssig2, csig2, c, maxpow) -
+      SinSeries(ssig1, csig1, c, maxpow);
     lamscale = dlamScale(_f, mu),
     chi12 = lam12 + salp0 * lamscale * (sig12 + eta12);
 
     if (diffp) {
+      double dalp0, dsig1, dlam1, dalp2, dsig2, dlam2;
+      // Differentiate sin(alp) * cos(bet) = sin(alp0),
+      dalp0 = cbet1 * calp1 / calp0;
+      dalp2 = calp2 != 0 ? calp1 * cbet1/ (calp2 * cbet2) :
+	calp1 >= 0 ? 1 : -1;
+      // Differentiate tan(bet) = tan(sig) * cos(alp) and clear
+      // calp from the denominator with tan(alp0)=cos(sig)*tan(alp),
+      dsig1 = ssig1 * salp0 / calp0;
+      dsig2 = ssig2 * salp0 / calp0 * dalp2;
+      // Differentiate tan(lam) = sin(alp0) * tan(sig).  Substitute
+      //   tan(sig) = tan(bet) / cos(alp) = tan(lam) / sin(alp0)
+      //   cos(lam) / cos(sig) = 1 / cos(bet)
+      // to give
+      dlam1 = (sbet1 * sq(clam1) + slam1 * salp0 / (calp0 * cbet1));
+      dlam2 = (sbet2 * sq(clam2) + slam2 * salp0 / (calp0 * cbet2)) * dalp2;
+
       double deta12, dmu, dlamscale, dchisig;
       dlamCoeffmu(_f, mu, c);
       dmu = - 2 * calp0 * salp0 * dalp0;
@@ -411,32 +417,32 @@ namespace GeographicLib {
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
-			     double lat1, double lon1, double head1) {
-    head1 = Geodesic::AngNormalize(head1);
-    // Normalize heading at poles.  Evaluate heads at lat = +/- (90 - eps).
+			     double lat1, double lon1, double azi1) {
+    azi1 = Geodesic::AngNormalize(azi1);
+    // Normalize azimuth at poles.  Evaluate azimuths at lat = +/- (90 - eps).
     if (lat1 == 90) {
-      lon1 -= head1 - (head1 >= 0 ? 180 : -180);
-      head1 = -180;
+      lon1 -= azi1 - (azi1 >= 0 ? 180 : -180);
+      azi1 = -180;
     } else if (lat1 == -90) {
-      lon1 += head1;
-      head1 = 0;
+      lon1 += azi1;
+      azi1 = 0;
     }
     // Guard against underflow in salp0
-    head1 = Geodesic::AngRound(head1);
+    azi1 = Geodesic::AngRound(azi1);
     lon1 = Geodesic::AngNormalize(lon1);
-    _bsign = head1 >= 0 ? 1 : -1;
-    head1 *= _bsign;
+    _bsign = azi1 >= 0 ? 1 : -1;
+    azi1 *= _bsign;
     _lat1 = lat1;
     _lon1 = lon1;
-    _head1 = head1;
+    _azi1 = azi1;
     _f1 = g._f1;
     // alp1 is in [0, pi]
     double
-      alp1 = head1 * Constants::degree,
+      alp1 = azi1 * Constants::degree,
       // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
       // problems directly than to skirt them.
-      salp1 = head1 == 180 ? 0 : sin(alp1),
-      calp1 = head1 ==  90 ? 0 : cos(alp1);
+      salp1 = azi1 == 180 ? 0 : sin(alp1),
+      calp1 = azi1 ==  90 ? 0 : cos(alp1);
     double cbet1, sbet1, phi;
     phi = lat1 * Constants::degree;
     // Ensure cbet1 = +eps at poles
@@ -459,7 +465,8 @@ namespace GeographicLib {
     // No atan2(0,0) ambiguity at poles sce cbet1 = +eps.
     // With alp0 = 0, lam1 = 0 for alp1 = 0, lam1 = pi for alp1 = pi.
     _ssig1 = sbet1; _slam1 = _salp0 * sbet1;
-    _csig1 = _clam1 = sbet1 != 0 || calp1 != 0 ? cbet1 * calp1 : 0;
+    _csig1 = _clam1 = sbet1 != 0 || calp1 != 0 ? cbet1 * calp1 : 1;
+
     Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
     Geodesic::SinCosNorm(_slam1, _clam1);
     double
@@ -485,7 +492,7 @@ namespace GeographicLib {
   }
 
   void GeodesicLine::Position(double s12,
-			      double& lat2, double& lon2, double& head2)
+			      double& lat2, double& lon2, double& azi2)
   const throw() {
     if (_sScale == 0)
       // Uninitialized
@@ -503,13 +510,13 @@ namespace GeographicLib {
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * c + _csig1 * s;
     csig2 = _csig1 * c - _ssig1 * s;
+    // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
     // Alt: cbet2 = hypot(csig2, salp0 * ssig2);
     cbet2 = Geodesic::hypot(_salp0, _calp0 * csig2);
-    // tan(lam2)=sin(alp0)*tan(sig2)
+    // tan(lam2) = sin(alp0) * tan(sig2)
     slam2 = _salp0 * ssig2; clam2 = csig2;  // No need to normalize
-    // Geodesic::SinCosNorm(slam2, clam2);	    // Not necessary
-    // tan(alp0)=cos(sig2)*tan(alp2)
+    // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
     // lam12 = lam2 - lam1
     lam12 = atan2(slam2 * _clam1 - clam2 * _slam1,
@@ -523,8 +530,8 @@ namespace GeographicLib {
     lon12 = lon12 - 360 * floor(lon12/360 + 0.5);
     lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree;
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);
-    head2 = -atan2(- Geodesic::head2sense * _bsign * salp2,
-		   + Geodesic::head2sense * calp2) / Constants::degree;
+    azi2 = -atan2(- Geodesic::azi2sense * _bsign * salp2,
+		   + Geodesic::azi2sense * calp2) / Constants::degree;
   }
 
 } // namespace GeographicLib

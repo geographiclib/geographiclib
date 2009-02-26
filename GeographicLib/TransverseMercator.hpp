@@ -36,7 +36,7 @@ namespace GeographicLib {
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum
    * errors is 5 nm (ground distance) for all positions within 35 degrees of
    * the central meridian.  The error in the convergence is 2e-15" and the
-   * relative error in the scale is 6e-12%%.  (See \ref errors for the weasel
+   * relative error in the scale is 6e-12%%.  (See \ref tmerrors for the weasel
    * words.)  The speed penalty in going to 6th order is only about 1%.
    * GeographicLib::TransverseMercatorExact is an alternative implementation of
    * the projection using exact formulas which yield accurate (to 8 nm)
