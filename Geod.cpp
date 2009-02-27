@@ -116,6 +116,7 @@ int main(int argc, char* argv[]) {
       return usage(arg != "-h");
   }
 
+  /* FIX ME */
   const GeographicLib::Geodesic internat(6378388.0, 297.0);
   const GeographicLib::Geodesic& geod = international ? internat :
     GeographicLib::Geodesic::WGS84;
@@ -151,6 +152,7 @@ int main(int argc, char* argv[]) {
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
 	geod.Inverse(lat1, lon1, lat2, lon2, s12, head1, head2);
+	std::cerr << geod.itera << " " << geod.iterb << " ";
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
 	std::cout << AzimuthString(head1, prec, dms) << " ";
