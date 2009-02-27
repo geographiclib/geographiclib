@@ -264,48 +264,56 @@ namespace GeographicLib {
 
       double sig12, ssig1, csig1, ssig2, csig2, u2;
 
+      // Figure a starting point for Newton's method
       double
 	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi,
 	chicrit = Constants::pi - chicrita;
       if (chi12 == chicrit && cbet1 == cbet2 && sbet2 == -sbet1) {
-	// Possibly we don't have to make a special case here?
-	sig12 = Constants::pi;
-	ssig1 = -1; salp1 = salp2 =ssig2 = 1;
-	calp1 = calp2 = csig1 = csig2 = 0;
-	u2 = sq(sbet1) * _ep2;
+	salp1 = 1; calp1 = 0;	// The singular point
+	// This leads to
+	//
+	// sig12 = Constants::pi; ssig1 = -1; salp2 = ssig2 = 1;
+	// calp2 = csig1 = csig2 = 0; u2 = sq(sbet1) * _ep2;
+	//
+	// But we let Newton's method proceed so that we have fewer special
+	// cases in the code.
+      } else if (chi12 > chicrit && cbet12a > 0 && sbet12a > - chicrita) {
+	salp1 = min(1.0, (Constants::pi - chi12) / chicrita);
+	calp1 = - sqrt(1 - sq(salp1));
+      } else if (chi12 > Constants::pi - 2 * chicrita &&
+		 cbet12a > 0 && sbet12a > - 2 * chicrita) {
+	salp1 = 1;
+	calp1 = sbet2 <= 0 ? -eps2 : eps2;
       } else {
-	if (chi12 > chicrit && cbet12a > 0 && sbet12a > - chicrita) {
-	  salp1 = min(1.0, (Constants::pi - chi12) / chicrita);
-	  calp1 = - sqrt(1 - sq(salp1));
-	} else {
-	  salp1 = cbet2 * schi12;
-	  // calp1 = sbet2 * cbet1 - cbet2 * sbet1 * cchi12;
-	  // _f1/n1 gives ellipsoid correction for short distances.
-	  calp1 = cchi12 >= 0 ?
-	    sbet12 * _f1/n1 + cbet2 * sbet1 * sq(schi12) / (1 + cchi12) :
-	    sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
-	  // N.B. ssig1 = hypot(salp1, calp1) (before normalization)
-	  SinCosNorm(salp1, calp1);
-	}
+	salp1 = cbet2 * schi12;
+	// calp1 = sbet2 * cbet1 - cbet2 * sbet1 * cchi12;
+	// _f1/n1 gives ellipsoid correction for short distances.
+	calp1 = cchi12 >= 0 ?
+	  sbet12 * _f1/n1 + cbet2 * sbet1 * sq(schi12) / (1 + cchi12) :
+	  sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
+	// N.B. ssig1 = hypot(salp1, calp1) (before normalization)
+	SinCosNorm(salp1, calp1);
+      }
 
-	for (unsigned i = 0, trip = 0; i < 100; ++i) {
-	  double dv;
-	  double v = Chi12(sbet1, cbet1, sbet2, cbet2,
-			   salp1, calp1, salp2, calp2,
-			   sig12, ssig1, csig1, ssig2, csig2,
-			   u2, trip < 1, dv, c) - chi12;
-	  if (v == 0 || !(trip < 1))
-	    break;
-	  double
-	    dalp1 = -v/dv,
-	    sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
-	    nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-	  calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-	  salp1 = max(0.0, nsalp1);
-	  SinCosNorm(salp1, calp1);
-	  if (abs(v) < tol) ++trip;
-	}
-      }	
+      // Newton's method
+      for (unsigned i = 0, trip = 0; i < 100; ++i) {
+	double dv;
+	double v = Chi12(sbet1, cbet1, sbet2, cbet2,
+			 salp1, calp1, salp2, calp2,
+			 sig12, ssig1, csig1, ssig2, csig2,
+			 u2, trip < 1, dv, c) - chi12;
+	if (v == 0 || !(trip < 1))
+	  break;
+	double
+	  dalp1 = -v/dv,
+	  sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
+	  nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+	calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+	salp1 = max(0.0, nsalp1);
+	SinCosNorm(salp1, calp1);
+	if (abs(v) < tol) ++trip;
+      }
+	
       tauCoeff(u2, c);
       s12 =  _b * tauScale(u2) *
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow) -
