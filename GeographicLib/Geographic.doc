@@ -948,25 +948,35 @@ References
 
 \section geoddesc Description of algorithm
 
-A geodesic is the shortest path between two points on the earth,
-represented here by an ellipsoid.  The "inverse" problem is formulated
-as follows
- - Given two points, 1 and 2, determine the length of the geodesic and
-   the azimuths of the geodesic at the two end points.
- .
-The "direct" problem is
- - Given a geodesic passing through point 1 at with a particular
-   azimuth, determine the position of point 2 a particular distance away
-   and the azimuth of the geodesic at that point.
+The shortest path between two points on the ellipsoid at (\e lat1, \e
+lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is \e
+s12 and the geodesic from point 1 to point 2 has azimuths \e azi1 and \e
+azi2 at the two end points.  (The azimuth is the heading measured
+clockwise from north.  \e azi2 is the "forward" azimuth, i.e., the
+heading that takes you beyond point 2 not back to point 1.)
+
+Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2,
+\e lon2, \e azi2.  This is the \e direct geodesic problem.  (If \e s12
+is sufficiently large that the geodesic wraps more than halfway around
+the earth, there will be a true geodesic between the points with a
+smaller \e s12.)
+
+Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1,
+\e azi2, \e s12.  This is the \e inverse geodesic problem.  Usually, the
+solution to the inverse problem is unique.  In cases where there are
+muliple solutions (all with the same \e s12, of course), all the
+solutions can be easily generated once a particular solution is
+provided.
 
 On a sphere, the geodesic is a great circle.  On the ellipsoid, the
 problem is usually solved by transferring the geodesic to an "auxilliary
-sphere" where the latitude phi has been replaced by the reduced latitude
-beta where tan(beta) = (1 - f) tan(phi).  On this sphere, the geodesic
-is again a great circle and the azimuth is the same as on the ellipsoid.
-However, the ellipsoidal distance is related to the great circle
-distance by an integral; and the ellipsoidal longitude is similarly
-related to the longitude on the auxiliary sphere.
+sphere" where the latitude \e phi has been replaced by the reduced
+latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).  On this
+sphere, the geodesic is again a great circle and the azimuth is the same
+as on the ellipsoid.  However, the ellipsoidal distance is related to
+the great circle distance by an integral; and the ellipsoidal longitude
+is similarly related to the longitude on the auxiliary sphere.  Williams
+(2002) gives the necessary integrals.
 
 A popular method of doing geodesic calculations is due to Vincenty
 (1975).  This entails expanding the integrals in powers of the ellipsoid
@@ -977,20 +987,20 @@ iteration.  This approach has three drawbacks:
    to about 1 mm.
  - A simple minded iteration scheme is employed to solve the equations.
    This is inelegant and slow.
- - The iteration scheme for the inverse problem is unstable for near
-   anti-podal points.  Thus the method yields no solution in this case.
+ - The iteration scheme for the inverse problem is unstable for points
+   which are nearly anti-podal.  Thus the method yields no solution in
+   this case.
  .
 Here we reformulate the geodesic problem with three goals:
  - Accuracy to round-off.  In practice this means about 10 nm using
    doubles.
  - Always yields a solution.  The direct problem is trivial.  In the
    case of inverse problem, the geodesic is returned.  (And in the event
-   that there are multiple geodesics &mdash; of equal length, obviously
-   &mdash; one of them is returned.)
+   that there are multiple geodesics, one of them is returned.)
  - Uses a non-iterative or rapidly converging iterative scheme.
 
-We derive higher-order series for the distance and longitude using
-Maxima.  In this release, we use an 8th-order expansion which is
+We derive higher-order series for the distance and longitude integrals
+using Maxima.  In this release, we use an 8th-order expansion which is
 probably overkill.  (I will replace this with a lower-order series
 following more testing.)  The series is evaluated by a mixture of
 Horner's method and Clenshaw summation.  For the direct problem, we use
@@ -1000,23 +1010,19 @@ methods.
 
 For the inverse problem, we rearrange the points so that the point 1 is
 the one closest to a pole and is in the southern hemisphere and the
-point 2 is to the north and east of this.  We consider geodesics leaving
-point 1 with azimuth \e alpha1 in [0, 180] and we determine the
+point 2 is to the north and east of point 1.  We consider geodesics
+leaving point 1 with azimuth \e alpha1 in [0, pi] and we determine the
 longitude where these geodesics first intersect the latitude = \e lat2.
 The longitude is an increasing function of \e alpha1 and we use Newton's
 method to determine the value of \e alpha1 for which the longitude
 matches \e lon2.  This then gives the desired geodesic.
 
-In order to maintain accuracy, we represent angles internally with the
-pair [sin(\e theta), cos(\e theta)].  This allows angles very close to
-all the cardinal points to be resolved.
-
-\section testgeod Test data for the geodesics
+\section testgeod Test data for geodesics
 
 A test set a geodesics is available at
  - http://charles.karney.info/geographic/GeodTest.dat.gz
 
-This test set consists of a set of geodestics for the WGS84 ellipsoid.
+This consists of a set of geodestics for the WGS84 ellipsoid.
 
 Each line of the test set gives 7 space delimited numbers
  - latitude for point 1, \e lat1 (degrees, exact)
@@ -1027,15 +1033,19 @@ Each line of the test set gives 7 space delimited numbers
  - azimuth for point 2, \e azi2 (degrees, accurate to 10<sup>-18</sup> deg)
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
  .
-These are computed using as direct geodesic calculations with the give
+These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
 corresponds to an arc length on the auxilliary sphere of pi or less, so
 the given geodesics give the shortest paths from point 1 to point 2.
 For simplicity and without loss of generality, \e lat1 is chosen in
-[0<sup>o</sup>, 90<sup>o</sup>], \e lon2 is taken to be zero, \e azi1
+[0<sup>o</sup>, 90<sup>o</sup>], \e lon1 is taken to be zero, \e azi1
 is chosen in [0<sup>o</sup>, 180<sup>o</sup>].  Furthermore, \e lat1 and
 \e azi1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is
-a multiple of 0.1 um.  The direct calculation uses an expansion of the
+a multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e lon2
+in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
+180<sup>o</sup>].
+
+The direct calculation uses an expansion of the
 geodesic equations accurate to \e f<sup>20</sup> (approximately 1 part
 in 10<sup>50</sup>) and is computed with with
 <a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
@@ -1053,24 +1063,47 @@ The contents of the file are as follows:
  .
 (a total of 350000 entries).
 
+This data can be fed to the Geod utility as follows
+ - Direct from point 1:
+\verbatim
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./Geod
+\endverbatim
+   This should yield columns 4, 5, and 6 of the test set.
+ - Direct from point 2:
+\verbatim
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f4,5,6,7 |
+  sed "s/ \([^ ]*$\)/ -\1/" | ./Geod
+\endverbatim
+   (The sed command negates the distance.)  This should yield columns 1,
+   2, and 3 of the test set.
+ - Inverse between points 1 and 2:
+\verbatim
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,4,5 | ./Geod -i
+\endverbatim
+   This should yield columns 3, 6, and 7 of the test set.
+ .
+Add, e.g., "-p 6", to the call to Geoid to change the precision of the
+output.  Adding "-f" causes Geoid to print all 7 fields specifying the
+geodesic (in the same order as the test set).
+
 A small set of test points has been culled from the literature on
 geodesics.  These are all for the International Ellispoid (\e a =
-6378388m \e f = 1/297.0).  The endpoints are taken from
+6378388 m \e f = 1/297.0).  The endpoints are taken from
  - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
-   geodesy</a>, Part II, Ohio State Univ. (March 1993)
+   geodesy, Part II</a>, Ohio State Univ. (March 1993).
  - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
    computation of long geodesics on the ellipsoid through Gaussian
    quadrature</a>,
-   Journal of Geodesy 53, 165-177 (1979)
+   Journal of Geodesy 53, 165-177 (1979).
  - B.K. Meade, Discussion of results obtained from the Bowring formulas
    developed for solutions of the geodetic inverse and great elliptic
-   inverse, Survey Review 33 (261) 477-487 (1996)
+   inverse, Survey Review 33 (261) 477&ndash;487 (1996).
  .
 However some of the results quoted for the inverse problem in these
 papers are inaccurate.  Accurate data are given here.  The end points
 are
 \verbatim
-No lat1		     lat2             lon2 - lon1
+No     lat1              lat2            lon2 - lon1
 
 00 37d19'54.95367"   26d07'42.83946"   41d28'35.50729"
 01 35d16'11.24862"   67d22'14.77638"  137d47'28.31435"
@@ -1102,7 +1135,7 @@ No lat1		     lat2             lon2 - lon1
 \endverbatim
 and the geodesics are given by
 \verbatim
-No  azi1                     azi2                     s12
+No      azi1                      azi2                      s12
 
 00  95d27'59.63088905553491" 118d05'58.96160858886728"  4085966.7025902201825
 01  15d44'23.74849770324814" 144d55'39.92147266777383"  8084823.8382961415712
@@ -1135,35 +1168,118 @@ No  azi1                     azi2                     s12
 
 \section geoderrors Accuracy of geodesic calculation
 
-WGS84
-30 0 89.999999921314210986 -30 179.477019999756654402 90.000000078685789014 19978693.3090370851559
-30 0 89.999984164145203661 -30 179.477019999756674402 90.000015835854796339 19978693.3090370870856
-diff -0.000016                   0.00000000000002      0.000016                    0.0000000019
+We regard all the test data as "exact".  For each member of the test
+set, 7 error distances are computed.
+ -# Compute direct problem from point 1, compare position of resulting
+    point 2 with the exact result.
+ -# Using point 2 and its azimuth given in (1), run the geodesic
+    backward to recompute point 1.  Compare this with the original
+    point 1.
+ -# Similar to (1) with points 1 and 2 interchanged.
+ -# Similar to (2) with points 1 and 2 interchanged.
+ -# Solve the inverse problem bewteen points 1 and 2.  Compare the
+    distance with the exact result.
+ -# Using the azimuth at point 1 found in (5), compute the direct
+    problem from point 1 and compare the position of the resulting point
+    2 with the exact result.
+ -# Similar to (6) with points 1 and 2 interchanged.
+ .
+To guard against a canceling error, the calculations in (2), (4), (6),
+and (7) use a long double version of the geodesic calculation (which is
+about 2000 times more accurate than the double version.  The maximum of
+the resulting errors in less than 12 nm for the double version and 6 pm
+for the long double version.
 
-lat1 = -lon1 (not at pole), azi1 != azi2, interchange azi1 and az2
-gives second geodesic
+None of the checks listed above directly compares the computed azimuths
+with the exact values.  The problem is that tiny changes in the
+positions of the points may sometimes lead to large changes in azimuths.
+Obvious examples of this are when the two points are close to opposite
+poles or when they are very close to each other.
 
-lat1 = -lon1 (two poles), change az1 and az2 ensuring that (az1 + az2)
-is constant (mod 360).
+A less obvious case is when the latitudes of the two points are equal
+and opposite and the azimuths are close to +/- 90<sup>o</sup>.  For
+example, consider
+ - Point 1: 30N 0E
+ - Point 2a: 30S 179.477019999756663537E
+ - Point 2b: 30S 179.477019999756691959E
+ .
+(The difference is longitudes for Points 2a and 2b is 2<sup>-45</sup>,
+so there are no representable doubles between these values.)  The two
+geodesic are then
+ - 1 to 2a: \e azi1 = 89.999989..., \e s12 = 19978693.3090370860...
+ - 1 to 2b: \e azi1 = 89.999978..., \e s12 = 19978693.3090370887...
+ - azimuth difference = -0.04", distance difference = 2.7 nm
+ .
+The difference in the distance is commensurate with the difference in
+longitude.  But the difference is azimuths is much bigger.  The two
+geodesics are in fact about 1.2 m apart at their centers.
 
-coincident points (including at either pole with lon1 != lon2)...
+For this reason, we are content with ensuring that the position errors
+are small.
+
+\section geodtodo Loose end on geodesics
+
+When either point is at a pole, the azimuth is defined by keeping the
+longitude fixed and considering the writing \e lat = 90 - \e eps or -90
++ \e eps and taking the limit \e eps -> 0 from above.
+
+The following prescription allows you to ascertain when there are
+multiple solutions to the inverse problem and to generate the complete
+set.
+ - \e lat1 = \e -lat2 (with either at a pole).  If \e azi1 = \e azi2
+   then the geodesic is unique.  Otherwise there are two geodesics and
+   the second one is obtained by setting [\e azi1, \e azi2] = [\e azi2,
+   \e azi1].  (This occurs when the longitude difference is near +/-
+   180<sup>o</sup>.)
+ - Points 1 and 2 at opposite poles.  There are infinitely many
+   geodesics which can be generated by setting [\e azi1, \e azi2] = [\e
+   azi1, \e azi2] + [\e d, -\e d], for arbitrary \e d.
+ - \e s12 = 0 (coincident points).  There are infinitely many geodesics
+   which can be generated by setting [\e azi1, \e azi2] = [\e azi1, \e
+   azi2] + [\e d, \e d], for arbitrary \e d.
 
 Timing: Direct 1.1 us
-	Inverse 5.1 us
+	Line 0.44 us
+        Inverse 3.4 us
 
-The errors in the direct and inverse geodesic calculations are computed
-as follows.  The test data is read in
+A rather large fraction of the code in GeographicLib::Geodesic deals
+merely with the spherical trigonometry required to do great circle
+calculations.  When high accuracy is required, care has to be taken to
+use stable methods for computing angles.  Typically, we represent angles
+internally with the pair [sin(\e theta), cos(\e theta)].  This expands
+the number of representable angles by about 4; in particular, it allows
+angles very close to all the cardinal points to be resolved.  We use
+expressions for sin(\e theta) and cos(\e theta) which avoid large
+cancellations.  Having a comprehensive test set as described in \ref
+testgeod helps to identify problems.
 
-\section geodtodo Remaining work on geodesic algorithm
+In order to limits the enumeration of cases, the inverse problem is
+brought to a canonical ordering of points by interchanging the points
+and changing the signs of the coordinates.  The effect of these changes
+are undone at the end by applying sign changes to the final calls to
+atan2 to give the azimuths.
 
-TODO:
+Still to do:
+Large number of iterations in some cases.
 
 Tune order of series.
 Allow use of different orders via CPPFLAGS
 
-Tune starting point and  exit condition for Newton's iteraction.
+Tune starting point and  exit condition for Newton's iteration.
+(Current mean number of iterations is about 6; but can go to 44.)
+echo .0000000001 .0 .00000000009 .00000000001 | ./Geod -i => 43 iterations
+echo .0000000001 .0 .00000000009 179.3964940803 | ./Geod -i => 32 iterations
 
 More detailed write up.
+
+Provide Maxima code used to generate the series.
+
+Fuzzed up coordinates.
+
+Missing special lines in test set.
+
+Special treatment for meridan, equatorial geodesics, singular points.
+Maybe should treat short lines specially too.
 
 <center>
 Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
@@ -1334,6 +1450,11 @@ one).
 \section geod Geod
 
 Geod is a command line utility for geodesic calculations.
+
+Example (route from JFK Airport to Singapore Changi Airport)
+ - echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |\n
+   ./Geod -i -d -p 0\n
+   => 003d18'29.9"E 177d29'09.2"E 15347628
 
 \section cartconvert CartConvert
 

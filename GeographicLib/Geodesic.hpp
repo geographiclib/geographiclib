@@ -18,7 +18,24 @@ namespace GeographicLib {
   /**
    * \brief Geodesic calculations
    *
-   * Direct and inverse geodesic calculations.
+   * The shortest path between two points on the ellipsoid at (\e lat1, \e
+   * lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12
+   * and the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2
+   * at the two end points.  (The azimuth is the heading measured clockwise
+   * from north.  \e azi2 is the "forward" azimuth, i.e., the heading that
+   * takes you beyond point 2 not back to point 1.)
+   *
+   * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e
+   * lon2, \e azi2.  This is the \e direct geodesic problem.  (If \e s12 is
+   * sufficiently large that the geodesic wraps more than halfway around the
+   * earth, there will be a true geodesic between the points with a smaller \e
+   * s12.)
+   *
+   * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e
+   * azi2, \e s12.  This is the \e inverse geodesic problem.  Usually, the
+   * solution to the inverse problem is unique.  In cases where there are
+   * muliple solutions (all with the same \e s12, of course), all the solutions
+   * can be easily generated once a particular solution is provided.
    **********************************************************************/
 
   class Geodesic {
@@ -112,16 +129,17 @@ namespace GeographicLib {
      * ellipsoid.
      **********************************************************************/
     const static Geodesic WGS84;
+    mutable unsigned itera, iterb;
   };
 
   /**
    * \brief A geodesic line.
    *
-   * Calculate multiple points on a single geodesic line specified by a point 1
-   * and a azimuth at that point.  Geodesic.Line allows point 1 and the azimuth
-   * to be specified and returns a GeodesicLine object.  GeodesicLine.Position
-   * returns the position and head at point 2 a give distance away.  An example
-   * of use of this class is:
+   * GeodesicLine facilitates the determination of a series of points on a
+   * single geodesic.  Geodesic.Line returns a GeodesicLine object with the
+   * geodesic defined by by \e lat1, \e lon1, and \e azi1.
+   * GeodesicLine.Position returns the \e lat2, \e lon2, and \e azi2 given \e
+   * s12.  An example of use of this class is:
    \verbatim
    // Print positions on a geodesic going through latitude 30,
    // longitude 10 at azimuth 80.  Points at intervals of 10km
@@ -149,8 +167,7 @@ namespace GeographicLib {
       _sScale, _dlamScale, _dtau1, _dchi1;
     double _sigCoeff[maxpow], _dlamCoeff[maxpow];
 
-    GeodesicLine(const Geodesic& g,
-		 double lat1, double lon1, double azi1);
+    GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1);
   public:
     /**
      * A default constructor.  If Position is called on the resulting object,

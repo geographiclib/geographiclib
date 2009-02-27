@@ -10,6 +10,11 @@
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
+#define DEBUG 1
+#if DEBUG
+#include <iostream>
+#include <iomanip>
+#endif
 
 namespace {
   char RCSID[] = "$Id$";
@@ -31,7 +36,7 @@ namespace GeographicLib {
     , _f(invf > 0 ? 1 / invf : 0)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
-    , _ep2(_e2 / (1 - _e2))
+    , _ep2(_e2 / sq(_f1))	// e2 / (1 - e2)
     , _b(_a * _f1)
   {}
 
@@ -160,8 +165,9 @@ namespace GeographicLib {
   }
 
   void Geodesic::Inverse(double lat1, double lon1, double lat2, double lon2,
-		 double& s12, double& azi1, double& azi2)
+			 double& s12, double& azi1, double& azi2)
     const throw() {
+    itera = iterb = 0;
     lon1 = AngNormalize(lon1);
     double lon12 = AngNormalize(AngNormalize(lon2) - lon1);
     // If very close to being on the same meridian, then make it so.
@@ -195,13 +201,15 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    double phi, sbet1, cbet1, sbet2, cbet2;
+    double phi, sbet1, cbet1, sbet2, cbet2, n1;
 
     phi = lat1 * Constants::degree;
     // Ensure cbet1 = +eps at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = lat1 == -90 ? eps2 : cos(phi);
-    SinCosNorm(sbet1, cbet1);
+    // n = sqrt(1 - e2 * sq(sin(phi)))
+    n1 = hypot(sbet1, cbet1);
+    sbet1 /= n1; cbet1 /= n1;
 
     phi = lat2 * Constants::degree;
     // Ensure cbet2 = +eps at poles
@@ -211,7 +219,10 @@ namespace GeographicLib {
 
     double
       // How close to antipodal lat?
-      phi12a = (lat2 + lat1) * Constants::degree,
+      sbet12 = sbet2 * cbet1 - cbet2 * sbet1, // bet2 - bet1 in [0, pi)
+      // cbet12 = cbet2 * cbet1 + sbet2 * sbet1,
+      sbet12a = sbet2 * cbet1 + cbet2 * sbet1, // bet2 + bet1 (-pi, 0]
+      cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
       chi12 = lon12 * Constants::degree,
       cchi12 = cos(chi12),	// lon12 == 90 isn't interesting
       schi12 = lon12 == 180 ? 0 :sin(chi12);
@@ -257,17 +268,24 @@ namespace GeographicLib {
 	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi,
 	chicrit = Constants::pi - chicrita;
       if (chi12 == chicrit && cbet1 == cbet2 && sbet2 == -sbet1) {
+	// Possibly we don't have to make a special case here?
 	sig12 = Constants::pi;
 	ssig1 = -1; salp1 = salp2 =ssig2 = 1;
 	calp1 = calp2 = csig1 = csig2 = 0;
 	u2 = sq(sbet1) * _ep2;
       } else {
-	if (chi12 > chicrit && phi12a > - chicrita) {
+	if (chi12 > chicrit && cbet12a > 0 && sbet12a > - chicrita) {
 	  salp1 = min(1.0, (Constants::pi - chi12) / chicrita);
 	  calp1 = - sqrt(1 - sq(salp1));
 	} else {
-	  salp1 = 1;
-	  calp1 = sbet2 <= 0 ? -eps2 : eps2;
+	  salp1 = cbet2 * schi12;
+	  // calp1 = sbet2 * cbet1 - cbet2 * sbet1 * cchi12;
+	  // _f1/n1 gives ellipsoid correction for short distances.
+	  calp1 = cchi12 >= 0 ?
+	    sbet12 * _f1/n1 + cbet2 * sbet1 * sq(schi12) / (1 + cchi12) :
+	    sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
+	  // N.B. ssig1 = hypot(salp1, calp1) (before normalization)
+	  SinCosNorm(salp1, calp1);
 	}
 
 	for (unsigned i = 0, trip = 0; i < 100; ++i) {
@@ -275,8 +293,8 @@ namespace GeographicLib {
 	  double v = Chi12(sbet1, cbet1, sbet2, cbet2,
 			   salp1, calp1, salp2, calp2,
 			   sig12, ssig1, csig1, ssig2, csig2,
-			   u2, trip == 0, dv, c) - chi12;
-	  if (v == 0 || trip > 0)
+			   u2, trip < 1, dv, c) - chi12;
+	  if (v == 0 || !(trip < 1))
 	    break;
 	  double
 	    dalp1 = -v/dv,
@@ -302,9 +320,10 @@ namespace GeographicLib {
       swap(calp1, calp2);
     }
 
-    azi1 = -atan2(- swapp * lonsign * salp1,
+    // minus signs give range [-180, 180). 0- converts -0 to +0.
+    azi1 = 0-atan2(- swapp * lonsign * salp1,
 		   + swapp * latsign * calp1) / Constants::degree;
-    azi2 = -atan2(- azi2sense * swapp * lonsign * salp2,
+    azi2 = 0-atan2(- azi2sense * swapp * lonsign * salp2,
 		   + azi2sense * swapp * latsign * calp2) / Constants::degree;
     return;
   }
@@ -319,6 +338,9 @@ namespace GeographicLib {
 			 double& u2,
 			 bool diffp, double& dchi12, double c[])
     const throw() {
+
+    if (diffp) ++itera;
+    else ++iterb;
 
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This cases has already been
@@ -530,7 +552,8 @@ namespace GeographicLib {
     lon12 = lon12 - 360 * floor(lon12/360 + 0.5);
     lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree;
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);
-    azi2 = -atan2(- Geodesic::azi2sense * _bsign * salp2,
+    // minus signs give range [-180, 180). 0- converts -0 to +0.
+    azi2 = 0-atan2(- Geodesic::azi2sense * _bsign * salp2,
 		   + Geodesic::azi2sense * calp2) / Constants::degree;
   }
 
