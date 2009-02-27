@@ -83,7 +83,7 @@ the standard zone.\n\
 \n\
 -z zone sets the zone for output.  Use zone = 0 to specify UPS.\n\
 \n\
--s uses the standard zone\n\
+-s uses the standard zone.\n\
 \n\
 For example, the point\n\
 \n\
@@ -101,7 +101,7 @@ then\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -s    ==> 32CMS4328\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917\n\
 \n\
--h prints this help\n";
+-h prints this help.\n";
   return retval;
 }
 
