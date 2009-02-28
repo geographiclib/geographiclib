@@ -1014,7 +1014,7 @@ flattening, and then solving both the direct and inverse problems by
 iteration.  This approach has three drawbacks:
  - The series are cast into a "nested" form which makes them difficult
    to extend to higher order.  This limits the accuracy of this method
-   to about 0.1 mm.
+   to about 0.5 mm.
  - A simple iteration scheme is employed to solve the equations.  This
    is inelegant and slow.
  - The iteration scheme for the inverse problem is unstable for points
