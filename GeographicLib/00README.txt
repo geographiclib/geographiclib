@@ -55,9 +55,6 @@ This is the 2009-03 version of the library.
 
 Changes between 2009-03 and 2009-02 versions:
 
-  * Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
-    CartConvert
-
   * Add Geographic::Geodesic and the Geod utility.
 
   * Declare when no exceptions are thrown by functions.
@@ -67,6 +64,9 @@ Changes between 2009-03 and 2009-02 versions:
   * Use invf = 0 to mean a sphere in constructors to some classes.
 
   * The makefile creates a library and includes an install target.
+
+  * Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
+    CartConvert
 
 Changes between 2009-02 and 2009-01 versions:
 
