@@ -1248,7 +1248,7 @@ and the two geodesics are separated by about 160 m at their midpoints.
 For this reason, we are content with ensuring that the position errors
 are small.
 
-\section geodtodo Loose end on geodesics
+\section geodtodo Loose ends on geodesics
 
 When either point is at a pole, the azimuth is defined by keeping the
 longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
@@ -1728,13 +1728,13 @@ list of changes.
 
  - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-03
    (current)</a>
-  - Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
-    \ref cartconvert.
   - Add Geographic::Geodesic and the \ref geod utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
   - Use invf = 0 to mean a sphere in constructors to some classes.
   - The makefile creates a library and includes an install target.
+  - Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
+    \ref cartconvert.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-02.tgz">2009-02</a>
   - Fix documentation of constructors (flattening -> inverse
