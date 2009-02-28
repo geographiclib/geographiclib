@@ -966,7 +966,7 @@ References
    Survey Review 22 (176), 88&ndash;93 (1975).
  - E. A. Williams,
    <a href="http://williams.best.vwh.net/ellipsoid/ellipsoid.html">
-   Navigation on the Spheroidal Earth Equations</a> (March 2002).
+   Navigation on the Spheroidal Earth</a> (March 2002).
 
 \section geoddesc Description of algorithm
 
@@ -1308,7 +1308,7 @@ Future work:
  - The use of 8th order series is overkill.  (At this order, the long
    double calculation is still accurate.)  I will generate the code for
    all orders 4 (approximately corresponding to Vincenty) thru 8 and
-   make them selectable through CPP macros.
+   make them selectable through preprocessor macros.
  - The mean number of Newton's iterations is about 3.  However in some
    cases more than 20 iterations are required.  Improved starting points
    are needed.
