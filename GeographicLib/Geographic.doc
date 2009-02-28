@@ -248,6 +248,14 @@ with -I..).  The cpp files implementing the classes include "using
 namespace std;", however, for portability, the headers files and the
 test programs do not.
 
+There's an "install" target in the Makefile which installs the library
+components into \$(PREFIX)/lib, \$(PREFIX)/include/GeographicLib,
+\$(PREFIX)/bin.  Once installed, the library can be used by setting
+  - CPPFLAGS=-I\$(PREFIX)/include
+  - LDFLAGS=-L\$(PREFIX)/lib -lGeographic
+  .
+in the Makefile.
+
 The low level projection classes, TransverseMercator and
 PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
 GeoCoords all check their arguments and throw std::out_of_range
@@ -1023,7 +1031,7 @@ Here we reformulate the geodesic problem with three goals:
 
 We derive higher-order series for the distance and longitude integrals
 using Maxima.  In this release, we use an 8th-order expansion.  The
-series is evaluated by a mixture of Horner's method and Clenshaw
+series is evaluated by a combination of Horner's method and Clenshaw
 summation.  For the direct problem, we use a reversion of the series for
 the distance to compute the spherical arc length and thereby complete
 the solution without the need to iterate.
@@ -1111,15 +1119,15 @@ Add, e.g., "-p 6", to the call to Geod to change the precision of the
 output.  Adding "-f" causes Geod to print all 7 fields specifying the
 geodesic (in the same order as the test set).
 
-A small set of test points has been culled from the literature on
-geodesics.  These are all for the International Ellipsoid (\e a =
-6378388 m \e f = 1/297.0).  The endpoints are taken from
+Another much smaller set of test points has been culled from the
+literature on geodesics.  These are all for the International Ellipsoid
+(\e a = 6378388 m, \e f = 1/297.0).  The endpoints are taken from
  - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
    geodesy, Part II</a>, Ohio State Univ. (March 1993).
  - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
    computation of long geodesics on the ellipsoid through Gaussian
    quadrature</a>,
-   Journal of Geodesy 53, 165-177 (1979).
+   Journal of Geodesy 53, 165&ndash;177 (1979).
  - B.K. Meade, Discussion of results obtained from the Bowring formulas
    developed for solutions of the geodetic inverse and great elliptic
    inverse, Survey Review 33 (261) 477&ndash;487 (1996).
@@ -1195,8 +1203,8 @@ No      azi1                      azi2                      s12
 
 We regard all the test data as "exact".  For each member of the test
 set, 7 error distances are computed.
- -# Compute direct problem from point 1, compare position of resulting
-    point 2 with the exact result.
+ -# Compute the direct problem from point 1, compare position of
+    resulting point 2 with the exact result.
  -# Using point 2 and its azimuth given in (1), run the geodesic
     backward to recompute point 1.  Compare this with the original
     point 1.
@@ -1249,7 +1257,7 @@ taking the limit \e eps -> 0 from above.
 The following prescription allows you to ascertain when there are
 multiple solutions to the inverse problem and to generate the complete
 set.
- - \e lat1 = \e -lat2 (with either at a pole).  If \e azi1 = \e azi2
+ - \e lat1 = \e -lat2 (with neither at a pole).  If \e azi1 = \e azi2
    then the geodesic is unique.  Otherwise there are two geodesics and
    the second one is obtained by setting [\e azi1, \e azi2] = [\e azi2,
    \e azi1].  (This occurs when the longitude difference is near +/-
@@ -1270,13 +1278,14 @@ the number of representable angles by about 4; in particular, it allows
 angles very close to all the cardinal points to be resolved.  We use
 expressions for sin(\e theta) and cos(\e theta) which avoid large
 cancellations.  Having a comprehensive test set as described in \ref
-testgeod helps to identify problems.  Specifying a zero inverse
-flattening in Geodesic constructor is equivalent to zero flattening
-(i.e., a sphere).  The method accommodates this case without any special
-coding.  The code for the inverse treats equatorial and meridional
-geodesics specially.  All other case are handled by the same code
-(implementing Newton's method) with just tests to select appropriate
-starting guess in difference regimes.
+testgeod helps to identify problems.
+
+The code for the inverse treats equatorial and meridional geodesics
+specially.  All other case are handled by the same code (implementing
+Newton's method) with tests to select appropriate starting guess in
+difference regimes.  Specifying a zero inverse flattening in Geodesic
+constructor is equivalent to zero flattening (i.e., a sphere).  The
+method accommodates this case without any special coding.
 
 In order to limits the enumeration of cases, the inverse problem is
 brought to a canonical form by interchanging the points and changing the
@@ -1703,39 +1712,6 @@ If -r is given the reverse transformation is performed.
 -h prints this help
 \endverbatim
 
-\section geod Geod
-
-Geod is a command line utility for geodetic to cartesian
-coordinate conversions via GeographicLib::Geocentric and
-GeographicLib::LocalCartesian.
-
-Examples:
- - echo 33.3 44.4 6000 | ./Geod\n=>
-   3816209.60 3737108.55 3485109.57
- - echo 33.3 44.4 6000 | ./Geod -l 33 44 20\n=>
-   37288.97 33374.29 5783.64
- - echo 30000 30000 0 | ./Geod -r\n=>
-   6.483 45 -6335709.73
-
-Compile with "make Geod" or with
-
-g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp Constants.cpp
-
-Note that, unlike \ref geoconvert, Geod has no
-facility for dealing with angles in degrees, minutes, and seconds, and
-no ability to change the precision of the output.
-
-Here is the usage (obtained from "Geod -h")
-\verbatim
-Usage: Geod [-r] [-l lat0 lon0 h0] [-h]
-
-TODO
-
-If -r is given the reverse transformation is performed.
-
--h prints this help
-\endverbatim
-
 <center>
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
@@ -1758,6 +1734,7 @@ list of changes.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
   - Use invf = 0 to mean a sphere in constructors to some classes.
+  - The makefile creates a library and includes an install target.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-02.tgz">2009-02</a>
   - Fix documentation of constructors (flattening -> inverse
