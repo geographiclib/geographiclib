@@ -42,7 +42,7 @@ namespace GeographicLib {
    *
    * This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger
    * method, GeographicLib::TransverseMercator, taking about 11 us for a
-   * combined forward and reverse projection on a 2.6GHz Intel machine (g++,
+   * combined forward and reverse projection on a 2.6 GHz Intel machine (g++,
    * version 4.3.0, -O3).
    *
    * See TransverseMercatorExact.cpp for more information on the
