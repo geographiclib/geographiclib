@@ -1218,10 +1218,10 @@ set, 7 error distances are computed.
  -# Similar to (6) with points 1 and 2 interchanged.
  .
 To guard against a canceling error, the calculations in (2), (4), (6),
-and (7) use a long double version of the geodesic calculation (which is
-about 2000 times more accurate than the double version).  The maximum of
-the resulting errors in less than 12 nm for the double version and 6 pm
-for the long double version.
+and (7) use a long double version of the direct geodesic calculation
+(which is about 2000 times more accurate than the double version).  The
+maximum of the resulting errors in less than 12 nm for the double
+version and 6 pm for the long double version.
 
 None of the checks listed above directly compares the computed azimuths
 with the exact values.  The problem is that tiny changes in the
