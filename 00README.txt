@@ -22,12 +22,14 @@ Files
     EllipticFunction.[ch]pp -- elliptic functions
     GeoCoords.[ch]pp -- hold geographic location
     DMS.[ch]pp -- handle degrees minutes seconds
-    ECEF.[ch]pp -- ECEF coordinates
+    Geocentric.[ch]pp -- geocentric coordinates
     LocalCartesian.[ch]pp -- local cartesian coordinates
+    Geodesic.[ch]pp -- geodesic calculatiosn
 
     GeoConvert.cpp -- geographic conversion utility
     TransverseMercatorTest.cpp -- TM tester
-    ECEFConvert.cpp -- convert to ECEF and local cartesian
+    Geod -- geodesic utility
+    CartConvert.cpp -- convert to geocentric and local cartesian
 
     Makefile -- Unix/Linux makefile
 
@@ -35,7 +37,8 @@ Files
     GeographicLib.vcproj -- project for library
     GeoConvert.vcproj -- project for GeoConvert
     TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
-    ECEFConvert.vcproj -- project for ECEFConvert
+    Geod.vcproj -- project for Geod
+    CartConvert.vcproj -- project for CartConvert
 
     tm.mac -- Maxima code for high precision TM
     ellint.mac -- Maxima code for elliptic functions needed by tm.mac
@@ -48,7 +51,20 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-02 version of the library.
+This is the 2009-03 version of the library.
+
+Changes between 2009-03 and 2009-02 versions:
+
+  * Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
+    CartConvert
+
+  * Add Geographic::Geodesic and the Geod utility.
+
+  * Declare when no exceptions are thrown by functions.
+
+  * Minor changes to GeographicLib::DMS class.
+
+  * Use invf = 0 to mean a sphere in constructors to some classes.
 
 Changes between 2009-02 and 2009-01 versions:
 

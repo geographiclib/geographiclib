@@ -37,7 +37,7 @@ The WGS84 model of the earth is used.  Geographic coordinates are given on\n\
 standard input as:\n\
 \n\
 Latitude and longitude (decimal degrees or degrees minutes seconds).  d,\n\
-\', and \" are used to denote degrees, minutes, and seconds, with the least\n\
+', and \" are used to denote degrees, minutes, and seconds, with the least\n\
 significant designator optional.  Latitude is given first unless a\n\
 hemisphere is specified, e.g., the following are all equivalent\n\
 \n\

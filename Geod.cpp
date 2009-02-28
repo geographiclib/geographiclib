@@ -8,7 +8,7 @@
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp Constants.cpp
+ *   g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp Constants.cpp
  *
  * See \ref geod for usage information.
  **********************************************************************/
@@ -28,9 +28,10 @@ $Id$\n\
 \n\
 Perform geodesic calculations.\n\
 \n\
-The shortest path between two points on the ellipsoid at (lat1, lon1) and\n\
-(lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic\n\
-from point 1 to point 2 has azimuths azi1 and azi2 at the two end points.\n\
+The shortest path between two points on the ellipsoid at (lat1, lon1)\n\
+and (lat2, lon2) is called the geodesic.  Its length is s12 and the\n\
+geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two\n\
+end points.\n\
 \n\
 Geod operates in one of three modes:\n\
 \n\
@@ -39,34 +40,35 @@ Geod operates in one of three modes:\n\
     direct geodesic calculation.\n\
 \n\
 (2) Command line arguments \"-l lat1 lon1 azi1\" specify a geodesic line.\n\
-    Geod then accepts a sequence of s12 values (one per line) on standard\n\
-    input and prints \"lat2 lon2 azi2\" for each.  This generates a\n\
-    sequence of points on a single geodesic.\n\
+    Geod then accepts a sequence of s12 values (one per line) on\n\
+    standard input and prints \"lat2 lon2 azi2\" for each.  This generates\n\
+    a sequence of points on a single geodesic.\n\
 \n\
-(3) With the -i command line argument, Geod performs the inverse geodesic\n\
-    calculation.  It reads lines containing \"lat1 lon1 lat2 lon2\" and\n\
-    prints the corresponding values of \"azi1 azi2 s12\".\n\
+(3) With the -i command line argument, Geod performs the inverse\n\
+    geodesic calculation.  It reads lines containing \"lat1 lon1 lat2\n\
+    lon2\" and prints the corresponding values of \"azi1 azi2 s12\".\n\
 \n\
-By default, the WGS84 ellipsoid is used.  With the -n option, it uses the\n\
-international ellipsoid (major radius 6378388 m, inverse flattening 297).\n\
+By default, the WGS84 ellipsoid is used.  With the -n option, it uses\n\
+the international ellipsoid (major radius 6378388 m, inverse flattening\n\
+297).\n\
 \n\
-Output of angles is as decimal degrees.  If -d is specified the output is\n\
-as degrees, minutes, seconds.  Input can be in either style.  d, \', and \"\n\
-are used to denote degrees, minutes, and seconds, with the least\n\
-significant designator optional.  By default, latitude precedes longitude\n\
-for each point; however on input either may be given first by appending N\n\
-or S to the latitude and E or W to the longitude.  s12 is always given in\n\
-meters.\n\
+Output of angles is as decimal degrees.  If -d is specified the output\n\
+is as degrees, minutes, seconds.  Input can be in either style.  d, ',\n\
+and \" are used to denote degrees, minutes, and seconds, with the least\n\
+significant designator optional.  By default, latitude precedes\n\
+longitude for each point; however on input either may be given first by\n\
+appending N or S to the latitude and E or W to the longitude.  s12 is\n\
+always given in meters.\n\
 \n\
 The output lines consist of the three quantities needs to complete the\n\
-specification of the geodesic.  With the -f option, each line of output is\n\
-a complete geodesic specification consisting of seven quantities\n\
+specification of the geodesic.  With the -f option, each line of output\n\
+is a complete geodesic specification consisting of seven quantities\n\
 \n\
     lat1 lon1 azi1 lat2 lon2 azi2 s12\n\
 \n\
--p prec (default 3) gives the precison of the output relative to 1m.  The\n\
-minimum value of prec is 0 (1 m accuracy) and the maximum value is 9 (1 nm\n\
-accuracy, but then the last digit is not reliable).\n\
+-p prec (default 3) gives the precision of the output relative to 1m.\n\
+The minimum value of prec is 0 (1 m accuracy) and the maximum value is\n\
+10 (0.1 nm accuracy, but then the last digits are unreliable).\n\
 \n\
 -h prints this help.\n";
   return retval;
@@ -162,7 +164,7 @@ int main(int argc, char* argv[]) {
 
   // Max precision = 9: 1 nm in distance, 10^-14 deg (= 1.1 nm),
   // 10^-10 sec (= 3 nm).
-  prec = std::min(9, std::max(0, prec));
+  prec = std::min(10, std::max(0, prec));
   std::cout << std::fixed << std::setprecision(prec);
   std::string s;
   int retval = 0;
@@ -188,7 +190,6 @@ int main(int argc, char* argv[]) {
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
 	geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);
-	std::cerr << geod.itera << " " << geod.iterb << " ";
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
 	std::cout << AzimuthString(azi1, prec, dms) << " ";

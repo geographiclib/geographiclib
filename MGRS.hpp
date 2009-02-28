@@ -93,7 +93,6 @@ namespace GeographicLib {
     }
     static int UTMRow(int iband, int icol, int irow) throw();
 
-  protected:
     friend class UTMUPS;	// UTMUPS::StandardZone calls LatitudeBand
     // Return latitude band number [-10, 10) for the give latitude (degrees).
     // The bands are reckoned in include their southern edges.

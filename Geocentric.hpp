@@ -33,12 +33,12 @@ namespace GeographicLib {
    * .
    * Several changes have been made to ensure that the method returns accurate
    * results for all finite inputs (even if \e h is infinite).  See
-   * Geocentric.cpp for details.
+   * \ref geocentric for details.
    * 
    * The errors in these routines are close to round-off.  Specifically, for
    * points within 5000 km of the surface of the ellipsoid (either inside or
    * outside the ellipsoid), the error is bounded by 7 nm for the WGS84
-   * ellipsoid.  See Geocentric.cpp for further information on the errors.
+   * ellipsoid.  See \ref geocentric for further information on the errors.
    **********************************************************************/
 
   class Geocentric {

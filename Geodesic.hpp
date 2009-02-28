@@ -16,7 +16,7 @@ namespace GeographicLib {
   class GeodesicLine;
 
   /**
-   * \brief Geodesic calculations
+   * \brief %Geodesic calculations
    *
    * The shortest path between two points on the ellipsoid at (\e lat1, \e
    * lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12
@@ -36,6 +36,9 @@ namespace GeographicLib {
    * solution to the inverse problem is unique.  In cases where there are
    * muliple solutions (all with the same \e s12, of course), all the solutions
    * can be easily generated once a particular solution is provided.
+   *
+   * The calculations are accurate to better than 12 nm.  (See \ref geoderrors
+   * for details.)
    **********************************************************************/
 
   class Geodesic {
@@ -43,11 +46,13 @@ namespace GeographicLib {
     friend class GeodesicLine;
     static const int maxpow = 8, azi2sense = 1;
 
-    static inline double sq(double x) { return x * x; }
+    static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
-    static inline double hypot(double x, double y) { return _hypot(x, y); }
+    static inline double hypot(double x, double y) throw()
+    { return _hypot(x, y); }
 #else
-    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+    static inline double hypot(double x, double y) throw()
+    { return ::hypot(x, y); }
 #endif
     double Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
 		 double salp1, double calp1, double& salp2, double& calp2,
@@ -92,12 +97,14 @@ namespace GeographicLib {
     static void dlamCoeffmu(double f, double mu, double e[]) throw();
 
   public:
+
     /**
      * Constructor for a ellipsoid radius \e a (meters) and inverse flattening
      * \e invf.  Setting \e invf <= 0 implies \e invf = inf or flattening = 0
      * (i.e., a sphere).
      **********************************************************************/
-    Geodesic(double a, double invf);
+    Geodesic(double a, double invf) throw();
+
     /**
      * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
      * longitude, \e lon1, and azimuth \e azi1 (in degrees) for point 1 and a
@@ -107,13 +114,17 @@ namespace GeographicLib {
      **********************************************************************/
     void Direct(double lat1, double lon1, double azi1, double s12,
 		double& lat2, double& lon2, double& azi2) const throw();
+
     /**
      * Set up to do a series of ranges.  This returns a GeodesicLine object
      * with point 1 given by latitude, \e lat1, longitude, \e lon1, and azimuth
      * \e azi1 (in degrees).  Calls to GeodesicLine::Position return the
-     * position and azimuth for point 2 a specified distance away.
+     * position and azimuth for point 2 a specified distance away.  Using
+     * GeodesicLine::Position is approximately 2.5 faster than calling
+     * Geodesic::Direct.
      **********************************************************************/
     GeodesicLine Line(double lat1, double lon1, double azi1) const throw();
+
     /**
      * Perform the inverse geodesic calculation.  Given a latitude, \e lat1,
      * longitude, \e lon1, for point 1 and a latitude, \e lat2, longitude, \e
@@ -124,12 +135,12 @@ namespace GeographicLib {
     void Inverse(double lat1, double lon1, double lat2, double lon2,
 		 double& s12, double& azi1, double& azi2) const throw();
 
+
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
     const static Geodesic WGS84;
-    mutable unsigned itera, iterb;
   };
 
   /**
@@ -153,6 +164,17 @@ namespace GeographicLib {
      cout << s12 << " " << lat2 << " " << lon2 << " " << azi2 << "\n";
    }
    \endverbatim
+   * The default copy constructor and assignment operators work with this
+   * class, so that, for example, the previous example could start
+   \verbatim
+   GeodesicLine line;
+   line = Geodesic::WGS84.Line(30.0, 10.0, 80.0);
+   ...
+   \endverbatim
+   * Similarly, a vector can be used to hold GeodesicLine objects.
+   *
+   * The calculations are accurate to better than 12 nm.  (See \ref geoderrors
+   * for details.)
    **********************************************************************/
 
   class GeodesicLine {
@@ -167,15 +189,17 @@ namespace GeographicLib {
       _sScale, _dlamScale, _dtau1, _dchi1;
     double _sigCoeff[maxpow], _dlamCoeff[maxpow];
 
-    GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1);
+    GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1)
+      throw();
   public:
+
     /**
-     * A default constructor.  If Position is called on the resulting object,
-     * it returns immediately (without doing any calculations).  The object
-     * should be set with a call to Geodesic::Line.  Use Init() to test whether
-     * object is still in this uninitialized state.
+     * A default constructor.  If GeodesicLine::Position is called on the
+     * resulting object, it returns immediately (without doing any
+     * calculations).  The object should be set with a call to Geodesic::Line.
+     * Use Init() to test whether object is still in this uninitialized state.
      **********************************************************************/
-    GeodesicLine() : _sScale(0) {};
+    GeodesicLine() throw() : _sScale(0) {};
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
@@ -189,14 +213,17 @@ namespace GeographicLib {
      * Has this object been initialize so that Position can be called?
      **********************************************************************/
     bool Init() const throw() { return _sScale > 0; }
+
     /**
      * Return the latitude of point 1 (in degrees).
      **********************************************************************/
     double Latitude() const throw() { return _lat1; }
+
     /**
      * Return the longitude of point 1 (in degrees).
      **********************************************************************/
     double Longitude() const throw() { return _lon1; }
+
     /**
      * Return the azimuth of the geodesic line as it passes through point 1.
      **********************************************************************/
