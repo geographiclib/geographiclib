@@ -66,6 +66,8 @@ Changes between 2009-03 and 2009-02 versions:
 
   * Use invf = 0 to mean a sphere in constructors to some classes.
 
+  * The makefile creates a library and includes an install target.
+
 Changes between 2009-02 and 2009-01 versions:
 
   * Fix documentation of constructors (flattening -> inverse
