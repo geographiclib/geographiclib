@@ -1278,7 +1278,9 @@ the number of representable angles by about 4; in particular, it allows
 angles very close to all the cardinal points to be resolved.  We use
 expressions for sin(\e theta) and cos(\e theta) which avoid large
 cancellations.  Having a comprehensive test set as described in \ref
-testgeod helps to identify problems.
+testgeod helps to identify problems.  This representation allows input
+arguments which are multiples of 90<sup>o</sup> to be represented
+exactly.
 
 The code for the inverse treats equatorial and meridional geodesics
 specially.  All other case are handled by the same code (implementing
