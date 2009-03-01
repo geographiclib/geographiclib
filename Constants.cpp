@@ -19,6 +19,7 @@ namespace GeographicLib {
 
   using namespace std;
 
+// When converting to long doubles, remember to change this to M_PIl
 #if defined(M_PI)
   const double Constants::pi = M_PI;
 #else

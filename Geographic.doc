@@ -1245,8 +1245,10 @@ length.  However the azimuths at point 1 are
 
 and the two geodesics are separated by about 160 m at their midpoints.
 
-For this reason, we are content with ensuring that the position errors
-are small.
+So instead of directly quoting the errors in the azimuths, we must use
+the back-to-front formulation: The azimuths returned are the correct
+azimuths for some geodesic with end-points within 12 nm of the given
+end-points.
 
 \section geodtodo Loose ends on geodesics
 
