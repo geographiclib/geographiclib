@@ -30,13 +30,14 @@ namespace GeographicLib {
     , _maxrad(2 * _a / numeric_limits<double>::epsilon())
   {}
 
-  const Geocentric Geocentric::WGS84(Constants::WGS84_a, Constants::WGS84_invf);
+  const Geocentric Geocentric::WGS84(Constants::WGS84_a(),
+				     Constants::WGS84_invf());
 
   void Geocentric::Forward(double lat, double lon, double h,
 			   double& x, double& y, double& z) const throw() {
     double
-      phi = lat * Constants::degree,
-      lam = lon * Constants::degree,
+      phi = lat * Constants::degree(),
+      lam = lon * Constants::degree(),
       sphi = sin(phi),
       n = _a/sqrt(1 - _e2 * sq(sphi));
     z = ( sq(1 - _f) * n + h) * sphi;
@@ -97,7 +98,7 @@ namespace GeographicLib {
 	  // nevertheless leads to a continuous (and accurate) solution for k.
 	  // Other choices of the multiplier lead to poorly conditioned
 	  // solutions near s = 0 (i.e., near p = 0 or q = 0).
-	  u += 2 * abs(r) * cos((2 * Constants::pi + ang) / 3.0);
+	  u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / 3.0);
 	}
 	double
 	  v = sqrt(sq(u) + _e4 * q), // guaranteed positive
@@ -126,9 +127,9 @@ namespace GeographicLib {
 	h = - _a * _e2m / sqrt(1 - _e2 * sq(sin(phi)));
       }
     }
-    lat = phi / Constants::degree;
+    lat = phi / Constants::degree();
     // Negative signs return lon in [-180, 180).  Assume atan2(0,0) = 0.
-    lon = -atan2(-y, x) / Constants::degree;
+    lon = -atan2(-y, x) / Constants::degree();
   }
 
 } // namespace GeographicLib

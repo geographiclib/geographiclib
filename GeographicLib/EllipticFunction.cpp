@@ -122,7 +122,7 @@ namespace GeographicLib {
       s += mul * t * t;
     }
     x0 = (x0 + y0)/2;
-    return  (x0 * x0 - s) * Constants::pi / (2 * (xn + yn));
+    return  (x0 * x0 - s) * Constants::pi() / (2 * (xn + yn));
   }
 
   EllipticFunction::EllipticFunction(double m) throw()

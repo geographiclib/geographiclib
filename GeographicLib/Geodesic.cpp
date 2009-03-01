@@ -54,7 +54,8 @@ namespace GeographicLib {
     , _b(_a * _f1)
   {}
 
-  const Geodesic Geodesic::WGS84(Constants::WGS84_a, Constants::WGS84_invf);
+  const Geodesic Geodesic::WGS84(Constants::WGS84_a(),
+				 Constants::WGS84_invf());
 
   double Geodesic::SinSeries(double sinx, double cosx,
 			     const double c[], int n) throw() {
@@ -288,7 +289,7 @@ namespace GeographicLib {
 
     double phi, sbet1, cbet1, sbet2, cbet2, n1;
 
-    phi = lat1 * Constants::degree;
+    phi = lat1 * Constants::degree();
     // Ensure cbet1 = +eps at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = lat1 == -90 ? eps2 : cos(phi);
@@ -296,7 +297,7 @@ namespace GeographicLib {
     n1 = hypot(sbet1, cbet1);
     sbet1 /= n1; cbet1 /= n1;
 
-    phi = lat2 * Constants::degree;
+    phi = lat2 * Constants::degree();
     // Ensure cbet2 = +eps at poles
     sbet2 = _f1 * sin(phi);
     cbet2 = abs(lat2) == 90 ? eps2 : cos(phi);
@@ -308,7 +309,7 @@ namespace GeographicLib {
       // cbet12 = cbet2 * cbet1 + sbet2 * sbet1,
       sbet12a = sbet2 * cbet1 + cbet2 * sbet1, // bet2 + bet1 (-pi, 0]
       cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
-      chi12 = lon12 * Constants::degree,
+      chi12 = lon12 * Constants::degree(),
       cchi12 = cos(chi12),	// lon12 == 90 isn't interesting
       schi12 = lon12 == 180 ? 0 :sin(chi12);
 
@@ -338,7 +339,7 @@ namespace GeographicLib {
 		  SinSeries(ssig1, csig1, c, maxpow)));
     } else if (sbet1 == 0 &&	// and sbet2 == 0
 	       // Mimic the way Chi12 works with calp1 = 0
-	       chi12 <= Constants::pi - _f * Constants::pi) {
+	       chi12 <= Constants::pi() - _f * Constants::pi()) {
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
       s12 = _a * chi12;
@@ -351,21 +352,21 @@ namespace GeographicLib {
 
       // Figure a starting point for Newton's method
       double
-	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi,
-	chicrit = Constants::pi - chicrita;
+	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi(),
+	chicrit = Constants::pi() - chicrita;
       if (chi12 == chicrit && cbet1 == cbet2 && sbet2 == -sbet1) {
 	salp1 = 1; calp1 = 0;	// The singular point
 	// This leads to
 	//
-	// sig12 = Constants::pi; ssig1 = -1; salp2 = ssig2 = 1;
+	// sig12 = Constants::pi(); ssig1 = -1; salp2 = ssig2 = 1;
 	// calp2 = csig1 = csig2 = 0; u2 = sq(sbet1) * _ep2;
 	//
 	// But we let Newton's method proceed so that we have fewer special
 	// cases in the code.
       } else if (chi12 > chicrit && cbet12a > 0 && sbet12a > - chicrita) {
-	salp1 = min(1.0, (Constants::pi - chi12) / chicrita);
+	salp1 = min(1.0, (Constants::pi() - chi12) / chicrita);
 	calp1 = - sqrt(1 - sq(salp1));
-      } else if (chi12 > Constants::pi - 2 * chicrita &&
+      } else if (chi12 > Constants::pi() - 2 * chicrita &&
 		 cbet12a > 0 && sbet12a > - 2 * chicrita) {
 	salp1 = 1;
 	calp1 = sbet2 <= 0 ? -eps2 : eps2;
@@ -415,9 +416,9 @@ namespace GeographicLib {
 
     // minus signs give range [-180, 180). 0- converts -0 to +0.
     azi1 = 0-atan2(- swapp * lonsign * salp1,
-		   + swapp * latsign * calp1) / Constants::degree;
+		   + swapp * latsign * calp1) / Constants::degree();
     azi2 = 0-atan2(- azi2sense * swapp * lonsign * salp2,
-		   + azi2sense * swapp * latsign * calp2) / Constants::degree;
+		   + azi2sense * swapp * latsign * calp2) / Constants::degree();
     return;
   }
 
@@ -550,13 +551,13 @@ namespace GeographicLib {
     _f1 = g._f1;
     // alp1 is in [0, pi]
     double
-      alp1 = azi1 * Constants::degree,
+      alp1 = azi1 * Constants::degree(),
       // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
       // problems directly than to skirt them.
       salp1 = azi1 == 180 ? 0 : sin(alp1),
       calp1 = azi1 ==  90 ? 0 : cos(alp1);
     double cbet1, sbet1, phi;
-    phi = lat1 * Constants::degree;
+    phi = lat1 * Constants::degree();
     // Ensure cbet1 = +eps at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
@@ -636,15 +637,15 @@ namespace GeographicLib {
     chi12 = lam12 + _dlamScale *
       ( sig12 +
 	(Geodesic::SinSeries(ssig2, csig2, _dlamCoeff, maxpow)  - _dchi1));
-    lon12 = _bsign * chi12 / Constants::degree;
+    lon12 = _bsign * chi12 / Constants::degree();
     // Can't use AngNormalize because longitude might have wrapped multiple
     // times.
     lon12 = lon12 - 360 * floor(lon12/360 + 0.5);
-    lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree;
+    lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree();
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);
     // minus signs give range [-180, 180). 0- converts -0 to +0.
     azi2 = 0-atan2(- Geodesic::azi2sense * _bsign * salp2,
-		   + Geodesic::azi2sense * calp2) / Constants::degree;
+		   + Geodesic::azi2sense * calp2) / Constants::degree();
   }
 
 } // namespace GeographicLib
