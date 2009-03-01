@@ -6,11 +6,11 @@ PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod
 
 all: $(PROGRAMS) $(LIBRARY)
 
-CC = g++
+CC = g++ -g
 CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 
 CPPFLAGS = -I..
-LDFLAGS=$(LIBRARY)
+LDFLAGS = $(LIBRARY)
 
 PREFIX = /usr/local
 # After installation, use these values of CPPFLAGS and LDFLAGS
@@ -31,7 +31,7 @@ $(LIBRARY): $(OBJECTS)
 	$(AR) r $@ $?
 
 $(PROGRAMS): $(LIBRARY)
-	$(CC) -g -o $@ $@.o $(LDFLAGS)
+	$(CC) -o $@ $@.o $(LDFLAGS)
 
 GeoConvert: GeoConvert.o
 TransverseMercatorTest: TransverseMercatorTest.o
