@@ -92,7 +92,7 @@ std::string LatLonString(double lat, double lon, int prec, bool dms) {
 std::string AzimuthString(double azi, int prec, bool dms) {
   using namespace GeographicLib;
   if (dms)
-    return DMS::Encode(azi, prec + 5, DMS::LONGITUDE);
+    return DMS::Encode(azi, prec + 5, DMS::AZIMUTH);
   else {
     std::ostringstream os;
     os << std::fixed << std::setprecision(prec + 5)

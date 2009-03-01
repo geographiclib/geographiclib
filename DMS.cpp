@@ -201,8 +201,11 @@ namespace GeographicLib {
       scale *= 60;
     for (unsigned i = 0; i < prec; ++i)
       scale *= 10;
+    if (ind == AZIMUTH)
+      angle -= floor(angle/360) * 360;
     int sign = angle < 0 ? -1 : 1;
     angle *= sign;
+      
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
     double
@@ -228,12 +231,12 @@ namespace GeographicLib {
     switch (trailing) {
     case DEGREE:
       if (ind != NONE)
-	s << setw(1 + ind + prec + (prec ? 1 : 0));
+	s << setw(1 + min(int(ind), 2) + prec + (prec ? 1 : 0));
       s << setprecision(prec) << pieces[0];
       break;
     default:
       if (ind != NONE)
-	s << setw(1 + ind);
+	s << setw(1 + min(int(ind), 2));
       s << setprecision(0) << pieces[0] << char(tolower(dmsindicators[0]));
       switch (trailing) {
       case MINUTE:
@@ -249,7 +252,7 @@ namespace GeographicLib {
 	break;
       }
     }
-    if (ind != NONE)
+    if (ind != NONE && ind != AZIMUTH)
       s << hemispheres[(ind == LATITUDE ? 0 : 2) + (sign < 0 ? 0 : 1)];
     return s.str();
   }
