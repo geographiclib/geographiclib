@@ -76,8 +76,8 @@ namespace GeographicLib {
   {}
 
   const TransverseMercatorExact
-  TransverseMercatorExact::UTM(Constants::WGS84_a, Constants::WGS84_invf,
-			       Constants::UTM_k0);
+  TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_invf(),
+			       Constants::UTM_k0());
 
   double  TransverseMercatorExact::psi(double phi) const throw() {
     double s = sin(phi);
@@ -143,9 +143,9 @@ namespace GeographicLib {
   bool TransverseMercatorExact::zetainv0(double psi, double lam,
 					  double& u, double& v) const throw() {
     bool retval = false;
-    if (psi < -_e * Constants::pi/4 &&
-	lam > (1 - 2 * _e) * Constants::pi/2 &&
-	psi < lam - (1 - _e) * Constants::pi/2) {
+    if (psi < -_e * Constants::pi()/4 &&
+	lam > (1 - 2 * _e) * Constants::pi()/2 &&
+	psi < lam - (1 - _e) * Constants::pi()/2) {
       // N.B. this branch is normally not taken because psi < 0 is converted
       // psi > 0 by Forward.
       //
@@ -157,13 +157,13 @@ namespace GeographicLib {
       // Inverting this gives:
       double
 	psix = 1 - psi / _e,
-	lamx = (Constants::pi/2 - lam) / _e;
+	lamx = (Constants::pi()/2 - lam) / _e;
       u = asinh(sin(lamx) / hypot(cos(lamx), sinh(psix))) * (1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
       u = _Eu.K() - u;
       v = _Ev.K() - v;
-    } else if (psi < _e * Constants::pi/2 &&
-	       lam > (1 - 2 * _e) * Constants::pi/2) {
+    } else if (psi < _e * Constants::pi()/2 &&
+	       lam > (1 - 2 * _e) * Constants::pi()/2) {
       // At w = w0 = i * Ev.K(), we have
       //
       //     zeta = zeta0 = i * (1 - _e) * pi/2
@@ -176,14 +176,14 @@ namespace GeographicLib {
       // When inverting this, we map arg(w - w0) = [-90, 0] to
       // arg(zeta - zeta0) = [-90, 180]
       double
-	dlam = lam - (1 - _e) * Constants::pi/2,
+	dlam = lam - (1 - _e) * Constants::pi()/2,
 	rad = hypot(psi, dlam),
 	// atan2(dlam-psi, psi+dlam) + 45d gives arg(zeta - zeta0) in range
 	// [-135, 225).  Subtracting 180 (since multiplier is negative) makes
 	// range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
 	// [-105, 15).  In particular the range [-90, 180] in zeta space maps
 	// to [-90, 0] in w space as required.
-	ang = atan2(dlam-psi, psi+dlam) - 0.75 * Constants::pi;
+	ang = atan2(dlam-psi, psi+dlam) - 0.75 * Constants::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol;
       rad = pow(3 / (_mv * _e) * rad, 1/3.0);
@@ -197,8 +197,8 @@ namespace GeographicLib {
       v = asinh(sin(lam) / hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
-      u *= _Eu.K() / (Constants::pi/2);
-      v *= _Eu.K() / (Constants::pi/2);
+      u *= _Eu.K() / (Constants::pi()/2);
+      v *= _Eu.K() / (Constants::pi()/2);
     }
     return retval;
   }
@@ -294,7 +294,7 @@ namespace GeographicLib {
 	rad = hypot(xi, deta),
 	// Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
 	// discussion in zetainv0 on the cut for ang.
-	ang = atan2(deta-xi, xi+deta) - 0.75 * Constants::pi;
+	ang = atan2(deta-xi, xi+deta) - 0.75 * Constants::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol;
       rad = pow(3 / _mv * rad, 1/3.0);
@@ -408,8 +408,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     double
-      phi = lat * Constants::degree,
-      lam = lon * Constants::degree;
+      phi = lat * Constants::degree(),
+      lam = lon * Constants::degree();
 
     // u,v = coordinates for the Thompson TM, Lee 54
     double u, v;
@@ -434,7 +434,7 @@ namespace GeographicLib {
     x = eta * _a * _k0 * lonsign;
 
     Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Constants::degree;
+    gamma /= Constants::degree();
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
@@ -475,15 +475,15 @@ namespace GeographicLib {
       double psi;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi, lam);
       phi = psiinv(psi);
-      lat = phi / Constants::degree;
-      lon = lam / Constants::degree;
+      lat = phi / Constants::degree();
+      lon = lam / Constants::degree();
     } else {
-      phi = Constants::pi/2;
+      phi = Constants::pi()/2;
       lat = 90;
       lon = lam = 0;
     }
     Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Constants::degree;
+    gamma /= Constants::degree();
     if (backside)
       lon = 180 - lon;
     lon *= lonsign;

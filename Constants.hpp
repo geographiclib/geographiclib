@@ -10,6 +10,10 @@
 #if !defined(CONSTANTS_HPP)
 #define CONSTANTS_HPP "$Id$"
 
+namespace {
+  char CONSTANTS_RCSID_H[] = CONSTANTS_HPP;
+}
+
 namespace GeographicLib {
 
   /**
@@ -23,11 +27,12 @@ namespace GeographicLib {
     /**
      * pi
      **********************************************************************/
-    static const double pi;
+    static inline double pi() throw()
+    { return 3.141592653589793238462643383279502884; }
     /**
-     * Conversion from degrees to radians
+     * Factor to convert from degrees to radians
      **********************************************************************/
-    static const double degree;
+    static inline double degree() throw() { return pi() / 180; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/
@@ -35,72 +40,77 @@ namespace GeographicLib {
     /**
      * Major radius of WGS84 ellipsoid
      **********************************************************************/
-    static const double WGS84_a;
+    static inline double WGS84_a() throw() { return 6378137 * meter(); }
     /**
      * Inverse flattening of WGS84 ellipsoid
      **********************************************************************/
-    static const double WGS84_invf;
+    static inline double WGS84_invf() throw() { return 298.257223563; }
     /**
      * Central scale factor for UTM
      **********************************************************************/
-    static const double UTM_k0;
+    static inline double UTM_k0() throw() {return 0.9996; }
     /**
      * Central scale factor for UPS
      **********************************************************************/
-    static const double UPS_k0;
+    static inline double UPS_k0() throw() { return 0.994; }
     ///@}
 
     /** \name SI units
      **********************************************************************/
     ///@{
     /**
-     * Convert meters to meters (i.e., 1, but this lets the internal
-     * system of units be changed if necessary).
+     * Factor to convert from meters to meters (i.e., 1, but this lets the
+     * internal system of units be changed if necessary).
      **********************************************************************/
-    static const double meter;
+    static inline double meter() throw() { return 1; }
     /**
-     * Convert kilometers to meters.
+     * Factor to convert from kilometers to meters.
      **********************************************************************/
-    static const double kilometer;
+    static inline double kilometer() throw() { return 1000 * meter(); }
     ///@}
 
     /**
-     * Convert nautical miles (approximately 1 arc minute) to meters.
+     * Factor to convert from nautical miles (approximately 1 arc minute) to meters.
      **********************************************************************/
-    static const double nauticalmile;
+    static inline double nauticalmile() throw() { return 1852 * meter(); }
 
     /** \name Anachronistic British units
      **********************************************************************/
     ///@{
     /**
-     * Convert international feet to meters.
+     * Factor to convert from international feet to meters.
      **********************************************************************/
-    static const double foot;
+    static inline double foot() throw() { return 0.0254 * 12 * meter(); }
     /**
-     * Convert yards to meters.
+     * Factor to convert from yards to meters.
      **********************************************************************/
-    static const double yard;
+    static inline double yard() throw() { return 3 * foot(); }
     /**
-     * Convert fathoms to meters.
+     * Factor to convert from fathoms to meters.
      **********************************************************************/
-    static const double fathom;
+    static inline double fathom() throw() { return 2 * yard(); }
     /**
-     * Convert chains to meters.
+     * Factor to convert from chains to meters.
      **********************************************************************/
-    static const double chain;
+    static inline double chain() throw() { return 22 * yard(); }
     /**
-     * Convert statute miles to meters.
+     * Factor to convert from furlongs to meters.
      **********************************************************************/
-    static const double mile;
+    static inline double furlong() throw() { return 10 * chain(); }
+    /**
+     * Factor to convert from statute miles to meters.
+     **********************************************************************/
+    static inline double mile() throw() { return 8 * furlong(); }
     ///@}
 
     /** \name Anachronistic US units
      **********************************************************************/
     ///@{
     /**
-     * Convert US survery feet to meters.
+     * Factor to convert from US survery feet to meters.
      **********************************************************************/
-    static const double surveyfoot;
+    static inline double surveyfoot() throw()
+    { return 1200.0 / 3937.0 * meter(); }
     ///@}
   };
 

@@ -13,11 +13,11 @@ Files
     Doxyfile -- Doxygen config file
     Geographic.doc -- main page of Doxygen documentation
 
+    Constants.hpp -- WGS84 constants
     PolarStereographic.[ch]pp -- polar stereographic projection
     TransverseMercator.[ch]pp -- transverse Mercator projection
     UTMUPS.[ch]pp -- UTM and UPS
     MGRS.[ch]pp -- MGRS
-    Constants.[ch]pp -- WGS84 constants
     TransverseMercatorExact.[ch]pp -- exact TM projection
     EllipticFunction.[ch]pp -- elliptic functions
     GeoCoords.[ch]pp -- hold geographic location
@@ -66,7 +66,9 @@ Changes between 2009-03 and 2009-02 versions:
   * The makefile creates a library and includes an install target.
 
   * Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
-    CartConvert
+    CartConvert.
+
+  * Use inline functions to define constant double in Constants.hpp.
 
 Changes between 2009-02 and 2009-01 versions:
 

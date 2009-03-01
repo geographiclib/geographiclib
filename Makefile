@@ -18,11 +18,11 @@ PREFIX = /usr/local
 # CPPFLAGS = -I$(PREFIX)/include
 # LDFLAGS = -L$(PREFIX)/lib -l$(LIBSTEM)
 
-MODULES = Constants DMS EllipticFunction GeoCoords MGRS PolarStereographic \
+MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic
 
-HEADERS = $(patsubst %,%.hpp,$(MODULES))
+HEADERS = Constants.hpp $(patsubst %,%.hpp,$(MODULES))
 SOURCES = $(patsubst %,%.cpp,$(MODULES))
 OBJECTS = $(patsubst %,%.o,$(MODULES))
 ALLSOURCES = $(SOURCES) $(patsubst %,%.cpp,$(PROGRAMS))
