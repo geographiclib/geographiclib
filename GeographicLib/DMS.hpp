@@ -41,9 +41,10 @@ namespace GeographicLib {
 
     /**
      * Indicator for presence of hemisphere indicator (N/S/E/W) on latitudes
-     * and longitudes.
+     * and longitudes.  AZIMUTH is used in Encode to indicate output in [000,
+     * 360) with no letter indicator.
      **********************************************************************/
-    enum flag { NONE = 0, LATITUDE = 1, LONGITUDE = 2 };
+    enum flag { NONE = 0, LATITUDE = 1, LONGITUDE = 2, AZIMUTH = 3 };
 
     /**
      * Indicator for trailing units on an angle.
