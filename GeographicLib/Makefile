@@ -67,15 +67,15 @@ install: install-lib install-headers install-progs
 
 install-lib: $(LIBRARY)
 	test -f $(PREFIX)/lib || mkdir -p $(PREFIX)/lib
-	install -m 644 $(LIBRARY) $(PREFIX)/lib
+	install -m 644 $^ $(PREFIX)/lib
 
 install-headers: $(HEADERS)
 	test -f $(PREFIX)/include/GeographicLib || mkdir -p $(PREFIX)/include/GeographicLib
-	install -m 644 $(HEADERS) $(PREFIX)/include/GeographicLib
+	install -m 644 $^ $(PREFIX)/include/GeographicLib
 
 install-progs: $(PROGRAMS)
 	test -f $(PREFIX)/bin || mkdir -p $(PREFIX)/bin
-	install $(PROGRAMS) $(PREFIX)/bin
+	install $^ $(PREFIX)/bin
 
 doc: Doxyfile Geographic.doc \
 	$(HEADERS) $(ALLSOURCES) \
