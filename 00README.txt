@@ -68,7 +68,7 @@ Changes between 2009-03 and 2009-02 versions:
   * Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
     CartConvert.
 
-  * Use inline functions to define constant double in Constants.hpp.
+  * Use inline functions to define constant doubles in Constants.hpp.
 
 Changes between 2009-02 and 2009-01 versions:
 
