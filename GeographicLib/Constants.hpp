@@ -2,9 +2,9 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(CONSTANTS_HPP)
@@ -42,9 +42,9 @@ namespace GeographicLib {
      **********************************************************************/
     static inline double WGS84_a() throw() { return 6378137 * meter(); }
     /**
-     * Inverse flattening of WGS84 ellipsoid
+     * reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
-    static inline double WGS84_invf() throw() { return 298.257223563; }
+    static inline double WGS84_r() throw() { return 298.257223563; }
     /**
      * Central scale factor for UTM
      **********************************************************************/

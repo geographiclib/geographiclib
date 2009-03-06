@@ -2,8 +2,9 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #include "GeographicLib/Geocentric.hpp"
@@ -20,10 +21,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geocentric::Geocentric(double a, double invf)
+  Geocentric::Geocentric(double a, double r)
     throw()
     : _a(a)
-    , _f(invf > 0 ? 1 / invf : 0)
+    , _f(r > 0 ? 1 / r : 0)
     , _e2(_f * (2 - _f))
     , _e4(sq(_e2))
     , _e2m(1 - _e2)
@@ -31,7 +32,7 @@ namespace GeographicLib {
   {}
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a(),
-				     Constants::WGS84_invf());
+				     Constants::WGS84_r());
 
   void Geocentric::Forward(double lat, double lon, double h,
 			   double& x, double& y, double& z) const throw() {

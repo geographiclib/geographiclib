@@ -2,12 +2,31 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(GEODESIC_HPP)
 #define GEODESIC_HPP "$Id$"
+
+
+// These correspond to the max and min orders in Geodesic.cpp
+#define MINPOW 1
+#define MAXPOW 8
+#define MAXPOW_CLAMP(x) ((x) > MAXPOW ? MAXPOW : ((x) < MINPOW ? MINPOW : (x)))
+
+#if !defined(MAXPOW_DEFAULT)
+#define MAXPOW_DEFAULT 6
+#endif
+
+#define MAXPOW_TAUSC MAXPOW_CLAMP(MAXPOW_DEFAULT)
+#define MAXPOW_TAUCOEF MAXPOW_CLAMP(MAXPOW_DEFAULT)
+#define MAXPOW_SIGCOEF MAXPOW_CLAMP(MAXPOW_DEFAULT)
+#define MAXPOW_LAMSC MAXPOW_CLAMP(MAXPOW_DEFAULT-1)
+#define MAXPOW_LAMCOEF MAXPOW_CLAMP(MAXPOW_DEFAULT-2)
+
+#define ALTAZI 0
 
 #include <cmath>
 
@@ -44,7 +63,9 @@ namespace GeographicLib {
   class Geodesic {
   private:
     friend class GeodesicLine;
-    static const int maxpow = 8, azi2sense = 1;
+    static const int azi2sense = 1;
+    static const int maxpow_taucoef = MAXPOW_TAUCOEF;
+    static const int maxpow_lamcoef = MAXPOW_LAMCOEF;
 
     static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
@@ -55,7 +76,8 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
 #endif
     double Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
-		 double salp1, double calp1, double& salp2, double& calp2,
+		 double salp1, double calp1,
+		 double& salp2, double& calp2,
 		 double& sig12,
 		 double& ssig1, double& csig1, double& ssig2, double& csig2,
 		 double& u2, bool diffp, double& dchi12, double c[])
@@ -99,11 +121,11 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters) and inverse flattening
-     * \e invf.  Setting \e invf <= 0 implies \e invf = inf or flattening = 0
+     * Constructor for a ellipsoid radius \e a (meters) and reciprocal flattening
+     * \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
      * (i.e., a sphere).
      **********************************************************************/
-    Geodesic(double a, double invf) throw();
+    Geodesic(double a, double r) throw();
 
     /**
      * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
@@ -180,14 +202,18 @@ namespace GeographicLib {
   class GeodesicLine {
   private:
     friend class Geodesic;
-    static const int maxpow = 8;
+    static const int maxpow_taucoef = MAXPOW_TAUCOEF;
+    static const int maxpow_sigcoef = MAXPOW_SIGCOEF;
+    static const int maxpow_lamcoef = MAXPOW_LAMCOEF;
 
     int _bsign;
     double _lat1, _lon1, _azi1;
     double  _f1, _salp0, _calp0,
       _ssig1, _csig1, _stau1, _ctau1, _slam1, _clam1,
       _sScale, _dlamScale, _dtau1, _dchi1;
-    double _sigCoeff[maxpow], _dlamCoeff[maxpow];
+    double _sigCoeff[maxpow_taucoef > maxpow_sigcoef ?
+		     maxpow_taucoef : maxpow_sigcoef],
+      _dlamCoeff[maxpow_lamcoef];
 
     GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1)
       throw();

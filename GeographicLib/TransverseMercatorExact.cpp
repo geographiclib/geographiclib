@@ -2,9 +2,9 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  *
  * The relevant section of Lee's paper is part V, pp 67&ndash;101,
  * <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
@@ -60,11 +60,11 @@ namespace GeographicLib {
     (double)(numeric_limits<double>::digits)
     /log((double)(numeric_limits<double>::radix)) + 2;
 
-  TransverseMercatorExact::TransverseMercatorExact(double a, double invf,
+  TransverseMercatorExact::TransverseMercatorExact(double a, double r,
 						   double k0, bool extendp)
     throw()
     : _a(a)
-    , _f(1 / invf)
+    , _f(1 / r)
     , _k0(k0)
     , _mu(_f * (2 - _f))	// e^2
     , _mv(1 - _mu)		// 1 - e^2
@@ -76,7 +76,7 @@ namespace GeographicLib {
   {}
 
   const TransverseMercatorExact
-  TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_invf(),
+  TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
 			       Constants::UTM_k0());
 
   double  TransverseMercatorExact::psi(double phi) const throw() {

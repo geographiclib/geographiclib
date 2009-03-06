@@ -1122,12 +1122,16 @@ geodesic (in the same order as the test set).
 Another much smaller set of test points has been culled from the
 literature on geodesics.  These are all for the International Ellipsoid
 (\e a = 6378388 m, \e f = 1/297.0).  The endpoints are taken from
+
+ - H. F. Rainsford, <a href="http://dx.doi.org/10.1007/BF02527187">
+   Long geodesics on the ellipsoid</a>,
+   Bull. Geodesique 37, 12&ndash;22 (1955).
  - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
    geodesy, Part II</a>, Ohio State Univ. (March 1993).
  - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
    computation of long geodesics on the ellipsoid through Gaussian
    quadrature</a>,
-   Journal of Geodesy 53, 165&ndash;177 (1979).
+   J. Geodesy 53, 165&ndash;177 (1979).
  - B.K. Meade, Discussion of results obtained from the Bowring formulas
    developed for solutions of the geodetic inverse and great elliptic
    inverse, Survey Review 33 (261) 477&ndash;487 (1996).
@@ -1202,7 +1206,7 @@ No      azi1                      azi2                      s12
 \section geoderrors Accuracy of geodesic calculation
 
 We regard all the test data as "exact".  For each member of the test
-set, 7 error distances are computed.
+set, 8 error distances are computed.
  -# Compute the direct problem from point 1, compare position of
     resulting point 2 with the exact result.
  -# Using point 2 and its azimuth given in (1), run the geodesic
@@ -1210,18 +1214,24 @@ set, 7 error distances are computed.
     point 1.
  -# Similar to (1) with points 1 and 2 interchanged.
  -# Similar to (2) with points 1 and 2 interchanged.
- -# Solve the inverse problem between points 1 and 2.  Compare the
-    distance with the exact result.
+ -# Solve the inverse problem between points 1 and 2.  Compare \e s12
+    with the exact result.
  -# Using the azimuth at point 1 found in (5), compute the direct
     problem from point 1 and compare the position of the resulting point
     2 with the exact result.
  -# Similar to (6) with points 1 and 2 interchanged.
+ -# Use the results of (5) to compute the position of the midpoint of
+    the geodesic by a direct calculation from either end with +/- \e
+    s12.  Compare the resulting positions.
  .
-To guard against a canceling error, the calculations in (2), (4), (6),
-and (7) use a long double version of the direct geodesic calculation
-(which is about 2000 times more accurate than the double version).  The
-maximum of the resulting errors in less than 12 nm for the double
-version and 6 pm for the long double version.
+The last check verifies that \e azi1 and \e azi2 returned by the inverse
+solution correspond to the same path and is important, e.g., when point
+1 and point 2 are near opposite poles.  To guard against a canceling
+error, the calculations in (2), (4), (6), (7), and (8) use a long double
+version of the direct geodesic calculation (which is about 2000 times
+more accurate than the double version).  The maximum of the resulting
+errors in less than 12 nm for the double version and 6 pm for the long
+double version.
 
 None of the checks listed above directly compares the computed azimuths
 with the exact values.  The problem is that tiny changes in the
@@ -1316,6 +1326,21 @@ calling Geodesic::Direct.  On a 2.6 GHz Intel machine (g++, version
 4.3.0, -O3), calls to Geodesic::Direct take 1.1 us, calls to
 GeodesicLine::Position take 0.44 us, and calls to Geodesic::Inverse take
 3.4 us.
+
+(Optimized timings:
+
+#define MAXPOW_TAUSC 6
+#define MAXPOW_TAUCOEF 6
+#define MAXPOW_SIGCOEF 6
+#define MAXPOW_LAMSC 5
+#define MAXPOW_LAMCOEF 4
+
+Direct 0.83 us, Line 0.41 us, Inverse 2.5 us
+
+Up MAXPOW's by 1 for long double; error = 7 nm
+
+)
+
 
 Future work:
  - The use of 8th order series is overkill.  (At this order, the long

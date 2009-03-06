@@ -2,9 +2,9 @@
  * \file TransverseMercatorExact.hpp
  * \brief Header for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(TRANSVERSEMERCATOREXACT_HPP)
@@ -117,8 +117,8 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
-     * invf, and central scale factor \e k0.  The transverse Mercator
+     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening \e
+     * r, and central scale factor \e k0.  The transverse Mercator
      * projection has a branch point singularity at \e lat = 0 and \e lon - \e
      * lon0 = 90 (1 - \e e) or (for TransverseMercatorExact::UTM) x = 18381 km
      * , y = 0m.  The \e extendp argument governs where the branch cut is
@@ -149,12 +149,12 @@ namespace GeographicLib {
      * cut.
      *
      * The method will work for all ellipsoids used in terrestial geodesy.  The
-     * method cannot be applied directly to the case of a sphere (\e invf =
+     * method cannot be applied directly to the case of a sphere (\e r =
      * inf) because some the constants characterizing this method diverge in
      * that limit.  However, GeographicLib::TransverseMercator treats the
      * sphere exactly.
      **********************************************************************/
-    TransverseMercatorExact(double a, double invf, double k0,
+    TransverseMercatorExact(double a, double r, double k0,
 			    bool extendp = false) throw();
 
     /**
