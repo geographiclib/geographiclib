@@ -2,8 +2,9 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  *
  * This implementation follows closely
  * <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
@@ -54,10 +55,10 @@ namespace GeographicLib {
   const double TransverseMercator::tol =
     0.1*sqrt(numeric_limits<double>::epsilon());
 
-  TransverseMercator::TransverseMercator(double a, double invf, double k0)
+  TransverseMercator::TransverseMercator(double a, double r, double k0)
     throw()
     : _a(a)
-    , _f(invf > 0 ? 1 / invf : 0)
+    , _f(r > 0 ? 1 / r : 0)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(_e2))
@@ -171,7 +172,7 @@ namespace GeographicLib {
   }
 
   const TransverseMercator
-  TransverseMercator::UTM(Constants::WGS84_a(), Constants::WGS84_invf(),
+  TransverseMercator::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
 			  Constants::UTM_k0());
 
   void TransverseMercator::Forward(double lon0, double lat, double lon,

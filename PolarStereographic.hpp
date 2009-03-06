@@ -2,8 +2,9 @@
  * \file PolarStereographic.hpp
  * \brief Header for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(POLARSTEREOGRAPHIC_HPP)
@@ -40,11 +41,11 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
-     * invf, and central scale factor \e k0.  Setting \e invf <= 0 implies \e
-     * invf = inf or flattening = 0 (i.e., a sphere).
+     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening \e
+     * r, and central scale factor \e k0.  Setting \e r <= 0 implies \e
+     * r = inf or flattening = 0 (i.e., a sphere).
      **********************************************************************/
-    PolarStereographic(double a, double invf, double k0) throw();
+    PolarStereographic(double a, double r, double k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to

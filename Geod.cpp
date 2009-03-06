@@ -2,9 +2,9 @@
  * \file Geod.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  *
  * Compile with
  *
@@ -49,7 +49,7 @@ Geod operates in one of three modes:\n\
     lon2\" and prints the corresponding values of \"azi1 azi2 s12\".\n\
 \n\
 By default, the WGS84 ellipsoid is used.  With the -n option, it uses\n\
-the international ellipsoid (major radius 6378388 m, inverse flattening\n\
+the international ellipsoid (major radius 6378388 m, reciprocal flattening\n\
 297).\n\
 \n\
 Output of angles is as decimal degrees.  If -d is specified the output\n\

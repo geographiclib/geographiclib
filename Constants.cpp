@@ -2,9 +2,9 @@
  * \file Constants.cpp
  * \brief Implementation for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #include "GeographicLib/Constants.hpp"
