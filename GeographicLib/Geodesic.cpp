@@ -11,15 +11,15 @@
  * - at a general point (no suffix or 1 or 2 as suffix)
  *   - phi = latitude
  *   - beta = latitude on auxilliary sphere
- *   - lambda = longitude on auxilliary sphere
- *   - chi = longitude
+ *   - chi = longitude on auxilliary sphere
+ *   - lambda = longitude
  *   - alpha = azimuth of great circle
  *   - sigma = arc length along greate circle
  *   - s = distance
  *   - tau = scaled distance (= sigma at multiples of pi/2)
  * - at previous northwards equator crossing
  *   - beta = phi = 0
- *   - lambda = chi = 0
+ *   - chi = lambda = 0
  *   - alpha = alpha0
  *   - sigma = s = 0
  * - a 12 suffix means a difference, e.g., s12 = s2 - s1.
@@ -154,17 +154,17 @@ namespace GeographicLib {
       // cbet12 = cbet2 * cbet1 + sbet2 * sbet1,
       sbet12a = sbet2 * cbet1 + cbet2 * sbet1, // bet2 + bet1 (-pi, 0]
       //      cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
-      chi12 = lon12 * Constants::degree(),
-      cchi12 = cos(chi12),	// lon12 == 90 isn't interesting
-      schi12 = lon12 == 180 ? 0 :sin(chi12);
+      lam12 = lon12 * Constants::degree(),
+      clam12 = cos(lam12),	// lon12 == 90 isn't interesting
+      slam12 = lon12 == 180 ? 0 :sin(lam12);
 
     double calp1, salp1, calp2, salp2,
       c[maxpow_taucoef > maxpow_lamcoef ? maxpow_taucoef : maxpow_lamcoef];
     // Enumerate all the cases where the geodesic is a meridian.  This includes
     // coincident points.
-    if (schi12 == 0 || lat1 == -90) {
+    if (slam12 == 0 || lat1 == -90) {
       // Head to the target longitude
-      calp1 = cchi12; salp1 = schi12;
+      calp1 = clam12; salp1 = slam12;
       // At the target we're heading north
       calp2 = 1; salp2 = 0;
 
@@ -184,11 +184,11 @@ namespace GeographicLib {
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow_taucoef) -
 		  SinSeries(ssig1, csig1, c, maxpow_taucoef)));
     } else if (sbet1 == 0 &&	// and sbet2 == 0
-	       // Mimic the way Chi12 works with calp1 = 0
-	       chi12 <= Constants::pi() - _f * Constants::pi()) {
+	       // Mimic the way Lam12 works with calp1 = 0
+	       lam12 <= Constants::pi() - _f * Constants::pi()) {
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
-      s12 = _a * chi12;
+      s12 = _a * lam12;
     } else {
 
       // Now point1 and point2 belong within a hemisphere bounded by a line of
@@ -196,112 +196,114 @@ namespace GeographicLib {
 
       {
 	// Figure a starting point for Newton's method
-	double csig12, ssig12, chicrita;
-	csig12 = sbet1 * sbet2 + cbet1 * cbet2 * cchi12;
-	salp1 = cbet2 * schi12;
-	calp1 = cchi12 >= 0 ?
-	  sbet12 * _f1/n1 + cbet2 * sbet1 * sq(schi12) / (1 + cchi12) :
-	  sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
+	double csig12, ssig12, lamcrita;
+	csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
+	salp1 = cbet2 * slam12;
+	calp1 = clam12 >= 0 ?
+	  sbet12 * _f1/n1 + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
+	  sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
 	ssig12 = hypot(salp1, calp1);
-	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi();
+	lamcrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi();
 
-	if (csig12 >= 0 || ssig12 >= 3 * chicrita * cbet1)
+	if (csig12 >= 0 || ssig12 >= 3 * lamcrita * cbet1) {
 	  // Zeroth order spherical approximation is OK
-	  SinCosNorm(salp1, calp1);
-	else {
+	} else {
 	  double
-	    x = (chi12 - Constants::pi())/chicrita,
-	    y = sbet12a / (chicrita * cbet1);
+	    x = (lam12 - Constants::pi())/lamcrita,
+	    y = sbet12a / (lamcrita * cbet1);
 	  if (y > -tol && x >  -1 - xthresh) {
 	    // strip near cut
 	    salp1 = min(1.0, -x);
 	    calp1 = - sqrt(1 - sq(salp1));
 	  } else {
-	    // estimate alp2
+	    double salp2, calp2;
+	    // estimate alp2, by solving
+	    // calp2 * (salp2 + x) - y * salp2 = 0
 	    if (y == 0) {
-	      salp1 = 1;
-	      calp1 = 0;
-	      // cerr << "0 ";
+	      salp2 = 1; calp2 = 0; // This applies only for x < -1
 	    } else if (y > - 0.027 && x > -1.09 && x < -0.91) {
 	      // Near singular point we have
-	      // solve t^3 - 2*a*t - 2 = 0
+	      //     t^3 - 2*a*t - 2 = 0
 	      // where a = (x + 1)/|y|^(2/3), t = calp2/|y|^(1/3)
 	      double
-		a = (x + 1)/sq(cbrt(y)),
-		a3 = sq(a)*a,
-		disc = 27 - 8 * a3,
-		v = 1;
+		y3 = cbrt(-y),
+		a = (x + 1) / sq(y3),
+		a3 = sq(a) * a,
+		disc = 729 - 216 * a3, // sq(3 * sqrt(3) * sqrt(27 - 8 * a3))
+		b = 4 * a3 - 27,
+		t3 = a;		       // t = - 3 / t3
 	      if (disc >= 0) {
-		double s = 4 * a3 - 27;
-		s += (s > 0 ? 1 : -1) * 3 * sqrt(3.0) * sqrt(disc);
-		s /= 4*a3;
-		s = cbrt(s);
-		v += s + 1/s;
+		// b < 0 here, so use neg sqrt
+		double s = cbrt( (b - sqrt(disc)) / 4 );
+		t3 += s + sq(a)/s;
 	      } else {
-		double ang = atan2(3 * sqrt(3.0) * sqrt(-disc), 4 * a3 - 27) +
-		  2 * Constants::pi();
-		v += 2 * cos(ang/3);
+		double ang = atan2(sqrt(-disc), b) + 2 * Constants::pi();
+		t3 += 2 * a * cos(ang/3);
 	      }
-	      calp1 = cbrt(-y) * -3 / a / v;
-	      salp1 = sqrt(1 - sq(calp1));
+	      calp2 = - 3 * y3 / t3;
+	      // calp2 is small so sqrt is safe
+	      salp2 = sqrt(1 - sq(calp2));
 	      // cerr << "1 ";
 	    } else {
-	      salp1 = 0;
-	      calp1 = 1;
+	      salp2 = 0;
+	      calp2 = 1;
 	      // cerr << "2 ";
 	    }
-	    // cerr << x + 1 << " " << y << " " << salp1 << " " << calp1 << " ";
+	    // cerr << x + 1 << " " << y << " " << salp2 << " " << calp2 << " ";
+	    // Now apply Newton's method to solve for salp2, calp2
 	    for (unsigned i = 0; i < 30; ++i) {
 	      ++iterx;
 	      double
-		v = calp1 * (salp1 + x) - y * salp1,
-		dv = - calp1 * y - salp1 * x + (calp1 - salp1) * (calp1 + salp1),
+		v = calp2 * (salp2 + x) - y * salp2,
+		dv = - calp2 * y - salp2 * x +
+		(calp2 - salp2) * (calp2 + salp2),
 		da = -v/dv,
 		sda = sin(da),
 		cda = cos(da),
-		nsalp1 = salp1 * cda + calp1 * sda;
+		nsalp2 = salp2 * cda + calp2 * sda;
 	      if (v == 0)
 		break;
-	      calp1 = max(0.0, calp1 * cda - salp1 * sda);
-	      salp1 = max(0.0, nsalp1);
-	      SinCosNorm(salp1, calp1);
+	      calp2 = max(0.0, calp2 * cda - salp2 * sda);
+	      salp2 = max(0.0, nsalp2);
+	      SinCosNorm(salp2, calp2);
 	      if (abs(da) < tol1)
 		break;
 	    }
-	    // cerr << iterx << " " << salp1 << " " << calp1 << "\n";
-	    // estimate lam12
-	    double r = hypot(y, salp1 + x) * chicrita * salp1;
-	    // chi12 = pi - chicrita * r * salp1
-	    schi12 = sin(r);
-	    cchi12 = -cos(r);
+	    // cerr << iterx << " " << salp2 << " " << calp2 << "\n";
+	    // estimate chi12
+	    double r = hypot(y, salp2 + x) * lamcrita * salp2,
+	    // chi12 = pi - lamcrita * r * salp2
+	    // sin(chi12) = sin(r), cos(chi12) = -cos(r)
+	      schi12 = sin(r),
+	      cchi12 = -cos(r);
 	    salp1 = cbet2 * schi12;
 	    calp1 = sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
-	    SinCosNorm(salp1, calp1);
 	  }
 	}
+	SinCosNorm(salp1, calp1);
       }
 	/*
 	
 
       double sig120 =
-	atan2(hypot(cbet2 * schi12,
+	atan2(hypot(cbet2 * slam12,
 ),
-	      sbet1 * sbet2 + cbet1 *cbet2 * cchi12)/Constants::degree();
+	      sbet1 * sbet2 + cbet1 *cbet2 * clam12)/Constants::degree();
 
       double
-	chicrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi(),
-	chicrit = Constants::pi() - chicrita;
-      double xx = (chi12 - Constants::pi())/chicrita,
-	yy = sbet12a / (chicrita * cbet1);
+	lamcrita = -cbet1 * dlamScale(_f, sq(sbet1)) * Constants::pi(),
+	lamcrit = Constants::pi() - lamcrita;
+      double xx = (lam12 - Constants::pi())/lamcrita,
+	yy = sbet12a / (lamcrita * cbet1);
       //      cerr << setprecision(10);
       //      cerr << atan2(-sbet1, cbet1)/Constants::degree() << " "
-      //      	   << chicrita / Constants::degree() << " "
+      //      	   << lamcrita / Constants::degree() << " "
       //      	   << xx << " " << yy << " ";
 
-      //salp1 = min(1.0, (Constants::pi() - chi12) / chicrita);
+      //salp1 = min(1.0, (Constants::pi() - lam12) / lamcrita);
       //calp1 = - sqrt(1 - sq(salp1));
       if(true) {
-      if (chi12 == chicrit && cbet1 == cbet2 && sbet2 == -sbet1) {
+      if (lam12 == lamcrit && cbet1 == cbet2 && sbet2 == -sbet1) {
 	salp1 = 1; calp1 = 0;	// The singular point
 	// This leads to
 	//
@@ -327,11 +329,11 @@ namespace GeographicLib {
 	  calp1 = eps2;
 	  salp1 = 1;
 	}
-      } else if (false && chi12 > chicrit && cbet12a > 0 && sbet12a > - chicrita) {
-	salp1 = min(1.0, (Constants::pi() - chi12) / chicrita);
+      } else if (false && lam12 > lamcrit && cbet12a > 0 && sbet12a > - lamcrita) {
+	salp1 = min(1.0, (Constants::pi() - lam12) / lamcrita);
 	calp1 = - sqrt(1 - sq(salp1));
-      } else if (false && chi12 > Constants::pi() - 2 * chicrita &&
-		 cbet12a > 0 && sbet12a > - 2 * chicrita) {
+      } else if (false && lam12 > Constants::pi() - 2 * lamcrita &&
+		 cbet12a > 0 && sbet12a > - 2 * lamcrita) {
 	salp1 = 1;
 	calp1 = sbet2 <= 0 ? -eps2 : eps2;
       } else {
@@ -347,18 +349,18 @@ namespace GeographicLib {
 	  calp1 = max(0.0, calp1 - salp1 * da);
 	  SinCosNorm(salp1, calp1);
 	}
-	double rr=max(eps2, hypot(yy, salp1 + xx) * chicrita * salp1);
-	// chi12 = pi - chicrita * rr * salp1
-	schi12 = sin(rr);
-	cchi12 = -cos(rr);
+	double rr=max(eps2, hypot(yy, salp1 + xx) * lamcrita * salp1);
+	// lam12 = pi - lamcrita * rr * salp1
+	slam12 = sin(rr);
+	clam12 = -cos(rr);
 	}
 
-	salp1 = cbet2 * schi12;
-	// calp1 = sbet2 * cbet1 - cbet2 * sbet1 * cchi12;
+	salp1 = cbet2 * slam12;
+	// calp1 = sbet2 * cbet1 - cbet2 * sbet1 * clam12;
 	// _f1 / n1 gives ellipsoid correction for short distances.
-	calp1 = cchi12 >= 0 ?
-	  sbet12 * _f1 / n1 + cbet2 * sbet1 * sq(schi12) / (1 + cchi12) :
-	  sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
+	calp1 = clam12 >= 0 ?
+	  sbet12 * _f1 / n1 + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
+	  sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
 	// N.B. ssig1 = hypot(salp1, calp1) (before normalization)
 	SinCosNorm(salp1, calp1);
       }
@@ -369,11 +371,11 @@ namespace GeographicLib {
       // Newton's method
       for (unsigned i = 0, trip = 0; i < 50; ++i) {
 	double dv;
-	double v = Chi12(sbet1, cbet1, sbet2, cbet2,
-			 salp1, calp1, 
-			 salp2, calp2,
-			 sig12, ssig1, csig1, ssig2, csig2,
-			 u2, trip < 1, dv, c) - chi12;
+	double v = Lambda12(sbet1, cbet1, sbet2, cbet2,
+			    salp1, calp1, 
+			    salp2, calp2,
+			    sig12, ssig1, csig1, ssig2, csig2,
+			    u2, trip < 1, dv, c) - lam12;
 	if (abs(v) <= eps2 || !(trip < 1))
 	  break;
 	double
@@ -398,7 +400,7 @@ namespace GeographicLib {
 	(sig12 + (SinSeries(ssig2, csig2, c, maxpow_taucoef) -
 		  SinSeries(ssig1, csig1, c, maxpow_taucoef)));
 
-      //      cerr << sig12 / Constants::degree() << " " << extlam12 << " ";
+      //      cerr << sig12 / Constants::degree() << " " << extchi12 << " ";
       //      cerr << lon12 << " ";
       //      cerr << sig120 << "\n";
 
@@ -423,15 +425,15 @@ namespace GeographicLib {
     return;
   }
 
-  double Geodesic::Chi12(double sbet1, double cbet1,
-			 double sbet2, double cbet2,
-			 double salp1, double calp1,
-			 double& salp2, double& calp2,
-			 double& sig12,
-			 double& ssig1, double& csig1,
-			 double& ssig2, double& csig2,
-			 double& u2,
-			 bool diffp, double& dchi12, double c[])
+  double Geodesic::Lambda12(double sbet1, double cbet1,
+			    double sbet2, double cbet2,
+			    double salp1, double calp1,
+			    double& salp2, double& calp2,
+			    double& sig12,
+			    double& ssig1, double& csig1,
+			    double& ssig2, double& csig2,
+			    double& u2,
+			    bool diffp, double& dlam12, double c[])
     const throw() {
 
 #if ITER
@@ -447,18 +449,18 @@ namespace GeographicLib {
       salp0 = salp1 * cbet1,
       calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    double slam1, clam1, slam2, clam2, lam12, chi12, mu;
+    double schi1, cchi1, schi2, cchi2, chi12, lam12, mu;
     // tan(bet1) = tan(sig1) * cos(alp1)
-    // tan(lam1) = sin(alp0) * tan(sig1) = tan(lam1)=tan(alp1)*sin(bet1)
-    ssig1 = sbet1; slam1 = salp0 * sbet1;
-    csig1 = clam1 = calp1 * cbet1;
+    // tan(chi1) = sin(alp0) * tan(sig1) = tan(chi1)=tan(alp1)*sin(bet1)
+    ssig1 = sbet1; schi1 = salp0 * sbet1;
+    csig1 = cchi1 = calp1 * cbet1;
     SinCosNorm(ssig1, csig1);
-    SinCosNorm(slam1, clam1);
+    SinCosNorm(schi1, cchi1);
     /*
     ssig1 = sbet1; csig1 = calp1 * cbet1;
     SinCosNorm(ssig1, csig1);
-    slam1 = salp1 * sbet1; clam1 = calp1;
-    SinCosNorm(slam1, clam1);
+    schi1 = salp1 * sbet1; cchi1 = calp1;
+    SinCosNorm(schi1, cchi1);
     */
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
@@ -476,30 +478,30 @@ namespace GeographicLib {
 				(sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
       abs(calp1);
     // tan(bet2) = tan(sig2) * cos(alp2)
-    // tan(lam2) = sin(alp0) * tan(sig2).
-    ssig2 = sbet2; slam2 = salp0 * sbet2;
-    csig2 = clam2 = calp2 * cbet2;
+    // tan(chi2) = sin(alp0) * tan(sig2).
+    ssig2 = sbet2; schi2 = salp0 * sbet2;
+    csig2 = cchi2 = calp2 * cbet2;
     SinCosNorm(ssig2, csig2);
-    SinCosNorm(slam2, clam2);
+    SinCosNorm(schi2, cchi2);
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		  csig1 * csig2 + ssig1 * ssig2);
 
-    // lam12 = lam2 - lam1, limit to [0, pi]
-    lam12 = atan2(max(clam1 * slam2 - slam1 * clam2, 0.0),
-		  clam1 * clam2 + slam1 * slam2);
+    // chi12 = chi2 - chi1, limit to [0, pi]
+    chi12 = atan2(max(cchi1 * schi2 - schi1 * cchi2, 0.0),
+		  cchi1 * cchi2 + schi1 * schi2);
     double eta12, lamscale;
     mu = sq(calp0);
     dlamCoeff(_f, mu, c);
     eta12 = SinSeries(ssig2, csig2, c, maxpow_lamcoef) -
       SinSeries(ssig1, csig1, c, maxpow_lamcoef);
     lamscale = dlamScale(_f, mu),
-    chi12 = lam12 + salp0 * lamscale * (sig12 + eta12);
+    lam12 = chi12 + salp0 * lamscale * (sig12 + eta12);
 
-    // XXX extlam12 = lam12 / Constants::degree();
+    // XXX extchi12 = chi12 / Constants::degree();
     if (diffp) {
-      double dalp0, dsig1, dlam1, dalp2, dsig2, dlam2;
+      double dalp0, dsig1, dchi1, dalp2, dsig2, dchi2;
       // Differentiate sin(alp) * cos(bet) = sin(alp0),
       dalp0 = cbet1 * calp1 / calp0;
       dalp2 = calp2 != 0 ? calp1 * cbet1/ (calp2 * cbet2) :
@@ -508,14 +510,14 @@ namespace GeographicLib {
       // calp from the denominator with tan(alp0)=cos(sig)*tan(alp),
       dsig1 = ssig1 * salp0 / calp0;
       dsig2 = ssig2 * salp0 / calp0 * dalp2;
-      // Differentiate tan(lam) = sin(alp0) * tan(sig).  Substitute
-      //   tan(sig) = tan(bet) / cos(alp) = tan(lam) / sin(alp0)
-      //   cos(lam) / cos(sig) = 1 / cos(bet)
+      // Differentiate tan(chi) = sin(alp0) * tan(sig).  Substitute
+      //   tan(sig) = tan(bet) / cos(alp) = tan(chi) / sin(alp0)
+      //   cos(chi) / cos(sig) = 1 / cos(bet)
       // to give
-      dlam1 = (sbet1 * sq(clam1) + slam1 * salp0 / (calp0 * cbet1));
-      dlam2 = (sbet2 * sq(clam2) + slam2 * salp0 / (calp0 * cbet2)) * dalp2;
+      dchi1 = (sbet1 * sq(cchi1) + schi1 * salp0 / (calp0 * cbet1));
+      dchi2 = (sbet2 * sq(cchi2) + schi2 * salp0 / (calp0 * cbet2)) * dalp2;
 
-      double deta12, dmu, dlamscale, dchisig;
+      double deta12, dmu, dlamscale, dlamsig;
       dlamCoeffmu(_f, mu, c);
       dmu = - 2 * calp0 * salp0 * dalp0;
       deta12 = dmu * (SinSeries(ssig2, csig2, c, maxpow_lamcoef) -
@@ -524,23 +526,23 @@ namespace GeographicLib {
 
       // Derivative of salp0 * lamscale * (sig + eta) wrt sig.  This
       // is from integral form of this expression.
-      dchisig =  - _e2 * salp0 *
+      dlamsig =  - _e2 * salp0 *
 	(dsig2 / (sqrt(1 - _e2 * (1 - mu * sq(ssig2))) + 1) -
 	 dsig1 / (sqrt(1 - _e2 * (1 - mu * sq(ssig1))) + 1)) ;
 
-      dchi12 =
-	(dlam2 - dlam1) + dchisig +
+      dlam12 =
+	(dchi2 - dchi1) + dlamsig +
 	// Derivative wrt mu
 	(dalp0 * calp0 * lamscale + salp0 * dlamscale) * (sig12 + eta12) +
 	salp0 * lamscale * deta12;
     }
 
 #if ALTAZI
-    salp2 = hypot(salp0, calp0 * slam2);
-    calp2 = calp0 * clam2;
+    salp2 = hypot(salp0, calp0 * schi2);
+    calp2 = calp0 * cchi2;
 #endif
     u2 = mu * _ep2;
-    return chi12;
+    return lam12;
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
@@ -587,20 +589,20 @@ namespace GeographicLib {
     // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
     // With bet1 =  pi/2, alp1 = -pi, sig1 =  pi/2
     // With bet1 = -pi/2, alp1 =  0 , sig1 = -pi/2
-    // Evaluate lam1 with tan(lam1) = sin(alp0) * tan(sig1).
-    // With alp0 in (0, pi/2], quadrants for sig and lam coincide.
+    // Evaluate chi1 with tan(chi1) = sin(alp0) * tan(sig1).
+    // With alp0 in (0, pi/2], quadrants for sig and chi coincide.
     // No atan2(0,0) ambiguity at poles sce cbet1 = +eps.
-    // With alp0 = 0, lam1 = 0 for alp1 = 0, lam1 = pi for alp1 = pi.
-    _ssig1 = sbet1; _slam1 = _salp0 * sbet1;
-    _csig1 = _clam1 = sbet1 != 0 || calp1 != 0 ? cbet1 * calp1 : 1;
+    // With alp0 = 0, chi1 = 0 for alp1 = 0, chi1 = pi for alp1 = pi.
+    _ssig1 = sbet1; _schi1 = _salp0 * sbet1;
+    _csig1 = _cchi1 = sbet1 != 0 || calp1 != 0 ? cbet1 * calp1 : 1;
 
     Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
-    Geodesic::SinCosNorm(_slam1, _clam1);
+    Geodesic::SinCosNorm(_schi1, _cchi1);
     /*
     _ssig1 = sbet1; _csig1 = sbet1 != 0 || calp1 != 0 ? cbet1 * calp1 : 1;
     Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
-    _slam1 = salp1 * sbet1; _clam1 = sbet1 != 0 || calp1 != 0 ? calp1 : 1;
-    Geodesic::SinCosNorm(_slam1, _clam1);
+    _schi1 = salp1 * sbet1; _cchi1 = sbet1 != 0 || calp1 != 0 ? calp1 : 1;
+    Geodesic::SinCosNorm(_schi1, _cchi1);
     */
 
     double
@@ -622,7 +624,7 @@ namespace GeographicLib {
 
     _dlamScale = _salp0 * Geodesic::dlamScale(g._f, mu);
     Geodesic::dlamCoeff(g._f, mu, _dlamCoeff);
-    _dchi1 = Geodesic::SinSeries(_ssig1, _csig1, _dlamCoeff, maxpow_lamcoef);
+    _dlam1 = Geodesic::SinSeries(_ssig1, _csig1, _dlamCoeff, maxpow_lamcoef);
   }
 
   void GeodesicLine::Position(double s12,
@@ -631,8 +633,8 @@ namespace GeographicLib {
     if (_sScale == 0)
       // Uninitialized
       return;
-    double tau12, sig12, lam12, chi12, lon12, s, c;
-    double ssig2, csig2, sbet2, cbet2, slam2, clam2, salp2, calp2;
+    double tau12, sig12, chi12, lam12, lon12, s, c;
+    double ssig2, csig2, sbet2, cbet2, schi2, cchi2, salp2, calp2;
     tau12 = s12 / _sScale;
     s = sin(tau12); c = cos(tau12);
     sig12 = tau12 + (_dtau1 +
@@ -648,17 +650,17 @@ namespace GeographicLib {
     sbet2 = _calp0 * ssig2;
     // Alt: cbet2 = hypot(csig2, salp0 * ssig2);
     cbet2 = Geodesic::hypot(_salp0, _calp0 * csig2);
-    // tan(lam2) = sin(alp0) * tan(sig2)
-    slam2 = _salp0 * ssig2; clam2 = csig2;  // No need to normalize
+    // tan(chi2) = sin(alp0) * tan(sig2)
+    schi2 = _salp0 * ssig2; cchi2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
-    // lam12 = lam2 - lam1
-    lam12 = atan2(slam2 * _clam1 - clam2 * _slam1,
-		  clam2 * _clam1 + slam2 * _slam1);
-    chi12 = lam12 + _dlamScale *
+    // chi12 = chi2 - chi1
+    chi12 = atan2(schi2 * _cchi1 - cchi2 * _schi1,
+		  cchi2 * _cchi1 + schi2 * _schi1);
+    lam12 = chi12 + _dlamScale *
       ( sig12 +
-	(Geodesic::SinSeries(ssig2, csig2, _dlamCoeff, maxpow_lamcoef)  - _dchi1));
-    lon12 = _bsign * chi12 / Constants::degree();
+	(Geodesic::SinSeries(ssig2, csig2, _dlamCoeff, maxpow_lamcoef)  - _dlam1));
+    lon12 = _bsign * lam12 / Constants::degree();
     // Can't use AngNormalize because longitude might have wrapped multiple
     // times.
     lon12 = lon12 - 360 * floor(lon12/360 + 0.5);
