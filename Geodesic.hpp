@@ -10,6 +10,7 @@
 #if !defined(GEODESIC_HPP)
 #define GEODESIC_HPP "$Id$"
 
+#define ITER 1
 
 // These correspond to the max and min orders in Geodesic.cpp
 #define MINPOW 1
@@ -71,9 +72,14 @@ namespace GeographicLib {
 #if defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }
+    static inline double cbrt(double x) throw() {
+      double y = std::pow(std::abs(x), 1/3.0);
+      return x < 0 ? -y : y;
+    }
 #else
     static inline double hypot(double x, double y) throw()
     { return ::hypot(x, y); }
+    static inline double cbrt(double x) throw() { return ::cbrt(x); }
 #endif
     double Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
 		 double salp1, double calp1,
@@ -83,7 +89,7 @@ namespace GeographicLib {
 		 double& u2, bool diffp, double& dchi12, double c[])
       const throw();
 
-    static const double eps2, tol;
+    static const double eps2, tol, tol1, xthresh;
     const double _a, _f, _f1, _e2, _ep2, _b;
     static double SinSeries(double sinx, double cosx, const double c[], int n)
       throw();
@@ -163,6 +169,9 @@ namespace GeographicLib {
      * ellipsoid.
      **********************************************************************/
     const static Geodesic WGS84;
+#if ITER
+    mutable int iter, iterx;
+#endif
   };
 
   /**
