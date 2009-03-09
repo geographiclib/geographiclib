@@ -81,12 +81,12 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
 #endif
-    double Chi12(double sbet1, double cbet1, double sbet2, double cbet2,
-		 double salp1, double calp1,
-		 double& salp2, double& calp2,
-		 double& sig12,
-		 double& ssig1, double& csig1, double& ssig2, double& csig2,
-		 double& u2, bool diffp, double& dchi12, double c[])
+    double Lambda12(double sbet1, double cbet1, double sbet2, double cbet2,
+		    double salp1, double calp1,
+		    double& salp2, double& calp2,
+		    double& sig12,
+		    double& ssig1, double& csig1, double& ssig2, double& csig2,
+		    double& u2, bool diffp, double& dlam12, double c[])
       const throw();
 
     static const double eps2, tol, tol1, xthresh;
@@ -218,8 +218,8 @@ namespace GeographicLib {
     int _bsign;
     double _lat1, _lon1, _azi1;
     double  _f1, _salp0, _calp0,
-      _ssig1, _csig1, _stau1, _ctau1, _slam1, _clam1,
-      _sScale, _dlamScale, _dtau1, _dchi1;
+      _ssig1, _csig1, _stau1, _ctau1, _schi1, _cchi1,
+      _sScale, _dlamScale, _dtau1, _dlam1;
     double _sigCoeff[maxpow_taucoef > maxpow_sigcoef ?
 		     maxpow_taucoef : maxpow_sigcoef],
       _dlamCoeff[maxpow_lamcoef];
