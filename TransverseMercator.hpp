@@ -50,8 +50,7 @@ namespace GeographicLib {
 
   class TransverseMercator {
   private:
-    static const int maxpow =
-      TM_TX_MAXPOW > 8 ? 8 : (TM_TX_MAXPOW < 4 ? 4 : TM_TX_MAXPOW);
+    static const int maxpow = TM_TX_MAXPOW;
     static const double tol;
     static const int numit = 5;
     const double _a, _f, _k0, _e2, _e, _e2m,  _n;
@@ -85,9 +84,9 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening \e
-     * r, and central scale factor \e k0.  Setting \e r <= 0 implies \e
-     * r = inf or flattening = 0 (i.e., a sphere).
+     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
+     * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
+     * inf or flattening = 0 (i.e., a sphere).
      **********************************************************************/
     TransverseMercator(double a, double r, double k0) throw();
 

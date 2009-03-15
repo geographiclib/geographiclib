@@ -12,10 +12,10 @@
 #include <cmath>
 #include <stdexcept>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = LOCALCARTESIAN_HPP;
-}
+#define LOCALCARTESIAN_CPP "$Id$"
+
+RCSID_DECL(LOCALCARTESIAN_CPP)
+RCSID_DECL(LOCALCARTESIAN_HPP)
 
 namespace GeographicLib {
 

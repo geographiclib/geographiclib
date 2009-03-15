@@ -117,15 +117,15 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening \e
-     * r, and central scale factor \e k0.  The transverse Mercator
+     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
+     * \e r, and central scale factor \e k0.  The transverse Mercator
      * projection has a branch point singularity at \e lat = 0 and \e lon - \e
-     * lon0 = 90 (1 - \e e) or (for TransverseMercatorExact::UTM) x = 18381 km
-     * , y = 0m.  The \e extendp argument governs where the branch cut is
-     * placed.  With \e extendp = false, the "standard" convention is followed,
-     * namely the cut is placed along x > 18381 km, y = 0m.  Forward can be
-     * called with any \e lat and \e lon then produces the transformation shown
-     * in Lee, Fig 46.  Reverse analytically continues this in the +/- \e x
+     * lon0 = 90 (1 - \e e) or (for TransverseMercatorExact::UTM) x = 18381 km,
+     * y = 0m.  The \e extendp argument governs where the branch cut is placed.
+     * With \e extendp = false, the "standard" convention is followed, namely
+     * the cut is placed along x > 18381 km, y = 0m.  Forward can be called
+     * with any \e lat and \e lon then produces the transformation shown in
+     * Lee, Fig 46.  Reverse analytically continues this in the +/- \e x
      * direction.  As a consequence, Reverse may map multiple points to the
      * same geographic location; for example, for TransverseMercatorExact::UTM,
      * \e x = 22051449.037349 m, \e y = -7131237.022729 m and \e x =

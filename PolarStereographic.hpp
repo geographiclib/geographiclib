@@ -41,9 +41,9 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening \e
-     * r, and central scale factor \e k0.  Setting \e r <= 0 implies \e
-     * r = inf or flattening = 0 (i.e., a sphere).
+     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
+     * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
+     * inf or flattening = 0 (i.e., a sphere).
      **********************************************************************/
     PolarStereographic(double a, double r, double k0) throw();
 

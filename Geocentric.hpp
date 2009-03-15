@@ -61,8 +61,8 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters) and reciprocal flattening
-     * \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
+     * Constructor for a ellipsoid radius \e a (meters) and reciprocal
+     * flattening \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
      * (i.e., a sphere).
      **********************************************************************/
     Geocentric(double a, double r) throw();

@@ -7,19 +7,20 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
+#include "GeographicLib/GeoCoords.hpp"
+#include "GeographicLib/MGRS.hpp"
+#include "GeographicLib/DMS.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <vector>
 #include <sstream>
 #include <stdexcept>
 #include <iomanip>
 #include <cerrno>
-#include "GeographicLib/GeoCoords.hpp"
-#include "GeographicLib/MGRS.hpp"
-#include "GeographicLib/DMS.hpp"
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = GEOCOORDS_HPP;
-}
+#define GEOCOORDS_CPP "$Id$"
+
+RCSID_DECL(GEOCOORDS_CPP)
+RCSID_DECL(GEOCOORDS_HPP)
 
 namespace GeographicLib {
 

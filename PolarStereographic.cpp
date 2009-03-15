@@ -11,10 +11,10 @@
 #include "GeographicLib/Constants.hpp"
 #include <limits>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = POLARSTEREOGRAPHIC_HPP;
-}
+#define POLARSTEREOGRAPHIC_CPP "$Id$"
+
+RCSID_DECL(POLARSTEREOGRAPHIC_CPP)
+RCSID_DECL(POLARSTEREOGRAPHIC_HPP)
 
 namespace GeographicLib {
 

@@ -7,19 +7,20 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#include <cmath>
-#include <algorithm>
-#include <stdexcept>
-#include <limits>
 #include "GeographicLib/UTMUPS.hpp"
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/PolarStereographic.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
+#include "GeographicLib/Constants.hpp"
+#include <cmath>
+#include <algorithm>
+#include <stdexcept>
+#include <limits>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = UTMUPS_HPP;
-}
+#define UTMUPS_CPP "$Id$"
+
+RCSID_DECL(UTMUPS_CPP)
+RCSID_DECL(UTMUPS_HPP)
 
 namespace GeographicLib {
 
