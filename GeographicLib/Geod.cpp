@@ -13,17 +13,17 @@
  * See \ref geod for usage information.
  **********************************************************************/
 
+#include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/DMS.hpp"
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
-#include "GeographicLib/Geodesic.hpp"
-#include "GeographicLib/DMS.hpp"
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: Geod [-l lat1 lon1 azi1 | -i] [-n] [-d] [-f] [-p prec] [-h]\n\
+"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n] [-d] [-f] [-p prec] [-h]\n\
 $Id$\n\
 \n\
 Perform geodesic calculations.\n\
@@ -51,6 +51,8 @@ Geod operates in one of three modes:\n\
 By default, the WGS84 ellipsoid is used.  With the -n option, it uses\n\
 the international ellipsoid (major radius 6378388 m, reciprocal flattening\n\
 297).\n\
+\n\
+NEED TO DOCUMENT -a\n\
 \n\
 Output of angles is as decimal degrees.  If -d is specified the output\n\
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',\n\
@@ -114,9 +116,38 @@ double ReadAzimuth(const std::string& s) {
   return azi;
 }
 
+std::string DistanceString(double s12, bool arcmode, int prec, bool dms) {
+  using namespace GeographicLib;
+  if (arcmode && dms)
+    return DMS::Encode(s12, prec + 5, DMS::NONE);
+  else {
+    std::ostringstream os;
+    os << std::fixed << std::setprecision(prec + (arcmode ? 5 : 0))
+       << s12;
+    return os.str();
+  }
+}
+
+double ReadDistance(const std::string& s, bool arcmode) {
+  using namespace GeographicLib;
+  double s12;
+  if (arcmode) {
+    DMS::flag ind;
+    s12 = DMS::Decode(s, ind);
+    if (ind != DMS::NONE)
+      throw std::out_of_range("Arc angle " + s +
+			      " includes a hemisphere, N/E/W/S");
+  } else {
+    std::istringstream is(s);
+    if (!(is >> s12))
+      throw std::out_of_range("Incomplete distance: " + s);
+  }
+  return s12;
+}
+
 int main(int argc, char* argv[]) {
-  bool linecalc = false, inverse = false, international = false,
-    dms = false, full = false;
+  bool linecalc = false, inverse = false, arcmode = false,
+    international = false, dms = false, full = false;
   double lat1, lon1, azi1, lat2, lon2, azi2, s12;
   int prec = 3;
 
@@ -125,7 +156,9 @@ int main(int argc, char* argv[]) {
     if (arg == "-i") {
       inverse = true;
       linecalc = false;
-    } else if (arg == "-l") {
+    } else if (arg == "-a")
+      arcmode = true;
+    else if (arg == "-l") {
       inverse = false;
       linecalc = true;
       if (m + 3 >= argc) return usage(1);
@@ -172,16 +205,21 @@ int main(int argc, char* argv[]) {
     try {
       std::istringstream str(s);
       if (linecalc) {
-	if (!(str >> s12))
-	  throw std::out_of_range("Incomplete input: " + s);
-	l.Position(s12, lat2, lon2, azi2);
+	std::string ss12;
+	if (!(str >> ss12))
+	    throw std::out_of_range("Incomplete input: " + s);
+	s12 = ReadDistance(ss12, arcmode);
+	if (arcmode)
+	  l.PositionA(s12, lat2, lon2, azi2);
+	else
+	  l.Position(s12, lat2, lon2, azi2);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
 	    AzimuthString(azi1, prec, dms) << " ";
 	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
 	  AzimuthString(azi2, prec, dms);
 	if (full)
-	  std::cout << " " << s12;
+	  std::cout << " " << DistanceString(s12, arcmode, prec, dms);
 	std::cout << "\n";
       } else if (inverse) {
 	std::string slat1, slon1, slat2, slon2;
@@ -189,27 +227,33 @@ int main(int argc, char* argv[]) {
 	  throw std::out_of_range("Incomplete input: " + s);
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-	geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);
+	double t = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);
+	if (arcmode) s12 = t;
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
 	std::cout << AzimuthString(azi1, prec, dms) << " ";
 	if (full)
 	  std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
-	std::cout << AzimuthString(azi2, prec, dms) << " " << s12 << "\n";
+	std::cout << AzimuthString(azi2, prec, dms) << " "
+		  << DistanceString(s12, arcmode, prec, dms) << "\n";
       } else {
-	std::string slat1, slon1, sazi1;
-	if (!(str >> slat1 >> slon1 >> sazi1 >> s12))
+	std::string slat1, slon1, sazi1, ss12;
+	if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
 	  throw std::out_of_range("Incomplete input: " + s);
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	azi1 = ReadAzimuth(sazi1);
-	geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2);
+	s12 = ReadDistance(ss12, arcmode);
+	if (arcmode)
+	  geod.DirectA(lat1, lon1, azi1, s12, lat2, lon2, azi2);
+	else
+	  geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
 	    AzimuthString(azi1, prec, dms) << " ";
 	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
 	  AzimuthString(azi2, prec, dms);
 	if (full)
-	  std::cout << " " << s12;
+	  std::cout << " " << DistanceString(s12, arcmode, prec, dms);
 	std::cout << "\n";
       }
     }

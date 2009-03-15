@@ -13,12 +13,12 @@
  * See \ref geoconvert for usage information.
  **********************************************************************/
 
+#include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <stdexcept>
 #include <iomanip>
-#include "GeographicLib/GeoCoords.hpp"
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<

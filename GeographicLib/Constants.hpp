@@ -10,9 +10,26 @@
 #if !defined(CONSTANTS_HPP)
 #define CONSTANTS_HPP "$Id$"
 
-namespace {
-  char CONSTANTS_RCSID_H[] = CONSTANTS_HPP;
-}
+/**
+ * A simple compile-time assert.  This is designed to be compatible with the
+ * C++0X static_assert.
+ **********************************************************************/
+#if !defined(STATIC_ASSERT)
+#define STATIC_ASSERT(cond,reason) { enum{ STATIC_ASSERT_ENUM = 1/int(cond) }; }
+#endif
+
+#if defined(__GNUC__)
+// Suppress "defined but not used" warnings
+#define RCSID_DECL(x) namespace \
+{ char VAR_ ## x [] __attribute__((unused)) = x; }
+#else
+/**
+ * Insertion of RCS Id strings into the object file.
+ **********************************************************************/
+#define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
+#endif
+
+RCSID_DECL(CONSTANTS_HPP)
 
 namespace GeographicLib {
 

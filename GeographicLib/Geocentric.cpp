@@ -12,10 +12,10 @@
 #include <algorithm>
 #include <limits>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = GEOCENTRIC_HPP;
-}
+#define GEOCENTRIC_CPP "$Id$"
+
+RCSID_DECL(GEOCENTRIC_CPP)
+RCSID_DECL(GEOCENTRIC_HPP)
 
 namespace GeographicLib {
 

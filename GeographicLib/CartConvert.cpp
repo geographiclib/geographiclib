@@ -13,12 +13,12 @@
  * See \ref cartconvert for usage information.
  **********************************************************************/
 
+#include "GeographicLib/Geocentric.hpp"
+#include "GeographicLib/LocalCartesian.hpp"
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include "GeographicLib/Geocentric.hpp"
-#include "GeographicLib/LocalCartesian.hpp"
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<

@@ -8,15 +8,16 @@
  **********************************************************************/
 
 #include "GeographicLib/DMS.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
 #include <iomanip>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = DMS_HPP;
-}
+#define DMS_CPP "$Id$"
+
+RCSID_DECL(DMS_CPP)
+RCSID_DECL(DMS_HPP)
 
 namespace GeographicLib {
 

@@ -13,10 +13,10 @@
 #include <cmath>
 #include <algorithm>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = ELLIPTICFUNCTION_HPP;
-}
+#define ELLIPTICFUNCTION_CPP "$Id$"
+
+RCSID_DECL(ELLIPTICFUNCTION_CPP)
+RCSID_DECL(ELLIPTICFUNCTION_HPP)
 
 namespace GeographicLib {
 

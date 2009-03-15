@@ -9,13 +9,14 @@
 
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/UTMUPS.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <stdexcept>
 #include <limits>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = MGRS_HPP;
-}
+#define MGRS_CPP "$Id$"
+
+RCSID_DECL(MGRS_CPP)
+RCSID_DECL(MGRS_HPP)
 
 namespace GeographicLib {
 

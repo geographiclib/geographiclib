@@ -12,20 +12,12 @@
 
 #define ITER 1
 
-// These correspond to the max and min orders in Geodesic.cpp
-#define MINPOW 1
-#define MAXPOW 8
-#define MAXPOW_CLAMP(x) ((x) > MAXPOW ? MAXPOW : ((x) < MINPOW ? MINPOW : (x)))
-
-#if !defined(MAXPOW_DEFAULT)
-#define MAXPOW_DEFAULT 6
+#if !defined(GEOD_TAU_ORD)
+#define GEOD_TAU_ORD 6
 #endif
-
-#define MAXPOW_TAUSC MAXPOW_CLAMP(MAXPOW_DEFAULT)
-#define MAXPOW_TAUCOEF MAXPOW_CLAMP(MAXPOW_DEFAULT)
-#define MAXPOW_SIGCOEF MAXPOW_CLAMP(MAXPOW_DEFAULT)
-#define MAXPOW_LAMSC MAXPOW_CLAMP(MAXPOW_DEFAULT-1)
-#define MAXPOW_LAMCOEF MAXPOW_CLAMP(MAXPOW_DEFAULT-2)
+#if !defined(GEOD_ETA_ORD)
+#define GEOD_ETA_ORD 5
+#endif
 
 #define ALTAZI 0
 
@@ -64,9 +56,13 @@ namespace GeographicLib {
   class Geodesic {
   private:
     friend class GeodesicLine;
-    static const int azi2sense = 1;
-    static const int maxpow_taucoef = MAXPOW_TAUCOEF;
-    static const int maxpow_lamcoef = MAXPOW_LAMCOEF;
+    static const int tauord = GEOD_TAU_ORD;
+    static const int ntau = tauord;
+    static const int nsig = tauord;
+    static const int etaord = GEOD_TAU_ORD;
+    // etaCoeff is multiplied by etaFactor which is O(f), so we reduce the
+    // order to which etaCoeff is computed by 1.
+    static const int neta = etaord > 0 ? etaord - 1 : 0;
 
     static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
@@ -89,11 +85,10 @@ namespace GeographicLib {
 		    double& u2, bool diffp, double& dlam12, double c[])
       const throw();
 
-    static const double eps2, tol, tol1, xthresh;
+    static const double eps2, tol0, tol1, tol2, xthresh;
     const double _a, _f, _f1, _e2, _ep2, _b;
     static double SinSeries(double sinx, double cosx, const double c[], int n)
       throw();
-
     static inline double AngNormalize(double x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
       return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
@@ -116,19 +111,19 @@ namespace GeographicLib {
       cosx /= r;
     }
 
-    static double tauScale(double u2) throw();
-    static void tauCoeff(double u2, double c[]) throw();
-    static void sigCoeff(double u2, double c[]) throw();
-    static double dlamScale(double f, double mu) throw();
-    static void dlamCoeff(double f, double mu, double e[]) throw();
-    static double dlamScalemu(double f, double mu) throw();
-    static void dlamCoeffmu(double f, double mu, double e[]) throw();
+    static double tauFactor(double u2) throw();
+    static void tauCoeff(double u2, double t[]) throw();
+    static void sigCoeff(double u2, double tp[]) throw();
+    static double etaFactor(double f, double mu) throw();
+    static void etaCoeff(double f, double mu, double h[]) throw();
+    static double etaFactormu(double f, double mu) throw();
+    static void etaCoeffmu(double f, double mu, double hp[]) throw();
 
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters) and reciprocal flattening
-     * \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
+     * Constructor for a ellipsoid radius \e a (meters) and reciprocal
+     * flattening \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
      * (i.e., a sphere).
      **********************************************************************/
     Geodesic(double a, double r) throw();
@@ -137,11 +132,22 @@ namespace GeographicLib {
      * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
      * longitude, \e lon1, and azimuth \e azi1 (in degrees) for point 1 and a
      * range, \e s12 (in meters) from point 1 to point 2, return the latitude,
-     * \e lat2, longitude, \e lon2, and forward azimuth, \e azi2 (in degees)
-     * for point 2.
+     * \e lat2, longitude, \e lon2, and forward azimuth, \e azi2 (in degrees)
+     * for point 2.  Returned value is the equivalent arc length (in degrees)
+     * on the auxiliary sphere.
      **********************************************************************/
-    void Direct(double lat1, double lon1, double azi1, double s12,
-		double& lat2, double& lon2, double& azi2) const throw();
+    double Direct(double lat1, double lon1, double azi1, double s12,
+		  double& lat2, double& lon2, double& azi2) const throw();
+
+    /**
+     * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
+     * longitude, \e lon1, and azimuth \e azi1 (in degrees) for point 1 and a
+     * range, equivalent arc length \e sig12 (in degrees) from point 1 to point
+     * 2, return the latitude, \e lat2, longitude, \e lon2, and forward
+     * azimuth, \e azi2 (in degrees) for point 2.
+     **********************************************************************/
+    void DirectA(double lat1, double lon1, double azi1, double sig12,
+		 double& lat2, double& lon2, double& azi2) const throw();
 
     /**
      * Set up to do a series of ranges.  This returns a GeodesicLine object
@@ -157,11 +163,12 @@ namespace GeographicLib {
      * Perform the inverse geodesic calculation.  Given a latitude, \e lat1,
      * longitude, \e lon1, for point 1 and a latitude, \e lat2, longitude, \e
      * lon2, for point 2 (all in degrees), return the geodesic distance, \e s12
-     * (in meters), and the forward azimuths, \e azi1 and \e azi2 (in
-     * degrees), at points 1 and 2.
+     * (in meters), and the forward azimuths, \e azi1 and \e azi2 (in degrees),
+     * at points 1 and 2.  Returned value is the equivalent arc length (in
+     * degrees) on the auxiliary sphere.
      **********************************************************************/
-    void Inverse(double lat1, double lon1, double lat2, double lon2,
-		 double& s12, double& azi1, double& azi2) const throw();
+    double Inverse(double lat1, double lon1, double lat2, double lon2,
+		   double& s12, double& azi1, double& azi2) const throw();
 
 
     /**
@@ -211,21 +218,21 @@ namespace GeographicLib {
   class GeodesicLine {
   private:
     friend class Geodesic;
-    static const int maxpow_taucoef = MAXPOW_TAUCOEF;
-    static const int maxpow_sigcoef = MAXPOW_SIGCOEF;
-    static const int maxpow_lamcoef = MAXPOW_LAMCOEF;
+    static const int ntau = Geodesic::ntau;
+    static const int nsig = Geodesic::nsig;
+    static const int neta = Geodesic::neta;
 
-    int _bsign;
     double _lat1, _lon1, _azi1;
     double  _f1, _salp0, _calp0,
       _ssig1, _csig1, _stau1, _ctau1, _schi1, _cchi1,
-      _sScale, _dlamScale, _dtau1, _dlam1;
-    double _sigCoeff[maxpow_taucoef > maxpow_sigcoef ?
-		     maxpow_taucoef : maxpow_sigcoef],
-      _dlamCoeff[maxpow_lamcoef];
+      _sScale, _etaFactor, _dtau1, _dlam1;
+    double _sigCoeff[ntau > nsig ? (ntau ? ntau : 1) : (nsig ? nsig : 1)],
+      _etaCoeff[neta ? neta : 1];
 
     GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1)
       throw();
+    void PositionB(double sig12, double ssig12, double csig12,
+		   double& lat2, double& lon2, double& azi2) const throw();
   public:
 
     /**
@@ -239,9 +246,18 @@ namespace GeographicLib {
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
      * \e azi2 (in degrees) of the point 2 which is a distance, \e s12
-     * (meters), from point 1.  \e s12 can be signed.
+     * (in meters), from point 1.  \e s12 can be signed.  Returned value is the
+     * equivalent arc length (in degrees) on the auxiliary sphere.
      **********************************************************************/
-    void Position(double s12, double& lat2, double& lon2, double& azi2)
+    double Position(double s12, double& lat2, double& lon2, double& azi2)
+      const throw();
+
+    /**
+     * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
+     * \e azi2 (in degrees) of the point 2 which is a equivalent spherical arc
+     * length, \e sig12 (in degrees), from point 1.  \e chi12 can be signed.
+     **********************************************************************/
+    void PositionA(double sig12, double& lat2, double& lon2, double& azi2)
       const throw();
 
     /**
@@ -262,7 +278,7 @@ namespace GeographicLib {
     /**
      * Return the azimuth of the geodesic line as it passes through point 1.
      **********************************************************************/
-    double Azimuth() const throw() { return _bsign * _azi1; }
+    double Azimuth() const throw() { return _azi1; }
   };
 
 } //namespace GeographicLib

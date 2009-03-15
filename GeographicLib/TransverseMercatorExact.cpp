@@ -42,10 +42,10 @@
 #include <limits>
 #include <algorithm>
 
-namespace {
-  char RCSID[] = "$Id$";
-  char RCSID_H[] = TRANSVERSEMERCATOREXACT_HPP;
-}
+#define TRANSVERSEMERCATOREXACT_CPP "$Id$"
+
+RCSID_DECL(TRANSVERSEMERCATOREXACT_CPP)
+RCSID_DECL(TRANSVERSEMERCATOREXACT_HPP)
 
 namespace GeographicLib {
 

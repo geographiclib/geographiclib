@@ -13,12 +13,12 @@
  * See \ref transversemercatortest for usage information.
  **********************************************************************/
 
-#include <string>
-#include <iostream>
-#include <iomanip>
 #include "GeographicLib/EllipticFunction.hpp"
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
+#include <string>
+#include <iostream>
+#include <iomanip>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
