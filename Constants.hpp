@@ -45,6 +45,7 @@ namespace GeographicLib {
      * pi
      **********************************************************************/
     static inline double pi() throw()
+    // good for about 123-bit accuracy
     { return 3.141592653589793238462643383279502884; }
     /**
      * Factor to convert from degrees to radians

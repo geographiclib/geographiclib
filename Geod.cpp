@@ -24,7 +24,8 @@
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r] [-d] [-b] [-f] [-p prec] [-h]\n\
+"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]\n\
+            [-d] [-b] [-f] [-p prec] [-h]\n\
 $Id$\n\
 \n\
 Perform geodesic calculations.\n\
@@ -49,21 +50,30 @@ Geod operates in one of three modes:\n\
     geodesic calculation.  It reads lines containing \"lat1 lon1 lat2\n\
     lon2\" and prints the corresponding values of \"azi1 azi2 s12\".\n\
 \n\
-By default, the WGS84 ellipsoid is used.  With the -n option, it uses\n\
-the international ellipsoid (major radius 6378388 m, reciprocal flattening\n\
-297).\n\
-\n\
-NEED TO DOCUMENT -a\n\
+By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
+major radius of the ellipsoid to \"a\" and the reciprocal flattening to r.\n\
+Setting r = 0 results in a sphere.  For a prolate spheroid, r < 0, only\n\
+the direct calculation is supported.  The results of the inverse\n\
+calculation are undefined.  The -n option uses the international\n\
+ellipsoid (equivalent to \"-e 6378388 297\").\n\
 \n\
 Output of angles is as decimal degrees.  If -d is specified the output\n\
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',\n\
 and \" are used to denote degrees, minutes, and seconds, with the least\n\
 significant designator optional.  By default, latitude precedes\n\
 longitude for each point; however on input either may be given first by\n\
-appending N or S to the latitude and E or W to the longitude.  s12 is\n\
-always given in meters.\n\
+appending N or S to the latitude and E or W to the longitude.  Azimuths\n\
+(measured clockwise from north) give the heading of the geodesic.  The\n\
+azimuth azi2 is the forward azimuth (the heading beyond point 2).  If\n\
+the -b flag is given, azi2 is converted to a back azimuth (the direction\n\
+back to point 1) for output.\n\
 \n\
-NEED TO DOCUMENT SENSE of azi2 -b\n\
+s12 is given in meters, unless the -a flag is given.  In that case, s12\n\
+(on both input and output) are given in terms of arc length on the\n\
+auxiliary sphere (measured in degrees).  In these terms, 180 degrees is\n\
+the distance from one equator crossing to the next or from the minimum\n\
+latitude to the maximum latitude.  Distances greater than 180 degrees do\n\
+not correspond to shortest paths.\n\
 \n\
 The output lines consist of the three quantities needs to complete the\n\
 specification of the geodesic.  With the -f option, each line of output\n\
