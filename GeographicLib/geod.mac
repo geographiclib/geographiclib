@@ -233,14 +233,15 @@ printcode(maxpow):=(
 
 /* FORMAT FOR DISPLAY */
 
-disptaufactor(ord):=block([tt:expand(ratdisrep(taylor(T,u2,0,ord))),ttt],
+disptaufactor(ord):=block(
+  [tt:expand(ratdisrep(taylor(T,u2,0,ord))),ttt,linel:600],
   for j:1 thru ord do (ttt:coeff(tt,u2,j),
     print(concat(if j = 1 then "T = 1 " else "      ",
         if ttt>0 then "+ " else "- ",
         string(abs(ttt)), " * ", string(u^(2*j)),if j=ord then ";" else ""))))$
 
 disptaucoeff(ord):=for i:1 thru ord do
-block([tt:expand(ratdisrep(taylor(t[i],u2,0,ord))),ttt],
+block([tt:expand(ratdisrep(taylor(t[i],u2,0,ord))),ttt,linel:600],
   print(),
   for j:i thru ord do (ttt:coeff(tt,u2,j), print(concat(
         if j = i then concat("t[",string(i),"] = ") else "       ",
@@ -249,7 +250,7 @@ block([tt:expand(ratdisrep(taylor(t[i],u2,0,ord))),ttt],
         if j=ord then ";" else ""))))$
 
 dispsigcoeff(ord):=for i:1 thru ord do
-block([tt:expand(ratdisrep(taylor(tp[i],u2,0,ord))),ttt],
+block([tt:expand(ratdisrep(taylor(tp[i],u2,0,ord))),ttt,linel:600],
   print(),
   for j:i thru ord do (ttt:coeff(tt,u2,j), print(concat(
         if j = i then concat("t'[",string(i),"] = ") else "        ",
@@ -257,8 +258,8 @@ block([tt:expand(ratdisrep(taylor(tp[i],u2,0,ord))),ttt],
         string(abs(ttt)), " * ", string(u^(2*j)),
         if j=ord then ";" else ""))))$
 
-dispetafactor(ord):=block([tt:ratdisrep(taylor(H,f,0,ord)),
-  ttt,t4],
+dispetafactor(ord):=block(
+  [tt:ratdisrep(taylor(H,f,0,ord)),ttt,t4,linel:600],
   print("H = - f"),
   for j:2 thru ord do (ttt:coeff(tt,f,j),
     t4:inpart(ttt,1,2),
@@ -271,8 +272,7 @@ dispetafactor(ord):=block([tt:ratdisrep(taylor(H,f,0,ord)),
         if j = ord then ";" else ""))))$
 
 dispetacoeff(ord):=for i:1 thru ord do
-block([tt:ratdisrep(taylor(h[i],f,0,ord)),
-  ttt,t4],
+block([tt:ratdisrep(taylor(h[i],f,0,ord)),ttt,t4,linel:600],
   for j:i thru ord do (ttt:coeff(tt,f,j),
     t4:inpart(ttt,1,2),
     ttt:t4*ttt,

@@ -10,9 +10,6 @@
 #if !defined(GEODESIC_HPP)
 #define GEODESIC_HPP "$Id$"
 
-#define ITER 1
-#define VINCENTY 0
-
 #if !defined(GEOD_TAU_ORD)
 /**
  * The order of the series relating \e s and \e sigma when expanded in powers
@@ -20,6 +17,7 @@
  **********************************************************************/
 #define GEOD_TAU_ORD 6
 #endif
+
 #if !defined(GEOD_ETA_ORD)
 /**
  * The order of the series relating \e lambda and \e eta when expanded in
@@ -51,7 +49,7 @@ namespace GeographicLib {
    * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e
    * lon2, \e azi2.  This is the \e direct geodesic problem.  (If \e s12 is
    * sufficiently large that the geodesic wraps more than halfway around the
-   * earth, there will be a true geodesic between the points with a smaller \e
+   * earth, there will be another geodesic between the points with a smaller \e
    * s12.)
    *
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e
@@ -64,9 +62,9 @@ namespace GeographicLib {
    * use the arc length (in degrees) on the auxiliary sphere.  This is a
    * mathematical construct used in solving the geodesic problems.  However, an
    * arc length in excess of 180<sup>o</sup> indicates that the geodesic is not
-   * a true geodesic (there's a shorter geodesic connecting the points).  In
-   * addition, the arc length between an equatorial crossing and the next
-   * extremum of latitude for a geodesic is 90<sup>o</sup>.
+   * a shortest path.  In addition, the arc length between an equatorial
+   * crossing and the next extremum of latitude for a geodesic is
+   * 90<sup>o</sup>.
    *
    * The calculations are accurate to better than 12 nm.  (See \ref geoderrors
    * for details.)
@@ -148,8 +146,9 @@ namespace GeographicLib {
 
     /**
      * Constructor for a ellipsoid radius \e a (meters) and reciprocal
-     * flattening \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
-     * (i.e., a sphere).
+     * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
+     * (i.e., a sphere).  Negative \e r (prolate ellipsoid) is support only for
+     * direct calculations.
      **********************************************************************/
     Geodesic(double a, double r) throw();
 
@@ -171,7 +170,7 @@ namespace GeographicLib {
      * with point 1 given by latitude, \e lat1, longitude, \e lon1, and azimuth
      * \e azi1 (in degrees).  Calls to GeodesicLine::Position return the
      * position and azimuth for point 2 a specified distance away.  Using
-     * GeodesicLine::Position is approximately 2.5 faster than calling
+     * GeodesicLine::Position is approximately 2.1 faster than calling
      * Geodesic::Direct.
      **********************************************************************/
     GeodesicLine Line(double lat1, double lon1, double azi1) const throw();
@@ -187,19 +186,11 @@ namespace GeographicLib {
     double Inverse(double lat1, double lon1, double lat2, double lon2,
 		   double& s12, double& azi1, double& azi2) const throw();
 
-#if 0
-    double InverseB(double lat1, double lon1, double lat2, double lon2,
-		    double& s12, double& azi1, double& azi2) const throw();
-#endif
-
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
     const static Geodesic WGS84;
-#if ITER
-    mutable int iter, iterx;
-#endif
   };
 
   /**
@@ -249,9 +240,6 @@ namespace GeographicLib {
       _sScale, _etaFactor, _dtau1, _dlam1;
     double _sigCoeff[ntau > nsig ? (ntau ? ntau : 1) : (nsig ? nsig : 1)],
       _etaCoeff[neta ? neta : 1];
-#if VINCENTY
-    double _sbet1, _cbet1, _calp1;
-#endif
 
     GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1)
       throw();
@@ -272,8 +260,8 @@ namespace GeographicLib {
      * \e azi2 (in degrees) of the point 2 which is a distance, \e s12 (in
      * meters), from point 1.  \e s12 can be signed.  If \e arcmode (default
      * false) is set to true, \e s12 is interpreted as the arc length (in
-     * degrees) on the auxiliary sphere.  Returned value is the arc length (in
-     * degrees).
+     * degrees) on the auxiliary sphere; this speeds up the calculation by a
+     * factor of 1.6.  Returned value is the arc length (in degrees).
      **********************************************************************/
     double Position(double s12, double& lat2, double& lon2, double& azi2,
 		    bool arcmode = false)

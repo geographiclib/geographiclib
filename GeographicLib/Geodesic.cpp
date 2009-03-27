@@ -17,7 +17,7 @@
  *   - sigma = arc length along greate circle
  *   - s = distance
  *   - tau = scaled distance (= sigma at multiples of pi/2)
- * - at previous northwards equator crossing
+ * - at northwards equator crossing
  *   - beta = phi = 0
  *   - chi = lambda = 0
  *   - alpha = alpha0
@@ -26,15 +26,10 @@
  * - s and c prefixes mean sin and cos
  **********************************************************************/
 
-#define DEBUG 1
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
-#if DEBUG
-#include <iostream>
-#include <iomanip>
-#endif
 
 #define GEODESIC_CPP "$Id$"
 
@@ -98,10 +93,6 @@ namespace GeographicLib {
   double Geodesic::Inverse(double lat1, double lon1, double lat2, double lon2,
 			   double& s12, double& azi1, double& azi2)
     const throw() {
-#if ITER
-    iter = 0; iterx = 0;
-    // cerr << setprecision(12);
-#endif
     lon1 = AngNormalize(lon1);
     double lon12 = AngNormalize(AngNormalize(lon2) - lon1);
     // If very close to being on the same meridian, then make it so.
@@ -316,7 +307,6 @@ namespace GeographicLib {
 	}
 	// Now apply Newton's method to solve for salp2, calp2
 	for (unsigned i = 0; i < 30; ++i) {
-	  ++iterx;
 	  double
 	    v = calp2 * (salp2 + x) - y * salp2,
 	    dv = - calp2 * y - salp2 * x +
@@ -344,153 +334,6 @@ namespace GeographicLib {
     SinCosNorm(salp1, calp1);
   }
 
-
-#if 0
-  double Geodesic::InverseB(double lat1, double lon1, double lat2, double lon2,
-			   double& s12, double& azi1, double& azi2)
-    const throw() {
-    double lon12 = AngNormalize(AngNormalize(lon2) - lon1);
-    // If very close to being on the same meridian, then make it so.
-    // Not sure this is necessary...
-    lon12 = AngRound(lon12);
-    // Make longitude difference positive.
-    int lonsign = lon12 >= 0 ? 1 : -1;
-    lon12 *= lonsign;
-    // If really close to the equator, treat as on equator.
-    lat1 = AngRound(lat1);
-    lat2 = AngRound(lat2);
-
-    double lon12p = 180 - lon12;
-    
-    double
-      phi1 = lat1 * Constants::degree(),
-      phi2 = lat2 * Constants::degree(),
-      delta = phi2 - phi1,
-      sigma = phi1 + phi2,
-      sigmap = atan2( _f1 * sin(sigma),
-		      cos(sigma) + _e2 * sin(phi1) * sin(phi2)),
-      deltap = atan2( _f1 * sin(delta),
-		      cos(delta) - _e2 * sin(phi1) * sin(phi2)),
-      xi = cos(sigmap/2),
-      xip = sin(sigmap/2),
-      eta = sin(deltap/2),
-      etap = cos(deltap/2),
-      beta1 = atan2(_f1 * sin(phi1), cos(phi1)),
-      beta2 = atan2(_f1 * sin(phi2), cos(phi2)),
-      x = sin(beta1)*sin(beta2),
-      y = cos(beta1)*cos(beta2),
-      lam12 = lon12 * Constants::degree(),
-      lam12p = lon12p * Constants::degree(),
-      c = y * cos(lam12) + x;
-    int mode;
-    double theta;
-    double Gamma;
-    if (c >= 0) {
-      mode = 0;
-      theta = lam12 * (1 + _f * y);
-    } else if (c >= -cos(3*Constants::degree() * cos(beta1))) {
-      mode = 1;
-      theta = lam12p;
-    } else {
-      double
-	r = _f * Constants::pi() * sq(cos(beta1)) *
-	(1 - _f/4 * (1 + _f) * sq(sin(beta1)) + 3 * sq(_f * sq(sin(beta1)))/16),
-	d1 = lam12p * cos(beta1) - r,
-	d2 = abs(sigmap) + r,
-	q = lam12p/(_f * Constants::pi()),
-	f1 = _f/4 * (1 + _f/2),
-	gamma0 = q + f1 * q - f1 * q * sq(q);
-      if (sigma != 0) {
-	mode = 2;
-	double
-	  a0 = atan2(d1, d2),
-	  b0 = asin(f / hypot(d1, d2)),
-	  psi = a0 + b0,
-	  j = gamma0 / cos(beta1),
-	  k = (1 + f1) * abs(sigmap) * (1 - _f*y) / (_f * Constants::pi() * y),
-	  j1 = j / (1 + k * sec(psi)),
-	  psip = asin(j1),
-	  psipp = asin((cos(beta1) / cos(beta2)) * j1);
-	theta = 2 * atan2(tan((psip + psipp)/2) * sin(abs(sigmap)/2),
-			  cos(deltap/2));
-      } else {
-	if (d1 > 0)
-	  mode = 3;
-	  theta = lam12p;
-	else if (d1 == 0) {
-	  mode = 4;
-	  azi1 = azi2 = Constants::pi()/2;
-	  Gamma = sq(sin(beta1)) ?
-	  s12 = _f1 * _a * A;
-	} else {
-	  mode = 5;
-	  gamma = gama0;
-	  double D;
-	  for (unsigned i = 0; i < 20; ++i) {
-	    Gamma = 1 - sq(gamma);
-	    D = _f * ( 1 + _f ) / 4 - 3 * sq(_f) * Gamma / 16;
-	    gamma = q / ( 1 - D * Gamma);
-	  }
-	  double
-	    m = 1 - q * sec(beta1),
-	    n = D * Gamma / ( 1 - D * Gamma),
-	    w = m - n + m * n;;
-	  if (w <= 0)
-	    azi1 = Constants::pi()/2;
-	  else
-	    azi1 = Constants::pi()/2 - 2 * asin(sqrt(w / 2));
-	  azi2 = Constants::pi() - azi1;
-	}
-      }
-      if (mode < 4) {
-	for (unsigned i = 0; i < 10; ++i) {
-	  double g, h;
-	  if (mode == 0) {
-	    g = hypot(eta * cos(theta/2),  xi * sin(theta/2));
-	    h = hypot(etap * cos(theta/2),  xip * sin(theta/2));
-	  } else {
-	    g = hypot(eta * sin(theta/2),  xi * cos(theta/2));
-	    h = hypot(etap * sin(theta/2),  xip * cos(theta/2));
-	  }
-	  double
-	    sigma = 2 * atan2(g, h),
-	    J = 2 * g * h,
-	    K = sq(h) - sq(g),
-	    gamma = y * sin(theta) / J;
-	  Gamma = 1 - sq(gamma);
-	  double
-	    zeta = Gamma * K - 2 * x,
-	    zetap = zeta + x,
-	    D = _f * ( 1 + _f ) / 4 - 3 * sq(_f) * Gamma / 16,
-	    E = (1 - D * Gamma) * _f * gamma *
-	    (sigma + (zeta + D*K*(2*sq(zeta)-sq(Gamma)))),
-	    F = mode == 0 ? (theta - lon12 - E) :
-	    (theta - lon12p + E),
-	    G = _f * sq(gamma) * (1 - 2*D*Gamma) +
-	    _f * zetap*(sigma/J) * (1 - D*Gamma + _f*sq(gamma)/2) +
-	    sq(_f)*zeta*zetap/4;
-	  theta -= F/(1-G);
-	}
-	double alpha = mode == 0 ? atan2(xi * tan(theta/2), eta) :
-	  atan2(etap * tan(theta/2), xip);
-	    
-	    
-	    
-	double 
-	  
-	    
-	  
-
-	      // minus signs give range [-180, 180). 0- converts -0 to +0.
-    azi1 = 0 - atan2(- swapp * lonsign * salp1,
-		     + swapp * latsign * calp1) / Constants::degree();
-    azi2 = 0 - atan2(- swapp * lonsign * salp2,
-		     + swapp * latsign * calp2) / Constants::degree();
-    // Returned value in [0, 180]
-    return sig12;
-  }
-#endif
-
   double Geodesic::Lambda12(double sbet1, double cbet1,
 			    double sbet2, double cbet2,
 			    double salp1, double calp1,
@@ -502,9 +345,6 @@ namespace GeographicLib {
 			    bool diffp, double& dlam12, double c[])
     const throw() {
 
-#if ITER
-    if (diffp) ++iter;
-#endif
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This cases has already been
       // handled.
@@ -597,10 +437,6 @@ namespace GeographicLib {
 	salp0 * lamscale * deta12;
     }
 
-#if ALTAZI
-    salp2 = hypot(salp0, calp0 * schi2);
-    calp2 = calp0 * cchi2;
-#endif
     u2 = mu * _ep2;
     return lam12;
   }
@@ -637,9 +473,6 @@ namespace GeographicLib {
     cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
     Geodesic::SinCosNorm(sbet1, cbet1);
 
-#if VINCENTY
-    _sbet1 = sbet1; _cbet1 = cbet1; _calp1 = calp1;
-#endif
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
     _salp0 = salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
     // Alt: calp0 = hypot(sbet1, calp1 * cbet1).  The following
@@ -710,12 +543,7 @@ namespace GeographicLib {
     lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree();
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);
     // minus signs give range [-180, 180). 0- converts -0 to +0.
-#if VINCENTY
-    azi2 = 0 - atan2(-_salp0, - _sbet1 * ssig12 + _cbet1 * csig12 * _calp1) /
-      Constants::degree();
-#else
     azi2 = 0 - atan2(-salp2, calp2) / Constants::degree();
-#endif
   }
 
   double GeodesicLine::Position(double s12,
