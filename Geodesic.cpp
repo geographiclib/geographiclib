@@ -226,9 +226,7 @@ namespace GeographicLib {
       sig12 /= Constants::degree();
     }
 
-    // Convert calp, salp to head accounting for
-    // lonsign, swapp, latsign.  The minus signs up result in [-180, 180).
-
+    // Convert calp, salp to azimuth accounting for lonsign, swapp, latsign.
     if (swapp < 0) {
       swap(salp1, salp2);
       swap(calp1, calp2);
