@@ -49,39 +49,22 @@ namespace GeographicLib {
   //   eps2 * epsilon() > 0
   //   eps2 + epsilon() == epsilon()
   const double Geodesic::eps2 = sqrt(numeric_limits<double>::min());
-  const double Geodesic::tol0 =  numeric_limits<double>::epsilon();
+  const double Geodesic::tol0 = numeric_limits<double>::epsilon();
   const double Geodesic::tol1 = 100 * tol0;
   const double Geodesic::tol2 = sqrt(numeric_limits<double>::epsilon());
-  const double Geodesic::xthresh =  10 * tol2;
+  const double Geodesic::xthresh = 10 * tol2;
 
   Geodesic::Geodesic(double a, double r) throw()
     : _a(a)
-    , _f(r > 0 ? 1 / r : 0)
+    , _f(r != 0 ? 1 / r : 0)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / sq(_f1))	// e2 / (1 - e2)
     , _b(_a * _f1)
   {}
 
-  const Geodesic Geodesic::WGS84(Constants::WGS84_a(),
-				 Constants::WGS84_r());
+  const Geodesic Geodesic::WGS84(Constants::WGS84_a(), Constants::WGS84_r());
 
-#if 0
-  double Geodesic::SinSeries(double sinx, double cosx,
-			     const double c[], int n) throw() {
-    // Evaluate y = sum(c[i - 1] * sin(2 * i * x), i, 1, n) using Clenshaw
-    // summation.  (Indices into c offset by 1.)  THIS REQUIRES THAT n BE
-    // POSITIVE.
-    double
-      ar = 2 * (sq(cosx) - sq(sinx)), // 2 * cos(2 * x)
-      y0 = c[n - 1], y1 = 0;	      // Accumulators for sum
-    for (int j = n; --j;) {	      // j = n-1 .. 1
-      double y2 = y1;
-      y1 = y0; y0  = ar * y1 - y2 + c[j - 1];
-    }
-    return 2 * sinx * cosx * y0; // sin(2 * x) * y0
-  }
-#else
   double Geodesic::SinSeries(double sinx, double cosx,
 			     const double c[], int n) throw() {
     // Evaluate y = sum(c[i - 1] * sin(2 * i * x), i, 1, n) using Clenshaw
@@ -89,17 +72,15 @@ namespace GeographicLib {
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
     double
       ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-      y0 = n & 1 ? c[--n] : 0,		      // Accumulators for sum
-      y1 = 0;
+      y0 = n & 1 ? c[--n] : 0, y1 = 0;	      // Accumulators for sum
     // Now n is even
     while (n) {
-      // Unroll loop x 2, so accumulations return do their original role
+      // Unroll loop x 2, so accumulators return to their original role
       y1 = ar * y0 - y1 + c[--n];
       y0 = ar * y1 - y0 + c[--n];
     }
     return 2 * sinx * cosx * y0; // sin(2 * x) * y0
   }
-#endif
 
   GeodesicLine Geodesic::Line(double lat1, double lon1, double azi1)
     const throw() {
@@ -107,17 +88,11 @@ namespace GeographicLib {
   }
 
   double Geodesic::Direct(double lat1, double lon1, double azi1, double s12,
-			  double& lat2, double& lon2, double& azi2)
+			  double& lat2, double& lon2, double& azi2,
+			  bool arcmode)
     const throw() {
     GeodesicLine l(*this, lat1, lon1, azi1);
-    return l.Position(s12, lat2, lon2, azi2);
-  }
-
-  void Geodesic::DirectA(double lat1, double lon1, double azi1, double sig12,
-			 double& lat2, double& lon2, double& azi2)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1);
-    l.PositionA(sig12, lat2, lon2, azi2);
+    return l.Position(s12, lat2, lon2, azi2, arcmode);
   }
 
   double Geodesic::Inverse(double lat1, double lon1, double lat2, double lon2,
@@ -177,14 +152,9 @@ namespace GeographicLib {
     SinCosNorm(sbet2, cbet2);
 
     double
-      // How close to antipodal lat?
-      sbet12 = sbet2 * cbet1 - cbet2 * sbet1, // bet2 - bet1 in [0, pi)
-      // cbet12 = cbet2 * cbet1 + sbet2 * sbet1,
-      sbet12a = sbet2 * cbet1 + cbet2 * sbet1, // bet2 + bet1 (-pi, 0]
-      //      cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
       lam12 = lon12 * Constants::degree(),
-      clam12 = cos(lam12),	// lon12 == 90 isn't interesting
-      slam12 = lon12 == 180 ? 0 :sin(lam12);
+      slam12 = lon12 == 180 ? 0 :sin(lam12),
+      clam12 = cos(lam12);	// lon12 == 90 isn't interesting
 
     double sig12, calp1, salp1, calp2, salp2,
       c[ntau > neta ? (ntau ? ntau : 1) : (neta ? neta : 1)];
@@ -221,93 +191,12 @@ namespace GeographicLib {
       sig12 = lon12 / _f1;
     } else {
 
-      // Now point1 and point2 belong within a hemisphere bounded by a line of
-      // longitude (lon = lon12/2 +/- 90).
+      // Now point1 and point2 belong within a hemisphere bounded by a
+      // meridian.
 
-      {
-	// Figure a starting point for Newton's method
-	double csig12, ssig12, lamcrita;
-	csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
-	salp1 = cbet2 * slam12;
-	calp1 = clam12 >= 0 ?
-	  // The factor _f1/n1 applies an ellipsoidal correction for close
-	  // points.  This saves 1 iteration of Newton's method in the case of
-	  // short lines.
-	  sbet12 * _f1/n1 + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
-	  sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
-	ssig12 = hypot(salp1, calp1);
-	lamcrita = -cbet1 * etaFactor(_f, sq(sbet1)) * Constants::pi();
-
-	if (csig12 >= 0 || ssig12 >= 3 * lamcrita * cbet1) {
-	  // Nothing to do, zeroth order spherical approximation is OK
-	} else {
-	  double
-	    x = (lam12 - Constants::pi())/lamcrita,
-	    y = sbet12a / (lamcrita * cbet1);
-	  if (y > -tol1 && x >  -1 - xthresh) {
-	    // strip near cut
-	    salp1 = min(1.0, -x);
-	    calp1 = - sqrt(1 - sq(salp1));
-	  } else {
-	    // estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0
-	    double salp2, calp2;
-	    if (y == 0) {
-	      salp2 = 1; calp2 = 0; // This applies only for x < -1
-	    } else if (y > - 0.027 && x > -1.09 && x < -0.91) {
-	      // Near singular point we have
-	      //     t^3 - 2*a*t - 2 = 0
-	      // where a = (x + 1)/|y|^(2/3), t = calp2/|y|^(1/3)
-	      double
-		y3 = cbrt(-y),
-		a = (x + 1) / sq(y3),
-		a3 = sq(a) * a,
-		disc = 729 - 216 * a3, // sq(3 * sqrt(3) * sqrt(27 - 8 * a3))
-		b = 4 * a3 - 27,
-		t3 = a;		       // t = - 3 / t3
-	      if (disc >= 0) {
-		// b < 0 here, so use neg sqrt
-		double s = cbrt( (b - sqrt(disc)) / 4 );
-		t3 += s + sq(a)/s;
-	      } else {
-		double ang = atan2(sqrt(-disc), b) + 2 * Constants::pi();
-		t3 += 2 * a * cos(ang/3);
-	      }
-	      calp2 = - 3 * y3 / t3;
-	      // calp2 is small so sqrt is safe
-	      salp2 = sqrt(1 - sq(calp2));
-	    } else {
-	      salp2 = 0;
-	      calp2 = 1;
-	    }
-	    // Now apply Newton's method to solve for salp2, calp2
-	    for (unsigned i = 0; i < 30; ++i) {
-	      ++iterx;
-	      double
-		v = calp2 * (salp2 + x) - y * salp2,
-		dv = - calp2 * y - salp2 * x +
-		(calp2 - salp2) * (calp2 + salp2),
-		da = -v/dv,
-		sda = sin(da),
-		cda = cos(da),
-		nsalp2 = salp2 * cda + calp2 * sda;
-	      if (v == 0)
-		break;
-	      calp2 = max(0.0, calp2 * cda - salp2 * sda);
-	      salp2 = max(0.0, nsalp2);
-	      SinCosNorm(salp2, calp2);
-	      if (abs(da) < tol2)
-		break;
-	    }
-	    // estimate chi12
-	    double r = hypot(y, salp2 + x) * lamcrita * salp2,
-	      // chi12 = pi - lamcrita * r * salp2
-	      schi12 = sin(r), cchi12 = -cos(r);
-	    salp1 = cbet2 * schi12;
-	    calp1 = sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
-	  }
-	}
-	SinCosNorm(salp1, calp1);
-      }
+      // Figure a starting point for Newton's method
+      InverseStart(sbet1, cbet1, n1, sbet2, cbet2,
+		   lam12, slam12, clam12, salp1, calp1);
 
       // Newton's method
       double ssig1, csig1, ssig2, csig2, u2;
@@ -340,7 +229,7 @@ namespace GeographicLib {
       }
 	
       tauCoeff(u2, c);
-      s12 =  _b * tauFactor(u2) *
+      s12 = _b * tauFactor(u2) *
 	(sig12 + (SinSeries(ssig2, csig2, c, ntau) -
 		  SinSeries(ssig1, csig1, c, ntau)));
       sig12 /= Constants::degree();
@@ -362,6 +251,245 @@ namespace GeographicLib {
     // Returned value in [0, 180]
     return sig12;
   }
+
+  void Geodesic::InverseStart(double sbet1, double cbet1, double n1,
+			 double sbet2, double cbet2,
+			 double lam12, double slam12, double clam12,
+			 double& salp1, double& calp1) const throw() {
+    // Figure a starting point for Newton's method
+    double
+      // How close to antipodal lat?
+      sbet12 = sbet2 * cbet1 - cbet2 * sbet1,  // bet2 - bet1 in [0, pi)
+      sbet12a = sbet2 * cbet1 + cbet2 * sbet1; // bet2 + bet1 (-pi, 0]
+
+    double csig12, ssig12, lamcrita;
+    csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
+    salp1 = cbet2 * slam12;
+    calp1 = clam12 >= 0 ?
+      // The factor _f1/n1 applies an ellipsoidal correction for close points.
+      // This saves 1 iteration of Newton's method in the case of short lines.
+      sbet12 * _f1/n1 + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
+      sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
+    ssig12 = hypot(salp1, calp1);
+    lamcrita = -cbet1 * etaFactor(_f, sq(sbet1)) * Constants::pi();
+
+    if (csig12 >= 0 || ssig12 >= 3 * lamcrita * cbet1) {
+      // Nothing to do, zeroth order spherical approximation is OK
+    } else {
+      double
+	x = (lam12 - Constants::pi())/lamcrita,
+	y = sbet12a / (lamcrita * cbet1);
+      if (y > -tol1 && x >  -1 - xthresh) {
+	// strip near cut
+	salp1 = min(1.0, -x);
+	calp1 = - sqrt(1 - sq(salp1));
+      } else {
+	// estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0
+	double salp2, calp2;
+	if (y == 0) {
+	  salp2 = 1; calp2 = 0; // This applies only for x < -1
+	} else if (y > - 0.027 && x > -1.09 && x < -0.91) {
+	  // Near singular point we have
+	  //     t^3 - 2*a*t - 2 = 0
+	  // where a = (x + 1)/|y|^(2/3), t = calp2/|y|^(1/3)
+	  double
+	    y3 = cbrt(-y),
+	    a = (x + 1) / sq(y3),
+	    a3 = sq(a) * a,
+	    disc = 729 - 216 * a3, // sq(3 * sqrt(3) * sqrt(27 - 8 * a3))
+	    b = 4 * a3 - 27,
+	    t3 = a;		// t = - 3 / t3
+	  if (disc >= 0) {
+	    // b < 0 here, so use neg sqrt
+	    double s = cbrt( (b - sqrt(disc)) / 4 );
+	    t3 += s + sq(a)/s;
+	  } else {
+	    double ang = atan2(sqrt(-disc), b) + 2 * Constants::pi();
+	    t3 += 2 * a * cos(ang/3);
+	  }
+	  calp2 = - 3 * y3 / t3;
+	  // calp2 is small so sqrt is safe
+	  salp2 = sqrt(1 - sq(calp2));
+	} else {
+	  salp2 = 0;
+	  calp2 = 1;
+	}
+	// Now apply Newton's method to solve for salp2, calp2
+	for (unsigned i = 0; i < 30; ++i) {
+	  ++iterx;
+	  double
+	    v = calp2 * (salp2 + x) - y * salp2,
+	    dv = - calp2 * y - salp2 * x +
+	    (calp2 - salp2) * (calp2 + salp2),
+	    da = -v/dv,
+	    sda = sin(da),
+	    cda = cos(da),
+	    nsalp2 = salp2 * cda + calp2 * sda;
+	  if (v == 0)
+	    break;
+	  calp2 = max(0.0, calp2 * cda - salp2 * sda);
+	  salp2 = max(0.0, nsalp2);
+	  SinCosNorm(salp2, calp2);
+	  if (abs(da) < tol2)
+	    break;
+	}
+	// estimate chi12
+	double r = hypot(y, salp2 + x) * lamcrita * salp2,
+	  // chi12 = pi - lamcrita * r * salp2
+	  schi12 = sin(r), cchi12 = -cos(r);
+	salp1 = cbet2 * schi12;
+	calp1 = sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
+      }
+    }
+    SinCosNorm(salp1, calp1);
+  }
+
+
+#if 0
+  double Geodesic::InverseB(double lat1, double lon1, double lat2, double lon2,
+			   double& s12, double& azi1, double& azi2)
+    const throw() {
+    double lon12 = AngNormalize(AngNormalize(lon2) - lon1);
+    // If very close to being on the same meridian, then make it so.
+    // Not sure this is necessary...
+    lon12 = AngRound(lon12);
+    // Make longitude difference positive.
+    int lonsign = lon12 >= 0 ? 1 : -1;
+    lon12 *= lonsign;
+    // If really close to the equator, treat as on equator.
+    lat1 = AngRound(lat1);
+    lat2 = AngRound(lat2);
+
+    double lon12p = 180 - lon12;
+    
+    double
+      phi1 = lat1 * Constants::degree(),
+      phi2 = lat2 * Constants::degree(),
+      delta = phi2 - phi1,
+      sigma = phi1 + phi2,
+      sigmap = atan2( _f1 * sin(sigma),
+		      cos(sigma) + _e2 * sin(phi1) * sin(phi2)),
+      deltap = atan2( _f1 * sin(delta),
+		      cos(delta) - _e2 * sin(phi1) * sin(phi2)),
+      xi = cos(sigmap/2),
+      xip = sin(sigmap/2),
+      eta = sin(deltap/2),
+      etap = cos(deltap/2),
+      beta1 = atan2(_f1 * sin(phi1), cos(phi1)),
+      beta2 = atan2(_f1 * sin(phi2), cos(phi2)),
+      x = sin(beta1)*sin(beta2),
+      y = cos(beta1)*cos(beta2),
+      lam12 = lon12 * Constants::degree(),
+      lam12p = lon12p * Constants::degree(),
+      c = y * cos(lam12) + x;
+    int mode;
+    double theta;
+    double Gamma;
+    if (c >= 0) {
+      mode = 0;
+      theta = lam12 * (1 + _f * y);
+    } else if (c >= -cos(3*Constants::degree() * cos(beta1))) {
+      mode = 1;
+      theta = lam12p;
+    } else {
+      double
+	r = _f * Constants::pi() * sq(cos(beta1)) *
+	(1 - _f/4 * (1 + _f) * sq(sin(beta1)) + 3 * sq(_f * sq(sin(beta1)))/16),
+	d1 = lam12p * cos(beta1) - r,
+	d2 = abs(sigmap) + r,
+	q = lam12p/(_f * Constants::pi()),
+	f1 = _f/4 * (1 + _f/2),
+	gamma0 = q + f1 * q - f1 * q * sq(q);
+      if (sigma != 0) {
+	mode = 2;
+	double
+	  a0 = atan2(d1, d2),
+	  b0 = asin(f / hypot(d1, d2)),
+	  psi = a0 + b0,
+	  j = gamma0 / cos(beta1),
+	  k = (1 + f1) * abs(sigmap) * (1 - _f*y) / (_f * Constants::pi() * y),
+	  j1 = j / (1 + k * sec(psi)),
+	  psip = asin(j1),
+	  psipp = asin((cos(beta1) / cos(beta2)) * j1);
+	theta = 2 * atan2(tan((psip + psipp)/2) * sin(abs(sigmap)/2),
+			  cos(deltap/2));
+      } else {
+	if (d1 > 0)
+	  mode = 3;
+	  theta = lam12p;
+	else if (d1 == 0) {
+	  mode = 4;
+	  azi1 = azi2 = Constants::pi()/2;
+	  Gamma = sq(sin(beta1)) ?
+	  s12 = _f1 * _a * A;
+	} else {
+	  mode = 5;
+	  gamma = gama0;
+	  double D;
+	  for (unsigned i = 0; i < 20; ++i) {
+	    Gamma = 1 - sq(gamma);
+	    D = _f * ( 1 + _f ) / 4 - 3 * sq(_f) * Gamma / 16;
+	    gamma = q / ( 1 - D * Gamma);
+	  }
+	  double
+	    m = 1 - q * sec(beta1),
+	    n = D * Gamma / ( 1 - D * Gamma),
+	    w = m - n + m * n;;
+	  if (w <= 0)
+	    azi1 = Constants::pi()/2;
+	  else
+	    azi1 = Constants::pi()/2 - 2 * asin(sqrt(w / 2));
+	  azi2 = Constants::pi() - azi1;
+	}
+      }
+      if (mode < 4) {
+	for (unsigned i = 0; i < 10; ++i) {
+	  double g, h;
+	  if (mode == 0) {
+	    g = hypot(eta * cos(theta/2),  xi * sin(theta/2));
+	    h = hypot(etap * cos(theta/2),  xip * sin(theta/2));
+	  } else {
+	    g = hypot(eta * sin(theta/2),  xi * cos(theta/2));
+	    h = hypot(etap * sin(theta/2),  xip * cos(theta/2));
+	  }
+	  double
+	    sigma = 2 * atan2(g, h),
+	    J = 2 * g * h,
+	    K = sq(h) - sq(g),
+	    gamma = y * sin(theta) / J;
+	  Gamma = 1 - sq(gamma);
+	  double
+	    zeta = Gamma * K - 2 * x,
+	    zetap = zeta + x,
+	    D = _f * ( 1 + _f ) / 4 - 3 * sq(_f) * Gamma / 16,
+	    E = (1 - D * Gamma) * _f * gamma *
+	    (sigma + (zeta + D*K*(2*sq(zeta)-sq(Gamma)))),
+	    F = mode == 0 ? (theta - lon12 - E) :
+	    (theta - lon12p + E),
+	    G = _f * sq(gamma) * (1 - 2*D*Gamma) +
+	    _f * zetap*(sigma/J) * (1 - D*Gamma + _f*sq(gamma)/2) +
+	    sq(_f)*zeta*zetap/4;
+	  theta -= F/(1-G);
+	}
+	double alpha = mode == 0 ? atan2(xi * tan(theta/2), eta) :
+	  atan2(etap * tan(theta/2), xip);
+	    
+	    
+	    
+	double 
+	  
+	    
+	  
+
+	      // minus signs give range [-180, 180). 0- converts -0 to +0.
+    azi1 = 0 - atan2(- swapp * lonsign * salp1,
+		     + swapp * latsign * calp1) / Constants::degree();
+    azi2 = 0 - atan2(- swapp * lonsign * salp2,
+		     + swapp * latsign * calp2) / Constants::degree();
+    // Returned value in [0, 180]
+    return sig12;
+  }
+#endif
 
   double Geodesic::Lambda12(double sbet1, double cbet1,
 			    double sbet2, double cbet2,
@@ -458,7 +586,7 @@ namespace GeographicLib {
 
       // Derivative of salp0 * lamscale * (sig + eta) wrt sig.  This
       // is from integral form of this expression.
-      dlamsig =  - _e2 * salp0 *
+      dlamsig = - _e2 * salp0 *
 	(dsig2 / (sqrt(1 - _e2 * (1 - mu * sq(ssig2))) + 1) -
 	 dsig1 / (sqrt(1 - _e2 * (1 - mu * sq(ssig1))) + 1)) ;
 
@@ -509,6 +637,9 @@ namespace GeographicLib {
     cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
     Geodesic::SinCosNorm(sbet1, cbet1);
 
+#if VINCENTY
+    _sbet1 = sbet1; _cbet1 = cbet1; _calp1 = calp1;
+#endif
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
     _salp0 = salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
     // Alt: calp0 = hypot(sbet1, calp1 * cbet1).  The following
@@ -532,7 +663,7 @@ namespace GeographicLib {
       mu = Geodesic::sq(_calp0),
       u2 = mu * g._ep2;
 
-    _sScale =  g._b * Geodesic::tauFactor(u2);
+    _sScale = g._b * Geodesic::tauFactor(u2);
     Geodesic::tauCoeff(u2, _sigCoeff);
     _dtau1 = Geodesic::SinSeries(_ssig1, _csig1, _sigCoeff, ntau);
     {
@@ -550,8 +681,8 @@ namespace GeographicLib {
     _dlam1 = Geodesic::SinSeries(_ssig1, _csig1, _etaCoeff, neta);
   }
 
-  void GeodesicLine::PositionB(double sig12, double ssig12, double csig12,
-			       double& lat2, double& lon2, double& azi2)
+  void GeodesicLine::ArcPosition(double sig12, double ssig12, double csig12,
+				 double& lat2, double& lon2, double& azi2)
   const throw() {
     double chi12, lam12, lon12;
     double ssig2, csig2, sbet2, cbet2, schi2, cchi2, salp2, calp2;
@@ -579,48 +710,54 @@ namespace GeographicLib {
     lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree();
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);
     // minus signs give range [-180, 180). 0- converts -0 to +0.
+#if VINCENTY
+    azi2 = 0 - atan2(-_salp0, - _sbet1 * ssig12 + _cbet1 * csig12 * _calp1) /
+      Constants::degree();
+#else
     azi2 = 0 - atan2(-salp2, calp2) / Constants::degree();
-  }
-
-  void GeodesicLine::PositionA(double sig12,
-			       double& lat2, double& lon2, double& azi2)
-  const throw() {
-    if (_sScale == 0)
-      // Uninitialized
-      return;
-    double sig12rad = sig12 * Constants::degree();
-    sig12 = abs(sig12);
-    sig12 -= 180 * floor(sig12 / 180);
-    double
-      ssig12 = sig12 == 0 ? 0 : sin(sig12rad),
-      csig12 = sig12 == 90 ? 0 : cos(sig12rad);
-    PositionB(sig12rad, ssig12, csig12, lat2, lon2, azi2);
+#endif
   }
 
   double GeodesicLine::Position(double s12,
-				double& lat2, double& lon2, double& azi2)
+				double& lat2, double& lon2, double& azi2,
+				bool arcmode)
   const throw() {
     if (_sScale == 0)
       // Uninitialized
       return 0;
-    double tau12, sig12, s, c;
-    tau12 = s12 / _sScale;
-    s = sin(tau12); c = cos(tau12);
-    sig12 = tau12 + (_dtau1 +
-		     // tau2 = tau1 + tau12
-		     Geodesic::SinSeries(_stau1 * c + _ctau1 * s,
-					 _ctau1 * c - _stau1 * s,
-					 _sigCoeff, nsig));
-    PositionB(sig12, sin(sig12), cos(sig12), lat2, lon2, azi2);
-    return sig12 /  Constants::degree();
+    double sig12, ssig12, csig12;
+    if (arcmode) {
+      // Interpret s12 as spherical arc length
+      sig12 = s12 * Constants::degree();
+      double s12a = abs(s12);
+      s12a -= 180 * floor(s12a / 180);
+      ssig12 = s12a ==  0 ? 0 : sin(sig12);
+      csig12 = s12a == 90 ? 0 : cos(sig12);
+    } else {
+      // Interpret s12 as distance
+      double
+	tau12 = s12 / _sScale,
+	s = sin(tau12),
+	c = cos(tau12);
+      sig12 = tau12 + (_dtau1 +
+		       // tau2 = tau1 + tau12
+		       Geodesic::SinSeries(_stau1 * c + _ctau1 * s,
+					   _ctau1 * c - _stau1 * s,
+					   _sigCoeff, nsig));
+      ssig12 = sin(sig12);
+      csig12 = cos(sig12);
+    }
+    ArcPosition(sig12, ssig12, csig12, lat2, lon2, azi2);
+    return arcmode ? s12 : sig12 /  Constants::degree();
   }
 
   // Generated by Maxima on 06:15:35 Fri, 3/13/2009 (GMT-5)
   //
   // Minor edits have been made: (1) remove trailing spaces, (2) promote
-  // integers of 10 digits or more to doubles; (3) rudimentary line-breaking.
+  // integers of 10 digits or more to doubles; (3) change 1/4 to 1/4.0; (4)
+  // rudimentary line-breaking.
 
-  // The scale factor to convert tau to s / b
+  // The scale factor, T, to convert tau to s / b
   double Geodesic::tauFactor(double u2) throw() {
     switch (tauord) {
     case 0:
@@ -660,7 +797,7 @@ namespace GeographicLib {
     }
   }
 
-  // Coefficients of sine series to convert sigma to tau
+  // Coefficients, t[k], of sine series to convert sigma to tau
   void Geodesic::tauCoeff(double u2, double t[]) throw() {
     double d = u2;
     switch (ntau) {
@@ -757,7 +894,7 @@ namespace GeographicLib {
     }
   }
 
-  // Coefficients of sine series to convert tau to sigma
+  // Coefficients, t'[k], of sine series to convert tau to sigma
   void Geodesic::sigCoeff(double u2, double tp[]) throw() {
     double d = u2;
     switch (nsig) {
@@ -857,7 +994,7 @@ namespace GeographicLib {
     }
   }
 
-  // The scale factor to convert eta to changes in lambda
+  // The scale factor, H, to convert eta to changes in lambda
   double Geodesic::etaFactor(double f, double mu) throw() {
   double g;
   switch (etaord) {
@@ -906,7 +1043,7 @@ namespace GeographicLib {
     return f * g;
   }
 
-  // Coefficients of sine series to convert sigma to eta
+  // Coefficients, h[k], of sine series to convert sigma to eta
   void Geodesic::etaCoeff(double f, double mu, double h[]) throw() {
     double s = f * mu, d = s;
     switch (neta) {
@@ -1002,7 +1139,7 @@ namespace GeographicLib {
     }
   }
 
-  // The derivative of etaFactor with respect to mu
+  // The derivative of etaFactor with respect to mu, dH/dmu
   double Geodesic::etaFactormu(double f, double mu) throw() {
   double g;
   switch (etaord) {
@@ -1013,7 +1150,7 @@ namespace GeographicLib {
       g = 0;
       break;
     case 2:
-      g = 1/4;
+      g = 1/4.0;
       break;
     case 3:
       g = (f*(2-3*mu)+2)/8;
@@ -1051,7 +1188,7 @@ namespace GeographicLib {
   }
 
   // Coefficients of sine series to convert sigma to the derivative of eta
-  // with respect to mu
+  // with respect to mu, dh[k]/dmu
   void Geodesic::etaCoeffmu(double f, double mu, double hp[]) throw() {
     double s = f * mu, d = f;
     switch (neta) {
