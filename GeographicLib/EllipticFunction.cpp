@@ -66,7 +66,6 @@ namespace GeographicLib {
     return (1 - e2 / 10 + e3 / 14 + e2 * e2 / 24 - 3 * e2 * e3 / 44) / sqrt(an);
   }
 
-
   double EllipticFunction::RD(double x, double y, double z) throw() {
     // Carlson, eqs 2.28 - 2.34
     double
@@ -201,24 +200,9 @@ namespace GeographicLib {
 
   double EllipticFunction::E(double sn, double cn, double dn) const throw() {
     double ei;
-    if (abs(sn) > tolJAC1) {
-      double
-	s = 1 / sn,
-	c = cn * s,
-	d = dn * s;
-      s *= s;
-      c *= c;
-      d *= d;
-      // Carlson, eq. 4.6
-      ei = RF(c, d, s) - _m / 3 * RD(c, d, s);
-    } else
-      // From A+S 16.22.1, 16.22.3, 17.2.10, we have for small sn, and cn > 0
-      // ei = sn
-      //      - (m-1)*sn^3/6
-      //      - (m^2+2*m-3)*sn^5/40
-      //      - (m^3+m^2+3*m-5)*sn^7/112
-      //    approx sn,  for sn < sqrt(6 * eps)
-      ei = abs(sn);
+    cn *= cn; dn *= dn;
+    // Carlson, eq. 4.6
+    ei = abs(sn) * (RF(cn, dn, 1.0) - (_m/3) * sn*sn * RD(cn, dn, 1.0));
     // Enforce usual trig-like symmetries
     if (cn < 0) {
       ei = 2 * E() - ei;

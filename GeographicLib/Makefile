@@ -61,7 +61,7 @@ FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
 	gauss-krueger-graticule-a thompson-tm-graticule-a
 
-MAXIMASOURCES = tm.mac ellint.mac tmseries.mac
+MAXIMASOURCES = tm.mac ellint.mac tmseries.mac geod.mac
 
 install: install-lib install-headers install-progs
 

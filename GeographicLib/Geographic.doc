@@ -1904,8 +1904,18 @@ is as degrees, minutes, seconds.  Input can be in either style.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  By default, latitude precedes
 longitude for each point; however on input either may be given first by
-appending N or S to the latitude and E or W to the longitude.  s12 is
-always given in meters.
+appending N or S to the latitude and E or W to the longitude.  Azimuths
+(measured clockwise from north) give the heading of the geodesic.  The
+azimuth azi2 is the forward azimuth (the heading beyond point 2).  If
+the -b flag is given, azi2 is converted to a back azimuth (the direction
+back to point 1) for output.
+
+s12 is given in meters, unless the -a flag is given.  In that case, s12
+(on both input and output) are given in terms of arc length on the
+auxiliary sphere (measured in degrees).  In these terms, 180 degrees is
+the distance from one equator crossing to the next or from the minimum
+latitude to the maximum latitude.  Distances greater than 180 degrees do
+not correspond to true geodesics.
 
 The output lines consist of the three quantities needs to complete the
 specification of the geodesic.  With the -f option, each line of output

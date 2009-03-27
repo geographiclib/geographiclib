@@ -14,6 +14,7 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/Constants.hpp"
 #include "GeographicLib/DMS.hpp"
 #include <string>
 #include <iostream>
@@ -23,7 +24,7 @@
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n] [-d] [-f] [-p prec] [-h]\n\
+"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r] [-d] [-b] [-f] [-p prec] [-h]\n\
 $Id$\n\
 \n\
 Perform geodesic calculations.\n\
@@ -62,6 +63,8 @@ longitude for each point; however on input either may be given first by\n\
 appending N or S to the latitude and E or W to the longitude.  s12 is\n\
 always given in meters.\n\
 \n\
+NEED TO DOCUMENT SENSE of azi2 -b\n\
+\n\
 The output lines consist of the three quantities needs to complete the\n\
 specification of the geodesic.  With the -f option, each line of output\n\
 is a complete geodesic specification consisting of seven quantities\n\
@@ -75,7 +78,6 @@ The minimum value of prec is 0 (1 m accuracy) and the maximum value is\n\
 -h prints this help.\n";
   return retval;
 }
-
 
 std::string LatLonString(double lat, double lon, int prec, bool dms) {
   using namespace GeographicLib;
@@ -98,7 +100,7 @@ std::string AzimuthString(double azi, int prec, bool dms) {
   else {
     std::ostringstream os;
     os << std::fixed << std::setprecision(prec + 5)
-       << azi;
+       << (azi >= 180 ? azi - 360 : azi);
     return os.str();
   }
 }
@@ -147,8 +149,12 @@ double ReadDistance(const std::string& s, bool arcmode) {
 
 int main(int argc, char* argv[]) {
   bool linecalc = false, inverse = false, arcmode = false,
-    international = false, dms = false, full = false;
+    dms = false, full = false;
+  double
+    a = GeographicLib::Constants::WGS84_a(),
+    r = GeographicLib::Constants::WGS84_r();
   double lat1, lon1, azi1, lat2, lon2, azi2, s12;
+  double azi2sense = 0;
   int prec = 3;
 
   for (int m = 1; m < argc; ++m) {
@@ -173,24 +179,33 @@ int main(int argc, char* argv[]) {
 	std::cerr << "ERROR: " << e.what() << "\n";
 	return usage(1);
       }
-    } else if (arg == "-n")
-      international = true;
+    } else if (arg == "-n") {
+      a = 6378388.0;
+      r = 297.0;
+    } else if (arg == "-e") {
+      for (unsigned i = 0; i < 2; ++i) {
+	if (++m == argc) return usage(1);
+	std::string s = std::string(argv[m]);
+	std::istringstream str(s);
+	if (!(str >> (i ? r : a))) return usage(1);
+      }
+    }
     else if (arg == "-d")
       dms = true;
+    else if (arg == "-b")
+      azi2sense = 180;
     else if (arg == "-f")
       full = true;
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
-      std::string a = std::string(argv[m]);
-      std::istringstream str(a);
+      std::string s = std::string(argv[m]);
+      std::istringstream str(s);
       if (!(str >> prec)) return usage(1);
     } else
       return usage(arg != "-h");
   }
 
-  const GeographicLib::Geodesic internat(6378388.0, 297.0);
-  const GeographicLib::Geodesic& geod = international ? internat :
-    GeographicLib::Geodesic::WGS84;
+  const GeographicLib::Geodesic geod(a, r);
   GeographicLib::GeodesicLine l;
   if (linecalc)
     l = geod.Line(lat1, lon1, azi1);
@@ -209,15 +224,12 @@ int main(int argc, char* argv[]) {
 	if (!(str >> ss12))
 	    throw std::out_of_range("Incomplete input: " + s);
 	s12 = ReadDistance(ss12, arcmode);
-	if (arcmode)
-	  l.PositionA(s12, lat2, lon2, azi2);
-	else
-	  l.Position(s12, lat2, lon2, azi2);
+	l.Position(s12, lat2, lon2, azi2, arcmode);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
 	    AzimuthString(azi1, prec, dms) << " ";
 	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
-	  AzimuthString(azi2, prec, dms);
+	  AzimuthString(azi2 + azi2sense, prec, dms);
 	if (full)
 	  std::cout << " " << DistanceString(s12, arcmode, prec, dms);
 	std::cout << "\n";
@@ -234,7 +246,7 @@ int main(int argc, char* argv[]) {
 	std::cout << AzimuthString(azi1, prec, dms) << " ";
 	if (full)
 	  std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
-	std::cout << AzimuthString(azi2, prec, dms) << " "
+	std::cout << AzimuthString(azi2 + azi2sense, prec, dms) << " "
 		  << DistanceString(s12, arcmode, prec, dms) << "\n";
       } else {
 	std::string slat1, slon1, sazi1, ss12;
@@ -243,15 +255,12 @@ int main(int argc, char* argv[]) {
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	azi1 = ReadAzimuth(sazi1);
 	s12 = ReadDistance(ss12, arcmode);
-	if (arcmode)
-	  geod.DirectA(lat1, lon1, azi1, s12, lat2, lon2, azi2);
-	else
-	  geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2);
+	geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, arcmode);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
 	    AzimuthString(azi1, prec, dms) << " ";
 	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
-	  AzimuthString(azi2, prec, dms);
+	  AzimuthString(azi2 + azi2sense, prec, dms);
 	if (full)
 	  std::cout << " " << DistanceString(s12, arcmode, prec, dms);
 	std::cout << "\n";

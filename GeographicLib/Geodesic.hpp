@@ -11,11 +11,22 @@
 #define GEODESIC_HPP "$Id$"
 
 #define ITER 1
+#define VINCENTY 0
 
 #if !defined(GEOD_TAU_ORD)
+/**
+ * The order of the series relating \e s and \e sigma when expanded in powers
+ * of \e u<sup>2</sup> = e'<sup>2</sup> cos<sup>2</sup> alpha<sub>0</sub>.
+ **********************************************************************/
 #define GEOD_TAU_ORD 6
 #endif
 #if !defined(GEOD_ETA_ORD)
+/**
+ * The order of the series relating \e lambda and \e eta when expanded in
+ * powers of \e f.  Typically, this can be one less that GEOD_TAU_ORD because
+ * the convergence of the series is more rapid when \e f is used as the
+ * expansion parameter (Rainsford 1955).
+ **********************************************************************/
 #define GEOD_ETA_ORD 5
 #endif
 
@@ -49,6 +60,14 @@ namespace GeographicLib {
    * muliple solutions (all with the same \e s12, of course), all the solutions
    * can be easily generated once a particular solution is provided.
    *
+   * As an alternative to using distance to measure \e s12, the class can also
+   * use the arc length (in degrees) on the auxiliary sphere.  This is a
+   * mathematical construct used in solving the geodesic problems.  However, an
+   * arc length in excess of 180<sup>o</sup> indicates that the geodesic is not
+   * a true geodesic (there's a shorter geodesic connecting the points).  In
+   * addition, the arc length between an equatorial crossing and the next
+   * extremum of latitude for a geodesic is 90<sup>o</sup>.
+   *
    * The calculations are accurate to better than 12 nm.  (See \ref geoderrors
    * for details.)
    **********************************************************************/
@@ -77,6 +96,10 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
 #endif
+    void InverseStart(double sbet1, double cbet1, double n1,
+		      double sbet2, double cbet2,
+		      double lam12, double slam12, double clam12,
+		      double& salp1, double& calp1) const throw();
     double Lambda12(double sbet1, double cbet1, double sbet2, double cbet2,
 		    double salp1, double calp1,
 		    double& salp2, double& calp2,
@@ -111,6 +134,8 @@ namespace GeographicLib {
       cosx /= r;
     }
 
+    // These are maxima generated functions to provide series approximations to
+    // the integrals for the spheroidal geodesic.
     static double tauFactor(double u2) throw();
     static void tauCoeff(double u2, double t[]) throw();
     static void sigCoeff(double u2, double tp[]) throw();
@@ -133,21 +158,13 @@ namespace GeographicLib {
      * longitude, \e lon1, and azimuth \e azi1 (in degrees) for point 1 and a
      * range, \e s12 (in meters) from point 1 to point 2, return the latitude,
      * \e lat2, longitude, \e lon2, and forward azimuth, \e azi2 (in degrees)
-     * for point 2.  Returned value is the equivalent arc length (in degrees)
-     * on the auxiliary sphere.
+     * for point 2.  If \e arcmode (default false) is set to true, \e s12 is
+     * interpreted as the arc length (in degrees) on the auxiliary sphere.
+     * Returned value is the arc length (in degrees).
      **********************************************************************/
     double Direct(double lat1, double lon1, double azi1, double s12,
-		  double& lat2, double& lon2, double& azi2) const throw();
-
-    /**
-     * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
-     * longitude, \e lon1, and azimuth \e azi1 (in degrees) for point 1 and a
-     * range, equivalent arc length \e sig12 (in degrees) from point 1 to point
-     * 2, return the latitude, \e lat2, longitude, \e lon2, and forward
-     * azimuth, \e azi2 (in degrees) for point 2.
-     **********************************************************************/
-    void DirectA(double lat1, double lon1, double azi1, double sig12,
-		 double& lat2, double& lon2, double& azi2) const throw();
+		  double& lat2, double& lon2, double& azi2,
+		  bool arcmode = false) const throw();
 
     /**
      * Set up to do a series of ranges.  This returns a GeodesicLine object
@@ -164,12 +181,16 @@ namespace GeographicLib {
      * longitude, \e lon1, for point 1 and a latitude, \e lat2, longitude, \e
      * lon2, for point 2 (all in degrees), return the geodesic distance, \e s12
      * (in meters), and the forward azimuths, \e azi1 and \e azi2 (in degrees),
-     * at points 1 and 2.  Returned value is the equivalent arc length (in
-     * degrees) on the auxiliary sphere.
+     * at points 1 and 2.  Returned value is the arc length (in degrees) on the
+     * auxiliary sphere.
      **********************************************************************/
     double Inverse(double lat1, double lon1, double lat2, double lon2,
 		   double& s12, double& azi1, double& azi2) const throw();
 
+#if 0
+    double InverseB(double lat1, double lon1, double lat2, double lon2,
+		    double& s12, double& azi1, double& azi2) const throw();
+#endif
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
@@ -228,11 +249,14 @@ namespace GeographicLib {
       _sScale, _etaFactor, _dtau1, _dlam1;
     double _sigCoeff[ntau > nsig ? (ntau ? ntau : 1) : (nsig ? nsig : 1)],
       _etaCoeff[neta ? neta : 1];
+#if VINCENTY
+    double _sbet1, _cbet1, _calp1;
+#endif
 
     GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1)
       throw();
-    void PositionB(double sig12, double ssig12, double csig12,
-		   double& lat2, double& lon2, double& azi2) const throw();
+    void ArcPosition(double sig12, double ssig12, double csig12,
+		     double& lat2, double& lon2, double& azi2) const throw();
   public:
 
     /**
@@ -245,19 +269,14 @@ namespace GeographicLib {
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
-     * \e azi2 (in degrees) of the point 2 which is a distance, \e s12
-     * (in meters), from point 1.  \e s12 can be signed.  Returned value is the
-     * equivalent arc length (in degrees) on the auxiliary sphere.
+     * \e azi2 (in degrees) of the point 2 which is a distance, \e s12 (in
+     * meters), from point 1.  \e s12 can be signed.  If \e arcmode (default
+     * false) is set to true, \e s12 is interpreted as the arc length (in
+     * degrees) on the auxiliary sphere.  Returned value is the arc length (in
+     * degrees).
      **********************************************************************/
-    double Position(double s12, double& lat2, double& lon2, double& azi2)
-      const throw();
-
-    /**
-     * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
-     * \e azi2 (in degrees) of the point 2 which is a equivalent spherical arc
-     * length, \e sig12 (in degrees), from point 1.  \e chi12 can be signed.
-     **********************************************************************/
-    void PositionA(double sig12, double& lat2, double& lon2, double& azi2)
+    double Position(double s12, double& lat2, double& lon2, double& azi2,
+		    bool arcmode = false)
       const throw();
 
     /**
