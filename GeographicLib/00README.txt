@@ -43,6 +43,7 @@ Files
     tm.mac -- Maxima code for high precision TM
     ellint.mac -- Maxima code for elliptic functions needed by tm.mac
     tmseries.mac -- Maxima code for series approximations for TM
+    geod.mac -- Maxima code for series approximates for Geodesic
 
     gauss-laborde-graticule-a.{png,pdf} -- Fig. 1
     gauss-krueger-graticule-a.{png,pdf} -- Fig. 2
