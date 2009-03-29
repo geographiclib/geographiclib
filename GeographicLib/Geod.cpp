@@ -30,10 +30,10 @@ $Id$\n\
 \n\
 Perform geodesic calculations.\n\
 \n\
-The shortest path between two points on the ellipsoid at (lat1, lon1)\n\
-and (lat2, lon2) is called the geodesic.  Its length is s12 and the\n\
-geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two\n\
-end points.\n\
+The shortest path between two points on the spheroid at (lat1, lon1) and\n\
+(lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic\n\
+from point 1 to point 2 has azimuths azi1 and azi2 at the two end\n\
+points.\n\
 \n\
 Geod operates in one of three modes:\n\
 \n\
@@ -51,11 +51,10 @@ Geod operates in one of three modes:\n\
     lon2\" and prints the corresponding values of \"azi1 azi2 s12\".\n\
 \n\
 By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
-major radius of the ellipsoid to \"a\" and the reciprocal flattening to r.\n\
-Setting r = 0 results in a sphere.  For a prolate spheroid, r < 0, only\n\
-the direct calculation is supported.  The results of the inverse\n\
-calculation are undefined.  The -n option uses the international\n\
-ellipsoid (equivalent to \"-e 6378388 297\").\n\
+equatorial radius of the spheroid to \"a\" and the reciprocal flattening\n\
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
+spheroid.  The -n option uses the international ellipsoid (equivalent to\n\
+\"-e 6378388 297\").\n\
 \n\
 Output of angles is as decimal degrees.  If -d is specified the output\n\
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',\n\

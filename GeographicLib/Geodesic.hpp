@@ -28,7 +28,7 @@
 #define GEOD_ETA_ORD 5
 #endif
 
-#define ALTAZI 0
+#define DEBUG 1
 
 #include <cmath>
 
@@ -39,12 +39,12 @@ namespace GeographicLib {
   /**
    * \brief %Geodesic calculations
    *
-   * The shortest path between two points on the ellipsoid at (\e lat1, \e
-   * lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12
-   * and the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2
-   * at the two end points.  (The azimuth is the heading measured clockwise
-   * from north.  \e azi2 is the "forward" azimuth, i.e., the heading that
-   * takes you beyond point 2 not back to point 1.)
+   * The shortest path between two points on a spheroid at (\e lat1, \e lon1)
+   * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
+   * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
+   * the two end points.  (The azimuth is the heading measured clockwise from
+   * north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes you
+   * beyond point 2 not back to point 1.)
    *
    * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e
    * lon2, \e azi2.  This is the \e direct geodesic problem.  (If \e s12 is
@@ -97,7 +97,7 @@ namespace GeographicLib {
     void InverseStart(double sbet1, double cbet1, double n1,
 		      double sbet2, double cbet2,
 		      double lam12, double slam12, double clam12,
-		      double& salp1, double& calp1) const throw();
+		      double& salp1, double& calp1, double c[]) const throw();
     double Lambda12(double sbet1, double cbet1, double sbet2, double cbet2,
 		    double salp1, double calp1,
 		    double& salp2, double& calp2,
@@ -145,10 +145,10 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters) and reciprocal
-     * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
-     * (i.e., a sphere).  Negative \e r (prolate ellipsoid) is support only for
-     * direct calculations.
+     * Constructor for a spheroid with equatorial radius \e a (meters) and
+     * reciprocal flattening \e r.  Setting \e r = 0 implies \e r = inf or
+     * flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
+     * spheroid.
      **********************************************************************/
     Geodesic(double a, double r) throw();
 
@@ -185,6 +185,11 @@ namespace GeographicLib {
      **********************************************************************/
     double Inverse(double lat1, double lon1, double lat2, double lon2,
 		   double& s12, double& azi1, double& azi2) const throw();
+
+#if DEBUG
+    void PrintLambda12(double lat1, double lat2, double alpmin, double alpmax,
+		       unsigned n) const;
+#endif
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
