@@ -28,8 +28,6 @@
 #define GEOD_ETA_ORD 5
 #endif
 
-#define DEBUG 1
-
 #include <cmath>
 
 namespace GeographicLib {
@@ -185,11 +183,6 @@ namespace GeographicLib {
      **********************************************************************/
     double Inverse(double lat1, double lon1, double lat2, double lon2,
 		   double& s12, double& azi1, double& azi2) const throw();
-
-#if DEBUG
-    void PrintLambda12(double lat1, double lat2, double alpmin, double alpmax,
-		       unsigned n) const;
-#endif
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
