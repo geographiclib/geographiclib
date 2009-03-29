@@ -36,11 +36,6 @@
 RCSID_DECL(GEODESIC_CPP)
 RCSID_DECL(GEODESIC_HPP)
 
-#if DEBUG
-#include <iostream>
-#include <iomanip>
-#endif
-
 namespace GeographicLib {
 
   using namespace std;
@@ -160,12 +155,12 @@ namespace GeographicLib {
     // coincident points.
     bool meridian = lat1 == -90 || (_f >= 0 ? slam12 : lam12) == 0;
     if (!meridian && _f < 0 && lon12 == 180) {
-      // for _f < 0 and lam12 = 180, need to check where we're beyond singular
+      // for _f < 0 and lam12 = 180, need to check if we're beyond singular
       // point.  If lon12 == 180 then define bet2[ab] with
       //
       // tan(bet2[ab]) + tan(bet1) + H * (eta(bet2) + eta(bet1)) = +/- H * pi
       //
-      // if bet2b < bet2 < bet2a, the geodesic on not on meridian
+      // if bet2b < bet2 < bet2a, the geodesic is not a meridian
       double h0 = etaFactor(_f, 1.0);
       etaCoeff(_f, 1.0, c);
       double
@@ -388,46 +383,6 @@ namespace GeographicLib {
     }
     SinCosNorm(salp1, calp1);
   }
-
-#if DEBUG
-  void Geodesic::PrintLambda12(double lat1, double lat2,
-			       double alpmin, double alpmax,
-			       unsigned n) const {
-    lat1 = AngRound(lat1);
-    lat2 = AngRound(lat2);
-    double phi, sbet1, cbet1, sbet2, cbet2, n1;
-
-    phi = lat1 * Constants::degree();
-    // Ensure cbet1 = +eps at poles
-    sbet1 = _f1 * sin(phi);
-    cbet1 = lat1 == -90 ? eps2 : cos(phi);
-    // n = sqrt(1 - e2 * sq(sin(phi)))
-    n1 = hypot(sbet1, cbet1);
-    sbet1 /= n1; cbet1 /= n1;
-
-    phi = lat2 * Constants::degree();
-    // Ensure cbet2 = +eps at poles
-    sbet2 = _f1 * sin(phi);
-    cbet2 = abs(lat2) == 90 ? eps2 : cos(phi);
-    SinCosNorm(sbet2, cbet2);
-
-    for (unsigned i = 0; i <= n; ++i) {
-      double
-	alp1 = alpmin + i * (alpmax - alpmin) / n,
-	salp1 = sin(alp1 * Constants::degree()),
-	calp1 = cos(alp1 * Constants::degree());
-      double salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, u2, dlam12,
-	c[ntau > neta ? (ntau ? ntau : 1) : (neta ? neta : 1)];
-      double lam12 =  Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
-			       salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-			       u2, true, dlam12, c) / Constants::degree();
-      cout << fixed << setprecision(3)
-	   << lat1 << " " << lat2 << " " << setprecision(5)
-	   << alp1 << " " << setprecision(7)
-	   << lam12 << " " << dlam12 << "\n";
-    }
-  }
-#endif
 
   double Geodesic::Lambda12(double sbet1, double cbet1,
 			    double sbet2, double cbet2,
