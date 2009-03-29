@@ -36,6 +36,11 @@
 RCSID_DECL(GEODESIC_CPP)
 RCSID_DECL(GEODESIC_HPP)
 
+#if DEBUG
+#include <iostream>
+#include <iomanip>
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
@@ -101,6 +106,8 @@ namespace GeographicLib {
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
     lon12 *= lonsign;
+    if (lon12 == 180)
+      lonsign = 1;
     // If really close to the equator, treat as on equator.
     lat1 = AngRound(lat1);
     lat2 = AngRound(lat2);
@@ -151,7 +158,27 @@ namespace GeographicLib {
       c[ntau > neta ? (ntau ? ntau : 1) : (neta ? neta : 1)];
     // Enumerate all the cases where the geodesic is a meridian.  This includes
     // coincident points.
-    if (slam12 == 0 || lat1 == -90) {
+    bool meridian = lat1 == -90 || (_f >= 0 ? slam12 : lam12) == 0;
+    if (!meridian && _f < 0 && lon12 == 180) {
+      // for _f < 0 and lam12 = 180, need to check where we're beyond singular
+      // point.  If lon12 == 180 then define bet2[ab] with
+      //
+      // tan(bet2[ab]) + tan(bet1) + H * (eta(bet2) + eta(bet1)) = +/- H * pi
+      //
+      // if bet2b < bet2 < bet2a, the geodesic on not on meridian
+      double h0 = etaFactor(_f, 1.0);
+      etaCoeff(_f, 1.0, c);
+      double
+	sbet12a = sbet2 * cbet1 + cbet2 * sbet1,
+	cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
+	bet12a = atan2(sbet12a, cbet12a), // bet2 + bet1 (-pi, 0]
+	x = ( sbet12a / (cbet1 * cbet2)
+	      + h0 * (bet12a + (SinSeries(sbet2, cbet2, c, neta) +
+				SinSeries(sbet1, cbet1, c, neta))) ) /
+	(h0 * Constants::pi());
+      meridian = x <= -1;
+    }
+    if (meridian) {
       // Head to the target longitude
       calp1 = clam12; salp1 = slam12;
       // At the target we're heading north
@@ -174,8 +201,9 @@ namespace GeographicLib {
 		  SinSeries(ssig1, csig1, c, ntau)));
       sig12 /= Constants::degree();
     } else if (sbet1 == 0 &&	// and sbet2 == 0
+	       (_f <= 0 ||
 	       // Mimic the way Lambda12 works with calp1 = 0
-	       lam12 <= Constants::pi() - _f * Constants::pi()) {
+		lam12 <= Constants::pi() - _f * Constants::pi())) {
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
       s12 = _a * lam12;
@@ -187,17 +215,15 @@ namespace GeographicLib {
 
       // Figure a starting point for Newton's method
       InverseStart(sbet1, cbet1, n1, sbet2, cbet2,
-		   lam12, slam12, clam12, salp1, calp1);
+		   lam12, slam12, clam12, salp1, calp1, c);
 
       // Newton's method
       double ssig1, csig1, ssig2, csig2, u2;
       double ov = 0;
       for (unsigned i = 0, trip = 0; i < 50; ++i) {
 	double dv;
-	double v = Lambda12(sbet1, cbet1, sbet2, cbet2,
-			    salp1, calp1,
-			    salp2, calp2,
-			    sig12, ssig1, csig1, ssig2, csig2,
+	double v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
+			    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
 			    u2, trip < 1, dv, c) - lam12;
 	if (abs(v) <= eps2 || !(trip < 1))
 	  break;
@@ -242,44 +268,72 @@ namespace GeographicLib {
   }
 
   void Geodesic::InverseStart(double sbet1, double cbet1, double n1,
-			 double sbet2, double cbet2,
-			 double lam12, double slam12, double clam12,
-			 double& salp1, double& calp1) const throw() {
+			      double sbet2, double cbet2,
+			      double lam12, double slam12, double clam12,
+			      double& salp1, double& calp1,
+			      double c[]) const throw() {
     // Figure a starting point for Newton's method
     double
       // How close to antipodal lat?
       sbet12 = sbet2 * cbet1 - cbet2 * sbet1,  // bet2 - bet1 in [0, pi)
       sbet12a = sbet2 * cbet1 + cbet2 * sbet1; // bet2 + bet1 (-pi, 0]
 
-    double csig12, ssig12, lamcrita;
-    csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
     salp1 = cbet2 * slam12;
     calp1 = clam12 >= 0 ?
-      // The factor _f1/n1 applies an ellipsoidal correction for close points.
+      // The factor _f1/n1 applies a spheroidal correction for close points.
       // This saves 1 iteration of Newton's method in the case of short lines.
       sbet12 * _f1/n1 + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
       sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
-    ssig12 = hypot(salp1, calp1);
-    lamcrita = -cbet1 * etaFactor(_f, sq(sbet1)) * Constants::pi();
 
-    if (csig12 >= 0 || ssig12 >= 3 * lamcrita * cbet1) {
+    double
+      ssig12 = hypot(salp1, calp1),
+      csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
+
+    if (csig12 >= 0 || ssig12 >= 3 * abs(_f) * Constants::pi() * cbet1) {
       // Nothing to do, zeroth order spherical approximation is OK
     } else {
-      double
-	x = (lam12 - Constants::pi())/lamcrita,
-	y = sbet12a / (lamcrita * cbet1);
+      // Scale lam12 and bet2 to x, y coordinate system where antipodal point
+      // is at origin and singular point is at y = 0, x = -1.
+      double x, y, lamscale, betscale;
+      if (_f >= 0) {		// In fact f == 0 does not get here
+	// x = dlong, y = dlat
+	lamscale = -cbet1 * etaFactor(_f, sq(sbet1)) * Constants::pi();
+	betscale = lamscale * cbet1;
+	x = (lam12 - Constants::pi()) / lamscale;
+	y = sbet12a / betscale;
+      } else {			// _f < 0
+	// x = dlat, y = dlong
+	double
+	  h0 = etaFactor(_f, 1.0),
+	  cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
+	  bet12a = atan2(sbet12a, cbet12a);
+	etaCoeff(_f, 1.0, c);
+	x = ( sbet12a / (cbet1 * cbet2)
+	      + h0 * (bet12a +  (SinSeries(sbet2, cbet2, c, neta) +
+				 SinSeries(sbet1, cbet1, c, neta))) ) /
+	  (h0 * Constants::pi());
+	betscale = x < -0.01 ? sbet12a / x : -_f * sq(cbet1) * Constants::pi();
+	lamscale = betscale / cbet1;
+	y = (lam12 - Constants::pi()) / lamscale;
+      }
+
       if (y > -tol1 && x >  -1 - xthresh) {
 	// strip near cut
-	salp1 = min(1.0, -x);
-	calp1 = - sqrt(1 - sq(salp1));
+	if (_f >= 0) {
+	  salp1 = min(1.0, -x); calp1 = - sqrt(1 - sq(salp1));
+	} else {
+	  calp1 = max(-1.0, x); salp1 =   sqrt(1 - sq(calp1));
+	}
       } else {
-	// estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0
+	// Estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0.  (For
+	// f < 0, we're solving for pi/2 - alp2 and calp2 and salp2 are
+	// swapped.)
 	double salp2, calp2;
 	if (y == 0) {
 	  salp2 = 1; calp2 = 0; // This applies only for x < -1
-	} else if (y > - 0.027 && x > -1.09 && x < -0.91) {
+	} else if (y > -0.027 && x > -1.09 && x < -0.91) {
 	  // Near singular point we have
-	  //     t^3 - 2*a*t - 2 = 0
+	  //     t^3 - 2*a*t - 2 = -t^2 * y^(2/3) approx 0
 	  // where a = (x + 1)/|y|^(2/3), t = calp2/|y|^(1/3)
 	  double
 	    y3 = cbrt(-y),
@@ -321,16 +375,59 @@ namespace GeographicLib {
 	  if (abs(da) < tol2)
 	    break;
 	}
-	// estimate chi12
-	double r = hypot(y, salp2 + x) * lamcrita * salp2,
-	  // chi12 = pi - lamcrita * r * salp2
-	  schi12 = sin(r), cchi12 = -cos(r);
+	// estimate chi12a = pi - chi12
+	double
+	  chi12a = lamscale * ( _f >= 0
+				? hypot(y,  salp2 + x) * salp2
+				: hypot(x, -calp2 + y) * calp2 ),
+	  schi12 = sin(chi12a), cchi12 = -cos(chi12a);
+	// Update spherical estimate of alp1 using chi12 instead of lam12
 	salp1 = cbet2 * schi12;
 	calp1 = sbet12a - cbet2 * sbet1 * sq(schi12) / (1 - cchi12);
       }
     }
     SinCosNorm(salp1, calp1);
   }
+
+#if DEBUG
+  void Geodesic::PrintLambda12(double lat1, double lat2,
+			       double alpmin, double alpmax,
+			       unsigned n) const {
+    lat1 = AngRound(lat1);
+    lat2 = AngRound(lat2);
+    double phi, sbet1, cbet1, sbet2, cbet2, n1;
+
+    phi = lat1 * Constants::degree();
+    // Ensure cbet1 = +eps at poles
+    sbet1 = _f1 * sin(phi);
+    cbet1 = lat1 == -90 ? eps2 : cos(phi);
+    // n = sqrt(1 - e2 * sq(sin(phi)))
+    n1 = hypot(sbet1, cbet1);
+    sbet1 /= n1; cbet1 /= n1;
+
+    phi = lat2 * Constants::degree();
+    // Ensure cbet2 = +eps at poles
+    sbet2 = _f1 * sin(phi);
+    cbet2 = abs(lat2) == 90 ? eps2 : cos(phi);
+    SinCosNorm(sbet2, cbet2);
+
+    for (unsigned i = 0; i <= n; ++i) {
+      double
+	alp1 = alpmin + i * (alpmax - alpmin) / n,
+	salp1 = sin(alp1 * Constants::degree()),
+	calp1 = cos(alp1 * Constants::degree());
+      double salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, u2, dlam12,
+	c[ntau > neta ? (ntau ? ntau : 1) : (neta ? neta : 1)];
+      double lam12 =  Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
+			       salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
+			       u2, true, dlam12, c) / Constants::degree();
+      cout << fixed << setprecision(3)
+	   << lat1 << " " << lat2 << " " << setprecision(5)
+	   << alp1 << " " << setprecision(7)
+	   << lam12 << " " << dlam12 << "\n";
+    }
+  }
+#endif
 
   double Geodesic::Lambda12(double sbet1, double cbet1,
 			    double sbet2, double cbet2,
@@ -389,15 +486,13 @@ namespace GeographicLib {
     // chi12 = chi2 - chi1, limit to [0, pi]
     chi12 = atan2(max(cchi1 * schi2 - schi1 * cchi2, 0.0),
 		  cchi1 * cchi2 + schi1 * schi2);
-    double eta12, lamscale;
+    double eta12, h0;
     mu = sq(calp0);
     etaCoeff(_f, mu, c);
-    eta12 = SinSeries(ssig2, csig2, c, neta) -
-      SinSeries(ssig1, csig1, c, neta);
-    lamscale = etaFactor(_f, mu),
-    lam12 = chi12 + salp0 * lamscale * (sig12 + eta12);
+    eta12 = SinSeries(ssig2, csig2, c, neta) - SinSeries(ssig1, csig1, c, neta);
+    h0 = etaFactor(_f, mu),
+    lam12 = chi12 + salp0 * h0 * (sig12 + eta12);
 
-    // XXX extchi12 = chi12 / Constants::degree();
     if (diffp) {
       double dalp0, dsig1, dchi1, dalp2, dsig2, dchi2;
       // Differentiate sin(alp) * cos(bet) = sin(alp0),
@@ -415,14 +510,14 @@ namespace GeographicLib {
       dchi1 = (sbet1 * sq(cchi1) + schi1 * salp0 / (calp0 * cbet1));
       dchi2 = (sbet2 * sq(cchi2) + schi2 * salp0 / (calp0 * cbet2)) * dalp2;
 
-      double deta12, dmu, dlamscale, dlamsig;
+      double deta12, dmu, dh0, dlamsig;
       etaCoeffmu(_f, mu, c);
       dmu = - 2 * calp0 * salp0 * dalp0;
       deta12 = dmu * (SinSeries(ssig2, csig2, c, neta) -
 		      SinSeries(ssig1, csig1, c, neta));
-      dlamscale = etaFactormu(_f, mu) * dmu;
+      dh0 = etaFactormu(_f, mu) * dmu;
 
-      // Derivative of salp0 * lamscale * (sig + eta) wrt sig.  This
+      // Derivative of salp0 * h0 * (sig + eta) wrt sig.  This
       // is from integral form of this expression.
       dlamsig = - _e2 * salp0 *
 	(dsig2 / (sqrt(1 - _e2 * (1 - mu * sq(ssig2))) + 1) -
@@ -431,8 +526,8 @@ namespace GeographicLib {
       dlam12 =
 	(dchi2 - dchi1) + dlamsig +
 	// Derivative wrt mu
-	(dalp0 * calp0 * lamscale + salp0 * dlamscale) * (sig12 + eta12) +
-	salp0 * lamscale * deta12;
+	(dalp0 * calp0 * h0 + salp0 * dh0) * (sig12 + eta12) +
+	salp0 * h0 * deta12;
     }
 
     u2 = mu * _ep2;
