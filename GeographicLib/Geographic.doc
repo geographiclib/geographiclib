@@ -11,18 +11,18 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-03
-\date 2009-03-01
+\version 2009-04
+\date 2009-04-01
 
 \section abstract Abstract
 
 %GeographicLib is a small set of <a href="annotated.html">C++
-classes</a> to perform conversions between geographic, UTM, UPS, MGRS,
-geocentric, and local cartesian coordinates.  In this application, the
-errors are close to round-off (about 5 nm).  It is specialized for use
-with the WGS84 but can be adapted for use with other ellipsoids.  In
-addition, various properties of the \ref transversemercator are
-described and a new accurate algorithm for \ref geodesic is given.
+classes</a> for performing conversions between geographic, UTM, UPS,
+MGRS, geocentric, and local cartesian coordinates and for solving
+geodesic problems.  The emphasis is on returning accurate results with
+errors close to round-off (about 5&ndash;12 nm).  In addition, various
+properties of the \ref transversemercator are described and a new
+accurate algorithm for \ref geodesic is given.
 
 \section download Download
 
@@ -112,6 +112,9 @@ Visual Studio 2005
 
 The section \ref transversemercator documents various properties of this
 projection.
+
+The section \ref geodesic documents (still rather incompletely) the
+method of solving the geodesic problem.
 
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
 report any you find to <charles@karney.com>.
@@ -1303,7 +1306,7 @@ set.
    second one is obtained by setting [\e azi1, \e azi2] = [\e azi2, \e
    azi1].  (This occurs when the longitude difference is near +/-
    180<sup>o</sup> for oblate spheroids.)
- - \e lon2 = \e lon1 +/- 180<sup>o</sup>(with neither at a pole).  If \e
+ - \e lon2 = \e lon1 +/- 180<sup>o</sup> (with neither at a pole).  If \e
    azi1 = 0<sup>o</sup> or +/- 180<sup>o</sup>, the geodesic is unique.
    Otherwise there are two geodesics and the second one is obtained by
    setting [\e azi1, \e azi2] = [-\e azi1, -\e azi2].  (This occurs when
@@ -1345,9 +1348,18 @@ azimuths.
 The evaluation of the derivative for Newton's method for the inverse
 problem is a straightforward application of the chain rule for
 derivatives.  In evaluating the derivative of the longitude function,
-the derivative with respect to cos<sup>2</sup> \e alpha is carried out by
-differentiating the series.  However the derivative with respect to \e
-sigma (the limit of the integral) just gives the integrand.
+the derivative with respect to cos<sup>2</sup> \e alpha<sub>0</sub> is
+carried out by differentiating the series.  However the derivative with
+respect to \e sigma (the limit of the integral) just gives the
+integrand.
+
+Convergence failures with Newton's method for the inverse problem is
+signaled by negating the distance (and the arc distance) and by
+reversing the azimuths.  This convention was chosen as it allows both
+detection of the problem and subsequent use of the values (assuming that
+they are approximately correct).  It is expected that the method
+converges for all models of the earth and for any two input
+points. Please report all cases where this does not happen.
 
 Geographic coordinates which are close to zero are quantized (by adding
 and subtracting 1/16 deg).  This allows certain cases of underflow to be
@@ -1355,7 +1367,21 @@ avoided.  This limits the accuracy to which coordinates can be specified
 to 0.7 pm.  This should not be a problem since the overall accuracy of
 the algorithms is only 12 nm.
 
-You can specify a \e negative flattening to get a prolate spheroid.
+You can specify a \e negative flattening to get a prolate spheroid.  The
+rule is that \e b is the radius of the axis of symmetry (the polar
+radius), that \e a is the equatorial radius, and that \e b = \e a (1 -
+\e f).  The direct solution needed no modification.  The inverse
+solution required a generalization in the way starting points for
+Newton's method are chosen; in addition a test are added to the case
+when the endpoints are on the same meridian to determine if a shorter
+non-meridional geodesic exists.
+
+Most planets and satellites are approximated by oblate spheroids.
+However, satellites whose rotation frequency is tidally locked to a
+month may be prolate (as example is Saturn's moon, Tethys).  Such
+satellites are typically considerably more eccentric that the earth and
+it may be necessary to increase the order of the series used in order to
+maintain accuracy.
 
 GeodesicLine::Position provides a way of doing a series of direct
 calculations for a single geodesic.  This is about 2.1 times faster than
@@ -2067,6 +2093,7 @@ list of changes.
     - improvements in the selection of starting points for Newton's
       method,
     - accept and return spherical arc lengths,
+    - works with both oblate and prolate spheroids,
     - add -a, -e, -b options to \ref geod utility.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-03.tgz">2009-03</a>

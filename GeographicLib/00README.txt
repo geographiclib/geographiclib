@@ -52,7 +52,9 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-03 version of the library.
+This is the 2009-04 version of the library.
+
+Changes between 2009-04 and 2009-03 versions:
 
 Changes between 2009-03 and 2009-02 versions:
 
