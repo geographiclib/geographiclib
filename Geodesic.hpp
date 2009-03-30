@@ -78,6 +78,7 @@ namespace GeographicLib {
     // etaCoeff is multiplied by etaFactor which is O(f), so we reduce the
     // order to which etaCoeff is computed by 1.
     static const int neta = etaord > 0 ? etaord - 1 : 0;
+    static const unsigned maxit = 50;
 
     static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
@@ -156,12 +157,30 @@ namespace GeographicLib {
      * range, \e s12 (in meters) from point 1 to point 2, return the latitude,
      * \e lat2, longitude, \e lon2, and forward azimuth, \e azi2 (in degrees)
      * for point 2.  If \e arcmode (default false) is set to true, \e s12 is
-     * interpreted as the arc length (in degrees) on the auxiliary sphere.
-     * Returned value is the arc length (in degrees).
+     * interpreted as the arc length (in degrees) on the auxiliary sphere.  An
+     * arc length greater that 180 degrees results in a geodesic which is not a
+     * shortest path.  For a prolate spheroid, an additional condition is
+     * necessary for a shortest path: the longitudinal extent must not exceed
+     * of 180 degrees.  Returned value is the arc length (in degrees).
      **********************************************************************/
     double Direct(double lat1, double lon1, double azi1, double s12,
 		  double& lat2, double& lon2, double& azi2,
 		  bool arcmode = false) const throw();
+
+    /**
+     * Perform the inverse geodesic calculation.  Given a latitude, \e lat1,
+     * longitude, \e lon1, for point 1 and a latitude, \e lat2, longitude, \e
+     * lon2, for point 2 (all in degrees), return the geodesic distance, \e s12
+     * (in meters), and the forward azimuths, \e azi1 and \e azi2 (in degrees),
+     * at points 1 and 2.  Returned value is the arc length (in degrees) on the
+     * auxiliary sphere.  The routine uses an iterative method.  If the method
+     * fails to converge, the negative of the distances (\e s12 and the
+     * function value) and reverse of the azimuths are returned.  This is not
+     * expected to happen with spheroidal models of the earth.  Please report
+     * all cases where this occurs.
+     **********************************************************************/
+    double Inverse(double lat1, double lon1, double lat2, double lon2,
+		   double& s12, double& azi1, double& azi2) const throw();
 
     /**
      * Set up to do a series of ranges.  This returns a GeodesicLine object
@@ -172,17 +191,6 @@ namespace GeographicLib {
      * Geodesic::Direct.
      **********************************************************************/
     GeodesicLine Line(double lat1, double lon1, double azi1) const throw();
-
-    /**
-     * Perform the inverse geodesic calculation.  Given a latitude, \e lat1,
-     * longitude, \e lon1, for point 1 and a latitude, \e lat2, longitude, \e
-     * lon2, for point 2 (all in degrees), return the geodesic distance, \e s12
-     * (in meters), and the forward azimuths, \e azi1 and \e azi2 (in degrees),
-     * at points 1 and 2.  Returned value is the arc length (in degrees) on the
-     * auxiliary sphere.
-     **********************************************************************/
-    double Inverse(double lat1, double lon1, double lat2, double lon2,
-		   double& s12, double& azi1, double& azi2) const throw();
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84

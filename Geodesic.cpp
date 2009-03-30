@@ -155,7 +155,7 @@ namespace GeographicLib {
     // coincident points.
     bool meridian = lat1 == -90 || (_f >= 0 ? slam12 : lam12) == 0;
     if (!meridian && _f < 0 && lon12 == 180) {
-      // for _f < 0 and lam12 = 180, need to check if we're beyond singular
+      // For _f < 0 and lam12 = 180, need to check if we're beyond singular
       // point.  If lon12 == 180 then define bet2[ab] with
       //
       // tan(bet2[ab]) + tan(bet1) + H * (eta(bet2) + eta(bet1)) = +/- H * pi
@@ -166,7 +166,7 @@ namespace GeographicLib {
       double
 	sbet12a = sbet2 * cbet1 + cbet2 * sbet1,
 	cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
-	bet12a = atan2(sbet12a, cbet12a), // bet2 + bet1 (-pi, 0]
+	bet12a = atan2(sbet12a, cbet12a), // bet12a = bet2 + bet1
 	x = ( sbet12a / (cbet1 * cbet2)
 	      + h0 * (bet12a + (SinSeries(sbet2, cbet2, c, neta) +
 				SinSeries(sbet1, cbet1, c, neta))) ) /
@@ -215,7 +215,8 @@ namespace GeographicLib {
       // Newton's method
       double ssig1, csig1, ssig2, csig2, u2;
       double ov = 0;
-      for (unsigned i = 0, trip = 0; i < 50; ++i) {
+      unsigned numit = 0;
+      for (unsigned trip = 0; numit < maxit; ++numit) {
 	double dv;
 	double v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
 			    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
@@ -245,6 +246,12 @@ namespace GeographicLib {
 	(sig12 + (SinSeries(ssig2, csig2, c, ntau) -
 		  SinSeries(ssig1, csig1, c, ntau)));
       sig12 /= Constants::degree();
+      if (numit >= maxit) {
+	// Signal failure to converge by negating the distance and azimuths.
+	s12 *= -1; sig12 *= -1;
+	salp1 *= -1; calp1 *= -1;
+	salp2 *= -1; calp2 *= -1;
+      }
     }
 
     // Convert calp, salp to azimuth accounting for lonsign, swapp, latsign.
@@ -270,8 +277,9 @@ namespace GeographicLib {
     // Figure a starting point for Newton's method
     double
       // How close to antipodal lat?
-      sbet12 = sbet2 * cbet1 - cbet2 * sbet1,  // bet2 - bet1 in [0, pi)
-      sbet12a = sbet2 * cbet1 + cbet2 * sbet1; // bet2 + bet1 (-pi, 0]
+      // bet12 = bet2 - bet1 in [0, pi);  bet12a = bet2 + bet1 in (-pi, 0]
+      sbet12 = sbet2 * cbet1 - cbet2 * sbet1,  
+      sbet12a = sbet2 * cbet1 + cbet2 * sbet1; 
 
     salp1 = cbet2 * slam12;
     calp1 = clam12 >= 0 ?
@@ -284,7 +292,7 @@ namespace GeographicLib {
       ssig12 = hypot(salp1, calp1),
       csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
 
-    if (csig12 >= 0 || ssig12 >= 3 * abs(_f) * Constants::pi() * cbet1) {
+    if (csig12 >= 0 || ssig12 >= 3 * abs(_f) * Constants::pi() * sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
@@ -303,6 +311,8 @@ namespace GeographicLib {
 	  cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
 	  bet12a = atan2(sbet12a, cbet12a);
 	etaCoeff(_f, 1.0, c);
+	// In the case of lon12 = 180, this repeats a calculation made in
+	// Inverse.
 	x = ( sbet12a / (cbet1 * cbet2)
 	      + h0 * (bet12a +  (SinSeries(sbet2, cbet2, c, neta) +
 				 SinSeries(sbet1, cbet1, c, neta))) ) /
