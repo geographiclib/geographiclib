@@ -289,7 +289,8 @@ namespace GeographicLib {
     double Longitude() const throw() { return _lon1; }
 
     /**
-     * Return the azimuth of the geodesic line as it passes through point 1.
+     * Return the azimuth (in degrees) of the geodesic line as it passes
+     * through point 1.
      **********************************************************************/
     double Azimuth() const throw() { return _azi1; }
   };
