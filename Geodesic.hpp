@@ -64,7 +64,7 @@ namespace GeographicLib {
    * crossing and the next extremum of latitude for a geodesic is
    * 90<sup>o</sup>.
    *
-   * The calculations are accurate to better than 12 nm.  (See \ref geoderrors
+   * The calculations are accurate to better than 15 nm.  (See \ref geoderrors
    * for details.)
    **********************************************************************/
 
