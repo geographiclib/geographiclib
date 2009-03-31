@@ -47,7 +47,7 @@ namespace GeographicLib {
   const double Geodesic::tol0 = numeric_limits<double>::epsilon();
   const double Geodesic::tol1 = 100 * tol0;
   const double Geodesic::tol2 = sqrt(numeric_limits<double>::epsilon());
-  const double Geodesic::xthresh = 100 * tol2;
+  const double Geodesic::xthresh = 1000 * tol2;
 
   Geodesic::Geodesic(double a, double r) throw()
     : _a(a)

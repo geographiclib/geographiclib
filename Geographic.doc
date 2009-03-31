@@ -21,8 +21,8 @@ classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates and for solving
 geodesic problems.  The emphasis is on returning accurate results with
 errors close to round-off (about 5&ndash;15 nm).  In addition, various
-properties of the \ref transversemercator are described and a new
-accurate algorithm for \ref geodesic is given.
+properties of the \ref transversemercator are described and an accurate
+algorithm for \ref geodesic is given.
 
 \section download Download
 
