@@ -1037,16 +1037,17 @@ Here we reformulate the geodesic problem with three goals:
  - Employ a non-iterative or rapidly converging iterative scheme.
 
 We derive higher-order series for the distance and longitude integrals
-using Maxima.  In this release, we use a 6th-order expansion for the
-distance integral and a 5th-order expansion for the longitude integral.
-This is sufficient to maintain accuracy for doubles.  However,
-preprocessor macros GEOD_TAU_ORD (default 6) and GEOD_ETA_ORD (default
-5) can be used to select any order up to 8.  (If using long doubles,
-with a 64-bit fraction, it's necessary to set GEOD_TAU_ORD to 7 and
-GEOD_ETA_ORD to 6.)  The series is evaluated by a combination of
-Horner's method and Clenshaw summation.  For the direct problem, we use
-a reversion of the series for the distance to compute the spherical arc
-length and thereby complete the solution without the need to iterate.
+using <a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>.  In this
+release, we use a 6th-order expansion for the distance integral and a
+5th-order expansion for the longitude integral.  This is sufficient to
+maintain accuracy for doubles.  However, preprocessor macros
+GEOD_TAU_ORD (default 6) and GEOD_ETA_ORD (default 5) can be used to
+select any order up to 8.  (If using long doubles, with a 64-bit
+fraction, it's necessary to set GEOD_TAU_ORD to 7 and GEOD_ETA_ORD to
+6.)  The series is evaluated by a combination of Horner's method and
+Clenshaw summation.  For the direct problem, we use a reversion of the
+series for the distance to compute the spherical arc length and thereby
+complete the solution without the need to iterate.
 
 The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the
 series for the distance and longitude integrals.  In addition this
@@ -1410,9 +1411,10 @@ Future work:
 In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
 f) and / indicates real division (3/5 = 0.6).  The equations need to be
 converted to Horner form, but are here left in expanded form so that
-they can be easily truncated to lower order.  Some of the integers
-here are not representable as 32-bit integers and will need to be
-included as double literals.
+they can be easily truncated to lower order.  Some of the integers here
+are not representable as 32-bit integers and will need to be included as
+double literals.  These expansions were obtained using the the Maxima
+code, <a href="geod.mac">geod.mac</a>.
 
 In the expansions below, we have
  - \e alpha<sub>0</sub> is the azimuth at the equator crossing

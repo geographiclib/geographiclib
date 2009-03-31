@@ -16,6 +16,9 @@ There are 4 sections in this file
 
 Edit the section at the end, to modify what is done.  As distributed
 this code computes the 8th order series.  This takes less that 10 secs.
+To run the code, start Maxima and enter
+
+  load("geod.mac")$
 
 */
 
