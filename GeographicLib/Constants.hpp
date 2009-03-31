@@ -60,7 +60,7 @@ namespace GeographicLib {
      **********************************************************************/
     static inline double WGS84_a() throw() { return 6378137 * meter(); }
     /**
-     * reciprocal flattening of WGS84 ellipsoid
+     * Reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
     static inline double WGS84_r() throw() { return 298.257223563; }
     /**
