@@ -1405,6 +1405,7 @@ to 17 with some values of the arguments.
 Future work:
  - More documentation.
  - Testing on inverse solution for prolate spheroids.
+ - More thorough analysis of Newton's method for inverse problem
 
 \section geodseries Expansions for geodesics
 
