@@ -253,7 +253,7 @@ GeographicLib/ directory prefix.  If compiling within the %GeographicLib
 directory, ".." should be included in the header search path (e.g.,
 with -I..).  The cpp files implementing the classes include "using
 namespace std;", however, for portability, the headers files and the
-test programs do not.
+utility programs do not.
 
 There's an "install" target in the Makefile which installs the library
 components into \$(PREFIX)/lib, \$(PREFIX)/include/GeographicLib,
