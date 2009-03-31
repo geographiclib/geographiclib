@@ -274,7 +274,7 @@ namespace GeographicLib {
       const throw();
 
     /**
-     * Has this object been initialize so that Position can be called?
+     * Has this object been initialized so that Position can be called?
      **********************************************************************/
     bool Init() const throw() { return _sScale > 0; }
 
