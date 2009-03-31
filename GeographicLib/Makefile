@@ -12,6 +12,7 @@ CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 CPPFLAGS = -I..
 LDFLAGS = $(LIBRARY)
 
+INSTALL = install -b
 PREFIX = /usr/local
 # After installation, use these values of CPPFLAGS and LDFLAGS
 
@@ -67,15 +68,15 @@ install: install-lib install-headers install-progs
 
 install-lib: $(LIBRARY)
 	test -f $(PREFIX)/lib || mkdir -p $(PREFIX)/lib
-	install -m 644 $^ $(PREFIX)/lib
+	$(INSTALL) -m 644 $^ $(PREFIX)/lib
 
 install-headers: $(HEADERS)
 	test -f $(PREFIX)/include/GeographicLib || mkdir -p $(PREFIX)/include/GeographicLib
-	install -m 644 $^ $(PREFIX)/include/GeographicLib
+	$(INSTALL) -m 644 $^ $(PREFIX)/include/GeographicLib
 
 install-progs: $(PROGRAMS)
 	test -f $(PREFIX)/bin || mkdir -p $(PREFIX)/bin
-	install $^ $(PREFIX)/bin
+	$(INSTALL) $^ $(PREFIX)/bin
 
 doc: Doxyfile Geographic.doc \
 	$(HEADERS) $(ALLSOURCES) \
