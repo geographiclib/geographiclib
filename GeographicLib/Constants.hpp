@@ -15,7 +15,7 @@
  * C++0X static_assert.
  **********************************************************************/
 #if !defined(STATIC_ASSERT)
-#define STATIC_ASSERT(cond,reason) { enum{ STATIC_ASSERT_ENUM = 1/int(cond) }; }
+#define STATIC_ASSERT(cond,reason) { enum{ STATIC_ASSERT_ENUM=1/int(cond) }; }
 #endif
 
 #if defined(__GNUC__)
