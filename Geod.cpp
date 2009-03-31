@@ -74,7 +74,7 @@ the distance from one equator crossing to the next or from the minimum\n\
 latitude to the maximum latitude.  Distances greater than 180 degrees do\n\
 not correspond to shortest paths.\n\
 \n\
-The output lines consist of the three quantities needs to complete the\n\
+The output lines consist of the three quantities needed to complete the\n\
 specification of the geodesic.  With the -f option, each line of output\n\
 is a complete geodesic specification consisting of seven quantities\n\
 \n\
