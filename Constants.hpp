@@ -88,7 +88,8 @@ namespace GeographicLib {
     ///@}
 
     /**
-     * Factor to convert from nautical miles (approximately 1 arc minute) to meters.
+     * Factor to convert from nautical miles (approximately 1 arc minute) to
+     * meters.
      **********************************************************************/
     static inline double nauticalmile() throw() { return 1852 * meter(); }
 

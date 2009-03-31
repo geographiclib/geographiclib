@@ -47,7 +47,7 @@ namespace GeographicLib {
   const double Geodesic::tol0 = numeric_limits<double>::epsilon();
   const double Geodesic::tol1 = 100 * tol0;
   const double Geodesic::tol2 = sqrt(numeric_limits<double>::epsilon());
-  const double Geodesic::xthresh = 10 * tol2;
+  const double Geodesic::xthresh = 100 * tol2;
 
   Geodesic::Geodesic(double a, double r) throw()
     : _a(a)
@@ -221,8 +221,11 @@ namespace GeographicLib {
 	double v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
 			    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
 			    u2, trip < 1, dv, c) - lam12;
-	if (abs(v) <= eps2 || !(trip < 1))
+	if (abs(v) <= eps2 || !(trip < 1)) {
+	  if (abs(v) > max(tol1, ov))
+	    numit = maxit;
 	  break;
+	}
 	double
 	  dalp1 = -v/dv;
 	double
@@ -322,7 +325,7 @@ namespace GeographicLib {
 	y = (lam12 - Constants::pi()) / lamscale;
       }
 
-      if (y > -tol1 && x >  -1 - xthresh) {
+      if (y > -100 * tol1 && x >  -1 - xthresh) {
 	// strip near cut
 	if (_f >= 0) {
 	  salp1 = min(1.0, -x); calp1 = - sqrt(1 - sq(salp1));

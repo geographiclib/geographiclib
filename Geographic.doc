@@ -20,7 +20,7 @@
 classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates and for solving
 geodesic problems.  The emphasis is on returning accurate results with
-errors close to round-off (about 5&ndash;12 nm).  In addition, various
+errors close to round-off (about 5&ndash;15 nm).  In addition, various
 properties of the \ref transversemercator are described and a new
 accurate algorithm for \ref geodesic is given.
 
@@ -1029,7 +1029,7 @@ iteration.  This approach has three drawbacks:
    this case.
  .
 Here we reformulate the geodesic problem with three goals:
- - Accuracy to round-off.  We achieve an accuracy of 12 nm using
+ - Accuracy to round-off.  We achieve an accuracy of 15 nm using
    doubles.
  - Always yield a solution.  The direct problem is trivial.  In the
    case of inverse problem, the geodesic is returned.  (And in the event
@@ -1259,7 +1259,7 @@ solution correspond to the same path and is important, e.g., when point
 error, the calculations in (2), (4), (6), (7), and (8) use a long double
 version of the direct geodesic calculation (which is about 2000 times
 more accurate than the double version).  The maximum of the resulting
-errors in less than 12 nm for the double version and 7 pm for the long
+errors in less than 15 nm for the double version and 7 pm for the long
 double version.
 
 None of the checks listed above directly compares the computed azimuths
@@ -1289,7 +1289,7 @@ calculation with azi1 = 90<sup>o</sup> and arc length of
 
 So instead of directly quoting the errors in the azimuths, we must use
 the back-to-front formulation: The azimuths returned are the correct
-azimuths for some geodesic with end-points within 12 nm of the given
+azimuths for some geodesic with end-points within 15 nm of the given
 end-points.
 
 \section geodtodo Loose ends on geodesics
@@ -1365,7 +1365,7 @@ Geographic coordinates which are close to zero are quantized (by adding
 and subtracting 1/16 deg).  This allows certain cases of underflow to be
 avoided.  This limits the accuracy to which coordinates can be specified
 to 0.7 pm.  This should not be a problem since the overall accuracy of
-the algorithms is only 12 nm.
+the algorithms is only 15 nm.
 
 You can specify a \e negative flattening to get a prolate spheroid.  The
 rule is that \e b is the radius of the axis of symmetry (the polar
@@ -2089,6 +2089,7 @@ list of changes.
   - Use STATIC_ASSERT for compile-time checking of constants.
   - Improvements to GeographicLib::Geodesic:
     - compile-time option to change order of series used,
+    - post maxima code for generating the series,
     - tune the order of series for double,
     - improvements in the selection of starting points for Newton's
       method,
