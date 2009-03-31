@@ -2092,7 +2092,7 @@ list of changes.
   - Use STATIC_ASSERT for compile-time checking of constants.
   - Improvements to GeographicLib::Geodesic:
     - compile-time option to change order of series used,
-    - post maxima code for generating the series,
+    - post Maxima code for generating the series,
     - tune the order of series for double,
     - improvements in the selection of starting points for Newton's
       method,
