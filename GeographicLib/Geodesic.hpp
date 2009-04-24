@@ -74,6 +74,8 @@ namespace GeographicLib {
     static const int tauord = GEOD_TAU_ORD;
     static const int ntau = tauord;
     static const int nsig = tauord;
+    static const int zetord = GEOD_TAU_ORD;
+    static const int nzet = zetord;
     static const int etaord = GEOD_TAU_ORD;
     // etaCoeff is multiplied by etaFactor which is O(f), so we reduce the
     // order to which etaCoeff is computed by 1.
@@ -133,13 +135,13 @@ namespace GeographicLib {
 
     // These are maxima generated functions to provide series approximations to
     // the integrals for the spheroidal geodesic.
-    static double tauFactor(double u2) throw();
+    static double dtauFactor(double u2) throw();
     static void tauCoeff(double u2, double t[]) throw();
     static void sigCoeff(double u2, double tp[]) throw();
+    static double dzetFactor(double u2) throw();
+    static void zetCoeff(double u2, double t[]) throw();
     static double etaFactor(double f, double mu) throw();
     static void etaCoeff(double f, double mu, double h[]) throw();
-    static double etaFactormu(double f, double mu) throw();
-    static void etaCoeffmu(double f, double mu, double hp[]) throw();
 
   public:
 
@@ -180,7 +182,8 @@ namespace GeographicLib {
      * all cases where this occurs.
      **********************************************************************/
     double Inverse(double lat1, double lon1, double lat2, double lon2,
-		   double& s12, double& azi1, double& azi2) const throw();
+		   double& s12, double& azi1, double& azi2, double& m12)
+      const throw();
 
     /**
      * Set up to do a series of ranges.  This returns a GeodesicLine object
@@ -241,8 +244,8 @@ namespace GeographicLib {
     static const int neta = Geodesic::neta;
 
     double _lat1, _lon1, _azi1;
-    double  _f1, _salp0, _calp0,
-      _ssig1, _csig1, _stau1, _ctau1, _schi1, _cchi1,
+    double  _f1, _salp0, _calp0, _u2,
+      _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
       _sScale, _etaFactor, _dtau1, _dlam1;
     double _sigCoeff[ntau > nsig ? (ntau ? ntau : 1) : (nsig ? nsig : 1)],
       _etaCoeff[neta ? neta : 1];

@@ -19,6 +19,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <stdexcept>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -62,31 +63,54 @@ int main(int argc, char* argv[]) {
     } else
       return usage(arg != "-h");
   }
+
+  if (localcartesian) {
+    if ( !(-90 <= latlonh0[0] && latlonh0[0] <= 90) ) {
+      std::cerr << "Latitude not in range [-90, 90]\\n";
+      return 1;
+    } else if ( !(-180 <= latlonh0[1] && latlonh0[1] <= 360) ) {
+      std::cerr << "Longitude not in range [-180, 360]\\n";
+      return 1;
+    }
+  }
+
   const GeographicLib::LocalCartesian lc(latlonh0[0], latlonh0[1], latlonh0[2]);
   const GeographicLib::Geocentric& ec = GeographicLib::Geocentric::WGS84;
 
+  std::string s;
+  int retval = 0;
   std::cout << std::setprecision(16);
-  while (true) {
-    double lat, lon, h, x, y, z;
-    if (reverse)
-      std::cin >> x >> y >> z;
-    else
-      std::cin >> lat >> lon >> h;
-    if (!std::cin.good())
-      break;
-    if (reverse) {
-      if (localcartesian)
-	lc.Reverse(x, y, z, lat, lon, h);
-      else
-	ec.Reverse(x, y, z, lat, lon, h);
-      std::cout << lat << " " << lon << " " << h << "\n";
-    } else {
-      if (localcartesian)
-	lc.Forward(lat, lon, h, x, y, z);
-      else
-	ec.Forward(lat, lon, h, x, y, z);
-      std::cout << x << " " << y << " " << z << "\n";
+  while (std::getline(std::cin, s)) {
+    try {
+      std::istringstream str(s);
+      double lat, lon, h, x, y, z;
+      if (!(reverse ?
+	    (str >> x >> y >> z) :
+	    (str >> lat >> lon >> h)))
+	throw  std::out_of_range("Incomplete input: " + s);
+      if (reverse) {
+	if (localcartesian)
+	  lc.Reverse(x, y, z, lat, lon, h);
+	else
+	  ec.Reverse(x, y, z, lat, lon, h);
+	std::cout << lat << " " << lon << " " << h << "\n";
+      } else {
+	if ( !(-90 <= lat && lat <= 90) )
+	  throw std::out_of_range("Latitude not in range [-90, 90]\n");
+	if ( !(-180 <= lon && lat <= 360) )
+	  throw std::out_of_range("Longitude not in range [-180, 360]");
+	if (localcartesian)
+	  lc.Forward(lat, lon, h, x, y, z);
+	else
+	  ec.Forward(lat, lon, h, x, y, z);
+	std::cout << x << " " << y << " " << z << "\n";
+      }
+    }
+    catch (std::out_of_range& e) {
+      std::cout << "ERROR: " << e.what() << "\n";
+      retval = 1;
     }
   }
-  return 0;
+
+  return retval;
 }

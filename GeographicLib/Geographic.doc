@@ -1074,9 +1074,9 @@ allows distances to be specified in these terms.  See the -a option to
 A test set a geodesics is available at
  - http://charles.karney.info/geographic/GeodTest.dat.gz
  .
-This is about 25 MB (compressed).  This consists of a set of geodesics
+This is about 30 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
-members &mdash; about 1/2 MB, compressed) is available at
+members &mdash; about 600 kB, compressed) is available at
  - http://charles.karney.info/geographic/GeodTest-short.dat.gz
 
 Each line of the test set gives 7 space delimited numbers
@@ -1087,6 +1087,7 @@ Each line of the test set gives 7 space delimited numbers
  - longitude for point 2, \e lon2 (degrees, accurate to 10<sup>-18</sup> deg)
  - azimuth for point 2, \e azi2 (degrees, accurate to 10<sup>-18</sup> deg)
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
+ - reduced length XXXX
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
