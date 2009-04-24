@@ -248,7 +248,8 @@ int main(int argc, char* argv[]) {
 	  throw std::out_of_range("Incomplete input: " + s);
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-	double t = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);
+	double m12;
+	double t = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
 	if (arcmode) s12 = t;
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
@@ -256,7 +257,8 @@ int main(int argc, char* argv[]) {
 	if (full)
 	  std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
 	std::cout << AzimuthString(azi2 + azi2sense, prec, dms) << " "
-		  << DistanceString(s12, arcmode, prec, dms) << "\n";
+		  << DistanceString(s12, arcmode, prec, dms) << " "
+		  << DistanceString(m12, false, prec, false) << "\n";
       } else {
 	std::string slat1, slon1, sazi1, ss12;
 	if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))

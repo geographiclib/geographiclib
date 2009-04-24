@@ -206,7 +206,7 @@ namespace GeographicLib {
       angle -= floor(angle/360) * 360;
     int sign = angle < 0 ? -1 : 1;
     angle *= sign;
-      
+
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
     double

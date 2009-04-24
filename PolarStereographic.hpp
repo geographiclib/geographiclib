@@ -28,16 +28,26 @@ namespace GeographicLib {
    **********************************************************************/
   class PolarStereographic {
   private:
-    const double _a, _f, _k0, _e, _e2m, _c, _tol;
-    const int _numit;
+    const double _a, _f, _k0, _e2, _e, _e2m, _c;
+    static const double tol;
+    static const int numit = 5;
     static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }
+    static inline double atanh(double x) throw() {
+      return std::log((1 + x)/(1 - x))/2;
+    }
 #else
     static inline double hypot(double x, double y) throw()
     { return ::hypot(x, y); }
+    static inline double atanh(double x) throw() { return ::atanh(x); }
 #endif
+    // Return e * atanh(e * x) for f >= 0, else return
+    // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
+    inline double eatanhe(double x) const throw() {
+      return _f >= 0 ? _e * atanh(_e * x) : - _e * atan(_e * x);
+    }
   public:
 
     /**

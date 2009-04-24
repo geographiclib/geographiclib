@@ -35,7 +35,7 @@ namespace GeographicLib {
    * Several changes have been made to ensure that the method returns accurate
    * results for all finite inputs (even if \e h is infinite).  See
    * \ref geocentric for details.
-   * 
+   *
    * The errors in these routines are close to round-off.  Specifically, for
    * points within 5000 km of the surface of the ellipsoid (either inside or
    * outside the ellipsoid), the error is bounded by 7 nm for the WGS84
@@ -44,7 +44,7 @@ namespace GeographicLib {
 
   class Geocentric {
   private:
-    const double _a, _f, _e2, _e4, _e2m, _maxrad;
+    const double _a, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
     static inline double sq(double x) throw() { return x * x; }
 #if defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
@@ -62,8 +62,8 @@ namespace GeographicLib {
 
     /**
      * Constructor for a ellipsoid radius \e a (meters) and reciprocal
-     * flattening \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
-     * (i.e., a sphere).
+     * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
+     * (i.e., a sphere).  Negative \e r indicates a prolate spheroid.
      **********************************************************************/
     Geocentric(double a, double r) throw();
 

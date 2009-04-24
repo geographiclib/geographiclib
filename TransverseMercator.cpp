@@ -58,11 +58,14 @@ namespace GeographicLib {
   TransverseMercator::TransverseMercator(double a, double r, double k0)
     throw()
     : _a(a)
-    , _f(r > 0 ? 1 / r : 0)
+    , _f(r != 0 ? 1 / r : 0)
     , _k0(k0)
     , _e2(_f * (2 - _f))
-    , _e(sqrt(_e2))
+    , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
+      // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) ) )
+      // See, for example, Lee (1976), p 100.
+    , _c( sqrt(_e2m) * exp(eatanhe(1.0)) )
     , _n(_f / (2 - _f))
   {
     switch (maxpow) {
@@ -235,8 +238,7 @@ namespace GeographicLib {
     if (lat < 90) {
       double
 	qp = asinh(tan(phi)),
-	qpp = atanh(_e * sin(phi)),
-	q = qp - _e * qpp;
+	q = qp - eatanhe(sin(phi));
       xip = atan2(sinh(q), cos(lam));
       etap = atanh(sin(lam) / cosh(q));
       // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
@@ -250,8 +252,7 @@ namespace GeographicLib {
       xip = Constants::pi()/2;
       etap = 0;
       gamma = lam;
-      // See, for example, Lee (1976), p 100.
-      k = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) );
+      k = _c;
     }
     // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse mercator
     // (for eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
@@ -462,7 +463,7 @@ namespace GeographicLib {
       for (int i = 0; i < numit; ++i) {
 	double
 	  t = tanh(qp),
-	  dqp = -(qp - _e * atanh(_e * t) - q) * (1 - _e2 * sq(t)) / _e2m;
+	  dqp = -(qp - eatanhe(t) - q) * (1 - _e2 * sq(t)) / _e2m;
 	qp += dqp;
 	if (abs(dqp) < tol)
 	  break;
@@ -474,7 +475,7 @@ namespace GeographicLib {
     } else {
       phi = Constants::pi()/2;
       lam = 0;
-      k *= sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) );
+      k *= _c;
     }
     lat = phi / Constants::degree() * xisign;
     lon = lam / Constants::degree();
