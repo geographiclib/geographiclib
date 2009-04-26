@@ -104,6 +104,7 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
 #endif
+    static void Evolute(double R, double z, double& c, double& s) throw();
     void InverseStart(double sbet1, double cbet1, double n1,
 		      double sbet2, double cbet2,
 		      double lam12, double slam12, double clam12,
