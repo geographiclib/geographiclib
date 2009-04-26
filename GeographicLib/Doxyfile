@@ -464,8 +464,8 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = Constants.hpp GeoConvert.cpp TransverseMercatorTest.cpp CartConvert.cpp Geod.cpp \
-GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp TransverseMercatorExact.cpp EllipticFunction.cpp Geocentric.cpp LocalCartesian.cpp Geodesic.cpp \
-GeoCoords.hpp MGRS.hpp UTMUPS.hpp DMS.hpp TransverseMercator.hpp PolarStereographic.hpp TransverseMercatorExact.hpp EllipticFunction.hpp Geocentric.hpp LocalCartesian.hpp Geodesic.hpp \
+GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp TransverseMercatorExact.cpp EllipticFunction.cpp Geocentric.cpp LocalCartesian.cpp Geodesic.cpp AzimuthalEquidistant.cpp \
+GeoCoords.hpp MGRS.hpp UTMUPS.hpp DMS.hpp TransverseMercator.hpp PolarStereographic.hpp TransverseMercatorExact.hpp EllipticFunction.hpp Geocentric.hpp LocalCartesian.hpp Geodesic.hpp AzimuthalEquidistant.hpp \
 Geographic.doc
 
 # This tag can be used to specify the character encoding of the source files that 

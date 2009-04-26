@@ -302,10 +302,10 @@ namespace GeographicLib {
     return sig12;
   }
 
-  void Geodesic::Evolute(double R, double z, double& c, double& s) throw() {
-    // Let _ax -> 1/_e2x
-    // _e2x = e2
-    // _e2mx = 1-e2
+  void Geodesic::Evolute(double R, double z, double& s, double& c) throw() {
+    // Solve (R - cos(phi)) * sin(phi) - z * cos(phi) = 0 for phi.  This is
+    // adapted from Geocentric::Reverse, taking e^2 -> 0 and a * e^2 -> 1 and
+    // scaling all variables to e^2.
     double
       p = sq(R),		// *e^4
       q = sq(z),		// *e^4
@@ -314,11 +314,11 @@ namespace GeographicLib {
       double
 	// Avoid possible division by zero when r = 0 by multiplying
 	// equations for s and t by r^3 and r, resp.
-	S = p * q / 4,	// *e^12 ... S = r^3 * s
+	S = p * q / 4,		// *e^12 ... S = r^3 * s
 	r2 = sq(r),		// *e^8
 	r3 = r * r2,		// *e^12
 	disc =  S * (2 * r3 + S); // *e^24
-      double u = r;		    // *e^4
+      double u = r;		  // *e^4
       if (disc >= 0) {
 	double T3 = r3 + S;	// *e^12
 	// Pick the sign on the sqrt to maximize abs(T3).  This minimizes
@@ -341,7 +341,7 @@ namespace GeographicLib {
 	u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / 3.0);
       }
       double
-	v = sqrt(sq(u) + q), // *e^4 guaranteed positive
+	v = sqrt(sq(u) + q),	// *e^4 guaranteed positive
 	// Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
 	// e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
 	uv = u < 0 ? q / (v - u) : u + v, // *e^4... u+v, guaranteed positive
@@ -349,17 +349,14 @@ namespace GeographicLib {
 	w = max(0.0, (uv - q) / (2 * v)), // *e^2
 	// Rearrange expression for k to avoid loss of accuracy due to
 	// subtraction.  Division by 0 not possible because uv > 0, w >= 0.
-	k = uv / (sqrt(uv + sq(w)) + w), // *e^2 ... guaranteed positive
+	k = uv / (sqrt(uv + sq(w)) + w),   // *e^2 ... guaranteed positive
 	d = k * R / (k + 1);		   // *e^0
       s = z;
       c = d;
-    } else {			// e4 * q == 0 && r <= 0
+    } else {			// q == 0 && r <= 0
       // Very near equatorial plane with R <= a * e^2.  This leads to k = 0
       // using the general formula and division by 0 in formula for h.  So
-      // handle this case directly.  The condition e4 * q == 0 implies abs(z)
-      // < 1.e-145 for WGS84 so it's OK to treat these points as though z =
-      // 0.  (But we do take care that the sign of phi matches the sign of
-      // z.)
+      // handle this case directly.
       s = sqrt( -6 * r);
       c = sqrt(p);
     }
@@ -422,16 +419,17 @@ namespace GeographicLib {
       if (y > -100 * tol1 && x >  -1 - xthresh) {
 	// strip near cut
 	if (_f >= 0) {
-	  salp1 = min(1.0, -x); calp1 = - sqrt(1 - sq(salp1));
+	  salp1 = min( 1.0, -x); calp1 = - sqrt(1 - sq(salp1));
 	} else {
-	  calp1 = max(-1.0, x); salp1 =   sqrt(1 - sq(calp1));
+	  calp1 = max(-1.0,  x); salp1 =   sqrt(1 - sq(calp1));
 	}
       } else {
 	// Estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0.  (For
 	// f < 0, we're solving for pi/2 - alp2 and calp2 and salp2 are
 	// swapped.)
 	double salp2, calp2;
-	Evolute(-x, -y, salp2, calp2);
+	// Note phi = 90 - alpha2, so swap salp2 and calp2
+	Evolute(-x, -y, calp2, salp2);
 	// estimate omg12a = pi - omg12
 	double
 	  omg12a = lamscale * ( _f >= 0

@@ -21,7 +21,7 @@ PREFIX = /usr/local
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic
+	LocalCartesian Geodesic AzimuthalEquidistant
 
 HEADERS = Constants.hpp $(patsubst %,%.hpp,$(MODULES))
 SOURCES = $(patsubst %,%.cpp,$(MODULES))
