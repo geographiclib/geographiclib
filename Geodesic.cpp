@@ -30,6 +30,8 @@
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
+#include <iostream>
+#include <iomanip>
 
 #define GEODESIC_CPP "$Id$"
 
@@ -135,8 +137,9 @@ namespace GeographicLib {
     sbet1 = _f1 * sin(phi);
     cbet1 = lat1 == -90 ? eps2 : cos(phi);
     // n = 1/sqrt(1 - e2 * sq(sin(phi)))
-    n1 = 1/hypot(sbet1, cbet1);
-    sbet1 *= n1; cbet1 *= n1;
+    n1 = hypot(sbet1, cbet1);
+    sbet1 /= n1; cbet1 /= n1;
+    n1 = 1/n1;
 
     phi = lat2 * Constants::degree();
     // Ensure cbet2 = +eps at poles
@@ -277,7 +280,7 @@ namespace GeographicLib {
       sig12 /= Constants::degree();
       if (numit >= maxit) {
 	// Signal failure to converge by negating the distance and azimuths.
-	s12 *= -1; sig12 *= -1;
+	s12 *= -1; sig12 *= -1; m12 *= -1;
 	salp1 *= -1; calp1 *= -1;
 	salp2 *= -1; calp2 *= -1;
       }
@@ -297,6 +300,70 @@ namespace GeographicLib {
     // Returned value in [0, 180], unless it's negated to signal convergence
     // failure
     return sig12;
+  }
+
+  void Geodesic::Evolute(double R, double z, double& c, double& s) throw() {
+    // Let _ax -> 1/_e2x
+    // _e2x = e2
+    // _e2mx = 1-e2
+    double
+      p = sq(R),		// *e^4
+      q = sq(z),		// *e^4
+      r = (p + q - 1) / 6;	// *e^4
+    if ( !(q == 0 && r <= 0) ) {
+      double
+	// Avoid possible division by zero when r = 0 by multiplying
+	// equations for s and t by r^3 and r, resp.
+	S = p * q / 4,	// *e^12 ... S = r^3 * s
+	r2 = sq(r),		// *e^8
+	r3 = r * r2,		// *e^12
+	disc =  S * (2 * r3 + S); // *e^24
+      double u = r;		    // *e^4
+      if (disc >= 0) {
+	double T3 = r3 + S;	// *e^12
+	// Pick the sign on the sqrt to maximize abs(T3).  This minimizes
+	// loss of precision due to cancellation.  The result is unchanged
+	// because of the way the T is used in definition of u.
+	T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
+	// N.B. cbrt always returns the real root.  cbrt(-8) = -2.
+	double T = cbrt(T3);	// T = r * t
+	// T can be zero; but then r2 / T -> 0.
+	u += T + (T != 0 ? r2 / T : 0);
+      } else {
+	// T is complex, but the way u is defined the result is real.
+	double ang = atan2(sqrt(-disc), r3 + S);
+	// There are three possible real solutions for u depending on the
+	// multiple of 2*pi here.  We choose multiplier = 1 which leads to a
+	// jump in the solution across the line 2 + s = 0; but this
+	// nevertheless leads to a continuous (and accurate) solution for k.
+	// Other choices of the multiplier lead to poorly conditioned
+	// solutions near s = 0 (i.e., near p = 0 or q = 0).
+	u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / 3.0);
+      }
+      double
+	v = sqrt(sq(u) + q), // *e^4 guaranteed positive
+	// Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
+	// e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
+	uv = u < 0 ? q / (v - u) : u + v, // *e^4... u+v, guaranteed positive
+	// Need to guard against w going negative due to roundoff in uv - q.
+	w = max(0.0, (uv - q) / (2 * v)), // *e^2
+	// Rearrange expression for k to avoid loss of accuracy due to
+	// subtraction.  Division by 0 not possible because uv > 0, w >= 0.
+	k = uv / (sqrt(uv + sq(w)) + w), // *e^2 ... guaranteed positive
+	d = k * R / (k + 1);		   // *e^0
+      s = z;
+      c = d;
+    } else {			// e4 * q == 0 && r <= 0
+      // Very near equatorial plane with R <= a * e^2.  This leads to k = 0
+      // using the general formula and division by 0 in formula for h.  So
+      // handle this case directly.  The condition e4 * q == 0 implies abs(z)
+      // < 1.e-145 for WGS84 so it's OK to treat these points as though z =
+      // 0.  (But we do take care that the sign of phi matches the sign of
+      // z.)
+      s = sqrt( -6 * r);
+      c = sqrt(p);
+    }
+    SinCosNorm(s, c);
   }
 
   void Geodesic::InverseStart(double sbet1, double cbet1, double n1,
@@ -364,52 +431,7 @@ namespace GeographicLib {
 	// f < 0, we're solving for pi/2 - alp2 and calp2 and salp2 are
 	// swapped.)
 	double salp2, calp2;
-	if (y == 0) {
-	  salp2 = 1; calp2 = 0; // This applies only for x < -1
-	} else if (y > -0.027 && x > -1.09 && x < -0.91) {
-	  // Near singular point we have
-	  //     t^3 - 2*a*t - 2 = -t^2 * y^(2/3) approx 0
-	  // where a = (x + 1)/|y|^(2/3), t = calp2/|y|^(1/3)
-	  double
-	    y3 = cbrt(-y),
-	    a = (x + 1) / sq(y3),
-	    a3 = sq(a) * a,
-	    disc = 729 - 216 * a3, // sq(3 * sqrt(3) * sqrt(27 - 8 * a3))
-	    b = 4 * a3 - 27,
-	    t3 = a;		// t = - 3 / t3
-	  if (disc >= 0) {
-	    // b < 0 here, so use neg sqrt
-	    double s = cbrt( (b - sqrt(disc)) / 4 );
-	    t3 += s + sq(a)/s;
-	  } else {
-	    double ang = atan2(sqrt(-disc), b) + 2 * Constants::pi();
-	    t3 += 2 * a * cos(ang/3);
-	  }
-	  calp2 = - 3 * y3 / t3;
-	  // calp2 is small so sqrt is safe
-	  salp2 = sqrt(1 - sq(calp2));
-	} else {
-	  salp2 = 0;
-	  calp2 = 1;
-	}
-	// Now apply Newton's method to solve for salp2, calp2
-	for (unsigned i = 0; i < 30; ++i) {
-	  double
-	    v = calp2 * (salp2 + x) - y * salp2,
-	    dv = - calp2 * y - salp2 * x +
-	    (calp2 - salp2) * (calp2 + salp2),
-	    da = -v/dv,
-	    sda = sin(da),
-	    cda = cos(da),
-	    nsalp2 = salp2 * cda + calp2 * sda;
-	  if (v == 0)
-	    break;
-	  calp2 = max(0.0, calp2 * cda - salp2 * sda);
-	  salp2 = max(0.0, nsalp2);
-	  SinCosNorm(salp2, calp2);
-	  if (abs(da) < tol2)
-	    break;
-	}
+	Evolute(-x, -y, salp2, calp2);
 	// estimate omg12a = pi - omg12
 	double
 	  omg12a = lamscale * ( _f >= 0
@@ -1021,16 +1043,16 @@ namespace GeographicLib {
 
   // The scale factor, H, to convert eta to changes in lambda
   double Geodesic::etaFactor(double f, double mu) throw() {
-  double
-    e2 = f*(2-f),
-    ep2 = e2/sq(1-f),
-    u2 = ep2*mu,
-    eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-    fp = (f - eps) / (1 - eps),
-    nu = fp !=0 ? 2 * eps / fp : mu / (1 - mu/2),
-    nu2 = sq(nu);
-  double g;
-  switch (etaord) {
+    double
+      e2 = f*(2-f),
+      ep2 = e2/sq(1-f),
+      u2 = ep2*mu,
+      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
+      fp = (f - eps) / (1 - eps),
+      nu = fp !=0 ? 2 * eps / fp : mu / (1 - mu/2),
+      nu2 = sq(nu);
+    double g;
+    switch (etaord) {
     case 0:
       g = 0;
       break;
@@ -1062,7 +1084,7 @@ namespace GeographicLib {
       STATIC_ASSERT(etaord >= 0 && etaord <= 8, "Bad value of etaord");
       g = 0;
     }
-  return -f * (2 - f)/(2 - fp) * g;
+    return -f * (2 - f)/(2 - fp) * g;
   }
 
   // Coefficients, h[k], of sine series to convert sigma to eta
@@ -1146,6 +1168,4 @@ namespace GeographicLib {
       STATIC_ASSERT(neta >= 0 && neta <= 7, "Bad value of neta");
     }
   }
-
 } // namespace GeographicLib
-

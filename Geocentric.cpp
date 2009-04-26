@@ -115,7 +115,7 @@ namespace GeographicLib {
 	  v = sqrt(sq(u) + _e4x * q), // guaranteed positive
 	  // Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
 	  // e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
-	  uv = u < 0 ? _e4x * q / (v - u) : u + v, //  u+v, guaranteed positive
+	  uv = u < 0 ? _e4x * q / (v - u) : u + v, // u+v, guaranteed positive
 	  // Need to guard against w going negative due to roundoff in uv - q.
 	  w = max(0.0, _e2x * (uv - q) / (2 * v)),
 	  // Rearrange expression for k to avoid loss of accuracy due to
