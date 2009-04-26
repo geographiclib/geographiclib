@@ -21,6 +21,7 @@
 #include <iomanip>
 #include <sstream>
 #include <stdexcept>
+#include <algorithm>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -33,22 +34,25 @@ Perform geodesic calculations.\n\
 The shortest path between two points on the spheroid at (lat1, lon1) and\n\
 (lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic\n\
 from point 1 to point 2 has azimuths azi1 and azi2 at the two end\n\
-points.\n\
+points.  The reduced length of the geodesic, m12, is defined such that\n\
+if the initial azimuth is perturbed by dazi1 (radians) then the second\n\
+point is displaced by m12*dazi1 in the direction perpendicular to the\n\
+geodesic.  On a flat surface, we have m12 = s12.\n\
 \n\
 Geod operates in one of three modes:\n\
 \n\
 (1) It accepts lines on the standard input containing \"lat1 lon1 azi1\n\
-    s12\" and prints \"lat2 lon2 azi2\" on standard output.  This is the\n\
-    direct geodesic calculation.\n\
+    s12\" and prints \"lat2 lon2 azi2 m12\" on standard output.  This is\n\
+    the direct geodesic calculation.\n\
 \n\
 (2) Command line arguments \"-l lat1 lon1 azi1\" specify a geodesic line.\n\
     Geod then accepts a sequence of s12 values (one per line) on\n\
-    standard input and prints \"lat2 lon2 azi2\" for each.  This generates\n\
-    a sequence of points on a single geodesic.\n\
+    standard input and prints \"lat2 lon2 azi2 m12\" for each.  This\n\
+    generates a sequence of points on a single geodesic.\n\
 \n\
 (3) With the -i command line argument, Geod performs the inverse\n\
     geodesic calculation.  It reads lines containing \"lat1 lon1 lat2\n\
-    lon2\" and prints the corresponding values of \"azi1 azi2 s12\".\n\
+    lon2\" and prints the corresponding values of \"azi1 azi2 s12 m12\".\n\
 \n\
 By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
 equatorial radius of the spheroid to \"a\" and the reciprocal flattening\n\
@@ -74,11 +78,13 @@ the distance from one equator crossing to the next or from the minimum\n\
 latitude to the maximum latitude.  Distances greater than 180 degrees do\n\
 not correspond to shortest paths.\n\
 \n\
-The output lines consist of the three quantities needed to complete the\n\
+The output lines consist of the four quantities needed to complete the\n\
 specification of the geodesic.  With the -f option, each line of output\n\
-is a complete geodesic specification consisting of seven quantities\n\
+is a complete geodesic specification consisting of nine quantities\n\
 \n\
-    lat1 lon1 azi1 lat2 lon2 azi2 s12\n\
+    lat1 lon1 azi1 lat2 lon2 azi2 s12 sig12 m12\n\
+\n\
+where here s12 is the distance and sig12 the arc length.\n\
 \n\
 -p prec (default 3) gives the precision of the output relative to 1m.\n\
 The minimum value of prec is 0 (1 m accuracy) and the maximum value is\n\
@@ -127,16 +133,21 @@ double ReadAzimuth(const std::string& s) {
   return azi;
 }
 
-std::string DistanceString(double s12, bool arcmode, int prec, bool dms) {
+std::string DistanceStrings(double s12, double sig12, bool full,
+			    bool arcmode, int prec, bool dms) {
   using namespace GeographicLib;
-  if (arcmode && dms)
-    return DMS::Encode(s12, prec + 5, DMS::NONE);
-  else {
-    std::ostringstream os;
-    os << std::fixed << std::setprecision(prec + (arcmode ? 5 : 0))
-       << s12;
-    return os.str();
+  std::ostringstream os;
+  if (full || !arcmode)
+    os << std::fixed << std::setprecision(prec) << s12;
+  if (full)
+    os << " ";
+  if (full || arcmode) {
+    if (dms)
+      os << DMS::Encode(sig12, prec + 5, DMS::NONE);
+    else
+      os << std::fixed << std::setprecision(prec + 5) << sig12;
   }
+  return os.str();
 }
 
 double ReadDistance(const std::string& s, bool arcmode) {
@@ -162,7 +173,7 @@ int main(int argc, char* argv[]) {
   double
     a = GeographicLib::Constants::WGS84_a(),
     r = GeographicLib::Constants::WGS84_r();
-  double lat1, lon1, azi1, lat2, lon2, azi2, s12;
+  double lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, sig12;
   double azi2sense = 0;
   int prec = 3;
 
@@ -219,8 +230,8 @@ int main(int argc, char* argv[]) {
   if (linecalc)
     l = geod.Line(lat1, lon1, azi1);
 
-  // Max precision = 9: 1 nm in distance, 10^-14 deg (= 1.1 nm),
-  // 10^-10 sec (= 3 nm).
+  // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
+  // 10^-11 sec (= 0.3 nm).
   prec = std::min(10, std::max(0, prec));
   std::cout << std::fixed << std::setprecision(prec);
   std::string s;
@@ -228,53 +239,49 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
-      if (linecalc) {
-	std::string ss12;
-	if (!(str >> ss12))
-	    throw std::out_of_range("Incomplete input: " + s);
-	s12 = ReadDistance(ss12, arcmode);
-	l.Position(s12, lat2, lon2, azi2, arcmode);
-	if (full)
-	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
-	    AzimuthString(azi1, prec, dms) << " ";
-	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
-	  AzimuthString(azi2 + azi2sense, prec, dms);
-	if (full)
-	  std::cout << " " << DistanceString(s12, arcmode, prec, dms);
-	std::cout << "\n";
-      } else if (inverse) {
+      if (inverse) {
 	std::string slat1, slon1, slat2, slon2;
 	if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
 	  throw std::out_of_range("Incomplete input: " + s);
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-	double m12;
-	double t = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
-	if (arcmode) s12 = t;
+	sig12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
 	std::cout << AzimuthString(azi1, prec, dms) << " ";
 	if (full)
 	  std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
 	std::cout << AzimuthString(azi2 + azi2sense, prec, dms) << " "
-		  << DistanceString(s12, arcmode, prec, dms) << " "
-		  << DistanceString(m12, false, prec, false) << "\n";
+		  << DistanceStrings(s12, sig12, full, arcmode, prec, dms)
+		  << " " << m12 << "\n";
       } else {
-	std::string slat1, slon1, sazi1, ss12;
-	if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
-	  throw std::out_of_range("Incomplete input: " + s);
-	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
-	azi1 = ReadAzimuth(sazi1);
-	s12 = ReadDistance(ss12, arcmode);
-	geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, arcmode);
+	if (linecalc) {
+	  std::string ss12;
+	  if (!(str >> ss12))
+	    throw std::out_of_range("Incomplete input: " + s);
+	  s12 = ReadDistance(ss12, arcmode);
+	  sig12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
+	} else {
+	  std::string slat1, slon1, sazi1, ss12;
+	  if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
+	    throw std::out_of_range("Incomplete input: " + s);
+	  GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
+	  azi1 = ReadAzimuth(sazi1);
+	  s12 = ReadDistance(ss12, arcmode);
+	  sig12 =
+	    geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12, arcmode);
+	}
+	if (arcmode)
+	  std::swap(s12, sig12);
 	if (full)
-	  std::cout << LatLonString(lat1, lon1, prec, dms) << " " <<
-	    AzimuthString(azi1, prec, dms) << " ";
-	std::cout << LatLonString(lat2, lon2, prec, dms) << " " <<
-	  AzimuthString(azi2 + azi2sense, prec, dms);
+	  std::cout << LatLonString(lat1, lon1, prec, dms) << " "
+		    << AzimuthString(azi1, prec, dms) << " ";
+	std::cout << LatLonString(lat2, lon2, prec, dms) << " "
+		  << AzimuthString(azi2 + azi2sense, prec, dms);
 	if (full)
-	  std::cout << " " << DistanceString(s12, arcmode, prec, dms);
-	std::cout << "\n";
+	  std::cout << " "
+		    << DistanceStrings(s12, sig12, full, arcmode, prec, dms);
+	std::cout << " " << m12 << "\n";
       }
     }
     catch (std::out_of_range& e) {
