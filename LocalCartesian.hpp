@@ -25,7 +25,7 @@ namespace GeographicLib {
    * north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
    *
    * The conversions all take place via geocentric coordinates using a
-   * GeographicLib::GeoCentric object (by default
+   * GeographicLib::Geocentric object (by default
    * GeographicLib::Geocentric::WGS84).
    **********************************************************************/
 
