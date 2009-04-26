@@ -83,11 +83,11 @@ namespace GeographicLib {
   }
 
   double Geodesic::Direct(double lat1, double lon1, double azi1, double s12,
-			  double& lat2, double& lon2, double& azi2,
+			  double& lat2, double& lon2, double& azi2, double& m12,
 			  bool arcmode)
     const throw() {
     GeodesicLine l(*this, lat1, lon1, azi1);
-    return l.Position(s12, lat2, lon2, azi2, arcmode);
+    return l.Position(s12, lat2, lon2, azi2, m12, arcmode);
   }
 
   double Geodesic::Inverse(double lat1, double lon1, double lat2, double lon2,
@@ -149,8 +149,9 @@ namespace GeographicLib {
       slam12 = lon12 == 180 ? 0 :sin(lam12),
       clam12 = cos(lam12);	// lon12 == 90 isn't interesting
 
-    double sig12, calp1, salp1, calp2, salp2,
-      c[ntau > neta ? (ntau ? ntau : 1) : (neta ? neta : 1)];
+    double sig12, calp1, salp1, calp2, salp2;
+    double tc[ntau ? ntau : 1], zc[nzet ? nzet : 1], ec[neta ? neta : 1];
+
     // Enumerate all the cases where the geodesic is a meridian.  This includes
     // coincident points.
     bool meridian = lat1 == -90 || (_f >= 0 ? slam12 : lam12) == 0;
@@ -162,14 +163,14 @@ namespace GeographicLib {
       //
       // if bet2b < bet2 < bet2a, the geodesic is not a meridian
       double h0 = etaFactor(_f, 1.0);
-      etaCoeff(_f, 1.0, c);
+      etaCoeff(_f, 1.0, ec);
       double
 	sbet12a = sbet2 * cbet1 + cbet2 * sbet1,
 	cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
 	bet12a = atan2(sbet12a, cbet12a), // bet12a = bet2 + bet1
 	x = ( sbet12a / (cbet1 * cbet2)
-	      + h0 * (bet12a + (SinSeries(sbet2, cbet2, c, neta) +
-				SinSeries(sbet1, cbet1, c, neta))) ) /
+	      + h0 * (bet12a + (SinSeries(sbet2, cbet2, ec, neta) +
+				SinSeries(sbet1, cbet1, ec, neta))) ) /
 	(h0 * Constants::pi());
       meridian = x <= -1;
     }
@@ -190,22 +191,22 @@ namespace GeographicLib {
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		    csig1 * csig2 + ssig1 * ssig2);
 
-      tauCoeff(_ep2, c);
+      tauCoeff(_ep2, tc);
       double
-	dtau = dtauFactor(_ep2),
-	et = (1 + dtau) * (SinSeries(ssig2, csig2, c, ntau) -
-			   SinSeries(ssig1, csig1, c, ntau));
-      zetCoeff(_ep2, c);
+	taufm1 = tauFactorm1(_ep2),
+	et = (1 + taufm1) * (SinSeries(ssig2, csig2, tc, ntau) -
+			     SinSeries(ssig1, csig1, tc, ntau));
+      zetCoeff(_ep2, zc);
       double
-	dzet = dzetFactor(_ep2),
-	ez = (1 + dzet) * (SinSeries(ssig2, csig2, c, nzet) -
-			   SinSeries(ssig1, csig1, c, nzet));
+	zetfm1 = zetFactorm1(_ep2),
+	ez = (1 + zetfm1) * (SinSeries(ssig2, csig2, zc, nzet) -
+			     SinSeries(ssig1, csig1, zc, nzet));
 
       m12 = _a * (sqrt(1 - _e2 * sq(cbet2)) * csig1 * ssig2 -
 		  sqrt(1 - _e2 * sq(cbet1)) * ssig1 * csig2)
-	- _b * csig1 * csig2 * ( (dtau - dzet) * sig12 + (et - ez) );
+	- _b * csig1 * csig2 * ( (taufm1 - zetfm1) * sig12 + (et - ez) );
 
-      s12 = _b * ((1 + dtau) * sig12 + et);
+      s12 = _b * ((1 + taufm1) * sig12 + et);
       sig12 /= Constants::degree();
     } else if (sbet1 == 0 &&	// and sbet2 == 0
 	       (_f <= 0 ||
@@ -223,7 +224,7 @@ namespace GeographicLib {
 
       // Figure a starting point for Newton's method
       InverseStart(sbet1, cbet1, n1, sbet2, cbet2,
-		   lam12, slam12, clam12, salp1, calp1, c);
+		   lam12, slam12, clam12, salp1, calp1, ec);
 
       // Newton's method
       double ssig1, csig1, ssig2, csig2, u2;
@@ -233,7 +234,7 @@ namespace GeographicLib {
 	double dv;
 	double v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
 			    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-			    u2, trip < 1, dv, c) - lam12;
+			    u2, trip < 1, dv, tc, zc, ec) - lam12;
 	if (abs(v) <= eps2 || !(trip < 1)) {
 	  if (abs(v) > max(tol1, ov))
 	    numit = maxit;
@@ -257,22 +258,21 @@ namespace GeographicLib {
 	ov = abs(v);
       }
 
-      tauCoeff(u2, c);
+      tauCoeff(u2, tc);
       double
-	dtau = dtauFactor(u2),
-	et = (1 + dtau) * (SinSeries(ssig2, csig2, c, ntau) -
-			     SinSeries(ssig1, csig1, c, ntau));
-      zetCoeff(u2, c);
+	taufm1 = tauFactorm1(u2),
+	et = (1 + taufm1) * (SinSeries(ssig2, csig2, tc, ntau) -
+			     SinSeries(ssig1, csig1, tc, ntau));
+      zetCoeff(u2, zc);
       double
-	dzet = dzetFactor(u2),
-	ez = (1 + dzet) * (SinSeries(ssig2, csig2, c, nzet) -
-			   SinSeries(ssig1, csig1, c, nzet));
+	zetfm1 = zetFactorm1(u2),
+	ez = (1 + zetfm1) * (SinSeries(ssig2, csig2, zc, nzet) -
+			     SinSeries(ssig1, csig1, zc, nzet));
 
       m12 = _a * (sqrt(1 - _e2 * sq(cbet2)) * csig1 * ssig2 -
 		  sqrt(1 - _e2 * sq(cbet1)) * ssig1 * csig2)
-	- _b * csig1 * csig2 * ( (dtau - dzet) * sig12 + (et - ez) );
-
-      s12 = _b * ((1 + dtau) * sig12 + et);
+	- _b * csig1 * csig2 * ( (taufm1 - zetfm1) * sig12 + (et - ez) );
+      s12 = _b * ((1 + taufm1) * sig12 + et);
 
       sig12 /= Constants::degree();
       if (numit >= maxit) {
@@ -303,7 +303,7 @@ namespace GeographicLib {
 			      double sbet2, double cbet2,
 			      double lam12, double slam12, double clam12,
 			      double& salp1, double& calp1,
-			      double c[]) const throw() {
+			      double ec[]) const throw() {
     // Figure a starting point for Newton's method
     double
       // How close to antipodal lat?
@@ -340,12 +340,12 @@ namespace GeographicLib {
 	  h0 = etaFactor(_f, 1.0),
 	  cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
 	  bet12a = atan2(sbet12a, cbet12a);
-	etaCoeff(_f, 1.0, c);
+	etaCoeff(_f, 1.0, ec);
 	// In the case of lon12 = 180, this repeats a calculation made in
 	// Inverse.
 	x = ( sbet12a / (cbet1 * cbet2)
-	      + h0 * (bet12a +  (SinSeries(sbet2, cbet2, c, neta) +
-				 SinSeries(sbet1, cbet1, c, neta))) ) /
+	      + h0 * (bet12a +  (SinSeries(sbet2, cbet2, ec, neta) +
+				 SinSeries(sbet1, cbet1, ec, neta))) ) /
 	  (h0 * Constants::pi());
 	betscale = x < -0.01 ? sbet12a / x : -_f * sq(cbet1) * Constants::pi();
 	lamscale = betscale / cbet1;
@@ -432,7 +432,8 @@ namespace GeographicLib {
 			    double& ssig1, double& csig1,
 			    double& ssig2, double& csig2,
 			    double& u2,
-			    bool diffp, double& dlam12, double c[])
+			    bool diffp, double& dlam12,
+			    double tc[], double zc[], double ec[])
     const throw() {
 
     if (sbet1 == 0 && calp1 == 0)
@@ -483,8 +484,9 @@ namespace GeographicLib {
 		  comg1 * comg2 + somg1 * somg2);
     double eta12, h0;
     mu = sq(calp0);
-    etaCoeff(_f, mu, c);
-    eta12 = SinSeries(ssig2, csig2, c, neta) - SinSeries(ssig1, csig1, c, neta);
+    etaCoeff(_f, mu, ec);
+    eta12 = (SinSeries(ssig2, csig2, ec, neta) -
+	     SinSeries(ssig1, csig1, ec, neta));
     h0 = etaFactor(_f, mu),
     lam12 = omg12 + salp0 * h0 * (sig12 + eta12);
     u2 = mu * _ep2;
@@ -493,20 +495,20 @@ namespace GeographicLib {
       if (calp2 == 0)
 	dlam12 = - 2 * sqrt(1 - _e2 * sq(cbet1)) / sbet1;
       else {
-	tauCoeff(u2, c);
+	tauCoeff(u2, tc);
 	double
-	  dtau = dtauFactor(u2),
-	  et = (1 + dtau) * (SinSeries(ssig2, csig2, c, ntau) -
-			     SinSeries(ssig1, csig1, c, ntau));
-	zetCoeff(u2, c);
+	  taufm1 = tauFactorm1(u2),
+	  et = (1 + taufm1) * (SinSeries(ssig2, csig2, tc, ntau) -
+			       SinSeries(ssig1, csig1, tc, ntau));
+	zetCoeff(u2, zc);
 	double
-	  dzet = dzetFactor(u2),
-	  ez = (1 + dzet) * (SinSeries(ssig2, csig2, c, nzet) -
-			     SinSeries(ssig1, csig1, c, nzet));
+	  zetfm1 = zetFactorm1(u2),
+	  ez = (1 + zetfm1) * (SinSeries(ssig2, csig2, zc, nzet) -
+			       SinSeries(ssig1, csig1, zc, nzet));
 
 	dlam12 = (sqrt(1 - _e2 * sq(cbet2)) * csig1 * ssig2 -
 		   sqrt(1 - _e2 * sq(cbet1)) * ssig1 * csig2)
-	  - _f1 * csig1 * csig2 * ( (dtau - dzet) * sig12 + (et - ez) );
+	  - _f1 * csig1 * csig2 * ( (taufm1 - zetfm1) * sig12 + (et - ez) );
 	dlam12 /= calp2 * cbet2;
       }
     }
@@ -516,14 +518,17 @@ namespace GeographicLib {
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
 			     double lat1, double lon1, double azi1) throw() {
-    azi1 = Geodesic::AngNormalize(azi1);
-    // Normalize azimuth at poles.  Evaluate azimuths at lat = +/- (90 - eps).
-    if (lat1 == 90) {
-      lon1 -= azi1 - (azi1 >= 0 ? 180 : -180);
-      azi1 = -180;
-    } else if (lat1 == -90) {
-      lon1 += azi1;
-      azi1 = 0;
+    if (true) {
+      // Skip this for now.  Don't need to treat this as a special case.
+      azi1 = Geodesic::AngNormalize(azi1);
+      // Normalize azimuth at poles.  Evaluate azimuths at lat = +/- (90 - eps).
+      if (lat1 == 90) {
+	lon1 -= azi1 - (azi1 >= 0 ? 180 : -180);
+	azi1 = -180;
+      } else if (lat1 == -90) {
+	lon1 += azi1;
+	azi1 = 0;
+      }
     }
     // Guard against underflow in salp0
     azi1 = Geodesic::AngRound(azi1);
@@ -531,6 +536,7 @@ namespace GeographicLib {
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;
+    _b = g._b;
     _f1 = g._f1;
     // alp1 is in [0, pi]
     double
@@ -567,33 +573,67 @@ namespace GeographicLib {
 
     double mu = Geodesic::sq(_calp0);
     _u2 = mu * g._ep2;
+    _taufm1 =  Geodesic::tauFactorm1(_u2);
+    _zetfm1 =  Geodesic::zetFactorm1(_u2);
 
-    _sScale = g._b * (1 + Geodesic::dtauFactor(_u2));
-    Geodesic::tauCoeff(_u2, _sigCoeff);
-    _dtau1 = Geodesic::SinSeries(_ssig1, _csig1, _sigCoeff, ntau);
+    Geodesic::tauCoeff(_u2, _tauCoeff);
+    Geodesic::sigCoeff(_u2, _sigCoeff);
+    Geodesic::zetCoeff(_u2, _zetCoeff);
+    Geodesic::etaCoeff(g._f, mu, _etaCoeff);
+
+    _dtau1 = Geodesic::SinSeries(_ssig1, _csig1, _tauCoeff, ntau);
+    _dzet1 = Geodesic::SinSeries(_ssig1, _csig1, _zetCoeff, nzet);
     {
       double s = sin(_dtau1), c = cos(_dtau1);
       // tau1 = sig1 + dtau1
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
     }
-    Geodesic::sigCoeff(_u2, _sigCoeff);
     // Not necessary because sigCoeff reverts tauCoeff
     //    _dtau1 = -SinSeries(_stau1, _ctau1, _sigCoeff, nsig);
 
-    _etaFactor = _salp0 * Geodesic::etaFactor(g._f, mu);
-    Geodesic::etaCoeff(g._f, mu, _etaCoeff);
+    _etaf = _salp0 * Geodesic::etaFactor(g._f, mu);
     _dlam1 = Geodesic::SinSeries(_ssig1, _csig1, _etaCoeff, neta);
   }
 
-  void GeodesicLine::ArcPosition(double sig12, double ssig12, double csig12,
-				 double& lat2, double& lon2, double& azi2)
+  double GeodesicLine::Position(double s12,
+				double& lat2, double& lon2, double& azi2,
+				double& m12, bool arcmode)
   const throw() {
+    if (_b == 0)
+      // Uninitialized
+      return 0;
+    double sig12, ssig12, csig12, dtau2;
+    if (arcmode) {
+      // Interpret s12 as spherical arc length
+      sig12 = s12 * Constants::degree();
+      double s12a = abs(s12);
+      s12a -= 180 * floor(s12a / 180);
+      ssig12 = s12a ==  0 ? 0 : sin(sig12);
+      csig12 = s12a == 90 ? 0 : cos(sig12);
+    } else {
+      // Interpret s12 as distance
+      double
+	tau12 = s12 / (_b * (1 + _taufm1)),
+	s = sin(tau12),
+	c = cos(tau12);
+      // tau2 = tau1 + tau12
+      dtau2 = - Geodesic::SinSeries(_stau1 * c + _ctau1 * s,
+				    _ctau1 * c - _stau1 * s,
+				    _sigCoeff, nsig);
+      sig12 = tau12 - (dtau2 - _dtau1);
+      ssig12 = sin(sig12);
+      csig12 = cos(sig12);
+    }
+    // ArcPosition(sig12, ssig12, csig12, lat2, lon2, azi2);
+
     double omg12, lam12, lon12;
     double ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2;
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * csig12 + _csig1 * ssig12;
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
+    if (arcmode)
+      dtau2 = Geodesic::SinSeries(ssig2, csig2, _tauCoeff, ntau);
     // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
     // Alt: cbet2 = hypot(csig2, salp0 * ssig2);
@@ -605,7 +645,7 @@ namespace GeographicLib {
     // omg12 = omg2 - omg1
     omg12 = atan2(somg2 * _comg1 - comg2 * _somg1,
 		  comg2 * _comg1 + somg2 * _somg1);
-    lam12 = omg12 + _etaFactor *
+    lam12 = omg12 + _etaf *
       ( sig12 +
 	(Geodesic::SinSeries(ssig2, csig2, _etaCoeff, neta)  - _dlam1));
     lon12 = lam12 / Constants::degree();
@@ -616,38 +656,18 @@ namespace GeographicLib {
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);
     // minus signs give range [-180, 180). 0- converts -0 to +0.
     azi2 = 0 - atan2(-salp2, calp2) / Constants::degree();
-  }
 
-  double GeodesicLine::Position(double s12,
-				double& lat2, double& lon2, double& azi2,
-				bool arcmode)
-  const throw() {
-    if (_sScale == 0)
-      // Uninitialized
-      return 0;
-    double sig12, ssig12, csig12;
-    if (arcmode) {
-      // Interpret s12 as spherical arc length
-      sig12 = s12 * Constants::degree();
-      double s12a = abs(s12);
-      s12a -= 180 * floor(s12a / 180);
-      ssig12 = s12a ==  0 ? 0 : sin(sig12);
-      csig12 = s12a == 90 ? 0 : cos(sig12);
-    } else {
-      // Interpret s12 as distance
-      double
-	tau12 = s12 / _sScale,
-	s = sin(tau12),
-	c = cos(tau12);
-      sig12 = tau12 + (_dtau1 +
-		       // tau2 = tau1 + tau12
-		       Geodesic::SinSeries(_stau1 * c + _ctau1 * s,
-					   _ctau1 * c - _stau1 * s,
-					   _sigCoeff, nsig));
-      ssig12 = sin(sig12);
-      csig12 = cos(sig12);
-    }
-    ArcPosition(sig12, ssig12, csig12, lat2, lon2, azi2);
+    double
+      et = (1 + _taufm1) * (dtau2 - _dtau1),
+      ez = (1 + _zetfm1) * (Geodesic::SinSeries(ssig2, csig2, _zetCoeff, nzet)
+			    - _dzet1);
+
+    m12 = _b * ((sqrt(1 + _u2 * Geodesic::sq( ssig2)) * _csig1 * ssig2 -
+		 sqrt(1 + _u2 * Geodesic::sq(_ssig1)) * _ssig1 * csig2)
+		- _csig1 * csig2 * ( (_taufm1 - _zetfm1) * sig12 + (et - ez) ));
+    if (arcmode)
+      s12 = _b * ((1 + _taufm1) * sig12 + et);
+
     return arcmode ? s12 : sig12 /  Constants::degree();
   }
 
@@ -660,7 +680,7 @@ namespace GeographicLib {
   // Generated by Maxima on 13:48:48 Thu, 4/23/2009 (GMT-5)
 
   // The scale factor, T-1, to convert tau to s / b
-  double Geodesic::dtauFactor(double u2) throw() {
+  double Geodesic::tauFactorm1(double u2) throw() {
     double
       eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
       eps2 = sq(eps),
@@ -877,7 +897,7 @@ namespace GeographicLib {
   }
 
   // The scale factor, Z-1
-  double Geodesic::dzetFactor(double u2) throw() {
+  double Geodesic::zetFactorm1(double u2) throw() {
     double
       eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
       eps2 = sq(eps),

@@ -1942,19 +1942,22 @@ Geod is a command line utility for geodesic calculations.
 Example (route from JFK Airport to Singapore Changi Airport)
  - echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |\n
    ./Geod -i -d -p 0\n
-   => 003d18'29.9" 177d29'09.2" 15347628
+   => 003d18'29.9" 177d29'09.2" 15347628 4302458\n
+   This returns the azimuths at the two end points, the distance, and
+   the "reduced length".  The reduced length gives a measure of the
+   sensitivity of the end point to errors in the initial azimuth.
  - for ((i = 0; i <= 16; i += 2)); do echo ${i}000000;done |\n
    ./Geod -l "40d38'23N" "073d46'44W" "003d18'29.9" -d -p 0\n
    => way points at intervals of 2000 km on route\n
-   40d38'23.0"N 073d46'44.0"W 003d18'29.9"\n
-   58d34'45.1"N 071d49'36.7"W 004d48'48.8"\n
-   76d22'28.4"N 065d32'17.8"W 010d41'38.4"\n
-   84d50'28.0"N 075d04'39.2"E 150d55'00.9"\n
-   67d26'20.3"N 098d00'51.2"E 173d27'20.3"\n
-   49d33'03.2"N 101d06'52.6"E 176d07'54.3"\n
-   31d34'16.5"N 102d30'46.3"E 177d03'08.4"\n
-   13d31'56.0"N 103d26'50.7"E 177d24'55.0"\n
-   04d32'05.7"S 104d14'48.7"E 177d28'43.6"
+   40d38'23.0"N 073d46'44.0"W 003d18'29.9" 0\n
+   58d34'45.1"N 071d49'36.7"W 004d48'48.8" 1967419\n
+   76d22'28.4"N 065d32'17.8"W 010d41'38.4" 3743642\n
+   84d50'28.0"N 075d04'39.2"E 150d55'00.9" 5156905\n
+   67d26'20.3"N 098d00'51.2"E 173d27'20.3" 6070415\n
+   49d33'03.2"N 101d06'52.6"E 176d07'54.3" 6394568\n
+   31d34'16.5"N 102d30'46.3"E 177d03'08.4" 6095725\n
+   13d31'56.0"N 103d26'50.7"E 177d24'55.0" 5200700\n
+   04d32'05.7"S 104d14'48.7"E 177d28'43.6" 3795596
 
 Compile with "make Geod" or with
 
@@ -1971,22 +1974,25 @@ Perform geodesic calculations.
 The shortest path between two points on the spheroid at (lat1, lon1) and
 (lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic
 from point 1 to point 2 has azimuths azi1 and azi2 at the two end
-points.
+points.  The reduced length of the geodesic, m12, is defined such that
+if the initial azimuth is perturbed by dazi1 (radians) then the second
+point is displaced by m12*dazi1 in the direction perpendicular to the
+geodesic.  On a flat surface, we have m12 = s12.
 
 Geod operates in one of three modes:
 
 (1) It accepts lines on the standard input containing "lat1 lon1 azi1
-    s12" and prints "lat2 lon2 azi2" on standard output.  This is the
-    direct geodesic calculation.
+    s12" and prints "lat2 lon2 azi2 m12" on standard output.  This is
+    the direct geodesic calculation.
 
 (2) Command line arguments "-l lat1 lon1 azi1" specify a geodesic line.
     Geod then accepts a sequence of s12 values (one per line) on
-    standard input and prints "lat2 lon2 azi2" for each.  This generates
-    a sequence of points on a single geodesic.
+    standard input and prints "lat2 lon2 azi2 m12" for each.  This
+    generates a sequence of points on a single geodesic.
 
 (3) With the -i command line argument, Geod performs the inverse
     geodesic calculation.  It reads lines containing "lat1 lon1 lat2
-    lon2" and prints the corresponding values of "azi1 azi2 s12".
+    lon2" and prints the corresponding values of "azi1 azi2 s12 m12".
 
 By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
 equatorial radius of the spheroid to "a" and the reciprocal flattening
@@ -2012,11 +2018,13 @@ the distance from one equator crossing to the next or from the minimum
 latitude to the maximum latitude.  Distances greater than 180 degrees do
 not correspond to shortest paths.
 
-The output lines consist of the three quantities needed to complete the
+The output lines consist of the four quantities needed to complete the
 specification of the geodesic.  With the -f option, each line of output
-is a complete geodesic specification consisting of seven quantities
+is a complete geodesic specification consisting of nine quantities
 
-    lat1 lon1 azi1 lat2 lon2 azi2 s12
+    lat1 lon1 azi1 lat2 lon2 azi2 s12 sig12 m12
+
+where here s12 is the distance and sig12 the arc length.
 
 -p prec (default 3) gives the precision of the output relative to 1m.
 The minimum value of prec is 0 (1 m accuracy) and the maximum value is
