@@ -2,7 +2,7 @@
  * \file AzimuthalEquidistant.hpp
  * \brief Header for GeographicLib::AzimuthalEquidistant class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  **********************************************************************/
@@ -19,12 +19,14 @@ namespace GeographicLib {
    *
    * Azimuthal equidistant projection centered at an arbitrary position on the
    * ellipsoid.  For an point in projected space (\e x, \e y), the distance
-   * from the center position is hypot(\e x, \e y) and
-   * the azimuth from the center point is atan2(\e x, \e y).
+   * from the center position is hypot(\e x, \e y) and the azimuth from the
+   * center point is atan2(\e x, \e y).  The Forward and Reverse methods also
+   * return the azimuth and reduced length which, together with the basic
+   * properties of the projection, serve to specify completely the local affine
+   * transformation between geographic and projected coordinates.
    *
-   * The conversions all take place via geocentric coordinates using a
-   * GeographicLib::Geodesic object (by default
-   * GeographicLib::Geodesic::WGS84).
+   * The conversions all take place using a GeographicLib::Geodesic object (by
+   * default GeographicLib::Geodesic::WGS84).
    **********************************************************************/
 
   class AzimuthalEquidistant {

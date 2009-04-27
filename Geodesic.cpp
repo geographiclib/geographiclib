@@ -57,6 +57,7 @@ namespace GeographicLib {
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / sq(_f1))	// e2 / (1 - e2)
+    , _n(_f / ( 2 - _f))
     , _b(_a * _f1)
   {}
 
@@ -165,8 +166,8 @@ namespace GeographicLib {
       // tan(bet2[ab]) + tan(bet1) + H * (eta(bet2) + eta(bet1)) = +/- H * pi
       //
       // if bet2b < bet2 < bet2a, the geodesic is not a meridian
-      double h0 = etaFactor(_f, 1.0);
-      etaCoeff(_f, 1.0, ec);
+      double h0 = etaFactor(_f, _n);
+      etaCoeff(_f, _n, ec);
       double
 	sbet12a = sbet2 * cbet1 + cbet2 * sbet1,
 	cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
@@ -194,14 +195,14 @@ namespace GeographicLib {
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
 		    csig1 * csig2 + ssig1 * ssig2);
 
-      tauCoeff(_ep2, tc);
+      tauCoeff(_n, tc);
       double
-	taufm1 = tauFactorm1(_ep2),
+	taufm1 = tauFactorm1(_n),
 	et = (1 + taufm1) * (SinSeries(ssig2, csig2, tc, ntau) -
 			     SinSeries(ssig1, csig1, tc, ntau));
-      zetCoeff(_ep2, zc);
+      zetCoeff(_n, zc);
       double
-	zetfm1 = zetFactorm1(_ep2),
+	zetfm1 = zetFactorm1(_n),
 	ez = (1 + zetfm1) * (SinSeries(ssig2, csig2, zc, nzet) -
 			     SinSeries(ssig1, csig1, zc, nzet));
 
@@ -230,14 +231,19 @@ namespace GeographicLib {
 		   lam12, slam12, clam12, salp1, calp1, ec);
 
       // Newton's method
-      double ssig1, csig1, ssig2, csig2, u2;
+      double ssig1, csig1, ssig2, csig2, k1;
       double ov = 0;
       unsigned numit = 0;
       for (unsigned trip = 0; numit < maxit; ++numit) {
 	double dv;
 	double v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
 			    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-			    u2, trip < 1, dv, tc, zc, ec) - lam12;
+			    k1, trip < 1, dv, tc, zc, ec) - lam12;
+	/*
+	cerr << setprecision(16);
+	cerr << salp1 << " " << calp1 << " "
+	<< salp2 << " " << calp2 << "\n"; */
+
 	if (abs(v) <= eps2 || !(trip < 1)) {
 	  if (abs(v) > max(tol1, ov))
 	    numit = maxit;
@@ -261,14 +267,14 @@ namespace GeographicLib {
 	ov = abs(v);
       }
 
-      tauCoeff(u2, tc);
+      tauCoeff(k1, tc);
       double
-	taufm1 = tauFactorm1(u2),
+	taufm1 = tauFactorm1(k1),
 	et = (1 + taufm1) * (SinSeries(ssig2, csig2, tc, ntau) -
 			     SinSeries(ssig1, csig1, tc, ntau));
-      zetCoeff(u2, zc);
+      zetCoeff(k1, zc);
       double
-	zetfm1 = zetFactorm1(u2),
+	zetfm1 = zetFactorm1(k1),
 	ez = (1 + zetfm1) * (SinSeries(ssig2, csig2, zc, nzet) -
 			     SinSeries(ssig1, csig1, zc, nzet));
 
@@ -394,17 +400,23 @@ namespace GeographicLib {
       double x, y, lamscale, betscale;
       if (_f >= 0) {		// In fact f == 0 does not get here
 	// x = dlong, y = dlat
-	lamscale = -cbet1 * etaFactor(_f, sq(sbet1)) * Constants::pi();
+	{
+	  double
+	    mu = sq(sbet1),
+	    u2 = mu * _ep2,
+	    k1 = u2 / (2 * (1 + sqrt(1 + u2)) + u2);
+	  lamscale = -cbet1 * etaFactor(_f, k1) * Constants::pi();
+	}
 	betscale = lamscale * cbet1;
 	x = (lam12 - Constants::pi()) / lamscale;
 	y = sbet12a / betscale;
       } else {			// _f < 0
 	// x = dlat, y = dlong
 	double
-	  h0 = etaFactor(_f, 1.0),
+	  h0 = etaFactor(_f, _n),
 	  cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
 	  bet12a = atan2(sbet12a, cbet12a);
-	etaCoeff(_f, 1.0, ec);
+	etaCoeff(_f, _n, ec);
 	// In the case of lon12 = 180, this repeats a calculation made in
 	// Inverse.
 	x = ( sbet12a / (cbet1 * cbet2)
@@ -451,7 +463,7 @@ namespace GeographicLib {
 			    double& sig12,
 			    double& ssig1, double& csig1,
 			    double& ssig2, double& csig2,
-			    double& u2,
+			    double& k1,
 			    bool diffp, double& dlam12,
 			    double tc[], double zc[], double ec[])
     const throw() {
@@ -466,7 +478,7 @@ namespace GeographicLib {
       salp0 = salp1 * cbet1,
       calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    double somg1, comg1, somg2, comg2, omg12, lam12, mu;
+    double somg1, comg1, somg2, comg2, omg12, lam12, mu, u2;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1;
@@ -504,25 +516,26 @@ namespace GeographicLib {
 		  comg1 * comg2 + somg1 * somg2);
     double eta12, h0;
     mu = sq(calp0);
-    etaCoeff(_f, mu, ec);
+    u2 = mu * _ep2;
+    k1 = u2 / (2 * (1 + sqrt(1 + u2)) + u2);
+    etaCoeff(_f, k1, ec);
     eta12 = (SinSeries(ssig2, csig2, ec, neta) -
 	     SinSeries(ssig1, csig1, ec, neta));
-    h0 = etaFactor(_f, mu),
+    h0 = etaFactor(_f, k1),
     lam12 = omg12 + salp0 * h0 * (sig12 + eta12);
-    u2 = mu * _ep2;
 
     if (diffp) {
       if (calp2 == 0)
 	dlam12 = - 2 * sqrt(1 - _e2 * sq(cbet1)) / sbet1;
       else {
-	tauCoeff(u2, tc);
+	tauCoeff(k1, tc);
 	double
-	  taufm1 = tauFactorm1(u2),
+	  taufm1 = tauFactorm1(k1),
 	  et = (1 + taufm1) * (SinSeries(ssig2, csig2, tc, ntau) -
 			       SinSeries(ssig1, csig1, tc, ntau));
-	zetCoeff(u2, zc);
+	zetCoeff(k1, zc);
 	double
-	  zetfm1 = zetFactorm1(u2),
+	  zetfm1 = zetFactorm1(k1),
 	  ez = (1 + zetfm1) * (SinSeries(ssig2, csig2, zc, nzet) -
 			       SinSeries(ssig1, csig1, zc, nzet));
 
@@ -593,13 +606,14 @@ namespace GeographicLib {
 
     double mu = Geodesic::sq(_calp0);
     _u2 = mu * g._ep2;
-    _taufm1 =  Geodesic::tauFactorm1(_u2);
-    _zetfm1 =  Geodesic::zetFactorm1(_u2);
+    double k1 = _u2 / (2 * (1 + sqrt(1 + _u2)) + _u2);
+    _taufm1 =  Geodesic::tauFactorm1(k1);
+    _zetfm1 =  Geodesic::zetFactorm1(k1);
 
-    Geodesic::tauCoeff(_u2, _tauCoeff);
-    Geodesic::sigCoeff(_u2, _sigCoeff);
-    Geodesic::zetCoeff(_u2, _zetCoeff);
-    Geodesic::etaCoeff(g._f, mu, _etaCoeff);
+    Geodesic::tauCoeff(k1, _tauCoeff);
+    Geodesic::sigCoeff(k1, _sigCoeff);
+    Geodesic::zetCoeff(k1, _zetCoeff);
+    Geodesic::etaCoeff(g._f, k1, _etaCoeff);
 
     _dtau1 = Geodesic::SinSeries(_ssig1, _csig1, _tauCoeff, ntau);
     _dzet1 = Geodesic::SinSeries(_ssig1, _csig1, _zetCoeff, nzet);
@@ -612,7 +626,7 @@ namespace GeographicLib {
     // Not necessary because sigCoeff reverts tauCoeff
     //    _dtau1 = -SinSeries(_stau1, _ctau1, _sigCoeff, nsig);
 
-    _etaf = _salp0 * Geodesic::etaFactor(g._f, mu);
+    _etaf = _salp0 * Geodesic::etaFactor(g._f, k1);
     _dlam1 = Geodesic::SinSeries(_ssig1, _csig1, _etaCoeff, neta);
   }
 
@@ -700,40 +714,38 @@ namespace GeographicLib {
   // Generated by Maxima on 13:48:48 Thu, 4/23/2009 (GMT-5)
 
   // The scale factor, T-1, to convert tau to s / b
-  double Geodesic::tauFactorm1(double u2) throw() {
+  double Geodesic::tauFactorm1(double k1) throw() {
     double
-      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-      eps2 = sq(eps),
+      k2 = sq(k1),
       t;
     switch (tauord/2) {
     case 0:
       t = 0;
       break;
     case 1:
-      t = eps2/4;
+      t = k2/4;
       break;
     case 2:
-      t = eps2*(eps2+16)/64;
+      t = k2*(k2+16)/64;
       break;
     case 3:
-      t = eps2*(eps2*(eps2+4)+64)/256;
+      t = k2*(k2*(k2+4)+64)/256;
       break;
     case 4:
-      t = eps2*(eps2*(eps2*(25*eps2+64)+256)+4096)/16384;
+      t = k2*(k2*(k2*(25*k2+64)+256)+4096)/16384;
       break;
     default:
       STATIC_ASSERT(tauord >= 0 && tauord <= 8, "Bad value of tauord");
       t = 0;
     }
-    return (t + eps) / (1 - eps);
+    return (t + k1) / (1 - k1);
   }
 
   // Coefficients, t[k], of sine series to convert sigma to tau
-  void Geodesic::tauCoeff(double u2, double t[]) throw() {
+  void Geodesic::tauCoeff(double k1, double t[]) throw() {
     double
-      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-      eps2 = sq(eps),
-      d = eps;
+      k2 = sq(k1),
+      d = k1;
     switch (ntau) {
     case 0:
       break;
@@ -742,79 +754,79 @@ namespace GeographicLib {
       break;
     case 2:
       t[0] = -d/2;
-      d *= eps;
+      d *= k1;
       t[1] = -d/16;
       break;
     case 3:
-      t[0] = d*(3*eps2-8)/16;
-      d *= eps;
+      t[0] = d*(3*k2-8)/16;
+      d *= k1;
       t[1] = -d/16;
-      d *= eps;
+      d *= k1;
       t[2] = -d/48;
       break;
     case 4:
-      t[0] = d*(3*eps2-8)/16;
-      d *= eps;
-      t[1] = d*(eps2-2)/32;
-      d *= eps;
+      t[0] = d*(3*k2-8)/16;
+      d *= k1;
+      t[1] = d*(k2-2)/32;
+      d *= k1;
       t[2] = -d/48;
-      d *= eps;
+      d *= k1;
       t[3] = -5*d/512;
       break;
     case 5:
-      t[0] = d*((6-eps2)*eps2-16)/32;
-      d *= eps;
-      t[1] = d*(eps2-2)/32;
-      d *= eps;
-      t[2] = d*(9*eps2-16)/768;
-      d *= eps;
+      t[0] = d*((6-k2)*k2-16)/32;
+      d *= k1;
+      t[1] = d*(k2-2)/32;
+      d *= k1;
+      t[2] = d*(9*k2-16)/768;
+      d *= k1;
       t[3] = -5*d/512;
-      d *= eps;
+      d *= k1;
       t[4] = -7*d/1280;
       break;
     case 6:
-      t[0] = d*((6-eps2)*eps2-16)/32;
-      d *= eps;
-      t[1] = d*((64-9*eps2)*eps2-128)/2048;
-      d *= eps;
-      t[2] = d*(9*eps2-16)/768;
-      d *= eps;
-      t[3] = d*(3*eps2-5)/512;
-      d *= eps;
+      t[0] = d*((6-k2)*k2-16)/32;
+      d *= k1;
+      t[1] = d*((64-9*k2)*k2-128)/2048;
+      d *= k1;
+      t[2] = d*(9*k2-16)/768;
+      d *= k1;
+      t[3] = d*(3*k2-5)/512;
+      d *= k1;
       t[4] = -7*d/1280;
-      d *= eps;
+      d *= k1;
       t[5] = -7*d/2048;
       break;
     case 7:
-      t[0] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
-      d *= eps;
-      t[1] = d*((64-9*eps2)*eps2-128)/2048;
-      d *= eps;
-      t[2] = d*((72-9*eps2)*eps2-128)/6144;
-      d *= eps;
-      t[3] = d*(3*eps2-5)/512;
-      d *= eps;
-      t[4] = d*(35*eps2-56)/10240;
-      d *= eps;
+      t[0] = d*(k2*(k2*(19*k2-64)+384)-1024)/2048;
+      d *= k1;
+      t[1] = d*((64-9*k2)*k2-128)/2048;
+      d *= k1;
+      t[2] = d*((72-9*k2)*k2-128)/6144;
+      d *= k1;
+      t[3] = d*(3*k2-5)/512;
+      d *= k1;
+      t[4] = d*(35*k2-56)/10240;
+      d *= k1;
       t[5] = -7*d/2048;
-      d *= eps;
+      d *= k1;
       t[6] = -33*d/14336;
       break;
     case 8:
-      t[0] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
-      d *= eps;
-      t[1] = d*(eps2*(eps2*(7*eps2-18)+128)-256)/4096;
-      d *= eps;
-      t[2] = d*((72-9*eps2)*eps2-128)/6144;
-      d *= eps;
-      t[3] = d*((96-11*eps2)*eps2-160)/16384;
-      d *= eps;
-      t[4] = d*(35*eps2-56)/10240;
-      d *= eps;
-      t[5] = d*(9*eps2-14)/4096;
-      d *= eps;
+      t[0] = d*(k2*(k2*(19*k2-64)+384)-1024)/2048;
+      d *= k1;
+      t[1] = d*(k2*(k2*(7*k2-18)+128)-256)/4096;
+      d *= k1;
+      t[2] = d*((72-9*k2)*k2-128)/6144;
+      d *= k1;
+      t[3] = d*((96-11*k2)*k2-160)/16384;
+      d *= k1;
+      t[4] = d*(35*k2-56)/10240;
+      d *= k1;
+      t[5] = d*(9*k2-14)/4096;
+      d *= k1;
       t[6] = -33*d/14336;
-      d *= eps;
+      d *= k1;
       t[7] = -429*d/262144;
       break;
     default:
@@ -823,11 +835,10 @@ namespace GeographicLib {
   }
 
   // Coefficients, t'[k], of sine series to convert tau to sigma
-  void Geodesic::sigCoeff(double u2, double tp[]) throw() {
+  void Geodesic::sigCoeff(double k1, double tp[]) throw() {
     double
-      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-      eps2 = sq(eps),
-      d = eps;
+      k2 = sq(k1),
+      d = k1;
     switch (nsig) {
     case 0:
       break;
@@ -836,79 +847,79 @@ namespace GeographicLib {
       break;
     case 2:
       tp[0] = d/2;
-      d *= eps;
+      d *= k1;
       tp[1] = 5*d/16;
       break;
     case 3:
-      tp[0] = d*(16-9*eps2)/32;
-      d *= eps;
+      tp[0] = d*(16-9*k2)/32;
+      d *= k1;
       tp[1] = 5*d/16;
-      d *= eps;
+      d *= k1;
       tp[2] = 29*d/96;
       break;
     case 4:
-      tp[0] = d*(16-9*eps2)/32;
-      d *= eps;
-      tp[1] = d*(30-37*eps2)/96;
-      d *= eps;
+      tp[0] = d*(16-9*k2)/32;
+      d *= k1;
+      tp[1] = d*(30-37*k2)/96;
+      d *= k1;
       tp[2] = 29*d/96;
-      d *= eps;
+      d *= k1;
       tp[3] = 539*d/1536;
       break;
     case 5:
-      tp[0] = d*(eps2*(205*eps2-432)+768)/1536;
-      d *= eps;
-      tp[1] = d*(30-37*eps2)/96;
-      d *= eps;
-      tp[2] = d*(116-225*eps2)/384;
-      d *= eps;
+      tp[0] = d*(k2*(205*k2-432)+768)/1536;
+      d *= k1;
+      tp[1] = d*(30-37*k2)/96;
+      d *= k1;
+      tp[2] = d*(116-225*k2)/384;
+      d *= k1;
       tp[3] = 539*d/1536;
-      d *= eps;
+      d *= k1;
       tp[4] = 3467*d/7680;
       break;
     case 6:
-      tp[0] = d*(eps2*(205*eps2-432)+768)/1536;
-      d *= eps;
-      tp[1] = d*(eps2*(4005*eps2-4736)+3840)/12288;
-      d *= eps;
-      tp[2] = d*(116-225*eps2)/384;
-      d *= eps;
-      tp[3] = d*(2695-7173*eps2)/7680;
-      d *= eps;
+      tp[0] = d*(k2*(205*k2-432)+768)/1536;
+      d *= k1;
+      tp[1] = d*(k2*(4005*k2-4736)+3840)/12288;
+      d *= k1;
+      tp[2] = d*(116-225*k2)/384;
+      d *= k1;
+      tp[3] = d*(2695-7173*k2)/7680;
+      d *= k1;
       tp[4] = 3467*d/7680;
-      d *= eps;
+      d *= k1;
       tp[5] = 38081*d/61440;
       break;
     case 7:
-      tp[0] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
-      d *= eps;
-      tp[1] = d*(eps2*(4005*eps2-4736)+3840)/12288;
-      d *= eps;
-      tp[2] = d*(eps2*(8703*eps2-7200)+3712)/12288;
-      d *= eps;
-      tp[3] = d*(2695-7173*eps2)/7680;
-      d *= eps;
-      tp[4] = d*(41604-141115*eps2)/92160;
-      d *= eps;
+      tp[0] = d*(k2*((9840-4879*k2)*k2-20736)+36864)/73728;
+      d *= k1;
+      tp[1] = d*(k2*(4005*k2-4736)+3840)/12288;
+      d *= k1;
+      tp[2] = d*(k2*(8703*k2-7200)+3712)/12288;
+      d *= k1;
+      tp[3] = d*(2695-7173*k2)/7680;
+      d *= k1;
+      tp[4] = d*(41604-141115*k2)/92160;
+      d *= k1;
       tp[5] = 38081*d/61440;
-      d *= eps;
+      d *= k1;
       tp[6] = 459485*d/516096;
       break;
     case 8:
-      tp[0] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
-      d *= eps;
-      tp[1] = d*(eps2*((120150-86171*eps2)*eps2-142080)+115200)/368640;
-      d *= eps;
-      tp[2] = d*(eps2*(8703*eps2-7200)+3712)/12288;
-      d *= eps;
-      tp[3] = d*(eps2*(1082857*eps2-688608)+258720)/737280;
-      d *= eps;
-      tp[4] = d*(41604-141115*eps2)/92160;
-      d *= eps;
-      tp[5] = d*(533134-2200311*eps2)/860160;
-      d *= eps;
+      tp[0] = d*(k2*((9840-4879*k2)*k2-20736)+36864)/73728;
+      d *= k1;
+      tp[1] = d*(k2*((120150-86171*k2)*k2-142080)+115200)/368640;
+      d *= k1;
+      tp[2] = d*(k2*(8703*k2-7200)+3712)/12288;
+      d *= k1;
+      tp[3] = d*(k2*(1082857*k2-688608)+258720)/737280;
+      d *= k1;
+      tp[4] = d*(41604-141115*k2)/92160;
+      d *= k1;
+      tp[5] = d*(533134-2200311*k2)/860160;
+      d *= k1;
       tp[6] = 459485*d/516096;
-      d *= eps;
+      d *= k1;
       tp[7] = 109167851*d/82575360;
       break;
     default:
@@ -917,40 +928,38 @@ namespace GeographicLib {
   }
 
   // The scale factor, Z-1
-  double Geodesic::zetFactorm1(double u2) throw() {
+  double Geodesic::zetFactorm1(double k1) throw() {
     double
-      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-      eps2 = sq(eps),
+      k2 = sq(k1),
       t;
     switch (zetord/2) {
     case 0:
       t = 0;
       break;
     case 1:
-      t = eps2/4;
+      t = k2/4;
       break;
     case 2:
-      t = eps2*(9*eps2+16)/64;
+      t = k2*(9*k2+16)/64;
       break;
     case 3:
-      t = eps2*(eps2*(25*eps2+36)+64)/256;
+      t = k2*(k2*(25*k2+36)+64)/256;
       break;
     case 4:
-      t = eps2*(eps2*(eps2*(1225*eps2+1600)+2304)+4096)/16384;
+      t = k2*(k2*(k2*(1225*k2+1600)+2304)+4096)/16384;
       break;
     default:
       STATIC_ASSERT(zetord >= 0 && zetord <= 8, "Bad value of zetord");
       t = 0;
     }
-    return t * (1 - eps) - eps;
+    return t * (1 - k1) - k1;
   }
 
   // Coefficients, z[k], of sine series to convert sigma to zeta
-  void Geodesic::zetCoeff(double u2, double z[]) throw() {
+  void Geodesic::zetCoeff(double k1, double z[]) throw() {
     double
-      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-      eps2 = sq(eps),
-      d = eps;
+      k2 = sq(k1),
+      d = k1;
     switch (nzet) {
     case 0:
       break;
@@ -959,79 +968,79 @@ namespace GeographicLib {
       break;
     case 2:
       z[0] = d/2;
-      d *= eps;
+      d *= k1;
       z[1] = 3*d/16;
       break;
     case 3:
-      z[0] = d*(eps2+8)/16;
-      d *= eps;
+      z[0] = d*(k2+8)/16;
+      d *= k1;
       z[1] = 3*d/16;
-      d *= eps;
+      d *= k1;
       z[2] = 5*d/48;
       break;
     case 4:
-      z[0] = d*(eps2+8)/16;
-      d *= eps;
-      z[1] = d*(eps2+6)/32;
-      d *= eps;
+      z[0] = d*(k2+8)/16;
+      d *= k1;
+      z[1] = d*(k2+6)/32;
+      d *= k1;
       z[2] = 5*d/48;
-      d *= eps;
+      d *= k1;
       z[3] = 35*d/512;
       break;
     case 5:
-      z[0] = d*(eps2*(eps2+2)+16)/32;
-      d *= eps;
-      z[1] = d*(eps2+6)/32;
-      d *= eps;
-      z[2] = d*(15*eps2+80)/768;
-      d *= eps;
+      z[0] = d*(k2*(k2+2)+16)/32;
+      d *= k1;
+      z[1] = d*(k2+6)/32;
+      d *= k1;
+      z[2] = d*(15*k2+80)/768;
+      d *= k1;
       z[3] = 35*d/512;
-      d *= eps;
+      d *= k1;
       z[4] = 63*d/1280;
       break;
     case 6:
-      z[0] = d*(eps2*(eps2+2)+16)/32;
-      d *= eps;
-      z[1] = d*(eps2*(35*eps2+64)+384)/2048;
-      d *= eps;
-      z[2] = d*(15*eps2+80)/768;
-      d *= eps;
-      z[3] = d*(7*eps2+35)/512;
-      d *= eps;
+      z[0] = d*(k2*(k2+2)+16)/32;
+      d *= k1;
+      z[1] = d*(k2*(35*k2+64)+384)/2048;
+      d *= k1;
+      z[2] = d*(15*k2+80)/768;
+      d *= k1;
+      z[3] = d*(7*k2+35)/512;
+      d *= k1;
       z[4] = 63*d/1280;
-      d *= eps;
+      d *= k1;
       z[5] = 77*d/2048;
       break;
     case 7:
-      z[0] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
-      d *= eps;
-      z[1] = d*(eps2*(35*eps2+64)+384)/2048;
-      d *= eps;
-      z[2] = d*(eps2*(69*eps2+120)+640)/6144;
-      d *= eps;
-      z[3] = d*(7*eps2+35)/512;
-      d *= eps;
-      z[4] = d*(105*eps2+504)/10240;
-      d *= eps;
+      z[0] = d*(k2*(k2*(41*k2+64)+128)+1024)/2048;
+      d *= k1;
+      z[1] = d*(k2*(35*k2+64)+384)/2048;
+      d *= k1;
+      z[2] = d*(k2*(69*k2+120)+640)/6144;
+      d *= k1;
+      z[3] = d*(7*k2+35)/512;
+      d *= k1;
+      z[4] = d*(105*k2+504)/10240;
+      d *= k1;
       z[5] = 77*d/2048;
-      d *= eps;
+      d *= k1;
       z[6] = 429*d/14336;
       break;
     case 8:
-      z[0] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
-      d *= eps;
-      z[1] = d*(eps2*(eps2*(47*eps2+70)+128)+768)/4096;
-      d *= eps;
-      z[2] = d*(eps2*(69*eps2+120)+640)/6144;
-      d *= eps;
-      z[3] = d*(eps2*(133*eps2+224)+1120)/16384;
-      d *= eps;
-      z[4] = d*(105*eps2+504)/10240;
-      d *= eps;
-      z[5] = d*(33*eps2+154)/4096;
-      d *= eps;
+      z[0] = d*(k2*(k2*(41*k2+64)+128)+1024)/2048;
+      d *= k1;
+      z[1] = d*(k2*(k2*(47*k2+70)+128)+768)/4096;
+      d *= k1;
+      z[2] = d*(k2*(69*k2+120)+640)/6144;
+      d *= k1;
+      z[3] = d*(k2*(133*k2+224)+1120)/16384;
+      d *= k1;
+      z[4] = d*(105*k2+504)/10240;
+      d *= k1;
+      z[5] = d*(33*k2+154)/4096;
+      d *= k1;
       z[6] = 429*d/14336;
-      d *= eps;
+      d *= k1;
       z[7] = 6435*d/262144;
       break;
     default:
@@ -1040,14 +1049,10 @@ namespace GeographicLib {
   }
 
   // The scale factor, H, to convert eta to changes in lambda
-  double Geodesic::etaFactor(double f, double mu) throw() {
+  double Geodesic::etaFactor(double f, double k1) throw() {
     double
-      e2 = f*(2-f),
-      ep2 = e2/sq(1-f),
-      u2 = ep2*mu,
-      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-      fp = (f - eps) / (1 - eps),
-      nu = fp !=0 ? 2 * eps / fp : mu / (1 - mu/2),
+      fp = (f - k1) / (1 - k1),
+      nu = fp !=0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
       nu2 = sq(nu);
     double g;
     switch (etaord) {
@@ -1086,16 +1091,12 @@ namespace GeographicLib {
   }
 
   // Coefficients, h[k], of sine series to convert sigma to eta
-  void Geodesic::etaCoeff(double f, double mu, double h[]) throw() {
+  void Geodesic::etaCoeff(double f, double k1, double h[]) throw() {
     double
-      e2 = f*(2-f),
-      ep2 = e2/sq(1-f),
-      u2 = ep2*mu,
-      eps = u2 / (2 * (1 + sqrt(1 + u2)) + u2),
-      fp = (f - eps) / (1 - eps),
-      nu = fp !=0 ? 2 * eps / fp : mu / (1 - mu/2),
+      fp = (f - k1) / (1 - k1),
+      nu = fp !=0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
       nu2 = sq(nu);
-    double s = fp * nu, d = s;
+    double s = 2 * k1, d = s;
     switch (neta) {
     case 0:
       break;
