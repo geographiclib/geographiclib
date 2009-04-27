@@ -21,28 +21,25 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void AzimuthalEquidistant::Reset(double lat0, double lon0) throw() {
-    _lat0 = lat0;
-    _lon0 = lon0 >= 180 ? lon0 - 360 : lon0 < -180 ? lon0 + 360 : lon0;
-  }
-
-  void AzimuthalEquidistant::Forward(double lat, double lon,
+  void AzimuthalEquidistant::Forward(double lat0, double lon0,
+				     double lat, double lon,
 				     double& x, double& y,
 				     double& azi, double& m) const throw() {
-    double s12, azi1;
-    _earth.Inverse(_lat0, _lon0, lat, lon, s12, azi1, azi, m);
-    azi1 *= Constants::degree();
-    x = s12 * sin(azi1);
-    y = s12 * cos(azi1);
+    double s, azi0;
+    _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
+    azi0 *= Constants::degree();
+    x = s * sin(azi0);
+    y = s * cos(azi0);
   }
 
-  void AzimuthalEquidistant::Reverse(double x, double y,
+  void AzimuthalEquidistant::Reverse(double lat0, double lon0,
+				     double x, double y,
 				     double& lat, double& lon,
 				     double& azi, double& m) const throw() {
     double
-      azi1 = atan2(x, y) / Constants::degree(),
-      s12 = hypot(x, y);
-    _earth.Direct(_lat0, _lon0, azi1, s12, lat, lon, azi, m);
+      azi0 = atan2(x, y) / Constants::degree(),
+      s = hypot(x, y);
+    _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);
   }
 
 } // namespace GeographicLib

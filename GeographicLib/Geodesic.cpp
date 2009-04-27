@@ -131,16 +131,13 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    double phi, sbet1, cbet1, sbet2, cbet2, n1;
+    double phi, sbet1, cbet1, sbet2, cbet2;
 
     phi = lat1 * Constants::degree();
     // Ensure cbet1 = +eps at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = lat1 == -90 ? eps2 : cos(phi);
-    // n = 1/sqrt(1 - e2 * sq(sin(phi)))
-    n1 = hypot(sbet1, cbet1);
-    sbet1 /= n1; cbet1 /= n1;
-    n1 = 1/n1;
+    SinCosNorm(sbet1, cbet1);
 
     phi = lat2 * Constants::degree();
     // Ensure cbet2 = +eps at poles
@@ -227,7 +224,7 @@ namespace GeographicLib {
       // meridian.
 
       // Figure a starting point for Newton's method
-      InverseStart(sbet1, cbet1, n1, sbet2, cbet2,
+      InverseStart(sbet1, cbet1, sbet2, cbet2,
 		   lam12, slam12, clam12, salp1, calp1, ec);
 
       // Newton's method
@@ -369,7 +366,7 @@ namespace GeographicLib {
     SinCosNorm(s, c);
   }
 
-  void Geodesic::InverseStart(double sbet1, double cbet1, double n1,
+  void Geodesic::InverseStart(double sbet1, double cbet1,
 			      double sbet2, double cbet2,
 			      double lam12, double slam12, double clam12,
 			      double& salp1, double& calp1,
@@ -382,10 +379,26 @@ namespace GeographicLib {
       sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
 
     salp1 = cbet2 * slam12;
+    // For short lines we have
+    //
+    //    dy = (1 - e2) * n^3 * dphi
+    //    dx = cos(phi) * n * dlam
+    //    n = 1/sqrt(1-e2*sin(phi)^2)
+    //
+    // or in terms of reduced latitude
+    //
+    //    dy = sqrt(1 - e2) * n * dbeta = sqrt(1 - e2 * cos(beta)^2) * dbeta
+    //    dx = cos(beta) * dlam
+    //
+    // The factor
+    //
+    //    sqrt(1 - e2 * sq(cbet1))
+    //
+    // applies the spheroidal correction for close points.  This saves 1
+    // iteration of Newton's method in the case of short lines.
     calp1 = clam12 >= 0 ?
-      // The factor _f1*n1 applies a spheroidal correction for close points.
-      // This saves 1 iteration of Newton's method in the case of short lines.
-      sbet12 * _f1*n1 + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
+      sbet12 * (slam12 < 0.1 ? sqrt(1 - _e2 * sq(cbet1)) : 1.0)
+      + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
       sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
 
     double

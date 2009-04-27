@@ -103,14 +103,12 @@ namespace GeographicLib {
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
 #endif
     static void Evolute(double R, double z, double& c, double& s) throw();
-    void InverseStart(double sbet1, double cbet1, double n1,
-		      double sbet2, double cbet2,
+    void InverseStart(double sbet1, double cbet1, double sbet2, double cbet2,
 		      double lam12, double slam12, double clam12,
 		      double& salp1, double& calp1, double c[]) const throw();
     double Lambda12(double sbet1, double cbet1, double sbet2, double cbet2,
 		    double salp1, double calp1,
-		    double& salp2, double& calp2,
-		    double& sig12,
+		    double& salp2, double& calp2, double& sig12,
 		    double& ssig1, double& csig1, double& ssig2, double& csig2,
 		    double& k1, bool diffp, double& dlam12,
 		    double tc[], double zc[], double ec[])
