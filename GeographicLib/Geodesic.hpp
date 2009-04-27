@@ -13,17 +13,15 @@
 #if !defined(GEOD_TAU_ORD)
 /**
  * The order of the series relating \e s and \e sigma when expanded in powers
- * of \e u<sup>2</sup> = e'<sup>2</sup> cos<sup>2</sup> alpha<sub>0</sub>.
+ * of \e k1.
  **********************************************************************/
-#define GEOD_TAU_ORD 6
+#define GEOD_TAU_ORD 5
 #endif
 
 #if !defined(GEOD_ETA_ORD)
 /**
  * The order of the series relating \e lambda and \e eta when expanded in
- * powers of \e f.  Typically, this can be one less that GEOD_TAU_ORD because
- * the convergence of the series is more rapid when \e f is used as the
- * expansion parameter (Rainsford 1955).
+ * powers of \e fp.
  **********************************************************************/
 #define GEOD_ETA_ORD 5
 #endif
@@ -85,7 +83,7 @@ namespace GeographicLib {
     static const int nsig = tauord;
     static const int zetord = GEOD_TAU_ORD;
     static const int nzet = zetord;
-    static const int etaord = GEOD_TAU_ORD;
+    static const int etaord = GEOD_ETA_ORD;
     // etaCoeff is multiplied by etaFactor which is O(f), so we reduce the
     // order to which etaCoeff is computed by 1.
     static const int neta = etaord > 0 ? etaord - 1 : 0;
@@ -114,12 +112,12 @@ namespace GeographicLib {
 		    double& salp2, double& calp2,
 		    double& sig12,
 		    double& ssig1, double& csig1, double& ssig2, double& csig2,
-		    double& u2, bool diffp, double& dlam12,
+		    double& k1, bool diffp, double& dlam12,
 		    double tc[], double zc[], double ec[])
       const throw();
 
     static const double eps2, tol0, tol1, tol2, xthresh;
-    const double _a, _f, _f1, _e2, _ep2, _b;
+    const double _a, _f, _f1, _e2, _ep2, _n, _b;
     static double SinSeries(double sinx, double cosx, const double c[], int n)
       throw();
     static inline double AngNormalize(double x) throw() {
@@ -146,13 +144,13 @@ namespace GeographicLib {
 
     // These are maxima generated functions to provide series approximations to
     // the integrals for the spheroidal geodesic.
-    static double tauFactorm1(double u2) throw();
-    static void tauCoeff(double u2, double t[]) throw();
-    static void sigCoeff(double u2, double tp[]) throw();
-    static double zetFactorm1(double u2) throw();
-    static void zetCoeff(double u2, double t[]) throw();
-    static double etaFactor(double f, double mu) throw();
-    static void etaCoeff(double f, double mu, double h[]) throw();
+    static double tauFactorm1(double k1) throw();
+    static void tauCoeff(double k1, double t[]) throw();
+    static void sigCoeff(double k1, double tp[]) throw();
+    static double zetFactorm1(double k1) throw();
+    static void zetCoeff(double k1, double t[]) throw();
+    static double etaFactor(double f, double k1) throw();
+    static void etaCoeff(double f, double k1, double h[]) throw();
 
   public:
 
