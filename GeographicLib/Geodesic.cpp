@@ -30,8 +30,6 @@
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
-#include <iostream>
-#include <iomanip>
 
 #define GEODESIC_CPP "$Id$"
 
@@ -236,10 +234,6 @@ namespace GeographicLib {
 	double v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
 			    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
 			    k1, trip < 1, dv, tc, zc, ec) - lam12;
-	/*
-	cerr << setprecision(16);
-	cerr << salp1 << " " << calp1 << " "
-	<< salp2 << " " << calp2 << "\n"; */
 
 	if (abs(v) <= eps2 || !(trip < 1)) {
 	  if (abs(v) > max(tol1, ov))

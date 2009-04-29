@@ -50,13 +50,13 @@ http://charles.karney.info/geographic/
    - \ref geoddesc
    - \ref testgeod
    - \ref geoderrors
-   - \ref geodmisc
    - \ref geodseries
+   - \ref geodmisc
  - \ref geocentric
  - \ref utilities
    - \ref geoconvert
-   - \ref transversemercatortest
    - \ref geod
+   - \ref transversemercatortest
    - \ref cartconvert
  - \ref old
 
@@ -146,7 +146,7 @@ The following steps will get you started with %GeographicLib:
  - Try out \ref geoconvert (for help, type ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
- - Similarly, try out \ref transversemercatortest, \ref geod, and
+ - Similarly, try out \ref geod, \ref transversemercatortest, and
    \ref cartconvert.
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
@@ -1834,62 +1834,6 @@ then
 -h prints this help.
 \endverbatim
 
-\section transversemercatortest TransverseMercatorTest
-
-TransverseMercatorTest is a command line utility for testing
-GeographicLib::TransverseMercatorExact and
-GeographicLib::TransverseMercator.
-
-Examples:
- - echo 0 90 | ./TransverseMercatorTest\n=>
-   0 90 25953592.84 9997964.94 90 18.40
- - echo 260e5 100e5 | ./TransverseMercatorTest -r\n=>
-   -0.02 90.00 26000000 10000000 90.01 18.47
-
-Compile with "make TransverseMercatorTest" or with
-
-g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp
-TransverseMercatorExact.cpp EllipticFunction.cpp TransverseMercator.cpp
-
-Note that, unlike \ref geoconvert, TransverseMercatorTest has no
-facility for dealing with angles in degrees, minutes, and seconds, and
-no ability to change the precision of the output.
-
-Here is the usage (obtained from "TranverseMercatorTest -h")
-\verbatim
-TransverseMercatorTest [-r] [-t|-s]
-
-Convert between geographic coordinates and transverse Mercator coordinates.
-
-Read lines with latitude and longitude (or easting and northing if -r is
-specified) from standard input and print latitude, longitude, easting,
-northing, convergence, and scale.  Units are degrees and meters.
-
-By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM
-central scale, and false easting and false northing are zero.
-
-If -r is given, the reverse projection is performed (the inputs are easting
-and northing).
-
-If -s is given, the sixth-order Krueger series approximation to the
-transverse Mercator projection is used instead of the exact projection.
-
-If -t is specified, an ellipsoid of eccentricity 0.1 is used, central scale
-= 1, 1/4 meridian distance = 1.  In addition, the cut in the exact
-transverse Mercator projection at northing = 0 is removed.  The domain of
-latitude (lat) and longitude (lon) is the union of
-    lat in [0, 90]  and lon in [0, 90]
-    lat in (-90, 0] and lon in [81, 90]
-The domain of easting (x) and northing (x) is the union of
-    x in [0, inf)       and y in [0, 1]
-    x in [1.71..., inf) and y in (-inf, 0]
-
--s and -t are mutually exclusive (the last flag specified is the operative
-one).
-
--h prints this help.
-\endverbatim
-
 \section geod Geod
 
 Geod is a command line utility for geodesic calculations.
@@ -1971,19 +1915,75 @@ s12 is given in meters, unless the -a flag is given.  In that case, s12
 auxiliary sphere (measured in degrees).  In these terms, 180 degrees is
 the distance from one equator crossing to the next or from the minimum
 latitude to the maximum latitude.  Distances greater than 180 degrees do
-not correspond to shortest paths.
+not correspond to shortest paths.  m12 is always given in meters.
 
 The output lines consist of the four quantities needed to complete the
 specification of the geodesic.  With the -f option, each line of output
 is a complete geodesic specification consisting of nine quantities
 
-    lat1 lon1 azi1 lat2 lon2 azi2 s12 sig12 m12
+    lat1 lon1 azi1 lat2 lon2 azi2 s12 a12 m12
 
-where here s12 is the distance and sig12 the arc length.
+where here s12 is the distance and a12 the arc length.
 
 -p prec (default 3) gives the precision of the output relative to 1m.
 The minimum value of prec is 0 (1 m accuracy) and the maximum value is
 10 (0.1 nm accuracy, but then the last digits are unreliable).
+
+-h prints this help.
+\endverbatim
+
+\section transversemercatortest TransverseMercatorTest
+
+TransverseMercatorTest is a command line utility for testing
+GeographicLib::TransverseMercatorExact and
+GeographicLib::TransverseMercator.
+
+Examples:
+ - echo 0 90 | ./TransverseMercatorTest\n=>
+   0 90 25953592.84 9997964.94 90 18.40
+ - echo 260e5 100e5 | ./TransverseMercatorTest -r\n=>
+   -0.02 90.00 26000000 10000000 90.01 18.47
+
+Compile with "make TransverseMercatorTest" or with
+
+g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp
+TransverseMercatorExact.cpp EllipticFunction.cpp TransverseMercator.cpp
+
+Note that, unlike \ref geoconvert, TransverseMercatorTest has no
+facility for dealing with angles in degrees, minutes, and seconds, and
+no ability to change the precision of the output.
+
+Here is the usage (obtained from "TranverseMercatorTest -h")
+\verbatim
+TransverseMercatorTest [-r] [-t|-s]
+
+Convert between geographic coordinates and transverse Mercator coordinates.
+
+Read lines with latitude and longitude (or easting and northing if -r is
+specified) from standard input and print latitude, longitude, easting,
+northing, convergence, and scale.  Units are degrees and meters.
+
+By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM
+central scale, and false easting and false northing are zero.
+
+If -r is given, the reverse projection is performed (the inputs are easting
+and northing).
+
+If -s is given, the sixth-order Krueger series approximation to the
+transverse Mercator projection is used instead of the exact projection.
+
+If -t is specified, an ellipsoid of eccentricity 0.1 is used, central scale
+= 1, 1/4 meridian distance = 1.  In addition, the cut in the exact
+transverse Mercator projection at northing = 0 is removed.  The domain of
+latitude (lat) and longitude (lon) is the union of
+    lat in [0, 90]  and lon in [0, 90]
+    lat in (-90, 0] and lon in [81, 90]
+The domain of easting (x) and northing (x) is the union of
+    x in [0, inf)       and y in [0, 1]
+    x in [1.71..., inf) and y in (-inf, 0]
+
+-s and -t are mutually exclusive (the last flag specified is the operative
+one).
 
 -h prints this help.
 \endverbatim
@@ -2047,8 +2047,20 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-04
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-05
    (current)</a>
+  - Improvements to GeographicLib::Geodesic:
+    - more economical series expansions,
+    - return reduced length (as does \ref geod utility)
+    - improved calculation of starting point for inverse method,
+    - use reduced length to give derivative for Newton's method.
+  - Add AzimuthalEquidistant class.
+  - Make Geocentric, TransverseMercator, and PolarStereographic classes
+    work with prolate ellipsoids.
+  - CartConvert checks its inputs more carefully.
+  - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
+
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-04.tgz">2009-04</a>
   - Use compile-time constants to select the order of series in
     GeographicLib::TransverseMercator.
   - 2x unroll of Clenshaw summation to avoid data shuffling.
