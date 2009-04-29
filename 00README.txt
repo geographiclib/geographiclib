@@ -25,6 +25,7 @@ Files
     Geocentric.[ch]pp -- geocentric coordinates
     LocalCartesian.[ch]pp -- local cartesian coordinates
     Geodesic.[ch]pp -- geodesic calculatiosn
+    AzimuthalEquidistant.[ch]pp -- azimuthal equidistant coordinates
 
     GeoConvert.cpp -- geographic conversion utility
     TransverseMercatorTest.cpp -- TM tester
