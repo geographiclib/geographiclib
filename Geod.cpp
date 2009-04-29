@@ -76,15 +76,15 @@ s12 is given in meters, unless the -a flag is given.  In that case, s12\n\
 auxiliary sphere (measured in degrees).  In these terms, 180 degrees is\n\
 the distance from one equator crossing to the next or from the minimum\n\
 latitude to the maximum latitude.  Distances greater than 180 degrees do\n\
-not correspond to shortest paths.\n\
+not correspond to shortest paths.  m12 is always given in meters.\n\
 \n\
 The output lines consist of the four quantities needed to complete the\n\
 specification of the geodesic.  With the -f option, each line of output\n\
 is a complete geodesic specification consisting of nine quantities\n\
 \n\
-    lat1 lon1 azi1 lat2 lon2 azi2 s12 sig12 m12\n\
+    lat1 lon1 azi1 lat2 lon2 azi2 s12 a12 m12\n\
 \n\
-where here s12 is the distance and sig12 the arc length.\n\
+where here s12 is the distance and a12 the arc length.\n\
 \n\
 -p prec (default 3) gives the precision of the output relative to 1m.\n\
 The minimum value of prec is 0 (1 m accuracy) and the maximum value is\n\
@@ -133,7 +133,7 @@ double ReadAzimuth(const std::string& s) {
   return azi;
 }
 
-std::string DistanceStrings(double s12, double sig12, bool full,
+std::string DistanceStrings(double s12, double a12, bool full,
 			    bool arcmode, int prec, bool dms) {
   using namespace GeographicLib;
   std::ostringstream os;
@@ -143,9 +143,9 @@ std::string DistanceStrings(double s12, double sig12, bool full,
     os << " ";
   if (full || arcmode) {
     if (dms)
-      os << DMS::Encode(sig12, prec + 5, DMS::NONE);
+      os << DMS::Encode(a12, prec + 5, DMS::NONE);
     else
-      os << std::fixed << std::setprecision(prec + 5) << sig12;
+      os << std::fixed << std::setprecision(prec + 5) << a12;
   }
   return os.str();
 }
@@ -173,7 +173,7 @@ int main(int argc, char* argv[]) {
   double
     a = GeographicLib::Constants::WGS84_a(),
     r = GeographicLib::Constants::WGS84_r();
-  double lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, sig12;
+  double lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
   double azi2sense = 0;
   int prec = 3;
 
@@ -245,14 +245,14 @@ int main(int argc, char* argv[]) {
 	  throw std::out_of_range("Incomplete input: " + s);
 	GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-	sig12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
+	a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
 	std::cout << AzimuthString(azi1, prec, dms) << " ";
 	if (full)
 	  std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
 	std::cout << AzimuthString(azi2 + azi2sense, prec, dms) << " "
-		  << DistanceStrings(s12, sig12, full, arcmode, prec, dms)
+		  << DistanceStrings(s12, a12, full, arcmode, prec, dms)
 		  << " " << m12 << "\n";
       } else {
 	if (linecalc) {
@@ -260,7 +260,7 @@ int main(int argc, char* argv[]) {
 	  if (!(str >> ss12))
 	    throw std::out_of_range("Incomplete input: " + s);
 	  s12 = ReadDistance(ss12, arcmode);
-	  sig12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
+	  a12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
 	} else {
 	  std::string slat1, slon1, sazi1, ss12;
 	  if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
@@ -268,11 +268,11 @@ int main(int argc, char* argv[]) {
 	  GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
 	  azi1 = ReadAzimuth(sazi1);
 	  s12 = ReadDistance(ss12, arcmode);
-	  sig12 =
+	  a12 =
 	    geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12, arcmode);
 	}
 	if (arcmode)
-	  std::swap(s12, sig12);
+	  std::swap(s12, a12);
 	if (full)
 	  std::cout << LatLonString(lat1, lon1, prec, dms) << " "
 		    << AzimuthString(azi1, prec, dms) << " ";
@@ -280,7 +280,7 @@ int main(int argc, char* argv[]) {
 		  << AzimuthString(azi2 + azi2sense, prec, dms);
 	if (full)
 	  std::cout << " "
-		    << DistanceStrings(s12, sig12, full, arcmode, prec, dms);
+		    << DistanceStrings(s12, a12, full, arcmode, prec, dms);
 	std::cout << " " << m12 << "\n";
       }
     }

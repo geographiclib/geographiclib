@@ -45,10 +45,10 @@ namespace GeographicLib {
    * If we fix the first point and increase \e s12 by \e ds12, then the second
    * point is displaced \e ds12 in the direction \e azi2.  Similarly we
    * increase \e azi1 by \e dazi1 (radians), the the second point is displaced
-   * \e m12 dazi1 in the direction \e azi2 + 90<sup>o</sup>.  The quantity \e
-   * m12 is called the "reduced length" and is symmetric under interchange of
-   * the two points.  On a flat surface, he have \e m12 = \e s12.  The ratio \e
-   * s12/\e m12 gives the azimuthal scale for an azimuthal equidistant
+   * \e m12 \e dazi1 in the direction \e azi2 + 90<sup>o</sup>.  The quantity
+   * \e m12 is called the "reduced length" and is symmetric under interchange
+   * of the two points.  On a flat surface, he have \e m12 = \e s12.  The ratio
+   * \e s12/\e m12 gives the azimuthal scale for an azimuthal equidistant
    * projection.
    *
    * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e
@@ -64,7 +64,7 @@ namespace GeographicLib {
    * can be easily generated once a particular solution is provided.
    *
    * As an alternative to using distance to measure \e s12, the class can also
-   * use the arc length (in degrees) on the auxiliary sphere.  This is a
+   * use the arc length \e a12 (in degrees) on the auxiliary sphere.  This is a
    * mathematical construct used in solving the geodesic problems.  However, an
    * arc length in excess of 180<sup>o</sup> indicates that the geodesic is not
    * a shortest path.  In addition, the arc length between an equatorial
@@ -166,13 +166,13 @@ namespace GeographicLib {
      * range, \e s12 (meters) from point 1 to point 2, return the latitude, \e
      * lat2, longitude, \e lon2, and forward azimuth, \e azi2 (degrees) for
      * point 2 and the reduced length \e m12 (meters).  If \e arcmode (default
-     * false) is set to true, \e s12 is interpreted as the arc length (degrees)
-     * on the auxiliary sphere.  An arc length greater that 180 degrees results
-     * in a geodesic which is not a shortest path.  For a prolate spheroid, an
-     * additional condition is necessary for a shortest path: the longitudinal
-     * extent must not exceed of 180 degrees.  Returned value is the arc length
-     * (degrees) if \e arcmode is false, otherwise its the distance \e s12
-     * (meters)
+     * false) is set to true, \e s12 is interpreted as the arc length \e a12
+     * (degrees) on the auxiliary sphere.  An arc length greater that 180
+     * degrees results in a geodesic which is not a shortest path.  For a
+     * prolate spheroid, an additional condition is necessary for a shortest
+     * path: the longitudinal extent must not exceed of 180 degrees.  Returned
+     * value is the arc length \e a12 (degrees) if \e arcmode is false,
+     * otherwise it is the distance \e s12 (meters)
      **********************************************************************/
     double Direct(double lat1, double lon1, double azi1, double s12,
 		  double& lat2, double& lon2, double& azi2, double& m12,
@@ -184,9 +184,9 @@ namespace GeographicLib {
      * lon2, for point 2 (all in degrees), return the geodesic distance, \e s12
      * (meters), the forward azimuths, \e azi1 and \e azi2 (degrees) at points
      * 1 and 2, and the reduced length \e m12 (meters).  Returned value is the
-     * arc length (degrees) on the auxiliary sphere.  The routine uses an
-     * iterative method.  If the method fails to converge, the negative of the
-     * distances (\e s12 and the function value) and reverse of the azimuths
+     * arc length \e a12 (degrees) on the auxiliary sphere.  The routine uses
+     * an iterative method.  If the method fails to converge, the negative of
+     * the distances (\e s12, \e m12, and \e a12) and reverse of the azimuths
      * are returned.  This is not expected to happen with spheroidal models of
      * the earth.  Please report all cases where this occurs.
      **********************************************************************/
@@ -217,8 +217,8 @@ namespace GeographicLib {
    * GeodesicLine facilitates the determination of a series of points on a
    * single geodesic.  Geodesic.Line returns a GeodesicLine object with the
    * geodesic defined by by \e lat1, \e lon1, and \e azi1.
-   * GeodesicLine.Position returns the \e lat2, \e lon2, and \e azi2 given \e
-   * s12.  An example of use of this class is:
+   * GeodesicLine.Position returns the \e lat2, \e lon2, \e azi2, and \e m12
+   * given \e s12.  An example of use of this class is:
    \verbatim
    // Print positions on a geodesic going through latitude 30,
    // longitude 10 at azimuth 80.  Points at intervals of 10km
@@ -278,9 +278,9 @@ namespace GeographicLib {
      * \e azi2 (degrees) of the point 2 which is a distance, \e s12 (in
      * meters), from point 1.  Also return the reduced length \e m12 (meters).
      * \e s12 can be signed.  If \e arcmode (default false) is set to true, \e
-     * s12 is interpreted as the arc length (in degrees) on the auxiliary
-     * sphere.  Returned value is the arc length (degrees) if \e arcmode is
-     * false, otherwise its the distance \e s12 (meters).
+     * s12 is interpreted as the arc length \e a12 (in degrees) on the
+     * auxiliary sphere.  Returned value is the arc length \e a12 (degrees) if
+     * \e arcmode is false, otherwise it is the distance \e s12 (meters).
      **********************************************************************/
     double Position(double s12, double& lat2, double& lon2, double& azi2,
 		    double &m12, bool arcmode = false)
