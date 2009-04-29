@@ -26,26 +26,59 @@ To run the code, start Maxima and enter
 
 taylordepth:5$
 
-/* Compute T and t[k] */
-computetau(maxpow):=block([sintegrand,sintegrandexp,s,sigma,tau,u2],
+/*
+
+Express
+
+    integrate( sqrt(1+u2*sin(sigma1)^2), sigma1, 0, sigma )
+
+as a series
+
+    T * ( sigma + sum(t[k] * sin(2*sigma), k, 1, maxpow) )
+
+valid for u2 small.  It is convenient to write u2 = 4 * k1 / (1 - k1)^2
+and to expand (1 - k1) * integral retaining terms up to order k1^maxpow
+in T and t[k].  This leads to a series where half the terms drop out.
+
+*/
+
+computetau(maxpow):=block([sintegrand,sintegrandexp,s,sigma,tau,u2,k1],
   sintegrand:sqrt(1+u2*sin(sigma)^2),
-  sintegrandexp:ratdisrep(taylor(sintegrand,u2,0,maxpow)),
+/* Multiplicative factor 1/(1-k1) */
+  sintegrandexp:ratdisrep(taylor(
+      (1-k1)*subst([u2=4*k1/(1-k1)^2],sintegrand),
+      k1,0,maxpow)),
   s:trigreduce(integrate(sintegrandexp,sigma)),
   s:s-subst(sigma=0,s),
   T:expand(subst(sigma=2*%pi,s)/(2*%pi)),
-  tau:expand(ratdisrep(taylor(s/T,u2,0,maxpow))),
+  tau:expand(ratdisrep(taylor(s/T,k1,0,maxpow))),
   for i:1 thru maxpow do t[i]:coeff(tau,sin(2*i*sigma)),
   if expand(tau-sigma-sum(t[i]*sin(2*i*sigma),i,1,maxpow)) # 0
   then error("left over terms in tau"),
+  T:T/(1-k1),
   'done)$
 
-/* Compute t'[k] -- call after computetau(maxpow)$ */
-reverttau(maxpow):=block([sigma,tau,u2],local(sigma),
+/*
+
+Write
+
+    tau = sigma + sum(t[k] * sin(2*sigma), k, 1, maxpow)
+
+and revert this to obtain
+
+    sigma = tau + sum(tp[k] * sin(2*tau), k, 1, maxpow)
+
+retaining terms up to order k1^maxpow in tp[k].
+
+Call this after computetau(maxpow)$
+
+*/
+reverttau(maxpow):=block([sigma,tau,k1],local(sigma),
   sigma[0]:tau,
   for i:1 thru maxpow do (
     sigma[i]:tau-
     sum(trigreduce(ratdisrep(
-          taylor(t[j]*sin(2*j*sigma[i-j]),u2,0,i))),
+          taylor(t[j]*sin(2*j*sigma[i-j]),k1,0,i))),
       j,1,i)),
   sigma[maxpow]:expand(sigma[maxpow]),
   for i:1 thru maxpow do tp[i]:coeff(sigma[maxpow],sin(2*i*tau)),
@@ -53,24 +86,102 @@ reverttau(maxpow):=block([sigma,tau,u2],local(sigma),
   then error("left over terms in sigma"),
   'done)$
 
-/* Compute H and h[k] */
+/*
+
+Express
+
+    integrate( 1/sqrt(1+u2*sin(sigma1)^2), sigma1, 0, sigma )
+
+as a series
+
+    Z * ( sigma + sum(z[k] * sin(2*sigma), k, 1, N) )
+
+valid for u2 small.  It is convenient to write u2 = 4 * k1 / (1 - k1)^2
+and to expand integral / (1 - k1) retaining terms up to order k1^maxpow
+in Z and z[k]..  This leads to a series where half the terms drop out.
+
+*/
+
+computezeta(maxpow):=block([mintegrand,mintegrandexp,mm,sigma,u2,k1,mu],
+  /* Multiplicative factor (1-k1) */
+  mintegrand:1/sqrt(1+u2*sin(sigma)^2),
+  mintegrandexp:ratdisrep(taylor(
+      subst([u2=4*k1/(1-k1)^2],1/(1-k1)*mintegrand),
+      k1,0,maxpow)),
+  mm:trigreduce(integrate(mintegrandexp,sigma)),
+  mm:mm-subst(sigma=0,mm),
+  Z:expand(subst(sigma=2*%pi,mm)/(2*%pi)),
+  mu:expand(ratdisrep(taylor(mm/Z,k1,0,maxpow))),
+  for i:1 thru maxpow do z[i]:coeff(mu,sin(2*i*sigma)),
+  if expand(mu-sigma-sum(z[i]*sin(2*i*sigma),i,1,maxpow)) # 0
+  then error("left over terms in mu"),
+  Z:Z*(1-k1),
+  'done)$
+
+/*
+
+Express
+
+    integrate( -e2/(1+sqrt(1-e2+e2*mu*sin(sigma1)^2)), sigma1, 0, sigma )
+
+as a series
+
+    H * ( sigma + sum(h[k] * sin(2*sigma), k, 1, N) )
+
+valid for e2 small.  It is convenient to write the integrand in terms of
+fp and nu where
+
+    mu = u2*(1-e2)/e2,
+    e2 = f*(2-f),
+    u2 = 4*k1/(1-k1)^2,
+    f = (1-k1)*fp + k1,
+    k1 = nu*fp/2
+
+and to divide out a factor -f * (2 - f)/(2 - fp) before the expansion.
+Expand for small fp (and finite nu) retaining terms up to order
+fp^(maxpow-1), which is equivalent to expanding to order f^maxpow (after
+the factor is multiplied back).  This procedure leads to a series where
+half the terms drop out.
+
+*/
 computeeta(maxpow):=block([dlamintegrand,dlamintegrandexp,dlam,eta,e2,f],
-  dlamintegrand:subst(e2=f*(2-f),
-    -e2/(1+sqrt(1-e2)*sqrt(1+e2/(1-e2)*mu*sin(sigma)^2))),
-  dlamintegrandexp:ratdisrep(taylor(dlamintegrand,f,0,maxpow+1)),
-  dlam:trigreduce(integrate(dlamintegrandexp,sigma)),
+/* Multiplicative factor -e^2/(2-fp) = -f*(2-f)/(2-fp) */
+/* 1-fp = (1-f)/(1-k1)
+   u2 = 4*k1/(1-k1)^2
+   k1 = nu*fp/2
+
+   e2 = f*(2-f)
+   ep2 = e2/sq(1-f)
+   u2 = ep2*mu
+   k1 = u2 / (2 * (1 + sqrt(1 + u2)) + u2)
+   fp = (f - k1) / (1 - k1)
+   nu = 2 * k1 / fp
+       = mu / (1 - mu/2) (for f = 0)
+
+   mult factor = -f * (2 - f)/(2 - fp)
+   */
+   int:-e2/(1+sqrt(1-e2)*sqrt(1+e2/(1-e2)*mu*sin(sigma)^2)),
+   int:subst([mu=u2*(1-e2)/e2,
+     e2=f*(2-f),
+     u2=4*k1/(1-k1)^2,
+     f=(1-k1)*fp + k1,
+     k1=nu*fp/2],-(2-fp)/e2*int),
+  /* int : (2-fp)/(1+(1-fp)*sqrt(1+(nu*fp/2)^2-nu*fp*cos(2*sigma))) */
+  intexp:ratdisrep(taylor(int,fp,0,maxpow-1)),
+  dlam:trigreduce(integrate(intexp,sigma)),
   dlam:dlam-subst(sigma=0,dlam),
   H:expand(subst(sigma=2*%pi,dlam)/(2*%pi)),
-  eta:expand(ratdisrep(taylor(dlam/H,f,0,maxpow))),
-  H:expand(ratdisrep(taylor(H,f,0,maxpow))),
-  for i:1 thru maxpow do h[i]:coeff(eta,sin(2*i*sigma)),
-  if expand(eta-sigma-sum(h[i]*sin(2*i*sigma),i,1,maxpow)) # 0
+  eta:expand(ratdisrep(taylor(dlam/H,fp,0,maxpow-1))),
+  H:expand(ratdisrep(taylor(H,fp,0,maxpow))),
+  for i:1 thru maxpow-1 do h[i]:coeff(eta,sin(2*i*sigma)),
+  if expand(eta-sigma-sum(h[i]*sin(2*i*sigma),i,1,maxpow-1)) # 0
   then error("left over terms in eta"),
+  H:-f*(2-f)/(2-fp)*H,
   'done)$
 
 /* Call all of the above */
 computeall(maxpow):=(computetau(maxpow), reverttau(maxpow),
-  computeeta(maxpow))$
+ computezeta(maxpow), computeeta(maxpow))$
 
 /* FORMAT FOR C++ */
 
@@ -80,32 +191,40 @@ code.  STATIC_ASSERT is a macro to cause a compile-time error if the
 assertion is false.  */
 
 codetaufactor(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
-  print("  // The scale factor, T, to convert tau to s / b
-  double Geodesic::tauFactor(double u2) throw() {
-    switch (tauord) {"),
-  for n:minpow thru maxpow do block([q:horner(ratdisrep(taylor(T,u2,0,n))),
+  print("  // The scale factor, T-1, to convert tau to s / b
+  double Geodesic::tauFactorm1(double k1) throw() {
+    double
+      k2 = sq(k1),
+      t;
+    switch (tauord/2) {"),
+  for n:entier(minpow/2) thru entier(maxpow/2) do block([
+    q:horner(ratdisrep(taylor(subst([k1=sqrt(k2)],T*(1-k1)-1),k2,0,n))),
     linel:600],
     print(concat(tab2,"case ",string(n),":")),
-    print(concat(tab3,"return ",string(q),";")),
+    print(concat(tab3,"t = ",string(q),";")),
     print(concat(tab3,"break;"))),
   print(concat(tab2,"default:")),
   print(concat(tab3,"STATIC_ASSERT(tauord >= ",string(minpow),
       " && tauord <= ",string(maxpow),", \"Bad value of tauord\");")),
-  print(concat(tab3,"return 0;")),
+  print(concat(tab3,"t = 0;")),
   print("    }
+    return (t + k1) / (1 - k1);
   }"),
 'done)$
 
 codetaucoeff(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
   print("  // Coefficients, t[k], of sine series to convert sigma to tau
-  void Geodesic::tauCoeff(double u2, double t[]) throw() {
-    double d = u2;
+  void Geodesic::tauCoeff(double k1, double t[]) throw() {
+    double
+      k2 = sq(k1),
+      d = k1;
     switch (ntau) {"),
   for n:minpow thru maxpow do (
     print(concat(tab2,"case ",string(n),":")),
-    for m:1 thru n do block([q:d*horner(ratdisrep(taylor(t[m],u2,0,n))/u2^m),
+    for m:1 thru n do block([q:d*horner(
+        subst([k1=sqrt(k2)],ratdisrep(taylor(t[m],k1,0,n))/k1^m)),
       linel:600],
-      if m>1 then print(concat(tab3,"d *= u2;")),
+      if m>1 then print(concat(tab3,"d *= k1;")),
       print(concat(tab3,"t[",string(m-1),"] = ",string(q),";"))),
     print(concat(tab3,"break;"))),
   print(concat(tab2,"default:")),
@@ -117,14 +236,17 @@ codetaucoeff(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
 
 codesigcoeff(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
   print("  // Coefficients, t'[k], of sine series to convert tau to sigma
-  void Geodesic::sigCoeff(double u2, double tp[]) throw() {
-    double d = u2;
+  void Geodesic::sigCoeff(double k1, double tp[]) throw() {
+    double
+      k2 = sq(k1),
+      d = k1;
     switch (nsig) {"),
   for n:minpow thru maxpow do (
     print(concat(tab2,"case ",string(n),":")),
-    for m:1 thru n do block([q:d*horner(ratdisrep(taylor(tp[m],u2,0,n))/u2^m),
+    for m:1 thru n do block([q:d*horner(
+        subst([k1=sqrt(k2)],ratdisrep(taylor(tp[m],k1,0,n))/k1^m)),
       linel:600],
-      if m>1 then print(concat(tab3,"d *= u2;")),
+      if m>1 then print(concat(tab3,"d *= k1;")),
       print(concat(tab3,"tp[",string(m-1),"] = ",string(q),";"))),
     print(concat(tab3,"break;"))),
   print(concat(tab2,"default:")),
@@ -134,13 +256,63 @@ codesigcoeff(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
   }"),
 'done)$
 
+codezetafactor(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
+  print("  // The scale factor, Z-1
+  double Geodesic::zetFactorm1(double k1) throw() {
+    double
+      k2 = sq(k1),
+      t;
+    switch (zetord/2) {"),
+  for n:entier(minpow/2) thru entier(maxpow/2) do block([
+    q:horner(ratdisrep(taylor(subst([k1=sqrt(k2)],Z/(1-k1)-1),k2,0,n))),
+    linel:600],
+    print(concat(tab2,"case ",string(n),":")),
+    print(concat(tab3,"t = ",string(q),";")),
+    print(concat(tab3,"break;"))),
+  print(concat(tab2,"default:")),
+  print(concat(tab3,"STATIC_ASSERT(zetord >= ",string(minpow),
+      " && zetord <= ",string(maxpow),", \"Bad value of zetord\");")),
+  print(concat(tab3,"t = 0;")),
+  print("    }
+    return t * (1 - k1) - k1;
+  }"),
+'done)$
+
+codezetacoeff(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
+  print("  // Coefficients, z[k], of sine series to convert sigma to zeta
+  void Geodesic::zetCoeff(double k1, double z[]) throw() {
+    double
+      k2 = sq(k1),
+      d = k1;
+    switch (nzet) {"),
+  for n:minpow thru maxpow do (
+    print(concat(tab2,"case ",string(n),":")),
+    for m:1 thru n do block([q:d*horner(
+        subst([k1=sqrt(k2)],ratdisrep(taylor(z[m],k1,0,n))/k1^m)),
+      linel:600],
+      if m>1 then print(concat(tab3,"d *= k1;")),
+      print(concat(tab3,"z[",string(m-1),"] = ",string(q),";"))),
+    print(concat(tab3,"break;"))),
+  print(concat(tab2,"default:")),
+  print(concat(tab3,"STATIC_ASSERT(nzet >= ",string(minpow),
+      " && nzet <= ",string(maxpow),", \"Bad value of nzet\");")),
+  print("    }
+  }"),
+'done)$
+
 codeetafactor(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
   print("  // The scale factor, H, to convert eta to changes in lambda
-  double Geodesic::etaFactor(double f, double mu) throw() {
-  double g;
-  switch (etaord) {"),
+  double Geodesic::etaFactor(double f, double k1) throw() {
+    double
+      fp = (f - k1) / (1 - k1),
+      nu = fp !=0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
+      nu2 = sq(nu);
+    double g;
+    switch (etaord) {"),
   for n:minpow thru maxpow do block(
-    [q:horner(ratdisrep(taylor(H,f,0,n))/f,f),
+    [q:subst([fp^3=fp*sq(fp),nu2^2=sq(nu2)],
+      horner(ratdisrep(taylor(
+          subst([nu=sqrt(nu2)], H)/(-f * (2 - f)/(2 - fp)),fp,0,n-1)),fp)),
     linel:600],
     print(concat(tab2,"case ",string(n),":")),
     print(concat(tab3,"g = ",string(q),";")),
@@ -150,64 +322,26 @@ codeetafactor(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
       " && etaord <= ",string(maxpow),", \"Bad value of etaord\");")),
   print(concat(tab3,"g = 0;")),
   print("    }
-    return f * g;
+    return -f * (2 - f)/(2 - fp) * g;
   }"),
 'done)$
 
 codeetacoeff(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
   print("  // Coefficients, h[k], of sine series to convert sigma to eta
-  void Geodesic::etaCoeff(double f, double mu, double h[]) throw() {
-    double s = f * mu, d = s;
+  void Geodesic::etaCoeff(double f, double k1, double h[]) throw() {
+    double
+      fp = (f - k1) / (1 - k1),
+      nu = fp !=0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
+      nu2 = sq(nu);
+    double s = 2 * k1, d = s;
     switch (neta) {"),
   for n:minpow thru maxpow do (
     print(concat(tab2,"case ",string(n),":")),
     for m:1 thru n do block(
-      [q:d*horner(ratdisrep(taylor(h[m],f,0,n))/(f*mu)^m,f),
+      [q:d*horner(subst([nu=sqrt(nu2)],ratdisrep(taylor(h[m]/(fp*nu)^m,fp,0,n-m))),fp),
       linel:600],
       if m>1 then print(concat(tab3,"d *= s;")),
       print(concat(tab3,"h[",string(m-1),"] = ",string(q),";"))),
-    print(concat(tab3,"break;"))),
-  print(concat(tab2,"default:")),
-  print(concat(tab3,"STATIC_ASSERT(neta >= ",string(minpow),
-      " && neta <= ",string(maxpow),", \"Bad value of neta\");")),
-  print("    }
-  }"),
-'done)$
-
-codeetafactormu(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
-  print("  // The derivative of etaFactor with respect to mu, dH/dmu
-  double Geodesic::etaFactormu(double f, double mu) throw() {
-  double g;
-  switch (etaord) {"),
-  for n:minpow thru maxpow do block(
-    [q:horner(diff(ratdisrep(taylor(H,f,0,n)),mu)/f^2,f),
-    linel:600],
-    print(concat(tab2,"case ",string(n),":")),
-    print(concat(tab3,"g = ",string(q),";")),
-    print(concat(tab3,"break;"))),
-  print(concat(tab2,"default:")),
-  print(concat(tab3,"STATIC_ASSERT(etaord >= ",string(minpow),
-      " && etaord <= ",string(maxpow),", \"Bad value of etaord\");")),
-  print(concat(tab3,"g = 0;")),
-  print("    }
-    return sq(f) * g;
-  }"),
-'done)$
-
-codeetacoeffmu(minpow,maxpow):=block([tab2:"    ",tab3:"      "],
-  print(
-"  // Coefficients of sine series to convert sigma to the derivative of eta
-  // with respect to mu, dh[k]/dmu
-  void Geodesic::etaCoeffmu(double f, double mu, double hp[]) throw() {
-    double s = f * mu, d = f;
-    switch (neta) {"),
-  for n:minpow thru maxpow do (
-    print(concat(tab2,"case ",string(n),":")),
-    for m:1 thru n do block(
-      [q:d*horner(diff(ratdisrep(taylor(h[m],f,0,n)),mu)*mu/(f*mu)^m,f),
-      linel:600],
-      if m>1 then print(concat(tab3,"d *= s;")),
-      print(concat(tab3,"hp[",string(m-1),"] = ",string(q),";"))),
     print(concat(tab3,"break;"))),
   print(concat(tab2,"default:")),
   print(concat(tab3,"STATIC_ASSERT(neta >= ",string(minpow),
@@ -226,65 +360,81 @@ printcode(maxpow):=(
   print(""),
   codesigcoeff(0,maxpow),
   print(""),
+  codezetafactor(0,maxpow),
+  print(""),
+  codezetacoeff(0,maxpow),
+  print(""),
   codeetafactor(0,maxpow),
   print(""),
-  codeetacoeff(0,maxpow-1),
-  print(""),
-  codeetafactormu(0,maxpow),
-  print(""),
-  codeetacoeffmu(0,maxpow-1))$
+  codeetacoeff(0,maxpow-1))$
 
 /* FORMAT FOR DISPLAY */
 
 disptaufactor(ord):=block(
-  [tt:expand(ratdisrep(taylor(T,u2,0,ord))),ttt,linel:600],
-  for j:1 thru ord do (ttt:coeff(tt,u2,j),
-    print(concat(if j = 1 then "T = 1 " else "      ",
+  [tt:expand(ratdisrep(taylor(T*(1-k1),k1,0,ord))),ttt,linel:600],
+  for j:2 step 2 thru ord do (ttt:coeff(tt,k1,j),
+    print(concat(if j = 2 then "T = (1 " else "       ",
         if ttt>0 then "+ " else "- ",
-        string(abs(ttt)), " * ", string(u^(2*j)),if j=ord then ";" else ""))))$
+        string(abs(ttt)), " * ", string(k1^j),
+        if j=ord or j = ord-1 then ") / (1 - k1);" else ""))))$
 
 disptaucoeff(ord):=for i:1 thru ord do
-block([tt:expand(ratdisrep(taylor(t[i],u2,0,ord))),ttt,linel:600],
+block([tt:expand(ratdisrep(taylor(t[i],k1,0,ord))),ttt,linel:600],
   print(),
-  for j:i thru ord do (ttt:coeff(tt,u2,j), print(concat(
+  for j:i step 2 thru ord do (ttt:coeff(tt,k1,j), print(concat(
         if j = i then concat("t[",string(i),"] = ") else "       ",
         if ttt>0 then "+ " else "- ",
-        string(abs(ttt)), " * ", string(u^(2*j)),
-        if j=ord then ";" else ""))))$
+        string(abs(ttt)), " * ", string(k1^j),
+        if j=ord or j=ord-1 then ";" else ""))))$
 
 dispsigcoeff(ord):=for i:1 thru ord do
-block([tt:expand(ratdisrep(taylor(tp[i],u2,0,ord))),ttt,linel:600],
+block([tt:expand(ratdisrep(taylor(tp[i],k1,0,ord))),ttt,linel:600],
   print(),
-  for j:i thru ord do (ttt:coeff(tt,u2,j), print(concat(
+  for j:i step 2 thru ord do (ttt:coeff(tt,k1,j), print(concat(
         if j = i then concat("t'[",string(i),"] = ") else "        ",
         if ttt>0 then "+ " else "- ",
-        string(abs(ttt)), " * ", string(u^(2*j)),
-        if j=ord then ";" else ""))))$
+        string(abs(ttt)), " * ", string(k1^j),
+        if j=ord or j=ord-1 then ";" else ""))))$
+
+dispzetfactor(ord):=block(
+  [tt:expand(ratdisrep(taylor(Z/(1-k1),k1,0,ord))),ttt,linel:600],
+  for j:2 step 2 thru ord do (ttt:coeff(tt,k1,j),
+    print(concat(if j = 2 then "Z = (1 " else "       ",
+        if ttt>0 then "+ " else "- ",
+        string(abs(ttt)), " * ", string(k1^j),
+        if j=ord or j = ord-1 then ") * (1 - k1);" else ""))))$
+
+dispzetcoeff(ord):=for i:1 thru ord do
+block([tt:expand(ratdisrep(taylor(z[i],k1,0,ord))),ttt,linel:600],
+  print(),
+  for j:i step 2 thru ord do (ttt:coeff(tt,k1,j), print(concat(
+        if j = i then concat("z[",string(i),"] = ") else "       ",
+        if ttt>0 then "+ " else "- ",
+        string(abs(ttt)), " * ", string(k1^j),
+        if j=ord or j=ord-1 then ";" else ""))))$
 
 dispetafactor(ord):=block(
-  [tt:ratdisrep(taylor(H,f,0,ord)),ttt,t4,linel:600],
-  print("H = - f"),
-  for j:2 thru ord do (ttt:coeff(tt,f,j),
-    t4:inpart(ttt,1,2),
-    ttt:t4*ttt,
-    print(concat("    + ",
-        if ttt = mu then string(mu) else concat("(",
-          string(taylor(ttt,mu,0,j-1)),")"),
-        "/",string(t4), " * ",
-        string(f^j),
-        if j = ord then ";" else ""))))$
+  [tt:ratdisrep(taylor(H/(-f*(2-f)/(2-fp)),fp,0,ord-1)),ttt,t4,linel:600,s],
+  print("H = - f * (2 - f) / (2 - fp) * (1"),
+  for j:1 thru ord-1 do (ttt:expand(coeff(tt,fp,j)),
+    if ttt # 0 then block([a:lopow(ttt,nu),b:hipow(ttt,nu),s],
+      if coeff(ttt,nu,a)>=0 then s:"+" else (s:"-",ttt:-ttt),
+      print(concat("       ",s," ",
+          if a=b then string(ttt) else
+          concat("(",string(taylor(ttt,nu,0,b)),")"),
+          " * ", string(fp^j),
+          if j = ord-1 then ");" else "")))))$
 
 dispetacoeff(ord):=for i:1 thru ord do
-block([tt:ratdisrep(taylor(h[i],f,0,ord)),ttt,t4,linel:600],
-  for j:i thru ord do (ttt:coeff(tt,f,j),
-    t4:inpart(ttt,1,2),
-    ttt:t4*ttt,
-    print(concat(if j = i then concat("h[",i,"] = ") else "       ","+ ",
-        if j = i then string(ttt) else concat("(",
-          string(taylor(ttt,mu,0,j)),")"),
-        "/",string(t4), " * ",
-        string(f^j),
-        if j = ord then ";" else ""))))$
+block([tt:ratdisrep(taylor(h[i],fp,0,ord)),ttt,t4,linel:600],
+  for j:i thru ord do (ttt:expand(coeff(tt,fp,j)/nu^i),
+    if ttt # 0 then block([a:lopow(ttt,nu),b:hipow(ttt,nu),s],
+      if coeff(ttt,nu,a)>=0 then s:"+" else (s:"-",ttt:-ttt),
+      print(concat(if j = i then concat("h[",i,"] = ") else "       ",s," ",
+          if a=b then string(ttt) else
+          concat("(",string(taylor(ttt,nu,0,b)),")"),
+          " * ", string(nu^i),"*",string(fp^j),
+          if j = ord then ";" else "")))))$
 
 dispseries(tauord,etaord):=(
   print(""),
@@ -296,6 +446,10 @@ dispseries(tauord,etaord):=(
   print(""),
   dispsigcoeff(tauord),
   print(""),
+  dispzetfactor(tauord),
+  print(""),
+  dispzetcoeff(tauord),
+  print(""),
   dispetafactor(etaord),
   print(""),
   dispetacoeff(etaord-1),
@@ -305,4 +459,4 @@ dispseries(tauord,etaord):=(
 
 computeall(8)$
 printcode(8)$
-dispseries(7,6)$
+dispseries(8,8)$

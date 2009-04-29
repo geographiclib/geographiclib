@@ -974,85 +974,103 @@ solutions to the direct and inverse geodesic problems.  The \ref geod
 utility provides an interface to these classes.
 
 References
+ - F. W. Bessel,
+   <a href="http://adsabs.harvard.edu/abs/1826AN......4..241B">Ueber die
+   Berechnung der geographischen Laengen und Breiten aus geodaetischen
+   Vermessungen</a>,
+   Astron. Nachr. 4(86), 241&ndash;254 (1826).
+ - F. R. Helmert,
+   Die Mathematischen und Physikalischen Theorieen der Hoeheren
+   Geodaesie, vol. 1 (Teubner, Leipzig, 1880).
+ - E. B. Christoffel,
+   Allgemeine Theorie der geodaetischen Dreiecke,
+   in "Gesammelte Mathematische Abhandlungen",
+   vol. 1, chap. 16, pp. 297&ndash;346 (Teubner, Leipzig, 1910).
+ - H. F. Rainsford,
+   <a href="http://dx.doi.org/10.1007/BF02527187">
+   Long geodesics on the ellipsoid</a>,
+   Bull. Geod. 37(1), 12&ndash;22 (1955).
  - T. Vincenty,
    <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">Direct and Inverse
    Solutions of Geodesics on the Ellipsoid with Application of Nested
    Equations</a>,
    Survey Review 22 (176), 88&ndash;93 (1975).
- - E. A. Williams,
-   <a href="http://williams.best.vwh.net/ellipsoid/ellipsoid.html">
-   Navigation on the Spheroidal Earth</a> (March 2002).
 
 \section geoddesc Description of algorithm
 
-The shortest path between two points on a spheroid at (\e lat1, \e
-lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is \e
-s12 and the geodesic from point 1 to point 2 has azimuths \e azi1 and \e
-azi2 at the two end points.  (The azimuth is the heading measured
-clockwise from north.  \e azi2 is the "forward" azimuth, i.e., the
-heading that takes you beyond point 2 not back to point 1.)
+The shortest path between two points on a spheroid at (\e lat1, \e lon1)
+and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
+the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
+the two end points.  (The azimuth is the heading measured clockwise from
+north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes
+you beyond point 2 not back to point 1.)  The reduced length of the
+geodesic, \e m12, is the rate at which the second point moves as the
+geodesic is rotated about the first point.  Christoffel (1910) proved
+that this is equal to the rate at the first point moved when the
+geodesic is rotated about the first point.
 
 Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2,
-\e lon2, \e azi2.  This is the <b>direct</b> geodesic problem.  (If \e s12
-is sufficiently large that the geodesic wraps more than halfway around
-the earth, there will be another geodesic between the points with a
-smaller \e s12.)
+\e lon2, \e azi2, \e m12.  This is the <b>direct</b> geodesic problem.
+(If \e s12 is sufficiently large that the geodesic wraps more than
+halfway around the earth, there will be another geodesic between the
+points with a smaller \e s12.)
 
 Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1,
-\e azi2, \e s12.  This is the <b>inverse</b> geodesic problem.  Usually, the
-solution to the inverse problem is unique.  In cases where there are
-multiple solutions (all with the same \e s12, of course), all the
-solutions can be easily generated once a particular solution is
+\e azi2, \e s12, \e m12.  This is the <b>inverse</b> geodesic problem.
+Usually, the solution to the inverse problem is unique.  In cases where
+there are multiple solutions (all with the same \e s12, of course), all
+the solutions can be easily generated once a particular solution is
 provided.
 
-On a sphere, the geodesic is a great circle.  On the spheroid, the
-problem is usually solved by transferring the geodesic to an "auxiliary
-sphere" where the latitude \e phi has been replaced by the reduced
-latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).  On this
-sphere, the geodesic is again a great circle and the azimuth is the same
-as on the spheroid.  However, the spheroidal distance is related to
+The framework for solving geodesic problems on the ellipsoid was laid
+down by Bessel (1826) who showed how the problem may be transferred to
+an "auxiliary sphere" where the latitude \e phi has been replaced by the
+reduced latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).
+On this sphere, the geodesic is a great circle and the azimuth is the
+same as on the spheroid.  However, the spheroidal distance is related to
 the great circle distance by an integral; and the spheroidal longitude
-is similarly related to the longitude on the auxiliary sphere.  Williams
-(2002) gives the necessary integrals.
+is similarly related to the longitude on the auxiliary sphere.  In the
+case of small \e f, Bessel developed series expansions for the integrals
+and provided a systematic solution to the direct problem.  Helmert
+(1880) extended Bessel's treatment by giving an expression for the
+reduced length of a geodesic.  the "azimuthal scale" of the azimuthal
+equidistant projection about point 1 is given by \e s12/\e m12.
 
-A popular method of doing geodesic calculations is due to Vincenty
-(1975).  This entails expanding the integrals in powers of the spheroid
-flattening, and then solving both the direct and inverse problems by
-iteration.  This approach has three drawbacks:
- - The series are cast into a "nested" form which makes them difficult
-   to extend to higher order.  This limits the accuracy of this method
-   to about 0.5 mm.
- - A simple iteration scheme is employed to solve the equations.  This
-   is inelegant and slow.
- - The iteration scheme for the inverse problem is unstable for points
-   which are nearly anti-podal.  Thus the method yields no solution in
-   this case.
- .
-Here we reformulate the geodesic problem with three goals:
- - Accuracy to round-off.  We achieve an accuracy of 15 nm using
-   doubles.
- - Always yield a solution.  The direct problem is trivial.  In the
-   case of inverse problem, the geodesic is returned.  (And in the event
-   that there are multiple geodesics, one of them is returned.)
- - Employ a non-iterative or rapidly converging iterative scheme.
+The algorithms included here are based on the work of Bessel (1826) and
+Helmert (1880).  Key points are:
+  - Extension Bessel's method for removing half the terms in the series
+    expansions to the longitude integral.  This also accelerates the
+    convergence of the series.
+  - Inclusion of sufficient terms in the series to give accuracy at the
+    round-off level for doubles and long doubles.
+  - Reverting the distance series so that the direct problem can be
+    solved non-iteratively.
+  - Calculation of the reduced length for the geodesic.
+  - Solution the inverse problem via Newton's method, using the reduced
+    length to compute the needed derivative.
+  .
+Vincenty (1975) has provided algorithms for the forward and direct
+geodesic problems based in the series given by Rainsford (1955).
+However these algorithms were designed for use on a desk calculator and
+are not optimal for a general purpose computer.  The key distinguishing
+features of the algorithms presented here compared to Vincenty's are
+  - Accuracy to close to the round-off limit.
+  - Complete solution of the inverse problem.  (Vincenty's algorithms
+    sometimes fails to provide a solution.)
+  - Returns the reduced length of the geodesic.
 
-We derive higher-order series for the distance and longitude integrals
-using <a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>.  In this
-release, we use a 6th-order expansion for the distance integral and a
-5th-order expansion for the longitude integral.  This is sufficient to
-maintain accuracy for doubles.  However, preprocessor macros
-GEOD_TAU_ORD (default 6) and GEOD_ETA_ORD (default 5) can be used to
-select any order up to 8.  (If using long doubles, with a 64-bit
-fraction, it's necessary to set GEOD_TAU_ORD to 7 and GEOD_ETA_ORD to
-6.)  The series is evaluated by a combination of Horner's method and
-Clenshaw summation.  For the direct problem, we use a reversion of the
-series for the distance to compute the spherical arc length and thereby
-complete the solution without the need to iterate.
-
-XXXXXX
-For double: GEOD_TAU_ORD = GEOD_ETA_ORD = 5
-For long double:  GEOD_TAU_ORD = GEOD_ETA_ORD = 6
-
+The series expansions for the integrals are obtained using <a
+href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>.  In this release,
+we use a 5th-order expansions.  This is sufficient to maintain accuracy
+for doubles.  However, preprocessor macros GEOD_TAU_ORD (for the
+distance and reduced length integrals, default 5) and GEOD_ETA_ORD (for
+the longitude integral, default 5) can be used to select any order up to
+8.  (If using long doubles, with a 64-bit fraction, it's necessary to
+set GEOD_TAU_ORD and GEOD_ETA_ORD to 6.)  The series is evaluated by a
+combination of Horner's method and Clenshaw summation.  For the direct
+problem, we use a reversion of the series for the distance to compute
+the spherical arc length and thereby complete the solution without the
+need to iterate.
 
 The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the
 series for the distance and longitude integrals.  In addition this
@@ -1092,8 +1110,9 @@ Each line of the test set gives 9 space delimited numbers
  - longitude for point 2, \e lon2 (degrees, accurate to 10<sup>-18</sup> deg)
  - azimuth for point 2, \e azi2 (degrees, accurate to 10<sup>-18</sup> deg)
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
- - arc distance XXXX
- - reduced length XXXX
+ - arc distance on the auxiliary sphere (degrees, accurate to
+   10<sup>-18</sup> deg)
+ - reduced length of the geodesic, \e m12 (meters, accurate to 0.1 pm)
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
@@ -1134,31 +1153,29 @@ This data can be fed to the \ref geod utility as follows
 \verbatim
   gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./Geod
 \endverbatim
-   This should yield columns 4, 5, and 6 of the test set.
+   This should yield columns 4, 5, 6, and 9 of the test set.
  - Direct from point 2:
 \verbatim
   gunzip -c GeodTest.dat.gz | cut -d' ' -f4,5,6,7 |
   sed "s/ \([^ ]*$\)/ -\1/" | ./Geod
 \endverbatim
    (The sed command negates the distance.)  This should yield columns 1,
-   2, and 3 of the test set.
+   2, and 3, and the negative of column 9 of the test set.
  - Inverse between points 1 and 2:
 \verbatim
   gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,4,5 | ./Geod -i
 \endverbatim
-   This should yield columns 3, 6, and 7 of the test set.
+   This should yield columns 3, 6, 7, and 9 of the test set.
  .
 Add, e.g., "-p 6", to the call to Geod to change the precision of the
-output.  Adding "-f" causes Geod to print all 7 fields specifying the
+output.  Adding "-f" causes Geod to print all 9 fields specifying the
 geodesic (in the same order as the test set).
 
 Another much smaller set of test points has been culled from the
 literature on geodesics.  These are all for the International Ellipsoid
 (\e a = 6378388 m, \e f = 1/297.0).  The endpoints are taken from
 
- - H. F. Rainsford, <a href="http://dx.doi.org/10.1007/BF02527187">
-   Long geodesics on the ellipsoid</a>,
-   Bull. Geodesique 37, 12&ndash;22 (1955).
+ - H. F. Rainsford, <i>Op. Cit.</i>
  - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
    geodesy, Part II</a>, Ohio State Univ. (March 1993).
  - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
@@ -1399,10 +1416,10 @@ terms of the spherical arc length.
 
 On a 2.6 GHz Intel machine (g++, version 4.3.0, -O3), timings are as
 follows:
- - Geodesic::Direct 0.87 us -> 0.95 us
- - GeodesicLine::Position 0.41 us (arcmode = false) -> 0.43 us
- - GeodesicLine::Position 0.25 us (arcmode = true) -> 0.27 us
- - Geodesic::Inverse 2.6 us -> 2.6 us
+ - Geodesic::Direct 0.93 us
+ - GeodesicLine::Position 0.43 us (arcmode = false)
+ - GeodesicLine::Position 0.27 us (arcmode = true)
+ - Geodesic::Inverse 2.6 us
  .
 Timing for Geodesic::Inverse is a mean.  Individual calls may take a few
 times longer because of the need to do additional Newton iterations.
@@ -1415,6 +1432,9 @@ Future work:
  - More thorough analysis of Newton's method for inverse problem
 
 \section geodseries Expansions for geodesics
+
+We give here the series expansions for the various geodesic integrals
+valid to order \e f<sup>8</sup>.
 
 In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
 f) and / indicates real division (3/5 = 0.6).  The equations need to be
@@ -1432,7 +1452,7 @@ In the expansions below, we have
  - \e f is the flattening
  - \e e<sup>2</sup> = \e f (2 - \e f)
  - \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 - \e e<sup>2</sup>)
- - \e mu = cos<sup>2</sup> <i>alpha</i><sub>0</sub>
+ - \e mu = cos<sup>2</sup> \e alpha<sub>0</sub>
  - \e u<sup>2</sup> = \e e'<sup>2</sup> \e mu = 4 k1 / (1 - k1)<sup>2</sup>
  - \e fp = (\e f - \e k1) / (1 - \e k1)
  - \e mu = 2 \e k1 / \e fp
@@ -1444,7 +1464,7 @@ The formula for distance is
 where
 
 &nbsp; &nbsp; \e tau(\e sigma) =
-\e sigma + sum<sub>\e k = 1</sub> \e t<sub>\e k</sub> sin(2 \e k \e sigma)
+\e sigma + sum<sub>\e k = 1</sub> \e t<sub>k</sub> sin(2 \e k \e sigma)
 
 and
 
@@ -1452,47 +1472,36 @@ and
 T = (1 + 1/4 * k1^2
        + 1/64 * k1^4
        + 1/256 * k1^6
-       + 25/16384 * k1^8
-       + 49/65536 * k1^10) / (1 - k1);
+       + 25/16384 * k1^8) / (1 - k1);
 \endverbatim
 
 \verbatim
 t[1] = - 1/2 * k1
        + 3/16 * k1^3
        - 1/32 * k1^5
-       + 19/2048 * k1^7
-       - 3/4096 * k1^9;
+       + 19/2048 * k1^7;
 t[2] = - 1/16 * k1^2
        + 1/32 * k1^4
        - 9/2048 * k1^6
-       + 7/4096 * k1^8
-       + 1/65536 * k1^10;
+       + 7/4096 * k1^8;
 t[3] = - 1/48 * k1^3
        + 3/256 * k1^5
-       - 3/2048 * k1^7
-       + 17/24576 * k1^9;
+       - 3/2048 * k1^7;
 t[4] = - 5/512 * k1^4
        + 3/512 * k1^6
-       - 11/16384 * k1^8
-       + 3/8192 * k1^10;
+       - 11/16384 * k1^8;
 t[5] = - 7/1280 * k1^5
-       + 7/2048 * k1^7
-       - 3/8192 * k1^9;
+       + 7/2048 * k1^7;
 t[6] = - 7/2048 * k1^6
-       + 9/4096 * k1^8
-       - 117/524288 * k1^10;
-t[7] = - 33/14336 * k1^7
-       + 99/65536 * k1^9;
-t[8] = - 429/262144 * k1^8
-       + 143/131072 * k1^10;
-t[9] = - 715/589824 * k1^9;
-t[10] = - 2431/2621440 * k1^10;
+       + 9/4096 * k1^8;
+t[7] = - 33/14336 * k1^7;
+t[8] = - 429/262144 * k1^8;
 \endverbatim
 
 The function \e tau(\e sigma) may be inverted by series reversion giving
 
 &nbsp; &nbsp; \e sigma(\e tau) =
-\e tau + sum<sub>\e k = 1</sub> \e t'<sub>\e k</sub> sin(2 \e k \e tau)
+\e tau + sum<sub>\e k = 1</sub> \e t'<sub>k</sub> sin(2 \e k \e tau)
 
 where
 
@@ -1500,88 +1509,72 @@ where
 t'[1] = + 1/2 * k1
         - 9/32 * k1^3
         + 205/1536 * k1^5
-        - 4879/73728 * k1^7
-        + 9039/327680 * k1^9;
+        - 4879/73728 * k1^7;
 t'[2] = + 5/16 * k1^2
         - 37/96 * k1^4
         + 1335/4096 * k1^6
-        - 86171/368640 * k1^8
-        + 4119073/28311552 * k1^10;
+        - 86171/368640 * k1^8;
 t'[3] = + 29/96 * k1^3
         - 75/128 * k1^5
-        + 2901/4096 * k1^7
-        - 443327/655360 * k1^9;
+        + 2901/4096 * k1^7;
 t'[4] = + 539/1536 * k1^4
         - 2391/2560 * k1^6
-        + 1082857/737280 * k1^8
-        - 2722891/1548288 * k1^10;
+        + 1082857/737280 * k1^8;
 t'[5] = + 3467/7680 * k1^5
-        - 28223/18432 * k1^7
-        + 1361343/458752 * k1^9;
+        - 28223/18432 * k1^7;
 t'[6] = + 38081/61440 * k1^6
-        - 733437/286720 * k1^8
-        + 10820079/1835008 * k1^10;
-t'[7] = + 459485/516096 * k1^7
-        - 709743/163840 * k1^9;
-t'[8] = + 109167851/82575360 * k1^8
-        - 550835669/74317824 * k1^10;
-t'[9] = + 83141299/41287680 * k1^9;
-t'[10] = + 9303339907/2972712960 * k1^10;
+        - 733437/286720 * k1^8;
+t'[7] = + 459485/516096 * k1^7;
+t'[8] = + 109167851/82575360 * k1^8;
 \endverbatim
 
 The reduced length is given by
 
 &nbsp; &nbsp; \e m/\e b =
-sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>) cos \e sigma<sub>1</sub> sin \e sigma<sub>2</sub><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>) sin \e sigma<sub>1</sub> cos \e sigma<sub>2</sub><br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -  cos \e sigma<sub>1</sub>  cos \e sigma<sub>2</sub>
-(T (\e tau(\e sigma<sub>2</sub>) - \e tau(\e sigma<sub>1</sub>))<br>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - Z (\e zeta(\e sigma<sub>2</sub>) - \e zeta(\e sigma<sub>1</sub>)))
- 
+sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>)
+cos \e sigma<sub>1</sub> sin \e sigma<sub>2</sub><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
+sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>)
+sin \e sigma<sub>1</sub> cos \e sigma<sub>2</sub><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
+cos \e sigma<sub>1</sub>  cos \e sigma<sub>2</sub>
+(\e J(\e sigma<sub>2</sub>) - \e J(\e sigma<sub>1</sub>))
+
 where
 
+&nbsp; &nbsp; \e J(\e sigma) =
+\e T \e tau(\e sigma) - \e Z \e zeta(\e sigma)<br>
 &nbsp; &nbsp; \e zeta(\e sigma) =
-\e sigma + sum<sub>\e k = 1</sub> \e z<sub>\e k</sub> sin(2 \e k \e sigma)
+\e sigma + sum<sub>\e k = 1</sub> \e z<sub>k</sub> sin(2 \e k \e sigma)
 
 \verbatim
 Z = (1 + 1/4 * k1^2
        + 9/64 * k1^4
        + 25/256 * k1^6
-       + 1225/16384 * k1^8
-       + 3969/65536 * k1^10) * (1 - k1);
+       + 1225/16384 * k1^8) * (1 - k1);
 \endverbatim
 
 \verbatim
 z[1] = + 1/2 * k1
        + 1/16 * k1^3
        + 1/32 * k1^5
-       + 41/2048 * k1^7
-       + 59/4096 * k1^9;
+       + 41/2048 * k1^7;
 z[2] = + 3/16 * k1^2
        + 1/32 * k1^4
        + 35/2048 * k1^6
-       + 47/4096 * k1^8
-       + 557/65536 * k1^10;
+       + 47/4096 * k1^8;
 z[3] = + 5/48 * k1^3
        + 5/256 * k1^5
-       + 23/2048 * k1^7
-       + 191/24576 * k1^9;
+       + 23/2048 * k1^7;
 z[4] = + 35/512 * k1^4
        + 7/512 * k1^6
-       + 133/16384 * k1^8
-       + 47/8192 * k1^10;
+       + 133/16384 * k1^8;
 z[5] = + 63/1280 * k1^5
-       + 21/2048 * k1^7
-       + 51/8192 * k1^9;
+       + 21/2048 * k1^7;
 z[6] = + 77/2048 * k1^6
-       + 33/4096 * k1^8
-       + 2607/524288 * k1^10;
-z[7] = + 429/14336 * k1^7
-       + 429/65536 * k1^9;
-z[8] = + 6435/262144 * k1^8
-       + 715/131072 * k1^10;
-z[9] = + 12155/589824 * k1^9;
-z[10] = + 46189/2621440 * k1^10;
+       + 33/4096 * k1^8;
+z[7] = + 429/14336 * k1^7;
+z[8] = + 6435/262144 * k1^8;
 \endverbatim
 
 The longitude is given in terms of the spherical longitude by
@@ -1592,7 +1585,7 @@ The longitude is given in terms of the spherical longitude by
 where
 
 &nbsp; &nbsp; \e eta(\e sigma) =
-\e sigma + sum<sub>\e k = 1</sub> \e h<sub>\e k</sub> sin(2 \e k \e sigma)
+\e sigma + sum<sub>\e k = 1</sub> \e h<sub>k</sub> sin(2 \e k \e sigma)
 
 and
 
@@ -1602,10 +1595,7 @@ H = - f * (2 - f) / (2 - fp) *
        - nu^4/1024 * fp^4
        + nu^2/256 * fp^5
        + (nu^2/256+nu^4/1024-nu^6/8192) * fp^6
-       + (3*nu^2/1024+7*nu^4/16384+15*nu^6/131072) * fp^7
-       + (nu^2/512+5*nu^6/65536-59*nu^8/4194304) * fp^8
-       + (5*nu^2/4096-5*nu^4/32768-15*nu^6/524288
-                                               +21*nu^8/1048576) * fp^9);
+       + (3*nu^2/1024+7*nu^4/16384+15*nu^6/131072) * fp^7);
 \endverbatim
 
 \verbatim
@@ -1615,47 +1605,28 @@ h[1] = + 1/8 * nu*fp
        - (1/64+nu^2/1024) * nu*fp^4
        - (1/128-nu^2/1024+nu^4/4096) * nu*fp^5
        - (1/256-nu^2/1024-3*nu^4/32768) * nu*fp^6
-       - (1/512-5*nu^2/8192-5*nu^4/32768+61*nu^6/2097152) * nu*fp^7
-       - (1/1024-5*nu^2/16384-7*nu^4/131072-101*nu^6/4194304) * nu*fp^8
-       - (1/2048-nu^2/8192+nu^4/262144-7*nu^6/524288
-                                             +31*nu^8/8388608) * nu*fp^9;
+       - (1/512-5*nu^2/8192-5*nu^4/32768+61*nu^6/2097152) * nu*fp^7;
 h[2] = + 1/64 * nu^2*fp^2
        - 3/256 * nu^2*fp^3
        - (1/256+nu^2/2048) * nu^2*fp^4
        - 1/1024 * nu^2*fp^5
        + (5*nu^2/16384-7*nu^4/131072) * nu^2*fp^6
-       + (1/4096+3*nu^2/16384+37*nu^4/1048576) * nu^2*fp^7
-       + (1/4096+nu^2/16384+31*nu^4/1048576-53*nu^6/8388608) * nu^2*fp^8
-       + (3/16384+9*nu^4/4194304+109*nu^6/16777216) * nu^2*fp^9;
+       + (1/4096+3*nu^2/16384+37*nu^4/1048576) * nu^2*fp^7;
 h[3] = + 5/1536 * nu^3*fp^3
        - 3/1024 * nu^3*fp^4
        - (1/1536+7*nu^2/49152) * nu^3*fp^5
        + nu^2/24576 * nu^3*fp^6
-       + (1/8192+35*nu^2/393216-91*nu^4/6291456) * nu^3*fp^7
-       + (5/49152+9*nu^2/262144+155*nu^4/12582912) * nu^3*fp^8
-       + (1/16384+nu^2/1572864+5*nu^4/786432
-                                          -43*nu^6/25165824) * nu^3*fp^9;
+       + (1/8192+35*nu^2/393216-91*nu^4/6291456) * nu^3*fp^7;
 h[4] = + 7/8192 * nu^4*fp^4
        - 7/8192 * nu^4*fp^5
        - (1/8192+3*nu^2/65536) * nu^4*fp^6
-       + (5/131072+23*nu^2/1048576) * nu^4*fp^7
-       + (3/65536+7*nu^2/262144-37*nu^4/8388608) * nu^4*fp^8
-       + (7/262144+25*nu^2/4194304+73*nu^4/16777216) * nu^4*fp^9;
+       + (5/131072+23*nu^2/1048576) * nu^4*fp^7;
 h[5] = + 21/81920 * nu^5*fp^5
        - 9/32768 * nu^5*fp^6
-       - (3/131072+33*nu^2/2097152) * nu^5*fp^7
-       + (5/262144+41*nu^2/4194304) * nu^5*fp^8
-       + (39/2621440+87*nu^2/10485760-61*nu^4/41943040) * nu^5*fp^9;
+       - (3/131072+33*nu^2/2097152) * nu^5*fp^7;
 h[6] = + 11/131072 * nu^6*fp^6
-       - 99/1048576 * nu^6*fp^7
-       - (11/3145728+143*nu^2/25165824) * nu^6*fp^8
-       + (33/4194304+209*nu^2/50331648) * nu^6*fp^9;
-h[7] = + 429/14680064 * nu^7*fp^7
-       - 143/4194304 * nu^7*fp^8
-       - 143*nu^2/67108864 * nu^7*fp^9;
-h[8] = + 715/67108864 * nu^8*fp^8
-       - 429/33554432 * nu^8*fp^9;
-h[9] = + 2431/603979776 * nu^9*fp^9;
+       - 99/1048576 * nu^6*fp^7;
+h[7] = + 429/14680064 * nu^7*fp^7;
 \endverbatim
 
 <center>
