@@ -73,6 +73,8 @@ namespace GeographicLib {
    *
    * The calculations are accurate to better than 15 nm.  (See \ref geoderrors
    * for details.)
+   *
+   * For more information on geodesics see \ref geodesic.
    **********************************************************************/
 
   class Geodesic {

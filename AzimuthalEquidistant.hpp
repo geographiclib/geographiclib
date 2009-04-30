@@ -27,7 +27,8 @@ namespace GeographicLib {
    * affine transformation between geographic and projected coordinates.
    *
    * The conversions all take place using a GeographicLib::Geodesic object (by
-   * default GeographicLib::Geodesic::WGS84).
+   * default GeographicLib::Geodesic::WGS84).  For more information on
+   * geodesics see \ref geodesic.
    **********************************************************************/
 
   class AzimuthalEquidistant {
