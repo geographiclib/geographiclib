@@ -973,29 +973,31 @@ Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref content
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
 solutions to the direct and inverse geodesic problems.  The \ref geod
 utility provides an interface to these classes.
+GeographicLib::AzimuthalEquidistant implements the azimuthal equidistant
+projection in terms of geodesics.
 
 References
  - F. W. Bessel,
-   <a href="http://adsabs.harvard.edu/abs/1826AN......4..241B">Ueber die
-   Berechnung der geographischen Laengen und Breiten aus geodaetischen
+   <a href="http://adsabs.harvard.edu/abs/1826AN......4..241B">&Uuml;ber die
+   Berechnung der geographischen L&auml;ngen und Breiten aus geod&auml;tischen
    Vermessungen</a>,
-   Astron. Nachr. 4(86), 241&ndash;254 (1826).
+   Astron. Nachr. 4 (86), 241&ndash;254 (1826).
  - F. R. Helmert,
-   Die Mathematischen und Physikalischen Theorieen der Hoeheren
-   Geodaesie, vol. 1 (Teubner, Leipzig, 1880).
+   Die Mathematischen und Physikalischen Theorieen der H&ouml;heren
+   Geod&auml;sie, vol. 1 (Teubner, Leipzig, 1880).
  - E. B. Christoffel,
-   Allgemeine Theorie der geodaetischen Dreiecke,
+   Allgemeine Theorie der geod&auml;tischen Dreiecke (1868),
    in "Gesammelte Mathematische Abhandlungen",
    vol. 1, chap. 16, pp. 297&ndash;346 (Teubner, Leipzig, 1910).
  - H. F. Rainsford,
    <a href="http://dx.doi.org/10.1007/BF02527187">
    Long geodesics on the ellipsoid</a>,
-   Bull. Geod. 37(1), 12&ndash;22 (1955).
+   Bull. Geod. 37 (1), 12&ndash;22 (1955).
  - T. Vincenty,
    <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">Direct and Inverse
    Solutions of Geodesics on the Ellipsoid with Application of Nested
    Equations</a>,
-   Survey Review 22 (176), 88&ndash;93 (1975).
+   Survey Review 23 (176), 88&ndash;93 (1975).
 
 \section geoddesc Description of algorithm
 
@@ -1006,7 +1008,7 @@ the two end points.  (The azimuth is the heading measured clockwise from
 north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes
 you beyond point 2 not back to point 1.)  The reduced length of the
 geodesic, \e m12, is the rate at which the second point moves as the
-geodesic is rotated about the first point.  Christoffel (1910) proved
+geodesic is rotated about the first point.  Christoffel (1868) proved
 that this is equal to the rate at which the first point moves when the
 geodesic is rotated about the second point.
 
@@ -1023,7 +1025,7 @@ there are multiple solutions (all with the same \e s12, of course), all
 the solutions can be easily generated once a particular solution is
 provided.
 
-The framework for solving geodesic problems on the ellipsoid was laid
+The framework for solving geodesic problems on the spheroid was laid
 down by Bessel (1826) who showed how the problem may be transferred to
 an "auxiliary sphere" where the latitude \e phi has been replaced by the
 reduced latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).
@@ -1034,14 +1036,15 @@ is similarly related to the longitude on the auxiliary sphere.  In the
 case of small \e f, Bessel developed series expansions for the integrals
 and provided a systematic solution to the direct problem.  Helmert
 (1880) extended Bessel's treatment by giving an expression for the
-reduced length of a geodesic.  The "azimuthal scale" of the azimuthal
-equidistant projection about point 1 is given by \e s12/\e m12.
+reduced length of a geodesic for the spheroid.  The "azimuthal scale" of
+the azimuthal equidistant projection about point 1 is given by \e s12/\e
+m12.
 
 The algorithms included here are based on the work of Bessel (1826) and
 Helmert (1880).  Key points are:
-  - Extension Bessel's method for removing half the terms in the series
-    expansions to the longitude integral.  This also accelerates the
-    convergence of the series.
+  - Extension of Bessel's method for removing half the terms in the
+    series expansions to the longitude integral.  This also accelerates
+    the convergence of the series.
   - Inclusion of sufficient terms in the series to give accuracy at the
     round-off level for doubles and long doubles.
   - Reverting the distance series so that the direct problem can be
@@ -1050,16 +1053,17 @@ Helmert (1880).  Key points are:
   - Solution the inverse problem via Newton's method, using the reduced
     length to compute the needed derivative.
   .
-Vincenty (1975) has provided algorithms for the forward and direct
-geodesic problems based in the series given by Rainsford (1955).
-However these algorithms were designed for use on desk calculators of
-that era and are not optimal (in terms of accuracy and robustness) for a
-general purpose computer.  The distinguishing features of the algorithms
-presented here compared to Vincenty's are:
-  - Accuracy to close to the round-off limit.
+Vincenty (1975) has provided algorithms for the direct and inverse
+geodesic problems based in the series given by Rainsford (1955) (based,
+in turn, on Bessel).  However Vincenty's methods were designed for use
+on the desk calculators of that era and are not optimal (in terms of
+accuracy and robustness) for a general purpose computer.  The
+distinguishing features of the algorithms presented here compared to
+Vincenty's are:
+  - Accuracy to close to the round-off limit (i.e., 15 nm for doubles).
   - Complete solution of the inverse problem.  (Vincenty's inverse
-    algorithm sometimes fails to provide a solution.)
-  - Returns the reduced length of the geodesic.
+    algorithm sometimes fails.)
+  - Return the reduced length of the geodesic.
 
 The series expansions for the integrals are obtained using <a
 href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>.  In this release,
@@ -1090,9 +1094,9 @@ The longitude is an increasing function of \e alpha1 and we use Newton's
 method to determine the value of \e alpha1 for which the longitude
 matches \e lon2.  This then gives the desired geodesic.
 
-This class also returns the arc length on the auxiliary sphere and
-allows distances to be specified in these terms.  See the -a option to
-\ref geod.
+This class also returns the arc length \e a12 on the auxiliary sphere
+and allows distances to be specified in these terms.  See the -a option
+to \ref geod.
 
 \section testgeod Test data for geodesics
 
@@ -1112,19 +1116,19 @@ Each line of the test set gives 9 space delimited numbers
  - longitude for point 2, \e lon2 (degrees, accurate to 10<sup>-18</sup> deg)
  - azimuth for point 2, \e azi2 (degrees, accurate to 10<sup>-18</sup> deg)
  - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
- - arc distance on the auxiliary sphere (degrees, accurate to
+ - arc distance on the auxiliary sphere, \e a12 (degrees, accurate to
    10<sup>-18</sup> deg)
  - reduced length of the geodesic, \e m12 (meters, accurate to 0.1 pm)
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
-corresponds to an arc length on the auxiliary sphere of pi or less, so
-the given geodesics give the shortest paths from point 1 to point 2.
-For simplicity and without loss of generality, \e lat1 is chosen in
-[0<sup>o</sup>, 90<sup>o</sup>], \e lon1 is taken to be zero, \e azi1
-is chosen in [0<sup>o</sup>, 180<sup>o</sup>].  Furthermore, \e lat1 and
-\e azi1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is
-a multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e lon2
+corresponds to an arc length \e a12 <= 180<sup>o</sup>, so the given
+geodesics give the shortest paths from point 1 to point 2.  For
+simplicity and without loss of generality, \e lat1 is chosen in
+[0<sup>o</sup>, 90<sup>o</sup>], \e lon1 is taken to be zero, \e azi1 is
+chosen in [0<sup>o</sup>, 180<sup>o</sup>].  Furthermore, \e lat1 and \e
+azi1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is a
+multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e lon2
 in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
 180<sup>o</sup>].
 
@@ -1574,7 +1578,7 @@ azimuths.
 The derivative needed for Newton's method for the inverse problem is
 given in terms of the reduced length.  The reduced length can also be
 used to apply Newton's method to solve problems such finding the
-distance between given a point and a geodesic.
+distance between a point and a geodesic line.
 
 Convergence failures with Newton's method for the inverse problem is
 signaled by negating the distance (and the arc distance and reduced
@@ -1911,9 +1915,9 @@ the -b flag is given, azi2 is converted to a back azimuth (the direction
 back to point 1) for output.
 
 s12 is given in meters, unless the -a flag is given.  In that case, s12
-(on both input and output) are given in terms of arc length on the
-auxiliary sphere (measured in degrees).  In these terms, 180 degrees is
-the distance from one equator crossing to the next or from the minimum
+(on both input and output) are given as the arc length on the auxiliary
+sphere a12 (measured in degrees).  In these terms, 180 degrees is the
+distance from one equator crossing to the next or from the minimum
 latitude to the maximum latitude.  Distances greater than 180 degrees do
 not correspond to shortest paths.  m12 is always given in meters.
 

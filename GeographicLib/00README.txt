@@ -53,7 +53,24 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-04 version of the library.
+This is the 2009-05 version of the library.
+
+Changes between 2009-05 and 2009-03 versions:
+
+  * Improvements to GeographicLib::Geodesic:
+    + more economical series expansions,
+    + return reduced length (as does \ref geod utility)
+    + improved calculation of starting point for inverse method,
+    + use reduced length to give derivative for Newton's method.
+
+  * Add AzimuthalEquidistant class.
+
+  * Make Geocentric, TransverseMercator, and PolarStereographic classes
+    work with prolate ellipsoids.
+
+  * CartConvert checks its inputs more carefully.
+
+  * Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
 Changes between 2009-04 and 2009-03 versions:
 

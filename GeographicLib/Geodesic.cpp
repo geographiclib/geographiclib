@@ -705,7 +705,7 @@ namespace GeographicLib {
 
     m12 = _b * ((sqrt(1 + _u2 * Geodesic::sq( ssig2)) * _csig1 * ssig2 -
 		 sqrt(1 + _u2 * Geodesic::sq(_ssig1)) * _ssig1 * csig2)
-		- _csig1 * csig2 * ( (_taufm1 - _zetfm1) * sig12 + (et - ez) ));
+		- _csig1 * csig2 * ( (_taufm1-_zetfm1) * sig12 + (et-ez) ));
     if (arcmode)
       s12 = _b * ((1 + _taufm1) * sig12 + et);
 

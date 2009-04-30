@@ -72,9 +72,9 @@ the -b flag is given, azi2 is converted to a back azimuth (the direction\n\
 back to point 1) for output.\n\
 \n\
 s12 is given in meters, unless the -a flag is given.  In that case, s12\n\
-(on both input and output) are given in terms of arc length on the\n\
-auxiliary sphere (measured in degrees).  In these terms, 180 degrees is\n\
-the distance from one equator crossing to the next or from the minimum\n\
+(on both input and output) are given as the arc length on the auxiliary\n\
+sphere a12 (measured in degrees).  In these terms, 180 degrees is the\n\
+distance from one equator crossing to the next or from the minimum\n\
 latitude to the maximum latitude.  Distances greater than 180 degrees do\n\
 not correspond to shortest paths.  m12 is always given in meters.\n\
 \n\
