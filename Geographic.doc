@@ -2058,10 +2058,11 @@ list of changes.
     - return reduced length (as does the \ref geod utility),
     - improved calculation of starting point for inverse method,
     - use reduced length to give derivative for Newton's method.
-  - Add AzimuthalEquidistant class.
-  - Make Geocentric, TransverseMercator, and PolarStereographic classes
-    work with prolate ellipsoids.
-  - CartConvert checks its inputs more carefully.
+  - Add GeographicLib::AzimuthalEquidistant class.
+  - Make GeographicLib::Geocentric, GeographicLib::TransverseMercator,
+    and GeographicLib::PolarStereographic classes work with prolate
+    ellipsoids.
+  - \ref cartconvert checks its inputs more carefully.
   - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-04.tgz">2009-04</a>
@@ -2081,13 +2082,13 @@ list of changes.
     - add -a, -e, -b options to the \ref geod utility.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-03.tgz">2009-03</a>
-  - Add Geographic::Geodesic and the \ref geod utility.
+  - Add GeographicLib::Geodesic and the \ref geod utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
   - Use invf = 0 to mean a sphere in constructors to some classes.
   - The makefile creates a library and includes an install target.
-  - Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
-    \ref cartconvert.
+  - Rename GeographicLib::ECEF to GeographicLib::Geocentric, ECEFConvert
+    to \ref cartconvert.
   - Use inline functions to define constant doubles in Constants.hpp.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-02.tgz">2009-02</a>

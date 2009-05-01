@@ -65,8 +65,9 @@ Changes between 2009-05 and 2009-03 versions:
 
   * Add AzimuthalEquidistant class.
 
-  * Make Geocentric, TransverseMercator, and PolarStereographic classes
-    work with prolate ellipsoids.
+  + Make GeographicLib::Geocentric, GeographicLib::TransverseMercator,
+    and GeographicLib::PolarStereographic classes work with prolate
+    ellipsoids.
 
   * CartConvert checks its inputs more carefully.
 
@@ -95,7 +96,7 @@ Changes between 2009-04 and 2009-03 versions:
 
 Changes between 2009-03 and 2009-02 versions:
 
-  * Add Geographic::Geodesic and the Geod utility.
+  * Add GeographicLib::Geodesic and the Geod utility.
 
   * Declare when no exceptions are thrown by functions.
 
@@ -105,8 +106,8 @@ Changes between 2009-03 and 2009-02 versions:
 
   * The makefile creates a library and includes an install target.
 
-  * Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
-    CartConvert.
+  * Rename GeographicLib::ECEF to GeographicLib::Geocentric, ECEFConvert
+    to CartConvert.
 
   * Use inline functions to define constant doubles in Constants.hpp.
 
