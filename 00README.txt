@@ -59,7 +59,7 @@ Changes between 2009-05 and 2009-03 versions:
 
   * Improvements to GeographicLib::Geodesic:
     + more economical series expansions,
-    + return reduced length (as does \ref geod utility)
+    + return reduced length (as does the Geod utility),
     + improved calculation of starting point for inverse method,
     + use reduced length to give derivative for Newton's method.
 
@@ -91,7 +91,7 @@ Changes between 2009-04 and 2009-03 versions:
       method,
     + accept and return spherical arc lengths,
     + works with both oblate and prolate spheroids,
-    + add -a, -e, -b options to \ref geod utility.
+    + add -a, -e, -b options to the Geod utility.
 
 Changes between 2009-03 and 2009-02 versions:
 

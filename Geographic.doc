@@ -2055,7 +2055,7 @@ list of changes.
    (current)</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
-    - return reduced length (as does \ref geod utility)
+    - return reduced length (as does the \ref geod utility),
     - improved calculation of starting point for inverse method,
     - use reduced length to give derivative for Newton's method.
   - Add AzimuthalEquidistant class.
@@ -2078,7 +2078,7 @@ list of changes.
       method,
     - accept and return spherical arc lengths,
     - works with both oblate and prolate spheroids,
-    - add -a, -e, -b options to \ref geod utility.
+    - add -a, -e, -b options to the \ref geod utility.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-03.tgz">2009-03</a>
   - Add Geographic::Geodesic and the \ref geod utility.
