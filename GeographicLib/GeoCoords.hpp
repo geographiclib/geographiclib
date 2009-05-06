@@ -61,7 +61,7 @@ namespace GeographicLib {
       _alt_zone = _zone;
     }
     void UTMUPSString(int zone, double easting, double northing,
-		   int prec, std::string& utm) const;
+		      int prec, std::string& utm) const;
     void FixHemisphere();
 #if defined(_MSC_VER)
     static inline int isfinite(double x) throw() { return _finite(x); }
