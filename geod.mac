@@ -144,7 +144,7 @@ the factor is multiplied back).  This procedure leads to a series where
 half the terms drop out.
 
 */
-computeeta(maxpow):=block([dlamintegrand,dlamintegrandexp,dlam,eta,e2,f],
+computeeta(maxpow):=block([int,intexp,dlam,eta,e2,f],
 /* Multiplicative factor -e^2/(2-fp) = -f*(2-f)/(2-fp) */
 /* 1-fp = (1-f)/(1-k1)
    u2 = 4*k1/(1-k1)^2
