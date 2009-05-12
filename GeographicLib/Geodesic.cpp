@@ -541,18 +541,7 @@ namespace GeographicLib {
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
 			     double lat1, double lon1, double azi1) throw() {
-    if (true) {
-      // Skip this for now.  Don't need to treat this as a special case.
-      azi1 = Geodesic::AngNormalize(azi1);
-      // Normalize azimuth at poles.  Evaluate azimuths at lat = +/- (90 - eps).
-      if (lat1 == 90) {
-	lon1 -= azi1 - (azi1 >= 0 ? 180 : -180);
-	azi1 = -180;
-      } else if (lat1 == -90) {
-	lon1 += azi1;
-	azi1 = 0;
-      }
-    }
+    azi1 = Geodesic::AngNormalize(azi1);
     // Guard against underflow in salp0
     azi1 = Geodesic::AngRound(azi1);
     lon1 = Geodesic::AngNormalize(lon1);
@@ -566,8 +555,8 @@ namespace GeographicLib {
       alp1 = azi1 * Constants::degree(),
       // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
       // problems directly than to skirt them.
-      salp1 = azi1 == 180 ? 0 : sin(alp1),
-      calp1 = azi1 ==  90 ? 0 : cos(alp1);
+      salp1 = azi1 == -180 ? 0 : sin(alp1),
+      calp1 = azi1 ==   90 ? 0 : cos(alp1);
     double cbet1, sbet1, phi;
     phi = lat1 * Constants::degree();
     // Ensure cbet1 = +eps at poles
