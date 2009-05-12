@@ -918,7 +918,7 @@ are given here where \e ep2 = \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 -
 \endverbatim
 
 Unfortunately, expansions of this type are much more messy at higher
-order.  Therefore, For greater accuracy, directly differentiate the
+order.  Therefore, for greater accuracy, directly differentiate the
 series involving \e h' or \e h.  The accumulation of the sum can be
 carried out at the same time as the transformation itself (and the
 calculation slots into a Clenshaw summation very easily).  The

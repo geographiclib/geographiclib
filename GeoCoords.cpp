@@ -164,7 +164,7 @@ namespace GeographicLib {
   }
 
   void GeoCoords::FixHemisphere() {
-    if (_lat == 0 || (_northp && _lat > 0) || (!_northp && _lat < 0))
+    if (_lat == 0 || (_northp && _lat >= 0) || (!_northp && _lat < 0))
       // Allow either hemisphere for equator
       return;
     if (_zone > 0) {
