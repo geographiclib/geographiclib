@@ -152,6 +152,23 @@ namespace GeographicLib {
       double gamma, k;
       Reverse(zone, northp, x, y, lat, lon, gamma, k);
     }
+
+    /**
+     * Decode a UTM/UPS zone string
+     **********************************************************************/
+    static void DecodeZone(const std::string& zonestr,
+			   int& zone, bool& northp);
+
+    /**
+     * Encode a UTM/UPS zone string
+     **********************************************************************/
+    static std::string EncodeZone(int zone, bool northp);
+
+    /**
+     * The shift necessary to align N and S halves of a UTM zone
+     **********************************************************************/
+    static double UTMShift() throw();
+
   };
 
 } // namespace GeographicLib
