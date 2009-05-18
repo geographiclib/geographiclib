@@ -101,8 +101,7 @@ namespace GeographicLib {
       int ilat = int(std::floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
-    // These are protected also so that UTMUPS can access them.
-    friend class GeoCoords;	// GeoCoords accesses utmNshift
+    // UTMUPS access these enums
     enum {
       tile = 100000,		// Size MGRS blocks
       minutmcol = 1,

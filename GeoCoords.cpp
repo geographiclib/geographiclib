@@ -60,23 +60,10 @@ namespace GeographicLib {
 	throw out_of_range("Neither " + sa[0] + " nor " + sa[2] +
 			   " of the form UTM/UPS Zone + Hemisphere" +
 			   " (ex: 38N, 09S, N)");
-      char hemi = toupper(sa[zoneind][sa[zoneind].size() - 1]);
-      _northp = hemi == 'N';
-      if (! (_northp || hemi == 'S'))
-	throw out_of_range(string("Illegal hemisphere letter ") + hemi
-			   + " in " + sa[zoneind]);
-      const char* c = sa[zoneind].c_str();
-      char* q;
-      _zone = strtol(c, &q, 10);
-      if (q - c != int(sa[zoneind].size()) - 1)
-	throw out_of_range("Extra text in UTM/UPS zone " + sa[zoneind]);
-      if (q > c && _zone == 0)
-	// Don't allow 0N as an alternative to N for UPS coordinates
-	throw out_of_range("Illegal zone 0 in " + sa[zoneind]);
-      if (q == c)
-	_zone = 0;
+      UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i) {
 	const char* c = sa[coordind + i].c_str();
+	char* q;
 	errno = 0;
 	double x = strtod(c, &q);
 	if (errno ==  ERANGE || !isfinite(x))
@@ -133,12 +120,10 @@ namespace GeographicLib {
   void GeoCoords::UTMUPSString(int zone, double easting, double northing,
 			       int prec, std::string& utm) const {
     ostringstream os;
-    os << fixed << setfill('0');
-    if (zone)
-      os << setw(2) << zone;
     prec = max(-5, min(9, prec));
     double scale = prec < 0 ? pow(10.0, -prec) : 1.0;
-    os << (_northp ? 'N' : 'S') << " "
+    os << UTMUPS::EncodeZone(zone, _northp) << fixed << setfill('0');
+    os << " "
        << setprecision(max(0, prec))
        << easting / scale;
     if (prec < 0 && abs(easting / scale) > 0.5)
@@ -168,7 +153,7 @@ namespace GeographicLib {
       // Allow either hemisphere for equator
       return;
     if (_zone > 0) {
-      _northing += (_northp ? 1 : -1) * MGRS::utmNshift;
+      _northing += (_northp ? 1 : -1) * UTMUPS::UTMShift();
       _northp = !_northp;
     } else
       throw out_of_range("Hemisphere mixup");

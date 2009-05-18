@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <limits>
+#include <iomanip>
 
 #define UTMUPS_CPP "$Id$"
 
@@ -161,5 +162,46 @@ namespace GeographicLib {
     }
     return true;
   }
+
+  void UTMUPS::DecodeZone(const std::string& zonestr,
+			  int& zone, bool& northp) {
+    unsigned zlen = unsigned(zonestr.size());
+    if (zlen == 0)
+      throw out_of_range("Empty zone specification");
+    if (zlen > 3)
+      throw out_of_range("More than 3 characters in zone specification " +
+			 zonestr);
+    char hemi = toupper(zonestr[zlen - 1]);
+    northp = hemi == 'N';
+    if (! (northp || hemi == 'S'))
+      throw out_of_range(string("Illegal hemisphere letter ") + hemi +
+			 " in " + zonestr);
+    if (zlen == 1)
+      zone = 0;
+    else {
+      const char* c = zonestr.c_str();
+      char* q;
+      zone = strtol(c, &q, 10);
+      if (q - c != int(zlen) - 1)
+	throw out_of_range("Extra text in UTM/UPS zone " + zonestr);
+      if (q > c && zone == 0)
+	// Don't allow 0N as an alternative to N for UPS coordinates
+	throw out_of_range("Illegal zone 0 in " + zonestr);
+    }
+  }
+
+  std::string UTMUPS::EncodeZone(int zone, bool northp) {
+    ostringstream os;
+    if (! (zone >= 0 && zone <= 60)) {
+      os << "Illegal UTM zone " << zone;
+      throw out_of_range(os.str());
+    }
+    if (zone)
+      os << setfill('0') << setw(2) << zone;
+    os << (northp ? 'N' : 'S');
+    return os.str();
+  }
+
+  double UTMUPS::UTMShift() throw() { return double(MGRS::utmNshift); }
 
 } // namespace GeographicLib

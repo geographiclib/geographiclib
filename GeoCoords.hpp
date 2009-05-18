@@ -67,8 +67,6 @@ namespace GeographicLib {
     static inline int isfinite(double x) throw() { return _finite(x); }
 #else
     static inline int isfinite(double x) throw() { return std::isfinite(x); }
-    static inline int isnan(double x) throw() { return std::isnan(x); }
-    static inline int isinf(double x) throw() { return std::isinf(x); }
 #endif
   public:
 
