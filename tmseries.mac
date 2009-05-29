@@ -70,7 +70,7 @@ load("revert.mac")$
    e2 = e^2
    phi = geodetic latitude
    beta = conformal latitude
-   z = Gauss-Laborde TM
+   z = Gauss-Schreiber TM
    w = Thompson projection (scaled by 2*kc/%pi)
    psi = isometric latitude
    s = UTM projection (scaled by 2*ec/%pi)
