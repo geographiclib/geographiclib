@@ -53,9 +53,15 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-05 version of the library.
+This is the 2009-06 version of the library.
 
-Changes between 2009-05 and 2009-03 versions:
+Changes between 2009-06 and 2009-05 versions:
+
+  * Add routines to decode and encode zone+hemisphere tu UTMUPS.
+
+  * Clean up code in Geodesic.
+
+Changes between 2009-05 and 2009-04 versions:
 
   * Improvements to GeographicLib::Geodesic:
     + more economical series expansions,
