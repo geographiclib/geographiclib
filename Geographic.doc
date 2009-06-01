@@ -2053,8 +2053,8 @@ list of changes.
 
  - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-06
    (current)</a>
-  - Add routines to decode and encode zone+hemisphere to UTMUPS.
-  - Clean up code in Geodesic.
+  - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
+  - Clean up code in GeographicLib::Geodesic.
 
  - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-05</a>
   - Improvements to GeographicLib::Geodesic:
