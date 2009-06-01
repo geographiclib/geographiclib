@@ -57,7 +57,7 @@ This is the 2009-06 version of the library.
 
 Changes between 2009-06 and 2009-05 versions:
 
-  * Add routines to decode and encode zone+hemisphere tu UTMUPS.
+  * Add routines to decode and encode zone+hemisphere to UTMUPS.
 
   * Clean up code in Geodesic.
 
