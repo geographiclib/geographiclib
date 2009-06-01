@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-05
-\date 2009-05-01
+\version 2009-06
+\date 2009-06-01
 
 \section abstract Abstract
 
@@ -2051,8 +2051,12 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-05
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-06
    (current)</a>
+  - Add routines to decode and encode zone+hemisphere tu UTMUPS.
+  - Clean up code in Geodesic.
+
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-05</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the \ref geod utility),
