@@ -531,7 +531,7 @@ namespace GeographicLib {
       else {
 	double dummy1, dummy2;
 	Lengths(k1, sig12, ssig1, csig1, ssig2, csig2,
-		cbet1, cbet2, dummy1, dummy2, dlam12, tc, zc);
+		cbet1, cbet2, dummy1, dlam12, dummy2, tc, zc);
 	dlam12 /= calp2 * cbet2;
       }
     }
