@@ -156,7 +156,7 @@ namespace GeographicLib {
     /**
      * Decode a UTM/UPS zone string, \e zonestr, returning the resulting \e
      * zone and hemisphere thru \e northp (true for northern and false for
-     * southern hemispheres).  For UTM, \w zonestr has the form of a zone
+     * southern hemispheres).  For UTM, \e zonestr has the form of a zone
      * number in the range [1,60] followed by a hemisphere letter, N or S.  For
      * UPS, it consists just of the hemisphere letter.  The returned value of
      * \e zone is 0 for UPS.
