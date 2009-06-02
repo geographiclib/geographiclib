@@ -10,7 +10,6 @@
 #if !defined(ELLIPTICFUNCTION_HPP)
 #define ELLIPTICFUNCTION_HPP "$Id$"
 
-
 namespace GeographicLib {
 
   /**
