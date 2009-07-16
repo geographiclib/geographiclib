@@ -53,7 +53,13 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-06 version of the library.
+This is the 2009-07 version of the library.
+
+Changes between 2009-07 and 2009-06 versions:
+
+  * Speed up the series inversion code in tmseries.mac and geod.mac.
+
+  * Reference Borkowski in section on Geocentric coordinates.
 
 Changes between 2009-06 and 2009-05 versions:
 

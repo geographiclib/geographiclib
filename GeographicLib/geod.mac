@@ -70,20 +70,35 @@ and revert this to obtain
 
 retaining terms up to order k1^maxpow in tp[k].
 
+Write
+
+  tau = sigma + dtau(sigma)
+  sigma = tau + dsigma(tau)
+  dtau(sigma) = sum(t[k] * sin(2*sigma), k, 1, inf)
+  dsigma(tau) = sum(tp[k] * sin(2*tau), k, 1, inf)
+
+Then the Lagrange Inversion Theorem
+
+  http://mathworld.wolfram.com/LagrangeInversionTheorem.html
+
+gives
+
+  dsigma(tau) = sum( (-1)^n/n! * diff( dtau(tau)^n, tau, n-1 ),
+                         n, 1, inf)
+
 Call this after computetau(maxpow)$
 
 */
-reverttau(maxpow):=block([sigma,tau,k1],local(sigma),
-  sigma[0]:tau,
-  for i:1 thru maxpow do (
-    sigma[i]:tau-
-    sum(trigreduce(ratdisrep(
-          taylor(t[j]*sin(2*j*sigma[i-j]),k1,0,i))),
-      j,1,i)),
-  sigma[maxpow]:expand(sigma[maxpow]),
-  for i:1 thru maxpow do tp[i]:coeff(sigma[maxpow],sin(2*i*tau)),
-  if expand(sigma[maxpow]-tau-sum(tp[i]*sin(2*i*tau),i,1,maxpow)) # 0
-  then error("left over terms in sigma"),
+
+reverttau(maxpow):=block([tau,k1,tauacc:1,sigacc:0],
+  for n:1 thru maxpow do (
+    tauacc:trigreduce(ratdisrep(taylor(
+          -sum(t[j]*sin(2*j*tau),j,1,maxpow-n+1)*tauacc/n,
+          k1,0,maxpow))),
+    sigacc:sigacc+expand(diff(tauacc,tau,n-1))),
+  for i:1 thru maxpow do tp[i]:coeff(sigacc,sin(2*i*tau)),
+  if expand(sigacc-sum(tp[i]*sin(2*i*tau),i,1,maxpow)) # 0
+  then error("left over terms in sigacc"),
   'done)$
 
 /*

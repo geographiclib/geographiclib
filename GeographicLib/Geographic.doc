@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-06
-\date 2009-06-01
+\version 2009-07
+\date 2009-07-16
 
 \section abstract Abstract
 
@@ -1720,15 +1720,16 @@ very nearly spherical near yield inaccurate results due to underflow; in the
 other hand, the case of the sphere, \e f = 0, is treated specially and gives
 accurate results.
 
-Another comparable method is T. Fukushima,
+Other comparable methods are K. M. Borkowski,
+<a href="http://dx.doi.org/10.1007/BF00643807"> Transformation
+of geocentric to geodetic coordinates without approximations</a>,
+Astrophys. Space Sci. 139, 1&ndash;4 (1987)
+(<a href="http://dx.doi.org/10.1007/BF00656995"> erratum</a>)
+and T. Fukushima,
 <a href="http://dx.doi.org/10.1007/s001900050271"> Fast transform from
 geocentric to geodetic coordinates</a>, J. Geodesy 73, 603&ndash;610 (2003).
-This is an iterative method and is somewhat faster than Geocentric.Reverse.
-However, because of the choice of independent variable in Newton's
-iteration, accuracy is lost for points near the equatorial plane.  As a
-consequence, the maximum error \e err near the center of meridional
-curvature for \e lat = 0 is about 50 m (as opposed to 8 mm for
-WGS84.Reverse).
+However the choice of independent variables in these methods leads
+to a loss of accuracy for points near the equatorial plane.
 
 <center>
 Back to \ref geodesic.  Forward to \ref utilities.  Up to \ref contents.
@@ -2051,12 +2052,16 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-06
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-07
    (current)</a>
+  - Speed up the series inversion code in tmseries.mac and geod.mac.
+  - Reference Borkowski in section on \ref geocentric.
+
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-06.tgz">2009-06</a>
   - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
   - Clean up code in GeographicLib::Geodesic.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-05</a>
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-05.tgz">2009-05</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the \ref geod utility),
