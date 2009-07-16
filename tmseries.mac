@@ -57,10 +57,10 @@ the projection itself.)
 
 */
 
+taylordepth:5$
+triginverses:'all$
 maxpow:4$ /* Max power for forward and reverse projections */
 maxpow2:2$ /* Max power for convergence and scale */
-
-load("revert.mac")$
 
 /* Notation
 
@@ -83,17 +83,16 @@ load("revert.mac")$
     to
        var1 = revertexpr(var2) = series in eps
 
-Require that expr(var1) = var1 to order eps^0.  The version throw in a
+Require that expr(var1) = var1 to order eps^0.  This throws in a
 trigreduce to convert to multiple angle trig functions.
 */
-reverta(expr,var1,var2,eps,pow):=block([f,revert],
-  expr:expand(ratdisrep(expr)),
-  revert:var1-expr+var2,
-  for i:1 thru pow do (
-    revert:subst([var1=revert],revert),
-    revert:ratsimp(trigreduce(ratsimp(ratdisrep(taylor(revert,eps,0,pow))))),
-    if freeof(var1,revert) then return(done)),
-  revert)$
+reverta(expr,var1,var2,eps,pow):=block([tauacc:1,sigacc:0,dsig],
+  dsig:ratdisrep(taylor(expr-var1,eps,0,pow)),
+  dsig:subst([var1=var2],dsig),
+  for n:1 thru pow do (tauacc:trigreduce(ratdisrep(taylor(
+    -dsig*tauacc/n,eps,0,pow))),
+    sigacc:sigacc+expand(diff(tauacc,var2,n-1))),
+  var2+sigacc)$
 
 /* Complete elliptic integral of 1st kind -- A+S 17.3.11 */
 kc(m):=''(%pi/2*(1+sum(((2*i-1)!!/(2*i)!!)^2*m^i,i,1,maxpow)))$
