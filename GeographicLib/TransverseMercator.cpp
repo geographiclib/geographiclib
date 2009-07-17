@@ -35,7 +35,7 @@
  * 12th order is given in \ref tmseries.)
  *
  * Other equivalent implementations are given in
- *  - http://www.ign.fr/telechargement/MPro/geodesie/CIRCE/NTG_76.pdf
+ *  - http://www.ign.fr/DISPLAY/000/526/702/5267021/NTG_76.pdf
  *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
  **********************************************************************/
 
