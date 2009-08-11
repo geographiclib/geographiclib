@@ -25,12 +25,14 @@ Files
     Geocentric.[ch]pp -- geocentric coordinates
     LocalCartesian.[ch]pp -- local cartesian coordinates
     Geodesic.[ch]pp -- geodesic calculatiosn
-    AzimuthalEquidistant.[ch]pp -- azimuthal equidistant coordinates
+    AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
+    CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
 
     GeoConvert.cpp -- geographic conversion utility
     TransverseMercatorTest.cpp -- TM tester
     Geod -- geodesic utility
     CartConvert.cpp -- convert to geocentric and local cartesian
+    EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
 
     Makefile -- Unix/Linux makefile
 

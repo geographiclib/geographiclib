@@ -66,10 +66,10 @@ int main(int argc, char* argv[]) {
 
   if (localcartesian) {
     if ( !(-90 <= latlonh0[0] && latlonh0[0] <= 90) ) {
-      std::cerr << "Latitude not in range [-90, 90]\\n";
+      std::cerr << "Latitude not in range [-90, 90]\n";
       return 1;
     } else if ( !(-180 <= latlonh0[1] && latlonh0[1] <= 360) ) {
-      std::cerr << "Longitude not in range [-180, 360]\\n";
+      std::cerr << "Longitude not in range [-180, 360]\n";
       return 1;
     }
   }

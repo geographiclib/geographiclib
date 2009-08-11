@@ -80,6 +80,7 @@ namespace GeographicLib {
   class Geodesic {
   private:
     friend class GeodesicLine;
+    friend class CassiniSoldner;
     static const int tauord = GEOD_TAU_ORD;
     static const int ntau = tauord;
     static const int nsig = tauord;
@@ -257,6 +258,7 @@ namespace GeographicLib {
   class GeodesicLine {
   private:
     friend class Geodesic;
+    friend class CassiniSoldner;
     static const int ntau = Geodesic::ntau;
     static const int nsig = Geodesic::nsig;
     static const int nzet = Geodesic::nzet;
