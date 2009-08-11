@@ -174,7 +174,7 @@ namespace GeographicLib {
 	Lengths(_n, sig12, ssig1, csig1, ssig2, csig2,
 		cbet1, cbet2, s12, m12, dummy, tc, zc);
       }
-      if (m12 >= 0) {
+      if (sig12 < 1 || m12 >= 0) {
 	m12 *= _a;
 	s12 *= _b;
 	sig12 /= Constants::degree();
@@ -287,8 +287,8 @@ namespace GeographicLib {
 			   SinSeries(ssig1, csig1, zc, nzet));
     m0 = taufm1 - zetfm1;
     // Missing a factor of _a
-    m12a = (sqrt(1 - _e2 * sq(cbet2)) * csig1 * ssig2 -
-	    sqrt(1 - _e2 * sq(cbet1)) * ssig1 * csig2)
+    m12a = (sqrt(1 - _e2 * sq(cbet2)) * (csig1 * ssig2) -
+	    sqrt(1 - _e2 * sq(cbet1)) * (ssig1 * csig2))
       - _f1 * csig1 * csig2 * ( m0 * sig12 + (et - ez) );
     // Missing a factor of _b
     s12b =  (1 + taufm1) * sig12 + et;
@@ -613,7 +613,7 @@ namespace GeographicLib {
 				double& lat2, double& lon2, double& azi2,
 				double& m12, bool arcmode)
   const throw() {
-    if (_b == 0)
+    if (!Init())
       // Uninitialized
       return 0;
     double sig12, ssig12, csig12, dtau2;
@@ -638,7 +638,6 @@ namespace GeographicLib {
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
     }
-    // ArcPosition(sig12, ssig12, csig12, lat2, lon2, azi2);
 
     double omg12, lam12, lon12;
     double ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2;
