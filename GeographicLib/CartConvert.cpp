@@ -2,13 +2,13 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp LocalCartesian.cpp Constants.cpp
+ *   g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp LocalCartesian.cpp
  *
  * See \ref cartconvert for usage information.
  **********************************************************************/
@@ -41,7 +41,7 @@ cartesian coordinates x, y, z (meters) are printed on standard output.\n\
 \n\
 If -r is given the reverse transformation is performed.\n\
 \n\
--h prints this help\n";
+-h prints this help.\n";
   return retval;
 }
 

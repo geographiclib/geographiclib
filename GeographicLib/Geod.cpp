@@ -2,13 +2,13 @@
  * \file Geod.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp Constants.cpp
+ *   g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp
  *
  * See \ref geod for usage information.
  **********************************************************************/

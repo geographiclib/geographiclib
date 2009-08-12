@@ -58,6 +58,7 @@ http://charles.karney.info/geographic/
    - \ref geod
    - \ref transversemercatortest
    - \ref cartconvert
+   - \ref equidistanttest
  - \ref old
 
 <center>
@@ -146,8 +147,8 @@ The following steps will get you started with %GeographicLib:
  - Try out \ref geoconvert (for help, type ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
- - Similarly, try out \ref geod, \ref transversemercatortest, and
-   \ref cartconvert.
+ - Similarly, try out \ref geod, \ref transversemercatortest,
+   \ref cartconvert, and \ref equidistanttest.
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
    on the library.
@@ -235,6 +236,10 @@ function returns the coordinates a specified distance from the starting
 point.  \ref geod is a simple command line utility to perform geodesic
 calculations.  GeographicLib::AzimuthalEquidistant computes the
 azimuthal equidistant projection using Geodesic.
+GeographicLib::CassiniSoldner computes the Cassini-Soldner projection
+which is a cylindrical equidistant projection using Geodesic. \ref
+equidistanttest is a simple command line utility to exercise these two
+projections.
 
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
@@ -1427,7 +1432,7 @@ The reduced length is given by
 sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>)
 cos \e sigma<sub>1</sub> sin \e sigma<sub>2</sub><br>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
-sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>)
+sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>1</sub>)
 sin \e sigma<sub>1</sub> cos \e sigma<sub>2</sub><br>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
 cos \e sigma<sub>1</sub>  cos \e sigma<sub>2</sub>
@@ -2038,6 +2043,57 @@ If -r is given the reverse transformation is performed.
 -h prints this help
 \endverbatim
 
+\section equidistanttest EquidistantTest
+
+EquidistantTest is a command line utility for performing azimuthal
+equidistant and Cassini-Soldner projections using
+GeographicLib::AzimuthalEquidistant and GeographicLib::CassiniSoldner.
+These projections are both defined in terms of geodesics.
+
+Examples (position of Caen in the Cassini-Soldner projection with origin
+at the Paris Observatory)
+ - echo 48.648 -2.007 | ./EquidistantTest -c 48.836 2.337\n=>
+   -319919 -11791 86.7 0.999
+ - echo -319919 -11791 | ./EquidistantTest -c 48.836 2.337 -r\n=>
+   48.648 -2.007 86.7 0.999
+
+Compile with "make EquidistantTest" or with
+
+g++ -g -O3 -I.. -o EquidistantTest EquidistantTest.cpp Geodesic.cpp
+AzimuthalEquidistant.cpp CassiniSoldner.cpp
+
+Note that, unlike \ref geoconvert, EquidistantTest has no
+facility for dealing with angles in degrees, minutes, and seconds, and
+no ability to change the precision of the output.
+
+Here is the usage (obtained from "EquidistantTest -h")
+\verbatim
+Usage: EquidistantTest [-c lat0 lon0] [-z lat0 lon0] [-r] [-h]
+
+Convert geodetic coordinates to either azimuthal equidistant or
+Cassini-Soldner coordinates.  The center of the projection (lat0, lon0)
+is specified by either the -c option (for Cassini-Soldner) or -z option
+(for azimuthal equidistant).  At least one of these options must be
+given (the last one given is used).  The WGS84 model of the earth is
+used.
+
+Geodetic coordinates are provided on standard input as a set of lines
+containing (blank separated) latitude and longitude (decimal degrees).
+For each set of geodetic coordinates, the corresponding projected
+coordinates x, y (meters) are printed on standard output together with
+the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,
+azi is the bearing of the easting direction and the scale in the
+northing direction is 1/rk.  For azimuthal equidistant, azi is the
+bearing of the radial direction and the scale in the azimuthal direction
+is 1/rk
+
+If -r is given the reverse transformation is performed.  x and y are
+given on standard input and each line of the standard output gives
+latitude, longitude, azi, and rk.
+
+-h prints this help
+\endverbatim
+
 <center>
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
@@ -2052,8 +2108,19 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-07
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-08
    (current)</a>
+
+  - Add GeographicLib::CassiniSoldner class and \ref equidistanttest utility.
+
+  - Fix bug in GeographicLib::Geodesic::Inverse where nans were
+    sometimes returned.
+
+  - INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
+    of the azimuthal scale instead of the reduced length.
+
+
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-07.tgz">2009-07</a>
   - Speed up the series inversion code in tmseries.mac and geod.mac.
   - Reference Borkowski in section on \ref geocentric.
 
