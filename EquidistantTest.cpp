@@ -1,16 +1,17 @@
 /**
  * \file EquidistantTest.cpp
- * \brief Command line utility for geodetic to cartesian coordinate conversions
+ * \brief Command line utility for azimuthal equidistant and Cassini-Soldner
+ * projections
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o EquidistantTest EquidistantTest.cpp Geocentric.cpp LocalCartesian.cpp Constants.cpp
+ *   g++ -g -O3 -I.. -o EquidistantTest EquidistantTest.cpp Geodesic.cpp AzimuthalEquidistant.cpp CassiniSoldner.cpp
  *
- * See \ref cartconvert for usage information.
+ * See \ref equidistanttest for usage information.
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
@@ -42,13 +43,13 @@ the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,\n\
 azi is the bearing of the easting direction and the scale in the\n\
 northing direction is 1/rk.  For azimuthal equidistant, azi is the\n\
 bearing of the radial direction and the scale in the azimuthal direction\n\
-is 1/rk\n\
+is 1/rk.\n\
 \n\
 If -r is given the reverse transformation is performed.  x and y are\n\
 given on standard input and each line of the standard output gives\n\
 latitude, longitude, azi, and rk.\n\
 \n\
--h prints this help\n";
+-h prints this help.\n";
   return retval;
 }
 

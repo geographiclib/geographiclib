@@ -8,7 +8,7 @@
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp TransverseMercatorExact.cpp Constants.cpp EllipticFunction.cpp TransverseMercator.cpp
+ *   g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp TransverseMercatorExact.cpp EllipticFunction.cpp TransverseMercator.cpp
  *
  * See \ref transversemercatortest for usage information.
  **********************************************************************/

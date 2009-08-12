@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  **********************************************************************/
