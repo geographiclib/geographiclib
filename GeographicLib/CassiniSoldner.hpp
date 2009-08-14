@@ -18,7 +18,8 @@ namespace GeographicLib {
    * \brief Cassini-Soldner Projection.
    *
    * Cassini-Soldner projection centered at an arbitrary position, \e lat0, \e
-   * lon0, on the ellipsoid.  This projection from (\e lat, \e lon0) to easting
+   * lon0, on the ellipsoid.  This projection is a transverse cylindrical
+   * equidistant projection.  The projection from (\e lat, \e lon) to easting
    * and northing (\e x, \e y) is defined by geodesics as follows.  Go north
    * along a geodesic a distance \e y from the central point; then turn
    * clockwise 90<sup>o</sup> and go a distance \e x along a geodesic.
@@ -47,7 +48,14 @@ namespace GeographicLib {
    *
    * The conversions all take place using a GeographicLib::Geodesic object (by
    * default GeographicLib::Geodesic::WGS84).  For more information on
-   * geodesics see \ref geodesic.
+   * geodesics see \ref geodesic.  The determination of (\e lat1, \e lon1) in
+   * the forward projection is by solving the inverse geodesic problem for (\e
+   * lat, \e lon) and its twin obtained by reflection in the meridional plane.
+   * The scale is found by determining where two neighboring geodesics
+   * intersecting the central meridan at \e lat1 and \e lat1 + \e dlat1
+   * intersect and taking the ratio of the reduced lengths for the two
+   * geodesics between that point and, respectively, (\e lat1, \e lon1) and (\e
+   * lat, \e lon).
    **********************************************************************/
 
   class CassiniSoldner {

@@ -42,6 +42,7 @@ Files
     TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
     Geod.vcproj -- project for Geod
     CartConvert.vcproj -- project for CartConvert
+    EquidistantTest.vcproj -- project ofr EquidistantTest
 
     tm.mac -- Maxima code for high precision TM
     ellint.mac -- Maxima code for elliptic functions needed by tm.mac
@@ -55,7 +56,19 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-07 version of the library.
+This is the 2009-08 version of the library.
+
+Changes between 2009-08 and 2009-07 versions:
+
+  * Add GeographicLib::CassiniSoldner class and EquidistantTest utility.
+
+  * Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
+    sometimes returned.
+
+  * INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
+    of the azimuthal scale instead of the reduced length.
+
+  * Add -n option to GeoConvert.
 
 Changes between 2009-07 and 2009-06 versions:
 
