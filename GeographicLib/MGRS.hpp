@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(MGRS_HPP)
-#define MGRS_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_MGRS_HPP)
+#define GEOGRAPHICLIB_MGRS_HPP "$Id$"
 
 #include <cmath>
 #include <algorithm>

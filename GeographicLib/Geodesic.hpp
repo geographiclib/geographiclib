@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(GEODESIC_HPP)
-#define GEODESIC_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
+#define GEOGRAPHICLIB_GEODESIC_HPP "$Id$"
 
 #if !defined(GEOD_TAU_ORD)
 /**

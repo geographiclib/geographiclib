@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(CASSINISOLDNER_HPP)
-#define CASSINISOLDNER_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
+#define GEOGRAPHICLIB_CASSINISOLDNER_HPP "$Id$"
 
 #include "GeographicLib/Geodesic.hpp"
 

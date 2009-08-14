@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(GEOCENTRIC_HPP)
-#define GEOCENTRIC_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
+#define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id$"
 
 #include <cmath>
 

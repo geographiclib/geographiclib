@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(TRANSVERSEMERCATOREXACT_HPP)
-#define TRANSVERSEMERCATOREXACT_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id$"
 
 #include <cmath>
 #include "GeographicLib/EllipticFunction.hpp"

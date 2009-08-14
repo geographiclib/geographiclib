@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(AZIMUTHALEQUIDISTANT_HPP)
-#define AZIMUTHALEQUIDISTANT_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
+#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id$"
 
 #include "GeographicLib/Geodesic.hpp"
 
