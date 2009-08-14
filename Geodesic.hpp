@@ -35,7 +35,7 @@ namespace GeographicLib {
   /**
    * \brief %Geodesic calculations
    *
-   * The shortest path between two points on a spheroid at (\e lat1, \e lon1)
+   * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
    * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
    * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
    * the two end points.  (The azimuth is the heading measured clockwise from
@@ -150,7 +150,7 @@ namespace GeographicLib {
     }
 
     // These are maxima generated functions to provide series approximations to
-    // the integrals for the spheroidal geodesic.
+    // the integrals for the ellipsoidal geodesic.
     static double tauFactorm1(double k1) throw();
     static void tauCoeff(double k1, double t[]) throw();
     static void sigCoeff(double k1, double tp[]) throw();
@@ -162,10 +162,10 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a spheroid with equatorial radius \e a (meters) and
+     * Constructor for a ellipsoid with equatorial radius \e a (meters) and
      * reciprocal flattening \e r.  Setting \e r = 0 implies \e r = inf or
      * flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
-     * spheroid.
+     * ellipsoid.
      **********************************************************************/
     Geodesic(double a, double r) throw();
 
@@ -178,7 +178,7 @@ namespace GeographicLib {
      * false) is set to true, \e s12 is interpreted as the arc length \e a12
      * (degrees) on the auxiliary sphere.  An arc length greater that 180
      * degrees results in a geodesic which is not a shortest path.  For a
-     * prolate spheroid, an additional condition is necessary for a shortest
+     * prolate ellipsoid, an additional condition is necessary for a shortest
      * path: the longitudinal extent must not exceed of 180 degrees.  Returned
      * value is the arc length \e a12 (degrees) if \e arcmode is false,
      * otherwise it is the distance \e s12 (meters)
@@ -196,7 +196,7 @@ namespace GeographicLib {
      * arc length \e a12 (degrees) on the auxiliary sphere.  The routine uses
      * an iterative method.  If the method fails to converge, the negative of
      * the distances (\e s12, \e m12, and \e a12) and reverse of the azimuths
-     * are returned.  This is not expected to happen with spheroidal models of
+     * are returned.  This is not expected to happen with ellipsoidal models of
      * the earth.  Please report all cases where this occurs.
      **********************************************************************/
     double Inverse(double lat1, double lon1, double lat2, double lon2,

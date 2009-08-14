@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-07
-\date 2009-07-16
+\version 2009-08
+\date 2009-08-14
 
 \section abstract Abstract
 
@@ -406,7 +406,7 @@ width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
 The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
 The equator lies on \e y = 0 for longitude < 81<sup>o</sup>; beyond
 this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
-(upper), which shows the graticule for the International Spheroid.  Lee,
+(upper), which shows the graticule for the International Ellipsoid.  Lee,
 Fig. 46, shows the graticule for the entire ellipsoid.  This projection
 (like the Thompson projection) projects the ellipsoid to a finite area.
 
@@ -420,7 +420,7 @@ The graticule for the Thompson transverse Mercator projection.  The
 equator lies on \e y = 0 for longitude < 81<sup>o</sup>; at longitude =
 81<sup>o</sup>, it turns by 120<sup>o</sup> and heads for \e y = 1.
 Compare this with Lee, Fig. 43, which shows the graticule for the
-International Spheroid.  Lee, Fig. 44, shows the graticule for the
+International Ellipsoid.  Lee, Fig. 44, shows the graticule for the
 entire ellipsoid.  This projection (like the Gauss-Kr&uuml;ger
 projection) projects the ellipsoid to a finite area.
 
@@ -969,7 +969,7 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page geodesic Geodesics on the Spheroid
+\page geodesic Geodesics on the Ellipsoid
 
 <center>
 Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
@@ -979,14 +979,18 @@ GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
 solutions to the direct and inverse geodesic problems.  The \ref geod
 utility provides an interface to these classes.
 GeographicLib::AzimuthalEquidistant implements the azimuthal equidistant
-projection in terms of geodesics.
+projection in terms of geodesics.  GeographicLib::CassiniSoldner
+implements a transverse cylindrical equidistant projection in terms of
+geodesics.  The \ref equidistanttest utility provides an interface to
+these projections.
 
 References
  - F. W. Bessel,
    <a href="http://adsabs.harvard.edu/abs/1826AN......4..241B">&Uuml;ber die
    Berechnung der geographischen L&auml;ngen und Breiten aus geod&auml;tischen
    Vermessungen</a>,
-   Astron. Nachr. 4 (86), 241&ndash;254 (1826).
+   Astron. Nachr. 4 (86), 241&ndash;254 (1826).  English translation:
+   <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
    Die Mathematischen und Physikalischen Theorieen der H&ouml;heren
    Geod&auml;sie, vol. 1 (Teubner, Leipzig, 1880).
@@ -1006,7 +1010,7 @@ References
 
 \section geoddesc Description of algorithm
 
-The shortest path between two points on a spheroid at (\e lat1, \e lon1)
+The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
 and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
 the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
 the two end points.  (The azimuth is the heading measured clockwise from
@@ -1030,18 +1034,18 @@ there are multiple solutions (all with the same \e s12, of course), all
 the solutions can be easily generated once a particular solution is
 provided.
 
-The framework for solving geodesic problems on the spheroid was laid
+The framework for solving geodesic problems on the ellipsoid was laid
 down by Bessel (1826) who showed how the problem may be transferred to
 an "auxiliary sphere" where the latitude \e phi has been replaced by the
 reduced latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).
 On this sphere, the geodesic is a great circle and the azimuth is the
-same as on the spheroid.  However, the spheroidal distance is related to
-the great circle distance by an integral; and the spheroidal longitude
+same as on the ellipsoid.  However, the ellipsoidal distance is related to
+the great circle distance by an integral; and the ellipsoidal longitude
 is similarly related to the longitude on the auxiliary sphere.  In the
 case of small \e f, Bessel developed series expansions for the integrals
 and provided a systematic solution to the direct problem.  Helmert
 (1880) extended Bessel's treatment by giving an expression for the
-reduced length of a geodesic for the spheroid.  The "azimuthal scale" of
+reduced length of a geodesic for the ellipsoid.  The "azimuthal scale" of
 the azimuthal equidistant projection about point 1 is given by \e s12/\e
 m12.
 
@@ -1284,7 +1288,7 @@ set, 8 error distances are computed.
  -# Use the results of (5) to compute the position of the midpoint of
     the geodesic by a direct calculation from both ends with distance
     +/-\e s12/2.  Compare the resulting positions.  In addition, if \e
-    s12 < \e a/2 (where \e a is the equatorial radius of the spheroid),
+    s12 < \e a/2 (where \e a is the equatorial radius of the ellipsoid),
     then similarly compare the calcuated positions on the geodesic \e a
     beyond either end of the line starting at both endpoints (i.e., with
     distances +/-\e a and +/-(\e s12 + \e a)).
@@ -1540,12 +1544,12 @@ set.
    the geodesic is unique.  Otherwise there are two geodesics and the
    second one is obtained by setting [\e azi1, \e azi2] = [\e azi2, \e
    azi1].  (This occurs when the longitude difference is near +/-
-   180<sup>o</sup> for oblate spheroids.)
+   180<sup>o</sup> for oblate ellipsoids.)
  - \e lon2 = \e lon1 +/- 180<sup>o</sup> (with neither at a pole).  If \e
    azi1 = 0<sup>o</sup> or +/- 180<sup>o</sup>, the geodesic is unique.
    Otherwise there are two geodesics and the second one is obtained by
    setting [\e azi1, \e azi2] = [-\e azi1, -\e azi2].  (This occurs when
-   the \e lat2 is near -\e lat1 for prolate spheroids.)
+   the \e lat2 is near -\e lat1 for prolate ellipsoids.)
  - Points 1 and 2 at opposite poles.  There are infinitely many
    geodesics which can be generated by setting [\e azi1, \e azi2] = [\e
    azi1, \e azi2] + [\e d, -\e d], for arbitrary \e d.  (For spheres,
@@ -1599,7 +1603,7 @@ avoided.  This limits the accuracy to which coordinates can be specified
 to 0.7 pm.  This should not be a problem since the overall accuracy of
 the algorithms is only 15 nm.
 
-You can specify a \e negative flattening to get a prolate spheroid.  The
+You can specify a \e negative flattening to get a prolate ellipsoid.  The
 rule is that \e b is the radius of the axis of symmetry (the polar
 radius), that \e a is the equatorial radius, and that \e b = \e a (1 -
 \e f).  The direct solution needed no modification.  The inverse
@@ -1608,7 +1612,7 @@ Newton's method are chosen; in addition a test are added to the case
 when the endpoints are on the same meridian to determine if a shorter
 non-meridional geodesic exists.
 
-Most planets and satellites are approximated by oblate spheroids.
+Most planets and satellites are approximated by oblate ellipsoids.
 However, satellites whose rotation frequency is tidally locked to a
 month may be prolate (as example is Saturn's moon, Tethys).  Such
 satellites are typically considerably more eccentric that the earth and
@@ -1882,7 +1886,7 @@ Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]
 
 Perform geodesic calculations.
 
-The shortest path between two points on the spheroid at (lat1, lon1) and
+The shortest path between two points on the ellipsoid at (lat1, lon1) and
 (lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic
 from point 1 to point 2 has azimuths azi1 and azi2 at the two end
 points.  The reduced length of the geodesic, m12, is defined such that
@@ -1906,9 +1910,9 @@ Geod operates in one of three modes:
     lon2" and prints the corresponding values of "azi1 azi2 s12 m12".
 
 By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
-equatorial radius of the spheroid to "a" and the reciprocal flattening
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
 to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
-spheroid.  The -n option uses the international ellipsoid (equivalent to
+ellipsoid.  The -n option uses the international ellipsoid (equivalent to
 "-e 6378388 297").
 
 Output of angles is as decimal degrees.  If -d is specified the output
@@ -2112,15 +2116,11 @@ list of changes.
 
  - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-08
    (current)</a>
-
   - Add GeographicLib::CassiniSoldner class and \ref equidistanttest utility.
-
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
     sometimes returned.
-
   - INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
     of the azimuthal scale instead of the reduced length.
-
   - Add -n option to \ref geoconvert.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-07.tgz">2009-07</a>
@@ -2157,7 +2157,7 @@ list of changes.
     - improvements in the selection of starting points for Newton's
       method,
     - accept and return spherical arc lengths,
-    - works with both oblate and prolate spheroids,
+    - works with both oblate and prolate ellipsoids,
     - add -a, -e, -b options to the \ref geod utility.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-03.tgz">2009-03</a>

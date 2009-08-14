@@ -392,7 +392,7 @@ namespace GeographicLib {
     //
     //    sqrt(1 - e2 * sq(cbet1))
     //
-    // applies the spheroidal correction for close points.  This saves 1
+    // applies the ellipsoidal correction for close points.  This saves 1
     // iteration of Newton's method in the case of short lines.
     calp1 = clam12 >= 0 ?
       sbet12 * (slam12 < 0.1 ? sqrt(1 - _e2 * sq(cbet1)) : 1.0)
