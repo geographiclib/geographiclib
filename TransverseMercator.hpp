@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(TRANSVERSEMERCATOR_HPP)
-#define TRANSVERSEMERCATOR_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id$"
 
 #include <cmath>
 

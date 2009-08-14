@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#ifndef GEOCOORDS_HPP
-#define GEOCOORDS_HPP "$Id$"
+#ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
+#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id$"
 
 #include <cmath>
 #include <string>
@@ -361,4 +361,4 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-#endif	// GEOCOORDS_HPP
+#endif	// GEOGRAPHICLIB_GEOCOORDS_HPP

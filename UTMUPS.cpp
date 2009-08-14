@@ -18,10 +18,10 @@
 #include <limits>
 #include <iomanip>
 
-#define UTMUPS_CPP "$Id$"
+#define GEOGRAPHICLIB_UTMUPS_CPP "$Id$"
 
-RCSID_DECL(UTMUPS_CPP)
-RCSID_DECL(UTMUPS_HPP)
+RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
+RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)
 
 namespace GeographicLib {
 
