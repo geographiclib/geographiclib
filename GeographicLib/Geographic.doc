@@ -1763,7 +1763,7 @@ UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp
 
 Here is the usage (obtained from "GeoConvert -h")
 \verbatim
-Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]
+Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-n] [-h]
 
 Convert geographic coordinates to
 
@@ -1813,7 +1813,9 @@ convergence and scale.
 
 MGRS coordinates are given by truncating (instead of rounding) the
 coordinates to the requested precision.  For example is prec = -3, the
-result is the 1km square enclosing the position.
+result is the 1km square enclosing the position.  If the -n option is
+given, then, on input, an MSGS coordinate refers to the south-west
+corner of the MGRS square instead of the center.
 
 Convergence is the bearing of grid north given as degrees clockwise from
 true north.
@@ -2113,12 +2115,13 @@ list of changes.
 
   - Add GeographicLib::CassiniSoldner class and \ref equidistanttest utility.
 
-  - Fix bug in GeographicLib::Geodesic::Inverse where nans were
+  - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
     sometimes returned.
 
   - INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
     of the azimuthal scale instead of the reduced length.
 
+  - Add -n option to \ref geoconvert.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-07.tgz">2009-07</a>
   - Speed up the series inversion code in tmseries.mac and geod.mac.

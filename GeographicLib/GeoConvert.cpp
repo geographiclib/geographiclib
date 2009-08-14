@@ -22,7 +22,7 @@
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]\n\
+"Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-n] [-h]\n\
 $Id$\n\
 \n\
 Convert geographic coordinates to\n\
@@ -73,7 +73,9 @@ convergence and scale.\n\
 \n\
 MGRS coordinates are given by truncating (instead of rounding) the\n\
 coordinates to the requested precision.  For example is prec = -3, the\n\
-result is the 1km square enclosing the position.\n\
+result is the 1km square enclosing the position.  If the -n option is\n\
+given, then, on input, an MSGS coordinate refers to the south-west\n\
+corner of the MGRS square instead of the center.\n\
 \n\
 Convergence is the bearing of grid north given as degrees clockwise from\n\
 true north.\n\
@@ -110,6 +112,7 @@ int main(int argc, char* argv[]) {
   int outputmode = GEOGRAPHIC;
   int prec = 0;
   int zone = -2;		// -2 = track input, -1 = standard
+  bool centerp = true;
 
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
@@ -123,6 +126,8 @@ int main(int argc, char* argv[]) {
       outputmode = MGRS;
     else if (arg == "-c")
       outputmode = CONVERGENCE;
+    else if (arg == "-n")
+      centerp = false;
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
       std::string a = std::string(argv[m]);
@@ -149,7 +154,7 @@ int main(int argc, char* argv[]) {
   }
   while (std::getline(std::cin, s)) {
     try {
-      p.Reset(s);
+      p.Reset(s, centerp);
       if (zone != -2)
 	p.SetAltZone(zone);
       switch (outputmode) {

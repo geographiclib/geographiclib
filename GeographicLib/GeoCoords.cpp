@@ -26,7 +26,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void GeoCoords::Reset(const std::string& s) {
+  void GeoCoords::Reset(const std::string& s, bool centerp) {
     vector<string> sa;
     bool in = false;
     for (unsigned i = 0; i < s.size(); ++i) {
@@ -41,7 +41,7 @@ namespace GeographicLib {
     }
     if (sa.size() == 1) {
       int prec;
-      MGRS::Reverse(sa[0], _zone, _northp, _easting, _northing, prec);
+      MGRS::Reverse(sa[0], _zone, _northp, _easting, _northing, prec, centerp);
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
 		      _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
