@@ -137,13 +137,15 @@ namespace GeographicLib {
      * (where UPS is employed) is a hemisphere letter by itself, i.e., N or S.
      *
      * MGRS parsing interprets the grid references as square area at the
-     * specified precision (1m, 10m, 100m, etc.).  The center of this square is
-     * then taken to be the precise position.  Thus:
+     * specified precision (1m, 10m, 100m, etc.).  If \e centerp = true (the
+     * default), the center of this square is then taken to be the precise
+     * position; thus:
      * - 38SMB           = 38N 450000 3650000
      * - 38SMB4484       = 38N 444500 3684500
      * - 38SMB44148470   = 38N 444145 3684705
+     * otherwise the "south-west" corner of the square is used.
      **********************************************************************/
-    GeoCoords(const std::string& s) { Reset(s); }
+    GeoCoords(const std::string& s, bool centerp = true) { Reset(s, centerp); }
 
     /**
      * Specify the location in terms of \e latitude (degrees) and \e longitude
@@ -166,9 +168,9 @@ namespace GeographicLib {
 
     /**
      * Reset the location as a 1-element, 2-element, or 3-element string.  See
-     * GeoCoords(const string& s).
+     * GeoCoords(const string& s, bool centerp).
      **********************************************************************/
-    void Reset(const std::string& s);
+    void Reset(const std::string& s, bool centerp = true);
 
     /**
      * Reset the location in terms of \e latitude and \e longitude.  See
