@@ -189,7 +189,7 @@ int main(int argc, char* argv[]) {
       os = std::string("ERROR: ") + e.what();
       retval = 1;
     }
-    std::cout << os << std::endl;
+    std::cout << os << "\n";
   }
   return retval;
 }

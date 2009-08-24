@@ -2,7 +2,8 @@
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
-PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest
+PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
+	GeoidEval
 
 all: $(PROGRAMS) $(LIBRARY)
 
@@ -21,7 +22,8 @@ PREFIX = /usr/local
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner
+	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
+	Geoid
 
 HEADERS = Constants.hpp $(patsubst %,%.hpp,$(MODULES))
 SOURCES = $(patsubst %,%.cpp,$(MODULES))
@@ -39,26 +41,33 @@ TransverseMercatorTest: TransverseMercatorTest.o
 CartConvert: CartConvert.o
 Geod: Geod.o
 EquidistantTest: EquidistantTest.o
+GeoidEval: GeoidEval.o
 
 Constants.o: Constants.hpp
-DMS.o: DMS.hpp
+DMS.o: DMS.hpp Constants.hpp
 EllipticFunction.o: EllipticFunction.hpp Constants.hpp
-GeoCoords.o: GeoCoords.hpp UTMUPS.hpp MGRS.hpp DMS.hpp
-MGRS.o: MGRS.hpp UTMUPS.hpp
+GeoCoords.o: GeoCoords.hpp UTMUPS.hpp MGRS.hpp DMS.hpp Constants.hpp
+MGRS.o: MGRS.hpp UTMUPS.hpp Constants.hpp
 PolarStereographic.o: PolarStereographic.hpp Constants.hpp
 TransverseMercator.o: TransverseMercator.hpp Constants.hpp
 TransverseMercatorExact.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
 	Constants.hpp
-UTMUPS.o: UTMUPS.hpp MGRS.hpp PolarStereographic.hpp TransverseMercator.hpp
+UTMUPS.o: UTMUPS.hpp MGRS.hpp PolarStereographic.hpp TransverseMercator.hpp \
+	Constants.hpp
 Geocentric.o: Geocentric.hpp Constants.hpp
 LocalCartesian.o: LocalCartesian.hpp Geocentric.hpp Constants.hpp
 Geodesic.o: Geodesic.hpp Constants.hpp
+AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Geodesic.hpp Constants.hpp
+CassiniSoldner.o: CassiniSoldner.hpp Geodesic.hpp Constants.hpp
+Geoid.o: Geoid.hpp Constants.hpp
+
 GeoConvert.o: GeoCoords.hpp UTMUPS.hpp
 TransverseMercatorTest.o: EllipticFunction.hpp TransverseMercatorExact.hpp \
 	TransverseMercator.hpp
 CartConvert.o: Geocentric.hpp LocalCartesian.hpp
-Geod.o: Geodesic.hpp DMS.hpp
+Geod.o: Geodesic.hpp DMS.hpp Constants.hpp
 EquidistantTest.o: Geodesic.hpp AzimuthalEquidistant.hpp CassiniSoldner.hpp
+GeoidEval.o: Geoid.hpp DMS.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
