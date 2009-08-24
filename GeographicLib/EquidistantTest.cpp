@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
       if (!(reverse ?
 	    (str >> x >> y) :
 	    (str >> lat >> lon)))
-	throw  std::out_of_range("Incomplete input: " + s);
+	throw std::out_of_range("Incomplete input: " + s);
       if (reverse) {
 	if (cassini)
 	  cs.Reverse(x, y, lat, lon, a, m);
