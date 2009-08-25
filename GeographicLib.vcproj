@@ -198,6 +198,10 @@
 				RelativePath="CassiniSoldner.cpp"
 				>
 			</File>
+			<File
+				RelativePath="Geoid.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -258,6 +262,10 @@
 			</File>
 			<File
 				RelativePath="CassiniSoldner.hpp"
+				>
+			</File>
+			<File
+				RelativePath="Geoid.hpp"
 				>
 			</File>
 		</Filter>
