@@ -13,14 +13,13 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <iostream>
-#include <stdexcept>
 
 namespace GeographicLib {
 
   class Geoid {
   private:
     std::string _filename;
+    const double _a, _e2, _degree, _eps;
     mutable std::ifstream _file;
     double _rlonres, _rlatres;
     std::string _description;
@@ -55,40 +54,20 @@ namespace GeographicLib {
 	return double((unsigned char)(a) * 256u + (unsigned char)(b));
       }
     }
+    double height(double lat, double lon, bool gradp,
+	       double& grade, double& gradn) const;
   public:
     Geoid(const std::string& geoid, const std::string& path = "");
     void CacheArea(double south, double west, double north, double east) const;
     void CacheAll() const { CacheArea(-90.0, 0.0, 90.0, 360.0); }
-    void CacheClear() const {
-      _cache = false;
-      std::vector< std::vector<unsigned short> > t;
-      _data.swap(t);
-    }
+    void CacheClear() const;
     double operator()(double lat, double lon) const {
-      if (lon < 0)
-	lon += 360;
-      double
-	fy = (90 - lat) * _rlatres,
-	fx = lon * _rlonres;
-      unsigned
-	iy = unsigned(fy),
-	ix = unsigned(fx);
-      if (iy == _height - 1)
-	--iy;
-      fx -= ix;
-      fy -= iy;
-      if (!(ix == _ix && iy == _iy)) {
-	_v00 = rawval(ix    , iy    );
-	_v01 = rawval(ix + 1, iy    );
-	_v10 = rawval(ix    , iy + 1);
-	_v11 = rawval(ix + 1, iy + 1);
-	_ix = ix;
-	_iy = iy;
-      }
-      double a = (1 - fx) * _v00 + fx * _v01;
-      double b = (1 - fx) * _v10 + fx * _v11;
-      double c = (1 - fy) * a + fy * b;
-      return _offset + _scale * c;
+      double gradn, grade;
+      return height(lat, lon, false, gradn, grade);
+    }
+    double operator()(double lat, double lon, double& gradn, double& grade)
+      const {
+      return height(lat, lon, true, gradn, grade);
     }
     const std::string& Description() const { return _description; }
     const std::string& GeoidFile() const { return _filename; }
