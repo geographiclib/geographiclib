@@ -13,13 +13,13 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 
 namespace GeographicLib {
 
   class Geoid {
   private:
-    static inline double sq(double x) throw() { return x * x; }
     std::string _filename;
     mutable std::ifstream _file;
     double _rlonres, _rlatres;
@@ -27,17 +27,27 @@ namespace GeographicLib {
     double _offset, _scale, _maxerror, _rmserror;
     unsigned _width, _height;
     unsigned _datastart;
+    // Area cache
     mutable std::vector< std::vector<unsigned short> > _data;
     mutable bool _cache;
+    // NE corner and extent of cache
+    mutable unsigned _xoffset, _yoffset, _xsize, _ysize;
+    // Cell cache
     mutable unsigned _ix, _iy;
     mutable double _v00, _v01, _v10, _v11;
 
     double rawval(unsigned ix, unsigned iy) const {
       if (ix >= _width)
 	ix -= _width;
-      if (_cache)
-	return double(_data[iy][ix]);
-      else {
+      if (_cache && iy >= _yoffset && iy < _yoffset + _ysize &&
+	  ((ix >= _xoffset && ix < _xoffset + _xsize) ||
+	   (ix + _width >= _xoffset && ix + _width < _xoffset + _xsize))) {
+	return double(_data
+		      [iy - _yoffset]
+		      [ix >= _xoffset ?
+		       ix - _xoffset :
+		       ix + _width - _xoffset]);
+      } else {
 	_file.seekg(_datastart + 2 * (iy * _width + ix), std::ios::beg);
 	char a, b;
 	_file.get(a);
@@ -46,18 +56,20 @@ namespace GeographicLib {
       }
     }
   public:
-    Geoid(const std::string& filename);
-    void CacheAll() const;
-    double operator()(float lat, float lon) const {
-      if (lon < -180 || lon > 360)
-	throw std::out_of_range("Longitude not in [-180, 360]");
-      if (lat < -90 || lat > 90)
-	throw std::out_of_range("Latitude not in [-90, 90]");
+    Geoid(const std::string& geoid, const std::string& path = "");
+    void CacheArea(double south, double west, double north, double east) const;
+    void CacheAll() const { CacheArea(-90.0, 0.0, 90.0, 360.0); }
+    void CacheClear() const {
+      _cache = false;
+      std::vector< std::vector<unsigned short> > t;
+      _data.swap(t);
+    }
+    double operator()(double lat, double lon) const {
       if (lon < 0)
 	lon += 360;
       double
 	fy = (90 - lat) * _rlatres,
-	fx = lon * _rlatres;
+	fx = lon * _rlonres;
       unsigned
 	iy = unsigned(fy),
 	ix = unsigned(fx);
@@ -82,6 +94,8 @@ namespace GeographicLib {
     const std::string& GeoidFile() const { return _filename; }
     double MaxError() const { return _maxerror; }
     double RMSError() const { return _rmserror; }
+    static std::string DefaultPath();
+    static std::string GeoidPath();
   };
 } //namespace GeographicLib
 #endif
