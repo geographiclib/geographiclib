@@ -12,6 +12,8 @@
 #include <sstream>
 #include <limits>
 #include <cstdlib>
+#include <stdexcept>
+#include <cmath>
 
 #define GEOGRAPHICLIB_GEOID_CPP "$Id$"
 
@@ -39,7 +41,11 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geoid::Geoid(const std::string& geoid, const std::string& path) {
+  Geoid::Geoid(const std::string& geoid, const std::string& path)
+    : _a( Constants::WGS84_a() )
+    , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
+    , _degree( Constants::degree() )
+    , _eps( sqrt(numeric_limits<double>::epsilon()) ) {
     string dir = path;
     if (dir.size() == 0)
       dir = GeoidPath();
@@ -118,6 +124,63 @@ namespace GeographicLib {
     _file.exceptions(ifstream::eofbit | ifstream::failbit | ifstream::badbit);
   }
 
+  double Geoid::height(double lat, double lon, bool gradp,
+		       double& gradn, double& grade) const  {
+    if (lon < 0)
+      lon += 360;
+    double
+      fy = (90 - lat) * _rlatres,
+      fx = lon * _rlonres;
+    unsigned
+      iy = unsigned(fy),
+      ix = unsigned(fx);
+    if (iy == _height - 1)
+      --iy;
+    fx -= ix;
+    fy -= iy;
+    if (!(ix == _ix && iy == _iy)) {
+      _v00 = rawval(ix    , iy    );
+      _v01 = rawval(ix + 1, iy    );
+      _v10 = rawval(ix    , iy + 1);
+      _v11 = rawval(ix + 1, iy + 1);
+      _ix = ix;
+      _iy = iy;
+    }
+    double
+      a = (1 - fx) * _v00 + fx * _v01,
+      b = (1 - fx) * _v10 + fx * _v11,
+      c = (1 - fy) * a + fy * b,
+      h = _offset + _scale * c;
+    if (gradp) {
+      double
+	phi = lat * _degree,
+	cosphi = cos(phi),
+	sinphi = sin(phi),
+	n = 1/sqrt(1 - _e2 * sinphi * sinphi);
+      gradn = ((1 - fx) * (_v00 - _v10) + fx * (_v01 - _v11)) *
+	_rlatres / _degree / (_a * (1 - _e2) * n * n * n);
+      grade = (cosphi > _eps ?
+	       ((1 - fy) * (_v01 - _v00) + fy * (_v11 - _v10)) /   cosphi :
+	       (sinphi > 0 ? _v11 - _v10 : _v01 - _v00) * _rlatres / _degree ) *
+	_rlonres / (_degree * _a * n);
+      gradn *= _scale;
+      grade *= _scale;
+    }
+    return h;
+  }
+
+  void Geoid::CacheClear() const {
+    _cache = false;
+    try {
+      _data.clear();
+      // Use swap to release memory back to system
+      std::vector< std::vector<unsigned short> > t;
+      _data.swap(t);
+    }
+    catch (std::bad_alloc&) {
+    }
+  }
+
   void Geoid::CacheArea(double south, double west,
 			double north, double east) const {
     if (south > north) {
@@ -133,6 +196,7 @@ namespace GeographicLib {
       fs = (90 - south) * _rlatres,
       fw = west * _rlonres,
       fe = east * _rlonres;
+    // Bounding indices for cached area
     unsigned
       in = unsigned(fn),
       is = unsigned(fs) + 1,
@@ -143,6 +207,7 @@ namespace GeographicLib {
     if (in == _height - 1)
       --in;
     if (ie - iw >= _width - 1) {
+      // Include entire longitude range
       iw = 0;
       ie = _width -1;
     }
@@ -176,6 +241,7 @@ namespace GeographicLib {
 			     (unsigned char)buf[2 * ix + 1]);
       }
       if (ie1 < ie) {
+	// Cached area wraps past longitude = 0
 	ie1 = ie - _width;
 	unsigned
 	  iw1 = 0,
@@ -210,3 +276,49 @@ namespace GeographicLib {
     return path;
   }
 }
+
+/*
+
+h=(1-fy)*((1-fx)*v00+fx*v01)+
+fy*((1-fx)*v10+fx*v11);
+
+dh/dfx
+(1-fy)*(v01-v00)+fy*(v11-v10);
+
+dh/dfy
+(1-fx)*(v10-v00)+fx*(v11-v01)
+
+	fy = (90 - lat) * _rlatres,
+	fx = lon * _rlonres;
+
+dfy/dlat = -rlatres
+dfx/dlon = rlonres
+
+degree = pi/180
+phi = lat * degree
+lam = lon * degree
+
+e2 = f*(2-f)
+
+      n = 1/sqrt(1 - e2 * sin(phi)^2)
+
+dy/dphi = a * (1-e2) * n*n*n
+dx/dlon = a * cos(phi) * n
+
+dh/dx = dh/dfx * dfx/dlon * dlon/dlam * dlam/dx
+
+= ( (1-fy)*(v01-v00)+fy*(v11-v10) ) * rlonres / degree / (a * cos(phi) * n)
+
+
+Near lat = 90, v01=v00, cos(phi) = (pi/2-phi) = fy/(rlatres/degree)
+dh/dx = fy*(v11-v10) * rlonres / degree / (a * fy/(rlatres/degree) * n)
+      = (v11-v10) * rlonres*rlatres / degree^2 / (a * n)
+
+Similarly near lat = -90
+dh/dx = (v01-v00) * rlonres*rlatres / degree^2 / (a * n)
+
+dh/dy = dh/dfy * dfy/dlat * dlat/dphi * dphi/dy
+= ( (1-fx)*(v10-v00)+fx*(v11-v01) ) * -rlatres / degree / (a * (1-e2) * n^3)
+= ( (1-fx)*(v00-v10)+fx*(v01-v11) ) * rlatres / degree / (a * (1-e2) * n^3)
+
+ */

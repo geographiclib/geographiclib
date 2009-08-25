@@ -44,14 +44,14 @@ provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.\n\
 By default the EGM96 Geoid is used with a 5\' grid.  This may be\n\
 overriden with the -n option.  The name specified should be one of\n\
 \n\
-    name         geoid    grid   max_error  rms_error\n\
-    egm84_30     EGM84    30\'    1.546m     0.070m\n\
-    egm84_15     EGM84    15\'    0.470m     0.018m\n\
-    egm96_15     EGM96    15\'    1.152m     0.040m\n\
-    egm96_5      EGM96     5\'    0.140m     0.005m\n\
-    egm2008_5    EGM2008   5\'    0.478m     0.012m\n\
-    egm2008_2p5  EGM2008   2.5\'  0.143m     0.003m\n\
-    egm2008_1    EGM2008   1\'    0.021m     0.001m\n\
+    name         geoid    grid   max-error  rms-error\n\
+    egm84-30     EGM84    30\'    1.546m     0.070m\n\
+    egm84-15     EGM84    15\'    0.470m     0.018m\n\
+    egm96-15     EGM96    15\'    1.152m     0.040m\n\
+    egm96-5      EGM96     5\'    0.140m     0.005m\n\
+    egm2008-5    EGM2008   5\'    0.478m     0.012m\n\
+    egm2008-2_5  EGM2008   2.5\'  0.143m     0.003m\n\
+    egm2008-1    EGM2008   1\'    0.021m     0.001m\n\
 \n\
 (Some of the geoids may not be available.)  The errors listed here\n\
 are estimates of the quantization and interpolation errors in the\n\
@@ -59,9 +59,9 @@ results compared to the specified geoid.\n\
 \n\
 GeoidEval will load the geoid data from the directory specified by\n\
 the -d option.  If this is not provided, it will look up the value of\n\
-GEOID_PATH (currently " << geoidpath << ") in the\n\
-environment.  If this is not defined, it will use the compile-time\n\
-value of " << defaultpath << ".\n\
+GEOID_PATH (currently " << geoidpath << ") in the environment.\n\
+If this is not defined, it will use the compile-time value of\n"
+<< defaultpath << ".\n\
 \n\
 By default, the data file is randomly read to compute the geoid\n\
 heights at the input positions.  Usually this is sufficient for\n\
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
   bool cacheall = false, cachearea = false, verbose = false;
   double caches, cachew, cachen, cachee;
   std::string dir;
-  std::string geoid = "egm96_5";
+  std::string geoid = "egm96-5";
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-a") {
@@ -127,57 +127,59 @@ int main(int argc, char* argv[]) {
       return usage(arg != "-h");
   }
 
-  GeographicLib::Geoid gx(geoid, dir);
-  try {
-    if (cacheall)
-      gx.CacheAll();
-    else if (cachearea)
-      gx.CacheArea(caches, cachew, cachen, cachee);
-  }
-  catch (std::out_of_range& e) {
-    std::cerr << "ERROR: " << e.what() << "\nProceeding without a cache\n";
-  }
-  if (verbose)
-    std::cerr << "Geoid file: " << gx.GeoidFile() << "\n"
-	      << "Description: " << gx.Description() << "\n"
-	      << "Max error: " << gx.MaxError() << "\n"
-	      << "RMS error: " << gx.RMSError() << "\n";
-  std::cout << std::fixed << std::setprecision(4);
-  /*
-  {
-    double h = 0;
-  for (double lat = -90; lat <= 90; lat += 0.25)
-    for (double lon = 0; lon < 360; lon += 0.25)
-      h+=gx(lat, lon);
-  return 0;
-  }
-  */  
-  std::string s;
   int retval = 0;
-  while (std::getline(std::cin, s)) {
+  try {
+    GeographicLib::Geoid gx(geoid, dir);
     try {
-      std::istringstream  str(s);
-      if (true) {
-	std::string stra, strb;
-	if (!(str >> stra >> strb))
-	  throw std::out_of_range("Incomplete input: " + s);
-	double lat, lon;
-	GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
-	double h = gx(lat, lon);
-	std::cout << h << "\n";
-      } else {
-	double lat, lon;
-	if (!(str >> lat >> lon))
-	  throw std::out_of_range("Incomplete input: " + s);
-	double h = gx(lat, lon);
-	std::cout << h << "\n";
+      if (cacheall)
+	gx.CacheAll();
+      else if (cachearea)
+	gx.CacheArea(caches, cachew, cachen, cachee);
+    }
+    catch (std::out_of_range& e) {
+      std::cerr << "ERROR: " << e.what() << "\nProceeding without a cache\n";
+    }
+    if (verbose)
+      std::cerr << "Geoid file: " << gx.GeoidFile() << "\n"
+		<< "Description: " << gx.Description() << "\n"
+		<< "Max error: " << gx.MaxError() << "\n"
+		<< "RMS error: " << gx.RMSError() << "\n";
+
+    std::cout << std::fixed;
+    std::string s;
+    while (std::getline(std::cin, s)) {
+      try {
+	std::istringstream  str(s);
+	if (true) {
+	  std::string stra, strb;
+	  if (!(str >> stra >> strb))
+	    throw std::out_of_range("Incomplete input: " + s);
+	  double lat, lon;
+	  GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
+	  double gradn, grade;
+	  double h = gx(lat, lon, gradn, grade);
+	  std::cout << std::setprecision(3) << h << " " << std::setprecision(2)
+		    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
+	} else {
+	  double lat, lon;
+	  if (!(str >> lat >> lon))
+	    throw std::out_of_range("Incomplete input: " + s);
+	  double gradn, grade;
+	  double h = gx(lat, lon, gradn, grade);
+	  std::cout << h << " " << gradn << " " << grade << "\n";
+	}
+      }
+      catch (std::exception& e) {
+	std::cout << "ERROR: " << e.what() << "\n";
+	retval = 1;
       }
     }
-    catch (std::exception& e) {
-      std::cout << "ERROR: " << e.what() << "\n";
-      retval = 1;
-    }
   }
+  catch (std::exception& e) {
+    std::cerr << "Error reading " << geoid << ": " << e.what() << "\n";
+    retval = 1;
+  }
+
   return retval;
 }
 
