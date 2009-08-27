@@ -41,7 +41,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geoid::Geoid(const std::string& geoid, const std::string& path)
+  Geoid::Geoid(const std::string& name, const std::string& path)
     : _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
     , _degree( Constants::degree() )
@@ -51,7 +51,7 @@ namespace GeographicLib {
       dir = GeoidPath();
     if (dir.size() == 0)
       dir = DefaultPath();
-    _filename = dir + "/" + geoid + ".pgm";
+    _filename = dir + "/" + name + ".pgm";
     _file.open(_filename.c_str(), ios::binary);
     if (!(_file.good()))
       throw out_of_range("File not readable " + _filename);
