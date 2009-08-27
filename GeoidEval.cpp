@@ -30,11 +30,14 @@ int usage(int retval) {
   ( retval ? std::cerr : std::cout )
     <<
 "Usage:\n\
-  Geoid [-n geoid] [-d dir] [-a] [-c south west north east] [-v] [-h]\n\
+  Geoid [-n name] [-d dir] [-a] [-c south west north east] [-v] [-h]\n\
 $Id$\n\
 \n\
 Read in positions on standard input and print out the corresponding\n\
-geoid heights on standard output.\n\
+geoid heights on standard output.  In addition print the northly and\n\
+easterly gradients of the geoid height (i.e., the rate at which the\n\
+geoid height changes per unit distance along the WGS84 ellipsoid in\n\
+the specified directions).\n\
 \n\
 Positions are given as latitude and longitude, either in decimal\n\
 degrees or degrees, minutes, and seconds.  The latitude should be\n\
@@ -55,7 +58,14 @@ overriden with the -n option.  The name specified should be one of\n\
 \n\
 (Some of the geoids may not be available.)  The errors listed here\n\
 are estimates of the quantization and interpolation errors in the\n\
-results compared to the specified geoid.\n\
+reported heights compared to the specified geoid.\n\
+\n\
+Simple bilinear interpolation is used to compute the geoid height\n\
+from the gridded data.  The returned height is a continuous function\n\
+of position; however, the returned gradients are discontinuous at\n\
+cell boundaries.  The gridded data has also be quantized (to the\n\
+nearest multiple of 3mm) which will lead to additional errors in the\n\
+gradients.\n\
 \n\
 GeoidEval will load the geoid data from the directory specified by\n\
 the -d option.  If this is not provided, it will look up the value of\n\
