@@ -52,24 +52,36 @@ namespace GeographicLib {
   class Geoid {
   private:
     std::string _filename;
+    const bool _cubic;
     const double _a, _e2, _degree, _eps;
     mutable std::ifstream _file;
     double _rlonres, _rlatres;
     std::string _description;
     double _offset, _scale, _maxerror, _rmserror;
-    unsigned _width, _height;
+    int _width, _height;
     unsigned _datastart;
     // Area cache
     mutable std::vector< std::vector<unsigned short> > _data;
     mutable bool _cache;
     // NE corner and extent of cache
-    mutable unsigned _xoffset, _yoffset, _xsize, _ysize;
+    mutable int _xoffset, _yoffset, _xsize, _ysize;
     // Cell cache
-    mutable unsigned _ix, _iy;
+    mutable int _ix, _iy;
     mutable double _v00, _v01, _v10, _v11;
-
-    double rawval(unsigned ix, unsigned iy) const {
-      if (ix >= _width)
+    mutable double _t[10];
+    mutable double _t0;
+    mutable double _t00, _t01, _t10, _t02, _t11, _t20, _t03, _t12, _t21, _t30;
+    double rawval(int ix, int iy) const {
+      if (iy < 0) {
+	iy = -iy;
+	ix += _width/2;
+      } else if (iy >= _height) {
+	iy = 2 * (_height - 1) - iy;
+	ix += _width/2;
+      }
+      if (ix < 0)
+	ix += _width;
+      else if (ix >= _width)
 	ix -= _width;
       if (_cache && iy >= _yoffset && iy < _yoffset + _ysize &&
 	  ((ix >= _xoffset && ix < _xoffset + _xsize) ||
@@ -100,7 +112,8 @@ namespace GeographicLib {
      * on non-Windows systems and
      * C:/cygwin/usr/local/share/geographiclib/geoids on Windows systems.
      **********************************************************************/
-    Geoid(const std::string& name, const std::string& path = "");
+    Geoid(const std::string& name, bool cubic = false,
+	  const std::string& path = "");
 
     /**
      * Cache the data for the rectangular area defined by the four arguments \e

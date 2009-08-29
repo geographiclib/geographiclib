@@ -139,45 +139,36 @@ int main(int argc, char* argv[]) {
 
   int retval = 0;
   try {
-    GeographicLib::Geoid gx(geoid, dir);
+    GeographicLib::Geoid g(geoid, true, dir);
     try {
       if (cacheall)
-	gx.CacheAll();
+	g.CacheAll();
       else if (cachearea)
-	gx.CacheArea(caches, cachew, cachen, cachee);
+	g.CacheArea(caches, cachew, cachen, cachee);
     }
     catch (std::out_of_range& e) {
       std::cerr << "ERROR: " << e.what() << "\nProceeding without a cache\n";
     }
     if (verbose)
-      std::cerr << "Geoid file: " << gx.GeoidFile() << "\n"
-		<< "Description: " << gx.Description() << "\n"
-		<< "Max error: " << gx.MaxError() << "\n"
-		<< "RMS error: " << gx.RMSError() << "\n";
+      std::cerr << "Geoid file: " << g.GeoidFile() << "\n"
+		<< "Description: " << g.Description() << "\n"
+		<< "Max error: " << g.MaxError() << "\n"
+		<< "RMS error: " << g.RMSError() << "\n";
 
     std::cout << std::fixed;
     std::string s;
     while (std::getline(std::cin, s)) {
       try {
 	std::istringstream  str(s);
-	if (true) {
-	  std::string stra, strb;
-	  if (!(str >> stra >> strb))
-	    throw std::out_of_range("Incomplete input: " + s);
-	  double lat, lon;
-	  GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
-	  double gradn, grade;
-	  double h = gx(lat, lon, gradn, grade);
-	  std::cout << std::setprecision(3) << h << " " << std::setprecision(2)
+	std::string stra, strb;
+	if (!(str >> stra >> strb))
+	  throw std::out_of_range("Incomplete input: " + s);
+	double lat, lon;
+	GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
+	double gradn, grade;
+	double h = g(lat, lon, gradn, grade);
+	std::cout << std::setprecision(5) << h << " " << std::setprecision(2)
 		    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
-	} else {
-	  double lat, lon;
-	  if (!(str >> lat >> lon))
-	    throw std::out_of_range("Incomplete input: " + s);
-	  double gradn, grade;
-	  double h = gx(lat, lon, gradn, grade);
-	  std::cout << h << " " << gradn << " " << grade << "\n";
-	}
       }
       catch (std::exception& e) {
 	std::cout << "ERROR: " << e.what() << "\n";

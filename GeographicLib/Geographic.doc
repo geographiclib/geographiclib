@@ -1831,7 +1831,7 @@ second argument to the GeographicLib::Geoid::Geoid constructor.
 The sizes of these datasets are
 \verbatim
    name         geoid    grid           sizes (MB)
-				 tar.bz2    zip    disk
+                                 tar.bz2    zip    disk
    egm84-30     EGM84    30'      0.5       0.5     0.5
    egm84-15     EGM84    15'      1.5       1.9     2.0
    egm96-15     EGM96    15'      1.5       1.9     2.0
@@ -1905,6 +1905,30 @@ can check these by printing out the header data, e.g., with
    sed /65535/,\$d egm96-5.pgm
 \endverbatim
 
+Finally, here is a sample script which uses GDAL to create a 1-degree
+squared grid of geoid heights at 3" resolution (matching DTED1) by
+bilinear interpolation.
+\verbatim
+   lat=37
+   lon=067
+   res=3                           # resolution in seconds
+   TEMP=`mktemp junkXXXXXXXXXX`    # temporary file for GDAL
+   gdalwarp -q -te `echo $lon $lat $res | awk '{
+       lon = $1; lat = $2; res = $3;
+       printf "%.14f %.14f %.14f %.14f",
+           lon  -0.5*res/3600, lat  -0.5*res/3600,
+           lon+1+0.5*res/3600, lat+1+0.5*res/3600;
+   }'` -ts $((3600/res+1)) $((3600/res+1)) -r bilinear egm96-5.tif $TEMP
+   gdal_translate -quiet \
+       -mo AREA_OR_POINT=Point \
+       -mo "Description=WGS84 EGM96, $res-second grid" \
+       -mo Vertical_Datum=WGS84 \
+       -mo Tie_Point_Location=pixel_corner \
+       $TEMP e$lon-n$lat.tif
+   rm -f $TEMP
+\endverbatim
+
+
 \section geoidinterp Interpolating the geoid data
 
 In the current implementation of GeographicLib::Geoid, the evaluation of
@@ -1916,18 +1940,19 @@ gradients are discontinuous and the quantization of the heights
 increases the error in the gradients.  Here is a summary of the combined
 quantization and interpolation errors for the heights.
 \verbatim
-   name         geoid    grid   max-error  rms-error
-   egm84-30     EGM84    30'    1.546m     0.070m
-   egm84-15     EGM84    15'    0.470m     0.018m
-   egm96-15     EGM96    15'    1.152m     0.040m
-   egm96-5      EGM96     5'    0.140m     0.005m
-   egm2008-5    EGM2008   5'    0.478m     0.012m
-   egm2008-2_5  EGM2008   2.5'  0.143m     0.003m
-   egm2008-1    EGM2008   1'    0.021m     0.001m
+                                  bilinear error    cubic-012 error
+   name         geoid    grid     max     rms       max     rms
+   egm84-30     EGM84    30'      1.546m  70mm      0.274m  14mm
+   egm84-15     EGM84    15'      0.413m  18mm      0.020m   1mm
+   egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
+   egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
+   egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
+   egm2008-2_5  EGM2008   2.5'    0.143m   3mm      0.028m*  1mm
+   egm2008-1    EGM2008   1'      0.021m   1mm      0.003m*  1mm
 \endverbatim
 The errors are with respect the the specific NGA earth gravity model
 (not to any "real" geoid).  The RMS values are obtained using 5 million
-uniformly distributed points.  The maximum values are obtained by
+uniformly distributed random points.  The maximum values are obtained by
 evaluating the errors using a different grid with points at or near the
 centers of the original grid.
 
