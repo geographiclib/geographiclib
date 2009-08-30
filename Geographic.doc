@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-08
-\date 2009-08-14
+\version 2009-09
+\date 2009-09-01<
 
 \section abstract Abstract
 
@@ -64,6 +64,7 @@ http://charles.karney.info/geographic/
    - \ref transversemercatortest
    - \ref cartconvert
    - \ref equidistanttest
+   - \ref geoideval
  - \ref old
 
 <center>
@@ -159,7 +160,7 @@ The following steps will get you started with %GeographicLib:
    on the library.
  - Read the section, \ref transversemercator, for more information on
    this projection.
- - If you use the library frequently, install it to $(PREFIX) =
+ - If you use the library frequently, install it to \$(PREFIX) =
    /usr/local with
    - make install
 
@@ -253,6 +254,12 @@ implemented as const member functions.  GeographicLib::Geocentric::WGS84 is a
 const static instantiation of Geocentric specific for the WGS84 ellipsoid.
 \ref cartconvert is a simple command line utility to provide access to
 these classes.
+
+GeographicLib::Geoid evaluates geoid heights by interpolation.
+\ref geoideval is a simple command line utility to provide
+access to this class.  This class requires installation of data
+files for the various geoid models; see \ref geoidinst for
+details.
 
 GeographicLib::Constants, GeographicLib::DMS, and
 GeographicLib::EllipticFunction are utility classes which are used
@@ -1770,7 +1777,7 @@ This class offers a uniform way to handle all 3 geoids at a variety of
 grid resolutions.  (In contrast, the software tools that NGA offers are
 different for each geoid, and the interpolation programs are different
 for each grid resolution.  In addition these tools are written in
-Fortran with is difficult to integrate with other tools.
+Fortran with is nowadays difficult to integrate with other software.)
 
 The geoid heights are computed using interpolation into a rectangular
 grid.  The grids are read from data files which have been are computed
@@ -1778,26 +1785,26 @@ using the NGA synthesis programs in the case of the EGM84 and EGM96
 models and using the NGA binary gridded data files in the case of
 EGM2008.  These data files are available for download:
 - EGM84,    30' grid:
-  <a href="http://charles.karney.info/geographic-new/egm84-30.tar.bz2">tar.bz2</a>,
-  <a href="http://charles.karney.info/geographic-new/egm84-30.zip">zip</a>.
+  <a href="http://charles.karney.info/geographic/egm84-30.tar.bz2">tar.bz2</a>,
+  <a href="http://charles.karney.info/geographic/egm84-30.zip">zip</a>.
 - EGM84,    15' grid:
-  <a href="http://charles.karney.info/geographic-new/egm84-15.tar.bz2">tar.bz2</a>,
-  <a href="http://charles.karney.info/geographic-new/egm84-15.zip">zip</a>.
+  <a href="http://charles.karney.info/geographic/egm84-15.tar.bz2">tar.bz2</a>,
+  <a href="http://charles.karney.info/geographic/egm84-15.zip">zip</a>.
 - EGM96,    15' grid:
-  <a href="http://charles.karney.info/geographic-new/egm96-15.tar.bz2">tar.bz2</a>,
-  <a href="http://charles.karney.info/geographic-new/egm96-15.zip">zip</a>.
+  <a href="http://charles.karney.info/geographic/egm96-15.tar.bz2">tar.bz2</a>,
+  <a href="http://charles.karney.info/geographic/egm96-15.zip">zip</a>.
 - EGM96,     5' grid:
-  <a href="http://charles.karney.info/geographic-new/egm96-5.tar.bz2">tar.bz2</a>,
-  <a href="http://charles.karney.info/geographic-new/egm96-5.zip">zip</a>.
+  <a href="http://charles.karney.info/geographic/egm96-5.tar.bz2">tar.bz2</a>,
+  <a href="http://charles.karney.info/geographic/egm96-5.zip">zip</a>.
 - EGM2008,   5' grid:
-  <a href="http://charles.karney.info/geographic-new/egm2008-5.tar.bz2">tar.bz2</a>,
-  <a href="http://charles.karney.info/geographic-new/egm2008-5.zip">zip</a>.
+  <a href="http://charles.karney.info/geographic/egm2008-5.tar.bz2">tar.bz2</a>,
+  <a href="http://charles.karney.info/geographic/egm2008-5.zip">zip</a>.
 - EGM2008, 2.5' grid:
-  <a href="http://charles.karney.info/geographic-new/egm2008-2_5.tar.bz2">tar.bz2</a>,
-  <a href="http://charles.karney.info/geographic-new/egm2008-2_5.zip">zip</a>.
+  <a href="http://charles.karney.info/geographic/egm2008-2_5.tar.bz2">tar.bz2</a>,
+  <a href="http://charles.karney.info/geographic/egm2008-2_5.zip">zip</a>.
 - EGM2008,   1' grid:
-  <a href="http://charles.karney.info/geographic-new/egm2008-1.tar.bz2">tar.bz2</a>,
-  <a href="http://charles.karney.info/geographic-new/egm2008-1.zip">zip</a>.
+  <a href="http://charles.karney.info/geographic/egm2008-1.tar.bz2">tar.bz2</a>,
+  <a href="http://charles.karney.info/geographic/egm2008-1.zip">zip</a>.
 
 \section geoidinst Installing the datasets
 
@@ -1872,8 +1879,11 @@ egm96-5 are
    # Geoid file in PGM format for the GeographicLib::Geoid class
    # Description WGS84 EGM96, 5-minute grid
    # URL http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+   # DateTime 2009-08-29 18:45:03
    # MaxBilinearError 0.140
    # RMSBilinearError 0.005
+   # MaxCubicError 0.003
+   # RMSCubicError 0.001
    # Offset -108
    # Scale 0.003
    # Origin 90N 0E
@@ -1883,14 +1893,15 @@ egm96-5 are
 Of these lines, the Scale and Offset lines are required and define the
 conversion from pixel value to height (in meters) using \e height = \e
 offset + \e scale \e pixel.  The Geoid constructor also reads the
-Description, MaxBilinearError, and RMSBilinearError lines (if present)
-and stores the resulting data so that it can be returned by
-GeographicLib::Geoid::Description, GeographicLib::Geoid::MaxError, and
-GeographicLib::Geoid::RMSError methods.  The other lines serve as
-additional documentation but are not used by this class.  Accompanying
-egm96-5.pgm (and similarly with the other geoid data files) are two
-files egm96-5.wld and egm96-5.pgm.aux.xml.  The first is an ESRI "world"
-file and the second supplies complete projection meta data for use by <a
+Description, DataTime, and error lines (if present) and stores the
+resulting data so that it can be returned by
+GeographicLib::Geoid::Description, GeographicLib::Geoid::DateTime,
+GeographicLib::Geoid::MaxError, and GeographicLib::Geoid::RMSError
+methods.  The other lines serve as additional documentation but are not
+used by this class.  Accompanying egm96-5.pgm (and similarly with the
+other geoid data files) are two files egm96-5.wld and
+egm96-5.pgm.aux.xml.  The first is an ESRI "world" file and the second
+supplies complete projection meta data for use by <a
 href="www.gdal.org">GDAL</a>.  Neither of these files are read by
 GeographicLib::Geoid.
 
@@ -1901,15 +1912,13 @@ GeoTiff, e.g., with
 \endverbatim
 The arguments to -scale here are specific to the Offset and Scale
 parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
-can check these by printing out the header data, e.g., with
-\verbatim
-   sed '/65535/,$d' egm96-5.pgm | grep '^#'
-\endverbatim
+can check these by running \ref geoideval with the "-v" option.
 
 Finally, here is a sample script which uses GDAL to create a 1-degree
 squared grid of geoid heights at 3" resolution (matching DTED1) by
 bilinear interpolation.
 \verbatim
+   #! /bin/sh
    lat=37
    lon=067
    res=3                           # resolution in seconds
@@ -1929,19 +1938,39 @@ bilinear interpolation.
    rm -f $TEMP
 \endverbatim
 
-
 \section geoidinterp Interpolating the geoid data
 
-In the current implementation of GeographicLib::Geoid, the evaluation of
-the geoid height is by bilinear interpolation.  The gradient of the
-geoid height is obtained by differentiating the interpolated height and
-referencing the result to distance on the WGS84 ellipsoid.  This method
-is quick and guarantees continuity of the height.  However; the
-gradients are discontinuous and the quantization of the heights
-increases the error in the gradients.  Here is a summary of the combined
-quantization and interpolation errors for the heights.
+GeographicLib::Geoid evaluates the geoid height is by bilinear or cubic
+interpolation.  The gradient of the geoid height is obtained by
+differentiating the interpolated height and referencing the result to
+distance on the WGS84 ellipsoid.
+
+The bilinear interpolation is based on the values at the 4 corners of
+the enclosing cell.  The interpolated height is a continuous function of
+position; however the gradient has discontinuities are cell boundaries.
+The quantization of the data files exacerbates the errors in the
+gradients.
+
+The cubic interpolation is a least-squares fit to the values on a
+12-point stencil with weights as follows:
 \verbatim
-                                  bilinear error    cubic-012 error
+   0 1 1 0
+   1 2 2 1
+   1 2 2 1
+   0 1 1 0
+\endverbatim
+The cubic is constrained to be independent of longitude when evaluating
+the height at one of the poles.  Cubic interpolation is considerably
+more accurate than bilinear interpolation; however, in this
+implementation there are small discontinuities in the heights are cell
+boundaries.  The over-constrained cubic fit slightly reduces the
+quantization errors on average.
+
+The interpolations methods are quick and give good accuracy.  Here is a
+summary of the combined quantization and interpolation errors for the
+heights.
+\verbatim
+                                  bilinear error    cubic error
    name         geoid    grid     max     rms       max     rms
    egm84-30     EGM84    30'      1.546m  70mm      0.274m  14mm
    egm84-15     EGM84    15'      0.413m  18mm      0.020m   1mm
@@ -1972,13 +2001,15 @@ A simple way of calling Geoid is as follows
       std::cout << g(lat, lon) << "\n";
    ...
 \endverbatim
-The first call to g(lat, lon) causes the data for the 4 corner points of
-a cell to be read and the interpolated value returned.  A simple
-0th-order caching scheme is provided by default, so that, if the second
-and subsequent points falls within the same grid cell, the data values
-are not reread from the file.  This is adequate for most interactive use
-and also minimizes disk accesses for the case when a continuous track is
-being followed.
+
+The first call to g(lat, lon) causes the data for the stencil points (4
+points for bilinear interpolation and 12 for cubic interpolation) to be
+read and the interpolated value returned.  A simple 0th-order caching
+scheme is provided by default, so that, if the second and subsequent
+points falls within the same grid cell, the data values are not reread
+from the file.  This is adequate for most interactive use and also
+minimizes disk accesses for the case when a continuous track is being
+followed.
 
 If a large quantity of geoid calculations are needed, the calculation
 can be speeded up by preloading the data for a rectangular block with
@@ -1987,12 +2018,15 @@ GeographicLib::Geoid::CacheAll.  If the requested points lie within the
 cached area, the cached data values are used; otherwise the data is read
 from disk as before.  Caching all the data is a reasonable choice for
 the 5' grids and coarser.  Caching all the data for the 1' grid will
-require 450MB of RAM and should only be used on systems with sufficient
+require 0.5GB of RAM and should only be used on systems with sufficient
 memory.
 
-The use of caching does not affect the values returned.
-
-NOT THREAD SAFE
+The use of caching does not affect the values returned.  Because
+of the caching and the random file access, this class is \e not
+thread safe; i.e., a single instantiation cannot be safely used
+by multiple threads.  If multiple threads need to calculate
+geoid heights they should all construct thread-local
+instantiations.
 
 <center>
 Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
@@ -2354,6 +2388,91 @@ latitude, longitude, azi, and rk.
 -h prints this help
 \endverbatim
 
+\section geoideval GeoidEval
+
+Evaluate the height of the geoid by interpolating into a grid.
+
+Example: the height of the EGM96 geoid at Timbuktu
+ - echo "16d46'33N" "3d00'34W" | ./GeoidEval\n=>
+   28.7068 -0.02e-6 -1.73e-6
+ .
+The first number is the height of the geoid and the 2nd and 3rd are its
+slopes in the northerly and easterly direction.
+
+Compile with "make GeoidEval" or with
+
+g++ -g -O3 -I.. -o GeoidEval GeoidEval.cpp Geoid.cpp DMS.vpp
+
+In addition, this utility requires the installation of the geoid data
+files; see \ref geoidinst for details
+
+\verbatim
+Usage:
+  Geoid [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]
+
+Read in positions on standard input and print out the corresponding
+geoid heights on standard output.  In addition print the northly and
+easterly gradients of the geoid height (i.e., the rate at which the
+geoid height changes per unit distance along the WGS84 ellipsoid in
+the specified directions).
+
+Positions are given as latitude and longitude, either in decimal
+degrees or degrees, minutes, and seconds.  The latitude should be
+given first, unless at least one hemisphere desiginator is
+provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.
+
+By default the EGM96 Geoid is used with a 5' grid.  This may be
+overriden with the -n option.  The name specified should be one of
+
+                                  bilinear error    cubic error
+   name         geoid    grid     max     rms       max     rms
+   egm84-30     EGM84    30'      1.546m  70mm      0.274m  14mm
+   egm84-15     EGM84    15'      0.413m  18mm      0.020m   1mm
+   egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
+   egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
+   egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
+   egm2008-2_5  EGM2008   2.5'    0.145m   3mm      0.031m   1mm
+   egm2008-1    EGM2008   1'      0.022m   1mm      0.003m   1mm
+
+(Some of the geoids may not be available.)  The errors listed here
+are estimates of the quantization and interpolation errors in the
+reported heights compared to the specified geoid.
+
+Cubic interpolation is used to compute the geoid height unless
+-l is specified in which case bilinear interpolation is used.
+Cubic interpolation is more accurate; however it results in
+small discontinuities in the returned height on cell boundaries.
+The gradients are computed by differentiating the interpolated
+results.
+
+GeoidEval will load the geoid data from the directory specified by
+the -d option.  If this is not provided, it will look up the value of
+GEOID_PATH (currently UNDEFINED) in the environment.
+If this is not defined, it will use the compile-time value of
+/usr/local/share/geographiclib/geoids.
+
+By default, the data file is randomly read to compute the geoid
+heights at the input positions.  Usually this is sufficient for
+interactive use.  If many heights are to be computed, GeoidEval
+allows a block of data to be read into memory and heights within the
+corresponding rectangle can then be computed without any disk acces.
+If -a is specified all the geoid data is read; in the case of
+egm2008_1, this requires about 0.5 GB of RAM.  The -c option allows
+a rectangle of data to be cached.  The evaluation of heights
+outside the cached rectangle causes the necessary data to be read
+from disk.
+
+Regardless of whether any cache is requested (with the -a or -c
+options), the data for the last grid cell in cached.  This allows
+the geoid height along a continuous path to be returned with little
+disk overhead.
+
+The -v option causes the data about the current geoid to be printed
+to standard error.
+
+-h prints this help.
+\endverbatim
+
 <center>
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
@@ -2368,8 +2487,11 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-08
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-09
    (current)</a>
+  - Add GeographicLib::Geoid and \ref geoideval utility.
+
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-08</a>
   - Add GeographicLib::CassiniSoldner class and \ref equidistanttest utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
     sometimes returned.

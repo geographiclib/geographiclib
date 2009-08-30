@@ -41,13 +41,13 @@ the specified directions).\n\
 \n\
 Positions are given as latitude and longitude, either in decimal\n\
 degrees or degrees, minutes, and seconds.  The latitude should be\n\
-given first, unless at least one a hemisphere desiginator is\n\
+given first, unless at least one hemisphere desiginator is\n\
 provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.\n\
 \n\
 By default the EGM96 Geoid is used with a 5\' grid.  This may be\n\
 overriden with the -n option.  The name specified should be one of\n\
 \n\
-                                  bilinear error    cubic-012 error\n\
+                                  bilinear error    cubic error\n\
    name         geoid    grid     max     rms       max     rms\n\
    egm84-30     EGM84    30\'      1.546m  70mm      0.274m  14mm\n\
    egm84-15     EGM84    15\'      0.413m  18mm      0.020m   1mm\n\
@@ -64,9 +64,9 @@ reported heights compared to the specified geoid.\n\
 Cubic interpolation is used to compute the geoid height unless\n\
 -l is specified in which case bilinear interpolation is used.\n\
 Cubic interpolation is more accurate; however it results in\n\
-small discontinuities in the resturned height on cell\n\
-boundaries.  The gradients are computed by differentiating the\n\
-interpolated results.\n\
+small discontinuities in the returned height on cell boundaries.\n\
+The gradients are computed by differentiating the interpolated\n\
+results.\n\
 \n\
 GeoidEval will load the geoid data from the directory specified by\n\
 the -d option.  If this is not provided, it will look up the value of\n\
