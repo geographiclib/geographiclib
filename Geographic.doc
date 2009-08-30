@@ -2401,7 +2401,7 @@ slopes in the northerly and easterly direction.
 
 Compile with "make GeoidEval" or with
 
-g++ -g -O3 -I.. -o GeoidEval GeoidEval.cpp Geoid.cpp DMS.vpp
+g++ -g -O3 -I.. -o GeoidEval GeoidEval.cpp Geoid.cpp DMS.cpp
 
 In addition, this utility requires the installation of the geoid data
 files; see \ref geoidinst for details
