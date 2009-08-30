@@ -1,5 +1,5 @@
 /**
- * \file Geoid.cpp
+ * \file GeoidEval.cpp
  * \brief Command line utility for evaluation geoid heights
  *
  * Copyright (c) Charles Karney (2009) <charles@karney.com>
