@@ -20,8 +20,8 @@ namespace GeographicLib {
    * \brief Computing the height of the geoid
    *
    * This class evaluated the height of one of the standard geoids, EGM84,
-   * EGM96, or EGM2008 by bilinear interpolation into a rectangular grid of
-   * data.  These geoid models are documented in
+   * EGM96, or EGM2008 by bilinear or cubic interpolation into a rectangular
+   * grid of data.  These geoid models are documented in
    * - EGM84:
    *   http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
    * - EGM96:
@@ -31,8 +31,8 @@ namespace GeographicLib {
    *
    * The geoids are defined in terms of spherical harmonics.  However in order
    * to provide a quick and flexible method of evaluating the geoid heights,
-   * this class reads in a data file giving the geoid heights on a rectangle
-   * grid and determines the geoid height by bilinear interpolation.
+   * this class evaluates the height by interpolation inot a grid of
+   * precomputed values.
    *
    * See \ref geoid for details of how to install the data sets, the data
    * format, estimates of the interpolation errors, and how to use caching.
@@ -41,8 +41,7 @@ namespace GeographicLib {
    * be calculated.  The gradient is defined as the rate of change of the geoid
    * as a function of position on the ellipsoid.  This uses the parameters for
    * the WGS84 ellipsoid.  The gradient defined in terms of the interpolated
-   * heights and, because the interpolation is bilinear, the gradient has
-   * discontinuities on cell boundaries.
+   * heights.
    *
    * This class is \e not thread safe in that a single instantiation cannot be
    * safely used by multiple threads.  If multiple threads need to calculate
@@ -51,12 +50,19 @@ namespace GeographicLib {
 
   class Geoid {
   private:
+    static const unsigned stencilsize = 12;
+    static const unsigned nterms = ((3 + 1) * (3 + 2))/2; // for a cubic fit
+    static const double c0, c0n, c0s;
+    static const double c3[stencilsize * nterms];
+    static const double c3n[stencilsize * nterms];
+    static const double c3s[stencilsize * nterms];
+
     std::string _filename;
     const bool _cubic;
     const double _a, _e2, _degree, _eps;
     mutable std::ifstream _file;
     double _rlonres, _rlatres;
-    std::string _description;
+    std::string _description, _datetime;
     double _offset, _scale, _maxerror, _rmserror;
     int _width, _height;
     unsigned _datastart;
@@ -68,9 +74,7 @@ namespace GeographicLib {
     // Cell cache
     mutable int _ix, _iy;
     mutable double _v00, _v01, _v10, _v11;
-    mutable double _t[10];
-    mutable double _t0;
-    mutable double _t00, _t01, _t10, _t02, _t11, _t20, _t03, _t12, _t21, _t30;
+    mutable double _t[nterms];
     double rawval(int ix, int iy) const {
       if (iy < 0) {
 	iy = -iy;
@@ -106,14 +110,16 @@ namespace GeographicLib {
     /**
      * Create a Geoid loading the data for geoid \e name.  The data file is
      * formed by appending ".pgm" to the name.  If \e path is specified, then
-     * the file is load from that directory.  Otherwise the path is given by
+     * the file is loaded from that directory.  Otherwise the path is given by
      * the GEOID_PATH environment variable.  If that is undefined, a
      * compile-time default path is used (/usr/local/share/geographiclib/geoids
      * on non-Windows systems and
-     * C:/cygwin/usr/local/share/geographiclib/geoids on Windows systems.
+     * C:/cygwin/usr/local/share/geographiclib/geoids on Windows systems).  The
+     * final \e cubic argument specifies whether to use bilinear (\e cubic =
+     * false) or cubic (\e cubic = true, the default) interpolation.
      **********************************************************************/
-    Geoid(const std::string& name, bool cubic = false,
-	  const std::string& path = "");
+    Geoid(const std::string& name, const std::string& path = "",
+	  bool cubic = true);
 
     /**
      * Cache the data for the rectangular area defined by the four arguments \e
@@ -155,15 +161,26 @@ namespace GeographicLib {
     }
 
     /**
-     * Return the geoid description if availabe in the data file.  If absent,
-     * return "UNKNOWN".
+     * Return the geoid description if available in the data file.  If absent,
+     * return "NONE".
      **********************************************************************/
     const std::string& Description() const { return _description; }
+
+    /**
+     * Return the date of the data file.  If absent, return "UNKNOWN".
+     **********************************************************************/
+    const std::string& DateTime() const { return _datetime; }
 
     /**
      * Return the path name used to load the geoid data.
      **********************************************************************/
     const std::string& GeoidFile() const { return _filename; }
+
+    /**
+     * Return the interpolation method (cubic or bilinear).
+     **********************************************************************/
+    const std::string Interpolation() const
+    { return std::string(_cubic ? "cubic" : "bilinear"); }
 
     /**
      * Return a estimate of the maximum interpolation and quantization error
@@ -178,6 +195,17 @@ namespace GeographicLib {
      * the value is absent, return -1.
      **********************************************************************/
     double RMSError() const { return _rmserror; }
+
+    /**
+     * Return offset (meters) for converting pixel values to geoid heights.
+     **********************************************************************/
+    double Offset() const { return _offset; }
+
+    /**
+     * Return scale (meters) for converting pixel values to geoid
+     * heights.
+     **********************************************************************/
+    double Scale() const { return _scale; }
 
     /**
      * Return the compile-time default path for the geoid data files.

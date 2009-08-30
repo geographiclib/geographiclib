@@ -27,12 +27,14 @@ Files
     Geodesic.[ch]pp -- geodesic calculatiosn
     AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
     CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
+    Geoid.[ch]pp -- geoid heights
 
     GeoConvert.cpp -- geographic conversion utility
     TransverseMercatorTest.cpp -- TM tester
     Geod -- geodesic utility
     CartConvert.cpp -- convert to geocentric and local cartesian
     EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
+    GeoidEval.cpp -- evaluate geoid heights
 
     Makefile -- Unix/Linux makefile
 
@@ -42,7 +44,8 @@ Files
     TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
     Geod.vcproj -- project for Geod
     CartConvert.vcproj -- project for CartConvert
-    EquidistantTest.vcproj -- project ofr EquidistantTest
+    EquidistantTest.vcproj -- project for EquidistantTest
+    GeoidEval.vcproj -- project for GeoidEval
 
     tm.mac -- Maxima code for high precision TM
     ellint.mac -- Maxima code for elliptic functions needed by tm.mac
@@ -57,6 +60,10 @@ Files
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
 This is the 2009-08 version of the library.
+
+Changes between 2009-09 and 2009-08 versions:
+
+  * Add GeographicLib::Geoid and GeoidEval utility.
 
 Changes between 2009-08 and 2009-07 versions:
 

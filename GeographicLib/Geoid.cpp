@@ -51,8 +51,8 @@ namespace GeographicLib {
   //   0   1  2  2  1
   //   1   1  2  2  1
   //   2   0  1  1  0
-  double Geoid::c0 = 240;	// Common denominator
-  double Geoid::c3[12 * 10] = {
+  const double Geoid::c0 = 240;	// Common denominator
+  const double Geoid::c3[stencilsize * nterms] = {
       9, -18, -88,    0,  96,   90,   0,   0, -60, -20,
      -9,  18,   8,    0, -96,   30,   0,   0,  60, -20,
       9, -88, -18,   90,  96,    0, -20, -60,   0,   0,
@@ -70,8 +70,8 @@ namespace GeographicLib {
   // Like c3, but with the coeffs of x, x^2, and x^3 constrained to be zero.
   // Use this at the N pole so that the height in independent of the longitude
   // there.
-  double Geoid::c0n = 372;	// Common denominator
-  double Geoid::c3n[12 * 10] = {
+  const double Geoid::c0n = 372;	// Common denominator
+  const double Geoid::c3n[stencilsize * nterms] = {
       0, 0, -131, 0,  138,  144, 0,   0, -102, -31,
       0, 0,    7, 0, -138,   42, 0,   0,  102, -31,
      62, 0,  -31, 0,    0,  -62, 0,   0,    0,  31,
@@ -89,8 +89,8 @@ namespace GeographicLib {
   // Like c3n, but y -> 1-y so that h is independent of x at y = 1.
   // Use this at the S pole so that the height in independent of the longitude
   // there.
-  double Geoid::c0s = 372;	// Common denominator
-  double Geoid::c3s[12 * 10] = {
+  const double Geoid::c0s = 372;	// Common denominator
+  const double Geoid::c3s[stencilsize * nterms] = {
      18,  -36, -122,   0,  120,  135, 0,   0,  -84, -31,
     -18,   36,   -2,   0, -120,   51, 0,   0,   84, -31,
      36, -165,  -27,  93,  147,   -9, 0, -93,   18,   0,
@@ -227,7 +227,7 @@ namespace GeographicLib {
 	_v10 = rawval(ix    , iy + 1);
 	_v11 = rawval(ix + 1, iy + 1);
       } else {
-	double v[12];
+	double v[stencilsize];
 	int k = 0;
 	v[k++] = rawval(ix    , iy - 1);
 	v[k++] = rawval(ix + 1, iy - 1);
@@ -242,12 +242,12 @@ namespace GeographicLib {
 	v[k++] = rawval(ix    , iy + 2);
 	v[k++] = rawval(ix + 1, iy + 2);
 
-	double* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
+	const double* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
 	double c0x = iy == 0 ? c0n : iy == _height - 2 ? c0s : c0;
-	for (unsigned i = 0; i < 10; ++i) {
+	for (unsigned i = 0; i < nterms; ++i) {
 	  _t[i] = 0;
-	  for (unsigned j = 0; j < 12; ++j)
-	    _t[i] += v[j] * c3x[10 * j + i];
+	  for (unsigned j = 0; j < stencilsize; ++j)
+	    _t[i] += v[j] * c3x[nterms * j + i];
 	  _t[i] /= c0x;
 	}
       }
@@ -324,25 +324,34 @@ namespace GeographicLib {
     east += east < 0 ? 360 : east >= 360 ? -360 : 0;
     if (east <= west)
       east += 360;
+    // Move south (and north) boundaries off the south pole.
+    south = min(south, -90 + 0.5 / _rlatres);
+    north = min(north, south);
     double
       fn = (90 - north) * _rlatres,
       fs = (90 - south) * _rlatres,
       fw = west * _rlonres,
       fe = east * _rlonres;
+    // Extra boudary of cells for cubic interpolation
+    int boundary = _cubic ? 1 : 0;
     // Bounding indices for cached area
     int
-      in = int(fn),
-      is = int(fs) + 1,
-      iw = int(fw),
-      ie = int(fe) + 1;
-    if (is == _height)
-      --is;
-    if (in == _height - 1)
-      --in;
+      in = int(fn)     - boundary,
+      is = int(fs) + 1 + boundary,
+      iw = int(fw)     - boundary,
+      ie = int(fe) + 1 + boundary;
+    if (is >= _height)
+      is = _height - 1;
+    if (in < 0)
+      in = 0;
     if (ie - iw >= _width - 1) {
       // Include entire longitude range
       iw = 0;
-      ie = _width -1;
+      ie = _width - 1;
+    }
+    if (iw < 0){
+      iw += _width;
+      ie += _width;
     }
     int oysize = int(_data.size());
     _xsize = ie - iw + 1;
@@ -409,95 +418,3 @@ namespace GeographicLib {
     return path;
   }
 }
-
-/*
-
-h=(1-fy)*((1-fx)*v00+fx*v01)+
-fy*((1-fx)*v10+fx*v11);
-
-dh/dfx
-(1-fy)*(v01-v00)+fy*(v11-v10);
-
-dh/dfy
-(1-fx)*(v10-v00)+fx*(v11-v01)
-
-	fy = (90 - lat) * _rlatres,
-	fx = lon * _rlonres;
-
-dfy/dlat = -rlatres
-dfx/dlon = rlonres
-
-degree = pi/180
-phi = lat * degree
-lam = lon * degree
-
-e2 = f*(2-f)
-
-      n = 1/sqrt(1 - e2 * sin(phi)^2)
-
-dy/dphi = a * (1-e2) * n*n*n
-dx/dlon = a * cos(phi) * n
-
-dh/dx = dh/dfx * dfx/dlon * dlon/dlam * dlam/dx
-
-= ( (1-fy)*(v01-v00)+fy*(v11-v10) ) * rlonres / degree / (a * cos(phi) * n)
-
-
-Near lat = 90, v01=v00, cos(phi) = (pi/2-phi) = fy/(rlatres/degree)
-dh/dx = fy*(v11-v10) * rlonres / degree / (a * fy/(rlatres/degree) * n)
-      = (v11-v10) * rlonres*rlatres / degree^2 / (a * n)
-
-Similarly near lat = -90
-dh/dx = (v01-v00) * rlonres*rlatres / degree^2 / (a * n)
-
-dh/dy = dh/dfy * dfy/dlat * dlat/dphi * dphi/dy
-= ( (1-fx)*(v10-v00)+fx*(v11-v01) ) * -rlatres / degree / (a * (1-e2) * n^3)
-= ( (1-fx)*(v00-v10)+fx*(v01-v11) ) * rlatres / degree / (a * (1-e2) * n^3)
-
-c:44
-    0, 0, 0, 0,
-    0, 8, 0, 0,
-    1, 2, 2, 1,
-    0, 1, 1, 0,
-
-
-
-[ 44   0     -66   0     0     22  ]
-[ 0    -24   12    11    1     -6  ]
-[ 0    -16   52    -11   19    -26 ]
-[ 0    16    36    -11   3     -18 ]
-[ 0    24    -12   11    -23   6   ]
-[ 0    22    -22   0     -22   22  ]
-[ 0    -22   0     0     22    0   ]
-
-3 order canceling x, x^2, x^3 terms
-0,1,2 stencil, mult = 1/372
-[    0, 0, -131, 0,  138,  144, 0,   0, -102, -31 ],
-[    0, 0,    7, 0, -138,   42, 0,   0,  102, -31 ],
-[   62, 0,  -31, 0,    0,  -62, 0,   0,    0,  31 ],
-[  124, 0,  -62, 0,    0, -124, 0,   0,    0,  62 ],
-[  124, 0,  -62, 0,    0, -124, 0,   0,    0,  62 ],
-[   62, 0,  -31, 0,    0,  -62, 0,   0,    0,  31 ],
-[    0, 0,   45, 0, -183,   -9, 0,  93,   18,   0 ],
-[    0, 0,  216, 0,   33,   87, 0, -93,   12, -93 ],
-[    0, 0,  156, 0,  153,   99, 0, -93,  -12, -93 ],
-[    0, 0,  -45, 0,   -3,    9, 0,  93,  -18,   0 ],
-[    0, 0,  -55, 0,   48,   42, 0,   0,  -84,  31 ],
-[    0, 0,   -7, 0,  -48,  -42, 0,   0,   84,  31 ],
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- */
