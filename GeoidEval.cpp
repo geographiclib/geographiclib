@@ -30,7 +30,7 @@ int usage(int retval) {
   ( retval ? std::cerr : std::cout )
     <<
 "Usage:\n\
-  Geoid [-n name] [-d dir] [-a] [-c south west north east] [-v] [-h]\n\
+  Geoid [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]\n\
 $Id$\n\
 \n\
 Read in positions on standard input and print out the corresponding\n\
@@ -47,25 +47,26 @@ provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.\n\
 By default the EGM96 Geoid is used with a 5\' grid.  This may be\n\
 overriden with the -n option.  The name specified should be one of\n\
 \n\
-    name         geoid    grid   max-error  rms-error\n\
-    egm84-30     EGM84    30\'    1.546m     0.070m\n\
-    egm84-15     EGM84    15\'    0.470m     0.018m\n\
-    egm96-15     EGM96    15\'    1.152m     0.040m\n\
-    egm96-5      EGM96     5\'    0.140m     0.005m\n\
-    egm2008-5    EGM2008   5\'    0.478m     0.012m\n\
-    egm2008-2_5  EGM2008   2.5\'  0.143m     0.003m\n\
-    egm2008-1    EGM2008   1\'    0.021m     0.001m\n\
+                                  bilinear error    cubic-012 error\n\
+   name         geoid    grid     max     rms       max     rms\n\
+   egm84-30     EGM84    30\'      1.546m  70mm      0.274m  14mm\n\
+   egm84-15     EGM84    15\'      0.413m  18mm      0.020m   1mm\n\
+   egm96-15     EGM96    15\'      1.152m  40mm      0.169m   7mm\n\
+   egm96-5      EGM96     5\'      0.140m   5mm      0.003m   1mm\n\
+   egm2008-5    EGM2008   5\'      0.478m  12mm      0.294m   5mm\n\
+   egm2008-2_5  EGM2008   2.5\'    0.145m   3mm      0.031m   1mm\n\
+   egm2008-1    EGM2008   1\'      0.022m   1mm      0.003m   1mm\n\
 \n\
 (Some of the geoids may not be available.)  The errors listed here\n\
 are estimates of the quantization and interpolation errors in the\n\
 reported heights compared to the specified geoid.\n\
 \n\
-Simple bilinear interpolation is used to compute the geoid height\n\
-from the gridded data.  The returned height is a continuous function\n\
-of position; however, the returned gradients are discontinuous at\n\
-cell boundaries.  The gridded data has also be quantized (to the\n\
-nearest multiple of 3mm) which will lead to additional errors in the\n\
-gradients.\n\
+Cubic interpolation is used to compute the geoid height unless\n\
+-l is specified in which case bilinear interpolation is used.\n\
+Cubic interpolation is more accurate; however it results in\n\
+small discontinuities in the resturned height on cell\n\
+boundaries.  The gradients are computed by differentiating the\n\
+interpolated results.\n\
 \n\
 GeoidEval will load the geoid data from the directory specified by\n\
 the -d option.  If this is not provided, it will look up the value of\n\
@@ -97,7 +98,7 @@ to standard error.\n\
 }
 
 int main(int argc, char* argv[]) {
-  bool cacheall = false, cachearea = false, verbose = false;
+  bool cacheall = false, cachearea = false, verbose = false, cubic = true;
   double caches, cachew, cachen, cachee;
   std::string dir;
   std::string geoid = "egm96-5";
@@ -131,6 +132,8 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-d") {
       if (++m == argc) return usage(1);
       dir = std::string(argv[m]);
+    } else if (arg == "-l") {
+      cubic = false;
     } else if (arg == "-v")
       verbose = true;
     else
@@ -139,7 +142,7 @@ int main(int argc, char* argv[]) {
 
   int retval = 0;
   try {
-    GeographicLib::Geoid g(geoid, true, dir);
+    GeographicLib::Geoid g(geoid, dir, cubic);
     try {
       if (cacheall)
 	g.CacheAll();
@@ -152,8 +155,12 @@ int main(int argc, char* argv[]) {
     if (verbose)
       std::cerr << "Geoid file: " << g.GeoidFile() << "\n"
 		<< "Description: " << g.Description() << "\n"
-		<< "Max error: " << g.MaxError() << "\n"
-		<< "RMS error: " << g.RMSError() << "\n";
+		<< "Interpolation: " << g.Interpolation() << "\n"
+		<< "Date & Time: " << g.DateTime() << "\n"
+		<< "Offset (m): " << g.Offset() << "\n"
+		<< "Scale (m): " << g.Scale() << "\n"
+		<< "Max error (m): " << g.MaxError() << "\n"
+		<< "RMS error (m): " << g.RMSError() << "\n";
 
     std::cout << std::fixed;
     std::string s;
@@ -167,7 +174,7 @@ int main(int argc, char* argv[]) {
 	GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
 	double gradn, grade;
 	double h = g(lat, lon, gradn, grade);
-	std::cout << std::setprecision(5) << h << " " << std::setprecision(2)
+	std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
 		    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
       }
       catch (std::exception& e) {
@@ -180,37 +187,5 @@ int main(int argc, char* argv[]) {
     std::cerr << "Error reading " << geoid << ": " << e.what() << "\n";
     retval = 1;
   }
-
   return retval;
 }
-
-/*
-  Errors:
-  EGM84 MAX RMS
-  30' 1.546 0.070
-  15' 0.470 0.018
-
-  EGM96
-  15' grid (vs 3.75') 1.152 0.040
-  5' grid (vs 2.5')   0.140 0.005
-
-  EMG2009
-  15' grid (vs 2.5') 2.670 0.079*
-  5' grid (vs 2.5')  0.478 0.012*
-  2.5' grid (vs 1')  0.143 0.003*
-  1' grid (vs 2.5')  0.021 0.001*
-
-
-  
-0.1314 => 1.085 * 0.1314 = 
-
-
-degree:ev(%pi/180,0)$
-rnd():=bfloat(random(1.0))+0.5^53$
-quant(x):=entier(1e3*x+0.5b0)*1e-3$
-rndlat():=quant(asin(2*rnd()-1)/degree);
-rndlon():=quant(180*(2*rnd()-1))$
-set_random_state(make_random_state(true))$
-
-for i:1 thru 100 do print(rndlat(), rndlon())$
-*/

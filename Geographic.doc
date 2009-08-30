@@ -1769,7 +1769,8 @@ height and its gradient using one of the earth gravity models,
 This class offers a uniform way to handle all 3 geoids at a variety of
 grid resolutions.  (In contrast, the software tools that NGA offers are
 different for each geoid, and the interpolation programs are different
-for each grid resoltuion.)
+for each grid resolution.  In addition these tools are written in
+Fortran with is difficult to integrate with other tools.
 
 The geoid heights are computed using interpolation into a rectangular
 grid.  The grids are read from data files which have been are computed
@@ -1902,7 +1903,7 @@ The arguments to -scale here are specific to the Offset and Scale
 parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
 can check these by printing out the header data, e.g., with
 \verbatim
-   sed /65535/,\$d egm96-5.pgm
+   sed '/65535/,$d' egm96-5.pgm | grep '^#'
 \endverbatim
 
 Finally, here is a sample script which uses GDAL to create a 1-degree
@@ -1947,14 +1948,16 @@ quantization and interpolation errors for the heights.
    egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
    egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
    egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
-   egm2008-2_5  EGM2008   2.5'    0.143m   3mm      0.028m*  1mm
-   egm2008-1    EGM2008   1'      0.021m   1mm      0.003m*  1mm
+   egm2008-2_5  EGM2008   2.5'    0.145m   3mm      0.031m   1mm
+   egm2008-1    EGM2008   1'      0.022m   1mm      0.003m   1mm
 \endverbatim
 The errors are with respect the the specific NGA earth gravity model
 (not to any "real" geoid).  The RMS values are obtained using 5 million
 uniformly distributed random points.  The maximum values are obtained by
 evaluating the errors using a different grid with points at or near the
-centers of the original grid.
+centers of the original grid.  (The RMS difference between EGM96 and
+EGM2008 is about 0.5m.  The RMS difference between EGM84 and EGM96 is
+about 1.5m.)
 
 \section geoidcache Caching the geoid data
 
@@ -1988,6 +1991,8 @@ require 450MB of RAM and should only be used on systems with sufficient
 memory.
 
 The use of caching does not affect the values returned.
+
+NOT THREAD SAFE
 
 <center>
 Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
