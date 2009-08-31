@@ -116,7 +116,9 @@ namespace GeographicLib {
      * on non-Windows systems and
      * C:/cygwin/usr/local/share/geographiclib/geoids on Windows systems).  The
      * final \e cubic argument specifies whether to use bilinear (\e cubic =
-     * false) or cubic (\e cubic = true, the default) interpolation.
+     * false) or cubic (\e cubic = true, the default) interpolation.  This may
+     * throw an error because the file does not exist, is unreadable, or is
+     * corrupt.
      **********************************************************************/
     Geoid(const std::string& name, const std::string& path = "",
 	  bool cubic = true);
@@ -125,25 +127,34 @@ namespace GeographicLib {
      * Cache the data for the rectangular area defined by the four arguments \e
      * south, \e west, \e north, \e east (all in degrees).  \e east is always
      * interpreted as being east of \e west, if necessary by adding
-     * 360<sup>o</sup> to its value.
+     * 360<sup>o</sup> to its value.  This may throw an error because of
+     * insufficent memory or because of an error reading the data from the
+     * file.  In this case, you can catch the error and either do nothing (you
+     * will have no cache in this case) or try again with a smaller area.
      **********************************************************************/
     void CacheArea(double south, double west, double north, double east) const;
 
     /**
      * Cache all the data.  On most computers, this is fast for data sets with
      * grid resolution of 5' or coarser.  For a 1' grid, the required RAM is
-     * 450MB; a 2.5' grid needs 72MB; and a 5' grid needs 18MB.
+     * 450MB; a 2.5' grid needs 72MB; and a 5' grid needs 18MB.  This may throw
+     * an error because of insufficent memory or because of an error reading
+     * the data from the file.  In this case, you can catch the error and
+     * either do nothing (you will have no cache in this case) or try using
+     * Geoid::CacheArea on a specific area.
      **********************************************************************/
     void CacheAll() const { CacheArea(-90.0, 0.0, 90.0, 360.0); }
 
     /**
-     * Clear the cache.
+     * Clear the cache.  This never throws an error.
      **********************************************************************/
-    void CacheClear() const;
+    void CacheClear() const throw();
 
     /**
      * Return the geoid height in meters for latitude \e lat (in [-90, 90]) and
-     * longitude \e lon (in [-180,360]), both in degrees.
+     * longitude \e lon (in [-180,360]), both in degrees.  This may throw an
+     * error because of an error reading data from disk.  However, it will not
+     * throw if (\e lat, \e lon) is within a successfully cached area.
      **********************************************************************/
     double operator()(double lat, double lon) const {
       double gradn, grade;
@@ -153,7 +164,9 @@ namespace GeographicLib {
      * Return the geoid height in meters for latitude \e lat (in [-90, 90]) and
      * longitude \e lon (in [-180,360]), both in degrees.  In addition compute
      * the gradient of the geoid height in the northerly \e gradn and easterly
-     * \e grade directions.
+     * \e grade directions.  This may throw an error because of an error
+     * reading data from disk.  However, it will not throw if (\e lat, \e lon)
+     * is within a successfully cached area.
      **********************************************************************/
     double operator()(double lat, double lon, double& gradn, double& grade)
       const {
@@ -164,17 +177,17 @@ namespace GeographicLib {
      * Return the geoid description if available in the data file.  If absent,
      * return "NONE".
      **********************************************************************/
-    const std::string& Description() const { return _description; }
+    const std::string& Description() const throw() { return _description; }
 
     /**
      * Return the date of the data file.  If absent, return "UNKNOWN".
      **********************************************************************/
-    const std::string& DateTime() const { return _datetime; }
+    const std::string& DateTime() const throw() { return _datetime; }
 
     /**
      * Return the path name used to load the geoid data.
      **********************************************************************/
-    const std::string& GeoidFile() const { return _filename; }
+    const std::string& GeoidFile() const throw() { return _filename; }
 
     /**
      * Return the interpolation method (cubic or bilinear).
@@ -187,25 +200,25 @@ namespace GeographicLib {
      * (meters).  This relies on the value being stored in the data file.  If
      * the value is absent, return -1.
      **********************************************************************/
-    double MaxError() const { return _maxerror; }
+    double MaxError() const throw() { return _maxerror; }
 
     /**
      * Return a estimate of the RMS interpolation and quantization error
      * (meters).  This relies on the value being stored in the data file.  If
      * the value is absent, return -1.
      **********************************************************************/
-    double RMSError() const { return _rmserror; }
+    double RMSError() const throw() { return _rmserror; }
 
     /**
      * Return offset (meters) for converting pixel values to geoid heights.
      **********************************************************************/
-    double Offset() const { return _offset; }
+    double Offset() const throw() { return _offset; }
 
     /**
      * Return scale (meters) for converting pixel values to geoid
      * heights.
      **********************************************************************/
-    double Scale() const { return _scale; }
+    double Scale() const throw() { return _scale; }
 
     /**
      * Return the compile-time default path for the geoid data files.

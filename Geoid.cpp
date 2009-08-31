@@ -189,18 +189,23 @@ namespace GeographicLib {
       throw out_of_range("Scale not set " + _filename);
     if (_scale < 0)
       throw out_of_range("Scale must be positive " + _filename);
-    if (_height < 2 || _width < 1)
+    if (_height < 2 || _width < 2)
+      // Coarsest grid spacing is 180deg.
       throw out_of_range("Raster size too small " + _filename);
     if (_width & 1)
+      // This is so that longitude grids can be extended thru the poles.
       throw out_of_range("Raster width is odd " + _filename);
     _file.seekg(0, ios::end);
     if (_datastart + 2 * _width * _height != _file.tellg())
+      // Possibly this test should be "<" because the tile contains, e.g., a
+      // second image.  However, for now we are more strict.
       throw out_of_range("File has the wrong length " + _filename);
     _rlonres = _width / 360.0;
     _rlatres = (_height - 1) / 180.0;
     _cache = false;
     _ix = _width;
     _iy = _height;
+    // Ensure that file errors throw exceptions
     _file.exceptions(ifstream::eofbit | ifstream::failbit | ifstream::badbit);
   }
 
@@ -302,7 +307,7 @@ namespace GeographicLib {
     }
   }
 
-  void Geoid::CacheClear() const {
+  void Geoid::CacheClear() const throw() {
     _cache = false;
     try {
       _data.clear();
@@ -310,7 +315,7 @@ namespace GeographicLib {
       std::vector< std::vector<unsigned short> > t;
       _data.swap(t);
     }
-    catch (std::bad_alloc&) {
+    catch (std::exception&) {
     }
   }
 
