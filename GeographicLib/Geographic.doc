@@ -1764,20 +1764,39 @@ Back to \ref geodesic.  Forward to \ref geoid.  Up to \ref contents.
 Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
 </center>
 
-The GeographicLib::Geoid class provide a method for computing the geoid
-height and its gradient using one of the earth gravity models,
+The gravitational equipotential surface approximately coinciding with
+mean sea level is called the geoid.  The GeographicLib::Geoid class
+evaluates the height of the geoid above the WGS84 ellipsoid.  This can
+be used to convert heights above mean sea level to heights above the
+WGS84 ellipoid.  Because the normal to the ellipsoid differs from the
+normal to the geoid (the direction of a plumb line) there is a slight
+ambiguity in the measurement of heights; however for heights up to 10km
+this ambiguity is only 1mm.
+
+The geoid is usually approximated by an "earth gravity model".  The
+models published by the NGA are:
 - EGM84:
   http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
 - EGM96:
   http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
 - EGM2008:
   http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+.
+GeographicLib::Geoid offers a uniform way to handle all 3 geoids at a
+variety of grid resolutions.  (In contrast, the software tools that NGA
+offers are different for each geoid, and the interpolation programs are
+different for each grid resolution.  In addition these tools are written
+in Fortran with is nowadays difficult to integrate with other software.)
 
-This class offers a uniform way to handle all 3 geoids at a variety of
-grid resolutions.  (In contrast, the software tools that NGA offers are
-different for each geoid, and the interpolation programs are different
-for each grid resolution.  In addition these tools are written in
-Fortran with is nowadays difficult to integrate with other software.)
+Unlike other components of %GeographicLib, there is a appreciable error
+in the results obtained (at best, the RMS error is 1mm).  However the
+class provides methods to report the maximum and RMS errors in the
+results.
+
+The class also returns the gradient of the geoid.  This can be used to
+estimate the direction of a plumb line relative to the WGS84 ellipsoid.
+
+\section geoidinst Installing the datasets
 
 The geoid heights are computed using interpolation into a rectangular
 grid.  The grids are read from data files which have been are computed
@@ -1806,8 +1825,6 @@ EGM2008.  These data files are available for download:
   <a href="http://charles.karney.info/geographic/egm2008-1.tar.bz2">tar.bz2</a>,
   <a href="http://charles.karney.info/geographic/egm2008-1.zip">zip</a>.
 
-\section geoidinst Installing the datasets
-
 Download \e either the tar.bz2 file \e or zip file (they have the same
 contents).  If possible use the tar.bz2 format, since bzip2 compresses
 these files about 2 times better than zip.  The data in tar and zip
@@ -1823,8 +1840,8 @@ or
 \verbatim
    mkdir -p /usr/local/share/geographiclib
    cd /usr/local/share/geographiclib
-   unzip <dir>/egm96-5.zip 
-   unzip <dir>/egm2008-2_5.zip
+   unzip ~-/egm96-5.zip
+   unzip ~-/egm2008-2_5.zip
    etc.
 \endverbatim
 Geoid uses a compile time default (specified by the GEOID_DEFAULT_PATH
@@ -1931,7 +1948,7 @@ bilinear interpolation.
    }'` -ts $((3600/res+1)) $((3600/res+1)) -r bilinear egm96-5.tif $TEMP
    gdal_translate -quiet \
        -mo AREA_OR_POINT=Point \
-       -mo "Description=WGS84 EGM96, $res-second grid" \
+       -mo Description="WGS84 EGM96, $res-second grid" \
        -mo Vertical_Datum=WGS84 \
        -mo Tie_Point_Location=pixel_corner \
        $TEMP e$lon-n$lat.tif
@@ -1977,8 +1994,8 @@ heights.
    egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
    egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
    egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
-   egm2008-2_5  EGM2008   2.5'    0.145m   3mm      0.031m   1mm
-   egm2008-1    EGM2008   1'      0.022m   1mm      0.003m   1mm
+   egm2008-2_5  EGM2008   2.5'    0.134m   3mm      0.030m   1mm
+   egm2008-1    EGM2008   1'      0.024m   1mm      0.003m   1mm
 \endverbatim
 The errors are with respect the the specific NGA earth gravity model
 (not to any "real" geoid).  The RMS values are obtained using 5 million
@@ -2431,8 +2448,8 @@ overriden with the -n option.  The name specified should be one of
    egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
    egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
    egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
-   egm2008-2_5  EGM2008   2.5'    0.145m   3mm      0.031m   1mm
-   egm2008-1    EGM2008   1'      0.022m   1mm      0.003m   1mm
+   egm2008-2_5  EGM2008   2.5'    0.134m   3mm      0.030m   1mm
+   egm2008-1    EGM2008   1'      0.024m   1mm      0.003m   1mm
 
 (Some of the geoids may not be available.)  The errors listed here
 are estimates of the quantization and interpolation errors in the
