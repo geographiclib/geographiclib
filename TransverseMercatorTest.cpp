@@ -34,7 +34,7 @@ specified) from standard input and print latitude, longitude, easting,\n\
 northing, convergence, and scale.  Units are degrees and meters.\n\
 \n\
 By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM\n\
-central scale, and false easting and false northing are zero.\n\
+central scale (0.9996), and false easting and false northing are zero.\n\
 \n\
 If -r is given, the reverse projection is performed (the inputs are easting\n\
 and northing).\n\
