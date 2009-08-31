@@ -10,7 +10,7 @@
  *
  *   g++ -g -O3 -I.. -o GeoidEval GeoidEval.cpp Geoid.cpp DMS.cpp
  *
- * See \ref geod for usage information.
+ * See \ref geoideval for usage information.
  **********************************************************************/
 
 #include "GeographicLib/Geoid.hpp"
@@ -54,8 +54,8 @@ overriden with the -n option.  The name specified should be one of\n\
    egm96-15     EGM96    15\'      1.152m  40mm      0.169m   7mm\n\
    egm96-5      EGM96     5\'      0.140m   5mm      0.003m   1mm\n\
    egm2008-5    EGM2008   5\'      0.478m  12mm      0.294m   5mm\n\
-   egm2008-2_5  EGM2008   2.5\'    0.145m   3mm      0.031m   1mm\n\
-   egm2008-1    EGM2008   1\'      0.022m   1mm      0.003m   1mm\n\
+   egm2008-2_5  EGM2008   2.5\'    0.134m   3mm      0.030m   1mm\n\
+   egm2008-1    EGM2008   1\'      0.024m   1mm      0.003m   1mm\n\
 \n\
 (Some of the geoids may not be available.)  The errors listed here\n\
 are estimates of the quantization and interpolation errors in the\n\
