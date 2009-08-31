@@ -1851,8 +1851,8 @@ or
 \endverbatim
 Geoid uses a compile time default (specified by the GEOID_DEFAULT_PATH
 macro) to locate the datasets.  This is
-- /usr/local/share/geographiclib/geoids, for non-Windows systems
-- C:/cygwin/usr/local/share/geographiclib/geoids, for Windows systems
+- /usr/local/share/GeographicLib/geoids, for non-Windows systems
+- C:/cygwin/usr/local/share/GeographicLib/geoids, for Windows systems
 .
 This may be overridden at run-time by defining the GEOID_PATH
 environment variable.  Finally, the path may be set using the optional
@@ -1878,7 +1878,7 @@ GeographicLib::Geoid::CacheAll method.
 
 The gridded data used by the GeographicLib::Geoid class is stored in
 16-bit PGM files.  Thus the data for egm96-5 might be stored in the file
-- /usr/local/share/geographiclib/geoids/egm96-5.pgm
+- /usr/local/share/GeographicLib/geoids/egm96-5.pgm
 .
 PGM simple graphic format with the following properties
 - it is well documented
@@ -2471,7 +2471,7 @@ GeoidEval will load the geoid data from the directory specified by
 the -d option.  If this is not provided, it will look up the value of
 GEOID_PATH (currently UNDEFINED) in the environment.
 If this is not defined, it will use the compile-time value of
-/usr/local/share/geographiclib/geoids.
+/usr/local/share/GeographicLib/geoids.
 
 By default, the data file is randomly read to compute the geoid
 heights at the input positions.  Usually this is sufficient for

@@ -27,9 +27,9 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
  * powers of \e fp.
  **********************************************************************/
 #if defined(_MSC_VER)
-#define GEOID_DEFAULT_PATH "C:/cygwin/usr/local/share/geographiclib/geoids"
+#define GEOID_DEFAULT_PATH "C:/cygwin/usr/local/share/GeographicLib/geoids"
 #else
-#define GEOID_DEFAULT_PATH "/usr/local/share/geographiclib/geoids"
+#define GEOID_DEFAULT_PATH "/usr/local/share/GeographicLib/geoids"
 #endif
 #endif
 

@@ -112,9 +112,9 @@ namespace GeographicLib {
      * formed by appending ".pgm" to the name.  If \e path is specified, then
      * the file is loaded from that directory.  Otherwise the path is given by
      * the GEOID_PATH environment variable.  If that is undefined, a
-     * compile-time default path is used (/usr/local/share/geographiclib/geoids
+     * compile-time default path is used (/usr/local/share/GeographicLib/geoids
      * on non-Windows systems and
-     * C:/cygwin/usr/local/share/geographiclib/geoids on Windows systems).  The
+     * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).  The
      * final \e cubic argument specifies whether to use bilinear (\e cubic =
      * false) or cubic (\e cubic = true, the default) interpolation.  This may
      * throw an error because the file does not exist, is unreadable, or is
