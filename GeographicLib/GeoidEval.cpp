@@ -80,7 +80,7 @@ interactive use.  If many heights are to be computed, GeoidEval\n\
 allows a block of data to be read into memory and heights within the\n\
 corresponding rectangle can then be computed without any disk acces.\n\
 If -a is specified all the geoid data is read; in the case of\n\
-egm2008_1, this requires about 0.5 GB of RAM.  The -c option allows\n\
+egm2008-1, this requires about 0.5 GB of RAM.  The -c option allows\n\
 a rectangle of data to be cached.  The evaluation of heights\n\
 outside the cached rectangle causes the necessary data to be read\n\
 from disk.\n\

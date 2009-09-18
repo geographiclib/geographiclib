@@ -84,7 +84,7 @@ namespace GeographicLib {
      * to set the central latitude and longuitude, prior to calling Forward and
      * Reverse.
      **********************************************************************/
-    CassiniSoldner(const Geodesic& earth = Geodesic::WGS84) throw()
+    explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84) throw()
       : _earth(earth) {}
 
     /**

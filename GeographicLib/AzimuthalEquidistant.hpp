@@ -49,8 +49,8 @@ namespace GeographicLib {
      * Constructor for AzimuthalEquidistant setting the Geodesic object to use
      * for geodesic calculations.  By default this uses the WGS84 ellipsoid.
      **********************************************************************/
-    AzimuthalEquidistant(const Geodesic& earth = Geodesic::WGS84) throw()
-      : _earth(earth) {}
+    explicit AzimuthalEquidistant(const Geodesic& earth = Geodesic::WGS84)
+      throw() : _earth(earth) {}
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to

@@ -149,7 +149,7 @@ namespace GeographicLib {
       cosx /= r;
     }
 
-    // These are maxima generated functions to provide series approximations to
+    // These are Maxima generated functions to provide series approximations to
     // the integrals for the ellipsoidal geodesic.
     static double tauFactorm1(double k1) throw();
     static void tauCoeff(double k1, double t[]) throw();
