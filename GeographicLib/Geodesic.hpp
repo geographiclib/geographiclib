@@ -15,7 +15,8 @@
  * The order of the series relating \e s and \e sigma when expanded in powers
  * of \e k1.
  **********************************************************************/
-#define GEOD_TAU_ORD 5
+#define GEOD_TAU_ORD \
+(sizeof(real_t) == sizeof(double) ? 5 : sizeof(real_t) == sizeof(float) ? 4 : 6)
 #endif
 
 #if !defined(GEOD_ETA_ORD)
@@ -23,9 +24,11 @@
  * The order of the series relating \e lambda and \e eta when expanded in
  * powers of \e fp.
  **********************************************************************/
-#define GEOD_ETA_ORD 5
+#define GEOD_ETA_ORD \
+(sizeof(real_t) == sizeof(double) ? 5 : sizeof(real_t) == sizeof(float) ? 4 : 6)
 #endif
 
+#include "GeographicLib/Constants.hpp"
 #include <cmath>
 
 namespace GeographicLib {
@@ -79,6 +82,7 @@ namespace GeographicLib {
 
   class Geodesic {
   private:
+    typedef Math::real_t real_t;
     friend class GeodesicLine;
     friend class CassiniSoldner;
     static const int tauord = GEOD_TAU_ORD;
@@ -92,72 +96,63 @@ namespace GeographicLib {
     static const int neta = etaord > 0 ? etaord - 1 : 0;
     static const unsigned maxit = 50;
 
-    static inline double sq(double x) throw() { return x * x; }
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) throw()
-    { return _hypot(x, y); }
-    static inline double cbrt(double x) throw() {
-      double y = std::pow(std::abs(x), 1/3.0);
-      return x < 0 ? -y : y;
-    }
-#else
-    static inline double hypot(double x, double y) throw()
-    { return ::hypot(x, y); }
-    static inline double cbrt(double x) throw() { return ::cbrt(x); }
-#endif
-    void Lengths(double k1, double sig12,
-		 double ssig1, double csig1, double ssig2, double csig2,
-		 double cbet1, double cbet2,
-		 double& s12s, double& m12a, double& m0,
-		 double tc[], double zc[]) const throw();
-    static void Evolute(double R, double z, double& c, double& s) throw();
-    void InverseStart(double sbet1, double cbet1, double sbet2, double cbet2,
-		      double lam12, double slam12, double clam12,
-		      double& salp1, double& calp1,
-		      double tc[], double zc[]) const throw();
-    double Lambda12(double sbet1, double cbet1, double sbet2, double cbet2,
-		    double salp1, double calp1,
-		    double& salp2, double& calp2, double& sig12,
-		    double& ssig1, double& csig1, double& ssig2, double& csig2,
-		    double& k1, bool diffp, double& dlam12,
-		    double tc[], double zc[], double ec[])
+    static inline real_t sq(real_t x) throw() { return x * x; }
+    static inline real_t hypot(real_t x, real_t y) throw()
+    { return Math::hypot(x, y); }
+    static inline real_t cbrt(real_t x) throw() { return Math::cbrt(x); }
+    void Lengths(real_t k1, real_t sig12,
+		 real_t ssig1, real_t csig1, real_t ssig2, real_t csig2,
+		 real_t cbet1, real_t cbet2,
+		 real_t& s12s, real_t& m12a, real_t& m0,
+		 real_t tc[], real_t zc[]) const throw();
+    static void Evolute(real_t R, real_t z, real_t& c, real_t& s) throw();
+    void InverseStart(real_t sbet1, real_t cbet1, real_t sbet2, real_t cbet2,
+		      real_t lam12, real_t slam12, real_t clam12,
+		      real_t& salp1, real_t& calp1,
+		      real_t tc[], real_t zc[]) const throw();
+    real_t Lambda12(real_t sbet1, real_t cbet1, real_t sbet2, real_t cbet2,
+		    real_t salp1, real_t calp1,
+		    real_t& salp2, real_t& calp2, real_t& sig12,
+		    real_t& ssig1, real_t& csig1, real_t& ssig2, real_t& csig2,
+		    real_t& k1, bool diffp, real_t& dlam12,
+		    real_t tc[], real_t zc[], real_t ec[])
       const throw();
 
-    static const double eps2, tol0, tol1, tol2, xthresh;
-    const double _a, _f, _f1, _e2, _ep2, _n, _b;
-    static double SinSeries(double sinx, double cosx, const double c[], int n)
+    static const real_t eps2, tol0, tol1, tol2, xthresh;
+    const real_t _a, _f, _f1, _e2, _ep2, _n, _b;
+    static real_t SinSeries(real_t sinx, real_t cosx, const real_t c[], int n)
       throw();
-    static inline double AngNormalize(double x) throw() {
+    static inline real_t AngNormalize(real_t x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
       return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
     }
-    static inline double AngRound(double x) throw() {
+    static inline real_t AngRound(real_t x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-      // for doubles = 0.7 pm on the earth if x is an angle in degrees.  (This
+      // for real_ts = 0.7 pm on the earth if x is an angle in degrees.  (This
       // is about 1000 times more resolution than we get with angles around 90
       // degrees.)  We use this to avoid having to deal with near singular
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
-      const double z = 0.0625;	// 1/16
-      double y = std::abs(x);
+      const real_t z = real_t(0.0625L);	// 1/16
+      real_t y = std::abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;
     }
-    static inline void SinCosNorm(double& sinx, double& cosx) throw() {
-      double r = hypot(sinx, cosx);
+    static inline void SinCosNorm(real_t& sinx, real_t& cosx) throw() {
+      real_t r = hypot(sinx, cosx);
       sinx /= r;
       cosx /= r;
     }
 
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the ellipsoidal geodesic.
-    static double tauFactorm1(double k1) throw();
-    static void tauCoeff(double k1, double t[]) throw();
-    static void sigCoeff(double k1, double tp[]) throw();
-    static double zetFactorm1(double k1) throw();
-    static void zetCoeff(double k1, double t[]) throw();
-    static double etaFactor(double f, double k1) throw();
-    static void etaCoeff(double f, double k1, double h[]) throw();
+    static real_t tauFactorm1(real_t k1) throw();
+    static void tauCoeff(real_t k1, real_t t[]) throw();
+    static void sigCoeff(real_t k1, real_t tp[]) throw();
+    static real_t zetFactorm1(real_t k1) throw();
+    static void zetCoeff(real_t k1, real_t t[]) throw();
+    static real_t etaFactor(real_t f, real_t k1) throw();
+    static void etaCoeff(real_t f, real_t k1, real_t h[]) throw();
 
   public:
 
@@ -167,7 +162,7 @@ namespace GeographicLib {
      * flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
      * ellipsoid.
      **********************************************************************/
-    Geodesic(double a, double r) throw();
+    Geodesic(Math::real_t a, Math::real_t r) throw();
 
     /**
      * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
@@ -183,9 +178,11 @@ namespace GeographicLib {
      * value is the arc length \e a12 (degrees) if \e arcmode is false,
      * otherwise it is the distance \e s12 (meters)
      **********************************************************************/
-    double Direct(double lat1, double lon1, double azi1, double s12,
-		  double& lat2, double& lon2, double& azi2, double& m12,
-		  bool arcmode = false) const throw();
+    Math::real_t Direct(Math::real_t lat1, Math::real_t lon1,
+			Math::real_t azi1, Math::real_t s12,
+			Math::real_t& lat2, Math::real_t& lon2,
+			Math::real_t& azi2, Math::real_t& m12,
+			bool arcmode = false) const throw();
 
     /**
      * Perform the inverse geodesic calculation.  Given a latitude, \e lat1,
@@ -199,8 +196,10 @@ namespace GeographicLib {
      * are returned.  This is not expected to happen with ellipsoidal models of
      * the earth.  Please report all cases where this occurs.
      **********************************************************************/
-    double Inverse(double lat1, double lon1, double lat2, double lon2,
-		   double& s12, double& azi1, double& azi2, double& m12)
+    Math::real_t Inverse(Math::real_t lat1, Math::real_t lon1,
+			 Math::real_t lat2, Math::real_t lon2,
+			 Math::real_t& s12, Math::real_t& azi1,
+			 Math::real_t& azi2, Math::real_t& m12)
       const throw();
 
     /**
@@ -211,7 +210,8 @@ namespace GeographicLib {
      * GeodesicLine::Position is approximately 2.1 faster than calling
      * Geodesic::Direct.
      **********************************************************************/
-    GeodesicLine Line(double lat1, double lon1, double azi1) const throw();
+    GeodesicLine Line(Math::real_t lat1, Math::real_t lon1, Math::real_t azi1)
+      const throw();
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
@@ -257,6 +257,7 @@ namespace GeographicLib {
 
   class GeodesicLine {
   private:
+    typedef Math::real_t real_t;
     friend class Geodesic;
     friend class CassiniSoldner;
     static const int ntau = Geodesic::ntau;
@@ -264,14 +265,14 @@ namespace GeographicLib {
     static const int nzet = Geodesic::nzet;
     static const int neta = Geodesic::neta;
 
-    double _lat1, _lon1, _azi1;
-    double  _b, _f1, _salp0, _calp0, _u2,
+    real_t _lat1, _lon1, _azi1;
+    real_t  _b, _f1, _salp0, _calp0, _u2,
       _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
       _taufm1, _zetfm1, _etaf, _dtau1, _dzet1, _dlam1;
-    double _tauCoeff[ntau ? ntau : 1], _sigCoeff[nsig ? nsig : 1],
+    real_t _tauCoeff[ntau ? ntau : 1], _sigCoeff[nsig ? nsig : 1],
       _zetCoeff[nzet ? nzet : 1], _etaCoeff[neta ? neta : 1];
 
-    GeodesicLine(const Geodesic& g, double lat1, double lon1, double azi1)
+    GeodesicLine(const Geodesic& g, real_t lat1, real_t lon1, real_t azi1)
       throw();
   public:
 
@@ -292,8 +293,10 @@ namespace GeographicLib {
      * auxiliary sphere.  Returned value is the arc length \e a12 (degrees) if
      * \e arcmode is false, otherwise it is the distance \e s12 (meters).
      **********************************************************************/
-    double Position(double s12, double& lat2, double& lon2, double& azi2,
-		    double &m12, bool arcmode = false)
+    Math::real_t Position(Math::real_t s12,
+			  Math::real_t& lat2, Math::real_t& lon2,
+			  Math::real_t& azi2,
+			  Math::real_t &m12, bool arcmode = false)
       const throw();
 
     /**
@@ -304,18 +307,18 @@ namespace GeographicLib {
     /**
      * Return the latitude of point 1 (degrees).
      **********************************************************************/
-    double Latitude() const throw() { return _lat1; }
+    Math::real_t Latitude() const throw() { return _lat1; }
 
     /**
      * Return the longitude of point 1 (degrees).
      **********************************************************************/
-    double Longitude() const throw() { return _lon1; }
+    Math::real_t Longitude() const throw() { return _lon1; }
 
     /**
      * Return the azimuth (degrees) of the geodesic line as it passes through
      * point 1.
      **********************************************************************/
-    double Azimuth() const throw() { return _azi1; }
+    Math::real_t Azimuth() const throw() { return _azi1; }
   };
 
 } //namespace GeographicLib

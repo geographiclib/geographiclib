@@ -263,9 +263,13 @@ access to this class.  This class requires installation of data
 files for the various geoid models; see \ref geoidinst for
 details.
 
-GeographicLib::Constants, GeographicLib::DMS, and
+GeographicLib::Constants, GeographicLib::Math, GeographicLib::DMS, and
 GeographicLib::EllipticFunction are utility classes which are used
-internally by the library.
+internally by the library.  One important definition is
+GeographicLib::Math::real_t which is the type used for real numbers.
+This allows the library to be easily switched to using floats, doubles,
+or long doubles.  However all the testing has been with real_t set to
+double and the library should be installed in this way.
 
 In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the

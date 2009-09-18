@@ -15,6 +15,7 @@
 
 #include "GeographicLib/Geoid.hpp"
 #include "GeographicLib/DMS.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -98,8 +99,10 @@ to standard error.\n\
 }
 
 int main(int argc, char* argv[]) {
+  using namespace GeographicLib;
+  typedef Math::real_t real_t;
   bool cacheall = false, cachearea = false, verbose = false, cubic = true;
-  double caches, cachew, cachen, cachee;
+  real_t caches, cachew, cachen, cachee;
   std::string dir;
   std::string geoid = "egm96-5";
   for (int m = 1; m < argc; ++m) {
@@ -170,10 +173,10 @@ int main(int argc, char* argv[]) {
 	std::string stra, strb;
 	if (!(str >> stra >> strb))
 	  throw std::out_of_range("Incomplete input: " + s);
-	double lat, lon;
+	real_t lat, lon;
 	GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
-	double gradn, grade;
-	double h = g(lat, lon, gradn, grade);
+	real_t gradn, grade;
+	real_t h = g(lat, lon, gradn, grade);
 	std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
 		    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
       }
