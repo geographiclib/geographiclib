@@ -55,7 +55,7 @@ latitude, longitude, azi, and rk.\n\
 
 int main(int argc, char* argv[]) {
   bool azimuthal = false, cassini = false, reverse = false;
-  double latlon0[3] = {0, 0};
+  double lat0 = 0, lon0 = 0;
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-r")
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 	if (++m == argc) return usage(1);
 	std::string a = std::string(argv[m]);
 	std::istringstream str(a);
-	if (!(str >> latlon0[i])) return usage(1);
+	if (!(str >> (i ? lon0 : lat0))) return usage(1);
       }
     } else
       return usage(arg != "-h");
@@ -78,7 +78,6 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  double lat0 = latlon0[0], lon0 = latlon0[1];
   if ( !(-90 <= lat0 && lat0 <= 90) ) {
     std::cerr << "Latitude not in range [-90, 90]\n";
     return 1;

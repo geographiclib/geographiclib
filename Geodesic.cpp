@@ -625,7 +625,8 @@ namespace GeographicLib {
     if (!Init())
       // Uninitialized
       return 0;
-    double sig12, ssig12, csig12, dtau2;
+    // Avoid warning about uninitialized dtau2.
+    double sig12, ssig12, csig12, dtau2 = 0;
     if (arcmode) {
       // Interpret s12 as spherical arc length
       sig12 = s12 * Constants::degree();

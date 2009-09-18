@@ -617,13 +617,13 @@ The latitude and longitude are all multiples of 10<sup>-12</sup> deg and
 should be regarded as exact, except that longitude =
 82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
 degrees.  These results are computed using Lee's formulas with
-<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
-fpprec set to 80 (so the errors in the data are probably 1/2 of the
-values quoted above).  The Maxima code, <a href="tm.mac">tm.mac</a> and
-<a href="ellint.mac">ellint.mac</a>, used to prepare this data set is
-included in the distribution.  You will need to have Maxima installed to
-use this code.  The comments at the top of <a href="tm.mac">tm.mac</a>
-illustrate how to run it.
+<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
+bfloats and fpprec set to 80 (so the errors in the data are probably 1/2
+of the values quoted above).  The Maxima code,
+<a href="tm.mac">tm.mac</a> and <a href="ellint.mac">ellint.mac</a>,
+used to prepare this data set is included in the distribution.  You will
+need to have Maxima installed to use this code.  The comments at the top
+of <a href="tm.mac">tm.mac</a> illustrate how to run it.
 
 The contents of the file are as follows:
  - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
@@ -1022,6 +1022,8 @@ References
    Solutions of Geodesics on the Ellipsoid with Application of Nested
    Equations</a>,
    Survey Review 23 (176), 88&ndash;93 (1975).
+ - A collection of some older papers on geodesics is available at
+   http://trac.osgeo.org/proj/wiki/GeodesicCalculations#TheHistory
 
 \section geoddesc Description of algorithm
 
@@ -1090,17 +1092,17 @@ Vincenty's are:
   - Return the reduced length of the geodesic.
 
 The series expansions for the integrals are obtained using <a
-href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>.  In this release,
-we use a 5th-order expansions.  This is sufficient to maintain accuracy
-for doubles.  However, preprocessor macros GEOD_TAU_ORD (for the
-distance and reduced length integrals, default 5) and GEOD_ETA_ORD (for
-the longitude integral, default 5) can be used to select any order up to
-8.  (If using long doubles, with a 64-bit fraction, it's necessary to
-set GEOD_TAU_ORD and GEOD_ETA_ORD to 6.)  The series is evaluated by a
-combination of Horner's method and Clenshaw summation.  For the direct
-problem, we use a reversion of the series for the distance to compute
-the spherical arc length and thereby complete the solution without the
-need to iterate.
+href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>.
+In this release, we use a 5th-order expansions.  This is sufficient to
+maintain accuracy for doubles.  However, preprocessor macros
+GEOD_TAU_ORD (for the distance and reduced length integrals, default 5)
+and GEOD_ETA_ORD (for the longitude integral, default 5) can be used to
+select any order up to 8.  (If using long doubles, with a 64-bit
+fraction, it's necessary to set GEOD_TAU_ORD and GEOD_ETA_ORD to 6.)
+The series is evaluated by a combination of Horner's method and Clenshaw
+summation.  For the direct problem, we use a reversion of the series for
+the distance to compute the spherical arc length and thereby complete
+the solution without the need to iterate.
 
 The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the
 series for the distance and longitude integrals.  In addition this
@@ -1161,9 +1163,9 @@ in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
 The direct calculation uses an expansion of the geodesic equations
 accurate to \e f<sup>20</sup> (approximately 1 part in 10<sup>50</sup>)
 and is computed with with
-<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
-fpprec set to 100 (so the errors in the data are probably 1/2 of the
-values quoted above).
+<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
+bfloats and fpprec set to 100 (so the errors in the data are probably
+1/2 of the values quoted above).
 
 The contents of the file are as follows:
  - 100000 entries randomly distributed
@@ -1976,10 +1978,10 @@ gradients.
 The cubic interpolation is a least-squares fit to the values on a
 12-point stencil with weights as follows:
 \verbatim
-   0 1 1 0
+   . 1 1 .
    1 2 2 1
    1 2 2 1
-   0 1 1 0
+   . 1 1 .
 \endverbatim
 The cubic is constrained to be independent of longitude when evaluating
 the height at one of the poles.  Cubic interpolation is considerably
@@ -1987,6 +1989,15 @@ more accurate than bilinear interpolation; however, in this
 implementation there are small discontinuities in the heights are cell
 boundaries.  The over-constrained cubic fit slightly reduces the
 quantization errors on average.
+
+The algorithm for the least squares fit is taken from, F. H. Lesh,
+Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30
+(1959).  This algorithm is not part of Geographic::Geoid; instead it is
+implemented as
+<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
+code which is used to precompute the matrices to convert the function
+values on the stencil into the coefficients from the cubic polynomial.
+This code is included as a comment in Geoid.cpp.
 
 The interpolations methods are quick and give good accuracy.  Here is a
 summary of the combined quantization and interpolation errors for the
@@ -2127,9 +2138,15 @@ convergence and scale.
 
 MGRS coordinates are given by truncating (instead of rounding) the
 coordinates to the requested precision.  For example is prec = -3, the
-result is the 1km square enclosing the position.  If the -n option is
-given, then, on input, an MSGS coordinate refers to the south-west
-corner of the MGRS square instead of the center.
+result is the 1km square enclosing the position, for example,
+
+    echo 38N 444800 3684700 | GeoConvert -m -p -3   ==> 38SMB4484
+
+If the -n option is given, then, on input, an MSGS coordinate refers to
+the south-west corner of the MGRS square instead of the center.  Thus:
+
+    echo 38SMB4484 | GeoConvert -u         ==> 38N 444500 3684500
+    echo 38SMB4484 | GeoConvert -u -n      ==> 38N 444000 3684000
 
 Convergence is the bearing of grid north given as degrees clockwise from
 true north.
@@ -2479,7 +2496,7 @@ interactive use.  If many heights are to be computed, GeoidEval
 allows a block of data to be read into memory and heights within the
 corresponding rectangle can then be computed without any disk acces.
 If -a is specified all the geoid data is read; in the case of
-egm2008_1, this requires about 0.5 GB of RAM.  The -c option allows
+egm2008-1, this requires about 0.5 GB of RAM.  The -c option allows
 a rectangle of data to be cached.  The evaluation of heights
 outside the cached rectangle causes the necessary data to be read
 from disk.

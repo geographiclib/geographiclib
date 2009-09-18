@@ -120,8 +120,8 @@ namespace GeographicLib {
      * throw an error because the file does not exist, is unreadable, or is
      * corrupt.
      **********************************************************************/
-    Geoid(const std::string& name, const std::string& path = "",
-	  bool cubic = true);
+    explicit Geoid(const std::string& name, const std::string& path = "",
+		   bool cubic = true);
 
     /**
      * Cache the data for the rectangular area defined by the four arguments \e

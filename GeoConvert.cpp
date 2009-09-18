@@ -73,9 +73,15 @@ convergence and scale.\n\
 \n\
 MGRS coordinates are given by truncating (instead of rounding) the\n\
 coordinates to the requested precision.  For example is prec = -3, the\n\
-result is the 1km square enclosing the position.  If the -n option is\n\
-given, then, on input, an MSGS coordinate refers to the south-west\n\
-corner of the MGRS square instead of the center.\n\
+result is the 1km square enclosing the position, for example,\n\
+\n\
+    echo 38N 444800 3684700 | GeoConvert -m -p -3   ==> 38SMB4484\n\
+\n\
+If the -n option is given, then, on input, an MSGS coordinate refers to\n\
+the south-west corner of the MGRS square instead of the center.  Thus:\n\
+\n\
+    echo 38SMB4484 | GeoConvert -u         ==> 38N 444500 3684500\n\
+    echo 38SMB4484 | GeoConvert -u -n      ==> 38N 444000 3684000\n\
 \n\
 Convergence is the bearing of grid north given as degrees clockwise from\n\
 true north.\n\

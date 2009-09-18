@@ -143,9 +143,14 @@ namespace GeographicLib {
      * - 38SMB           = 38N 450000 3650000
      * - 38SMB4484       = 38N 444500 3684500
      * - 38SMB44148470   = 38N 444145 3684705
-     * otherwise the "south-west" corner of the square is used.
+     * .
+     * Otherwise, the "south-west" corner of the square is used, i.e.,
+     * - 38SMB           = 38N 400000 3600000
+     * - 38SMB4484       = 38N 444000 3684000
+     * - 38SMB44148470   = 38N 444140 3684700
      **********************************************************************/
-    GeoCoords(const std::string& s, bool centerp = true) { Reset(s, centerp); }
+    explicit GeoCoords(const std::string& s, bool centerp = true)
+    { Reset(s, centerp); }
 
     /**
      * Specify the location in terms of \e latitude (degrees) and \e longitude

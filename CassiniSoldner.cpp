@@ -116,8 +116,6 @@ namespace GeographicLib {
 	ez = (1 + perp._zetfm1) * ( dzetc - dzet1 ),
 	j1c = ( (perp._taufm1 - perp._zetfm1) * sig1c + (et - ez) ),
 	v = - 2 * wc * csigc * ssigc + 2 * sq(csigc) * j1c;
-      //            std::cout << numit << " " << ssigc << " " << csigc
-      //      		<< " " << v << "\n";
       if (abs(v) <= eps2 || trip > 1)
 	break;
       double dv = - 2 * wc * (1 - 2 * sq(ssigc)) - 4 * csigc * ssigc * j1c;

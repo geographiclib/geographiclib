@@ -22,10 +22,6 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 
 #if !defined(GEOID_DEFAULT_PATH)
-/**
- * The order of the series relating \e lambda and \e eta when expanded in
- * powers of \e fp.
- **********************************************************************/
 #if defined(_MSC_VER)
 #define GEOID_DEFAULT_PATH "C:/cygwin/usr/local/share/GeographicLib/geoids"
 #else
@@ -45,12 +41,67 @@ namespace GeographicLib {
   // This is the transfer matrix for a 3rd order fit with a 12-point stencil
   // with weights
   //
-  //   \x -1  0  1  2
-  //   y
-  //  -1   0  1  1  0
+  //  \ x -1  0  1  2
+  //  y
+  //  -1   .  1  1  .
   //   0   1  2  2  1
   //   1   1  2  2  1
-  //   2   0  1  1  0
+  //   2   .  1  1  .
+  //
+  // A algorithm for n-dimensional polynomial fits is described in
+  //   F. H. Lesh,
+  //   Multi-dimensional least-squares polynomial curve fitting,
+  //   CACM 2, 29-30 (1959).
+  //
+  // Here's the Maxima code to generate this matrix:
+  //
+  // /* The stencil and the weights */
+  // xarr:[
+  //     0, 1,
+  // -1, 0, 1, 2,
+  // -1, 0, 1, 2,
+  //     0, 1]$
+  // yarr:[
+  //   -1,-1,
+  // 0, 0, 0, 0,
+  // 1, 1, 1, 1,
+  //    2, 2]$
+  // warr:[
+  //    1, 1,
+  // 1, 2, 2, 1,
+  // 1, 2, 2, 1,
+  //    1, 1]$
+  // 
+  // /* [x exponent, y exponent] for cubic fit */
+  // pows:[
+  // [0,0],
+  // [1,0],[0,1],
+  // [2,0],[1,1],[0,2],
+  // [3,0],[2,1],[1,2],[0,3]]$
+  // 
+  // basisvec(x,y,pows):=map(lambda([ex],(if ex[1]=0 then 1 else x^ex[1])*
+  //     (if ex[2]=0 then 1 else y^ex[2])),pows)$
+  // addterm(x,y,f,w,pows):=block([a,b,bb:basisvec(x,y,pows)],
+  //   a:w*(transpose(bb).bb),
+  //   b:(w*f) * bb,
+  //   [a,b])$
+  // 
+  // c3row(k):=block([a,b,c,pows:pows,n],
+  //   n:length(pows),
+  //   a:zeromatrix(n,n),
+  //   b:copylist(part(a,1)),
+  //   c:[a,b],
+  //   for i:1 thru length(xarr) do
+  //   c:c+addterm(xarr[i],yarr[i],if i=k then 1 else 0,warr[i],pows),
+  //   a:c[1],b:c[2],
+  //   part(transpose( a^^-1 . transpose(b)),1))$
+  // c3:[]$
+  // for k:1 thru length(warr) do c3:endcons(c3row(k),c3)$
+  // c3:apply(matrix,c3)$
+  // c0:part(ratsimp(
+  // genmatrix(yc,1,length(warr)).abs(c3).genmatrix(yd,length(pows),1)),2)$
+  // c3:c0*c3$
+
   const double Geoid::c0 = 240;	// Common denominator
   const double Geoid::c3[stencilsize * nterms] = {
       9, -18, -88,    0,  96,   90,   0,   0, -60, -20,
@@ -70,7 +121,38 @@ namespace GeographicLib {
   // Like c3, but with the coeffs of x, x^2, and x^3 constrained to be zero.
   // Use this at the N pole so that the height in independent of the longitude
   // there.
-  const double Geoid::c0n = 372;	// Common denominator
+  //
+  // Here's the Maxima code to generate this matrix (continued from above).
+  // 
+  // /* figure which terms to exclude so that fit is indep of x at y=0 */
+  // mask:part(zeromatrix(1,length(pows)),1)+1$
+  // for i:1 thru length(pows) do
+  // if pows[i][1]>0 and pows[i][2]=0 then mask[i]:0$
+  // 
+  // /* Same as c3row but with masked pows. */
+  // c3nrow(k):=block([a,b,c,powsa:[],n,d,e],
+  //   for i:1 thru length(mask) do if mask[i]>0 then
+  //   powsa:endcons(pows[i],powsa),
+  //   n:length(powsa),
+  //   a:zeromatrix(n,n),
+  //   b:copylist(part(a,1)),
+  //   c:[a,b],
+  //   for i:1 thru length(xarr) do
+  //   c:c+addterm(xarr[i],yarr[i],if i=k then 1 else 0,warr[i],powsa),
+  //   a:c[1],b:c[2],
+  //   d:part(transpose( a^^-1 . transpose(b)),1),
+  //   e:[],
+  //   for i:1 thru length(mask) do
+  //   if mask[i]>0 then (e:endcons(first(d),e),d:rest(d)) else e:endcons(0,e),
+  //   e)$
+  // c3n:[]$
+  // for k:1 thru length(warr) do c3n:endcons(c3nrow(k),c3n)$
+  // c3n:apply(matrix,c3n)$
+  // c0n:part(ratsimp(
+  //     genmatrix(yc,1,length(warr)).abs(c3n).genmatrix(yd,length(pows),1)),2)$
+  // c3n:c0n*c3n$
+
+  const double Geoid::c0n = 372; // Common denominator
   const double Geoid::c3n[stencilsize * nterms] = {
       0, 0, -131, 0,  138,  144, 0,   0, -102, -31,
       0, 0,    7, 0, -138,   42, 0,   0,  102, -31,
@@ -86,10 +168,25 @@ namespace GeographicLib {
       0, 0,   -7, 0,  -48,  -42, 0,   0,   84,  31,
   };
 
-  // Like c3n, but y -> 1-y so that h is independent of x at y = 1.
-  // Use this at the S pole so that the height in independent of the longitude
-  // there.
-  const double Geoid::c0s = 372;	// Common denominator
+  // Like c3n, but y -> 1-y so that h is independent of x at y = 1.  Use this
+  // at the S pole so that the height in independent of the longitude there.
+  //
+  // Here's the Maxima code to generate this matrix (continued from above).
+  // 
+  // /* Transform c3n to c3s by transforming y -> 1-y */
+  // vv:[
+  //      v[11],v[12],
+  // v[7],v[8],v[9],v[10],
+  // v[3],v[4],v[5],v[6],
+  //      v[1],v[2]]$
+  // poly:expand(vv.(c3n/c0n).transpose(basisvec(x,1-y,pows)))$
+  // c3sf[i,j]:=coeff(coeff(coeff(poly,v[i]),x,pows[j][1]),y,pows[j][2])$
+  // c3s:genmatrix(c3sf,length(vv),length(pows))$
+  // c0s:part(ratsimp(
+  //     genmatrix(yc,1,length(warr)).abs(c3s).genmatrix(yd,length(pows),1)),2)$
+  // c3s:c0s*c3s$
+
+  const double Geoid::c0s = 372; // Common denominator
   const double Geoid::c3s[stencilsize * nterms] = {
      18,  -36, -122,   0,  120,  135, 0,   0,  -84, -31,
     -18,   36,   -2,   0, -120,   51, 0,   0,   84, -31,
@@ -312,10 +409,10 @@ namespace GeographicLib {
     try {
       _data.clear();
       // Use swap to release memory back to system
-      std::vector< std::vector<unsigned short> > t;
+      vector< vector<unsigned short> > t;
       _data.swap(t);
     }
-    catch (std::exception&) {
+    catch (exception&) {
     }
   }
 
@@ -369,7 +466,7 @@ namespace GeographicLib {
       for (int iy = min(oysize, _ysize); iy--;)
 	_data[iy].resize(_xsize);
     }
-    catch (std::bad_alloc&) {
+    catch (bad_alloc&) {
       CacheClear();
       throw out_of_range("Insufficient memory for caching " + _filename);
     }
@@ -405,7 +502,7 @@ namespace GeographicLib {
       }
       _cache = true;
     }
-    catch (std::exception& e) {
+    catch (exception& e) {
       CacheClear();
       throw out_of_range(string("Error filling cache ") + e.what());
     }
