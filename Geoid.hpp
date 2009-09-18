@@ -10,6 +10,7 @@
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOGRAPHICLIB_GEOID_HPP "$Id$"
 
+#include "GeographicLib/Constants.hpp"
 #include <vector>
 #include <string>
 #include <fstream>
@@ -50,20 +51,21 @@ namespace GeographicLib {
 
   class Geoid {
   private:
+    typedef Math::real_t real_t;
     static const unsigned stencilsize = 12;
     static const unsigned nterms = ((3 + 1) * (3 + 2))/2; // for a cubic fit
-    static const double c0, c0n, c0s;
-    static const double c3[stencilsize * nterms];
-    static const double c3n[stencilsize * nterms];
-    static const double c3s[stencilsize * nterms];
+    static const real_t c0, c0n, c0s;
+    static const real_t c3[stencilsize * nterms];
+    static const real_t c3n[stencilsize * nterms];
+    static const real_t c3s[stencilsize * nterms];
 
     std::string _filename;
     const bool _cubic;
-    const double _a, _e2, _degree, _eps;
+    const real_t _a, _e2, _degree, _eps;
     mutable std::ifstream _file;
-    double _rlonres, _rlatres;
+    real_t _rlonres, _rlatres;
     std::string _description, _datetime;
-    double _offset, _scale, _maxerror, _rmserror;
+    real_t _offset, _scale, _maxerror, _rmserror;
     int _width, _height;
     unsigned _datastart;
     // Area cache
@@ -73,9 +75,9 @@ namespace GeographicLib {
     mutable int _xoffset, _yoffset, _xsize, _ysize;
     // Cell cache
     mutable int _ix, _iy;
-    mutable double _v00, _v01, _v10, _v11;
-    mutable double _t[nterms];
-    double rawval(int ix, int iy) const {
+    mutable real_t _v00, _v01, _v10, _v11;
+    mutable real_t _t[nterms];
+    real_t rawval(int ix, int iy) const {
       if (iy < 0) {
 	iy = -iy;
 	ix += _width/2;
@@ -90,7 +92,7 @@ namespace GeographicLib {
       if (_cache && iy >= _yoffset && iy < _yoffset + _ysize &&
 	  ((ix >= _xoffset && ix < _xoffset + _xsize) ||
 	   (ix + _width >= _xoffset && ix + _width < _xoffset + _xsize))) {
-	return double(_data
+	return real_t(_data
 		      [iy - _yoffset]
 		      [ix >= _xoffset ?
 		       ix - _xoffset :
@@ -100,11 +102,11 @@ namespace GeographicLib {
 	char a, b;
 	_file.get(a);
 	_file.get(b);
-	return double((unsigned char)(a) * 256u + (unsigned char)(b));
+	return real_t((unsigned char)(a) * 256u + (unsigned char)(b));
       }
     }
-    double height(double lat, double lon, bool gradp,
-	       double& grade, double& gradn) const;
+    real_t height(real_t lat, real_t lon, bool gradp,
+	       real_t& grade, real_t& gradn) const;
   public:
 
     /**
@@ -132,7 +134,8 @@ namespace GeographicLib {
      * file.  In this case, you can catch the error and either do nothing (you
      * will have no cache in this case) or try again with a smaller area.
      **********************************************************************/
-    void CacheArea(double south, double west, double north, double east) const;
+    void CacheArea(Math::real_t south, Math::real_t west,
+		   Math::real_t north, Math::real_t east) const;
 
     /**
      * Cache all the data.  On most computers, this is fast for data sets with
@@ -143,7 +146,8 @@ namespace GeographicLib {
      * either do nothing (you will have no cache in this case) or try using
      * Geoid::CacheArea on a specific area.
      **********************************************************************/
-    void CacheAll() const { CacheArea(-90.0, 0.0, 90.0, 360.0); }
+    void CacheAll() const { CacheArea(real_t(-90), real_t(0),
+				      real_t(90), real_t(360)); }
 
     /**
      * Clear the cache.  This never throws an error.
@@ -156,8 +160,8 @@ namespace GeographicLib {
      * error because of an error reading data from disk.  However, it will not
      * throw if (\e lat, \e lon) is within a successfully cached area.
      **********************************************************************/
-    double operator()(double lat, double lon) const {
-      double gradn, grade;
+    Math::real_t operator()(Math::real_t lat, Math::real_t lon) const {
+      real_t gradn, grade;
       return height(lat, lon, false, gradn, grade);
     }
     /**
@@ -168,7 +172,8 @@ namespace GeographicLib {
      * reading data from disk.  However, it will not throw if (\e lat, \e lon)
      * is within a successfully cached area.
      **********************************************************************/
-    double operator()(double lat, double lon, double& gradn, double& grade)
+    Math::real_t operator()(Math::real_t lat, Math::real_t lon,
+			    Math::real_t& gradn, Math::real_t& grade)
       const {
       return height(lat, lon, true, gradn, grade);
     }
@@ -200,25 +205,25 @@ namespace GeographicLib {
      * (meters).  This relies on the value being stored in the data file.  If
      * the value is absent, return -1.
      **********************************************************************/
-    double MaxError() const throw() { return _maxerror; }
+    Math::real_t MaxError() const throw() { return _maxerror; }
 
     /**
      * Return a estimate of the RMS interpolation and quantization error
      * (meters).  This relies on the value being stored in the data file.  If
      * the value is absent, return -1.
      **********************************************************************/
-    double RMSError() const throw() { return _rmserror; }
+    Math::real_t RMSError() const throw() { return _rmserror; }
 
     /**
      * Return offset (meters) for converting pixel values to geoid heights.
      **********************************************************************/
-    double Offset() const throw() { return _offset; }
+    Math::real_t Offset() const throw() { return _offset; }
 
     /**
      * Return scale (meters) for converting pixel values to geoid
      * heights.
      **********************************************************************/
-    double Scale() const throw() { return _scale; }
+    Math::real_t Scale() const throw() { return _scale; }
 
     /**
      * Return the compile-time default path for the geoid data files.
