@@ -61,13 +61,14 @@ AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Geodesic.hpp Constants.hpp
 CassiniSoldner.o: CassiniSoldner.hpp Geodesic.hpp Constants.hpp
 Geoid.o: Geoid.hpp Constants.hpp
 
-GeoConvert.o: GeoCoords.hpp UTMUPS.hpp
+GeoConvert.o: GeoCoords.hpp UTMUPS.hpp Constants.hpp
 TransverseMercatorTest.o: EllipticFunction.hpp TransverseMercatorExact.hpp \
-	TransverseMercator.hpp
-CartConvert.o: Geocentric.hpp LocalCartesian.hpp
-Geod.o: Geodesic.hpp DMS.hpp Constants.hpp
-EquidistantTest.o: Geodesic.hpp AzimuthalEquidistant.hpp CassiniSoldner.hpp
-GeoidEval.o: Geoid.hpp DMS.hpp
+	TransverseMercator.hpp Constants.hpp
+CartConvert.o: Geocentric.hpp LocalCartesian.hpp Constants.hpp
+Geod.o: Geodesic.hpp DMS.hpp Constants.hpp Constants.hpp
+EquidistantTest.o: Geodesic.hpp AzimuthalEquidistant.hpp CassiniSoldner.hpp \
+	Constants.hpp
+GeoidEval.o: Geoid.hpp DMS.hpp Constants.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \

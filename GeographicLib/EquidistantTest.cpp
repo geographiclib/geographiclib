@@ -17,6 +17,7 @@
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/AzimuthalEquidistant.hpp"
 #include "GeographicLib/CassiniSoldner.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -54,8 +55,10 @@ latitude, longitude, azi, and rk.\n\
 }
 
 int main(int argc, char* argv[]) {
+  using namespace GeographicLib;
+  typedef Math::real_t real_t;
   bool azimuthal = false, cassini = false, reverse = false;
-  double lat0 = 0, lon0 = 0;
+  real_t lat0 = 0, lon0 = 0;
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-r")
@@ -97,7 +100,7 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
-      double lat, lon, x, y, a, m;
+      real_t lat, lon, x, y, a, m;
       if (!(reverse ?
 	    (str >> x >> y) :
 	    (str >> lat >> lon)))

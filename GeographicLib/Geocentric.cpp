@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/Geocentric.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <limits>
 
@@ -21,7 +20,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geocentric::Geocentric(double a, double r)
+  Geocentric::Geocentric(real_t a, real_t r)
     throw()
     : _a(a)
     , _f(r != 0 ? 1 / r : 0)
@@ -33,16 +32,16 @@ namespace GeographicLib {
     , _e2x(_f >= 0 ? _e2 : - _e2/(1 - _e2))
     , _e4x(sq(_e2x))
     , _e2mx(_f >= 0 ? _e2m : 1/_e2m)
-    , _maxrad(2 * _ax / numeric_limits<double>::epsilon())
+    , _maxrad(2 * _ax / numeric_limits<real_t>::epsilon())
   {}
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a(),
 				     Constants::WGS84_r());
 
-  void Geocentric::Forward(double lat, double lon, double h,
-			   double& x, double& y, double& z) const throw() {
+  void Geocentric::Forward(real_t lat, real_t lon, real_t h,
+			   real_t& x, real_t& y, real_t& z) const throw() {
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
-    double
+    real_t
       phi = lat * Constants::degree(),
       lam = lon * Constants::degree(),
       sphi = sin(phi),
@@ -54,11 +53,11 @@ namespace GeographicLib {
     x *= (abs(lon) == 90 ? 0 : cos(lam));
   }
 
-  void Geocentric::Reverse(double x, double y, double z,
-			   double& lat, double& lon, double& h) const throw() {
-    double R = hypot(x, y);
+  void Geocentric::Reverse(real_t x, real_t y, real_t z,
+			   real_t& lat, real_t& lon, real_t& h) const throw() {
+    real_t R = hypot(x, y);
     h = hypot(R, z);		// Distance to center of earth
-    double phi;
+    real_t phi;
     if (h > _maxrad)
       // We really far away (> 12 million light years); treat the earth as a
       // point and h, above, is an acceptable approximation to the height.
@@ -71,53 +70,53 @@ namespace GeographicLib {
       // Treat the spherical case.  Dealing with underflow in the general case
       // with _e2 = 0 is difficult.  Origin maps to N pole same as an
       // ellipsoid.
-      phi = atan2(h != 0 ? z : 1.0, R);
+      phi = atan2(h != 0 ? z : real_t(1), R);
       h -= _ax;
     } else {
       // Treat prolate spheroids by swapping R and z here and by switching
       // the arguments to phi = atan2(...) at the end.
       if (_f < 0) swap(R, z);
-      double
+      real_t
 	p = sq(R / _ax),
 	q = _e2mx * sq(z / _ax),
 	r = (p + q - _e4x) / 6;
       if ( !(_e4x * q == 0 && r <= 0) ) {
-	double
+	real_t
 	  // Avoid possible division by zero when r = 0 by multiplying
 	  // equations for s and t by r^3 and r, resp.
 	  S = _e4x * p * q / 4,	// S = r^3 * s
 	  r2 = sq(r),
 	  r3 = r * r2,
 	  disc =  S * (2 * r3 + S);
-	double u = r;
+	real_t u = r;
 	if (disc >= 0) {
-	  double T3 = r3 + S;
+	  real_t T3 = r3 + S;
 	  // Pick the sign on the sqrt to maximize abs(T3).  This minimizes
 	  // loss of precision due to cancellation.  The result is unchanged
 	  // because of the way the T is used in definition of u.
 	  T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
 	  // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
-	  double T = cbrt(T3);	// T = r * t
+	  real_t T = cbrt(T3);	// T = r * t
 	  // T can be zero; but then r2 / T -> 0.
 	  u += T + (T != 0 ? r2 / T : 0);
 	} else {
 	  // T is complex, but the way u is defined the result is real.
-	  double ang = atan2(sqrt(-disc), r3 + S);
+	  real_t ang = atan2(sqrt(-disc), r3 + S);
 	  // There are three possible real solutions for u depending on the
 	  // multiple of 2*pi here.  We choose multiplier = 1 which leads to a
 	  // jump in the solution across the line 2 + s = 0; but this
 	  // nevertheless leads to a continuous (and accurate) solution for k.
 	  // Other choices of the multiplier lead to poorly conditioned
 	  // solutions near s = 0 (i.e., near p = 0 or q = 0).
-	  u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / 3.0);
+	  u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / real_t(3));
 	}
-	double
+	real_t
 	  v = sqrt(sq(u) + _e4x * q), // guaranteed positive
 	  // Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
 	  // e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
 	  uv = u < 0 ? _e4x * q / (v - u) : u + v, // u+v, guaranteed positive
 	  // Need to guard against w going negative due to roundoff in uv - q.
-	  w = max(0.0, _e2x * (uv - q) / (2 * v)),
+	  w = max(real_t(0), _e2x * (uv - q) / (2 * v)),
 	  // Rearrange expression for k to avoid loss of accuracy due to
 	  // subtraction.  Division by 0 not possible because uv > 0, w >= 0.
 	  k = uv / (sqrt(uv + sq(w)) + w), // guaranteed positive
@@ -137,7 +136,7 @@ namespace GeographicLib {
 	  atan2(sqrt( -6 * r), sqrt(p * _e2mx)) :
 	  atan2(sqrt(p * _e2mx), sqrt( -6 * r));
 	if (z < 0) phi = -phi;	// for tiny negative z (not for prolate)
-	h = - _a * (_f >= 0 ? _e2m : 1.0) / sqrt(1 - _e2 * sq(sin(phi)));
+	h = - _a * (_f >= 0 ? _e2m : real_t(1)) / sqrt(1 - _e2 * sq(sin(phi)));
       }
     }
     lat = phi / Constants::degree();

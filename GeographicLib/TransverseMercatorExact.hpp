@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id$"
 
-#include <cmath>
+#include "GeographicLib/Constants.hpp"
 #include "GeographicLib/EllipticFunction.hpp"
 
 namespace GeographicLib {
@@ -53,66 +53,46 @@ namespace GeographicLib {
 
   class TransverseMercatorExact {
   private:
-    static const double tol, tol1, tol2, taytol, ahypover;
+    typedef Math::real_t real_t;
+    static const real_t tol, tol1, tol2, taytol, ahypover;
     static const int numit = 10;
-    const double _a, _f, _k0, _mu, _mv, _e, _ep2;
+    const real_t _a, _f, _k0, _mu, _mv, _e, _ep2;
     const bool _extendp;
     const EllipticFunction _Eu, _Ev;
-    static inline double sq(double x) throw() { return x * x; }
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) throw()
-    { return _hypot(x, y); }
-    // These have poor relative accuracy near x = 0.  However, for mapping
-    // applications, we only need good absolute accuracy.
-    // For small arguments we would write
-    //
-    // asinh(x) = asin(x) -x^3/3-5*x^7/56-63*x^11/1408-143*x^15/5120 ...
-    // atanh(x) = atan(x) +2*x^3/3+2*x^7/7+2*x^11/11+2*x^15/15
-    //
-    // The accuracy of asinh is also bad for large negative arguments.  This is
-    // easy to fix in the definition of asinh.  Instead we call these functions
-    // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) throw() {
-      return std::log(x + std::sqrt(1 + sq(x)));
-    }
-    static inline double atanh(double x) throw() {
-      return std::log((1 + x)/(1 - x))/2;
-    }
-#else
-    static inline double hypot(double x, double y) throw()
-    { return ::hypot(x, y); }
-    static inline double asinh(double x) throw() { return ::asinh(x); }
-    static inline double atanh(double x) throw() { return ::atanh(x); }
-#endif
-    double psi(double phi) const throw();
-    double psiinv(double psi) const throw();
+    static inline real_t sq(real_t x) throw() { return x * x; }
+    static inline real_t hypot(real_t x, real_t y) throw()
+    { return Math::hypot(x, y); }
+    static inline real_t asinh(real_t x) throw() { return Math::asinh(x); }
+    static inline real_t atanh(real_t x) throw() { return Math::atanh(x); }
+    real_t psi(real_t phi) const throw();
+    real_t psiinv(real_t psi) const throw();
 
-    void zeta(double u, double snu, double cnu, double dnu,
-	      double v, double snv, double cnv, double dnv,
-	      double& psi, double& lam) const throw();
+    void zeta(real_t u, real_t snu, real_t cnu, real_t dnu,
+	      real_t v, real_t snv, real_t cnv, real_t dnv,
+	      real_t& psi, real_t& lam) const throw();
 
-    void dwdzeta(double u, double snu, double cnu, double dnu,
-		 double v, double snv, double cnv, double dnv,
-		 double& du, double& dv) const throw();
+    void dwdzeta(real_t u, real_t snu, real_t cnu, real_t dnu,
+		 real_t v, real_t snv, real_t cnv, real_t dnv,
+		 real_t& du, real_t& dv) const throw();
 
-    bool zetainv0(double psi, double lam, double& u, double& v) const throw();
-    void zetainv(double psi, double lam, double& u, double& v) const throw();
+    bool zetainv0(real_t psi, real_t lam, real_t& u, real_t& v) const throw();
+    void zetainv(real_t psi, real_t lam, real_t& u, real_t& v) const throw();
 
-    void sigma(double u, double snu, double cnu, double dnu,
-	       double v, double snv, double cnv, double dnv,
-	       double& xi, double& eta) const throw();
+    void sigma(real_t u, real_t snu, real_t cnu, real_t dnu,
+	       real_t v, real_t snv, real_t cnv, real_t dnv,
+	       real_t& xi, real_t& eta) const throw();
 
-    void dwdsigma(double u, double snu, double cnu, double dnu,
-		  double v, double snv, double cnv, double dnv,
-		  double& du, double& dv) const throw();
+    void dwdsigma(real_t u, real_t snu, real_t cnu, real_t dnu,
+		  real_t v, real_t snv, real_t cnv, real_t dnv,
+		  real_t& du, real_t& dv) const throw();
 
-    bool sigmainv0(double xi, double eta, double& u, double& v) const throw();
-    void sigmainv(double xi, double eta, double& u, double& v) const throw();
+    bool sigmainv0(real_t xi, real_t eta, real_t& u, real_t& v) const throw();
+    void sigmainv(real_t xi, real_t eta, real_t& u, real_t& v) const throw();
 
-    void Scale(double phi, double lam,
-	       double snu, double cnu, double dnu,
-	       double snv, double cnv, double dnv,
-	       double& gamma, double& k) const throw();
+    void Scale(real_t phi, real_t lam,
+	       real_t snu, real_t cnu, real_t dnu,
+	       real_t snv, real_t cnv, real_t dnv,
+	       real_t& gamma, real_t& k) const throw();
 
   public:
 
@@ -154,7 +134,7 @@ namespace GeographicLib {
      * that limit.  However, GeographicLib::TransverseMercator treats the
      * sphere exactly.
      **********************************************************************/
-    TransverseMercatorExact(double a, double r, double k0,
+    TransverseMercatorExact(Math::real_t a, Math::real_t r, Math::real_t k0,
 			    bool extendp = false) throw();
 
     /**
@@ -165,9 +145,9 @@ namespace GeographicLib {
      * No false easting or northing is added.  \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
-    void Forward(double lon0, double lat, double lon,
-		 double& x, double& y,
-		 double& gamma, double& k) const throw();
+    void Forward(Math::real_t lon0, Math::real_t lat, Math::real_t lon,
+		 Math::real_t& x, Math::real_t& y,
+		 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
@@ -177,9 +157,9 @@ namespace GeographicLib {
      * No false easting or northing is added.  The value of \e lon returned is
      * in the range [-180, 180).
      **********************************************************************/
-    void Reverse(double lon0, double x, double y,
-		 double& lat, double& lon,
-		 double& gamma, double& k) const throw();
+    void Reverse(Math::real_t lon0, Math::real_t x, Math::real_t y,
+		 Math::real_t& lat, Math::real_t& lon,
+		 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * A global instantiation of TransverseMercatorExact with the WGS84

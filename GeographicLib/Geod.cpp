@@ -94,7 +94,9 @@ The minimum value of prec is 0 (1 m accuracy) and the maximum value is\n\
   return retval;
 }
 
-std::string LatLonString(double lat, double lon, int prec, bool dms) {
+typedef GeographicLib::Math::real_t real_t;
+
+std::string LatLonString(real_t lat, real_t lon, int prec, bool dms) {
   using namespace GeographicLib;
   if (dms)
     return
@@ -108,7 +110,7 @@ std::string LatLonString(double lat, double lon, int prec, bool dms) {
   }
 }
 
-std::string AzimuthString(double azi, int prec, bool dms) {
+std::string AzimuthString(real_t azi, int prec, bool dms) {
   using namespace GeographicLib;
   if (dms)
     return DMS::Encode(azi, prec + 5, DMS::AZIMUTH);
@@ -120,10 +122,10 @@ std::string AzimuthString(double azi, int prec, bool dms) {
   }
 }
 
-double ReadAzimuth(const std::string& s) {
+real_t ReadAzimuth(const std::string& s) {
   using namespace GeographicLib;
   DMS::flag ind;
-  double azi = DMS::Decode(s, ind);
+  real_t azi = DMS::Decode(s, ind);
   if (!(azi >= -180 && azi <= 360))
     throw std::out_of_range("Azimuth " + s + " not in range [-180,360]");
   if (azi >= 180) azi -= 360;
@@ -133,8 +135,8 @@ double ReadAzimuth(const std::string& s) {
   return azi;
 }
 
-std::string DistanceStrings(double s12, double a12, bool full,
-			    bool arcmode, int prec, bool dms) {
+std::string DistanceStrings(real_t s12, real_t a12,
+			    bool full, bool arcmode, int prec, bool dms) {
   using namespace GeographicLib;
   std::ostringstream os;
   if (full || !arcmode)
@@ -150,9 +152,9 @@ std::string DistanceStrings(double s12, double a12, bool full,
   return os.str();
 }
 
-double ReadDistance(const std::string& s, bool arcmode) {
+real_t ReadDistance(const std::string& s, bool arcmode) {
   using namespace GeographicLib;
-  double s12;
+  real_t s12;
   if (arcmode) {
     DMS::flag ind;
     s12 = DMS::Decode(s, ind);
@@ -168,13 +170,14 @@ double ReadDistance(const std::string& s, bool arcmode) {
 }
 
 int main(int argc, char* argv[]) {
+  using namespace GeographicLib;
   bool linecalc = false, inverse = false, arcmode = false,
     dms = false, full = false;
-  double
+  real_t
     a = GeographicLib::Constants::WGS84_a(),
     r = GeographicLib::Constants::WGS84_r();
-  double lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
-  double azi2sense = 0;
+  real_t lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
+  real_t azi2sense = 0;
   int prec = 3;
 
   for (int m = 1; m < argc; ++m) {
@@ -200,8 +203,8 @@ int main(int argc, char* argv[]) {
 	return usage(1);
       }
     } else if (arg == "-n") {
-      a = 6378388.0;
-      r = 297.0;
+      a = 6378388;
+      r = 297;
     } else if (arg == "-e") {
       for (unsigned i = 0; i < 2; ++i) {
 	if (++m == argc) return usage(1);

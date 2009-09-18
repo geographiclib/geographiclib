@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id$"
 
-#include <cmath>
+#include "GeographicLib/Constants.hpp"
 
 namespace GeographicLib {
 
@@ -28,24 +28,17 @@ namespace GeographicLib {
    **********************************************************************/
   class PolarStereographic {
   private:
-    const double _a, _f, _k0, _e2, _e, _e2m, _c;
-    static const double tol;
+    typedef Math::real_t real_t;
+    const real_t _a, _f, _k0, _e2, _e, _e2m, _c;
+    static const real_t tol;
     static const int numit = 5;
-    static inline double sq(double x) throw() { return x * x; }
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) throw()
-    { return _hypot(x, y); }
-    static inline double atanh(double x) throw() {
-      return std::log((1 + x)/(1 - x))/2;
-    }
-#else
-    static inline double hypot(double x, double y) throw()
-    { return ::hypot(x, y); }
-    static inline double atanh(double x) throw() { return ::atanh(x); }
-#endif
+    static inline real_t sq(real_t x) throw() { return x * x; }
+    static inline real_t hypot(real_t x, real_t y) throw()
+    { return Math::hypot(x, y); }
+    static inline real_t atanh(real_t x) throw() { return Math::atanh(x); }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline double eatanhe(double x) const throw() {
+    inline real_t eatanhe(real_t x) const throw() {
       return _f >= 0 ? _e * atanh(_e * x) : - _e * atan(_e * x);
     }
   public:
@@ -55,7 +48,7 @@ namespace GeographicLib {
      * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
      * inf or flattening = 0 (i.e., a sphere).
      **********************************************************************/
-    PolarStereographic(double a, double r, double k0) throw();
+    PolarStereographic(Math::real_t a, Math::real_t r, Math::real_t k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -67,9 +60,9 @@ namespace GeographicLib {
      * range [-90, 90) for \e northp = false; \e lon should be in the range
      * [-180, 360].
      **********************************************************************/
-    void Forward(bool northp, double lat, double lon,
-		 double& x, double& y,
-		 double& gamma, double& k) const throw();
+    void Forward(bool northp, Math::real_t lat, Math::real_t lon,
+		 Math::real_t& x, Math::real_t& y,
+		 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * Convert from polar stereogrphic easting \e x (meters) and northing \e y
@@ -79,9 +72,9 @@ namespace GeographicLib {
      * scale \e k.  No false easting or northing is added.  The value of \e lon
      * returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(bool northp, double x, double y,
-		 double& lat, double& lon,
-		 double& gamma, double& k) const throw();
+    void Reverse(bool northp, Math::real_t x, Math::real_t y,
+		 Math::real_t& lat, Math::real_t& lon,
+		 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * A global instantiation of PolarStereographic with the WGS84 ellipsoid

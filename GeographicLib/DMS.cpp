@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/DMS.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
@@ -29,8 +28,8 @@ namespace GeographicLib {
   const string DMS::dmsindicators = "D'\"";
   const string DMS::components[] = {"degrees", "minutes", "seconds"};
 
-  double DMS::Decode(const std::string& dms, flag& ind) {
-    double sign = 1;
+  Math::real_t DMS::Decode(const std::string& dms, flag& ind) {
+    int sign = 1;
     unsigned
       beg = 0,
       end = unsigned(dms.size());
@@ -71,11 +70,11 @@ namespace GeographicLib {
     }
     if (end == beg)
       throw out_of_range("Empty or incomplete DMS string " + dms);
-    double ipieces[] = {0, 0, 0};
-    double fpieces[] = {0, 0, 0};
+    real_t ipieces[] = {0, 0, 0};
+    real_t fpieces[] = {0, 0, 0};
     unsigned npiece = 0;
-    double icurrent = 0;
-    double fcurrent = 0;
+    real_t icurrent = 0;
+    real_t fcurrent = 0;
     unsigned ncurrent = 0, p = beg;
     bool pointseen = false;
     unsigned digcount = 0;
@@ -152,12 +151,12 @@ namespace GeographicLib {
 			 + " not in range [0, 60)");
     // Assume check on range of result is made by calling routine (which might
     // be able to offer a better diagnostic).
-    return sign * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
+    return real_t(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
   }
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
-			 double& lat, double& lon) {
-      double a, b;
+			 real_t& lat, real_t& lon) {
+      real_t a, b;
       flag ia, ib;
       a = Decode(stra, ia);
       b = Decode(strb, ib);
@@ -189,15 +188,15 @@ namespace GeographicLib {
 	lon -= 360;
   }
 
-  string DMS::Encode(double angle, component trailing, unsigned prec,
+  string DMS::Encode(real_t angle, component trailing, unsigned prec,
 		     flag ind) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
     //
     // 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).
-    // This suffices to give full double precision for numbers in [-90,90]
+    // This suffices to give full real_t precision for numbers in [-90,90]
     prec = min(15 - 2 * unsigned(trailing), prec);
-    double scale = 1;
+    real_t scale = 1;
     for (unsigned i = 0; i < unsigned(trailing); ++i)
       scale *= 60;
     for (unsigned i = 0; i < prec; ++i)
@@ -209,16 +208,16 @@ namespace GeographicLib {
 
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
-    double
+    real_t
       idegree = floor(angle),
-      fdegree = floor((angle - idegree) * scale + 0.5) / scale;
+      fdegree = floor((angle - idegree) * scale + real_t(0.5L)) / scale;
     if (fdegree >= 1) {
       idegree += 1;
       fdegree -= 1;
     }
-    double pieces[3] = {fdegree, 0, 0};
+    real_t pieces[3] = {fdegree, 0, 0};
     for (unsigned i = 1; i <= unsigned(trailing); ++i) {
-      double
+      real_t
 	ip = floor(pieces[i - 1]),
 	fp = pieces[i - 1] - ip;
       pieces[i] = fp * 60;

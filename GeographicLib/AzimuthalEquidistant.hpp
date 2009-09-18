@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id$"
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/Constants.hpp"
 
 namespace GeographicLib {
 
@@ -34,15 +35,11 @@ namespace GeographicLib {
 
   class AzimuthalEquidistant {
   private:
+    typedef Math::real_t real_t;
     const Geodesic& _earth;
-    static const double eps;
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) throw()
-    { return _hypot(x, y); }
-#else
-    static inline double hypot(double x, double y) throw()
-    { return ::hypot(x, y); }
-#endif
+    static const real_t eps;
+    static inline real_t hypot(real_t x, real_t y) throw()
+    { return Math::hypot(x, y); }
   public:
 
     /**
@@ -65,8 +62,10 @@ namespace GeographicLib {
      * to Reverse will return the original (\e lat, \e lon) (to within
      * roundoff).
      **********************************************************************/
-    void Forward(double lat0, double lon0, double lat, double lon,
-		 double& x, double& y, double& azi, double& rk) const throw();
+    void Forward(Math::real_t lat0, Math::real_t lon0,
+		 Math::real_t lat, Math::real_t lon,
+		 Math::real_t& x, Math::real_t& y,
+		 Math::real_t& azi, Math::real_t& rk) const throw();
 
     /**
      * Convert from azimuthal equidistant easting \e x (meters) and northing \e
@@ -82,9 +81,10 @@ namespace GeographicLib {
      * to Forward will return the original (\e x, \e y) (to roundoff) only if
      * the geodesic to (\e x, \e y) is a shortest path.
      **********************************************************************/
-    void Reverse(double lat0, double lon0, double x, double y,
-		 double& lat, double& lon,
-		 double& azi, double& rk) const throw();
+    void Reverse(Math::real_t lat0, Math::real_t lon0,
+		 Math::real_t x, Math::real_t y,
+		 Math::real_t& lat, Math::real_t& lon,
+		 Math::real_t& azi, Math::real_t& rk) const throw();
 
   };
 
