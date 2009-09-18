@@ -133,13 +133,13 @@ namespace GeographicLib {
     /**
      * pi
      **********************************************************************/
-    static inline real_t pi() throw()
+    static inline Math::real_t pi() throw()
     // good for about 123-bit accuracy
     { return real_t(3.141592653589793238462643383279502884L); }
     /**
      * Factor to convert from degrees to radians
      **********************************************************************/
-    static inline real_t degree() throw() { return pi() / 180; }
+    static inline Math::real_t degree() throw() { return pi() / 180; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/
@@ -147,19 +147,20 @@ namespace GeographicLib {
     /**
      * Major radius of WGS84 ellipsoid
      **********************************************************************/
-    static inline real_t WGS84_a() throw() { return 6378137 * meter(); }
+    static inline Math::real_t WGS84_a() throw() { return 6378137 * meter(); }
     /**
      * Reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
-    static inline real_t WGS84_r() throw() { return real_t(298.257223563L); }
+    static inline Math::real_t WGS84_r() throw()
+    { return real_t(298.257223563L); }
     /**
      * Central scale factor for UTM
      **********************************************************************/
-    static inline real_t UTM_k0() throw() {return real_t(0.9996L); }
+    static inline Math::real_t UTM_k0() throw() {return real_t(0.9996L); }
     /**
      * Central scale factor for UPS
      **********************************************************************/
-    static inline real_t UPS_k0() throw() { return real_t(0.994L); }
+    static inline Math::real_t UPS_k0() throw() { return real_t(0.994L); }
     ///@}
 
     /** \name SI units
@@ -169,18 +170,18 @@ namespace GeographicLib {
      * Factor to convert from meters to meters (i.e., 1, but this lets the
      * internal system of units be changed if necessary).
      **********************************************************************/
-    static inline real_t meter() throw() { return 1; }
+    static inline Math::real_t meter() throw() { return 1; }
     /**
      * Factor to convert from kilometers to meters.
      **********************************************************************/
-    static inline real_t kilometer() throw() { return 1000 * meter(); }
+    static inline Math::real_t kilometer() throw() { return 1000 * meter(); }
     ///@}
 
     /**
      * Factor to convert from nautical miles (approximately 1 arc minute) to
      * meters.
      **********************************************************************/
-    static inline real_t nauticalmile() throw() { return 1852 * meter(); }
+    static inline Math::real_t nauticalmile() throw() { return 1852 * meter(); }
 
     /** \name Anachronistic British units
      **********************************************************************/
@@ -188,28 +189,28 @@ namespace GeographicLib {
     /**
      * Factor to convert from international feet to meters.
      **********************************************************************/
-    static inline real_t foot() throw()
+    static inline Math::real_t foot() throw()
     { return real_t(0.0254L) * 12 * meter(); }
     /**
      * Factor to convert from yards to meters.
      **********************************************************************/
-    static inline real_t yard() throw() { return 3 * foot(); }
+    static inline Math::real_t yard() throw() { return 3 * foot(); }
     /**
      * Factor to convert from fathoms to meters.
      **********************************************************************/
-    static inline real_t fathom() throw() { return 2 * yard(); }
+    static inline Math::real_t fathom() throw() { return 2 * yard(); }
     /**
      * Factor to convert from chains to meters.
      **********************************************************************/
-    static inline real_t chain() throw() { return 22 * yard(); }
+    static inline Math::real_t chain() throw() { return 22 * yard(); }
     /**
      * Factor to convert from furlongs to meters.
      **********************************************************************/
-    static inline real_t furlong() throw() { return 10 * chain(); }
+    static inline Math::real_t furlong() throw() { return 10 * chain(); }
     /**
      * Factor to convert from statute miles to meters.
      **********************************************************************/
-    static inline real_t mile() throw() { return 8 * furlong(); }
+    static inline Math::real_t mile() throw() { return 8 * furlong(); }
     ///@}
 
     /** \name Anachronistic US units
@@ -218,7 +219,7 @@ namespace GeographicLib {
     /**
      * Factor to convert from US survery feet to meters.
      **********************************************************************/
-    static inline real_t surveyfoot() throw()
+    static inline Math::real_t surveyfoot() throw()
     { return real_t(1200) / real_t(3937) * meter(); }
     ///@}
   };
