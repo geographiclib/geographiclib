@@ -11,7 +11,6 @@
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/PolarStereographic.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <cmath>
 #include <algorithm>
 #include <stdexcept>
@@ -27,28 +26,28 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const double UTMUPS::falseeasting[4] =
+  const Math::real_t UTMUPS::falseeasting[4] =
     { MGRS::upseasting * MGRS::tile, MGRS::upseasting * MGRS::tile,
       MGRS::utmeasting * MGRS::tile, MGRS::utmeasting* MGRS::tile };
-  const double UTMUPS::falsenorthing[4] =
+  const Math::real_t UTMUPS::falsenorthing[4] =
     { MGRS::upseasting * MGRS::tile, MGRS::upseasting * MGRS::tile,
       MGRS::maxutmSrow * MGRS::tile, MGRS::minutmNrow * MGRS::tile };
-  const double UTMUPS::mineasting[4] =
+  const Math::real_t UTMUPS::mineasting[4] =
     { MGRS::minupsSind * MGRS::tile,  MGRS::minupsNind * MGRS::tile,
       MGRS::minutmcol * MGRS::tile,  MGRS::minutmcol * MGRS::tile };
-  const double UTMUPS::maxeasting[4] =
+  const Math::real_t UTMUPS::maxeasting[4] =
     { MGRS::maxupsSind * MGRS::tile,  MGRS::maxupsNind * MGRS::tile,
       MGRS::maxutmcol * MGRS::tile,  MGRS::maxutmcol * MGRS::tile };
-  const double UTMUPS::minnorthing[4] =
+  const Math::real_t UTMUPS::minnorthing[4] =
     { MGRS::minupsSind * MGRS::tile,  MGRS::minupsNind * MGRS::tile,
       MGRS::minutmSrow * MGRS::tile,
       (MGRS::minutmNrow + MGRS::minutmSrow - MGRS::maxutmSrow) * MGRS::tile };
-  const double UTMUPS::maxnorthing[4] =
+  const Math::real_t UTMUPS::maxnorthing[4] =
     { MGRS::maxupsSind * MGRS::tile,  MGRS::maxupsNind * MGRS::tile,
       (MGRS::maxutmSrow + MGRS::maxutmNrow - MGRS::minutmNrow) * MGRS::tile,
       MGRS::maxutmNrow * MGRS::tile };
 
-  int UTMUPS::StandardZone(double lat, double lon)  throw() {
+  int UTMUPS::StandardZone(real_t lat, real_t lon)  throw() {
     // Assume lon is in [-180, 360].
     int zone;
     int ilat = int(floor(lat));
@@ -68,19 +67,19 @@ namespace GeographicLib {
     return zone;
   }
 
-  void UTMUPS::Forward(double lat, double lon,
-		       int& zone, bool& northp, double& x, double& y,
-		       double& gamma, double& k,
+  void UTMUPS::Forward(real_t lat, real_t lon,
+		       int& zone, bool& northp, real_t& x, real_t& y,
+		       real_t& gamma, real_t& k,
 		       int setzone) {
     CheckLatLon(lat, lon);
     northp = lat >= 0;
     zone = setzone >= 0 ? setzone : StandardZone(lat, lon);
     if (setzone > 60)
       throw out_of_range("Illegal UTM zone requested " + setzone);
-    double x1, y1;
+    real_t x1, y1;
     bool utmp = zone > 0;
     if (utmp) {
-      double
+      real_t
 	lon0 = CentralMeridian(zone),
 	dlon = lon - lon0;
       dlon = abs(dlon - 360 * floor((dlon + 180)/360));
@@ -109,8 +108,8 @@ namespace GeographicLib {
 			      (utmp ? "UTM zone " + str(zone) : "UPS"));
   }
 
-  void UTMUPS::Reverse(int zone, bool northp, double x, double y,
-		       double& lat, double& lon, double& gamma, double& k) {
+  void UTMUPS::Reverse(int zone, bool northp, real_t x, real_t y,
+		       real_t& lat, real_t& lon, real_t& gamma, real_t& k) {
     if (! (zone >= 0 && zone <= 60))
       throw out_of_range("Illegal UTM zone " + str(zone));
     CheckCoords(zone > 0, northp, x, y);
@@ -125,7 +124,7 @@ namespace GeographicLib {
       PolarStereographic::UPS.Reverse(northp, x, y, lat, lon, gamma, k);
   }
 
-  void UTMUPS::CheckLatLon(double lat, double lon) {
+  void UTMUPS::CheckLatLon(real_t lat, real_t lon) {
     if (! (lat >= -90 && lat <= 90))
       throw out_of_range("Latitude " + str(lat) +
 			      "d not in [-90d, 90d]");
@@ -134,11 +133,11 @@ namespace GeographicLib {
 			      "d not in [-180d, 360d]");
     }
 
-  bool UTMUPS::CheckCoords(bool utmp, bool northp, double x, double y,
+  bool UTMUPS::CheckCoords(bool utmp, bool northp, real_t x, real_t y,
 			   bool throwp) {
     // Limits are all multiples of 100km and are all closed on the both ends.
     // Failure tests are all negated success tests so that NaNs fail.
-    double slop = MGRS::tile;
+    real_t slop = MGRS::tile;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (x >= mineasting[ind] - slop && x <= maxeasting[ind] + slop) ) {
       if (!throwp) return false;
@@ -202,6 +201,6 @@ namespace GeographicLib {
     return os.str();
   }
 
-  double UTMUPS::UTMShift() throw() { return double(MGRS::utmNshift); }
+  Math::real_t UTMUPS::UTMShift() throw() { return real_t(MGRS::utmNshift); }
 
 } // namespace GeographicLib

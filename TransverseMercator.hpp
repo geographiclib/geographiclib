@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id$"
 
-#include <cmath>
+#include "GeographicLib/Constants.hpp"
 
 #if !defined(TM_TX_MAXPOW)
 /**
@@ -18,7 +18,8 @@
  * GeographicLib::TransverseMercator.  TM_TX_MAXPOW can be set to any integer
  * in [4, 8].
  **********************************************************************/
-#define TM_TX_MAXPOW 6
+#define TM_TX_MAXPOW \
+(sizeof(real_t) == sizeof(double) ? 6 : sizeof(real_t) == sizeof(float) ? 5 : 7)
 #endif
 
 namespace GeographicLib {
@@ -50,40 +51,20 @@ namespace GeographicLib {
 
   class TransverseMercator {
   private:
+    typedef Math::real_t real_t;
     static const int maxpow = TM_TX_MAXPOW;
-    static const double tol;
+    static const real_t tol;
     static const int numit = 5;
-    const double _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
-    double _a1, _b1, _h[maxpow], _hp[maxpow];
-    static inline double sq(double x) throw() { return x * x; }
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) throw()
-    { return _hypot(x, y); }
-    // These have poor relative accuracy near x = 0.  However, for mapping
-    // applications, we only need good absolute accuracy.
-    // For small arguments we would write
-    //
-    // asinh(x) = asin(x) -x^3/3-5*x^7/56-63*x^11/1408-143*x^15/5120 ...
-    // atanh(x) = atan(x) +2*x^3/3+2*x^7/7+2*x^11/11+2*x^15/15
-    //
-    // The accuracy of asinh is also bad for large negative arguments.  This is
-    // easy to fix in the definition of asinh.  Instead we call these functions
-    // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) throw() {
-      return std::log(x + std::sqrt(1 + sq(x)));
-    }
-    static inline double atanh(double x) throw() {
-      return std::log((1 + x)/(1 - x))/2;
-    }
-#else
-    static inline double hypot(double x, double y) throw()
-    { return ::hypot(x, y); }
-    static inline double asinh(double x) throw() { return ::asinh(x); }
-    static inline double atanh(double x) throw() { return ::atanh(x); }
-#endif
+    const real_t _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
+    real_t _a1, _b1, _h[maxpow], _hp[maxpow];
+    static inline real_t sq(real_t x) throw() { return x * x; }
+    static inline real_t hypot(real_t x, real_t y) throw()
+    { return Math::hypot(x, y); }
+    static inline real_t asinh(real_t x) throw() { return Math::asinh(x); }
+    static inline real_t atanh(real_t x) throw() { return Math::atanh(x); }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline double eatanhe(double x) const throw() {
+    inline real_t eatanhe(real_t x) const throw() {
       return _f >= 0 ? _e * atanh(_e * x) : - _e * atan(_e * x);
     }
   public:
@@ -94,7 +75,7 @@ namespace GeographicLib {
      * inf or flattening = 0 (i.e., a sphere).  Negative \e r indicates a
      * prolate spheroid.
      **********************************************************************/
-    TransverseMercator(double a, double r, double k0) throw();
+    TransverseMercator(Math::real_t a, Math::real_t r, Math::real_t k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -104,9 +85,9 @@ namespace GeographicLib {
      * No false easting or northing is added. \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
-    void Forward(double lon0, double lat, double lon,
-		 double& x, double& y,
-		 double& gamma, double& k) const throw();
+    void Forward(Math::real_t lon0, Math::real_t lat, Math::real_t lon,
+		 Math::real_t& x, Math::real_t& y,
+		 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
@@ -116,9 +97,9 @@ namespace GeographicLib {
      * No false easting or northing is added.  The value of \e lon returned is
      * in the range [-180, 180).
      **********************************************************************/
-    void Reverse(double lon0, double x, double y,
-		 double& lat, double& lon,
-		 double& gamma, double& k) const throw();
+    void Reverse(Math::real_t lon0, Math::real_t x, Math::real_t y,
+		 Math::real_t& lat, Math::real_t& lon,
+		 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * A global instantiation of TransverseMercator with the WGS84 ellipsoid

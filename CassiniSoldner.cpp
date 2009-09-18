@@ -9,7 +9,6 @@
  **********************************************************************/
 
 #include "GeographicLib/CassiniSoldner.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <cmath>
 #include <limits>
 
@@ -22,34 +21,34 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const double CassiniSoldner::eps1 =
-    0.01 * sqrt(numeric_limits<double>::epsilon());
-  const double CassiniSoldner::eps2 = sqrt(numeric_limits<double>::min());
+  const Math::real_t CassiniSoldner::eps1 =
+    real_t(0.01L) * sqrt(numeric_limits<real_t>::epsilon());
+  const Math::real_t CassiniSoldner::eps2 = sqrt(numeric_limits<real_t>::min());
 
-  void CassiniSoldner::Reset(double lat0, double lon0) throw() {
-    _meridian = _earth.Line(lat0, lon0, 0.0);
-    double phi = LatitudeOrigin() * Constants::degree();
+  void CassiniSoldner::Reset(real_t lat0, real_t lon0) throw() {
+    _meridian = _earth.Line(lat0, lon0, real_t(0));
+    real_t phi = LatitudeOrigin() * Constants::degree();
     _sbet0 = _earth._f1 * sin(phi);
     _cbet0 = abs(LatitudeOrigin()) == 90 ? 0 : cos(phi);
     Geodesic::SinCosNorm(_sbet0, _cbet0);
   }
 
-  void CassiniSoldner::Forward(double lat, double lon,
-			       double& x, double& y,
-			       double& azi, double& m) const throw() {
+  void CassiniSoldner::Forward(real_t lat, real_t lon,
+			       real_t& x, real_t& y,
+			       real_t& azi, real_t& m) const throw() {
     if (!Init())
       return;
-    double dlon = Geodesic::AngNormalize(lon - LongitudeOrigin());
-    double sig12, s12, azi1, azi2, m12;
+    real_t dlon = Geodesic::AngNormalize(lon - LongitudeOrigin());
+    real_t sig12, s12, azi1, azi2, m12;
     lat = Geodesic::AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon),
 			   s12, azi1, azi2, m12);
     if (sig12 < 100 * eps2)
       sig12 = s12 = 0;
-    sig12 *= 0.5;
-    s12 *= 0.5;
+    sig12 *= real_t(0.5L);
+    s12 *= real_t(0.5L);
     if (s12 == 0) {
-      double da = (azi2 - azi1)/2;
+      real_t da = (azi2 - azi1)/2;
       if (abs(dlon) <= 90) {
 	azi1 = 90 - da;
 	azi2 = 90 + da;
@@ -68,49 +67,51 @@ namespace GeographicLib {
     GeodesicLine perp = _earth.Line(lat, dlon, azi2);
     m = Scale(perp, sig12);
 
-    double
+    real_t
       sbet1 = lat >=0 ? perp._calp0 : -perp._calp0,
       cbet1 = abs(dlon) <= 90 ? abs(perp._salp0) : -abs(perp._salp0),
       sbet01 = sbet1 * _cbet0 - cbet1 * _sbet0,
       cbet01 = cbet1 * _cbet0 + sbet1 * _sbet0,
       sig01 = atan2(sbet01, cbet01) / Constants::degree();
-    double latx, lonx, azix, m12x;
+    real_t latx, lonx, azix, m12x;
     y = _meridian.Position(sig01, latx, lonx, azix, m12x, true);
   }
 
-  void CassiniSoldner::Reverse(double x, double y,
-			       double& lat, double& lon,
-			       double& azi, double& m) const throw() {
+  void CassiniSoldner::Reverse(real_t x, real_t y,
+			       real_t& lat, real_t& lon,
+			       real_t& azi, real_t& m) const throw() {
     if (!Init())
       return;
-    double lat1, lon1;
-    double azi0, m0;
+    real_t lat1, lon1;
+    real_t azi0, m0;
     _meridian.Position(y, lat1, lon1, azi0, m0);
-    GeodesicLine perp = _earth.Line(lat1, lon1, azi0 + 90.0);
-    double sig12 = perp.Position(x, lat, lon, azi, m0);
+    GeodesicLine perp = _earth.Line(lat1, lon1, azi0 + 90);
+    real_t sig12 = perp.Position(x, lat, lon, azi, m0);
     m = Scale(perp, sig12);
   }
 
-  double CassiniSoldner::Scale(const GeodesicLine& perp,
-			       double sig12) const throw() {
+  Math::real_t CassiniSoldner::Scale(const GeodesicLine& perp,
+				     real_t sig12) const throw() {
     if (sig12 == 0)
       return 1;
     // Result is symmetric in sig12, however numerical accuracy is better if
     // sigc-sig2 is smaller.
     sig12 = abs(sig12) * Constants::degree();
     // Point on meridian, sigma = pi/2
-    double
+    real_t
       // ssig1 = 1, csig1 = 0,
-      dtau1 = Geodesic::SinSeries(1.0, 0.0, perp._tauCoeff, Geodesic::ntau),
-      dzet1 = Geodesic::SinSeries(1.0, 0.0, perp._zetCoeff, Geodesic::nzet);
+      dtau1 = Geodesic::SinSeries(real_t(1), real_t(0), perp._tauCoeff,
+				  Geodesic::ntau),
+      dzet1 = Geodesic::SinSeries(real_t(1), real_t(0), perp._zetCoeff,
+				  Geodesic::nzet);
     // Find semi-conjugate point -- initial guess, sigma = pi
-    double ssigc = 0, csigc = -1;
-    double wc, dtauc, dzetc;
+    real_t ssigc = 0, csigc = -1;
+    real_t wc, dtauc, dzetc;
     for (unsigned trip = 0, numit = 0; numit < maxit; ++numit) {
       wc = sqrt(1 + perp._u2 * sq(ssigc));
       dtauc = Geodesic::SinSeries(ssigc, csigc, perp._tauCoeff, Geodesic::ntau);
       dzetc = Geodesic::SinSeries(ssigc, csigc, perp._zetCoeff, Geodesic::nzet);
-      double
+      real_t
 	sig1c = atan2(-csigc, ssigc),
 	et = (1 + perp._taufm1) * ( dtauc - dtau1 ),
 	ez = (1 + perp._zetfm1) * ( dzetc - dzet1 ),
@@ -118,9 +119,9 @@ namespace GeographicLib {
 	v = - 2 * wc * csigc * ssigc + 2 * sq(csigc) * j1c;
       if (abs(v) <= eps2 || trip > 1)
 	break;
-      double dv = - 2 * wc * (1 - 2 * sq(ssigc)) - 4 * csigc * ssigc * j1c;
-      double dsig = -v/dv;
-      double
+      real_t dv = - 2 * wc * (1 - 2 * sq(ssigc)) - 4 * csigc * ssigc * j1c;
+      real_t dsig = -v/dv;
+      real_t
 	sdsigc = sin(dsig),
 	cdsigc = cos(dsig),
 	nssigc = ssigc * cdsigc + csigc * sdsigc;
@@ -130,10 +131,10 @@ namespace GeographicLib {
 	++trip;
     }
     // Scale meridian to conjugate
-    double m1c = - sqrt(1 + perp._u2 ) * csigc;
+    real_t m1c = - sqrt(1 + perp._u2 ) * csigc;
 
     // Target point, sigma = sig12 + pi/2
-    double
+    real_t
       ssig2 = cos(sig12), csig2 = -sin(sig12),
       dtau2 = Geodesic::SinSeries(ssig2, csig2, perp._tauCoeff, Geodesic::ntau),
       dzet2 = Geodesic::SinSeries(ssig2, csig2, perp._zetCoeff, Geodesic::nzet),

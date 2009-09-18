@@ -10,7 +10,6 @@
 #include "GeographicLib/GeoCoords.hpp"
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/DMS.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <vector>
 #include <sstream>
 #include <stdexcept>
@@ -65,7 +64,7 @@ namespace GeographicLib {
 	const char* c = sa[coordind + i].c_str();
 	char* q;
 	errno = 0;
-	double x = strtod(c, &q);
+	real_t x = strtod(c, &q);
 	if (errno ==  ERANGE || !isfinite(x))
 	  throw out_of_range("Number " + sa[coordind + i] + " out of range");
 	if (q - c != int(sa[coordind + i].size()))
@@ -117,21 +116,21 @@ namespace GeographicLib {
     return mgrs;
   }
 
-  void GeoCoords::UTMUPSString(int zone, double easting, double northing,
+  void GeoCoords::UTMUPSString(int zone, real_t easting, real_t northing,
 			       int prec, std::string& utm) const {
     ostringstream os;
     prec = max(-5, min(9, prec));
-    double scale = prec < 0 ? pow(10.0, -prec) : 1.0;
+    real_t scale = prec < 0 ? pow(real_t(10), -prec) : real_t(1);
     os << UTMUPS::EncodeZone(zone, _northp) << fixed << setfill('0');
     os << " "
        << setprecision(max(0, prec))
        << easting / scale;
-    if (prec < 0 && abs(easting / scale) > 0.5)
+    if (prec < 0 && abs(easting / scale) > real_t(0.5L))
       os << setw(-prec) << 0;
     os << " "
        << setprecision(max(0, prec))
        << northing / scale;
-    if (prec < 0 && abs(northing / scale) > 0.5)
+    if (prec < 0 && abs(northing / scale) > real_t(0.5L))
       os << setw(-prec) << 0;
     utm = os.str();
   }

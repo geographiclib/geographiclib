@@ -16,6 +16,7 @@
 #include "GeographicLib/EllipticFunction.hpp"
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -60,6 +61,8 @@ one).\n\
 }
 
 int main(int argc, char* argv[]) {
+  using namespace GeographicLib;
+  typedef Math::real_t real_t;
   bool reverse = false, testing = false, series = false;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
@@ -75,15 +78,15 @@ int main(int argc, char* argv[]) {
       return usage(arg != "-h");
   }
 
-  double e, a;
+  real_t e, a;
   if (testing) {
-    e = 0.1;
+    e = real_t(0.1L);
     GeographicLib::EllipticFunction temp(e * e);
     a = 1/temp.E();
   }
   const GeographicLib::TransverseMercatorExact& TME = testing ?
     GeographicLib::TransverseMercatorExact
-    (a, (std::sqrt(1 - e * e) + 1) / (e * e), 1.0, true) :
+    (a, (std::sqrt(1 - e * e) + 1) / (e * e), real_t(1), true) :
     GeographicLib::TransverseMercatorExact::UTM;
 
   const GeographicLib::TransverseMercator& TMS =
@@ -95,22 +98,22 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
-      double lat, lon, x, y;
+      real_t lat, lon, x, y;
       if (!(reverse ?
 	    (str >> x >> y) :
 	    (str >> lat >> lon)))
 	throw  std::out_of_range("Incomplete input: " + s);
-      double gamma, k;
+      real_t gamma, k;
       if (reverse) {
 	if (series)
-	  TMS.Reverse(0.0, x, y, lat, lon, gamma, k);
+	  TMS.Reverse(real_t(0), x, y, lat, lon, gamma, k);
 	else
-	  TME.Reverse(0.0, x, y, lat, lon, gamma, k);
+	  TME.Reverse(real_t(0), x, y, lat, lon, gamma, k);
       } else {
 	if (series)
-	  TMS.Forward(0.0, lat, lon, x, y, gamma, k);
+	  TMS.Forward(real_t(0), lat, lon, x, y, gamma, k);
 	else
-	  TME.Forward(0.0, lat, lon, x, y, gamma, k);
+	  TME.Forward(real_t(0), lat, lon, x, y, gamma, k);
       }
       std::cout << lat << " " << lon << " "
 		<< x << " " << y << " "

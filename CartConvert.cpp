@@ -15,6 +15,7 @@
 
 #include "GeographicLib/Geocentric.hpp"
 #include "GeographicLib/LocalCartesian.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -46,8 +47,10 @@ If -r is given the reverse transformation is performed.\n\
 }
 
 int main(int argc, char* argv[]) {
+  using namespace GeographicLib;
+  typedef Math::real_t real_t;
   bool localcartesian = false, reverse = false;
-  double latlonh0[3] = {0, 0, 0};
+  real_t latlonh0[3] = {0, 0, 0};
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-r")
@@ -83,7 +86,7 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
-      double lat, lon, h, x, y, z;
+      real_t lat, lon, h, x, y, z;
       if (!(reverse ?
 	    (str >> x >> y >> z) :
 	    (str >> lat >> lon >> h)))

@@ -9,7 +9,6 @@
 
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/UTMUPS.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <stdexcept>
 #include <limits>
 
@@ -22,13 +21,13 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const double MGRS::eps =
+  const Math::real_t MGRS::eps =
     // 25 = ceil(log_2(2e7)) -- use half circumference here because northing
     // 195e5 is a legal in the "southern" hemisphere.
-    pow(0.5, numeric_limits<double>::digits - 25);
-  const double MGRS::angeps =
+    pow(real_t(0.5L), numeric_limits<real_t>::digits - 25);
+  const Math::real_t MGRS::angeps =
     // 7 = ceil(log_2(90))
-    pow(0.5, numeric_limits<double>::digits - 7);
+    pow(real_t(0.5L), numeric_limits<real_t>::digits - 7);
   const string MGRS::hemispheres = "SN";
   const string MGRS::utmcols[3] =
     { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
@@ -52,7 +51,7 @@ namespace GeographicLib {
     { maxupsSind, maxupsNind,
       maxutmNrow + (maxutmSrow - minutmNrow), maxutmNrow };
 
-  void MGRS::Forward(int zone, bool northp, double x, double y, double lat,
+  void MGRS::Forward(int zone, bool northp, real_t x, real_t y, real_t lat,
 		     int prec, std::string& mgrs) {
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
@@ -75,7 +74,7 @@ namespace GeographicLib {
     int
       xh = int(floor(x)) / tile,
       yh = int(floor(y)) / tile;
-    double
+    real_t
       xf = x - tile * xh,
       yf = y - tile * yh;
     if (utmp) {
@@ -99,7 +98,7 @@ namespace GeographicLib {
 				       northp ? minupsNind : minupsSind)];
       mgrs[z++] = upsrows[northp][yh - (northp ? minupsNind : minupsSind)];
     }
-    double mult = pow(double(base), min(prec - tilelevel, 0));
+    real_t mult = pow(real_t(base), min(prec - tilelevel, 0));
     int
       ix = int(floor(xf * mult)),
       iy = int(floor(yf * mult));
@@ -112,7 +111,7 @@ namespace GeographicLib {
     if (prec > tilelevel) {
       xf -= floor(xf * mult);
       yf -= floor(yf * mult);
-      mult = pow(double(base), prec - tilelevel);
+      mult = pow(real_t(base), prec - tilelevel);
       ix = int(floor(xf * mult));
       iy = int(floor(yf * mult));
       for (int c = prec - tilelevel; c--;) {
@@ -124,9 +123,9 @@ namespace GeographicLib {
     }
   }
 
-  void MGRS::Forward(int zone, bool northp, double x, double y,
+  void MGRS::Forward(int zone, bool northp, real_t x, real_t y,
 		     int prec, std::string& mgrs) {
-    double lat, lon;
+    real_t lat, lon;
     if (zone)
       UTMUPS::Reverse(zone, northp, x, y, lat, lon);
     else
@@ -136,7 +135,7 @@ namespace GeographicLib {
   }
 
   void MGRS::Reverse(const std::string& mgrs,
-		     int& zone, bool& northp, double& x, double& y,
+		     int& zone, bool& northp, real_t& x, real_t& y,
 		     int& prec, bool centerp) {
     int
       p = 0,
@@ -198,7 +197,7 @@ namespace GeographicLib {
       irow += northp ? minupsNind : minupsSind;
     }
     prec = (len - p)/2;
-    double unit = tile;
+    real_t unit = tile;
     x = unit * icol;
     y = unit * irow;
     for (int i = 0; i < prec; ++i) {
@@ -227,7 +226,7 @@ namespace GeographicLib {
     }
   }
 
-  void MGRS::CheckCoords(bool utmp, bool& northp, double& x, double& y) {
+  void MGRS::CheckCoords(bool utmp, bool& northp, real_t& x, real_t& y) {
     // Limits are all multiples of 100km and are all closed on the lower end
     // and open on the upper end -- and this is reflected in the error
     // messages.  However if a coordinate lies on the excluded upper end (e.g.,
@@ -287,11 +286,13 @@ namespace GeographicLib {
 
     // Estimate center row number for latitude band
     // 90 deg = 100 tiles; 1 band = 8 deg = 100*8/90 tiles
-    double c = 100 * (8 * iband + 4)/90.0;
+    real_t c = 100 * (8 * iband + 4)/real_t(90);
     bool northp = iband >= 0;
     int
-      minrow = iband > -10 ? int(floor(c - 4.3 - 0.1 * northp)) : -90,
-      maxrow = iband <   9 ? int(floor(c + 4.4 - 0.1 * northp)) :  94,
+      minrow = iband > -10 ?
+      int(floor(c - real_t(4.3L) - real_t(0.1L) * northp)) : -90,
+      maxrow = iband <   9 ?
+      int(floor(c + real_t(4.4L) - real_t(0.1L) * northp)) :  94,
       baserow = (minrow + maxrow) / 2 - utmrowperiod / 2;
     // Add maxutmSrow = 5 * utmrowperiod to ensure operand is positive
     irow = (irow - baserow + maxutmSrow) % utmrowperiod + baserow;

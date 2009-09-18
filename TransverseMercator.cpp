@@ -40,7 +40,6 @@
  **********************************************************************/
 
 #include "GeographicLib/TransverseMercator.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <limits>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id$"
@@ -52,10 +51,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const double TransverseMercator::tol =
-    0.1*sqrt(numeric_limits<double>::epsilon());
+  const Math::real_t TransverseMercator::tol =
+    real_t(0.1L)*sqrt(numeric_limits<real_t>::epsilon());
 
-  TransverseMercator::TransverseMercator(double a, double r, double k0)
+  TransverseMercator::TransverseMercator(real_t a, real_t r, real_t k0)
     throw()
     : _a(a)
     , _f(r != 0 ? 1 / r : 0)
@@ -65,7 +64,7 @@ namespace GeographicLib {
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) ) )
       // See, for example, Lee (1976), p 100.
-    , _c( sqrt(_e2m) * exp(eatanhe(1.0)) )
+    , _c( sqrt(_e2m) * exp(eatanhe(real_t(1))) )
     , _n(_f / (2 - _f))
   {
     switch (maxpow) {
@@ -123,8 +122,8 @@ namespace GeographicLib {
       _h[3] = sq(sq(_n))*(_n*(_n*(14928352*_n-9132761)-1742400)+2176515)/
 	79833600;
       _h[4] = sq(sq(_n))*_n*((-8005831*_n-1741552)*_n+1814868)/63866880;
-      _h[5] = (268433009-261810608*_n)*sq(sq(_n))*sq(_n)/8302694400.0;
-      _h[6] = 219941297*sq(sq(_n))*sq(_n)*_n/5535129600.0;
+      _h[5] = (268433009-261810608*_n)*sq(sq(_n))*sq(_n)/8302694400LL;
+      _h[6] = 219941297*sq(sq(_n))*sq(_n)*_n/5535129600LL;
       _hp[0] = _n*(_n*(_n*(_n*(_n*(_n*(1804025*_n+2020096)-4267200)+2204160)+
 			   3024000)-6451200)+4838400)/9676800;
       _hp[1] = sq(_n)*(_n*(_n*(_n*(_n*(4626384*_n-9917165)+4316160)+3743040)-
@@ -134,8 +133,9 @@ namespace GeographicLib {
       _hp[3] = sq(sq(_n))*(_n*(_n*(155912000*_n+72618271)-85060800)+24532695)/
 	79833600;
       _hp[4] = sq(sq(_n))*_n*(_n*(102508609*_n-109404448)+27505368)/63866880;
-      _hp[5] = (2760926233.0-12282192400.0*_n)*sq(sq(_n))*sq(_n)/4151347200.0;
-      _hp[6] = 1522256789.0*sq(sq(_n))*sq(_n)*_n/1383782400.0;
+      _hp[5] = (2760926233LL-12282192400LL*_n)*sq(sq(_n))*
+	sq(_n)/4151347200LL;
+      _hp[6] = 1522256789LL*sq(sq(_n))*sq(_n)*_n/1383782400LL;
       break;
     case 8:
       _b1 = 1/(1+_n)*(sq(_n)*(sq(_n)*(sq(_n)*(25*sq(_n)+64)+256)+4096)+16384)/
@@ -148,15 +148,15 @@ namespace GeographicLib {
 	348364800;
       _h[2] = sq(_n)*_n*(_n*(_n*(_n*((101880889-232468668*_n)*_n+39205760)-
 				 29795040)-28131840)+22619520)/638668800;
-      _h[3] = sq(sq(_n))*(_n*(_n*(_n*(324154477*_n+1433121792.0)-876745056)-
-			      167270400)+208945440)/7664025600.0;
+      _h[3] = sq(sq(_n))*(_n*(_n*(_n*(324154477*_n+1433121792LL)-876745056)-
+			      167270400)+208945440)/7664025600LL;
       _h[4] = sq(sq(_n))*_n*(_n*(_n*(457888660*_n-312227409)-67920528)+
-			     70779852)/2490808320.0;
-      _h[5] = sq(sq(_n))*sq(_n)*((-19841813847.0*_n-3665348512.0)*_n+
-				 3758062126.0)/116237721600.0;
-      _h[6] = (1979471673.0-1989295244.0*_n)*sq(sq(_n))*sq(_n)*_n/
-	49816166400.0;
-      _h[7] = 191773887257.0*sq(sq(sq(_n)))/3719607091200.0;
+			     70779852)/2490808320LL;
+      _h[5] = sq(sq(_n))*sq(_n)*((-19841813847LL*_n-3665348512LL)*_n+
+				 3758062126LL)/116237721600LL;
+      _h[6] = (1979471673LL-1989295244LL*_n)*sq(sq(_n))*sq(_n)*_n/
+	49816166400LL;
+      _h[7] = 191773887257LL*sq(sq(sq(_n)))/3719607091200LL;
       _hp[0] = _n*(_n*(_n*(_n*(_n*(_n*((37884525-75900428*_n)*_n+42422016)-
 				   89611200)+46287360)+63504000)-135475200)+
 		   101606400)/203212800;
@@ -165,16 +165,16 @@ namespace GeographicLib {
 	174182400;
       _hp[2] = sq(_n)*_n*(_n*(_n*(_n*(_n*(318729724*_n-738126169)+294981280)+
 				  178924680)-234938880)+81164160)/319334400;
-      _hp[3] = sq(sq(_n))*(_n*(_n*((14967552000.0-40176129013.0*_n)*_n+
-				   6971354016.0)-8165836800.0)+2355138720.0)/
-	7664025600.0;
-      _hp[4] = sq(sq(_n))*_n*(_n*(_n*(10421654396.0*_n+3997835751.0)-
-				  4266773472.0)+1072709352.0)/2490808320.0;
-      _hp[5] = sq(sq(_n))*sq(_n)*(_n*(175214326799.0*_n-171950693600.0)+
-				  38652967262.0)/58118860800.0;
-      _hp[6] = (13700311101.0-67039739596.0*_n)*sq(sq(_n))*sq(_n)*_n/
-	12454041600.0;
-      _hp[7] = 1424729850961.0*sq(sq(sq(_n)))/743921418240.0;
+      _hp[3] = sq(sq(_n))*(_n*(_n*((14967552000LL-40176129013LL*_n)*_n+
+				   6971354016LL)-8165836800LL)+2355138720LL)/
+	7664025600LL;
+      _hp[4] = sq(sq(_n))*_n*(_n*(_n*(10421654396LL*_n+3997835751LL)-
+				  4266773472LL)+1072709352LL)/2490808320LL;
+      _hp[5] = sq(sq(_n))*sq(_n)*(_n*(175214326799LL*_n-171950693600LL)+
+				  38652967262LL)/58118860800LL;
+      _hp[6] = (13700311101LL-67039739596LL*_n)*sq(sq(_n))*sq(_n)*_n/
+	12454041600LL;
+      _hp[7] = 1424729850961LL*sq(sq(sq(_n)))/743921418240LL;
       break;
     default:
       STATIC_ASSERT(maxpow >= 4 && maxpow <= 8, "Bad value of maxpow");
@@ -188,9 +188,9 @@ namespace GeographicLib {
   TransverseMercator::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
 			  Constants::UTM_k0());
 
-  void TransverseMercator::Forward(double lon0, double lat, double lon,
-				   double& x, double& y,
-				   double& gamma, double& k) const throw() {
+  void TransverseMercator::Forward(real_t lon0, real_t lat, real_t lon,
+				   real_t& x, real_t& y,
+				   real_t& gamma, real_t& k) const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
       lon -= lon0 - 360;
@@ -211,7 +211,7 @@ namespace GeographicLib {
 	latsign = -1;
       lon = 180 - lon;
     }
-    double
+    real_t
       phi = lat * Constants::degree(),
       lam = lon * Constants::degree();
     // q is isometric latitude
@@ -234,9 +234,9 @@ namespace GeographicLib {
     //   sinh(etap) = cos(beta)*sin(lam)/denom = sech(q)*sin(lam)/denom
     //
     // to eliminate beta and derive more stable expressions for xi',eta'
-    double etap, xip;
+    real_t etap, xip;
     if (lat < 90) {
-      double
+      real_t
 	qp = asinh(tan(phi)),
 	q = qp - eatanhe(sin(phi));
       xip = atan2(sinh(q), cos(lam));
@@ -307,16 +307,16 @@ namespace GeographicLib {
     //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = n*x, B = x ]
     //    c[0] = 1; c[k] = 2*k*_hp[k-1]
     //    S = (c[0] - y[2]) + y[1] * cos(x)
-    double
+    real_t
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta')
 #if 0
-    double			// Accumulators for zeta
+    real_t			// Accumulators for zeta
       xi0 = _hp[maxpow - 1], eta0 = 0,
       xi1 = 0, eta1 = 0,
       xi2, eta2;
-    double			// Accumulators for dzeta/dzeta'
+    real_t			// Accumulators for dzeta/dzeta'
       yr0 = 2 * maxpow * _hp[maxpow - 1], yi0 = 0,
       yr1 = 0, yi1 = 0,
       yr2, yi2;
@@ -330,10 +330,10 @@ namespace GeographicLib {
     }
 #else
     int n = maxpow;
-    double
+    real_t
       xi0 = (n & 1 ? _hp[n - 1] : 0), eta0 = 0,
       xi1 = 0, eta1 = 0;
-    double			// Accumulators for dzeta/dzeta'
+    real_t			// Accumulators for dzeta/dzeta'
       yr0 = (n & 1 ? 2 * maxpow * _hp[--n] : 0), yi0 = 0,
       yr1 = 0, yi1 = 0;
     while (n) {
@@ -353,7 +353,7 @@ namespace GeographicLib {
     yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
     yi1 =   - yi1 + ai * yr0 + ar * yi0;
     ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta')
-    double
+    real_t
       xi  = xip  + ar * xi0 - ai * eta0,
       eta = etap + ai * xi0 + ar * eta0;
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
@@ -369,13 +369,13 @@ namespace GeographicLib {
     k *= _k0;
   }
 
-  void TransverseMercator::Reverse(double lon0, double x, double y,
-				   double& lat, double& lon,
-				   double& gamma, double& k) const throw() {
+  void TransverseMercator::Reverse(real_t lon0, real_t x, real_t y,
+				   real_t& lat, real_t& lon,
+				   real_t& gamma, real_t& k) const throw() {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of q.
-    double
+    real_t
       xi = y / (_a1 * _k0),
       eta = x / (_a1 * _k0);
     // Explicitly enforce the parity
@@ -387,16 +387,16 @@ namespace GeographicLib {
     bool backside = xi > Constants::pi()/2;
     if (backside)
       xi = Constants::pi() - xi;
-    double
+    real_t
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
 #if 0
-    double			// Accumulators for zeta'
+    real_t			// Accumulators for zeta'
       xip0 = -_h[maxpow - 1], etap0 = 0,
       xip1 = 0, etap1 = 0,
       xip2, etap2;
-    double			// Accumulators for dzeta'/dzeta
+    real_t			// Accumulators for dzeta'/dzeta
       yr0 = - 2 * maxpow * _h[maxpow - 1], yi0 = 0,
       yr1 = 0, yi1 = 0,
       yr2, yi2;
@@ -410,10 +410,10 @@ namespace GeographicLib {
     }
 #else
     int n = maxpow;
-    double			// Accumulators for zeta'
+    real_t			// Accumulators for zeta'
       xip0 = (n & 1 ? -_h[n - 1] : 0), etap0 = 0,
       xip1 = 0, etap1 = 0;
-    double			// Accumulators for dzeta'/dzeta
+    real_t			// Accumulators for dzeta'/dzeta
       yr0 = (n & 1 ? - 2 * maxpow * _h[--n] : 0), yi0 = 0,
       yr1 = 0, yi1 = 0;
     while (n) {
@@ -433,7 +433,7 @@ namespace GeographicLib {
     yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
     yi1 =   - yi1 + ai * yr0 + ar * yi0;
     ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta)
-    double
+    real_t
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
@@ -446,8 +446,8 @@ namespace GeographicLib {
     // 	 q = asinh(tan(beta))
     //
     // the following eliminates beta and is more stable
-    double lam, phi;
-    double
+    real_t lam, phi;
+    real_t
       s = sinh(etap),
       c = cos(xip),
       r = hypot(s, c);
@@ -456,12 +456,12 @@ namespace GeographicLib {
       // Use Newton's method to solve
       // q = qp - e * atanh(e * tanh(qp))
       // for qp = asinh(tan(phi))
-      double
+      real_t
 	q = asinh(sin(xip)/r),
 	qp = q;
       // min iterations = 1, max iterations = 3; mean = 2.8
       for (int i = 0; i < numit; ++i) {
-	double
+	real_t
 	  t = tanh(qp),
 	  dqp = -(qp - eatanhe(t) - q) * (1 - _e2 * sq(t)) / _e2m;
 	qp += dqp;

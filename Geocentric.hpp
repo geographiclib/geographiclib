@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id$"
 
-#include <cmath>
+#include "GeographicLib/Constants.hpp"
 
 namespace GeographicLib {
 
@@ -44,20 +44,12 @@ namespace GeographicLib {
 
   class Geocentric {
   private:
-    const double _a, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
-    static inline double sq(double x) throw() { return x * x; }
-#if defined(_MSC_VER)
-    static inline double hypot(double x, double y) throw()
-    { return _hypot(x, y); }
-    static inline double cbrt(double x) throw() {
-      double y = std::pow(std::abs(x), 1/3.0);
-      return x < 0 ? -y : y;
-    }
-#else
-    static inline double hypot(double x, double y) throw()
-    { return ::hypot(x, y); }
-    static inline double cbrt(double x) throw() { return ::cbrt(x); }
-#endif
+    typedef Math::real_t real_t;
+    const real_t _a, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
+    static inline real_t sq(real_t x) throw() { return x * x; }
+    static inline real_t hypot(real_t x, real_t y) throw()
+    { return Math::hypot(x, y); }
+    static inline real_t cbrt(real_t x) throw() { return Math::cbrt(x); }
   public:
 
     /**
@@ -65,7 +57,7 @@ namespace GeographicLib {
      * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
      * (i.e., a sphere).  Negative \e r indicates a prolate spheroid.
      **********************************************************************/
-    Geocentric(double a, double r) throw();
+    Geocentric(real_t a, real_t r) throw();
 
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
@@ -73,8 +65,8 @@ namespace GeographicLib {
      * should be in the range [-90, 90]; \e lon and \e lon0 should be in the
      * range [-180, 360].
      **********************************************************************/
-    void Forward(double lat, double lon, double h,
-		 double& x, double& y, double& z) const throw();
+    void Forward(real_t lat, real_t lon, real_t h,
+		 real_t& x, real_t& y, real_t& z) const throw();
 
     /**
      * Convert from geocentric coordinates \e x, \e y, \e z (meters) to
@@ -88,8 +80,8 @@ namespace GeographicLib {
      * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).  The
      * value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(double x, double y, double z,
-		 double& lat, double& lon, double& h) const throw();
+    void Reverse(real_t x, real_t y, real_t z,
+		 real_t& lat, real_t& lon, real_t& h) const throw();
 
     /**
      * A global instantiation of Geocentric with the parameters for the WGS84

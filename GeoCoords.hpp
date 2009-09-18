@@ -10,13 +10,9 @@
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
 #define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id$"
 
-#include <cmath>
-#include <string>
-#include <cstdlib>
 #include "GeographicLib/UTMUPS.hpp"
-#if defined(_MSC_VER)
-#include <float.h>		// For _finite
-#endif
+#include "GeographicLib/Constants.hpp"
+#include <string>
 
 namespace GeographicLib {
 
@@ -47,10 +43,11 @@ namespace GeographicLib {
    **********************************************************************/
   class GeoCoords {
   private:
-    double _lat, _long, _easting, _northing, _gamma, _k;
+    typedef Math::real_t real_t;
+    real_t _lat, _long, _easting, _northing, _gamma, _k;
     bool _northp;
     int _zone;			// 0 = poles, -1 = undefined
-    mutable double _alt_easting, _alt_northing, _alt_gamma, _alt_k;
+    mutable real_t _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
     void CopyToAlt() const throw() {
@@ -60,14 +57,12 @@ namespace GeographicLib {
       _alt_k = _k;
       _alt_zone = _zone;
     }
-    void UTMUPSString(int zone, double easting, double northing,
+    void UTMUPSString(int zone, real_t easting, real_t northing,
 		      int prec, std::string& utm) const;
     void FixHemisphere();
-#if defined(_MSC_VER)
-    static inline int isfinite(double x) throw() { return _finite(x); }
-#else
-    static inline int isfinite(double x) throw() { return std::isfinite(x); }
-#endif
+    static inline int isfinite(real_t x) throw() { return Math::isfinite(x); }
+    static inline real_t strtod(const char *nptr, char **endptr)
+    { return Math::strtod(nptr, endptr); }
   public:
 
     /**
@@ -76,10 +71,10 @@ namespace GeographicLib {
      **********************************************************************/
     GeoCoords() throw()
       // This is the N pole
-      : _lat(90.0)
-      , _long(0.0)
-      , _easting(2000000.0)
-      , _northing(2000000.0)
+      : _lat(90)
+      , _long(0)
+      , _easting(2000000)
+      , _northing(2000000)
       , _northp(true)
       , _zone(0)
     { CopyToAlt();}
@@ -158,7 +153,7 @@ namespace GeographicLib {
      * a specified zone (\e zone = 0 means UPS).  Omitting the third argument
      * causes the standard zone to be used.
      **********************************************************************/
-    GeoCoords(double latitude, double longitude, int zone = -1) {
+    GeoCoords(Math::real_t latitude, Math::real_t longitude, int zone = -1) {
       Reset(latitude, longitude, zone);
     }
 
@@ -167,7 +162,8 @@ namespace GeographicLib {
      * hemisphere \e northp (false means south, true means north), \e easting
      * (meters) and \e northing (meters).
      **********************************************************************/
-    GeoCoords(int zone, bool northp, double easting, double northing) {
+    GeoCoords(int zone, bool northp,
+	      Math::real_t easting, Math::real_t northing) {
       Reset(zone, northp, easting, northing);
     }
 
@@ -179,9 +175,9 @@ namespace GeographicLib {
 
     /**
      * Reset the location in terms of \e latitude and \e longitude.  See
-     * GeoCoords(double latitude, double longitude, int zone).
+     * GeoCoords(Math::real_t latitude, Math::real_t longitude, int zone).
      **********************************************************************/
-    void Reset(double latitude, double longitude, int zone = -1) {
+    void Reset(Math::real_t latitude, Math::real_t longitude, int zone = -1) {
       _lat = latitude;
       _long = longitude;
       UTMUPS::Forward(_lat, _long,
@@ -194,10 +190,11 @@ namespace GeographicLib {
 
     /**
      * Reset the location in terms of UPS/UPS \e zone, hemisphere \e northp, \e
-     * easting, and \e northing.  See GeoCoords(int zone, bool northp, double
-     * easting, double northing).
+     * easting, and \e northing.  See GeoCoords(int zone, bool northp,
+     * Math::real_t easting, Math::real_t northing).
      **********************************************************************/
-    void Reset(int zone, bool northp, double easting, double northing) {
+    void Reset(int zone, bool northp,
+	       Math::real_t easting, Math::real_t northing) {
       _zone = zone;
       _northp = northp;
       _easting = easting;
@@ -211,32 +208,32 @@ namespace GeographicLib {
     /**
      * Return latitude (degrees)
      **********************************************************************/
-    double Latitude() const throw() { return _lat; }
+    Math::real_t Latitude() const throw() { return _lat; }
 
     /**
      * Return longitude (degrees)
      **********************************************************************/
-    double Longitude() const throw() { return _long; }
+    Math::real_t Longitude() const throw() { return _long; }
 
     /**
      * Return easting (meters)
      **********************************************************************/
-    double Easting() const throw() { return _easting; }
+    Math::real_t Easting() const throw() { return _easting; }
 
     /**
      * Return northing (meters)
      **********************************************************************/
-    double Northing() const throw() { return _northing; }
+    Math::real_t Northing() const throw() { return _northing; }
 
     /**
      * Return meridian convergence (degrees) for the UTM/UPS projection.
      **********************************************************************/
-    double Convergence() const throw() { return _gamma; }
+    Math::real_t Convergence() const throw() { return _gamma; }
 
     /**
      * Return scale for the UTM/UPS projection.
      **********************************************************************/
-    double Scale() const throw() { return _k; }
+    Math::real_t Scale() const throw() { return _k; }
 
     /**
      * Return hemisphere (false means south, true means north).
@@ -279,22 +276,22 @@ namespace GeographicLib {
     /**
      * Return easting (meters) for alternate zone.
      **********************************************************************/
-    double AltEasting() const throw() { return _alt_easting; }
+    Math::real_t AltEasting() const throw() { return _alt_easting; }
 
     /**
      * Return northing (meters) for alternate zone.
      **********************************************************************/
-    double AltNorthing() const throw() { return _alt_northing; }
+    Math::real_t AltNorthing() const throw() { return _alt_northing; }
 
     /**
      * Return meridian convergence (degrees) for altermate zone.
      **********************************************************************/
-    double AltConvergence() const throw() { return _alt_gamma; }
+    Math::real_t AltConvergence() const throw() { return _alt_gamma; }
 
     /**
      * Return scale for altermate zone.
      **********************************************************************/
-    double AltScale() const throw() { return _alt_k; }
+    Math::real_t AltScale() const throw() { return _alt_k; }
 
     /**
      * Return string with latitude and longitude as signed decimal degrees.

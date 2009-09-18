@@ -14,6 +14,7 @@
  **********************************************************************/
 
 #include "GeographicLib/GeoCoords.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -114,6 +115,8 @@ then\n\
 }
 
 int main(int argc, char* argv[]) {
+  using namespace GeographicLib;
+  typedef Math::real_t real_t;
   enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE };
   int outputmode = GEOGRAPHIC;
   int prec = 0;
@@ -150,7 +153,7 @@ int main(int argc, char* argv[]) {
       return usage(arg != "-h");
   }
 
-  GeographicLib::GeoCoords p;
+  GeoCoords p;
   std::string s;
   std::string os;
   int retval = 0;
@@ -178,7 +181,7 @@ int main(int argc, char* argv[]) {
 	break;
       case CONVERGENCE:
 	{
-	  double
+	  real_t
 	    gamma = p.AltConvergence(),
 	    k = p.AltScale();
 	  std::ostringstream ss;

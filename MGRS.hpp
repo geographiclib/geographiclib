@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
 #define GEOGRAPHICLIB_MGRS_HPP "$Id$"
 
-#include <cmath>
+#include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <string>
 #include <sstream>
@@ -56,10 +56,11 @@ namespace GeographicLib {
    **********************************************************************/
   class MGRS {
   private:
+    typedef Math::real_t real_t;
     // The smallest length s.t., 1.0e7 - eps < 1.0e7 (approx 1.9 nm)
-    static const double eps;
+    static const real_t eps;
     // The smallest angle s.t., 90 - eps < 90 (approx 50e-12 arcsec)
-    static const double angeps;
+    static const real_t angeps;
     static const std::string hemispheres;
     static const std::string utmcols[3];
     static const std::string utmrow;
@@ -84,7 +85,7 @@ namespace GeographicLib {
       // Maximum precision is um
       maxprec = 5 + 6
     };
-    static void CheckCoords(bool utmp, bool& northp, double& x, double& y);
+    static void CheckCoords(bool utmp, bool& northp, real_t& x, real_t& y);
     static int lookup(const std::string& s, char c) throw() {
       std::string::size_type r = s.find(toupper(c));
       return r == std::string::npos ? -1 : int(r);
@@ -97,7 +98,7 @@ namespace GeographicLib {
     friend class UTMUPS;	// UTMUPS::StandardZone calls LatitudeBand
     // Return latitude band number [-10, 10) for the give latitude (degrees).
     // The bands are reckoned in include their southern edges.
-    static int LatitudeBand(double lat) throw() {
+    static int LatitudeBand(real_t lat) throw() {
       int ilat = int(std::floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
@@ -171,7 +172,7 @@ namespace GeographicLib {
      * roundoff.
      *
      **********************************************************************/
-    static void Forward(int zone, bool northp, double x, double y,
+    static void Forward(int zone, bool northp, Math::real_t x, Math::real_t y,
 			int prec, std::string& mgrs);
 
     /**
@@ -180,7 +181,8 @@ namespace GeographicLib {
      * (UPS); otherwise the latitude is used to determine the latitude band and
      * this is checked for consistency using the same tests as Reverse.
      **********************************************************************/
-    static void Forward(int zone, bool northp, double x, double y, double lat,
+    static void Forward(int zone, bool northp,
+			Math::real_t x, Math::real_t y, Math::real_t lat,
 			int prec, std::string& mgrs);
 
     /**
@@ -211,7 +213,8 @@ namespace GeographicLib {
      * stable.  This is not assured if \e centerp = false.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
-			int& zone, bool& northp, double& x, double& y,
+			int& zone, bool& northp,
+			Math::real_t& x, Math::real_t& y,
 			int& prec, bool centerp = true);
 
   };
