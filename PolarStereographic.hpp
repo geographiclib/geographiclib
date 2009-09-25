@@ -33,13 +33,10 @@ namespace GeographicLib {
     static const real_t tol;
     static const int numit = 5;
     static inline real_t sq(real_t x) throw() { return x * x; }
-    static inline real_t hypot(real_t x, real_t y) throw()
-    { return Math::hypot(x, y); }
-    static inline real_t atanh(real_t x) throw() { return Math::atanh(x); }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
     inline real_t eatanhe(real_t x) const throw() {
-      return _f >= 0 ? _e * atanh(_e * x) : - _e * atan(_e * x);
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
     }
   public:
 

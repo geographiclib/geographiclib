@@ -84,7 +84,8 @@ namespace GeographicLib {
     // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
     // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
     // sign(phi)
-    return asinh(s / max(cos(phi), real_t(0.1L) * tol)) - _e * atanh(_e * s);
+    return Math::asinh(s / max(cos(phi), real_t(0.1L) * tol)) -
+      _e * Math::atanh(_e * s);
   }
 
   Math::real_t TransverseMercatorExact::psiinv(real_t psi) const throw() {
@@ -99,7 +100,7 @@ namespace GeographicLib {
       // min iterations = 1, max iterations = 3; mean = 2.8
       real_t
 	t = tanh(q),
-	dq = -(q - _e * atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
+	dq = -(q - _e * Math::atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
       q += dq;
       if (abs(dq) < tol1)
 	break;
@@ -121,8 +122,8 @@ namespace GeographicLib {
       d2 = sqrt(_mu * sq(cnu) + _mv * sq(cnv));
     psi =
       // Overflow to values s.t. tanh = 1.
-      (d1 ? asinh(snu * dnv / d1) : snu < 0 ? -ahypover : ahypover)
-      - (d2 ? _e * asinh(_e * snu / d2) : snu < 0 ? -ahypover : ahypover);
+      (d1 ? Math::asinh(snu * dnv / d1) : snu < 0 ? -ahypover : ahypover)
+      - (d2 ? _e * Math::asinh(_e * snu / d2) : snu < 0 ? -ahypover : ahypover);
     lam = (d1 != 0 && d2 != 0) ?
       atan2(dnu * snv, cnu * cnv) - _e * atan2(_e * cnu * snv, dnu * cnv) :
       0;
@@ -159,7 +160,8 @@ namespace GeographicLib {
       real_t
 	psix = 1 - psi / _e,
 	lamx = (Constants::pi()/2 - lam) / _e;
-      u = asinh(sin(lamx) / hypot(cos(lamx), sinh(psix))) * (1 + _mu/2);
+      u = Math::asinh(sin(lamx) / Math::hypot(cos(lamx), sinh(psix))) *
+	(1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
       u = _Eu.K() - u;
       v = _Ev.K() - v;
@@ -178,7 +180,7 @@ namespace GeographicLib {
       // arg(zeta - zeta0) = [-90, 180]
       real_t
 	dlam = lam - (1 - _e) * Constants::pi()/2,
-	rad = hypot(psi, dlam),
+	rad = Math::hypot(psi, dlam),
 	// atan2(dlam-psi, psi+dlam) + 45d gives arg(zeta - zeta0) in range
 	// [-135, 225).  Subtracting 180 (since multiplier is negative) makes
 	// range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
@@ -195,7 +197,7 @@ namespace GeographicLib {
       // Use spherical TM, Lee 12.6 -- writing atanh(sin(lam) / cosh(psi)) =
       // asinh(sin(lam) / hypot(cos(lam), sinh(psi))).  This takes care of the
       // log singularity at zeta = Eu.K() (corresponding to the north pole)
-      v = asinh(sin(lam) / hypot(cos(lam), sinh(psi)));
+      v = Math::asinh(sin(lam) / Math::hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
       u *= _Eu.K() / (Constants::pi()/2);
@@ -293,7 +295,7 @@ namespace GeographicLib {
       // mapping arg = [-pi/2, -pi/6] to [-pi/2, pi/2]
       real_t
 	deta = eta - _Ev.KE(),
-	rad = hypot(xi, deta),
+	rad = Math::hypot(xi, deta),
 	// Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
 	// discussion in zetainv0 on the cut for ang.
 	ang = atan2(deta-xi, xi+deta) - real_t(0.75L) * Constants::pi();

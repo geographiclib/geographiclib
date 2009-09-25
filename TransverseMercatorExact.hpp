@@ -60,10 +60,6 @@ namespace GeographicLib {
     const bool _extendp;
     const EllipticFunction _Eu, _Ev;
     static inline real_t sq(real_t x) throw() { return x * x; }
-    static inline real_t hypot(real_t x, real_t y) throw()
-    { return Math::hypot(x, y); }
-    static inline real_t asinh(real_t x) throw() { return Math::asinh(x); }
-    static inline real_t atanh(real_t x) throw() { return Math::atanh(x); }
     real_t psi(real_t phi) const throw();
     real_t psiinv(real_t psi) const throw();
 

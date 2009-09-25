@@ -97,9 +97,6 @@ namespace GeographicLib {
     static const unsigned maxit = 50;
 
     static inline real_t sq(real_t x) throw() { return x * x; }
-    static inline real_t hypot(real_t x, real_t y) throw()
-    { return Math::hypot(x, y); }
-    static inline real_t cbrt(real_t x) throw() { return Math::cbrt(x); }
     void Lengths(real_t k1, real_t sig12,
 		 real_t ssig1, real_t csig1, real_t ssig2, real_t csig2,
 		 real_t cbet1, real_t cbet2,
@@ -139,7 +136,7 @@ namespace GeographicLib {
       return x < 0 ? -y : y;
     }
     static inline void SinCosNorm(real_t& sinx, real_t& cosx) throw() {
-      real_t r = hypot(sinx, cosx);
+      real_t r = Math::hypot(sinx, cosx);
       sinx /= r;
       cosx /= r;
     }
@@ -272,6 +269,7 @@ namespace GeographicLib {
     real_t _tauCoeff[ntau ? ntau : 1], _sigCoeff[nsig ? nsig : 1],
       _zetCoeff[nzet ? nzet : 1], _etaCoeff[neta ? neta : 1];
 
+    static inline real_t sq(real_t x) throw() { return x * x; }
     GeodesicLine(const Geodesic& g, real_t lat1, real_t lon1, real_t azi1)
       throw();
   public:

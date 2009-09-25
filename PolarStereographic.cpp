@@ -64,7 +64,7 @@ namespace GeographicLib {
 				   real_t& lat, real_t& lon,
 				   real_t& gamma, real_t& k) const throw() {
     real_t
-      rho = hypot(x, y),
+      rho = Math::hypot(x, y),
       t2 = rho * _c / (_a * _k0),
       theta = Constants::pi()/2;	// initial estimate of colatitude
     // Solve from theta using Newton's method on Snyder (15-9) which converges

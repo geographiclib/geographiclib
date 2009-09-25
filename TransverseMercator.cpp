@@ -237,17 +237,18 @@ namespace GeographicLib {
     real_t etap, xip;
     if (lat < 90) {
       real_t
-	qp = asinh(tan(phi)),
+	qp = Math::asinh(tan(phi)),
 	q = qp - eatanhe(sin(phi));
       xip = atan2(sinh(q), cos(lam));
-      etap = atanh(sin(lam) / cosh(q));
+      etap = Math::atanh(sin(lam) / cosh(q));
       // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
       // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(beta))
       gamma = atan(tan(lam) * tanh(q));
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(beta) / cos(phi)) * cosh(etap)
       // Note 1/cos(phi) = cosh(qp);
       // and cos(beta) * cosh(etap) = 1/hypot(sinh(q), cos(lam))
-      k = sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) / hypot(sinh(q), cos(lam));
+      k = sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) /
+	Math::hypot(sinh(q), cos(lam));
     } else {
       xip = Constants::pi()/2;
       etap = 0;
@@ -359,7 +360,7 @@ namespace GeographicLib {
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
     gamma -= atan2(yi1, yr1);
-    k *= _b1 * hypot(yr1, yi1);
+    k *= _b1 * Math::hypot(yr1, yi1);
     gamma /= Constants::degree();
     y = _a1 * _k0 * (backside ? Constants::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
@@ -438,7 +439,7 @@ namespace GeographicLib {
       etap = eta + ai * xip0 + ar * etap0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
     gamma = atan2(yi1, yr1);
-    k = _b1 / hypot(yr1, yi1);
+    k = _b1 / Math::hypot(yr1, yi1);
     // JHS 154 has
     //
     // 	 beta = asin(sin(xip) / cosh(etap))
@@ -450,14 +451,14 @@ namespace GeographicLib {
     real_t
       s = sinh(etap),
       c = cos(xip),
-      r = hypot(s, c);
+      r = Math::hypot(s, c);
     if (r > 0) {
       lam = atan2(s, c);
       // Use Newton's method to solve
       // q = qp - e * atanh(e * tanh(qp))
       // for qp = asinh(tan(phi))
       real_t
-	q = asinh(sin(xip)/r),
+	q = Math::asinh(sin(xip)/r),
 	qp = q;
       // min iterations = 1, max iterations = 3; mean = 2.8
       for (int i = 0; i < numit; ++i) {

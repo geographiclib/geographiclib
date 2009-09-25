@@ -60,9 +60,6 @@ namespace GeographicLib {
     void UTMUPSString(int zone, real_t easting, real_t northing,
 		      int prec, std::string& utm) const;
     void FixHemisphere();
-    static inline int isfinite(real_t x) throw() { return Math::isfinite(x); }
-    static inline real_t strtod(const char *nptr, char **endptr)
-    { return Math::strtod(nptr, endptr); }
   public:
 
     /**
