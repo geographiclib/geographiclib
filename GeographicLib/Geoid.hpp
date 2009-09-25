@@ -111,11 +111,11 @@ namespace GeographicLib {
 
     /**
      * Create a Geoid loading the data for geoid \e name.  The data file is
-     * formed by appending ".pgm" to the name.  If \e path is specified, then
-     * the file is loaded from that directory.  Otherwise the path is given by
-     * the GEOID_PATH environment variable.  If that is undefined, a
-     * compile-time default path is used (/usr/local/share/GeographicLib/geoids
-     * on non-Windows systems and
+     * formed by appending ".pgm" to the name.  If \e path is specified (and is
+     * non-empty), then the file is loaded from directory, \e path.  Otherwise
+     * the path is given by the GEOID_PATH environment variable.  If that is
+     * undefined, a compile-time default path is used
+     * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
      * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).  The
      * final \e cubic argument specifies whether to use bilinear (\e cubic =
      * false) or cubic (\e cubic = true, the default) interpolation.  This may

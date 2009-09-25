@@ -38,8 +38,6 @@ namespace GeographicLib {
     typedef Math::real_t real_t;
     const Geodesic& _earth;
     static const real_t eps;
-    static inline real_t hypot(real_t x, real_t y) throw()
-    { return Math::hypot(x, y); }
   public:
 
     /**

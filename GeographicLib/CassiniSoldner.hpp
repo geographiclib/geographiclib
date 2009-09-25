@@ -70,8 +70,6 @@ namespace GeographicLib {
     static const unsigned maxit =  10;
 
     static inline real_t sq(real_t x) throw() { return x * x; }
-    static inline real_t hypot(real_t x, real_t y) throw()
-    { return Math::hypot(x, y); }
   public:
 
     /**

@@ -55,8 +55,8 @@ namespace GeographicLib {
 
   void Geocentric::Reverse(real_t x, real_t y, real_t z,
 			   real_t& lat, real_t& lon, real_t& h) const throw() {
-    real_t R = hypot(x, y);
-    h = hypot(R, z);		// Distance to center of earth
+    real_t R = Math::hypot(x, y);
+    h = Math::hypot(R, z);	// Distance to center of earth
     real_t phi;
     if (h > _maxrad)
       // We really far away (> 12 million light years); treat the earth as a
@@ -65,7 +65,7 @@ namespace GeographicLib {
       // possible that h has overflowed to inf; but that's OK.
       //
       // Treat the case x, y finite, but R overflows to +inf by scaling by 2.
-      phi = atan2(z/2, hypot(x/2, y/2));
+      phi = atan2(z/2, Math::hypot(x/2, y/2));
     else if (_e4x == 0) {
       // Treat the spherical case.  Dealing with underflow in the general case
       // with _e2 = 0 is difficult.  Origin maps to N pole same as an
@@ -96,7 +96,7 @@ namespace GeographicLib {
 	  // because of the way the T is used in definition of u.
 	  T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
 	  // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
-	  real_t T = cbrt(T3);	// T = r * t
+	  real_t T = Math::cbrt(T3); // T = r * t
 	  // T can be zero; but then r2 / T -> 0.
 	  u += T + (T != 0 ? r2 / T : 0);
 	} else {
@@ -124,7 +124,7 @@ namespace GeographicLib {
 	// Probably atan2 returns the result for phi more accurately than the
 	// half-angle formula that Vermeille uses.  It's certainly simpler.
 	phi = _f >= 0 ? atan2(z, d) : atan2(d, z);
-	h = (k + _e2x - 1) * hypot(d, z) / k;
+	h = (k + _e2x - 1) * Math::hypot(d, z) / k;
       } else {			// e4 * q == 0 && r <= 0
 	// Very near equatorial plane with R <= a * e^2.  This leads to k = 0
 	// using the general formula and division by 0 in formula for h.  So

@@ -47,9 +47,6 @@ namespace GeographicLib {
     typedef Math::real_t real_t;
     const real_t _a, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
     static inline real_t sq(real_t x) throw() { return x * x; }
-    static inline real_t hypot(real_t x, real_t y) throw()
-    { return Math::hypot(x, y); }
-    static inline real_t cbrt(real_t x) throw() { return Math::cbrt(x); }
   public:
 
     /**

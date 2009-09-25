@@ -41,7 +41,7 @@ namespace GeographicLib {
 				     real_t& azi, real_t& rk) const throw() {
     real_t
       azi0 = atan2(x, y) / Constants::degree(),
-      s = hypot(x, y);
+      s = Math::hypot(x, y);
     real_t sig, m;
     sig = _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);
     rk = sig > eps ? m / s : 1;

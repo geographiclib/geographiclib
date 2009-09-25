@@ -330,7 +330,7 @@ namespace GeographicLib {
 	// because of the way the T is used in definition of u.
 	T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
 	// N.B. cbrt always returns the real root.  cbrt(-8) = -2.
-	real_t T = cbrt(T3);	// T = r * t
+	real_t T = Math::cbrt(T3); // T = r * t
 	// T can be zero; but then r2 / T -> 0.
 	u += T + (T != 0 ? r2 / T : 0);
       } else {
@@ -403,7 +403,7 @@ namespace GeographicLib {
       sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
 
     real_t
-      ssig12 = hypot(salp1, calp1),
+      ssig12 = Math::hypot(salp1, calp1),
       csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
 
     if (csig12 >= 0 || ssig12 >= 3 * abs(_f) * Constants::pi() * sq(cbet1)) {
@@ -459,8 +459,8 @@ namespace GeographicLib {
 	// estimate omg12a = pi - omg12
 	real_t
 	  omg12a = lamscale * ( _f >= 0
-				? hypot(y,  salp2 + x) * salp2
-				: hypot(x, -calp2 + y) * calp2 ),
+				? Math::hypot(y,  salp2 + x) * salp2
+				: Math::hypot(x, -calp2 + y) * calp2 ),
 	  somg12 = sin(omg12a), comg12 = -cos(omg12a);
 	// Update spherical estimate of alp1 using omg12 instead of lam12
 	salp1 = cbet2 * somg12;
@@ -490,7 +490,7 @@ namespace GeographicLib {
     real_t
       // sin(alp1) * cos(bet1) = sin(alp0),
       salp0 = salp1 * cbet1,
-      calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
+      calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
     real_t somg1, comg1, somg2, comg2, omg12, lam12, mu, u2;
     // tan(bet1) = tan(sig1) * cos(alp1)
@@ -581,7 +581,7 @@ namespace GeographicLib {
     _salp0 = salp1 * cbet1; // alp0 in [0, pi/2 - |bet1|]
     // Alt: calp0 = hypot(sbet1, calp1 * cbet1).  The following
     // is slightly better (consider the case salp1 = 0).
-    _calp0 = Geodesic::hypot(calp1, salp1 * sbet1);
+    _calp0 = Math::hypot(calp1, salp1 * sbet1);
     // Evaluate sig with tan(bet1) = tan(sig1) * cos(alp1).
     // sig = 0 is nearest northward crossing of equator.
     // With bet1 = 0, alp1 = pi/2, we have sig1 = 0 (equatorial line).
@@ -596,7 +596,7 @@ namespace GeographicLib {
     Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
     Geodesic::SinCosNorm(_somg1, _comg1);
 
-    real_t mu = Geodesic::sq(_calp0);
+    real_t mu = sq(_calp0);
     _u2 = mu * g._ep2;
     real_t k1 = _u2 / (2 * (1 + sqrt(1 + _u2)) + _u2);
     _taufm1 =  Geodesic::tauFactorm1(k1);
@@ -663,7 +663,7 @@ namespace GeographicLib {
     // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
     // Alt: cbet2 = hypot(csig2, salp0 * ssig2);
-    cbet2 = Geodesic::hypot(_salp0, _calp0 * csig2);
+    cbet2 = Math::hypot(_salp0, _calp0 * csig2);
     // tan(omg2) = sin(alp0) * tan(sig2)
     somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
@@ -689,8 +689,8 @@ namespace GeographicLib {
 			    - _dzet1);
     // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
     // accurate cancellation in the case of coincident points.
-    m12 = _b * ((sqrt(1 + _u2 * Geodesic::sq( ssig2)) * (_csig1 * ssig2) -
-		 sqrt(1 + _u2 * Geodesic::sq(_ssig1)) * (_ssig1 * csig2))
+    m12 = _b * ((sqrt(1 + _u2 * sq( ssig2)) * (_csig1 * ssig2) -
+		 sqrt(1 + _u2 * sq(_ssig1)) * (_ssig1 * csig2))
 		- _csig1 * csig2 * ( (_taufm1-_zetfm1) * sig12 + (et-ez) ));
     if (arcmode)
       s12 = _b * ((1 + _taufm1) * sig12 + et);

@@ -1919,8 +1919,8 @@ egm96-5 are
    # Vertical_Datum WGS84
 \endverbatim
 Of these lines, the Scale and Offset lines are required and define the
-conversion from pixel value to height (in meters) using \e height = \e
-offset + \e scale \e pixel.  The Geoid constructor also reads the
+conversion from pixel value to height (in meters) using \e height =
+\e offset + \e scale \e pixel.  The Geoid constructor also reads the
 Description, DataTime, and error lines (if present) and stores the
 resulting data so that it can be returned by
 GeographicLib::Geoid::Description, GeographicLib::Geoid::DateTime,
@@ -1929,8 +1929,8 @@ methods.  The other lines serve as additional documentation but are not
 used by this class.  Accompanying egm96-5.pgm (and similarly with the
 other geoid data files) are two files egm96-5.wld and
 egm96-5.pgm.aux.xml.  The first is an ESRI "world" file and the second
-supplies complete projection meta data for use by <a
-href="www.gdal.org">GDAL</a>.  Neither of these files are read by
+supplies complete projection metadata for use by
+<a href="www.gdal.org">GDAL</a>.  Neither of these files is read by
 GeographicLib::Geoid.
 
 You can use gdal_translate to convert the data files to a standard
