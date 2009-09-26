@@ -59,7 +59,7 @@ namespace GeographicLib {
     static const real_t c3n[stencilsize * nterms];
     static const real_t c3s[stencilsize * nterms];
 
-    std::string _filename;
+    std::string _name, _dir, _filename;
     const bool _cubic;
     const real_t _a, _e2, _degree, _eps;
     mutable std::ifstream _file;
@@ -106,7 +106,9 @@ namespace GeographicLib {
       }
     }
     real_t height(real_t lat, real_t lon, bool gradp,
-	       real_t& grade, real_t& gradn) const;
+		  real_t& grade, real_t& gradn) const;
+    Geoid(const Geoid&);	// copy constructor not allowed
+    Geoid& operator=(const Geoid&); // copy assignment not allowed
   public:
 
     /**
@@ -190,9 +192,20 @@ namespace GeographicLib {
     const std::string& DateTime() const throw() { return _datetime; }
 
     /**
-     * Return the path name used to load the geoid data.
+     * Return the full file name used to load the geoid data.
      **********************************************************************/
     const std::string& GeoidFile() const throw() { return _filename; }
+
+    /**
+     * Return the "name" used to load the geoid data (from the first argument
+     * of the constructor).
+     **********************************************************************/
+    const std::string& GeoidName() const throw() { return _name; }
+
+    /**
+     * Return the directory used to load the geoid data.
+     **********************************************************************/
+    const std::string& GeoidDirectory() const throw() { return _dir; }
 
     /**
      * Return the interpolation method (cubic or bilinear).
