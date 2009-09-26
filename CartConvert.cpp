@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
 	std::cout << x << " " << y << " " << z << "\n";
       }
     }
-    catch (std::out_of_range& e) {
+    catch (const std::exception& e) {
       std::cout << "ERROR: " << e.what() << "\n";
       retval = 1;
     }

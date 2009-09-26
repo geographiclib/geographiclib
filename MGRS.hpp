@@ -120,6 +120,8 @@ namespace GeographicLib {
       // Difference between S hemisphere northing and N hemisphere northing
       utmNshift = (maxutmSrow - minutmNrow) * tile
     };
+    MGRS();			// Disable constructor
+
   public:
 
     /**

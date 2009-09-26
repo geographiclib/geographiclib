@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
 		<< x << " " << y << " "
 		<< gamma << " " << k << "\n";
     }
-    catch (std::out_of_range& e) {
+    catch (const std::exception& e) {
       std::cout << "ERROR: " << e.what() << "\n";
       retval = 1;
     }

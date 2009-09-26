@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 					 cachen, cachee);
 	m += 2;
       }
-      catch (std::out_of_range& e) {
+      catch (const std::exception& e) {
 	std::cerr << "ERROR: " << e.what() << "\n";
 	return usage(1);
       }
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
       else if (cachearea)
 	g.CacheArea(caches, cachew, cachen, cachee);
     }
-    catch (std::out_of_range& e) {
+    catch (const std::exception& e) {
       std::cerr << "ERROR: " << e.what() << "\nProceeding without a cache\n";
     }
     if (verbose)
@@ -180,13 +180,13 @@ int main(int argc, char* argv[]) {
 	std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
 		    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
       }
-      catch (std::exception& e) {
+      catch (const std::exception& e) {
 	std::cout << "ERROR: " << e.what() << "\n";
 	retval = 1;
       }
     }
   }
-  catch (std::exception& e) {
+  catch (const std::exception& e) {
     std::cerr << "Error reading " << geoid << ": " << e.what() << "\n";
     retval = 1;
   }

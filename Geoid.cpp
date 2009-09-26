@@ -412,7 +412,7 @@ namespace GeographicLib {
       vector< vector<unsigned short> > t;
       _data.swap(t);
     }
-    catch (exception&) {
+    catch (const exception&) {
     }
   }
 
@@ -466,7 +466,7 @@ namespace GeographicLib {
       for (int iy = min(oysize, _ysize); iy--;)
 	_data[iy].resize(_xsize);
     }
-    catch (bad_alloc&) {
+    catch (const bad_alloc&) {
       CacheClear();
       throw out_of_range("Insufficient memory for caching " + _filename);
     }
@@ -502,7 +502,7 @@ namespace GeographicLib {
       }
       _cache = true;
     }
-    catch (exception& e) {
+    catch (const exception& e) {
       CacheClear();
       throw out_of_range(string("Error filling cache ") + e.what());
     }
