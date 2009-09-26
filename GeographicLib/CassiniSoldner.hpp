@@ -62,7 +62,7 @@ namespace GeographicLib {
   class CassiniSoldner {
   private:
     typedef Math::real_t real_t;
-    const Geodesic& _earth;
+    const Geodesic _earth;
     GeodesicLine _meridian;
     real_t _sbet0, _cbet0;
     real_t Scale(const GeodesicLine& perp, real_t sig12) const throw();

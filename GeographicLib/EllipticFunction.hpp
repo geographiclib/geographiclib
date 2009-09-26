@@ -56,7 +56,7 @@ namespace GeographicLib {
     /**
      * Constructor with parameter \e m.
      **********************************************************************/
-    EllipticFunction(Math::real_t m) throw();
+    explicit EllipticFunction(Math::real_t m) throw();
 
     /**
      * The parameter \e m.

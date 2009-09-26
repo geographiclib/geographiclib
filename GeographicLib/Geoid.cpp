@@ -202,17 +202,18 @@ namespace GeographicLib {
   };
 
   Geoid::Geoid(const std::string& name, const std::string& path, bool cubic)
-    : _cubic(cubic)
+    : _name(name)
+    , _dir(path)
+    , _cubic(cubic)
     , _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
     , _degree( Constants::degree() )
     , _eps( sqrt(numeric_limits<real_t>::epsilon()) ) {
-    string dir = path;
-    if (dir.size() == 0)
-      dir = GeoidPath();
-    if (dir.size() == 0)
-      dir = DefaultPath();
-    _filename = dir + "/" + name + ".pgm";
+    if (_dir.size() == 0)
+      _dir = GeoidPath();
+    if (_dir.size() == 0)
+      _dir = DefaultPath();
+    _filename = _dir + "/" + _name + ".pgm";
     _file.open(_filename.c_str(), ios::binary);
     if (!(_file.good()))
       throw out_of_range("File not readable " + _filename);

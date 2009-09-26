@@ -33,7 +33,7 @@ namespace GeographicLib {
   class LocalCartesian {
   private:
     typedef Math::real_t real_t;
-    const Geocentric& _earth;
+    const Geocentric _earth;
     real_t _lat0, _lon0, _h0;
     real_t _x0, _y0, _z0,
       _rxx, _rxy, _rxz,
@@ -57,7 +57,7 @@ namespace GeographicLib {
      * 0.  The optional \e earth argument (default Geocentric::WGS84) specifies
      * the Geocentric object to use for the transformation.
      **********************************************************************/
-    LocalCartesian(const Geocentric& earth = Geocentric::WGS84) throw()
+    explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84) throw()
       : _earth(earth)
     { Reset(real_t(0), real_t(0), real_t(0)); }
 
