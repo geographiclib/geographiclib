@@ -18,7 +18,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <stdexcept>
+#include <exception>
 #include <iomanip>
 
 int usage(int retval) {
@@ -193,7 +193,7 @@ int main(int argc, char* argv[]) {
 	}
       }
     }
-    catch (std::out_of_range& e) {
+    catch (const std::exception& e) {
       // Write error message cout so output lines match input lines
       os = std::string("ERROR: ") + e.what();
       retval = 1;

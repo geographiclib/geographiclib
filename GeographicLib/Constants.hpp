@@ -46,6 +46,8 @@ namespace GeographicLib {
    * In addition define a real type to be used by %GeographicLib.
    **********************************************************************/
   class Math {
+  private:
+    Math();			// Disable constructor
   public:
     
     /**
@@ -128,6 +130,7 @@ namespace GeographicLib {
   class Constants {
   private:
     typedef Math::real_t real_t;
+    Constants();		// Disable constructor
 
   public:
     /**

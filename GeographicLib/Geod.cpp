@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
 	azi1 = ReadAzimuth(std::string(argv[m + 3]));
 	m += 3;
       }
-      catch (std::out_of_range& e) {
+      catch (const std::exception& e) {
 	std::cerr << "ERROR: " << e.what() << "\n";
 	return usage(1);
       }
@@ -287,7 +287,7 @@ int main(int argc, char* argv[]) {
 	std::cout << " " << m12 << "\n";
       }
     }
-    catch (std::out_of_range& e) {
+    catch (const std::exception& e) {
       // Write error message cout so output lines match input lines
       std::cout << "ERROR: " << e.what() << "\n";
       retval = 1;

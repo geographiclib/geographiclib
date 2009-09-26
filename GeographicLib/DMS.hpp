@@ -38,6 +38,7 @@ namespace GeographicLib {
     static const std::string digits;
     static const std::string dmsindicators;
     static const std::string components[3];
+    DMS();			// Disable constructor
 
   public:
 

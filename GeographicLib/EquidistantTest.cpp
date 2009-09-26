@@ -123,7 +123,7 @@ int main(int argc, char* argv[]) {
 	std::cout << x << " " << y << " " << a << " " << m << "\n";
       }
     }
-    catch (std::out_of_range& e) {
+    catch (const std::exception& e) {
       std::cout << "ERROR: " << e.what() << "\n";
       retval = 1;
     }
