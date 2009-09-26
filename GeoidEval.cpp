@@ -26,7 +26,7 @@ int usage(int retval) {
   std::string
     geoidpath = GeographicLib::Geoid::GeoidPath(),
     defaultpath = GeographicLib::Geoid::DefaultPath();
-  if (geoidpath.size() == 0)
+  if (geoidpath.empty())
     geoidpath = "UNDEFINED";
   ( retval ? std::cerr : std::cout )
     <<

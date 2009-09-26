@@ -209,9 +209,9 @@ namespace GeographicLib {
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
     , _degree( Constants::degree() )
     , _eps( sqrt(numeric_limits<real_t>::epsilon()) ) {
-    if (_dir.size() == 0)
+    if (_dir.empty())
       _dir = GeoidPath();
-    if (_dir.size() == 0)
+    if (_dir.empty())
       _dir = DefaultPath();
     _filename = _dir + "/" + _name + ".pgm";
     _file.open(_filename.c_str(), ios::binary);
@@ -226,7 +226,7 @@ namespace GeographicLib {
     _description = "NONE";
     _datetime = "UNKNOWN";
     while (getline(_file, s)) {
-      if (s.size() == 0)
+      if (s.empty())
 	continue;
       if (s[0] == '#') {
 	if (s.substr(0, 14) == "# Description ")
