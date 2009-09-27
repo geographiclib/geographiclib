@@ -14,7 +14,6 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
-#include "GeographicLib/Constants.hpp"
 #include "GeographicLib/DMS.hpp"
 #include <string>
 #include <iostream>

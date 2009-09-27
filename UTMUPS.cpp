@@ -11,7 +11,6 @@
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/PolarStereographic.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
-#include <cmath>
 #include <algorithm>
 #include <stdexcept>
 #include <limits>

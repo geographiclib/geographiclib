@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/AzimuthalEquidistant.hpp"
-#include <cmath>
 #include <limits>
 
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP "$Id$"

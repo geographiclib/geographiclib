@@ -29,7 +29,6 @@
 #endif
 
 #include "GeographicLib/Constants.hpp"
-#include <cmath>
 
 namespace GeographicLib {
 

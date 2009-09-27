@@ -9,7 +9,6 @@
  **********************************************************************/
 
 #include "GeographicLib/CassiniSoldner.hpp"
-#include <cmath>
 #include <limits>
 
 #define GEOGRAPHICLIB_CASSINISOLDNER_CPP "$Id$"

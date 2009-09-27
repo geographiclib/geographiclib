@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/LocalCartesian.hpp"
-#include <cmath>
 #include <stdexcept>
 
 #define GEOGRAPHICLIB_LOCALCARTESIAN_CPP "$Id$"

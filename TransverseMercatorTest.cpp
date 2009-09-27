@@ -16,7 +16,6 @@
 #include "GeographicLib/EllipticFunction.hpp"
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>

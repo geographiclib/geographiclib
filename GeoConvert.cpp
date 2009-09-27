@@ -14,7 +14,6 @@
  **********************************************************************/
 
 #include "GeographicLib/GeoCoords.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <iostream>
 #include <sstream>
 #include <string>

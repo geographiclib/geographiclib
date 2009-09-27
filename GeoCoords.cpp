@@ -61,20 +61,15 @@ namespace GeographicLib {
                            " (ex: 38N, 09S, N)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i) {
-        const char* c = sa[coordind + i].c_str();
-        char* q;
-        errno = 0;
-        real_t x = Math::strtod(c, &q);
-        if (errno ==  ERANGE || !Math::isfinite(x))
-          throw out_of_range("Number " + sa[coordind + i] + " out of range");
-        if (q - c != int(sa[coordind + i].size()))
+        istringstream str(sa[coordind + i]);
+        real_t x;
+        if (!(str >> x))
+          throw out_of_range("Bad number " + sa[coordind + i]);
+        if (int(str.tellg()) != int(sa[coordind + i].size()))
           throw out_of_range(string("Extra text in UTM/UPS ") +
                              (i == 0 ? "easting " : "northing ") +
                              sa[coordind + i]);
-        if (i == 0)
-          _easting = x;
-        else
-          _northing = x;
+        (i ? _northing : _easting) = x;
       }
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
                       _lat, _long, _gamma, _k);

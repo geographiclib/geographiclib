@@ -17,7 +17,6 @@
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/AzimuthalEquidistant.hpp"
 #include "GeographicLib/CassiniSoldner.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <iomanip>
