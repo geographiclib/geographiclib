@@ -15,7 +15,6 @@
 
 #include "GeographicLib/Geocentric.hpp"
 #include "GeographicLib/LocalCartesian.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <iomanip>

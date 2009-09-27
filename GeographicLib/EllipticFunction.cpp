@@ -9,7 +9,6 @@
 
 #include "GeographicLib/EllipticFunction.hpp"
 #include <limits>
-#include <cmath>
 #include <algorithm>
 
 #define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id$"

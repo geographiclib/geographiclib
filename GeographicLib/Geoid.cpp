@@ -12,7 +12,6 @@
 #include <limits>
 #include <cstdlib>
 #include <stdexcept>
-#include <cmath>
 #include <algorithm>
 
 #define GEOGRAPHICLIB_GEOID_CPP "$Id$"
@@ -294,7 +293,7 @@ namespace GeographicLib {
       throw out_of_range("Raster width is odd " + _filename);
     _file.seekg(0, ios::end);
     if (_datastart + 2 * _width * _height != _file.tellg())
-      // Possibly this test should be "<" because the tile contains, e.g., a
+      // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.
       throw out_of_range("File has the wrong length " + _filename);
     _rlonres = _width / real_t(360);

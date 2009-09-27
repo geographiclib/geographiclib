@@ -9,7 +9,6 @@
 
 #include "GeographicLib/DMS.hpp"
 #include <algorithm>
-#include <cmath>
 #include <stdexcept>
 #include <iomanip>
 
@@ -106,7 +105,7 @@ namespace GeographicLib {
                              + " component of "
                              + dms.substr(beg, end - beg));
         if (digcount > 1) {
-          istringstream s(dms.substr(p-digcount-1, digcount));
+          istringstream s(dms.substr(p - digcount - 1, digcount));
           s >> fcurrent;
         }
         ipieces[k] = icurrent;

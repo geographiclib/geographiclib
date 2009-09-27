@@ -32,11 +32,6 @@
 RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
 
 #include <cmath>
-#include <cstdlib>
-#if defined(_MSC_VER)
-#include <float.h>              // For _finite
-#endif
-
 namespace GeographicLib {
 
   /**
@@ -75,29 +70,10 @@ namespace GeographicLib {
      * \e x<sup>1/3</sup>
      **********************************************************************/
     static inline real_t cbrt(real_t x) throw() { return ::cbrt(x); }
-    /**
-     * Is \e x a regular number
-     **********************************************************************/
-    static inline int isfinite(real_t x) throw() { return std::isfinite(x); }
-    /**
-     * Convert a string to a real number
-     **********************************************************************/
-    static inline real_t strtod(const char *nptr, char **endptr) {
-      return real_t( sizeof(real_t) == sizeof(double) ?
-                     std::strtod(nptr, endptr) :
-                     sizeof(real_t) == sizeof(float) ?
-                     ::strtof(nptr, endptr) :
-#if defined(__linux__) && defined(__GNU__)  && __GNUC__ > 3
-                     ::strtold(nptr, endptr)
-#else
-                     ::strtod(nptr, endptr)
-#endif
-                     );
-    }
 #else
     static inline real_t hypot(real_t x, real_t y) throw() {
-      return real_t( sizeof(real_t) == sizeof(double) ?
-                     _hypot(x, y) : _hypot(x, y) );
+      return real_t( sizeof(real_t) <= sizeof(double) ?
+                     _hypot(x, y) : _hypotf(float(x), float(y)) );
     }
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.
@@ -118,10 +94,6 @@ namespace GeographicLib {
     static inline real_t cbrt(real_t x) throw() {
       real_t y = std::pow(std::abs(x), 1/real_t(3));
       return x < 0 ? -y : y;
-    }
-    static inline int isfinite(real_t x) throw() { return _finite(x); }
-    static inline real_t strtod(const char *nptr, char **endptr) {
-      return real_t( std::strtod(nptr, endptr) );
     }
 #endif
   };

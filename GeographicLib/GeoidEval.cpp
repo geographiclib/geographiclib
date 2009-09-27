@@ -15,7 +15,6 @@
 
 #include "GeographicLib/Geoid.hpp"
 #include "GeographicLib/DMS.hpp"
-#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
