@@ -75,8 +75,8 @@ namespace GeographicLib {
     // Throw an error if easting or northing are outside standard ranges.  If
     // throwp = false, return bool instead.
     static bool CheckCoords(bool utmp, bool northp, real_t x, real_t y,
-			    bool throwp = true);
-    UTMUPS();			// Disable constructor
+                            bool throwp = true);
+    UTMUPS();                   // Disable constructor
   public:
 
     /**
@@ -105,9 +105,9 @@ namespace GeographicLib {
      * UTMUPS::StandardZone(max(-80.0, min(80.0, \e lat))).
      **********************************************************************/
     static void Forward(real_t lat, real_t lon,
-			int& zone, bool& northp, real_t& x, real_t& y,
-			real_t& gamma, real_t& k,
-			int setzone = -1);
+                        int& zone, bool& northp, real_t& x, real_t& y,
+                        real_t& gamma, real_t& k,
+                        int setzone = -1);
 
     /**
      * Convert UTM or UPS coordinate to geographic coordinates .  Given zone \e
@@ -136,14 +136,14 @@ namespace GeographicLib {
      * outside the standard zone boundaries).
      **********************************************************************/
     static void Reverse(int zone, bool northp, real_t x, real_t y,
-			real_t& lat, real_t& lon, real_t& gamma, real_t& k);
+                        real_t& lat, real_t& lon, real_t& gamma, real_t& k);
 
     /**
      * Forward without returning convergence and scale.
      **********************************************************************/
     static void Forward(real_t lat, real_t lon,
-			int& zone, bool& northp, real_t& x, real_t& y,
-			int setzone = -1) {
+                        int& zone, bool& northp, real_t& x, real_t& y,
+                        int setzone = -1) {
       real_t gamma, k;
       Forward(lat, lon, zone, northp, x, y, gamma, k, setzone);
     }
@@ -152,7 +152,7 @@ namespace GeographicLib {
      * Reverse without returning convergence and scale.
      **********************************************************************/
     static void Reverse(int zone, bool northp, real_t x, real_t y,
-			real_t& lat, real_t& lon) {
+                        real_t& lat, real_t& lon) {
       real_t gamma, k;
       Reverse(zone, northp, x, y, lat, lon, gamma, k);
     }
@@ -168,7 +168,7 @@ namespace GeographicLib {
      * are legal.  0N, 001S, 61N, 38P are illegal.
      **********************************************************************/
     static void DecodeZone(const std::string& zonestr,
-			   int& zone, bool& northp);
+                           int& zone, bool& northp);
 
     /**
      * Encode a UTM/UPS zone string given the \e zone and hemisphere \e northp.

@@ -82,8 +82,8 @@ namespace GeographicLib {
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
     void Forward(Math::real_t lon0, Math::real_t lat, Math::real_t lon,
-		 Math::real_t& x, Math::real_t& y,
-		 Math::real_t& gamma, Math::real_t& k) const throw();
+                 Math::real_t& x, Math::real_t& y,
+                 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
@@ -94,8 +94,8 @@ namespace GeographicLib {
      * in the range [-180, 180).
      **********************************************************************/
     void Reverse(Math::real_t lon0, Math::real_t x, Math::real_t y,
-		 Math::real_t& lat, Math::real_t& lon,
-		 Math::real_t& gamma, Math::real_t& k) const throw();
+                 Math::real_t& lat, Math::real_t& lon,
+                 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * A global instantiation of TransverseMercator with the WGS84 ellipsoid

@@ -53,7 +53,7 @@ namespace GeographicLib {
     , _f(r != 0 ? 1 / r : 0)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
-    , _ep2(_e2 / sq(_f1))	// e2 / (1 - e2)
+    , _ep2(_e2 / sq(_f1))       // e2 / (1 - e2)
     , _n(_f / ( 2 - _f))
     , _b(_a * _f1)
   {}
@@ -61,13 +61,13 @@ namespace GeographicLib {
   const Geodesic Geodesic::WGS84(Constants::WGS84_a(), Constants::WGS84_r());
 
   Math::real_t Geodesic::SinSeries(real_t sinx, real_t cosx,
-				   const real_t c[], int n) throw() {
+                                   const real_t c[], int n) throw() {
     // Evaluate y = sum(c[i - 1] * sin(2 * i * x), i, 1, n) using Clenshaw
     // summation.  (Indices into c offset by 1.)
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
     real_t
       ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-      y0 = n & 1 ? c[--n] : 0, y1 = 0;	      // Accumulators for sum
+      y0 = n & 1 ? c[--n] : 0, y1 = 0;        // Accumulators for sum
     // Now n is even
     while (n) {
       // Unroll loop x 2, so accumulators return to their original role
@@ -83,19 +83,19 @@ namespace GeographicLib {
   }
 
   Math::real_t Geodesic::Direct(real_t lat1, real_t lon1,
-				real_t azi1, real_t s12,
-				real_t& lat2, real_t& lon2,
-				real_t& azi2, real_t& m12,
-				bool arcmode)
+                                real_t azi1, real_t s12,
+                                real_t& lat2, real_t& lon2,
+                                real_t& azi2, real_t& m12,
+                                bool arcmode)
     const throw() {
     GeodesicLine l(*this, lat1, lon1, azi1);
     return l.Position(s12, lat2, lon2, azi2, m12, arcmode);
   }
 
   Math::real_t Geodesic::Inverse(real_t lat1, real_t lon1,
-				 real_t lat2, real_t lon2,
-				 real_t& s12, real_t& azi1,
-				 real_t& azi2, real_t& m12)
+                                 real_t lat2, real_t lon2,
+                                 real_t& s12, real_t& azi1,
+                                 real_t& azi2, real_t& m12)
     const throw() {
     lon1 = AngNormalize(lon1);
     real_t lon12 = AngNormalize(AngNormalize(lon2) - lon1);
@@ -149,7 +149,7 @@ namespace GeographicLib {
     real_t
       lam12 = lon12 * Constants::degree(),
       slam12 = lon12 == 180 ? 0 :sin(lam12),
-      clam12 = cos(lam12);	// lon12 == 90 isn't interesting
+      clam12 = cos(lam12);      // lon12 == 90 isn't interesting
 
     real_t sig12, calp1, salp1, calp2, salp2;
     real_t tc[ntau ? ntau : 1], zc[nzet ? nzet : 1], ec[neta ? neta : 1];
@@ -162,20 +162,20 @@ namespace GeographicLib {
       // a meridian.
 
       calp1 = clam12; salp1 = slam12; // Head to the target longitude
-      calp2 = 1; salp2 = 0;	// At the target we're heading north
+      calp2 = 1; salp2 = 0;     // At the target we're heading north
 
       real_t
-	// tan(bet) = tan(sig) * cos(alp),
-	ssig1 = sbet1, csig1 = calp1 * cbet1,
-	ssig2 = sbet2, csig2 = calp2 * cbet2;
+        // tan(bet) = tan(sig) * cos(alp),
+        ssig1 = sbet1, csig1 = calp1 * cbet1,
+        ssig2 = sbet2, csig2 = calp2 * cbet2;
 
       // sig12 = sig2 - sig1
       sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real_t(0)),
-		    csig1 * csig2 + ssig1 * ssig2);
+                    csig1 * csig2 + ssig1 * ssig2);
       {
-	real_t dummy;
-	Lengths(_n, sig12, ssig1, csig1, ssig2, csig2,
-		cbet1, cbet2, s12, m12, dummy, tc, zc);
+        real_t dummy;
+        Lengths(_n, sig12, ssig1, csig1, ssig2, csig2,
+                cbet1, cbet2, s12, m12, dummy, tc, zc);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
       // 0.  Test case was
@@ -185,18 +185,18 @@ namespace GeographicLib {
       // In fact, we will have sig12 > pi/2 for meridional geodesic which is
       // not a shortest path.
       if (sig12 < 1 || m12 >= 0) {
-	m12 *= _a;
-	s12 *= _b;
-	sig12 /= Constants::degree();
+        m12 *= _a;
+        s12 *= _b;
+        sig12 /= Constants::degree();
       } else
-	// m12 < 0, i.e., prolate and too close to anti-podal
-	meridian = false;
+        // m12 < 0, i.e., prolate and too close to anti-podal
+        meridian = false;
     }
 
     if (!meridian &&
-	sbet1 == 0 &&	// and sbet2 == 0
-	 // Mimic the way Lambda12 works with calp1 = 0
-	(_f <= 0 || lam12 <= Constants::pi() - _f * Constants::pi())) {
+        sbet1 == 0 &&   // and sbet2 == 0
+         // Mimic the way Lambda12 works with calp1 = 0
+        (_f <= 0 || lam12 <= Constants::pi() - _f * Constants::pi())) {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
@@ -211,55 +211,55 @@ namespace GeographicLib {
 
       // Figure a starting point for Newton's method
       InverseStart(sbet1, cbet1, sbet2, cbet2,
-		   lam12, slam12, clam12, salp1, calp1, tc, zc);
+                   lam12, slam12, clam12, salp1, calp1, tc, zc);
 
       // Newton's method
       real_t ssig1, csig1, ssig2, csig2, k1;
       real_t ov = 0;
       unsigned numit = 0;
       for (unsigned trip = 0; numit < maxit; ++numit) {
-	real_t dv;
-	real_t v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
-			    salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-			    k1, trip < 1, dv, tc, zc, ec) - lam12;
+        real_t dv;
+        real_t v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
+                            salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
+                            k1, trip < 1, dv, tc, zc, ec) - lam12;
 
-	if (abs(v) <= eps2 || !(trip < 1)) {
-	  if (abs(v) > max(tol1, ov))
-	    numit = maxit;
-	  break;
-	}
-	real_t
-	  dalp1 = -v/dv;
-	real_t
-	  sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
-	  nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-	calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-	salp1 = max(real_t(0), nsalp1);
-	SinCosNorm(salp1, calp1);
-	// In some regimes we don't get quadratic convergence because slope ->
-	// 0.  So use convergernce conditions based on epsilon instead of
-	// sqrt(epsilon).  The first criterion is a test on abs(v) against 100
-	// * epsilon.  The second takes credit for an anticipated reduction in
-	// abs(v) by v/ov (due to the latest update in alp1) and checks this
-	// against epsilon.
-	if (abs(v) < tol1 || sq(v) < ov * tol0) ++trip;
-	ov = abs(v);
+        if (abs(v) <= eps2 || !(trip < 1)) {
+          if (abs(v) > max(tol1, ov))
+            numit = maxit;
+          break;
+        }
+        real_t
+          dalp1 = -v/dv;
+        real_t
+          sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
+          nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+        calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+        salp1 = max(real_t(0), nsalp1);
+        SinCosNorm(salp1, calp1);
+        // In some regimes we don't get quadratic convergence because slope ->
+        // 0.  So use convergernce conditions based on epsilon instead of
+        // sqrt(epsilon).  The first criterion is a test on abs(v) against 100
+        // * epsilon.  The second takes credit for an anticipated reduction in
+        // abs(v) by v/ov (due to the latest update in alp1) and checks this
+        // against epsilon.
+        if (abs(v) < tol1 || sq(v) < ov * tol0) ++trip;
+        ov = abs(v);
       }
 
       {
-	real_t dummy;
-	Lengths(k1, sig12, ssig1, csig1, ssig2, csig2,
-		cbet1, cbet2, s12, m12, dummy, tc, zc);
+        real_t dummy;
+        Lengths(k1, sig12, ssig1, csig1, ssig2, csig2,
+                cbet1, cbet2, s12, m12, dummy, tc, zc);
       }
       m12 *= _a;
       s12 *= _b;
       sig12 /= Constants::degree();
 
       if (numit >= maxit) {
-	// Signal failure to converge by negating the distance and azimuths.
-	s12 *= -1; sig12 *= -1; m12 *= -1;
-	salp1 *= -1; calp1 *= -1;
-	salp2 *= -1; calp2 *= -1;
+        // Signal failure to converge by negating the distance and azimuths.
+        s12 *= -1; sig12 *= -1; m12 *= -1;
+        salp1 *= -1; calp1 *= -1;
+        salp2 *= -1; calp2 *= -1;
       }
     }
 
@@ -271,19 +271,19 @@ namespace GeographicLib {
 
     // minus signs give range [-180, 180). 0- converts -0 to +0.
     azi1 = 0 - atan2(- swapp * lonsign * salp1,
-		     + swapp * latsign * calp1) / Constants::degree();
+                     + swapp * latsign * calp1) / Constants::degree();
     azi2 = 0 - atan2(- swapp * lonsign * salp2,
-		     + swapp * latsign * calp2) / Constants::degree();
+                     + swapp * latsign * calp2) / Constants::degree();
     // Returned value in [0, 180], unless it's negated to signal convergence
     // failure
     return sig12;
   }
 
   void Geodesic::Lengths(real_t k1, real_t sig12,
-			 real_t ssig1, real_t csig1, real_t ssig2, real_t csig2,
-			 real_t cbet1, real_t cbet2,
-			 real_t& s12b, real_t& m12a, real_t& m0,
-			 real_t tc[], real_t zc[]) const throw() {
+                         real_t ssig1, real_t csig1, real_t ssig2, real_t csig2,
+                         real_t cbet1, real_t cbet2,
+                         real_t& s12b, real_t& m12a, real_t& m0,
+                         real_t tc[], real_t zc[]) const throw() {
     // Return m12a = (reduced length)/_a; also calculate s12b = distance/_b,
     // and m0 = coefficient of secular term in expression for reduced length.
     tauCoeff(k1, tc);
@@ -291,16 +291,16 @@ namespace GeographicLib {
     real_t
       taufm1 = tauFactorm1(k1),
       et = (1 + taufm1) * (SinSeries(ssig2, csig2, tc, ntau) -
-			   SinSeries(ssig1, csig1, tc, ntau)),
+                           SinSeries(ssig1, csig1, tc, ntau)),
       zetfm1 = zetFactorm1(k1),
       ez = (1 + zetfm1) * (SinSeries(ssig2, csig2, zc, nzet) -
-			   SinSeries(ssig1, csig1, zc, nzet));
+                           SinSeries(ssig1, csig1, zc, nzet));
     m0 = taufm1 - zetfm1;
     // Missing a factor of _a.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
     m12a = (sqrt(1 - _e2 * sq(cbet2)) * (csig1 * ssig2) -
-	    sqrt(1 - _e2 * sq(cbet1)) * (ssig1 * csig2))
+            sqrt(1 - _e2 * sq(cbet1)) * (ssig1 * csig2))
       - _f1 * csig1 * csig2 * ( m0 * sig12 + (et - ez) );
     // Missing a factor of _b
     s12b =  (1 + taufm1) * sig12 + et;
@@ -311,53 +311,53 @@ namespace GeographicLib {
     // adapted from Geocentric::Reverse, taking e^2 -> 0 and a * e^2 -> 1 and
     // scaling all variables to e^2.
     real_t
-      p = sq(R),		// *e^4
-      q = sq(z),		// *e^4
-      r = (p + q - 1) / 6;	// *e^4
+      p = sq(R),                // *e^4
+      q = sq(z),                // *e^4
+      r = (p + q - 1) / 6;      // *e^4
     if ( !(q == 0 && r <= 0) ) {
       real_t
-	// Avoid possible division by zero when r = 0 by multiplying
-	// equations for s and t by r^3 and r, resp.
-	S = p * q / 4,		// *e^12 ... S = r^3 * s
-	r2 = sq(r),		// *e^8
-	r3 = r * r2,		// *e^12
-	disc =  S * (2 * r3 + S); // *e^24
-      real_t u = r;		  // *e^4
+        // Avoid possible division by zero when r = 0 by multiplying
+        // equations for s and t by r^3 and r, resp.
+        S = p * q / 4,          // *e^12 ... S = r^3 * s
+        r2 = sq(r),             // *e^8
+        r3 = r * r2,            // *e^12
+        disc =  S * (2 * r3 + S); // *e^24
+      real_t u = r;               // *e^4
       if (disc >= 0) {
-	real_t T3 = r3 + S;	// *e^12
-	// Pick the sign on the sqrt to maximize abs(T3).  This minimizes
-	// loss of precision due to cancellation.  The result is unchanged
-	// because of the way the T is used in definition of u.
-	T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
-	// N.B. cbrt always returns the real root.  cbrt(-8) = -2.
-	real_t T = Math::cbrt(T3); // T = r * t
-	// T can be zero; but then r2 / T -> 0.
-	u += T + (T != 0 ? r2 / T : 0);
+        real_t T3 = r3 + S;     // *e^12
+        // Pick the sign on the sqrt to maximize abs(T3).  This minimizes
+        // loss of precision due to cancellation.  The result is unchanged
+        // because of the way the T is used in definition of u.
+        T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
+        // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
+        real_t T = Math::cbrt(T3); // T = r * t
+        // T can be zero; but then r2 / T -> 0.
+        u += T + (T != 0 ? r2 / T : 0);
       } else {
-	// T is complex, but the way u is defined the result is real.
-	real_t ang = atan2(sqrt(-disc), r3 + S);
-	// There are three possible real solutions for u depending on the
-	// multiple of 2*pi here.  We choose multiplier = 1 which leads to a
-	// jump in the solution across the line 2 + s = 0; but this
-	// nevertheless leads to a continuous (and accurate) solution for k.
-	// Other choices of the multiplier lead to poorly conditioned
-	// solutions near s = 0 (i.e., near p = 0 or q = 0).
-	u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / real_t(3));
+        // T is complex, but the way u is defined the result is real.
+        real_t ang = atan2(sqrt(-disc), r3 + S);
+        // There are three possible real solutions for u depending on the
+        // multiple of 2*pi here.  We choose multiplier = 1 which leads to a
+        // jump in the solution across the line 2 + s = 0; but this
+        // nevertheless leads to a continuous (and accurate) solution for k.
+        // Other choices of the multiplier lead to poorly conditioned
+        // solutions near s = 0 (i.e., near p = 0 or q = 0).
+        u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / real_t(3));
       }
       real_t
-	v = sqrt(sq(u) + q),	// *e^4 guaranteed positive
-	// Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
-	// e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
-	uv = u < 0 ? q / (v - u) : u + v, // *e^4... u+v, guaranteed positive
-	// Need to guard against w going negative due to roundoff in uv - q.
-	w = max(real_t(0), (uv - q) / (2 * v)), // *e^2
-	// Rearrange expression for k to avoid loss of accuracy due to
-	// subtraction.  Division by 0 not possible because uv > 0, w >= 0.
-	k = uv / (sqrt(uv + sq(w)) + w),   // *e^2 ... guaranteed positive
-	d = k * R / (k + 1);		   // *e^0
+        v = sqrt(sq(u) + q),    // *e^4 guaranteed positive
+        // Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
+        // e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
+        uv = u < 0 ? q / (v - u) : u + v, // *e^4... u+v, guaranteed positive
+        // Need to guard against w going negative due to roundoff in uv - q.
+        w = max(real_t(0), (uv - q) / (2 * v)), // *e^2
+        // Rearrange expression for k to avoid loss of accuracy due to
+        // subtraction.  Division by 0 not possible because uv > 0, w >= 0.
+        k = uv / (sqrt(uv + sq(w)) + w),   // *e^2 ... guaranteed positive
+        d = k * R / (k + 1);               // *e^0
       s = z;
       c = d;
-    } else {			// q == 0 && r <= 0
+    } else {                    // q == 0 && r <= 0
       // Very near equatorial plane with R <= a * e^2.  This leads to k = 0
       // using the general formula and division by 0 in formula for h.  So
       // handle this case directly.
@@ -368,10 +368,10 @@ namespace GeographicLib {
   }
 
   void Geodesic::InverseStart(real_t sbet1, real_t cbet1,
-			      real_t sbet2, real_t cbet2,
-			      real_t lam12, real_t slam12, real_t clam12,
-			      real_t& salp1, real_t& calp1,
-			      real_t tc[], real_t zc[]) const throw() {
+                              real_t sbet2, real_t cbet2,
+                              real_t lam12, real_t slam12, real_t clam12,
+                              real_t& salp1, real_t& calp1,
+                              real_t tc[], real_t zc[]) const throw() {
     // Figure a starting point for Newton's method
     real_t
       // How close to antipodal lat?
@@ -412,74 +412,74 @@ namespace GeographicLib {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
       // is at origin and singular point is at y = 0, x = -1.
       real_t x, y, lamscale, betscale;
-      if (_f >= 0) {		// In fact f == 0 does not get here
-	// x = dlong, y = dlat
-	{
-	  real_t
-	    mu = sq(sbet1),
-	    u2 = mu * _ep2,
-	    k1 = u2 / (2 * (1 + sqrt(1 + u2)) + u2);
-	  lamscale = -cbet1 * etaFactor(_f, k1) * Constants::pi();
-	}
-	betscale = lamscale * cbet1;
-	x = (lam12 - Constants::pi()) / lamscale;
-	y = sbet12a / betscale;
-      } else {			// _f < 0
-	// x = dlat, y = dlong
-	real_t
-	  cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
-	  bet12a = atan2(sbet12a, cbet12a);
-	real_t m0, dummy;
-	etaCoeff(_f, _n, zc);
-	// In the case of lon12 = 180, this repeats a calculation made in
-	// Inverse.
-	Lengths(_n, Constants::pi() + bet12a, sbet1, -cbet1, sbet2, cbet2,
-		cbet1, cbet2, dummy, x, m0, tc, zc);
-	x = -1 + x/(_f1 * cbet1 * cbet2 * m0 * Constants::pi());
-	betscale = x < -real_t(0.01L) ? sbet12a / x :
-	  -_f * sq(cbet1) * Constants::pi();
-	lamscale = betscale / cbet1;
-	y = (lam12 - Constants::pi()) / lamscale;
+      if (_f >= 0) {            // In fact f == 0 does not get here
+        // x = dlong, y = dlat
+        {
+          real_t
+            mu = sq(sbet1),
+            u2 = mu * _ep2,
+            k1 = u2 / (2 * (1 + sqrt(1 + u2)) + u2);
+          lamscale = -cbet1 * etaFactor(_f, k1) * Constants::pi();
+        }
+        betscale = lamscale * cbet1;
+        x = (lam12 - Constants::pi()) / lamscale;
+        y = sbet12a / betscale;
+      } else {                  // _f < 0
+        // x = dlat, y = dlong
+        real_t
+          cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
+          bet12a = atan2(sbet12a, cbet12a);
+        real_t m0, dummy;
+        etaCoeff(_f, _n, zc);
+        // In the case of lon12 = 180, this repeats a calculation made in
+        // Inverse.
+        Lengths(_n, Constants::pi() + bet12a, sbet1, -cbet1, sbet2, cbet2,
+                cbet1, cbet2, dummy, x, m0, tc, zc);
+        x = -1 + x/(_f1 * cbet1 * cbet2 * m0 * Constants::pi());
+        betscale = x < -real_t(0.01L) ? sbet12a / x :
+          -_f * sq(cbet1) * Constants::pi();
+        lamscale = betscale / cbet1;
+        y = (lam12 - Constants::pi()) / lamscale;
       }
 
       if (y > -100 * tol1 && x >  -1 - xthresh) {
-	// strip near cut
-	if (_f >= 0) {
-	  salp1 = min(real_t( 1), -x); calp1 = - sqrt(1 - sq(salp1));
-	} else {
-	  calp1 = max(real_t(-1),  x); salp1 =   sqrt(1 - sq(calp1));
-	}
+        // strip near cut
+        if (_f >= 0) {
+          salp1 = min(real_t( 1), -x); calp1 = - sqrt(1 - sq(salp1));
+        } else {
+          calp1 = max(real_t(-1),  x); salp1 =   sqrt(1 - sq(calp1));
+        }
       } else {
-	// Estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0.  (For
-	// f < 0, we're solving for pi/2 - alp2 and calp2 and salp2 are
-	// swapped.)
-	real_t salp2, calp2;
-	// Note phi = 90 - alpha2, so swap salp2 and calp2
-	Evolute(-x, -y, calp2, salp2);
-	// estimate omg12a = pi - omg12
-	real_t
-	  omg12a = lamscale * ( _f >= 0
-				? Math::hypot(y,  salp2 + x) * salp2
-				: Math::hypot(x, -calp2 + y) * calp2 ),
-	  somg12 = sin(omg12a), comg12 = -cos(omg12a);
-	// Update spherical estimate of alp1 using omg12 instead of lam12
-	salp1 = cbet2 * somg12;
-	calp1 = sbet12a - cbet2 * sbet1 * sq(somg12) / (1 - comg12);
+        // Estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0.  (For
+        // f < 0, we're solving for pi/2 - alp2 and calp2 and salp2 are
+        // swapped.)
+        real_t salp2, calp2;
+        // Note phi = 90 - alpha2, so swap salp2 and calp2
+        Evolute(-x, -y, calp2, salp2);
+        // estimate omg12a = pi - omg12
+        real_t
+          omg12a = lamscale * ( _f >= 0
+                                ? Math::hypot(y,  salp2 + x) * salp2
+                                : Math::hypot(x, -calp2 + y) * calp2 ),
+          somg12 = sin(omg12a), comg12 = -cos(omg12a);
+        // Update spherical estimate of alp1 using omg12 instead of lam12
+        salp1 = cbet2 * somg12;
+        calp1 = sbet12a - cbet2 * sbet1 * sq(somg12) / (1 - comg12);
       }
     }
     SinCosNorm(salp1, calp1);
   }
 
   Math::real_t Geodesic::Lambda12(real_t sbet1, real_t cbet1,
-				  real_t sbet2, real_t cbet2,
-				  real_t salp1, real_t calp1,
-				  real_t& salp2, real_t& calp2,
-				  real_t& sig12,
-				  real_t& ssig1, real_t& csig1,
-				  real_t& ssig2, real_t& csig2,
-				  real_t& k1,
-				  bool diffp, real_t& dlam12,
-				  real_t tc[], real_t zc[], real_t ec[])
+                                  real_t sbet2, real_t cbet2,
+                                  real_t salp1, real_t calp1,
+                                  real_t& salp2, real_t& calp2,
+                                  real_t& sig12,
+                                  real_t& ssig1, real_t& csig1,
+                                  real_t& ssig2, real_t& csig2,
+                                  real_t& k1,
+                                  bool diffp, real_t& dlam12,
+                                  real_t tc[], real_t zc[], real_t ec[])
     const throw() {
 
     if (sbet1 == 0 && calp1 == 0)
@@ -511,8 +511,8 @@ namespace GeographicLib {
     // to give alp2 in [0, pi/2]).
     calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
       sqrt(sq(calp1 * cbet1) + (cbet1 < -sbet1 ?
-				(cbet2 - cbet1) * (cbet1 + cbet2) :
-				(sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
+                                (cbet2 - cbet1) * (cbet1 + cbet2) :
+                                (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
       abs(calp1);
     // tan(bet2) = tan(sig2) * cos(alp2)
     // tan(omg2) = sin(alp0) * tan(sig2).
@@ -523,29 +523,29 @@ namespace GeographicLib {
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real_t(0)),
-		  csig1 * csig2 + ssig1 * ssig2);
+                  csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
     omg12 = atan2(max(comg1 * somg2 - somg1 * comg2, real_t(0)),
-		  comg1 * comg2 + somg1 * somg2);
+                  comg1 * comg2 + somg1 * somg2);
     real_t eta12, h0;
     mu = sq(calp0);
     u2 = mu * _ep2;
     k1 = u2 / (2 * (1 + sqrt(1 + u2)) + u2);
     etaCoeff(_f, k1, ec);
     eta12 = (SinSeries(ssig2, csig2, ec, neta) -
-	     SinSeries(ssig1, csig1, ec, neta));
+             SinSeries(ssig1, csig1, ec, neta));
     h0 = etaFactor(_f, k1),
     lam12 = omg12 + salp0 * h0 * (sig12 + eta12);
 
     if (diffp) {
       if (calp2 == 0)
-	dlam12 = - 2 * sqrt(1 - _e2 * sq(cbet1)) / sbet1;
+        dlam12 = - 2 * sqrt(1 - _e2 * sq(cbet1)) / sbet1;
       else {
-	real_t dummy1, dummy2;
-	Lengths(k1, sig12, ssig1, csig1, ssig2, csig2,
-		cbet1, cbet2, dummy1, dlam12, dummy2, tc, zc);
-	dlam12 /= calp2 * cbet2;
+        real_t dummy1, dummy2;
+        Lengths(k1, sig12, ssig1, csig1, ssig2, csig2,
+                cbet1, cbet2, dummy1, dlam12, dummy2, tc, zc);
+        dlam12 /= calp2 * cbet2;
       }
     }
 
@@ -553,7 +553,7 @@ namespace GeographicLib {
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
-			     real_t lat1, real_t lon1, real_t azi1) throw() {
+                             real_t lat1, real_t lon1, real_t azi1) throw() {
     azi1 = Geodesic::AngNormalize(azi1);
     // Guard against underflow in salp0
     azi1 = Geodesic::AngRound(azi1);
@@ -623,8 +623,8 @@ namespace GeographicLib {
   }
 
   Math::real_t GeodesicLine::Position(real_t s12,
-				      real_t& lat2, real_t& lon2, real_t& azi2,
-				      real_t& m12, bool arcmode)
+                                      real_t& lat2, real_t& lon2, real_t& azi2,
+                                      real_t& m12, bool arcmode)
   const throw() {
     if (!Init())
       // Uninitialized
@@ -641,13 +641,13 @@ namespace GeographicLib {
     } else {
       // Interpret s12 as distance
       real_t
-	tau12 = s12 / (_b * (1 + _taufm1)),
-	s = sin(tau12),
-	c = cos(tau12);
+        tau12 = s12 / (_b * (1 + _taufm1)),
+        s = sin(tau12),
+        c = cos(tau12);
       // tau2 = tau1 + tau12
       dtau2 = - Geodesic::SinSeries(_stau1 * c + _ctau1 * s,
-				    _ctau1 * c - _stau1 * s,
-				    _sigCoeff, nsig);
+                                    _ctau1 * c - _stau1 * s,
+                                    _sigCoeff, nsig);
       sig12 = tau12 - (dtau2 - _dtau1);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
@@ -670,10 +670,10 @@ namespace GeographicLib {
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
     // omg12 = omg2 - omg1
     omg12 = atan2(somg2 * _comg1 - comg2 * _somg1,
-		  comg2 * _comg1 + somg2 * _somg1);
+                  comg2 * _comg1 + somg2 * _somg1);
     lam12 = omg12 + _etaf *
       ( sig12 +
-	(Geodesic::SinSeries(ssig2, csig2, _etaCoeff, neta)  - _dlam1));
+        (Geodesic::SinSeries(ssig2, csig2, _etaCoeff, neta)  - _dlam1));
     lon12 = lam12 / Constants::degree();
     // Can't use AngNormalize because longitude might have wrapped multiple
     // times.
@@ -686,12 +686,12 @@ namespace GeographicLib {
     real_t
       et = (1 + _taufm1) * (dtau2 - _dtau1),
       ez = (1 + _zetfm1) * (Geodesic::SinSeries(ssig2, csig2, _zetCoeff, nzet)
-			    - _dzet1);
+                            - _dzet1);
     // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
     // accurate cancellation in the case of coincident points.
     m12 = _b * ((sqrt(1 + _u2 * sq( ssig2)) * (_csig1 * ssig2) -
-		 sqrt(1 + _u2 * sq(_ssig1)) * (_ssig1 * csig2))
-		- _csig1 * csig2 * ( (_taufm1-_zetfm1) * sig12 + (et-ez) ));
+                 sqrt(1 + _u2 * sq(_ssig1)) * (_ssig1 * csig2))
+                - _csig1 * csig2 * ( (_taufm1-_zetfm1) * sig12 + (et-ez) ));
     if (arcmode)
       s12 = _b * ((1 + _taufm1) * sig12 + et);
 

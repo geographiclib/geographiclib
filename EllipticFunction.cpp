@@ -80,8 +80,8 @@ namespace GeographicLib {
     while (q >= mul * abs(an)) {
       // Max 7 trips
       real_t ln = sqrt(x0)*sqrt(y0) +
-	sqrt(y0)*sqrt(z0) +
-	sqrt(z0)*sqrt(x0);
+        sqrt(y0)*sqrt(z0) +
+        sqrt(z0)*sqrt(x0);
       s += 1/(mul * sqrt(z0) * (z0 + ln ));
       an = (an + ln)/4;
       x0 = (x0 + ln)/4;
@@ -98,7 +98,7 @@ namespace GeographicLib {
       e4 = 3 * (xx * yy - zz * zz) * zz * zz,
       e5 = xx * yy * zz * zz * zz;
     return (1 - 3 * e2 / 14 + e3 / 6 + 9 * e2 * e2 / 88 - 3 * e4 / 22
-	    - 9 * e2 * e3 / 52 + 3 * e5 / 26) / (mul * an * sqrt(an))
+            - 9 * e2 * e3 / 52 + 3 * e5 / 26) / (mul * an * sqrt(an))
       + 3 * s;
   }
 
@@ -151,7 +151,7 @@ namespace GeographicLib {
    */
 
   void EllipticFunction::sncndn(real_t x,
-				real_t& sn, real_t& cn, real_t& dn)
+                                real_t& sn, real_t& cn, real_t& dn)
     const throw() {
     // Bulirsch's sncndn routine, p 89.
     //
@@ -163,34 +163,34 @@ namespace GeographicLib {
       real_t m[num], n[num];
       unsigned l = 0;
       for (real_t a = 1; l < num; ++l) {
-	// Max 5 trips
-	m[l] = a;
-	n[l] = mc = sqrt(mc);
-	c = (a + mc) / 2;
-	if (abs(a - mc) <= tolJAC * a) {
-	  ++l;
-	  break;
-	}
-	mc = a * mc;
-	a = c;
+        // Max 5 trips
+        m[l] = a;
+        n[l] = mc = sqrt(mc);
+        c = (a + mc) / 2;
+        if (abs(a - mc) <= tolJAC * a) {
+          ++l;
+          break;
+        }
+        mc = a * mc;
+        a = c;
       }
       x = c * x;
       sn = sin(x);
       cn = cos(x);
       dn = 1;
       if (sn != 0) {
-	real_t a = cn / sn;
-	c = a * c;
-	while (l--) {
-	  real_t b = m[l];
-	  a = c * a;
-	  c = dn * c;
-	  dn = (n[l] + a) / (b + a);
-	  a = c / b;
-	}
-	a = 1 / sqrt(c * c + 1);
-	sn = sn < 0 ? -a : a;
-	cn = c * sn;
+        real_t a = cn / sn;
+        c = a * c;
+        while (l--) {
+          real_t b = m[l];
+          a = c * a;
+          c = dn * c;
+          dn = (n[l] + a) / (b + a);
+          a = c / b;
+        }
+        a = 1 / sqrt(c * c + 1);
+        sn = sn < 0 ? -a : a;
+        cn = c * sn;
       }
     } else {
       sn = tanh(x);
@@ -204,7 +204,7 @@ namespace GeographicLib {
     cn *= cn; dn *= dn;
     // Carlson, eq. 4.6
     ei = abs(sn) * (RF(cn, dn, real_t(1)) -
-		    (_m/3) * sn*sn * RD(cn, dn, real_t(1)));
+                    (_m/3) * sn*sn * RD(cn, dn, real_t(1)));
     // Enforce usual trig-like symmetries
     if (cn < 0) {
       ei = 2 * E() - ei;

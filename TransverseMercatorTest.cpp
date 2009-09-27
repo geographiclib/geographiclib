@@ -100,24 +100,24 @@ int main(int argc, char* argv[]) {
       std::istringstream str(s);
       real_t lat, lon, x, y;
       if (!(reverse ?
-	    (str >> x >> y) :
-	    (str >> lat >> lon)))
-	throw  std::out_of_range("Incomplete input: " + s);
+            (str >> x >> y) :
+            (str >> lat >> lon)))
+        throw  std::out_of_range("Incomplete input: " + s);
       real_t gamma, k;
       if (reverse) {
-	if (series)
-	  TMS.Reverse(real_t(0), x, y, lat, lon, gamma, k);
-	else
-	  TME.Reverse(real_t(0), x, y, lat, lon, gamma, k);
+        if (series)
+          TMS.Reverse(real_t(0), x, y, lat, lon, gamma, k);
+        else
+          TME.Reverse(real_t(0), x, y, lat, lon, gamma, k);
       } else {
-	if (series)
-	  TMS.Forward(real_t(0), lat, lon, x, y, gamma, k);
-	else
-	  TME.Forward(real_t(0), lat, lon, x, y, gamma, k);
+        if (series)
+          TMS.Forward(real_t(0), lat, lon, x, y, gamma, k);
+        else
+          TME.Forward(real_t(0), lat, lon, x, y, gamma, k);
       }
       std::cout << lat << " " << lon << " "
-		<< x << " " << y << " "
-		<< gamma << " " << k << "\n";
+                << x << " " << y << " "
+                << gamma << " " << k << "\n";
     }
     catch (const std::exception& e) {
       std::cout << "ERROR: " << e.what() << "\n";

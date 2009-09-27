@@ -227,56 +227,56 @@ namespace GeographicLib {
     _datetime = "UNKNOWN";
     while (getline(_file, s)) {
       if (s.empty())
-	continue;
+        continue;
       if (s[0] == '#') {
-	if (s.substr(0, 14) == "# Description ")
-	  _description = s.substr(14);
-	else if (s.substr(0, 11) == "# DateTime ")
-	  _datetime = s.substr(11);
-	else if (s.substr(0,9) == "# Offset ") {
-	  s = s.substr(9);
-	  istringstream is(s);
-	  if (!(is >> _offset))
-	    throw out_of_range("Error reading offset " + _filename);
-	} else if (s.substr(0, 8) == "# Scale ") {
-	  s = s.substr(8);
-	  istringstream is(s);
-	  if (!(is >> _scale))
-	    throw out_of_range("Error reading scale " + _filename);
-	} else if (!_cubic && s.substr(0,19) == "# MaxBilinearError ") {
-	  s = s.substr(19);
-	  istringstream is(s);
-	  // It's not an error if the error can't be read
-	  is >> _maxerror;
-	} else if (!_cubic && s.substr(0,19) == "# RMSBilinearError ") {
-	  s = s.substr(19);
-	  istringstream is(s);
-	  // It's not an error if the error can't be read
-	  is >> _rmserror;
-	} else if (_cubic && s.substr(0,16) == "# MaxCubicError ") {
-	  s = s.substr(16);
-	  istringstream is(s);
-	  // It's not an error if the error can't be read
-	  is >> _maxerror;
-	} else if (_cubic && s.substr(0,16) == "# RMSCubicError ") {
-	  s = s.substr(16);
-	  istringstream is(s);
-	  // It's not an error if the error can't be read
-	  is >> _rmserror;
-	}
+        if (s.substr(0, 14) == "# Description ")
+          _description = s.substr(14);
+        else if (s.substr(0, 11) == "# DateTime ")
+          _datetime = s.substr(11);
+        else if (s.substr(0,9) == "# Offset ") {
+          s = s.substr(9);
+          istringstream is(s);
+          if (!(is >> _offset))
+            throw out_of_range("Error reading offset " + _filename);
+        } else if (s.substr(0, 8) == "# Scale ") {
+          s = s.substr(8);
+          istringstream is(s);
+          if (!(is >> _scale))
+            throw out_of_range("Error reading scale " + _filename);
+        } else if (!_cubic && s.substr(0,19) == "# MaxBilinearError ") {
+          s = s.substr(19);
+          istringstream is(s);
+          // It's not an error if the error can't be read
+          is >> _maxerror;
+        } else if (!_cubic && s.substr(0,19) == "# RMSBilinearError ") {
+          s = s.substr(19);
+          istringstream is(s);
+          // It's not an error if the error can't be read
+          is >> _rmserror;
+        } else if (_cubic && s.substr(0,16) == "# MaxCubicError ") {
+          s = s.substr(16);
+          istringstream is(s);
+          // It's not an error if the error can't be read
+          is >> _maxerror;
+        } else if (_cubic && s.substr(0,16) == "# RMSCubicError ") {
+          s = s.substr(16);
+          istringstream is(s);
+          // It's not an error if the error can't be read
+          is >> _rmserror;
+        }
       } else {
-	istringstream is(s);
-	if (!(is >> _width >> _height))
-	  throw out_of_range("Error reading raster size " + _filename);
-	break;
+        istringstream is(s);
+        if (!(is >> _width >> _height))
+          throw out_of_range("Error reading raster size " + _filename);
+        break;
       }
     }
     {
       unsigned maxval;
       if (!(_file >> maxval))
-	throw out_of_range("Error reading maxval " + _filename);
+        throw out_of_range("Error reading maxval " + _filename);
       if (maxval != 0xffffu)
-	throw out_of_range("Maxval not equal to 2^16-1 " + _filename);
+        throw out_of_range("Maxval not equal to 2^16-1 " + _filename);
       // Add 1 for whitespace after maxval
       _datastart = unsigned(_file.tellg()) + 1u;
     }
@@ -307,7 +307,7 @@ namespace GeographicLib {
   }
 
   Math::real_t Geoid::height(real_t lat, real_t lon, bool gradp,
-			     real_t& gradn, real_t& grade) const  {
+                             real_t& gradn, real_t& grade) const  {
     if (lon < 0)
       lon += 360;
     real_t
@@ -324,81 +324,81 @@ namespace GeographicLib {
       _ix = ix;
       _iy = iy;
       if (!_cubic) {
-	_v00 = rawval(ix    , iy    );
-	_v01 = rawval(ix + 1, iy    );
-	_v10 = rawval(ix    , iy + 1);
-	_v11 = rawval(ix + 1, iy + 1);
+        _v00 = rawval(ix    , iy    );
+        _v01 = rawval(ix + 1, iy    );
+        _v10 = rawval(ix    , iy + 1);
+        _v11 = rawval(ix + 1, iy + 1);
       } else {
-	real_t v[stencilsize];
-	int k = 0;
-	v[k++] = rawval(ix    , iy - 1);
-	v[k++] = rawval(ix + 1, iy - 1);
-	v[k++] = rawval(ix - 1, iy    );
-	v[k++] = rawval(ix    , iy    );
-	v[k++] = rawval(ix + 1, iy    );
-	v[k++] = rawval(ix + 2, iy    );
-	v[k++] = rawval(ix - 1, iy + 1);
-	v[k++] = rawval(ix    , iy + 1);
-	v[k++] = rawval(ix + 1, iy + 1);
-	v[k++] = rawval(ix + 2, iy + 1);
-	v[k++] = rawval(ix    , iy + 2);
-	v[k++] = rawval(ix + 1, iy + 2);
+        real_t v[stencilsize];
+        int k = 0;
+        v[k++] = rawval(ix    , iy - 1);
+        v[k++] = rawval(ix + 1, iy - 1);
+        v[k++] = rawval(ix - 1, iy    );
+        v[k++] = rawval(ix    , iy    );
+        v[k++] = rawval(ix + 1, iy    );
+        v[k++] = rawval(ix + 2, iy    );
+        v[k++] = rawval(ix - 1, iy + 1);
+        v[k++] = rawval(ix    , iy + 1);
+        v[k++] = rawval(ix + 1, iy + 1);
+        v[k++] = rawval(ix + 2, iy + 1);
+        v[k++] = rawval(ix    , iy + 2);
+        v[k++] = rawval(ix + 1, iy + 2);
 
-	const real_t* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
-	real_t c0x = iy == 0 ? c0n : iy == _height - 2 ? c0s : c0;
-	for (unsigned i = 0; i < nterms; ++i) {
-	  _t[i] = 0;
-	  for (unsigned j = 0; j < stencilsize; ++j)
-	    _t[i] += v[j] * c3x[nterms * j + i];
-	  _t[i] /= c0x;
-	}
+        const real_t* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
+        real_t c0x = iy == 0 ? c0n : iy == _height - 2 ? c0s : c0;
+        for (unsigned i = 0; i < nterms; ++i) {
+          _t[i] = 0;
+          for (unsigned j = 0; j < stencilsize; ++j)
+            _t[i] += v[j] * c3x[nterms * j + i];
+          _t[i] /= c0x;
+        }
       }
     }
     if (!_cubic) {
       real_t
-	a = (1 - fx) * _v00 + fx * _v01,
-	b = (1 - fx) * _v10 + fx * _v11,
-	c = (1 - fy) * a + fy * b,
-	h = _offset + _scale * c;
+        a = (1 - fx) * _v00 + fx * _v01,
+        b = (1 - fx) * _v10 + fx * _v11,
+        c = (1 - fy) * a + fy * b,
+        h = _offset + _scale * c;
       if (gradp) {
-	real_t
-	  phi = lat * _degree,
-	  cosphi = cos(phi),
-	  sinphi = sin(phi),
-	  n = 1/sqrt(1 - _e2 * sinphi * sinphi);
-	gradn = ((1 - fx) * (_v00 - _v10) + fx * (_v01 - _v11)) *
-	  _rlatres / (_degree * _a * (1 - _e2) * n * n * n);
-	grade = (cosphi > _eps ?
-		 ((1 - fy) * (_v01 - _v00) + fy * (_v11 - _v10)) /   cosphi :
-		 (sinphi > 0 ? _v11 - _v10 : _v01 - _v00) *
-		 _rlatres / _degree ) *
-	  _rlonres / (_degree * _a * n);
-	gradn *= _scale;
-	grade *= _scale;
+        real_t
+          phi = lat * _degree,
+          cosphi = cos(phi),
+          sinphi = sin(phi),
+          n = 1/sqrt(1 - _e2 * sinphi * sinphi);
+        gradn = ((1 - fx) * (_v00 - _v10) + fx * (_v01 - _v11)) *
+          _rlatres / (_degree * _a * (1 - _e2) * n * n * n);
+        grade = (cosphi > _eps ?
+                 ((1 - fy) * (_v01 - _v00) + fy * (_v11 - _v10)) /   cosphi :
+                 (sinphi > 0 ? _v11 - _v10 : _v01 - _v00) *
+                 _rlatres / _degree ) *
+          _rlonres / (_degree * _a * n);
+        gradn *= _scale;
+        grade *= _scale;
       }
       return h;
     } else {
       real_t h = _t[0] + fx * (_t[1] + fx * (_t[3] + fx * _t[6])) +
-	fy * (_t[2] + fx * (_t[4] + fx * _t[7]) +
-	     fy * (_t[5] + fx * _t[8] + fy * _t[9]));
+        fy * (_t[2] + fx * (_t[4] + fx * _t[7]) +
+             fy * (_t[5] + fx * _t[8] + fy * _t[9]));
       h = _offset + _scale * h;
       if (gradp) {
-	// Avoid 0/0 at the poles by backing off 1/100 of a cell size
-	lat = min(lat,  90 - 1/(100 * _rlatres));
-	lat = max(lat, -90 + 1/(100 * _rlatres));
-	fy = (90 - lat) * _rlatres;
-	fy -=  int(fy);
-	real_t
-	  phi = lat * _degree,
-	  cosphi = cos(phi),
-	  sinphi = sin(phi),
-	  n = 1/sqrt(1 - _e2 * sinphi * sinphi);
-	gradn = _t[2] + fx * (_t[4] + fx * _t[7]) +
-	  fy * (2 * _t[5] + fx * 2 * _t[8] + 3 * fy * _t[9]);
-	grade = _t[1] + fx * (2 * _t[3] + fx * 3 * _t[6]) +
-	  fy * (_t[4] + fx * 2 * _t[7] + fy * _t[8]);
-	gradn *= - _rlatres / (_degree * _a * (1 - _e2) * n * n * n) * _scale;
-	grade *= _rlonres / (_degree * _a * n * cosphi) * _scale;
+        // Avoid 0/0 at the poles by backing off 1/100 of a cell size
+        lat = min(lat,  90 - 1/(100 * _rlatres));
+        lat = max(lat, -90 + 1/(100 * _rlatres));
+        fy = (90 - lat) * _rlatres;
+        fy -=  int(fy);
+        real_t
+          phi = lat * _degree,
+          cosphi = cos(phi),
+          sinphi = sin(phi),
+          n = 1/sqrt(1 - _e2 * sinphi * sinphi);
+        gradn = _t[2] + fx * (_t[4] + fx * _t[7]) +
+          fy * (2 * _t[5] + fx * 2 * _t[8] + 3 * fy * _t[9]);
+        grade = _t[1] + fx * (2 * _t[3] + fx * 3 * _t[6]) +
+          fy * (_t[4] + fx * 2 * _t[7] + fy * _t[8]);
+        gradn *= - _rlatres / (_degree * _a * (1 - _e2) * n * n * n) * _scale;
+        grade *= _rlonres / (_degree * _a * n * cosphi) * _scale;
       }
       return h;
     }
@@ -415,7 +415,7 @@ namespace GeographicLib {
   }
 
   void Geoid::CacheArea(real_t south, real_t west,
-			real_t north, real_t east) const {
+                        real_t north, real_t east) const {
     if (south > north) {
       CacheClear();
       return;
@@ -462,7 +462,7 @@ namespace GeographicLib {
     try {
       _data.resize(_ysize, vector<unsigned short>(_xsize));
       for (int iy = min(oysize, _ysize); iy--;)
-	_data[iy].resize(_xsize);
+        _data[iy].resize(_xsize);
     }
     catch (const bad_alloc&) {
       CacheClear();
@@ -471,32 +471,32 @@ namespace GeographicLib {
 
     try {
       int
-	ie1 = min(_width - 1, ie),
-	w1 = ie1 - iw + 1;
+        ie1 = min(_width - 1, ie),
+        w1 = ie1 - iw + 1;
       vector<char> buf(2 * w1);
       for (int iy = in; iy <= is; ++iy) {
-	_file.seekg(_datastart + 2 * (iy * _width + iw), ios::beg);
-	_file.read(&(buf[0]), 2 * w1);
-	for (int ix = 0; ix < w1; ++ix)
-	  _data[iy - in][ix] =
-	    (unsigned short)((unsigned char)buf[2 * ix] * 256u +
-			     (unsigned char)buf[2 * ix + 1]);
+        _file.seekg(_datastart + 2 * (iy * _width + iw), ios::beg);
+        _file.read(&(buf[0]), 2 * w1);
+        for (int ix = 0; ix < w1; ++ix)
+          _data[iy - in][ix] =
+            (unsigned short)((unsigned char)buf[2 * ix] * 256u +
+                             (unsigned char)buf[2 * ix + 1]);
       }
       if (ie1 < ie) {
-	// Cached area wraps past longitude = 0
-	ie1 = ie - _width;
-	int
-	  iw1 = 0,
-	  w2 = ie1 + 1;
-	buf.resize(2 * w1);
-	for (int iy = in; iy <= is; ++iy) {
-	  _file.seekg(_datastart + 2 * (iy * _width + iw1), ios::beg);
-	  _file.read(&(buf[0]), 2 * w2);
-	  for (int ix = 0; ix < w2; ++ix)
-	  _data[iy - in][ix + w1] =
-	    (unsigned short)((unsigned char)buf[2 * ix] * 256u +
-			     (unsigned char)buf[2 * ix + 1]);
-	}
+        // Cached area wraps past longitude = 0
+        ie1 = ie - _width;
+        int
+          iw1 = 0,
+          w2 = ie1 + 1;
+        buf.resize(2 * w1);
+        for (int iy = in; iy <= is; ++iy) {
+          _file.seekg(_datastart + 2 * (iy * _width + iw1), ios::beg);
+          _file.read(&(buf[0]), 2 * w2);
+          for (int ix = 0; ix < w2; ++ix)
+          _data[iy - in][ix + w1] =
+            (unsigned short)((unsigned char)buf[2 * ix] * 256u +
+                             (unsigned char)buf[2 * ix + 1]);
+        }
       }
       _cache = true;
     }

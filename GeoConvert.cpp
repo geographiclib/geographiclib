@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
   enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE };
   int outputmode = GEOGRAPHIC;
   int prec = 0;
-  int zone = -2;		// -2 = track input, -1 = standard
+  int zone = -2;                // -2 = track input, -1 = standard
   bool centerp = true;
 
   for (int m = 1; m < argc; ++m) {
@@ -165,32 +165,32 @@ int main(int argc, char* argv[]) {
     try {
       p.Reset(s, centerp);
       if (zone != -2)
-	p.SetAltZone(zone);
+        p.SetAltZone(zone);
       switch (outputmode) {
       case GEOGRAPHIC:
-	os = p.GeoRepresentation(prec);
-	break;
+        os = p.GeoRepresentation(prec);
+        break;
       case DMS:
-	os = p.DMSRepresentation(prec);
-	break;
+        os = p.DMSRepresentation(prec);
+        break;
       case UTMUPS:
-	os = p.AltUTMUPSRepresentation(prec);
-	break;
+        os = p.AltUTMUPSRepresentation(prec);
+        break;
       case MGRS:
-	os = p.AltMGRSRepresentation(prec);
-	break;
+        os = p.AltMGRSRepresentation(prec);
+        break;
       case CONVERGENCE:
-	{
-	  real_t
-	    gamma = p.AltConvergence(),
-	    k = p.AltScale();
-	  std::ostringstream ss;
-	  ss << std::fixed
-	     << std::setprecision(std::max(-5, std::min(8, prec)) + 5) << gamma
-	     << " "
-	     << std::setprecision(std::max(-5, std::min(8, prec)) + 7) << k;
-	  os = ss.str();
-	}
+        {
+          real_t
+            gamma = p.AltConvergence(),
+            k = p.AltScale();
+          std::ostringstream ss;
+          ss << std::fixed
+             << std::setprecision(std::max(-5, std::min(8, prec)) + 5) << gamma
+             << " "
+             << std::setprecision(std::max(-5, std::min(8, prec)) + 7) << k;
+          os = ss.str();
+        }
       }
     }
     catch (const std::exception& e) {

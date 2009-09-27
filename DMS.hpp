@@ -38,7 +38,7 @@ namespace GeographicLib {
     static const std::string digits;
     static const std::string dmsindicators;
     static const std::string components[3];
-    DMS();			// Disable constructor
+    DMS();                      // Disable constructor
 
   public:
 
@@ -80,7 +80,7 @@ namespace GeographicLib {
      * hemisphere designator (N, S, E, W).
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
-			     Math::real_t& lat, Math::real_t& lon);
+                             Math::real_t& lat, Math::real_t& lon);
 
     /**
      * Convert \e degree into a DMS string.  \e trailing indicates the least
@@ -95,9 +95,9 @@ namespace GeographicLib {
      * digits.
      **********************************************************************/
     static std::string Encode(Math::real_t degree,
-			      component trailing,
-			      unsigned prec,
-			      flag ind = NONE);
+                              component trailing,
+                              unsigned prec,
+                              flag ind = NONE);
 
     /**
      * Convert \e degree into a DMS string selecting the trailing component
@@ -106,12 +106,12 @@ namespace GeographicLib {
      * a result accurate to 1".
      **********************************************************************/
     static std::string Encode(Math::real_t degree,
-			      unsigned prec,
-			      flag ind = NONE) {
+                              unsigned prec,
+                              flag ind = NONE) {
       return Encode(degree,
-		    prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
-		    prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
-		    ind);
+                    prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
+                    prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
+                    ind);
     }
   };
 

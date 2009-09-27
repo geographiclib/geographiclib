@@ -34,15 +34,15 @@ namespace GeographicLib {
   }
 
   void CassiniSoldner::Forward(real_t lat, real_t lon,
-			       real_t& x, real_t& y,
-			       real_t& azi, real_t& m) const throw() {
+                               real_t& x, real_t& y,
+                               real_t& azi, real_t& m) const throw() {
     if (!Init())
       return;
     real_t dlon = Geodesic::AngNormalize(lon - LongitudeOrigin());
     real_t sig12, s12, azi1, azi2, m12;
     lat = Geodesic::AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon),
-			   s12, azi1, azi2, m12);
+                           s12, azi1, azi2, m12);
     if (sig12 < 100 * eps2)
       sig12 = s12 = 0;
     sig12 *= real_t(0.5L);
@@ -50,11 +50,11 @@ namespace GeographicLib {
     if (s12 == 0) {
       real_t da = (azi2 - azi1)/2;
       if (abs(dlon) <= 90) {
-	azi1 = 90 - da;
-	azi2 = 90 + da;
+        azi1 = 90 - da;
+        azi2 = 90 + da;
       } else {
-	azi1 = -90 - da;
-	azi2 = -90 + da;
+        azi1 = -90 - da;
+        azi2 = -90 + da;
       }
     }
     if (dlon < 0) {
@@ -78,8 +78,8 @@ namespace GeographicLib {
   }
 
   void CassiniSoldner::Reverse(real_t x, real_t y,
-			       real_t& lat, real_t& lon,
-			       real_t& azi, real_t& m) const throw() {
+                               real_t& lat, real_t& lon,
+                               real_t& azi, real_t& m) const throw() {
     if (!Init())
       return;
     real_t lat1, lon1;
@@ -91,7 +91,7 @@ namespace GeographicLib {
   }
 
   Math::real_t CassiniSoldner::Scale(const GeodesicLine& perp,
-				     real_t sig12) const throw() {
+                                     real_t sig12) const throw() {
     if (sig12 == 0)
       return 1;
     // Result is symmetric in sig12, however numerical accuracy is better if
@@ -101,9 +101,9 @@ namespace GeographicLib {
     real_t
       // ssig1 = 1, csig1 = 0,
       dtau1 = Geodesic::SinSeries(real_t(1), real_t(0), perp._tauCoeff,
-				  Geodesic::ntau),
+                                  Geodesic::ntau),
       dzet1 = Geodesic::SinSeries(real_t(1), real_t(0), perp._zetCoeff,
-				  Geodesic::nzet);
+                                  Geodesic::nzet);
     // Find semi-conjugate point -- initial guess, sigma = pi
     real_t ssigc = 0, csigc = -1;
     real_t wc, dtauc, dzetc;
@@ -112,23 +112,23 @@ namespace GeographicLib {
       dtauc = Geodesic::SinSeries(ssigc, csigc, perp._tauCoeff, Geodesic::ntau);
       dzetc = Geodesic::SinSeries(ssigc, csigc, perp._zetCoeff, Geodesic::nzet);
       real_t
-	sig1c = atan2(-csigc, ssigc),
-	et = (1 + perp._taufm1) * ( dtauc - dtau1 ),
-	ez = (1 + perp._zetfm1) * ( dzetc - dzet1 ),
-	j1c = ( (perp._taufm1 - perp._zetfm1) * sig1c + (et - ez) ),
-	v = - 2 * wc * csigc * ssigc + 2 * sq(csigc) * j1c;
+        sig1c = atan2(-csigc, ssigc),
+        et = (1 + perp._taufm1) * ( dtauc - dtau1 ),
+        ez = (1 + perp._zetfm1) * ( dzetc - dzet1 ),
+        j1c = ( (perp._taufm1 - perp._zetfm1) * sig1c + (et - ez) ),
+        v = - 2 * wc * csigc * ssigc + 2 * sq(csigc) * j1c;
       if (abs(v) <= eps2 || trip > 1)
-	break;
+        break;
       real_t dv = - 2 * wc * (1 - 2 * sq(ssigc)) - 4 * csigc * ssigc * j1c;
       real_t dsig = -v/dv;
       real_t
-	sdsigc = sin(dsig),
-	cdsigc = cos(dsig),
-	nssigc = ssigc * cdsigc + csigc * sdsigc;
+        sdsigc = sin(dsig),
+        cdsigc = cos(dsig),
+        nssigc = ssigc * cdsigc + csigc * sdsigc;
       csigc = csigc * cdsigc - ssigc * sdsigc;
       ssigc = nssigc;
       if (abs(v) < eps1)
-	++trip;
+        ++trip;
     }
     // Scale meridian to conjugate
     real_t m1c = - sqrt(1 + perp._u2 ) * csigc;
@@ -141,12 +141,12 @@ namespace GeographicLib {
       et = (1 + perp._taufm1) * ( dtauc - dtau2 ),
       ez = (1 + perp._zetfm1) * ( dzetc - dzet2 ),
       sig2c = atan2(ssigc * csig2 - csigc * ssig2,
-		    csigc * csig2 + ssigc * ssig2),
+                    csigc * csig2 + ssigc * ssig2),
       j2c = ( (perp._taufm1 - perp._zetfm1) * sig2c + (et - ez) ),
       // Scale target to conjugate
       m2c = ((wc * csig2 * ssigc -
-	      sqrt(1 + perp._u2 * sq(ssig2)) * ssig2 * csigc)
-	     - csig2 * csigc * j2c);
+              sqrt(1 + perp._u2 * sq(ssig2)) * ssig2 * csigc)
+             - csig2 * csigc * j2c);
     return m2c/m1c;
   }
 

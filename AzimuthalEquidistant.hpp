@@ -61,9 +61,9 @@ namespace GeographicLib {
      * roundoff).
      **********************************************************************/
     void Forward(Math::real_t lat0, Math::real_t lon0,
-		 Math::real_t lat, Math::real_t lon,
-		 Math::real_t& x, Math::real_t& y,
-		 Math::real_t& azi, Math::real_t& rk) const throw();
+                 Math::real_t lat, Math::real_t lon,
+                 Math::real_t& x, Math::real_t& y,
+                 Math::real_t& azi, Math::real_t& rk) const throw();
 
     /**
      * Convert from azimuthal equidistant easting \e x (meters) and northing \e
@@ -80,9 +80,9 @@ namespace GeographicLib {
      * the geodesic to (\e x, \e y) is a shortest path.
      **********************************************************************/
     void Reverse(Math::real_t lat0, Math::real_t lon0,
-		 Math::real_t x, Math::real_t y,
-		 Math::real_t& lat, Math::real_t& lon,
-		 Math::real_t& azi, Math::real_t& rk) const throw();
+                 Math::real_t x, Math::real_t y,
+                 Math::real_t& lat, Math::real_t& lon,
+                 Math::real_t& azi, Math::real_t& rk) const throw();
 
   };
 

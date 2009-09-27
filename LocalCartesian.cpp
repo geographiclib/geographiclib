@@ -41,7 +41,7 @@ namespace GeographicLib {
   }
 
   void LocalCartesian::Forward(real_t lat, real_t lon, real_t h,
-			       real_t& x, real_t& y, real_t& z) const throw() {
+                               real_t& x, real_t& y, real_t& z) const throw() {
     real_t xc, yc, zc;
     _earth.Forward(lat, lon, h, xc, yc, zc);
     xc -= _x0; yc -= _y0; zc -= _z0;
@@ -51,7 +51,7 @@ namespace GeographicLib {
   }
 
   void LocalCartesian::Reverse(real_t x, real_t y, real_t z,
-			       real_t& lat, real_t& lon, real_t& h)
+                               real_t& lat, real_t& lon, real_t& h)
     const throw() {
     real_t
       xc = _x0 + _rxx * x + _ryx * y + _rzx * z,

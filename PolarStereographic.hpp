@@ -58,8 +58,8 @@ namespace GeographicLib {
      * [-180, 360].
      **********************************************************************/
     void Forward(bool northp, Math::real_t lat, Math::real_t lon,
-		 Math::real_t& x, Math::real_t& y,
-		 Math::real_t& gamma, Math::real_t& k) const throw();
+                 Math::real_t& x, Math::real_t& y,
+                 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * Convert from polar stereogrphic easting \e x (meters) and northing \e y
@@ -70,8 +70,8 @@ namespace GeographicLib {
      * returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(bool northp, Math::real_t x, Math::real_t y,
-		 Math::real_t& lat, Math::real_t& lon,
-		 Math::real_t& gamma, Math::real_t& k) const throw();
+                 Math::real_t& lat, Math::real_t& lon,
+                 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * A global instantiation of PolarStereographic with the WGS84 ellipsoid

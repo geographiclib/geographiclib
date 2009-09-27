@@ -30,11 +30,11 @@ namespace GeographicLib {
     bool in = false;
     for (unsigned i = 0; i < s.size(); ++i) {
       if (isspace(s[i]) || s[i] == ',') {
-	in = false;
-	continue;
+        in = false;
+        continue;
       }
       if (!in)
-	sa.push_back("");
+        sa.push_back("");
       in = true;
       sa.back().push_back(s[i]);
     }
@@ -42,42 +42,42 @@ namespace GeographicLib {
       int prec;
       MGRS::Reverse(sa[0], _zone, _northp, _easting, _northing, prec, centerp);
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
-		      _lat, _long, _gamma, _k);
+                      _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
       DMS::DecodeLatLon(sa[0], sa[1], _lat, _long);
       UTMUPS::Forward( _lat, _long,
-		       _zone, _northp, _easting, _northing, _gamma, _k);
+                       _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {
       unsigned zoneind, coordind;
       if (sa[0].size() > 0 && isalpha(sa[0][sa[0].size() - 1])) {
-	zoneind = 0;
-	coordind = 1;
+        zoneind = 0;
+        coordind = 1;
       } else if (sa[2].size() > 0 && isalpha(sa[2][sa[2].size() - 1])) {
-	zoneind = 2;
-	coordind = 0;
+        zoneind = 2;
+        coordind = 0;
       } else
-	throw out_of_range("Neither " + sa[0] + " nor " + sa[2] +
-			   " of the form UTM/UPS Zone + Hemisphere" +
-			   " (ex: 38N, 09S, N)");
+        throw out_of_range("Neither " + sa[0] + " nor " + sa[2] +
+                           " of the form UTM/UPS Zone + Hemisphere" +
+                           " (ex: 38N, 09S, N)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i) {
-	const char* c = sa[coordind + i].c_str();
-	char* q;
-	errno = 0;
-	real_t x = Math::strtod(c, &q);
-	if (errno ==  ERANGE || !Math::isfinite(x))
-	  throw out_of_range("Number " + sa[coordind + i] + " out of range");
-	if (q - c != int(sa[coordind + i].size()))
-	  throw out_of_range(string("Extra text in UTM/UPS ") +
-			     (i == 0 ? "easting " : "northing ") +
-			     sa[coordind + i]);
-	if (i == 0)
-	  _easting = x;
-	else
-	  _northing = x;
+        const char* c = sa[coordind + i].c_str();
+        char* q;
+        errno = 0;
+        real_t x = Math::strtod(c, &q);
+        if (errno ==  ERANGE || !Math::isfinite(x))
+          throw out_of_range("Number " + sa[coordind + i] + " out of range");
+        if (q - c != int(sa[coordind + i].size()))
+          throw out_of_range(string("Extra text in UTM/UPS ") +
+                             (i == 0 ? "easting " : "northing ") +
+                             sa[coordind + i]);
+        if (i == 0)
+          _easting = x;
+        else
+          _northing = x;
       }
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
-		      _lat, _long, _gamma, _k);
+                      _lat, _long, _gamma, _k);
       FixHemisphere();
     } else
       throw out_of_range("Coordinate requires 1, 2, or 3 elements");
@@ -112,12 +112,12 @@ namespace GeographicLib {
     prec = max(0, min(6, prec) + 5);
     string mgrs;
     MGRS::Forward(_alt_zone, _northp, _alt_easting, _alt_northing, _lat, prec,
-		  mgrs);
+                  mgrs);
     return mgrs;
   }
 
   void GeoCoords::UTMUPSString(int zone, real_t easting, real_t northing,
-			       int prec, std::string& utm) const {
+                               int prec, std::string& utm) const {
     ostringstream os;
     prec = max(-5, min(9, prec));
     real_t scale = prec < 0 ? pow(real_t(10), -prec) : real_t(1);

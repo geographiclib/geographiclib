@@ -46,7 +46,7 @@ namespace GeographicLib {
     typedef Math::real_t real_t;
     real_t _lat, _long, _easting, _northing, _gamma, _k;
     bool _northp;
-    int _zone;			// 0 = poles, -1 = undefined
+    int _zone;                  // 0 = poles, -1 = undefined
     mutable real_t _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
@@ -58,7 +58,7 @@ namespace GeographicLib {
       _alt_zone = _zone;
     }
     void UTMUPSString(int zone, real_t easting, real_t northing,
-		      int prec, std::string& utm) const;
+                      int prec, std::string& utm) const;
     void FixHemisphere();
   public:
 
@@ -160,7 +160,7 @@ namespace GeographicLib {
      * (meters) and \e northing (meters).
      **********************************************************************/
     GeoCoords(int zone, bool northp,
-	      Math::real_t easting, Math::real_t northing) {
+              Math::real_t easting, Math::real_t northing) {
       Reset(zone, northp, easting, northing);
     }
 
@@ -178,10 +178,10 @@ namespace GeographicLib {
       _lat = latitude;
       _long = longitude;
       UTMUPS::Forward(_lat, _long,
-		      _zone, _northp, _easting, _northing, _gamma, _k,
-		      zone);
+                      _zone, _northp, _easting, _northing, _gamma, _k,
+                      zone);
       if (_long >= 180)
-	_long -= 360;
+        _long -= 360;
       CopyToAlt();
     }
 
@@ -191,13 +191,13 @@ namespace GeographicLib {
      * Math::real_t easting, Math::real_t northing).
      **********************************************************************/
     void Reset(int zone, bool northp,
-	       Math::real_t easting, Math::real_t northing) {
+               Math::real_t easting, Math::real_t northing) {
       _zone = zone;
       _northp = northp;
       _easting = easting;
       _northing = northing;
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
-		      _lat, _long, _gamma, _k);
+                      _lat, _long, _gamma, _k);
       FixHemisphere();
       CopyToAlt();
     }
@@ -254,14 +254,14 @@ namespace GeographicLib {
      **********************************************************************/
     void SetAltZone(int zone = -1) const {
       if (zone == _zone ||
-	  (zone < 0 && _zone == UTMUPS::StandardZone(_lat, _long)))
-	CopyToAlt();
+          (zone < 0 && _zone == UTMUPS::StandardZone(_lat, _long)))
+        CopyToAlt();
       else {
-	bool northp;
-	UTMUPS::Forward(_lat, _long,
-			_alt_zone, northp,
-			_alt_easting, _alt_northing, _alt_gamma, _alt_k,
-			zone);
+        bool northp;
+        UTMUPS::Forward(_lat, _long,
+                        _alt_zone, northp,
+                        _alt_easting, _alt_northing, _alt_gamma, _alt_k,
+                        zone);
       }
     }
 
@@ -360,4 +360,4 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-#endif	// GEOGRAPHICLIB_GEOCOORDS_HPP
+#endif  // GEOGRAPHICLIB_GEOCOORDS_HPP

@@ -48,7 +48,7 @@ namespace GeographicLib {
      * the transformation.
      **********************************************************************/
     LocalCartesian(Math::real_t lat0, Math::real_t lon0, Math::real_t h0 = 0,
-		   const Geocentric& earth = Geocentric::WGS84) throw()
+                   const Geocentric& earth = Geocentric::WGS84) throw()
       : _earth(earth)
     { Reset(lat0, lon0, h0); }
 
@@ -75,7 +75,7 @@ namespace GeographicLib {
      * the range [-180, 360].
      **********************************************************************/
     void Forward(Math::real_t lat, Math::real_t lon, Math::real_t h,
-		 Math::real_t& x, Math::real_t& y, Math::real_t& z)
+                 Math::real_t& x, Math::real_t& y, Math::real_t& z)
       const throw();
 
     /**
@@ -84,7 +84,7 @@ namespace GeographicLib {
      * lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(Math::real_t x, Math::real_t y, Math::real_t z,
-		 Math::real_t& lat, Math::real_t& lon, Math::real_t& h)
+                 Math::real_t& lat, Math::real_t& lon, Math::real_t& h)
       const throw();
 
     /**
