@@ -87,7 +87,12 @@ namespace GeographicLib {
 		     std::strtod(nptr, endptr) :
 		     sizeof(real_t) == sizeof(float) ?
 		     ::strtof(nptr, endptr) :
-		     ::strtold(nptr, endptr) );
+#if defined(__linux__) && defined(__GNU__)  && __GNUC__ > 3
+		     ::strtold(nptr, endptr)
+#else
+		     ::strtod(nptr, endptr)
+#endif
+		     );
     }
 #else
     static inline real_t hypot(real_t x, real_t y) throw() {

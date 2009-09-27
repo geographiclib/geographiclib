@@ -407,10 +407,8 @@ namespace GeographicLib {
   void Geoid::CacheClear() const throw() {
     _cache = false;
     try {
-      _data.clear();
       // Use swap to release memory back to system
-      vector< vector<unsigned short> > t;
-      _data.swap(t);
+      vector< vector<unsigned short> >().swap(_data);
     }
     catch (const exception&) {
     }
