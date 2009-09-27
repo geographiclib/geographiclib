@@ -79,35 +79,35 @@ namespace GeographicLib {
     mutable real_t _t[nterms];
     real_t rawval(int ix, int iy) const {
       if (iy < 0) {
-	iy = -iy;
-	ix += _width/2;
+        iy = -iy;
+        ix += _width/2;
       } else if (iy >= _height) {
-	iy = 2 * (_height - 1) - iy;
-	ix += _width/2;
+        iy = 2 * (_height - 1) - iy;
+        ix += _width/2;
       }
       if (ix < 0)
-	ix += _width;
+        ix += _width;
       else if (ix >= _width)
-	ix -= _width;
+        ix -= _width;
       if (_cache && iy >= _yoffset && iy < _yoffset + _ysize &&
-	  ((ix >= _xoffset && ix < _xoffset + _xsize) ||
-	   (ix + _width >= _xoffset && ix + _width < _xoffset + _xsize))) {
-	return real_t(_data
-		      [iy - _yoffset]
-		      [ix >= _xoffset ?
-		       ix - _xoffset :
-		       ix + _width - _xoffset]);
+          ((ix >= _xoffset && ix < _xoffset + _xsize) ||
+           (ix + _width >= _xoffset && ix + _width < _xoffset + _xsize))) {
+        return real_t(_data
+                      [iy - _yoffset]
+                      [ix >= _xoffset ?
+                       ix - _xoffset :
+                       ix + _width - _xoffset]);
       } else {
-	_file.seekg(_datastart + 2 * (iy * _width + ix), std::ios::beg);
-	char a, b;
-	_file.get(a);
-	_file.get(b);
-	return real_t((unsigned char)(a) * 256u + (unsigned char)(b));
+        _file.seekg(_datastart + 2 * (iy * _width + ix), std::ios::beg);
+        char a, b;
+        _file.get(a);
+        _file.get(b);
+        return real_t((unsigned char)(a) * 256u + (unsigned char)(b));
       }
     }
     real_t height(real_t lat, real_t lon, bool gradp,
-		  real_t& grade, real_t& gradn) const;
-    Geoid(const Geoid&);	// copy constructor not allowed
+                  real_t& grade, real_t& gradn) const;
+    Geoid(const Geoid&);        // copy constructor not allowed
     Geoid& operator=(const Geoid&); // copy assignment not allowed
   public:
 
@@ -125,7 +125,7 @@ namespace GeographicLib {
      * corrupt.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
-		   bool cubic = true);
+                   bool cubic = true);
 
     /**
      * Cache the data for the rectangular area defined by the four arguments \e
@@ -137,7 +137,7 @@ namespace GeographicLib {
      * will have no cache in this case) or try again with a smaller area.
      **********************************************************************/
     void CacheArea(Math::real_t south, Math::real_t west,
-		   Math::real_t north, Math::real_t east) const;
+                   Math::real_t north, Math::real_t east) const;
 
     /**
      * Cache all the data.  On most computers, this is fast for data sets with
@@ -149,7 +149,7 @@ namespace GeographicLib {
      * Geoid::CacheArea on a specific area.
      **********************************************************************/
     void CacheAll() const { CacheArea(real_t(-90), real_t(0),
-				      real_t(90), real_t(360)); }
+                                      real_t(90), real_t(360)); }
 
     /**
      * Clear the cache.  This never throws an error.
@@ -175,7 +175,7 @@ namespace GeographicLib {
      * is within a successfully cached area.
      **********************************************************************/
     Math::real_t operator()(Math::real_t lat, Math::real_t lon,
-			    Math::real_t& gradn, Math::real_t& grade)
+                            Math::real_t& gradn, Math::real_t& grade)
       const {
       return height(lat, lon, true, gradn, grade);
     }

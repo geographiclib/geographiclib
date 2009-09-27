@@ -89,7 +89,7 @@ namespace GeographicLib {
      * ellipsoid.
      **********************************************************************/
     CassiniSoldner(Math::real_t lat0, Math::real_t lon0,
-		   const Geodesic& earth = Geodesic::WGS84) throw()
+                   const Geodesic& earth = Geodesic::WGS84) throw()
       : _earth(earth) {
       Reset(lat0, lon0);
     }
@@ -112,8 +112,8 @@ namespace GeographicLib {
      * has not been set.
      **********************************************************************/
     void Forward(Math::real_t lat, Math::real_t lon,
-		 Math::real_t& x, Math::real_t& y,
-		 Math::real_t& azi, Math::real_t& rk) const throw();
+                 Math::real_t& x, Math::real_t& y,
+                 Math::real_t& azi, Math::real_t& rk) const throw();
 
     /**
      * Convert from Cassini-Soldner easting \e x (meters) and northing \e y
@@ -126,8 +126,8 @@ namespace GeographicLib {
      * been set.
      **********************************************************************/
     void Reverse(Math::real_t x, Math::real_t y,
-		 Math::real_t& lat, Math::real_t& lon,
-		 Math::real_t& azi, Math::real_t& rk) const throw();
+                 Math::real_t& lat, Math::real_t& lon,
+                 Math::real_t& azi, Math::real_t& rk) const throw();
 
     /**
      * Has this object been initialized with an origin?

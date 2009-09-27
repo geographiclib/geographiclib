@@ -58,10 +58,10 @@ int main(int argc, char* argv[]) {
     else if (arg == "-l") {
       localcartesian = true;
       for (unsigned i = 0; i < 3; ++i) {
-	if (++m == argc) return usage(1);
-	std::string a = std::string(argv[m]);
-	std::istringstream str(a);
-	if (!(str >> latlonh0[i])) return usage(1);
+        if (++m == argc) return usage(1);
+        std::string a = std::string(argv[m]);
+        std::istringstream str(a);
+        if (!(str >> latlonh0[i])) return usage(1);
       }
     } else
       return usage(arg != "-h");
@@ -88,25 +88,25 @@ int main(int argc, char* argv[]) {
       std::istringstream str(s);
       real_t lat, lon, h, x, y, z;
       if (!(reverse ?
-	    (str >> x >> y >> z) :
-	    (str >> lat >> lon >> h)))
-	throw  std::out_of_range("Incomplete input: " + s);
+            (str >> x >> y >> z) :
+            (str >> lat >> lon >> h)))
+        throw  std::out_of_range("Incomplete input: " + s);
       if (reverse) {
-	if (localcartesian)
-	  lc.Reverse(x, y, z, lat, lon, h);
-	else
-	  ec.Reverse(x, y, z, lat, lon, h);
-	std::cout << lat << " " << lon << " " << h << "\n";
+        if (localcartesian)
+          lc.Reverse(x, y, z, lat, lon, h);
+        else
+          ec.Reverse(x, y, z, lat, lon, h);
+        std::cout << lat << " " << lon << " " << h << "\n";
       } else {
-	if ( !(-90 <= lat && lat <= 90) )
-	  throw std::out_of_range("Latitude not in range [-90, 90]\n");
-	if ( !(-180 <= lon && lat <= 360) )
-	  throw std::out_of_range("Longitude not in range [-180, 360]");
-	if (localcartesian)
-	  lc.Forward(lat, lon, h, x, y, z);
-	else
-	  ec.Forward(lat, lon, h, x, y, z);
-	std::cout << x << " " << y << " " << z << "\n";
+        if ( !(-90 <= lat && lat <= 90) )
+          throw std::out_of_range("Latitude not in range [-90, 90]\n");
+        if ( !(-180 <= lon && lat <= 360) )
+          throw std::out_of_range("Longitude not in range [-180, 360]");
+        if (localcartesian)
+          lc.Forward(lat, lon, h, x, y, z);
+        else
+          ec.Forward(lat, lon, h, x, y, z);
+        std::cout << x << " " << y << " " << z << "\n";
       }
     }
     catch (const std::exception& e) {

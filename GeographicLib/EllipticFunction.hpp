@@ -89,7 +89,7 @@ namespace GeographicLib {
      * The results are returned in \e sn, \e cn, and \e dn.
      **********************************************************************/
     void sncndn(Math::real_t x,
-		Math::real_t& sn, Math::real_t& cn, Math::real_t& dn)
+                Math::real_t& sn, Math::real_t& cn, Math::real_t& dn)
       const throw();
 
     /**

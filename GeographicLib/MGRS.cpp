@@ -52,14 +52,14 @@ namespace GeographicLib {
       maxutmNrow + (maxutmSrow - minutmNrow), maxutmNrow };
 
   void MGRS::Forward(int zone, bool northp, real_t x, real_t y, real_t lat,
-		     int prec, std::string& mgrs) {
+                     int prec, std::string& mgrs) {
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
     if (!(zone >= 0 || zone <= 60))
       throw out_of_range("Zone " + str(zone) + " not in [0,60]");
     if (!(prec >= 0 || prec <= maxprec))
       throw out_of_range("MGRS precision " + str(prec) + " not in [0, "
-			      + str(int(maxprec)) + "]");
+                              + str(int(maxprec)) + "]");
     int
       zone1 = zone - 1,
       z = utmp ? 2 : 0;
@@ -79,23 +79,23 @@ namespace GeographicLib {
       yf = y - tile * yh;
     if (utmp) {
       int
-	// Correct fuzziness in latitude near equator
-	iband = abs(lat) > angeps ? LatitudeBand(lat) : (northp ? 0 : -1),
-	icol = xh - minutmcol,
-	irow = UTMRow(iband, icol, yh % utmrowperiod);
+        // Correct fuzziness in latitude near equator
+        iband = abs(lat) > angeps ? LatitudeBand(lat) : (northp ? 0 : -1),
+        icol = xh - minutmcol,
+        irow = UTMRow(iband, icol, yh % utmrowperiod);
       if (irow != yh - (northp ? minutmNrow : maxutmSrow))
-	throw out_of_range("Latitude " + str(lat)
-				+ " is inconsistent with UTM coordinates");
+        throw out_of_range("Latitude " + str(lat)
+                                + " is inconsistent with UTM coordinates");
       mgrs[z++] = latband[10 + iband];
       mgrs[z++] = utmcols[zone1 % 3][icol];
       mgrs[z++] = utmrow[(yh + (zone1 & 1 ? utmevenrowshift : 0))
-			 % utmrowperiod];
+                         % utmrowperiod];
     } else {
       bool eastp = xh >= upseasting;
       int iband = (northp ? 2 : 0) + (eastp ? 1 : 0);
       mgrs[z++] = upsband[iband];
       mgrs[z++] = upscols[iband][xh - (eastp ? upseasting :
-				       northp ? minupsNind : minupsSind)];
+                                       northp ? minupsNind : minupsSind)];
       mgrs[z++] = upsrows[northp][yh - (northp ? minupsNind : minupsSind)];
     }
     real_t mult = pow(real_t(base), min(prec - tilelevel, 0));
@@ -115,16 +115,16 @@ namespace GeographicLib {
       ix = int(floor(xf * mult));
       iy = int(floor(yf * mult));
       for (int c = prec - tilelevel; c--;) {
-	mgrs[z + c + tilelevel] = digits[ ix % base ];
-	ix /= base;
-	mgrs[z + c + tilelevel + prec] = digits[ iy % base ];
-	iy /= base;
+        mgrs[z + c + tilelevel] = digits[ ix % base ];
+        ix /= base;
+        mgrs[z + c + tilelevel + prec] = digits[ iy % base ];
+        iy /= base;
       }
     }
   }
 
   void MGRS::Forward(int zone, bool northp, real_t x, real_t y,
-		     int prec, std::string& mgrs) {
+                     int prec, std::string& mgrs) {
     real_t lat, lon;
     if (zone)
       UTMUPS::Reverse(zone, northp, x, y, lat, lon);
@@ -135,8 +135,8 @@ namespace GeographicLib {
   }
 
   void MGRS::Reverse(const std::string& mgrs,
-		     int& zone, bool& northp, real_t& x, real_t& y,
-		     int& prec, bool centerp) {
+                     int& zone, bool& northp, real_t& x, real_t& y,
+                     int& prec, bool centerp) {
     int
       p = 0,
       len = int(mgrs.size());
@@ -144,7 +144,7 @@ namespace GeographicLib {
     while (p < len) {
       int i = lookup(digits, mgrs[p]);
       if (i < 0)
-	break;
+        break;
       zone = 10 * zone + i;
       ++p;
     }
@@ -152,7 +152,7 @@ namespace GeographicLib {
       throw out_of_range("Zone " + str(zone) + " not in [1,60]");
     if (p > 2)
       throw out_of_range("More than 2 digits at start of MGRS "
-			 + mgrs.substr(0, p));
+                         + mgrs.substr(0, p));
     if (len - p < 3)
       throw out_of_range("MGRS string " + mgrs + " too short");
     bool utmp = zone != 0;
@@ -161,33 +161,33 @@ namespace GeographicLib {
     int iband = lookup(band, mgrs[p++]);
     if (iband < 0)
       throw out_of_range("Band letter " + str(mgrs[p-1])
-			 + " not in " + (utmp ? "UTM" : "UPS")
-			 + " set " + band);
+                         + " not in " + (utmp ? "UTM" : "UPS")
+                         + " set " + band);
     northp = iband >= (utmp ? 10 : 2);
     const string& col = utmp ? utmcols[zone1 % 3] : upscols[iband];
     const string& row = utmp ? utmrow : upsrows[northp];
     int icol = lookup(col, mgrs[p++]);
     if (icol < 0)
       throw out_of_range("Column letter " + str(mgrs[p-1])
-			 + " not in "
-			 + (utmp ? "zone " + mgrs.substr(0, p-2) :
-			    "UPS band " + str(mgrs[p-2]))
-			 + " set " + col );
+                         + " not in "
+                         + (utmp ? "zone " + mgrs.substr(0, p-2) :
+                            "UPS band " + str(mgrs[p-2]))
+                         + " set " + col );
     int irow = lookup(row, mgrs[p++]);
     if (irow < 0)
       throw out_of_range("Row letter " + str(mgrs[p-1])
-			 + " not in "
-			 + (utmp ? "UTM" :
-			    "UPS " + str(hemispheres[northp]))
-			 + " set " + row);
+                         + " not in "
+                         + (utmp ? "UTM" :
+                            "UPS " + str(hemispheres[northp]))
+                         + " set " + row);
     if (utmp) {
       if (zone1 & 1)
-	irow = (irow + utmrowperiod - utmevenrowshift) % utmrowperiod;
+        irow = (irow + utmrowperiod - utmevenrowshift) % utmrowperiod;
       iband -= 10;
       irow = UTMRow(iband, icol, irow);
       if (irow == maxutmSrow)
-	throw out_of_range("Block " + mgrs.substr(p-2, 2)
-			   + " not in zone/band " + mgrs.substr(0, p-2));
+        throw out_of_range("Block " + mgrs.substr(p-2, 2)
+                           + " not in zone/band " + mgrs.substr(0, p-2));
 
       irow = northp ? irow : irow + 100;
       icol = icol + minutmcol;
@@ -203,23 +203,23 @@ namespace GeographicLib {
     for (int i = 0; i < prec; ++i) {
       unit /= base;
       int
-	ix = lookup(digits, mgrs[p + i]),
-	iy = lookup(digits, mgrs[p + i + prec]);
+        ix = lookup(digits, mgrs[p + i]),
+        iy = lookup(digits, mgrs[p + i + prec]);
       if (ix < 0 || iy < 0)
-	throw out_of_range("Encountered a non-digit in " + mgrs.substr(p));
+        throw out_of_range("Encountered a non-digit in " + mgrs.substr(p));
       x += unit * ix;
       y += unit * iy;
     }
     if ((len - p) % 2) {
       if (lookup(digits, mgrs[len - 1]) < 0)
-	throw out_of_range("Encountered a non-digit in " + mgrs.substr(p));
+        throw out_of_range("Encountered a non-digit in " + mgrs.substr(p));
       else
-	throw out_of_range("Not an even number of digits in "
-			   + mgrs.substr(p));
+        throw out_of_range("Not an even number of digits in "
+                           + mgrs.substr(p));
     }
     if (prec > maxprec)
       throw out_of_range("More than " + str(2*maxprec) + " digits in "
-			 + mgrs.substr(p));
+                         + mgrs.substr(p));
     if (centerp) {
       x += unit/2;
       y += unit/2;
@@ -238,42 +238,42 @@ namespace GeographicLib {
       ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (ix >= mineasting[ind] && ix < maxeasting[ind]) ) {
       if (ix == maxeasting[ind] && x == maxeasting[ind] * tile)
-	x -= eps;
+        x -= eps;
       else
-	throw out_of_range("Easting " + str(int(floor(x/1000)))
-			   + "km not in MGRS/"
-			   + (utmp ? "UTM" : "UPS") + " range for "
-			   + (northp ? "N" : "S" )
-			   + " hemisphere ["
-			   + str(mineasting[ind]*tile/1000) + "km, "
-			   + str(maxeasting[ind]*tile/1000) + "km)");
+        throw out_of_range("Easting " + str(int(floor(x/1000)))
+                           + "km not in MGRS/"
+                           + (utmp ? "UTM" : "UPS") + " range for "
+                           + (northp ? "N" : "S" )
+                           + " hemisphere ["
+                           + str(mineasting[ind]*tile/1000) + "km, "
+                           + str(maxeasting[ind]*tile/1000) + "km)");
     }
     if (! (iy >= minnorthing[ind] && iy < maxnorthing[ind]) ) {
       if (iy == maxnorthing[ind] && y == maxnorthing[ind] * tile)
-	y -= eps;
+        y -= eps;
       else
-	throw out_of_range("Northing " + str(int(floor(y/1000)))
-			   + "km not in MGRS/"
-			   + (utmp ? "UTM" : "UPS") + " range for "
-			   + (northp ? "N" : "S" )
-			   + " hemisphere ["
-			   + str(minnorthing[ind]*tile/1000) + "km, "
-			   + str(maxnorthing[ind]*tile/1000) + "km)");
+        throw out_of_range("Northing " + str(int(floor(y/1000)))
+                           + "km not in MGRS/"
+                           + (utmp ? "UTM" : "UPS") + " range for "
+                           + (northp ? "N" : "S" )
+                           + " hemisphere ["
+                           + str(minnorthing[ind]*tile/1000) + "km, "
+                           + str(maxnorthing[ind]*tile/1000) + "km)");
     }
 
     // Correct the UTM northing and hemisphere if necessary
     if (utmp) {
       if (northp && iy < minutmNrow) {
-	northp = false;
-	y += utmNshift;
+        northp = false;
+        y += utmNshift;
       } else if (!northp && iy >= maxutmSrow) {
-	if (y == maxutmSrow * tile)
-	  // If on equator retain S hemisphere
-	  y -= eps;
-	else {
-	  northp = true;
-	  y -= utmNshift;
-	}
+        if (y == maxutmSrow * tile)
+          // If on equator retain S hemisphere
+          y -= eps;
+        else {
+          northp = true;
+          y -= utmNshift;
+        }
       }
     }
   }
@@ -300,17 +300,17 @@ namespace GeographicLib {
       // Northing = 71*100km and 80*100km intersect band boundaries
       // The following deals with these special cases.
       int
-	// Fold [-10,-1] -> [9,0]
-	sband = iband >= 0 ? iband : - iband  - 1,
-	// Fold [-90,-1] -> [89,0]
-	srow = irow >= 0 ? irow : -irow - 1,
-	// Fold [4,7] -> [3,0]
-	scol = icol < 4 ? icol : -icol + 7;
+        // Fold [-10,-1] -> [9,0]
+        sband = iband >= 0 ? iband : - iband  - 1,
+        // Fold [-90,-1] -> [89,0]
+        srow = irow >= 0 ? irow : -irow - 1,
+        // Fold [4,7] -> [3,0]
+        scol = icol < 4 ? icol : -icol + 7;
       if ( ! ( (srow == 70 && sband == 8 && scol >= 2) ||
-	       (srow == 71 && sband == 7 && scol <= 2) ||
-	       (srow == 79 && sband == 9 && scol >= 1) ||
-	       (srow == 80 && sband == 8 && scol <= 1) ) )
-	irow = maxutmSrow;
+               (srow == 71 && sband == 7 && scol <= 2) ||
+               (srow == 79 && sband == 9 && scol >= 1) ||
+               (srow == 80 && sband == 8 && scol <= 1) ) )
+        irow = maxutmSrow;
     }
     return irow;
   }

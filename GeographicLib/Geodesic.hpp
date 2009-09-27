@@ -98,21 +98,21 @@ namespace GeographicLib {
 
     static inline real_t sq(real_t x) throw() { return x * x; }
     void Lengths(real_t k1, real_t sig12,
-		 real_t ssig1, real_t csig1, real_t ssig2, real_t csig2,
-		 real_t cbet1, real_t cbet2,
-		 real_t& s12s, real_t& m12a, real_t& m0,
-		 real_t tc[], real_t zc[]) const throw();
+                 real_t ssig1, real_t csig1, real_t ssig2, real_t csig2,
+                 real_t cbet1, real_t cbet2,
+                 real_t& s12s, real_t& m12a, real_t& m0,
+                 real_t tc[], real_t zc[]) const throw();
     static void Evolute(real_t R, real_t z, real_t& c, real_t& s) throw();
     void InverseStart(real_t sbet1, real_t cbet1, real_t sbet2, real_t cbet2,
-		      real_t lam12, real_t slam12, real_t clam12,
-		      real_t& salp1, real_t& calp1,
-		      real_t tc[], real_t zc[]) const throw();
+                      real_t lam12, real_t slam12, real_t clam12,
+                      real_t& salp1, real_t& calp1,
+                      real_t tc[], real_t zc[]) const throw();
     real_t Lambda12(real_t sbet1, real_t cbet1, real_t sbet2, real_t cbet2,
-		    real_t salp1, real_t calp1,
-		    real_t& salp2, real_t& calp2, real_t& sig12,
-		    real_t& ssig1, real_t& csig1, real_t& ssig2, real_t& csig2,
-		    real_t& k1, bool diffp, real_t& dlam12,
-		    real_t tc[], real_t zc[], real_t ec[])
+                    real_t salp1, real_t calp1,
+                    real_t& salp2, real_t& calp2, real_t& sig12,
+                    real_t& ssig1, real_t& csig1, real_t& ssig2, real_t& csig2,
+                    real_t& k1, bool diffp, real_t& dlam12,
+                    real_t tc[], real_t zc[], real_t ec[])
       const throw();
 
     static const real_t eps2, tol0, tol1, tol2, xthresh;
@@ -129,7 +129,7 @@ namespace GeographicLib {
       // is about 1000 times more resolution than we get with angles around 90
       // degrees.)  We use this to avoid having to deal with near singular
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
-      const real_t z = real_t(0.0625L);	// 1/16
+      const real_t z = real_t(0.0625L); // 1/16
       real_t y = std::abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
@@ -176,10 +176,10 @@ namespace GeographicLib {
      * otherwise it is the distance \e s12 (meters)
      **********************************************************************/
     Math::real_t Direct(Math::real_t lat1, Math::real_t lon1,
-			Math::real_t azi1, Math::real_t s12,
-			Math::real_t& lat2, Math::real_t& lon2,
-			Math::real_t& azi2, Math::real_t& m12,
-			bool arcmode = false) const throw();
+                        Math::real_t azi1, Math::real_t s12,
+                        Math::real_t& lat2, Math::real_t& lon2,
+                        Math::real_t& azi2, Math::real_t& m12,
+                        bool arcmode = false) const throw();
 
     /**
      * Perform the inverse geodesic calculation.  Given a latitude, \e lat1,
@@ -194,9 +194,9 @@ namespace GeographicLib {
      * the earth.  Please report all cases where this occurs.
      **********************************************************************/
     Math::real_t Inverse(Math::real_t lat1, Math::real_t lon1,
-			 Math::real_t lat2, Math::real_t lon2,
-			 Math::real_t& s12, Math::real_t& azi1,
-			 Math::real_t& azi2, Math::real_t& m12)
+                         Math::real_t lat2, Math::real_t lon2,
+                         Math::real_t& s12, Math::real_t& azi1,
+                         Math::real_t& azi2, Math::real_t& m12)
       const throw();
 
     /**
@@ -292,9 +292,9 @@ namespace GeographicLib {
      * \e arcmode is false, otherwise it is the distance \e s12 (meters).
      **********************************************************************/
     Math::real_t Position(Math::real_t s12,
-			  Math::real_t& lat2, Math::real_t& lon2,
-			  Math::real_t& azi2,
-			  Math::real_t &m12, bool arcmode = false)
+                          Math::real_t& lat2, Math::real_t& lon2,
+                          Math::real_t& azi2,
+                          Math::real_t &m12, bool arcmode = false)
       const throw();
 
     /**

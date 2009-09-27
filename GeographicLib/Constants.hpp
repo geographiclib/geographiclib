@@ -34,7 +34,7 @@ RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
 #include <cmath>
 #include <cstdlib>
 #if defined(_MSC_VER)
-#include <float.h>		// For _finite
+#include <float.h>              // For _finite
 #endif
 
 namespace GeographicLib {
@@ -47,7 +47,7 @@ namespace GeographicLib {
    **********************************************************************/
   class Math {
   private:
-    Math();			// Disable constructor
+    Math();                     // Disable constructor
   public:
     
     /**
@@ -84,20 +84,20 @@ namespace GeographicLib {
      **********************************************************************/
     static inline real_t strtod(const char *nptr, char **endptr) {
       return real_t( sizeof(real_t) == sizeof(double) ?
-		     std::strtod(nptr, endptr) :
-		     sizeof(real_t) == sizeof(float) ?
-		     ::strtof(nptr, endptr) :
+                     std::strtod(nptr, endptr) :
+                     sizeof(real_t) == sizeof(float) ?
+                     ::strtof(nptr, endptr) :
 #if defined(__linux__) && defined(__GNU__)  && __GNUC__ > 3
-		     ::strtold(nptr, endptr)
+                     ::strtold(nptr, endptr)
 #else
-		     ::strtod(nptr, endptr)
+                     ::strtod(nptr, endptr)
 #endif
-		     );
+                     );
     }
 #else
     static inline real_t hypot(real_t x, real_t y) throw() {
       return real_t( sizeof(real_t) == sizeof(double) ?
-		     _hypot(x, y) : _hypot(x, y) );
+                     _hypot(x, y) : _hypot(x, y) );
     }
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.
@@ -135,7 +135,7 @@ namespace GeographicLib {
   class Constants {
   private:
     typedef Math::real_t real_t;
-    Constants();		// Disable constructor
+    Constants();                // Disable constructor
 
   public:
     /**

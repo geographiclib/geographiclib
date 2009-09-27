@@ -63,7 +63,7 @@ namespace GeographicLib {
      * range [-180, 360].
      **********************************************************************/
     void Forward(Math::real_t lat, Math::real_t lon, Math::real_t h,
-		 Math::real_t& x, Math::real_t& y, Math::real_t& z)
+                 Math::real_t& x, Math::real_t& y, Math::real_t& z)
       const throw();
 
     /**
@@ -79,7 +79,7 @@ namespace GeographicLib {
      * value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(Math::real_t x, Math::real_t y, Math::real_t z,
-		 Math::real_t& lat, Math::real_t& lon, Math::real_t& h)
+                 Math::real_t& lat, Math::real_t& lon, Math::real_t& h)
       const throw();
 
     /**

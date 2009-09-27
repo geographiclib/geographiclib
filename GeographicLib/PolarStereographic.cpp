@@ -36,11 +36,11 @@ namespace GeographicLib {
 
   const PolarStereographic
   PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_r(),
-			  Constants::UPS_k0());
+                          Constants::UPS_k0());
 
   void PolarStereographic::Forward(bool northp, real_t lat, real_t lon,
-				   real_t& x, real_t& y,
-				   real_t& gamma, real_t& k) const throw() {
+                                   real_t& x, real_t& y,
+                                   real_t& gamma, real_t& k) const throw() {
     real_t theta = 90 - (northp ? lat : -lat); //  the colatitude
     real_t rho;
     theta *= Constants::degree();
@@ -50,7 +50,7 @@ namespace GeographicLib {
       f = exp(eatanhe(ctheta)),
       t2 = 2 * tan(theta/2) * f, // Snyder (15-9) (t2 = 2 * t)
       m = sin(theta) / sqrt(1 - _e2 * sq(ctheta)); // Snyder (14-15)
-    rho = _a * _k0 * t2 / _c;			   // Snyder (21-33)
+    rho = _a * _k0 * t2 / _c;                      // Snyder (21-33)
     k = m < numeric_limits<real_t>::epsilon() ? _k0 : rho / (_a * m);
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real_t
@@ -61,27 +61,27 @@ namespace GeographicLib {
   }
 
   void PolarStereographic::Reverse(bool northp, real_t x, real_t y,
-				   real_t& lat, real_t& lon,
-				   real_t& gamma, real_t& k) const throw() {
+                                   real_t& lat, real_t& lon,
+                                   real_t& gamma, real_t& k) const throw() {
     real_t
       rho = Math::hypot(x, y),
       t2 = rho * _c / (_a * _k0),
-      theta = Constants::pi()/2;	// initial estimate of colatitude
+      theta = Constants::pi()/2;        // initial estimate of colatitude
     // Solve from theta using Newton's method on Snyder (15-9) which converges
     // more rapidly than the iteration procedure given by Snyder (7-9).  First
     // rewrite as
     // v(theta) = 2 * tan(theta/2) * f - t2 = 0
     for (int i = 0; i < numit; ++i) {
       real_t
-	ctheta = cos(theta),
-	f = exp(eatanhe(ctheta)),
-	c2 = cos(theta/2),
-	v = 2 * tan(theta/2) * f - t2,
-	dv = _e2m * f / ((1 - _e2 * sq(ctheta)) * sq(c2)), // dv/dtheta
-	dtheta = -v/dv;
+        ctheta = cos(theta),
+        f = exp(eatanhe(ctheta)),
+        c2 = cos(theta/2),
+        v = 2 * tan(theta/2) * f - t2,
+        dv = _e2m * f / ((1 - _e2 * sq(ctheta)) * sq(c2)), // dv/dtheta
+        dtheta = -v/dv;
       theta += dtheta;
       if (abs(dtheta) < tol)
-	break;
+        break;
     }
     lat = (northp ? 1 : -1) * (90 - theta / Constants::degree());
     // Result is in [-180, 180).  Assume atan2(0,0) = 0.

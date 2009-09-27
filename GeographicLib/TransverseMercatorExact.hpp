@@ -64,31 +64,31 @@ namespace GeographicLib {
     real_t psiinv(real_t psi) const throw();
 
     void zeta(real_t u, real_t snu, real_t cnu, real_t dnu,
-	      real_t v, real_t snv, real_t cnv, real_t dnv,
-	      real_t& psi, real_t& lam) const throw();
+              real_t v, real_t snv, real_t cnv, real_t dnv,
+              real_t& psi, real_t& lam) const throw();
 
     void dwdzeta(real_t u, real_t snu, real_t cnu, real_t dnu,
-		 real_t v, real_t snv, real_t cnv, real_t dnv,
-		 real_t& du, real_t& dv) const throw();
+                 real_t v, real_t snv, real_t cnv, real_t dnv,
+                 real_t& du, real_t& dv) const throw();
 
     bool zetainv0(real_t psi, real_t lam, real_t& u, real_t& v) const throw();
     void zetainv(real_t psi, real_t lam, real_t& u, real_t& v) const throw();
 
     void sigma(real_t u, real_t snu, real_t cnu, real_t dnu,
-	       real_t v, real_t snv, real_t cnv, real_t dnv,
-	       real_t& xi, real_t& eta) const throw();
+               real_t v, real_t snv, real_t cnv, real_t dnv,
+               real_t& xi, real_t& eta) const throw();
 
     void dwdsigma(real_t u, real_t snu, real_t cnu, real_t dnu,
-		  real_t v, real_t snv, real_t cnv, real_t dnv,
-		  real_t& du, real_t& dv) const throw();
+                  real_t v, real_t snv, real_t cnv, real_t dnv,
+                  real_t& du, real_t& dv) const throw();
 
     bool sigmainv0(real_t xi, real_t eta, real_t& u, real_t& v) const throw();
     void sigmainv(real_t xi, real_t eta, real_t& u, real_t& v) const throw();
 
     void Scale(real_t phi, real_t lam,
-	       real_t snu, real_t cnu, real_t dnu,
-	       real_t snv, real_t cnv, real_t dnv,
-	       real_t& gamma, real_t& k) const throw();
+               real_t snu, real_t cnu, real_t dnu,
+               real_t snv, real_t cnv, real_t dnv,
+               real_t& gamma, real_t& k) const throw();
 
   public:
 
@@ -131,7 +131,7 @@ namespace GeographicLib {
      * sphere exactly.
      **********************************************************************/
     TransverseMercatorExact(Math::real_t a, Math::real_t r, Math::real_t k0,
-			    bool extendp = false) throw();
+                            bool extendp = false) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -142,8 +142,8 @@ namespace GeographicLib {
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
     void Forward(Math::real_t lon0, Math::real_t lat, Math::real_t lon,
-		 Math::real_t& x, Math::real_t& y,
-		 Math::real_t& gamma, Math::real_t& k) const throw();
+                 Math::real_t& x, Math::real_t& y,
+                 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
@@ -154,8 +154,8 @@ namespace GeographicLib {
      * in the range [-180, 180).
      **********************************************************************/
     void Reverse(Math::real_t lon0, Math::real_t x, Math::real_t y,
-		 Math::real_t& lat, Math::real_t& lon,
-		 Math::real_t& gamma, Math::real_t& k) const throw();
+                 Math::real_t& lat, Math::real_t& lon,
+                 Math::real_t& gamma, Math::real_t& k) const throw();
 
     /**
      * A global instantiation of TransverseMercatorExact with the WGS84

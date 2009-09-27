@@ -67,10 +67,10 @@ int main(int argc, char* argv[]) {
       cassini = arg == "-c";
       azimuthal = arg != "-c";
       for (unsigned i = 0; i < 2; ++i) {
-	if (++m == argc) return usage(1);
-	std::string a = std::string(argv[m]);
-	std::istringstream str(a);
-	if (!(str >> (i ? lon0 : lat0))) return usage(1);
+        if (++m == argc) return usage(1);
+        std::string a = std::string(argv[m]);
+        std::istringstream str(a);
+        if (!(str >> (i ? lon0 : lat0))) return usage(1);
       }
     } else
       return usage(arg != "-h");
@@ -102,25 +102,25 @@ int main(int argc, char* argv[]) {
       std::istringstream str(s);
       real_t lat, lon, x, y, a, m;
       if (!(reverse ?
-	    (str >> x >> y) :
-	    (str >> lat >> lon)))
-	throw std::out_of_range("Incomplete input: " + s);
+            (str >> x >> y) :
+            (str >> lat >> lon)))
+        throw std::out_of_range("Incomplete input: " + s);
       if (reverse) {
-	if (cassini)
-	  cs.Reverse(x, y, lat, lon, a, m);
-	else
-	  az.Reverse(lat0, lon0, x, y, lat, lon, a, m);
-	std::cout << lat << " " << lon << " " << a << " " << m << "\n";
+        if (cassini)
+          cs.Reverse(x, y, lat, lon, a, m);
+        else
+          az.Reverse(lat0, lon0, x, y, lat, lon, a, m);
+        std::cout << lat << " " << lon << " " << a << " " << m << "\n";
       } else {
-	if ( !(-90 <= lat && lat <= 90) )
-	  throw std::out_of_range("Latitude not in range [-90, 90]\n");
-	if ( !(-180 <= lon && lat <= 360) )
-	  throw std::out_of_range("Longitude not in range [-180, 360]");
-	if (cassini)
-	  cs.Forward(lat, lon, x, y, a, m);
-	else
-	  az.Forward(lat0, lon0, lat, lon, x, y, a, m);
-	std::cout << x << " " << y << " " << a << " " << m << "\n";
+        if ( !(-90 <= lat && lat <= 90) )
+          throw std::out_of_range("Latitude not in range [-90, 90]\n");
+        if ( !(-180 <= lon && lat <= 360) )
+          throw std::out_of_range("Longitude not in range [-180, 360]");
+        if (cassini)
+          cs.Forward(lat, lon, x, y, a, m);
+        else
+          az.Forward(lat0, lon0, lat, lon, x, y, a, m);
+        std::cout << x << " " << y << " " << a << " " << m << "\n";
       }
     }
     catch (const std::exception& e) {

@@ -95,7 +95,7 @@ namespace GeographicLib {
     }
     static int UTMRow(int iband, int icol, int irow) throw();
 
-    friend class UTMUPS;	// UTMUPS::StandardZone calls LatitudeBand
+    friend class UTMUPS;        // UTMUPS::StandardZone calls LatitudeBand
     // Return latitude band number [-10, 10) for the give latitude (degrees).
     // The bands are reckoned in include their southern edges.
     static int LatitudeBand(real_t lat) throw() {
@@ -104,23 +104,23 @@ namespace GeographicLib {
     }
     // UTMUPS access these enums
     enum {
-      tile = 100000,		// Size MGRS blocks
+      tile = 100000,            // Size MGRS blocks
       minutmcol = 1,
       maxutmcol = 9,
       minutmSrow = 10,
-      maxutmSrow = 100,		// Also used for UTM S false northing
-      minutmNrow = 0,		// Also used for UTM N false northing
+      maxutmSrow = 100,         // Also used for UTM S false northing
+      minutmNrow = 0,           // Also used for UTM N false northing
       maxutmNrow = 95,
-      minupsSind = 8,		// These 4 ind's apply to easting and northing
+      minupsSind = 8,           // These 4 ind's apply to easting and northing
       maxupsSind = 32,
       minupsNind = 13,
       maxupsNind = 27,
-      upseasting = 20,		// Also used for UPS false northing
-      utmeasting = 5,		// UTM false easting
+      upseasting = 20,          // Also used for UPS false northing
+      utmeasting = 5,           // UTM false easting
       // Difference between S hemisphere northing and N hemisphere northing
       utmNshift = (maxutmSrow - minutmNrow) * tile
     };
-    MGRS();			// Disable constructor
+    MGRS();                     // Disable constructor
 
   public:
 
@@ -175,7 +175,7 @@ namespace GeographicLib {
      *
      **********************************************************************/
     static void Forward(int zone, bool northp, Math::real_t x, Math::real_t y,
-			int prec, std::string& mgrs);
+                        int prec, std::string& mgrs);
 
     /**
      * Convert UTM or UPS coordinates to an MGRS coordinate in case that
@@ -184,8 +184,8 @@ namespace GeographicLib {
      * this is checked for consistency using the same tests as Reverse.
      **********************************************************************/
     static void Forward(int zone, bool northp,
-			Math::real_t x, Math::real_t y, Math::real_t lat,
-			int prec, std::string& mgrs);
+                        Math::real_t x, Math::real_t y, Math::real_t lat,
+                        int prec, std::string& mgrs);
 
     /**
      * Convert a MGRS coordinate to UTM or UPS coordinates returning zone \e
@@ -215,9 +215,9 @@ namespace GeographicLib {
      * stable.  This is not assured if \e centerp = false.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
-			int& zone, bool& northp,
-			Math::real_t& x, Math::real_t& y,
-			int& prec, bool centerp = true);
+                        int& zone, bool& northp,
+                        Math::real_t& x, Math::real_t& y,
+                        int& prec, bool centerp = true);
 
   };
 

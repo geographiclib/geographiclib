@@ -116,18 +116,18 @@ int main(int argc, char* argv[]) {
       cacheall = false;
       cachearea = true;
       try {
-	GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
-					 std::string(argv[m + 2]),
-					 caches, cachew);
-	m += 2;
-	GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
-					 std::string(argv[m + 2]),
-					 cachen, cachee);
-	m += 2;
+        GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
+                                         std::string(argv[m + 2]),
+                                         caches, cachew);
+        m += 2;
+        GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
+                                         std::string(argv[m + 2]),
+                                         cachen, cachee);
+        m += 2;
       }
       catch (const std::exception& e) {
-	std::cerr << "ERROR: " << e.what() << "\n";
-	return usage(1);
+        std::cerr << "ERROR: " << e.what() << "\n";
+        return usage(1);
       }
     } else if (arg == "-n") {
       if (++m == argc) return usage(1);
@@ -148,41 +148,41 @@ int main(int argc, char* argv[]) {
     GeographicLib::Geoid g(geoid, dir, cubic);
     try {
       if (cacheall)
-	g.CacheAll();
+        g.CacheAll();
       else if (cachearea)
-	g.CacheArea(caches, cachew, cachen, cachee);
+        g.CacheArea(caches, cachew, cachen, cachee);
     }
     catch (const std::exception& e) {
       std::cerr << "ERROR: " << e.what() << "\nProceeding without a cache\n";
     }
     if (verbose)
       std::cerr << "Geoid file: " << g.GeoidFile() << "\n"
-		<< "Description: " << g.Description() << "\n"
-		<< "Interpolation: " << g.Interpolation() << "\n"
-		<< "Date & Time: " << g.DateTime() << "\n"
-		<< "Offset (m): " << g.Offset() << "\n"
-		<< "Scale (m): " << g.Scale() << "\n"
-		<< "Max error (m): " << g.MaxError() << "\n"
-		<< "RMS error (m): " << g.RMSError() << "\n";
+                << "Description: " << g.Description() << "\n"
+                << "Interpolation: " << g.Interpolation() << "\n"
+                << "Date & Time: " << g.DateTime() << "\n"
+                << "Offset (m): " << g.Offset() << "\n"
+                << "Scale (m): " << g.Scale() << "\n"
+                << "Max error (m): " << g.MaxError() << "\n"
+                << "RMS error (m): " << g.RMSError() << "\n";
 
     std::cout << std::fixed;
     std::string s;
     while (std::getline(std::cin, s)) {
       try {
-	std::istringstream  str(s);
-	std::string stra, strb;
-	if (!(str >> stra >> strb))
-	  throw std::out_of_range("Incomplete input: " + s);
-	real_t lat, lon;
-	GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
-	real_t gradn, grade;
-	real_t h = g(lat, lon, gradn, grade);
-	std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
-		    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
+        std::istringstream  str(s);
+        std::string stra, strb;
+        if (!(str >> stra >> strb))
+          throw std::out_of_range("Incomplete input: " + s);
+        real_t lat, lon;
+        GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
+        real_t gradn, grade;
+        real_t h = g(lat, lon, gradn, grade);
+        std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
+                    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
       }
       catch (const std::exception& e) {
-	std::cout << "ERROR: " << e.what() << "\n";
-	retval = 1;
+        std::cout << "ERROR: " << e.what() << "\n";
+        retval = 1;
       }
     }
   }
