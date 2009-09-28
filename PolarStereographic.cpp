@@ -19,10 +19,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real_t PolarStereographic::tol =
-    real_t(0.1L)*sqrt(numeric_limits<real_t>::epsilon());
+  const Math::real PolarStereographic::tol =
+    real(0.1L)*sqrt(numeric_limits<real>::epsilon());
 
-  PolarStereographic::PolarStereographic(real_t a, real_t r, real_t k0)
+  PolarStereographic::PolarStereographic(real a, real r, real k0)
     throw()
     : _a(a)
     , _f(r != 0 ? 1 / r : 0)
@@ -31,39 +31,39 @@ namespace GeographicLib {
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) )
-    , _c( sqrt(_e2m) * exp(eatanhe(real_t(1))) )
+    , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
   {}
 
   const PolarStereographic
   PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_r(),
                           Constants::UPS_k0());
 
-  void PolarStereographic::Forward(bool northp, real_t lat, real_t lon,
-                                   real_t& x, real_t& y,
-                                   real_t& gamma, real_t& k) const throw() {
-    real_t theta = 90 - (northp ? lat : -lat); //  the colatitude
-    real_t rho;
+  void PolarStereographic::Forward(bool northp, real lat, real lon,
+                                   real& x, real& y,
+                                   real& gamma, real& k) const throw() {
+    real theta = 90 - (northp ? lat : -lat); //  the colatitude
+    real rho;
     theta *= Constants::degree();
-    real_t
+    real
       // f = ((1 + e cos(theta))/(1 - e cos(theta)))^(e/2),
       ctheta = cos(theta),
       f = exp(eatanhe(ctheta)),
       t2 = 2 * tan(theta/2) * f, // Snyder (15-9) (t2 = 2 * t)
       m = sin(theta) / sqrt(1 - _e2 * sq(ctheta)); // Snyder (14-15)
     rho = _a * _k0 * t2 / _c;                      // Snyder (21-33)
-    k = m < numeric_limits<real_t>::epsilon() ? _k0 : rho / (_a * m);
+    k = m < numeric_limits<real>::epsilon() ? _k0 : rho / (_a * m);
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
-    real_t
+    real
       lam = lon * Constants::degree();
     x = rho * (lon == -180 ? 0 : sin(lam));
     y = (northp ? -rho : rho) * (abs(lon) == 90 ? 0 : cos(lam));
     gamma = northp ? lon : -lon;
   }
 
-  void PolarStereographic::Reverse(bool northp, real_t x, real_t y,
-                                   real_t& lat, real_t& lon,
-                                   real_t& gamma, real_t& k) const throw() {
-    real_t
+  void PolarStereographic::Reverse(bool northp, real x, real y,
+                                   real& lat, real& lon,
+                                   real& gamma, real& k) const throw() {
+    real
       rho = Math::hypot(x, y),
       t2 = rho * _c / (_a * _k0),
       theta = Constants::pi()/2;        // initial estimate of colatitude
@@ -72,7 +72,7 @@ namespace GeographicLib {
     // rewrite as
     // v(theta) = 2 * tan(theta/2) * f - t2 = 0
     for (int i = 0; i < numit; ++i) {
-      real_t
+      real
         ctheta = cos(theta),
         f = exp(eatanhe(ctheta)),
         c2 = cos(theta/2),
@@ -86,7 +86,7 @@ namespace GeographicLib {
     lat = (northp ? 1 : -1) * (90 - theta / Constants::degree());
     // Result is in [-180, 180).  Assume atan2(0,0) = 0.
     lon = -atan2( -x, northp ? -y : y ) / Constants::degree();
-    real_t m = sin(theta) / sqrt(1 - _e2 * sq(cos(theta)));
+    real m = sin(theta) / sqrt(1 - _e2 * sq(cos(theta)));
     k = m == 0 ? _k0 : rho / (_a * m);
     gamma = northp ? lon : -lon;
   }

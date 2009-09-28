@@ -41,55 +41,55 @@ namespace GeographicLib {
    **********************************************************************/
   class EllipticFunction {
   private:
-    typedef Math::real_t real_t;
-    static const real_t tol, tolRF, tolRD, tolRG0, tolJAC, tolJAC1;
+    typedef Math::real real;
+    static const real tol, tolRF, tolRD, tolRG0, tolJAC, tolJAC1;
     enum { num = 10 }; // Max depth required for sncndn.  Probably 5 is enough.
-    static real_t RF(real_t x, real_t y, real_t z) throw();
-    static real_t RD(real_t x, real_t y, real_t z) throw();
-    static real_t RG0(real_t x, real_t y) throw();
-    const real_t _m, _m1;
+    static real RF(real x, real y, real z) throw();
+    static real RD(real x, real y, real z) throw();
+    static real RG0(real x, real y) throw();
+    const real _m, _m1;
     mutable bool _init;
-    mutable real_t _kc, _ec, _kec;
+    mutable real _kc, _ec, _kec;
     bool Init() const throw();
   public:
 
     /**
      * Constructor with parameter \e m.
      **********************************************************************/
-    explicit EllipticFunction(Math::real_t m) throw();
+    explicit EllipticFunction(Math::real m) throw();
 
     /**
      * The parameter \e m.
      **********************************************************************/
-    Math::real_t m() const throw() { return _m; }
+    Math::real m() const throw() { return _m; }
 
     /**
      * The complementary parameter \e m' = (1 - \e m).
      **********************************************************************/
-    Math::real_t m1() const throw() { return _m1; }
+    Math::real m1() const throw() { return _m1; }
 
     /**
      * The complete integral of first kind, \e K(\e m).
      **********************************************************************/
-    Math::real_t K() const throw() { _init || Init(); return _kc; }
+    Math::real K() const throw() { _init || Init(); return _kc; }
 
     /**
      * The complete integral of second kind, \e E(\e m).
      **********************************************************************/
-    Math::real_t E() const throw() { _init || Init(); return _ec; }
+    Math::real E() const throw() { _init || Init(); return _ec; }
 
     /**
      * The difference \e K(\e m) - \e E(\e m) (which can be computed directly).
      **********************************************************************/
-    Math::real_t KE() const throw() { _init || Init(); return _kec; }
+    Math::real KE() const throw() { _init || Init(); return _kec; }
 
     /**
      * The Jacobi elliptic functions sn(<i>x</i>|<i>m</i>),
      * cn(<i>x</i>|<i>m</i>), and dn(<i>x</i>|<i>m</i>) with argument \e x.
      * The results are returned in \e sn, \e cn, and \e dn.
      **********************************************************************/
-    void sncndn(Math::real_t x,
-                Math::real_t& sn, Math::real_t& cn, Math::real_t& dn)
+    void sncndn(Math::real x,
+                Math::real& sn, Math::real& cn, Math::real& dn)
       const throw();
 
     /**
@@ -98,7 +98,7 @@ namespace GeographicLib {
      * provide \e sn = sin(\e phi), \e cn = cos(\e phi), \e dn = sqrt(1 - \e m
      * sin<sup>2</sup>(\e phi)).
      **********************************************************************/
-    Math::real_t E(Math::real_t sn, Math::real_t cn, Math::real_t dn)
+    Math::real E(Math::real sn, Math::real cn, Math::real dn)
       const throw();
   };
 

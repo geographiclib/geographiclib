@@ -47,9 +47,9 @@ If -r is given the reverse transformation is performed.\n\
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
-  typedef Math::real_t real_t;
+  typedef Math::real real;
   bool localcartesian = false, reverse = false;
-  real_t latlonh0[3] = {0, 0, 0};
+  real latlonh0[3] = {0, 0, 0};
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-r")
@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
-      real_t lat, lon, h, x, y, z;
+      real lat, lon, h, x, y, z;
       if (!(reverse ?
             (str >> x >> y >> z) :
             (str >> lat >> lon >> h)))

@@ -19,7 +19,7 @@
  * in [4, 8].
  **********************************************************************/
 #define TM_TX_MAXPOW \
-(sizeof(real_t) == sizeof(double) ? 6 : sizeof(real_t) == sizeof(float) ? 5 : 7)
+(sizeof(real) == sizeof(double) ? 6 : sizeof(real) == sizeof(float) ? 5 : 7)
 #endif
 
 namespace GeographicLib {
@@ -51,16 +51,16 @@ namespace GeographicLib {
 
   class TransverseMercator {
   private:
-    typedef Math::real_t real_t;
+    typedef Math::real real;
     static const int maxpow = TM_TX_MAXPOW;
-    static const real_t tol;
+    static const real tol;
     static const int numit = 5;
-    const real_t _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
-    real_t _a1, _b1, _h[maxpow], _hp[maxpow];
-    static inline real_t sq(real_t x) throw() { return x * x; }
+    const real _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
+    real _a1, _b1, _h[maxpow], _hp[maxpow];
+    static inline real sq(real x) throw() { return x * x; }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real_t eatanhe(real_t x) const throw() {
+    inline real eatanhe(real x) const throw() {
       return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
     }
   public:
@@ -71,7 +71,7 @@ namespace GeographicLib {
      * inf or flattening = 0 (i.e., a sphere).  Negative \e r indicates a
      * prolate spheroid.
      **********************************************************************/
-    TransverseMercator(Math::real_t a, Math::real_t r, Math::real_t k0) throw();
+    TransverseMercator(Math::real a, Math::real r, Math::real k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -81,9 +81,9 @@ namespace GeographicLib {
      * No false easting or northing is added. \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
-    void Forward(Math::real_t lon0, Math::real_t lat, Math::real_t lon,
-                 Math::real_t& x, Math::real_t& y,
-                 Math::real_t& gamma, Math::real_t& k) const throw();
+    void Forward(Math::real lon0, Math::real lat, Math::real lon,
+                 Math::real& x, Math::real& y,
+                 Math::real& gamma, Math::real& k) const throw();
 
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
@@ -93,9 +93,9 @@ namespace GeographicLib {
      * No false easting or northing is added.  The value of \e lon returned is
      * in the range [-180, 180).
      **********************************************************************/
-    void Reverse(Math::real_t lon0, Math::real_t x, Math::real_t y,
-                 Math::real_t& lat, Math::real_t& lon,
-                 Math::real_t& gamma, Math::real_t& k) const throw();
+    void Reverse(Math::real lon0, Math::real x, Math::real y,
+                 Math::real& lat, Math::real& lon,
+                 Math::real& gamma, Math::real& k) const throw();
 
     /**
      * A global instantiation of TransverseMercator with the WGS84 ellipsoid

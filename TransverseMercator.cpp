@@ -51,10 +51,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real_t TransverseMercator::tol =
-    real_t(0.1L)*sqrt(numeric_limits<real_t>::epsilon());
+  const Math::real TransverseMercator::tol =
+    real(0.1L)*sqrt(numeric_limits<real>::epsilon());
 
-  TransverseMercator::TransverseMercator(real_t a, real_t r, real_t k0)
+  TransverseMercator::TransverseMercator(real a, real r, real k0)
     throw()
     : _a(a)
     , _f(r != 0 ? 1 / r : 0)
@@ -64,7 +64,7 @@ namespace GeographicLib {
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) ) )
       // See, for example, Lee (1976), p 100.
-    , _c( sqrt(_e2m) * exp(eatanhe(real_t(1))) )
+    , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
     , _n(_f / (2 - _f))
   {
     switch (maxpow) {
@@ -188,9 +188,9 @@ namespace GeographicLib {
   TransverseMercator::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
                           Constants::UTM_k0());
 
-  void TransverseMercator::Forward(real_t lon0, real_t lat, real_t lon,
-                                   real_t& x, real_t& y,
-                                   real_t& gamma, real_t& k) const throw() {
+  void TransverseMercator::Forward(real lon0, real lat, real lon,
+                                   real& x, real& y,
+                                   real& gamma, real& k) const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
       lon -= lon0 - 360;
@@ -211,7 +211,7 @@ namespace GeographicLib {
         latsign = -1;
       lon = 180 - lon;
     }
-    real_t
+    real
       phi = lat * Constants::degree(),
       lam = lon * Constants::degree();
     // q is isometric latitude
@@ -234,9 +234,9 @@ namespace GeographicLib {
     //   sinh(etap) = cos(beta)*sin(lam)/denom = sech(q)*sin(lam)/denom
     //
     // to eliminate beta and derive more stable expressions for xi',eta'
-    real_t etap, xip;
+    real etap, xip;
     if (lat < 90) {
-      real_t
+      real
         qp = Math::asinh(tan(phi)),
         q = qp - eatanhe(sin(phi));
       xip = atan2(sinh(q), cos(lam));
@@ -308,33 +308,15 @@ namespace GeographicLib {
     //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = n*x, B = x ]
     //    c[0] = 1; c[k] = 2*k*_hp[k-1]
     //    S = (c[0] - y[2]) + y[1] * cos(x)
-    real_t
+    real
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta')
-#if 0
-    real_t                      // Accumulators for zeta
-      xi0 = _hp[maxpow - 1], eta0 = 0,
-      xi1 = 0, eta1 = 0,
-      xi2, eta2;
-    real_t                      // Accumulators for dzeta/dzeta'
-      yr0 = 2 * maxpow * _hp[maxpow - 1], yi0 = 0,
-      yr1 = 0, yi1 = 0,
-      yr2, yi2;
-    for (int j = maxpow; --j;) { // j = maxpow-1 .. 1
-      xi2 = xi1; eta2 = eta1; yr2 = yr1; yi2 = yi1;
-      xi1 = xi0; eta1 = eta0; yr1 = yr0; yi1 = yi0;
-      xi0  = ar * xi1 - ai * eta1 - xi2 + _hp[j - 1];
-      eta0 = ai * xi1 + ar * eta1 - eta2;
-      yr0 = ar * yr1 - ai * yi1 - yr2 + 2 * j * _hp[j - 1];
-      yi0 = ai * yr1 + ar * yi1 - yi2;
-    }
-#else
     int n = maxpow;
-    real_t
+    real
       xi0 = (n & 1 ? _hp[n - 1] : 0), eta0 = 0,
       xi1 = 0, eta1 = 0;
-    real_t                      // Accumulators for dzeta/dzeta'
+    real                        // Accumulators for dzeta/dzeta'
       yr0 = (n & 1 ? 2 * maxpow * _hp[--n] : 0), yi0 = 0,
       yr1 = 0, yi1 = 0;
     while (n) {
@@ -349,12 +331,11 @@ namespace GeographicLib {
       yr0 = ar * yr1 - ai * yi1 - yr0 + 2 * (n + 1) * _hp[n];
       yi0 = ai * yr1 + ar * yi1 - yi0;
     }
-#endif
     ar /= 2; ai /= 2;           // cos(2*zeta')
     yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
     yi1 =   - yi1 + ai * yr0 + ar * yi0;
     ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta')
-    real_t
+    real
       xi  = xip  + ar * xi0 - ai * eta0,
       eta = etap + ai * xi0 + ar * eta0;
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
@@ -370,13 +351,13 @@ namespace GeographicLib {
     k *= _k0;
   }
 
-  void TransverseMercator::Reverse(real_t lon0, real_t x, real_t y,
-                                   real_t& lat, real_t& lon,
-                                   real_t& gamma, real_t& k) const throw() {
+  void TransverseMercator::Reverse(real lon0, real x, real y,
+                                   real& lat, real& lon,
+                                   real& gamma, real& k) const throw() {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of q.
-    real_t
+    real
       xi = y / (_a1 * _k0),
       eta = x / (_a1 * _k0);
     // Explicitly enforce the parity
@@ -388,33 +369,15 @@ namespace GeographicLib {
     bool backside = xi > Constants::pi()/2;
     if (backside)
       xi = Constants::pi() - xi;
-    real_t
+    real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
-#if 0
-    real_t                      // Accumulators for zeta'
-      xip0 = -_h[maxpow - 1], etap0 = 0,
-      xip1 = 0, etap1 = 0,
-      xip2, etap2;
-    real_t                      // Accumulators for dzeta'/dzeta
-      yr0 = - 2 * maxpow * _h[maxpow - 1], yi0 = 0,
-      yr1 = 0, yi1 = 0,
-      yr2, yi2;
-    for (int j = maxpow; --j;) { // j = maxpow-1 .. 1
-      xip2 = xip1; etap2 = etap1; yr2 = yr1; yi2 = yi1;
-      xip1 = xip0; etap1 = etap0; yr1 = yr0; yi1 = yi0;
-      xip0  = ar * xip1 - ai * etap1 - xip2 - _h[j - 1];
-      etap0 = ai * xip1 + ar * etap1 - etap2;
-      yr0 = ar * yr1 - ai * yi1 - yr2 - 2 * j * _h[j - 1];
-      yi0 = ai * yr1 + ar * yi1 - yi2;
-    }
-#else
     int n = maxpow;
-    real_t                      // Accumulators for zeta'
+    real                        // Accumulators for zeta'
       xip0 = (n & 1 ? -_h[n - 1] : 0), etap0 = 0,
       xip1 = 0, etap1 = 0;
-    real_t                      // Accumulators for dzeta'/dzeta
+    real                        // Accumulators for dzeta'/dzeta
       yr0 = (n & 1 ? - 2 * maxpow * _h[--n] : 0), yi0 = 0,
       yr1 = 0, yi1 = 0;
     while (n) {
@@ -429,12 +392,11 @@ namespace GeographicLib {
       yr0 = ar * yr1 - ai * yi1 - yr0 - 2 * (n + 1) * _h[n];
       yi0 = ai * yr1 + ar * yi1 - yi0;
     }
-#endif
     ar /= 2; ai /= 2;           // cos(2*zeta')
     yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
     yi1 =   - yi1 + ai * yr0 + ar * yi0;
     ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta)
-    real_t
+    real
       xip  = xi  + ar * xip0 - ai * etap0,
       etap = eta + ai * xip0 + ar * etap0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
@@ -447,8 +409,8 @@ namespace GeographicLib {
     //   q = asinh(tan(beta))
     //
     // the following eliminates beta and is more stable
-    real_t lam, phi;
-    real_t
+    real lam, phi;
+    real
       s = sinh(etap),
       c = cos(xip),
       r = Math::hypot(s, c);
@@ -457,12 +419,12 @@ namespace GeographicLib {
       // Use Newton's method to solve
       // q = qp - e * atanh(e * tanh(qp))
       // for qp = asinh(tan(phi))
-      real_t
+      real
         q = Math::asinh(sin(xip)/r),
         qp = q;
       // min iterations = 1, max iterations = 3; mean = 2.8
       for (int i = 0; i < numit; ++i) {
-        real_t
+        real
           t = tanh(qp),
           dqp = -(qp - eatanhe(t) - q) * (1 - _e2 * sq(t)) / _e2m;
         qp += dqp;

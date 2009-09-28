@@ -61,7 +61,7 @@ one).\n\
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
-  typedef Math::real_t real_t;
+  typedef Math::real real;
   bool reverse = false, testing = false, series = false;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
@@ -77,15 +77,15 @@ int main(int argc, char* argv[]) {
       return usage(arg != "-h");
   }
 
-  real_t e, a;
+  real e, a;
   if (testing) {
-    e = real_t(0.1L);
+    e = real(0.1L);
     GeographicLib::EllipticFunction temp(e * e);
     a = 1/temp.E();
   }
   const GeographicLib::TransverseMercatorExact& TME = testing ?
     GeographicLib::TransverseMercatorExact
-    (a, (std::sqrt(1 - e * e) + 1) / (e * e), real_t(1), true) :
+    (a, (std::sqrt(1 - e * e) + 1) / (e * e), real(1), true) :
     GeographicLib::TransverseMercatorExact::UTM;
 
   const GeographicLib::TransverseMercator& TMS =
@@ -97,22 +97,22 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
-      real_t lat, lon, x, y;
+      real lat, lon, x, y;
       if (!(reverse ?
             (str >> x >> y) :
             (str >> lat >> lon)))
         throw  std::out_of_range("Incomplete input: " + s);
-      real_t gamma, k;
+      real gamma, k;
       if (reverse) {
         if (series)
-          TMS.Reverse(real_t(0), x, y, lat, lon, gamma, k);
+          TMS.Reverse(real(0), x, y, lat, lon, gamma, k);
         else
-          TME.Reverse(real_t(0), x, y, lat, lon, gamma, k);
+          TME.Reverse(real(0), x, y, lat, lon, gamma, k);
       } else {
         if (series)
-          TMS.Forward(real_t(0), lat, lon, x, y, gamma, k);
+          TMS.Forward(real(0), lat, lon, x, y, gamma, k);
         else
-          TME.Forward(real_t(0), lat, lon, x, y, gamma, k);
+          TME.Forward(real(0), lat, lon, x, y, gamma, k);
       }
       std::cout << lat << " " << lon << " "
                 << x << " " << y << " "

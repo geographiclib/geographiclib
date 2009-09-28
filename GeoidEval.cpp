@@ -99,9 +99,9 @@ to standard error.\n\
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
-  typedef Math::real_t real_t;
+  typedef Math::real real;
   bool cacheall = false, cachearea = false, verbose = false, cubic = true;
-  real_t caches, cachew, cachen, cachee;
+  real caches, cachew, cachen, cachee;
   std::string dir;
   std::string geoid = "egm96-5";
   for (int m = 1; m < argc; ++m) {
@@ -172,10 +172,10 @@ int main(int argc, char* argv[]) {
         std::string stra, strb;
         if (!(str >> stra >> strb))
           throw std::out_of_range("Incomplete input: " + s);
-        real_t lat, lon;
+        real lat, lon;
         GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
-        real_t gradn, grade;
-        real_t h = g(lat, lon, gradn, grade);
+        real gradn, grade;
+        real h = g(lat, lon, gradn, grade);
         std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
                     << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
       }

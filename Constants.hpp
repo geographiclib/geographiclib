@@ -47,33 +47,33 @@ namespace GeographicLib {
     
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
-     * with \e real_t = double.  However, the algorithms should also work with
+     * with \e real = double.  However, the algorithms should also work with
      * float and long double (where available).
      **********************************************************************/
-    typedef double real_t;
+    typedef double real;
 
 #if !defined(_MSC_VER)
     /**
      * sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>)
      **********************************************************************/
-    static inline real_t hypot(real_t x, real_t y) throw()
+    static inline real hypot(real x, real y) throw()
     { return ::hypot(x, y); }
     /**
      * asinh(\e x)
      **********************************************************************/
-    static inline real_t asinh(real_t x) throw() { return ::asinh(x); }
+    static inline real asinh(real x) throw() { return ::asinh(x); }
     /**
      * atanh(\e x)
      **********************************************************************/
-    static inline real_t atanh(real_t x) throw() { return ::atanh(x); }
+    static inline real atanh(real x) throw() { return ::atanh(x); }
     /**
      * \e x<sup>1/3</sup>
      **********************************************************************/
-    static inline real_t cbrt(real_t x) throw() { return ::cbrt(x); }
+    static inline real cbrt(real x) throw() { return ::cbrt(x); }
 #else
-    static inline real_t hypot(real_t x, real_t y) throw() {
-      return real_t( sizeof(real_t) <= sizeof(double) ?
-                     _hypot(x, y) : _hypotf(float(x), float(y)) );
+    static inline real hypot(real x, real y) throw() {
+      return real( sizeof(real) <= sizeof(double) ?
+                   _hypot(x, y) : _hypotf(float(x), float(y)) );
     }
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.
@@ -85,14 +85,14 @@ namespace GeographicLib {
     // The accuracy of asinh is also bad for large negative arguments.  This is
     // easy to fix in the definition of asinh.  Instead we call these functions
     // with positive arguments and enforce the correct parity separately.
-    static inline real_t asinh(real_t x) throw() {
+    static inline real asinh(real x) throw() {
       return std::log(x + std::sqrt(1 + x * x));
     }
-    static inline real_t atanh(real_t x) throw() {
+    static inline real atanh(real x) throw() {
       return std::log((1 + x)/(1 - x))/2;
     }
-    static inline real_t cbrt(real_t x) throw() {
-      real_t y = std::pow(std::abs(x), 1/real_t(3));
+    static inline real cbrt(real x) throw() {
+      real y = std::pow(std::abs(x), 1/real(3));
       return x < 0 ? -y : y;
     }
 #endif
@@ -106,20 +106,20 @@ namespace GeographicLib {
    **********************************************************************/
   class Constants {
   private:
-    typedef Math::real_t real_t;
+    typedef Math::real real;
     Constants();                // Disable constructor
 
   public:
     /**
      * pi
      **********************************************************************/
-    static inline Math::real_t pi() throw()
+    static inline Math::real pi() throw()
     // good for about 123-bit accuracy
-    { return real_t(3.141592653589793238462643383279502884L); }
+    { return real(3.141592653589793238462643383279502884L); }
     /**
      * Factor to convert from degrees to radians
      **********************************************************************/
-    static inline Math::real_t degree() throw() { return pi() / 180; }
+    static inline Math::real degree() throw() { return pi() / 180; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/
@@ -127,20 +127,20 @@ namespace GeographicLib {
     /**
      * Major radius of WGS84 ellipsoid
      **********************************************************************/
-    static inline Math::real_t WGS84_a() throw() { return 6378137 * meter(); }
+    static inline Math::real WGS84_a() throw() { return 6378137 * meter(); }
     /**
      * Reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
-    static inline Math::real_t WGS84_r() throw()
-    { return real_t(298.257223563L); }
+    static inline Math::real WGS84_r() throw()
+    { return real(298.257223563L); }
     /**
      * Central scale factor for UTM
      **********************************************************************/
-    static inline Math::real_t UTM_k0() throw() {return real_t(0.9996L); }
+    static inline Math::real UTM_k0() throw() {return real(0.9996L); }
     /**
      * Central scale factor for UPS
      **********************************************************************/
-    static inline Math::real_t UPS_k0() throw() { return real_t(0.994L); }
+    static inline Math::real UPS_k0() throw() { return real(0.994L); }
     ///@}
 
     /** \name SI units
@@ -150,18 +150,18 @@ namespace GeographicLib {
      * Factor to convert from meters to meters (i.e., 1, but this lets the
      * internal system of units be changed if necessary).
      **********************************************************************/
-    static inline Math::real_t meter() throw() { return 1; }
+    static inline Math::real meter() throw() { return 1; }
     /**
      * Factor to convert from kilometers to meters.
      **********************************************************************/
-    static inline Math::real_t kilometer() throw() { return 1000 * meter(); }
+    static inline Math::real kilometer() throw() { return 1000 * meter(); }
     ///@}
 
     /**
      * Factor to convert from nautical miles (approximately 1 arc minute) to
      * meters.
      **********************************************************************/
-    static inline Math::real_t nauticalmile() throw() { return 1852 * meter(); }
+    static inline Math::real nauticalmile() throw() { return 1852 * meter(); }
 
     /** \name Anachronistic British units
      **********************************************************************/
@@ -169,28 +169,28 @@ namespace GeographicLib {
     /**
      * Factor to convert from international feet to meters.
      **********************************************************************/
-    static inline Math::real_t foot() throw()
-    { return real_t(0.0254L) * 12 * meter(); }
+    static inline Math::real foot() throw()
+    { return real(0.0254L) * 12 * meter(); }
     /**
      * Factor to convert from yards to meters.
      **********************************************************************/
-    static inline Math::real_t yard() throw() { return 3 * foot(); }
+    static inline Math::real yard() throw() { return 3 * foot(); }
     /**
      * Factor to convert from fathoms to meters.
      **********************************************************************/
-    static inline Math::real_t fathom() throw() { return 2 * yard(); }
+    static inline Math::real fathom() throw() { return 2 * yard(); }
     /**
      * Factor to convert from chains to meters.
      **********************************************************************/
-    static inline Math::real_t chain() throw() { return 22 * yard(); }
+    static inline Math::real chain() throw() { return 22 * yard(); }
     /**
      * Factor to convert from furlongs to meters.
      **********************************************************************/
-    static inline Math::real_t furlong() throw() { return 10 * chain(); }
+    static inline Math::real furlong() throw() { return 10 * chain(); }
     /**
      * Factor to convert from statute miles to meters.
      **********************************************************************/
-    static inline Math::real_t mile() throw() { return 8 * furlong(); }
+    static inline Math::real mile() throw() { return 8 * furlong(); }
     ///@}
 
     /** \name Anachronistic US units
@@ -199,8 +199,8 @@ namespace GeographicLib {
     /**
      * Factor to convert from US survery feet to meters.
      **********************************************************************/
-    static inline Math::real_t surveyfoot() throw()
-    { return real_t(1200) / real_t(3937) * meter(); }
+    static inline Math::real surveyfoot() throw()
+    { return real(1200) / real(3937) * meter(); }
     ///@}
   };
 

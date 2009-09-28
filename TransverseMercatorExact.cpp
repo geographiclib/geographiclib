@@ -50,18 +50,18 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real_t TransverseMercatorExact::tol =
-    numeric_limits<real_t>::epsilon();
-  const Math::real_t TransverseMercatorExact::tol1 = real_t(0.1L) * sqrt(tol);
-  const Math::real_t TransverseMercatorExact::tol2 = real_t(0.1L) * tol;
-  const Math::real_t TransverseMercatorExact::taytol = pow(tol, real_t(0.6L));
+  const Math::real TransverseMercatorExact::tol =
+    numeric_limits<real>::epsilon();
+  const Math::real TransverseMercatorExact::tol1 = real(0.1L) * sqrt(tol);
+  const Math::real TransverseMercatorExact::tol2 = real(0.1L) * tol;
+  const Math::real TransverseMercatorExact::taytol = pow(tol, real(0.6L));
       // Overflow value for asinh(tan(pi/2)) etc.
-  const Math::real_t TransverseMercatorExact::ahypover =
-    (real_t)(numeric_limits<real_t>::digits)
-    /log((real_t)(numeric_limits<real_t>::radix)) + 2;
+  const Math::real TransverseMercatorExact::ahypover =
+    (real)(numeric_limits<real>::digits)
+    /log((real)(numeric_limits<real>::radix)) + 2;
 
-  TransverseMercatorExact::TransverseMercatorExact(real_t a, real_t r,
-                                                   real_t k0, bool extendp)
+  TransverseMercatorExact::TransverseMercatorExact(real a, real r,
+                                                   real k0, bool extendp)
     throw()
     : _a(a)
     , _f(1 / r)
@@ -79,26 +79,26 @@ namespace GeographicLib {
   TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
                                Constants::UTM_k0());
 
-  Math::real_t TransverseMercatorExact::psi(real_t phi) const throw() {
-    real_t s = sin(phi);
+  Math::real TransverseMercatorExact::psi(real phi) const throw() {
+    real s = sin(phi);
     // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
     // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
     // sign(phi)
-    return Math::asinh(s / max(cos(phi), real_t(0.1L) * tol)) -
+    return Math::asinh(s / max(cos(phi), real(0.1L) * tol)) -
       _e * Math::atanh(_e * s);
   }
 
-  Math::real_t TransverseMercatorExact::psiinv(real_t psi) const throw() {
+  Math::real TransverseMercatorExact::psiinv(real psi) const throw() {
     // This is the inverse of psi.  Use Newton's method to solve for q in
     //
     //   psi = q - e * atanh(e * tanh(q))
     //
     // and then substitute phi = atan(sinh(q)).  Note that
     // dpsi/dq = (1 - e^2)/(1 - e^2 * tanh(q)^2)
-    real_t q = psi;             // Initial guess
+    real q = psi;               // Initial guess
     for (int i = 0; i < numit; ++i) {
       // min iterations = 1, max iterations = 3; mean = 2.8
-      real_t
+      real
         t = tanh(q),
         dq = -(q - _e * Math::atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
       q += dq;
@@ -108,16 +108,14 @@ namespace GeographicLib {
     return atan(sinh(q));
   }
 
-  void TransverseMercatorExact::zeta(real_t u,
-                                     real_t snu, real_t cnu, real_t dnu,
-                                     real_t v,
-                                     real_t snv, real_t cnv, real_t dnv,
-                                     real_t& psi, real_t& lam) const throw() {
+  void TransverseMercatorExact::zeta(real u, real snu, real cnu, real dnu,
+                                     real v, real snv, real cnv, real dnv,
+                                     real& psi, real& lam) const throw() {
     // Lee 54.17 but write
     // atanh(snu * dnv) = asinh(snu * dnv / sqrt(cnu^2 + _mv * snu^2 * snv^2))
     // atanh(_e * snu / dnv) =
     //         asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
-    real_t
+    real
       d1 = sqrt(sq(cnu) + _mv * sq(snu * snv)),
       d2 = sqrt(_mu * sq(cnu) + _mv * sq(cnv));
     psi =
@@ -129,21 +127,19 @@ namespace GeographicLib {
       0;
   }
 
-  void TransverseMercatorExact::dwdzeta(real_t u,
-                                        real_t snu, real_t cnu, real_t dnu,
-                                        real_t v,
-                                        real_t snv, real_t cnv, real_t dnv,
-                                        real_t& du, real_t& dv) const throw() {
+  void TransverseMercatorExact::dwdzeta(real u, real snu, real cnu, real dnu,
+                                        real v, real snv, real cnv, real dnv,
+                                        real& du, real& dv) const throw() {
     // Lee 54.21 but write (1 - dnu^2 * snv^2) = (cnv^2 + _mu * snu^2 * snv^2)
     // (see A+S 16.21.4)
-    real_t d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
+    real d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
     du =  cnu * dnu * dnv * (sq(cnv) - _mu * sq(snu * snv)) / d;
     dv = -snu * snv * cnv * (sq(dnu * dnv) + _mu * sq(cnu)) / d;
   }
 
   // Starting point for zetainv
-  bool TransverseMercatorExact::zetainv0(real_t psi, real_t lam,
-                                          real_t& u, real_t& v) const throw() {
+  bool TransverseMercatorExact::zetainv0(real psi, real lam,
+                                          real& u, real& v) const throw() {
     bool retval = false;
     if (psi < -_e * Constants::pi()/4 &&
         lam > (1 - 2 * _e) * Constants::pi()/2 &&
@@ -157,7 +153,7 @@ namespace GeographicLib {
       //   psi = _e + i * pi/2 - _e * atanh(cos(i * (w - w0)/(1 + _mu/2)))
       //
       // Inverting this gives:
-      real_t
+      real
         psix = 1 - psi / _e,
         lamx = (Constants::pi()/2 - lam) / _e;
       u = Math::asinh(sin(lamx) / Math::hypot(cos(lamx), sinh(psix))) *
@@ -178,7 +174,7 @@ namespace GeographicLib {
       //
       // When inverting this, we map arg(w - w0) = [-90, 0] to
       // arg(zeta - zeta0) = [-90, 180]
-      real_t
+      real
         dlam = lam - (1 - _e) * Constants::pi()/2,
         rad = Math::hypot(psi, dlam),
         // atan2(dlam-psi, psi+dlam) + 45d gives arg(zeta - zeta0) in range
@@ -186,10 +182,10 @@ namespace GeographicLib {
         // range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
         // [-105, 15).  In particular the range [-90, 180] in zeta space maps
         // to [-90, 0] in w space as required.
-        ang = atan2(dlam-psi, psi+dlam) - real_t(0.75L) * Constants::pi();
+        ang = atan2(dlam-psi, psi+dlam) - real(0.75L) * Constants::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol;
-      rad = pow(3 / (_mv * _e) * rad, 1/real_t(3));
+      rad = pow(3 / (_mv * _e) * rad, 1/real(3));
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();
@@ -207,56 +203,52 @@ namespace GeographicLib {
   }
 
   // Invert zeta using Newton's method
-  void TransverseMercatorExact::zetainv(real_t psi, real_t lam,
-                                        real_t& u, real_t& v) const throw() {
+  void TransverseMercatorExact::zetainv(real psi, real lam,
+                                        real& u, real& v) const throw() {
     if (zetainv0(psi, lam, u, v))
       return;
-    real_t stol2 = tol2 / sq(max(psi, real_t(1)));
+    real stol2 = tol2 / sq(max(psi, real(1)));
     // min iterations = 2, max iterations = 6; mean = 4.0
     for (int i = 0, trip = 0; i < numit; ++i) {
-      real_t snu, cnu, dnu, snv, cnv, dnv;
+      real snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
-      real_t psi1, lam1, du1, dv1;
+      real psi1, lam1, du1, dv1;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi1, lam1);
       dwdzeta(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
       psi1 -= psi;
       lam1 -= lam;
-      real_t
+      real
         delu = psi1 * du1 - lam1 * dv1,
         delv = psi1 * dv1 + lam1 * du1;
       u -= delu;
       v -= delv;
       if (trip)
         break;
-      real_t delw2 = sq(delu) + sq(delv);
+      real delw2 = sq(delu) + sq(delv);
       if (delw2 < stol2)
         ++trip;
     }
   }
 
-  void TransverseMercatorExact::sigma(real_t u,
-                                      real_t snu, real_t cnu, real_t dnu,
-                                      real_t v,
-                                      real_t snv, real_t cnv, real_t dnv,
-                                      real_t& xi, real_t& eta) const throw() {
+  void TransverseMercatorExact::sigma(real u, real snu, real cnu, real dnu,
+                                      real v, real snv, real cnv, real dnv,
+                                      real& xi, real& eta) const throw() {
     // Lee 55.4 writing
     // dnu^2 + dnv^2 - 1 = _mu * cnu^2 + _mv * cnv^2
-    real_t d = _mu * sq(cnu) + _mv * sq(cnv);
+    real d = _mu * sq(cnu) + _mv * sq(cnv);
     xi = _Eu.E(snu, cnu, dnu) - _mu * snu * cnu * dnu / d;
     eta = v - _Ev.E(snv, cnv, dnv) + _mv * snv * cnv * dnv / d;
   }
 
-  void TransverseMercatorExact::dwdsigma(real_t u,
-                                         real_t snu, real_t cnu, real_t dnu,
-                                         real_t v,
-                                         real_t snv, real_t cnv, real_t dnv,
-                                         real_t& du, real_t& dv)
+  void TransverseMercatorExact::dwdsigma(real u, real snu, real cnu, real dnu,
+                                         real v, real snv, real cnv, real dnv,
+                                         real& du, real& dv)
     const throw() {
     // Reciprocal of 55.9: dw/ds = dn(w)^2/_mv, expanding complex dn(w) using
     // A+S 16.21.4
-    real_t d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
-    real_t
+    real d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
+    real
       dnr = dnu * cnv * dnv,
       dni = - _mu * snu * cnu * snv;
     du = (sq(dnr) - sq(dni)) / d;
@@ -264,22 +256,22 @@ namespace GeographicLib {
   }
 
   // Starting point for sigmainv
-  bool TransverseMercatorExact::sigmainv0(real_t xi, real_t eta,
-                                          real_t& u, real_t& v) const throw() {
+  bool TransverseMercatorExact::sigmainv0(real xi, real eta,
+                                          real& u, real& v) const throw() {
     bool retval = false;
-    if (eta > real_t(1.25L) * _Ev.KE() ||
-        (xi < -real_t(0.25L) * _Eu.E() && xi < eta - _Ev.KE())) {
+    if (eta > real(1.25L) * _Ev.KE() ||
+        (xi < -real(0.25L) * _Eu.E() && xi < eta - _Ev.KE())) {
       // sigma as a simple pole at w = w0 = Eu.K() + i * Ev.K() and sigma is
       // approximated by
       //
       // sigma = (Eu.E() + i * Ev.KE()) + 1/(w - w0)
-      real_t
+      real
         x = xi - _Eu.E(),
         y = eta - _Ev.KE(),
         r2 = sq(x) + sq(y);
       u = _Eu.K() + x/r2;
       v = _Ev.K() - y/r2;
-    } else if ((eta > real_t(0.75L) * _Ev.KE() && xi < real_t(0.25L) * _Eu.E())
+    } else if ((eta > real(0.75L) * _Ev.KE() && xi < real(0.25L) * _Eu.E())
                || eta > _Ev.KE()) {
       // At w = w0 = i * Ev.K(), we have
       //
@@ -293,15 +285,15 @@ namespace GeographicLib {
       // When inverting this, we map arg(w - w0) = [-pi/2, -pi/6] to
       // arg(sigma - sigma0) = [-pi/2, pi/2]
       // mapping arg = [-pi/2, -pi/6] to [-pi/2, pi/2]
-      real_t
+      real
         deta = eta - _Ev.KE(),
         rad = Math::hypot(xi, deta),
         // Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
         // discussion in zetainv0 on the cut for ang.
-        ang = atan2(deta-xi, xi+deta) - real_t(0.75L) * Constants::pi();
+        ang = atan2(deta-xi, xi+deta) - real(0.75L) * Constants::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol;
-      rad = pow(3 / _mv * rad, 1/real_t(3));
+      rad = pow(3 / _mv * rad, 1/real(3));
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();
@@ -314,45 +306,45 @@ namespace GeographicLib {
   }
 
   // Invert sigma using Newton's method
-  void TransverseMercatorExact::sigmainv(real_t xi, real_t eta,
-                                         real_t& u, real_t& v) const throw() {
+  void TransverseMercatorExact::sigmainv(real xi, real eta,
+                                         real& u, real& v) const throw() {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
     for (int i = 0, trip = 0; i < numit; ++i) {
-      real_t snu, cnu, dnu, snv, cnv, dnv;
+      real snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
-      real_t xi1, eta1, du1, dv1;
+      real xi1, eta1, du1, dv1;
       sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi1, eta1);
       dwdsigma(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
       xi1 -= xi;
       eta1 -= eta;
-      real_t
+      real
         delu = xi1 * du1 - eta1 * dv1,
         delv = xi1 * dv1 + eta1 * du1;
       u -= delu;
       v -= delv;
       if (trip)
         break;
-      real_t delw2 = sq(delu) + sq(delv);
+      real delw2 = sq(delu) + sq(delv);
       if (delw2 < tol2)
         ++trip;
     }
   }
 
-  void TransverseMercatorExact::Scale(real_t phi, real_t lam,
-                                      real_t snu, real_t cnu, real_t dnu,
-                                      real_t snv, real_t cnv, real_t dnv,
-                                      real_t& gamma, real_t& k) const throw() {
-    real_t
+  void TransverseMercatorExact::Scale(real phi, real lam,
+                                      real snu, real cnu, real dnu,
+                                      real snv, real cnv, real dnv,
+                                      real& gamma, real& k) const throw() {
+    real
       c = cos(phi),
       s = sin(lam),
       c2 = sq(c),
       s2 = sq(s),
       d = 1 - s2 * c2;
     // See comment after else clause for a discussion.
-    if ( !( phi > 0 && d > real_t(0.75) && c2 * sq(c2 * _ep2) * s2 < tol ) ) {
+    if ( !( phi > 0 && d > real(0.75) && c2 * sq(c2 * _ep2) * s2 < tol ) ) {
       // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
       // (clockwise from true north) of grid north
       gamma = atan2(_mv * snu * snv * cnv, cnu * dnu * dnv);
@@ -376,7 +368,7 @@ namespace GeographicLib {
       // Use series approximations for gamma and k accurate to ep2.  Ignored
       // O(ep2^2) are shown here as gam2 and k2.  So only use these series if
       // the larger O(ep2^2) term (gam2) is less that tol.
-      real_t
+      real
         // gam2 = c2^3*s2*((4*c2^2-c2)*s2^2+(8-9*c2)*s2-2)/(3*d^3)*ep2^2
         gam1 = sq(c2) * s2 / d * _ep2,
         // k2 = c2^3*s2^2*((3*c2^3+12*c2^2-28*c2)*s2^2+
@@ -387,9 +379,9 @@ namespace GeographicLib {
     }
   }
 
-  void TransverseMercatorExact::Forward(real_t lon0, real_t lat, real_t lon,
-                                        real_t& x, real_t& y,
-                                        real_t& gamma, real_t& k)
+  void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
+                                        real& x, real& y,
+                                        real& gamma, real& k)
     const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
@@ -411,12 +403,12 @@ namespace GeographicLib {
         latsign = -1;
       lon = 180 - lon;
     }
-    real_t
+    real
       phi = lat * Constants::degree(),
       lam = lon * Constants::degree();
 
     // u,v = coordinates for the Thompson TM, Lee 54
-    real_t u, v;
+    real u, v;
     if (lat == 90) {
       u = _Eu.K();
       v = 0;
@@ -426,11 +418,11 @@ namespace GeographicLib {
     } else
       zetainv(psi(phi), lam, u, v);
 
-    real_t snu, cnu, dnu, snv, cnv, dnv;
+    real snu, cnu, dnu, snv, cnv, dnv;
     _Eu.sncndn(u, snu, cnu, dnu);
     _Ev.sncndn(v, snv, cnv, dnv);
 
-    real_t xi, eta;
+    real xi, eta;
     sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi, eta);
     if (backside)
       xi = 2 * _Eu.E() - xi;
@@ -445,12 +437,12 @@ namespace GeographicLib {
     k *= _k0;
   }
 
-  void TransverseMercatorExact::Reverse(real_t lon0, real_t x, real_t y,
-                                        real_t& lat, real_t& lon,
-                                        real_t& gamma, real_t& k)
+  void TransverseMercatorExact::Reverse(real lon0, real x, real y,
+                                        real& lat, real& lon,
+                                        real& gamma, real& k)
     const throw() {
     // This undoes the steps in Forward.
-    real_t
+    real
       xi = y / (_a * _k0),
       eta = x / (_a * _k0);
     // Explicitly enforce the parity
@@ -464,19 +456,19 @@ namespace GeographicLib {
       xi = 2 * _Eu.E()- xi;
 
     // u,v = coordinates for the Thompson TM, Lee 54
-    real_t u, v;
+    real u, v;
     if (xi == 0 && eta == _Ev.KE()) {
       u = 0;
       v = _Ev.K();
     } else
       sigmainv(xi, eta, u, v);
 
-    real_t snu, cnu, dnu, snv, cnv, dnv;
+    real snu, cnu, dnu, snv, cnv, dnv;
     _Eu.sncndn(u, snu, cnu, dnu);
     _Ev.sncndn(v, snv, cnv, dnv);
-    real_t phi, lam;
+    real phi, lam;
     if (v != 0 || u != _Eu.K()) {
-      real_t psi;
+      real psi;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi, lam);
       phi = psiinv(psi);
       lat = phi / Constants::degree();

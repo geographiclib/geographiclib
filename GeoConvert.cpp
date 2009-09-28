@@ -115,7 +115,7 @@ then\n\
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
-  typedef Math::real_t real_t;
+  typedef Math::real real;
   enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE };
   int outputmode = GEOGRAPHIC;
   int prec = 0;
@@ -180,7 +180,7 @@ int main(int argc, char* argv[]) {
         break;
       case CONVERGENCE:
         {
-          real_t
+          real
             gamma = p.AltConvergence(),
             k = p.AltScale();
           std::ostringstream ss;

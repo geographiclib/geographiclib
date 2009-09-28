@@ -32,10 +32,10 @@ namespace GeographicLib {
 
   class LocalCartesian {
   private:
-    typedef Math::real_t real_t;
+    typedef Math::real real;
     const Geocentric _earth;
-    real_t _lat0, _lon0, _h0;
-    real_t _x0, _y0, _z0,
+    real _lat0, _lon0, _h0;
+    real _x0, _y0, _z0,
       _rxx, _rxy, _rxz,
       _ryx, _ryy, _ryz,
       _rzx, _rzy, _rzz;
@@ -47,7 +47,7 @@ namespace GeographicLib {
      * (default Geocentric::WGS84) specifies the Geocentric object to use for
      * the transformation.
      **********************************************************************/
-    LocalCartesian(Math::real_t lat0, Math::real_t lon0, Math::real_t h0 = 0,
+    LocalCartesian(Math::real lat0, Math::real lon0, Math::real h0 = 0,
                    const Geocentric& earth = Geocentric::WGS84) throw()
       : _earth(earth)
     { Reset(lat0, lon0, h0); }
@@ -59,13 +59,13 @@ namespace GeographicLib {
      **********************************************************************/
     explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84) throw()
       : _earth(earth)
-    { Reset(real_t(0), real_t(0), real_t(0)); }
+    { Reset(real(0), real(0), real(0)); }
 
     /**
      * Change the origin to latitude = \e lat0, longitude = \e lon0 (degrees),
      * height = \e h0 (meters).
      **********************************************************************/
-    void Reset(Math::real_t lat0, Math::real_t lon0, Math::real_t h0 = 0)
+    void Reset(Math::real lat0, Math::real lon0, Math::real h0 = 0)
       throw();
 
     /**
@@ -74,8 +74,8 @@ namespace GeographicLib {
      * lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
      * the range [-180, 360].
      **********************************************************************/
-    void Forward(Math::real_t lat, Math::real_t lon, Math::real_t h,
-                 Math::real_t& x, Math::real_t& y, Math::real_t& z)
+    void Forward(Math::real lat, Math::real lon, Math::real h,
+                 Math::real& x, Math::real& y, Math::real& z)
       const throw();
 
     /**
@@ -83,24 +83,24 @@ namespace GeographicLib {
      * coordinates \e lat, \e lon (degrees), \e h (meters).  The value of \e
      * lon returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(Math::real_t x, Math::real_t y, Math::real_t z,
-                 Math::real_t& lat, Math::real_t& lon, Math::real_t& h)
+    void Reverse(Math::real x, Math::real y, Math::real z,
+                 Math::real& lat, Math::real& lon, Math::real& h)
       const throw();
 
     /**
      * Return the latitude of the origin (degrees).
      **********************************************************************/
-    Math::real_t LatitudeOrigin() const throw() { return _lat0; }
+    Math::real LatitudeOrigin() const throw() { return _lat0; }
 
     /**
      * Return the longitude of the origin (degrees).
      **********************************************************************/
-    Math::real_t LongitudeOrigin() const throw() { return _lon0; }
+    Math::real LongitudeOrigin() const throw() { return _lon0; }
 
     /**
      * Return the height of the origin (meters).
      **********************************************************************/
-    Math::real_t HeightOrigin() const throw() { return _h0; }
+    Math::real HeightOrigin() const throw() { return _h0; }
   };
 
 } // namespace GeographicLib
