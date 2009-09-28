@@ -24,10 +24,10 @@ namespace GeographicLib {
   const Math::real MGRS::eps =
     // 25 = ceil(log_2(2e7)) -- use half circumference here because northing
     // 195e5 is a legal in the "southern" hemisphere.
-    pow(real(0.5L), numeric_limits<real>::digits - 25);
+    pow(real(0.5), numeric_limits<real>::digits - 25);
   const Math::real MGRS::angeps =
     // 7 = ceil(log_2(90))
-    pow(real(0.5L), numeric_limits<real>::digits - 7);
+    pow(real(0.5), numeric_limits<real>::digits - 7);
   const string MGRS::hemispheres = "SN";
   const string MGRS::utmcols[3] =
     { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
@@ -290,9 +290,9 @@ namespace GeographicLib {
     bool northp = iband >= 0;
     int
       minrow = iband > -10 ?
-      int(floor(c - real(4.3L) - real(0.1L) * northp)) : -90,
+      int(floor(c - real(4.3) - real(0.1) * northp)) : -90,
       maxrow = iband <   9 ?
-      int(floor(c + real(4.4L) - real(0.1L) * northp)) :  94,
+      int(floor(c + real(4.4) - real(0.1) * northp)) :  94,
       baserow = (minrow + maxrow) / 2 - utmrowperiod / 2;
     // Add maxutmSrow = 5 * utmrowperiod to ensure operand is positive
     irow = (irow - baserow + maxutmSrow) % utmrowperiod + baserow;

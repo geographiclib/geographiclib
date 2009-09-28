@@ -92,11 +92,8 @@ namespace GeographicLib {
       if (_cache && iy >= _yoffset && iy < _yoffset + _ysize &&
           ((ix >= _xoffset && ix < _xoffset + _xsize) ||
            (ix + _width >= _xoffset && ix + _width < _xoffset + _xsize))) {
-        return real(_data
-                      [iy - _yoffset]
-                      [ix >= _xoffset ?
-                       ix - _xoffset :
-                       ix + _width - _xoffset]);
+        return real(_data[iy - _yoffset]
+                    [ix >= _xoffset ? ix - _xoffset : ix + _width - _xoffset]);
       } else {
         _file.seekg(_datastart + 2 * (iy * _width + ix), std::ios::beg);
         char a, b;

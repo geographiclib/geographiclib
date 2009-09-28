@@ -20,7 +20,7 @@ namespace GeographicLib {
   using namespace std;
 
   const Math::real PolarStereographic::tol =
-    real(0.1L)*sqrt(numeric_limits<real>::epsilon());
+    real(0.1)*sqrt(numeric_limits<real>::epsilon());
 
   PolarStereographic::PolarStereographic(real a, real r, real k0)
     throw()

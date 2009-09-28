@@ -131,8 +131,7 @@ namespace GeographicLib {
     /**
      * Reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
-    static inline Math::real WGS84_r() throw()
-    { return real(298.257223563L); }
+    static inline Math::real WGS84_r() throw() { return real(298.257223563L); }
     /**
      * Central scale factor for UTM
      **********************************************************************/
@@ -150,7 +149,7 @@ namespace GeographicLib {
      * Factor to convert from meters to meters (i.e., 1, but this lets the
      * internal system of units be changed if necessary).
      **********************************************************************/
-    static inline Math::real meter() throw() { return 1; }
+    static inline Math::real meter() throw() { return real(1); }
     /**
      * Factor to convert from kilometers to meters.
      **********************************************************************/

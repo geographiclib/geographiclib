@@ -120,12 +120,12 @@ namespace GeographicLib {
     os << " "
        << setprecision(max(0, prec))
        << easting / scale;
-    if (prec < 0 && abs(easting / scale) > real(0.5L))
+    if (prec < 0 && abs(easting / scale) > real(0.5))
       os << setw(-prec) << 0;
     os << " "
        << setprecision(max(0, prec))
        << northing / scale;
-    if (prec < 0 && abs(northing / scale) > real(0.5L))
+    if (prec < 0 && abs(northing / scale) > real(0.5))
       os << setw(-prec) << 0;
     utm = os.str();
   }

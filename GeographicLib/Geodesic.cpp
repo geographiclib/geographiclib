@@ -394,7 +394,7 @@ namespace GeographicLib {
     // applies the ellipsoidal correction for close points.  This saves 1
     // iteration of Newton's method in the case of short lines.
     calp1 = clam12 >= 0 ?
-      sbet12 * (slam12 < real(0.1L) ? sqrt(1 - _e2 * sq(cbet1)) : real(1))
+      sbet12 * (slam12 < real(0.1) ? sqrt(1 - _e2 * sq(cbet1)) : real(1))
       + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
       sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
 
@@ -432,7 +432,7 @@ namespace GeographicLib {
         Lengths(_n, Constants::pi() + bet12a, sbet1, -cbet1, sbet2, cbet2,
                 cbet1, cbet2, dummy, x, m0, tc, zc);
         x = -1 + x/(_f1 * cbet1 * cbet2 * m0 * Constants::pi());
-        betscale = x < -real(0.01L) ? sbet12a / x :
+        betscale = x < -real(0.01) ? sbet12a / x :
           -_f * sq(cbet1) * Constants::pi();
         lamscale = betscale / cbet1;
         y = (lam12 - Constants::pi()) / lamscale;
@@ -673,7 +673,7 @@ namespace GeographicLib {
     lon12 = lam12 / Constants::degree();
     // Can't use AngNormalize because longitude might have wrapped multiple
     // times.
-    lon12 = lon12 - 360 * floor(lon12/360 + real(0.5L));
+    lon12 = lon12 - 360 * floor(lon12/360 + real(0.5));
     lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree();
     lon2 = Geodesic::AngNormalize(_lon1 + lon12);
     // minus signs give range [-180, 180). 0- converts -0 to +0.
