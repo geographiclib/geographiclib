@@ -424,7 +424,7 @@ namespace GeographicLib {
     if (east <= west)
       east += 360;
     // Move south (and north) boundaries off the south pole.
-    south = min(south, -90 + real(0.5L) / _rlatres);
+    south = min(south, -90 + real(0.5) / _rlatres);
     north = min(north, south);
     real
       fn = (90 - north) * _rlatres,

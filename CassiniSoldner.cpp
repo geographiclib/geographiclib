@@ -21,7 +21,7 @@ namespace GeographicLib {
   using namespace std;
 
   const Math::real CassiniSoldner::eps1 =
-    real(0.01L) * sqrt(numeric_limits<real>::epsilon());
+    real(0.01) * sqrt(numeric_limits<real>::epsilon());
   const Math::real CassiniSoldner::eps2 = sqrt(numeric_limits<real>::min());
 
   void CassiniSoldner::Reset(real lat0, real lon0) throw() {
@@ -44,8 +44,8 @@ namespace GeographicLib {
                            s12, azi1, azi2, m12);
     if (sig12 < 100 * eps2)
       sig12 = s12 = 0;
-    sig12 *= real(0.5L);
-    s12 *= real(0.5L);
+    sig12 *= real(0.5);
+    s12 *= real(0.5);
     if (s12 == 0) {
       real da = (azi2 - azi1)/2;
       if (abs(dlon) <= 90) {

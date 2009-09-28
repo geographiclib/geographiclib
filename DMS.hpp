@@ -17,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between degrees to %DMS representation.
+   * \brief Convert between degrees and %DMS representation.
    *
    * Parse a string representing degree, minutes, and seconds and return the
    * angle in degrees and format an angle in degrees as degree, minutes, and
@@ -87,12 +87,18 @@ namespace GeographicLib {
      * significant component of the string (and this component is given as a
      * decimal number if necessary).  \e prec indicates the number of digits
      * after the decimal point for the trailing component.  \e flag indicates
-     * whether the result should be include a sign (if negative) or a trailing
-     * latitude or longitude hemisphere indicator.  In the latter two cases,
-     * the integer part of the degrees component is given with 2 (latitude) or
-     * 3 (longitude) digits (with leading zeros if necessary).  The integer
-     * parts of the minutes and seconds components are always given with 2
-     * digits.
+     * additional formating as follows
+     * - flag == NONE, signed result no leading zeros on degrees except in the
+     *   units place, e.g., -8d03'.
+     * - flag == LATITUDE, trailing N or S hemisphere designator, no sign, pad
+     *   degress to 2 digits, e.g., 08d03'S.
+     * - flag == LONGITUDE, trailing E or W hemisphere designator, no sign, pad
+     *   degress to 3 digits, e.g., 008d03'W.
+     * - flag == AZIMUTH, convert to the range [0, 360<sup>o</sup>), no sign,
+     *   pad degrees to 3 digits, , e.g., 351d57'.
+     * .
+     * The integer parts of the minutes and seconds components are always given
+     * with 2 digits.
      **********************************************************************/
     static std::string Encode(Math::real degree,
                               component trailing,

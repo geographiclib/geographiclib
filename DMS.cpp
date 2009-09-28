@@ -209,7 +209,7 @@ namespace GeographicLib {
     // fractional part.
     real
       idegree = floor(angle),
-      fdegree = floor((angle - idegree) * scale + real(0.5L)) / scale;
+      fdegree = floor((angle - idegree) * scale + real(0.5)) / scale;
     if (fdegree >= 1) {
       idegree += 1;
       fdegree -= 1;
@@ -232,6 +232,7 @@ namespace GeographicLib {
       if (ind != NONE)
         s << setw(1 + min(int(ind), 2) + prec + (prec ? 1 : 0));
       s << setprecision(prec) << pieces[0];
+      // Don't include degree designator (d) if it is the trailing component.
       break;
     default:
       if (ind != NONE)

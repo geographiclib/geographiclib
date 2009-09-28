@@ -21,11 +21,11 @@ namespace GeographicLib {
   using namespace std;
 
   const Math::real EllipticFunction::tol =
-    numeric_limits<real>::epsilon() * real(0.01L);
+    numeric_limits<real>::epsilon() * real(0.01);
   const Math::real EllipticFunction::tolRF = pow(3 * tol, 1/real(6));
   const Math::real EllipticFunction::tolRD =
-    pow(real(0.25L) * tol, 1/real(6));
-  const Math::real EllipticFunction::tolRG0 = real(2.7L) * sqrt(tol);
+    pow(real(0.25) * tol, 1/real(6));
+  const Math::real EllipticFunction::tolRG0 = real(2.7) * sqrt(tol);
   const Math::real EllipticFunction::tolJAC = sqrt(tol);
   const Math::real EllipticFunction::tolJAC1 = sqrt(6 * tol);
 
@@ -109,7 +109,7 @@ namespace GeographicLib {
       xn = x0,
       yn = y0,
       s = 0,
-      mul = real(0.25L);
+      mul = real(0.25);
     while (abs(xn-yn) >= tolRG0 * abs(xn)) {
       // Max 4 trips
       real t = (xn + yn) /2;

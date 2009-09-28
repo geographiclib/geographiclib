@@ -52,9 +52,9 @@ namespace GeographicLib {
 
   const Math::real TransverseMercatorExact::tol =
     numeric_limits<real>::epsilon();
-  const Math::real TransverseMercatorExact::tol1 = real(0.1L) * sqrt(tol);
-  const Math::real TransverseMercatorExact::tol2 = real(0.1L) * tol;
-  const Math::real TransverseMercatorExact::taytol = pow(tol, real(0.6L));
+  const Math::real TransverseMercatorExact::tol1 = real(0.1) * sqrt(tol);
+  const Math::real TransverseMercatorExact::tol2 = real(0.1) * tol;
+  const Math::real TransverseMercatorExact::taytol = pow(tol, real(0.6));
       // Overflow value for asinh(tan(pi/2)) etc.
   const Math::real TransverseMercatorExact::ahypover =
     (real)(numeric_limits<real>::digits)
@@ -84,7 +84,7 @@ namespace GeographicLib {
     // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
     // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
     // sign(phi)
-    return Math::asinh(s / max(cos(phi), real(0.1L) * tol)) -
+    return Math::asinh(s / max(cos(phi), real(0.1) * tol)) -
       _e * Math::atanh(_e * s);
   }
 
@@ -182,7 +182,7 @@ namespace GeographicLib {
         // range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
         // [-105, 15).  In particular the range [-90, 180] in zeta space maps
         // to [-90, 0] in w space as required.
-        ang = atan2(dlam-psi, psi+dlam) - real(0.75L) * Constants::pi();
+        ang = atan2(dlam-psi, psi+dlam) - real(0.75) * Constants::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol;
       rad = pow(3 / (_mv * _e) * rad, 1/real(3));
@@ -259,8 +259,8 @@ namespace GeographicLib {
   bool TransverseMercatorExact::sigmainv0(real xi, real eta,
                                           real& u, real& v) const throw() {
     bool retval = false;
-    if (eta > real(1.25L) * _Ev.KE() ||
-        (xi < -real(0.25L) * _Eu.E() && xi < eta - _Ev.KE())) {
+    if (eta > real(1.25) * _Ev.KE() ||
+        (xi < -real(0.25) * _Eu.E() && xi < eta - _Ev.KE())) {
       // sigma as a simple pole at w = w0 = Eu.K() + i * Ev.K() and sigma is
       // approximated by
       //
@@ -271,7 +271,7 @@ namespace GeographicLib {
         r2 = sq(x) + sq(y);
       u = _Eu.K() + x/r2;
       v = _Ev.K() - y/r2;
-    } else if ((eta > real(0.75L) * _Ev.KE() && xi < real(0.25L) * _Eu.E())
+    } else if ((eta > real(0.75) * _Ev.KE() && xi < real(0.25) * _Eu.E())
                || eta > _Ev.KE()) {
       // At w = w0 = i * Ev.K(), we have
       //
@@ -290,7 +290,7 @@ namespace GeographicLib {
         rad = Math::hypot(xi, deta),
         // Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
         // discussion in zetainv0 on the cut for ang.
-        ang = atan2(deta-xi, xi+deta) - real(0.75L) * Constants::pi();
+        ang = atan2(deta-xi, xi+deta) - real(0.75) * Constants::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol;
       rad = pow(3 / _mv * rad, 1/real(3));
