@@ -93,9 +93,9 @@ The minimum value of prec is 0 (1 m accuracy) and the maximum value is\n\
   return retval;
 }
 
-typedef GeographicLib::Math::real_t real_t;
+typedef GeographicLib::Math::real real;
 
-std::string LatLonString(real_t lat, real_t lon, int prec, bool dms) {
+std::string LatLonString(real lat, real lon, int prec, bool dms) {
   using namespace GeographicLib;
   if (dms)
     return
@@ -109,7 +109,7 @@ std::string LatLonString(real_t lat, real_t lon, int prec, bool dms) {
   }
 }
 
-std::string AzimuthString(real_t azi, int prec, bool dms) {
+std::string AzimuthString(real azi, int prec, bool dms) {
   using namespace GeographicLib;
   if (dms)
     return DMS::Encode(azi, prec + 5, DMS::AZIMUTH);
@@ -121,10 +121,10 @@ std::string AzimuthString(real_t azi, int prec, bool dms) {
   }
 }
 
-real_t ReadAzimuth(const std::string& s) {
+real ReadAzimuth(const std::string& s) {
   using namespace GeographicLib;
   DMS::flag ind;
-  real_t azi = DMS::Decode(s, ind);
+  real azi = DMS::Decode(s, ind);
   if (!(azi >= -180 && azi <= 360))
     throw std::out_of_range("Azimuth " + s + " not in range [-180,360]");
   if (azi >= 180) azi -= 360;
@@ -134,7 +134,7 @@ real_t ReadAzimuth(const std::string& s) {
   return azi;
 }
 
-std::string DistanceStrings(real_t s12, real_t a12,
+std::string DistanceStrings(real s12, real a12,
                             bool full, bool arcmode, int prec, bool dms) {
   using namespace GeographicLib;
   std::ostringstream os;
@@ -151,9 +151,9 @@ std::string DistanceStrings(real_t s12, real_t a12,
   return os.str();
 }
 
-real_t ReadDistance(const std::string& s, bool arcmode) {
+real ReadDistance(const std::string& s, bool arcmode) {
   using namespace GeographicLib;
-  real_t s12;
+  real s12;
   if (arcmode) {
     DMS::flag ind;
     s12 = DMS::Decode(s, ind);
@@ -172,11 +172,11 @@ int main(int argc, char* argv[]) {
   using namespace GeographicLib;
   bool linecalc = false, inverse = false, arcmode = false,
     dms = false, full = false;
-  real_t
+  real
     a = GeographicLib::Constants::WGS84_a(),
     r = GeographicLib::Constants::WGS84_r();
-  real_t lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
-  real_t azi2sense = 0;
+  real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
+  real azi2sense = 0;
   int prec = 3;
 
   for (int m = 1; m < argc; ++m) {

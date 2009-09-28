@@ -56,11 +56,11 @@ namespace GeographicLib {
    **********************************************************************/
   class MGRS {
   private:
-    typedef Math::real_t real_t;
+    typedef Math::real real;
     // The smallest length s.t., 1.0e7 - eps < 1.0e7 (approx 1.9 nm)
-    static const real_t eps;
+    static const real eps;
     // The smallest angle s.t., 90 - eps < 90 (approx 50e-12 arcsec)
-    static const real_t angeps;
+    static const real angeps;
     static const std::string hemispheres;
     static const std::string utmcols[3];
     static const std::string utmrow;
@@ -85,7 +85,7 @@ namespace GeographicLib {
       // Maximum precision is um
       maxprec = 5 + 6
     };
-    static void CheckCoords(bool utmp, bool& northp, real_t& x, real_t& y);
+    static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int lookup(const std::string& s, char c) throw() {
       std::string::size_type r = s.find(toupper(c));
       return r == std::string::npos ? -1 : int(r);
@@ -98,7 +98,7 @@ namespace GeographicLib {
     friend class UTMUPS;        // UTMUPS::StandardZone calls LatitudeBand
     // Return latitude band number [-10, 10) for the give latitude (degrees).
     // The bands are reckoned in include their southern edges.
-    static int LatitudeBand(real_t lat) throw() {
+    static int LatitudeBand(real lat) throw() {
       int ilat = int(std::floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
@@ -174,7 +174,7 @@ namespace GeographicLib {
      * roundoff.
      *
      **********************************************************************/
-    static void Forward(int zone, bool northp, Math::real_t x, Math::real_t y,
+    static void Forward(int zone, bool northp, Math::real x, Math::real y,
                         int prec, std::string& mgrs);
 
     /**
@@ -184,7 +184,7 @@ namespace GeographicLib {
      * this is checked for consistency using the same tests as Reverse.
      **********************************************************************/
     static void Forward(int zone, bool northp,
-                        Math::real_t x, Math::real_t y, Math::real_t lat,
+                        Math::real x, Math::real y, Math::real lat,
                         int prec, std::string& mgrs);
 
     /**
@@ -216,7 +216,7 @@ namespace GeographicLib {
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
                         int& zone, bool& northp,
-                        Math::real_t& x, Math::real_t& y,
+                        Math::real& x, Math::real& y,
                         int& prec, bool centerp = true);
 
   };

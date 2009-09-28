@@ -59,22 +59,22 @@ namespace GeographicLib {
    **********************************************************************/
   class UTMUPS {
   private:
-    typedef Math::real_t real_t;
-    static const real_t falseeasting[4];
-    static const real_t falsenorthing[4];
-    static const real_t mineasting[4];
-    static const real_t maxeasting[4];
-    static const real_t minnorthing[4];
-    static const real_t maxnorthing[4];
-    static real_t CentralMeridian(int zone) throw()
-    { return real_t(6 * zone - 183); }
+    typedef Math::real real;
+    static const real falseeasting[4];
+    static const real falsenorthing[4];
+    static const real mineasting[4];
+    static const real maxeasting[4];
+    static const real minnorthing[4];
+    static const real maxnorthing[4];
+    static real CentralMeridian(int zone) throw()
+    { return real(6 * zone - 183); }
     template<typename T> static std::string str(T x) {
       std::ostringstream s; s << x; return s.str();
     }
-    static void CheckLatLon(real_t lat, real_t lon);
+    static void CheckLatLon(real lat, real lon);
     // Throw an error if easting or northing are outside standard ranges.  If
     // throwp = false, return bool instead.
-    static bool CheckCoords(bool utmp, bool northp, real_t x, real_t y,
+    static bool CheckCoords(bool utmp, bool northp, real x, real y,
                             bool throwp = true);
     UTMUPS();                   // Disable constructor
   public:
@@ -87,7 +87,7 @@ namespace GeographicLib {
      * open on the upper.  Thus for UTM zone 38, latitude is in [-80, 84) and
      * longitude is in [42, 48).  This is exact.
      **********************************************************************/
-    static int StandardZone(real_t lat, real_t lon) throw();
+    static int StandardZone(real lat, real lon) throw();
 
     /**
      * Convert geographic coordinates to UTM or UPS coordinate.  Given latitude
@@ -104,9 +104,9 @@ namespace GeographicLib {
      * To extent the standard UTM zones into the UPS regions use \e setzone =
      * UTMUPS::StandardZone(max(-80.0, min(80.0, \e lat))).
      **********************************************************************/
-    static void Forward(real_t lat, real_t lon,
-                        int& zone, bool& northp, real_t& x, real_t& y,
-                        real_t& gamma, real_t& k,
+    static void Forward(real lat, real lon,
+                        int& zone, bool& northp, real& x, real& y,
+                        real& gamma, real& k,
                         int setzone = -1);
 
     /**
@@ -135,25 +135,25 @@ namespace GeographicLib {
      * UPS.  No checks are performed beyond these (e.g., to limit the distance
      * outside the standard zone boundaries).
      **********************************************************************/
-    static void Reverse(int zone, bool northp, real_t x, real_t y,
-                        real_t& lat, real_t& lon, real_t& gamma, real_t& k);
+    static void Reverse(int zone, bool northp, real x, real y,
+                        real& lat, real& lon, real& gamma, real& k);
 
     /**
      * Forward without returning convergence and scale.
      **********************************************************************/
-    static void Forward(real_t lat, real_t lon,
-                        int& zone, bool& northp, real_t& x, real_t& y,
+    static void Forward(real lat, real lon,
+                        int& zone, bool& northp, real& x, real& y,
                         int setzone = -1) {
-      real_t gamma, k;
+      real gamma, k;
       Forward(lat, lon, zone, northp, x, y, gamma, k, setzone);
     }
 
     /**
      * Reverse without returning convergence and scale.
      **********************************************************************/
-    static void Reverse(int zone, bool northp, real_t x, real_t y,
-                        real_t& lat, real_t& lon) {
-      real_t gamma, k;
+    static void Reverse(int zone, bool northp, real x, real y,
+                        real& lat, real& lon) {
+      real gamma, k;
       Reverse(zone, northp, x, y, lat, lon, gamma, k);
     }
 
@@ -181,7 +181,7 @@ namespace GeographicLib {
      * The shift necessary to align N and S halves of a UTM zone
      * (10<sup>7</sup>).
      **********************************************************************/
-    static real_t UTMShift() throw();
+    static real UTMShift() throw();
 
   };
 

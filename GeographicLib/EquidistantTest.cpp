@@ -55,9 +55,9 @@ latitude, longitude, azi, and rk.\n\
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
-  typedef Math::real_t real_t;
+  typedef Math::real real;
   bool azimuthal = false, cassini = false, reverse = false;
-  real_t lat0 = 0, lon0 = 0;
+  real lat0 = 0, lon0 = 0;
   for (int m = 1; m < argc; ++m) {
     std::string arg = std::string(argv[m]);
     if (arg == "-r")
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
-      real_t lat, lon, x, y, a, m;
+      real lat, lon, x, y, a, m;
       if (!(reverse ?
             (str >> x >> y) :
             (str >> lat >> lon)))

@@ -25,7 +25,7 @@ namespace GeographicLib {
    **********************************************************************/
   class DMS {
   private:
-    typedef Math::real_t real_t;
+    typedef Math::real real;
     static int lookup(const std::string& s, char c) throw() {
       std::string::size_type r = s.find(toupper(c));
       return r == std::string::npos ? -1 : int(r);
@@ -70,7 +70,7 @@ namespace GeographicLib {
      * and whether it implies that the angle is a latitude (N or S) or
      * longitude (E or W).
      **********************************************************************/
-    static Math::real_t Decode(const std::string& dms, flag& ind);
+    static Math::real Decode(const std::string& dms, flag& ind);
 
     /**
      * Convert two strings \e dmsa and \e dmsb to a latitude, \e lat, and
@@ -80,7 +80,7 @@ namespace GeographicLib {
      * hemisphere designator (N, S, E, W).
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
-                             Math::real_t& lat, Math::real_t& lon);
+                             Math::real& lat, Math::real& lon);
 
     /**
      * Convert \e degree into a DMS string.  \e trailing indicates the least
@@ -94,7 +94,7 @@ namespace GeographicLib {
      * parts of the minutes and seconds components are always given with 2
      * digits.
      **********************************************************************/
-    static std::string Encode(Math::real_t degree,
+    static std::string Encode(Math::real degree,
                               component trailing,
                               unsigned prec,
                               flag ind = NONE);
@@ -105,7 +105,7 @@ namespace GeographicLib {
      * e.g., \e prec = 3 gives a result accurate to 0.1' and \e prec = 4 gives
      * a result accurate to 1".
      **********************************************************************/
-    static std::string Encode(Math::real_t degree,
+    static std::string Encode(Math::real degree,
                               unsigned prec,
                               flag ind = NONE) {
       return Encode(degree,

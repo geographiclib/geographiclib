@@ -20,14 +20,14 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real_t EllipticFunction::tol =
-    numeric_limits<real_t>::epsilon() * real_t(0.01L);
-  const Math::real_t EllipticFunction::tolRF = pow(3 * tol, 1/real_t(6));
-  const Math::real_t EllipticFunction::tolRD =
-    pow(real_t(0.25L) * tol, 1/real_t(6));
-  const Math::real_t EllipticFunction::tolRG0 = real_t(2.7L) * sqrt(tol);
-  const Math::real_t EllipticFunction::tolJAC = sqrt(tol);
-  const Math::real_t EllipticFunction::tolJAC1 = sqrt(6 * tol);
+  const Math::real EllipticFunction::tol =
+    numeric_limits<real>::epsilon() * real(0.01L);
+  const Math::real EllipticFunction::tolRF = pow(3 * tol, 1/real(6));
+  const Math::real EllipticFunction::tolRD =
+    pow(real(0.25L) * tol, 1/real(6));
+  const Math::real EllipticFunction::tolRG0 = real(2.7L) * sqrt(tol);
+  const Math::real EllipticFunction::tolJAC = sqrt(tol);
+  const Math::real EllipticFunction::tolJAC1 = sqrt(6 * tol);
 
   /*
    * Implementation of methods given in
@@ -37,9 +37,9 @@ namespace GeographicLib {
    *   Numerical Algorithms 10, 13-26 (1995)
    */
 
-  Math::real_t EllipticFunction::RF(real_t x, real_t y, real_t z) throw() {
+  Math::real EllipticFunction::RF(real x, real y, real z) throw() {
     // Carlson, eqs 2.2 - 2.7
-    real_t
+    real
       a0 = (x + y + z)/3,
       an = a0,
       q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRF,
@@ -49,14 +49,14 @@ namespace GeographicLib {
       mul = 1;
     while (q >= mul * abs(an)) {
       // Max 6 trips
-      real_t ln = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
+      real ln = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
       an = (an + ln)/4;
       x0 = (x0 + ln)/4;
       y0 = (y0 + ln)/4;
       z0 = (z0 + ln)/4;
       mul *= 4;
     }
-    real_t
+    real
       xx = (a0 - x) / (mul * an),
       yy = (a0 - y) / (mul * an),
       zz = - xx - yy,
@@ -65,9 +65,9 @@ namespace GeographicLib {
     return (1 - e2 / 10 + e3 / 14 + e2 * e2 / 24 - 3 * e2 * e3 / 44) / sqrt(an);
   }
 
-  Math::real_t EllipticFunction::RD(real_t x, real_t y, real_t z) throw() {
+  Math::real EllipticFunction::RD(real x, real y, real z) throw() {
     // Carlson, eqs 2.28 - 2.34
-    real_t
+    real
       a0 = (x + y + 3 * z)/5,
       an = a0,
       q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRD,
@@ -78,7 +78,7 @@ namespace GeographicLib {
       s = 0;
     while (q >= mul * abs(an)) {
       // Max 7 trips
-      real_t ln = sqrt(x0)*sqrt(y0) +
+      real ln = sqrt(x0)*sqrt(y0) +
         sqrt(y0)*sqrt(z0) +
         sqrt(z0)*sqrt(x0);
       s += 1/(mul * sqrt(z0) * (z0 + ln ));
@@ -88,7 +88,7 @@ namespace GeographicLib {
       z0 = (z0 + ln)/4;
       mul *= 4;
     }
-    real_t
+    real
       xx = (a0 - x) / (mul * an),
       yy = (a0 - y) / (mul * an),
       zz = -(xx + yy) / 3,
@@ -101,18 +101,18 @@ namespace GeographicLib {
       + 3 * s;
   }
 
-  Math::real_t EllipticFunction::RG0(real_t x, real_t y) throw() {
+  Math::real EllipticFunction::RG0(real x, real y) throw() {
     // Carlson, eqs 2.36 - 2.39
-    real_t
+    real
       x0 = sqrt(x),
       y0 = sqrt(y),
       xn = x0,
       yn = y0,
       s = 0,
-      mul = real_t(0.25L);
+      mul = real(0.25L);
     while (abs(xn-yn) >= tolRG0 * abs(xn)) {
       // Max 4 trips
-      real_t t = (xn + yn) /2;
+      real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
       xn = t;
       mul *= 2;
@@ -123,21 +123,21 @@ namespace GeographicLib {
     return  (x0 * x0 - s) * Constants::pi() / (2 * (xn + yn));
   }
 
-  EllipticFunction::EllipticFunction(real_t m) throw()
+  EllipticFunction::EllipticFunction(real m) throw()
     : _m(m)
     , _m1(1 - m)
       // Don't initialize _kc, _ec, _kec since this constructor might be called
-      // before the static real_t constants tolRF, etc., are initialized.
+      // before the static real constants tolRF, etc., are initialized.
     , _init(false)
   {}
 
   bool EllipticFunction::Init() const throw() {
     // Complete elliptic integral K(m), Carlson eq. 4.1
-    _kc = RF(real_t(0), _m1, real_t(1));
+    _kc = RF(real(0), _m1, real(1));
     // Complete elliptic integral E(m), Carlson eq. 4.2
-    _ec = 2 * RG0(_m1, real_t(1));
+    _ec = 2 * RG0(_m1, real(1));
     // K - E, Carlson eq.4.3
-    _kec = _m / 3 * RD(real_t(0), _m1, real_t(1));
+    _kec = _m / 3 * RD(real(0), _m1, real(1));
     return _init = true;
   }
 
@@ -149,19 +149,19 @@ namespace GeographicLib {
    *   Numericshe Mathematik 7, 78-90 (1965)
    */
 
-  void EllipticFunction::sncndn(real_t x,
-                                real_t& sn, real_t& cn, real_t& dn)
+  void EllipticFunction::sncndn(real x,
+                                real& sn, real& cn, real& dn)
     const throw() {
     // Bulirsch's sncndn routine, p 89.
     //
     // Assume _m1 is in [0, 1].  See Bulirsch article for code to treat
     // negative _m1.
     if (_m1 != 0) {
-      real_t mc = _m1;
-      real_t c;
-      real_t m[num], n[num];
+      real mc = _m1;
+      real c;
+      real m[num], n[num];
       unsigned l = 0;
-      for (real_t a = 1; l < num; ++l) {
+      for (real a = 1; l < num; ++l) {
         // Max 5 trips
         m[l] = a;
         n[l] = mc = sqrt(mc);
@@ -178,10 +178,10 @@ namespace GeographicLib {
       cn = cos(x);
       dn = 1;
       if (sn != 0) {
-        real_t a = cn / sn;
+        real a = cn / sn;
         c = a * c;
         while (l--) {
-          real_t b = m[l];
+          real b = m[l];
           a = c * a;
           c = dn * c;
           dn = (n[l] + a) / (b + a);
@@ -197,13 +197,13 @@ namespace GeographicLib {
     }
   }
 
-  Math::real_t EllipticFunction::E(real_t sn, real_t cn, real_t dn)
+  Math::real EllipticFunction::E(real sn, real cn, real dn)
     const throw() {
-    real_t ei;
+    real ei;
     cn *= cn; dn *= dn;
     // Carlson, eq. 4.6
-    ei = abs(sn) * (RF(cn, dn, real_t(1)) -
-                    (_m/3) * sn*sn * RD(cn, dn, real_t(1)));
+    ei = abs(sn) * (RF(cn, dn, real(1)) -
+                    (_m/3) * sn*sn * RD(cn, dn, real(1)));
     // Enforce usual trig-like symmetries
     if (cn < 0) {
       ei = 2 * E() - ei;

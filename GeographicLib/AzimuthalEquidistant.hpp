@@ -35,9 +35,9 @@ namespace GeographicLib {
 
   class AzimuthalEquidistant {
   private:
-    typedef Math::real_t real_t;
+    typedef Math::real real;
     const Geodesic _earth;
-    static const real_t eps;
+    static const real eps;
   public:
 
     /**
@@ -60,10 +60,10 @@ namespace GeographicLib {
      * to Reverse will return the original (\e lat, \e lon) (to within
      * roundoff).
      **********************************************************************/
-    void Forward(Math::real_t lat0, Math::real_t lon0,
-                 Math::real_t lat, Math::real_t lon,
-                 Math::real_t& x, Math::real_t& y,
-                 Math::real_t& azi, Math::real_t& rk) const throw();
+    void Forward(Math::real lat0, Math::real lon0,
+                 Math::real lat, Math::real lon,
+                 Math::real& x, Math::real& y,
+                 Math::real& azi, Math::real& rk) const throw();
 
     /**
      * Convert from azimuthal equidistant easting \e x (meters) and northing \e
@@ -79,10 +79,10 @@ namespace GeographicLib {
      * to Forward will return the original (\e x, \e y) (to roundoff) only if
      * the geodesic to (\e x, \e y) is a shortest path.
      **********************************************************************/
-    void Reverse(Math::real_t lat0, Math::real_t lon0,
-                 Math::real_t x, Math::real_t y,
-                 Math::real_t& lat, Math::real_t& lon,
-                 Math::real_t& azi, Math::real_t& rk) const throw();
+    void Reverse(Math::real lat0, Math::real lon0,
+                 Math::real x, Math::real y,
+                 Math::real& lat, Math::real& lon,
+                 Math::real& azi, Math::real& rk) const throw();
 
   };
 

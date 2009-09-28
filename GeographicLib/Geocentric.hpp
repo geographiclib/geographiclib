@@ -44,9 +44,9 @@ namespace GeographicLib {
 
   class Geocentric {
   private:
-    typedef Math::real_t real_t;
-    const real_t _a, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
-    static inline real_t sq(real_t x) throw() { return x * x; }
+    typedef Math::real real;
+    const real _a, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
+    static inline real sq(real x) throw() { return x * x; }
   public:
 
     /**
@@ -54,7 +54,7 @@ namespace GeographicLib {
      * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
      * (i.e., a sphere).  Negative \e r indicates a prolate spheroid.
      **********************************************************************/
-    Geocentric(Math::real_t a, Math::real_t r) throw();
+    Geocentric(Math::real a, Math::real r) throw();
 
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
@@ -62,8 +62,8 @@ namespace GeographicLib {
      * should be in the range [-90, 90]; \e lon and \e lon0 should be in the
      * range [-180, 360].
      **********************************************************************/
-    void Forward(Math::real_t lat, Math::real_t lon, Math::real_t h,
-                 Math::real_t& x, Math::real_t& y, Math::real_t& z)
+    void Forward(Math::real lat, Math::real lon, Math::real h,
+                 Math::real& x, Math::real& y, Math::real& z)
       const throw();
 
     /**
@@ -78,8 +78,8 @@ namespace GeographicLib {
      * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).  The
      * value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(Math::real_t x, Math::real_t y, Math::real_t z,
-                 Math::real_t& lat, Math::real_t& lon, Math::real_t& h)
+    void Reverse(Math::real x, Math::real y, Math::real z,
+                 Math::real& lat, Math::real& lon, Math::real& h)
       const throw();
 
     /**

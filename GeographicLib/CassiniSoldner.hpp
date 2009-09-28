@@ -61,15 +61,15 @@ namespace GeographicLib {
 
   class CassiniSoldner {
   private:
-    typedef Math::real_t real_t;
+    typedef Math::real real;
     const Geodesic _earth;
     GeodesicLine _meridian;
-    real_t _sbet0, _cbet0;
-    real_t Scale(const GeodesicLine& perp, real_t sig12) const throw();
-    static const real_t eps1, eps2;
+    real _sbet0, _cbet0;
+    real Scale(const GeodesicLine& perp, real sig12) const throw();
+    static const real eps1, eps2;
     static const unsigned maxit =  10;
 
-    static inline real_t sq(real_t x) throw() { return x * x; }
+    static inline real sq(real x) throw() { return x * x; }
   public:
 
     /**
@@ -88,7 +88,7 @@ namespace GeographicLib {
      * use for geodesic calculations.  By default this uses the WGS84
      * ellipsoid.
      **********************************************************************/
-    CassiniSoldner(Math::real_t lat0, Math::real_t lon0,
+    CassiniSoldner(Math::real lat0, Math::real lon0,
                    const Geodesic& earth = Geodesic::WGS84) throw()
       : _earth(earth) {
       Reset(lat0, lon0);
@@ -99,7 +99,7 @@ namespace GeographicLib {
      * (degrees).  \e lat0 should be in the range [-90, 90] and \e lon0 should
      * be in the range [-180, 360].
      **********************************************************************/    
-    void Reset(Math::real_t lat0, Math::real_t lon0) throw();
+    void Reset(Math::real lat0, Math::real lon0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -111,9 +111,9 @@ namespace GeographicLib {
      * \e lon) (to within roundoff).  The routine does nothing if the origin
      * has not been set.
      **********************************************************************/
-    void Forward(Math::real_t lat, Math::real_t lon,
-                 Math::real_t& x, Math::real_t& y,
-                 Math::real_t& azi, Math::real_t& rk) const throw();
+    void Forward(Math::real lat, Math::real lon,
+                 Math::real& x, Math::real& y,
+                 Math::real& azi, Math::real& rk) const throw();
 
     /**
      * Convert from Cassini-Soldner easting \e x (meters) and northing \e y
@@ -125,9 +125,9 @@ namespace GeographicLib {
      * "wrap around" the earth.  The routine does nothing if the origin has not
      * been set.
      **********************************************************************/
-    void Reverse(Math::real_t x, Math::real_t y,
-                 Math::real_t& lat, Math::real_t& lon,
-                 Math::real_t& azi, Math::real_t& rk) const throw();
+    void Reverse(Math::real x, Math::real y,
+                 Math::real& lat, Math::real& lon,
+                 Math::real& azi, Math::real& rk) const throw();
 
     /**
      * Has this object been initialized with an origin?
@@ -137,13 +137,13 @@ namespace GeographicLib {
     /**
      * Return the latitude of the origin (degrees).
      **********************************************************************/
-    Math::real_t LatitudeOrigin() const throw()
+    Math::real LatitudeOrigin() const throw()
     { return _meridian.Latitude(); }
 
     /**
      * Return the longitude of the origin (degrees).
      **********************************************************************/
-    Math::real_t LongitudeOrigin() const throw()
+    Math::real LongitudeOrigin() const throw()
     { return _meridian.Longitude(); }
 
   };

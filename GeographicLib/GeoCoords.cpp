@@ -62,7 +62,7 @@ namespace GeographicLib {
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i) {
         istringstream str(sa[coordind + i]);
-        real_t x;
+        real x;
         if (!(str >> x))
           throw out_of_range("Bad number " + sa[coordind + i]);
         if (int(str.tellg()) != int(sa[coordind + i].size()))
@@ -111,21 +111,21 @@ namespace GeographicLib {
     return mgrs;
   }
 
-  void GeoCoords::UTMUPSString(int zone, real_t easting, real_t northing,
+  void GeoCoords::UTMUPSString(int zone, real easting, real northing,
                                int prec, std::string& utm) const {
     ostringstream os;
     prec = max(-5, min(9, prec));
-    real_t scale = prec < 0 ? pow(real_t(10), -prec) : real_t(1);
+    real scale = prec < 0 ? pow(real(10), -prec) : real(1);
     os << UTMUPS::EncodeZone(zone, _northp) << fixed << setfill('0');
     os << " "
        << setprecision(max(0, prec))
        << easting / scale;
-    if (prec < 0 && abs(easting / scale) > real_t(0.5L))
+    if (prec < 0 && abs(easting / scale) > real(0.5L))
       os << setw(-prec) << 0;
     os << " "
        << setprecision(max(0, prec))
        << northing / scale;
-    if (prec < 0 && abs(northing / scale) > real_t(0.5L))
+    if (prec < 0 && abs(northing / scale) > real(0.5L))
       os << setw(-prec) << 0;
     utm = os.str();
   }

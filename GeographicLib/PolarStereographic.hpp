@@ -28,14 +28,14 @@ namespace GeographicLib {
    **********************************************************************/
   class PolarStereographic {
   private:
-    typedef Math::real_t real_t;
-    const real_t _a, _f, _k0, _e2, _e, _e2m, _c;
-    static const real_t tol;
+    typedef Math::real real;
+    const real _a, _f, _k0, _e2, _e, _e2m, _c;
+    static const real tol;
     static const int numit = 5;
-    static inline real_t sq(real_t x) throw() { return x * x; }
+    static inline real sq(real x) throw() { return x * x; }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
-    inline real_t eatanhe(real_t x) const throw() {
+    inline real eatanhe(real x) const throw() {
       return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
     }
   public:
@@ -45,7 +45,7 @@ namespace GeographicLib {
      * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
      * inf or flattening = 0 (i.e., a sphere).
      **********************************************************************/
-    PolarStereographic(Math::real_t a, Math::real_t r, Math::real_t k0) throw();
+    PolarStereographic(Math::real a, Math::real r, Math::real k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -57,9 +57,9 @@ namespace GeographicLib {
      * range [-90, 90) for \e northp = false; \e lon should be in the range
      * [-180, 360].
      **********************************************************************/
-    void Forward(bool northp, Math::real_t lat, Math::real_t lon,
-                 Math::real_t& x, Math::real_t& y,
-                 Math::real_t& gamma, Math::real_t& k) const throw();
+    void Forward(bool northp, Math::real lat, Math::real lon,
+                 Math::real& x, Math::real& y,
+                 Math::real& gamma, Math::real& k) const throw();
 
     /**
      * Convert from polar stereogrphic easting \e x (meters) and northing \e y
@@ -69,9 +69,9 @@ namespace GeographicLib {
      * scale \e k.  No false easting or northing is added.  The value of \e lon
      * returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(bool northp, Math::real_t x, Math::real_t y,
-                 Math::real_t& lat, Math::real_t& lon,
-                 Math::real_t& gamma, Math::real_t& k) const throw();
+    void Reverse(bool northp, Math::real x, Math::real y,
+                 Math::real& lat, Math::real& lon,
+                 Math::real& gamma, Math::real& k) const throw();
 
     /**
      * A global instantiation of PolarStereographic with the WGS84 ellipsoid

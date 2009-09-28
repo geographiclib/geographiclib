@@ -21,13 +21,13 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real_t MGRS::eps =
+  const Math::real MGRS::eps =
     // 25 = ceil(log_2(2e7)) -- use half circumference here because northing
     // 195e5 is a legal in the "southern" hemisphere.
-    pow(real_t(0.5L), numeric_limits<real_t>::digits - 25);
-  const Math::real_t MGRS::angeps =
+    pow(real(0.5L), numeric_limits<real>::digits - 25);
+  const Math::real MGRS::angeps =
     // 7 = ceil(log_2(90))
-    pow(real_t(0.5L), numeric_limits<real_t>::digits - 7);
+    pow(real(0.5L), numeric_limits<real>::digits - 7);
   const string MGRS::hemispheres = "SN";
   const string MGRS::utmcols[3] =
     { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
@@ -51,7 +51,7 @@ namespace GeographicLib {
     { maxupsSind, maxupsNind,
       maxutmNrow + (maxutmSrow - minutmNrow), maxutmNrow };
 
-  void MGRS::Forward(int zone, bool northp, real_t x, real_t y, real_t lat,
+  void MGRS::Forward(int zone, bool northp, real x, real y, real lat,
                      int prec, std::string& mgrs) {
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
@@ -74,7 +74,7 @@ namespace GeographicLib {
     int
       xh = int(floor(x)) / tile,
       yh = int(floor(y)) / tile;
-    real_t
+    real
       xf = x - tile * xh,
       yf = y - tile * yh;
     if (utmp) {
@@ -98,7 +98,7 @@ namespace GeographicLib {
                                        northp ? minupsNind : minupsSind)];
       mgrs[z++] = upsrows[northp][yh - (northp ? minupsNind : minupsSind)];
     }
-    real_t mult = pow(real_t(base), min(prec - tilelevel, 0));
+    real mult = pow(real(base), min(prec - tilelevel, 0));
     int
       ix = int(floor(xf * mult)),
       iy = int(floor(yf * mult));
@@ -111,7 +111,7 @@ namespace GeographicLib {
     if (prec > tilelevel) {
       xf -= floor(xf * mult);
       yf -= floor(yf * mult);
-      mult = pow(real_t(base), prec - tilelevel);
+      mult = pow(real(base), prec - tilelevel);
       ix = int(floor(xf * mult));
       iy = int(floor(yf * mult));
       for (int c = prec - tilelevel; c--;) {
@@ -123,9 +123,9 @@ namespace GeographicLib {
     }
   }
 
-  void MGRS::Forward(int zone, bool northp, real_t x, real_t y,
+  void MGRS::Forward(int zone, bool northp, real x, real y,
                      int prec, std::string& mgrs) {
-    real_t lat, lon;
+    real lat, lon;
     if (zone)
       UTMUPS::Reverse(zone, northp, x, y, lat, lon);
     else
@@ -135,7 +135,7 @@ namespace GeographicLib {
   }
 
   void MGRS::Reverse(const std::string& mgrs,
-                     int& zone, bool& northp, real_t& x, real_t& y,
+                     int& zone, bool& northp, real& x, real& y,
                      int& prec, bool centerp) {
     int
       p = 0,
@@ -197,7 +197,7 @@ namespace GeographicLib {
       irow += northp ? minupsNind : minupsSind;
     }
     prec = (len - p)/2;
-    real_t unit = tile;
+    real unit = tile;
     x = unit * icol;
     y = unit * irow;
     for (int i = 0; i < prec; ++i) {
@@ -226,7 +226,7 @@ namespace GeographicLib {
     }
   }
 
-  void MGRS::CheckCoords(bool utmp, bool& northp, real_t& x, real_t& y) {
+  void MGRS::CheckCoords(bool utmp, bool& northp, real& x, real& y) {
     // Limits are all multiples of 100km and are all closed on the lower end
     // and open on the upper end -- and this is reflected in the error
     // messages.  However if a coordinate lies on the excluded upper end (e.g.,
@@ -286,13 +286,13 @@ namespace GeographicLib {
 
     // Estimate center row number for latitude band
     // 90 deg = 100 tiles; 1 band = 8 deg = 100*8/90 tiles
-    real_t c = 100 * (8 * iband + 4)/real_t(90);
+    real c = 100 * (8 * iband + 4)/real(90);
     bool northp = iband >= 0;
     int
       minrow = iband > -10 ?
-      int(floor(c - real_t(4.3L) - real_t(0.1L) * northp)) : -90,
+      int(floor(c - real(4.3L) - real(0.1L) * northp)) : -90,
       maxrow = iband <   9 ?
-      int(floor(c + real_t(4.4L) - real_t(0.1L) * northp)) :  94,
+      int(floor(c + real(4.4L) - real(0.1L) * northp)) :  94,
       baserow = (minrow + maxrow) / 2 - utmrowperiod / 2;
     // Add maxutmSrow = 5 * utmrowperiod to ensure operand is positive
     irow = (irow - baserow + maxutmSrow) % utmrowperiod + baserow;

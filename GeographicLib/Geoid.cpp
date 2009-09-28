@@ -100,8 +100,8 @@ namespace GeographicLib {
   // genmatrix(yc,1,length(warr)).abs(c3).genmatrix(yd,length(pows),1)),2)$
   // c3:c0*c3$
 
-  const Math::real_t Geoid::c0 = 240; // Common denominator
-  const Math::real_t Geoid::c3[stencilsize * nterms] = {
+  const Math::real Geoid::c0 = 240; // Common denominator
+  const Math::real Geoid::c3[stencilsize * nterms] = {
       9, -18, -88,    0,  96,   90,   0,   0, -60, -20,
      -9,  18,   8,    0, -96,   30,   0,   0,  60, -20,
       9, -88, -18,   90,  96,    0, -20, -60,   0,   0,
@@ -150,8 +150,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3n).genmatrix(yd,length(pows),1)),2)$
   // c3n:c0n*c3n$
 
-  const Math::real_t Geoid::c0n = 372; // Common denominator
-  const Math::real_t Geoid::c3n[stencilsize * nterms] = {
+  const Math::real Geoid::c0n = 372; // Common denominator
+  const Math::real Geoid::c3n[stencilsize * nterms] = {
       0, 0, -131, 0,  138,  144, 0,   0, -102, -31,
       0, 0,    7, 0, -138,   42, 0,   0,  102, -31,
      62, 0,  -31, 0,    0,  -62, 0,   0,    0,  31,
@@ -184,8 +184,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3s).genmatrix(yd,length(pows),1)),2)$
   // c3s:c0s*c3s$
 
-  const Math::real_t Geoid::c0s = 372; // Common denominator
-  const Math::real_t Geoid::c3s[stencilsize * nterms] = {
+  const Math::real Geoid::c0s = 372; // Common denominator
+  const Math::real Geoid::c3s[stencilsize * nterms] = {
      18,  -36, -122,   0,  120,  135, 0,   0,  -84, -31,
     -18,   36,   -2,   0, -120,   51, 0,   0,   84, -31,
      36, -165,  -27,  93,  147,   -9, 0, -93,   18,   0,
@@ -207,7 +207,7 @@ namespace GeographicLib {
     , _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
     , _degree( Constants::degree() )
-    , _eps( sqrt(numeric_limits<real_t>::epsilon()) ) {
+    , _eps( sqrt(numeric_limits<real>::epsilon()) ) {
     if (_dir.empty())
       _dir = GeoidPath();
     if (_dir.empty())
@@ -219,7 +219,7 @@ namespace GeographicLib {
     string s;
     if (!(getline(_file, s) && s == "P5"))
       throw out_of_range("File not in PGM format " + _filename);
-    _offset = numeric_limits<real_t>::max();
+    _offset = numeric_limits<real>::max();
     _scale = 0;
     _maxerror = _rmserror = -1;
     _description = "NONE";
@@ -279,7 +279,7 @@ namespace GeographicLib {
       // Add 1 for whitespace after maxval
       _datastart = unsigned(_file.tellg()) + 1u;
     }
-    if (_offset == numeric_limits<real_t>::max())
+    if (_offset == numeric_limits<real>::max())
       throw out_of_range("Offset not set " + _filename);
     if (_scale == 0)
       throw out_of_range("Scale not set " + _filename);
@@ -296,8 +296,8 @@ namespace GeographicLib {
       // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.
       throw out_of_range("File has the wrong length " + _filename);
-    _rlonres = _width / real_t(360);
-    _rlatres = (_height - 1) / real_t(180);
+    _rlonres = _width / real(360);
+    _rlatres = (_height - 1) / real(180);
     _cache = false;
     _ix = _width;
     _iy = _height;
@@ -305,11 +305,11 @@ namespace GeographicLib {
     _file.exceptions(ifstream::eofbit | ifstream::failbit | ifstream::badbit);
   }
 
-  Math::real_t Geoid::height(real_t lat, real_t lon, bool gradp,
-                             real_t& gradn, real_t& grade) const  {
+  Math::real Geoid::height(real lat, real lon, bool gradp,
+                           real& gradn, real& grade) const  {
     if (lon < 0)
       lon += 360;
-    real_t
+    real
       fy = (90 - lat) * _rlatres,
       fx = lon * _rlonres;
     int
@@ -328,7 +328,7 @@ namespace GeographicLib {
         _v10 = rawval(ix    , iy + 1);
         _v11 = rawval(ix + 1, iy + 1);
       } else {
-        real_t v[stencilsize];
+        real v[stencilsize];
         int k = 0;
         v[k++] = rawval(ix    , iy - 1);
         v[k++] = rawval(ix + 1, iy - 1);
@@ -343,8 +343,8 @@ namespace GeographicLib {
         v[k++] = rawval(ix    , iy + 2);
         v[k++] = rawval(ix + 1, iy + 2);
 
-        const real_t* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
-        real_t c0x = iy == 0 ? c0n : iy == _height - 2 ? c0s : c0;
+        const real* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
+        real c0x = iy == 0 ? c0n : iy == _height - 2 ? c0s : c0;
         for (unsigned i = 0; i < nterms; ++i) {
           _t[i] = 0;
           for (unsigned j = 0; j < stencilsize; ++j)
@@ -354,13 +354,13 @@ namespace GeographicLib {
       }
     }
     if (!_cubic) {
-      real_t
+      real
         a = (1 - fx) * _v00 + fx * _v01,
         b = (1 - fx) * _v10 + fx * _v11,
         c = (1 - fy) * a + fy * b,
         h = _offset + _scale * c;
       if (gradp) {
-        real_t
+        real
           phi = lat * _degree,
           cosphi = cos(phi),
           sinphi = sin(phi),
@@ -377,7 +377,7 @@ namespace GeographicLib {
       }
       return h;
     } else {
-      real_t h = _t[0] + fx * (_t[1] + fx * (_t[3] + fx * _t[6])) +
+      real h = _t[0] + fx * (_t[1] + fx * (_t[3] + fx * _t[6])) +
         fy * (_t[2] + fx * (_t[4] + fx * _t[7]) +
              fy * (_t[5] + fx * _t[8] + fy * _t[9]));
       h = _offset + _scale * h;
@@ -387,7 +387,7 @@ namespace GeographicLib {
         lat = max(lat, -90 + 1/(100 * _rlatres));
         fy = (90 - lat) * _rlatres;
         fy -=  int(fy);
-        real_t
+        real
           phi = lat * _degree,
           cosphi = cos(phi),
           sinphi = sin(phi),
@@ -413,8 +413,8 @@ namespace GeographicLib {
     }
   }
 
-  void Geoid::CacheArea(real_t south, real_t west,
-                        real_t north, real_t east) const {
+  void Geoid::CacheArea(real south, real west,
+                        real north, real east) const {
     if (south > north) {
       CacheClear();
       return;
@@ -424,9 +424,9 @@ namespace GeographicLib {
     if (east <= west)
       east += 360;
     // Move south (and north) boundaries off the south pole.
-    south = min(south, -90 + real_t(0.5L) / _rlatres);
+    south = min(south, -90 + real(0.5L) / _rlatres);
     north = min(north, south);
-    real_t
+    real
       fn = (90 - north) * _rlatres,
       fs = (90 - south) * _rlatres,
       fw = west * _rlonres,
