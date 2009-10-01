@@ -114,8 +114,7 @@ int main(int argc, char* argv[]) {
         else
           TME.Forward(real(0), lat, lon, x, y, gamma, k);
       }
-      std::cout << lat << " " << lon << " "
-                << x << " " << y << " "
+      std::cout << lat << " " << lon << " " << x << " " << y << " "
                 << gamma << " " << k << "\n";
     }
     catch (const std::exception& e) {

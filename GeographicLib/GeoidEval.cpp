@@ -27,8 +27,7 @@ int usage(int retval) {
     defaultpath = GeographicLib::Geoid::DefaultPath();
   if (geoidpath.empty())
     geoidpath = "UNDEFINED";
-  ( retval ? std::cerr : std::cout )
-    <<
+  ( retval ? std::cerr : std::cout ) <<
 "Usage:\n\
   Geoid [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]\n\
 $Id$\n\
@@ -155,14 +154,14 @@ int main(int argc, char* argv[]) {
       std::cerr << "ERROR: " << e.what() << "\nProceeding without a cache\n";
     }
     if (verbose)
-      std::cerr << "Geoid file: " << g.GeoidFile() << "\n"
-                << "Description: " << g.Description() << "\n"
+      std::cerr << "Geoid file: "    << g.GeoidFile()     << "\n"
+                << "Description: "   << g.Description()   << "\n"
                 << "Interpolation: " << g.Interpolation() << "\n"
-                << "Date & Time: " << g.DateTime() << "\n"
-                << "Offset (m): " << g.Offset() << "\n"
-                << "Scale (m): " << g.Scale() << "\n"
-                << "Max error (m): " << g.MaxError() << "\n"
-                << "RMS error (m): " << g.RMSError() << "\n";
+                << "Date & Time: "   << g.DateTime()      << "\n"
+                << "Offset (m): "    << g.Offset()        << "\n"
+                << "Scale (m): "     << g.Scale()         << "\n"
+                << "Max error (m): " << g.MaxError()      << "\n"
+                << "RMS error (m): " << g.RMSError()      << "\n";
 
     std::cout << std::fixed;
     std::string s;
@@ -177,7 +176,7 @@ int main(int argc, char* argv[]) {
         real gradn, grade;
         real h = g(lat, lon, gradn, grade);
         std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
-                    << gradn*1e6 << "e-6 " << grade*1e6 << "e-6\n";
+                  << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";
       }
       catch (const std::exception& e) {
         std::cout << "ERROR: " << e.what() << "\n";

@@ -75,7 +75,7 @@ namespace GeographicLib {
     // Throw an error if easting or northing are outside standard ranges.  If
     // throwp = false, return bool instead.
     static bool CheckCoords(bool utmp, bool northp, real x, real y,
-                            bool throwp = true);
+                            bool msgrlimits = false, bool throwp = true);
     UTMUPS();                   // Disable constructor
   public:
 
@@ -97,17 +97,18 @@ namespace GeographicLib {
      * zone for the result can be specified with \e setzone (negative means
      * result of UTMUPS::StandardZone, zero means UPS, positive means a
      * particular UTM zone), Throw error if the resulting easting or northing
-     * is outside the allowed range (see Reverse). This also returns meridian
-     * convergence \e gamma (degrees) and scale \e k.  The accuracy of the
-     * conversion is about 5nm.
+     * is outside the allowed range (see Reverse).  If \e mgrslimits == true,
+     * then use the stricter MGRS limits (see Reverse).  This also returns
+     * meridian convergence \e gamma (degrees) and scale \e k.  The accuracy of
+     * the conversion is about 5nm.
      *
-     * To extent the standard UTM zones into the UPS regions use \e setzone =
+     * To extend the standard UTM zones into the UPS regions use \e setzone =
      * UTMUPS::StandardZone(max(-80.0, min(80.0, \e lat))).
      **********************************************************************/
     static void Forward(real lat, real lon,
                         int& zone, bool& northp, real& x, real& y,
                         real& gamma, real& k,
-                        int setzone = -1);
+                        int setzone = -1, bool mgrslimits = false);
 
     /**
      * Convert UTM or UPS coordinate to geographic coordinates .  Given zone \e
@@ -132,29 +133,32 @@ namespace GeographicLib {
      * These ranges are 100km larger than allowed for the conversions to MGRS.
      * (100km is the maximum extra padding consistent with eastings remaining
      * non-negative.)  This allows generous overlaps between zones and UTM and
-     * UPS.  No checks are performed beyond these (e.g., to limit the distance
-     * outside the standard zone boundaries).
+     * UPS.  If \e mgrslimits = true, then all the ranges are shrunk by 100km
+     * so that they agree with the sticter MGRS ranges.  No checks are
+     * performed besides these (e.g., to limit the distance outside the
+     * standard zone boundaries).
      **********************************************************************/
     static void Reverse(int zone, bool northp, real x, real y,
-                        real& lat, real& lon, real& gamma, real& k);
+                        real& lat, real& lon, real& gamma, real& k,
+                        bool mgrslimits = false);
 
     /**
      * Forward without returning convergence and scale.
      **********************************************************************/
     static void Forward(real lat, real lon,
                         int& zone, bool& northp, real& x, real& y,
-                        int setzone = -1) {
+                        int setzone = -1, bool mgrslimits = false) {
       real gamma, k;
-      Forward(lat, lon, zone, northp, x, y, gamma, k, setzone);
+      Forward(lat, lon, zone, northp, x, y, gamma, k, setzone, mgrslimits);
     }
 
     /**
      * Reverse without returning convergence and scale.
      **********************************************************************/
     static void Reverse(int zone, bool northp, real x, real y,
-                        real& lat, real& lon) {
+                        real& lat, real& lon, bool mgrslimits = false) {
       real gamma, k;
-      Reverse(zone, northp, x, y, lat, lon, gamma, k);
+      Reverse(zone, northp, x, y, lat, lon, gamma, k, mgrslimits);
     }
 
     /**
@@ -167,8 +171,7 @@ namespace GeographicLib {
      * hemisphere of zone 38 and not latitude band S, [32,40].  N, 01S, 2N, 38S
      * are legal.  0N, 001S, 61N, 38P are illegal.
      **********************************************************************/
-    static void DecodeZone(const std::string& zonestr,
-                           int& zone, bool& northp);
+    static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
 
     /**
      * Encode a UTM/UPS zone string given the \e zone and hemisphere \e northp.
