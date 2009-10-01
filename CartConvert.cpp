@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
         std::cout << lat << " " << lon << " " << h << "\n";
       } else {
         if ( !(-90 <= lat && lat <= 90) )
-          throw std::out_of_range("Latitude not in range [-90, 90]\n");
+          throw std::out_of_range("Latitude not in range [-90, 90]");
         if ( !(-180 <= lon && lat <= 360) )
           throw std::out_of_range("Longitude not in range [-180, 360]");
         if (localcartesian)

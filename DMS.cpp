@@ -94,16 +94,14 @@ namespace GeographicLib {
       } else if ((k = lookup(dmsindicators, x)) >= 0) {
         if (unsigned(k) == npiece - 1)
           throw out_of_range("Repeated " + components[k]
-                             + " component in "
-                             + dms.substr(beg, end - beg));
+                             + " component in " + dms.substr(beg, end - beg));
         else if (unsigned(k) < npiece)
           throw out_of_range(components[k] + " component follows "
                              + components[npiece - 1] + " component in "
                              + dms.substr(beg, end - beg));
         if (ncurrent == 0)
           throw out_of_range("Missing numbers in " + components[k]
-                             + " component of "
-                             + dms.substr(beg, end - beg));
+                             + " component of " + dms.substr(beg, end - beg));
         if (digcount > 1) {
           istringstream s(dms.substr(p - digcount - 1, digcount));
           s >> fcurrent;
@@ -129,8 +127,7 @@ namespace GeographicLib {
                            + dms.substr(beg, end - beg));
       if (ncurrent == 0)
         throw out_of_range("Missing numbers in " + components[k]
-                           + " component of "
-                           + dms.substr(beg, end - beg));
+                           + " component of " + dms.substr(beg, end - beg));
       if (digcount > 1) {
         istringstream s(dms.substr(p - digcount, digcount));
         s >> fcurrent;
@@ -168,21 +165,17 @@ namespace GeographicLib {
       else if (ib == NONE)
         ib = flag(LATITUDE + LONGITUDE - ia);
       if (ia == ib)
-        throw out_of_range("Both " + stra + " and " + strb +
-                           " interpreted as "
-                           + (ia == LATITUDE ? "latitudes"
-                              : "longitudes"));
+        throw out_of_range("Both " + stra + " and " + strb + " interpreted as "
+                           + (ia == LATITUDE ? "latitudes" : "longitudes"));
       if (ia == LATITUDE) {
         lat = a; lon = b;
       } else {
         lat = b; lon = a;
       }
       if (! (lat >= -90 && lat <= 90))
-        throw out_of_range("Latitude " + str(lat) +
-                           "d not in [-90d, 90d]");
+        throw out_of_range("Latitude " + str(lat) + "d not in [-90d, 90d]");
       if (! (lon >= -180 && lon <= 360))
-        throw out_of_range("Latitude " + str(lon) +
-                           "d not in [-180d, 360d]");
+        throw out_of_range("Latitude " + str(lon) + "d not in [-180d, 360d]");
       if (lon >= 180)
         lon -= 360;
   }

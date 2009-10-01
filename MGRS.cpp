@@ -59,7 +59,7 @@ namespace GeographicLib {
       throw out_of_range("Zone " + str(zone) + " not in [0,60]");
     if (!(prec >= 0 || prec <= maxprec))
       throw out_of_range("MGRS precision " + str(prec) + " not in [0, "
-                              + str(int(maxprec)) + "]");
+                         + str(int(maxprec)) + "]");
     int
       zone1 = zone - 1,
       z = utmp ? 2 : 0;
@@ -85,7 +85,7 @@ namespace GeographicLib {
         irow = UTMRow(iband, icol, yh % utmrowperiod);
       if (irow != yh - (northp ? minutmNrow : maxutmSrow))
         throw out_of_range("Latitude " + str(lat)
-                                + " is inconsistent with UTM coordinates");
+                           + " is inconsistent with UTM coordinates");
       mgrs[z++] = latband[10 + iband];
       mgrs[z++] = utmcols[zone1 % 3][icol];
       mgrs[z++] = utmrow[(yh + (zone1 & 1 ? utmevenrowshift : 0))
@@ -160,23 +160,20 @@ namespace GeographicLib {
     const string& band = utmp ? latband : upsband;
     int iband = lookup(band, mgrs[p++]);
     if (iband < 0)
-      throw out_of_range("Band letter " + str(mgrs[p-1])
-                         + " not in " + (utmp ? "UTM" : "UPS")
-                         + " set " + band);
+      throw out_of_range("Band letter " + str(mgrs[p-1]) + " not in "
+                         + (utmp ? "UTM" : "UPS") + " set " + band);
     northp = iband >= (utmp ? 10 : 2);
     const string& col = utmp ? utmcols[zone1 % 3] : upscols[iband];
     const string& row = utmp ? utmrow : upsrows[northp];
     int icol = lookup(col, mgrs[p++]);
     if (icol < 0)
-      throw out_of_range("Column letter " + str(mgrs[p-1])
-                         + " not in "
+      throw out_of_range("Column letter " + str(mgrs[p-1]) + " not in "
                          + (utmp ? "zone " + mgrs.substr(0, p-2) :
                             "UPS band " + str(mgrs[p-2]))
                          + " set " + col );
     int irow = lookup(row, mgrs[p++]);
     if (irow < 0)
-      throw out_of_range("Row letter " + str(mgrs[p-1])
-                         + " not in "
+      throw out_of_range("Row letter " + str(mgrs[p-1]) + " not in "
                          + (utmp ? "UTM" :
                             "UPS " + str(hemispheres[northp]))
                          + " set " + row);
@@ -214,8 +211,7 @@ namespace GeographicLib {
       if (lookup(digits, mgrs[len - 1]) < 0)
         throw out_of_range("Encountered a non-digit in " + mgrs.substr(p));
       else
-        throw out_of_range("Not an even number of digits in "
-                           + mgrs.substr(p));
+        throw out_of_range("Not an even number of digits in " + mgrs.substr(p));
     }
     if (prec > maxprec)
       throw out_of_range("More than " + str(2*maxprec) + " digits in "
@@ -243,8 +239,7 @@ namespace GeographicLib {
         throw out_of_range("Easting " + str(int(floor(x/1000)))
                            + "km not in MGRS/"
                            + (utmp ? "UTM" : "UPS") + " range for "
-                           + (northp ? "N" : "S" )
-                           + " hemisphere ["
+                           + (northp ? "N" : "S" ) + " hemisphere ["
                            + str(mineasting[ind]*tile/1000) + "km, "
                            + str(maxeasting[ind]*tile/1000) + "km)");
     }
@@ -255,8 +250,7 @@ namespace GeographicLib {
         throw out_of_range("Northing " + str(int(floor(y/1000)))
                            + "km not in MGRS/"
                            + (utmp ? "UTM" : "UPS") + " range for "
-                           + (northp ? "N" : "S" )
-                           + " hemisphere ["
+                           + (northp ? "N" : "S" ) + " hemisphere ["
                            + str(minnorthing[ind]*tile/1000) + "km, "
                            + str(maxnorthing[ind]*tile/1000) + "km)");
     }

@@ -56,9 +56,9 @@ namespace GeographicLib {
         zoneind = 2;
         coordind = 0;
       } else
-        throw out_of_range("Neither " + sa[0] + " nor " + sa[2] +
-                           " of the form UTM/UPS Zone + Hemisphere" +
-                           " (ex: 38N, 09S, N)");
+        throw out_of_range("Neither " + sa[0] + " nor " + sa[2]
+                           + " of the form UTM/UPS Zone + Hemisphere"
+                           + " (ex: 38N, 09S, N)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i) {
         istringstream str(sa[coordind + i]);
@@ -66,9 +66,9 @@ namespace GeographicLib {
         if (!(str >> x))
           throw out_of_range("Bad number " + sa[coordind + i]);
         if (int(str.tellg()) != int(sa[coordind + i].size()))
-          throw out_of_range(string("Extra text in UTM/UPS ") +
-                             (i == 0 ? "easting " : "northing ") +
-                             sa[coordind + i]);
+          throw out_of_range(string("Extra text in UTM/UPS ")
+                             + (i == 0 ? "easting " : "northing ")
+                             + sa[coordind + i]);
         (i ? _northing : _easting) = x;
       }
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
@@ -83,8 +83,7 @@ namespace GeographicLib {
   string GeoCoords::GeoRepresentation(int prec) const {
     prec = max(0, min(9, prec) + 5);
     ostringstream os;
-    os << fixed << setprecision(prec)
-       << _lat << " " << _long;
+    os << fixed << setprecision(prec) << _lat << " " << _long;
     return os.str();
   }
 
@@ -117,14 +116,10 @@ namespace GeographicLib {
     prec = max(-5, min(9, prec));
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);
     os << UTMUPS::EncodeZone(zone, _northp) << fixed << setfill('0');
-    os << " "
-       << setprecision(max(0, prec))
-       << easting / scale;
+    os << " " << setprecision(max(0, prec)) << easting / scale;
     if (prec < 0 && abs(easting / scale) > real(0.5))
       os << setw(-prec) << 0;
-    os << " "
-       << setprecision(max(0, prec))
-       << northing / scale;
+    os << " " << setprecision(max(0, prec)) << northing / scale;
     if (prec < 0 && abs(northing / scale) > real(0.5))
       os << setw(-prec) << 0;
     utm = os.str();

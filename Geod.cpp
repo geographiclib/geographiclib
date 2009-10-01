@@ -103,8 +103,7 @@ std::string LatLonString(real lat, real lon, int prec, bool dms) {
       DMS::Encode(lon, prec + 5, DMS::LONGITUDE);
   else {
     std::ostringstream os;
-    os << std::fixed << std::setprecision(prec + 5)
-       << lat << " " << lon;
+    os << std::fixed << std::setprecision(prec + 5) << lat << " " << lon;
     return os.str();
   }
 }
@@ -129,8 +128,8 @@ real ReadAzimuth(const std::string& s) {
     throw std::out_of_range("Azimuth " + s + " not in range [-180,360]");
   if (azi >= 180) azi -= 360;
   if (ind == DMS::LATITUDE)
-    throw std::out_of_range("Azimuth " + s +
-                            " has a latitude hemisphere, N/S");
+    throw std::out_of_range("Azimuth " + s
+                            + " has a latitude hemisphere, N/S");
   return azi;
 }
 
@@ -158,8 +157,8 @@ real ReadDistance(const std::string& s, bool arcmode) {
     DMS::flag ind;
     s12 = DMS::Decode(s, ind);
     if (ind != DMS::NONE)
-      throw std::out_of_range("Arc angle " + s +
-                              " includes a hemisphere, N/E/W/S");
+      throw std::out_of_range("Arc angle " + s
+                              + " includes a hemisphere, N/E/W/S");
   } else {
     std::istringstream is(s);
     if (!(is >> s12))
