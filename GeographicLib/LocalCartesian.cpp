@@ -50,8 +50,7 @@ namespace GeographicLib {
   }
 
   void LocalCartesian::Reverse(real x, real y, real z,
-                               real& lat, real& lon, real& h)
-    const throw() {
+                               real& lat, real& lon, real& h) const throw() {
     real
       xc = _x0 + _rxx * x + _ryx * y + _rzx * z,
       yc = _y0 + _rxy * x + _ryy * y + _rzy * z,

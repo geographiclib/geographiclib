@@ -80,7 +80,7 @@ namespace GeographicLib {
      * hemisphere designator (N, S, E, W).
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
-                             Math::real& lat, Math::real& lon);
+                             real& lat, real& lon);
 
     /**
      * Convert \e degree into a DMS string.  \e trailing indicates the least
@@ -100,9 +100,7 @@ namespace GeographicLib {
      * The integer parts of the minutes and seconds components are always given
      * with 2 digits.
      **********************************************************************/
-    static std::string Encode(Math::real degree,
-                              component trailing,
-                              unsigned prec,
+    static std::string Encode(real degree, component trailing, unsigned prec,
                               flag ind = NONE);
 
     /**
@@ -111,9 +109,7 @@ namespace GeographicLib {
      * e.g., \e prec = 3 gives a result accurate to 0.1' and \e prec = 4 gives
      * a result accurate to 1".
      **********************************************************************/
-    static std::string Encode(Math::real degree,
-                              unsigned prec,
-                              flag ind = NONE) {
+    static std::string Encode(real degree, unsigned prec, flag ind = NONE) {
       return Encode(degree,
                     prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
                     prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),

@@ -277,7 +277,8 @@ namespace GeographicLib {
       if (maxval != 0xffffu)
         throw out_of_range("Maxval not equal to 2^16-1 " + _filename);
       // Add 1 for whitespace after maxval
-      _datastart = unsigned(_file.tellg()) + 1u;
+      _datastart = (unsigned long long)(_file.tellg()) + 1ULL;
+      _swidth = (unsigned long long)(_width);
     }
     if (_offset == numeric_limits<real>::max())
       throw out_of_range("Offset not set " + _filename);
@@ -292,7 +293,8 @@ namespace GeographicLib {
       // This is so that longitude grids can be extended thru the poles.
       throw out_of_range("Raster width is odd " + _filename);
     _file.seekg(0, ios::end);
-    if (_datastart + 2 * _width * _height != _file.tellg())
+    if (_datastart + 2ULL * _swidth * (unsigned long long)(_height) !=
+        (unsigned long long)(_file.tellg()))
       // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.
       throw out_of_range("File has the wrong length " + _filename);
@@ -306,7 +308,7 @@ namespace GeographicLib {
   }
 
   Math::real Geoid::height(real lat, real lon, bool gradp,
-                           real& gradn, real& grade) const  {
+                           real& gradn, real& grade) const {
     if (lon < 0)
       lon += 360;
     real
@@ -413,8 +415,7 @@ namespace GeographicLib {
     }
   }
 
-  void Geoid::CacheArea(real south, real west,
-                        real north, real east) const {
+  void Geoid::CacheArea(real south, real west, real north, real east) const {
     if (south > north) {
       CacheClear();
       return;
@@ -474,7 +475,7 @@ namespace GeographicLib {
         w1 = ie1 - iw + 1;
       vector<char> buf(2 * w1);
       for (int iy = in; iy <= is; ++iy) {
-        _file.seekg(_datastart + 2 * (iy * _width + iw), ios::beg);
+        filepos(iw, iy);
         _file.read(&(buf[0]), 2 * w1);
         for (int ix = 0; ix < w1; ++ix)
           _data[iy - in][ix] =
@@ -489,7 +490,7 @@ namespace GeographicLib {
           w2 = ie1 + 1;
         buf.resize(2 * w1);
         for (int iy = in; iy <= is; ++iy) {
-          _file.seekg(_datastart + 2 * (iy * _width + iw1), ios::beg);
+          filepos(iw1, iy);
           _file.read(&(buf[0]), 2 * w2);
           for (int ix = 0; ix < w2; ++ix)
           _data[iy - in][ix + w1] =

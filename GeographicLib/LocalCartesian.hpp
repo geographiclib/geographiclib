@@ -47,7 +47,7 @@ namespace GeographicLib {
      * (default Geocentric::WGS84) specifies the Geocentric object to use for
      * the transformation.
      **********************************************************************/
-    LocalCartesian(Math::real lat0, Math::real lon0, Math::real h0 = 0,
+    LocalCartesian(real lat0, real lon0, real h0 = 0,
                    const Geocentric& earth = Geocentric::WGS84) throw()
       : _earth(earth)
     { Reset(lat0, lon0, h0); }
@@ -65,7 +65,7 @@ namespace GeographicLib {
      * Change the origin to latitude = \e lat0, longitude = \e lon0 (degrees),
      * height = \e h0 (meters).
      **********************************************************************/
-    void Reset(Math::real lat0, Math::real lon0, Math::real h0 = 0)
+    void Reset(real lat0, real lon0, real h0 = 0)
       throw();
 
     /**
@@ -74,8 +74,7 @@ namespace GeographicLib {
      * lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
      * the range [-180, 360].
      **********************************************************************/
-    void Forward(Math::real lat, Math::real lon, Math::real h,
-                 Math::real& x, Math::real& y, Math::real& z)
+    void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw();
 
     /**
@@ -83,8 +82,7 @@ namespace GeographicLib {
      * coordinates \e lat, \e lon (degrees), \e h (meters).  The value of \e
      * lon returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(Math::real x, Math::real y, Math::real z,
-                 Math::real& lat, Math::real& lon, Math::real& h)
+    void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const throw();
 
     /**

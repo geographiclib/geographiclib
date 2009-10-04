@@ -110,8 +110,8 @@ namespace GeographicLib {
     return mgrs;
   }
 
-  void GeoCoords::UTMUPSString(int zone, real easting, real northing,
-                               int prec, std::string& utm) const {
+  void GeoCoords::UTMUPSString(int zone, real easting, real northing, int prec,
+                               std::string& utm) const {
     ostringstream os;
     prec = max(-5, min(9, prec));
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);

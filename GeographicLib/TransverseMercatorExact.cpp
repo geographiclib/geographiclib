@@ -60,9 +60,8 @@ namespace GeographicLib {
     (real)(numeric_limits<real>::digits)
     /log((real)(numeric_limits<real>::radix)) + 2;
 
-  TransverseMercatorExact::TransverseMercatorExact(real a, real r,
-                                                   real k0, bool extendp)
-    throw()
+  TransverseMercatorExact::TransverseMercatorExact(real a, real r, real k0,
+                                                   bool extendp) throw()
     : _a(a)
     , _f(1 / r)
     , _k0(k0)
@@ -138,8 +137,8 @@ namespace GeographicLib {
   }
 
   // Starting point for zetainv
-  bool TransverseMercatorExact::zetainv0(real psi, real lam,
-                                          real& u, real& v) const throw() {
+  bool TransverseMercatorExact::zetainv0(real psi, real lam, real& u, real& v)
+    const throw() {
     bool retval = false;
     if (psi < -_e * Constants::pi()/4 &&
         lam > (1 - 2 * _e) * Constants::pi()/2 &&
@@ -203,8 +202,8 @@ namespace GeographicLib {
   }
 
   // Invert zeta using Newton's method
-  void TransverseMercatorExact::zetainv(real psi, real lam,
-                                        real& u, real& v) const throw() {
+  void TransverseMercatorExact::zetainv(real psi, real lam, real& u, real& v)
+    const throw() {
     if (zetainv0(psi, lam, u, v))
       return;
     real stol2 = tol2 / sq(max(psi, real(1)));
@@ -243,8 +242,7 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::dwdsigma(real u, real snu, real cnu, real dnu,
                                          real v, real snv, real cnv, real dnv,
-                                         real& du, real& dv)
-    const throw() {
+                                         real& du, real& dv) const throw() {
     // Reciprocal of 55.9: dw/ds = dn(w)^2/_mv, expanding complex dn(w) using
     // A+S 16.21.4
     real d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
@@ -256,8 +254,8 @@ namespace GeographicLib {
   }
 
   // Starting point for sigmainv
-  bool TransverseMercatorExact::sigmainv0(real xi, real eta,
-                                          real& u, real& v) const throw() {
+  bool TransverseMercatorExact::sigmainv0(real xi, real eta, real& u, real& v)
+    const throw() {
     bool retval = false;
     if (eta > real(1.25) * _Ev.KE() ||
         (xi < -real(0.25) * _Eu.E() && xi < eta - _Ev.KE())) {
@@ -306,8 +304,8 @@ namespace GeographicLib {
   }
 
   // Invert sigma using Newton's method
-  void TransverseMercatorExact::sigmainv(real xi, real eta,
-                                         real& u, real& v) const throw() {
+  void TransverseMercatorExact::sigmainv(real xi, real eta, real& u, real& v)
+    const throw() {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
@@ -380,8 +378,7 @@ namespace GeographicLib {
   }
 
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
-                                        real& x, real& y,
-                                        real& gamma, real& k)
+                                        real& x, real& y, real& gamma, real& k)
     const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)

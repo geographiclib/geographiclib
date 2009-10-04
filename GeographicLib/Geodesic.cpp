@@ -77,15 +77,13 @@ namespace GeographicLib {
     return 2 * sinx * cosx * y0; // sin(2 * x) * y0
   }
 
-  GeodesicLine Geodesic::Line(real lat1, real lon1, real azi1)
-    const throw() {
+  GeodesicLine Geodesic::Line(real lat1, real lon1, real azi1) const throw() {
     return GeodesicLine(*this, lat1, lon1, azi1);
   }
 
   Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
                               real& lat2, real& lon2, real& azi2, real& m12,
-                              bool arcmode)
-    const throw() {
+                              bool arcmode) const throw() {
     GeodesicLine l(*this, lat1, lon1, azi1);
     return l.Position(s12, lat2, lon2, azi2, m12, arcmode);
   }
@@ -363,8 +361,7 @@ namespace GeographicLib {
     SinCosNorm(s, c);
   }
 
-  void Geodesic::InverseStart(real sbet1, real cbet1,
-                              real sbet2, real cbet2,
+  void Geodesic::InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
                               real lam12, real slam12, real clam12,
                               real& salp1, real& calp1,
                               real tc[], real zc[]) const throw() {
@@ -466,17 +463,14 @@ namespace GeographicLib {
     SinCosNorm(salp1, calp1);
   }
 
-  Math::real Geodesic::Lambda12(real sbet1, real cbet1,
-                                real sbet2, real cbet2,
+  Math::real Geodesic::Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
                                 real salp1, real calp1,
                                 real& salp2, real& calp2,
                                 real& sig12,
                                 real& ssig1, real& csig1,
                                 real& ssig2, real& csig2,
-                                real& k1,
-                                bool diffp, real& dlam12,
-                                real tc[], real zc[], real ec[])
-    const throw() {
+                                real& k1, bool diffp, real& dlam12,
+                                real tc[], real zc[], real ec[]) const throw() {
 
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This cases has already been
@@ -618,9 +612,8 @@ namespace GeographicLib {
     _dlam1 = Geodesic::SinSeries(_ssig1, _csig1, _etaCoeff, neta);
   }
 
-  Math::real GeodesicLine::Position(real s12,
-                                    real& lat2, real& lon2, real& azi2,
-                                    real& m12, bool arcmode)
+  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
+                                    real& azi2, real& m12, bool arcmode)
   const throw() {
     if (!Init())
       // Uninitialized

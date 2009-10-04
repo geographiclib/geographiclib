@@ -32,8 +32,7 @@ namespace GeographicLib {
     Geodesic::SinCosNorm(_sbet0, _cbet0);
   }
 
-  void CassiniSoldner::Forward(real lat, real lon,
-                               real& x, real& y,
+  void CassiniSoldner::Forward(real lat, real lon, real& x, real& y,
                                real& azi, real& m) const throw() {
     if (!Init())
       return;
@@ -76,8 +75,7 @@ namespace GeographicLib {
     y = _meridian.Position(sig01, latx, lonx, azix, m12x, true);
   }
 
-  void CassiniSoldner::Reverse(real x, real y,
-                               real& lat, real& lon,
+  void CassiniSoldner::Reverse(real x, real y, real& lat, real& lon,
                                real& azi, real& m) const throw() {
     if (!Init())
       return;
@@ -89,8 +87,8 @@ namespace GeographicLib {
     m = Scale(perp, sig12);
   }
 
-  Math::real CassiniSoldner::Scale(const GeodesicLine& perp,
-                                   real sig12) const throw() {
+  Math::real CassiniSoldner::Scale(const GeodesicLine& perp, real sig12)
+    const throw() {
     if (sig12 == 0)
       return 1;
     // Result is symmetric in sig12, however numerical accuracy is better if

@@ -174,7 +174,7 @@ namespace GeographicLib {
      * roundoff.
      *
      **********************************************************************/
-    static void Forward(int zone, bool northp, Math::real x, Math::real y,
+    static void Forward(int zone, bool northp, real x, real y,
                         int prec, std::string& mgrs);
 
     /**
@@ -183,8 +183,7 @@ namespace GeographicLib {
      * (UPS); otherwise the latitude is used to determine the latitude band and
      * this is checked for consistency using the same tests as Reverse.
      **********************************************************************/
-    static void Forward(int zone, bool northp,
-                        Math::real x, Math::real y, Math::real lat,
+    static void Forward(int zone, bool northp, real x, real y, real lat,
                         int prec, std::string& mgrs);
 
     /**
@@ -215,8 +214,7 @@ namespace GeographicLib {
      * stable.  This is not assured if \e centerp = false.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
-                        int& zone, bool& northp,
-                        Math::real& x, Math::real& y,
+                        int& zone, bool& northp, real& x, real& y,
                         int& prec, bool centerp = true);
 
   };

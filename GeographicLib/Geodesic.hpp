@@ -158,7 +158,7 @@ namespace GeographicLib {
      * flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
      * ellipsoid.
      **********************************************************************/
-    Geodesic(Math::real a, Math::real r) throw();
+    Geodesic(real a, real r) throw();
 
     /**
      * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
@@ -174,10 +174,8 @@ namespace GeographicLib {
      * value is the arc length \e a12 (degrees) if \e arcmode is false,
      * otherwise it is the distance \e s12 (meters)
      **********************************************************************/
-    Math::real Direct(Math::real lat1, Math::real lon1,
-                      Math::real azi1, Math::real s12,
-                      Math::real& lat2, Math::real& lon2,
-                      Math::real& azi2, Math::real& m12,
+    Math::real Direct(real lat1, real lon1, real azi1, real s12,
+                      real& lat2, real& lon2, real& azi2, real& m12,
                       bool arcmode = false) const throw();
 
     /**
@@ -192,10 +190,8 @@ namespace GeographicLib {
      * are returned.  This is not expected to happen with ellipsoidal models of
      * the earth.  Please report all cases where this occurs.
      **********************************************************************/
-    Math::real Inverse(Math::real lat1, Math::real lon1,
-                       Math::real lat2, Math::real lon2,
-                       Math::real& s12, Math::real& azi1,
-                       Math::real& azi2, Math::real& m12)
+    Math::real Inverse(real lat1, real lon1, real lat2, real lon2,
+                       real& s12, real& azi1, real& azi2, real& m12)
       const throw();
 
     /**
@@ -206,7 +202,7 @@ namespace GeographicLib {
      * GeodesicLine::Position is approximately 2.1 faster than calling
      * Geodesic::Direct.
      **********************************************************************/
-    GeodesicLine Line(Math::real lat1, Math::real lon1, Math::real azi1)
+    GeodesicLine Line(real lat1, real lon1, real azi1)
       const throw();
 
     /**
@@ -290,10 +286,8 @@ namespace GeographicLib {
      * auxiliary sphere.  Returned value is the arc length \e a12 (degrees) if
      * \e arcmode is false, otherwise it is the distance \e s12 (meters).
      **********************************************************************/
-    Math::real Position(Math::real s12,
-                        Math::real& lat2, Math::real& lon2,
-                        Math::real& azi2,
-                        Math::real &m12, bool arcmode = false)
+    Math::real Position(real s12, real& lat2, real& lon2,
+                        real& azi2, real &m12, bool arcmode = false)
       const throw();
 
     /**

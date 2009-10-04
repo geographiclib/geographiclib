@@ -54,8 +54,7 @@ namespace GeographicLib {
   const Math::real TransverseMercator::tol =
     real(0.1)*sqrt(numeric_limits<real>::epsilon());
 
-  TransverseMercator::TransverseMercator(real a, real r, real k0)
-    throw()
+  TransverseMercator::TransverseMercator(real a, real r, real k0) throw()
     : _a(a)
     , _f(r != 0 ? 1 / r : 0)
     , _k0(k0)
@@ -191,8 +190,8 @@ namespace GeographicLib {
                           Constants::UTM_k0());
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,
-                                   real& x, real& y,
-                                   real& gamma, real& k) const throw() {
+                                   real& x, real& y, real& gamma, real& k)
+    const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
       lon -= lon0 - 360;
@@ -354,8 +353,8 @@ namespace GeographicLib {
   }
 
   void TransverseMercator::Reverse(real lon0, real x, real y,
-                                   real& lat, real& lon,
-                                   real& gamma, real& k) const throw() {
+                                   real& lat, real& lon, real& gamma, real& k)
+    const throw() {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of q.

@@ -71,7 +71,7 @@ namespace GeographicLib {
      * inf or flattening = 0 (i.e., a sphere).  Negative \e r indicates a
      * prolate spheroid.
      **********************************************************************/
-    TransverseMercator(Math::real a, Math::real r, Math::real k0) throw();
+    TransverseMercator(real a, real r, real k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -81,9 +81,8 @@ namespace GeographicLib {
      * No false easting or northing is added. \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
-    void Forward(Math::real lon0, Math::real lat, Math::real lon,
-                 Math::real& x, Math::real& y,
-                 Math::real& gamma, Math::real& k) const throw();
+    void Forward(real lon0, real lat, real lon,
+                 real& x, real& y, real& gamma, real& k) const throw();
 
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
@@ -93,9 +92,8 @@ namespace GeographicLib {
      * No false easting or northing is added.  The value of \e lon returned is
      * in the range [-180, 180).
      **********************************************************************/
-    void Reverse(Math::real lon0, Math::real x, Math::real y,
-                 Math::real& lat, Math::real& lon,
-                 Math::real& gamma, Math::real& k) const throw();
+    void Reverse(real lon0, real x, real y,
+                 real& lat, real& lon, real& gamma, real& k) const throw();
 
     /**
      * A global instantiation of TransverseMercator with the WGS84 ellipsoid

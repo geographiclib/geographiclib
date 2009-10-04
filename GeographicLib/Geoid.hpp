@@ -67,7 +67,7 @@ namespace GeographicLib {
     std::string _description, _datetime;
     real _offset, _scale, _maxerror, _rmserror;
     int _width, _height;
-    unsigned _datastart;
+    unsigned long long _datastart, _swidth;
     // Area cache
     mutable std::vector< std::vector<unsigned short> > _data;
     mutable bool _cache;
@@ -77,6 +77,11 @@ namespace GeographicLib {
     mutable int _ix, _iy;
     mutable real _v00, _v01, _v10, _v11;
     mutable real _t[nterms];
+    void filepos(int ix, int iy) const {
+      _file.seekg(std::ios::streamoff(_datastart +
+                                      2ULL * (unsigned(iy) * _swidth +
+                                              unsigned(ix))));
+    }
     real rawval(int ix, int iy) const {
       if (iy < 0) {
         iy = -iy;
@@ -95,7 +100,7 @@ namespace GeographicLib {
         return real(_data[iy - _yoffset]
                     [ix >= _xoffset ? ix - _xoffset : ix + _width - _xoffset]);
       } else {
-        _file.seekg(_datastart + 2 * (iy * _width + ix), std::ios::beg);
+        filepos(ix, iy);
         char a, b;
         _file.get(a);
         _file.get(b);
@@ -133,8 +138,7 @@ namespace GeographicLib {
      * file.  In this case, you can catch the error and either do nothing (you
      * will have no cache in this case) or try again with a smaller area.
      **********************************************************************/
-    void CacheArea(Math::real south, Math::real west,
-                   Math::real north, Math::real east) const;
+    void CacheArea(real south, real west, real north, real east) const;
 
     /**
      * Cache all the data.  On most computers, this is fast for data sets with
@@ -159,7 +163,7 @@ namespace GeographicLib {
      * error because of an error reading data from disk.  However, it will not
      * throw if (\e lat, \e lon) is within a successfully cached area.
      **********************************************************************/
-    Math::real operator()(Math::real lat, Math::real lon) const {
+    Math::real operator()(real lat, real lon) const {
       real gradn, grade;
       return height(lat, lon, false, gradn, grade);
     }
@@ -171,9 +175,7 @@ namespace GeographicLib {
      * reading data from disk.  However, it will not throw if (\e lat, \e lon)
      * is within a successfully cached area.
      **********************************************************************/
-    Math::real operator()(Math::real lat, Math::real lon,
-                          Math::real& gradn, Math::real& grade)
-      const {
+    Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
       return height(lat, lon, true, gradn, grade);
     }
 
