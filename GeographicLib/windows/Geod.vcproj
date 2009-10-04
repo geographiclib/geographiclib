@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="GeographicLib"
-	ProjectGUID="{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
+	Name="Geod"
+	ProjectGUID="{F1B64F66-7B95-4087-9619-4ABC20BEB591}"
+	RootNamespace="Geod"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -21,8 +22,8 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
+			ConfigurationType="1"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -42,8 +43,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VP_WIN32"
+				AdditionalIncludeDirectories="../include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,10 +63,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="GeographicLib.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -77,6 +87,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -84,8 +100,9 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			CharacterSet="2"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -104,8 +121,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;VP_WIN32"
+				AdditionalIncludeDirectories="../include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -122,10 +139,21 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="GeographicLib.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -137,6 +165,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -144,8 +178,8 @@
 			Name="Debug|x64"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)64"
 			IntermediateDirectory="$(ConfigurationName)64"
-			ConfigurationType="4"
-			CharacterSet="2"
+			ConfigurationType="1"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -166,8 +200,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VP_WIN32"
+				AdditionalIncludeDirectories="../include"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -186,10 +220,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="GeographicLib.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -201,6 +244,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -208,8 +257,9 @@
 			Name="Release|x64"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)64"
 			IntermediateDirectory="$(ConfigurationName)64"
-			ConfigurationType="4"
-			CharacterSet="2"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -229,8 +279,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories=".."
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;VP_WIN32"
+				AdditionalIncludeDirectories="../include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -247,10 +297,21 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="GeographicLib.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="$(OutDir)"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="17"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -262,6 +323,12 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -271,63 +338,11 @@
 	<Files>
 		<Filter
 			Name="Source Files"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="MGRS.cpp"
-				>
-			</File>
-			<File
-				RelativePath="PolarStereographic.cpp"
-				>
-			</File>
-			<File
-				RelativePath="TransverseMercator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="UTMUPS.cpp"
-				>
-			</File>
-			<File
-				RelativePath="DMS.cpp"
-				>
-			</File>
-			<File
-				RelativePath="GeoCoords.cpp"
-				>
-			</File>
-			<File
-				RelativePath="TransverseMercatorExact.cpp"
-				>
-			</File>
-			<File
-				RelativePath="EllipticFunction.cpp"
-				>
-			</File>
-			<File
-				RelativePath="Geocentric.cpp"
-				>
-			</File>
-			<File
-				RelativePath="LocalCartesian.cpp"
-				>
-			</File>
-			<File
-				RelativePath="Geodesic.cpp"
-				>
-			</File>
-			<File
-				RelativePath="AzimuthalEquidistant.cpp"
-				>
-			</File>
-			<File
-				RelativePath="CassiniSoldner.cpp"
-				>
-			</File>
-			<File
-				RelativePath="Geoid.cpp"
+				RelativePath="..\tools\Geod.cpp"
 				>
 			</File>
 		</Filter>
@@ -336,70 +351,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="Constants.hpp"
-				>
-			</File>
-			<File
-				RelativePath="MGRS.hpp"
-				>
-			</File>
-			<File
-				RelativePath="PolarStereographic.hpp"
-				>
-			</File>
-			<File
-				RelativePath="TransverseMercator.hpp"
-				>
-			</File>
-			<File
-				RelativePath="UTMUPS.hpp"
-				>
-			</File>
-			<File
-				RelativePath="DMS.hpp"
-				>
-			</File>
-			<File
-				RelativePath="GeoCoords.hpp"
-				>
-			</File>
-			<File
-				RelativePath="TransverseMercatorExact.hpp"
-				>
-			</File>
-			<File
-				RelativePath="EllipticFunction.hpp"
-				>
-			</File>
-			<File
-				RelativePath="Geocentric.hpp"
-				>
-			</File>
-			<File
-				RelativePath="LocalCartesian.hpp"
-				>
-			</File>
-			<File
-				RelativePath="Geodesic.hpp"
-				>
-			</File>
-			<File
-				RelativePath="AzimuthalEquidistant.hpp"
-				>
-			</File>
-			<File
-				RelativePath="CassiniSoldner.hpp"
-				>
-			</File>
-			<File
-				RelativePath="Geoid.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
