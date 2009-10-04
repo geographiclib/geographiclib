@@ -88,7 +88,7 @@ namespace GeographicLib {
      * use for geodesic calculations.  By default this uses the WGS84
      * ellipsoid.
      **********************************************************************/
-    CassiniSoldner(Math::real lat0, Math::real lon0,
+    CassiniSoldner(real lat0, real lon0,
                    const Geodesic& earth = Geodesic::WGS84) throw()
       : _earth(earth) {
       Reset(lat0, lon0);
@@ -99,7 +99,7 @@ namespace GeographicLib {
      * (degrees).  \e lat0 should be in the range [-90, 90] and \e lon0 should
      * be in the range [-180, 360].
      **********************************************************************/    
-    void Reset(Math::real lat0, Math::real lon0) throw();
+    void Reset(real lat0, real lon0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -111,9 +111,8 @@ namespace GeographicLib {
      * \e lon) (to within roundoff).  The routine does nothing if the origin
      * has not been set.
      **********************************************************************/
-    void Forward(Math::real lat, Math::real lon,
-                 Math::real& x, Math::real& y,
-                 Math::real& azi, Math::real& rk) const throw();
+    void Forward(real lat, real lon,
+                 real& x, real& y, real& azi, real& rk) const throw();
 
     /**
      * Convert from Cassini-Soldner easting \e x (meters) and northing \e y
@@ -125,9 +124,8 @@ namespace GeographicLib {
      * "wrap around" the earth.  The routine does nothing if the origin has not
      * been set.
      **********************************************************************/
-    void Reverse(Math::real x, Math::real y,
-                 Math::real& lat, Math::real& lon,
-                 Math::real& azi, Math::real& rk) const throw();
+    void Reverse(real x, real y,
+                 real& lat, real& lon, real& azi, real& rk) const throw();
 
     /**
      * Has this object been initialized with an origin?

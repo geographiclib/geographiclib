@@ -22,8 +22,7 @@ namespace GeographicLib {
   const Math::real PolarStereographic::tol =
     real(0.1)*sqrt(numeric_limits<real>::epsilon());
 
-  PolarStereographic::PolarStereographic(real a, real r, real k0)
-    throw()
+  PolarStereographic::PolarStereographic(real a, real r, real k0) throw()
     : _a(a)
     , _f(r != 0 ? 1 / r : 0)
     , _k0(k0)
@@ -39,8 +38,8 @@ namespace GeographicLib {
                           Constants::UPS_k0());
 
   void PolarStereographic::Forward(bool northp, real lat, real lon,
-                                   real& x, real& y,
-                                   real& gamma, real& k) const throw() {
+                                   real& x, real& y, real& gamma, real& k)
+    const throw() {
     real theta = 90 - (northp ? lat : -lat); //  the colatitude
     real rho;
     theta *= Constants::degree();
@@ -61,8 +60,8 @@ namespace GeographicLib {
   }
 
   void PolarStereographic::Reverse(bool northp, real x, real y,
-                                   real& lat, real& lon,
-                                   real& gamma, real& k) const throw() {
+                                   real& lat, real& lon, real& gamma, real& k)
+    const throw() {
     real
       rho = Math::hypot(x, y),
       t2 = rho * _c / (_a * _k0),

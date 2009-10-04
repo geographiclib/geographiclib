@@ -180,8 +180,7 @@ namespace GeographicLib {
         lon -= 360;
   }
 
-  string DMS::Encode(real angle, component trailing, unsigned prec,
-                     flag ind) {
+  string DMS::Encode(real angle, component trailing, unsigned prec, flag ind) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
     //

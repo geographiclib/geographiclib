@@ -54,7 +54,7 @@ namespace GeographicLib {
      * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
      * (i.e., a sphere).  Negative \e r indicates a prolate spheroid.
      **********************************************************************/
-    Geocentric(Math::real a, Math::real r) throw();
+    Geocentric(real a, real r) throw();
 
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
@@ -62,8 +62,7 @@ namespace GeographicLib {
      * should be in the range [-90, 90]; \e lon and \e lon0 should be in the
      * range [-180, 360].
      **********************************************************************/
-    void Forward(Math::real lat, Math::real lon, Math::real h,
-                 Math::real& x, Math::real& y, Math::real& z)
+    void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw();
 
     /**
@@ -78,8 +77,7 @@ namespace GeographicLib {
      * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).  The
      * value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(Math::real x, Math::real y, Math::real z,
-                 Math::real& lat, Math::real& lon, Math::real& h)
+    void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const throw();
 
     /**

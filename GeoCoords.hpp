@@ -150,7 +150,7 @@ namespace GeographicLib {
      * a specified zone (\e zone = 0 means UPS).  Omitting the third argument
      * causes the standard zone to be used.
      **********************************************************************/
-    GeoCoords(Math::real latitude, Math::real longitude, int zone = -1) {
+    GeoCoords(real latitude, real longitude, int zone = -1) {
       Reset(latitude, longitude, zone);
     }
 
@@ -159,8 +159,7 @@ namespace GeographicLib {
      * hemisphere \e northp (false means south, true means north), \e easting
      * (meters) and \e northing (meters).
      **********************************************************************/
-    GeoCoords(int zone, bool northp,
-              Math::real easting, Math::real northing) {
+    GeoCoords(int zone, bool northp, real easting, real northing) {
       Reset(zone, northp, easting, northing);
     }
 
@@ -172,9 +171,9 @@ namespace GeographicLib {
 
     /**
      * Reset the location in terms of \e latitude and \e longitude.  See
-     * GeoCoords(Math::real latitude, Math::real longitude, int zone).
+     * GeoCoords(real latitude, real longitude, int zone).
      **********************************************************************/
-    void Reset(Math::real latitude, Math::real longitude, int zone = -1) {
+    void Reset(real latitude, real longitude, int zone = -1) {
       _lat = latitude;
       _long = longitude;
       UTMUPS::Forward(_lat, _long,
@@ -188,10 +187,9 @@ namespace GeographicLib {
     /**
      * Reset the location in terms of UPS/UPS \e zone, hemisphere \e northp, \e
      * easting, and \e northing.  See GeoCoords(int zone, bool northp,
-     * Math::real easting, Math::real northing).
+     * real easting, real northing).
      **********************************************************************/
-    void Reset(int zone, bool northp,
-               Math::real easting, Math::real northing) {
+    void Reset(int zone, bool northp, real easting, real northing) {
       _zone = zone;
       _northp = northp;
       _easting = easting;

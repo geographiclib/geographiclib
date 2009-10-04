@@ -56,7 +56,7 @@ namespace GeographicLib {
     /**
      * Constructor with parameter \e m.
      **********************************************************************/
-    explicit EllipticFunction(Math::real m) throw();
+    explicit EllipticFunction(real m) throw();
 
     /**
      * The parameter \e m.
@@ -88,9 +88,7 @@ namespace GeographicLib {
      * cn(<i>x</i>|<i>m</i>), and dn(<i>x</i>|<i>m</i>) with argument \e x.
      * The results are returned in \e sn, \e cn, and \e dn.
      **********************************************************************/
-    void sncndn(Math::real x,
-                Math::real& sn, Math::real& cn, Math::real& dn)
-      const throw();
+    void sncndn(real x, real& sn, real& cn, real& dn) const throw();
 
     /**
      * The incomplete integral of the second kind = int dn(\e w)<sup>2</sup> \e
@@ -98,8 +96,7 @@ namespace GeographicLib {
      * provide \e sn = sin(\e phi), \e cn = cos(\e phi), \e dn = sqrt(1 - \e m
      * sin<sup>2</sup>(\e phi)).
      **********************************************************************/
-    Math::real E(Math::real sn, Math::real cn, Math::real dn)
-      const throw();
+    Math::real E(real sn, real cn, real dn) const throw();
   };
 
 

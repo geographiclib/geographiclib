@@ -60,10 +60,8 @@ namespace GeographicLib {
      * to Reverse will return the original (\e lat, \e lon) (to within
      * roundoff).
      **********************************************************************/
-    void Forward(Math::real lat0, Math::real lon0,
-                 Math::real lat, Math::real lon,
-                 Math::real& x, Math::real& y,
-                 Math::real& azi, Math::real& rk) const throw();
+    void Forward(real lat0, real lon0, real lat, real lon,
+                 real& x, real& y, real& azi, real& rk) const throw();
 
     /**
      * Convert from azimuthal equidistant easting \e x (meters) and northing \e
@@ -79,10 +77,8 @@ namespace GeographicLib {
      * to Forward will return the original (\e x, \e y) (to roundoff) only if
      * the geodesic to (\e x, \e y) is a shortest path.
      **********************************************************************/
-    void Reverse(Math::real lat0, Math::real lon0,
-                 Math::real x, Math::real y,
-                 Math::real& lat, Math::real& lon,
-                 Math::real& azi, Math::real& rk) const throw();
+    void Reverse(real lat0, real lon0, real x, real y,
+                 real& lat, real& lon, real& azi, real& rk) const throw();
 
   };
 

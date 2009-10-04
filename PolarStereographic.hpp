@@ -45,7 +45,7 @@ namespace GeographicLib {
      * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
      * inf or flattening = 0 (i.e., a sphere).
      **********************************************************************/
-    PolarStereographic(Math::real a, Math::real r, Math::real k0) throw();
+    PolarStereographic(real a, real r, real k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -57,9 +57,8 @@ namespace GeographicLib {
      * range [-90, 90) for \e northp = false; \e lon should be in the range
      * [-180, 360].
      **********************************************************************/
-    void Forward(bool northp, Math::real lat, Math::real lon,
-                 Math::real& x, Math::real& y,
-                 Math::real& gamma, Math::real& k) const throw();
+    void Forward(bool northp, real lat, real lon,
+                 real& x, real& y, real& gamma, real& k) const throw();
 
     /**
      * Convert from polar stereogrphic easting \e x (meters) and northing \e y
@@ -69,9 +68,8 @@ namespace GeographicLib {
      * scale \e k.  No false easting or northing is added.  The value of \e lon
      * returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(bool northp, Math::real x, Math::real y,
-                 Math::real& lat, Math::real& lon,
-                 Math::real& gamma, Math::real& k) const throw();
+    void Reverse(bool northp, real x, real y,
+                 real& lat, real& lon, real& gamma, real& k) const throw();
 
     /**
      * A global instantiation of PolarStereographic with the WGS84 ellipsoid

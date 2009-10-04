@@ -130,7 +130,7 @@ namespace GeographicLib {
      * that limit.  However, GeographicLib::TransverseMercator treats the
      * sphere exactly.
      **********************************************************************/
-    TransverseMercatorExact(Math::real a, Math::real r, Math::real k0,
+    TransverseMercatorExact(real a, real r, real k0,
                             bool extendp = false) throw();
 
     /**
@@ -141,9 +141,8 @@ namespace GeographicLib {
      * No false easting or northing is added.  \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
-    void Forward(Math::real lon0, Math::real lat, Math::real lon,
-                 Math::real& x, Math::real& y,
-                 Math::real& gamma, Math::real& k) const throw();
+    void Forward(real lon0, real lat, real lon,
+                 real& x, real& y, real& gamma, real& k) const throw();
 
     /**
      * Convert from transverse Mercator easting \e x (meters) and northing \e y
@@ -153,9 +152,8 @@ namespace GeographicLib {
      * No false easting or northing is added.  The value of \e lon returned is
      * in the range [-180, 180).
      **********************************************************************/
-    void Reverse(Math::real lon0, Math::real x, Math::real y,
-                 Math::real& lat, Math::real& lon,
-                 Math::real& gamma, Math::real& k) const throw();
+    void Reverse(real lon0, real x, real y,
+                 real& lat, real& lon, real& gamma, real& k) const throw();
 
     /**
      * A global instantiation of TransverseMercatorExact with the WGS84

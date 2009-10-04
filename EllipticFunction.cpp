@@ -149,8 +149,7 @@ namespace GeographicLib {
    *   Numericshe Mathematik 7, 78-90 (1965)
    */
 
-  void EllipticFunction::sncndn(real x,
-                                real& sn, real& cn, real& dn)
+  void EllipticFunction::sncndn(real x, real& sn, real& cn, real& dn)
     const throw() {
     // Bulirsch's sncndn routine, p 89.
     //
@@ -197,8 +196,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real EllipticFunction::E(real sn, real cn, real dn)
-    const throw() {
+  Math::real EllipticFunction::E(real sn, real cn, real dn) const throw() {
     real ei;
     cn *= cn; dn *= dn;
     // Carlson, eq. 4.6

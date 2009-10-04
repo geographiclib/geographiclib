@@ -20,8 +20,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geocentric::Geocentric(real a, real r)
-    throw()
+  Geocentric::Geocentric(real a, real r) throw()
     : _a(a)
     , _f(r != 0 ? 1 / r : 0)
     , _e2(_f * (2 - _f))
