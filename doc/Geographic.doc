@@ -164,9 +164,9 @@ The following steps will get you started with %GeographicLib:
    on the library.
  - Read the section, \ref transversemercator, for more information on
    this projection.
- - If you use the library frequently, install it to \$(PREFIX) =
+ - If you use the library frequently, install it, e.g., to \$(PREFIX) =
    /usr/local with
-   - make install install-doc
+   - make PREFIX=/usr/local install install-doc
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
