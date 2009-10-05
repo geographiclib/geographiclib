@@ -6,9 +6,8 @@
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
- * Compile with
- *
- *   g++ -g -O3 -I.. -o GeoConvert GeoConvert.cpp GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp
+ * Compile with -I../include and link with GeoCoords.o MGRS.o UTMUPS.o DMS.o
+ * TransverseMercator.o PolarStereographic.o
  *
  * See \ref geoconvert for usage information.
  **********************************************************************/

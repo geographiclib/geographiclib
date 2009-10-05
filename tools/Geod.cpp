@@ -6,9 +6,7 @@
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
- * Compile with
- *
- *   g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp
+ * Compile with -I../include and link with Geodesic.o DMS.o
  *
  * See \ref geod for usage information.
  **********************************************************************/

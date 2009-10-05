@@ -11,7 +11,6 @@
 #include <sstream>
 #include <limits>
 #include <cstdlib>
-#include <stdexcept>
 #include <algorithm>
 
 #define GEOGRAPHICLIB_GEOID_CPP "$Id$"
@@ -293,7 +292,8 @@ namespace GeographicLib {
       // This is so that longitude grids can be extended thru the poles.
       throw out_of_range("Raster width is odd " + _filename);
     _file.seekg(0, ios::end);
-    if (_datastart + 2ULL * _swidth * (unsigned long long)(_height) !=
+    if (!_file.good() ||
+        _datastart + 2ULL * _swidth * (unsigned long long)(_height) !=
         (unsigned long long)(_file.tellg()))
       // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.

@@ -1,12 +1,12 @@
 SUBDIRS = src tools doc
 
-all: $(SUBDIRS)
+all: src tools
 
 $(SUBDIRS):
 	$(MAKE) -C $@
 
 tools: src
-install: install-headers install-lib install-tools install-doc
+install: install-headers install-lib install-tools
 clean: clean-src clean-tools clean-doc
 install-headers:
 	$(MAKE) -C include install

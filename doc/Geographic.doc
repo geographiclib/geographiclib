@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-09
-\date 2009-09-01
+\version 2009-10
+\date 2009-10-xx
 
 \section abstract Abstract
 
@@ -148,11 +148,13 @@ The following steps will get you started with %GeographicLib:
    This will create a %GeographicLib directory.
  - Change to the %GeographicLib directory
    - cd %GeographicLib
- - Create the utility programs and (optionally) the documentation
+ - Create the library, the utility programs and (optionally) the
+   documentation
    - make all doc
+   The compiled utility programs are in the tools directory.
  - GeographicLib.sln is MS Visual Studio 2005 solution file which
    compiles the library and the utility programs under Windows.
- - Try out \ref geoconvert (for help, type ./GeoConvert -h)
+ - Try out \ref geoconvert (for help, type cd tools; ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
  - Similarly, try out \ref geod, \ref transversemercatortest,
@@ -164,7 +166,7 @@ The following steps will get you started with %GeographicLib:
    this projection.
  - If you use the library frequently, install it to \$(PREFIX) =
    /usr/local with
-   - make install
+   - make install install-doc
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
@@ -257,11 +259,11 @@ const static instantiation of Geocentric specific for the WGS84 ellipsoid.
 \ref cartconvert is a simple command line utility to provide access to
 these classes.
 
-GeographicLib::Geoid evaluates geoid heights by interpolation.
-\ref geoideval is a simple command line utility to provide
-access to this class.  This class requires installation of data
-files for the various geoid models; see \ref geoidinst for
-details.
+GeographicLib::Geoid evaluates geoid heights by interpolation.  This is
+provided by the operator() member function.  \ref geoideval is a simple
+command line utility to provide access to this class.  This class
+requires installation of data files for the various geoid models; see
+\ref geoidinst for details.
 
 GeographicLib::Constants, GeographicLib::Math, GeographicLib::DMS, and
 GeographicLib::EllipticFunction are utility classes which are used
@@ -273,25 +275,28 @@ double and the library should be installed in this way.
 
 In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the
-GeographicLib/ directory prefix.  If compiling within the %GeographicLib
-directory, ".." should be included in the header search path (e.g.,
-with -I..).  The cpp files implementing the classes include "using
-namespace std;", however, for portability, the headers files and the
-utility programs do not.
+GeographicLib/ directory prefix.  If compiling within the
+%GeographicLib/src or %GeographicLib/tools directories, "../include"
+should be included in the header search path (e.g., with -I../include).
+The cpp files implementing the classes include "using namespace std;",
+however, the headers files and the utility programs do not.
 
 There's an "install" target in the Makefile which installs the library
 components into \$(PREFIX)/lib, \$(PREFIX)/include/GeographicLib,
-\$(PREFIX)/bin.  Once installed, the library can be used by setting
-  - CPPFLAGS=-I\$(PREFIX)/include
-  - LDFLAGS=-L\$(PREFIX)/lib -lGeographic
+\$(PREFIX)/bin, \$(PREFIX)/share/GeographicLib/doc.  Once installed, the
+library can be used by setting
+  - INCLUDEPATH = $(PREFIX)/include
+  - LIBPATH = $(PREFIX)/lib
   .
-in the Makefile.
+in tools/Makefile.
 
-The low level projection classes, TransverseMercator and
-PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
-GeoCoords all check their arguments and throw std::out_of_range
-exceptions with a explanatory message.  See GeoConvert.cpp for an
-example of how exceptions can be handled.
+The low level projection classes, e.g., TransverseMercator and
+PolarStereographic, do not throw exceptions.  Most of the other classes,
+e.g., UTMUPS, MGRS, and GeoCoords all check their arguments and throw
+std::out_of_range exceptions with a explanatory message.  See
+GeoConvert.cpp for an example of how exceptions can be handled.  Geoid
+is exceptional in than file errors can cause exceptions to be thrown
+when evaluating the geoid at a valid location.
 
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
@@ -991,7 +996,7 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 \page geodesic Geodesics on the Ellipsoid
 
 <center>
-Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
@@ -2076,19 +2081,17 @@ Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
 
+The examples of utility use here assume that the utilities have been
+built and put in a directory in your PATH.
+
 \section geoconvert GeoConvert
 
 GeoConvert is a command line utility for geographic coordinate
 conversions via GeographicLib::GeoCoords.
 
 Examples:
- - echo 33.3 44.4 | ./GeoConvert -u\n=> 38N 444141 368470
- - echo 33.3 44.4 | ./GeoConvert -m -p -3\n=> 38SMB4484
-
-Compile with "make GeoConvert" or with
-
-g++ -g -O3 -I.. -o GeoConvert GeoConvert.cpp GeoCoords.cpp MGRS.cpp
-UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp
+ - echo 33.3 44.4 | GeoConvert -u\n=> 38N 444141 368470
+ - echo 33.3 44.4 | GeoConvert -m -p -3\n=> 38SMB4484
 
 Here is the usage (obtained from "GeoConvert -h")
 \verbatim
@@ -2187,13 +2190,13 @@ Geod is a command line utility for geodesic calculations.
 
 Example (route from JFK Airport to Singapore Changi Airport)
  - echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |\n
-   ./Geod -i -d -p 0\n
+   Geod -i -d -p 0\n
    => 003d18'29.9" 177d29'09.2" 15347628 4302458\n
    This returns the azimuths at the two end points, the distance, and
    the "reduced length".  The reduced length gives a measure of the
    sensitivity of the end point to errors in the initial azimuth.
  - for ((i = 0; i <= 16; i += 2)); do echo ${i}000000;done |\n
-   ./Geod -l "40d38'23N" "073d46'44W" "003d18'29.9" -d -p 0\n
+   Geod -l "40d38'23N" "073d46'44W" "003d18'29.9" -d -p 0\n
    => way points at intervals of 2000 km on route\n
    40d38'23.0"N 073d46'44.0"W 003d18'29.9" 0\n
    58d34'45.1"N 071d49'36.7"W 004d48'48.8" 1967419\n
@@ -2204,10 +2207,6 @@ Example (route from JFK Airport to Singapore Changi Airport)
    31d34'16.5"N 102d30'46.3"E 177d03'08.4" 6095725\n
    13d31'56.0"N 103d26'50.7"E 177d24'55.0" 5200700\n
    04d32'05.7"S 104d14'48.7"E 177d28'43.6" 3795596
-
-Compile with "make Geod" or with
-
-g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp
 
 Here is the usage (obtained from "Geod -h")
 
@@ -2286,15 +2285,10 @@ GeographicLib::TransverseMercatorExact and
 GeographicLib::TransverseMercator.
 
 Examples:
- - echo 0 90 | ./TransverseMercatorTest\n=>
+ - echo 0 90 | TransverseMercatorTest\n=>
    0 90 25953592.84 9997964.94 90 18.40
- - echo 260e5 100e5 | ./TransverseMercatorTest -r\n=>
+ - echo 260e5 100e5 | TransverseMercatorTest -r\n=>
    -0.02 90.00 26000000 10000000 90.01 18.47
-
-Compile with "make TransverseMercatorTest" or with
-
-g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp
-TransverseMercatorExact.cpp EllipticFunction.cpp TransverseMercator.cpp
 
 Note that, unlike \ref geoconvert, TransverseMercatorTest has no
 facility for dealing with angles in degrees, minutes, and seconds, and
@@ -2342,17 +2336,12 @@ coordinate conversions via GeographicLib::Geocentric and
 GeographicLib::LocalCartesian.
 
 Examples:
- - echo 33.3 44.4 6000 | ./CartConvert\n=>
+ - echo 33.3 44.4 6000 | CartConvert\n=>
    3816209.60 3737108.55 3485109.57
- - echo 33.3 44.4 6000 | ./CartConvert -l 33 44 20\n=>
+ - echo 33.3 44.4 6000 | CartConvert -l 33 44 20\n=>
    37288.97 33374.29 5783.64
- - echo 30000 30000 0 | ./CartConvert -r\n=>
+ - echo 30000 30000 0 | CartConvert -r\n=>
    6.483 45 -6335709.73
-
-Compile with "make CartConvert" or with
-
-g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp
-LocalCartesian.cpp
 
 Note that, unlike \ref geoconvert, CartConvert has no
 facility for dealing with angles in degrees, minutes, and seconds, and
@@ -2389,15 +2378,10 @@ These projections are both defined in terms of geodesics.
 
 Examples (position of Caen in the Cassini-Soldner projection with origin
 at the Paris Observatory)
- - echo 48.648 -2.007 | ./EquidistantTest -c 48.836 2.337\n=>
+ - echo 48.648 -2.007 | EquidistantTest -c 48.836 2.337\n=>
    -319919 -11791 86.7 0.999
- - echo -319919 -11791 | ./EquidistantTest -c 48.836 2.337 -r\n=>
+ - echo -319919 -11791 | EquidistantTest -c 48.836 2.337 -r\n=>
    48.648 -2.007 86.7 0.999
-
-Compile with "make EquidistantTest" or with
-
-g++ -g -O3 -I.. -o EquidistantTest EquidistantTest.cpp Geodesic.cpp
-AzimuthalEquidistant.cpp CassiniSoldner.cpp
 
 Note that, unlike \ref geoconvert, EquidistantTest has no
 facility for dealing with angles in degrees, minutes, and seconds, and
@@ -2436,15 +2420,11 @@ latitude, longitude, azi, and rk.
 Evaluate the height of the geoid by interpolating into a grid.
 
 Example: the height of the EGM96 geoid at Timbuktu
- - echo "16d46'33N" "3d00'34W" | ./GeoidEval\n=>
+ - echo "16d46'33N" "3d00'34W" | GeoidEval\n=>
    28.7068 -0.02e-6 -1.73e-6
  .
 The first number is the height of the geoid and the 2nd and 3rd are its
 slopes in the northerly and easterly direction.
-
-Compile with "make GeoidEval" or with
-
-g++ -g -O3 -I.. -o GeoidEval GeoidEval.cpp Geoid.cpp DMS.cpp
 
 In addition, this utility requires the installation of the geoid data
 files; see \ref geoidinst for details
@@ -2530,8 +2510,28 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="Geographic.tgz">2009-09
+ - <a href="Geographic.tgz">2009-10
    (current)</a>
+  - Several house-cleaning changes:
+    - Change from the a flat directory structure to a more easily
+      maintained one.
+    - Introduce Math class for common mathematical functions (in
+      Constants.hpp).
+    - Use Math::real as the type for all real quantities.  By default this
+      is typedefed to double; and the library should be installed this
+      way.
+    - Eliminate const reference members of AzimuthalEquidistant,
+      CassiniSoldner and LocalCartesian so that they may be copied.
+    - Make several constructors explicit.  Disallow some constructors.
+      Disallow copy constructor/assignment for Geoid.
+    - Document least square formulas in Geoid.cpp.
+    - Use unsigned long long for files positions of geoid files in Geoid.
+    - Introduce optional mgrslimits argument in UTMUPS::Forward and
+      UTMUPS::Reverse to enforce stricter MGRS limits on eastings and
+      northings.in
+    - Add 64-bit targets in Visual Studio project files.
+
+ - <a href="Geographic-2009-09.tgz">2009-09</a>
   - Add GeographicLib::Geoid and \ref geoideval utility.
 
  - <a href="Geographic.tgz">2009-08</a>

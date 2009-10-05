@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <stdexcept>
 
 namespace GeographicLib {
 
@@ -100,11 +101,17 @@ namespace GeographicLib {
         return real(_data[iy - _yoffset]
                     [ix >= _xoffset ? ix - _xoffset : ix + _width - _xoffset]);
       } else {
-        filepos(ix, iy);
-        char a, b;
-        _file.get(a);
-        _file.get(b);
-        return real((unsigned char)(a) * 256u + (unsigned char)(b));
+        try {
+          filepos(ix, iy);
+          char a, b;
+          _file.get(a);
+          _file.get(b);
+          return real((unsigned char)(a) * 256u + (unsigned char)(b));
+        }
+        catch (const std::exception& e) {
+          throw std::out_of_range("Error reading " + _filename
+                                  + ": " + e.what());
+        }
       }
     }
     real height(real lat, real lon, bool gradp,
