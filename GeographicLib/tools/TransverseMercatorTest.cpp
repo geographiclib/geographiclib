@@ -6,9 +6,8 @@
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
- * Compile with
- *
- *   g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp TransverseMercatorExact.cpp EllipticFunction.cpp TransverseMercator.cpp
+ * Compile with -I../include and link with TransverseMercatorExact.o
+ * EllipticFunction.o TransverseMercator.o
  *
  * See \ref transversemercatortest for usage information.
  **********************************************************************/

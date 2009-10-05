@@ -6,9 +6,7 @@
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
- * Compile with
- *
- *   g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp LocalCartesian.cpp
+ * Compile with -I../include and link with Geocentric.o LocalCartesian.o
  *
  * See \ref cartconvert for usage information.
  **********************************************************************/

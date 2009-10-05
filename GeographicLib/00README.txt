@@ -10,56 +10,82 @@ the LGPL.  For more information, see
 Files
 
     00README.txt  -- this file
-    Doxyfile -- Doxygen config file
-    Geographic.doc -- main page of Doxygen documentation
 
-    Constants.hpp -- WGS84 constants
-    PolarStereographic.[ch]pp -- polar stereographic projection
-    TransverseMercator.[ch]pp -- transverse Mercator projection
-    UTMUPS.[ch]pp -- UTM and UPS
-    MGRS.[ch]pp -- MGRS
-    TransverseMercatorExact.[ch]pp -- exact TM projection
-    EllipticFunction.[ch]pp -- elliptic functions
-    GeoCoords.[ch]pp -- hold geographic location
-    DMS.[ch]pp -- handle degrees minutes seconds
-    Geocentric.[ch]pp -- geocentric coordinates
-    LocalCartesian.[ch]pp -- local cartesian coordinates
-    Geodesic.[ch]pp -- geodesic calculatiosn
-    AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
-    CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
-    Geoid.[ch]pp -- geoid heights
+    include/GeographicLib/ and src/
+      Constants.hpp -- WGS84 constants
+      PolarStereographic.[ch]pp -- polar stereographic projection
+      TransverseMercator.[ch]pp -- transverse Mercator projection
+      UTMUPS.[ch]pp -- UTM and UPS
+      MGRS.[ch]pp -- MGRS
+      TransverseMercatorExact.[ch]pp -- exact TM projection
+      EllipticFunction.[ch]pp -- elliptic functions
+      GeoCoords.[ch]pp -- hold geographic location
+      DMS.[ch]pp -- handle degrees minutes seconds
+      Geocentric.[ch]pp -- geocentric coordinates
+      LocalCartesian.[ch]pp -- local cartesian coordinates
+      Geodesic.[ch]pp -- geodesic calculatiosn
+      AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
+      CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
+      Geoid.[ch]pp -- geoid heights
 
-    GeoConvert.cpp -- geographic conversion utility
-    TransverseMercatorTest.cpp -- TM tester
-    Geod -- geodesic utility
-    CartConvert.cpp -- convert to geocentric and local cartesian
-    EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
-    GeoidEval.cpp -- evaluate geoid heights
+    tools/
+      GeoConvert.cpp -- geographic conversion utility
+      TransverseMercatorTest.cpp -- TM tester
+      Geod -- geodesic utility
+      CartConvert.cpp -- convert to geocentric and local cartesian
+      EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
+      GeoidEval.cpp -- evaluate geoid heights
 
-    Makefile -- Unix/Linux makefile
+    Makefile -- Unix/Linux makefile (invoke make in the other directories)
 
-    GeographicLib.sln -- MS Studio 2005 solution
-    GeographicLib.vcproj -- project for library
-    GeoConvert.vcproj -- project for GeoConvert
-    TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
-    Geod.vcproj -- project for Geod
-    CartConvert.vcproj -- project for CartConvert
-    EquidistantTest.vcproj -- project for EquidistantTest
-    GeoidEval.vcproj -- project for GeoidEval
+    windows/
+      GeographicLib.sln -- MS Studio 2005 solution
+      GeographicLib.vcproj -- project for library
+      GeoConvert.vcproj -- project for GeoConvert
+      TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
+      Geod.vcproj -- project for Geod
+      CartConvert.vcproj -- project for CartConvert
+      EquidistantTest.vcproj -- project for EquidistantTest
+      GeoidEval.vcproj -- project for GeoidEval
 
-    tm.mac -- Maxima code for high precision TM
-    ellint.mac -- Maxima code for elliptic functions needed by tm.mac
-    tmseries.mac -- Maxima code for series approximations for TM
-    geod.mac -- Maxima code for series approximates for Geodesic
+    maxima/
+      tm.mac -- Maxima code for high precision TM
+      ellint.mac -- Maxima code for elliptic functions needed by tm.mac
+      tmseries.mac -- Maxima code for series approximations for TM
+      geod.mac -- Maxima code for series approximates for Geodesic
 
-    gauss-laborde-graticule-a.{png,pdf} -- Fig. 1
-    gauss-krueger-graticule-a.{png,pdf} -- Fig. 2
-    thompson-tm-graticule-a.{png,pdf} -- Fig. 3
-    gauss-krueger-graticule.{png,pdf} -- Fig. 4
-    gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
-    thompson-tm-graticule.{png,pdf} -- Fig. 6
+    doc/
+      Doxyfile -- Doxygen config file
+      Geographic.doc -- main page of Doxygen documentation
+      gauss-laborde-graticule-a.{png,pdf} -- Fig. 1
+      gauss-krueger-graticule-a.{png,pdf} -- Fig. 2
+      thompson-tm-graticule-a.{png,pdf} -- Fig. 3
+      gauss-krueger-graticule.{png,pdf} -- Fig. 4
+      gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
+      thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-08 version of the library.
+This is the 2009-10 version of the library.
+
+Changes between 2009-10 and 2009-09 versions:
+
+  * Several house-cleaning changes:
+    + Change from the a flat directory structure to a more easily
+      maintained one.
+    + Introduce Math class for common mathematical functions (in
+      Constants.hpp).
+    + Use Math::real as the type for all real quantities.  By default this
+      is typedefed to double; and the library should be installed this
+      way.
+    + Eliminate const reference members of AzimuthalEquidistant,
+      CassiniSoldner and LocalCartesian so that they may be copied.
+    + Make several constructors explicit.  Disallow some constructors.
+      Disallow copy constructor/assignment for Geoid.
+    + Document least square formulas in Geoid.cpp.
+    + Use unsigned long long for files positions of geoid files in Geoid.
+    + Introduce optional mgrslimits argument in UTMUPS::Forward and
+      UTMUPS::Reverse to enforce stricter MGRS limits on eastings and
+      northings.in
+    + Add 64-bit targets in Visual Studio project files.
 
 Changes between 2009-09 and 2009-08 versions:
 
