@@ -1,3 +1,5 @@
+# $Id$
+
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
@@ -29,7 +31,7 @@ html/index.html: Doxyfile Geographic.doc \
 	doxygen
 
 PREFIX = /usr/local
-DEST = $(PREFIX)/share/GeographicLib/doc
+DEST = $(PREFIX)/share/GeographicLib/doc/html
 INSTALL = install -b
 
 install: html/index.html
