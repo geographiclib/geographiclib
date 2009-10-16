@@ -2528,7 +2528,7 @@ list of changes.
     - Use unsigned long long for files positions of geoid files in Geoid.
     - Introduce optional mgrslimits argument in UTMUPS::Forward and
       UTMUPS::Reverse to enforce stricter MGRS limits on eastings and
-      northings.in
+      northings.
     - Add 64-bit targets in Visual Studio project files.
 
  - <a href="Geographic-2009-09.tgz">2009-09</a>

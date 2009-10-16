@@ -1,3 +1,5 @@
+# $Id$
+
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval
 

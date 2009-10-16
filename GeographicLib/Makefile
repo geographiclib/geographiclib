@@ -1,4 +1,8 @@
+# $Id$
+
+MAKE := $(MAKE) -f $(lastword $(MAKEFILE_LIST))
 SUBDIRS = src tools doc
+ALLDIRS = include $(SUBDIRS) maxima windows
 
 all: src tools
 
@@ -25,7 +29,7 @@ clean-doc:
 
 list:
 	@echo 00README.txt; echo COPYING; echo AUTHORS; echo Makefile
-	@for d in include $(SUBDIRS) maxima windows; do \
+	@for d in $(ALLDIRS); do \
 	  (echo Makefile; $(MAKE) -s -C $$d list) | tr ' ' '\n' | \
 	  while read f; do echo $$d/$$f; done; \
 	done
