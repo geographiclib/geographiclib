@@ -5,7 +5,7 @@ A library for geographic projections.
 Written by Charles Karney <charles@karney.com> and licensed under
 the LGPL.  For more information, see
 
-    http://charles.karney.info/geographic/
+    http://www.petrel.org/geographic/
 
 Files
 
