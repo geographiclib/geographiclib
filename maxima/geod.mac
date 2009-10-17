@@ -3,7 +3,7 @@
 Compute the series expansions for the spheroidal geodesic problem.
 
 Written by Charles Karney <charles@karney.com>
-http://www.petrel.org/geographic/
+http://geographiclib.sourceforge.net/
 
 $Id$
 

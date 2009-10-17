@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
- * http://www.petrel.org/geographic/
+ * http://geographiclib.sourceforge.net/
  *
  * The relevant section of Lee's paper is part V, pp 67&ndash;101,
  * <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
