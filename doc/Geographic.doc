@@ -34,9 +34,9 @@ cures several of the defects of that package.
 \section download Download
 
 The code is available for download at either of
-- <a href="Geographic.tgz">
+- <a href="../distrib/Geographic.tgz">
   http://www.petrel.org/geographic/distrib/Geographic.tgz</a>
-- <a href="Geographic.zip">
+- <a href="../distrib/Geographic.zip">
   http://www.petrel.org/geographic/distrib/Geographic.zip</a>
 .
 (The two archives have identical contents; however, the text files in
@@ -150,7 +150,7 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the <a
-   href="Geographic.tgz">source</a>.
+   href="../distrib/Geographic.tgz">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
    - tar xfpvz Geographic.tgz
    .
@@ -614,7 +614,7 @@ slip around it longitudinally.
 \section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
- - <a href="TMcoords.dat.gz">
+ - <a href="../testdata/TMcoords.dat.gz">
    http://www.petrel.org/geographic/testdata/TMcoords.dat.gz</a>
  .
 This is about 17 MB (compressed).  This test set consists of a set of
@@ -1145,13 +1145,13 @@ to \ref geod.
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
- - <a href="GeodTest.dat.gz">
+ - <a href="../testdata/GeodTest.dat.gz">
    http://www.petrel.org/geographic/testdata/GeodTest.dat.gz</a>
  .
 This is about 34 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
- - <a href="GeodTest-short.dat.gz">
+ - <a href="../testdata/GeodTest-short.dat.gz">
    http://www.petrel.org/geographic/testdata/GeodTest-short.dat.gz</a>
 
 Each line of the test set gives 9 space delimited numbers
