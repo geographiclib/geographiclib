@@ -39,6 +39,9 @@ list:
 clean:
 	rm -f *.o $(LIBRARY)
 
+TAGS: $(HEADERS) $(SOURCES)
+	etags $^
+
 DMS.o: Constants.hpp DMS.hpp
 EllipticFunction.o: Constants.hpp EllipticFunction.hpp
 GeoCoords.o: Constants.hpp DMS.hpp GeoCoords.hpp MGRS.hpp UTMUPS.hpp
