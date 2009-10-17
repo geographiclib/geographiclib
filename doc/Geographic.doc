@@ -18,11 +18,18 @@
 
 %GeographicLib is a small set of <a href="annotated.html">C++
 classes</a> for performing conversions between geographic, UTM, UPS,
-MGRS, geocentric, and local cartesian coordinates and for solving
-geodesic problems.  The emphasis is on returning accurate results with
-errors close to round-off (about 5&ndash;15 nm).  In addition, various
-properties of the \ref transversemercator are described and an accurate
-algorithm for \ref geodesic is given.
+MGRS, geocentric, and local cartesian coordinates, for geoid height
+calculations, and for solving geodesic problems.  The emphasis is on
+returning accurate results with errors close to round-off (about
+5&ndash;15 nm).  In addition, various properties of the \ref
+transversemercator are described and an accurate algorithm for \ref
+geodesic is given.
+
+This library is <i>not</i> a general purpose projection library; use
+<a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
+hand, it does provide the core functionality offered by
+<a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a> and it
+cures several of the defects of that package.
 
 \section download Download
 
@@ -82,12 +89,13 @@ Forward to \ref intro.
 Forward to \ref organization.  Up to \ref contents.
 </center>
 
-%GeographicLib offers a C++ interfaces to a small (but important!) set of
-geographic transformations.  It grew out of a desire to improve on the
-<a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
+%GeographicLib offers a C++ interfaces to a small (but important!) set
+of geographic transformations.  It grew out of a desire to improve on
+the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
 present, %GeographicLib provides UTM, UPS, MGRS, geocentric, and local
-cartesian projections, and classes for geodesic calculations.
+cartesian projections, geoid heights, and classes for geodesic
+calculations.
 
 The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
