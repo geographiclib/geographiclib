@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
- * http://www.petrel.org/geographic/
+ * http://geographiclib.sourceforge.net/
  *
  * This implementation follows closely
  * <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -

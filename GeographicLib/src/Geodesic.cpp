@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
- * http://www.petrel.org/geographic/
+ * http://geographiclib.sourceforge.net/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
  * follows:

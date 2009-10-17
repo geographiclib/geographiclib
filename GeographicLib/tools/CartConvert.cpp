@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
- * http://www.petrel.org/geographic/
+ * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geocentric.o LocalCartesian.o
  *

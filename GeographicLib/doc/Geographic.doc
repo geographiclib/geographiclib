@@ -4,7 +4,7 @@
  * \brief Documentation for GeographicLib
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
- * LGPL.  For more information, see http://www.petrel.org/geographic/
+ * LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 // $Id$
 /**
@@ -35,16 +35,16 @@ cures several of the defects of that package.
 
 The code is available for download at either of
 - <a href="../distrib/Geographic.tgz">
-  http://www.petrel.org/geographic/distrib/Geographic.tgz</a>
+  http://geographiclib.sourceforge.net/distrib/Geographic.tgz</a>
 - <a href="../distrib/Geographic.zip">
-  http://www.petrel.org/geographic/distrib/Geographic.zip</a>
+  http://geographiclib.sourceforge.net/distrib/Geographic.zip</a>
 .
 (The two archives have identical contents; however, the text files in
 the zip archive have Windows-style line endings.)
 
 It is licensed under the
 <a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">LGPL</a>.
-For more information, see http://www.petrel.org/geographic/
+For more information, see http://geographiclib.sourceforge.net/
 
 \section contents Contents
  - \ref intro
@@ -615,7 +615,7 @@ slip around it longitudinally.
 
 A test set for the transverse Mercator projection is available at
  - <a href="../testdata/TMcoords.dat.gz">
-   http://www.petrel.org/geographic/testdata/TMcoords.dat.gz</a>
+   http://geographiclib.sourceforge.net/testdata/TMcoords.dat.gz</a>
  .
 This is about 17 MB (compressed).  This test set consists of a set of
 geographic coordinates together with the corresponding transverse
@@ -1146,13 +1146,13 @@ to \ref geod.
 
 A test set a geodesics is available at
  - <a href="../testdata/GeodTest.dat.gz">
-   http://www.petrel.org/geographic/testdata/GeodTest.dat.gz</a>
+   http://geographiclib.sourceforge.net/testdata/GeodTest.dat.gz</a>
  .
 This is about 34 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
  - <a href="../testdata/GeodTest-short.dat.gz">
-   http://www.petrel.org/geographic/testdata/GeodTest-short.dat.gz</a>
+   http://geographiclib.sourceforge.net/testdata/GeodTest-short.dat.gz</a>
 
 Each line of the test set gives 9 space delimited numbers
  - latitude for point 1, \e lat1 (degrees, exact)
@@ -1829,26 +1829,26 @@ using the NGA synthesis programs in the case of the EGM84 and EGM96
 models and using the NGA binary gridded data files in the case of
 EGM2008.  These data files are available for download:
 - EGM84,    30' grid:
-  <a href="../geoids/egm84-30.tar.bz2">tar.bz2</a>,
-  <a href="../geoids/egm84-30.zip">zip</a>.
+  <a href="../geoids-distrib/egm84-30.tar.bz2">tar.bz2</a>,
+  <a href="../geoids-distrib/egm84-30.zip">zip</a>.
 - EGM84,    15' grid:
-  <a href="../geoids/egm84-15.tar.bz2">tar.bz2</a>,
-  <a href="../geoids/egm84-15.zip">zip</a>.
+  <a href="../geoids-distrib/egm84-15.tar.bz2">tar.bz2</a>,
+  <a href="../geoids-distrib/egm84-15.zip">zip</a>.
 - EGM96,    15' grid:
-  <a href="../geoids/egm96-15.tar.bz2">tar.bz2</a>,
-  <a href="../geoids/egm96-15.zip">zip</a>.
+  <a href="../geoids-distrib/egm96-15.tar.bz2">tar.bz2</a>,
+  <a href="../geoids-distrib/egm96-15.zip">zip</a>.
 - EGM96,     5' grid:
-  <a href="../geoids/egm96-5.tar.bz2">tar.bz2</a>,
-  <a href="../geoids/egm96-5.zip">zip</a>.
+  <a href="../geoids-distrib/egm96-5.tar.bz2">tar.bz2</a>,
+  <a href="../geoids-distrib/egm96-5.zip">zip</a>.
 - EGM2008,   5' grid:
-  <a href="../geoids/egm2008-5.tar.bz2">tar.bz2</a>,
-  <a href="../geoids/egm2008-5.zip">zip</a>.
+  <a href="../geoids-distrib/egm2008-5.tar.bz2">tar.bz2</a>,
+  <a href="../geoids-distrib/egm2008-5.zip">zip</a>.
 - EGM2008, 2.5' grid:
-  <a href="../geoids/egm2008-2_5.tar.bz2">tar.bz2</a>,
-  <a href="../geoids/egm2008-2_5.zip">zip</a>.
+  <a href="../geoids-distrib/egm2008-2_5.tar.bz2">tar.bz2</a>,
+  <a href="../geoids-distrib/egm2008-2_5.zip">zip</a>.
 - EGM2008,   1' grid:
-  <a href="../geoids/egm2008-1.tar.bz2">tar.bz2</a>,
-  <a href="../geoids/egm2008-1.zip">zip</a>.
+  <a href="../geoids-distrib/egm2008-1.tar.bz2">tar.bz2</a>,
+  <a href="../geoids-distrib/egm2008-1.zip">zip</a>.
 
 Download \e either the tar.bz2 file \e or zip file (they have the same
 contents).  If possible use the tar.bz2 format, since bzip2 compresses
