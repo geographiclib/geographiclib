@@ -3,7 +3,7 @@
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval
 
-VSPROJECTS = $(addsuffix .vcproj,$(PROGRAMS))
+VSPROJECTS = $(addsuffix .vcproj,GeographicLib $(PROGRAMS))
 
 all:
 	@:
@@ -12,6 +12,6 @@ install:
 clean:
 	@:
 list:
-	@echo $(VSPROJECTS)
+	@echo GeographicLib.sln $(VSPROJECTS)
 
 .PHONY: all install list clean
