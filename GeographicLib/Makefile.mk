@@ -37,16 +37,18 @@ list:
 	  while read f; do echo $$d/$$f; done; \
 	done
 
+DATEVERSION:=$(shell date +%Y-%m)
+
 package:
 	test -d distrib || mkdir distrib
 	$(MAKE) -s list | while read f;do \
 	  echo GeographicLib/$$f; \
-	done | xargs tar Ccfz .. distrib/Geographic.tgz
+	done | xargs tar Ccfz .. distrib/Geographic-$(DATEVERSION).tgz
 	rm -rf distrib/GeographicLib
-	tar Cxfpz distrib distrib/Geographic.tgz
+	tar Cxfpz distrib distrib/Geographic-$(DATEVERSION).tgz
 	find distrib/GeographicLib -type f \
 	  \! \( -name "*.pdf" -o -name "*.png" \) | xargs unix2dos -k
-	cd distrib && zip -r Geographic.zip GeographicLib && \
+	cd distrib && zip -r Geographic-$(DATEVERSION).zip GeographicLib && \
 	  rm -rf GeographicLib
 
 .PHONY: all $(SUBDIRS) \
