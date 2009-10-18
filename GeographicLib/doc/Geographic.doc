@@ -2542,7 +2542,7 @@ list of changes.
  - <a href="https://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-09.tgz">2009-09</a>
   - Add GeographicLib::Geoid and \ref geoideval utility.
 
- - <a href="https://sourceforge.net/projects/geographiclib/files/distrib/Geographic.tgz">2009-08</a>
+ - <a href="https://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-08.tgz">2009-08</a>
   - Add GeographicLib::CassiniSoldner class and \ref equidistanttest utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
     sometimes returned.
