@@ -68,6 +68,8 @@ This is the 2009-10 version of the library.
 
 Changes between 2009-10 and 2009-09 versions:
 
+  * Change web site to http://geographiclib.sourceforge.net
+
   * Several house-cleaning changes:
     + Change from the a flat directory structure to a more easily
       maintained one.
