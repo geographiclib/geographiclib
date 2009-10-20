@@ -2526,6 +2526,7 @@ list of changes.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">2009-10
    (current)</a>
+  - Change web site to http://geographiclib.sourceforge.net
   - Several house-cleaning changes:
     - Change from the a flat directory structure to a more easily
       maintained one.
