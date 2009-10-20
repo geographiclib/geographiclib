@@ -13,7 +13,7 @@ distrib:
 distrib-files:
 	rsync -av --delete distrib testdata geoids-distrib $(STAGE)/$(D1)-files/
 	for d in distrib testdata geoids-distrib; do \
-	  rsync --exclude '*~' --exclude '#*' -av -e ssh $(STAGE)/$(D1)-files/$$d $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/; \
+	  rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(STAGE)/$(D1)-files/$$d $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/; \
 	done
 
 depend:
