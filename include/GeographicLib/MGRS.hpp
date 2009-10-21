@@ -159,7 +159,7 @@ namespace GeographicLib {
      * UPS coordinates are truncated to requested precision to determine the
      * MGRS coordinate.  Thus in UTM zone 38N, the square area with easting in
      * [444 km, 445 km) and northing in [3688 km, 3689 km) maps to MGRS
-     * coordinate 38SMB4488 (at \e prec = 2, 1km), Kulani Sq., Baghdad.
+     * coordinate 38SMB4488 (at \e prec = 2, 1km), Khulani Sq., Baghdad.
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion to
      * MGRS coordinate.  Thus for \e zone > 0, the MGRS coordinate begins with
