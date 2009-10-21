@@ -1,0 +1,14 @@
+Options Indexes
+IndexOptions DescriptionWidth=*
+AddDescription "du Séjour (1789), missing page from Google scan" dusejour89-add.pdf
+AddDescription "du Séjour (1789), missing figures from Google scan" dusejour89-fig.pdf
+AddDescription "Forsyth (1896b), missing page from Google scan" forsyth96b-add.pdf
+AddDescription "Ivory (1826), missing page from Google scan" ivory26-add.pdf
+AddDescription "Krüger, dissertation (1883)" krueger83.pdf
+AddDescription "Laplace, Mech. Cel. 2 (1799), Bowditch transl. (1832)" laplace99a.pdf
+AddDescription "Legendre (1806), missing pages from Google scan" legendre06-add.pdf
+AddDescription "Legendre (1825), missing figures from Google scan" legendre25-fig.pdf
+AddDescription "Puissant (1819), missing pages from Google scan"  puissant19b-add.pdf
+AddDescription "Puissant (1819), missing figures from Google scan" puissant19b-fig.pdf
+AddDescription "Geodesic papers from Quart. Jour. Roy. Inst. 21 (1826)" quartjour26-extracts.pdf
+AddDescription "Thune, Trigonometriam Sphaeroidicam (1815)" thune15.pdf
