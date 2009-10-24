@@ -134,7 +134,7 @@ namespace GeographicLib {
      * (100km is the maximum extra padding consistent with eastings remaining
      * non-negative.)  This allows generous overlaps between zones and UTM and
      * UPS.  If \e mgrslimits = true, then all the ranges are shrunk by 100km
-     * so that they agree with the sticter MGRS ranges.  No checks are
+     * so that they agree with the stricter MGRS ranges.  No checks are
      * performed besides these (e.g., to limit the distance outside the
      * standard zone boundaries).
      **********************************************************************/
