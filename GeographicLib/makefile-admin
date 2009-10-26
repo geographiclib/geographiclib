@@ -16,6 +16,16 @@ distrib-files:
 	  rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(STAGE)/$(D1)-files/$$d $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/; \
 	done
 
+distrib-cgi:
+	for f in GeoConvert Geod GeoidEval printlogs; do \
+	  a=cgi-bin/$$f.cgi; b=$(STAGE)/cgi-bin/$$f; \
+	  cmp $$a $$b > /dev/null || install $$a $$b; done
+	for f in utils; do \
+	  a=cgi-bin/$$f.sh; b=$(STAGE)/cgi-bin/$$f.sh; \
+	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
+	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(STAGE)/cgi-bin/ $(USER),geographiclib@web.sourceforge.net:cgi-bin/
+
+
 depend:
 	makedepend -- $(CPPFLAGS) -- $(ALLSOURCES)
 

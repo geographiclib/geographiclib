@@ -2200,7 +2200,8 @@ then
 
 \section geod Geod
 
-Geod is a command line utility for geodesic calculations.
+Geod is a command line utility for geodesic calculations via
+GeographicLib::Geodesic
 
 Example (route from JFK Airport to Singapore Changi Airport)
  - echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |\n
@@ -2431,7 +2432,8 @@ latitude, longitude, azi, and rk.
 
 \section geoideval GeoidEval
 
-Evaluate the height of the geoid by interpolating into a grid.
+Evaluate the height of the geoid by interpolating into a grid via
+GeographicLib::Geoid.
 
 Example: the height of the EGM96 geoid at Timbuktu
  - echo "16d46'33N" "3d00'34W" | GeoidEval\n=>
@@ -2445,7 +2447,7 @@ files; see \ref geoidinst for details
 
 \verbatim
 Usage:
-  Geoid [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]
+  GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]
 
 Read in positions on standard input and print out the corresponding
 geoid heights on standard output.  In addition print the northly and
@@ -2458,7 +2460,7 @@ degrees or degrees, minutes, and seconds.  The latitude should be
 given first, unless at least one hemisphere desiginator is
 provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.
 
-By default the EGM96 Geoid is used with a 5' grid.  This may be
+By default the EGM96 geoid is used with a 5' grid.  This may be
 overriden with the -n option.  The name specified should be one of
 
                                   bilinear error    cubic error
