@@ -2101,7 +2101,9 @@ built and put in a directory in your PATH.
 \section geoconvert GeoConvert
 
 GeoConvert is a command line utility for geographic coordinate
-conversions via GeographicLib::GeoCoords.
+conversions via GeographicLib::GeoCoords.  There is an online interface
+to this utility at
+http://geographiclib.sourceforge.net/cgi-bin/GeoConvert
 
 Examples:
  - echo 33.3 44.4 | GeoConvert -u\n=> 38N 444141 368470
@@ -2201,7 +2203,8 @@ then
 \section geod Geod
 
 Geod is a command line utility for geodesic calculations via
-GeographicLib::Geodesic
+GeographicLib::Geodesic.  There is an online interface to this utility
+at http://geographiclib.sourceforge.net/cgi-bin/Geod
 
 Example (route from JFK Airport to Singapore Changi Airport)
  - echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |\n
@@ -2433,7 +2436,8 @@ latitude, longitude, azi, and rk.
 \section geoideval GeoidEval
 
 Evaluate the height of the geoid by interpolating into a grid via
-GeographicLib::Geoid.
+GeographicLib::Geoid.  There is an online interface to this utility
+at http://geographiclib.sourceforge.net/cgi-bin/Geoid
 
 Example: the height of the EGM96 geoid at Timbuktu
  - echo "16d46'33N" "3d00'34W" | GeoidEval\n=>
