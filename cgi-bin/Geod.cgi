@@ -24,11 +24,12 @@ test $AZI2 = f || COMMAND="$COMMAND -$AZI2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
 if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
+    echo `date +"%F %T"` echo $INPUT \| $COMMAND >> ../persistent/utilities.log
 else
     OUTPUT=
+    echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
 fi
 OUTPUTENC=`encodevalue "$OUTPUT"`
-echo `date +"%F %T"` echo $INPUT \| $COMMAND >> ../persistent/utilities.log
 
 echo Content-type: text/html
 echo
