@@ -5,7 +5,7 @@ OPTION=`lookupkey "$QUERY_STRING" option`
 if test "$OPTION" = Reset; then
     INPUT=
 else
-    INPUT=`lookupkey "$QUERY_STRING" input`
+    INPUT=`lookupcheckkey "$QUERY_STRING" input`
     GEOID=`lookupkey "$QUERY_STRING" geoid`
 fi
 test "$GEOID" || GEOID=egm96-5

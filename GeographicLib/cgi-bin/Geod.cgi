@@ -5,7 +5,7 @@ OPTION=`lookupkey "$QUERY_STRING" option`
 if test "$OPTION" = Reset; then
     INPUT=
 else
-    INPUT=`lookupkey "$QUERY_STRING" input`
+    INPUT=`lookupcheckkey "$QUERY_STRING" input`
     FORMAT=`lookupkey "$QUERY_STRING" format`
     AZI2=`lookupkey "$QUERY_STRING" azi2`
     PREC=`lookupkey "$QUERY_STRING" prec`
