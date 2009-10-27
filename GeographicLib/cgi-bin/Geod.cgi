@@ -216,7 +216,7 @@ cat <<EOF
         16d47' -3d1'
         W3d0'34" N16d46'33"
       </pre>
-      Azimuthms are given in degress clockwise from north.  The
+      Azimuths are given in degress clockwise from north.  The
       distances <em>s12</em> and <em>m12</em> are in meters.
     </p>
     <p>
@@ -225,12 +225,12 @@ cat <<EOF
       <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
 	Vincenty (1975)</a>.
       However, this has limited accuracy and completely fails for the
-      inverse problem when the points are near antipodal.  The method
+      inverse problem when the points are nearly antipodal.  The method
       used by Geod is accurate to about 15 nm and gives solutions for
       the inverse problem for any pair of points.  For example, compare
       the inverse result given by Geod for the antipodal points (N30,
       E0) and (S30, E180) where the geodesic follows a meridian with the
-      bogus results returned by the
+      bogus result returned by the
       <a href="http://www.ngs.noaa.gov/">
 	NGS</a> online 
       <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
