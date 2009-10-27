@@ -39,7 +39,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/GeoidEval" method="get">
       <p>
-	Position:<br>
+	Position (ex. "<tt>16.8N 3.0W</tt>"):<br>
 	&nbsp;&nbsp;&nbsp;
 	<input type=text name="input" size=30 value="$INPUTENC">
       </p>
@@ -56,7 +56,7 @@ EOF
     CHECKED=
     test "$c" = "$GEOID" && CHECKED=CHECKED
     echo "&nbsp;&nbsp;&nbsp;"
-    echo \<input type=\"radio\" name=\"geoid\" value=\"$c\" $CHECKED\> $desc\<br\>
+    echo \<input type=\"radio\" name=\"geoid\" value=\"$c\" $CHECKED\> $desc
 done
 cat <<EOF
       </p>
