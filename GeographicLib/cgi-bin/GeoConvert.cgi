@@ -175,6 +175,7 @@ cat <<EOF
     UPS:                              25N 504158 9286521
         N 1617772 1403805             430000 9290000 26N
       </pre>
+      <b>Note:</b>
       The letter in following the zone number in the UTM position is a
       hemisphere designator (N or S) and <em>not</em> the MGRS latitude
       band letter.

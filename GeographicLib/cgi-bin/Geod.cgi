@@ -209,9 +209,8 @@ cat <<EOF
 	here</a>.
     </p>
     <p>
-      Latitudes and longitudes are given in degrees and can be in
-      various formats, for example (these all refer to the position of
-      Timbuktu):
+      Latitudes and longitudes can be given in various formats, for
+      example (these all refer to the position of Timbuktu):
       <pre>
         16.776 -3.009
         16d47' -3d1'
@@ -229,9 +228,9 @@ cat <<EOF
       inverse problem when the points are near antipodal.  The method
       used by Geod is accurate to about 15 nm and gives solutions for
       the inverse problem for any pair of points.  For example, compare
-      the results given by Geod for <em>point1</em> = (30N, 0E)
-      and <em>point2</em> = (29.9S, 179.6E) with the bogus results
-      returned by the
+      the inverse result given by Geod for the antipodal points (N30,
+      E0) and (S30, E180) where the geodesic follows a meridian with the
+      bogus results returned by the
       <a href="http://www.ngs.noaa.gov/">
 	NGS</a> online 
       <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
