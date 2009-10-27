@@ -24,7 +24,7 @@ test $AZI2 = f || COMMAND="$COMMAND -$AZI2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
 if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
-    echo `date +"%F %T"` echo $INPUT \| $COMMAND >> ../persistent/utilities.log
+    echo `date +"%F %T"` "echo $INPUT | $COMMAND" >> ../persistent/utilities.log
 else
     OUTPUT=
     echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
@@ -65,9 +65,9 @@ EOF
 ) | while read c desc; do
     CHECKED=
     test "$c" = "$FORMAT" && CHECKED=CHECKED
-    echo \<td\>
-    echo \<input type=\"radio\" name=\"format\" value=\"$c\" $CHECKED\> $desc
-    echo \</td\>
+    echo "<td>&nbsp;"
+    echo "<input type=\"radio\" name=\"format\" value=\"$c\" $CHECKED> $desc"
+    echo "</td>"
 done
 cat <<EOF
 	  </tr>
@@ -84,9 +84,9 @@ EOF
 ) | while read c desc; do
     CHECKED=
     test "$c" = "$AZI2" && CHECKED=CHECKED
-    echo \<td\>
-    echo \<input type=\"radio\" name=\"azi2\" value=\"$c\" $CHECKED\> $desc
-    echo \</td\>
+    echo "<td>&nbsp;"
+    echo "<input type=\"radio\" name=\"azi2\" value=\"$c\" $CHECKED> $desc"
+    echo "</td>"
 done
 cat <<EOF
 	  </tr>
@@ -94,7 +94,7 @@ cat <<EOF
 	    <td>
 	      Output precision:
 	    </td>
-	    <td colspan="2">
+	    <td colspan="2">&nbsp;
 	      <select name="prec" size=1>
 EOF
 (
@@ -114,7 +114,7 @@ EOF
 ) | while read p desc; do
     SELECTED=
     test "$p" = "$PREC" && SELECTED=SELECTED
-    echo \<option $SELECTED value=\"$p\"\> $desc\<br\>
+    echo "<option $SELECTED value=\"$p\"> $desc<br>"
 done
 cat <<EOF
 	      </select>
@@ -168,7 +168,7 @@ cat <<EOF
       <p>
         Results:<br>
         <pre>
-    Command = `test "$INPUT" && echo echo $INPUTENC \| $COMMAND`
+    Command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
     Output  = $OUTPUTENC
         </pre>
       </p>
