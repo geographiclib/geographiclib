@@ -46,7 +46,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/Geod" method="get">
       <p>
-        Input:<br>
+        Input (ex. "<tt>40N 74W 53.2 5900e3</tt>" [direct], "<tt>40N 74W 49N 2E</tt>" [inverse]):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=50 value="$INPUTENC">
       </p>
@@ -92,7 +92,7 @@ cat <<EOF
 	  </tr>
 	  <tr>
 	    <td>
-	      Precision:
+	      Output precision:
 	    </td>
 	    <td colspan="2">
 	      <select name="prec" size=1>

@@ -47,7 +47,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
       <p>
-        Location:<br>
+        Location (ex. "<tt>33.3N 44.4E</tt>", "<tt>38SMB4488</tt>", "<tt>38N 444000 3688000</tt>"):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=30 value="$INPUTENC">
       </p>
@@ -73,7 +73,7 @@ cat <<EOF
           </td>
           <td>
             &nbsp;&nbsp;&nbsp;
-            Zone specification:<br>
+            Output zone:<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <select name="zone" size=1>
 EOF
@@ -94,7 +94,8 @@ cat <<EOF
         </tr>
         <tr>
           <td>
-            &nbsp;&nbsp;&nbsp;Precision:<br>
+            &nbsp;&nbsp;&nbsp;
+	    Output precision:<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <select name="prec" size=1>
 EOF
