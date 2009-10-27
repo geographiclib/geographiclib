@@ -25,7 +25,7 @@ esac
 test $PREC = 0 || COMMAND="$COMMAND -p $PREC"
 if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
-    echo `date +"%F %T"` echo $INPUT \| $COMMAND >> ../persistent/utilities.log
+    echo `date +"%F %T"` echo "$INPUT | $COMMAND" >> ../persistent/utilities.log
 else
     OUTPUT=
     echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
@@ -67,7 +67,7 @@ EOF
     CHECKED=
     test "$c" = "$FORMAT" && CHECKED=CHECKED
     echo "&nbsp;&nbsp;&nbsp;"
-    echo \<input type=\"radio\" name=\"format\" value=\"$c\" $CHECKED\> $desc\<br\>
+    echo "<input type=\"radio\" name=\"format\" value=\"$c\" $CHECKED> $desc<br>"
 done
 cat <<EOF
           </td>
@@ -86,7 +86,7 @@ for ((z=-2; z<=60; ++z)); do
         0 ) name=UPS;;
         * ) name="UTM zone $z";;
     esac
-    echo \<option $SELECTED value=\"$z\"\>$name
+    echo "<option $SELECTED value=\"$z\">$name"
 done
 cat <<EOF
 	    </select>
@@ -121,7 +121,7 @@ EOF
 ) | while read p desc; do
     SELECTED=
     test "$p" = "$PREC" && SELECTED=SELECTED
-    echo \<option $SELECTED value=\"$p\"\>$desc
+    echo "<option $SELECTED value=\"$p\">$desc"
 done
 cat <<EOF
 	    </select>
@@ -137,7 +137,7 @@ cat <<EOF
       <p>
         Results:<br>
         <pre>
-    Command = `test "$INPUT" && echo echo $INPUTENC \| $COMMAND`
+    Command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
     Output  = $OUTPUTENC
         </pre>
       </p>

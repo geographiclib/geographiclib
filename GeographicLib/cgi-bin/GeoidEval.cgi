@@ -17,7 +17,7 @@ test $GEOID = egm96-5 || COMMAND="$COMMAND -n $GEOID"
 if test "$INPUT"; then
     OUTPUT=`echo $INPUT | GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND`
     test $? -eq 0 && OUTPUT="`echo $OUTPUT | cut -f1 -d' '` m"
-    echo `date +"%F %T"` echo $INPUT \| $COMMAND >> ../persistent/utilities.log
+    echo `date +"%F %T"` "echo $INPUT | $COMMAND" >> ../persistent/utilities.log
 else
     OUTPUT=
     echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
@@ -56,7 +56,7 @@ EOF
     CHECKED=
     test "$c" = "$GEOID" && CHECKED=CHECKED
     echo "&nbsp;&nbsp;&nbsp;"
-    echo \<input type=\"radio\" name=\"geoid\" value=\"$c\" $CHECKED\> $desc
+    echo "<input type=\"radio\" name=\"geoid\" value=\"$c\" $CHECKED> $desc"
 done
 cat <<EOF
       </p>
@@ -69,7 +69,7 @@ cat <<EOF
       <p>
 	Geoid height:<br>
 	<pre>
-    Command = `test "$INPUT" && echo echo $INPUTENC \| $COMMAND`
+    Command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
     Height  = $OUTPUTENC
 	</pre>
       </p>
