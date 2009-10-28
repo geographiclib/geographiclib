@@ -77,37 +77,17 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
-        GeoidEval</a>,
-      which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geoid.html">
-        GeographicLib::Geoid</a> class,
-      is one of the utilities provided
-      with <a href="http://geographiclib.sourceforge.net/">
-        GeographicLib</a>.
-      It computes the height of the geoid above the WGS84 ellipsoid
+        GeoidEval</a>
+      computes the height of the geoid above the WGS84 ellipsoid
       using interpolation in a grid of values for one of the earth
-      gravity models:
-      <ul>
-        <li>
-          <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
-            EGM84</a>
-        <li>
-          <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
-            EGM96</a>
-        <li>
-          <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
-            EGM2008</a>
-      </ul>
-      The RMS error in the interpolated height is about 1 mm.  This web
-      interface illustrates a subset of its capabilities.  If you wish
-      to use GeoidEval directly,
-      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
-        download</a>
-      and compile GeographicLib.  A description of the methods is given
-      <a href="http://geographiclib.sourceforge.net/html/geoid.html">
-        here</a>.
-    </p>
-    <p>
+      gravity models,
+      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
+        EGM84</a>, or
+      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
+        EGM96</a>,
+      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
+            EGM2008</a>.
+      The RMS error in the interpolated height is about 1 mm.
       Give the position in terms of latitude and longitude, for example
       (these all refer to the position of Timbuktu):
       <pre>
@@ -115,6 +95,25 @@ cat <<EOF
         16d47' -3d1'
         W3d0'34" N16d46'33"
       </pre>
+    </p>
+    <p>
+      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
+        GeoidEval</a>,
+      which is a simple wrapper of the
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geoid.html">
+        GeographicLib::Geoid</a> class,
+      is one of the utilities provided
+      with <a href="http://geographiclib.sourceforge.net/">
+        GeographicLib</a>.
+      This web interface illustrates a subset of its capabilities.  If
+      you wish to use GeoidEval directly,
+      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+        download</a>
+      and compile GeographicLib.  A description of the methods is given
+      <a href="http://geographiclib.sourceforge.net/html/geoid.html">
+        here</a>.
+    </p>
+    <p>
     </p>
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
