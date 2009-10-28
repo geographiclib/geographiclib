@@ -15,11 +15,12 @@ decodevalue () {
 }
 
 # Convert degree (&B0) minute (&#8242;) second (&#8243;) symbols into d ' ".
-# and also the Windows variants(?) %81%8B, %81%8C, %81%8D
+# and also the Windows variants(?) %81%8B, %81%8C, %81%8D.  Elide ' ' to ".
 translate () {
     echo "$1" | sed \
 	-e 's/%B0/d/g' -e 's/%26%238242%3B/%27/g' -e 's/%26%238243%3B/%22/g' \
-	-e 's/%81%8B/d/g' -e 's/%81%8C/%27/g' -e 's/%81%8D/%22/g'
+	-e 's/%81%8B/d/g' -e 's/%81%8C/%27/g' -e 's/%81%8D/%22/g' \
+	-e 's/%27%27/%22/g'
 }
 
 # Look up and decode a key
@@ -33,7 +34,7 @@ lookupcheckkey () {
     RAWVAL=`lookuprawkey "$1" "$2"`
     VALUE=`translate "$RAWVAL"`
     VALUE=`decodevalue "$VALUE"`
-    test `echo "$VALUE" | tr -d '[ -~\n]' | wc -c` -ne 0 &&
+    test `echo "$VALUE" | tr -d '[ -~\n\t]' | wc -c` -ne 0 &&
     echo `date +"%F %T"` Unprintable "$RAWVAL" >> ../persistent/utilities.log
     echo "$VALUE"
 }    
