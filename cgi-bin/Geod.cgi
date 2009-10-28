@@ -49,7 +49,7 @@ cat <<EOF
       <p>
         Input (ex. "<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>" [direct], "<tt>40.6 -73.8 49d01'N 2d33'E</tt>" [inverse]):<br>
         &nbsp;&nbsp;&nbsp;
-        <input type=text name="input" size=50 value="$INPUTENC">
+        <input type=text name="input" size=60 value="$INPUTENC">
       </p>
       <p>
         <table>
@@ -177,36 +177,20 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/utilities.html#geod">
-        Geod</a>,
-      which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">
-        GeographicLib::Geodesic</a> class,
-      is one of the utilities provided
-      with <a href="http://geographiclib.sourceforge.net/">
-        GeographicLib</a>.
-      It performs direct and inverse geodesic calculations for the WGS84
-      ellipsoid.  The shortest path between two points on the ellipsoid
-      at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
-      <em>lon2</em>) is called the geodesic.  Its length is <em>s12</em>
+        Geod</a>
+      performs geodesic calculations for the WGS84 ellipsoid.  The
+      shortest path between two points on the ellipsoid at
+      (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
+      <em>lon2</em>) is called the geodesic; its length is <em>s12</em>
       and the geodesic from point 1 to point 2 has azimuths
       <em>azi1</em> and <em>azi2</em> at the two end points.
       There are two standard geodesic problems:
       <ul>
-        <li> Direct: the input is <em>lat1 lon1 azi1 s12</em> and the
-          output is <em>lat2 lon2 azi2</em>;
-        <li> Inverse: the input is <em>lat1 lon1 lat2 lon2</em> and the
-          output is <em>azi1 azi2 s12</em>.
+        <li> Direct: &nbsp; given [<em>lat1 lon1 azi1 s12</em>] find
+          [<em>lat2 lon2 azi2</em>];
+        <li> Inverse: given [<em>lat1 lon1 lat2 lon2</em>] find
+          [<em>azi1 azi2 s12</em>].
       </ul>
-      This web interface illustrates a subset of the capabilities of
-      Geod.  If you wish to use Geod directly,
-      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
-        download</a>
-      and compile GeographicLib.  A description of the algorithms is
-      given
-      <a href="http://geographiclib.sourceforge.net/html/geodesic.html">
-        here</a>.
-    </p>
-    <p>
       Latitudes and longitudes can be given in various formats, for
       example (these all refer to the position of Timbuktu):
       <pre>
@@ -233,6 +217,24 @@ cat <<EOF
         NGS</a> online 
       <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
         inverse geodesic calculator</a>.
+    </p>
+    <p>
+      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geod">
+        Geod</a>,
+      which is a simple wrapper of the
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">
+        GeographicLib::Geodesic</a> class,
+      is one of the utilities provided
+      with <a href="http://geographiclib.sourceforge.net/">
+        GeographicLib</a>.
+      This web interface illustrates a subset of its capabilities.  If
+      you wish to use Geod directly,
+      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+        download</a>
+      and compile GeographicLib.  A description of the algorithms is
+      given
+      <a href="http://geographiclib.sourceforge.net/html/geodesic.html">
+        here</a>.
     </p>
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>

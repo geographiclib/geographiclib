@@ -47,7 +47,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
       <p>
-        Location (ex. "<tt>33.33 44.4</tt>" "<tt>33d19'47"N 44d23.9'E</tt>", "<tt>38SMB4488</tt>", "<tt>38N 444000 3688000</tt>"):<br>
+        Location (ex. "<tt>33.33 44.4</tt>", "<tt>33d19'47"N 44d23.9'E</tt>", "<tt>38SMB4488</tt>", "<tt>38N 444000 3688000</tt>"):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=40 value="$INPUTENC">
       </p>
@@ -145,27 +145,14 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoconvert">
-        GeoConvert</a>,
-      which is a simple wrapper of the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1GeoCoords.html">
-        GeographicLib::GeoCoords</a> class,
-      is one of the utilities provided
-      with <a href="http://geographiclib.sourceforge.net/">
-        GeographicLib</a>.
-      It converts between geographic (latitude and longitude) coordinates,
+        GeoConvert</a>
+      converts between geographic (latitude and longitude) coordinates,
       <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
         universal transverse Mercator (UTM)</a> or
       <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
         universal polar stereographic (UPS)</a> coordinates, and the
       <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
         military grid reference system (MGRS)</a>.
-      This web interface illustrates a subset of its capabilities.  If
-      you wish to use GeoConvert directly,
-      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
-        download</a>
-      and compile GeographicLib.
-    </p>
-    <p>
       Examples of legal geographic locations are (these all refer to the
       same place, Cape Morris Jesup on the northern tip of Greenland):
       <pre>
@@ -184,7 +171,7 @@ cat <<EOF
 	  band letter.
 	<li>
 	  MGRS coordinates are taken to refer to <em>grid squares</em>
-	  (<em>not</em> to the intersection of grid lines).  Thus in UTM
+	  (<em>not</em> to the intersections of grid lines).  Thus in UTM
 	  zone 38N, the square area with easting in [444 km, 445 km) and
 	  northing in [3688 km, 3689 km) corresponds to the MGRS square
 	  38SMB4488 (at 1 km precision).
@@ -198,6 +185,21 @@ cat <<EOF
 	      (<em>not</em> rounding).
 	  </ul>
       </ul>
+    </p>
+    <p>
+      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoconvert">
+        GeoConvert</a>,
+      which is a simple wrapper of the
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1GeoCoords.html">
+        GeographicLib::GeoCoords</a> class,
+      is one of the utilities provided
+      with <a href="http://geographiclib.sourceforge.net/">
+        GeographicLib</a>.
+      This web interface illustrates a subset of its capabilities.  If
+      you wish to use GeoConvert directly,
+      <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+        download</a>
+      and compile GeographicLib.
     </p>
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
