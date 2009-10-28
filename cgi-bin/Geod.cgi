@@ -47,16 +47,16 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/Geod" method="get">
       <p>
-        Input (ex. "<tt>40N 74W 53.2 5900e3</tt>" [direct], "<tt>40N 74W 49N 2E</tt>" [inverse]):<br>
+        Input (ex. "<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>" [direct], "<tt>40.6 -73.8 49d01'N 2d33'E</tt>" [inverse]):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=50 value="$INPUTENC">
       </p>
       <p>
-	<table>
-	  <tr>
-	    <td>
-	      Output format:
-	    </td>
+        <table>
+          <tr>
+            <td>
+              Output format:
+            </td>
 EOF
 (
     cat <<EOF
@@ -71,11 +71,11 @@ EOF
     echo "</td>"
 done
 cat <<EOF
-	  </tr>
-	  <tr>
-	    <td>
-	      Heading at point 2:
-	    </td>
+          </tr>
+          <tr>
+            <td>
+              Heading at point 2:
+            </td>
 EOF
 (
     cat <<EOF
@@ -90,13 +90,13 @@ EOF
     echo "</td>"
 done
 cat <<EOF
-	  </tr>
-	  <tr>
-	    <td>
-	      Output precision:
-	    </td>
-	    <td colspan="2">&nbsp;
-	      <select name="prec" size=1>
+          </tr>
+          <tr>
+            <td>
+              Output precision:
+            </td>
+            <td colspan="2">&nbsp;
+              <select name="prec" size=1>
 EOF
 (
     cat <<EOF
@@ -118,47 +118,47 @@ EOF
     echo "<option $SELECTED value=\"$p\"> $desc<br>"
 done
 cat <<EOF
-	      </select>
-	    </td>
-	  </tr>
-	</table>
+              </select>
+            </td>
+          </tr>
+        </table>
       </p>
       <p>
         Geodesic calculation:
-	<table>
-	  <tr>
-	    <td>
-	      &nbsp;&nbsp;&nbsp;
-	      <input type="radio" name="type" value="d"
-		     `test "$TYPE" = d && echo CHECKED`>
-	    </td>
-	    <td>
-	      Direct:
-	    </td>
-	    <td>
-	      <em>lat1 lon1 azi1 s12</em>
-	    </td>
-	    <td>
-	      &rarr; <em>lat2 lon2 azi2</em>
-	    </td>
-	  <tr>
-	  <tr>
-	    <td>
-	      &nbsp;&nbsp;&nbsp;
-	      <input type="radio" name="type" value="i"
-		     `test "$TYPE" = i && echo CHECKED`>
-	    </td>
-	    <td>
-	      Inverse:
-	    </td>
-	    <td>
-	      <em>lat1 lon1 lat2 lon2</em>
-	    </td>
-	    <td>
-	      &rarr; <em>azi1 azi2 s12</em>
-	    </td>
-	  <tr>
-	</table>
+        <table>
+          <tr>
+            <td>
+              &nbsp;&nbsp;&nbsp;
+              <input type="radio" name="type" value="d"
+                     `test "$TYPE" = d && echo CHECKED`>
+            </td>
+            <td>
+              Direct:
+            </td>
+            <td>
+              <em>lat1 lon1 azi1 s12</em>
+            </td>
+            <td>
+              &rarr; <em>lat2 lon2 azi2</em>
+            </td>
+          <tr>
+          <tr>
+            <td>
+              &nbsp;&nbsp;&nbsp;
+              <input type="radio" name="type" value="i"
+                     `test "$TYPE" = i && echo CHECKED`>
+            </td>
+            <td>
+              Inverse:
+            </td>
+            <td>
+              <em>lat1 lon1 lat2 lon2</em>
+            </td>
+            <td>
+              &rarr; <em>azi1 azi2 s12</em>
+            </td>
+          <tr>
+        </table>
       </p>
       <p>
         Select action:<br>
@@ -177,7 +177,10 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/utilities.html#geod">
-        Geod</a>
+        Geod</a>,
+      which is a simple wrapper of the
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">
+        GeographicLib::Geodesic</a> class,
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
@@ -189,21 +192,19 @@ cat <<EOF
       <em>azi1</em> and <em>azi2</em> at the two end points.
       There are two standard geodesic problems:
       <ul>
-	<li> Direct: the input is <em>lat1 lon1 azi1 s12</em> and the
-	  output is <em>lat2 lon2 azi2</em>;
-	<li> Inverse: the input is <em>lat1 lon1 lat2 lon2</em> and the
-	  output is <em>azi1 azi2 s12</em>.
+        <li> Direct: the input is <em>lat1 lon1 azi1 s12</em> and the
+          output is <em>lat2 lon2 azi2</em>;
+        <li> Inverse: the input is <em>lat1 lon1 lat2 lon2</em> and the
+          output is <em>azi1 azi2 s12</em>.
       </ul>
       This web interface illustrates a subset of the capabilities of
       Geod.  If you wish to use Geod directly,
       <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
-      and compile GeographicLib.  Geod is a simple wrapper in the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">
-	GeographicLib::Geodesic</a> class.
-      A description of the algorithms is given
+      and compile GeographicLib.  A description of the algorithms is
+      given
       <a href="http://geographiclib.sourceforge.net/html/geodesic.html">
-	here</a>.
+        here</a>.
     </p>
     <p>
       Latitudes and longitudes can be given in various formats, for
@@ -220,23 +221,23 @@ cat <<EOF
       The "standard" method of calculating geodesics uses an algorithm
       given by
       <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
-	Vincenty (1975)</a>.
-      However, this has limited accuracy and completely fails for the
-      inverse problem when the points are nearly antipodal.  The method
-      used by Geod is accurate to about 15 nm and gives solutions for
-      the inverse problem for any pair of points.  For example, compare
-      the inverse result given by Geod for the antipodal points (N30,
-      E0) and (S30, E180) where the geodesic follows a meridian with the
+        Vincenty (1975)</a>.
+      However, this has limited accuracy and fails for the inverse
+      problem when the points are nearly antipodal.  The method used by
+      Geod is accurate to about 15 nm and gives solutions for the
+      inverse problem for any pair of points.  For example, compare the
+      inverse result given by Geod for the antipodal points (N30, E0)
+      and (S30, E180) where the geodesic follows a meridian with the
       bogus result returned by the
       <a href="http://www.ngs.noaa.gov/">
-	NGS</a> online 
+        NGS</a> online 
       <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
-	inverse geodesic calculator</a>.
+        inverse geodesic calculator</a>.
     </p>
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2009-10-26)</address>
+      (2009-10-27)</address>
   </body>
 </html>
 EOF

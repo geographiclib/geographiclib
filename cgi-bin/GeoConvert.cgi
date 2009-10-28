@@ -47,9 +47,9 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
       <p>
-        Location (ex. "<tt>33.3N 44.4E</tt>", "<tt>38SMB4488</tt>", "<tt>38N 444000 3688000</tt>"):<br>
+        Location (ex. "<tt>33.33 44.4</tt>" "<tt>33d19'47"N 44d23.9'E</tt>", "<tt>38SMB4488</tt>", "<tt>38N 444000 3688000</tt>"):<br>
         &nbsp;&nbsp;&nbsp;
-        <input type=text name="input" size=30 value="$INPUTENC">
+        <input type=text name="input" size=40 value="$INPUTENC">
       </p>
       <table>
         <tr>
@@ -89,13 +89,13 @@ for ((z=-2; z<=60; ++z)); do
     echo "<option $SELECTED value=\"$z\">$name"
 done
 cat <<EOF
-	    </select>
+            </select>
           </td>
         </tr>
         <tr>
           <td>
             &nbsp;&nbsp;&nbsp;
-	    Output precision:<br>
+            Output precision:<br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <select name="prec" size=1>
 EOF
@@ -124,7 +124,7 @@ EOF
     echo "<option $SELECTED value=\"$p\">$desc"
 done
 cat <<EOF
-	    </select>
+            </select>
           </td>
         </tr>
       </table>
@@ -145,7 +145,10 @@ cat <<EOF
     <hr>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoconvert">
-        GeoConvert</a>
+        GeoConvert</a>,
+      which is a simple wrapper of the
+      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1GeoCoords.html">
+        GeographicLib::GeoCoords</a> class,
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
@@ -160,9 +163,7 @@ cat <<EOF
       you wish to use GeoConvert directly,
       <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
-      and compile GeographicLib.  GeoConvert is a simple wrapper in the
-      <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1GeoCoords.html">
-	GeographicLib::GeoCoords</a> class.
+      and compile GeographicLib.
     </p>
     <p>
       Examples of legal geographic locations are (these all refer to the
@@ -175,15 +176,33 @@ cat <<EOF
     UPS:                              25N 504158 9286521
         N 1617772 1403805             430000 9290000 26N
       </pre>
-      <b>Note:</b>
-      The letter in following the zone number in the UTM position is a
-      hemisphere designator (N or S) and <em>not</em> the MGRS latitude
-      band letter.
+      <b>Notes:</b>
+      <ul>
+	<li>
+	  The letter in following the zone number in the UTM position is a
+	  hemisphere designator (N or S) and <em>not</em> the MGRS latitude
+	  band letter.
+	<li>
+	  MGRS coordinates are taken to refer to <em>grid squares</em>
+	  (<em>not</em> to the intersection of grid lines).  Thus in UTM
+	  zone 38N, the square area with easting in [444 km, 445 km) and
+	  northing in [3688 km, 3689 km) corresponds to the MGRS square
+	  38SMB4488 (at 1 km precision).
+	  <ul>
+	    <li>
+	      When an MGRS coordinate is read, it is treated as the
+	      <em>center</em> of the grid square.
+	    <li>
+	      The MGRS easting and northing are obtained
+	      by <em>truncation</em> to the requested precision
+	      (<em>not</em> rounding).
+	  </ul>
+      </ul>
     </p>
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2009-10-25)</address>
+      (2009-10-27)</address>
   </body>
 </html>
 EOF
