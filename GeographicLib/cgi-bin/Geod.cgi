@@ -24,6 +24,7 @@ test $AZI2 = f || COMMAND="$COMMAND -$AZI2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
 if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
+    test $? -eq 0 && OUTPUT="`echo $OUTPUT | cut -f1-3 -d' '`"
     echo `date +"%F %T"` "echo $INPUT | $COMMAND" >> ../persistent/utilities.log
 else
     OUTPUT=
@@ -138,7 +139,7 @@ cat <<EOF
 	      <em>lat1 lon1 azi1 s12</em>
 	    </td>
 	    <td>
-	      &rarr; <em>lat2 lon2 azi2 m12</em>
+	      &rarr; <em>lat2 lon2 azi2</em>
 	    </td>
 	  <tr>
 	  <tr>
@@ -154,7 +155,7 @@ cat <<EOF
 	      <em>lat1 lon1 lat2 lon2</em>
 	    </td>
 	    <td>
-	      &rarr; <em>azi1 azi2 s12 m12</em>
+	      &rarr; <em>azi1 azi2 s12</em>
 	    </td>
 	  <tr>
 	</table>
@@ -185,17 +186,13 @@ cat <<EOF
       at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>,
       <em>lon2</em>) is called the geodesic.  Its length is <em>s12</em>
       and the geodesic from point 1 to point 2 has azimuths
-      <em>azi1</em> and <em>azi2</em> at the two end points.  The
-      reduced length of the geodesic, <em>m12</em>, is defined such that
-      if the initial azimuth is perturbed by <em>dazi1</em> (radians)
-      then the second point is displaced by <em>m12</em> *
-      <em>dazi1</em> in the direction perpendicular to the geodesic.
+      <em>azi1</em> and <em>azi2</em> at the two end points.
       There are two standard geodesic problems:
       <ul>
 	<li> Direct: the input is <em>lat1 lon1 azi1 s12</em> and the
-	  output is <em>lat2 lon2 azi2 m12</em>;
+	  output is <em>lat2 lon2 azi2</em>;
 	<li> Inverse: the input is <em>lat1 lon1 lat2 lon2</em> and the
-	  output is <em>azi1 azi2 s12 m12</em>.
+	  output is <em>azi1 azi2 s12</em>.
       </ul>
       This web interface illustrates a subset of the capabilities of
       Geod.  If you wish to use Geod directly,
@@ -217,7 +214,7 @@ cat <<EOF
         W3d0'34" N16d46'33"
       </pre>
       Azimuths are given in degress clockwise from north.  The
-      distances <em>s12</em> and <em>m12</em> are in meters.
+      distance <em>s12</em> is in meters.
     </p>
     <p>
       The "standard" method of calculating geodesics uses an algorithm
