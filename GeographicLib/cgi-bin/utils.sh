@@ -7,11 +7,11 @@ lookuprawkey () {
     echo "$QUERY" | tr '&' '\n' | grep "^$KEY=" | tail -1 | cut -f2- -d=
 }
 
-# Decode raw value translating %XX and converting + to space
+# Decode raw value translating %XX and converting + and , to space
 decodevalue () {
     echo "$1" | sed \
 	-e 's/\\/%5C/g' -e 's/%\([0-9a-fA-f][0-9a-fA-F]\)/\\x\1/g' -e s/%/%%/g |
-    xargs -d '\n' printf | tr -s '+' ' '
+    xargs -d '\n' printf | tr -s '+,' ' '
 }
 
 # Convert degree (&B0) minute (&#8242;) second (&#8243;) symbols into d ' ".
