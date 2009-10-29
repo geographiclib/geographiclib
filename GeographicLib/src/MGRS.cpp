@@ -100,10 +100,10 @@ namespace GeographicLib {
                                        northp ? minupsNind : minupsSind)];
       mgrs1[z++] = upsrows[northp][yh - (northp ? minupsNind : minupsSind)];
     }
-    real mult = pow(real(base), min(prec - tilelevel, 0));
+    real mult = pow(real(base), max(tilelevel - prec, 0));
     int
-      ix = int(floor(xf * mult)),
-      iy = int(floor(yf * mult));
+      ix = int(floor(xf / mult)),
+      iy = int(floor(yf / mult));
     for (int c = min(prec, int(tilelevel)); c--;) {
       mgrs1[z + c] = digits[ ix % base ];
       ix /= base;
@@ -111,8 +111,8 @@ namespace GeographicLib {
       iy /= base;
     }
     if (prec > tilelevel) {
-      xf -= floor(xf * mult);
-      yf -= floor(yf * mult);
+      xf -= floor(xf / mult);
+      yf -= floor(yf / mult);
       mult = pow(real(base), prec - tilelevel);
       ix = int(floor(xf * mult));
       iy = int(floor(yf * mult));

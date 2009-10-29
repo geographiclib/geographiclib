@@ -173,7 +173,9 @@ namespace GeographicLib {
      * of a band boundary.  For prec in [6, 11], the conversion is accurate to
      * roundoff.
      *
-     * If an error is thrown, then \e mgrs is unchanged.
+     * Return the result via a reference argument to avoid the overhead of
+     * allocating a potentially large number of small strings.  If an error is
+     * thrown, then \e mgrs is unchanged.
      **********************************************************************/
     static void Forward(int zone, bool northp, real x, real y,
                         int prec, std::string& mgrs);

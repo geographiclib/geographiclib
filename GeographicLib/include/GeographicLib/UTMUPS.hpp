@@ -83,7 +83,7 @@ namespace GeographicLib {
      * In this class we bring together the UTM and UPS coordinates systems.
      * The UTM divides the earth between latitudes -80 and 84 into 60 zones
      * numbered 1 thru 60.  Zone assign zone number 0 to the UPS regions,
-     * covering the two poles.  Within UTMUPS nonnegative, zone numbers refer
+     * covering the two poles.  Within UTMUPS, non-negative zone numbers refer
      * to one of the "physical" zones, 0 for UPS and [1, 60] for UTM.  Negative
      * "pseudo-zone" numbers are used to select one of the physical zones.
      * 
