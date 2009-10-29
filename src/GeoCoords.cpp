@@ -27,16 +27,13 @@ namespace GeographicLib {
 
   void GeoCoords::Reset(const std::string& s, bool centerp) {
     vector<string> sa;
-    bool in = false;
-    for (unsigned i = 0; i < s.size(); ++i) {
-      if (isspace(s[i]) || s[i] == ',') {
-        in = false;
-        continue;
-      }
-      if (!in)
-        sa.push_back("");
-      in = true;
-      sa.back().push_back(s[i]);
+    const char* spaces = " \t\n\v\f\v,"; // Include , as a space
+    for (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
+      pos1 = s.find_first_not_of(spaces, pos0);
+      if (pos1 == string::npos)
+        break;
+      pos0 = s.find_first_of(spaces, pos1);
+      sa.push_back(s.substr(pos1, pos0 == string::npos ? pos0 : pos0 - pos1));
     }
     if (sa.size() == 1) {
       int prec;

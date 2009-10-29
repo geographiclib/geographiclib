@@ -64,11 +64,12 @@ namespace GeographicLib {
      * but the non-final components must be integers.  The integer parts of the
      * minutes and seconds components must be less than 60.  A single leading
      * sign is permitted.  A hemisphere designator (N, E, W, S) may be added to
-     * tbe beginning or end of the string.  The result is mulitplied by the
+     * tbe beginning or end of the string.  The result is multiplied by the
      * implied signed of the hemisphere designator (negative for S and W).  In
      * addition \e flag is used to indicate whether such a designator was found
      * and whether it implies that the angle is a latitude (N or S) or
-     * longitude (E or W).
+     * longitude (E or W).  Throws an error on a malformed string.  No check is
+     * performed on the range of the result.
      **********************************************************************/
     static Math::real Decode(const std::string& dms, flag& ind);
 
@@ -77,7 +78,11 @@ namespace GeographicLib {
      * longitude, \e lon.  By default, the \e lat (resp., \e lon) is assigned
      * to the results of decoding \e dmsa (resp., \e dmsb).  However this is
      * overridden if either \e dmsa or \e dmsb contain a latitude or longitude
-     * hemisphere designator (N, S, E, W).
+     * hemisphere designator (N, S, E, W).  Throws an error if the decoded
+     * numbers are out of the ranges [-90<sup>o</sup>, 90<sup>o</sup>] for
+     * latitude and [-180<sup>o</sup>, 360<sup>o</sup>] for longitude and, in
+     * which case \e lat and \e lon are unchanged.  Finally the longitude is
+     * reduced to the range [-180<sup>o</sup>, 180<sup>o</sup>).
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
                              real& lat, real& lon);

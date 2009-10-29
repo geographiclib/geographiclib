@@ -173,6 +173,7 @@ namespace GeographicLib {
      * of a band boundary.  For prec in [6, 11], the conversion is accurate to
      * roundoff.
      *
+     * If an error is thrown, then \e mgrs is unchanged.
      **********************************************************************/
     static void Forward(int zone, bool northp, real x, real y,
                         int prec, std::string& mgrs);
@@ -212,6 +213,8 @@ namespace GeographicLib {
      * from MGRS coordinate.  The conversion is exact for prec in [0, 5].  With
      * centerp = true the conversion from MGRS to geographic and back is
      * stable.  This is not assured if \e centerp = false.
+     *
+     * If an error is thrown, then the arguments are unchanged.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
                         int& zone, bool& northp, real& x, real& y,

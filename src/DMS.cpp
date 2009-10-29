@@ -36,16 +36,16 @@ namespace GeographicLib {
       ++beg;
     while (beg < end && isspace(dms[end - 1]))
       --end;
-    ind = NONE;
+    flag ind1 = NONE;
     int k = -1;
     if (end > beg && (k = lookup(hemispheres, dms[beg])) >= 0) {
-      ind = (k / 2) ? LONGITUDE : LATITUDE;
+      ind1 = (k / 2) ? LONGITUDE : LATITUDE;
       sign = k % 2 ? 1 : -1;
       ++beg;
     }
     if (end > beg && (k = lookup(hemispheres, dms[end-1])) >= 0) {
       if (k >= 0) {
-        if (ind != NONE) {
+        if (ind1 != NONE) {
           if (toupper(dms[beg - 1]) == toupper(dms[end - 1]))
             throw out_of_range("Repeated hemisphere indicators "
                                + str(dms[beg - 1]) + " in "
@@ -56,7 +56,7 @@ namespace GeographicLib {
                                + str(dms[end - 1]) + " in "
                                + dms.substr(beg - 1, end - beg + 1));
         }
-        ind = (k / 2) ? LONGITUDE : LATITUDE;
+        ind1 = (k / 2) ? LONGITUDE : LATITUDE;
         sign = k % 2 ? 1 : -1;
         --end;
       }
@@ -145,6 +145,7 @@ namespace GeographicLib {
     if (ipieces[2] >= 60)
       throw out_of_range("Seconds " + str(fpieces[2])
                          + " not in range [0, 60)");
+    ind = ind1;
     // Assume check on range of result is made by calling routine (which might
     // be able to offer a better diagnostic).
     return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
@@ -167,17 +168,17 @@ namespace GeographicLib {
       if (ia == ib)
         throw out_of_range("Both " + stra + " and " + strb + " interpreted as "
                            + (ia == LATITUDE ? "latitudes" : "longitudes"));
-      if (ia == LATITUDE) {
-        lat = a; lon = b;
-      } else {
-        lat = b; lon = a;
-      }
-      if (! (lat >= -90 && lat <= 90))
-        throw out_of_range("Latitude " + str(lat) + "d not in [-90d, 90d]");
-      if (! (lon >= -180 && lon <= 360))
-        throw out_of_range("Latitude " + str(lon) + "d not in [-180d, 360d]");
-      if (lon >= 180)
-        lon -= 360;
+      real
+        lat1 = ia == LATITUDE ? a : b,
+        lon1 = ia == LATITUDE ? b : a;
+      if (! (lat1 >= -90 && lat1 <= 90))
+        throw out_of_range("Latitude " + str(lat1) + "d not in [-90d, 90d]");
+      if (! (lon1 >= -180 && lon1 <= 360))
+        throw out_of_range("Latitude " + str(lon1) + "d not in [-180d, 360d]");
+      if (lon1 >= 180)
+        lon1 -= 360;
+      lat = lat1;
+      lon = lon1;
   }
 
   string DMS::Encode(real angle, component trailing, unsigned prec, flag ind) {

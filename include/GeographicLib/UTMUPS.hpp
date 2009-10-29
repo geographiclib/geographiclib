@@ -82,28 +82,30 @@ namespace GeographicLib {
     /**
      * Return the standard zone for latitude \e lat (degrees) and longitude \e
      * lon (degrees).  Return 0 if in the standard regions for UPS otherwise
-     * return the UTM zone.  This includes the Norway and Svalbard exceptions.
-     * The tests on latitudes and longitudes are all closed on the lower end
-     * open on the upper.  Thus for UTM zone 38, latitude is in [-80, 84) and
-     * longitude is in [42, 48).  This is exact.
+     * return the standard UTM zone.  (This includes the Norway and Svalbard
+     * exceptions.)  The tests on latitudes and longitudes are all closed on
+     * the lower end open on the upper.  Thus for UTM zone 38, latitude is in
+     * [-80, 84) and longitude is in [42, 48).  This is exact.  If the optional
+     * argument \e setzone is given then -1 (the default) returns the standard
+     * zone, -2 is similar to -1 but forces UPS regions into the closest UTM
+     * zone, 0 returns 0 (i.e., UPS), and otherwise \e setzone is returned.
+     * Throws an error if \e setzone is outsize the range [-2, 60].
      **********************************************************************/
-    static int StandardZone(real lat, real lon) throw();
+    static int StandardZone(real lat, real lon, int setzone = -1);
 
     /**
      * Convert geographic coordinates to UTM or UPS coordinate.  Given latitude
      * \e lat (degrees), and longitude \e lon (degrees), return \e zone (zero
      * indicates UPS), hemisphere \e northp (false means south, true means
      * north), easting \e x (meters), and northing \e y (meters).  The prefered
-     * zone for the result can be specified with \e setzone (negative means
-     * result of UTMUPS::StandardZone, zero means UPS, positive means a
-     * particular UTM zone), Throw error if the resulting easting or northing
-     * is outside the allowed range (see Reverse).  If \e mgrslimits == true,
-     * then use the stricter MGRS limits (see Reverse).  This also returns
-     * meridian convergence \e gamma (degrees) and scale \e k.  The accuracy of
-     * the conversion is about 5nm.
-     *
-     * To extend the standard UTM zones into the UPS regions use \e setzone =
-     * UTMUPS::StandardZone(max(-80.0, min(80.0, \e lat))).
+     * zone for the result can be specified with \e setzone (-1, the default,
+     * means result of UTMUPS::StandardZone, zero means UPS, positive means a
+     * particular UTM zone, -2 means the closest UTM zone).  Throw error if the
+     * resulting easting or northing is outside the allowed range (see
+     * Reverse), in which case the arguments are unchanged.  If \e mgrslimits
+     * == true, then use the stricter MGRS limits (see Reverse).  This also
+     * returns meridian convergence \e gamma (degrees) and scale \e k.  The
+     * accuracy of the conversion is about 5nm.
      **********************************************************************/
     static void Forward(real lat, real lon,
                         int& zone, bool& northp, real& x, real& y,
@@ -116,8 +118,9 @@ namespace GeographicLib {
      * south, true means north), easting \e x (meters), and northing \e y
      * (meters), return latitude \e lat (degrees) and longitude \e lon
      * (degrees).  Throw error if easting or northing is outside the allowed
-     * range (see below).  This also returns meridian convergence \e gamma
-     * (degrees) and scale \e k.  The accuracy of the conversion is about 5nm.
+     * range (see below), in which case the arguments are unchanged.  This also
+     * returns meridian convergence \e gamma (degrees) and scale \e k.  The
+     * accuracy of the conversion is about 5nm.
      *
      * UTM eastings are allowed to be in the range [0km, 1000km], northings are
      * allowed to be in in [0km, 9600km] for the northern hemisphere and in

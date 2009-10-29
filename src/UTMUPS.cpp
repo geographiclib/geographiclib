@@ -46,24 +46,26 @@ namespace GeographicLib {
       (MGRS::maxutmSrow + MGRS::maxutmNrow - MGRS::minutmNrow) * MGRS::tile,
       MGRS::maxutmNrow * MGRS::tile };
 
-  int UTMUPS::StandardZone(real lat, real lon)  throw() {
+  int UTMUPS::StandardZone(real lat, real lon, int setzone) {
+    if (setzone < -2 || setzone > 60)
+      throw std::out_of_range("Illegal zone requested " + str(setzone));
+    if (setzone >= 0)
+      return setzone;
     // Assume lon is in [-180, 360].
-    int zone;
-    int ilat = int(floor(lat));
-    if (ilat >= 84 || ilat < -80)
-      zone = 0;
-    else {
+    if (setzone == -2 || (lat >= -80 && lat < 84)) {
+      // Assume lon is in [-180, 360].
       int ilon = int(floor(lon));
       if (ilon >= 180)
         ilon -= 360;
-      zone = (ilon + 186)/6;
+      int zone = (ilon + 186)/6;
       int band = MGRS::LatitudeBand(lat);
       if (band == 7 && zone == 31 && ilon >= 3)
         zone = 32;
       else if (band == 9 && ilon >= 0 && ilon < 42)
         zone = 2 * ((ilon + 183)/12) + 1;
-    }
-    return zone;
+      return zone;
+    } else
+      return 0;                 // UPS
   }
 
   void UTMUPS::Forward(real lat, real lon,
@@ -71,15 +73,13 @@ namespace GeographicLib {
                        real& gamma, real& k,
                        int setzone, bool mgrslimits) {
     CheckLatLon(lat, lon);
-    northp = lat >= 0;
-    zone = setzone >= 0 ? setzone : StandardZone(lat, lon);
-    if (setzone > 60)
-      throw out_of_range("Illegal UTM zone requested " + setzone);
-    real x1, y1;
-    bool utmp = zone > 0;
+    bool northp1 = lat >= 0;
+    int zone1 = StandardZone(lat, lon, setzone);
+    real x1, y1, gamma1, k1;
+    bool utmp = zone1 > 0;
     if (utmp) {
       real
-        lon0 = CentralMeridian(zone),
+        lon0 = CentralMeridian(zone1),
         dlon = lon - lon0;
       dlon = abs(dlon - 360 * floor((dlon + 180)/360));
       if (dlon > 60)
@@ -87,22 +87,28 @@ namespace GeographicLib {
         // But this allows a more meaningful error message to be given.
         throw out_of_range("Longitude " + str(lon)
                            + "d more than 60d from center of UTM zone "
-                           + str(zone));
-      TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma, k);
+                           + str(zone1));
+      TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma1, k1);
     } else {
       if (abs(lat) < 70)
         // Check isn't really necessary ... (see above).
         throw out_of_range("Latitude " + str(lat) + "d more than 20d from "
-                           + (northp ? "N" : "S") + " pole");
-      PolarStereographic::UPS.Forward(northp, lat, lon, x1, y1, gamma, k);
+                           + (northp1 ? "N" : "S") + " pole");
+      PolarStereographic::UPS.Forward(northp1, lat, lon, x1, y1, gamma1, k1);
     }
-    int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-    x = x1 + falseeasting[ind];
-    y = y1 + falsenorthing[ind];
-    if (! CheckCoords(zone > 0, northp, x, y, mgrslimits, false) )
+    int ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
+    x1 =+ falseeasting[ind];
+    y1 =+ falsenorthing[ind];
+    if (! CheckCoords(zone1 > 0, northp1, x1, y1, mgrslimits, false) )
       throw out_of_range("Latitude " + str(lat) + ", longitude " + str(lon)
                          + " out of legal range for "
-                         + (utmp ? "UTM zone " + str(zone) : "UPS"));
+                         + (utmp ? "UTM zone " + str(zone1) : "UPS"));
+    zone = zone1;
+    northp = northp1;
+    x = x1;
+    y = y1;
+    gamma = gamma1;
+    k = k1;
   }
 
   void UTMUPS::Reverse(int zone, bool northp, real x, real y,
@@ -164,7 +170,7 @@ namespace GeographicLib {
       throw out_of_range("More than 3 characters in zone specification "
                          + zonestr);
     char hemi = toupper(zonestr[zlen - 1]);
-    northp = hemi == 'N';
+    bool northp1 = hemi == 'N';
     if (! (northp || hemi == 'S'))
       throw out_of_range(string("Illegal hemisphere letter ") + hemi + " in "
                          + zonestr);
@@ -173,13 +179,15 @@ namespace GeographicLib {
     else {
       const char* c = zonestr.c_str();
       char* q;
-      zone = strtol(c, &q, 10);
+      int zone1 = strtol(c, &q, 10);
       if (q - c != int(zlen) - 1)
         throw out_of_range("Extra text in UTM/UPS zone " + zonestr);
-      if (q > c && zone == 0)
+      if (q > c && zone1 == 0)
         // Don't allow 0N as an alternative to N for UPS coordinates
         throw out_of_range("Illegal zone 0 in " + zonestr);
+      zone = zone1;
     }
+    northp = northp1;
   }
 
   std::string UTMUPS::EncodeZone(int zone, bool northp) {

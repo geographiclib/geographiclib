@@ -46,7 +46,7 @@ namespace GeographicLib {
     typedef Math::real real;
     real _lat, _long, _easting, _northing, _gamma, _k;
     bool _northp;
-    int _zone;                  // 0 = poles, -1 = undefined
+    int _zone;                  // 0 = poles
     mutable real _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
@@ -146,9 +146,10 @@ namespace GeographicLib {
 
     /**
      * Specify the location in terms of \e latitude (degrees) and \e longitude
-     * (degrees).  Use \e zone to force the UTM/UPS representation to use
-     * a specified zone (\e zone = 0 means UPS).  Omitting the third argument
-     * causes the standard zone to be used.
+     * (degrees).  Use \e zone to force the UTM/UPS representation to use a
+     * specified zone: -1 (the default) use the standard UPS or UTM zone, -2 is
+     * similar to -1 but forces UPS regions into the closest UTM zone, 0 uses
+     * UPS, and otherwise use a particular UTM zone.
      **********************************************************************/
     GeoCoords(real latitude, real longitude, int zone = -1) {
       Reset(latitude, longitude, zone);
@@ -174,11 +175,11 @@ namespace GeographicLib {
      * GeoCoords(real latitude, real longitude, int zone).
      **********************************************************************/
     void Reset(real latitude, real longitude, int zone = -1) {
-      _lat = latitude;
-      _long = longitude;
-      UTMUPS::Forward(_lat, _long,
+      UTMUPS::Forward(latitude, longitude,
                       _zone, _northp, _easting, _northing, _gamma, _k,
                       zone);
+      _lat = latitude;
+      _long = longitude;
       if (_long >= 180)
         _long -= 360;
       CopyToAlt();
@@ -190,12 +191,12 @@ namespace GeographicLib {
      * real easting, real northing).
      **********************************************************************/
     void Reset(int zone, bool northp, real easting, real northing) {
+      UTMUPS::Reverse(zone, northp, easting, northing,
+                      _lat, _long, _gamma, _k);
       _zone = zone;
       _northp = northp;
       _easting = easting;
       _northing = northing;
-      UTMUPS::Reverse(_zone, _northp, _easting, _northing,
-                      _lat, _long, _gamma, _k);
       FixHemisphere();
       CopyToAlt();
     }
@@ -246,13 +247,15 @@ namespace GeographicLib {
     int Zone() const throw() { return _zone; }
 
     /**
-     * Set the zone (default, -1, means use the standard zone) for the
-     * alternate representation.  Before this is called the alternate zone is
-     * the input zone.
+     * Use zone number, \e zone, for the alternate representation.  \e zone ==
+     * -1 (the default) use the standard UPS or UTM zone, -2 is similar to -1
+     * but forces UPS regions into the closest UTM zone, 0 uses UPS, and
+     * otherwise use a particular UTM zone.  Before this is called the
+     * alternate zone is the input zone.
      **********************************************************************/
     void SetAltZone(int zone = -1) const {
-      if (zone == _zone ||
-          (zone < 0 && _zone == UTMUPS::StandardZone(_lat, _long)))
+      zone = UTMUPS::StandardZone(_lat, _long, zone);
+      if (zone == _zone)
         CopyToAlt();
       else {
         bool northp;
