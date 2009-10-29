@@ -80,47 +80,100 @@ namespace GeographicLib {
   public:
 
     /**
-     * Return the standard zone for latitude \e lat (degrees) and longitude \e
-     * lon (degrees).  Return 0 if in the standard regions for UPS otherwise
-     * return the standard UTM zone.  (This includes the Norway and Svalbard
-     * exceptions.)  The tests on latitudes and longitudes are all closed on
-     * the lower end open on the upper.  Thus for UTM zone 38, latitude is in
-     * [-80, 84) and longitude is in [42, 48).  This is exact.  If the optional
-     * argument \e setzone is given then -1 (the default) returns the standard
-     * zone, -2 is similar to -1 but forces UPS regions into the closest UTM
-     * zone, 0 returns 0 (i.e., UPS), and otherwise \e setzone is returned.
-     * Throws an error if \e setzone is outsize the range [-2, 60].
+     * In this class we bring together the UTM and UPS coordinates systems.
+     * The UTM divides the earth between latitudes -80 and 84 into 60 zones
+     * numbered 1 thru 60.  Zone assign zone number 0 to the UPS regions,
+     * covering the two poles.  Within UTMUPS nonnegative, zone numbers refer
+     * to one of the "physical" zones, 0 for UPS and [1, 60] for UTM.  Negative
+     * "pseudo-zone" numbers are used to select one of the physical zones.
+     * 
      **********************************************************************/
-    static int StandardZone(real lat, real lon, int setzone = -1);
+    enum zonespec {
+      /**
+       * The smallest pseudo-zone number.
+       **********************************************************************/
+      MINPSEUDOZONE = -3,
+      /**
+       * If a coordinate already include zone information (e.g., it is an MGRS
+       * coordinate), use that, otherwise apply the UTMUPS::STANDARD rules.
+       **********************************************************************/
+      MATCH = -3,
+      /**
+       * Apply the standard rules for UTM zone assigment extending the UTM zone
+       * to each pole to give a zone number in [1, 60].  For example, use UTM
+       * zone 38 for longitude in [42, 48).  The rules include the Norway and
+       * Svalbard exceptions.
+       **********************************************************************/
+      UTM = -2,
+      /**
+       * Apply the standard rules for zone assignment to give a zone number in
+       * [0, 60].  If the latitude is not in [-80, 84), then use UTMUPS::UPS =
+       * 0, otherwise apply the rules for UTMUPS::UTM.  The tests on latitudes
+       * and longitudes are all closed on the lower end open on the upper.
+       * Thus for UTM zone 38, latitude is in [-80, 84) and longitude is in
+       * [42, 48).
+       **********************************************************************/
+      STANDARD = -1,
+      /**
+       * The largest pseudo-zone number.
+       **********************************************************************/
+      MAXPSEUDOZONE = -1,
+      /**
+       * The smallest physical zone number.
+       **********************************************************************/
+      MINZONE = 0,
+      /**
+       * The zone number used for UPS
+       **********************************************************************/
+      UPS = 0,
+      /**
+       * The smallest UTM zone number.
+       **********************************************************************/
+      MINUTMZONE = 1,
+      /**
+       * The largest UTM zone number.
+       **********************************************************************/
+      MAXUTMZONE = 60,
+      /**
+       * The largest physical zone number.
+       **********************************************************************/
+      MAXZONE = 60 };
+    /**
+     * Return the standard zone for latitude \e lat (degrees) and longitude \e
+     * lon (degrees); see UTMUPS::STANDARD.  This is exact.  If the optional
+     * argument \e setzone is given then use that zone if it is non-negative,
+     * orthewise apply the rules given in UTMUPS::zonespec.  Throws an error if
+     * \e setzone is outsize the range [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE]
+     * = [-3, 60].
+     **********************************************************************/
+    static int StandardZone(real lat, real lon, int setzone = STANDARD);
 
     /**
      * Convert geographic coordinates to UTM or UPS coordinate.  Given latitude
      * \e lat (degrees), and longitude \e lon (degrees), return \e zone (zero
      * indicates UPS), hemisphere \e northp (false means south, true means
      * north), easting \e x (meters), and northing \e y (meters).  The prefered
-     * zone for the result can be specified with \e setzone (-1, the default,
-     * means result of UTMUPS::StandardZone, zero means UPS, positive means a
-     * particular UTM zone, -2 means the closest UTM zone).  Throw error if the
-     * resulting easting or northing is outside the allowed range (see
-     * Reverse), in which case the arguments are unchanged.  If \e mgrslimits
-     * == true, then use the stricter MGRS limits (see Reverse).  This also
-     * returns meridian convergence \e gamma (degrees) and scale \e k.  The
-     * accuracy of the conversion is about 5nm.
+     * zone for the result can be specified with \e setzone, see
+     * UTMUPS::StandardZone.  Throw error if the resulting easting or northing
+     * is outside the allowed range (see Reverse), in which case the arguments
+     * are unchanged.  If \e mgrslimits == true, then use the stricter MGRS
+     * limits (see Reverse).  This also returns meridian convergence \e gamma
+     * (degrees) and scale \e k.  The accuracy of the conversion is about 5nm.
      **********************************************************************/
     static void Forward(real lat, real lon,
                         int& zone, bool& northp, real& x, real& y,
                         real& gamma, real& k,
-                        int setzone = -1, bool mgrslimits = false);
+                        int setzone = STANDARD, bool mgrslimits = false);
 
     /**
      * Convert UTM or UPS coordinate to geographic coordinates .  Given zone \e
-     * zone (\e zone == 0 indicates UPS), hemisphere \e northp (false means
-     * south, true means north), easting \e x (meters), and northing \e y
-     * (meters), return latitude \e lat (degrees) and longitude \e lon
-     * (degrees).  Throw error if easting or northing is outside the allowed
-     * range (see below), in which case the arguments are unchanged.  This also
-     * returns meridian convergence \e gamma (degrees) and scale \e k.  The
-     * accuracy of the conversion is about 5nm.
+     * zone (\e zone == UTMUPS::UPS, 0, indicates UPS), hemisphere \e
+     * northp (false means south, true means north), easting \e x (meters), and
+     * northing \e y (meters), return latitude \e lat (degrees) and longitude
+     * \e lon (degrees).  Throw error if easting or northing is outside the
+     * allowed range (see below), in which case the arguments are unchanged.
+     * This also returns meridian convergence \e gamma (degrees) and scale \e
+     * k.  The accuracy of the conversion is about 5nm.
      *
      * UTM eastings are allowed to be in the range [0km, 1000km], northings are
      * allowed to be in in [0km, 9600km] for the northern hemisphere and in
@@ -150,7 +203,7 @@ namespace GeographicLib {
      **********************************************************************/
     static void Forward(real lat, real lon,
                         int& zone, bool& northp, real& x, real& y,
-                        int setzone = -1, bool mgrslimits = false) {
+                        int setzone = STANDARD, bool mgrslimits = false) {
       real gamma, k;
       Forward(lat, lon, zone, northp, x, y, gamma, k, setzone, mgrslimits);
     }
@@ -168,18 +221,21 @@ namespace GeographicLib {
      * Decode a UTM/UPS zone string, \e zonestr, returning the resulting \e
      * zone and hemisphere thru \e northp (true for northern and false for
      * southern hemispheres).  For UTM, \e zonestr has the form of a zone
-     * number in the range [1,60] followed by a hemisphere letter, N or S.  For
-     * UPS, it consists just of the hemisphere letter.  The returned value of
-     * \e zone is 0 for UPS.  Note well that "38S" indicates the southern
-     * hemisphere of zone 38 and not latitude band S, [32,40].  N, 01S, 2N, 38S
-     * are legal.  0N, 001S, 61N, 38P are illegal.
+     * number in the range [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60]
+     * followed by a hemisphere letter, N or S.  For UPS, it consists just of
+     * the hemisphere letter.  The returned value of \e zone is UTMUPS::UPS = 0
+     * for UPS.  Note well that "38S" indicates the southern hemisphere of zone
+     * 38 and not latitude band S, [32, 40].  N, 01S, 2N, 38S are legal.  0N,
+     * 001S, 61N, 38P are illegal.
      **********************************************************************/
     static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
 
     /**
-     * Encode a UTM/UPS zone string given the \e zone and hemisphere \e northp.
-     * \e zone must be in the range [0,60] with \e zone = 0 indicating UPS (but
-     * the resulting string does not contain "0").  This reverses DecodeZone.
+     * Encode a UTM/UPS zone string given the \e zone and hemisphere \e
+     * northp.  \e zone must be in the range [UTMUPS::MINZONE,
+     * UTMUPS::MAXZONE] = [0, 60] with \e zone = UTMUPS::UPS, 0, indicating
+     * UPS (but the resulting string does not contain "0").  This reverses
+     * DecodeZone.
      **********************************************************************/
     static std::string EncodeZone(int zone, bool northp);
 

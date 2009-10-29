@@ -46,7 +46,7 @@ namespace GeographicLib {
     typedef Math::real real;
     real _lat, _long, _easting, _northing, _gamma, _k;
     bool _northp;
-    int _zone;                  // 0 = poles
+    int _zone;                  // See UTMUPS::zone
     mutable real _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
@@ -147,11 +147,9 @@ namespace GeographicLib {
     /**
      * Specify the location in terms of \e latitude (degrees) and \e longitude
      * (degrees).  Use \e zone to force the UTM/UPS representation to use a
-     * specified zone: -1 (the default) use the standard UPS or UTM zone, -2 is
-     * similar to -1 but forces UPS regions into the closest UTM zone, 0 uses
-     * UPS, and otherwise use a particular UTM zone.
+     * specified zone using the rules given in UTMUPS::zone.
      **********************************************************************/
-    GeoCoords(real latitude, real longitude, int zone = -1) {
+    GeoCoords(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
       Reset(latitude, longitude, zone);
     }
 
@@ -174,7 +172,7 @@ namespace GeographicLib {
      * Reset the location in terms of \e latitude and \e longitude.  See
      * GeoCoords(real latitude, real longitude, int zone).
      **********************************************************************/
-    void Reset(real latitude, real longitude, int zone = -1) {
+    void Reset(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
       UTMUPS::Forward(latitude, longitude,
                       _zone, _northp, _easting, _northing, _gamma, _k,
                       zone);
@@ -247,13 +245,16 @@ namespace GeographicLib {
     int Zone() const throw() { return _zone; }
 
     /**
-     * Use zone number, \e zone, for the alternate representation.  \e zone ==
-     * -1 (the default) use the standard UPS or UTM zone, -2 is similar to -1
-     * but forces UPS regions into the closest UTM zone, 0 uses UPS, and
-     * otherwise use a particular UTM zone.  Before this is called the
-     * alternate zone is the input zone.
+     * Use zone number, \e zone, for the alternate representation.  See
+     * UTMUPS::zone for more information on the interpretation of \e zone.
+     * Note that \e zone == UTMUPS::STANDARD (the default) use the standard UPS
+     * or UTM zone, UTMUPS::MATCH does nothing retaining the existing alternate
+     * representation.  Before this is called the alternate zone is the input
+     * zone.
      **********************************************************************/
-    void SetAltZone(int zone = -1) const {
+    void SetAltZone(int zone = UTMUPS::STANDARD) const {
+      if (zone == UTMUPS::MATCH)
+        return;
       zone = UTMUPS::StandardZone(_lat, _long, zone);
       if (zone == _zone)
         CopyToAlt();

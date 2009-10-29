@@ -138,7 +138,7 @@ namespace GeographicLib {
     if (_lat == 0 || (_northp && _lat >= 0) || (!_northp && _lat < 0))
       // Allow either hemisphere for equator
       return;
-    if (_zone > 0) {
+    if (_zone != UTMUPS::UPS) {
       _northing += (_northp ? 1 : -1) * UTMUPS::UTMShift();
       _northp = !_northp;
     } else

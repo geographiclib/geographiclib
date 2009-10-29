@@ -11,14 +11,18 @@ lookuprawkey () {
 decodevalue () {
     echo "$1" | sed \
 	-e 's/\\/%5C/g' -e 's/%\([0-9a-fA-f][0-9a-fA-F]\)/\\x\1/g' -e s/%/%%/g |
-    xargs -d '\n' printf | tr -s '+,' ' '
+    xargs -d '\n' printf | tr -s '+,\t' ' ' | sed -e 's/^ //' -e 's/ $//'
 }
 
-# Convert degree (&B0) minute (&#8242;) second (&#8243;) symbols into d ' ".
-# and also the Windows variants(?) %81%8B, %81%8C, %81%8D.  Elide ' ' to ".
+# Apply conversions for the various degree, minute, and second symbols
+# &B0 %81%8B  -> d
+# %92 %26%238242%3B (&#8242;) %81%8C -> ' (%27)
+# %94 %26%238243%3B (&#8243;) %81%8D -> " (%22)
+# Then convert ' ' -> "
 translate () {
     echo "$1" | sed \
-	-e 's/%B0/d/g' -e 's/%26%238242%3B/%27/g' -e 's/%26%238243%3B/%22/g' \
+	-e 's/%B0/d/g' -e 's/%92/%27/g' -e 's/%94/%22/g' \
+	-e 's/%26%238242%3B/%27/g' -e 's/%26%238243%3B/%22/g' \
 	-e 's/%81%8B/d/g' -e 's/%81%8C/%27/g' -e 's/%81%8D/%22/g' \
 	-e 's/%27%27/%22/g'
 }
