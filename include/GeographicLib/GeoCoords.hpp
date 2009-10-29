@@ -46,7 +46,7 @@ namespace GeographicLib {
     typedef Math::real real;
     real _lat, _long, _easting, _northing, _gamma, _k;
     bool _northp;
-    int _zone;                  // See UTMUPS::zone
+    int _zone;                  // See UTMUPS::zonespec
     mutable real _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
@@ -147,7 +147,7 @@ namespace GeographicLib {
     /**
      * Specify the location in terms of \e latitude (degrees) and \e longitude
      * (degrees).  Use \e zone to force the UTM/UPS representation to use a
-     * specified zone using the rules given in UTMUPS::zone.
+     * specified zone using the rules given in UTMUPS::zonespec.
      **********************************************************************/
     GeoCoords(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
       Reset(latitude, longitude, zone);
@@ -246,7 +246,7 @@ namespace GeographicLib {
 
     /**
      * Use zone number, \e zone, for the alternate representation.  See
-     * UTMUPS::zone for more information on the interpretation of \e zone.
+     * UTMUPS::zonespec for more information on the interpretation of \e zone.
      * Note that \e zone == UTMUPS::STANDARD (the default) use the standard UPS
      * or UTM zone, UTMUPS::MATCH does nothing retaining the existing alternate
      * representation.  Before this is called the alternate zone is the input
