@@ -15,7 +15,7 @@ decodevalue () {
 }
 
 # Apply conversions for the various degree, minute, and second symbols
-# &B0 %81%8B  -> d
+# &B0 %81%8B  -> d (maybe add &deg;)
 # %92 %26%238242%3B (&#8242;) %81%8C -> ' (%27)
 # %94 %26%238243%3B (&#8243;) %81%8D -> " (%22)
 # Then convert ' ' -> "
