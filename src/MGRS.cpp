@@ -60,12 +60,13 @@ namespace GeographicLib {
     if (!(prec >= 0 || prec <= maxprec))
       throw out_of_range("MGRS precision " + str(prec) + " not in [0, "
                          + str(int(maxprec)) + "]");
-    // Fixed char array for accumulating string.  Allow
-    // space for zone, 3 block letters, easting + northing + null
-    char mgrs1[2 + 3 + 2 * maxprec + 1];
+    // Fixed char array for accumulating string.  Allow space for zone, 3 block
+    // letters, easting + northing.  Don't need to allow for terminating null.
+    char mgrs1[2 + 3 + 2 * maxprec];
     int
       zone1 = zone - 1,
-      z = utmp ? 2 : 0;
+      z = utmp ? 2 : 0,
+      mlen = z + 3 + 2 * prec;
     if (utmp) {
       mgrs1[0] = digits[ zone / base ];
       mgrs1[1] = digits[ zone % base ];
@@ -122,9 +123,8 @@ namespace GeographicLib {
         iy /= base;
       }
     }
-    mgrs1[z + 3 + 2 * prec] = '\0';
-    mgrs.reserve(z + 3 + 2 * prec);
-    mgrs = mgrs1;
+    mgrs.resize(mlen);
+    copy(mgrs1, mgrs1 + mlen, mgrs.begin());
   }
 
   void MGRS::Forward(int zone, bool northp, real x, real y,

@@ -11,14 +11,15 @@ else
     PREC=`lookupkey "$QUERY_STRING" prec`
 fi
 test "$FORMAT" || FORMAT=g
-test "$ZONE" || ZONE=-2
+test "$ZONE" || ZONE=-3
 test "$PREC" || PREC=0
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=GeoConvert
 EXECDIR=./exec
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
 case $ZONE in
-    -2 ) ;;
+    -3 ) ;;
+#   -2 ) COMMAND="$COMMAND -t";;  # Not supported yet
     -1 ) COMMAND="$COMMAND -s";;
     * ) COMMAND="$COMMAND -z $ZONE"
 esac
@@ -77,15 +78,23 @@ cat <<EOF
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <select name="zone" size=1>
 EOF
-for ((z=-2; z<=60; ++z)); do
+(
+    cat <<EOF
+-3 Match input or standard
+-1 Standard UPS/UTM zone
+0 UPS
+-2 Standard UTM zone
+EOF
+) | while read z name; do
+    test $z -eq -2 && continue # Not supported yet
     SELECTED=
     test "$z" = "$ZONE" && SELECTED=SELECTED
-    case $z in
-        -2 ) name="Match input or standard";;
-        -1 ) name="Convert to standard zone";;
-        0 ) name=UPS;;
-        * ) name="UTM zone $z";;
-    esac
+    echo "<option $SELECTED value=\"$z\">$name"
+done
+for ((z=1; z<=60; ++z)); do
+    SELECTED=
+    test "$z" = "$ZONE" && SELECTED=SELECTED
+    name="UTM zone $z"
     echo "<option $SELECTED value=\"$z\">$name"
 done
 cat <<EOF
@@ -184,6 +193,11 @@ cat <<EOF
 	      by <em>truncation</em> to the requested precision
 	      (<em>not</em> rounding).
 	  </ul>
+	<li>
+	  Usually <em>Output zone</em> should be <em>Match input or
+	  standard</em>.  If the latitude and longitude are given, the
+	  standard UPS and UTM zone rules are applied; otherwise the
+	  UPS/UTM selection and the UTM zone matches the input.
       </ul>
     </p>
     <p>

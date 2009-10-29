@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
   enum { GEOGRAPHIC, DMS, UTMUPS, MGRS, CONVERGENCE };
   int outputmode = GEOGRAPHIC;
   int prec = 0;
-  int zone = -3;                // -2 = track input, -1 = standard
+  int zone = UTMUPS::MATCH;
   bool centerp = true;
 
   for (int m = 1; m < argc; ++m) {
@@ -147,14 +147,14 @@ int main(int argc, char* argv[]) {
       std::string a = std::string(argv[m]);
       std::istringstream str(a);
       if (!(str >> zone)) return usage(1);
-      if (!(zone >= 0 && zone <= 60)) {
+      if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE)) {
         std::cerr << "Zone " << zone << "not in [0, 60]\n";
         return 1;
       }
     } else if (arg == "-s")
-      zone = -1;
+      zone = UTMUPS::STANDARD;
     else if (arg == "-t")
-      zone = -2;
+      zone = UTMUPS::UTM;
     else
       return usage(arg != "-h");
   }
@@ -167,8 +167,7 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       p.Reset(s, centerp);
-      if (zone != -3)
-        p.SetAltZone(zone);
+      p.SetAltZone(zone);
       switch (outputmode) {
       case GEOGRAPHIC:
         os = p.GeoRepresentation(prec);
