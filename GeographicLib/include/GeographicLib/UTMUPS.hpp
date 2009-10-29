@@ -142,7 +142,7 @@ namespace GeographicLib {
      * Return the standard zone for latitude \e lat (degrees) and longitude \e
      * lon (degrees); see UTMUPS::STANDARD.  This is exact.  If the optional
      * argument \e setzone is given then use that zone if it is non-negative,
-     * orthewise apply the rules given in UTMUPS::zonespec.  Throws an error if
+     * otherwise apply the rules given in UTMUPS::zonespec.  Throws an error if
      * \e setzone is outsize the range [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE]
      * = [-3, 60].
      **********************************************************************/
