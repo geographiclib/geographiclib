@@ -60,14 +60,15 @@ namespace GeographicLib {
     if (!(prec >= 0 || prec <= maxprec))
       throw out_of_range("MGRS precision " + str(prec) + " not in [0, "
                          + str(int(maxprec)) + "]");
+    // Fixed char array for accumulating string.  Allow
+    // space for zone, 3 block letters, easting + northing + null
+    char mgrs1[2 + 3 + 2 * maxprec + 1];
     int
       zone1 = zone - 1,
       z = utmp ? 2 : 0;
-    // Space for zone, 3 block letters, easting + northing
-    mgrs.resize(z + 3 + 2 * prec);
     if (utmp) {
-      mgrs[0] = digits[ zone / base ];
-      mgrs[1] = digits[ zone % base ];
+      mgrs1[0] = digits[ zone / base ];
+      mgrs1[1] = digits[ zone % base ];
       // This isn't necessary...!  Keep y non-neg
       // if (!northp) y -= maxutmSrow * tile;
     }
@@ -86,26 +87,26 @@ namespace GeographicLib {
       if (irow != yh - (northp ? minutmNrow : maxutmSrow))
         throw out_of_range("Latitude " + str(lat)
                            + " is inconsistent with UTM coordinates");
-      mgrs[z++] = latband[10 + iband];
-      mgrs[z++] = utmcols[zone1 % 3][icol];
-      mgrs[z++] = utmrow[(yh + (zone1 & 1 ? utmevenrowshift : 0))
+      mgrs1[z++] = latband[10 + iband];
+      mgrs1[z++] = utmcols[zone1 % 3][icol];
+      mgrs1[z++] = utmrow[(yh + (zone1 & 1 ? utmevenrowshift : 0))
                          % utmrowperiod];
     } else {
       bool eastp = xh >= upseasting;
       int iband = (northp ? 2 : 0) + (eastp ? 1 : 0);
-      mgrs[z++] = upsband[iband];
-      mgrs[z++] = upscols[iband][xh - (eastp ? upseasting :
+      mgrs1[z++] = upsband[iband];
+      mgrs1[z++] = upscols[iband][xh - (eastp ? upseasting :
                                        northp ? minupsNind : minupsSind)];
-      mgrs[z++] = upsrows[northp][yh - (northp ? minupsNind : minupsSind)];
+      mgrs1[z++] = upsrows[northp][yh - (northp ? minupsNind : minupsSind)];
     }
     real mult = pow(real(base), min(prec - tilelevel, 0));
     int
       ix = int(floor(xf * mult)),
       iy = int(floor(yf * mult));
     for (int c = min(prec, int(tilelevel)); c--;) {
-      mgrs[z + c] = digits[ ix % base ];
+      mgrs1[z + c] = digits[ ix % base ];
       ix /= base;
-      mgrs[z + c + prec] = digits[ iy % base ];
+      mgrs1[z + c + prec] = digits[ iy % base ];
       iy /= base;
     }
     if (prec > tilelevel) {
@@ -115,12 +116,15 @@ namespace GeographicLib {
       ix = int(floor(xf * mult));
       iy = int(floor(yf * mult));
       for (int c = prec - tilelevel; c--;) {
-        mgrs[z + c + tilelevel] = digits[ ix % base ];
+        mgrs1[z + c + tilelevel] = digits[ ix % base ];
         ix /= base;
-        mgrs[z + c + tilelevel + prec] = digits[ iy % base ];
+        mgrs1[z + c + tilelevel + prec] = digits[ iy % base ];
         iy /= base;
       }
     }
+    mgrs1[z + 3 + 2 * prec] = '\0';
+    mgrs.reserve(z + 3 + 2 * prec);
+    mgrs = mgrs1;
   }
 
   void MGRS::Forward(int zone, bool northp, real x, real y,
@@ -140,31 +144,31 @@ namespace GeographicLib {
     int
       p = 0,
       len = int(mgrs.size());
-    zone = 0;
+    int zone1 = 0;
     while (p < len) {
       int i = lookup(digits, mgrs[p]);
       if (i < 0)
         break;
-      zone = 10 * zone + i;
+      zone1 = 10 * zone1 + i;
       ++p;
     }
-    if (p > 0 && (zone == 0 || zone > 60))
-      throw out_of_range("Zone " + str(zone) + " not in [1,60]");
+    if (p > 0 && (zone1 == 0 || zone1 > 60))
+      throw out_of_range("Zone " + str(zone1) + " not in [1,60]");
     if (p > 2)
       throw out_of_range("More than 2 digits at start of MGRS "
                          + mgrs.substr(0, p));
     if (len - p < 3)
       throw out_of_range("MGRS string " + mgrs + " too short");
-    bool utmp = zone != 0;
-    int zone1 = zone - 1;
+    bool utmp = zone1 != 0;
+    int zonem1 = zone1 - 1;
     const string& band = utmp ? latband : upsband;
     int iband = lookup(band, mgrs[p++]);
     if (iband < 0)
       throw out_of_range("Band letter " + str(mgrs[p-1]) + " not in "
                          + (utmp ? "UTM" : "UPS") + " set " + band);
-    northp = iband >= (utmp ? 10 : 2);
-    const string& col = utmp ? utmcols[zone1 % 3] : upscols[iband];
-    const string& row = utmp ? utmrow : upsrows[northp];
+    bool northp1 = iband >= (utmp ? 10 : 2);
+    const string& col = utmp ? utmcols[zonem1 % 3] : upscols[iband];
+    const string& row = utmp ? utmrow : upsrows[northp1];
     int icol = lookup(col, mgrs[p++]);
     if (icol < 0)
       throw out_of_range("Column letter " + str(mgrs[p-1]) + " not in "
@@ -175,10 +179,10 @@ namespace GeographicLib {
     if (irow < 0)
       throw out_of_range("Row letter " + str(mgrs[p-1]) + " not in "
                          + (utmp ? "UTM" :
-                            "UPS " + str(hemispheres[northp]))
+                            "UPS " + str(hemispheres[northp1]))
                          + " set " + row);
     if (utmp) {
-      if (zone1 & 1)
+      if (zonem1 & 1)
         irow = (irow + utmrowperiod - utmevenrowshift) % utmrowperiod;
       iband -= 10;
       irow = UTMRow(iband, icol, irow);
@@ -186,26 +190,27 @@ namespace GeographicLib {
         throw out_of_range("Block " + mgrs.substr(p-2, 2)
                            + " not in zone/band " + mgrs.substr(0, p-2));
 
-      irow = northp ? irow : irow + 100;
+      irow = northp1 ? irow : irow + 100;
       icol = icol + minutmcol;
     } else {
       bool eastp = iband & 1;
-      icol += eastp ? upseasting : northp ? minupsNind : minupsSind;
-      irow += northp ? minupsNind : minupsSind;
+      icol += eastp ? upseasting : northp1 ? minupsNind : minupsSind;
+      irow += northp1 ? minupsNind : minupsSind;
     }
-    prec = (len - p)/2;
-    real unit = tile;
-    x = unit * icol;
-    y = unit * irow;
-    for (int i = 0; i < prec; ++i) {
+    int prec1 = (len - p)/2;
+    real
+      unit = tile,
+      x1 = unit * icol,
+      y1 = unit * irow;
+    for (int i = 0; i < prec1; ++i) {
       unit /= base;
       int
         ix = lookup(digits, mgrs[p + i]),
-        iy = lookup(digits, mgrs[p + i + prec]);
+        iy = lookup(digits, mgrs[p + i + prec1]);
       if (ix < 0 || iy < 0)
         throw out_of_range("Encountered a non-digit in " + mgrs.substr(p));
-      x += unit * ix;
-      y += unit * iy;
+      x1 += unit * ix;
+      y1 += unit * iy;
     }
     if ((len - p) % 2) {
       if (lookup(digits, mgrs[len - 1]) < 0)
@@ -213,13 +218,18 @@ namespace GeographicLib {
       else
         throw out_of_range("Not an even number of digits in " + mgrs.substr(p));
     }
-    if (prec > maxprec)
+    if (prec1 > maxprec)
       throw out_of_range("More than " + str(2*maxprec) + " digits in "
                          + mgrs.substr(p));
     if (centerp) {
-      x += unit/2;
-      y += unit/2;
+      x1 += unit/2;
+      y1 += unit/2;
     }
+    zone = zone1;
+    northp = northp1;
+    x = x1;
+    y = y1;
+    prec = prec1;
   }
 
   void MGRS::CheckCoords(bool utmp, bool& northp, real& x, real& y) {
