@@ -25,13 +25,21 @@ case $ZONE in
 esac
 test $PREC = 0 || COMMAND="$COMMAND -p $PREC"
 if test "$INPUT"; then
+    COMMANDLINE="echo $INPUT | $COMMAND"
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
+    if test $? -eq 0; then
+	STATUS=OK
+    else
+	STATUS="$OUTPUT"
+	OUTPUT=
+    fi
     echo `date +"%F %T"` echo "$INPUT | $COMMAND" >> ../persistent/utilities.log
 else
+    COMMANDLINE=
+    STATUS=
     OUTPUT=
     echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
 fi
-OUTPUTENC=`encodevalue "$OUTPUT"`
 
 echo Content-type: text/html
 echo
@@ -147,9 +155,10 @@ cat <<EOF
       </p>
       <p>
         Results:<br>
-        <pre>
-    command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
-    output  = $OUTPUTENC</pre>
+        <font size="4"><pre>
+    command = `encodevalue "$COMMANDLINE"`
+    status  = `encodevalue "$STATUS"`
+    output  = `encodevalue "$OUTPUT"`</pre></font>
       </p>
     </form>
     <hr>
