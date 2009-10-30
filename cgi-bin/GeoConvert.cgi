@@ -39,12 +39,14 @@ cat <<EOF
 <html>
   <header>
     <title>
-      Online geographic coordinate conversions
+      Online geographic coordinate converter
     </title>
   </header>
   <body>
     <h3>
-      Online geographic coordinate conversions using the GeoConvert utility
+      Online geographic coordinate conversions using the
+      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoconvert">
+	GeoConvert</a> utility
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
       <p>
@@ -146,9 +148,8 @@ cat <<EOF
       <p>
         Results:<br>
         <pre>
-    Command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
-    Output  = $OUTPUTENC
-        </pre>
+    command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
+    output  = $OUTPUTENC</pre>
       </p>
     </form>
     <hr>
@@ -170,8 +171,7 @@ cat <<EOF
         W32d40 N83d37.6               YUB17770380
         83d37'39"N 32d39'52"W     UTM:
     UPS:                              25N 504158 9286521
-        N 1617772 1403805             430000 9290000 26N
-      </pre>
+        N 1617772 1403805             430000 9290000 26N</pre>
       <b>Notes:</b>
       <ul>
 	<li>

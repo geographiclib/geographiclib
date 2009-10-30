@@ -15,19 +15,41 @@ test "$FORMAT" || FORMAT=g
 test "$AZI2" || AZI2=f
 test "$PREC" || PREC=3
 test "$TYPE" || TYPE=d
+AZIX=" azi2"
+test "$AZI2" = b && AZIX="bazi2"
+
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=Geod
 EXECDIR=./exec
+test -z "$INPUT" || COMMAND="$COMMAND -f"
 test $TYPE = d || COMMAND="$COMMAND -$TYPE"
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
 test $AZI2 = f || COMMAND="$COMMAND -$AZI2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
 if test "$INPUT"; then
+    COMMANDLINE="echo $INPUT | $COMMAND"
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
-    test $? -eq 0 && OUTPUT="`echo $OUTPUT | cut -f1-3 -d' '`"
-    echo `date +"%F %T"` "echo $INPUT | $COMMAND" >> ../persistent/utilities.log
+    if test $? -eq 0; then
+	STATUS=OK
+	OUTPUT="`echo $OUTPUT | cut -f1-7 -d' '`"
+	POSITION1="`echo $OUTPUT | cut -f1-3 -d' '`"
+	POSITION2="`echo $OUTPUT | cut -f4-6 -d' '`"
+	DIST12="`echo $OUTPUT | cut -f7 -d' '`"
+    else
+	STATUS="$OUTPUT"
+	OUTPUT=
+	POSITION1=
+	POSITION2=
+	DIST12=
+    fi
+    echo `date +"%F %T"` "$COMMANDLINE" >> ../persistent/utilities.log
 else
+    COMMANDLINE=
     OUTPUT=
+    STATUS=
+    POSITION1=
+    POSITION2=
+    DIST12=
     echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
 fi
 OUTPUTENC=`encodevalue "$OUTPUT"`
@@ -38,12 +60,14 @@ cat <<EOF
 <html>
   <header>
     <title>
-      Online geodesic calculations
+      Online geodesic calculator
     </title>
   </header>
   <body>
     <h3>
-      Online geodesic calculations using the Geod utility
+      Online geodesic calculations using the
+      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geod">
+	 Geod</a> utility
     </h3>
     <form action="/cgi-bin/Geod" method="get">
       <p>
@@ -110,7 +134,6 @@ EOF
 7 100nm 0.00000001"
 8 10nm 0.000000001"
 9 1nm 0.0000000001"
-10 100pm 0.00000000001"
 EOF
 ) | while read p desc; do
     SELECTED=
@@ -169,9 +192,11 @@ cat <<EOF
       <p>
         Results:<br>
         <pre>
-    Command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
-    Output  = $OUTPUTENC
-        </pre>
+    command         = `encodevalue "$COMMANDLINE"`
+    status          = `encodevalue "$STATUS"`
+    lat1 lon1  azi1 = `encodevalue "$POSITION1"`
+    lat2 lon2 $AZIX = `encodevalue "$POSITION2"`
+    s12 (m)         = `encodevalue "$DIST12"`</pre>
       </p>
     </form>
     <hr>
@@ -196,8 +221,7 @@ cat <<EOF
       <pre>
         16.776 -3.009
         16d47' -3d1'
-        W3d0'34" N16d46'33"
-      </pre>
+        W3d0'34" N16d46'33"</pre>
       Azimuths are given in degress clockwise from north.  The
       distance <em>s12</em> is in meters.
     </p>

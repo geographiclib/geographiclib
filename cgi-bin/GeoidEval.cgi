@@ -15,14 +15,25 @@ GEOID_PATH=geoids
 EXECDIR=./exec
 test $GEOID = egm96-5 || COMMAND="$COMMAND -n $GEOID"
 if test "$INPUT"; then
+    COMMANDLINE="echo $INPUT | $COMMAND"
     OUTPUT=`echo $INPUT | GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND`
-    test $? -eq 0 && OUTPUT="`echo $OUTPUT | cut -f1 -d' '` m"
-    echo `date +"%F %T"` "echo $INPUT | $COMMAND" >> ../persistent/utilities.log
+    if test $? -eq 0; then
+	STATUS=OK
+	POSITION=`echo $INPUT | cut -f1,2 -d' ' | $EXECDIR/GeoConvert`
+	OUTPUT="`echo $OUTPUT | cut -f1 -d' '`"
+    else
+	STATUS="$OUTPUT"
+	POSITION=
+	OUTPUT=
+    fi
+    echo `date +"%F %T"` "$COMMANDLINE" >> ../persistent/utilities.log
 else
+    COMMANDLINE=
     OUTPUT=
+    STATUS=
+    POSITION=
     echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
 fi
-OUTPUTENC=`encodevalue "$OUTPUT"`
 
 echo Content-type: text/html
 echo
@@ -35,7 +46,9 @@ cat <<EOF
   </header>
   <body>
     <h3>
-      Online geoid calculator using the GeoidEval utility
+      Online geoid calculations using the
+      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
+	GeoidEval</a> utility
     </h3>
     <form action="/cgi-bin/GeoidEval" method="get">
       <p>
@@ -69,9 +82,10 @@ cat <<EOF
       <p>
         Geoid height:<br>
         <pre>
-    Command = `test "$INPUT" && echo "echo $INPUTENC | $COMMAND"`
-    Height  = $OUTPUTENC
-        </pre>
+    command    = `encodevalue "$COMMANDLINE"`
+    status     = `encodevalue "$STATUS"`
+    lat lon    = `encodevalue "$POSITION"`
+    height (m) = `encodevalue "$OUTPUT"`</pre>
       </p>
     </form>
     <hr>
@@ -93,8 +107,7 @@ cat <<EOF
       <pre>
         16.776 -3.009
         16d47' -3d1'
-        W3d0'34" N16d46'33"
-      </pre>
+        W3d0'34" N16d46'33"</pre>
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
