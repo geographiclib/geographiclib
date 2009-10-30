@@ -15,8 +15,8 @@ test "$FORMAT" || FORMAT=g
 test "$AZI2" || AZI2=f
 test "$PREC" || PREC=3
 test "$TYPE" || TYPE=d
-AZIX=" azi2"
-test "$AZI2" = b && AZIX="bazi2"
+AZX="faz2"
+test "$AZI2" = b && AZX="baz2"
 
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=Geod
@@ -191,12 +191,12 @@ cat <<EOF
       </p>
       <p>
         Results:<br>
-        <pre>
-    command         = `encodevalue "$COMMANDLINE"`
-    status          = `encodevalue "$STATUS"`
-    lat1 lon1  azi1 = `encodevalue "$POSITION1"`
-    lat2 lon2 $AZIX = `encodevalue "$POSITION2"`
-    s12 (m)         = `encodevalue "$DIST12"`</pre>
+        <font size="4"><pre>
+    command        = `encodevalue "$COMMANDLINE"`
+    status         = `encodevalue "$STATUS"`
+    lat1 lon1 faz1 = `encodevalue "$POSITION1"`
+    lat2 lon2 $AZX = `encodevalue "$POSITION2"`
+    s12 (m)        = `encodevalue "$DIST12"`</pre></font>
       </p>
     </form>
     <hr>

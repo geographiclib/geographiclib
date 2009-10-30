@@ -81,11 +81,11 @@ cat <<EOF
       </p>
       <p>
         Geoid height:<br>
-        <pre>
+        <font size="4"><pre>
     command    = `encodevalue "$COMMANDLINE"`
     status     = `encodevalue "$STATUS"`
     lat lon    = `encodevalue "$POSITION"`
-    height (m) = `encodevalue "$OUTPUT"`</pre>
+    height (m) = `encodevalue "$OUTPUT"`</pre></font>
       </p>
     </form>
     <hr>
