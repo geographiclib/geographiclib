@@ -15,7 +15,7 @@ test "$ZONE" || ZONE=-3
 test "$PREC" || PREC=0
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=GeoConvert
-EXECDIR=./exec
+EXECDIR=../bin
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
 case $ZONE in
     -3 ) ;;

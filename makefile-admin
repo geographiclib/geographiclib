@@ -3,30 +3,28 @@ include Makefile
 
 USER=karney
 STAGE=$(HOME)/web
-D=GeographicLib
-D1=geographic
+WEBSTAGE=$(STAGE)/geographic-web
+DATASTAGE=$(STAGE)/geographic-files
 
 distrib:
-	rsync -av --delete index.html doc/html geodesic-papers $(STAGE)/$(D1)/
-	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(STAGE)/$(D1)/ $(USER),geographiclib@web.sourceforge.net:htdocs/
+	rsync -av --exclude .svn --delete --delete-excluded index.html doc/html geodesic-papers $(WEBSTAGE)/htdocs/
+	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
-	rsync -av --delete distrib testdata geoids-distrib $(STAGE)/$(D1)-files/
-	for d in distrib testdata geoids-distrib; do \
-	  rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(STAGE)/$(D1)-files/$$d $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/; \
-	done
+	rsync -av --delete distrib testdata geoids-distrib $(DATASTAGE)/
+	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,geoids-distrib} $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/
 
 distrib-cgi:
 	for f in GeoConvert Geod GeoidEval printlogs; do \
-	  a=cgi-bin/$$f.cgi; b=$(STAGE)/cgi-bin/$$f; \
+	  a=cgi-bin/$$f.cgi; b=$(WEBSTAGE)/cgi-bin/$$f; \
 	  cmp $$a $$b > /dev/null || install $$a $$b; done
 	for f in utils; do \
-	  a=cgi-bin/$$f.sh; b=$(STAGE)/cgi-bin/$$f.sh; \
+	  a=cgi-bin/$$f.sh; b=$(WEBSTAGE)/cgi-bin/$$f.sh; \
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
-	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(STAGE)/cgi-bin/ $(USER),geographiclib@web.sourceforge.net:cgi-bin/
+	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
 
 depend:
 	makedepend -- $(CPPFLAGS) -- $(ALLSOURCES)
 
-.PHONY: distrib distrib-files
+.PHONY: distrib distrib-files distrib-cgi

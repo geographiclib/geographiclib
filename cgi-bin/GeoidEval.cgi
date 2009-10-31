@@ -11,8 +11,8 @@ fi
 test "$GEOID" || GEOID=egm96-5
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=GeoidEval
-GEOID_PATH=geoids
-EXECDIR=./exec
+GEOID_PATH=../geoids
+EXECDIR=../bin
 test $GEOID = egm96-5 || COMMAND="$COMMAND -n $GEOID"
 if test "$INPUT"; then
     COMMANDLINE="echo $INPUT | $COMMAND"

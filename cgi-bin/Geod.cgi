@@ -20,7 +20,7 @@ test "$AZI2" = b && AZX="baz2"
 
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=Geod
-EXECDIR=./exec
+EXECDIR=../bin
 test -z "$INPUT" || COMMAND="$COMMAND -f"
 test $TYPE = d || COMMAND="$COMMAND -$TYPE"
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"

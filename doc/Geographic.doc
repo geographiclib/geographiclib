@@ -299,8 +299,8 @@ There's an "install" target in the Makefile which installs the library
 components into \$(PREFIX)/lib, \$(PREFIX)/include/GeographicLib,
 \$(PREFIX)/bin, \$(PREFIX)/share/GeographicLib/doc.  Once installed, the
 library can be used by setting
-  - INCLUDEPATH = $(PREFIX)/include
-  - LIBPATH = $(PREFIX)/lib
+  - INCLUDEPATH = \$(PREFIX)/include
+  - LIBPATH = \$(PREFIX)/lib
   .
 in tools/Makefile.
 
