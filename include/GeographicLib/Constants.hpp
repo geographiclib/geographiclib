@@ -51,45 +51,124 @@ namespace GeographicLib {
      * float and long double (where available).
      **********************************************************************/
     typedef double real;
-
 #if !defined(_MSC_VER)
     /**
      * sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>)
      **********************************************************************/
-    static inline real hypot(real x, real y) throw()
+    static inline double hypot(double x, double y) throw()
     { return ::hypot(x, y); }
+    /**
+     * sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>)
+     **********************************************************************/
+    static inline float hypot(float x, float y) throw()
+    { return ::hypotf(x, y); }
+    /**
+     * sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>)
+     **********************************************************************/
+    static inline long double hypot(long double x, long double y) throw()
+    { return ::hypotl(x, y); }
+    /**
+     * exp(\e x) - 1
+     **********************************************************************/
+    static inline double expm1(double x) throw() { return ::expm1(x); }
+    /**
+     * exp(\e x) - 1
+     **********************************************************************/
+    static inline float expm1(float x) throw() { return ::expm1f(x); }
+    /**
+     * exp(\e x) - 1
+     **********************************************************************/
+    static inline long double expm1(long double x) throw()
+    { return ::expm1l(x); }
+    /**
+     * log(\e x + 1)
+     **********************************************************************/
+    static inline double log1p(double x) throw() { return ::log1p(x); }
+    /**
+     * log(\e x + 1)
+     **********************************************************************/
+    static inline float log1p(float x) throw() { return ::log1pf(x); }
+    /**
+     * log(\e x + 1)
+     **********************************************************************/
+    static inline long double log1p(long double x) throw()
+    { return ::log1pl(x); }
     /**
      * asinh(\e x)
      **********************************************************************/
-    static inline real asinh(real x) throw() { return ::asinh(x); }
+    static inline double asinh(double x) throw() { return ::asinh(x); }
+    /**
+     * asinh(\e x)
+     **********************************************************************/
+    static inline float asinh(float x) throw() { return ::asinhf(x); }
+    /**
+     * asinh(\e x)
+     **********************************************************************/
+    static inline long double asinh(long double x) throw()
+    { return ::asinhl(x); }
     /**
      * atanh(\e x)
      **********************************************************************/
-    static inline real atanh(real x) throw() { return ::atanh(x); }
+    static inline double atanh(double x) throw() { return ::atanh(x); }
+    /**
+     * atanh(\e x)
+     **********************************************************************/
+    static inline float atanh(float x) throw() { return ::atanhf(x); }
+    /**
+     * atanh(\e x)
+     **********************************************************************/
+    static inline long double atanh(long double x) throw()
+    { return ::atanhl(x); }
     /**
      * \e x<sup>1/3</sup>
      **********************************************************************/
-    static inline real cbrt(real x) throw() { return ::cbrt(x); }
+    static inline double cbrt(double x) throw() { return ::cbrt(x); }
+    /**
+     * \e x<sup>1/3</sup>
+     **********************************************************************/
+    static inline float cbrt(float x) throw() { return ::cbrtf(x); }
+    /**
+     * \e x<sup>1/3</sup>
+     **********************************************************************/
+    static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
 #else
-    static inline real hypot(real x, real y) throw() {
-      return real( sizeof(real) <= sizeof(double) ?
-                   _hypot(x, y) : _hypotf(float(x), float(y)) );
+    static inline double hypot(double x, double y) throw()
+    { return _hypot(x, y); }
+    static inline float hypot(float x, float y) throw()
+    { return _hypotf(x, y); }
+    static inline real expm1(real x) throw() {
+      // See http://www.plunk.org/~hatch/rightway.php which credits Kahan
+      volatile real
+        y = std::exp(x),
+        z = y - 1;
+      // The reasoning here is similar to that for log1p.  The expression
+      // mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -
+      // 1)/log(y) is a slowly varying quantity near y = 1 and is accurately
+      // computed.
+      return std::abs(x) > 1 ? z : z == 0 ?  x : x * z / std::log(y);
     }
-    // These have poor relative accuracy near x = 0.  However, for mapping
-    // applications, we only need good absolute accuracy.
-    // For small arguments we would write
-    //
-    // asinh(x) = asin(x) -x^3/3-5*x^7/56-63*x^11/1408-143*x^15/5120 ...
-    // atanh(x) = atan(x) +2*x^3/3+2*x^7/7+2*x^11/11+2*x^15/15
-    //
-    // The accuracy of asinh is also bad for large negative arguments.  This is
-    // easy to fix in the definition of asinh.  Instead we call these functions
-    // with positive arguments and enforce the correct parity separately.
+    static inline real log1p(real x) throw() {
+      // See D. Goldberg "What every computer scientist should know about
+      // floating-point arithmetic" (1991), Theorem 4.
+      // http://docs.sun.com/source/806-3568/ncg_goldberg.html
+      volatile real
+        y = 1 + x,
+        z = y - 1;
+      // Here's the explanation for this magic: y = 1 + z, exactly, and z
+      // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
+      // a good approximation to the true log(1 + x)/x.  The multiplication x *
+      // (log(y)/z) introduces little additional error.
+      return z == 0 ? x : x * std::log(y) / z;
+    }
     static inline real asinh(real x) throw() {
-      return std::log(x + std::sqrt(1 + x * x));
+      real y = std::abs(x);
+      y = log1p(y * (1 + y/(sqrt(1 + y * y) + 1)));
+      return x < 0 ? -y : y;
     }
     static inline real atanh(real x) throw() {
-      return std::log((1 + x)/(1 - x))/2;
+      real y = std::abs(x);
+      y = log1p(2 * y/(1 - y))/2;
+      return x < 0 ? -y : y;
     }
     static inline real cbrt(real x) throw() {
       real y = std::pow(std::abs(x), 1/real(3));

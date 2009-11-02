@@ -169,6 +169,9 @@ int main(int argc, char* argv[]) {
         std::string stra, strb;
         if (!(str >> stra >> strb))
           throw std::out_of_range("Incomplete input: " + s);
+        std::string strc;
+        if (str >> strc)
+          throw std::out_of_range("Extraneous input: " + strc);
         real lat, lon;
         GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
         real gradn, grade;

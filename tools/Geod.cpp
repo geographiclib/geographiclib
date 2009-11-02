@@ -242,6 +242,9 @@ int main(int argc, char* argv[]) {
         std::string slat1, slon1, slat2, slon2;
         if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
           throw std::out_of_range("Incomplete input: " + s);
+        std::string strc;
+        if (str >> strc)
+          throw std::out_of_range("Extraneous input: " + strc);
         GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
         GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
         a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
@@ -258,12 +261,18 @@ int main(int argc, char* argv[]) {
           std::string ss12;
           if (!(str >> ss12))
             throw std::out_of_range("Incomplete input: " + s);
+          std::string strc;
+          if (str >> strc)
+            throw std::out_of_range("Extraneous input: " + strc);
           s12 = ReadDistance(ss12, arcmode);
           a12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
         } else {
           std::string slat1, slon1, sazi1, ss12;
           if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
             throw std::out_of_range("Incomplete input: " + s);
+          std::string strc;
+          if (str >> strc)
+            throw std::out_of_range("Extraneous input: " + strc);
           GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           azi1 = ReadAzimuth(sazi1);
           s12 = ReadDistance(ss12, arcmode);

@@ -74,6 +74,15 @@ namespace GeographicLib {
     static Math::real Decode(const std::string& dms, flag& ind);
 
     /**
+     * Convert real degrees \e d, minutes \e m, and seconds \e s, to degrees.
+     * This does not propagate the sign on \e d to the other components, so
+     * -3d20' would need to be represented as - DMS::Decode(3.0, 20.0) or
+     * DMS::Decode(-3.0, -20.0).
+     **********************************************************************/
+    static Math::real Decode(real d, real m = 0, real s = 0) throw()
+    { return d + (m + s/real(60))/real(60); }
+
+    /**
      * Convert two strings \e dmsa and \e dmsb to a latitude, \e lat, and
      * longitude, \e lon.  By default, the \e lat (resp., \e lon) is assigned
      * to the results of decoding \e dmsa (resp., \e dmsb).  However this is
@@ -120,6 +129,23 @@ namespace GeographicLib {
                     prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
                     ind);
     }
+
+    /**
+     * Split angle, \e ang, into degrees, \e d, and minutes \e m.
+     **********************************************************************/
+    static void Encode(real ang, real& d, real& m) throw() {
+      d = int(ang); m = 60 * (ang - d);
+    }
+
+    /**
+     * Split angle, \e ang, into degrees, \e d, minutes, \e m, and seconds \e
+     * s.
+     **********************************************************************/
+    static void Encode(real ang, real& d, real& m, real& s) throw() {
+      d = int(ang); ang = 60 * (ang - d);
+      m = int(ang); s = 60 * (ang - m);
+    }
+
   };
 
 } // namespace GeographicLib

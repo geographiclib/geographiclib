@@ -88,6 +88,9 @@ int main(int argc, char* argv[]) {
             (str >> x >> y >> z) :
             (str >> lat >> lon >> h)))
         throw  std::out_of_range("Incomplete input: " + s);
+      std::string strc;
+      if (str >> strc)
+        throw std::out_of_range("Extraneous input: " + strc);
       if (reverse) {
         if (localcartesian)
           lc.Reverse(x, y, z, lat, lon, h);
