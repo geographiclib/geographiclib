@@ -97,8 +97,8 @@ namespace GeographicLib {
       PolarStereographic::UPS.Forward(northp1, lat, lon, x1, y1, gamma1, k1);
     }
     int ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
-    x1 =+ falseeasting[ind];
-    y1 =+ falsenorthing[ind];
+    x1 += falseeasting[ind];
+    y1 += falsenorthing[ind];
     if (! CheckCoords(zone1 != UPS, northp1, x1, y1, mgrslimits, false) )
       throw out_of_range("Latitude " + str(lat) + ", longitude " + str(lon)
                          + " out of legal range for "
