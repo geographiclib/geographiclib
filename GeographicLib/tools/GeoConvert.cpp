@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
       std::istringstream str(a);
       if (!(str >> zone)) return usage(1);
       if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE)) {
-        std::cerr << "Zone " << zone << "not in [0, 60]\n";
+        std::cerr << "Zone " << zone << " not in [0, 60]\n";
         return 1;
       }
     } else if (arg == "-s")

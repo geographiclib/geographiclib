@@ -64,7 +64,25 @@ Files
       gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
       thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-10 version of the library.
+This is the 2009-11 version of the library.
+
+Changes between 2009-11 and 2009-10 versions:
+
+  * Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
+    and GeoConvert (via -t option).
+
+  * Utilities now complain is there are too many tokens on input lines.
+
+  * Include real-to-real versions of GeographicLib::DMS::Decode and
+    GeographicLib::DMS::Encode.
+
+  * More house-cleaning changes:
+    + Ensure that functions which return results through reference
+      arguments do not alter the arguments when an exception is thrown.
+    + Improve accuracy of GeographicLib::MGRS::Forward.
+    + Include more information in some error messages.
+    + Improve accuracy of inverse hypobolic functions.
+    + Fix the way GeographicLib::Math functions handle different precisions.
 
 Changes between 2009-10 and 2009-09 versions:
 

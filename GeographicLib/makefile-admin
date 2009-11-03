@@ -23,7 +23,6 @@ distrib-cgi:
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
-
 depend:
 	makedepend -- $(CPPFLAGS) -- $(ALLSOURCES)
 

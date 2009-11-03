@@ -14,7 +14,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <iomanip>
-#include <cerrno>
 
 #define GEOGRAPHICLIB_GEOCOORDS_CPP "$Id$"
 
@@ -27,7 +26,8 @@ namespace GeographicLib {
 
   void GeoCoords::Reset(const std::string& s, bool centerp) {
     vector<string> sa;
-    const char* spaces = " \t\n\v\f\v,"; // Include , as a space
+    const char* spaces = " \t\n\v\f\v,"; // Include comma as a space
+    const char* digits = "0123456789.";  // Include period as a digit
     for (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
       pos1 = s.find_first_not_of(spaces, pos0);
       if (pos1 == string::npos)
@@ -61,9 +61,15 @@ namespace GeographicLib {
         istringstream str(sa[coordind + i]);
         real x;
         if (!(str >> x))
-          throw out_of_range("Bad number " + sa[coordind + i]);
-        if (int(str.tellg()) != int(sa[coordind + i].size()))
-          throw out_of_range(string("Extra text in UTM/UPS ")
+          throw out_of_range("Bad number " + sa[coordind + i] + " for UTM/UPS "
+                             + (i == 0 ? "easting " : "northing "));
+        // str >> x gobbles final E in 1234E, so look for last character which
+        // is legal as the final character in a number (digit or period).
+        int pos = min(int(str.tellg()),
+                      int(sa[coordind + i].find_last_of(digits)) + 1);
+        if (pos != int(sa[coordind + i].size()))
+          throw out_of_range("Extra text "
+                             + sa[coordind + i].substr(pos) + " in UTM/UPS "
                              + (i == 0 ? "easting " : "northing ")
                              + sa[coordind + i]);
         (i ? _northing : _easting) = x;

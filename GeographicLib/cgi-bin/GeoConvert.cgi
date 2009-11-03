@@ -19,7 +19,7 @@ EXECDIR=../bin
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
 case $ZONE in
     -3 ) ;;
-#   -2 ) COMMAND="$COMMAND -t";;  # Not supported yet
+    -2 ) COMMAND="$COMMAND -t";;
     -1 ) COMMAND="$COMMAND -s";;
     * ) COMMAND="$COMMAND -z $ZONE"
 esac
@@ -96,7 +96,6 @@ EOF
 -2 Standard UTM zone
 EOF
 ) | while read z name; do
-    test $z -eq -2 && continue # Not supported yet
     SELECTED=
     test "$z" = "$ZONE" && SELECTED=SELECTED
     echo "<option $SELECTED value=\"$z\">$name"
