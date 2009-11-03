@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-10
-\date 2009-10-18
+\version 2009-11
+\date 2009-11-03
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib	</a>
 .
 The code is available for download at
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">
-  Geographic-2009-10.tgz</a>
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-10.zip/download">
-  Geographic-2009-10.zip</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">
+  Geographic-2009-11.tgz</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.zip/download">
+  Geographic-2009-11.zip</a>
 .
 as either a compressed tar file (tgz) or a zip file.  (The two archives
 have identical contents; however, the text files in the zip archive have
@@ -155,9 +155,9 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the <a
-   href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">source</a>.
+   href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz Geographic-2009-10.tgz
+   - tar xfpvz Geographic-2009-11.tgz
    .
    This will create a %GeographicLib directory.
  - Change to the %GeographicLib directory
@@ -2530,8 +2530,21 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">2009-10
-   (current)</a>
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">2009-11 (current)</a>
+  - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
+    and \ref geoconvert (via -t option).
+  - Utilities now complain is there are too many tokens on input lines.
+  - Include real-to-real versions of GeographicLib::DMS::Decode and
+    GeographicLib::DMS::Encode.
+  - More house-cleaning changes:
+    - Ensure that functions which return results through reference
+      arguments do not alter the arguments when an exception is thrown.
+    - Improve accuracy of GeographicLib::MGRS::Forward.
+    - Include more information in some error messages.
+    - Improve accuracy of inverse hypobolic functions.
+    - Fix the way GeographicLib::Math functions handle different precisions.
+
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">2009-10</a>
   - Change web site to http://geographiclib.sourceforge.net
   - Several house-cleaning changes:
     - Change from the a flat directory structure to a more easily
