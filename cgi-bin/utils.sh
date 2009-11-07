@@ -49,3 +49,8 @@ encodevalue () {
 	-e 's/>/\&gt;/g' -e 's/</\&lt;/g' -e "s/'/\&#39;/g" -e 's/`/\&#96;/g'
 }
 
+# Generate GeoHack URL.  $1 $2 are real position; $3 $4 is displayed
+# postion; $5 is link color
+geohack () {
+    echo "<a href=\"http://stable.toolserver.org/geohack/geohack.php?params=$1;$2\" style=\"color:$5\">$(encodevalue "$3 $4")</a>"
+}
