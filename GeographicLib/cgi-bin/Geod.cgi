@@ -36,19 +36,21 @@ if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -f`
     if test $? -eq 0; then
 	STATUS=OK
-	OUTPUT="`echo $OUTPUT | cut -f1-7 -d' '`"
+	OUTPUTG=`echo $INPUT | $EXECDIR/Geod -f -p 1`
 	POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
 	POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
+	POSG1="`echo $OUTPUTG | cut -f1-2 -d' '`"
+	POSG2="`echo $OUTPUTG | cut -f4-5 -d' '`"
 	AZI1="`echo $OUTPUT | cut -f3 -d' '`"
 	AZI2="`echo $OUTPUT | cut -f6 -d' '`"
 	DIST12="`echo $OUTPUT | cut -f7 -d' '`"
 	if test "$TYPE" = d; then
-	    POSITION1=$(encodevalue "$POS1 $AZI1")
-	    POSITION2=$F$(encodevalue "$POS2 $AZI2")$G
+	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $(encodevalue "$AZI1")
+	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)\ $(encodevalue "$AZI2")$G
 	    DIST12=$(encodevalue "$DIST12")
 	else
-	    POSITION1=$(encodevalue "$POS1")\ $F$(encodevalue "$AZI1")$G
-	    POSITION2=$(encodevalue "$POS2")\ $F$(encodevalue "$AZI2")$G
+	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $F$(encodevalue "$AZI1")$G
+	    POSITION2=$(geohack $POSG2 $POS2 Black)\ $F$(encodevalue "$AZI2")$G
 	    DIST12=$F$(encodevalue "$DIST12")$G
 	fi
     else

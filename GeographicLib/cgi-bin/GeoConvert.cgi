@@ -14,16 +14,19 @@ test "$PREC" || PREC=0
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=GeoConvert
 EXECDIR=../bin
-F='<font color="blue">'
+F='<font color="Blue">'
 G='</font>'
 test $PREC = 0 || COMMAND="$COMMAND -p $PREC"
 LOCG=
 LOCD=
 LOCU=
 LOCM=
+GEOH=
 if test "$INPUT"; then
     LOCG=`echo $INPUT | $EXECDIR/$COMMAND`
     if test $? -eq 0; then
+	GEOH=`echo $INPUT | $EXECDIR/$COMMAND -p 1`
+	LOCG=`geohack $GEOH $LOCG Blue`
 	LOCD=\(`echo $INPUT | $EXECDIR/$COMMAND -d`\)
 	case $ZONE in
 	    -3 ) ;;
@@ -132,7 +135,7 @@ cat <<EOF
         Results:
 <font size="4"><pre>
     input   = `encodevalue "$INPUT"`
-    lat lon = $F`encodevalue "$LOCG"` `encodevalue "$LOCD"`$G
+    lat lon = $F$LOCG `encodevalue "$LOCD"`$G
     <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a>/<a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">UPS</a> = $F`encodevalue "$LOCU"`$G
     <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>    = $F`encodevalue "$LOCM"`$G</pre></font>
       </p>

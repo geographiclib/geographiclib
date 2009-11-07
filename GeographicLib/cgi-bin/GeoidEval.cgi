@@ -23,6 +23,7 @@ if test "$INPUT"; then
     GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm96-5`
     if test $? -eq 0; then
 	POSITION1=`echo $INPUT | $EXECDIR/GeoConvert`
+	POSITION1=`geohack $POSITION1 $POSITION1 Black`
 	POSITION2=\(`echo $INPUT | $EXECDIR/GeoConvert -d -p -1`\)
 	HEIGHT2008=`echo $INPUT |
 	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm2008-1`
@@ -32,7 +33,7 @@ if test "$INPUT"; then
 	HEIGHT96=`echo $HEIGHT96 | cut -f1 -d' '`
 	HEIGHT84=`echo $HEIGHT84 | cut -f1 -d' '`
     else
-	POSITION1="$HEIGHT96"
+	POSITION1=`encodevalue "$HEIGHT96"`
 	HEIGHT96=
     fi
     echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
@@ -68,7 +69,7 @@ cat <<EOF
       <p>
         Geoid height:
 <font size="4"><pre>
-    position = `encodevalue "$POSITION1"` `encodevalue "$POSITION2"`
+    lat lon = $POSITION1 `encodevalue "$POSITION2"`
     geoid heights (m)
 	<a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">EGM2008</a> = $F`encodevalue "$HEIGHT2008"`$G
 	<a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">EGM96</a>   = $F`encodevalue "$HEIGHT96"`$G
