@@ -82,7 +82,8 @@ Changes between 2009-11 and 2009-10 versions:
     + Improve accuracy of GeographicLib::MGRS::Forward.
     + Include more information in some error messages.
     + Improve accuracy of inverse hypobolic functions.
-    + Fix the way GeographicLib::Math functions handle different precisions.
+    + Fix the way GeographicLib::Math functions handle different
+      precisions.
 
 Changes between 2009-10 and 2009-09 versions:
 

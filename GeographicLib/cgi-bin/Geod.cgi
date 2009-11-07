@@ -7,52 +7,55 @@ if test "$OPTION" = Reset; then
 else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
     FORMAT=`lookupkey "$QUERY_STRING" format`
-    AZI2=`lookupkey "$QUERY_STRING" azi2`
+    AZF2=`lookupkey "$QUERY_STRING" azi2`
     PREC=`lookupkey "$QUERY_STRING" prec`
     TYPE=`lookupkey "$QUERY_STRING" type`
 fi
 test "$FORMAT" || FORMAT=g
-test "$AZI2" || AZI2=f
+test "$AZF2" || AZF2=f
 test "$PREC" || PREC=3
 test "$TYPE" || TYPE=d
 AZX="faz2"
-test "$AZI2" = b && AZX="baz2"
+test "$AZF2" = b && AZX="baz2"
 
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=Geod
 EXECDIR=../bin
-test -z "$INPUT" || COMMAND="$COMMAND -f"
+F='<font color="blue">'
+G='</font>'
 test $TYPE = d || COMMAND="$COMMAND -$TYPE"
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
-test $AZI2 = f || COMMAND="$COMMAND -$AZI2"
+test $AZF2 = f || COMMAND="$COMMAND -$AZF2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
+STATUS=
+POSITION1=
+POSITION2=
+DIST12=
 if test "$INPUT"; then
     COMMANDLINE="echo $INPUT | $COMMAND"
-    OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
+    OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -f`
     if test $? -eq 0; then
 	STATUS=OK
 	OUTPUT="`echo $OUTPUT | cut -f1-7 -d' '`"
-	POSITION1="`echo $OUTPUT | cut -f1-3 -d' '`"
-	POSITION2="`echo $OUTPUT | cut -f4-6 -d' '`"
+	POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
+	POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
+	AZI1="`echo $OUTPUT | cut -f3 -d' '`"
+	AZI2="`echo $OUTPUT | cut -f6 -d' '`"
 	DIST12="`echo $OUTPUT | cut -f7 -d' '`"
+	if test "$TYPE" = d; then
+	    POSITION1=$(encodevalue "$POS1 $AZI1")
+	    POSITION2=$F$(encodevalue "$POS2 $AZI2")$G
+	    DIST12=$(encodevalue "$DIST12")
+	else
+	    POSITION1=$(encodevalue "$POS1")\ $F$(encodevalue "$AZI1")$G
+	    POSITION2=$(encodevalue "$POS2")\ $F$(encodevalue "$AZI2")$G
+	    DIST12=$F$(encodevalue "$DIST12")$G
+	fi
     else
 	STATUS="$OUTPUT"
-	OUTPUT=
-	POSITION1=
-	POSITION2=
-	DIST12=
     fi
-    echo `date +"%F %T"` "$COMMANDLINE" >> ../persistent/utilities.log
-else
-    COMMANDLINE=
-    OUTPUT=
-    STATUS=
-    POSITION1=
-    POSITION2=
-    DIST12=
-    echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
+    echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
-OUTPUTENC=`encodevalue "$OUTPUT"`
 
 echo Content-type: text/html
 echo
@@ -108,7 +111,7 @@ b Back azimuth
 EOF
 ) | while read c desc; do
     CHECKED=
-    test "$c" = "$AZI2" && CHECKED=CHECKED
+    test "$c" = "$AZF2" && CHECKED=CHECKED
     echo "<td>&nbsp;"
     echo "<input type=\"radio\" name=\"azi2\" value=\"$c\" $CHECKED> $desc"
     echo "</td>"
@@ -190,13 +193,12 @@ cat <<EOF
         <input type="submit" name="option" value="Reset">
       </p>
       <p>
-        Results:<br>
+        Geodesic (input in black, output in ${F}blue${G}):<br>
         <font size="4"><pre>
-    command        = `encodevalue "$COMMANDLINE"`
     status         = `encodevalue "$STATUS"`
-    lat1 lon1 faz1 = `encodevalue "$POSITION1"`
-    lat2 lon2 $AZX = `encodevalue "$POSITION2"`
-    s12 (m)        = `encodevalue "$DIST12"`</pre></font>
+    lat1 lon1 faz1 = $POSITION1
+    lat2 lon2 $AZX = $POSITION2
+    s12 (m)        = $DIST12</pre></font>
       </p>
     </form>
     <hr>
