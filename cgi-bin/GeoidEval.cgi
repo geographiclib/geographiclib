@@ -6,33 +6,36 @@ if test "$OPTION" = Reset; then
     INPUT=
 else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
-    GEOID=`lookupkey "$QUERY_STRING" geoid`
 fi
-test "$GEOID" || GEOID=egm96-5
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=GeoidEval
 GEOID_PATH=../geoids
 EXECDIR=../bin
-test $GEOID = egm96-5 || COMMAND="$COMMAND -n $GEOID"
+F='<font color="blue">'
+G='</font>'
+POSITION1=
+POSITION2=
+HEIGHT96=
+HEIGHT84=
+HEIGHT2008=
 if test "$INPUT"; then
-    COMMANDLINE="echo $INPUT | $COMMAND"
-    OUTPUT=`echo $INPUT | GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND`
+    HEIGHT96=`echo $INPUT |
+    GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm96-5`
     if test $? -eq 0; then
-	STATUS=OK
-	POSITION=`echo $INPUT | cut -f1,2 -d' ' | $EXECDIR/GeoConvert`
-	OUTPUT="`echo $OUTPUT | cut -f1 -d' '`"
+	POSITION1=`echo $INPUT | $EXECDIR/GeoConvert`
+	POSITION2=\(`echo $INPUT | $EXECDIR/GeoConvert -d -p -1`\)
+	HEIGHT2008=`echo $INPUT |
+	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm2008-1`
+	HEIGHT84=`echo $INPUT |
+	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm84-15`
+	HEIGHT2008=`echo $HEIGHT2008 | cut -f1 -d' '`
+	HEIGHT96=`echo $HEIGHT96 | cut -f1 -d' '`
+	HEIGHT84=`echo $HEIGHT84 | cut -f1 -d' '`
     else
-	STATUS="$OUTPUT"
-	POSITION=
-	OUTPUT=
+	POSITION1="$HEIGHT96"
+	HEIGHT96=
     fi
-    echo `date +"%F %T"` "$COMMANDLINE" >> ../persistent/utilities.log
-else
-    COMMANDLINE=
-    OUTPUT=
-    STATUS=
-    POSITION=
-    echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
+    echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
 
 echo Content-type: text/html
@@ -57,35 +60,19 @@ cat <<EOF
         <input type=text name="input" size=30 value="$INPUTENC">
       </p>
       <p>
-        Earth gravity model:<br>
-EOF
-(
-    cat <<EOF
-egm84-15 <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">EGM84</a>
-egm96-5 <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">EGM96</a>
-egm2008-1 <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">EGM2008</a>
-EOF
-) | while read c desc; do
-    CHECKED=
-    test "$c" = "$GEOID" && CHECKED=CHECKED
-    echo "&nbsp;&nbsp;&nbsp;"
-    echo "<input type=\"radio\" name=\"geoid\" value=\"$c\" $CHECKED> $desc"
-done
-cat <<EOF
-      </p>
-      <p>
         Select action:<br>
         &nbsp;&nbsp;&nbsp;
         <input type="submit" name="option" value="Submit">
         <input type="submit" name="option" value="Reset">
       </p>
       <p>
-        Geoid height:<br>
-        <font size="4"><pre>
-    command    = `encodevalue "$COMMANDLINE"`
-    status     = `encodevalue "$STATUS"`
-    lat lon    = `encodevalue "$POSITION"`
-    height (m) = `encodevalue "$OUTPUT"`</pre></font>
+        Geoid height:
+<font size="4"><pre>
+    position = `encodevalue "$POSITION1"` `encodevalue "$POSITION2"`
+    geoid heights (m)
+	<a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">EGM2008</a> = $F`encodevalue "$HEIGHT2008"`$G
+	<a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">EGM96</a>   = $F`encodevalue "$HEIGHT96"`$G
+	<a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">EGM84</a>   = $F`encodevalue "$HEIGHT84"`$G</pre></font>
       </p>
     </form>
     <hr>
@@ -93,7 +80,7 @@ cat <<EOF
       <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
         GeoidEval</a>
       computes the height of the geoid above the WGS84 ellipsoid
-      using interpolation in a grid of values for one of the earth
+      using interpolation in a grid of values for the earth
       gravity models,
       <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
         EGM84</a>, or

@@ -6,39 +6,35 @@ if test "$OPTION" = Reset; then
     INPUT=
 else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
-    FORMAT=`lookupkey "$QUERY_STRING" format`
     ZONE=`lookupkey "$QUERY_STRING" zone`
     PREC=`lookupkey "$QUERY_STRING" prec`
 fi
-test "$FORMAT" || FORMAT=g
 test "$ZONE" || ZONE=-3
 test "$PREC" || PREC=0
 INPUTENC=`encodevalue "$INPUT"`
 COMMAND=GeoConvert
 EXECDIR=../bin
-test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
-case $ZONE in
-    -3 ) ;;
-    -2 ) COMMAND="$COMMAND -t";;
-    -1 ) COMMAND="$COMMAND -s";;
-    * ) COMMAND="$COMMAND -z $ZONE"
-esac
+F='<font color="blue">'
+G='</font>'
 test $PREC = 0 || COMMAND="$COMMAND -p $PREC"
+LOCG=
+LOCD=
+LOCU=
+LOCM=
 if test "$INPUT"; then
-    COMMANDLINE="echo $INPUT | $COMMAND"
-    OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND`
+    LOCG=`echo $INPUT | $EXECDIR/$COMMAND`
     if test $? -eq 0; then
-	STATUS=OK
-    else
-	STATUS="$OUTPUT"
-	OUTPUT=
+	LOCD=\(`echo $INPUT | $EXECDIR/$COMMAND -d`\)
+	case $ZONE in
+	    -3 ) ;;
+	    -2 ) COMMAND="$COMMAND -t";;
+	    -1 ) COMMAND="$COMMAND -s";;
+	    * ) COMMAND="$COMMAND -z $ZONE"
+	esac
+	LOCU=`echo $INPUT | $EXECDIR/$COMMAND -u`
+	LOCM=`echo $INPUT | $EXECDIR/$COMMAND -m`
     fi
-    echo `date +"%F %T"` echo "$INPUT | $COMMAND" >> ../persistent/utilities.log
-else
-    COMMANDLINE=
-    STATUS=
-    OUTPUT=
-    echo `date +"%F %T"` $COMMAND >> ../persistent/utilities.log
+    echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
 
 echo Content-type: text/html
@@ -64,24 +60,6 @@ cat <<EOF
       </p>
       <table>
         <tr>
-          <td rowspan="2">
-            Output format:<br>
-EOF
-(
-    cat <<EOF
-g Decimal degrees
-d Degrees minutes seconds
-u <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a> or <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">UPS</a>
-m <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>
-EOF
-) | while read c desc; do
-    CHECKED=
-    test "$c" = "$FORMAT" && CHECKED=CHECKED
-    echo "&nbsp;&nbsp;&nbsp;"
-    echo "<input type=\"radio\" name=\"format\" value=\"$c\" $CHECKED> $desc<br>"
-done
-cat <<EOF
-          </td>
           <td>
             &nbsp;&nbsp;&nbsp;
             Output zone:<br>
@@ -109,8 +87,6 @@ done
 cat <<EOF
             </select>
           </td>
-        </tr>
-        <tr>
           <td>
             &nbsp;&nbsp;&nbsp;
             Output precision:<br>
@@ -153,11 +129,12 @@ cat <<EOF
         <input type="submit" name="option" value="Reset">
       </p>
       <p>
-        Results:<br>
-        <font size="4"><pre>
-    command = `encodevalue "$COMMANDLINE"`
-    status  = `encodevalue "$STATUS"`
-    output  = `encodevalue "$OUTPUT"`</pre></font>
+        Results:
+<font size="4"><pre>
+    input   = `encodevalue "$INPUT"`
+    lat lon = $F`encodevalue "$LOCG"` `encodevalue "$LOCD"`$G
+    <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a>/<a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">UPS</a> = $F`encodevalue "$LOCU"`$G
+    <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>    = $F`encodevalue "$LOCM"`$G</pre></font>
       </p>
     </form>
     <hr>
@@ -205,7 +182,8 @@ cat <<EOF
 	  Usually <em>Output zone</em> should be <em>Match input or
 	  standard</em>.  If the latitude and longitude are given, the
 	  standard UPS and UTM zone rules are applied; otherwise the
-	  UPS/UTM selection and the UTM zone matches the input.
+	  UPS/UTM selection and the UTM zone match the input.  The other
+	  choices let you override this selection.
       </ul>
     </p>
     <p>
