@@ -57,7 +57,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
       <p>
-        Location (ex. "<tt>33.33 44.4</tt>", "<tt>33d19'47"N 44d23.9'E</tt>", "<tt>38SMB4488</tt>", "<tt>38N 444000 3688000</tt>"):<br>
+        Location (ex. &laquo;<tt>33.33 44.4</tt>&raquo;, &laquo;<tt>33d19'47"N 44d23.9'E</tt>&raquo;, &laquo;<tt>38SMB4488</tt>&raquo;, &laquo;<tt>38N 444000 3688000</tt>&raquo;):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=40 value="$INPUTENC">
       </p>

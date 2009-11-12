@@ -76,7 +76,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/Geod" method="get">
       <p>
-        Input (ex. "<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>" [direct], "<tt>40.6 -73.8 49d01'N 2d33'E</tt>" [inverse]):<br>
+        Input (ex. &laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo; [direct], &laquo;<tt>40.6 -73.8 49d01'N 2d33'E</tt>&raquo; [inverse]):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=60 value="$INPUTENC">
       </p>
