@@ -56,7 +56,7 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/GeoidEval" method="get">
       <p>
-        Position (ex. "<tt>16.78 -3.01</tt>", "<tt>16d46'33"N 3d0.6'W</tt>"):<br>
+        Position (ex. &laquo;<tt>16.78 -3.01</tt>&raquo;, &laquo;<tt>16d46'33"N 3d0.6'W</tt>&raquo;):<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=30 value="$INPUTENC">
       </p>
