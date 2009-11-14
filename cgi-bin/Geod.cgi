@@ -14,7 +14,7 @@ fi
 test "$FORMAT" || FORMAT=g
 test "$AZF2" || AZF2=f
 test "$PREC" || PREC=3
-test "$TYPE" || TYPE=d
+test "$TYPE" || TYPE=i
 AZX="faz2"
 test "$AZF2" = b && AZX="baz2"
 
