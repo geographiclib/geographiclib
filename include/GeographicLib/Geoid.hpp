@@ -84,13 +84,6 @@ namespace GeographicLib {
                                               unsigned(ix))));
     }
     real rawval(int ix, int iy) const {
-      if (iy < 0) {
-        iy = -iy;
-        ix += _width/2;
-      } else if (iy >= _height) {
-        iy = 2 * (_height - 1) - iy;
-        ix += _width/2;
-      }
       if (ix < 0)
         ix += _width;
       else if (ix >= _width)
@@ -101,6 +94,10 @@ namespace GeographicLib {
         return real(_data[iy - _yoffset]
                     [ix >= _xoffset ? ix - _xoffset : ix + _width - _xoffset]);
       } else {
+        if (iy < 0 || iy >= _height) {
+          iy = iy < 0 ? -iy : 2 * (_height - 1) - iy;
+          ix += (ix < _width/2 ? 1 : -1) * _width/2;
+        }
         try {
           filepos(ix, iy);
           char a, b;

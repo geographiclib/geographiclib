@@ -24,6 +24,7 @@ EXECDIR=../bin
 F='<font color="blue">'
 G='</font>'
 test $TYPE = d || COMMAND="$COMMAND -$TYPE"
+COMMANDX="$COMMAND -f -p 1"
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
 test $AZF2 = f || COMMAND="$COMMAND -$AZF2"
 test $PREC = 3 || COMMAND="$COMMAND -p $PREC"
@@ -36,7 +37,7 @@ if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -f`
     if test $? -eq 0; then
 	STATUS=OK
-	OUTPUTG=`echo $INPUT | $EXECDIR/Geod -f -p 1`
+	OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX`
 	POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
 	POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
 	POSG1="`echo $OUTPUTG | cut -f1-2 -d' '`"
