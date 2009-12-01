@@ -291,6 +291,9 @@ namespace GeographicLib {
     if (_width & 1)
       // This is so that longitude grids can be extended thru the poles.
       throw out_of_range("Raster width is odd " + _filename);
+    if (!(_height & 1))
+      // This is so that latitude grid includes the equator.
+      throw out_of_range("Raster height is even " + _filename);
     _file.seekg(0, ios::end);
     if (!_file.good() ||
         _datastart + 2ULL * _swidth * (unsigned long long)(_height) !=
@@ -309,18 +312,16 @@ namespace GeographicLib {
 
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
-    if (lon < 0)
-      lon += 360;
     real
-      fy = (90 - lat) * _rlatres,
-      fx = lon * _rlonres;
+      fx =  lon * _rlonres,
+      fy = -lat * _rlatres;
     int
-      iy = int(fy),
-      ix = int(fx);
-    if (iy == _height - 1)
-      --iy;
+      ix = int(floor(fx)),
+      iy = min((_height - 1)/2 - 1, int(floor(fy)));
     fx -= ix;
     fy -= iy;
+    iy += (_height - 1)/2;
+    ix += ix < 0 ? _width : ix >= _width ? -_width : 0;
     if (!(ix == _ix && iy == _iy)) {
       _ix = ix;
       _iy = iy;
@@ -408,6 +409,7 @@ namespace GeographicLib {
   void Geoid::CacheClear() const throw() {
     _cache = false;
     try {
+      _data.clear();
       // Use swap to release memory back to system
       vector< vector<unsigned short> >().swap(_data);
     }
@@ -420,38 +422,30 @@ namespace GeographicLib {
       CacheClear();
       return;
     }
-    west += west < 0 ? 360 : west >= 360 ? -360 : 0;
-    east += east < 0 ? 360 : east >= 360 ? -360 : 0;
-    if (east <= west)
-      east += 360;
-    // Move south (and north) boundaries off the south pole.
-    south = min(south, -90 + real(0.5) / _rlatres);
-    north = min(north, south);
-    real
-      fn = (90 - north) * _rlatres,
-      fs = (90 - south) * _rlatres,
-      fw = west * _rlonres,
-      fe = east * _rlonres;
-    // Extra boudary of cells for cubic interpolation
-    int boundary = _cubic ? 1 : 0;
-    // Bounding indices for cached area
     int
-      in = int(fn)     - boundary,
-      is = int(fs) + 1 + boundary,
-      iw = int(fw)     - boundary,
-      ie = int(fe) + 1 + boundary;
-    if (is >= _height)
-      is = _height - 1;
-    if (in < 0)
-      in = 0;
+      iw = int(floor(west * _rlonres)),
+      ie = int(floor(east * _rlonres)),
+      in = int(floor(-north * _rlatres)) + (_height - 1)/2,
+      is = int(floor(-south * _rlatres)) + (_height - 1)/2;
+    in = max(0, min(_height - 2, in));
+    is = max(0, min(_height - 2, is));
+    is += 1;
+    ie += 1;
+    if (_cubic) {
+      in -= 1;
+      is += 1;
+      iw -= 1;
+      ie += 1;
+    }
+    if (east <= west)
+      ie += _width;
     if (ie - iw >= _width - 1) {
       // Include entire longitude range
       iw = 0;
       ie = _width - 1;
-    }
-    if (iw < 0){
-      iw += _width;
-      ie += _width;
+    } else {
+      ie += iw < 0 ? _width : iw >= _width ? -_width : 0;
+      iw += iw < 0 ? _width : iw >= _width ? -_width : 0;
     }
     int oysize = int(_data.size());
     _xsize = ie - iw + 1;
@@ -470,33 +464,27 @@ namespace GeographicLib {
     }
 
     try {
-      int
-        ie1 = min(_width - 1, ie),
-        w1 = ie1 - iw + 1;
-      vector<char> buf(2 * w1);
+      vector<char> buf(2 * _xsize);
       for (int iy = in; iy <= is; ++iy) {
-        filepos(iw, iy);
-        _file.read(&(buf[0]), 2 * w1);
-        for (int ix = 0; ix < w1; ++ix)
+        int iy1 = iy, iw1 = iw;
+        if (iy < 0 || iy >= _height) {
+          iy1 = iy1 < 0 ? -iy1 : 2 * (_height - 1) - iy1;
+          iw1 += _width/2;
+          if (iw1 >= _width)
+            iw1 -= _width;
+        }
+        int xs1 = min(_width - iw1, _xsize);
+        filepos(iw1, iy1);
+        _file.read(&(buf[0]), 2 * xs1);
+        if (xs1 < _xsize) {
+          // Wrap around longitude = 0
+          filepos(0, iy1);
+          _file.read(&(buf[2 * xs1]), 2 * (_xsize - xs1));
+        }
+        for (int ix = 0; ix < _xsize; ++ix)
           _data[iy - in][ix] =
             (unsigned short)((unsigned char)buf[2 * ix] * 256u +
                              (unsigned char)buf[2 * ix + 1]);
-      }
-      if (ie1 < ie) {
-        // Cached area wraps past longitude = 0
-        ie1 = ie - _width;
-        int
-          iw1 = 0,
-          w2 = ie1 + 1;
-        buf.resize(2 * w1);
-        for (int iy = in; iy <= is; ++iy) {
-          filepos(iw1, iy);
-          _file.read(&(buf[0]), 2 * w2);
-          for (int ix = 0; ix < w2; ++ix)
-          _data[iy - in][ix + w1] =
-            (unsigned short)((unsigned char)buf[2 * ix] * 256u +
-                             (unsigned char)buf[2 * ix + 1]);
-        }
       }
       _cache = true;
     }

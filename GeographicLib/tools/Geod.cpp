@@ -160,7 +160,13 @@ real ReadDistance(const std::string& s, bool arcmode) {
   } else {
     std::istringstream is(s);
     if (!(is >> s12))
-      throw std::out_of_range("Incomplete distance: " + s);
+      throw std::out_of_range("Could not read distance: " + s);
+    // is >> s12 gobbles final E in 1234E, so look for last character which is
+    // legal as the final character in a number (digit or period).
+    int pos = std::min(int(is.tellg()), int(s.find_last_of("0123456789.")) + 1);
+    if (pos != int(s.size()))
+      throw std::out_of_range("Extra text "
+                         + s.substr(pos) + " in distance " + s);
   }
   return s12;
 }

@@ -151,7 +151,7 @@ namespace GeographicLib {
     static inline real log1p(real x) throw() {
       // See D. Goldberg "What every computer scientist should know about
       // floating-point arithmetic" (1991), Theorem 4.
-      // http://docs.sun.com/source/806-3568/ncg_goldberg.html.
+      // http://docs.sun.com/source/806-3568/ncg_goldberg.html
       // See also, Higham (op. cit.), Answer to Problem 1.5, p 528.
       volatile real
         y = 1 + x,
@@ -201,6 +201,14 @@ namespace GeographicLib {
      * Factor to convert from degrees to radians
      **********************************************************************/
     static inline Math::real degree() throw() { return pi() / 180; }
+    /**
+     * Factor to convert from minutes to radians
+     **********************************************************************/
+    static inline Math::real arcminute() throw() { return degree() / 60; }
+    /**
+     * Factor to convert from seconds to radians
+     **********************************************************************/
+    static inline Math::real arcsecond() throw() { return arcminute() / 60; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/
