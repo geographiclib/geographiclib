@@ -1,12 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeographicLib", "GeographicLib.vcproj", "{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeographicLib", "GeographicLib-vc8.vcproj", "{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoConvert", "GeoConvert.vcproj", "{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoConvert", "GeoConvert-vc8.vcproj", "{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -15,7 +15,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoConvert", "GeoConvert.vc
 		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransverseMercatorTest", "TransverseMercatorTest.vcproj", "{73FED050-34B7-40EE-96FA-6EABA84F6F9B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransverseMercatorTest", "TransverseMercatorTest-vc8.vcproj", "{73FED050-34B7-40EE-96FA-6EABA84F6F9B}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -25,7 +25,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransverseMercatorTest", "T
 		{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65} = {699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CartConvert", "CartConvert.vcproj", "{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CartConvert", "CartConvert-vc8.vcproj", "{699D2AD1-5545-4FE8-AF72-7D5AAF5D8F65}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -35,7 +35,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CartConvert", "CartConvert.
 		{0507FE91-AD45-4630-88EF-DABFA9A02FB4} = {0507FE91-AD45-4630-88EF-DABFA9A02FB4}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geod", "Geod.vcproj", "{F1B64F66-7B95-4087-9619-4ABC20BEB591}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geod", "Geod-vc8.vcproj", "{F1B64F66-7B95-4087-9619-4ABC20BEB591}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -45,7 +45,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Geod", "Geod.vcproj", "{F1B
 		{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034} = {C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EquidistantTest", "EquidistantTest.vcproj", "{2E0C4271-25A7-4A94-8112-7DA0D1A8AF9A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EquidistantTest", "EquidistantTest-vc8.vcproj", "{2E0C4271-25A7-4A94-8112-7DA0D1A8AF9A}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
@@ -55,7 +55,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EquidistantTest", "Equidist
 		{73FED050-34B7-40EE-96FA-6EABA84F6F9B} = {73FED050-34B7-40EE-96FA-6EABA84F6F9B}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoidEval", "GeoidEval.vcproj", "{0507FE91-AD45-4630-88EF-DABFA9A02FB4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoidEval", "GeoidEval-vc8.vcproj", "{0507FE91-AD45-4630-88EF-DABFA9A02FB4}"
 	ProjectSection(WebsiteProperties) = preProject
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.Debug = "False"
