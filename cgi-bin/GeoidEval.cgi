@@ -47,18 +47,18 @@ cat <<EOF
     <title>
       Online geoid calculator
     </title>
-    <meta name="description" content="Online geoid calculator">
-    <meta name="author" content="Charles F. F. Karney">
+    <meta name="description" content="Online geoid calculator" />
+    <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
 	  content="geoid height,
 		   orthometric height,
 		   earth gravity model,
 		   EGM84, EGM96, EGM2008,
-		   mean sea level,
+		   mean sea level, MSL,
 		   height above ellipsoid, HAE,
 		   latitude and longitude,
 		   WGS84 ellipsoid,
-		   GeographicLib">
+		   GeographicLib" />
   </head>
   <body>
     <h3>
