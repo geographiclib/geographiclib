@@ -44,11 +44,25 @@ echo Content-type: text/html
 echo
 cat <<EOF
 <html>
-  <header>
+  <head>
     <title>
       Online geographic coordinate converter
     </title>
-  </header>
+    <meta name="description" content="Online geographic coordinate converter">
+    <meta name="author" content="Charles F. F. Karney">
+    <meta name="keywords"
+	  content="geographic coordinate conversions,
+		   geographic coordinates,
+		   latitude and longitude,
+		   degrees minutes seconds,
+		   universal transverse Mercator, UTM,
+		   easting northing and zone,
+		   universal polar sterographic, UPS,
+		   military grid reference system, MGRS,
+		   online calculator,
+		   WGS84 ellipsoid,
+		   GeographicLib">
+  </head>
   <body>
     <h3>
       Online geographic coordinate conversions using the
