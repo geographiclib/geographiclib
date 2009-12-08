@@ -68,8 +68,8 @@ cat <<EOF
     <title>
       Online geodesic calculator
     </title>
-    <meta name="description" content="Online geodesic calculator">
-    <meta name="author" content="Charles F. F. Karney">
+    <meta name="description" content="Online geodesic calculator" />
+    <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
 	  content="geodesics,
 		   geodesic distance,
@@ -82,7 +82,7 @@ cat <<EOF
 		   distance and bearing,
 		   distance and heading,
 		   shortest distance,
-		   GeographicLib"> 
+		   GeographicLib" /> 
   </head>
   <body>
     <h3>

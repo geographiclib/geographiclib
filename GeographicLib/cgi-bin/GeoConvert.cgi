@@ -48,8 +48,8 @@ cat <<EOF
     <title>
       Online geographic coordinate converter
     </title>
-    <meta name="description" content="Online geographic coordinate converter">
-    <meta name="author" content="Charles F. F. Karney">
+    <meta name="description" content="Online geographic coordinate converter" />
+    <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
 	  content="geographic coordinate conversions,
 		   geographic coordinates,
@@ -61,7 +61,7 @@ cat <<EOF
 		   military grid reference system, MGRS,
 		   online calculator,
 		   WGS84 ellipsoid,
-		   GeographicLib">
+		   GeographicLib" />
   </head>
   <body>
     <h3>
