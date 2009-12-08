@@ -64,11 +64,26 @@ echo Content-type: text/html
 echo
 cat <<EOF
 <html>
-  <header>
+  <head>
     <title>
       Online geodesic calculator
     </title>
-  </header>
+    <meta name="description" content="Online geodesic calculator">
+    <meta name="author" content="Charles F. F. Karney">
+    <meta name="keywords"
+	  content="geodesics,
+		   geodesic distance,
+		   direct geodesic problem,
+		   inverse geodesic problem,
+		   online calculator,
+		   WGS84 ellipsoid,
+		   latitude and longitude,
+		   distance and azimuth,
+		   distance and bearing,
+		   distance and heading,
+		   shortest distance,
+		   GeographicLib"> 
+  </head>
   <body>
     <h3>
       Online geodesic calculations using the
