@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
     catch (const std::exception& e) {
       std::cerr << "ERROR: " << e.what() << "\nProceeding without a cache\n";
     }
-    if (verbose)
+    if (verbose) {
       std::cerr << "Geoid file: "    << g.GeoidFile()     << "\n"
                 << "Description: "   << g.Description()   << "\n"
                 << "Interpolation: " << g.Interpolation() << "\n"
@@ -160,6 +160,12 @@ int main(int argc, char* argv[]) {
                 << "Scale (m): "     << g.Scale()         << "\n"
                 << "Max error (m): " << g.MaxError()      << "\n"
                 << "RMS error (m): " << g.RMSError()      << "\n";
+      if (g.Cache())
+        std::cerr << "Caching:"
+                  << "\n SW Corner: " << g.CacheSouth() << " " << g.CacheWest()
+                  << "\n NE Corner: " << g.CacheNorth() << " " << g.CacheEast()
+                  << "\n";
+    }
 
     std::cout << std::fixed;
     std::string s;
