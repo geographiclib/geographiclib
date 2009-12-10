@@ -140,7 +140,9 @@ namespace GeographicLib {
      * 360<sup>o</sup> to its value.  This may throw an error because of
      * insufficent memory or because of an error reading the data from the
      * file.  In this case, you can catch the error and either do nothing (you
-     * will have no cache in this case) or try again with a smaller area.
+     * will have no cache in this case) or try again with a smaller area.  \e
+     * south and \e north should be in the range [-90, 90]; \e west and \e east
+     * should be in the range [-180, 360].
      **********************************************************************/
     void CacheArea(real south, real west, real north, real east) const;
 
@@ -240,6 +242,45 @@ namespace GeographicLib {
      * heights.
      **********************************************************************/
     Math::real Scale() const throw() { return _scale; }
+
+    /**
+     * Is a data cache active?
+     **********************************************************************/
+    bool Cache() const throw() { return _cache; }
+
+    /**
+     * Return the west edge of the cached area.  The cache includes this edge.
+     **********************************************************************/
+    Math::real CacheWest() const throw() {
+      return _cache ? ((_xoffset + (_xsize == _width ? 0 : _cubic)
+                        + _width/2) % _width - _width/2) / _rlonres :
+        0;
+    }
+
+    /**
+     * Return the east edge of the cached area.  The cache excludes this edge.
+     **********************************************************************/
+    Math::real CacheEast() const throw() {
+      return  _cache ?
+        CacheWest() +
+        (_xsize - (_xsize == _width ? 0 : 1 + 2 * _cubic)) / _rlonres :
+        0;
+    }
+
+    /**
+     * Return the north edge of the cached area.  The cache includes this edge.
+     **********************************************************************/
+    Math::real CacheNorth() const throw() {
+      return _cache ? 90 - (_yoffset + _cubic) / _rlatres : 0;
+    }
+
+    /**
+     * Return the south edge of the cached area.  The cache excludes this edge
+     * unless it's the south pole.
+     **********************************************************************/
+    Math::real CacheSouth() const throw() {
+      return _cache ? 90 - ( _yoffset + _ysize - 1 - _cubic) / _rlatres : 0;
+    }
 
     /**
      * Return the compile-time default path for the geoid data files.

@@ -422,6 +422,12 @@ namespace GeographicLib {
       CacheClear();
       return;
     }
+    if (west >= 180)
+      west -= 360;              // west in [-180, 180)
+    if (east >= 180)
+      east -= 360;
+    if (east <= west)
+      east += 360;              // east - west in (0, 360]
     int
       iw = int(floor(west * _rlonres)),
       ie = int(floor(east * _rlonres)),
@@ -437,8 +443,6 @@ namespace GeographicLib {
       iw -= 1;
       ie += 1;
     }
-    if (east <= west)
-      ie += _width;
     if (ie - iw >= _width - 1) {
       // Include entire longitude range
       iw = 0;
