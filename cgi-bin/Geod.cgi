@@ -73,15 +73,17 @@ cat <<EOF
     <meta name="keywords"
 	  content="geodesics,
 		   geodesic distance,
+		   geographic distance,
+		   shortest path,
 		   direct geodesic problem,
 		   inverse geodesic problem,
+		   distance and azimuth,
+		   distance and heading,
+		   range and bearing,
+		   spheroidal triangle,
+		   latitude and longitude,
 		   online calculator,
 		   WGS84 ellipsoid,
-		   latitude and longitude,
-		   distance and azimuth,
-		   distance and bearing,
-		   distance and heading,
-		   shortest distance,
 		   GeographicLib" /> 
   </head>
   <body>

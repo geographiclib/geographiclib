@@ -56,7 +56,9 @@ cat <<EOF
 		   EGM84, EGM96, EGM2008,
 		   mean sea level, MSL,
 		   height above ellipsoid, HAE,
+		   vertical datum,
 		   latitude and longitude,
+		   online calculator,
 		   WGS84 ellipsoid,
 		   GeographicLib" />
   </head>
