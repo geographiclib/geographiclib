@@ -164,7 +164,7 @@ namespace GeographicLib {
     }
     static inline real asinh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
-      y = log1p(y * (1 + y/(sqrt(1 + y * y) + 1)));
+      y = log1p(y * (1 + y/(std::sqrt(1 + y * y) + 1)));
       return x < 0 ? -y : y;
     }
     static inline real atanh(real x) throw() {
