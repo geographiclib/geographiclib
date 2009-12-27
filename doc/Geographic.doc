@@ -989,7 +989,7 @@ where the factors on the last line are can be computed accurately with
          = cosh(Q') * hypot(sinh(eta'), cos(xi'))
 \endverbatim
 These last two expressions preserve accuracy near the pole.  See also
-Kr&uuml;ger, pp. 19&ndash;20, eqs. (19) to (33*) and pp 21&ndash;22,
+Kr&uuml;ger, pp. 19&ndash;20, eqs. (29) to (33*) and pp 21&ndash;22,
 eqs. (43) to (47).  GeographicLib::TransverseMercator uses this approach
 to compute the convergence and the scale.
 
