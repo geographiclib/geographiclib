@@ -63,8 +63,13 @@ namespace GeographicLib {
         if (!(str >> x))
           throw out_of_range("Bad number " + sa[coordind + i] + " for UTM/UPS "
                              + (i == 0 ? "easting " : "northing "));
-        // str >> x gobbles final E in 1234E, so look for last character which
-        // is legal as the final character in a number (digit or period).
+        // Both g++ and VS handle "str >> x" incorrectly when the string is
+        // 1234E.  (The "right" result would be to handle it the same way as
+        // 1234X; x is set to 1234 with tellg() is 4.)  VS fails to read any
+        // number (which is incorrect but which is OK here).  Linux reads past
+        // the "E" and a following sign if there is one; we need to detect this
+        // and report it as an error.  So look for last character which is
+        // legal as the final character in a number (digit or period).
         int pos = min(int(str.tellg()),
                       int(sa[coordind + i].find_last_of(digits)) + 1);
         if (pos != int(sa[coordind + i].size()))
