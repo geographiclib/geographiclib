@@ -26,7 +26,7 @@ namespace GeographicLib {
 
   void GeoCoords::Reset(const std::string& s, bool centerp) {
     vector<string> sa;
-    const char* spaces = " \t\n\v\f\v,"; // Include comma as a space
+    const char* spaces = " \t\n\v\f\r,"; // Include comma as a space
     const char* digits = "0123456789.";  // Include period as a digit
     for (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
       pos1 = s.find_first_not_of(spaces, pos0);
