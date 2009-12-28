@@ -94,9 +94,46 @@ cat <<EOF
     </h3>
     <form action="/cgi-bin/Geod" method="get">
       <p>
+        Geodesic calculation:
+        <table>
+          <tr>
+            <td>
+              &nbsp;&nbsp;&nbsp;
+              <input type="radio" name="type" value="d"
+                     `test "$TYPE" = d && echo CHECKED`>
+            </td>
+            <td>
+              Direct:
+            </td>
+            <td>
+              <em>lat1 lon1 azi1 s12</em>
+            </td>
+            <td>
+              &rarr; <em>lat2 lon2 azi2</em>
+            </td>
+          <tr>
+          <tr>
+            <td>
+              &nbsp;&nbsp;&nbsp;
+              <input type="radio" name="type" value="i"
+                     `test "$TYPE" = i && echo CHECKED`>
+            </td>
+            <td>
+              Inverse:
+            </td>
+            <td>
+              <em>lat1 lon1 lat2 lon2</em>
+            </td>
+            <td>
+              &rarr; <em>azi1 azi2 s12</em>
+            </td>
+          <tr>
+        </table>
+      </p>
+      <p>
         Input (ex. &laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo; [direct], &laquo;<tt>40.6 -73.8 49d01'N 2d33'E</tt>&raquo; [inverse]):<br>
         &nbsp;&nbsp;&nbsp;
-        <input type=text name="input" size=60 value="$INPUTENC">
+        <input type=text name="input" size=72 value="$INPUTENC">
       </p>
       <p>
         <table>
@@ -167,43 +204,6 @@ cat <<EOF
               </select>
             </td>
           </tr>
-        </table>
-      </p>
-      <p>
-        Geodesic calculation:
-        <table>
-          <tr>
-            <td>
-              &nbsp;&nbsp;&nbsp;
-              <input type="radio" name="type" value="d"
-                     `test "$TYPE" = d && echo CHECKED`>
-            </td>
-            <td>
-              Direct:
-            </td>
-            <td>
-              <em>lat1 lon1 azi1 s12</em>
-            </td>
-            <td>
-              &rarr; <em>lat2 lon2 azi2</em>
-            </td>
-          <tr>
-          <tr>
-            <td>
-              &nbsp;&nbsp;&nbsp;
-              <input type="radio" name="type" value="i"
-                     `test "$TYPE" = i && echo CHECKED`>
-            </td>
-            <td>
-              Inverse:
-            </td>
-            <td>
-              <em>lat1 lon1 lat2 lon2</em>
-            </td>
-            <td>
-              &rarr; <em>azi1 azi2 s12</em>
-            </td>
-          <tr>
         </table>
       </p>
       <p>
