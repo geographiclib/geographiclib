@@ -2,7 +2,7 @@
  * \file AzimuthalEquidistant.hpp
  * \brief Header for GeographicLib::AzimuthalEquidistant class
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -80,6 +80,19 @@ namespace GeographicLib {
     void Reverse(real lat0, real lon0, real x, real y,
                  real& lat, real& lon, real& azi, real& rk) const throw();
 
+    /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * inherited from the Geodesic object used in the constructor.  A value of
+     * 0 is returned for a sphere (infinite inverse flattening).
+     **********************************************************************/
+    Math::real InverseFlattening() const throw()
+    { return _earth.InverseFlattening(); }
   };
 
 } // namespace GeographicLib

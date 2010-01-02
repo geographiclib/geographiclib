@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.hpp
  * \brief Header for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -45,6 +45,14 @@ namespace GeographicLib {
    * combined forward and reverse projection on a 2.6 GHz Intel machine (g++,
    * version 4.3.0, -O3).
    *
+   * The ellipsoid parameters and the central scale are set in the constructor.
+   * The central meridian (which is a trivial shift of the longitude) is
+   * specified as the \e lon0 argument of the TransverseMercatorExact::Forward
+   * and TransverseMercatorExact::Reverse functions.  The latitude of origin is
+   * taken to be the equator.  See the documentation on
+   * GeographicLib::TransverseMercator for how to include a false easting,
+   * false northing, or a latitude of origin.
+   *
    * See TransverseMercatorExact.cpp for more information on the
    * implementation.
    *
@@ -56,7 +64,7 @@ namespace GeographicLib {
     typedef Math::real real;
     static const real tol, tol1, tol2, taytol, ahypover;
     static const int numit = 10;
-    const real _a, _f, _k0, _mu, _mv, _e, _ep2;
+    const real _a, _r, _f, _k0, _mu, _mv, _e, _ep2;
     const bool _extendp;
     const EllipticFunction _Eu, _Ev;
     static inline real sq(real x) throw() { return x * x; }
@@ -125,13 +133,13 @@ namespace GeographicLib {
      * cut.
      *
      * The method will work for all ellipsoids used in terrestial geodesy.  The
-     * method cannot be applied directly to the case of a sphere (\e r =
-     * inf) because some the constants characterizing this method diverge in
-     * that limit.  However, GeographicLib::TransverseMercator treats the
-     * sphere exactly.
+     * method cannot be applied directly to the case of a sphere (\e r = inf)
+     * because some the constants characterizing this method diverge in that
+     * limit.  However, GeographicLib::TransverseMercator treats the sphere
+     * exactly.  An exception is thrown if \e a or \e r or \e k0 is
+     * non-positive.
      **********************************************************************/
-    TransverseMercatorExact(real a, real r, real k0,
-                            bool extendp = false) throw();
+    TransverseMercatorExact(real a, real r, real k0, bool extendp = false);
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -149,11 +157,29 @@ namespace GeographicLib {
      * (meters) to latitude \e lat (degrees) and longitude \e lon (degrees) .
      * The central meridian of the transformation is \e lon0 (degrees).  Also
      * return the meridian convergence \e gamma (degrees) and the scale \e k.
-     * No false easting or northing is added.  The value of \e lon returned is
-     * in the range [-180, 180).
+     * No false easting or northing is added.  \e lon0 should be in the range
+     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();
+
+    /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _a; }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * used in the constructor.
+     **********************************************************************/
+    Math::real InverseFlattening() const throw() { return _r; }
+
+    /**
+     * The central scale for the projection.  This is that value of \e k0 used
+     * in the constructor and is the scale on the central meridian.
+     **********************************************************************/
+    Math::real CentralScale() const throw() { return _k0; }
 
     /**
      * A global instantiation of TransverseMercatorExact with the WGS84

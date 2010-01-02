@@ -2,7 +2,7 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -31,114 +31,89 @@
 
 RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
 
+#if !defined(GEOGRAPHICLIB_PREC)
+/**
+ * The precision of floating point numbers used in %GeographicLib.  0 means
+ * float; 1 (default) means double; 2 means long double.  Nearly all the
+ * testing has been carried out with doubles and that's the recommended
+ * configuration.  Note that with Microsoft Visual Studio, long double is the
+ * same as double.
+ **********************************************************************/
+#define GEOGRAPHICLIB_PREC 1
+#endif
+
 #include <cmath>
+#include <limits>
+#include <algorithm>
+
 namespace GeographicLib {
 
   /**
-   * \brief Mathematic functions needed by %GeographicLib
+   * \brief Mathematical functions needed by %GeographicLib
    *
-   * Define mathematical functions in a way to localize system dependencies.
-   * In addition define a real type to be used by %GeographicLib.
+   * Define mathematical functions in order to localize system dependencies and
+   * to provide generic versions of the functions.  In addition define a real
+   * type to be used by %GeographicLib.
    **********************************************************************/
   class Math {
   private:
+    void dummy() {
+      STATIC_ASSERT((GEOGRAPHICLIB_PREC) >= 0 && (GEOGRAPHICLIB_PREC) <= 2,
+                    "Bad value of precision");
+    }
     Math();                     // Disable constructor
   public:
     
+#if GEOGRAPHICLIB_PREC == 1
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
      * with \e real = double.  However, the algorithms should also work with
      * float and long double (where available).
      **********************************************************************/
     typedef double real;
-#if !defined(_MSC_VER)
-    /**
-     * double version of sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>)
-     **********************************************************************/
-    static inline double hypot(double x, double y) throw()
-    { return ::hypot(x, y); }
-    /**
-     * float version of sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>)
-     **********************************************************************/
-    static inline float hypot(float x, float y) throw()
-    { return ::hypotf(x, y); }
-    /**
-     * long double version of sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>)
-     **********************************************************************/
-    static inline long double hypot(long double x, long double y) throw()
-    { return ::hypotl(x, y); }
-    /**
-     * double version of exp(\e x) - 1
-     **********************************************************************/
-    static inline double expm1(double x) throw() { return ::expm1(x); }
-    /**
-     * float version of exp(\e x) - 1
-     **********************************************************************/
-    static inline float expm1(float x) throw() { return ::expm1f(x); }
-    /**
-     * long double version of exp(\e x) - 1
-     **********************************************************************/
-    static inline long double expm1(long double x) throw()
-    { return ::expm1l(x); }
-    /**
-     * double version of log(\e x + 1)
-     **********************************************************************/
-    static inline double log1p(double x) throw() { return ::log1p(x); }
-    /**
-     * float version of log(\e x + 1)
-     **********************************************************************/
-    static inline float log1p(float x) throw() { return ::log1pf(x); }
-    /**
-     * long double version of log(\e x + 1)
-     **********************************************************************/
-    static inline long double log1p(long double x) throw()
-    { return ::log1pl(x); }
-    /**
-     * double version of asinh(\e x)
-     **********************************************************************/
-    static inline double asinh(double x) throw() { return ::asinh(x); }
-    /**
-     * float version of asinh(\e x)
-     **********************************************************************/
-    static inline float asinh(float x) throw() { return ::asinhf(x); }
-    /**
-     * long double version of asinh(\e x)
-     **********************************************************************/
-    static inline long double asinh(long double x) throw()
-    { return ::asinhl(x); }
-    /**
-     * double version of atanh(\e x)
-     **********************************************************************/
-    static inline double atanh(double x) throw() { return ::atanh(x); }
-    /**
-     * float version of atanh(\e x)
-     **********************************************************************/
-    static inline float atanh(float x) throw() { return ::atanhf(x); }
-    /**
-     * long double version of atanh(\e x)
-     **********************************************************************/
-    static inline long double atanh(long double x) throw()
-    { return ::atanhl(x); }
-    /**
-     * double version of \e x<sup>1/3</sup>
-     **********************************************************************/
-    static inline double cbrt(double x) throw() { return ::cbrt(x); }
-    /**
-     * float version of \e x<sup>1/3</sup>
-     **********************************************************************/
-    static inline float cbrt(float x) throw() { return ::cbrtf(x); }
-    /**
-     * long double version of \e x<sup>1/3</sup>
-     **********************************************************************/
-    static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
+#elif GEOGRAPHICLIB_PREC == 0
+    typedef float real;
+#elif GEOGRAPHICLIB_PREC == 2
+    typedef long double real;
 #else
+    typedef double real;
+#endif
+
+#if defined(DOXYGEN)
+    /**
+     * Return sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>) avoiding underflow and
+     * overflow.
+     **********************************************************************/
+    static inline real hypot(real x, real y) throw() {
+      x = std::abs(x);
+      y = std::abs(y);
+      real
+        a = std::max(x, y),
+        b = std::min(x, y) / a;
+      return a * sqrt(1 + b * b);
+    }
+#elif defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
+#else
+    // Use overloading to define generic versions
+    static inline double hypot(double x, double y) throw()
+    { return ::hypot(x, y); }
+    static inline float hypot(float x, float y) throw()
+    { return ::hypotf(x, y); }
+    static inline long double hypot(long double x, long double y) throw()
+    { return ::hypotl(x, y); }
+#endif
+
+#if defined(DOXYGEN) || defined(_MSC_VER)
+    /**
+     * Return exp(\e x) - 1 accurate near \e x = 0.  This is taken from
+     * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd
+     * Edition (SIAM, 2002), Sec 1.14.1, p 19.
+     **********************************************************************/
     static inline real expm1(real x) throw() {
-      // See N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd
-      // Edition (SIAM, 2002), Sec 1.14.1, p 19.
       volatile real
         y = std::exp(x),
         z = y - 1;
@@ -148,11 +123,23 @@ namespace GeographicLib {
       // computed.
       return std::abs(x) > 1 ? z : z == 0 ?  x : x * z / std::log(y);
     }
+#else
+    static inline double expm1(double x) throw() { return ::expm1(x); }
+    static inline float expm1(float x) throw() { return ::expm1f(x); }
+    static inline long double expm1(long double x) throw()
+    { return ::expm1l(x); }
+#endif
+
+#if defined(DOXYGEN) || defined(_MSC_VER)
+    /**
+     * Return log(\e x + 1) accurate near \e x = 0.  This is taken See
+     * D. Goldberg,
+     * <a href="http://docs.sun.com/source/806-3568/ncg_goldberg.html"> What
+     * every computer scientist should know about floating-point arithmetic</a>
+     * (1991), Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5,
+     * p 528.
+     **********************************************************************/
     static inline real log1p(real x) throw() {
-      // See D. Goldberg "What every computer scientist should know about
-      // floating-point arithmetic" (1991), Theorem 4.
-      // http://docs.sun.com/source/806-3568/ncg_goldberg.html
-      // See also, Higham (op. cit.), Answer to Problem 1.5, p 528.
       volatile real
         y = 1 + x,
         z = y - 1;
@@ -162,20 +149,74 @@ namespace GeographicLib {
       // (log(y)/z) introduces little additional error.
       return z == 0 ? x : x * std::log(y) / z;
     }
+#else
+    static inline double log1p(double x) throw() { return ::log1p(x); }
+    static inline float log1p(float x) throw() { return ::log1pf(x); }
+    static inline long double log1p(long double x) throw()
+    { return ::log1pl(x); }
+#endif
+
+#if defined(DOXYGEN) || defined(_MSC_VER)
+    /**
+     * Return asinh(\e x).  This is defined in terms of log1p(\e x) in order to
+     * maintain accuracy near \e x = 0.  In addition, the odd parity of the
+     * function is enforced.
+     **********************************************************************/
     static inline real asinh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
-      y = log1p(y * (1 + y/(std::sqrt(1 + y * y) + 1)));
+      y = log1p(y * (1 + y/(hypot(real(1), y) + 1)));
       return x < 0 ? -y : y;
     }
+#else
+    static inline double asinh(double x) throw() { return ::asinh(x); }
+    static inline float asinh(float x) throw() { return ::asinhf(x); }
+    static inline long double asinh(long double x) throw()
+    { return ::asinhl(x); }
+#endif
+
+#if defined(DOXYGEN) || defined(_MSC_VER)
+    /**
+     * Return atanh(\e x).  This is defined in terms of log1p(\e x) in order to
+     * maintain accuracy near \e x = 0.  In addition, the odd parity of the
+     * function is enforced.
+     **********************************************************************/
     static inline real atanh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
       y = log1p(2 * y/(1 - y))/2;
       return x < 0 ? -y : y;
     }
+#else
+    static inline double atanh(double x) throw() { return ::atanh(x); }
+    static inline float atanh(float x) throw() { return ::atanhf(x); }
+    static inline long double atanh(long double x) throw()
+    { return ::atanhl(x); }
+#endif
+
+#if defined(DOXYGEN) || defined(_MSC_VER)
+    /**
+     * Return the real cube root of \e x.
+     **********************************************************************/
     static inline real cbrt(real x) throw() {
       real y = std::pow(std::abs(x), 1/real(3)); // Return the real cube root
       return x < 0 ? -y : y;
     }
+#else
+    static inline double cbrt(double x) throw() { return ::cbrt(x); }
+    static inline float cbrt(float x) throw() { return ::cbrtf(x); }
+    static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
+#endif
+
+#if defined(DOXYGEN)
+    /**
+     * Return true if number is finite, false if NaN or infinite.
+     **********************************************************************/
+    static inline bool isfinite(real x) throw() {
+      return std::abs(x) < std::numeric_limits<real>::max();
+    }
+#elif defined(_MSC_VER)
+    static inline real isfinite(real x) throw() { return _finite(x); }
+#else
+    static inline real isfinite(real x) throw() { return std::isfinite(x); }
 #endif
   };
 

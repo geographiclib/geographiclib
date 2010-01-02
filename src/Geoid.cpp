@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -227,38 +227,24 @@ namespace GeographicLib {
       if (s.empty())
         continue;
       if (s[0] == '#') {
-        if (s.substr(0, 14) == "# Description ")
-          _description = s.substr(14);
-        else if (s.substr(0, 11) == "# DateTime ")
-          _datetime = s.substr(11);
-        else if (s.substr(0,9) == "# Offset ") {
-          s = s.substr(9);
-          istringstream is(s);
+        istringstream is(s);
+        string commentid, key;
+        if (!(is >> commentid >> key) || commentid != "#")
+          continue;
+        if (key == "Description" || key =="DateTime") {
+          string::size_type p = s.find_first_not_of(" \t", is.tellg());
+          if (p != string::npos)
+            (key == "Description" ? _description : _datetime) = s.substr(p);
+        } else if (key == "Offset") {
           if (!(is >> _offset))
             throw out_of_range("Error reading offset " + _filename);
-        } else if (s.substr(0, 8) == "# Scale ") {
-          s = s.substr(8);
-          istringstream is(s);
+        } else if (key == "Scale") {
           if (!(is >> _scale))
             throw out_of_range("Error reading scale " + _filename);
-        } else if (!_cubic && s.substr(0,19) == "# MaxBilinearError ") {
-          s = s.substr(19);
-          istringstream is(s);
+        } else if (key == (_cubic ? "MaxCubicError" : "MaxBilinearError")) {
           // It's not an error if the error can't be read
           is >> _maxerror;
-        } else if (!_cubic && s.substr(0,19) == "# RMSBilinearError ") {
-          s = s.substr(19);
-          istringstream is(s);
-          // It's not an error if the error can't be read
-          is >> _rmserror;
-        } else if (_cubic && s.substr(0,16) == "# MaxCubicError ") {
-          s = s.substr(16);
-          istringstream is(s);
-          // It's not an error if the error can't be read
-          is >> _maxerror;
-        } else if (_cubic && s.substr(0,16) == "# RMSCubicError ") {
-          s = s.substr(16);
-          istringstream is(s);
+        } else if (key == (_cubic ? "RMSCubicError" : "RMSBilinearError")) {
           // It's not an error if the error can't be read
           is >> _rmserror;
         }

@@ -2,7 +2,7 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -10,6 +10,7 @@
 #include "GeographicLib/Geocentric.hpp"
 #include <algorithm>
 #include <limits>
+#include <stdexcept>
 
 #define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id$"
 
@@ -20,9 +21,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geocentric::Geocentric(real a, real r) throw()
+  Geocentric::Geocentric(real a, real r)
     : _a(a)
-    , _f(r != 0 ? 1 / r : 0)
+    , _r(r)
+    , _f(_r != 0 ? 1 / _r : 0)
     , _e2(_f * (2 - _f))
     , _e2m(sq(1 - _f))          // 1 - _e2
       // Constants with the x suffix are for use by Reverse and support prolate
@@ -32,7 +34,10 @@ namespace GeographicLib {
     , _e4x(sq(_e2x))
     , _e2mx(_f >= 0 ? _e2m : 1/_e2m)
     , _maxrad(2 * _ax / numeric_limits<real>::epsilon())
-  {}
+  {
+    if (!(_a > 0))
+      throw std::out_of_range("Major radius is not positive");
+  }
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a(),
                                      Constants::WGS84_r());

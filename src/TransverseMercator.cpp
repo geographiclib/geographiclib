@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -41,6 +41,7 @@
 
 #include "GeographicLib/TransverseMercator.hpp"
 #include <limits>
+#include <stdexcept>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id$"
 
@@ -54,9 +55,10 @@ namespace GeographicLib {
   const Math::real TransverseMercator::tol =
     real(0.1)*sqrt(numeric_limits<real>::epsilon());
 
-  TransverseMercator::TransverseMercator(real a, real r, real k0) throw()
+  TransverseMercator::TransverseMercator(real a, real r, real k0)
     : _a(a)
-    , _f(r != 0 ? 1 / r : 0)
+    , _r(r)
+    , _f(_r != 0 ? 1 / _r : 0)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -66,6 +68,10 @@ namespace GeographicLib {
     , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
     , _n(_f / (2 - _f))
   {
+    if (!(_a > 0))
+      throw std::out_of_range("Major radius is not positive");
+    if (!(_k0 > 0))
+      throw std::out_of_range("Scale is not positive");
     // If coefficents might overflow an int, convert them to double (and they
     // are all exactly representable as doubles).
     switch (maxpow) {
@@ -255,9 +261,9 @@ namespace GeographicLib {
       gamma = lam;
       k = _c;
     }
-    // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse mercator
+    // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse Mercator
     // (for eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
-    // mercator with constant scale on the central meridian (for eta = 0, xip =
+    // Mercator with constant scale on the central meridian (for eta = 0, xip =
     // rectifying latitude).  Define
     //
     //   zeta = xi + i*eta

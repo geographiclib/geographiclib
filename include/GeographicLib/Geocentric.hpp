@@ -2,7 +2,7 @@
  * \file Geocentric.hpp
  * \brief Header for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -45,16 +45,17 @@ namespace GeographicLib {
   class Geocentric {
   private:
     typedef Math::real real;
-    const real _a, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
+    const real _a, _r, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
     static inline real sq(real x) throw() { return x * x; }
   public:
 
     /**
      * Constructor for a ellipsoid radius \e a (meters) and reciprocal
      * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
-     * (i.e., a sphere).  Negative \e r indicates a prolate spheroid.
+     * (i.e., a sphere).  Negative \e r indicates a prolate spheroid.  An
+     * exception is thrown if \e a is non-positive.
      **********************************************************************/
-    Geocentric(real a, real r) throw();
+    Geocentric(real a, real r);
 
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
@@ -81,11 +82,24 @@ namespace GeographicLib {
       const throw();
 
     /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _a; }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * used in the constructor.  A value of 0 is returned for a sphere
+     * (infinite inverse flattening).
+     **********************************************************************/
+    Math::real InverseFlattening() const throw() { return _r; }
+
+    /**
      * A global instantiation of Geocentric with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
     const static Geocentric WGS84;
   };
 
-} //namespace GeographicLib
+} // namespace GeographicLib
 #endif

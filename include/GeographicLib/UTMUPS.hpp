@@ -2,7 +2,7 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -77,6 +77,7 @@ namespace GeographicLib {
     static bool CheckCoords(bool utmp, bool northp, real x, real y,
                             bool msgrlimits = false, bool throwp = true);
     UTMUPS();                   // Disable constructor
+
   public:
 
     /**
@@ -243,8 +244,22 @@ namespace GeographicLib {
      * The shift necessary to align N and S halves of a UTM zone
      * (10<sup>7</sup>).
      **********************************************************************/
-    static real UTMShift() throw();
+    static Math::real UTMShift() throw();
 
+    /**
+     * The major radius of the ellipsoid (meters).  This is the value for the
+     * WGS84 ellipsoid because the UTM and UPS projections are based on this
+     * ellipsoid.
+     **********************************************************************/
+    static Math::real MajorRadius() throw() { return Constants::WGS84_a(); }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is the value for the
+     * WGS84 ellipsoid because the UTM and UPS projections are based on this
+     * ellipsoid.
+     **********************************************************************/
+    static Math::real InverseFlattening() throw()
+    { return Constants::WGS84_r(); }
   };
 
 } // namespace GeographicLib

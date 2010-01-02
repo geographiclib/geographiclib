@@ -166,8 +166,9 @@ The following steps will get you started with %GeographicLib:
    documentation
    - make all doc
    The compiled utility programs are in the tools directory.
- - windows/GeographicLib.sln is MS Visual Studio 2005 solution file which
-   compiles the library and the utility programs under Windows.
+ - windows/GeographicLib-vc8.sln (resp. vc9) is MS Visual Studio 2005
+   (resp. 2008) solution file which compiles the library and the utility
+   programs under Windows.
  - Try out \ref geoconvert (for help, type cd tools; ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d

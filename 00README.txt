@@ -27,6 +27,7 @@ Files
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
+      LambertConformalConic.[ch]pp -- Lambert conformal conic projection
 
     tools/
       GeoConvert.cpp -- geographic conversion utility

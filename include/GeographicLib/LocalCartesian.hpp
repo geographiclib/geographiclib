@@ -2,7 +2,7 @@
  * \file LocalCartesian.hpp
  * \brief Header for GeographicLib::LocalCartesian class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -99,6 +99,20 @@ namespace GeographicLib {
      * Return the height of the origin (meters).
      **********************************************************************/
     Math::real HeightOrigin() const throw() { return _h0; }
+
+    /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * inherited from the Geocentric object used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * inherited from the Geocentric object used in the constructor.  A value of
+     * 0 is returned for a sphere (infinite inverse flattening).
+     **********************************************************************/
+    Math::real InverseFlattening() const throw()
+    { return _earth.InverseFlattening(); }
   };
 
 } // namespace GeographicLib

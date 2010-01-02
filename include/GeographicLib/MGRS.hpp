@@ -2,7 +2,7 @@
  * \file MGRS.hpp
  * \brief Header for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_MGRS_HPP "$Id$"
 
 #include "GeographicLib/Constants.hpp"
+#include "GeographicLib/UTMUPS.hpp"
 #include <algorithm>
 #include <string>
 #include <sstream>
@@ -222,6 +223,18 @@ namespace GeographicLib {
                         int& zone, bool& northp, real& x, real& y,
                         int& prec, bool centerp = true);
 
+    /**
+     * The major radius of the ellipsoid (meters).  This is the value for the
+     * WGS84 ellipsoid because MGRS coordinates are based on this ellipsoid.
+     **********************************************************************/
+    static Math::real MajorRadius() throw()  { return UTMUPS::MajorRadius(); }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is the value for the
+     * WGS84 ellipsoid because MGRS coordinates are based on this ellipsoid.
+     **********************************************************************/
+    static Math::real InverseFlattening() throw()
+    { return UTMUPS::InverseFlattening(); }
   };
 
 } // namespace GeographicLib

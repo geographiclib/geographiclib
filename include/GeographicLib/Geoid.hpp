@@ -2,7 +2,7 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -283,6 +283,21 @@ namespace GeographicLib {
     }
 
     /**
+     * The major radius of the ellipsoid (meters).  This is the value for the
+     * WGS84 ellipsoid because the supported geoid models are all based on this
+     * ellipsoid.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return Constants::WGS84_a(); }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is the value for the
+     * WGS84 ellipsoid because the supported geoid models are all based on this
+     * ellipsoid.
+     **********************************************************************/
+    Math::real InverseFlattening() const throw()
+    { return Constants::WGS84_r(); }
+
+    /**
      * Return the compile-time default path for the geoid data files.
      **********************************************************************/
     static std::string DefaultPath();
@@ -293,5 +308,5 @@ namespace GeographicLib {
     static std::string GeoidPath();
   };
 
-} //namespace GeographicLib
+} // namespace GeographicLib
 #endif
