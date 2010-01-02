@@ -2,13 +2,14 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/PolarStereographic.hpp"
 #include <limits>
+#include <stdexcept>
 
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id$"
 
@@ -22,16 +23,22 @@ namespace GeographicLib {
   const Math::real PolarStereographic::tol =
     real(0.1)*sqrt(numeric_limits<real>::epsilon());
 
-  PolarStereographic::PolarStereographic(real a, real r, real k0) throw()
+  PolarStereographic::PolarStereographic(real a, real r, real k0)
     : _a(a)
-    , _f(r != 0 ? 1 / r : 0)
+    , _r(r)
+    , _f(_r != 0 ? 1 / _r : 0)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) )
     , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
-  {}
+  {
+    if (!(_a > 0))
+      throw std::out_of_range("Major radius is not positive");
+    if (!(_k0 > 0))
+      throw std::out_of_range("Scale is not positive");
+  }
 
   const PolarStereographic
   PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_r(),
@@ -74,9 +81,9 @@ namespace GeographicLib {
       real
         ctheta = cos(theta),
         f = exp(eatanhe(ctheta)),
-        c2 = cos(theta/2),
         v = 2 * tan(theta/2) * f - t2,
-        dv = _e2m * f / ((1 - _e2 * sq(ctheta)) * sq(c2)), // dv/dtheta
+        // dv/dtheta
+        dv = _e2m * f / ((1 - _e2 * sq(ctheta)) * sq(cos(theta/2))),
         dtheta = -v/dv;
       theta += dtheta;
       if (abs(dtheta) < tol)

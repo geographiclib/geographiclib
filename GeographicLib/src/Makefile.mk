@@ -10,7 +10,7 @@ INCLUDEPATH = ../include
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
-	Geoid
+	Geoid LambertConformalConic
 
 HEADERS = Constants.hpp $(addsuffix .hpp,$(MODULES))
 SOURCES = $(addsuffix .cpp,$(MODULES))
@@ -58,5 +58,6 @@ Geodesic.o: Constants.hpp Geodesic.hpp
 AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Constants.hpp Geodesic.hpp
 CassiniSoldner.o: CassiniSoldner.hpp Constants.hpp Geodesic.hpp
 Geoid.o: Constants.hpp Geoid.hpp
+LambertConformalConic.o: Constants.hpp LambertConformalConic.hpp
 
 .PHONY: all install list clean

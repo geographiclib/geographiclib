@@ -2,7 +2,7 @@
  * \file GeoCoords.hpp
  * \brief Header for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -74,7 +74,7 @@ namespace GeographicLib {
       , _northing(2000000)
       , _northp(true)
       , _zone(0)
-    { CopyToAlt();}
+    { CopyToAlt(); }
 
     /**
      * Parse as a string and interpret it as a geographic position.  The input
@@ -359,6 +359,21 @@ namespace GeographicLib {
      * prec.
      **********************************************************************/
     std::string AltUTMUPSRepresentation(int prec = 0) const;
+
+    /**
+     * The major radius of the ellipsoid (meters).  This is the value for the
+     * WGS84 ellipsoid because the UTM and UPS projections are based on this
+     * ellipsoid.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return UTMUPS::MajorRadius(); }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is the value for the
+     * WGS84 ellipsoid because the UTM and UPS projections are based on this
+     * ellipsoid.
+     **********************************************************************/
+    Math::real InverseFlattening() const throw()
+    { return UTMUPS::InverseFlattening(); }
   };
 
 } // namespace GeographicLib

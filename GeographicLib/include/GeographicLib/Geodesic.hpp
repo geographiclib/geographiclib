@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -115,7 +115,7 @@ namespace GeographicLib {
       const throw();
 
     static const real eps2, tol0, tol1, tol2, xthresh;
-    const real _a, _f, _f1, _e2, _ep2, _n, _b;
+    const real _a, _r, _f, _f1, _e2, _ep2, _n, _b;
     static real SinSeries(real sinx, real cosx, const real c[], int n)
       throw();
     static inline real AngNormalize(real x) throw() {
@@ -156,9 +156,9 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with equatorial radius \e a (meters) and
      * reciprocal flattening \e r.  Setting \e r = 0 implies \e r = inf or
      * flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
-     * ellipsoid.
+     * ellipsoid.  An exception is thrown if \e a is non-positive.
      **********************************************************************/
-    Geodesic(real a, real r) throw();
+    Geodesic(real a, real r);
 
     /**
      * Perform the direct geodesic calculation.  Given a latitude, \e lat1,
@@ -204,6 +204,19 @@ namespace GeographicLib {
      **********************************************************************/
     GeodesicLine Line(real lat1, real lon1, real azi1)
       const throw();
+
+    /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _a; }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * used in the constructor.  A value of 0 is returned for a sphere
+     * (infinite inverse flattening).
+     **********************************************************************/
+    Math::real InverseFlattening() const throw() { return _r; }
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
@@ -258,7 +271,7 @@ namespace GeographicLib {
     static const int neta = Geodesic::neta;
 
     real _lat1, _lon1, _azi1;
-    real  _b, _f1, _salp0, _calp0, _u2,
+    real _a, _r,  _b, _f1, _salp0, _calp0, _u2,
       _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
       _taufm1, _zetfm1, _etaf, _dtau1, _dzet1, _dlam1;
     real _tauCoeff[ntau ? ntau : 1], _sigCoeff[nsig ? nsig : 1],
@@ -298,19 +311,32 @@ namespace GeographicLib {
     /**
      * Return the latitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Latitude() const throw() { return _lat1; }
+    Math::real Latitude() const throw() { return Init() ? _lat1 : 0; }
 
     /**
      * Return the longitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Longitude() const throw() { return _lon1; }
+    Math::real Longitude() const throw() { return Init() ? _lon1 : 0; }
 
     /**
      * Return the azimuth (degrees) of the geodesic line as it passes through
      * point 1.
      **********************************************************************/
-    Math::real Azimuth() const throw() { return _azi1; }
+    Math::real Azimuth() const throw() { return Init() ? _azi1 : 0; }
+
+    /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return Init() ? _a : 0; }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * inherited from the Geodesic object used in the constructor.  A value of
+     * 0 is returned for a sphere (infinite inverse flattening).
+     **********************************************************************/
+    Math::real InverseFlattening() const throw() { return Init() ? _r : 0; }
   };
 
-} //namespace GeographicLib
+} // namespace GeographicLib
 #endif

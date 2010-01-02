@@ -2,7 +2,7 @@
  * \file PolarStereographic.hpp
  * \brief Header for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -29,7 +29,7 @@ namespace GeographicLib {
   class PolarStereographic {
   private:
     typedef Math::real real;
-    const real _a, _f, _k0, _e2, _e, _e2m, _c;
+    const real _a, _r, _f, _k0, _e2, _e, _e2m, _c;
     static const real tol;
     static const int numit = 5;
     static inline real sq(real x) throw() { return x * x; }
@@ -43,9 +43,10 @@ namespace GeographicLib {
     /**
      * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
      * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
-     * inf or flattening = 0 (i.e., a sphere).
+     * inf or flattening = 0 (i.e., a sphere).  An exception is thrown if \e a
+     * or \e k0 is non-positive.
      **********************************************************************/
-    PolarStereographic(real a, real r, real k0) throw();
+    PolarStereographic(real a, real r, real k0);
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
@@ -70,6 +71,25 @@ namespace GeographicLib {
      **********************************************************************/
     void Reverse(bool northp, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();
+
+    /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _a; }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * used in the constructor.  A value of 0 is returned for a sphere
+     * (infinite inverse flattening).
+     **********************************************************************/
+    Math::real InverseFlattening() const throw() { return _r; }
+
+    /**
+     * The central scale for the projection.  This is that value of \e k0 used
+     * in the constructor and is the scale at the pole.
+     **********************************************************************/
+    Math::real CentralScale() const throw() { return _k0; }
 
     /**
      * A global instantiation of PolarStereographic with the WGS84 ellipsoid

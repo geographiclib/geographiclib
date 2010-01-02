@@ -48,7 +48,7 @@ namespace GeographicLib {
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
     if (setzone < MINPSEUDOZONE || setzone > MAXZONE)
-      throw std::out_of_range("Illegal zone requested " + str(setzone));
+      throw out_of_range("Illegal zone requested " + str(setzone));
     if (setzone >= MINZONE)
       return setzone;
     // Assume lon is in [-180, 360].

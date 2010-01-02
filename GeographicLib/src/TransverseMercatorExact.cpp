@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -40,6 +40,7 @@
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include <limits>
 #include <algorithm>
+#include <stdexcept>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id$"
 
@@ -55,15 +56,16 @@ namespace GeographicLib {
   const Math::real TransverseMercatorExact::tol1 = real(0.1) * sqrt(tol);
   const Math::real TransverseMercatorExact::tol2 = real(0.1) * tol;
   const Math::real TransverseMercatorExact::taytol = pow(tol, real(0.6));
-      // Overflow value for asinh(tan(pi/2)) etc.
+  // Overflow value for asinh(tan(pi/2)) etc.
   const Math::real TransverseMercatorExact::ahypover =
-    (real)(numeric_limits<real>::digits)
-    /log((real)(numeric_limits<real>::radix)) + 2;
+    real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
+    + 2;
 
   TransverseMercatorExact::TransverseMercatorExact(real a, real r, real k0,
-                                                   bool extendp) throw()
+                                                   bool extendp)
     : _a(a)
-    , _f(1 / r)
+    , _r(r)
+    , _f(1 / _r)
     , _k0(k0)
     , _mu(_f * (2 - _f))        // e^2
     , _mv(1 - _mu)              // 1 - e^2
@@ -72,7 +74,14 @@ namespace GeographicLib {
     , _extendp(extendp)
     , _Eu(_mu)
     , _Ev(_mv)
-  {}
+  {
+    if (!(_a > 0))
+      throw std::out_of_range("Major radius is not positive");
+    if (!(_r > 0))
+      throw std::out_of_range("Inverse flattening is not positive");
+    if (!(_k0 > 0))
+      throw std::out_of_range("Scale is not positive");
+  }
 
   const TransverseMercatorExact
   TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_r(),

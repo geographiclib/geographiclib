@@ -2,7 +2,7 @@
  * \file Geodesic.cpp
  * \brief Implementation for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -29,6 +29,7 @@
 #include "GeographicLib/Geodesic.hpp"
 #include <algorithm>
 #include <limits>
+#include <stdexcept>
 
 #define GEOGRAPHICLIB_GEODESIC_CPP "$Id$"
 
@@ -48,15 +49,19 @@ namespace GeographicLib {
   const Math::real Geodesic::tol2 = sqrt(numeric_limits<real>::epsilon());
   const Math::real Geodesic::xthresh = 1000 * tol2;
 
-  Geodesic::Geodesic(real a, real r) throw()
+  Geodesic::Geodesic(real a, real r)
     : _a(a)
-    , _f(r != 0 ? 1 / r : 0)
+    , _r(r)
+    , _f(_r != 0 ? 1 / _r : 0)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / sq(_f1))       // e2 / (1 - e2)
     , _n(_f / ( 2 - _f))
     , _b(_a * _f1)
-  {}
+  {
+    if (!(_a > 0))
+      throw std::out_of_range("Major radius is not positive");
+  }
 
   const Geodesic Geodesic::WGS84(Constants::WGS84_a(), Constants::WGS84_r());
 
@@ -543,7 +548,12 @@ namespace GeographicLib {
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
-                             real lat1, real lon1, real azi1) throw() {
+                             real lat1, real lon1, real azi1) throw()
+    : _a(g._a)
+    , _r(g._r)
+    , _b(g._b)
+    , _f1(g._f1)
+  {
     azi1 = Geodesic::AngNormalize(azi1);
     // Guard against underflow in salp0
     azi1 = Geodesic::AngRound(azi1);
@@ -551,8 +561,6 @@ namespace GeographicLib {
     _lat1 = lat1;
     _lon1 = lon1;
     _azi1 = azi1;
-    _b = g._b;
-    _f1 = g._f1;
     // alp1 is in [0, pi]
     real
       alp1 = azi1 * Constants::degree(),

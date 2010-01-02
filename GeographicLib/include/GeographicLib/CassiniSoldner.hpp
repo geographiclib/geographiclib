@@ -2,7 +2,7 @@
  * \file CassiniSoldner.hpp
  * \brief Header for GeographicLib::CassiniSoldner class
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -144,6 +144,19 @@ namespace GeographicLib {
     Math::real LongitudeOrigin() const throw()
     { return _meridian.Longitude(); }
 
+    /**
+     * The major radius of the ellipsoid (meters).  This is that value of \e a
+     * inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+
+    /**
+     * The inverse flattening of the ellipsoid.  This is that value of \e r
+     * inherited from the Geodesic object used in the constructor.  A value of
+     * 0 is returned for a sphere (infinite inverse flattening).
+     **********************************************************************/
+    Math::real InverseFlattening() const throw()
+    { return _earth.InverseFlattening(); }
   };
 
 } // namespace GeographicLib
