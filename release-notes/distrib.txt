@@ -1,0 +1,17 @@
+# $Id$
+
+These files contain the source code for GeogragphicLib.  The version
+numbering is by year and month, i.e., Geographic-YYYY-MM.tgz.  Usually
+you will only need to download the latest version.
+
+The files are packaged as either a compressed tar file (tgz) or a zip
+file.  (The two archives have identical contents; however, the text
+files in the zip archive have Windows-style line endings.)
+
+The library is documented at
+
+  http://geographiclib.sourceforge.net/html/index.html
+
+For information on the changes between versions, see
+
+  http://geographiclib.sourceforge.net/html/old.html
