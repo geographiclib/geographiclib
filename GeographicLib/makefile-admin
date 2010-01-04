@@ -11,8 +11,8 @@ distrib:
 	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
-	rsync -av --delete distrib testdata geoids-distrib $(DATASTAGE)/
-	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,geoids-distrib} $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/
+	rsync -av --exclude .svn --delete distrib testdata geoids-distrib release-notes $(DATASTAGE)/
+	rsync --exclude '*~' --exclude '#*' --exclude .svn --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,geoids-distrib,release-notes} $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/
 
 distrib-cgi:
 	for f in GeoConvert Geod GeoidEval printlogs; do \

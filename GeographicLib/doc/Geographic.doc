@@ -2228,7 +2228,6 @@ Example (route from JFK Airport to Singapore Changi Airport)
    04d32'05.7"S 104d14'48.7"E 177d28'43.6" 3795596
 
 Here is the usage (obtained from "Geod -h")
-
 \verbatim
 Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]
             [-d] [-b] [-f] [-p prec] [-h]
@@ -2450,6 +2449,7 @@ slopes in the northerly and easterly direction.
 In addition, this utility requires the installation of the geoid data
 files; see \ref geoidinst for details
 
+Here is the usage (obtained from "GeoidEval -h")
 \verbatim
 Usage:
   GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]
@@ -2531,7 +2531,22 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">2009-11 (current)</a>
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-1.0.x.tgz/download">1.0.x (unreleased)</a>
+  - Constructors for TransverseMercator, TransverseMercatorExact,
+    PolarStereographic, Geocentric, and Geodesic now check for obvious
+    problems with their arguments and throw an exception if necessary.
+  - Most classes now include inspector functions such as MajorRadius()
+    so that you can determine how instances were constructed.
+  - Add GeographicLib::LambertConformalConic class.
+  - Add solution and project files for Visual Studio 2008.
+  - GeographicLib::Geoid changes:
+   - FIX BUG in GeographicLib::Geoid::Cache which could cause a
+     segmentation fault in some cases;
+   - Include sufficient edge data to allow heights to be returned for
+     cached area without disk reads;
+   - Add inspector functions to query the extent of the cache.
+
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">2009-11</a>
   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
     and \ref geoconvert (via -t option).
   - Utilities now complain is there are too many tokens on input lines.
