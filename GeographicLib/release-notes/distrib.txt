@@ -15,3 +15,8 @@ The library is documented at
 For information on the changes between versions, see
 
   http://geographiclib.sourceforge.net/html/old.html
+
+If you want to use the GeographicLib::Geoid class, you will also need to
+download one of the geoid models from
+
+  http://sourceforge.net/projects/geographiclib/files/geoids-distrib
