@@ -237,7 +237,8 @@ namespace GeographicLib {
    // Print positions on a geodesic going through latitude 30,
    // longitude 10 at azimuth 80.  Points at intervals of 10km
    // in the range [-1000km, 1000km] are given.
-   GeodesicLine line(Geodesic::WGS84.Line(30.0, 10.0, 80.0));
+   GeographicLib::GeodesicLine
+     line(GeographicLib::Geodesic::WGS84.Line(30.0, 10.0, 80.0));
    double step = 10e3;
    for (int s = -100; s <= 100; ++s) {
      double lat2, lon2, azi2, m12;
@@ -250,8 +251,8 @@ namespace GeographicLib {
    * The default copy constructor and assignment operators work with this
    * class, so that, for example, the previous example could start
    \verbatim
-   GeodesicLine line;
-   line = Geodesic::WGS84.Line(30.0, 10.0, 80.0);
+   GeographicLib::GeodesicLine line;
+   line = GeographicLib::Geodesic::WGS84.Line(30.0, 10.0, 80.0);
    ...
    \endverbatim
    * Similarly, a vector can be used to hold GeodesicLine objects.

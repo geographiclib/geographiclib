@@ -48,10 +48,11 @@ namespace GeographicLib {
    const double
      a = GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80
      lat1 = 39 + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels
+     k1 = 1,                                   // scale
      lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin
      fe = 600000, fn = 0;                      // false easting and northing
    // Set up basic projection
-   const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, 1.0);
+   const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
    double x0, y0;
    {
      double gamma, k;
@@ -60,12 +61,12 @@ namespace GeographicLib {
      x0 -= fe; y0 -= fn;         // Combine result with false origin
    }
    double lat, lon, x, y, gamma, k;
-   // Sample conversion from geodetic to OSGB grid
+   // Sample conversion from geodetic to PASouth grid
    std::cin >> lat >> lon;
    PASouth.Forward(lon0, lat, lon, x, y, gamma, k);
    x -= x0; y -= y0;
    std::cout << x << " " << y << "\n";
-   // Sample conversion from OSGB grid to geodetic
+   // Sample conversion from PASouth grid to geodetic
    std::cin >> x >> y;
    x += x0; y += y0;
    PASouth.Reverse(lon0, x, y, lat, lon, gamma, k);
