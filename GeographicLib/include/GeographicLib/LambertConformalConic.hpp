@@ -114,7 +114,7 @@ namespace GeographicLib {
      * \e r, standard parallel (the circle of tangency) \e stdlat (degrees),
      * and scale on the standard parallel \e k0.  Setting \e r = 0 implies \e r
      * = inf or flattening = 0 (i.e., a sphere). An exception is thrown if \e a
-     * or \e k0 is non-positive or if \e stdlat is not in the range [-90, 90].
+     * or \e k0 is not positive or if \e stdlat is not in the range [-90, 90].
      **********************************************************************/
     LambertConformalConic(real a, real r, real stdlat, real k0);
 
@@ -123,7 +123,7 @@ namespace GeographicLib {
      * \e r, standard parallels \e stdlat1 (degrees) and \e stdlat2 (degrees),
      * and the scale on the standard parallels \e k1.  Setting \e r = 0 implies
      * \e r = inf or flattening = 0 (i.e., a sphere). An exception is thrown if
-     * \e a or \e k0 is non-positive or if \e stdlat1 or \e stdlat2 is not in
+     * \e a or \e k0 is not positive or if \e stdlat1 or \e stdlat2 is not in
      * the range [-90, 90].  In addition, if either \e stdlat1 or \e stdlat2 is
      * a pole, then an exception is thrown if \e stdlat1 is not equal \e
      * stdlat2
@@ -139,6 +139,13 @@ namespace GeographicLib {
                           real sinlat1, real coslat1,
                           real sinlat2, real coslat2,
                           real k1);
+
+    /**
+     * Alter the scale for the projection so that on latitude \e lat, the scale
+     * is \e k (default 1).  The allows a "latitude of true scale" to be
+     * specified.  An exception is thrown if \e k is not positive.
+     **********************************************************************/
+    void SetScale(real lat, real k = real(1));
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to

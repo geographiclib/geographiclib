@@ -156,7 +156,7 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with equatorial radius \e a (meters) and
      * reciprocal flattening \e r.  Setting \e r = 0 implies \e r = inf or
      * flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
-     * ellipsoid.  An exception is thrown if \e a is non-positive.
+     * ellipsoid.  An exception is thrown if \e a is not positive.
      **********************************************************************/
     Geodesic(real a, real r);
 

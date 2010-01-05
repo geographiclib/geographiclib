@@ -8,9 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/Geocentric.hpp"
-#include <algorithm>
-#include <limits>
-#include <stdexcept>
 
 #define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id$"
 
@@ -36,7 +33,7 @@ namespace GeographicLib {
     , _maxrad(2 * _ax / numeric_limits<real>::epsilon())
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
   }
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a(),

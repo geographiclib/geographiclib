@@ -73,6 +73,7 @@ For more information, see http://geographiclib.sourceforge.net/
    - \ref geoidformat
    - \ref geoidinterp
    - \ref geoidcache
+   - \ref testgeoid
  - \ref utilities
    - \ref geoconvert
    - \ref geod
@@ -2088,6 +2089,31 @@ by multiple threads.  If multiple threads need to calculate
 geoid heights they should all construct thread-local
 instantiations.
 
+\section testgeoid Test data for geoids
+
+A test set for the geoid models is available at
+ - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeoidHeight.dat.gz/download">
+   GeoidHeight.dat.gz</a>
+ .
+This is about 10 MB (compressed).  This test set consists of a set of
+500000 geographic coordinates together with the corresponding geoid
+heights according to various earth gravity models.
+
+Each line of the test set gives 6 space delimited numbers
+ - latitude (degrees, exact)
+ - longitude (degrees, exact)
+ - EGM84 height (meters, accurate to 1 mm)
+ - EGM96 height (meters, accurate to 0.1 mm)
+ - EGM2008 height (meters, accurate to 1 mm)
+ .
+The latitude and longitude are all multiples of 10<sup>-6</sup> deg and
+should be regarded as exact.  The geoid heights are computed using the
+harmonic NGA synthesis programs.  In the case of the EGM84 and EGM96,
+the programs were compiled (with gfortran) and run under Linux.  In the
+case of EGM2008, the prescription results in NaNs (possibly because of
+uninitialized variables in the program?), so the data was generated with
+the precompiled binary that NGA supplies for Windows.
+
 <center>
 Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
 </center>
@@ -2544,14 +2570,17 @@ list of changes.
   - Most classes now include inspector functions such as MajorRadius()
     so that you can determine how instances were constructed.
   - Add GeographicLib::LambertConformalConic class.
+  - Add GeographicLib::PolarStereographic::SetScale to allow the
+    latitude of true scale to be specified.
   - Add solution and project files for Visual Studio 2008.
+  - Add GeographicLib::GeographicErr for exceptions.
   - GeographicLib::Geoid changes:
-   - BUG FIX: fix typo in GeographicLib::Geoid::Cache which could cause
-     a segmentation fault in some cases when the cached area spanned the
-     prime meridian.
-   - Include sufficient edge data to allow heights to be returned for
-     cached area without disk reads;
-   - Add inspector functions to query the extent of the cache.
+    - BUG FIX: fix typo in GeographicLib::Geoid::Cache which could cause
+      a segmentation fault in some cases when the cached area spanned
+      the prime meridian.
+    - Include sufficient edge data to allow heights to be returned for
+      cached area without disk reads;
+    - Add inspector functions to query the extent of the cache.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">2009-11</a>
   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS

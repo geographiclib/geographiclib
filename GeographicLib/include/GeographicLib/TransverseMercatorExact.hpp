@@ -138,7 +138,7 @@ namespace GeographicLib {
      * limit, and in practise, \e r should be smaller than about
      * 1/std::numeric_limits<real>::epsilon().  However,
      * GeographicLib::TransverseMercator treats the sphere exactly.  An
-     * exception is thrown if \e a, \e r, or \e k0 is non-positive.
+     * exception is thrown if \e a, \e r, or \e k0 is not positive.
      **********************************************************************/
     TransverseMercatorExact(real a, real r, real k0, bool extendp = false);
 

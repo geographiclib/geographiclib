@@ -12,7 +12,6 @@
 
 #include "GeographicLib/UTMUPS.hpp"
 #include "GeographicLib/Constants.hpp"
-#include <string>
 
 namespace GeographicLib {
 

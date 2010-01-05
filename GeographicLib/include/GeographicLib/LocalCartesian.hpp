@@ -22,8 +22,8 @@ namespace GeographicLib {
    * lon, height = \e h (measured vertically from the surface of the ellipsoid)
    * to local cartesian coordinates (\e x, \e y, \e z).  The origin of local
    * cartesian coordinate system is at \e lat = \e lat0, \e lon = \e lon0, \e h
-   * = \e h0. The \e z axis is normal to the ellipsoid; the \e y axis points due
-   * north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
+   * = \e h0. The \e z axis is normal to the ellipsoid; the \e y axis points
+   * due north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
    *
    * The conversions all take place via geocentric coordinates using a
    * GeographicLib::Geocentric object (by default
@@ -57,7 +57,8 @@ namespace GeographicLib {
      * 0.  The optional \e earth argument (default Geocentric::WGS84) specifies
      * the Geocentric object to use for the transformation.
      **********************************************************************/
-    explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84) throw()
+    explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84)
+      throw()
       : _earth(earth)
     { Reset(real(0), real(0), real(0)); }
 
@@ -108,8 +109,8 @@ namespace GeographicLib {
 
     /**
      * The inverse flattening of the ellipsoid.  This is that value of \e r
-     * inherited from the Geocentric object used in the constructor.  A value of
-     * 0 is returned for a sphere (infinite inverse flattening).
+     * inherited from the Geocentric object used in the constructor.  A value
+     * of 0 is returned for a sphere (infinite inverse flattening).
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }

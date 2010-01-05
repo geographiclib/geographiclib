@@ -98,7 +98,7 @@ namespace GeographicLib {
      * Set the central latititude to \e lat0 and central longitude to \e lon0
      * (degrees).  \e lat0 should be in the range [-90, 90] and \e lon0 should
      * be in the range [-180, 360].
-     **********************************************************************/    
+     **********************************************************************/
     void Reset(real lat0, real lon0) throw();
 
     /**

@@ -2,7 +2,7 @@
  * \file Geod.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -13,12 +13,9 @@
 
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/DMS.hpp"
-#include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <stdexcept>
-#include <algorithm>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -123,11 +120,11 @@ real ReadAzimuth(const std::string& s) {
   DMS::flag ind;
   real azi = DMS::Decode(s, ind);
   if (!(azi >= -180 && azi <= 360))
-    throw std::out_of_range("Azimuth " + s + " not in range [-180,360]");
+    throw GeographicErr("Azimuth " + s + " not in range [-180,360]");
   if (azi >= 180) azi -= 360;
   if (ind == DMS::LATITUDE)
-    throw std::out_of_range("Azimuth " + s
-                            + " has a latitude hemisphere, N/S");
+    throw GeographicErr("Azimuth " + s
+                        + " has a latitude hemisphere, N/S");
   return azi;
 }
 
@@ -155,18 +152,18 @@ real ReadDistance(const std::string& s, bool arcmode) {
     DMS::flag ind;
     s12 = DMS::Decode(s, ind);
     if (ind != DMS::NONE)
-      throw std::out_of_range("Arc angle " + s
-                              + " includes a hemisphere, N/E/W/S");
+      throw GeographicErr("Arc angle " + s
+                          + " includes a hemisphere, N/E/W/S");
   } else {
     std::istringstream is(s);
     if (!(is >> s12))
-      throw std::out_of_range("Could not read distance: " + s);
+      throw GeographicErr("Could not read distance: " + s);
     // is >> s12 gobbles final E in 1234E, so look for last character which is
     // legal as the final character in a number (digit or period).
-    int pos = std::min(int(is.tellg()), int(s.find_last_of("0123456789.")) + 1);
+    int pos = std::min(int(is.tellg()),
+                       int(s.find_last_of("0123456789.")) + 1);
     if (pos != int(s.size()))
-      throw std::out_of_range("Extra text "
-                         + s.substr(pos) + " in distance " + s);
+      throw GeographicErr("Extra text " + s.substr(pos) + " in distance " + s);
   }
   return s12;
 }
@@ -247,10 +244,10 @@ int main(int argc, char* argv[]) {
       if (inverse) {
         std::string slat1, slon1, slat2, slon2;
         if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
-          throw std::out_of_range("Incomplete input: " + s);
+          throw GeographicErr("Incomplete input: " + s);
         std::string strc;
         if (str >> strc)
-          throw std::out_of_range("Extraneous input: " + strc);
+          throw GeographicErr("Extraneous input: " + strc);
         GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
         GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
         a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
@@ -266,19 +263,19 @@ int main(int argc, char* argv[]) {
         if (linecalc) {
           std::string ss12;
           if (!(str >> ss12))
-            throw std::out_of_range("Incomplete input: " + s);
+            throw GeographicErr("Incomplete input: " + s);
           std::string strc;
           if (str >> strc)
-            throw std::out_of_range("Extraneous input: " + strc);
+            throw GeographicErr("Extraneous input: " + strc);
           s12 = ReadDistance(ss12, arcmode);
           a12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
         } else {
           std::string slat1, slon1, sazi1, ss12;
           if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
-            throw std::out_of_range("Incomplete input: " + s);
+            throw GeographicErr("Incomplete input: " + s);
           std::string strc;
           if (str >> strc)
-            throw std::out_of_range("Extraneous input: " + strc);
+            throw GeographicErr("Extraneous input: " + strc);
           GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           azi1 = ReadAzimuth(sazi1);
           s12 = ReadDistance(ss12, arcmode);

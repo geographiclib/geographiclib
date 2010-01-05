@@ -12,9 +12,7 @@
 
 #include "GeographicLib/Constants.hpp"
 #include <vector>
-#include <string>
 #include <fstream>
-#include <stdexcept>
 
 namespace GeographicLib {
 
@@ -106,14 +104,22 @@ namespace GeographicLib {
           return real((unsigned char)(a) * 256u + (unsigned char)(b));
         }
         catch (const std::exception& e) {
-          throw std::out_of_range("Error reading " + _filename
-                                  + ": " + e.what());
+          // throw GeographicErr("Error reading " + _filename + ": "
+          //                      + e.what());
+          // triggers complaints about the "binary '+'" under Visual Studio.
+          // So use '+=' instead.
+          std::string err("Error reading ");
+          err += _filename;
+          err += ": ";
+          err += e.what();
+          throw GeographicErr(err);
+
         }
       }
     }
     real height(real lat, real lon, bool gradp,
                 real& grade, real& gradn) const;
-    Geoid(const Geoid&);        // copy constructor not allowed
+    Geoid(const Geoid&);            // copy constructor not allowed
     Geoid& operator=(const Geoid&); // copy assignment not allowed
   public:
 

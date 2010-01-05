@@ -2,13 +2,12 @@
  * \file AzimuthalEquidistant.cpp
  * \brief Implementation for GeographicLib::AzimuthalEquidistant class
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/AzimuthalEquidistant.hpp"
-#include <limits>
 
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP "$Id$"
 
