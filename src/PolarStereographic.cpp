@@ -8,8 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/PolarStereographic.hpp"
-#include <limits>
-#include <stdexcept>
 
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id$"
 
@@ -27,17 +25,17 @@ namespace GeographicLib {
     : _a(a)
     , _r(r)
     , _f(_r != 0 ? 1 / _r : 0)
-    , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) )
     , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
+    , _k0(k0)
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
     if (!(_k0 > 0))
-      throw std::out_of_range("Scale is not positive");
+      throw GeographicErr("Scale is not positive");
   }
 
   const PolarStereographic
@@ -95,6 +93,14 @@ namespace GeographicLib {
     real m = sin(theta) / sqrt(1 - _e2 * sq(cos(theta)));
     k = m == 0 ? _k0 : rho / (_a * m);
     gamma = northp ? lon : -lon;
+  }
+
+  void PolarStereographic::SetScale(real lat, real k) {
+    if (!(k > 0))
+      throw GeographicErr("Scale is not positive");
+    real x, y, gamma, kold;
+    Forward(true, lat, 0, x, y, gamma, kold);
+    _k0 *= k/kold;
   }
 
 } // namespace GeographicLib

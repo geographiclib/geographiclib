@@ -38,9 +38,6 @@
  **********************************************************************/
 
 #include "GeographicLib/TransverseMercatorExact.hpp"
-#include <limits>
-#include <algorithm>
-#include <stdexcept>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id$"
 
@@ -76,11 +73,11 @@ namespace GeographicLib {
     , _Ev(_mv)
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
     if (!(_r > 0))
-      throw std::out_of_range("Inverse flattening is not positive");
+      throw GeographicErr("Inverse flattening is not positive");
     if (!(_k0 > 0))
-      throw std::out_of_range("Scale is not positive");
+      throw GeographicErr("Scale is not positive");
   }
 
   const TransverseMercatorExact

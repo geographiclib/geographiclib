@@ -2,7 +2,7 @@
  * \file GeoidEval.cpp
  * \brief Command line utility for evaluation geoid heights
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -13,11 +13,9 @@
 
 #include "GeographicLib/Geoid.hpp"
 #include "GeographicLib/DMS.hpp"
-#include <string>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <stdexcept>
 
 int usage(int retval) {
   std::string
@@ -174,10 +172,10 @@ int main(int argc, char* argv[]) {
         std::istringstream  str(s);
         std::string stra, strb;
         if (!(str >> stra >> strb))
-          throw std::out_of_range("Incomplete input: " + s);
+          throw GeographicErr("Incomplete input: " + s);
         std::string strc;
         if (str >> strc)
-          throw std::out_of_range("Extraneous input: " + strc);
+          throw GeographicErr("Extraneous input: " + strc);
         real lat, lon;
         GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
         real gradn, grade;

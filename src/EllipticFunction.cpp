@@ -2,14 +2,12 @@
  * \file EllipticFunction.cpp
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/EllipticFunction.hpp"
-#include <limits>
-#include <algorithm>
 
 #define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id$"
 

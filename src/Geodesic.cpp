@@ -27,9 +27,6 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
-#include <algorithm>
-#include <limits>
-#include <stdexcept>
 
 #define GEOGRAPHICLIB_GEODESIC_CPP "$Id$"
 
@@ -60,7 +57,7 @@ namespace GeographicLib {
     , _b(_a * _f1)
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
   }
 
   const Geodesic Geodesic::WGS84(Constants::WGS84_a(), Constants::WGS84_r());

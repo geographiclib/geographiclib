@@ -2,7 +2,7 @@
  * \file TransverseMercatorTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -15,11 +15,9 @@
 #include "GeographicLib/EllipticFunction.hpp"
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
-#include <string>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-#include <stdexcept>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -100,10 +98,10 @@ int main(int argc, char* argv[]) {
       if (!(reverse ?
             (str >> x >> y) :
             (str >> lat >> lon)))
-        throw  std::out_of_range("Incomplete input: " + s);
+        throw  GeographicErr("Incomplete input: " + s);
       std::string strc;
       if (str >> strc)
-        throw std::out_of_range("Extraneous input: " + strc);
+        throw GeographicErr("Extraneous input: " + strc);
       real gamma, k;
       if (reverse) {
         if (series)

@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -11,7 +11,6 @@
 #define GEOGRAPHICLIB_DMS_HPP "$Id$"
 
 #include "GeographicLib/Constants.hpp"
-#include <string>
 #include <sstream>
 
 namespace GeographicLib {

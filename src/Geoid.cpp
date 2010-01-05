@@ -9,9 +9,7 @@
 
 #include "GeographicLib/Geoid.hpp"
 #include <sstream>
-#include <limits>
 #include <cstdlib>
-#include <algorithm>
 
 #define GEOGRAPHICLIB_GEOID_CPP "$Id$"
 
@@ -68,21 +66,21 @@ namespace GeographicLib {
   // 1, 2, 2, 1,
   // 1, 2, 2, 1,
   //    1, 1]$
-  // 
+  //
   // /* [x exponent, y exponent] for cubic fit */
   // pows:[
   // [0,0],
   // [1,0],[0,1],
   // [2,0],[1,1],[0,2],
   // [3,0],[2,1],[1,2],[0,3]]$
-  // 
+  //
   // basisvec(x,y,pows):=map(lambda([ex],(if ex[1]=0 then 1 else x^ex[1])*
   //     (if ex[2]=0 then 1 else y^ex[2])),pows)$
   // addterm(x,y,f,w,pows):=block([a,b,bb:basisvec(x,y,pows)],
   //   a:w*(transpose(bb).bb),
   //   b:(w*f) * bb,
   //   [a,b])$
-  // 
+  //
   // c3row(k):=block([a,b,c,pows:pows,n],
   //   n:length(pows),
   //   a:zeromatrix(n,n),
@@ -120,12 +118,12 @@ namespace GeographicLib {
   // there.
   //
   // Here's the Maxima code to generate this matrix (continued from above).
-  // 
+  //
   // /* figure which terms to exclude so that fit is indep of x at y=0 */
   // mask:part(zeromatrix(1,length(pows)),1)+1$
   // for i:1 thru length(pows) do
   // if pows[i][1]>0 and pows[i][2]=0 then mask[i]:0$
-  // 
+  //
   // /* Same as c3row but with masked pows. */
   // c3nrow(k):=block([a,b,c,powsa:[],n,d,e],
   //   for i:1 thru length(mask) do if mask[i]>0 then
@@ -169,7 +167,7 @@ namespace GeographicLib {
   // at the S pole so that the height in independent of the longitude there.
   //
   // Here's the Maxima code to generate this matrix (continued from above).
-  // 
+  //
   // /* Transform c3n to c3s by transforming y -> 1-y */
   // vv:[
   //      v[11],v[12],
@@ -214,10 +212,10 @@ namespace GeographicLib {
     _filename = _dir + "/" + _name + ".pgm";
     _file.open(_filename.c_str(), ios::binary);
     if (!(_file.good()))
-      throw out_of_range("File not readable " + _filename);
+      throw GeographicErr("File not readable " + _filename);
     string s;
     if (!(getline(_file, s) && s == "P5"))
-      throw out_of_range("File not in PGM format " + _filename);
+      throw GeographicErr("File not in PGM format " + _filename);
     _offset = numeric_limits<real>::max();
     _scale = 0;
     _maxerror = _rmserror = -1;
@@ -237,10 +235,10 @@ namespace GeographicLib {
             (key == "Description" ? _description : _datetime) = s.substr(p);
         } else if (key == "Offset") {
           if (!(is >> _offset))
-            throw out_of_range("Error reading offset " + _filename);
+            throw GeographicErr("Error reading offset " + _filename);
         } else if (key == "Scale") {
           if (!(is >> _scale))
-            throw out_of_range("Error reading scale " + _filename);
+            throw GeographicErr("Error reading scale " + _filename);
         } else if (key == (_cubic ? "MaxCubicError" : "MaxBilinearError")) {
           // It's not an error if the error can't be read
           is >> _maxerror;
@@ -251,42 +249,42 @@ namespace GeographicLib {
       } else {
         istringstream is(s);
         if (!(is >> _width >> _height))
-          throw out_of_range("Error reading raster size " + _filename);
+          throw GeographicErr("Error reading raster size " + _filename);
         break;
       }
     }
     {
       unsigned maxval;
       if (!(_file >> maxval))
-        throw out_of_range("Error reading maxval " + _filename);
+        throw GeographicErr("Error reading maxval " + _filename);
       if (maxval != 0xffffu)
-        throw out_of_range("Maxval not equal to 2^16-1 " + _filename);
+        throw GeographicErr("Maxval not equal to 2^16-1 " + _filename);
       // Add 1 for whitespace after maxval
       _datastart = (unsigned long long)(_file.tellg()) + 1ULL;
       _swidth = (unsigned long long)(_width);
     }
     if (_offset == numeric_limits<real>::max())
-      throw out_of_range("Offset not set " + _filename);
+      throw GeographicErr("Offset not set " + _filename);
     if (_scale == 0)
-      throw out_of_range("Scale not set " + _filename);
+      throw GeographicErr("Scale not set " + _filename);
     if (_scale < 0)
-      throw out_of_range("Scale must be positive " + _filename);
+      throw GeographicErr("Scale must be positive " + _filename);
     if (_height < 2 || _width < 2)
       // Coarsest grid spacing is 180deg.
-      throw out_of_range("Raster size too small " + _filename);
+      throw GeographicErr("Raster size too small " + _filename);
     if (_width & 1)
       // This is so that longitude grids can be extended thru the poles.
-      throw out_of_range("Raster width is odd " + _filename);
+      throw GeographicErr("Raster width is odd " + _filename);
     if (!(_height & 1))
       // This is so that latitude grid includes the equator.
-      throw out_of_range("Raster height is even " + _filename);
+      throw GeographicErr("Raster height is even " + _filename);
     _file.seekg(0, ios::end);
     if (!_file.good() ||
         _datastart + 2ULL * _swidth * (unsigned long long)(_height) !=
         (unsigned long long)(_file.tellg()))
       // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.
-      throw out_of_range("File has the wrong length " + _filename);
+      throw GeographicErr("File has the wrong length " + _filename);
     _rlonres = _width / real(360);
     _rlatres = (_height - 1) / real(180);
     _cache = false;
@@ -450,7 +448,7 @@ namespace GeographicLib {
     }
     catch (const bad_alloc&) {
       CacheClear();
-      throw out_of_range("Insufficient memory for caching " + _filename);
+      throw GeographicErr("Insufficient memory for caching " + _filename);
     }
 
     try {
@@ -480,7 +478,7 @@ namespace GeographicLib {
     }
     catch (const exception& e) {
       CacheClear();
-      throw out_of_range(string("Error filling cache ") + e.what());
+      throw GeographicErr(string("Error filling cache ") + e.what());
     }
   }
 

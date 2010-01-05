@@ -3,7 +3,7 @@
  * \brief Command line utility for azimuthal equidistant and Cassini-Soldner
  * projections
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -16,11 +16,9 @@
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/AzimuthalEquidistant.hpp"
 #include "GeographicLib/CassiniSoldner.hpp"
-#include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <stdexcept>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -102,10 +100,10 @@ int main(int argc, char* argv[]) {
       if (!(reverse ?
             (str >> x >> y) :
             (str >> lat >> lon)))
-        throw std::out_of_range("Incomplete input: " + s);
+        throw GeographicErr("Incomplete input: " + s);
       std::string strc;
       if (str >> strc)
-        throw std::out_of_range("Extraneous input: " + strc);
+        throw GeographicErr("Extraneous input: " + strc);
       if (reverse) {
         if (cassini)
           cs.Reverse(x, y, lat, lon, a, m);
@@ -114,9 +112,9 @@ int main(int argc, char* argv[]) {
         std::cout << lat << " " << lon << " " << a << " " << m << "\n";
       } else {
         if ( !(-90 <= lat && lat <= 90) )
-          throw std::out_of_range("Latitude not in range [-90, 90]");
+          throw GeographicErr("Latitude not in range [-90, 90]");
         if ( !(-180 <= lon && lat <= 360) )
-          throw std::out_of_range("Longitude not in range [-180, 360]");
+          throw GeographicErr("Longitude not in range [-180, 360]");
         if (cassini)
           cs.Forward(lat, lon, x, y, a, m);
         else

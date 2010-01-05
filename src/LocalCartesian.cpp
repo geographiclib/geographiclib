@@ -2,13 +2,12 @@
  * \file LocalCartesian.cpp
  * \brief Implementation for GeographicLib::LocalCartesian class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/LocalCartesian.hpp"
-#include <stdexcept>
 
 #define GEOGRAPHICLIB_LOCALCARTESIAN_CPP "$Id$"
 

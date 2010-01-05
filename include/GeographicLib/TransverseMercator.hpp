@@ -111,7 +111,7 @@ namespace GeographicLib {
      * \e r, and central scale factor \e k0.  Setting \e r = 0 implies \e r =
      * inf or flattening = 0 (i.e., a sphere).  Negative \e r indicates a
      * prolate spheroid.  An exception is thrown if \e a or \e k0 is
-     * non-positive.
+     * not positive.
      **********************************************************************/
     TransverseMercator(real a, real r, real k0);
 

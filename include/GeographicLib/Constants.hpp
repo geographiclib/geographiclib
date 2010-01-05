@@ -45,7 +45,15 @@ RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
 #include <cmath>
 #include <limits>
 #include <algorithm>
+#include <stdexcept>
 
+/**
+ * \brief Namespace for %GeographicLib
+ *
+ * All of %GeographicLib is defined within the GeographicLib namespace.  In
+ * addtion all the header files are included via %GeographicLib/filename.  This
+ * minimizes the likelihood of conflicts with other packages.
+ **********************************************************************/
 namespace GeographicLib {
 
   /**
@@ -63,7 +71,7 @@ namespace GeographicLib {
     }
     Math();                     // Disable constructor
   public:
-    
+
 #if GEOGRAPHICLIB_PREC == 1
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
@@ -331,6 +339,17 @@ namespace GeographicLib {
     static inline Math::real surveyfoot() throw()
     { return real(1200) / real(3937) * meter(); }
     ///@}
+  };
+
+  /**
+   * \brief %Exception handling for %GeographicLib
+   *
+   * A class to handle exceptions.  It's derived off std::runtime_error so it
+   * can be caught by the usual catch clauses.
+   **********************************************************************/
+  class GeographicErr : public std::runtime_error {
+  public:
+    GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
   };
 
 } // namespace GeographicLib

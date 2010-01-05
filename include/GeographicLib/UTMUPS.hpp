@@ -12,7 +12,6 @@
 #define GEOGRAPHICLIB_UTMUPS_HPP "$Id$"
 
 #include "GeographicLib/Constants.hpp"
-#include <string>
 #include <sstream>
 
 namespace GeographicLib {
@@ -87,7 +86,6 @@ namespace GeographicLib {
      * covering the two poles.  Within UTMUPS, non-negative zone numbers refer
      * to one of the "physical" zones, 0 for UPS and [1, 60] for UTM.  Negative
      * "pseudo-zone" numbers are used to select one of the physical zones.
-     * 
      **********************************************************************/
     enum zonespec {
       /**

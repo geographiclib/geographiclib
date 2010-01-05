@@ -2,7 +2,7 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -13,11 +13,9 @@
 
 #include "GeographicLib/Geocentric.hpp"
 #include "GeographicLib/LocalCartesian.hpp"
-#include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <stdexcept>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -87,10 +85,10 @@ int main(int argc, char* argv[]) {
       if (!(reverse ?
             (str >> x >> y >> z) :
             (str >> lat >> lon >> h)))
-        throw  std::out_of_range("Incomplete input: " + s);
+        throw  GeographicErr("Incomplete input: " + s);
       std::string strc;
       if (str >> strc)
-        throw std::out_of_range("Extraneous input: " + strc);
+        throw GeographicErr("Extraneous input: " + strc);
       if (reverse) {
         if (localcartesian)
           lc.Reverse(x, y, z, lat, lon, h);
@@ -99,9 +97,9 @@ int main(int argc, char* argv[]) {
         std::cout << lat << " " << lon << " " << h << "\n";
       } else {
         if ( !(-90 <= lat && lat <= 90) )
-          throw std::out_of_range("Latitude not in range [-90, 90]");
+          throw GeographicErr("Latitude not in range [-90, 90]");
         if ( !(-180 <= lon && lat <= 360) )
-          throw std::out_of_range("Longitude not in range [-180, 360]");
+          throw GeographicErr("Longitude not in range [-180, 360]");
         if (localcartesian)
           lc.Forward(lat, lon, h, x, y, z);
         else

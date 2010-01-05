@@ -8,8 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/LambertConformalConic.hpp"
-#include <limits>
-#include <stdexcept>
 
 #define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: LambertConformalConic.cpp 6720 2009-10-17 23:13:57Z ckarney $"
 
@@ -39,11 +37,11 @@ namespace GeographicLib {
     , _e2m(1 - _e2)
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
     if (!(k0 > 0))
-      throw std::out_of_range("Scale is not positive");
+      throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
-      throw std::out_of_range("Standard latitude not in [-90, 90]");
+      throw GeographicErr("Standard latitude not in [-90, 90]");
     real
       phi = stdlat * Constants::degree(),
       sphi = sin(phi),
@@ -62,16 +60,16 @@ namespace GeographicLib {
     , _e2m(1 - _e2)
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
     if (!(k1 > 0))
-      throw std::out_of_range("Scale is not positive");
+      throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
-      throw std::out_of_range("Standard latitude 1 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 1 not in [-90, 90]");
     if (!(abs(stdlat2) <= 90))
-      throw std::out_of_range("Standard latitude 2 not in [-90, 90]");
+      throw GeographicErr("Standard latitude 2 not in [-90, 90]");
     if (abs(stdlat1) == 90 || abs(stdlat2) == 90)
       if (!(stdlat1 == stdlat2))
-        throw std::out_of_range
+        throw GeographicErr
           ("Standard latitudes must be equal is either is a pole");
     real
       phi1 = stdlat1 * Constants::degree(),
@@ -92,12 +90,12 @@ namespace GeographicLib {
     , _e2m(1 - _e2)
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
     if (!(k1 > 0))
-      throw std::out_of_range("Scale is not positive");
+      throw GeographicErr("Scale is not positive");
     if (coslat1 == 0 || coslat2 == 0)
       if (!(coslat1 == coslat2 && sinlat1 == sinlat2))
-        throw std::out_of_range
+        throw GeographicErr
           ("Standard latitudes must be equal is either is a pole");
     Init(sinlat1, coslat1, sinlat2, coslat2, k1);
   }
@@ -172,9 +170,9 @@ namespace GeographicLib {
     else {
       // write as
       // _t0n * ( (1 - ctheta)/_n - (tn/_t0n - 1)/_n * ctheta )
-      // _t0n * ( stheta^2/(1 + ctheta) / _n 
+      // _t0n * ( stheta^2/(1 + ctheta) / _n
       //          - ((t/_t0)^n - 1)/_n * ctheta )
-      // _t0n * ( stheta^2/(1 + ctheta) / _n 
+      // _t0n * ( stheta^2/(1 + ctheta) / _n
       //          - (exp(_n * log(t/_t0)) - 1)/_n * ctheta )
       // _t0n * (ax - bx)
       real
@@ -217,7 +215,7 @@ namespace GeographicLib {
       real
         b1 = _t0nm1 - _n * y,
         tnm1 = (sq(x1) +  2 * b1 + sq(b1)) / (tn + 1); // tn - 1
-      q = _n != 0 ? - Math::log1p(tnm1)/_n : 
+      q = _n != 0 ? - Math::log1p(tnm1)/_n :
         -2 * (_lt0  - y) / (tn + 1); // _t0nm1 -> _n * _lt0
     }
     // Clip to [-ahypover, ahypover] to avoid overflow later
@@ -254,6 +252,16 @@ namespace GeographicLib {
     k = _scale * (m == 0 && _nc == 0 && qp > 0 ?
                   sqrt(_e2m) * exp(eatanhe(real(1))) / 2 :
                   tn/m);        // infinite if pole and _n < 1
+  }
+
+  void LambertConformalConic::SetScale(real lat, real k) {
+    if (!(k > 0))
+      throw GeographicErr("Scale is not positive");
+    real x, y, gamma, kold;
+    Forward(0, lat, 0, x, y, gamma, kold);
+    k /= kold;
+    _scale *= k;
+    _k0 *= k;
   }
 
 } // namespace GeographicLib

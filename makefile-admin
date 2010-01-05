@@ -1,5 +1,5 @@
 # $Id$ -*- Makefile -*-
-include Makefile
+include Makefile.mk
 
 USER=karney
 STAGE=$(HOME)/web
@@ -26,4 +26,10 @@ distrib-cgi:
 depend:
 	makedepend -- $(CPPFLAGS) -- $(ALLSOURCES)
 
-.PHONY: distrib distrib-files distrib-cgi
+TAGS:
+	for d in include src tools; do \
+	  $(MAKE) -s -C $$d list | tr ' ' '\n' | \
+	  while read f; do echo $$d/$$f; done; \
+	done | xargs etags
+
+.PHONY: distrib distrib-files distrib-cgi TAGS

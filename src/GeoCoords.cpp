@@ -2,7 +2,7 @@
  * \file GeoCoords.cpp
  * \brief Implementation for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -12,7 +12,6 @@
 #include "GeographicLib/DMS.hpp"
 #include <vector>
 #include <sstream>
-#include <stdexcept>
 #include <iomanip>
 
 #define GEOGRAPHICLIB_GEOCOORDS_CPP "$Id$"
@@ -53,16 +52,17 @@ namespace GeographicLib {
         zoneind = 2;
         coordind = 0;
       } else
-        throw out_of_range("Neither " + sa[0] + " nor " + sa[2]
-                           + " of the form UTM/UPS Zone + Hemisphere"
-                           + " (ex: 38N, 09S, N)");
+        throw GeographicErr("Neither " + sa[0] + " nor " + sa[2]
+                            + " of the form UTM/UPS Zone + Hemisphere"
+                            + " (ex: 38N, 09S, N)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
       for (unsigned i = 0; i < 2; ++i) {
         istringstream str(sa[coordind + i]);
         real x;
         if (!(str >> x))
-          throw out_of_range("Bad number " + sa[coordind + i] + " for UTM/UPS "
-                             + (i == 0 ? "easting " : "northing "));
+          throw GeographicErr("Bad number " + sa[coordind + i]
+                              + " for UTM/UPS "
+                              + (i == 0 ? "easting " : "northing "));
         // Both g++ and VS handle "str >> x" incorrectly when the string is
         // 1234E.  (The "right" result would be to handle it the same way as
         // 1234X; x is set to 1234 with tellg() is 4.)  VS fails to read any
@@ -73,17 +73,17 @@ namespace GeographicLib {
         int pos = min(int(str.tellg()),
                       int(sa[coordind + i].find_last_of(digits)) + 1);
         if (pos != int(sa[coordind + i].size()))
-          throw out_of_range("Extra text "
-                             + sa[coordind + i].substr(pos) + " in UTM/UPS "
-                             + (i == 0 ? "easting " : "northing ")
-                             + sa[coordind + i]);
+          throw GeographicErr("Extra text "
+                              + sa[coordind + i].substr(pos) + " in UTM/UPS "
+                              + (i == 0 ? "easting " : "northing ")
+                              + sa[coordind + i]);
         (i ? _northing : _easting) = x;
       }
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
                       _lat, _long, _gamma, _k);
       FixHemisphere();
     } else
-      throw out_of_range("Coordinate requires 1, 2, or 3 elements");
+      throw GeographicErr("Coordinate requires 1, 2, or 3 elements");
     CopyToAlt();
   }
 
@@ -153,7 +153,7 @@ namespace GeographicLib {
       _northing += (_northp ? 1 : -1) * UTMUPS::UTMShift();
       _northp = !_northp;
     } else
-      throw out_of_range("Hemisphere mixup");
+      throw GeographicErr("Hemisphere mixup");
   }
 
 } // namespace GeographicLib

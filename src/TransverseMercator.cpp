@@ -40,8 +40,6 @@
  **********************************************************************/
 
 #include "GeographicLib/TransverseMercator.hpp"
-#include <limits>
-#include <stdexcept>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id$"
 
@@ -69,9 +67,9 @@ namespace GeographicLib {
     , _n(_f / (2 - _f))
   {
     if (!(_a > 0))
-      throw std::out_of_range("Major radius is not positive");
+      throw GeographicErr("Major radius is not positive");
     if (!(_k0 > 0))
-      throw std::out_of_range("Scale is not positive");
+      throw GeographicErr("Scale is not positive");
     // If coefficents might overflow an int, convert them to double (and they
     // are all exactly representable as doubles).
     switch (maxpow) {

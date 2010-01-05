@@ -29,7 +29,8 @@ namespace GeographicLib {
   class PolarStereographic {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _k0, _e2, _e, _e2m, _c;
+    const real _a, _r, _f, _e2, _e, _e2m, _c;
+    real _k0;
     static const real tol;
     static const int numit = 5;
     static inline real sq(real x) throw() { return x * x; }
@@ -44,9 +45,17 @@ namespace GeographicLib {
      * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
      * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
      * inf or flattening = 0 (i.e., a sphere).  An exception is thrown if \e a
-     * or \e k0 is non-positive.
+     * or \e k0 is not positive.
      **********************************************************************/
     PolarStereographic(real a, real r, real k0);
+
+    /**
+     * Alter the scale for the projection so that on latitude \e lat, the scale
+     * is \e k (default 1).  \e lat is interpreted in the context a projection
+     * centered at the north pole.  The allows a "latitude of true scale" to be
+     * specified.  An exception is thrown if \e k is not positive.
+     **********************************************************************/
+    void SetScale(real lat, real k = real(1));
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to

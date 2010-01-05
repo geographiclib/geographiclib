@@ -2,14 +2,12 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/DMS.hpp"
-#include <algorithm>
-#include <stdexcept>
 #include <iomanip>
 
 #define GEOGRAPHICLIB_DMS_CPP "$Id$"
@@ -47,14 +45,14 @@ namespace GeographicLib {
       if (k >= 0) {
         if (ind1 != NONE) {
           if (toupper(dms[beg - 1]) == toupper(dms[end - 1]))
-            throw out_of_range("Repeated hemisphere indicators "
-                               + str(dms[beg - 1]) + " in "
-                               + dms.substr(beg - 1, end - beg + 1));
+            throw GeographicErr("Repeated hemisphere indicators "
+                                + str(dms[beg - 1]) + " in "
+                                + dms.substr(beg - 1, end - beg + 1));
           else
-            throw out_of_range("Contradictory hemisphere indicators "
-                               + str(dms[beg - 1]) + " and "
-                               + str(dms[end - 1]) + " in "
-                               + dms.substr(beg - 1, end - beg + 1));
+            throw GeographicErr("Contradictory hemisphere indicators "
+                                + str(dms[beg - 1]) + " and "
+                                + str(dms[end - 1]) + " in "
+                                + dms.substr(beg - 1, end - beg + 1));
         }
         ind1 = (k / 2) ? LONGITUDE : LATITUDE;
         sign = k % 2 ? 1 : -1;
@@ -68,7 +66,7 @@ namespace GeographicLib {
       }
     }
     if (end == beg)
-      throw out_of_range("Empty or incomplete DMS string " + dms);
+      throw GeographicErr("Empty or incomplete DMS string " + dms);
     real ipieces[] = {0, 0, 0};
     real fpieces[] = {0, 0, 0};
     unsigned npiece = 0;
@@ -87,21 +85,21 @@ namespace GeographicLib {
           icurrent = 10 * icurrent + k;
       } else if (x == '.') {
         if (pointseen)
-          throw out_of_range("Multiple decimal points in "
-                             + dms.substr(beg, end - beg));
+          throw GeographicErr("Multiple decimal points in "
+                              + dms.substr(beg, end - beg));
         pointseen = true;
         digcount = 1;
       } else if ((k = lookup(dmsindicators, x)) >= 0) {
         if (unsigned(k) == npiece - 1)
-          throw out_of_range("Repeated " + components[k]
-                             + " component in " + dms.substr(beg, end - beg));
+          throw GeographicErr("Repeated " + components[k]
+                              + " component in " + dms.substr(beg, end - beg));
         else if (unsigned(k) < npiece)
-          throw out_of_range(components[k] + " component follows "
-                             + components[npiece - 1] + " component in "
-                             + dms.substr(beg, end - beg));
+          throw GeographicErr(components[k] + " component follows "
+                              + components[npiece - 1] + " component in "
+                              + dms.substr(beg, end - beg));
         if (ncurrent == 0)
-          throw out_of_range("Missing numbers in " + components[k]
-                             + " component of " + dms.substr(beg, end - beg));
+          throw GeographicErr("Missing numbers in " + components[k]
+                              + " component of " + dms.substr(beg, end - beg));
         if (digcount > 1) {
           istringstream s(dms.substr(p - digcount - 1, digcount));
           s >> fcurrent;
@@ -114,20 +112,20 @@ namespace GeographicLib {
           ncurrent = digcount = 0;
         }
       } else if (lookup(signs, x) >= 0)
-        throw out_of_range("Internal sign in DMS string "
-                           + dms.substr(beg, end - beg));
+        throw GeographicErr("Internal sign in DMS string "
+                            + dms.substr(beg, end - beg));
       else
-        throw out_of_range("Illegal character " + str(x)
-                           + " in DMS string "
-                           + dms.substr(beg, end - beg));
+        throw GeographicErr("Illegal character " + str(x)
+                            + " in DMS string "
+                            + dms.substr(beg, end - beg));
     }
     if (lookup(dmsindicators, dms[p - 1]) < 0) {
       if (npiece >= 3)
-        throw out_of_range("Extra text following seconds in DMS string "
-                           + dms.substr(beg, end - beg));
+        throw GeographicErr("Extra text following seconds in DMS string "
+                            + dms.substr(beg, end - beg));
       if (ncurrent == 0)
-        throw out_of_range("Missing numbers in " + components[k]
-                           + " component of " + dms.substr(beg, end - beg));
+        throw GeographicErr("Missing numbers in " + components[k]
+                            + " component of " + dms.substr(beg, end - beg));
       if (digcount > 1) {
         istringstream s(dms.substr(p - digcount, digcount));
         s >> fcurrent;
@@ -136,15 +134,15 @@ namespace GeographicLib {
       fpieces[npiece] = icurrent + fcurrent;
     }
     if (pointseen && digcount == 0)
-      throw out_of_range("Decimal point in non-terminal component of "
-                         + dms.substr(beg, end - beg));
+      throw GeographicErr("Decimal point in non-terminal component of "
+                          + dms.substr(beg, end - beg));
     // Note that we accept 59.999999... even though it rounds to 60.
     if (ipieces[1] >= 60)
-      throw out_of_range("Minutes " + str(fpieces[1])
-                         + " not in range [0, 60)");
+      throw GeographicErr("Minutes " + str(fpieces[1])
+                          + " not in range [0, 60)");
     if (ipieces[2] >= 60)
-      throw out_of_range("Seconds " + str(fpieces[2])
-                         + " not in range [0, 60)");
+      throw GeographicErr("Seconds " + str(fpieces[2])
+                          + " not in range [0, 60)");
     ind = ind1;
     // Assume check on range of result is made by calling routine (which might
     // be able to offer a better diagnostic).
@@ -166,15 +164,17 @@ namespace GeographicLib {
       else if (ib == NONE)
         ib = flag(LATITUDE + LONGITUDE - ia);
       if (ia == ib)
-        throw out_of_range("Both " + stra + " and " + strb + " interpreted as "
-                           + (ia == LATITUDE ? "latitudes" : "longitudes"));
+        throw GeographicErr("Both " + stra + " and "
+                            + strb + " interpreted as "
+                            + (ia == LATITUDE ? "latitudes" : "longitudes"));
       real
         lat1 = ia == LATITUDE ? a : b,
         lon1 = ia == LATITUDE ? b : a;
       if (! (lat1 >= -90 && lat1 <= 90))
-        throw out_of_range("Latitude " + str(lat1) + "d not in [-90d, 90d]");
+        throw GeographicErr("Latitude " + str(lat1) + "d not in [-90d, 90d]");
       if (! (lon1 >= -180 && lon1 <= 360))
-        throw out_of_range("Latitude " + str(lon1) + "d not in [-180d, 360d]");
+        throw GeographicErr("Latitude " + str(lon1)
+                            + "d not in [-180d, 360d]");
       if (lon1 >= 180)
         lon1 -= 360;
       lat = lat1;
