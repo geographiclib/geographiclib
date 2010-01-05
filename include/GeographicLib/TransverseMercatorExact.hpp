@@ -135,9 +135,10 @@ namespace GeographicLib {
      * The method will work for all ellipsoids used in terrestial geodesy.  The
      * method cannot be applied directly to the case of a sphere (\e r = inf)
      * because some the constants characterizing this method diverge in that
-     * limit.  However, GeographicLib::TransverseMercator treats the sphere
-     * exactly.  An exception is thrown if \e a or \e r or \e k0 is
-     * non-positive.
+     * limit, and in practise, \e r should be smaller than about
+     * 1/std::numeric_limits<real>::epsilon().  However,
+     * GeographicLib::TransverseMercator treats the sphere exactly.  An
+     * exception is thrown if \e a, \e r, or \e k0 is non-positive.
      **********************************************************************/
     TransverseMercatorExact(real a, real r, real k0, bool extendp = false);
 
