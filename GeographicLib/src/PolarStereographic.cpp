@@ -72,7 +72,7 @@ namespace GeographicLib {
     real
       rho = Math::hypot(x, y),
       t2 = rho * _c / (_a * _k0),
-      theta = Constants::pi()/2;        // initial estimate of colatitude
+      theta = 2 * atan(t2/2);   // initial (spherical) estimate of colatitude
     // Solve from theta using Newton's method on Snyder (15-9) which converges
     // more rapidly than the iteration procedure given by Snyder (7-9).  First
     // rewrite as

@@ -208,19 +208,22 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 Here is a brief description of the relationship between the various
 components of %GeographicLib.
 
-GeographicLib::TransverseMercator and GeographicLib::PolarStereographic
-provide the basic projections.  The constructors for these classes
-specify the ellipsoid and the forward and reverse projections are
-implemented as const member functions.  TransverseMercator uses
-Kr&uuml;ger's series which have been extended to sixth order in the
-square of the eccentricity.  PolarStereographic uses the exact formulas
-for the projection (from Snyder).
+GeographicLib::TransverseMercator, GeographicLib::PolarStereographic,
+and GeographicLib::LambertConformalConic provide the basic projections.
+The constructors for these classes specify the ellipsoid and the forward
+and reverse projections are implemented as const member functions.
+TransverseMercator uses Kr&uuml;ger's series which have been extended to
+sixth order in the square of the eccentricity.  PolarStereographic and
+LambertConformalConic use the exact formulas for the projections (from
+Snyder).
 
 GeographicLib::TransverseMercator::UTM and
 GeographicLib::PolarStereographic::UPS are const static instantiations
 specific for the WGS84 ellipsoid with the UTM and UPS scale factors.
 (These do \e not add the standard false eastings or false northings for
-UTM and UPS.)
+UTM and UPS.)  Similarly GeographicLib::LambertConformalConic::Mercator
+is a const static instantiation of this projection for a WGS84 ellipsoid
+and a standard parallel of 0 (which gives the Mercator projection).
 
 GeographicLib::UTMUPS uses TransverseMercator::UTM and
 PolarStereographic::UPS to perform the UTM and UPS
@@ -2532,6 +2535,9 @@ List of versions in reverse chronological order together with a brief
 list of changes.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-1.0.x.tgz/download">1.0.x (unreleased)</a>
+  - BUG FIX: Improve initial guess for Newton's method in
+    PolarStereographic.Reverse.  (Previously this failed to converge
+    when the co-latitude exceeded about 130 deg.)
   - Constructors for TransverseMercator, TransverseMercatorExact,
     PolarStereographic, Geocentric, and Geodesic now check for obvious
     problems with their arguments and throw an exception if necessary.
@@ -2540,8 +2546,9 @@ list of changes.
   - Add GeographicLib::LambertConformalConic class.
   - Add solution and project files for Visual Studio 2008.
   - GeographicLib::Geoid changes:
-   - FIX BUG in GeographicLib::Geoid::Cache which could cause a
-     segmentation fault in some cases;
+   - BUG FIX: fix typo in GeographicLib::Geoid::Cache which could cause
+     a segmentation fault in some cases when the cached area spanned the
+     prime meridian.
    - Include sufficient edge data to allow heights to be returned for
      cached area without disk reads;
    - Add inspector functions to query the extent of the cache.

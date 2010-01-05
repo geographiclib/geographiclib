@@ -75,9 +75,9 @@ namespace GeographicLib {
     /**
      * Constructor for CassiniSoldner setting the Geodesic object, \e earth, to
      * use for geodesic calculations.  By default this uses the WGS84
-     * ellipsoid.  This constructor makes an "unitialized" object.  Call Reset
-     * to set the central latitude and longuitude, prior to calling Forward and
-     * Reverse.
+     * ellipsoid.  This constructor makes an "uninitialized" object.  Call
+     * Reset to set the central latitude and longuitude, prior to calling
+     * Forward and Reverse.
      **********************************************************************/
     explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84) throw()
       : _earth(earth) {}
