@@ -6,7 +6,39 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 2009-11.
+The current version of the library is 1.0.
+
+Changes between 1.0 (released 2010-01-07) and 2009-11 versions:
+
+  * Add autoconf configuration files.
+
+  * BUG FIX: Improve initial guess for Newton's method in
+    PolarStereographic.Reverse.  (Previously this failed to converge
+    when the co-latitude exceeded about 130 deg.)
+
+  * Constructors for TransverseMercator, TransverseMercatorExact,
+    PolarStereographic, Geocentric, and Geodesic now check for obvious
+    problems with their arguments and throw an exception if necessary.
+
+  * Most classes now include inspector functions such as MajorRadius()
+    so that you can determine how instances were constructed.
+
+  * Add GeographicLib::LambertConformalConic class.
+
+  * Add GeographicLib::PolarStereographic::SetScale to allow the
+    latitude of true scale to be specified.
+
+  * Add solution and project files for Visual Studio 2008.
+
+  * Add GeographicLib::GeographicErr for exceptions.
+
+  * GeographicLib::Geoid changes:
+    + BUG FIX: fix typo in GeographicLib::Geoid::Cache which could cause
+      a segmentation fault in some cases when the cached area spanned
+      the prime meridian.
+    + Include sufficient edge data to allow heights to be returned for
+      cached area without disk reads;
+    + Add inspector functions to query the extent of the cache.
 
 Changes between 2009-11 and 2009-10 versions:
 

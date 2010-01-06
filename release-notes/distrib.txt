@@ -1,12 +1,17 @@
 # $Id$
 
-These files contain the source code for GeogragphicLib.  The version
-numbering is by year and month, i.e., Geographic-YYYY-MM.tgz.  Usually
-you will only need to download the latest version.
+These files contain the source code for GeogragphicLib.
 
-The files are packaged as either a compressed tar file (tgz) or a zip
-file.  (The two archives have identical contents; however, the text
-files in the zip archive have Windows-style line endings.)
+The original version numbering scheme is by year and month, e.g.,
+Geographic-2009-11.tgz.
+
+Currently the library uses libtool's version numbering scheme (interface
+and revision), e.g., geographiclib-2.1.tar.gz.
+
+Usually you will only need to download the latest version.
+
+The files are packaged as either a compressed tar file (tar.gz or tgz)
+or a zip file.  (The two archives have identical contents.)
 
 The library is documented at
 
