@@ -1,0 +1,30 @@
+#
+# Makefile.am
+#
+# Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
+# $Id$
+
+AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
+INCLUDES = -I$(top_srcdir)/include 
+
+LDADD = $(top_builddir)/src/libGeographic.la
+DEPS = $(top_builddir)/src/libGeographic.la
+
+bin_PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest GeoidEval
+
+GeoConvert_SOURCES = GeoConvert.cpp ../include/GeographicLib/GeoCoords.hpp ../include/GeographicLib/UTMUPS.hpp
+
+TransverseMercatorTest_SOURCES = TransverseMercatorTest.cpp ../include/GeographicLib/EllipticFunction.hpp \
+								 ../include/GeographicLib/TransverseMercatorExact.hpp \
+								 ../include/GeographicLib/TransverseMercator.hpp
+
+CartConvert_SOURCES = CartConvert.cpp ../include/GeographicLib/Geocentric.hpp ../include/GeographicLib/LocalCartesian.hpp
+
+Geod_SOURCES = Geod.cpp ../include/GeographicLib/Geodesic.hpp ../include/GeographicLib/DMS.hpp ../include/GeographicLib/Constants.hpp
+
+EquidistantTest_SOURCES = EquidistantTest.cpp ../include/GeographicLib/Geodesic.hpp \
+						  ../include/GeographicLib/AzimuthalEquidistant.hpp ../include/GeographicLib/CassiniSoldner.hpp
+
+GeoidEval_SOURCES = GeoidEval.cpp ../include/GeographicLib/Geoid.hpp ../include/GeographicLib/DMS.hpp
+
+EXTRA_DIST = Makefile.mk
