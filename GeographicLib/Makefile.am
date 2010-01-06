@@ -18,9 +18,9 @@ dist-hook:
 	find $(distdir)/windows -type f \
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \
 		xargs rm -f ; \
-	rm -rf `find $(distdir) -name .svn` \
-		`find $(distdir) -name .git` \
-		`find $(distdir) -name CVS` ; \
+	find $(distdir) \
+		\( -name .svn -o -name .git -o -name CVS -o -name Makefile \)| \
+		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 
 # Custom rules
