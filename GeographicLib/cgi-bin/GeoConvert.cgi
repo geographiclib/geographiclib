@@ -37,7 +37,7 @@ if test "$INPUT"; then
 	LOCU=`echo $INPUT | $EXECDIR/$COMMAND -u`
 	LOCM=`echo $INPUT | $EXECDIR/$COMMAND -m`
     fi
-    echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
+    # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
 
 echo Content-type: text/html

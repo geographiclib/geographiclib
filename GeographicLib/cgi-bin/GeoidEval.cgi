@@ -36,7 +36,7 @@ if test "$INPUT"; then
 	POSITION1=`encodevalue "$HEIGHT96"`
 	HEIGHT96=
     fi
-    echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
+    # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
 
 echo Content-type: text/html
