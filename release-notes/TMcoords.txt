@@ -15,6 +15,9 @@ line of the file contains:
   * arc distance on the auxiliary sphere, a12 (degrees, accurate to 10^-18 deg)
   * reduced length of the geodesic, m12 (meters, accurate to 0.1 pm)
 
+For testing standard transverse Mercator algorithms use only the first
+258000 entries which have lat >= 0.
+
 For more information, see
 
   http://geographiclib.sourceforge.net/html/transversemercator.html#testmerc

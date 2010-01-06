@@ -57,7 +57,7 @@ if test "$INPUT"; then
     else
 	STATUS="$OUTPUT"
     fi
-    echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
+    # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
 
 echo Content-type: text/html
