@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-11
-\date 2009-11-03
+\version 1.0
+\date 2010-01-07
 
 \section abstract Abstract
 
@@ -38,14 +38,13 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib	</a>
 .
 The code is available for download at
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">
-  Geographic-2009-11.tgz</a>
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.zip/download">
-  Geographic-2009-11.zip</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
+  geographiclib-1.0.tar.gz</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.zip/download">
+  geographiclib-1.0.zip</a>
 .
-as either a compressed tar file (tgz) or a zip file.  (The two archives
-have identical contents; however, the text files in the zip archive have
-Windows-style line endings.)
+as either a compressed tar file (tar.gz) or a zip file.  (The two archives
+have identical contents.)
 
 It is licensed under the
 <a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">LGPL</a>.
@@ -155,20 +154,21 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 </center>
 
 The following steps will get you started with %GeographicLib:
- - Download the <a
-   href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">source</a>.
+ - Download the
+   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
+   source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz Geographic-2009-11.tgz
+   - tar xfpvz geographiclib-1.0.tar.gz
    .
-   This will create a %GeographicLib directory.
- - Change to the %GeographicLib directory
-   - cd %GeographicLib
- - Create the library, the utility programs and (optionally) the
-   documentation
-   - make all doc
+   This will create a geographiclib-1.0 directory.  (Alternatively,
+   download and unpack the zip file.)
+ - Change to the geographiclib-1.0 directory
+   - cd geographiclib-1.0
+ - Create the library and the utility programs
+   - make all
    The compiled utility programs are in the tools directory.
- - windows/GeographicLib-vc8.sln (resp. vc9) is MS Visual Studio 2005
-   (resp. 2008) solution file which compiles the library and the utility
+ - windows/GeographicLib-vc9.sln (resp. vc8) is MS Visual Studio 2008
+   (resp. 2005) solution file which compiles the library and the utility
    programs under Windows.
  - Try out \ref geoconvert (for help, type cd tools; ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
@@ -194,6 +194,8 @@ corresponding Wikipedia articles:
    UPS</a>, Universal Polar Stereographic coordinate system.
  - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
    MGRS</a>, Military Grid Reference System.
+ - <a href="http://en.wikipedia.org/wiki/Geoid">
+   EGM</a>, Earth Gravity Model.
 
 <center>
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
@@ -2558,9 +2560,15 @@ Back to \ref utilities.  Up to \ref contents.
 </center>
 
 List of versions in reverse chronological order together with a brief
-list of changes.
+list of changes.  (Note: Old versions of the library use a year-month
+style of numbering.  Now, the library uses
+<a href="http://www.gnu.org/software/libtool/manual/libtool.html#Versioning">
+libtool's version numbering scheme</a> using an interface and revision
+numbers.)
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-1.0.x.tgz/download">1.0.x (unreleased)</a>
+ - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
+   1.0 (released 2009-01-07)</a>
+  - Add autoconf configuration files.
   - BUG FIX: Improve initial guess for Newton's method in
     PolarStereographic.Reverse.  (Previously this failed to converge
     when the co-latitude exceeded about 130 deg.)

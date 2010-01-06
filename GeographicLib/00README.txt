@@ -11,8 +11,9 @@ Files
 
     00README.txt  -- this file
     AUTHORS -- the authors of the library
-    NEWS -- a history of changes
     COPYING -- the LGPL license, v. 3
+    INSTALL -- brief installation instructions
+    NEWS -- a history of changes
 
     include/GeographicLib/ and src/
       Constants.hpp -- WGS84 constants
@@ -40,17 +41,16 @@ Files
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
 
-    Makefile -- Unix/Linux makefile (invoke make in the other directories)
-
     windows/
-      GeographicLib.sln -- MS Studio 2005 solution
-      GeographicLib.vcproj -- project for library
-      GeoConvert.vcproj -- project for GeoConvert
-      TransverseMercatorTest.vcproj -- project for TransverseMercatorTest
-      Geod.vcproj -- project for Geod
-      CartConvert.vcproj -- project for CartConvert
-      EquidistantTest.vcproj -- project for EquidistantTest
-      GeoidEval.vcproj -- project for GeoidEval
+      GeographicLib-vc9.sln -- MS Studio 2008 solution
+      GeographicLib-vc9.vcproj -- project for library
+      GeoConvert-vc9.vcproj -- project for GeoConvert
+      TransverseMercatorTest-vc9.vcproj -- project for TransverseMercatorTest
+      Geod-vc9.vcproj -- project for Geod
+      CartConvert-vc9.vcproj -- project for CartConvert
+      EquidistantTest-vc9.vcproj -- project for EquidistantTest
+      GeoidEval-vc9.vcproj -- project for GeoidEval
+      also files for MS Studio 2005 (with vc8)
 
     maxima/
       tm.mac -- Maxima code for high precision TM
@@ -67,3 +67,7 @@ Files
       gauss-krueger-graticule.{png,pdf} -- Fig. 4
       gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
       thompson-tm-graticule.{png,pdf} -- Fig. 6
+      html/* -- directory with built documentation
+
+    Makefile -- Unix/Linux makefile (invokes make in the other directories)
+    configure -- autoconf configuration script
