@@ -1868,15 +1868,15 @@ these files about 2 times better than zip.  The data in tar and zip
 files both unpack into a "geoids" directory and, for convenience, all
 the data should be unpacked in the same parent directory.  For example
 \verbatim
-   mkdir -p /usr/local/share/geographiclib
-   tar xfjC egm96-5.tar.bz2 /usr/local/share/geographiclib
-   tar xfjC egm2008-2_5.tar.bz2 /usr/local/share/geographiclib
+   mkdir -p /usr/local/share/GeographicLib
+   tar xfjC egm96-5.tar.bz2 /usr/local/share/GeographicLib
+   tar xfjC egm2008-2_5.tar.bz2 /usr/local/share/GeographicLib
    etc.
 \endverbatim
 or
 \verbatim
-   mkdir -p /usr/local/share/geographiclib
-   cd /usr/local/share/geographiclib
+   mkdir -p /usr/local/share/GeographicLib
+   cd /usr/local/share/GeographicLib
    unzip ~-/egm96-5.zip
    unzip ~-/egm2008-2_5.zip
    etc.
