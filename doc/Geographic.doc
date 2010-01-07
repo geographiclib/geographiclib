@@ -2094,7 +2094,7 @@ instantiations.
 \section testgeoid Test data for geoids
 
 A test set for the geoid models is available at
- - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeoidHeight.dat.gz/download">
+ - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
    GeoidHeight.dat.gz</a>
  .
 This is about 10 MB (compressed).  This test set consists of a set of
