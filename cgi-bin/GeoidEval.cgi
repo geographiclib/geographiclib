@@ -133,7 +133,7 @@ cat <<EOF
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2009-10-27)</address>
+      (2010-01-08)</address>
     <a href="http://sourceforge.net">
       <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2" border="0" alt="SourceForge.net" />
     </a>
