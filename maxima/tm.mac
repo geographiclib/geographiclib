@@ -77,6 +77,7 @@ setparams(a1,invf,k1):=(a:bfloat(a1),f:1/bfloat(invf),k0:bfloat(k1),
   kcv:kc(1-e2),
   ecu:ec(e2),
   ecv:ec(1-e2),
+  n:f/(2-f),
   'done)$
 setparams(6378137b0, 298.257223563b0, 0.9996b0)$  /* WGS 84 */
 /* setparams(6378388b0, 297b0, 0.9996b0)$ International */
@@ -94,8 +95,17 @@ thom = Thompson coords
 
 */
 
+/* sqrt(x^2 + y^2) -- Real only */
+hypot(x,y):=sqrt(x^2 + y^2)$
+
+/* log(1 + x) -- Real only */
+log1p(x) := block([y : 1b0+x],
+  if y = 1b0 then x else x*log(y)/(y - 1))$
+
 /* Real only */
-atnh(x):=log((1+x)/(1-x))/2$
+atnh(x) := block([y : abs(x)],
+  y : log1p(2 * y/(1 - y))/2,
+  if x < 0 then -y else y)$
 
 /* Real only */
 psi_phi(phi):=block([s:sin(phi)],
@@ -216,7 +226,7 @@ thom_sigma(sigma):=block([w:wx0(sigma),dw,v,vv],
   w
   )$
 
-/* Lee/Thompson's method */
+/* Lee/Thompson's method forward */
 
 tm(phi,lam):=block([psi,thom,jacr,jaci,sigma,gam,scale,c],
   phi:phi*degree,
@@ -236,6 +246,8 @@ tm(phi,lam):=block([psi,thom,jacr,jaci,sigma,gam,scale,c],
   else (gam : lam, scale : 1b0),
   [imagpart(sigma)*k0*a,realpart(sigma)*k0*a,gam/degree,k0*scale])$
 
+/* Lee/Thompson's method reverse */
+
 ll(x,y):=block([sigma,thom,jacr,jaci,psi,lam,phi,gam,scale,c],
   sigma:y/(a*k0)+%i*x/(a*k0),
   thom:thom_sigma(sigma),
@@ -254,3 +266,92 @@ ll(x,y):=block([sigma,thom,jacr,jaci,psi,lam,phi,gam,scale,c],
       (e2*jacr[2]^2 + (1-e2)*jaci[2]^2)))
   else (gam : lam, scale : 1b0),
   [phi/degree,lam/degree,gam/degree,k0*scale])$
+
+/* Gauss-Krueger series to order n^i forward
+
+Uses the array functions
+
+ a1_a[i](n), s_z_a[i](z,n), s_z_d[i](z,n), z_s_a[i](s,n), z_s_d[i](s,n),
+
+defined in tmseries.mac.
+*/
+
+tms(phi,lam,i):=block([psi,xip,etap,z,sigma,sp,gam,k,b1],
+  phi:phi*degree,
+  lam:lam*degree,
+  psi:psi_phi(phi),
+  xip:atan2(sinh(psi), cos(lam)),
+  etap:asinh(sin(lam)/hypot(sinh(psi),cos(lam))),
+  k:sqrt(1 - e2*sin(phi)^2)/(cos(phi)*hypot(sinh(psi),cos(lam))),
+  gam:atan(tan(xip)*tanh(etap)),
+  z:xip+%i*etap,
+  b1:a1_a[i](n),
+  sigma:rectform(b1*s_z_a[i](z,n)),
+  sp:rectform(s_z_d[i](z,n)),
+  gam : gam - atan2(imagpart(sp),realpart(sp)),
+  k : k * b1 * cabs(sp),
+  [imagpart(sigma)*k0*a,realpart(sigma)*k0*a,gam/degree,k*k0])$
+
+/* Gauss-Krueger series to order n^i reverse */
+
+lls(x,y,i):=block([sigma,b1,s,z,zp,xip,etap,s,c,r,gam,k,lam,psi,phi],
+  sigma:y/(a*k0)+%i*x/(a*k0),
+  b1:a1_a[i](n),
+  s:rectform(sigma/b1),
+  z:rectform(z_s_a[i](s,n)),
+  zp:rectform(z_s_d[i](s,n)),
+  gam : atan2(imagpart(zp), realpart(zp)),
+  k : b1 / cabs(zp),
+  xip:realpart(z),
+  etap:imagpart(z),
+  s:sinh(etap),
+  c:cos(xip),
+  r:hypot(s, c),
+  lam:atan2(s, c),
+  psi : asinh(sin(xip)/r),
+  phi :phi_psi(psi),
+  k : k * sqrt(1 - e2*sin(phi)^2) * r/cos(phi),
+  gam : gam + atan(tan(xip) * tanh(etap)),
+  [phi/degree,lam/degree,gam/degree,k*k0])$
+
+/* Approx geodesic distance valid for small displacements */
+
+dist(phi0,lam0,phi,lam):=block([dphi,dlam,nn,hlon,hlat],
+  dphi:(phi-phi0)*degree,
+  dlam:(lam-lam0)*degree,
+  phi0:phi0*degree,
+  lam0:lam0*degree,
+  nn : 1/sqrt(1 - e2 * sin(phi0)^2),
+  hlon : cos(phi0) * nn,
+  hlat : (1 - e2) * nn^3,
+  a * hypot(dphi*hlat, dlam*hlon))$
+
+/* Compute truncation errors for all truncation levels */
+
+check(phi,lam):=block([vv,x,y,gam,k,vf,vb,errf,errr,err2,errlist],
+  phi:min(90-0.01b0,phi),
+  lam:min(90-0.01b0,lam),
+  vv:tm(phi,lam),
+  errlist:[],
+  x:vv[1], y:vv[2], gam:vv[3], k:vv[4],
+  for i:1 thru maxpow do (
+    vf:tms(phi,lam,i),
+    errf:hypot(vf[1]-x,vf[2]-y)/k,
+    errfg:abs(vf[3]-gam),
+    errfk:abs((vf[4]-k)/k),
+    vb:lls(x,y,i),
+    errr:dist(phi,lam,vb[1],vb[2]),
+    errrg:abs(vb[3]-gam),
+    errrk:abs((vb[4]-k)/k),
+    errlist:append(errlist,
+      [max(errf, errr), max(errfg, errrg), max(errfk, errrk)])),
+  errlist)$
+
+/* Max of output of check over a set of points */
+
+checka(lst):=block([errlist:[],errx],
+  for i:1 thru 3*maxpow do errlist:cons(0b0,errlist),
+  for vv in lst do (
+    errx:check(vv[1],vv[2]),
+    for i:1 thru 3*maxpow do errlist[i]:max(errlist[i],errx[i])),
+  errlist)$

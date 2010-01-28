@@ -19,7 +19,7 @@
  * in [4, 8].
  **********************************************************************/
 #define TM_TX_MAXPOW \
-(sizeof(real) == sizeof(double) ? 6 : sizeof(real) == sizeof(float) ? 5 : 7)
+(sizeof(real) == sizeof(double) ? 6 : sizeof(real) == sizeof(float) ? 4 : 8)
 #endif
 
 namespace GeographicLib {
@@ -97,7 +97,8 @@ namespace GeographicLib {
     static const real tol;
     static const int numit = 5;
     const real _a, _r, _f, _k0, _e2, _e, _e2m,  _c, _n;
-    real _a1, _b1, _h[maxpow], _hp[maxpow];
+    // _alp[0] and _bet[0] unused
+    real _a1, _b1, _alp[maxpow + 1], _bet[maxpow + 1];
     static inline real sq(real x) throw() { return x * x; }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0

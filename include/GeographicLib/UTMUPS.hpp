@@ -20,7 +20,8 @@ namespace GeographicLib {
    * \brief Convert between Geographic coordinates and UTM/UPS
    *
    * UTM and UPS are defined
-   * - <a href="http://earth-info.nga.mil/GandG/publications/tm8358.2/TM8358_2.pdf">
+   * - J. W. Hager, J. F. Behensky, and B. W. Drew,
+   *   <a href="http://earth-info.nga.mil/GandG/publications/tm8358.2/TM8358_2.pdf">
    *   The Universal Grids: Universal Transverse Mercator (UTM) and Universal
    *   Polar Stereographic (UPS)</a>, Defense Mapping Agency, Technical Manual
    *   TM8358.2 (1989).
