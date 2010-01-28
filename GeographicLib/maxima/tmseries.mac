@@ -18,50 +18,55 @@ To run, start maxima and enter
     load("tmseries.mac")$
     closefile()$
 
-With maxpow = 4 and maxpow2 = 2, the output is
+With maxpow = 6, the output (after less than 10 secs) is
 
-A1=a/(n+1)*(1+n^2/4+n^4/64);
-h[1]=n/2-2*n^2/3+37*n^3/96-n^4/360;
-h[2]=n^2/48+n^3/15-437*n^4/1440;
-h[3]=17*n^3/480-37*n^4/840;
-h[4]=+4397*n^4/161280;
-hp[1]=n/2-2*n^2/3+5*n^3/16+41*n^4/180;
-hp[2]=13*n^2/48-3*n^3/5+557*n^4/1440;
-hp[3]=61*n^3/240-103*n^4/140;
-hp[4]=+49561*n^4/161280;
-c2=cos(phi)^2;
-s2=sin(lam)^2;
-d=1-c2*s2;
-carg=1+c2^2*s2*ep2/d-((4*c2^5-c2^4)*s2^3+(-9*c2^4+8*c2^3)*s2^2-2*c2^3*s2)*ep2^\
-2/(3*d^3);
-cabs=1+((c2^3-2*c2^2)*s2^2+c2^2*s2)*ep2/(2*d^2)-((3*c2^6+12*c2^5-28*c2^4)*s2^4\
-+(-34*c2^5+124*c2^4-64*c2^3)*s2^3+(-61*c2^4+48*c2^3)*s2^2)*ep2^2/(24*d^4);
-gamma=atan2(carg*sin(lam)*sin(phi),cos(lam));
-k=cabs/sqrt(d);
+A1=a/(n+1)*(1+n^2/4+n^4/64+n^6/256);
+alpha[1]=n/2-2*n^2/3+5*n^3/16+41*n^4/180-127*n^5/288+7891*n^6/37800;
+alpha[2]=13*n^2/48-3*n^3/5+557*n^4/1440+281*n^5/630-1983433*n^6/1935360;
+alpha[3]=61*n^3/240-103*n^4/140+15061*n^5/26880+167603*n^6/181440;
+alpha[4]=49561*n^4/161280-179*n^5/168+6601661*n^6/7257600;
+alpha[5]=34729*n^5/80640-3418889*n^6/1995840;
+alpha[6]=+212378941*n^6/319334400;
+beta[1]=n/2-2*n^2/3+37*n^3/96-n^4/360-81*n^5/512+96199*n^6/604800;
+beta[2]=n^2/48+n^3/15-437*n^4/1440+46*n^5/105-1118711*n^6/3870720;
+beta[3]=17*n^3/480-37*n^4/840-209*n^5/4480+5569*n^6/90720;
+beta[4]=4397*n^4/161280-11*n^5/504-830251*n^6/7257600;
+beta[5]=4583*n^5/161280-108847*n^6/3991680;
+beta[6]=+20648693*n^6/638668800;
 
 Notation of output matches that of
 
- JHS 154, ETRS89 - Map projections, plane coordinates,
- and map sheet index for ETRS89, Published by JUHTA, Finnish Geodetic
- Institute, and the National Land Survey of Finland, 34 p (2006).
- http://www.jhs-suositukset.fi/suomi/jhs154
- http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154.pdf
+ L. Krueger,
+ Konforme Abbildung des Erdellipsoids in der Ebene
+ Royal Prussian Geodetic Institute, New Series 52, 172 pp. (1912).
 
-Alter maxpow to generate more or less terms (tested out to maxpow:12)
-for the series approximations to the forward and reverse projections
+with gamma replaced by alpha.  The expansion uses the exact formulas for
+the projection given in
 
-Alter maxpow2 to generate more or less terms (tested out to maxpow2:4)
-for the series approximations to the convergence and scale.  (But note
-that the convergence and scale can also be computed from the series for
-the projection itself.)
+ L. P. Lee,
+ Conformal Projections Based on Elliptic Functions,
+ (B. V. Gutsell, Toronto, 1976), 128pp.
+
+Alter maxpow to generate more or less terms for the series
+approximations to the forward and reverse projections This has been
+tested out to maxpow = 30; but this takes a long time (more than 12
+hours).
 
 */
 
-taylordepth:5$
+taylordepth:6$
 triginverses:'all$
-maxpow:4$ /* Max power for forward and reverse projections */
-maxpow2:2$ /* Max power for convergence and scale */
-
+/* Timing:
+  maxpow  time
+    4      2s
+    6      4s
+    8     11s
+   10     27s
+   12     62s
+   20     17m = 998s
+   30     279m = 16695s
+    */
+maxpow:30$ /* Max power for forward and reverse projections */
 /* Notation
 
    m = elliptic function parameter
@@ -133,22 +138,23 @@ cd(v,m):=''(block([],local(cdcof),
         m,0,maxpow)),
     sum(cdcof[n]*cos((2*n+1)*v),n,0,maxpow)))$
 
-/* Expansion for asin(x+eps) for small eps */
+/* Expansion for asin(x+eps) for small eps.  Equivalent to
+   taylor(asin(x + eps), eps, 0, maxpow)
+   except that taylor returns a very messy expression.  */
 asinexp(x,eps):=''(block([asintemp,etemp,eqs],local(b,cof),
-    asintemp:sum(b[i]*eps^i,i,0,maxpow),
-    etemp:x+eps - sin(asintemp),
-    etemp:ratdisrep(taylor(etemp,eps,0,maxpow)),
-    cof[i]:=coeff(etemp,eps,i),
-    eqs:[b[0]=asin(x)],
-    for i:1 thru maxpow do
-    block([t],cof[i],t:subst(eqs,cof[i]),eqs:cons(solve(t,b[i])[1],eqs)),
-    subst(eqs,asintemp)))$
+asintemp:sum(b[i]*eps^i,i,0,maxpow), etemp:x+eps - sin(asintemp),
+etemp:ratdisrep(taylor(etemp,eps,0,maxpow)), cof[i]:=coeff(etemp,eps,i),
+eqs:[b[0]=asin(x)], for i:1 thru maxpow do
+block([t],cof[i],t:subst(eqs,cof[i]),eqs:cons(solve(t,b[i])[1],eqs)),
+subst(eqs,asintemp)))$
 
 /* Convert from n to e^2 */
 e2_n(n):=4*n/(1+n)^2$
 
-/* beta in terms of phi */
-beta_phi(phi,e2):=''(block([psi,sinbet,bet],
+/* beta in terms of phi.  The expansion of
+   beta = asin(tanh( tanh(sin(phi)) + e * atanh(e * sin(phi)) ))
+*/
+beta_phi(phi,e2):=''(block([psi,sinbet,bet,qq],
     /* Here tanh(qq) = sin(phi) */
     psi:qq-e*atanh(e*tanh(qq)),
     psi:subst([e=sqrt(e2),qq=atanh(sin(phi))],
@@ -162,8 +168,11 @@ beta_phi(phi,e2):=''(block([psi,sinbet,bet],
 /* phi in terms of beta */
 phi_beta(beta,e2):=''(reverta(beta_phi(phi,e2),phi,beta,e2,maxpow))$
 
-/* z in terms of w */
-z_w(w,e2):=''(block([psia,sinbeta,beta],
+/* z in terms of w.  The expansion of
+   z = asin(tanh( tanh(snw) + e * atanh(e * snw) ))
+   where snw = sn( w * 2*kc/%pi )
+*/
+z_w(w,e2):=''(block([psia,sinbeta,beta,qq],
     /* Here tanh(qq) = sn(w,e2) */
     psia:qq-e*atanh(e*tanh(qq)),
     psia:subst([e=sqrt(e2),qq=atanh(snu)],
@@ -186,7 +195,10 @@ w_z(z,e2):=''(reverta(z_w(w,e2),w,z,e2,maxpow))$
 w_z_a(z,n):=''(trigreduce(taylor(w_z(z,e2_n(n)),n,0,maxpow)))$
 kill(psia,sinbeta,beta)$
 
-/* s in terms of w */
+/* s in terms of w.  The expansion of
+   s = pi/2 * int(ndw^2, w) / int(ndw^2, w, 0, pi/2)
+   where ndw = nd( w * 2*kc/%pi )
+*/
 s_w(w,e2):=''(block([nd2,mm],
     /* nd^2 */
     nd2:expand(trigreduce(ratdisrep(taylor(nd(w,e2)^2,e2,0,maxpow)))),
@@ -201,78 +213,62 @@ w_s(s,e2):=''(reverta(s_w(w,e2),w,s,e2,maxpow))$
 w_s_a(s,n):=''(trigreduce(taylor(w_s(s,e2_n(n)),n,0,maxpow)))$
 
 /* s in terms of z */
+/* This is slow.  The next version speeds it up a little.
 s_z(z,n):=''(expand(trigreduce(ratdisrep(
         taylor(s_w_a(w_z_a(z,n),n),n,0,maxpow)))))$
+*/
+s_z(z,n):=''(block([ww:w_z_a(z,n),ss:expand(s_w_a(w,n)),acc:0],
+    for i:0 thru maxpow do (
+      ww:ratdisrep(taylor(ww,n,0,maxpow-i)),
+      acc:acc + expand(n^i * trigreduce(ratdisrep(taylor(
+              subst([w=ww],coeff(ss,n,i)),n,0,maxpow-i))))),
+    acc))$
 
 /* z in terms of s */
+/* This is slow.  The next version speeds it up a little.
 z_s(s,n):=''(expand(trigreduce(ratdisrep(
         taylor(z_w_a(w_s_a(s,n),n),n,0,maxpow)))))$
+*/
+z_s(s,n):=''(block([ww:w_s_a(s,n),zz:expand(z_w_a(w,n)),acc:0],
+    for i:0 thru maxpow do (
+      ww:ratdisrep(taylor(ww,n,0,maxpow-i)),
+      acc:acc + expand(n^i * trigreduce(ratdisrep(taylor(
+              subst([w=ww],coeff(zz,n,i)),n,0,maxpow-i))))),
+    acc))$
 
 a1(n):=''(ratdisrep(taylor(ec(e2_n(n))*(1+n)/(%pi/2),n,0,maxpow))/(1+n))$
 
 printa1():=block([aa:a1(n)],
-  print(concat("A1=",string(a/(n+1)),"*(",
+  print(concat("A=",string(a/(n+1)),"*(",
       string(taylor(a1(n)*(1+n),n,0,maxpow)),");")),
   0)$
-printtxf():=block([hp:s_z(z,n),t],
-  for i:1 thru maxpow do (t:coeff(hp,sin(2*i*z)),
-    print(concat("hp[",i,"]=",string(taylor(t,n,0,maxpow)),";")),
-    hp:hp-expand(t*sin(2*i*z))),
+printtxf():=block([alpha:s_z(z,n),t],
+  for i:1 thru maxpow do (t:coeff(alpha,sin(2*i*z)),
+    print(concat("alpha[",i,"]=",string(taylor(t,n,0,maxpow)),";")),
+    alpha:alpha-expand(t*sin(2*i*z))),
 /* should return zero */
-  hp:hp-z)$
-printtxr():=block([h:z_s(s,n),t],
-  for i:1 thru maxpow do (t:coeff(h,sin(2*i*s)),
-    print(concat("h[",i,"]=",string(taylor(-t,n,0,maxpow)),";")),
-    h:h-expand(t*sin(2*i*s))),
+  alpha:alpha-z)$
+printtxr():=block([beta:z_s(s,n),t],
+  for i:1 thru maxpow do (t:coeff(beta,sin(2*i*s)),
+    print(concat("beta[",i,"]=",string(taylor(-t,n,0,maxpow)),";")),
+    beta:beta-expand(t*sin(2*i*s))),
 /* should return zero */
-  h:h-s)$
+  beta:beta-s)$
 
-printseries():=[printa1(),printtxr(),printtxf()]$
+printseries():=[printa1(),printtxf(),printtxr()]$
 
-block([scalez,scalev,betx,sinbetx,cosbetx,phi,ep2,scalei,scaler,
-  scaler2,scalei2,scalea2],
-  scalev:cd(ratdisrep(taylor(w_z(z,ep2/(1+ep2)),ep2,0,maxpow2)),ep2/(1+ep2)),
-  scalev:ratsimp(trigexpand(ratdisrep(taylor(
-          scalev,ep2,0,maxpow2)))),
-  scalev:subst([denom=sqrt(1-cos(beta)^2*sin(lam)^2)],subst([
-      sin(xip)   = sin(beta)/denom          ,
-      cos(xip)   = cos(beta)*cos(lam)/denom ,
-      cosh(etap) = 1/denom                  ,
-      sinh(etap) = cos(beta)*sin(lam)/denom ],
-      trigexpand(subst([z=xip+%i*etap],scalev)))),
-  betx:ratdisrep(taylor(beta_phi(phi,ep2/(1+ep2)),ep2,0,maxpow2)),
-  sinbetx:ratsimp(trigexpand(ratdisrep(taylor(sin(betx),ep2,0,maxpow2)))),
-  cosbetx:ratsimp(trigexpand(ratdisrep(taylor(cos(betx),ep2,0,maxpow2)))),
-  scalez:ratsimp(ratdisrep(taylor(subst(
-          [sin(beta)=sinbetx,cos(beta)=cosbetx],scalev),ep2,0,maxpow2))),
-  scalei:imagpart(scalez),
-  scaler:realpart(scalez),
-  carg:ratdisrep(subst(
-      [sin(phi)=sqrt(1-c^2),cos(phi)=c,sin(lam)=s,cos(lam)=sqrt(1-s^2)],
-      taylor(-(scalei/sin(phi)/sin(lam))/(scaler/cos(lam)),
-        ep2, 0, maxpow2))),
-  carg:taylor(subst([c=sqrt(c2),s=sqrt(s2),ep2=ep2*(1-s2*c2)^2/d^2],
-      d/(1-s2*c2)*(carg-1)+1),ep2,0,maxpow),
-  scaler2:taylor(scaler^2,ep2,0,maxpow),
-  scalei2:taylor(scalei^2,ep2,0,maxpow),
-  scalea2:taylor(subst([e2=ep2/(1+ep2)],(1-e2*sin(phi)^2)/cos(phi)^2),
-    ep2,0,maxpow)*
-  (1-cos(phi)^2*sin(lam)^2)*(scaler2+scalei2),
-  cabs:taylor(sqrt(subst([sin(lam)=sqrt(s2),cos(lam)=sqrt(1-s2),
-        cos(phi)=sqrt(c2),sin(phi)=sqrt(1-c2)],
-        ratdisrep(scalea2))),ep2,0,maxpow2),
-  cabs:taylor(subst([ep2=ep2*(1-s2*c2)^2/d^2],ratdisrep(cabs)),ep2,0,maxpow2)
-)$
-
-printscale():=block([phi,lam,s2,c2,d],
-  print(concat("c2=",string(cos(phi)^2),";")),
-  print(concat("s2=",string(sin(lam)^2),";")),
-  print(concat("d=",string(1-s2*c2),";")),
-  print(concat("carg=",string(carg),";")),
-  print(concat("cabs=",string(cabs),";")),
-  print(concat("gamma=",string(atan2(sin(lam)*sin(phi)*'carg,cos(lam))),";")),
-  print(concat("k=",string('cabs/sqrt(d)),";")),
-  0)$
+/* Define array functions which are be read by tm.mac */
+defarrayfuns():=block([aa:a1(n)*(1+n),alpha:s_z(z,n),beta:z_s(s,n),t],
+  for i:1 thru maxpow do (
+    define(a1_a[i](n),ratdisrep(taylor(aa,n,0,i))/(1+n)),
+    t:expand(ratdisrep(taylor(alpha,n,0,i))),
+    define(s_z_a[i](z,n),z+sum(coeff(t,sin(2*k*z))*sin(2*k*z),k,1,i)),
+    t:diff(t,z),
+    define(s_z_d[i](z,n),1+sum(coeff(t,cos(2*k*z))*cos(2*k*z),k,1,i)),
+    t:expand(ratdisrep(taylor(beta,n,0,i))),
+    define(z_s_a[i](s,n),s+sum(coeff(t,sin(2*k*s))*sin(2*k*s),k,1,i)),
+    t:diff(t,s),
+    define(z_s_d[i](s,n),1+sum(coeff(t,cos(2*k*s))*cos(2*k*s),k,1,i))))$
 
 printseries()$
-printscale()$
+defarrayfuns()$

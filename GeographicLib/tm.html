@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <!-- $Id$ -->
+    <title>
+      Transverse Mercator Projection
+    </title>
+    <meta name="description" content="Transverse Mercator Projection" />
+    <meta name="keywords"
+	  content="transverse Mercator,
+		   Gauss-Krueger projection,
+		   UTM,
+		   WGS84 ellipsoid,
+		   latitude and longitude" />
+    <meta name="author" content="Charles F. F. Karney" />
+  </head>
+  <body topmargin=10 leftmargin=10>
+    <h3>Transverse Mercator Projection</h3>
+    <p>
+      This page is a web resource for the paper
+      <blockquote>
+	Charles F. F. Karney,
+	The transverse Mercator projection with an accuracy of
+	a few nanometers, in preparation.
+      </blockquote>
+      The implementation of the series and exact algorithms are
+      available as part of GeographicLib
+    </p>
+    <ul>
+      <li>
+	<a href="html">GeographicLib documentation</a>
+      <li>
+	<a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+	  Download GeographicLib</a>
+      <li>
+	The C++ class
+	<a href="html/classGeographicLib_1_1TransverseMercator.html">
+	  TransverseMercator</a>, which implements the Kr&uuml;ger
+	series method.
+      <li>
+	The C++ class
+	<a href="html/classGeographicLib_1_1TransverseMercatorExact.html">
+	  TransverseMercatorExact</a>, which implements the Lee's exact
+	method.
+      <li>
+	The utility
+	<a href="html/utilities.html#transversemercatortest">
+	  TransverseMercatorTest</a>, for testing the implementations.
+    </ul>
+    <p>
+      Additional material:
+    </p>
+    <ul>
+      <li>
+	Test set for the transverse Mercator projection:
+	<ul>
+	  <li>
+	    the
+	    <a href="http://sourceforge.net/projects/geographiclib/files/testdata/TMcoords.dat.gz/download">
+	      data set</a>
+	  <li>
+	    <a href="html/transversemercator.html#testmerc">
+	      documentation</a> for the data set
+	</ul>
+	Use only the entries with latitude &ge; 0 for testing an
+	algorithm with the standard convention for the branch cut.
+      <li>
+	Maxima implementation of Lee's exact method (arbitrary precision):
+	<a href="html/tm.mac">tm.mac</a>
+	and <a href="html/ellint.mac">ellint.mac</a>.  There is brief
+	documentation at the top of tm.mac.
+      <li>
+	Maxima code to generate Kr&uuml;ger's series to arbitrary order:
+	<a href="html/tmseries.mac">tmseries.mac</a>.  There is brief
+	documentation at the top of the file.
+      <li>
+	Kr&uuml;ger's series to 30th order:
+	<a href="html/tmseries30.html">tmseries30.html</a>.
+      <li>
+	<a href="http://maxima.sourceforge.net/">
+	  Download maxima</a>.
+    </ul>
+    <hr>
+    <address><a href="http://charles.karney.info/">Charles Karney</a>
+      <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
+      (2010-01-26)</address>
+    <br>
+    <a href="http://sourceforge.net">
+      <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2" border="0" alt="SourceForge.net" />
+    </a>
+</body>
+</html>

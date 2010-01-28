@@ -13,8 +13,11 @@ SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
-	gauss-krueger-graticule-a thompson-tm-graticule-a
+	gauss-krueger-graticule-a thompson-tm-graticule-a \
+	gauss-krueger-error
 FIGURESOURCES = $(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES))
+
+EXTRAFILES = tmseries30.html
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
@@ -28,6 +31,7 @@ html/index.html: Doxyfile Geographic.doc \
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	for f in $(FIGURESOURCES); do cp -p $$f html/; done
 	for f in $(MAXIMASOURCES); do cp -p $$f html/; done
+	for f in $(EXTRAFILES); do cp -p $$f html/; done
 	doxygen
 
 PREFIX = /usr/local
@@ -38,7 +42,7 @@ install: html/index.html
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 html/* $(DEST)/
 list:
-	@echo Doxyfile Geographic.doc $(FIGURESOURCES)
+	@echo Doxyfile Geographic.doc $(FIGURESOURCES) $(EXTRAFILES)
 clean:
 	rm -rf html
 

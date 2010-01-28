@@ -166,6 +166,7 @@ The following steps will get you started with %GeographicLib:
    - cd geographiclib-1.0
  - Create the library and the utility programs
    - make all
+   .
    The compiled utility programs are in the tools directory.
  - windows/GeographicLib-vc9.sln (resp. vc8) is MS Visual Studio 2008
    (resp. 2005) solution file which compiles the library and the utility
@@ -376,7 +377,7 @@ The primary sources for the material presented here are:
    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
    Projections Based On Jacobian Elliptic Functions</a>, gives closed
    form expressions for the transverse Mercator projection based on work
-   by Thompson (1945).  This may be purchased for a modest sum.  Other
+   by E. H. Thompson (1945).  This may be purchased for a modest sum.  Other
    useful sections are Part I, pp. 1&ndash;3 and Part II, pp. 4&ndash;14.
  - M. Abramowitz and I. A. Stegun,
    Handbook of Mathematical Functions
@@ -395,20 +396,21 @@ The transverse Mercator projection is a conformal projection of the
 ellipsoid in which the central meridian is straight.  Within these
 constrains there are various projections that differ in how the scale
 varies along the central meridian.  The simplest such projection from an
-algorithmic point of view is the Gauss-Schreiber projection which consists
-of a conformal projection from the ellipsoid to a sphere followed by the
-spherical transverse Mercator projection.  This results in a projection
-whose scale on the central meridian increases from the equator to the
-pole (by an amount proportional to the flattening).  In the
-Gauss-Kr&uuml;ger projection, the scale along the central meridian is
-held constant.  This projection is usually expressed as a series which
-is valid only sufficiently close to the central meridian.  (This is
-implemented by GeographicLib::TransverseMercator.)  The projection can
-however be expressed in closed form in terms of the Thompson transverse
-Mercator projection (where the scale along the central meridian
-decreases from the equator to the pole by an amount proportional to the
-flattening).  (This method of computing the Gauss-Kr&uuml;ger projection
-is implemented by GeographicLib::TransverseMercatorExact.)
+algorithmic point of view is the Gauss-Schreiber projection which
+consists of a conformal projection from the ellipsoid to a sphere
+followed by the spherical transverse Mercator projection.  This results
+in a projection whose scale on the central meridian increases from the
+equator to the pole (by an amount proportional to the flattening).  In
+the Gauss-Kr&uuml;ger projection, the scale along the central meridian
+is held constant.  This projection is usually expressed as a series
+which is valid only sufficiently close to the central meridian.  (This
+is implemented by GeographicLib::TransverseMercator.)  The projection
+can however be expressed in closed form in terms of the Thompson
+transverse Mercator projection (where the scale along the central
+meridian decreases from the equator to the pole by an amount
+proportional to the flattening).  (This method of computing the
+Gauss-Kr&uuml;ger projection is implemented by
+GeographicLib::TransverseMercatorExact.)
 
 The graticules (lines of constant latitude and longitude) for all these
 projections are shown in Figs. 1&ndash;3.  These figures all use an
@@ -418,7 +420,7 @@ and the projections have all been scaled so that the distance from the
 equator to the north pole is unity.  One eighth of the ellipsoid is
 shown in these figures, 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
 0<sup>o</sup> <= longitude <= 90<sup>o</sup>.  To obtain the graticule
-for the entire ellipsoid reflect these figures in \e x = 0, \e y = 0,
+for the entire ellipsoid, reflect these figures in \e x = 0, \e y = 0,
 and \e y = 1.  The blue lines show latitude and longitude at multiples
 of 10<sup>o</sup>.  The green lines show 1<sup>o</sup> intervals for
 longitude in [80, 90] and latitude in [0, 10].  In all three figures,
@@ -484,7 +486,7 @@ projection (and similarly in the Thompson projection) is perhaps
 puzzling.  We explore the behavior more carefully in this section.
 
 Firstly, the Gauss-Kr&uuml;ger projection \e does have a singularity at
-latitude = 0<sup>o</sup> and longitude < 90<sup>o</sup>(1 - \e e), where
+latitude = 0<sup>o</sup> and longitude = 90<sup>o</sup>(1 - \e e), where
 \e e is the eccentricity of the ellipsoid.  The choice of \e e = 1/10
 for Figs. 1&ndash;3 was made to ensure that one of the graticule lines
 (longitude = 81<sup>o</sup>) covered this singularly.  The singularly is
@@ -494,7 +496,7 @@ from Thompson to Gauss-Kr&uuml;ger "repairs" this to lowest order so
 that there's no kink in the equation.  Nevertheless, a weaker
 singularity remains (causing a discontinuous change in the radius of
 curvature for the equator).  Thus Gauss-Kr&uuml;ger has a branch point
-at latitude = 0<sup>o</sup> and longitude < 90<sup>o</sup>(1 - \e e) and
+at latitude = 0<sup>o</sup> and longitude = 90<sup>o</sup>(1 - \e e) and
 the projection is analytic provided this point is avoided.  However the
 results obtained for the projection will depend on which sheet of the
 projection is used or which route around the branch point is taken.
@@ -607,13 +609,13 @@ lower right corner of Fig. 6 expands by 3 to 270<sup>o</sup> to produce
 the outside corner at \e x = 1.71 and \e y = 0 in Fig. 4.  The top right
 corner of Fig. 6 represents the south pole and this is transformed to
 infinity in the extended Gauss-Kr&uuml;ger projection.  Despite the
-apparent similarities, the behavior of north and south poles in the
-extended Thompson projection (top left and top right corners in Fig. 6)
-is rather different.  The singularity for the north pole is merely the
-result of the singularity of a polar coordinate system (e.g., longitude
-is undefined at the north pole).  Encircling the north pole, causes
-longitude to increase by 360<sup>o</sup>, as expected.  On the other
-hand, encircling the south pole in increasing the longitude by
+apparent similarities, the behaviors of the extended Thompson projection
+near the north and south poles (top left and top right corners in
+Fig. 6) are rather different.  The singularity for the north pole is
+merely the result of the singularity of a polar coordinate system (e.g.,
+longitude is undefined at the north pole).  Encircling the north pole,
+causes longitude to increase by 360<sup>o</sup>, as expected.  On the
+other hand, encircling the south pole increases the longitude by
 360<sup>o</sup> \e e = 36<sup>o</sup>.  The same behavior is exhibited
 by the extended Gauss-Kr&uuml;ger projection.  The point latitude =
 -1<sup>o</sup>, longitude = 90<sup>o</sup> projects to a point [2.65,1]
@@ -691,7 +693,7 @@ term proportional to the gradient of the quantity being measured.
 
 Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
 Reverse projections
- - error in position < 8 nm
+ - error in position < 8 nm (5 pm for long doubles)
  - error in convergence, \e d(\e gamma) < 2e-15" + 8 nm . grad(\e gamma)
  - relative error in scale, \e dk/\e k < 7e-12%% + 3 nm . grad(\e k)/\e k
  .
@@ -753,8 +755,9 @@ Mercator projection.  The method entails performing first a
 Gauss-Schreiber projection and approximating the warp of this to
 Gauss-Kr&uuml;ger projection as a series in \e n = (\e a - \e b)/(\e a +
 \e b).  This is accurate to about 200 nm within the UTM domain.  Here we
-present the series extended to 12th order.  We follow the notation of
-JHS 154.
+present the series extended to 10th order.  The series expanded to order
+<i>n</i><sup>30</sup> are given in <a href="tmseries30.html">
+tmseries30.html</a>.
 
 By default, GeographicLib::TransverseMercator uses the 6th-order
 approximation. The preprocessor variable TM_TX_MAXPOW can be used to
@@ -767,101 +770,18 @@ they can be easily truncated to lower order in \e n.  Some of the
 integers here are not representable as 32-bit integers and will need to
 be included as double literals.
 
-Eq. (01) [\e A in Kr&uuml;ger, p. 12, eq. (5)]
+\e A in Kr&uuml;ger, p. 12, eq. (5)
 \verbatim
-  A1 = a/(n + 1) * (1 + 1/4 * n^2
-                      + 1/64 * n^4
-                      + 1/256 * n^6
-                      + 25/16384 * n^8
-                      + 49/65536 * n^10
-                      + 441/1048576 * n^12);
+  A = a/(n + 1) * (1 + 1/4 * n^2
+                     + 1/64 * n^4
+                     + 1/256 * n^6
+                     + 25/16384 * n^8
+                     + 49/65536 * n^10);
 \endverbatim
 
-Eqs. (06) [\e beta in Kr&uuml;ger, p. 18, eq. (26*)]
+\e gamma in Kr&uuml;ger, p. 21, eq. (41)
 \verbatim
-  h[1]   =   1/2 * n
-           - 2/3 * n^2
-           + 37/96 * n^3
-           - 1/360 * n^4
-           - 81/512 * n^5
-           + 96199/604800 * n^6
-           - 5406467/38707200 * n^7
-           + 7944359/67737600 * n^8
-           - 7378753979/97542144000 * n^9
-           + 25123531261/804722688000 * n^10
-           - 9280258847/6437781504000 * n^11
-           - 1628053924171/99584432640000 * n^12;
-  h[2]   =   1/48 * n^2
-           + 1/15 * n^3
-           - 437/1440 * n^4
-           + 46/105 * n^5
-           - 1118711/3870720 * n^6
-           + 51841/1209600 * n^7
-           + 24749483/348364800 * n^8
-           - 115295683/1397088000 * n^9
-           + 5487737251099/51502252032000 * n^10
-           - 5845886411021/41845579776000 * n^11
-           + 6339155669701909/46867049349120000 * n^12;
-  h[3]   =   17/480 * n^3
-           - 37/840 * n^4
-           - 209/4480 * n^5
-           + 5569/90720 * n^6
-           + 9261899/58060800 * n^7
-           - 6457463/17740800 * n^8
-           + 2473691167/9289728000 * n^9
-           - 852549456029/20922789888000 * n^10
-           - 2673218294321/191294078976000 * n^11
-           - 1619588070701683/35150287011840000 * n^12;
-  h[4]   =   4397/161280 * n^4
-           - 11/504 * n^5
-           - 830251/7257600 * n^6
-           + 466511/2494800 * n^7
-           + 324154477/7664025600 * n^8
-           - 937932223/3891888000 * n^9
-           - 89112264211/5230697472000 * n^10
-           + 12003335387/32691859200 * n^11
-           - 537877266968267441/2249618368757760000 * n^12;
-  h[5]   =   4583/161280 * n^5
-           - 108847/3991680 * n^6
-           - 8005831/63866880 * n^7
-           + 22894433/124540416 * n^8
-           + 112731569449/557941063680 * n^9
-           - 5391039814733/10461394944000 * n^10
-           + 4863559943251/167382319104000 * n^11
-           + 37588208648677/67596705792000 * n^12;
-  h[6]   =   20648693/638668800 * n^6
-           - 16363163/518918400 * n^7
-           - 2204645983/12915302400 * n^8
-           + 4543317553/18162144000 * n^9
-           + 54894890298749/167382319104000 * n^10
-           - 132058444054073/177843714048000 * n^11
-           - 21678380925301381/85364982743040000 * n^12;
-  h[7]   =   219941297/5535129600 * n^7
-           - 497323811/12454041600 * n^8
-           - 79431132943/332107776000 * n^9
-           + 4346429528407/12703122432000 * n^10
-           + 947319776978297/1625999671296000 * n^11
-           - 139564766909992667/115852476579840000 * n^12;
-  h[8]   =   191773887257/3719607091200 * n^8
-           - 17822319343/336825216000 * n^9
-           - 497155444501631/1422749712384000 * n^10
-           + 4081516004323/8281937664000 * n^11
-           + 3016420810780677019/2994340933140480000 * n^12;
-  h[9]   =   11025641854267/158083301376000 * n^9
-           - 492293158444691/6758061133824000 * n^10
-           - 3340781295639871/6360528125952000 * n^11
-           + 230755947172792843/315376186245120000 * n^12;
-  h[10]  =   7028504530429621/72085985427456000 * n^10
-           - 1396721719354981/13516122267648000 * n^11
-           - 242069739433316973869/299733527407362048000 * n^12;
-  h[11]  =   20180430688893997/144171970854912000 * n^11
-           - 39227670225311092139/261131482210959360000 * n^12;
-  h[12]  =   170866240186706518133/831839653739888640000 * n^12;
-\endverbatim
-
-Eqs. (07) [\e gamma in Kr&uuml;ger, p. 21, eq. (41)]
-\verbatim
-  h'[1]  =   1/2 * n
+alpha[1] =   1/2 * n
            - 2/3 * n^2
            + 5/16 * n^3
            + 41/180 * n^4
@@ -870,10 +790,8 @@ Eqs. (07) [\e gamma in Kr&uuml;ger, p. 21, eq. (41)]
            + 72161/387072 * n^7
            - 18975107/50803200 * n^8
            + 60193001/290304000 * n^9
-           + 134592031/1026432000 * n^10
-           - 1043934033787/3218890752000 * n^11
-           + 1107802529272207/5178390497280000 * n^12;
-  h'[2]  =   13/48 * n^2
+           + 134592031/1026432000 * n^10;
+alpha[2] =   13/48 * n^2
            - 3/5 * n^3
            + 557/1440 * n^4
            + 281/630 * n^5
@@ -881,102 +799,160 @@ Eqs. (07) [\e gamma in Kr&uuml;ger, p. 21, eq. (41)]
            + 13769/28800 * n^7
            + 148003883/174182400 * n^8
            - 705286231/465696000 * n^9
-           + 1703267974087/3218890752000 * n^10
-           + 490493610499/373621248000 * n^11
-           - 1975809888712343/976396861440000 * n^12;
-  h'[3]  =   61/240 * n^3
+           + 1703267974087/3218890752000 * n^10;
+alpha[3] =   61/240 * n^3
            - 103/140 * n^4
            + 15061/26880 * n^5
            + 167603/181440 * n^6
            - 67102379/29030400 * n^7
            + 79682431/79833600 * n^8
            + 6304945039/2128896000 * n^9
-           - 6601904925257/1307674368000 * n^10
-           + 35472608886503/41845579776000 * n^11
-           + 7660808256523559/1098446469120000 * n^12;
-  h'[4]  =   49561/161280 * n^4
+           - 6601904925257/1307674368000 * n^10;
+alpha[4] =   49561/161280 * n^4
            - 179/168 * n^5
            + 6601661/7257600 * n^6
            + 97445/49896 * n^7
            - 40176129013/7664025600 * n^8
            + 138471097/66528000 * n^9
-           + 48087451385201/5230697472000 * n^10
-           - 634613396309/40864824000 * n^11
-           + 152161926556090753/1124809184378880000 * n^12;
-  h'[5]  =   34729/80640 * n^5
+           + 48087451385201/5230697472000 * n^10;
+alpha[5] =   34729/80640 * n^5
            - 3418889/1995840 * n^6
            + 14644087/9123840 * n^7
            + 2605413599/622702080 * n^8
            - 31015475399/2583060480 * n^9
-           + 5820486440369/1307674368000 * n^10
-           + 98568244458947/3678732288000 * n^11
-           - 1367520624030470251/29877743960064000 * n^12;
-  h'[6]  =   212378941/319334400 * n^6
+           + 5820486440369/1307674368000 * n^10;
+alpha[6] =   212378941/319334400 * n^6
            - 30705481/10378368 * n^7
            + 175214326799/58118860800 * n^8
            + 870492877/96096000 * n^9
-           - 1328004581729009/47823519744000 * n^10
-           + 3512873113922087/355687428096000 * n^11
-           + 986615629722639449/13133074268160000 * n^12;
-  h'[7]  =   1522256789/1383782400 * n^7
+           - 1328004581729009/47823519744000 * n^10;
+alpha[7] =   1522256789/1383782400 * n^7
            - 16759934899/3113510400 * n^8
            + 1315149374443/221405184000 * n^9
-           + 71809987837451/3629463552000 * n^10
-           - 52653013293696143/812999835648000 * n^11
-           + 101784256296129577/4455864483840000 * n^12;
-  h'[8]  =   1424729850961/743921418240 * n^8
+           + 71809987837451/3629463552000 * n^10;
+alpha[8] =   1424729850961/743921418240 * n^8
            - 256783708069/25204608000 * n^9
-           + 2468749292989891/203249958912000 * n^10
-           + 117880637749661/2707556544000 * n^11
-           - 5921832934345276446697/38926432130826240000 * n^12;
-  h'[9]  =   21091646195357/6080126976000 * n^9
-           - 67196182138355857/3379030566912000 * n^10
-           + 395018924202597949/15446996877312000 * n^11
-           + 91220875613845291081/946128558735360000 * n^12;
-  h'[10] =   77911515623232821/12014330904576000 * n^10
-           - 268897530802721453/6758061133824000 * n^11
-           + 8257746726303249815683/149866763703681024000 * n^12;
-  h'[11] =   12809767642647461/1029799791820800 * n^11
-           - 5303630969873795374429/65282870552739840000 * n^12;
-  h'[12] =   2240624428311897034834681/91918281738257694720000 * n^12;
+           + 2468749292989891/203249958912000 * n^10;
+alpha[9] =   21091646195357/6080126976000 * n^9
+           - 67196182138355857/3379030566912000 * n^10;
+alpha[10]=   77911515623232821/12014330904576000 * n^10;
 \endverbatim
 
-Eqs. (15), (16), (17), (18), (23), (24), (25), (26) of JHS 154 are
-extended in the obvious way.
+\e beta in Kr&uuml;ger, p. 18, eq. (26*)
+\verbatim
+ beta[1] =   1/2 * n
+           - 2/3 * n^2
+           + 37/96 * n^3
+           - 1/360 * n^4
+           - 81/512 * n^5
+           + 96199/604800 * n^6
+           - 5406467/38707200 * n^7
+           + 7944359/67737600 * n^8
+           - 7378753979/97542144000 * n^9
+           + 25123531261/804722688000 * n^10;
+ beta[2] =   1/48 * n^2
+           + 1/15 * n^3
+           - 437/1440 * n^4
+           + 46/105 * n^5
+           - 1118711/3870720 * n^6
+           + 51841/1209600 * n^7
+           + 24749483/348364800 * n^8
+           - 115295683/1397088000 * n^9
+           + 5487737251099/51502252032000 * n^10;
+ beta[3] =   17/480 * n^3
+           - 37/840 * n^4
+           - 209/4480 * n^5
+           + 5569/90720 * n^6
+           + 9261899/58060800 * n^7
+           - 6457463/17740800 * n^8
+           + 2473691167/9289728000 * n^9
+           - 852549456029/20922789888000 * n^10;
+ beta[4] =   4397/161280 * n^4
+           - 11/504 * n^5
+           - 830251/7257600 * n^6
+           + 466511/2494800 * n^7
+           + 324154477/7664025600 * n^8
+           - 937932223/3891888000 * n^9
+           - 89112264211/5230697472000 * n^10;
+ beta[5] =   4583/161280 * n^5
+           - 108847/3991680 * n^6
+           - 8005831/63866880 * n^7
+           + 22894433/124540416 * n^8
+           + 112731569449/557941063680 * n^9
+           - 5391039814733/10461394944000 * n^10;
+ beta[6] =   20648693/638668800 * n^6
+           - 16363163/518918400 * n^7
+           - 2204645983/12915302400 * n^8
+           + 4543317553/18162144000 * n^9
+           + 54894890298749/167382319104000 * n^10;
+ beta[7] =   219941297/5535129600 * n^7
+           - 497323811/12454041600 * n^8
+           - 79431132943/332107776000 * n^9
+           + 4346429528407/12703122432000 * n^10;
+ beta[8] =   191773887257/3719607091200 * n^8
+           - 17822319343/336825216000 * n^9
+           - 497155444501631/1422749712384000 * n^10;
+ beta[9] =   11025641854267/158083301376000 * n^9
+           - 492293158444691/6758061133824000 * n^10;
+ beta[10]=   7028504530429621/72085985427456000 * n^10;
+\endverbatim
+
+The following table gives the truncation error when the series above are
+truncated to order \e n<sup><i>J</i></sup>.  The error is the maximum of
+the errors for the forward and reverse projections, converted in both
+cases to a true distance (in meters).  It is expressed as a function of
+the geodesic distance (in km) from the central meridian.  This table was
+computed for the WGS84 ellipsoid.  When implementing with floating point
+arithmetic on a computer, there is an additional rounding error incurred;
+this adds 2.2 m for floats, 4.9 nm for doubles and 2.0 pm for long
+doubles.
+\verbatim
+dist J=2     J=4     J=5     J=6     J=7     J=8     J=10    J=12
+   0 3.0e-02 1.9e-07 5.9e-10 1.7e-12 6.6e-15 2.4e-17 3.5e-22 5.6e-27
+ 500 3.2e-02 2.1e-07 7.3e-10 2.4e-12 9.4e-15 3.7e-17 6.6e-22 1.3e-26
+1000 3.7e-02 3.1e-07 1.2e-09 4.8e-12 2.1e-14 9.8e-17 2.3e-21 5.9e-26
+1500 4.7e-02 5.3e-07 2.4e-09 1.1e-11 5.8e-14 3.1e-16 9.4e-21 3.2e-25
+2000 6.3e-02 1.0e-06 5.3e-09 2.9e-11 1.7e-13 1.0e-15 4.3e-20 1.9e-24
+2500 8.8e-02 2.1e-06 1.2e-08 8.0e-11 5.4e-13 3.8e-15 2.1e-19 1.3e-23
+3000 1.3e-01 4.5e-06 3.1e-08 2.3e-10 1.9e-12 1.5e-14 1.2e-18 9.9e-23
+3500 1.9e-01 9.6e-06 8.0e-08 7.2e-10 6.8e-12 6.8e-14 7.3e-18 8.6e-22
+4000 3.0e-01 2.1e-05 2.2e-07 2.4e-09 2.7e-11 3.2e-13 5.0e-17 8.6e-21
+4500 4.7e-01 5.0e-05 6.2e-07 8.3e-09 1.2e-10 1.7e-12 3.9e-16 1.0e-19
+5000 7.7e-01 1.3e-04 1.9e-06 3.2e-08 5.5e-10 9.9e-12 3.5e-15 1.4e-18
+5500 1.3e+00 3.4e-04 6.6e-06 1.4e-07 3.0e-09 6.8e-11 3.8e-14 2.3e-17
+6000 2.4e+00 1.0e-03 2.6e-05 6.8e-07 1.9e-08 5.6e-10 5.2e-13 5.3e-16
+6500 4.7e+00 3.6e-03 1.2e-04 4.1e-06 1.5e-07 5.9e-09 9.6e-12 1.7e-14
+7000 1.0e+01 1.5e-02 6.6e-04 3.2e-05 1.6e-06 8.7e-08 2.7e-10 9.1e-13
+7500 2.5e+01 7.7e-02 5.0e-03 3.5e-04 2.6e-05 2.0e-06 1.3e-08 9.4e-11
+8000 7.6e+01 5.7e-01 5.9e-02 6.5e-03 7.6e-04 9.2e-05 1.5e-06 2.6e-08
+8500 3.3e+02 8.0e+00 1.5e+00 2.9e-01 5.9e-02 1.3e-02 6.3e-04 3.4e-05
+9000 2.9e+03 3.9e+02 1.6e+02 7.4e+01 3.5e+01 1.7e+01 4.4e+00 1.2e+00
+\endverbatim
+
+<center>
+<img src="gauss-krueger-error.png"
+width=672 height=552 alt="Truncation error for Gauss-Krueger series">
+<a href="gauss-krueger-error.pdf">Fig. 7</a>
+</center>\n
+The truncation error for the series for the Gauss-Kr&uuml;ger transverse
+Mercator projection.  The blue curves show the truncation error for the
+order of the series \e J = 2 (top) thru \e J = 12 (bottom).  The red
+curves show the combined truncation and round-off errors for
+ - float and \e J = 4 (top)
+ - double and \e J = 6 (middle)
+ - long double and \e J = 8 (bottom)
 
 The formulas for meridian convergence (34) and scale (35) are only good
-for small lam (l in the notation of JHS 154).  More accurate expressions
-are given here where \e ep2 = \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 -
-\e e<sup>2</sup>) (eq. 04).
-\verbatim
-  double
-    c = cos(phi),
-    s = sin(lam),
-    c2 = c * c,
-    s2 = s * s,
-    d = 1 - s2 * c2,
-    // Accurate to order ep2^2
-    carg = 1 + c2 * c2 * s2 / d * ep2 *
-    (1 + c2 / (3 * d * d) *
-     (2 - s2 * (c2 * ((4 * c2 - 1) * s2 - 9) + 8)) * ep2),
-    // Accurate to order ep2
-    cabs = 1 + c2 * c2 * s2 * ((c2 - 2) * s2 + 1) / (2 * d * d) * ep2;
-  // This replaces (34)
-  gamma = atan2(sin(phi) * s * carg, cos(lam));
-  // This replaces (35)
-  k = cabs/sqrt(d);
-\endverbatim
-
-Unfortunately, expansions of this type are much more messy at higher
-order.  Therefore, for greater accuracy, directly differentiate the
-series involving \e h' or \e h.  The accumulation of the sum can be
-carried out at the same time as the transformation itself (and the
-calculation slots into a Clenshaw summation very easily).  The
-derivatives give the convergence, \e gamma'', and scale, \e k'', of the
-[\e xi, \e eta] (Gauss-Kr&uuml;ger) projection relative to [\e xi', \e
-eta'] (Gauss-Schreiber) projection and vice versa.  For the full
-convergence and scale these need to be compounded with the convergence,
-\e gamma', and scale, \e k', of the Gauss-Schreiber projection.
+for small lam (l in the notation of JHS 154).  It is therefore
+preferable to differentiate the series involving \e h' or \e h.  The
+accumulation of the resulting sums can be carried out at the same time
+as the transformation itself (and the calculation slots into a Clenshaw
+summation very easily).  The derivatives give the convergence, \e
+gamma'', and scale, \e k'', of the [\e xi, \e eta] (Gauss-Kr&uuml;ger)
+projection relative to [\e xi', \e eta'] (Gauss-Schreiber) projection
+and vice versa.  For the full convergence and scale these need to be
+compounded with the convergence, \e gamma', and scale, \e k', of the
+Gauss-Schreiber projection.
 \verbatim
    gamma = gamma' + gamma''
        k = k' * k''
@@ -984,24 +960,30 @@ convergence and scale these need to be compounded with the convergence,
 gamma' and k' are conveniently expressed as
 \verbatim
   gamma' = atan(tan(lam) * sin(beta))
-         = atan(tan(lam) * tanh(Q))
-         = atan(tan(xi') * tanh(eta'))
+         = atan(tan(lam) * tanh(Q))              // Forward
+         = atan(tan(xi') * tanh(eta'))           // Reverse
       k' = sqrt(1 - e^2 * sin(phi)^2)
            * (cos(beta) / cos(phi)) * cosh(eta')
 \endverbatim
 where the factors on the last line are can be computed accurately with
 \verbatim
  (cos(beta) / cos(phi)) * cosh(eta')
-         = cosh(Q') / hypot(sinh(Q), cos(lam))
-         = cosh(Q') * hypot(sinh(eta'), cos(xi'))
+       = cosh(Q') / hypot(sinh(Q), cos(lam))     // Forward
+       = cosh(Q') * hypot(sinh(eta'), cos(xi'))  // Reverse
 \endverbatim
 These last two expressions preserve accuracy near the pole.  See also
 Kr&uuml;ger, pp. 19&ndash;20, eqs. (29) to (33*) and pp 21&ndash;22,
 eqs. (43) to (47).  GeographicLib::TransverseMercator uses this approach
-to compute the convergence and the scale.
+to compute the convergence and the scale.  The truncation errors for the
+meridian and scale when the series are truncated to order \e
+n<sup><i>J</i></sup> are well approximated by
+\verbatim
+  dgamma = 2J (dr/a) / cos(dist/a) (180/pi) degrees
+  dk / k = 2J (dr/a) / cos(dist/a)
+\endverbatim
+where dist and dr are the \e x and \e y coordinates in Fig. 7.
 
-The high-order expansions for \e h and \e h' and the expansions in \e
-e'<sup>2</sup> for the convergence and scale were produced by the Maxima
+The high-order expansions for \e h and \e h' were produced by the Maxima
 program <a href="tmseries.mac">tmseries.mac</a> (included in the
 distribution).  To run, start Maxima and enter
 \verbatim
@@ -1635,7 +1617,7 @@ azimuths.
 
 The derivative needed for Newton's method for the inverse problem is
 given in terms of the reduced length.  The reduced length can also be
-used to apply Newton's method to solve problems such finding the
+used to apply Newton's method to solve problems such as finding the
 distance between a point and a geodesic line.
 
 Convergence failures with Newton's method for the inverse problem is
@@ -2565,6 +2547,13 @@ style of numbering.  Now, the library uses
 <a href="http://www.gnu.org/software/libtool/manual/libtool.html#Versioning">
 libtool's version numbering scheme</a> using an interface and revision
 numbers.)
+
+ - PENDING
+
+  - FIX BUG in EllipticFunction::E(sn, cn, dn).  This bug was introduced
+    in r6579 (2009-03-27) as part of a code clean up.  This broke the
+    imposition of symmetries when cn < 0.
+
 
  - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
    1.0 (released 2009-01-07)</a>
