@@ -1,13 +1,15 @@
 # $Id$ -*- Makefile -*-
 include Makefile.mk
 
+# ssh -t karney,geographiclib@shell.sourceforge.net create
+
 USER=karney
 STAGE=$(HOME)/web
 WEBSTAGE=$(STAGE)/geographic-web
 DATASTAGE=$(STAGE)/geographic-files
 
 distrib:
-	rsync -av --exclude .svn --exclude '*~' --exclude '#*' --delete --delete-excluded index.html doc/html geodesic-papers $(WEBSTAGE)/htdocs/
+	rsync -av --exclude .svn --exclude '*~' --exclude '#*' --delete --delete-excluded index.html tm.html doc/html geodesic-papers $(WEBSTAGE)/htdocs/
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
