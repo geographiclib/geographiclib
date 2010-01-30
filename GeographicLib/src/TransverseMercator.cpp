@@ -234,53 +234,48 @@ namespace GeographicLib {
     real
       phi = lat * Constants::degree(),
       lam = lon * Constants::degree();
-    // psi is isometric latitude
-    //
-    // JHS 154 notation
-    //   q = psi
-    //   qp = psip
-    //   h' = _alp (= Krueger's gamma)
-    //   h = _bet (= Krueger's beta)
-    //
-    // JHS does the transformat to xi', eta' with
-    //   beta = atan(sinh(psi)) = conformal latitude
-    //   [xi', eta'] = Gauss-Schreiber TM coordinates
-    //   eta' = atanh(cos(beta) * sin(lam))
-    //   xi' = asin(sin(beta)*cosh(eta'))
+    // phi = latitude
+    // phi' = conformal latitude
+    // psi = isometric latitude
+    // tau = tan(phi)
+    // tau' = tan(phi')
+    // [xi', eta'] = Gauss-Schreiber TM coordinates
+    // [xi, eta] = Gauss-Krueger TM coordinates
     //
     // We use
-    //   tan(beta) = sinh(psi)
-    //   sin(beta) = tanh(psi)
-    //   cos(beta) = sech(psi)
-    //   denom^2    = 1-cos(beta)^2*sin(lam)^2 = 1-sech(psi)^2*sin(lam)^2
-    //   sin(xip)   = sin(beta)/denom          = tanh(psi)/denom
-    //   cos(xip)   = cos(beta)*cos(lam)/denom = sech(psi)*cos(lam)/denom
+    //   tan(phi') = sinh(psi)
+    //   sin(phi') = tanh(psi)
+    //   cos(phi') = sech(psi)
+    //   denom^2    = 1-cos(phi')^2*sin(lam)^2 = 1-sech(psi)^2*sin(lam)^2
+    //   sin(xip)   = sin(phi')/denom          = tanh(psi)/denom
+    //   cos(xip)   = cos(phi')*cos(lam)/denom = sech(psi)*cos(lam)/denom
     //   cosh(etap) = 1/denom                  = 1/denom
-    //   sinh(etap) = cos(beta)*sin(lam)/denom = sech(psi)*sin(lam)/denom
-    //
-    // to eliminate beta and derive more stable expressions for xi',eta'
+    //   sinh(etap) = cos(phi')*sin(lam)/denom = sech(psi)*sin(lam)/denom
     real etap, xip;
     if (lat < 90) {
       real
-        psip = Math::asinh(tan(phi)),
-        psi = psip - eatanhe(sin(phi)),
-        s = sinh(psi),
-        c = cos(lam);
-      xip = atan2(s, c);
+        c = max(real(0), cos(lam)), // cos(pi/2) might be negative
+        tau = tan(phi),
+        secphi = Math::hypot(real(1), tau),
+        sig = sinh( eatanhe(sin(phi)) ),
+        taup = (Math::hypot(real(1), sig) * tau - sig * secphi);
+      xip = atan2(taup, c);
       // Used to be
       //   etap = Math::atanh(sin(lam) / cosh(psi));
-      etap = Math::asinh(sin(lam) / Math::hypot(s, c));
+      etap = Math::asinh(sin(lam) / Math::hypot(taup, c));
       // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
-      // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(beta))
-      gamma = atan(tan(lam) * tanh(psi)); // Krueger p 22 (44)
-      // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(beta) / cos(phi)) * cosh(etap)
+      // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(phi'));
+      // sin(phi') = tau'/sqrt(1 + tau'^2)
+      gamma = atan(abs(tan(lam)) *
+                   taup / Math::hypot(real(1), taup)); // Krueger p 22 (44)
+      // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(phi') / cos(phi)) * cosh(etap)
       // Note 1/cos(phi) = cosh(psip);
-      // and cos(beta) * cosh(etap) = 1/hypot(sinh(psi), cos(lam))
+      // and cos(phi') * cosh(etap) = 1/hypot(sinh(psi), cos(lam))
       //
       // This form has cancelling errors.  This property is lost if cosh(psip)
       // is replaced by 1/cos(phi), even though it's using "primary" data (phi
       // instead of psip).
-      k = sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(psip) / Math::hypot(s, c);
+      k = sqrt(_e2m + _e2 * sq(cos(phi))) * secphi / Math::hypot(taup, c);
     } else {
       xip = Constants::pi()/2;
       etap = 0;
@@ -436,37 +431,36 @@ namespace GeographicLib {
     k = _b1 / Math::hypot(yr1, yi1);
     // JHS 154 has
     //
-    //   beta = asin(sin(xip) / cosh(etap)) (Krueger p 17 (25))
-    //   lam = asin(tanh(etap) / cos(beta)
-    //   psi = asinh(tan(beta))
-    //
-    // the following eliminates beta and is more stable
+    //   phi' = asin(sin(xi') / cosh(eta')) (Krueger p 17 (25))
+    //   lam = asin(tanh(eta') / cos(phi')
+    //   psi = asinh(tan(phi'))
     real lam, phi;
     real
       s = sinh(etap),
-      c = cos(xip),
+      c = max(real(0), cos(xip)), // cos(pi/2) might be negative
       r = Math::hypot(s, c);
     if (r > 0) {
       lam = atan2(s, c);        // Krueger p 17 (25)
-      // Use Newton's method to solve
-      // psi = psip - e * atanh(e * tanh(psip))
-      // for psip = asinh(tan(phi))
+      // Use Newton's< method to solve for tau
       real
-        psi = Math::asinh(sin(xip)/r),
-        psip = psi;
+        taup = sin(xip)/r,
+        tau = taup;
       // min iterations = 1, max iterations = 3; mean = 2.8
       for (int i = 0; i < numit; ++i) {
         real
-          t = tanh(psip),
-          dpsip = -(psip - eatanhe(t) - psi) * (1 - _e2 * sq(t)) / _e2m;
-        psip += dpsip;
-        if (abs(dpsip) < tol)
+          tau1 = Math::hypot(real(1), tau),
+          sig = sinh( eatanhe( tau / tau1 ) ),
+          sig1 =  Math::hypot(real(1), sig),
+          dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _e2m * sq(tau)) /
+          ( (sig1 * tau1 - sig * tau) * _e2m * tau1 );
+        tau += dtau;
+        if (abs(dtau) < tol * max(real(1), tau))
           break;
       }
-      phi = atan(sinh(psip));
-      gamma += atan(tan(xip) * tanh(etap)); // Krueger p 19 (31)
-      // Note cos(beta) * cosh(etap) = r
-      k *= sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(psip) * r;
+      phi = atan(tau);
+      gamma += atan(abs(tan(xip)) * tanh(etap)); // Krueger p 19 (31)
+      // Note cos(phi') * cosh(eta') = r
+      k *= sqrt(_e2m + _e2 * sq(cos(phi))) * Math::hypot(real(1), tau) * r;
     } else {
       phi = Constants::pi()/2;
       lam = 0;

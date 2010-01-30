@@ -20,7 +20,7 @@ To run, start maxima and enter
 
 With maxpow = 6, the output (after less than 10 secs) is
 
-A1=a/(n+1)*(1+n^2/4+n^4/64+n^6/256);
+A=a/(n+1)*(1+n^2/4+n^4/64+n^6/256);
 alpha[1]=n/2-2*n^2/3+5*n^3/16+41*n^4/180-127*n^5/288+7891*n^6/37800;
 alpha[2]=13*n^2/48-3*n^3/5+557*n^4/1440+281*n^5/630-1983433*n^6/1935360;
 alpha[3]=61*n^3/240-103*n^4/140+15061*n^5/26880+167603*n^6/181440;
@@ -66,7 +66,7 @@ triginverses:'all$
    20     17m = 998s
    30     279m = 16695s
     */
-maxpow:30$ /* Max power for forward and reverse projections */
+maxpow:6$ /* Max power for forward and reverse projections */
 /* Notation
 
    m = elliptic function parameter
@@ -123,6 +123,13 @@ sn(v,m):=''(block([],local(sncof),
         m,0,maxpow)),
     sum(sncof[n]*sin((2*n+1)*v),n,0,maxpow)))$
 
+/* cn -- A+S 16.23.2 */
+cn(v,m):=''(block([],local(cncof),
+    cncof[n]:=ratdisrep(taylor(
+        2*%pi/kc(m)*multthru(q(m)/m)^(n+1/2)*m^n/(1+q(m)^(2*n+1)),
+        m,0,maxpow)),
+    sum(cncof[n]*cos((2*n+1)*v),n,0,maxpow)))$
+
 /* nd -- A+S 16.23.6 */
 nd(v,m):=''(block([],local(ndcof),
     ndcof[n]:=ratdisrep(taylor(
@@ -138,31 +145,26 @@ cd(v,m):=''(block([],local(cdcof),
         m,0,maxpow)),
     sum(cdcof[n]*cos((2*n+1)*v),n,0,maxpow)))$
 
-/* Expansion for asin(x+eps) for small eps.  Equivalent to
-   taylor(asin(x + eps), eps, 0, maxpow)
-   except that taylor returns a very messy expression.  */
-asinexp(x,eps):=''(block([asintemp,etemp,eqs],local(b,cof),
-asintemp:sum(b[i]*eps^i,i,0,maxpow), etemp:x+eps - sin(asintemp),
-etemp:ratdisrep(taylor(etemp,eps,0,maxpow)), cof[i]:=coeff(etemp,eps,i),
-eqs:[b[0]=asin(x)], for i:1 thru maxpow do
-block([t],cof[i],t:subst(eqs,cof[i]),eqs:cons(solve(t,b[i])[1],eqs)),
-subst(eqs,asintemp)))$
-
+/* Expansion for atan(x+eps) for small eps.  Equivalent to
+   taylor(atan(x + eps), eps, 0, maxpow) but tidied up a bit. */
+atanexp(x,eps):=''(block([t:ratdisrep(taylor(atan(x+eps),eps,0,maxpow)),tq],
+  t-subst(eps=0,t)+atan(x)))$
+  
 /* Convert from n to e^2 */
 e2_n(n):=4*n/(1+n)^2$
 
 /* beta in terms of phi.  The expansion of
    beta = asin(tanh( tanh(sin(phi)) + e * atanh(e * sin(phi)) ))
 */
-beta_phi(phi,e2):=''(block([psi,sinbet,bet,qq],
-    /* Here tanh(qq) = sin(phi) */
+beta_phi(phi,e2):=''(block([psi,tanbet,bet,qq,e,phi,e2],
+    /* Here sinh(qq) = tan(phi) */
     psi:qq-e*atanh(e*tanh(qq)),
-    psi:subst([e=sqrt(e2),qq=atanh(sin(phi))],
+    psi:subst([e=sqrt(e2),qq=asinh(tan(phi))],
       ratdisrep(taylor(psi,e,0,2*maxpow))),
-    sinbet:ratdisrep(taylor(tanh(psi),e2,0,maxpow)),
-    bet:asinexp(sin(phi),sinbet-sin(phi)),
+    tanbet:ratdisrep(taylor(sinh(psi),e2,0,maxpow)),
+    bet:atanexp(tan(phi),tanbet-tan(phi)),
     bet:ratdisrep(taylor(bet,e2,0,maxpow)),
-    bet:ratsimp((bet-phi)*cos(phi)/sqrt(1-sin(phi)^2))+phi,
+    bet:ratsimp(subst(tan(phi)=sin(phi)/cos(phi),bet-phi))+phi,
     trigreduce(bet)))$
 
 /* phi in terms of beta */
@@ -172,19 +174,20 @@ phi_beta(beta,e2):=''(reverta(beta_phi(phi,e2),phi,beta,e2,maxpow))$
    z = asin(tanh( tanh(snw) + e * atanh(e * snw) ))
    where snw = sn( w * 2*kc/%pi )
 */
-z_w(w,e2):=''(block([psia,sinbeta,beta,qq],
+z_w(w,e2):=''(block([psia,tanbeta,beta,qq,e,w,e2],
     /* Here tanh(qq) = sn(w,e2) */
     psia:qq-e*atanh(e*tanh(qq)),
-    psia:subst([e=sqrt(e2),qq=atanh(snu)],
+    psia:subst([e=sqrt(e2),qq=asinh(snu/cnu)],
       ratdisrep(taylor(psia,e,0,2*maxpow))),
-    sinbeta:ratdisrep(taylor(tanh(psia),e2,0,maxpow)),
-    sinbeta:ratdisrep(taylor(
-        subst([snu=trigexpand(sn(w,e2))], sinbeta),
+    tanbeta:ratdisrep(taylor(sinh(psia),e2,0,maxpow)),
+    tanbeta:ratdisrep(taylor(
+        subst([snu=trigexpand(sn(w,e2)),cnu=trigexpand(cn(w,e2))], tanbeta),
         e2,0,maxpow)),
-    sinbeta:ratdisrep(taylor(
-        subst([cos(w)=sqrt(1-sin(w)^2)], sinbeta),
+    tanbeta:ratdisrep(taylor(
+        subst([cos(w)=sqrt(1-sin(w)^2)], tanbeta),
         e2,0,maxpow)),
-    beta:asinexp(sin(w),sinbeta-sin(w)),
+    beta:atanexp(tan(w),tanbeta-tan(w)),
+    beta:subst([tan(w)=sin(w)/sqrt(1-sin(w)^2)],beta),
     beta:ratdisrep(taylor(beta,e2,0,maxpow)),
     beta:ratsimp((beta-w)*cos(w)/sqrt(1-sin(w)^2))+w,
     trigreduce(beta)))$
