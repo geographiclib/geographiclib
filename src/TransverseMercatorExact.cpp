@@ -53,10 +53,8 @@ namespace GeographicLib {
   const Math::real TransverseMercatorExact::tol1 = real(0.1) * sqrt(tol);
   const Math::real TransverseMercatorExact::tol2 = real(0.1) * tol;
   const Math::real TransverseMercatorExact::taytol = pow(tol, real(0.6));
-  // Overflow value for asinh(tan(pi/2)) etc.
-  const Math::real TransverseMercatorExact::ahypover =
-    real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
-    + 2;
+  // Overflow value s.t. atan(overflow) = pi/2
+  const Math::real TransverseMercatorExact::overflow = 1 / sq(tol);
 
   TransverseMercatorExact::TransverseMercatorExact(real a, real r, real k0,
                                                    bool extendp)
@@ -84,49 +82,47 @@ namespace GeographicLib {
   TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
                                Constants::UTM_k0());
 
-  Math::real TransverseMercatorExact::psi(real phi) const throw() {
-    real s = sin(phi);
-    // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
-    // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
-    // sign(phi)
-    return Math::asinh(s / max(cos(phi), real(0.1) * tol)) -
-      _e * Math::atanh(_e * s);
+  // tau = tan(phi), taup = sinh(psi)
+  Math::real TransverseMercatorExact::taup(real tau) const throw() {
+    real
+      tau1 = Math::hypot(real(1), tau),
+      sig = sinh( _e * Math::atanh(_e * tau / tau1) ),
+      sig1 = Math::hypot(real(1), sig);
+    return tau * sig1 - sig * tau1;
   }
 
-  Math::real TransverseMercatorExact::psiinv(real psi) const throw() {
-    // This is the inverse of psi.  Use Newton's method to solve for q in
-    //
-    //   psi = q - e * atanh(e * tanh(q))
-    //
-    // and then substitute phi = atan(sinh(q)).  Note that
-    // dpsi/dq = (1 - e^2)/(1 - e^2 * tanh(q)^2)
-    real q = psi;               // Initial guess
+  Math::real TransverseMercatorExact::taupinv(real taup) const throw() {
+    real tau = taup;
     for (int i = 0; i < numit; ++i) {
-      // min iterations = 1, max iterations = 3; mean = 2.8
       real
-        t = tanh(q),
-        dq = -(q - _e * Math::atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
-      q += dq;
-      if (abs(dq) < tol1)
+        tau1 = Math::hypot(real(1), tau),
+        sig = sinh( _e * Math::atanh(_e * tau / tau1 ) ),
+        sig1 =  Math::hypot(real(1), sig),
+        dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _mv * sq(tau)) /
+        ( (sig1 * tau1 - sig * tau) * _mv * tau1 );
+      tau += dtau;
+      if (abs(dtau) < tol * max(real(1), tau))
         break;
     }
-    return atan(sinh(q));
+    return tau;
   }
 
   void TransverseMercatorExact::zeta(real u, real snu, real cnu, real dnu,
                                      real v, real snv, real cnv, real dnv,
-                                     real& psi, real& lam) const throw() {
+                                     real& taup, real& lam) const throw() {
     // Lee 54.17 but write
     // atanh(snu * dnv) = asinh(snu * dnv / sqrt(cnu^2 + _mv * snu^2 * snv^2))
     // atanh(_e * snu / dnv) =
     //         asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
     real
       d1 = sqrt(sq(cnu) + _mv * sq(snu * snv)),
-      d2 = sqrt(_mu * sq(cnu) + _mv * sq(cnv));
-    psi =
-      // Overflow to values s.t. tanh = 1.
-      (d1 ? Math::asinh(snu * dnv / d1) : snu < 0 ? -ahypover : ahypover)
-      - (d2 ? _e * Math::asinh(_e * snu / d2) : snu < 0 ? -ahypover : ahypover);
+      d2 = sqrt(_mu * sq(cnu) + _mv * sq(cnv)),
+      t1 = (d1 ? snu * dnv / d1 : snu < 0 ? -overflow : overflow),
+      t2 = (d2 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
+            snu < 0 ? -overflow : overflow);
+    // psi = asinh(t1) - asinh(t2)
+    // taup = sinh(psi)
+    taup = t1 * Math::hypot(real(1), t2) - t2 * Math::hypot(real(1), t1);
     lam = (d1 != 0 && d2 != 0) ?
       atan2(dnu * snv, cnu * cnv) - _e * atan2(_e * cnu * snv, dnu * cnv) :
       0;
@@ -208,8 +204,11 @@ namespace GeographicLib {
   }
 
   // Invert zeta using Newton's method
-  void TransverseMercatorExact::zetainv(real psi, real lam, real& u, real& v)
-    const throw() {
+  void TransverseMercatorExact::zetainv(real taup, real lam, real& u, real& v)
+    const throw()  {
+    real
+      psi = Math::asinh(taup),
+      scal = 1/Math::hypot(real(1), taup);
     if (zetainv0(psi, lam, u, v))
       return;
     real stol2 = tol2 / sq(max(psi, real(1)));
@@ -218,14 +217,15 @@ namespace GeographicLib {
       real snu, cnu, dnu, snv, cnv, dnv;
       _Eu.sncndn(u, snu, cnu, dnu);
       _Ev.sncndn(v, snv, cnv, dnv);
-      real psi1, lam1, du1, dv1;
-      zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi1, lam1);
+      real tau1, lam1, du1, dv1;
+      zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau1, lam1);
       dwdzeta(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
-      psi1 -= psi;
+      tau1 -= taup;
       lam1 -= lam;
+      tau1 *= scal;
       real
-        delu = psi1 * du1 - lam1 * dv1,
-        delv = psi1 * dv1 + lam1 * du1;
+        delu = tau1 * du1 - lam1 * dv1,
+        delv = tau1 * dv1 + lam1 * du1;
       u -= delu;
       v -= delv;
       if (trip)
@@ -337,50 +337,30 @@ namespace GeographicLib {
     }
   }
 
-  void TransverseMercatorExact::Scale(real phi, real lam,
-                                      real snu, real cnu, real dnu,
-                                      real snv, real cnv, real dnv,
-                                      real& gamma, real& k) const throw() {
-    real
-      c = cos(phi),
-      s = sin(lam),
-      c2 = sq(c),
-      s2 = sq(s),
-      d = 1 - s2 * c2;
-    // See comment after else clause for a discussion.
-    if ( !( phi > 0 && d > real(0.75) && c2 * sq(c2 * _ep2) * s2 < tol ) ) {
-      // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
-      // (clockwise from true north) of grid north
-      gamma = atan2(_mv * snu * snv * cnv, cnu * dnu * dnv);
-      // Lee 55.13 with nu given by Lee 9.1 -- in sqrt change the numerator
-      // from
-      //
-      //    (1 - snu^2 * dnv^2) to (_mv * snv^2 + cnu^2 * dnv^2)
-      //
-      // to maintain accuracy near phi = 90 and change the denomintor from
-      //
-      //    (dnu^2 + dnv^2 - 1) to (_mu * cnu^2 + _mv * cnv^2)
-      //
-      // to maintain accuracy near phi = 0, lam = 90 * (1 - e).  Similarly
-      // rewrite sqrt term in 9.1 as
-      //
-      //    _mv + _mu * c^2 instead of 1 - _mu * sin(phi)^2
-      k = sqrt(_mv + _mu * sq(c)) / c *
-        sqrt( (_mv * sq(snv) + sq(cnu * dnv)) /
-              (_mu * sq(cnu) + _mv * sq(cnv)) );
-    } else {           //  phi > 0 && d > 0.75 && c2 * sq(c2 * _ep2) * s2 < tol
-      // Use series approximations for gamma and k accurate to ep2.  Ignored
-      // O(ep2^2) are shown here as gam2 and k2.  So only use these series if
-      // the larger O(ep2^2) term (gam2) is less that tol.
-      real
-        // gam2 = c2^3*s2*((4*c2^2-c2)*s2^2+(8-9*c2)*s2-2)/(3*d^3)*ep2^2
-        gam1 = sq(c2) * s2 / d * _ep2,
-        // k2 = c2^3*s2^2*((3*c2^3+12*c2^2-28*c2)*s2^2+
-        // (-34*c2^2+124*c2-64)*s2-61*c2+48)/(24*d^4)*ep2^2
-        k1 = gam1 * ((c2 - 2) * s2 + 1) / (2 * d);
-      gamma = atan2(sin(phi) * s * (1 + gam1), cos(lam));
-      k = (1 + k1) / sqrt(d);
-    }
+  void TransverseMercatorExact::Scale(real tau, real lam,
+                                       real snu, real cnu, real dnu,
+                                       real snv, real cnv, real dnv,
+                                       real& gamma, real& k) const throw() {
+    real sec2 = 1 + sq(tau);    // sec(phi)^2
+    // Lee 55.12 -- negated for our sign convention.  gamma gives the bearing
+    // (clockwise from true north) of grid north
+    gamma = atan2(_mv * snu * snv * cnv, cnu * dnu * dnv);
+    // Lee 55.13 with nu given by Lee 9.1 -- in sqrt change the numerator
+    // from
+    //
+    //    (1 - snu^2 * dnv^2) to (_mv * snv^2 + cnu^2 * dnv^2)
+    //
+    // to maintain accuracy near phi = 90 and change the denomintor from
+    //
+    //    (dnu^2 + dnv^2 - 1) to (_mu * cnu^2 + _mv * cnv^2)
+    //
+    // to maintain accuracy near phi = 0, lam = 90 * (1 - e).  Similarly
+    // rewrite sqrt term in 9.1 as
+    //
+    //    _mv + _mu * c^2 instead of 1 - _mu * sin(phi)^2
+    k = sqrt(_mv + _mu / sec2) * sqrt(sec2) *
+      sqrt( (_mv * sq(snv) + sq(cnu * dnv)) /
+            (_mu * sq(cnu) + _mv * sq(cnv)) );
   }
 
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
@@ -408,7 +388,8 @@ namespace GeographicLib {
     }
     real
       phi = lat * Constants::degree(),
-      lam = lon * Constants::degree();
+      lam = lon * Constants::degree(),
+      tau = tanx(phi);
 
     // u,v = coordinates for the Thompson TM, Lee 54
     real u, v;
@@ -419,7 +400,7 @@ namespace GeographicLib {
       u = 0;
       v = _Ev.K();
     } else
-      zetainv(psi(phi), lam, u, v);
+      zetainv(taup(tau), lam, u, v);
 
     real snu, cnu, dnu, snv, cnv, dnv;
     _Eu.sncndn(u, snu, cnu, dnu);
@@ -432,7 +413,10 @@ namespace GeographicLib {
     y = xi * _a * _k0 * latsign;
     x = eta * _a * _k0 * lonsign;
 
-    Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
+    // Recompute (tau, lam) from (u, v) to improve accuracy of Scale
+    zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
+    tau=taupinv(tau);
+    Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
     gamma /= Constants::degree();
     if (backside)
       gamma = 180 - gamma;
@@ -469,19 +453,20 @@ namespace GeographicLib {
     real snu, cnu, dnu, snv, cnv, dnv;
     _Eu.sncndn(u, snu, cnu, dnu);
     _Ev.sncndn(v, snv, cnv, dnv);
-    real phi, lam;
+    real phi, lam, tau;
     if (v != 0 || u != _Eu.K()) {
-      real psi;
-      zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi, lam);
-      phi = psiinv(psi);
+      zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
+      tau = taupinv(tau);
+      phi = atan(tau);
       lat = phi / Constants::degree();
       lon = lam / Constants::degree();
     } else {
+      tau = overflow;
       phi = Constants::pi()/2;
       lat = 90;
       lon = lam = 0;
     }
-    Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
+    Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
     gamma /= Constants::degree();
     if (backside)
       lon = 180 - lon;

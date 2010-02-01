@@ -84,7 +84,7 @@ namespace GeographicLib {
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
     // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
     inline real eatanhe(real x) const throw() {
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
     }
     inline real mf(real sphi, real cphi) const throw() {
       return cphi/std::sqrt(1 - _e2 * sq(sphi)); // Snyder's m, p 108, eq 14-15
@@ -94,7 +94,7 @@ namespace GeographicLib {
       // First factor is sqrt((1 - sphi) / (1 + sphi))
       // Second factor is ((1 + e * sphi)/(1 - e * sphi)) ^ (e/2)
       return (sphi >= 0 ? cphi / (1 + sphi) : (1 - sphi) / cphi) *
-        exp(eatanhe(sphi));
+        std::exp(eatanhe(sphi));
     }
     inline real logtf(real sphi, real cphi) const throw() {
       // Return log(t).  This retains relative accuracy near the equator where
@@ -104,7 +104,8 @@ namespace GeographicLib {
     }
     inline real logmtf(real sphi) const throw() {
       // Return log(m/t).  This allows the cancellation of cphi in m and t.
-      return log((1 + sphi)/std::sqrt(1 - _e2 * sq(sphi))) - eatanhe(sphi);
+      return std::log((1 + sphi)/std::sqrt(1 - _e2 * sq(sphi))) -
+        eatanhe(sphi);
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
   public:
