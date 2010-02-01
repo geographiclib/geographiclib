@@ -62,25 +62,31 @@ namespace GeographicLib {
   class TransverseMercatorExact {
   private:
     typedef Math::real real;
-    static const real tol, tol1, tol2, taytol, ahypover;
+    static const real tol, tol1, tol2, taytol, overflow;
     static const int numit = 10;
     const real _a, _r, _f, _k0, _mu, _mv, _e, _ep2;
     const bool _extendp;
     const EllipticFunction _Eu, _Ev;
     static inline real sq(real x) throw() { return x * x; }
-    real psi(real phi) const throw();
-    real psiinv(real psi) const throw();
+    // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
+    static inline real tanx(real x) throw() {
+      real t = std::tan(x);
+      return x >= 0 ? (t >= 0 ? t : overflow) : (t < 0 ? t : -overflow);
+    }
+
+    real taup(real tau) const throw();
+    real taupinv(real taup) const throw();
 
     void zeta(real u, real snu, real cnu, real dnu,
               real v, real snv, real cnv, real dnv,
-              real& psi, real& lam) const throw();
+              real& taup, real& lam) const throw();
 
     void dwdzeta(real u, real snu, real cnu, real dnu,
                  real v, real snv, real cnv, real dnv,
                  real& du, real& dv) const throw();
 
     bool zetainv0(real psi, real lam, real& u, real& v) const throw();
-    void zetainv(real psi, real lam, real& u, real& v) const throw();
+    void zetainv(real taup, real lam, real& u, real& v) const throw();
 
     void sigma(real u, real snu, real cnu, real dnu,
                real v, real snv, real cnv, real dnv,
@@ -93,7 +99,7 @@ namespace GeographicLib {
     bool sigmainv0(real xi, real eta, real& u, real& v) const throw();
     void sigmainv(real xi, real eta, real& u, real& v) const throw();
 
-    void Scale(real phi, real lam,
+    void Scale(real tau, real lam,
                real snu, real cnu, real dnu,
                real snv, real cnv, real dnv,
                real& gamma, real& k) const throw();

@@ -98,7 +98,7 @@ namespace GeographicLib {
       real
         a = std::max(x, y),
         b = std::min(x, y) / a;
-      return a * sqrt(1 + b * b);
+      return a * std::sqrt(1 + b * b);
     }
 #elif defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()

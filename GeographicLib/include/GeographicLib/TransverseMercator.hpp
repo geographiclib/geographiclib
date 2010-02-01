@@ -94,16 +94,21 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     static const int maxpow = TM_TX_MAXPOW;
-    static const real tol;
+    static const real tol, overflow;
     static const int numit = 5;
     const real _a, _r, _f, _k0, _e2, _e, _e2m,  _c, _n;
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow + 1], _bet[maxpow + 1];
     static inline real sq(real x) throw() { return x * x; }
+    // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
+    static inline real tanx(real x) throw() {
+      real t = std::tan(x);
+      return x >= 0 ? (t >= 0 ? t : overflow) : (t < 0 ? t : -overflow);
+    }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
     inline real eatanhe(real x) const throw() {
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
     }
   public:
 

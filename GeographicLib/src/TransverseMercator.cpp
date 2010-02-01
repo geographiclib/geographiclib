@@ -52,6 +52,9 @@ namespace GeographicLib {
 
   const Math::real TransverseMercator::tol =
     real(0.1)*sqrt(numeric_limits<real>::epsilon());
+  // Overflow value s.t. atan(overflow) = pi/2
+  const Math::real TransverseMercator::overflow =
+    1 / sq(numeric_limits<real>::epsilon());
 
   TransverseMercator::TransverseMercator(real a, real r, real k0)
     : _a(a)
@@ -255,7 +258,7 @@ namespace GeographicLib {
     if (lat < 90) {
       real
         c = max(real(0), cos(lam)), // cos(pi/2) might be negative
-        tau = tan(phi),
+        tau = tanx(phi),
         secphi = Math::hypot(real(1), tau),
         sig = sinh( eatanhe(sin(phi)) ),
         taup = (Math::hypot(real(1), sig) * tau - sig * secphi);
@@ -266,7 +269,7 @@ namespace GeographicLib {
       // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
       // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(phi'));
       // sin(phi') = tau'/sqrt(1 + tau'^2)
-      gamma = atan(abs(tan(lam)) *
+      gamma = atan(tanx(lam) *
                    taup / Math::hypot(real(1), taup)); // Krueger p 22 (44)
       // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(phi') / cos(phi)) * cosh(etap)
       // Note 1/cos(phi) = cosh(psip);
@@ -445,7 +448,7 @@ namespace GeographicLib {
       real
         taup = sin(xip)/r,
         tau = taup;
-      // min iterations = 1, max iterations = 3; mean = 2.8
+      // min iterations = 1, max iterations = 2; mean = 1.99
       for (int i = 0; i < numit; ++i) {
         real
           tau1 = Math::hypot(real(1), tau),
@@ -458,7 +461,7 @@ namespace GeographicLib {
           break;
       }
       phi = atan(tau);
-      gamma += atan(abs(tan(xip)) * tanh(etap)); // Krueger p 19 (31)
+      gamma += atan(tanx(xip) * tanh(etap)); // Krueger p 19 (31)
       // Note cos(phi') * cosh(eta') = r
       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * Math::hypot(real(1), tau) * r;
     } else {
