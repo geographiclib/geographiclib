@@ -933,15 +933,15 @@ curves show the combined truncation and round-off errors for
 
 The formulas for meridian convergence (34) and scale (35) are only good
 for small lam (l in the notation of JHS 154).  It is therefore
-preferable to differentiate the series involving \e h' or \e h.  The
-accumulation of the resulting sums can be carried out at the same time
-as the transformation itself (and the calculation slots into a Clenshaw
-summation very easily).  The derivatives give the convergence, \e
-gamma'', and scale, \e k'', of the [\e xi, \e eta] (Gauss-Kr&uuml;ger)
-projection relative to [\e xi', \e eta'] (Gauss-Schreiber) projection
-and vice versa.  For the full convergence and scale these need to be
-compounded with the convergence, \e gamma', and scale, \e k', of the
-Gauss-Schreiber projection.
+preferable to differentiate the series involving \e alpha or \e beta.
+The accumulation of the resulting sums can be carried out at the same
+time as the transformation itself (and the calculation slots into a
+Clenshaw summation very easily).  The derivatives give the convergence,
+\e gamma'', and scale, \e k'', of the [\e xi, \e eta]
+(Gauss-Kr&uuml;ger) projection relative to [\e xi', \e eta']
+(Gauss-Schreiber) projection and vice versa.  For the full convergence
+and scale these need to be compounded with the convergence, \e gamma',
+and scale, \e k', of the Gauss-Schreiber projection.
 \verbatim
    gamma = gamma' + gamma''
        k = k' * k''
@@ -949,31 +949,32 @@ Gauss-Schreiber projection.
 gamma' and k' are conveniently expressed as
 \verbatim
   gamma' = atan(tan(lam) * sin(beta))
-         = atan(tan(lam) * tanh(Q))              // Forward
-         = atan(tan(xi') * tanh(eta'))           // Reverse
+         = atan(tan(lam) * tau' / hypot(1, tau')) // Forward
+         = atan(tan(xi') * tanh(eta'))            // Reverse
       k' = sqrt(1 - e^2 * sin(phi)^2)
            * (cos(beta) / cos(phi)) * cosh(eta')
 \endverbatim
 where the factors on the last line are can be computed accurately with
 \verbatim
  (cos(beta) / cos(phi)) * cosh(eta')
-       = cosh(Q') / hypot(sinh(Q), cos(lam))     // Forward
-       = cosh(Q') * hypot(sinh(eta'), cos(xi'))  // Reverse
+       = hypot(1, tau) / hypot(tau', cos(lam))       // Forward
+       = hypot(1, tau) * hypot(sinh(eta'), cos(xi')) // Reverse
 \endverbatim
-These last two expressions preserve accuracy near the pole.  See also
-Kr&uuml;ger, pp. 19&ndash;20, eqs. (29) to (33*) and pp 21&ndash;22,
-eqs. (43) to (47).  GeographicLib::TransverseMercator uses this approach
-to compute the convergence and the scale.  The truncation errors for the
-meridian and scale when the series are truncated to order \e
-n<sup><i>J</i></sup> are well approximated by
+Here tau = tan(phi) and tau' = tan(beta).  These last two expressions
+preserve accuracy near the pole.  See also Kr&uuml;ger, pp. 19&ndash;20,
+eqs. (29) to (33*) and pp 21&ndash;22, eqs. (43) to (47).
+GeographicLib::TransverseMercator uses this approach to compute the
+convergence and the scale.  The truncation errors for the meridian and
+scale when the series are truncated to order \e n<sup><i>J</i></sup> are
+well approximated by
 \verbatim
   dgamma = 2J (dr/a) / cos(dist/a) (180/pi) degrees
   dk / k = 2J (dr/a) / cos(dist/a)
 \endverbatim
 where dist and dr are the \e x and \e y coordinates in Fig. 7.
 
-The high-order expansions for \e h and \e h' were produced by the Maxima
-program <a href="tmseries.mac">tmseries.mac</a> (included in the
+The high-order expansions for \e alpha and \e beta were produced by the
+Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
 distribution).  To run, start Maxima and enter
 \verbatim
   load("tmseries.mac")$
