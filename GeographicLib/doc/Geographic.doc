@@ -693,9 +693,7 @@ term proportional to the gradient of the quantity being measured.
 
 Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
 Reverse projections
- - error in position < 8 nm (5 pm for long doubles)
- - error in convergence, \e d(\e gamma) < 2e-15" + 8 nm . grad(\e gamma)
- - relative error in scale, \e dk/\e k < 7e-12%% + 3 nm . grad(\e k)/\e k
+ - error in position < 9 nm (5 pm for long doubles)
  .
 These errors apply with the standard convention for the transverse
 Mercator projection.  In this case, we use only test samples with
@@ -718,22 +716,13 @@ the South pole.
 
 If GeographicLib::TransverseMercatorExact is modified to use long
 doubles (a 64-bit floating fraction) instead of of doubles (53-bit
-floating fraction) then the error in the position is about 4 pm, for
+floating fraction) then the error in the position is about 5 pm, for
 latitude >= -15<sup>o</sup>.
 
 Errors in GeographicLib::TransverseMercator.  For both Forward and
-Reverse projections with easting |\e x| <= 4200 km (approximately within
-35<sup>o</sup> of the central meridian) using the 6th-order series
+Reverse projections within 3900 km using the 6th-order series
 (TM_TX_MAXPOW = 6, the default)
  - error in position < 5 nm
- - error in convergence, \e d(\e gamma) < 7e-10" + 5 nm . grad(\e gamma)
- - relative error in scale, \e dk/\e k < 6e-12%%
- .
-The error in the scale does not need to include a grad(\e k) term
-because the scale varies smoothly within this region.  If instead we
-restrict |\e x| <= 3400 km (approximately within 29<sup>o</sup> of the
-central meridian), we get a tighter bound on the convergence
- - error in convergence, \e d(\e gamma) < 2e-15" + 5 nm . grad(\e gamma)
  .
 Further from the central meridian, the errors grow rapidly.  For |\e x|
 = 10700 km (approx 68<sup>o</sup> from the central median), the error in
@@ -742,7 +731,7 @@ restricted to |\e x| <= 500 km.  Within |\e x| <= 500 km, the errors
 using the 6th-order series are dominated by round-off rather than the
 number of terms.  If GeographicLib::TransverseMercator is modified to
 use long double instead of double, the error in the position within the
-the UTM region is about 4 pm.
+the UTM region is about 2 pm.
 
 If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
 to give the 4th-order approximation, then the error is about 210 nm
