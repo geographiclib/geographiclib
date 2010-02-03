@@ -186,7 +186,7 @@ namespace GeographicLib {
         ang = atan2(dlam-psi, psi+dlam) - real(0.75) * Constants::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol;
-      rad = pow(3 / (_mv * _e) * rad, 1/real(3));
+      rad = Math::cbrt(3 / (_mv * _e) * rad);
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();
@@ -297,7 +297,7 @@ namespace GeographicLib {
         ang = atan2(deta-xi, xi+deta) - real(0.75) * Constants::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol;
-      rad = pow(3 / _mv * rad, 1/real(3));
+      rad = Math::cbrt(3 / _mv * rad);
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();
