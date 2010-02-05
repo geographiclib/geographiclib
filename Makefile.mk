@@ -29,7 +29,7 @@ clean-doc:
 	$(MAKE) -C doc clean
 
 list:
-	@for f in 00README.txt COPYING AUTHORS Makefile $(MAKEFILE); do \
+	@for f in 00README.txt COPYING AUTHORS NEWS Makefile $(MAKEFILE); do \
 	  echo $$f; \
 	done
 	@for d in $(ALLDIRS); do \
@@ -37,18 +37,17 @@ list:
 	  while read f; do echo $$d/$$f; done; \
 	done
 
-DATEVERSION:=$(shell date +%Y-%m)
+VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\')
 
 package:
+	echo include Makefile.mk > Makefile
 	test -d distrib || mkdir distrib
 	$(MAKE) -s list | while read f;do \
 	  echo GeographicLib/$$f; \
-	done | xargs tar Ccfz .. distrib/Geographic-$(DATEVERSION).tgz
+	done | xargs tar Ccfz .. distrib/Geographic-$(VERSION).tgz
 	rm -rf distrib/GeographicLib
-	tar Cxfpz distrib distrib/Geographic-$(DATEVERSION).tgz
-	find distrib/GeographicLib -type f \
-	  \! \( -name "*.pdf" -o -name "*.png" \) | xargs unix2dos -k
-	cd distrib && zip -r Geographic-$(DATEVERSION).zip GeographicLib && \
+	tar Cxfpz distrib distrib/Geographic-$(VERSION).tgz
+	cd distrib && zip -r Geographic-$(VERSION).zip GeographicLib && \
 	  rm -rf GeographicLib
 
 .PHONY: all $(SUBDIRS) \

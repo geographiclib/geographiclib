@@ -19,7 +19,7 @@ dist-hook:
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \
 		xargs rm -f ; \
 	find $(distdir) \
-		\( -name .svn -o -name .git -o -name CVS -o -name Makefile \)| \
+		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -name '*~' \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 

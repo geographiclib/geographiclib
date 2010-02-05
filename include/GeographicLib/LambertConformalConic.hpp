@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: LambertConformalConic.hpp 6720 2009-10-17 23:13:57Z ckarney $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id$"
 
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>

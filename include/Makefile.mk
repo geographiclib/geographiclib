@@ -3,7 +3,7 @@
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
-	Geoid
+	Geoid LambertConformalConic
 
 PREFIX = /usr/local
 LIBNAME = GeographicLib
