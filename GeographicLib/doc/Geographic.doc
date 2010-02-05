@@ -2500,7 +2500,7 @@ style of numbering.  Now, the library uses
 libtool's version numbering scheme</a> using an interface and revision
 numbers.)
 
- - PENDING
+ - 1.1 (PENDING)
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
   - Increase accuracy of scale calculation in TransverseMercator and
     TransverseMercatorExact.

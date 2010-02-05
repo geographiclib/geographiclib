@@ -8,6 +8,15 @@ For more information, see
 
 The current version of the library is 1.0.
 
+Changes between 1.1 (PENDING) and 1.0 versions:
+
+  * FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
+
+  * Increase accuracy of scale calculation in TransverseMercator and
+    TransverseMercatorExact.
+
+  * Documentation changes for consistency with arXiv:physics/yymm.nnnn
+
 Changes between 1.0 (released 2010-01-07) and 2009-11 versions:
 
   * Add autoconf configuration files.
