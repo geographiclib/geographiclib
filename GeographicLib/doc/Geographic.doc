@@ -331,7 +331,11 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
-\b NOTE: The figures in this section are relatively small in order to
+\b NOTE 1: Some of the material in this section has been included in 
+<a  href="http://arxiv.org/abs/physics/yymm.nnnn">
+arXiv:physics/yymm.nnnn</a>.
+
+\b NOTE 2: The figures in this section are relatively small in order to
 allow them to be displayed quickly.  The "Fig. N" link beneath each
 figure points to a PDF version of the figure.  These are in vector
 format and allow the figures to be magnified to show the details more
@@ -930,48 +934,6 @@ curves show the combined truncation and round-off errors for
  - float and \e J = 4 (top)
  - double and \e J = 6 (middle)
  - long double and \e J = 8 (bottom)
-
-The formulas for meridian convergence (34) and scale (35) are only good
-for small lam (l in the notation of JHS 154).  It is therefore
-preferable to differentiate the series involving \e alpha or \e beta.
-The accumulation of the resulting sums can be carried out at the same
-time as the transformation itself (and the calculation slots into a
-Clenshaw summation very easily).  The derivatives give the convergence,
-\e gamma'', and scale, \e k'', of the [\e xi, \e eta]
-(Gauss-Kr&uuml;ger) projection relative to [\e xi', \e eta']
-(Gauss-Schreiber) projection and vice versa.  For the full convergence
-and scale these need to be compounded with the convergence, \e gamma',
-and scale, \e k', of the Gauss-Schreiber projection.
-\verbatim
-   gamma = gamma' + gamma''
-       k = k' * k''
- \endverbatim
-gamma' and k' are conveniently expressed as
-\verbatim
-  gamma' = atan(tan(lam) * sin(beta))
-         = atan(tan(lam) * tau' / hypot(1, tau')) // Forward
-         = atan(tan(xi') * tanh(eta'))            // Reverse
-      k' = sqrt(1 - e^2 * sin(phi)^2)
-           * (cos(beta) / cos(phi)) * cosh(eta')
-\endverbatim
-where the factors on the last line are can be computed accurately with
-\verbatim
- (cos(beta) / cos(phi)) * cosh(eta')
-       = hypot(1, tau) / hypot(tau', cos(lam))       // Forward
-       = hypot(1, tau) * hypot(sinh(eta'), cos(xi')) // Reverse
-\endverbatim
-Here tau = tan(phi) and tau' = tan(beta).  These last two expressions
-preserve accuracy near the pole.  See also Kr&uuml;ger, pp. 19&ndash;20,
-eqs. (29) to (33*) and pp 21&ndash;22, eqs. (43) to (47).
-GeographicLib::TransverseMercator uses this approach to compute the
-convergence and the scale.  The truncation errors for the meridian and
-scale when the series are truncated to order \e n<sup><i>J</i></sup> are
-well approximated by
-\verbatim
-  dgamma = 2J (dr/a) / cos(dist/a) (180/pi) degrees
-  dk / k = 2J (dr/a) / cos(dist/a)
-\endverbatim
-where dist and dr are the \e x and \e y coordinates in Fig. 7.
 
 The high-order expansions for \e alpha and \e beta were produced by the
 Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
@@ -2539,11 +2501,12 @@ libtool's version numbering scheme</a> using an interface and revision
 numbers.)
 
  - PENDING
-
-  - FIX BUG in EllipticFunction::E(sn, cn, dn).  This bug was introduced
-    in r6579 (2009-03-27) as part of a code clean up.  This broke the
-    imposition of symmetries when cn < 0.
-
+  - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
+  - Increase accuracy of scale calculation in TransverseMercator and
+    TransverseMercatorExact.
+  - Documentation changes for consistency with
+    <a  href="http://arxiv.org/abs/physics/yymm.nnnn">
+    arXiv:physics/yymm.nnnn</a>
 
  - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
    1.0 (released 2009-01-07)</a>
