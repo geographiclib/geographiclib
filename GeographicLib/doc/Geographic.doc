@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.0
-\date 2010-01-07
+\version 1.1
+\date 2010-02-09
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib	</a>
 .
 The code is available for download at
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
-  geographiclib-1.0.tar.gz</a>
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.zip/download">
-  geographiclib-1.0.zip</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">
+  geographiclib-1.1.tar.gz</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.zip/download">
+  geographiclib-1.1.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -155,15 +155,15 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
+   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.0.tar.gz
+   - tar xfpvz geographiclib-1.1.tar.gz
    .
-   This will create a geographiclib-1.0 directory.  (Alternatively,
+   This will create a geographiclib-1.1 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.0 directory
-   - cd geographiclib-1.0
+ - Change to the geographiclib-1.1 directory
+   - cd geographiclib-1.1
  - Create the library and the utility programs
    - make all
    .
@@ -332,8 +332,11 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 \b NOTE 1: Some of the material in this section has been included in 
-<a  href="http://arxiv.org/abs/physics/yymm.nnnn">
-arXiv:physics/yymm.nnnn</a>.
+ - Charles F. F. Karney,
+   <a href="http://arxiv.org/abs/1002.1417">
+   Transverse Mercator with an accuracy of a few nanometers,</a>
+   Feb. 2010,
+   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
 
 \b NOTE 2: The figures in this section are relatively small in order to
 allow them to be displayed quickly.  The "Fig. N" link beneath each
@@ -2500,16 +2503,15 @@ style of numbering.  Now, the library uses
 libtool's version numbering scheme</a> using an interface and revision
 numbers.)
 
- - 1.1 (PENDING)
+ - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">1.1 (released 2010-02-09)</a>
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
   - Increase accuracy of scale calculation in TransverseMercator and
     TransverseMercatorExact.
-  - Documentation changes for consistency with
-    <a  href="http://arxiv.org/abs/physics/yymm.nnnn">
-    arXiv:physics/yymm.nnnn</a>
+  - Code and documentation changes for consistency with
+    <a  href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
 
  - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
-   1.0 (released 2009-01-07)</a>
+   1.0 (released 2010-01-07)</a>
   - Add autoconf configuration files.
   - BUG FIX: Improve initial guess for Newton's method in
     PolarStereographic.Reverse.  (Previously this failed to converge

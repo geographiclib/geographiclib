@@ -349,6 +349,11 @@ namespace GeographicLib {
    **********************************************************************/
   class GeographicErr : public std::runtime_error {
   public:
+
+    /**
+     * Constructor takes a string message, \e msg, which is accessible in the
+     * catch clause, via what().
+     **********************************************************************/
     GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
   };
 

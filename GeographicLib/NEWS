@@ -6,16 +6,16 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.0.
+The current version of the library is 1.1.
 
-Changes between 1.1 (PENDING) and 1.0 versions:
+Changes between 1.1 (released 2010-02-09) and 1.0 versions:
 
   * FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
 
   * Increase accuracy of scale calculation in TransverseMercator and
     TransverseMercatorExact.
 
-  * Documentation changes for consistency with arXiv:physics/yymm.nnnn
+  * Code and documentation changes for consistency with arXiv:1002.1417
 
 Changes between 1.0 (released 2010-01-07) and 2009-11 versions:
 
