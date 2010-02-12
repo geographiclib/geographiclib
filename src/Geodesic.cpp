@@ -1036,7 +1036,7 @@ namespace GeographicLib {
   Math::real Geodesic::etaFactor(real f, real k1) throw() {
     real
       fp = (f - k1) / (1 - k1),
-      nu = fp !=0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
+      nu = fp != 0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
       nu2 = sq(nu);
     real g;
     switch (etaord) {
@@ -1080,7 +1080,7 @@ namespace GeographicLib {
   void Geodesic::etaCoeff(real f, real k1, real h[]) throw() {
     real
       fp = (f - k1) / (1 - k1),
-      nu = fp !=0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
+      nu = fp != 0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
       nu2 = sq(nu);
     real s = 2 * k1, d = s;
     switch (neta) {

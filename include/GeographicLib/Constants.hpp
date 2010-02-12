@@ -214,18 +214,18 @@ namespace GeographicLib {
     static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
 #endif
 
-#if defined(DOXYGEN)
     /**
      * Return true if number is finite, false if NaN or infinite.
      **********************************************************************/
     static inline bool isfinite(real x) throw() {
-      return std::abs(x) < std::numeric_limits<real>::max();
-    }
+#if defined(DOXYGEN)
+      return std::abs(x) <= std::numeric_limits<real>::max();
 #elif defined(_MSC_VER)
-    static inline real isfinite(real x) throw() { return _finite(x); }
+      return _finite(x) != 0;
 #else
-    static inline real isfinite(real x) throw() { return std::isfinite(x); }
+      return std::isfinite(x) != 0;
 #endif
+    }
   };
 
   /**

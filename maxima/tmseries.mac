@@ -49,24 +49,22 @@ the projection given in
 
 Alter maxpow to generate more or less terms for the series
 approximations to the forward and reverse projections This has been
-tested out to maxpow = 30; but this takes a long time (more than 12
-hours).
+tested out to maxpow = 30; but this takes a long time (see below).
 
 */
 
-taylordepth:6$
-triginverses:'all$
 /* Timing:
   maxpow  time
-    4      2s
-    6      4s
-    8     11s
-   10     27s
-   12     62s
-   20     17m = 998s
-   30     279m = 16695s
+    4      4s
+    6      6s
+    8     18s
+   10     49s
+   12    119s
+   20   2192s =  37m
+   30  32641s = 545m
     */
-maxpow:6$ /* Max power for forward and reverse projections */
+
+maxpow:30$ /* Max power for forward and reverse projections */
 /* Notation
 
    m = elliptic function parameter
@@ -82,6 +80,8 @@ maxpow:6$ /* Max power for forward and reverse projections */
 
 */
 
+taylordepth:6$
+triginverses:'all$
 /*
     revert
        var2 = expr(var1) = series in eps
@@ -104,16 +104,14 @@ kc(m):=''(%pi/2*(1+sum(((2*i-1)!!/(2*i)!!)^2*m^i,i,1,maxpow)))$
 /* Complete elliptic integral of 2nd kind -- A+S 17.3.12 */
 ec(m):=''(%pi/2*(1-sum(((2*i-1)!!/(2*i)!!)^2*m^i/(2*i-1),i,1,maxpow)))$
 
-/* Nome -- A+S 17.3.12 */
-q(m):=''(block([qtemp,etemp,eqs,m],local(cof,a),
-    qtemp:sum(a[i]*m^i,i,1,maxpow+1),
-    /* Generalize series from http://mathworld.wolfram.com/Nome.html. eq 11 */
-    etemp:expand(diff(qtemp,m)*(1-m)*m*kc(m)^2/(%pi/2)^2-qtemp),
-    eqs:[a[1]=1/16],
-    cof[i]:=coeff(etemp,m,i),
-    for i:2 thru maxpow+1 do block([t],
-      cof[i],t:subst(eqs,cof[i]),eqs:cons(solve(t,a[i])[1],eqs)),
-    subst(eqs,qtemp)))$
+/* Nome -- A+S 17.3.17.  Solve from A+S 17.3.22. */
+q(m):=''(block([kk:kc(m)/(%pi/2),qq:0],
+  for i:1 thru maxpow do block([d,c],
+    qq:qq+c*m^i,
+    d:ratdisrep(taylor(1+4*sum(qq^k/(1+qq^(2*k)),k,1,i)-kk,m,0,i))/m^i,
+    d:solve(d,c),
+    qq:subst(d,qq)),
+  qq))$
 
 /* Elliptic functions in terms of v = %pi*u/(2*kc) */
 /* sn -- A+S 16.23.1 */
