@@ -63,6 +63,6 @@ clean-local:
 	rm -rf html
 
 install-doc: doc
-	$(INSTALL) -d $(docdir)/html
-	$(INSTALL) -m 644 html/* $(docdir)/html
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html
+	$(INSTALL) -m 644 html/* $(DESTDIR)$(docdir)/html
 
