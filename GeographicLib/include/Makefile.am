@@ -21,8 +21,8 @@ nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/TransverseMercator.hpp \
 				GeographicLib/UTMUPS.hpp
 
-geoid_dir=$(datadir)/GeographicLib/geoids
+geoids_dir=$(datadir)/GeographicLib/geoids
 
-DEFS=-DGEOID_DEFAULT_PATH=\"$(geoid_dir)\"  @DEFS@
+DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
 
 EXTRA_DIST = Makefile.mk
