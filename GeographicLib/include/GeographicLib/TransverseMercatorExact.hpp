@@ -30,7 +30,7 @@ namespace GeographicLib {
    *
    * This method gives the correct results for forward and reverse
    * transformations subject to the branch cut rules (see the description of
-   * the \e extendp argument to the constructor)..  The maximum error is about
+   * the \e extendp argument to the constructor).  The maximum error is about
    * 8 nm (ground distance) for the forward and reverse transformations.  The
    * error in the convergence is 2e-15", the relative error in the scale is
    * 7e-12%%.  (See \ref tmerrors for the weasel words.)  The method is "exact"
