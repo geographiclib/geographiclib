@@ -111,8 +111,10 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return ::hypotf(x, y); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double hypot(long double x, long double y) throw()
     { return ::hypotl(x, y); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -134,8 +136,10 @@ namespace GeographicLib {
 #else
     static inline double expm1(double x) throw() { return ::expm1(x); }
     static inline float expm1(float x) throw() { return ::expm1f(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double expm1(long double x) throw()
     { return ::expm1l(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -160,8 +164,10 @@ namespace GeographicLib {
 #else
     static inline double log1p(double x) throw() { return ::log1p(x); }
     static inline float log1p(float x) throw() { return ::log1pf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double log1p(long double x) throw()
     { return ::log1pl(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -178,8 +184,10 @@ namespace GeographicLib {
 #else
     static inline double asinh(double x) throw() { return ::asinh(x); }
     static inline float asinh(float x) throw() { return ::asinhf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double asinh(long double x) throw()
     { return ::asinhl(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -196,8 +204,10 @@ namespace GeographicLib {
 #else
     static inline double atanh(double x) throw() { return ::atanh(x); }
     static inline float atanh(float x) throw() { return ::atanhf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double atanh(long double x) throw()
     { return ::atanhl(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -211,7 +221,9 @@ namespace GeographicLib {
 #else
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
     static inline float cbrt(float x) throw() { return ::cbrtf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
+#endif
 #endif
 
     /**
