@@ -165,9 +165,9 @@ int main(int argc, char* argv[]) {
 
     enum { undef = 0, tm = 1, ps = 2, lcc = 3 };
     int m = 0;
-    std::string geof = std::string(argv[++m]);
+    std::string geof(argv[++m]);
     DataFile geo(geof);
-    std::string projf = std::string(argv[++m]);
+    std::string projf(argv[++m]);
     DataFile proj(projf);
     if (geo.coords() != "Geodetic")
       throw std::out_of_range("Unsupported coordinates " + geo.coords());

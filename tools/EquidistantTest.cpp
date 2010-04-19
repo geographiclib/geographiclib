@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
   bool azimuthal = false, cassini = false, reverse = false;
   real lat0 = 0, lon0 = 0;
   for (int m = 1; m < argc; ++m) {
-    std::string arg = std::string(argv[m]);
+    std::string arg(argv[m]);
     if (arg == "-r")
       reverse = true;
     else if (arg == "-c" || arg == "-z") {
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
       azimuthal = arg != "-c";
       for (unsigned i = 0; i < 2; ++i) {
         if (++m == argc) return usage(1);
-        std::string a = std::string(argv[m]);
+        std::string a(argv[m]);
         std::istringstream str(a);
         if (!(str >> (i ? lon0 : lat0))) return usage(1);
       }

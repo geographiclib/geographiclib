@@ -103,10 +103,22 @@ log1p(x) := block([y : 1b0+x],
   if y = 1b0 then x else x*log(y)/(y - 1))$
 
 /* Real only */
+/* Some versions of Maxima have a buggy atanh
 atnh(x) := block([y : abs(x)],
   y : log1p(2 * y/(1 - y))/2,
-  if x < 0 then -y else y)$
+  if x < 0 then -y else y)$ */
+atnh(x) := atanh(x)$
 
+/* exp(x)-1 -- Real only */
+expm1(x) := block([y : exp(bfloat(x)),z],
+  z : y - 1b0,
+  if abs(x) > 1b0 then z else if z = 0b0 then x else x * z/log(y))$
+
+/* Real only */
+/* Some versions of Maxima have a buggy sinh */
+snh(x) := block([u : expm1(x)],
+  (u / (u + 1)) * (u + 2) /2);
+    
 /* Real only */
 psi_phi(phi):=block([s:sin(phi)],
   asinh(s/max(cos(phi),0.1b0*tol)) - e * atnh(e * s))$
@@ -119,7 +131,7 @@ phi_psi(psi):=block([q:psi,t,dq],
     q : q + dq,
     if debugprint then print(float(q), float(dq)),
     if abs(dq) < tol1 then return(false)),
-  atan(sinh(q)))$
+  atan(snh(q)))$
 
 psi_thom_comb(w):=block([jacr:sncndn(bfloat(realpart(w)),1-e2),
   jaci:sncndn(bfloat(imagpart(w)),e2),d,d1,d2],
@@ -140,8 +152,8 @@ psi_thom(w):=block([tt:psi_thom_comb(w)],tt[1])$
 inv_diff_psi_thom(w):=block([tt:psi_thom_comb(w)],tt[2])$
 
 w0a(psi):=block([lam:bfloat(imagpart(psi)),psia:bfloat(realpart(psi))],
-  rectform(kcu/(pi/2)*( atan2(sinh(psia),cos(lam))
-      +%i*asinh(sin(lam)/sqrt(cos(lam)^2 + sinh(psia)^2)))))$
+  rectform(kcu/(pi/2)*( atan2(snh(psia),cos(lam))
+      +%i*asinh(sin(lam)/sqrt(cos(lam)^2 + snh(psia)^2)))))$
 
 w0c(psi):=block([m,a,dlam],
   dlam:bfloat(imagpart(psi))-pi/2*(1-e),
@@ -152,8 +164,8 @@ w0c(psi):=block([m,a,dlam],
   m*cos(a)+%i*(m*sin(a)+kcv))$
 
 w0d(psi):=block([psir:-realpart(psi)/e+1b0,lam:(pi/2-imagpart(psi))/e,uu,vv],
-  uu:asinh(sin(lam)/sqrt(cos(lam)^2+sinh(psir)^2))*(1+e2/2),
-  vv:atan2(cos(lam), sinh(psir)) *(1+e2/2),
+  uu:asinh(sin(lam)/sqrt(cos(lam)^2+snh(psir)^2))*(1+e2/2),
+  vv:atan2(cos(lam), snh(psir)) *(1+e2/2),
   (-uu+kcu) + %i * (-vv+kcv))$
 
 w0m(psi):=if realpart(psi)<-e/2*pi/2 and
@@ -280,9 +292,9 @@ tms(phi,lam,i):=block([psi,xip,etap,z,sigma,sp,gam,k,b1],
   phi:phi*degree,
   lam:lam*degree,
   psi:psi_phi(phi),
-  xip:atan2(sinh(psi), cos(lam)),
-  etap:asinh(sin(lam)/hypot(sinh(psi),cos(lam))),
-  k:sqrt(1 - e2*sin(phi)^2)/(cos(phi)*hypot(sinh(psi),cos(lam))),
+  xip:atan2(snh(psi), cos(lam)),
+  etap:asinh(sin(lam)/hypot(snh(psi),cos(lam))),
+  k:sqrt(1 - e2*sin(phi)^2)/(cos(phi)*hypot(snh(psi),cos(lam))),
   gam:atan(tan(xip)*tanh(etap)),
   z:xip+%i*etap,
   b1:a1_a[i](n),
@@ -304,7 +316,7 @@ lls(x,y,i):=block([sigma,b1,s,z,zp,xip,etap,s,c,r,gam,k,lam,psi,phi],
   k : b1 / cabs(zp),
   xip:realpart(z),
   etap:imagpart(z),
-  s:sinh(etap),
+  s:snh(etap),
   c:cos(xip),
   r:hypot(s, c),
   lam:atan2(s, c),

@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
   bool series = false;
   bool dump = false;
   for (int m = 1; m < argc; ++m) {
-    std::string arg = std::string(argv[m]);
+    std::string arg(argv[m]);
     if (arg == "-s")
       series = true;
     else if (arg == "-d")
