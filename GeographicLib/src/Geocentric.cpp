@@ -134,8 +134,8 @@ namespace GeographicLib {
         // 0.  (But we do take care that the sign of phi matches the sign of
         // z.)
         phi = _f >= 0 ?
-          atan2(sqrt( -6 * r), sqrt(p * _e2mx)) :
-          atan2(sqrt(p * _e2mx), sqrt( -6 * r));
+          atan2(sqrt(-6 * r), sqrt(p * _e2mx)) :
+          atan2(sqrt(p * _e2mx), sqrt(-6 * r));
         if (z < 0) phi = -phi;  // for tiny negative z (not for prolate)
         h = - _a * (_f >= 0 ? _e2m : real(1)) / sqrt(1 - _e2 * sq(sin(phi)));
       }

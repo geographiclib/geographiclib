@@ -56,19 +56,19 @@ namespace GeographicLib {
     /**
      * Read a string \e dms in DMS format and return the resulting angle in
      * degrees.  Degrees, minutes, and seconds are indicated by the letters d,
-     * ', ", and these components may only be given in this order.  Any (but
-     * not all) components may be omitted.  The last component indicator may be
-     * omitted and is assumed to be tbe next smallest unit (thus 33d10 is
-     * interpreted as 33d10').  The final component may be a decimal fraction
-     * but the non-final components must be integers.  The integer parts of the
-     * minutes and seconds components must be less than 60.  A single leading
-     * sign is permitted.  A hemisphere designator (N, E, W, S) may be added to
-     * tbe beginning or end of the string.  The result is multiplied by the
-     * implied signed of the hemisphere designator (negative for S and W).  In
-     * addition \e flag is used to indicate whether such a designator was found
-     * and whether it implies that the angle is a latitude (N or S) or
-     * longitude (E or W).  Throws an error on a malformed string.  No check is
-     * performed on the range of the result.
+     * ', &quot;, and these components may only be given in this order.  Any
+     * (but not all) components may be omitted.  The last component indicator
+     * may be omitted and is assumed to be tbe next smallest unit (thus 33d10
+     * is interpreted as 33d10').  The final component may be a decimal
+     * fraction but the non-final components must be integers.  The integer
+     * parts of the minutes and seconds components must be less than 60.  A
+     * single leading sign is permitted.  A hemisphere designator (N, E, W, S)
+     * may be added to tbe beginning or end of the string.  The result is
+     * multiplied by the implied signed of the hemisphere designator (negative
+     * for S and W).  In addition \e flag is used to indicate whether such a
+     * designator was found and whether it implies that the angle is a latitude
+     * (N or S) or longitude (E or W).  Throws an error on a malformed string.
+     * No check is performed on the range of the result.
      **********************************************************************/
     static Math::real Decode(const std::string& dms, flag& ind);
 
@@ -120,7 +120,7 @@ namespace GeographicLib {
      * Convert \e degree into a DMS string selecting the trailing component
      * based on \e prec.  \e prec indicates the precision relative to 1 degree,
      * e.g., \e prec = 3 gives a result accurate to 0.1' and \e prec = 4 gives
-     * a result accurate to 1".
+     * a result accurate to 1&quot;.
      **********************************************************************/
     static std::string Encode(real degree, unsigned prec, flag ind = NONE) {
       return Encode(degree,

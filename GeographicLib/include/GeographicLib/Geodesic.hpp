@@ -10,13 +10,22 @@
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
 #define GEOGRAPHICLIB_GEODESIC_HPP "$Id$"
 
+#include "GeographicLib/Constants.hpp"
+
+#if !defined(GEOD_DIAG)
+/**
+ * Turn on diagnosics.
+ **********************************************************************/
+#define GEOD_DIAG 1
+#endif
+
 #if !defined(GEOD_TAU_ORD)
 /**
  * The order of the series relating \e s and \e sigma when expanded in powers
  * of \e k1.
  **********************************************************************/
 #define GEOD_TAU_ORD \
-(sizeof(real) == sizeof(double) ? 5 : sizeof(real) == sizeof(float) ? 4 : 6)
+(GEOGRAPHICLIB_PREC == 1 ? 5 : GEOGRAPHICLIB_PREC == 0 ? 4 : 6)
 #endif
 
 #if !defined(GEOD_ETA_ORD)
@@ -25,10 +34,8 @@
  * powers of \e fp.
  **********************************************************************/
 #define GEOD_ETA_ORD \
-(sizeof(real) == sizeof(double) ? 5 : sizeof(real) == sizeof(float) ? 4 : 6)
+(GEOGRAPHICLIB_PREC == 1 ? 5 : GEOGRAPHICLIB_PREC == 0 ? 4 : 6)
 #endif
-
-#include "GeographicLib/Constants.hpp"
 
 namespace GeographicLib {
 
@@ -223,6 +230,12 @@ namespace GeographicLib {
      * ellipsoid.
      **********************************************************************/
     const static Geodesic WGS84;
+
+#if GEOD_DIAG
+    mutable int coverage, niter;
+    mutable double param1, param2, param3;
+#endif
+    
   };
 
   /**

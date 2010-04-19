@@ -27,6 +27,9 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
+#if GEOD_DIAG
+#include <iostream>
+#endif
 
 #define GEOGRAPHICLIB_GEODESIC_CPP "$Id$"
 
@@ -93,6 +96,10 @@ namespace GeographicLib {
   Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
                                real& s12, real& azi1, real& azi2, real& m12)
     const throw() {
+#if GEOD_DIAG
+    coverage = niter = 0;
+    param1 = param2 = param3 = 0;
+#endif
     lon1 = AngNormalize(lon1);
     real lon12 = AngNormalize(AngNormalize(lon2) - lon1);
     // If very close to being on the same meridian, then make it so.
@@ -184,6 +191,11 @@ namespace GeographicLib {
         m12 *= _a;
         s12 *= _b;
         sig12 /= Constants::degree();
+#if GEOD_DIAG
+        coverage = 1;           // MERIDIAN
+        if (lat1 == -90)
+          coverage = 2;         // POLE
+#endif
       } else
         // m12 < 0, i.e., prolate and too close to anti-podal
         meridian = false;
@@ -199,6 +211,9 @@ namespace GeographicLib {
       s12 = _a * lam12;
       m12 = _b * sin(lam12 / _f1);
       sig12 = lon12 / _f1;
+#if GEOD_DIAG
+        coverage = 3;           // EQUATOR
+#endif
 
     } else if (!meridian) {
 
@@ -233,7 +248,7 @@ namespace GeographicLib {
         salp1 = max(real(0), nsalp1);
         SinCosNorm(salp1, calp1);
         // In some regimes we don't get quadratic convergence because slope ->
-        // 0.  So use convergernce conditions based on epsilon instead of
+        // 0.  So use convergence conditions based on epsilon instead of
         // sqrt(epsilon).  The first criterion is a test on abs(v) against 100
         // * epsilon.  The second takes credit for an anticipated reduction in
         // abs(v) by v/ov (due to the latest update in alp1) and checks this
@@ -241,6 +256,9 @@ namespace GeographicLib {
         if (abs(v) < tol1 || sq(v) < ov * tol0) ++trip;
         ov = abs(v);
       }
+#if GEOD_DIAG
+        niter = numit;           // NUMBER OF ITERATIONS
+#endif
 
       {
         real dummy;
@@ -302,28 +320,33 @@ namespace GeographicLib {
     s12b =  (1 + taufm1) * sig12 + et;
   }
 
-  void Geodesic::Evolute(real R, real z, real& s, real& c) throw() {
-    // Solve (R - cos(phi)) * sin(phi) - z * cos(phi) = 0 for phi.  This is
-    // adapted from Geocentric::Reverse, taking e^2 -> 0 and a * e^2 -> 1 and
-    // scaling all variables to e^2.
+  void Geodesic::Evolute(real x, real y, real& s, real& c) throw() {
+    // Consider (x, y) in quadrant 1.  Find slope s/c of line thru (x, y)
+    // touching the evolute xe = c^3, ye = -s^3.  Axis intercepts for line are
+    // (c, 0) and (0, -s) or x * s - y * c = c * s.  Substituting s = sqrt(1 -
+    // c^2) gives a quartic equation in c.  This solution is adapted from
+    // Geocentric::Reverse (with R replaced by x and z by y), taking e^2 -> 0
+    // and a * e^2 -> 1 and scaling all variables to e^2.
     real
-      p = sq(R),                // *e^4
-      q = sq(z),                // *e^4
-      r = (p + q - 1) / 6;      // *e^4
+      p = sq(x),
+      q = sq(y),
+      r = (p + q - 1) / 6;
     if ( !(q == 0 && r <= 0) ) {
       real
-        // Avoid possible division by zero when r = 0 by multiplying
-        // equations for s and t by r^3 and r, resp.
-        S = p * q / 4,          // *e^12 ... S = r^3 * s
-        r2 = sq(r),             // *e^8
-        r3 = r * r2,            // *e^12
-        disc =  S * (2 * r3 + S); // *e^24
-      real u = r;                 // *e^4
+        // Avoid possible division by zero when r = 0 by multiplying equations
+        // for s and t by r^3 and r, resp.
+        S = p * q / 4,            // S = r^3 * s
+        r2 = sq(r),
+        r3 = r * r2,
+        // The discrimant of the quadratic equation for T3.  This is zero on
+        // the evolute curve p^(1/3)+q^(1/3) = 1
+        disc =  S * (S + 2 * r3);
+      real u = r;
       if (disc >= 0) {
-        real T3 = r3 + S;       // *e^12
-        // Pick the sign on the sqrt to maximize abs(T3).  This minimizes
-        // loss of precision due to cancellation.  The result is unchanged
-        // because of the way the T is used in definition of u.
+        real T3 = S + r3;
+        // Pick the sign on the sqrt to maximize abs(T3).  This minimizes loss
+        // of precision due to cancellation.  The result is unchanged because
+        // of the way the T is used in definition of u.
         T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
         // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
         real T = Math::cbrt(T3); // T = r * t
@@ -331,34 +354,26 @@ namespace GeographicLib {
         u += T + (T != 0 ? r2 / T : 0);
       } else {
         // T is complex, but the way u is defined the result is real.
-        real ang = atan2(sqrt(-disc), r3 + S);
-        // There are three possible real solutions for u depending on the
-        // multiple of 2*pi here.  We choose multiplier = 1 which leads to a
-        // jump in the solution across the line 2 + s = 0; but this
-        // nevertheless leads to a continuous (and accurate) solution for k.
-        // Other choices of the multiplier lead to poorly conditioned
-        // solutions near s = 0 (i.e., near p = 0 or q = 0).
-        u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / real(3));
+        real ang = atan2(sqrt(-disc), -(S + r3));
+        // There are three possible cube roots.  We choose the root which
+        // avoids cancellation.  Note that disc < 0 implies that r < 0.
+        u += 2 * r * cos(ang / 3);
       }
       real
-        v = sqrt(sq(u) + q),    // *e^4 guaranteed positive
-        // Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
-        // e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
-        uv = u < 0 ? q / (v - u) : u + v, // *e^4... u+v, guaranteed positive
-        // Need to guard against w going negative due to roundoff in uv - q.
-        w = max(real(0), (uv - q) / (2 * v)), // *e^2
+        v = sqrt(sq(u) + q),    // guaranteed positive
+        // Avoid loss of accuracy when u < 0.
+        uv = u < 0 ? q / (v - u) : u + v, // u+v, guaranteed positive
+        w = (uv - q) / (2 * v),           // positive?
         // Rearrange expression for k to avoid loss of accuracy due to
         // subtraction.  Division by 0 not possible because uv > 0, w >= 0.
-        k = uv / (sqrt(uv + sq(w)) + w),   // *e^2 ... guaranteed positive
-        d = k * R / (k + 1);               // *e^0
-      s = z;
-      c = d;
-    } else {                    // q == 0 && r <= 0
-      // Very near equatorial plane with R <= a * e^2.  This leads to k = 0
-      // using the general formula and division by 0 in formula for h.  So
-      // handle this case directly.
-      s = sqrt( -6 * r);
-      c = sqrt(p);
+        k = uv / (sqrt(uv + sq(w)) + w);   // guaranteed positive
+      s = -(1 + k) * y;                    // More properly: s = -y/k, c=-x/(1+k)
+      c = -k * x;                          // however we have k > 0.
+    } else {               // q == 0 && r <= 0
+      // y = 0 with |x| <= 1.  Handle this case directly.
+      // for y small, positive root is k = abs(y)/sqrt(1-x^2)
+      s = sqrt(1 - sq(x));
+      c = -x;
     }
     SinCosNorm(s, c);
   }
@@ -388,12 +403,12 @@ namespace GeographicLib {
     //
     // The factor
     //
-    //    sqrt(1 - e2 * sq(cbet1))
+    //    w1 = sqrt(1 - e2 * sq(cbet1))
     //
-    // applies the ellipsoidal correction for close points.  This saves 1
+    // applies the ellipsoidal correction for close points.  This saves 0.8
     // iteration of Newton's method in the case of short lines.
     calp1 = clam12 >= 0 ?
-      sbet12 * (slam12 < real(0.1) ? sqrt(1 - _e2 * sq(cbet1)) : real(1))
+      sbet12 * (slam12 < real(0.5) ? sqrt(1 - _e2 * sq(cbet1)) : real(1))
       + cbet2 * sbet1 * sq(slam12) / (1 + clam12) :
       sbet12a - cbet2 * sbet1 * sq(slam12) / (1 - clam12);
 
@@ -401,8 +416,28 @@ namespace GeographicLib {
       ssig12 = Math::hypot(salp1, calp1),
       csig12 = sbet1 * sbet2 + cbet1 * cbet2 * clam12;
 
+#if (GEOD_DIAG)
+    param1 = ssig12 / (abs(_f) * Constants::pi() * sq(cbet1));
+    {
+      real lamscale, betscale;
+      real
+        mu = sq(sbet1),
+        u2 = mu * _ep2,
+        k1 = u2 / (2 * (1 + sqrt(1 + u2)) + u2);
+      lamscale = -cbet1 * etaFactor(_f, k1) * Constants::pi();
+      betscale = lamscale * cbet1;
+      param2 = (lam12 - Constants::pi()) / lamscale;
+      param3 = sbet12a / betscale;
+    }
+#endif
     if (csig12 >= 0 || ssig12 >= 3 * abs(_f) * Constants::pi() * sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
+#if GEOD_DIAG
+        coverage = 4;           // GENERAL
+        if (slam12 < real(0.1))
+          coverage = 5;         // SHORT
+#endif
+
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
       // is at origin and singular point is at y = 0, x = -1.
@@ -417,6 +452,7 @@ namespace GeographicLib {
           lamscale = -cbet1 * etaFactor(_f, k1) * Constants::pi();
         }
         betscale = lamscale * cbet1;
+
         x = (lam12 - Constants::pi()) / lamscale;
         y = sbet12a / betscale;
       } else {                  // _f < 0
@@ -437,29 +473,38 @@ namespace GeographicLib {
         y = (lam12 - Constants::pi()) / lamscale;
       }
 
-      if (y > -100 * tol1 && x >  -1 - xthresh) {
+      //if (y > -100 * tol1 && x >  -1 - xthresh) { **********
+      if (y > -tol1 && x >  -1 - xthresh) {
         // strip near cut
         if (_f >= 0) {
           salp1 = min(real( 1), -x); calp1 = - sqrt(1 - sq(salp1));
         } else {
           calp1 = max(real(-1),  x); salp1 =   sqrt(1 - sq(calp1));
         }
+#if GEOD_DIAG
+        coverage = 6;           // STRIP
+#endif
       } else {
         // Estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0.  (For
         // f < 0, we're solving for pi/2 - alp2 and calp2 and salp2 are
         // swapped.)
         real salp2, calp2;
-        // Note phi = 90 - alpha2, so swap salp2 and calp2
-        Evolute(-x, -y, calp2, salp2);
+        // Note theta = 90 - alpha2, so swap salp2 and calp2
+        Evolute(x, y, calp2, salp2);
         // estimate omg12a = pi - omg12
         real
           omg12a = lamscale * ( _f >= 0
-                                ? Math::hypot(y,  salp2 + x) * salp2
-                                : Math::hypot(x, -calp2 + y) * calp2 ),
+                                // **********
+                                // ? Math::hypot(y,  salp2 + x) * salp2
+                                // : Math::hypot(x, -calp2 + y) * calp2 ),
+                                ? -x - salp2 : -y  + calp2 ),
           somg12 = sin(omg12a), comg12 = -cos(omg12a);
         // Update spherical estimate of alp1 using omg12 instead of lam12
         salp1 = cbet2 * somg12;
         calp1 = sbet12a - cbet2 * sbet1 * sq(somg12) / (1 - comg12);
+#if GEOD_DIAG
+        coverage = 7;           // ANTIPODAL
+#endif
       }
     }
     SinCosNorm(salp1, calp1);
@@ -475,7 +520,7 @@ namespace GeographicLib {
                                 real tc[], real zc[], real ec[]) const throw() {
 
     if (sbet1 == 0 && calp1 == 0)
-      // Break degeneracy of equatorial line.  This cases has already been
+      // Break degeneracy of equatorial line.  This case has already been
       // handled.
       calp1 = -eps2;
 
@@ -1036,8 +1081,9 @@ namespace GeographicLib {
   Math::real Geodesic::etaFactor(real f, real k1) throw() {
     real
       fp = (f - k1) / (1 - k1),
-      nu = fp != 0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
-      nu2 = sq(nu);
+      // Correct limit for fp -> 0 is nu = mu / (1 - mu/2).  However, it
+      // doesn't matter because the correction vanishes in this limit.
+      nu2 = sq( fp != 0 ? 2 * k1 / fp : 2 );
     real g;
     switch (etaord) {
     case 0:
@@ -1080,8 +1126,9 @@ namespace GeographicLib {
   void Geodesic::etaCoeff(real f, real k1, real h[]) throw() {
     real
       fp = (f - k1) / (1 - k1),
-      nu = fp != 0 ? 2 * k1 / fp : 2, // Correct limit is mu / (1 - mu/2)
-      nu2 = sq(nu);
+      // Correct limit for fp -> 0 is nu = mu / (1 - mu/2).  However, it
+      // doesn't matter because the correction vanishes in this limit.
+      nu2 = sq( fp != 0 ? 2 * k1 / fp : 2 );
     real s = 2 * k1, d = s;
     switch (neta) {
     case 0:

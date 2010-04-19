@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
   std::string dir;
   std::string geoid = "egm96-5";
   for (int m = 1; m < argc; ++m) {
-    std::string arg = std::string(argv[m]);
+    std::string arg(argv[m]);
     if (arg == "-a") {
       cacheall = true;
       cachearea = false;
@@ -125,10 +125,10 @@ int main(int argc, char* argv[]) {
       }
     } else if (arg == "-n") {
       if (++m == argc) return usage(1);
-      geoid = std::string(argv[m]);
+      geoid = argv[m];
     } else if (arg == "-d") {
       if (++m == argc) return usage(1);
-      dir = std::string(argv[m]);
+      dir = argv[m];
     } else if (arg == "-l") {
       cubic = false;
     } else if (arg == "-v")

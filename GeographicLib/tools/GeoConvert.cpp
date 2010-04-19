@@ -122,7 +122,7 @@ int main(int argc, char* argv[]) {
   bool centerp = true;
 
   for (int m = 1; m < argc; ++m) {
-    std::string arg = std::string(argv[m]);
+    std::string arg(argv[m]);
     if (arg == "-g")
       outputmode = GEOGRAPHIC;
     else if (arg == "-d")
@@ -137,12 +137,12 @@ int main(int argc, char* argv[]) {
       centerp = false;
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
-      std::string a = std::string(argv[m]);
+      std::string a(argv[m]);
       std::istringstream str(a);
       if (!(str >> prec)) return usage(1);
     } else if (arg == "-z") {
       if (++m == argc) return usage(1);
-      std::string a = std::string(argv[m]);
+      std::string a(argv[m]);
       std::istringstream str(a);
       if (!(str >> zone)) return usage(1);
       if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE)) {

@@ -47,14 +47,14 @@ int main(int argc, char* argv[]) {
   bool localcartesian = false, reverse = false;
   real latlonh0[3] = {0, 0, 0};
   for (int m = 1; m < argc; ++m) {
-    std::string arg = std::string(argv[m]);
+    std::string arg(argv[m]);
     if (arg == "-r")
       reverse = true;
     else if (arg == "-l") {
       localcartesian = true;
       for (unsigned i = 0; i < 3; ++i) {
         if (++m == argc) return usage(1);
-        std::string a = std::string(argv[m]);
+        std::string a(argv[m]);
         std::istringstream str(a);
         if (!(str >> latlonh0[i])) return usage(1);
       }
