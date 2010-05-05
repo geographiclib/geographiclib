@@ -5,7 +5,7 @@ FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-graticule-a thompson-tm-graticule-a \
 	gauss-krueger-error
 
-EXTRAFILES = tmseries30.html
+EXTRAFILES = tmseries30.html geodseries30.html
 
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \

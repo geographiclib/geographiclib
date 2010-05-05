@@ -17,7 +17,7 @@ FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-error
 FIGURESOURCES = $(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES))
 
-EXTRAFILES = tmseries30.html
+EXTRAFILES = tmseries30.html geodseries30.html
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
@@ -27,7 +27,7 @@ doc: html/index.html
 VPATH = ../src ../include/GeographicLib ../tools ../maxima
 
 html/index.html: Doxyfile Geographic.doc \
-	$(HEADERS) $(ALLSOURCES) $(FIGURESOURCES) $(MAXIMASOURCES)
+	$(HEADERS) $(ALLSOURCES) $(FIGURESOURCES) $(MAXIMASOURCES) $(EXTRAFILES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
 	for f in $(FIGURESOURCES); do cp -p $$f html/; done
 	for f in $(MAXIMASOURCES); do cp -p $$f html/; done
