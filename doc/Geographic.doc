@@ -331,7 +331,7 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
-\b NOTE 1: Some of the material in this section has been included in 
+\b NOTE 1: Some of the material in this section has been included in
  - Charles F. F. Karney,
    <a href="http://arxiv.org/abs/1002.1417">
    Transverse Mercator with an accuracy of a few nanometers,</a>
@@ -1059,17 +1059,16 @@ Vincenty's are:
   - Return the reduced length of the geodesic.
 
 The series expansions for the integrals are obtained using <a
-href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>.
-In this release, we use a 5th-order expansions.  This is sufficient to
-maintain accuracy for doubles.  However, preprocessor macros
-GEOD_TAU_ORD (for the distance and reduced length integrals, default 5)
-and GEOD_ETA_ORD (for the longitude integral, default 5) can be used to
+href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>.  In
+this release, we use a 6th-order expansions.  This is sufficient to
+maintain accuracy for doubles for the SRMmax ellipsoid (\e a = 6400 km,
+\e f = 1/150).  However, the preprocessor macro GEOD_ORD can be used to
 select any order up to 8.  (If using long doubles, with a 64-bit
-fraction, it's necessary to set GEOD_TAU_ORD and GEOD_ETA_ORD to 6.)
-The series is evaluated by a combination of Horner's method and Clenshaw
-summation.  For the direct problem, we use a reversion of the series for
-the distance to compute the spherical arc length and thereby complete
-the solution without the need to iterate.
+fraction, the default order is 7.)  The series is evaluated by a
+combination of Horner's method and Clenshaw summation.  For the direct
+problem, we use a reversion of the series for the distance to compute
+the spherical arc length and thereby complete the solution without the
+need to iterate.
 
 The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the
 series for the distance and longitude integrals.  In addition this
@@ -1321,108 +1320,111 @@ end-points.
 \section geodseries Expansions for geodesics
 
 We give here the series expansions for the various geodesic integrals
-valid to order \e f<sup>8</sup>.
+valid to order <i>f</i><sup>8</sup>.
 
 In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
 f) and / indicates real division (3/5 = 0.6).  The equations need to be
 converted to Horner form, but are here left in expanded form so that
-they can be easily truncated to lower order.  Some of the integers here
-are not representable as 32-bit integers and will need to be included as
-double literals.  These expansions were obtained using the the Maxima
-code, <a href="geod.mac">geod.mac</a>.
+they can be easily truncated to lower order.  These expansions were
+obtained using the the Maxima code, <a href="geod.mac">geod.mac</a>.
+
+The series expanded to order
+<i>f</i><sup>30</sup> are given in <a href="geodseries30.html">
+geodseries30.html</a>.
 
 In the expansions below, we have
  - \e alpha<sub>0</sub> is the azimuth at the equator crossing
  - \e lambda is the longitude measured from the equator crossing
- - \e chi is the spherical longitude
+ - \e omega is the spherical longitude
  - \e sigma is the spherical arc length
  - \e f is the flattening
  - \e e<sup>2</sup> = \e f (2 - \e f)
  - \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 - \e e<sup>2</sup>)
- - \e mu = cos<sup>2</sup> \e alpha<sub>0</sub>
- - \e u<sup>2</sup> = \e e'<sup>2</sup> \e mu
-   = 4 \e k1 / (1 - \e k1)<sup>2</sup>
- - \e fp = (\e f - \e k1) / (1 - \e k1)
- - \e mu = 2 \e k1 / \e fp
+ - \e k<sup>2</sup> = \e e'<sup>2</sup> cos<sup>2</sup> \e alpha<sub>0</sub>
+   = 4 \e eps / (1 - \e eps)<sup>2</sup>
+ - \e del = (\e f - \e eps) / (1 - \e eps)
+ - \e nu = \e eps / \e del
 
 The formula for distance is
 
-&nbsp; &nbsp; \e s/\e b = \e T \e tau(\e sigma)
+&nbsp; &nbsp; \e s/\e b = \e I1(\e sigma)
 
 where
 
-&nbsp; &nbsp; \e tau(\e sigma) =
-\e sigma + sum<sub>\e k = 1</sub> \e t<sub>k</sub> sin(2 \e k \e sigma)
+&nbsp; &nbsp; \e I1(\e sigma) = \e A1 (\e sigma + \e B1(\e sigma))<br>
+&nbsp; &nbsp; \e B1(\e sigma) =
+sum<sub>\e j = 1</sub> \e C1<sub>j</sub> sin(2 \e j \e sigma)
 
 and
 
 \verbatim
-T = (1 + 1/4 * k1^2
-       + 1/64 * k1^4
-       + 1/256 * k1^6
-       + 25/16384 * k1^8) / (1 - k1);
+A1 = (1 + 1/4 * eps^2
+        + 1/64 * eps^4
+        + 1/256 * eps^6
+        + 25/16384 * eps^8) / (1 - eps);
 \endverbatim
 
 \verbatim
-t[1] = - 1/2 * k1
-       + 3/16 * k1^3
-       - 1/32 * k1^5
-       + 19/2048 * k1^7;
-t[2] = - 1/16 * k1^2
-       + 1/32 * k1^4
-       - 9/2048 * k1^6
-       + 7/4096 * k1^8;
-t[3] = - 1/48 * k1^3
-       + 3/256 * k1^5
-       - 3/2048 * k1^7;
-t[4] = - 5/512 * k1^4
-       + 3/512 * k1^6
-       - 11/16384 * k1^8;
-t[5] = - 7/1280 * k1^5
-       + 7/2048 * k1^7;
-t[6] = - 7/2048 * k1^6
-       + 9/4096 * k1^8;
-t[7] = - 33/14336 * k1^7;
-t[8] = - 429/262144 * k1^8;
+C1[1] = - 1/2 * eps
+        + 3/16 * eps^3
+        - 1/32 * eps^5
+        + 19/2048 * eps^7;
+C1[2] = - 1/16 * eps^2
+        + 1/32 * eps^4
+        - 9/2048 * eps^6
+        + 7/4096 * eps^8;
+C1[3] = - 1/48 * eps^3
+        + 3/256 * eps^5
+        - 3/2048 * eps^7;
+C1[4] = - 5/512 * eps^4
+        + 3/512 * eps^6
+        - 11/16384 * eps^8;
+C1[5] = - 7/1280 * eps^5
+        + 7/2048 * eps^7;
+C1[6] = - 7/2048 * eps^6
+        + 9/4096 * eps^8;
+C1[7] = - 33/14336 * eps^7;
+C1[8] = - 429/262144 * eps^8;
 \endverbatim
 
-The function \e tau(\e sigma) may be inverted by series reversion giving
+The function \e tau(\e sigma) = \e s/(\e b \e A1) = \e sigma + \e B1(\e
+sigma) may be inverted by series reversion giving
 
 &nbsp; &nbsp; \e sigma(\e tau) =
-\e tau + sum<sub>\e k = 1</sub> \e t'<sub>k</sub> sin(2 \e k \e tau)
+\e tau + sum<sub>\e j = 1</sub> \e C1'<sub>j</sub> sin(2 \e j \e tau)
 
 where
 
 \verbatim
-t'[1] = + 1/2 * k1
-        - 9/32 * k1^3
-        + 205/1536 * k1^5
-        - 4879/73728 * k1^7;
-t'[2] = + 5/16 * k1^2
-        - 37/96 * k1^4
-        + 1335/4096 * k1^6
-        - 86171/368640 * k1^8;
-t'[3] = + 29/96 * k1^3
-        - 75/128 * k1^5
-        + 2901/4096 * k1^7;
-t'[4] = + 539/1536 * k1^4
-        - 2391/2560 * k1^6
-        + 1082857/737280 * k1^8;
-t'[5] = + 3467/7680 * k1^5
-        - 28223/18432 * k1^7;
-t'[6] = + 38081/61440 * k1^6
-        - 733437/286720 * k1^8;
-t'[7] = + 459485/516096 * k1^7;
-t'[8] = + 109167851/82575360 * k1^8;
+C1'[1] = + 1/2 * eps
+         - 9/32 * eps^3
+         + 205/1536 * eps^5
+         - 4879/73728 * eps^7;
+C1'[2] = + 5/16 * eps^2
+         - 37/96 * eps^4
+         + 1335/4096 * eps^6
+         - 86171/368640 * eps^8;
+C1'[3] = + 29/96 * eps^3
+         - 75/128 * eps^5
+         + 2901/4096 * eps^7;
+C1'[4] = + 539/1536 * eps^4
+         - 2391/2560 * eps^6
+         + 1082857/737280 * eps^8;
+C1'[5] = + 3467/7680 * eps^5
+         - 28223/18432 * eps^7;
+C1'[6] = + 38081/61440 * eps^6
+         - 733437/286720 * eps^8;
+C1'[7] = + 459485/516096 * eps^7;
+C1'[8] = + 109167851/82575360 * eps^8;
 \endverbatim
 
 The reduced length is given by
 
 &nbsp; &nbsp; \e m/\e b =
-sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>)
+sqrt(1 + \e k<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>)
 cos \e sigma<sub>1</sub> sin \e sigma<sub>2</sub><br>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
-sqrt(1 + \e u<sup>2</sup> sin<sup>2</sup>\e sigma<sub>1</sub>)
+sqrt(1 + \e k<sup>2</sup> sin<sup>2</sup>\e sigma<sub>1</sub>)
 sin \e sigma<sub>1</sub> cos \e sigma<sub>2</sub><br>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
 cos \e sigma<sub>1</sub>  cos \e sigma<sub>2</sub>
@@ -1431,90 +1433,92 @@ cos \e sigma<sub>1</sub>  cos \e sigma<sub>2</sub>
 where
 
 &nbsp; &nbsp; \e J(\e sigma) =
-\e T \e tau(\e sigma) - \e Z \e zeta(\e sigma)<br>
-&nbsp; &nbsp; \e zeta(\e sigma) =
-\e sigma + sum<sub>\e k = 1</sub> \e z<sub>k</sub> sin(2 \e k \e sigma)
+\e I1(\e sigma) - \e I2(\e sigma)<br>
+&nbsp; &nbsp; \e I2(\e sigma) = \e A2 (\e sigma + \e B2(\e sigma))<br>
+&nbsp; &nbsp; \e B2(\e sigma) =
+sum<sub>\e j = 1</sub> \e C2<sub>j</sub> sin(2 \e j \e sigma)
 
 \verbatim
-Z = (1 + 1/4 * k1^2
-       + 9/64 * k1^4
-       + 25/256 * k1^6
-       + 1225/16384 * k1^8) * (1 - k1);
+A2 = (1 + 1/4 * eps^2
+        + 9/64 * eps^4
+        + 25/256 * eps^6
+        + 1225/16384 * eps^8) * (1 - eps);
 \endverbatim
 
 \verbatim
-z[1] = + 1/2 * k1
-       + 1/16 * k1^3
-       + 1/32 * k1^5
-       + 41/2048 * k1^7;
-z[2] = + 3/16 * k1^2
-       + 1/32 * k1^4
-       + 35/2048 * k1^6
-       + 47/4096 * k1^8;
-z[3] = + 5/48 * k1^3
-       + 5/256 * k1^5
-       + 23/2048 * k1^7;
-z[4] = + 35/512 * k1^4
-       + 7/512 * k1^6
-       + 133/16384 * k1^8;
-z[5] = + 63/1280 * k1^5
-       + 21/2048 * k1^7;
-z[6] = + 77/2048 * k1^6
-       + 33/4096 * k1^8;
-z[7] = + 429/14336 * k1^7;
-z[8] = + 6435/262144 * k1^8;
+C2[1] = + 1/2 * eps
+        + 1/16 * eps^3
+        + 1/32 * eps^5
+        + 41/2048 * eps^7;
+C2[2] = + 3/16 * eps^2
+        + 1/32 * eps^4
+        + 35/2048 * eps^6
+        + 47/4096 * eps^8;
+C2[3] = + 5/48 * eps^3
+        + 5/256 * eps^5
+        + 23/2048 * eps^7;
+C2[4] = + 35/512 * eps^4
+        + 7/512 * eps^6
+        + 133/16384 * eps^8;
+C2[5] = + 63/1280 * eps^5
+        + 21/2048 * eps^7;
+C2[6] = + 77/2048 * eps^6
+        + 33/4096 * eps^8;
+C2[7] = + 429/14336 * eps^7;
+C2[8] = + 6435/262144 * eps^8;
 \endverbatim
 
 The longitude is given in terms of the spherical longitude by
 
 &nbsp; &nbsp;
-\e lambda - \e chi = sin \e alpha<sub>0</sub> \e H \e eta(\e sigma)
+\e lambda = \e omega - \e f sin \e alpha<sub>0</sub> \e I3(\e sigma)
 
 where
 
-&nbsp; &nbsp; \e eta(\e sigma) =
-\e sigma + sum<sub>\e k = 1</sub> \e h<sub>k</sub> sin(2 \e k \e sigma)
+&nbsp; &nbsp; \e I3(\e sigma) = \e A3 (\e sigma + \e B3(\e sigma))<br>
+&nbsp; &nbsp; \e B3(\e sigma) =
+sum<sub>\e j = 1</sub> \e C3<sub>j</sub> sin(2 \e j \e sigma)
 
 and
 
 \verbatim
-H = - f * (2 - f) / (2 - fp) *
-    (1 - nu^2/64 * fp^3
-       - nu^4/1024 * fp^4
-       + nu^2/256 * fp^5
-       + (nu^2/256+nu^4/1024-nu^6/8192) * fp^6
-       + (3*nu^2/1024+7*nu^4/16384+15*nu^6/131072) * fp^7);
+A3 = (2 - f) / (2 - del) * (1
+        - 1/16 * nu^2 * del^3
+        - 1/64 * nu^4 * del^4
+        + 1/64 * nu^2 * del^5
+        + (1/64 * nu^2 + 1/64 * nu^4 - 1/128 * nu^6) * del^6
+        + (3/256 * nu^2 + 7/1024 * nu^4 + 15/2048 * nu^6) * del^7);
 \endverbatim
 
 \verbatim
-h[1] = + 1/8 * nu*fp
-       - 1/16 * nu*fp^2
-       - (1/32+nu^2/512) * nu*fp^3
-       - (1/64+nu^2/1024) * nu*fp^4
-       - (1/128-nu^2/1024+nu^4/4096) * nu*fp^5
-       - (1/256-nu^2/1024-3*nu^4/32768) * nu*fp^6
-       - (1/512-5*nu^2/8192-5*nu^4/32768+61*nu^6/2097152) * nu*fp^7;
-h[2] = + 1/64 * nu^2*fp^2
-       - 3/256 * nu^2*fp^3
-       - (1/256+nu^2/2048) * nu^2*fp^4
-       - 1/1024 * nu^2*fp^5
-       + (5*nu^2/16384-7*nu^4/131072) * nu^2*fp^6
-       + (1/4096+3*nu^2/16384+37*nu^4/1048576) * nu^2*fp^7;
-h[3] = + 5/1536 * nu^3*fp^3
-       - 3/1024 * nu^3*fp^4
-       - (1/1536+7*nu^2/49152) * nu^3*fp^5
-       + nu^2/24576 * nu^3*fp^6
-       + (1/8192+35*nu^2/393216-91*nu^4/6291456) * nu^3*fp^7;
-h[4] = + 7/8192 * nu^4*fp^4
-       - 7/8192 * nu^4*fp^5
-       - (1/8192+3*nu^2/65536) * nu^4*fp^6
-       + (5/131072+23*nu^2/1048576) * nu^4*fp^7;
-h[5] = + 21/81920 * nu^5*fp^5
-       - 9/32768 * nu^5*fp^6
-       - (3/131072+33*nu^2/2097152) * nu^5*fp^7;
-h[6] = + 11/131072 * nu^6*fp^6
-       - 99/1048576 * nu^6*fp^7;
-h[7] = + 429/14680064 * nu^7*fp^7;
+C3[1] = + 1/4 * eps
+        - 1/8 * eps*del
+        - (1/16 + 1/64 * nu^2) * eps*del^2
+        - (1/32 + 1/128 * nu^2) * eps*del^3
+        - (1/64 - 1/128 * nu^2 + 1/128 * nu^4) * eps*del^4
+        - (1/128 - 1/128 * nu^2 - 3/1024 * nu^4) * eps*del^5
+        - (1/256 - 5/1024 * nu^2 - 5/1024 * nu^4 + 61/16384 * nu^6) * eps*del^6;
+C3[2] = + 1/16 * eps^2
+        - 3/64 * eps^2*del
+        - (1/64 + 1/128 * nu^2) * eps^2*del^2
+        - 1/256 * eps^2*del^3
+        + (5/1024 * nu^2 - 7/2048 * nu^4) * eps^2*del^4
+        + (1/1024 + 3/1024 * nu^2 + 37/16384 * nu^4) * eps^2*del^5;
+C3[3] = + 5/192 * eps^3
+        - 3/128 * eps^3*del
+        - (1/192 + 7/1536 * nu^2) * eps^3*del^2
+        + 1/768 * nu^2 * eps^3*del^3
+        + (1/1024 + 35/12288 * nu^2 - 91/49152 * nu^4) * eps^3*del^4;
+C3[4] = + 7/512 * eps^4
+        - 7/512 * eps^4*del
+        - (1/512 + 3/1024 * nu^2) * eps^4*del^2
+        + (5/8192 + 23/16384 * nu^2) * eps^4*del^3;
+C3[5] = + 21/2560 * eps^5
+        - 9/1024 * eps^5*del
+        - (3/4096 + 33/16384 * nu^2) * eps^5*del^2;
+C3[6] = + 11/2048 * eps^6
+        - 99/16384 * eps^6*del;
+C3[7] = + 429/114688 * eps^7;
 \endverbatim
 
 \section geodmisc Miscellaneous information on geodesics
@@ -2503,7 +2507,15 @@ style of numbering.  Now, the library uses
 libtool's version numbering scheme</a> using an interface and revision
 numbers.)
 
- - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">1.1 (released 2010-02-09)</a>
+ - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">1.2 (not released yet)</a>
+  - FIX BUG in Geodesic::Direct (wrong azimuth with point 2 on pole).
+  - Improve calculation of scale in CassiniSoldner.
+  - Code and documentation changes in Geodesic for consistency with
+    <a  href="http://arxiv.org/abs/yymm.nnnn">arXiv:yymm.nnnn</a>
+  - Macro __NO_LONG_DOUBLE_MATH to disable use of long double.
+  - Correct declaration of Math::isfinite to return a bool.
+
+ - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">1.1 (released 2010-02-09)</a>
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
   - Increase accuracy of scale calculation in TransverseMercator and
     TransverseMercatorExact.
