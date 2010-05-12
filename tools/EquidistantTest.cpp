@@ -64,8 +64,7 @@ int main(int argc, char* argv[]) {
       azimuthal = arg != "-c";
       for (unsigned i = 0; i < 2; ++i) {
         if (++m == argc) return usage(1);
-        std::string a(argv[m]);
-        std::istringstream str(a);
+        std::istringstream str(argv[m]);
         if (!(str >> (i ? lon0 : lat0))) return usage(1);
       }
     } else

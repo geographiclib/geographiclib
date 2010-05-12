@@ -12,29 +12,12 @@
 
 #include "GeographicLib/Constants.hpp"
 
-#if !defined(GEOD_DIAG)
+#if !defined(GEOD_ORD)
 /**
- * Turn on diagnosics.
+ * The order of the expansions used by Geodesic.
  **********************************************************************/
-#define GEOD_DIAG 1
-#endif
-
-#if !defined(GEOD_TAU_ORD)
-/**
- * The order of the series relating \e s and \e sigma when expanded in powers
- * of \e k1.
- **********************************************************************/
-#define GEOD_TAU_ORD \
-(GEOGRAPHICLIB_PREC == 1 ? 5 : GEOGRAPHICLIB_PREC == 0 ? 4 : 6)
-#endif
-
-#if !defined(GEOD_ETA_ORD)
-/**
- * The order of the series relating \e lambda and \e eta when expanded in
- * powers of \e fp.
- **********************************************************************/
-#define GEOD_ETA_ORD \
-(GEOGRAPHICLIB_PREC == 1 ? 5 : GEOGRAPHICLIB_PREC == 0 ? 4 : 6)
+#define GEOD_ORD \
+(GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 3 : 7)
 #endif
 
 namespace GeographicLib {
@@ -91,24 +74,17 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class GeodesicLine;
     friend class CassiniSoldner;
-    static const int tauord = GEOD_TAU_ORD;
-    static const int ntau = tauord;
-    static const int nsig = tauord;
-    static const int zetord = GEOD_TAU_ORD;
-    static const int nzet = zetord;
-    static const int etaord = GEOD_ETA_ORD;
-    // etaCoeff is multiplied by etaFactor which is O(f), so we reduce the
-    // order to which etaCoeff is computed by 1.
-    static const int neta = etaord > 0 ? etaord - 1 : 0;
+    static const int nA1 = GEOD_ORD, nC1 = GEOD_ORD, nC1p = GEOD_ORD,
+      nA2 = GEOD_ORD, nC2 = GEOD_ORD, nA3 = GEOD_ORD, nC3 = GEOD_ORD;
     static const unsigned maxit = 50;
 
     static inline real sq(real x) throw() { return x * x; }
-    void Lengths(real k1, real sig12,
+    void Lengths(real eps, real sig12,
                  real ssig1, real csig1, real ssig2, real csig2,
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  real tc[], real zc[]) const throw();
-    static void Evolute(real R, real z, real& c, real& s) throw();
+    static real Astroid(real R, real z) throw();
     void InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
                       real lam12, real slam12, real clam12,
                       real& salp1, real& calp1,
@@ -117,7 +93,7 @@ namespace GeographicLib {
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  real& k1, bool diffp, real& dlam12,
+                  real& eps, bool diffp, real& dlam12,
                   real tc[], real zc[], real ec[])
       const throw();
 
@@ -146,16 +122,15 @@ namespace GeographicLib {
       sinx /= r;
       cosx /= r;
     }
-
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the ellipsoidal geodesic.
-    static real tauFactorm1(real k1) throw();
-    static void tauCoeff(real k1, real t[]) throw();
-    static void sigCoeff(real k1, real tp[]) throw();
-    static real zetFactorm1(real k1) throw();
-    static void zetCoeff(real k1, real t[]) throw();
-    static real etaFactor(real f, real k1) throw();
-    static void etaCoeff(real f, real k1, real h[]) throw();
+    static real A1m1f(real eps) throw();
+    static void C1f(real eps, real c[]) throw();
+    static void C1pf(real eps, real c[]) throw();
+    static real A2m1f(real eps) throw();
+    static void C2f(real eps, real c[]) throw();
+    static real A3f(real f, real eps) throw();
+    static void C3f(real f, real eps, real c[]) throw();
 
   public:
 
@@ -231,11 +206,6 @@ namespace GeographicLib {
      **********************************************************************/
     const static Geodesic WGS84;
 
-#if GEOD_DIAG
-    mutable int coverage, niter;
-    mutable double param1, param2, param3;
-#endif
-    
   };
 
   /**
@@ -279,17 +249,15 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class Geodesic;
     friend class CassiniSoldner;
-    static const int ntau = Geodesic::ntau;
-    static const int nsig = Geodesic::nsig;
-    static const int nzet = Geodesic::nzet;
-    static const int neta = Geodesic::neta;
+    static const int nC1 = Geodesic::nC1, nC1p = Geodesic::nC1p,
+      nC2 = Geodesic::nC2, nC3 = Geodesic::nC3;
 
     real _lat1, _lon1, _azi1;
-    real _a, _r,  _b, _f1, _salp0, _calp0, _u2,
+    real _a, _r,  _b, _f1, _salp0, _calp0, _k2 ,
       _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
-      _taufm1, _zetfm1, _etaf, _dtau1, _dzet1, _dlam1;
-    real _tauCoeff[ntau ? ntau : 1], _sigCoeff[nsig ? nsig : 1],
-      _zetCoeff[nzet ? nzet : 1], _etaCoeff[neta ? neta : 1];
+      _A1m1, _A2m1, _A3c, _B11, _B21, _B31;
+    // index zero elements of these arrays are unused
+    real _C1[nC1 + 1], _C1p[nC1p + 1], _C2[nC2 + 1], _C3[nC3];
 
     static inline real sq(real x) throw() { return x * x; }
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1)

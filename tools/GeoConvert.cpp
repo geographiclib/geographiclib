@@ -137,13 +137,11 @@ int main(int argc, char* argv[]) {
       centerp = false;
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
-      std::string a(argv[m]);
-      std::istringstream str(a);
+      std::istringstream str(argv[m]);
       if (!(str >> prec)) return usage(1);
     } else if (arg == "-z") {
       if (++m == argc) return usage(1);
-      std::string a(argv[m]);
-      std::istringstream str(a);
+      std::istringstream str(argv[m]);
       if (!(str >> zone)) return usage(1);
       if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE)) {
         std::cerr << "Zone " << zone << " not in [0, 60]\n";

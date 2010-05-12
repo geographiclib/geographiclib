@@ -54,8 +54,7 @@ int main(int argc, char* argv[]) {
       localcartesian = true;
       for (unsigned i = 0; i < 3; ++i) {
         if (++m == argc) return usage(1);
-        std::string a(argv[m]);
-        std::istringstream str(a);
+        std::istringstream str(argv[m]);
         if (!(str >> latlonh0[i])) return usage(1);
       }
     } else
