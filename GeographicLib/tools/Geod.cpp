@@ -207,8 +207,7 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-e") {
       for (unsigned i = 0; i < 2; ++i) {
         if (++m == argc) return usage(1);
-        std::string s(argv[m]);
-        std::istringstream str(s);
+        std::istringstream str(argv[m]);
         if (!(str >> (i ? r : a))) return usage(1);
       }
     }
@@ -220,8 +219,7 @@ int main(int argc, char* argv[]) {
       full = true;
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
-      std::string s(argv[m]);
-      std::istringstream str(s);
+      std::istringstream str(argv[m]);
       if (!(str >> prec)) return usage(1);
     } else
       return usage(arg != "-h");
