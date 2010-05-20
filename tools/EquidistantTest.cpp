@@ -16,6 +16,7 @@
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/AzimuthalEquidistant.hpp"
 #include "GeographicLib/CassiniSoldner.hpp"
+#include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -33,7 +34,7 @@ given (the last one given is used).  The WGS84 model of the earth is\n\
 used.\n\
 \n\
 Geodetic coordinates are provided on standard input as a set of lines\n\
-containing (blank separated) latitude and longitude (decimal degrees).\n\
+containing (blank separated) latitude and longitude (degrees or DMS).\n\
 For each set of geodetic coordinates, the corresponding projected\n\
 coordinates x, y (meters) are printed on standard output together with\n\
 the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,\n\
@@ -62,11 +63,17 @@ int main(int argc, char* argv[]) {
     else if (arg == "-c" || arg == "-z") {
       cassini = arg == "-c";
       azimuthal = arg != "-c";
-      for (unsigned i = 0; i < 2; ++i) {
-        if (++m == argc) return usage(1);
-        std::istringstream str(argv[m]);
-        if (!(str >> (i ? lon0 : lat0))) return usage(1);
+      if (m + 2 >= argc) return usage(1);
+      try {
+        DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                          lat0, lon0);
       }
+      catch (const std::exception& e) {
+        std::cerr << "Error decoding arguments of " << arg << ": "
+                  << e.what() << "\n";
+        return 1;
+      }
+      m += 2;
     } else
       return usage(arg != "-h");
   }
@@ -76,18 +83,10 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  if ( !(-90 <= lat0 && lat0 <= 90) ) {
-    std::cerr << "Latitude not in range [-90, 90]\n";
-    return 1;
-  } else if ( !(-180 <= lon0 && lon0 <= 360) ) {
-    std::cerr << "Longitude not in range [-180, 360]\n";
-    return 1;
-  }
-
-  const GeographicLib::CassiniSoldner cs = cassini ?
-    GeographicLib::CassiniSoldner(lat0, lon0, GeographicLib::Geodesic::WGS84) :
-    GeographicLib::CassiniSoldner(GeographicLib::Geodesic::WGS84);
-  const GeographicLib::AzimuthalEquidistant az(GeographicLib::Geodesic::WGS84);
+  const CassiniSoldner cs = cassini ?
+    CassiniSoldner(lat0, lon0, Geodesic::WGS84) :
+    CassiniSoldner(Geodesic::WGS84);
+  const AzimuthalEquidistant az(Geodesic::WGS84);
 
   std::string s;
   int retval = 0;
@@ -96,10 +95,14 @@ int main(int argc, char* argv[]) {
     try {
       std::istringstream str(s);
       real lat, lon, x, y, a, m;
-      if (!(reverse ?
-            (str >> x >> y) :
-            (str >> lat >> lon)))
+      std::string stra, strb;
+      if (!(str >> stra >> strb))
         throw GeographicErr("Incomplete input: " + s);
+      if (reverse) {
+        x = DMS::Decode(stra);
+        y = DMS::Decode(strb);
+      } else
+        DMS::DecodeLatLon(stra, strb, lat, lon);
       std::string strc;
       if (str >> strc)
         throw GeographicErr("Extraneous input: " + strc);

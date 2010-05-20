@@ -13,13 +13,14 @@
 
 #include "GeographicLib/Geocentric.hpp"
 #include "GeographicLib/LocalCartesian.hpp"
+#include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]\n\
+"Usage: CartConvert [-r] [-l lat0 lon0 h0] [-e a r] [-h]\n\
 $Id$\n\
 \n\
 Convert geodetic coordinates to either geocentric or local cartesian\n\
@@ -28,10 +29,15 @@ earth, with the z axis going thru the north pole, and the x axis thru lat =\n\
 0, lon = 0.  By default, the conversion is to geocentric coordinates.\n\
 Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with\n\
 the origin at latitude = lat0, longitude = lon0, height = h0, z normal to\n\
-the ellipsoid and y due north.  The WGS84 model of the earth is used.\n\
+the ellipsoid and y due north.\n\
+\n\
+By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
+equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
+ellipsoid.\n\
 \n\
 Geodetic coordinates are provided on standard input as a set of lines\n\
-containing (blank separated) latitude, longitude (decimal degrees), and\n\
+containing (blank separated) latitude, longitude (degrees or DMS), and\n\
 height (meters).  For each set of geodetic coordinates, the corresponding\n\
 cartesian coordinates x, y, z (meters) are printed on standard output.\n\
 \n\
@@ -45,34 +51,44 @@ int main(int argc, char* argv[]) {
   using namespace GeographicLib;
   typedef Math::real real;
   bool localcartesian = false, reverse = false;
-  real latlonh0[3] = {0, 0, 0};
+  real
+    a = Constants::WGS84_a(),
+    r = Constants::WGS84_r();
+  real lat0 = 0, lon0 = 0, h0 = 0;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
     if (arg == "-r")
       reverse = true;
     else if (arg == "-l") {
       localcartesian = true;
-      for (unsigned i = 0; i < 3; ++i) {
-        if (++m == argc) return usage(1);
-        std::istringstream str(argv[m]);
-        if (!(str >> latlonh0[i])) return usage(1);
+      if (m + 3 >= argc) return usage(1);
+      try {
+        DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                          lat0, lon0);
+        h0 = DMS::Decode(std::string(argv[m + 3]));
       }
+      catch (const std::exception& e) {
+        std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+        return 1;
+      }
+      m += 3;
+    } else if (arg == "-e") {
+      if (m + 2 >= argc) return usage(1);
+      try {
+        a = DMS::Decode(std::string(argv[m + 1]));
+        r = DMS::Decode(std::string(argv[m + 2]));
+      }
+      catch (const std::exception& e) {
+        std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+        return 1;
+      }
+      m += 2;
     } else
       return usage(arg != "-h");
   }
 
-  if (localcartesian) {
-    if ( !(-90 <= latlonh0[0] && latlonh0[0] <= 90) ) {
-      std::cerr << "Latitude not in range [-90, 90]\n";
-      return 1;
-    } else if ( !(-180 <= latlonh0[1] && latlonh0[1] <= 360) ) {
-      std::cerr << "Longitude not in range [-180, 360]\n";
-      return 1;
-    }
-  }
-
-  const GeographicLib::LocalCartesian lc(latlonh0[0], latlonh0[1], latlonh0[2]);
-  const GeographicLib::Geocentric& ec = GeographicLib::Geocentric::WGS84;
+  const Geocentric ec(a, r);
+  const LocalCartesian lc(lat0, lon0, h0, ec);
 
   std::string s;
   int retval = 0;
@@ -81,13 +97,20 @@ int main(int argc, char* argv[]) {
     try {
       std::istringstream str(s);
       real lat, lon, h, x, y, z;
-      if (!(reverse ?
-            (str >> x >> y >> z) :
-            (str >> lat >> lon >> h)))
+      std::string stra, strb, strc;
+      if (!(str >> stra >> strb >> strc))
         throw  GeographicErr("Incomplete input: " + s);
-      std::string strc;
-      if (str >> strc)
-        throw GeographicErr("Extraneous input: " + strc);
+      if (reverse) {
+        x = DMS::Decode(stra);
+        y = DMS::Decode(strb);
+        z = DMS::Decode(strc);
+      } else {
+        DMS::DecodeLatLon(stra, strb, lat, lon);
+        h = DMS::Decode(strc);
+      }
+      std::string strd;
+      if (str >> strd)
+        throw GeographicErr("Extraneous input: " + strd);
       if (reverse) {
         if (localcartesian)
           lc.Reverse(x, y, z, lat, lon, h);
@@ -95,10 +118,6 @@ int main(int argc, char* argv[]) {
           ec.Reverse(x, y, z, lat, lon, h);
         std::cout << lat << " " << lon << " " << h << "\n";
       } else {
-        if ( !(-90 <= lat && lat <= 90) )
-          throw GeographicErr("Latitude not in range [-90, 90]");
-        if ( !(-180 <= lon && lat <= 360) )
-          throw GeographicErr("Longitude not in range [-180, 360]");
         if (localcartesian)
           lc.Forward(lat, lon, h, x, y, z);
         else

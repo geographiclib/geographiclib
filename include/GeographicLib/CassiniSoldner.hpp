@@ -65,11 +65,32 @@ namespace GeographicLib {
     const Geodesic _earth;
     GeodesicLine _meridian;
     real _sbet0, _cbet0;
-    real Scale(const GeodesicLine& perp, real sig12) const throw();
     static const real eps1, eps2;
     static const unsigned maxit =  10;
 
     static inline real sq(real x) throw() { return x * x; }
+    // The following private helper functions are copied from Geodesic.
+    static inline real AngNormalize(real x) throw() {
+      // Place angle in [-180, 180).  Assumes x is in [-540, 540).
+      return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+    }
+    static inline real AngRound(real x) throw() {
+      // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
+      // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
+      // is about 1000 times more resolution than we get with angles around 90
+      // degrees.)  We use this to avoid having to deal with near singular
+      // cases when x is non-zero but tiny (e.g., 1.0e-200).
+      const real z = real(0.0625); // 1/16
+      volatile real y = std::abs(x);
+      // The compiler mustn't "simplify" z - (z - y) to y
+      y = y < z ? z - (z - y) : y;
+      return x < 0 ? -y : y;
+    }
+    static inline void SinCosNorm(real& sinx, real& cosx) throw() {
+      real r = Math::hypot(sinx, cosx);
+      sinx /= r;
+      cosx /= r;
+    }
   public:
 
     /**

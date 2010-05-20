@@ -342,7 +342,8 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 allow them to be displayed quickly.  The "Fig. N" link beneath each
 figure points to a PDF version of the figure.  These are in vector
 format and allow the figures to be magnified to show the details more
-clearly.
+clearly.  The numbering of the figures matches that in the paper cited
+above.
 
 The primary sources for the material presented here are:
  - J. P. Snyder,
@@ -366,14 +367,6 @@ The primary sources for the material presented here are:
    meridian.  It is also of interest to see the systematic use of
    logarithms in the pre-electronic and pre-mechanical age (when
    computers were human).
- - <a href="http://www.jhs-suositukset.fi/suomi/jhs154">JHS 154, ETRS89 -
-   j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
-   tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
-   coordinates, and map sheet index for ETRS89), published by JUHTA, Finnish
-   Geodetic Institute, and the National Land Survey of Finland (2006).
-   A concise summary of Kr&uuml;ger's method is given in
-   <a href="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154_liite1.pdf">
-   Appendix 1</a>.
  - L. P. Lee,
    Conformal Projections Based on Elliptic Functions,
    (B. V. Gutsell, Toronto, 1976), 128pp.,
@@ -386,12 +379,6 @@ The primary sources for the material presented here are:
    form expressions for the transverse Mercator projection based on work
    by E. H. Thompson (1945).  This may be purchased for a modest sum.  Other
    useful sections are Part I, pp. 1&ndash;3 and Part II, pp. 4&ndash;14.
- - M. Abramowitz and I. A. Stegun,
-   Handbook of Mathematical Functions
-   (Dover, 1965).
-   This is the bible for special functions.  It is easily accessible on
-   the web.  Chapter 16 covers elliptic functions and Chapter 17 covers
-   elliptic integrals.
  .
 
 \section tmvarious Survey of transverse Mercator projections
@@ -420,7 +407,7 @@ Gauss-Kr&uuml;ger projection is implemented by
 GeographicLib::TransverseMercatorExact.)
 
 The graticules (lines of constant latitude and longitude) for all these
-projections are shown in Figs. 1&ndash;3.  These figures all use an
+projections are shown in Figs. 1(a&ndash;c).  These figures all use an
 ellipsoid with eccentricity \e e = 1/10 (inverse flattening = 10 (3
 sqrt(11) + 10) = 199.5, i.e., somewhat flatter than the WGS84 ellipsoid)
 and the projections have all been scaled so that the distance from the
@@ -438,7 +425,7 @@ longitude = 0<sup>o</sup> lies on \e x = 0 and longitude =
 <img src="gauss-schreiber-graticule-a.png"
 width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
 (scaled)">
-<a href="gauss-schreiber-graticule-a.pdf">Fig. 1</a>
+<a href="gauss-schreiber-graticule-a.pdf">Fig. 1(a)</a>
 </center>\n
 The graticule for the Gauss-Schreiber transverse Mercator projection.
 The equator lies on \e y = 0.
@@ -454,7 +441,7 @@ the lines of latitude.)  This projection places the point latitude =
 <img src="gauss-krueger-graticule-a.png"
 width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
 (scaled)">
-<a href="gauss-krueger-graticule-a.pdf">Fig. 2</a>
+<a href="gauss-krueger-graticule-a.pdf">Fig. 1(b)</a>
 </center>\n
 The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
 The equator lies on \e y = 0 for longitude < 81<sup>o</sup>; beyond
@@ -467,7 +454,7 @@ Fig. 46, shows the graticule for the entire ellipsoid.  This projection
 <img src="thompson-tm-graticule-a.png"
 width=667 height=305 alt="Thompson transverse Mercator graticule
 (scaled)">
-<a href="thompson-tm-graticule-a.pdf">Fig. 3</a>
+<a href="thompson-tm-graticule-a.pdf">Fig. 1(c)</a>
 </center>\n
 The graticule for the Thompson transverse Mercator projection.  The
 equator lies on \e y = 0 for longitude < 81<sup>o</sup>; at longitude =
@@ -515,10 +502,10 @@ This is equivalent to placing two branch cuts on the equator in the
 longitude ranges +/- [90<sup>o</sup>(1 - \e e), 90<sup>o</sup>(1 + \e
 e)].  For points on equator for |longitude| > 90<sup>o</sup>(1 - \e e),
 the path should go to the north of branch point.  This convention
-corresponds to Fig. 2, above, after suitable reflections to cover the
+corresponds to Fig. 1(b), above, after suitable reflections to cover the
 ellipsoid and to Lee, Fig. 46.
 
-In order to explore the behavior to the right of the equator in Fig. 2,
+In order to explore the behavior to the right of the equator in Fig. 1(b),
 we define an "extended" domain for the projection, this consists of the
 union of
  - 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
@@ -554,7 +541,7 @@ this case lies at lat = 0<sup>o</sup>, lon = 81<sup>o</sup> or \e x =
 <img src="gauss-krueger-graticule.png"
 width=673 height=323 alt="Gauss-Krueger transverse Mercator
 graticule">\n
-<a href="gauss-krueger-graticule.pdf">Fig. 4</a>
+<a href="gauss-krueger-graticule.pdf">Fig. 3(a)</a>
 </center>
 Figure 4 shows the graticule the extended domain.  The blue lines show
 latitude and longitude at multiples of 10<sup>o</sup>.  The green lines
@@ -565,7 +552,7 @@ show 1<sup>o</sup> intervals for longitude in [80, 90] and latitude in
 <img src="gauss-krueger-convergence-scale.png"
 width=673 height=323 alt="Gauss-Krueger transverse Mercator
 convergence and scale">
-<a href="gauss-krueger-convergence-scale.pdf">Fig. 5</a>
+<a href="gauss-krueger-convergence-scale.pdf">Fig. 3(b)</a>
 </center>\n
 Figure 5 shows the convergence and scale for the Gauss-Kr&uuml;ger
 transverse Mercator projection in the extended domain.  The blue lines
@@ -597,7 +584,7 @@ examine the Thompson projection in the extended domain.
 <center>
 <img src="thompson-tm-graticule.png"
 width=661 height=321 alt="Thompson transverse Mercator graticule">
-<a href="thompson-tm-graticule.pdf">Fig. 6</a>
+<a href="thompson-tm-graticule.pdf">Fig. 3(c)</a>
 </center>\n
 Figure 6 shows the graticule for the Thompson transverse Mercator
 projection for the extended domain.  The range of the projection is the
@@ -605,20 +592,20 @@ rectangular region shown
  - 0 <= \e u <= K(\e e<sup>2</sup>),
    0 <= \e v <= K(1 - \e e<sup>2</sup>)
  .
-The coloring of the lines is the same as Fig. 4, except that latitude
+The coloring of the lines is the same as Fig. 3(a), except that latitude
 lines extended down to -10<sup>o</sup> and a red line has been added
 showing the line \e y = 0 for \e x > 1.71 in the Gauss-Kr&uuml;ger
-projection (Fig. 4).  The extended Thompson projection figure has
-reflection symmetry on all the four sides of Fig. 6.
+projection (Fig. 3(a)).  The extended Thompson projection figure has
+reflection symmetry on all the four sides of Fig. 3(c).
 
 In transforming from Thompson to Gauss-Kr&uuml;ger, the right angle at
-lower right corner of Fig. 6 expands by 3 to 270<sup>o</sup> to produce
-the outside corner at \e x = 1.71 and \e y = 0 in Fig. 4.  The top right
-corner of Fig. 6 represents the south pole and this is transformed to
+lower right corner of Fig. 3(c) expands by 3 to 270<sup>o</sup> to produce
+the outside corner at \e x = 1.71 and \e y = 0 in Fig. 3(a).  The top right
+corner of Fig. 3(c) represents the south pole and this is transformed to
 infinity in the extended Gauss-Kr&uuml;ger projection.  Despite the
 apparent similarities, the behaviors of the extended Thompson projection
 near the north and south poles (top left and top right corners in
-Fig. 6) are rather different.  The singularity for the north pole is
+Fig. 3(c)) are rather different.  The singularity for the north pole is
 merely the result of the singularity of a polar coordinate system (e.g.,
 longitude is undefined at the north pole).  Encircling the north pole,
 causes longitude to increase by 360<sup>o</sup>, as expected.  On the
@@ -626,7 +613,7 @@ other hand, encircling the south pole increases the longitude by
 360<sup>o</sup> \e e = 36<sup>o</sup>.  The same behavior is exhibited
 by the extended Gauss-Kr&uuml;ger projection.  The point latitude =
 -1<sup>o</sup>, longitude = 90<sup>o</sup> projects to a point [2.65,1]
-in Fig. 4.  If we now travel along this latitude line to longitude =
+in Fig. 3(a).  If we now travel along this latitude line to longitude =
 54<sup>o</sup> = 90<sup>o</sup> - 36<sup>o</sup> we arrive back at the
 same projected position.  In the extended domain, the Thompson and the
 Gauss-Kr&uuml;ger projections are not tightly tied to the globe but can
@@ -706,13 +693,13 @@ These errors apply with the standard convention for the transverse
 Mercator projection.  In this case, we use only test samples with
 non-negative values of latitude.
 
-For the extended transverse Mercator projection (Fig. 4), the errors
+For the extended transverse Mercator projection (Fig. 3(a)), the errors
 given above apply only for latitude >= -15<sup>o</sup>.  For more negative
 latitudes, the errors become large.  For example for latitude >=
 -58<sup>o</sup>, the maximum error is 1 mm (and the scale has become 124
 million).  This increase in the error is due to the use of the Thompson
 projection in the computation.  Looking at the graticule for this
-projection (Fig. 6), we see that the Thompson scale becomes small close
+projection (Fig. 3(c)), we see that the Thompson scale becomes small close
 to the south pole resulting in errors (measured as a ground distance)
 which diverges (the errors vary inversely with scale).  For example at
 lat = -58<sup>o</sup>, the scale for the Thompson projection is about
@@ -928,7 +915,7 @@ dist J=2     J=4     J=5     J=6     J=7     J=8     J=10    J=12
 <center>
 <img src="gauss-krueger-error.png"
 width=672 height=552 alt="Truncation error for Gauss-Krueger series">
-<a href="gauss-krueger-error.pdf">Fig. 7</a>
+<a href="gauss-krueger-error.pdf">Fig. 2</a>
 </center>\n
 The truncation error for the series for the Gauss-Kr&uuml;ger transverse
 Mercator projection.  The blue curves show the truncation error for the
@@ -1170,88 +1157,6 @@ This data can be fed to the \ref geod utility as follows
 Add, e.g., "-p 6", to the call to Geod to change the precision of the
 output.  Adding "-f" causes Geod to print all 9 fields specifying the
 geodesic (in the same order as the test set).
-
-Another much smaller set of test points has been culled from the
-literature on geodesics.  These are all for the International Ellipsoid
-(\e a = 6378388 m, \e f = 1/297.0).  The endpoints are taken from
-
- - H. F. Rainsford, <i>Op. Cit.</i>
- - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
-   geodesy, Part II</a>, Ohio State Univ. (March 1993).
- - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
-   computation of long geodesics on the ellipsoid through Gaussian
-   quadrature</a>,
-   J. Geodesy 53, 165&ndash;177 (1979).
- - B.K. Meade, Discussion of results obtained from the Bowring formulas
-   developed for solutions of the geodetic inverse and great elliptic
-   inverse, Survey Review 33 (261) 477&ndash;487 (1996).
- .
-However some of the results quoted for the inverse problem in these
-papers are inaccurate.  Accurate data are given here.  The end points
-are
-\verbatim
-No     lat1              lat2            lon2 - lon1
-
-00 37d19'54.95367"   26d07'42.83946"   41d28'35.50729"
-01 35d16'11.24862"   67d22'14.77638"  137d47'28.31435"
-02  1d00'00"         -0d59'53.83076"  179d17'48.02997"
-03  1d00'00"          1d01'15.18952"  179d46'17.84244"
-04 41d41'45.88"     -41d41'46.20"     179d59'59.44"
-05  0d00'00"          0d00'00"        179d41'49.78063"
-06 30d00'00"        -30d00'00"        179d40'00"
-07 60d00'00"        -59d59'00"        179d50'00"
-08 30d00'00"        -29d50'00"        179d48'00"
-09 30d00'00"        -29d55'00"        179d48'00"
-10 34d28'44.76421"  -34d28'44.76421"  179d30'00"
-11  0d00'00"          0d00'00"        179d23'38.18182"
-12 34d28'44.764213" -34d28'44.764213" 179d30'00"
-13 56d41'58.297496" -56d41'58.297496" 179d40'00"
-14 29d45'00"         29d45'00.23848"    0d00'00.25626"
-15 41d41'45.88"      41d41'46.2"        0d00'00.56"
-16 46d00'00"         46d00'01"          0d00'01.816"
-17 40d00'00"         40d00'02"          0d00'04.75"
-18 38d00'00"         38d00'04.765"      0d00'05.554"
-19 30d00'00"         37d53'32.46584"  116d19'16.68843"
-20 30d19'54.95367"  -30d11'50.15681"  179d58'17.84244"
-21  0d39'49.12586"   -0d45'14.13112"  179d58'17.84244"
-22  0d00'54.95367"    0d00'42.83946"  179d28'17.84244"
-23 40d00'00"        -40d00'05.75932"  179d55'15.59578"
-24 37d00'00"         28d15'36.69535"    2d37'39.52918"
-25 38d30'45"        -35d25'35"        179d45'00"
-26 60d00'00"        -60d00'00"        179d41'47"
-\endverbatim
-and the geodesics are given by
-\verbatim
-No      azi1                      azi2                      s12
-
-00  95d27'59.63088905553491" 118d05'58.96160858886728"  4085966.7025902201825
-01  15d44'23.74849770324814" 144d55'39.92147266777383"  8084823.8382961415712
-02  88d59'59.99897053696689"  91d00'06.11835637659787" 19959999.9998034962728
-03   4d59'59.9999565312182"  174d59'59.88480004914149" 19780006.5587880182731
-04 179d58'49.16247860972594"   0d01'10.83761892414861" 20004566.7228054132931
-05  30d00'00.00002084815889" 149d59'59.99997915184111" 19996147.416826781925
-06  39d24'51.80601183179472" 140d35'08.19398816820528" 19994364.6068583984182
-07  29d11'51.07006518417487" 150d49'06.86792886226858" 20000433.9629039632049
-08  16d02'28.33895348073478" 163d59'10.33689436714454" 19983420.1535833515076
-09  18d38'12.55689701007199" 161d22'45.43724069005652" 19992241.7634404403113
-10  89d59'59.78608904242135"  90d00'00.21391095757865" 19981603.2781440234735
-11  89d59'51.5863776476884"   90d00'08.4136223523116"  19970827.8695289752144
-12  90d00'00.00000000479721"  90d00'00.00000000479721" 19981603.2781440234735
-13  90d00'00.0000006754891"   90d00'00.0000006754891"  19994364.6068583984183
-14  43d09'29.0634310812721"   43d09'29.19059165112047"       10.0665488514951
-15  52d40'39.39067110974434"  52d40'39.76317180931766"       16.2839750636094
-16  51d41'11.54166708300919"  51d41'12.8479912183896"        49.8037586266135
-17  61d18'00.21784992705284"  61d18'03.27110871411274"      128.4581417556041
-18  42d41'10.35602545797828"  42d41'13.77545984493403"      199.8717376568129
-19  45d00'00.00000438165649" 129d08'12.32600911217221" 10002499.999860115911
-20   2d23'52.10812966032674" 177d36'19.67010864697937" 19989590.5480170316779
-21 177d39'39.01010365081902"   2d20'21.15303599834387" 19994529.4454322340309
-22  54d08'27.73161935117439" 125d51'32.27232710890937" 19977290.7711390609949
-23 170d15'10.8812277902834"    9d44'49.94565915545135" 20003827.8511392345191
-24 164d59'59.99997936397788" 166d25'16.2593819478948"   1000000.0001515200393
-25   3d22'19.5694402667547"  176d45'41.43721792855263" 19661438.0251956080829
-26  90d00'00.00891264563132"  90d00'00.00891264563132" 19996104.3689008382234
-\endverbatim
 
 \section geoderrors Accuracy of geodesic calculation
 
@@ -2150,7 +2055,9 @@ true north.
 UTM/UPS and MGRS are given in zone of the input if applicable, otherwise in
 the standard zone.
 
--z zone sets the zone for output.  Use zone = 0 to specify UPS.
+-z zone sets the zone for output.  Use either a positive number for a UTM
+zone or zone = 0 to specify UPS.  Alternatively use a zone+hemisphere
+designation (and the hemisphere is ignored).
 
 -s uses the standard zone.
 
@@ -2281,7 +2188,6 @@ Examples:
    -0.02 90.00 26000000 10000000 90.01 18.47
 
 Note that, unlike \ref geoconvert, TransverseMercatorTest has no
-facility for dealing with angles in degrees, minutes, and seconds, and
 no ability to change the precision of the output.
 
 Here is the usage (obtained from "TranverseMercatorTest -h")
@@ -2292,7 +2198,7 @@ Convert between geographic coordinates and transverse Mercator coordinates.
 
 Read lines with latitude and longitude (or easting and northing if -r is
 specified) from standard input and print latitude, longitude, easting,
-northing, convergence, and scale.  Units are degrees and meters.
+northing, convergence, and scale.  Units are degrees (or DMS) and meters.
 
 By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM
 central scale (0.9996), and false easting and false northing are zero.
@@ -2334,7 +2240,6 @@ Examples:
    6.483 45 -6335709.73
 
 Note that, unlike \ref geoconvert, CartConvert has no
-facility for dealing with angles in degrees, minutes, and seconds, and
 no ability to change the precision of the output.
 
 Here is the usage (obtained from "CartConvert -h")
@@ -2347,10 +2252,15 @@ earth, with the z axis going thru the north pole, and the x axis thru lat =
 0, lon = 0.  By default, the conversion is to geocentric coordinates.
 Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with
 the origin at latitude = lat0, longitude = lon0, height = h0, z normal to
-the ellipsoid and y due north.  The WGS84 model of the earth is used.
+the ellipsoid and y due north.
+
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
+ellipsoid.
 
 Geodetic coordinates are provided on standard input as a set of lines
-containing (blank separated) latitude, longitude (decimal degrees), and
+containing (blank separated) latitude, longitude (degrees or DMS), and
 height (meters).  For each set of geodetic coordinates, the corresponding
 cartesian coordinates x, y, z (meters) are printed on standard output.
 
@@ -2374,7 +2284,6 @@ at the Paris Observatory)
    48.648 -2.007 86.7 0.999
 
 Note that, unlike \ref geoconvert, EquidistantTest has no
-facility for dealing with angles in degrees, minutes, and seconds, and
 no ability to change the precision of the output.
 
 Here is the usage (obtained from "EquidistantTest -h")
@@ -2389,7 +2298,7 @@ given (the last one given is used).  The WGS84 model of the earth is
 used.
 
 Geodetic coordinates are provided on standard input as a set of lines
-containing (blank separated) latitude and longitude (decimal degrees).
+containing (blank separated) latitude and longitude (degrees or DMS).
 For each set of geodetic coordinates, the corresponding projected
 coordinates x, y (meters) are printed on standard output together with
 the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,
@@ -2432,10 +2341,8 @@ easterly gradients of the geoid height (i.e., the rate at which the
 geoid height changes per unit distance along the WGS84 ellipsoid in
 the specified directions).
 
-Positions are given as latitude and longitude, either in decimal
-degrees or degrees, minutes, and seconds.  The latitude should be
-given first, unless at least one hemisphere desiginator is
-provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.
+Positions are given as latitude and longitude, UTM/UPS, or MGRS, in
+any of the formats accepted by GeoConvert.
 
 By default the EGM96 geoid is used with a 5' grid.  This may be
 overriden with the -n option.  The name specified should be one of
@@ -2507,13 +2414,31 @@ style of numbering.  Now, the library uses
 libtool's version numbering scheme</a> using an interface and revision
 numbers.)
 
- - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">1.2 (not released yet)</a>
-  - FIX BUG in Geodesic::Direct (wrong azimuth with point 2 on pole).
-  - Improve calculation of scale in CassiniSoldner.
-  - Code and documentation changes in Geodesic for consistency with
-    <a  href="http://arxiv.org/abs/yymm.nnnn">arXiv:yymm.nnnn</a>
+ - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-2.0.tar.gz/download">2.0 (not released yet)</a>
+  - FIX BUGS in GeographicLib::Geodesic,
+    - wrong azimuth returned by Direct if point 2 is on a pole;
+    - Inverse sometimes fails with very close points.
+  - Improve calculation of scale in GeographicLib::CassiniSoldner
+    - add GeographicLib::GeodesicLine::Scale,
+      GeographicLib::GeodesicLine::EquatorialAzimuth, and
+      GeographicLib::GeodesicLine::EquatorialArc;
+    - break friend connection between CassiniSoldner and Geodesic.
+  - Add GeographicLib::DMS::DecodeAngle and
+    GeographicLib::DMS::DecodeAzimuth.  Extend
+    GeographicLib::DMS::Decode and GeographicLib::DMS::Encode to deal
+    with distances
+  - Code and documentation changes in GeographicLib::Geodesic and
+    GeographicLib::Geocentric for consistency with
+    <a href="http://arxiv.org/abs/yymm.nnnn">arXiv:yymm.nnnn</a>
   - Macro __NO_LONG_DOUBLE_MATH to disable use of long double.
-  - Correct declaration of Math::isfinite to return a bool.
+  - Correct declaration of GeographicLib::Math::isfinite to return a bool.
+  - Changes in the \ref utilities:
+    - improve error reporting when parsing command line arguments;
+    - accept latitudes and longitudes in decimal degrees or degrees,
+      minutes, and seconds, with optional hemisphere designators;
+    - \ref geoconvert -z accepts zone or zone+hemisphere;
+    - \ref geoideval accepts any of the input formats used by \ref geoconvert;
+    - \ref cartconvert allows the ellipsoid to be specified with -e.
 
  - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">1.1 (released 2010-02-09)</a>
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
@@ -2526,7 +2451,7 @@ numbers.)
    1.0 (released 2010-01-07)</a>
   - Add autoconf configuration files.
   - BUG FIX: Improve initial guess for Newton's method in
-    PolarStereographic.Reverse.  (Previously this failed to converge
+    PolarStereographic::Reverse.  (Previously this failed to converge
     when the co-latitude exceeded about 130 deg.)
   - Constructors for TransverseMercator, TransverseMercatorExact,
     PolarStereographic, Geocentric, and Geodesic now check for obvious

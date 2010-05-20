@@ -24,13 +24,9 @@ namespace GeographicLib {
     , _f(_r != 0 ? 1 / _r : 0)
     , _e2(_f * (2 - _f))
     , _e2m(sq(1 - _f))          // 1 - _e2
-      // Constants with the x suffix are for use by Reverse and support prolate
-      // spheroids by interchanging the roles of a and b.
-    , _ax(_f >= 0 ? _a : _a * (1 - _f))
-    , _e2x(_f >= 0 ? _e2 : - _e2/(1 - _e2))
-    , _e4x(sq(_e2x))
-    , _e2mx(_f >= 0 ? _e2m : 1/_e2m)
-    , _maxrad(2 * _ax / numeric_limits<real>::epsilon())
+    , _e2a(abs(_e2))
+    , _e4a(sq(_e2))
+    , _maxrad(2 * _a / numeric_limits<real>::epsilon())
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -67,25 +63,25 @@ namespace GeographicLib {
       //
       // Treat the case x, y finite, but R overflows to +inf by scaling by 2.
       phi = atan2(z/2, Math::hypot(x/2, y/2));
-    else if (_e4x == 0) {
+    else if (_e4a == 0) {
       // Treat the spherical case.  Dealing with underflow in the general case
       // with _e2 = 0 is difficult.  Origin maps to N pole same as an
       // ellipsoid.
-      phi = atan2(h != 0 ? z : real(1), R);
-      h -= _ax;
+      phi = atan2(h != 0 ? z : 1, R);
+      h -= _a;
     } else {
       // Treat prolate spheroids by swapping R and z here and by switching
       // the arguments to phi = atan2(...) at the end.
-      if (_f < 0) swap(R, z);
       real
-        p = sq(R / _ax),
-        q = _e2mx * sq(z / _ax),
-        r = (p + q - _e4x) / 6;
-      if ( !(_e4x * q == 0 && r <= 0) ) {
+        p = sq(R / _a),
+        q = _e2m * sq(z / _a),
+        r = (p + q - _e4a) / 6;
+      if (_f < 0) swap(p, q);
+      if ( !(_e4a * q == 0 && r <= 0) ) {
         real
           // Avoid possible division by zero when r = 0 by multiplying
           // equations for s and t by r^3 and r, resp.
-          S = _e4x * p * q / 4, // S = r^3 * s
+          S = _e4a * p * q / 4, // S = r^3 * s
           r2 = sq(r),
           r3 = r * r2,
           disc =  S * (2 * r3 + S);
@@ -102,42 +98,39 @@ namespace GeographicLib {
           u += T + (T != 0 ? r2 / T : 0);
         } else {
           // T is complex, but the way u is defined the result is real.
-          real ang = atan2(sqrt(-disc), r3 + S);
-          // There are three possible real solutions for u depending on the
-          // multiple of 2*pi here.  We choose multiplier = 1 which leads to a
-          // jump in the solution across the line 2 + s = 0; but this
-          // nevertheless leads to a continuous (and accurate) solution for k.
-          // Other choices of the multiplier lead to poorly conditioned
-          // solutions near s = 0 (i.e., near p = 0 or q = 0).
-          u += 2 * abs(r) * cos((2 * Constants::pi() + ang) / real(3));
+          real ang = atan2(sqrt(-disc), -(S + r3));
+          // There are three possible cube roots.  We choose the root which
+          // avoids cancellation.  Note that disc < 0 implies that r < 0.
+          u += 2 * r * cos(ang / 3);
         }
         real
-          v = sqrt(sq(u) + _e4x * q), // guaranteed positive
+          v = sqrt(sq(u) + _e4a * q), // guaranteed positive
           // Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
           // e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
-          uv = u < 0 ? _e4x * q / (v - u) : u + v, // u+v, guaranteed positive
+          uv = u < 0 ? _e4a * q / (v - u) : u + v, // u+v, guaranteed positive
           // Need to guard against w going negative due to roundoff in uv - q.
-          w = max(real(0), _e2x * (uv - q) / (2 * v)),
+          w = max(real(0), _e2a * (uv - q) / (2 * v)),
           // Rearrange expression for k to avoid loss of accuracy due to
           // subtraction.  Division by 0 not possible because uv > 0, w >= 0.
-          k = uv / (sqrt(uv + sq(w)) + w), // guaranteed positive
-          d = k * R / (k + _e2x);
-        // Probably atan2 returns the result for phi more accurately than the
-        // half-angle formula that Vermeille uses.  It's certainly simpler.
-        phi = _f >= 0 ? atan2(z, d) : atan2(d, z);
-        h = (k + _e2x - 1) * Math::hypot(d, z) / k;
+          k = uv / (sqrt(uv + sq(w)) + w),
+          k1 = _f >= 0 ? k : k - _e2,
+          k2 = _f >= 0 ? k + _e2 : k,
+          d = k1 * R / k2;
+        phi = atan2(z/k1, R/k2);
+        h = (1 - _e2m/k1) * Math::hypot(d, z);
       } else {                  // e4 * q == 0 && r <= 0
-        // Very near equatorial plane with R <= a * e^2.  This leads to k = 0
-        // using the general formula and division by 0 in formula for h.  So
-        // handle this case directly.  The condition e4 * q == 0 implies abs(z)
-        // < 1.e-145 for WGS84 so it's OK to treat these points as though z =
-        // 0.  (But we do take care that the sign of phi matches the sign of
-        // z.)
-        phi = _f >= 0 ?
-          atan2(sqrt(-6 * r), sqrt(p * _e2mx)) :
-          atan2(sqrt(p * _e2mx), sqrt(-6 * r));
-        if (z < 0) phi = -phi;  // for tiny negative z (not for prolate)
-        h = - _a * (_f >= 0 ? _e2m : real(1)) / sqrt(1 - _e2 * sq(sin(phi)));
+        // This leads to k = 0 (oblate, equatorial plane) and k + e^2 = 0
+        // (prolate, rotation axis) and the generation of 0/0 in the general
+        // formulas for phi and h.  using the general formula and division by 0
+        // in formula for h.  So handle this case by taking the limits:
+        // f > 0: z -> 0, k      ->   e2 * sqrt(q)/sqrt(e4 - p)
+        // f < 0: R -> 0, k + e2 -> - e2 * sqrt(q)/sqrt(e4 - p)
+        real
+          zz = sqrt((_f >= 0 ? _e4a - p : p) / _e2m),
+          xx = sqrt( _f <  0 ? _e4a - p : p        );
+        phi = atan2(zz, xx);
+        if (z < 0) phi = -phi; // for tiny negative z (not for prolate)
+        h = - _a * (_f >= 0 ? _e2m : 1) * Math::hypot(xx, zz) / _e2a;
       }
     }
     lat = phi / Constants::degree();
@@ -146,4 +139,3 @@ namespace GeographicLib {
   }
 
 } // namespace GeographicLib
-

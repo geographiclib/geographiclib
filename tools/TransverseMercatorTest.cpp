@@ -15,6 +15,7 @@
 #include "GeographicLib/EllipticFunction.hpp"
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
+#include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -28,7 +29,7 @@ Convert between geographic coordinates and transverse Mercator coordinates.\n\
 \n\
 Read lines with latitude and longitude (or easting and northing if -r is\n\
 specified) from standard input and print latitude, longitude, easting,\n\
-northing, convergence, and scale.  Units are degrees and meters.\n\
+northing, convergence, and scale.  Units are degrees (or DMS) and meters.\n\
 \n\
 By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM\n\
 central scale (0.9996), and false easting and false northing are zero.\n\
@@ -77,16 +78,15 @@ int main(int argc, char* argv[]) {
   real e, a;
   if (testing) {
     e = real(0.1L);
-    GeographicLib::EllipticFunction temp(e * e);
+    EllipticFunction temp(e * e);
     a = 1/temp.E();
   }
-  const GeographicLib::TransverseMercatorExact& TME = testing ?
-    GeographicLib::TransverseMercatorExact
-    (a, (std::sqrt(1 - e * e) + 1) / (e * e), real(1), true) :
-    GeographicLib::TransverseMercatorExact::UTM;
+  const TransverseMercatorExact& TME = testing ?
+    TransverseMercatorExact(a, (std::sqrt(1 - e * e) + 1) / (e * e),
+                            real(1), true) :
+    TransverseMercatorExact::UTM;
 
-  const GeographicLib::TransverseMercator& TMS =
-    GeographicLib::TransverseMercator::UTM;
+  const TransverseMercator& TMS = TransverseMercator::UTM;
 
   std::string s;
   int retval = 0;
@@ -95,10 +95,14 @@ int main(int argc, char* argv[]) {
     try {
       std::istringstream str(s);
       real lat, lon, x, y;
-      if (!(reverse ?
-            (str >> x >> y) :
-            (str >> lat >> lon)))
-        throw  GeographicErr("Incomplete input: " + s);
+      std::string stra, strb;
+      if (!(str >> stra >> strb))
+          throw GeographicErr("Incomplete input: " + s);
+      if (reverse) {
+        x = DMS::Decode(stra);
+        y = DMS::Decode(strb);
+      } else
+        DMS::DecodeLatLon(stra, strb, lat, lon);
       std::string strc;
       if (str >> strc)
         throw GeographicErr("Extraneous input: " + strc);
