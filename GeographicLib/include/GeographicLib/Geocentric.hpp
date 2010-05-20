@@ -45,7 +45,7 @@ namespace GeographicLib {
   class Geocentric {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
+    const real _a, _r, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
     static inline real sq(real x) throw() { return x * x; }
   public:
 

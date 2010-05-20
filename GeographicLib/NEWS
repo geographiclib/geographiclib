@@ -22,7 +22,7 @@ Changes between 1.0 (released 2010-01-07) and 2009-11 versions:
   * Add autoconf configuration files.
 
   * BUG FIX: Improve initial guess for Newton's method in
-    PolarStereographic.Reverse.  (Previously this failed to converge
+    PolarStereographic::Reverse.  (Previously this failed to converge
     when the co-latitude exceeded about 130 deg.)
 
   * Constructors for TransverseMercator, TransverseMercatorExact,

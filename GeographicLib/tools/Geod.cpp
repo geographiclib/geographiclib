@@ -92,80 +92,36 @@ typedef GeographicLib::Math::real real;
 
 std::string LatLonString(real lat, real lon, int prec, bool dms) {
   using namespace GeographicLib;
-  if (dms)
-    return
-      DMS::Encode(lat, prec + 5, DMS::LATITUDE) + " " +
-      DMS::Encode(lon, prec + 5, DMS::LONGITUDE);
-  else {
-    std::ostringstream os;
-    os << std::fixed << std::setprecision(prec + 5) << lat << " " << lon;
-    return os.str();
-  }
+  return dms ?
+    DMS::Encode(lat, prec + 5, DMS::LATITUDE) + " " +
+    DMS::Encode(lon, prec + 5, DMS::LONGITUDE) :
+    DMS::Encode(lat, prec + 5, DMS::NUMBER) + " " +
+    DMS::Encode(lon, prec + 5, DMS::NUMBER);
 }
 
 std::string AzimuthString(real azi, int prec, bool dms) {
   using namespace GeographicLib;
-  if (dms)
-    return DMS::Encode(azi, prec + 5, DMS::AZIMUTH);
-  else {
-    std::ostringstream os;
-    os << std::fixed << std::setprecision(prec + 5)
-       << (azi >= 180 ? azi - 360 : azi);
-    return os.str();
-  }
-}
-
-real ReadAzimuth(const std::string& s) {
-  using namespace GeographicLib;
-  DMS::flag ind;
-  real azi = DMS::Decode(s, ind);
-  if (!(azi >= -180 && azi <= 360))
-    throw GeographicErr("Azimuth " + s + " not in range [-180,360]");
-  if (azi >= 180) azi -= 360;
-  if (ind == DMS::LATITUDE)
-    throw GeographicErr("Azimuth " + s
-                        + " has a latitude hemisphere, N/S");
-  return azi;
+  return dms ? DMS::Encode(azi, prec + 5, DMS::AZIMUTH) :
+    DMS::Encode(azi >= 180 ? azi - 360 : azi, prec + 5, DMS::NUMBER);
 }
 
 std::string DistanceStrings(real s12, real a12,
                             bool full, bool arcmode, int prec, bool dms) {
   using namespace GeographicLib;
-  std::ostringstream os;
+  std::string s;
   if (full || !arcmode)
-    os << std::fixed << std::setprecision(prec) << s12;
+    s += DMS::Encode(s12, prec, DMS::NUMBER);
   if (full)
-    os << " ";
-  if (full || arcmode) {
-    if (dms)
-      os << DMS::Encode(a12, prec + 5, DMS::NONE);
-    else
-      os << std::fixed << std::setprecision(prec + 5) << a12;
-  }
-  return os.str();
+    s += " ";
+  if (full || arcmode)
+    s += dms ? DMS::Encode(a12, prec + 5, DMS::NONE) :
+      DMS::Encode(a12, prec + 5, DMS::NUMBER);
+  return s;
 }
 
 real ReadDistance(const std::string& s, bool arcmode) {
   using namespace GeographicLib;
-  real s12;
-  if (arcmode) {
-    DMS::flag ind;
-    s12 = DMS::Decode(s, ind);
-    if (ind != DMS::NONE)
-      throw GeographicErr("Arc angle " + s
-                          + " includes a hemisphere, N/E/W/S");
-  } else {
-    std::istringstream is(s);
-    if (!(is >> s12))
-      throw GeographicErr("Could not read distance: " + s);
-    // is >> s12 gobbles final E in 1234E, so look for last character which is
-    // legal as the final character in a number (digit or period).
-    int pos = std::min(int(is.tellg()),
-                       int(s.find_last_of("0123456789.")) + 1);
-    if (pos != int(s.size()))
-      throw GeographicErr("Extra text " + s.substr(pos) + " in distance " + s);
-  }
-  return s12;
+  return arcmode ? DMS::DecodeAngle(s) : DMS::Decode(s);
 }
 
 int main(int argc, char* argv[]) {
@@ -173,8 +129,8 @@ int main(int argc, char* argv[]) {
   bool linecalc = false, inverse = false, arcmode = false,
     dms = false, full = false;
   real
-    a = GeographicLib::Constants::WGS84_a(),
-    r = GeographicLib::Constants::WGS84_r();
+    a = Constants::WGS84_a(),
+    r = Constants::WGS84_r();
   real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
   real azi2sense = 0;
   int prec = 3;
@@ -191,25 +147,29 @@ int main(int argc, char* argv[]) {
       linecalc = true;
       if (m + 3 >= argc) return usage(1);
       try {
-        GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
-                                         std::string(argv[m + 2]),
-                                         lat1, lon1);
-        azi1 = ReadAzimuth(std::string(argv[m + 3]));
-        m += 3;
+        DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                          lat1, lon1);
+        azi1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
       }
       catch (const std::exception& e) {
-        std::cerr << "ERROR: " << e.what() << "\n";
-        return usage(1);
+        std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+        return 1;
       }
+      m += 3;
     } else if (arg == "-n") {
       a = 6378388;
       r = 297;
     } else if (arg == "-e") {
-      for (unsigned i = 0; i < 2; ++i) {
-        if (++m == argc) return usage(1);
-        std::istringstream str(argv[m]);
-        if (!(str >> (i ? r : a))) return usage(1);
+      if (m + 2 >= argc) return usage(1);
+      try {
+        a = DMS::Decode(std::string(argv[m + 1]));
+        r = DMS::Decode(std::string(argv[m + 2]));
       }
+      catch (const std::exception& e) {
+        std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+        return 1;
+      }
+      m += 2;
     }
     else if (arg == "-d")
       dms = true;
@@ -220,13 +180,17 @@ int main(int argc, char* argv[]) {
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
       std::istringstream str(argv[m]);
-      if (!(str >> prec)) return usage(1);
+      char c;
+      if (!(str >> prec) || (str >> c)) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+      }
     } else
       return usage(arg != "-h");
   }
 
-  const GeographicLib::Geodesic geod(a, r);
-  GeographicLib::GeodesicLine l;
+  const Geodesic geod(a, r);
+  GeodesicLine l;
   if (linecalc)
     l = geod.Line(lat1, lon1, azi1);
 
@@ -246,8 +210,8 @@ int main(int argc, char* argv[]) {
         std::string strc;
         if (str >> strc)
           throw GeographicErr("Extraneous input: " + strc);
-        GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
-        GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
+        DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
+        DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
         a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
         if (full)
           std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
@@ -255,8 +219,8 @@ int main(int argc, char* argv[]) {
         if (full)
           std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
         std::cout << AzimuthString(azi2 + azi2sense, prec, dms) << " "
-                  << DistanceStrings(s12, a12, full, arcmode, prec, dms)
-                  << " " << m12 << "\n";
+                  << DistanceStrings(s12, a12, full, arcmode, prec, dms) << " "
+                  << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
       } else {
         if (linecalc) {
           std::string ss12;
@@ -274,8 +238,8 @@ int main(int argc, char* argv[]) {
           std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
-          azi1 = ReadAzimuth(sazi1);
+          DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
+          azi1 = DMS::DecodeAzimuth(sazi1);
           s12 = ReadDistance(ss12, arcmode);
           a12 =
             geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12, arcmode);
@@ -290,7 +254,7 @@ int main(int argc, char* argv[]) {
         if (full)
           std::cout << " "
                     << DistanceStrings(s12, a12, full, arcmode, prec, dms);
-        std::cout << " " << m12 << "\n";
+        std::cout << " " << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
       }
     }
     catch (const std::exception& e) {

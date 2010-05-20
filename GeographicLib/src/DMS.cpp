@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include "GeographicLib/DMS.hpp"
-#include <iomanip>
 
 #define GEOGRAPHICLIB_DMS_CPP "$Id$"
 
@@ -149,6 +148,22 @@ namespace GeographicLib {
     return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
   }
 
+  Math::real DMS::Decode(const std::string& str) {
+    std::istringstream is(str);
+    real num;
+    if (!(is >> num))
+      throw GeographicErr("Could not read number: " + str);
+    // On some platforms, is >> num gobbles final E in 1234E, so look for last
+    // character which is legal as the final character in a number (digit or
+    // period).
+    int pos = std::min(int(is.tellg()),
+                       int(str.find_last_of("0123456789.")) + 1);
+    if (pos != int(str.size()))
+      throw GeographicErr("Extra text " + str.substr(pos) +
+                          " in number " + str);
+    return num;
+  }
+
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
                          real& lat, real& lon) {
       real a, b;
@@ -179,6 +194,27 @@ namespace GeographicLib {
         lon1 -= 360;
       lat = lat1;
       lon = lon1;
+  }
+
+  Math::real DMS::DecodeAngle(const std::string& angstr) {
+    DMS::flag ind;
+    real ang = Decode(angstr, ind);
+    if (ind != DMS::NONE)
+      throw GeographicErr("Arc angle " + angstr
+                          + " includes a hemisphere, N/E/W/S");
+    return ang;
+  }
+
+  Math::real DMS::DecodeAzimuth(const std::string& azistr) {
+    DMS::flag ind;
+    real azi = Decode(azistr, ind);
+    if (ind == DMS::LATITUDE)
+      throw GeographicErr("Azimuth " + azistr
+                          + " has a latitude hemisphere, N/S");
+    if (!(azi >= -180 && azi <= 360))
+      throw GeographicErr("Azimuth " + azistr + " not in range [-180,360]");
+    if (azi >= 180) azi -= 360;
+    return azi;
   }
 
   string DMS::Encode(real angle, component trailing, unsigned prec, flag ind) {

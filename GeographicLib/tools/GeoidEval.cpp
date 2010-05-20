@@ -13,14 +13,16 @@
 
 #include "GeographicLib/Geoid.hpp"
 #include "GeographicLib/DMS.hpp"
+#include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 
 int usage(int retval) {
+  using namespace GeographicLib;
   std::string
-    geoidpath = GeographicLib::Geoid::GeoidPath(),
-    defaultpath = GeographicLib::Geoid::DefaultPath();
+    geoidpath = Geoid::GeoidPath(),
+    defaultpath = Geoid::DefaultPath();
   if (geoidpath.empty())
     geoidpath = "UNDEFINED";
   ( retval ? std::cerr : std::cout ) <<
@@ -34,10 +36,8 @@ easterly gradients of the geoid height (i.e., the rate at which the\n\
 geoid height changes per unit distance along the WGS84 ellipsoid in\n\
 the specified directions).\n\
 \n\
-Positions are given as latitude and longitude, either in decimal\n\
-degrees or degrees, minutes, and seconds.  The latitude should be\n\
-given first, unless at least one hemisphere desiginator is\n\
-provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.\n\
+Positions are given as latitude and longitude, UTM/UPS, or MGRS, in\n\
+any of the formats accepted by GeoConvert.\n\
 \n\
 By default the EGM96 geoid is used with a 5\' grid.  This may be\n\
 overriden with the -n option.  The name specified should be one of\n\
@@ -110,19 +110,16 @@ int main(int argc, char* argv[]) {
       cacheall = false;
       cachearea = true;
       try {
-        GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
-                                         std::string(argv[m + 2]),
-                                         caches, cachew);
-        m += 2;
-        GeographicLib::DMS::DecodeLatLon(std::string(argv[m + 1]),
-                                         std::string(argv[m + 2]),
-                                         cachen, cachee);
-        m += 2;
+        DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                          caches, cachew);
+        DMS::DecodeLatLon(std::string(argv[m + 3]), std::string(argv[m + 4]),
+                          cachen, cachee);
       }
       catch (const std::exception& e) {
-        std::cerr << "ERROR: " << e.what() << "\n";
-        return usage(1);
+        std::cerr << "Error decoding argument of -c: " << e.what() << "\n";
+        return 1;
       }
+      m += 4;
     } else if (arg == "-n") {
       if (++m == argc) return usage(1);
       geoid = argv[m];
@@ -139,7 +136,7 @@ int main(int argc, char* argv[]) {
 
   int retval = 0;
   try {
-    GeographicLib::Geoid g(geoid, dir, cubic);
+    Geoid g(geoid, dir, cubic);
     try {
       if (cacheall)
         g.CacheAll();
@@ -166,20 +163,13 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << std::fixed;
+    GeoCoords p;
     std::string s;
     while (std::getline(std::cin, s)) {
       try {
-        std::istringstream  str(s);
-        std::string stra, strb;
-        if (!(str >> stra >> strb))
-          throw GeographicErr("Incomplete input: " + s);
-        std::string strc;
-        if (str >> strc)
-          throw GeographicErr("Extraneous input: " + strc);
-        real lat, lon;
-        GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
+        p.Reset(s);
         real gradn, grade;
-        real h = g(lat, lon, gradn, grade);
+        real h = g(p.Latitude(), p.Longitude(), gradn, grade);
         std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
                   << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";
       }

@@ -172,9 +172,9 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return asinh(\e x).  This is defined in terms of log1p(\e x) in order to
-     * maintain accuracy near \e x = 0.  In addition, the odd parity of the
-     * function is enforced.
+     * Return asinh(\e x).  This is defined in terms of Math::log1p(\e x) in
+     * order to maintain accuracy near \e x = 0.  In addition, the odd parity
+     * of the function is enforced.
      **********************************************************************/
     static inline real asinh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
@@ -192,9 +192,9 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return atanh(\e x).  This is defined in terms of log1p(\e x) in order to
-     * maintain accuracy near \e x = 0.  In addition, the odd parity of the
-     * function is enforced.
+     * Return atanh(\e x).  This is defined in terms of Math::log1p(\e x) in
+     * order to maintain accuracy near \e x = 0.  In addition, the odd parity
+     * of the function is enforced.
      **********************************************************************/
     static inline real atanh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity

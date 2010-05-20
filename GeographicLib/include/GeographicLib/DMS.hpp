@@ -12,6 +12,7 @@
 
 #include "GeographicLib/Constants.hpp"
 #include <sstream>
+#include <iomanip>
 
 namespace GeographicLib {
 
@@ -43,10 +44,12 @@ namespace GeographicLib {
 
     /**
      * Indicator for presence of hemisphere indicator (N/S/E/W) on latitudes
-     * and longitudes.  AZIMUTH is used in Encode to indicate output in [000,
-     * 360) with no letter indicator.
+     * and longitudes.  DMS::AZIMUTH is used in Encode to indicate output in
+     * [000, 360) with no letter indicator.  DMS::NUMBER is used in Encode to
+     * indicate the output of a plain number.
      **********************************************************************/
-    enum flag { NONE = 0, LATITUDE = 1, LONGITUDE = 2, AZIMUTH = 3 };
+    enum flag { NONE = 0, LATITUDE = 1, LONGITUDE = 2, AZIMUTH = 3,
+                NUMBER = 4, };
 
     /**
      * Indicator for trailing units on an angle.
@@ -82,6 +85,11 @@ namespace GeographicLib {
     { return d + (m + s/real(60))/real(60); }
 
     /**
+     * Convert a string \e str to a real number.
+     **********************************************************************/
+    static Math::real Decode(const std::string& str);
+
+    /**
      * Convert two strings \e dmsa and \e dmsb to a latitude, \e lat, and
      * longitude, \e lon.  By default, the \e lat (resp., \e lon) is assigned
      * to the results of decoding \e dmsa (resp., \e dmsb).  However this is
@@ -96,37 +104,58 @@ namespace GeographicLib {
                              real& lat, real& lon);
 
     /**
-     * Convert \e degree into a DMS string.  \e trailing indicates the least
-     * significant component of the string (and this component is given as a
-     * decimal number if necessary).  \e prec indicates the number of digits
-     * after the decimal point for the trailing component.  \e flag indicates
-     * additional formating as follows
-     * - flag == NONE, signed result no leading zeros on degrees except in the
-     *   units place, e.g., -8d03'.
-     * - flag == LATITUDE, trailing N or S hemisphere designator, no sign, pad
-     *   degress to 2 digits, e.g., 08d03'S.
-     * - flag == LONGITUDE, trailing E or W hemisphere designator, no sign, pad
-     *   degress to 3 digits, e.g., 008d03'W.
-     * - flag == AZIMUTH, convert to the range [0, 360<sup>o</sup>), no sign,
-     *   pad degrees to 3 digits, , e.g., 351d57'.
+     * Convert a string \e angstr to an angle in degrees.  No hemisphere
+     * designator is allowed and no check is done on the range of the result.
+     **********************************************************************/
+    static Math::real DecodeAngle(const std::string& angstr);
+
+    /**
+     * Convert a string \e azistr to an azimuth in degrees.  A hemisphere
+     * designator E/W can be used; the result is multiplied by -1 if W is
+     * present.  Throws an error if the result is out of the range
+     * [-180<sup>o</sup>, 360<sup>o</sup>].  Finally the azimuth is reduced to
+     * the range [-180<sup>o</sup>, 180<sup>o</sup>).
+     **********************************************************************/
+    static Math::real DecodeAzimuth(const std::string& azistr);
+
+    /**
+     * Convert \e angle (in degrees) into a DMS string.  \e trailing indicates
+     * the least significant component of the string (and this component is
+     * given as a decimal number if necessary).  \e prec indicates the number
+     * of digits after the decimal point for the trailing component.  \e flag
+     * indicates additional formating as follows
+     * - flag == DMS::NONE, signed result no leading zeros on degrees except in
+     *   the units place, e.g., -8d03'.
+     * - flag == DMS::LATITUDE, trailing N or S hemisphere designator, no sign,
+     *   pad degress to 2 digits, e.g., 08d03'S.
+     * - flag == DMS::LONGITUDE, trailing E or W hemisphere designator, no
+     *   sign, pad degress to 3 digits, e.g., 008d03'W.
+     * - flag == DMS::AZIMUTH, convert to the range [0, 360<sup>o</sup>), no
+     *   sign, pad degrees to 3 digits, , e.g., 351d57'.
      * .
      * The integer parts of the minutes and seconds components are always given
      * with 2 digits.
      **********************************************************************/
-    static std::string Encode(real degree, component trailing, unsigned prec,
+    static std::string Encode(real angle, component trailing, unsigned prec,
                               flag ind = NONE);
 
     /**
-     * Convert \e degree into a DMS string selecting the trailing component
+     * Convert \e angle into a DMS string selecting the trailing component
      * based on \e prec.  \e prec indicates the precision relative to 1 degree,
      * e.g., \e prec = 3 gives a result accurate to 0.1' and \e prec = 4 gives
-     * a result accurate to 1&quot;.
+     * a result accurate to 1&quot;.  If \e ind is DMS::NUMBER, then merely
+     * format \e angle as a number in fixed format with precision \e prec.
      **********************************************************************/
-    static std::string Encode(real degree, unsigned prec, flag ind = NONE) {
-      return Encode(degree,
-                    prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
-                    prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
-                    ind);
+    static std::string Encode(real angle, unsigned prec, flag ind = NONE) {
+      if (ind == NUMBER) {
+        std::ostringstream s;
+        s << std::fixed << std::setprecision(prec) << angle;
+        return s.str();
+      } else
+        return Encode(angle,
+                      prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
+                      prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
+                      ind);
     }
 
     /**

@@ -16,8 +16,7 @@
 /**
  * The order of the expansions used by Geodesic.
  **********************************************************************/
-#define GEOD_ORD \
-(GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 3 : 7)
+#define GEOD_ORD (GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 3 : 7)
 #endif
 
 namespace GeographicLib {
@@ -73,7 +72,6 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLine;
-    friend class CassiniSoldner;
     static const int nA1 = GEOD_ORD, nC1 = GEOD_ORD, nC1p = GEOD_ORD,
       nA2 = GEOD_ORD, nC2 = GEOD_ORD, nA3 = GEOD_ORD, nC3 = GEOD_ORD;
     static const unsigned maxit = 50;
@@ -85,20 +83,21 @@ namespace GeographicLib {
                  real& s12s, real& m12a, real& m0,
                  real tc[], real zc[]) const throw();
     static real Astroid(real R, real z) throw();
-    void InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
-                      real lam12, real slam12, real clam12,
+    real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
+                      real lam12,
                       real& salp1, real& calp1,
-                      real tc[], real zc[]) const throw();
+                      real& salp2, real& calp2,
+                      real C1a[], real C2a[]) const throw();
     real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
                   real& eps, bool diffp, real& dlam12,
-                  real tc[], real zc[], real ec[])
+                  real C1a[], real C2a[], real C3a[])
       const throw();
 
     static const real eps2, tol0, tol1, tol2, xthresh;
-    const real _a, _r, _f, _f1, _e2, _ep2, _n, _b;
+    const real _a, _r, _f, _f1, _e2, _ep2, _n, _b, _etol2;
     static real SinSeries(real sinx, real cosx, const real c[], int n)
       throw();
     static inline real AngNormalize(real x) throw() {
@@ -248,16 +247,15 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class Geodesic;
-    friend class CassiniSoldner;
     static const int nC1 = Geodesic::nC1, nC1p = Geodesic::nC1p,
       nC2 = Geodesic::nC2, nC3 = Geodesic::nC3;
 
     real _lat1, _lon1, _azi1;
-    real _a, _r,  _b, _f1, _salp0, _calp0, _k2 ,
+    real _a, _r,  _b, _f1, _salp0, _calp0, _k2,
       _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
       _A1m1, _A2m1, _A3c, _B11, _B21, _B31;
     // index zero elements of these arrays are unused
-    real _C1[nC1 + 1], _C1p[nC1p + 1], _C2[nC2 + 1], _C3[nC3];
+    real _C1a[nC1 + 1], _C1pa[nC1p + 1], _C2a[nC2 + 1], _C3a[nC3];
 
     static inline real sq(real x) throw() { return x * x; }
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1)
@@ -286,6 +284,17 @@ namespace GeographicLib {
       const throw();
 
     /**
+     * Return the scale of the geodesic line extending an arc length \e a12
+     * (degrees) from point 1 to point 2.  \e M12 (a number) measures the
+     * convergence of initially parallel geodesics.  It is defined by the
+     * following construction: starting at point 1 proceed at azimuth \e azi1 +
+     * 90<sup>o</sup> a small distance \e dt; turn -90<sup>o</sup> and proceed
+     * a distance \e s12 (\e not the arc length \e a12); the distance to point
+     * 2 is given by \e M12 \e dt.  \e M21 is defined analogously.
+     **********************************************************************/
+    void Scale(real a12, real& M12, real& M21) const throw();
+
+    /**
      * Has this object been initialized so that Position can be called?
      **********************************************************************/
     bool Init() const throw() { return _b > 0; }
@@ -305,6 +314,22 @@ namespace GeographicLib {
      * point 1.
      **********************************************************************/
     Math::real Azimuth() const throw() { return Init() ? _azi1 : 0; }
+
+    /**
+     * Return the azimuth (degrees) of the geodesic line as it crosses the
+     * equator in a northward direction.
+     **********************************************************************/
+    Math::real EquatorialAzimuth() const throw() {
+      return Init() ? atan2(_salp0, _calp0) / Constants::degree() : 0;
+    }
+
+    /**
+     * Return the arc length (degrees) between the northward equatorial
+     * crossing and point 1.
+     **********************************************************************/
+    Math::real EquatorialArc() const throw() {
+      return Init() ? atan2(_ssig1, _csig1) / Constants::degree() : 0;
+    }
 
     /**
      * The major radius of the ellipsoid (meters).  This is that value of \e a
