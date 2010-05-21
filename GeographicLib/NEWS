@@ -6,7 +6,39 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.1.
+The current version of the library is 1.2.
+
+Changes between 1.2 (released 2010-05-21) and 1.1 versions:
+
+  * FIX BUGS in GeographicLib::Geodesic,
+    + wrong azimuth returned by Direct if point 2 is on a pole;
+    + Inverse sometimes fails with very close points.
+
+  * Improve calculation of scale in GeographicLib::CassiniSoldner,
+    + add GeodesicLine::Scale, GeodesicLine::EquatorialAzimuth, and
+      GeodesicLine::EquatorialArc;
+    + break friend connection between CassiniSoldner and Geodesic.
+
+  * Add DMS::DecodeAngle and DMS::DecodeAzimuth. Extend DMS::Decode and
+    DMS::Encode to deal with distances.
+
+  * Code and documentation changes in Geodesic and Geocentric for
+    consistency with the forthcoming paper on geodesics.
+
+  * Increase order of series using in Geodesic to 6 (full accuracy
+    maintained for ellipsoid flattening < 0.01).
+
+  * Macro __NO_LONG_DOUBLE_MATH to disable use of long double.
+
+  * Correct declaration of Math::isfinite to return a bool.
+
+  * Changes in the Utility Programs,
+    + improve error reporting when parsing command line arguments;
+    + accept latitudes and longitudes in decimal degrees or degrees,
+      minutes, and seconds, with optional hemisphere designators;
+    + GeoConvert -z accepts zone or zone+hemisphere;
+    + GeoidEval accepts any of the input formats used by GeoConvert;
+    + CartConvert allows the ellipsoid to be specified with -e.
 
 Changes between 1.1 (released 2010-02-09) and 1.0 versions:
 
