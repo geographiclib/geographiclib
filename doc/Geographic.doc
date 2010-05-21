@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.1
-\date 2010-02-09
+\version 1.2
+\date 2010-05-21
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib	</a>
 .
 The code is available for download at
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">
-  geographiclib-1.1.tar.gz</a>
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.zip/download">
-  geographiclib-1.1.zip</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">
+  geographiclib-1.2.tar.gz</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.zip/download">
+  geographiclib-1.2.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -155,15 +155,15 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">
+   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.1.tar.gz
+   - tar xfpvz geographiclib-1.2.tar.gz
    .
-   This will create a geographiclib-1.1 directory.  (Alternatively,
+   This will create a geographiclib-1.2 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.1 directory
-   - cd geographiclib-1.1
+ - Change to the geographiclib-1.2 directory
+   - cd geographiclib-1.2
  - Create the library and the utility programs
    - make all
    .
@@ -2379,7 +2379,7 @@ style of numbering.  Now, the library uses
 libtool's version numbering scheme</a> using an interface and revision
 numbers.)
 
- - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-2.0.tar.gz/download">2.0 (not released yet)</a>
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>
   - FIX BUGS in GeographicLib::Geodesic,
     - wrong azimuth returned by Direct if point 2 is on a pole;
     - Inverse sometimes fails with very close points.
