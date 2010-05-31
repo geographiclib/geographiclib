@@ -10,7 +10,7 @@ INCLUDEPATH = ../include
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
-	Geoid LambertConformalConic
+	Geoid LambertConformalConic Gnomonic
 
 HEADERS = Constants.hpp $(addsuffix .hpp,$(MODULES))
 SOURCES = $(addsuffix .cpp,$(MODULES))

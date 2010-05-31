@@ -238,6 +238,15 @@ namespace GeographicLib {
       return std::isfinite(x) != 0;
 #endif
     }
+
+    /**
+     * Return a NaN if available, otherwise return the max real.
+     **********************************************************************/
+    static inline real NaN() throw() {
+      return std::numeric_limits<real>::has_quiet_NaN ?
+        std::numeric_limits<real>::quiet_NaN() :
+        std::numeric_limits<real>::max();
+    }
   };
 
   /**

@@ -17,6 +17,7 @@ $(top_srcdir)/include/GeographicLib/Geocentric.hpp \
 $(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
 $(top_srcdir)/include/GeographicLib/Geodesic.hpp \
 $(top_srcdir)/include/GeographicLib/Geoid.hpp \
+$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 $(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
 $(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
 $(top_srcdir)/include/GeographicLib/MGRS.hpp \
@@ -34,6 +35,7 @@ $(top_srcdir)/src/Geocentric.cpp \
 $(top_srcdir)/src/GeoCoords.cpp \
 $(top_srcdir)/src/Geodesic.cpp \
 $(top_srcdir)/src/Geoid.cpp \
+$(top_srcdir)/src/Gnomonic.cpp \
 $(top_srcdir)/src/LambertConformalConic.cpp \
 $(top_srcdir)/src/LocalCartesian.cpp \
 $(top_srcdir)/src/MGRS.cpp \

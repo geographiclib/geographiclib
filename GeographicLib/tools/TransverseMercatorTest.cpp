@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 
   real e, a;
   if (testing) {
-    e = real(0.1L);
+    e = 1/real(10);
     EllipticFunction temp(e * e);
     a = 1/temp.E();
   }
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 
   std::string s;
   int retval = 0;
-  std::cout << std::setprecision(16);
+  std::cout << std::fixed;
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
@@ -118,7 +118,11 @@ int main(int argc, char* argv[]) {
         else
           TME.Forward(real(0), lat, lon, x, y, gamma, k);
       }
-      std::cout << lat << " " << lon << " " << x << " " << y << " "
+      std::cout << std::setprecision(15)
+                << lat << " " << lon << " "
+                << std::setprecision(10)
+                << x << " " << y << " "
+                << std::setprecision(16)
                 << gamma << " " << k << "\n";
     }
     catch (const std::exception& e) {
