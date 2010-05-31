@@ -50,10 +50,10 @@ namespace GeographicLib {
     real lat1, lon1, azi1, M, s;
     int count = numit;
     if (rho * _f < _a / 2)
-      s = _a * std::atan(rho/_a);
+      s = _a * atan(rho/_a);
     else {
       real m, Mx, ang = 90;
-      int trip = _f == 0 ? 1 : -std::log(rho/_a) / std::log(_f);
+      int trip = _f == 0 ? 1 : max(1, int(-log(rho/_a) / log(_f) + real(0.5)));
       while (count--) {
         s = line.Position(ang, lat1, lon1, azi1, m, true);
         line.Scale(ang, M, Mx);
@@ -81,7 +81,7 @@ namespace GeographicLib {
       }
       real ds = (m/M - rho) * M * M;
       s -= ds;
-      if (std::abs(ds) < eps * _a)
+      if (abs(ds) < eps * _a)
         ++trip;
     }
     if (count >= 0) {
