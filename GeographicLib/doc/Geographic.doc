@@ -2153,7 +2153,7 @@ Examples:
    -0.02 90.00 26000000 10000000 90.01 18.47
 
 Note that, unlike \ref geoconvert, TransverseMercatorTest has no
-no ability to change the precision of the output.
+ability to change the precision of the output.
 
 Here is the usage (obtained from "TranverseMercatorTest -h")
 \verbatim
@@ -2205,7 +2205,7 @@ Examples:
    6.483 45 -6335709.73
 
 Note that, unlike \ref geoconvert, CartConvert has no
-no ability to change the precision of the output.
+ability to change the precision of the output.
 
 Here is the usage (obtained from "CartConvert -h")
 \verbatim
@@ -2237,9 +2237,10 @@ If -r is given the reverse transformation is performed.
 \section equidistanttest EquidistantTest
 
 EquidistantTest is a command line utility for performing azimuthal
-equidistant and Cassini-Soldner projections using
-GeographicLib::AzimuthalEquidistant and GeographicLib::CassiniSoldner.
-These projections are both defined in terms of geodesics.
+equidistant, gnomonic, and Cassini-Soldner projections using
+GeographicLib::AzimuthalEquidistant, GeographicLib::Gnomonic, and
+GeographicLib::CassiniSoldner.  These projections are all defined in
+terms of geodesics.
 
 Examples (position of Caen in the Cassini-Soldner projection with origin
 at the Paris Observatory)
@@ -2249,7 +2250,7 @@ at the Paris Observatory)
    48.648 -2.007 86.7 0.999
 
 Note that, unlike \ref geoconvert, EquidistantTest has no
-no ability to change the precision of the output.
+ability to change the precision of the output.
 
 Here is the usage (obtained from "EquidistantTest -h")
 \verbatim

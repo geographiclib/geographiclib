@@ -8,7 +8,7 @@
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geodesic.o AzimuthalEquidistant.o
- * CassiniSoldner.o
+ * Gnomonic.o CassiniSoldner.o
  *
  * See \ref equidistanttest for usage information.
  **********************************************************************/

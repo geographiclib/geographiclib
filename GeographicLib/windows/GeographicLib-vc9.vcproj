@@ -20,7 +20,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
@@ -82,7 +82,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
@@ -141,7 +141,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)64"
+			OutputDirectory="$(ConfigurationName)64"
 			IntermediateDirectory="$(ConfigurationName)64"
 			ConfigurationType="4"
 			CharacterSet="0"
@@ -204,7 +204,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)64"
+			OutputDirectory="$(ConfigurationName)64"
 			IntermediateDirectory="$(ConfigurationName)64"
 			ConfigurationType="4"
 			CharacterSet="0"
@@ -320,6 +320,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Gnomonic.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\CassiniSoldner.cpp"
 				>
 			</File>
@@ -387,6 +391,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/AzimuthalEquidistant.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Gnomonic.hpp"
 				>
 			</File>
 			<File
