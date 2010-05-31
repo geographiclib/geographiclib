@@ -13,6 +13,7 @@ nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/GeoCoords.hpp \
 				GeographicLib/Geodesic.hpp \
 				GeographicLib/Geoid.hpp \
+				GeographicLib/Gnomonic.hpp \
 				GeographicLib/LambertConformalConic.hpp \
 				GeographicLib/LocalCartesian.hpp \
 				GeographicLib/MGRS.hpp \

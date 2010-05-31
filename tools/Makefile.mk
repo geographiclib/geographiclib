@@ -42,8 +42,8 @@ TransverseMercatorTest.o: Constants.hpp DMS.hpp EllipticFunction.hpp \
 	TransverseMercator.hpp TransverseMercatorExact.hpp
 CartConvert.o: Constants.hpp DMS.hpp Geocentric.hpp LocalCartesian.hpp
 Geod.o: Constants.hpp DMS.hpp Geodesic.hpp
-EquidistantTest.o: AzimuthalEquidistant.hpp CassiniSoldner.hpp Constants.hpp \
-	DMS.hpp Geodesic.hpp
+EquidistantTest.o: AzimuthalEquidistant.hpp CassiniSoldner.hpp Gnomonic.hpp \
+	 Constants.hpp DMS.hpp Geodesic.hpp
 GeoidEval.o: Constants.hpp DMS.hpp GeoCoords.hpp Geoid.hpp
 
 INSTALL = install -b

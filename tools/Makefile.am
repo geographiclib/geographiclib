@@ -39,6 +39,7 @@ Geod_SOURCES = Geod.cpp \
 EquidistantTest_SOURCES = EquidistantTest.cpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
 	../include/GeographicLib/CassiniSoldner.hpp \
+	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp

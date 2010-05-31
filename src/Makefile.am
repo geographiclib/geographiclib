@@ -17,6 +17,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		GeoCoords.cpp \
 		Geodesic.cpp \
 		Geoid.cpp \
+		Gnomonic.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
@@ -33,6 +34,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geodesic.hpp \
 		../include/GeographicLib/Geoid.hpp \
+		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \

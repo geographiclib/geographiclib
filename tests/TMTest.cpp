@@ -130,7 +130,7 @@ int main(int argc, char* argv[]) {
       errgr = real(std::abs((long double)(gam) - gam0));
       errkr = real(std::abs((long double)(k) - k0));
 
-      real 
+      real
         err = std::max(errf, errr),
         errg = std::max(errgf, errgr)
         - esterr/(a * std::sin((90 - lat0) * Constants::degree())

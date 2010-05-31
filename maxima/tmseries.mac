@@ -147,7 +147,7 @@ cd(v,m):=''(block([],local(cdcof),
    taylor(atan(x + eps), eps, 0, maxpow) but tidied up a bit. */
 atanexp(x,eps):=''(block([t:ratdisrep(taylor(atan(x+eps),eps,0,maxpow)),tq],
   t-subst(eps=0,t)+atan(x)))$
-  
+
 /* Convert from n to e^2 */
 e2_n(n):=4*n/(1+n)^2$
 

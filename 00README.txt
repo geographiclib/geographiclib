@@ -29,6 +29,7 @@ Files
       LocalCartesian.[ch]pp -- local cartesian coordinates
       Geodesic.[ch]pp -- geodesic calculatiosn
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
+      Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection

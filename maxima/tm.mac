@@ -118,7 +118,7 @@ expm1(x) := block([y : exp(bfloat(x)),z],
 /* Some versions of Maxima have a buggy sinh */
 snh(x) := block([u : expm1(x)],
   (u / (u + 1)) * (u + 2) /2);
-    
+
 /* Real only */
 psi_phi(phi):=block([s:sin(phi)],
   asinh(s/max(cos(phi),0.1b0*tol)) - e * atnh(e * s))$

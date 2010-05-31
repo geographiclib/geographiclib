@@ -130,8 +130,8 @@ The goals of %GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with g++ 4.3 under Linux and with MS
-Visual Studio 2005
+and the utilities have been tested with g++ 4.4 under Linux and with MS
+Visual Studio 2008.
 
 The section \ref transversemercator documents various properties of this
 projection.
@@ -1485,17 +1485,17 @@ calling Geodesic::Direct.  A speed-up by a further factor of 1.6 is
 obtained with the direct calculation if the distance is expressed in
 terms of the spherical arc length.
 
-On a 2.6 GHz Intel machine (g++, version 4.3.0, -O3), timings are as
+On a 2.6 GHz Intel machine (g++, version 4.4.0, -O3), timings are as
 follows:
- - Geodesic::Direct 0.93 us
- - GeodesicLine::Position 0.43 us (arcmode = false)
- - GeodesicLine::Position 0.27 us (arcmode = true)
- - Geodesic::Inverse 2.6 us
+ - Geodesic::Direct 0.96 us
+ - GeodesicLine::Position 0.45 us (arcmode = false)
+ - GeodesicLine::Position 0.29 us (arcmode = true)
+ - Geodesic::Inverse 2.8 us
  .
 The timing for Geodesic::Inverse is a mean.  Individual calls may take a
 few times longer because of the need to do additional Newton iterations.
 Mean number of Newton iterations is about 3, but this increases (rarely)
-to 17 with some values of the arguments.
+to 16 with some values of the arguments.
 
 Future work:
  - More documentation.
@@ -2253,24 +2253,31 @@ no ability to change the precision of the output.
 
 Here is the usage (obtained from "EquidistantTest -h")
 \verbatim
-Usage: EquidistantTest [-c lat0 lon0] [-z lat0 lon0] [-r] [-h]
+Usage: EquidistantTest -(c|z|g) lat0 lon0 [-z lat0 lon0] [-r] [-h]
 
-Convert geodetic coordinates to either azimuthal equidistant or
-Cassini-Soldner coordinates.  The center of the projection (lat0, lon0)
-is specified by either the -c option (for Cassini-Soldner) or -z option
-(for azimuthal equidistant).  At least one of these options must be
-given (the last one given is used).  The WGS84 model of the earth is
-used.
+Perform projections based on geodesics.  Convert geodetic coordinates to
+either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
+The center of the projection (lat0, lon0) is specified by either the -c
+option (for Cassini-Soldner), the -z option (for azimuthal equidistant),
+or the -g option (for gnomonic).  At least one of these options must be
+given (the last one given is used).
+
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
+ellipsoid.
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) latitude and longitude (degrees or DMS).
 For each set of geodetic coordinates, the corresponding projected
 coordinates x, y (meters) are printed on standard output together with
 the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,
-azi is the bearing of the easting direction and the scale in the
-northing direction is 1/rk.  For azimuthal equidistant, azi is the
-bearing of the radial direction and the scale in the azimuthal direction
-is 1/rk
+azi is the bearing of the easting direction and the scale in the easting
+direction is 1 and the scale in the northing direction is 1/rk.  For
+azimuthal equidistant and gnomonic, azi is the bearing of the radial
+direction and the scale in the azimuthal direction is 1/rk.  For
+azimuthal equidistant and gnomonic, the scales in the radial direction
+are 1 and 1/rk^2, respectively.
 
 If -r is given the reverse transformation is performed.  x and y are
 given on standard input and each line of the standard output gives
@@ -2378,6 +2385,13 @@ style of numbering.  Now, the library uses
 <a href="http://www.gnu.org/software/libtool/manual/libtool.html#Versioning">
 libtool's version numbering scheme</a> using an interface and revision
 numbers.)
+
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.x.tar.gz/download">1.x (not released)</a>
+  - Add GeographicLib::Gnomonic.
+  - Add -g and -e options to EquidistantTest.
+  - Use fixed-point notation for output from CartConvert,
+    EquidistantTest, TransverseMercatorTest.
+  - Add GeographicLib::Math::NaN().
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>
   - FIX BUGS in GeographicLib::Geodesic,
