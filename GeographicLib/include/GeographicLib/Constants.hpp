@@ -21,7 +21,7 @@
 #if defined(__GNUC__)
 // Suppress "defined but not used" warnings
 #define RCSID_DECL(x) namespace \
-{ char VAR_ ## x [] __attribute__((unused)) = x; }
+{ char VAR_ ## x [] __attribute__((used)) = x; }
 #else
 /**
  * Insertion of RCS Id strings into the object file.

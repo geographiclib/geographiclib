@@ -2231,7 +2231,7 @@ cartesian coordinates x, y, z (meters) are printed on standard output.
 
 If -r is given the reverse transformation is performed.
 
--h prints this help
+-h prints this help.
 \endverbatim
 
 \section equidistanttest EquidistantTest
@@ -2284,7 +2284,7 @@ If -r is given the reverse transformation is performed.  x and y are
 given on standard input and each line of the standard output gives
 latitude, longitude, azi, and rk.
 
--h prints this help
+-h prints this help.
 \endverbatim
 
 \section geoideval GeoidEval
@@ -2389,9 +2389,9 @@ numbers.)
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.x.tar.gz/download">1.x (not released)</a>
   - Add GeographicLib::Gnomonic.
-  - Add -g and -e options to EquidistantTest.
-  - Use fixed-point notation for output from CartConvert,
-    EquidistantTest, TransverseMercatorTest.
+  - Add -g and -e options to \ref equidistanttest.
+  - Use fixed-point notation for output from \ref cartconvert,
+    \ref equidistanttest, \ref transversemercatortest.
   - Add GeographicLib::Math::NaN().
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>
