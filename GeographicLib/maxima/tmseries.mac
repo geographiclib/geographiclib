@@ -64,7 +64,7 @@ tested out to maxpow = 30; but this takes a long time (see below).
    30  32641s = 545m
     */
 
-maxpow:30$ /* Max power for forward and reverse projections */
+maxpow:6$ /* Max power for forward and reverse projections */
 /* Notation
 
    m = elliptic function parameter
