@@ -41,6 +41,17 @@ namespace GeographicLib {
    * The conversions all take place using a GeographicLib::Geodesic object (by
    * default GeographicLib::Geodesic::WGS84).  For more information on
    * geodesics see \ref geodesic.
+   *
+   * <b>CAUTION:</b> The definition of this projection for a sphere is
+   * standard.  However, there is no standard for how it should be extended to
+   * an ellipsoid.  The choices are:
+   * - Declare that the projection is undefined for an ellipsoid.
+   * - Project to a tangent plane from the center of the ellipsoid.  This
+   *   causes great ellipses to appear as straight lines in the projection;
+   *   i.e., it generalizes the spherical great circle to a great ellipse.
+   * - The projection given here.  This causes geodesics close to the center
+   *   point to appear as straight lines in the projection; i.e., it
+   *   generalizes the spherical great circle to a geodesic.
    **********************************************************************/
 
   class Gnomonic {
