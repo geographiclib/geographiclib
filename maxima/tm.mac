@@ -283,7 +283,7 @@ ll(x,y):=block([sigma,thom,jacr,jaci,psi,lam,phi,gam,scale,c],
 
 Uses the array functions
 
- a1_a[i](n), s_z_a[i](z,n), s_z_d[i](z,n), z_s_a[i](s,n), z_s_d[i](s,n),
+ a1[i](n), zeta[i](z,n), zeta_d[i](z,n), zetap[i](s,n), zetap_d[i](s,n),
 
 defined in tmseries.mac.
 */
@@ -297,9 +297,9 @@ tms(phi,lam,i):=block([psi,xip,etap,z,sigma,sp,gam,k,b1],
   k:sqrt(1 - e2*sin(phi)^2)/(cos(phi)*hypot(snh(psi),cos(lam))),
   gam:atan(tan(xip)*tanh(etap)),
   z:xip+%i*etap,
-  b1:a1_a[i](n),
-  sigma:rectform(b1*s_z_a[i](z,n)),
-  sp:rectform(s_z_d[i](z,n)),
+  b1:a1[i](n),
+  sigma:rectform(b1*zeta[i](z,n)),
+  sp:rectform(zeta_d[i](z,n)),
   gam : gam - atan2(imagpart(sp),realpart(sp)),
   k : k * b1 * cabs(sp),
   [imagpart(sigma)*k0*a,realpart(sigma)*k0*a,gam/degree,k*k0])$
@@ -308,10 +308,10 @@ tms(phi,lam,i):=block([psi,xip,etap,z,sigma,sp,gam,k,b1],
 
 lls(x,y,i):=block([sigma,b1,s,z,zp,xip,etap,s,c,r,gam,k,lam,psi,phi],
   sigma:y/(a*k0)+%i*x/(a*k0),
-  b1:a1_a[i](n),
+  b1:a1[i](n),
   s:rectform(sigma/b1),
-  z:rectform(z_s_a[i](s,n)),
-  zp:rectform(z_s_d[i](s,n)),
+  z:rectform(zetap[i](s,n)),
+  zp:rectform(zetap_d[i](s,n)),
   gam : atan2(imagpart(zp), realpart(zp)),
   k : b1 / cabs(zp),
   xip:realpart(z),
