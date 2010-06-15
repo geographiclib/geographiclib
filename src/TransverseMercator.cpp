@@ -261,7 +261,7 @@ namespace GeographicLib {
         tau = tanx(phi),
         secphi = Math::hypot(real(1), tau),
         sig = sinh( eatanhe(sin(phi)) ),
-        taup = (Math::hypot(real(1), sig) * tau - sig * secphi);
+        taup = Math::hypot(real(1), sig) * tau - sig * secphi;
       xip = atan2(taup, c);
       // Used to be
       //   etap = Math::atanh(sin(lam) / cosh(psi));

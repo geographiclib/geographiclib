@@ -63,11 +63,11 @@ maxpow:6$ /* Max power for forward and reverse projections */
 /* Notation
 
    e = eccentricity
-   e2 = e^2
-   n = third eccentricity
-   phi = geodetic latitude
-   zetap = Gauss-Schreiber TM = comples conformal latitude
-   psi = isometric latitude
+   e2 = e^2 = f*(2-f)
+   n = third flattening = f/(2-f)
+   phi = (complex) geodetic latitude
+   zetap = Gauss-Schreiber TM = complex conformal latitude
+   psi = Mercator = complex isometric latitude
    zeta = scaled UTM projection = complex rectifying latitude
 */
 
@@ -92,7 +92,7 @@ reverta(expr,var1,var2,eps,pow):=block([tauacc:1,sigacc:0,dsig],
 
 
 /* Expansion for atan(x+eps) for small eps.  Equivalent to
-   taylor(atan(x + eps), eps, 0, maxpow) but tidied up a bit. 
+   taylor(atan(x + eps), eps, 0, maxpow) but tidied up a bit.
  */
 atanexp(x,eps):=''(ratdisrep(taylor(atan(x+eps),eps,0,maxpow)))$
 

@@ -1485,7 +1485,7 @@ calling Geodesic::Direct.  A speed-up by a further factor of 1.6 is
 obtained with the direct calculation if the distance is expressed in
 terms of the spherical arc length.
 
-On a 2.6 GHz Intel machine (g++, version 4.4.0, -O3), timings are as
+On a 2.66 GHz Intel machine (g++, version 4.4.0, -O3), timings are as
 follows:
  - Geodesic::Direct 0.96 us
  - GeodesicLine::Position 0.45 us (arcmode = false)
