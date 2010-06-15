@@ -59,5 +59,6 @@ AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Constants.hpp Geodesic.hpp
 CassiniSoldner.o: CassiniSoldner.hpp Constants.hpp Geodesic.hpp
 Geoid.o: Constants.hpp Geoid.hpp
 LambertConformalConic.o: Constants.hpp LambertConformalConic.hpp
+Gnomonic.o: Gnomonic.hpp Constants.hpp Geodesic.hpp
 
 .PHONY: all install list clean
