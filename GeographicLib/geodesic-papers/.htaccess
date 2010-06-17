@@ -1,5 +1,6 @@
 Options Indexes
 IndexOptions DescriptionWidth=*
+AddDescription "Bagratuni, Course in Spheroidal Geodesy (1967)" bagratuni67.pdf
 AddDescription "du Séjour (1789), missing page from Google scan" dusejour89-add.pdf
 AddDescription "du Séjour (1789), missing figures from Google scan" dusejour89-fig.pdf
 AddDescription "Forsyth (1896b), missing page from Google scan" forsyth96b-add.pdf
