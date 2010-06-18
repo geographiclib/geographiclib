@@ -49,6 +49,18 @@ namespace GeographicLib {
    * - Project to a tangent plane from the center of the ellipsoid.  This
    *   causes great ellipses to appear as straight lines in the projection;
    *   i.e., it generalizes the spherical great circle to a great ellipse.
+   *   This was proposed by Roy Williams, Geometry of Navigation (Horwood,
+   *   Chichester, 1998).
+   * - Project to the conformal sphere with a latitude offset so that the
+   *   values of the latitude and longitude match for the center point and
+   *   perform a central projection onto the plane tangent to the conformal
+   *   sphere at the center point.  This causes normal sections through the
+   *   center point to appear as straight lines in the projection; i.e., it
+   *   generalizes the spherical great circle to a normal section.  This was
+   *   proposed by I. G. Letoval'tsev, Generalization of the Gnomonic
+   *   Projection for a Spheroid and the Principal Geodetic Problems Involved
+   *   in the Alignment of Surface Routes, Geodesy and Aerophotography (5),
+   *   271-274 (1963).
    * - The projection given here.  This causes geodesics close to the center
    *   point to appear as straight lines in the projection; i.e., it
    *   generalizes the spherical great circle to a geodesic.
