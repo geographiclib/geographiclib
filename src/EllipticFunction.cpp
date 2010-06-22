@@ -209,4 +209,9 @@ namespace GeographicLib {
     return ei;
   }
 
+  Math::real EllipticFunction::E(real phi) const throw() {
+    real sn = sin(phi);
+    return E(sn, cos(phi), sqrt(1 - _m * sn * sn));
+  }
+
 } // namespace GeographicLib
