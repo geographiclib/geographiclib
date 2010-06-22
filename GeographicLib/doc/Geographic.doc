@@ -2393,6 +2393,7 @@ numbers.)
   - Use fixed-point notation for output from \ref cartconvert,
     \ref equidistanttest, \ref transversemercatortest.
   - Add GeographicLib::Math::NaN().
+  - Add EllipticFunction::E(real).
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>
   - FIX BUGS in GeographicLib::Geodesic,
