@@ -5,11 +5,6 @@
  * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
- *
- * Compile with -I../include and link with ProjExact.o
- * EllipticFunction.o Proj.o
- *
- * See \ref transversemercatortest for usage information.
  **********************************************************************/
 
 #include "GeographicLib/LambertConformalConic.hpp"

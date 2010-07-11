@@ -20,6 +20,9 @@ namespace GeographicLib {
 
   const Math::real PolarStereographic::tol =
     real(0.1)*sqrt(numeric_limits<real>::epsilon());
+  // Overflow value s.t. atan(overflow) = pi/2
+  const Math::real PolarStereographic::overflow =
+    1 / sq(numeric_limits<real>::epsilon());
 
   PolarStereographic::PolarStereographic(real a, real r, real k0)
     : _a(a)
@@ -28,8 +31,8 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
-      // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) )
-    , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
+    , _C(exp(eatanhe(real(1))))
+    , _c( (1 - _f) * _C )
     , _k0(k0)
   {
     if (!(_a > 0))
@@ -42,20 +45,41 @@ namespace GeographicLib {
   PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_r(),
                           Constants::UPS_k0());
 
+  // This formulation converts to conformal coordinates by tau = tan(phi) and
+  // tau' = tan(phi') where phi' is the conformal latitude.  The formulas are:
+  //    tau = tan(phi)
+  //    secphi = hypot(1, tau)
+  //    sig = sinh(e * atanh(e * tau / secphi))
+  //    taup = tan(phip) = tau * hypot(1, sig) - sig * hypot(1, tau)
+  //    c = (1 - f) * exp(e * atanh(e))
+  //
+  // Forward:
+  //   rho = (2*k0*a/c) / (hypot(1, taup) + taup)  (taup >= 0)
+  //       = (2*k0*a/c) * (hypot(1, taup) - taup)  (taup <  0)
+  //
+  // Reverse:
+  //   taup = ((2*k0*a/c) / rho - rho / (2*k0*a/c))/2
+  //
+  // Scale:
+  //   k = (rho/a) * secphi * sqrt((1-e2) + e2 / secphi^2)
+  //
+  // In limit rho -> 0, tau -> inf, taup -> inf, secphi -> inf, secphip -> inf
+  //   secphip = taup = exp(-e * atanh(e)) * tau = exp(-e * atanh(e)) * secphi
+
   void PolarStereographic::Forward(bool northp, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
     const throw() {
-    real theta = 90 - (northp ? lat : -lat); //  the colatitude
-    real rho;
-    theta *= Constants::degree();
+    lat *= northp ? 1 : -1;
     real
-      // f = ((1 + e cos(theta))/(1 - e cos(theta)))^(e/2),
-      ctheta = cos(theta),
-      f = exp(eatanhe(ctheta)),
-      t2 = 2 * tan(theta/2) * f, // Snyder (15-9) (t2 = 2 * t)
-      m = sin(theta) / sqrt(1 - _e2 * sq(ctheta)); // Snyder (14-15)
-    rho = _a * _k0 * t2 / _c;                      // Snyder (21-33)
-    k = m < numeric_limits<real>::epsilon() ? _k0 : rho / (_a * m);
+      phi = lat * Constants::degree(),
+      tau = lat > -90 ? tan(phi) : -overflow,
+      secphi = Math::hypot(real(1), tau),
+      sig = sinh( eatanhe(tau / secphi) ),
+      taup = Math::hypot(real(1), sig) * tau - sig * secphi,
+      rho =  Math::hypot(real(1), taup) + abs(taup);
+    rho = taup >= 0 ? (lat < 90 ? 1/rho : 0) : rho;
+    rho *= 2 * _k0 * _a / _c;
+    k = lat < 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real
       lam = lon * Constants::degree();
@@ -69,36 +93,38 @@ namespace GeographicLib {
     const throw() {
     real
       rho = Math::hypot(x, y),
-      t2 = rho * _c / (_a * _k0),
-      theta = 2 * atan(t2/2);   // initial (spherical) estimate of colatitude
-    // Solve from theta using Newton's method on Snyder (15-9) which converges
-    // more rapidly than the iteration procedure given by Snyder (7-9).  First
-    // rewrite as
-    // v(theta) = 2 * tan(theta/2) * f - t2 = 0
+      t = rho / (2 * _k0 * _a / _c),
+      taup = (1 / t - t) / 2,
+      tau = taup * _C,
+      stol = tol * max(real(1), abs(taup));
+    // min iterations = 1, max iterations = 2; mean = 1.99
     for (int i = 0; i < numit; ++i) {
       real
-        ctheta = cos(theta),
-        f = exp(eatanhe(ctheta)),
-        v = 2 * tan(theta/2) * f - t2,
-        // dv/dtheta
-        dv = _e2m * f / ((1 - _e2 * sq(ctheta)) * sq(cos(theta/2))),
-        dtheta = -v/dv;
-      theta += dtheta;
-      if (abs(dtheta) < tol)
+        tau1 = Math::hypot(real(1), tau),
+        sig = sinh( eatanhe( tau / tau1 ) ),
+        sig1 =  Math::hypot(real(1), sig),
+        dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _e2m * sq(tau)) /
+        ( (sig1 * tau1 - sig * tau) * _e2m * tau1 );
+      tau += dtau;
+      if (abs(dtau) < stol)
         break;
     }
-    lat = (northp ? 1 : -1) * (90 - theta / Constants::degree());
-    // Result is in [-180, 180).  Assume atan2(0,0) = 0.
+    real
+      phi = atan(tau),
+      secphi = Math::hypot(real(1), tau);
+    k = rho != 0 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
+    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Constants::degree() : 90);
     lon = -atan2( -x, northp ? -y : y ) / Constants::degree();
-    real m = sin(theta) / sqrt(1 - _e2 * sq(cos(theta)));
-    k = m == 0 ? _k0 : rho / (_a * m);
     gamma = northp ? lon : -lon;
   }
 
   void PolarStereographic::SetScale(real lat, real k) {
     if (!(k > 0))
       throw GeographicErr("Scale is not positive");
+    if (!(abs(lat) <= 90))
+      throw GeographicErr("Latitude must be in [-90d, 90d]");
     real x, y, gamma, kold;
+    _k0 = 1;
     Forward(true, lat, 0, x, y, gamma, kold);
     _k0 *= k/kold;
   }

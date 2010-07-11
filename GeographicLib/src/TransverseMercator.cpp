@@ -258,9 +258,9 @@ namespace GeographicLib {
     if (lat < 90) {
       real
         c = max(real(0), cos(lam)), // cos(pi/2) might be negative
-        tau = tanx(phi),
+        tau = tan(phi),
         secphi = Math::hypot(real(1), tau),
-        sig = sinh( eatanhe(sin(phi)) ),
+        sig = sinh( eatanhe(tau / secphi) ),
         taup = Math::hypot(real(1), sig) * tau - sig * secphi;
       xip = atan2(taup, c);
       // Used to be
@@ -386,7 +386,7 @@ namespace GeographicLib {
     const throw() {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
-    // to solve for phi in terms of psi.
+    // to solve for phi in terms of tan(phi).
     real
       xi = y / (_a1 * _k0),
       eta = x / (_a1 * _k0);
@@ -447,7 +447,8 @@ namespace GeographicLib {
       // Use Newton's< method to solve for tau
       real
         taup = sin(xip)/r,
-        tau = taup;
+        tau = taup,
+        stol = tol * max(real(1), abs(taup));
       // min iterations = 1, max iterations = 2; mean = 1.99
       for (int i = 0; i < numit; ++i) {
         real
@@ -457,7 +458,7 @@ namespace GeographicLib {
           dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _e2m * sq(tau)) /
           ( (sig1 * tau1 - sig * tau) * _e2m * tau1 );
         tau += dtau;
-        if (abs(dtau) < tol * max(real(1), tau))
+        if (abs(dtau) < stol)
           break;
       }
       phi = atan(tau);
