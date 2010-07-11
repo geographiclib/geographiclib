@@ -184,19 +184,22 @@ printseries():=[printa1(),printtxf(),printtxr()]$
 /* Define array functions which are be read by tm.mac */
 defarrayfuns():=block([aa:a1*(1+n),alpha:zeta_zetap,beta:zetap_zeta,t],
   for i:1 thru maxpow do (
-    define(a1[i](n),ratdisrep(taylor(aa,n,0,i))/(1+n)),
+    define(a1_a[i](n),ratdisrep(taylor(aa,n,0,i))/(1+n)),
     t:expand(ratdisrep(taylor(alpha,n,0,i))),
-    define(zeta[i](zetap,n),
-      zetap+sum(coeff(t,sin(2*k*zetap))*sin(2*k*zetap),k,1,i)),
+    define(zeta_a[i](zp,n),
+      zp+sum(coeff(t,sin(2*k*zetap))*sin(2*k*zp),k,1,i)),
     t:diff(t,zetap),
-    define(zeta_d[i](zetap,n),
-      1+sum(coeff(t,cos(2*k*zetap))*cos(2*k*zetap),k,1,i)),
+    define(zeta_d[i](zp,n),
+      1+sum(coeff(t,cos(2*k*zetap))*cos(2*k*zp),k,1,i)),
     t:expand(ratdisrep(taylor(beta,n,0,i))),
-    define(zetap[i](zeta,n),
-      zeta+sum(coeff(t,sin(2*k*zeta))*sin(2*k*zeta),k,1,i)),
+    define(zetap_a[i](z,n),
+      z+sum(coeff(t,sin(2*k*zeta))*sin(2*k*z),k,1,i)),
     t:diff(t,zeta),
-    define(zetap_d[i](zeta,n),
-      1+sum(coeff(t,cos(2*k*zeta))*cos(2*k*zeta),k,1,i))))$
+    define(zetap_d[i](z,n),
+      1+sum(coeff(t,cos(2*k*zeta))*cos(2*k*z),k,1,i))))$
 
 printseries()$
+/*
 defarrayfuns()$
+save("tmseries.lsp",maxpow,arrays)$
+*/

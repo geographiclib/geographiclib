@@ -92,7 +92,9 @@ namespace GeographicLib {
   }
 
   Math::real TransverseMercatorExact::taupinv(real taup) const throw() {
-    real tau = taup;
+    real
+      tau = taup,
+      stol = tol * max(real(1), abs(taup));
     for (int i = 0; i < numit; ++i) {
       real
         tau1 = Math::hypot(real(1), tau),
@@ -101,7 +103,7 @@ namespace GeographicLib {
         dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _mv * sq(tau)) /
         ( (sig1 * tau1 - sig * tau) * _mv * tau1 );
       tau += dtau;
-      if (abs(dtau) < tol * max(real(1), tau))
+      if (abs(dtau) < stol)
         break;
     }
     return tau;
