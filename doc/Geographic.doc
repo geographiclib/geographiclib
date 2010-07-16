@@ -2398,6 +2398,11 @@ numbers.)
     \ref equidistanttest, \ref transversemercatortest.
   - Add GeographicLib::Math::NaN().
   - Add EllipticFunction::E(real).
+  - PolarStereographic.
+    - Improved conversion to conformal coordinates
+    - Fix bug with scale at opposite pole
+    - Complain is latitude out of range in SetScale
+  - Add long double version of hypot for Windows
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>
   - FIX BUGS in GeographicLib::Geodesic,

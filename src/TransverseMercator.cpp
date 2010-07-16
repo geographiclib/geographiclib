@@ -205,6 +205,28 @@ namespace GeographicLib {
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.
     _a1 = _b1 * _a;
+#if CLENSHAWCHECK
+    {
+      real ny = _n;
+      _df[1] = ny*(_n*(_n*(_n*(_n*(4642*_n+3360)-8610)+6300)+3150)-9450)/4725;
+      _dr[1] = ny*(_n*(_n*(_n*((390-2854*_n)*_n+1740)-1350)-450)+1350)/675;
+      ny *= _n;
+      _df[2] = ny*(_n*(_n*((2712-1522*_n)*_n-1365)-1008)+1575)/945;
+      _dr[2] = ny*(_n*(_n*(_n*(2323*_n+8112)-4767)-1512)+2205)/945;
+      ny *= _n;
+      _df[3] = ny*(_n*((4536-12686*_n)*_n+4590)-4914)/2835;
+      _dr[3] = ny*(_n*(_n*(73814*_n-34074)-11016)+10584)/2835;
+      ny *= _n;
+      _df[4] = ny*((-49664*_n-68040)*_n+55665)/28350;
+      _dr[4] = ny*((-799144*_n-268920)*_n+192555)/28350;
+      ny *= _n;
+      _df[5] = ny*(109598*_n-72666)/31185;
+      _dr[5] = (413226-724190*_n)*ny/31185;
+      ny *= _n;
+      _df[6] = 444337*ny/155925;
+      _dr[6] = 601676*ny/22275;
+    }
+#endif
   }
 
   const TransverseMercator
@@ -256,12 +278,34 @@ namespace GeographicLib {
     //   sinh(etap) = cos(phi')*sin(lam)/denom = sech(psi)*sin(lam)/denom
     real etap, xip;
     if (lat < 90) {
+#if CLENSHAWCHECK
+      int n = min(6, maxpow);
+      real
+        c = max(real(0), cos(lam)), // cos(pi/2) might be negative
+        tau = tan(phi),
+        secphi = Math::hypot(real(1), tau),
+        cs = 1 / secphi,
+        sn = tau / secphi,
+        ar = 2 * (cs - sn) * (cs + sn),
+        //ar = sinh(Math::atanh(sn)) < 10 ? 2 * (cs - sn) * (cs + sn) : 0,
+        //ar = log((sn + 2)/(1-sn)) < 10 ? 2 * (cs - sn) * (cs + sn) : 0,
+        y0 = n & 1 ? _df[n--] : 0, y1 = 0;        // Accumulators for sum
+      while (n) {
+        // Unroll loop x 2, so accumulators return to their original role
+        y1 = ar * y0 - y1 + _df[n--];
+        y0 = ar * y1 - y0 + _df[n--];
+      }
+      real
+        dtau = tan(2 * sn * cs * y0),
+        taup = (tau + dtau)/(1 - tau * dtau);
+#else
       real
         c = max(real(0), cos(lam)), // cos(pi/2) might be negative
         tau = tan(phi),
         secphi = Math::hypot(real(1), tau),
         sig = sinh( eatanhe(tau / secphi) ),
         taup = Math::hypot(real(1), sig) * tau - sig * secphi;
+#endif
       xip = atan2(taup, c);
       // Used to be
       //   etap = Math::atanh(sin(lam) / cosh(psi));
@@ -444,7 +488,26 @@ namespace GeographicLib {
       r = Math::hypot(s, c);
     if (r > 0) {
       lam = atan2(s, c);        // Krueger p 17 (25)
-      // Use Newton's< method to solve for tau
+#if CLENSHAWCHECK
+      int n = min(6, maxpow);
+      real
+        taup = sin(xip)/r,
+        secphi = Math::hypot(real(1), taup),
+        cs = 1 / secphi,
+        sn = taup / secphi,
+        ar = 2 * (cs - sn) * (cs + sn),
+        y0 = n & 1 ? _dr[n--] : 0, y1 = 0;        // Accumulators for sum
+      while (n) {
+        // Unroll loop x 2, so accumulators return to their original role
+        y1 = ar * y0 - y1 + _dr[n--];
+        y0 = ar * y1 - y0 + _dr[n--];
+      }
+      real
+        dtau = tan(2 * sn * cs * y0),
+        tau = (taup + dtau)/(1 - taup * dtau);
+      phi = atan(tau);
+#else
+      // Use Newton's method to solve for tau
       real
         taup = sin(xip)/r,
         tau = taup,
@@ -462,6 +525,7 @@ namespace GeographicLib {
           break;
       }
       phi = atan(tau);
+#endif
       gamma += atan(tanx(xip) * tanh(etap)); // Krueger p 19 (31)
       // Note cos(phi') * cosh(eta') = r
       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * Math::hypot(real(1), tau) * r;

@@ -105,6 +105,10 @@ namespace GeographicLib {
     { return _hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
+    static inline long double hypot(long double x, long double y) throw()
+    { return _hypot(x, y); }
+#endif
 #else
     // Use overloading to define generic versions
     static inline double hypot(double x, double y) throw()
