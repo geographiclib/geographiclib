@@ -29,6 +29,8 @@
  * <tr><td>k^2    <td>mu      <td>elliptic function parameter
  * <tr><td>k'^2   <td>mv      <td>elliptic function complementary parameter
  * <tr><td>m      <td>k       <td>scale
+ * <tr><td>zeta   <td>zeta    <td>complex longitude = Mercator = chi in paper
+ * <tr><td>s      <td>sigma   <td>complex GK = zeta in paper
  * </table></center>
  *
  * Minor alterations have been made in some of Lee's expressions in an
