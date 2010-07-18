@@ -13,9 +13,6 @@
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/Constants.hpp"
 
-#if !defined(GNOMONICR)
-#define GNOMONICR 0
-#endif
 namespace GeographicLib {
 
   /**
@@ -74,17 +71,9 @@ namespace GeographicLib {
     typedef Math::real real;
     const Geodesic _earth;
     real _a, _f;
-#if GNOMONICR
-    const Geodesic _sphere;
-    real _e2, _e;
-#endif
     static const real eps0, eps;
     static const int numit = 10;
   public:
-#if GNOMONICR
-    real ConformalLat(real geoglat, real lat0) const throw();
-    real GeographicLat(real conflat, real lat0) const throw();
-#endif
 
     /**
      * Constructor for Gnomonic setting the Geodesic object to use
@@ -96,11 +85,6 @@ namespace GeographicLib {
       , _a(_earth.MajorRadius())
       , _f(_earth.InverseFlattening() ?
            1/std::abs(_earth.InverseFlattening()) : 0)
-#if GNOMONICR
-      , _sphere(Geodesic(1, 0))
-      , _e2(_f * (2 - _f))
-      , _e(sqrt(_e2))
-#endif
     {}
 
     /**
@@ -140,12 +124,6 @@ namespace GeographicLib {
     void Reverse(real lat0, real lon0, real x, real y,
                  real& lat, real& lon, real& azi, real& rk) const throw();
 
-#if GNOMONICR
-    void ForwardR(real lat0, real lon0, real lat, real lon,
-                  real& x, real& y, real& azi, real& rk) const throw();
-    void ReverseR(real lat0, real lon0, real x, real y,
-                  real& lat, real& lon, real& azi, real& rk) const throw();
-#endif
     /**
      * The major radius of the ellipsoid (meters).  This is that value of \e a
      * inherited from the Geodesic object used in the constructor.

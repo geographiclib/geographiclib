@@ -20,7 +20,6 @@ CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
 
-
 $(PROGRAMS): $(LIBPATH)/$(LIBRARY)
 	$(CC) -o $@ $@.o $(LDLIBS)
 
