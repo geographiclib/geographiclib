@@ -22,8 +22,6 @@
 (GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 4 : 8)
 #endif
 
-#define CLENSHAWCHECK 0
-
 namespace GeographicLib {
 
   /**
@@ -101,9 +99,6 @@ namespace GeographicLib {
     const real _a, _r, _f, _k0, _e2, _e, _e2m,  _c, _n;
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow + 1], _bet[maxpow + 1];
-#if CLENSHAWCHECK
-    real _df[7], _dr[7];
-#endif
     static inline real sq(real x) throw() { return x * x; }
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) throw() {

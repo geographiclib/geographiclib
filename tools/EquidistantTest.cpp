@@ -63,6 +63,9 @@ int main(int argc, char* argv[]) {
   using namespace GeographicLib;
   typedef Math::real real;
   bool azimuthal = false, cassini = false, gnomonic = false, reverse = false;
+#if GNOMONICR
+  bool gnomonicr = false;
+#endif
   real lat0 = 0, lon0 = 0;
   real
     a = Constants::WGS84_a(),
@@ -71,10 +74,17 @@ int main(int argc, char* argv[]) {
     std::string arg(argv[m]);
     if (arg == "-r")
       reverse = true;
-    else if (arg == "-c" || arg == "-z" || arg == "-g") {
+    else if (arg == "-c" || arg == "-z" || arg == "-g"
+#if GNOMONICR
+             || arg == "-gr"
+#endif
+             ) {
       cassini = arg == "-c";
       azimuthal = arg == "-z";
       gnomonic = arg == "-g";
+#if GNOMONICR
+      gnomonicr = arg == "-gr";
+#endif
       if (m + 2 >= argc) return usage(1);
       try {
         DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
@@ -101,7 +111,11 @@ int main(int argc, char* argv[]) {
       return usage(arg != "-h");
   }
 
-  if (!(azimuthal || cassini || gnomonic)) {
+  if (!(azimuthal || cassini || gnomonic
+#if GNOMONICR
+        || gnomonicr
+#endif
+        )) {
     std::cerr
       << "Must specify \"-c lat lon\" or \"-z lat lon\" or \"-g lat lon\"\n";
     return 1;
@@ -136,6 +150,10 @@ int main(int argc, char* argv[]) {
           cs.Reverse(x, y, lat, lon, azi, rk);
         else if (azimuthal)
           az.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
+#if GNOMONICR
+        else if (gnomonicr)
+          gn.ReverseR(lat0, lon0, x, y, lat, lon, azi, rk);
+#endif
         else
           gn.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
         std::cout << std::setprecision(15)
@@ -147,6 +165,10 @@ int main(int argc, char* argv[]) {
           cs.Forward(lat, lon, x, y, azi, rk);
         else if (azimuthal)
           az.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
+#if GNOMONICR
+        else if (gnomonicr)
+          gn.ForwardR(lat0, lon0, lat, lon, x, y, azi, rk);
+#endif
         else
           gn.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
         std::cout << std::setprecision(10)
