@@ -8,8 +8,12 @@ STAGE=$(HOME)/web
 WEBSTAGE=$(STAGE)/geographic-web
 DATASTAGE=$(STAGE)/geographic-files
 
-distrib:
-	rsync -av --exclude .svn --exclude '*~' --exclude '#*' --delete --delete-excluded index.html tm.html doc/html geodesic-papers $(WEBSTAGE)/htdocs/
+distrib-html:
+	rsync -av --exclude .svn --exclude '*~' --exclude '#*' --delete --delete-excluded index.html tm.html geod.html geodesic-papers $(WEBSTAGE)/htdocs/
+	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
+
+distrib-doc:
+	rsync -av --exclude .svn --exclude '*~' --exclude '#*' --delete --delete-excluded doc/html $(WEBSTAGE)/htdocs/
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
@@ -23,7 +27,7 @@ distrib-cgi:
 	for f in utils; do \
 	  a=cgi-bin/$$f.sh; b=$(WEBSTAGE)/cgi-bin/$$f.sh; \
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
-	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
+	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
 depend:
 	makedepend -- $(CPPFLAGS) -- $(ALLSOURCES)
