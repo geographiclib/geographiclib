@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.2
-\date 2010-05-21
+\version 1.3
+\date 2010-07-21
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib	</a>
 .
 The code is available for download at
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">
-  geographiclib-1.2.tar.gz</a>
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.zip/download">
-  geographiclib-1.2.zip</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">
+  geographiclib-1.3.tar.gz</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.zip/download">
+  geographiclib-1.3.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -155,15 +155,15 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">
+   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.2.tar.gz
+   - tar xfpvz geographiclib-1.3.tar.gz
    .
-   This will create a geographiclib-1.2 directory.  (Alternatively,
+   This will create a geographiclib-1.3 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.2 directory
-   - cd geographiclib-1.2
+ - Change to the geographiclib-1.3 directory
+   - cd geographiclib-1.3
  - Create the library and the utility programs
    - make all
    .
@@ -394,21 +394,21 @@ The transverse Mercator projection is a conformal projection of the
 ellipsoid in which the central meridian is straight.  Within these
 constrains there are various projections that differ in how the scale
 varies along the central meridian.  The simplest such projection from an
-algorithmic point of view is the Gauss-Schreiber projection which
-consists of a conformal projection from the ellipsoid to a sphere
-followed by the spherical transverse Mercator projection.  This results
-in a projection whose scale on the central meridian increases from the
-equator to the pole (by an amount proportional to the flattening).  In
-the Gauss-Kr&uuml;ger projection, the scale along the central meridian
-is held constant.  This projection is usually expressed as a series
-which is valid only sufficiently close to the central meridian.  (This
-is implemented by GeographicLib::TransverseMercator.)  The projection
-can however be expressed in closed form in terms of the Thompson
-transverse Mercator projection (where the scale along the central
-meridian decreases from the equator to the pole by an amount
-proportional to the flattening).  (This method of computing the
-Gauss-Kr&uuml;ger projection is implemented by
-GeographicLib::TransverseMercatorExact.)
+algorithmic point of view is the spherical transverse Mercator
+projection (labeled Gauss-Schreiber in Fig. 1(a)) which consists of a
+conformal projection from the ellipsoid to a sphere followed by the
+spherical transverse Mercator projection.  This results in a projection
+whose scale on the central meridian increases from the equator to the
+pole (by an amount proportional to the flattening).  In the
+Gauss-Kr&uuml;ger projection, the scale along the central meridian is
+held constant.  This projection is usually expressed as a series which
+is valid only sufficiently close to the central meridian.  (This is
+implemented by GeographicLib::TransverseMercator.)  The projection can
+however be expressed in closed form in terms of the Thompson transverse
+Mercator projection (where the scale along the central meridian
+decreases from the equator to the pole by an amount proportional to the
+flattening).  (This method of computing the Gauss-Kr&uuml;ger projection
+is implemented by GeographicLib::TransverseMercatorExact.)
 
 The graticules (lines of constant latitude and longitude) for all these
 projections are shown in Figs. 1(a&ndash;c).  These figures all use an
@@ -431,7 +431,7 @@ width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
 (scaled)">
 <a href="gauss-schreiber-graticule-a.pdf">Fig. 1(a)</a>
 </center>\n
-The graticule for the Gauss-Schreiber transverse Mercator projection.
+The graticule for the spherical transverse Mercator projection.
 The equator lies on \e y = 0.
 Compare this with Lee, Fig. 1 (right), which shows the graticule for
 half a sphere, but note that in his notation \e x and \e y have switched
@@ -476,7 +476,7 @@ the Gauss-Kr&uuml;ger projection.
 
 \section extend Properties far from the central meridian
 
-The divergent behavior of the Gauss-Schreiber projection as latitude =
+The divergent behavior of the spherical projection as latitude =
 0<sup>o</sup>, longitude = 90<sup>o</sup> is approached is unsurprising
 given the behavior of the standard Mercator projection at the poles.  On
 the other hand, the lack of divergence in the Gauss-Kr&uuml;ger
@@ -738,8 +738,8 @@ for |\e x| <= 500 km (the region used for UTM coordinates).
 \section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  The method entails performing first a
-Gauss-Schreiber projection and approximating the warp of this to
+Mercator projection.  The method entails performing first a spherical
+transverse Mercator projection and approximating the warp of this to
 Gauss-Kr&uuml;ger projection as a series in \e n = (\e a - \e b)/(\e a +
 \e b).  This is accurate to about 200 nm within the UTM domain.  Here we
 present the series extended to 10th order.  The series expanded to order
@@ -2213,7 +2213,7 @@ ability to change the precision of the output.
 
 Here is the usage (obtained from "CartConvert -h")
 \verbatim
-Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]
+Usage: CartConvert [-r] [-l lat0 lon0 h0] [-e a r] [-h]
 
 Convert geodetic coordinates to either geocentric or local cartesian
 coordinates.  Geocentric coordinates have the origin at the center of the
@@ -2258,7 +2258,7 @@ ability to change the precision of the output.
 
 Here is the usage (obtained from "EquidistantTest -h")
 \verbatim
-Usage: EquidistantTest -(c|z|g) lat0 lon0 [-z lat0 lon0] [-r] [-h]
+Usage: EquidistantTest -(c|z|g) lat0 lon0 [-r] [-e a r] [-h]
 
 Perform projections based on geodesics.  Convert geodetic coordinates to
 either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
@@ -2386,23 +2386,22 @@ Back to \ref utilities.  Up to \ref contents.
 
 List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
-style of numbering.  Now, the library uses
-<a href="http://www.gnu.org/software/libtool/manual/libtool.html#Versioning">
-libtool's version numbering scheme</a> using an interface and revision
-numbers.)
+style of numbering.  Now, the library uses a major and minor version
+number.)
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.x.tar.gz/download">1.x (not released)</a>
-  - Add GeographicLib::Gnomonic.
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
+  - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
+    gnomonic projection.
   - Add -g and -e options to \ref equidistanttest.
   - Use fixed-point notation for output from \ref cartconvert,
     \ref equidistanttest, \ref transversemercatortest.
-  - Add GeographicLib::Math::NaN().
-  - Add EllipticFunction::E(real).
   - PolarStereographic:
     - Improved conversion to conformal coordinates;
     - Fix bug with scale at opposite pole;
     - Complain if latitude out of range in SetScale.
+  - Add GeographicLib::Math::NaN().
   - Add long double version of hypot for Windows.
+  - Add EllipticFunction::E(real).
   - Update references to Geotrans in MGRS documentation.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>

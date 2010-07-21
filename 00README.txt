@@ -33,6 +33,7 @@ Files
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection
+      Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
 
     tools/
       GeoConvert.cpp -- geographic conversion utility

@@ -32,11 +32,25 @@ namespace GeographicLib {
    * the length of the geodesic from \e C to \e P, and the gnomonic projection
    * has the property that all geodesics appear as straight lines.  For an
    * ellipsoid, this property holds only for geodesics interesting the centers.
-   * However geodesics segments close to the center are approximately straight;
-   * the deviation from straightness is of order \e f (\e r/\e a)<sup>3</sup>
-   * where \e a and \e f are the major radius and the flattening of the
-   * ellipsoid and \e r is the maximum distance of the geodesic from the
-   * center.
+   * However geodesic segments close to the center are approximately straight.
+   *
+   * Consider a geodesic segment of length \e l.  Let \e T be the point on the
+   * geodesic closest to \e C the center of the projection and \e t be the
+   * distance \e CT.  To lowest order, the maximum deviation (as a true
+   * distance) of the corresponding gnomonic line segment (i.e., with the same
+   * end points) from the geodesic is<br>
+   * <br>
+   * (\e K(T) - \e K(C)) \e l<sup>2</sup> \e t / 32.<br>
+   * <br>
+   * where \e K is the Gaussian curvature.
+   *
+   * This result applies for any surface.  For an allipsoid of revoluation,
+   * consider all geodesics whose end points are within a distance \e r of \e
+   * C.  For a given \e r, the deviation is maximum when the latitude of \e C
+   * is 45<sup>o</sup>, when endpoints are a distance \e r away, and when their
+   * azimuths from the center are +/- 45<sup>o</sup> or +/- 135<sup>o</sup>.
+   * To lowest order in \e r and the flattening \e f, the deviation is \e f
+   * (\e r/2\e a)<sup>3</sup> \e r.
    *
    * The conversions all take place using a GeographicLib::Geodesic object (by
    * default GeographicLib::Geodesic::WGS84).  For more information on
