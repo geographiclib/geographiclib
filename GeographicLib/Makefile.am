@@ -14,6 +14,7 @@ EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
 			 Makefile.mk windows maxima doc 
 
 dist-hook:
+	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \

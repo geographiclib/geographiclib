@@ -6,7 +6,30 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.2.
+The current version of the library is 1.3.
+
+Changes between 1.3 (released 2010-07-21) and 1.2 versions:
+
+  * Add GeographicLib::Gnomonic, the ellipsoid generalization of the
+    gnomonic projection.
+
+  * Add -g and -e options to Equidistanttest.
+
+  * Use fixed-point notation for output from Cartconvert,
+    Equidistanttest, Transversemercatortest.
+
+  * PolarStereographic:
+    + Improved conversion to conformal coordinates;
+    + Fix bug with scale at opposite pole;
+    + Complain if latitude out of range in SetScale.
+
+  * Add GeographicLib::Math::NaN().
+
+  * Add long double version of hypot for Windows.
+
+  * Add EllipticFunction::E(real).
+
+  * Update references to Geotrans in MGRS documentation.
 
 Changes between 1.2 (released 2010-05-21) and 1.1 versions:
 
