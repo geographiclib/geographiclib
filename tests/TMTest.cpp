@@ -22,7 +22,8 @@
 #include <iomanip>
 #include <stdexcept>
 
-#define GEOTRANSTM 0
+#define GEOTRANSTM 1
+#define WMM 1
 
 GeographicLib::Math::real
 dist(GeographicLib::Math::real a, GeographicLib::Math::real r,
@@ -228,6 +229,27 @@ namespace GeographicLib
     double sphsr( double latitude ) const;
 
   };
+
+  class WMMTM {
+  private:
+	double K0, Eps, Epssq, R4, R4oa, Bcoeff[10], Dcoeff[6];
+    int NtrmsB, NtrmsD;
+    static double ATanH(double x)
+    {
+      return(0.5 * std::log((1 + x) / (1 - x)));
+    }
+  public:
+    WMMTM(double scale);
+    void Forward(double lon0, double latitude, double longitude,
+                 double& easting, double& northing) const {}
+    void Reverse(double lon0, double easting, double northing,
+                 double& latitude, double& longitude,
+                 double& gamma, double& k) const;
+    double MajorRadius() const
+    { return Constants::WGS84_a();}
+    double InverseFlattening() const
+    { return Constants::WGS84_r();}
+  };
 }
 // CLASSIFICATION: UNCLASSIFIED
 #endif
@@ -292,9 +314,13 @@ int main(int argc, char* argv[]) {
       }
 #if GEOTRANSTM
     } else if (geotrans) {
+#if WMM
+      const WMMTM tm(Constants::UTM_k0());
+#else
       const GeotransTM tm(Constants::WGS84_a(),
-                                      Constants::WGS84_r(),
-                                      Constants::UTM_k0());
+                          Constants::WGS84_r(),
+                          Constants::UTM_k0());
+#endif
       if (timefor) {
         real x, y;
         for (real lat = -80.0; lat <= 84.0; lat += dlat)
@@ -304,10 +330,14 @@ int main(int argc, char* argv[]) {
             ++count;
           }
       } else {
-        real lat, lon;
+        real lat, lon, gamma, k;
         for (real x = -400e3; x <= 400e3; x += dx)
           for (real y = -9000e3; y <= 9500e3; y += dy) {
+#if WMM
+            tm.Reverse(0.0, x, y, lat, lon, gamma, k);
+#else
             tm.Reverse(0.0, x, y, lat, lon);
+#endif
             s += lat;
             ++count;
           }
@@ -363,9 +393,13 @@ int main(int argc, char* argv[]) {
                                       Constants::UTM_k0(),
                                       true);
 #if GEOTRANSTM
+#if WMM
+    const WMMTM tmg(tm.CentralScale());
+#else
     const GeotransTM tmg(tm.MajorRadius(),
                          tm.InverseFlattening(),
                          tm.CentralScale());
+#endif
     real
       a = (series || geotrans) ? tm.MajorRadius() : tme.MajorRadius(),
       r = (series || geotrans) ? tm.InverseFlattening() : tme.InverseFlattening();
@@ -410,9 +444,14 @@ int main(int argc, char* argv[]) {
         tm.Reverse(0, x0, y0, lat, lon, gam, k);
 #if GEOTRANSTM
       } else if (geotrans) {
+#if WMM
+        tmg.Reverse(0, x0, y0, lat, lon, gam, k);
+        std::cerr << std::setprecision(16) << std::fixed << lat << " " << lon << "\n";
+#else
         tmg.Reverse(0, x0, y0, lat, lon);
         k = 1;
         gam = 0;
+#endif
 #endif
       } else
         tme.Reverse(0, x0, y0, lat, lon, gam, k);
@@ -420,6 +459,10 @@ int main(int argc, char* argv[]) {
       errgr = real(std::abs((long double)(gam) - gam0));
       errkr = real(std::abs((long double)(k) - k0));
 
+#if WMM
+      //if (geotrans)
+        errf = errgf = errkf = 0;
+#endif
       real
         err = std::max(errf, errr),
         errg = std::max(errgf, errgr)
@@ -877,6 +920,167 @@ namespace GeographicLib {
   {
     double denom = sqrt(1.e0 - TranMerc_es * pow(sin(latitude), 2.0));
     return semiMajorAxis * (1.e0 - TranMerc_es) / pow(denom, 3.0);
+  }
+
+  WMMTM::WMMTM( /* double ellipsoidSemiMajorAxis, double invFlattening, */
+               double scaleFactor )  {
+    K0=scaleFactor;
+	
+    //WGS84 ellipsoid
+	Eps=0.081819190842621494335;
+    Epssq=0.0066943799901413169961;
+	R4=6367449.1458234153093;
+    R4oa=0.99832429843125277950;
+
+    Bcoeff[0]=-8.3773216405794867707E-04;
+    Bcoeff[1]=-5.9058701522203651815E-08;    
+    Bcoeff[2]=-1.6734826653438249274E-10;   
+    Bcoeff[3]=-2.1647981104903861797E-13;   
+    Bcoeff[4]=-3.7879309688396013649E-16;   
+    Bcoeff[5]=-7.2367692879669040169E-19;   
+    Bcoeff[6]=-1.4934544948474238627E-21;   
+    Bcoeff[7]=-3.2538430893102429751E-24;   
+    Bcoeff[8]=-7.3912479800652263027E-27;   
+    Bcoeff[9]=-1.7344445906774504295E-29;  
+
+    Dcoeff[0]=3.3565514691328321888E-03;
+    Dcoeff[1]=6.5718731986276970786E-06;
+    Dcoeff[2]=1.7646404113343270872E-08;
+    Dcoeff[3]=5.3877540683992094349E-11;
+    Dcoeff[4]=1.7639829049873024993E-13;
+    Dcoeff[5]=6.0345363280209865351E-16;
+    
+    NtrmsB = NtrmsD = 6;
+  }
+
+  void WMMTM::Reverse(double lon0, double easting, double northing,
+                      double& latitude, double& longitude,
+                      double& gamma, double& k) const {
+    double Xstar, Ystar, TwoX, TwoY;
+    int K;
+    double c2kx[8], s2kx[8], c2ky[8], s2ky[8];
+    double U, V;
+    double CU, SU, CV, SV;
+    double Lam;
+    double Schi, Chi, TwoChi;
+
+    /*   These are needed for point-scale and CoM  */
+
+    double sig3, sig4;
+    double Sphi;
+    double W, P, denom;
+
+
+    /*  Undo offsets, scale change, and factor R4
+        ---- -------  ----- ------  --- ------ --  */
+
+    Xstar = easting /  (K0 * R4);
+    Ystar = northing / (K0 * R4);
+
+
+    /*  Trigonometric multiple angles
+        ------------- -------- ------  */
+
+    TwoX = 2 * Xstar;
+    TwoY = 2 * Ystar;
+
+    for (K = 0; K < NtrmsB; K++)
+      {
+        c2kx[K] = cosh((K+1) * TwoX);
+        s2kx[K] = sinh((K+1) * TwoX);
+        c2ky[K] = cos((K+1) * TwoY);
+        s2ky[K] = sin((K+1) * TwoY);
+      }
+
+    /*  Second plane (x*, y*) to first plane (u, v)
+        ------ ----- -------- -- ----- ----- ------  */
+
+    U = 0;
+    V = 0;
+
+    for (K = NtrmsB - 1; K >= 0; K--)
+      {
+        U += Bcoeff[K] * s2kx[K] * c2ky[K];
+        V += Bcoeff[K] * c2kx[K] * s2ky[K];
+      }
+
+    U += Xstar;
+    V += Ystar;
+
+
+    /*  First plane to sphere
+        ----- ----- -- ------  */
+
+    CU = cosh(U);
+    SU = sinh(U);
+    CV = cos(V);
+    SV = sin(V);
+
+    /*   Longitude from central meridian  */
+
+    /*
+    if ((abs(CV) < 10E-12) && (abs(SU) < 10E-12))
+      Lam = 0;
+    else
+    */
+      Lam = atan2(SU, CV);
+
+    /*   Conformal latitude  */
+
+    Schi = SV / CU;
+
+    if (true) /* (abs(Schi) < 0.984375000L) */
+      Chi = std::asin(Schi);
+    else
+      Chi = std::atan2(SV, sqrt((SU * SU) + (CV * CV)));
+    /*  Sphere to ellipsoid
+        ------ -- ---------  */
+
+    TwoChi = 2 * Chi;
+    double Phi = 0;
+
+    for (K = NtrmsD - 1; K >= 0; K--)
+      Phi += Dcoeff[K] * sin((K+1) * TwoChi);
+
+    Phi += Chi;
+    latitude = Phi;
+    longitude = Lam;
+
+
+    latitude /= Constants::degree();
+    longitude /= Constants::degree();
+    if (longitude + lon0 >= 180)
+      longitude += lon0 - 360;
+    else if (longitude + lon0 < -180)
+      longitude += lon0 + 360;
+    else
+      longitude += lon0;
+
+    /*  Point-scale and CoM
+        ----------- --- ---  */
+
+    sig3 = 0;
+    sig4 = 0;
+
+    for (K = NtrmsB - 1; K >= 0; K--)
+      {
+        sig3 += 2 * (K+1) * Bcoeff[K] * c2kx[K] * c2ky[K];
+        sig4 += 2 * (K+1) * Bcoeff[K] * s2kx[K] * s2ky[K];
+      }
+
+    sig3++;
+
+    Sphi = sin(Phi);
+    W = sqrt(1 - (Epssq * Sphi * Sphi));
+    P = exp(Eps * ATanH(Eps * Sphi));
+    denom = (1 + Sphi) / P + (1 - Sphi) * P;
+
+    k = K0 * R4oa * W * 2 / denom * CU /
+      sqrt((sig3 * sig3) + (sig4 * sig4));
+
+    gamma = atan2(Schi * SU, CV) - atan2(sig4, sig3);
+    gamma /= Constants::degree();
+
   }
 
 }
