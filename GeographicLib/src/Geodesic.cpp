@@ -402,7 +402,7 @@ namespace GeographicLib {
     if (shortline && ssig12 < _etol2) {
       // really short lines
       salp2 = cbet1 * somg12;
-      calp2 = (sbet12 - cbet1 * sbet2 * sq(somg12) / (1 + comg12));
+      calp2 = sbet12 - cbet1 * sbet2 * sq(somg12) / (1 + comg12);
       // Set return value
       sig12 = atan2(ssig12, csig12);
     } else if (csig12 >= 0 ||
@@ -451,9 +451,7 @@ namespace GeographicLib {
           calp1 = max(real(-1),  x); salp1 =   sqrt(1 - sq(calp1));
         }
       } else {
-        // Estimate alp2, by solving calp2 * (salp2 + x) - y * salp2 = 0.  (For
-        // f < 0, we're solving for pi/2 - alp2 and calp2 and salp2 are
-        // swapped.)
+        // Estimate omega12, by solving the astroid problem.
         real k = Astroid(x, y);
         // estimate omg12a = pi - omg12
         real

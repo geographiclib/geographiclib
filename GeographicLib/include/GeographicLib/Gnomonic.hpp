@@ -35,16 +35,16 @@ namespace GeographicLib {
    * However geodesic segments close to the center are approximately straight.
    *
    * Consider a geodesic segment of length \e l.  Let \e T be the point on the
-   * geodesic closest to \e C the center of the projection and \e t be the
-   * distance \e CT.  To lowest order, the maximum deviation (as a true
-   * distance) of the corresponding gnomonic line segment (i.e., with the same
-   * end points) from the geodesic is<br>
+   * geodesic (extended if necessary) closest to \e C the center of the
+   * projection and \e t be the distance \e CT.  To lowest order, the maximum
+   * deviation (as a true distance) of the corresponding gnomonic line segment
+   * (i.e., with the same end points) from the geodesic is<br>
    * <br>
    * (\e K(T) - \e K(C)) \e l<sup>2</sup> \e t / 32.<br>
    * <br>
    * where \e K is the Gaussian curvature.
    *
-   * This result applies for any surface.  For an allipsoid of revoluation,
+   * This result applies for any surface.  For an allipsoid of revolution,
    * consider all geodesics whose end points are within a distance \e r of \e
    * C.  For a given \e r, the deviation is maximum when the latitude of \e C
    * is 45<sup>o</sup>, when endpoints are a distance \e r away, and when their
