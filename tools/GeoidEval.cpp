@@ -27,17 +27,27 @@ int usage(int retval) {
     geoidpath = "UNDEFINED";
   ( retval ? std::cerr : std::cout ) <<
 "Usage:\n\
-  GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]\n\
+  GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] \\\n\
+            [-z zone] [-msltohae] [-haetomsl] [-v] [-h]\n\
 $Id$\n\
 \n\
 Read in positions on standard input and print out the corresponding\n\
-geoid heights on standard output.  In addition print the northly and\n\
+geoid heights on standard output.  In addition print the northerly and\n\
 easterly gradients of the geoid height (i.e., the rate at which the\n\
 geoid height changes per unit distance along the WGS84 ellipsoid in\n\
 the specified directions).\n\
 \n\
 Positions are given as latitude and longitude, UTM/UPS, or MGRS, in\n\
-any of the formats accepted by GeoConvert.\n\
+any of the formats accepted by GeoConvert.  If the -z option is\n\
+specified then the specified zone is prepended to each line of input\n\
+(which must be in UTM/UPS coordinates).  This allows a file with UTM\n\
+eastings and northings in a single zone to be used as standard input.\n\
+\n\
+With the -msltohae or -haetomsl options, each line of input should\n\
+also include a height (in meters) as the last item.  In this case the\n\
+height is converted in the indicated direction and the input line is\n\
+echoed to standard output with the height adjusted, thereby allowing\n\
+vertical datum of 3d data to be changed.\n\
 \n\
 By default the EGM96 geoid is used with a 5\' grid.  This may be\n\
 overriden with the -n option.  The name specified should be one of\n\
@@ -73,7 +83,7 @@ By default, the data file is randomly read to compute the geoid\n\
 heights at the input positions.  Usually this is sufficient for\n\
 interactive use.  If many heights are to be computed, GeoidEval\n\
 allows a block of data to be read into memory and heights within the\n\
-corresponding rectangle can then be computed without any disk acces.\n\
+corresponding rectangle can then be computed without any disk access.\n\
 If -a is specified all the geoid data is read; in the case of\n\
 egm2008-1, this requires about 0.5 GB of RAM.  The -c option allows\n\
 a rectangle of data to be cached.  The evaluation of heights\n\
@@ -99,6 +109,11 @@ int main(int argc, char* argv[]) {
   real caches, cachew, cachen, cachee;
   std::string dir;
   std::string geoid = "egm96-5";
+  std::string zone;
+  //  0 -> report geoid height
+  // +1 -> msl to hae
+  // -1 -> hae to msl
+  int heightmult = 0;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
     if (arg == "-a") {
@@ -120,6 +135,23 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       m += 4;
+    } else if (arg == "-msltohae")
+      heightmult = +1;
+    else if (arg == "-haetomsl")
+      heightmult = -1;
+    else if (arg == "-z") {
+      if (++m == argc) return usage(1);
+      zone = argv[m];
+      bool northp;
+      int zonenum;
+      try {
+        UTMUPS::DecodeZone(zone, zonenum, northp);
+        zone += ' ';
+      }
+      catch (const std::exception& e) {
+        std::cerr << "Error decoding zone: " << e.what() << "\n";
+        return 1;
+      }
     } else if (arg == "-n") {
       if (++m == argc) return usage(1);
       geoid = argv[m];
@@ -165,13 +197,30 @@ int main(int argc, char* argv[]) {
     std::cout << std::fixed;
     GeoCoords p;
     std::string s;
+    const char* spaces = " \t\n\v\f\r,"; // Include comma as space
+    if (heightmult)
+      std::cout << std::setprecision(3);
     while (std::getline(std::cin, s)) {
       try {
-        p.Reset(s);
+        real height = 0;
+        if (heightmult) {
+          std::string::size_type pb = s.find_last_not_of(spaces);
+          std::string::size_type pa = s.find_last_of(spaces, pb);
+          std::string::size_type px = s.find_last_not_of(spaces, pa);
+          if (pa == std::string::npos || pb == std::string::npos ||
+              px == std::string::npos)
+            throw GeographicErr("Incomplete input: " + s);
+          height = DMS::Decode(s.substr(pa + 1, pb - pa));
+          s = s.substr(0, px + 1);
+        }
+        p.Reset(zone + s);
         real gradn, grade;
         real h = g(p.Latitude(), p.Longitude(), gradn, grade);
-        std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
-                  << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";
+        if (heightmult)
+          std::cout << s << " " << height + heightmult * h << "\n";
+        else
+          std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
+                    << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";
       }
       catch (const std::exception& e) {
         std::cout << "ERROR: " << e.what() << "\n";
