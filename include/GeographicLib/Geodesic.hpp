@@ -73,7 +73,8 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class GeodesicLine;
     static const int nA1 = GEOD_ORD, nC1 = GEOD_ORD, nC1p = GEOD_ORD,
-      nA2 = GEOD_ORD, nC2 = GEOD_ORD, nA3 = GEOD_ORD, nC3 = GEOD_ORD;
+      nA2 = GEOD_ORD, nC2 = GEOD_ORD, nA3 = GEOD_ORD, nC3 = GEOD_ORD,
+      nA3x = GEOD_ORD, nC3x = (nA3x * (nA3x - 1)) / 2;
     static const unsigned maxit = 50;
 
     static inline real sq(real x) throw() { return x * x; }
@@ -95,9 +96,12 @@ namespace GeographicLib {
                   real& eps, bool diffp, real& dlam12,
                   real C1a[], real C2a[], real C3a[])
       const throw();
+    void A3coeff() throw();
+    void C3coeff() throw();
 
     static const real eps2, tol0, tol1, tol2, xthresh;
     const real _a, _r, _f, _f1, _e2, _ep2, _n, _b, _etol2;
+    real _A3x[nA3x], _C3x[nC3x];
     static real SinSeries(real sinx, real cosx, const real c[], int n)
       throw();
     static inline real AngNormalize(real x) throw() {
@@ -128,8 +132,8 @@ namespace GeographicLib {
     static void C1pf(real eps, real c[]) throw();
     static real A2m1f(real eps) throw();
     static void C2f(real eps, real c[]) throw();
-    static real A3f(real f, real eps) throw();
-    static void C3f(real f, real eps, real c[]) throw();
+    real A3f(real eps) const throw();
+    void C3f(real eps, real c[]) const throw();
 
   public:
 

@@ -35,8 +35,8 @@ $Id$\n\
 \n\
 Check GeographicLib::Geodesic class.\n\
 -a (default) accuracy test (reads test date on standard input)\n\
--c coverage test (reads test date on standard input)\n\
--t0 time GeodecicLine with distannces using synthetic data\n\
+-c coverage test (reads test data on standard input)\n\
+-t0 time GeodecicLine with distances using synthetic data\n\
 -t1 time GeodecicLine with angles using synthetic data\n\
 -t2 time Geodecic::Direct using synthetic data\n\
 -t3 time Geodecic::Inverse with synthetic data\n\
