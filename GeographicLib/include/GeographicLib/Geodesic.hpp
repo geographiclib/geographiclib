@@ -62,6 +62,13 @@ namespace GeographicLib {
    * crossing and the next extremum of latitude for a geodesic is
    * 90<sup>o</sup>.
    *
+   * The Geodesic class provides the solution of the direct and inverse
+   * geodesic problems via Geodesic::Direct and Geodesic::Inverse.  Additional
+   * functionality if provided by the GeodesicLine class, which allows a
+   * sequence of points along a geodesic to be computed and calculates the
+   * geodesic scale and the area under a geodesic via GeodesicLine::Scale and
+   * GeodesicLine::Area.
+   *
    * The calculations are accurate to better than 15 nm.  (See \ref geoderrors
    * for details.)
    *
@@ -73,8 +80,10 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class GeodesicLine;
     static const int nA1 = GEOD_ORD, nC1 = GEOD_ORD, nC1p = GEOD_ORD,
-      nA2 = GEOD_ORD, nC2 = GEOD_ORD, nA3 = GEOD_ORD, nC3 = GEOD_ORD,
-      nA3x = GEOD_ORD, nC3x = (nA3x * (nA3x - 1)) / 2;
+      nA2 = GEOD_ORD, nC2 = GEOD_ORD,
+      nA3 = GEOD_ORD, nA3x = nA3,
+      nC3 = GEOD_ORD, nC3x = (nC3 * (nC3 - 1)) / 2,
+      nC4 = GEOD_ORD + 2, nC4x = (nC4 * (nC4 + 1)) / 2;
     static const unsigned maxit = 50;
 
     static inline real sq(real x) throw() { return x * x; }
@@ -96,13 +105,12 @@ namespace GeographicLib {
                   real& eps, bool diffp, real& dlam12,
                   real C1a[], real C2a[], real C3a[])
       const throw();
-    void A3coeff() throw();
-    void C3coeff() throw();
 
     static const real eps2, tol0, tol1, tol2, xthresh;
-    const real _a, _r, _f, _f1, _e2, _ep2, _n, _b, _etol2;
-    real _A3x[nA3x], _C3x[nC3x];
-    static real SinSeries(real sinx, real cosx, const real c[], int n)
+    const real _a, _r, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+    real _A3x[nA3x], _C3x[nC3x], _C4x[nC4x];
+    static real SinCosSeries(bool sinp,
+                             real sinx, real cosx, const real c[], int n)
       throw();
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
@@ -132,8 +140,12 @@ namespace GeographicLib {
     static void C1pf(real eps, real c[]) throw();
     static real A2m1f(real eps) throw();
     static void C2f(real eps, real c[]) throw();
+    void A3coeff() throw();
     real A3f(real eps) const throw();
+    void C3coeff() throw();
     void C3f(real eps, real c[]) const throw();
+    void C4coeff() throw();
+    void C4f(real k2, real c[]) const throw();
 
   public:
 
@@ -243,6 +255,11 @@ namespace GeographicLib {
    \endverbatim
    * Similarly, a vector can be used to hold GeodesicLine objects.
    *
+   * This class is also used to give access to two other pieces of information
+   * about a geodesic line:
+   * - The geodesic scale accessible with GeodesicLine::Scale.
+   * - The area under a geodesic accessible with GeodesicLine::Area.
+   *
    * The calculations are accurate to better than 12 nm.  (See \ref geoderrors
    * for details.)
    **********************************************************************/
@@ -252,14 +269,18 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class Geodesic;
     static const int nC1 = Geodesic::nC1, nC1p = Geodesic::nC1p,
-      nC2 = Geodesic::nC2, nC3 = Geodesic::nC3;
+      nC2 = Geodesic::nC2, nC3 = Geodesic::nC3, nC4 = Geodesic::nC4;
 
     real _lat1, _lon1, _azi1;
-    real _a, _r,  _b, _f1, _salp0, _calp0, _k2,
-      _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
+    real _a, _r, _b, _c2, _f1, _salp0, _calp0, _k2,
+      _salp1, _calp1, _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
       _A1m1, _A2m1, _A3c, _B11, _B21, _B31;
     // index zero elements of these arrays are unused
     real _C1a[nC1 + 1], _C1pa[nC1p + 1], _C2a[nC2 + 1], _C3a[nC3];
+    // For area computations
+    bool _areap;
+    real _A4, _B41;
+    real _C4a[nC4 + 1];
 
     static inline real sq(real x) throw() { return x * x; }
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1)
@@ -272,7 +293,7 @@ namespace GeographicLib {
      * calculations).  The object should be set with a call to Geodesic::Line.
      * Use Init() to test whether object is still in this uninitialized state.
      **********************************************************************/
-    GeodesicLine() throw() : _b(0) {};
+    GeodesicLine() throw() : _b(0), _areap(false) {};
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
@@ -302,6 +323,67 @@ namespace GeographicLib {
      * Has this object been initialized so that Position can be called?
      **********************************************************************/
     bool Init() const throw() { return _b > 0; }
+
+    /**
+     * Allow areas to be computed.  The ellipsoid parameters for \e g must
+     * match those used to construct the object.
+     **********************************************************************/
+    void AreaEnable(const Geodesic& g) throw();
+
+    /**
+     * Has GeodesicLine::AreaEnable been called?
+     **********************************************************************/
+    bool AreaInit() const throw() { return Init() && _areap; }
+
+    /**
+     * Return area below the geodesic in meters<sup>2</sup>.  This must be
+     * called after GeodesicLine::AreaEnable.  The end point of the geodesic is
+     * specified as a spherical arc length, \e a12 (in degrees), from the
+     * initial point.  The area is computed for the geodesic quadilateral
+     * joining the points (0,\e lon1), (\e lat1,\e lon1), (\e lat2,\e lon2),
+     * (0,\e lon2), and (0,\e lon1), with a clockwise traversal counted as
+     * positive and with the segment from (0,\e lon2) to (0,\e lon1) taken
+     * along the equator (even if this isn't the shortest path).  The following
+     * function can be used to compute the area of a geodesic polygon.
+     \verbatim
+     #include <vector>
+     #include <utility>
+     // Return the area of a geodesic polygon with vertices, pts, which is a
+     // vector of latitude/longitude pairs.  Clockwise traversal of the polygon
+     // counts as positive.  If the polygon encircles a pole one or more times
+     // EllipsoidArea()/2 should be added (or subtracted) to the result for
+     // each clockwise (or anticlockwise) encirclement.
+     double PolygonArea(const Geodesic& geod,
+                        const std::vector<std::pair<double,double> >& pts) {
+       int n = pts.size();
+       double area = 0;
+       for (int i = 0; i < n; ++i) {
+         int j = (i + 1) % n;
+         double azi1, azi2, s12, m12;
+         double a12 = geod.Inverse(pts[i].first, pts[i].second,
+                                   pts[j].first, pts[j].second,
+                                   s12, azi1, azi2, m12);
+         GeodesicLine l(geod.Line(pts[i].first, pts[i].second, azi1));
+         l.AreaEnable(geod);
+         area += l.Area(a12);
+       }
+       return area;
+     }
+     \endverbatim
+     *
+     * The accuracy of the result is about 0.25 m<sup>2</sup>.
+     **********************************************************************/
+    Math::real Area(real a12) const throw();
+
+    /**
+     * Return total area of ellipsoid in meters<sup>2</sup>.  (Does not require
+     * GeodesicLine::AreaEnable to have been called.)  The area of a polygon
+     * encircling a pole can be found by adding the return values of Area for
+     * each side of the polygon to 1/2 of GeodesicLine::EllipsoidArea().
+     **********************************************************************/
+    Math::real EllipsoidArea() const throw() {
+      return 4 * Constants::pi() * _c2;
+    }
 
     /**
      * Return the latitude of point 1 (degrees).
