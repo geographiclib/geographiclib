@@ -162,14 +162,17 @@ namespace GeographicLib {
      * longitude, \e lon1, and azimuth \e azi1 (degrees) for point 1 and a
      * range, \e s12 (meters) from point 1 to point 2, return the latitude, \e
      * lat2, longitude, \e lon2, and forward azimuth, \e azi2 (degrees) for
-     * point 2 and the reduced length \e m12 (meters).  If \e arcmode (default
-     * false) is set to true, \e s12 is interpreted as the arc length \e a12
-     * (degrees) on the auxiliary sphere.  An arc length greater that 180
-     * degrees results in a geodesic which is not a shortest path.  For a
-     * prolate ellipsoid, an additional condition is necessary for a shortest
-     * path: the longitudinal extent must not exceed of 180 degrees.  Returned
-     * value is the arc length \e a12 (degrees) if \e arcmode is false,
-     * otherwise it is the distance \e s12 (meters)
+     * point 2 and the reduced length \e m12 (meters).  If either point is at a
+     * pole, the azimuth is defined by keeping the longitude fixed and writing
+     * \e lat = 90 - \e eps or -90 + \e eps and taking the limit \e eps -> 0
+     * from above.  If \e arcmode (default false) is set to true, \e s12 is
+     * interpreted as the arc length \e a12 (degrees) on the auxiliary sphere.
+     * An arc length greater that 180 degrees results in a geodesic which is
+     * not a shortest path.  For a prolate ellipsoid, an additional condition
+     * is necessary for a shortest path: the longitudinal extent must not
+     * exceed of 180 degrees.  Returned value is the arc length \e a12
+     * (degrees) if \e arcmode is false, otherwise it is the distance \e s12
+     * (meters).
      **********************************************************************/
     Math::real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2, real& azi2, real& m12,
@@ -283,9 +286,17 @@ namespace GeographicLib {
     real _C4a[nC4 + 1];
 
     static inline real sq(real x) throw() { return x * x; }
+  public:
+
+    /**
+     * Constructor for a geodesic line staring at latitude \e lat1, longitude
+     * \e lon1, and aziumuth \e azi1 (all in degrees).  If the point is at a
+     * pole, the azimuth is defined by keeping the \e lon1 fixed and writing \e
+     * lat1 = 90 - \e eps or -90 + \e eps and taking the limit \e eps -> 0 from
+     * above.
+     **********************************************************************/
     GeodesicLine(const Geodesic& g, real lat1, real lon1, real azi1)
       throw();
-  public:
 
     /**
      * A default constructor.  If GeodesicLine::Position is called on the
@@ -343,8 +354,11 @@ namespace GeographicLib {
      * joining the points (0,\e lon1), (\e lat1,\e lon1), (\e lat2,\e lon2),
      * (0,\e lon2), and (0,\e lon1), with a clockwise traversal counted as
      * positive and with the segment from (0,\e lon2) to (0,\e lon1) taken
-     * along the equator (even if this isn't the shortest path).  The following
-     * function can be used to compute the area of a geodesic polygon.
+     * along the equator (even if this isn't the shortest path).  If the
+     * geodesic is a meridian passing over a pole, that it is deemed to pass
+     * very close to the pole in an easterly direction for the purposes of
+     * determining the area.  The following function can be used to compute the
+     * area of a geodesic polygon.
      \verbatim
      #include <vector>
      #include <utility>
@@ -352,7 +366,8 @@ namespace GeographicLib {
      // vector of latitude/longitude pairs.  Clockwise traversal of the polygon
      // counts as positive.  If the polygon encircles a pole one or more times
      // EllipsoidArea()/2 should be added (or subtracted) to the result for
-     // each clockwise (or anticlockwise) encirclement.
+     // each clockwise (or anticlockwise) encirclement.  This is left as an
+     // exercise.
      double PolygonArea(const Geodesic& geod,
                         const std::vector<std::pair<double,double> >& pts) {
        int n = pts.size();
