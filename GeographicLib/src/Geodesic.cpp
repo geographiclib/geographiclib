@@ -27,7 +27,6 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
-#include <iostream>
 
 #define GEOGRAPHICLIB_GEODESIC_CPP "$Id$"
 
@@ -778,11 +777,7 @@ namespace GeographicLib {
       // alp12 = alp2 - alp1, used in atan2 so no need to normalized 
       salp12 = salp2 * _calp1 - calp2 * _salp1,
       calp12 = calp2 * _calp1 + salp2 * _salp1;
-    cout << _salp1 << " " << _calp1 << " " << atan2(_salp1, _calp1) / Constants::degree()<< " "
-         << salp2 << " " << calp2<< " " << atan2(salp2, calp2) / Constants::degree() << " "
-         << salp12 << " " << calp12 << " " << atan2(salp12, calp12) / Constants::degree() << " ";
     real area = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
-    cout << area << "\n";
     return area;
   }
 
