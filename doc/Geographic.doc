@@ -1086,7 +1086,8 @@ which returns the area between the geodesic and the equator.  This uses
 Danielsen's method extended to higher order and with the terms
 rearranged to facilitate the use of Clenshaw summation.  See
 J. Danielsen, The Area under the Geodesic, Survey Review 30 (232),
-61&ndash;66 (1989).
+61&ndash;66 (1989).  Using this function, it is simple to compute the
+area of any geodesic polygon.
 
 \section testgeod Test data for geodesics
 
@@ -2468,6 +2469,11 @@ number.)
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (not released yet)</a>
   - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
+  - Change longitude series in GeographicLib::Geodesic so that some of the
+    work evaluating it can be done in the constructor.
+  - Ensure that equatorial geodesics have cos(alpha0) = 0 identically.
+  - Make GeographicLib::GeodesicLine constructor public..
+  - Add area computations via GeographicLib::GeodesicLine::Area
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
