@@ -777,6 +777,13 @@ namespace GeographicLib {
       // alp12 = alp2 - alp1, used in atan2 so no need to normalized 
       salp12 = salp2 * _calp1 - calp2 * _salp1,
       calp12 = calp2 * _calp1 + salp2 * _salp1;
+    // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+    // salph12 = -0 and alp12 = -180.  However this depends on the sign being
+    // attached to 0 correctly.  The following ensures the correct behavior.
+    if (salp12 == 0 && calp12 < 0) {
+      salp12 = Geodesic::eps2 * _calp1;
+      calp12 = -1;
+    }
     real area = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     return area;
   }
