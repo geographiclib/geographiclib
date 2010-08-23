@@ -76,6 +76,8 @@ namespace GeographicLib {
       throw GeographicErr("Major radius is not positive");
     if (!(_r > 0))
       throw GeographicErr("Inverse flattening is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(_k0 > 0))
       throw GeographicErr("Scale is not positive");
   }

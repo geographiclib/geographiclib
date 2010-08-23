@@ -30,6 +30,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
   }
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a(),

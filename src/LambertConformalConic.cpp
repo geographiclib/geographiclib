@@ -38,6 +38,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
@@ -61,6 +63,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
@@ -91,6 +95,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (coslat1 == 0 || coslat2 == 0)
