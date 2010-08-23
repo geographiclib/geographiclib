@@ -1112,6 +1112,8 @@ Each line of the test set gives 9 space delimited numbers
  - arc distance on the auxiliary sphere, \e a12 (degrees, accurate to
    10<sup>-18</sup> deg)
  - reduced length of the geodesic, \e m12 (meters, accurate to 0.1 pm)
+ - the area under the geodesic, \e S12 (m<sup>2</sup>, accurate to
+   1 mm<sup>2</sup>)
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
@@ -2472,8 +2474,10 @@ number.)
   - Change longitude series in GeographicLib::Geodesic so that some of the
     work evaluating it can be done in the constructor.
   - Ensure that equatorial geodesics have cos(alpha0) = 0 identically.
-  - Make GeographicLib::GeodesicLine constructor public..
-  - Add area computations via GeographicLib::GeodesicLine::Area
+  - Make GeographicLib::GeodesicLine constructor public.
+  - Add area computations via GeographicLib::GeodesicLine::Area.
+  - Add area to geodesic test set.
+  - Constructors check that minor radius is positive.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
