@@ -47,7 +47,7 @@ namespace GeographicLib {
       azi0 = atan2(x, y) / Constants::degree(),
       rho = min(Math::hypot(x, y), _a/(2 * eps0));
     GeodesicLine line(_earth.Line(lat0, lon0, azi0));
-    real lat1, lon1, azi1, M, s;
+    real lat1, lon1, azi1, M, s = 0; // Suppress warning about uninitialized s
     int count = numit;
     if (rho * _f < _a / 2)
       s = _a * atan(rho/_a);

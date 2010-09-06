@@ -27,6 +27,8 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
+#include <iostream>
+#include <iomanip>
 
 #define GEOGRAPHICLIB_GEODESIC_CPP "$Id$"
 
@@ -77,37 +79,171 @@ namespace GeographicLib {
                                     const real c[], int n) throw() {
     // Evaluate
     // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
-    //            sum(c[i] * cos((2*i-1) * x), i, 1, n) :
-    // using Clenshaw summation.  N.B. c[0] is unused.
+    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
+    // using Clenshaw summation.  N.B. c[0] is unused for sin series
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
+    c += (n + sinp);            // Point to one beyond last element
     real
       ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-      y0 = n & 1 ? c[n--] : 0, y1 = 0;        // Accumulators for sum
+      y0 = n & 1 ? *--c : 0, y1 = 0;          // accumulators for sum
     // Now n is even
-    while (n) {
+    n /= 2;
+    while (n--) {
       // Unroll loop x 2, so accumulators return to their original role
-      y1 = ar * y0 - y1 + c[n--];
-      y0 = ar * y1 - y0 + c[n--];
+      y1 = ar * y0 - y1 + *--c;
+      y0 = ar * y1 - y0 + *--c;
     }
     return sinp
       ? 2 * sinx * cosx * y0    // sin(2 * x) * y0
       : cosx * (y0 - y1);       // cos(x) * (y0 - y1)
   }
 
-  GeodesicLine Geodesic::Line(real lat1, real lon1, real azi1) const throw() {
-    return GeodesicLine(*this, lat1, lon1, azi1);
+  GeodesicLine Geodesic::Line(real lat1, real lon1, real azi1, unsigned caps)
+    const throw() {
+    return GeodesicLine(*this, lat1, lon1, azi1, caps);
   }
 
   Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
-                              real& lat2, real& lon2, real& azi2, real& m12,
-                              bool arcmode) const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1);
-    return l.Position(s12, lat2, lon2, azi2, m12, arcmode);
+                              real& lat2, real& lon2)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   DISTANCE_IN | DISTANCE);
+    return l.Position(s12, lat2, lon2);
+  }
+
+  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
+                              real& lat2, real& lon2, real& azi2)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH |
+                   DISTANCE_IN | DISTANCE);
+    return l.Position(s12, lat2, lon2, azi2);
+  }
+
+  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
+                              real& lat2, real& lon2, real& azi2, real& m12)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH |
+                   DISTANCE_IN | DISTANCE |
+                   REDUCEDLENGTH);
+    return l.Position(s12, lat2, lon2, azi2, m12);
+  }
+
+  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
+                              real& lat2, real& lon2, real& azi2,
+                              real& M12, real& M21)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH |
+                   DISTANCE_IN | DISTANCE |
+                   GEODESICSCALE);
+    return l.Position(s12, lat2, lon2, azi2, M12, M21);
+  }
+
+  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
+                              real& lat2, real& lon2, real& azi2,
+                              real& m12, real& M12, real& M21)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH |
+                   DISTANCE_IN | DISTANCE |
+                   REDUCEDLENGTH |
+                   GEODESICSCALE);
+    return l.Position(s12, lat2, lon2, azi2, m12, M12, M21);
+  }
+
+  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
+                              real& lat2, real& lon2, real& azi2,
+                              real& m12, real& M12, real& M21, real& S12)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH |
+                   DISTANCE_IN | DISTANCE |
+                   REDUCEDLENGTH |
+                   GEODESICSCALE | AREA);
+    return l.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12);
+  }
+
+  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
+                           real& lat2, real& lon2) const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE);
+    l.ArcPosition(a12, lat2, lon2);
+  }
+
+  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
+                           real& lat2, real& lon2, real& azi2) const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH);
+    l.ArcPosition(a12, lat2, lon2, azi2);
+  }
+
+  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
+                           real& lat2, real& lon2, real& azi2, real& s12)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH | DISTANCE);
+    l.ArcPosition(a12, lat2, lon2, azi2, s12);
+  }
+
+  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
+                           real& lat2, real& lon2, real& azi2,
+                           real& s12, real& m12) const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH | DISTANCE |
+                   REDUCEDLENGTH);
+    l.ArcPosition(a12, lat2, lon2, azi2, s12, m12);
+  }
+
+  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
+                           real& lat2, real& lon2, real& azi2, real& s12,
+                           real& M12, real& M21) const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH | DISTANCE |
+                   GEODESICSCALE);
+    l.ArcPosition(a12, lat2, lon2, azi2, s12, M12, M21);
+  }
+
+  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
+                           real& lat2, real& lon2, real& azi2, real& s12,
+                           real& m12, real& M12, real& M21) const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH | DISTANCE |
+                   REDUCEDLENGTH |
+                   GEODESICSCALE);
+    l.ArcPosition(a12, lat2, lon2, azi2, s12, m12, M12, M21);
+  }
+
+  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
+                           real& lat2, real& lon2, real& azi2, real& s12,
+                           real& m12, real& M12, real& M21, real& S12)
+    const throw() {
+    GeodesicLine l(*this, lat1, lon1, azi1,
+                   LATITUDE | LONGITUDE |
+                   AZIMUTH | DISTANCE |
+                   REDUCEDLENGTH |
+                   GEODESICSCALE | AREA);
+    l.ArcPosition(a12, lat2, lon2, azi2, s12, m12, M12, M21, S12);
   }
 
   Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& s12, real& azi1, real& azi2, real& m12)
+                               unsigned outmask,
+                               real& s12, real& azi1, real& azi2,
+                               real& m12, real& M12, real& M21, real& S12)
     const throw() {
+    outmask &= OUT_ALL;
     lon1 = AngNormalize(lon1);
     real lon12 = AngNormalize(AngNormalize(lon2) - lon1);
     // If very close to being on the same meridian, then make it so.
@@ -143,7 +279,7 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    real phi, sbet1, cbet1, sbet2, cbet2;
+    real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
     phi = lat1 * Constants::degree();
     // Ensure cbet1 = +epsilon at poles
@@ -187,7 +323,8 @@ namespace GeographicLib {
       {
         real dummy;
         Lengths(_n, sig12, ssig1, csig1, ssig2, csig2,
-                cbet1, cbet2, s12, m12, dummy, C1a, C2a);
+                cbet1, cbet2, s12x, m12x, dummy,
+                outmask & GEODESICSCALE, M12, M21, C1a, C2a);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
       // 0.  Test case was
@@ -196,9 +333,9 @@ namespace GeographicLib {
       //
       // In fact, we will have sig12 > pi/2 for meridional geodesic which is
       // not a shortest path.
-      if (sig12 < 1 || m12 >= 0) {
-        m12 *= _a;
-        s12 *= _b;
+      if (sig12 < 1 || m12x >= 0) {
+        m12x *= _a;
+        s12x *= _b;
         sig12 /= Constants::degree();
       } else
         // m12 < 0, i.e., prolate and too close to anti-podal
@@ -212,8 +349,10 @@ namespace GeographicLib {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
-      s12 = _a * lam12;
-      m12 = _b * sin(lam12 / _f1);
+      s12x = _a * lam12;
+      m12x = _b * sin(lam12 / _f1);
+      if (outmask & GEODESICSCALE)
+        M12 = M21 = cos(lam12 / _f1);
       sig12 = lon12 / _f1;
 
     } else if (!meridian) {
@@ -229,7 +368,11 @@ namespace GeographicLib {
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2)
-        s12 = m12 = sig12 * _a * sqrt(1 - _e2 * sq(cbet1));
+        real w1 = sqrt(1 - _e2 * sq(cbet1));
+        s12x = sig12 * _a * w1;
+        m12x = sq(w1) * _a / _f1 * sin(sig12 * _f1 / w1);
+        if (outmask & GEODESICSCALE)
+          M12 = M21 = cos(sig12 * _f1 / w1);
         sig12 /= Constants::degree();
       } else {
 
@@ -266,44 +409,160 @@ namespace GeographicLib {
           ov = abs(v);
         }
 
+        if (numit >= maxit) {
+          // Signal failure.
+          if (outmask & DISTANCE)
+            s12 = Math::NaN();
+          if (outmask & AZIMUTH)
+            azi1 = azi2 = Math::NaN();
+          if (outmask & REDUCEDLENGTH)
+            m12 = Math::NaN();
+          if (outmask & GEODESICSCALE)
+            M12 = M21 = Math::NaN();
+          if (outmask & AREA)
+            S12 = Math::NaN();
+          return Math::NaN();
+        }
+
         {
           real dummy;
           Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
-                  cbet1, cbet2, s12, m12, dummy, C1a, C2a);
+                  cbet1, cbet2, s12x, m12x, dummy,
+                  outmask & GEODESICSCALE, M12, M21, C1a, C2a);
         }
-        m12 *= _a;
-        s12 *= _b;
+        m12x *= _a;
+        s12x *= _b;
         sig12 /= Constants::degree();
-
-        if (numit >= maxit) {
-          // Signal failure to converge by negating the distance and azimuths.
-          s12 *= -1; sig12 *= -1; m12 *= -1;
-          salp1 *= -1; calp1 *= -1;
-          salp2 *= -1; calp2 *= -1;
-        }
       }
+    }
+
+    if (outmask & DISTANCE)
+      s12 = s12x;
+
+    if (outmask & REDUCEDLENGTH)
+      m12 = m12x;
+
+    if (outmask & AREA) {
+      real
+        // From Lambda12: sin(alp1) * cos(bet1) = sin(alp0)
+        salp0 = salp1 * cbet1,
+        calp0 = Math::hypot(calp1, salp1 * sbet1), // calp0 > 0
+        // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
+        A4 = sq(_a) * calp0 * salp0 * _e2;
+      if (A4 == 0)
+        // Avoid problems with indeterminate sig1, sig2 on equator
+        S12 = 0;
+      else {
+        real
+          // From Lambda12: tan(bet) = tan(sig) * cos(alp)
+          ssig1 = sbet1, csig1 = calp1 * cbet1,
+          ssig2 = sbet2, csig2 = calp2 * cbet2,
+          k2 = sq(calp0) * _ep2;
+        SinCosNorm(ssig1, csig1);
+        SinCosNorm(ssig2, csig2);
+        real C4a[nC4];
+        C4f(k2, C4a);
+        real
+          B41 = Geodesic::SinCosSeries(false, ssig1, csig1, C4a, nC4),
+          B42 = Geodesic::SinCosSeries(false, ssig2, csig2, C4a, nC4);
+        S12 = A4 * (B42 - B41);
+        /*
+        cout << "YY " << csig1 << " " << ssig1 << " " << csig2 << " " << ssig2 << "\n";
+        cout << "XX " << k2 << " " << A4 << " " << (B42 - B41) << " ";
+        */
+      }
+      real
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalized 
+        salp12 = salp2 * calp1 - calp2 * salp1,
+        calp12 = calp2 * calp1 + salp2 * salp1;
+      // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+      // salp12 = -0 and alp12 = -180.  However this depends on the sign being
+      // attached to 0 correctly.  The following ensures the correct behavior.
+      if (salp12 == 0 && calp12 < 0) {
+        salp12 = Geodesic::eps2 * calp1;
+        calp12 = -1;
+      }
+      //      cout << _c2 * atan2(salp12, calp12) << "\n";
+      S12 += _c2 * atan2(salp12, calp12);
+      S12 *= swapp * lonsign * latsign;
+      // Convert -0 to 0
+      S12 += 0;
     }
 
     // Convert calp, salp to azimuth accounting for lonsign, swapp, latsign.
     if (swapp < 0) {
       swap(salp1, salp2);
       swap(calp1, calp2);
+      if (outmask & GEODESICSCALE)
+        swap(M12, M21);
     }
 
-    // minus signs give range [-180, 180). 0- converts -0 to +0.
-    azi1 = 0 - atan2(- swapp * lonsign * salp1,
-                     + swapp * latsign * calp1) / Constants::degree();
-    azi2 = 0 - atan2(- swapp * lonsign * salp2,
-                     + swapp * latsign * calp2) / Constants::degree();
-    // Returned value in [0, 180], unless it's negated to signal convergence
-    // failure
+    salp1 *= swapp * lonsign; calp1 *= swapp * latsign;
+    salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
+
+    if (outmask & AZIMUTH) {
+      // minus signs give range [-180, 180). 0- converts -0 to +0.
+      azi1 = 0 - atan2(-salp1, calp1) / Constants::degree();
+      azi2 = 0 - atan2(-salp2, calp2) / Constants::degree();
+    }
+
+    // Returned value in [0, 180]
     return sig12;
+  }
+
+  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
+                               real& s12) const throw() {
+    real azi1, azi2, m12, M12, M21, S12;
+    return Inverse(lat1, lon1, lat2, lon2,
+                      DISTANCE,
+                      s12, azi1, azi2, m12, M12, M21, S12);
+  }
+  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
+                               real& azi1, real& azi2) const throw() {
+    real s12, m12, M12, M21, S12;
+    return Inverse(lat1, lon1, lat2, lon2,
+                      AZIMUTH,
+                      s12, azi1, azi2, m12, M12, M21, S12);
+  }
+  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
+                               real& s12, real& azi1, real& azi2, real& m12)
+    const throw() {
+    real M12, M21, S12;
+    return Inverse(lat1, lon1, lat2, lon2,
+                      DISTANCE | AZIMUTH | REDUCEDLENGTH,
+                      s12, azi1, azi2, m12, M12, M21, S12);
+  }
+  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
+                               real& s12, real& azi1, real& azi2,
+                               real& M12, real& M21) const throw() {
+    real m12, S12;
+    return Inverse(lat1, lon1, lat2, lon2,
+                      DISTANCE | AZIMUTH | GEODESICSCALE,
+                      s12, azi1, azi2, m12, M12, M21, S12);
+  }
+  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
+                               real& s12, real& azi1, real& azi2, real& m12,
+                               real& M12, real& M21) const throw() {
+    real S12;
+    return Inverse(lat1, lon1, lat2, lon2,
+                      DISTANCE | AZIMUTH |
+                      REDUCEDLENGTH | GEODESICSCALE,
+                      s12, azi1, azi2, m12, M12, M21, S12);
+  }
+  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
+                               real& s12, real& azi1, real& azi2, real& m12,
+                               real& M12, real& M21, real& S12) const throw() {
+    return Inverse(lat1, lon1, lat2, lon2,
+                      DISTANCE | AZIMUTH |
+                      REDUCEDLENGTH | GEODESICSCALE | AREA,
+                      s12, azi1, azi2, m12, M12, M21, S12);
   }
 
   void Geodesic::Lengths(real eps, real sig12,
                          real ssig1, real csig1, real ssig2, real csig2,
                          real cbet1, real cbet2,
                          real& s12b, real& m12a, real& m0,
+                         bool scalep, real& M12, real& M21,
                          // Scratch areas of the right size
                          real C1a[], real C2a[]) const throw() {
     // Return m12a = (reduced length)/_a; also calculate s12b = distance/_b,
@@ -316,16 +575,34 @@ namespace GeographicLib {
                           SinCosSeries(true, ssig1, csig1, C1a, nC1)),
       A2m1 = A2m1f(eps),
       AB2 = (1 + A2m1) * (SinCosSeries(true, ssig2, csig2, C2a, nC2) -
-                          SinCosSeries(true, ssig1, csig1, C2a, nC2));
-    m0 = A1m1 - A2m1;
+                          SinCosSeries(true, ssig1, csig1, C2a, nC2)),
+      cbet1sq = sq(cbet1),
+      cbet2sq = sq(cbet2),
+      w1 = sqrt(1 - _e2 * cbet1sq),
+      w2 = sqrt(1 - _e2 * cbet2sq),
+      // Make sure it's OK to have repeated dummy arguments
+      m0x = A1m1 - A2m1,
+      J12 = m0x * sig12 + (AB1 - AB2);
+    m0 = m0x;
     // Missing a factor of _a.
     // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to ensure accurate
     // cancellation in the case of coincident points.
-    m12a = (sqrt(1 - _e2 * sq(cbet2)) * (csig1 * ssig2) -
-            sqrt(1 - _e2 * sq(cbet1)) * (ssig1 * csig2))
-      - _f1 * csig1 * csig2 * ( m0 * sig12 + (AB1 - AB2) );
+    m12a = (w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
+      - _f1 * csig1 * csig2 * J12;
     // Missing a factor of _b
     s12b =  (1 + A1m1) * sig12 + AB1;
+    if (scalep) {
+      real csig12 = csig1 * csig2 + ssig1 * ssig2;
+      /*
+      cout << w1/_f1 << " " << w2/_f1 << " " << J12 << " " << csig12 << "\n";
+      cout << csig1 << " " << ssig1 << " " << csig2 << " " << ssig2 << "\n";
+      */
+      J12 *= _f1;
+      M12 = csig12 + (_e2 * (cbet1sq - cbet2sq) * ssig2 / (w1 + w2)
+                      - csig2 * J12) * ssig1 / w1;
+      M21 = csig12 - (_e2 * (cbet1sq - cbet2sq) * ssig1 / (w1 + w2)
+                      - csig1 * J12) * ssig2 / w2;
+    }
   }
 
   Math::real Geodesic::Astroid(real x, real y) throw() {
@@ -417,6 +694,7 @@ namespace GeographicLib {
       // really short lines
       salp2 = cbet1 * somg12;
       calp2 = sbet12 - cbet1 * sbet2 * sq(somg12) / (1 + comg12);
+      SinCosNorm(salp2, calp2);
       // Set return value
       sig12 = atan2(ssig12, csig12);
     } else if (csig12 >= 0 ||
@@ -431,8 +709,7 @@ namespace GeographicLib {
         // x = dlong, y = dlat
         {
           real
-            mu = sq(sbet1),
-            k2 = mu * _ep2,
+            k2 = sq(sbet1) * _ep2,
             eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
           lamscale = _f * cbet1 * A3f(eps) * Constants::pi();
         }
@@ -449,7 +726,7 @@ namespace GeographicLib {
         // In the case of lon12 = 180, this repeats a calculation made in
         // Inverse.
         Lengths(_n, Constants::pi() + bet12a, sbet1, -cbet1, sbet2, cbet2,
-                cbet1, cbet2, dummy, x, m0, C1a, C2a);
+                cbet1, cbet2, dummy, x, m0, false, dummy, dummy, C1a, C2a);
         x = -1 + x/(_f1 * cbet1 * cbet2 * m0 * Constants::pi());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * sq(cbet1) * Constants::pi();
@@ -462,7 +739,8 @@ namespace GeographicLib {
         if (_f >= 0) {
           salp1 = min(real( 1), -x); calp1 = - sqrt(1 - sq(salp1));
         } else {
-          calp1 = max(real(-1),  x); salp1 =   sqrt(1 - sq(calp1));
+          calp1 = max(real(x > -tol1 ? 0 : -1),  x);
+          salp1 = sqrt(1 - sq(calp1));
         }
       } else {
         // Estimate omega12, by solving the astroid problem.
@@ -501,7 +779,7 @@ namespace GeographicLib {
       salp0 = salp1 * cbet1,
       calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
-    real somg1, comg1, somg2, comg2, omg12, lam12, mu, k2;
+    real somg1, comg1, somg2, comg2, omg12, lam12;
     // tan(bet1) = tan(sig1) * cos(alp1)
     // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
     ssig1 = sbet1; somg1 = salp0 * sbet1;
@@ -538,8 +816,7 @@ namespace GeographicLib {
     omg12 = atan2(max(comg1 * somg2 - somg1 * comg2, real(0)),
                   comg1 * comg2 + somg1 * somg2);
     real B312, h0;
-    mu = sq(calp0);
-    k2 = mu * _ep2;
+    real k2 = sq(calp0) * _ep2;
     eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
     C3f(eps, C3a);
     B312 = (SinCosSeries(true, ssig2, csig2, C3a, nC3-1) -
@@ -551,9 +828,10 @@ namespace GeographicLib {
       if (calp2 == 0)
         dlam12 = - 2 * sqrt(1 - _e2 * sq(cbet1)) / sbet1;
       else {
-        real dummy1, dummy2;
+        real dummy;
         Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
-                cbet1, cbet2, dummy1, dlam12, dummy2, C1a, C2a);
+                cbet1, cbet2, dummy, dlam12, dummy,
+                false, dummy, dummy,  C1a, C2a);
         dlam12 /= calp2 * cbet2;
       }
     }
@@ -562,13 +840,15 @@ namespace GeographicLib {
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
-                             real lat1, real lon1, real azi1) throw()
+                             real lat1, real lon1, real azi1,
+                             unsigned caps) throw()
     : _a(g._a)
     , _r(g._r)
     , _b(g._b)
     , _c2(g._c2)
     , _f1(g._f1)
-    , _areap(false)
+      // Always allow latitude and azimuth
+    , _caps(caps | LATITUDE | AZIMUTH)
   {
     azi1 = Geodesic::AngNormalize(azi1);
     // Guard against underflow in salp0
@@ -609,57 +889,75 @@ namespace GeographicLib {
     Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
     Geodesic::SinCosNorm(_somg1, _comg1);
 
-    real mu = sq(_calp0);
-    _k2 = mu * g._ep2;
+    _k2 = sq(_calp0) * g._ep2;
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
-    _A1m1 =  Geodesic::A1m1f(eps);
-    _A2m1 =  Geodesic::A2m1f(eps);
 
-    Geodesic::C1f(eps, _C1a);
-    Geodesic::C1pf(eps, _C1pa);
-    Geodesic::C2f(eps, _C2a);
-    g.C3f(eps, _C3a);
-
-    _B11 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C1a, nC1);
-    _B21 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C2a, nC2);
-    {
+    if (_caps & CAP_C1) {
+      _A1m1 =  Geodesic::A1m1f(eps);
+      Geodesic::C1f(eps, _C1a);
+      _B11 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C1a, nC1);
       real s = sin(_B11), c = cos(_B11);
       // tau1 = sig1 + B11
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
+      // Not necessary because C1pa reverts C1a
+      //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p);
     }
-    // Not necessary because C1pa reverts C1a
-    //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p);
 
-    _A3c = -g._f * _salp0 * g.A3f(eps);
-    _B31 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C3a, nC3-1);
+    if (_caps & CAP_C1p)
+      Geodesic::C1pf(eps, _C1pa);
+
+    if (_caps & CAP_C2) {
+      _A2m1 =  Geodesic::A2m1f(eps);
+      Geodesic::C2f(eps, _C2a);
+      _B21 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C2a, nC2);
+    }
+
+    if (_caps & CAP_C3) {
+      g.C3f(eps, _C3a);
+      _A3c = -g._f * _salp0 * g.A3f(eps);
+      _B31 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C3a, nC3-1);
+    }
+
+    if (_caps & CAP_C4) {
+      g.C4f(_k2, _C4a);
+      // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
+      _A4 = sq(g._a) * _calp0 * _salp0 * g._e2;
+      _B41 = Geodesic::SinCosSeries(false, _ssig1, _csig1, _C4a, nC4);
+    }
   }
 
-  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
-                                    real& azi2, real& m12, bool arcmode)
+  Math::real GeodesicLine::Position(bool arcmode, real a12,
+                                       unsigned outmask,
+                                       real& lat2, real& lon2, real& azi2,
+                                       real& s12, real& m12,
+                                       real& M12, real& M21,
+                                       real& S12)
   const throw() {
-    if (!Init())
-      // Uninitialized
-      return 0;
+    outmask &= _caps & OUT_ALL;
+    if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
+      // Uninitialized or impossible distance calculation requested
+      return Math::NaN();
+    
     // Avoid warning about uninitialized B12.
-    real sig12, ssig12, csig12, B12 = 0;
+    real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
     if (arcmode) {
-      // Interpret s12 as spherical arc length
-      sig12 = s12 * Constants::degree();
-      real s12a = abs(s12);
+      // Interpret a12 as spherical arc length
+      sig12 = a12 * Constants::degree();
+      real s12a = abs(a12);
       s12a -= 180 * floor(s12a / 180);
       ssig12 = s12a ==  0 ? 0 : sin(sig12);
       csig12 = s12a == 90 ? 0 : cos(sig12);
     } else {
-      // Interpret s12 as distance
+      // Interpret a12 as distance
       real
-        tau12 = s12 / (_b * (1 + _A1m1)),
+        tau12 = a12 / (_b * (1 + _A1m1)),
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
       B12 = - Geodesic::SinCosSeries(true, _stau1 * c + _ctau1 * s,
-                                  _ctau1 * c - _stau1 * s,
-                                  _C1pa, nC1p);
+                                     _ctau1 * c - _stau1 * s,
+                                     _C1pa, nC1p);
       sig12 = tau12 - (B12 - _B11);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
@@ -670,8 +968,11 @@ namespace GeographicLib {
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * csig12 + _csig1 * ssig12;
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
-    if (arcmode)
-      B12 = Geodesic::SinCosSeries(true, ssig2, csig2, _C1a, nC1);
+    if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
+      if (arcmode)
+        B12 = Geodesic::SinCosSeries(true, ssig2, csig2, _C1a, nC1);
+      AB1 = (1 + _A1m1) * (B12 - _B11);
+    }
     // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
     // Alt: cbet2 = hypot(csig2, salp0 * ssig2);
@@ -686,108 +987,191 @@ namespace GeographicLib {
     // omg12 = omg2 - omg1
     omg12 = atan2(somg2 * _comg1 - comg2 * _somg1,
                   comg2 * _comg1 + somg2 * _somg1);
-    lam12 = omg12 + _A3c *
-      ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3-1)  - _B31));
-    lon12 = lam12 / Constants::degree();
-    // Can't use AngNormalize because longitude might have wrapped multiple
-    // times.
-    lon12 = lon12 - 360 * floor(lon12/360 + real(0.5));
-    lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree();
-    lon2 = Geodesic::AngNormalize(_lon1 + lon12);
-    // minus signs give range [-180, 180). 0- converts -0 to +0.
-    azi2 = 0 - atan2(-salp2, calp2) / Constants::degree();
 
-    real
-      B22 = Geodesic::SinCosSeries(true, ssig2, csig2, _C2a, nC2),
-      AB1 = (1 + _A1m1) * (B12 - _B11),
-      AB2 = (1 + _A2m1) * (B22 - _B21);
-    // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
-    // accurate cancellation in the case of coincident points.
-    m12 = _b * ((sqrt(1 + _k2 * sq( ssig2)) * (_csig1 * ssig2) -
-                 sqrt(1 + _k2 * sq(_ssig1)) * (_ssig1 * csig2))
-                - _csig1 * csig2 * ( (_A1m1 - _A2m1) * sig12 + (AB1 - AB2) ));
-    if (arcmode)
-      s12 = _b * ((1 + _A1m1) * sig12 + AB1);
+    if (outmask & DISTANCE)
+      s12 = arcmode ? _b * ((1 + _A1m1) * sig12 + AB1) : a12;
 
-    return arcmode ? s12 : sig12 /  Constants::degree();
-  }
-
-  void GeodesicLine::Scale(real a12, real& M12, real& M21) const throw() {
-    if (!Init())
-      // Uninitialized
-      return;
-    real sig12 = a12 * Constants::degree(), ssig12, csig12;
-    {
-      real a12a = abs(a12);
-      a12a -= 180 * floor(a12a / 180);
-      ssig12 = a12a ==  0 ? 0 : sin(sig12);
-      csig12 = a12a == 90 ? 0 : cos(sig12);
-    }
-    // sig2 = sig1 + sig12
-    real
-      ssig2 = _ssig1 * csig12 + _csig1 * ssig12,
-      csig2 = _csig1 * csig12 - _ssig1 * ssig12,
-      ssig1sq = sq(_ssig1),
-      ssig2sq = sq( ssig2),
-      w1 = sqrt(1 + _k2 * ssig1sq),
-      w2 = sqrt(1 + _k2 * ssig2sq),
-      B12 = Geodesic::SinCosSeries(true, ssig2, csig2, _C1a, nC1),
-      B22 = Geodesic::SinCosSeries(true, ssig2, csig2, _C2a, nC2),
-      AB1 = (1 + _A1m1) * (B12 - _B11),
-      AB2 = (1 + _A2m1) * (B22 - _B21),
-      J12 = (_A1m1 - _A2m1) * sig12 + (AB1 - AB2);
-    M12 = csig12 + (_k2 * (ssig2sq - ssig1sq) * ssig2/ (w1 + w2)
-                    - csig2 * J12) * _ssig1 / w1;
-    M21 = csig12 - (_k2 * (ssig2sq - ssig1sq) * _ssig1/ (w1 + w2)
-                    - _csig1 * J12) * ssig2 / w2;
-  }
-
-  void GeodesicLine::AreaEnable(const Geodesic& g) throw() {
-    if (!Init())
-      return;
-    g.C4f(_k2, _C4a);
-    // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-    _A4 = sq(g._a) * _calp0 * _salp0 * g._e2;
-    _B41 = Geodesic::SinCosSeries(false, _ssig1, _csig1, _C4a, nC4);
-    _areap = true;
-  }
-
-  Math::real GeodesicLine::Area(real a12) const throw() {
-    if (!AreaInit())
-      // Uninitialized
-      return 0;
-
-    real sig12 = a12 * Constants::degree(), ssig12, csig12;
-    {
-      real a12a = abs(a12);
-      a12a -= 180 * floor(a12a / 180);
-      ssig12 = a12a ==  0 ? 0 : sin(sig12);
-      csig12 = a12a == 90 ? 0 : cos(sig12);
+    if (outmask & LONGITUDE) {
+      lam12 = omg12 + _A3c *
+        ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3-1)
+                   - _B31));
+      lon12 = lam12 / Constants::degree();
+      // Can't use AngNormalize because longitude might have wrapped multiple
+      // times.
+      lon12 = lon12 - 360 * floor(lon12/360 + real(0.5));
+      lon2 = Geodesic::AngNormalize(_lon1 + lon12);
     }
 
-    real
-      // sig2 = sig1 + sig12
-      ssig2 = _ssig1 * csig12 + _csig1 * ssig12,
-      csig2 = _csig1 * csig12 - _ssig1 * ssig12;
-    if (_salp0 == 0 && csig2 == 0)
-      // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
-      csig2 = Geodesic::eps2;
-    real
-      B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4),
-      // tan(alp0) = cos(sig2)*tan(alp2)
-      salp2 = _salp0, calp2 = _calp0 * csig2, // No need to normalize
+    if (outmask & LATITUDE)
+      lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree();
+
+    if (outmask & AZIMUTH)
+      // minus signs give range [-180, 180). 0- converts -0 to +0.
+      azi2 = 0 - atan2(-salp2, calp2) / Constants::degree();
+
+    if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
+      real
+        ssig1sq = sq(_ssig1),
+        ssig2sq = sq( ssig2),
+        w1 = sqrt(1 + _k2 * ssig1sq),
+        w2 = sqrt(1 + _k2 * ssig2sq),
+        B22 = Geodesic::SinCosSeries(true, ssig2, csig2, _C2a, nC2),
+        AB2 = (1 + _A2m1) * (B22 - _B21),
+        J12 = (_A1m1 - _A2m1) * sig12 + (AB1 - AB2);
+      if (outmask & REDUCEDLENGTH)
+        // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
+        // accurate cancellation in the case of coincident points.
+        m12 = _b * ((w2 * (_csig1 * ssig2) - w1 * (_ssig1 * csig2))
+                  - _csig1 * csig2 * J12);
+      if (outmask & GEODESICSCALE) {
+        /*
+        cout << w1 << " " << w2 << " " << J12 << " " << csig12 << "\n";
+        cout <<_csig1 << " " <<_ssig1 << " " << csig2 << " " << ssig2 << "\n";
+        */
+        M12 = csig12 + (_k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
+                        - csig2 * J12) * _ssig1 / w1;
+        M21 = csig12 - (_k2 * (ssig2sq - ssig1sq) * _ssig1 / (w1 + w2)
+                        - _csig1 * J12) * ssig2 / w2;
+      }
+    }
+
+    if (outmask & AREA) {
+      real
+        B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4),
       // alp12 = alp2 - alp1, used in atan2 so no need to normalized 
-      salp12 = salp2 * _calp1 - calp2 * _salp1,
-      calp12 = calp2 * _calp1 + salp2 * _salp1;
-    // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-    // salph12 = -0 and alp12 = -180.  However this depends on the sign being
-    // attached to 0 correctly.  The following ensures the correct behavior.
-    if (salp12 == 0 && calp12 < 0) {
-      salp12 = Geodesic::eps2 * _calp1;
-      calp12 = -1;
+        salp12 = salp2 * _calp1 - calp2 * _salp1,
+        calp12 = calp2 * _calp1 + salp2 * _salp1;
+      // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+      // salp12 = -0 and alp12 = -180.  However this depends on the sign being
+      // attached to 0 correctly.  The following ensures the correct behavior.
+      if (salp12 == 0 && calp12 < 0) {
+        salp12 = Geodesic::eps2 * _calp1;
+        calp12 = -1;
+      }
+      S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
-    real area = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
-    return area;
+
+    return arcmode ? a12 : sig12 /  Constants::degree();
+  }
+
+  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2)
+    const throw() {
+    real azi2, s12x, m12, M12, M21, S12;
+    return Position(false, s12,
+                    LATITUDE | LONGITUDE,
+                    lat2, lon2, azi2, s12x, m12, M12, M21, S12);
+  }
+
+  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
+                                    real& azi2) const throw() {
+    real s12x, m12, M12, M21, S12;
+    return Position(false, s12,
+                    LATITUDE | LONGITUDE | AZIMUTH,
+                    lat2, lon2, azi2, s12x, m12, M12, M21, S12);
+  }
+
+  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
+                                    real& azi2, real& m12) const throw() {
+    real s12x, M12, M21, S12;
+    return Position(false, s12,
+                    LATITUDE | LONGITUDE |
+                    AZIMUTH | REDUCEDLENGTH,
+                    lat2, lon2, azi2, s12x, m12, M12, M21, S12);
+  }
+
+  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
+                                    real& azi2, real& M12, real& M21)
+    const throw() {
+    real s12x, m12, S12;
+    return Position(false, s12,
+                    LATITUDE | LONGITUDE |
+                    AZIMUTH | GEODESICSCALE,
+                    lat2, lon2, azi2, s12x, m12, M12, M21, S12);
+  }
+
+  Math::real GeodesicLine::Position(real s12,
+                                    real& lat2, real& lon2, real& azi2,
+                                    real& m12, real& M12, real& M21)
+    const throw() {
+    real s12x, S12;
+    return Position(false, s12,
+                    LATITUDE | LONGITUDE | AZIMUTH |
+                    REDUCEDLENGTH | GEODESICSCALE,
+                    lat2, lon2, azi2, s12x, m12, M12, M21, S12);
+  }
+
+  Math::real GeodesicLine::Position(real s12,
+                                    real& lat2, real& lon2, real& azi2,
+                                    real& m12, real& M12, real& M21,
+                                    real& S12) const throw() {
+    real s12x;
+    return Position(false, s12,
+                    LATITUDE | LONGITUDE | AZIMUTH |
+                    REDUCEDLENGTH | GEODESICSCALE | AREA,
+                    lat2, lon2, azi2, s12x, m12, M12, M21, S12);
+  }
+
+  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2)
+    const throw() {
+    real azi2, s12, m12, M12, M21, S12;
+    Position(true, a12,
+             LATITUDE | LONGITUDE,
+             lat2, lon2, azi2, s12, m12, M12, M21, S12);
+  }
+
+  void GeodesicLine::ArcPosition(real a12,
+                                 real& lat2, real& lon2, real& azi2)
+    const throw() {
+    real s12, m12, M12, M21, S12;
+    Position(true, a12,
+             LATITUDE | LONGITUDE | AZIMUTH,
+             lat2, lon2, azi2, s12, m12, M12, M21, S12);
+  }
+
+  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                                 real& s12) const throw() {
+    real m12, M12, M21, S12;
+    Position(true, a12,
+             LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
+             lat2, lon2, azi2, s12, m12, M12, M21, S12);
+  }
+
+  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                                 real& s12, real& m12) const throw() {
+    real M12, M21, S12;
+    Position(true, a12,
+             LATITUDE | LONGITUDE | AZIMUTH |
+             DISTANCE | REDUCEDLENGTH,
+             lat2, lon2, azi2, s12, m12, M12, M21, S12);
+  }
+
+  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                                 real& s12, real& M12, real& M21)
+    const throw() {
+    real m12, S12;
+    Position(true, a12,
+             LATITUDE | LONGITUDE | AZIMUTH |
+             DISTANCE | GEODESICSCALE,
+             lat2, lon2, azi2, s12, m12, M12, M21, S12);
+  }
+
+  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                                 real& s12, real& m12, real& M12, real& M21)
+    const throw() {
+    real S12;
+    Position(true, a12,
+             LATITUDE | LONGITUDE | AZIMUTH |
+             DISTANCE | REDUCEDLENGTH | GEODESICSCALE,
+             lat2, lon2, azi2, s12, m12, M12, M21, S12);
+  }
+
+  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                                 real& s12, real& m12, real& M12, real& M21,
+                                 real& S12) const throw() {
+    Position(true, a12,
+             LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
+             REDUCEDLENGTH | GEODESICSCALE | AREA,
+             lat2, lon2, azi2, s12, m12, M12, M21, S12);
   }
 
   Math::real Geodesic::A3f(real eps) const throw() {
@@ -817,22 +1201,22 @@ namespace GeographicLib {
 
   void Geodesic::C4f(real k2, real c[]) const throw() {
     // Evaluation C4 coeffs by Horner's method
-    // Elements c[1] thru c[nC4] are set
+    // Elements c[0] thru c[nC4 - 1] are set
     for (int j = nC4x, k = nC4; k; ) {
       real t = 0;
       for (int i = nC4 - k + 1; i; --i)
         t = k2 * t + _C4x[--j];
-      c[k--] = t;
+      c[--k] = t;
     }
 
     real mult = 1;
-    for (int k = 2; k <= nC4; ) {
+    for (int k = 1; k < nC4; ) {
       mult *= k2;
       c[k++] *= mult;
     }
   }
 
-  // Generated by Maxima on 2010-05-03 08:35:50-04:00
+  // Generated by Maxima on 2010-09-04 10:26:17-04:00
 
   // The scale factor A1-1 = mean value of I1-1
   Math::real Geodesic::A1m1f(real eps) throw() {
@@ -1341,9 +1725,11 @@ namespace GeographicLib {
     }
   }
 
-  // The coefficients C4[l] in the Fourier expansion of B3
+  // The coefficients C4[l] in the Fourier expansion of I4
   void Geodesic::C4coeff() throw() {
     switch (nC4) {
+    case 0:
+      break;
     case 1:
       _C4x[0] = 2/real(3);
       break;

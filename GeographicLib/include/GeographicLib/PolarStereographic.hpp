@@ -29,7 +29,8 @@ namespace GeographicLib {
   class PolarStereographic {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _e2, _e, _e2m, _C, _c;
+    // _Cx used to be _C but g++ 3.4 has a macro of that name
+    const real _a, _r, _f, _e2, _e, _e2m, _Cx, _c;
     real _k0;
     static const real tol, overflow;
     static const int numit = 5;

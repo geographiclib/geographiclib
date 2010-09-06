@@ -77,9 +77,9 @@ namespace GeographicLib {
     mutable real _v00, _v01, _v10, _v11;
     mutable real _t[nterms];
     void filepos(int ix, int iy) const {
-      _file.seekg(std::ios::streamoff(_datastart +
-                                      2ULL * (unsigned(iy) * _swidth +
-                                              unsigned(ix))));
+      // The argument to seekg should really be cast to type
+      // std::ios::streamoff.  But g++ 3.x doesn't know about this.
+      _file.seekg(_datastart + 2ULL * (unsigned(iy) * _swidth + unsigned(ix)));
     }
     real rawval(int ix, int iy) const {
       if (ix < 0)
