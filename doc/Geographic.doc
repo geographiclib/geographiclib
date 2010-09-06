@@ -1026,9 +1026,6 @@ m12.
 
 The algorithms included here are based on the work of Bessel (1826) and
 Helmert (1880).  Key points are:
-  - Extension of Bessel's method for removing half the terms in the
-    series expansions to the longitude integral.  This also accelerates
-    the convergence of the series.
   - Inclusion of sufficient terms in the series to give accuracy at the
     round-off level for doubles and long doubles.
   - Reverting the distance series so that the direct problem can be
@@ -1095,7 +1092,7 @@ A test set a geodesics is available at
  - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">
    GeodTest.dat.gz</a>
  .
-This is about 34 MB (compressed).  This consists of a set of geodesics
+This is about 39 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
  - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
@@ -1418,12 +1415,12 @@ where
 
 &nbsp; &nbsp; \e Gamma = geodesic excess<br>
 &nbsp; &nbsp; \e I4(\e sigma) =
-sum<sub>\e j = 1</sub> \e C4<sub>j</sub> cos((2\e j - 1) \e sigma)
+sum<sub>\e j = 0</sub> \e C4<sub>j</sub> cos((2\e j + 1) \e sigma)
 
 and
 
 \verbatim
-C4[1] = + (2/3 - 1/15*ep2 + 4/105*ep2^2 - 8/315*ep2^3 + 64/3465*ep2^4 - 128/9009*ep2^5 + 512/45045*ep2^6 - 1024/109395*ep2^7)
+C4[0] = + (2/3 - 1/15*ep2 + 4/105*ep2^2 - 8/315*ep2^3 + 64/3465*ep2^4 - 128/9009*ep2^5 + 512/45045*ep2^6 - 1024/109395*ep2^7)
         - (1/20 - 1/35*ep2 + 2/105*ep2^2 - 16/1155*ep2^3 + 32/3003*ep2^4 - 128/15015*ep2^5 + 256/36465*ep2^6) * k2
         + (1/42 - 1/63*ep2 + 8/693*ep2^2 - 80/9009*ep2^3 + 64/9009*ep2^4 - 128/21879*ep2^5) * k2^2
         - (1/72 - 1/99*ep2 + 10/1287*ep2^2 - 8/1287*ep2^3 + 112/21879*ep2^4) * k2^3
@@ -1431,34 +1428,34 @@ C4[1] = + (2/3 - 1/15*ep2 + 4/105*ep2^2 - 8/315*ep2^3 + 64/3465*ep2^4 - 128/9009
         - (1/156 - 1/195*ep2 + 14/3315*ep2^2) * k2^5
         + (1/210 - 1/255*ep2) * k2^6
         - 1/272 * k2^7;
-C4[2] = + (1/180 - 1/315*ep2 + 2/945*ep2^2 - 16/10395*ep2^3 + 32/27027*ep2^4 - 128/135135*ep2^5 + 256/328185*ep2^6) * k2
+C4[1] = + (1/180 - 1/315*ep2 + 2/945*ep2^2 - 16/10395*ep2^3 + 32/27027*ep2^4 - 128/135135*ep2^5 + 256/328185*ep2^6) * k2
         - (1/252 - 1/378*ep2 + 4/2079*ep2^2 - 40/27027*ep2^3 + 32/27027*ep2^4 - 64/65637*ep2^5) * k2^2
         + (1/360 - 1/495*ep2 + 2/1287*ep2^2 - 8/6435*ep2^3 + 112/109395*ep2^4) * k2^3
         - (1/495 - 2/1287*ep2 + 8/6435*ep2^2 - 112/109395*ep2^3) * k2^4
         + (5/3276 - 1/819*ep2 + 2/1989*ep2^2) * k2^5
         - (1/840 - 1/1020*ep2) * k2^6
         + 7/7344 * k2^7;
-C4[3] = + (1/2100 - 1/3150*ep2 + 4/17325*ep2^2 - 8/45045*ep2^3 + 32/225225*ep2^4 - 64/546975*ep2^5) * k2^2
+C4[2] = + (1/2100 - 1/3150*ep2 + 4/17325*ep2^2 - 8/45045*ep2^3 + 32/225225*ep2^4 - 64/546975*ep2^5) * k2^2
         - (1/1800 - 1/2475*ep2 + 2/6435*ep2^2 - 8/32175*ep2^3 + 112/546975*ep2^4) * k2^3
         + (1/1925 - 2/5005*ep2 + 8/25025*ep2^2 - 16/60775*ep2^3) * k2^4
         - (1/2184 - 1/2730*ep2 + 1/3315*ep2^2) * k2^5
         + (1/2520 - 1/3060*ep2) * k2^6
         - 7/20400 * k2^7;
-C4[4] = + (1/17640 - 1/24255*ep2 + 2/63063*ep2^2 - 8/315315*ep2^3 + 16/765765*ep2^4) * k2^3
+C4[3] = + (1/17640 - 1/24255*ep2 + 2/63063*ep2^2 - 8/315315*ep2^3 + 16/765765*ep2^4) * k2^3
         - (1/10780 - 1/14014*ep2 + 2/35035*ep2^2 - 4/85085*ep2^3) * k2^4
         + (5/45864 - 1/11466*ep2 + 1/13923*ep2^2) * k2^5
         - (1/8820 - 1/10710*ep2) * k2^6
         + 1/8976 * k2^7;
-C4[5] = + (1/124740 - 1/162162*ep2 + 2/405405*ep2^2 - 4/984555*ep2^3) * k2^4
+C4[4] = + (1/124740 - 1/162162*ep2 + 2/405405*ep2^2 - 4/984555*ep2^3) * k2^4
         - (1/58968 - 1/73710*ep2 + 1/89505*ep2^2) * k2^5
         + (1/41580 - 1/50490*ep2) * k2^6
         - 7/242352 * k2^7;
-C4[6] = + (1/792792 - 1/990990*ep2 + 1/1203345*ep2^2) * k2^5
+C4[5] = + (1/792792 - 1/990990*ep2 + 1/1203345*ep2^2) * k2^5
         - (1/304920 - 1/370260*ep2) * k2^6
         + 7/1283568 * k2^7;
-C4[7] = + (1/4684680 - 1/5688540*ep2) * k2^6
+C4[6] = + (1/4684680 - 1/5688540*ep2) * k2^6
         - 1/1516944 * k2^7;
-C4[8] = + 1/26254800 * k2^7;
+C4[7] = + 1/26254800 * k2^7;
 \endverbatim
 
 
@@ -1559,8 +1556,7 @@ terms of the spherical arc length.
 On a 2.66 GHz Intel machine (g++, version 4.4.0, -O3), timings are as
 follows:
  - Geodesic::Direct 0.96 us
- - GeodesicLine::Position 0.45 us (arcmode = false)
- - GeodesicLine::Position 0.29 us (arcmode = true)
+ - GeodesicLine::Position 0.45 us
  - Geodesic::Inverse 2.8 us
  .
 The timing for Geodesic::Inverse is a mean.  Individual calls may take a
@@ -2470,14 +2466,16 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (not released yet)</a>
-  - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
-  - Change longitude series in GeographicLib::Geodesic so that some of the
-    work evaluating it can be done in the constructor.
-  - Ensure that equatorial geodesics have cos(alpha0) = 0 identically.
-  - Make GeographicLib::GeodesicLine constructor public.
   - Add area computations via GeographicLib::GeodesicLine::Area.
-  - Add area to geodesic test set.
+  - Add geodesic areas to geodesic test set.
+  - Make GeographicLib::GeodesicLine constructor public.
+  - Change longitude series in GeographicLib::Geodesic into Helmert-like form.
+  - Ensure that equatorial geodesics have cos(alpha0) = 0 identically.
+  - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
   - Constructors check that minor radius is positive.
+  - Minor fixes to allow package to compile under cygwin.
+  - Generalize interface for GeographicLib::GeodesicLine and
+    GeographicLib::Geodesic.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the

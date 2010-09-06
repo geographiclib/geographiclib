@@ -31,14 +31,12 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
-    , _C(exp(eatanhe(real(1))))
-    , _c( (1 - _f) * _C )
+    , _Cx(exp(eatanhe(real(1))))
+    , _c( (1 - _f) * _Cx )
     , _k0(k0)
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
-      throw GeographicErr("Minor radius is not positive");
     if (!(_k0 > 0))
       throw GeographicErr("Scale is not positive");
   }
@@ -97,7 +95,7 @@ namespace GeographicLib {
       rho = Math::hypot(x, y),
       t = rho / (2 * _k0 * _a / _c),
       taup = (1 / t - t) / 2,
-      tau = taup * _C,
+      tau = taup * _Cx,
       stol = tol * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.99
     for (int i = 0; i < numit; ++i) {

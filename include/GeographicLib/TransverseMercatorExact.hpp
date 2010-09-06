@@ -142,9 +142,9 @@ namespace GeographicLib {
      * method cannot be applied directly to the case of a sphere (\e r = inf)
      * because some the constants characterizing this method diverge in that
      * limit, and in practise, \e r should be smaller than about
-     * 1/std::numeric_limits<real>::epsilon().  However,
+     * 1/numeric_limits< real >::%epsilon().  However,
      * GeographicLib::TransverseMercator treats the sphere exactly.  An
-     * exception is thrown if \e a, \e r, or \e k0 is not positive.
+     * exception is thrown if \e a or \e k0 is not positive or if \e r < 1.
      **********************************************************************/
     TransverseMercatorExact(real a, real r, real k0, bool extendp = false);
 
