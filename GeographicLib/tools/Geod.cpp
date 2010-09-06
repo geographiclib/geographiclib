@@ -19,7 +19,7 @@
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]\n\
+"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-e a r]\n\
             [-d] [-b] [-f] [-p prec] [-h]\n\
 $Id$\n\
 \n\
@@ -51,8 +51,7 @@ Geod operates in one of three modes:\n\
 By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
 equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
 to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-ellipsoid.  The -n option uses the international ellipsoid (equivalent to\n\
-\"-e 6378388 297\").\n\
+ellipsoid.\n\
 \n\
 Output of angles is as decimal degrees.  If -d is specified the output\n\
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',\n\
