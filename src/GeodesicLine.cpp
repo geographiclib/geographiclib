@@ -1,6 +1,6 @@
 /**
- * \file Geodesic.cpp
- * \brief Implementation for GeographicLib::Geodesic class
+ * \file GeodesicLine.cpp
+ * \brief Implementation for GeographicLib::GeodesicLine class
  *
  * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see

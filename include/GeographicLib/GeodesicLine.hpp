@@ -1,6 +1,6 @@
 /**
- * \file Geodesic.hpp
- * \brief Header for GeographicLib::Geodesic class
+ * \file GeodesicLine.hpp
+ * \brief Header for GeographicLib::GeodesicLine class
  *
  * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
@@ -352,17 +352,6 @@ namespace GeographicLib {
      * Has this object been initialized so that Position can be called?
      **********************************************************************/
     bool Init() const throw() { return _caps != 0U; }
-
-
-    /**
-     * Return total area of ellipsoid in meters<sup>2</sup>.  (Does not require
-     * GeodesicLine::AreaEnable to have been called.)  The area of a polygon
-     * encircling a pole can be found by adding GeodesicLine::EllipsoidArea()/2
-     * to the sum of GeodesicLine::Area for each side of the polygon.
-     **********************************************************************/
-    Math::real EllipsoidArea() const throw() {
-      return 4 * Constants::pi() * _c2;
-    }
 
     /**
      * Return the latitude of point 1 (degrees).

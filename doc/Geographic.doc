@@ -76,6 +76,7 @@ For more information, see http://geographiclib.sourceforge.net/
  - \ref utilities
    - \ref geoconvert
    - \ref geod
+   - \ref planimeter
    - \ref transversemercatortest
    - \ref cartconvert
    - \ref equidistanttest
@@ -1555,10 +1556,10 @@ terms of the spherical arc length.
 
 On a 2.66 GHz Intel machine (g++, version 4.4.0, -O3), timings are as
 follows:
- - Geodesic::Direct 0.57 us
- - GeodesicLine::Position 0.39 us
+ - Geodesic::Direct 0.88 us
+ - GeodesicLine::Position 0.37 us
  - GeodesicLine::ArcPosition 0.31 us
- - Geodesic::Inverse 2.6 us
+ - Geodesic::Inverse 2.62 us
  .
 The timing for Geodesic::Inverse is a mean.  Individual calls may take a
 few times longer because of the need to do additional Newton iterations.
@@ -2141,7 +2142,7 @@ Example (route from JFK Airport to Singapore Changi Airport)
 
 Here is the usage (obtained from "Geod -h")
 \verbatim
-Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]
+Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-e a r]
             [-d] [-b] [-f] [-p prec] [-h]
 
 Perform geodesic calculations.
@@ -2172,8 +2173,7 @@ Geod operates in one of three modes:
 By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
 equatorial radius of the ellipsoid to "a" and the reciprocal flattening
 to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
-ellipsoid.  The -n option uses the international ellipsoid (equivalent to
-"-e 6378388 297").
+ellipsoid.
 
 Output of angles is as decimal degrees.  If -d is specified the output
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',
@@ -2204,6 +2204,45 @@ where here s12 is the distance and a12 the arc length.
 -p prec (default 3) gives the precision of the output relative to 1m.
 The minimum value of prec is 0 (1 m accuracy) and the maximum value is
 10 (0.1 nm accuracy, but then the last digits are unreliable).
+
+-h prints this help.
+\endverbatim
+
+\section planimeter Planimeter
+
+Planimeter is a command line utility for determining the area of
+geodesic polygons via GeographicLib::Geodesic.
+
+Example (the area of the 100km MGRS square 18SWK)
+ - Planimeter <<EOF\n
+   18N 500000 4400000\n
+   18N 500000 4500000\n
+   18N 600000 4500000\n
+   18N 600000 4400000\n
+   EOF\n
+   => 4 400139.53295860 10007388597.191
+
+Here is the usage (obtained from "Planimeter -h")
+\verbatim
+Usage: Planimeter [-e a r] [-h]
+
+Measure the area of a geodesic polygon.  Reads polygon vertices from
+standard input, one per line.  Vertices may be given as latitude and
+longitude, UTM/UPS, or MGRS coordinates (interpreted in the same way as
+GeoConvert).  The end of input, a blank line, or a line which can't be
+interpreted as a vertex signals the end of one polygon and the start of
+the next.  For each polygon print a summary line with the number of
+points, the perimeter (in meters), and the area (in meters^2).  Areas
+are tranversed in a clockwise sense (in other words, the included area
+is to the right of the perimeter).  By this rule, a polygon tranversed
+in a counter-clockwise sense will return the area of ellipsoid excluded
+by the polygon.  Only simple polygons are supported for the area
+computation.  Polygons may include one or both poles.
+
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
+ellipsoid.
 
 -h prints this help.
 \endverbatim
@@ -2467,7 +2506,7 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (not released yet)</a>
-  - Add area computations via GeographicLib::GeodesicLine::Area.
+  - Add area computations to GeographicLib::Geodesic.
   - Add geodesic areas to geodesic test set.
   - Make GeographicLib::GeodesicLine constructor public.
   - Change longitude series in GeographicLib::Geodesic into Helmert-like form.
@@ -2479,6 +2518,11 @@ number.)
     GeographicLib::GeodesicLine.
   - Split GeographicLib::GeodesicLine and
     GeographicLib::Geodesic into different files.
+  - Signal convergence failure in GeographicLib::Geodesic::Inverse with
+    NaNs.
+  - Deprecate -n option for \ref geod.
+  - Deprecate two functions in GeographicLib::GeodesicLine.
+  - Add the \ref planimeter utility.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the

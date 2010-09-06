@@ -321,6 +321,15 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 
+    /**
+     * Return total area of ellipsoid in meters<sup>2</sup>.  (Does not require
+     * GeodesicLine::AreaEnable to have been called.)  The area of a polygon
+     * encircling a pole can be found by adding GeodesicLine::EllipsoidArea()/2
+     * to the sum of GeodesicLine::Area for each side of the polygon.
+     **********************************************************************/
+    Math::real EllipsoidArea() const throw() {
+      return 4 * Constants::pi() * _c2;
+    }
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
