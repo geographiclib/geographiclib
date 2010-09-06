@@ -151,13 +151,13 @@ namespace GeographicLib {
 
     enum captype {
       CAP_NONE = 0U,
-      CAP_C1 = 1U<<0,
-      CAP_C1p= 1U<<1,
-      CAP_C2 = 1U<<2,
-      CAP_C3 = 1U<<3,
-      CAP_C4 = 1U<<4,
-      CAP_ALL= 0x1FU,
-      OUT_ALL= 0x7F80U,
+      CAP_C1   = 1U<<0,
+      CAP_C1p  = 1U<<1,
+      CAP_C2   = 1U<<2,
+      CAP_C3   = 1U<<3,
+      CAP_C4   = 1U<<4,
+      CAP_ALL  = 0x1FU,
+      OUT_ALL  = 0x7F80U,
     };
   public:
 
@@ -170,7 +170,7 @@ namespace GeographicLib {
       LONGITUDE     = 1U<<8  | CAP_C3,
       AZIMUTH       = 1U<<9  | CAP_NONE,
       DISTANCE      = 1U<<10 | CAP_C1,
-      DISTANCE_IN   = 1U<<12 | CAP_C1 | CAP_C1p,
+      DISTANCE_IN   = 1U<<11 | CAP_C1 | CAP_C1p,
       REDUCEDLENGTH = 1U<<12 | CAP_C1 | CAP_C2,
       GEODESICSCALE = 1U<<13 | CAP_C1 | CAP_C2,
       AREA          = 1U<<14 | CAP_C4,

@@ -136,7 +136,7 @@ namespace GeographicLib {
     if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
       // Uninitialized or impossible distance calculation requested
       return Math::NaN();
-    
+
     // Avoid warning about uninitialized B12.
     real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
     if (arcmode) {
@@ -232,7 +232,7 @@ namespace GeographicLib {
     if (outmask & AREA) {
       real
         B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4),
-      // alp12 = alp2 - alp1, used in atan2 so no need to normalized 
+      // alp12 = alp2 - alp1, used in atan2 so no need to normalized
         salp12 = salp2 * _calp1 - calp2 * _salp1,
         calp12 = calp2 * _calp1 + salp2 * _salp1;
       // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz

@@ -57,7 +57,7 @@ namespace GeographicLib {
     , _b(_a * _f1)
     , _c2((sq(_a) + sq(_b) *
            (_e2 == 0 ? 1 :
-            (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) / 
+            (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
     , _etol2(tol2 / max(real(0.1), sqrt(abs(_e2))))
   {
@@ -445,7 +445,7 @@ namespace GeographicLib {
         S12 = A4 * (B42 - B41);
       }
       real
-        // alp12 = alp2 - alp1, used in atan2 so no need to normalized 
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
         salp12 = salp2 * calp1 - calp2 * salp1,
         calp12 = calp2 * calp1 + salp2 * salp1;
       // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz

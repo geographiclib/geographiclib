@@ -75,14 +75,14 @@ namespace GeographicLib {
 
     static inline real sq(real x) throw() { return x * x; }
     enum captype {
-      CAP_NONE = 0U,
-      CAP_C1 = 1U<<0,
-      CAP_C1p= 1U<<1,
-      CAP_C2 = 1U<<2,
-      CAP_C3 = 1U<<3,
-      CAP_C4 = 1U<<4,
-      CAP_ALL= 0x1FU,           // Bits 0 thru 4
-      OUT_ALL= 0x7F80U,         // Bits 7 thru 14
+      CAP_NONE = Geodesic::CAP_NONE,
+      CAP_C1   = Geodesic::CAP_C1,
+      CAP_C1p  = Geodesic::CAP_C1p,
+      CAP_C2   = Geodesic::CAP_C2,
+      CAP_C3   = Geodesic::CAP_C3,
+      CAP_C4   = Geodesic::CAP_C4,
+      CAP_ALL  = Geodesic::CAP_ALL,
+      OUT_ALL  = Geodesic::OUT_ALL,
     };
   public:
 
@@ -107,16 +107,16 @@ namespace GeographicLib {
      LONGITUDE                         X
     **********************************************************************/
     enum mask {
-      NONE          = 0U,
-      LATITUDE      = 1U<<7  | CAP_NONE,
-      LONGITUDE     = 1U<<8  | CAP_C3,
-      AZIMUTH       = 1U<<9  | CAP_NONE,
-      DISTANCE      = 1U<<10 | CAP_C1,
-      DISTANCE_IN   = 1U<<11 | CAP_C1 | CAP_C1p,
-      REDUCEDLENGTH = 1U<<12 | CAP_C1 | CAP_C2,
-      GEODESICSCALE = 1U<<13 | CAP_C1 | CAP_C2,
-      AREA          = 1U<<14 | CAP_C4,
-      ALL           = OUT_ALL| CAP_ALL,
+      NONE          = Geodesic::NONE,
+      LATITUDE      = Geodesic::LATITUDE,
+      LONGITUDE     = Geodesic::LONGITUDE,
+      AZIMUTH       = Geodesic::AZIMUTH,
+      DISTANCE      = Geodesic::DISTANCE,
+      DISTANCE_IN   = Geodesic::DISTANCE_IN,
+      REDUCEDLENGTH = Geodesic::REDUCEDLENGTH,
+      GEODESICSCALE = Geodesic::GEODESICSCALE,
+      AREA          = Geodesic::AREA,
+      ALL           = Geodesic::ALL,
     };
 
     /** \name Constructors
