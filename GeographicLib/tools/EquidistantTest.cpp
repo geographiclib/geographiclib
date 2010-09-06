@@ -7,8 +7,8 @@
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geodesic.o AzimuthalEquidistant.o
- * Gnomonic.o CassiniSoldner.o
+ * Compile with -I../include and link with Geodesic.o GeodesicLine.o
+ * AzimuthalEquidistant.o Gnomonic.o CassiniSoldner.o
  *
  * See \ref equidistanttest for usage information.
  **********************************************************************/

@@ -27,7 +27,8 @@ Files
       DMS.[ch]pp -- handle degrees minutes seconds
       Geocentric.[ch]pp -- geocentric coordinates
       LocalCartesian.[ch]pp -- local cartesian coordinates
-      Geodesic.[ch]pp -- geodesic calculatiosn
+      Geodesic.[ch]pp -- geodesic calculations
+      GeodesicLine.[ch]pp -- calculations on a single geodesic
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
       Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
