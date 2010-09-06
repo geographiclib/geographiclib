@@ -1555,9 +1555,10 @@ terms of the spherical arc length.
 
 On a 2.66 GHz Intel machine (g++, version 4.4.0, -O3), timings are as
 follows:
- - Geodesic::Direct 0.96 us
- - GeodesicLine::Position 0.45 us
- - Geodesic::Inverse 2.8 us
+ - Geodesic::Direct 0.57 us
+ - GeodesicLine::Position 0.39 us
+ - GeodesicLine::ArcPosition 0.31 us
+ - Geodesic::Inverse 2.6 us
  .
 The timing for Geodesic::Inverse is a mean.  Individual calls may take a
 few times longer because of the need to do additional Newton iterations.
