@@ -2474,8 +2474,10 @@ number.)
   - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
   - Constructors check that minor radius is positive.
   - Minor fixes to allow package to compile under cygwin.
-  - Generalize interface for GeographicLib::GeodesicLine and
-    GeographicLib::Geodesic.
+  - Generalize interface for GeographicLib::Geodesic and
+    GeographicLib::GeodesicLine.
+  - Split GeographicLib::GeodesicLine and
+    GeographicLib::Geodesic into different files.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the

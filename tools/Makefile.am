@@ -34,7 +34,8 @@ CartConvert_SOURCES = CartConvert.cpp \
 Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
-	../include/GeographicLib/Geodesic.hpp
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicLine.hpp
 
 EquidistantTest_SOURCES = EquidistantTest.cpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -42,7 +43,8 @@ EquidistantTest_SOURCES = EquidistantTest.cpp \
 	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
-	../include/GeographicLib/Geodesic.hpp
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicLine.hpp
 
 GeoidEval_SOURCES = GeoidEval.cpp \
 	../include/GeographicLib/Constants.hpp \

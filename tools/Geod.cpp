@@ -6,7 +6,7 @@
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geodesic.o DMS.o
+ * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
  *
  * See \ref geod for usage information.
  **********************************************************************/

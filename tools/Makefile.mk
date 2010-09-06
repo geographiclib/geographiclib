@@ -41,9 +41,9 @@ GeoConvert.o: Constants.hpp DMS.hpp GeoCoords.hpp UTMUPS.hpp
 TransverseMercatorTest.o: Constants.hpp DMS.hpp EllipticFunction.hpp \
 	TransverseMercator.hpp TransverseMercatorExact.hpp
 CartConvert.o: Constants.hpp DMS.hpp Geocentric.hpp LocalCartesian.hpp
-Geod.o: Constants.hpp DMS.hpp Geodesic.hpp
+Geod.o: Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
 EquidistantTest.o: AzimuthalEquidistant.hpp CassiniSoldner.hpp Gnomonic.hpp \
-	 Constants.hpp DMS.hpp Geodesic.hpp
+	 Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
 GeoidEval.o: Constants.hpp DMS.hpp GeoCoords.hpp Geoid.hpp
 
 INSTALL = install -b

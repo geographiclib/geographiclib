@@ -16,6 +16,7 @@ $(top_srcdir)/include/GeographicLib/EllipticFunction.hpp \
 $(top_srcdir)/include/GeographicLib/Geocentric.hpp \
 $(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
 $(top_srcdir)/include/GeographicLib/Geodesic.hpp \
+$(top_srcdir)/include/GeographicLib/GeodesicLine.hpp \
 $(top_srcdir)/include/GeographicLib/Geoid.hpp \
 $(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 $(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
