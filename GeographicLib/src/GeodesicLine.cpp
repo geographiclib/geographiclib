@@ -126,11 +126,11 @@ namespace GeographicLib {
   }
 
   Math::real GeodesicLine::Position(bool arcmode, real a12,
-                                       unsigned outmask,
-                                       real& lat2, real& lon2, real& azi2,
-                                       real& s12, real& m12,
-                                       real& M12, real& M21,
-                                       real& S12)
+                                    unsigned outmask,
+                                    real& lat2, real& lon2, real& azi2,
+                                    real& s12, real& m12,
+                                    real& M12, real& M21,
+                                    real& S12)
   const throw() {
     outmask &= _caps & OUT_ALL;
     if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))

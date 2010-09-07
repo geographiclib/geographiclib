@@ -200,7 +200,7 @@ namespace GeographicLib {
      * is necessary for a shortest path: the longitudinal extent must not
      * exceed of 180 degrees.  Returned value is the arc length \e a12
      * (degrees) if \e arcmode is false, otherwise it is the distance \e s12
-     * (meters).
+     * (meters). <b>DEPRECATED</b>
      **********************************************************************/
     Math::real Direct(real lat1, real lon1, real azi1, real s12,
                       real& lat2, real& lon2, real& azi2, real& m12,

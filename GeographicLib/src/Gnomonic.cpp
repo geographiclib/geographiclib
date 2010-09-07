@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #include "GeographicLib/Gnomonic.hpp"
-
+#include <iostream>
 #define GEOGRAPHICLIB_GNOMONIC_CPP "$Id$"
 
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_CPP)
@@ -24,11 +24,11 @@ namespace GeographicLib {
   void Gnomonic::Forward(real lat0, real lon0, real lat, real lon,
                          real& x, real& y, real& azi, real& rk)
     const throw() {
-    real sig, s, azi0, m;
-    sig = _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
-    const GeodesicLine line(_earth.Line(lat0, lon0, azi0));
-    real M, Mx;
-    line.Scale(sig, M, Mx);
+    real azi0, m, M, t;
+    _earth.Inverse(lat0, lon0, lat, lon,
+                   Geodesic::AZIMUTH | Geodesic::REDUCEDLENGTH |
+                   Geodesic::GEODESICSCALE,
+                   t, azi0, azi, m, M, t, t);
     rk = M;
     if (M <= 0)
       x = y = Math::NaN();
@@ -45,50 +45,34 @@ namespace GeographicLib {
     const throw() {
     real
       azi0 = atan2(x, y) / Constants::degree(),
-      rho = min(Math::hypot(x, y), _a/(2 * eps0));
-    GeodesicLine line(_earth.Line(lat0, lon0, azi0));
-    real lat1, lon1, azi1, M, s = 0; // Suppress warning about uninitialized s
-    int count = numit;
-    if (rho * _f < _a / 2)
+      rho = Math::hypot(x, y),
       s = _a * atan(rho/_a);
-    else {
-      real m, Mx, ang = 90;
-      int trip = _f == 0 ? 1 : max(1, int(-log(rho/_a) / log(_f) + real(0.5)));
-      while (count--) {
-        s = line.Position(ang, lat1, lon1, azi1, m, true);
-        line.Scale(ang, M, Mx);
-        if (trip < 0 && M > 0)
-          break;
-        // Estimate new arc length assuming dM/da = -1.
-        ang += (M - m/rho)/Constants::degree();
-        if (M > 0)
-          --trip;
-      }
-      s -= (m/M - rho) * M * M;
-    }
-    int trip = 0;
-    // Reset count if previous iteration was OK; otherwise skip next iteration
-    count = count < 0 ? 0 : numit;
+    bool little = rho <= _a;
+    if (!little)
+      rho = 1/rho;
+    GeodesicLine line(_earth.Line(lat0, lon0, azi0,
+                                  Geodesic::LATITUDE | Geodesic::LONGITUDE |
+                                  Geodesic::AZIMUTH | Geodesic::DISTANCE_IN |
+                                  Geodesic::REDUCEDLENGTH |
+                                  Geodesic::GEODESICSCALE));
+    int count = numit, trip = 0;
+    real lat1, lon1, azi1, M;
     while (count--) {
-      real m, Mx;
-      real ang = line.Position(s, lat1, lon1, azi1, m);
-      line.Scale(ang, M, Mx);
+      real m, t;
+      line.Position(s, lat1, lon1, azi1, m, M, t);
       if (trip)
         break;
-      else if (M <= 0) {
-        count = -1;
-        break;
-      }
-      real ds = (m/M - rho) * M * M;
+      // If little, solve rho(s) = rho with drho(s)/ds = 1/M^2
+      // else solve 1/rho(s) = 1/rho with d(1/rho(s))/ds = -1/m^2
+      real ds = little ? (m/M - rho) * M * M : (rho - M/m) * m * m;
       s -= ds;
       if (abs(ds) < eps * _a)
         ++trip;
     }
-    if (count >= 0) {
+    if (trip) {
       lat = lat1; lon = lon1; azi = azi1; rk = M;
     } else
       lat = lon = azi = rk = Math::NaN();
     return;
   }
-
 } // namespace GeographicLib
