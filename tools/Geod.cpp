@@ -229,7 +229,10 @@ int main(int argc, char* argv[]) {
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           s12 = ReadDistance(ss12, arcmode);
-          a12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
+          if (arcmode)
+            l.ArcPosition(s12, lat2, lon2, azi2, a12, m12);
+          else
+            a12 = l.Position(s12, lat2, lon2, azi2, m12);
         } else {
           std::string slat1, slon1, sazi1, ss12;
           if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
@@ -240,8 +243,10 @@ int main(int argc, char* argv[]) {
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           azi1 = DMS::DecodeAzimuth(sazi1);
           s12 = ReadDistance(ss12, arcmode);
-          a12 =
-            geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12, arcmode);
+          if (arcmode)
+            geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12, m12);
+          else
+            a12 = geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
         }
         if (arcmode)
           std::swap(s12, a12);

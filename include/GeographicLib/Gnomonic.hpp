@@ -86,7 +86,7 @@ namespace GeographicLib {
     const Geodesic _earth;
     real _a, _f;
     static const real eps0, eps;
-    static const int numit = 10;
+    static const int numit = 5;
   public:
 
     /**

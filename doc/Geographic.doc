@@ -2523,6 +2523,7 @@ number.)
   - Deprecate -n option for \ref geod.
   - Deprecate two functions in GeographicLib::GeodesicLine.
   - Add the \ref planimeter utility.
+  - Simplify iterative solution of GeographicLib::Gnomonic::Reverse.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the

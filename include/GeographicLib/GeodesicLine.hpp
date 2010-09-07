@@ -403,6 +403,14 @@ namespace GeographicLib {
      * LATITUDE and AZIMUTH are always included.
      **********************************************************************/
     unsigned Capabilities() const throw() { return _caps; }
+
+    /**
+     * Check the computational capabilities against the capabilities \e caps..
+     **********************************************************************/
+    bool Capabilities(unsigned caps) const throw() {
+      caps &= OUT_ALL;
+      return (_caps & caps)  == caps;
+    }
     ///@}
 
     /** \name Deprecated Functions
