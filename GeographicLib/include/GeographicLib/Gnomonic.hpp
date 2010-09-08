@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_GNOMONIC_HPP "$Id$"
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/Constants.hpp"
 
 namespace GeographicLib {

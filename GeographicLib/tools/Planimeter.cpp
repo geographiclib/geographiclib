@@ -92,9 +92,9 @@ int main(int argc, char* argv[]) {
         _lon0 = _lon1 = lon;
       } else {
         real s12, S12, t;
-        _g.Inverse(_lat1, _lon1, lat, lon,
-                   Geodesic::DISTANCE | Geodesic::AREA,
-                   s12, t, t, t, t, t, S12);
+        _g.GenInverse(_lat1, _lon1, lat, lon,
+                      Geodesic::DISTANCE | Geodesic::AREA,
+                      s12, t, t, t, t, t, S12);
         _perimeter += s12;
         _area += S12;
         _crossings += transit(_lon1, lon);
@@ -109,9 +109,9 @@ int main(int argc, char* argv[]) {
     }
     unsigned Compute(real& perimeter, real& area) const throw() {
       real s12, S12, t;
-      _g.Inverse(_lat1, _lon1, _lat0, _lon0,
-                 Geodesic::DISTANCE | Geodesic::AREA,
-                 s12, t, t, t, t, t, S12);
+      _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
+                    Geodesic::DISTANCE | Geodesic::AREA,
+                    s12, t, t, t, t, t, S12);
       perimeter = _perimeter + s12;
       area = _area + S12;
       int crossings = _crossings + transit(_lon1, _lon0);
@@ -161,7 +161,7 @@ int main(int argc, char* argv[]) {
     try {
       p.Reset(s);
     }
-    catch (const std::exception& e) {
+    catch (const std::exception&) {
       num = poly.Compute(perimeter, area);
       if (num > 0)
         std::cout << num << " "

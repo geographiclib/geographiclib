@@ -12,6 +12,7 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <iomanip>

@@ -125,12 +125,12 @@ namespace GeographicLib {
     }
   }
 
-  Math::real GeodesicLine::Position(bool arcmode, real a12,
-                                    unsigned outmask,
-                                    real& lat2, real& lon2, real& azi2,
-                                    real& s12, real& m12,
-                                    real& M12, real& M21,
-                                    real& S12)
+  Math::real GeodesicLine::GenPosition(bool arcmode, real a12,
+                                       unsigned outmask,
+                                       real& lat2, real& lon2, real& azi2,
+                                       real& s12, real& m12,
+                                       real& M12, real& M21,
+                                       real& S12)
   const throw() {
     outmask &= _caps & OUT_ALL;
     if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
@@ -246,126 +246,6 @@ namespace GeographicLib {
     }
 
     return arcmode ? a12 : sig12 /  Constants::degree();
-  }
-
-  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2)
-    const throw() {
-    real t;
-    return Position(false, s12,
-                    LATITUDE | LONGITUDE,
-                    lat2, lon2, t, t, t, t, t, t);
-  }
-
-  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
-                                    real& azi2) const throw() {
-    real t;
-    return Position(false, s12,
-                    LATITUDE | LONGITUDE | AZIMUTH,
-                    lat2, lon2, azi2, t, t, t, t, t);
-  }
-
-  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
-                                    real& azi2, real& m12) const throw() {
-    real t;
-    return Position(false, s12,
-                    LATITUDE | LONGITUDE |
-                    AZIMUTH | REDUCEDLENGTH,
-                    lat2, lon2, azi2, t, m12, t, t, t);
-  }
-
-  Math::real GeodesicLine::Position(real s12, real& lat2, real& lon2,
-                                    real& azi2, real& M12, real& M21)
-    const throw() {
-    real t;
-    return Position(false, s12,
-                    LATITUDE | LONGITUDE |
-                    AZIMUTH | GEODESICSCALE,
-                    lat2, lon2, azi2, t, t, M12, M21, t);
-  }
-
-  Math::real GeodesicLine::Position(real s12,
-                                    real& lat2, real& lon2, real& azi2,
-                                    real& m12, real& M12, real& M21)
-    const throw() {
-    real t;
-    return Position(false, s12,
-                    LATITUDE | LONGITUDE | AZIMUTH |
-                    REDUCEDLENGTH | GEODESICSCALE,
-                    lat2, lon2, azi2, t, m12, M12, M21, t);
-  }
-
-  Math::real GeodesicLine::Position(real s12,
-                                    real& lat2, real& lon2, real& azi2,
-                                    real& m12, real& M12, real& M21,
-                                    real& S12) const throw() {
-    real t;
-    return Position(false, s12,
-                    LATITUDE | LONGITUDE | AZIMUTH |
-                    REDUCEDLENGTH | GEODESICSCALE | AREA,
-                    lat2, lon2, azi2, t, m12, M12, M21, S12);
-  }
-
-  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2)
-    const throw() {
-    real t;
-    Position(true, a12,
-             LATITUDE | LONGITUDE,
-             lat2, lon2, t, t, t, t, t, t);
-  }
-
-  void GeodesicLine::ArcPosition(real a12,
-                                 real& lat2, real& lon2, real& azi2)
-    const throw() {
-    real t;
-    Position(true, a12,
-             LATITUDE | LONGITUDE | AZIMUTH,
-             lat2, lon2, azi2, t, t, t, t, t);
-  }
-
-  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                                 real& s12) const throw() {
-    real t;
-    Position(true, a12,
-             LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
-             lat2, lon2, azi2, s12, t, t, t, t);
-  }
-
-  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                                 real& s12, real& m12) const throw() {
-    real t;
-    Position(true, a12,
-             LATITUDE | LONGITUDE | AZIMUTH |
-             DISTANCE | REDUCEDLENGTH,
-             lat2, lon2, azi2, s12, m12, t, t, t);
-  }
-
-  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                                 real& s12, real& M12, real& M21)
-    const throw() {
-    real t;
-    Position(true, a12,
-             LATITUDE | LONGITUDE | AZIMUTH |
-             DISTANCE | GEODESICSCALE,
-             lat2, lon2, azi2, s12, t, M12, M21, t);
-  }
-
-  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                                 real& s12, real& m12, real& M12, real& M21)
-    const throw() {
-    real t;
-    Position(true, a12,
-             LATITUDE | LONGITUDE | AZIMUTH |
-             DISTANCE | REDUCEDLENGTH | GEODESICSCALE,
-             lat2, lon2, azi2, s12, m12, M12, M21, t);
-  }
-
-  void GeodesicLine::ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                                 real& s12, real& m12, real& M12, real& M21,
-                                 real& S12) const throw() {
-    Position(true, a12,
-             LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
-             REDUCEDLENGTH | GEODESICSCALE | AREA,
-             lat2, lon2, azi2, s12, m12, M12, M21, S12);
   }
 } // namespace GeographicLib
 

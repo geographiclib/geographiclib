@@ -27,6 +27,7 @@
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/GeodesicLine.hpp"
 
 #define GEOGRAPHICLIB_GEODESIC_CPP "$Id$"
 
@@ -101,124 +102,23 @@ namespace GeographicLib {
     return GeodesicLine(*this, lat1, lon1, azi1, caps);
   }
 
-  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
-                              real& lat2, real& lon2)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | DISTANCE_IN | DISTANCE);
-    return l.Position(s12, lat2, lon2);
+  Math::real Geodesic::GenDirect(real lat1, real lon1, real azi1,
+                                 bool arcmode, real a12, unsigned outmask,
+                                 real& lat2, real& lon2, real& azi2,
+                                 real& s12, real& m12, real& M12, real& M21,
+                                 real& S12) const throw() {
+    return
+      GeodesicLine(*this, lat1, lon1, azi1,
+                   outmask | (arcmode ? NONE : DISTANCE_IN))
+      .                         // Note the dot!
+      GenPosition(arcmode, a12, outmask,
+                  lat2, lon2, azi2, s12, m12, M12, M21, S12);
   }
 
-  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
-                              real& lat2, real& lon2, real& azi2)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE_IN | DISTANCE);
-    return l.Position(s12, lat2, lon2, azi2);
-  }
-
-  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
-                              real& lat2, real& lon2, real& azi2, real& m12)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE_IN | DISTANCE |
-                   REDUCEDLENGTH);
-    return l.Position(s12, lat2, lon2, azi2, m12);
-  }
-
-  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
-                              real& lat2, real& lon2, real& azi2,
-                              real& M12, real& M21)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE_IN | DISTANCE |
-                   GEODESICSCALE);
-    return l.Position(s12, lat2, lon2, azi2, M12, M21);
-  }
-
-  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
-                              real& lat2, real& lon2, real& azi2,
-                              real& m12, real& M12, real& M21)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE_IN | DISTANCE |
-                   REDUCEDLENGTH | GEODESICSCALE);
-    return l.Position(s12, lat2, lon2, azi2, m12, M12, M21);
-  }
-
-  Math::real Geodesic::Direct(real lat1, real lon1, real azi1, real s12,
-                              real& lat2, real& lon2, real& azi2,
-                              real& m12, real& M12, real& M21, real& S12)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE_IN | DISTANCE |
-                   REDUCEDLENGTH | GEODESICSCALE | AREA);
-    return l.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12);
-  }
-
-  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
-                           real& lat2, real& lon2) const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE);
-    l.ArcPosition(a12, lat2, lon2);
-  }
-
-  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
-                           real& lat2, real& lon2, real& azi2) const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH);
-    l.ArcPosition(a12, lat2, lon2, azi2);
-  }
-
-  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
-                           real& lat2, real& lon2, real& azi2, real& s12)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE);
-    l.ArcPosition(a12, lat2, lon2, azi2, s12);
-  }
-
-  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
-                           real& lat2, real& lon2, real& azi2,
-                           real& s12, real& m12) const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
-                   REDUCEDLENGTH);
-    l.ArcPosition(a12, lat2, lon2, azi2, s12, m12);
-  }
-
-  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
-                           real& lat2, real& lon2, real& azi2, real& s12,
-                           real& M12, real& M21) const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
-                   GEODESICSCALE);
-    l.ArcPosition(a12, lat2, lon2, azi2, s12, M12, M21);
-  }
-
-  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
-                           real& lat2, real& lon2, real& azi2, real& s12,
-                           real& m12, real& M12, real& M21) const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
-                   REDUCEDLENGTH | GEODESICSCALE);
-    l.ArcPosition(a12, lat2, lon2, azi2, s12, m12, M12, M21);
-  }
-
-  void Geodesic::ArcDirect(real lat1, real lon1, real azi1, real a12,
-                           real& lat2, real& lon2, real& azi2, real& s12,
-                           real& m12, real& M12, real& M21, real& S12)
-    const throw() {
-    GeodesicLine l(*this, lat1, lon1, azi1,
-                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
-                   REDUCEDLENGTH | GEODESICSCALE | AREA);
-    l.ArcPosition(a12, lat2, lon2, azi2, s12, m12, M12, M21, S12);
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               unsigned outmask,
-                               real& s12, real& azi1, real& azi2,
-                               real& m12, real& M12, real& M21, real& S12)
+  Math::real Geodesic::GenInverse(real lat1, real lon1, real lat2, real lon2,
+                                  unsigned outmask,
+                                  real& s12, real& azi1, real& azi2,
+                                  real& m12, real& M12, real& M21, real& S12)
     const throw() {
     outmask &= OUT_ALL;
     lon1 = AngNormalize(lon1);
@@ -301,7 +201,7 @@ namespace GeographicLib {
         real dummy;
         Lengths(_n, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, s12x, m12x, dummy,
-                outmask & GEODESICSCALE, M12, M21, C1a, C2a);
+                (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
       }
       // Add the check for sig12 since zero length geodesics might yield m12 <
       // 0.  Test case was
@@ -405,7 +305,7 @@ namespace GeographicLib {
           real dummy;
           Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
                   cbet1, cbet2, s12x, m12x, dummy,
-                  outmask & GEODESICSCALE, M12, M21, C1a, C2a);
+                  (outmask & GEODESICSCALE) != 0U, M12, M21, C1a, C2a);
         }
         m12x *= _a;
         s12x *= _b;
@@ -480,68 +380,6 @@ namespace GeographicLib {
 
     // Returned value in [0, 180]
     return sig12;
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& s12) const throw() {
-    real t;
-    return Inverse(lat1, lon1, lat2, lon2,
-                   DISTANCE,
-                   s12, t, t, t, t, t, t);
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& azi1, real& azi2) const throw() {
-    real t;
-    return Inverse(lat1, lon1, lat2, lon2,
-                   AZIMUTH,
-                   t, azi1, azi2, t, t, t, t);
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& s12, real& azi1, real& azi2)
-    const throw() {
-    real t;
-    return Inverse(lat1, lon1, lat2, lon2,
-                   DISTANCE | AZIMUTH,
-                   s12, azi1, azi2, t, t, t, t);
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& s12, real& azi1, real& azi2, real& m12)
-    const throw() {
-    real t;
-    return Inverse(lat1, lon1, lat2, lon2,
-                   DISTANCE | AZIMUTH | REDUCEDLENGTH,
-                   s12, azi1, azi2, m12, t, t, t);
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& s12, real& azi1, real& azi2,
-                               real& M12, real& M21) const throw() {
-    real t;
-    return Inverse(lat1, lon1, lat2, lon2,
-                   DISTANCE | AZIMUTH | GEODESICSCALE,
-                   s12, azi1, azi2, t, M12, M21, t);
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& s12, real& azi1, real& azi2, real& m12,
-                               real& M12, real& M21) const throw() {
-    real t;
-    return Inverse(lat1, lon1, lat2, lon2,
-                   DISTANCE | AZIMUTH |
-                   REDUCEDLENGTH | GEODESICSCALE,
-                   s12, azi1, azi2, m12, M12, M21, t);
-  }
-
-  Math::real Geodesic::Inverse(real lat1, real lon1, real lat2, real lon2,
-                               real& s12, real& azi1, real& azi2, real& m12,
-                               real& M12, real& M21, real& S12) const throw() {
-    return Inverse(lat1, lon1, lat2, lon2,
-                   DISTANCE | AZIMUTH |
-                   REDUCEDLENGTH | GEODESICSCALE | AREA,
-                   s12, azi1, azi2, m12, M12, M21, S12);
   }
 
   void Geodesic::Lengths(real eps, real sig12,
