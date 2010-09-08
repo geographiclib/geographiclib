@@ -24,8 +24,8 @@ namespace GeographicLib {
   const Math::real CassiniSoldner::eps2 = sqrt(numeric_limits<real>::min());
 
   void CassiniSoldner::Reset(real lat0, real lon0) throw() {
-    _meridian =_earth.Line(lat0, lon0, real(0),
-                           Geodesic::LATITUDE | Geodesic::LONGITUDE |
+    _meridian = _earth.Line(lat0, lon0, real(0),
+                            Geodesic::LATITUDE | Geodesic::LONGITUDE |
                             Geodesic::DISTANCE | Geodesic::DISTANCE_IN |
                             Geodesic::AZIMUTH);
     real
@@ -43,8 +43,7 @@ namespace GeographicLib {
     real dlon = AngNormalize(lon - LongitudeOrigin());
     real sig12, s12, azi1, azi2;
     lat = AngRound(lat);
-    sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon),
-                           s12, azi1, azi2);
+    sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
     if (sig12 < 100 * eps2)
       sig12 = s12 = 0;
     sig12 *= real(0.5);
@@ -68,9 +67,9 @@ namespace GeographicLib {
     azi = AngNormalize(azi2);
     GeodesicLine perp(_earth.Line(lat, dlon, azi2, Geodesic::GEODESICSCALE));
     real t;
-    perp.Position(true, -sig12,
-                  Geodesic::GEODESICSCALE,
-                  t, t, t, t, t, t, rk, t);
+    perp.GenPosition(true, -sig12,
+                     Geodesic::GEODESICSCALE,
+                     t, t, t, t, t, t, rk, t);
 
     real
       alp0 = perp.EquatorialAzimuth() * Constants::degree(),
@@ -80,9 +79,9 @@ namespace GeographicLib {
       sbet01 = sbet1 * _cbet0 - cbet1 * _sbet0,
       cbet01 = cbet1 * _cbet0 + sbet1 * _sbet0,
       sig01 = atan2(sbet01, cbet01) / Constants::degree();
-    _meridian.Position(true, sig01,
-                       Geodesic::DISTANCE,
-                       t, t, t, y, t, t, t, t);
+    _meridian.GenPosition(true, sig01,
+                          Geodesic::DISTANCE,
+                          t, t, t, y, t, t, t, t);
   }
 
   void CassiniSoldner::Reverse(real x, real y, real& lat, real& lon,
@@ -92,14 +91,7 @@ namespace GeographicLib {
     real lat1, lon1;
     real azi0, t;
     _meridian.Position(y, lat1, lon1, azi0);
-    GeodesicLine perp(_earth.Line(lat1, lon1, azi0 + 90,
-                                  Geodesic::LATITUDE | Geodesic::LONGITUDE |
-                                  Geodesic::AZIMUTH | Geodesic::DISTANCE_IN |
-                                  Geodesic::GEODESICSCALE));
-    perp.Position(false, x,
-                  Geodesic::LATITUDE | Geodesic::LONGITUDE |
-                  Geodesic::AZIMUTH | Geodesic::GEODESICSCALE,
-                  lat, lon, azi, t, t, rk, t, t);
+    _earth.Direct(lat1, lon1, azi0 + 90, x, lat, lon, azi, rk, t);
   }
 
 } // namespace GeographicLib

@@ -37,6 +37,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoidEval", "GeoidEval-vc9.
 		{F1B64F66-7B95-4087-9619-4ABC20BEB591} = {F1B64F66-7B95-4087-9619-4ABC20BEB591}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Planimeter", "Planimeter-vc9.vcproj", "{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
+		{2E0C4271-25A7-4A94-8112-7DA0D1A8AF9A} = {2E0C4271-25A7-4A94-8112-7DA0D1A8AF9A}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -101,6 +107,14 @@ Global
 		{0507FE91-AD45-4630-88EF-DABFA9A02FB4}.Release|Win32.Build.0 = Release|Win32
 		{0507FE91-AD45-4630-88EF-DABFA9A02FB4}.Release|x64.ActiveCfg = Release|x64
 		{0507FE91-AD45-4630-88EF-DABFA9A02FB4}.Release|x64.Build.0 = Release|x64
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Debug|Win32.Build.0 = Debug|Win32
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Debug|x64.ActiveCfg = Debug|x64
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Debug|x64.Build.0 = Debug|x64
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Release|Win32.ActiveCfg = Release|Win32
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Release|Win32.Build.0 = Release|Win32
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Release|x64.ActiveCfg = Release|x64
+		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

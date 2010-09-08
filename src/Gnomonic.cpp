@@ -25,10 +25,10 @@ namespace GeographicLib {
                          real& x, real& y, real& azi, real& rk)
     const throw() {
     real azi0, m, M, t;
-    _earth.Inverse(lat0, lon0, lat, lon,
-                   Geodesic::AZIMUTH | Geodesic::REDUCEDLENGTH |
-                   Geodesic::GEODESICSCALE,
-                   t, azi0, azi, m, M, t, t);
+    _earth.GenInverse(lat0, lon0, lat, lon,
+                      Geodesic::AZIMUTH | Geodesic::REDUCEDLENGTH |
+                      Geodesic::GEODESICSCALE,
+                      t, azi0, azi, m, M, t, t);
     rk = M;
     if (M <= 0)
       x = y = Math::NaN();

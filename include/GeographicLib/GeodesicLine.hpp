@@ -187,21 +187,18 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * The general position routine.
-     **********************************************************************/
-    Math::real Position(bool arcmode, real a12, unsigned outmask,
-                        real& lat2, real& lon2, real& azi2,
-                        real& s12, real& m12, real& M12, real& M21,
-                        real& S12) const throw();
-
-    /**
      * Return the latitude, \e lat2, and longitude, \e lon2 of the point 2
      * which is a distance, \e s12 (in meters), from point 1.  \e s12 can be
      * signed.  Returned function value is the arc length \e a12 (degrees).
      * The GeodesicLine object should have been constructed with \e caps =
      * CAP_DISTANCE_IN | CAP_LATITUDE | CAP_LONGITUDE.
      **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2) const throw();
+    Math::real Position(real s12, real& lat2, real& lon2) const throw() {
+      real t;
+      return GenPosition(false, s12,
+                         LATITUDE | LONGITUDE,
+                         lat2, lon2, t, t, t, t, t, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
@@ -211,8 +208,13 @@ namespace GeographicLib {
      * been constructed with \e caps = CAP_DISTANCE_IN | CAP_LATITUDE |
      * CAP_LONGITUDE | CAP_AZIMUTH.
      **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2, real& azi2)
-      const throw();
+    Math::real Position(real s12, real& lat2, real& lon2,
+                        real& azi2) const throw() {
+      real t;
+      return GenPosition(false, s12,
+                         LATITUDE | LONGITUDE | AZIMUTH,
+                         lat2, lon2, azi2, t, t, t, t, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
@@ -223,8 +225,14 @@ namespace GeographicLib {
      * \e caps = CAP_DISTANCE_IN | CAP_LATITUDE | CAP_LONGITUDE | CAP_AZIMUTH |
      * CAP_REDUCEDLENGTH.
      **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2, real& azi2, real& m12)
-      const throw();
+    Math::real Position(real s12, real& lat2, real& lon2,
+                        real& azi2, real& m12) const throw() {
+      real t;
+      return GenPosition(false, s12,
+                         LATITUDE | LONGITUDE |
+                         AZIMUTH | REDUCEDLENGTH,
+                         lat2, lon2, azi2, t, m12, t, t, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
@@ -236,7 +244,14 @@ namespace GeographicLib {
      * CAP_LONGITUDE | CAP_AZIMUTH | CAP_GEODESICSCALE.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2,
-                        real& azi2, real& M12, real& M21) const throw();
+                        real& azi2, real& M12, real& M21)
+      const throw() {
+      real t;
+      return GenPosition(false, s12,
+                         LATITUDE | LONGITUDE |
+                         AZIMUTH | GEODESICSCALE,
+                         lat2, lon2, azi2, t, t, M12, M21, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
@@ -248,8 +263,16 @@ namespace GeographicLib {
      * CAP_DISTANCE_IN | CAP_LATITUDE | CAP_LONGITUDE | CAP_AZIMUTH |
      * CAP_REDUCEDLENGTH | CAP_GEODESICSCALE.
      **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
-                        real& m12, real& M12, real& M21) const throw();
+    Math::real Position(real s12,
+                        real& lat2, real& lon2, real& azi2,
+                        real& m12, real& M12, real& M21)
+      const throw() {
+      real t;
+      return GenPosition(false, s12,
+                         LATITUDE | LONGITUDE | AZIMUTH |
+                         REDUCEDLENGTH | GEODESICSCALE,
+                         lat2, lon2, azi2, t, m12, M12, M21, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward azimuth,
@@ -262,9 +285,16 @@ namespace GeographicLib {
      * CAP_LONGITUDE | CAP_AZIMUTH | CAP_REDUCEDLENGTH | CAP_GEODESICSCALE |
      * CAP_AREA.
      **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
-                        real& m12, real& M12, real& M21, real& S12)
-      const throw();
+    Math::real Position(real s12,
+                        real& lat2, real& lon2, real& azi2,
+                        real& m12, real& M12, real& M21,
+                        real& S12) const throw() {
+      real t;
+      return GenPosition(false, s12,
+                         LATITUDE | LONGITUDE | AZIMUTH |
+                         REDUCEDLENGTH | GEODESICSCALE | AREA,
+                         lat2, lon2, azi2, t, m12, M12, M21, S12);
+    }
 
     ///@}
 
@@ -278,7 +308,12 @@ namespace GeographicLib {
      * can be signed, is the arc length on the auxiliary sphere.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2)
-      const throw();
+      const throw() {
+      real t;
+      GenPosition(true, a12,
+                  LATITUDE | LONGITUDE,
+                  lat2, lon2, t, t, t, t, t, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward
@@ -286,8 +321,14 @@ namespace GeographicLib {
      * (in degree), from point 1.  \e a12, which can be signed, is the arc
      * length on the auxiliary sphere.
      **********************************************************************/
-    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2)
-      const throw();
+    void ArcPosition(real a12,
+                     real& lat2, real& lon2, real& azi2)
+      const throw() {
+      real t;
+      GenPosition(true, a12,
+                  LATITUDE | LONGITUDE | AZIMUTH,
+                  lat2, lon2, azi2, t, t, t, t, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward
@@ -296,8 +337,13 @@ namespace GeographicLib {
      * length on the auxiliary sphere.  Also return the distance \e s12 (in
      * meters).
      **********************************************************************/
-    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2, real& s12)
-      const throw();
+    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                     real& s12) const throw() {
+      real t;
+      GenPosition(true, a12,
+                  LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
+                  lat2, lon2, azi2, s12, t, t, t, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward
@@ -307,7 +353,13 @@ namespace GeographicLib {
      * meters) and the reduced length \e m12 (meters).
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                     real& s12, real& m12) const throw();
+                     real& s12, real& m12) const throw() {
+      real t;
+      GenPosition(true, a12,
+                  LATITUDE | LONGITUDE | AZIMUTH |
+                  DISTANCE | REDUCEDLENGTH,
+                  lat2, lon2, azi2, s12, m12, t, t, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward
@@ -317,7 +369,14 @@ namespace GeographicLib {
      * meters) and the geodesic scales \e M12 and \e M21 (dimensionless).
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                     real& s12, real& M12, real& M21) const throw();
+                     real& s12, real& M12, real& M21)
+      const throw() {
+      real t;
+      GenPosition(true, a12,
+                  LATITUDE | LONGITUDE | AZIMUTH |
+                  DISTANCE | GEODESICSCALE,
+                  lat2, lon2, azi2, s12, t, M12, M21, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward
@@ -328,7 +387,14 @@ namespace GeographicLib {
      * M12 and \e M21 (dimensionless).
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                     real& s12, real& m12, real& M12, real& M21) const throw();
+                     real& s12, real& m12, real& M12, real& M21)
+      const throw() {
+      real t;
+      GenPosition(true, a12,
+                  LATITUDE | LONGITUDE | AZIMUTH |
+                  DISTANCE | REDUCEDLENGTH | GEODESICSCALE,
+                  lat2, lon2, azi2, s12, m12, M12, M21, t);
+    }
 
     /**
      * Return the latitude, \e lat2, longitude, \e lon2, and forward
@@ -339,8 +405,26 @@ namespace GeographicLib {
      * and \e M21 (dimensionless), and the area \e S12 (meter<sup>2</sup>).
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                     real& s12, real& m12, real& M12, real& M21, real& S12)
-      const throw();
+                     real& s12, real& m12, real& M12, real& M21,
+                     real& S12) const throw() {
+      GenPosition(true, a12,
+                  LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
+                  REDUCEDLENGTH | GEODESICSCALE | AREA,
+                  lat2, lon2, azi2, s12, m12, M12, M21, S12);
+    }
+    ///@}
+
+    /** \name The general position function.
+     **********************************************************************/
+    ///@{
+
+    /**
+     * The general position routine.
+     **********************************************************************/
+    Math::real GenPosition(bool arcmode, real a12, unsigned outmask,
+                           real& lat2, real& lon2, real& azi2,
+                           real& s12, real& m12, real& M12, real& M21,
+                           real& S12) const throw();
 
     ///@}
 
