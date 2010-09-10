@@ -44,7 +44,7 @@ namespace GeographicLib {
    * calling function.  For example the Pennsylvania South state coordinate
    * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
    * EPSG:3364</a>) is obtained by:
-   \verbatim
+   \code
    const double
      a = GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80
      lat1 = 39 + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels
@@ -55,23 +55,22 @@ namespace GeographicLib {
    const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
    double x0, y0;
    {
-     double gamma, k;
      // Transform origin point
-     PASouth.Forward(lon0, lat0, lon0, x0, y0, gamma, k);
+     PASouth.Forward(lon0, lat0, lon0, x0, y0);
      x0 -= fe; y0 -= fn;         // Combine result with false origin
    }
-   double lat, lon, x, y, gamma, k;
+   double lat, lon, x, y;
    // Sample conversion from geodetic to PASouth grid
    std::cin >> lat >> lon;
-   PASouth.Forward(lon0, lat, lon, x, y, gamma, k);
+   PASouth.Forward(lon0, lat, lon, x, y);
    x -= x0; y -= y0;
    std::cout << x << " " << y << "\n";
    // Sample conversion from PASouth grid to geodetic
    std::cin >> x >> y;
    x += x0; y += y0;
-   PASouth.Reverse(lon0, x, y, lat, lon, gamma, k);
+   PASouth.Reverse(lon0, x, y, lat, lon);
    std::cout << lat << " " << lon << "\n";
-   \endverbatim
+   \endcode
    **********************************************************************/
   class LambertConformalConic {
   private:
