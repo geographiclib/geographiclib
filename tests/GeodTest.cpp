@@ -12,9 +12,11 @@
 #endif
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/Constants.hpp"
 #if USE_LONG_DOUBLE_GEOGRAPHICLIB
 #include "GeographicLibL/Geodesic.hpp"
+#include "GeographicLibL/GeodesicLine.hpp"
 #include "GeographicLibL/Constants.hpp"
 #else
 namespace GeographicLibL = GeographicLib;
@@ -143,107 +145,8 @@ void GeodError(const test& tgeod, const ref& rgeod,
   }
 }
 
-double AreaPoly(const Geodesic& geod,
-            const std::vector< std::pair<double, double> >& pts,
-            double& perimeter) {
-  int n = pts.size();
-  double area = 0;
-  perimeter = 0;
-  for (int i = 0; i < n; ++i) {
-    int j = i + 1 == n ? 0 : i + 1;
-    double azi1, azi2, s12, m12;
-    double a12 = geod.Inverse(pts[i].first, pts[i].second,
-                              pts[j].first, pts[j].second,
-                              s12, azi1, azi2, m12);
-    perimeter += s12;
-    GeodesicLine l(geod.Line(pts[i].first, pts[i].second, azi1));
-    l.AreaEnable(geod);
-    double a = l.Area(a12);
-    area += a;
-  }
-  return area;
-}
-
-double AreaLine(const Geodesic& geod,
-                double lat1, double lon1, double azi1, double s12) {
-  GeodesicLine l(geod.Line(lat1, lon1, azi1));
-  l.AreaEnable(geod);
-  double lat2, lon2, azi2, m12;
-  double
-    a12 = l.Position(s12, lat2, lon2, azi2, m12),
-    area = l.Area(a12);
-  return area;
-}
-
-double AreaLine0(const Geodesic& geod,
-                double lat1, double lon1, double azi1, double a12) {
-  GeodesicLine l(geod.Line(lat1, lon1, azi1));
-  l.AreaEnable(geod);
-  return l.Area(a12);
-}
 
 int main(int argc, char* argv[]) {
-  if (argc == 2 && std::string(argv[1]) == "-area0") {
-    const Geodesic& geod0 = Geodesic::WGS84;
-    double lat1, lon1, azi1, a12;
-    while (cin >> lat1 >> lon1 >> azi1 >> a12) {
-      cout << lat1 << " " << lon1 << " " << azi1 << " " << a12 << " "
-      << AreaLine0(geod0, lat1, lon1, azi1, a12) << "\n";
-    }
-    return 0;
-  }
-  if (argc == 2 && string(argv[1]) == "-area") {
-    long double c2;
-    {
-      long double
-        a = GeographicLibL::Constants::WGS84_a(),
-        f = 1/GeographicLibL::Constants::WGS84_r(),
-        e = sqrt(f*(2-f)),
-        b = a*(1-f);
-      c2 = (a*a + b*b * Math::atanh(e)/e)/2;
-    }
-      
-    const Geodesic& geod0 = Geodesic::WGS84;
-    long double maxerr = 0;
-    while (true) {
-      long double lat1l, lon1l, azi1l, lat2l, lon2l, azi2l, s12l, a12l, m12l,
-        area12l;
-      if (!(cin >> lat1l >> lon1l >> azi1l
-            >> lat2l >> lon2l >> azi2l
-            >> s12l >> a12l >> m12l >> area12l))
-        break;
-      long double darea = area12l - c2 * (azi2l-azi1l) *
-        GeographicLibL::Constants::degree();
-      double areaf, areab;
-      areaf = AreaLine(geod0, double(lat1l),double(lon1l),double(azi1l),
-                       double(s12l));
-      areab = -AreaLine(geod0, double(lat2l),double(lon2l),double(azi2l),
-                        -double(s12l));
-      long double err = max( abs((long double)areaf - darea),
-                             abs((long double)areab - darea) );
-      long double slop = geod0.MajorRadius() * 0.e-9 *
-        (1/cos(lat1l * Constants::degree()) +
-         1/cos(lat2l * Constants::degree()));
-      maxerr = max(maxerr, err - slop);
-      cout << fixed << setprecision(12) << lat1l << " " << azi1l << " "
-           << setprecision(7) << s12l << " "
-           << setprecision(5) << err << " " << maxerr << "\n";
-    }
-    cout << "Max error " << maxerr << "\n";
-    return 0;
-
-    std::cout << std::setprecision(17);
-    double b = 6400e3, e2 =  0.00694, r = (sqrt(1-e2)+1)/e2, a = b/(1-1/r);
-    const Geodesic geod(a, r);
-    std::vector< std::pair<double, double> > pts;
-    pts.push_back(std::pair<double, double>( 0.0,  0.0));
-    pts.push_back(std::pair<double, double>(10.0, 10.0));
-    pts.push_back(std::pair<double, double>( 0.0, 10.0));
-    double area, perimeter;
-    area =  AreaPoly(geod, pts, perimeter);
-    std::cout << perimeter << " " << area << "\n";
-    return 0;
-  }
   bool timing = false;
   int timecase = 0; // 0 = line, 1 = line ang, 2 = direct, 3 = inverse
   bool accuracytest = true;
@@ -296,13 +199,13 @@ int main(int argc, char* argv[]) {
         double lat1 = i;
         for (int j = 0; j <= 180; ++j) {
           double azi1 = j;
-          GeodesicLine l(geod.Line(lat1, 0.0, azi1));
+          const GeodesicLine l(geod, lat1, 0.0, azi1);
           for (int k = 0; k <= 1000; ++k) {
             double s12 = dl * k;
-            double lat2, lon2, azi2, m12;
-            l.Position(s12, lat2, lon2, azi2, m12);
+            double lat2, lon2;
+            l.Position(s12, lat2, lon2);
             ++cnt;
-            s += azi2;
+            s += lat2;
           }
         }
       }
@@ -310,18 +213,18 @@ int main(int argc, char* argv[]) {
       break;
     case 1:
       // Time Line ang
-      dl = 180/1000;
+      dl = 180.0/1000;
       for (int i = 0; i <= 90; ++i) {
         double lat1 = i;
         for (int j = 0; j <= 180; ++j) {
           double azi1 = j;
-          GeodesicLine l(geod.Line(lat1, 0.0, azi1));
+          GeodesicLine l(geod, lat1, 0.0, azi1);
           for (int k = 0; k <= 1000; ++k) {
             double s12 = dl * k;
-            double lat2, lon2, azi2, m12;
-            l.Position(s12, lat2, lon2, azi2, m12, true);
+            double lat2, lon2;
+            l.ArcPosition(s12, lat2, lon2);
             ++cnt;
-            s += azi2;
+            s += lat2;
           }
         }
       }
@@ -336,10 +239,10 @@ int main(int argc, char* argv[]) {
           double azi1 = j;
           for (int k = 0; k <= 200; ++k) {
             double s12 = dl * k;
-            double lat2, lon2, azi2, m12;
-            geod.Direct(lat1, 0.0, azi1, s12, lat2, lon2, azi2, m12);
+            double lat2, lon2;
+            geod.Direct(lat1, 0.0, azi1, s12, lat2, lon2);
             ++cnt;
-            s += azi2;
+            s += lat2;
           }
         }
       }
@@ -353,8 +256,8 @@ int main(int argc, char* argv[]) {
           double lat2 = j * 0.5;
           for (int k = 0; k <= 359; ++k) {
             double lon2 = k * 0.5;
-            double s12, a1, a2, m12;
-            geod.Inverse(lat1, 0.0, lat2, lon2, s12, a1, a2, m12);
+            double s12;
+            geod.Inverse(lat1, 0.0, lat2, lon2, s12);
             ++cnt;
             s += s12;
           }
@@ -383,10 +286,11 @@ int main(int argc, char* argv[]) {
     unsigned cnt = 0;
 
     while (true) {
-      long double lat1l, lon1l, azi1l, lat2l, lon2l, azi2l, s12l, a12l, m12l;
+      long double lat1l, lon1l, azi1l, lat2l, lon2l, azi2l, s12l, a12l, m12l,
+        area12l;
       if (!(cin >> lat1l >> lon1l >> azi1l
             >> lat2l >> lon2l >> azi2l
-            >> s12l >> a12l >> m12l))
+            >> s12l >> a12l >> m12l >> area12l))
         break;
       if (coverage) {
 #if defined(GEOD_DIAG) && GEOD_DIAG

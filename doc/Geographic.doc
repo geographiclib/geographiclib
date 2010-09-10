@@ -1935,7 +1935,7 @@ about 1.5m.)
 \section geoidcache Caching the geoid data
 
 A simple way of calling Geoid is as follows
-\verbatim
+\code
    #include "GeographicLib/Geoid.hpp"
    #include <iostream>
    ...
@@ -1944,7 +1944,7 @@ A simple way of calling Geoid is as follows
    while (std::cin >> lat >> lon)
       std::cout << g(lat, lon) << "\n";
    ...
-\endverbatim
+\endcode
 
 The first call to g(lat, lon) causes the data for the stencil points (4
 points for bilinear interpolation and 12 for cubic interpolation) to be
@@ -2510,27 +2510,23 @@ number.)
   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
     - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
     - add area computations to Geodesic::Direct and Geodesic::Inverse;
-    - add the \ref planimeter utility for computing the areas of
-      geodesic polygons;
     - add geodesic areas to geodesic test set;
-    - make GeographicLib::GeodesicLine constructor public;
-    - change longitude series in GeographicLib::Geodesic into Helmert-like form;
+    - make GeodesicLine constructor public;
+    - change longitude series in Geodesic into Helmert-like form;
     - ensure that equatorial geodesics have cos(alpha0) = 0 identically;
-    - generalize interface for GeographicLib::Geodesic and
-      GeographicLib::GeodesicLine;
-    - split GeographicLib::GeodesicLine and
-      GeographicLib::Geodesic into different files'
-    - signal convergence failure in GeographicLib::Geodesic::Inverse with
-      NaNs;
-    - deprecate one function in GeographicLib::Geodesic and two functions in
-      GeographicLib::GeodesicLine;
-    - deprecate -n option for \ref geod;
-    - simplify iterative solution of GeographicLib::Gnomonic::Reverse.
+    - generalize interface for Geodesic and GeodesicLine;
+    - split GeodesicLine and Geodesic into different files;
+    - signal convergence failure in Geodesic::Inverse with NaNs;
+    - deprecate one function in Geodesic and two functions in GeodesicLine;
+    - deprecate -n option for \ref geod.
     .
     WARNING: These changes break binary compatibility with previous
     versions of %GeographicLib.  However, the library is source
     compatible (with the proviso that GeographicLib/GeodesicLine.hpp may
     now need to be included).
+  - Add the \ref planimeter utility for computing the areas of
+    geodesic polygons.
+  - Simplify iterative solution of GeographicLib::Gnomonic::Reverse.
   - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
   - Constructors check that minor radius is positive.
   - Add overloaded Forward and Reverse functions to the projection

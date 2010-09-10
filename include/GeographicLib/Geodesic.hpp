@@ -274,6 +274,8 @@ namespace GeographicLib {
      * @param[in] azi1 azimuth at point 1 (degrees).
      * @param[in] s12 distance between point 1 and point 2 (meters); it can be
      *   signed.
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
      * @param[out] azi2 (forward) azimuth at point 2 (degrees).
      * @param[out] m12 reduced length of geodesic (meters).
      * @param[out] M12 geodesic scale of point 2 relative to point 1
@@ -381,7 +383,10 @@ namespace GeographicLib {
      * @param[in] azi1 azimuth at point 1 (degrees).
      * @param[in] a12 arc length between point 1 and point 2 (degrees); it can
      *   be signed.
+     * @param[out] lat2 latitude of point 2 (degrees).
+     * @param[out] lon2 longitude of point 2 (degrees).
      * @param[out] azi2 (forward) azimuth at point 2 (degrees).
+     * @param[out] s12 distance between point 1 and point 2 (meters).
      * @param[out] m12 reduced length of geodesic (meters).
      * @param[out] M12 geodesic scale of point 2 relative to point 1
      *   (dimensionless).
@@ -398,6 +403,19 @@ namespace GeographicLib {
      *
      * The following functions are overloaded versions of Geodesic::Direct
      * which omit some of the output parameters.
+     **********************************************************************/
+    void ArcDirect(real lat1, real lon1, real azi1, real a12,
+                   real& lat2, real& lon2, real& azi2, real& s12,
+                   real& m12, real& M12, real& M21, real& S12)
+      const throw() {
+      GenDirect(lat1, lon1, azi1, true, a12,
+                LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
+                REDUCEDLENGTH | GEODESICSCALE | AREA,
+                lat2, lon2, azi2, s12, m12, M12, M21, S12);
+    }
+
+    /**
+     * See the documentation for Geodesic::ArcDirect.
      **********************************************************************/
     void ArcDirect(real lat1, real lon1, real azi1, real a12,
                    real& lat2, real& lon2) const throw() {
@@ -468,19 +486,6 @@ namespace GeographicLib {
                 REDUCEDLENGTH | GEODESICSCALE,
                 lat2, lon2, azi2, s12, m12, M12, M21, t);
     }
-
-    /**
-     * See the documentation for Geodesic::ArcDirect.
-     **********************************************************************/
-    void ArcDirect(real lat1, real lon1, real azi1, real a12,
-                   real& lat2, real& lon2, real& azi2, real& s12,
-                   real& m12, real& M12, real& M21, real& S12)
-      const throw() {
-      GenDirect(lat1, lon1, azi1, true, a12,
-                LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
-                REDUCEDLENGTH | GEODESICSCALE | AREA,
-                lat2, lon2, azi2, s12, m12, M12, M21, S12);
-    }
     ///@}
 
     /** \name General version of the direct geodesic solution.
@@ -513,16 +518,16 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * The GeodesicLine::mask values possible for \e outmask are
-     * - \e outmask |= GeodesicLine::LATITUDE for the latitude \e lat2.
-     * - \e outmask |= GeodesicLine::LONGITUDE for the latitude \e lon2.
-     * - \e outmask |= GeodesicLine::AZIMUTH for the latitude \e azi2.
-     * - \e outmask |= GeodesicLine::DISTANCE for the distance \e s12.
-     * - \e outmask |= GeodesicLine::REDUCEDLENGTH for the reduced length \e
+     * The Geodesic::mask values possible for \e outmask are
+     * - \e outmask |= Geodesic::LATITUDE for the latitude \e lat2.
+     * - \e outmask |= Geodesic::LONGITUDE for the latitude \e lon2.
+     * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2.
+     * - \e outmask |= Geodesic::DISTANCE for the distance \e s12.
+     * - \e outmask |= Geodesic::REDUCEDLENGTH for the reduced length \e
      *   m12.
-     * - \e outmask |= GeodesicLine::GEODESICSCALE for the geodesic scales \e
+     * - \e outmask |= Geodesic::GEODESICSCALE for the geodesic scales \e
      *   M12 and \e M21.
-     * - \e outmask |= GeodesicLine::AREA for the area \e S12.
+     * - \e outmask |= Geodesic::AREA for the area \e S12.
      * .
      * The function value \e a12 is always computed and returned and this
      * equals \e s12_a12 is \e arcmode is true.  If \e outmask includes
@@ -550,7 +555,6 @@ namespace GeographicLib {
      * @param[out] s12 distance between point 1 and point 2 (meters).
      * @param[out] azi1 azimuth at point 1 (degrees).
      * @param[out] azi2 (forward) azimuth at point 1 (degrees).
-     * @param[out] s12 distance between point 1 and point 2 (meters).
      * @param[out] m12 reduced length of geodesic (meters).
      * @param[out] M12 geodesic scale of point 2 relative to point 1
      *   (dimensionless).
@@ -558,7 +562,7 @@ namespace GeographicLib {
      *   (dimensionless).
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
-     * .
+     *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
      * taking the limit \e eps -> 0 from above.  If the routine fails to
@@ -667,7 +671,6 @@ namespace GeographicLib {
      * @param[out] s12 distance between point 1 and point 2 (meters).
      * @param[out] azi1 azimuth at point 1 (degrees).
      * @param[out] azi2 (forward) azimuth at point 1 (degrees).
-     * @param[out] s12 distance between point 1 and point 2 (meters).
      * @param[out] m12 reduced length of geodesic (meters).
      * @param[out] M12 geodesic scale of point 2 relative to point 1
      *   (dimensionless).
@@ -676,7 +679,7 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
-     * The GeodesicLine::mask values possible for \e outmask are
+     * The Geodesic::mask values possible for \e outmask are
      * - \e outmask |= Geodesic::DISTANCE for the distance \e s12.
      * - \e outmask |= Geodesic::AZIMUTH for the latitude \e azi2.
      * - \e outmask |= Geodesic::REDUCEDLENGTH for the reduced length \e
@@ -724,7 +727,7 @@ namespace GeographicLib {
      *   geodesic to be given in terms of \e s12; without this capability the
      *   length can only be specified in terms of arc length.
      * .
-     * The default value of \e caps is GeodesicLine::ALL which turns on all the
+     * The default value of \e caps is Geodesic::ALL which turns on all the
      * capabilities.
      *
      * If the point is at a pole, the azimuth is defined by keeping the \e lon1
