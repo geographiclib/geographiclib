@@ -125,7 +125,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real GeodesicLine::GenPosition(bool arcmode, real a12,
+  Math::real GeodesicLine::GenPosition(bool arcmode, real s12_a12,
                                        unsigned outmask,
                                        real& lat2, real& lon2, real& azi2,
                                        real& s12, real& m12,
@@ -140,16 +140,16 @@ namespace GeographicLib {
     // Avoid warning about uninitialized B12.
     real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
     if (arcmode) {
-      // Interpret a12 as spherical arc length
-      sig12 = a12 * Constants::degree();
-      real s12a = abs(a12);
+      // Interpret s12_a12 as spherical arc length
+      sig12 = s12_a12 * Constants::degree();
+      real s12a = abs(s12_a12);
       s12a -= 180 * floor(s12a / 180);
       ssig12 = s12a ==  0 ? 0 : sin(sig12);
       csig12 = s12a == 90 ? 0 : cos(sig12);
     } else {
-      // Interpret a12 as distance
+      // Interpret s12_a12 as distance
       real
-        tau12 = a12 / (_b * (1 + _A1m1)),
+        tau12 = s12_a12 / (_b * (1 + _A1m1)),
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
@@ -187,7 +187,7 @@ namespace GeographicLib {
                   comg2 * _comg1 + somg2 * _somg1);
 
     if (outmask & DISTANCE)
-      s12 = arcmode ? _b * ((1 + _A1m1) * sig12 + AB1) : a12;
+      s12 = arcmode ? _b * ((1 + _A1m1) * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
       lam12 = omg12 + _A3c *
@@ -245,7 +245,7 @@ namespace GeographicLib {
       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
 
-    return arcmode ? a12 : sig12 /  Constants::degree();
+    return arcmode ? s12_a12 : sig12 /  Constants::degree();
   }
 } // namespace GeographicLib
 

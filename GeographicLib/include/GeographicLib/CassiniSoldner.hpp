@@ -150,6 +150,24 @@ namespace GeographicLib {
                  real& lat, real& lon, real& azi, real& rk) const throw();
 
     /**
+     * CassiniSoldner::Forward without returning the azimuth and scale.
+     **********************************************************************/
+    void Forward(real lat, real lon,
+                 real& x, real& y) const throw() {
+      real azi, rk;
+      Forward(lat, lon, x, y, azi, rk);
+    }
+
+    /**
+     * CassiniSoldner::Reverse without returning the azimuth and scale.
+     **********************************************************************/
+    void Reverse(real x, real y,
+                 real& lat, real& lon) const throw() {
+      real azi, rk;
+      Reverse(x, y, lat, lon, azi, rk);
+    }
+
+    /**
      * Has this object been initialized with an origin?
      **********************************************************************/
     bool Init() const throw() { return _meridian.Init(); }

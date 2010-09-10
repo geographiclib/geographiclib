@@ -30,7 +30,7 @@ GeoConvert).  The end of input, a blank line, or a line which can't be\n\
 interpreted as a vertex signals the end of one polygon and the start of\n\
 the next.  For each polygon print a summary line with the number of\n\
 points, the perimeter (in meters), and the area (in meters^2).  Areas\n\
-are tranversed in a clockwise sense (in other words, the included area\n\
+are traversed in a clockwise sense (in other words, the included area\n\
 is to the right of the perimeter).  By this rule, a polygon tranversed\n\
 in a counter-clockwise sense will return the area of ellipsoid excluded\n\
 by the polygon.  Only simple polygons are supported for the area\n\
@@ -161,7 +161,7 @@ int main(int argc, char* argv[]) {
     try {
       p.Reset(s);
     }
-    catch (const std::exception&) {
+    catch (const GeographicErr&) {
       num = poly.Compute(perimeter, area);
       if (num > 0)
         std::cout << num << " "

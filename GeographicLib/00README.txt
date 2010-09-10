@@ -39,10 +39,11 @@ Files
     tools/
       GeoConvert.cpp -- geographic conversion utility
       TransverseMercatorTest.cpp -- TM tester
-      Geod -- geodesic utility
+      Geod.cpp -- geodesic utility
       CartConvert.cpp -- convert to geocentric and local cartesian
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
+      Planimeter.cpp -- computer polygon areas
 
     windows/
       GeographicLib-vc9.sln -- MS Studio 2008 solution

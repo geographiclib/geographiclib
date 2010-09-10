@@ -103,15 +103,16 @@ namespace GeographicLib {
   }
 
   Math::real Geodesic::GenDirect(real lat1, real lon1, real azi1,
-                                 bool arcmode, real a12, unsigned outmask,
+                                 bool arcmode, real s12_a12, unsigned outmask,
                                  real& lat2, real& lon2, real& azi2,
                                  real& s12, real& m12, real& M12, real& M21,
                                  real& S12) const throw() {
     return
       GeodesicLine(*this, lat1, lon1, azi1,
+                   // Automatically supply DISTANCE_IN if necessary
                    outmask | (arcmode ? NONE : DISTANCE_IN))
       .                         // Note the dot!
-      GenPosition(arcmode, a12, outmask,
+      GenPosition(arcmode, s12_a12, outmask,
                   lat2, lon2, azi2, s12, m12, M12, M21, S12);
   }
 
