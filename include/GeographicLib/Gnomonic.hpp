@@ -140,6 +140,24 @@ namespace GeographicLib {
                  real& lat, real& lon, real& azi, real& rk) const throw();
 
     /**
+     * Gnomonic::Forward without returning the azimuth and scale.
+     **********************************************************************/
+    void Forward(real lat0, real lon0, real lat, real lon,
+                 real& x, real& y) const throw() {
+      real azi, rk;
+      Forward(lat0, lon0, lat, lon, x, y, azi, rk);
+    }
+
+    /**
+     * Gnomonic::Reverse without returning the azimuth and scale.
+     **********************************************************************/
+    void Reverse(real lat0, real lon0, real x, real y,
+                 real& lat, real& lon) const throw() {
+      real azi, rk;
+      Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
+    }
+
+    /**
      * The major radius of the ellipsoid (meters).  This is that value of \e a
      * inherited from the Geodesic object used in the constructor.
      **********************************************************************/

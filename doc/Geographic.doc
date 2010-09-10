@@ -981,6 +981,9 @@ References
    Solutions of Geodesics on the Ellipsoid with Application of Nested
    Equations</a>,
    Survey Review 23 (176), 88&ndash;93 (1975).
+ - J. Danielsen,
+   The Area under the Geodesic,
+   Survey Review 30 (232), 61&ndash;66 (1989).
  - A collection of some older papers on geodesics is available at
    http://trac.osgeo.org/proj/wiki/GeodesicCalculations#TheHistory
 
@@ -1079,13 +1082,11 @@ This class also returns the arc length \e a12 on the auxiliary sphere
 and allows distances to be specified in these terms.  See the -a option
 to \ref geod.
 
-Area computations are supported via GeographicLib::GeodesicLine::Area
-which returns the area between the geodesic and the equator.  This uses
-Danielsen's method extended to higher order and with the terms
-rearranged to facilitate the use of Clenshaw summation.  See
-J. Danielsen, The Area under the Geodesic, Survey Review 30 (232),
-61&ndash;66 (1989).  Using this function, it is simple to compute the
-area of any geodesic polygon.
+Area computations are supported via \e S12 the area between the geodesic
+and the equator.  This uses Danielsen's method extended to higher order
+and with the terms rearranged to facilitate the use of Clenshaw
+summation.  Using this function, it is simple to compute the area of any
+geodesic polygon.  This functionality is provided by \ref planimeter.
 
 \section testgeod Test data for geodesics
 
@@ -2233,7 +2234,7 @@ GeoConvert).  The end of input, a blank line, or a line which can't be
 interpreted as a vertex signals the end of one polygon and the start of
 the next.  For each polygon print a summary line with the number of
 points, the perimeter (in meters), and the area (in meters^2).  Areas
-are tranversed in a clockwise sense (in other words, the included area
+are traversed in a clockwise sense (in other words, the included area
 is to the right of the perimeter).  By this rule, a polygon tranversed
 in a counter-clockwise sense will return the area of ellipsoid excluded
 by the polygon.  Only simple polygons are supported for the area
@@ -2506,26 +2507,34 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (not released yet)</a>
-  - Add area computations to GeographicLib::Geodesic.
-  - Add geodesic areas to geodesic test set.
-  - Make GeographicLib::GeodesicLine constructor public.
-  - Change longitude series in GeographicLib::Geodesic into Helmert-like form.
-  - Ensure that equatorial geodesics have cos(alpha0) = 0 identically.
+  - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
+    - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
+    - add area computations to Geodesic::Direct and Geodesic::Inverse;
+    - add the \ref planimeter utility for computing the areas of
+      geodesic polygons;
+    - add geodesic areas to geodesic test set;
+    - make GeographicLib::GeodesicLine constructor public;
+    - change longitude series in GeographicLib::Geodesic into Helmert-like form;
+    - ensure that equatorial geodesics have cos(alpha0) = 0 identically;
+    - generalize interface for GeographicLib::Geodesic and
+      GeographicLib::GeodesicLine;
+    - split GeographicLib::GeodesicLine and
+      GeographicLib::Geodesic into different files'
+    - signal convergence failure in GeographicLib::Geodesic::Inverse with
+      NaNs;
+    - deprecate one function in GeographicLib::Geodesic and two functions in
+      GeographicLib::GeodesicLine;
+    - deprecate -n option for \ref geod;
+    - simplify iterative solution of GeographicLib::Gnomonic::Reverse.
+    .
+    WARNING: These changes break binary compatibility with previous
+    versions of %GeographicLib.  However, the library is source
+    compatible (with the proviso that GeographicLib/GeodesicLine.hpp may
+    now need to be included).
   - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
   - Constructors check that minor radius is positive.
-  - Minor fixes to allow package to compile under cygwin.
-  - Generalize interface for GeographicLib::Geodesic and
-    GeographicLib::GeodesicLine.
-  - Split GeographicLib::GeodesicLine and
-    GeographicLib::Geodesic into different files.  WARNING: need to
-    include GeographicLib/GeodesicLine.hpp.
-  - Signal convergence failure in GeographicLib::Geodesic::Inverse with
-    NaNs.
-  - Deprecate -n option for \ref geod.
-  - Deprecate two functions in GeographicLib::GeodesicLine.
-  - Add the \ref planimeter utility.
-  - Simplify iterative solution of GeographicLib::Gnomonic::Reverse.
-  - Fix bug in Geodesic::Inverse with prolate ellipsoids.
+  - Add overloaded Forward and Reverse functions to the projection
+    classes which don't return the convergence (or azimuth) and scale.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the

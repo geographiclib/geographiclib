@@ -199,7 +199,7 @@ namespace GeographicLib {
                         bool mgrslimits = false);
 
     /**
-     * Forward without returning convergence and scale.
+     * UTMUPS::Forward without returning convergence and scale.
      **********************************************************************/
     static void Forward(real lat, real lon,
                         int& zone, bool& northp, real& x, real& y,
@@ -209,7 +209,7 @@ namespace GeographicLib {
     }
 
     /**
-     * Reverse without returning convergence and scale.
+     * UTMUPS::Reverse without returning convergence and scale.
      **********************************************************************/
     static void Reverse(int zone, bool northp, real x, real y,
                         real& lat, real& lon, bool mgrslimits = false) {

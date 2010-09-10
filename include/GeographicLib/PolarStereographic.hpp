@@ -83,6 +83,24 @@ namespace GeographicLib {
                  real& lat, real& lon, real& gamma, real& k) const throw();
 
     /**
+     * PolarStereographic::Forward without returning the convergence and scale.
+     **********************************************************************/
+    void Forward(bool northp, real lat, real lon,
+                 real& x, real& y) const throw() {
+      real gamma, k;
+      Forward(northp, lat, lon, x, y, gamma, k);
+    }
+
+    /**
+     * PolarStereographic::Reverse without returning the convergence and scale.
+     **********************************************************************/
+    void Reverse(bool northp, real x, real y,
+                 real& lat, real& lon) const throw() {
+      real gamma, k;
+      Reverse(northp, x, y, lat, lon, gamma, k);
+    }
+
+    /**
      * The major radius of the ellipsoid (meters).  This is that value of \e a
      * used in the constructor.
      **********************************************************************/

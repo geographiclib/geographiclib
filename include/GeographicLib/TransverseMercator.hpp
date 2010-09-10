@@ -144,6 +144,24 @@ namespace GeographicLib {
                  real& lat, real& lon, real& gamma, real& k) const throw();
 
     /**
+     * TransverseMercator::Forward without returning the convergence and scale.
+     **********************************************************************/
+    void Forward(real lon0, real lat, real lon,
+                 real& x, real& y) const throw() {
+      real gamma, k;
+      Forward(lon0, lat, lon, x, y, gamma, k);
+    }
+
+    /**
+     * TransverseMercator::Reverse without returning the convergence and scale.
+     **********************************************************************/
+    void Reverse(real lon0, real x, real y,
+                 real& lat, real& lon) const throw() {
+      real gamma, k;
+      Reverse(lon0, x, y, lat, lon, gamma, k);
+    }
+
+    /**
      * The major radius of the ellipsoid (meters).  This is that value of \e a
      * used in the constructor.
      **********************************************************************/
