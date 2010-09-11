@@ -205,9 +205,12 @@ namespace GeographicLib {
       Reverse(lon0, x, y, lat, lon, gamma, k);
     }
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is the
-     *   value used in the constructor.
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 
@@ -223,6 +226,7 @@ namespace GeographicLib {
      *   k0 used in the constructor and is the scale on the central meridian.
      **********************************************************************/
     Math::real CentralScale() const throw() { return _k0; }
+    ///@}
 
     /**
      * A global instantiation of TransverseMercatorExact with the WGS84

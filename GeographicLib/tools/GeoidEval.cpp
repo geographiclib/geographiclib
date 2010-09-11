@@ -38,7 +38,8 @@ geoid height changes per unit distance along the WGS84 ellipsoid in\n\
 the specified directions).\n\
 \n\
 Positions are given as latitude and longitude, UTM/UPS, or MGRS, in\n\
-any of the formats accepted by GeoConvert.  If the -z option is\n\
+any of the formats accepted by GeoConvert.  (MGRS coordinates signify\n\
+the center of the corresponing MGRS square.)  If the -z option is\n\
 specified then the specified zone is prepended to each line of input\n\
 (which must be in UTM/UPS coordinates).  This allows a file with UTM\n\
 eastings and northings in a single zone to be used as standard input.\n\

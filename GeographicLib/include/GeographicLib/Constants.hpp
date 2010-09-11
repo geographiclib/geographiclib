@@ -311,7 +311,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return major radius of WGS84 ellipsoid
+     * @return equatorial radius of WGS84 ellipsoid
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return 6378137 * meter(); }
     /**

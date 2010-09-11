@@ -234,9 +234,12 @@ namespace GeographicLib {
       Reverse(lon0, x, y, lat, lon, gamma, k);
     }
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is the
-     *   value used in the constructor.
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 
@@ -261,6 +264,7 @@ namespace GeographicLib {
      *   latitude of origin..
      **********************************************************************/
     Math::real CentralScale() const throw() { return _k0; }
+    ///@}
 
     /**
      * A global instantiation of LambertConformalConic with the WGS84 ellipsoid

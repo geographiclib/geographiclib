@@ -744,8 +744,8 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is the
-     *   value used in the constructor.
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 

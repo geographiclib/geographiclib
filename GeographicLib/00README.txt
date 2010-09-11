@@ -51,6 +51,7 @@ Files
       GeoConvert-vc9.vcproj -- project for GeoConvert
       TransverseMercatorTest-vc9.vcproj -- project for TransverseMercatorTest
       Geod-vc9.vcproj -- project for Geod
+      Planimeter-vc9.vcproj -- project for Planimeter
       CartConvert-vc9.vcproj -- project for CartConvert
       EquidistantTest-vc9.vcproj -- project for EquidistantTest
       GeoidEval-vc9.vcproj -- project for GeoidEval

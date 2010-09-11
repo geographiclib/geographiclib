@@ -108,6 +108,9 @@ namespace GeographicLib {
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const throw();
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
      * @return latitude of the origin (degrees).
      **********************************************************************/
@@ -124,8 +127,8 @@ namespace GeographicLib {
     Math::real HeightOrigin() const throw() { return _h0; }
 
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is the
-     *   value of \e a inherited from the Geocentric object used in the
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value of \e a inherited from the Geocentric object used in the
      *   constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
@@ -138,6 +141,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }
+    ///@}
   };
 
 } // namespace GeographicLib

@@ -146,6 +146,9 @@ namespace GeographicLib {
       GEOIDTOELLIPSOID = 1,
     };
 
+    /** \name Setting up the geoid
+     **********************************************************************/
+    ///@{
     /**
      * Construct a Geoid.
      *
@@ -202,6 +205,11 @@ namespace GeographicLib {
      **********************************************************************/
     void CacheClear() const throw();
 
+    ///@}
+
+    /** \name Compute geoid heights
+     **********************************************************************/
+    ///@{
     /**
      * Compute the geoid height at a point
      *
@@ -256,6 +264,11 @@ namespace GeographicLib {
       return h + real(dir) * height(lat, lon, true, gradn, grade);
     }
 
+    ///@}
+
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
      * @return geoid description, if available, in the data file; if
      *   absent, return "NONE".
@@ -363,7 +376,7 @@ namespace GeographicLib {
     }
 
     /**
-     * @return \e a the major radius of the WGS84 ellipsoid (meters).
+     * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
      *
      * (The WGS84 values is returned because the supported geoid models are all
      * based on this ellipsoid.)
@@ -378,6 +391,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return Constants::WGS84_r(); }
+    ///@}
 
     /**
      * Return the compile-time default path for the geoid data files.
