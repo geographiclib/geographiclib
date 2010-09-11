@@ -110,10 +110,7 @@ int main(int argc, char* argv[]) {
   std::string dir;
   std::string geoid = "egm96-5";
   std::string zone;
-  //  0 -> report geoid height
-  // +1 -> msl to hae
-  // -1 -> hae to msl
-  int heightmult = 0;
+  Geoid::convertflag heightmult = Geoid::NONE;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
     if (arg == "-a") {
@@ -136,9 +133,9 @@ int main(int argc, char* argv[]) {
       }
       m += 4;
     } else if (arg == "-msltohae")
-      heightmult = +1;
+      heightmult = Geoid::GEOIDTOELLIPSOID;
     else if (arg == "-haetomsl")
-      heightmult = -1;
+      heightmult = Geoid::ELLIPSOIDTOGEOID;
     else if (arg == "-z") {
       if (++m == argc) return usage(1);
       zone = argv[m];
@@ -217,7 +214,7 @@ int main(int argc, char* argv[]) {
         real gradn, grade;
         real h = g(p.Latitude(), p.Longitude(), gradn, grade);
         if (heightmult)
-          std::cout << s << " " << height + heightmult * h << "\n";
+          std::cout << s << " " << height + real(heightmult) * h << "\n";
         else
           std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
                     << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";

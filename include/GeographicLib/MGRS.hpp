@@ -120,11 +120,24 @@ namespace GeographicLib {
   public:
 
     /**
-     * Convert UTM or UPS coordinate to an MGRS coordinate.  \e zone and \e
-     * northp give input zone (with \e zone = 0 indicating UPS) and hemisphere,
-     * \e x and \e y are the easting and northing (meters).  \e prec indicates
-     * the desired precision with \e prec = 0 (the minimum) meaning 100 km, \e
-     * prec = 5 meaning 1 m, and \e prec == 11 (the maximum) meaning 1 um.
+     * Convert UTM or UPS coordinate to an MGRS coordinate.
+     *
+     * @param[in] zone UTM zone (zero means UPS)
+     * @param[in] northp hemisphere (true means north, false means south)
+     * @param[in] x (meters)
+     * @param[in] y (meters)
+     * @param[in] prec precision relative to 100 km
+     * @param[out] mgrs MGRS string.
+     * 
+     * \e prec specifies the precision of the MSGRS string as follows:
+     * - prec = 0 (min), 100km
+     * - prec = 1, 10km
+     * - prec = 2, 1km
+     * - prec = 3, 100m
+     * - prec = 4, 10m
+     * - prec = 5, 1m
+     * - prec = 6, 0.1m
+     * - prec = 11 (max), 1um
      *
      * UTM eastings are allowed to be in the range [100 km, 900 km], northings
      * are allowed to be in in [0 km, 9500 km] for the northern hemisphere and
@@ -176,20 +189,35 @@ namespace GeographicLib {
                         int prec, std::string& mgrs);
 
     /**
-     * Convert UTM or UPS coordinates to an MGRS coordinate in case that
-     * latitude is already known.  The latitude is ignored for \e zone = 0
-     * (UPS); otherwise the latitude is used to determine the latitude band and
-     * this is checked for consistency using the same tests as Reverse.
+     * Convert UTM or UPS coordinate to an MGRS coordinate when the latitude is
+     * known.
+     *
+     * @param[in] zone UTM zone (zero means UPS).
+     * @param[in] northp hemisphere (true means north, false means south).
+     * @param[in] x (meters).
+     * @param[in] y (meters).
+     * @param[in] lat latitude (degrees).
+     * @param[in] prec precision relative to 100 km.
+     * @param[out] mgrs MGRS string.
+     *
+     * The latitude is ignored for \e zone = 0 (UPS); otherwise the latitude is
+     * used to determine the latitude band and this is checked for consistency
+     * using the same tests as Reverse.
      **********************************************************************/
     static void Forward(int zone, bool northp, real x, real y, real lat,
                         int prec, std::string& mgrs);
 
     /**
-     * Convert a MGRS coordinate to UTM or UPS coordinates returning zone \e
-     * zone, hemisphere \e northp, easting \e x (meters), northing \e y
-     * (meters) .  Also return the precision of the MGRS string (see Forward).
-     * If \e centerp = true (default), return center of the MGRS square, else
-     * return SW (lower left) corner.
+     * Convert a MGRS coordinate to UTM or UPS coordinates.
+     *
+     * @param[in] mgrs MGRS string.
+     * @param[out] zone UTM zone (zero means UPS).
+     * @param[out] northp hemisphere (true means north, false means south).
+     * @param[out] x (meters).
+     * @param[out] y (meters).
+     * @param[out] prec precision relative to 100 km.
+     * @param[in] centerp if true(default), return center of the MGRS square,
+     *   else return SW (lower left) corner.
      *
      * All conversions from MGRS to UTM/UPS are permitted provided the MGRS
      * coordinate is a possible result of a conversion in the other direction.
@@ -218,14 +246,18 @@ namespace GeographicLib {
                         int& prec, bool centerp = true);
 
     /**
-     * The major radius of the ellipsoid (meters).  This is the value for the
-     * WGS84 ellipsoid because MGRS coordinates are based on this ellipsoid.
+     * @return \e a the major radius of the WGS84 ellipsoid (meters).
+     *
+     * (The WGS84 values is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
      **********************************************************************/
     static Math::real MajorRadius() throw()  { return UTMUPS::MajorRadius(); }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is the value for the
-     * WGS84 ellipsoid because MGRS coordinates are based on this ellipsoid.
+     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 values is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
      **********************************************************************/
     static Math::real InverseFlattening() throw()
     { return UTMUPS::InverseFlattening(); }

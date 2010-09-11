@@ -549,13 +549,13 @@ namespace GeographicLib {
     }
 
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is that
+     * @return \e a the major radius of the ellipsoid (meters).  This is the
      *   value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return Init() ? _a : 0; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is that
+     * @return \e r the inverse flattening of the ellipsoid.  This is the
      *   value inherited from the Geodesic object used in the constructor.  A
      *   value of 0 is returned for a sphere (infinite inverse flattening).
      **********************************************************************/

@@ -89,8 +89,11 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN)
     /**
-     * Return sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>) avoiding underflow and
-     * overflow.
+     * The hypotenuse function avoiding underflow and overflow.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @return sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>).
      **********************************************************************/
     static inline real hypot(real x, real y) throw() {
       x = std::abs(x);
@@ -123,9 +126,12 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return exp(\e x) - 1 accurate near \e x = 0.  This is taken from
+     * exp(\e x) - 1 accurate near \e x = 0.  This is taken from
      * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd
      * Edition (SIAM, 2002), Sec 1.14.1, p 19.
+     *
+     * @param[in] x
+     * @return exp(\e x) - 1.
      **********************************************************************/
     static inline real expm1(real x) throw() {
       volatile real
@@ -148,12 +154,15 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return log(\e x + 1) accurate near \e x = 0.  This is taken See
+     * log(\e x + 1) accurate near \e x = 0.  This is taken See
      * D. Goldberg,
      * <a href="http://docs.sun.com/source/806-3568/ncg_goldberg.html"> What
      * every computer scientist should know about floating-point arithmetic</a>
      * (1991), Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5,
      * p 528.
+     *
+     * @param[in] x
+     * @return log(\e x + 1).
      **********************************************************************/
     static inline real log1p(real x) throw() {
       volatile real
@@ -176,9 +185,12 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return asinh(\e x).  This is defined in terms of Math::log1p(\e x) in
-     * order to maintain accuracy near \e x = 0.  In addition, the odd parity
-     * of the function is enforced.
+     * The inverse hyperbolic sine function.  This is defined in terms of
+     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
+     * addition, the odd parity of the function is enforced.
+     *
+     * @param[in] x
+     * @return asinh(\e x).
      **********************************************************************/
     static inline real asinh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
@@ -196,9 +208,12 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return atanh(\e x).  This is defined in terms of Math::log1p(\e x) in
-     * order to maintain accuracy near \e x = 0.  In addition, the odd parity
-     * of the function is enforced.
+     * The inverse hyperbolic tangent function.  This is defined in terms of
+     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
+     * addition, the odd parity of the function is enforced.
+     *
+     * @param[in] x
+     * @return atanh(\e x).
      **********************************************************************/
     static inline real atanh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
@@ -216,7 +231,10 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return the real cube root of \e x.
+     * The cube root function.
+     *
+     * @param[in] x
+     * @return the real cube root of \e x.
      **********************************************************************/
     static inline real cbrt(real x) throw() {
       real y = std::pow(std::abs(x), 1/real(3)); // Return the real cube root
@@ -231,7 +249,10 @@ namespace GeographicLib {
 #endif
 
     /**
-     * Return true if number is finite, false if NaN or infinite.
+     * Test for finiteness.
+     *
+     * @param[in] x
+     * @return true if number is finite, false if NaN or infinite.
      **********************************************************************/
     static inline bool isfinite(real x) throw() {
 #if defined(DOXYGEN)
@@ -244,7 +265,9 @@ namespace GeographicLib {
     }
 
     /**
-     * Return a NaN if available, otherwise return the max real.
+     * The NaN (not a number)
+     *
+     * @return NaN if available, otherwise return the max real.
      **********************************************************************/
     static inline real NaN() throw() {
       return std::numeric_limits<real>::has_quiet_NaN ?
@@ -266,21 +289,21 @@ namespace GeographicLib {
 
   public:
     /**
-     * pi
+     * @return \e pi
      **********************************************************************/
     static inline Math::real pi() throw()
     // good for about 123-bit accuracy
     { return real(3.141592653589793238462643383279502884L); }
     /**
-     * Factor to convert from degrees to radians
+     * @return the number of radians in a degree.
      **********************************************************************/
     static inline Math::real degree() throw() { return pi() / 180; }
     /**
-     * Factor to convert from minutes to radians
+     * @return the number of radians in an arcminute.
      **********************************************************************/
     static inline Math::real arcminute() throw() { return degree() / 60; }
     /**
-     * Factor to convert from seconds to radians
+     * @return the number of radians in an arcsecond.
      **********************************************************************/
     static inline Math::real arcsecond() throw() { return arcminute() / 60; }
 
@@ -288,19 +311,19 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Major radius of WGS84 ellipsoid
+     * @return major radius of WGS84 ellipsoid
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return 6378137 * meter(); }
     /**
-     * Reciprocal flattening of WGS84 ellipsoid
+     * @return reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
     static inline Math::real WGS84_r() throw() { return real(298.257223563L); }
     /**
-     * Central scale factor for UTM
+     * @return central scale factor for UTM
      **********************************************************************/
     static inline Math::real UTM_k0() throw() {return real(0.9996L); }
     /**
-     * Central scale factor for UPS
+     * @return central scale factor for UPS
      **********************************************************************/
     static inline Math::real UPS_k0() throw() { return real(0.994L); }
     ///@}
@@ -309,19 +332,21 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Factor to convert from meters to meters (i.e., 1, but this lets the
-     * internal system of units be changed if necessary).
+     * @return the number of meters in a meter.
+     *
+     * This is unity, but this lets the internal system of units be changed if
+     * necessary.
      **********************************************************************/
     static inline Math::real meter() throw() { return real(1); }
     /**
-     * Factor to convert from kilometers to meters.
+     * @return the number of meters in a kilometer.
      **********************************************************************/
     static inline Math::real kilometer() throw() { return 1000 * meter(); }
     ///@}
 
     /**
-     * Factor to convert from nautical miles (approximately 1 arc minute) to
-     * meters.
+     * @return the number of meters in a nautical mile (approximately 1 arc
+     *   minute)
      **********************************************************************/
     static inline Math::real nauticalmile() throw() { return 1852 * meter(); }
 
@@ -329,28 +354,28 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Factor to convert from international feet to meters.
+     * @return the number of meters in an international foot.
      **********************************************************************/
     static inline Math::real foot() throw()
     { return real(0.0254L) * 12 * meter(); }
     /**
-     * Factor to convert from yards to meters.
+     * @return the number of meters in a yard.
      **********************************************************************/
     static inline Math::real yard() throw() { return 3 * foot(); }
     /**
-     * Factor to convert from fathoms to meters.
+     * @return the number of meters in a fathom.
      **********************************************************************/
     static inline Math::real fathom() throw() { return 2 * yard(); }
     /**
-     * Factor to convert from chains to meters.
+     * @return the number of meters in a chain.
      **********************************************************************/
     static inline Math::real chain() throw() { return 22 * yard(); }
     /**
-     * Factor to convert from furlongs to meters.
+     * @return the number of meters in a furlong.
      **********************************************************************/
     static inline Math::real furlong() throw() { return 10 * chain(); }
     /**
-     * Factor to convert from statute miles to meters.
+     * @return the number of meters in a statute mile.
      **********************************************************************/
     static inline Math::real mile() throw() { return 8 * furlong(); }
     ///@}
@@ -359,7 +384,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Factor to convert from US survery feet to meters.
+     * @return the number of meters in a US survey foot.
      **********************************************************************/
     static inline Math::real surveyfoot() throw()
     { return real(1200) / real(3937) * meter(); }
@@ -376,8 +401,10 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor takes a string message, \e msg, which is accessible in the
-     * catch clause, via what().
+     * Constructor
+     *
+     * @param[in] msg a string message, which is accessible in the catch
+     *   clause, via what().
      **********************************************************************/
     GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
   };

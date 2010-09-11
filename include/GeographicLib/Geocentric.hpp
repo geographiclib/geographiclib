@@ -50,26 +50,45 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters) and reciprocal
-     * flattening \e r.  Setting \e r = 0 implies \e r = inf or flattening = 0
-     * (i.e., a sphere).  Negative \e r indicates a prolate spheroid.  An
-     * exception is thrown if \e a is not positive.
+     * Constructor for a ellipsoid with
+     *
+     * @param[in] a equatorial radius (meters)
+     * @param[in] r reciprocal flattening.  Setting \e r = 0 implies \e r = inf
+     *   or flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
+     *   ellipsoid.
+     *
+     * An exception is thrown if either of the axes of the ellipsoid is
+     * non-positive.
      **********************************************************************/
     Geocentric(real a, real r);
 
     /**
-     * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
-     * (meters) to geocentric coordinates \e x, \e y, \e z (meters).  \e lat
-     * should be in the range [-90, 90]; \e lon and \e lon0 should be in the
-     * range [-180, 360].
+     * Convert from geodetic to geocentric coordinates.
+     *
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[in] h height of point above the ellipsoid (meters).
+     * @param[out] x geocentric coordinate (meters).
+     * @param[out] y geocentric coordinate (meters).
+     * @param[out] z geocentric coordinate (meters).
+     *
+     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
+     * the range [-180, 360].
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw();
 
     /**
-     * Convert from geocentric coordinates \e x, \e y, \e z (meters) to
-     * geodetic \e lat, \e lon (degrees), \e h (meters).  In general there are
-     * multiple solutions and the result which minimizes the absolute value of
+     * Convert from geocentric to geodetic to coordinates.
+     *
+     * @param[in] x geocentric coordinate (meters).
+     * @param[in] y geocentric coordinate (meters).
+     * @param[in] z geocentric coordinate (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] h height of point above the ellipsoid (meters).
+     *
+     * In general there are multiple solutions and the result which maximizes
      * \e h is returned.  If there are still multiple solutions with different
      * latitutes (applies only if \e z = 0), then the solution with \e lat > 0
      * is returned.  If there are still multiple solutions with different
@@ -82,15 +101,15 @@ namespace GeographicLib {
       const throw();
 
     /**
-     * The major radius of the ellipsoid (meters).  This is that value of \e a
-     * used in the constructor.
+     * @return \e a the major radius of the ellipsoid (meters).  This is the
+     *   value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is that value of \e r
-     * used in the constructor.  A value of 0 is returned for a sphere
-     * (infinite inverse flattening).
+     * @return \e r the inverse flattening of the ellipsoid.  This is the
+     *   value used in the constructor.  A value of 0 is returned for a sphere
+     *   (infinite inverse flattening).
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 

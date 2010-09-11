@@ -126,24 +126,55 @@ namespace GeographicLib {
   public:
 
     /**
-     * Create a Geoid loading the data for geoid \e name.  The data file is
-     * formed by appending ".pgm" to the name.  If \e path is specified (and is
-     * non-empty), then the file is loaded from directory, \e path.  Otherwise
-     * the path is given by the GEOID_PATH environment variable.  If that is
-     * undefined, a compile-time default path is used
+     * Flags indicating conversions between heights above the geoid and heights
+     * above the ellipsoid.
+     **********************************************************************/
+    enum convertflag {
+      /**
+       * The multiplier for converting from heights above the geoid to heights
+       * above the ellipsoid.
+       **********************************************************************/
+      ELLIPSOIDTOGEOID = -1,
+      /**
+       * No conversion.
+       **********************************************************************/
+      NONE = 0,
+      /**
+       * The multiplier for converting from heights above the ellipsoid to
+       * heights above the geoid.
+       **********************************************************************/
+      GEOIDTOELLIPSOID = 1,
+    };
+
+    /**
+     * Construct a Geoid.
+     *
+     * @param[in] name the name of the geoid.
+     * @param[in] path (optional) directory for data file.
+     * @param[in] cubic interpolation method; false means bilinear, true (the
+     *   default) means cubic.
+     *
+     * The data file is formed by appending ".pgm" to the name.  If \e path is
+     * specified (and is non-empty), then the file is loaded from directory, \e
+     * path.  Otherwise the path is given by the GEOID_PATH environment
+     * variable.  If that is undefined, a compile-time default path is used
      * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
-     * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).  The
-     * final \e cubic argument specifies whether to use bilinear (\e cubic =
-     * false) or cubic (\e cubic = true, the default) interpolation.  This may
-     * throw an error because the file does not exist, is unreadable, or is
-     * corrupt.
+     * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).
+     * This may throw an error because the file does not exist, is unreadable,
+     * or is corrupt.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
                    bool cubic = true);
 
     /**
-     * Cache the data for the rectangular area defined by the four arguments \e
-     * south, \e west, \e north, \e east (all in degrees).  \e east is always
+     * Set up a cache.
+     *
+     * @param[in] south latitude (degrees) of the south edge of the cached area.
+     * @param[in] west longitude (degrees) of the west edge of the cached area.
+     * @param[in] north latitude (degrees) of the north edge of the cached area.
+     * @param[in] east longitude (degrees) of the east edge of the cached area.
+     *
+     * Cache the data for the specified rectangular area .  \e east is always
      * interpreted as being east of \e west, if necessary by adding
      * 360<sup>o</sup> to its value.  This may throw an error because of
      * insufficent memory or because of an error reading the data from the
@@ -172,92 +203,133 @@ namespace GeographicLib {
     void CacheClear() const throw();
 
     /**
-     * Return the geoid height in meters for latitude \e lat (in [-90, 90]) and
-     * longitude \e lon (in [-180,360]), both in degrees.  This may throw an
-     * error because of an error reading data from disk.  However, it will not
-     * throw if (\e lat, \e lon) is within a successfully cached area.
+     * Compute the geoid height at a point
+     *
+     * @param[in] lat latitude of the point (degrees).
+     * @param[in] lon longitude of the point (degrees).
+     * @return geoid height (meters).
+     *
+     * The latitude should be in [-90, 90] and longitude should bein
+     * [-180,360].  This may throw an error because of an error reading data
+     * from disk.  However, it will not throw if (\e lat, \e lon) is within a
+     * successfully cached area.
      **********************************************************************/
     Math::real operator()(real lat, real lon) const {
       real gradn, grade;
       return height(lat, lon, false, gradn, grade);
     }
+
     /**
-     * Return the geoid height in meters for latitude \e lat (in [-90, 90]) and
-     * longitude \e lon (in [-180,360]), both in degrees.  In addition compute
-     * the gradient of the geoid height in the northerly \e gradn and easterly
-     * \e grade directions.  This may throw an error because of an error
-     * reading data from disk.  However, it will not throw if (\e lat, \e lon)
-     * is within a successfully cached area.
+     * Compute the geoid height and gradient at a point
+     *
+     * @param[in] lat latitude of the point (degrees).
+     * @param[in] lon longitude of the point (degrees).
+     * @param[out] gradn northerly gradient (dimensionless).
+     * @param[out] grade easterly gradient (dimensionless).
+     * @return geoid height (meters).
+     *
+     * The latitude should be in [-90, 90] and longitude should be in [-180,
+     * 360].  This may throw an error because of an error reading data from
+     * disk.  However, it will not throw if (\e lat, \e lon) is within a
+     * successfully cached area.
      **********************************************************************/
     Math::real operator()(real lat, real lon, real& gradn, real& grade) const {
       return height(lat, lon, true, gradn, grade);
     }
 
     /**
-     * Return the geoid description if available in the data file.  If absent,
-     * return "NONE".
+     * Convert a height above the geoid to a height above the ellipsoid and
+     * vice versa.
+     *
+     * @param[in] lat latitude of the point (degrees).
+     * @param[in] lon longitude of the point (degrees).
+     * @param[in] h height of the point (degrees).
+     * @param[in] dir a convertflag specifying the direction of the conversion;
+     *   Geoid::GEOIDTOELLIPSOID means convert a height above the geoid to a
+     *   height above the ellipsoid; Geoid::ELLIPSOIDTOGEOID means convert a
+     *   height above the ellipsoid to a height above the geoid.
+     * @return converted height (meters).
+     **********************************************************************/
+    Math::real ConvertHeight(real lat, real lon, real h,
+                             convertflag dir) const {
+      real gradn, grade;
+      return h + real(dir) * height(lat, lon, true, gradn, grade);
+    }
+
+    /**
+     * @return geoid description, if available, in the data file; if
+     *   absent, return "NONE".
      **********************************************************************/
     const std::string& Description() const throw() { return _description; }
 
     /**
-     * Return the date of the data file.  If absent, return "UNKNOWN".
+     * @return date of the data file; if absent, return "UNKNOWN".
      **********************************************************************/
     const std::string& DateTime() const throw() { return _datetime; }
 
     /**
-     * Return the full file name used to load the geoid data.
+     * @return full file name used to load the geoid data.
      **********************************************************************/
     const std::string& GeoidFile() const throw() { return _filename; }
 
     /**
-     * Return the "name" used to load the geoid data (from the first argument
-     * of the constructor).
+     * @return "name" used to load the geoid data (from the first argument of
+     *   the constructor).
      **********************************************************************/
     const std::string& GeoidName() const throw() { return _name; }
 
     /**
-     * Return the directory used to load the geoid data.
+     * @return directory used to load the geoid data.
      **********************************************************************/
     const std::string& GeoidDirectory() const throw() { return _dir; }
 
     /**
-     * Return the interpolation method (cubic or bilinear).
+     * @return interpolation method ("cubic" or "bilinear").
      **********************************************************************/
     const std::string Interpolation() const
     { return std::string(_cubic ? "cubic" : "bilinear"); }
 
     /**
-     * Return a estimate of the maximum interpolation and quantization error
-     * (meters).  This relies on the value being stored in the data file.  If
-     * the value is absent, return -1.
+     * @return estimate of the maximum interpolation and quantization error
+     *   (meters).
+     *
+     * This relies on the value being stored in the data file.  If the value is
+     * absent, return -1.
      **********************************************************************/
     Math::real MaxError() const throw() { return _maxerror; }
 
     /**
-     * Return a estimate of the RMS interpolation and quantization error
-     * (meters).  This relies on the value being stored in the data file.  If
-     * the value is absent, return -1.
+     * @return estimate of the RMS interpolation and quantization error
+     *   (meters).
+     *
+     * This relies on the value being stored in the data file.  If the value is
+     * absent, return -1.
      **********************************************************************/
     Math::real RMSError() const throw() { return _rmserror; }
 
     /**
-     * Return offset (meters) for converting pixel values to geoid heights.
+     * @return offset (meters).
+     *
+     * This in used in converting from the pixel values in the data file to
+     * geoid heights.
      **********************************************************************/
     Math::real Offset() const throw() { return _offset; }
 
     /**
-     * Return scale (meters) for converting pixel values to geoid
-     * heights.
+     * @return scale (meters).
+     *
+     * This in used in converting from the pixel values in the data file to
+     * geoid heights.
      **********************************************************************/
     Math::real Scale() const throw() { return _scale; }
 
     /**
-     * Is a data cache active?
+     * @return true if a data cache is active.
      **********************************************************************/
     bool Cache() const throw() { return _cache; }
 
     /**
-     * Return the west edge of the cached area.  The cache includes this edge.
+     * @return west edge of the cached area; the cache includes this edge.
      **********************************************************************/
     Math::real CacheWest() const throw() {
       return _cache ? ((_xoffset + (_xsize == _width ? 0 : _cubic)
@@ -266,7 +338,7 @@ namespace GeographicLib {
     }
 
     /**
-     * Return the east edge of the cached area.  The cache excludes this edge.
+     * @return east edge of the cached area; the cache excludes this edge.
      **********************************************************************/
     Math::real CacheEast() const throw() {
       return  _cache ?
@@ -276,31 +348,33 @@ namespace GeographicLib {
     }
 
     /**
-     * Return the north edge of the cached area.  The cache includes this edge.
+     * @return north edge of the cached area; the cache includes this edge.
      **********************************************************************/
     Math::real CacheNorth() const throw() {
       return _cache ? 90 - (_yoffset + _cubic) / _rlatres : 0;
     }
 
     /**
-     * Return the south edge of the cached area.  The cache excludes this edge
-     * unless it's the south pole.
+     * @return south edge of the cached area; the cache excludes this edge
+     *   unless it's the south pole.
      **********************************************************************/
     Math::real CacheSouth() const throw() {
       return _cache ? 90 - ( _yoffset + _ysize - 1 - _cubic) / _rlatres : 0;
     }
 
     /**
-     * The major radius of the ellipsoid (meters).  This is the value for the
-     * WGS84 ellipsoid because the supported geoid models are all based on this
-     * ellipsoid.
+     * @return \e a the major radius of the WGS84 ellipsoid (meters).
+     *
+     * (The WGS84 values is returned because the supported geoid models are all
+     * based on this ellipsoid.)
      **********************************************************************/
     Math::real MajorRadius() const throw() { return Constants::WGS84_a(); }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is the value for the
-     * WGS84 ellipsoid because the supported geoid models are all based on this
-     * ellipsoid.
+     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 values is returned because the supported geoid models are all
+     * based on this ellipsoid.)
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return Constants::WGS84_r(); }
