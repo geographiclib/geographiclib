@@ -187,6 +187,9 @@ namespace GeographicLib {
       Reverse(x, y, lat, lon, azi, rk);
     }
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
      * @return true if the object has been initialized.
      **********************************************************************/
@@ -205,8 +208,8 @@ namespace GeographicLib {
     { return _meridian.Longitude(); }
 
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is the
-     *   value inherited from the Geodesic object used in the constructor.
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
@@ -217,6 +220,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }
+    ///@}
   };
 
 } // namespace GeographicLib

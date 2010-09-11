@@ -100,9 +100,12 @@ namespace GeographicLib {
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const throw();
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is the
-     *   value used in the constructor.
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 
@@ -112,6 +115,7 @@ namespace GeographicLib {
      *   (infinite inverse flattening).
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
+    ///@}
 
     /**
      * A global instantiation of Geocentric with the parameters for the WGS84

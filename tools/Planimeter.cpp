@@ -26,7 +26,8 @@ $Id$\n\
 Measure the area of a geodesic polygon.  Reads polygon vertices from\n\
 standard input, one per line.  Vertices may be given as latitude and\n\
 longitude, UTM/UPS, or MGRS coordinates (interpreted in the same way as\n\
-GeoConvert).  The end of input, a blank line, or a line which can't be\n\
+GeoConvert).  (MGRS coordinates signify the center of the corresponing\n\
+MGRS square.)  The end of input, a blank line, or a line which can't be\n\
 interpreted as a vertex signals the end of one polygon and the start of\n\
 the next.  For each polygon print a summary line with the number of\n\
 points, the perimeter (in meters), and the area (in meters^2).  Areas\n\

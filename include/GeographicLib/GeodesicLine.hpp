@@ -549,8 +549,8 @@ namespace GeographicLib {
     }
 
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is the
-     *   value inherited from the Geodesic object used in the constructor.
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return Init() ? _a : 0; }
 

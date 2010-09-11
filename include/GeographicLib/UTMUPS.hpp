@@ -280,8 +280,11 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real UTMShift() throw();
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
-     * @return \e a the major radius of the WGS84 ellipsoid (meters).
+     * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
      *
      * (The WGS84 values is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
@@ -296,6 +299,7 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real InverseFlattening() throw()
     { return Constants::WGS84_r(); }
+    ///@}
   };
 
 } // namespace GeographicLib

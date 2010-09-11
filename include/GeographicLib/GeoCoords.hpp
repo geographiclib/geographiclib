@@ -61,6 +61,9 @@ namespace GeographicLib {
     void FixHemisphere();
   public:
 
+    /** \name Initializing the GeoCoords object
+     **********************************************************************/
+    ///@{
     /**
      * The default contructor is equivalent to \e latitude = 90<sup>o</sup>, \e
      * longitude = 0<sup>o</sup>.
@@ -209,7 +212,11 @@ namespace GeographicLib {
       FixHemisphere();
       CopyToAlt();
     }
+    ///@}
 
+    /** \name Querying the GeoCoords object
+     **********************************************************************/
+    ///@{
     /**
      * @return latitude (degrees)
      **********************************************************************/
@@ -255,6 +262,11 @@ namespace GeographicLib {
      **********************************************************************/
     int Zone() const throw() { return _zone; }
 
+    ///@}
+
+    /** \name Setting and querying the alternate zone
+     **********************************************************************/
+    ///@{
     /**
      * Specify alternate zone number.
      *
@@ -305,7 +317,11 @@ namespace GeographicLib {
      * @return scale for altermate zone.
      **********************************************************************/
     Math::real AltScale() const throw() { return _alt_k; }
+    ///@}
 
+    /** \name String representations of the GeoCoords object
+     **********************************************************************/
+    ///@{
     /**
      * String representation with latitude and longitude as signed decimal
      * degrees.
@@ -388,9 +404,13 @@ namespace GeographicLib {
      * GeoCoords::UTMUPSRepresentation.
      **********************************************************************/
     std::string AltUTMUPSRepresentation(int prec = 0) const;
+    ///@}
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
-     * @return \e a the major radius of the WGS84 ellipsoid (meters).
+     * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
      *
      * (The WGS84 values is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
@@ -405,6 +425,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return UTMUPS::InverseFlattening(); }
+    ///@}
   };
 
 } // namespace GeographicLib
