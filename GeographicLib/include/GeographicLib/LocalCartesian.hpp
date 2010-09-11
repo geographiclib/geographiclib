@@ -26,8 +26,7 @@ namespace GeographicLib {
    * due north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
    *
    * The conversions all take place via geocentric coordinates using a
-   * GeographicLib::Geocentric object (by default
-   * GeographicLib::Geocentric::WGS84).
+   * Geocentric object (by default Geocentric::WGS84).
    **********************************************************************/
 
   class LocalCartesian {
@@ -42,10 +41,13 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor setting the origin to latitude = \e lat0, longitude = \e
-     * lon0 (degrees), height = \e h0 (meters).  The optional \e earth argument
-     * (default Geocentric::WGS84) specifies the Geocentric object to use for
-     * the transformation.
+     * Constructor setting the origin.
+     *
+     * @param[in] lat0 latitude at origin (degrees).
+     * @param[in] lon0 longitude at origin (degrees).
+     * @param[in] h0 height above ellipsoid at origin (meters); default 0.
+     * @param[in] earth Geocentric object for the transformation; default
+     *   Geocentric::WGS84.
      **********************************************************************/
     LocalCartesian(real lat0, real lon0, real h0 = 0,
                    const Geocentric& earth = Geocentric::WGS84) throw()
@@ -53,9 +55,12 @@ namespace GeographicLib {
     { Reset(lat0, lon0, h0); }
 
     /**
-     * Default constructor sets the origin to \e lat0 = 0, \e lon0 = 0, \e h0 =
-     * 0.  The optional \e earth argument (default Geocentric::WGS84) specifies
-     * the Geocentric object to use for the transformation.
+     * Default constructor.
+     *
+     * @param[in] earth Geocentric object for the transformation; default
+     *   Geocentric::WGS84.
+     *
+     * Sets \e lat0 = 0, \e lon0 = 0, \e h0 = 0.
      **********************************************************************/
     explicit LocalCartesian(const Geocentric& earth = Geocentric::WGS84)
       throw()
@@ -63,54 +68,73 @@ namespace GeographicLib {
     { Reset(real(0), real(0), real(0)); }
 
     /**
-     * Change the origin to latitude = \e lat0, longitude = \e lon0 (degrees),
-     * height = \e h0 (meters).
+     * Reset the origin.
+     *
+     * @param[in] lat0 latitude at origin (degrees).
+     * @param[in] lon0 longitude at origin (degrees).
+     * @param[in] h0 height above ellipsoid at origin (meters); default 0.
      **********************************************************************/
     void Reset(real lat0, real lon0, real h0 = 0)
       throw();
 
     /**
-     * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h
-     * (meters) to local cartesian coordinates \e x, \e y, \e z (meters).  \e
-     * lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
+     * Convert from geodetic to local cartesian coordinates.
+     *
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[in] h height of point above the ellipsoid (meters).
+     * @param[out] x local cartesian coordinate (meters).
+     * @param[out] y local cartesian coordinate (meters).
+     * @param[out] z local cartesian coordinate (meters).
+     *
+     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
      * the range [-180, 360].
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw();
 
     /**
-     * Convert from local cartesian \e x, \e y, \e z (meters) to geodetic
-     * coordinates \e lat, \e lon (degrees), \e h (meters).  The value of \e
-     * lon returned is in the range [-180, 180).
+     * Convert from local cartesian to geodetic to coordinates.
+     *
+     * @param[in] x local cartesian coordinate (meters).
+     * @param[in] y local cartesian coordinate (meters).
+     * @param[in] z local cartesian coordinate (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] h height of point above the ellipsoid (meters).
+     *
+     * The value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const throw();
 
     /**
-     * Return the latitude of the origin (degrees).
+     * @return latitude of the origin (degrees).
      **********************************************************************/
     Math::real LatitudeOrigin() const throw() { return _lat0; }
 
     /**
-     * Return the longitude of the origin (degrees).
+     * @return longitude of the origin (degrees).
      **********************************************************************/
     Math::real LongitudeOrigin() const throw() { return _lon0; }
 
     /**
-     * Return the height of the origin (meters).
+     * @return height of the origin (meters).
      **********************************************************************/
     Math::real HeightOrigin() const throw() { return _h0; }
 
     /**
-     * The major radius of the ellipsoid (meters).  This is that value of \e a
-     * inherited from the Geocentric object used in the constructor.
+     * @return \e a the major radius of the ellipsoid (meters).  This is the
+     *   value of \e a inherited from the Geocentric object used in the
+     *   constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is that value of \e r
-     * inherited from the Geocentric object used in the constructor.  A value
-     * of 0 is returned for a sphere (infinite inverse flattening).
+     * @return \e r the inverse flattening of the ellipsoid.  This is the
+     *   value of \e r inherited from the Geocentric object used in the
+     *   constructor.  A value of 0 is returned for a sphere (infinite inverse
+     *   flattening).
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }

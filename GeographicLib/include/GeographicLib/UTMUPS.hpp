@@ -137,27 +137,43 @@ namespace GeographicLib {
       /**
        * The largest physical zone number.
        **********************************************************************/
-      MAXZONE = 60 };
+      MAXZONE = 60,
+    };
+
     /**
-     * Return the standard zone for latitude \e lat (degrees) and longitude \e
-     * lon (degrees); see UTMUPS::STANDARD.  This is exact.  If the optional
-     * argument \e setzone is given then use that zone if it is non-negative,
-     * otherwise apply the rules given in UTMUPS::zonespec.  Throws an error if
-     * \e setzone is outsize the range [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE]
-     * = [-3, 60].
+     * The standard zone.
+     *
+     * @param[in] lat latitude (degrees).
+     * @param[in] lon longitude (degrees).
+     * @param[in] setzone zone override (optional)
+     *
+     * This is exact.  If the optional argument \e setzone is given then use
+     * that zone if it is non-negative, otherwise apply the rules given in
+     * UTMUPS::zonespec.  Throws an error if \e setzone is outsize the range
+     * [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [-3, 60].
      **********************************************************************/
     static int StandardZone(real lat, real lon, int setzone = STANDARD);
 
     /**
-     * Convert geographic coordinates to UTM or UPS coordinate.  Given latitude
-     * \e lat (degrees), and longitude \e lon (degrees), return \e zone (zero
-     * indicates UPS), hemisphere \e northp (false means south, true means
-     * north), easting \e x (meters), and northing \e y (meters).  The prefered
-     * zone for the result can be specified with \e setzone, see
+     * Forward projection, from geographic to UTM/UPS.
+     *
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[out] zone the UTM zone (zero means UPS).
+     * @param[out] northp hemisphere of location (true means northern, false
+     *   means southern).
+     * @param[out] x easting of point (meters).
+     * @param[out] y northing of point (meters).
+     * @param[out] gamma meridian convergence at point (degrees).
+     * @param[out] k scale of projection at point.
+     * @param[in] setzone zone override.
+     * @param[in] mgrslimits if true enforce the stricted MGRS limits on the
+     *   coordinates (default = false).
+     *
+     * The prefered zone for the result can be specified with \e setzone, see
      * UTMUPS::StandardZone.  Throw error if the resulting easting or northing
      * is outside the allowed range (see Reverse), in which case the arguments
-     * are unchanged.  If \e mgrslimits == true, then use the stricter MGRS
-     * limits (see Reverse).  This also returns meridian convergence \e gamma
+     * are unchanged.  This also returns meridian convergence \e gamma
      * (degrees) and scale \e k.  The accuracy of the conversion is about 5nm.
      **********************************************************************/
     static void Forward(real lat, real lon,
@@ -166,14 +182,23 @@ namespace GeographicLib {
                         int setzone = STANDARD, bool mgrslimits = false);
 
     /**
-     * Convert UTM or UPS coordinate to geographic coordinates .  Given zone \e
-     * zone (\e zone == UTMUPS::UPS, 0, indicates UPS), hemisphere \e
-     * northp (false means south, true means north), easting \e x (meters), and
-     * northing \e y (meters), return latitude \e lat (degrees) and longitude
-     * \e lon (degrees).  Throw error if easting or northing is outside the
-     * allowed range (see below), in which case the arguments are unchanged.
-     * This also returns meridian convergence \e gamma (degrees) and scale \e
-     * k.  The accuracy of the conversion is about 5nm.
+     * Reverse projection, from  UTM/UPS to geographic.
+     *
+     * @param[in] zone the UTM zone (zero means UPS).
+     * @param[in] northp hemisphere of location (true means northern, false
+     *   means southern).
+     * @param[in] x easting of point (meters).
+     * @param[in] y northing of point (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] gamma meridian convergence at point (degrees).
+     * @param[out] k scale of projection at point.
+     * @param[in] mgrslimits if true enforce the stricted MGRS limits on the
+     *   coordinates (default = false).
+     *
+     * Throw error if easting or northing is outside the allowed range (see
+     * below), in which case the arguments are unchanged.  The accuracy of the
+     * conversion is about 5nm.
      *
      * UTM eastings are allowed to be in the range [0km, 1000km], northings are
      * allowed to be in in [0km, 9600km] for the northern hemisphere and in
@@ -218,44 +243,56 @@ namespace GeographicLib {
     }
 
     /**
-     * Decode a UTM/UPS zone string, \e zonestr, returning the resulting \e
-     * zone and hemisphere thru \e northp (true for northern and false for
-     * southern hemispheres).  For UTM, \e zonestr has the form of a zone
-     * number in the range [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60]
-     * followed by a hemisphere letter, N or S.  For UPS, it consists just of
-     * the hemisphere letter.  The returned value of \e zone is UTMUPS::UPS = 0
-     * for UPS.  Note well that "38S" indicates the southern hemisphere of zone
-     * 38 and not latitude band S, [32, 40].  N, 01S, 2N, 38S are legal.  0N,
-     * 001S, 61N, 38P are illegal.
+     * Decode a UTM/UPS zone string.
+     *
+     * @param[in] zonestr string represention of zone and hemisphere.
+     * @param[out] zone the UTM zone (zero means UPS).
+     * @param[out] northp the hemisphere (true means northern, false
+     *   means southern).
+     *
+     * For UTM, \e zonestr has the form of a zone number in the range
+     * [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60] followed by a
+     * hemisphere letter, N or S.  For UPS, it consists just of the hemisphere
+     * letter.  The returned value of \e zone is UTMUPS::UPS = 0 for UPS.  Note
+     * well that "38S" indicates the southern hemisphere of zone 38 and not
+     * latitude band S, [32, 40].  N, 01S, 2N, 38S are legal.  0N, 001S, 61N,
+     * 38P are illegal.  Throws an error is the zone string is malformed.
      **********************************************************************/
     static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
 
     /**
-     * Encode a UTM/UPS zone string given the \e zone and hemisphere \e
-     * northp.  \e zone must be in the range [UTMUPS::MINZONE,
-     * UTMUPS::MAXZONE] = [0, 60] with \e zone = UTMUPS::UPS, 0, indicating
-     * UPS (but the resulting string does not contain "0").  This reverses
-     * DecodeZone.
+     * Encode a UTM/UPS zone string.
+     *
+     * @param[out] zone the UTM zone (zero means UPS).
+     * @param[out] northp the hemisphere (true means northern, false
+     *   means southern).
+     * @return string represention of zone and hemisphere.
+     *
+     * \e zone must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,
+     * 60] with \e zone = UTMUPS::UPS, 0, indicating UPS (but the resulting
+     * string does not contain "0").  This reverses UTMUPS::DecodeZone.
      **********************************************************************/
     static std::string EncodeZone(int zone, bool northp);
 
     /**
-     * The shift necessary to align N and S halves of a UTM zone
+     * @return shift (meters) necessary to align N and S halves of a UTM zone
      * (10<sup>7</sup>).
      **********************************************************************/
     static Math::real UTMShift() throw();
 
     /**
-     * The major radius of the ellipsoid (meters).  This is the value for the
-     * WGS84 ellipsoid because the UTM and UPS projections are based on this
-     * ellipsoid.
+     * @return \e a the major radius of the WGS84 ellipsoid (meters).
+     *
+     * (The WGS84 values is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
      **********************************************************************/
     static Math::real MajorRadius() throw() { return Constants::WGS84_a(); }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is the value for the
-     * WGS84 ellipsoid because the UTM and UPS projections are based on this
-     * ellipsoid.
+     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 values is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
      **********************************************************************/
     static Math::real InverseFlattening() throw()
     { return Constants::WGS84_r(); }

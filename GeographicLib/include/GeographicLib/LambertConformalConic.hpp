@@ -32,10 +32,11 @@ namespace GeographicLib {
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  If the standard parallels
    * are both at a single pole the projection becomes the polar stereographic
-   * projection.  If the standard parallels are symmetric around equator, the
-   * projection becomes the Mercator projection.  The central meridian (which
-   * is a trivial shift of the longitude) is specified as the \e lon0 argument
-   * of the LambertConformalConic::Forward and LambertConformalConic::Reverse
+   * projection (compare with the PolarStereographic class).  If the standard
+   * parallels are symmetric around equator, the projection becomes the
+   * Mercator projection.  The central meridian (which is a trivial shift of
+   * the longitude) is specified as the \e lon0 argument of the
+   * LambertConformalConic::Forward and LambertConformalConic::Reverse
    * functions.  The latitude of origin is taken to be the latitude of tangency
    * which lies between the standard parallels which is given by
    * LambertConformalConic::OriginLatitude.  There is no provision in this
@@ -110,30 +111,52 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
-     * \e r, standard parallel (the circle of tangency) \e stdlat (degrees),
-     * and scale on the standard parallel \e k0.  Setting \e r = 0 implies \e r
-     * = inf or flattening = 0 (i.e., a sphere). An exception is thrown if \e a
-     * or \e k0 is not positive or if \e stdlat is not in the range [-90, 90].
+     * Constructor with a single standard parallel.
+     *
+     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
+     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
+     *   indicates a prolate ellipsoid.
+     * @param[in] stdlat standard parallel (degrees), the circle of tangency.
+     * @param[in] k0 scale on standard parallel.
+     *
+     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
+     * is not in the range [-90, 90].
      **********************************************************************/
     LambertConformalConic(real a, real r, real stdlat, real k0);
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
-     * \e r, standard parallels \e stdlat1 (degrees) and \e stdlat2 (degrees),
-     * and the scale on the standard parallels \e k1.  Setting \e r = 0 implies
-     * \e r = inf or flattening = 0 (i.e., a sphere). An exception is thrown if
-     * \e a or \e k0 is not positive or if \e stdlat1 or \e stdlat2 is not in
-     * the range [-90, 90].  In addition, if either \e stdlat1 or \e stdlat2 is
-     * a pole, then an exception is thrown if \e stdlat1 is not equal \e
-     * stdlat2
+     * Constructor with two standard parallels.
+     *
+     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
+     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
+     *   indicates a prolate ellipsoid.
+     * @param[in] stdlat1 first standard parallel (degrees).
+     * @param[in] stdlat2 second standard parallel (degrees).
+     * @param[in] k1 scale on the standard parallels.
+     *
+     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1
+     * or \e stdlat2 is not in the range [-90, 90].  In addition, if either \e
+     * stdlat1 or \e stdlat2 is a pole, then an exception is thrown if \e
+     * stdlat1 is not equal \e stdlat2
      **********************************************************************/
     LambertConformalConic(real a, real r, real stdlat1, real stdlat2, real k1);
 
     /**
-     * An alternative constructor for 2 standard parallels where the parallels
-     * are given by their sines and cosines.  This allows parallels close to
-     * the poles to be specified accurately.
+     * Constructor with two standard parallels specified by sines and cosines.
+     *
+     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
+     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
+     *   indicates a prolate ellipsoid.
+     * @param[in] sinlat1 sine of first standard parallel.
+     * @param[in] coslat1 cosine of first standard parallel.
+     * @param[in] sinlat2 sine of second standard parallel.
+     * @param[in] coslat2 cosine of second standard parallel.
+     * @param[in] k1 scale on the standard parallels.
+     *
+     * This allows parallels close to the poles to be specified accurately.
      **********************************************************************/
     LambertConformalConic(real a, real r,
                           real sinlat1, real coslat1,
@@ -141,37 +164,52 @@ namespace GeographicLib {
                           real k1);
 
     /**
-     * Alter the scale for the projection so that on latitude \e lat, the scale
-     * is \e k (default 1).  The allows a "latitude of true scale" to be
-     * specified.  An exception is thrown if \e k is not positive.
+     * Set the scale for the projection.
+     *
+     * @param[in] lat (degrees).
+     * @param[in] k scale at latitude \e lat (default 1).
+     *
+     * This allows a "latitude of true scale" to be specified.  An exception is
+     * thrown if \e k is not positive.
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
     /**
-     * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
-     * Lambert conformal conic easting \e x (meters) and northing \e y
-     * (meters).  The central meridian is given by \e lon0 (degrees) and the
-     * latitude origin is given by LambertConformalConic::LatitudeOrigin().
-     * Also return the meridian convergence \e gamma (degrees) and the scale \e
-     * k.  No false easting or northing is added and \e lat should be in the
-     * range [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
-     * The values of \e x and \e y returned for points which project to
-     * infinity (i.e., one or both of the poles) will be large but finite.  The
-     * value of \e k returned for the poles in infinite (unless \e lat equals
-     * the latitude origin).
+     * Forward projection, from geographic to Lambert conformal conic.
+     *
+     * @param[in] lon0 central meridian longitude (degrees).
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[out] x easting of point (meters).
+     * @param[out] y northing of point (meters).
+     * @param[out] gamma meridian convergence at point (degrees).
+     * @param[out] k scale of projection at point.
+     *
+     * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
+     * No false easting or northing is added and \e lat should be in the range
+     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
+     * values of \e x and \e y returned for points which project to infinity
+     * (i.e., one or both of the poles) will be large but finite.  The value of
+     * \e k returned for the poles in infinite (unless \e lat equals the
+     * latitude origin).
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
 
     /**
-     * Convert from Lambert conformal conic easting \e x (meters) and northing
-     * \e y (meters) to latitude \e lat (degrees) and longitude \e lon
-     * (degrees) .  The central meridian is given by \e lon0 (degrees) and the
-     * latitude origin is given by LambertConformalConic::LatitudeOrigin().
-     * Also return the meridian convergence \e gamma (degrees) and the scale \e
-     * k.  No false easting or northing is added.  \e lon0 should be in the
-     * range [-180, 360].  The value of \e lon returned is in the range [-180,
-     * 180).
+     * Reverse projection, from Lambert conformal conic to geographic.
+     *
+     * @param[in] lon0 central meridian longitude (degrees).
+     * @param[in] x easting of point (meters).
+     * @param[in] y northing of point (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] gamma meridian convergence at point (degrees).
+     * @param[out] k scale of projection at point.
+     *
+     * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
+     * No false easting or northing is added.  \e lon0 should be in the range
+     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();
@@ -197,29 +235,30 @@ namespace GeographicLib {
     }
 
     /**
-     * The major radius of the ellipsoid (meters).  This is that value of \e a
-     * used in the constructor.
+     * @return \e a the major radius of the ellipsoid (meters).  This is the
+     *   value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is that value of \e r
-     * used in the constructor.  A value of 0 is returned for a sphere
-     * (infinite inverse flattening).
+     * @return \e r the inverse flattening of the ellipsoid.  This is the
+     *   value used in the constructor.  A value of 0 is returned for a sphere
+     *   (infinite inverse flattening).
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 
     /**
-     * The latitude of the origin for the projection (degrees).  This is that
-     * latitude of minimum scale and equals the \e stdlat in the 1-parallel
-     * constructor and lies between \e stdlat1 and \e stdlat2 in the 2-parallel
-     * constructors.
+     * @return latitude of the origin for the projection (degrees).
+     *
+     * This is the latitude of minimum scale and equals the \e stdlat in the
+     * 1-parallel constructor and lies between \e stdlat1 and \e stdlat2 in the
+     * 2-parallel constructors.
      **********************************************************************/
     Math::real OriginLatitude() const throw() { return _lat0; }
 
     /**
-     * The central scale for the projection.  This is that scale on the
-     * latitude of origin..
+     * @return central scale for the projection.  This is the scale on the
+     *   latitude of origin..
      **********************************************************************/
     Math::real CentralScale() const throw() { return _k0; }
 

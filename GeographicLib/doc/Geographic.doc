@@ -2223,6 +2223,28 @@ Example (the area of the 100km MGRS square 18SWK)
    EOF\n
    => 4 400139.53295860 10007388597.191
 
+The following code takes the output from gdalinfo and reports the area
+covered by the data (assuming the edges of the image are geodesics).
+\code
+#! /bin/sh
+egrep '^((Upper|Lower) (Left|Right)|Center) ' |
+sed -e 's/d /d/g' -e "s/' /'/g" | tr -s '(),\r\t' ' ' | awk '{
+    if ($1 $2 == "UpperLeft")
+	ul = $6 " "  $5;
+    else if ($1 $2 == "LowerLeft")
+	ll = $6 " "  $5;
+    else if ($1 $2 == "UpperRight")
+	ur = $6 " "  $5;
+    else if ($1 $2 == "LowerRight")
+	lr = $6 " "  $5;
+    else if ($1 == "Center") {
+	printf "%s\n%s\n%s\n%s\n\n", ul, ur, lr, ll;
+	ul = ll = ur = lr = "";
+    }
+}
+' | Planimeter | cut -f3 -d' '
+\endcode
+
 Here is the usage (obtained from "Planimeter -h")
 \verbatim
 Usage: Planimeter [-e a r] [-h]
@@ -2527,10 +2549,12 @@ number.)
   - Add the \ref planimeter utility for computing the areas of
     geodesic polygons.
   - Simplify iterative solution of GeographicLib::Gnomonic::Reverse.
+  - Add Geoid::ConvertHeight.
   - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
   - Constructors check that minor radius is positive.
   - Add overloaded Forward and Reverse functions to the projection
     classes which don't return the convergence (or azimuth) and scale.
+  - Document function parameters and return values consistently.
 
  - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the

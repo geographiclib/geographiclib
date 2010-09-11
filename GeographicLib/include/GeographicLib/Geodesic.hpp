@@ -251,7 +251,7 @@ namespace GeographicLib {
     /**
      * Constructor for a ellipsoid with
      *
-     * @param[in] a with equatorial radius (meters)
+     * @param[in] a equatorial radius (meters)
      * @param[in] r reciprocal flattening.  Setting \e r = 0 implies \e r = inf
      *   or flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
      *   ellipsoid.
@@ -744,13 +744,13 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * @return \e a the major radius of the ellipsoid (meters).  This is that
+     * @return \e a the major radius of the ellipsoid (meters).  This is the
      *   value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is that
+     * @return \e r the inverse flattening of the ellipsoid.  This is the
      *   value used in the constructor.  A value of 0 is returned for a sphere
      *   (infinite inverse flattening).
      **********************************************************************/

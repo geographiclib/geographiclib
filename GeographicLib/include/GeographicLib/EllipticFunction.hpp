@@ -54,54 +54,69 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor with parameter \e m which must lie in [0, 1].  (No checking
-     * is done.)
+     * Constructor.
+     *
+     * @param[in] m the parameter which must lie in [0, 1].  (No checking
+     *   is done.)
      **********************************************************************/
     explicit EllipticFunction(real m) throw();
 
     /**
-     * The parameter \e m.
+     * @return the parameter \e m.
      **********************************************************************/
     Math::real m() const throw() { return _m; }
 
     /**
-     * The complementary parameter \e m' = (1 - \e m).
+     * @return the complementary parameter \e m' = (1 - \e m).
      **********************************************************************/
     Math::real m1() const throw() { return _m1; }
 
     /**
-     * The complete integral of first kind, \e K(\e m).
+     * @return the complete integral of first kind, \e K(\e m).
      **********************************************************************/
     Math::real K() const throw() { _init || Init(); return _kc; }
 
     /**
-     * The complete integral of second kind, \e E(\e m).
+     * @return the complete integral of second kind, \e E(\e m).
      **********************************************************************/
     Math::real E() const throw() { _init || Init(); return _ec; }
 
     /**
-     * The difference \e K(\e m) - \e E(\e m) (which can be computed directly).
+     * @return the difference \e K(\e m) - \e E(\e m) (which can be computed
+     *   directly).
      **********************************************************************/
     Math::real KE() const throw() { _init || Init(); return _kec; }
 
     /**
-     * The Jacobi elliptic functions sn(<i>x</i>|<i>m</i>),
-     * cn(<i>x</i>|<i>m</i>), and dn(<i>x</i>|<i>m</i>) with argument \e x.
-     * The results are returned in \e sn, \e cn, and \e dn.
+     * The Jacobi elliptic functions.
+     *
+     * @param[in] x the argument.
+     * @param[out] sn sn(<i>x</i>|<i>m</i>).
+     * @param[out] cn cn(<i>x</i>|<i>m</i>).
+     * @param[out] dn dn(<i>x</i>|<i>m</i>).
      **********************************************************************/
     void sncndn(real x, real& sn, real& cn, real& dn) const throw();
 
     /**
-     * The incomplete integral of the second kind = int sqrt(1 -  \e m
-     * sin<sup>2</sup>(\e phi)) \e dphi.
+     * The incomplete integral of the second kind.
+     *
+     * @param[in] phi
+     * @return int sqrt(1 -  \e m sin<sup>2</sup>(\e phi)) \e dphi.
      **********************************************************************/
     Math::real E(real phi) const throw();
 
     /**
-     * The incomplete integral of the second kind = int dn(\e w)<sup>2</sup> \e
-     * dw (A+S 17.2.10).  Instead of specifying the ampltiude \e phi, we
-     * provide \e sn = sin(\e phi), \e cn = cos(\e phi), \e dn = sqrt(1 - \e m
-     * sin<sup>2</sup>(\e phi)).
+     * The incomplete integral of the second kind in terms of Jacobi elliptic
+     * functions
+     *
+     * @param[in] sn
+     * @param[in] cn
+     * @param[in] dn
+     * @return int dn(\e w)<sup>2</sup> \e dw (A+S 17.2.10).
+     *
+     * Instead of specifying the ampltiude \e phi, we provide \e sn = sin(\e
+     * phi), \e cn = cos(\e phi), \e dn = sqrt(1 - \e m sin<sup>2</sup>(\e
+     * phi)).
      **********************************************************************/
     Math::real E(real sn, real cn, real dn) const throw();
   };

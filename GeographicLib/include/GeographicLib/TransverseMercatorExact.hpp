@@ -41,17 +41,15 @@ namespace GeographicLib {
    * 53-bit fraction).
    *
    * This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger
-   * method, GeographicLib::TransverseMercator, taking about 11 us for a
-   * combined forward and reverse projection on a 2.66 GHz Intel machine (g++,
-   * version 4.3.0, -O3).
+   * method, TransverseMercator, taking about 11 us for a combined forward and
+   * reverse projection on a 2.66 GHz Intel machine (g++, version 4.3.0, -O3).
    *
    * The ellipsoid parameters and the central scale are set in the constructor.
    * The central meridian (which is a trivial shift of the longitude) is
    * specified as the \e lon0 argument of the TransverseMercatorExact::Forward
    * and TransverseMercatorExact::Reverse functions.  The latitude of origin is
-   * taken to be the equator.  See the documentation on
-   * GeographicLib::TransverseMercator for how to include a false easting,
-   * false northing, or a latitude of origin.
+   * taken to be the equator.  See the documentation on TransverseMercator for
+   * how to include a false easting, false northing, or a latitude of origin.
    *
    * See TransverseMercatorExact.cpp for more information on the
    * implementation.
@@ -107,20 +105,25 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
-     * \e r, and central scale factor \e k0.  The transverse Mercator
-     * projection has a branch point singularity at \e lat = 0 and \e lon - \e
-     * lon0 = 90 (1 - \e e) or (for TransverseMercatorExact::UTM) x = 18381 km,
-     * y = 0m.  The \e extendp argument governs where the branch cut is placed.
-     * With \e extendp = false, the "standard" convention is followed, namely
-     * the cut is placed along x > 18381 km, y = 0m.  Forward can be called
-     * with any \e lat and \e lon then produces the transformation shown in
-     * Lee, Fig 46.  Reverse analytically continues this in the +/- \e x
-     * direction.  As a consequence, Reverse may map multiple points to the
-     * same geographic location; for example, for TransverseMercatorExact::UTM,
-     * \e x = 22051449.037349 m, \e y = -7131237.022729 m and \e x =
-     * 29735142.378357 m, \e y = 4235043.607933 m both map to \e lat = -2 deg,
-     * \e lon = 88 deg.
+     * Constructor for a ellipsoid with
+     *
+     * @param[in] a equatorial radius (meters)
+     * @param[in] r reciprocal flattening.
+     * @param[in] k0 central scale factor.
+     * @param[in] extendp use extended domain.
+     *
+     * The transverse Mercator projection has a branch point singularity at \e
+     * lat = 0 and \e lon - \e lon0 = 90 (1 - \e e) or (for
+     * TransverseMercatorExact::UTM) x = 18381 km, y = 0m.  The \e extendp
+     * argument governs where the branch cut is placed.  With \e extendp =
+     * false, the "standard" convention is followed, namely the cut is placed
+     * along x > 18381 km, y = 0m.  Forward can be called with any \e lat and
+     * \e lon then produces the transformation shown in Lee, Fig 46.  Reverse
+     * analytically continues this in the +/- \e x direction.  As a
+     * consequence, Reverse may map multiple points to the same geographic
+     * location; for example, for TransverseMercatorExact::UTM, \e x =
+     * 22051449.037349 m, \e y = -7131237.022729 m and \e x = 29735142.378357
+     * m, \e y = 4235043.607933 m both map to \e lat = -2 deg, \e lon = 88 deg.
      *
      * With \e extendp = true, the branch cut is moved to the lower left
      * quadrant.  The various symmetries of the transverse Mercator projection
@@ -142,28 +145,40 @@ namespace GeographicLib {
      * method cannot be applied directly to the case of a sphere (\e r = inf)
      * because some the constants characterizing this method diverge in that
      * limit, and in practise, \e r should be smaller than about
-     * 1/numeric_limits< real >::%epsilon().  However,
-     * GeographicLib::TransverseMercator treats the sphere exactly.  An
-     * exception is thrown if \e a or \e k0 is not positive or if \e r < 1.
+     * 1/numeric_limits< real >::%epsilon().  However, TransverseMercator
+     * treats the sphere exactly.  An exception is thrown if either axis of the
+     * ellipsoid or \e k0 is not positive or if \e r < 1.
      **********************************************************************/
     TransverseMercatorExact(real a, real r, real k0, bool extendp = false);
 
     /**
-     * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
-     * transverse Mercator easting \e x (meters) and northing \e y (meters).
-     * The central meridian of the transformation is \e lon0 (degrees).  Also
-     * return the meridian convergence \e gamma (degrees) and the scale \e k.
-     * No false easting or northing is added.  \e lat should be in the range
+     * Forward projection, from geographic to transverse Mercator.
+     *
+     * @param[in] lon0 central meridian of the projection (degrees).
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[out] x easting of point (meters).
+     * @param[out] y northing of point (meters).
+     * @param[out] gamma meridian convergence at point (degrees).
+     * @param[out] k scale of projection at point.
+     *
+     * No false easting or northing is added. \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
 
     /**
-     * Convert from transverse Mercator easting \e x (meters) and northing \e y
-     * (meters) to latitude \e lat (degrees) and longitude \e lon (degrees) .
-     * The central meridian of the transformation is \e lon0 (degrees).  Also
-     * return the meridian convergence \e gamma (degrees) and the scale \e k.
+     * Reverse projection, from transverse Mercator to geographic.
+     *
+     * @param[in] lon0 central meridian of the projection (degrees).
+     * @param[in] x easting of point (meters).
+     * @param[in] y northing of point (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] gamma meridian convergence at point (degrees).
+     * @param[out] k scale of projection at point.
+     *
      * No false easting or northing is added.  \e lon0 should be in the range
      * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
@@ -191,20 +206,21 @@ namespace GeographicLib {
     }
 
     /**
-     * The major radius of the ellipsoid (meters).  This is that value of \e a
-     * used in the constructor.
+     * @return \e a the major radius of the ellipsoid (meters).  This is the
+     *   value used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is that value of \e r
-     * used in the constructor.
+     * @return \e r the inverse flattening of the ellipsoid.  This is the
+     *   value used in the constructor.  A value of 0 is returned for a sphere
+     *   (infinite inverse flattening).
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 
     /**
-     * The central scale for the projection.  This is that value of \e k0 used
-     * in the constructor and is the scale on the central meridian.
+     * @return \e k0 central scale for the projection.  This is the value of \e
+     *   k0 used in the constructor and is the scale on the central meridian.
      **********************************************************************/
     Math::real CentralScale() const throw() { return _k0; }
 
