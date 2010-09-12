@@ -2541,10 +2541,11 @@ number.)
     - generalize interface for Geodesic and GeodesicLine;
     - split GeodesicLine and Geodesic into different files;
     - signal convergence failure in Geodesic::Inverse with NaNs;
-    - deprecate one function in Geodesic and two functions in GeodesicLine;
+    - deprecate one function in Geodesic and two functions in
+      GeodesicLine;
     - deprecate -n option for \ref geod.
     .
-    WARNING: These changes break binary compatibility with previous
+    WARNING: These changes may break binary compatibility with previous
     versions of %GeographicLib.  However, the library is source
     compatible (with the proviso that GeographicLib/GeodesicLine.hpp may
     now need to be included).

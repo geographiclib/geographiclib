@@ -252,16 +252,16 @@ namespace GeographicLib {
      * @param[in] lat latitude of the point (degrees).
      * @param[in] lon longitude of the point (degrees).
      * @param[in] h height of the point (degrees).
-     * @param[in] dir a convertflag specifying the direction of the conversion;
-     *   Geoid::GEOIDTOELLIPSOID means convert a height above the geoid to a
-     *   height above the ellipsoid; Geoid::ELLIPSOIDTOGEOID means convert a
-     *   height above the ellipsoid to a height above the geoid.
+     * @param[in] d a Geoid::convertflag specifying the direction of the
+     *   conversion; Geoid::GEOIDTOELLIPSOID means convert a height above the
+     *   geoid to a height above the ellipsoid; Geoid::ELLIPSOIDTOGEOID means
+     *   convert a height above the ellipsoid to a height above the geoid.
      * @return converted height (meters).
      **********************************************************************/
     Math::real ConvertHeight(real lat, real lon, real h,
-                             convertflag dir) const {
+                             convertflag d) const {
       real gradn, grade;
-      return h + real(dir) * height(lat, lon, true, gradn, grade);
+      return h + real(d) * height(lat, lon, true, gradn, grade);
     }
 
     ///@}
