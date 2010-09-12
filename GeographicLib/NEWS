@@ -10,6 +10,40 @@ The current version of the library is 1.4.
 
 Changes between 1.4 (released 2010-09-12) and 1.3 versions:
 
+  * Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
+    + FIX BUG in Geodesic::Inverse with prolate ellipsoids;
+    + add area computations to Geodesic::Direct and Geodesic::Inverse;
+    + add geodesic areas to geodesic test set;
+    + make GeodesicLine constructor public;
+    + change longitude series in Geodesic into Helmert-like form;
+    + ensure that equatorial geodesics have cos(alpha0) = 0 identically;
+    + generalize interface for Geodesic and GeodesicLine;
+    + split GeodesicLine and Geodesic into different files;
+    + signal convergence failure in Geodesic::Inverse with NaNs;
+    + deprecate one function in Geodesic and two functions in
+      GeodesicLine;
+    + deprecate -n option for Geod.
+    WARNING: These changes may break binary compatibility with previous
+    versions of GeographicLib.  However, the library is source
+    compatible (with the proviso that GeographicLib/GeodesicLine.hpp may
+    now need to be included).
+
+  * Add the Planimeter utility for computing the areas of
+    geodesic polygons.
+
+  * Improve iterative solution of GeographicLib::Gnomonic::Reverse.
+
+  * Add GeographicLib::Geoid::ConvertHeight.
+
+  * Add -msltohae, -haetomsl, and -z options to \ref geoideval.
+
+  * Constructors check that minor radius is positive.
+
+  * Add overloaded Forward and Reverse functions to the projection
+    classes which don't return the convergence (or azimuth) and scale.
+
+  * Document function parameters and return values consistently.
+
 Changes between 1.3 (released 2010-07-21) and 1.2 versions:
 
   * Add GeographicLib::Gnomonic, the ellipsoid generalization of the
