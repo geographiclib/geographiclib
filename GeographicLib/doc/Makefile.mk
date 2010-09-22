@@ -6,7 +6,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid Gnomonic
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
-	GeoidEval
+	GeoidEval Planimeter
 
 HEADERS = Constants.hpp $(patsubst %,../include/GeographicLib/%.hpp,$(MODULES))
 SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \

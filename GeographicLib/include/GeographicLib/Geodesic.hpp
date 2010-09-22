@@ -123,7 +123,7 @@ namespace GeographicLib {
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  real& eps, bool diffp, real& dlam12,
+                  real& eps, real& domg12, bool diffp, real& dlam12,
                   real C1a[], real C2a[], real C3a[])
       const throw();
 
