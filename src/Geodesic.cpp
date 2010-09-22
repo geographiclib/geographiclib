@@ -176,7 +176,7 @@ namespace GeographicLib {
       slam12 = lon12 == 180 ? 0 : sin(lam12),
       clam12 = cos(lam12);      // lon12 == 90 isn't interesting
 
-    real sig12, calp1, salp1, calp2, salp2;
+    real a12, sig12, calp1, salp1, calp2, salp2;
     // index zero elements of these arrays are unused
     real C1a[nC1 + 1], C2a[nC2 + 1], C3a[nC3];
 
@@ -214,12 +214,13 @@ namespace GeographicLib {
       if (sig12 < 1 || m12x >= 0) {
         m12x *= _a;
         s12x *= _b;
-        sig12 /= Constants::degree();
+        a12 = sig12 / Constants::degree();
       } else
         // m12 < 0, i.e., prolate and too close to anti-podal
         meridian = false;
     }
 
+    real omg12;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
          // Mimic the way Lambda12 works with calp1 = 0
@@ -231,7 +232,8 @@ namespace GeographicLib {
       m12x = _b * sin(lam12 / _f1);
       if (outmask & GEODESICSCALE)
         M12 = M21 = cos(lam12 / _f1);
-      sig12 = lon12 / _f1;
+      a12 = lon12 / _f1;
+      sig12 = lam12 / _f1;
 
     } else if (!meridian) {
 
@@ -251,7 +253,8 @@ namespace GeographicLib {
         m12x = sq(w1) * _a / _f1 * sin(sig12 * _f1 / w1);
         if (outmask & GEODESICSCALE)
           M12 = M21 = cos(sig12 * _f1 / w1);
-        sig12 /= Constants::degree();
+        a12 = sig12 / Constants::degree();
+        omg12 = lam12 / w1;
       } else {
 
         // Newton's method
@@ -262,7 +265,7 @@ namespace GeographicLib {
           real dv;
           real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
-                            eps, trip < 1, dv, C1a, C2a, C3a) - lam12;
+                            eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
 
           if (abs(v) <= eps2 || !(trip < 1)) {
             if (abs(v) > max(tol1, ov))
@@ -310,7 +313,8 @@ namespace GeographicLib {
         }
         m12x *= _a;
         s12x *= _b;
-        sig12 /= Constants::degree();
+        a12 = sig12 / Constants::degree();
+        omg12 = lam12 - omg12;
       }
     }
 
@@ -324,18 +328,16 @@ namespace GeographicLib {
       real
         // From Lambda12: sin(alp1) * cos(bet1) = sin(alp0)
         salp0 = salp1 * cbet1,
-        calp0 = Math::hypot(calp1, salp1 * sbet1), // calp0 > 0
-        // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-        A4 = sq(_a) * calp0 * salp0 * _e2;
-      if (A4 == 0)
-        // Avoid problems with indeterminate sig1, sig2 on equator
-        S12 = 0;
-      else {
+        calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
+      real alp12;
+      if (calp0 != 0 && salp0 != 0) {
         real
           // From Lambda12: tan(bet) = tan(sig) * cos(alp)
           ssig1 = sbet1, csig1 = calp1 * cbet1,
           ssig2 = sbet2, csig2 = calp2 * cbet2,
-          k2 = sq(calp0) * _ep2;
+          k2 = sq(calp0) * _ep2,
+          // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
+          A4 = sq(_a) * calp0 * salp0 * _e2;
         SinCosNorm(ssig1, csig1);
         SinCosNorm(ssig2, csig2);
         real C4a[nC4];
@@ -344,19 +346,36 @@ namespace GeographicLib {
           B41 = Geodesic::SinCosSeries(false, ssig1, csig1, C4a, nC4),
           B42 = Geodesic::SinCosSeries(false, ssig2, csig2, C4a, nC4);
         S12 = A4 * (B42 - B41);
+      } else
+        // Avoid problems with indeterminate sig1, sig2 on equator
+        S12 = 0;
+      if (!meridian &&
+          omg12 < real(0.75) * Constants::pi() && // Long difference too big
+          sbet2 - sbet1 < real(1.75)) {           // Lat difference too big
+        // Use tan(Gamma/2) = tan(omg12/2)
+        // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
+        // with tan(x/2) = sin(x)/(1+cos(x))
+        real
+          somg12 = sin(omg12), domg12 = 1 + cos(omg12),
+          dbet1 = 1 + cbet1, dbet2 = 1 + cbet2;
+        alp12 = 2 * atan2( somg12 * ( sbet1 * dbet2 + sbet2 * dbet1 ),
+                           domg12 * ( sbet1 * sbet2 + dbet1 * dbet2 ) );
+      } else {
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalize
+        real
+          salp12 = salp2 * calp1 - calp2 * salp1,
+          calp12 = calp2 * calp1 + salp2 * salp1;
+        // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+        // salp12 = -0 and alp12 = -180.  However this depends on the sign
+        // being attached to 0 correctly.  The following ensures the correct
+        // behavior.
+        if (salp12 == 0 && calp12 < 0) {
+          salp12 = Geodesic::eps2 * calp1;
+          calp12 = -1;
+        }
+        alp12 = atan2(salp12, calp12);
       }
-      real
-        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
-        salp12 = salp2 * calp1 - calp2 * salp1,
-        calp12 = calp2 * calp1 + salp2 * salp1;
-      // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-      // salp12 = -0 and alp12 = -180.  However this depends on the sign being
-      // attached to 0 correctly.  The following ensures the correct behavior.
-      if (salp12 == 0 && calp12 < 0) {
-        salp12 = Geodesic::eps2 * calp1;
-        calp12 = -1;
-      }
-      S12 += _c2 * atan2(salp12, calp12);
+      S12 += _c2 * alp12;
       S12 *= swapp * lonsign * latsign;
       // Convert -0 to 0
       S12 += 0;
@@ -380,7 +399,7 @@ namespace GeographicLib {
     }
 
     // Returned value in [0, 180]
-    return sig12;
+    return a12;
   }
 
   void Geodesic::Lengths(real eps, real sig12,
@@ -585,7 +604,8 @@ namespace GeographicLib {
                                 real& sig12,
                                 real& ssig1, real& csig1,
                                 real& ssig2, real& csig2,
-                                real& eps, bool diffp, real& dlam12,
+                                real& eps, real& domg12,
+                                bool diffp, real& dlam12,
                                 // Scratch areas of the right size
                                 real C1a[], real C2a[], real C3a[]) const
     throw() {
@@ -642,8 +662,9 @@ namespace GeographicLib {
     C3f(eps, C3a);
     B312 = (SinCosSeries(true, ssig2, csig2, C3a, nC3-1) -
             SinCosSeries(true, ssig1, csig1, C3a, nC3-1));
-    h0 = -_f * A3f(eps),
-    lam12 = omg12 + salp0 * h0 * (sig12 + B312);
+    h0 = -_f * A3f(eps);
+    domg12 = salp0 * h0 * (sig12 + B312);
+    lam12 = omg12 + domg12;
 
     if (diffp) {
       if (calp2 == 0)

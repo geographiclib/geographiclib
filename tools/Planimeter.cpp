@@ -20,7 +20,7 @@
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: Planimeter [-e a r] [-h]\n\
+"Usage: Planimeter [-s] [-r] [-e a r] [-h]\n\
 $Id$\n\
 \n\
 Measure the area of a geodesic polygon.  Reads polygon vertices from\n\
@@ -30,12 +30,17 @@ GeoConvert).  (MGRS coordinates signify the center of the corresponing\n\
 MGRS square.)  The end of input, a blank line, or a line which can't be\n\
 interpreted as a vertex signals the end of one polygon and the start of\n\
 the next.  For each polygon print a summary line with the number of\n\
-points, the perimeter (in meters), and the area (in meters^2).  Areas\n\
-are traversed in a clockwise sense (in other words, the included area\n\
-is to the right of the perimeter).  By this rule, a polygon tranversed\n\
-in a counter-clockwise sense will return the area of ellipsoid excluded\n\
-by the polygon.  Only simple polygons are supported for the area\n\
-computation.  Polygons may include one or both poles.\n\
+points, the perimeter (in meters), and the area (in meters^2).\n\
+\n\
+By default, areas are traversed in a counter-clockwise sense (in other\n\
+words, the included area is to the left of the perimeter) and a\n\
+positive area is returned.  By this rule, a polygon tranversed in a\n\
+clockwise sense will return the area of ellipsoid excluded by the\n\
+polygon; however, if the -s option is given, the signed area will be\n\
+returned.  If the -r option is given, the included area is to the right\n\
+of the perimeter.  The -s and -r flags are toggles; repeating one of\n\
+then reverses the previous setting.  Only simple polygons are supported\n\
+for the area computation.  Polygons may include one or both poles.\n\
 \n\
 By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
 equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
@@ -97,24 +102,36 @@ int main(int argc, char* argv[]) {
                       Geodesic::DISTANCE | Geodesic::AREA,
                       s12, t, t, t, t, t, S12);
         _perimeter += s12;
-        _area += S12;
+        if (_area + S12 > _area0/2)
+          _area += S12 - _area0;
+        else if (_area + S12 <= -_area0/2)
+          _area += S12 + _area0;
+        else
+          _area += S12;
         _crossings += transit(_lon1, lon);
-        if (_area > _area0/2)
-          _area -= _area0;
-        if (_area <= -_area0/2)
-          _area += _area0;
         _lat1 = lat;
         _lon1 = lon;
       }
       ++_num;
     }
-    unsigned Compute(real& perimeter, real& area) const throw() {
+    unsigned Compute(bool reverse, bool sign,
+                     real& perimeter, real& area) const throw() {
       real s12, S12, t;
+      if (_num < 2) {
+        perimeter = area = 0;
+        return _num;
+      }
       _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
                     Geodesic::DISTANCE | Geodesic::AREA,
                     s12, t, t, t, t, t, S12);
       perimeter = _perimeter + s12;
-      area = _area + S12;
+      area = _area;
+      if (area + S12 > _area0/2)
+        area += S12 - _area0;
+      else if (area + S12 <= -_area0/2)
+        area += S12 + _area0;
+      else
+        area += S12;
       int crossings = _crossings + transit(_lon1, _lon0);
       if (crossings & 1) {
         if (area < 0)
@@ -122,10 +139,22 @@ int main(int argc, char* argv[]) {
         else
           area -= _area0/2;
       }
-      if (area > _area0)
-        area -= _area0;
-      if (area < 0)
-        area += _area0;
+      // area is with the clockwise sense.  If !reverse convert to
+      // counter-clockwise convention.
+      if (!reverse)
+        area *= -1;
+      // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+      if (sign) {
+        if (area > _area0/2)
+          area -= _area0;
+        else if (area <= -_area0/2)
+          area += _area0;
+      } else {
+        if (area >= _area0)
+          area -= _area0;
+        else if (area < 0)
+          area += _area0;
+      }
       return _num;
     }
   };
@@ -133,9 +162,14 @@ int main(int argc, char* argv[]) {
   real
     a = Constants::WGS84_a(),
     r = Constants::WGS84_r();
+  bool reverse = false, sign = false;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
-    if (arg == "-e") {
+    if (arg == "-r")
+      reverse = !reverse;
+    else if (arg == "-s")
+      sign = !sign;
+    else if (arg == "-e") {
       if (m + 2 >= argc) return usage(1);
       try {
         a = DMS::Decode(std::string(argv[m + 1]));
@@ -163,21 +197,21 @@ int main(int argc, char* argv[]) {
       p.Reset(s);
     }
     catch (const GeographicErr&) {
-      num = poly.Compute(perimeter, area);
+      num = poly.Compute(reverse, sign, perimeter, area);
       if (num > 0)
         std::cout << num << " "
                   << std::setprecision(8) << perimeter << " "
-                  << std::setprecision(3) << area << "\n";
+                  << std::setprecision(4) << area << "\n";
       poly.Clear();
       continue;
     }
     poly.AddPoint(p.Latitude(), p.Longitude());
   }
-  num = poly.Compute(perimeter, area);
+  num = poly.Compute(reverse, sign, perimeter, area);
   if (num > 0)
     std::cout << num << " "
               << std::setprecision(8) << perimeter << " "
-              << std::setprecision(3) << area << "\n";
+              << std::setprecision(4) << area << "\n";
   poly.Clear();
   return 0;
 }

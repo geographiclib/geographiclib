@@ -35,6 +35,7 @@ $(top_srcdir)/src/EllipticFunction.cpp \
 $(top_srcdir)/src/Geocentric.cpp \
 $(top_srcdir)/src/GeoCoords.cpp \
 $(top_srcdir)/src/Geodesic.cpp \
+$(top_srcdir)/src/GeodesicLine.cpp \
 $(top_srcdir)/src/Geoid.cpp \
 $(top_srcdir)/src/Gnomonic.cpp \
 $(top_srcdir)/src/LambertConformalConic.cpp \
@@ -49,6 +50,7 @@ $(top_srcdir)/tools/EquidistantTest.cpp \
 $(top_srcdir)/tools/GeoConvert.cpp \
 $(top_srcdir)/tools/Geod.cpp \
 $(top_srcdir)/tools/GeoidEval.cpp \
+$(top_srcdir)/tools/Planimeter.cpp \
 $(top_srcdir)/tools/TransverseMercatorTest.cpp
 
 doc: html/index.html

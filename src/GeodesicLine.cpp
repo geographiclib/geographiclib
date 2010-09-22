@@ -231,16 +231,32 @@ namespace GeographicLib {
 
     if (outmask & AREA) {
       real
-        B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4),
-      // alp12 = alp2 - alp1, used in atan2 so no need to normalized
-        salp12 = salp2 * _calp1 - calp2 * _salp1,
+        B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4);
+      real salp12, calp12;
+      if (_calp0 == 0 || _salp0 == 0) {
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
+        salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
-      // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-      // salp12 = -0 and alp12 = -180.  However this depends on the sign being
-      // attached to 0 correctly.  The following ensures the correct behavior.
-      if (salp12 == 0 && calp12 < 0) {
-        salp12 = Geodesic::eps2 * _calp1;
-        calp12 = -1;
+        // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+        // salp12 = -0 and alp12 = -180.  However this depends on the sign being
+        // attached to 0 correctly.  The following ensures the correct behavior.
+        if (salp12 == 0 && calp12 < 0) {
+          salp12 = Geodesic::eps2 * _calp1;
+          calp12 = -1;
+        }
+      } else {
+        // tan(alp) = tan(alp0) * sec(sig)
+        // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
+        // = calp0 * salp0 * (csig1-csig2) / (salp0^2 + calp0^2 * csig1*csig2)
+        // If csig12 > 0, write
+        //   csig1 - csig2 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
+        // else
+        //   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 + ssig1
+        // No need to normalize
+        salp12 = _calp0 * _salp0 *
+          (csig12 <= 0 ? _csig1 * (1 - csig12) + ssig12 + _ssig1 :
+           ssig12 * (_csig1 * ssig12 / (1 + csig12) + _ssig1));
+        calp12 = sq(_salp0) + sq(_calp0) * _csig1 * csig2;
       }
       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
