@@ -62,6 +62,7 @@ For more information, see http://geographiclib.sourceforge.net/
    - \ref tmseries
  - \ref geodesic
    - \ref geoddesc
+   - \ref geodarea
    - \ref testgeod
    - \ref geoderrors
    - \ref geodseries
@@ -1090,30 +1091,63 @@ This class also returns the arc length \e a12 on the auxiliary sphere
 and allows distances to be specified in these terms.  See the -a option
 to \ref geod.
 
-Area computations are supported via \e S12 the area between the geodesic
-and the equator.  This uses Danielsen's method extended to higher order
-and with the terms rearranged to facilitate the use of Clenshaw
-summation.  Using this function, it is simple to compute the area of any
-geodesic polygon.  This functionality is provided by \ref planimeter.
+\section geodarea Geodesic area
 
-The calculation of the geodesic excess required in this calculation uses
-a new formula for the area \e S12 on a unit \e sphere of the
-quadrilateral with vertices
+Area computations are supported via \e S12 the area between the geodesic
+and the equator, i.e., the area of the quadrilateral with vertices
 \verbatim
   (phi1, lambda1); (phi2, lambda2);
   (0,    lambda1); (0,    lambda2);
 \endverbatim
-\e S12 is given by
+In a reformulation of  Danielsen's method, \e S12 may be expressed as
 \verbatim
-  tan(S12/2) = tan(lambda12/2) * ( tan(phi1/2) + tan(phi2/2) )
-                           / ( 1 + tan(phi1/2) * tan(phi2/2) )
-             = tan(lambda12/2) * tanh( (lam(phi1) + lam(phi2))/2 )
+  S12 = S(sigma2) - S(sigma1)
+  S(sigma) = c^2*alpha + e^2*a^2 * cos(alpha0)*sin(alpha0) * I4(sigma)
+  I4(sigma) = - integrate(
+       (t(ep^2) - t(k^2*sin(sigma)^2)) / (ep^2 - k^2*sin(sigma)^2),
+       sigma)
+  t(x) = sqrt(1+1/x) * asinh(sqrt(x)) + x
+
+  a = major radius
+  c = authalic radius (area of ellipsoid = 4*pi*c^2)
+  e = eccentricity
+  ep = second eccentricity, ep^2 = e^2/(1-e^2)
+  alpha = azimuth of geodesic
+  alpha0 = azimuth at the equator crossing
+  k = ep*cos(alpha0)
+  sigma = arc length on auxiliary sphere (measured from the equator)
 \endverbatim
-where lambda12 = lambda2 - lambda1 and lam(x) is the lambertian (or
-inverse gudermannian) function
+The term \e I4(\e sigma) can be expanded as a trigonometric series which
+is amenable to Clenshaw summation; see \ref geodseries.  Using \e S12,
+it is simple to compute the area of any geodesic polygon.  This
+functionality is provided by \ref planimeter.
+
+A major source of errors in this formulation (particularly for small
+polygons) is round-off when computing \e E<sub>12</sub> = \e
+alpha<sub>2</sub> - \e alpha<sub>1</sub>.  However, \e E<sub>12</sub> is
+merely the geodesic access for a geodesic quadilateral on a \e sphere
+with vertices
 \verbatim
-  lam(x) = asinh(tan(x)) = atanh(sin(x)) = 2*atanh(tan(x/2))
+  (beta1, omega1); (beta2, omega2);
+  (0,     omega1); (0,     omega2);
 \endverbatim
+where \e beta is the latitude on the sphere and \e omega the longitude.
+\e E<sub>12</sub> is also the area of the quadrilateral on a unit
+sphere.  When computing areas when the end-point of the Geodesic is
+given, %GeographicLib uses
+\verbatim
+                                tan(beta1/2) + tan(beta2/2)  
+  tan(E12/2) = tan(omega12/2) -------------------------------
+                              1 + tan(beta1/2) * tan(beta2/2)
+\endverbatim
+where \e omega<sub>12</sub> = \e omega<sub>2</sub> - \e
+omega<sub>1</sub>.  This result can be derived from the formula for the
+area of a spherical triangle in terms of two edges and the included
+angle; it is the spherical generalization of the familiar trapezoidal
+formula for plane areas (\e x<sub>2</sub> - \e x<sub>1</sub>) (\e
+y<sub>1</sub> + \e y<sub>2</sub>)/2.  Summing \e E<sub>12</sub> over all
+the edges of a spherical polygon provides accurate method of computing
+its area.
 
 \section testgeod Test data for geodesics
 
@@ -1434,19 +1468,13 @@ C3[6] = + (11/2048 - 99/8192*n) * eps^6
 C3[7] = + 429/114688 * eps^7;
 \endverbatim
 
-The formula for area between the geodesic and the equator is
+The formula for area between the geodesic and the equator (see \ref
+geodarea) involves the function \e I4(\e sigma) which can be expanded as
 
-&nbsp; &nbsp;
-Area = \e c<sup>2</sup> \e Gamma + \e e<sup>2</sup> \e a<sup>2</sup>
-cos \e alpha<sub>0</sub> sin \e alpha<sub>0</sub> \e I4(\e sigma)
-
-where
-
-&nbsp; &nbsp; \e Gamma = geodesic excess<br>
 &nbsp; &nbsp; \e I4(\e sigma) =
 sum<sub>\e j = 0</sub> \e C4<sub>j</sub> cos((2\e j + 1) \e sigma)
 
-and
+with
 
 \verbatim
 C4[0] = + (2/3 - 1/15*ep2 + 4/105*ep2^2 - 8/315*ep2^3 + 64/3465*ep2^4 - 128/9009*ep2^5 + 512/45045*ep2^6 - 1024/109395*ep2^7)
