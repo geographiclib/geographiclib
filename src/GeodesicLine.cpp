@@ -254,7 +254,7 @@ namespace GeographicLib {
         //   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 + ssig1
         // No need to normalize
         salp12 = _calp0 * _salp0 *
-          (csig12 <= 0 ? _csig1 * (1 - csig12) + ssig12 + _ssig1 :
+          (csig12 <= 0 ? _csig1 * (1 - csig12) + ssig12 * _ssig1 :
            ssig12 * (_csig1 * ssig12 / (1 + csig12) + _ssig1));
         calp12 = sq(_salp0) + sq(_calp0) * _csig1 * csig2;
       }

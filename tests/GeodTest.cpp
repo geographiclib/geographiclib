@@ -82,6 +82,11 @@ long double azidiff(long double lat, long double lon1, long double lon2,
 
 long double dist(long double lat0, long double lon0,
                  long double lat1, long double lon1) {
+  //  typedef GeographicLibL::Math::real real;
+  //  real s12;
+  //  GeographicLibL::Geodesic::
+  //    WGS84.Inverse(real(lat0), real(lon0), real(lat1), real(lon1), s12);
+  //  return (long double)(s12);
   long double
     phi = lat0 * degree(),
     cphi = abs(lat0) <= 45 ? cos(phi) : sin((90 - abs(lat0)) * degree()),
@@ -100,31 +105,53 @@ long double dist(long double lat0, long double lon0,
   return GeographicLibL::Math::hypot(dlat, dlon);
 }
 
+// wreal is precision of args.
+// treal is precision of test class.
+// rreal is precision of reference class.
+//
+// err[0] error in position of point 2 for the direct problem.
+// err[1] error in azimuth at point 2 for the direct problem.
+// err[2] error in m12 for the direct problem.
+// err[3] error in s12 for the inverse problem.
+// err[4] error in the azimuths for the inverse problem scaled by m12.
+// err[5] consistency of the azimuths for the inverse problem.
+// err[6] area error direct
+// err[7] area error inverse
 template<class wreal, class test, class treal, class ref, class rreal>
 void GeodError(const test& tgeod, const ref& rgeod,
                wreal lat1, wreal lon1, wreal azi1,
                wreal lat2, wreal lon2, wreal azi2,
-               wreal s12, wreal a12, wreal m12,
+               wreal s12, wreal a12, wreal m12, wreal S12,
                std::vector<wreal>& err) {
-  treal tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b;
+  treal tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b,
+    tM12, tM21, tS12a, tS12b, ta12;
   rreal rlat1, rlon1, razi1, rlat2, rlon2, razi2, rm12;
-  tgeod.Direct(lat1, lon1, azi1,  s12, tlat2, tlon2, tazi2, tm12a);
-  tgeod.Direct(lat2, lon2, azi2, -s12, tlat1, tlon1, tazi1, tm12b);
+  tgeod.Direct(lat1, lon1, azi1,  s12, tlat2, tlon2, tazi2, tm12a,
+               tM12, tM21, tS12a);
+  tS12a -= rgeod.EllipsoidArea() * (tazi2-azi2)/720;
+  tgeod.Direct(lat2, lon2, azi2, -s12, tlat1, tlon1, tazi1, tm12b,
+               tM12, tM21, tS12b);
+  tS12b -= rgeod.EllipsoidArea() * (tazi1-azi1)/720;
   err[0] = max(dist(lat2, lon2, tlat2, tlon2),
                dist(lat1, lon1, tlat1, tlon1));
   err[1] = max(abs(azidiff(lat2, lon2, tlon2, azi2, tazi2)),
                abs(azidiff(lat1, lon1, tlon1, azi1, tazi1))) *
     rgeod.MajorRadius();
   err[2] = max(abs(tm12a - m12), abs(tm12b + m12));
+  err[6] = max(abs(tS12a - S12), abs(tS12b + S12));
 
-  tgeod.Inverse(lat1, lon1, lat2, lon2, ts12, tazi1, tazi2, tm12a);
+  ta12 = tgeod.Inverse(lat1, lon1, lat2, lon2, ts12, tazi1, tazi2, tm12a,
+                       tM12, tM21, tS12a);
+  tS12a -= rgeod.EllipsoidArea() * ((tazi2-azi2)-(tazi1-azi1))/720;
   err[3] = abs(ts12 - s12);
   err[4] = max(abs(angdiff(azi1, tazi1)), abs(angdiff(azi2, tazi2))) *
     degree() * abs(m12);
+  err[7] = ta12 < 179.9 ? abs(tS12a - S12) : 0;
   if (treal(lat1) + treal(lat2) == 0)
     err[4] = min(err[4],
                  max(abs(angdiff(azi1, tazi2)), abs(angdiff(azi2, tazi1))) *
                  degree() * abs(m12));
+  // m12 is too sensitive with the inverse problem
   // err[2] = max(err[2], wreal(abs(tm12a - m12)));
 
   if (s12 > rgeod.MajorRadius()) {
@@ -273,24 +300,25 @@ int main(int argc, char* argv[]) {
     const GeographicLibL::Geodesic geodl(GeographicLibL::Constants::WGS84_a(),
                                          GeographicLibL::Constants::WGS84_r());
     typedef GeographicLibL::Math::real reale;
+    const unsigned NUMERR = 8;
 
     cout << fixed << setprecision(2);
-    vector<long double> erra(6);
-    vector<long double> err(6, 0.0);
-    vector<unsigned> errind(6);
+    vector<long double> erra(NUMERR);
+    vector<long double> err(NUMERR, 0.0);
+    vector<unsigned> errind(NUMERR);
 #if USE_LONG_DOUBLE_GEOGRAPHICLIB
-    vector<long double> errla(6);
-    vector<long double> errl(6, 0.0);
-    vector<unsigned> errlind(6);
+    vector<long double> errla(NUMERR);
+    vector<long double> errl(NUMERR, 0.0);
+    vector<unsigned> errlind(NUMERR);
 #endif
     unsigned cnt = 0;
 
     while (true) {
-      long double lat1l, lon1l, azi1l, lat2l, lon2l, azi2l, s12l, a12l, m12l,
-        area12l;
+      long double lat1l, lon1l, azi1l, lat2l, lon2l, azi2l,
+        s12l, a12l, m12l, S12l;
       if (!(cin >> lat1l >> lon1l >> azi1l
             >> lat2l >> lon2l >> azi2l
-            >> s12l >> a12l >> m12l >> area12l))
+            >> s12l >> a12l >> m12l >> S12l))
         break;
       if (coverage) {
 #if defined(GEOD_DIAG) && GEOD_DIAG
@@ -307,9 +335,9 @@ int main(int argc, char* argv[]) {
           GeographicLibL::Geodesic, GeographicLibL::Math::real >
           (geod, geodl, lat1l, lon1l, azi1l,
            lat2l, lon2l, azi2l,
-           s12l, a12l, m12l,
+           s12l, a12l, m12l, S12l,
            erra);
-        for (unsigned i = 0; i < 6; ++i) {
+        for (unsigned i = 0; i < NUMERR; ++i) {
           if (Math::isfinite(err[i]) && !(erra[i] <= err[i])) {
             err[i] = erra[i];
             errind[i] = cnt;
@@ -321,9 +349,9 @@ int main(int argc, char* argv[]) {
           GeographicLibL::Geodesic, GeographicLibL::Math::real >
           (geodl, geodl, lat1l, lon1l, azi1l,
            lat2l, lon2l, azi2l,
-           s12l, a12l, m12l,
+           s12l, a12l, m12l, S12l,
            errla);
-        for (unsigned i = 0; i < 6; ++i) {
+        for (unsigned i = 0; i < NUMERR; ++i) {
           if (GeographicLibL::Math::isfinite(errl[i]) &&
               !(errla[i] <= errl[i])) {
             errl[i] = errla[i];
@@ -335,11 +363,13 @@ int main(int argc, char* argv[]) {
       }
     }
     if (accuracytest) {
-      for (unsigned i = 0; i < 6; ++i)
-        cout << i << " " << 1e9l * err[i] << " " << errind[i] << "\n";
+      for (unsigned i = 0; i < NUMERR; ++i)
+        cout << i << " " << (i < 6 ? 1e9l : 1e3l) * err[i]
+             << " " << errind[i] << "\n";
 #if USE_LONG_DOUBLE_GEOGRAPHICLIB
-      for (unsigned i = 0; i < 6; ++i)
-        cout << i << " " << 1e12l * errl[i] << " " << errlind[i] << "\n";
+      for (unsigned i = 0; i < NUMERR; ++i)
+        cout << i << " " << (i < 6 ? 1e12l : 1e6l) * errl[i]
+             << " " << errlind[i] << "\n";
 #endif
     }
   }
