@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #include "GeographicLib/Gnomonic.hpp"
-#include <iostream>
+
 #define GEOGRAPHICLIB_GNOMONIC_CPP "$Id$"
 
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_CPP)

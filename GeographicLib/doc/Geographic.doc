@@ -318,14 +318,14 @@ The following definitions can be used in your Makefile when using
 %GeographicLib, once it has been installed:
   - PREFIX = /usr/local
   - CPPFLAGS = -I\$(PREFIX)/lib
-  - LDLIBS = -Wl,"-rpath=\$(PREFIX)/lib" -L\$(PREFIX)/lib -lGeographic
+  - LDLIBS = -Wl,"-rpath=$(PREFIX)/lib" -L\$(PREFIX)/lib -lGeographic
   - CC = g++ -g
   - CXXFLAGS = -g -Wall -O3
 
 The low level projection classes, e.g., TransverseMercator and
 PolarStereographic, do not throw exceptions.  Most of the other classes,
 e.g., UTMUPS, MGRS, and GeoCoords all check their arguments and throw
-std::out_of_range exceptions with a explanatory message.  See
+GeographicLib::GeographicErr exceptions with a explanatory message.  See
 GeoConvert.cpp for an example of how exceptions can be handled.  Geoid
 is exceptional in than file errors can cause exceptions to be thrown
 when evaluating the geoid at a valid location.
@@ -1133,7 +1133,7 @@ with vertices
 \endverbatim
 where \e beta is the latitude on the sphere and \e omega the longitude.
 \e E<sub>12</sub> is also the area of the quadrilateral on a unit
-sphere.  When computing areas when the end-point of the Geodesic is
+sphere.  When computing areas when the end-points of the Geodesic are
 given, %GeographicLib uses
 \verbatim
                                 tan(beta1/2) + tan(beta2/2)  
