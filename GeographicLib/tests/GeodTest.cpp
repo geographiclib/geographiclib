@@ -111,12 +111,11 @@ long double dist(long double lat0, long double lon0,
 //
 // err[0] error in position of point 2 for the direct problem.
 // err[1] error in azimuth at point 2 for the direct problem.
-// err[2] error in m12 for the direct problem.
+// err[2] error in m12 for the direct problem & inverse (except near conjugacy)
 // err[3] error in s12 for the inverse problem.
 // err[4] error in the azimuths for the inverse problem scaled by m12.
 // err[5] consistency of the azimuths for the inverse problem.
-// err[6] area error direct
-// err[7] area error inverse
+// err[6] area error direct & inverse (except near conjugacy)
 template<class wreal, class test, class treal, class ref, class rreal>
 void GeodError(const test& tgeod, const ref& rgeod,
                wreal lat1, wreal lon1, wreal azi1,
@@ -138,7 +137,7 @@ void GeodError(const test& tgeod, const ref& rgeod,
                abs(azidiff(lat1, lon1, tlon1, azi1, tazi1))) *
     rgeod.MajorRadius();
   err[2] = max(abs(tm12a - m12), abs(tm12b + m12));
-  err[6] = max(abs(tS12a - S12), abs(tS12b + S12));
+  err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / rgeod.MajorRadius();
 
   ta12 = tgeod.Inverse(lat1, lon1, lat2, lon2, ts12, tazi1, tazi2, tm12a,
                        tM12, tM21, tS12a);
@@ -146,14 +145,15 @@ void GeodError(const test& tgeod, const ref& rgeod,
   err[3] = abs(ts12 - s12);
   err[4] = max(abs(angdiff(azi1, tazi1)), abs(angdiff(azi2, tazi2))) *
     degree() * abs(m12);
-  err[7] = ta12 < 179.9 ? abs(tS12a - S12) : 0;
   if (treal(lat1) + treal(lat2) == 0)
     err[4] = min(err[4],
                  max(abs(angdiff(azi1, tazi2)), abs(angdiff(azi2, tazi1))) *
                  degree() * abs(m12));
-  // m12 is too sensitive with the inverse problem
-  // err[2] = max(err[2], wreal(abs(tm12a - m12)));
-
+  // m12 and S12 are very sensitive with the inverse problem near conjugacy
+  if (!(s12 > rgeod.MajorRadius() && m12 < 10e3)) {
+    err[2] = max(err[2], wreal(abs(tm12a - m12)));
+    err[6] = max(err[6], wreal(abs(tS12a - S12) / rgeod.MajorRadius()));
+  }
   if (s12 > rgeod.MajorRadius()) {
     rgeod.Direct(lat1, lon1, tazi1,   ts12/2, rlat2, rlon2, razi2, rm12);
     rgeod.Direct(lat2, lon2, tazi2, - ts12/2, rlat1, rlon1, razi1, rm12);
@@ -300,7 +300,7 @@ int main(int argc, char* argv[]) {
     const GeographicLibL::Geodesic geodl(GeographicLibL::Constants::WGS84_a(),
                                          GeographicLibL::Constants::WGS84_r());
     typedef GeographicLibL::Math::real reale;
-    const unsigned NUMERR = 8;
+    const unsigned NUMERR = 7;
 
     cout << fixed << setprecision(2);
     vector<long double> erra(NUMERR);
@@ -364,11 +364,11 @@ int main(int argc, char* argv[]) {
     }
     if (accuracytest) {
       for (unsigned i = 0; i < NUMERR; ++i)
-        cout << i << " " << (i < 6 ? 1e9l : 1e3l) * err[i]
+        cout << i << " " << 1e9l * err[i]
              << " " << errind[i] << "\n";
 #if USE_LONG_DOUBLE_GEOGRAPHICLIB
       for (unsigned i = 0; i < NUMERR; ++i)
-        cout << i << " " << (i < 6 ? 1e12l : 1e6l) * errl[i]
+        cout << i << " " << 1e12l * errl[i]
              << " " << errlind[i] << "\n";
 #endif
     }
