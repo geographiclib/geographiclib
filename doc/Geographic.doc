@@ -969,10 +969,10 @@ these projections.
 
 References
  - F. W. Bessel,
-   <a href="http://adsabs.harvard.edu/abs/1825AN......4..241B">&Uuml;ber die
-   Berechnung der geographischen L&auml;ngen und Breiten aus geod&auml;tischen
-   Vermessungen</a>,
-   Astron. Nachr. 4 (86), 241&ndash;254 (1826).  English translation:
+   <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation
+   of longitude and latitude from geodesic measurements (1825)</a>,
+   Astron. Nachr. 331(8), 852-861 (2010);
+   translated by C. F. F. Karney and R. E. Deakin.  Preprint:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
    Die Mathematischen und Physikalischen Theorieen der H&ouml;heren
@@ -1023,7 +1023,7 @@ the solutions can be easily generated once a particular solution is
 provided.
 
 The framework for solving geodesic problems on the ellipsoid was laid
-down by Bessel (1826) who showed how the problem may be transferred to
+down by Bessel (1825) who showed how the problem may be transferred to
 an "auxiliary sphere" where the latitude \e phi has been replaced by the
 reduced latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).
 On this sphere, the geodesic is a great circle and the azimuth is the
@@ -1037,7 +1037,7 @@ reduced length of a geodesic for the ellipsoid.  The "azimuthal scale" of
 the azimuthal equidistant projection about point 1 is given by \e s12/\e
 m12.
 
-The algorithms included here are based on the work of Bessel (1826) and
+The algorithms included here are based on the work of Bessel (1825) and
 Helmert (1880).  Key points are:
   - Inclusion of sufficient terms in the series to give accuracy at the
     round-off level for doubles and long doubles.
