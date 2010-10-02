@@ -45,7 +45,7 @@ namespace GeographicLib {
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90, 90]");
     real
-      phi = stdlat * Constants::degree(),
+      phi = stdlat * Math::degree(),
       sphi = sin(phi),
       cphi = abs(stdlat) != 90 ? cos(phi) : 0;
     Init(sphi, cphi, sphi, cphi, k0);
@@ -76,8 +76,8 @@ namespace GeographicLib {
         throw GeographicErr
           ("Standard latitudes must be equal is either is a pole");
     real
-      phi1 = stdlat1 * Constants::degree(),
-      phi2 = stdlat2 * Constants::degree();
+      phi1 = stdlat1 * Math::degree(),
+      phi2 = stdlat2 * Math::degree();
     Init(sin(phi1), abs(stdlat1) != 90 ? cos(phi1) : 0,
          sin(phi2), abs(stdlat2) != 90 ? cos(phi2) : 0, k1);
   }
@@ -135,7 +135,7 @@ namespace GeographicLib {
     }
     _n = sphi0;                 // Snyder's n
     _nc = cphi0;                // sqrt(1 - sq(n))
-    _lat0 = atan2(_sign * sphi0, cphi0) / Constants::degree();
+    _lat0 = atan2(_sign * sphi0, cphi0) / Math::degree();
     _lt0 = logtf(sphi0, cphi0); // Snyder's log(t0)
     _t0n = exp(_n * _lt0);      // Snyder's t0^n
     _t0nm1 = Math::expm1(_n * _lt0);      // Snyder's t0^n - 1
@@ -163,8 +163,8 @@ namespace GeographicLib {
       lon -= lon0;
     lat *= _sign;
     real
-      phi = lat * Constants::degree(),
-      lam = lon * Constants::degree(),
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree(),
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : 0,
       m = mf(sphi, cphi),
       lt = logtf(sphi, cphi),
@@ -245,8 +245,8 @@ namespace GeographicLib {
     double
       phi = _sign * atan(sinh(qp)),
       m = mf(tanh(qp), 1/cosh(qp));
-    lat = phi / Constants::degree();
-    lon = lam / Constants::degree();
+    lat = phi / Math::degree();
+    lon = lam / Math::degree();
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon + lon0 >= 180)
       lon += lon0 - 360;
@@ -254,7 +254,7 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    gamma = _sign * theta / Constants::degree();
+    gamma = _sign * theta / Math::degree();
     k = _scale * (m == 0 && _nc == 0 && qp > 0 ?
                   sqrt(_e2m) * exp(eatanhe(real(1))) / 2 :
                   tn/m);        // infinite if pole and _n < 1

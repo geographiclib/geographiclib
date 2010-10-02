@@ -34,13 +34,13 @@ cures several of the defects of that package.
 \section download Download
 
 The main project page is at
--  <a href="http://sourceforge.net/projects/geographiclib">
-  http://sourceforge.net/projects/geographiclib </a>
+-  <a href="http://sf.net/projects/geographiclib">
+  http://sf.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
   geographiclib-1.4.tar.gz</a>
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.zip/download">
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.zip/download">
   geographiclib-1.4.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
@@ -157,7 +157,7 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
+   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
    - tar xfpvz geographiclib-1.4.tar.gz
@@ -348,8 +348,8 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
    Feb. 2010, revised July 2010,
    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
  .
-<a href="http://geographiclib.sourceforge.net/tm.html">
-http://geographiclib.sourceforge.net/tm.html</a> provides a
+<a href="http://geographiclib.sf.net/tm.html">
+http://geographiclib.sf.net/tm.html</a> provides a
 resource page for this paper.
 
 \b NOTE 2: The figures in this section are relatively small in order to
@@ -636,7 +636,7 @@ slip around it longitudinally.
 \section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
- - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/TMcoords.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz/download">
    TMcoords.dat.gz</a>
  .
 This is about 17 MB (compressed).  This test set consists of a set of
@@ -1146,19 +1146,19 @@ area of a spherical triangle in terms of two edges and the included
 angle; it is the spherical generalization of the familiar trapezoidal
 formula for plane areas (\e x<sub>2</sub> - \e x<sub>1</sub>) (\e
 y<sub>1</sub> + \e y<sub>2</sub>)/2.  Summing \e E<sub>12</sub> over all
-the edges of a spherical polygon provides accurate method of computing
+the edges of a spherical polygon provides an accurate method of computing
 its area.
 
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
- - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">
    GeodTest.dat.gz</a>
  .
 This is about 39 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
- - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
    GeodTest-short.dat.gz</a>
 
 Each line of the test set gives 9 space delimited numbers
@@ -1777,26 +1777,26 @@ using the NGA synthesis programs in the case of the EGM84 and EGM96
 models and using the NGA binary gridded data files in the case of
 EGM2008.  These data files are available for download:
 - EGM84,    30' grid:
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">zip</a>.
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">tar.bz2</a>,
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">zip</a>.
 - EGM84,    15' grid:
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">zip</a>.
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">tar.bz2</a>,
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">zip</a>.
 - EGM96,    15' grid:
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">zip</a>.
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">tar.bz2</a>,
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">zip</a>.
 - EGM96,     5' grid:
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">zip</a>.
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">tar.bz2</a>,
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">zip</a>.
 - EGM2008,   5' grid:
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">zip</a>.
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">tar.bz2</a>,
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">zip</a>.
 - EGM2008, 2.5' grid:
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">zip</a>.
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">tar.bz2</a>,
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">zip</a>.
 - EGM2008,   1' grid:
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">zip</a>.
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">tar.bz2</a>,
+  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">zip</a>.
 
 Download \e either the tar.bz2 file \e or zip file (they have the same
 contents).  If possible use the tar.bz2 format, since bzip2 compresses
@@ -1850,13 +1850,13 @@ The gridded data used by the GeographicLib::Geoid class is stored in
 .
 PGM simple graphic format with the following properties
 - it is well documented
-  <a href="http://netpbm.sourceforge.net/doc/pgm.html">here</a>;
+  <a href="http://netpbm.sf.net/doc/pgm.html">here</a>;
 - there are no separate "little-endian" and "big-endian" versions;
 - it uses 1 or 2 bytes per pixel;
 - pixels can be randomly accessed;
 - comments can be added to the file header;
 - it is sufficiently simple that it can be easily read without using the
-  <a href="http://netpbm.sourceforge.net/doc/libnetpbm.html">libnetpbm</a>
+  <a href="http://netpbm.sf.net/doc/libnetpbm.html">libnetpbm</a>
   library (and thus we avoid adding a software dependency to
   %GeographicLib).
 .
@@ -2030,7 +2030,7 @@ instantiations.
 \section testgeoid Test data for geoids
 
 A test set for the geoid models is available at
- - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
    GeoidHeight.dat.gz</a>
  .
 This is about 10 MB (compressed).  This test set consists of a set of
@@ -2071,7 +2071,7 @@ built and put in a directory in your PATH.
 GeoConvert is a command line utility for geographic coordinate
 conversions via GeographicLib::GeoCoords.  There is an online interface
 to this utility at
-http://geographiclib.sourceforge.net/cgi-bin/GeoConvert
+http://geographiclib.sf.net/cgi-bin/GeoConvert
 
 Examples:
  - echo 33.3 44.4 | GeoConvert -u\n=> 38N 444141 368470
@@ -2174,7 +2174,7 @@ then
 
 Geod is a command line utility for geodesic calculations via
 GeographicLib::Geodesic.  There is an online interface to this utility
-at http://geographiclib.sourceforge.net/cgi-bin/Geod
+at http://geographiclib.sf.net/cgi-bin/Geod
 
 Example (route from JFK Airport to Singapore Changi Airport)
  - echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |\n
@@ -2482,7 +2482,7 @@ latitude, longitude, azi, and rk.
 
 Evaluate the height of the geoid by interpolating into a grid via
 GeographicLib::Geoid.  There is an online interface to this utility
-at http://geographiclib.sourceforge.net/cgi-bin/Geoid
+at http://geographiclib.sf.net/cgi-bin/Geoid
 
 Example: the height of the EGM96 geoid at Timbuktu
  - echo "16d46'33N" "3d00'34W" | GeoidEval\n=>
@@ -2590,12 +2590,13 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (not released yet)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (not released yet)</a>
   - Add missing dependencies in some Makefiles.
   - Add -s and -r flags to \ref planimeter.
   - Improve area calculations for small polygons.
+  - Move pi() and degree() from GeographicLib::Constants to GeographicLib::Math.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (current, released 2010-09-12)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (current, released 2010-09-12)</a>
   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
     - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
     - add area computations to Geodesic::Direct and Geodesic::Inverse;
@@ -2624,7 +2625,7 @@ number.)
     classes which don't return the convergence (or azimuth) and scale.
   - Document function parameters and return values consistently.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (released 2010-07-21)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
     gnomonic projection.
   - Add -g and -e options to \ref equidistanttest.
@@ -2640,7 +2641,7 @@ number.)
   - Update references to Geotrans in MGRS documentation.
   - Speed up tmseries.mac.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.2.tar.gz/download">1.2 (released 2010-05-21)</a>
   - FIX BUGS in GeographicLib::Geodesic,
     - wrong azimuth returned by Direct if point 2 is on a pole;
     - Inverse sometimes fails with very close points.
@@ -2668,14 +2669,14 @@ number.)
     - \ref geoideval accepts any of the input formats used by \ref geoconvert;
     - \ref cartconvert allows the ellipsoid to be specified with -e.
 
- - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">1.1 (released 2010-02-09)</a>
+ - <a  href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">1.1 (released 2010-02-09)</a>
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
   - Increase accuracy of scale calculation in TransverseMercator and
     TransverseMercatorExact.
   - Code and documentation changes for consistency with
     <a  href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
 
- - <a  href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
+ - <a  href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">
    1.0 (released 2010-01-07)</a>
   - Add autoconf configuration files.
   - BUG FIX: Improve initial guess for Newton's method in
@@ -2699,7 +2700,7 @@ number.)
       cached area without disk reads;
     - Add inspector functions to query the extent of the cache.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">2009-11</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">2009-11</a>
   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
     and \ref geoconvert (via -t option).
   - Utilities now complain is there are too many tokens on input lines.
@@ -2713,7 +2714,7 @@ number.)
     - Improve accuracy of inverse hypobolic functions.
     - Fix the way GeographicLib::Math functions handle different precisions.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">2009-10</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">2009-10</a>
   - Change web site to http://geographiclib.sourceforge.net
   - Several house-cleaning changes:
     - Change from the a flat directory structure to a more easily
@@ -2734,10 +2735,10 @@ number.)
       northings.
     - Add 64-bit targets in Visual Studio project files.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-09.tgz/download">2009-09</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-09.tgz/download">2009-09</a>
   - Add GeographicLib::Geoid and \ref geoideval utility.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-08.tgz/download">2009-08</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-08.tgz/download">2009-08</a>
   - Add GeographicLib::CassiniSoldner class and \ref equidistanttest utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
     sometimes returned.
@@ -2745,15 +2746,15 @@ number.)
     of the azimuthal scale instead of the reduced length.
   - Add -n option to \ref geoconvert.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-07.tgz/download">2009-07</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-07.tgz/download">2009-07</a>
   - Speed up the series inversion code in tmseries.mac and geod.mac.
   - Reference Borkowski in section on \ref geocentric.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-06.tgz/download">2009-06</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-06.tgz/download">2009-06</a>
   - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
   - Clean up code in GeographicLib::Geodesic.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-05.tgz/download">2009-05</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-05.tgz/download">2009-05</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the \ref geod utility),
@@ -2766,7 +2767,7 @@ number.)
   - \ref cartconvert checks its inputs more carefully.
   - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-04.tgz/download">2009-04</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-04.tgz/download">2009-04</a>
   - Use compile-time constants to select the order of series in
     GeographicLib::TransverseMercator.
   - 2x unroll of Clenshaw summation to avoid data shuffling.
@@ -2782,7 +2783,7 @@ number.)
     - works with both oblate and prolate ellipsoids,
     - add -a, -e, -b options to the \ref geod utility.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-03.tgz/download">2009-03</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-03.tgz/download">2009-03</a>
   - Add GeographicLib::Geodesic and the \ref geod utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
@@ -2792,7 +2793,7 @@ number.)
     to \ref cartconvert.
   - Use inline functions to define constant doubles in Constants.hpp.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-02.tgz/download">2009-02</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-02.tgz/download">2009-02</a>
   - Fix documentation of constructors (flattening -> inverse
     flattening).
   - Use std versions of math functions.
@@ -2800,7 +2801,7 @@ number.)
     and the ECEFConvert utility.
   - Gather the documentation on the utility programs onto one page.
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/Geographic-2009-01.tgz/download">2009-01</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-01.tgz/download">2009-01</a>
   - First proper release of library.
   - More robust GeographicLib::TransverseMercatorExact:
     - Introduce \e extendp version of constructor,

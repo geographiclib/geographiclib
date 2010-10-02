@@ -56,13 +56,13 @@ namespace GeographicLib {
     _lon1 = lon1;
     _azi1 = azi1;
     // alp1 is in [0, pi]
-    real alp1 = azi1 * Constants::degree();
+    real alp1 = azi1 * Math::degree();
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
     // problems directly than to skirt them.
     _salp1 =     azi1  == -180 ? 0 : sin(alp1);
     _calp1 = abs(azi1) ==   90 ? 0 : cos(alp1);
     real cbet1, sbet1, phi;
-    phi = lat1 * Constants::degree();
+    phi = lat1 * Math::degree();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
@@ -141,7 +141,7 @@ namespace GeographicLib {
     real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
-      sig12 = s12_a12 * Constants::degree();
+      sig12 = s12_a12 * Math::degree();
       real s12a = abs(s12_a12);
       s12a -= 180 * floor(s12a / 180);
       ssig12 = s12a ==  0 ? 0 : sin(sig12);
@@ -193,7 +193,7 @@ namespace GeographicLib {
       lam12 = omg12 + _A3c *
         ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3-1)
                    - _B31));
-      lon12 = lam12 / Constants::degree();
+      lon12 = lam12 / Math::degree();
       // Can't use AngNormalize because longitude might have wrapped multiple
       // times.
       lon12 = lon12 - 360 * floor(lon12/360 + real(0.5));
@@ -201,11 +201,11 @@ namespace GeographicLib {
     }
 
     if (outmask & LATITUDE)
-      lat2 = atan2(sbet2, _f1 * cbet2) / Constants::degree();
+      lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree();
 
     if (outmask & AZIMUTH)
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi2 = 0 - atan2(-salp2, calp2) / Constants::degree();
+      azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
       real
@@ -261,7 +261,7 @@ namespace GeographicLib {
       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
 
-    return arcmode ? s12_a12 : sig12 /  Constants::degree();
+    return arcmode ? s12_a12 : sig12 /  Math::degree();
   }
 } // namespace GeographicLib
 

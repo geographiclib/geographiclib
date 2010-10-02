@@ -24,10 +24,10 @@ namespace GeographicLib {
     _h0 = h0;
     _earth.Forward(_lat0, _lon0, _h0, _x0, _y0, _z0);
     real
-      phi = lat0 * Constants::degree(),
+      phi = lat0 * Math::degree(),
       sphi = sin(phi),
       cphi = abs(_lat0) == 90 ? 0 : cos(phi),
-      lam = lon0 * Constants::degree(),
+      lam = lon0 * Math::degree(),
       slam = _lon0 == -180 ? 0 : sin(lam),
       clam = abs(_lon0) == 90 ? 0 : cos(lam);
     // Local x axis in geocentric coords

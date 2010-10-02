@@ -26,7 +26,7 @@ namespace GeographicLib {
     const throw() {
     real sig, s, azi0, m;
     sig = _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
-    azi0 *= Constants::degree();
+    azi0 *= Math::degree();
     x = s * sin(azi0);
     y = s * cos(azi0);
     rk = sig > eps ? m / s : 1;
@@ -36,7 +36,7 @@ namespace GeographicLib {
                                      real& lat, real& lon, real& azi, real& rk)
     const throw() {
     real
-      azi0 = atan2(x, y) / Constants::degree(),
+      azi0 = atan2(x, y) / Math::degree(),
       s = Math::hypot(x, y);
     real sig, m;
     sig = _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);

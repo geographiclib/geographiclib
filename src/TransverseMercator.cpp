@@ -237,8 +237,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     real
-      phi = lat * Constants::degree(),
-      lam = lon * Constants::degree();
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree();
     // phi = latitude
     // phi' = conformal latitude
     // psi = isometric latitude
@@ -282,7 +282,7 @@ namespace GeographicLib {
       // instead of psip).
       k = sqrt(_e2m + _e2 * sq(cos(phi))) * secphi / Math::hypot(taup, c);
     } else {
-      xip = Constants::pi()/2;
+      xip = Math::pi()/2;
       etap = 0;
       gamma = lam;
       k = _c;
@@ -374,8 +374,8 @@ namespace GeographicLib {
     // Gauss-Krueger TM.
     gamma -= atan2(yi1, yr1);
     k *= _b1 * Math::hypot(yr1, yi1);
-    gamma /= Constants::degree();
-    y = _a1 * _k0 * (backside ? Constants::pi() - xi : xi) * latsign;
+    gamma /= Math::degree();
+    y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
       gamma = 180 - gamma;
@@ -398,9 +398,9 @@ namespace GeographicLib {
       etasign = eta < 0 ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
-    bool backside = xi > Constants::pi()/2;
+    bool backside = xi > Math::pi()/2;
     if (backside)
-      xi = Constants::pi() - xi;
+      xi = Math::pi() - xi;
     real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
@@ -468,12 +468,12 @@ namespace GeographicLib {
       // Note cos(phi') * cosh(eta') = r
       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * Math::hypot(real(1), tau) * r;
     } else {
-      phi = Constants::pi()/2;
+      phi = Math::pi()/2;
       lam = 0;
       k *= _c;
     }
-    lat = phi / Constants::degree() * xisign;
-    lon = lam / Constants::degree();
+    lat = phi / Math::degree() * xisign;
+    lon = lam / Math::degree();
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
@@ -484,7 +484,7 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    gamma /= Constants::degree();
+    gamma /= Math::degree();
     if (backside)
       gamma = 180 - gamma;
     gamma *= xisign * etasign;

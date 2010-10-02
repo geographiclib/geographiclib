@@ -537,7 +537,7 @@ namespace GeographicLib {
      * the equator in a northward direction.
      **********************************************************************/
     Math::real EquatorialAzimuth() const throw() {
-      return Init() ? atan2(_salp0, _calp0) / Constants::degree() : 0;
+      return Init() ? atan2(_salp0, _calp0) / Math::degree() : 0;
     }
 
     /**
@@ -545,7 +545,7 @@ namespace GeographicLib {
      * crossing and point 1.
      **********************************************************************/
     Math::real EquatorialArc() const throw() {
-      return Init() ? atan2(_ssig1, _csig1) / Constants::degree() : 0;
+      return Init() ? atan2(_ssig1, _csig1) / Math::degree() : 0;
     }
 
     /**
