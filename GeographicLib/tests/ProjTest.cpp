@@ -171,7 +171,7 @@ int main(int argc, char* argv[]) {
       a = Constants::WGS84_a();
       r = Constants::WGS84_r();
     } else if (geo.datum() == "Test_sphere") {
-      a = 20000000/Constants::pi();
+      a = 20000000/Math::pi();
       r = 0;
     } else if (geo.datum() == "Test_SRMmax") {
       a = 6400000;

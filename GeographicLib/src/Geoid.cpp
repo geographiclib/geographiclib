@@ -203,7 +203,7 @@ namespace GeographicLib {
     , _cubic(cubic)
     , _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
-    , _degree( Constants::degree() )
+    , _degree( Math::degree() )
     , _eps( sqrt(numeric_limits<real>::epsilon()) ) {
     if (_dir.empty())
       _dir = GeoidPath();

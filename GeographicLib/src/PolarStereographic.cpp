@@ -71,7 +71,7 @@ namespace GeographicLib {
     const throw() {
     lat *= northp ? 1 : -1;
     real
-      phi = lat * Constants::degree(),
+      phi = lat * Math::degree(),
       tau = lat > -90 ? tan(phi) : -overflow,
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
@@ -82,7 +82,7 @@ namespace GeographicLib {
     k = lat < 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real
-      lam = lon * Constants::degree();
+      lam = lon * Math::degree();
     x = rho * (lon == -180 ? 0 : sin(lam));
     y = (northp ? -rho : rho) * (abs(lon) == 90 ? 0 : cos(lam));
     gamma = northp ? lon : -lon;
@@ -113,8 +113,8 @@ namespace GeographicLib {
       phi = atan(tau),
       secphi = Math::hypot(real(1), tau);
     k = rho != 0 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
-    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Constants::degree() : 90);
-    lon = -atan2( -x, northp ? -y : y ) / Constants::degree();
+    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree() : 90);
+    lon = -atan2( -x, northp ? -y : y ) / Math::degree();
     gamma = northp ? lon : -lon;
   }
 

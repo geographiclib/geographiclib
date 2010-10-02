@@ -87,6 +87,17 @@ namespace GeographicLib {
     typedef double real;
 #endif
 
+    /**
+     * @return \e pi
+     **********************************************************************/
+    static inline real pi() throw()
+    // good for about 123-bit accuracy
+    { return real(3.141592653589793238462643383279502884L); }
+    /**
+     * @return the number of radians in a degree.
+     **********************************************************************/
+    static inline real degree() throw() { return pi() / 180; }
+
 #if defined(DOXYGEN)
     /**
      * The hypotenuse function avoiding underflow and overflow.
@@ -289,41 +300,41 @@ namespace GeographicLib {
 
   public:
     /**
-     * @return \e pi
+     * @return \e pi.  This duplicates Math::pi().
      **********************************************************************/
-    static inline Math::real pi() throw()
-    // good for about 123-bit accuracy
-    { return real(3.141592653589793238462643383279502884L); }
+    static inline Math::real pi() throw() { return Math::pi(); }
     /**
-     * @return the number of radians in a degree.
+     * @return the number of radians in a degree.  This duplicates
+     * Math::degree().
      **********************************************************************/
-    static inline Math::real degree() throw() { return pi() / 180; }
+    static inline Math::real degree() throw() { return Math::degree(); }
     /**
      * @return the number of radians in an arcminute.
      **********************************************************************/
-    static inline Math::real arcminute() throw() { return degree() / 60; }
+    static inline Math::real arcminute() throw() { return Math::degree() / 60; }
     /**
      * @return the number of radians in an arcsecond.
      **********************************************************************/
-    static inline Math::real arcsecond() throw() { return arcminute() / 60; }
+    static inline Math::real arcsecond() throw()
+    { return Math::degree() / 3600; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/
     ///@{
     /**
-     * @return equatorial radius of WGS84 ellipsoid
+     * @return the equatorial radius of WGS84 ellipsoid
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return 6378137 * meter(); }
     /**
-     * @return reciprocal flattening of WGS84 ellipsoid
+     * @return the reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
     static inline Math::real WGS84_r() throw() { return real(298.257223563L); }
     /**
-     * @return central scale factor for UTM
+     * @return the central scale factor for UTM
      **********************************************************************/
     static inline Math::real UTM_k0() throw() {return real(0.9996L); }
     /**
-     * @return central scale factor for UPS
+     * @return the central scale factor for UPS
      **********************************************************************/
     static inline Math::real UPS_k0() throw() { return real(0.994L); }
     ///@}
@@ -342,13 +353,12 @@ namespace GeographicLib {
      * @return the number of meters in a kilometer.
      **********************************************************************/
     static inline Math::real kilometer() throw() { return 1000 * meter(); }
-    ///@}
-
     /**
      * @return the number of meters in a nautical mile (approximately 1 arc
      *   minute)
      **********************************************************************/
     static inline Math::real nauticalmile() throw() { return 1852 * meter(); }
+    ///@}
 
     /** \name Anachronistic British units
      **********************************************************************/
