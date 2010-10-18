@@ -121,7 +121,7 @@ namespace GeographicLib {
      * A global instantiation of Geocentric with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    const static Geocentric WGS84;
+    static const Geocentric WGS84;
   };
 
 } // namespace GeographicLib

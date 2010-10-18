@@ -11,7 +11,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic GeodesicLine \
 	AzimuthalEquidistant CassiniSoldner \
-	Geoid LambertConformalConic Gnomonic
+	Geoid LambertConformalConic Gnomonic OSGB
 
 HEADERS = Constants.hpp $(addsuffix .hpp,$(MODULES))
 SOURCES = $(addsuffix .cpp,$(MODULES))
@@ -62,5 +62,6 @@ CassiniSoldner.o: CassiniSoldner.hpp Constants.hpp Geodesic.hpp
 Geoid.o: Constants.hpp Geoid.hpp
 LambertConformalConic.o: Constants.hpp LambertConformalConic.hpp
 Gnomonic.o: Gnomonic.hpp Constants.hpp Geodesic.hpp
+OSGB.o: OSGB.hpp Constants.hpp TransverseMercator.hpp
 
 .PHONY: all install list clean

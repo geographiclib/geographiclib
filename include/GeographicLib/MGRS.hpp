@@ -40,6 +40,8 @@ namespace GeographicLib {
    * - The range of UTM/UPS coordinates allowed for conversion to MGRS
    *   coordinates is the maximum consistent with staying within the letter
    *   ranges of the MGRS scheme.
+   * - All the transformations are implemented as static methods in the MGRS
+   *   class.
    *
    * The <a href="http://www.nga.mil">NGA</a> software package
    * <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a>
@@ -78,7 +80,7 @@ namespace GeographicLib {
       // Row letters are shifted by 5 for even zones
       utmevenrowshift = 5,
       // Maximum precision is um
-      maxprec = 5 + 6
+      maxprec = 5 + 6,
     };
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int lookup(const std::string& s, char c) throw() {
@@ -122,11 +124,11 @@ namespace GeographicLib {
     /**
      * Convert UTM or UPS coordinate to an MGRS coordinate.
      *
-     * @param[in] zone UTM zone (zero means UPS)
-     * @param[in] northp hemisphere (true means north, false means south)
-     * @param[in] x (meters)
-     * @param[in] y (meters)
-     * @param[in] prec precision relative to 100 km
+     * @param[in] zone UTM zone (zero means UPS).
+     * @param[in] northp hemisphere (true means north, false means south).
+     * @param[in] x (meters).
+     * @param[in] y (meters).
+     * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
      * 
      * \e prec specifies the precision of the MSGRS string as follows:
@@ -216,7 +218,7 @@ namespace GeographicLib {
      * @param[out] x (meters).
      * @param[out] y (meters).
      * @param[out] prec precision relative to 100 km.
-     * @param[in] centerp if true(default), return center of the MGRS square,
+     * @param[in] centerp if true (default), return center of the MGRS square,
      *   else return SW (lower left) corner.
      *
      * All conversions from MGRS to UTM/UPS are permitted provided the MGRS
@@ -251,15 +253,15 @@ namespace GeographicLib {
     /**
      * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
      *
-     * (The WGS84 values is returned because the UTM and UPS projections are
+     * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius() throw()  { return UTMUPS::MajorRadius(); }
+    static Math::real MajorRadius() throw() { return UTMUPS::MajorRadius(); }
 
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      *
-     * (The WGS84 values is returned because the UTM and UPS projections are
+     * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real InverseFlattening() throw()

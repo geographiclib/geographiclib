@@ -26,16 +26,15 @@ namespace GeographicLib {
     // 7 = ceil(log_2(90))
     pow(real(0.5), numeric_limits<real>::digits - 7);
   const string MGRS::hemispheres = "SN";
-  const string MGRS::utmcols[3] =
-    { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
-  const string MGRS::utmrow  = "ABCDEFGHJKLMNPQRSTUV";
+  const string MGRS::utmcols[3] = { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
+  const string MGRS::utmrow = "ABCDEFGHJKLMNPQRSTUV";
   const string MGRS::upscols[4] =
     { "JKLPQRSTUXYZ", "ABCFGHJKLPQR", "RSTUXYZ", "ABCFGHJ" };
   const string MGRS::upsrows[2] =
     { "ABCDEFGHJKLMNPQRSTUVWXYZ", "ABCDEFGHJKLMNP" };
   const string MGRS::latband = "CDEFGHJKLMNPQRSTUVWX";
   const string MGRS::upsband = "ABYZ";
-  const string MGRS::digits  = "0123456789";
+  const string MGRS::digits = "0123456789";
 
   const int MGRS::mineasting[4] =
     { minupsSind, minupsNind, minutmcol, minutmcol };

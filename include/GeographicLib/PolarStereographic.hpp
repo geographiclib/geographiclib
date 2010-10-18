@@ -151,7 +151,7 @@ namespace GeographicLib {
      * and the UPS scale factor.  However, unlike UPS, no false easting or
      * northing is added.
      **********************************************************************/
-    const static PolarStereographic UPS;
+    static const PolarStereographic UPS;
   };
 
 } // namespace GeographicLib

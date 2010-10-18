@@ -18,6 +18,7 @@ nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/LambertConformalConic.hpp \
 				GeographicLib/LocalCartesian.hpp \
 				GeographicLib/MGRS.hpp \
+				GeographicLib/OSGB.hpp \
 				GeographicLib/PolarStereographic.hpp \
 				GeographicLib/TransverseMercatorExact.hpp \
 				GeographicLib/TransverseMercator.hpp \

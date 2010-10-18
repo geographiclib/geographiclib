@@ -54,34 +54,7 @@ namespace GeographicLib {
    * the UTM projections.  A more complicated example is the British National
    * Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">
    * EPSG:7405</a>) which requires the use of a latitude of origin.  This is
-   * accommodated by (constants from
-   * <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidecontents/guidea.html">
-   * A guide to coordinate systems in Great Britain</a>):
-   \code
-   const double
-     a = 6377563.396, b = 6356256.910, r = a/(a - b), // Airy 1830 ellipsoid
-     k0 = 0.9996012717, lat0 = 49, lon0 = -2, // central scale and origin
-     fe = 400000, fn = -100000;               // false easting and northing
-   // Set up basic projection
-   const GeographicLib::TransverseMercator OSGB(a, r, k0);
-   double x0, y0;
-   {
-     // Transform origin point
-     OSGB.Forward(lon0, lat0, lon0, x0, y0);
-     x0 -= fe; y0 -= fn;         // Combine result with false origin
-   }
-   double lat, lon, x, y;
-   // Sample conversion from geodetic to OSGB grid
-   std::cin >> lat >> lon;
-   OSGB.Forward(lon0, lat, lon, x, y);
-   x -= x0; y -= y0;
-   std::cout << x << " " << y << "\n";
-   // Sample conversion from OSGB grid to geodetic
-   std::cin >> x >> y;
-   x += x0; y += y0;
-   OSGB.Reverse(lon0, x, y, lat, lon);
-   std::cout << lat << " " << lon << "\n";
-   \endcode
+   * implemented by the GeographicLib::OSGB class.
    *
    * See TransverseMercator.cpp for more information on the implementation.
    *
@@ -204,7 +177,7 @@ namespace GeographicLib {
      * and the UTM scale factor.  However, unlike UTM, no false easting or
      * northing is added.
      **********************************************************************/
-    const static TransverseMercator UTM;
+    static const TransverseMercator UTM;
   };
 
 } // namespace GeographicLib
