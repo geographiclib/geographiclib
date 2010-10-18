@@ -35,6 +35,7 @@ Files
       Geoid.[ch]pp -- geoid heights
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
+      OSGB.[ch]pp -- Ordnance Survey grid system
 
     tools/
       GeoConvert.cpp -- geographic conversion utility

@@ -251,7 +251,7 @@ namespace GeographicLib {
         // If csig12 > 0, write
         //   csig1 - csig2 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
         // else
-        //   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 + ssig1
+        //   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 * ssig1
         // No need to normalize
         salp12 = _calp0 * _salp0 *
           (csig12 <= 0 ? _csig1 * (1 - csig12) + ssig12 * _ssig1 :

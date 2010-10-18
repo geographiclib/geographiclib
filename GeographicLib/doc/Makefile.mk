@@ -4,7 +4,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic GeodesicLine \
 	AzimuthalEquidistant CassiniSoldner \
-	Geoid Gnomonic
+	Geoid Gnomonic OSGB
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval Planimeter
 

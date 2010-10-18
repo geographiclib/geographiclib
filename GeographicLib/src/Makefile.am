@@ -22,6 +22,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
+		OSGB.cpp \
 		PolarStereographic.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
@@ -40,6 +41,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
+		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/TransverseMercatorExact.hpp \
 		../include/GeographicLib/TransverseMercator.hpp \

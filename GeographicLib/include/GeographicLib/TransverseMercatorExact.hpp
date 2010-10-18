@@ -233,7 +233,7 @@ namespace GeographicLib {
      * ellipsoid and the UTM scale factor.  However, unlike UTM, no false
      * easting or northing is added.
      **********************************************************************/
-    const static TransverseMercatorExact UTM;
+    static const TransverseMercatorExact UTM;
   };
 
 } // namespace GeographicLib

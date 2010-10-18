@@ -286,7 +286,7 @@ namespace GeographicLib {
     /**
      * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
      *
-     * (The WGS84 values is returned because the UTM and UPS projections are
+     * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real MajorRadius() throw() { return Constants::WGS84_a(); }
@@ -294,7 +294,7 @@ namespace GeographicLib {
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      *
-     * (The WGS84 values is returned because the UTM and UPS projections are
+     * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real InverseFlattening() throw()
