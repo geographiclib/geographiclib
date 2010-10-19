@@ -456,9 +456,9 @@ namespace GeographicLib {
         real
           tau1 = Math::hypot(real(1), tau),
           sig = sinh( eatanhe( tau / tau1 ) ),
-          sig1 =  Math::hypot(real(1), sig),
-          dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _e2m * sq(tau)) /
-          ( (sig1 * tau1 - sig * tau) * _e2m * tau1 );
+          taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
+          dtau = (taup - taupa) * (1 + _e2m * sq(tau)) /
+          ( _e2m * tau1 * Math::hypot(real(1), taupa) );
         tau += dtau;
         if (abs(dtau) < stol)
           break;
