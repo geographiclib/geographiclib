@@ -341,6 +341,10 @@
 				RelativePath="..\src\LambertConformalConic.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\src\OSGB.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -417,6 +421,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/LambertConformalConic.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/OSGB.hpp"
 				>
 			</File>
 		</Filter>
