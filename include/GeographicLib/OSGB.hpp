@@ -28,6 +28,11 @@ namespace GeographicLib {
    * A guide to coordinate systems in Great Britain</a>
    * - <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidetonationalgrid/page1.html">
    * Guide to National Grid</a>
+   *
+   * \b WARNING: the latitudes and longitudes for the Ordnance Survery grid
+   * system do not use the WGS84 datum.  Do not use the values returned by this
+   * class in the UTMUPS, MGRS, or Geoid classes without first converting the
+   * datum (and vice versa).
    **********************************************************************/
   class OSGB {
   private:
