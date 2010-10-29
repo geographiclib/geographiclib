@@ -30,7 +30,7 @@ namespace GeographicLib {
     OSGBTM.Forward(real(0), OriginLatitude(), real(0), x, y);
     return FalseNorthing() - y;
   }
-  
+
   const Math::real OSGB::northoffset = computenorthoffset();
 
   void OSGB::GridReference(real x, real y, int prec, std::string& gridref) {
@@ -79,11 +79,10 @@ namespace GeographicLib {
     gridref.resize(mlen);
     copy(grid, grid + mlen, gridref.begin());
   }
-  
+
   void OSGB::GridReference(const std::string& gridref,
                            real& x, real& y, int& prec,
                            bool centerp) {
-    
     int
       len = int(gridref.size()),
       p = 0;
