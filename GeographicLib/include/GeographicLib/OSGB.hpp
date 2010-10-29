@@ -77,12 +77,12 @@ namespace GeographicLib {
      * @param[out] y northing of point (meters).
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
-     * 
+     *
      * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
      * the range [-180, 360].
      **********************************************************************/
     static void Forward(real lat, real lon,
-                        real& x, real& y, real& gamma, real& k) {
+                        real& x, real& y, real& gamma, real& k) throw() {
       OSGBTM.Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
       x += FalseEasting();
       y += northoffset;
@@ -97,21 +97,21 @@ namespace GeographicLib {
      * @param[out] lon longitude of point (degrees).
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
-     * 
+     *
      * The value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
 
     static void Reverse(real x, real y,
-                        real& lat, real& lon, real& gamma, real& k) {
+                        real& lat, real& lon, real& gamma, real& k) throw() {
       x -= FalseEasting();
       y -= northoffset;
       OSGBTM.Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
     }
-    
+
     /**
      * OSGB::Forward without returning the convergence and scale.
      **********************************************************************/
-    static void Forward(real lat, real lon, real& x, real& y) {
+    static void Forward(real lat, real lon, real& x, real& y) throw() {
       real gamma, k;
       Forward(lat, lon, x, y, gamma, k);
     }
@@ -119,11 +119,10 @@ namespace GeographicLib {
     /**
      * OSGB::Reverse without returning the convergence and scale.
      **********************************************************************/
-    static void Reverse(real x, real y, real& lat, real& lon) {
+    static void Reverse(real x, real y, real& lat, real& lon) throw() {
       real gamma, k;
       Reverse(x, y, lat, lon, gamma, k);
     }
-
 
     /**
      * Convert OSGB coordinates to a grid reference.
@@ -132,7 +131,7 @@ namespace GeographicLib {
      * @param[in] y northing of point (meters).
      * @param[in] prec precision relative to 100 km.
      * @param[out] gridref National Grid reference.
-     * 
+     *
      * \e prec specifies the precision of the grid reference string as follows:
      * - prec = 0 (min), 100km
      * - prec = 1, 10km
@@ -218,7 +217,6 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real FalseEasting() throw() { return real(400000); }
     ///@}
-
 
   };
 
