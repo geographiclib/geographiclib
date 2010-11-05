@@ -243,9 +243,7 @@ int main(int argc, char* argv[]) {
     LambertConformalConic tx(a, r, lat1, lat2, k1);
     PolarStereographic txa(a, r, k1);
     TransverseMercator txb(a, r, k1);
-    if (type == tm)
-      r = r == 0 ? 0.1/eps : r;
-    TransverseMercatorExact txc(a, r, k1);
+    TransverseMercatorExact txc(a, r == 0 ? 0.1/eps : r, k1);
     std::cout << a << " " << r << " " << k1 << " " << type << "\n";
     real x0, y0, gam, k;
     if (type == lcc)
