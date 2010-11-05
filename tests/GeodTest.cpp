@@ -27,7 +27,6 @@ namespace GeographicLibL = GeographicLib;
 #include <algorithm>
 #include <limits>
 
-
 using namespace std;
 using namespace GeographicLib;
 
@@ -53,12 +52,12 @@ also checked.\n\
   return retval;
 }
 
-long double degree() {
+Math::extended degree() {
   return atan2(1.0L,1.0L)/45.0L;
 }
 
-long double angdiff(long double a1, long double a2) {
-  long double d = a2 - a1;
+Math::extended angdiff(Math::extended a1, Math::extended a2) {
+  Math::extended d = a2 - a1;
   if (d >= 180)
     d -= 360;
   else if (d < -180)
@@ -66,28 +65,29 @@ long double angdiff(long double a1, long double a2) {
   return d;
 }
 
-long double azidiff(long double lat, long double lon1, long double lon2,
-                    long double azi1, long double azi2) {
-  long double
+Math::extended azidiff(Math::extended lat,
+		       Math::extended lon1, Math::extended lon2,
+		       Math::extended azi1, Math::extended azi2) {
+  Math::extended
     phi = lat * degree(),
     alpha1 = azi1 * degree(),
     alpha2 = azi2 * degree(),
     dlam = angdiff(lon1, lon2) * degree();
-  long double res = sin(alpha2-alpha1)*cos(dlam)
+  Math::extended res = sin(alpha2-alpha1)*cos(dlam)
     -cos(alpha2-alpha1)*sin(dlam)*sin(phi)
     // -sin(alpha1)*cos(alpha2)*(1-cos(dlam))*cos(phi)*cos(phi)
     ;
   return res;
 }
 
-long double dist(long double lat0, long double lon0,
-                 long double lat1, long double lon1) {
+Math::extended dist(Math::extended lat0, Math::extended lon0,
+		    Math::extended lat1, Math::extended lon1) {
   //  typedef GeographicLibL::Math::real real;
   //  real s12;
   //  GeographicLibL::Geodesic::
   //    WGS84.Inverse(real(lat0), real(lon0), real(lat1), real(lon1), s12);
-  //  return (long double)(s12);
-  long double
+  //  return Math::extended(s12);
+  Math::extended
     phi = lat0 * degree(),
     cphi = abs(lat0) <= 45 ? cos(phi) : sin((90 - abs(lat0)) * degree()),
     a = GeographicLibL::Constants::WGS84_a() * degree(),
@@ -303,18 +303,18 @@ int main(int argc, char* argv[]) {
     const unsigned NUMERR = 7;
 
     cout << fixed << setprecision(2);
-    vector<long double> erra(NUMERR);
-    vector<long double> err(NUMERR, 0.0);
+    vector<Math::extended> erra(NUMERR);
+    vector<Math::extended> err(NUMERR, 0.0);
     vector<unsigned> errind(NUMERR);
 #if USE_LONG_DOUBLE_GEOGRAPHICLIB
-    vector<long double> errla(NUMERR);
-    vector<long double> errl(NUMERR, 0.0);
+    vector<Math::extended> errla(NUMERR);
+    vector<Math::extended> errl(NUMERR, 0.0);
     vector<unsigned> errlind(NUMERR);
 #endif
     unsigned cnt = 0;
 
     while (true) {
-      long double lat1l, lon1l, azi1l, lat2l, lon2l, azi2l,
+      Math::extended lat1l, lon1l, azi1l, lat2l, lon2l, azi2l,
         s12l, a12l, m12l, S12l;
       if (!(cin >> lat1l >> lon1l >> azi1l
             >> lat2l >> lon2l >> azi2l
@@ -330,7 +330,7 @@ int main(int argc, char* argv[]) {
         cout << geod.coverage << " " << geod.niter << "\n";
 #endif
       } else {
-        GeodError< long double,
+        GeodError< Math::extended,
           Geodesic, Math::real,
           GeographicLibL::Geodesic, GeographicLibL::Math::real >
           (geod, geodl, lat1l, lon1l, azi1l,
@@ -344,7 +344,7 @@ int main(int argc, char* argv[]) {
           }
         }
 #if USE_LONG_DOUBLE_GEOGRAPHICLIB
-        GeodError< long double,
+        GeodError< Math::extended,
           GeographicLibL::Geodesic, GeographicLibL::Math::real,
           GeographicLibL::Geodesic, GeographicLibL::Math::real >
           (geodl, geodl, lat1l, lon1l, azi1l,

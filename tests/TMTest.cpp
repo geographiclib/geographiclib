@@ -13,7 +13,6 @@
 #include "GeographicLib/Constants.hpp"
 #include <vector>
 #include <algorithm>
-
 #include <string>
 #include <limits>
 #include <iostream>
@@ -22,12 +21,11 @@
 #include <iomanip>
 #include <stdexcept>
 
-#define GEOTRANSTM 1
-#define WMM 1
+using namespace GeographicLib;
 
 GeographicLib::Math::real
 dist(GeographicLib::Math::real a, GeographicLib::Math::real r,
-     long double lat0, long double lon0,
+     GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
   typedef Math::real real;
@@ -40,11 +38,11 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real r,
       // See Wikipedia article on latitude
     hlon = std::cos(phi) * n,
     hlat = (1 - e2) * n * n * n;
-  long double dlon = (long double)(lon1) - lon0;
+  Math::extended dlon = Math::extended(lon1) - lon0;
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
   return a * Constants::degree() *
-    Math::hypot(real((long double)(lat1) - lat0) * hlat, real(dlon) * hlon);
+    Math::hypot(real(Math::extended(lat1) - lat0) * hlat, real(dlon) * hlon);
 }
 
 int usage(int retval) {
@@ -158,7 +156,7 @@ int main(int argc, char* argv[]) {
       a = series ? tm.MajorRadius() : tme.MajorRadius(),
       r = series ? tm.InverseFlattening() : tme.InverseFlattening();
     const Geodesic geod(a, r);
-    long double lat0l, lon0l, x0l, y0l, gam0l, k0l;
+    Math::extended lat0l, lon0l, x0l, y0l, gam0l, k0l;
     while (std::cin >> lat0l >> lon0l >> x0l >> y0l >> gam0l >> k0l) {
       real
         lat0 = lat0l,
@@ -179,17 +177,17 @@ int main(int argc, char* argv[]) {
         tm.Forward(0, lat0, lon0, x, y, gam, k);
       } else
         tme.Forward(0, lat0, lon0, x, y, gam, k);
-      errf = real(Math::hypot((long double)(x) - x0l,
-                              (long double)(y) - y0l)) / k0;
-      errgf = real(std::abs((long double)(gam) - gam0));
-      errkf = real(std::abs((long double)(k) - k0));
+      errf = real(Math::hypot(Math::extended(x) - x0l,
+                              Math::extended(y) - y0l)) / k0;
+      errgf = real(std::abs(Math::extended(gam) - gam0));
+      errkf = real(std::abs(Math::extended(k) - k0));
       if (series) {
         tm.Reverse(0, x0, y0, lat, lon, gam, k);
       } else
         tme.Reverse(0, x0, y0, lat, lon, gam, k);
       errr = dist(a, r, lat0l, lon0l, lat, lon);
-      errgr = real(std::abs((long double)(gam) - gam0));
-      errkr = real(std::abs((long double)(k) - k0));
+      errgr = real(std::abs(Math::extended(gam) - gam0));
+      errkr = real(std::abs(Math::extended(k) - k0));
 
       real
         err = std::max(errf, errr),

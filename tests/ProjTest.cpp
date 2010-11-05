@@ -153,6 +153,7 @@ Checks projections against NGS GoldData files\n";
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
   typedef Math::real real;
+
   if (argc != 3)
     return usage(1);
   try {
@@ -252,12 +253,7 @@ int main(int argc, char* argv[]) {
       txb.Forward(lon0, lat0, lon0, x0, y0, gam, k);
     else
       x0 = y0 = 0;
-    //    std::cout << x0 << " " << y0 << "\n";
-    real lata, lona, xa, ya;
-    //    tx.Forward(lon0, -5.0, 20.0, xa, ya, gam, k);
-    //    std::cout << xa << " " << ya << "\n";
-    //    tx.Forward(lon0, -4.0, 20.0, xa, ya, gam, k);
-    //    std::cout << xa << " " << ya << "\n";
+    real lata, lona, xa, ya; 
     unsigned count = 0;
     real maxerrx = 0, maxerry = 0, maxerr = 0, maxerrk = 0, maxerrr = 0;
     std::cout << std::fixed << std::setprecision(7);
@@ -335,33 +331,4 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   return 0;
-  bool reverse = false, testing = false, series = false;
-  for (int m = 1; m < argc; ++m) {
-    std::string arg(argv[m]);
-    if (arg == "-r")
-      reverse = true;
-    else if (arg == "-t") {
-      testing = true;
-      series = false;
-    } else if (arg == "-s") {
-      testing = false;
-      series = true;
-    } else
-      return usage(arg != "-h");
-  }
-
-  std::string s;
-  int retval = 0;
-  std::cout << std::setprecision(16);
-  while (std::getline(std::cin, s)) {
-    try {
-      std::istringstream str(s);
-    }
-    catch (const std::exception& e) {
-      std::cout << "ERROR: " << e.what() << "\n";
-      retval = 1;
-    }
-  }
-
-  return retval;
 }

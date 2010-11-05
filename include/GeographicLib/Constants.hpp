@@ -42,6 +42,11 @@ RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
 #define GEOGRAPHICLIB_PREC 1
 #endif
 
+#if defined(__CYGWIN__) && defined(__GNUC__) && __GNUC__ < 4
+// g++ 3.x under cygwin doesn't have long double
+#define __NO_LONG_DOUBLE_MATH 1
+#endif
+
 #include <cmath>
 #include <limits>
 #include <algorithm>
@@ -72,6 +77,12 @@ namespace GeographicLib {
     Math();                     // Disable constructor
   public:
 
+#if !defined(__NO_LONG_DOUBLE_MATH)
+    typedef long double extended;
+#else
+    typedef double extended;
+#endif
+
 #if GEOGRAPHICLIB_PREC == 1
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
@@ -82,7 +93,7 @@ namespace GeographicLib {
 #elif GEOGRAPHICLIB_PREC == 0
     typedef float real;
 #elif GEOGRAPHICLIB_PREC == 2
-    typedef long double real;
+    typedef extended real;
 #else
     typedef double real;
 #endif
