@@ -76,18 +76,89 @@ namespace GeographicLib {
   class LambertConformalConic {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _e2, _e, _e2m;
+    const real _a, _r, _f, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _lt0, _t0n, _t0nm1, _scale, _lat0, _k0;
+    real _tphi0, _tbet0, _scbet0, _scphi0, _sphi0, _xi0, _shxi0, _chxi0,
+      _tchi0, _scchi0, _psi0, _nrho0;
     static const real eps, eps2, epsx, tol, ahypover;
     static const int numit = 5;
     static inline real sq(real x) throw() { return x * x; }
+    static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
+    static inline void SinCosNorm(real& sinx, real& cosx) throw() {
+      real r = Math::hypot(sinx, cosx);
+      sinx /= r;
+      cosx /= r;
+    }
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
     // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
     inline real eatanhe(real x) const throw() {
       return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
     }
-    inline real mf(real sphi, real cphi) const throw() {
-      return cphi/std::sqrt(1 - _e2 * sq(sphi)); // Snyder's m, p 108, eq 14-15
+    // Divided differences
+    // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
+    // See: W. M. Kahan and R. J. Fateman,
+    // Symbolic computation of divided differences,
+    // SIGSAM Bull. 33(3), 7-28 (1999)
+    // http://doi.acm.org/10.1145/334714.334716
+    // http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
+    //
+    // General rules
+    // h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)
+    // h(x) = f(x)*g(x): Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
+    //
+    // hyp(x) = sqrt(1+x^2): Dhyp(x,y) = (x+y)/(hyp(x)+hyp(y))
+    static inline real Dhyp(real x, real y, real hx, real hy) throw()
+    // hx = hyp(x)
+    { return (x + y) / (hx + hy); }
+    // sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))
+    static inline real Dsn(real x, real y, real sx, real sy) throw() {
+      // sx = x/hyp(x)
+      real t = sx * sy;
+      return t >= 0 ? (x + y) * sq( t/(x*y) ) / (sx + sy) : (sx - sy) / (x - y);
+    }
+    // Dlog(x,y) = log1p((x-y)/y)/(x-y) = 2*atanh((x-y)/(x+y))/(x-y)
+    static inline real Dlog(real x, real y) throw() {
+      real t = x - y; if (t < 0) { t = -t; y = x; }
+      return t != 0 ? Math::log1p(t/y) / t : 1/x;
+    }
+    // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
+    static inline real Dexp(real x, real y) throw() {
+      real t = (x - y)/2;
+      return (t != 0 ? sinh(t)/t : real(1)) * exp((x + y)/2);
+    }
+    // Dsinh(x,y) = 2*sinh((x-y)/2)/(x-y) * cosh((x+y)/2)
+    //   cosh((x+y)/2) = (c+sinh(x)*sinh(y)/c)/2
+    //   c=sqrt((1+cosh(x))*(1+cosh(y)))
+    static inline real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
+      // sx = sinh(x), cx = cosh(x)
+      throw() {
+      real t = (x  - y)/2, c = sqrt((1 + cx) * (1 + cy));
+      return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
+    }
+    // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
+    //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
+    static inline real Dasinh(real x, real y, real hx, real hy) throw() {
+      // hx = hyp(x)
+      real t = x - y;
+      return t != 0 ?
+        Math::asinh(x*y > 0 ? t * (x+y) / (x*hy + y*hx) : x*hy - y*hx) / t :
+        1/hx;
+    }
+    // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
+    inline real Deatanhe(real x, real y) const throw() {
+      real t = x - y, d = (1 - _e2 * x * y);
+      return t != 0 ? eatanhe(t / d) / t : _e2 / d;
+    }
+    inline real mf(real cphi) const throw() {
+      // Snyder's m, p 108, eq 14-15.  m = cos(beta), beta = reduced lat.
+      return cphi/std::sqrt(_e2m + _e2 * sq(cphi));
+    }
+    inline real tchif(real tphi) const throw() {
+      // tan of conformal latitude
+      real 
+        secphi = Math::hypot(real(1), tphi),
+        sig = sinh( eatanhe(tphi / secphi) );
+      return Math::hypot(real(1), sig) * tphi - sig * secphi;
     }
     inline real tf(real sphi, real cphi) const throw() {
       // Snyder's t, p 108, eq 15-9a
@@ -271,7 +342,7 @@ namespace GeographicLib {
      * and the UPS scale factor and \e stdlat = 0.  This degenerates to the
      * Mercator projection.
      **********************************************************************/
-    const static LambertConformalConic Mercator;
+    static const LambertConformalConic Mercator;
   };
 
 } // namespace GeographicLib

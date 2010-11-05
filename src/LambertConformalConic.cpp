@@ -14,6 +14,9 @@
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
 
+#include <iostream>
+#include <iomanip>
+
 namespace GeographicLib {
 
   using namespace std;
@@ -32,6 +35,7 @@ namespace GeographicLib {
     : _a(a)
     , _r(r)
     , _f(_r != 0 ? 1 / _r : 0)
+    , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
@@ -57,6 +61,7 @@ namespace GeographicLib {
     : _a(a)
     , _r(r)
     , _f(_r != 0 ? 1 / _r : 0)
+    , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
@@ -89,6 +94,7 @@ namespace GeographicLib {
     : _a(a)
     , _r(r)
     , _f(_r != 0 ? 1 / _r : 0)
+    , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
@@ -108,44 +114,108 @@ namespace GeographicLib {
 
   void LambertConformalConic::Init(real sphi1, real cphi1,
                                    real sphi2, real cphi2, real k1) throw() {
+    // Snyder: 15-8: n = (log(m1) - log(m2))/(log(t1)-log(t2))
+    //
+    // m = cos(beta) = 1/sec(beta) = 1/sqrt(1+tan(beta)^2)
+    // beta = parametric lat, tan(beta) = (1-f)*tan(phi)
+    //
+    // t = tan(pi/4-chi/2) = 1/(sec(chi) + tan(chi)) = sec(chi) - tan(chi)
+    // log(t) = -asinh(tan(chi))
+    // chi = conformal lat
+    // tan(chi) = tan(phi)*cosh(xi) - sinh(xi)*sec(phi)
+    // xi = eatanhe(sin(phi)), eatanhe(x) = e * atanh(e*x)
+    //
+    // n = (log(sec(beta2))-log(sec(beta1)))/(asinh(tan(chi2))-asinh(tan(chi1)))
+    //
+    //
+    // Let log(sec(beta)) = b(tphi), asinh(tan(chi)) = c(tphi)
+    // Then n = Db(tphi2, tphi1)/Dc(tphi2, tphi1)
+    // In limit tphi2 -> tphi1, n -> sphi1
+    //
+    bool polar = (cphi1 == 0);
+    cphi1 = max(epsx, cphi1);   // Avoid singularities at poles
+    cphi2 = max(epsx, cphi2);
     // Determine hemisphere of tangent latitude
-    _sign = sphi1 + sphi2 > 0 ? 1 : sphi1 + sphi2 < 0  ? -1 :
-      atan2(sphi1, cphi1) + atan2(sphi2, cphi2) >= 0 ? 1 : -1;
+    _sign = sphi1 + sphi2 >= 0 ? 1 : -1;
     // Internally work with tangent latitude positive
-    sphi1 *= _sign;
-    sphi2 *= _sign;
-    real
-      m1 = mf(sphi1, cphi1), lt1 = logtf(sphi1, cphi1),
-      m2 = mf(sphi2, cphi2), lt2 = logtf(sphi2, cphi2),
-      sindiff = abs(sphi1 * cphi2 - cphi1 * sphi2);
-    real sphi0, cphi0;          // Use phi0 = tangent latitude
-    if (sindiff > eps2) {
-      // sphi0 = Snyder's n, p 108, eq 15-8
-      sphi0 = (log(m1) - log (m2)) / (lt1 - lt2);
-      cphi0 = sindiff < real(0.7) ? sqrt(1 - sq(sphi0)) :
-        // cos(phi0) = sqrt( - (sin(phi0) - 1) * (sin(phi0) + 1) )
-        sqrt( -(logmtf(sphi1) - logmtf(sphi2)) / (lt1 - lt2)
-              * (sphi0 + 1));
-    } else {
-      // Set phi0 = (phi1 + phi2)/2
-      sphi0 = (sphi1 * sqrt((1 + cphi2)/(1 + cphi1)) +
-               sphi2 * sqrt((1 + cphi1)/(1 + cphi2)))/2;
-      cphi0 = (cphi1 * sqrt((1 + sphi2)/(1 + sphi1)) +
-               cphi2 * sqrt((1 + sphi1)/(1 + sphi2)))/2;
+    sphi1 *= _sign; sphi2 *= _sign;
+    if (sphi1 > sphi2) {
+      swap(sphi1, sphi2); swap(cphi1, cphi2); // Make phi1 < phi2
     }
-    _n = sphi0;                 // Snyder's n
-    _nc = cphi0;                // sqrt(1 - sq(n))
-    _lat0 = atan2(_sign * sphi0, cphi0) / Math::degree();
-    _lt0 = logtf(sphi0, cphi0); // Snyder's log(t0)
-    _t0n = exp(_n * _lt0);      // Snyder's t0^n
-    _t0nm1 = Math::expm1(_n * _lt0);      // Snyder's t0^n - 1
-    // k1 * m1/t1^n = k1 * m2/t2^n = k1 * n * (Snyder's F)
-    _scale = k1 *
-      (_nc == 0 ?               // if phi0 = pi/2, n = t = m = 0, so take limit
-       2/( sqrt(_e2m) * exp(eatanhe(real(1))) ) :
-       (lt1 > lt2 ? m1 / exp(_n * lt1) : m2 / exp(_n * lt2)));
-    // Scale at phi0
-    _k0 = _scale * _t0n / mf(sphi0, cphi0);
+    real
+      tphi1 = sphi1/cphi1, tphi2 = sphi2/cphi2;
+    _tphi0 = (sphi1 + sphi2)/(cphi1 + cphi2);
+    real
+      tbet1 = _fm * tphi1, scbet1 = hyp(tbet1),
+      tbet2 = _fm * tphi2, scbet2 = hyp(tbet2);
+    real
+      scphi1 = 1/cphi1,
+      xi1 = eatanhe(sphi1), shxi1 = sinh(xi1), chxi1 = hyp(shxi1),
+      tchi1 = chxi1 * tphi1 - shxi1 * scphi1, scchi1 = hyp(tchi1),
+      scphi2 = 1/cphi2,
+      xi2 = eatanhe(sphi2), shxi2 = sinh(xi2), chxi2 = hyp(shxi2),
+      tchi2 = chxi2 * tphi2 - shxi2 * scphi2, scchi2 = hyp(tchi2),
+      dshxi = ( Dsinh(xi2, xi1, shxi2, shxi1, chxi2, chxi1) *
+                Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1) ),
+      psi1 = Math::asinh(tchi1);
+    if (tphi2 - tphi1 != 0) {
+      real num, numcheck;
+
+      // Db(tphi2, tphi1)
+      num = Dlog(scbet2, scbet1) * Dhyp(tbet2, tbet1, scbet2, scbet1)
+        * _fm;
+      numcheck = (log(scbet2) - log(scbet1))/(tphi2 - tphi1);
+
+      real den, dencheck;
+
+      den = Dasinh(tchi2, tchi1, scchi2, scchi1)
+        * // Dchi(tphi2, tphi1)
+        ( ( (chxi1  + chxi2 )/2 -
+            (shxi1  + shxi2 )/2 * (tphi1 + tphi2)/(scphi1 + scphi2) ) +
+          ( (tphi1  + tphi2 )/2 * (shxi1 + shxi2)/(chxi1  + chxi2 ) -
+            (scphi1 + scphi2)/2 ) * dshxi );
+      dencheck = (Math::asinh(tchi2) - Math::asinh(tchi1))/(tphi2 - tphi1);
+
+      _n = numcheck/dencheck;
+      _n = num/den;
+      _n = max(-real(1), min(real(1), _n));
+      // _n = sin(phi0), _nc = cos(phi0)
+      // compute _nc biasing the result towards the mean value
+      real t = (1 - _n) * (1 + _n);
+      _nc = 1/hyp(_tphi0);
+      _nc += (t - sq(_nc))/(sqrt(t) + _nc);
+      _nc = max(epsx, _nc);
+      _tphi0 = _n / _nc;
+    } else {
+      _nc = 1/hyp(_tphi0);
+      _n = _tphi0 * _nc;
+      if (polar)
+        _nc = 0;
+    }
+
+    _tbet0 = _fm * _tphi0; _scbet0 = hyp(_tbet0);
+    _scphi0 = hyp(_tphi0); _sphi0 = _tphi0/_scphi0;
+    _xi0 = eatanhe(_sphi0); _shxi0 = sinh(_xi0); _chxi0 = hyp(_shxi0);
+    _tchi0 = _chxi0 * _tphi0 - _shxi0 * _scphi0; _scchi0 = hyp(_tchi0);
+    _psi0 = Math::asinh(_tchi0);
+
+    _lat0 = atan(_sign * _tphi0) / Math::degree();
+    _lt0 = - _psi0; // Snyder's log(t0)
+    _t0n = exp(- _n * _psi0);      // Snyder's t0^n
+    _t0nm1 = Math::expm1(- _n * _psi0);      // Snyder's t0^n - 1
+    // a * k1 * m1/t1^n = a * k1 * m2/t2^n = a * k1 * n * (Snyder's F)
+    // = a * k1 / (scbet1 * exp(-n * psi1))
+    _scale = _a * k1 /
+      (scbet1 * (2 * _n <= 1 ? exp(- _n * psi1) :
+                 // exp((1-n)* psi1) * exp(-psi1)
+                 // with (1-n) = nc^2/(1+n) and exp(-psi1) = 1/(tchi1+scchi1)
+                 exp( (sq(_nc)/(1 + _n)) * psi1 ) / (tchi1 + scchi1)));
+    // Scale at phi0 = k0 = k1 * (scbet0*exp(-n*psi0))/(scbet1*exp(-n*psi1))
+    //                    = k1 * scbet0/scbet1 * exp(n * (psi1 - psi0))
+    // psi1 - psi0 = Dasinh(tchi1, tchi0) * (tchi1 - tchi0)
+    _k0 = k1 * (_scbet0/scbet1) *
+      exp(_n * Dasinh(tchi1, _tchi0, scchi1, _scchi0) * (tchi1 - _tchi0));
+    _nrho0 = _a * _k0 / _scbet0;
   }
 
   const LambertConformalConic
@@ -163,34 +233,22 @@ namespace GeographicLib {
       lon -= lon0;
     lat *= _sign;
     real
-      phi = lat * Math::degree(),
       lam = lon * Math::degree(),
-      sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : 0,
-      m = mf(sphi, cphi),
-      lt = logtf(sphi, cphi),
-      tn = exp(_n * lt),
-      theta = _n * lam, stheta = sin(theta), ctheta = cos(theta);
-    x = _a * _scale * tn * (_n > eps2 ? stheta/_n : lam);
-    if (_n > real(0.5))
-      y = (_t0n - tn * ctheta)/_n;
-    else {
-      // write as
-      // _t0n * ( (1 - ctheta)/_n - (tn/_t0n - 1)/_n * ctheta )
-      // _t0n * ( stheta^2/(1 + ctheta) / _n
-      //          - ((t/_t0)^n - 1)/_n * ctheta )
-      // _t0n * ( stheta^2/(1 + ctheta) / _n
-      //          - (exp(_n * log(t/_t0)) - 1)/_n * ctheta )
-      // _t0n * (ax - bx)
-      real
-        ax = (_n > eps2 ? sq(stheta) / _n : lam * theta) / (1 + ctheta),
-        fx = lt - _lt0,
-        bx = ctheta * (abs(_n * fx) > eps ? Math::expm1(_n * fx) / _n : fx);
-      y = _t0n * (ax - bx);
-    }
-    y *= _a * _scale * _sign;
-    k = _scale * (m == 0 && _nc == 0 && sphi > 0 ?
-                  sqrt(_e2m) * exp(eatanhe(real(1))) / 2 :
-                  tn/m);        // infinite if pole and _n < 1
+      phi = lat * Math::degree(),
+      sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx,
+      tphi = sphi/cphi, tbet = _fm * tphi, scbet = hyp(tbet),
+      scphi = 1/cphi,
+      xi = eatanhe(sphi), shxi = sinh(xi), chxi = hyp(shxi),
+      tchi = chxi * tphi - shxi * scphi, scchi = hyp(tchi),
+      psi = Math::asinh(tchi),
+      // m = 1/scbet, lt = - psi, tn = exp(_n * lt),
+      theta = _n * lam, stheta = sin(theta), ctheta = cos(theta),
+      dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0),
+      drho = - _scale * Dexp(-_n * psi, -_n * _psi0) * dpsi;
+    x = (_nrho0 + _n * drho) * (_n != 0 ? stheta / _n : lam);
+    y = _nrho0 * (_n != 0 ? sq(stheta)/((1 + ctheta) * _n) : 0) - drho * ctheta;
+    k = _k0 * (scbet/_scbet0) * exp( -_n * dpsi );
+    y *= _sign;
     gamma = theta * _sign;
   }
 
@@ -199,54 +257,43 @@ namespace GeographicLib {
                                       real& gamma, real& k)
     const throw() {
     y *= _sign;
-    x /= _a * _scale;
-    y /= _a * _scale;
     real
-      /*
-        rho = hypot(x, rho0 - y)
-        rho0 = _a * _scale * _t0n / _n
-        _n * rho = hypot(x * _n, _a * _scale * _t0n - y * _n)
-        tn    = _n * rho / (_a * _scale)
-              = hypot(_n * x/(_a * _scale), _t0n - _n * y/(_a * _scale))
-        theta = atan2(_n * x/(_a * _scale), _t0n - _n * y/(_a * _scale))
-        lam = theta/_n
-      */
-      x1 = _n * x, y1 = _n * y,
-      tn = Math::hypot(x1, _t0n - y1), theta = atan2(x1, _t0n - y1),
-      lam = _n != 0 ? theta/_n : x/_t0n;
-    real q;                     // -log(t)
-    if (_n != 0 && tn < real(0.5))
-      q = -log(tn) / _n;
-    else {
-      real
-        b1 = _t0nm1 - _n * y,
-        tnm1 = (sq(x1) +  2 * b1 + sq(b1)) / (tn + 1); // tn - 1
-      q = _n != 0 ? - Math::log1p(tnm1)/_n :
-        -2 * (_lt0  - y) / (tn + 1); // _t0nm1 -> _n * _lt0
-    }
-    // Clip to [-ahypover, ahypover] to avoid overflow later
-    q = q < ahypover ? (q > -ahypover ? q : -ahypover) : ahypover;
-    // Recast Snyder's 15-9 as
-    // q = q' - eatanh(tanh(q'))
-    // where q = -log(t) and q' = asinh(tan(phi))
-    // q is known and we solve for q' by Newton's method.
-    // Write f(q') = q' - eatanh(tanh(q')) - q
-    // f'(q') = (1 - e^2)/(1 - e^2 * tanh(q')^2)
-    // Starting guess is q' = q.
-    real qp = q;
+      nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
+      drho = (x*nx - 2*y*_nrho0 + y*ny) / ( Math::hypot(nx, y1) + _nrho0 ),
+      dpsi = - Dlog(_t0n + _n * drho/_scale, _t0n) * drho / _scale,
+      psi = _psi0 + dpsi, tchi = sinh(psi), scchi = hyp(tchi),
+      dtchi = Dsinh(psi, _psi0, tchi, _tchi0, scchi, _scchi0) * dpsi,
+      lam = _n != 0 ? atan2( nx, y1 ) / _n : x / y1;
+    tchi = _tchi0 + dtchi;      // Update tchi using divided difference
+
+    std::cout << std::fixed << std::setprecision(14);
+    std::cout << _nrho0/_n << " " << drho << " " << _nrho0/_n + drho << "\n";
+    std::cout << _psi0 << " " << dpsi << " " << psi << "\n";
+    std::cout << _tchi0 << " " << dtchi << " " << tchi << "\n";
+
+    // Use Newton's method to solve for tphi
+    real
+      tphi = tchi,
+      stol = tol * max(real(1), abs(tchi));
+    // min iterations = 1, max iterations = 2; mean = 1.99
     for (int i = 0; i < numit; ++i) {
       real
-        t = tanh(qp),
-        dqp = -(qp - eatanhe(t) - q) * (1 - _e2 * sq(t)) / _e2m;
-      qp += dqp;
-      if (abs(dqp) < tol)
+        scphi = hyp(tphi),
+        shxi = sinh( eatanhe( tphi / scphi ) ),
+        tchia = hyp(shxi) * tphi - shxi * scphi,
+        dtphi = (tchi - tchia) * (1 + _e2m * sq(tphi)) /
+        ( _e2m * scphi * hyp(tchia) );
+      tphi += dtphi;
+      if (abs(dtphi) < stol)
         break;
     }
+    std::cout << _tphi0 << " " << tphi-_tphi0 << " " << tphi << "\n";
     double
-      phi = _sign * atan(sinh(qp)),
-      m = mf(tanh(qp), 1/cosh(qp));
+      phi = _sign * atan(tphi),
+      tbet = _fm * tphi, scbet = hyp(tbet);
     lat = phi / Math::degree();
     lon = lam / Math::degree();
+    gamma = _sign * _n * lon;
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon + lon0 >= 180)
       lon += lon0 - 360;
@@ -254,15 +301,14 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    gamma = _sign * theta / Math::degree();
-    k = _scale * (m == 0 && _nc == 0 && qp > 0 ?
-                  sqrt(_e2m) * exp(eatanhe(real(1))) / 2 :
-                  tn/m);        // infinite if pole and _n < 1
+    k = _k0 * (scbet/_scbet0) * exp( -_n * dpsi );
   }
 
   void LambertConformalConic::SetScale(real lat, real k) {
     if (!(k > 0))
       throw GeographicErr("Scale is not positive");
+    if (!(abs(lat) <= 90))
+      throw GeographicErr("Latitude for SetScale not in [-90, 90]");
     real x, y, gamma, kold;
     Forward(0, lat, 0, x, y, gamma, kold);
     k /= kold;
