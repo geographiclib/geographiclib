@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
 
   int retval = 0;
   try {
-    Geoid g(geoid, dir, cubic);
+    const Geoid g(geoid, dir, cubic);
     try {
       if (cacheall)
         g.CacheAll();
