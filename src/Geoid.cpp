@@ -197,14 +197,17 @@ namespace GeographicLib {
      18,  -36,    2,   0,  -66,  -51, 0,   0,  102,  31,
   };
 
-  Geoid::Geoid(const std::string& name, const std::string& path, bool cubic)
+  Geoid::Geoid(const std::string& name, const std::string& path, bool cubic,
+               bool threadsafe)
     : _name(name)
     , _dir(path)
     , _cubic(cubic)
     , _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
     , _degree( Math::degree() )
-    , _eps( sqrt(numeric_limits<real>::epsilon()) ) {
+    , _eps( sqrt(numeric_limits<real>::epsilon()) ) 
+    , _threadsafe(false)        // Set after cache is read
+  {
     if (_dir.empty())
       _dir = GeoidPath();
     if (_dir.empty())
@@ -292,6 +295,11 @@ namespace GeographicLib {
     _iy = _height;
     // Ensure that file errors throw exceptions
     _file.exceptions(ifstream::eofbit | ifstream::failbit | ifstream::badbit);
+    if (threadsafe) {
+      CacheAll();
+      _file.close();
+      _threadsafe = true;
+    }
   }
 
   Math::real Geoid::height(real lat, real lon, bool gradp,
@@ -306,14 +314,15 @@ namespace GeographicLib {
     fy -= iy;
     iy += (_height - 1)/2;
     ix += ix < 0 ? _width : ix >= _width ? -_width : 0;
-    if (!(ix == _ix && iy == _iy)) {
-      _ix = ix;
-      _iy = iy;
+    real v00 = 0, v01 = 0, v10 = 0, v11 = 0;
+    real t[nterms];
+
+    if (_threadsafe || !(ix == _ix && iy == _iy)) {
       if (!_cubic) {
-        _v00 = rawval(ix    , iy    );
-        _v01 = rawval(ix + 1, iy    );
-        _v10 = rawval(ix    , iy + 1);
-        _v11 = rawval(ix + 1, iy + 1);
+        v00 = rawval(ix    , iy    );
+        v01 = rawval(ix + 1, iy    );
+        v10 = rawval(ix    , iy + 1);
+        v11 = rawval(ix + 1, iy + 1);
       } else {
         real v[stencilsize];
         int k = 0;
@@ -333,17 +342,17 @@ namespace GeographicLib {
         const real* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
         real c0x = iy == 0 ? c0n : iy == _height - 2 ? c0s : c0;
         for (unsigned i = 0; i < nterms; ++i) {
-          _t[i] = 0;
+          t[i] = 0;
           for (unsigned j = 0; j < stencilsize; ++j)
-            _t[i] += v[j] * c3x[nterms * j + i];
-          _t[i] /= c0x;
+            t[i] += v[j] * c3x[nterms * j + i];
+          t[i] /= c0x;
         }
       }
     }
     if (!_cubic) {
       real
-        a = (1 - fx) * _v00 + fx * _v01,
-        b = (1 - fx) * _v10 + fx * _v11,
+        a = (1 - fx) * v00 + fx * v01,
+        b = (1 - fx) * v10 + fx * v11,
         c = (1 - fy) * a + fy * b,
         h = _offset + _scale * c;
       if (gradp) {
@@ -352,21 +361,29 @@ namespace GeographicLib {
           cosphi = cos(phi),
           sinphi = sin(phi),
           n = 1/sqrt(1 - _e2 * sinphi * sinphi);
-        gradn = ((1 - fx) * (_v00 - _v10) + fx * (_v01 - _v11)) *
+        gradn = ((1 - fx) * (v00 - v10) + fx * (v01 - v11)) *
           _rlatres / (_degree * _a * (1 - _e2) * n * n * n);
         grade = (cosphi > _eps ?
-                 ((1 - fy) * (_v01 - _v00) + fy * (_v11 - _v10)) /   cosphi :
-                 (sinphi > 0 ? _v11 - _v10 : _v01 - _v00) *
+                 ((1 - fy) * (v01 - v00) + fy * (v11 - v10)) /   cosphi :
+                 (sinphi > 0 ? v11 - v10 : v01 - v00) *
                  _rlatres / _degree ) *
           _rlonres / (_degree * _a * n);
         gradn *= _scale;
         grade *= _scale;
       }
+      if (!_threadsafe) {
+        _ix = ix;
+        _iy = iy;
+        _v00 = v00;
+        _v01 = v01;
+        _v10 = v10;
+        _v11 = v11;
+      }
       return h;
     } else {
-      real h = _t[0] + fx * (_t[1] + fx * (_t[3] + fx * _t[6])) +
-        fy * (_t[2] + fx * (_t[4] + fx * _t[7]) +
-             fy * (_t[5] + fx * _t[8] + fy * _t[9]));
+      real h = t[0] + fx * (t[1] + fx * (t[3] + fx * t[6])) +
+        fy * (t[2] + fx * (t[4] + fx * t[7]) +
+             fy * (t[5] + fx * t[8] + fy * t[9]));
       h = _offset + _scale * h;
       if (gradp) {
         // Avoid 0/0 at the poles by backing off 1/100 of a cell size
@@ -379,18 +396,26 @@ namespace GeographicLib {
           cosphi = cos(phi),
           sinphi = sin(phi),
           n = 1/sqrt(1 - _e2 * sinphi * sinphi);
-        gradn = _t[2] + fx * (_t[4] + fx * _t[7]) +
-          fy * (2 * _t[5] + fx * 2 * _t[8] + 3 * fy * _t[9]);
-        grade = _t[1] + fx * (2 * _t[3] + fx * 3 * _t[6]) +
-          fy * (_t[4] + fx * 2 * _t[7] + fy * _t[8]);
+        gradn = t[2] + fx * (t[4] + fx * t[7]) +
+          fy * (2 * t[5] + fx * 2 * t[8] + 3 * fy * t[9]);
+        grade = t[1] + fx * (2 * t[3] + fx * 3 * t[6]) +
+          fy * (t[4] + fx * 2 * t[7] + fy * t[8]);
         gradn *= - _rlatres / (_degree * _a * (1 - _e2) * n * n * n) * _scale;
         grade *= _rlonres / (_degree * _a * n * cosphi) * _scale;
+      }
+      if (!_threadsafe) {
+        _ix = ix;
+        _iy = iy;
+        for (unsigned i = 0; i < nterms; ++i)
+          _t[i] = t[i];
       }
       return h;
     }
   }
 
   void Geoid::CacheClear() const throw() {
+    if (_threadsafe)
+      throw GeographicErr("Attempt to change cache of threadsafe Geoid");
     _cache = false;
     try {
       _data.clear();
@@ -402,6 +427,8 @@ namespace GeographicLib {
   }
 
   void Geoid::CacheArea(real south, real west, real north, real east) const {
+    if (_threadsafe)
+      throw GeographicErr("Attempt to change cache of threadsafe Geoid");
     if (south > north) {
       CacheClear();
       return;
