@@ -414,15 +414,15 @@ namespace GeographicLib {
   }
 
   void Geoid::CacheClear() const throw() {
-    if (_threadsafe)
-      throw GeographicErr("Attempt to change cache of threadsafe Geoid");
-    _cache = false;
-    try {
-      _data.clear();
-      // Use swap to release memory back to system
-      vector< vector<unsigned short> >().swap(_data);
-    }
-    catch (const exception&) {
+    if (!_threadsafe) {
+      _cache = false;
+      try {
+        _data.clear();
+        // Use swap to release memory back to system
+        vector< vector<unsigned short> >().swap(_data);
+      }
+      catch (const exception&) {
+      }
     }
   }
 
