@@ -161,9 +161,10 @@ namespace GeographicLib {
      *
      * @param[in] name the name of the geoid.
      * @param[in] path (optional) directory for data file.
-     * @param[in] cubic interpolation method; false means bilinear, true (the
-     *   default) means cubic.
-     * @param[in] threadsafe construct a thread safe object (default false).
+     * @param[in] cubic (optional) interpolation method; false means bilinear,
+     *   true (the default) means cubic.
+     * @param[in] threadsafe (optional), if true, construct a thread safe
+     *   object.  The default is false
      *
      * The data file is formed by appending ".pgm" to the name.  If \e path is
      * specified (and is non-empty), then the file is loaded from directory, \e
@@ -172,9 +173,10 @@ namespace GeographicLib {
      * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
      * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).
      * This may throw an exception because the file does not exist, is
-     * unreadable, or is corrupt.  If the \e threadsafe parameter is set, the
-     * data set is read into memory and this may also cause an exception to be
-     * thrown.
+     * unreadable, or is corrupt.  If the \e threadsafe parameter is true, the
+     * data set is read into memory (which this may also cause an exception to
+     * be thrown), the data file is closed, and single-cell caching is turned
+     * off; this results in a Geoid object which \e is thread safe.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
                    bool cubic = true, bool threadsafe = false);
@@ -213,8 +215,8 @@ namespace GeographicLib {
                                       real(90), real(360)); }
 
     /**
-     * Clear the cache.  An exception is thrown if this routine is called on a
-     * thread safe Geoid.  Otherwise, this never throws an error.
+     * Clear the cache.  This never throws an error.  (This does nothing with a
+     * thread safe Geoid.)
      **********************************************************************/
     void CacheClear() const throw();
 
