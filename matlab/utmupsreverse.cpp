@@ -18,25 +18,25 @@
 using namespace std;
 using namespace GeographicLib;
 
-void mexFunction( int nlhs, mxArray* plhs[], 
-                  int nrhs, const mxArray* prhs[] ) { 
+void mexFunction( int nlhs, mxArray* plhs[],
+                  int nrhs, const mxArray* prhs[] ) {
 
   static char rcsid[]
     = "$Id$";
 
   if (nrhs != 1)
-    mexErrMsgTxt("One input argument required."); 
+    mexErrMsgTxt("One input argument required.");
   else if (nlhs > 1)
     mexErrMsgTxt("Only one output argument can be specified.");
 
-  if (!mxIsDouble(prhs[0]))
+  if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
     mexErrMsgTxt("utmups coordinates are not of type double.");
 
   if (mxGetN(prhs[0]) != 4)
-    mexErrMsgTxt("utmups coordinates must be M x 4 matrix."); 
+    mexErrMsgTxt("utmups coordinates must be M x 4 matrix.");
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateDoubleMatrix(m, 4, mxREAL); 
+  plhs[0] = mxCreateDoubleMatrix(m, 4, mxREAL);
 
   double* x = mxGetPr(prhs[0]);
   double* y = x + m;
@@ -49,11 +49,14 @@ void mexFunction( int nlhs, mxArray* plhs[],
   double* k = lat + 3*m;
 
   for (int i = 0; i < m; ++i) {
-    int ZONE;
-    bool HEMI;
     try {
-      UTMUPS::Reverse(int(floor(zone[i]+0.5)), hemi[i]!= 0,
-                      x[i], y[i], lat[i], lon[i], gamma[i], k[i]);
+      int ZONE = int(zone[i]);
+      if (double(ZONE) != zone[i])
+        throw GeographicErr("Zone is not an integer");
+      bool HEMI = (hemi[i] != 0);
+      if (HEMI && (hemi[i] != 1))
+        throw GeographicErr("Hemisphere is not 0 or 1");
+      UTMUPS::Reverse(ZONE, HEMI, x[i], y[i], lat[i], lon[i], gamma[i], k[i]);
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());

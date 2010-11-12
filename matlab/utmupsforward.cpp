@@ -18,42 +18,42 @@
 using namespace std;
 using namespace GeographicLib;
 
-void mexFunction( int nlhs, mxArray* plhs[], 
-                  int nrhs, const mxArray* prhs[] ) { 
+void mexFunction( int nlhs, mxArray* plhs[],
+                  int nrhs, const mxArray* prhs[] ) {
 
   static char rcsid[]
     = "$Id$";
 
   if (nrhs < 1)
-    mexErrMsgTxt("One input argument required."); 
+    mexErrMsgTxt("One input argument required.");
   if (nrhs > 2)
-    mexErrMsgTxt("More that two input arguments specified."); 
+    mexErrMsgTxt("More than two input arguments specified.");
   else if (nlhs > 1)
     mexErrMsgTxt("Only one output argument can be specified.");
 
-  if (!mxIsDouble(prhs[0]))
+  if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
     mexErrMsgTxt("latlong coordinates are not of type double.");
 
   if (mxGetN(prhs[0]) != 2)
-    mexErrMsgTxt("latlong coordinates must be M x 2 matrix."); 
+    mexErrMsgTxt("latlong coordinates must be M x 2 matrix.");
 
   int setzone;
   if (nrhs == 1)
     setzone = UTMUPS::STANDARD;
   else {
-    if (!mxIsDouble(prhs[1]))
-      mexErrMsgTxt("setzone is not of type double.");
-    if (mxGetM(prhs[1]) != 1 || mxGetN(prhs[1]) != 1)
-      mexErrMsgTxt("setzone must be a scaler.");
-    double* t = mxGetPr(prhs[1]);
-    setzone = int(floor(t[0] + 0.5));
+    if (!( mxIsDouble(prhs[1]) && mxIsComplex(prhs[1]) &&
+           mxGetNumberOfElements(prhs[1]) == 1 ))
+      mexErrMsgTxt("setzone is not an integer.");
+    double rzone = mxGetScalar(prhs[1]);
+    setzone = int(rzone);
+    if (double(setzone) != rzone)
+      mexErrMsgTxt("setzone is not an integer.");
     if (setzone < UTMUPS::MINPSEUDOZONE || setzone > UTMUPS::MAXZONE)
       mexErrMsgTxt("setzone outside the legal range.");
   }
-    
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateDoubleMatrix(m, 6, mxREAL); 
+  plhs[0] = mxCreateDoubleMatrix(m, 6, mxREAL);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
