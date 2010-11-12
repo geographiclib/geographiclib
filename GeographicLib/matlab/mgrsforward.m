@@ -1,7 +1,8 @@
-function latlong = utmupsreverse(utmups)
-%utmupsreverse  Convert UTM/UPS coordinates to geographic
+function mgrs = mgrsforward(utmups)
+%mgrsforward  Convert UTM/UPS coordinates to MGRS
 %
-%   latlong = utmupsreverse(utmups);
+%   mgrs = mgrsforward(utmups);
+%   mgrs = mgrsforward(utmups, prec);
 %
 %   utmups is an M x 4 matrix
 %       easting = utmups(:,1) in meters
@@ -10,16 +11,15 @@ function latlong = utmupsreverse(utmups)
 %       hemi = utmups(:,4)
 %
 %   zone = 0 for UPS, zone = [1,60] for UTM
-%   hemi = 0 for southern hemisphere, hemi = 1 for northern hemisphere.
+%   hemi = 0 for southern hemisphere, hemi = 1 for northern hemisphere
+%   prec = half the number of trailing digits in the MGRS string
+%          (default 5)
 %
-%   latlong is an M x 4 matrix
-%       latitude = latlong(:,1) in degrees
-%       longitude = latlong(:,2) in degrees
-%       gamma = latlong(:,3) meridian convergence in degrees
-%       k = latlong(:,4) scale
+%   mgrs is a vector of M strings of length 5 + 2 * prec.
+%   For UPS coordinates the string begins with 2 blanks.
   error('Error: executing .m file instead of compiled routine');
 end.
-% utmupsreverse.m
+% mgrsforward.m
 % Matlab .m file for geographic to UTM/UPS conversions
 %
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under

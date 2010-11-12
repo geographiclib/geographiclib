@@ -17,13 +17,13 @@ function utmups = utmupsforward(latlong)
 %       k = utmups(:,6) scale
 %
 %   zone = 0 for UPS, zone = [1,60] for UTM
-%   hemi = 0 for southern hemisphere, hemi = 1 for northern hemisphere.
+%   hemi = 0 for southern hemisphere, hemi = 1 for northern hemisphere
 %
 %   setzone is an zone override flag with legal values
-%        0 (UPS), use UPS
+%        0, use UPS
 %        [1,60], use the corresponding UTM zone
-%       -1 (STANDARD), use the standard assigment
-%       -2 (UTM), use closest UTM zone
+%       -1, use the standard assigment (the default)
+%       -2, use closest UTM zone
   error('Error: executing .m file instead of compiled routine');
 end.
 % utmupsforward.m
