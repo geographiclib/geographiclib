@@ -1,6 +1,6 @@
 # $Id$
 
-PROGRAMS = ProjTest TMTest GeodTest
+PROGRAMS = ProjTest TMTest GeodTest ConicTest
 
 all: $(PROGRAMS)
 
@@ -35,11 +35,13 @@ ProjTest: ProjTest.o
 TMTest: TMTest.o
 GeodTest: GeodTest.o
 GeodTestL: GeodTestL.o
+ConicTest: ConicTest.o
 ProjTest.o: Constants.hpp LambertConformalConic.hpp PolarStereographic.hpp \
 	TransverseMercator.hpp TransverseMercatorExact.hpp
 TMTest.o: Constants.hpp TransverseMercator.hpp TransverseMercatorExact.hpp \
 	Geodesic.hpp
 GeodTest.o: Constants.hpp Geodesic.hpp
+ConicTest.o: Constants.hpp LambertConformalConic.hpp
 
 GeodTestL.o: GeodTest.cpp Constants.hpp Geodesic.hpp \
 	../include/GeographicLibL/Constants.hpp \
