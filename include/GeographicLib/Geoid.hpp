@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_GEOID_HPP "$Id$"
 
 #include "GeographicLib/Constants.hpp"
+#include <string>
 #include <vector>
 #include <fstream>
 

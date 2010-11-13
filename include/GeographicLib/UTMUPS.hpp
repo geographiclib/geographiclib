@@ -7,7 +7,6 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
 #define GEOGRAPHICLIB_UTMUPS_HPP "$Id$"
 
