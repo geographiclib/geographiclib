@@ -212,13 +212,15 @@ int main(int argc, char* argv[]) {
           s = s.substr(0, px + 1);
         }
         p.Reset(zone + s);
-        real gradn, grade;
-        real h = g(p.Latitude(), p.Longitude(), gradn, grade);
-        if (heightmult)
+        if (heightmult) {
+          real h = g(p.Latitude(), p.Longitude());
           std::cout << s << " " << height + real(heightmult) * h << "\n";
-        else
+        } else {
+          real gradn, grade;
+          real h = g(p.Latitude(), p.Longitude(), gradn, grade);
           std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
                     << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";
+        }
       }
       catch (const std::exception& e) {
         std::cout << "ERROR: " << e.what() << "\n";

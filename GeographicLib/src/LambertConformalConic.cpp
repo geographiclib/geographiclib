@@ -116,22 +116,28 @@ namespace GeographicLib {
                                    real sphi2, real cphi2, real k1) throw() {
     // Snyder: 15-8: n = (log(m1) - log(m2))/(log(t1)-log(t2))
     //
-    // m = cos(beta) = 1/sec(beta) = 1/sqrt(1+tan(beta)^2)
-    // beta = parametric lat, tan(beta) = (1-f)*tan(phi)
+    // m = cos(bet) = 1/sec(bet) = 1/sqrt(1+tan(bet)^2)
+    // bet = parametric lat, tan(bet) = (1-f)*tan(phi)
     //
     // t = tan(pi/4-chi/2) = 1/(sec(chi) + tan(chi)) = sec(chi) - tan(chi)
-    // log(t) = -asinh(tan(chi))
+    // log(t) = -asinh(tan(chi)) = -psi
     // chi = conformal lat
     // tan(chi) = tan(phi)*cosh(xi) - sinh(xi)*sec(phi)
     // xi = eatanhe(sin(phi)), eatanhe(x) = e * atanh(e*x)
     //
-    // n = (log(sec(beta2))-log(sec(beta1)))/(asinh(tan(chi2))-asinh(tan(chi1)))
+    // n = (log(sec(bet2))-log(sec(bet1)))/(asinh(tan(chi2))-asinh(tan(chi1)))
     //
-    //
-    // Let log(sec(beta)) = b(tphi), asinh(tan(chi)) = c(tphi)
+    // Let log(sec(bet)) = b(tphi), asinh(tan(chi)) = c(tphi)
     // Then n = Db(tphi2, tphi1)/Dc(tphi2, tphi1)
     // In limit tphi2 -> tphi1, n -> sphi1
     //
+    {
+      real r;
+      r = Math::hypot(sphi1, cphi1);
+      sphi1 /= r; cphi1 /= r;
+      r = Math::hypot(sphi2, cphi2);
+      sphi2 /= r; cphi2 /= r;
+    }
     bool polar = (cphi1 == 0);
     cphi1 = max(epsx, cphi1);   // Avoid singularities at poles
     cphi2 = max(epsx, cphi2);
@@ -155,8 +161,10 @@ namespace GeographicLib {
       scphi2 = 1/cphi2,
       xi2 = eatanhe(sphi2), shxi2 = sinh(xi2), chxi2 = hyp(shxi2),
       tchi2 = chxi2 * tphi2 - shxi2 * scphi2, scchi2 = hyp(tchi2),
+      /*
       dshxi = ( Dsinh(xi2, xi1, shxi2, shxi1, chxi2, chxi1) *
                 Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1) ),
+      */
       psi1 = Math::asinh(tchi1);
     if (tphi2 - tphi1 != 0) {
       real num, numcheck;
@@ -168,23 +176,68 @@ namespace GeographicLib {
 
       real den, dencheck;
 
-      den = Dasinh(tchi2, tchi1, scchi2, scchi1)
-        * // Dchi(tphi2, tphi1)
-        ( ( (chxi1  + chxi2 )/2 -
-            (shxi1  + shxi2 )/2 * (tphi1 + tphi2)/(scphi1 + scphi2) ) +
-          ( (tphi1  + tphi2 )/2 * (shxi1 + shxi2)/(chxi1  + chxi2 ) -
-            (scphi1 + scphi2)/2 ) * dshxi );
-      dencheck = (Math::asinh(tchi2) - Math::asinh(tchi1))/(tphi2 - tphi1);
+      den =  Dasinh(tphi2, tphi1, scphi2, scphi1) - Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1);
+      //cout << den << "\n";
 
+      dencheck = (Math::asinh(tchi2) - Math::asinh(tchi1))/(tphi2 - tphi1);
       _n = numcheck/dencheck;
       _n = num/den;
       _n = max(-real(1), min(real(1), _n));
-      // _n = sin(phi0), _nc = cos(phi0)
-      // compute _nc biasing the result towards the mean value
-      real t = (1 - _n) * (1 + _n);
-      _nc = 1/hyp(_tphi0);
-      _nc += (t - sq(_nc))/(sqrt(t) + _nc);
-      _nc = max(epsx, _nc);
+      {
+        // scbet - scchi
+        real s1 = (tphi1 * (2 * shxi1 * chxi1 * scphi1 - _e2 * tphi1) -
+                   sq(shxi1) * (1 + 2 * sq(tphi1)));
+        real s2 = (tphi2 * (2 * shxi2 * chxi2 * scphi2 - _e2 * tphi2) -
+                   sq(shxi2) * (1 + 2 * sq(tphi2)));
+        real t1 = tchi1 < 0 ? scbet1 - tchi1 : (s1 + 1)/(scbet1 + tchi1);
+        real t2 = tchi2 < 0 ? scbet2 - tchi2 : (s2 + 1)/(scbet2 + tchi2);
+        s1 /= scbet1 + scchi1;
+        s2 /= scbet2 + scchi2;
+        real a2 = -(s2 + t2)/(2*scbet2);
+        real a1 = -(s1 + t1)/(2*scbet1);
+        real
+          dtchi = den/Dasinh(tchi2, tchi1, scchi2, scchi1),
+          tbm = ((tbet1 > 0 ? 1/(scbet1+tbet1) : scbet1 - tbet1)+
+                 (tbet2 > 0 ? 1/(scbet2+tbet2) : scbet2 - tbet2))/
+          (scbet1+scbet2),
+          dbet = _e2 * (1/(scbet2+_fm*scphi2)+1/(scbet1+_fm*scphi1))/_fm,
+          xi0 = eatanhe(real(1)), shxi0 = sinh(xi0), chxi0 = hyp(shxi0),
+          dxi = Deatanhe(sphi1, sphi2) * Dsn(tphi2, tphi1, sphi2, sphi1),
+          dxi1 = 2*sinh(Deatanhe(real(1), sphi1)/(scphi1*(tphi1+scphi1))/2),
+          dxi2 = 2*sinh(Deatanhe(real(1), sphi2)/(scphi2*(tphi2+scphi2))/2),
+          chxi01 = cosh((xi0+xi1)/2), shxi01 = sinh((xi0+xi1)/2),
+          chxi02 = cosh((xi0+xi2)/2), shxi02 = sinh((xi0+xi2)/2),
+          dshxi1 = dxi1*chxi01, dchxi1 = dxi1*shxi01,
+          dshxi2 = dxi2*chxi02, dchxi2 = dxi2*shxi02,
+          dxi01 = Deatanhe(real(1), sphi1)/(scphi1*(tphi1+scphi1)),
+          dxi02 = Deatanhe(real(1), sphi2)/(scphi2*(tphi2+scphi2)),
+          dshxi01 = Dsinh(xi0, xi1, shxi0, shxi1, chxi0, chxi1) * dxi01,
+          dshxi02 = Dsinh(xi0, xi2, shxi0, shxi2, chxi0, chxi2) * dxi02,
+          /*
+            dchxi01 = Dcosh(xi0, xi1, shxi0, shxi1, chxi0, chxi1) * dxi01,
+            dchxi02 = Dcosh(xi0, xi2, shxi0, shxi2, chxi0, chxi2) * dxi02,
+          */
+          dchxi01 = Dhyp(shxi0, shxi1, chxi0, chxi1) * dshxi01,
+          dchxi02 = Dhyp(shxi0, shxi2, chxi0, chxi2) * dshxi02,
+          /* mu12 = (- scphi1 * dchxi1 + tphi1 * dshxi1
+             - scphi2 * dchxi2 + tphi2 * dshxi2), */
+          mu12 = (- scphi1 * dchxi01 + tphi1 * dshxi01
+                  - scphi2 * dchxi02 + tphi2 * dshxi02),
+          ddel = (Dhyp(tphi1, tphi2, scphi1, scphi2) * (dshxi1+dshxi2)/2
+                  - (dchxi1+dchxi2)/2
+                  - ((scphi1+scphi2)/2  -
+                     (tphi1+tphi2)/2 * Dhyp(shxi1,shxi2,chxi1,chxi2))
+                  *Dsinh(xi1,xi2,shxi1,shxi2,chxi1,chxi2)*dxi),
+          dchi = (mu12-ddel*(scphi2+scphi1))/dtchi,
+          tam = dtchi*(dchi-dbet)/(scchi1+scchi2),
+          nca = Dlog1p(a2, a1)*
+          ( ( (tchi2 >= 0 ? scchi2 + tchi2 : 1/(scchi2 - tchi2)) +
+              (tchi1 >= 0 ? scchi1 + tchi1 : 1/(scchi1 - tchi1)) ) /
+            (4 * scbet1 * scbet2) )
+          * _fm * (tbm - tam) /
+          den;
+        _nc = sqrt(nca * (1 + _n));
+      }
       _tphi0 = _n / _nc;
     } else {
       _nc = 1/hyp(_tphi0);
@@ -261,15 +314,25 @@ namespace GeographicLib {
       nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
       drho = (x*nx - 2*y*_nrho0 + y*ny) / ( Math::hypot(nx, y1) + _nrho0 ),
       dpsi = - Dlog(_t0n + _n * drho/_scale, _t0n) * drho / _scale,
-      psi = _psi0 + dpsi, tchi = sinh(psi), scchi = hyp(tchi),
-      dtchi = Dsinh(psi, _psi0, tchi, _tchi0, scchi, _scchi0) * dpsi,
       lam = _n != 0 ? atan2( nx, y1 ) / _n : x / y1;
-    tchi = _tchi0 + dtchi;      // Update tchi using divided difference
-
-    std::cout << std::fixed << std::setprecision(14);
-    std::cout << _nrho0/_n << " " << drho << " " << _nrho0/_n + drho << "\n";
-    std::cout << _psi0 << " " << dpsi << " " << psi << "\n";
-    std::cout << _tchi0 << " " << dtchi << " " << tchi << "\n";
+    real tchi;
+    if (2 * _n <= 1) {
+      real
+	psi = _psi0 + dpsi, tchia = sinh(psi), scchi = hyp(tchia),
+	dtchi = Dsinh(psi, _psi0, tchia, _tchi0, scchi, _scchi0) * dpsi;
+      tchi = _tchi0 + dtchi;	// Update tchi using divided difference
+    } else {
+      // tchi = sinh(-1/n * log(tn))
+      // = sinh((1-1/n) * log(tn) - log(tn))
+      // = + sinh((1-1/n) * log(tn)) * cosh(log(tn))
+      //   - cosh((1-1/n) * log(tn)) * sinh(log(tn))
+      // (1-1/n) = - nc^2/(n*(1+n))
+      // cosh(log(tn)) = (tn + 1/tn)/2; sinh(log(tn)) = (tn - 1/tn)/2
+      real
+	tn = _t0n + _n * drho/_scale,
+	sh = sinh( -sq(_nc)/(_n * (1 + _n)) * log(tn) );
+      tchi = sh * (tn + 1/tn)/2 - hyp(sh) * (tn - 1/tn)/2;
+    }
 
     // Use Newton's method to solve for tphi
     real
@@ -287,7 +350,6 @@ namespace GeographicLib {
       if (abs(dtphi) < stol)
         break;
     }
-    std::cout << _tphi0 << " " << tphi-_tphi0 << " " << tphi << "\n";
     double
       phi = _sign * atan(tphi),
       tbet = _fm * tphi, scbet = hyp(tbet);

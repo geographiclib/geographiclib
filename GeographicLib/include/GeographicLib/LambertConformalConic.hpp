@@ -104,7 +104,8 @@ namespace GeographicLib {
     //
     // General rules
     // h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)
-    // h(x) = f(x)*g(x): Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
+    // h(x) = f(x)*g(x):
+    //        Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // hyp(x) = sqrt(1+x^2): Dhyp(x,y) = (x+y)/(hyp(x)+hyp(y))
     static inline real Dhyp(real x, real y, real hx, real hy) throw()
@@ -113,13 +114,19 @@ namespace GeographicLib {
     // sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))
     static inline real Dsn(real x, real y, real sx, real sy) throw() {
       // sx = x/hyp(x)
-      real t = sx * sy;
-      return t >= 0 ? (x + y) * sq( t/(x*y) ) / (sx + sy) : (sx - sy) / (x - y);
+      real t = x * y;
+      return t > 0 ? (x+y) * sq( (sx*sy)/t ) / (sx+sy) :
+	(x-y != 0 ? (sx-sy) / (x-y) : 1);
     }
     // Dlog(x,y) = log1p((x-y)/y)/(x-y) = 2*atanh((x-y)/(x+y))/(x-y)
     static inline real Dlog(real x, real y) throw() {
       real t = x - y; if (t < 0) { t = -t; y = x; }
       return t != 0 ? Math::log1p(t/y) / t : 1/x;
+    }
+    // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
+    static inline real Dlog1p(real x, real y) throw() {
+      real t = x - y; if (t < 0) { t = -t; y = x; }
+      return t != 0 ? Math::log1p(t/(1+y)) / t : 1/(1+x);
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
     static inline real Dexp(real x, real y) throw() {
@@ -129,11 +136,23 @@ namespace GeographicLib {
     // Dsinh(x,y) = 2*sinh((x-y)/2)/(x-y) * cosh((x+y)/2)
     //   cosh((x+y)/2) = (c+sinh(x)*sinh(y)/c)/2
     //   c=sqrt((1+cosh(x))*(1+cosh(y)))
+    //   cosh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) + 1)/2 )
     static inline real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
       // sx = sinh(x), cx = cosh(x)
       throw() {
-      real t = (x  - y)/2, c = sqrt((1 + cx) * (1 + cy));
-      return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
+      // real t = (x  - y)/2, c = sqrt((1 + cx) * (1 + cy));
+      // return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
+      real t = (x  - y)/2;
+      return (t != 0 ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
+    }
+    // Dcosh(x,y) = 2*sinh((x-y)/2)/(x-y) * sinh((x+y)/2)
+    //   sinh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) - 1)/2 )
+    static inline real Dcosh(real x, real y, real sx, real sy, real cx, real cy)
+      // sx = sinh(x), cx = cosh(x)
+      throw() {
+      real t = (x  - y)/2;
+      return (t != 0 ? sinh(t)/t : real(1)) *
+        sqrt((sx * sy + (sq(sx * sy) + sq(sx) + sq(sy)) / (cx * cy + 1)) /2);
     }
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
