@@ -161,41 +161,26 @@ namespace GeographicLib {
       scphi2 = 1/cphi2,
       xi2 = eatanhe(sphi2), shxi2 = sinh(xi2), chxi2 = hyp(shxi2),
       tchi2 = chxi2 * tphi2 - shxi2 * scphi2, scchi2 = hyp(tchi2),
-      /*
-      dshxi = ( Dsinh(xi2, xi1, shxi2, shxi1, chxi2, chxi1) *
-                Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1) ),
-      */
       psi1 = Math::asinh(tchi1);
     if (tphi2 - tphi1 != 0) {
-      real num, numcheck;
-
-      // Db(tphi2, tphi1)
-      num = Dlog(scbet2, scbet1) * Dhyp(tbet2, tbet1, scbet2, scbet1)
+      real num = Dlog1p(sq(tbet2)/(1 + scbet2), sq(tbet1)/(1 + scbet1))
+        /* Dlog(scbet2, scbet1)*/ * Dhyp(tbet2, tbet1, scbet2, scbet1)
         * _fm;
-      numcheck = (log(scbet2) - log(scbet1))/(tphi2 - tphi1);
-
-      real den, dencheck;
-
-      den =  Dasinh(tphi2, tphi1, scphi2, scphi1) - Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1);
-      //cout << den << "\n";
-
-      dencheck = (Math::asinh(tchi2) - Math::asinh(tchi1))/(tphi2 - tphi1);
-      _n = numcheck/dencheck;
+      real den =  Dasinh(tphi2, tphi1, scphi2, scphi1)
+        - Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1);
       _n = num/den;
-      _n = max(-real(1), min(real(1), _n));
       {
-        // scbet - scchi
-        real s1 = (tphi1 * (2 * shxi1 * chxi1 * scphi1 - _e2 * tphi1) -
-                   sq(shxi1) * (1 + 2 * sq(tphi1)));
-        real s2 = (tphi2 * (2 * shxi2 * chxi2 * scphi2 - _e2 * tphi2) -
-                   sq(shxi2) * (1 + 2 * sq(tphi2)));
-        real t1 = tchi1 < 0 ? scbet1 - tchi1 : (s1 + 1)/(scbet1 + tchi1);
-        real t2 = tchi2 < 0 ? scbet2 - tchi2 : (s2 + 1)/(scbet2 + tchi2);
-        s1 /= scbet1 + scchi1;
-        s2 /= scbet2 + scchi2;
-        real a2 = -(s2 + t2)/(2*scbet2);
-        real a1 = -(s1 + t1)/(2*scbet1);
         real
+          // scbet1 - scchi1 = s1/(scbet1 + scchi1)
+          s1 = (tphi1 * (2 * shxi1 * chxi1 * scphi1 - _e2 * tphi1) -
+                sq(shxi1) * (1 + 2 * sq(tphi1))),
+          s2 = (tphi2 * (2 * shxi2 * chxi2 * scphi2 - _e2 * tphi2) -
+                sq(shxi2) * (1 + 2 * sq(tphi2))),
+          // scbet1 - tchi1 = t1
+          t1 = tchi1 < 0 ? scbet1 - tchi1 : (s1 + 1)/(scbet1 + tchi1),
+          t2 = tchi2 < 0 ? scbet2 - tchi2 : (s2 + 1)/(scbet2 + tchi2),
+          a2 = -(s2/(scbet2 + scchi2) + t2)/(2*scbet2),
+          a1 = -(s1/(scbet1 + scchi1) + t1)/(2*scbet1),
           dtchi = den/Dasinh(tchi2, tchi1, scchi2, scchi1),
           tbm = ((tbet1 > 0 ? 1/(scbet1+tbet1) : scbet1 - tbet1)+
                  (tbet2 > 0 ? 1/(scbet2+tbet2) : scbet2 - tbet2))/
@@ -203,28 +188,16 @@ namespace GeographicLib {
           dbet = _e2 * (1/(scbet2+_fm*scphi2)+1/(scbet1+_fm*scphi1))/_fm,
           xi0 = eatanhe(real(1)), shxi0 = sinh(xi0), chxi0 = hyp(shxi0),
           dxi = Deatanhe(sphi1, sphi2) * Dsn(tphi2, tphi1, sphi2, sphi1),
-          dxi1 = 2*sinh(Deatanhe(real(1), sphi1)/(scphi1*(tphi1+scphi1))/2),
-          dxi2 = 2*sinh(Deatanhe(real(1), sphi2)/(scphi2*(tphi2+scphi2))/2),
-          chxi01 = cosh((xi0+xi1)/2), shxi01 = sinh((xi0+xi1)/2),
-          chxi02 = cosh((xi0+xi2)/2), shxi02 = sinh((xi0+xi2)/2),
-          dshxi1 = dxi1*chxi01, dchxi1 = dxi1*shxi01,
-          dshxi2 = dxi2*chxi02, dchxi2 = dxi2*shxi02,
           dxi01 = Deatanhe(real(1), sphi1)/(scphi1*(tphi1+scphi1)),
           dxi02 = Deatanhe(real(1), sphi2)/(scphi2*(tphi2+scphi2)),
           dshxi01 = Dsinh(xi0, xi1, shxi0, shxi1, chxi0, chxi1) * dxi01,
           dshxi02 = Dsinh(xi0, xi2, shxi0, shxi2, chxi0, chxi2) * dxi02,
-          /*
-            dchxi01 = Dcosh(xi0, xi1, shxi0, shxi1, chxi0, chxi1) * dxi01,
-            dchxi02 = Dcosh(xi0, xi2, shxi0, shxi2, chxi0, chxi2) * dxi02,
-          */
           dchxi01 = Dhyp(shxi0, shxi1, chxi0, chxi1) * dshxi01,
           dchxi02 = Dhyp(shxi0, shxi2, chxi0, chxi2) * dshxi02,
-          /* mu12 = (- scphi1 * dchxi1 + tphi1 * dshxi1
-             - scphi2 * dchxi2 + tphi2 * dshxi2), */
           mu12 = (- scphi1 * dchxi01 + tphi1 * dshxi01
                   - scphi2 * dchxi02 + tphi2 * dshxi02),
-          ddel = (Dhyp(tphi1, tphi2, scphi1, scphi2) * (dshxi1+dshxi2)/2
-                  - (dchxi1+dchxi2)/2
+          ddel = (Dhyp(tphi1, tphi2, scphi1, scphi2) * (dshxi01+dshxi02)/2
+                  - (dchxi01+dchxi02)/2
                   - ((scphi1+scphi2)/2  -
                      (tphi1+tphi2)/2 * Dhyp(shxi1,shxi2,chxi1,chxi2))
                   *Dsinh(xi1,xi2,shxi1,shxi2,chxi1,chxi2)*dxi),
@@ -237,6 +210,11 @@ namespace GeographicLib {
           * _fm * (tbm - tam) /
           den;
         _nc = sqrt(nca * (1 + _n));
+      }
+      {
+        real r = Math::hypot(_n, _nc);
+        _n /= r;
+        _nc /= r;
       }
       _tphi0 = _n / _nc;
     } else {
@@ -313,7 +291,7 @@ namespace GeographicLib {
     real
       nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
       drho = (x*nx - 2*y*_nrho0 + y*ny) / ( Math::hypot(nx, y1) + _nrho0 ),
-      dpsi = - Dlog(_t0n + _n * drho/_scale, _t0n) * drho / _scale,
+      dpsi = - Dlog1p(_t0nm1 + _n * drho/_scale, _t0nm1) * drho / _scale,
       lam = _n != 0 ? atan2( nx, y1 ) / _n : x / y1;
     real tchi;
     if (2 * _n <= 1) {
