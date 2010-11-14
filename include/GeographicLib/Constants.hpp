@@ -105,9 +105,19 @@ namespace GeographicLib {
     // good for about 123-bit accuracy
     { return real(3.141592653589793238462643383279502884L); }
     /**
+     * @return \e pi in extended precision
+     **********************************************************************/
+    static inline extended epi() throw()
+    // good for about 123-bit accuracy
+    { return extended(3.141592653589793238462643383279502884L); }
+    /**
      * @return the number of radians in a degree.
      **********************************************************************/
     static inline real degree() throw() { return pi() / 180; }
+    /**
+     * @return the number of radians in a degree in extended precision.
+     **********************************************************************/
+    static inline extended edegree() throw() { return epi() / 180; }
 
 #if defined(DOXYGEN)
     /**

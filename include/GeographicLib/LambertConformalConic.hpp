@@ -30,21 +30,25 @@ namespace GeographicLib {
    * the Mercator projection or the polar sterographic projection.
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
-   * standard parallels are set in the constructor.  If the standard parallels
-   * are both at a single pole the projection becomes the polar stereographic
-   * projection (compare with the PolarStereographic class).  If the standard
-   * parallels are symmetric around equator, the projection becomes the
-   * Mercator projection.  The central meridian (which is a trivial shift of
-   * the longitude) is specified as the \e lon0 argument of the
-   * LambertConformalConic::Forward and LambertConformalConic::Reverse
-   * functions.  The latitude of origin is taken to be the latitude of tangency
-   * which lies between the standard parallels which is given by
-   * LambertConformalConic::OriginLatitude.  There is no provision in this
-   * class for specifying a false easting or false northing or a different
-   * latitude of origin.  However these are can be simply included by the
-   * calling function.  For example the Pennsylvania South state coordinate
-   * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
-   * EPSG:3364</a>) is obtained by:
+   * standard parallels are set in the constructor.  Internally, the case with
+   * two standard parallels is converted into a single standard parallel which
+   * is taken to be the latitude of tangency (also the latitude of minimum
+   * scale).  This latitude is also used as the latitude of origin which is
+   * returned by LambertConformalConic::OriginLatitued.  The scale on the
+   * latitude of origin is given by LambertConformalConic::CentralScale.  The
+   * case with two distinct standard parallels where one is a pole is singular
+   * and is disallowed.  If the standard parallel is at a pole the projection
+   * becomes the polar stereographic projection (compare with the
+   * PolarStereographic class).  If the standard parallels is the equator, the
+   * projection becomes the Mercator projection.  The central meridian (which
+   * is a trivial shift of the longitude) is specified as the \e lon0 argument
+   * of the LambertConformalConic::Forward and LambertConformalConic::Reverse
+   * functions.  There is no provision in this class for specifying a false
+   * easting or false northing or a different latitude of origin.  However
+   * these are can be simply included by the calling function.  For example the
+   * Pennsylvania South state coordinate system
+   * (<a href="http://www.spatialreference.org/ref/epsg/3364/"> EPSG:3364</a>)
+   * is obtained by:
    \code
    const double
      a = GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80
@@ -118,11 +122,13 @@ namespace GeographicLib {
       return t > 0 ? (x+y) * sq( (sx*sy)/t ) / (sx+sy) :
 	(x-y != 0 ? (sx-sy) / (x-y) : 1);
     }
+    /*
     // Dlog(x,y) = log1p((x-y)/y)/(x-y) = 2*atanh((x-y)/(x+y))/(x-y)
     static inline real Dlog(real x, real y) throw() {
       real t = x - y; if (t < 0) { t = -t; y = x; }
       return t != 0 ? Math::log1p(t/y) / t : 1/x;
     }
+    */
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
     static inline real Dlog1p(real x, real y) throw() {
       real t = x - y; if (t < 0) { t = -t; y = x; }
@@ -145,6 +151,7 @@ namespace GeographicLib {
       real t = (x  - y)/2;
       return (t != 0 ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
     }
+    /*
     // Dcosh(x,y) = 2*sinh((x-y)/2)/(x-y) * sinh((x+y)/2)
     //   sinh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) - 1)/2 )
     static inline real Dcosh(real x, real y, real sx, real sy, real cx, real cy)
@@ -154,6 +161,7 @@ namespace GeographicLib {
       return (t != 0 ? sinh(t)/t : real(1)) *
         sqrt((sx * sy + (sq(sx * sy) + sq(sx) + sq(sy)) / (cx * cy + 1)) /2);
     }
+    */
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
     static inline real Dasinh(real x, real y, real hx, real hy) throw() {
@@ -247,6 +255,12 @@ namespace GeographicLib {
      * @param[in] k1 scale on the standard parallels.
      *
      * This allows parallels close to the poles to be specified accurately.
+     * This routine computes the latitude of origin and the scale at this
+     * latitude.  In the case where \e lat1 and \e lat2 are different, the
+     * errors in this routines are as follows: if abs(\e lat2 - \e lat1) <=
+     * 160<sup>o</sup> and max(abs(\e lat1), abs(\e lat2)) <=
+     * 89.9999<sup>o</sup>, then the error in the latitude of origin is less
+     * than 4e-14d and the relative error in the scale is less than 7e-15.
      **********************************************************************/
     LambertConformalConic(real a, real r,
                           real sinlat1, real coslat1,
