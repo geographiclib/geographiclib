@@ -2595,12 +2595,14 @@ number.)
   - Add -s and -r flags to \ref planimeter.
   - Improve area calculations for small polygons.
   - Move pi() and degree() from GeographicLib::Constants to GeographicLib::Math.
+  - Add GeographicLib::Math::epi() and GeographicLib::Math::edegree().
   - Add GeographicLib::OSGB.
   - Explicitly turn on optimization in Visual Studio 2008 projects.
   - Tweak expression used to find latitude from conformal latitude.
   - Compile under cygwin.
   - Introduce Math::extended.
   - Add optional threadsafe parameter to GeographicLib::Geoid constructor.
+  - Improve the accuracy of LambertConformalConic.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (current, released 2010-09-12)</a>
   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
