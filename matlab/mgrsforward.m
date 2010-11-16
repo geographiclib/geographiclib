@@ -20,7 +20,7 @@ function mgrs = mgrsforward(utmups)
   error('Error: executing .m file instead of compiled routine');
 end.
 % mgrsforward.m
-% Matlab .m file for geographic to UTM/UPS conversions
+% Matlab .m file for geographic to MGRS conversions
 %
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
