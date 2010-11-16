@@ -78,6 +78,10 @@ namespace GeographicLib {
   public:
 
 #if !defined(__NO_LONG_DOUBLE_MATH)
+    /**
+     * The extended precision type for real numbers, used for some testing.
+     * This is long double on computers with this type; otherwise it is double.
+     **********************************************************************/
     typedef long double extended;
 #else
     typedef double extended;
@@ -102,22 +106,13 @@ namespace GeographicLib {
      * @return \e pi
      **********************************************************************/
     static inline real pi() throw()
-    // good for about 123-bit accuracy
-    { return real(3.141592653589793238462643383279502884L); }
-    /**
-     * @return \e pi in extended precision
-     **********************************************************************/
-    static inline extended epi() throw()
-    // good for about 123-bit accuracy
-    { return extended(3.141592653589793238462643383279502884L); }
+    // good for about 168-bit accuracy
+    { return real(3.1415926535897932384626433832795028841971693993751L); }
+
     /**
      * @return the number of radians in a degree.
      **********************************************************************/
     static inline real degree() throw() { return pi() / 180; }
-    /**
-     * @return the number of radians in a degree in extended precision.
-     **********************************************************************/
-    static inline extended edegree() throw() { return epi() / 180; }
 
 #if defined(DOXYGEN)
     /**
@@ -306,6 +301,18 @@ namespace GeographicLib {
         std::numeric_limits<real>::quiet_NaN() :
         std::numeric_limits<real>::max();
     }
+
+    /**
+     * @return \e pi in extended precision
+     **********************************************************************/
+    static inline extended epi() throw()
+    // good for about 168-bit accuracy
+    { return extended(3.1415926535897932384626433832795028841971693993751L); }
+
+    /**
+     * @return the number of radians in a degree in extended precision.
+     **********************************************************************/
+    static inline extended edegree() throw() { return epi() / 180; }
   };
 
   /**
