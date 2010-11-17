@@ -85,7 +85,7 @@ namespace GeographicLib {
     const real _a, _r, _f, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
-    static const real eps, epsx, tol;
+    static const real eps, epsx, tol, ahypover;
     static const int numit = 5;
     static inline real sq(real x) throw() { return x * x; }
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
@@ -116,7 +116,7 @@ namespace GeographicLib {
       // sx = x/hyp(x)
       real t = x * y;
       return t > 0 ? (x+y) * sq( (sx*sy)/t ) / (sx+sy) :
-	(x-y != 0 ? (sx-sy) / (x-y) : 1);
+        (x-y != 0 ? (sx-sy) / (x-y) : 1);
     }
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
     static inline real Dlog1p(real x, real y) throw() {
@@ -241,10 +241,10 @@ namespace GeographicLib {
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added and \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
-     * values of \e x and \e y returned for points which project to infinity
-     * (i.e., one or both of the poles) will be large but finite.  The value of
-     * \e k returned for the poles in infinite (unless \e lat equals the
-     * latitude origin).
+     * error in the projection is less than about 10 nm (true distance) and the
+     * errors in the meridian convergence and scale are consistent with this.
+     * The values of \e x and \e y returned for points which project to
+     * infinity (i.e., one or both of the poles) will be large but finite.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -263,6 +263,9 @@ namespace GeographicLib {
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added.  \e lon0 should be in the range
      * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
+     * The error in the projection is less than about 10 nm (true distance) and
+     * the errors in the meridian convergence and scale are consistent with
+     * this.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();
