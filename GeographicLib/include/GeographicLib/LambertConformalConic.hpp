@@ -24,25 +24,27 @@ namespace GeographicLib {
    *   Working Manual</a>, USGS Professional Paper 1395 (1987),
    *   pp. 107&ndash;109.
    *
-   * This is a straightforward implementation of the equations in Snyder except
-   * that Newton's method is used to invert the projection and that several of
-   * the formulas are modified so that the projection correctly degenerates to
-   * the Mercator projection or the polar sterographic projection.
+   * This is a implementation of the equations in Snyder except that the
+   * expressions have been transformed into ones which may be evaluated
+   * accurately and that Newton's method is used to invert the projection.  In
+   * this implementation, the projection correctly becomes the Mercator
+   * projection or the polar sterographic projection when the standard latitude
+   * is the equator or a pole.
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
-   * two standard parallels is converted into a single standard parallel which
-   * is taken to be the latitude of tangency (also the latitude of minimum
-   * scale).  This latitude is also used as the latitude of origin which is
-   * returned by LambertConformalConic::OriginLatitued.  The scale on the
-   * latitude of origin is given by LambertConformalConic::CentralScale.  The
-   * case with two distinct standard parallels where one is a pole is singular
-   * and is disallowed.  If the standard parallel is at a pole the projection
-   * becomes the polar stereographic projection (compare with the
-   * PolarStereographic class).  If the standard parallels is the equator, the
-   * projection becomes the Mercator projection.  The central meridian (which
-   * is a trivial shift of the longitude) is specified as the \e lon0 argument
-   * of the LambertConformalConic::Forward and LambertConformalConic::Reverse
+   * two standard parallels is converted into a single standard parallel, the
+   * latitude of tangency (also the latitude of minimum scale).  This latitude
+   * is also used as the latitude of origin which is returned by
+   * LambertConformalConic::OriginLatitude.  The scale on the latitude of
+   * origin is given by LambertConformalConic::CentralScale.  The case with two
+   * distinct standard parallels where one is a pole is singular and is
+   * disallowed.  If the standard parallel is at a pole the projection becomes
+   * the polar stereographic projection (compare with the PolarStereographic
+   * class).  If the standard parallel is the equator, the projection becomes
+   * the Mercator projection.  The central meridian (which is a trivial shift
+   * of the longitude) is specified as the \e lon0 argument of the
+   * LambertConformalConic::Forward and LambertConformalConic::Reverse
    * functions.  There is no provision in this class for specifying a false
    * easting or false northing or a different latitude of origin.  However
    * these are can be simply included by the calling function.  For example the
@@ -81,18 +83,12 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     const real _a, _r, _f, _fm, _e2, _e, _e2m;
-    real _sign, _n, _nc, _lt0, _t0n, _t0nm1, _scale, _lat0, _k0;
-    real _tphi0, _tbet0, _scbet0, _scphi0, _sphi0, _xi0, _shxi0, _chxi0,
-      _tchi0, _scchi0, _psi0, _nrho0;
-    static const real eps, eps2, epsx, tol, ahypover;
+    real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
+    real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
+    static const real eps, epsx, tol;
     static const int numit = 5;
     static inline real sq(real x) throw() { return x * x; }
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
-    static inline void SinCosNorm(real& sinx, real& cosx) throw() {
-      real r = Math::hypot(sinx, cosx);
-      sinx /= r;
-      cosx /= r;
-    }
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
     // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
     inline real eatanhe(real x) const throw() {
@@ -122,13 +118,6 @@ namespace GeographicLib {
       return t > 0 ? (x+y) * sq( (sx*sy)/t ) / (sx+sy) :
 	(x-y != 0 ? (sx-sy) / (x-y) : 1);
     }
-    /*
-    // Dlog(x,y) = log1p((x-y)/y)/(x-y) = 2*atanh((x-y)/(x+y))/(x-y)
-    static inline real Dlog(real x, real y) throw() {
-      real t = x - y; if (t < 0) { t = -t; y = x; }
-      return t != 0 ? Math::log1p(t/y) / t : 1/x;
-    }
-    */
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
     static inline real Dlog1p(real x, real y) throw() {
       real t = x - y; if (t < 0) { t = -t; y = x; }
@@ -151,17 +140,6 @@ namespace GeographicLib {
       real t = (x  - y)/2;
       return (t != 0 ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
     }
-    /*
-    // Dcosh(x,y) = 2*sinh((x-y)/2)/(x-y) * sinh((x+y)/2)
-    //   sinh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) - 1)/2 )
-    static inline real Dcosh(real x, real y, real sx, real sy, real cx, real cy)
-      // sx = sinh(x), cx = cosh(x)
-      throw() {
-      real t = (x  - y)/2;
-      return (t != 0 ? sinh(t)/t : real(1)) *
-        sqrt((sx * sy + (sq(sx * sy) + sq(sx) + sq(sy)) / (cx * cy + 1)) /2);
-    }
-    */
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
     static inline real Dasinh(real x, real y, real hx, real hy) throw() {
@@ -175,35 +153,6 @@ namespace GeographicLib {
     inline real Deatanhe(real x, real y) const throw() {
       real t = x - y, d = (1 - _e2 * x * y);
       return t != 0 ? eatanhe(t / d) / t : _e2 / d;
-    }
-    inline real mf(real cphi) const throw() {
-      // Snyder's m, p 108, eq 14-15.  m = cos(beta), beta = reduced lat.
-      return cphi/std::sqrt(_e2m + _e2 * sq(cphi));
-    }
-    inline real tchif(real tphi) const throw() {
-      // tan of conformal latitude
-      real 
-        secphi = Math::hypot(real(1), tphi),
-        sig = sinh( eatanhe(tphi / secphi) );
-      return Math::hypot(real(1), sig) * tphi - sig * secphi;
-    }
-    inline real tf(real sphi, real cphi) const throw() {
-      // Snyder's t, p 108, eq 15-9a
-      // First factor is sqrt((1 - sphi) / (1 + sphi))
-      // Second factor is ((1 + e * sphi)/(1 - e * sphi)) ^ (e/2)
-      return (sphi >= 0 ? cphi / (1 + sphi) : (1 - sphi) / cphi) *
-        std::exp(eatanhe(sphi));
-    }
-    inline real logtf(real sphi, real cphi) const throw() {
-      // Return log(t).  This retains relative accuracy near the equator where
-      // t -> 1.  This is the negative of the standard Mercator northing.  Note
-      // that log( sqrt((1 - sin(phi)) / (1 + sin(phi))) ) = -asinh(tan(phi))
-      return -Math::asinh(sphi/std::max(epsx, cphi)) + eatanhe(sphi);
-    }
-    inline real logmtf(real sphi) const throw() {
-      // Return log(m/t).  This allows the cancellation of cphi in m and t.
-      return std::log((1 + sphi)/std::sqrt(1 - _e2 * sq(sphi))) -
-        eatanhe(sphi);
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
   public:

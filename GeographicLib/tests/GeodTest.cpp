@@ -81,7 +81,7 @@ Math::extended azidiff(Math::extended lat,
 }
 
 Math::extended dist(Math::extended lat0, Math::extended lon0,
-		    Math::extended lat1, Math::extended lon1) {
+                    Math::extended lat1, Math::extended lon1) {
   //  typedef GeographicLibL::Math::real real;
   //  real s12;
   //  GeographicLibL::Geodesic::
