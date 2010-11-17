@@ -24,6 +24,9 @@ namespace GeographicLib {
   const Math::real LambertConformalConic::eps = numeric_limits<real>::epsilon();
   const Math::real LambertConformalConic::epsx = sq(eps);
   const Math::real LambertConformalConic::tol = real(0.1) * sqrt(eps);
+  const Math::real LambertConformalConic::ahypover =
+    real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
+    + 2;
 
   LambertConformalConic::LambertConformalConic(real a, real r,
                                                real stdlat, real k0)
@@ -305,12 +308,11 @@ namespace GeographicLib {
     //                    = k1 * scbet0/scbet1 * exp(n * (psi1 - psi0))
     // psi1 - psi0 = Dasinh(tchi1, tchi0) * (tchi1 - tchi0)
     _k0 = k1 * (_scbet0/scbet1) *
-      //exp(_n * Dasinh(tchi1, _tchi0, scchi1, _scchi0) * (tchi1 - _tchi0));
       exp( - (sq(_nc)/(1 + _n)) *
            Dasinh(tchi1, _tchi0, scchi1, _scchi0) * (tchi1 - _tchi0))
       * (tchi1 >= 0 ? scchi1 + tchi1 : 1 / (scchi1 - tchi1)) /
       (_scchi0 + _tchi0);
-    _nrho0 = _a * _k0 / _scbet0;
+    _nrho0 = polar ? 0 : _a * _k0 / _scbet0;
   }
 
   const LambertConformalConic
@@ -335,15 +337,18 @@ namespace GeographicLib {
       scphi = 1/cphi, shxi = sinh(eatanhe(sphi)),
       tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
       psi = Math::asinh(tchi),
-      // m = 1/scbet, lt = - psi, tn = exp(_n * lt),
       theta = _n * lam, stheta = sin(theta), ctheta = cos(theta),
       dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0),
-      drho = - _scale * Dexp(-_n * psi, -_n * _psi0) * dpsi;
+      drho = - _scale * (2 * _nc < 1 ?
+                         (exp(sq(_nc)/(1 + _n) * psi ) *
+                          (tchi > 0 ? 1/(scchi + tchi) : (scchi - tchi))
+                          - (_t0nm1 + 1))/(-_n) :
+                         Dexp(-_n * psi, -_n * _psi0) * dpsi);
     x = (_nrho0 + _n * drho) * (_n != 0 ? stheta / _n : lam);
     y = _nrho0 *
       (_n != 0 ? (ctheta < 0 ? 1 - ctheta : sq(stheta)/(1 + ctheta)) / _n : 0)
       - drho * ctheta;
-    k = _k0 * (scbet/_scbet0) /  // * exp( -_n * dpsi );
+    k = _k0 * (scbet/_scbet0) /
       (exp( - (sq(_nc)/(1 + _n)) * dpsi )
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     y *= _sign;
@@ -359,10 +364,11 @@ namespace GeographicLib {
       nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
       den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
       drho = den != 0 ? (x*nx - 2*y*_nrho0 + y*ny) / den : 0,
-      dpsi = - Dlog1p(_t0nm1 + _n * drho/_scale, _t0nm1) * drho / _scale,
-      lam = _n != 0 ?
-      atan2(nx, y1 ) / _n :
-      x / y1;
+      tnm1 = _t0nm1 + _n * drho/_scale,
+      dpsi = (den == 0 ? 0 :
+              (tnm1 + 1 != 0 ? - Dlog1p(tnm1, _t0nm1) * drho / _scale :
+               ahypover)),
+      lam = _n != 0 ? atan2(nx, y1 ) / _n : x / y1;
     real tchi;
     if (2 * _n <= 1) {
       real
@@ -377,11 +383,10 @@ namespace GeographicLib {
       // (1-1/n) = - nc^2/(n*(1+n))
       // cosh(log(tn)) = (tn + 1/tn)/2; sinh(log(tn)) = (tn - 1/tn)/2
       real
-        tnm1 = _t0nm1 + _n * drho/_scale,
-        tn = tnm1 + 1,
-        sh = sinh( -sq(_nc)/(_n * (1 + _n)) * Math::log1p(tnm1) );
-      tchi = den != 0 ? sh * (tn + 1/tn)/2 - hyp(sh) * (tnm1 * (tn + 1)/tn)/2 :
-        1/epsx;
+        tn = tnm1 + 1 == 0 ? epsx : tnm1 + 1,
+        sh = sinh( -sq(_nc)/(_n * (1 + _n)) *
+                   (2 * tn > 1 ? Math::log1p(tnm1) : log(tn)) );
+      tchi = sh * (tn + 1/tn)/2 - hyp(sh) * (tnm1 * (tn + 1)/tn)/2;
     }
 
     // Use Newton's method to solve for tphi
@@ -414,11 +419,9 @@ namespace GeographicLib {
     else
       lon += lon0;
     real scchi = hyp(tchi);
-    //    k = _k0 * (scbet/_scbet0) * exp( -_n * dpsi );
     k = _k0 * (scbet/_scbet0) /
       (exp( - (sq(_nc)/(1 + _n)) * dpsi )
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
-
   }
 
   void LambertConformalConic::SetScale(real lat, real k) {
