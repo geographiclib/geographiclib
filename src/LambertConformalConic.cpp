@@ -22,13 +22,8 @@ namespace GeographicLib {
   using namespace std;
 
   const Math::real LambertConformalConic::eps = numeric_limits<real>::epsilon();
-  const Math::real LambertConformalConic::eps2 = sqrt(eps);
   const Math::real LambertConformalConic::epsx = sq(eps);
-  const Math::real LambertConformalConic::tol = real(0.1) * eps2;
-  // Large enough value so that atan(sinh(ahypover)) = pi/2
-  const Math::real LambertConformalConic::ahypover =
-    real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
-    + 2;
+  const Math::real LambertConformalConic::tol = real(0.1) * sqrt(eps);
 
   LambertConformalConic::LambertConformalConic(real a, real r,
                                                real stdlat, real k0)
@@ -132,7 +127,7 @@ namespace GeographicLib {
       swap(sphi1, sphi2); swap(cphi1, cphi2); // Make phi1 < phi2
     }
     real
-      tphi1 = sphi1/cphi1, tphi2 = sphi2/cphi2;
+      tphi1 = sphi1/cphi1, tphi2 = sphi2/cphi2, tphi0;
     //
     // Snyder: 15-8: n = (log(m1) - log(m2))/(log(t1)-log(t2))
     //
@@ -283,39 +278,38 @@ namespace GeographicLib {
         _n /= r;
         _nc /= r;
       }
-      _tphi0 = _n / _nc;
+      tphi0 = _n / _nc;
     } else {
-      _tphi0 = tphi1;
-      _nc = 1/hyp(_tphi0);
-      _n = _tphi0 * _nc;
+      tphi0 = tphi1;
+      _nc = 1/hyp(tphi0);
+      _n = tphi0 * _nc;
       if (polar)
         _nc = 0;
     }
 
-    // Not all of these are needed.  Prune later.
-    _tbet0 = _fm * _tphi0; _scbet0 = hyp(_tbet0);
-    _scphi0 = hyp(_tphi0); _sphi0 = _tphi0/_scphi0;
-    _xi0 = eatanhe(_sphi0); _shxi0 = sinh(_xi0); _chxi0 = hyp(_shxi0);
-    _tchi0 = _chxi0 * _tphi0 - _shxi0 * _scphi0; _scchi0 = hyp(_tchi0);
+    _scbet0 = hyp(_fm * tphi0);
+    real shxi0 = sinh(eatanhe(_n));
+    _tchi0 = tphi0 * hyp(shxi0) - shxi0 * hyp(tphi0); _scchi0 = hyp(_tchi0);
     _psi0 = Math::asinh(_tchi0);
 
-    _lat0 = atan(_sign * _tphi0) / Math::degree();
-    _lt0 = - _psi0; // Snyder's log(t0)
-    _t0n = exp(- _n * _psi0);      // Snyder's t0^n
-    _t0nm1 = Math::expm1(- _n * _psi0);      // Snyder's t0^n - 1
+    _lat0 = atan(_sign * tphi0) / Math::degree();
+    _t0nm1 = Math::expm1(- _n * _psi0); // Snyder's t0^n - 1
     // a * k1 * m1/t1^n = a * k1 * m2/t2^n = a * k1 * n * (Snyder's F)
     // = a * k1 / (scbet1 * exp(-n * psi1))
-    _scale = _a * k1 /
-      (scbet1 * (/* 2 * _n <= 1 ? exp(- _n * psi1) : */
-                 // exp(-n * psi) = exp((1-n)* psi1) * exp(-psi1)
-                 // with (1-n) = nc^2/(1+n) and exp(-psi1) = scchi1 - tchi1
-                 exp( (sq(_nc)/(1 + _n)) * psi1 )
-                 * (tchi1 <= 0 ? scchi1 - tchi1 : 1 / (scchi1 + tchi1))));
+    _scale = _a * k1 / scbet1 *
+      // exp(n * psi1) = exp(- (1 - n) * psi1) * exp(psi1)
+      // with (1-n) = nc^2/(1+n) and exp(-psi1) = scchi1 + tchi1
+      exp( - (sq(_nc)/(1 + _n)) * psi1 )
+      * (tchi1 >= 0 ? scchi1 + tchi1 : 1 / (scchi1 - tchi1));
     // Scale at phi0 = k0 = k1 * (scbet0*exp(-n*psi0))/(scbet1*exp(-n*psi1))
     //                    = k1 * scbet0/scbet1 * exp(n * (psi1 - psi0))
     // psi1 - psi0 = Dasinh(tchi1, tchi0) * (tchi1 - tchi0)
     _k0 = k1 * (_scbet0/scbet1) *
-      exp(_n * Dasinh(tchi1, _tchi0, scchi1, _scchi0) * (tchi1 - _tchi0));
+      //exp(_n * Dasinh(tchi1, _tchi0, scchi1, _scchi0) * (tchi1 - _tchi0));
+      exp( - (sq(_nc)/(1 + _n)) *
+           Dasinh(tchi1, _tchi0, scchi1, _scchi0) * (tchi1 - _tchi0))
+      * (tchi1 >= 0 ? scchi1 + tchi1 : 1 / (scchi1 - tchi1)) /
+      (_scchi0 + _tchi0);
     _nrho0 = _a * _k0 / _scbet0;
   }
 
@@ -346,8 +340,12 @@ namespace GeographicLib {
       dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0),
       drho = - _scale * Dexp(-_n * psi, -_n * _psi0) * dpsi;
     x = (_nrho0 + _n * drho) * (_n != 0 ? stheta / _n : lam);
-    y = _nrho0 * (_n != 0 ? sq(stheta)/((1 + ctheta) * _n) : 0) - drho * ctheta;
-    k = _k0 * (scbet/_scbet0) * exp( -_n * dpsi );
+    y = _nrho0 *
+      (_n != 0 ? (ctheta < 0 ? 1 - ctheta : sq(stheta)/(1 + ctheta)) / _n : 0)
+      - drho * ctheta;
+    k = _k0 * (scbet/_scbet0) /  // * exp( -_n * dpsi );
+      (exp( - (sq(_nc)/(1 + _n)) * dpsi )
+       * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     y *= _sign;
     gamma = theta * _sign;
   }
@@ -359,9 +357,12 @@ namespace GeographicLib {
     y *= _sign;
     real
       nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
-      drho = (x*nx - 2*y*_nrho0 + y*ny) / ( Math::hypot(nx, y1) + _nrho0 ),
+      den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
+      drho = den != 0 ? (x*nx - 2*y*_nrho0 + y*ny) / den : 0,
       dpsi = - Dlog1p(_t0nm1 + _n * drho/_scale, _t0nm1) * drho / _scale,
-      lam = _n != 0 ? atan2( nx, y1 ) / _n : x / y1;
+      lam = _n != 0 ?
+      atan2(nx, y1 ) / _n :
+      x / y1;
     real tchi;
     if (2 * _n <= 1) {
       real
@@ -379,7 +380,8 @@ namespace GeographicLib {
         tnm1 = _t0nm1 + _n * drho/_scale,
         tn = tnm1 + 1,
         sh = sinh( -sq(_nc)/(_n * (1 + _n)) * Math::log1p(tnm1) );
-      tchi = sh * (tn + 1/tn)/2 - hyp(sh) * (tnm1 * (tn + 1)/tn)/2;
+      tchi = den != 0 ? sh * (tn + 1/tn)/2 - hyp(sh) * (tnm1 * (tn + 1)/tn)/2 :
+        1/epsx;
     }
 
     // Use Newton's method to solve for tphi
@@ -411,7 +413,12 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    k = _k0 * (scbet/_scbet0) * exp( -_n * dpsi );
+    real scchi = hyp(tchi);
+    //    k = _k0 * (scbet/_scbet0) * exp( -_n * dpsi );
+    k = _k0 * (scbet/_scbet0) /
+      (exp( - (sq(_nc)/(1 + _n)) * dpsi )
+       * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
+
   }
 
   void LambertConformalConic::SetScale(real lat, real k) {
@@ -419,6 +426,8 @@ namespace GeographicLib {
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) <= 90))
       throw GeographicErr("Latitude for SetScale not in [-90, 90]");
+    if (abs(lat) == 90 && !(_nc == 0 && lat * _n > 0))
+      throw GeographicErr("Incompatible polar latitude in SecScale");
     real x, y, gamma, kold;
     Forward(0, lat, 0, x, y, gamma, kold);
     k /= kold;
