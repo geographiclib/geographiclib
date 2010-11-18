@@ -1,10 +1,10 @@
-function height = geoidheight(latlong)
+function height = geoidheight(latlong, geoidname, geoiddir)
 %geoidheight  Compute geoid height
 %
 %   CAUTION: THIS CRASHES MATLAB!!  There is some incompatibility with
 %   the Geoid constructor and the Matlab environment.  The crash (with
 %   Matlab 2008a under Windows using Visual Studio 2008) happens on the
-%   second call.
+%   second call.  This works OK with Octave.
 %
 %   height = geoidheight(latlong);
 %   height = geoidheight(latlong, geoidname);
@@ -21,6 +21,10 @@ function height = geoidheight(latlong)
 %       geoidheight = utmups(:,1) in meters
 %       gradn = utmups(:,2) gradient of height in northerly direction
 %       grade = utmups(:,3) gradient of height in easterly direction
+%
+%   This is an interface to the GeographicLib C++ routine
+%       Geoid::operator()
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % geoidheight.m

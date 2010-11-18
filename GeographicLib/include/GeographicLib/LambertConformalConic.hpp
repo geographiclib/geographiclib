@@ -24,12 +24,12 @@ namespace GeographicLib {
    *   Working Manual</a>, USGS Professional Paper 1395 (1987),
    *   pp. 107&ndash;109.
    *
-   * This is a implementation of the equations in Snyder except that the
-   * expressions have been transformed into ones which may be evaluated
-   * accurately and that Newton's method is used to invert the projection.  In
-   * this implementation, the projection correctly becomes the Mercator
-   * projection or the polar sterographic projection when the standard latitude
-   * is the equator or a pole.
+   * This is a implementation of the equations in Snyder except that divided
+   * differences have been used to transform the expressions into ones which
+   * may be evaluated accurately and that Newton's method is used to invert the
+   * projection.  In this implementation, the projection correctly becomes the
+   * Mercator projection or the polar sterographic projection when the standard
+   * latitude is the equator or a pole.
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with

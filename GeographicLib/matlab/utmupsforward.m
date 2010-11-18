@@ -1,4 +1,4 @@
-function utmups = utmupsforward(latlong)
+function utmups = utmupsforward(latlong, setzone)
 %utmupsforward  Convert geographic coordinates to UTM/UPS
 %
 %   utmups = utmupsforward(latlong);
@@ -24,6 +24,10 @@ function utmups = utmupsforward(latlong)
 %        [1,60], use the corresponding UTM zone
 %       -1, use the standard assigment (the default)
 %       -2, use closest UTM zone
+%
+%   This is an interface to the GeographicLib C++ routine
+%       UTMUPS::Forward
+%   See the documenation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % utmupsforward.m

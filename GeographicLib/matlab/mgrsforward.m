@@ -1,4 +1,4 @@
-function mgrs = mgrsforward(utmups)
+function mgrs = mgrsforward(utmups, prec)
 %mgrsforward  Convert UTM/UPS coordinates to MGRS
 %
 %   mgrs = mgrsforward(utmups);
@@ -17,6 +17,10 @@ function mgrs = mgrsforward(utmups)
 %
 %   mgrs is a vector of M strings of length 5 + 2 * prec.
 %   For UPS coordinates the string begins with 2 blanks.
+%
+%   This is an interface to the GeographicLib C++ routine
+%       MGRS::Forward
+%   See the documenation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % mgrsforward.m
