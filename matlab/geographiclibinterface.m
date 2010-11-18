@@ -1,14 +1,23 @@
-function compilematlabfuns;
-% compilematlabfuns.m
+function geographiclibinterface;
+% geographiclibinterface.m
 % Use mex to compile interface to GeographicLib
+%
+% This has been tested with
+%
+%   Octave 3.2.2 and g++ 4.4.4 under Linus
+%   Matlab 2008a and Visual Studio 2008 4.4.4 under Windows
+%
+% Note that the geoidheight causes Matlab to CRASH (in the second
+% configuration above).  The crash happens on the second call.
 %
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
 % $Id$
-  funs = {'geoidheight', ...
-    'utmupsforward', 'utmupsreverse', ...
-    'mgrsforward', 'mgrsreverse'};
+  funs = {'geodesicdirect', 'geodesicinverse', 'geodesicpath', ...
+	  'geoidheight', ...
+	  'utmupsforward', 'utmupsreverse', ...
+	  'mgrsforward', 'mgrsreverse'};
   if ispc,
     incdir='../include';
     libdir='../windows/Release';

@@ -19,6 +19,10 @@ function mgrs = mgrsreverse(utmups)
 %
 %   The position is the center of the MGRS square.  To obtain the
 %   SW corner subtract 0.5 * 10^(5-prec) from the easting and northing.
+%
+%   This is an interface to the GeographicLib C++ routine
+%       MGRS::Reverse
+%   See the documenation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % mgrsreverse.m

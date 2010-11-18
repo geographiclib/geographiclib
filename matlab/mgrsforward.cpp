@@ -16,7 +16,6 @@
 
 #include "GeographicLib/MGRS.hpp"
 #include "mex.h"
-#include <sstream>
 
 using namespace std;
 using namespace GeographicLib;

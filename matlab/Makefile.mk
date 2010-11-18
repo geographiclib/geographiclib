@@ -1,6 +1,8 @@
 # $Id$
 
-FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse geoidheight
+FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
+	geodesicdirect geodesicinverse geodesicpath \
+	geoidheight
 
 MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS))
 
@@ -11,6 +13,6 @@ install:
 clean:
 	@:
 list:
-	@echo compilematlabfuns.m $(MATLABFILES)
+	@echo geographiclibinterface.m $(MATLABFILES)
 
 .PHONY: all install list clean

@@ -64,6 +64,17 @@ Files
       tmseries.mac -- Maxima code for series approximations for TM
       geod.mac -- Maxima code for series approximates for Geodesic
 
+    matlab/
+      geographiclibinterface.m -- Matlab code to compile Matlab interfaces
+      utmupsforward.{cpp,m} -- Matlab code to convert geographic to UTM/UPS
+      utmupsreverse.{cpp,m} -- Matlab code to convert UTM/UPS to geographic
+      mgrsforward.{cpp,m} -- Matlab code to convert UTM/UPS to MGRS
+      mgrsreverse.{cpp,m} -- Matlab code to convert MGRS to UTM/UPS
+      geodesicdirect.{cpp,m} -- Matlab code for the direct geodesic problem
+      geodesicinverse.{cpp,m} -- Matlab code for the inverse geodesic problem
+      geodesicpath.{cpp,m} -- Matlab code for geodesic paths
+      geoidheight.{cpp,m} -- Matlab code to look up geoid heights
+
     doc/
       Doxyfile -- Doxygen config file
       Geographic.doc -- main page of Doxygen documentation
