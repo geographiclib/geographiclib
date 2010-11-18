@@ -72,7 +72,7 @@ Files
       mgrsreverse.{cpp,m} -- Matlab code to convert MGRS to UTM/UPS
       geodesicdirect.{cpp,m} -- Matlab code for the direct geodesic problem
       geodesicinverse.{cpp,m} -- Matlab code for the inverse geodesic problem
-      geodesicpath.{cpp,m} -- Matlab code for geodesic paths
+      geodesicline.{cpp,m} -- Matlab code for geodesic lines
       geoidheight.{cpp,m} -- Matlab code to look up geoid heights
 
     doc/

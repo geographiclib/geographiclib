@@ -2604,7 +2604,8 @@ number.)
   - Introduce GeographicLib::Math::extended type to aid testing.
   - Add optional threadsafe parameter to GeographicLib::Geoid
     constructor.
-  - Improve the accuracy of LambertConformalConic.
+  - Improve the accuracy of GeographicLib::LambertConformalConic using
+    divided differences.
   - Matlab interface to GeographicLib::UTMUPS and GeographicLib::MGRS
     checked into SVN.
 

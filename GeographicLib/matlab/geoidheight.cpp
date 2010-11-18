@@ -82,6 +82,10 @@ void mexFunction( int nlhs, mxArray* plhs[],
     const Geoid g(geoidname, geoiddir);
     for (int i = 0; i < m; ++i) {
       try {
+        if (abs(lat[i]) > 90)
+          throw GeographicErr("Invalid latitude");
+        if (lon[i] < -180 || lon[i] > 360)
+          throw GeographicErr("Invalid longitude");
         h[i] = g(lat[i], lon[i], gradn[i], grade[i]);
       }
       catch (const std::exception& e) {

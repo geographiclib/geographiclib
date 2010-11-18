@@ -1,7 +1,7 @@
 # $Id$
 
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
-	geodesicdirect geodesicinverse geodesicpath \
+	geodesicdirect geodesicinverse geodesicline \
 	geoidheight
 
 MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS))
