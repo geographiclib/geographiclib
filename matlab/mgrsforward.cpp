@@ -8,21 +8,21 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -lGeographic mgrsforward.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic mgrsforward.cpp
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographicLib mgrsforward.cpp
 
+// "$Id$";
+
 #include "GeographicLib/MGRS.hpp"
 #include "mex.h"
+#include <sstream>
 
 using namespace std;
 using namespace GeographicLib;
 
-void mexFunction( int nlhs, mxArray* plhs[], 
-                  int nrhs, const mxArray* prhs[] ) { 
-
-  static char rcsid[]
-    = "$Id$";
+void mexFunction( int nlhs, mxArray* plhs[],
+                  int nrhs, const mxArray* prhs[] ) {
 
   if (nrhs < 1)
     mexErrMsgTxt("One input argument required.");
@@ -35,19 +35,19 @@ void mexFunction( int nlhs, mxArray* plhs[],
     mexErrMsgTxt("utmups coordinates are not of type double.");
 
   if (mxGetN(prhs[0]) != 4)
-    mexErrMsgTxt("utmups coordinates must be M x 4 matrix."); 
+    mexErrMsgTxt("utmups coordinates must be M x 4 matrix.");
 
   int prec;
   if (nrhs == 1)
     prec = 5;
   else {
-    if (!( mxIsDouble(prhs[1]) && mxIsComplex(prhs[1]) &&
+    if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
-      mexErrMsgTxt("precision is not an integer.");
+      mexErrMsgTxt("precision is not an integera.");
     double rprec = mxGetScalar(prhs[1]);
     prec = int(rprec);
     if (double(prec) != rprec)
-      mexErrMsgTxt("precision is not an integer.");
+      mexErrMsgTxt("precision is not an integerb.");
     if (prec < 0 || prec > 11)
       mexErrMsgTxt("precision outside the legal range [0, 11].");
   }
@@ -79,11 +79,9 @@ void mexFunction( int nlhs, mxArray* plhs[],
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
     }
-    unsigned retlen = min(mgrsstr.size(), mgrslen);
+    unsigned retlen = min(unsigned(mgrsstr.size()), mgrslen);
     for (unsigned k = 0; k < mgrslen; ++k)
       mgrs[i + k * m] = (k + retlen >= mgrslen ?
                          mgrsstr[k + retlen - mgrslen] : ' ');
   }
 }
-
-

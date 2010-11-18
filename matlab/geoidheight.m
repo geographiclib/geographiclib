@@ -3,7 +3,8 @@ function height = geoidheight(latlong)
 %
 %   CAUTION: THIS CRASHES MATLAB!!  There is some incompatibility with
 %   the Geoid constructor and the Matlab environment.  The crash (with
-%   Matlab 2008a under Windows) happens on the second call.
+%   Matlab 2008a under Windows using Visual Studio 2008) happens on the
+%   second call.
 %
 %   height = geoidheight(latlong);
 %   height = geoidheight(latlong, geoidname);
@@ -21,7 +22,7 @@ function height = geoidheight(latlong)
 %       gradn = utmups(:,2) gradient of height in northerly direction
 %       grade = utmups(:,3) gradient of height in easterly direction
   error('Error: executing .m file instead of compiled routine');
-end.
+end
 % geoidheight.m
 % Matlab .m file for looking up geoid heights
 %

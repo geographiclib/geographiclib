@@ -8,9 +8,11 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -lGeographic utmupsreverse.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic utmupsreverse.cpp
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographicLib utmupsreverse.cpp
+
+// "$Id$";
 
 #include "GeographicLib/UTMUPS.hpp"
 #include "mex.h"
@@ -20,9 +22,6 @@ using namespace GeographicLib;
 
 void mexFunction( int nlhs, mxArray* plhs[],
                   int nrhs, const mxArray* prhs[] ) {
-
-  static char rcsid[]
-    = "$Id$";
 
   if (nrhs != 1)
     mexErrMsgTxt("One input argument required.");
@@ -64,5 +63,3 @@ void mexFunction( int nlhs, mxArray* plhs[],
     }
   }
 }
-
-
