@@ -8,9 +8,11 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I../include -L../lib -lGeographic geoidheight.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic geoidheight.cpp
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographicLib geoidheight.cpp
+
+// "$Id$";
 
 #include "GeographicLib/Geoid.hpp"
 #include "mex.h"
@@ -21,9 +23,6 @@ using namespace GeographicLib;
 
 void mexFunction( int nlhs, mxArray* plhs[],
                   int nrhs, const mxArray* prhs[] ) {
-
-  static char rcsid[]
-    = "$Id$";
 
   if (nrhs < 1)
     mexErrMsgTxt("One input argument required.");

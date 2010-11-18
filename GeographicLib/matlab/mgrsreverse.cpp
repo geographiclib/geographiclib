@@ -8,9 +8,11 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -lGeographic mgrsreverse.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic mgrsreverse.cpp
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographicLib mgrsreverse.cpp
+
+// "$Id$";
 
 #include "GeographicLib/MGRS.hpp"
 #include "mex.h"
@@ -18,11 +20,8 @@
 using namespace std;
 using namespace GeographicLib;
 
-void mexFunction( int nlhs, mxArray* plhs[], 
-                  int nrhs, const mxArray* prhs[] ) { 
-
-  static char rcsid[]
-    = "$Id$";
+void mexFunction( int nlhs, mxArray* plhs[],
+                  int nrhs, const mxArray* prhs[] ) {
 
   if (nrhs != 1)
     mexErrMsgTxt("One input argument required.");
@@ -34,7 +33,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   int n = mxGetN(prhs[0]);
   if (n < 3)
-    mexErrMsgTxt("mgrs strings are too short."); 
+    mexErrMsgTxt("mgrs strings are too short.");
 
   int m = mxGetM(prhs[0]);
   plhs[0] = mxCreateDoubleMatrix(m, 5, mxREAL);
@@ -53,7 +52,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   for (int i = 0; i < m; ++i) {
     try {
       mgrsstr.resize(n);
-      for (unsigned k = 0; k < n; ++k)
+      for (int k = 0; k < n; ++k)
         mgrsstr[k] = mgrs[i + k * m];
       string::size_type pos1 = mgrsstr.find_first_not_of(spaces);
       if (pos1 == string::npos)
@@ -73,5 +72,3 @@ void mexFunction( int nlhs, mxArray* plhs[],
     }
   }
 }
-
-

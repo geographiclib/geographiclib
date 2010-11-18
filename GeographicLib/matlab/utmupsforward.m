@@ -25,7 +25,7 @@ function utmups = utmupsforward(latlong)
 %       -1, use the standard assigment (the default)
 %       -2, use closest UTM zone
   error('Error: executing .m file instead of compiled routine');
-end.
+end
 % utmupsforward.m
 % Matlab .m file for geographic to UTM/UPS conversions
 %

@@ -18,7 +18,7 @@ function mgrs = mgrsforward(utmups)
 %   mgrs is a vector of M strings of length 5 + 2 * prec.
 %   For UPS coordinates the string begins with 2 blanks.
   error('Error: executing .m file instead of compiled routine');
-end.
+end
 % mgrsforward.m
 % Matlab .m file for geographic to MGRS conversions
 %

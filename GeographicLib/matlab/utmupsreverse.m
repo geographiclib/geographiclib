@@ -18,7 +18,7 @@ function latlong = utmupsreverse(utmups)
 %       gamma = latlong(:,3) meridian convergence in degrees
 %       k = latlong(:,4) scale
   error('Error: executing .m file instead of compiled routine');
-end.
+end
 % utmupsreverse.m
 % Matlab .m file for geographic to UTM/UPS conversions
 %

@@ -20,7 +20,7 @@ function mgrs = mgrsreverse(utmups)
 %   The position is the center of the MGRS square.  To obtain the
 %   SW corner subtract 0.5 * 10^(5-prec) from the easting and northing.
   error('Error: executing .m file instead of compiled routine');
-end.
+end
 % mgrsreverse.m
 % Matlab .m file for geographic to MGRS conversions
 %
