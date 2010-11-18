@@ -68,9 +68,22 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   try {
     const Geodesic g(a, r);
-    for (int i = 0; i < m; ++i)
-      g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
-               lat2[i], lon2[i], azi2[i], m12[i], M12[i], M21[i], S12[i]);
+    for (int i = 0; i < m; ++i) {
+      try {
+        if (abs(lat1[i]) > 90)
+          throw GeographicErr("Invalid latitude");
+        if (lon1[i] < -180 || lon1[i] > 360)
+          throw GeographicErr("Invalid longitude");
+        if (azi1[i] < -180 || azi1[i] > 360)
+          throw GeographicErr("Invalid azimuth");
+        g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
+                 lat2[i], lon2[i], azi2[i], m12[i], M12[i], M21[i], S12[i]);
+      }
+      catch (const std::exception& e) {
+        mexWarnMsgTxt(e.what());
+        lat2[i] = lon2[i] = azi2[i]
+          = m12[i] = M12[i] = M21[i] = S12[i] = Math::NaN();
+      }
   }
   catch (const std::exception& e) {
     mexErrMsgTxt(e.what());

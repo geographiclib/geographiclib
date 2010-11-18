@@ -11,7 +11,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src tools doc include
 
 EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
-			 Makefile.mk windows maxima doc 
+			 Makefile.mk windows maxima matlab doc 
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
@@ -19,6 +19,7 @@ dist-hook:
 	find $(distdir)/windows -type f \
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \
 		xargs rm -f ; \
+	find $(distdir)/matlab -type f -name '*.mex*' | xargs rm -rf ; \
 	find $(distdir) \
 		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -o -name '*~' \)| \
 		xargs rm -rf ; \

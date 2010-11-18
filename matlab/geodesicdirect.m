@@ -1,5 +1,5 @@
 function latlong = geodesicdirect(geodesic, a, r)
-%geodesicdirect  Solve inverse geodesic problem
+%geodesicdirect  Solve direct geodesic problem
 %
 %   latlong = geodesicdirect(geodesic)
 %   latlong = geodesicdirect(geodesic, a, r)

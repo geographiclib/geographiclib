@@ -1,8 +1,8 @@
-function latlong = geodesicpath(lat1, lon1, azi1, distances, a, r)
-%geodesicpath  Convert geographic coordinates to UTM/UPS
+function latlong = geodesicline(lat1, lon1, azi1, distances, a, r)
+%geodesicline  Compute points along a geodesic
 %
-%   path = geodesicpath(lat1, lon1, azi1, distances)
-%   path = geodesicpath(lat1, lon1, azi1, distances, a, r)
+%   latlong = geodesicline(lat1, lon1, azi1, distances)
+%   latlong = geodesicline(lat1, lon1, azi1, distances, a, r)
 %
 %   lat1 is the latitude of point 1 (scalar) in degrees
 %   lon1 is the longitude of point 1 (scalar) in degrees
@@ -21,12 +21,16 @@ function latlong = geodesicpath(lat1, lon1, azi1, distances, a, r)
 %   a = major radius (meters)
 %   r = reciprocal flattening (0 means a sphere)
 %
+%   The result is the same as produced by
+%       geodesicdirect([repmat([lat1, lon1, azi1],size(distances)), ...
+%                       distances], a, r)
+%
 %   This is an interface to the GeographicLib C++ routine
 %       GeodesicLine::Position
 %   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
-% geodesicpath.m
+% geodesicline.m
 % Matlab .m file for geographic to UTM/UPS conversions
 %
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
