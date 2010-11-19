@@ -6,7 +6,40 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.4.
+The current version of the library is 1.5.
+
+Changes between 1.5 (released 2010-11-19) and 1.4 versions:
+
+  * Improve area calculations for small polygons.
+
+  * Add -s and -r flags to Planimeter utility.
+
+  * Improve the accuracy of GeographicLib::LambertConformalConic using
+    divided differences.
+
+  * FIX BUG in meridian convergence returned by
+    LambertConformalConic::Forward.
+
+  * Add optional threadsafe parameter to GeographicLib::Geoid
+    constructor.  WARNING: This changes may break binary compatibility
+    with previous versions of GeographicLib.  However, the library is
+    source compatible.
+
+  * Add GeographicLib::OSGB.
+
+  * Matlab and Octave interfaces to GeographicLib::UTMUPS,
+    GeographicLib::MGRS, GeographicLib::Geoid, GeographicLib::Geodesic
+    provided.
+
+  * Minor changes
+    + explicitly turn on optimization in Visual Studio 2008 projects;
+    + add missing dependencies in some Makefiles;
+    + move pi() and degree() from GeographicLib::Constants to
+      GeographicLib::Math;
+    + introduce GeographicLib::Math::extended type to aid testing;
+    + add GeographicLib::Math::epi() and GeographicLib::Math::edegree().
+    + fixes to compile under cygwin;
+    + tweak expression used to find latitude from conformal latitude.
 
 Changes between 1.4 (released 2010-09-12) and 1.3 versions:
 

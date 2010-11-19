@@ -29,7 +29,8 @@ namespace GeographicLib {
    * may be evaluated accurately and that Newton's method is used to invert the
    * projection.  In this implementation, the projection correctly becomes the
    * Mercator projection or the polar sterographic projection when the standard
-   * latitude is the equator or a pole.
+   * latitude is the equator or a pole.  The accuracy of the projections is
+   * about 10 nm.
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
@@ -39,10 +40,7 @@ namespace GeographicLib {
    * LambertConformalConic::OriginLatitude.  The scale on the latitude of
    * origin is given by LambertConformalConic::CentralScale.  The case with two
    * distinct standard parallels where one is a pole is singular and is
-   * disallowed.  If the standard parallel is at a pole the projection becomes
-   * the polar stereographic projection (compare with the PolarStereographic
-   * class).  If the standard parallel is the equator, the projection becomes
-   * the Mercator projection.  The central meridian (which is a trivial shift
+   * disallowed.  The central meridian (which is a trivial shift
    * of the longitude) is specified as the \e lon0 argument of the
    * LambertConformalConic::Forward and LambertConformalConic::Reverse
    * functions.  There is no provision in this class for specifying a false
