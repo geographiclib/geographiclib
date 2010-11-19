@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.4
-\date 2010-09-12
+\version 1.5
+\date 2010-11-19
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sf.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
-  geographiclib-1.4.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.zip/download">
-  geographiclib-1.4.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">
+  geographiclib-1.5.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.zip/download">
+  geographiclib-1.5.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -157,15 +157,15 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
+   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.4.tar.gz
+   - tar xfpvz geographiclib-1.5.tar.gz
    .
-   This will create a geographiclib-1.4 directory.  (Alternatively,
+   This will create a geographiclib-1.5 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.4 directory
-   - cd geographiclib-1.4
+ - Change to the geographiclib-1.5 directory
+   - cd geographiclib-1.5
  - Create the library and the utility programs
    - make all
    .
@@ -271,12 +271,10 @@ line, the GeographicLib::GeodesicLine class can be used.  This packages
 all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
 point.  \ref geod is a simple command line utility to perform geodesic
-calculations.  GeographicLib::AzimuthalEquidistant computes the
-azimuthal equidistant projection using Geodesic.
-GeographicLib::CassiniSoldner computes the Cassini-Soldner projection
-which is a cylindrical equidistant projection using Geodesic. \ref
-equidistanttest is a simple command line utility to exercise these two
-projections.
+calculations.  GeographicLib::AzimuthalEquidistant,
+GeographicLib::CassiniSoldner, and GeographicLib::Gnomonic are
+projections based on the Geodesic class.  \ref equidistanttest is a
+simple command line utility to exercise these projections.
 
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
@@ -330,7 +328,7 @@ PolarStereographic, do not throw exceptions.  Most of the other classes,
 e.g., UTMUPS, MGRS, and GeoCoords all check their arguments and throw
 GeographicLib::GeographicErr exceptions with a explanatory message.  See
 GeoConvert.cpp for an example of how exceptions can be handled.  Geoid
-is exceptional in than file errors can cause exceptions to be thrown
+is exceptional in that file errors can cause exceptions to be thrown
 when evaluating the geoid at a valid location.
 
 <center>
@@ -2593,7 +2591,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (not released yet)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (current, released 2010-11-19)</a>
   - Improve area calculations for small polygons.
   - Add -s and -r flags to \ref planimeter.
   - Improve the accuracy of GeographicLib::LambertConformalConic using
@@ -2601,22 +2599,24 @@ number.)
   - FIX BUG in meridian convergence returned by
     LambertConformalConic::Forward.
   - Add optional threadsafe parameter to GeographicLib::Geoid
-    constructor.
+    constructor.  WARNING: This changes may break binary compatibility
+    with previous versions of %GeographicLib.  However, the library is
+    source compatible.
   - Add GeographicLib::OSGB.
   - Matlab and Octave interfaces to GeographicLib::UTMUPS,
     GeographicLib::MGRS, GeographicLib::Geoid, GeographicLib::Geodesic
     provided.
   - Minor changes
-    - Explicitly turn on optimization in Visual Studio 2008 projects.
-    - Add missing dependencies in some Makefiles.
-    - Move pi() and degree() from GeographicLib::Constants to
-      GeographicLib::Math.
-    - Introduce GeographicLib::Math::extended type to aid testing.
-    - Add GeographicLib::Math::epi() and GeographicLib::Math::edegree().
-    - Fixes to compile under cygwin.
-    - Tweak expression used to find latitude from conformal latitude.
+    - explicitly turn on optimization in Visual Studio 2008 projects;
+    - add missing dependencies in some Makefiles;
+    - move pi() and degree() from GeographicLib::Constants to
+      GeographicLib::Math;
+    - introduce GeographicLib::Math::extended type to aid testing;
+    - add GeographicLib::Math::epi() and GeographicLib::Math::edegree().
+    - fixes to compile under cygwin;
+    - tweak expression used to find latitude from conformal latitude.
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (current, released 2010-09-12)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (released 2010-09-12)</a>
   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
     - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
     - add area computations to Geodesic::Direct and Geodesic::Inverse;

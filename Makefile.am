@@ -15,11 +15,14 @@ EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
+	find $(distdir)/doc -maxdepth 1 -type f -name '*.tmp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \
 		xargs rm -f ; \
-	find $(distdir)/matlab -type f -name '*.mex*' | xargs rm -rf ; \
+	find $(distdir)/matlab -type f \
+		\( ! -name '*.cpp' -a ! -name '*.m' -a ! -name '*.mk' \) | \
+		xargs rm -rf ; \
 	find $(distdir) \
 		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -o -name '*~' \)| \
 		xargs rm -rf ; \
