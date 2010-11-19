@@ -731,15 +731,16 @@ int main(int argc, char* argv[]) {
             break;
           }
           // std::cout << "Process: " << lat0 << " " << lat << " " << lon << " " << k << "\n";
-          real lata, lona, xa, ya, gamma, ka, kb;
-          lcc.Forward(real(0), real(lat), real(lon), xa, ya, gamma, ka);
+          real lata, lona, xa, ya, gammaa, gammab, ka, kb;
+          lcc.Forward(real(0), real(lat), real(lon), xa, ya, gammaa, ka);
           real errf = Math::hypot(extended(xa) - x, extended(ya) - y) / k;
           real errk = abs(extended(ka) - k);
-          lcc.Reverse(real(0), real(x), real(y), lata, lona, gamma, kb);
+          lcc.Reverse(real(0), real(x), real(y), lata, lona, gammab, kb);
           real errr = dist(extended(a), extended(r),
                            lat, lon, extended(lata), extended(lona));
           std::cout << lata << " " << lona << " " << xa << " " << ya << " "
-                    << ka << " " << kb << "\n";
+                    << ka << " " << kb << " "
+                    << gammaa << " " << gammab << "\n";
           errk = max(errk, real(abs(extended(kb) - k)));
           errk /= k;
           if (errf > maxerrf) {

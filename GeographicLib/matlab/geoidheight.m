@@ -1,10 +1,8 @@
 function height = geoidheight(latlong, geoidname, geoiddir)
 %geoidheight  Compute geoid height
 %
-%   CAUTION: THIS CRASHES MATLAB!!  There is some incompatibility with
-%   the Geoid constructor and the Matlab environment.  The crash (with
-%   Matlab 2008a under Windows using Visual Studio 2008) happens on the
-%   second call.  This works OK with Octave.
+%   CAUTION: THIS MAY CAUSE MATLAB TO CRASH!!  This occurs with Matlab
+%   2008a when using Visual Studio 2008 as the compiler.
 %
 %   height = geoidheight(latlong);
 %   height = geoidheight(latlong, geoidname);
@@ -13,7 +11,10 @@ function height = geoidheight(latlong, geoidname, geoiddir)
 %   latlong is an M x 2 matrix
 %       latitude = latlong(:,1) in degrees
 %       longitude = latlong(:,2) in degrees
-%   geoidname is the name of the geoid (default egm96-5)
+%   geoidname is the name of the geoid; choices are (default egm96-5)
+%       egm84-30  egm84-15
+%       egm96-15  egm96-5
+%       egm2008-5 egm2008-2_5 egm2008-1
 %   geoiddir is the direcortory containing the geoid models (default empty
 %       string meaning system default)
 %

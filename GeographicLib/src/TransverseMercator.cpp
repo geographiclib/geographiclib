@@ -218,9 +218,9 @@ namespace GeographicLib {
     const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
-      lon -= lon0 - 360;
-    else if (lon - lon0 <= -180)
       lon -= lon0 + 360;
+    else if (lon - lon0 <= -180)
+      lon -= lon0 - 360;
     else
       lon -= lon0;
     // Now lon in (-180, 180]

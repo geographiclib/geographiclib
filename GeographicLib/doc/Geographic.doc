@@ -186,6 +186,9 @@ The following steps will get you started with %GeographicLib:
  - If you use the library frequently, install it, e.g., to \$(PREFIX) =
    /usr/local with
    - make PREFIX=/usr/local install install-doc
+ - There is an interface for some %GeographicLib classes to Matlab and
+   Octave.  The geographiclibinterface function in the matlab
+   directory compiles the interface routines.
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
@@ -2591,23 +2594,27 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (not released yet)</a>
-  - Add missing dependencies in some Makefiles.
-  - Add -s and -r flags to \ref planimeter.
   - Improve area calculations for small polygons.
-  - Move pi() and degree() from GeographicLib::Constants to
-    GeographicLib::Math.
-  - Add GeographicLib::Math::epi() and GeographicLib::Math::edegree().
-  - Add GeographicLib::OSGB.
-  - Explicitly turn on optimization in Visual Studio 2008 projects.
-  - Tweak expression used to find latitude from conformal latitude.
-  - Fixes to compile under cygwin.
-  - Introduce GeographicLib::Math::extended type to aid testing.
-  - Add optional threadsafe parameter to GeographicLib::Geoid
-    constructor.
+  - Add -s and -r flags to \ref planimeter.
   - Improve the accuracy of GeographicLib::LambertConformalConic using
     divided differences.
-  - Matlab interface to GeographicLib::UTMUPS and GeographicLib::MGRS
-    checked into SVN.
+  - FIX BUG in meridian convergence returned by
+    LambertConformalConic::Forward.
+  - Add optional threadsafe parameter to GeographicLib::Geoid
+    constructor.
+  - Add GeographicLib::OSGB.
+  - Matlab and Octave interfaces to GeographicLib::UTMUPS,
+    GeographicLib::MGRS, GeographicLib::Geoid, GeographicLib::Geodesic
+    provided.
+  - Minor changes
+    - Explicitly turn on optimization in Visual Studio 2008 projects.
+    - Add missing dependencies in some Makefiles.
+    - Move pi() and degree() from GeographicLib::Constants to
+      GeographicLib::Math.
+    - Introduce GeographicLib::Math::extended type to aid testing.
+    - Add GeographicLib::Math::epi() and GeographicLib::Math::edegree().
+    - Fixes to compile under cygwin.
+    - Tweak expression used to find latitude from conformal latitude.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (current, released 2010-09-12)</a>
   - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:

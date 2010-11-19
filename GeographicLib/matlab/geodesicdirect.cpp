@@ -84,6 +84,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
         lat2[i] = lon2[i] = azi2[i]
           = m12[i] = M12[i] = M21[i] = S12[i] = Math::NaN();
       }
+    }
   }
   catch (const std::exception& e) {
     mexErrMsgTxt(e.what());
