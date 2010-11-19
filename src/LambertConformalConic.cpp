@@ -322,13 +322,23 @@ namespace GeographicLib {
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
                                       real& x, real& y, real& gamma, real& k)
     const throw() {
-    if (lon - lon0 > 180)
-      lon -= lon0 - 360;
-    else if (lon - lon0 <= -180)
+    if (lon - lon0 >= 180)
       lon -= lon0 + 360;
+    else if (lon - lon0 < -180)
+      lon -= lon0 - 360;
     else
       lon -= lon0;
     lat *= _sign;
+    // From Snyder, we have
+    //
+    // theta = n * lambda
+    // x = rho * sin(theta)
+    //   = (nrho0 + n * drho) * sin(theta)/n
+    // y = rho0 - rho * cos(theta)
+    //   = nrho0 * (1-cos(theta))/n - drho * cos(theta)
+    //
+    // where nrho0 = n * rho0, drho = rho - rho0
+    // and drho is evaluated with divided differences
     real
       lam = lon * Math::degree(),
       phi = lat * Math::degree(),
@@ -352,13 +362,25 @@ namespace GeographicLib {
       (exp( - (sq(_nc)/(1 + _n)) * dpsi )
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     y *= _sign;
-    gamma = theta * _sign;
+    gamma = _sign * theta / Math::degree();
   }
 
   void LambertConformalConic::Reverse(real lon0, real x, real y,
                                       real& lat, real& lon,
                                       real& gamma, real& k)
     const throw() {
+    // From Snyder, we have
+    //
+    //        x = rho * sin(theta)
+    // rho0 - y = rho * cos(theta)
+    //
+    // rho = hypot(x, rho0 - y)
+    // drho = (n*x^2 - 2*y*nrho0 + n*y^2)/(hypot(n*x, nrho0-n*y) + nrho0)
+    // theta = atan2(n*x, nrho0-n*y)
+    //
+    // From drho, obtain t^n-1
+    // psi = -log(t), so
+    // dpsi = - Dlog1p(t^n-1, t0^n-1) * drho / scale
     y *= _sign;
     real
       nx = _n * x, ny = _n * y, y1 = _nrho0 - ny,
@@ -367,19 +389,19 @@ namespace GeographicLib {
       tnm1 = _t0nm1 + _n * drho/_scale,
       dpsi = (den == 0 ? 0 :
               (tnm1 + 1 != 0 ? - Dlog1p(tnm1, _t0nm1) * drho / _scale :
-               ahypover)),
-      lam = _n != 0 ? atan2(nx, y1 ) / _n : x / y1;
+               ahypover));
     real tchi;
     if (2 * _n <= 1) {
+      // tchi = sinh(psi)
       real
         psi = _psi0 + dpsi, tchia = sinh(psi), scchi = hyp(tchia),
         dtchi = Dsinh(psi, _psi0, tchia, _tchi0, scchi, _scchi0) * dpsi;
       tchi = _tchi0 + dtchi;    // Update tchi using divided difference
     } else {
       // tchi = sinh(-1/n * log(tn))
-      // = sinh((1-1/n) * log(tn) - log(tn))
-      // = + sinh((1-1/n) * log(tn)) * cosh(log(tn))
-      //   - cosh((1-1/n) * log(tn)) * sinh(log(tn))
+      //      = sinh((1-1/n) * log(tn) - log(tn))
+      //      = + sinh((1-1/n) * log(tn)) * cosh(log(tn))
+      //        - cosh((1-1/n) * log(tn)) * sinh(log(tn))
       // (1-1/n) = - nc^2/(n*(1+n))
       // cosh(log(tn)) = (tn + 1/tn)/2; sinh(log(tn)) = (tn - 1/tn)/2
       real
@@ -405,12 +427,14 @@ namespace GeographicLib {
       if (abs(dtphi) < stol)
         break;
     }
+    // log(t) = -asinh(tan(chi)) = -psi
+    gamma = atan2(nx, y1);
     double
       phi = _sign * atan(tphi),
-      tbet = _fm * tphi, scbet = hyp(tbet);
+      scbet = hyp(_fm * tphi), scchi = hyp(tchi),
+      lam = _n != 0 ? gamma / _n : x / y1;
     lat = phi / Math::degree();
     lon = lam / Math::degree();
-    gamma = _sign * _n * lon;
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon + lon0 >= 180)
       lon += lon0 - 360;
@@ -418,10 +442,10 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    real scchi = hyp(tchi);
     k = _k0 * (scbet/_scbet0) /
       (exp( - (sq(_nc)/(1 + _n)) * dpsi )
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
+    gamma /= _sign * Math::degree();
   }
 
   void LambertConformalConic::SetScale(real lat, real k) {

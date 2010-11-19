@@ -4,10 +4,12 @@ function geographiclibinterface;
 %
 % This has been tested with
 %
-%   Octave 3.2.2 and g++ 4.4.4 under Linus
-%   Matlab 2008a and Visual Studio 2008 4.4.4 under Windows
+%   Octave 3.2.2 and g++ 4.4.4 under Linux
+%   Matlab 2007a and Visual Studio 2005 under Windows
+%   Matlab 2008a and Visual Studio 2005 under Windows
+%   Matlab 2008a and Visual Studio 2008 under Windows
 %
-% Note that the geoidheight causes Matlab to CRASH (in the second
+% Note that the geoidheight causes Matlab to CRASH (in the last
 % configuration above).  The crash happens on the second call.
 %
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
@@ -19,6 +21,8 @@ function geographiclibinterface;
 	  'utmupsforward', 'utmupsreverse', ...
 	  'mgrsforward', 'mgrsreverse'};
   if ispc,
+    warning(['geoidheight (compiled with Visual Studio 2008) ',...
+	     'causes Matlab (2008a) to CRASH']);
     incdir='../include';
     libdir='../windows/Release';
     lib='GeographicLib';
