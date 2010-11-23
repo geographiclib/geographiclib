@@ -10,6 +10,7 @@
 #include "GeographicLib/Geoid.hpp"
 #include <sstream>
 #include <cstdlib>
+#include <algorithm>
 
 #define GEOGRAPHICLIB_GEOID_CPP "$Id$"
 
@@ -348,6 +349,14 @@ namespace GeographicLib {
           t[i] /= c0x;
         }
       }
+    } else { // same cell; used cached coefficients
+      if (!_cubic) {
+        v00 = _v00;
+        v01 = _v01;
+        v10 = _v10;
+        v11 = _v11;
+      } else
+        copy(_t, _t + nterms, t);
     }
     if (!_cubic) {
       real
@@ -406,8 +415,7 @@ namespace GeographicLib {
       if (!_threadsafe) {
         _ix = ix;
         _iy = iy;
-        for (unsigned i = 0; i < nterms; ++i)
-          _t[i] = t[i];
+        copy(t, t + nterms, _t);
       }
       return h;
     }
