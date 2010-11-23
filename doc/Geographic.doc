@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.5
-\date 2010-11-19
+\version 1.6
+\date 2010-11-23
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sf.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">
-  geographiclib-1.5.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.zip/download">
-  geographiclib-1.5.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">
+  geographiclib-1.6.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.zip/download">
+  geographiclib-1.6.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -157,15 +157,15 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">
+   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.5.tar.gz
+   - tar xfpvz geographiclib-1.6.tar.gz
    .
-   This will create a geographiclib-1.5 directory.  (Alternatively,
+   This will create a geographiclib-1.6 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.5 directory
-   - cd geographiclib-1.5
+ - Change to the geographiclib-1.6 directory
+   - cd geographiclib-1.6
  - Create the library and the utility programs
    - make all
    .
@@ -2591,7 +2591,10 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (current, released 2010-11-19)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (current, released 2010-11-23)</a>
+  - FIX BUG introduced in GeographicLib::Geoid in version 1.5.
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (released 2010-11-19)</a>
   - Improve area calculations for small polygons.
   - Add -s and -r flags to \ref planimeter.
   - Improve the accuracy of GeographicLib::LambertConformalConic using
