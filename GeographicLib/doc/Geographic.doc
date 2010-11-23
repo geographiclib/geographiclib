@@ -2592,7 +2592,8 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (current, released 2010-11-23)</a>
-  - FIX BUG introduced in GeographicLib::Geoid in version 1.5.
+  - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by
+    Dave Edwards).
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (released 2010-11-19)</a>
   - Improve area calculations for small polygons.
