@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="GeographicLib"
+	Name="Geographic"
 	ProjectGUID="{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
 	Keyword="Win32Proj"
 	>
