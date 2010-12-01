@@ -48,7 +48,7 @@ Files
 
     windows/
       GeographicLib-vc9.sln -- MS Studio 2008 solution
-      GeographicLib-vc9.vcproj -- project for library
+      Geographic-vc9.vcproj -- project for library
       GeoConvert-vc9.vcproj -- project for GeoConvert
       TransverseMercatorTest-vc9.vcproj -- project for TransverseMercatorTest
       Geod-vc9.vcproj -- project for Geod

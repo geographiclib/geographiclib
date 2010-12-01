@@ -3,8 +3,8 @@
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval Planimeter
 
-VSPROJECTS = $(addsuffix -vc8.vcproj,GeographicLib $(PROGRAMS)) \
-	$(addsuffix -vc9.vcproj,GeographicLib $(PROGRAMS))
+VSPROJECTS = $(addsuffix -vc8.vcproj,Geographic $(PROGRAMS)) \
+	$(addsuffix -vc9.vcproj,Geographic $(PROGRAMS))
 
 all:
 	@:
