@@ -28,17 +28,11 @@ void mexFunction( int nlhs, mxArray* plhs[],
   else if (nlhs > 1)
     mexErrMsgTxt("Only one output argument can be specified.");
 
-  if (!mxIsChar(prhs[0]))
-    mexErrMsgTxt("mgrs coordinates should be strings.");
-
-  int n = mxGetN(prhs[0]);
-  if (n < 3)
-    mexErrMsgTxt("mgrs strings are too short.");
+  if (!mxIsCell(prhs[0]) || mxGetN(prhs[0]) != 1)
+    mexErrMsgTxt("mgrs coordinates should be in a M x 1 cell array.");
 
   int m = mxGetM(prhs[0]);
   plhs[0] = mxCreateDoubleMatrix(m, 5, mxREAL);
-
-  mxChar* mgrs = mxGetChars(prhs[0]);
 
   double* x = mxGetPr(plhs[0]);
   double* y = x + m;
@@ -47,18 +41,16 @@ void mexFunction( int nlhs, mxArray* plhs[],
   double* prec = x + 4*m;
 
   string mgrsstr;
-  const char* spaces = " \t\n\v\f\r"; // Include comma as a space
-
   for (int i = 0; i < m; ++i) {
     try {
+      mxArray* mgrs = mxGetCell(prhs[0], i);
+      if (!mxIsChar(mgrs) || mxGetM(mgrs) != 1)
+        throw GeographicErr("Cell element not a string");
+      int n = mxGetN(mgrs);
+      mxChar* mgrschar = mxGetChars(mgrs);
       mgrsstr.resize(n);
       for (int k = 0; k < n; ++k)
-        mgrsstr[k] = mgrs[i + k * m];
-      string::size_type pos1 = mgrsstr.find_first_not_of(spaces);
-      if (pos1 == string::npos)
-        throw GeographicErr("Empty MGRS string");
-      string::size_type pos2 = mgrsstr.find_first_of(spaces, pos1);
-      mgrsstr = mgrsstr.substr(pos1, pos2);
+        mgrsstr[k] = mgrschar[k];
       int ZONE, PREC;
       bool HEMI;
       MGRS::Reverse(mgrsstr, ZONE, HEMI, x[i], y[i], PREC);
@@ -68,7 +60,9 @@ void mexFunction( int nlhs, mxArray* plhs[],
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      x[i] = y[i] = zone[i] = hemi[i] = prec[i] = Math::NaN();
+      x[i] = y[i] = Math::NaN();
+      zone[i] = UTMUPS::INVALID;
+      hemi[i] = 0; prec[i] = -1;
     }
   }
 }

@@ -15,7 +15,7 @@ function mgrs = mgrsforward(utmups, prec)
 %   prec = half the number of trailing digits in the MGRS string
 %          (default 5)
 %
-%   mgrs is a vector of M strings of length 5 + 2 * prec.
+%   mgrs is a M x 1 cell array of MGRS strings.
 %   For UPS coordinates the string begins with 2 blanks.
 %
 %   This is an interface to the GeographicLib C++ routine

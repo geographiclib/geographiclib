@@ -20,16 +20,15 @@ function geographiclibinterface;
 	  'geoidheight', ...
 	  'utmupsforward', 'utmupsreverse', ...
 	  'mgrsforward', 'mgrsreverse'};
+  lib='Geographic';
   if ispc,
     warning(['geoidheight (compiled with Visual Studio 2008) ',...
 	     'causes Matlab (2008a) to CRASH']);
     incdir='../include';
     libdir='../windows/Release';
-    lib='GeographicLib';
   else
     incdir='/usr/local/include';
     libdir='/usr/local/lib';
-    lib='Geographic';
   end
   for i=1:size(funs,2),
     fprintf('Compiling %s...', funs{i});
