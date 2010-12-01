@@ -26,7 +26,9 @@ namespace GeographicLib {
   void GeoCoords::Reset(const std::string& s, bool centerp) {
     vector<string> sa;
     const char* spaces = " \t\n\v\f\r,"; // Include comma as a space
+    /*
     const char* digits = "0123456789.";  // Include period as a digit
+    */
     for (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
       pos1 = s.find_first_not_of(spaces, pos0);
       if (pos1 == string::npos)
@@ -56,29 +58,8 @@ namespace GeographicLib {
                             + " of the form UTM/UPS Zone + Hemisphere"
                             + " (ex: 38N, 09S, N)");
       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
-      for (unsigned i = 0; i < 2; ++i) {
-        istringstream str(sa[coordind + i]);
-        real x;
-        if (!(str >> x))
-          throw GeographicErr("Bad number " + sa[coordind + i]
-                              + " for UTM/UPS "
-                              + (i == 0 ? "easting " : "northing "));
-        // Both g++ and VS handle "str >> x" incorrectly when the string is
-        // 1234E.  (The "right" result would be to handle it the same way as
-        // 1234X; x is set to 1234 with tellg() is 4.)  VS fails to read any
-        // number (which is incorrect but which is OK here).  Linux reads past
-        // the "E" and a following sign if there is one; we need to detect this
-        // and report it as an error.  So look for last character which is
-        // legal as the final character in a number (digit or period).
-        int pos = min(int(str.tellg()),
-                      int(sa[coordind + i].find_last_of(digits)) + 1);
-        if (pos != int(sa[coordind + i].size()))
-          throw GeographicErr("Extra text "
-                              + sa[coordind + i].substr(pos) + " in UTM/UPS "
-                              + (i == 0 ? "easting " : "northing ")
-                              + sa[coordind + i]);
-        (i ? _northing : _easting) = x;
-      }
+      for (unsigned i = 0; i < 2; ++i)
+        (i ? _northing : _easting) = DMS::Decode(sa[coordind + i]);
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
                       _lat, _long, _gamma, _k);
       FixHemisphere();
@@ -91,7 +72,16 @@ namespace GeographicLib {
   string GeoCoords::GeoRepresentation(int prec) const {
     prec = max(0, min(9, prec) + 5);
     ostringstream os;
-    os << fixed << setprecision(prec) << _lat << " " << _long;
+    os << fixed << setprecision(prec);
+    if (_lat == _lat)
+      os << _lat;
+    else
+      os << "nan";
+    os << " ";
+    if (_long == _long)
+      os << _long;
+    else
+      os << "nan";
     return os.str();
   }
 
@@ -124,12 +114,18 @@ namespace GeographicLib {
     prec = max(-5, min(9, prec));
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);
     os << UTMUPS::EncodeZone(zone, _northp) << fixed << setfill('0');
-    os << " " << setprecision(max(0, prec)) << easting / scale;
-    if (prec < 0 && abs(easting / scale) > real(0.5))
-      os << setw(-prec) << 0;
-    os << " " << setprecision(max(0, prec)) << northing / scale;
-    if (prec < 0 && abs(northing / scale) > real(0.5))
-      os << setw(-prec) << 0;
+    if (easting == easting) {
+      os << " " << setprecision(max(0, prec)) << easting / scale;
+      if (prec < 0 && abs(easting / scale) > real(0.5))
+        os << setw(-prec) << 0;
+    } else
+      os << " nan";
+    if (northing == northing) {
+      os << " " << setprecision(max(0, prec)) << northing / scale;
+      if (prec < 0 && abs(northing / scale) > real(0.5))
+        os << setw(-prec) << 0;
+    } else
+      os << " nan";
     utm = os.str();
   }
 
@@ -146,7 +142,8 @@ namespace GeographicLib {
   }
 
   void GeoCoords::FixHemisphere() {
-    if (_lat == 0 || (_northp && _lat >= 0) || (!_northp && _lat < 0))
+    if (_lat == 0 || (_northp && _lat >= 0) || (!_northp && _lat < 0) ||
+        _lat != _lat)
       // Allow either hemisphere for equator
       return;
     if (_zone != UTMUPS::UPS) {

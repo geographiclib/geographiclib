@@ -15,7 +15,6 @@
 #include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/DMS.hpp"
 #include <iostream>
-#include <iomanip>
 #include <sstream>
 
 int usage(int retval) {
@@ -197,7 +196,6 @@ int main(int argc, char* argv[]) {
   // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
   // 10^-11 sec (= 0.3 nm).
   prec = std::min(10, std::max(0, prec));
-  std::cout << std::fixed << std::setprecision(prec);
   std::string s;
   int retval = 0;
   while (std::getline(std::cin, s)) {

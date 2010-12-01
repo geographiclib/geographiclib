@@ -14,9 +14,8 @@
 
 #include "GeographicLib/GeoCoords.hpp"
 #include "GeographicLib/DMS.hpp"
-#include <iostream>
 #include <sstream>
-#include <iomanip>
+#include <iostream>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<

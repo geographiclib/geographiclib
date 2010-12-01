@@ -46,8 +46,10 @@ namespace GeographicLib {
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
     if (setzone < MINPSEUDOZONE || setzone > MAXZONE)
       throw GeographicErr("Illegal zone requested " + str(setzone));
-    if (setzone >= MINZONE)
+    if (setzone >= MINZONE || setzone == INVALID)
       return setzone;
+    if (lat != lat || lon != lon) // Check if lat or lon is a NaN
+      return INVALID;
     // Assume lon is in [-180, 360].
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
       // Assume lon is in [-180, 360].
@@ -72,6 +74,12 @@ namespace GeographicLib {
     CheckLatLon(lat, lon);
     bool northp1 = lat >= 0;
     int zone1 = StandardZone(lat, lon, setzone);
+    if (zone1 == INVALID) {
+      zone = zone1;
+      northp = northp1;
+      x = y = gamma = k = Math::NaN();
+      return;
+    }
     real x1, y1, gamma1, k1;
     bool utmp = zone1 != UPS;
     if (utmp) {
@@ -111,6 +119,10 @@ namespace GeographicLib {
   void UTMUPS::Reverse(int zone, bool northp, real x, real y,
                        real& lat, real& lon, real& gamma, real& k,
                        bool mgrslimits) {
+    if (zone == INVALID || x != x || y != y) {
+      lat = lon = gamma = k = Math::NaN();
+      return;
+    }
     if (! (zone >= MINZONE && zone <= MAXZONE))
       throw GeographicErr("Zone " + str(zone) + " not in range [0, 60]");
     bool utmp = zone != UPS;
@@ -126,19 +138,19 @@ namespace GeographicLib {
   }
 
   void UTMUPS::CheckLatLon(real lat, real lon) {
-    if (! (lat >= -90 && lat <= 90))
+    if (lat < -90 || lat > 90)
       throw GeographicErr("Latitude " + str(lat) + "d not in [-90d, 90d]");
-    if (! (lon >= -180 && lon <= 360))
+    if (lon < -180 || lon > 360)
       throw GeographicErr("Latitude " + str(lon) + "d not in [-180d, 360d]");
     }
 
   bool UTMUPS::CheckCoords(bool utmp, bool northp, real x, real y,
                            bool mgrslimits, bool throwp) {
     // Limits are all multiples of 100km and are all closed on the both ends.
-    // Failure tests are all negated success tests so that NaNs fail.
+    // Failure tests are such that NaNs succeed.
     real slop = mgrslimits ? 0 : MGRS::tile;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-    if (! (x >= mineasting[ind] - slop && x <= maxeasting[ind] + slop) ) {
+    if (x < mineasting[ind] - slop || x > maxeasting[ind] + slop) {
       if (!throwp) return false;
       throw GeographicErr("Easting " + str(x/1000) + "km not in "
                           + (mgrslimits ? "MGRS/" : "")
@@ -147,7 +159,7 @@ namespace GeographicLib {
                           + str((mineasting[ind] - slop)/1000) + "km, "
                           + str((maxeasting[ind] + slop)/1000) + "km]");
     }
-    if (! (y >= minnorthing[ind] - slop && y <= maxnorthing[ind] + slop) ) {
+    if (y < minnorthing[ind] - slop || y > maxnorthing[ind] + slop) {
       if (!throwp) return false;
       throw GeographicErr("Northing " + str(y/1000) + "km not in "
                           + (mgrslimits ? "MGRS/" : "")
@@ -166,6 +178,14 @@ namespace GeographicLib {
     if (zlen > 3)
       throw GeographicErr("More than 3 characters in zone specification "
                           + zonestr);
+    if (zlen == 3 &&
+        toupper(zonestr[0]) == 'I' &&
+        toupper(zonestr[1]) == 'N' &&
+        toupper(zonestr[2]) == 'V') {
+      zone = INVALID;
+      northp = false;
+      return;
+    }
     char hemi = toupper(zonestr[zlen - 1]);
     bool northp1 = hemi == 'N';
     if (! (northp1 || hemi == 'S'))
@@ -195,6 +215,8 @@ namespace GeographicLib {
   }
 
   std::string UTMUPS::EncodeZone(int zone, bool northp) {
+    if (zone == INVALID)
+      return string("INV");
     if (! (zone >= MINZONE && zone <= MAXZONE))
         throw GeographicErr("Zone " + str(zone) + " not in range [0, 60]");
     ostringstream os;

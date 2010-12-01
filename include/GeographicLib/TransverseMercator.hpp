@@ -74,7 +74,8 @@ namespace GeographicLib {
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) throw() {
       real t = std::tan(x);
-      return x >= 0 ? (t >= 0 ? t : overflow) : (t < 0 ? t : -overflow);
+      // Write the tests this way to ensure that tanx(NaN()) is NaN()
+      return x >= 0 ? (!(t < 0) ? t : overflow) : (!(t >= 0) ? t : -overflow);
     }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0

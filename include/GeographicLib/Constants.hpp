@@ -303,6 +303,17 @@ namespace GeographicLib {
     }
 
     /**
+     * Infinity
+     *
+     * @return infinity if available, otherwise return the max real.
+     **********************************************************************/
+    static inline real infinity() throw() {
+      return std::numeric_limits<real>::has_infinity ?
+        std::numeric_limits<real>::infinity() :
+        std::numeric_limits<real>::max();
+    }
+
+    /**
      * @return \e pi in extended precision
      **********************************************************************/
     static inline extended epi() throw()

@@ -267,8 +267,8 @@ namespace GeographicLib {
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
 
-          if (abs(v) <= eps2 || !(trip < 1)) {
-            if (abs(v) > max(tol1, ov))
+          if (!(abs(v) > eps2) || !(trip < 1)) {
+            if (!(abs(v) <= max(tol1, ov)))
               numit = maxit;
             break;
           }
@@ -286,7 +286,7 @@ namespace GeographicLib {
           // 100 * epsilon.  The second takes credit for an anticipated
           // reduction in abs(v) by v/ov (due to the latest update in alp1) and
           // checks this against epsilon.
-          if (abs(v) < tol1 || sq(v) < ov * tol0) ++trip;
+          if (!(abs(v) >= tol1 && sq(v) >= ov * tol0)) ++trip;
           ov = abs(v);
         }
 
