@@ -424,7 +424,7 @@ namespace GeographicLib {
         dtphi = (tchi - tchia) * (1 + _e2m * sq(tphi)) /
         ( _e2m * scphi * hyp(tchia) );
       tphi += dtphi;
-      if (abs(dtphi) < stol)
+      if (!(abs(dtphi) >= stol))
         break;
     }
     // log(t) = -asinh(tan(chi)) = -psi

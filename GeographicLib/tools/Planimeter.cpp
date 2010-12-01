@@ -15,8 +15,6 @@
 #include "GeographicLib/DMS.hpp"
 #include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
-#include <iomanip>
-#include <sstream>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
@@ -187,7 +185,6 @@ int main(int argc, char* argv[]) {
   const Geodesic geod(a, r);
   GeodesicPolygon poly(geod);
   GeoCoords p;
-  std::cout << std::fixed;
 
   std::string s;
   real perimeter, area;
@@ -195,13 +192,15 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       p.Reset(s);
+      if (p.Latitude() != p.Latitude() || p.Longitude() != p.Longitude())
+        throw GeographicErr("NAN");
     }
     catch (const GeographicErr&) {
       num = poly.Compute(reverse, sign, perimeter, area);
       if (num > 0)
         std::cout << num << " "
-                  << std::setprecision(8) << perimeter << " "
-                  << std::setprecision(4) << area << "\n";
+                  << DMS::Encode(perimeter, 8, DMS::NUMBER) << " "
+                  << DMS::Encode(area, 4, DMS::NUMBER) << "\n";
       poly.Clear();
       continue;
     }
@@ -209,9 +208,9 @@ int main(int argc, char* argv[]) {
   }
   num = poly.Compute(reverse, sign, perimeter, area);
   if (num > 0)
-    std::cout << num << " "
-              << std::setprecision(8) << perimeter << " "
-              << std::setprecision(4) << area << "\n";
+        std::cout << num << " "
+                  << DMS::Encode(perimeter, 8, DMS::NUMBER) << " "
+                  << DMS::Encode(area, 4, DMS::NUMBER) << "\n";
   poly.Clear();
   return 0;
 }

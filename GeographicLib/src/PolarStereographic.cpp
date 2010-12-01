@@ -37,6 +37,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(_k0 > 0))
       throw GeographicErr("Scale is not positive");
   }
@@ -72,14 +74,15 @@ namespace GeographicLib {
     lat *= northp ? 1 : -1;
     real
       phi = lat * Math::degree(),
-      tau = lat > -90 ? tan(phi) : -overflow,
+      tau = lat != -90 ? tan(phi) : -overflow,
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
       taup = Math::hypot(real(1), sig) * tau - sig * secphi,
       rho =  Math::hypot(real(1), taup) + abs(taup);
-    rho = taup >= 0 ? (lat < 90 ? 1/rho : 0) : rho;
+    rho = taup >= 0 ? (lat != 90 ? 1/rho : 0) : rho;
     rho *= 2 * _k0 * _a / _c;
-    k = lat < 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
+    k = lat != 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) :
+      _k0;
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real
       lam = lon * Math::degree();
@@ -106,7 +109,7 @@ namespace GeographicLib {
         dtau = (taup - taupa) * (1 + _e2m * sq(tau)) /
         ( _e2m * tau1 * Math::hypot(real(1), taupa) );
       tau += dtau;
-      if (abs(dtau) < stol)
+      if (!(abs(dtau) >= stol))
         break;
     }
     real

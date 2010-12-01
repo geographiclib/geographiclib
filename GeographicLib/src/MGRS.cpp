@@ -49,6 +49,11 @@ namespace GeographicLib {
 
   void MGRS::Forward(int zone, bool northp, real x, real y, real lat,
                      int prec, std::string& mgrs) {
+    if (zone == UTMUPS::INVALID || x != x || y != y || lat != lat) {
+      prec = -1;
+      mgrs = "INVALID";
+      return;
+    }
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
     if (!(zone >= 0 || zone <= 60))
@@ -126,10 +131,10 @@ namespace GeographicLib {
   void MGRS::Forward(int zone, bool northp, real x, real y,
                      int prec, std::string& mgrs) {
     real lat, lon;
-    if (zone)
+    if (zone > 0)
       UTMUPS::Reverse(zone, northp, x, y, lat, lon);
     else
-      // Latitude isn't needed for UPS specs.
+      // Latitude isn't needed for UPS specs or for INVALID
       lat = 0;
     Forward(zone, northp, x, y, lat, prec, mgrs);
   }
@@ -140,6 +145,16 @@ namespace GeographicLib {
     int
       p = 0,
       len = int(mgrs.size());
+    if (len >= 3 &&
+        toupper(mgrs[0]) == 'I' &&
+        toupper(mgrs[1]) == 'N' &&
+        toupper(mgrs[2]) == 'V') {
+      zone = UTMUPS::INVALID;
+      northp = false;
+      x = y = Math::NaN();
+      prec = -1;
+      return;
+    }
     int zone1 = 0;
     while (p < len) {
       int i = lookup(digits, mgrs[p]);

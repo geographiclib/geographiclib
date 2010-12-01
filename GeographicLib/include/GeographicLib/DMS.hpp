@@ -38,6 +38,7 @@ namespace GeographicLib {
     static const std::string digits;
     static const std::string dmsindicators;
     static const std::string components[3];
+    static Math::real NumMatch(const std::string& s);
     DMS();                      // Disable constructor
 
   public:
@@ -231,6 +232,9 @@ namespace GeographicLib {
      **********************************************************************/
     static std::string Encode(real angle, unsigned prec, flag ind = NONE) {
       if (ind == NUMBER) {
+        if (!Math::isfinite(angle))
+          return angle < 0 ? std::string("-inf") :
+            (angle > 0 ? std::string("inf") : std::string("nan"));
         std::ostringstream s;
         s << std::fixed << std::setprecision(prec) << angle;
         return s.str();

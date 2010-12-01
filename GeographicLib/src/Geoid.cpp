@@ -305,6 +305,10 @@ namespace GeographicLib {
 
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
+    if (lat != lat || lon != lon) {
+      if (gradp) gradn = grade = Math::NaN();
+      return Math::NaN();
+    }
     real
       fx =  lon * _rlonres,
       fy = -lat * _rlatres;

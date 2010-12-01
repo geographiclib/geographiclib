@@ -15,8 +15,6 @@
 #include "GeographicLib/DMS.hpp"
 #include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
-#include <sstream>
-#include <iomanip>
 
 int usage(int retval) {
   using namespace GeographicLib;
@@ -192,12 +190,9 @@ int main(int argc, char* argv[]) {
                   << "\n";
     }
 
-    std::cout << std::fixed;
     GeoCoords p;
     std::string s;
     const char* spaces = " \t\n\v\f\r,"; // Include comma as space
-    if (heightmult)
-      std::cout << std::setprecision(3);
     while (std::getline(std::cin, s)) {
       try {
         real height = 0;
@@ -214,12 +209,17 @@ int main(int argc, char* argv[]) {
         p.Reset(zone + s);
         if (heightmult) {
           real h = g(p.Latitude(), p.Longitude());
-          std::cout << s << " " << height + real(heightmult) * h << "\n";
+          std::cout << s << " "
+                    << DMS::Encode(height + real(heightmult) * h,
+                                   3, DMS::NUMBER) << "\n";
         } else {
           real gradn, grade;
           real h = g(p.Latitude(), p.Longitude(), gradn, grade);
-          std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
-                    << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";
+          std::cout << DMS::Encode(h, 4, DMS::NUMBER) << " "
+                    << DMS::Encode(gradn * 1e6, 2, DMS::NUMBER)
+                    << (gradn == gradn ? "e-6 " : " ")
+                    << DMS::Encode(grade * 1e6, 2, DMS::NUMBER)
+                    << (grade == grade ? "e-6\n" : "\n");
         }
       }
       catch (const std::exception& e) {

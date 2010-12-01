@@ -257,7 +257,7 @@ namespace GeographicLib {
     //   cosh(etap) = 1/denom                  = 1/denom
     //   sinh(etap) = cos(phi')*sin(lam)/denom = sech(psi)*sin(lam)/denom
     real etap, xip;
-    if (lat < 90) {
+    if (lat != 90) {
       real
         c = max(real(0), cos(lam)), // cos(pi/2) might be negative
         tau = tan(phi),
@@ -444,7 +444,7 @@ namespace GeographicLib {
       s = sinh(etap),
       c = max(real(0), cos(xip)), // cos(pi/2) might be negative
       r = Math::hypot(s, c);
-    if (r > 0) {
+    if (r != 0) {
       lam = atan2(s, c);        // Krueger p 17 (25)
       // Use Newton's method to solve for tau
       real
@@ -460,7 +460,7 @@ namespace GeographicLib {
           dtau = (taup - taupa) * (1 + _e2m * sq(tau)) /
           ( _e2m * tau1 * Math::hypot(real(1), taupa) );
         tau += dtau;
-        if (abs(dtau) < stol)
+        if (!(abs(dtau) >= stol))
           break;
       }
       phi = atan(tau);

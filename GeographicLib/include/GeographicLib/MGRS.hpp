@@ -183,6 +183,9 @@ namespace GeographicLib {
      * of a band boundary.  For prec in [6, 11], the conversion is accurate to
      * roundoff.
      *
+     * If \e x or \e y is NaN or if \e zone is UTMUPS::INVALID, the returned
+     * MGRS string is "INVALID".
+     *
      * Return the result via a reference argument to avoid the overhead of
      * allocating a potentially large number of small strings.  If an error is
      * thrown, then \e mgrs is unchanged.

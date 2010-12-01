@@ -163,7 +163,7 @@ namespace GeographicLib {
         m[l] = a;
         n[l] = mc = sqrt(mc);
         c = (a + mc) / 2;
-        if (abs(a - mc) <= tolJAC * a) {
+        if (!(abs(a - mc) > tolJAC * a)) {
           ++l;
           break;
         }

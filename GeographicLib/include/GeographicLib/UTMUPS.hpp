@@ -91,7 +91,11 @@ namespace GeographicLib {
       /**
        * The smallest pseudo-zone number.
        **********************************************************************/
-      MINPSEUDOZONE = -3,
+      MINPSEUDOZONE = -4,
+      /**
+       * A marker for an undefined or invalid zone.  Equivalent to NaN.
+       **********************************************************************/
+      INVALID = -4,
       /**
        * If a coordinate already include zone information (e.g., it is an MGRS
        * coordinate), use that, otherwise apply the UTMUPS::STANDARD rules.
@@ -149,7 +153,7 @@ namespace GeographicLib {
      * This is exact.  If the optional argument \e setzone is given then use
      * that zone if it is non-negative, otherwise apply the rules given in
      * UTMUPS::zonespec.  Throws an error if \e setzone is outsize the range
-     * [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [-3, 60].
+     * [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [-4, 60].
      **********************************************************************/
     static int StandardZone(real lat, real lon, int setzone = STANDARD);
 
@@ -255,7 +259,8 @@ namespace GeographicLib {
      * letter.  The returned value of \e zone is UTMUPS::UPS = 0 for UPS.  Note
      * well that "38S" indicates the southern hemisphere of zone 38 and not
      * latitude band S, [32, 40].  N, 01S, 2N, 38S are legal.  0N, 001S, 61N,
-     * 38P are illegal.  Throws an error is the zone string is malformed.
+     * 38P are illegal.  INV is a special value for which the returned value of
+     * \e is UTMUPS::INVALID.  Throws an error is the zone string is malformed.
      **********************************************************************/
     static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
 
@@ -269,7 +274,9 @@ namespace GeographicLib {
      *
      * \e zone must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,
      * 60] with \e zone = UTMUPS::UPS, 0, indicating UPS (but the resulting
-     * string does not contain "0").  This reverses UTMUPS::DecodeZone.
+     * string does not contain "0").  \e zone may also be UTMUPS::INVALID, in
+     * which case the returned string is "INV".  This reverses
+     * UTMUPS::DecodeZone.
      **********************************************************************/
     static std::string EncodeZone(int zone, bool northp);
 

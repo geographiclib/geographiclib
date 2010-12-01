@@ -19,7 +19,6 @@
 #include "GeographicLib/Gnomonic.hpp"
 #include "GeographicLib/DMS.hpp"
 #include <iostream>
-#include <iomanip>
 #include <sstream>
 
 int usage(int retval) {
@@ -138,10 +137,10 @@ int main(int argc, char* argv[]) {
           az.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
         else
           gn.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-        std::cout << std::setprecision(15)
-                  << lat << " " << lon << " " << azi << " "
-                  << std::setprecision(16)
-                  << rk << "\n";
+        std::cout << DMS::Encode(lat, 15, DMS::NUMBER) << " "
+                  << DMS::Encode(lon, 15, DMS::NUMBER) << " "
+                  << DMS::Encode(azi, 15, DMS::NUMBER) << " "
+                  << DMS::Encode(rk, 16, DMS::NUMBER) << "\n";
       } else {
         if (cassini)
           cs.Forward(lat, lon, x, y, azi, rk);
@@ -149,12 +148,10 @@ int main(int argc, char* argv[]) {
           az.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
         else
           gn.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
-        std::cout << std::setprecision(10)
-                  << x << " " << y << " "
-                  << std::setprecision(15)
-                  << azi << " "
-                  << std::setprecision(16)
-                  << rk << "\n";
+        std::cout << DMS::Encode(x, 10, DMS::NUMBER) << " "
+                  << DMS::Encode(y, 10, DMS::NUMBER) << " "
+                  << DMS::Encode(azi, 15, DMS::NUMBER) << " "
+                  << DMS::Encode(rk, 16, DMS::NUMBER) << "\n";
       }
     }
     catch (const std::exception& e) {

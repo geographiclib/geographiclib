@@ -29,7 +29,7 @@ namespace GeographicLib {
     azi0 *= Math::degree();
     x = s * sin(azi0);
     y = s * cos(azi0);
-    rk = sig > eps ? m / s : 1;
+    rk = !(sig <= eps) ? m / s : 1;
   }
 
   void AzimuthalEquidistant::Reverse(real lat0, real lon0, real x, real y,
@@ -40,7 +40,7 @@ namespace GeographicLib {
       s = Math::hypot(x, y);
     real sig, m;
     sig = _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);
-    rk = sig > eps ? m / s : 1;
+    rk = !(sig <= eps) ? m / s : 1;
   }
 
 } // namespace GeographicLib
