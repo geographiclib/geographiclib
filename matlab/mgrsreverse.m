@@ -3,8 +3,7 @@ function mgrs = mgrsreverse(utmups)
 %
 %   utmups = mgrsreverse(mgrs);
 %
-%   mgrs is a vector of M MGRS strings.  The first white-space
-%   delimited word in each string is used.
+%   mgrs is a M x 1 cell array of MGRS strings.
 %
 %   utmups is an M x 5 matrix
 %       easting = utmups(:,1) in meters
