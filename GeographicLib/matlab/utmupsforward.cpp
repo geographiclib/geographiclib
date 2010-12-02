@@ -10,7 +10,7 @@
 // [Unix]
 // mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic utmupsforward.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographicLib utmupsforward.cpp
+// mex -I../include -L../windows/Release -lGeographic utmupsforward.cpp
 
 // "$Id$";
 
@@ -70,12 +70,13 @@ void mexFunction( int nlhs, mxArray* plhs[],
     try {
       UTMUPS::Forward(lat[i], lon[i], ZONE, HEMI, x[i], y[i], gamma[i], k[i],
                       setzone);
-      zone[i] = double(ZONE);
+      zone[i] = ZONE;
       hemi[i] = HEMI ? 1 : 0;
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      x[i] = y[i] = zone[i] = hemi[i] = gamma[i] = k[i] = Math::NaN();
+      x[i] = y[i] = gamma[i] = k[i] = Math::NaN();
+      zone[i] = UTMUPS::INVALID; hemi[i] = 0;
     }
   }
 }

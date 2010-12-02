@@ -4,7 +4,8 @@
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 # $Id$
 
-nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
+nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
+				GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/CassiniSoldner.hpp \
 				GeographicLib/Constants.hpp \
 				GeographicLib/DMS.hpp \

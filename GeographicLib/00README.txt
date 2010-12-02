@@ -34,6 +34,7 @@ Files
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection
+      AlbersEqualArea.[ch]pp -- Albers equal area projection
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
       OSGB.[ch]pp -- Ordnance Survey grid system
 

@@ -10,7 +10,7 @@
 // [Unix]
 // mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic utmupsreverse.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographicLib utmupsreverse.cpp
+// mex -I../include -L../windows/Release -lGeographic utmupsreverse.cpp
 
 // "$Id$";
 

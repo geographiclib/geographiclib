@@ -1,14 +1,14 @@
 /**
- * \file LambertConformalConic.hpp
- * \brief Header for GeographicLib::LambertConformalConic class
+ * \file AlbersEqualArea.hpp
+ * \brief Header for GeographicLib::AlbersEqualArea class
  *
  * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id$"
 
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
@@ -16,81 +16,53 @@
 namespace GeographicLib {
 
   /**
-   * \brief Lambert Conformal Conic Projection
+   * \brief Albers Equal Area Conic Projection
    *
    * Implementation taken from the report,
    * - J. P. Snyder,
    *   <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395"> Map Projections: A
    *   Working Manual</a>, USGS Professional Paper 1395 (1987),
-   *   pp. 107&ndash;109.
+   *   pp. 101&ndash;102.
    *
    * This is a implementation of the equations in Snyder except that divided
-   * differences have been used to transform the expressions into ones which
-   * may be evaluated accurately and that Newton's method is used to invert the
-   * projection.  In this implementation, the projection correctly becomes the
-   * Mercator projection or the polar sterographic projection when the standard
-   * latitude is the equator or a pole.  The accuracy of the projections is
-   * about 10 nm.
+   * differences will be [have been] used to transform the expressions into
+   * ones which may be evaluated accurately.  [In this implementation, the
+   * projection correctly becomes the cylindrical equal area or the azimuthal
+   * equal area projection when the standard latitude is the equator or a
+   * pole.]
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
    * two standard parallels is converted into a single standard parallel, the
-   * latitude of tangency (also the latitude of minimum scale).  This latitude
-   * is also used as the latitude of origin which is returned by
-   * LambertConformalConic::OriginLatitude.  The scale on the latitude of
-   * origin is given by LambertConformalConic::CentralScale.  The case with two
-   * distinct standard parallels where one is a pole is singular and is
-   * disallowed.  The central meridian (which is a trivial shift
-   * of the longitude) is specified as the \e lon0 argument of the
-   * LambertConformalConic::Forward and LambertConformalConic::Reverse
-   * functions.  There is no provision in this class for specifying a false
-   * easting or false northing or a different latitude of origin.  However
-   * these are can be simply included by the calling function.  For example the
-   * Pennsylvania South state coordinate system
-   * (<a href="http://www.spatialreference.org/ref/epsg/3364/"> EPSG:3364</a>)
-   * is obtained by:
-   \code
-   const double
-     a = GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80
-     lat1 = 39 + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels
-     k1 = 1,                                   // scale
-     lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin
-     fe = 600000, fn = 0;                      // false easting and northing
-   // Set up basic projection
-   const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
-   double x0, y0;
-   {
-     // Transform origin point
-     PASouth.Forward(lon0, lat0, lon0, x0, y0);
-     x0 -= fe; y0 -= fn;         // Combine result with false origin
-   }
-   double lat, lon, x, y;
-   // Sample conversion from geodetic to PASouth grid
-   std::cin >> lat >> lon;
-   PASouth.Forward(lon0, lat, lon, x, y);
-   x -= x0; y -= y0;
-   std::cout << x << " " << y << "\n";
-   // Sample conversion from PASouth grid to geodetic
-   std::cin >> x >> y;
-   x += x0; y += y0;
-   PASouth.Reverse(lon0, x, y, lat, lon);
-   std::cout << lat << " " << lon << "\n";
-   \endcode
+   * latitude of minimum azimuthal scale).  This latitude is also used as the
+   * latitude of origin which is returned by AlbersEqualArea::OriginLatitude.
+   * The azimuthal scale on the latitude of origin is given by
+   * AlbersEqualArea::CentralScale.  The case with two standard parallels at
+   * opposite poles is singular and is disallowed.  The central meridian (which
+   * is a trivial shift of the longitude) is specified as the \e lon0 argument
+   * of the AlbersEqualArea::Forward and AlbersEqualArea::Reverse functions.
+   * There is no provision in this class for specifying a false easting or
+   * false northing or a different latitude of origin.
    **********************************************************************/
-  class LambertConformalConic {
+  class AlbersEqualArea {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _fm, _e2, _e, _e2m;
-    real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
-    real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
+    const real _a, _r, _f, _fm, _e2, _e, _e2m, _qp, _qx;
+    real _sign, _lat0, _k0;
+    real _q0, _n0, _m02, _C0, _rho0, _k2;
+    //    real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
+    //    real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
+    //    real _q0, _n0, _m02, _C0, _rho0, _k2;
     static const real eps, epsx, tol, ahypover;
     static const int numit = 5;
     static inline real sq(real x) throw() { return x * x; }
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
-    // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
-    // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
-    inline real eatanhe(real x) const throw() {
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
+    // atanh(e * x)/e                 if f > 0
+    // atan( sqrt(-e2) * x)/sqrt(-e2) if f < 0
+    // x                              if f = 0
+    inline real atanhee(real x) const throw() {
+      return _f > 0 ? Math::atanh(_e * x)/_e :
+        (_f < 0 ? std::atan(_e * x)/_e : x);
     }
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
@@ -147,12 +119,14 @@ namespace GeographicLib {
         Math::asinh(x*y > 0 ? t * (x+y) / (x*hy + y*hx) : x*hy - y*hx) / t :
         1/hx;
     }
-    // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
-    inline real Deatanhe(real x, real y) const throw() {
+    // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
+    inline real Datanhee(real x, real y) const throw() {
       real t = x - y, d = (1 - _e2 * x * y);
-      return t != 0 ? eatanhe(t / d) / t : _e2 / d;
+      return t != 0 ? atanhee(t / d) / t : 1 / d;
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
+    real txif(real tphi) const throw();
+    real tphif(real txi) const throw();
   public:
 
     /**
@@ -163,12 +137,12 @@ namespace GeographicLib {
      *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
      *   indicates a prolate ellipsoid.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
-     * @param[in] k0 scale on the standard parallel.
+     * @param[in] k0 azimuthal scale on the standard parallel.
      *
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
      * is not in the range [-90, 90].
      **********************************************************************/
-    LambertConformalConic(real a, real r, real stdlat, real k0);
+    AlbersEqualArea(real a, real r, real stdlat, real k0);
 
     /**
      * Constructor with two standard parallels.
@@ -179,14 +153,13 @@ namespace GeographicLib {
      *   indicates a prolate ellipsoid.
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
-     * @param[in] k1 scale on the standard parallels.
+     * @param[in] k1 azimuthal scale on the standard parallels.
      *
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1
-     * or \e stdlat2 is not in the range [-90, 90].  In addition, if either \e
-     * stdlat1 or \e stdlat2 is a pole, then an exception is thrown if \e
-     * stdlat1 is not equal \e stdlat2.
+     * or \e stdlat2 is not in the range [-90, 90].  In addition, an exception
+     * is thrown if \e stdlat1 and \e stdlat2 are opposite poles.
      **********************************************************************/
-    LambertConformalConic(real a, real r, real stdlat1, real stdlat2, real k1);
+    AlbersEqualArea(real a, real r, real stdlat1, real stdlat2, real k1);
 
     /**
      * Constructor with two standard parallels specified by sines and cosines.
@@ -199,30 +172,26 @@ namespace GeographicLib {
      * @param[in] coslat1 cosine of first standard parallel.
      * @param[in] sinlat2 sine of second standard parallel.
      * @param[in] coslat2 cosine of second standard parallel.
-     * @param[in] k1 scale on the standard parallels.
+     * @param[in] k1 azimuthal scale on the standard parallels.
      *
      * This allows parallels close to the poles to be specified accurately.
-     * This routine computes the latitude of origin and the scale at this
-     * latitude.  In the case where \e lat1 and \e lat2 are different, the
-     * errors in this routines are as follows: if abs(\e lat2 - \e lat1) <=
-     * 160<sup>o</sup> and max(abs(\e lat1), abs(\e lat2)) <=
-     * 89.9999<sup>o</sup>, then the error in the latitude of origin is less
-     * than 4e-14d and the relative error in the scale is less than 7e-15.
+     * This routine computes the latitude of origin and the azimuthal scale at
+     * this latitude.
      **********************************************************************/
-    LambertConformalConic(real a, real r,
-                          real sinlat1, real coslat1,
-                          real sinlat2, real coslat2,
-                          real k1);
+    AlbersEqualArea(real a, real r,
+                    real sinlat1, real coslat1,
+                    real sinlat2, real coslat2,
+                    real k1);
 
     /**
-     * Set the scale for the projection.
+     * Set the azimuthal scale for the projection.
      *
      * @param[in] lat (degrees).
-     * @param[in] k scale at latitude \e lat (default 1).
+     * @param[in] k azimuthal scale at latitude \e lat (default 1).
      *
-     * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive or if \e stdlat is not in the range [-90,
-     * 90]
+     * This allows a "latitude of conformality" to be specified.  An exception
+     * is thrown if \e k is not positive or if \e lat is not in the range (-90,
+     * 90).
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
@@ -235,15 +204,14 @@ namespace GeographicLib {
      * @param[out] x easting of point (meters).
      * @param[out] y northing of point (meters).
      * @param[out] gamma meridian convergence at point (degrees).
-     * @param[out] k scale of projection at point.
+     * @param[out] k azimuthal scale of projection at point; the radial
+     *   scale is the 1/\e k.
      *
-     * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
-     * No false easting or northing is added and \e lat should be in the range
+     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
+     * false easting or northing is added and \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
-     * error in the projection is less than about 10 nm (true distance) and the
-     * errors in the meridian convergence and scale are consistent with this.
-     * The values of \e x and \e y returned for points which project to
-     * infinity (i.e., one or both of the poles) will be large but finite.
+     * values of \e x and \e y returned for points which project to infinity
+     * (i.e., one or both of the poles) will be large but finite.  
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -257,20 +225,18 @@ namespace GeographicLib {
      * @param[out] lat latitude of point (degrees).
      * @param[out] lon longitude of point (degrees).
      * @param[out] gamma meridian convergence at point (degrees).
-     * @param[out] k scale of projection at point.
+     * @param[out] k azimuthal scale of projection at point; the radial
+     *   scale is the 1/\e k.
      *
-     * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
+     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().
      * No false easting or northing is added.  \e lon0 should be in the range
      * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
-     * The error in the projection is less than about 10 nm (true distance) and
-     * the errors in the meridian convergence and scale are consistent with
-     * this.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();
 
     /**
-     * LambertConformalConic::Forward without returning the convergence and
+     * AlbersEqualArea::Forward without returning the convergence and
      * scale.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
@@ -280,7 +246,7 @@ namespace GeographicLib {
     }
 
     /**
-     * LambertConformalConic::Reverse without returning the convergence and
+     * AlbersEqualArea::Reverse without returning the convergence and
      * scale.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
@@ -308,25 +274,25 @@ namespace GeographicLib {
     /**
      * @return latitude of the origin for the projection (degrees).
      *
-     * This is the latitude of minimum scale and equals the \e stdlat in the
-     * 1-parallel constructor and lies between \e stdlat1 and \e stdlat2 in the
-     * 2-parallel constructors.
+     * This is the latitude of minimum azimuthal scale and equals the \e stdlat
+     * in the 1-parallel constructor and lies between \e stdlat1 and \e stdlat2
+     * in the 2-parallel constructors.
      **********************************************************************/
     Math::real OriginLatitude() const throw() { return _lat0; }
 
     /**
-     * @return central scale for the projection.  This is the scale on the
-     *   latitude of origin.
+     * @return central scale for the projection.  This is the azimuthal scale
+     *   on the latitude of origin.
      **********************************************************************/
     Math::real CentralScale() const throw() { return _k0; }
     ///@}
 
     /**
-     * A global instantiation of LambertConformalConic with the WGS84
-     * ellipsoid, \e stdlat = 0, and \e k0 = 1.  This degenerates to the
-     * Mercator projection.
+     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid and
+     * the UPS scale factor and \e stdlat = 0.  This degenerates to the
+     * cylindrical equal area projection.
      **********************************************************************/
-    static const LambertConformalConic Mercator;
+    static const AlbersEqualArea CylindricalEqualArea;
   };
 
 } // namespace GeographicLib

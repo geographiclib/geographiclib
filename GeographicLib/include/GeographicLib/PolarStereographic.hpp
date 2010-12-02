@@ -59,11 +59,12 @@ namespace GeographicLib {
     /**
      * Set the scale for the projection.
      *
-     * @param[in] lat (degrees).
+     * @param[in] lat (degrees) assuming \e northp = true.
      * @param[in] k scale at latitude \e lat (default 1).
      *
      * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive.
+     * thrown if \e k is not positive or if \e lat is not in the range (-90,
+     * 90].
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 

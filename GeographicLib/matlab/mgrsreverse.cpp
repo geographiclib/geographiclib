@@ -10,7 +10,7 @@
 // [Unix]
 // mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic mgrsreverse.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographicLib mgrsreverse.cpp
+// mex -I../include -L../windows/Release -lGeographic mgrsreverse.cpp
 
 // "$Id$";
 
@@ -54,15 +54,14 @@ void mexFunction( int nlhs, mxArray* plhs[],
       int ZONE, PREC;
       bool HEMI;
       MGRS::Reverse(mgrsstr, ZONE, HEMI, x[i], y[i], PREC);
-      zone[i] = double(ZONE);
+      zone[i] = ZONE;
       hemi[i] = HEMI ? 1 : 0;
-      prec[i] = double(PREC);
+      prec[i] = PREC;
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
       x[i] = y[i] = Math::NaN();
-      zone[i] = UTMUPS::INVALID;
-      hemi[i] = 0; prec[i] = -1;
+      zone[i] = UTMUPS::INVALID; hemi[i] = 0; prec[i] = -1;
     }
   }
 }
