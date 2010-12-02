@@ -9,7 +9,8 @@ AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -f
 lib_LTLIBRARIES = libGeographic.la
 
 libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)	
-libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
+libGeographic_la_SOURCES = AlbersEqualArea.cpp \
+		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
 		DMS.cpp \
 		EllipticFunction.cpp \
@@ -27,6 +28,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
 		../include/GeographicLib/CassiniSoldner.hpp \
 		../include/GeographicLib/Constants.hpp \

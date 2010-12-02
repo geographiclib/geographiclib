@@ -8,6 +8,7 @@ FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 EXTRAFILES = tmseries30.html geodseries30.html
 
 HPPFILES = \
+$(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
 $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
 $(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
 $(top_srcdir)/include/GeographicLib/Constants.hpp \
@@ -29,6 +30,7 @@ $(top_srcdir)/include/GeographicLib/TransverseMercator.hpp \
 $(top_srcdir)/include/GeographicLib/UTMUPS.hpp
 
 ALLSOURCES = \
+$(top_srcdir)/src/AlbersEqualArea.cpp \
 $(top_srcdir)/src/AzimuthalEquidistant.cpp \
 $(top_srcdir)/src/CassiniSoldner.cpp \
 $(top_srcdir)/src/DMS.cpp \

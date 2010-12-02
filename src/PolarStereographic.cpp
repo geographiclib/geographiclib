@@ -124,8 +124,8 @@ namespace GeographicLib {
   void PolarStereographic::SetScale(real lat, real k) {
     if (!(k > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(abs(lat) <= 90))
-      throw GeographicErr("Latitude must be in [-90d, 90d]");
+    if (!(-90 < lat && lat <= 90))
+      throw GeographicErr("Latitude must be in (-90d, 90d]");
     real x, y, gamma, kold;
     _k0 = 1;
     Forward(true, lat, 0, x, y, gamma, kold);

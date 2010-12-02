@@ -342,6 +342,10 @@
 				RelativePath="..\src\OSGB.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\src\AlbersEqualArea.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -422,6 +426,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/OSGB.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/AlbersEqualArea.hpp"
 				>
 			</File>
 		</Filter>

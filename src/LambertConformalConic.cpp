@@ -74,10 +74,6 @@ namespace GeographicLib {
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
     if (!(abs(stdlat2) <= 90))
       throw GeographicErr("Standard latitude 2 not in [-90, 90]");
-    if (abs(stdlat1) == 90 || abs(stdlat2) == 90)
-      if (!(stdlat1 == stdlat2))
-        throw GeographicErr
-          ("Standard latitudes must be equal is either is a pole");
     real
       phi1 = stdlat1 * Math::degree(),
       phi2 = stdlat2 * Math::degree();
@@ -429,7 +425,7 @@ namespace GeographicLib {
     }
     // log(t) = -asinh(tan(chi)) = -psi
     gamma = atan2(nx, y1);
-    double
+    real
       phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi), scchi = hyp(tchi),
       lam = _n != 0 ? gamma / _n : x / y1;
@@ -454,7 +450,7 @@ namespace GeographicLib {
     if (!(abs(lat) <= 90))
       throw GeographicErr("Latitude for SetScale not in [-90, 90]");
     if (abs(lat) == 90 && !(_nc == 0 && lat * _n > 0))
-      throw GeographicErr("Incompatible polar latitude in SecScale");
+      throw GeographicErr("Incompatible polar latitude in SetScale");
     real x, y, gamma, kold;
     Forward(0, lat, 0, x, y, gamma, kold);
     k /= kold;

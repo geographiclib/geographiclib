@@ -331,6 +331,15 @@ GeoConvert.cpp for an example of how exceptions can be handled.  Geoid
 is exceptional in that file errors can cause exceptions to be thrown
 when evaluating the geoid at a valid location.
 
+%GeographicLib attempts to act sensibly with NaNs.  NaNs in constructors
+typically throw errors (an exception is GeographicLib::GeodesicLine).
+However, calling the class functions with NaNs as arguments is not an
+error; NaNs are returned as appropriate.  "INV" is treated as an invalid
+zone designation by GeographicLib::UTMUPS.  "INVALID" is the
+corresponding invalid MGRS string.  NaNs allow the projection of
+polylines which are separated by NaNs; in this format they can be easily
+plotted in Matlab.
+
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
@@ -2590,6 +2599,13 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.7 (not released yet)</a>
+  - Library created by Visual Studio is Geographic.lib instead of
+    GeographicLib.lib (compatible with makefiles).
+  - Add GeographicLib::AlbersEqualArea projection.
+  - Make classes NaN aware.
+  - Use cell arrays for MGRS strings in Matlab.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (current, released 2010-11-23)</a>
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by

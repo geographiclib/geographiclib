@@ -11,7 +11,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic GeodesicLine \
 	AzimuthalEquidistant CassiniSoldner \
-	Geoid LambertConformalConic Gnomonic OSGB
+	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea
 
 HEADERS = Constants.hpp $(addsuffix .hpp,$(MODULES))
 SOURCES = $(addsuffix .cpp,$(MODULES))
