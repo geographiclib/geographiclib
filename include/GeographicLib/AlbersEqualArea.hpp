@@ -55,6 +55,7 @@ namespace GeographicLib {
     //    real _q0, _n0, _m02, _C0, _rho0, _k2;
     static const real eps, epsx, tol, ahypover;
     static const int numit = 5;
+    static const int numit0 = 10;
     static inline real sq(real x) throw() { return x * x; }
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
     // atanh(e * x)/e                 if f > 0
@@ -121,7 +122,7 @@ namespace GeographicLib {
     }
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
     inline real Datanhee(real x, real y) const throw() {
-      real t = x - y, d = (1 - _e2 * x * y);
+      real t = x - y, d = 1 - _e2 * x * y;
       return t != 0 ? atanhee(t / d) / t : 1 / d;
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
