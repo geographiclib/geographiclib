@@ -149,7 +149,7 @@ namespace GeographicLib {
     }
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const throw() {
-      real t = x - y, d = (1 - _e2 * x * y);
+      real t = x - y, d = 1 - _e2 * x * y;
       return t != 0 ? eatanhe(t / d) / t : _e2 / d;
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();

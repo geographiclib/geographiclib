@@ -157,41 +157,47 @@ namespace GeographicLib {
 
     real tphi0, n;
     if (tphi1 == tphi2) {
-      tphi0 = tphi1;
-      n = tphi1/hyp(tphi1);
+      tphi0 = tphi2;
+      n = tphi2/hyp(tphi2);
     } else {
       real
         tbet1 = _fm * tphi1, scbet12 = 1 + sq(tbet1),
         tbet2 = _fm * tphi2, scbet22 = 1 + sq(tbet2),
         txi1 = txif(tphi1), sxi1 = txi1/hyp(txi1),
         txi2 = txif(tphi2), sxi2 = txi2/hyp(txi2),
-        snum = (sq(tbet2) - sq(tbet1))/(tphi2 - tphi1),
-        sden = (scbet22*sxi2 - scbet12*sxi1)/(tphi2 - tphi1),
-        tphi0a = tphi1, tphi0b = tphi2;
-      n = (1/scbet12 - 1/scbet22)/(_qp * (sxi2 - sxi1));
-      for (unsigned i = 0; i < 100; ++i) {
+        dtbet2 = _fm * (tbet1 + tbet2),
+        es1 = 1 - _e2 * sq(sphi1), es2 = 1 - _e2 * sq(sphi2),
+        dsxi = ( (_e2 * sq(sphi2 + sphi1) + es2 + es1) / (2 * es2 * es1) +
+                 Datanhee(sphi2, sphi1) ) * Dsn(tphi2, tphi1, sphi2, sphi1) /
+        ( 2 * _qx ),
+        // s = (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1)
+        s = 2 * dtbet2 / ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi);
+      // n = (scbet22 - scbet12) / (scbet22 * scbet12 * _qp * (sxi2 - sxi1))
+      n = dtbet2 / (scbet12 * scbet22 * _qp * dsxi);
+      tphi0 = (tphi2 + tphi1)/2;
+      real stol = tol * max(real(1), abs(tphi0));
+      for (int i = 0; i < numit0; ++i) {
+        // Solve (scbet0^2 * sphi0) / (1/qp + scbet0^2 * sphi0 * sxi) = s
+        // by Newton's method on
+        // v(phi0) = (scbet0^2 * sphi0) - s * (1/qp + scbet0^2 * sphi0 * sxi)
+        //         = 0
         real
-          tphi0c = (tphi0a + tphi0b)/2,
-          sphi0c = tphi0c/hyp(tphi0c),
-          scbet0c2 = 1 + sq(_fm * tphi0c),
-          txi0c = txif(tphi0c),
-          sxi0c = txi0c/hyp(txi0c),
-          num = sphi0c * scbet0c2,
-          den = 1/_qp + num * sxi0c,
-          diff = num * sden - den * snum;
-        if (diff > 0) {
-          if (tphi0b == tphi0c)
-            break;
-          else
-            tphi0b = tphi0c;
-        } else {
-          if (tphi0a == tphi0c)
-            break;
-          else
-            tphi0a = tphi0c;
-        }
+          scphi0 = hyp(tphi0), sphi0 = tphi0 / scphi0,
+          txi0 = txif(tphi0), sxi0 = txi0 / hyp(txi0),
+          // scbet0^2 * sphi0
+          g = (1 + sq( _fm * tphi0 )) * sphi0,
+          // dg/dtphi0 * scphi0^3
+          dg = _e2m * sq(scphi0) * (1 + 2 * sq(tphi0)) + _e2,
+          // dsxi0/dtphi0 * scphi0^2
+          ds = 1 / (_qx * sq(1 - _e2 * sq(sphi0))),
+          v = g - s * (1/_qp + g * sxi0),
+          // dv/dtphi0
+          dv = (dg * (1 - s * sxi0) - s * g * ds)/(scphi0 * sq(scphi0)),
+          dt = - v/dv;
+        tphi0 += dt;
+        if (!(abs(dt) >= stol))
+          break;
       }
-      tphi0 = (tphi0a + tphi0b)/2;
     }
     real txi0 = txif(tphi0);
     _q0 = _qp * txi0/hyp(txi0);
@@ -244,7 +250,7 @@ namespace GeographicLib {
       stol = tol * max(real(1), abs(txi));
     // CHECK: min iterations = 1, max iterations = 2; mean = 1.99
     for (int i = 0; i < numit; ++i) {
-      // d(txi)/d(tphi) = (scxi/scphi)^3 * 2*(1-e^2)/(qp*(1-e^2*sphi^2)^2)
+      // dtxi/dtphi = (scxi/scphi)^3 * 2*(1-e^2)/(qp*(1-e^2*sphi^2)^2)
       real
         txia = txif(tphi),
         tphi2 = sq(tphi),
