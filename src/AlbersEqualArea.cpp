@@ -155,10 +155,11 @@ namespace GeographicLib {
     //  s = sphi0 * qp / (m0^2 + sphi0*q0)
     //    = sphi0 * scbet0^2 / (1/qp + sphi0 * scbet0^2 * sxi0)
 
-    real tphi0, n;
+    real tphi0, n, C;
     if (tphi1 == tphi2) {
       tphi0 = tphi2;
       n = tphi2/hyp(tphi2);
+      C = 1;                    // ignored
     } else {
       real
         tbet1 = _fm * tphi1, scbet12 = 1 + sq(tbet1),
@@ -174,13 +175,16 @@ namespace GeographicLib {
         s = 2 * dtbet2 / ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi);
       // n = (scbet22 - scbet12) / (scbet22 * scbet12 * _qp * (sxi2 - sxi1))
       n = dtbet2 / (scbet12 * scbet22 * _qp * dsxi);
+      // C = (scbet22*sxi2 - scbet12*sxi1) / (scbet22 * scbet12 * (sx2 - sx1))
+      C = ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi) /
+        (2 * scbet12 * scbet22 * dsxi);
       tphi0 = (tphi2 + tphi1)/2;
       real stol = tol * max(real(1), abs(tphi0));
       for (int i = 0; i < numit0; ++i) {
         // Solve (scbet0^2 * sphi0) / (1/qp + scbet0^2 * sphi0 * sxi) = s
-        // by Newton's method on
-        // v(phi0) = (scbet0^2 * sphi0) - s * (1/qp + scbet0^2 * sphi0 * sxi)
-        //         = 0
+        // for tphi0 by Newton's method on
+        // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qp + scbet0^2 * sphi0 * sxi)
+        //          = 0
         real
           scphi0 = hyp(tphi0), sphi0 = tphi0 / scphi0,
           txi0 = txif(tphi0), sxi0 = txi0 / hyp(txi0),
@@ -193,19 +197,18 @@ namespace GeographicLib {
           v = g - s * (1/_qp + g * sxi0),
           // dv/dtphi0
           dv = (dg * (1 - s * sxi0) - s * g * ds)/(scphi0 * sq(scphi0)),
-          dt = - v/dv;
+          dt = -v/dv;
         tphi0 += dt;
         if (!(abs(dt) >= stol))
           break;
       }
     }
-    real txi0 = txif(tphi0);
-    _q0 = _qp * txi0/hyp(txi0);
+    _txi0 = txif(tphi0); _sxi0 = _txi0 / hyp(_txi0);
+    _q0 = _qp * _sxi0;
     _n0 = tphi0/hyp(tphi0);
-    _m02 = 1/(1 + sq(_fm * tphi0));
-    _C0 = _m02 + _n0 * _q0;
-    _rho0 = _a * sqrt(_m02) / _n0;
-    _k2 = n / _n0;
+    _m02 = 1 / (1 + sq(_fm * tphi0));
+    _nrho0 = _a * sqrt(_m02);
+    _k2 = tphi1 == tphi2 ? 1 : C / (_m02 + _n0 * _q0);
     _k0 = sqrt(_k2);
     _lat0 = _sign * atan(tphi0)/Constants::degree();
   }
@@ -216,16 +219,14 @@ namespace GeographicLib {
                                         real(0), real(1));
 
   Math::real AlbersEqualArea::txif(real tphi) const throw() {
-    // sxi =
-    // ( sphi/(1-e2*sphi^2) + atanhee(sphi) ) /
-    // ( 1/(1-e2) + atanhee(1) )
+    // sxi = ( sphi/(1-e2*sphi^2) + atanhee(sphi) ) /
+    //       ( 1/(1-e2) + atanhee(1) )
     //
-    // txi =
-    // ( sphi/(1-e2*sphi^2) + atanhee(sphi) ) /
-    // sqrt( ( (1+e2*sphi)*(1-sphi)/( (1-e2*sphi^2) * (1-e2) ) +
-    //         atanhee((1-sphi)/(1-e2*sphi)) ) *
-    //       ( (1-e2*sphi)*(1+sphi)/( (1-e2*sphi^2) * (1-e2) ) +
-    //         atanhee((1+sphi)/(1+e2*sphi)) ) )
+    // txi = ( sphi/(1-e2*sphi^2) + atanhee(sphi) ) /
+    //       sqrt( ( (1+e2*sphi)*(1-sphi)/( (1-e2*sphi^2) * (1-e2) ) +
+    //               atanhee((1-sphi)/(1-e2*sphi)) ) *
+    //             ( (1-e2*sphi)*(1+sphi)/( (1-e2*sphi^2) * (1-e2) ) +
+    //               atanhee((1+sphi)/(1+e2*sphi)) ) )
     //
     // subst 1-sphi = cphi^2/(1+sphi)
     int s = tphi < 0 ? -1 : 1;  // Enforce odd parity
@@ -259,7 +260,7 @@ namespace GeographicLib {
         dtphi = (txi - txia) * scterm * sqrt(scterm) *
         _qx * sq(1 - _e2 * tphi2 / scphi2);
       tphi += dtphi;
-      if (abs(dtphi) < stol)
+      if (!(abs(dtphi) >= stol))
         break;
     }
     return tphi;
@@ -275,18 +276,20 @@ namespace GeographicLib {
     else
       lon -= lon0;
     lat *= _sign;
-    // From Snyder, we have
     real
       lam = lon * Math::degree(),
       phi = lat * Math::degree(),
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx,
       tphi = sphi/cphi, tbet = _fm * tphi, scbet = hyp(tbet),
-      txi = txif(tphi), q = _qp * txi/hyp(txi),
-      rho = _a * sqrt(_C0 - _n0 * q)/_n0,
-      theta = _k2 * _n0 * lam;
-    x = (rho * sin(theta)) / _k0;
-    y = (_rho0 - rho * cos(theta)) / _k0;
-    k = _k0 * rho * _n0 * scbet / _a;
+      txi = txif(tphi), sxi = txi/hyp(txi),
+      dq = _qp * Dsn(txi, _txi0, sxi, _sxi0) * (txi - _txi0),
+      drho = - _a * dq / (sqrt(_m02 - _n0 * dq) + _nrho0 / _a),
+      theta = _k2 * _n0 * lam, stheta = sin(theta), ctheta = cos(theta);
+    x = (_nrho0 + _n0 * drho) * (_n0 != 0 ? stheta / _n0 : _k2 * lam) / _k0;
+    y = (_nrho0 *
+         (_n0 != 0 ? (ctheta < 0 ? 1 - ctheta : sq(stheta)/(1 + ctheta)) / _n0 :
+          0) - drho * ctheta) / _k0;
+    k = _k0 * (_nrho0 + _n0 * drho) * scbet / _a;
     y *= _sign;
     gamma = _sign * theta / Math::degree();
   }
@@ -297,18 +300,23 @@ namespace GeographicLib {
     const throw() {
     y *= _sign;
     real
-      rho = Math::hypot(_k0 * x, _rho0 - _k0 * y),
-      theta = atan2(_k0 * x, _rho0 - _k0 * y),
-      sxi = (_C0 - sq(rho * _n0 / _a))/ (_n0 * _qp),
-      txi = sxi/sqrt(1 - sq(sxi)),
+      nx = _k0 * _n0 * x, ny = _k0 * _n0 * y, y1 =  _nrho0 - ny,
+      den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
+      drho = den != 0 ? (_k0*x*nx - 2*_k0*y*_nrho0 + _k0*y*ny) / den : 0,
+      dsxi = - (2 * _nrho0 + _n0 * drho) * drho / (sq(_a) * _qp),
+      sxi = _sxi0 + dsxi,
+      dtxia = Dtn(_sxi0, sxi, _txi0, sxi/sqrt(1 - sq(sxi))) * dsxi,
+      dtxi = Dtn(_sxi0, sxi, _txi0, _txi0 + dtxia) * dsxi,
+      txi = _txi0 + dtxi,
       tphi = tphif(txi),
       phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi),
+      theta = atan2(nx, y1),
       lam = theta / (_k2 * _n0);
     gamma = _sign * theta / Math::degree();
     lat = phi / Math::degree();
     lon = lam / Math::degree();
-    k = _k0 * rho * _n0 * scbet / _a;
+    k = _k0 * (_nrho0 + _n0 * drho) * scbet / _a;
   }
 
   void AlbersEqualArea::SetScale(real lat, real k) {
