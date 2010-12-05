@@ -113,13 +113,13 @@ namespace GeographicLib {
     static inline real Dsn(real x, real y, real sx, real sy) throw() {
       // sx = x/hyp(x)
       real t = x * y;
-      return t > 0 ? (x+y) * sq( (sx*sy)/t ) / (sx+sy) :
-        (x-y != 0 ? (sx-sy) / (x-y) : 1);
+      return t > 0 ? (x + y) * sq( (sx * sy)/t ) / (sx + sy) :
+        (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
     static inline real Dlog1p(real x, real y) throw() {
       real t = x - y; if (t < 0) { t = -t; y = x; }
-      return t != 0 ? Math::log1p(t/(1+y)) / t : 1/(1+x);
+      return t != 0 ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
     static inline real Dexp(real x, real y) throw() {
