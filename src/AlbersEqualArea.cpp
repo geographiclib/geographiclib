@@ -204,12 +204,11 @@ namespace GeographicLib {
       }
     }
     _txi0 = txif(tphi0); _sxi0 = _txi0 / hyp(_txi0);
-    _q0 = _qp * _sxi0;
     _n0 = tphi0/hyp(tphi0);
     _m02 = 1 / (1 + sq(_fm * tphi0));
     _nrho0 = _a * sqrt(_m02);
-    _k2 = tphi1 == tphi2 ? 1 : C / (_m02 + _n0 * _q0);
-    _k0 = sqrt(_k2);
+    _k0 = sqrt(tphi1 == tphi2 ? 1 : C / (_m02 + _n0 * _qp * _sxi0)) * k1;
+    _k2 = sq(_k0);
     _lat0 = _sign * atan(tphi0)/Constants::degree();
   }
 
