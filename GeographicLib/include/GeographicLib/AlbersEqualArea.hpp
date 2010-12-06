@@ -49,10 +49,7 @@ namespace GeographicLib {
     typedef Math::real real;
     const real _a, _r, _f, _fm, _e2, _e, _e2m, _qp, _qx;
     real _sign, _lat0, _k0;
-    real _q0, _n0, _m02, _nrho0, _k2, _txi0, _sxi0;
-    //    real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
-    //    real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
-    //    real _q0, _n0, _m02, _C0, _rho0, _k2;
+    real _n0, _m02, _nrho0, _k2, _txi0, _sxi0;
     static const real eps, epsx, tol, ahypover;
     static const int numit = 5;
     static const int numit0 = 10;
