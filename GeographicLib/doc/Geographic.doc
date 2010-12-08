@@ -323,22 +323,25 @@ The following definitions can be used in your Makefile when using
   - CC = g++ -g
   - CXXFLAGS = -g -Wall -O3
 
-The low level projection classes, e.g., TransverseMercator and
-PolarStereographic, do not throw exceptions.  Most of the other classes,
-e.g., UTMUPS, MGRS, and GeoCoords all check their arguments and throw
-GeographicLib::GeographicErr exceptions with a explanatory message.  See
-GeoConvert.cpp for an example of how exceptions can be handled.  Geoid
-is exceptional in that file errors can cause exceptions to be thrown
-when evaluating the geoid at a valid location.
+In general, the constructors for the classes in %GeographicLib check
+their arguments and throw GeographicLib::GeographicErr exceptions with a
+explanatory message if these are illegal.  The member functions, e.g.,
+the projections implemented by TransverseMercator and
+PolarStereographic, the solutions to the geodesic problem, etc.,
+typically do <i>not</i> check their arguments; the calling program
+should ensure that the arguments are legitimate.  However, the functions
+implemented by UTMUPS, MGRS, and GeoCoords do check their arguments and
+may throw GeographicLib::GeographicErr exceptions.  Similarly Geoid may
+throw exceptions on file errors.  If a function does throw an exception,
+then the function arguments used for return values will not be altered.
 
 %GeographicLib attempts to act sensibly with NaNs.  NaNs in constructors
-typically throw errors (an exception is GeographicLib::GeodesicLine).
-However, calling the class functions with NaNs as arguments is not an
-error; NaNs are returned as appropriate.  "INV" is treated as an invalid
-zone designation by GeographicLib::UTMUPS.  "INVALID" is the
-corresponding invalid MGRS string.  NaNs allow the projection of
-polylines which are separated by NaNs; in this format they can be easily
-plotted in Matlab.
+typically throw errors (an exception is GeodesicLine).  However, calling
+the class functions with NaNs as arguments is not an error; NaNs are
+returned as appropriate.  "INV" is treated as an invalid zone
+designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
+string.  NaNs allow the projection of polylines which are separated by
+NaNs; in this format they can be easily plotted in Matlab.
 
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
@@ -2606,6 +2609,7 @@ number.)
   - Add GeographicLib::AlbersEqualArea projection.
   - Make classes NaN aware.
   - Use cell arrays for MGRS strings in Matlab.
+  - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (current, released 2010-11-23)</a>
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by

@@ -439,7 +439,7 @@ namespace GeographicLib {
     else
       lon += lon0;
     k = _k0 * (scbet/_scbet0) /
-      (exp( - (sq(_nc)/(1 + _n)) * dpsi )
+      (exp(_nc != 0 ? - (sq(_nc)/(1 + _n)) * dpsi : 0)
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     gamma /= _sign * Math::degree();
   }
