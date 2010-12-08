@@ -47,7 +47,7 @@ namespace GeographicLib {
   class AlbersEqualArea {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _fm, _e2, _e, _e2m, _qp, _qx;
+    const real _a, _r, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
     real _sign, _lat0, _k0;
     real _n0, _m02, _nrho0, _k2, _txi0, _sxi0;
     static const real eps, epsx, tol, ahypover;
@@ -81,14 +81,6 @@ namespace GeographicLib {
       real t = x * y;
       return t > 0 ? (x + y) * sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
-    }
-    // tn(x) = x/sqrt(1-x^2):
-    //      Dtn(x,y) = (tn(x)*tn(y))^2*(x+y)/((tn(x)+tn(y))*(x*y)^2)
-    static inline real Dtn(real x, real y, real tx, real ty) throw() {
-      // tx = x/sqrt(1-x^2)
-      real t = x * y;
-      return t > 0 ? (x+y) * sq(tx * ty) / ( (tx+ty) * sq(t) ) :
-        (x-y != 0 ? (tx-ty) / (x-y) : 1);
     }
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
     inline real Datanhee(real x, real y) const throw() {

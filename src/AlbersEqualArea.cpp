@@ -37,8 +37,8 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
-    , _qp(1 + _e2m * atanhee(real(1)))
-    , _qx(_qp / ( 2 * _e2m ))
+    , _qZ(1 + _e2m * atanhee(real(1)))
+    , _qx(_qZ / ( 2 * _e2m ))
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -65,8 +65,8 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
-    , _qp(1 + _e2m * atanhee(real(1)))
-    , _qx(_qp / ( 2 * _e2m ))
+    , _qZ(1 + _e2m * atanhee(real(1)))
+    , _qx(_qZ / ( 2 * _e2m ))
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -96,8 +96,8 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
-    , _qp(1 + _e2m * atanhee(real(1)))
-    , _qx(_qp / ( 2 * _e2m ))
+    , _qZ(1 + _e2m * atanhee(real(1)))
+    , _qx(_qZ / ( 2 * _e2m ))
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -164,42 +164,61 @@ namespace GeographicLib {
       real
         tbet1 = _fm * tphi1, scbet12 = 1 + sq(tbet1),
         tbet2 = _fm * tphi2, scbet22 = 1 + sq(tbet2),
-        txi1 = txif(tphi1), sxi1 = txi1/hyp(txi1),
-        txi2 = txif(tphi2), sxi2 = txi2/hyp(txi2),
+        txi1 = txif(tphi1), cxi1 = 1/hyp(txi1), sxi1 = txi1 * cxi1,
+        txi2 = txif(tphi2), cxi2 = 1/hyp(txi2), sxi2 = txi2 * cxi2,
         dtbet2 = _fm * (tbet1 + tbet2),
         es1 = 1 - _e2 * sq(sphi1), es2 = 1 - _e2 * sq(sphi2),
         dsxi = ( (_e2 * sq(sphi2 + sphi1) + es2 + es1) / (2 * es2 * es1) +
                  Datanhee(sphi2, sphi1) ) * Dsn(tphi2, tphi1, sphi2, sphi1) /
         ( 2 * _qx ),
         // s = (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1)
-        s = 2 * dtbet2 / ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi);
-      // n = (scbet22 - scbet12) / (scbet22 * scbet12 * _qp * (sxi2 - sxi1))
-      n = dtbet2 / (scbet12 * scbet22 * _qp * dsxi);
+        s = 2 * dtbet2 / ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi),
+        // 1-s
+        sm1 = -(((sxi2 <= 0 ? 1 - sxi2 : sq(cxi2) / (1 + sxi2)) +
+                 (sxi1 <= 0 ? 1 - sxi1 : sq(cxi1) / (1 + sxi1))) * dtbet2 -
+                (scbet22 + scbet12) * dsxi) /
+        ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi);
+      // n = (scbet22 - scbet12) / (scbet22 * scbet12 * _qZ * (sxi2 - sxi1))
+      n = dtbet2 / (scbet12 * scbet22 * _qZ * dsxi);
       // C = (scbet22*sxi2 - scbet12*sxi1) / (scbet22 * scbet12 * (sx2 - sx1))
       C = ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi) /
         (2 * scbet12 * scbet22 * dsxi);
       tphi0 = (tphi2 + tphi1)/2;
       real stol = tol * max(real(1), abs(tphi0));
+      /*
+      cout << "s " << s << " "
+           << (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1) << "\n";
+      */
+      cout << "s/sm1 " << s << " " << sm1 << " " << s + sm1 << "\n";
       for (int i = 0; i < numit0; ++i) {
-        // Solve (scbet0^2 * sphi0) / (1/qp + scbet0^2 * sphi0 * sxi) = s
+        // Solve (scbet0^2 * sphi0) / (1/qp + scbet0^2 * sphi0 * sxi0) = s
         // for tphi0 by Newton's method on
-        // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qp + scbet0^2 * sphi0 * sxi)
+        // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qp + scbet0^2 * sphi0 * sxi0)
         //          = 0
+        // Alt:
+        // (scbet0^2 * sphi0) / (1/qp - scbet0^2 * sphi0 * (1-sxi0)) = s / (1-s)
+        // w(tphi0) = (1-s) * (scbet0^2 * sphi0)
+        //             - s  * (1/qp - scbet0^2 * sphi0 * (1-sxi0))
         real
           scphi0 = hyp(tphi0), sphi0 = tphi0 / scphi0,
-          txi0 = txif(tphi0), sxi0 = txi0 / hyp(txi0),
+          txi0 = txif(tphi0), cxi0 = 1 / hyp(txi0), sxi0 = txi0 * cxi0,
           // scbet0^2 * sphi0
           g = (1 + sq( _fm * tphi0 )) * sphi0,
           // dg/dtphi0 * scphi0^3
           dg = _e2m * sq(scphi0) * (1 + 2 * sq(tphi0)) + _e2,
-          // dsxi0/dtphi0 * scphi0^2
+          // dsxi0/dtphi0 * scphi0^3
           ds = 1 / (_qx * sq(1 - _e2 * sq(sphi0))),
-          v = g - s * (1/_qp + g * sxi0),
+          v = g - s * (1/_qZ + g * sxi0),
           // dv/dtphi0
-          dv = (dg * (1 - s * sxi0) - s * g * ds)/(scphi0 * sq(scphi0)),
-          dt = -v/dv;
-        tphi0 += dt;
-        if (!(abs(dt) >= stol))
+          dv = (dg * (1 - s * sxi0) - s * g * ds) / (scphi0 * sq(scphi0)),
+          w = sm1 * g - s * (1/_qZ - g * sq(cxi0) / (1 + sxi0)),
+          dw = (dg * (sm1 + s * sq(cxi0) / (1 + sxi0)) - s * g * ds)/
+          (scphi0 * sq(scphi0)),
+          dt = -v/dv,
+          dtx = -w/dw;
+        cout << i << " " << tphi0 << " " << dt << " " << dtx << "\n";
+        tphi0 += dtx;
+        if (!(abs(dtx) >= stol))
           break;
       }
     }
@@ -207,7 +226,7 @@ namespace GeographicLib {
     _n0 = tphi0/hyp(tphi0);
     _m02 = 1 / (1 + sq(_fm * tphi0));
     _nrho0 = _a * sqrt(_m02);
-    _k0 = sqrt(tphi1 == tphi2 ? 1 : C / (_m02 + _n0 * _qp * _sxi0)) * k1;
+    _k0 = sqrt(tphi1 == tphi2 ? 1 : C / (_m02 + _n0 * _qZ * _sxi0)) * k1;
     _k2 = sq(_k0);
     _lat0 = _sign * atan(tphi0)/Constants::degree();
   }
@@ -281,7 +300,7 @@ namespace GeographicLib {
       sphi = sin(phi), cphi = abs(lat) != 90 ? cos(phi) : epsx,
       tphi = sphi/cphi, tbet = _fm * tphi, scbet = hyp(tbet),
       txi = txif(tphi), sxi = txi/hyp(txi),
-      dq = _qp * Dsn(txi, _txi0, sxi, _sxi0) * (txi - _txi0),
+      dq = _qZ * Dsn(txi, _txi0, sxi, _sxi0) * (txi - _txi0),
       drho = - _a * dq / (sqrt(_m02 - _n0 * dq) + _nrho0 / _a),
       theta = _k2 * _n0 * lam, stheta = sin(theta), ctheta = cos(theta);
     x = (_nrho0 + _n0 * drho) * (_n0 != 0 ? stheta / _n0 : _k2 * lam) / _k0;
@@ -302,16 +321,14 @@ namespace GeographicLib {
       nx = _k0 * _n0 * x, ny = _k0 * _n0 * y, y1 =  _nrho0 - ny,
       den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
       drho = den != 0 ? (_k0*x*nx - 2*_k0*y*_nrho0 + _k0*y*ny) / den : 0,
-      dsxi = - (2 * _nrho0 + _n0 * drho) * drho / (sq(_a) * _qp),
+      dsxi = - (2 * _nrho0 + _n0 * drho) * drho / (sq(_a) * _qZ),
       sxi = _sxi0 + dsxi,
-      dtxia = Dtn(_sxi0, sxi, _txi0, sxi/sqrt(1 - sq(sxi))) * dsxi,
-      dtxi = Dtn(_sxi0, sxi, _txi0, _txi0 + dtxia) * dsxi,
-      txi = _txi0 + dtxi,
+      txi = sxi / sqrt((1 + sxi) * (1 - sxi)),
       tphi = tphif(txi),
       phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi),
       theta = atan2(nx, y1),
-      lam = theta / (_k2 * _n0);
+      lam = _n0 != 0 ? theta / (_k2 * _n0) : x / (y1 * _k0);
     gamma = _sign * theta / Math::degree();
     lat = phi / Math::degree();
     lon = lam / Math::degree();

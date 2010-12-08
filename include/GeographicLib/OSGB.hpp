@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Ordnance Survery grid system for Great Britain
+   * \brief Ordnance Survey grid system for Great Britain
    *
    * The class implements the coordinate system used by the Ordnance Survey for
    * maps of Great Britain and conversions to the grid reference system.
@@ -29,7 +29,7 @@ namespace GeographicLib {
    * - <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidetonationalgrid/page1.html">
    * Guide to National Grid</a>
    *
-   * \b WARNING: the latitudes and longitudes for the Ordnance Survery grid
+   * \b WARNING: the latitudes and longitudes for the Ordnance Survey grid
    * system do not use the WGS84 datum.  Do not use the values returned by this
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).

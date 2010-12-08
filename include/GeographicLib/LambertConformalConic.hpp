@@ -103,7 +103,9 @@ namespace GeographicLib {
     // General rules
     // h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)
     // h(x) = f(x)*g(x):
-    //        Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
+    //        Dh(x,y) = Df(x,y)*g(x) + Dg(x,y)*f(y)
+    //                = Df(x,y)*g(y) + Dg(x,y)*f(x)
+    //                = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // hyp(x) = sqrt(1+x^2): Dhyp(x,y) = (x+y)/(hyp(x)+hyp(y))
     static inline real Dhyp(real x, real y, real hx, real hy) throw()

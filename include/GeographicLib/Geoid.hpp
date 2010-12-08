@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Computing the height of the geoid
+   * \brief Looking up the height of the geoid
    *
    * This class evaluated the height of one of the standard geoids, EGM84,
    * EGM96, or EGM2008 by bilinear or cubic interpolation into a rectangular
