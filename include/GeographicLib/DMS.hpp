@@ -47,7 +47,7 @@ namespace GeographicLib {
      * Indicator for presence of hemisphere indicator (N/S/E/W) on latitudes
      * and longitudes.
      **********************************************************************/
-    enum flag { 
+    enum flag {
       /**
        * No indicator present.
        * @hideinitializer

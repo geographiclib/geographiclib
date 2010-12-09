@@ -2,9 +2,8 @@
  * \file AlbersEqualArea.hpp
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
@@ -174,7 +173,7 @@ namespace GeographicLib {
      * false easting or northing is added and \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
      * values of \e x and \e y returned for points which project to infinity
-     * (i.e., one or both of the poles) will be large but finite.  
+     * (i.e., one or both of the poles) will be large but finite.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -191,9 +190,11 @@ namespace GeographicLib {
      * @param[out] k azimuthal scale of projection at point; the radial
      *   scale is the 1/\e k.
      *
-     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().
-     * No false easting or northing is added.  \e lon0 should be in the range
+     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
+     * false easting or northing is added.  \e lon0 should be in the range
      * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
+     * The value of \e lat returned is in the range [-90,90], except if the
+     * input point is outside the legal projected space when NaN is returned.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();
