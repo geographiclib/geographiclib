@@ -130,7 +130,7 @@ namespace GeographicLib {
      * @param[in] y (meters).
      * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
-     * 
+     *
      * \e prec specifies the precision of the MSGRS string as follows:
      * - prec = 0 (min), 100km
      * - prec = 1, 10km

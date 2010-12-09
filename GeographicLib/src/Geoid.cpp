@@ -206,7 +206,7 @@ namespace GeographicLib {
     , _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
     , _degree( Math::degree() )
-    , _eps( sqrt(numeric_limits<real>::epsilon()) ) 
+    , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
     if (_dir.empty())
