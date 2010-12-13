@@ -119,7 +119,7 @@ namespace GeographicLib {
       r = Math::hypot(sphi2, cphi2);
       sphi2 /= r; cphi2 /= r;
     }
-    // bool polar = (cphi1 == 0);
+    bool polar = (cphi1 == 0);
     cphi1 = max(epsx, cphi1);   // Avoid singularities at poles
     cphi2 = max(epsx, cphi2);
     // Determine hemisphere of tangent latitude
@@ -133,29 +133,29 @@ namespace GeographicLib {
       tphi1 = sphi1/cphi1, tphi2 = sphi2/cphi2;
 
     // q = (1-e^2)*(sphi/(1-e^2*sphi^2) - atanhee(sphi))
-    // qp = q(pi/2) = (1 + (1-e^2)*atanhee(1))
+    // qZ = q(pi/2) = (1 + (1-e^2)*atanhee(1))
     // atanhee(x) = atanh(e*x)/e
-    // q = sxi * qp
+    // q = sxi * qZ
     // dq/dphi = 2*(1-e^2)*cphi/(1-e^2*sphi^2)^2
     //
     // n = (m1^2-m2^2)/(q2-q1) -> sin(phi0) for phi1, phi2 -> phi0
     // C = m1^2 + n*q1 = (m1^2*q2-m2^2*q1)/(q2-q1)
     // let
     //   rho(pi/2)/rho(-pi/2) = (1-s)/(1+s)
-    //   s = n*qp/C
-    //     = qp * (m1^2-m2^2)/(m1^2*q2-m2^2*q1)
-    //     = qp * (scbet2^2 - scbet1^2)/(scbet2^2*q2 - scbet1^2*q1)
+    //   s = n*qZ/C
+    //     = qZ * (m1^2-m2^2)/(m1^2*q2-m2^2*q1)
+    //     = qZ * (scbet2^2 - scbet1^2)/(scbet2^2*q2 - scbet1^2*q1)
     //     = (scbet2^2 - scbet1^2)/(scbet2^2*sxi2 - scbet1^2*sxi1)
     //     = (tbet2^2 - tbet1^2)/(scbet2^2*sxi2 - scbet1^2*sxi1)
     // 1-s = -((1-sxi2)*scbet2^2 - (1-sxi1)*scbet1^2)/
     //         (scbet2^2*sxi2 - scbet1^2*sxi1)
     //
     // Define phi0 to give same value of s, i.e.,
-    //  s = sphi0 * qp / (m0^2 + sphi0*q0)
-    //    = sphi0 * scbet0^2 / (1/qp + sphi0 * scbet0^2 * sxi0)
+    //  s = sphi0 * qZ / (m0^2 + sphi0*q0)
+    //    = sphi0 * scbet0^2 / (1/qZ + sphi0 * scbet0^2 * sxi0)
 
     real tphi0, n, C;
-    if (tphi1 == tphi2) {
+    if (polar || tphi1 == tphi2) {
       tphi0 = tphi2;
       n = tphi2/hyp(tphi2);
       C = 1;                    // ignored
@@ -167,16 +167,37 @@ namespace GeographicLib {
         txi2 = txif(tphi2), cxi2 = 1/hyp(txi2), sxi2 = txi2 * cxi2,
         dtbet2 = _fm * (tbet1 + tbet2),
         es1 = 1 - _e2 * sq(sphi1), es2 = 1 - _e2 * sq(sphi2),
+        /*
         dsxi = ( (_e2 * sq(sphi2 + sphi1) + es2 + es1) / (2 * es2 * es1) +
+                 Datanhee(sphi2, sphi1) ) * Dsn(tphi2, tphi1, sphi2, sphi1) /
+        ( 2 * _qx ),
+        */
+        dsxi = ( (1 + _e2 * sphi1 * sphi2) / (es2 * es1) +
                  Datanhee(sphi2, sphi1) ) * Dsn(tphi2, tphi1, sphi2, sphi1) /
         ( 2 * _qx ),
         // s = (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1)
         s = 2 * dtbet2 / ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi),
-        // 1-s
+        // 1-s = -(sq(scbet2)*(1-sxi2) - sq(scbet1)*(1-sxi1)) /
+        //        (scbet22*sxi2 - scbet12*sxi1)
         sm1 = -(((sxi2 <= 0 ? 1 - sxi2 : sq(cxi2) / (1 + sxi2)) +
                  (sxi1 <= 0 ? 1 - sxi1 : sq(cxi1) / (1 + sxi1))) * dtbet2 -
                 (scbet22 + scbet12) * dsxi) /
+        ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi),
+        // Alt form for sm1.  Write
+        // sq(scbet)*(1-sxi) = sq(scbet)*(1-sphi) * (1-sxi)/(1-sphi)
+        sm1a = -Dsn(tphi2, tphi1, sphi2, sphi1) *
+        ( -( ((sphi2 <= 0 ? (1 - sxi2)/(1 - sphi2) :
+               sq(cxi2/cphi2) * (1 + sphi2) / (1 + sxi2)) +
+              (sphi1 <= 0 ? (1 - sxi1)/(1 - sphi1) :
+               sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
+          (1 + _e2 * (sphi1 + sphi2 + sphi1*sphi2)) /
+          (1 +       (sphi1 + sphi2 + sphi1*sphi2)) +
+          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : sq(cphi2) / ( 1 + sphi2)) +
+           scbet12 * (sphi1 <= 0 ? 1 - sphi1 : sq(cphi1) / ( 1 + sphi1))) *
+         (_e2*(1+sphi1+sphi2+_e2*sphi1*sphi2)/(es1*es2)
+          +_e2m*DDatanhee(sphi1,sphi2) )/_qZ ) /
         ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi);
+      sm1 = sm1a;
       // n = (scbet22 - scbet12) / (scbet22 * scbet12 * _qZ * (sxi2 - sxi1))
       n = dtbet2 / (scbet12 * scbet22 * _qZ * dsxi);
       // C = (scbet22*sxi2 - scbet12*sxi1) / (scbet22 * scbet12 * (sx2 - sx1))
@@ -188,36 +209,76 @@ namespace GeographicLib {
       cout << "s " << s << " "
            << (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1) << "\n";
       */
-      cout << "s/sm1 " << s << " " << sm1 << " " << s + sm1 << "\n";
+      /* cout << "s/sm1 " << s << " " << sm1 << " " << s + sm1 << "\n"; */
       for (int i = 0; i < numit0; ++i) {
-        // Solve (scbet0^2 * sphi0) / (1/qp + scbet0^2 * sphi0 * sxi0) = s
+        // Solve (scbet0^2 * sphi0) / (1/qZ + scbet0^2 * sphi0 * sxi0) = s
         // for tphi0 by Newton's method on
-        // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qp + scbet0^2 * sphi0 * sxi0)
+        // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qZ + scbet0^2 * sphi0 * sxi0)
         //          = 0
         // Alt:
-        // (scbet0^2 * sphi0) / (1/qp - scbet0^2 * sphi0 * (1-sxi0)) = s / (1-s)
+        // (scbet0^2 * sphi0) / (1/qZ - scbet0^2 * sphi0 * (1-sxi0)) = s / (1-s)
         // w(tphi0) = (1-s) * (scbet0^2 * sphi0)
-        //             - s  * (1/qp - scbet0^2 * sphi0 * (1-sxi0))
+        //             - s  * (1/qZ - scbet0^2 * sphi0 * (1-sxi0))
+        //          = (1-s) * (scbet0^2 * sphi0)
+        //             - S/qZ  * (1 - scbet0^2 * sphi0 * (qZ-q0))
+        // Now
+        // qZ-q0 = (1+e2*sphi0)*(1-sphi0)/(1-e2*sphi0^2) +
+        //         (1-e2)*atanhee((1-sphi0)/(1-e2*sphi0))
+        // In limit sphi0 -> 1, qZ-q0 -> 2*(1-sphi0)/(1-e2), so wrte
+        // qZ-q0 = 2*(1-sphi0)/(1-e2) + A + B
+        // A = (1-sphi0)*( (1+e2*sphi0)/(1-e2*sphi0^2) - (1+e2)/(1-e2) )
+        //   = -e2 *(1-sphi0)^2 * (2+(1+e2)*sphi0) / ((1-e2)*(1-e2*sphi0^2))
+        // B = (1-e2)*atanhee((1-sphi0)/(1-e2*sphi0)) - (1-sphi0)
+        //   = (1-sphi0)*(1-e2)/(1-e2*sphi0)*
+        //     ((atanhee(x)/x-1) - e2*(1-sphi0)/(1-e2))
+        // x = (1-sphi0)/(1-e2*sphi0), atanhee(x)/x = atanh(e*x)/(e*x)
+        //
+        // 1 - scbet0^2 * sphi0 * (qZ-q0)
+        //   = 1 - scbet0^2 * sphi0 * (2*(1-sphi0)/(1-e2) + A + B)
+        //   = C - scbet0^2 * sphi0 * (A + B)
+        // C = 1 - scbet0^2 * sphi0 * 2*(1-sphi0)/(1-e2)
+        //   = (1-sphi0)*(1-e2*(1+2*sphi0*(1+sphi0)))/((1-e2)*(1+sphi0))
+        // dC/dsphi0 = -2*(1-e2*sphi0^2*(2*sphi0+3))/((1-e2)*(1+sphi0)^2)
+        // d(A+B)/dsphi0 = 2*(1-sphi0^2)*e2*(2-e2*(1+sphi0^2))/
+        //                 ((1-e2)*(1-e2*sphi0^2)^2)
+        
         real
-          scphi0 = hyp(tphi0), sphi0 = tphi0 / scphi0,
-          txi0 = txif(tphi0), cxi0 = 1 / hyp(txi0), sxi0 = txi0 * cxi0,
+          scphi02 = 1 + sq(tphi0), scphi0 = sqrt(scphi02),
+          // sphi0m = 1-sin(phi0) = 1/( sec(phi0) * (tan(phi0) + sec(phi0)) )
+          sphi0 = tphi0 / scphi0, sphi0m = 1/(scphi0 * (tphi0 + scphi0)),
+          txi0 = txif(tphi0), scxi0 = hyp(txi0),
+          sxi0 = txi0 / scxi0, sxi0m = 1/(scxi0 * (txi0 + scxi0)),
           // scbet0^2 * sphi0
           g = (1 + sq( _fm * tphi0 )) * sphi0,
-          // dg/dtphi0 * scphi0^3
-          dg = _e2m * sq(scphi0) * (1 + 2 * sq(tphi0)) + _e2,
-          // dsxi0/dtphi0 * scphi0^3
+          // dg/dsphi0 = dg/dtphi0 * scphi0^3
+          dg = _e2m * scphi02 * (1 + 2 * sq(tphi0)) + _e2,
+          // dsxi0/dsphi0 = dsxi0/dtphi0 * scphi0^3
           ds = 1 / (_qx * sq(1 - _e2 * sq(sphi0))),
           v = g - s * (1/_qZ + g * sxi0),
-          // dv/dtphi0
-          dv = (dg * (1 - s * sxi0) - s * g * ds) / (scphi0 * sq(scphi0)),
-          w = sm1 * g - s * (1/_qZ - g * sq(cxi0) / (1 + sxi0)),
-          dw = (dg * (sm1 + s * sq(cxi0) / (1 + sxi0)) - s * g * ds)/
-          (scphi0 * sq(scphi0)),
-          dt = -v/dv,
-          dtx = -w/dw;
-        cout << i << " " << tphi0 << " " << dt << " " << dtx << "\n";
-        tphi0 += dtx;
-        if (!(abs(dtx) >= stol))
+          // dv/dsphi0
+          dv = (dg * (1 - s * sxi0) - s * g * ds),
+          w = sm1 * g - s * (1/_qZ - g * sxi0m),
+          dw = (dg * (sm1 + s * sxi0m) - s * g * ds),
+          C = sphi0m * (1 - _e2*(1 + 2*sphi0*(1+sphi0))) / (_e2m * (1+sphi0)),
+          // dC/dsphi0
+          dC = -2 * (1 - _e2*sq(sphi0) * (2*sphi0+3)) / (_e2m * sq(1+sphi0)),
+          A = -_e2 * sq(sphi0m) * (2+(1+_e2)*sphi0) / (_e2m*(1-_e2*sq(sphi0))),
+          B = (sphi0m * _e2m / (1 - _e2*sphi0) *
+               (atanhxm1(_e2 * sq(sphi0m / (1-_e2*sphi0))) - _e2*sphi0m/_e2m)),
+          // d(A+B)/dsphi0
+          dAB = (2 * _e2 * (2 - _e2 * (1 + sq(sphi0))) /
+                 (_e2m * sq(1 - _e2*sq(sphi0)) * scphi02)),
+          u = sm1 * g - s/_qZ * ( C - g * (A + B) ),
+          du = sm1 * dg - s/_qZ * (dC - dg * (A + B) - g * dAB),
+          dtv = -v/dv * (scphi0 * scphi02),
+          dtw = -w/dw * (scphi0 * scphi02),
+          dtu = -u/du * (scphi0 * scphi02);
+        //        cout << "it "  << i << " " << tphi0 << " " << u << " " << du << " " << dtu << "\n";
+        //        cout << "u " << u << " " << w << " " << u-w << "\n";
+        //        cout << "du " << du << " " << dw << " " << du-dw << "\n";
+        //        cout << "it " << i << " " << tphi0 << " " << dt << " " << dtx << " " << dtu << "\n";
+        tphi0 += dtu;
+        if (!(abs(dtu) >= sq(stol)))
           break;
       }
     }
@@ -268,7 +329,7 @@ namespace GeographicLib {
       stol = tol * max(real(1), abs(txi));
     // CHECK: min iterations = 1, max iterations = 2; mean = 1.99
     for (int i = 0; i < numit; ++i) {
-      // dtxi/dtphi = (scxi/scphi)^3 * 2*(1-e^2)/(qp*(1-e^2*sphi^2)^2)
+      // dtxi/dtphi = (scxi/scphi)^3 * 2*(1-e^2)/(qZ*(1-e^2*sphi^2)^2)
       real
         txia = txif(tphi),
         tphi2 = sq(tphi),
@@ -281,6 +342,46 @@ namespace GeographicLib {
         break;
     }
     return tphi;
+  }
+
+  // return atanh(sqrt(x))/sqrt(x) - 1 = y/3 + y^2/5 + y^3/7 + ...
+  // typical x < e^2 = 2*f
+  Math::real AlbersEqualArea::atanhxm1(real x) throw() {
+    real s = 0;
+    if (abs(x) < real(0.5)) {
+      real os = -1, y = 1, k = 1;
+      while (os != s) {
+        os = s;
+        y *= x;                 // y = x^n
+        k += 2;                 // k = 2*n + 1
+        s += y/k;               // sum( x^n/(2*n + 1) )
+      }
+    } else {
+      real xs = sqrt(abs(x));
+      s = (x > 0 ? Math::atanh(xs) : atan(xs)) / xs - 1;
+    }
+    return s; 
+  }
+
+  // return (Datanhee(1,y) - Datanhee(1,x))/(y-x)
+  Math::real AlbersEqualArea::DDatanhee(real x, real y) const throw() {
+    real s = 0;
+    if (_e2 * (abs(x) + abs(y)) < real(0.5)) {
+      real os = -1, s = 0, z = 1, k = 1, t = 0, c = 0, en = 1;
+      while (os != s) {
+        os = s;
+        t = y * t + z; c += t; z *= x;
+        t = y * t + z; c += t; z *= x;
+        k += 2; en *= _e2;
+        // Here en[l] = e2^l, k[l] = 2*l + 1,
+        // c[l] = sum( x^i * y^j; i >= 0, j >= 0, i+j < 2*l)
+        s += en * c / k;
+      }
+      // Taylor expansion is
+      // s = sum( c[l] * e2^l / (2*l + 1), l, 1, N)
+    } else
+      s = (Datanhee(1, y) - Datanhee(x, y))/(1 - x);
+    return s;
   }
 
   void AlbersEqualArea::Forward(real lon0, real lat, real lon,

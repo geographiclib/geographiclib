@@ -61,6 +61,9 @@ namespace GeographicLib {
       return _f > 0 ? Math::atanh(_e * x)/_e :
         (_f < 0 ? std::atan(_e * x)/_e : x);
     }
+    // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x
+    static real atanhxm1(real x) throw();
+
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
     // See: W. M. Kahan and R. J. Fateman,
@@ -86,6 +89,8 @@ namespace GeographicLib {
       real t = x - y, d = 1 - _e2 * x * y;
       return t != 0 ? atanhee(t / d) / t : 1 / d;
     }
+    // DDatanhee(x,y) = (Datanhee(1,y) - Datanhee(1,x))/(y-x)
+    real DDatanhee(real x, real y) const throw();
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
     real txif(real tphi) const throw();
     real tphif(real txi) const throw();
