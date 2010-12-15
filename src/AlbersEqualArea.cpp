@@ -22,7 +22,7 @@ namespace GeographicLib {
 
   const Math::real AlbersEqualArea::eps = numeric_limits<real>::epsilon();
   const Math::real AlbersEqualArea::epsx = sq(eps);
-  const Math::real AlbersEqualArea::tol = real(0.1) * sqrt(eps);
+  const Math::real AlbersEqualArea::tol = sqrt(eps) * sqrt(sqrt(eps));
   const Math::real AlbersEqualArea::ahypover =
     real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
     + 2;
@@ -197,6 +197,32 @@ namespace GeographicLib {
          (_e2*(1+sphi1+sphi2+_e2*sphi1*sphi2)/(es1*es2)
           +_e2m*DDatanhee(sphi1,sphi2) )/_qZ ) /
         ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi);
+      /*
+      cout << Dsn(tphi2, tphi1, sphi2, sphi1) *
+        ( -( ((sphi2 <= 0 ? (1 - sxi2)/(1 - sphi2) :
+               sq(cxi2/cphi2) * (1 + sphi2) / (1 + sxi2)) +
+              (sphi1 <= 0 ? (1 - sxi1)/(1 - sphi1) :
+               sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
+          (1 + _e2 * (sphi1 + sphi2 + sphi1*sphi2)) /
+          (1 +       (sphi1 + sphi2 + sphi1*sphi2)) ) << " "
+           << Dsn(tphi2, tphi1, sphi2, sphi1) * (
+          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : sq(cphi2) / ( 1 + sphi2)) +
+           scbet12 * (sphi1 <= 0 ? 1 - sphi1 : sq(cphi1) / ( 1 + sphi1))) *
+         (_e2*(1+sphi1+sphi2+_e2*sphi1*sphi2)/(es1*es2)
+          +_e2m*DDatanhee(sphi1,sphi2) )/_qZ ) << " "
+           << Dsn(tphi2, tphi1, sphi2, sphi1) *
+        ( -( ((sphi2 <= 0 ? (1 - sxi2)/(1 - sphi2) :
+               sq(cxi2/cphi2) * (1 + sphi2) / (1 + sxi2)) +
+              (sphi1 <= 0 ? (1 - sxi1)/(1 - sphi1) :
+               sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
+          (1 + _e2 * (sphi1 + sphi2 + sphi1*sphi2)) /
+          (1 +       (sphi1 + sphi2 + sphi1*sphi2)) +
+          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : sq(cphi2) / ( 1 + sphi2)) +
+           scbet12 * (sphi1 <= 0 ? 1 - sphi1 : sq(cphi1) / ( 1 + sphi1))) *
+         (_e2*(1+sphi1+sphi2+_e2*sphi1*sphi2)/(es1*es2)
+          +_e2m*DDatanhee(sphi1,sphi2) )/_qZ ) << "\n";
+      cout << _qZ << " " << DDatanhee(sphi1,sphi2) << "\n";
+      */
       sm1 = sm1a;
       // n = (scbet22 - scbet12) / (scbet22 * scbet12 * _qZ * (sxi2 - sxi1))
       n = dtbet2 / (scbet12 * scbet22 * _qZ * dsxi);
@@ -210,7 +236,7 @@ namespace GeographicLib {
            << (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1) << "\n";
       */
       /* cout << "s/sm1 " << s << " " << sm1 << " " << s + sm1 << "\n"; */
-      for (int i = 0; i < numit0; ++i) {
+      for (int i = 0; i < 2*numit0; ++i) {
         // Solve (scbet0^2 * sphi0) / (1/qZ + scbet0^2 * sphi0 * sxi0) = s
         // for tphi0 by Newton's method on
         // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qZ + scbet0^2 * sphi0 * sxi0)
@@ -273,12 +299,12 @@ namespace GeographicLib {
           dtv = -v/dv * (scphi0 * scphi02),
           dtw = -w/dw * (scphi0 * scphi02),
           dtu = -u/du * (scphi0 * scphi02);
-        //        cout << "it "  << i << " " << tphi0 << " " << u << " " << du << " " << dtu << "\n";
+        // cout << "it "  << i << " " << tphi0 << " " << u << " " << du << " " << dtu << "\n";
         //        cout << "u " << u << " " << w << " " << u-w << "\n";
         //        cout << "du " << du << " " << dw << " " << du-dw << "\n";
         //        cout << "it " << i << " " << tphi0 << " " << dt << " " << dtx << " " << dtu << "\n";
         tphi0 += dtu;
-        if (!(abs(dtu) >= sq(stol)))
+        if (!(abs(dtu) >= stol))
           break;
       }
     }
@@ -367,7 +393,7 @@ namespace GeographicLib {
   Math::real AlbersEqualArea::DDatanhee(real x, real y) const throw() {
     real s = 0;
     if (_e2 * (abs(x) + abs(y)) < real(0.5)) {
-      real os = -1, s = 0, z = 1, k = 1, t = 0, c = 0, en = 1;
+      real os = -1, z = 1, k = 1, t = 0, c = 0, en = 1;
       while (os != s) {
         os = s;
         t = y * t + z; c += t; z *= x;
