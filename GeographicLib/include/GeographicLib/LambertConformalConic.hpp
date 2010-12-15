@@ -205,10 +205,12 @@ namespace GeographicLib {
      * This allows parallels close to the poles to be specified accurately.
      * This routine computes the latitude of origin and the scale at this
      * latitude.  In the case where \e lat1 and \e lat2 are different, the
-     * errors in this routines are as follows: if abs(\e lat2 - \e lat1) <=
-     * 160<sup>o</sup> and max(abs(\e lat1), abs(\e lat2)) <=
-     * 89.9999<sup>o</sup>, then the error in the latitude of origin is less
-     * than 4e-14d and the relative error in the scale is less than 7e-15.
+     * errors in this routines are as follows: if \e dlat = abs(\e lat2 - \e
+     * lat1) <= 160<sup>o</sup> and max(abs(\e lat1), abs(\e lat2)) <= 90 -
+     * min(0.0002, 2.2e-6(180 - \e dlat), 6e-8\e dlat<sup>2</sup>) (in
+     * degrees), then the error in the latitude of origin is less than
+     * 4.5e-14<sup>o</sup> and the relative error in the scale is less than
+     * 7e-15.
      **********************************************************************/
     LambertConformalConic(real a, real r,
                           real sinlat1, real coslat1,

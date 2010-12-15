@@ -50,12 +50,12 @@ namespace GeographicLib {
     real _sign, _lat0, _k0;
     real _n0, _m02, _nrho0, _k2, _txi0, _sxi0;
     static const real eps, epsx, tol, ahypover;
-    static const int numit = 5;
-    static const int numit0 = 10;
+    static const int numit = 5;   // Newton iterations in Reverse
+    static const int numit0 = 20; // Newton iterations in Init
     static inline real sq(real x) throw() { return x * x; }
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
-    // atanh(e * x)/e                 if f > 0
-    // atan( sqrt(-e2) * x)/sqrt(-e2) if f < 0
+    // atanh(      e   * x)/      e   if f > 0
+    // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
     // x                              if f = 0
     inline real atanhee(real x) const throw() {
       return _f > 0 ? Math::atanh(_e * x)/_e :
@@ -143,7 +143,9 @@ namespace GeographicLib {
      *
      * This allows parallels close to the poles to be specified accurately.
      * This routine computes the latitude of origin and the azimuthal scale at
-     * this latitude.
+     * this latitude.  If \e dlat = abs(\e lat2 - \e lat1) <= 160<sup>o</sup>,
+     * then the error in the latitude of origin is less than
+     * 4.5e-14<sup>o</sup>.
      **********************************************************************/
     AlbersEqualArea(real a, real r,
                     real sinlat1, real coslat1,
