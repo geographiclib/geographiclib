@@ -154,10 +154,9 @@ namespace GeographicLib {
     //  s = sphi0 * qZ / (m0^2 + sphi0*q0)
     //    = sphi0 * scbet0^2 / (1/qZ + sphi0 * scbet0^2 * sxi0)
 
-    real tphi0, n, C;
+    real tphi0, C;
     if (polar || tphi1 == tphi2) {
       tphi0 = tphi2;
-      n = tphi2/hyp(tphi2);
       C = 1;                    // ignored
     } else {
       real
@@ -175,67 +174,28 @@ namespace GeographicLib {
         dsxi = ( (1 + _e2 * sphi1 * sphi2) / (es2 * es1) +
                  Datanhee(sphi2, sphi1) ) * Dsn(tphi2, tphi1, sphi2, sphi1) /
         ( 2 * _qx ),
+        den = (sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi,
         // s = (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1)
-        s = 2 * dtbet2 / ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi),
+        s = 2 * dtbet2 / den,
         // 1-s = -(sq(scbet2)*(1-sxi2) - sq(scbet1)*(1-sxi1)) /
         //        (scbet22*sxi2 - scbet12*sxi1)
-        sm1 = -(((sxi2 <= 0 ? 1 - sxi2 : sq(cxi2) / (1 + sxi2)) +
-                 (sxi1 <= 0 ? 1 - sxi1 : sq(cxi1) / (1 + sxi1))) * dtbet2 -
-                (scbet22 + scbet12) * dsxi) /
-        ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi),
-        // Alt form for sm1.  Write
-        // sq(scbet)*(1-sxi) = sq(scbet)*(1-sphi) * (1-sxi)/(1-sphi)
-        sm1a = -Dsn(tphi2, tphi1, sphi2, sphi1) *
-        ( -( ((sphi2 <= 0 ? (1 - sxi2)/(1 - sphi2) :
+        // Write
+        //   sq(scbet)*(1-sxi) = sq(scbet)*(1-sphi) * (1-sxi)/(1-sphi)
+        sm1 = -Dsn(tphi2, tphi1, sphi2, sphi1) *
+        ( -( ((sphi2 <= 0 ? (1 - sxi2) / (1 - sphi2) :
                sq(cxi2/cphi2) * (1 + sphi2) / (1 + sxi2)) +
-              (sphi1 <= 0 ? (1 - sxi1)/(1 - sphi1) :
+              (sphi1 <= 0 ? (1 - sxi1) / (1 - sphi1) :
                sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
-          (1 + _e2 * (sphi1 + sphi2 + sphi1*sphi2)) /
-          (1 +       (sphi1 + sphi2 + sphi1*sphi2)) +
+          (1 + _e2 * (sphi1 + sphi2 + sphi1 * sphi2)) /
+          (1 +       (sphi1 + sphi2 + sphi1 * sphi2)) +
           (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : sq(cphi2) / ( 1 + sphi2)) +
            scbet12 * (sphi1 <= 0 ? 1 - sphi1 : sq(cphi1) / ( 1 + sphi1))) *
-         (_e2*(1+sphi1+sphi2+_e2*sphi1*sphi2)/(es1*es2)
-          +_e2m*DDatanhee(sphi1,sphi2) )/_qZ ) /
-        ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi);
-      /*
-      cout << Dsn(tphi2, tphi1, sphi2, sphi1) *
-        ( -( ((sphi2 <= 0 ? (1 - sxi2)/(1 - sphi2) :
-               sq(cxi2/cphi2) * (1 + sphi2) / (1 + sxi2)) +
-              (sphi1 <= 0 ? (1 - sxi1)/(1 - sphi1) :
-               sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
-          (1 + _e2 * (sphi1 + sphi2 + sphi1*sphi2)) /
-          (1 +       (sphi1 + sphi2 + sphi1*sphi2)) ) << " "
-           << Dsn(tphi2, tphi1, sphi2, sphi1) * (
-          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : sq(cphi2) / ( 1 + sphi2)) +
-           scbet12 * (sphi1 <= 0 ? 1 - sphi1 : sq(cphi1) / ( 1 + sphi1))) *
-         (_e2*(1+sphi1+sphi2+_e2*sphi1*sphi2)/(es1*es2)
-          +_e2m*DDatanhee(sphi1,sphi2) )/_qZ ) << " "
-           << Dsn(tphi2, tphi1, sphi2, sphi1) *
-        ( -( ((sphi2 <= 0 ? (1 - sxi2)/(1 - sphi2) :
-               sq(cxi2/cphi2) * (1 + sphi2) / (1 + sxi2)) +
-              (sphi1 <= 0 ? (1 - sxi1)/(1 - sphi1) :
-               sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
-          (1 + _e2 * (sphi1 + sphi2 + sphi1*sphi2)) /
-          (1 +       (sphi1 + sphi2 + sphi1*sphi2)) +
-          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : sq(cphi2) / ( 1 + sphi2)) +
-           scbet12 * (sphi1 <= 0 ? 1 - sphi1 : sq(cphi1) / ( 1 + sphi1))) *
-         (_e2*(1+sphi1+sphi2+_e2*sphi1*sphi2)/(es1*es2)
-          +_e2m*DDatanhee(sphi1,sphi2) )/_qZ ) << "\n";
-      cout << _qZ << " " << DDatanhee(sphi1,sphi2) << "\n";
-      */
-      sm1 = sm1a;
-      // n = (scbet22 - scbet12) / (scbet22 * scbet12 * _qZ * (sxi2 - sxi1))
-      n = dtbet2 / (scbet12 * scbet22 * _qZ * dsxi);
+         (_e2 * (1 + sphi1 + sphi2 + _e2 * sphi1 * sphi2)/(es1 * es2)
+          +_e2m * DDatanhee(sphi1, sphi2) ) / _qZ ) / den;
       // C = (scbet22*sxi2 - scbet12*sxi1) / (scbet22 * scbet12 * (sx2 - sx1))
-      C = ((sxi2 + sxi1) * dtbet2 + (scbet22 + scbet12) * dsxi) /
-        (2 * scbet12 * scbet22 * dsxi);
+      C = den / (2 * scbet12 * scbet22 * dsxi);
       tphi0 = (tphi2 + tphi1)/2;
       real stol = tol * max(real(1), abs(tphi0));
-      /*
-      cout << "s " << s << " "
-           << (sq(tbet2) - sq(tbet1)) / (scbet22*sxi2 - scbet12*sxi1) << "\n";
-      */
-      /* cout << "s/sm1 " << s << " " << sm1 << " " << s + sm1 << "\n"; */
       for (int i = 0; i < 2*numit0; ++i) {
         // Solve (scbet0^2 * sphi0) / (1/qZ + scbet0^2 * sphi0 * sxi0) = s
         // for tphi0 by Newton's method on
@@ -261,10 +221,10 @@ namespace GeographicLib {
         //
         // 1 - scbet0^2 * sphi0 * (qZ-q0)
         //   = 1 - scbet0^2 * sphi0 * (2*(1-sphi0)/(1-e2) + A + B)
-        //   = C - scbet0^2 * sphi0 * (A + B)
-        // C = 1 - scbet0^2 * sphi0 * 2*(1-sphi0)/(1-e2)
+        //   = D - scbet0^2 * sphi0 * (A + B)
+        // D = 1 - scbet0^2 * sphi0 * 2*(1-sphi0)/(1-e2)
         //   = (1-sphi0)*(1-e2*(1+2*sphi0*(1+sphi0)))/((1-e2)*(1+sphi0))
-        // dC/dsphi0 = -2*(1-e2*sphi0^2*(2*sphi0+3))/((1-e2)*(1+sphi0)^2)
+        // dD/dsphi0 = -2*(1-e2*sphi0^2*(2*sphi0+3))/((1-e2)*(1+sphi0)^2)
         // d(A+B)/dsphi0 = 2*(1-sphi0^2)*e2*(2-e2*(1+sphi0^2))/
         //                 ((1-e2)*(1-e2*sphi0^2)^2)
         
@@ -272,37 +232,23 @@ namespace GeographicLib {
           scphi02 = 1 + sq(tphi0), scphi0 = sqrt(scphi02),
           // sphi0m = 1-sin(phi0) = 1/( sec(phi0) * (tan(phi0) + sec(phi0)) )
           sphi0 = tphi0 / scphi0, sphi0m = 1/(scphi0 * (tphi0 + scphi0)),
-          txi0 = txif(tphi0), scxi0 = hyp(txi0),
-          sxi0 = txi0 / scxi0, sxi0m = 1/(scxi0 * (txi0 + scxi0)),
           // scbet0^2 * sphi0
           g = (1 + sq( _fm * tphi0 )) * sphi0,
           // dg/dsphi0 = dg/dtphi0 * scphi0^3
           dg = _e2m * scphi02 * (1 + 2 * sq(tphi0)) + _e2,
-          // dsxi0/dsphi0 = dsxi0/dtphi0 * scphi0^3
-          ds = 1 / (_qx * sq(1 - _e2 * sq(sphi0))),
-          v = g - s * (1/_qZ + g * sxi0),
-          // dv/dsphi0
-          dv = (dg * (1 - s * sxi0) - s * g * ds),
-          w = sm1 * g - s * (1/_qZ - g * sxi0m),
-          dw = (dg * (sm1 + s * sxi0m) - s * g * ds),
-          C = sphi0m * (1 - _e2*(1 + 2*sphi0*(1+sphi0))) / (_e2m * (1+sphi0)),
-          // dC/dsphi0
-          dC = -2 * (1 - _e2*sq(sphi0) * (2*sphi0+3)) / (_e2m * sq(1+sphi0)),
+          D = sphi0m * (1 - _e2*(1 + 2*sphi0*(1+sphi0))) / (_e2m * (1+sphi0)),
+          // dD/dsphi0
+          dD = -2 * (1 - _e2*sq(sphi0) * (2*sphi0+3)) / (_e2m * sq(1+sphi0)),
           A = -_e2 * sq(sphi0m) * (2+(1+_e2)*sphi0) / (_e2m*(1-_e2*sq(sphi0))),
           B = (sphi0m * _e2m / (1 - _e2*sphi0) *
                (atanhxm1(_e2 * sq(sphi0m / (1-_e2*sphi0))) - _e2*sphi0m/_e2m)),
           // d(A+B)/dsphi0
           dAB = (2 * _e2 * (2 - _e2 * (1 + sq(sphi0))) /
                  (_e2m * sq(1 - _e2*sq(sphi0)) * scphi02)),
-          u = sm1 * g - s/_qZ * ( C - g * (A + B) ),
-          du = sm1 * dg - s/_qZ * (dC - dg * (A + B) - g * dAB),
-          dtv = -v/dv * (scphi0 * scphi02),
-          dtw = -w/dw * (scphi0 * scphi02),
+          u = sm1 * g - s/_qZ * ( D - g * (A + B) ),
+          // du/dsphi0
+          du = sm1 * dg - s/_qZ * (dD - dg * (A + B) - g * dAB),
           dtu = -u/du * (scphi0 * scphi02);
-        // cout << "it "  << i << " " << tphi0 << " " << u << " " << du << " " << dtu << "\n";
-        //        cout << "u " << u << " " << w << " " << u-w << "\n";
-        //        cout << "du " << du << " " << dw << " " << du-dw << "\n";
-        //        cout << "it " << i << " " << tphi0 << " " << dt << " " << dtx << " " << dtu << "\n";
         tphi0 += dtu;
         if (!(abs(dtu) >= stol))
           break;
