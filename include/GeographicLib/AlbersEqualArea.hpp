@@ -48,8 +48,8 @@ namespace GeographicLib {
     typedef Math::real real;
     const real _a, _r, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
     real _sign, _lat0, _k0;
-    real _n0, _m02, _nrho0, _k2, _txi0, _sxi0;
-    static const real eps, epsx, tol, ahypover;
+    real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
+    static const real eps, epsx, epsx2, tol, tol0, ahypover;
     static const int numit = 5;   // Newton iterations in Reverse
     static const int numit0 = 20; // Newton iterations in Init
     static inline real sq(real x) throw() { return x * x; }
@@ -200,8 +200,8 @@ namespace GeographicLib {
      * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No
      * false easting or northing is added.  \e lon0 should be in the range
      * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
-     * The value of \e lat returned is in the range [-90,90], except if the
-     * input point is outside the legal projected space when NaN is returned.
+     * The value of \e lat returned is in the range [-90,90].  If the input
+     * point is outside the legal projected space the nearest pole is returned.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();
