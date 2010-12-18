@@ -344,7 +344,7 @@ namespace GeographicLib {
       psi = Math::asinh(tchi),
       theta = _n * lam, stheta = sin(theta), ctheta = cos(theta),
       dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0),
-      drho = - _scale * (2 * _nc < 1 ?
+      drho = - _scale * (2 * _nc < 1 && dpsi != 0 ?
                          (exp(sq(_nc)/(1 + _n) * psi ) *
                           (tchi > 0 ? 1/(scchi + tchi) : (scchi - tchi))
                           - (_t0nm1 + 1))/(-_n) :

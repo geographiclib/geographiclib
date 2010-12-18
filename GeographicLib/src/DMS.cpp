@@ -164,7 +164,7 @@ namespace GeographicLib {
       return 0;
     string t;
     t.resize(s.length());
-    for (unsigned i = s.length(); i--;)
+    for (size_t i = s.length(); i--;)
       t[i] = toupper(s[i]);
     int sign = t[0] == '-' ? -1 : 1;
     string::size_type p0 = t[0] == '-' || t[0] == '+' ? 1 : 0;
