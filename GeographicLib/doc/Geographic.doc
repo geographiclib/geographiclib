@@ -2610,6 +2610,7 @@ number.)
   - Make classes NaN aware.
   - Use cell arrays for MGRS strings in Matlab.
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
+  - Add solution/project files for Visual Studio 2010 (32-bit only).
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (current, released 2010-11-23)</a>
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by
