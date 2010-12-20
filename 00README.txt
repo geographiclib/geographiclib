@@ -58,6 +58,7 @@ Files
       EquidistantTest-vc9.vcproj -- project for EquidistantTest
       GeoidEval-vc9.vcproj -- project for GeoidEval
       also files for MS Studio 2005 (with vc8)
+      also files for MS Studio 2010 (with vc10)
 
     maxima/
       tm.mac -- Maxima code for high precision TM
