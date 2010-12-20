@@ -34,27 +34,24 @@ namespace GeographicLib {
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
    * two standard parallels is converted into a single standard parallel, the
-   * latitude of tangency (also the latitude of minimum scale).  This latitude
-   * is also used as the latitude of origin which is returned by
-   * LambertConformalConic::OriginLatitude.  The scale on the latitude of
-   * origin is given by LambertConformalConic::CentralScale.  The case with two
-   * distinct standard parallels where one is a pole is singular and is
-   * disallowed.  The central meridian (which is a trivial shift
-   * of the longitude) is specified as the \e lon0 argument of the
-   * LambertConformalConic::Forward and LambertConformalConic::Reverse
-   * functions.  There is no provision in this class for specifying a false
-   * easting or false northing or a different latitude of origin.  However
-   * these are can be simply included by the calling function.  For example the
-   * Pennsylvania South state coordinate system
-   * (<a href="http://www.spatialreference.org/ref/epsg/3364/"> EPSG:3364</a>)
-   * is obtained by:
-   \code
-   const double
-     a = GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80
-     lat1 = 39 + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels
-     k1 = 1,                                   // scale
-     lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin
-     fe = 600000, fn = 0;                      // false easting and northing
+   * latitude of tangency (also the latitude of minimum scale), with a scale
+   * specified on this parallel.  This latitude is also used as the latitude of
+   * origin which is returned by LambertConformalConic::OriginLatitude.  The
+   * scale on the latitude of origin is given by
+   * LambertConformalConic::CentralScale.  The case with two distinct standard
+   * parallels where one is a pole is singular and is disallowed.  The central
+   * meridian (which is a trivial shift of the longitude) is specified as the
+   * \e lon0 argument of the LambertConformalConic::Forward and
+   * LambertConformalConic::Reverse functions.  There is no provision in this
+   * class for specifying a false easting or false northing or a different
+   * latitude of origin.  However these are can be simply included by the
+   * calling function.  For example the Pennsylvania South state coordinate
+   * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
+   * EPSG:3364</a>) is obtained by: \code const double a =
+   * GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80 lat1 = 39
+   * + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels k1 = 1, // scale
+   * lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin fe = 600000, fn =
+   * 0; // false easting and northing
    // Set up basic projection
    const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
    double x0, y0;
