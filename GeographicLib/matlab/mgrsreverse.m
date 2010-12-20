@@ -3,7 +3,8 @@ function mgrs = mgrsreverse(utmups)
 %
 %   utmups = mgrsreverse(mgrs);
 %
-%   mgrs is a M x 1 cell array of MGRS strings.
+%   mgrs is a M x 1 cell array of MGRS strings, e.g.,
+%       mgrsreverse({ '38SMB4488'; '12TUK3393' })
 %
 %   utmups is an M x 5 matrix
 %       easting = utmups(:,1) in meters

@@ -16,7 +16,6 @@ function mgrs = mgrsforward(utmups, prec)
 %          (default 5)
 %
 %   mgrs is a M x 1 cell array of MGRS strings.
-%   For UPS coordinates the string begins with 2 blanks.
 %
 %   This is an interface to the GeographicLib C++ routine
 %       MGRS::Forward

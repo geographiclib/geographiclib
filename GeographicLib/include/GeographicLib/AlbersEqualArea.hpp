@@ -33,15 +33,22 @@ namespace GeographicLib {
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
    * two standard parallels is converted into a single standard parallel, the
-   * latitude of minimum azimuthal scale).  This latitude is also used as the
-   * latitude of origin which is returned by AlbersEqualArea::OriginLatitude.
-   * The azimuthal scale on the latitude of origin is given by
-   * AlbersEqualArea::CentralScale.  The case with two standard parallels at
-   * opposite poles is singular and is disallowed.  The central meridian (which
-   * is a trivial shift of the longitude) is specified as the \e lon0 argument
-   * of the AlbersEqualArea::Forward and AlbersEqualArea::Reverse functions.
-   * There is no provision in this class for specifying a false easting or
-   * false northing or a different latitude of origin.
+   * latitude of minimum azimuthal scale, with an azimuthal scale specified on
+   * this parallel.  This latitude is also used as the latitude of origin which
+   * is returned by AlbersEqualArea::OriginLatitude.  The azimuthal scale on
+   * the latitude of origin is given by AlbersEqualArea::CentralScale.  The
+   * case with two standard parallels at opposite poles is singular and is
+   * disallowed.  The central meridian (which is a trivial shift of the
+   * longitude) is specified as the \e lon0 argument of the
+   * AlbersEqualArea::Forward and AlbersEqualArea::Reverse functions.
+   * AlbersEqualArea::Forward and AlbersEqualArea::Reverse also return the
+   * meridian convergence, \e gamma, and azimuthal scale, \e k.  A small square
+   * aligned with the cardinal directions is projected to a rectangle with
+   * dimensions \e k (in the E-W direction) and 1/\e k (in the N-S direction).
+   * The E-W sides of the rectangle are oriented \e gamma degrees
+   * counter-clockwise from the \e x axis.  There is no provision in this class
+   * for specifying a false easting or false northing or a different latitude
+   * of origin.
    **********************************************************************/
   class AlbersEqualArea {
   private:
