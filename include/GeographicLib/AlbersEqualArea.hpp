@@ -266,11 +266,25 @@ namespace GeographicLib {
     ///@}
 
     /**
-     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid and
-     * the UPS scale factor and \e stdlat = 0.  This degenerates to the
-     * cylindrical equal area projection.
+     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
+     * stdlat = 0, and \e k0 = 1.  This degenerates to the cylindrical equal
+     * area projection.
      **********************************************************************/
     static const AlbersEqualArea CylindricalEqualArea;
+
+    /**
+     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
+     * stdlat = 90<sup>o</sup>, and \e k0 = 1.  This degenerates to the
+     * Lambert azimuthal equal area projection.
+     **********************************************************************/
+    static const AlbersEqualArea AzimuthalEqualAreaNorth;
+
+    /**
+     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e
+     * stdlat = -90<sup>o</sup>, and \e k0 = 1.  This degenerates to the
+     * Lambert azimuthal equal area projection.
+     **********************************************************************/
+    static const AlbersEqualArea AzimuthalEqualAreaSouth;
   };
 
 } // namespace GeographicLib

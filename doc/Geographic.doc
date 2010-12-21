@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.6
-\date 2010-11-23
+\version 1.7
+\date 2010-12-21
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sf.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">
-  geographiclib-1.6.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.zip/download">
-  geographiclib-1.6.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">
+  geographiclib-1.7.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.zip/download">
+  geographiclib-1.7.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -157,22 +157,23 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">
+   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.6.tar.gz
+   - tar xfpvz geographiclib-1.7.tar.gz
    .
-   This will create a geographiclib-1.6 directory.  (Alternatively,
+   This will create a geographiclib-1.7 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.6 directory
-   - cd geographiclib-1.6
+ - Change to the geographiclib-1.7 directory
+   - cd geographiclib-1.7
  - Create the library and the utility programs
    - make all
    .
    The compiled utility programs are in the tools directory.
  - windows/GeographicLib-vc9.sln (resp. vc8) is MS Visual Studio 2008
    (resp. 2005) solution file which compiles the library and the utility
-   programs under Windows.
+   programs under Windows.  (Visual Studio 2010 is also supported with a
+   vc10 suffix.)
  - Try out \ref geoconvert (for help, type cd tools; ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
@@ -218,12 +219,13 @@ Here is a brief description of the relationship between the various
 components of %GeographicLib.
 
 GeographicLib::TransverseMercator, GeographicLib::PolarStereographic,
-and GeographicLib::LambertConformalConic provide the basic projections.
-The constructors for these classes specify the ellipsoid and the forward
-and reverse projections are implemented as const member functions.
-TransverseMercator uses Kr&uuml;ger's series which have been extended to
-sixth order in the square of the eccentricity.  PolarStereographic and
-LambertConformalConic use the exact formulas for the projections (from
+GeographicLib::LambertConformalConic, and GeographicLib::AlbersEqualArea
+provide the basic projections.  The constructors for these classes
+specify the ellipsoid and the forward and reverse projections are
+implemented as const member functions.  TransverseMercator uses
+Kr&uuml;ger's series which have been extended to sixth order in the
+square of the eccentricity.  PolarStereographic, LambertConformalConic,
+and AlbersEqualArea use the exact formulas for the projections (from
 Snyder).
 
 GeographicLib::TransverseMercator::UTM and
@@ -233,6 +235,9 @@ specific for the WGS84 ellipsoid with the UTM and UPS scale factors.
 UTM and UPS.)  Similarly GeographicLib::LambertConformalConic::Mercator
 is a const static instantiation of this projection for a WGS84 ellipsoid
 and a standard parallel of 0 (which gives the Mercator projection).
+GeographicLib::AlbersEqualArea::CylindricalEqualArea,
+AzimuthalEqualAreaNorth, and AzimuthalEqualAreaSouth, likewise provide
+special cases of the equal area projection.
 
 GeographicLib::UTMUPS uses TransverseMercator::UTM and
 PolarStereographic::UPS to perform the UTM and UPS
@@ -2603,16 +2608,17 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.7 (not released yet)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
+  - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
+  - Add GeographicLib::AlbersEqualArea projection.
   - Library created by Visual Studio is Geographic.lib instead of
     GeographicLib.lib (compatible with makefiles).
-  - Add GeographicLib::AlbersEqualArea projection.
   - Make classes NaN aware.
   - Use cell arrays for MGRS strings in Matlab.
-  - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
   - Add solution/project files for Visual Studio 2010 (32-bit only).
+  - Use C++0X static_assert and math functions, if available.
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (current, released 2010-11-23)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (released 2010-11-23)</a>
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by
     Dave Edwards).
 
