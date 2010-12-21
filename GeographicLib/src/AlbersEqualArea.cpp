@@ -265,7 +265,20 @@ namespace GeographicLib {
   const AlbersEqualArea
   AlbersEqualArea::CylindricalEqualArea(Constants::WGS84_a(),
                                         Constants::WGS84_r(),
-                                        real(0), real(1));
+                                        real(0), real(1), real(0), real(1),
+                                        real(1));
+
+  const AlbersEqualArea
+  AlbersEqualArea::AzimuthalEqualAreaNorth(Constants::WGS84_a(),
+                                           Constants::WGS84_r(),
+                                           real(1), real(0), real(1), real(0),
+                                           real(1));
+
+  const AlbersEqualArea
+  AlbersEqualArea::AzimuthalEqualAreaSouth(Constants::WGS84_a(),
+                                           Constants::WGS84_r(),
+                                           real(-1), real(0), real(-1), real(0),
+                                           real(1));
 
   Math::real AlbersEqualArea::txif(real tphi) const throw() {
     // sxi = ( sphi/(1-e2*sphi^2) + atanhee(sphi) ) /
