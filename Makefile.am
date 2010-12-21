@@ -18,7 +18,7 @@ dist-hook:
 	find $(distdir)/doc -maxdepth 1 -type f -name '*.tmp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
-		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \
+		\( ! -name '*.sln' -a ! -name '*.vc*proj' -a ! -name '*.mk' \)| \
 		xargs rm -f ; \
 	find $(distdir)/matlab -type f \
 		\( ! -name '*.cpp' -a ! -name '*.m' -a ! -name '*.mk' \) | \
