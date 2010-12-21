@@ -49,7 +49,8 @@ namespace GeographicLib {
 
   void MGRS::Forward(int zone, bool northp, real x, real y, real lat,
                      int prec, std::string& mgrs) {
-    if (zone == UTMUPS::INVALID || x != x || y != y || lat != lat) {
+    if (zone == UTMUPS::INVALID ||
+        Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {
       prec = -1;
       mgrs = "INVALID";
       return;

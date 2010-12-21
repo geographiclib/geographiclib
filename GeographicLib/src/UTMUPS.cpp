@@ -48,7 +48,7 @@ namespace GeographicLib {
       throw GeographicErr("Illegal zone requested " + str(setzone));
     if (setzone >= MINZONE || setzone == INVALID)
       return setzone;
-    if (lat != lat || lon != lon) // Check if lat or lon is a NaN
+    if (Math::isnan(lat) || Math::isnan(lon)) // Check if lat or lon is a NaN
       return INVALID;
     // Assume lon is in [-180, 360].
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
@@ -119,7 +119,7 @@ namespace GeographicLib {
   void UTMUPS::Reverse(int zone, bool northp, real x, real y,
                        real& lat, real& lon, real& gamma, real& k,
                        bool mgrslimits) {
-    if (zone == INVALID || x != x || y != y) {
+    if (zone == INVALID || Math::isnan(x) || Math::isnan(y)) {
       lat = lon = gamma = k = Math::NaN();
       return;
     }
