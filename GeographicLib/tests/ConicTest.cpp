@@ -27,7 +27,7 @@ dist(GeographicLib::Math::extended a, GeographicLib::Math::extended r,
   using namespace GeographicLib;
   typedef Math::extended extended;
   extended
-    phi = lat0 * Constants::degree(),
+    phi = lat0 * Math::degree<extended>(),
     f = r != 0 ? 1/r : 0,
     e2 = f * (2 - f),
     sinphi = sin(phi),
@@ -38,7 +38,7 @@ dist(GeographicLib::Math::extended a, GeographicLib::Math::extended r,
     dlon = lon1 - lon0;
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
-  return a * Constants::degree() *
+  return a * Math::degree<extended>() *
     Math::hypot((lat1 - lat0) * hlat, dlon * hlon);
 }
 
@@ -135,14 +135,14 @@ int main(int argc, char* argv[]) {
         lat1 /= quant;
         lat2 /= quant;
         extended
-          sinlat1 = sign1 * (lat1 < 45 ? sin(lat1 * Math::edegree())
-                             : cos(colat1 * Math::edegree())),
-          sinlat2 = sign2 * (lat2 < 45 ? sin(lat2 * Math::edegree())
-                             : cos(colat2 * Math::edegree())),
-          coslat1 = (lat1 < 45 ? cos(lat1 * Math::edegree())
-                     : sin(colat1 * Math::edegree())),
-          coslat2 = (lat2 < 45 ? cos(lat2 * Math::edegree())
-                     : sin(colat2 * Math::edegree()));
+          sinlat1 = sign1 * (lat1 < 45 ? sin(lat1 * Math::degree<extended>())
+                             : cos(colat1 * Math::degree<extended>())),
+          sinlat2 = sign2 * (lat2 < 45 ? sin(lat2 * Math::degree<extended>())
+                             : cos(colat2 * Math::degree<extended>())),
+          coslat1 = (lat1 < 45 ? cos(lat1 * Math::degree<extended>())
+                     : sin(colat1 * Math::degree<extended>())),
+          coslat2 = (lat2 < 45 ? cos(lat2 * Math::degree<extended>())
+                     : sin(colat2 * Math::degree<extended>()));
         lat1 *= sign1;
         lat2 *= sign2;
         const LambertConformalConic lam(a, r, /* real(lat1), real(lat2), */
@@ -154,10 +154,11 @@ int main(int argc, char* argv[]) {
                                         real(sinlat2), real(coslat2),
                                         real(1));
         extended
-          lat0a = albers ? alb.OriginLatitude() : lam.OriginLatitude(),
+          lat0a = albers ? alb.OriginLatitude() : lam.OriginLatitude();
           //k0a = albers ? alb.CentralScale() : lam.CentralScale();
         if (!(abs(lat0a-lat0) <= 4.5e-14))
-          cout << lat1 << " " << lat2 << " " << lat0 << " " << lat0a << " " << lat0a - lat0 << "\n";
+          cout << lat1 << " " << lat2 << " " << lat0
+               << " " << lat0a << " " << lat0a - lat0 << "\n";
       }
     } else { // Check projection
       // stdin contains lat0 lat lon x y k
@@ -177,10 +178,11 @@ int main(int argc, char* argv[]) {
           colat00 = (90 * quant - lat00) / quant;
         lat00 /= quant;
         real
-          sinlat0 = real(sign0 * (lat00 < 45 ? sin(lat00 * Math::edegree())
-                                  : cos(colat00 * Math::edegree()))),
-          coslat0 = real(lat00 < 45 ? cos(lat00 * Math::edegree())
-                         : sin(colat00 * Math::edegree()));
+          sinlat0 = real(sign0 * (lat00 < 45 ?
+                                  sin(lat00 * Math::degree<extended>()) :
+                                  cos(colat00 * Math::degree<extended>()))),
+          coslat0 = real(lat00 < 45 ? cos(lat00 * Math::degree<extended>())
+                         : sin(colat00 * Math::degree<extended>()));
         const LambertConformalConic lcc(a, r,
                                         sinlat0, coslat0, sinlat0, coslat0,
                                         real(1));
@@ -199,7 +201,6 @@ int main(int argc, char* argv[]) {
             testset.BackUp();
             break;
           }
-          // std::cout << "Process: " << lat0 << " " << lat << " " << lon << " " << k << "\n";
           real latb, lonb, xa, ya, gammaa, gammab, ka, kb;
           if (albers)
             alb.Forward(real(0), real(lat), real(lon), xa, ya, gammaa, ka);

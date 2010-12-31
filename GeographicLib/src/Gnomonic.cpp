@@ -33,7 +33,7 @@ namespace GeographicLib {
       x = y = Math::NaN();
     else {
       real rho = m/M;
-      azi0 *= Math::degree();
+      azi0 *= Math::degree<real>();
       x = rho * sin(azi0);
       y = rho * cos(azi0);
     }
@@ -43,7 +43,7 @@ namespace GeographicLib {
                          real& lat, real& lon, real& azi, real& rk)
     const throw() {
     real
-      azi0 = atan2(x, y) / Math::degree(),
+      azi0 = atan2(x, y) / Math::degree<real>(),
       rho = Math::hypot(x, y),
       s = _a * atan(rho/_a);
     bool little = rho <= _a;

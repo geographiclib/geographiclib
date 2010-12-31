@@ -33,7 +33,7 @@ int main() {
     PolarStereographic::UPS.Reverse(true, Math::NaN(), 0.0, lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    PolarStereographic::UPS.Reverse(false, 0.0, Math::NaN(), lat, lon, gamma, k);
+    PolarStereographic::UPS.Reverse(false,0.0, Math::NaN(), lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
   }
   {
@@ -75,13 +75,16 @@ int main() {
   {
     Math::real lat, lon, gamma, k;
     lat = lon = gamma = k = 0;
-    TransverseMercatorExact::UTM.Reverse(0.0, Math::NaN(), 0.0, lat, lon, gamma, k);
+    TransverseMercatorExact::UTM.Reverse(0.0, Math::NaN(), 0.0,
+                                         lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    TransverseMercatorExact::UTM.Reverse(0.0, 0.0, Math::NaN(), lat, lon, gamma, k);
+    TransverseMercatorExact::UTM.Reverse(0.0, 0.0, Math::NaN(),
+                                         lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    TransverseMercatorExact::UTM.Reverse(Math::NaN(), 0.0, 0.0, lat, lon, gamma, k);
+    TransverseMercatorExact::UTM.Reverse(Math::NaN(), 0.0, 0.0,
+                                         lat, lon, gamma, k);
     cout << lon << "\n";
   }
   {
@@ -108,4 +111,3 @@ int main() {
          << " E(sncndn) " << e.E(sn, cn, dn) << "\n";
   }
 }
-    
