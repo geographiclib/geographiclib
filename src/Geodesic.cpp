@@ -159,20 +159,20 @@ namespace GeographicLib {
 
     real phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
 
-    phi = lat1 * Math::degree();
+    phi = lat1 * Math::degree<real>();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
     cbet1 = lat1 == -90 ? eps2 : cos(phi);
     SinCosNorm(sbet1, cbet1);
 
-    phi = lat2 * Math::degree();
+    phi = lat2 * Math::degree<real>();
     // Ensure cbet2 = +epsilon at poles
     sbet2 = _f1 * sin(phi);
     cbet2 = abs(lat2) == 90 ? eps2 : cos(phi);
     SinCosNorm(sbet2, cbet2);
 
     real
-      lam12 = lon12 * Math::degree(),
+      lam12 = lon12 * Math::degree<real>(),
       slam12 = lon12 == 180 ? 0 : sin(lam12),
       clam12 = cos(lam12);      // lon12 == 90 isn't interesting
 
@@ -214,7 +214,7 @@ namespace GeographicLib {
       if (sig12 < 1 || m12x >= 0) {
         m12x *= _a;
         s12x *= _b;
-        a12 = sig12 / Math::degree();
+        a12 = sig12 / Math::degree<real>();
       } else
         // m12 < 0, i.e., prolate and too close to anti-podal
         meridian = false;
@@ -224,7 +224,7 @@ namespace GeographicLib {
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
          // Mimic the way Lambda12 works with calp1 = 0
-        (_f <= 0 || lam12 <= Math::pi() - _f * Math::pi())) {
+        (_f <= 0 || lam12 <= Math::pi<real>() - _f * Math::pi<real>())) {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
@@ -253,7 +253,7 @@ namespace GeographicLib {
         m12x = sq(w1) * _a / _f1 * sin(sig12 * _f1 / w1);
         if (outmask & GEODESICSCALE)
           M12 = M21 = cos(sig12 * _f1 / w1);
-        a12 = sig12 / Math::degree();
+        a12 = sig12 / Math::degree<real>();
         omg12 = lam12 / w1;
       } else {
 
@@ -313,7 +313,7 @@ namespace GeographicLib {
         }
         m12x *= _a;
         s12x *= _b;
-        a12 = sig12 / Math::degree();
+        a12 = sig12 / Math::degree<real>();
         omg12 = lam12 - omg12;
       }
     }
@@ -350,7 +350,7 @@ namespace GeographicLib {
         // Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0;
       if (!meridian &&
-          omg12 < real(0.75) * Math::pi() && // Long difference too big
+          omg12 < real(0.75) * Math::pi<real>() && // Long difference too big
           sbet2 - sbet1 < real(1.75)) {           // Lat difference too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
@@ -394,8 +394,8 @@ namespace GeographicLib {
 
     if (outmask & AZIMUTH) {
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      azi1 = 0 - atan2(-salp1, calp1) / Math::degree();
-      azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
+      azi1 = 0 - atan2(-salp1, calp1) / Math::degree<real>();
+      azi2 = 0 - atan2(-salp2, calp2) / Math::degree<real>();
     }
 
     // Returned value in [0, 180]
@@ -516,7 +516,7 @@ namespace GeographicLib {
       sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
 
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
-      lam12 <= Math::pi() / 6;
+      lam12 <= Math::pi<real>() / 6;
     real
       omg12 = shortline ? lam12 / sqrt(1 - _e2 * sq(cbet1)) : lam12,
       somg12 = sin(omg12), comg12 = cos(omg12);
@@ -538,7 +538,7 @@ namespace GeographicLib {
       // Set return value
       sig12 = atan2(ssig12, csig12);
     } else if (csig12 >= 0 ||
-               ssig12 >= 3 * abs(_f) * Math::pi() * sq(cbet1)) {
+               ssig12 >= 3 * abs(_f) * Math::pi<real>() * sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
 
     } else {
@@ -551,11 +551,11 @@ namespace GeographicLib {
           real
             k2 = sq(sbet1) * _ep2,
             eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
-          lamscale = _f * cbet1 * A3f(eps) * Math::pi();
+          lamscale = _f * cbet1 * A3f(eps) * Math::pi<real>();
         }
         betscale = lamscale * cbet1;
 
-        x = (lam12 - Math::pi()) / lamscale;
+        x = (lam12 - Math::pi<real>()) / lamscale;
         y = sbet12a / betscale;
       } else {                  // _f < 0
         // x = dlat, y = dlong
@@ -565,13 +565,13 @@ namespace GeographicLib {
         real m0, dummy;
         // In the case of lon12 = 180, this repeats a calculation made in
         // Inverse.
-        Lengths(_n, Math::pi() + bet12a, sbet1, -cbet1, sbet2, cbet2,
+        Lengths(_n, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
                 cbet1, cbet2, dummy, x, m0, false, dummy, dummy, C1a, C2a);
-        x = -1 + x/(_f1 * cbet1 * cbet2 * m0 * Math::pi());
+        x = -1 + x/(_f1 * cbet1 * cbet2 * m0 * Math::pi<real>());
         betscale = x < -real(0.01) ? sbet12a / x :
-          -_f * sq(cbet1) * Math::pi();
+          -_f * sq(cbet1) * Math::pi<real>();
         lamscale = betscale / cbet1;
-        y = (lam12 - Math::pi()) / lamscale;
+        y = (lam12 - Math::pi<real>()) / lamscale;
       }
 
       if (y > -tol1 && x >  -1 - xthresh) {

@@ -126,7 +126,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real r,
   using namespace GeographicLib;
   typedef Math::real real;
   real
-    phi = lat0 * Constants::degree(),
+    phi = lat0 * Math::degree<real>(),
     f = r != 0 ? 1/r : 0,
     e2 = f * (2 - f),
     sinphi = sin(phi),
@@ -137,7 +137,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real r,
     dlon = lon1 - lon0;
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
-  return a * Constants::degree() *
+  return a * Math::degree<real>() *
     Math::hypot((lat1 - lat0) * hlat, dlon * hlon);
 }
 
@@ -172,7 +172,7 @@ int main(int argc, char* argv[]) {
       a = Constants::WGS84_a();
       r = Constants::WGS84_r();
     } else if (geo.datum() == "Test_sphere") {
-      a = 20000000/Math::pi();
+      a = 20000000/Math::pi<real>();
       r = 0;
     } else if (geo.datum() == "Test_SRMmax") {
       a = 6400000;
@@ -253,7 +253,7 @@ int main(int argc, char* argv[]) {
       txb.Forward(lon0, lat0, lon0, x0, y0, gam, k);
     else
       x0 = y0 = 0;
-    real lata, lona, xa, ya; 
+    real lata, lona, xa, ya;
     unsigned count = 0;
     real maxerrx = 0, maxerry = 0, maxerr = 0, maxerrk = 0, maxerrr = 0;
     std::cout << std::fixed << std::setprecision(7);

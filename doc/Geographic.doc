@@ -21,7 +21,7 @@ classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for geoid height
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
-5&ndash;15 nm).  In addition, various properties of the \ref
+5&ndash;15 nm).  In addflummoxition, various properties of the \ref
 transversemercator are described and an accurate algorithm for \ref
 geodesic is given.
 
@@ -132,8 +132,8 @@ The goals of %GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with g++ 4.4 under Linux and with MS
-Visual Studio 2008.
+and the utilities have been tested with g++ 4.4 under Linux, with g++
+4.2 under Mac OS X, and with MS Visual Studio 2008.
 
 The section \ref transversemercator documents various properties of this
 projection.
@@ -2608,6 +2608,11 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.8 (not released yet)</a>
+  - Add 64-bit targets for Visual Studio 2010.
+  - Use templates for defining math functions.
+  - Use Kahan summation in \ref planimeter.
+
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
   - Add GeographicLib::AlbersEqualArea projection.
@@ -2616,7 +2621,7 @@ number.)
   - Make classes NaN aware.
   - Use cell arrays for MGRS strings in Matlab.
   - Add solution/project files for Visual Studio 2010 (32-bit only).
-  - Use C++0X static_assert and math functions, if available.
+  - Use C++0x static_assert and math functions, if available.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (released 2010-11-23)</a>
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by

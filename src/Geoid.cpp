@@ -205,7 +205,7 @@ namespace GeographicLib {
     , _cubic(cubic)
     , _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
-    , _degree( Math::degree() )
+    , _degree( Math::degree<real>() )
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {

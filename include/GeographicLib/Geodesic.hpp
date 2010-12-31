@@ -762,7 +762,8 @@ namespace GeographicLib {
      *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the
      *   polygon.
      **********************************************************************/
-    Math::real EllipsoidArea() const throw() { return 4 * Math::pi() * _c2; }
+    Math::real EllipsoidArea() const throw()
+    { return 4 * Math::pi<real>() * _c2; }
     ///@}
 
     /**

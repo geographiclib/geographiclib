@@ -217,9 +217,9 @@ int main(int argc, char* argv[]) {
           real h = g(p.Latitude(), p.Longitude(), gradn, grade);
           std::cout << DMS::Encode(h, 4, DMS::NUMBER) << " "
                     << DMS::Encode(gradn * 1e6, 2, DMS::NUMBER)
-                    << (gradn == gradn ? "e-6 " : " ")
+                    << (Math::isnan(gradn) ? " " : "e-6 ")
                     << DMS::Encode(grade * 1e6, 2, DMS::NUMBER)
-                    << (grade == grade ? "e-6\n" : "\n");
+                    << (Math::isnan(grade) ? "\n" : "e-6\n");
         }
       }
       catch (const std::exception& e) {

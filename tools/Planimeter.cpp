@@ -52,13 +52,35 @@ int main(int argc, char* argv[]) {
   using namespace GeographicLib;
   typedef Math::real real;
 
+  class Accumulator {
+    // Compute a sum following W. M. Kahan, CACM 8(1), 40 (1965).
+  private:
+    real _s, _s2;
+  public:
+    Accumulator() throw() : _s(0), _s2(0) {};
+    void Clear() throw() { _s = 0; _s2 = 0; }
+    // Accumulate y
+    void Add(real y) throw() {
+      _s2 += y;
+      volatile real t = _s + _s2;
+      _s2 += _s - t;
+      _s = t;
+    }
+    void Negate() throw() { _s *= -1; _s2 *= -1; }
+    // Return sum +  y (don't accumulate)
+    real Sum(real y) const throw() { return _s + (_s2 + y); }
+    // Return sum
+    real Sum() const throw() { return _s; }
+  };
+
   class GeodesicPolygon {
   private:
     const Geodesic& _g;
     const real _area0;          // Full ellipsoid area
     unsigned _num;
     int _crossings;
-    real _area, _perimeter, _lat0, _lon0, _lat1, _lon1;
+    Accumulator _area, _perimeter;
+    real _lat0, _lon0, _lat1, _lon1;
     // Copied from Geodesic class
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
@@ -86,7 +108,8 @@ int main(int argc, char* argv[]) {
     void Clear() throw() {
       _num = 0;
       _crossings = 0;
-      _area = _perimeter = 0;
+      _area.Clear();
+      _perimeter.Clear();
       _lat0 = _lon0 = _lat1 = _lon1 = 0;
     }
     void AddPoint(real lat, real lon) throw() {
@@ -98,13 +121,12 @@ int main(int argc, char* argv[]) {
         _g.GenInverse(_lat1, _lon1, lat, lon,
                       Geodesic::DISTANCE | Geodesic::AREA,
                       s12, t, t, t, t, t, S12);
-        _perimeter += s12;
-        if (_area + S12 > _area0/2)
-          _area += S12 - _area0;
-        else if (_area + S12 <= -_area0/2)
-          _area += S12 + _area0;
-        else
-          _area += S12;
+        _perimeter.Add(s12);
+        _area.Add(S12);
+        if (_area.Sum() > _area0/2)
+          _area.Add(-_area0);
+        else if (_area.Sum() <= -_area0/2)
+          _area.Add(_area0);
         _crossings += transit(_lon1, lon);
         _lat1 = lat;
         _lon1 = lon;
@@ -121,37 +143,37 @@ int main(int argc, char* argv[]) {
       _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
                     Geodesic::DISTANCE | Geodesic::AREA,
                     s12, t, t, t, t, t, S12);
-      perimeter = _perimeter + s12;
-      area = _area;
-      if (area + S12 > _area0/2)
-        area += S12 - _area0;
-      else if (area + S12 <= -_area0/2)
-        area += S12 + _area0;
-      else
-        area += S12;
+      perimeter = _perimeter.Sum(s12);
+      Accumulator area1(_area);
+      area1.Add(S12);
+      if (area1.Sum() > _area0/2)
+        area1.Add(-_area0);
+      else if (area1.Sum() <= -_area0/2)
+        area1.Add(_area0);
       int crossings = _crossings + transit(_lon1, _lon0);
       if (crossings & 1) {
-        if (area < 0)
-          area += _area0/2;
+        if (area1.Sum() < 0)
+          area1.Sum(_area0/2);
         else
-          area -= _area0/2;
+          area1.Sum(-_area0/2);
       }
       // area is with the clockwise sense.  If !reverse convert to
       // counter-clockwise convention.
       if (!reverse)
-        area *= -1;
+        area1.Negate();
       // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
       if (sign) {
-        if (area > _area0/2)
-          area -= _area0;
-        else if (area <= -_area0/2)
-          area += _area0;
+        if (area1.Sum() > _area0/2)
+          area1.Add(-_area0);
+        else if (area1.Sum() <= -_area0/2)
+          area1.Add(_area0);
       } else {
-        if (area >= _area0)
-          area -= _area0;
-        else if (area < 0)
-          area += _area0;
+        if (area1.Sum() >= _area0)
+          area1.Add(-_area0);
+        else if (area1.Sum() < 0)
+          area1.Add(_area0);
       }
+      area = area1.Sum();
       return _num;
     }
   };
