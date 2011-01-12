@@ -2,7 +2,7 @@
  * \file Geod.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       m += 3;
-    } else if (arg == "-n") {
+    } else if (arg == "-n") {   // Deprecated and so not documented
       a = 6378388;
       r = 297;
     } else if (arg == "-e") {
