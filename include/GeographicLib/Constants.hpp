@@ -2,7 +2,7 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -408,7 +408,7 @@ namespace GeographicLib {
      **********************************************************************/ 
     static inline Math::real pi() throw() { return Math::pi<real>(); }
     /**
-     * <b>DEPRECATED</b> A synonym for Math::degree<real>().
+     * A synonym for Math::degree<real>().
      **********************************************************************/ 
     static inline Math::real degree() throw() { return Math::degree<real>(); }
     /**
