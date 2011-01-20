@@ -28,9 +28,10 @@ function latlong = geodesicdirect(geodesic, a, r)
   error('Error: executing .m file instead of compiled routine');
 end
 % geodesicdirect.m
-% Matlab .m file for geographic to UTM/UPS conversions
+% Matlab .m file for solving direct geodesic problem
 %
-% Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
-% the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
+% licensed under the LGPL.  For more information, see
+% http://geographiclib.sourceforge.net/
 %
 % $Id$
