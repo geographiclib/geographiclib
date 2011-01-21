@@ -1,5 +1,7 @@
 Options Indexes
 IndexOptions DescriptionWidth=*
+IndexIgnore HEADER.html FOOTER.html
+ReadmeName FOOTER.html
 AddDescription "Bagratuni, Course in Spheroidal Geodesy (1967)" bagratuni67.pdf
 AddDescription "du Séjour (1789), missing page from Google scan" dusejour89-add.pdf
 AddDescription "du Séjour (1789), missing figures from Google scan" dusejour89-fig.pdf
