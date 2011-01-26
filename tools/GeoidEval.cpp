@@ -19,10 +19,8 @@
 int usage(int retval) {
   using namespace GeographicLib;
   std::string
-    geoidpath = Geoid::GeoidPath(),
-    defaultpath = Geoid::DefaultPath();
-  if (geoidpath.empty())
-    geoidpath = "UNDEFINED";
+    defaultpath = Geoid::DefaultGeoidPath(),
+    defaultname = Geoid::DefaultGeoidName();
   ( retval ? std::cerr : std::cout ) <<
 "Usage:\n\
   GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] \\\n\
@@ -48,8 +46,7 @@ height is converted in the indicated direction and the input line is\n\
 echoed to standard output with the height adjusted, thereby allowing\n\
 vertical datum of 3d data to be changed.\n\
 \n\
-By default the EGM96 geoid is used with a 5\' grid.  This may be\n\
-overriden with the -n option.  The name specified should be one of\n\
+The following geoids are supported (some may not be available):\n\
 \n\
                                   bilinear error    cubic error\n\
    name         geoid    grid     max     rms       max     rms\n\
@@ -61,9 +58,10 @@ overriden with the -n option.  The name specified should be one of\n\
    egm2008-2_5  EGM2008   2.5\'    0.135m   3mm      0.031m   1mm\n\
    egm2008-1    EGM2008   1\'      0.025m   1mm      0.003m   1mm\n\
 \n\
-(Some of the geoids may not be available.)  The errors listed here\n\
-are estimates of the quantization and interpolation errors in the\n\
-reported heights compared to the specified geoid.\n\
+By default, the " << defaultname << " geoid is used.  This may changed by\n\
+setting the environment variable GEOID_NAME or with the -n option.  The\n\
+errors listed here are estimates of the quantization and interpolation\n\
+errors in the reported heights compared to the specified geoid.\n\
 \n\
 Cubic interpolation is used to compute the geoid height unless\n\
 -l is specified in which case bilinear interpolation is used.\n\
@@ -72,11 +70,9 @@ small discontinuities in the returned height on cell boundaries.\n\
 The gradients are computed by differentiating the interpolated\n\
 results.\n\
 \n\
-GeoidEval will load the geoid data from the directory specified by\n\
-the -d option.  If this is not provided, it will look up the value of\n\
-GEOID_PATH (currently " << geoidpath << ") in the environment.\n\
-If this is not defined, it will use the compile-time value of\n"
-<< defaultpath << ".\n\
+The geoid data will be loaded from the directory,\n"
+<< defaultpath << ".  This may changed\n\
+by setting the environment variable GEOID_PATH or with the -d option.\n\
 \n\
 By default, the data file is randomly read to compute the geoid\n\
 heights at the input positions.  Usually this is sufficient for\n\
@@ -107,7 +103,7 @@ int main(int argc, char* argv[]) {
   bool cacheall = false, cachearea = false, verbose = false, cubic = true;
   real caches, cachew, cachen, cachee;
   std::string dir;
-  std::string geoid = "egm96-5";
+  std::string geoid = Geoid::DefaultGeoidName();
   std::string zone;
   Geoid::convertflag heightmult = Geoid::NONE;
   for (int m = 1; m < argc; ++m) {

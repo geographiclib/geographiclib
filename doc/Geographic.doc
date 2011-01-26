@@ -2540,8 +2540,7 @@ height is converted in the indicated direction and the input line is
 echoed to standard output with the height adjusted, thereby allowing
 vertical datum of 3d data to be changed.
 
-By default the EGM96 geoid is used with a 5' grid.  This may be
-overriden with the -n option.  The name specified should be one of
+The following geoids are supported (some may not be available):
 
                                   bilinear error    cubic error
    name         geoid    grid     max     rms       max     rms
@@ -2553,9 +2552,10 @@ overriden with the -n option.  The name specified should be one of
    egm2008-2_5  EGM2008   2.5'    0.135m   3mm      0.031m   1mm
    egm2008-1    EGM2008   1'      0.025m   1mm      0.003m   1mm
 
-(Some of the geoids may not be available.)  The errors listed here
-are estimates of the quantization and interpolation errors in the
-reported heights compared to the specified geoid.
+By default, the egm96-5 geoid is used.  This may changed by
+setting the environment variable GEOID_NAME or with the -n option.  The
+errors listed here are estimates of the quantization and interpolation
+errors in the reported heights compared to the specified geoid.
 
 Cubic interpolation is used to compute the geoid height unless
 -l is specified in which case bilinear interpolation is used.
@@ -2564,11 +2564,9 @@ small discontinuities in the returned height on cell boundaries.
 The gradients are computed by differentiating the interpolated
 results.
 
-GeoidEval will load the geoid data from the directory specified by
-the -d option.  If this is not provided, it will look up the value of
-GEOID_PATH (currently UNDEFINED) in the environment.
-If this is not defined, it will use the compile-time value of
-/usr/local/share/GeographicLib/geoids.
+The geoid data will be loaded from the directory,
+/usr/local/share/GeographicLib/geoids.  This may changed
+by setting the environment variable GEOID_PATH or with the -d option.
 
 By default, the data file is randomly read to compute the geoid
 heights at the input positions.  Usually this is sufficient for
@@ -2612,6 +2610,9 @@ number.)
   - Add 64-bit targets for Visual Studio 2010.
   - Use templates for defining math functions.
   - Use Kahan summation in \ref planimeter.
+  - Add GeographicLib::Geoid::DefaultGeoidPath and
+    GeographicLib::Geoid::DefaultGeoidName.
+  - GeoidEval uses environment variable GEOID_NAME as the default geoid.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
