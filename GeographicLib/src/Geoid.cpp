@@ -24,6 +24,9 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOID_DEFAULT_PATH "/usr/local/share/GeographicLib/geoids"
 #endif
 #endif
+#if !defined(GEOID_DEFAULT_NAME)
+#define GEOID_DEFAULT_NAME "egm96-5"
+#endif
 
 #if defined(_MSC_VER)
 // Squelch warnings about unsafe use of getenv
@@ -210,9 +213,7 @@ namespace GeographicLib {
     , _threadsafe(false)        // Set after cache is read
   {
     if (_dir.empty())
-      _dir = GeoidPath();
-    if (_dir.empty())
-      _dir = DefaultPath();
+      _dir = DefaultGeoidPath();
     _filename = _dir + "/" + _name + ".pgm";
     _file.open(_filename.c_str(), ios::binary);
     if (!(_file.good()))
@@ -532,5 +533,21 @@ namespace GeographicLib {
     if (geoidpath)
       path = string(geoidpath);
     return path;
+  }
+
+  std::string Geoid::DefaultGeoidPath() {
+    string path;
+    char* geoidpath = getenv("GEOID_PATH");
+    if (geoidpath)
+      path = string(geoidpath);
+    return path.length() ? path : string(GEOID_DEFAULT_PATH);
+  }
+
+  std::string Geoid::DefaultGeoidName() {
+    string name;
+    char* geoidname = getenv("GEOID_NAME");
+    if (geoidname)
+      name = string(geoidname);
+    return name.length() ? name : string(GEOID_DEFAULT_NAME);
   }
 }

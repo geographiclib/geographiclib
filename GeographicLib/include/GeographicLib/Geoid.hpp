@@ -415,12 +415,28 @@ namespace GeographicLib {
     ///@}
 
     /**
-     * Return the compile-time default path for the geoid data files.
+     * Return the value of the environment variable GEOID_PATH, if set;
+     * otherwise, return the compile-time default path for geoid data files.
+     **********************************************************************/
+    static std::string DefaultGeoidPath();
+
+    /**
+     * Return the value of the environment variable GEOID_NAME, if set;
+     * otherwise return egm96-5.  The Geoid class does not call this function;
+     * it is just provided as a convenience for a calling program when
+     * constructing a Geoid object.
+     **********************************************************************/
+    static std::string DefaultGeoidName();
+
+    /**
+     * <b>DEPRECATED</b> Return the compile-time default path for the geoid
+     * data files.
      **********************************************************************/
     static std::string DefaultPath();
 
     /**
-     * Return the value of the environment variable GEOID_PATH.
+     * <b>DEPRECATED</b> Return the value of the environment variable
+     * GEOID_PATH.
      **********************************************************************/
     static std::string GeoidPath();
   };
