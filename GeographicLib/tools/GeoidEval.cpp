@@ -44,7 +44,9 @@ With the -msltohae or -haetomsl options, each line of input should\n\
 also include a height (in meters) as the last item.  In this case the\n\
 height is converted in the indicated direction and the input line is\n\
 echoed to standard output with the height adjusted, thereby allowing\n\
-vertical datum of 3d data to be changed.\n\
+vertical datum of 3d data to be changed.  MSL is used here as a short\n\
+hand for the height above the geoid.  (Typically the geoid differs by\n\
+a few meters from mean sea level.)\n\
 \n\
 The following geoids are supported (some may not be available):\n\
 \n\
