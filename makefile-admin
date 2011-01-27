@@ -8,7 +8,10 @@ STAGE=$(HOME)/web
 WEBSTAGE=$(STAGE)/geographic-web
 DATASTAGE=$(STAGE)/geographic-files
 
-distrib-html:
+geodesic-papers/biblio.html: geodesic-biblio.txt biblio.sh
+	sh biblio.sh < $^ > $@
+
+distrib-html: geodesic-papers/biblio.html
 	rsync -av --exclude .svn --exclude '*~' --exclude '#*' --delete --delete-excluded index.html tm.html geod.html bessel-errata.html geodesic-papers $(WEBSTAGE)/htdocs/
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
