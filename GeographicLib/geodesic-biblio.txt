@@ -30,7 +30,8 @@ $Id$
    ''Détermination géometrique de la perpendiculaire à la méridienne
    tracée par M. Cassini [Geometrical determination of the perpendicular
    to the meridian drawn by Jacques Cassini]'',
-   Mém. de l'Acad. Roy. des Sciences de Paris, 406--416 (1733, publ. 1735).[[BR]]
+   Mém. de l'Acad. Roy. des Sciences de Paris,
+   406--416 (1733, publ. 1735).[[BR]]
    http://books.google.com/books?id=GOAEAAAAQAAJ&pg=PA406 [[BR]]
    alt: http://gallica.bnf.fr/ark:/12148/bpt6k3530m.image.f566
  * A. C. Clairaut,[[BR]]
@@ -67,7 +68,8 @@ $Id$
    alt: http://math.dartmouth.edu/~euler/pages/E214.html [[BR]]
    German translation: ''Grundzüge der sphärischen Trigonometrie'' in
    ''Zwei Abhandlungen über sphärische Trigonometrie'' by E. Hammer,
-   Ostwald's Klass. ex. Wiss., No. 73 (Engelmann, Leipzig 1896), pp. 3--39.[[BR]]
+   Ostwald's Klass. ex. Wiss., No. 73 (Engelmann, Leipzig 1896),
+   pp. 3--39.[[BR]]
    http://books.google.com/books?id=dPbhs0MSJOgC&pg=PA3
  * L. Euler,[[BR]]
    ''Élémens de la trigonométrie sphéroïdique tirés de la méthode des
@@ -82,7 +84,8 @@ $Id$
    ''Nouvelle méthode pour résoudre les équations littérales par le moyen
    des séries [New method for solving explicit equations by means of a
    series]'',
-   Mém. de l'Acad. Roy. des Sciences de Berlin '''24''', 251--326 (1768, publ. 1770),
+   Mém. de l'Acad. Roy. des Sciences de Berlin '''24''',
+   251--326 (1768, publ. 1770),
    in
    ''Oeuvres de Lagrange'', Vol. 3 (Gauthier-Villars, Paris, 1869),
    pp. 5--73.[[BR]]
@@ -130,7 +133,8 @@ $Id$
    ''Mémoire sur les opérations trigonométriques, dont les résultats
    dépendent de la figure de la terre [Trigonometric operations which
    depend on the shape of the earth]'',
-   Mém. de l'Acad. Roy. des Sciences de Paris, 352--383 (1787, publ. 1789).[[BR]]
+   Mém. de l'Acad. Roy. des Sciences de Paris, 352--383
+   (1787, publ. 1789).[[BR]]
    http://books.google.com/books?id=0uIEAAAAQAAJ&pg=PA352 (figures missing)
  * A. M. Legendre,[[BR]]
    ''Analyse des triangles tracés sur la surface d'un sphéroïde
@@ -178,9 +182,9 @@ $Id$
  * B. Oriani,[[BR]]
    ''Elementi di trigonemetria sferoidica
    [Elements of spheroidal trigonometry]'',
-   Part 1: Mem. dell'Ist. Naz. Ital. 1(1), 118--198 (Bologna, 1806);
-   Part 2: 2(1), 1--58 (Bologna, 1808);
-   Part 3: 2(2), 1--58 (Bologna, 1810);
+   Part 1: Mem. dell'Ist. Naz. Ital. '''1'''(1), 118--198 (Bologna, 1806);
+   Part 2: '''2'''(1), 1--58 (Bologna, 1808);
+   Part 3: '''2'''(2), 1--58 (Bologna, 1810);
    Addendum: Mem. dell'Imp. Reg. Ist. del Regno Lombardo-Veneto '''4''',
    325--331 (Milan, 1833).[[BR]]
    http://www.archive.org/stream/memoriedellistit11isti#page/118 [[BR]]
@@ -245,7 +249,8 @@ $Id$
  * L. Puissant,[[BR]]
    ''Nouvel essai de trigonométrie sphéroïdique
    [New essay on spheroidal trigonometry]'',
-   Mém. l'Acad. Roy. des Sciences de l'Inst. de France '''10''', 457--529 (1831).[[BR]]
+   Mém. l'Acad. Roy. des Sciences de l'Inst. de France '''10''',
+   457--529 (1831).[[BR]]
    http://books.google.com/books?id=KcjOAAAAMAAJ&pg=RA2-PA457 [[BR]]
    errata: http://books.google.com/books?id=KcjOAAAAMAAJ&pg=PR7
  * J. J. Littrow,[[BR]]
@@ -313,7 +318,8 @@ $Id$
  * J. Ivory,[[BR]]
    ''A direct method of finding the shortest distance between two points on
    the Earth's surface when their geographical position is given'',
-   Phil. Mag. '''8''', 30--34 and 114--117 (misprinted as 134--137) (1830).[[BR]]
+   Phil. Mag. '''8''',
+   30--34 and 114--117 (misprinted as 134--137) (1830).[[BR]]
    http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA30 [[BR]]
    http://books.google.com/books?id=j4EqAAAAYAAJ&pg=PA134
  * F. T. Poselger,[[BR]]
@@ -386,7 +392,8 @@ $Id$
  * C. G. J. Jacobi and E. Luther,[[BR]]
    ''Solution nouvelle d'un problème fondamental de géodésie
    [A new solution to a fundamental problem of geodesy]'',
-   Astron. Nachr. '''41'''(974), 209--216 (1855); '''42'''(1006), 337--358 (1856).[[BR]]
+   Astron. Nachr. '''41'''(974), 209--216 (1855);
+   '''42'''(1006), 337--358 (1856).[[BR]]
    http://adsabs.harvard.edu/full/1855AN.....41..209J [[BR]]
    http://adsabs.harvard.edu/full/1856AN.....42..337J [[BR]]
    also in Jour. Crelle '''53''', 335--365 (1857).[[BR]]
@@ -439,7 +446,7 @@ $Id$
  * P. O. Bonnet,[[BR]]
    ''Mémoire sur la théorie générale des surfaces
    [On the general theory of surfaces]'',
-   Jour. l'École Polytechnique 19(32), 1--146 (1848).[[BR]]
+   Jour. l'École Polytechnique '''19'''(32), 1--146 (1848).[[BR]]
    http://books.google.com/books?id=VGo_AAAAcAAJ&pg=PA1
  * G. Monge and J. Liouville,[[BR]]
    ''Application de l'Analyse à la Géometrie
@@ -544,7 +551,8 @@ $Id$
    Länge einer geodätische Linie auf dem Erdsphäroid als Function der
    Bogenlänge, wenn Breite und Azimuth des Anfangspunks gegeben sind
    [The direct geodesic problem]'',
-   Astron. Nachr. '''89'''(2119), 103--110 and (2120), 113--128 (1877).[[BR]]
+   Astron. Nachr. '''89'''(2119), 103--110;
+   '''89'''(2120), 113--128 (1877).[[BR]]
    http://adsabs.harvard.edu/full/1877AN.....89..103W [[BR]]
    http://adsabs.harvard.edu/full/1877AN.....89..113W
  * C. Winterberg,[[BR]]
@@ -558,7 +566,7 @@ $Id$
    ''Über die geodätische Linie: Dritte allgemeine Aufgabe. Auflösung
    der sphäroidischen Dreicke [Solution of geodesic triangles]'',
    Astron. Nachr. '''95'''(2271), 223--228;
-   (2272) 239--250; (2274) 271--280 (1879).[[BR]]
+   '''95'''(2272) 239--250; '''95'''(2274) 271--280 (1879).[[BR]]
    http://adsabs.harvard.edu/full/1879AN.....95..223W [[BR]]
    http://adsabs.harvard.edu/full/1879AN.....95..239W [[BR]]
    http://adsabs.harvard.edu/full/1879AN.....95..271W
