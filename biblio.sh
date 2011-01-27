@@ -1,4 +1,5 @@
 #! /bin/sh
+# $Id$
 cat <<'EOF'
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
    "http://www.w3.org/TR/html4/strict.dtd">
@@ -21,8 +22,14 @@ some cases I have been able to scan the missing pages, see
 <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>,
 know of errors, omissions, etc.
 </p>
-    <ul>
+<p>This bibliography was started on 2009-06-06 (at
+<a href=" http://trac.osgeo.org/proj/wiki/GeodesicCalculations">
+http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>).
+The latest update was on
 EOF
+head -1 $1 | cut -f4 -d' ' | sed 's/$/./'
+echo "</p><ul>"
+tail --lines +2 $1 |
 sed -e 's/\*/<li>/' -e 's/ *\[\[BR\]\]/<br>/' \
     -e "s%'''\([0-9][0-9]*\)'''%<b>\1</b>%g" \
     -e "s% ''% <i>%g" -e "s%\([^ ]\)''%\1</i>%g" \
