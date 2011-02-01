@@ -360,6 +360,9 @@ namespace GeographicLib {
         std::numeric_limits<T>::quiet_NaN() :
         std::numeric_limits<T>::max();
     }
+    /**
+     * A synonym for NaN<real>().
+     **********************************************************************/
     static inline real NaN() throw() { return NaN<real>(); }
 
     /**
@@ -388,6 +391,9 @@ namespace GeographicLib {
         std::numeric_limits<T>::infinity() :
         std::numeric_limits<T>::max();
     }
+    /**
+     * A synonym for infinity<real>().
+     **********************************************************************/
     static inline real infinity() throw() { return infinity<real>(); }
   };
 
@@ -428,19 +434,42 @@ namespace GeographicLib {
     /**
      * @return the equatorial radius of WGS84 ellipsoid
      **********************************************************************/
-    static inline Math::real WGS84_a() throw() { return 6378137 * meter(); }
+    template<typename T>
+    static inline T WGS84_a() throw() { return T(6378137) * meter<T>(); }
+    /**
+     * A synonym for WGS84_a<real>().
+     **********************************************************************/ 
+    static inline Math::real WGS84_a() throw() { return WGS84_a<real>(); }
     /**
      * @return the reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
-    static inline Math::real WGS84_r() throw() { return real(298.257223563L); }
+    template<typename T>
+    static inline T WGS84_r() throw() {
+      // 298.257223563 = 3393 * 87903691 / 1000000000
+      return (T(3393) * T(87903691)) / T(1000000000);
+    }
+    /**
+     * A synonym for WGS84_r<real>().
+     **********************************************************************/ 
+    static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
      * @return the central scale factor for UTM
      **********************************************************************/
-    static inline Math::real UTM_k0() throw() {return real(0.9996L); }
+    template<typename T>
+    static inline T UTM_k0() throw() {return T(9996) / T(10000); } // 0.9996
+    /**
+     * A synonym for UTM_k0<real>().
+     **********************************************************************/ 
+    static inline Math::real UTM_k0() throw() { return UTM_k0<real>(); }
     /**
      * @return the central scale factor for UPS
      **********************************************************************/
-    static inline Math::real UPS_k0() throw() { return real(0.994L); }
+    template<typename T>
+    static inline T UPS_k0() throw() { return T(994) / T(1000); } // 0.994
+    /**
+     * A synonym for UPS_k0<real>().
+     **********************************************************************/ 
+    static inline Math::real UPS_k0() throw() { return UPS_k0<real>(); }
     ///@}
 
     /** \name SI units
@@ -452,16 +481,23 @@ namespace GeographicLib {
      * This is unity, but this lets the internal system of units be changed if
      * necessary.
      **********************************************************************/
-    static inline Math::real meter() throw() { return real(1); }
+    template<typename T>
+    static inline T meter() throw() { return T(1); }
+    /**
+     * A synonym for meter<real>().
+     **********************************************************************/ 
+    static inline Math::real meter() throw() { return meter<real>(); }
     /**
      * @return the number of meters in a kilometer.
      **********************************************************************/
-    static inline Math::real kilometer() throw() { return 1000 * meter(); }
+    static inline Math::real kilometer() throw()
+    { return 1000 * meter<real>(); }
     /**
      * @return the number of meters in a nautical mile (approximately 1 arc
      *   minute)
      **********************************************************************/
-    static inline Math::real nauticalmile() throw() { return 1852 * meter(); }
+    static inline Math::real nauticalmile() throw()
+    { return 1852 * meter<real>(); }
     ///@}
 
     /** \name Anachronistic British units
@@ -471,7 +507,7 @@ namespace GeographicLib {
      * @return the number of meters in an international foot.
      **********************************************************************/
     static inline Math::real foot() throw()
-    { return real(0.0254L) * 12 * meter(); }
+    { return real(0.0254L) * 12 * meter<real>(); }
     /**
      * @return the number of meters in a yard.
      **********************************************************************/
@@ -501,7 +537,7 @@ namespace GeographicLib {
      * @return the number of meters in a US survey foot.
      **********************************************************************/
     static inline Math::real surveyfoot() throw()
-    { return real(1200) / real(3937) * meter(); }
+    { return real(1200) / real(3937) * meter<real>(); }
     ///@}
   };
 

@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -206,8 +206,8 @@ namespace GeographicLib {
     : _name(name)
     , _dir(path)
     , _cubic(cubic)
-    , _a( Constants::WGS84_a() )
-    , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
+    , _a( Constants::WGS84_a<real>() )
+    , _e2( (2 - 1/Constants::WGS84_r<real>())/Constants::WGS84_r<real>() )
     , _degree( Math::degree<real>() )
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read

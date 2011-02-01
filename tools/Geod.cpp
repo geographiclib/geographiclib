@@ -128,8 +128,8 @@ int main(int argc, char* argv[]) {
   bool linecalc = false, inverse = false, arcmode = false,
     dms = false, full = false;
   real
-    a = Constants::WGS84_a(),
-    r = Constants::WGS84_r();
+    a = Constants::WGS84_a<real>(),
+    r = Constants::WGS84_r<real>();
   real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
   real azi2sense = 0;
   int prec = 3;

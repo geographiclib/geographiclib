@@ -2,8 +2,9 @@
  * \file AlbersEqualArea.cpp
  * \brief Implementation for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/AlbersEqualArea.hpp"
@@ -271,20 +272,20 @@ namespace GeographicLib {
   }
 
   const AlbersEqualArea
-  AlbersEqualArea::CylindricalEqualArea(Constants::WGS84_a(),
-                                        Constants::WGS84_r(),
+  AlbersEqualArea::CylindricalEqualArea(Constants::WGS84_a<real>(),
+                                        Constants::WGS84_r<real>(),
                                         real(0), real(1), real(0), real(1),
                                         real(1));
 
   const AlbersEqualArea
-  AlbersEqualArea::AzimuthalEqualAreaNorth(Constants::WGS84_a(),
-                                           Constants::WGS84_r(),
+  AlbersEqualArea::AzimuthalEqualAreaNorth(Constants::WGS84_a<real>(),
+                                           Constants::WGS84_r<real>(),
                                            real(1), real(0), real(1), real(0),
                                            real(1));
 
   const AlbersEqualArea
-  AlbersEqualArea::AzimuthalEqualAreaSouth(Constants::WGS84_a(),
-                                           Constants::WGS84_r(),
+  AlbersEqualArea::AzimuthalEqualAreaSouth(Constants::WGS84_a<real>(),
+                                           Constants::WGS84_r<real>(),
                                            real(-1), real(0), real(-1), real(0),
                                            real(1));
 

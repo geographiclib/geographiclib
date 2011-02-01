@@ -3,7 +3,7 @@
  * \brief Command line utility for azimuthal equidistant and Cassini-Soldner
  * projections
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -64,8 +64,8 @@ int main(int argc, char* argv[]) {
   bool azimuthal = false, cassini = false, gnomonic = false, reverse = false;
   real lat0 = 0, lon0 = 0;
   real
-    a = Constants::WGS84_a(),
-    r = Constants::WGS84_r();
+    a = Constants::WGS84_a<real>(),
+    r = Constants::WGS84_r<real>();
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
     if (arg == "-r")

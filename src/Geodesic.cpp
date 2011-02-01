@@ -2,7 +2,7 @@
  * \file Geodesic.cpp
  * \brief Implementation for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -71,7 +71,8 @@ namespace GeographicLib {
     C4coeff();
   }
 
-  const Geodesic Geodesic::WGS84(Constants::WGS84_a(), Constants::WGS84_r());
+  const Geodesic Geodesic::WGS84(Constants::WGS84_a<real>(),
+                                 Constants::WGS84_r<real>());
 
   Math::real Geodesic::SinCosSeries(bool sinp,
                                     real sinx, real cosx,

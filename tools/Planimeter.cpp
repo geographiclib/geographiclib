@@ -2,8 +2,9 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
  *
@@ -179,8 +180,8 @@ int main(int argc, char* argv[]) {
   };
 
   real
-    a = Constants::WGS84_a(),
-    r = Constants::WGS84_r();
+    a = Constants::WGS84_a<real>(),
+    r = Constants::WGS84_r<real>();
   bool reverse = false, sign = false;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
