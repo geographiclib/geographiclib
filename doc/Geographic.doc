@@ -993,8 +993,10 @@ References
    translated by C. F. F. Karney and R. E. Deakin.  Preprint:
    <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.
  - F. R. Helmert,
-   Die Mathematischen und Physikalischen Theorieen der H&ouml;heren
-   Geod&auml;sie, vol. 1 (Teubner, Leipzig, 1880).
+   <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">
+   Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
+   Aeronautical Chart and Information Center (St. Louis, 1964),
+   Chaps. 5&ndash;7.
  - E. B. Christoffel,
    Allgemeine Theorie der geod&auml;tischen Dreiecke (1868),
    in "Gesammelte Mathematische Abhandlungen",
@@ -1011,8 +1013,8 @@ References
  - J. Danielsen,
    The Area under the Geodesic,
    Survey Review 30 (232), 61&ndash;66 (1989).
- - A collection of some older papers on geodesics is available at
-   http://trac.osgeo.org/proj/wiki/GeodesicCalculations#TheHistory
+ - A collection of some papers on geodesics is available at
+   http://geographiclib.sf.net/geodesic-papers/biblio.html
 
 \section geoddesc Description of algorithm
 
@@ -2610,11 +2612,12 @@ number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.8 (not released yet)</a>
   - Add 64-bit targets for Visual Studio 2010.
-  - Use templates for defining math functions.
+  - Use templates for defining math functions and some constants.
   - Use Kahan summation in \ref planimeter.
   - Add GeographicLib::Geoid::DefaultGeoidPath and
     GeographicLib::Geoid::DefaultGeoidName.
   - GeoidEval uses environment variable GEOID_NAME as the default geoid.
+  - Update references for Helmert, transverse Mercator paper
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
