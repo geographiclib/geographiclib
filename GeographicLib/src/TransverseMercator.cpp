@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -210,8 +210,9 @@ namespace GeographicLib {
   }
 
   const TransverseMercator
-  TransverseMercator::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
-                          Constants::UTM_k0());
+  TransverseMercator::UTM(Constants::WGS84_a<real>(),
+                          Constants::WGS84_r<real>(),
+                          Constants::UTM_k0<real>());
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)

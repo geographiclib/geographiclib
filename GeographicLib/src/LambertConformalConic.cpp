@@ -2,8 +2,9 @@
  * \file LambertConformalConic.cpp
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/LambertConformalConic.hpp"
@@ -319,7 +320,8 @@ namespace GeographicLib {
   }
 
   const LambertConformalConic
-  LambertConformalConic::Mercator(Constants::WGS84_a(), Constants::WGS84_r(),
+  LambertConformalConic::Mercator(Constants::WGS84_a<real>(),
+                                  Constants::WGS84_r<real>(),
                                   real(0), real(1));
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,

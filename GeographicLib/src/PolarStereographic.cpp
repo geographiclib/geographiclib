@@ -2,7 +2,7 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -44,8 +44,9 @@ namespace GeographicLib {
   }
 
   const PolarStereographic
-  PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_r(),
-                          Constants::UPS_k0());
+  PolarStereographic::UPS(Constants::WGS84_a<real>(),
+                          Constants::WGS84_r<real>(),
+                          Constants::UPS_k0<real>());
 
   // This formulation converts to conformal coordinates by tau = tan(phi) and
   // tau' = tan(phi') where phi' is the conformal latitude.  The formulas are:

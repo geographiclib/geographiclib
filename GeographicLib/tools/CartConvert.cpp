@@ -2,7 +2,7 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
   typedef Math::real real;
   bool localcartesian = false, reverse = false;
   real
-    a = Constants::WGS84_a(),
-    r = Constants::WGS84_r();
+    a = Constants::WGS84_a<real>(),
+    r = Constants::WGS84_r<real>();
   real lat0 = 0, lon0 = 0, h0 = 0;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);

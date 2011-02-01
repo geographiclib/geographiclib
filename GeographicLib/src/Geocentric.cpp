@@ -2,7 +2,7 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -34,8 +34,8 @@ namespace GeographicLib {
       throw GeographicErr("Minor radius is not positive");
   }
 
-  const Geocentric Geocentric::WGS84(Constants::WGS84_a(),
-                                     Constants::WGS84_r());
+  const Geocentric Geocentric::WGS84(Constants::WGS84_a<real>(),
+                                     Constants::WGS84_r<real>());
 
   void Geocentric::Forward(real lat, real lon, real h,
                            real& x, real& y, real& z) const throw() {

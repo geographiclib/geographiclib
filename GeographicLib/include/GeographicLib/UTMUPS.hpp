@@ -2,7 +2,7 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -295,7 +295,8 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius() throw() { return Constants::WGS84_a(); }
+    static Math::real MajorRadius() throw()
+    { return Constants::WGS84_a<real>(); }
 
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
@@ -304,7 +305,7 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real InverseFlattening() throw()
-    { return Constants::WGS84_r(); }
+    { return Constants::WGS84_r<real>(); }
     ///@}
   };
 
