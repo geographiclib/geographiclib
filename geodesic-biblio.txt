@@ -690,6 +690,10 @@ $Id$
    unpublished report dated Aug. 28, 1975.[[BR]]
    http://geographiclib.sf.net/geodesic-papers/vincenty75b.pdf
  * R. H. Rapp,[[BR]]
+   ''Geometric geodesy, Part I'',
+   Ohio State Univ. (1991), Chap. 4.[[BR]]
+   http://hdl.handle.net/1811/24333
+ * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part II'',
    Ohio State Univ. (1993), Chap. 1.[[BR]]
    http://hdl.handle.net/1811/24409
