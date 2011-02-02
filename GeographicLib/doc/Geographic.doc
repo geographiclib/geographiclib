@@ -2617,7 +2617,7 @@ number.)
   - Add GeographicLib::Geoid::DefaultGeoidPath and
     GeographicLib::Geoid::DefaultGeoidName.
   - GeoidEval uses environment variable GEOID_NAME as the default geoid.
-  - Update references for Helmert, transverse Mercator paper
+  - Update references for Helmert, transverse Mercator paper.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
