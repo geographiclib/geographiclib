@@ -582,7 +582,7 @@ $Id$
    http://books.google.com/books?id=qt2CAAAAIAAJ&pg=PA212 [[BR]]
    English translation:
    by Aeronautical Chart and Information Center (St. Louis, 1964). [[BR]]
-   http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf
+   http://geographiclib.sf.net/geodesic-papers/helmert80-en.html
  * M. Sadebeck,[[BR]]
    ''Hilfstafel für die Differenz zwischen dem sphäroidischen und dem
    sphärischen Längenunterschiede zweier Punkte auf der Erdoberfläche
