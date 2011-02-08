@@ -697,3 +697,7 @@ $Id$
    ''Geometric geodesy, Part II'',
    Ohio State Univ. (1993), Chap. 1.[[BR]]
    http://hdl.handle.net/1811/24409
+ * C. F. F. Karney,[[BR]]
+   ''Geodesics on an ellipsoid of revolution'',
+   (Feb. 2011).[[BR]]
+   http://arxiv.org/abs/1102.1215
