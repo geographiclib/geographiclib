@@ -2,7 +2,7 @@
  * \file TransverseMercatorTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
       testing = false;
       series = true;
     } else
-      return usage(arg != "-h");
+      return usage(!(arg == "-h" || arg == "--help"));
   }
 
   real e, a;

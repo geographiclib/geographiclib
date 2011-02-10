@@ -2516,7 +2516,7 @@ Example: the height of the EGM96 geoid at Timbuktu
 The first number is the height of the geoid and the 2nd and 3rd are its
 slopes in the northerly and easterly direction.  Convert a point in UTM
 zone 18N from MSL to HAE
- - echo 531595 4468135 23 | GeoidEval -msltohae -z 18N\n=>
+ - echo 531595 4468135 23 | GeoidEval --msltohae -z 18N\n=>
    531595 4468135 -10.842
 
 In addition, this utility requires the installation of the geoid data
@@ -2526,7 +2526,7 @@ Here is the usage (obtained from "GeoidEval -h")
 \verbatim
 Usage:
   GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] \
-            [-z zone] [-msltohae] [-haetomsl] [-v] [-h]
+            [-z zone] [--msltohae] [--haetomsl] [-v] [-h]
 
 Read in positions on standard input and print out the corresponding
 geoid heights on standard output.  In addition print the northerly and
@@ -2541,7 +2541,7 @@ specified then the specified zone is prepended to each line of input
 (which must be in UTM/UPS coordinates).  This allows a file with UTM
 eastings and northings in a single zone to be used as standard input.
 
-With the -msltohae or -haetomsl options, each line of input should
+With the --msltohae or --haetomsl options, each line of input should
 also include a height (in meters) as the last item.  In this case the
 height is converted in the indicated direction and the input line is
 echoed to standard output with the height adjusted, thereby allowing
@@ -2621,8 +2621,11 @@ number.)
   - Use Kahan summation in \ref planimeter.
   - Add GeographicLib::Geoid::DefaultGeoidPath and
     GeographicLib::Geoid::DefaultGeoidName.
-  - GeoidEval uses environment variable GEOID_NAME as the default geoid.
+  - \ref geoideval uses environment variable GEOID_NAME as the default geoid.
   - Update references for Helmert, transverse Mercator paper.
+  - Accept --help as well as -h to produce help from the utilities.
+  - Add --msltohae and --haetomsl as \ref geoideval options (and don't
+    document the single hyphen versions).
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.

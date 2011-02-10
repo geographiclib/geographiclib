@@ -2,7 +2,7 @@
  * \file GeoidEval.cpp
  * \brief Command line utility for evaluation geoid heights
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -24,7 +24,7 @@ int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage:\n\
   GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] \\\n\
-            [-z zone] [-msltohae] [-haetomsl] [-v] [-h]\n\
+            [-z zone] [--msltohae] [--haetomsl] [-v] [-h]\n\
 $Id$\n\
 \n\
 Read in positions on standard input and print out the corresponding\n\
@@ -40,7 +40,7 @@ specified then the specified zone is prepended to each line of input\n\
 (which must be in UTM/UPS coordinates).  This allows a file with UTM\n\
 eastings and northings in a single zone to be used as standard input.\n\
 \n\
-With the -msltohae or -haetomsl options, each line of input should\n\
+With the --msltohae or --haetomsl options, each line of input should\n\
 also include a height (in meters) as the last item.  In this case the\n\
 height is converted in the indicated direction and the input line is\n\
 echoed to standard output with the height adjusted, thereby allowing\n\
@@ -129,9 +129,9 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       m += 4;
-    } else if (arg == "-msltohae")
+    } else if (arg == "--msltohae" || arg == "-msltohae")
       heightmult = Geoid::GEOIDTOELLIPSOID;
-    else if (arg == "-haetomsl")
+    else if (arg == "--haetomsl" || arg == "-haetomsl")
       heightmult = Geoid::ELLIPSOIDTOGEOID;
     else if (arg == "-z") {
       if (++m == argc) return usage(1);
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-v")
       verbose = true;
     else
-      return usage(arg != "-h");
+      return usage(!(arg == "-h" || arg == "--help"));
   }
 
   int retval = 0;
