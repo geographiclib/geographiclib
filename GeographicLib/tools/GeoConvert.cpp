@@ -2,7 +2,7 @@
  * \file GeoConvert.cpp
  * \brief Command line utility for geographic coordinate conversions
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
     else if (arg == "-t")
       zone = UTMUPS::UTM;
     else
-      return usage(arg != "-h");
+      return usage(!(arg == "-h" || arg == "--help"));
   }
 
   GeoCoords p;

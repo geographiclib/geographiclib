@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
           return 1;
       }
     } else
-      return usage(arg != "-h");
+      return usage(!(arg == "-h" || arg == "--help"));
   }
 
   const Geodesic geod(a, r);

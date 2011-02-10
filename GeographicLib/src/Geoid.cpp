@@ -29,7 +29,7 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 #endif
 
 #if defined(_MSC_VER)
-// Squelch warnings about unsafe use of getenv
+// Squelch warnings about unsafe use of getenv and copy
 #pragma warning (disable: 4996)
 #endif
 
