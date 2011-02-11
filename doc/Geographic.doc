@@ -55,18 +55,11 @@ For more information, see http://geographiclib.sourceforge.net/
  - \ref start
  - \ref organization
  - \ref transversemercator
-   - \ref tmvarious
-   - \ref extend
    - \ref testmerc
-   - \ref tmerrors
    - \ref tmseries
  - \ref geodesic
-   - \ref geoddesc
-   - \ref geodarea
    - \ref testgeod
-   - \ref geoderrors
    - \ref geodseries
-   - \ref geodmisc
  - \ref geocentric
  - \ref geoid
    - \ref geoidinst
@@ -359,47 +352,17 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
-\b NOTE 1: Some of the material in this section has been included in
- - Charles F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
-   Transverse Mercator with an accuracy of a few nanometers,</a>
-   J. Geodesy (2011);
-   preprint
-   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
- .
-<a href="http://geographiclib.sf.net/tm.html">
-http://geographiclib.sf.net/tm.html</a> provides a
-resource page for this paper.
+GeographicLib::TransverseMercator and
+GeographicLib::TransverseMercatorExact provide accurate implelmentations
+of the transverse Mercator projection.  The \ref transversemercatortest
+utility provides an interface to these classes.
 
-\b NOTE 2: The figures in this section are relatively small in order to
-allow them to be displayed quickly.  The "Fig. N" link beneath each
-figure points to a PDF version of the figure.  These are in vector
-format and allow the figures to be magnified to show the details more
-clearly.  The numbering of the figures matches that in the paper cited
-above.
-
-The primary sources for the material presented here are:
- - J. P. Snyder,
-   <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395">Map Projections: A
-   Working Manual</a>,
-   USGS Professional Paper 1395 (1987), pp. 48&ndash;66.
-   This contains an overview of the transverse Mercator projection (and
-   many other projections). However, the approximations given for
-   this projection are rather crude.  The terminology for the various
-   transverse Mercator map projections is taken form J. P. Snyder,
-   Flattening the Earth (Chicago Univ. Press, 1993).
+References
  - L. Kr&uuml;ger, <a
    href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
-   The derives the series solution for the transverse Mercator
-   projection of an ellipsoid.  This gives very good accuracy and this
-   method or an extension of it to higher-order provides the most accurate
-   algorithms for the projection valid in some zone near the central
-   meridian.  It is also of interest to see the systematic use of
-   logarithms in the pre-electronic and pre-mechanical age (when
-   computers were human).
  - L. P. Lee,
    Conformal Projections Based on Elliptic Functions,
    (B. V. Gutsell, Toronto, 1976), 128pp.,
@@ -408,249 +371,19 @@ The primary sources for the material presented here are:
    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    Part V, pp. 67&ndash;101,
    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
-   Projections Based On Jacobian Elliptic Functions</a>, gives closed
-   form expressions for the transverse Mercator projection based on work
-   by E. H. Thompson (1945).  This may be purchased for a modest sum.  Other
-   useful sections are Part I, pp. 1&ndash;3 and Part II, pp. 4&ndash;14.
+   Projections Based On Jacobian Elliptic Functions</a>.
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   Transverse Mercator with an accuracy of a few nanometers,</a>
+   J. Geodesy (2011);
+   preprint
+   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
+   resource page
+   <a href="http://geographiclib.sf.net/tm.html">tm.html</a>.
  .
-
-\section tmvarious Survey of transverse Mercator projections
-
-The following is adapted from Lee (1976) particularly pp. 92&ndash;101.
-The terminology is from Snyder (1993) pp. 159&ndash;161.
-
-The transverse Mercator projection is a conformal projection of the
-ellipsoid in which the central meridian is straight.  Within these
-constrains there are various projections that differ in how the scale
-varies along the central meridian.  The simplest such projection from an
-algorithmic point of view is the spherical transverse Mercator
-projection (labeled Gauss-Schreiber in Fig. 1(a)) which consists of a
-conformal projection from the ellipsoid to a sphere followed by the
-spherical transverse Mercator projection.  This results in a projection
-whose scale on the central meridian increases from the equator to the
-pole (by an amount proportional to the flattening).  In the
-Gauss-Kr&uuml;ger projection, the scale along the central meridian is
-held constant.  This projection is usually expressed as a series which
-is valid only sufficiently close to the central meridian.  (This is
-implemented by GeographicLib::TransverseMercator.)  The projection can
-however be expressed in closed form in terms of the Thompson transverse
-Mercator projection (where the scale along the central meridian
-decreases from the equator to the pole by an amount proportional to the
-flattening).  (This method of computing the Gauss-Kr&uuml;ger projection
-is implemented by GeographicLib::TransverseMercatorExact.)
-
-The graticules (lines of constant latitude and longitude) for all these
-projections are shown in Figs. 1(a&ndash;c).  These figures all use an
-ellipsoid with eccentricity \e e = 1/10 (inverse flattening = 10 (3
-sqrt(11) + 10) = 199.5, i.e., somewhat flatter than the WGS84 ellipsoid)
-and the projections have all been scaled so that the distance from the
-equator to the north pole is unity.  One eighth of the ellipsoid is
-shown in these figures, 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
-0<sup>o</sup> <= longitude <= 90<sup>o</sup>.  To obtain the graticule
-for the entire ellipsoid, reflect these figures in \e x = 0, \e y = 0,
-and \e y = 1.  The blue lines show latitude and longitude at multiples
-of 10<sup>o</sup>.  The green lines show 1<sup>o</sup> intervals for
-longitude in [80, 90] and latitude in [0, 10].  In all three figures,
-longitude = 0<sup>o</sup> lies on \e x = 0 and longitude =
-90<sup>o</sup> lies on \e y = 1.
-
-<center>
-<img src="gauss-schreiber-graticule-a.png"
-width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
-(scaled)">
-<a href="gauss-schreiber-graticule-a.pdf">Fig. 1(a)</a>
-</center>\n
-The graticule for the spherical transverse Mercator projection.
-The equator lies on \e y = 0.
-Compare this with Lee, Fig. 1 (right), which shows the graticule for
-half a sphere, but note that in his notation \e x and \e y have switched
-meanings.  The graticule for the ellipsoid differs from that for a
-sphere only in that the latitude lines have shifted slightly.  (The
-conformal transformation from an ellipsoid to a sphere merely relabels
-the lines of latitude.)  This projection places the point latitude =
-0<sup>o</sup>, longitude = 90<sup>o</sup> at infinity.
-
-<center>
-<img src="gauss-krueger-graticule-a.png"
-width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
-(scaled)">
-<a href="gauss-krueger-graticule-a.pdf">Fig. 1(b)</a>
-</center>\n
-The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
-The equator lies on \e y = 0 for longitude < 81<sup>o</sup>; beyond
-this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
-(upper), which shows the graticule for the International Ellipsoid.  Lee,
-Fig. 46, shows the graticule for the entire ellipsoid.  This projection
-(like the Thompson projection) projects the ellipsoid to a finite area.
-
-<center>
-<img src="thompson-tm-graticule-a.png"
-width=667 height=305 alt="Thompson transverse Mercator graticule
-(scaled)">
-<a href="thompson-tm-graticule-a.pdf">Fig. 1(c)</a>
-</center>\n
-The graticule for the Thompson transverse Mercator projection.  The
-equator lies on \e y = 0 for longitude < 81<sup>o</sup>; at longitude =
-81<sup>o</sup>, it turns by 120<sup>o</sup> and heads for \e y = 1.
-Compare this with Lee, Fig. 43, which shows the graticule for the
-International Ellipsoid.  Lee, Fig. 44, shows the graticule for the
-entire ellipsoid.  This projection (like the Gauss-Kr&uuml;ger
-projection) projects the ellipsoid to a finite area.
-
-Of the three transverse Mercator projections given here the
-Gauss-Kr&uuml;ger projection is by far the most important.  It is the
-basis of the UTM system.  If "transverse Mercator projection" is used
-without further elaboration, then, nearly always, it refers to
-the Gauss-Kr&uuml;ger projection.
-
-\section extend Properties far from the central meridian
-
-The divergent behavior of the spherical projection as latitude =
-0<sup>o</sup>, longitude = 90<sup>o</sup> is approached is unsurprising
-given the behavior of the standard Mercator projection at the poles.  On
-the other hand, the lack of divergence in the Gauss-Kr&uuml;ger
-projection (and similarly in the Thompson projection) is perhaps
-puzzling.  We explore the behavior more carefully in this section.
-
-Firstly, the Gauss-Kr&uuml;ger projection \e does have a singularity at
-latitude = 0<sup>o</sup> and longitude = 90<sup>o</sup>(1 - \e e), where
-\e e is the eccentricity of the ellipsoid.  The choice of \e e = 1/10
-for Figs. 1&ndash;3 was made to ensure that one of the graticule lines
-(longitude = 81<sup>o</sup>) covered this singularly.  The singularly is
-relatively benign.  The Thompson projection contains a cube root
-singularity with causes the corner in the equator.  The transformation
-from Thompson to Gauss-Kr&uuml;ger "repairs" this to lowest order so
-that there's no kink in the equation.  Nevertheless, a weaker
-singularity remains (causing a discontinuous change in the radius of
-curvature for the equator).  Thus Gauss-Kr&uuml;ger has a branch point
-at latitude = 0<sup>o</sup> and longitude = 90<sup>o</sup>(1 - \e e) and
-the projection is analytic provided this point is avoided.  However the
-results obtained for the projection will depend on which sheet of the
-projection is used or which route around the branch point is taken.
-
-The "standard" convention for projecting a geographic position is to
-follow the central meridian from the equator to the target latitude,
-then to follow the line of constant latitude to the target longitude.
-This is equivalent to placing two branch cuts on the equator in the
-longitude ranges +/- [90<sup>o</sup>(1 - \e e), 90<sup>o</sup>(1 + \e
-e)].  For points on equator for |longitude| > 90<sup>o</sup>(1 - \e e),
-the path should go to the north of branch point.  This convention
-corresponds to Fig. 1(b), above, after suitable reflections to cover the
-ellipsoid and to Lee, Fig. 46.
-
-In order to explore the behavior to the right of the equator in Fig. 1(b),
-we define an "extended" domain for the projection, this consists of the
-union of
- - 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
-   0<sup>o</sup> <= longitude <= 90<sup>o</sup>
- - -90<sup>o</sup> < latitude <= 0<sup>o</sup> and
-   90<sup>o</sup>(1 - \e e) <= longitude <= 90<sup>o</sup>
- .
-The rule for reaching the second area here is to move on the central
-meridian to a small positive latitude, move at constant latitude to the
-target longitude and then to move on a meridian to the target latitude.
-In this case, the branch cut emanates in a south-westerly direction from
-the branch point.  Following this prescription the range of the
-projection now consists of the union of
- - 0 <= \e x and
-   0 <= \e y/(\e k<sub>0</sub> \e a) <= E(\e e<sup>2</sup>)
- - K(1 - \e e<sup>2</sup>) - E(1 - \e e<sup>2</sup>)
-   <= \e x/(\e k<sub>0</sub> \e a) and \e y <= 0
- .
-where \e k<sub>0</sub> is the central scale factor, \e a is the major
-radius of the ellipsoid, K and E are complete elliptic integrals.
-Setting the optional argument \e extendp = true in the constructor for
-GeographicLib::TransverseMercatorExact provides access to this extended
-domain.
-
-Figures 4&ndash;5 illustrate the properties of the Gauss-Kr&uuml;ger
-transverse Mercator projection in this extended domain.  These figures
-use an ellipsoid with eccentricity 1/10 (as in Figs. 1&ndash;3) and with
-\e a = 1/E(0.01) = 0.6382 and \e k<sub>0</sub> = 1.  The branch point in
-this case lies at lat = 0<sup>o</sup>, lon = 81<sup>o</sup> or \e x =
-(K(0.99) - E(0.99))/E(0.01) = 1.71, \e y = 0.
-
-<center>
-<img src="gauss-krueger-graticule.png"
-width=673 height=323 alt="Gauss-Krueger transverse Mercator
-graticule">\n
-<a href="gauss-krueger-graticule.pdf">Fig. 3(a)</a>
-</center>
-Figure 4 shows the graticule the extended domain.  The blue lines show
-latitude and longitude at multiples of 10<sup>o</sup>.  The green lines
-show 1<sup>o</sup> intervals for longitude in [80, 90] and latitude in
-[-5, 10].
-
-<center>
-<img src="gauss-krueger-convergence-scale.png"
-width=673 height=323 alt="Gauss-Krueger transverse Mercator
-convergence and scale">
-<a href="gauss-krueger-convergence-scale.pdf">Fig. 3(b)</a>
-</center>\n
-Figure 5 shows the convergence and scale for the Gauss-Kr&uuml;ger
-transverse Mercator projection in the extended domain.  The blue lines
-emanating from the top left corner (the north pole) are lines of
-constant convergence.  Convergence = 0<sup>o</sup> is given by the
-dog-legged line joining the points (0,1), (0,0), (1.71,0), (1.71,-inf).
-Convergence = 90<sup>o</sup> is given by the line y = 1.  The other
-lines show multiples of 10<sup>o</sup> between 0<sup>o</sup> and
-90<sup>o</sup>.  The other blue, the green and the black lines show
-scale = 1 thru 2 at intervals of 0.1, 2 thru 15 at intervals of 1, and
-15 thru 35 at intervals of 5.  Multiples of 5 are shown in black,
-multiples of 1 are shown in blue, and the rest are shown in green.
-Scale = 1 is given by the line segment (0,0) to (0,1).  The red line
-shows the equator between lon = 81<sup>o</sup> and 90<sup>o</sup>.  The
-scale and convergence at the branch point are 1/\e e = 10 and
-0<sup>o</sup>, respectively.
-
-Symmetries in the projection can now be employed to extend the
-Gauss-Kr&uuml;ger transverse Mercator projection with arbitrary rules
-for how to circumvent the branch point.  The symmetries are equivalent
-to placing mirrors on the lines segments
- - 0 <= \e x, \e y = 1
- - \e x = 0, 0 <= \e y <= 1
- - 0 <= \e x <= 1.71, \e y = 0
- - \e x = 1.71, \e y <= 0
-
-In order to understand the projection better, it is instructive to
-examine the Thompson projection in the extended domain.
-<center>
-<img src="thompson-tm-graticule.png"
-width=661 height=321 alt="Thompson transverse Mercator graticule">
-<a href="thompson-tm-graticule.pdf">Fig. 3(c)</a>
-</center>\n
-Figure 6 shows the graticule for the Thompson transverse Mercator
-projection for the extended domain.  The range of the projection is the
-rectangular region shown
- - 0 <= \e u <= K(\e e<sup>2</sup>),
-   0 <= \e v <= K(1 - \e e<sup>2</sup>)
- .
-The coloring of the lines is the same as Fig. 3(a), except that latitude
-lines extended down to -10<sup>o</sup> and a red line has been added
-showing the line \e y = 0 for \e x > 1.71 in the Gauss-Kr&uuml;ger
-projection (Fig. 3(a)).  The extended Thompson projection figure has
-reflection symmetry on all the four sides of Fig. 3(c).
-
-In transforming from Thompson to Gauss-Kr&uuml;ger, the right angle at
-lower right corner of Fig. 3(c) expands by 3 to 270<sup>o</sup> to produce
-the outside corner at \e x = 1.71 and \e y = 0 in Fig. 3(a).  The top right
-corner of Fig. 3(c) represents the south pole and this is transformed to
-infinity in the extended Gauss-Kr&uuml;ger projection.  Despite the
-apparent similarities, the behaviors of the extended Thompson projection
-near the north and south poles (top left and top right corners in
-Fig. 3(c)) are rather different.  The singularity for the north pole is
-merely the result of the singularity of a polar coordinate system (e.g.,
-longitude is undefined at the north pole).  Encircling the north pole,
-causes longitude to increase by 360<sup>o</sup>, as expected.  On the
-other hand, encircling the south pole increases the longitude by
-360<sup>o</sup> \e e = 36<sup>o</sup>.  The same behavior is exhibited
-by the extended Gauss-Kr&uuml;ger projection.  The point latitude =
--1<sup>o</sup>, longitude = 90<sup>o</sup> projects to a point [2.65,1]
-in Fig. 3(a).  If we now travel along this latitude line to longitude =
-54<sup>o</sup> = 90<sup>o</sup> - 36<sup>o</sup> we arrive back at the
-same projected position.  In the extended domain, the Thompson and the
-Gauss-Kr&uuml;ger projections are not tightly tied to the globe but can
-slip around it longitudinally.
+The algorithm for GeographicLib::TransverseMercator is based on
+Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
+based on Lee (1976).
 
 \section testmerc Test data for the transverse Mercator projection
 
@@ -703,77 +436,18 @@ The contents of the file are as follows:
  .
 (a total of 287000 entries).  The entries for lat < 0<sup>o</sup> and
 lon in [90<sup>o</sup> (1 - \e e), 90<sup>o</sup>] use the "extended"
-domain for the transverse Mercator projection explained in \ref extend.
-The first 258000 entries have lat >= 0<sup>o</sup> and are suitable for
-testing implementations following the standard convention.
-
-The errors in the forward and reverse projections are converted into a
-ground distance (e.g., by dividing the error in the projection by the
-scale factor).  The errors in the convergence and in the scale may be
-large because these quantities vary rapidly near singular points (for
-convergence at the lat = 90<sup>o</sup> and for both convergence and
-scale at lat = 0<sup>o</sup>, lon = 90<sup>o</sup> (1 - \e e)).  We
-account for this by expressing the error as the sum of a constant and a
-term proportional to the gradient of the quantity being measured.
-
-\section tmerrors Accuracy of transverse Mercator projection
-
-Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
-Reverse projections
- - error in position < 9 nm (5 pm for long doubles)
- .
-These errors apply with the standard convention for the transverse
-Mercator projection.  In this case, we use only test samples with
-non-negative values of latitude.
-
-For the extended transverse Mercator projection (Fig. 3(a)), the errors
-given above apply only for latitude >= -15<sup>o</sup>.  For more negative
-latitudes, the errors become large.  For example for latitude >=
--58<sup>o</sup>, the maximum error is 1 mm (and the scale has become 124
-million).  This increase in the error is due to the use of the Thompson
-projection in the computation.  Looking at the graticule for this
-projection (Fig. 3(c)), we see that the Thompson scale becomes small close
-to the south pole resulting in errors (measured as a ground distance)
-which diverges (the errors vary inversely with scale).  For example at
-lat = -58<sup>o</sup>, the scale for the Thompson projection is about
-240000 times smaller than on the central meridian and the errors have
-increased by about the same factor.  If necessary, this problem could be
-avoided by reformulating the Thompson projection to place the origin at
-the South pole.
-
-If GeographicLib::TransverseMercatorExact is modified to use long
-doubles (a 64-bit floating fraction) instead of of doubles (53-bit
-floating fraction) then the error in the position is about 5 pm, for
-latitude >= -15<sup>o</sup>.
-
-Errors in GeographicLib::TransverseMercator.  For both Forward and
-Reverse projections within 3900 km using the 6th-order series
-(TM_TX_MAXPOW = 6, the default)
- - error in position < 5 nm
- .
-Further from the central meridian, the errors grow rapidly.  For |\e x|
-= 10700 km (approx 68<sup>o</sup> from the central median), the error in
-position is about 1 mm.  When used in the UTM system, \e x is typically
-restricted to |\e x| <= 500 km.  Within |\e x| <= 500 km, the errors
-using the 6th-order series are dominated by round-off rather than the
-number of terms.  If GeographicLib::TransverseMercator is modified to
-use long double instead of double, the error in the position within the
-the UTM region is about 2 pm.
-
-If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
-to give the 4th-order approximation, then the error is about 210 nm
-for |\e x| <= 500 km (the region used for UTM coordinates).
+domain for the transverse Mercator projection explained in Sec. 5 of
+<a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.  The first
+258000 entries have lat >= 0<sup>o</sup> and are suitable for testing
+implementations following the standard convention.
 
 \section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  The method entails performing first a spherical
-transverse Mercator projection and approximating the warp of this to
-Gauss-Kr&uuml;ger projection as a series in \e n = (\e a - \e b)/(\e a +
-\e b).  This is accurate to about 200 nm within the UTM domain.  Here we
-present the series extended to 10th order.  The series expanded to order
-<i>n</i><sup>30</sup> are given in <a href="tmseries30.html">
-tmseries30.html</a>.
+Mercator projection.  This is accurate to about 200 nm within the UTM
+domain.  Here we present the series extended to 10th order.  The series
+expanded to order <i>n</i><sup>30</sup> are given in <a
+href="tmseries30.html"> tmseries30.html</a>.
 
 By default, GeographicLib::TransverseMercator uses the 6th-order
 approximation. The preprocessor variable TM_TX_MAXPOW can be used to
@@ -913,51 +587,6 @@ alpha[10]=   77911515623232821/12014330904576000 * n^10;
  beta[10]=   7028504530429621/72085985427456000 * n^10;
 \endverbatim
 
-The following table gives the truncation error when the series above are
-truncated to order \e n<sup><i>J</i></sup>.  The error is the maximum of
-the errors for the forward and reverse projections, converted in both
-cases to a true distance (in meters).  It is expressed as a function of
-the geodesic distance (in km) from the central meridian.  This table was
-computed for the WGS84 ellipsoid.  When implementing with floating point
-arithmetic on a computer, there is an additional rounding error incurred;
-this adds 2.2 m for floats, 4.9 nm for doubles and 2.0 pm for long
-doubles.
-\verbatim
-dist J=2     J=4     J=5     J=6     J=7     J=8     J=10    J=12
-   0 3.0e-02 1.9e-07 5.9e-10 1.7e-12 6.6e-15 2.4e-17 3.5e-22 5.6e-27
- 500 3.2e-02 2.1e-07 7.3e-10 2.4e-12 9.4e-15 3.7e-17 6.6e-22 1.3e-26
-1000 3.7e-02 3.1e-07 1.2e-09 4.8e-12 2.1e-14 9.8e-17 2.3e-21 5.9e-26
-1500 4.7e-02 5.3e-07 2.4e-09 1.1e-11 5.8e-14 3.1e-16 9.4e-21 3.2e-25
-2000 6.3e-02 1.0e-06 5.3e-09 2.9e-11 1.7e-13 1.0e-15 4.3e-20 1.9e-24
-2500 8.8e-02 2.1e-06 1.2e-08 8.0e-11 5.4e-13 3.8e-15 2.1e-19 1.3e-23
-3000 1.3e-01 4.5e-06 3.1e-08 2.3e-10 1.9e-12 1.5e-14 1.2e-18 9.9e-23
-3500 1.9e-01 9.6e-06 8.0e-08 7.2e-10 6.8e-12 6.8e-14 7.3e-18 8.6e-22
-4000 3.0e-01 2.1e-05 2.2e-07 2.4e-09 2.7e-11 3.2e-13 5.0e-17 8.6e-21
-4500 4.7e-01 5.0e-05 6.2e-07 8.3e-09 1.2e-10 1.7e-12 3.9e-16 1.0e-19
-5000 7.7e-01 1.3e-04 1.9e-06 3.2e-08 5.5e-10 9.9e-12 3.5e-15 1.4e-18
-5500 1.3e+00 3.4e-04 6.6e-06 1.4e-07 3.0e-09 6.8e-11 3.8e-14 2.3e-17
-6000 2.4e+00 1.0e-03 2.6e-05 6.8e-07 1.9e-08 5.6e-10 5.2e-13 5.3e-16
-6500 4.7e+00 3.6e-03 1.2e-04 4.1e-06 1.5e-07 5.9e-09 9.6e-12 1.7e-14
-7000 1.0e+01 1.5e-02 6.6e-04 3.2e-05 1.6e-06 8.7e-08 2.7e-10 9.1e-13
-7500 2.5e+01 7.7e-02 5.0e-03 3.5e-04 2.6e-05 2.0e-06 1.3e-08 9.4e-11
-8000 7.6e+01 5.7e-01 5.9e-02 6.5e-03 7.6e-04 9.2e-05 1.5e-06 2.6e-08
-8500 3.3e+02 8.0e+00 1.5e+00 2.9e-01 5.9e-02 1.3e-02 6.3e-04 3.4e-05
-9000 2.9e+03 3.9e+02 1.6e+02 7.4e+01 3.5e+01 1.7e+01 4.4e+00 1.2e+00
-\endverbatim
-
-<center>
-<img src="gauss-krueger-error.png"
-width=672 height=552 alt="Truncation error for Gauss-Krueger series">
-<a href="gauss-krueger-error.pdf">Fig. 2</a>
-</center>\n
-The truncation error for the series for the Gauss-Kr&uuml;ger transverse
-Mercator projection.  The blue curves show the truncation error for the
-order of the series \e J = 2 (top) thru \e J = 12 (bottom).  The red
-curves show the combined truncation and round-off errors for
- - float and \e J = 4 (top)
- - double and \e J = 6 (middle)
- - long double and \e J = 8 (bottom)
-
 The high-order expansions for \e alpha and \e beta were produced by the
 Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
 distribution).  To run, start Maxima and enter
@@ -998,19 +627,6 @@ References
    Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>,
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5&ndash;7.
- - E. B. Christoffel,
-   Allgemeine Theorie der geod&auml;tischen Dreiecke (1868),
-   in "Gesammelte Mathematische Abhandlungen",
-   vol. 1, chap. 16, pp. 297&ndash;346 (Teubner, Leipzig, 1910).
- - H. F. Rainsford,
-   <a href="http://dx.doi.org/10.1007/BF02527187">
-   Long geodesics on the ellipsoid</a>,
-   Bull. Geod. 37 (1), 12&ndash;22 (1955).
- - T. Vincenty,
-   <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">Direct and Inverse
-   Solutions of Geodesics on the Ellipsoid with Application of Nested
-   Equations</a>,
-   Survey Review 23 (176), 88&ndash;93 (1975).
  - J. Danielsen,
    The Area under the Geodesic,
    Survey Review 30 (232), 61&ndash;66 (1989).
@@ -1020,159 +636,6 @@ References
    Feb. 2011.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sf.net/geodesic-papers/biblio.html
-
-\section geoddesc Description of algorithm
-
-The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
-and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
-the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
-the two end points.  (The azimuth is the heading measured clockwise from
-north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes
-you beyond point 2 not back to point 1.)  The reduced length of the
-geodesic, \e m12, is the rate at which the second point moves as the
-geodesic is rotated about the first point.  Christoffel (1868) proved
-that this is equal to the rate at which the first point moves when the
-geodesic is rotated about the second point.
-
-Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2,
-\e lon2, \e azi2, \e m12.  This is the <b>direct</b> geodesic problem.
-(If \e s12 is sufficiently large that the geodesic wraps more than
-halfway around the earth, there will be another geodesic between the
-points with a smaller \e s12.)
-
-Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1,
-\e azi2, \e s12, \e m12.  This is the <b>inverse</b> geodesic problem.
-Usually, the solution to the inverse problem is unique.  In cases where
-there are multiple solutions (all with the same \e s12, of course), all
-the solutions can be easily generated once a particular solution is
-provided.
-
-The framework for solving geodesic problems on the ellipsoid was laid
-down by Bessel (1825) who showed how the problem may be transferred to
-an "auxiliary sphere" where the latitude \e phi has been replaced by the
-reduced latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).
-On this sphere, the geodesic is a great circle and the azimuth is the
-same as on the ellipsoid.  However, the ellipsoidal distance is related to
-the great circle distance by an integral; and the ellipsoidal longitude
-is similarly related to the longitude on the auxiliary sphere.  In the
-case of small \e f, Bessel developed series expansions for the integrals
-and provided a systematic solution to the direct problem.  Helmert
-(1880) extended Bessel's treatment by giving an expression for the
-reduced length of a geodesic for the ellipsoid.  The "azimuthal scale" of
-the azimuthal equidistant projection about point 1 is given by \e s12/\e
-m12.
-
-The algorithms included here are based on the work of Bessel (1825) and
-Helmert (1880).  Key points are:
-  - Inclusion of sufficient terms in the series to give accuracy at the
-    round-off level for doubles and long doubles.
-  - Reverting the distance series so that the direct problem can be
-    solved non-iteratively.
-  - Calculation of the reduced length for the geodesic.
-  - Solution the inverse problem via Newton's method, using the reduced
-    length to compute the needed derivative.
-  .
-Vincenty (1975) has provided algorithms for the direct and inverse
-geodesic problems based in the series given by Rainsford (1955) (based,
-in turn, on Bessel).  However Vincenty's methods were designed for use
-on the desk calculators of that era and are not optimal (in terms of
-accuracy and robustness) for a general purpose computer.  The
-distinguishing features of the algorithms presented here compared to
-Vincenty's are:
-  - Accuracy to close to the round-off limit (i.e., 15 nm for doubles).
-  - Complete solution of the inverse problem.  (Vincenty's inverse
-    algorithm sometimes fails.)
-  - Return the reduced length of the geodesic.
-
-The series expansions for the integrals are obtained using <a
-href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>.  In
-this release, we use a 6th-order expansions.  This is sufficient to
-maintain accuracy for doubles for the SRMmax ellipsoid (\e a = 6400 km,
-\e f = 1/150).  However, the preprocessor macro GEOD_ORD can be used to
-select any order up to 8.  (If using long doubles, with a 64-bit
-fraction, the default order is 7.)  The series is evaluated by a
-combination of Horner's method and Clenshaw summation.  For the direct
-problem, we use a reversion of the series for the distance to compute
-the spherical arc length and thereby complete the solution without the
-need to iterate.
-
-The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the
-series for the distance and longitude integrals.  In addition this
-includes code to format the results for inclusion into C++ code.  You
-will need to have Maxima installed to use this code.  The comments at
-the top of <a href="geod.mac">geod.mac</a> illustrate how to run it.  It
-takes about 10s to generate the 8th order series.
-
-For the inverse problem, we rearrange the points so that the point 1 is
-the one closest to a pole and is in the southern hemisphere and the
-point 2 is to the north and east of point 1.  We consider geodesics
-leaving point 1 with azimuth \e alpha1 in [0, pi] and we determine the
-longitude where these geodesics first intersect the latitude = \e lat2.
-The longitude is an increasing function of \e alpha1 and we use Newton's
-method to determine the value of \e alpha1 for which the longitude
-matches \e lon2.  This then gives the desired geodesic.
-
-This class also returns the arc length \e a12 on the auxiliary sphere
-and allows distances to be specified in these terms.  See the -a option
-to \ref geod.
-
-\section geodarea Geodesic area
-
-Area computations are supported via \e S12 the area between the geodesic
-and the equator, i.e., the area of the quadrilateral with vertices
-\verbatim
-  (phi1, lambda1); (phi2, lambda2);
-  (0,    lambda1); (0,    lambda2);
-\endverbatim
-In a reformulation of  Danielsen's method, \e S12 may be expressed as
-\verbatim
-  S12 = S(sigma2) - S(sigma1)
-  S(sigma) = c^2*alpha + e^2*a^2 * cos(alpha0)*sin(alpha0) * I4(sigma)
-  I4(sigma) = - integrate(
-       (t(ep^2) - t(k^2*sin(sigma)^2)) / (ep^2 - k^2*sin(sigma)^2),
-       sigma)
-  t(x) = sqrt(1+1/x) * asinh(sqrt(x)) + x
-
-  a = major radius
-  c = authalic radius (area of ellipsoid = 4*pi*c^2)
-  e = eccentricity
-  ep = second eccentricity, ep^2 = e^2/(1-e^2)
-  alpha = azimuth of geodesic
-  alpha0 = azimuth at the equator crossing
-  k = ep*cos(alpha0)
-  sigma = arc length on auxiliary sphere (measured from the equator)
-\endverbatim
-The term \e I4(\e sigma) can be expanded as a trigonometric series which
-is amenable to Clenshaw summation; see \ref geodseries.  Using \e S12,
-it is simple to compute the area of any geodesic polygon.  This
-functionality is provided by \ref planimeter.
-
-A major source of errors in this formulation (particularly for small
-polygons) is round-off when computing \e E<sub>12</sub> = \e
-alpha<sub>2</sub> - \e alpha<sub>1</sub>.  However, \e E<sub>12</sub> is
-merely the geodesic access for a geodesic quadilateral on a \e sphere
-with vertices
-\verbatim
-  (beta1, omega1); (beta2, omega2);
-  (0,     omega1); (0,     omega2);
-\endverbatim
-where \e beta is the latitude on the sphere and \e omega the longitude.
-\e E<sub>12</sub> is also the area of the quadrilateral on a unit
-sphere.  When computing areas when the end-points of the Geodesic are
-given, %GeographicLib uses
-\verbatim
-                                tan(beta1/2) + tan(beta2/2)  
-  tan(E12/2) = tan(omega12/2) -------------------------------
-                              1 + tan(beta1/2) * tan(beta2/2)
-\endverbatim
-where \e omega<sub>12</sub> = \e omega<sub>2</sub> - \e
-omega<sub>1</sub>.  This result can be derived from the formula for the
-area of a spherical triangle in terms of two edges and the included
-angle; it is the spherical generalization of the familiar trapezoidal
-formula for plane areas (\e x<sub>2</sub> - \e x<sub>1</sub>) (\e
-y<sub>1</sub> + \e y<sub>2</sub>)/2.  Summing \e E<sub>12</sub> over all
-the edges of a spherical polygon provides an accurate method of computing
-its area.
 
 \section testgeod Test data for geodesics
 
@@ -1257,39 +720,15 @@ Add, e.g., "-p 6", to the call to Geod to change the precision of the
 output.  Adding "-f" causes Geod to print all 9 fields specifying the
 geodesic (in the same order as the test set).
 
-\section geoderrors Accuracy of geodesic calculation
-
-We regard all the test data as "exact".  For each member of the test
-set, 6 error distances are computed.  (The direct problem is solved from
-both ends and the maximum of the errors is used.)
- -# The error in the position of point 2 for the direct problem.
- -# Error in the direction of geodesic at point 2 for the direct
-    problem scaled by the major radius.  (This is the direction in 3D
-    space to allow canceling variations in longitude and azimuth near
-    the poles.)
- -# Error in m12 for the direct problem.
- -# Error in s12 for the inverse problem.
- -# Error in the azimuths at points 1 and 2 for the inverse problem
-    scaled by m12.
- -# Consistency of the azimuths at points 1 and 2 for the inverse
-    problem.  Compute geodesic from each endpoint using the computed
-    azimuths; compare positions on each geodesic at midpoint (for long
-    geodesics) or a distance equal to the major radius beyond each end
-    of the geodesic (for short geodesics).
- .
-The last check verifies that \e azi1 and \e azi2 returned by the inverse
-solution correspond to the same path and is important, e.g., when point
-1 and point 2 are near opposite poles.  To guard against a canceling
-error, the calculations in last error estimate use a long double
-version of the direct geodesic calculation (which is about 2000 times
-more accurate than the double version).  The maximum of the resulting
-errors in less than 15 nm for the double version and 7 pm for the long
-double version.
-
 \section geodseries Expansions for geodesics
 
 We give here the series expansions for the various geodesic integrals
-valid to order <i>f</i><sup>8</sup>.
+valid to order <i>f</i><sup>8</sup>.   In this release, we use a
+6th-order expansions.  This is sufficient to maintain accuracy for
+doubles for the SRMmax ellipsoid (\e a = 6400 km, \e f = 1/150).
+However, the preprocessor macro GEOD_ORD can be used to select any order
+up to 8.  (If using long doubles, with a 64-bit fraction, the default
+order is 7.)
 
 In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
 f) and / indicates real division (3/5 = 0.6).  The equations need to be
@@ -1540,116 +979,6 @@ C4[6] = + (1/4684680 - 1/5688540*ep2) * k2^6
 C4[7] = + 1/26254800 * k2^7;
 \endverbatim
 
-
-\section geodmisc Miscellaneous information on geodesics
-
-When either point is at a pole, the azimuth is defined by keeping the
-longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
-taking the limit \e eps -> 0 from above.
-
-The following prescription allows you to ascertain when there are
-multiple solutions to the inverse problem and to generate the complete
-set.
- - \e lat1 = \e -lat2 (with neither at a pole).  If \e azi1 = \e azi2,
-   the geodesic is unique.  Otherwise there are two geodesics and the
-   second one is obtained by setting [\e azi1, \e azi2] = [\e azi2, \e
-   azi1].  (This occurs when the longitude difference is near +/-
-   180<sup>o</sup> for oblate ellipsoids.)
- - \e lon2 = \e lon1 +/- 180<sup>o</sup> (with neither at a pole).  If \e
-   azi1 = 0<sup>o</sup> or +/- 180<sup>o</sup>, the geodesic is unique.
-   Otherwise there are two geodesics and the second one is obtained by
-   setting [\e azi1, \e azi2] = [-\e azi1, -\e azi2].  (This occurs when
-   the \e lat2 is near -\e lat1 for prolate ellipsoids.)
- - Points 1 and 2 at opposite poles.  There are infinitely many
-   geodesics which can be generated by setting [\e azi1, \e azi2] = [\e
-   azi1, \e azi2] + [\e d, -\e d], for arbitrary \e d.  (For spheres,
-   this prescription applies when points 1 and 2 are antipodal.)
- - \e s12 = 0 (coincident points).  There are infinitely many geodesics
-   which can be generated by setting [\e azi1, \e azi2] = [\e azi1, \e
-   azi2] + [\e d, \e d], for arbitrary \e d.
-
-A rather large fraction of the code in GeographicLib::Geodesic deals
-merely with the spherical trigonometry required to do great circle
-calculations.  When high accuracy is required, care has to be taken to
-use stable methods for computing angles.  Typically, we represent angles
-internally with the pair [sin(\e theta), cos(\e theta)].  This expands
-the number of representable angles by about 4; in particular, it allows
-angles very close to all the cardinal points to be resolved.  We use
-expressions for sin(\e theta) and cos(\e theta) which avoid large
-cancellations.  Having a comprehensive test set as described in \ref
-testgeod helps to identify problems.  This representation allows input
-arguments which are multiples of 90<sup>o</sup> to be represented
-exactly.
-
-The code for the inverse treats equatorial and meridional geodesics
-specially.  All other case are handled by the same code (implementing
-Newton's method) with tests to select appropriate starting guess in
-difference regimes.  Specifying a zero inverse flattening in Geodesic
-constructor is equivalent to zero flattening (i.e., a sphere).  The
-method accommodates this case without any special coding.
-
-In order to limits the enumeration of cases, the inverse problem is
-brought to a canonical form by interchanging the points and changing the
-signs of the coordinates.  The effect of these changes are undone at the
-end by applying sign changes to the final calls to atan2 to give the
-azimuths.
-
-The derivative needed for Newton's method for the inverse problem is
-given in terms of the reduced length.  The reduced length can also be
-used to apply Newton's method to solve problems such as finding the
-distance between a point and a geodesic line.
-
-Convergence failures with Newton's method for the inverse problem is
-signaled by negating the distance (and the arc distance and reduced
-length) and by reversing the azimuths.  This convention was chosen as it
-allows both detection of the problem and subsequent use of the values
-(assuming that they are approximately correct).  It is expected that the
-method converges for all models of the earth and for any two input
-points. Please report all cases where this does not happen.
-
-Geographic coordinates which are close to zero are quantized (by adding
-and subtracting 1/16 deg).  This allows certain cases of underflow to be
-avoided.  This limits the accuracy to which coordinates can be specified
-to 0.7 pm.  This should not be a problem since the overall accuracy of
-the algorithms is only 15 nm.
-
-You can specify a \e negative flattening to get a prolate ellipsoid.  The
-rule is that \e b is the radius of the axis of symmetry (the polar
-radius), that \e a is the equatorial radius, and that \e b = \e a (1 -
-\e f).  The direct solution needed no modification.  The inverse
-solution required a generalization in the way starting points for
-Newton's method are chosen; in addition a test are added to the case
-when the endpoints are on the same meridian to determine if a shorter
-non-meridional geodesic exists.
-
-Most planets and satellites are approximated by oblate ellipsoids.
-However, satellites whose rotation frequency is tidally locked to a
-month may be prolate (as example is Saturn's moon, Tethys).  Such
-satellites are typically considerably more eccentric that the earth and
-it may be necessary to increase the order of the series used in order to
-maintain accuracy.
-
-GeodesicLine::Position provides a way of doing a series of direct
-calculations for a single geodesic.  This is about 2.4 times faster than
-calling Geodesic::Direct.  A speed-up by a further factor of 1.2 is
-obtained with the direct calculation if the distance is expressed in
-terms of the spherical arc length.
-
-On a 2.66 GHz Intel machine (g++, version 4.4.4, -O3), timings are as
-follows:
- - Geodesic::Direct 0.88 us
- - GeodesicLine::Position 0.37 us
- - GeodesicLine::ArcPosition 0.31 us
- - Geodesic::Inverse 2.62 us
- .
-The timing for Geodesic::Inverse is a mean.  Individual calls may take a
-few times longer because of the need to do additional Newton iterations.
-Mean number of Newton iterations is about 3, but this increases (rarely)
-to 16 with some values of the arguments.
-
-Future work:
- - More documentation.
-
 <center>
 Back to \ref transversemercator.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
@@ -1670,7 +999,12 @@ The implementation of GeographicLib::Geocentric::Reverse is adapted from
 This provides a closed-form solution but can't directly be applied close to
 the center of the earth.  Several changes have been made to remove this
 restriction and to improve the numerical accuracy.  Now the method is
-accurate for all inputs (even if \e h is infinite).
+accurate for all inputs (even if \e h is infinite).  The changes are
+described in Appendix B of
+ - C. F. F. Karney,
+   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   on an ellipsoid of revolution</a>,
+   Feb. 2011.
 
 The problems encountered near the center of the ellipsoid are:
  - There's a potential division by zero in the definition of \e s. The

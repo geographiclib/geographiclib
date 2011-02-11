@@ -1,10 +1,5 @@
 #  $Id$
 
-FIGURES = gauss-krueger-graticule thompson-tm-graticule \
-	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
-	gauss-krueger-graticule-a thompson-tm-graticule-a \
-	gauss-krueger-error
-
 EXTRAFILES = tmseries30.html geodseries30.html
 
 HPPFILES = \
@@ -59,12 +54,9 @@ $(top_srcdir)/tools/TransverseMercatorTest.cpp
 
 doc: html/index.html
 html/index.html: Doxyfile Geographic.doc \
-	$(HPPFILES) $(ALLSOURCES) \
-	$(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES)) \
-	$(EXTRAFILES)
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES)
 	rm -rf html/*
 	doxygen
-	for f in $(FIGURES); do cp -p $$f.pdf $$f.png html/; done
 	for f in $(EXTRAFILES); do cp -p $$f html/; done
 	for f in $(top_srcdir)/maxima/*.mac; do cp -p $$f html/.; done
 

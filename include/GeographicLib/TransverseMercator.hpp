@@ -2,7 +2,7 @@
  * \file TransverseMercator.hpp
  * \brief Header for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -33,12 +33,19 @@ namespace GeographicLib {
    *    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
    *    ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
    *    Series 52, 172 pp. (1912).
+   *  - C. F. F. Karney,
+   *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   *    Transverse Mercator with an accuracy of a few nanometers,</a>
+   *    J. Geodesy (2011);
+   *    preprint
+   *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum
    * errors is 5 nm (ground distance) for all positions within 35 degrees of
    * the central meridian.  The error in the convergence is 2e-15&quot; and the
-   * relative error in the scale is 6e-12%%.  (See \ref tmerrors for the weasel
-   * words.)  The speed penalty in going to 6th order is only about 1%.
+   * relative error in the scale is 6e-12%%.  See Sec. 4 of
+   * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
+   * The speed penalty in going to 6th order is only about 1%.
    * TransverseMercatorExact is an alternative implementation of the projection
    * using exact formulas which yield accurate (to 8 nm) results over the
    * entire ellipsoid.

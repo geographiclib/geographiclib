@@ -80,12 +80,6 @@ Files
     doc/
       Doxyfile -- Doxygen config file
       Geographic.doc -- main page of Doxygen documentation
-      gauss-laborde-graticule-a.{png,pdf} -- Fig. 1
-      gauss-krueger-graticule-a.{png,pdf} -- Fig. 2
-      thompson-tm-graticule-a.{png,pdf} -- Fig. 3
-      gauss-krueger-graticule.{png,pdf} -- Fig. 4
-      gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
-      thompson-tm-graticule.{png,pdf} -- Fig. 6
       html/* -- directory with built documentation
 
     Makefile -- Unix/Linux makefile (invokes make in the other directories)
