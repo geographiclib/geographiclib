@@ -445,13 +445,11 @@ implementations following the standard convention.
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
 Mercator projection.  This is accurate to about 200 nm within the UTM
-domain.  Here we present the series extended to 10th order.  The series
-expanded to order <i>n</i><sup>30</sup> are given in <a
-href="tmseries30.html"> tmseries30.html</a>.
-
-By default, GeographicLib::TransverseMercator uses the 6th-order
-approximation. The preprocessor variable TM_TX_MAXPOW can be used to
-select an order from 4 thru 8.
+domain.  Here we present the series extended to 10th order.  By default,
+GeographicLib::TransverseMercator uses the 6th-order approximation. The
+preprocessor variable TM_TX_MAXPOW can be used to select an order from 4
+thru 8.  The series expanded to order <i>n</i><sup>30</sup> are given in
+<a href="tmseries30.html"> tmseries30.html</a>.
 
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
 n) and / indicates real division (3/5 = 0.6).  The equations need to be
@@ -633,7 +631,8 @@ References
  - C. F. F. Karney,
    <a href="http://arxiv.org/abs/1102.1215">Geodesics
    on an ellipsoid of revolution</a>,
-   Feb. 2011.
+   Feb. 2011; preprint
+   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>
  - A collection of some papers on geodesics is available at
    http://geographiclib.sf.net/geodesic-papers/biblio.html
 
@@ -723,12 +722,13 @@ geodesic (in the same order as the test set).
 \section geodseries Expansions for geodesics
 
 We give here the series expansions for the various geodesic integrals
-valid to order <i>f</i><sup>8</sup>.   In this release, we use a
+valid to order <i>f</i><sup>8</sup>.  In this release, we use a
 6th-order expansions.  This is sufficient to maintain accuracy for
 doubles for the SRMmax ellipsoid (\e a = 6400 km, \e f = 1/150).
 However, the preprocessor macro GEOD_ORD can be used to select any order
 up to 8.  (If using long doubles, with a 64-bit fraction, the default
-order is 7.)
+order is 7.)  The series expanded to order <i>f</i><sup>30</sup> are
+given in <a href="geodseries30.html"> geodseries30.html</a>.
 
 In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
 f) and / indicates real division (3/5 = 0.6).  The equations need to be
@@ -736,15 +736,14 @@ converted to Horner form, but are here left in expanded form so that
 they can be easily truncated to lower order.  These expansions were
 obtained using the the Maxima code, <a href="geod.mac">geod.mac</a>.
 
-The series expanded to order
-<i>f</i><sup>30</sup> are given in <a href="geodseries30.html">
-geodseries30.html</a>.
-
 In the expansions below, we have
+ - \e alpha is the azimuth
  - \e alpha<sub>0</sub> is the azimuth at the equator crossing
  - \e lambda is the longitude measured from the equator crossing
  - \e omega is the spherical longitude
  - \e sigma is the spherical arc length
+ - \e a is the equatorial radius
+ - \e b is the polar semi-axis
  - \e f is the flattening
  - \e e<sup>2</sup> = \e f (2 - \e f)
  - \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 - \e e<sup>2</sup>)
@@ -932,8 +931,16 @@ C3[6] = + (11/2048 - 99/8192*n) * eps^6
 C3[7] = + 429/114688 * eps^7;
 \endverbatim
 
-The formula for area between the geodesic and the equator (see \ref
-geodarea) involves the function \e I4(\e sigma) which can be expanded as
+The formula for area between the geodesic and the equator is given in
+Sec. 15 of
+<a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>
+in terms of \e S,
+
+&nbsp; &nbsp;
+\e S = \e c<sup>2</sup> \e alpha + \e e<sup>2</sup> \e a<sup>2</sup>
+cos \e alpha<sub>0</sub> sin \e alpha<sub>0</sub> \e I4(\e sigma)
+
+where
 
 &nbsp; &nbsp; \e I4(\e sigma) =
 sum<sub>\e j = 0</sub> \e C4<sub>j</sub> cos((2\e j + 1) \e sigma)
