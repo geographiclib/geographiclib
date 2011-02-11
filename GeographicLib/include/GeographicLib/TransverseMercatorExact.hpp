@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.hpp
  * \brief Header for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -27,18 +27,25 @@ namespace GeographicLib {
    *    ISBN: 0919870163
    *    (also appeared as:
    *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
+   *  - C. F. F. Karney,
+   *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   *    Transverse Mercator with an accuracy of a few nanometers,</a>
+   *    J. Geodesy (2011);
+   *    preprint
+   *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
-   * This method gives the correct results for forward and reverse
+   * Lee's gives the correct results for forward and reverse
    * transformations subject to the branch cut rules (see the description of
    * the \e extendp argument to the constructor).  The maximum error is about 8
    * nm (ground distance) for the forward and reverse transformations.  The
    * error in the convergence is 2e-15&quot;, the relative error in the scale
-   * is 7e-12%%.  (See \ref tmerrors for the weasel words.)  The method is
-   * "exact" in the sense that the errors are close to the round-off limit and
-   * that no changes are needed in the algorithms for them to be used with
-   * reals of a higher precision.  Thus the errors using long double (with a
-   * 64-bit fraction) are about 2000 times smaller than using double (with a
-   * 53-bit fraction).
+   * is 7e-12%%.  See Sec. 3 of
+   * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
+   * The method is "exact" in the sense that the errors are close to the
+   * round-off limit and that no changes are needed in the algorithms for them
+   * to be used with reals of a higher precision.  Thus the errors using long
+   * double (with a 64-bit fraction) are about 2000 times smaller than using
+   * double (with a 53-bit fraction).
    *
    * This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger
    * method, TransverseMercator, taking about 11 us for a combined forward and
@@ -139,8 +146,9 @@ namespace GeographicLib {
      *   - \e x/(\e k0 \e a) in [K(1 - \e e^2) - E(1 - \e e^2), inf) and
      *     \e y/(\e k0 \e a) in (-inf, 0]
      * .
-     * See \ref extend for a full discussion of the treatment of the branch
-     * cut.
+     * See Sec. 5 of
+     * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
+     * discussion of the treatment of the branch cut.
      *
      * The method will work for all ellipsoids used in terrestial geodesy.  The
      * method cannot be applied directly to the case of a sphere (\e r = inf)
