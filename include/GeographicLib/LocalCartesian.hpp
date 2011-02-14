@@ -32,12 +32,15 @@ namespace GeographicLib {
   class LocalCartesian {
   private:
     typedef Math::real real;
+    static const size_t dim = 3, dim2 = dim * dim;
     const Geocentric _earth;
     real _lat0, _lon0, _h0;
-    real _x0, _y0, _z0,
-      _rxx, _rxy, _rxz,
-      _ryx, _ryy, _ryz,
-      _rzx, _rzy, _rzz;
+    real _x0, _y0, _z0, _r[dim2];
+    void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
+                    real M[dim2]) const throw();
+    void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
+                    real M[dim2]) const throw();
+    void MatrixMultiply(real M[dim2]) const throw();
   public:
 
     /**
@@ -91,10 +94,38 @@ namespace GeographicLib {
      * the range [-180, 360].
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
-      const throw();
+      const throw() {
+      IntForward(lat, lon, h, x, y, z, NULL);
+    }
 
     /**
-     * Convert from local cartesian to geodetic to coordinates.
+     * Convert from geodetic to local cartesian coordinates and return rotation
+     * matrix.
+     *
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[in] h height of point above the ellipsoid (meters).
+     * @param[out] x local cartesian coordinate (meters).
+     * @param[out] y local cartesian coordinate (meters).
+     * @param[out] z local cartesian coordinate (meters).
+     * @param[out] M if the length of the vector is 9, fill with the rotation
+     *   matrix in row-major order.
+     *
+     * Pre-multiplying a unit vector in local cartesian coordinates at (lat,
+     * lon, h) by \e M transforms the vector to local cartesian coordinates at
+     * (lat0, lon0, h0).
+     **********************************************************************/
+    void Forward(real lat, real lon, real h, real& x, real& y, real& z,
+                 std::vector<real>& M)
+      const throw()  {
+      real t[dim2];
+      IntForward(lat, lon, h, x, y, z, t);
+      if (M.end() == M.begin() + dim2)
+        copy(t, t + dim2, M.begin());
+    }
+
+    /**
+     * Convert from local cartesian to geodetic coordinates.
      *
      * @param[in] x local cartesian coordinate (meters).
      * @param[in] y local cartesian coordinate (meters).
@@ -106,7 +137,35 @@ namespace GeographicLib {
      * The value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
-      const throw();
+      const throw() {
+      IntReverse(x, y, z, lat, lon, h, NULL);
+    }
+
+    /**
+     * Convert from local cartesian to geodetic coordinates and return rotation
+     * matrix.
+     *
+     * @param[in] x local cartesian coordinate (meters).
+     * @param[in] y local cartesian coordinate (meters).
+     * @param[in] z local cartesian coordinate (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] h height of point above the ellipsoid (meters).
+     * @param[out] M if the length of the vector is 9, fill with the rotation
+     *   matrix in row-major order.
+     *
+     * Pre-multiplying a unit vector in local cartesian coordinates at (lat0,
+     * lon0, h0) by the transpose of \e M transforms the vector to local
+     * cartesian coordinates at (lat, lon, h).
+     **********************************************************************/
+    void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
+                 std::vector<real>& M)
+      const throw() {
+      real t[dim2];
+      IntReverse(x, y, z, lat, lon, h, t);
+      if (M.end() == M.begin() + dim2)
+        copy(t, t + dim2, M.begin());
+    }
 
     /** \name Inspector functions
      **********************************************************************/

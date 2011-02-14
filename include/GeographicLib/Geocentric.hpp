@@ -2,7 +2,7 @@
  * \file Geocentric.hpp
  * \brief Header for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -11,6 +11,8 @@
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id$"
 
 #include "GeographicLib/Constants.hpp"
+#include <vector>
+#include <algorithm>
 
 namespace GeographicLib {
 
@@ -33,8 +35,14 @@ namespace GeographicLib {
    *   J. Geodesy 76, 451&ndash;454 (2002).
    * .
    * Several changes have been made to ensure that the method returns accurate
-   * results for all finite inputs (even if \e h is infinite).  See
-   * \ref geocentric for details.
+   * results for all finite inputs (even if \e h is infinite).  The changes are
+   * descibed in Appendix B of
+   * - C. F. F. Karney,
+   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   on an ellipsoid of revolution</a>,
+   *   Feb. 2011.
+   * .
+   * See \ref geocentric for more information.
    *
    * The errors in these routines are close to round-off.  Specifically, for
    * points within 5000 km of the surface of the ellipsoid (either inside or
@@ -45,8 +53,18 @@ namespace GeographicLib {
   class Geocentric {
   private:
     typedef Math::real real;
+    friend class LocalCartesian;
+    static const size_t dim = 3, dim2 = dim * dim;
     const real _a, _r, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
     static inline real sq(real x) throw() { return x * x; }
+    // Actually this can be static because it doesn't depend on the ellipsoid.
+    // But let's be more general than that.
+    void Rotation(real sphi, real cphi, real slam, real clam,
+                  real M[dim2]) const throw();
+    void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
+                    real M[dim2]) const throw();
+    void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
+                    real M[dim2]) const throw();
   public:
 
     /**
@@ -76,7 +94,34 @@ namespace GeographicLib {
      * the range [-180, 360].
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
-      const throw();
+      const throw() {
+      IntForward(lat, lon, h, x, y, z, NULL);
+    }
+
+    /**
+     * Convert from geodetic to geocentric coordinates and return rotation
+     * matrix.
+     *
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[in] h height of point above the ellipsoid (meters).
+     * @param[out] x geocentric coordinate (meters).
+     * @param[out] y geocentric coordinate (meters).
+     * @param[out] z geocentric coordinate (meters).
+     * @param[out] M if the length of the vector is 9, fill with the rotation
+     *   matrix in row-major order.
+     *
+     * Pre-multiplying a unit vector in local cartesian coordinates (east,
+     * north, up) by \e M transforms the vector to geocentric coordinates.
+     **********************************************************************/
+    void Forward(real lat, real lon, real h, real& x, real& y, real& z,
+                 std::vector<real>& M)
+      const throw() {
+      real t[dim2];
+      IntForward(lat, lon, h, x, y, z, t);
+      if (M.end() == M.begin() + dim2)
+        copy(t, t + dim2, M.begin());
+    }
 
     /**
      * Convert from geocentric to geodetic to coordinates.
@@ -98,7 +143,34 @@ namespace GeographicLib {
      * value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
-      const throw();
+      const throw() {
+      IntReverse(x, y, z, lat, lon, h, NULL);
+    }
+
+    /**
+     * Convert from geocentric to geodetic to coordinates.
+     *
+     * @param[in] x geocentric coordinate (meters).
+     * @param[in] y geocentric coordinate (meters).
+     * @param[in] z geocentric coordinate (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] h height of point above the ellipsoid (meters).
+     * @param[out] M if the length of the vector is 9, fill with the rotation
+     *   matrix in row-major order.
+     *
+     * Pre-multiplying a unit vector in geocentric coordinates by the transpose
+     * of \e M transforms the vector to local cartesian coordinates (east,
+     * north, up).
+     **********************************************************************/
+    void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
+                 std::vector<real>& M)
+      const throw() {
+      real t[dim2];
+      IntReverse(x, y, z, lat, lon, h, t);
+      if (M.end() == M.begin() + dim2)
+        copy(t, t + dim2, M.begin());
+    }
 
     /** \name Inspector functions
      **********************************************************************/
