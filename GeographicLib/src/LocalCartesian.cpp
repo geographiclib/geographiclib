@@ -2,7 +2,7 @@
  * \file LocalCartesian.cpp
  * \brief Implementation for GeographicLib::LocalCartesian class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -30,31 +30,41 @@ namespace GeographicLib {
       lam = lon0 * Math::degree<real>(),
       slam = _lon0 == -180 ? 0 : sin(lam),
       clam = abs(_lon0) == 90 ? 0 : cos(lam);
-    // Local x axis in geocentric coords
-    _rxx = -slam; _rxy = clam; _rxz = 0;
-    // Local y axis in geocentric coords
-    _ryx = -clam * sphi; _ryy = -slam * sphi; _ryz = cphi;
-    // Local z axis in geocentric coords
-    _rzx = clam * cphi; _rzy = slam * cphi; _rzz = sphi;
+    _earth.Rotation(sphi, cphi, slam, clam, _r);
   }
 
-  void LocalCartesian::Forward(real lat, real lon, real h,
-                               real& x, real& y, real& z) const throw() {
+  void LocalCartesian::MatrixMultiply(real M[dim2]) const throw() {
+    real t[dim2];
+    copy(M, M + dim2, t);
+    for (size_t i = 0; i < dim2; ++i) {
+      size_t row = i / dim, col = i % dim;
+      M[i] = _r[row] * t[col] + _r[row+3] * t[col+3] + _r[row+6] * t[col+6];
+    }
+  }
+
+  void LocalCartesian::IntForward(real lat, real lon, real h,
+                                  real& x, real& y, real& z,
+                                  real M[dim2]) const throw() {
     real xc, yc, zc;
-    _earth.Forward(lat, lon, h, xc, yc, zc);
+    _earth.IntForward(lat, lon, h, xc, yc, zc, M);
     xc -= _x0; yc -= _y0; zc -= _z0;
-    x = _rxx * xc + _rxy * yc + _rxz * zc;
-    y = _ryx * xc + _ryy * yc + _ryz * zc;
-    z = _rzx * xc + _rzy * yc + _rzz * zc;
+    x = _r[0] * xc + _r[3] * yc + _r[6] * zc;
+    y = _r[1] * xc + _r[4] * yc + _r[7] * zc;
+    z = _r[2] * xc + _r[5] * yc + _r[8] * zc;
+    if (M)
+      MatrixMultiply(M);
   }
 
-  void LocalCartesian::Reverse(real x, real y, real z,
-                               real& lat, real& lon, real& h) const throw() {
+  void LocalCartesian::IntReverse(real x, real y, real z,
+                                  real& lat, real& lon, real& h,
+                                  real M[dim2]) const throw() {
     real
-      xc = _x0 + _rxx * x + _ryx * y + _rzx * z,
-      yc = _y0 + _rxy * x + _ryy * y + _rzy * z,
-      zc = _z0 + _rxz * x + _ryz * y + _rzz * z;
-    _earth.Reverse(xc, yc, zc, lat, lon, h);
+      xc = _x0 + _r[0] * x + _r[1] * y + _r[2] * z,
+      yc = _y0 + _r[3] * x + _r[4] * y + _r[5] * z,
+      zc = _z0 + _r[6] * x + _r[7] * y + _r[8] * z;
+    _earth.IntReverse(xc, yc, zc, lat, lon, h, M);
+    if (M)
+      MatrixMultiply(M);
   }
 
 } // namespace GeographicLib

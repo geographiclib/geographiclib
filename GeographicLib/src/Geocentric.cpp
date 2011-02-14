@@ -14,6 +14,11 @@
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 
+#if defined(_MSC_VER)
+// Squelch warnings about unsafe use of copy
+#pragma warning (disable: 4996)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
@@ -36,7 +41,7 @@ namespace GeographicLib {
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a<real>(),
                                      Constants::WGS84_r<real>());
-
+  /*
   void Geocentric::Forward(real lat, real lon, real h,
                            real& x, real& y, real& z) const throw() {
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
@@ -45,31 +50,64 @@ namespace GeographicLib {
       lam = lon * Math::degree<real>(),
       sphi = sin(phi),
       cphi = abs(lat) == 90 ? 0 : cos(phi),
-      n = _a/sqrt(1 - _e2 * sq(sphi));
+      n = _a/sqrt(1 - _e2 * sq(sphi)),
+      slam = lon == -180 ? 0 : sin(lam),
+      clam = abs(lon) == 90 ? 0 : cos(lam);
     z = ( _e2m * n + h) * sphi;
     x = (n + h) * cphi;
-    y = x * (lon == -180 ? 0 : sin(lam));
-    x *= (abs(lon) == 90 ? 0 : cos(lam));
+    y = x * slam;
+    x *= clam;
+  }
+*/
+  void Geocentric::IntForward(real lat, real lon, real h,
+                              real& x, real& y, real& z,
+                              real M[dim2]) const throw() {
+    lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
+    real
+      phi = lat * Math::degree<real>(),
+      lam = lon * Math::degree<real>(),
+      sphi = sin(phi),
+      cphi = abs(lat) == 90 ? 0 : cos(phi),
+      n = _a/sqrt(1 - _e2 * sq(sphi)),
+      slam = lon == -180 ? 0 : sin(lam),
+      clam = abs(lon) == 90 ? 0 : cos(lam);
+    z = ( _e2m * n + h) * sphi;
+    x = (n + h) * cphi;
+    y = x * slam;
+    x *= clam;
+    if (M)
+      Rotation(sphi, cphi, slam, clam, M);
   }
 
-  void Geocentric::Reverse(real x, real y, real z,
-                           real& lat, real& lon, real& h) const throw() {
-    real R = Math::hypot(x, y);
+  void Geocentric::IntReverse(real x, real y, real z,
+                              real& lat, real& lon, real& h,
+                              real M[dim2]) const throw() {
+    real
+      R = Math::hypot(x, y),
+      slam = R ? y / R : 0,
+      clam = R ? x / R : 1;
     h = Math::hypot(R, z);      // Distance to center of earth
-    real phi;
-    if (h > _maxrad)
+    real sphi, cphi;
+    if (h > _maxrad) {
       // We really far away (> 12 million light years); treat the earth as a
       // point and h, above, is an acceptable approximation to the height.
       // This avoids overflow, e.g., in the computation of disc below.  It's
       // possible that h has overflowed to inf; but that's OK.
       //
       // Treat the case x, y finite, but R overflows to +inf by scaling by 2.
-      phi = atan2(z/2, Math::hypot(x/2, y/2));
-    else if (_e4a == 0) {
+      R = Math::hypot(x/2, y/2);
+      slam = R ? (y/2) / R : 0;
+      clam = R ? (x/2) / R : 1;
+      real H = Math::hypot(z/2, R);
+      sphi = (z/2) / H;
+      cphi = R / H;
+    } else if (_e4a == 0) {
       // Treat the spherical case.  Dealing with underflow in the general case
-      // with _e2 = 0 is difficult.  Origin maps to N pole same as an
+      // with _e2 = 0 is difficult.  Origin maps to N pole same as with
       // ellipsoid.
-      phi = atan2(h != 0 ? z : 1, R);
+      real H = Math::hypot(h == 0 ? 1 : z, R);
+      sphi = (h == 0 ? 1 : z) / H;
+      cphi = R / H;
       h -= _a;
     } else {
       // Treat prolate spheroids by swapping R and z here and by switching
@@ -117,8 +155,10 @@ namespace GeographicLib {
           k = uv / (sqrt(uv + sq(w)) + w),
           k1 = _f >= 0 ? k : k - _e2,
           k2 = _f >= 0 ? k + _e2 : k,
-          d = k1 * R / k2;
-        phi = atan2(z/k1, R/k2);
+          d = k1 * R / k2,
+          H = Math::hypot(z/k1, R/k2);
+        sphi = (z/k1) / H;
+        cphi = (R/k2) / H;
         h = (1 - _e2m/k1) * Math::hypot(d, z);
       } else {                  // e4 * q == 0 && r <= 0
         // This leads to k = 0 (oblate, equatorial plane) and k + e^2 = 0
@@ -129,15 +169,36 @@ namespace GeographicLib {
         // f < 0: R -> 0, k + e2 -> - e2 * sqrt(q)/sqrt(e4 - p)
         real
           zz = sqrt((_f >= 0 ? _e4a - p : p) / _e2m),
-          xx = sqrt( _f <  0 ? _e4a - p : p        );
-        phi = atan2(zz, xx);
-        if (z < 0) phi = -phi; // for tiny negative z (not for prolate)
-        h = - _a * (_f >= 0 ? _e2m : 1) * Math::hypot(xx, zz) / _e2a;
+          xx = sqrt( _f <  0 ? _e4a - p : p        ),
+          H = Math::hypot(zz, xx);
+        sphi = zz / H;
+        cphi = xx / H;
+        if (z < 0) sphi = -sphi; // for tiny negative z (not for prolate)
+        h = - _a * (_f >= 0 ? _e2m : 1) * H / _e2a;
       }
     }
-    lat = phi / Math::degree<real>();
-    // Negative signs return lon in [-180, 180).  Assume atan2(0,0) = 0.
-    lon = -atan2(-y, x) / Math::degree<real>();
+    lat = atan2(sphi, cphi) / Math::degree<real>();
+    // Negative signs return lon in [-180, 180).
+    lon = -atan2(-slam, clam) / Math::degree<real>();
+    if (M)
+      Rotation(sphi, cphi, slam, clam, M);
+  }
+
+  void Geocentric::Rotation(real sphi, real cphi, real slam, real clam,
+                             real M[dim2]) const throw() {
+    // This rotation matrix is given by the following quaternion operations
+    // qrot(lam, [0,0,1]) * qrot(phi, [0,-1,0]) * [1,1,1,1]/2
+    // or
+    // qrot(pi/2 + lam, [0,0,1]) * qrot(-pi/2 + phi , [-1,0,0])
+    // where
+    // qrot(t,v) = [cos(t/2), sin(t/2)*v[1], sin(t/2)*v[2], sin(t/2)*v[3]]
+
+    // Local x axis (east) in geocentric coords
+    M[0] = -slam;        M[3] =  clam;        M[6] = 0;
+    // Local y axis (north) in geocentric coords
+    M[1] = -clam * sphi; M[4] = -slam * sphi; M[7] = cphi;
+    // Local z axis (up) in geocentric coords
+    M[2] =  clam * cphi; M[5] =  slam * cphi; M[8] = sphi;
   }
 
 } // namespace GeographicLib
