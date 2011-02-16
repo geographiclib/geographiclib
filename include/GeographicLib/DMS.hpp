@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -127,7 +127,7 @@ namespace GeographicLib {
      * @param[in] d degrees.
      * @param[in] m arc minutes.
      * @param[in] s arc seconds.
-     * @return angle (degress)
+     * @return angle (degrees)
      *
      * This does not propagate the sign on \e d to the other components, so
      * -3d20' would need to be represented as - DMS::Decode(3.0, 20.0) or
@@ -197,15 +197,15 @@ namespace GeographicLib {
      * @param[in] prec the number of digits after the decimal point for the
      *   trailing component.
      * @param[in] ind DMS::flag value indicated additional formatting.
-     * @return formatting string
+     * @return formatted string
      *
      * The interpretation of \e ind is as follows:
      * - ind == DMS::NONE, signed result no leading zeros on degrees except in
      *   the units place, e.g., -8d03'.
      * - ind == DMS::LATITUDE, trailing N or S hemisphere designator, no sign,
-     *   pad degress to 2 digits, e.g., 08d03'S.
+     *   pad degrees to 2 digits, e.g., 08d03'S.
      * - ind == DMS::LONGITUDE, trailing E or W hemisphere designator, no
-     *   sign, pad degress to 3 digits, e.g., 008d03'W.
+     *   sign, pad degrees to 3 digits, e.g., 008d03'W.
      * - ind == DMS::AZIMUTH, convert to the range [0, 360<sup>o</sup>), no
      *   sign, pad degrees to 3 digits, , e.g., 351d57'.
      * .
@@ -222,7 +222,7 @@ namespace GeographicLib {
      * @param[in] angle input angle (degrees)
      * @param[in] prec the precision relative to 1 degree.
      * @param[in] ind DMS::flag value indicated additional formatting.
-     * @return formatting string
+     * @return formatted string
      *
      * \e prec indicates the precision relative to 1 degree, e.g., \e prec = 3
      * gives a result accurate to 0.1' and \e prec = 4 gives a result accurate

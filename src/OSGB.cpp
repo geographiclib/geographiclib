@@ -2,11 +2,11 @@
  * \file OSGB.cpp
  * \brief Implementation for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#include <iostream>
 #include "GeographicLib/OSGB.hpp"
 
 #define GEOGRAPHICLIB_OSGB_CPP "$Id$"

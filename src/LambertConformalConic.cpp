@@ -14,9 +14,6 @@
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
 
-#include <iostream>
-#include <iomanip>
-
 namespace GeographicLib {
 
   using namespace std;
