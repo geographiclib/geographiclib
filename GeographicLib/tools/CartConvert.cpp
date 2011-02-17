@@ -8,7 +8,10 @@
  *
  * Compile with -I../include and link with Geocentric.o LocalCartesian.o
  *
- * See \ref cartconvert for usage information.
+ * See the <a href="CartConvert.1.html">man page</a> for usage
+ * information.
+ *
+ * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geocentric.hpp"
@@ -17,34 +20,7 @@
 #include <iostream>
 #include <sstream>
 
-int usage(int retval) {
-  ( retval ? std::cerr : std::cout ) <<
-"Usage: CartConvert [-r] [-l lat0 lon0 h0] [-e a r] [-h]\n\
-$Id$\n\
-\n\
-Convert geodetic coordinates to either geocentric or local cartesian\n\
-coordinates.  Geocentric coordinates have the origin at the center of the\n\
-earth, with the z axis going thru the north pole, and the x axis thru lat =\n\
-0, lon = 0.  By default, the conversion is to geocentric coordinates.\n\
-Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with\n\
-the origin at latitude = lat0, longitude = lon0, height = h0, z normal to\n\
-the ellipsoid and y due north.\n\
-\n\
-By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
-equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
-to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-ellipsoid.\n\
-\n\
-Geodetic coordinates are provided on standard input as a set of lines\n\
-containing (blank separated) latitude, longitude (degrees or DMS), and\n\
-height (meters).  For each set of geodetic coordinates, the corresponding\n\
-cartesian coordinates x, y, z (meters) are printed on standard output.\n\
-\n\
-If -r is given the reverse transformation is performed.\n\
-\n\
--h prints this help.\n";
-  return retval;
-}
+#include "CartConvert.usage"
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
@@ -60,7 +36,7 @@ int main(int argc, char* argv[]) {
       reverse = true;
     else if (arg == "-l") {
       localcartesian = true;
-      if (m + 3 >= argc) return usage(1);
+      if (m + 3 >= argc) return usage(1, true);
       try {
         DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
                           lat0, lon0);
@@ -72,7 +48,7 @@ int main(int argc, char* argv[]) {
       }
       m += 3;
     } else if (arg == "-e") {
-      if (m + 2 >= argc) return usage(1);
+      if (m + 2 >= argc) return usage(1, true);
       try {
         a = DMS::Decode(std::string(argv[m + 1]));
         r = DMS::Decode(std::string(argv[m + 2]));
@@ -83,7 +59,7 @@ int main(int argc, char* argv[]) {
       }
       m += 2;
     } else
-      return usage(!(arg == "-h" || arg == "--help"));
+      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   const Geocentric ec(a, r);
