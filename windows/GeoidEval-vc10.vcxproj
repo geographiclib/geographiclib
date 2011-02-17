@@ -152,6 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="../tools/GeoidEval.usage" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="../tools/GeoidEval.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
