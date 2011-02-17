@@ -2,17 +2,17 @@
 
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
-SUBDIRS = src tools doc
+SUBDIRS = src tools doc man
 ALLDIRS = include $(SUBDIRS) maxima matlab windows
 
-all: src tools
+all: src tools man
 
 $(SUBDIRS):
 	$(MAKE) -C $@
 
 tools: src
-install: install-headers install-lib install-tools
-clean: clean-src clean-tools clean-doc
+install: install-headers install-lib install-tools install-man
+clean: clean-src clean-tools clean-doc clean-man
 install-headers:
 	$(MAKE) -C include install
 install-lib:
@@ -21,12 +21,16 @@ install-tools: src
 	$(MAKE) -C tools install
 install-doc: doc
 	$(MAKE) -C doc install
+install-man: man
+	$(MAKE) -C man install
 clean-src:
 	$(MAKE) -C src clean
 clean-tools:
 	$(MAKE) -C tools clean
 clean-doc:
 	$(MAKE) -C doc clean
+clean-man:
+	$(MAKE) -C man clean
 
 list:
 	@for f in 00README.txt COPYING AUTHORS NEWS Makefile $(MAKEFILE); do \

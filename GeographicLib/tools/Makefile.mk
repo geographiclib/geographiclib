@@ -61,7 +61,8 @@ PREFIX = /usr/local
 DEST = $(PREFIX)/bin
 
 list:
-	@echo $(addsuffix .cpp,$(PROGRAMS))
+	@echo $(addsuffix .cpp,$(PROGRAMS)) $(addsuffix .pod,$(PROGRAMS)) \
+	$(addsuffix .usage,$(PROGRAMS))
 
 install: $(PROGRAMS)
 	test -f $(DEST) || mkdir -p $(DEST)
