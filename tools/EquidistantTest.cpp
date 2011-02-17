@@ -10,7 +10,10 @@
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o
  * AzimuthalEquidistant.o Gnomonic.o CassiniSoldner.o
  *
- * See \ref equidistanttest for usage information.
+ * See the <a href="EquidistantTest.1.html">man page</a> for usage
+ * information.
+ *
+ * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
@@ -21,42 +24,7 @@
 #include <iostream>
 #include <sstream>
 
-int usage(int retval) {
-  ( retval ? std::cerr : std::cout ) <<
-"Usage: EquidistantTest -(c|z|g) lat0 lon0 [-r] [-e a r] [-h]\n\
-$Id$\n\
-\n\
-Perform projections based on geodesics.  Convert geodetic coordinates to\n\
-either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.\n\
-The center of the projection (lat0, lon0) is specified by either the -c\n\
-option (for Cassini-Soldner), the -z option (for azimuthal equidistant),\n\
-or the -g option (for gnomonic).  At least one of these options must be\n\
-given (the last one given is used).\n\
-\n\
-By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
-equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
-to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-ellipsoid.\n\
-\n\
-Geodetic coordinates are provided on standard input as a set of lines\n\
-containing (blank separated) latitude and longitude (degrees or DMS).\n\
-For each set of geodetic coordinates, the corresponding projected\n\
-coordinates x, y (meters) are printed on standard output together with\n\
-the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,\n\
-azi is the bearing of the easting direction and the scale in the easting\n\
-direction is 1 and the scale in the northing direction is 1/rk.  For\n\
-azimuthal equidistant and gnomonic, azi is the bearing of the radial\n\
-direction and the scale in the azimuthal direction is 1/rk.  For\n\
-azimuthal equidistant and gnomonic, the scales in the radial direction\n\
-are 1 and 1/rk^2, respectively.\n\
-\n\
-If -r is given the reverse transformation is performed.  x and y are\n\
-given on standard input and each line of the standard output gives\n\
-latitude, longitude, azi, and rk.\n\
-\n\
--h prints this help.\n";
-  return retval;
-}
+#include "EquidistantTest.usage"
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
@@ -74,7 +42,7 @@ int main(int argc, char* argv[]) {
       cassini = arg == "-c";
       azimuthal = arg == "-z";
       gnomonic = arg == "-g";
-      if (m + 2 >= argc) return usage(1);
+      if (m + 2 >= argc) return usage(1, true);
       try {
         DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
                           lat0, lon0);
@@ -86,7 +54,7 @@ int main(int argc, char* argv[]) {
       }
       m += 2;
     } else if (arg == "-e") {
-      if (m + 2 >= argc) return usage(1);
+      if (m + 2 >= argc) return usage(1, true);
       try {
         a = DMS::Decode(std::string(argv[m + 1]));
         r = DMS::Decode(std::string(argv[m + 2]));
@@ -97,7 +65,7 @@ int main(int argc, char* argv[]) {
       }
       m += 2;
     } else
-      return usage(!(arg == "-h" || arg == "--help"));
+      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   if (!(azimuthal || cassini || gnomonic)) {

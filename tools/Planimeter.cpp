@@ -8,7 +8,10 @@
  *
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
  *
- * See \ref geod for usage information.
+ * See the <a href="Planimeter.1.html">man page</a> for usage
+ * information.
+ *
+ * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
@@ -16,38 +19,7 @@
 #include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
 
-int usage(int retval) {
-  ( retval ? std::cerr : std::cout ) <<
-"Usage: Planimeter [-s] [-r] [-e a r] [-h]\n\
-$Id$\n\
-\n\
-Measure the area of a geodesic polygon.  Reads polygon vertices from\n\
-standard input, one per line.  Vertices may be given as latitude and\n\
-longitude, UTM/UPS, or MGRS coordinates (interpreted in the same way as\n\
-GeoConvert).  (MGRS coordinates signify the center of the corresponing\n\
-MGRS square.)  The end of input, a blank line, or a line which can't be\n\
-interpreted as a vertex signals the end of one polygon and the start of\n\
-the next.  For each polygon print a summary line with the number of\n\
-points, the perimeter (in meters), and the area (in meters^2).\n\
-\n\
-By default, areas are traversed in a counter-clockwise sense (in other\n\
-words, the included area is to the left of the perimeter) and a\n\
-positive area is returned.  By this rule, a polygon tranversed in a\n\
-clockwise sense will return the area of ellipsoid excluded by the\n\
-polygon; however, if the -s option is given, the signed area will be\n\
-returned.  If the -r option is given, the included area is to the right\n\
-of the perimeter.  The -s and -r flags are toggles; repeating one of\n\
-then reverses the previous setting.  Only simple polygons are supported\n\
-for the area computation.  Polygons may include one or both poles.\n\
-\n\
-By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
-equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
-to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-ellipsoid.\n\
-\n\
--h prints this help.\n";
-  return retval;
-}
+#include "Planimeter.usage"
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
@@ -190,7 +162,7 @@ int main(int argc, char* argv[]) {
     else if (arg == "-s")
       sign = !sign;
     else if (arg == "-e") {
-      if (m + 2 >= argc) return usage(1);
+      if (m + 2 >= argc) return usage(1, true);
       try {
         a = DMS::Decode(std::string(argv[m + 1]));
         r = DMS::Decode(std::string(argv[m + 2]));
@@ -201,7 +173,7 @@ int main(int argc, char* argv[]) {
       }
       m += 2;
     } else
-      return usage(!(arg == "-h" || arg == "--help"));
+      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   const Geodesic geod(a, r);

@@ -1,0 +1,33 @@
+=for comment $Id$
+
+=head1 NAME
+
+CartConvert(1) - convert geodetic to geocentric and local cartesian
+
+=head1 SYNOPSIS
+
+CartConvert [-r] [-l lat0 lon0 h0] [-e a r] [-h]
+
+$Id$
+
+Convert geodetic coordinates to either geocentric or local cartesian
+coordinates.  Geocentric coordinates have the origin at the center of the
+earth, with the z axis going thru the north pole, and the x axis thru lat =
+0, lon = 0.  By default, the conversion is to geocentric coordinates.
+Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with
+the origin at latitude = lat0, longitude = lon0, height = h0, z normal to
+the ellipsoid and y due north.
+
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
+ellipsoid.
+
+Geodetic coordinates are provided on standard input as a set of lines
+containing (blank separated) latitude, longitude (degrees or DMS), and
+height (meters).  For each set of geodetic coordinates, the corresponding
+cartesian coordinates x, y, z (meters) are printed on standard output.
+
+If -r is given the reverse transformation is performed.
+
+-h prints this help.

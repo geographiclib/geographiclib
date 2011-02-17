@@ -1,0 +1,41 @@
+=for comment $Id$
+
+=head1 NAME
+
+EquidistantTest(1) - perform projections based on geodesics
+
+=head1 SYNOPSIS
+
+Usage: EquidistantTest -(c|z|g) lat0 lon0 [-r] [-e a r] [-h]
+
+$Id$
+
+Perform projections based on geodesics.  Convert geodetic coordinates to
+either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
+The center of the projection (lat0, lon0) is specified by either the -c
+option (for Cassini-Soldner), the -z option (for azimuthal equidistant),
+or the -g option (for gnomonic).  At least one of these options must be
+given (the last one given is used).
+
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
+ellipsoid.
+
+Geodetic coordinates are provided on standard input as a set of lines
+containing (blank separated) latitude and longitude (degrees or DMS).
+For each set of geodetic coordinates, the corresponding projected
+coordinates x, y (meters) are printed on standard output together with
+the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,
+azi is the bearing of the easting direction and the scale in the easting
+direction is 1 and the scale in the northing direction is 1/rk.  For
+azimuthal equidistant and gnomonic, azi is the bearing of the radial
+direction and the scale in the azimuthal direction is 1/rk.  For
+azimuthal equidistant and gnomonic, the scales in the radial direction
+are 1 and 1/rk^2, respectively.
+
+If -r is given the reverse transformation is performed.  x and y are
+given on standard input and each line of the standard output gives
+latitude, longitude, azi, and rk.
+
+-h prints this help.

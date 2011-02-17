@@ -12,6 +12,19 @@ DEPS = $(top_builddir)/src/libGeographic.la
 
 bin_PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest GeoidEval Planimeter
 
+SUFFIXES = .pod .usage
+
+.pod.usage:
+	sh makeusage.sh $< > $@
+
+GeoConvert.o: GeoConvert.usage
+TransverseMercatorTest.o: TransverseMercatorTest.usage
+CartConvert.o: CartConvert.usage
+Geod.o: Geod.usage
+EquidistantTest.o: EquidistantTest.usage
+GeoidEval.o: GeoidEval.usage
+Planimeter.o: Planimeter.usage
+
 GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \

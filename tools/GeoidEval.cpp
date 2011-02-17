@@ -8,7 +8,10 @@
  *
  * Compile with -I../include and link with Geoid.o DMS.o
  *
- * See \ref geoideval for usage information.
+ * See the <a href="GeoidEval.1.html">man page</a> for usage
+ * information.
+ *
+ * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geoid.hpp"
@@ -16,88 +19,7 @@
 #include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
 
-int usage(int retval) {
-  using namespace GeographicLib;
-  std::string
-    defaultpath = Geoid::DefaultGeoidPath(),
-    defaultname = Geoid::DefaultGeoidName();
-  ( retval ? std::cerr : std::cout ) <<
-"Usage:\n\
-  GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] \\\n\
-            [-z zone] [--msltohae] [--haetomsl] [-v] [-h]\n\
-$Id$\n\
-\n\
-Read in positions on standard input and print out the corresponding\n\
-geoid heights on standard output.  In addition print the northerly and\n\
-easterly gradients of the geoid height (i.e., the rate at which the\n\
-geoid height changes per unit distance along the WGS84 ellipsoid in\n\
-the specified directions).\n\
-\n\
-Positions are given as latitude and longitude, UTM/UPS, or MGRS, in\n\
-any of the formats accepted by GeoConvert.  (MGRS coordinates signify\n\
-the center of the corresponing MGRS square.)  If the -z option is\n\
-specified then the specified zone is prepended to each line of input\n\
-(which must be in UTM/UPS coordinates).  This allows a file with UTM\n\
-eastings and northings in a single zone to be used as standard input.\n\
-\n\
-With the --msltohae or --haetomsl options, each line of input should\n\
-also include a height (in meters) as the last item.  In this case the\n\
-height is converted in the indicated direction and the input line is\n\
-echoed to standard output with the height adjusted, thereby allowing\n\
-vertical datum of 3d data to be changed.  MSL is used here as a short\n\
-hand for the height above the geoid.  (Typically the geoid differs by\n\
-a few meters from mean sea level.)\n\
-\n\
-The following geoids are supported (some may not be available):\n\
-\n\
-                                  bilinear error    cubic error\n\
-   name         geoid    grid     max     rms       max     rms\n\
-   egm84-30     EGM84    30\'      1.546m  70mm      0.274m  14mm\n\
-   egm84-15     EGM84    15\'      0.413m  18mm      0.020m   1mm\n\
-   egm96-15     EGM96    15\'      1.152m  40mm      0.169m   7mm\n\
-   egm96-5      EGM96     5\'      0.140m   5mm      0.003m   1mm\n\
-   egm2008-5    EGM2008   5\'      0.478m  12mm      0.294m   5mm\n\
-   egm2008-2_5  EGM2008   2.5\'    0.135m   3mm      0.031m   1mm\n\
-   egm2008-1    EGM2008   1\'      0.025m   1mm      0.003m   1mm\n\
-\n\
-By default, the " << defaultname << " geoid is used.  This may changed by\n\
-setting the environment variable GEOID_NAME or with the -n option.  The\n\
-errors listed here are estimates of the quantization and interpolation\n\
-errors in the reported heights compared to the specified geoid.\n\
-\n\
-Cubic interpolation is used to compute the geoid height unless\n\
--l is specified in which case bilinear interpolation is used.\n\
-Cubic interpolation is more accurate; however it results in\n\
-small discontinuities in the returned height on cell boundaries.\n\
-The gradients are computed by differentiating the interpolated\n\
-results.\n\
-\n\
-The geoid data will be loaded from the directory,\n"
-<< defaultpath << ".  This may changed\n\
-by setting the environment variable GEOID_PATH or with the -d option.\n\
-\n\
-By default, the data file is randomly read to compute the geoid\n\
-heights at the input positions.  Usually this is sufficient for\n\
-interactive use.  If many heights are to be computed, GeoidEval\n\
-allows a block of data to be read into memory and heights within the\n\
-corresponding rectangle can then be computed without any disk access.\n\
-If -a is specified all the geoid data is read; in the case of\n\
-egm2008-1, this requires about 0.5 GB of RAM.  The -c option allows\n\
-a rectangle of data to be cached.  The evaluation of heights\n\
-outside the cached rectangle causes the necessary data to be read\n\
-from disk.\n\
-\n\
-Regardless of whether any cache is requested (with the -a or -c\n\
-options), the data for the last grid cell in cached.  This allows\n\
-the geoid height along a continuous path to be returned with little\n\
-disk overhead.\n\
-\n\
-The -v option causes the data about the current geoid to be printed\n\
-to standard error.\n\
-\n\
--h prints this help.\n";
-  return retval;
-}
+#include "GeoidEval.usage"
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
@@ -115,7 +37,7 @@ int main(int argc, char* argv[]) {
       cachearea = false;
     }
     else if (arg == "-c") {
-      if (m + 4 >= argc) return usage(1);
+      if (m + 4 >= argc) return usage(1, true);
       cacheall = false;
       cachearea = true;
       try {
@@ -134,7 +56,7 @@ int main(int argc, char* argv[]) {
     else if (arg == "--haetomsl" || arg == "-haetomsl")
       heightmult = Geoid::ELLIPSOIDTOGEOID;
     else if (arg == "-z") {
-      if (++m == argc) return usage(1);
+      if (++m == argc) return usage(1, true);
       zone = argv[m];
       bool northp;
       int zonenum;
@@ -147,17 +69,17 @@ int main(int argc, char* argv[]) {
         return 1;
       }
     } else if (arg == "-n") {
-      if (++m == argc) return usage(1);
+      if (++m == argc) return usage(1, true);
       geoid = argv[m];
     } else if (arg == "-d") {
-      if (++m == argc) return usage(1);
+      if (++m == argc) return usage(1, true);
       dir = argv[m];
     } else if (arg == "-l") {
       cubic = false;
     } else if (arg == "-v")
       verbose = true;
     else
-      return usage(!(arg == "-h" || arg == "--help"));
+      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   int retval = 0;
