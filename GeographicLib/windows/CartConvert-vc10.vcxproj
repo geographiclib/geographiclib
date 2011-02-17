@@ -152,6 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="../tools/CartConvert.usage" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="../tools/CartConvert.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

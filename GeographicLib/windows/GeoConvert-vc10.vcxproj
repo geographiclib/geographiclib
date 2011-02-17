@@ -152,6 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="../tools/GeoConvert.usage" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="../tools/GeoConvert.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

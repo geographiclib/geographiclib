@@ -152,6 +152,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="../tools/Geod.usage" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="../tools/Geod.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
