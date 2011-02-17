@@ -34,7 +34,7 @@ cures several of the defects of that package.
 \section download Download
 
 The main project page is at
--  <a href="http://sf.net/projects/geographiclib">
+- <a href="http://sf.net/projects/geographiclib">
   http://sf.net/projects/geographiclib </a>
 .
 The code is available for download at
@@ -1499,6 +1499,23 @@ Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
 
+Various utility programs are provided with %GeographicLib.  These are
+merely wrapper programs that invoke the underlying functionality
+provided by the library.  The utilities all accept data on standard
+input, transform it in some way, and print the results on standard
+output.  This makes the utilities easy to use within scripts to transform
+tabular data; however they can also be used interactively, often with
+the input supplied via a pipe, e.g.,
+ - echo 38SMB4488 | GeoConvert -d
+
+The utililities are
+ - <a href="GeoConvert.1.html"><b>GeoConvert</b></a> convert coordinates
+ - <a href="Geod.1.html"><b>Geod</b></a> geodesic calculations
+ - <a href="CartConvert.1.html"><b>CartConvert</b></a> geocentric
+ - <a href="EquidistantTest.1.html"><b>EquidistantTest</b></a> geodesic projections
+ - <a href="GeoidEval.1.html"><b>GeoidEval</b></a> geoid heights
+ - <a href="Planimeter.1.html"><b>Planimeter</b></a> areas of geodesic polygons
+
 The examples of utility use here assume that the utilities have been
 built and put in a directory in your PATH.
 
@@ -1556,7 +1573,7 @@ number of digits after the decimal point for UTM/UPS.  The number of digits
 per coordinate for MGRS is 5 + prec.  For decimal degrees, the number of
 digits after the decimal point is 5 + prec.  For DMS (degree, minute,
 seconds) output, the number of digits after the decimal point in the
-seconds components is 1 + prec; if this is negative then use minutes (prec
+seconds component is 1 + prec; if this is negative then use minutes (prec
 = -2 or -3) or degrees (prec <= -4) as the least significant component.
 Print convergence, resp. scale, with 5 + prec, resp. 7 + prec, digits after
 the decimal point.  The minimum value of prec is -5 and the maximum is 9
