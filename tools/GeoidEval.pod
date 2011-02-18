@@ -59,20 +59,20 @@ when the input consists of UTM/UPS eastings and northings.
 
 =item B<--msltohae>
 
-the last token on the input line is treating as a height (in meters)
-above the geoid and the output echos the input line with the height
-converted to height above ellipsoid.
+standard input should include a final token on each line which is
+treated as a height (in meters) above the geoid and the output echoes
+the input line with the height converted to height above ellipsoid (HAE).
 
 =item B<--haetomsl>
 
-the last token on the input line is treating as a height (in meters)
-above the ellipsoid and the output echos the input line with the height
-converted to height above geoid.
+standard input should include a final token on each line which is
+treated as a height (in meters) above the ellipsoid and the output
+echoes the input line with the height converted to height above geoid.
 
 =item B<-v>
 
-print information about the geoid to be printed on standard error before
-processing the input.
+print information about the geoid on standard error before processing
+the input.
 
 =item B<-h>
 
@@ -107,10 +107,9 @@ errors listed here are estimates of the quantization and interpolation
 errors in the reported heights compared to the specified geoid.
 
 The geoid data will be loaded from a directory specified at compile
-time, e.g., C</usr/local/share/GeographicLib/geoids>.  This may changed
-by setting the environment variable C<GEOID_PATH> or with the B<-d>
-option.  Use the B<-v> option to ascertain the full path name of the
-data file.
+time.  This may changed by setting the environment variable
+C<GEOID_PATH> or with the B<-d> option.  Use the B<-v> option to
+ascertain the full path name of the data file.
 
 Instructions for downloading and installing geoid data are available at
 L<http://geographiclib.sf.net/html/geoid.html#geoidinst>.
@@ -139,16 +138,15 @@ results.
 
 =head1 CACHE
 
-By default, the data file is randomly read to compute the geoid
-heights at the input positions.  Usually this is sufficient for
-interactive use.  If many heights are to be computed, GeoidEval
-allows a block of data to be read into memory and heights within the
-corresponding rectangle can then be computed without any disk access.
-If B<-a> is specified all the geoid data is read; in the case of
-C<egm2008-1>, this requires about 0.5 GB of RAM.  The B<-c> option allows
-a rectangle of data to be cached.  The evaluation of heights
-outside the cached rectangle causes the necessary data to be read
-from disk.
+By default, the data file is randomly read to compute the geoid heights
+at the input positions.  Usually this is sufficient for interactive use.
+If many heights are to be computed, use B<-c> I<south> I<west> I<north>
+I<east> to notify B<GeoidEval> to read a rectangle of data into memory;
+heights within the this rectangle can then be computed without any disk
+access.  If B<-a> is specified all the geoid data is read; in the case
+of C<egm2008-1>, this requires about 0.5 GB of RAM.  The evaluation of
+heights outside the cached area causes the necessary data to be read
+from disk.  Use the B<-v> option to verify the size of the cache.
 
 Regardless of whether any cache is requested (with the B<-a> or B<-c>
 options), the data for the last grid cell in cached.  This allows
@@ -161,20 +159,24 @@ disk overhead.
 
 =item B<GEOID_NAME>
 
-Override the compile-time default geoid name.
+Override the compile-time default geoid name of C<egm96-5>.  If the
+B<-n> I<name> option is used then I<name> takes precedence.
 
 =item B<GEOID_PATH>
 
-Override the compile-time default geoid path.
+Override the compile-time default geoid path.  This is typically
+C</usr/local/share/GeographicLib/geoids> on Unix or Linux systems and
+C<C:/cygwin/usr/local/share/GeographicLib/geoids> on Windows systems.
+If the B<-d> I<dir> option is used then I<dir> takes precedence.
 
 =back
 
 =head1 ERRORS
 
-An illegal line of input will print an error message beginning with
-C<ERROR:> and causes B<GeoidEval> to return an exit code of 1.  However,
-an error does not cause B<GeoidEval> to terminate; following lines will
-be converted.
+An illegal line of input will print an error message to standard output
+beginning with C<ERROR:> and causes B<GeoidEval> to return an exit code
+of 1.  However, an error does not cause B<GeoidEval> to terminate;
+following lines will be converted.
 
 =head1 ABBREVIATIONS
 

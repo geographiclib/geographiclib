@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 # $Id$
 echo Content-type: text/html
 echo

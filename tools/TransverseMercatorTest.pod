@@ -39,6 +39,14 @@ one).
 
 -h prints this help.
 
+=head1 EXAMPLES
+
+   echo 0 90 | TransverseMercatorTest
+   => 0 90 25953592.84 9997964.94 90 18.40
+   echo 260e5 100e5 | TransverseMercatorTest -r
+   => -0.02 90.00 26000000 10000000 90.01 18.47
+
+
 =head1 SEE ALSO
 
 B<TransverseMercatorTest> is a part of GeographicLib,

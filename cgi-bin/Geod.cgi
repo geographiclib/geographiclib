@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 # $Id$
 . ./utils.sh
 OPTION=`lookupkey "$QUERY_STRING" option`
@@ -89,7 +89,7 @@ cat <<EOF
   <body>
     <h3>
       Online geodesic calculations using the
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geod">
+      <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">
 	 Geod</a> utility
     </h3>
     <form action="/cgi-bin/Geod" method="get">
@@ -225,7 +225,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geod">
+      <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">
         Geod</a>
       performs geodesic calculations for the WGS84 ellipsoid.  The
       shortest path between two points on the ellipsoid at

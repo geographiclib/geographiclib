@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 # $Id$
 . ./utils.sh
 OPTION=`lookupkey "$QUERY_STRING" option`
@@ -65,7 +65,7 @@ cat <<EOF
   <body>
     <h3>
       Online geoid calculations using the
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
+      <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
 	GeoidEval</a> utility
     </h3>
     <form action="/cgi-bin/GeoidEval" method="get">
@@ -92,7 +92,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
+      <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
         GeoidEval</a>
       computes the height of the geoid above the WGS84 ellipsoid
       using interpolation in a grid of values for the earth

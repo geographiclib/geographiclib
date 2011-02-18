@@ -164,10 +164,10 @@ corresponds to possible MGRS coordinates
 
 then
 
-   echo 79.9S 6.1E      | GeoConvert -p -3 -m       ==> 32CMS4328
-   echo 31CEM6066227959 | GeoConvert -p -3 -m       ==> 31CEM6027
-   echo 31CEM6066227959 | GeoConvert -p -3 -m -s    ==> 32CMS4328
-   echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917
+   echo 79.9S 6.1E      | GeoConvert -p -3 -m       => 32CMS4328
+   echo 31CEM6066227959 | GeoConvert -p -3 -m       => 31CEM6027
+   echo 31CEM6066227959 | GeoConvert -p -3 -m -s    => 32CMS4328
+   echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  =>   BBZ1917
 
 B<NOTE>: the letter in the zone specification for UTM is a hemisphere
 designator I<N> or I<S> and I<not> an MGRS latitude band letter.
@@ -176,17 +176,17 @@ replace I<C> thru I<M> by I<S>; replace I<N> thru I<X> by I<N>.
 
 =head1 EXAMPLES
 
-   echo 38SMB4488 | GeoConvert         ==> 33.33424 44.40363
-   echo 38SMB4488 | GeoConvert -d -p 1 ==> 33d20'03.25"N 044d24'13.06"E
-   echo 38SMB4488 | GeoConvert -u      ==> 38N 444500 3688500
-   echo E44d24 N33d20 | GeoConvert -m -p -3 ==> 38SMB4488
+   echo 38SMB4488 | GeoConvert         => 33.33424 44.40363
+   echo 38SMB4488 | GeoConvert -d -p 1 => 33d20'03.25"N 044d24'13.06"E
+   echo 38SMB4488 | GeoConvert -u      => 38N 444500 3688500
+   echo E44d24 N33d20 | GeoConvert -m -p -3 => 38SMB4488
 
 =head1 ERRORS
 
-An illegal line of input will print an error message beginning with
-C<ERROR:> and causes B<GeoConvert> to return an exit code of 1.  However,
-an error does not cause B<GeoConvert> to terminate; following lines will
-be converted.
+An illegal line of input will print an error message to standard output
+beginning with C<ERROR:> and causes B<GeoConvert> to return an exit code
+of 1.  However, an error does not cause B<GeoConvert> to terminate;
+following lines will be converted.
 
 =head1 ABBREVIATIONS
 
