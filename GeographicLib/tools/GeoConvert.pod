@@ -216,4 +216,9 @@ L<http://en.wikipedia.org/wiki/WGS84>.
 
 =head1 SEE ALSO
 
-B<GeoConvert> is a part of GeographicLib, L<http://geographiclib.sf.net>.
+B<GeoConvert> is a part of GeographicLib,
+L<http://geographiclib.sf.net>.  The algorithms for the transverse
+Mercator projection are described in C. F. F. Karney, I<Transverse
+Mercator with an accuracy of a few nanometers>, J. Geod (2011); DOI
+L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
+L<http://arxiv.org/abs/1002.1417>.

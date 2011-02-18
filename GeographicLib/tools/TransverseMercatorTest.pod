@@ -6,38 +6,61 @@ TransverseMercatorTest(1) -- convert between geographic and transverse Mercator
 
 =head1 SYNOPSIS
 
-TransverseMercatorTest [-r] [-t|-s]
-$Id$
+B<TransverseMercatorTest> [ B<-r> ] [ B<-s> | B<-t> ]
 
-Convert between geographic coordinates and transverse Mercator coordinates.
+=head1 DESCRIPTION
 
-Read lines with latitude and longitude (or easting and northing if -r is
-specified) from standard input and print latitude, longitude, easting,
-northing, convergence, and scale.  Units are degrees (or DMS) and meters.
+Convert between geographic coordinates and transverse Mercator
+coordinates.
 
-By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM
-central scale (0.9996), and false easting and false northing are zero.
+Read lines with I<latitude> and I<longitude> (or I<easting> and
+I<northing> if B<-r> is specified) from standard input and print
+I<latitude>, I<longitude>, I<easting>, I<northing>, I<convergence>, and
+I<scale>.  Units are degrees (or degrees, minutes, seconds) and meters.
 
-If -r is given, the reverse projection is performed (the inputs are easting
-and northing).
+By default, the WGS84 is ellipsoid is used (I<a> = 6378137m, I<f> =
+1/298.257223563), with central meridian = 0, UTM central scale (0.9996),
+and false easting and false northing = 0.  This is affected by the B<-t>
+option.
 
-If -s is given, the sixth-order Krueger series approximation to the
-transverse Mercator projection is used instead of the exact projection.
+=head1 OPTIONS
 
-If -t is specified, an ellipsoid of eccentricity 0.1 is used, central scale
-= 1, 1/4 meridian distance = 1.  In addition, the cut in the exact
-transverse Mercator projection at northing = 0 is removed.  The domain of
-latitude (lat) and longitude (lon) is the union of
+=over
+
+=item B<-r>
+
+perform the reverse projection; (the inputs are I<easting> and
+I<northing>).
+
+=item B<-s>
+
+use the sixth-order Krueger series approximation to the transverse
+Mercator projection instead of the exact projection.
+
+=item B<-t>
+
+use an ellipsoid of eccentricity 0.1, central scale = 1, 1/4 meridian =
+1.  In addition, the cut in the exact transverse Mercator projection at
+I<northing> = 0 is removed.  The domain of latitude (I<lat>) and
+longitude (I<lon>) is the union of
+
     lat in [0, 90]  and lon in [0, 90]
     lat in (-90, 0] and lon in [81, 90]
-The domain of easting (x) and northing (x) is the union of
+
+The domain of easting (I<x>) and northing (I<y>) is the union of
+
     x in [0, inf)       and y in [0, 1]
     x in [1.71..., inf) and y in (-inf, 0]
 
--s and -t are mutually exclusive (the last flag specified is the operative
-one).
+=item B<-h>
 
--h prints this help.
+print usage.
+
+=item B<--help>
+
+print full documentation.
+
+=back
 
 =head1 EXAMPLES
 
@@ -46,8 +69,12 @@ one).
    echo 260e5 100e5 | TransverseMercatorTest -r
    => -0.02 90.00 26000000 10000000 90.01 18.47
 
-
 =head1 SEE ALSO
 
 B<TransverseMercatorTest> is a part of GeographicLib,
-L<http://geographiclib.sf.net>.
+L<http://geographiclib.sf.net>.  The algorithms for the transverse
+Mercator projection are described in C. F. F. Karney, I<Transverse
+Mercator with an accuracy of a few nanometers>, J. Geod (2011); DOI
+L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
+L<http://arxiv.org/abs/1002.1417>.  The explanation of the domain of the
+projection with the B<-t> option is given in Section 5 of this paper.

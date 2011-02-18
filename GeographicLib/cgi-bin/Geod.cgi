@@ -250,17 +250,12 @@ cat <<EOF
       distance <em>s12</em> is in meters.
     </p>
     <p>
-      The "standard" method of calculating geodesics uses an algorithm
-      given by
-      <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
-        Vincenty (1975)</a>.
-      However, this has limited accuracy and fails for the inverse
-      problem when the points are nearly antipodal.  The method used by
       Geod is accurate to about 15 nm and gives solutions for the
-      inverse problem for any pair of points.  For example, compare the
+      inverse problem for any pair of points.  Most other geodesic
+      calculators fail for some inputs; for example, compare the
       inverse result given by Geod for the antipodal points (N30, E0)
       and (S30, E180) where the geodesic follows a meridian with the
-      bogus result returned by the
+      <b>wrong</b> result returned by the
       <a href="http://www.ngs.noaa.gov/">
         NGS</a> online 
       <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
@@ -279,15 +274,17 @@ cat <<EOF
       you wish to use Geod directly,
       <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
-      and compile GeographicLib.  A description of the algorithms is
-      given
-      <a href="http://geographiclib.sourceforge.net/html/geodesic.html">
-        here</a>.
+      and compile GeographicLib.  The algorithms are described
+      in C. F. F. Karney,
+      <a href="http://arxiv.org/abs/1102.1215"><i>Geodesics
+	on an ellipsoid of revolution</i></a>,
+      Feb. 2011; preprint
+      <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
     </p>
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2010-01-08)</address>
+      (2011-02-18)</address>
     <a href="http://sourceforge.net">
       <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2" border="0" alt="SourceForge.net" />
     </a>
