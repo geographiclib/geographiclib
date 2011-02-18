@@ -21,7 +21,7 @@ install:
 list:
 	@echo $(MANPAGES)
 
-clean:
+distclean:
 	rm -f *.1
 
 .PHONY: all install list clean

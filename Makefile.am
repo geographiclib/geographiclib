@@ -8,10 +8,10 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src tools doc include
+SUBDIRS = src tools doc include man
 
 EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
-			 Makefile.mk windows maxima matlab doc 
+			 Makefile.mk windows maxima matlab doc man
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \

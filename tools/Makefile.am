@@ -72,4 +72,11 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk \
+	GeoConvert.pod GeoConvert.usage \
+	TransverseMercatorTest.pod TransverseMercatorTest.usage \
+	CartConvert.pod CartConvert.usage \
+	Geod.pod Geod.usage \
+	EquidistantTest.pod EquidistantTest.usage \
+	GeoidEval.pod GeoidEval.usage \
+	Planimeter.pod Planimeter.usage
