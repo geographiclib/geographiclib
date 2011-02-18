@@ -267,7 +267,7 @@ cat <<EOF
         inverse geodesic calculator</a>.
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geod">
+      <a href="http://geographiclib.sourceforge.net/html/Geod.1.html">
         Geod</a>,
       which is a simple wrapper of the
       <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geodesic.html">

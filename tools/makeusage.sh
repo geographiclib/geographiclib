@@ -25,7 +25,7 @@ or visit:\n\\
 EOF
 
 pod2man $SOURCE | nroff -man | col -b -x | head --lines -4 | tail --lines +5 |
-sed -e 's/$/\\n\\/' -e 's/"/\\"/g'
+sed -e 's/\\/\\\\/g' -e 's/$/\\n\\/' -e 's/"/\\"/g'
 
 cat <<EOF
 ";

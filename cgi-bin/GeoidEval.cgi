@@ -112,7 +112,7 @@ cat <<EOF
         W3d0'34" N16d46'33"</pre>
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoideval">
+      <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
         GeoidEval</a>,
       which is a simple wrapper of the
       <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1Geoid.html">

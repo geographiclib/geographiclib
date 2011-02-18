@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Planimeter(1) - compute the area of geodesic polygons
+Planimeter(1) -- compute the area of geodesic polygons
 
 =head1 SYNOPSIS
 
@@ -34,3 +34,8 @@ to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
 ellipsoid.
 
 -h prints this help.
+
+=head1 SEE ALSO
+
+B<Planimeter> is a part of GeographicLib,
+L<http://geographiclib.sf.net>.
