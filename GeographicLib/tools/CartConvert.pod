@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-CartConvert(1) - convert geodetic to geocentric and local cartesian
+CartConvert(1) -- convert geodetic coordinates to geocentric or local cartesian
 
 =head1 SYNOPSIS
 
@@ -31,3 +31,8 @@ cartesian coordinates x, y, z (meters) are printed on standard output.
 If -r is given the reverse transformation is performed.
 
 -h prints this help.
+
+=head1 SEE ALSO
+
+B<CartConvert> is a part of GeographicLib,
+L<http://geographiclib.sf.net>.

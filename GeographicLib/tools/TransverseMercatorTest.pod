@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-TransverseMercatorTest(1) - convert between geographic and transverse Mercator
+TransverseMercatorTest(1) -- convert between geographic and transverse Mercator
 
 =head1 SYNOPSIS
 
@@ -38,3 +38,8 @@ The domain of easting (x) and northing (x) is the union of
 one).
 
 -h prints this help.
+
+=head1 SEE ALSO
+
+B<TransverseMercatorTest> is a part of GeographicLib,
+L<http://geographiclib.sf.net>.

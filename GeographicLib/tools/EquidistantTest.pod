@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-EquidistantTest(1) - perform projections based on geodesics
+EquidistantTest(1) -- perform projections based on geodesics
 
 =head1 SYNOPSIS
 
@@ -39,3 +39,8 @@ given on standard input and each line of the standard output gives
 latitude, longitude, azi, and rk.
 
 -h prints this help.
+
+=head1 SEE ALSO
+
+B<EquidistantTest> is a part of GeographicLib,
+L<http://geographiclib.sf.net>.

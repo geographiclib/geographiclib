@@ -134,6 +134,13 @@ decimal point is 5 + I<prec>.  For DMS (degree, minute, seconds) output,
 the number of digits after the decimal point in the seconds component
 is 1 + I<prec>.  The minimum value of I<prec> is 0 and the maximum is 10.
 
+=head1 ERRORS
+
+An illegal line of input will print an error message beginning with
+C<ERROR:> and causes B<Geod> to return an exit code of 1.  However, an
+error does not cause B<Geod> to terminate; following lines will be
+converted.
+
 =head1 EXAMPLES
 
 Route from JFK Airport to Singapore Changi Airport:

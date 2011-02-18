@@ -68,13 +68,6 @@ For more information, see http://geographiclib.sourceforge.net/
    - \ref geoidcache
    - \ref testgeoid
  - \ref utilities
-   - \ref geoconvert
-   - \ref geod
-   - \ref planimeter
-   - \ref transversemercatortest
-   - \ref cartconvert
-   - \ref equidistanttest
-   - \ref geoideval
  - \ref old
 
 <center>
@@ -167,11 +160,11 @@ The following steps will get you started with %GeographicLib:
    (resp. 2005) solution file which compiles the library and the utility
    programs under Windows.  (Visual Studio 2010 is also supported with a
    vc10 suffix.)
- - Try out \ref geoconvert (for help, type cd tools; ./GeoConvert -h)
+ - Try out <a href="GeoConvert.1.html">GeoConvert</a> (for help, type cd tools; ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
- - Similarly, try out \ref geod, \ref transversemercatortest,
-   \ref cartconvert, and \ref equidistanttest.
+ - Similarly, try out <a href="Geod.1.html">Geod</a>, <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>,
+   <a href="CartConvert.1.html">CartConvert</a>, and <a href="EquidistantTest.1.html">EquidistantTest</a>.
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
    on the library.
@@ -250,13 +243,12 @@ specified as latitude and longitude, UTM or UPS, or MGRS.  Member
 functions are provided to convert between coordinate systems and to
 provide formatted representations of them.
 
-\ref geoconvert is a simple command line utility to provide access to
+<a href="GeoConvert.1.html">GeoConvert</a> is a simple command line utility to provide access to
 the GeoCoords class.
 
 GeographicLib::TransverseMercatorExact is a drop in replacement for
 TransverseMercator which uses the exact formulas, based on elliptic
-functions, for the projection as given by Lee.  \ref
-transversemercatortest is a simple command line utility to test to the
+functions, for the projection as given by Lee.  <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a> is a simple command line utility to test to the
 TransverseMercator and TransverseMercatorExact.
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine perform geodesic
@@ -268,10 +260,10 @@ order to perform a series of direct geodesic calculations on a single
 line, the GeographicLib::GeodesicLine class can be used.  This packages
 all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
-point.  \ref geod is a simple command line utility to perform geodesic
+point.  <a href="Geod.1.html">Geod</a> is a simple command line utility to perform geodesic
 calculations.  GeographicLib::AzimuthalEquidistant,
 GeographicLib::CassiniSoldner, and GeographicLib::Gnomonic are
-projections based on the Geodesic class.  \ref equidistanttest is a
+projections based on the Geodesic class.  <a href="EquidistantTest.1.html">EquidistantTest</a> is a
 simple command line utility to exercise these projections.
 
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
@@ -279,11 +271,11 @@ geodetic and geocentric or a local cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
 implemented as const member functions.  GeographicLib::Geocentric::WGS84 is a
 const static instantiation of Geocentric specific for the WGS84 ellipsoid.
-\ref cartconvert is a simple command line utility to provide access to
+<a href="CartConvert.1.html">CartConvert</a> is a simple command line utility to provide access to
 these classes.
 
 GeographicLib::Geoid evaluates geoid heights by interpolation.  This is
-provided by the operator() member function.  \ref geoideval is a simple
+provided by the operator() member function.  <a href="GeoidEval.1.html">GeoidEval</a> is a simple
 command line utility to provide access to this class.  This class
 requires installation of data files for the various geoid models; see
 \ref geoidinst for details.
@@ -354,7 +346,7 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 
 GeographicLib::TransverseMercator and
 GeographicLib::TransverseMercatorExact provide accurate implelmentations
-of the transverse Mercator projection.  The \ref transversemercatortest
+of the transverse Mercator projection.  The <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>
 utility provides an interface to these classes.
 
 References
@@ -605,12 +597,12 @@ Back to \ref transversemercator.  Forward to \ref geocentric.  Up to \ref conten
 </center>
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
-solutions to the direct and inverse geodesic problems.  The \ref geod
+solutions to the direct and inverse geodesic problems.  The <a href="Geod.1.html">Geod</a>
 utility provides an interface to these classes.
 GeographicLib::AzimuthalEquidistant implements the azimuthal equidistant
 projection in terms of geodesics.  GeographicLib::CassiniSoldner
 implements a transverse cylindrical equidistant projection in terms of
-geodesics.  The \ref equidistanttest utility provides an interface to
+geodesics.  The <a href="EquidistantTest.1.html">EquidistantTest</a> utility provides an interface to
 these projections.
 
 References
@@ -696,7 +688,7 @@ The contents of the file are as follows:
 running between vertices are truncated to a multiple of 0.1 pm and this
 is used to determine point 2.
 
-This data can be fed to the \ref geod utility as follows
+This data can be fed to the <a href="Geod.1.html">Geod</a> utility as follows
  - Direct from point 1:
 \verbatim
   gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./Geod
@@ -1338,7 +1330,7 @@ GeoTiff, e.g., with
 \endverbatim
 The arguments to -scale here are specific to the Offset and Scale
 parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
-can check these by running \ref geoideval with the "-v" option.
+can check these by running <a href="GeoidEval.1.html">GeoidEval</a> with the "-v" option.
 
 Finally, here is a sample script which uses GDAL to create a 1-degree
 squared grid of geoid heights at 3&quot; resolution (matching DTED1) by
@@ -1499,27 +1491,46 @@ Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
 Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
 
-Various utility programs are provided with %GeographicLib.  These are
-merely wrapper programs that invoke the underlying functionality
-provided by the library.  The utilities all accept data on standard
-input, transform it in some way, and print the results on standard
-output.  This makes the utilities easy to use within scripts to transform
-tabular data; however they can also be used interactively, often with
-the input supplied via a pipe, e.g.,
+Various utility programs are provided with %GeographicLib.  These should
+be installed in a directory included in your PATH (e.g.,
+/usr/local/bin).  These programs are merely wrapper programs that invoke
+the underlying functionality provided by the library.  The utilities all
+accept data on standard input, transform it in some way, and print the
+results on standard output.  This makes the utilities easy to use within
+scripts to transform tabular data; however they can also be used
+interactively, often with the input supplied via a pipe, e.g.,
+
  - echo 38SMB4488 | GeoConvert -d
 
-The utililities are
- - <a href="GeoConvert.1.html"><b>GeoConvert</b></a> convert coordinates
- - <a href="Geod.1.html"><b>Geod</b></a> geodesic calculations
- - <a href="CartConvert.1.html"><b>CartConvert</b></a> geocentric
- - <a href="EquidistantTest.1.html"><b>EquidistantTest</b></a> geodesic projections
- - <a href="GeoidEval.1.html"><b>GeoidEval</b></a> geoid heights
- - <a href="Planimeter.1.html"><b>Planimeter</b></a> areas of geodesic polygons
+The utlilities are
 
-The examples of utility use here assume that the utilities have been
-built and put in a directory in your PATH.
+ - <a href="GeoConvert.1.html"><b>GeoConvert</b></a>: convert geographic
+   coordinates using GeographicLib::GeoCoords.  There is an online
+   interface to this utility at
+   http://geographiclib.sf.net/cgi-bin/GeoConvert
+ - <a href="Geod.1.html"><b>Geod</b></a>: perform geodesic calculations
+   using GeographicLib::Geodesic and GeographicLib::GeodesicLine.  There
+   is an online interface to this utility at
+   http://geographiclib.sf.net/cgi-bin/Geod
+ - <a href="Planimeter.1.html"><b>Planimeter</b></a>: compute the area of
+   geodesic polygons using the area facilities provided by
+   GeographicLib::Geodesic.
+ - <a href="TransverseMercatorTest.1.html"><b>TransverseMercatorTest</b></a>:
+   convert between geographic and transverse Mercator.  This is for testing
+   GeographicLib::TransverseMercatorExact and
+   GeographicLib::TransverseMercator.
+ - <a href="CartConvert.1.html"><b>CartConvert</b></a>: convert geodetic
+   coordinates to geocentric or local cartesian using
+   GeographicLib::Geocentric and GeographicLib::LocalCartesian.
+ - <a href="EquidistantTest.1.html"><b>EquidistantTest</b></a>: perform
+   projections based on geodesics using
+   GeographicLib::AzimuthalEquidistant, GeographicLib::Gnomonic, and
+   GeographicLib::CassiniSoldner.
+ - <a href="GeoidEval.1.html"><b>GeoidEval</b></a>: look up geoid
+   heights using GeographicLib::Geoid.  There is an online interface to
+   this utility at http://geographiclib.sf.net/cgi-bin/Geoid
 
-\section geoconvert GeoConvert
+geoconvert GeoConvert
 
 GeoConvert is a command line utility for geographic coordinate
 conversions via GeographicLib::GeoCoords.  There is an online interface
@@ -1623,7 +1634,7 @@ then
 -h prints this help.
 \endverbatim
 
-\section geod Geod
+geod Geod
 
 Geod is a command line utility for geodesic calculations via
 GeographicLib::Geodesic.  There is an online interface to this utility
@@ -1717,7 +1728,7 @@ The minimum value of prec is 0 (1 m accuracy) and the maximum value is
 -h prints this help.
 \endverbatim
 
-\section planimeter Planimeter
+planimeter Planimeter
 
 Planimeter is a command line utility for determining the area of
 geodesic polygons via GeographicLib::Geodesic.
@@ -1784,7 +1795,7 @@ ellipsoid.
 -h prints this help.
 \endverbatim
 
-\section transversemercatortest TransverseMercatorTest
+transversemercatortest TransverseMercatorTest
 
 TransverseMercatorTest is a command line utility for testing
 GeographicLib::TransverseMercatorExact and
@@ -1796,7 +1807,7 @@ Examples:
  - echo 260e5 100e5 | TransverseMercatorTest -r\n=>
    -0.02 90.00 26000000 10000000 90.01 18.47
 
-Note that, unlike \ref geoconvert, TransverseMercatorTest has no
+Note that, unlike <a href="GeoConvert.1.html">GeoConvert</a>, TransverseMercatorTest has no
 ability to change the precision of the output.
 
 Here is the usage (obtained from "TranverseMercatorTest -h")
@@ -1834,7 +1845,7 @@ one).
 -h prints this help.
 \endverbatim
 
-\section cartconvert CartConvert
+cartconvert CartConvert
 
 CartConvert is a command line utility for geodetic to cartesian
 coordinate conversions via GeographicLib::Geocentric and
@@ -1848,7 +1859,7 @@ Examples:
  - echo 30000 30000 0 | CartConvert -r\n=>
    6.483 45 -6335709.73
 
-Note that, unlike \ref geoconvert, CartConvert has no
+Note that, unlike <a href="GeoConvert.1.html">GeoConvert</a>, CartConvert has no
 ability to change the precision of the output.
 
 Here is the usage (obtained from "CartConvert -h")
@@ -1878,7 +1889,7 @@ If -r is given the reverse transformation is performed.
 -h prints this help.
 \endverbatim
 
-\section equidistanttest EquidistantTest
+equidistanttest EquidistantTest
 
 EquidistantTest is a command line utility for performing azimuthal
 equidistant, gnomonic, and Cassini-Soldner projections using
@@ -1893,7 +1904,7 @@ at the Paris Observatory)
  - echo -319919 -11791 | EquidistantTest -c 48.836 2.337 -r\n=>
    48.648 -2.007 86.7 0.999
 
-Note that, unlike \ref geoconvert, EquidistantTest has no
+Note that, unlike <a href="GeoConvert.1.html">GeoConvert</a>, EquidistantTest has no
 ability to change the precision of the output.
 
 Here is the usage (obtained from "EquidistantTest -h")
@@ -1931,7 +1942,7 @@ latitude, longitude, azi, and rk.
 -h prints this help.
 \endverbatim
 
-\section geoideval GeoidEval
+geoideval GeoidEval
 
 Evaluate the height of the geoid by interpolating into a grid via
 GeographicLib::Geoid.  There is an online interface to this utility
@@ -2046,13 +2057,13 @@ number.)
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.8 (not released yet)</a>
   - Add 64-bit targets for Visual Studio 2010.
   - Use templates for defining math functions and some constants.
-  - Use Kahan summation in \ref planimeter.
+  - Use Kahan summation in <a href="Planimeter.1.html">Planimeter</a>.
   - Add GeographicLib::Geoid::DefaultGeoidPath and
     GeographicLib::Geoid::DefaultGeoidName.
-  - \ref geoideval uses environment variable GEOID_NAME as the default geoid.
+  - <a href="GeoidEval.1.html">GeoidEval</a> uses environment variable GEOID_NAME as the default geoid.
   - Update references for Helmert, transverse Mercator paper.
   - Accept --help as well as -h to produce help from the utilities.
-  - Add --msltohae and --haetomsl as \ref geoideval options (and don't
+  - Add --msltohae and --haetomsl as <a href="GeoidEval.1.html">GeoidEval</a> options (and don't
     document the single hyphen versions).
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
@@ -2073,7 +2084,7 @@ number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.5.tar.gz/download">1.5 (released 2010-11-19)</a>
   - Improve area calculations for small polygons.
-  - Add -s and -r flags to \ref planimeter.
+  - Add -s and -r flags to <a href="Planimeter.1.html">Planimeter</a>.
   - Improve the accuracy of GeographicLib::LambertConformalConic using
     divided differences.
   - FIX BUG in meridian convergence returned by
@@ -2109,17 +2120,17 @@ number.)
     - signal convergence failure in Geodesic::Inverse with NaNs;
     - deprecate one function in Geodesic and two functions in
       GeodesicLine;
-    - deprecate -n option for \ref geod.
+    - deprecate -n option for <a href="Geod.1.html">Geod</a>.
     .
     WARNING: These changes may break binary compatibility with previous
     versions of %GeographicLib.  However, the library is source
     compatible (with the proviso that GeographicLib/GeodesicLine.hpp may
     now need to be included).
-  - Add the \ref planimeter utility for computing the areas of
+  - Add the <a href="Planimeter.1.html">Planimeter</a> utility for computing the areas of
     geodesic polygons.
   - Improve iterative solution of GeographicLib::Gnomonic::Reverse.
   - Add GeographicLib::Geoid::ConvertHeight.
-  - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
+  - Add -msltohae, -haetomsl, and -z options to <a href="GeoidEval.1.html">GeoidEval</a>.
   - Constructors check that minor radius is positive.
   - Add overloaded Forward and Reverse functions to the projection
     classes which don't return the convergence (or azimuth) and scale.
@@ -2128,9 +2139,9 @@ number.)
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
     gnomonic projection.
-  - Add -g and -e options to \ref equidistanttest.
-  - Use fixed-point notation for output from \ref cartconvert,
-    \ref equidistanttest, \ref transversemercatortest.
+  - Add -g and -e options to <a href="EquidistantTest.1.html">EquidistantTest</a>.
+  - Use fixed-point notation for output from <a href="CartConvert.1.html">CartConvert</a>,
+    <a href="EquidistantTest.1.html">EquidistantTest</a>, <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>.
   - PolarStereographic:
     - Improved conversion to conformal coordinates;
     - Fix bug with scale at opposite pole;
@@ -2165,9 +2176,9 @@ number.)
     - improve error reporting when parsing command line arguments;
     - accept latitudes and longitudes in decimal degrees or degrees,
       minutes, and seconds, with optional hemisphere designators;
-    - \ref geoconvert -z accepts zone or zone+hemisphere;
-    - \ref geoideval accepts any of the input formats used by \ref geoconvert;
-    - \ref cartconvert allows the ellipsoid to be specified with -e.
+    - <a href="GeoConvert.1.html">GeoConvert</a> -z accepts zone or zone+hemisphere;
+    - <a href="GeoidEval.1.html">GeoidEval</a> accepts any of the input formats used by <a href="GeoConvert.1.html">GeoConvert</a>;
+    - <a href="CartConvert.1.html">CartConvert</a> allows the ellipsoid to be specified with -e.
 
  - <a  href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.1.tar.gz/download">1.1 (released 2010-02-09)</a>
   - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
@@ -2202,7 +2213,7 @@ number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-11.tgz/download">2009-11</a>
   - Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
-    and \ref geoconvert (via -t option).
+    and <a href="GeoConvert.1.html">GeoConvert</a> (via -t option).
   - Utilities now complain is there are too many tokens on input lines.
   - Include real-to-real versions of GeographicLib::DMS::Decode and
     GeographicLib::DMS::Encode.
@@ -2236,15 +2247,15 @@ number.)
     - Add 64-bit targets in Visual Studio project files.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-09.tgz/download">2009-09</a>
-  - Add GeographicLib::Geoid and \ref geoideval utility.
+  - Add GeographicLib::Geoid and <a href="GeoidEval.1.html">GeoidEval</a> utility.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-08.tgz/download">2009-08</a>
-  - Add GeographicLib::CassiniSoldner class and \ref equidistanttest utility.
+  - Add GeographicLib::CassiniSoldner class and <a href="EquidistantTest.1.html">EquidistantTest</a> utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
     sometimes returned.
   - INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
     of the azimuthal scale instead of the reduced length.
-  - Add -n option to \ref geoconvert.
+  - Add -n option to <a href="GeoConvert.1.html">GeoConvert</a>.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-07.tgz/download">2009-07</a>
   - Speed up the series inversion code in tmseries.mac and geod.mac.
@@ -2257,14 +2268,14 @@ number.)
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-05.tgz/download">2009-05</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
-    - return reduced length (as does the \ref geod utility),
+    - return reduced length (as does the <a href="Geod.1.html">Geod</a> utility),
     - improved calculation of starting point for inverse method,
     - use reduced length to give derivative for Newton's method.
   - Add GeographicLib::AzimuthalEquidistant class.
   - Make GeographicLib::Geocentric, GeographicLib::TransverseMercator,
     and GeographicLib::PolarStereographic classes work with prolate
     ellipsoids.
-  - \ref cartconvert checks its inputs more carefully.
+  - <a href="CartConvert.1.html">CartConvert</a> checks its inputs more carefully.
   - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-04.tgz/download">2009-04</a>
@@ -2281,16 +2292,16 @@ number.)
       method,
     - accept and return spherical arc lengths,
     - works with both oblate and prolate ellipsoids,
-    - add -a, -e, -b options to the \ref geod utility.
+    - add -a, -e, -b options to the <a href="Geod.1.html">Geod</a> utility.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-03.tgz/download">2009-03</a>
-  - Add GeographicLib::Geodesic and the \ref geod utility.
+  - Add GeographicLib::Geodesic and the <a href="Geod.1.html">Geod</a> utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
   - Use invf = 0 to mean a sphere in constructors to some classes.
   - The makefile creates a library and includes an install target.
   - Rename GeographicLib::ECEF to GeographicLib::Geocentric, ECEFConvert
-    to \ref cartconvert.
+    to <a href="CartConvert.1.html">CartConvert</a>.
   - Use inline functions to define constant doubles in Constants.hpp.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-02.tgz/download">2009-02</a>

@@ -204,7 +204,7 @@ cat <<EOF
       </ul>
     </p>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoconvert">
+      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
         GeoConvert</a>,
       which is a simple wrapper of the
       <a href="http://geographiclib.sourceforge.net/html/classGeographicLib_1_1GeoCoords.html">
