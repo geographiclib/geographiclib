@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/sh
 # $Id$
 . ./utils.sh
 OPTION=`lookupkey "$QUERY_STRING" option`
@@ -66,7 +66,7 @@ cat <<EOF
   <body>
     <h3>
       Online geographic coordinate conversions using the
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoconvert">
+      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
 	GeoConvert</a> utility
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
@@ -156,7 +156,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="http://geographiclib.sourceforge.net/html/utilities.html#geoconvert">
+      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
         GeoConvert</a>
       converts between geographic (latitude and longitude) coordinates,
       <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">

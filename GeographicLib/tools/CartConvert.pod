@@ -32,6 +32,15 @@ If -r is given the reverse transformation is performed.
 
 -h prints this help.
 
+=head1 EXAMPLES
+
+   echo 33.3 44.4 6000 | CartConvert
+   => 3816209.60 3737108.55 3485109.57
+   echo 33.3 44.4 6000 | CartConvert -l 33 44 20
+   => 37288.97 33374.29 5783.64
+   echo 30000 30000 0 | CartConvert -r
+   => 6.483 45 -6335709.73
+
 =head1 SEE ALSO
 
 B<CartConvert> is a part of GeographicLib,

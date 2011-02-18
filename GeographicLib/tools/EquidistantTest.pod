@@ -40,6 +40,13 @@ latitude, longitude, azi, and rk.
 
 -h prints this help.
 
+=hear1 EXAMPLES
+
+   echo 48.648 -2.007 | EquidistantTest -c 48.836 2.337
+   => -319919 -11791 86.7 0.999
+   echo -319919 -11791 | EquidistantTest -c 48.836 2.337 -r
+   => 48.648 -2.007 86.7 0.999
+
 =head1 SEE ALSO
 
 B<EquidistantTest> is a part of GeographicLib,
