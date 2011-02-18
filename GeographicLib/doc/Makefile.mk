@@ -43,7 +43,7 @@ install: man html/index.html
 	$(INSTALL) -m 644 html/* $(DEST)/
 list:
 	@echo Doxyfile Geographic.doc $(EXTRAFILES)
-clean:
-	rm -rf html
+distclean:
+	rm -rf html $(MANPAGES)
 
 .PHONY: doc install list clean

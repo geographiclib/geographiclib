@@ -30,6 +30,9 @@ VPATH = ../include/GeographicLib
 clean:
 	rm -f *.o
 
+distclean:
+	rm -f *.usage
+
 GeoConvert: GeoConvert.o
 TransverseMercatorTest: TransverseMercatorTest.o
 CartConvert: CartConvert.o

@@ -46,6 +46,8 @@ Files
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
       Planimeter.cpp -- computer polygon areas
+      *.pod -- plain old documentation
+      *.usage -- documentation for incorporation into executables
 
     windows/
       GeographicLib-vc9.sln -- MS Studio 2008 solution
@@ -80,7 +82,13 @@ Files
     doc/
       Doxyfile -- Doxygen config file
       Geographic.doc -- main page of Doxygen documentation
+      geodseries30.html -- geodesic series to 30th order
+      tmseries30.html -- transverse Mercator series to 30th order
+      *.1.html -- man pages in html format
       html/* -- directory with built documentation
+
+    man/
+      *.1 -- man pages in nroff format
 
     Makefile -- Unix/Linux makefile (invokes make in the other directories)
     configure -- autoconf configuration script

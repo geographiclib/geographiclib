@@ -52,18 +52,44 @@ $(top_srcdir)/tools/GeoidEval.cpp \
 $(top_srcdir)/tools/Planimeter.cpp \
 $(top_srcdir)/tools/TransverseMercatorTest.cpp
 
-doc: html/index.html
-html/index.html: Doxyfile Geographic.doc \
-	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES)
-	rm -rf html/*
-	doxygen
-	for f in $(EXTRAFILES); do cp -p $$f html/; done
-	for f in $(top_srcdir)/maxima/*.mac; do cp -p $$f html/.; done
+MANPAGES = \
+CartConvert.1.html \
+EquidistantTest.1.html \
+GeoConvert.1.html \
+Geod.1.html \
+GeoidEval.1.html \
+Planimeter.1.html \
+TransverseMercatorTest.1.html
 
-clean-local:
-	rm -rf html
+PODFIX= sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
+
+doc: man html/index.html
+man: $(MANPAGES)
+
+CartConvert.1.html: $(top_srcdir)/tools/CartConvert.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+EquidistantTest.1.html: $(top_srcdir)/tools/EquidistantTest.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+GeoConvert.1.html: $(top_srcdir)/tools/GeoConvert.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+Geod.1.html: $(top_srcdir)/tools/Geod.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+GeoidEval.1.html: $(top_srcdir)/tools/GeoidEval.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+Planimeter.1.html: $(top_srcdir)/tools/Planimeter.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+TransverseMercatorTest.1.html: $(top_srcdir)/tools/TransverseMercatorTest.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+
+html/index.html: Doxyfile Geographic.doc \
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
+	if test -d html; then rm -rf html/*; else mkdir html; fi
+	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac html/
+	doxygen
+
+distclean-local:
+	rm -rf html $(MANPAGES)
 
 install-doc: doc
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
 	$(INSTALL) -m 644 html/* $(DESTDIR)$(docdir)/html
-
