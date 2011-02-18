@@ -13,7 +13,8 @@ GeoidEval.1 \
 Planimeter.1 \
 TransverseMercatorTest.1
 
-POD2MAN = pod2man --center="GeographicLib Utilities"
+POD2MAN = pod2man --center="GeographicLib Utilities" \
+	--release="$(PACKAGE_STRING)"
 man1_MANS = $(MANPAGES)
 
 CartConvert.1: $(top_srcdir)/tools/CartConvert.pod

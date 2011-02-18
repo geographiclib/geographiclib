@@ -6,10 +6,13 @@ PREFIX = /usr/local
 MANPAGES = $(addsuffix .1,$(PROGRAMS))
 DEST = $(PREFIX)/share/man/man1
 
+VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
+
 VPATH = ../tools
 
 %.1: %.pod
-	pod2man --center="GeographicLib Utilities" $^ > $@
+	pod2man --center="GeographicLib Utilities" \
+	--release="GeographicLib $(VERSION)" $^ > $@
 
 all: $(MANPAGES)
 
