@@ -167,4 +167,6 @@ Waypoints on the route at intervals of 2000km:
 
 =head1 SEE ALSO
 
-B<Geod> is a part of GeographicLib, L<http://geographiclib.sf.net>.
+B<Geod> is a part of GeographicLib, L<http://geographiclib.sf.net>.  The
+algorithms are described in C. F. F. Karney, I<Geodesics on an ellipsoid
+of revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.

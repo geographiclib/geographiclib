@@ -6,41 +6,74 @@ EquidistantTest(1) -- perform projections based on geodesics
 
 =head1 SYNOPSIS
 
-Usage: EquidistantTest -(c|z|g) lat0 lon0 [-r] [-e a r] [-h]
+B<EquidistantTest> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
+[ B<-e> I<a> I<r> ] [ B<-h> | B<--help> ]
 
-$Id$
+=head1 DESCRIPTION
 
 Perform projections based on geodesics.  Convert geodetic coordinates to
 either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
-The center of the projection (lat0, lon0) is specified by either the -c
-option (for Cassini-Soldner), the -z option (for azimuthal equidistant),
-or the -g option (for gnomonic).  At least one of these options must be
+The center of the projection (I<lat0>, I<lon0>) is specified by either the B<-c>
+option (for Cassini-Soldner), the B<-z> option (for azimuthal equidistant),
+or the B<-g> option (for gnomonic).  At least one of these options must be
 given (the last one given is used).
 
-By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
-equatorial radius of the ellipsoid to "a" and the reciprocal flattening
-to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
-ellipsoid.
-
 Geodetic coordinates are provided on standard input as a set of lines
-containing (blank separated) latitude and longitude (degrees or DMS).
-For each set of geodetic coordinates, the corresponding projected
-coordinates x, y (meters) are printed on standard output together with
-the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,
-azi is the bearing of the easting direction and the scale in the easting
-direction is 1 and the scale in the northing direction is 1/rk.  For
-azimuthal equidistant and gnomonic, azi is the bearing of the radial
-direction and the scale in the azimuthal direction is 1/rk.  For
-azimuthal equidistant and gnomonic, the scales in the radial direction
-are 1 and 1/rk^2, respectively.
+containing (blank separated) I<latitude> and I<longitude> (degrees or
+degrees, minutes, seconds).  For each set of geodetic coordinates, the
+corresponding projected coordinates I<x>, I<y> (meters) are printed on
+standard output together with the azimuth I<azi> (degrees) and
+reciprocal scale I<rk>.  For Cassini-Soldner, I<azi> is the bearing of
+the easting direction and the scale in the easting direction is 1 and
+the scale in the northing direction is 1/I<rk>.  For azimuthal
+equidistant and gnomonic, I<azi> is the bearing of the radial direction
+and the scale in the azimuthal direction is 1/I<rk>.  For azimuthal
+equidistant and gnomonic, the scales in the radial direction are 1 and
+1/I<rk>^2, respectively.
 
-If -r is given the reverse transformation is performed.  x and y are
-given on standard input and each line of the standard output gives
-latitude, longitude, azi, and rk.
+=head1 OPTIONS
 
--h prints this help.
+=over
 
-=hear1 EXAMPLES
+=item B<-z>
+
+use the azimuthal equidistant projection centered at latitude = I<lat0>,
+longitude = I<lon0>.
+
+=item B<-c>
+
+use the Cassini-Soldner projection centered at latitude = I<lat0>,
+longitude = I<lon0>.
+
+=item B<-g>
+
+use the ellipsoidal gnomonic projection centered at latitude = I<lat0>,
+longitude = I<lon0>.
+
+=item B<-r>
+
+perform the reverse projection.  I<x> and I<y> are given on standard
+input and each line of standard output gives I<latitude>, I<longitude>,
+I<azi>, and I<rk>.
+
+=item B<-e>
+
+specify the ellipsoid via I<a> I<r>; the equatorial radius is I<a> and
+the reciprocal flattening is I<r>.  Setting I<r> = 0 results in a
+sphere.  Specify I<r> E<lt> 0 for a prolate ellipsoid.  By default, the
+WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
+
+=item B<-h>
+
+print usage.
+
+=item B<--help>
+
+print full documentation.
+
+=back
+
+=head1 EXAMPLES
 
    echo 48.648 -2.007 | EquidistantTest -c 48.836 2.337
    => -319919 -11791 86.7 0.999
@@ -50,4 +83,6 @@ latitude, longitude, azi, and rk.
 =head1 SEE ALSO
 
 B<EquidistantTest> is a part of GeographicLib,
-L<http://geographiclib.sf.net>.
+L<http://geographiclib.sf.net>.  The ellipsoidal gnomonic projection is
+derived in Section 13 of C. F. F. Karney, I<Geodesics on an ellipsoid of
+revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.

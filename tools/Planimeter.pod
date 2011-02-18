@@ -6,34 +6,58 @@ Planimeter(1) -- compute the area of geodesic polygons
 
 =head1 SYNOPSIS
 
-Usage: Planimeter [-s] [-r] [-e a r] [-h]
-$Id$
+B<Planimeter> [ B<-s> ] [ B<-r> ] [ B<-e> I<a> I<r> ] [ B<-h> | B<--help> ]
+
+=head1 DESCRIPTION
 
 Measure the area of a geodesic polygon.  Reads polygon vertices from
 standard input, one per line.  Vertices may be given as latitude and
-longitude, UTM/UPS, or MGRS coordinates (interpreted in the same way as
-GeoConvert).  (MGRS coordinates signify the center of the corresponing
+longitude, UTM/UPS, or MGRS coordinates, interpreted in the same way as
+GeoConvert(1).  (MGRS coordinates signify the center of the corresponing
 MGRS square.)  The end of input, a blank line, or a line which can't be
 interpreted as a vertex signals the end of one polygon and the start of
 the next.  For each polygon print a summary line with the number of
 points, the perimeter (in meters), and the area (in meters^2).
 
 By default, areas are traversed in a counter-clockwise sense (in other
-words, the included area is to the left of the perimeter) and a
-positive area is returned.  By this rule, a polygon tranversed in a
-clockwise sense will return the area of ellipsoid excluded by the
-polygon; however, if the -s option is given, the signed area will be
-returned.  If the -r option is given, the included area is to the right
-of the perimeter.  The -s and -r flags are toggles; repeating one of
-then reverses the previous setting.  Only simple polygons are supported
-for the area computation.  Polygons may include one or both poles.
+words, the included area is to the left of the perimeter) and a positive
+area is returned.  By this rule, a polygon tranversed in a clockwise
+sense will return the area of ellipsoid excluded by the polygon;
+however, if the B<-s> option is given, the signed area will be returned.
+If the B<-r> option is given, the included area is to the right of the
+perimeter.  Only simple polygons are supported for the area computation.
+Polygons may include one or both poles.
 
-By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
-equatorial radius of the ellipsoid to "a" and the reciprocal flattening
-to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
-ellipsoid.
+=head1 OPTIONS
 
--h prints this help.
+=over
+
+=item B<-s>
+
+return a signed result for the area.  (This is a toggle; repeating the
+option undoes this setting.)
+
+=item B<-r>
+
+reverse the traversal rule so that clockwise traversal yields a positive
+result.  (This is a toggle; repeating the option undoes this setting.)
+
+=item B<-e>
+
+specify the ellipsoid via I<a> I<r>; the equatorial radius is I<a> and
+the reciprocal flattening is I<r>.  Setting I<r> = 0 results in a
+sphere.  Specify I<r> E<lt> 0 for a prolate ellipsoid.  By default, the
+WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
+
+=item B<-h>
+
+print usage.
+
+=item B<--help>
+
+print full documentation.
+
+=back
 
 =head1 EXAMPLES
 
@@ -70,5 +94,8 @@ covered by the data (assuming the edges of the image are geodesics).
 
 =head1 SEE ALSO
 
-B<Planimeter> is a part of GeographicLib,
-L<http://geographiclib.sf.net>.
+GeoConvert(1).  B<Planimeter> is a part of GeographicLib,
+L<http://geographiclib.sf.net>.  The algorithm for the area of geodesic
+polygon is given in Section 15 of C. F. F. Karney, I<Geodesics on an
+ellipsoid of revolution>, Feb. 2011; preprint
+L<http://arxiv.org/abs/1102.1215>.
