@@ -6,7 +6,8 @@ Planimeter(1) -- compute the area of geodesic polygons
 
 =head1 SYNOPSIS
 
-B<Planimeter> [ B<-s> ] [ B<-r> ] [ B<-e> I<a> I<r> ] [ B<-h> | B<--help> ]
+B<Planimeter> [ B<-s> ] [ B<-r> ] [ B<-e> I<a> I<r> ]
+[ B<--version> | B<-h> | B<--help> ]
 
 =head1 DESCRIPTION
 
@@ -48,6 +49,10 @@ specify the ellipsoid via I<a> I<r>; the equatorial radius is I<a> and
 the reciprocal flattening is I<r>.  Setting I<r> = 0 results in a
 sphere.  Specify I<r> E<lt> 0 for a prolate ellipsoid.  By default, the
 WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
+
+=item B<--version>
+
+print version.
 
 =item B<-h>
 

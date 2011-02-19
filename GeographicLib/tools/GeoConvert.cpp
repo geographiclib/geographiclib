@@ -77,7 +77,11 @@ int main(int argc, char* argv[]) {
       zone = UTMUPS::STANDARD;
     else if (arg == "-t")
       zone = UTMUPS::UTM;
-    else
+    else if (arg == "--version") {
+      std::cout << PROGRAM_NAME << ": $Id$\n"
+                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      return 0;
+    } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 

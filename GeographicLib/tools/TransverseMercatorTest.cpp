@@ -38,6 +38,10 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-s") {
       testing = false;
       series = true;
+    } else if (arg == "--version") {
+      std::cout << PROGRAM_NAME << ": $Id$\n"
+                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      return 0;
     } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }

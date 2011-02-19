@@ -7,6 +7,7 @@ TransverseMercatorTest(1) -- convert between geographic and transverse Mercator
 =head1 SYNOPSIS
 
 B<TransverseMercatorTest> [ B<-r> ] [ B<-s> | B<-t> ]
+[ B<--version> | B<-h> | B<--help> ]
 
 =head1 DESCRIPTION
 
@@ -51,6 +52,10 @@ The domain of easting (I<x>) and northing (I<y>) is the union of
 
     x in [0, inf)       and y in [0, 1]
     x in [1.71..., inf) and y in (-inf, 0]
+
+=item B<--version>
+
+print version.
 
 =item B<-h>
 
