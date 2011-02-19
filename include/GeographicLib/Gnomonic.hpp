@@ -2,8 +2,9 @@
  * \file Gnomonic.hpp
  * \brief Header for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
@@ -19,14 +20,22 @@ namespace GeographicLib {
    * \brief %Gnomonic Projection.
    *
    * %Gnomonic projection centered at an arbitrary position \e C on the
-   * ellipsoid.  The projection of \e P is defined as follows: compute the
+   * ellipsoid.  This projection is derived in Section 13 of
+   * - C. F. F. Karney,
+   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   on an ellipsoid of revolution</a>,
+   *   Feb. 2011;
+   *   preprint
+   *   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
+   * .
+   * The projection of \e P is defined as follows: compute the
    * geodesic line from \e C to \e P; compute the reduced length \e m12,
    * geodesic scale \e M12, and \e rho = \e m12/\e M12; finally \e x = \e rho
    * sin \e azi1; \e y = \e rho cos \e azi1, where \e azi1 is the azimuth of
-   * the geodesic at \e C.  The Forward and Reverse methods also return the
-   * azimuth \e azi of the geodesic at \e P and reciprocal scale \e rk in the
-   * azimuthal direction.  The scale in the radial direction if 1/\e
-   * rk<sup>2</sup>.
+   * the geodesic at \e C.  The Gnomonic::Forward and Gnomonic::Reverse methods
+   * also return the azimuth \e azi of the geodesic at \e P and reciprocal
+   * scale \e rk in the azimuthal direction.  The scale in the radial direction
+   * if 1/\e rk<sup>2</sup>.
    *
    * For a sphere, \e rho is reduces to \e a tan(\e s12/\e a), where \e s12 is
    * the length of the geodesic from \e C to \e P, and the gnomonic projection
@@ -62,8 +71,7 @@ namespace GeographicLib {
    * - Project to a tangent plane from the center of the ellipsoid.  This
    *   causes great ellipses to appear as straight lines in the projection;
    *   i.e., it generalizes the spherical great circle to a great ellipse.
-   *   This was proposed by Roy Williams, Geometry of Navigation (Horwood,
-   *   Chichester, 1998).
+   *   This was proposed by independently by Bowring and Williams in 1997.
    * - Project to the conformal sphere with the constant of integration chosen
    *   so that the values of the latitude match for the center point and
    *   perform a central projection onto the plane tangent to the conformal
