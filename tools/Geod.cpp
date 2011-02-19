@@ -119,6 +119,10 @@ int main(int argc, char* argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
       }
+    } else if (arg == "--version") {
+      std::cout << PROGRAM_NAME << ": $Id$\n"
+                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      return 0;
     } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }

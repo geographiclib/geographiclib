@@ -3,9 +3,13 @@
 # $Id$
 
 SOURCE=$1
-BASE=`basename $SOURCE .pod`
+NAME=`basename $SOURCE .pod`
+VERSION=`grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1`
 
 cat<<EOF
+#define GEOGRAPHICLIB_VERSION "$VERSION"
+#define PROGRAM_NAME "$NAME"
+
 int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n\\
@@ -17,9 +21,9 @@ sed -e 1,/SYNOPSIS/d -e '/^$/,$d' -e 's/  / /g' -e 's/$/\\n\\/' -e 's/"/\\"/g'
 cat <<EOF
 \n\\
 For full documentation type:\n\\
-    $BASE --help\n\\
+    $NAME --help\n\\
 or visit:\n\\
-    http://geographiclib.sf.net/html/$BASE.1.html\n";
+    http://geographiclib.sf.net/html/$NAME.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n\\
 EOF

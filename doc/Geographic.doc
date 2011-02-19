@@ -1577,7 +1577,7 @@ number.)
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
   - Supply man pages.  With the utilitiies, -h prints the synopsis and
-    --help prints the man page.
+    --help prints the man page, --version prints the version.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.

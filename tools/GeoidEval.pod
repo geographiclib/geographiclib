@@ -9,7 +9,7 @@ GeoidEval(1) -- look up geoid heights
 B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
 [ B<-a> | B<-c> I<south> I<west> I<north> I<east> ]
 [ B<-z> I<zone> ] [ B<--msltohae> ] [ B<--haetomsl> ]
-[ B<-v> ] [ B<-h> | B<--help> ]
+[ B<-v> ] [ B<--version> | B<-h> | B<--help> ]
 
 =head1 DESCRIPTION
 
@@ -73,6 +73,10 @@ echoes the input line with the height converted to height above geoid.
 
 print information about the geoid on standard error before processing
 the input.
+
+=item B<--version>
+
+print version.
 
 =item B<-h>
 

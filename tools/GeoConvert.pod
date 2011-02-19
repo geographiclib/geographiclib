@@ -7,7 +7,7 @@ GeoConvert(1) -- convert geographic coordinates
 =head1 SYNOPSIS
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-u> | B<-m> | B<-c> ] [ B<-p> I<prec> ]
-[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<-h> | B<--help> ]
+[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<--version> | B<-h> | B<--help> ]
 
 =head1 DESCRIPTION
 
@@ -108,6 +108,10 @@ similar to B<-s> but forces UPS regions to the closest UTM zone.
 
 on input, MGRS coordinates refer to the south-west corner of the MGRS
 square instead of the center; see L<MGRS|mgrs>.
+
+=item B<--version>
+
+print version.
 
 =item B<-h>
 
