@@ -127,7 +127,7 @@ namespace GeographicLib {
     { return T(3.1415926535897932384626433832795028841971693993751L); }
     /**
      * A synonym for pi<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline real pi() throw() { return pi<real>(); }
     /**
      * <b>DEPRECATED</b> A synonym for pi<extened>().
@@ -411,11 +411,11 @@ namespace GeographicLib {
   public:
     /**
      * <b>DEPRECATED</b> A synonym for Math::pi<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline Math::real pi() throw() { return Math::pi<real>(); }
     /**
      * A synonym for Math::degree<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline Math::real degree() throw() { return Math::degree<real>(); }
     /**
      * @return the number of radians in an arcminute.
@@ -438,7 +438,7 @@ namespace GeographicLib {
     static inline T WGS84_a() throw() { return T(6378137) * meter<T>(); }
     /**
      * A synonym for WGS84_a<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline Math::real WGS84_a() throw() { return WGS84_a<real>(); }
     /**
      * @return the reciprocal flattening of WGS84 ellipsoid
@@ -450,7 +450,7 @@ namespace GeographicLib {
     }
     /**
      * A synonym for WGS84_r<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
      * @return the central scale factor for UTM
@@ -459,7 +459,7 @@ namespace GeographicLib {
     static inline T UTM_k0() throw() {return T(9996) / T(10000); } // 0.9996
     /**
      * A synonym for UTM_k0<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline Math::real UTM_k0() throw() { return UTM_k0<real>(); }
     /**
      * @return the central scale factor for UPS
@@ -468,7 +468,7 @@ namespace GeographicLib {
     static inline T UPS_k0() throw() { return T(994) / T(1000); } // 0.994
     /**
      * A synonym for UPS_k0<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline Math::real UPS_k0() throw() { return UPS_k0<real>(); }
     ///@}
 
@@ -485,7 +485,7 @@ namespace GeographicLib {
     static inline T meter() throw() { return T(1); }
     /**
      * A synonym for meter<real>().
-     **********************************************************************/ 
+     **********************************************************************/
     static inline Math::real meter() throw() { return meter<real>(); }
     /**
      * @return the number of meters in a kilometer.

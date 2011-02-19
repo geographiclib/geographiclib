@@ -40,8 +40,8 @@ namespace GeographicLib {
   // This is the transfer matrix for a 3rd order fit with a 12-point stencil
   // with weights
   //
-  //  \ x -1  0  1  2
-  //  y
+  //   \x -1  0  1  2
+  //   y
   //  -1   .  1  1  .
   //   0   1  2  2  1
   //   1   1  2  2  1

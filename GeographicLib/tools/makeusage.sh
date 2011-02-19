@@ -1,5 +1,5 @@
 #! /bin/sh
-# Convert a pod file into a usage function.
+# Convert a pod file into a usage function for the GeographicLib utilities.
 # $Id$
 
 SOURCE=$1

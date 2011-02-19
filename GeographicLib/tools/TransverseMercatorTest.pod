@@ -17,7 +17,8 @@ coordinates.
 Read lines with I<latitude> and I<longitude> (or I<easting> and
 I<northing> if B<-r> is specified) from standard input and print
 I<latitude>, I<longitude>, I<easting>, I<northing>, I<convergence>, and
-I<scale>.  Units are degrees (or degrees, minutes, seconds) and meters.
+I<scale>.  Units are decimal degrees (or degrees, minutes, seconds) and
+meters.
 
 By default, the WGS84 is ellipsoid is used (I<a> = 6378137m, I<f> =
 1/298.257223563), with central meridian = 0, UTM central scale (0.9996),
@@ -74,6 +75,14 @@ print full documentation.
    echo 260e5 100e5 | TransverseMercatorTest -r
    => -0.02 90.00 26000000 10000000 90.01 18.47
 
+=head1 ERRORS
+
+An illegal line of input will print an error message to standard output
+beginning with C<ERROR:> and causes B<TransverseMercatorTest> to return
+an exit code of 1.  However, an error does not cause
+B<TransverseMercatorTest> to terminate; following lines will be
+converted.
+
 =head1 SEE ALSO
 
 B<TransverseMercatorTest> is a part of GeographicLib,
@@ -83,3 +92,7 @@ Mercator with an accuracy of a few nanometers>, J. Geod (2011); DOI
 L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
 L<http://arxiv.org/abs/1002.1417>.  The explanation of the domain of the
 projection with the B<-t> option is given in Section 5 of this paper.
+
+=head1 AUTHOR
+
+B<TransverseMercatorTest> was written by Charles Karney.
