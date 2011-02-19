@@ -24,7 +24,7 @@ namespace GeographicLib {
    * to geocentric coordinates (\e x, \e y, \e z).  The origin of geocentric
    * coordinates is at the center of the earth.  The \e z axis goes thru the
    * north pole, \e lat = 90<sup>o</sup>.  The \e x axis goes thru \e lat = 0,
-   * \e lon = 0.  Geocentric coordinates are also known as earth centered,
+   * \e lon = 0.  %Geocentric coordinates are also known as earth centered,
    * earth fixed (ECEF) coordinates.
    *
    * The conversion from geographic to geocentric coordinates is
@@ -36,11 +36,13 @@ namespace GeographicLib {
    * .
    * Several changes have been made to ensure that the method returns accurate
    * results for all finite inputs (even if \e h is infinite).  The changes are
-   * descibed in Appendix B of
+   * described in Appendix B of
    * - C. F. F. Karney,
    *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
    *   on an ellipsoid of revolution</a>,
-   *   Feb. 2011.
+   *   Feb. 2011;
+   *   preprint
+   *   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
    * .
    * See \ref geocentric for more information.
    *

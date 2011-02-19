@@ -128,17 +128,16 @@ specified in which case bilinear interpolation is used.  The cubic
 interpolation is based on a least-squares fit of a cubic polynomial to a
 12-point stencil
 
-    \x -1  0  1  2
-    y
-   -1   .  1  1  .
-    0   1  2  2  1
-    1   1  2  2  1
-    2   .  1  1  .
+   . 1 1 .
+   1 2 2 1
+   1 2 2 1
+   . 1 1 .
 
-Cubic interpolation is more accurate; however it results in
-small discontinuities in the returned height on cell boundaries.
-The gradients are computed by differentiating the interpolated
-results.
+The cubic is constrained to be independent of longitude when evaluating
+the height at one of the poles.  Cubic interpolation is considerably
+more accurate than bilinear; however it results in small discontinuities
+in the returned height on cell boundaries.  The gradients are computed
+by differentiating the interpolated results.
 
 =head1 CACHE
 
@@ -240,3 +239,7 @@ Convert a point in UTM zone 18N from MSL to HAE
 
 GeoConvert(1).  B<GeoidEval> is a part of GeographicLib,
 L<http://geographiclib.sf.net>.
+
+=head1 AUTHOR
+
+B<GeoidEval> was written by Charles Karney.

@@ -8,7 +8,7 @@ Geod(1) -- perform geodesic calculations
 
 B<Geod> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ] [ B<-e> I<a> I<r> ]
 [ B<-d> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ]
-[ B<--version> | B<-h> | B<--help>]
+[ B<--version> | B<-h> | B<--help> ]
 
 =head1 DESCRIPTION
 
@@ -175,3 +175,7 @@ Waypoints on the route at intervals of 2000km:
 B<Geod> is a part of GeographicLib, L<http://geographiclib.sf.net>.  The
 algorithms are described in C. F. F. Karney, I<Geodesics on an ellipsoid
 of revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
+
+=head1 AUTHOR
+
+B<Geod> was written by Charles Karney.

@@ -7,7 +7,8 @@ GeoConvert(1) -- convert geographic coordinates
 =head1 SYNOPSIS
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-u> | B<-m> | B<-c> ] [ B<-p> I<prec> ]
-[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<--version> | B<-h> | B<--help> ]
+[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ]
+[ B<--version> | B<-h> | B<--help> ]
 
 =head1 DESCRIPTION
 
@@ -64,11 +65,11 @@ grid square.  For example,
 
 =item B<-g>
 
-output latitude and longitude (decimal degrees).  Default output mode.
+output latitude and longitude using decimal degrees.  Default output mode.
 
 =item B<-d>
 
-output latitude and longitude (DMS, degrees minutes seconds).
+output latitude and longitude using degrees, minutes, and seconds (DMS).
 
 =item B<-u>
 
@@ -226,3 +227,7 @@ Mercator projection are described in C. F. F. Karney, I<Transverse
 Mercator with an accuracy of a few nanometers>, J. Geod (2011); DOI
 L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
 L<http://arxiv.org/abs/1002.1417>.
+
+=head1 AUTHOR
+
+B<GeoConvert> was written by Charles Karney.

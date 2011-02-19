@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.7
-\date 2010-12-21
+\version 1.8
+\date 2011-02-xx
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sf.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">
-  geographiclib-1.7.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.zip/download">
-  geographiclib-1.7.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">
+  geographiclib-1.8.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.zip/download">
+  geographiclib-1.8.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -143,15 +143,15 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">
+   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.7.tar.gz
+   - tar xfpvz geographiclib-1.8.tar.gz
    .
-   This will create a geographiclib-1.7 directory.  (Alternatively,
+   This will create a geographiclib-1.8 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.7 directory
-   - cd geographiclib-1.7
+ - Change to the geographiclib-1.8 directory
+   - cd geographiclib-1.8
  - Create the library and the utility programs
    - make all
    .
@@ -636,7 +636,9 @@ References
    <a href="http://arxiv.org/abs/1102.1215">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>
+   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>;
+   resource page
+   <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sf.net/geodesic-papers/biblio.html
 
@@ -1086,7 +1088,8 @@ described in Appendix B of
  - C. F. F. Karney,
    <a href="http://arxiv.org/abs/1102.1215">Geodesics
    on an ellipsoid of revolution</a>,
-   Feb. 2011.
+   Feb. 2011; preprint
+   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
 
 The problems encountered near the center of the ellipsoid are:
  - There's a potential division by zero in the definition of \e s. The
@@ -1462,12 +1465,17 @@ the 5' grids and coarser.  Caching all the data for the 1' grid will
 require 0.5GB of RAM and should only be used on systems with sufficient
 memory.
 
-The use of caching does not affect the values returned.  Because
-of the caching and the random file access, this class is \e not
-thread safe; i.e., a single instantiation cannot be safely used
-by multiple threads.  If multiple threads need to calculate
-geoid heights they should all construct thread-local
-instantiations.
+The use of caching does not affect the values returned.  Because of the
+caching and the random file access, this class is \e not normally thread
+safe; i.e., a single instantiation cannot be safely used by multiple
+threads.  If multiple threads need to calculate geoid heights, there are
+two alternatives:
+ - they should all construct thread-local instantiations.
+ - GeographicLib::Geoid should be constructed with \e threadsafe = true.
+   This causes all the data to be read at the time of construction (and
+   if this fails, an exception is thrown), the data file to be closed
+   and the single-cell caching to be turned off.  The resulting object
+   may then be shared safely between threads.
 
 \section testgeoid Test data for geoids
 
@@ -1502,7 +1510,7 @@ Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
 \page utilities Utility Programs
 
 <center>
-Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
+Back to \ref geoid.  Forward to \ref old.  Up to \ref contents.
 </center>
 
 Various utility programs are provided with %GeographicLib.  These should
@@ -1547,7 +1555,7 @@ The utlilities are
 Click on the utility name to read the documentation for the utility.
 
 <center>
-Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
+Back to \ref geoid.  Forward to \ref old.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
@@ -1562,24 +1570,26 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.8 (not released yet)</a>
-  - Add 64-bit targets for Visual Studio 2010.
-  - Use templates for defining math functions and some constants.
-  - Use Kahan summation in <a href="Planimeter.1.html">Planimeter</a>.
-  - Add GeographicLib::Geoid::DefaultGeoidPath and
-    GeographicLib::Geoid::DefaultGeoidName.
-  - <a href="GeoidEval.1.html">GeoidEval</a> uses environment variable
-    GEOID_NAME as the default geoid.
-  - Update references for Helmert, transverse Mercator paper.
-  - Add --msltohae and --haetomsl as
-    <a href="GeoidEval.1.html">GeoidEval</a> options (and don't document
-    the single hyphen versions).
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, 2011-02-xx)</a>
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
-  - Supply man pages.  With the utilitiies, -h prints the synopsis and
+  - For the \ref utilities, supply man pages, -h prints the synopsis,
     --help prints the man page, --version prints the version.
+  - Use Kahan summation in <a href="Planimeter.1.html">Planimeter</a>.
+  - Add 64-bit targets for Visual Studio 2010.
+  - Use templates for defining math functions and some constants.
+  - GeographicLib::Geoid updates
+    - Add GeographicLib::Geoid::DefaultGeoidPath and
+      GeographicLib::Geoid::DefaultGeoidName.
+    - <a href="GeoidEval.1.html">GeoidEval</a> uses environment variable
+      GEOID_NAME as the default geoid.
+    - Add --msltohae and --haetomsl as
+      <a href="GeoidEval.1.html">GeoidEval</a> options (and don't
+      document the single hyphen versions).
+  - Remove documentation that duplicates papers on transverse Mercator
+    and geodesics.
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (released 2010-12-21)</a>
   - FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
   - Add GeographicLib::AlbersEqualArea projection.
   - Library created by Visual Studio is Geographic.lib instead of
@@ -1757,7 +1767,7 @@ number.)
       CassiniSoldner and LocalCartesian so that they may be copied.
     - Make several constructors explicit.  Disallow some constructors.
       Disallow copy constructor/assignment for Geoid.
-    - Document least square formulas in Geoid.cpp.
+    - Document least squares formulas in Geoid.cpp.
     - Use unsigned long long for files positions of geoid files in Geoid.
     - Introduce optional mgrslimits argument in UTMUPS::Forward and
       UTMUPS::Reverse to enforce stricter MGRS limits on eastings and

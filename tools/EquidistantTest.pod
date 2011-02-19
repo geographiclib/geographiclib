@@ -19,17 +19,17 @@ or the B<-g> option (for gnomonic).  At least one of these options must be
 given (the last one given is used).
 
 Geodetic coordinates are provided on standard input as a set of lines
-containing (blank separated) I<latitude> and I<longitude> (degrees or
-degrees, minutes, seconds).  For each set of geodetic coordinates, the
-corresponding projected coordinates I<x>, I<y> (meters) are printed on
-standard output together with the azimuth I<azi> (degrees) and
-reciprocal scale I<rk>.  For Cassini-Soldner, I<azi> is the bearing of
-the easting direction and the scale in the easting direction is 1 and
-the scale in the northing direction is 1/I<rk>.  For azimuthal
-equidistant and gnomonic, I<azi> is the bearing of the radial direction
-and the scale in the azimuthal direction is 1/I<rk>.  For azimuthal
-equidistant and gnomonic, the scales in the radial direction are 1 and
-1/I<rk>^2, respectively.
+containing (blank separated) I<latitude> and I<longitude> (decimal
+degrees or degrees, minutes, seconds).  For each set of geodetic
+coordinates, the corresponding projected coordinates I<x>, I<y> (meters)
+are printed on standard output together with the azimuth I<azi>
+(degrees) and reciprocal scale I<rk>.  For Cassini-Soldner, I<azi> is
+the bearing of the easting direction and the scale in the easting
+direction is 1 and the scale in the northing direction is 1/I<rk>.  For
+azimuthal equidistant and gnomonic, I<azi> is the bearing of the radial
+direction and the scale in the azimuthal direction is 1/I<rk>.  For
+azimuthal equidistant and gnomonic, the scales in the radial direction
+are 1 and 1/I<rk>^2, respectively.
 
 =head1 OPTIONS
 
@@ -84,9 +84,20 @@ print full documentation.
    echo -319919 -11791 | EquidistantTest -c 48.836 2.337 -r
    => 48.648 -2.007 86.7 0.999
 
+=head1 ERRORS
+
+An illegal line of input will print an error message to standard output
+beginning with C<ERROR:> and causes B<EquidistantTest> to return an exit
+code of 1.  However, an error does not cause B<EquidistantTest> to
+terminate; following lines will be converted.
+
 =head1 SEE ALSO
 
 B<EquidistantTest> is a part of GeographicLib,
 L<http://geographiclib.sf.net>.  The ellipsoidal gnomonic projection is
 derived in Section 13 of C. F. F. Karney, I<Geodesics on an ellipsoid of
 revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
+
+=head1 AUTHOR
+
+B<EquidistantTest> was written by Charles Karney.

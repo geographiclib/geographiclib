@@ -12,17 +12,19 @@ B<CartConvert> [ B<-r> ] [ B<-l> I<lat0> I<lon0> I<h0> ] [ B<-e> I<a> I<r> ]
 =head1 DESCRIPTION
 
 Convert geodetic coordinates to either geocentric or local cartesian
-coordinates.  Geocentric coordinates have the origin at the center of the
-earth, with the z axis going thru the north pole, and the x axis thru lat =
-0, lon = 0.  By default, the conversion is to geocentric coordinates.
-Specifying B<-l> I<lat0> I<lon0> I<h0> causes a local coordinate system to be used with
-the origin at latitude = lat0, longitude = lon0, height = h0, z normal to
-the ellipsoid and y due north.
+coordinates.  Geocentric coordinates have the origin at the center of
+the earth, with the I<z> axis going thru the north pole, and the I<x>
+axis thru I<latitidude> = 0, I<longitude> = 0.  By default, the
+conversion is to geocentric coordinates.  Specifying B<-l> I<lat0>
+I<lon0> I<h0> causes a local coordinate system to be used with the
+origin at I<latitude> = I<lat0>, I<longitude> = I<lon0>, I<height> =
+I<h0>, I<z> normal to the ellipsoid and I<y> due north.
 
 Geodetic coordinates are provided on standard input as a set of lines
-containing (blank separated) latitude, longitude (degrees or DMS), and
-height (meters).  For each set of geodetic coordinates, the corresponding
-cartesian coordinates x, y, z (meters) are printed on standard output.
+containing (blank separated) I<latitude>, I<longitude> (decimal degrees
+or degrees, minutes and seconds), and I<height> (meters).  For each set
+of geodetic coordinates, the corresponding cartesian coordinates I<x>,
+I<y>, I<z> (meters) are printed on standard output.
 
 =head1 OPTIONS
 
@@ -30,7 +32,9 @@ cartesian coordinates x, y, z (meters) are printed on standard output.
 
 =item B<-r>
 
-perform the reverse projection.
+perform the reverse projection.  I<x>, I<y>, I<z> are given on standard
+input and each line of standard output gives I<latitude>, I<longitude>,
+I<height>.
 
 =item B<-e>
 
@@ -62,7 +66,21 @@ print full documentation.
    echo 30000 30000 0 | CartConvert -r
    => 6.483 45 -6335709.73
 
+=head1 ERRORS
+
+An illegal line of input will print an error message to standard output
+beginning with C<ERROR:> and causes B<CartConvert> to return an exit
+code of 1.  However, an error does not cause B<CartConvert> to
+terminate; following lines will be converted.
+
 =head1 SEE ALSO
 
 B<CartConvert> is a part of GeographicLib,
-L<http://geographiclib.sf.net>.
+L<http://geographiclib.sf.net>.  The algorithm for converting geocentric
+to geodetic coordinates is given in Appendix B of C. F. F. Karney,
+I<Geodesics on an ellipsoid of revolution>, Feb. 2011; preprint
+L<http://arxiv.org/abs/1102.1215>.
+
+=head1 AUTHOR
+
+B<CartConvert> was written by Charles Karney.

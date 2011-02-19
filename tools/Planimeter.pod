@@ -104,3 +104,7 @@ L<http://geographiclib.sf.net>.  The algorithm for the area of geodesic
 polygon is given in Section 15 of C. F. F. Karney, I<Geodesics on an
 ellipsoid of revolution>, Feb. 2011; preprint
 L<http://arxiv.org/abs/1102.1215>.
+
+=head1 AUTHOR
+
+B<Planimeter> was written by Charles Karney.
