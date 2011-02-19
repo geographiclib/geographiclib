@@ -1580,9 +1580,9 @@ number.)
   - Use templates for defining math functions and some constants.
   - GeographicLib::Geoid updates
     - Add GeographicLib::Geoid::DefaultGeoidPath and
-      GeographicLib::Geoid::DefaultGeoidName.
+      GeographicLib::Geoid::DefaultGeoidName;
     - <a href="GeoidEval.1.html">GeoidEval</a> uses environment variable
-      GEOID_NAME as the default geoid.
+      GEOID_NAME as the default geoid;
     - Add --msltohae and --haetomsl as
       <a href="GeoidEval.1.html">GeoidEval</a> options (and don't
       document the single hyphen versions).
