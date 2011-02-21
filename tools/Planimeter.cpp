@@ -26,9 +26,9 @@ int main(int argc, char* argv[]) {
   typedef Math::real real;
 
   class Accumulator {
-    // Compute a sum at double precision.  This is Algorithm 4.1, Cascaded
-    // summation, of T. Ogita, S. M. Rump, S. Oishi, Accurate sum and dot
-    // product, SIAM J. Sci. Comp., 26(6) 1955-1988 (2005).
+    // Compute a sum at double precision.  This is Algorithm 4.1, of T. Ogita,
+    // S. M. Rump, S. Oishi, Accurate sum and dot product, SIAM J. Sci. Comp.,
+    // 26(6) 1955-1988 (2005).
   private:
     // _s accumulates for the straight sum
     // _t accumulates the errors.
@@ -191,8 +191,10 @@ int main(int argc, char* argv[]) {
       }
       m += 2;
     } else if (arg == "--version") {
-      std::cout << PROGRAM_NAME << ": $Id$\n"
-                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id$\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
       return 0;
     } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");

@@ -59,10 +59,12 @@ int main(int argc, char* argv[]) {
       }
       m += 2;
     } else if (arg == "--version") {
-      std::cout << PROGRAM_NAME << ": $Id$\n"
-                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id$\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
       return 0;
-    } else      
+    } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
