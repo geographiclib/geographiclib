@@ -7,6 +7,15 @@ http://geographiclib.sourceforge.net/
 
 $Id$
 
+Reference:
+
+   Charles F. F. Karney,
+   Transverse Mercator with an accuracy of a few nanometers,
+   J. Geodesy (2011).
+   DOI 10.1007/s00190-011-0445-3
+   preprint http://arxiv.org/abs/1002.1417
+   resource page http://geographiclib.sf.net/tm.html
+
 Compute coefficient for forward and inverse trigonometric series for
 conversion from conformal latitude to rectifying latitude.  This prints
 out assignments which with minor editing are suitable for insertion into

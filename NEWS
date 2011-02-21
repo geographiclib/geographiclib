@@ -16,7 +16,7 @@ Change between 1.8 (released 2011-02-xx) and 1.7 versions:
   * For the Utility Programs, supply man pages, -h prints the synopsis,
     --help prints the man page, --version prints the version.
 
-  * Use Kahan summation in Planimeter.
+  * Use accurate summation in Planimeter.
 
   * Add 64-bit targets for Visual Studio 2010.
 

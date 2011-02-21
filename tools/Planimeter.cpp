@@ -26,24 +26,42 @@ int main(int argc, char* argv[]) {
   typedef Math::real real;
 
   class Accumulator {
-    // Compute a sum following W. M. Kahan, CACM 8(1), 40 (1965).
+    // Compute a sum at double precision.  This is Algorithm 4.1, Cascaded
+    // summation, of T. Ogita, S. M. Rump, S. Oishi, Accurate sum and dot
+    // product, SIAM J. Sci. Comp., 26(6) 1955-1988 (2005).
   private:
-    real _s, _s2;
+    // _s accumulates for the straight sum
+    // _t accumulates the errors.
+    real _s, _t;
+    // Error free transformation of a sum;
+    // see Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
+    static inline real sum(real u, real v, real& t) {
+      volatile real s = u + v;
+      volatile real up = s - v;
+      volatile real vpp = s - up;
+      up -= u;
+      vpp -= v;
+      t = -(up + vpp);
+      // u + v =       s      + t
+      //       = round(u + v) + t
+      return s;
+    }
   public:
-    Accumulator() throw() : _s(0), _s2(0) {};
-    void Clear() throw() { _s = 0; _s2 = 0; }
+    Accumulator() throw() : _s(0), _t(0) {};
+    void Clear() throw() { _s = 0; _t = 0; }
     // Accumulate y
     void Add(real y) throw() {
-      _s2 += y;
-      volatile real t = _s + _s2;
-      _s2 += _s - t;
-      _s = t;
+      _s = sum(_s, y, y);
+      _t += y;
     }
-    void Negate() throw() { _s *= -1; _s2 *= -1; }
-    // Return sum +  y (don't accumulate)
-    real Sum(real y) const throw() { return _s + (_s2 + y); }
+    void Negate() throw() { _s *= -1; _t *= -1; }
+    // Return sum + y (don't accumulate)
+    real Sum(real y) const throw() {
+      real s = sum(_s, y, y);
+      return s + (_t + y);
+    }
     // Return sum
-    real Sum() const throw() { return _s; }
+    real Sum() const throw() { return _s + _t; }
   };
 
   class GeodesicPolygon {

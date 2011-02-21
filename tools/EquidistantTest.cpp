@@ -73,8 +73,8 @@ int main(int argc, char* argv[]) {
   }
 
   if (!(azimuthal || cassini || gnomonic)) {
-    std::cerr
-      << "Must specify \"-c lat lon\" or \"-z lat lon\" or \"-g lat lon\"\n";
+    std::cerr << "Must specify \"-z lat0 lon0\" or "
+              << "\"-c lat0 lon0\" or \"-g lat0 lon0\"\n";
     return 1;
   }
 
