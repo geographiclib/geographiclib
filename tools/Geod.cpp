@@ -10,8 +10,6 @@
  *
  * See the <a href="Geod.1.html">man page</a> for usage
  * information.
- *
- * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"

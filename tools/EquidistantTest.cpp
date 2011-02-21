@@ -12,8 +12,6 @@
  *
  * See the <a href="EquidistantTest.1.html">man page</a> for usage
  * information.
- *
- * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
