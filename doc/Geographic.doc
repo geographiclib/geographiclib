@@ -12,7 +12,7 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 1.8
-\date 2011-02-xx
+\date 2011-02-22
 
 \section abstract Abstract
 
@@ -681,7 +681,7 @@ in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
 180<sup>o</sup>].
 
 The direct calculation uses an expansion of the geodesic equations
-accurate to \e f<sup>20</sup> (approximately 1 part in 10<sup>50</sup>)
+accurate to \e f<sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
 and is computed with with
 <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 100 (so the errors in the data are probably
@@ -1570,7 +1570,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, 2011-02-xx)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a>
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
   - For the \ref utilities, supply man pages, -h prints the synopsis,
