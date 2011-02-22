@@ -12,8 +12,6 @@
  *
  * See the <a href="EquidistantTest.1.html">man page</a> for usage
  * information.
- *
- * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
@@ -65,16 +63,18 @@ int main(int argc, char* argv[]) {
       }
       m += 2;
     } else if (arg == "--version") {
-      std::cout << PROGRAM_NAME << ": $Id$\n"
-                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id$\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
       return 0;
     } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   if (!(azimuthal || cassini || gnomonic)) {
-    std::cerr
-      << "Must specify \"-c lat lon\" or \"-z lat lon\" or \"-g lat lon\"\n";
+    std::cerr << "Must specify \"-z lat0 lon0\" or "
+              << "\"-c lat0 lon0\" or \"-g lat0 lon0\"\n";
     return 1;
   }
 

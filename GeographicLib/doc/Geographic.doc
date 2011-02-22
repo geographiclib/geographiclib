@@ -12,7 +12,7 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 1.8
-\date 2011-02-xx
+\date 2011-02-22
 
 \section abstract Abstract
 
@@ -21,7 +21,7 @@ classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for geoid height
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
-5&ndash;15 nm).  In addflummoxition, various properties of the \ref
+5&ndash;15 nm).  In addition, various properties of the \ref
 transversemercator are described and an accurate algorithm for \ref
 geodesic is given.
 
@@ -633,8 +633,8 @@ References
    The Area under the Geodesic,
    Survey Review 30 (232), 61&ndash;66 (1989).
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215">Geodesics
-   on an ellipsoid of revolution</a>,
+   <a href="http://arxiv.org/abs/1102.1215">
+   Geodesics on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
    <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>;
    resource page
@@ -681,7 +681,7 @@ in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
 180<sup>o</sup>].
 
 The direct calculation uses an expansion of the geodesic equations
-accurate to \e f<sup>20</sup> (approximately 1 part in 10<sup>50</sup>)
+accurate to \e f<sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
 and is computed with with
 <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 100 (so the errors in the data are probably
@@ -1570,12 +1570,12 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, 2011-02-xx)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a>
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
   - For the \ref utilities, supply man pages, -h prints the synopsis,
     --help prints the man page, --version prints the version.
-  - Use Kahan summation in <a href="Planimeter.1.html">Planimeter</a>.
+  - Use accurate summation in <a href="Planimeter.1.html">Planimeter</a>.
   - Add 64-bit targets for Visual Studio 2010.
   - Use templates for defining math functions and some constants.
   - GeographicLib::Geoid updates

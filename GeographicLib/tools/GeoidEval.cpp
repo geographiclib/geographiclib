@@ -10,8 +10,6 @@
  *
  * See the <a href="GeoidEval.1.html">man page</a> for usage
  * information.
- *
- * $Id$
  **********************************************************************/
 
 #include "GeographicLib/Geoid.hpp"
@@ -79,8 +77,10 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-v")
       verbose = true;
     else if (arg == "--version") {
-      std::cout << PROGRAM_NAME << ": $Id$\n"
-                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id$\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
       return 0;
     } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");

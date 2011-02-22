@@ -7,6 +7,14 @@ http://geographiclib.sourceforge.net/
 
 $Id$
 
+Reference:
+
+   Charles F. F. Karney,
+   Geodesics on an ellipsoid of revolution,
+   Feb. 2011.
+   preprint http://arxiv.org/abs/1102.1215
+   resource page http://geographiclib.sf.net/geod.html
+
 There are 4 sections in this file
 
 (1) Functions to compute the expansions

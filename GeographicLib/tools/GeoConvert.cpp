@@ -11,8 +11,6 @@
  *
  * See the <a href="GeoConvert.1.html">man page</a> for usage
  * information.
- *
- * $Id$
  **********************************************************************/
 
 #include "GeographicLib/GeoCoords.hpp"
@@ -78,8 +76,10 @@ int main(int argc, char* argv[]) {
     else if (arg == "-t")
       zone = UTMUPS::UTM;
     else if (arg == "--version") {
-      std::cout << PROGRAM_NAME << ": $Id$\n"
-                << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id$\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
       return 0;
     } else
       return usage(!(arg == "-h" || arg == "--help"), arg != "--help");

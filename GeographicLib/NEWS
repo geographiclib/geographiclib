@@ -8,7 +8,7 @@ For more information, see
 
 The current version of the library is 1.8.
 
-Change between 1.8 (released 2011-02-xx) and 1.7 versions:
+Changes between 1.8 (released 2011-02-22) and 1.7 versions:
 
   * Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
@@ -16,7 +16,7 @@ Change between 1.8 (released 2011-02-xx) and 1.7 versions:
   * For the Utility Programs, supply man pages, -h prints the synopsis,
     --help prints the man page, --version prints the version.
 
-  * Use Kahan summation in Planimeter.
+  * Use accurate summation in Planimeter.
 
   * Add 64-bit targets for Visual Studio 2010.
 
@@ -33,7 +33,7 @@ Change between 1.8 (released 2011-02-xx) and 1.7 versions:
   * Remove documentation that duplicates papers on transverse Mercator
     and geodesics.
 
-Change between 1.7 (released 2010-12-21) and 1.6 versions:
+Changes between 1.7 (released 2010-12-21) and 1.6 versions:
 
   * FIX BUG in scale returned by GeographicLib::LambertConformalConic::Reverse.
 
