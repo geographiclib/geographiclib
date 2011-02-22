@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-CartConvert(1) -- convert geodetic coordinates to geocentric or local cartesian
+CartConvert -- convert geodetic coordinates to geocentric or local cartesian
 
 =head1 SYNOPSIS
 

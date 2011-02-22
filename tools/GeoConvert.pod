@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-GeoConvert(1) -- convert geographic coordinates
+GeoConvert -- convert geographic coordinates
 
 =head1 SYNOPSIS
 

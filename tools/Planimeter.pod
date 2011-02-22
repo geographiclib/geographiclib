@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Planimeter(1) -- compute the area of geodesic polygons
+Planimeter -- compute the area of geodesic polygons
 
 =head1 SYNOPSIS
 
