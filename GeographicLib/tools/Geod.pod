@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-Geod(1) -- perform geodesic calculations
+Geod -- perform geodesic calculations
 
 =head1 SYNOPSIS
 
