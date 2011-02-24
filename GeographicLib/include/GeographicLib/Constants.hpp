@@ -222,12 +222,12 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
     /**
-     * log(\e x + 1) accurate near \e x = 0.  This is taken See
-     * D. Goldberg,
-     * <a href="http://docs.sun.com/source/806-3568/ncg_goldberg.html"> What
-     * every computer scientist should know about floating-point arithmetic</a>
-     * (1991), Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5,
-     * p 528.
+     * log(\e x + 1) accurate near \e x = 0.
+     *
+     * This is taken from D. Goldberg,
+     * <a href="http://dx.doi.org/10.1145/103162.103163">What every computer
+     * scientist should know about floating-point arithmetic</a> (1991),
+     * Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5, p 528.
      *
      * @param[in] x
      * @return log(\e x + 1).
