@@ -53,9 +53,9 @@ namespace GeographicLib {
    const double
      a = GeographicLib::Constants::WGS84_a<double>(),
      r = 298.257222101,                        // GRS80
-     lat1 = 39 + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels
+     lat1 = 39 + 56/60.0, lat2 = 40 + 58/60.0, // standard parallels
      k1 = 1,                                   // scale
-     lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin
+     lat0 = 39 + 20/60.0, lon0 =-75 - 45/60.0, // origin
      fe = 600000, fn = 0;                      // false easting and northing
    // Set up basic projection
    const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
