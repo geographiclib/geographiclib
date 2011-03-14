@@ -627,7 +627,7 @@ $Id$
    ''On the determination of the shortest distance
    between two points on a spheroid'',
    Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
-   http://adsabs.harvard.edu/full/1885AN....112...97K
+   http://books.google.com/books?id=kN4zAQAAIAAJ&pg=PA206
  * O. Börsch,[[BR]]
    ''Geodätische Literatur [Geodetic Bibliography]''
    (Internationale Erdmessung, 1889).[[BR]]
