@@ -142,9 +142,9 @@ int main(int argc, char* argv[]) {
       int crossings = _crossings + transit(_lon1, _lon0);
       if (crossings & 1) {
         if (area1.Sum() < 0)
-          area1.Sum(_area0/2);
+          area1.Add(_area0/2);
         else
-          area1.Sum(-_area0/2);
+          area1.Add(-_area0/2);
       }
       // area is with the clockwise sense.  If !reverse convert to
       // counter-clockwise convention.
