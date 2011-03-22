@@ -125,8 +125,8 @@ namespace GeographicLib {
           throw GeographicErr("Extra text following seconds in DMS string "
                               + dms.substr(beg, end - beg));
         if (ncurrent == 0)
-          throw GeographicErr("Missing numbers in " + components[k]
-                              + " component of " + dms.substr(beg, end - beg));
+          throw GeographicErr("Missing numbers in trailing component of "
+                              + dms.substr(beg, end - beg));
         if (digcount > 1) {
           istringstream s(dms.substr(p - digcount, digcount));
           s >> fcurrent;
