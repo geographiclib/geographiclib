@@ -32,13 +32,12 @@ distrib-cgi:
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
-depend:
-	makedepend -- $(CPPFLAGS) -- $(ALLSOURCES)
-
 TAGS:
 	for d in include src tools; do \
-	  $(MAKE) -s -C $$d list | tr ' ' '\n' | \
+	  $(MAKE) -s -C $$d list | tr ' ' '\n' | grep -v '/Config\.h$$' | \
 	  while read f; do echo $$d/$$f; done; \
 	done | xargs etags
 
-.PHONY: distrib distrib-files distrib-cgi TAGS
+.PHONY: distrib-html distrib-doc distrib-files distrib-cgi TAGS
+
+
