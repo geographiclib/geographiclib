@@ -35,7 +35,7 @@ html/index.html: Doxyfile Geographic.doc \
 	doxygen
 
 PREFIX = /usr/local
-DEST = $(PREFIX)/share/GeographicLib/doc/html
+DEST = $(PREFIX)/share/doc/GeographicLib/html
 INSTALL = install -b
 
 install: man html/index.html

@@ -43,17 +43,6 @@ list:
 
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 
-package:
-	echo include Makefile.mk > Makefile
-	test -d distrib || mkdir distrib
-	$(MAKE) -s list | while read f;do \
-	  echo GeographicLib/$$f; \
-	done | xargs tar Ccfz .. distrib/Geographic-$(VERSION).tgz
-	rm -rf distrib/GeographicLib
-	tar Cxfpz distrib distrib/Geographic-$(VERSION).tgz
-	cd distrib && zip -r Geographic-$(VERSION).zip GeographicLib && \
-	  rm -rf GeographicLib
-
 .PHONY: all $(SUBDIRS) \
 	install install-headers install-lib install-tools install-doc \
 	clean clean-src clean-tools clean-doc list package
