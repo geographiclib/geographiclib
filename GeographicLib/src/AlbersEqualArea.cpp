@@ -426,6 +426,13 @@ namespace GeographicLib {
     gamma = _sign * theta / Math::degree<real>();
     lat = phi / Math::degree<real>();
     lon = lam / Math::degree<real>();
+    // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
+    if (lon + lon0 >= 180)
+      lon += lon0 - 360;
+    else if (lon + lon0 < -180)
+      lon += lon0 + 360;
+    else
+      lon += lon0;
     k = _k0 * (den != 0 ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);
   }
 
