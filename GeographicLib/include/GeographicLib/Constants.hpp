@@ -161,7 +161,7 @@ namespace GeographicLib {
       x = std::abs(x);
       y = std::abs(y);
       T a = (std::max)(x, y),
-        b = (std::min)(x, y) / a;
+        b = (std::min)(x, y) / (a ? a : 1);
       return a * std::sqrt(1 + b * b);
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
