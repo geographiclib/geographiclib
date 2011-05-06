@@ -160,8 +160,8 @@ namespace GeographicLib {
     static inline T hypot(T x, T y) throw() {
       x = std::abs(x);
       y = std::abs(y);
-      T a = std::max(x, y),
-        b = std::min(x, y) / a;
+      T a = (std::max)(x, y),
+        b = (std::min)(x, y) / a;
       return a * std::sqrt(1 + b * b);
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
@@ -341,7 +341,7 @@ namespace GeographicLib {
     template<typename T>
     static inline bool isfinite(T x) throw() {
 #if defined(DOXYGEN)
-      return std::abs(x) <= std::numeric_limits<T>::max();
+      return std::abs(x) <= (std::numeric_limits<T>::max)();
 #elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
       return _finite(x) != 0;
 #else
@@ -358,7 +358,7 @@ namespace GeographicLib {
     static inline T NaN() throw() {
       return std::numeric_limits<T>::has_quiet_NaN ?
         std::numeric_limits<T>::quiet_NaN() :
-        std::numeric_limits<T>::max();
+        (std::numeric_limits<T>::max)();
     }
     /**
      * A synonym for NaN<real>().
@@ -389,7 +389,7 @@ namespace GeographicLib {
     static inline T infinity() throw() {
       return std::numeric_limits<T>::has_infinity ?
         std::numeric_limits<T>::infinity() :
-        std::numeric_limits<T>::max();
+        (std::numeric_limits<T>::max)();
     }
     /**
      * A synonym for infinity<real>().
