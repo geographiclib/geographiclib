@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6867 2010-09-11 13:04:26Z karney $
+# $Id: 00README.txt 6896 2010-11-18 22:43:19Z karney $
 
 A library for geographic projections.
 
@@ -35,6 +35,7 @@ Files
       Geoid.[ch]pp -- geoid heights
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
+      OSGB.[ch]pp -- Ordnance Survey grid system
 
     tools/
       GeoConvert.cpp -- geographic conversion utility
@@ -62,6 +63,17 @@ Files
       ellint.mac -- Maxima code for elliptic functions needed by tm.mac
       tmseries.mac -- Maxima code for series approximations for TM
       geod.mac -- Maxima code for series approximates for Geodesic
+
+    matlab/
+      geographiclibinterface.m -- Matlab code to compile Matlab interfaces
+      utmupsforward.{cpp,m} -- Matlab code to convert geographic to UTM/UPS
+      utmupsreverse.{cpp,m} -- Matlab code to convert UTM/UPS to geographic
+      mgrsforward.{cpp,m} -- Matlab code to convert UTM/UPS to MGRS
+      mgrsreverse.{cpp,m} -- Matlab code to convert MGRS to UTM/UPS
+      geodesicdirect.{cpp,m} -- Matlab code for the direct geodesic problem
+      geodesicinverse.{cpp,m} -- Matlab code for the inverse geodesic problem
+      geodesicline.{cpp,m} -- Matlab code for geodesic lines
+      geoidheight.{cpp,m} -- Matlab code to look up geoid heights
 
     doc/
       Doxyfile -- Doxygen config file

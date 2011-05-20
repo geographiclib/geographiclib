@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
-#define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id: Geocentric.hpp 6867 2010-09-11 13:04:26Z karney $"
+#define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id: Geocentric.hpp 6876 2010-10-18 13:47:55Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -121,7 +121,7 @@ namespace GeographicLib {
      * A global instantiation of Geocentric with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    const static Geocentric WGS84;
+    static const Geocentric WGS84;
   };
 
 } // namespace GeographicLib

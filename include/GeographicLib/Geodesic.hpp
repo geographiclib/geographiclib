@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
-#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: Geodesic.hpp 6867 2010-09-11 13:04:26Z karney $"
+#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: Geodesic.hpp 6876 2010-10-18 13:47:55Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -123,7 +123,7 @@ namespace GeographicLib {
                   real salp1, real calp1,
                   real& salp2, real& calp2, real& sig12,
                   real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  real& eps, bool diffp, real& dlam12,
+                  real& eps, real& domg12, bool diffp, real& dlam12,
                   real C1a[], real C2a[], real C3a[])
       const throw();
 
@@ -762,16 +762,14 @@ namespace GeographicLib {
      *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the
      *   polygon.
      **********************************************************************/
-    Math::real EllipsoidArea() const throw() {
-      return 4 * Constants::pi() * _c2;
-    }
+    Math::real EllipsoidArea() const throw() { return 4 * Math::pi() * _c2; }
     ///@}
 
     /**
      * A global instantiation of Geodesic with the parameters for the WGS84
      * ellipsoid.
      **********************************************************************/
-    const static Geodesic WGS84;
+    static const Geodesic WGS84;
 
 
     /** \name Deprecated function.

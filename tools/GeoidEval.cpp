@@ -29,7 +29,7 @@ int usage(int retval) {
 "Usage:\n\
   GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] \\\n\
             [-z zone] [-msltohae] [-haetomsl] [-v] [-h]\n\
-$Id: GeoidEval.cpp 6867 2010-09-11 13:04:26Z karney $\n\
+$Id: GeoidEval.cpp 6888 2010-11-13 15:19:42Z karney $\n\
 \n\
 Read in positions on standard input and print out the corresponding\n\
 geoid heights on standard output.  In addition print the northerly and\n\
@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
 
   int retval = 0;
   try {
-    Geoid g(geoid, dir, cubic);
+    const Geoid g(geoid, dir, cubic);
     try {
       if (cacheall)
         g.CacheAll();
@@ -212,13 +212,15 @@ int main(int argc, char* argv[]) {
           s = s.substr(0, px + 1);
         }
         p.Reset(zone + s);
-        real gradn, grade;
-        real h = g(p.Latitude(), p.Longitude(), gradn, grade);
-        if (heightmult)
+        if (heightmult) {
+          real h = g(p.Latitude(), p.Longitude());
           std::cout << s << " " << height + real(heightmult) * h << "\n";
-        else
+        } else {
+          real gradn, grade;
+          real h = g(p.Latitude(), p.Longitude(), gradn, grade);
           std::cout << std::setprecision(4) << h << " " << std::setprecision(2)
                     << gradn * 1e6 << "e-6 " << grade * 1e6 << "e-6\n";
+        }
       }
       catch (const std::exception& e) {
         std::cout << "ERROR: " << e.what() << "\n";

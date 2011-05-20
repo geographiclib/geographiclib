@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_50f390d007e2978e4938be195712f89f.html">include</a>      </li>
-      <li><a class="el" href="dir_5d64ffe5365416b93f1195b3933d7e00.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_79e1098902e66f6a177d48994037d882.html">include</a>      </li>
+      <li><a class="el" href="dir_fc11a85e9c9bbeb660c2eea06dda837b.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,7 +47,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)</span>
-<a name="l00011"></a><a class="code" href="GeodesicLine_8hpp.html#a45305d595b59bfb061a5a0c6e1044485">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_HPP &quot;$Id: GeodesicLine.hpp 6867 2010-09-11 13:04:26Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="GeodesicLine_8hpp.html#a45305d595b59bfb061a5a0c6e1044485">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_HPP &quot;$Id: GeodesicLine.hpp 6875 2010-10-02 19:31:54Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &quot;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&quot;</span>
@@ -576,7 +576,7 @@
 <a name="l00537"></a>00537 <span class="comment">     * the equator in a northward direction.</span>
 <a name="l00538"></a>00538 <span class="comment">     **********************************************************************/</span>
 <a name="l00539"></a><a class="code" href="classGeographicLib_1_1GeodesicLine.html#ad117912c4fc4ef29bf4050c9be3267f2">00539</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1GeodesicLine.html#ad117912c4fc4ef29bf4050c9be3267f2">EquatorialAzimuth</a>() <span class="keyword">const</span> throw() {
-<a name="l00540"></a>00540       <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1GeodesicLine.html#af7e248d7632f56cf7abc6eac4927a587">Init</a>() ? atan2(_salp0, _calp0) / <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>() : 0;
+<a name="l00540"></a>00540       <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1GeodesicLine.html#af7e248d7632f56cf7abc6eac4927a587">Init</a>() ? atan2(_salp0, _calp0) / <a class="code" href="classGeographicLib_1_1Math.html#a5bb8bea024e11eb402ecbcf9bae28bb5">Math::degree</a>() : 0;
 <a name="l00541"></a>00541     }
 <a name="l00542"></a>00542 <span class="comment"></span>
 <a name="l00543"></a>00543 <span class="comment">    /**</span>
@@ -584,7 +584,7 @@
 <a name="l00545"></a>00545 <span class="comment">     * crossing and point 1.</span>
 <a name="l00546"></a>00546 <span class="comment">     **********************************************************************/</span>
 <a name="l00547"></a><a class="code" href="classGeographicLib_1_1GeodesicLine.html#a308c7fb4f7c562a8c604453bf2ee2ca2">00547</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1GeodesicLine.html#a308c7fb4f7c562a8c604453bf2ee2ca2">EquatorialArc</a>() <span class="keyword">const</span> throw() {
-<a name="l00548"></a>00548       <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1GeodesicLine.html#af7e248d7632f56cf7abc6eac4927a587">Init</a>() ? atan2(_ssig1, _csig1) / <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>() : 0;
+<a name="l00548"></a>00548       <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1GeodesicLine.html#af7e248d7632f56cf7abc6eac4927a587">Init</a>() ? atan2(_ssig1, _csig1) / <a class="code" href="classGeographicLib_1_1Math.html#a5bb8bea024e11eb402ecbcf9bae28bb5">Math::degree</a>() : 0;
 <a name="l00549"></a>00549     }
 <a name="l00550"></a>00550 <span class="comment"></span>
 <a name="l00551"></a>00551 <span class="comment">    /**</span>
@@ -662,7 +662,7 @@
 <a name="l00623"></a>00623 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

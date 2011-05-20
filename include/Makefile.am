@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6859 2010-09-06 14:45:33Z karney $
+# $Id: Makefile.am 6876 2010-10-18 13:47:55Z karney $
 
 nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/CassiniSoldner.hpp \
@@ -18,6 +18,7 @@ nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/LambertConformalConic.hpp \
 				GeographicLib/LocalCartesian.hpp \
 				GeographicLib/MGRS.hpp \
+				GeographicLib/OSGB.hpp \
 				GeographicLib/PolarStereographic.hpp \
 				GeographicLib/TransverseMercatorExact.hpp \
 				GeographicLib/TransverseMercator.hpp \

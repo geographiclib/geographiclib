@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6867 2010-09-11 13:04:26Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6876 2010-10-18 13:47:55Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include "GeographicLib/EllipticFunction.hpp"
@@ -233,7 +233,7 @@ namespace GeographicLib {
      * ellipsoid and the UTM scale factor.  However, unlike UTM, no false
      * easting or northing is added.
      **********************************************************************/
-    const static TransverseMercatorExact UTM;
+    static const TransverseMercatorExact UTM;
   };
 
 } // namespace GeographicLib

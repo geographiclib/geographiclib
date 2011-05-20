@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_b99e15f269dc183379bcdcb16b1e9e4a.html">src</a>      </li>
+      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,7 +47,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="EllipticFunction_8hpp.html" title="Header for GeographicLib::EllipticFunction class.">GeographicLib/EllipticFunction.hpp</a>&quot;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="EllipticFunction_8cpp.html#a7843c8be162380a81bdd1c48d00a475b">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP &quot;$Id: EllipticFunction.cpp 6838 2010-06-22 21:26:37Z karney $&quot;</span>
+<a name="l00012"></a><a class="code" href="EllipticFunction_8cpp.html#a7843c8be162380a81bdd1c48d00a475b">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP &quot;$Id: EllipticFunction.cpp 6875 2010-10-02 19:31:54Z karney $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="EllipticFunction_8cpp.html#a7843c8be162380a81bdd1c48d00a475b">GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="EllipticFunction_8hpp.html#a94cb49e5d48fa1a0399e4303f1ad162a">GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP</a>)
@@ -156,7 +156,7 @@
 <a name="l00118"></a>00118       s += mul * t * t;
 <a name="l00119"></a>00119     }
 <a name="l00120"></a>00120     x0 = (x0 + y0)/2;
-<a name="l00121"></a>00121     <span class="keywordflow">return</span>  (x0 * x0 - s) * Constants::pi() / (2 * (xn + yn));
+<a name="l00121"></a>00121     <span class="keywordflow">return</span>  (x0 * x0 - s) * Math::pi() / (2 * (xn + yn));
 <a name="l00122"></a>00122   }
 <a name="l00123"></a>00123 
 <a name="l00124"></a><a class="code" href="classGeographicLib_1_1EllipticFunction.html#ada122111b55eb0ab9c7b9fafb0a4b1e6">00124</a>   EllipticFunction::EllipticFunction(real m) <span class="keywordflow">throw</span>()
@@ -255,7 +255,7 @@
 <a name="l00217"></a>00217 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

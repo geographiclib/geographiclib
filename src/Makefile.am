@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6859 2010-09-06 14:45:33Z karney $
+# $Id: Makefile.am 6876 2010-10-18 13:47:55Z karney $
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 
@@ -22,6 +22,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
+		OSGB.cpp \
 		PolarStereographic.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
@@ -40,6 +41,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
+		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/TransverseMercatorExact.hpp \
 		../include/GeographicLib/TransverseMercator.hpp \

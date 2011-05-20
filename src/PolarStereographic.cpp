@@ -9,7 +9,7 @@
 
 #include "GeographicLib/PolarStereographic.hpp"
 
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: PolarStereographic.cpp 6858 2010-09-06 13:52:31Z karney $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: PolarStereographic.cpp 6877 2010-10-19 21:22:37Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
@@ -71,7 +71,7 @@ namespace GeographicLib {
     const throw() {
     lat *= northp ? 1 : -1;
     real
-      phi = lat * Constants::degree(),
+      phi = lat * Math::degree(),
       tau = lat > -90 ? tan(phi) : -overflow,
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
@@ -82,7 +82,7 @@ namespace GeographicLib {
     k = lat < 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real
-      lam = lon * Constants::degree();
+      lam = lon * Math::degree();
     x = rho * (lon == -180 ? 0 : sin(lam));
     y = (northp ? -rho : rho) * (abs(lon) == 90 ? 0 : cos(lam));
     gamma = northp ? lon : -lon;
@@ -102,9 +102,9 @@ namespace GeographicLib {
       real
         tau1 = Math::hypot(real(1), tau),
         sig = sinh( eatanhe( tau / tau1 ) ),
-        sig1 =  Math::hypot(real(1), sig),
-        dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _e2m * sq(tau)) /
-        ( (sig1 * tau1 - sig * tau) * _e2m * tau1 );
+        taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
+        dtau = (taup - taupa) * (1 + _e2m * sq(tau)) /
+        ( _e2m * tau1 * Math::hypot(real(1), taupa) );
       tau += dtau;
       if (abs(dtau) < stol)
         break;
@@ -113,8 +113,8 @@ namespace GeographicLib {
       phi = atan(tau),
       secphi = Math::hypot(real(1), tau);
     k = rho != 0 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
-    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Constants::degree() : 90);
-    lon = -atan2( -x, northp ? -y : y ) / Constants::degree();
+    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree() : 90);
+    lon = -atan2( -x, northp ? -y : y ) / Math::degree();
     gamma = northp ? lon : -lon;
   }
 

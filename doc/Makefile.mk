@@ -1,12 +1,12 @@
-# $Id: Makefile.mk 6859 2010-09-06 14:45:33Z karney $
+# $Id: Makefile.mk 6876 2010-10-18 13:47:55Z karney $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic GeodesicLine \
 	AzimuthalEquidistant CassiniSoldner \
-	Geoid Gnomonic
+	Geoid Gnomonic OSGB
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
-	GeoidEval
+	GeoidEval Planimeter
 
 HEADERS = Constants.hpp $(patsubst %,../include/GeographicLib/%.hpp,$(MODULES))
 SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \

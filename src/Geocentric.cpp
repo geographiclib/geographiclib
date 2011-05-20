@@ -9,7 +9,7 @@
 
 #include "GeographicLib/Geocentric.hpp"
 
-#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: Geocentric.cpp 6856 2010-08-23 12:10:55Z karney $"
+#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: Geocentric.cpp 6875 2010-10-02 19:31:54Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -41,8 +41,8 @@ namespace GeographicLib {
                            real& x, real& y, real& z) const throw() {
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real
-      phi = lat * Constants::degree(),
-      lam = lon * Constants::degree(),
+      phi = lat * Math::degree(),
+      lam = lon * Math::degree(),
       sphi = sin(phi),
       cphi = abs(lat) == 90 ? 0 : cos(phi),
       n = _a/sqrt(1 - _e2 * sq(sphi));
@@ -135,9 +135,9 @@ namespace GeographicLib {
         h = - _a * (_f >= 0 ? _e2m : 1) * Math::hypot(xx, zz) / _e2a;
       }
     }
-    lat = phi / Constants::degree();
+    lat = phi / Math::degree();
     // Negative signs return lon in [-180, 180).  Assume atan2(0,0) = 0.
-    lon = -atan2(-y, x) / Constants::degree();
+    lon = -atan2(-y, x) / Math::degree();
   }
 
 } // namespace GeographicLib

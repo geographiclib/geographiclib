@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_50f390d007e2978e4938be195712f89f.html">include</a>      </li>
-      <li><a class="el" href="dir_5d64ffe5365416b93f1195b3933d7e00.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_79e1098902e66f6a177d48994037d882.html">include</a>      </li>
+      <li><a class="el" href="dir_fc11a85e9c9bbeb660c2eea06dda837b.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,7 +47,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEODESIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geodesic_8hpp.html#ab538cb707d6ff36056dd372c7e9e6d7e">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESIC_HPP &quot;$Id: Geodesic.hpp 6867 2010-09-11 13:04:26Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="Geodesic_8hpp.html#ab538cb707d6ff36056dd372c7e9e6d7e">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESIC_HPP &quot;$Id: Geodesic.hpp 6876 2010-10-18 13:47:55Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 
@@ -162,7 +162,7 @@
 <a name="l00123"></a>00123                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> salp1, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> calp1,
 <a name="l00124"></a>00124                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; salp2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; calp2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; sig12,
 <a name="l00125"></a>00125                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; ssig1, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; csig1, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; ssig2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; csig2,
-<a name="l00126"></a>00126                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; eps, <span class="keywordtype">bool</span> diffp, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; dlam12,
+<a name="l00126"></a>00126                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; domg12, <span class="keywordtype">bool</span> diffp, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; dlam12,
 <a name="l00127"></a>00127                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> C1a[], <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> C2a[], <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> C3a[])
 <a name="l00128"></a>00128       <span class="keyword">const</span> <span class="keywordflow">throw</span>();
 <a name="l00129"></a>00129 
@@ -801,58 +801,56 @@
 <a name="l00762"></a>00762 <span class="comment">     *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the</span>
 <a name="l00763"></a>00763 <span class="comment">     *   polygon.</span>
 <a name="l00764"></a>00764 <span class="comment">     **********************************************************************/</span>
-<a name="l00765"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#a0dde7d12d4bafedef63d371c5fe40f50">00765</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#a0dde7d12d4bafedef63d371c5fe40f50">EllipsoidArea</a>() <span class="keyword">const</span> throw() {
-<a name="l00766"></a>00766       <span class="keywordflow">return</span> 4 * <a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">Constants::pi</a>() * _c2;
-<a name="l00767"></a>00767     }<span class="comment"></span>
-<a name="l00768"></a>00768 <span class="comment">    ///@}</span>
-<a name="l00769"></a>00769 <span class="comment"></span><span class="comment"></span>
-<a name="l00770"></a>00770 <span class="comment">    /**</span>
-<a name="l00771"></a>00771 <span class="comment">     * A global instantiation of Geodesic with the parameters for the WGS84</span>
-<a name="l00772"></a>00772 <span class="comment">     * ellipsoid.</span>
-<a name="l00773"></a>00773 <span class="comment">     **********************************************************************/</span>
-<a name="l00774"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">00774</a>     <span class="keyword">const</span> <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">WGS84</a>;
-<a name="l00775"></a>00775 
-<a name="l00776"></a>00776 <span class="comment"></span>
-<a name="l00777"></a>00777 <span class="comment">    /** \name Deprecated function.</span>
-<a name="l00778"></a>00778 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00779"></a>00779 <span class="comment">    ///@{</span>
-<a name="l00780"></a>00780 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00781"></a>00781 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; Perform the direct geodesic calculation.  Given a</span>
-<a name="l00782"></a>00782 <span class="comment">     * latitude, \e lat1, longitude, \e lon1, and azimuth \e azi1 (degrees) for</span>
-<a name="l00783"></a>00783 <span class="comment">     * point 1 and a range, \e s12 (meters) from point 1 to point 2, return the</span>
-<a name="l00784"></a>00784 <span class="comment">     * latitude, \e lat2, longitude, \e lon2, and forward azimuth, \e azi2</span>
-<a name="l00785"></a>00785 <span class="comment">     * (degrees) for point 2 and the reduced length \e m12 (meters).  If either</span>
-<a name="l00786"></a>00786 <span class="comment">     * point is at a pole, the azimuth is defined by keeping the longitude</span>
-<a name="l00787"></a>00787 <span class="comment">     * fixed and writing \e lat = 90 - \e eps or -90 + \e eps and taking the</span>
-<a name="l00788"></a>00788 <span class="comment">     * limit \e eps -&gt; 0 from above.  If \e arcmode (default false) is set to</span>
-<a name="l00789"></a>00789 <span class="comment">     * true, \e s12 is interpreted as the arc length \e a12 (degrees) on the</span>
-<a name="l00790"></a>00790 <span class="comment">     * auxiliary sphere.  An arc length greater that 180 degrees results in a</span>
-<a name="l00791"></a>00791 <span class="comment">     * geodesic which is not a shortest path.  For a prolate ellipsoid, an</span>
-<a name="l00792"></a>00792 <span class="comment">     * additional condition is necessary for a shortest path: the longitudinal</span>
-<a name="l00793"></a>00793 <span class="comment">     * extent must not exceed of 180 degrees.  Returned value is the arc length</span>
-<a name="l00794"></a>00794 <span class="comment">     * \e a12 (degrees) if \e arcmode is false, otherwise it is the distance \e</span>
-<a name="l00795"></a>00795 <span class="comment">     * s12 (meters).</span>
-<a name="l00796"></a>00796 <span class="comment">     **********************************************************************/</span>
-<a name="l00797"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#a34dd5a7a84a91cbd379200819eb25315">00797</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Direct</a>(real lat1, real lon1, real azi1, real s12_a12,
-<a name="l00798"></a>00798                       real&amp; lat2, real&amp; lon2, real&amp; azi2, real&amp; m12,
-<a name="l00799"></a>00799                       <span class="keywordtype">bool</span> arcmode) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00800"></a>00800       <span class="keywordflow">if</span> (arcmode) {
-<a name="l00801"></a>00801         real a12 = s12_a12, s12;
-<a name="l00802"></a>00802         <a class="code" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">ArcDirect</a>(lat1, lon1, azi1, a12, lat2, lon2, azi2, s12, m12);
-<a name="l00803"></a>00803         <span class="keywordflow">return</span> s12;
-<a name="l00804"></a>00804       } <span class="keywordflow">else</span> {
-<a name="l00805"></a>00805         real s12 = s12_a12;
-<a name="l00806"></a>00806         <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Direct</a>(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
-<a name="l00807"></a>00807       }
-<a name="l00808"></a>00808     }<span class="comment"></span>
-<a name="l00809"></a>00809 <span class="comment">    ///@}</span>
-<a name="l00810"></a>00810 <span class="comment"></span>  };
-<a name="l00811"></a>00811 
-<a name="l00812"></a>00812 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00813"></a>00813 <span class="preprocessor">#endif</span>
+<a name="l00765"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#a0dde7d12d4bafedef63d371c5fe40f50">00765</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#a0dde7d12d4bafedef63d371c5fe40f50">EllipsoidArea</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 4 * <a class="code" href="classGeographicLib_1_1Math.html#abb031de2a30d6fbac4c634b344e46df4">Math::pi</a>() * _c2; }<span class="comment"></span>
+<a name="l00766"></a>00766 <span class="comment">    ///@}</span>
+<a name="l00767"></a>00767 <span class="comment"></span><span class="comment"></span>
+<a name="l00768"></a>00768 <span class="comment">    /**</span>
+<a name="l00769"></a>00769 <span class="comment">     * A global instantiation of Geodesic with the parameters for the WGS84</span>
+<a name="l00770"></a>00770 <span class="comment">     * ellipsoid.</span>
+<a name="l00771"></a>00771 <span class="comment">     **********************************************************************/</span>
+<a name="l00772"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">00772</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">WGS84</a>;
+<a name="l00773"></a>00773 
+<a name="l00774"></a>00774 <span class="comment"></span>
+<a name="l00775"></a>00775 <span class="comment">    /** \name Deprecated function.</span>
+<a name="l00776"></a>00776 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00777"></a>00777 <span class="comment">    ///@{</span>
+<a name="l00778"></a>00778 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00779"></a>00779 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; Perform the direct geodesic calculation.  Given a</span>
+<a name="l00780"></a>00780 <span class="comment">     * latitude, \e lat1, longitude, \e lon1, and azimuth \e azi1 (degrees) for</span>
+<a name="l00781"></a>00781 <span class="comment">     * point 1 and a range, \e s12 (meters) from point 1 to point 2, return the</span>
+<a name="l00782"></a>00782 <span class="comment">     * latitude, \e lat2, longitude, \e lon2, and forward azimuth, \e azi2</span>
+<a name="l00783"></a>00783 <span class="comment">     * (degrees) for point 2 and the reduced length \e m12 (meters).  If either</span>
+<a name="l00784"></a>00784 <span class="comment">     * point is at a pole, the azimuth is defined by keeping the longitude</span>
+<a name="l00785"></a>00785 <span class="comment">     * fixed and writing \e lat = 90 - \e eps or -90 + \e eps and taking the</span>
+<a name="l00786"></a>00786 <span class="comment">     * limit \e eps -&gt; 0 from above.  If \e arcmode (default false) is set to</span>
+<a name="l00787"></a>00787 <span class="comment">     * true, \e s12 is interpreted as the arc length \e a12 (degrees) on the</span>
+<a name="l00788"></a>00788 <span class="comment">     * auxiliary sphere.  An arc length greater that 180 degrees results in a</span>
+<a name="l00789"></a>00789 <span class="comment">     * geodesic which is not a shortest path.  For a prolate ellipsoid, an</span>
+<a name="l00790"></a>00790 <span class="comment">     * additional condition is necessary for a shortest path: the longitudinal</span>
+<a name="l00791"></a>00791 <span class="comment">     * extent must not exceed of 180 degrees.  Returned value is the arc length</span>
+<a name="l00792"></a>00792 <span class="comment">     * \e a12 (degrees) if \e arcmode is false, otherwise it is the distance \e</span>
+<a name="l00793"></a>00793 <span class="comment">     * s12 (meters).</span>
+<a name="l00794"></a>00794 <span class="comment">     **********************************************************************/</span>
+<a name="l00795"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#a34dd5a7a84a91cbd379200819eb25315">00795</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Direct</a>(real lat1, real lon1, real azi1, real s12_a12,
+<a name="l00796"></a>00796                       real&amp; lat2, real&amp; lon2, real&amp; azi2, real&amp; m12,
+<a name="l00797"></a>00797                       <span class="keywordtype">bool</span> arcmode) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00798"></a>00798       <span class="keywordflow">if</span> (arcmode) {
+<a name="l00799"></a>00799         real a12 = s12_a12, s12;
+<a name="l00800"></a>00800         <a class="code" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">ArcDirect</a>(lat1, lon1, azi1, a12, lat2, lon2, azi2, s12, m12);
+<a name="l00801"></a>00801         <span class="keywordflow">return</span> s12;
+<a name="l00802"></a>00802       } <span class="keywordflow">else</span> {
+<a name="l00803"></a>00803         real s12 = s12_a12;
+<a name="l00804"></a>00804         <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Direct</a>(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
+<a name="l00805"></a>00805       }
+<a name="l00806"></a>00806     }<span class="comment"></span>
+<a name="l00807"></a>00807 <span class="comment">    ///@}</span>
+<a name="l00808"></a>00808 <span class="comment"></span>  };
+<a name="l00809"></a>00809 
+<a name="l00810"></a>00810 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00811"></a>00811 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

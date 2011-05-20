@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_b99e15f269dc183379bcdcb16b1e9e4a.html">src</a>      </li>
+      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,7 +47,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="AzimuthalEquidistant_8hpp.html" title="Header for GeographicLib::AzimuthalEquidistant class.">GeographicLib/AzimuthalEquidistant.hpp</a>&quot;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="AzimuthalEquidistant_8cpp.html#a66c8226c0b34ef5b0138d44829f5c394">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP &quot;$Id: AzimuthalEquidistant.cpp 6785 2010-01-05 22:15:42Z karney $&quot;</span>
+<a name="l00012"></a><a class="code" href="AzimuthalEquidistant_8cpp.html#a66c8226c0b34ef5b0138d44829f5c394">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP &quot;$Id: AzimuthalEquidistant.cpp 6875 2010-10-02 19:31:54Z karney $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="AzimuthalEquidistant_8cpp.html#a66c8226c0b34ef5b0138d44829f5c394">GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="AzimuthalEquidistant_8hpp.html#a70d20e83eaef9177a9dbc4503fae17b7">GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP</a>)
@@ -64,7 +64,7 @@
 <a name="l00026"></a>00026     <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00027"></a>00027     real sig, s, azi0, m;
 <a name="l00028"></a>00028     sig = _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
-<a name="l00029"></a>00029     azi0 *= Constants::degree();
+<a name="l00029"></a>00029     azi0 *= Math::degree();
 <a name="l00030"></a>00030     x = s * sin(azi0);
 <a name="l00031"></a>00031     y = s * cos(azi0);
 <a name="l00032"></a>00032     rk = sig &gt; eps ? m / s : 1;
@@ -74,7 +74,7 @@
 <a name="l00036"></a>00036                                      real&amp; lat, real&amp; lon, real&amp; azi, real&amp; rk)
 <a name="l00037"></a>00037     <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00038"></a>00038     real
-<a name="l00039"></a>00039       azi0 = atan2(x, y) / Constants::degree(),
+<a name="l00039"></a>00039       azi0 = atan2(x, y) / Math::degree(),
 <a name="l00040"></a>00040       s = Math::hypot(x, y);
 <a name="l00041"></a>00041     real sig, m;
 <a name="l00042"></a>00042     sig = _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);
@@ -84,7 +84,7 @@
 <a name="l00046"></a>00046 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

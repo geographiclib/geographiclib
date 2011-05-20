@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6859 2010-09-06 14:45:33Z karney $
+# $Id: Makefile.am 6876 2010-10-18 13:47:55Z karney $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -81,7 +81,7 @@ libGeographic_la_LIBADD =
 am_libGeographic_la_OBJECTS = AzimuthalEquidistant.lo \
 	CassiniSoldner.lo DMS.lo EllipticFunction.lo Geocentric.lo \
 	GeoCoords.lo Geodesic.lo GeodesicLine.lo Geoid.lo Gnomonic.lo \
-	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
+	LambertConformalConic.lo LocalCartesian.lo MGRS.lo OSGB.lo \
 	PolarStereographic.lo TransverseMercator.lo \
 	TransverseMercatorExact.lo UTMUPS.lo
 libGeographic_la_OBJECTS = $(am_libGeographic_la_OBJECTS)
@@ -255,6 +255,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
+		OSGB.cpp \
 		PolarStereographic.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
@@ -273,6 +274,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
+		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/TransverseMercatorExact.hpp \
 		../include/GeographicLib/TransverseMercator.hpp \
@@ -367,6 +369,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LambertConformalConic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LocalCartesian.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MGRS.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSGB.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PolarStereographic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercator.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercatorExact.Plo@am__quote@

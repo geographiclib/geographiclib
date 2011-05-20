@@ -1,9 +1,9 @@
-# $Id: Makefile.mk 6816 2010-02-05 21:03:10Z karney $
+# $Id: Makefile.mk 6896 2010-11-18 22:43:19Z karney $
 
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
 SUBDIRS = src tools doc
-ALLDIRS = include $(SUBDIRS) maxima windows
+ALLDIRS = include $(SUBDIRS) maxima matlab windows
 
 all: src tools
 
@@ -37,7 +37,7 @@ list:
 	  while read f; do echo $$d/$$f; done; \
 	done
 
-VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\')
+VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 
 package:
 	echo include Makefile.mk > Makefile

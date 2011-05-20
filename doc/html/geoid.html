@@ -39,13 +39,13 @@
 Installing the datasets</h2>
 <p>The geoid heights are computed using interpolation into a rectangular grid. The grids are read from data files which have been are computed using the NGA synthesis programs in the case of the EGM84 and EGM96 models and using the NGA binary gridded data files in the case of EGM2008. These data files are available for download:</p>
 <ul>
-<li>EGM84, 30' grid: <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">tar.bz2</a>, <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">zip</a>.</li>
-<li>EGM84, 15' grid: <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">tar.bz2</a>, <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">zip</a>.</li>
-<li>EGM96, 15' grid: <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">tar.bz2</a>, <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">zip</a>.</li>
-<li>EGM96, 5' grid: <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">tar.bz2</a>, <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">zip</a>.</li>
-<li>EGM2008, 5' grid: <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">tar.bz2</a>, <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">zip</a>.</li>
-<li>EGM2008, 2.5' grid: <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">tar.bz2</a>, <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">zip</a>.</li>
-<li>EGM2008, 1' grid: <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">tar.bz2</a>, <a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">zip</a>.</li>
+<li>EGM84, 30' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">zip</a>.</li>
+<li>EGM84, 15' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">zip</a>.</li>
+<li>EGM96, 15' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">zip</a>.</li>
+<li>EGM96, 5' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">zip</a>.</li>
+<li>EGM2008, 5' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">zip</a>.</li>
+<li>EGM2008, 2.5' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">zip</a>.</li>
+<li>EGM2008, 1' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">zip</a>.</li>
 </ul>
 <p>Download <em>either</em> the tar.bz2 file <em>or</em> zip file (they have the same contents). If possible use the tar.bz2 format, since bzip2 compresses these files about 2 times better than zip. The data in tar and zip files both unpack into a "geoids" directory and, for convenience, all the data should be unpacked in the same parent directory. For example </p>
 <div class="fragment"><pre class="fragment">
@@ -86,12 +86,12 @@ The format of the geoid data files</h2>
 </ul>
 <p>PGM simple graphic format with the following properties</p>
 <ul>
-<li>it is well documented <a href="http://netpbm.sourceforge.net/doc/pgm.html">here</a>;</li>
+<li>it is well documented <a href="http://netpbm.sf.net/doc/pgm.html">here</a>;</li>
 <li>there are no separate "little-endian" and "big-endian" versions;</li>
 <li>it uses 1 or 2 bytes per pixel;</li>
 <li>pixels can be randomly accessed;</li>
 <li>comments can be added to the file header;</li>
-<li>it is sufficiently simple that it can be easily read without using the <a href="http://netpbm.sourceforge.net/doc/libnetpbm.html">libnetpbm</a> library (and thus we avoid adding a software dependency to GeographicLib).</li>
+<li>it is sufficiently simple that it can be easily read without using the <a href="http://netpbm.sf.net/doc/libnetpbm.html">libnetpbm</a> library (and thus we avoid adding a software dependency to GeographicLib).</li>
 </ul>
 <p>The major drawback of this format is that since there are only 65535 possible pixel values, the height must be quantized to 3mm. However, the resulting quantization error (up to 1.5mm) is typically smaller than the linear interpolation errors. The comments in the header for egm96-5 are </p>
 <div class="fragment"><pre class="fragment">
@@ -175,7 +175,7 @@ Caching the geoid data</h2>
 Test data for geoids</h2>
 <p>A test set for the geoid models is available at</p>
 <ul>
-<li><a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">GeoidHeight.dat.gz</a></li>
+<li><a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">GeoidHeight.dat.gz</a></li>
 </ul>
 <p>This is about 10 MB (compressed). This test set consists of a set of 500000 geographic coordinates together with the corresponding geoid heights according to various earth gravity models.</p>
 <p>Each line of the test set gives 6 space delimited numbers</p>
@@ -188,7 +188,7 @@ Test data for geoids</h2>
 </ul>
 <p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs. In the case of the EGM84 and EGM96, the programs were compiled (with gfortran) and run under Linux. In the case of EGM2008, the prescription results in NaNs (possibly because of uninitialized variables in the program?), so the data was generated with the precompiled binary that NGA supplies for Windows.</p>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

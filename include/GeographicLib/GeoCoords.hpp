@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
-#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: GeoCoords.hpp 6867 2010-09-11 13:04:26Z karney $"
+#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: GeoCoords.hpp 6876 2010-10-18 13:47:55Z karney $"
 
 #include "GeographicLib/UTMUPS.hpp"
 #include "GeographicLib/Constants.hpp"
@@ -412,7 +412,7 @@ namespace GeographicLib {
     /**
      * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
      *
-     * (The WGS84 values is returned because the UTM and UPS projections are
+     * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real MajorRadius() const throw() { return UTMUPS::MajorRadius(); }
@@ -420,7 +420,7 @@ namespace GeographicLib {
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      *
-     * (The WGS84 values is returned because the UTM and UPS projections are
+     * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real InverseFlattening() const throw()

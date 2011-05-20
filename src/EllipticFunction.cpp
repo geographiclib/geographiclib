@@ -9,7 +9,7 @@
 
 #include "GeographicLib/EllipticFunction.hpp"
 
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6838 2010-06-22 21:26:37Z karney $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6875 2010-10-02 19:31:54Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
@@ -118,7 +118,7 @@ namespace GeographicLib {
       s += mul * t * t;
     }
     x0 = (x0 + y0)/2;
-    return  (x0 * x0 - s) * Constants::pi() / (2 * (xn + yn));
+    return  (x0 * x0 - s) * Math::pi() / (2 * (xn + yn));
   }
 
   EllipticFunction::EllipticFunction(real m) throw()

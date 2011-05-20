@@ -59,7 +59,7 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Setting up the geoid</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp2386c59d1aaec6b6fd1374dfc579df43"></a> </p>
 </div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#a2adf59cbe7f86ea8493a78ef95f32d98">Geoid</a> (const std::string &amp;name, const std::string &amp;path=&quot;&quot;, bool cubic=true)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#ac3556c755dad0d43c3be0913df08b395">Geoid</a> (const std::string &amp;name, const std::string &amp;path=&quot;&quot;, bool cubic=true, bool threadsafe=false)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#a52b5dc2d976796046aaeb8765e4a9c0f">CacheArea</a> (real south, real west, real north, real east) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">CacheAll</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#ad948f48545c9c40f1705f2892887cdab">CacheClear</a> () const   throw ()</td></tr>
@@ -82,6 +82,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#a207f98316d20a5b9d47846e559c5e2a2">RMSError</a> () const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#ac798950a643e4286aa8d3bb8cd9b0815">Offset</a> () const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#ab2346300c12ff7e70d35e08479ecede1">Scale</a> () const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#a286e947c13592f21e45cbdd404b283c7">ThreadSafe</a> () const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#ade5715c0d1428a409383b1acd2cbe9be">Cache</a> () const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#aa0d2e119f089ee4182987ddd3faaf62a">CacheWest</a> () const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geoid.html#acb34cfbcfb8be2794b16a3d18209dbbe">CacheEast</a> () const   throw ()</td></tr>
@@ -105,9 +106,9 @@ Static Public Member Functions</h2></td></tr>
 <p>The geoids are defined in terms of spherical harmonics. However in order to provide a quick and flexible method of evaluating the geoid heights, this class evaluates the height by interpolation inot a grid of precomputed values.</p>
 <p>See <a class="el" href="geoid.html">Geoid height</a> for details of how to install the data sets, the data format, estimates of the interpolation errors, and how to use caching.</p>
 <p>In addition to returning the geoid height, the gradient of the geoid can be calculated. The gradient is defined as the rate of change of the geoid as a function of position on the ellipsoid. This uses the parameters for the WGS84 ellipsoid. The gradient defined in terms of the interpolated heights.</p>
-<p>This class is <em>not</em> thread safe in that a single instantiation cannot be safely used by multiple threads. If multiple threads need to calculate geoid heights they should all construct thread-local instantiations. </p>
+<p>This class is typically <em>not</em> thread safe in that a single instantiation cannot be safely used by multiple threads because of the way the object reads the data set and because it maintains a single-cell cache. If multiple threads need to calculate geoid heights they should all construct thread-local instantiations. Alternatively, set the optional <em>threadsafe</em> parameter to true in the constuctor. This causes the constructor to read all the data into memory and to turn off the single-cell caching which results in a <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a> object which <em>is</em> thread safe. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00051">51</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00058">58</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 <hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="a58ddbd0fd48c25b361f45bdb70dadb96"></a><!-- doxytag: member="GeographicLib::Geoid::convertflag" ref="a58ddbd0fd48c25b361f45bdb70dadb96" args="" -->
 <div class="memitem">
@@ -134,12 +135,12 @@ Static Public Member Functions</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00132">132</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00140">140</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a2adf59cbe7f86ea8493a78ef95f32d98"></a><!-- doxytag: member="GeographicLib::Geoid::Geoid" ref="a2adf59cbe7f86ea8493a78ef95f32d98" args="(const std::string &amp;name, const std::string &amp;path=&quot;&quot;, bool cubic=true)" -->
+<a class="anchor" id="ac3556c755dad0d43c3be0913df08b395"></a><!-- doxytag: member="GeographicLib::Geoid::Geoid" ref="ac3556c755dad0d43c3be0913df08b395" args="(const std::string &amp;name, const std::string &amp;path=&quot;&quot;, bool cubic=true, bool threadsafe=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -159,7 +160,13 @@ Static Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&nbsp;</td>
-          <td class="paramname"> <em>cubic</em> = <code>true</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>cubic</em> = <code>true</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>threadsafe</em> = <code>false</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -174,15 +181,16 @@ Static Public Member Functions</h2></td></tr>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>name</em>&nbsp;</td><td>the name of the geoid. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>path</em>&nbsp;</td><td>(optional) directory for data file. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cubic</em>&nbsp;</td><td>interpolation method; false means bilinear, true (the default) means cubic.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>cubic</em>&nbsp;</td><td>(optional) interpolation method; false means bilinear, true (the default) means cubic. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>threadsafe</em>&nbsp;</td><td>(optional), if true, construct a thread safe object. The default is false</td></tr>
   </table>
   </dd>
 </dl>
-<p>The data file is formed by appending ".pgm" to the name. If <em>path</em> is specified (and is non-empty), then the file is loaded from directory, <em>path</em>. Otherwise the path is given by the GEOID_PATH environment variable. If that is undefined, a compile-time default path is used (/usr/local/share/GeographicLib/geoids on non-Windows systems and C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems). This may throw an error because the file does not exist, is unreadable, or is corrupt. </p>
+<p>The data file is formed by appending ".pgm" to the name. If <em>path</em> is specified (and is non-empty), then the file is loaded from directory, <em>path</em>. Otherwise the path is given by the GEOID_PATH environment variable. If that is undefined, a compile-time default path is used (/usr/local/share/GeographicLib/geoids on non-Windows systems and C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems). This may throw an exception because the file does not exist, is unreadable, or is corrupt. If the <em>threadsafe</em> parameter is true, the data set is read into memory (which this may also cause an exception to be thrown), the data file is closed, and single-cell caching is turned off; this results in a <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a> object which <em>is</em> thread safe. </p>
 
 <p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00200">200</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
 
-<p>References <a class="el" href="Geoid_8cpp_source.html#l00485">DefaultPath()</a>, and <a class="el" href="Geoid_8cpp_source.html#l00489">GeoidPath()</a>.</p>
+<p>References <a class="el" href="Geoid_8hpp_source.html#l00215">CacheAll()</a>, <a class="el" href="Geoid_8cpp_source.html#l00512">DefaultPath()</a>, and <a class="el" href="Geoid_8cpp_source.html#l00516">GeoidPath()</a>.</p>
 
 </div>
 </div>
@@ -233,13 +241,13 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>Cache the data for the specified rectangular area . <em>east</em> is always interpreted as being east of <em>west</em>, if necessary by adding 360<sup>o</sup> to its value. This may throw an error because of insufficent memory or because of an error reading the data from the file. In this case, you can catch the error and either do nothing (you will have no cache in this case) or try again with a smaller area. <em>south</em> and <em>north</em> should be in the range [-90, 90]; <em>west</em> and <em>east</em> should be in the range [-180, 360]. </p>
+<p>Cache the data for the specified rectangular area . <em>east</em> is always interpreted as being east of <em>west</em>, if necessary by adding 360<sup>o</sup> to its value. This may throw an error because of insufficent memory or because of an error reading the data from the file. In this case, you can catch the error and either do nothing (you will have no cache in this case) or try again with a smaller area. <em>south</em> and <em>north</em> should be in the range [-90, 90]; <em>west</em> and <em>east</em> should be in the range [-180, 360]. An exception is thrown if this routine is called on a thread safe <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00404">404</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00429">429</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
 
-<p>References <a class="el" href="Geoid_8cpp_source.html#l00393">CacheClear()</a>.</p>
+<p>References <a class="el" href="Geoid_8cpp_source.html#l00416">CacheClear()</a>.</p>
 
-<p>Referenced by <a class="el" href="Geoid_8hpp_source.html#l00200">CacheAll()</a>.</p>
+<p>Referenced by <a class="el" href="Geoid_8hpp_source.html#l00215">CacheAll()</a>.</p>
 
 </div>
 </div>
@@ -257,11 +265,13 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Cache all the data. On most computers, this is fast for data sets with grid resolution of 5' or coarser. For a 1' grid, the required RAM is 450MB; a 2.5' grid needs 72MB; and a 5' grid needs 18MB. This may throw an error because of insufficent memory or because of an error reading the data from the file. In this case, you can catch the error and either do nothing (you will have no cache in this case) or try using <a class="el" href="classGeographicLib_1_1Geoid.html#a52b5dc2d976796046aaeb8765e4a9c0f">Geoid::CacheArea</a> on a specific area. </p>
+<p>Cache all the data. On most computers, this is fast for data sets with grid resolution of 5' or coarser. For a 1' grid, the required RAM is 450MB; a 2.5' grid needs 72MB; and a 5' grid needs 18MB. This may throw an error because of insufficent memory or because of an error reading the data from the file. In this case, you can catch the error and either do nothing (you will have no cache in this case) or try using <a class="el" href="classGeographicLib_1_1Geoid.html#a52b5dc2d976796046aaeb8765e4a9c0f">Geoid::CacheArea</a> on a specific area. An exception is thrown if this routine is called on a thread safe <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00200">200</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00215">215</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
-<p>References <a class="el" href="Geoid_8cpp_source.html#l00404">CacheArea()</a>.</p>
+<p>References <a class="el" href="Geoid_8cpp_source.html#l00429">CacheArea()</a>.</p>
+
+<p>Referenced by <a class="el" href="Geoid_8cpp_source.html#l00200">Geoid()</a>.</p>
 
 </div>
 </div>
@@ -279,11 +289,11 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Clear the cache. This never throws an error. </p>
+<p>Clear the cache. This never throws an error. (This does nothing with a thread safe <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>.) </p>
 
-<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00393">393</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00416">416</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Geoid_8cpp_source.html#l00404">CacheArea()</a>.</p>
+<p>Referenced by <a class="el" href="Geoid_8cpp_source.html#l00429">CacheArea()</a>.</p>
 
 </div>
 </div>
@@ -322,7 +332,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>geoid height (meters).</dd></dl>
 <p>The latitude should be in [-90, 90] and longitude should bein [-180,360]. This may throw an error because of an error reading data from disk. However, it will not throw if (<em>lat</em>, <em>lon</em>) is within a successfully cached area. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00225">225</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00241">241</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -375,7 +385,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>geoid height (meters).</dd></dl>
 <p>The latitude should be in [-90, 90] and longitude should be in [-180, 360]. This may throw an error because of an error reading data from disk. However, it will not throw if (<em>lat</em>, <em>lon</em>) is within a successfully cached area. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00244">244</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00260">260</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -427,7 +437,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>converted height (meters). </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00261">261</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00277">277</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -447,7 +457,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>geoid description, if available, in the data file; if absent, return "NONE". </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00276">276</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00292">292</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -467,7 +477,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>date of the data file; if absent, return "UNKNOWN". </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00281">281</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00297">297</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -487,7 +497,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>full file name used to load the geoid data. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00286">286</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00302">302</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -507,7 +517,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>"name" used to load the geoid data (from the first argument of the constructor). </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00292">292</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00308">308</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -527,7 +537,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>directory used to load the geoid data. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00297">297</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00313">313</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -547,7 +557,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>interpolation method ("cubic" or "bilinear"). </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00302">302</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00318">318</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -568,7 +578,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>estimate of the maximum interpolation and quantization error (meters).</dd></dl>
 <p>This relies on the value being stored in the data file. If the value is absent, return -1. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00312">312</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00328">328</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -589,7 +599,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>estimate of the RMS interpolation and quantization error (meters).</dd></dl>
 <p>This relies on the value being stored in the data file. If the value is absent, return -1. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00321">321</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00337">337</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -610,7 +620,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>offset (meters).</dd></dl>
 <p>This in used in converting from the pixel values in the data file to geoid heights. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00329">329</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00345">345</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -631,7 +641,27 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>scale (meters).</dd></dl>
 <p>This in used in converting from the pixel values in the data file to geoid heights. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00337">337</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00353">353</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a286e947c13592f21e45cbdd404b283c7"></a><!-- doxytag: member="GeographicLib::Geoid::ThreadSafe" ref="a286e947c13592f21e45cbdd404b283c7" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool GeographicLib::Geoid::ThreadSafe </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>true if the object is constructed to be thread safe. </dd></dl>
+
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00358">358</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -651,7 +681,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if a data cache is active. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00342">342</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00363">363</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -671,9 +701,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>west edge of the cached area; the cache includes this edge. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00347">347</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00368">368</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Geoid_8hpp_source.html#l00356">CacheEast()</a>.</p>
+<p>Referenced by <a class="el" href="Geoid_8hpp_source.html#l00377">CacheEast()</a>.</p>
 
 </div>
 </div>
@@ -693,9 +723,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>east edge of the cached area; the cache excludes this edge. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00356">356</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00377">377</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
-<p>References <a class="el" href="Geoid_8hpp_source.html#l00347">CacheWest()</a>.</p>
+<p>References <a class="el" href="Geoid_8hpp_source.html#l00368">CacheWest()</a>.</p>
 
 </div>
 </div>
@@ -715,7 +745,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>north edge of the cached area; the cache includes this edge. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00366">366</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00387">387</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -735,7 +765,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>south edge of the cached area; the cache excludes this edge unless it's the south pole. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00374">374</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00395">395</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
 </div>
 </div>
@@ -754,11 +784,11 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the WGS84 ellipsoid (meters).</dd></dl>
-<p>(The WGS84 values is returned because the supported geoid models are all based on this ellipsoid.) </p>
+<p>(The WGS84 value is returned because the supported geoid models are all based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00384">384</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00405">405</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00316">GeographicLib::Constants::WGS84_a()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00355">GeographicLib::Constants::WGS84_a()</a>.</p>
 
 </div>
 </div>
@@ -777,11 +807,11 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the WGS84 ellipsoid.</dd></dl>
-<p>(The WGS84 values is returned because the supported geoid models are all based on this ellipsoid.) </p>
+<p>(The WGS84 value is returned because the supported geoid models are all based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00392">392</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8hpp_source.html#l00413">413</a> of file <a class="el" href="Geoid_8hpp_source.html">Geoid.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00320">GeographicLib::Constants::WGS84_r()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00359">GeographicLib::Constants::WGS84_r()</a>.</p>
 
 </div>
 </div>
@@ -801,7 +831,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Return the compile-time default path for the geoid data files. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00485">485</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00512">512</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
 
 <p>References <a class="el" href="Geoid_8cpp_source.html#l00023">GEOID_DEFAULT_PATH</a>.</p>
 
@@ -825,7 +855,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Return the value of the environment variable GEOID_PATH. </p>
 
-<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00489">489</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geoid_8cpp_source.html#l00516">516</a> of file <a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geoid_8cpp_source.html#l00200">Geoid()</a>, and <a class="el" href="GeoidEval_8cpp_source.html#l00021">usage()</a>.</p>
 
@@ -836,7 +866,7 @@ Static Public Member Functions</h2></td></tr>
 <li><a class="el" href="Geoid_8cpp_source.html">Geoid.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

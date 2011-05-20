@@ -28,7 +28,7 @@
 <center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p><a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> and <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> provide accurate solutions to the direct and inverse geodesic problems. The <a class="el" href="utilities.html#geod">Geod</a> utility provides an interface to these classes. <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> implements the azimuthal equidistant projection in terms of geodesics. <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> implements a transverse cylindrical equidistant projection in terms of geodesics. The <a class="el" href="utilities.html#equidistanttest">EquidistantTest</a> utility provides an interface to these projections.</p>
 <p>References</p>
 <ul>
-<li>F. W. Bessel, <a href="http://adsabs.harvard.edu/abs/1825AN......4..241B">&Uuml;ber die Berechnung der geographischen L&auml;ngen und Breiten aus geod&auml;tischen Vermessungen</a>, Astron. Nachr. 4 (86), 241&ndash;254 (1826). English translation: <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.</li>
+<li>F. W. Bessel, <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation of longitude and latitude from geodesic measurements (1825)</a>, Astron. Nachr. 331(8), 852-861 (2010); translated by C. F. F. Karney and R. E. Deakin. Preprint: <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.</li>
 <li>F. R. Helmert, Die Mathematischen und Physikalischen Theorieen der H&ouml;heren Geod&auml;sie, vol. 1 (Teubner, Leipzig, 1880).</li>
 <li>E. B. Christoffel, Allgemeine Theorie der geod&auml;tischen Dreiecke (1868), in "Gesammelte Mathematische Abhandlungen", vol. 1, chap. 16, pp. 297&ndash;346 (Teubner, Leipzig, 1910).</li>
 <li>H. F. Rainsford, <a href="http://dx.doi.org/10.1007/BF02527187">Long geodesics on the ellipsoid</a>, Bull. Geod. 37 (1), 12&ndash;22 (1955).</li>
@@ -41,8 +41,8 @@ Description of algorithm</h2>
 <p>The shortest path between two points on a ellipsoid at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>, <em>lon2</em>) is called the geodesic. Its length is <em>s12</em> and the geodesic from point 1 to point 2 has azimuths <em>azi1</em> and <em>azi2</em> at the two end points. (The azimuth is the heading measured clockwise from north. <em>azi2</em> is the "forward" azimuth, i.e., the heading that takes you beyond point 2 not back to point 1.) The reduced length of the geodesic, <em>m12</em>, is the rate at which the second point moves as the geodesic is rotated about the first point. Christoffel (1868) proved that this is equal to the rate at which the first point moves when the geodesic is rotated about the second point.</p>
 <p>Given <em>lat1</em>, <em>lon1</em>, <em>azi1</em>, and <em>s12</em>, we can determine <em>lat2</em>, <em>lon2</em>, <em>azi2</em>, <em>m12</em>. This is the <b>direct</b> geodesic problem. (If <em>s12</em> is sufficiently large that the geodesic wraps more than halfway around the earth, there will be another geodesic between the points with a smaller <em>s12</em>.)</p>
 <p>Given <em>lat1</em>, <em>lon1</em>, <em>lat2</em>, and <em>lon2</em>, we can determine <em>azi1</em>, <em>azi2</em>, <em>s12</em>, <em>m12</em>. This is the <b>inverse</b> geodesic problem. Usually, the solution to the inverse problem is unique. In cases where there are multiple solutions (all with the same <em>s12</em>, of course), all the solutions can be easily generated once a particular solution is provided.</p>
-<p>The framework for solving geodesic problems on the ellipsoid was laid down by Bessel (1826) who showed how the problem may be transferred to an "auxiliary sphere" where the latitude <em>phi</em> has been replaced by the reduced latitude <em>beta</em> where tan(<em>beta</em>) = (1 - <em>f</em>) tan(<em>phi</em>). On this sphere, the geodesic is a great circle and the azimuth is the same as on the ellipsoid. However, the ellipsoidal distance is related to the great circle distance by an integral; and the ellipsoidal longitude is similarly related to the longitude on the auxiliary sphere. In the case of small <em>f</em>, Bessel developed series expansions for the integrals and provided a systematic solution to the direct problem. Helmert (1880) extended Bessel's treatment by giving an expression for the reduced length of a geodesic for the ellipsoid. The "azimuthal scale" of the azimuthal equidistant projection about point 1 is given by <em>s12/<em>m12</em>.</em> </p>
-<p>The algorithms included here are based on the work of Bessel (1826) and Helmert (1880). Key points are:</p>
+<p>The framework for solving geodesic problems on the ellipsoid was laid down by Bessel (1825) who showed how the problem may be transferred to an "auxiliary sphere" where the latitude <em>phi</em> has been replaced by the reduced latitude <em>beta</em> where tan(<em>beta</em>) = (1 - <em>f</em>) tan(<em>phi</em>). On this sphere, the geodesic is a great circle and the azimuth is the same as on the ellipsoid. However, the ellipsoidal distance is related to the great circle distance by an integral; and the ellipsoidal longitude is similarly related to the longitude on the auxiliary sphere. In the case of small <em>f</em>, Bessel developed series expansions for the integrals and provided a systematic solution to the direct problem. Helmert (1880) extended Bessel's treatment by giving an expression for the reduced length of a geodesic for the ellipsoid. The "azimuthal scale" of the azimuthal equidistant projection about point 1 is given by <em>s12/<em>m12</em>.</em> </p>
+<p>The algorithms included here are based on the work of Bessel (1825) and Helmert (1880). Key points are:</p>
 <ul>
 <li>Inclusion of sufficient terms in the series to give accuracy at the round-off level for doubles and long doubles.</li>
 <li>Reverting the distance series so that the direct problem can be solved non-iteratively.</li>
@@ -59,16 +59,49 @@ Description of algorithm</h2>
 <p>The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the series for the distance and longitude integrals. In addition this includes code to format the results for inclusion into C++ code. You will need to have Maxima installed to use this code. The comments at the top of <a href="geod.mac">geod.mac</a> illustrate how to run it. It takes about 10s to generate the 8th order series.</p>
 <p>For the inverse problem, we rearrange the points so that the point 1 is the one closest to a pole and is in the southern hemisphere and the point 2 is to the north and east of point 1. We consider geodesics leaving point 1 with azimuth <em>alpha1</em> in [0, pi] and we determine the longitude where these geodesics first intersect the latitude = <em>lat2</em>. The longitude is an increasing function of <em>alpha1</em> and we use Newton's method to determine the value of <em>alpha1</em> for which the longitude matches <em>lon2</em>. This then gives the desired geodesic.</p>
 <p>This class also returns the arc length <em>a12</em> on the auxiliary sphere and allows distances to be specified in these terms. See the -a option to <a class="el" href="utilities.html#geod">Geod</a>.</p>
-<p>Area computations are supported via <em>S12</em> the area between the geodesic and the equator. This uses Danielsen's method extended to higher order and with the terms rearranged to facilitate the use of Clenshaw summation. Using this function, it is simple to compute the area of any geodesic polygon. This functionality is provided by <a class="el" href="utilities.html#planimeter">Planimeter</a>.</p>
+<h2><a class="anchor" id="geodarea"></a>
+Geodesic area</h2>
+<p>Area computations are supported via <em>S12</em> the area between the geodesic and the equator, i.e., the area of the quadrilateral with vertices </p>
+<div class="fragment"><pre class="fragment">
+  (phi1, lambda1); (phi2, lambda2);
+  (0,    lambda1); (0,    lambda2);
+</pre></div><p> In a reformulation of Danielsen's method, <em>S12</em> may be expressed as </p>
+<div class="fragment"><pre class="fragment">
+  S12 = S(sigma2) - S(sigma1)
+  S(sigma) = c^2*alpha + e^2*a^2 * cos(alpha0)*sin(alpha0) * I4(sigma)
+  I4(sigma) = - integrate(
+       (t(ep^2) - t(k^2*sin(sigma)^2)) / (ep^2 - k^2*sin(sigma)^2),
+       sigma)
+  t(x) = sqrt(1+1/x) * asinh(sqrt(x)) + x
+
+  a = major radius
+  c = authalic radius (area of ellipsoid = 4*pi*c^2)
+  e = eccentricity
+  ep = second eccentricity, ep^2 = e^2/(1-e^2)
+  alpha = azimuth of geodesic
+  alpha0 = azimuth at the equator crossing
+  k = ep*cos(alpha0)
+  sigma = arc length on auxiliary sphere (measured from the equator)
+</pre></div><p> The term <em>I4</em>(<em>sigma</em>) can be expanded as a trigonometric series which is amenable to Clenshaw summation; see <a class="el" href="geodesic.html#geodseries">Expansions for geodesics</a>. Using <em>S12</em>, it is simple to compute the area of any geodesic polygon. This functionality is provided by <a class="el" href="utilities.html#planimeter">Planimeter</a>.</p>
+<p>A major source of errors in this formulation (particularly for small polygons) is round-off when computing <em>E<sub>12</sub></em> = <em>alpha<sub>2</sub></em> - <em>alpha<sub>1</sub></em>. However, <em>E<sub>12</sub></em> is merely the geodesic access for a geodesic quadilateral on a <em>sphere</em> with vertices </p>
+<div class="fragment"><pre class="fragment">
+  (beta1, omega1); (beta2, omega2);
+  (0,     omega1); (0,     omega2);
+</pre></div><p> where <em>beta</em> is the latitude on the sphere and <em>omega</em> the longitude. <em>E<sub>12</sub></em> is also the area of the quadrilateral on a unit sphere. When computing areas when the end-points of the Geodesic are given, GeographicLib uses </p>
+<div class="fragment"><pre class="fragment">
+                                tan(beta1/2) + tan(beta2/2)  
+  tan(E12/2) = tan(omega12/2) -------------------------------
+                              1 + tan(beta1/2) * tan(beta2/2)
+</pre></div><p> where <em>omega<sub>12</sub></em> = <em>omega<sub>2</sub></em> - <em>omega<sub>1</sub></em>. This result can be derived from the formula for the area of a spherical triangle in terms of two edges and the included angle; it is the spherical generalization of the familiar trapezoidal formula for plane areas (<em>x<sub>2</sub></em> - <em>x<sub>1</sub></em>) (<em>y<sub>1</sub></em> + <em>y<sub>2</sub></em>)/2. Summing <em>E<sub>12</sub></em> over all the edges of a spherical polygon provides an accurate method of computing its area.</p>
 <h2><a class="anchor" id="testgeod"></a>
 Test data for geodesics</h2>
 <p>A test set a geodesics is available at</p>
 <ul>
-<li><a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">GeodTest.dat.gz</a></li>
+<li><a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">GeodTest.dat.gz</a></li>
 </ul>
 <p>This is about 39 MB (compressed). This consists of a set of geodesics for the WGS84 ellipsoid. A subset of this (consisting of 1/50 of the members &mdash; about 690 kB, compressed) is available at</p>
 <ul>
-<li><a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">GeodTest-short.dat.gz</a></li>
+<li><a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">GeodTest-short.dat.gz</a></li>
 </ul>
 <p>Each line of the test set gives 9 space delimited numbers</p>
 <ul>
@@ -277,12 +310,9 @@ C3[5] = + (21/2560 - 9/512*n + 15/1024*n^2) * eps^5
 C3[6] = + (11/2048 - 99/8192*n) * eps^6
         + 99/16384 * eps^7;
 C3[7] = + 429/114688 * eps^7;
-</pre></div><p>The formula for area between the geodesic and the equator is</p>
-<p>&nbsp; &nbsp; Area = <em>c<sup>2</sup></em> <em>Gamma</em> + <em>e<sup>2</sup></em> <em>a<sup>2</sup></em> cos <em>alpha<sub>0</sub></em> sin <em>alpha<sub>0</sub></em> <em>I4</em>(<em>sigma</em>)</p>
-<p>where</p>
-<p>&nbsp; &nbsp; <em>Gamma</em> = geodesic excess<br/>
- &nbsp; &nbsp; <em>I4</em>(<em>sigma</em>) = sum<sub><em>j</em> = 0</sub> <em>C4<sub>j</sub></em> cos((2<em>j</em> + 1) <em>sigma</em>)</p>
-<p>and</p>
+</pre></div><p>The formula for area between the geodesic and the equator (see <a class="el" href="geodesic.html#geodarea">Geodesic area</a>) involves the function <em>I4</em>(<em>sigma</em>) which can be expanded as</p>
+<p>&nbsp; &nbsp; <em>I4</em>(<em>sigma</em>) = sum<sub><em>j</em> = 0</sub> <em>C4<sub>j</sub></em> cos((2<em>j</em> + 1) <em>sigma</em>)</p>
+<p>with</p>
 <div class="fragment"><pre class="fragment">
 C4[0] = + (2/3 - 1/15*ep2 + 4/105*ep2^2 - 8/315*ep2^3 + 64/3465*ep2^4 - 128/9009*ep2^5 + 512/45045*ep2^6 - 1024/109395*ep2^7)
         - (1/20 - 1/35*ep2 + 2/105*ep2^2 - 16/1155*ep2^3 + 32/3003*ep2^4 - 128/15015*ep2^5 + 256/36465*ep2^6) * k2
@@ -338,8 +368,8 @@ Miscellaneous information on geodesics</h2>
 <p>Geographic coordinates which are close to zero are quantized (by adding and subtracting 1/16 deg). This allows certain cases of underflow to be avoided. This limits the accuracy to which coordinates can be specified to 0.7 pm. This should not be a problem since the overall accuracy of the algorithms is only 15 nm.</p>
 <p>You can specify a <em>negative</em> flattening to get a prolate ellipsoid. The rule is that <em>b</em> is the radius of the axis of symmetry (the polar radius), that <em>a</em> is the equatorial radius, and that <em>b</em> = <em>a</em> (1 - <em>f</em>). The direct solution needed no modification. The inverse solution required a generalization in the way starting points for Newton's method are chosen; in addition a test are added to the case when the endpoints are on the same meridian to determine if a shorter non-meridional geodesic exists.</p>
 <p>Most planets and satellites are approximated by oblate ellipsoids. However, satellites whose rotation frequency is tidally locked to a month may be prolate (as example is Saturn's moon, Tethys). Such satellites are typically considerably more eccentric that the earth and it may be necessary to increase the order of the series used in order to maintain accuracy.</p>
-<p>GeodesicLine::Position provides a way of doing a series of direct calculations for a single geodesic. This is about 2.1 times faster than calling Geodesic::Direct. A speed-up by a further factor of 1.6 is obtained with the direct calculation if the distance is expressed in terms of the spherical arc length.</p>
-<p>On a 2.66 GHz Intel machine (g++, version 4.4.0, -O3), timings are as follows:</p>
+<p>GeodesicLine::Position provides a way of doing a series of direct calculations for a single geodesic. This is about 2.4 times faster than calling Geodesic::Direct. A speed-up by a further factor of 1.2 is obtained with the direct calculation if the distance is expressed in terms of the spherical arc length.</p>
+<p>On a 2.66 GHz Intel machine (g++, version 4.4.4, -O3), timings are as follows:</p>
 <ul>
 <li>Geodesic::Direct 0.88 us</li>
 <li>GeodesicLine::Position 0.37 us</li>
@@ -352,7 +382,7 @@ Miscellaneous information on geodesics</h2>
 <li>More documentation.</li>
 </ul>
 <center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

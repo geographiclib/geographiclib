@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_b99e15f269dc183379bcdcb16b1e9e4a.html">src</a>      </li>
+      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -46,8 +46,8 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="Gnomonic_8hpp.html" title="Header for GeographicLib::Gnomonic class.">GeographicLib/Gnomonic.hpp</a>&quot;</span>
-<a name="l00011"></a>00011 <span class="preprocessor">#include &lt;iostream&gt;</span>
-<a name="l00012"></a><a class="code" href="Gnomonic_8cpp.html#ad62c02d3264b4069476f2f1aa21f223e">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_GNOMONIC_CPP &quot;$Id: Gnomonic.cpp 6863 2010-09-08 21:28:58Z karney $&quot;</span>
+<a name="l00011"></a>00011 
+<a name="l00012"></a><a class="code" href="Gnomonic_8cpp.html#ad62c02d3264b4069476f2f1aa21f223e">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_GNOMONIC_CPP &quot;$Id: Gnomonic.cpp 6875 2010-10-02 19:31:54Z karney $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Gnomonic_8cpp.html#ad62c02d3264b4069476f2f1aa21f223e">GEOGRAPHICLIB_GNOMONIC_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Gnomonic_8hpp.html#af85f3f443620d568666f526ee193308a">GEOGRAPHICLIB_GNOMONIC_HPP</a>)
@@ -72,7 +72,7 @@
 <a name="l00034"></a>00034       x = y = Math::NaN();
 <a name="l00035"></a>00035     <span class="keywordflow">else</span> {
 <a name="l00036"></a>00036       real rho = m/M;
-<a name="l00037"></a>00037       azi0 *= Constants::degree();
+<a name="l00037"></a>00037       azi0 *= Math::degree();
 <a name="l00038"></a>00038       x = rho * sin(azi0);
 <a name="l00039"></a>00039       y = rho * cos(azi0);
 <a name="l00040"></a>00040     }
@@ -82,7 +82,7 @@
 <a name="l00044"></a>00044                          real&amp; lat, real&amp; lon, real&amp; azi, real&amp; rk)
 <a name="l00045"></a>00045     <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00046"></a>00046     real
-<a name="l00047"></a>00047       azi0 = atan2(x, y) / Constants::degree(),
+<a name="l00047"></a>00047       azi0 = atan2(x, y) / Math::degree(),
 <a name="l00048"></a>00048       rho = Math::hypot(x, y),
 <a name="l00049"></a>00049       s = _a * atan(rho/_a);
 <a name="l00050"></a>00050     <span class="keywordtype">bool</span> little = rho &lt;= _a;
@@ -116,7 +116,7 @@
 <a name="l00078"></a>00078 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

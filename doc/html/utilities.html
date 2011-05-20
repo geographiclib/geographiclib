@@ -28,7 +28,7 @@
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="old.html">Old Versions</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The examples of utility use here assume that the utilities have been built and put in a directory in your PATH.</p>
 <h2><a class="anchor" id="geoconvert"></a>
 GeoConvert</h2>
-<p>GeoConvert is a command line utility for geographic coordinate conversions via <a class="el" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeographicLib::GeoCoords</a>. There is an online interface to this utility at <a href="http://geographiclib.sourceforge.net/cgi-bin/GeoConvert">http://geographiclib.sourceforge.net/cgi-bin/GeoConvert</a></p>
+<p>GeoConvert is a command line utility for geographic coordinate conversions via <a class="el" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeographicLib::GeoCoords</a>. There is an online interface to this utility at <a href="http://geographiclib.sf.net/cgi-bin/GeoConvert">http://geographiclib.sf.net/cgi-bin/GeoConvert</a></p>
 <p>Examples:</p>
 <ul>
 <li>echo 33.3 44.4 | GeoConvert -u<br/>
@@ -129,7 +129,7 @@ then
 -h prints this help.
 </pre></div><h2><a class="anchor" id="geod"></a>
 Geod</h2>
-<p>Geod is a command line utility for geodesic calculations via <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a>. There is an online interface to this utility at <a href="http://geographiclib.sourceforge.net/cgi-bin/Geod">http://geographiclib.sourceforge.net/cgi-bin/Geod</a></p>
+<p>Geod is a command line utility for geodesic calculations via <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a>. There is an online interface to this utility at <a href="http://geographiclib.sf.net/cgi-bin/Geod">http://geographiclib.sf.net/cgi-bin/Geod</a></p>
 <p>Example (route from JFK Airport to Singapore Changi Airport)</p>
 <ul>
 <li>echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |<br/>
@@ -222,11 +222,11 @@ Planimeter</h2>
 <ul>
 <li>Planimeter &lt;&lt;EOF<br/>
  18N 500000 4400000<br/>
- 18N 500000 4500000<br/>
- 18N 600000 4500000<br/>
  18N 600000 4400000<br/>
+ 18N 600000 4500000<br/>
+ 18N 500000 4500000<br/>
  EOF<br/>
- =&gt; 4 400139.53295860 10007388597.191</li>
+ =&gt; 4 400139.53295860 10007388597.1913</li>
 </ul>
 <p>The following code takes the output from gdalinfo and reports the area covered by the data (assuming the edges of the image are geodesics). </p>
 <div class="fragment"><pre class="fragment"><span class="preprocessor">#! /bin/sh</span>
@@ -241,14 +241,14 @@ sed -e <span class="stringliteral">&#39;s/d /d/g&#39;</span> -e <span class="str
 <span class="stringliteral">    else if ($1 $2 == &quot;LowerRight&quot;)</span>
 <span class="stringliteral">        lr = $6 &quot; &quot;  $5;</span>
 <span class="stringliteral">    else if ($1 == &quot;Center&quot;) {</span>
-<span class="stringliteral">        printf &quot;%s\n%s\n%s\n%s\n\n&quot;, ul, ur, lr, ll;</span>
+<span class="stringliteral">        printf &quot;%s\n%s\n%s\n%s\n\n&quot;, ul, ll, lr, ur;</span>
 <span class="stringliteral">        ul = ll = ur = lr = &quot;&quot;;</span>
 <span class="stringliteral">    }</span>
 <span class="stringliteral">}</span>
 <span class="stringliteral">&#39;</span> | Planimeter | cut -f3 -d<span class="charliteral">&#39; &#39;</span>
 </pre></div><p>Here is the usage (obtained from "Planimeter -h") </p>
 <div class="fragment"><pre class="fragment">
-Usage: Planimeter [-e a r] [-h]
+Usage: Planimeter [-s] [-r] [-e a r] [-h]
 
 Measure the area of a geodesic polygon.  Reads polygon vertices from
 standard input, one per line.  Vertices may be given as latitude and
@@ -257,12 +257,17 @@ GeoConvert).  (MGRS coordinates signify the center of the corresponing
 MGRS square.)  The end of input, a blank line, or a line which can't be
 interpreted as a vertex signals the end of one polygon and the start of
 the next.  For each polygon print a summary line with the number of
-points, the perimeter (in meters), and the area (in meters^2).  Areas
-are traversed in a clockwise sense (in other words, the included area
-is to the right of the perimeter).  By this rule, a polygon tranversed
-in a counter-clockwise sense will return the area of ellipsoid excluded
-by the polygon.  Only simple polygons are supported for the area
-computation.  Polygons may include one or both poles.
+points, the perimeter (in meters), and the area (in meters^2).
+
+By default, areas are traversed in a counter-clockwise sense (in other
+words, the included area is to the left of the perimeter) and a
+positive area is returned.  By this rule, a polygon tranversed in a
+clockwise sense will return the area of ellipsoid excluded by the
+polygon; however, if the -s option is given, the signed area will be
+returned.  If the -r option is given, the included area is to the right
+of the perimeter.  The -s and -r flags are toggles; repeating one of
+then reverses the previous setting.  Only simple polygons are supported
+for the area computation.  Polygons may include one or both poles.
 
 By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
 equatorial radius of the ellipsoid to "a" and the reciprocal flattening
@@ -398,7 +403,7 @@ latitude, longitude, azi, and rk.
 -h prints this help.
 </pre></div><h2><a class="anchor" id="geoideval"></a>
 GeoidEval</h2>
-<p>Evaluate the height of the geoid by interpolating into a grid via <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a>. There is an online interface to this utility at <a href="http://geographiclib.sourceforge.net/cgi-bin/Geoid">http://geographiclib.sourceforge.net/cgi-bin/Geoid</a></p>
+<p>Evaluate the height of the geoid by interpolating into a grid via <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a>. There is an online interface to this utility at <a href="http://geographiclib.sf.net/cgi-bin/Geoid">http://geographiclib.sf.net/cgi-bin/Geoid</a></p>
 <p>Example: the height of the EGM96 geoid at Timbuktu</p>
 <ul>
 <li>echo "16d46'33N" "3d00'34W" | GeoidEval<br/>
@@ -486,7 +491,7 @@ to standard error.
 
 -h prints this help.
 </pre></div><center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="old.html">Old Versions</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Sep 12 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Nov 19 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

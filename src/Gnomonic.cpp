@@ -8,8 +8,8 @@
  **********************************************************************/
 
 #include "GeographicLib/Gnomonic.hpp"
-#include <iostream>
-#define GEOGRAPHICLIB_GNOMONIC_CPP "$Id: Gnomonic.cpp 6863 2010-09-08 21:28:58Z karney $"
+
+#define GEOGRAPHICLIB_GNOMONIC_CPP "$Id: Gnomonic.cpp 6875 2010-10-02 19:31:54Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_HPP)
@@ -34,7 +34,7 @@ namespace GeographicLib {
       x = y = Math::NaN();
     else {
       real rho = m/M;
-      azi0 *= Constants::degree();
+      azi0 *= Math::degree();
       x = rho * sin(azi0);
       y = rho * cos(azi0);
     }
@@ -44,7 +44,7 @@ namespace GeographicLib {
                          real& lat, real& lon, real& azi, real& rk)
     const throw() {
     real
-      azi0 = atan2(x, y) / Constants::degree(),
+      azi0 = atan2(x, y) / Math::degree(),
       rho = Math::hypot(x, y),
       s = _a * atan(rho/_a);
     bool little = rho <= _a;

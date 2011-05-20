@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6867 2010-09-11 13:04:26Z karney $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6876 2010-10-18 13:47:55Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -151,7 +151,7 @@ namespace GeographicLib {
      * and the UPS scale factor.  However, unlike UPS, no false easting or
      * northing is added.
      **********************************************************************/
-    const static PolarStereographic UPS;
+    static const PolarStereographic UPS;
   };
 
 } // namespace GeographicLib

@@ -8,9 +8,10 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
-#define GEOGRAPHICLIB_GEOID_HPP "$Id: Geoid.hpp 6868 2010-09-12 10:27:11Z karney $"
+#define GEOGRAPHICLIB_GEOID_HPP "$Id: Geoid.hpp 6888 2010-11-13 15:19:42Z karney $"
 
 #include "GeographicLib/Constants.hpp"
+#include <string>
 #include <vector>
 #include <fstream>
 
@@ -43,9 +44,15 @@ namespace GeographicLib {
    * the WGS84 ellipsoid.  The gradient defined in terms of the interpolated
    * heights.
    *
-   * This class is \e not thread safe in that a single instantiation cannot be
-   * safely used by multiple threads.  If multiple threads need to calculate
-   * geoid heights they should all construct thread-local instantiations.
+   * This class is typically \e not thread safe in that a single instantiation
+   * cannot be safely used by multiple threads because of the way the object
+   * reads the data set and because it maintains a single-cell cache.  If
+   * multiple threads need to calculate geoid heights they should all construct
+   * thread-local instantiations.  Alternatively, set the optional \e
+   * threadsafe parameter to true in the constuctor.  This causes the
+   * constructor to read all the data into memory and to turn off the
+   * single-cell caching which results in a Geoid object which \e is thread
+   * safe.
    **********************************************************************/
 
   class Geoid {
@@ -67,6 +74,7 @@ namespace GeographicLib {
     real _offset, _scale, _maxerror, _rmserror;
     int _width, _height;
     unsigned long long _datastart, _swidth;
+    bool _threadsafe;
     // Area cache
     mutable std::vector< std::vector<unsigned short> > _data;
     mutable bool _cache;
@@ -77,11 +85,12 @@ namespace GeographicLib {
     mutable real _v00, _v01, _v10, _v11;
     mutable real _t[nterms];
     void filepos(int ix, int iy) const {
-      // g++ 3.x doesn't know about the cast to std::ios::streamoff.  Just
-      // remove the cast in this case.
-      _file.seekg(std::ios::streamoff(_datastart +
-                                      2ULL * (unsigned(iy) * _swidth +
-                                              unsigned(ix))));
+      _file.seekg(
+#if !(defined(__GNUC__) && __GNUC__ < 4)
+                  // g++ 3.x doesn't know about the cast to streamoff.
+                  std::ios::streamoff
+#endif
+                  (_datastart + 2ULL * (unsigned(iy)*_swidth + unsigned(ix))));
     }
     real rawval(int ix, int iy) const {
       if (ix < 0)
@@ -115,7 +124,6 @@ namespace GeographicLib {
           err += ": ";
           err += e.what();
           throw GeographicErr(err);
-
         }
       }
     }
@@ -154,8 +162,10 @@ namespace GeographicLib {
      *
      * @param[in] name the name of the geoid.
      * @param[in] path (optional) directory for data file.
-     * @param[in] cubic interpolation method; false means bilinear, true (the
-     *   default) means cubic.
+     * @param[in] cubic (optional) interpolation method; false means bilinear,
+     *   true (the default) means cubic.
+     * @param[in] threadsafe (optional), if true, construct a thread safe
+     *   object.  The default is false
      *
      * The data file is formed by appending ".pgm" to the name.  If \e path is
      * specified (and is non-empty), then the file is loaded from directory, \e
@@ -163,11 +173,14 @@ namespace GeographicLib {
      * variable.  If that is undefined, a compile-time default path is used
      * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
      * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).
-     * This may throw an error because the file does not exist, is unreadable,
-     * or is corrupt.
+     * This may throw an exception because the file does not exist, is
+     * unreadable, or is corrupt.  If the \e threadsafe parameter is true, the
+     * data set is read into memory (which this may also cause an exception to
+     * be thrown), the data file is closed, and single-cell caching is turned
+     * off; this results in a Geoid object which \e is thread safe.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
-                   bool cubic = true);
+                   bool cubic = true, bool threadsafe = false);
 
     /**
      * Set up a cache.
@@ -184,7 +197,8 @@ namespace GeographicLib {
      * file.  In this case, you can catch the error and either do nothing (you
      * will have no cache in this case) or try again with a smaller area.  \e
      * south and \e north should be in the range [-90, 90]; \e west and \e east
-     * should be in the range [-180, 360].
+     * should be in the range [-180, 360].  An exception is thrown if this
+     * routine is called on a thread safe Geoid.
      **********************************************************************/
     void CacheArea(real south, real west, real north, real east) const;
 
@@ -195,13 +209,15 @@ namespace GeographicLib {
      * an error because of insufficent memory or because of an error reading
      * the data from the file.  In this case, you can catch the error and
      * either do nothing (you will have no cache in this case) or try using
-     * Geoid::CacheArea on a specific area.
+     * Geoid::CacheArea on a specific area.  An exception is thrown if this
+     * routine is called on a thread safe Geoid.
      **********************************************************************/
     void CacheAll() const { CacheArea(real(-90), real(0),
                                       real(90), real(360)); }
 
     /**
-     * Clear the cache.  This never throws an error.
+     * Clear the cache.  This never throws an error.  (This does nothing with a
+     * thread safe Geoid.)
      **********************************************************************/
     void CacheClear() const throw();
 
@@ -337,6 +353,11 @@ namespace GeographicLib {
     Math::real Scale() const throw() { return _scale; }
 
     /**
+     * @return true if the object is constructed to be thread safe.
+     **********************************************************************/
+    bool ThreadSafe() const throw() { return _threadsafe; }
+
+    /**
      * @return true if a data cache is active.
      **********************************************************************/
     bool Cache() const throw() { return _cache; }
@@ -378,7 +399,7 @@ namespace GeographicLib {
     /**
      * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
      *
-     * (The WGS84 values is returned because the supported geoid models are all
+     * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real MajorRadius() const throw() { return Constants::WGS84_a(); }
@@ -386,7 +407,7 @@ namespace GeographicLib {
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      *
-     * (The WGS84 values is returned because the supported geoid models are all
+     * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real InverseFlattening() const throw()
