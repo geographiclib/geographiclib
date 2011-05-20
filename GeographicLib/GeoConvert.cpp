@@ -23,7 +23,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-n] [-h]\n\
-$Id: GeoConvert.cpp 6667 2009-08-14 02:52:38Z ckarney $\n\
+$Id: GeoConvert.cpp 6671 2009-08-24 12:28:12Z ckarney $\n\
 \n\
 Convert geographic coordinates to\n\
 \n\
@@ -189,7 +189,7 @@ int main(int argc, char* argv[]) {
       os = std::string("ERROR: ") + e.what();
       retval = 1;
     }
-    std::cout << os << std::endl;
+    std::cout << os << "\n";
   }
   return retval;
 }

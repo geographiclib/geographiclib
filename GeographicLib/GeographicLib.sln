@@ -27,6 +27,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EquidistantTest", "Equidist
 		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoidEval", "GeoidEval.vcproj", "{0507FE91-AD45-4630-88EF-DABFA9A02FB4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -57,6 +62,10 @@ Global
 		{2E0C4271-25A7-4A94-8112-7DA0D1A8AF9A}.Debug|Win32.Build.0 = Debug|Win32
 		{2E0C4271-25A7-4A94-8112-7DA0D1A8AF9A}.Release|Win32.ActiveCfg = Release|Win32
 		{2E0C4271-25A7-4A94-8112-7DA0D1A8AF9A}.Release|Win32.Build.0 = Release|Win32
+		{0507FE91-AD45-4630-88EF-DABFA9A02FB4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0507FE91-AD45-4630-88EF-DABFA9A02FB4}.Debug|Win32.Build.0 = Debug|Win32
+		{0507FE91-AD45-4630-88EF-DABFA9A02FB4}.Release|Win32.ActiveCfg = Release|Win32
+		{0507FE91-AD45-4630-88EF-DABFA9A02FB4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

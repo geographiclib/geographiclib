@@ -1,5 +1,5 @@
 # Doxyfile 1.5.2
-# $Id: Doxyfile 6657 2009-08-11 17:43:05Z ckarney $
+# $Id: Doxyfile 6674 2009-08-27 10:58:29Z ckarney $
 
 # This file describes the settings to be used by the documentation system
 # doxygen (www.doxygen.org) for a project
@@ -463,9 +463,9 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = Constants.hpp GeoConvert.cpp TransverseMercatorTest.cpp CartConvert.cpp Geod.cpp EquidistantTest.cpp \
-GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp TransverseMercatorExact.cpp EllipticFunction.cpp Geocentric.cpp LocalCartesian.cpp Geodesic.cpp AzimuthalEquidistant.cpp CassiniSoldner.cpp \
-GeoCoords.hpp MGRS.hpp UTMUPS.hpp DMS.hpp TransverseMercator.hpp PolarStereographic.hpp TransverseMercatorExact.hpp EllipticFunction.hpp Geocentric.hpp LocalCartesian.hpp Geodesic.hpp AzimuthalEquidistant.hpp CassiniSoldner.hpp \
+INPUT                  = Constants.hpp GeoConvert.cpp TransverseMercatorTest.cpp CartConvert.cpp Geod.cpp EquidistantTest.cpp GeoidEval.cpp \
+GeoCoords.cpp MGRS.cpp UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp TransverseMercatorExact.cpp EllipticFunction.cpp Geocentric.cpp LocalCartesian.cpp Geodesic.cpp AzimuthalEquidistant.cpp CassiniSoldner.cpp Geoid.cpp \
+GeoCoords.hpp MGRS.hpp UTMUPS.hpp DMS.hpp TransverseMercator.hpp PolarStereographic.hpp TransverseMercatorExact.hpp EllipticFunction.hpp Geocentric.hpp LocalCartesian.hpp Geodesic.hpp AzimuthalEquidistant.hpp CassiniSoldner.hpp Geoid.hpp \
 Geographic.doc
 
 # This tag can be used to specify the character encoding of the source files that 
