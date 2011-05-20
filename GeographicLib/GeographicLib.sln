@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeographicLib", "GeographicLib.vcproj", "{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeoConvert", "GeoConvert.vcproj", "{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransverseMercatorTest", "TransverseMercatorTest.vcproj", "{73FED050-34B7-40EE-96FA-6EABA84F6F9B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}.Debug|Win32.Build.0 = Debug|Win32
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}.Release|Win32.ActiveCfg = Release|Win32
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}.Release|Win32.Build.0 = Release|Win32
+		{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}.Debug|Win32.Build.0 = Debug|Win32
+		{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}.Release|Win32.ActiveCfg = Release|Win32
+		{C7BBC1C8-0E3A-4338-B47F-9DE092DC7034}.Release|Win32.Build.0 = Release|Win32
+		{73FED050-34B7-40EE-96FA-6EABA84F6F9B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{73FED050-34B7-40EE-96FA-6EABA84F6F9B}.Debug|Win32.Build.0 = Debug|Win32
+		{73FED050-34B7-40EE-96FA-6EABA84F6F9B}.Release|Win32.ActiveCfg = Release|Win32
+		{73FED050-34B7-40EE-96FA-6EABA84F6F9B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,921 @@
+// -*- text -*-
+/**
+ * \file Geographic.doc
+ * \brief Documentation for GeographicLib
+ *
+ * Written by Charles Karney <charles@karney.com> and licensed under the
+ * LGPL.  For more information, see http://charles.karney.info/geographic/
+ **********************************************************************/
+// $Id: Geographic.doc 6517 2009-01-13 13:37:32Z ckarney $
+/**
+\mainpage Geographic library
+\author <a href="http://charles.karney.info/">Charles Karney</a>
+<charles@karney.com>
+\version 2009-01
+\date 2009-01-12
+
+\section abstract Abstract
+
+GeographicLib is a small set of C++ classes to perform conversions
+between geographic, UTM, UPS, and MGRS coordinates.  In this application
+the errors are close to round-off (about 5 nm).  It is specialized for
+use with the WGS84 but is easily adapted for use with other ellipsoids.
+In addition, various properties of the transverse Mercator projection
+are described.
+
+\section download Download
+
+The code is available for download at
+http://charles.karney.info/geographic/Geographic.tgz
+
+It is licensed under the LGPL.  For more information, see
+http://charles.karney.info/geographic/
+
+\section contents Contents
+ - \ref intro
+ - \ref start
+ - \ref organization
+ - \ref transversemercator
+   - \ref tmvarious
+   - \ref extend
+   - \ref testset
+   - \ref errors
+   - \ref series
+ - \ref old
+
+<center>
+Forward to \ref intro.
+</center>
+
+**********************************************************************/
+/**
+\page intro Introduction
+
+<center>
+Forward to \ref organization.  Up to \ref contents.
+</center>
+
+GeographicLib grew out of a need to perform conversions from MGRS to
+geographic coordinates (latitude and longitude).  At first, I used the
+<a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
+package (versions 2.4.1 and 2.4.2).  Unfortunately, geotrans rounds UTM
+coordinates to the nearest corner of a MGRS grid square.  This leads to
+the generation of illegal MGRS coordinates and other inconsistencies.
+In addition, geotrans makes use of global variables and so it is not
+thread safe.
+
+The goals of GeographicLib are:
+ - Accuracy.  In most applications the accuracy is about 5 nm.  A series
+   solution is used for the transverse Mercator projection and this
+   accuracy guarantee breaks down at distances of more than about
+   35<sup>o</sup> from the central meridian.  The package also provides
+   a class to perform the transverse Mercator projection over the whole
+   ellipsoid.
+ - C++ interface.  For the projection method, this allows encapsulation
+   of the ellipsoid parameters.  In addition a GeographicLib::GeoCoords
+   class is provided which holds the coordinates of a point and allows
+   conversions to other coordinate systems.
+ - Uniform treatment of UTM/UPS.  The GeographicLib::UTMUPS class treats
+   UPS as zone 0.  This simplifies conversions between UTM and UPS
+   coordinates, etc.
+ - Well defined and stable conventions for the conversion between
+   UTM/UPS to MGRS coordinates.
+ - GeoConvert (GeoConvert.cpp), a command-line utility to provide quick
+   and accurate conversions between geographic, UTM/UPS, and MGRS.
+
+The section \ref transversemercator documents various properties of this
+projection.
+
+Undoubtedly, bugs lurk in this code and in the documentation.  Please
+report any you find to <charles@karney.com>.
+
+<center>
+Forward to \ref start.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page start Getting Started
+
+<center>
+Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
+</center>
+
+The following steps will get you started with GeographicLib:
+ - Download the <a
+   href="http://charles.karney.info/geographic/Geographic.tgz">source</a>.
+ - Unpack the tar file somewhere convenient with, e.g.,
+   - tar xfpz Geographic.tgz
+   .
+   This will create a GeographicLib directory.
+ - Change to the GeographicLib directory
+   - cd GeographicLib
+ - Create the utility programs and (optionally) the documentation
+   - make all doc
+ - GeographicLib.sln is MS Visual Studio 2005 solution file which
+   compiles the library and the two utility programs.
+ - Try out GeoConvert (for help, type ./GeoConvert -h)
+   - echo 33.3 44.4 | ./GeoConvert -m -p -3
+   - echo 38SMB4484 | ./GeoConvert -d
+ - Try out TranverseMercatorTest (for help, type ./TransverseMercatorTest -h)
+   - echo 0 90 | ./TransverseMercatorTest
+   - echo 260e5 100e5 | ./TransverseMercatorTest -r
+ - Read \ref organization for an overview of the library.
+ - Browse the <a href="annotated.html">Class List</a> for full documentation.
+ - Read \ref transversemercator for more information on this projection.
+
+Here's a list of some of the abbreviations used here with links to the
+corresponding Wikipedia articles:
+ - <a href="http://en.wikipedia.org/wiki/WGS84">
+   WGS84</a>, World Geodetic System 1984.
+ - <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
+   UTM</a>, Universal Transverse Mercator coordinate system.
+ - <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">
+   UPS</a>, Universal Polar Stereographic coordinate system.
+ - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
+   MGRS</a>, Military Grid Reference System.
+
+<center>
+Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page organization Code organization
+
+<center>
+Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
+</center>
+
+Here is a brief description of the relationship between the various
+components of GeographicLib.
+
+GeographicLib::TransverseMercator and GeographicLib::PolarStereographic
+provide the basic projections.  The constructors for these classes
+specify the ellipsoid and the forward and and reverse projections are
+implemented as const member functions.  TransverseMercator uses
+Kr&uuml;ger's series which have been extended to sixth order in the
+square of the eccentricity.  PolarStereographic uses the exact formulas
+for the projection (from Snyder).
+
+GeographicLib::TransverseMercator::UTM and
+GeographicLib::PolarStereographic::UPS are const static instantiations
+specific for the WGS84 ellipsoid with the UTM and UPS scale factors.
+(These do \e not add the standard false eastings or false northings for
+UTM and UPS.)
+
+GeographicLib::UTMUPS uses TransverseMercator::UTM and
+PolarStereographic::UPS to perform the UTM and UPS
+projections.  The class offers a uniform interface to UTM and UPS by
+treating UPS as UTM zone 0.  This class stores no internal state and the
+forward and reverse projections are provided via static member
+functions.  The forward projection offers the ability to override the
+standard UTM/UPS choice and the UTM zone.
+
+GeographicLib::MGRS transforms between UTM/UPS coordinates and MGRS.
+UPS coordinates are handled as UTM zone 0.  This class stores no
+internal state and the forward (UTM/UPS to MGRS) and reverse (MGRS to
+UTM/UPS) conversions are provided via static member functions.
+
+GeographicLib::GeoCoords holds a single geographic location which may be
+specified as latitude and longitude, UTM or UPS, or MGRS.  Member
+functions are provided to convert between coordinate systems and to
+provide formatted representations of them.
+
+GeoConvert (GeoConvert.cpp) is a simple command line utility to provide
+access to the GeoCoords class.
+
+GeographicLib::TransverseMercatorExact is a drop in replacement for
+TransverseMercator which uses the exact formulas, based on elliptic
+functions, for the projection as given by Lee.  TransverseMercatorTest
+(TransverseMercatorTest.cpp) is a simple command line utility to test to
+the TransverseMercator and TransverseMercatorExact.
+
+GeographicLib::Constants, GeographicLib::DMS, and
+GeographicLib::EllipticFunction are utility classes with are used
+internally by the library.
+
+In order to avoid name clashes, all there classes are in the
+GeographicLib namespace.  The header files are included with the
+GeographicLib/ directory prefix.  If compiling within the GeographicLib
+directory, ".." should be included in the header search path (e.g.,
+with -I..).
+
+The low level projection classes, TransverseMercator and
+PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
+GeoCoords all check their arguments and throw exceptions with a
+explanatory message.  See GeoConvert for an example of how exceptions
+can be handled.
+
+<center>
+Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page transversemercator Transverse Mercator Projection
+
+<center>
+Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
+</center>
+
+\b NOTE: The figures in this section are relatively small in order to
+allow them to be displayed quickly.  The "Fig. N" link beneath each
+figure points to a PDF version of the figure.  These are in vector
+format and allow the figures to be magnified to show the details more
+clearly.
+
+The primary sources for the material presented here are:
+ - J. P. Snyder,
+   <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395">Map Projections: A
+   Working Manual</a>,
+   USGS Professional Paper 1395 (1987), pp. 48&ndash;66.
+   This contains an overview of the transverse Mercator projection (and
+   many other projections). However, the approximations given for
+   this projection are rather crude.  The terminology for the various
+   transverse Mercator map projections is taken form J. P. Snyder,
+   Flattening the Earth (Chicago Univ. Press, 1993).
+ - L. Kr&uuml;ger, <a
+   href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
+   the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
+   New Series 52, 172 pp. (1912).
+   The derives the series solution for the transverse Mercator
+   projection of an ellipsoid.  This gives very good accuracy and this
+   method or an extension of it to higher-order provide the most accurate
+   algorithms for the projection valid in some zone near the central
+   meridian.  It is also of interest to see the systematic use of
+   logarithms in the pre-electronic and pre-mechanical age (when
+   computers were human).
+ - <a href="http://www.jhs-suositukset.fi/suomi/jhs154">JHS 154, ETRS89 -
+   j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
+   tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
+   coordinates, and map sheet index for ETRS89), published by JUHTA, Finnish
+   Geodetic Institute, and the National Land Survey of Finland (2006).
+   A concise summary of Kr&uuml;ger's method is given in
+   <a href="http://docs.jhs-suositukset.fi/jhs-suositukset/JHS154/JHS154_liite1.pdf">
+   Appendix 1</a>.
+ - L. P. Lee,
+   Conformal Projections Based on Elliptic Functions,
+   (B. V. Gutsell, Toronto, 1976), 128pp.,
+   ISBN: 0919870163
+   (Also appeared as:
+   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
+   Part V, pp. 67&ndash;101,
+   <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+   Projections Based On Jacobian Elliptic Functions</a>, gives closed
+   form expressions for the transverse Mercator projection based on work
+   by Thompson (1945).  This may be purchased for a modest sum.  Other
+   useful sections are Part I, pp. 1&ndash;3 and Part II, pp. 4&ndash;14.
+ - M. Abramowitz and I. A. Stegun,
+   Handbook of Mathematical Functions
+   (Dover, 1965).
+   This is the bible for special functions.  It is easily accessible on
+   the web.  Chapter 16 covers elliptic functions and Chapter 17 covers
+   elliptic integrals.
+ .
+
+\section tmvarious Survey of transverse Mercator projections
+
+The following is adapted from Lee (1976) particularly pp. 92&ndash;101.
+The terminology is from Snyder (1993) pp. 159&ndash;161.
+
+The transverse Mercator projection is a conformal projection of the
+ellipsoid in which the central meridian is straight.  Within these
+constrains there are various projections that differ in how the scale
+varies along the central meridian.  The simplest such projection from an
+algorithmic point of view is the Gauss-Schreiber projection which consists
+of a conformal projection from the ellipsoid to a sphere followed by the
+spherical transverse Mercator projection.  This results in a projection
+whose scale on the central meridian increases from the equator to the
+pole (by an amount proportional to the flattening).  In the
+Gauss-Kr&uuml;ger projection, the scale along the central meridian is
+held constant.  This projection is usually expressed as a series which
+is valid only sufficiently close to the central meridian.  (This is
+implemented by GeographicLib::TransverseMercator.)  The projection can
+however be expressed in closed form in terms of the Thompson transverse
+Mercator projection (where the scale along the central meridian
+decreases from the equator to the pole by an amount proportional to the
+flattening).  (This method of computing the Gauss-Kr&uuml;ger projection
+is implemented by GeographicLib::TransverseMercatorExact.)
+
+The graticules (lines of constant latitude and longitude) for all these
+projections are shown in Figs. 1&ndash;3.  These figures all use an
+ellipsoid with eccentricity \e e = 1/10 (inverse flattening = 10 (3
+sqrt(11) + 10) = 199.5, i.e., somewhat flatter than the WGS84 ellipsoid)
+and the projections have all been scaled so that the distance from the
+equator to the north pole is unity.  One eighth of the ellipsoid is
+shown in these figures, 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
+0<sup>o</sup> <= longitude <= 90<sup>o</sup>.  To obtain the graticule
+for the entire ellipsoid reflect these figures in \e x = 0, \e y = 0,
+and \e y = 1.  The blue lines show latitude and longitude at multiples
+of 10<sup>o</sup>.  The green lines show 1<sup>o</sup> intervals for
+longitude in [80, 90] and latitude in [0, 10].  In all three figures,
+longitude = 0<sup>o</sup> lies on \e x = 0 and longitude =
+90<sup>o</sup> lies on \e y = 1.
+
+<center>
+<img src="gauss-schreiber-graticule-a.png"
+width=667 height=305 alt="Gauss-Schreiber transverse Mercator graticule
+(scaled)">
+<a href="gauss-schreiber-graticule-a.pdf">Fig. 1</a>
+</center>\n
+The graticule for the Gauss-Schreiber transverse Mercator projection.
+The equator lies on \e y = 0.
+Compare this with Lee, Fig. 1 (right), which shows the graticule for
+half a sphere, but note that in his notation \e x and \e y have switched
+meanings.  The graticule for the ellipsoid differs from that for a
+sphere only in that the latitude lines have shifted slightly.  (The
+conformal transformation from an ellipsoid to a sphere merely relabels
+the lines of latitude.)  This projection places the point latitude =
+0<sup>o</sup>, longitude = 90<sup>o</sup> at infinity.
+
+<center>
+<img src="gauss-krueger-graticule-a.png"
+width=667 height=305 alt="Gauss-Krueger transverse Mercator graticule
+(scaled)">
+<a href="gauss-krueger-graticule-a.pdf">Fig. 2</a>
+</center>\n
+The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
+The equator lies on \e y = 0 for longitude < 81<sup>o</sup>; beyond
+this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
+(upper), which shows the graticule for the International Spheroid.  Lee,
+Fig. 46, shows the graticule for the entire ellipsoid.  This projection
+(like the Thompson projection) projects the ellipsoid to a finite area.
+
+<center>
+<img src="thompson-tm-graticule-a.png"
+width=667 height=305 alt="Thompson transverse Mercator graticule
+(scaled)">
+<a href="thompson-tm-graticule-a.pdf">Fig. 3</a>
+</center>\n
+The graticule for the Thompson transverse Mercator projection.  The
+equator lies on \e y = 0 for longitude < 81<sup>o</sup>; at longitude =
+81<sup>o</sup>, it turns by 120<sup>o</sup> and heads for \e y = 1.
+Compare this with Lee, Fig. 43, which shows the graticule for the
+International Spheroid.  Lee, Fig. 44, shows the graticule for the
+entire ellipsoid.  This projection (like the Gauss-Kr&uuml;ger
+projection) projects the ellipsoid to a finite area.
+
+Of the three transverse Mercator projections given here the
+Gauss-Kr&uuml;ger projection is by far the most important.  It is the
+basis of the UTM system.  If "transverse Mercator projection" is used
+without further elaboration, then, nearly always, it refers to
+the Gauss-Kr&uuml;ger projection.
+
+\section extend Properties far from the central meridian
+
+The divergent behavior of the Gauss-Schreiber projection as latitude =
+0<sup>o</sup>, longitude = 90<sup>o</sup> is approached is unsurprising
+given the behavior of the standard Mercator projection at the poles.  On
+the other hand, the lack of divergence in the Gauss-Kr&uuml;ger
+projection (and similarly in the Thompson projection) is perhaps
+puzzling.  We explore the behavior more carefully in this section.
+
+Firstly, the Gauss-Kr&uuml;ger projection \e does have a singularity at
+latitude = 0<sup>o</sup> and longitude < 90<sup>o</sup>(1 - \e e), where
+\e e is the eccentricity of the ellipsoid.  The choice of \e e = 1/10
+for Figs. 1&ndash;3 was made to ensure that one of the graticule lines
+(longitude = 81<sup>o</sup>) covered this singularly.  The singularly is
+relatively benign.  The Thompson projection contains a cube root
+singularity with causes the corner in the equator.  The transformation
+from Thompson to Gauss-Kr&uuml;ger "repairs" this to lowest order so
+that there's no kink in the equation.  Nevertheless, a weaker
+singularity remains (causing a discontinuous change in the radius of
+curvature for the equator).  Thus Gauss-Kr&uuml;ger has a branch point
+at latitude = 0<sup>o</sup> and longitude < 90<sup>o</sup>(1 - \e e) and
+the projection is analytic provided this point is avoided.  However the
+results obtained for the projection will depend on which sheet of the
+projection is used or which route around the branch point is taken.
+
+The "standard" convention for projecting a geographic position is to
+follow the central meridian from the equator to the target latitude,
+then to follow the line of constant latitude to the target longitude.
+This is equivalent to placing two branch cuts on the equator in the
+longitude ranges +/- [90<sup>o</sup>(1 - \e e), 90<sup>o</sup>(1 + \e
+e)].  For points on equator for |longitude| > 90<sup>o</sup>(1 - \e e),
+the path should go to the north of branch point.  This convention
+corresponds to Fig. 2, above, after suitable reflections to cover the
+ellipsoid and to Lee, Fig. 46.
+
+In order to explore the behavior to the right of the equator in Fig. 2,
+we define an "extended" domain for the projection, this consists of the
+union of
+ - 0<sup>o</sup> <= latitude <= 90<sup>o</sup> and
+   0<sup>o</sup> <= longitude <= 90<sup>o</sup>
+ - -90<sup>o</sup> < latitude <= 0<sup>o</sup> and
+   90<sup>o</sup>(1 - \e e) <= longitude <= 90<sup>o</sup>
+ .
+The rule for reaching the second area here is to move on the central
+meridian to a small positive latitude, move at constant latitude to the
+target longitude and then to move on a meridian to the target latitude.
+In this case, the branch cut emanates in a south-westerly direction from
+the branch point.  Following this prescription the range of the
+projection now consists of the union of
+ - 0 <= \e x and
+   0 <= \e y/(\e k<sub>0</sub> \e a) <= E(\e e<sup>2</sup>)
+ - K(1 - \e e<sup>2</sup>) - E(1 - \e e<sup>2</sup>)
+   <= \e x/(\e k<sub>0</sub> \e a) and \e y <= 0
+ .
+where \e k<sub>0</sub> is the central scale factor, \e a is the major
+radius of the ellipsoid, K and E are complete elliptic integrals.
+Setting the optional argument \e extendp = true in the constructor for
+GeographicLib::TransverseMercatorExact provides access to this extended
+domain.
+
+Figures 4&ndash;5 illustrate the properties of the Gauss-Kr&uuml;ger
+transverse Mercator projection in this extended domain.  These figures
+use an ellipsoid with eccentricity 1/10 (as in Figs. 1&ndash;3) and with
+\e a = 1/E(0.01) = 0.6382 and \e k<sub>0</sub> = 1.  The branch point in
+this case lies at lat = 0<sup>o</sup>, lon = 81<sup>o</sup> or \e x =
+(K(0.99) - E(0.99))/E(0.01) = 1.71, \e y = 0.
+
+<center>
+<img src="gauss-krueger-graticule.png"
+width=673 height=323 alt="Gauss-Krueger transverse Mercator
+graticule">\n
+<a href="gauss-krueger-graticule.pdf">Fig. 4</a>
+</center>
+Figure 4 shows the graticule the extended domain.  The blue lines show
+latitude and longitude at multiples of 10<sup>o</sup>.  The green lines
+show 1<sup>o</sup> intervals for longitude in [80, 90] and latitude in
+[-5, 10].
+
+<center>
+<img src="gauss-krueger-convergence-scale.png"
+width=673 height=323 alt="Gauss-Krueger transverse Mercator
+convergence and scale">
+<a href="gauss-krueger-convergence-scale.pdf">Fig. 5</a>
+</center>\n
+Figure 5 shows the convergence and scale for the Gauss-Kr&uuml;ger
+transverse Mercator projection in the extended domain.  The blue lines
+emanating from the top left corner (the north pole) are lines of
+constant convergence.  Convergence = 0<sup>o</sup> is given by the
+dog-legged line joining the points (0,1), (0,0), (1.71,0), (1.71,-inf).
+Convergence = 90<sup>o</sup> is given by the line y = 1.  The other
+lines show multiples of 10<sup>o</sup> between 0<sup>o</sup> and
+90<sup>o</sup>.  The other blue, the green and the black lines show
+scale = 1 thru 2 at intervals of 0.1, 2 thru 15 at intervals of 1, and
+15 thru 35 at intervals of 5.  Multiples of 5 are shown in black,
+multiples of 1 are shown in blue, and the rest are shown in green.
+Scale = 1 is given by the line segment (0,0) to (0,1).  The red line
+shows the equator between lon = 81<sup>o</sup> and 90<sup>o</sup>.  The
+scale and convergence at the branch point are 1/\e e = 10 and
+0<sup>o</sup>, respectively.
+
+Symmetries in the projection can now be employed to extend the
+Gauss-Kr&uuml;ger transverse Mercator projection with arbitrary rules
+for how to circumvent the branch point.  The symmetries are equivalent
+to placing mirrors on the lines segments
+ - 0 <= \e x, \e y = 1
+ - \e x = 0, 0 <= \e y <= 1
+ - 0 <= \e x <= 1.71, \e y = 0
+ - \e x = 1.71, \e y <= 0
+ 
+In order to understand the projection better, it is instructive to
+examine the Thompson projection in the extended domain.
+<center>
+<img src="thompson-tm-graticule.png"
+width=661 height=321 alt="Thompson transverse Mercator graticule">
+<a href="thompson-tm-graticule.pdf">Fig. 6</a>
+</center>\n
+Figure 6 shows the graticule for the Thompson transverse Mercator
+projection for the extended domain.  The range of the projection is the
+rectangular region shown
+ - 0 <= \e u <= K(\e e<sup>2</sup>),
+   0 <= \e v <= K(1 - \e e<sup>2</sup>)
+ .
+The coloring of the lines is the same as Fig. 4, except that latitude
+lines extended down to -10<sup>o</sup> and a red line has been added
+showing the line \e y = 0 for \e x > 1.71 in the Gauss-Kr&uuml;ger
+projection (Fig. 4).  The extended Thompson projection figure has
+reflection symmetry on all the four sides of Fig. 6.
+
+In transforming from Thompson to Gauss-Kr&uuml;ger, the right angle at
+lower right corner of Fig. 6 expands by 3 to 270<sup>o</sup> to produce
+the outside corner at \e x = 1.71 and \e y = 0 in Fig. 4.  The top right
+corner of Fig. 6 represents the south pole and this is transformed to
+infinity in the extended Gauss-Kr&uuml;ger projection.  Despite the
+apparent similarities, the behavior of north and south poles in the
+extended Thompson projection (top left and top right corners in Fig. 6)
+is rather different.  The singularity for the north pole is merely the
+result of the singularity of a polar coordinate system (e.g., longitude
+is undefined at the north pole).  Encircling the north pole, causes
+longitude to increase by 360<sup>o</sup>, as expected.  On the other
+hand, encircling the south pole in increasing the longitude by
+360<sup>o</sup> \e e = 36<sup>o</sup>.  The same behavior is exhibited
+by the extended Gauss-Kr&uuml;ger projection.  The point latitude =
+-1<sup>o</sup>, longitude = 90<sup>o</sup> projects to a point [2.65,1]
+in Fig. 4.  If we now travel along this latitude line to longitude =
+54<sup>o</sup> = 90<sup>o</sup> - 36<sup>o</sup> we arrive back at the
+same projected position.  In the extended domain, the Thompson and the
+Gauss-Kr&uuml;ger projections are not tightly tied to the globe but can
+slip around it longitudinally.
+
+\section testset Test data for the transverse Mercator projection
+
+A test set for the transverse Mercator projection is available at
+ - http://charles.karney.info/geographic/TMcoords.dat.gz
+
+This test set consists of a set of geographic coordinates together with
+the corresponding transverse Mercator coordinates.  The WGS84 ellipsoid
+is used, with central meridian 0<sup>o</sup>, central scale factor
+0.9996 (the UTM value), false easting = false northing = 0 m.
+
+Each line of the test set gives 6 space delimited numbers
+ - latitude (degrees, exact)
+ - longitude (degrees, exact &mdash; see below)
+ - easting (meters, accurate to 0.1 pm)
+ - northing (meters, accurate to 0.1 pm)
+ - meridian convergence (degrees, accurate to 10<sup>-18</sup> deg)
+ - scale (accurate to 10<sup>-20</sup>)
+ .
+The latitude and longitude are all multiples of 10<sup>-12</sup> deg and
+should be regarded as exact, except that longitude =
+82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
+degrees.  These results are computed using Lee's formulas with
+<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
+fpprec set to 80 (so the errors in the data are probably 1/2 of the
+values quoted above).  The Maxima code, <a href="tm.mac">tm.mac</a> and
+<a href="ellint.mac">ellint.mac</a>, used to prepare this data set is
+included in the distribution.  You will need to have Maxima installed to
+use this code.  The comments at the top of <a href="tm.mac">tm.mac</a>
+illustrate how to run it.
+
+The contents of the file are as follows:
+ - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
+ - 1000 entries randomly distributed on lat in [0, 90], lon = 0;
+ - 1000 entries randomly distributed on lat = 0, lon in [0, 90];
+ - 1000 entries randomly distributed on lat in [0, 90], lon = 90;
+ - 1000 entries close to lat = 90 with lon in [0, 90];
+ - 1000 entries close to lat = 0, lon = 0 with lat >= 0, lon >= 0;
+ - 1000 entries close to lat = 0, lon = 90 with lat >= 0, lon <= 90;
+ - 2000 entries close to lat = 0, lon = 90 (1 - \e e) with lat >= 0;
+ - 25000 entries randomly distributed in lat
+   in [-89, 0], lon in [90 (1 - \e e), 90];
+ - 1000 entries randomly distributed on lat in [-89, 0], lon = 90;
+ - 1000 entries randomly distributed on lat in [-89, 0], lon = 90 (1 - \e e);
+ - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon <= 90);
+ - 1000 entries close to lat = 0, lon = 90 (1 - \e e)
+   (lat < 0, lon <= 90 (1 - \e e));
+ .
+(a total of 287000 entries).  The entries for lat < 0<sup>o</sup> and
+lon in [90<sup>o</sup> (1 - \e e), 90<sup>o</sup>] use the "extended"
+domain for the transverse Mercator projection explained in \ref extend.
+The first 258000 entries have lat >= 0<sup>o</sup> and are suitable for
+testing implementations following the standard convention.
+
+The errors in the forward and reverse projections are converted into a
+ground distance (e.g., by dividing the error in the projection by the
+scale factor).  The errors in the convergence and in the scale may be
+large because these quantities vary rapidly near singular points (for
+convergence at the lat = 90<sup>o</sup> and for both convergence and
+scale at lat = 0<sup>o</sup>, lon = 90<sup>o</sup> (1 - \e e)).  We
+account for this by expressing the error as the sum of a constant and a
+term proportional to the gradient of the quantity being measured.
+
+\section errors Numerical errors
+
+Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
+Reverse projections
+ - error in position < 8 nm
+ - error in convergence, \e d(\e gamma) < 2e-15" + 8 nm . grad(\e gamma)
+ - relative error in scale, \e dk/\e k < 7e-12%% + 3 nm . grad(\e k)/\e k
+ .
+These errors apply with the standard convention for the transverse
+Mercator projection.  In this case, we use only test samples with
+non-negative values of latitude.
+
+For the extended transverse Mercator projection (Fig. 4), the errors
+given above apply only for latitude >= -15<sup>o</sup>.  For more negative
+latitudes, the errors become large.  For example for latitude >=
+-58<sup>o</sup>, the maximum error is 1 mm (and the scale has become 124
+million).  This increase in the error is due to the use of the Thompson
+projection in the computation.  Looking at the graticule for this
+projection (Fig. 6), we see that the Thompson scale becomes small close
+to the south pole resulting in errors (measured as a ground distance)
+which diverges (the errors vary inversely with scale).  For example at
+lat = -58<sup>o</sup>, the scale for the Thompson projection is about
+240000 times smaller than on the central meridian and the errors have
+increased by about the same factor.  If necessary, this problem could be
+avoided by reformulating the Thompson projection to place the origin at
+the South pole.
+
+Errors in GeographicLib::TransverseMercator.  For both Forward and
+Reverse projections with easting |\e x| <= 4200 km (approximately within
+35<sup>o</sup> of the central meridian) using the 6th-order series
+(TM_TX_MAXPOW = 6, the default)
+ - error in position < 5 nm
+ - error in convergence, \e d(\e gamma) < 7e-10" + 5 nm . grad(\e gamma)
+ - relative error in scale, \e dk/\e k < 6e-12%%
+ .
+The error in the scale does not need to include a grad(\e k) term
+because the scale varies smoothly within this region.  If instead we
+restrict |\e x| <= 3400 km (approximately within 29<sup>o</sup> of the
+central meridian), we get a tighter bound on the convergence
+ - error in convergence, \e d(\e gamma) < 2e-15" + 5 nm . grad(\e gamma)
+ .
+Further from the central meridian, the errors grow rapidly.  For |\e x| =
+10700 km (approx 68<sup>o</sup> from the central median), the error in
+position is about 1 mm.  When used in the UTM system, \e x is typically
+restricted to |\e x| <= 500 km.
+
+If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
+to give the 4th-order approximation, then the error is about 210 nm
+for |\e x| <= 500 km (the region used for UTM coordinates).
+
+\section series Series approximation for transverse Mercator
+
+Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
+Mercator projection.  The method entails performing first a
+Gauss-Schreiber projection and approximating the warp of this to
+Gauss-Kr&uuml;ger projection as a series in \e n = (\e a - \e b)/(\e a +
+\e b).  This is accurate to about 200 nm within the UTM domain.  Here we
+present the series extended to 12th order.  We follow the notation of
+JHS 154.
+
+By default, GeographicLib::TransverseMercator uses the 6th-order
+approximation. The preprocessor variable TM_TX_MAXPOW can be used to
+select an order from 4 thru 8.
+
+In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
+n) and / indicates real division (3/5 = 0.6).  The equations need to be
+converted to Horner form, but are here left in expanded form so that
+they can be easily truncated to lower order in n.  Some of the integers
+here are not representable as 32-bit integers and will need to be
+included as double literals.
+
+Eq. (01) [\e A in Kr&uuml;ger, p. 12, eq. (5)]
+\verbatim
+  A1 = a/(n + 1) * (1 + 1/4 * n^2
+                      + 1/64 * n^4
+                      + 1/256 * n^6
+                      + 25/16384 * n^8
+                      + 49/65536 * n^10
+                      + 441/1048576 * n^12);
+\endverbatim
+
+Eqs. (06) [\e beta in Kr&uuml;ger, p. 18, eq. (26*)]
+\verbatim
+  h[1]   =   1/2 * n
+           - 2/3 * n^2
+           + 37/96 * n^3
+           - 1/360 * n^4
+           - 81/512 * n^5
+           + 96199/604800 * n^6
+           - 5406467/38707200 * n^7
+           + 7944359/67737600 * n^8
+           - 7378753979/97542144000 * n^9
+           + 25123531261/804722688000 * n^10
+           - 9280258847/6437781504000 * n^11
+           - 1628053924171/99584432640000 * n^12;
+  h[2]   =   1/48 * n^2
+           + 1/15 * n^3
+           - 437/1440 * n^4
+           + 46/105 * n^5
+           - 1118711/3870720 * n^6
+           + 51841/1209600 * n^7
+           + 24749483/348364800 * n^8
+           - 115295683/1397088000 * n^9
+           + 5487737251099/51502252032000 * n^10
+           - 5845886411021/41845579776000 * n^11
+           + 6339155669701909/46867049349120000 * n^12;
+  h[3]   =   17/480 * n^3
+           - 37/840 * n^4
+           - 209/4480 * n^5
+           + 5569/90720 * n^6
+           + 9261899/58060800 * n^7
+           - 6457463/17740800 * n^8
+           + 2473691167/9289728000 * n^9
+           - 852549456029/20922789888000 * n^10
+           - 2673218294321/191294078976000 * n^11
+           - 1619588070701683/35150287011840000 * n^12;
+  h[4]   =   4397/161280 * n^4
+           - 11/504 * n^5
+           - 830251/7257600 * n^6
+           + 466511/2494800 * n^7
+           + 324154477/7664025600 * n^8
+           - 937932223/3891888000 * n^9
+           - 89112264211/5230697472000 * n^10
+           + 12003335387/32691859200 * n^11
+           - 537877266968267441/2249618368757760000 * n^12;
+  h[5]   =   4583/161280 * n^5
+           - 108847/3991680 * n^6
+           - 8005831/63866880 * n^7
+           + 22894433/124540416 * n^8
+           + 112731569449/557941063680 * n^9
+           - 5391039814733/10461394944000 * n^10
+           + 4863559943251/167382319104000 * n^11
+           + 37588208648677/67596705792000 * n^12;
+  h[6]   =   20648693/638668800 * n^6
+           - 16363163/518918400 * n^7
+           - 2204645983/12915302400 * n^8
+           + 4543317553/18162144000 * n^9
+           + 54894890298749/167382319104000 * n^10
+           - 132058444054073/177843714048000 * n^11
+           - 21678380925301381/85364982743040000 * n^12;
+  h[7]   =   219941297/5535129600 * n^7
+           - 497323811/12454041600 * n^8
+           - 79431132943/332107776000 * n^9
+           + 4346429528407/12703122432000 * n^10
+           + 947319776978297/1625999671296000 * n^11
+           - 139564766909992667/115852476579840000 * n^12;
+  h[8]   =   191773887257/3719607091200 * n^8
+           - 17822319343/336825216000 * n^9
+           - 497155444501631/1422749712384000 * n^10
+           + 4081516004323/8281937664000 * n^11
+           + 3016420810780677019/2994340933140480000 * n^12;
+  h[9]   =   11025641854267/158083301376000 * n^9
+           - 492293158444691/6758061133824000 * n^10
+           - 3340781295639871/6360528125952000 * n^11
+           + 230755947172792843/315376186245120000 * n^12;
+  h[10]  =   7028504530429621/72085985427456000 * n^10
+           - 1396721719354981/13516122267648000 * n^11
+           - 242069739433316973869/299733527407362048000 * n^12;
+  h[11]  =   20180430688893997/144171970854912000 * n^11
+           - 39227670225311092139/261131482210959360000 * n^12;
+  h[12]  =   170866240186706518133/831839653739888640000 * n^12;
+\endverbatim
+
+Eqs. (07) [\e gamma in Kr&uuml;ger, p. 21, eq. (41)]
+\verbatim
+  h'[1]  =   1/2 * n
+           - 2/3 * n^2
+           + 5/16 * n^3
+           + 41/180 * n^4
+           - 127/288 * n^5
+           + 7891/37800 * n^6
+           + 72161/387072 * n^7
+           - 18975107/50803200 * n^8
+           + 60193001/290304000 * n^9
+           + 134592031/1026432000 * n^10
+           - 1043934033787/3218890752000 * n^11
+           + 1107802529272207/5178390497280000 * n^12;
+  h'[2]  =   13/48 * n^2
+           - 3/5 * n^3
+           + 557/1440 * n^4
+           + 281/630 * n^5
+           - 1983433/1935360 * n^6
+           + 13769/28800 * n^7
+           + 148003883/174182400 * n^8
+           - 705286231/465696000 * n^9
+           + 1703267974087/3218890752000 * n^10
+           + 490493610499/373621248000 * n^11
+           - 1975809888712343/976396861440000 * n^12;
+  h'[3]  =   61/240 * n^3
+           - 103/140 * n^4
+           + 15061/26880 * n^5
+           + 167603/181440 * n^6
+           - 67102379/29030400 * n^7
+           + 79682431/79833600 * n^8
+           + 6304945039/2128896000 * n^9
+           - 6601904925257/1307674368000 * n^10
+           + 35472608886503/41845579776000 * n^11
+           + 7660808256523559/1098446469120000 * n^12;
+  h'[4]  =   49561/161280 * n^4
+           - 179/168 * n^5
+           + 6601661/7257600 * n^6
+           + 97445/49896 * n^7
+           - 40176129013/7664025600 * n^8
+           + 138471097/66528000 * n^9
+           + 48087451385201/5230697472000 * n^10
+           - 634613396309/40864824000 * n^11
+           + 152161926556090753/1124809184378880000 * n^12;
+  h'[5]  =   34729/80640 * n^5
+           - 3418889/1995840 * n^6
+           + 14644087/9123840 * n^7
+           + 2605413599/622702080 * n^8
+           - 31015475399/2583060480 * n^9
+           + 5820486440369/1307674368000 * n^10
+           + 98568244458947/3678732288000 * n^11
+           - 1367520624030470251/29877743960064000 * n^12;
+  h'[6]  =   212378941/319334400 * n^6
+           - 30705481/10378368 * n^7
+           + 175214326799/58118860800 * n^8
+           + 870492877/96096000 * n^9
+           - 1328004581729009/47823519744000 * n^10
+           + 3512873113922087/355687428096000 * n^11
+           + 986615629722639449/13133074268160000 * n^12;
+  h'[7]  =   1522256789/1383782400 * n^7
+           - 16759934899/3113510400 * n^8
+           + 1315149374443/221405184000 * n^9
+           + 71809987837451/3629463552000 * n^10
+           - 52653013293696143/812999835648000 * n^11
+           + 101784256296129577/4455864483840000 * n^12;
+  h'[8]  =   1424729850961/743921418240 * n^8
+           - 256783708069/25204608000 * n^9
+           + 2468749292989891/203249958912000 * n^10
+           + 117880637749661/2707556544000 * n^11
+           - 5921832934345276446697/38926432130826240000 * n^12;
+  h'[9]  =   21091646195357/6080126976000 * n^9
+           - 67196182138355857/3379030566912000 * n^10
+           + 395018924202597949/15446996877312000 * n^11
+           + 91220875613845291081/946128558735360000 * n^12;
+  h'[10] =   77911515623232821/12014330904576000 * n^10
+           - 268897530802721453/6758061133824000 * n^11
+           + 8257746726303249815683/149866763703681024000 * n^12;
+  h'[11] =   12809767642647461/1029799791820800 * n^11
+           - 5303630969873795374429/65282870552739840000 * n^12;
+  h'[12] =   2240624428311897034834681/91918281738257694720000 * n^12;
+\endverbatim
+
+Eqs. (15), (16), (17), (18), (23), (24), (25), (26) of JHS 154 are
+extended in the obvious way.
+
+The formulas for meridian convergence (34) and scale (35) are only good
+for small lam (l in the notation of JHS 154).  More accurate expressions
+are given here where \e ep2 = \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 -
+\e e<sup>2</sup>) (eq. 04).
+\verbatim
+  double
+    c = cos(phi),
+    s = sin(lam),
+    c2 = c * c,
+    s2 = s * s,
+    d = 1 - s2 * c2,
+    // Accurate to order ep2^2
+    carg = 1 + c2 * c2 * s2 / d * ep2 *
+    (1 + c2 / (3 * d * d) *
+     (2 - s2 * (c2 * ((4 * c2 - 1) * s2 - 9) + 8)) * ep2),
+    // Accurate to order ep2
+    cabs = 1 + c2 * c2 * s2 * ((c2 - 2) * s2 + 1) / (2 * d * d) * ep2;
+  // This replaces (34)
+  gamma = atan2(sin(phi) * s * carg, cos(lam));
+  // This replaces (35)
+  k = cabs/sqrt(d);
+\endverbatim
+
+Unfortunately, expansions of this type are much more messy at higher
+order.  Therefore, For greater accuracy, directly differentiate the
+series involving \e h' or \e h.  The accumulation of the sum can be
+carried out at the same time as the transformation itself (and the
+calculation slots into a Clenshaw summation very easily).  The
+derivatives give the convergence, \e gamma'', and scale, \e k'', of the
+[\e xi, \e eta] (Gauss-Kr&uuml;ger) projection relative to [\e xi', \e
+eta'] (Gauss-Schreiber) projection and vice versa.  For the full
+convergence and scale these need to be compounded with the convergence,
+\e gamma', and scale, \e k', of the Gauss-Schreiber projection.
+\verbatim
+   gamma = gamma' + gamma''
+       k = k' * k''
+ \endverbatim
+gamma' and k' are conveniently expressed as
+\verbatim
+  gamma' = atan(tan(lam) * sin(beta))
+         = atan(tan(lam) * tanh(Q))
+         = atan(tan(xi') * tanh(eta'))
+      k' = sqrt(1 - e^2 * sin(phi)^2)
+           * (cos(beta) / cos(phi)) * cosh(eta')
+\endverbatim
+where the factors on the last line are can be computed accurately with
+\verbatim
+ (cos(beta) / cos(phi)) * cosh(eta')
+         = cosh(Q') / hypot(sinh(Q), cos(lam))
+         = cosh(Q') * hypot(sinh(eta'), cos(xi'))
+\endverbatim
+These last two expressions preserve accuracy near the pole.  See also
+Kr&uuml;ger, pp. 19&ndash;20, eqs. (19) to (33*) and pp 21&ndash;22,
+eqs. (43) to (47).  GeographicLib::TransverseMercator uses this approach
+to compute the convergence and the scale.
+
+The high-order expansions for \e h and \e h' and the expansions in \e
+e'<sup>2</sup> for the convergence and scale were produced by the Maxima
+program <a href="tmseries.mac">tmseries.mac</a> (included in the
+distribution).  To run, start Maxima and enter
+\verbatim
+  load("tmseries.mac")$
+\endverbatim
+Further instructions are included at the top of the file.
+
+<center>
+Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page old Old Versions
+
+<center>
+Back to \ref transversemercator.  Up to \ref contents.
+</center>
+
+List of versions in reverse chronological order together with a brief
+list of changes.
+
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-01</a>
+   (current)
+    - First proper release of library
+    - More robust GeographicLib::TransverseMercatorExact
+      - Introduce \e extendp version of constructor
+      - Test against extended test data
+      - Optimize starting positions for Newton's method
+      - Fix behavoir near all singularities
+      - Fix order dependence in C++ start-up code
+    - Documentation on transverse Mercator projection
+      - Improved method of computing scale and convergence
+    - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
+
+ -  <a href="http://charles.karney.info/geographic-2008/00README.txt">2008-09</a>
+    - Ad hoc posting of information on the transverse Mercator
+      projection
+
+<center>
+Back to \ref transversemercator.  Up to \ref contents.
+</center>
+**********************************************************************/
