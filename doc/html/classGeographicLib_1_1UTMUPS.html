@@ -78,14 +78,14 @@
 Convert between Geographic coordinates and UTM/UPS. 
 <p>
 UTM and UPS are defined<ul>
-<li><a href="http://earth-info.nga.mil/GandG/publications/tm8358.2/TM8358_2.pdf">The Universal Grids: Universal Transverse Mercator (UTM) and Universal Polar Stereographic (UPS)</a>, Defense Mapping Agency, Technical Manual TM8358.2 (1989).</li></ul>
+<li>J. W. Hager, J. F. Behensky, and B. W. Drew, <a href="http://earth-info.nga.mil/GandG/publications/tm8358.2/TM8358_2.pdf">The Universal Grids: Universal Transverse Mercator (UTM) and Universal Polar Stereographic (UPS)</a>, Defense Mapping Agency, Technical Manual TM8358.2 (1989).</li></ul>
 Section 2-3 defines UTM and section 3-2.4 defines UPS. This document also includes approximate algorithms for the computation of the underlying transverse Mercator and polar stereographic projections. Here we substitute much more accurate algorithms given by <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a>:<a class="el" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> and <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a>:<a class="el" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a>.<p>
 In this implementation, the conversions are closed, i.e., output from Forward is legal input for Reverse and vice versa. The error is about 5nm in each direction. However, the conversion from legal UTM/UPS coordinates to geographic coordinates and back might throw an error if the initial point is within 5nm of the edge of the allowed range for the UTM/UPS coordinates.<p>
 The simplest way to guarantee the closed property is to define allowed ranges for the eastings and northings for UTM and UPS coordinates. The UTM boundaries are the same for all zones. (The only place the exceptional nature of the zone boundaries is evident is when converting to UTM/UPS coordinates requesting the standard zone.) The <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> lettering scheme imposes natural limits on UTM/UPS coordinates which may be converted into <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates. For the conversion to/from geographic coordinates these ranges have been extended by 100km in order to provide a generous overlap between UTM and UPS and between UTM zones.<p>
 The <a href="http://www.nga.mil">NGA</a> software package <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a> also provides conversions to and from UTM and UPS. Version 2.4.2 (and earlier) suffers from some drawbacks:<ul>
 <li>Inconsistent rules are used to determine the whether a particular UTM or UPS coordinate is legal. A more systematic approach is taken here.</li><li>The underlying projections are not very accurately implemented. </li></ul>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00059">59</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00060">60</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
 <hr><h2>Member Enumeration Documentation</h2>
 <a class="anchor" name="0c459615da18cc899a960bdc8c5b11b7"></a><!-- doxytag: member="GeographicLib::UTMUPS::zonespec" ref="0c459615da18cc899a960bdc8c5b11b7" args="" -->
 <div class="memitem">
@@ -124,7 +124,7 @@ The largest physical zone number. </td></tr>
 </table>
 </dl>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00090">90</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00091">91</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -164,7 +164,7 @@ The largest physical zone number. </td></tr>
 Return the standard zone for latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees); see <a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b7df96495ab4bfbf495f1fe31aebb9e406">UTMUPS::STANDARD</a>. This is exact. If the optional argument <em>setzone</em> is given then use that zone if it is non-negative, otherwise apply the rules given in <a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b7">UTMUPS::zonespec</a>. Throws an error if <em>setzone</em> is outsize the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b7058ac8a834bbc78ce73d9b37a1a5dfb9">UTMUPS::MINPSEUDOZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b712dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>] = [-3, 60]. 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp-source.html#l00046">46</a> of file <a class="el" href="UTMUPS_8cpp-source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00139">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00123">MINZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00127">UPS</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00106">UTM</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00140">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00124">MINZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00128">UPS</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00107">UTM</a>.</p>
 
 <p>Referenced by <a class="el" href="UTMUPS_8cpp-source.html#l00068">Forward()</a>, and <a class="el" href="GeoCoords_8hpp-source.html#l00254">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
 
@@ -247,9 +247,9 @@ Return the standard zone for latitude <em>lat</em> (degrees) and longitude <em>l
 Convert geographic coordinates to UTM or UPS coordinate. Given latitude <em>lat</em> (degrees), and longitude <em>lon</em> (degrees), return <em>zone</em> (zero indicates UPS), hemisphere <em>northp</em> (false means south, true means north), easting <em>x</em> (meters), and northing <em>y</em> (meters). The prefered zone for the result can be specified with <em>setzone</em>, see <a class="el" href="classGeographicLib_1_1UTMUPS.html#62623c295d1b43318a9fa762c3da94ea">UTMUPS::StandardZone</a>. Throw error if the resulting easting or northing is outside the allowed range (see Reverse), in which case the arguments are unchanged. If <em>mgrslimits</em> == true, then use the stricter <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> limits (see Reverse). This also returns meridian convergence <em>gamma</em> (degrees) and scale <em>k</em>. The accuracy of the conversion is about 5nm. 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp-source.html#l00068">68</a> of file <a class="el" href="UTMUPS_8cpp-source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="PolarStereographic_8cpp-source.html#l00045">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="TransverseMercator_8cpp-source.html#l00195">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="UTMUPS_8cpp-source.html#l00046">StandardZone()</a>, <a class="el" href="PolarStereographic_8hpp-source.html#l00108">GeographicLib::PolarStereographic::UPS</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00127">UPS</a>, and <a class="el" href="TransverseMercator_8hpp-source.html#l00164">GeographicLib::TransverseMercator::UTM</a>.</p>
+<p>References <a class="el" href="PolarStereographic_8cpp-source.html#l00045">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="TransverseMercator_8cpp-source.html#l00214">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="UTMUPS_8cpp-source.html#l00046">StandardZone()</a>, <a class="el" href="PolarStereographic_8hpp-source.html#l00108">GeographicLib::PolarStereographic::UPS</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00128">UPS</a>, and <a class="el" href="TransverseMercator_8hpp-source.html#l00170">GeographicLib::TransverseMercator::UTM</a>.</p>
 
-<p>Referenced by <a class="el" href="UTMUPS_8hpp-source.html#l00203">Forward()</a>, <a class="el" href="GeoCoords_8cpp-source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="GeoCoords_8hpp-source.html#l00254">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
+<p>Referenced by <a class="el" href="UTMUPS_8hpp-source.html#l00204">Forward()</a>, <a class="el" href="GeoCoords_8cpp-source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="GeoCoords_8hpp-source.html#l00254">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
 
 </div>
 </div><p>
@@ -327,9 +327,9 @@ UPS eastings and northings are allowed to be in the range [1200km, 2800km] in th
 These ranges are 100km larger than allowed for the conversions to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>. (100km is the maximum extra padding consistent with eastings remaining non-negative.) This allows generous overlaps between zones and UTM and UPS. If <em>mgrslimits</em> = true, then all the ranges are shrunk by 100km so that they agree with the stricter <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> ranges. No checks are performed besides these (e.g., to limit the distance outside the standard zone boundaries). 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp-source.html#l00111">111</a> of file <a class="el" href="UTMUPS_8cpp-source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00139">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00123">MINZONE</a>, <a class="el" href="PolarStereographic_8cpp-source.html#l00067">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="TransverseMercator_8cpp-source.html#l00358">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8hpp-source.html#l00108">GeographicLib::PolarStereographic::UPS</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00127">UPS</a>, and <a class="el" href="TransverseMercator_8hpp-source.html#l00164">GeographicLib::TransverseMercator::UTM</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00140">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00124">MINZONE</a>, <a class="el" href="PolarStereographic_8cpp-source.html#l00067">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="TransverseMercator_8cpp-source.html#l00384">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8hpp-source.html#l00108">GeographicLib::PolarStereographic::UPS</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00128">UPS</a>, and <a class="el" href="TransverseMercator_8hpp-source.html#l00170">GeographicLib::TransverseMercator::UTM</a>.</p>
 
-<p>Referenced by <a class="el" href="MGRS_8cpp-source.html#l00127">GeographicLib::MGRS::Forward()</a>, <a class="el" href="GeoCoords_8cpp-source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00213">Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="MGRS_8cpp-source.html#l00127">GeographicLib::MGRS::Forward()</a>, <a class="el" href="GeoCoords_8cpp-source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00214">Reverse()</a>.</p>
 
 </div>
 </div><p>
@@ -396,7 +396,7 @@ These ranges are 100km larger than allowed for the conversions to <a class="el" 
 
 <p>
 Forward without returning convergence and scale. 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00203">203</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00204">204</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
 
 <p>References <a class="el" href="UTMUPS_8cpp-source.html#l00068">Forward()</a>.</p>
 
@@ -459,7 +459,7 @@ Forward without returning convergence and scale.
 
 <p>
 Reverse without returning convergence and scale. 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00213">213</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00214">214</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
 
 <p>References <a class="el" href="UTMUPS_8cpp-source.html#l00111">Reverse()</a>.</p>
 
@@ -500,7 +500,7 @@ Reverse without returning convergence and scale.
 Decode a UTM/UPS zone string, <em>zonestr</em>, returning the resulting <em>zone</em> and hemisphere thru <em>northp</em> (true for northern and false for southern hemispheres). For UTM, <em>zonestr</em> has the form of a zone number in the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b71413e6cc83d4bf1eb4ad1c0f1d745eb6">UTMUPS::MINUTMZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b7e8e04ab8df50a062c1fe277a6880bc19">UTMUPS::MAXUTMZONE</a>] = [1, 60] followed by a hemisphere letter, N or S. For UPS, it consists just of the hemisphere letter. The returned value of <em>zone</em> is <a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b740256f9ab9f277957f8ab697bcd2fd42">UTMUPS::UPS</a> = 0 for UPS. Note well that "38S" indicates the southern hemisphere of zone 38 and not latitude band S, [32, 40]. N, 01S, 2N, 38S are legal. 0N, 001S, 61N, 38P are illegal. 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp-source.html#l00162">162</a> of file <a class="el" href="UTMUPS_8cpp-source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00135">MAXUTMZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00131">MINUTMZONE</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00127">UPS</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00136">MAXUTMZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00132">MINUTMZONE</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00128">UPS</a>.</p>
 
 <p>Referenced by <a class="el" href="GeoCoords_8cpp-source.html#l00026">GeographicLib::GeoCoords::Reset()</a>.</p>
 
@@ -535,7 +535,7 @@ Decode a UTM/UPS zone string, <em>zonestr</em>, returning the resulting <em>zone
 Encode a UTM/UPS zone string given the <em>zone</em> and hemisphere <em>northp</em>. <em>zone</em> must be in the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b7f91adc987ae7295bfb6d3786b23c58e1">UTMUPS::MINZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b712dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>] = [0, 60] with <em>zone</em> = <a class="el" href="classGeographicLib_1_1UTMUPS.html#0c459615da18cc899a960bdc8c5b11b740256f9ab9f277957f8ab697bcd2fd42">UTMUPS::UPS</a>, 0, indicating UPS (but the resulting string does not contain "0"). This reverses DecodeZone. 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp-source.html#l00197">197</a> of file <a class="el" href="UTMUPS_8cpp-source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00139">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00123">MINZONE</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00127">UPS</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp-source.html#l00140">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp-source.html#l00124">MINZONE</a>, and <a class="el" href="UTMUPS_8hpp-source.html#l00128">UPS</a>.</p>
 
 </div>
 </div><p>
@@ -577,7 +577,7 @@ The shift necessary to align N and S halves of a UTM zone (10<sup>7</sup>).
 
 <p>
 The major radius of the ellipsoid (meters). This is the value for the WGS84 ellipsoid because the UTM and UPS projections are based on this ellipsoid. 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00252">252</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00253">253</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
 
 <p>References <a class="el" href="Constants_8hpp-source.html#l00268">GeographicLib::Constants::WGS84_a()</a>.</p>
 
@@ -602,7 +602,7 @@ The major radius of the ellipsoid (meters). This is the value for the WGS84 elli
 
 <p>
 The inverse flattening of the ellipsoid. This is the value for the WGS84 ellipsoid because the UTM and UPS projections are based on this ellipsoid. 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00259">259</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp-source.html#l00260">260</a> of file <a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a>.</p>
 
 <p>References <a class="el" href="Constants_8hpp-source.html#l00272">GeographicLib::Constants::WGS84_r()</a>.</p>
 
@@ -613,7 +613,7 @@ The inverse flattening of the ellipsoid. This is the value for the WGS84 ellipso
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="UTMUPS_8hpp-source.html">UTMUPS.hpp</a><li><a class="el" href="UTMUPS_8cpp-source.html">UTMUPS.cpp</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Jan 7 00:46:29 2010 for GeographicLib by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Feb 8 13:32:40 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

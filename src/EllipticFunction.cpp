@@ -9,7 +9,7 @@
 
 #include "GeographicLib/EllipticFunction.hpp"
 
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6803 2010-01-11 12:11:39Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
@@ -195,11 +195,11 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::E(real sn, real cn, real dn) const throw() {
-    real ei;
-    cn *= cn; dn *= dn;
-    // Carlson, eq. 4.6
-    ei = abs(sn) * (RF(cn, dn, real(1)) -
-                    (_m/3) * sn*sn * RD(cn, dn, real(1)));
+    real
+      cn2 = cn * cn, dn2 = dn * dn, sn2 = sn * sn,
+      // Carlson, eq. 4.6
+      ei = abs(sn) * (RF(cn2, dn2, real(1)) -
+                      (_m / 3) * sn2 * RD(cn2, dn2, real(1)));
     // Enforce usual trig-like symmetries
     if (cn < 0) {
       ei = 2 * E() - ei;

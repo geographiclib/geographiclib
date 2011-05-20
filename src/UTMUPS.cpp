@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -13,7 +13,7 @@
 #include "GeographicLib/TransverseMercator.hpp"
 #include <iomanip>
 
-#define GEOGRAPHICLIB_UTMUPS_CPP "$Id: UTMUPS.cpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_UTMUPS_CPP "$Id: UTMUPS.cpp 6814 2010-02-04 22:33:41Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)

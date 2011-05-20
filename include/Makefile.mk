@@ -1,9 +1,9 @@
-# $Id: Makefile.mk 6714 2009-10-17 11:50:59Z ckarney $
+# $Id: Makefile.mk 6816 2010-02-05 21:03:10Z karney $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
-	Geoid
+	Geoid LambertConformalConic
 
 PREFIX = /usr/local
 LIBNAME = GeographicLib

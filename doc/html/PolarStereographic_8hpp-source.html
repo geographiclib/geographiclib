@@ -30,7 +30,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6785 2010-01-05 22:15:42Z karney $"</span>
+<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6807 2010-02-01 11:26:34Z karney $"</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include "<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>"</span>
 <a name="l00014"></a>00014 
@@ -59,7 +59,7 @@
 <a name="l00037"></a>00037     <span class="comment">// Return e * atanh(e * x) for f &gt;= 0, else return</span>
 <a name="l00038"></a>00038     <span class="comment">// - sqrt(-e2) * atan( sqrt(-e2) * x) for f &lt; 0</span>
 <a name="l00039"></a>00039     <span class="keyword">inline</span> real eatanhe(real x) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00040"></a>00040       <span class="keywordflow">return</span> _f &gt;= 0 ? _e * <a class="code" href="classGeographicLib_1_1Math.html#fd1fced228b796061c72fd4afa842728">Math::atanh</a>(_e * x) : - _e * atan(_e * x);
+<a name="l00040"></a>00040       <span class="keywordflow">return</span> _f &gt;= 0 ? _e * <a class="code" href="classGeographicLib_1_1Math.html#fd1fced228b796061c72fd4afa842728">Math::atanh</a>(_e * x) : - _e * std::atan(_e * x);
 <a name="l00041"></a>00041     }
 <a name="l00042"></a>00042   <span class="keyword">public</span>:
 <a name="l00043"></a>00043 <span class="comment"></span>
@@ -134,7 +134,7 @@
 <a name="l00112"></a>00112 
 <a name="l00113"></a>00113 <span class="preprocessor">#endif</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Jan 7 00:46:28 2010 for GeographicLib by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Feb 8 13:32:39 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

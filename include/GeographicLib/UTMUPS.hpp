@@ -9,7 +9,7 @@
 
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
-#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: UTMUPS.hpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: UTMUPS.hpp 6805 2010-01-28 21:18:14Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include <sstream>
@@ -20,7 +20,8 @@ namespace GeographicLib {
    * \brief Convert between Geographic coordinates and UTM/UPS
    *
    * UTM and UPS are defined
-   * - <a href="http://earth-info.nga.mil/GandG/publications/tm8358.2/TM8358_2.pdf">
+   * - J. W. Hager, J. F. Behensky, and B. W. Drew,
+   *   <a href="http://earth-info.nga.mil/GandG/publications/tm8358.2/TM8358_2.pdf">
    *   The Universal Grids: Universal Transverse Mercator (UTM) and Universal
    *   Polar Stereographic (UPS)</a>, Defense Mapping Agency, Technical Manual
    *   TM8358.2 (1989).

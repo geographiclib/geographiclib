@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-#  $Id: Makefile.am 6792 2010-01-06 20:26:18Z karney $
+#  $Id: Makefile.am 6805 2010-01-28 21:18:14Z karney $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
@@ -163,8 +163,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
-	gauss-krueger-graticule-a thompson-tm-graticule-a
+	gauss-krueger-graticule-a thompson-tm-graticule-a \
+	gauss-krueger-error
 
+EXTRAFILES = tmseries30.html
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
 $(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
@@ -377,10 +379,12 @@ uninstall-am:
 doc: html/index.html
 html/index.html: Doxyfile Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) \
-	$(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES))
+	$(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES)) \
+	$(EXTRAFILES)
 	rm -rf html/*
 	doxygen
-	for f in $(FIGURES); do cp -p $$f.pdf $$f.png html/;done
+	for f in $(FIGURES); do cp -p $$f.pdf $$f.png html/; done
+	for f in $(EXTRAFILES); do cp -p $$f html/; done
 	for f in $(top_srcdir)/maxima/*.mac; do cp -p $$f html/.; done
 
 clean-local:

@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6817 2010-02-08 14:42:35Z karney $"
 
 /**
  * A simple compile-time assert.  This is designed to be compatible with the
@@ -98,7 +98,7 @@ namespace GeographicLib {
       real
         a = std::max(x, y),
         b = std::min(x, y) / a;
-      return a * sqrt(1 + b * b);
+      return a * std::sqrt(1 + b * b);
     }
 #elif defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
@@ -349,6 +349,11 @@ namespace GeographicLib {
    **********************************************************************/
   class GeographicErr : public std::runtime_error {
   public:
+
+    /**
+     * Constructor takes a string message, \e msg, which is accessible in the
+     * catch clause, via what().
+     **********************************************************************/
     GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
   };
 

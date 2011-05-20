@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6807 2010-02-01 11:26:34Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -37,7 +37,7 @@ namespace GeographicLib {
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
     inline real eatanhe(real x) const throw() {
-      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * atan(_e * x);
+      return _f >= 0 ? _e * Math::atanh(_e * x) : - _e * std::atan(_e * x);
     }
   public:
 

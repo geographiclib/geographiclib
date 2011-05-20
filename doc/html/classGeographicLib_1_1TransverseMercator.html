@@ -122,7 +122,7 @@ See <a class="el" href="transversemercator.html">Transverse Mercator Projection<
 
 <p>
 Constructor for a ellipsoid radius <em>a</em> (meters), reciprocal flattening <em>r</em>, and central scale factor <em>k0</em>. Setting <em>r</em> = 0 implies <em>r</em> = inf or flattening = 0 (i.e., a sphere). Negative <em>r</em> indicates a prolate spheroid. An exception is thrown if <em>a</em> or <em>k0</em> is not positive. 
-<p>Definition at line <a class="el" href="TransverseMercator_8cpp-source.html#l00056">56</a> of file <a class="el" href="TransverseMercator_8cpp-source.html">TransverseMercator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8cpp-source.html#l00059">59</a> of file <a class="el" href="TransverseMercator_8cpp-source.html">TransverseMercator.cpp</a>.</p>
 
 <p>References <a class="el" href="Constants_8hpp-source.html#l00018">STATIC_ASSERT</a>.</p>
 
@@ -186,9 +186,9 @@ Constructor for a ellipsoid radius <em>a</em> (meters), reciprocal flattening <e
 
 <p>
 Convert from latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees) to transverse Mercator easting <em>x</em> (meters) and northing <em>y</em> (meters). The central meridian of the transformation is <em>lon0</em> (degrees). Also return the meridian convergence <em>gamma</em> (degrees) and the scale <em>k</em>. No false easting or northing is added. <em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. 
-<p>Definition at line <a class="el" href="TransverseMercator_8cpp-source.html#l00195">195</a> of file <a class="el" href="TransverseMercator_8cpp-source.html">TransverseMercator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8cpp-source.html#l00214">214</a> of file <a class="el" href="TransverseMercator_8cpp-source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp-source.html#l00173">GeographicLib::Math::asinh()</a>, <a class="el" href="Constants_8hpp-source.html#l00191">GeographicLib::Math::atanh()</a>, <a class="el" href="Constants_8hpp-source.html#l00252">GeographicLib::Constants::degree()</a>, <a class="el" href="Constants_8hpp-source.html#l00095">GeographicLib::Math::hypot()</a>, and <a class="el" href="Constants_8hpp-source.html#l00246">GeographicLib::Constants::pi()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp-source.html#l00173">GeographicLib::Math::asinh()</a>, <a class="el" href="Constants_8hpp-source.html#l00252">GeographicLib::Constants::degree()</a>, <a class="el" href="Constants_8hpp-source.html#l00095">GeographicLib::Math::hypot()</a>, and <a class="el" href="Constants_8hpp-source.html#l00246">GeographicLib::Constants::pi()</a>.</p>
 
 <p>Referenced by <a class="el" href="UTMUPS_8cpp-source.html#l00068">GeographicLib::UTMUPS::Forward()</a>, and <a class="el" href="TransverseMercatorTest_8cpp-source.html#l00059">main()</a>.</p>
 
@@ -251,9 +251,9 @@ Convert from latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees
 
 <p>
 Convert from transverse Mercator easting <em>x</em> (meters) and northing <em>y</em> (meters) to latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees) . The central meridian of the transformation is <em>lon0</em> (degrees). Also return the meridian convergence <em>gamma</em> (degrees) and the scale <em>k</em>. No false easting or northing is added. <em>lon0</em> should be in the range [-180, 360]. The value of <em>lon</em> returned is in the range [-180, 180). 
-<p>Definition at line <a class="el" href="TransverseMercator_8cpp-source.html#l00358">358</a> of file <a class="el" href="TransverseMercator_8cpp-source.html">TransverseMercator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8cpp-source.html#l00384">384</a> of file <a class="el" href="TransverseMercator_8cpp-source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp-source.html#l00173">GeographicLib::Math::asinh()</a>, <a class="el" href="Constants_8hpp-source.html#l00252">GeographicLib::Constants::degree()</a>, <a class="el" href="Constants_8hpp-source.html#l00095">GeographicLib::Math::hypot()</a>, and <a class="el" href="Constants_8hpp-source.html#l00246">GeographicLib::Constants::pi()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp-source.html#l00252">GeographicLib::Constants::degree()</a>, <a class="el" href="Constants_8hpp-source.html#l00095">GeographicLib::Math::hypot()</a>, and <a class="el" href="Constants_8hpp-source.html#l00246">GeographicLib::Constants::pi()</a>.</p>
 
 <p>Referenced by <a class="el" href="TransverseMercatorTest_8cpp-source.html#l00059">main()</a>, and <a class="el" href="UTMUPS_8cpp-source.html#l00111">GeographicLib::UTMUPS::Reverse()</a>.</p>
 
@@ -276,7 +276,7 @@ Convert from transverse Mercator easting <em>x</em> (meters) and northing <em>y<
 
 <p>
 The major radius of the ellipsoid (meters). This is that value of <em>a</em> used in the constructor. 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00144">144</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00150">150</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -297,7 +297,7 @@ The major radius of the ellipsoid (meters). This is that value of <em>a</em> use
 
 <p>
 The inverse flattening of the ellipsoid. This is that value of <em>r</em> used in the constructor. A value of 0 is returned for a sphere (infinite inverse flattening). 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00151">151</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00157">157</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -318,7 +318,7 @@ The inverse flattening of the ellipsoid. This is that value of <em>r</em> used i
 
 <p>
 The central scale for the projection. This is that value of <em>k0</em> used in the constructor and is the scale on the central meridian. 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00157">157</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00163">163</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -336,7 +336,7 @@ The central scale for the projection. This is that value of <em>k0</em> used in 
 
 <p>
 A global instantiation of <a class="el" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> with the WGS84 ellipsoid and the UTM scale factor. However, unlike UTM, no false easting or northing is added. 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00164">164</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp-source.html#l00170">170</a> of file <a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="UTMUPS_8cpp-source.html#l00068">GeographicLib::UTMUPS::Forward()</a>, <a class="el" href="TransverseMercatorTest_8cpp-source.html#l00059">main()</a>, and <a class="el" href="UTMUPS_8cpp-source.html#l00111">GeographicLib::UTMUPS::Reverse()</a>.</p>
 
@@ -345,7 +345,7 @@ A global instantiation of <a class="el" href="classGeographicLib_1_1TransverseMe
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="TransverseMercator_8hpp-source.html">TransverseMercator.hpp</a><li><a class="el" href="TransverseMercator_8cpp-source.html">TransverseMercator.cpp</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Jan 7 00:46:29 2010 for GeographicLib by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Feb 8 13:32:40 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

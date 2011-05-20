@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6778 2010-01-02 21:29:34Z karney $
+# $Id: Makefile.mk 6805 2010-01-28 21:18:14Z karney $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -19,7 +19,7 @@ OBJECTS = $(addsuffix .o,$(MODULES))
 CC = g++ -g
 CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 
-CPPFLAGS = -I$(INCLUDEPATH)
+CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES)
 LDFLAGS = $(LIBRARY)
 
 $(LIBRARY): $(OBJECTS)

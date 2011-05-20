@@ -30,7 +30,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)</span>
-<a name="l00011"></a><a class="code" href="Constants_8hpp.html#16d93570265d8037f7dc7d5d026b2aa4">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6785 2010-01-05 22:15:42Z karney $"</span>
+<a name="l00011"></a><a class="code" href="Constants_8hpp.html#16d93570265d8037f7dc7d5d026b2aa4">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6817 2010-02-08 14:42:35Z karney $"</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span><span class="comment"></span>
 <a name="l00013"></a>00013 <span class="comment">/**</span>
 <a name="l00014"></a>00014 <span class="comment"> * A simple compile-time assert.  This is designed to be compatible with the</span>
@@ -120,7 +120,7 @@
 <a name="l00098"></a>00098       <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">real</a>
 <a name="l00099"></a>00099         a = std::max(x, y),
 <a name="l00100"></a>00100         b = std::min(x, y) / a;
-<a name="l00101"></a>00101       <span class="keywordflow">return</span> a * sqrt(1 + b * b);
+<a name="l00101"></a>00101       <span class="keywordflow">return</span> a * std::sqrt(1 + b * b);
 <a name="l00102"></a>00102     }
 <a name="l00103"></a>00103 <span class="preprocessor">#elif defined(_MSC_VER)</span>
 <a name="l00104"></a>00104 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#cdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
@@ -371,14 +371,19 @@
 <a name="l00349"></a>00349 <span class="comment">   **********************************************************************/</span>
 <a name="l00350"></a><a class="code" href="classGeographicLib_1_1GeographicErr.html">00350</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a> : <span class="keyword">public</span> std::runtime_error {
 <a name="l00351"></a>00351   <span class="keyword">public</span>:
-<a name="l00352"></a><a class="code" href="classGeographicLib_1_1GeographicErr.html#e0f338af58f073657b012c8a9a64b006">00352</a>     <a class="code" href="classGeographicLib_1_1GeographicErr.html#e0f338af58f073657b012c8a9a64b006">GeographicErr</a>(<span class="keyword">const</span> std::string&amp; msg) : std::runtime_error(msg) {}
-<a name="l00353"></a>00353   };
-<a name="l00354"></a>00354 
-<a name="l00355"></a>00355 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00356"></a>00356 
-<a name="l00357"></a>00357 <span class="preprocessor">#endif</span>
+<a name="l00352"></a>00352 <span class="comment"></span>
+<a name="l00353"></a>00353 <span class="comment">    /**</span>
+<a name="l00354"></a>00354 <span class="comment">     * Constructor takes a string message, \e msg, which is accessible in the</span>
+<a name="l00355"></a>00355 <span class="comment">     * catch clause, via what().</span>
+<a name="l00356"></a>00356 <span class="comment">     **********************************************************************/</span>
+<a name="l00357"></a><a class="code" href="classGeographicLib_1_1GeographicErr.html#e0f338af58f073657b012c8a9a64b006">00357</a>     <a class="code" href="classGeographicLib_1_1GeographicErr.html#e0f338af58f073657b012c8a9a64b006">GeographicErr</a>(<span class="keyword">const</span> std::string&amp; msg) : std::runtime_error(msg) {}
+<a name="l00358"></a>00358   };
+<a name="l00359"></a>00359 
+<a name="l00360"></a>00360 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00361"></a>00361 
+<a name="l00362"></a>00362 <span class="preprocessor">#endif</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Jan 7 00:46:28 2010 for GeographicLib by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Feb 8 13:32:39 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

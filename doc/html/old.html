@@ -21,7 +21,12 @@
 <h1><a class="anchor" name="old">Old Versions </a></h1><center> Back to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>
 List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses <a href="http://www.gnu.org/software/libtool/manual/libtool.html#Versioning">libtool's version numbering scheme</a> using an interface and revision numbers.)<p>
 <ul>
-<li><a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">1.0 (released 2009-01-07)</a><ul>
+<li><a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">1.1 (released 2010-02-09)</a><ul>
+<li>FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).</li><li>Increase accuracy of scale calculation in TransverseMercator and TransverseMercatorExact.</li><li>Code and documentation changes for consistency with <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a></li></ul>
+</li></ul>
+<p>
+<ul>
+<li><a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.0.tar.gz/download">1.0 (released 2010-01-07)</a><ul>
 <li>Add autoconf configuration files.</li><li>BUG FIX: Improve initial guess for Newton's method in PolarStereographic.Reverse. (Previously this failed to converge when the co-latitude exceeded about 130 deg.)</li><li>Constructors for TransverseMercator, TransverseMercatorExact, PolarStereographic, Geocentric, and Geodesic now check for obvious problems with their arguments and throw an exception if necessary.</li><li>Most classes now include inspector functions such as MajorRadius() so that you can determine how instances were constructed.</li><li>Add <a class="el" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">GeographicLib::LambertConformalConic</a> class.</li><li>Add <a class="el" href="classGeographicLib_1_1PolarStereographic.html#3f957214eb1d1248277a680e4c4ceed5">GeographicLib::PolarStereographic::SetScale</a> to allow the latitude of true scale to be specified.</li><li>Add solution and project files for Visual Studio 2008.</li><li>Add <a class="el" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicLib::GeographicErr</a> for exceptions.</li><li><a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> changes:<ul>
 <li>BUG FIX: fix typo in <a class="el" href="classGeographicLib_1_1Geoid.html#de5715c0d1428a409383b1acd2cbe9be">GeographicLib::Geoid::Cache</a> which could cause a segmentation fault in some cases when the cached area spanned the prime meridian.</li><li>Include sufficient edge data to allow heights to be returned for cached area without disk reads;</li><li>Add inspector functions to query the extent of the cache.</li></ul>
 </li></ul>
@@ -98,7 +103,7 @@ List of versions in reverse chronological order together with a brief list of ch
 </li></ul>
 <p>
 <center> Back to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Jan 7 00:46:29 2010 for GeographicLib by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Feb 8 13:32:39 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

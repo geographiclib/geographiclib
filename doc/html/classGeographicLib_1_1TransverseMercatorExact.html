@@ -113,7 +113,7 @@ With <em>extendp</em> = true, the branch cut is moved to the lower left quadrant
 </li></ul>
 See <a class="el" href="transversemercator.html#extend">Properties far from the central meridian</a> for a full discussion of the treatment of the branch cut.<p>
 The method will work for all ellipsoids used in terrestial geodesy. The method cannot be applied directly to the case of a sphere (<em>r</em> = inf) because some the constants characterizing this method diverge in that limit, and in practise, <em>r</em> should be smaller than about 1/stdnumeric_limits&lt;real&gt;::epsilon(). However, <a class="el" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">GeographicLib::TransverseMercator</a> treats the sphere exactly. An exception is thrown if <em>a</em>, <em>r</em>, or <em>k0</em> is not positive. 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp-source.html#l00061">61</a> of file <a class="el" href="TransverseMercatorExact_8cpp-source.html">TransverseMercatorExact.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp-source.html#l00059">59</a> of file <a class="el" href="TransverseMercatorExact_8cpp-source.html">TransverseMercatorExact.cpp</a>.</p>
 
 </div>
 </div><p>
@@ -175,7 +175,7 @@ The method will work for all ellipsoids used in terrestial geodesy. The method c
 
 <p>
 Convert from latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees) to transverse Mercator easting <em>x</em> (meters) and northing <em>y</em> (meters). The central meridian of the transformation is <em>lon0</em> (degrees). Also return the meridian convergence <em>gamma</em> (degrees) and the scale <em>k</em>. No false easting or northing is added. <em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp-source.html#l00386">386</a> of file <a class="el" href="TransverseMercatorExact_8cpp-source.html">TransverseMercatorExact.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp-source.html#l00366">366</a> of file <a class="el" href="TransverseMercatorExact_8cpp-source.html">TransverseMercatorExact.cpp</a>.</p>
 
 <p>References <a class="el" href="Constants_8hpp-source.html#l00252">GeographicLib::Constants::degree()</a>, <a class="el" href="EllipticFunction_8hpp-source.html#l00079">GeographicLib::EllipticFunction::E()</a>, <a class="el" href="EllipticFunction_8hpp-source.html#l00074">GeographicLib::EllipticFunction::K()</a>, and <a class="el" href="EllipticFunction_8cpp-source.html#l00150">GeographicLib::EllipticFunction::sncndn()</a>.</p>
 
@@ -240,7 +240,7 @@ Convert from latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees
 
 <p>
 Convert from transverse Mercator easting <em>x</em> (meters) and northing <em>y</em> (meters) to latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees) . The central meridian of the transformation is <em>lon0</em> (degrees). Also return the meridian convergence <em>gamma</em> (degrees) and the scale <em>k</em>. No false easting or northing is added. <em>lon0</em> should be in the range [-180, 360]. The value of <em>lon</em> returned is in the range [-180, 180). 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp-source.html#l00443">443</a> of file <a class="el" href="TransverseMercatorExact_8cpp-source.html">TransverseMercatorExact.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp-source.html#l00427">427</a> of file <a class="el" href="TransverseMercatorExact_8cpp-source.html">TransverseMercatorExact.cpp</a>.</p>
 
 <p>References <a class="el" href="Constants_8hpp-source.html#l00252">GeographicLib::Constants::degree()</a>, <a class="el" href="EllipticFunction_8hpp-source.html#l00079">GeographicLib::EllipticFunction::E()</a>, <a class="el" href="EllipticFunction_8hpp-source.html#l00074">GeographicLib::EllipticFunction::K()</a>, <a class="el" href="EllipticFunction_8hpp-source.html#l00084">GeographicLib::EllipticFunction::KE()</a>, <a class="el" href="Constants_8hpp-source.html#l00246">GeographicLib::Constants::pi()</a>, and <a class="el" href="EllipticFunction_8cpp-source.html#l00150">GeographicLib::EllipticFunction::sncndn()</a>.</p>
 
@@ -265,7 +265,7 @@ Convert from transverse Mercator easting <em>x</em> (meters) and northing <em>y<
 
 <p>
 The major radius of the ellipsoid (meters). This is that value of <em>a</em> used in the constructor. 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00171">171</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00177">177</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -286,7 +286,7 @@ The major radius of the ellipsoid (meters). This is that value of <em>a</em> use
 
 <p>
 The inverse flattening of the ellipsoid. This is that value of <em>r</em> used in the constructor. 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00177">177</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00183">183</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -307,7 +307,7 @@ The inverse flattening of the ellipsoid. This is that value of <em>r</em> used i
 
 <p>
 The central scale for the projection. This is that value of <em>k0</em> used in the constructor and is the scale on the central meridian. 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00183">183</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00189">189</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
 
 </div>
 </div><p>
@@ -325,7 +325,7 @@ The central scale for the projection. This is that value of <em>k0</em> used in 
 
 <p>
 A global instantiation of <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a> with the WGS84 ellipsoid and the UTM scale factor. However, unlike UTM, no false easting or northing is added. 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00190">190</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8hpp-source.html#l00196">196</a> of file <a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="TransverseMercatorTest_8cpp-source.html#l00059">main()</a>.</p>
 
@@ -334,7 +334,7 @@ A global instantiation of <a class="el" href="classGeographicLib_1_1TransverseMe
 <hr>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="TransverseMercatorExact_8hpp-source.html">TransverseMercatorExact.hpp</a><li><a class="el" href="TransverseMercatorExact_8cpp-source.html">TransverseMercatorExact.cpp</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Jan 7 00:46:29 2010 for GeographicLib by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Feb 8 13:32:40 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

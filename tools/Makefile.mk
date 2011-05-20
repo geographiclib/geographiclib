@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6714 2009-10-17 11:50:59Z ckarney $
+# $Id: Makefile.mk 6805 2010-01-28 21:18:14Z karney $
 
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval
@@ -18,7 +18,7 @@ LIBPATH = ../src
 CC = g++ -g
 CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 
-CPPFLAGS = -I$(INCLUDEPATH)
+CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
 
 

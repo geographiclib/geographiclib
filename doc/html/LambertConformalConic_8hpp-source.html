@@ -30,7 +30,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="LambertConformalConic_8hpp.html#ac2fbd995d5b75016781c58b97093c67">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: LambertConformalConic.hpp 6720 2009-10-17 23:13:57Z ckarney $"</span>
+<a name="l00011"></a><a class="code" href="LambertConformalConic_8hpp.html#ac2fbd995d5b75016781c58b97093c67">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: LambertConformalConic.hpp 6816 2010-02-05 21:03:10Z karney $"</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include "<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>"</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;algorithm&gt;</span>
@@ -106,7 +106,7 @@
 <a name="l00084"></a>00084     <span class="comment">// e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f &gt;= 0</span>
 <a name="l00085"></a>00085     <span class="comment">// - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f &lt; 0</span>
 <a name="l00086"></a>00086     <span class="keyword">inline</span> real eatanhe(real x) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00087"></a>00087       <span class="keywordflow">return</span> _f &gt;= 0 ? _e * <a class="code" href="classGeographicLib_1_1Math.html#fd1fced228b796061c72fd4afa842728">Math::atanh</a>(_e * x) : - _e * atan(_e * x);
+<a name="l00087"></a>00087       <span class="keywordflow">return</span> _f &gt;= 0 ? _e * <a class="code" href="classGeographicLib_1_1Math.html#fd1fced228b796061c72fd4afa842728">Math::atanh</a>(_e * x) : - _e * std::atan(_e * x);
 <a name="l00088"></a>00088     }
 <a name="l00089"></a>00089     <span class="keyword">inline</span> real mf(real sphi, real cphi) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00090"></a>00090       <span class="keywordflow">return</span> cphi/std::sqrt(1 - _e2 * sq(sphi)); <span class="comment">// Snyder's m, p 108, eq 14-15</span>
@@ -116,7 +116,7 @@
 <a name="l00094"></a>00094       <span class="comment">// First factor is sqrt((1 - sphi) / (1 + sphi))</span>
 <a name="l00095"></a>00095       <span class="comment">// Second factor is ((1 + e * sphi)/(1 - e * sphi)) ^ (e/2)</span>
 <a name="l00096"></a>00096       <span class="keywordflow">return</span> (sphi &gt;= 0 ? cphi / (1 + sphi) : (1 - sphi) / cphi) *
-<a name="l00097"></a>00097         exp(eatanhe(sphi));
+<a name="l00097"></a>00097         std::exp(eatanhe(sphi));
 <a name="l00098"></a>00098     }
 <a name="l00099"></a>00099     <span class="keyword">inline</span> real logtf(real sphi, real cphi) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00100"></a>00100       <span class="comment">// Return log(t).  This retains relative accuracy near the equator where</span>
@@ -126,118 +126,119 @@
 <a name="l00104"></a>00104     }
 <a name="l00105"></a>00105     <span class="keyword">inline</span> real logmtf(real sphi) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00106"></a>00106       <span class="comment">// Return log(m/t).  This allows the cancellation of cphi in m and t.</span>
-<a name="l00107"></a>00107       <span class="keywordflow">return</span> log((1 + sphi)/std::sqrt(1 - _e2 * sq(sphi))) - eatanhe(sphi);
-<a name="l00108"></a>00108     }
-<a name="l00109"></a>00109     <span class="keywordtype">void</span> Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) <span class="keywordflow">throw</span>();
-<a name="l00110"></a>00110   <span class="keyword">public</span>:
-<a name="l00111"></a>00111 <span class="comment"></span>
-<a name="l00112"></a>00112 <span class="comment">    /**</span>
-<a name="l00113"></a>00113 <span class="comment">     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening</span>
-<a name="l00114"></a>00114 <span class="comment">     * \e r, standard parallel (the circle of tangency) \e stdlat (degrees),</span>
-<a name="l00115"></a>00115 <span class="comment">     * and scale on the standard parallel \e k0.  Setting \e r = 0 implies \e r</span>
-<a name="l00116"></a>00116 <span class="comment">     * = inf or flattening = 0 (i.e., a sphere). An exception is thrown if \e a</span>
-<a name="l00117"></a>00117 <span class="comment">     * or \e k0 is not positive or if \e stdlat is not in the range [-90, 90].</span>
-<a name="l00118"></a>00118 <span class="comment">     **********************************************************************/</span>
-<a name="l00119"></a>00119     <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#9270bac79ef919854a4524044128a4dc">LambertConformalConic</a>(real a, real r, real stdlat, real k0);
-<a name="l00120"></a>00120 <span class="comment"></span>
-<a name="l00121"></a>00121 <span class="comment">    /**</span>
-<a name="l00122"></a>00122 <span class="comment">     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening</span>
-<a name="l00123"></a>00123 <span class="comment">     * \e r, standard parallels \e stdlat1 (degrees) and \e stdlat2 (degrees),</span>
-<a name="l00124"></a>00124 <span class="comment">     * and the scale on the standard parallels \e k1.  Setting \e r = 0 implies</span>
-<a name="l00125"></a>00125 <span class="comment">     * \e r = inf or flattening = 0 (i.e., a sphere). An exception is thrown if</span>
-<a name="l00126"></a>00126 <span class="comment">     * \e a or \e k0 is not positive or if \e stdlat1 or \e stdlat2 is not in</span>
-<a name="l00127"></a>00127 <span class="comment">     * the range [-90, 90].  In addition, if either \e stdlat1 or \e stdlat2 is</span>
-<a name="l00128"></a>00128 <span class="comment">     * a pole, then an exception is thrown if \e stdlat1 is not equal \e</span>
-<a name="l00129"></a>00129 <span class="comment">     * stdlat2</span>
-<a name="l00130"></a>00130 <span class="comment">     **********************************************************************/</span>
-<a name="l00131"></a>00131     <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#9270bac79ef919854a4524044128a4dc">LambertConformalConic</a>(real a, real r, real stdlat1, real stdlat2, real k1);
-<a name="l00132"></a>00132 <span class="comment"></span>
-<a name="l00133"></a>00133 <span class="comment">    /**</span>
-<a name="l00134"></a>00134 <span class="comment">     * An alternative constructor for 2 standard parallels where the parallels</span>
-<a name="l00135"></a>00135 <span class="comment">     * are given by their sines and cosines.  This allows parallels close to</span>
-<a name="l00136"></a>00136 <span class="comment">     * the poles to be specified accurately.</span>
-<a name="l00137"></a>00137 <span class="comment">     **********************************************************************/</span>
-<a name="l00138"></a>00138     <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#9270bac79ef919854a4524044128a4dc">LambertConformalConic</a>(real a, real r,
-<a name="l00139"></a>00139                           real sinlat1, real coslat1,
-<a name="l00140"></a>00140                           real sinlat2, real coslat2,
-<a name="l00141"></a>00141                           real k1);
-<a name="l00142"></a>00142 <span class="comment"></span>
-<a name="l00143"></a>00143 <span class="comment">    /**</span>
-<a name="l00144"></a>00144 <span class="comment">     * Alter the scale for the projection so that on latitude \e lat, the scale</span>
-<a name="l00145"></a>00145 <span class="comment">     * is \e k (default 1).  The allows a "latitude of true scale" to be</span>
-<a name="l00146"></a>00146 <span class="comment">     * specified.  An exception is thrown if \e k is not positive.</span>
-<a name="l00147"></a>00147 <span class="comment">     **********************************************************************/</span>
-<a name="l00148"></a>00148     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#ac6267f7f970b35043b17e12e4163ff2">SetScale</a>(real lat, real k = real(1));
-<a name="l00149"></a>00149 <span class="comment"></span>
-<a name="l00150"></a>00150 <span class="comment">    /**</span>
-<a name="l00151"></a>00151 <span class="comment">     * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to</span>
-<a name="l00152"></a>00152 <span class="comment">     * Lambert conformal conic easting \e x (meters) and northing \e y</span>
-<a name="l00153"></a>00153 <span class="comment">     * (meters).  The central meridian is given by \e lon0 (degrees) and the</span>
-<a name="l00154"></a>00154 <span class="comment">     * latitude origin is given by LambertConformalConic::LatitudeOrigin().</span>
-<a name="l00155"></a>00155 <span class="comment">     * Also return the meridian convergence \e gamma (degrees) and the scale \e</span>
-<a name="l00156"></a>00156 <span class="comment">     * k.  No false easting or northing is added and \e lat should be in the</span>
-<a name="l00157"></a>00157 <span class="comment">     * range [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].</span>
-<a name="l00158"></a>00158 <span class="comment">     * The values of \e x and \e y returned for points which project to</span>
-<a name="l00159"></a>00159 <span class="comment">     * infinity (i.e., one or both of the poles) will be large but finite.  The</span>
-<a name="l00160"></a>00160 <span class="comment">     * value of \e k returned for the poles in infinite (unless \e lat equals</span>
-<a name="l00161"></a>00161 <span class="comment">     * the latitude origin).</span>
-<a name="l00162"></a>00162 <span class="comment">     **********************************************************************/</span>
-<a name="l00163"></a>00163     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2bafb6c1a81d4b6cf04f172b9e96278c">Forward</a>(real lon0, real lat, real lon,
-<a name="l00164"></a>00164                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00165"></a>00165 <span class="comment"></span>
-<a name="l00166"></a>00166 <span class="comment">    /**</span>
-<a name="l00167"></a>00167 <span class="comment">     * Convert from Lambert conformal conic easting \e x (meters) and northing</span>
-<a name="l00168"></a>00168 <span class="comment">     * \e y (meters) to latitude \e lat (degrees) and longitude \e lon</span>
-<a name="l00169"></a>00169 <span class="comment">     * (degrees) .  The central meridian is given by \e lon0 (degrees) and the</span>
-<a name="l00170"></a>00170 <span class="comment">     * latitude origin is given by LambertConformalConic::LatitudeOrigin().</span>
-<a name="l00171"></a>00171 <span class="comment">     * Also return the meridian convergence \e gamma (degrees) and the scale \e</span>
-<a name="l00172"></a>00172 <span class="comment">     * k.  No false easting or northing is added.  \e lon0 should be in the</span>
-<a name="l00173"></a>00173 <span class="comment">     * range [-180, 360].  The value of \e lon returned is in the range [-180,</span>
-<a name="l00174"></a>00174 <span class="comment">     * 180).</span>
-<a name="l00175"></a>00175 <span class="comment">     **********************************************************************/</span>
-<a name="l00176"></a>00176     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#085d37693f5e95fd650b7f59f61ab744">Reverse</a>(real lon0, real x, real y,
-<a name="l00177"></a>00177                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00178"></a>00178 <span class="comment"></span>
-<a name="l00179"></a>00179 <span class="comment">    /**</span>
-<a name="l00180"></a>00180 <span class="comment">     * The major radius of the ellipsoid (meters).  This is that value of \e a</span>
-<a name="l00181"></a>00181 <span class="comment">     * used in the constructor.</span>
-<a name="l00182"></a>00182 <span class="comment">     **********************************************************************/</span>
-<a name="l00183"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#21f9bc21f3f40c56d2f5d12fb4b7f75a">00183</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#21f9bc21f3f40c56d2f5d12fb4b7f75a">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
-<a name="l00184"></a>00184 <span class="comment"></span>
-<a name="l00185"></a>00185 <span class="comment">    /**</span>
-<a name="l00186"></a>00186 <span class="comment">     * The inverse flattening of the ellipsoid.  This is that value of \e r</span>
-<a name="l00187"></a>00187 <span class="comment">     * used in the constructor.  A value of 0 is returned for a sphere</span>
-<a name="l00188"></a>00188 <span class="comment">     * (infinite inverse flattening).</span>
-<a name="l00189"></a>00189 <span class="comment">     **********************************************************************/</span>
-<a name="l00190"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2dcd66922112771c232d686e7bcc5f31">00190</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2dcd66922112771c232d686e7bcc5f31">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
-<a name="l00191"></a>00191 <span class="comment"></span>
-<a name="l00192"></a>00192 <span class="comment">    /**</span>
-<a name="l00193"></a>00193 <span class="comment">     * The latitude of the origin for the projection (degrees).  This is that</span>
-<a name="l00194"></a>00194 <span class="comment">     * latitude of minimum scale and equals the \e stdlat in the 1-parallel</span>
-<a name="l00195"></a>00195 <span class="comment">     * constructor and lies between \e stdlat1 and \e stdlat2 in the 2-parallel</span>
-<a name="l00196"></a>00196 <span class="comment">     * constructors.</span>
-<a name="l00197"></a>00197 <span class="comment">     **********************************************************************/</span>
-<a name="l00198"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7c589335b43b2274d3a68c0f68f29d77">00198</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7c589335b43b2274d3a68c0f68f29d77">OriginLatitude</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lat0; }
-<a name="l00199"></a>00199 <span class="comment"></span>
-<a name="l00200"></a>00200 <span class="comment">    /**</span>
-<a name="l00201"></a>00201 <span class="comment">     * The central scale for the projection.  This is that scale on the</span>
-<a name="l00202"></a>00202 <span class="comment">     * latitude of origin..</span>
-<a name="l00203"></a>00203 <span class="comment">     **********************************************************************/</span>
-<a name="l00204"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2298a4e48e550cfd7346cf5f2dd175ad">00204</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2298a4e48e550cfd7346cf5f2dd175ad">CentralScale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _k0; }
-<a name="l00205"></a>00205 <span class="comment"></span>
-<a name="l00206"></a>00206 <span class="comment">    /**</span>
-<a name="l00207"></a>00207 <span class="comment">     * A global instantiation of LambertConformalConic with the WGS84 ellipsoid</span>
-<a name="l00208"></a>00208 <span class="comment">     * and the UPS scale factor and \e stdlat = 0.  This degenerates to the</span>
-<a name="l00209"></a>00209 <span class="comment">     * Mercator projection.</span>
-<a name="l00210"></a>00210 <span class="comment">     **********************************************************************/</span>
-<a name="l00211"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7fbb6973b77593245db52c9759740f9a">00211</a>     <span class="keyword">const</span> <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7fbb6973b77593245db52c9759740f9a">Mercator</a>;
-<a name="l00212"></a>00212   };
-<a name="l00213"></a>00213 
-<a name="l00214"></a>00214 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00215"></a>00215 
-<a name="l00216"></a>00216 <span class="preprocessor">#endif</span>
+<a name="l00107"></a>00107       <span class="keywordflow">return</span> std::log((1 + sphi)/std::sqrt(1 - _e2 * sq(sphi))) -
+<a name="l00108"></a>00108         eatanhe(sphi);
+<a name="l00109"></a>00109     }
+<a name="l00110"></a>00110     <span class="keywordtype">void</span> Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) <span class="keywordflow">throw</span>();
+<a name="l00111"></a>00111   <span class="keyword">public</span>:
+<a name="l00112"></a>00112 <span class="comment"></span>
+<a name="l00113"></a>00113 <span class="comment">    /**</span>
+<a name="l00114"></a>00114 <span class="comment">     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening</span>
+<a name="l00115"></a>00115 <span class="comment">     * \e r, standard parallel (the circle of tangency) \e stdlat (degrees),</span>
+<a name="l00116"></a>00116 <span class="comment">     * and scale on the standard parallel \e k0.  Setting \e r = 0 implies \e r</span>
+<a name="l00117"></a>00117 <span class="comment">     * = inf or flattening = 0 (i.e., a sphere). An exception is thrown if \e a</span>
+<a name="l00118"></a>00118 <span class="comment">     * or \e k0 is not positive or if \e stdlat is not in the range [-90, 90].</span>
+<a name="l00119"></a>00119 <span class="comment">     **********************************************************************/</span>
+<a name="l00120"></a>00120     <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#9270bac79ef919854a4524044128a4dc">LambertConformalConic</a>(real a, real r, real stdlat, real k0);
+<a name="l00121"></a>00121 <span class="comment"></span>
+<a name="l00122"></a>00122 <span class="comment">    /**</span>
+<a name="l00123"></a>00123 <span class="comment">     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening</span>
+<a name="l00124"></a>00124 <span class="comment">     * \e r, standard parallels \e stdlat1 (degrees) and \e stdlat2 (degrees),</span>
+<a name="l00125"></a>00125 <span class="comment">     * and the scale on the standard parallels \e k1.  Setting \e r = 0 implies</span>
+<a name="l00126"></a>00126 <span class="comment">     * \e r = inf or flattening = 0 (i.e., a sphere). An exception is thrown if</span>
+<a name="l00127"></a>00127 <span class="comment">     * \e a or \e k0 is not positive or if \e stdlat1 or \e stdlat2 is not in</span>
+<a name="l00128"></a>00128 <span class="comment">     * the range [-90, 90].  In addition, if either \e stdlat1 or \e stdlat2 is</span>
+<a name="l00129"></a>00129 <span class="comment">     * a pole, then an exception is thrown if \e stdlat1 is not equal \e</span>
+<a name="l00130"></a>00130 <span class="comment">     * stdlat2</span>
+<a name="l00131"></a>00131 <span class="comment">     **********************************************************************/</span>
+<a name="l00132"></a>00132     <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#9270bac79ef919854a4524044128a4dc">LambertConformalConic</a>(real a, real r, real stdlat1, real stdlat2, real k1);
+<a name="l00133"></a>00133 <span class="comment"></span>
+<a name="l00134"></a>00134 <span class="comment">    /**</span>
+<a name="l00135"></a>00135 <span class="comment">     * An alternative constructor for 2 standard parallels where the parallels</span>
+<a name="l00136"></a>00136 <span class="comment">     * are given by their sines and cosines.  This allows parallels close to</span>
+<a name="l00137"></a>00137 <span class="comment">     * the poles to be specified accurately.</span>
+<a name="l00138"></a>00138 <span class="comment">     **********************************************************************/</span>
+<a name="l00139"></a>00139     <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#9270bac79ef919854a4524044128a4dc">LambertConformalConic</a>(real a, real r,
+<a name="l00140"></a>00140                           real sinlat1, real coslat1,
+<a name="l00141"></a>00141                           real sinlat2, real coslat2,
+<a name="l00142"></a>00142                           real k1);
+<a name="l00143"></a>00143 <span class="comment"></span>
+<a name="l00144"></a>00144 <span class="comment">    /**</span>
+<a name="l00145"></a>00145 <span class="comment">     * Alter the scale for the projection so that on latitude \e lat, the scale</span>
+<a name="l00146"></a>00146 <span class="comment">     * is \e k (default 1).  The allows a "latitude of true scale" to be</span>
+<a name="l00147"></a>00147 <span class="comment">     * specified.  An exception is thrown if \e k is not positive.</span>
+<a name="l00148"></a>00148 <span class="comment">     **********************************************************************/</span>
+<a name="l00149"></a>00149     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#ac6267f7f970b35043b17e12e4163ff2">SetScale</a>(real lat, real k = real(1));
+<a name="l00150"></a>00150 <span class="comment"></span>
+<a name="l00151"></a>00151 <span class="comment">    /**</span>
+<a name="l00152"></a>00152 <span class="comment">     * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to</span>
+<a name="l00153"></a>00153 <span class="comment">     * Lambert conformal conic easting \e x (meters) and northing \e y</span>
+<a name="l00154"></a>00154 <span class="comment">     * (meters).  The central meridian is given by \e lon0 (degrees) and the</span>
+<a name="l00155"></a>00155 <span class="comment">     * latitude origin is given by LambertConformalConic::LatitudeOrigin().</span>
+<a name="l00156"></a>00156 <span class="comment">     * Also return the meridian convergence \e gamma (degrees) and the scale \e</span>
+<a name="l00157"></a>00157 <span class="comment">     * k.  No false easting or northing is added and \e lat should be in the</span>
+<a name="l00158"></a>00158 <span class="comment">     * range [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].</span>
+<a name="l00159"></a>00159 <span class="comment">     * The values of \e x and \e y returned for points which project to</span>
+<a name="l00160"></a>00160 <span class="comment">     * infinity (i.e., one or both of the poles) will be large but finite.  The</span>
+<a name="l00161"></a>00161 <span class="comment">     * value of \e k returned for the poles in infinite (unless \e lat equals</span>
+<a name="l00162"></a>00162 <span class="comment">     * the latitude origin).</span>
+<a name="l00163"></a>00163 <span class="comment">     **********************************************************************/</span>
+<a name="l00164"></a>00164     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2bafb6c1a81d4b6cf04f172b9e96278c">Forward</a>(real lon0, real lat, real lon,
+<a name="l00165"></a>00165                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00166"></a>00166 <span class="comment"></span>
+<a name="l00167"></a>00167 <span class="comment">    /**</span>
+<a name="l00168"></a>00168 <span class="comment">     * Convert from Lambert conformal conic easting \e x (meters) and northing</span>
+<a name="l00169"></a>00169 <span class="comment">     * \e y (meters) to latitude \e lat (degrees) and longitude \e lon</span>
+<a name="l00170"></a>00170 <span class="comment">     * (degrees) .  The central meridian is given by \e lon0 (degrees) and the</span>
+<a name="l00171"></a>00171 <span class="comment">     * latitude origin is given by LambertConformalConic::LatitudeOrigin().</span>
+<a name="l00172"></a>00172 <span class="comment">     * Also return the meridian convergence \e gamma (degrees) and the scale \e</span>
+<a name="l00173"></a>00173 <span class="comment">     * k.  No false easting or northing is added.  \e lon0 should be in the</span>
+<a name="l00174"></a>00174 <span class="comment">     * range [-180, 360].  The value of \e lon returned is in the range [-180,</span>
+<a name="l00175"></a>00175 <span class="comment">     * 180).</span>
+<a name="l00176"></a>00176 <span class="comment">     **********************************************************************/</span>
+<a name="l00177"></a>00177     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#085d37693f5e95fd650b7f59f61ab744">Reverse</a>(real lon0, real x, real y,
+<a name="l00178"></a>00178                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00179"></a>00179 <span class="comment"></span>
+<a name="l00180"></a>00180 <span class="comment">    /**</span>
+<a name="l00181"></a>00181 <span class="comment">     * The major radius of the ellipsoid (meters).  This is that value of \e a</span>
+<a name="l00182"></a>00182 <span class="comment">     * used in the constructor.</span>
+<a name="l00183"></a>00183 <span class="comment">     **********************************************************************/</span>
+<a name="l00184"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#21f9bc21f3f40c56d2f5d12fb4b7f75a">00184</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#21f9bc21f3f40c56d2f5d12fb4b7f75a">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
+<a name="l00185"></a>00185 <span class="comment"></span>
+<a name="l00186"></a>00186 <span class="comment">    /**</span>
+<a name="l00187"></a>00187 <span class="comment">     * The inverse flattening of the ellipsoid.  This is that value of \e r</span>
+<a name="l00188"></a>00188 <span class="comment">     * used in the constructor.  A value of 0 is returned for a sphere</span>
+<a name="l00189"></a>00189 <span class="comment">     * (infinite inverse flattening).</span>
+<a name="l00190"></a>00190 <span class="comment">     **********************************************************************/</span>
+<a name="l00191"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2dcd66922112771c232d686e7bcc5f31">00191</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2dcd66922112771c232d686e7bcc5f31">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00192"></a>00192 <span class="comment"></span>
+<a name="l00193"></a>00193 <span class="comment">    /**</span>
+<a name="l00194"></a>00194 <span class="comment">     * The latitude of the origin for the projection (degrees).  This is that</span>
+<a name="l00195"></a>00195 <span class="comment">     * latitude of minimum scale and equals the \e stdlat in the 1-parallel</span>
+<a name="l00196"></a>00196 <span class="comment">     * constructor and lies between \e stdlat1 and \e stdlat2 in the 2-parallel</span>
+<a name="l00197"></a>00197 <span class="comment">     * constructors.</span>
+<a name="l00198"></a>00198 <span class="comment">     **********************************************************************/</span>
+<a name="l00199"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7c589335b43b2274d3a68c0f68f29d77">00199</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7c589335b43b2274d3a68c0f68f29d77">OriginLatitude</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lat0; }
+<a name="l00200"></a>00200 <span class="comment"></span>
+<a name="l00201"></a>00201 <span class="comment">    /**</span>
+<a name="l00202"></a>00202 <span class="comment">     * The central scale for the projection.  This is that scale on the</span>
+<a name="l00203"></a>00203 <span class="comment">     * latitude of origin..</span>
+<a name="l00204"></a>00204 <span class="comment">     **********************************************************************/</span>
+<a name="l00205"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2298a4e48e550cfd7346cf5f2dd175ad">00205</a>     <a class="code" href="classGeographicLib_1_1Math.html#eee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#2298a4e48e550cfd7346cf5f2dd175ad">CentralScale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _k0; }
+<a name="l00206"></a>00206 <span class="comment"></span>
+<a name="l00207"></a>00207 <span class="comment">    /**</span>
+<a name="l00208"></a>00208 <span class="comment">     * A global instantiation of LambertConformalConic with the WGS84 ellipsoid</span>
+<a name="l00209"></a>00209 <span class="comment">     * and the UPS scale factor and \e stdlat = 0.  This degenerates to the</span>
+<a name="l00210"></a>00210 <span class="comment">     * Mercator projection.</span>
+<a name="l00211"></a>00211 <span class="comment">     **********************************************************************/</span>
+<a name="l00212"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7fbb6973b77593245db52c9759740f9a">00212</a>     <span class="keyword">const</span> <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#7fbb6973b77593245db52c9759740f9a">Mercator</a>;
+<a name="l00213"></a>00213   };
+<a name="l00214"></a>00214 
+<a name="l00215"></a>00215 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00216"></a>00216 
+<a name="l00217"></a>00217 <span class="preprocessor">#endif</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Jan 7 00:46:28 2010 for GeographicLib by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Feb 8 13:32:39 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

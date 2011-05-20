@@ -1,0 +1,10 @@
+setparams(6400000.0b0,150b0,1.0b0)$
+checkd(lat,lon):= block([r:tm(lat,lon),phi:lat*degree,sphi,nn,del:1b0,dlat,dlon,r1,r2],
+  nn : 1/sqrt(1 - e2 * sin(phi)^2),
+  hlat : (1 - e2) * nn^3,
+  hlon : cos(phi0) * nn,
+  dlat : del/(a * hlat),
+  dlon : del/(a * hlon),
+  r1:(tm(lat+dlat/2,lon)-tm(lat-dlat/2,lon))/del,
+  r2:tm(lat,lon+dlon/2)-tm(lat/2,lon-dlon/2)/del,
+  [r[3],r[4],r1[1],r1[2],r2[1],r2[2]])$
