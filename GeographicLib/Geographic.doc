@@ -6,27 +6,31 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://charles.karney.info/geographic/
  **********************************************************************/
-// $Id: Geographic.doc 6517 2009-01-13 13:37:32Z ckarney $
+// $Id: Geographic.doc 6531 2009-01-30 15:01:40Z ckarney $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-01
-\date 2009-01-12
+\version 2009-02
+\date 2009-01-30
 
 \section abstract Abstract
 
 GeographicLib is a small set of C++ classes to perform conversions
-between geographic, UTM, UPS, and MGRS coordinates.  In this application
-the errors are close to round-off (about 5 nm).  It is specialized for
-use with the WGS84 but is easily adapted for use with other ellipsoids.
-In addition, various properties of the transverse Mercator projection
-are described.
+between geographic, UTM, UPS, MGRS, ECEF, and local cartesian
+coordinates.  In this application, the errors are close to round-off
+(about 5 nm).  It is specialized for use with the WGS84 but can be
+adapted for use with other ellipsoids.  In addition, various properties
+of the transverse Mercator projection are described.
 
 \section download Download
 
-The code is available for download at
-http://charles.karney.info/geographic/Geographic.tgz
+The code is available for download at either of
+- http://charles.karney.info/geographic/Geographic.tgz
+- http://charles.karney.info/geographic/Geographic.zip
+.
+(The two archives have identical contents; however, the text files in
+the zip achive have Windows-style line endings.)
 
 It is licensed under the LGPL.  For more information, see
 http://charles.karney.info/geographic/
@@ -41,6 +45,10 @@ http://charles.karney.info/geographic/
    - \ref testset
    - \ref errors
    - \ref series
+ - \ref utilities
+   - \ref geoconvert
+   - \ref transversemercatortest
+   - \ref ecefconvert
  - \ref old
 
 <center>
@@ -55,33 +63,41 @@ Forward to \ref intro.
 Forward to \ref organization.  Up to \ref contents.
 </center>
 
-GeographicLib grew out of a need to perform conversions from MGRS to
-geographic coordinates (latitude and longitude).  At first, I used the
+GeographicLib offers a C++ interfaces to a small (but important!) set of
+geographic transformations.  It grew out of a desire to improve on the
 <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
-package (versions 2.4.1 and 2.4.2).  Unfortunately, geotrans rounds UTM
-coordinates to the nearest corner of a MGRS grid square.  This leads to
-the generation of illegal MGRS coordinates and other inconsistencies.
-In addition, geotrans makes use of global variables and so it is not
-thread safe.
+package for transforming between geographic and MGRS coordinates.  At
+present, GeographicLib provides UTM, UPS, MGRS, ECEF, and local
+cartesian projections.
 
 The goals of GeographicLib are:
- - Accuracy.  In most applications the accuracy is about 5 nm.  A series
-   solution is used for the transverse Mercator projection and this
-   accuracy guarantee breaks down at distances of more than about
-   35<sup>o</sup> from the central meridian.  The package also provides
-   a class to perform the transverse Mercator projection over the whole
-   ellipsoid.
- - C++ interface.  For the projection method, this allows encapsulation
-   of the ellipsoid parameters.  In addition a GeographicLib::GeoCoords
-   class is provided which holds the coordinates of a point and allows
-   conversions to other coordinate systems.
+ - Accuracy.  In most applications the accuracy is close to round-off,
+   about 5 nm.  Even though in many geographic applications 1 cm is
+   considered "accurate enough", there is little penalty in providing
+   much better accuracy.  If situations where a faster approximate
+   algorithm is necessary, GeographicLib offers an accurate benchmark to
+   guide the development.
+ - Completeness.  For each of the projections included, an attempt is
+   made to provide a complete solution.  For example,
+   GeographicLib::ECEF.Reverse will return accurate geodetic coordinates
+   even for points close to the center of the earth.
+ - C++ interface.  For the projection methods, this allows encapsulation
+   of the ellipsoid parameters.
+ - Emphasis on projections necessary for analysing military data.
  - Uniform treatment of UTM/UPS.  The GeographicLib::UTMUPS class treats
    UPS as zone 0.  This simplifies conversions between UTM and UPS
    coordinates, etc.
  - Well defined and stable conventions for the conversion between
    UTM/UPS to MGRS coordinates.
- - GeoConvert (GeoConvert.cpp), a command-line utility to provide quick
-   and accurate conversions between geographic, UTM/UPS, and MGRS.
+ - Detailed internal documentation on the algorithms.  For the most part
+   GeographicLib uses published algorithms and references are given.  If
+   changes have been made (usually to improve the numerical accuracy),
+   these are described in the code.
+
+Various \ref utilities are provided with the library.  These illustrate
+the use of the library and are useful in their own right.  This library
+and the utilities have been tested with g++ 4.3 under Linux and with MS
+Visual Studio 2005
 
 The section \ref transversemercator documents various properties of this
 projection.
@@ -104,7 +120,7 @@ The following steps will get you started with GeographicLib:
  - Download the <a
    href="http://charles.karney.info/geographic/Geographic.tgz">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpz Geographic.tgz
+   - tar xfpvz Geographic.tgz
    .
    This will create a GeographicLib directory.
  - Change to the GeographicLib directory
@@ -112,16 +128,16 @@ The following steps will get you started with GeographicLib:
  - Create the utility programs and (optionally) the documentation
    - make all doc
  - GeographicLib.sln is MS Visual Studio 2005 solution file which
-   compiles the library and the two utility programs.
- - Try out GeoConvert (for help, type ./GeoConvert -h)
+   compiles the library and the utility programs under Windows.
+ - Try out \ref geoconvert (for help, type ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
- - Try out TranverseMercatorTest (for help, type ./TransverseMercatorTest -h)
-   - echo 0 90 | ./TransverseMercatorTest
-   - echo 260e5 100e5 | ./TransverseMercatorTest -r
- - Read \ref organization for an overview of the library.
- - Browse the <a href="annotated.html">Class List</a> for full documentation.
- - Read \ref transversemercator for more information on this projection.
+ - Similarly, try out \ref transversemercatortest and \ref ecefconvert.
+ - Read the section, \ref organization, for an overview of the library.
+ - Browse the <a href="annotated.html">Class List</a> for full documentation
+   on the library.
+ - Read the section, \ref transversemercator, for more information on
+   this projection.
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
@@ -133,6 +149,8 @@ corresponding Wikipedia articles:
    UPS</a>, Universal Polar Stereographic coordinate system.
  - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
    MGRS</a>, Military Grid Reference System.
+ - <a href="http://en.wikipedia.org/wiki/ECEF">
+   ECEF</a>, Earth-Centered, Earth-Fixed coordinate system.
 
 <center>
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
@@ -150,7 +168,7 @@ components of GeographicLib.
 
 GeographicLib::TransverseMercator and GeographicLib::PolarStereographic
 provide the basic projections.  The constructors for these classes
-specify the ellipsoid and the forward and and reverse projections are
+specify the ellipsoid and the forward and reverse projections are
 implemented as const member functions.  TransverseMercator uses
 Kr&uuml;ger's series which have been extended to sixth order in the
 square of the eccentricity.  PolarStereographic uses the exact formulas
@@ -180,14 +198,22 @@ specified as latitude and longitude, UTM or UPS, or MGRS.  Member
 functions are provided to convert between coordinate systems and to
 provide formatted representations of them.
 
-GeoConvert (GeoConvert.cpp) is a simple command line utility to provide
-access to the GeoCoords class.
+\ref geoconvert is a simple command line utility to provide access to
+the GeoCoords class.
 
 GeographicLib::TransverseMercatorExact is a drop in replacement for
 TransverseMercator which uses the exact formulas, based on elliptic
-functions, for the projection as given by Lee.  TransverseMercatorTest
-(TransverseMercatorTest.cpp) is a simple command line utility to test to
-the TransverseMercator and TransverseMercatorExact.
+functions, for the projection as given by Lee.  \ref
+transversemercatortest is a simple command-line utility to test to the
+TransverseMercator and TransverseMercatorExact.
+
+GeographicLib::ECEF and GeographicLib::LocalCartesian convert between
+geodetic and ECEF or a local cartesian system.  The constructor for ECEF
+specifies the ellipsoid and the forward and reverse projections are
+implemented as const member functions.  GeographicLib::ECEF::WGS84 is a
+const static instantiation of ECEF specific for the WGS84 ellipsoid.
+\ref ecefconvert is a simple command line utility to provide access to
+these classes.
 
 GeographicLib::Constants, GeographicLib::DMS, and
 GeographicLib::EllipticFunction are utility classes with are used
@@ -197,13 +223,15 @@ In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the
 GeographicLib/ directory prefix.  If compiling within the GeographicLib
 directory, ".." should be included in the header search path (e.g.,
-with -I..).
+with -I..).  The cpp files implementing the classes include "using
+namespace std;", however, for portability, the headers files and the
+test programs do not.
 
 The low level projection classes, TransverseMercator and
 PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
-GeoCoords all check their arguments and throw exceptions with a
-explanatory message.  See GeoConvert for an example of how exceptions
-can be handled.
+GeoCoords all check their arguments and throw std::out_of_range
+exceptions with a explanatory message.  See GeoConvert.cpp for an
+example of how exceptions can be handled.
 
 <center>
 Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
@@ -213,7 +241,7 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 \page transversemercator Transverse Mercator Projection
 
 <center>
-Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
+Back to \ref organization.  Forward to \ref utilities.  Up to \ref contents.
 </center>
 
 \b NOTE: The figures in this section are relatively small in order to
@@ -468,7 +496,7 @@ to placing mirrors on the lines segments
  - \e x = 0, 0 <= \e y <= 1
  - 0 <= \e x <= 1.71, \e y = 0
  - \e x = 1.71, \e y <= 0
- 
+
 In order to understand the projection better, it is instructive to
 examine the Thompson projection in the extended domain.
 <center>
@@ -598,6 +626,11 @@ increased by about the same factor.  If necessary, this problem could be
 avoided by reformulating the Thompson projection to place the origin at
 the South pole.
 
+If GeographicLib::TransverseMercatorExact is modified to use long
+doubles (a 64-bit floating fraction) instead of of doubles (53-bit
+floating fraction) then the error in the position is about 4 pm, for
+latitude >= -15<sup>o</sup>.
+
 Errors in GeographicLib::TransverseMercator.  For both Forward and
 Reverse projections with easting |\e x| <= 4200 km (approximately within
 35<sup>o</sup> of the central meridian) using the 6th-order series
@@ -612,10 +645,14 @@ restrict |\e x| <= 3400 km (approximately within 29<sup>o</sup> of the
 central meridian), we get a tighter bound on the convergence
  - error in convergence, \e d(\e gamma) < 2e-15" + 5 nm . grad(\e gamma)
  .
-Further from the central meridian, the errors grow rapidly.  For |\e x| =
-10700 km (approx 68<sup>o</sup> from the central median), the error in
+Further from the central meridian, the errors grow rapidly.  For |\e x|
+= 10700 km (approx 68<sup>o</sup> from the central median), the error in
 position is about 1 mm.  When used in the UTM system, \e x is typically
-restricted to |\e x| <= 500 km.
+restricted to |\e x| <= 500 km.  Within |\e x| <= 500 km, the errors
+using the 6th-order series are dominated by round-off rather than the
+number of terms.  If GeographicLib::TransverseMercator is modified to
+use long double instead of double, the error in the position within the
+the UTM region is about 4 pm.
 
 If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
 to give the 4th-order approximation, then the error is about 210 nm
@@ -885,21 +922,237 @@ distribution).  To run, start Maxima and enter
 Further instructions are included at the top of the file.
 
 <center>
-Back to \ref organization.  Forward to \ref old.  Up to \ref contents.
+Back to \ref organization.  Forward to \ref utilities.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page utilities Utility Programs
+
+<center>
+Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
+</center>
+
+\section geoconvert GeoConvert
+
+GeoConvert is a command line utility for geographic coordinate
+conversions via GeographicLib::GeoCoords.
+
+Examples:
+ - echo 33.3 44.4 | ./GeoConvert -u\n=> 38N 444141 368470
+ - echo 33.3 44.4 | ./GeoConvert -m -p -3\n=> 38SMB4484
+
+Compile with "make GeoConvert" or with
+
+g++ -g -O3 -I.. -o GeoConvert GeoConvert.cpp GeoCoords.cpp MGRS.cpp
+UTMUPS.cpp DMS.cpp Constants.cpp TransverseMercator.cpp
+PolarStereographic.cpp
+
+Here is the usage (obtained from "GeoConvert -h")
+\verbatim
+Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]
+
+Convert geographic coordinates to
+
+    -g latitude and longitude (decimal degrees), default output
+    -d latitude and longitude (degrees mins secs)
+    -u UTM or UPS
+    -m MGRS
+    -c meridian convergence and scale
+
+Geographic coordinates are given on standard input as:
+
+Latitude and longitude (decimal degrees or degrees minutes seconds).  d,
+', and " are used to denote degrees, minutes, and seconds, with the least
+significant designator optional.  Latitude is given first unless a
+hemisphere is specified, e.g., the following are all equivalent
+
+    33.3 44.4
+    E44.4 N33.3
+    33d18'N 44d24'E
+    44d24 33d18N
+
+UTM or UPS given as zone+hemisphere easting northing or easting northing
+zone+hemisphere.  The zone is absent for a UPS specification.  E.g.,
+
+    38N 444140.54 3684706.36
+    444140.54 3684706.36 38N
+    S 2173854.98 2985980.58
+    2173854.98 2985980.58 S
+
+MRGS is used to specify the center of a grid square, e.g.,
+
+    38SMB4484
+    38SMB44140847064
+
+-p prec (default 0) sets the precision relative to 1m.  This gives the
+number of digits after the decimal point for UTM/UPS.  The number of digits
+per coordinate for MGRS is 5 + prec.  For decimal degrees, the number of
+digits after the decimal point is 5 + prec.  For DMS (degree, minute,
+seconds) output, the number of digits after the decimal point in the
+seconds components is 1 + prec; if this is negative then use minutes (prec
+= -2 or -3) or degrees (prec <= -4) as the least significant component.
+Print convergence, resp. scale, with 5 + prec, resp. 7 + prec, digits after
+the decimal point.  The minimum value of prec is -5 and the maximum is 9
+for UTM/UPS, 9 for decimal degrees, 10 for DMS, 6 for MGRS, and 8 for
+convergence and scale.
+
+MGRS coordinates are given by truncating (instead of rounding) the
+coordinates to the requested precision.  For example is prec = -3, the
+result is the 1km square enclosing the position.
+
+Convergence is the bearing of grid north given as degrees clockwise from
+true north.
+
+UTM/UPS and MGRS are given in zone of the input if applicable, otherwise in
+the standard zone.
+
+-z zone sets the zone for output.  Use zone = 0 to specify UPS.
+
+-s uses the standard zone
+
+For example, the point
+
+    79.9S 6.1E
+
+corresponds to possible MGRS coordinates
+
+    32CMS4324728161 (standard UTM zone = 32)
+    31CEM6066227959 (neighboring UTM zone = 31)
+      BBZ1945517770 (neighboring UPS zone)
+
+then
+    echo 79.9S 6.1E      | GeoConvert -p -3 -m       ==> 32CMS4328
+    echo 31CEM6066227959 | GeoConvert -p -3 -m       ==> 31CEM6027
+    echo 31CEM6066227959 | GeoConvert -p -3 -m -s    ==> 32CMS4328
+    echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917
+
+-h prints this help
+\endverbatim
+
+\section transversemercatortest TransverseMercatorTest
+
+TransverseMercatorTest is a command line utility for testing
+GeographicLib::TransverseMercatorExact and
+GeographicLib::TransverseMercator.
+
+Examples:
+ - echo 0 90 | ./TransverseMercatorTest\n=>
+   0 90 25953592.84 9997964.94 90 18.40
+ - echo 260e5 100e5 | ./TransverseMercatorTest -r\n=>
+   -0.02 90.00 26000000 10000000 90.01 18.47
+
+Compile with "make TransverseMercatorTest" or with
+
+g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp
+TransverseMercatorExact.cpp Constants.cpp EllipticFunction.cpp
+TransverseMercator.cpp
+
+Note that, unlike \ref geoconvert, TransverseMercatorTest has no
+facility for dealing with angles in degrees, minutes, and seconds, and
+no ability to change the precision of the output.
+
+Here is the usage (obtained from "TranverseMercatorTest -h")
+\verbatim
+TransverseMercatorTest [-r] [-t|-s]
+
+Convert between geographic coordinates and transverse Mercator coordinates.
+
+Read lines with latitude and longitude (or easting and northing if -r is
+specified) from standard input and print latitude, longitude, easting,
+northing, convergence, and scale.  Units are degrees and meters.
+
+By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM
+central scale, and false easting and false northing are zero.
+
+If -r is given, the reverse projection is performed (the inputs are easting
+and northing).
+
+If -s is given, the sixth-order Krueger series approximation to the
+transverse Mercator projection is used instead of the exact projection.
+
+If -t is specified, an ellipsoid of eccentricity 0.1 is used, central scale
+= 1, 1/4 meridian distance = 1.  In addition, the cut in the exact
+transverse Mercator projection at northing = 0 is removed.  The domain of
+latitude (lat) and longitude (lon) is the union of
+    lat in [0, 90]  and lon in [0, 90]
+    lat in (-90, 0] and lon in [81, 90]
+The domain of easting (x) and northing (x) is the union of
+    x in [0, inf)       and y in [0, 1]
+    x in [1.71..., inf) and y in (-inf, 0]
+
+-s and -t are mutually exclusive (the last flag specified is the operative
+one).
+
+-h prints this help
+\endverbatim
+
+\section ecefconvert ECEFConvert
+
+ECEFConvert is a command line utility for geodetic to cartesian
+coordinate conversions via GeographicLib::ECEF and
+GeographicLib::LocalCartesian.
+
+Examples:
+ - echo 33.3 44.4 6000 | ./ECEFConvert\n=>
+   3816209.60 3737108.55 3485109.57
+ - echo 33.3 44.4 6000 | ./ECEFConvert -l 33 44\n=>
+   37288.97 33374.29 5803.64
+ - echo 30000 30000 0 | ./ECEFConvert -r\n=>
+   6.483 45 -6335709.73
+
+Compile with "make ECEFConvert" or with
+
+g++ -g -O3 -I.. -o ECEFConvert ECEFConvert.cpp ECEF.cpp
+LocalCartesian.cpp Constants.cpp
+
+Note that, unlike \ref geoconvert, ECEFConvert has no
+facility for dealing with angles in degrees, minutes, and seconds, and
+no ability to change the precision of the output.
+
+Here is the usage (obtained from "ECEFConvert -h")
+\verbatim
+Usage: ECEFConvert [-r] [-l lat0 lon0] [-h]
+
+Convert geodetic coordinates to either earth centered earth fixed (ECEF) or
+local cartesian coordinates.  By default conversion is to ECEF coordinates.
+Specifying -l lat0 lon0 causes a local coordinate system to be used with
+the origin at latitude = lat0, longitude = lon0, height = 0, z normal to
+the ellipsoid and y due north.
+
+Geodetic coordinates are provided on standard input as a set of lines
+containing (blank separated) latitude, longitude (decimal degrees), and
+height (meters).  For each set of geodetic coordinates, the corresponding
+cartesian coordinates x, y, z (meters) are printed on standard output.
+
+If -r is given the reverse transformation is performed.
+
+-h prints this help
+\endverbatim
+
+<center>
+Back to \ref  transversemercator.  Forward to \ref old.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page old Old Versions
 
 <center>
-Back to \ref transversemercator.  Up to \ref contents.
+Back to \ref utilities.  Up to \ref contents.
 </center>
 
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-01</a>
-   (current)
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-02
+   (current)</a>
+  - Fix documentation of constructors (flattening -> inverse
+    flattening).
+  - Use std versions of math functions.
+  - Add GeographicLib::ECEF and GeographicLib::LocalCartesian classes
+    and \ref ecefconvert utility.
+  - Gather the documentation on the utility programs onto one page.
+
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-01.tgz">2009-01</a>
     - First proper release of library
     - More robust GeographicLib::TransverseMercatorExact
       - Introduce \e extendp version of constructor
@@ -911,11 +1164,11 @@ list of changes.
       - Improved method of computing scale and convergence
     - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
 
- -  <a href="http://charles.karney.info/geographic-2008/00README.txt">2008-09</a>
+ - 2008-09
     - Ad hoc posting of information on the transverse Mercator
       projection
 
 <center>
-Back to \ref transversemercator.  Up to \ref contents.
+Back to \ref utilities.  Up to \ref contents.
 </center>
 **********************************************************************/

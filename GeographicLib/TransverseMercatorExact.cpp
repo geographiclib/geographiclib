@@ -43,25 +43,22 @@
 #include <algorithm>
 
 namespace {
-  char RCSID[] = "$Id: TransverseMercatorExact.cpp 6502 2009-01-11 21:48:22Z ckarney $";
+  char RCSID[] = "$Id: TransverseMercatorExact.cpp 6520 2009-01-22 20:59:05Z ckarney $";
   char RCSID_H[] = TRANSVERSEMERCATOREXACT_HPP;
 }
 
-#if defined(_MSC_VER)
-#define hypot _hypot
-#endif
-
 namespace GeographicLib {
 
-  const double TransverseMercatorExact::tol =
-    std::numeric_limits<double>::epsilon();
+  using namespace std;
+
+  const double TransverseMercatorExact::tol = numeric_limits<double>::epsilon();
   const double TransverseMercatorExact::tol1 = 0.1 * sqrt(tol);
   const double TransverseMercatorExact::tol2 = 0.1 * tol;
-  const double TransverseMercatorExact::taytol = std::pow(tol, 0.6);
+  const double TransverseMercatorExact::taytol = pow(tol, 0.6);
       // Overflow value for asinh(tan(pi/2)) etc.
   const double TransverseMercatorExact::ahypover =
-    double(std::numeric_limits<double>::digits)
-    /log(double(std::numeric_limits<double>::radix)) + 2;
+    (double)(numeric_limits<double>::digits)
+    /log((double)(numeric_limits<double>::radix)) + 2;
 
   TransverseMercatorExact::TransverseMercatorExact(double a, double invf,
 						   double k0, bool extendp)
@@ -86,7 +83,7 @@ namespace GeographicLib {
     // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
     // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
     // sign(phi)
-    return asinh(s / std::max(cos(phi), 0.1 * tol)) - _e * atanh(_e * s);
+    return asinh(s / max(cos(phi), 0.1 * tol)) - _e * atanh(_e * s);
   }
 
   double TransverseMercatorExact::psiinv(double psi) const {
@@ -103,7 +100,7 @@ namespace GeographicLib {
 	t = tanh(q),
 	dq = -(q - _e * atanh(_e * t) - psi) * (1 - _mu * sq(t)) / _mv;
       q += dq;
-      if (std::abs(dq) < tol1)
+      if (abs(dq) < tol1)
 	break;
     }
     return atan(sinh(q));
@@ -125,7 +122,8 @@ namespace GeographicLib {
       (d1 ? asinh(snu * dnv / d1) : snu < 0 ? -ahypover : ahypover)
       - (d2 ? _e * asinh(_e * snu / d2) : snu < 0 ? -ahypover : ahypover);
     lam = (d1 != 0 && d2 != 0) ?
-      atan2(dnu * snv, cnu * cnv) - _e * atan2(_e * cnu * snv, dnu * cnv) : 0;
+      atan2(dnu * snv, cnu * cnv) - _e * atan2(_e * cnu * snv, dnu * cnv) :
+      0;
   }
 
   void TransverseMercatorExact::dwdzeta(double u,
@@ -187,7 +185,7 @@ namespace GeographicLib {
 	ang = atan2(dlam-psi, psi+dlam) - 0.75 * Constants::pi;
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol;
-      rad = std::pow(3 / (_mv * _e) * rad, 1/3.0);
+      rad = pow(3 / (_mv * _e) * rad, 1/3.0);
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();
@@ -209,7 +207,7 @@ namespace GeographicLib {
 					 double& u, double& v) const {
     if (zetainv0(psi, lam, u, v))
       return;
-    double stol2 = tol2 / sq((std::max)(psi, 1.0));
+    double stol2 = tol2 / sq(max(psi, 1.0));
     // min iterations = 2, max iterations = 6; mean = 4.0
     for (int i = 0, trip = 0; i < numit; ++i) {
       double snu, cnu, dnu, snv, cnv, dnv;
@@ -298,7 +296,7 @@ namespace GeographicLib {
 	ang = atan2(deta-xi, xi+deta) - 0.75 * Constants::pi;
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol;
-      rad = std::pow(3 / _mv * rad, 1/3.0);
+      rad = pow(3 / _mv * rad, 1/3.0);
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();

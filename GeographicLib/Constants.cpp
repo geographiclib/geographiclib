@@ -11,18 +11,20 @@
 #include <cmath>
 
 namespace {
-  char RCSID[] = "$Id: Constants.cpp 6497 2009-01-10 12:14:10Z ckarney $";
+  char RCSID[] = "$Id: Constants.cpp 6520 2009-01-22 20:59:05Z ckarney $";
   char RCSID_H[] = CONSTANTS_HPP;
 }
 
 namespace GeographicLib {
+
+  using namespace std;
 
 #if defined(M_PI)
   const double Constants::pi = M_PI;
 #else
   const double Constants::pi = atan2(0.0, -1.0);
 #endif
-  const double Constants::degree = Constants::pi / 180;
+  const double Constants::degree = pi / 180;
 
   // All these constants are exact
 

@@ -8,13 +8,12 @@
  **********************************************************************/
 
 #ifndef GEOCOORDS_HPP
-#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6497 2009-01-10 12:14:10Z ckarney $"
+#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6520 2009-01-22 20:59:05Z ckarney $"
 
 #include <cmath>
 #include <string>
 #include <cstdlib>
 #include "GeographicLib/UTMUPS.hpp"
-
 
 namespace GeographicLib {
 
@@ -61,7 +60,18 @@ namespace GeographicLib {
     void UTMUPSString(int zone, double easting, double northing,
 		   int prec, std::string& utm) const;
     void FixHemisphere();
+#if defined(_MSC_VER)
+    static inline int isnan(double x) { return 0; }
+    static inline int isinf(double x) { return 0; }
+#else
+    static inline int isnan(double x) { return std::isnan(x); }
+    static inline int isinf(double x) { return std::isinf(x); }
+#endif
   public:
+    /**
+     * The default contructor is equivalent to \e latitude = 90<sup>o</sup>, \e
+     * longitude = 0<sup>o</sup>.
+     **********************************************************************/
     GeoCoords()
       // This is the N pole
       : _lat(90.0)
@@ -116,10 +126,10 @@ namespace GeographicLib {
      *
      * UTM/UPS parsing.  For UTM zones (-80 <= Lat <= 84), the zone designator
      * is made up of a zone number (for 1 to 60) and a hemisphere letter (N or
-     * S), e.g., 38N.  The latitude zone designer ([C-M] in the southern
-     * hemispher and [N-X] in the northern) should NOT be used.  (This is part
-     * of the MGRS coordinate.)  The zone designator for the poles (where UPS
-     * is employed) is a hemisphere letter by itself, i.e., N or S.
+     * S), e.g., 38N.  The latitude zone designer ([C&ndash;M] in the southern
+     * hemisphere and [N&ndash;X] in the northern) should NOT be used.  (This
+     * is part of the MGRS coordinate.)  The zone designator for the poles
+     * (where UPS is employed) is a hemisphere letter by itself, i.e., N or S.
      *
      * MGRS parsing interprets the grid references as square area at the
      * specified precision (1m, 10m, 100m, etc.).  The center of this square is
@@ -148,7 +158,7 @@ namespace GeographicLib {
     }
     /**
      * Reset the location as a 1-element, 2-element, or 3-element string.  See
-     * GeoCoords(const std::string& s).
+     * GeoCoords(const string& s).
      **********************************************************************/
     void Reset(const std::string& s);
     /**

@@ -43,18 +43,16 @@
 #include <limits>
 
 namespace {
-  char RCSID[] = "$Id: TransverseMercator.cpp 6517 2009-01-13 13:37:32Z ckarney $";
+  char RCSID[] = "$Id: TransverseMercator.cpp 6520 2009-01-22 20:59:05Z ckarney $";
   char RCSID_H[] = TRANSVERSEMERCATOR_HPP;
 }
 
-#if defined(_MSC_VER)
-#define hypot _hypot
-#endif
-
 namespace GeographicLib {
 
+  using namespace std;
+
   const double TransverseMercator::tol =
-    0.1*sqrt(std::numeric_limits<double>::epsilon());
+    0.1*sqrt(numeric_limits<double>::epsilon());
 
   TransverseMercator::TransverseMercator(double a, double invf, double k0)
     : _a(a)
@@ -242,7 +240,7 @@ namespace GeographicLib {
       etap = 0;
       gamma = lam;
       // See, for example, Lee (1976), p 100.
-      k = sqrt( std::pow(1 + _e, 1 + _e) * std::pow(1 - _e, 1 - _e) );
+      k = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) );
     }
     // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse mercator
     // (for eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
@@ -411,7 +409,7 @@ namespace GeographicLib {
 	  t = tanh(qp),
 	  dqp = -(qp - _e * atanh(_e * t) - q) * (1 - _e2 * sq(t)) / _e2m;
 	qp += dqp;
-	if (std::abs(dqp) < tol)
+	if (abs(dqp) < tol)
 	  break;
       }
       phi = atan(sinh(qp));
@@ -421,7 +419,7 @@ namespace GeographicLib {
     } else {
       phi = Constants::pi/2;
       lam = 0;
-      k *= sqrt( std::pow(1 + _e, 1 + _e) * std::pow(1 - _e, 1 - _e) );
+      k *= sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) );
     }
     lat = phi / Constants::degree * xisign;
     lon = lam / Constants::degree;

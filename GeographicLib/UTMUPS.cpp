@@ -16,11 +16,13 @@
 #include "GeographicLib/TransverseMercator.hpp"
 
 namespace {
-  char RCSID[] = "$Id: UTMUPS.cpp 6497 2009-01-10 12:14:10Z ckarney $";
+  char RCSID[] = "$Id: UTMUPS.cpp 6520 2009-01-22 20:59:05Z ckarney $";
   char RCSID_H[] = UTMUPS_HPP;
 }
 
 namespace GeographicLib {
+
+  using namespace std;
 
   const double UTMUPS::falseeasting[4] =
     { MGRS::upseasting * MGRS::tile, MGRS::upseasting * MGRS::tile,
@@ -71,25 +73,25 @@ namespace GeographicLib {
     northp = lat >= 0;
     zone = setzone >= 0 ? setzone : StandardZone(lat, lon);
     if (setzone > 60)
-      throw std::out_of_range("Illegal UTM zone requested " + setzone);
+      throw out_of_range("Illegal UTM zone requested " + setzone);
     double x1, y1;
     bool utmp = zone > 0;
     if (utmp) {
       double
 	lon0 = CentralMeridian(zone),
 	dlon = lon - lon0;
-      dlon = std::abs(dlon - 360 * floor((dlon + 180)/360));
+      dlon = abs(dlon - 360 * floor((dlon + 180)/360));
       if (dlon > 60)
 	// Check isn't really necessary because CheckCoords catches this case.
 	// But this allows a more meaningful error message to be given.
-	throw std::out_of_range("Longitude " + str(lon)
+	throw out_of_range("Longitude " + str(lon)
 				+ "d more than 60d from center of UTM zone "
 				+ str(zone));
       TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma, k);
     } else {
-      if (std::abs(lat) < 70)
+      if (abs(lat) < 70)
 	// Check isn't really necessary ... (see above).
-	throw std::out_of_range("Latitude " + str(lat)
+	throw out_of_range("Latitude " + str(lat)
 				+ "d more than 20d from "
 				+ (northp ? "N" : "S") + " pole");
       PolarStereographic::UPS.Forward(northp, lat, lon, x1, y1, gamma, k);
@@ -98,7 +100,7 @@ namespace GeographicLib {
     x = x1 + falseeasting[ind];
     y = y1 + falsenorthing[ind];
     if (! CheckCoords(zone > 0, northp, x, y, false) )
-      throw std::out_of_range("Latitude " + str(lat) +
+      throw out_of_range("Latitude " + str(lat) +
 			      ", longitude " + str(lon) +
 			      " out of legal range for " +
 			      (utmp ? "UTM zone " + str(zone) : "UPS"));
@@ -107,7 +109,7 @@ namespace GeographicLib {
   void UTMUPS::Reverse(int zone, bool northp, double x, double y,
 		       double& lat, double& lon, double& gamma, double& k) {
     if (! (zone >= 0 && zone <= 60))
-      throw std::out_of_range("Illegal UTM zone " + str(zone));
+      throw out_of_range("Illegal UTM zone " + str(zone));
     CheckCoords(zone > 0, northp, x, y);
     bool utmp = zone > 0;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
@@ -122,10 +124,10 @@ namespace GeographicLib {
 
   void UTMUPS::CheckLatLon(double lat, double lon) {
     if (! (lat >= -90 && lat <= 90))
-      throw std::out_of_range("Latitude " + str(lat) +
+      throw out_of_range("Latitude " + str(lat) +
 			      "d not in [-90d, 90d]");
     if (! (lon >= -180 && lon <= 360))
-      throw std::out_of_range("Latitude " + str(lon) +
+      throw out_of_range("Latitude " + str(lon) +
 			      "d not in [-180d, 360d]");
     }
 
@@ -137,7 +139,7 @@ namespace GeographicLib {
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
     if (! (x >= mineasting[ind] - slop && x <= maxeasting[ind] + slop) ) {
       if (!throwp) return false;
-      throw std::out_of_range("Easting " + str(x/1000)
+      throw out_of_range("Easting " + str(x/1000)
 			      + "km not in "
 			      + (utmp ? "UTM" : "UPS") + " range for "
 			      + (northp ? "N" : "S" )
@@ -147,7 +149,7 @@ namespace GeographicLib {
     }
     if (! (y >= minnorthing[ind] - slop && y <= maxnorthing[ind] + slop) ) {
       if (!throwp) return false;
-      throw std::out_of_range("Northing " + str(y/1000)
+      throw out_of_range("Northing " + str(y/1000)
 			      + "km not in "
 			      + (utmp ? "UTM" : "UPS") + " range for "
 			      + (northp ? "N" : "S" )

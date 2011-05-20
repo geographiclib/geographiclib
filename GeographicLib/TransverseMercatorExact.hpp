@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(TRANSVERSEMERCATOREXACT_HPP)
-#define TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6509 2009-01-12 11:41:12Z ckarney $"
+#define TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6524 2009-01-27 15:25:23Z ckarney $"
 
 #include <cmath>
 #include "GeographicLib/EllipticFunction.hpp"
@@ -20,6 +20,8 @@ namespace GeographicLib {
    *
    * Implementation of the Transverse Mercator Projection given in
    *  - L. P. Lee,
+   *    <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62"> Conformal
+   *    Projections Based On Jacobian Elliptic Functions</a>, Part V of
    *    Conformal Projections Based on Elliptic Functions,
    *    (B. V. Gutsell, Toronto, 1976), 128pp.,
    *    ISBN: 0919870163
@@ -34,7 +36,9 @@ namespace GeographicLib {
    * 7e-12%%.  (See \ref errors for the weasel words.)  The method is "exact"
    * in the sense that the errors are close to the round-off limit and that no
    * changes are needed in the algorithms for them to be used with reals of a
-   * higher precision (e.g., long double).
+   * higher precision.  Thus the errors using long double (with a 64-bit
+   * fraction) are about 2000 times smaller than using double (with a 53-bit
+   * fraction).
    *
    * This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger
    * method, GeographicLib::TransverseMercator, taking about 11 us for a
@@ -56,6 +60,7 @@ namespace GeographicLib {
     const EllipticFunction _Eu, _Ev;
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.
     // For small arguments we would write
@@ -66,8 +71,16 @@ namespace GeographicLib {
     // The accuracy of asinh is also bad for large negative arguments.  This is
     // easy to fix in the definition of asinh.  Instead we call these functions
     // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) { return log(x + sqrt(1 + sq(x))); }
-    static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
+    static inline double asinh(double x) {
+      return std::log(x + std::sqrt(1 + sq(x)));
+    }
+    static inline double atanh(double x) {
+      return std::log((1 + x)/(1 - x))/2;
+    }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+    static inline double asinh(double x) { return ::asinh(x); }
+    static inline double atanh(double x) { return ::atanh(x); }
 #endif
     double psi(double phi) const;
     double psiinv(double psi) const;
@@ -101,19 +114,20 @@ namespace GeographicLib {
 
   public:
     /**
-     * Constructor for a ellipsoid radius \e a (meters), flattening \e f, and
-     * central scale factor \e k0.  The transverse Mercator projection has a
-     * branch point singularity at \e lat = 0 and \e lon - \e lon0 = 90 (1 - \e
-     * e) or (for TransverseMercatorExact::UTM) x = 18381 km , y = 0m.  The \e
-     * extendp argument governs where the branch cut is placed.  With \e
-     * extendp = false, the "standard" convention is followed, namely the cut
-     * is placed along x > 18381 km, y = 0m.  Forward can be called with any \e
-     * lat and \e lon then produces the transformation shown in Lee, Fig 46.
-     * Reverse analytically continues this in the +/- \e x direction.  As a
-     * consequence, Reverse may map multiple points to the same geographic
-     * location; for example, for TransverseMercatorExact::UTM, \e x =
-     * 22051449.037349 m, \e y = -7131237.022729 m and \e x = 29735142.378357 m
-     * , \e y = 4235043.607933 m both map to \e lat = -2 deg, \e lon = 88 deg.
+     * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
+     * invf, and central scale factor \e k0.  The transverse Mercator
+     * projection has a branch point singularity at \e lat = 0 and \e lon - \e
+     * lon0 = 90 (1 - \e e) or (for TransverseMercatorExact::UTM) x = 18381 km
+     * , y = 0m.  The \e extendp argument governs where the branch cut is
+     * placed.  With \e extendp = false, the "standard" convention is followed,
+     * namely the cut is placed along x > 18381 km, y = 0m.  Forward can be
+     * called with any \e lat and \e lon then produces the transformation shown
+     * in Lee, Fig 46.  Reverse analytically continues this in the +/- \e x
+     * direction.  As a consequence, Reverse may map multiple points to the
+     * same geographic location; for example, for TransverseMercatorExact::UTM,
+     * \e x = 22051449.037349 m, \e y = -7131237.022729 m and \e x =
+     * 29735142.378357 m, \e y = 4235043.607933 m both map to \e lat = -2 deg,
+     * \e lon = 88 deg.
      *
      * With \e extendp = true, the branch cut is moved to the lower left
      * quadrant.  The various symmetries of the transverse Mercator projection
@@ -131,7 +145,7 @@ namespace GeographicLib {
      * See \ref extend for a full discussion of the treatment of the branch
      * cut.
      **********************************************************************/
-    TransverseMercatorExact(double a, double f, double k0,
+    TransverseMercatorExact(double a, double invf, double k0,
 			    bool extendp = false);
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to

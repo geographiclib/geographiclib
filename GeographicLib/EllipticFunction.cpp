@@ -14,16 +14,18 @@
 #include <algorithm>
 
 namespace {
-  char RCSID[] = "$Id: EllipticFunction.cpp 6497 2009-01-10 12:14:10Z ckarney $";
+  char RCSID[] = "$Id: EllipticFunction.cpp 6524 2009-01-27 15:25:23Z ckarney $";
   char RCSID_H[] = ELLIPTICFUNCTION_HPP;
 }
 
 namespace GeographicLib {
 
+  using namespace std;
+
   const double EllipticFunction::tol =
-    std::numeric_limits<double>::epsilon() * 0.01;
-  const double EllipticFunction::tolRF = std::pow(3 * tol, 1/6.0);
-  const double EllipticFunction::tolRD = std::pow(0.25 * tol, 1/6.0);
+    numeric_limits<double>::epsilon() * 0.01;
+  const double EllipticFunction::tolRF = pow(3 * tol, 1/6.0);
+  const double EllipticFunction::tolRD = pow(0.25 * tol, 1/6.0);
   const double EllipticFunction::tolRG0 = 2.7 * sqrt(tol);
   const double EllipticFunction::tolJAC = sqrt(tol);
   const double EllipticFunction::tolJAC1 = sqrt(6 * tol);
@@ -34,20 +36,19 @@ namespace GeographicLib {
    *   B. C. Carlson
    *   Computation of elliptic integrals
    *   Numerical Algorithms 10, 13-26 (1995)
-   *
    */
 
   double EllipticFunction::RF(double x, double y, double z) {
+    // Carlson, eqs 2.2 - 2.7
     double
       a0 = (x + y + z)/3,
       an = a0,
-      q = (std::max)((std::max)(std::abs(a0-x), std::abs(a0-y)),
-		     std::abs(a0-z)) / tolRF,
+      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRF,
       x0 = x,
       y0 = y,
       z0 = z,
       mul = 1;
-    while (q >= mul * std::abs(an)) {
+    while (q >= mul * abs(an)) {
       // Max 6 trips
       double ln = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
       an = (an + ln)/4;
@@ -67,19 +68,21 @@ namespace GeographicLib {
 
 
   double EllipticFunction::RD(double x, double y, double z) {
+    // Carlson, eqs 2.28 - 2.34
     double
       a0 = (x + y + 3 * z)/5,
       an = a0,
-      q = (std::max)((std::max)(std::abs(a0-x), std::abs(a0-y)),
-		     std::abs(a0-z)) / tolRD,
+      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRD,
       x0 = x,
       y0 = y,
       z0 = z,
       mul = 1,
       s = 0;
-    while (q >= mul * std::abs(an)) {
+    while (q >= mul * abs(an)) {
       // Max 7 trips
-      double ln = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
+      double ln = sqrt(x0)*sqrt(y0) +
+	sqrt(y0)*sqrt(z0) +
+	sqrt(z0)*sqrt(x0);
       s += 1/(mul * sqrt(z0) * (z0 + ln ));
       an = (an + ln)/4;
       x0 = (x0 + ln)/4;
@@ -101,6 +104,7 @@ namespace GeographicLib {
   }
 
   double EllipticFunction::RG0(double x, double y) {
+    // Carlson, eqs 2.36 - 2.39
     double
       x0 = sqrt(x),
       y0 = sqrt(y),
@@ -108,7 +112,7 @@ namespace GeographicLib {
       yn = y0,
       s = 0,
       mul = 0.25;
-    while (std::abs(xn-yn) >= tolRG0 * std::abs(xn)) {
+    while (abs(xn-yn) >= tolRG0 * abs(xn)) {
       // Max 4 trips
       double t = (xn + yn) /2;
       yn = sqrt(xn * yn);
@@ -140,17 +144,17 @@ namespace GeographicLib {
   }
 
   /*
-   *
    * Implementation of methods given in
    *
-   *   Roland Bulirsch
+   *   R. Bulirsch
    *   Numerical Calculation of Elliptic Integrals and Elliptic Functions
    *   Numericshe Mathematik 7, 78-90 (1965)
-   *
    */
 
   void EllipticFunction::sncndn(double x,
 				double& sn, double& cn, double& dn) const {
+    // Bulirsch's sncndn routine, p 89.
+    //
     // Assume _m1 is in [0, 1].  See Bulirsch article for code to treat
     // negative _m1.
     if (_m1 != 0) {
@@ -163,7 +167,7 @@ namespace GeographicLib {
 	m[l] = a;
 	n[l] = mc = sqrt(mc);
 	c = (a + mc) / 2;
-	if (std::abs(a - mc) <= tolJAC * a) {
+	if (abs(a - mc) <= tolJAC * a) {
 	  ++l;
 	  break;
 	}
@@ -196,7 +200,7 @@ namespace GeographicLib {
 
   double EllipticFunction::E(double sn, double cn, double dn) const {
     double ei;
-    if (std::abs(sn) > tolJAC1) {
+    if (abs(sn) > tolJAC1) {
       double
 	s = 1 / sn,
 	c = cn * s,
@@ -213,7 +217,7 @@ namespace GeographicLib {
       //      - (m^2+2*m-3)*sn^5/40
       //      - (m^3+m^2+3*m-5)*sn^7/112
       //    approx sn,  for sn < sqrt(6 * eps)
-      ei = std::abs(sn);
+      ei = abs(sn);
     // Enforce usual trig-like symmetries
     if (cn < 0) {
       ei = 2 * E() - ei;

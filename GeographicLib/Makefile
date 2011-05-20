@@ -1,39 +1,40 @@
-# $Id: Makefile 6516 2009-01-13 13:28:44Z ckarney $
-TARGET = GeoConvert TransverseMercatorTest
+# $Id: Makefile 6526 2009-01-27 21:51:07Z ckarney $
+TARGET = GeoConvert TransverseMercatorTest ECEFConvert
 all: $(TARGET)
 
 CC = g++
 CPPFLAGS = -I..
-CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
-
+CXXFLAGS = -g -Wall -pedantic -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 
 HEADERS = Constants.hpp DMS.hpp EllipticFunction.hpp GeoCoords.hpp MGRS.hpp \
 	PolarStereographic.hpp TransverseMercator.hpp \
-	TransverseMercatorExact.hpp UTMUPS.hpp
+	TransverseMercatorExact.hpp UTMUPS.hpp ECEF.hpp LocalCartesian.hpp
 
-SOURCES = Constants.cpp DMS.cpp EllipticFunction.cpp GeoCoords.cpp MGRS.cpp \
-	PolarStereographic.cpp TransverseMercator.cpp \
-	TransverseMercatorExact.cpp UTMUPS.cpp \
-	GeoConvert.cpp TransverseMercatorTest.cpp
+SOURCES = $(patsubst %.hpp,%.cpp,$(HEADERS)) \
+	GeoConvert.cpp TransverseMercatorTest.cpp ECEFConvert.cpp
 
 GeoConvert: GeoConvert.o GeoCoords.o MGRS.o UTMUPS.o DMS.o Constants.o \
 	TransverseMercator.o PolarStereographic.o
 TransverseMercatorTest: TransverseMercatorTest.o TransverseMercatorExact.o \
 	Constants.o EllipticFunction.o TransverseMercator.o
+ECEFConvert: ECEFConvert.o ECEF.o LocalCartesian.o Constants.o
 
 Constants.o: Constants.hpp
 DMS.o: DMS.hpp
 EllipticFunction.o: EllipticFunction.hpp Constants.hpp
-GeoConvert.o: GeoCoords.hpp UTMUPS.hpp
 GeoCoords.o: GeoCoords.hpp UTMUPS.hpp MGRS.hpp DMS.hpp
 MGRS.o: MGRS.hpp UTMUPS.hpp
 PolarStereographic.o: PolarStereographic.hpp Constants.hpp
 TransverseMercator.o: TransverseMercator.hpp Constants.hpp
 TransverseMercatorExact.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
 	Constants.hpp
-TransverseMercatorTest.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
-	Constants.hpp TransverseMercator.hpp
 UTMUPS.o: UTMUPS.hpp MGRS.hpp PolarStereographic.hpp TransverseMercator.hpp
+ECEF.o: ECEF.hpp Constants.hpp
+LocalCartesian.o: LocalCartesian.hpp ECEF.hpp Constants.hpp
+ECEFConvert.o: ECEF.hpp LocalCartesian.hpp Constants.hpp
+GeoConvert.o: GeoCoords.hpp UTMUPS.hpp
+TransverseMercatorTest.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
+	TransverseMercator.hpp Constants.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \

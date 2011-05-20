@@ -7,7 +7,7 @@
  **********************************************************************/
 
 #if !defined(TRANSVERSEMERCATOR_HPP)
-#define TRANSVERSEMERCATOR_HPP "$Id: TransverseMercator.hpp 6512 2009-01-12 18:56:20Z ckarney $"
+#define TRANSVERSEMERCATOR_HPP "$Id: TransverseMercator.hpp 6524 2009-01-27 15:25:23Z ckarney $"
 
 #include <cmath>
 
@@ -25,11 +25,12 @@ namespace GeographicLib {
    * \brief Transverse Mercator Projection
    *
    * This uses Kr&uuml;ger's method which evaluates the projection and its
-   * inverse in terms of a series.  See L. Kr&uuml;ger, <a
-   * href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
-   * Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
-   * ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
-   * Series 52, 172 pp. (1912).
+   * inverse in terms of a series.  See
+   *  - L. Kr&uuml;ger,
+   *    <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   *    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the
+   *    ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New
+   *    Series 52, 172 pp. (1912).
    *
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum
    * errors is 5 nm (ground distance) for all positions within 35 degrees of
@@ -55,6 +56,7 @@ namespace GeographicLib {
     double _a1, _b1, _h[maxpow], _hp[maxpow];
     static inline double sq(double x) { return x * x; }
 #if defined(_MSC_VER)
+    static inline double hypot(double x, double y) { return _hypot(x, y); }
     // These have poor relative accuracy near x = 0.  However, for mapping
     // applications, we only need good absolute accuracy.
     // For small arguments we would write
@@ -65,15 +67,23 @@ namespace GeographicLib {
     // The accuracy of asinh is also bad for large negative arguments.  This is
     // easy to fix in the definition of asinh.  Instead we call these functions
     // with positive arguments and enforce the correct parity separately.
-    static inline double asinh(double x) { return log(x + sqrt(1 + sq(x))); }
-    static inline double atanh(double x) { return log((1 + x)/(1 - x))/2; }
+    static inline double asinh(double x) {
+      return std::log(x + std::sqrt(1 + sq(x)));
+    }
+    static inline double atanh(double x) {
+      return std::log((1 + x)/(1 - x))/2;
+    }
+#else
+    static inline double hypot(double x, double y) { return ::hypot(x, y); }
+    static inline double asinh(double x) { return ::asinh(x); }
+    static inline double atanh(double x) { return ::atanh(x); }
 #endif
   public:
     /**
-     * Constructor for a ellipsoid radius \e a (meters), flattening \e f,
-     * and central scale factor \e k0.
+     * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
+     * invf, and central scale factor \e k0.
      **********************************************************************/
-    TransverseMercator(double a, double f, double k0);
+    TransverseMercator(double a, double invf, double k0);
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
      * transverse Mercator easting \e x (meters) and northing \e y (meters).
