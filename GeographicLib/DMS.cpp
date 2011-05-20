@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <iomanip>
 
-#define DMS_CPP "$Id: DMS.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+#define DMS_CPP "$Id: DMS.cpp 6599 2009-04-24 15:26:06Z ckarney $"
 
 RCSID_DECL(DMS_CPP)
 RCSID_DECL(DMS_HPP)
@@ -206,7 +206,7 @@ namespace GeographicLib {
       angle -= floor(angle/360) * 360;
     int sign = angle < 0 ? -1 : 1;
     angle *= sign;
-      
+
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
     double

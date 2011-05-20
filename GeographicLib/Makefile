@@ -1,4 +1,4 @@
-# $Id: Makefile 6593 2009-03-31 21:40:10Z ckarney $
+# $Id: Makefile 6602 2009-04-26 21:49:28Z ckarney $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -21,7 +21,7 @@ PREFIX = /usr/local
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic
+	LocalCartesian Geodesic AzimuthalEquidistant
 
 HEADERS = Constants.hpp $(patsubst %,%.hpp,$(MODULES))
 SOURCES = $(patsubst %,%.cpp,$(MODULES))

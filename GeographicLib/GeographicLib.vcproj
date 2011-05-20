@@ -147,10 +147,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="Constants.cpp"
-				>
-			</File>
-			<File
 				RelativePath="MGRS.cpp"
 				>
 			</File>
@@ -192,6 +188,10 @@
 			</File>
 			<File
 				RelativePath="Geodesic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="AzimuthalEquidistant.cpp"
 				>
 			</File>
 		</Filter>
@@ -246,6 +246,10 @@
 			</File>
 			<File
 				RelativePath="Geodesic.hpp"
+				>
+			</File>
+			<File
+				RelativePath="AzimuthalEquidistant.hpp"
 				>
 			</File>
 		</Filter>

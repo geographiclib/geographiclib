@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(LOCALCARTESIAN_HPP)
-#define LOCALCARTESIAN_HPP "$Id: LocalCartesian.hpp 6573 2009-03-06 20:33:50Z ckarney $"
+#define LOCALCARTESIAN_HPP "$Id: LocalCartesian.hpp 6602 2009-04-26 21:49:28Z ckarney $"
 
 #include "GeographicLib/Geocentric.hpp"
 
@@ -25,7 +25,7 @@ namespace GeographicLib {
    * north.  The plane \e z = - \e h0 is tangent to the ellipsoid.
    *
    * The conversions all take place via geocentric coordinates using a
-   * GeographicLib::GeoCentric object (by default
+   * GeographicLib::Geocentric object (by default
    * GeographicLib::Geocentric::WGS84).
    **********************************************************************/
 

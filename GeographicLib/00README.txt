@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6586 2009-03-31 00:24:54Z ckarney $
+# $Id: 00README.txt 6611 2009-05-01 12:51:44Z ckarney $
 
 A library for geographic projections.
 
@@ -25,6 +25,7 @@ Files
     Geocentric.[ch]pp -- geocentric coordinates
     LocalCartesian.[ch]pp -- local cartesian coordinates
     Geodesic.[ch]pp -- geodesic calculatiosn
+    AzimuthalEquidistant.[ch]pp -- azimuthal equidistant coordinates
 
     GeoConvert.cpp -- geographic conversion utility
     TransverseMercatorTest.cpp -- TM tester
@@ -52,7 +53,25 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-04 version of the library.
+This is the 2009-05 version of the library.
+
+Changes between 2009-05 and 2009-03 versions:
+
+  * Improvements to GeographicLib::Geodesic:
+    + more economical series expansions,
+    + return reduced length (as does the Geod utility),
+    + improved calculation of starting point for inverse method,
+    + use reduced length to give derivative for Newton's method.
+
+  * Add AzimuthalEquidistant class.
+
+  + Make GeographicLib::Geocentric, GeographicLib::TransverseMercator,
+    and GeographicLib::PolarStereographic classes work with prolate
+    ellipsoids.
+
+  * CartConvert checks its inputs more carefully.
+
+  * Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
 
 Changes between 2009-04 and 2009-03 versions:
 
@@ -73,11 +92,11 @@ Changes between 2009-04 and 2009-03 versions:
       method,
     + accept and return spherical arc lengths,
     + works with both oblate and prolate spheroids,
-    + add -a, -e, -b options to \ref geod utility.
+    + add -a, -e, -b options to the Geod utility.
 
 Changes between 2009-03 and 2009-02 versions:
 
-  * Add Geographic::Geodesic and the Geod utility.
+  * Add GeographicLib::Geodesic and the Geod utility.
 
   * Declare when no exceptions are thrown by functions.
 
@@ -87,8 +106,8 @@ Changes between 2009-03 and 2009-02 versions:
 
   * The makefile creates a library and includes an install target.
 
-  * Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
-    CartConvert.
+  * Rename GeographicLib::ECEF to GeographicLib::Geocentric, ECEFConvert
+    to CartConvert.
 
   * Use inline functions to define constant doubles in Constants.hpp.
 

@@ -12,7 +12,7 @@
 #include <cmath>
 #include <stdexcept>
 
-#define LOCALCARTESIAN_CPP "$Id: LocalCartesian.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+#define LOCALCARTESIAN_CPP "$Id: LocalCartesian.cpp 6599 2009-04-24 15:26:06Z ckarney $"
 
 RCSID_DECL(LOCALCARTESIAN_CPP)
 RCSID_DECL(LOCALCARTESIAN_HPP)
@@ -29,10 +29,10 @@ namespace GeographicLib {
     double
       phi = lat0 * Constants::degree(),
       sphi = sin(phi),
-      cphi = cos(phi),
+      cphi = abs(_lat0) == 90 ? 0 : cos(phi),
       lam = lon0 * Constants::degree(),
-      slam = sin(lam),
-      clam = cos(lam);
+      slam = _lon0 == -180 ? 0 : sin(lam),
+      clam = abs(_lon0) == 90 ? 0 : cos(lam);
     // Local x axis in geocentric coords
     _rxx = -slam; _rxy = clam; _rxz = 0;
     // Local y axis in geocentric coords
