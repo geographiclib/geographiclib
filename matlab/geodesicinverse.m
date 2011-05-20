@@ -21,6 +21,7 @@ function geodesic = geodesicinverse(latlong, a, r)
 %
 %   a = major radius (meters)
 %   r = reciprocal flattening (0 means a sphere)
+%   If a and r are omitted, the WGS84 values are used.
 %
 %   This is an interface to the GeographicLib C++ routine
 %       Geodesic::Inverse
@@ -34,4 +35,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: geodesicinverse.m 6927 2011-01-20 13:06:59Z karney $
+% $Id: 6a0cb2ef6e34d91834bf63f70d9c6c64c474bfdc $

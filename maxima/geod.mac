@@ -5,7 +5,7 @@ Compute the series expansions for the spheroidal geodesic problem.
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id: geod.mac 6976 2011-02-21 11:05:24Z karney $
+$Id: 06acafd2a814ed07108b45f3e4cc2fe566774113 $
 
 Reference:
 

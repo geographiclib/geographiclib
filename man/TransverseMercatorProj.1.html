@@ -1,0 +1,200 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">
+<title>TransverseMercatorProj -- perform transverse Mercator projection</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#extended_domain">EXTENDED DOMAIN</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#errors">ERRORS</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#history">HISTORY</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>TransverseMercatorProj -- perform transverse Mercator projection</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>TransverseMercatorProj</strong> [ <strong>-s</strong> | <strong>-t</strong> ]
+[ <strong>-l</strong> <em>lon0</em> ] [ <strong>-k</strong> <em>k1</em> ] [ <strong>-r</strong> ]
+[ <strong>-e</strong> <em>a</em> <em>r</em> ] [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
+[ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
+[ <strong>--output-file</strong> <em>outfile</em> ]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Perform the transverse Mercator projections.  Convert geodetic
+coordinates to transverse Mercator coordinates.  The central meridian is
+given by <em>lon0</em>.  The longitude of origin is the equator.  The scale on
+the central meridian is <em>k0</em>.  By default an implementation of the
+exact transverse Mercator projection is used.</p>
+<p>Geodetic coordinates are provided on standard input as a set of lines
+containing (blank separated) <em>latitude</em> and <em>longitude</em> (decimal
+degrees or degrees, minutes, seconds).  For each set of geodetic
+coordinates, the corresponding projected easting, <em>x</em>, and northing,
+<em>y</em>, (meters) are printed on standard output together with the meridian
+convergence <em>gamma</em> (degrees) and scale <em>k</em>.  The meridian convergence
+is the bearing of the <em>y</em> axis measured clockwise from true north.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="s" class="item"><strong>-s</strong></a></strong></dt>
+
+<dd>
+<p>use the sixth-order Krueger series approximation to the transverse
+Mercator projection instead of the exact projection.</p>
+</dd>
+<dt><strong><a name="t" class="item"><strong>-t</strong></a></strong></dt>
+
+<dd>
+<p>use exact algorithm with the <a href="#extended_domain">EXTENDED DOMAIN</a>.</p>
+</dd>
+<dt><strong><a name="l" class="item"><strong>-l</strong></a></strong></dt>
+
+<dd>
+<p>specify the longitude of origin <em>lon0</em> (degrees, default 0).</p>
+</dd>
+<dt><strong><a name="k" class="item"><strong>-k</strong></a></strong></dt>
+
+<dd>
+<p>specify the scale <em>k0</em> on the central meridian (default 0.9996).</p>
+</dd>
+<dt><strong><a name="r" class="item"><strong>-r</strong></a></strong></dt>
+
+<dd>
+<p>perform the reverse projection.  <em>x</em> and <em>y</em> are given on standard
+input and each line of standard output gives <em>latitude</em>, <em>longitude</em>,
+<em>gamma</em>, and <em>k</em>.</p>
+</dd>
+<dt><strong><a name="e" class="item"><strong>-e</strong></a></strong></dt>
+
+<dd>
+<p>specify the ellipsoid via <em>a</em> <em>r</em>; the equatorial radius is <em>a</em> and
+the reciprocal flattening is <em>r</em>.  Setting <em>r</em> = 0 results in a
+sphere.  Specify <em>r</em> &lt; 0 for a prolate ellipsoid.  By default, the
+WGS84 ellipsoid is used, <em>a</em> = 6378137m, <em>r</em> = 298.257223563.</p>
+</dd>
+<dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
+
+<dd>
+<p>print version and exit.</p>
+</dd>
+<dt><strong><a name="h" class="item"><strong>-h</strong></a></strong></dt>
+
+<dd>
+<p>print usage and exit.</p>
+</dd>
+<dt><strong><a name="help" class="item"><strong>--help</strong></a></strong></dt>
+
+<dd>
+<p>print full documentation and exit.</p>
+</dd>
+<dt><strong><a name="input_file" class="item"><strong>--input-file</strong></a></strong></dt>
+
+<dd>
+<p>read input from the file <em>infile</em> instead of from standard input; a file
+name of &quot;-&quot; stands for standard input.</p>
+</dd>
+<dt><strong><a name="input_string" class="item"><strong>--input-string</strong></a></strong></dt>
+
+<dd>
+<p>read input from the string <em>instring</em> instead of from standard input.
+All the semicolons in <em>instring</em> are converted to newlines before the
+reading begins.</p>
+</dd>
+<dt><strong><a name="output_file" class="item"><strong>--output-file</strong></a></strong></dt>
+
+<dd>
+<p>write output to the file <em>outfile</em> instead of to standard output; a
+file name of &quot;-&quot; stands for standard output.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="extended_domain">EXTENDED DOMAIN</a></h1>
+<p>The exact transverse Mercator projection has a <em>branch point</em> on the
+equator at longitudes (relative to <em>lon0</em>) of +/- (1 - <em>e</em>) 90, whre
+<em>e</em> is the eccentricity of the ellipsoid.  The standard convention for
+handling this branch point is to map positive (negative) latitudes into
+positive (negative) northings <em>y</em>; i.e., a branch cut is placed on the
+equator.  With the <em>extended</em> domain, the northern sheet of the
+projection is extended into the south hemisphere by pushing the branch
+cut south from the branch points.  See the reference below for details.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<pre>
+   echo 0 90 | TransverseMercatorProj
+   =&gt; 25953592.84 9997964.94 90 18.40
+   echo 260e5 100e5 | TransverseMercatorProj -r
+   =&gt; -0.02 90.00 90.01 18.48</pre>
+<p>
+</p>
+<hr />
+<h1><a name="errors">ERRORS</a></h1>
+<p>An illegal line of input will print an error message to standard output
+beginning with <code>ERROR:</code> and causes <strong>TransverseMercatorProj</strong> to return an exit
+code of 1.  However, an error does not cause <strong>TransverseMercatorProj</strong> to
+terminate; following lines will be converted.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p><strong>TransverseMercatorProj</strong> was written by Charles Karney.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><strong>TransverseMercatorTest</strong> is a part of GeographicLib,
+<a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>.  The algorithms for the transverse
+Mercator projection are described in C. F. F. Karney, <em>Transverse
+Mercator with an accuracy of a few nanometers</em>, J. Geod (2011); DOI
+<a href="http://dx.doi.org/10.1007/s00190-011-0445-3">http://dx.doi.org/10.1007/s00190-011-0445-3</a>; preprint
+<a href="http://arxiv.org/abs/1002.1417">http://arxiv.org/abs/1002.1417</a>.  The explanation of the extended
+domain of the projection with the <strong>-t</strong> option is given in Section 5 of
+this paper.</p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p><strong>TransverseMercatorProj</strong> was added to GeographicLib in 2009-01.  Prior
+to version 1.9 it was called TransverseMercatorTest (and its
+interface was slightly different).</p>
+
+</body>
+
+</html>

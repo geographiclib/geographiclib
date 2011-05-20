@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
-      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_b16414b5a70597b640ccac2a9ec4fe3e.html">include</a>      </li>
+      <li><a class="el" href="dir_b11e475971f7ccfb9ef63a8a3653f2dc.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,9 +47,9 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)</span>
-<a name="l00011"></a><a class="code" href="TransverseMercator_8hpp.html#abbbe2faaff284db3183ddf3afcbf5623">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP &quot;$Id: TransverseMercator.hpp 6950 2011-02-11 04:09:24Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="TransverseMercator_8hpp.html#abbbe2faaff284db3183ddf3afcbf5623">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP &quot;$Id: efc1fd9413c24c01583c80fd99435b84f0be1597 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
 <a name="l00015"></a>00015 <span class="preprocessor">#if !defined(TM_TX_MAXPOW)</span>
 <a name="l00016"></a>00016 <span class="preprocessor"></span><span class="comment">/**</span>
@@ -107,21 +107,21 @@
 <a name="l00068"></a>00068 <span class="comment">   * See \ref transversemercator for a discussion of this projection.</span>
 <a name="l00069"></a>00069 <span class="comment">   **********************************************************************/</span>
 <a name="l00070"></a>00070 
-<a name="l00071"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html">00071</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> {
+<a name="l00071"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html">00071</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> {
 <a name="l00072"></a>00072   <span class="keyword">private</span>:
 <a name="l00073"></a>00073     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
-<a name="l00074"></a>00074     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> maxpow = TM_TX_MAXPOW;
-<a name="l00075"></a>00075     <span class="keyword">static</span> <span class="keyword">const</span> real tol, overflow;
-<a name="l00076"></a>00076     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit = 5;
-<a name="l00077"></a>00077     <span class="keyword">const</span> real _a, _r, _f, _k0, _e2, _e, _e2m,  _c, _n;
-<a name="l00078"></a>00078     <span class="comment">// _alp[0] and _bet[0] unused</span>
-<a name="l00079"></a>00079     real _a1, _b1, _alp[maxpow + 1], _bet[maxpow + 1];
-<a name="l00080"></a>00080     <span class="keyword">static</span> <span class="keyword">inline</span> real sq(real x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> x * x; }
+<a name="l00074"></a>00074     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> maxpow_ = TM_TX_MAXPOW;
+<a name="l00075"></a>00075     <span class="keyword">static</span> <span class="keyword">const</span> real tol_;
+<a name="l00076"></a>00076     <span class="keyword">static</span> <span class="keyword">const</span> real overflow_;
+<a name="l00077"></a>00077     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 5;
+<a name="l00078"></a>00078     <span class="keyword">const</span> real _a, _r, _f, _k0, _e2, _e, _e2m,  _c, _n;
+<a name="l00079"></a>00079     <span class="comment">// _alp[0] and _bet[0] unused</span>
+<a name="l00080"></a>00080     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
 <a name="l00081"></a>00081     <span class="comment">// tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right</span>
 <a name="l00082"></a>00082     <span class="keyword">static</span> <span class="keyword">inline</span> real tanx(real x) <span class="keywordflow">throw</span>() {
 <a name="l00083"></a>00083       real t = std::tan(x);
 <a name="l00084"></a>00084       <span class="comment">// Write the tests this way to ensure that tanx(NaN()) is NaN()</span>
-<a name="l00085"></a>00085       <span class="keywordflow">return</span> x &gt;= 0 ? (!(t &lt; 0) ? t : overflow) : (!(t &gt;= 0) ? t : -overflow);
+<a name="l00085"></a>00085       <span class="keywordflow">return</span> x &gt;= 0 ? (!(t &lt; 0) ? t : overflow_) : (!(t &gt;= 0) ? t : -overflow_);
 <a name="l00086"></a>00086     }
 <a name="l00087"></a>00087     <span class="comment">// Return e * atanh(e * x) for f &gt;= 0, else return</span>
 <a name="l00088"></a>00088     <span class="comment">// - sqrt(-e2) * atan( sqrt(-e2) * x) for f &lt; 0</span>
@@ -142,7 +142,7 @@
 <a name="l00103"></a>00103 <span class="comment">     * An exception is thrown if either of the axes of the ellipsoid or \e k0</span>
 <a name="l00104"></a>00104 <span class="comment">     * is not positive.</span>
 <a name="l00105"></a>00105 <span class="comment">     **********************************************************************/</span>
-<a name="l00106"></a>00106     <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a1322ba37e8f01d724f9da1dfd94d91d7">TransverseMercator</a>(real a, real r, real k0);
+<a name="l00106"></a>00106     <a class="code" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a>(real a, real r, real k0);
 <a name="l00107"></a>00107 <span class="comment"></span>
 <a name="l00108"></a>00108 <span class="comment">    /**</span>
 <a name="l00109"></a>00109 <span class="comment">     * Forward projection, from geographic to transverse Mercator.</span>
@@ -158,7 +158,7 @@
 <a name="l00119"></a>00119 <span class="comment">     * No false easting or northing is added. \e lat should be in the range</span>
 <a name="l00120"></a>00120 <span class="comment">     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].</span>
 <a name="l00121"></a>00121 <span class="comment">     **********************************************************************/</span>
-<a name="l00122"></a>00122     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a07d73a6d94e2434cbb937978d61a5ae7">Forward</a>(real lon0, real lat, real lon,
+<a name="l00122"></a>00122     <span class="keywordtype">void</span> Forward(real lon0, real lat, real lon,
 <a name="l00123"></a>00123                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
 <a name="l00124"></a>00124 <span class="comment"></span>
 <a name="l00125"></a>00125 <span class="comment">    /**</span>
@@ -175,25 +175,25 @@
 <a name="l00136"></a>00136 <span class="comment">     * No false easting or northing is added.  \e lon0 should be in the range</span>
 <a name="l00137"></a>00137 <span class="comment">     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).</span>
 <a name="l00138"></a>00138 <span class="comment">     **********************************************************************/</span>
-<a name="l00139"></a>00139     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a15611aee4e3707e155278bab02403a07">Reverse</a>(real lon0, real x, real y,
+<a name="l00139"></a>00139     <span class="keywordtype">void</span> Reverse(real lon0, real x, real y,
 <a name="l00140"></a>00140                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
 <a name="l00141"></a>00141 <span class="comment"></span>
 <a name="l00142"></a>00142 <span class="comment">    /**</span>
 <a name="l00143"></a>00143 <span class="comment">     * TransverseMercator::Forward without returning the convergence and scale.</span>
 <a name="l00144"></a>00144 <span class="comment">     **********************************************************************/</span>
-<a name="l00145"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#af689c212234963734354347d56bf12f6">00145</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a07d73a6d94e2434cbb937978d61a5ae7">Forward</a>(real lon0, real lat, real lon,
+<a name="l00145"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#af689c212234963734354347d56bf12f6">00145</a>     <span class="keywordtype">void</span> Forward(real lon0, real lat, real lon,
 <a name="l00146"></a>00146                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00147"></a>00147       real gamma, k;
-<a name="l00148"></a>00148       <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a07d73a6d94e2434cbb937978d61a5ae7">Forward</a>(lon0, lat, lon, x, y, gamma, k);
+<a name="l00148"></a>00148       Forward(lon0, lat, lon, x, y, gamma, k);
 <a name="l00149"></a>00149     }
 <a name="l00150"></a>00150 <span class="comment"></span>
 <a name="l00151"></a>00151 <span class="comment">    /**</span>
 <a name="l00152"></a>00152 <span class="comment">     * TransverseMercator::Reverse without returning the convergence and scale.</span>
 <a name="l00153"></a>00153 <span class="comment">     **********************************************************************/</span>
-<a name="l00154"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#ac3bd58646dd6c06731a9baadee11f7e5">00154</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a15611aee4e3707e155278bab02403a07">Reverse</a>(real lon0, real x, real y,
+<a name="l00154"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#ac3bd58646dd6c06731a9baadee11f7e5">00154</a>     <span class="keywordtype">void</span> Reverse(real lon0, real x, real y,
 <a name="l00155"></a>00155                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00156"></a>00156       real gamma, k;
-<a name="l00157"></a>00157       <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a15611aee4e3707e155278bab02403a07">Reverse</a>(lon0, x, y, lat, lon, gamma, k);
+<a name="l00157"></a>00157       Reverse(lon0, x, y, lat, lon, gamma, k);
 <a name="l00158"></a>00158     }
 <a name="l00159"></a>00159 <span class="comment"></span>
 <a name="l00160"></a>00160 <span class="comment">    /** \name Inspector functions</span>
@@ -224,15 +224,15 @@
 <a name="l00185"></a>00185 <span class="comment">     * and the UTM scale factor.  However, unlike UTM, no false easting or</span>
 <a name="l00186"></a>00186 <span class="comment">     * northing is added.</span>
 <a name="l00187"></a>00187 <span class="comment">     **********************************************************************/</span>
-<a name="l00188"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#aa25b52e35bc54c368e6c8b17e02b0542">00188</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> <a class="code" href="classGeographicLib_1_1TransverseMercator.html#aa25b52e35bc54c368e6c8b17e02b0542">UTM</a>;
+<a name="l00188"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#aa25b52e35bc54c368e6c8b17e02b0542">00188</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> UTM;
 <a name="l00189"></a>00189   };
 <a name="l00190"></a>00190 
 <a name="l00191"></a>00191 } <span class="comment">// namespace GeographicLib</span>
 <a name="l00192"></a>00192 
-<a name="l00193"></a>00193 <span class="preprocessor">#endif</span>
+<a name="l00193"></a>00193 <span class="preprocessor">#endif  // GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

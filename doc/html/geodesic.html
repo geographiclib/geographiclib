@@ -25,14 +25,14 @@
 <h1>Geodesics on the Ellipsoid </h1>  </div>
 </div>
 <div class="contents">
-<center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p><a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> and <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> provide accurate solutions to the direct and inverse geodesic problems. The <a href="Geod.1.html">Geod</a> utility provides an interface to these classes. <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> implements the azimuthal equidistant projection in terms of geodesics. <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> implements a transverse cylindrical equidistant projection in terms of geodesics. The <a href="EquidistantTest.1.html">EquidistantTest</a> utility provides an interface to these projections.</p>
+<center> Back to <a class="el" href="geoid.html">Geoid height</a>. Forward to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p><a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> and <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> provide accurate solutions to the direct and inverse geodesic problems. The <a href="Geod.1.html">Geod</a> utility provides an interface to these classes. <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> implements the azimuthal equidistant projection in terms of geodesics. <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> implements a transverse cylindrical equidistant projection in terms of geodesics. The <a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an interface to these projections.</p>
 <p>References</p>
 <ul>
 <li>F. W. Bessel, <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation of longitude and latitude from geodesic measurements (1825)</a>, Astron. Nachr. 331(8), 852-861 (2010); translated by C. F. F. Karney and R. E. Deakin. Preprint: <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.</li>
 <li>F. R. Helmert, <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>, Aeronautical Chart and Information Center (St. Louis, 1964), Chaps. 5&ndash;7.</li>
 <li>J. Danielsen, The Area under the Geodesic, Survey Review 30 (232), 61&ndash;66 (1989).</li>
-<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>; resource page <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.</li>
-<li>A collection of some papers on geodesics is available at <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">http://geographiclib.sf.net/geodesic-papers/biblio.html</a></li>
+<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215v1">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>; resource page <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.</li>
+<li>A collection of some papers on geodesics is available at <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">http://geographiclib.sourceforge.net/geodesic-papers/biblio.html</a></li>
 </ul>
 <h2><a class="anchor" id="testgeod"></a>
 Test data for geodesics</h2>
@@ -292,7 +292,7 @@ C3[7] = + (429/114688 - 143/16384 * n + 143/16384 * n^2) * eps^7
 C3[8] = + (715/262144 - 429/65536 * n) * eps^8
         + 429/131072 * eps^9;
 C3[9] = + 2431/1179648 * eps^9;
-</pre></div><p>The formula for area between the geodesic and the equator is given in Sec. 15 of <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a> in terms of <em>S</em>,</p>
+</pre></div><p>The formula for area between the geodesic and the equator is given in Sec. 15 of <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a> in terms of <em>S</em>,</p>
 <p>&nbsp; &nbsp; <em>S</em> = <em>c<sup>2</sup></em> <em>alpha</em> + <em>e<sup>2</sup></em> <em>a<sup>2</sup></em> cos <em>alpha<sub>0</sub></em> sin <em>alpha<sub>0</sub></em> <em>I4</em>(<em>sigma</em>)</p>
 <p>where</p>
 <p>&nbsp; &nbsp; <em>I4</em>(<em>sigma</em>) = sum<sub><em>j</em> = 0</sub> <em>C4<sub>j</sub></em> cos((2<em>j</em> + 1) <em>sigma</em>)</p>
@@ -353,8 +353,8 @@ C4[7] = + (1/26254800 - 1/31177575 * ep2 + 2/72747675 * ep2^2) * k2^7
 C4[8] = + (1/141338340 - 1/164894730 * ep2) * k2^8
         - 1/34714680 * k2^9;
 C4[9] = + 1/737176440 * k2^9;
-</pre></div><center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+</pre></div><center> Back to <a class="el" href="geoid.html">Geoid height</a>. Forward to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

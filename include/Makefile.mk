@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6906 2010-12-02 22:10:56Z karney $
+# $Id: 73c53dea178abd7300904ae145208ead071960de $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
@@ -8,7 +8,8 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 
 PREFIX = /usr/local
 LIBNAME = GeographicLib
-HEADERS = $(LIBNAME)/Constants.hpp $(patsubst %,$(LIBNAME)/%.hpp,$(MODULES))
+HEADERS = $(LIBNAME)/Constants.hpp $(LIBNAME)/Config.h \
+	$(patsubst %,$(LIBNAME)/%.hpp,$(MODULES))
 DEST = $(PREFIX)/include/$(LIBNAME)
 
 INSTALL=install -b

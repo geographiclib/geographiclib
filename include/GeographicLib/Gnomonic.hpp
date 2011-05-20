@@ -8,11 +8,11 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
-#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: Gnomonic.hpp 6968 2011-02-19 15:58:56Z karney $"
+#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: bf3b7f9f87a997fd135064f9b3233ef267eb8394 $"
 
-#include "GeographicLib/Geodesic.hpp"
-#include "GeographicLib/GeodesicLine.hpp"
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicLine.hpp>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -22,11 +22,11 @@ namespace GeographicLib {
    * %Gnomonic projection centered at an arbitrary position \e C on the
    * ellipsoid.  This projection is derived in Section 13 of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    *   on an ellipsoid of revolution</a>,
    *   Feb. 2011;
    *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
+   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
    * The projection of \e P is defined as follows: compute the
    * geodesic line from \e C to \e P; compute the reduced length \e m12,
@@ -87,13 +87,14 @@ namespace GeographicLib {
    *   generalizes the spherical great circle to a geodesic.
    **********************************************************************/
 
-  class Gnomonic {
+  class GEOGRAPHIC_EXPORT Gnomonic {
   private:
     typedef Math::real real;
     const Geodesic _earth;
     real _a, _f;
-    static const real eps0, eps;
-    static const int numit = 5;
+    static const real eps0_;
+    static const real eps_;
+    static const int numit_ = 5;
   public:
 
     /**
@@ -200,4 +201,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_GNOMONIC_HPP

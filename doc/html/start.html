@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>GeographicLib: Getting Started</title>
+<title>GeographicLib: Getting started</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -22,39 +22,77 @@
 </div>
 <div class="header">
   <div class="headertitle">
-<h1>Getting Started </h1>  </div>
+<h1>Getting started </h1>  </div>
 </div>
 <div class="contents">
-<center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="organization.html">Code organization</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The following steps will get you started with GeographicLib:</p>
+<center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>Much (but not all!) of the useful functionality of GeographicLib is available via simple command line utilities. See <a class="el" href="utilities.html">Utility Programs</a> for documentation on these.</p>
+<p>In order to use GeographicLib from C++ code, you will need to</p>
 <ul>
-<li>Download the <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">source</a>.</li>
-<li>Unpack the tar file somewhere convenient with, e.g.,<ul>
-<li>tar xfpvz geographiclib-1.8.tar.gz</li>
+<li>Include the header files for the GeographicLib classes in your code. E.g., <div class="fragment"><pre class="fragment"><span class="preprocessor">  #include &lt;<a class="code" href="LambertConformalConic_8hpp.html" title="Header for GeographicLib::LambertConformalConic class.">GeographicLib/LambertConformalConic.hpp</a>&gt;</span> 
+</pre></div></li>
+<li>Include the <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a>:: namespace prefix to the GeographicLib classes, or include <div class="fragment"><pre class="fragment">  <span class="keyword">using namespace </span>GeographicLib; 
+</pre></div> in your code.</li>
+<li>Tell the compiler where to find the header files. With g++ and with /usr/local specified as the installation directory, this is accomplished with <div class="fragment"><pre class="fragment">
+  g++ -c -g -O3 -I/usr/local/include testprogram.cpp
+</pre></div> With Visual Studio, specify the include directory in the IDE via, e.g., <div class="fragment"><pre class="fragment">
+C/C++ -&gt; General -&gt; Additional Include Directories = C:\Program Files\GeographicLib\include
+</pre></div></li>
+<li>Tell the linker the name, Geographic, and location of the library. Using g++ as the linker, you would use <div class="fragment"><pre class="fragment">
+  g++ -g -o testprogram -L/usr/local/lib -lGeographic testprogram.o
+</pre></div> With Visual Studio, you supply this information in the IDE via, e.g., <div class="fragment"><pre class="fragment">
+Linker -&gt; Input -&gt; Additional Dependencies = Geographic.lib
+Linker -&gt; General -&gt; Additional Library DIrectories = C:\Program Files\GeographicLib\include
+</pre></div> Note that the library name is Geographic and not GeographicLib.</li>
+<li>Tell the runtime environment where to find the shared library (assuming you compiled GeographicLib as a shared library). With g++, this is accomplished by modifying the link line above to read. <div class="fragment"><pre class="fragment">
+  g++ -g -o testprogram -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic testprogram.o
+</pre></div> On Windows, you need to ensure that Geographic.dll is in the same directory as your executable or else include the directory containing the dll in your <code>PATH</code>.</li>
+<li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode.</li>
 </ul>
-This will create a geographiclib-1.8 directory. (Alternatively, download and unpack the zip file.)</li>
-<li>Change to the geographiclib-1.8 directory<ul>
-<li>cd geographiclib-1.8</li>
-</ul>
-</li>
-<li>Create the library and the utility programs<ul>
-<li>make all</li>
-</ul>
-The compiled utility programs are in the tools directory.</li>
-<li>windows/GeographicLib-vc9.sln (resp. vc8) is MS Visual Studio 2008 (resp. 2005) solution file which compiles the library and the utility programs under Windows. (Visual Studio 2010 is also supported with a vc10 suffix.)</li>
-<li>Try out <a href="GeoConvert.1.html">GeoConvert</a> (for help, type cd tools; ./GeoConvert --help)<ul>
-<li>echo 33.3 44.4 | ./GeoConvert -m -p -3</li>
-<li>echo 38SMB4484 | ./GeoConvert -d</li>
-</ul>
-</li>
-<li>Similarly, try out <a href="Geod.1.html">Geod</a>, <a href="Planimeter.1.html">Planimeter</a>, <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>, <a href="CartConvert.1.html">CartConvert</a>, and <a href="EquidistantTest.1.html">EquidistantTest</a>. <a href="GeoidEval.1.html">GeoidEval</a> requires the installation of geoid data, see <a class="el" href="geoid.html#geoidinst">Installing the datasets</a>.</li>
+<p>Here is a very simple test code, which convert the point 38.95N 75.17W (Philadelphia) to the Pennsylvania South coordinate system: </p>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;iomanip&gt;</span>
+
+<span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="LambertConformalConic_8hpp.html" title="Header for GeographicLib::LambertConformalConic class.">GeographicLib/LambertConformalConic.hpp</a>&gt;</span>
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keyword">using namespace </span>GeographicLib;
+  <span class="keywordtype">double</span> 
+    <span class="comment">// These are the constants for Pennsylvania South, EPSG:3364</span>
+    <span class="comment">// http://www.spatialreference.org/ref/epsg/3364/</span>
+    a = <a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(),   <span class="comment">// major radius</span>
+    r = 298.257222101,          <span class="comment">// inverse flattening (GRS80)</span>
+    lat1 = <a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(40,58),  <span class="comment">// standard parallel 1</span>
+    lat2 = <a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(39,56),  <span class="comment">// standard parallel 2</span>
+    k1 = 1,                     <span class="comment">// scale on std parallels</span>
+    lat0 =  <a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(39,20), <span class="comment">// latitude of origin</span>
+    lon0 = -<a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(77,45), <span class="comment">// longitude of origin</span>
+    fe = 600000,                <span class="comment">// false easting</span>
+    fn = 0;                     <span class="comment">// false northing</span>
+  LambertConformalConic PASouth(a, r, lat1, lat2, k1);
+  <span class="keywordtype">double</span> x0, y0;
+  PASouth.Forward(lon0, lat0, lon0, x0, y0); <span class="comment">// Transform origin point</span>
+  x0 -= fe; y0 -= fn;           <span class="comment">// Combine result with false origin</span>
+
+  <span class="keywordtype">double</span> lat = 39.95, lon = -75.17;    <span class="comment">// Philadelphia</span>
+  <span class="keywordtype">double</span> x, y;
+  PASouth.Forward(lon0, lat, lon, x, y);
+  x -= x0; y -= y0;             <span class="comment">// Philadelphia in PA South coordinates</span>
+
+  std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(3)
+            &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div><p> If you copy this code to testprogram.cpp, and compile, link, and run it according to the instructions above, it should print out </p>
+<div class="fragment"><pre class="fragment">
+  820444.831 71691.798
+</pre></div><p>The next steps are:</p>
+<ul>
+<li>Learn about and run the <a class="el" href="utilities.html">Utility Programs</a>.</li>
 <li>Read the section, <a class="el" href="organization.html">Code organization</a>, for an overview of the library.</li>
-<li>Browse the <a href="annotated.html">Class List</a> for full documentation on the library.</li>
-<li>Read the section, <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>, for more information on this projection.</li>
-<li>If you use the library frequently, install it, e.g., to $(PREFIX) = /usr/local with<ul>
-<li>make PREFIX=/usr/local install install-doc</li>
-</ul>
-</li>
-<li>There is an interface for some GeographicLib classes to Matlab and Octave. The geographiclibinterface function in the matlab directory compiles the interface routines.</li>
+<li>Browse the <a href="annotated.html">Class List</a> for full documentation on the classes in the library.</li>
+<li>Look at the source code for the utilites in the tools directory for more examples of using GeographicLib from C++ code, e.g., <a class="el" href="GeodesicProj_8cpp.html" title="Command line utility for azimuthal equidistant and Cassini-Soldner projections.">GeodesicProj.cpp</a> is a program to performing various geodesic projections.</li>
 </ul>
 <p>Here's a list of some of the abbreviations used here with links to the corresponding Wikipedia articles:</p>
 <ul>
@@ -64,8 +102,8 @@ The compiled utility programs are in the tools directory.</li>
 <li><a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>, Military Grid Reference System.</li>
 <li><a href="http://en.wikipedia.org/wiki/Geoid">EGM</a>, Earth Gravity Model.</li>
 </ul>
-<center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="organization.html">Code organization</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

@@ -1,11 +1,11 @@
-# $Id: Makefile.mk 6956 2011-02-17 23:20:13Z karney $
+# $Id: a9b9973c2674e10695153399386543c1c6b0f24f $
 
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
-SUBDIRS = src tools doc man
+SUBDIRS = src man tools doc
 ALLDIRS = include $(SUBDIRS) maxima matlab windows
 
-all: src tools man
+all: src man tools
 
 $(SUBDIRS):
 	$(MAKE) -C $@
@@ -13,6 +13,7 @@ $(SUBDIRS):
 tools: src
 install: install-headers install-lib install-tools install-man
 clean: clean-src clean-tools clean-doc clean-man
+distclean: clean distclean-doc distclean-man
 install-headers:
 	$(MAKE) -C include install
 install-lib:
@@ -31,9 +32,14 @@ clean-doc:
 	$(MAKE) -C doc clean
 clean-man:
 	$(MAKE) -C man clean
+distclean-doc:
+	$(MAKE) -C doc distclean
+distclean-man:
+	$(MAKE) -C man distclean
 
 list:
-	@for f in 00README.txt COPYING AUTHORS NEWS Makefile $(MAKEFILE); do \
+	@for f in 00README.txt COPYING.txt AUTHORS NEWS Makefile \
+	$(MAKEFILE); do \
 	  echo $$f; \
 	done
 	@for d in $(ALLDIRS); do \
@@ -42,17 +48,6 @@ list:
 	done
 
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
-
-package:
-	echo include Makefile.mk > Makefile
-	test -d distrib || mkdir distrib
-	$(MAKE) -s list | while read f;do \
-	  echo GeographicLib/$$f; \
-	done | xargs tar Ccfz .. distrib/Geographic-$(VERSION).tgz
-	rm -rf distrib/GeographicLib
-	tar Cxfpz distrib distrib/Geographic-$(VERSION).tgz
-	cd distrib && zip -r Geographic-$(VERSION).zip GeographicLib && \
-	  rm -rf GeographicLib
 
 .PHONY: all $(SUBDIRS) \
 	install install-headers install-lib install-tools install-doc \

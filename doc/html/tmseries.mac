@@ -5,7 +5,7 @@ Compute series approximations for Transverse Mercator Projection
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id: tmseries.mac 6976 2011-02-21 11:05:24Z karney $
+$Id: 838f230ee67353ba68df894f3c85f858f86f06ab $
 
 Reference:
 

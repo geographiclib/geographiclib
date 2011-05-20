@@ -32,4 +32,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: mgrsreverse.m 6927 2011-01-20 13:06:59Z karney $
+% $Id: 65639550524cf428c4307d9ab456e3582b4d7199 $

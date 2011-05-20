@@ -12,7 +12,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic utmupsforward.cpp
 
-// "$Id: utmupsforward.cpp 6906 2010-12-02 22:10:56Z karney $";
+// "$Id: ae7924db6c903a73edf4d52ba79ae2fd00a537e7 $";
 
 #include "GeographicLib/UTMUPS.hpp"
 #include "mex.h"

@@ -25,7 +25,32 @@
 <h1>Old Versions </h1>  </div>
 </div>
 <div class="contents">
-<center> Back to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
+<center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
+<ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (not released yet, 2011-mm-dd)</a><ul>
+<li>FIX BUG in area returned by <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.</li>
+<li>FIX BUG in error message reported when DMS::Decode reads the string "5d.".</li>
+<li>FIX BUG in AlbersEqualArea::Reverse (lon0 not being used).</li>
+<li>Ensure that all exceptions thrown in the <a class="el" href="utilities.html">Utility Programs</a> are caught.</li>
+<li>Avoid using catch within <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">GeographicLib::DMS</a>.</li>
+<li>Move <a class="el" href="classGeographicLib_1_1Accumulator.html" title="An accumulator for sums.">GeographicLib::Accumulator</a> class from <a class="el" href="Planimeter_8cpp.html" title="Command line utility for measuring the area of geodesic polygons.">Planimeter.cpp</a> to <a class="el" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">Constants.hpp</a>.</li>
+<li>Add Math::sq&lt;T&gt;.</li>
+<li>Simplify <a class="el" href="geoid.html#geoidinst">Installing the geoid datasets</a><ul>
+<li>add geographiclib-get-geoids for Unix-like systems;</li>
+<li>add installers for Windows.</li>
+</ul>
+</li>
+<li>Provide cmake support:<ul>
+<li>build binary installer for Windows;</li>
+<li>include regression tests;</li>
+<li>add --input-string, --input-file, --output-file options to the <a class="el" href="utilities.html">Utility Programs</a> to support tests.</li>
+</ul>
+</li>
+<li>Rename utility EquidistantTest as <a href="GeodesicProj.1.html">GeodesicProj</a> and TransverseMercatorTest as <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>.</li>
+<li>Add <a href="ConicProj.1.html">ConicProj</a>.</li>
+</ul>
+</li>
+</ul>
 <ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a><ul>
 <li>Optionally return rotation matrix from <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">GeographicLib::Geocentric</a> and <a class="el" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">GeographicLib::LocalCartesian</a>.</li>
@@ -74,7 +99,7 @@
 <li>explicitly turn on optimization in Visual Studio 2008 projects;</li>
 <li>add missing dependencies in some Makefiles;</li>
 <li>move pi() and degree() from <a class="el" href="classGeographicLib_1_1Constants.html" title="Constants needed by GeographicLib">GeographicLib::Constants</a> to <a class="el" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">GeographicLib::Math</a>;</li>
-<li>introduce <a class="el" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">GeographicLib::Math::extended</a> type to aid testing;</li>
+<li>introduce <a class="el" href="classGeographicLib_1_1Math.html#a436f350a6a9539e176dda19d0e4811f8">GeographicLib::Math::extended</a> type to aid testing;</li>
 <li>add <a class="el" href="classGeographicLib_1_1Math.html#a91d1a17265156f570708c0889fca2f13">GeographicLib::Math::epi()</a> and <a class="el" href="classGeographicLib_1_1Math.html#af8e63c641cce6cfdd59651edb5b0a723">GeographicLib::Math::edegree()</a>.</li>
 <li>fixes to compile under cygwin;</li>
 <li>tweak expression used to find latitude from conformal latitude.</li>
@@ -112,8 +137,8 @@ WARNING: These changes may break binary compatibility with previous versions of 
 <ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (released 2010-07-21)</a><ul>
 <li>Add <a class="el" href="classGeographicLib_1_1Gnomonic.html" title="Gnomonic Projection.">GeographicLib::Gnomonic</a>, the ellipsoid generalization of the gnomonic projection.</li>
-<li>Add -g and -e options to <a href="EquidistantTest.1.html">EquidistantTest</a>.</li>
-<li>Use fixed-point notation for output from <a href="CartConvert.1.html">CartConvert</a>, <a href="EquidistantTest.1.html">EquidistantTest</a>, <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>.</li>
+<li>Add -g and -e options to <a href="GeodesicProj.1.html">EquidistantTest</a>.</li>
+<li>Use fixed-point notation for output from <a href="CartConvert.1.html">CartConvert</a>, <a href="GeodesicProj.1.html">EquidistantTest</a>, <a href="TransverseMercatorProj.1.html">TransverseMercatorTest</a>.</li>
 <li>PolarStereographic:<ul>
 <li>Improved conversion to conformal coordinates;</li>
 <li>Fix bug with scale at opposite pole;</li>
@@ -173,7 +198,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 <li>Add <a class="el" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">GeographicLib::LambertConformalConic</a> class.</li>
 <li>Add <a class="el" href="classGeographicLib_1_1PolarStereographic.html#a3f957214eb1d1248277a680e4c4ceed5">GeographicLib::PolarStereographic::SetScale</a> to allow the latitude of true scale to be specified.</li>
 <li>Add solution and project files for Visual Studio 2008.</li>
-<li>Add <a class="el" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicLib::GeographicErr</a> for exceptions.</li>
+<li>Add <a class="el" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicLib::GeographicErr</a> for exceptions.</li>
 <li><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> changes:<ul>
 <li>BUG FIX: fix typo in <a class="el" href="classGeographicLib_1_1Geoid.html#ade5715c0d1428a409383b1acd2cbe9be">GeographicLib::Geoid::Cache</a> which could cause a segmentation fault in some cases when the cached area spanned the prime meridian.</li>
 <li>Include sufficient edge data to allow heights to be returned for cached area without disk reads;</li>
@@ -225,7 +250,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </ul>
 <ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-08.tgz/download">2009-08</a><ul>
-<li>Add <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> class and <a href="EquidistantTest.1.html">EquidistantTest</a> utility.</li>
+<li>Add <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> class and <a href="GeodesicProj.1.html">EquidistantTest</a> utility.</li>
 <li>Fix bug in <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">GeographicLib::Geodesic::Inverse</a> where NaNs were sometimes returned.</li>
 <li>INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal of the azimuthal scale instead of the reduced length.</li>
 <li>Add -n option to <a href="GeoConvert.1.html">GeoConvert</a>.</li>
@@ -325,8 +350,8 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </ul>
 </li>
 </ul>
-<center> Back to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

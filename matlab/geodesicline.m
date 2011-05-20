@@ -20,6 +20,7 @@ function latlong = geodesicline(lat1, lon1, azi1, distances, a, r)
 %
 %   a = major radius (meters)
 %   r = reciprocal flattening (0 means a sphere)
+%   If a and r are omitted, the WGS84 values are used.
 %
 %   The result is the same as produced by
 %       geodesicdirect([repmat([lat1, lon1, azi1],size(distances)), ...
@@ -37,4 +38,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: geodesicline.m 6927 2011-01-20 13:06:59Z karney $
+% $Id: 07d2e0375c249185944e8bd6f443550c8e9dc7af $

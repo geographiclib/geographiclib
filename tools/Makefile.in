@@ -19,7 +19,8 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6958 2011-02-18 04:12:27Z karney $
+# $Id: 1c4efce45d07aceb3b9df6177549d584224532e3 $
+
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -41,9 +42,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-bin_PROGRAMS = GeoConvert$(EXEEXT) TransverseMercatorTest$(EXEEXT) \
-	CartConvert$(EXEEXT) Geod$(EXEEXT) EquidistantTest$(EXEEXT) \
-	GeoidEval$(EXEEXT) Planimeter$(EXEEXT)
+bin_PROGRAMS = GeoConvert$(EXEEXT) TransverseMercatorProj$(EXEEXT) \
+	CartConvert$(EXEEXT) Geod$(EXEEXT) GeodesicProj$(EXEEXT) \
+	GeoidEval$(EXEEXT) Planimeter$(EXEEXT) ConicProj$(EXEEXT)
 subdir = tools
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -54,19 +55,19 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
-CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_HEADER = $(top_builddir)/include/GeographicLib/Config-ac.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)"
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(sbindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_CartConvert_OBJECTS = CartConvert.$(OBJEXT)
 CartConvert_OBJECTS = $(am_CartConvert_OBJECTS)
 CartConvert_LDADD = $(LDADD)
 CartConvert_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
-am_EquidistantTest_OBJECTS = EquidistantTest.$(OBJEXT)
-EquidistantTest_OBJECTS = $(am_EquidistantTest_OBJECTS)
-EquidistantTest_LDADD = $(LDADD)
-EquidistantTest_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+am_ConicProj_OBJECTS = ConicProj.$(OBJEXT)
+ConicProj_OBJECTS = $(am_ConicProj_OBJECTS)
+ConicProj_LDADD = $(LDADD)
+ConicProj_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
 am_GeoConvert_OBJECTS = GeoConvert.$(OBJEXT)
 GeoConvert_OBJECTS = $(am_GeoConvert_OBJECTS)
 GeoConvert_LDADD = $(LDADD)
@@ -75,6 +76,10 @@ am_Geod_OBJECTS = Geod.$(OBJEXT)
 Geod_OBJECTS = $(am_Geod_OBJECTS)
 Geod_LDADD = $(LDADD)
 Geod_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+am_GeodesicProj_OBJECTS = GeodesicProj.$(OBJEXT)
+GeodesicProj_OBJECTS = $(am_GeodesicProj_OBJECTS)
+GeodesicProj_LDADD = $(LDADD)
+GeodesicProj_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
 am_GeoidEval_OBJECTS = GeoidEval.$(OBJEXT)
 GeoidEval_OBJECTS = $(am_GeoidEval_OBJECTS)
 GeoidEval_LDADD = $(LDADD)
@@ -83,12 +88,34 @@ am_Planimeter_OBJECTS = Planimeter.$(OBJEXT)
 Planimeter_OBJECTS = $(am_Planimeter_OBJECTS)
 Planimeter_LDADD = $(LDADD)
 Planimeter_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
-am_TransverseMercatorTest_OBJECTS = TransverseMercatorTest.$(OBJEXT)
-TransverseMercatorTest_OBJECTS = $(am_TransverseMercatorTest_OBJECTS)
-TransverseMercatorTest_LDADD = $(LDADD)
-TransverseMercatorTest_DEPENDENCIES =  \
+am_TransverseMercatorProj_OBJECTS = TransverseMercatorProj.$(OBJEXT)
+TransverseMercatorProj_OBJECTS = $(am_TransverseMercatorProj_OBJECTS)
+TransverseMercatorProj_LDADD = $(LDADD)
+TransverseMercatorProj_DEPENDENCIES =  \
 	$(top_builddir)/src/libGeographic.la
-DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
+am__install_max = 40
+am__nobase_strip_setup = \
+  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
+am__nobase_strip = \
+  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
+am__nobase_list = $(am__nobase_strip_setup); \
+  for p in $$list; do echo "$$p $$p"; done | \
+  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
+  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
+    if (++n[$$2] == $(am__install_max)) \
+      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
+    END { for (dir in files) print dir, files[dir] }'
+am__base_list = \
+  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
+  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
+SCRIPTS = $(sbin_SCRIPTS)
+DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include/GeographicLib
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
@@ -110,12 +137,14 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
-SOURCES = $(CartConvert_SOURCES) $(EquidistantTest_SOURCES) \
-	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeoidEval_SOURCES) \
-	$(Planimeter_SOURCES) $(TransverseMercatorTest_SOURCES)
-DIST_SOURCES = $(CartConvert_SOURCES) $(EquidistantTest_SOURCES) \
-	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeoidEval_SOURCES) \
-	$(Planimeter_SOURCES) $(TransverseMercatorTest_SOURCES)
+SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
+	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeodesicProj_SOURCES) \
+	$(GeoidEval_SOURCES) $(Planimeter_SOURCES) \
+	$(TransverseMercatorProj_SOURCES)
+DIST_SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
+	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeodesicProj_SOURCES) \
+	$(GeoidEval_SOURCES) $(Planimeter_SOURCES) \
+	$(TransverseMercatorProj_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -244,17 +273,16 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
-INCLUDES = -I$(top_srcdir)/include 
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/man
 LDADD = $(top_builddir)/src/libGeographic.la
 DEPS = $(top_builddir)/src/libGeographic.la
-SUFFIXES = .pod .usage
 GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/UTMUPS.hpp
 
-TransverseMercatorTest_SOURCES = TransverseMercatorTest.cpp \
+TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/EllipticFunction.hpp \
@@ -273,7 +301,7 @@ Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
-EquidistantTest_SOURCES = EquidistantTest.cpp \
+GeodesicProj_SOURCES = GeodesicProj.cpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
 	../include/GeographicLib/CassiniSoldner.hpp \
 	../include/GeographicLib/Gnomonic.hpp \
@@ -295,19 +323,20 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
-EXTRA_DIST = Makefile.mk \
-	GeoConvert.pod GeoConvert.usage \
-	TransverseMercatorTest.pod TransverseMercatorTest.usage \
-	CartConvert.pod CartConvert.usage \
-	Geod.pod Geod.usage \
-	EquidistantTest.pod EquidistantTest.usage \
-	GeoidEval.pod GeoidEval.usage \
-	Planimeter.pod Planimeter.usage
+ConicProj_SOURCES = ConicProj.cpp \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/AlbersEqualArea.hpp \
+	../include/GeographicLib/LamberConformalConic.hpp
 
+sbin_SCRIPTS = geographiclib-get-geoids
+geoids_dir = $(datadir)/GeographicLib/geoids
+CLEANFILES = geographiclib-get-geoids
+EXTRA_DIST = Makefile.mk CMakeLists.txt geographiclib-get-geoids.sh
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .pod .usage .cpp .lo .o .obj
+.SUFFIXES: .cpp .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -384,24 +413,61 @@ clean-binPROGRAMS:
 CartConvert$(EXEEXT): $(CartConvert_OBJECTS) $(CartConvert_DEPENDENCIES) 
 	@rm -f CartConvert$(EXEEXT)
 	$(CXXLINK) $(CartConvert_OBJECTS) $(CartConvert_LDADD) $(LIBS)
-EquidistantTest$(EXEEXT): $(EquidistantTest_OBJECTS) $(EquidistantTest_DEPENDENCIES) 
-	@rm -f EquidistantTest$(EXEEXT)
-	$(CXXLINK) $(EquidistantTest_OBJECTS) $(EquidistantTest_LDADD) $(LIBS)
+ConicProj$(EXEEXT): $(ConicProj_OBJECTS) $(ConicProj_DEPENDENCIES) 
+	@rm -f ConicProj$(EXEEXT)
+	$(CXXLINK) $(ConicProj_OBJECTS) $(ConicProj_LDADD) $(LIBS)
 GeoConvert$(EXEEXT): $(GeoConvert_OBJECTS) $(GeoConvert_DEPENDENCIES) 
 	@rm -f GeoConvert$(EXEEXT)
 	$(CXXLINK) $(GeoConvert_OBJECTS) $(GeoConvert_LDADD) $(LIBS)
 Geod$(EXEEXT): $(Geod_OBJECTS) $(Geod_DEPENDENCIES) 
 	@rm -f Geod$(EXEEXT)
 	$(CXXLINK) $(Geod_OBJECTS) $(Geod_LDADD) $(LIBS)
+GeodesicProj$(EXEEXT): $(GeodesicProj_OBJECTS) $(GeodesicProj_DEPENDENCIES) 
+	@rm -f GeodesicProj$(EXEEXT)
+	$(CXXLINK) $(GeodesicProj_OBJECTS) $(GeodesicProj_LDADD) $(LIBS)
 GeoidEval$(EXEEXT): $(GeoidEval_OBJECTS) $(GeoidEval_DEPENDENCIES) 
 	@rm -f GeoidEval$(EXEEXT)
 	$(CXXLINK) $(GeoidEval_OBJECTS) $(GeoidEval_LDADD) $(LIBS)
 Planimeter$(EXEEXT): $(Planimeter_OBJECTS) $(Planimeter_DEPENDENCIES) 
 	@rm -f Planimeter$(EXEEXT)
 	$(CXXLINK) $(Planimeter_OBJECTS) $(Planimeter_LDADD) $(LIBS)
-TransverseMercatorTest$(EXEEXT): $(TransverseMercatorTest_OBJECTS) $(TransverseMercatorTest_DEPENDENCIES) 
-	@rm -f TransverseMercatorTest$(EXEEXT)
-	$(CXXLINK) $(TransverseMercatorTest_OBJECTS) $(TransverseMercatorTest_LDADD) $(LIBS)
+TransverseMercatorProj$(EXEEXT): $(TransverseMercatorProj_OBJECTS) $(TransverseMercatorProj_DEPENDENCIES) 
+	@rm -f TransverseMercatorProj$(EXEEXT)
+	$(CXXLINK) $(TransverseMercatorProj_OBJECTS) $(TransverseMercatorProj_LDADD) $(LIBS)
+install-sbinSCRIPTS: $(sbin_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	test -z "$(sbindir)" || $(MKDIR_P) "$(DESTDIR)$(sbindir)"
+	@list='$(sbin_SCRIPTS)'; test -n "$(sbindir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(sbindir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(sbindir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-sbinSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(sbin_SCRIPTS)'; test -n "$(sbindir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	test -n "$$list" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(sbindir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(sbindir)" && rm -f $$files
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -410,12 +476,13 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CartConvert.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EquidistantTest.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ConicProj.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoConvert.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geod.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicProj.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoidEval.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Planimeter.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercatorTest.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercatorProj.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -528,9 +595,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS)
+all-am: Makefile $(PROGRAMS) $(SCRIPTS)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(sbindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -550,6 +617,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -586,7 +654,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-binPROGRAMS
+install-exec-am: install-binPROGRAMS install-sbinSCRIPTS
 
 install-html: install-html-am
 
@@ -626,7 +694,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS
+uninstall-am: uninstall-binPROGRAMS uninstall-sbinSCRIPTS
 
 .MAKE: install-am install-strip
 
@@ -638,23 +706,24 @@ uninstall-am: uninstall-binPROGRAMS
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	pdf pdf-am ps ps-am tags uninstall uninstall-am \
-	uninstall-binPROGRAMS
+	install-sbinSCRIPTS install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-sbinSCRIPTS
 
 
-.pod.usage:
-	sh makeusage.sh $< > $@
-
-GeoConvert.o: GeoConvert.usage
-TransverseMercatorTest.o: TransverseMercatorTest.usage
-CartConvert.o: CartConvert.usage
-Geod.o: Geod.usage
-EquidistantTest.o: EquidistantTest.usage
-GeoidEval.o: GeoidEval.usage
-Planimeter.o: Planimeter.usage
+GeoConvert.o: ../man/GeoConvert.usage
+TransverseMercatorProj.o: ../man/TransverseMercatorProj.usage
+CartConvert.o: ../man/CartConvert.usage
+Geod.o: ../man/Geod.usage
+GeodesicProj.o: ../man/GeodesicProj.usage
+GeoidEval.o: ../man/GeoidEval.usage
+Planimeter.o: ../man/Planimeter.usage
+ConicProj.o: ../man/ConicProj.usage
+geographiclib-get-geoids: geographiclib-get-geoids.sh
+	sed -e "s%@GEOID_DEFAULT_PATH@%$(geoids_dir)%" $< > $@
+	chmod +x $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

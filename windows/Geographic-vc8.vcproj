@@ -432,6 +432,10 @@
 				RelativePath="../include/GeographicLib/AlbersEqualArea.hpp"
 				>
 			</File>
+			<File
+				RelativePath="../include/GeographicLib/Config.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

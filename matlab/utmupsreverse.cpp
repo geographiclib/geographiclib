@@ -12,7 +12,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic utmupsreverse.cpp
 
-// "$Id: utmupsreverse.cpp 6906 2010-12-02 22:10:56Z karney $";
+// "$Id: ea09d9423ec22cdd8598046e3c1ac201cff3d057 $";
 
 #include "GeographicLib/UTMUPS.hpp"
 #include "mex.h"

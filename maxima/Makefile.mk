@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6714 2009-10-17 11:50:59Z ckarney $
+# $Id: 46ea48c30b46597075c4729396125e8bc95ba167 $
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(addsuffix .mac,$(MAXIMA))

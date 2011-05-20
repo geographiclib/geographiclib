@@ -12,7 +12,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geoidheight.cpp
 
-// "$Id: geoidheight.cpp 6906 2010-12-02 22:10:56Z karney $";
+// "$Id: c752cd7a02925cc13e6a6306581e38696555bfd4 $";
 
 #include "GeographicLib/Geoid.hpp"
 #include "mex.h"

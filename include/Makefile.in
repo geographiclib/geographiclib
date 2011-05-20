@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6906 2010-12-02 22:10:56Z karney $
+# $Id: 5c6131ee06c345784d071e643d987e1e9adb3e64 $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -52,7 +52,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
-CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_HEADER = $(top_builddir)/include/GeographicLib/Config-ac.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
@@ -229,7 +229,7 @@ nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/UTMUPS.hpp
 
 geoids_dir = $(datadir)/GeographicLib/geoids
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk GeographicLib/CMakeLists.txt GeographicLib/Config.h.in
 all: all-am
 
 .SUFFIXES:

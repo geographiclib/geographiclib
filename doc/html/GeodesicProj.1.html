@@ -1,0 +1,184 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">
+<title>GeodesicProj -- perform projections based on geodesics</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#errors">ERRORS</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#history">HISTORY</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>GeodesicProj -- perform projections based on geodesics</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>GeodesicProj</strong> ( <strong>-z</strong> | <strong>-c</strong> | <strong>-g</strong> ) <em>lat0</em> <em>lon0</em> [ <strong>-r</strong> ]
+[ <strong>-e</strong> <em>a</em> <em>r</em> ] [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
+[ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
+[ <strong>--output-file</strong> <em>outfile</em> ]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>Perform projections based on geodesics.  Convert geodetic coordinates to
+either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
+The center of the projection (<em>lat0</em>, <em>lon0</em>) is specified by either the <strong>-c</strong>
+option (for Cassini-Soldner), the <strong>-z</strong> option (for azimuthal equidistant),
+or the <strong>-g</strong> option (for gnomonic).  At least one of these options must be
+given (the last one given is used).</p>
+<p>Geodetic coordinates are provided on standard input as a set of lines
+containing (blank separated) <em>latitude</em> and <em>longitude</em> (decimal
+degrees or degrees, minutes, seconds).  For each set of geodetic
+coordinates, the corresponding projected coordinates <em>x</em>, <em>y</em> (meters)
+are printed on standard output together with the azimuth <em>azi</em>
+(degrees) and reciprocal scale <em>rk</em>.  For Cassini-Soldner, <em>azi</em> is
+the bearing of the easting direction and the scale in the easting
+direction is 1 and the scale in the northing direction is 1/<em>rk</em>.  For
+azimuthal equidistant and gnomonic, <em>azi</em> is the bearing of the radial
+direction and the scale in the azimuthal direction is 1/<em>rk</em>.  For
+azimuthal equidistant and gnomonic, the scales in the radial direction
+are 1 and 1/<em>rk</em>^2, respectively.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="z" class="item"><strong>-z</strong></a></strong></dt>
+
+<dd>
+<p>use the azimuthal equidistant projection centered at latitude = <em>lat0</em>,
+longitude = <em>lon0</em>.</p>
+</dd>
+<dt><strong><a name="c" class="item"><strong>-c</strong></a></strong></dt>
+
+<dd>
+<p>use the Cassini-Soldner projection centered at latitude = <em>lat0</em>,
+longitude = <em>lon0</em>.</p>
+</dd>
+<dt><strong><a name="g" class="item"><strong>-g</strong></a></strong></dt>
+
+<dd>
+<p>use the ellipsoidal gnomonic projection centered at latitude = <em>lat0</em>,
+longitude = <em>lon0</em>.</p>
+</dd>
+<dt><strong><a name="r" class="item"><strong>-r</strong></a></strong></dt>
+
+<dd>
+<p>perform the reverse projection.  <em>x</em> and <em>y</em> are given on standard
+input and each line of standard output gives <em>latitude</em>, <em>longitude</em>,
+<em>azi</em>, and <em>rk</em>.</p>
+</dd>
+<dt><strong><a name="e" class="item"><strong>-e</strong></a></strong></dt>
+
+<dd>
+<p>specify the ellipsoid via <em>a</em> <em>r</em>; the equatorial radius is <em>a</em> and
+the reciprocal flattening is <em>r</em>.  Setting <em>r</em> = 0 results in a
+sphere.  Specify <em>r</em> &lt; 0 for a prolate ellipsoid.  By default, the
+WGS84 ellipsoid is used, <em>a</em> = 6378137m, <em>r</em> = 298.257223563.</p>
+</dd>
+<dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
+
+<dd>
+<p>print version and exit.</p>
+</dd>
+<dt><strong><a name="h" class="item"><strong>-h</strong></a></strong></dt>
+
+<dd>
+<p>print usage and exit.</p>
+</dd>
+<dt><strong><a name="help" class="item"><strong>--help</strong></a></strong></dt>
+
+<dd>
+<p>print full documentation and exit.</p>
+</dd>
+<dt><strong><a name="input_file" class="item"><strong>--input-file</strong></a></strong></dt>
+
+<dd>
+<p>read input from the file <em>infile</em> instead of from standard input; a file
+name of &quot;-&quot; stands for standard input.</p>
+</dd>
+<dt><strong><a name="input_string" class="item"><strong>--input-string</strong></a></strong></dt>
+
+<dd>
+<p>read input from the string <em>instring</em> instead of from standard input.
+All the semicolons in <em>instring</em> are converted to newlines before the
+reading begins.</p>
+</dd>
+<dt><strong><a name="output_file" class="item"><strong>--output-file</strong></a></strong></dt>
+
+<dd>
+<p>write output to the file <em>outfile</em> instead of to standard output; a
+file name of &quot;-&quot; stands for standard output.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<pre>
+   echo 48.648 -2.007 | GeodesicProj -c 48.836 2.337
+   =&gt; -319919 -11791 86.7 0.999
+   echo -319919 -11791 | GeodesicProj -c 48.836 2.337 -r
+   =&gt; 48.648 -2.007 86.7 0.999</pre>
+<p>
+</p>
+<hr />
+<h1><a name="errors">ERRORS</a></h1>
+<p>An illegal line of input will print an error message to standard output
+beginning with <code>ERROR:</code> and causes <strong>GeodesicProj</strong> to return an exit
+code of 1.  However, an error does not cause <strong>GeodesicProj</strong> to
+terminate; following lines will be converted.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><strong>GeodesicProj</strong> is a part of GeographicLib,
+<a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>.  The ellipsoidal gnomonic projection is
+derived in Section 13 of C. F. F. Karney, <em>Geodesics on an ellipsoid of
+revolution</em>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p><strong>GeodesicProj</strong> was written by Charles Karney.</p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p><strong>GeodesicProj</strong> was added to GeographicLib in 2009-08.  Prior to version
+1.9 it was called EquidistantTest.</p>
+
+</body>
+
+</html>

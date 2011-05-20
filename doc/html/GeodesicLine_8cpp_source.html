@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
+      <li><a class="el" href="dir_bef474d3441323eeb40ad6ee1f890a93.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -40,8 +40,8 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file GeodesicLine.cpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Implementation for GeographicLib::GeodesicLine class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2009, 2010) &lt;charles@karney.com&gt;</span>
-<a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2009, 2010, 2011) &lt;charles@karney.com&gt; and</span>
+<a name="l00006"></a>00006 <span class="comment"> * licensed under the LGPL.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> *</span>
 <a name="l00009"></a>00009 <span class="comment"> * This is a reformulation of the geodesic problem.  The notation is as</span>
@@ -64,9 +64,9 @@
 <a name="l00026"></a>00026 <span class="comment"> * - s and c prefixes mean sin and cos</span>
 <a name="l00027"></a>00027 <span class="comment"> **********************************************************************/</span>
 <a name="l00028"></a>00028 
-<a name="l00029"></a>00029 <span class="preprocessor">#include &quot;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&quot;</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&gt;</span>
 <a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">00031</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_CPP &quot;$Id: GeodesicLine.cpp 6921 2010-12-31 14:34:50Z karney $&quot;</span>
+<a name="l00031"></a><a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">00031</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_CPP &quot;$Id: 3d87c121ff7239da5e139738b31e5b383c8f18ee $&quot;</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
 <a name="l00033"></a>00033 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">GEOGRAPHICLIB_GEODESICLINE_CPP</a>)
 <a name="l00034"></a>00034 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeodesicLine_8hpp.html#a45305d595b59bfb061a5a0c6e1044485">GEOGRAPHICLIB_GEODESICLINE_HPP</a>)
@@ -103,7 +103,7 @@
 <a name="l00065"></a>00065     phi = lat1 * Math::degree&lt;real&gt;();
 <a name="l00066"></a>00066     <span class="comment">// Ensure cbet1 = +epsilon at poles</span>
 <a name="l00067"></a>00067     sbet1 = _f1 * sin(phi);
-<a name="l00068"></a>00068     cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
+<a name="l00068"></a>00068     cbet1 = abs(lat1) == 90 ? Geodesic::eps2_ : cos(phi);
 <a name="l00069"></a>00069     Geodesic::SinCosNorm(sbet1, cbet1);
 <a name="l00070"></a>00070 
 <a name="l00071"></a>00071     <span class="comment">// Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),</span>
@@ -125,19 +125,19 @@
 <a name="l00087"></a>00087     Geodesic::SinCosNorm(_ssig1, _csig1); <span class="comment">// sig1 in (-pi, pi]</span>
 <a name="l00088"></a>00088     Geodesic::SinCosNorm(_somg1, _comg1);
 <a name="l00089"></a>00089 
-<a name="l00090"></a>00090     _k2 = sq(_calp0) * g._ep2;
+<a name="l00090"></a>00090     _k2 = Math::sq(_calp0) * g._ep2;
 <a name="l00091"></a>00091     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
 <a name="l00092"></a>00092 
 <a name="l00093"></a>00093     <span class="keywordflow">if</span> (_caps &amp; CAP_C1) {
 <a name="l00094"></a>00094       _A1m1 =  Geodesic::A1m1f(eps);
 <a name="l00095"></a>00095       Geodesic::C1f(eps, _C1a);
-<a name="l00096"></a>00096       _B11 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C1a, nC1);
+<a name="l00096"></a>00096       _B11 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C1a, nC1_);
 <a name="l00097"></a>00097       real s = sin(_B11), c = cos(_B11);
 <a name="l00098"></a>00098       <span class="comment">// tau1 = sig1 + B11</span>
 <a name="l00099"></a>00099       _stau1 = _ssig1 * c + _csig1 * s;
 <a name="l00100"></a>00100       _ctau1 = _csig1 * c - _ssig1 * s;
 <a name="l00101"></a>00101       <span class="comment">// Not necessary because C1pa reverts C1a</span>
-<a name="l00102"></a>00102       <span class="comment">//    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p);</span>
+<a name="l00102"></a>00102       <span class="comment">//    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_);</span>
 <a name="l00103"></a>00103     }
 <a name="l00104"></a>00104 
 <a name="l00105"></a>00105     <span class="keywordflow">if</span> (_caps &amp; CAP_C1p)
@@ -146,20 +146,20 @@
 <a name="l00108"></a>00108     <span class="keywordflow">if</span> (_caps &amp; CAP_C2) {
 <a name="l00109"></a>00109       _A2m1 =  Geodesic::A2m1f(eps);
 <a name="l00110"></a>00110       Geodesic::C2f(eps, _C2a);
-<a name="l00111"></a>00111       _B21 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C2a, nC2);
+<a name="l00111"></a>00111       _B21 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C2a, nC2_);
 <a name="l00112"></a>00112     }
 <a name="l00113"></a>00113 
 <a name="l00114"></a>00114     <span class="keywordflow">if</span> (_caps &amp; CAP_C3) {
 <a name="l00115"></a>00115       g.C3f(eps, _C3a);
 <a name="l00116"></a>00116       _A3c = -g._f * _salp0 * g.A3f(eps);
-<a name="l00117"></a>00117       _B31 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C3a, nC3-1);
+<a name="l00117"></a>00117       _B31 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C3a, nC3_-1);
 <a name="l00118"></a>00118     }
 <a name="l00119"></a>00119 
 <a name="l00120"></a>00120     <span class="keywordflow">if</span> (_caps &amp; CAP_C4) {
 <a name="l00121"></a>00121       g.C4f(_k2, _C4a);
 <a name="l00122"></a>00122       <span class="comment">// Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)</span>
-<a name="l00123"></a>00123       _A4 = sq(g._a) * _calp0 * _salp0 * g._e2;
-<a name="l00124"></a>00124       _B41 = Geodesic::SinCosSeries(<span class="keyword">false</span>, _ssig1, _csig1, _C4a, nC4);
+<a name="l00123"></a>00123       _A4 = Math::sq(g._a) * _calp0 * _salp0 * g._e2;
+<a name="l00124"></a>00124       _B41 = Geodesic::SinCosSeries(<span class="keyword">false</span>, _ssig1, _csig1, _C4a, nC4_);
 <a name="l00125"></a>00125     }
 <a name="l00126"></a>00126   }
 <a name="l00127"></a>00127 
@@ -193,7 +193,7 @@
 <a name="l00155"></a>00155       <span class="comment">// tau2 = tau1 + tau12</span>
 <a name="l00156"></a>00156       B12 = - Geodesic::SinCosSeries(<span class="keyword">true</span>, _stau1 * c + _ctau1 * s,
 <a name="l00157"></a>00157                                      _ctau1 * c - _stau1 * s,
-<a name="l00158"></a>00158                                      _C1pa, nC1p);
+<a name="l00158"></a>00158                                      _C1pa, nC1p_);
 <a name="l00159"></a>00159       sig12 = tau12 - (B12 - _B11);
 <a name="l00160"></a>00160       ssig12 = sin(sig12);
 <a name="l00161"></a>00161       csig12 = cos(sig12);
@@ -206,7 +206,7 @@
 <a name="l00168"></a>00168     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
 <a name="l00169"></a>00169     <span class="keywordflow">if</span> (outmask &amp; (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
 <a name="l00170"></a>00170       <span class="keywordflow">if</span> (arcmode)
-<a name="l00171"></a>00171         B12 = Geodesic::SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, _C1a, nC1);
+<a name="l00171"></a>00171         B12 = Geodesic::SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, _C1a, nC1_);
 <a name="l00172"></a>00172       AB1 = (1 + _A1m1) * (B12 - _B11);
 <a name="l00173"></a>00173     }
 <a name="l00174"></a>00174     <span class="comment">// sin(bet2) = cos(alp0) * sin(sig2)</span>
@@ -215,7 +215,7 @@
 <a name="l00177"></a>00177     cbet2 = Math::hypot(_salp0, _calp0 * csig2);
 <a name="l00178"></a>00178     <span class="keywordflow">if</span> (cbet2 == 0)
 <a name="l00179"></a>00179       <span class="comment">// I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case</span>
-<a name="l00180"></a>00180       cbet2 = csig2 = Geodesic::eps2;
+<a name="l00180"></a>00180       cbet2 = csig2 = Geodesic::eps2_;
 <a name="l00181"></a>00181     <span class="comment">// tan(omg2) = sin(alp0) * tan(sig2)</span>
 <a name="l00182"></a>00182     somg2 = _salp0 * ssig2; comg2 = csig2;  <span class="comment">// No need to normalize</span>
 <a name="l00183"></a>00183     <span class="comment">// tan(alp0) = cos(sig2)*tan(alp2)</span>
@@ -229,7 +229,7 @@
 <a name="l00191"></a>00191 
 <a name="l00192"></a>00192     <span class="keywordflow">if</span> (outmask &amp; LONGITUDE) {
 <a name="l00193"></a>00193       lam12 = omg12 + _A3c *
-<a name="l00194"></a>00194         ( sig12 + (Geodesic::SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, _C3a, nC3-1)
+<a name="l00194"></a>00194         ( sig12 + (Geodesic::SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, _C3a, nC3_-1)
 <a name="l00195"></a>00195                    - _B31));
 <a name="l00196"></a>00196       lon12 = lam12 / Math::degree&lt;real&gt;();
 <a name="l00197"></a>00197       <span class="comment">// Can&#39;t use AngNormalize because longitude might have wrapped multiple</span>
@@ -247,11 +247,11 @@
 <a name="l00209"></a>00209 
 <a name="l00210"></a>00210     <span class="keywordflow">if</span> (outmask &amp; (REDUCEDLENGTH | GEODESICSCALE)) {
 <a name="l00211"></a>00211       real
-<a name="l00212"></a>00212         ssig1sq = sq(_ssig1),
-<a name="l00213"></a>00213         ssig2sq = sq( ssig2),
+<a name="l00212"></a>00212         ssig1sq = Math::sq(_ssig1),
+<a name="l00213"></a>00213         ssig2sq = Math::sq( ssig2),
 <a name="l00214"></a>00214         w1 = sqrt(1 + _k2 * ssig1sq),
 <a name="l00215"></a>00215         w2 = sqrt(1 + _k2 * ssig2sq),
-<a name="l00216"></a>00216         B22 = Geodesic::SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, _C2a, nC2),
+<a name="l00216"></a>00216         B22 = Geodesic::SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, _C2a, nC2_),
 <a name="l00217"></a>00217         AB2 = (1 + _A2m1) * (B22 - _B21),
 <a name="l00218"></a>00218         J12 = (_A1m1 - _A2m1) * sig12 + (AB1 - AB2);
 <a name="l00219"></a>00219       <span class="keywordflow">if</span> (outmask &amp; REDUCEDLENGTH)
@@ -269,7 +269,7 @@
 <a name="l00231"></a>00231 
 <a name="l00232"></a>00232     <span class="keywordflow">if</span> (outmask &amp; AREA) {
 <a name="l00233"></a>00233       real
-<a name="l00234"></a>00234         B42 = Geodesic::SinCosSeries(<span class="keyword">false</span>, ssig2, csig2, _C4a, nC4);
+<a name="l00234"></a>00234         B42 = Geodesic::SinCosSeries(<span class="keyword">false</span>, ssig2, csig2, _C4a, nC4_);
 <a name="l00235"></a>00235       real salp12, calp12;
 <a name="l00236"></a>00236       <span class="keywordflow">if</span> (_calp0 == 0 || _salp0 == 0) {
 <a name="l00237"></a>00237         <span class="comment">// alp12 = alp2 - alp1, used in atan2 so no need to normalized</span>
@@ -279,7 +279,7 @@
 <a name="l00241"></a>00241         <span class="comment">// salp12 = -0 and alp12 = -180.  However this depends on the sign being</span>
 <a name="l00242"></a>00242         <span class="comment">// attached to 0 correctly.  The following ensures the correct behavior.</span>
 <a name="l00243"></a>00243         <span class="keywordflow">if</span> (salp12 == 0 &amp;&amp; calp12 &lt; 0) {
-<a name="l00244"></a>00244           salp12 = Geodesic::eps2 * _calp1;
+<a name="l00244"></a>00244           salp12 = Geodesic::eps2_ * _calp1;
 <a name="l00245"></a>00245           calp12 = -1;
 <a name="l00246"></a>00246         }
 <a name="l00247"></a>00247       } <span class="keywordflow">else</span> {
@@ -294,18 +294,18 @@
 <a name="l00256"></a>00256         salp12 = _calp0 * _salp0 *
 <a name="l00257"></a>00257           (csig12 &lt;= 0 ? _csig1 * (1 - csig12) + ssig12 * _ssig1 :
 <a name="l00258"></a>00258            ssig12 * (_csig1 * ssig12 / (1 + csig12) + _ssig1));
-<a name="l00259"></a>00259         calp12 = sq(_salp0) + sq(_calp0) * _csig1 * csig2;
+<a name="l00259"></a>00259         calp12 = Math::sq(_salp0) + Math::sq(_calp0) * _csig1 * csig2;
 <a name="l00260"></a>00260       }
 <a name="l00261"></a>00261       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
 <a name="l00262"></a>00262     }
 <a name="l00263"></a>00263 
 <a name="l00264"></a>00264     <span class="keywordflow">return</span> arcmode ? s12_a12 : sig12 /  Math::degree&lt;real&gt;();
 <a name="l00265"></a>00265   }
-<a name="l00266"></a>00266 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00267"></a>00267 
+<a name="l00266"></a>00266 
+<a name="l00267"></a>00267 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

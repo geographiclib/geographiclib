@@ -12,7 +12,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic mgrsreverse.cpp
 
-// "$Id: mgrsreverse.cpp 6906 2010-12-02 22:10:56Z karney $";
+// "$Id: 0dcb2309bfcf556b88065e3c8c249fbbe7c84963 $";
 
 #include "GeographicLib/MGRS.hpp"
 #include "mex.h"

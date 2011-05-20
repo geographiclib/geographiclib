@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
-      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_b16414b5a70597b640ccac2a9ec4fe3e.html">include</a>      </li>
+      <li><a class="el" href="dir_b11e475971f7ccfb9ef63a8a3653f2dc.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,10 +47,10 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#ifndef GEOGRAPHICLIB_GEOCOORDS_HPP</span>
-<a name="l00011"></a><a class="code" href="GeoCoords_8hpp.html#a20841ff1ac217be34150ce32c5ad4bb8">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCOORDS_HPP &quot;$Id: GeoCoords.hpp 6876 2010-10-18 13:47:55Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="GeoCoords_8hpp.html#a20841ff1ac217be34150ce32c5ad4bb8">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCOORDS_HPP &quot;$Id: 43489a5a6c17b341fd293b326d0340e719df01e9 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="UTMUPS_8hpp.html" title="Header for GeographicLib::UTMUPS class.">GeographicLib/UTMUPS.hpp</a>&quot;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="UTMUPS_8hpp.html" title="Header for GeographicLib::UTMUPS class.">GeographicLib/UTMUPS.hpp</a>&gt;</span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00015"></a>00015 
 <a name="l00016"></a>00016 <span class="keyword">namespace </span>GeographicLib {
 <a name="l00017"></a>00017 <span class="comment"></span>
@@ -79,7 +79,7 @@
 <a name="l00040"></a>00040 <span class="comment">   * Once the input string has been parsed, you can print the result out in any</span>
 <a name="l00041"></a>00041 <span class="comment">   * of the formats, decimal degrees, degrees minutes seconds, MGRS, UTM/UPS.</span>
 <a name="l00042"></a>00042 <span class="comment">   **********************************************************************/</span>
-<a name="l00043"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html">00043</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeoCoords</a> {
+<a name="l00043"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html">00043</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeoCoords</a> {
 <a name="l00044"></a>00044   <span class="keyword">private</span>:
 <a name="l00045"></a>00045     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
 <a name="l00046"></a>00046     real _lat, _long, _easting, _northing, _gamma, _k;
@@ -107,7 +107,7 @@
 <a name="l00068"></a>00068 <span class="comment">     * The default contructor is equivalent to \e latitude = 90&lt;sup&gt;o&lt;/sup&gt;, \e</span>
 <a name="l00069"></a>00069 <span class="comment">     * longitude = 0&lt;sup&gt;o&lt;/sup&gt;.</span>
 <a name="l00070"></a>00070 <span class="comment">     **********************************************************************/</span>
-<a name="l00071"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a8b3f4a919ba4478c4fec0e7b01e84c57">00071</a>     <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8b3f4a919ba4478c4fec0e7b01e84c57">GeoCoords</a>() throw()
+<a name="l00071"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a8b3f4a919ba4478c4fec0e7b01e84c57">00071</a>     <a class="code" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeoCoords</a>() throw()
 <a name="l00072"></a>00072       <span class="comment">// This is the N pole</span>
 <a name="l00073"></a>00073       : _lat(90)
 <a name="l00074"></a>00074       , _long(0)
@@ -189,8 +189,8 @@
 <a name="l00150"></a>00150 <span class="comment">     * - 38SMB4484       = 38N 444000 3684000</span>
 <a name="l00151"></a>00151 <span class="comment">     * - 38SMB44148470   = 38N 444140 3684700</span>
 <a name="l00152"></a>00152 <span class="comment">     **********************************************************************/</span>
-<a name="l00153"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a2f08247e18f328a22f16354d3c723931">00153</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8b3f4a919ba4478c4fec0e7b01e84c57">GeoCoords</a>(<span class="keyword">const</span> std::string&amp; s, <span class="keywordtype">bool</span> centerp = <span class="keyword">true</span>)
-<a name="l00154"></a>00154     { <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8c5ba10e104ee04e0543fca6a33af874">Reset</a>(s, centerp); }
+<a name="l00153"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a2f08247e18f328a22f16354d3c723931">00153</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeoCoords</a>(<span class="keyword">const</span> std::string&amp; s, <span class="keywordtype">bool</span> centerp = <span class="keyword">true</span>)
+<a name="l00154"></a>00154     { Reset(s, centerp); }
 <a name="l00155"></a>00155 <span class="comment"></span>
 <a name="l00156"></a>00156 <span class="comment">    /**</span>
 <a name="l00157"></a>00157 <span class="comment">     * Construct from geographic coordinates.</span>
@@ -201,7 +201,7 @@
 <a name="l00162"></a>00162 <span class="comment">     *   specified zone using the rules given in UTMUPS::zonespec.</span>
 <a name="l00163"></a>00163 <span class="comment">     **********************************************************************/</span>
 <a name="l00164"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a7bde6a5cba74adf66d831788e6be8e65">00164</a>     <a class="code" href="classGeographicLib_1_1GeoCoords.html#a7bde6a5cba74adf66d831788e6be8e65">GeoCoords</a>(real latitude, real longitude, <span class="keywordtype">int</span> zone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">UTMUPS::STANDARD</a>) {
-<a name="l00165"></a>00165       <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8c5ba10e104ee04e0543fca6a33af874">Reset</a>(latitude, longitude, zone);
+<a name="l00165"></a>00165       Reset(latitude, longitude, zone);
 <a name="l00166"></a>00166     }
 <a name="l00167"></a>00167 <span class="comment"></span>
 <a name="l00168"></a>00168 <span class="comment">    /**</span>
@@ -213,14 +213,14 @@
 <a name="l00174"></a>00174 <span class="comment">     * @param[in] northing (meters).</span>
 <a name="l00175"></a>00175 <span class="comment">     **********************************************************************/</span>
 <a name="l00176"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#aaab765054416e1243f2d7b36edc8e0d4">00176</a>     <a class="code" href="classGeographicLib_1_1GeoCoords.html#aaab765054416e1243f2d7b36edc8e0d4">GeoCoords</a>(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, real easting, real northing) {
-<a name="l00177"></a>00177       <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8c5ba10e104ee04e0543fca6a33af874">Reset</a>(zone, northp, easting, northing);
+<a name="l00177"></a>00177       Reset(zone, northp, easting, northing);
 <a name="l00178"></a>00178     }
 <a name="l00179"></a>00179 <span class="comment"></span>
 <a name="l00180"></a>00180 <span class="comment">    /**</span>
 <a name="l00181"></a>00181 <span class="comment">     * Reset the location from a string.  See</span>
 <a name="l00182"></a>00182 <span class="comment">     * GeoCoords(const std::string&amp; s, bool centerp).</span>
 <a name="l00183"></a>00183 <span class="comment">     **********************************************************************/</span>
-<a name="l00184"></a>00184     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8c5ba10e104ee04e0543fca6a33af874">Reset</a>(<span class="keyword">const</span> std::string&amp; s, <span class="keywordtype">bool</span> centerp = <span class="keyword">true</span>);
+<a name="l00184"></a>00184     <span class="keywordtype">void</span> Reset(<span class="keyword">const</span> std::string&amp; s, <span class="keywordtype">bool</span> centerp = <span class="keyword">true</span>);
 <a name="l00185"></a>00185 <span class="comment"></span>
 <a name="l00186"></a>00186 <span class="comment">    /**</span>
 <a name="l00187"></a>00187 <span class="comment">     * Reset the location in terms of geographic coordinates.  See</span>
@@ -374,7 +374,7 @@
 <a name="l00335"></a>00335 <span class="comment">     * - prec = 3, 10&lt;sup&gt;-8&lt;/sup&gt;d</span>
 <a name="l00336"></a>00336 <span class="comment">     * - prec = 9 (max), 10&lt;sup&gt;-14&lt;/sup&gt;d</span>
 <a name="l00337"></a>00337 <span class="comment">     **********************************************************************/</span>
-<a name="l00338"></a>00338     std::string <a class="code" href="classGeographicLib_1_1GeoCoords.html#abf9239e8caae2bfbe8783d0258ac58d0">GeoRepresentation</a>(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
+<a name="l00338"></a>00338     std::string GeoRepresentation(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
 <a name="l00339"></a>00339 <span class="comment"></span>
 <a name="l00340"></a>00340 <span class="comment">    /**</span>
 <a name="l00341"></a>00341 <span class="comment">     * String representation with latitude and longitude as degrees, minutes,</span>
@@ -393,7 +393,7 @@
 <a name="l00354"></a>00354 <span class="comment">     * - prec = 1, 0.01&quot;</span>
 <a name="l00355"></a>00355 <span class="comment">     * - prec = 10 (max), 10&lt;sup&gt;-11&lt;/sup&gt;&quot;</span>
 <a name="l00356"></a>00356 <span class="comment">     **********************************************************************/</span>
-<a name="l00357"></a>00357     std::string <a class="code" href="classGeographicLib_1_1GeoCoords.html#a08d132e5bbd51a9feaab5d39903d3b5a">DMSRepresentation</a>(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
+<a name="l00357"></a>00357     std::string DMSRepresentation(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
 <a name="l00358"></a>00358 <span class="comment"></span>
 <a name="l00359"></a>00359 <span class="comment">    /**</span>
 <a name="l00360"></a>00360 <span class="comment">     * MGRS string.</span>
@@ -414,7 +414,7 @@
 <a name="l00375"></a>00375 <span class="comment">     * - prec = 1, 0.1m</span>
 <a name="l00376"></a>00376 <span class="comment">     * - prec = 6 (max), 1um</span>
 <a name="l00377"></a>00377 <span class="comment">     **********************************************************************/</span>
-<a name="l00378"></a>00378     std::string <a class="code" href="classGeographicLib_1_1GeoCoords.html#a36594aaa4f293b0ddf00b1c78bb04595">MGRSRepresentation</a>(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
+<a name="l00378"></a>00378     std::string MGRSRepresentation(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
 <a name="l00379"></a>00379 <span class="comment"></span>
 <a name="l00380"></a>00380 <span class="comment">    /**</span>
 <a name="l00381"></a>00381 <span class="comment">     * UTM/UPS string.</span>
@@ -431,18 +431,18 @@
 <a name="l00392"></a>00392 <span class="comment">     * - prec = 6, 1um</span>
 <a name="l00393"></a>00393 <span class="comment">     * - prec = 9 (max), 1nm</span>
 <a name="l00394"></a>00394 <span class="comment">     **********************************************************************/</span>
-<a name="l00395"></a>00395     std::string <a class="code" href="classGeographicLib_1_1GeoCoords.html#a056efc42fe4c653aad40be5d5b865ea3">UTMUPSRepresentation</a>(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
+<a name="l00395"></a>00395     std::string UTMUPSRepresentation(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
 <a name="l00396"></a>00396 <span class="comment"></span>
 <a name="l00397"></a>00397 <span class="comment">    /**</span>
 <a name="l00398"></a>00398 <span class="comment">     * MGRS string for the alternate zone.  See GeoCoords::MGRSRepresentation.</span>
 <a name="l00399"></a>00399 <span class="comment">     **********************************************************************/</span>
-<a name="l00400"></a>00400     std::string <a class="code" href="classGeographicLib_1_1GeoCoords.html#ad602893cd4a81ccc511daff76b411413">AltMGRSRepresentation</a>(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
+<a name="l00400"></a>00400     std::string AltMGRSRepresentation(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;
 <a name="l00401"></a>00401 <span class="comment"></span>
 <a name="l00402"></a>00402 <span class="comment">    /**</span>
 <a name="l00403"></a>00403 <span class="comment">     * UTM/UPS string for the alternate zone.  See</span>
 <a name="l00404"></a>00404 <span class="comment">     * GeoCoords::UTMUPSRepresentation.</span>
 <a name="l00405"></a>00405 <span class="comment">     **********************************************************************/</span>
-<a name="l00406"></a>00406     std::string <a class="code" href="classGeographicLib_1_1GeoCoords.html#a020732ccba257d7f5248692afd318b93">AltUTMUPSRepresentation</a>(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;<span class="comment"></span>
+<a name="l00406"></a>00406     std::string AltUTMUPSRepresentation(<span class="keywordtype">int</span> prec = 0) <span class="keyword">const</span>;<span class="comment"></span>
 <a name="l00407"></a>00407 <span class="comment">    ///@}</span>
 <a name="l00408"></a>00408 <span class="comment"></span><span class="comment"></span>
 <a name="l00409"></a>00409 <span class="comment">    /** \name Inspector functions</span>
@@ -454,7 +454,7 @@
 <a name="l00415"></a>00415 <span class="comment">     * (The WGS84 value is returned because the UTM and UPS projections are</span>
 <a name="l00416"></a>00416 <span class="comment">     * based on this ellipsoid.)</span>
 <a name="l00417"></a>00417 <span class="comment">     **********************************************************************/</span>
-<a name="l00418"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a897e6bbfb71f78b0646045bf47e09696">00418</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1GeoCoords.html#a897e6bbfb71f78b0646045bf47e09696">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1GeoCoords.html#a897e6bbfb71f78b0646045bf47e09696">UTMUPS::MajorRadius</a>(); }
+<a name="l00418"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a897e6bbfb71f78b0646045bf47e09696">00418</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1GeoCoords.html#a897e6bbfb71f78b0646045bf47e09696">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">UTMUPS::MajorRadius</a>(); }
 <a name="l00419"></a>00419 <span class="comment"></span>
 <a name="l00420"></a>00420 <span class="comment">    /**</span>
 <a name="l00421"></a>00421 <span class="comment">     * @return \e r the inverse flattening of the WGS84 ellipsoid.</span>
@@ -462,16 +462,17 @@
 <a name="l00423"></a>00423 <span class="comment">     * (The WGS84 value is returned because the UTM and UPS projections are</span>
 <a name="l00424"></a>00424 <span class="comment">     * based on this ellipsoid.)</span>
 <a name="l00425"></a>00425 <span class="comment">     **********************************************************************/</span>
-<a name="l00426"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a8f653a04eb087280cd020466213c9cac">00426</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8f653a04eb087280cd020466213c9cac">InverseFlattening</a>() <span class="keyword">const</span> throw()
-<a name="l00427"></a>00427     { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1GeoCoords.html#a8f653a04eb087280cd020466213c9cac">UTMUPS::InverseFlattening</a>(); }<span class="comment"></span>
+<a name="l00426"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a8f653a04eb087280cd020466213c9cac">00426</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
+<a name="l00427"></a>00427     { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">UTMUPS::InverseFlattening</a>(); }<span class="comment"></span>
 <a name="l00428"></a>00428 <span class="comment">    ///@}</span>
 <a name="l00429"></a>00429 <span class="comment"></span>  };
 <a name="l00430"></a>00430 
 <a name="l00431"></a>00431 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00432"></a>00432 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOCOORDS_HPP</span>
+<a name="l00432"></a>00432 
+<a name="l00433"></a>00433 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOCOORDS_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
-      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_b16414b5a70597b640ccac2a9ec4fe3e.html">include</a>      </li>
+      <li><a class="el" href="dir_b11e475971f7ccfb9ef63a8a3653f2dc.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,10 +47,10 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_UTMUPS_HPP)</span>
-<a name="l00011"></a><a class="code" href="UTMUPS_8hpp.html#aab4dce5d203c0d98ae740800332ed9d9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_UTMUPS_HPP &quot;$Id: UTMUPS.hpp 6937 2011-02-01 20:17:13Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="UTMUPS_8hpp.html#aab4dce5d203c0d98ae740800332ed9d9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_UTMUPS_HPP &quot;$Id: 280b3ae1d12d4ed1f8a429abf99be36a0546c309 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;sstream&gt;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;sstream&gt;</span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00015"></a>00015 
 <a name="l00016"></a>00016 <span class="keyword">namespace </span>GeographicLib {
 <a name="l00017"></a>00017 <span class="comment"></span>
@@ -95,17 +95,17 @@
 <a name="l00056"></a>00056 <span class="comment">   *   UPS coordinate is legal.  A more systematic approach is taken here.</span>
 <a name="l00057"></a>00057 <span class="comment">   * - The underlying projections are not very accurately implemented.</span>
 <a name="l00058"></a>00058 <span class="comment">   **********************************************************************/</span>
-<a name="l00059"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html">00059</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a> {
+<a name="l00059"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html">00059</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a> {
 <a name="l00060"></a>00060   <span class="keyword">private</span>:
 <a name="l00061"></a>00061     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
-<a name="l00062"></a>00062     <span class="keyword">static</span> <span class="keyword">const</span> real falseeasting[4];
-<a name="l00063"></a>00063     <span class="keyword">static</span> <span class="keyword">const</span> real falsenorthing[4];
-<a name="l00064"></a>00064     <span class="keyword">static</span> <span class="keyword">const</span> real mineasting[4];
-<a name="l00065"></a>00065     <span class="keyword">static</span> <span class="keyword">const</span> real maxeasting[4];
-<a name="l00066"></a>00066     <span class="keyword">static</span> <span class="keyword">const</span> real minnorthing[4];
-<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keyword">const</span> real maxnorthing[4];
+<a name="l00062"></a>00062     <span class="keyword">static</span> <span class="keyword">const</span> real falseeasting_[4];
+<a name="l00063"></a>00063     <span class="keyword">static</span> <span class="keyword">const</span> real falsenorthing_[4];
+<a name="l00064"></a>00064     <span class="keyword">static</span> <span class="keyword">const</span> real mineasting_[4];
+<a name="l00065"></a>00065     <span class="keyword">static</span> <span class="keyword">const</span> real maxeasting_[4];
+<a name="l00066"></a>00066     <span class="keyword">static</span> <span class="keyword">const</span> real minnorthing_[4];
+<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keyword">const</span> real maxnorthing_[4];
 <a name="l00068"></a>00068     <span class="keyword">static</span> real CentralMeridian(<span class="keywordtype">int</span> zone) <span class="keywordflow">throw</span>()
-<a name="l00069"></a>00069     { <span class="keywordflow">return</span> real(6 * zone - 183); }
+<a name="l00069"></a>00069     { <span class="keywordflow">return</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(6 * zone - 183); }
 <a name="l00070"></a>00070     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">static</span> std::string str(T x) {
 <a name="l00071"></a>00071       std::ostringstream s; s &lt;&lt; x; <span class="keywordflow">return</span> s.str();
 <a name="l00072"></a>00072     }
@@ -130,23 +130,23 @@
 <a name="l00091"></a>00091 <span class="comment">      /**</span>
 <a name="l00092"></a>00092 <span class="comment">       * The smallest pseudo-zone number.</span>
 <a name="l00093"></a>00093 <span class="comment">       **********************************************************************/</span>
-<a name="l00094"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9">00094</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9">MINPSEUDOZONE</a> = -4,<span class="comment"></span>
+<a name="l00094"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9">00094</a>       MINPSEUDOZONE = -4,<span class="comment"></span>
 <a name="l00095"></a>00095 <span class="comment">      /**</span>
 <a name="l00096"></a>00096 <span class="comment">       * A marker for an undefined or invalid zone.  Equivalent to NaN.</span>
 <a name="l00097"></a>00097 <span class="comment">       **********************************************************************/</span>
-<a name="l00098"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">00098</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">INVALID</a> = -4,<span class="comment"></span>
+<a name="l00098"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">00098</a>       INVALID = -4,<span class="comment"></span>
 <a name="l00099"></a>00099 <span class="comment">      /**</span>
 <a name="l00100"></a>00100 <span class="comment">       * If a coordinate already include zone information (e.g., it is an MGRS</span>
 <a name="l00101"></a>00101 <span class="comment">       * coordinate), use that, otherwise apply the UTMUPS::STANDARD rules.</span>
 <a name="l00102"></a>00102 <span class="comment">       **********************************************************************/</span>
-<a name="l00103"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320">00103</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320">MATCH</a> = -3,<span class="comment"></span>
+<a name="l00103"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320">00103</a>       MATCH = -3,<span class="comment"></span>
 <a name="l00104"></a>00104 <span class="comment">      /**</span>
 <a name="l00105"></a>00105 <span class="comment">       * Apply the standard rules for UTM zone assigment extending the UTM zone</span>
 <a name="l00106"></a>00106 <span class="comment">       * to each pole to give a zone number in [1, 60].  For example, use UTM</span>
 <a name="l00107"></a>00107 <span class="comment">       * zone 38 for longitude in [42, 48).  The rules include the Norway and</span>
 <a name="l00108"></a>00108 <span class="comment">       * Svalbard exceptions.</span>
 <a name="l00109"></a>00109 <span class="comment">       **********************************************************************/</span>
-<a name="l00110"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aacc8f89ac6144b1e445ca21cbe9a2533">00110</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aacc8f89ac6144b1e445ca21cbe9a2533">UTM</a> = -2,<span class="comment"></span>
+<a name="l00110"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aacc8f89ac6144b1e445ca21cbe9a2533">00110</a>       UTM = -2,<span class="comment"></span>
 <a name="l00111"></a>00111 <span class="comment">      /**</span>
 <a name="l00112"></a>00112 <span class="comment">       * Apply the standard rules for zone assignment to give a zone number in</span>
 <a name="l00113"></a>00113 <span class="comment">       * [0, 60].  If the latitude is not in [-80, 84), then use UTMUPS::UPS =</span>
@@ -155,31 +155,31 @@
 <a name="l00116"></a>00116 <span class="comment">       * Thus for UTM zone 38, latitude is in [-80, 84) and longitude is in</span>
 <a name="l00117"></a>00117 <span class="comment">       * [42, 48).</span>
 <a name="l00118"></a>00118 <span class="comment">       **********************************************************************/</span>
-<a name="l00119"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">00119</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">STANDARD</a> = -1,<span class="comment"></span>
+<a name="l00119"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">00119</a>       STANDARD = -1,<span class="comment"></span>
 <a name="l00120"></a>00120 <span class="comment">      /**</span>
 <a name="l00121"></a>00121 <span class="comment">       * The largest pseudo-zone number.</span>
 <a name="l00122"></a>00122 <span class="comment">       **********************************************************************/</span>
-<a name="l00123"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ac22db7e136b6e06fba7c3c06b5888362">00123</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ac22db7e136b6e06fba7c3c06b5888362">MAXPSEUDOZONE</a> = -1,<span class="comment"></span>
+<a name="l00123"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ac22db7e136b6e06fba7c3c06b5888362">00123</a>       MAXPSEUDOZONE = -1,<span class="comment"></span>
 <a name="l00124"></a>00124 <span class="comment">      /**</span>
 <a name="l00125"></a>00125 <span class="comment">       * The smallest physical zone number.</span>
 <a name="l00126"></a>00126 <span class="comment">       **********************************************************************/</span>
-<a name="l00127"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">00127</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">MINZONE</a> = 0,<span class="comment"></span>
+<a name="l00127"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">00127</a>       MINZONE = 0,<span class="comment"></span>
 <a name="l00128"></a>00128 <span class="comment">      /**</span>
 <a name="l00129"></a>00129 <span class="comment">       * The zone number used for UPS</span>
 <a name="l00130"></a>00130 <span class="comment">       **********************************************************************/</span>
-<a name="l00131"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">00131</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">UPS</a> = 0,<span class="comment"></span>
+<a name="l00131"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">00131</a>       UPS = 0,<span class="comment"></span>
 <a name="l00132"></a>00132 <span class="comment">      /**</span>
 <a name="l00133"></a>00133 <span class="comment">       * The smallest UTM zone number.</span>
 <a name="l00134"></a>00134 <span class="comment">       **********************************************************************/</span>
-<a name="l00135"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a1413e6cc83d4bf1eb4ad1c0f1d745eb6">00135</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a1413e6cc83d4bf1eb4ad1c0f1d745eb6">MINUTMZONE</a> = 1,<span class="comment"></span>
+<a name="l00135"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a1413e6cc83d4bf1eb4ad1c0f1d745eb6">00135</a>       MINUTMZONE = 1,<span class="comment"></span>
 <a name="l00136"></a>00136 <span class="comment">      /**</span>
 <a name="l00137"></a>00137 <span class="comment">       * The largest UTM zone number.</span>
 <a name="l00138"></a>00138 <span class="comment">       **********************************************************************/</span>
-<a name="l00139"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ae8e04ab8df50a062c1fe277a6880bc19">00139</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ae8e04ab8df50a062c1fe277a6880bc19">MAXUTMZONE</a> = 60,<span class="comment"></span>
+<a name="l00139"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ae8e04ab8df50a062c1fe277a6880bc19">00139</a>       MAXUTMZONE = 60,<span class="comment"></span>
 <a name="l00140"></a>00140 <span class="comment">      /**</span>
 <a name="l00141"></a>00141 <span class="comment">       * The largest physical zone number.</span>
 <a name="l00142"></a>00142 <span class="comment">       **********************************************************************/</span>
-<a name="l00143"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">00143</a>       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">MAXZONE</a> = 60,
+<a name="l00143"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">00143</a>       MAXZONE = 60,
 <a name="l00144"></a>00144     };
 <a name="l00145"></a>00145 <span class="comment"></span>
 <a name="l00146"></a>00146 <span class="comment">    /**</span>
@@ -194,7 +194,7 @@
 <a name="l00155"></a>00155 <span class="comment">     * UTMUPS::zonespec.  Throws an error if \e setzone is outsize the range</span>
 <a name="l00156"></a>00156 <span class="comment">     * [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [-4, 60].</span>
 <a name="l00157"></a>00157 <span class="comment">     **********************************************************************/</span>
-<a name="l00158"></a>00158     <span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a62623c295d1b43318a9fa762c3da94ea">StandardZone</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <span class="keywordtype">int</span> setzone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">STANDARD</a>);
+<a name="l00158"></a>00158     <span class="keyword">static</span> <span class="keywordtype">int</span> StandardZone(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <span class="keywordtype">int</span> setzone = STANDARD);
 <a name="l00159"></a>00159 <span class="comment"></span>
 <a name="l00160"></a>00160 <span class="comment">    /**</span>
 <a name="l00161"></a>00161 <span class="comment">     * Forward projection, from geographic to UTM/UPS.</span>
@@ -218,10 +218,10 @@
 <a name="l00179"></a>00179 <span class="comment">     * are unchanged.  This also returns meridian convergence \e gamma</span>
 <a name="l00180"></a>00180 <span class="comment">     * (degrees) and scale \e k.  The accuracy of the conversion is about 5nm.</span>
 <a name="l00181"></a>00181 <span class="comment">     **********************************************************************/</span>
-<a name="l00182"></a>00182     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">Forward</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon,
+<a name="l00182"></a>00182     <span class="keyword">static</span> <span class="keywordtype">void</span> Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon,
 <a name="l00183"></a>00183                         <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y,
 <a name="l00184"></a>00184                         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; gamma, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; k,
-<a name="l00185"></a>00185                         <span class="keywordtype">int</span> setzone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">STANDARD</a>, <span class="keywordtype">bool</span> mgrslimits = <span class="keyword">false</span>);
+<a name="l00185"></a>00185                         <span class="keywordtype">int</span> setzone = STANDARD, <span class="keywordtype">bool</span> mgrslimits = <span class="keyword">false</span>);
 <a name="l00186"></a>00186 <span class="comment"></span>
 <a name="l00187"></a>00187 <span class="comment">    /**</span>
 <a name="l00188"></a>00188 <span class="comment">     * Reverse projection, from  UTM/UPS to geographic.</span>
@@ -261,27 +261,27 @@
 <a name="l00222"></a>00222 <span class="comment">     * performed besides these (e.g., to limit the distance outside the</span>
 <a name="l00223"></a>00223 <span class="comment">     * standard zone boundaries).</span>
 <a name="l00224"></a>00224 <span class="comment">     **********************************************************************/</span>
-<a name="l00225"></a>00225     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">Reverse</a>(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
+<a name="l00225"></a>00225     <span class="keyword">static</span> <span class="keywordtype">void</span> Reverse(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
 <a name="l00226"></a>00226                         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; gamma, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; k,
 <a name="l00227"></a>00227                         <span class="keywordtype">bool</span> mgrslimits = <span class="keyword">false</span>);
 <a name="l00228"></a>00228 <span class="comment"></span>
 <a name="l00229"></a>00229 <span class="comment">    /**</span>
 <a name="l00230"></a>00230 <span class="comment">     * UTMUPS::Forward without returning convergence and scale.</span>
 <a name="l00231"></a>00231 <span class="comment">     **********************************************************************/</span>
-<a name="l00232"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#aa21ec1bc26f691e0a6f2ccc44debe6f0">00232</a>     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">Forward</a>(real lat, real lon,
+<a name="l00232"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#aa21ec1bc26f691e0a6f2ccc44debe6f0">00232</a>     <span class="keyword">static</span> <span class="keywordtype">void</span> Forward(real lat, real lon,
 <a name="l00233"></a>00233                         <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp, real&amp; x, real&amp; y,
-<a name="l00234"></a>00234                         <span class="keywordtype">int</span> setzone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">STANDARD</a>, <span class="keywordtype">bool</span> mgrslimits = <span class="keyword">false</span>) {
+<a name="l00234"></a>00234                         <span class="keywordtype">int</span> setzone = STANDARD, <span class="keywordtype">bool</span> mgrslimits = <span class="keyword">false</span>) {
 <a name="l00235"></a>00235       real gamma, k;
-<a name="l00236"></a>00236       <a class="code" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">Forward</a>(lat, lon, zone, northp, x, y, gamma, k, setzone, mgrslimits);
+<a name="l00236"></a>00236       Forward(lat, lon, zone, northp, x, y, gamma, k, setzone, mgrslimits);
 <a name="l00237"></a>00237     }
 <a name="l00238"></a>00238 <span class="comment"></span>
 <a name="l00239"></a>00239 <span class="comment">    /**</span>
 <a name="l00240"></a>00240 <span class="comment">     * UTMUPS::Reverse without returning convergence and scale.</span>
 <a name="l00241"></a>00241 <span class="comment">     **********************************************************************/</span>
-<a name="l00242"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#ac8cbfd7b15c96b52b876b54ce68f7b4d">00242</a>     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">Reverse</a>(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, real x, real y,
+<a name="l00242"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#ac8cbfd7b15c96b52b876b54ce68f7b4d">00242</a>     <span class="keyword">static</span> <span class="keywordtype">void</span> Reverse(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, real x, real y,
 <a name="l00243"></a>00243                         real&amp; lat, real&amp; lon, <span class="keywordtype">bool</span> mgrslimits = <span class="keyword">false</span>) {
 <a name="l00244"></a>00244       real gamma, k;
-<a name="l00245"></a>00245       <a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">Reverse</a>(zone, northp, x, y, lat, lon, gamma, k, mgrslimits);
+<a name="l00245"></a>00245       Reverse(zone, northp, x, y, lat, lon, gamma, k, mgrslimits);
 <a name="l00246"></a>00246     }
 <a name="l00247"></a>00247 <span class="comment"></span>
 <a name="l00248"></a>00248 <span class="comment">    /**</span>
@@ -301,7 +301,7 @@
 <a name="l00262"></a>00262 <span class="comment">     * 38P are illegal.  INV is a special value for which the returned value of</span>
 <a name="l00263"></a>00263 <span class="comment">     * \e is UTMUPS::INVALID.  Throws an error is the zone string is malformed.</span>
 <a name="l00264"></a>00264 <span class="comment">     **********************************************************************/</span>
-<a name="l00265"></a>00265     <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">DecodeZone</a>(<span class="keyword">const</span> std::string&amp; zonestr, <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp);
+<a name="l00265"></a>00265     <span class="keyword">static</span> <span class="keywordtype">void</span> DecodeZone(<span class="keyword">const</span> std::string&amp; zonestr, <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp);
 <a name="l00266"></a>00266 <span class="comment"></span>
 <a name="l00267"></a>00267 <span class="comment">    /**</span>
 <a name="l00268"></a>00268 <span class="comment">     * Encode a UTM/UPS zone string.</span>
@@ -317,13 +317,13 @@
 <a name="l00278"></a>00278 <span class="comment">     * which case the returned string is &quot;INV&quot;.  This reverses</span>
 <a name="l00279"></a>00279 <span class="comment">     * UTMUPS::DecodeZone.</span>
 <a name="l00280"></a>00280 <span class="comment">     **********************************************************************/</span>
-<a name="l00281"></a>00281     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1UTMUPS.html#a3410e1e221158962f34147255653818f">EncodeZone</a>(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp);
+<a name="l00281"></a>00281     <span class="keyword">static</span> std::string EncodeZone(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp);
 <a name="l00282"></a>00282 <span class="comment"></span>
 <a name="l00283"></a>00283 <span class="comment">    /**</span>
 <a name="l00284"></a>00284 <span class="comment">     * @return shift (meters) necessary to align N and S halves of a UTM zone</span>
 <a name="l00285"></a>00285 <span class="comment">     * (10&lt;sup&gt;7&lt;/sup&gt;).</span>
 <a name="l00286"></a>00286 <span class="comment">     **********************************************************************/</span>
-<a name="l00287"></a>00287     <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1UTMUPS.html#abd70d3f90f5c79a09bdd217b67e6729b">UTMShift</a>() throw();
+<a name="l00287"></a>00287     <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> UTMShift() throw();
 <a name="l00288"></a>00288 <span class="comment"></span>
 <a name="l00289"></a>00289 <span class="comment">    /** \name Inspector functions</span>
 <a name="l00290"></a>00290 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
@@ -334,7 +334,7 @@
 <a name="l00295"></a>00295 <span class="comment">     * (The WGS84 value is returned because the UTM and UPS projections are</span>
 <a name="l00296"></a>00296 <span class="comment">     * based on this ellipsoid.)</span>
 <a name="l00297"></a>00297 <span class="comment">     **********************************************************************/</span>
-<a name="l00298"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">00298</a>     static <a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::real <a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">MajorRadius</a>() throw()
+<a name="l00298"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">00298</a>     static <a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::real MajorRadius() throw()
 <a name="l00299"></a>00299     { <span class="keywordflow">return</span> Constants::WGS84_a&lt;real&gt;(); }
 <a name="l00300"></a>00300 <span class="comment"></span>
 <a name="l00301"></a>00301 <span class="comment">    /**</span>
@@ -343,16 +343,17 @@
 <a name="l00304"></a>00304 <span class="comment">     * (The WGS84 value is returned because the UTM and UPS projections are</span>
 <a name="l00305"></a>00305 <span class="comment">     * based on this ellipsoid.)</span>
 <a name="l00306"></a>00306 <span class="comment">     **********************************************************************/</span>
-<a name="l00307"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">00307</a>     <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">InverseFlattening</a>() throw()
+<a name="l00307"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">00307</a>     <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() throw()
 <a name="l00308"></a>00308     { <span class="keywordflow">return</span> Constants::WGS84_r&lt;real&gt;(); }<span class="comment"></span>
 <a name="l00309"></a>00309 <span class="comment">    ///@}</span>
 <a name="l00310"></a>00310 <span class="comment"></span>  };
 <a name="l00311"></a>00311 
 <a name="l00312"></a>00312 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00313"></a>00313 <span class="preprocessor">#endif</span>
+<a name="l00313"></a>00313 
+<a name="l00314"></a>00314 <span class="preprocessor">#endif  // GEOGRAPHICLIB_UTMUPS_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

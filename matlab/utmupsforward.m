@@ -36,4 +36,4 @@ end
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
-% $Id: utmupsforward.m 6895 2010-11-18 19:54:04Z karney $
+% $Id: b81cf582f574543d9510b1d7943b66d9ffab26d5 $

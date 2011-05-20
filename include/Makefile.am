@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6906 2010-12-02 22:10:56Z karney $
+# $Id: 5c6131ee06c345784d071e643d987e1e9adb3e64 $
 
 nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/AzimuthalEquidistant.hpp \
@@ -29,4 +29,4 @@ geoids_dir=$(datadir)/GeographicLib/geoids
 
 DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
 
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk GeographicLib/CMakeLists.txt GeographicLib/Config.h.in

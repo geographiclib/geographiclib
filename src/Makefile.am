@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6906 2010-12-02 22:10:56Z karney $
+# $Id: e3aadea47d146f9a6ed64d480beac875691f56d3 $
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 
@@ -47,10 +47,17 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/TransverseMercatorExact.hpp \
 		../include/GeographicLib/TransverseMercator.hpp \
-		../include/GeographicLib/UTMUPS.hpp
+		../include/GeographicLib/UTMUPS.hpp \
+		../include/GeographicLib/Config.h
+
+../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h
+	egrep '\bVERSION\b|\bHAVE_LONG_DOUBLE\b' $< | \
+	sed -e s/VERSION/GEOGRAPHICLIB_VERSION_STRING/ > $@
+
+$(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
 
 geoids_dir=$(datadir)/GeographicLib/geoids
 
 DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
 
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk CMakeLists.txt

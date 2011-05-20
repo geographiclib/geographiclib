@@ -64,7 +64,7 @@ Public Member Functions</h2></td></tr>
 <p>Gnomonic Projection. </p>
 <p>Gnomonic projection centered at an arbitrary position <em>C</em> on the ellipsoid. This projection is derived in Section 13 of</p>
 <ul>
-<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.</li>
+<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215v1">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.</li>
 </ul>
 <p>The projection of <em>P</em> is defined as follows: compute the geodesic line from <em>C</em> to <em>P</em>; compute the reduced length <em>m12</em>, geodesic scale <em>M12</em>, and <em>rho</em> = <em>m12/<em>M12</em>;</em> finally <em>x</em> = <em>rho</em> sin <em>azi1</em>; <em>y</em> = <em>rho</em> cos <em>azi1</em>, where <em>azi1</em> is the azimuth of the geodesic at <em>C</em>. The <a class="el" href="classGeographicLib_1_1Gnomonic.html#ab851ea19db5671f8d4a4151820bc6853">Gnomonic::Forward</a> and <a class="el" href="classGeographicLib_1_1Gnomonic.html#afccbed660a482ef73d33ad16406ee626">Gnomonic::Reverse</a> methods also return the azimuth <em>azi</em> of the geodesic at <em>P</em> and reciprocal scale <em>rk</em> in the azimuthal direction. The scale in the radial direction if 1/<em>rk<sup>2</sup></em>.</p>
 <p>For a sphere, <em>rho</em> is reduces to <em>a</em> tan(<em>s12/<em>a</em>)</em>, where <em>s12</em> is the length of the geodesic from <em>C</em> to <em>P</em>, and the gnomonic projection has the property that all geodesics appear as straight lines. For an ellipsoid, this property holds only for geodesics interesting the centers. However geodesic segments close to the center are approximately straight.</p>
@@ -108,7 +108,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00105">105</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00106">106</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -189,9 +189,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p><em>lat0</em> and <em>lat</em> should be in the range [-90, 90] and <em>lon0</em> and <em>lon</em> should be in the range [-180, 360]. The scale of the projection is 1/<em>rk<sup>2</sup></em> in the "radial" direction, <em>azi</em> clockwise from true north, and is 1/<em>rk</em> in the direction perpendicular to this. If the point lies "over the horizon", i.e., if <em>rk</em> &lt;= 0, then NaNs are returned for <em>x</em> and <em>y</em> (the correct values are returned for <em>azi</em> and <em>rk</em>). A call to Forward followed by a call to Reverse will return the original (<em>lat</em>, <em>lon</em>) (to within roundoff) provided the point in not over the horizon. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00023">23</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
-
-<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00167">Forward()</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00024">24</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
 
 </div>
 </div>
@@ -271,9 +269,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p><em>lat0</em> should be in the range [-90, 90] and <em>lon0</em> should be in the range [-180, 360]. <em>lat</em> will be in the range [-90, 90] and <em>lon</em> will be in the range [-180, 180). The scale of the projection is 1/<em>rk<sup>2</sup></em> in the "radial" direction, <em>azi</em> clockwise from true north, and is 1/<em>rk</em> in the direction perpendicular to this. Even though all inputs should return a valid <em>lat</em> and <em>lon</em>, it's possible that the procedure fails to converge for very large <em>x</em> or <em>y</em>; in this case NaNs are returned for all the output arguments. A call to Reverse followed by a call to Forward will return the original (<em>x</em>, <em>y</em>) (to roundoff). </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00042">42</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
-
-<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00176">Reverse()</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00043">43</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
 
 </div>
 </div>
@@ -327,9 +323,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#ab851ea19db5671f8d4a4151820bc6853">Gnomonic::Forward</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00167">167</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
-
-<p>References <a class="el" href="Gnomonic_8cpp_source.html#l00023">Forward()</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00168">168</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -383,9 +377,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#afccbed660a482ef73d33ad16406ee626">Gnomonic::Reverse</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00176">176</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
-
-<p>References <a class="el" href="Gnomonic_8cpp_source.html#l00042">Reverse()</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00177">177</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -405,9 +397,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00189">189</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
-
-<p>References <a class="el" href="Geodesic_8hpp_source.html#l00759">GeographicLib::Geodesic::MajorRadius()</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00190">190</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -427,9 +417,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. A value of 0 is returned for a sphere (infinite inverse flattening). </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00196">196</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
-
-<p>References <a class="el" href="Geodesic_8hpp_source.html#l00766">GeographicLib::Geodesic::InverseFlattening()</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00197">197</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -438,7 +426,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

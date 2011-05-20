@@ -12,7 +12,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geodesicline.cpp
 
-// "$Id: geodesicline.cpp 6906 2010-12-02 22:10:56Z karney $";
+// "$Id: db4331014125bb6186da44f7e9ce45db8dedd784 $";
 
 #include "GeographicLib/GeodesicLine.hpp"
 #include "mex.h"

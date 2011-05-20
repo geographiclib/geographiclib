@@ -2,15 +2,15 @@
  * \file EllipticFunction.hpp
  * \brief Header for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: EllipticFunction.hpp 6866 2010-09-11 02:15:29Z karney $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: 8e5a2b0b4722672f75bb33acb8233a78f00d8839 $"
 
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -39,11 +39,16 @@ namespace GeographicLib {
    * .
    * The notation follows Abramowitz and Stegun, Chapters 16 and 17.
    **********************************************************************/
-  class EllipticFunction {
+  class GEOGRAPHIC_EXPORT EllipticFunction {
   private:
     typedef Math::real real;
-    static const real tol, tolRF, tolRD, tolRG0, tolJAC, tolJAC1;
-    enum { num = 10 }; // Max depth required for sncndn.  Probably 5 is enough.
+    static const real tol_;
+    static const real tolRF_;
+    static const real tolRD_;
+    static const real tolRG0_;
+    static const real tolJAC_;
+    static const real tolJAC1_;
+    enum { num_ = 10 }; // Max depth required for sncndn.  Probably 5 is enough.
     static real RF(real x, real y, real z) throw();
     static real RD(real x, real y, real z) throw();
     static real RG0(real x, real y) throw();
@@ -124,4 +129,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP

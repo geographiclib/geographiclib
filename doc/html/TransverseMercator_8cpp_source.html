@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
+      <li><a class="el" href="dir_bef474d3441323eeb40ad6ee1f890a93.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -77,9 +77,9 @@
 <a name="l00039"></a>00039 <span class="comment"> *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf</span>
 <a name="l00040"></a>00040 <span class="comment"> **********************************************************************/</span>
 <a name="l00041"></a>00041 
-<a name="l00042"></a>00042 <span class="preprocessor">#include &quot;<a class="code" href="TransverseMercator_8hpp.html" title="Header for GeographicLib::TransverseMercator class.">GeographicLib/TransverseMercator.hpp</a>&quot;</span>
+<a name="l00042"></a>00042 <span class="preprocessor">#include &lt;<a class="code" href="TransverseMercator_8hpp.html" title="Header for GeographicLib::TransverseMercator class.">GeographicLib/TransverseMercator.hpp</a>&gt;</span>
 <a name="l00043"></a>00043 
-<a name="l00044"></a><a class="code" href="TransverseMercator_8cpp.html#ab09ba83d5531a4ca91dc8ce82ae98084">00044</a> <span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP &quot;$Id: TransverseMercator.cpp 6937 2011-02-01 20:17:13Z karney $&quot;</span>
+<a name="l00044"></a><a class="code" href="TransverseMercator_8cpp.html#ab09ba83d5531a4ca91dc8ce82ae98084">00044</a> <span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP &quot;$Id: 0e57dc6aea71d696de38e04935b936eb4ebe967c $&quot;</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
 <a name="l00046"></a>00046 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="TransverseMercator_8cpp.html#ab09ba83d5531a4ca91dc8ce82ae98084">GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP</a>)
 <a name="l00047"></a>00047 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="TransverseMercator_8hpp.html#abbbe2faaff284db3183ddf3afcbf5623">GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP</a>)
@@ -88,11 +88,11 @@
 <a name="l00050"></a>00050 
 <a name="l00051"></a>00051   <span class="keyword">using namespace </span>std;
 <a name="l00052"></a>00052 
-<a name="l00053"></a>00053   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> TransverseMercator::tol =
+<a name="l00053"></a>00053   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> TransverseMercator::tol_ =
 <a name="l00054"></a>00054     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.1)*sqrt(numeric_limits&lt;real&gt;::epsilon());
-<a name="l00055"></a>00055   <span class="comment">// Overflow value s.t. atan(overflow) = pi/2</span>
-<a name="l00056"></a>00056   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> TransverseMercator::overflow =
-<a name="l00057"></a>00057     1 / sq(numeric_limits&lt;real&gt;::epsilon());
+<a name="l00055"></a>00055   <span class="comment">// Overflow value s.t. atan(overflow_) = pi/2</span>
+<a name="l00056"></a>00056   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> TransverseMercator::overflow_ =
+<a name="l00057"></a>00057     1 / Math::sq(numeric_limits&lt;real&gt;::epsilon());
 <a name="l00058"></a>00058 
 <a name="l00059"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#a1322ba37e8f01d724f9da1dfd94d91d7">00059</a>   TransverseMercator::TransverseMercator(real a, real r, real k0)
 <a name="l00060"></a>00060     : _a(a)
@@ -108,15 +108,15 @@
 <a name="l00070"></a>00070     , _n(_f / (2 - _f))
 <a name="l00071"></a>00071   {
 <a name="l00072"></a>00072     <span class="keywordflow">if</span> (!(_a &gt; 0))
-<a name="l00073"></a>00073       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Major radius is not positive&quot;</span>);
+<a name="l00073"></a>00073       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Major radius is not positive&quot;</span>);
 <a name="l00074"></a>00074     <span class="keywordflow">if</span> (!(_f &lt; 1))
-<a name="l00075"></a>00075       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Minor radius is not positive&quot;</span>);
+<a name="l00075"></a>00075       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Minor radius is not positive&quot;</span>);
 <a name="l00076"></a>00076     <span class="keywordflow">if</span> (!(_k0 &gt; 0))
-<a name="l00077"></a>00077       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Scale is not positive&quot;</span>);
-<a name="l00078"></a>00078     <span class="comment">// If coefficents might overflow an int, convert them to double (and they</span>
+<a name="l00077"></a>00077       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Scale is not positive&quot;</span>);
+<a name="l00078"></a>00078     <span class="comment">// If coefficents might overflow_ an int, convert them to double (and they</span>
 <a name="l00079"></a>00079     <span class="comment">// are all exactly representable as doubles).</span>
-<a name="l00080"></a>00080     real nx = sq(_n);
-<a name="l00081"></a>00081     <span class="keywordflow">switch</span> (maxpow) {
+<a name="l00080"></a>00080     real nx = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(_n);
+<a name="l00081"></a>00081     <span class="keywordflow">switch</span> (maxpow_) {
 <a name="l00082"></a>00082     <span class="keywordflow">case</span> 4:
 <a name="l00083"></a>00083       _b1 = 1/(1+_n)*(nx*(nx+16)+64)/64;
 <a name="l00084"></a>00084       _alp[1] = _n*(_n*(_n*(164*_n+225)-480)+360)/720;
@@ -240,7 +240,7 @@
 <a name="l00202"></a>00202       _bet[8] = 191773887257.0*nx/3719607091200.0;
 <a name="l00203"></a>00203       <span class="keywordflow">break</span>;
 <a name="l00204"></a>00204     <span class="keywordflow">default</span>:
-<a name="l00205"></a>00205       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(maxpow &gt;= 4 &amp;&amp; maxpow &lt;= 8, <span class="stringliteral">&quot;Bad value of maxpow&quot;</span>);
+<a name="l00205"></a>00205       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(maxpow_ &gt;= 4 &amp;&amp; maxpow_ &lt;= 8, <span class="stringliteral">&quot;Bad value of maxpow_&quot;</span>);
 <a name="l00206"></a>00206     }
 <a name="l00207"></a>00207     <span class="comment">// _a1 is the equivalent radius for computing the circumference of</span>
 <a name="l00208"></a>00208     <span class="comment">// ellipse.</span>
@@ -319,7 +319,7 @@
 <a name="l00281"></a>00281       <span class="comment">// This form has cancelling errors.  This property is lost if cosh(psip)</span>
 <a name="l00282"></a>00282       <span class="comment">// is replaced by 1/cos(phi), even though it&#39;s using &quot;primary&quot; data (phi</span>
 <a name="l00283"></a>00283       <span class="comment">// instead of psip).</span>
-<a name="l00284"></a>00284       k = sqrt(_e2m + _e2 * sq(cos(phi))) * secphi / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(taup, c);
+<a name="l00284"></a>00284       k = sqrt(_e2m + _e2 * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(cos(phi))) * secphi / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(taup, c);
 <a name="l00285"></a>00285     } <span class="keywordflow">else</span> {
 <a name="l00286"></a>00286       xip = Math::pi&lt;real&gt;()/2;
 <a name="l00287"></a>00287       etap = 0;
@@ -337,11 +337,11 @@
 <a name="l00299"></a>00299     <span class="comment">// The conversion from conformal to rectifying latitude can be expresses as</span>
 <a name="l00300"></a>00300     <span class="comment">// a series in _n:</span>
 <a name="l00301"></a>00301     <span class="comment">//</span>
-<a name="l00302"></a>00302     <span class="comment">//   zeta = zeta&#39; + sum(h[j-1]&#39; * sin(2 * j * zeta&#39;), j = 1..maxpow)</span>
+<a name="l00302"></a>00302     <span class="comment">//   zeta = zeta&#39; + sum(h[j-1]&#39; * sin(2 * j * zeta&#39;), j = 1..maxpow_)</span>
 <a name="l00303"></a>00303     <span class="comment">//</span>
 <a name="l00304"></a>00304     <span class="comment">// where h[j]&#39; = O(_n^j).  The reversion of this series gives</span>
 <a name="l00305"></a>00305     <span class="comment">//</span>
-<a name="l00306"></a>00306     <span class="comment">//   zeta&#39; = zeta - sum(h[j-1] * sin(2 * j * zeta), j = 1..maxpow)</span>
+<a name="l00306"></a>00306     <span class="comment">//   zeta&#39; = zeta - sum(h[j-1] * sin(2 * j * zeta), j = 1..maxpow_)</span>
 <a name="l00307"></a>00307     <span class="comment">//</span>
 <a name="l00308"></a>00308     <span class="comment">// which is used in Reverse.</span>
 <a name="l00309"></a>00309     <span class="comment">//</span>
@@ -366,7 +366,7 @@
 <a name="l00328"></a>00328     <span class="comment">//    a(n, x) = 2 * cos(x)</span>
 <a name="l00329"></a>00329     <span class="comment">//    b(n, x) = -1</span>
 <a name="l00330"></a>00330     <span class="comment">//    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = n*x, B = x ]</span>
-<a name="l00331"></a>00331     <span class="comment">//    N = maxpow</span>
+<a name="l00331"></a>00331     <span class="comment">//    N = maxpow_</span>
 <a name="l00332"></a>00332     <span class="comment">//    c[k] = _alp[k]</span>
 <a name="l00333"></a>00333     <span class="comment">//    S = y[1] * sin(x)</span>
 <a name="l00334"></a>00334     <span class="comment">//</span>
@@ -383,12 +383,12 @@
 <a name="l00345"></a>00345       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
 <a name="l00346"></a>00346       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
 <a name="l00347"></a>00347       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; <span class="comment">// 2 * cos(2*zeta&#39;)</span>
-<a name="l00348"></a>00348     <span class="keywordtype">int</span> n = maxpow;
+<a name="l00348"></a>00348     <span class="keywordtype">int</span> n = maxpow_;
 <a name="l00349"></a>00349     real
 <a name="l00350"></a>00350       xi0 = (n &amp; 1 ? _alp[n] : 0), eta0 = 0,
 <a name="l00351"></a>00351       xi1 = 0, eta1 = 0;
 <a name="l00352"></a>00352     real                        <span class="comment">// Accumulators for dzeta/dzeta&#39;</span>
-<a name="l00353"></a>00353       yr0 = (n &amp; 1 ? 2 * maxpow * _alp[n--] : 0), yi0 = 0,
+<a name="l00353"></a>00353       yr0 = (n &amp; 1 ? 2 * maxpow_ * _alp[n--] : 0), yi0 = 0,
 <a name="l00354"></a>00354       yr1 = 0, yi1 = 0;
 <a name="l00355"></a>00355     <span class="keywordflow">while</span> (n) {
 <a name="l00356"></a>00356       xi1  = ar * xi0 - ai * eta0 - xi1 + _alp[n];
@@ -444,12 +444,12 @@
 <a name="l00406"></a>00406       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
 <a name="l00407"></a>00407       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
 <a name="l00408"></a>00408       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; <span class="comment">// 2 * cos(2*zeta)</span>
-<a name="l00409"></a>00409     <span class="keywordtype">int</span> n = maxpow;
+<a name="l00409"></a>00409     <span class="keywordtype">int</span> n = maxpow_;
 <a name="l00410"></a>00410     real                        <span class="comment">// Accumulators for zeta&#39;</span>
 <a name="l00411"></a>00411       xip0 = (n &amp; 1 ? -_bet[n] : 0), etap0 = 0,
 <a name="l00412"></a>00412       xip1 = 0, etap1 = 0;
 <a name="l00413"></a>00413     real                        <span class="comment">// Accumulators for dzeta&#39;/dzeta</span>
-<a name="l00414"></a>00414       yr0 = (n &amp; 1 ? - 2 * maxpow * _bet[n--] : 0), yi0 = 0,
+<a name="l00414"></a>00414       yr0 = (n &amp; 1 ? - 2 * maxpow_ * _bet[n--] : 0), yi0 = 0,
 <a name="l00415"></a>00415       yr1 = 0, yi1 = 0;
 <a name="l00416"></a>00416     <span class="keywordflow">while</span> (n) {
 <a name="l00417"></a>00417       xip1  = ar * xip0 - ai * etap0 - xip1 - _bet[n];
@@ -489,14 +489,14 @@
 <a name="l00451"></a>00451       real
 <a name="l00452"></a>00452         taup = sin(xip)/r,
 <a name="l00453"></a>00453         tau = taup,
-<a name="l00454"></a>00454         stol = tol * max(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), abs(taup));
+<a name="l00454"></a>00454         stol = tol_ * max(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), abs(taup));
 <a name="l00455"></a>00455       <span class="comment">// min iterations = 1, max iterations = 2; mean = 1.99</span>
-<a name="l00456"></a>00456       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numit; ++i) {
+<a name="l00456"></a>00456       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numit_; ++i) {
 <a name="l00457"></a>00457         real
 <a name="l00458"></a>00458           tau1 = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau),
 <a name="l00459"></a>00459           sig = sinh( eatanhe( tau / tau1 ) ),
 <a name="l00460"></a>00460           taupa = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), sig) * tau - sig * tau1,
-<a name="l00461"></a>00461           dtau = (taup - taupa) * (1 + _e2m * sq(tau)) /
+<a name="l00461"></a>00461           dtau = (taup - taupa) * (1 + _e2m * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(tau)) /
 <a name="l00462"></a>00462           ( _e2m * tau1 * <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), taupa) );
 <a name="l00463"></a>00463         tau += dtau;
 <a name="l00464"></a>00464         <span class="keywordflow">if</span> (!(abs(dtau) &gt;= stol))
@@ -505,35 +505,36 @@
 <a name="l00467"></a>00467       phi = atan(tau);
 <a name="l00468"></a>00468       gamma += atan(tanx(xip) * tanh(etap)); <span class="comment">// Krueger p 19 (31)</span>
 <a name="l00469"></a>00469       <span class="comment">// Note cos(phi&#39;) * cosh(eta&#39;) = r</span>
-<a name="l00470"></a>00470       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau) * r;
-<a name="l00471"></a>00471     } <span class="keywordflow">else</span> {
-<a name="l00472"></a>00472       phi = Math::pi&lt;real&gt;()/2;
-<a name="l00473"></a>00473       lam = 0;
-<a name="l00474"></a>00474       k *= _c;
-<a name="l00475"></a>00475     }
-<a name="l00476"></a>00476     lat = phi / Math::degree&lt;real&gt;() * xisign;
-<a name="l00477"></a>00477     lon = lam / Math::degree&lt;real&gt;();
-<a name="l00478"></a>00478     <span class="keywordflow">if</span> (backside)
-<a name="l00479"></a>00479       lon = 180 - lon;
-<a name="l00480"></a>00480     lon *= etasign;
-<a name="l00481"></a>00481     <span class="comment">// Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)</span>
-<a name="l00482"></a>00482     <span class="keywordflow">if</span> (lon + lon0 &gt;= 180)
-<a name="l00483"></a>00483       lon += lon0 - 360;
-<a name="l00484"></a>00484     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lon + lon0 &lt; -180)
-<a name="l00485"></a>00485       lon += lon0 + 360;
-<a name="l00486"></a>00486     <span class="keywordflow">else</span>
-<a name="l00487"></a>00487       lon += lon0;
-<a name="l00488"></a>00488     gamma /= Math::degree&lt;real&gt;();
-<a name="l00489"></a>00489     <span class="keywordflow">if</span> (backside)
-<a name="l00490"></a>00490       gamma = 180 - gamma;
-<a name="l00491"></a>00491     gamma *= xisign * etasign;
-<a name="l00492"></a>00492     k *= _k0;
-<a name="l00493"></a>00493   }
-<a name="l00494"></a>00494 
-<a name="l00495"></a>00495 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00470"></a>00470       k *= sqrt(_e2m + _e2 * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(cos(phi))) *
+<a name="l00471"></a>00471         <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau) * r;
+<a name="l00472"></a>00472     } <span class="keywordflow">else</span> {
+<a name="l00473"></a>00473       phi = Math::pi&lt;real&gt;()/2;
+<a name="l00474"></a>00474       lam = 0;
+<a name="l00475"></a>00475       k *= _c;
+<a name="l00476"></a>00476     }
+<a name="l00477"></a>00477     lat = phi / Math::degree&lt;real&gt;() * xisign;
+<a name="l00478"></a>00478     lon = lam / Math::degree&lt;real&gt;();
+<a name="l00479"></a>00479     <span class="keywordflow">if</span> (backside)
+<a name="l00480"></a>00480       lon = 180 - lon;
+<a name="l00481"></a>00481     lon *= etasign;
+<a name="l00482"></a>00482     <span class="comment">// Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)</span>
+<a name="l00483"></a>00483     <span class="keywordflow">if</span> (lon + lon0 &gt;= 180)
+<a name="l00484"></a>00484       lon += lon0 - 360;
+<a name="l00485"></a>00485     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lon + lon0 &lt; -180)
+<a name="l00486"></a>00486       lon += lon0 + 360;
+<a name="l00487"></a>00487     <span class="keywordflow">else</span>
+<a name="l00488"></a>00488       lon += lon0;
+<a name="l00489"></a>00489     gamma /= Math::degree&lt;real&gt;();
+<a name="l00490"></a>00490     <span class="keywordflow">if</span> (backside)
+<a name="l00491"></a>00491       gamma = 180 - gamma;
+<a name="l00492"></a>00492     gamma *= xisign * etasign;
+<a name="l00493"></a>00493     k *= _k0;
+<a name="l00494"></a>00494   }
+<a name="l00495"></a>00495 
+<a name="l00496"></a>00496 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

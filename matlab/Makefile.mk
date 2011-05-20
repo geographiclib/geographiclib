@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6896 2010-11-18 22:43:19Z karney $
+# $Id: c26d5af8f3ff807ccf3f27ec7627cf21d1efa5c9 $
 
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \

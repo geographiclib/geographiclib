@@ -77,7 +77,7 @@ Friends</h2></td></tr>
 </ul>
 <p>Several changes have been made to ensure that the method returns accurate results for all finite inputs (even if <em>h</em> is infinite). The changes are described in Appendix B of</p>
 <ul>
-<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.</li>
+<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215v1">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.</li>
 </ul>
 <p>See <a class="el" href="geocentric.html">Geocentric coordinates</a> for more information.</p>
 <p>The errors in these routines are close to round-off. Specifically, for points within 5000 km of the surface of the ellipsoid (either inside or outside the ellipsoid), the error is bounded by 7 nm for the WGS84 ellipsoid. See <a class="el" href="geocentric.html">Geocentric coordinates</a> for further information on the errors. </p>
@@ -118,7 +118,7 @@ Friends</h2></td></tr>
 </dl>
 <p>An exception is thrown if either of the axes of the ellipsoid is non-positive. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8cpp_source.html#l00026">26</a> of file <a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8cpp_source.html#l00021">21</a> of file <a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a>.</p>
 
 </div>
 </div>
@@ -419,8 +419,6 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00184">184</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="LocalCartesian_8hpp_source.html#l00193">GeographicLib::LocalCartesian::MajorRadius()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="aa947dd7275c12692b03d6ff43d217d13"></a><!-- doxytag: member="GeographicLib::Geocentric::InverseFlattening" ref="aa947dd7275c12692b03d6ff43d217d13" args="() const " -->
@@ -440,8 +438,6 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. This is the value used in the constructor. A value of 0 is returned for a sphere (infinite inverse flattening). </dd></dl>
 
 <p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00191">191</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="LocalCartesian_8hpp_source.html#l00201">GeographicLib::LocalCartesian::InverseFlattening()</a>.</p>
 
 </div>
 </div>
@@ -483,7 +479,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

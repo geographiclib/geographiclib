@@ -25,59 +25,72 @@
 <h1>Geoid height </h1>  </div>
 </div>
 <div class="contents">
-<center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class evaluates the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10km this ambiguity is only 1mm.</p>
-<p>The geoid is usually approximated by an "earth gravity model". The models published by the NGA are:</p>
+<center> Back to <a class="el" href="organization.html">Code organization</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class and the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10km this ambiguity is only 1mm.</p>
+<p>The geoid is usually approximated by an "earth gravity model" (EGM). The models published by the NGA are:</p>
 <ul>
 <li>EGM84: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html</a></li>
 <li>EGM96: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html</a></li>
 <li>EGM2008: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008</a></li>
 </ul>
 <p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> offers a uniform way to handle all 3 geoids at a variety of grid resolutions. (In contrast, the software tools that NGA offers are different for each geoid, and the interpolation programs are different for each grid resolution. In addition these tools are written in Fortran with is nowadays difficult to integrate with other software.)</p>
-<p>Unlike other components of GeographicLib, there is a appreciable error in the results obtained (at best, the RMS error is 1mm). However the class provides methods to report the maximum and RMS errors in the results.</p>
-<p>The class also returns the gradient of the geoid. This can be used to estimate the direction of a plumb line relative to the WGS84 ellipsoid.</p>
-<h2><a class="anchor" id="geoidinst"></a>
-Installing the datasets</h2>
-<p>The geoid heights are computed using interpolation into a rectangular grid. The grids are read from data files which have been are computed using the NGA synthesis programs in the case of the EGM84 and EGM96 models and using the NGA binary gridded data files in the case of EGM2008. These data files are available for download:</p>
+<p>Unlike other components of GeographicLib, there is a appreciable error in the results obtained (at best, the RMS error is 1mm). However the class provides methods to report the maximum and RMS errors in the results. The class also returns the gradient of the geoid. This can be used to estimate the direction of a plumb line relative to the WGS84 ellipsoid.</p>
+<p>Go to</p>
 <ul>
-<li>EGM84, 30' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">zip</a>.</li>
-<li>EGM84, 15' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">zip</a>.</li>
-<li>EGM96, 15' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">zip</a>.</li>
-<li>EGM96, 5' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">zip</a>.</li>
-<li>EGM2008, 5' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">zip</a>.</li>
-<li>EGM2008, 2.5' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">zip</a>.</li>
-<li>EGM2008, 1' grid: <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">tar.bz2</a>, <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">zip</a>.</li>
+<li><a class="el" href="geoid.html#geoidinst">Installing the geoid datasets</a></li>
+<li><a class="el" href="geoid.html#geoidformat">The format of the geoid data files</a></li>
+<li><a class="el" href="geoid.html#geoidinterp">Interpolating the geoid data</a></li>
+<li><a class="el" href="geoid.html#geoidcache">Caching the geoid data</a></li>
+<li><a class="el" href="geoid.html#testgeoid">Test data for geoids</a></li>
 </ul>
-<p>Download <em>either</em> the tar.bz2 file <em>or</em> zip file (they have the same contents). If possible use the tar.bz2 format, since bzip2 compresses these files about 2 times better than zip. The data in tar and zip files both unpack into a "geoids" directory and, for convenience, all the data should be unpacked in the same parent directory. For example </p>
+<h2><a class="anchor" id="geoidinst"></a>
+Installing the geoid datasets</h2>
+<p>The geoid heights are computed using interpolation into a rectangular grid. The grids are read from data files which have been are computed using the NGA synthesis programs in the case of the EGM84 and EGM96 models and using the NGA binary gridded data files in the case of EGM2008. These data files are available for download:</p>
+<center> <table class="doxtable">
+<caption align="bottom">Available geoid data files</caption>
+<tr>
+<th rowspan="2">name </th><th rowspan="2">geoid </th><th rowspan="2">grid </th><th rowspan="2">size<br/>
+(MB) </th><th colspan="3"><center>Download Links (size, MB)</center> </th></tr>
+<tr>
+<th>tar file </th><th>Windows<br/>
+ installer </th><th>zip file </th></tr>
+<tr>
+<td>egm84-30 </td><td>EGM84 </td><td><center>30'</center> </td><td><center>0.6</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">link</a> (0.5)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe/download">link</a> (0.8)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">link</a> (0.5)</center> </td></tr>
+<tr>
+<td>egm84-15 </td><td>EGM84 </td><td><center>15'</center> </td><td><center>2.1</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">link</a> (1.5)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe/download">link</a> (1.9)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">link</a> (2.0)</center> </td></tr>
+<tr>
+<td>egm96-15 </td><td>EGM96 </td><td><center>15'</center> </td><td><center>2.1</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">link</a> (1.5)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe/download">link</a> (1.9)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">link</a> (2.0)</center> </td></tr>
+<tr>
+<td>egm96-5 </td><td>EGM96 </td><td><center>5'</center> </td><td><center> 19</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">link</a> (11)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe/download">link</a> (11)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">link</a> (17)</center> </td></tr>
+<tr>
+<td>egm2008-5 </td><td>EGM2008 </td><td><center>5'</center> </td><td><center> 19</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">link</a> (11)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe/download">link</a> (11)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">link</a> (17)</center> </td></tr>
+<tr>
+<td>egm2008-2_5 </td><td>EGM2008 </td><td><center>2.5'</center> </td><td><center> 75</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">link</a> (35)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe/download">link</a> (33)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">link</a> (65)</center> </td></tr>
+<tr>
+<td>egm2008-1 </td><td>EGM2008 </td><td><center>1'</center> </td><td><center>470</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">link</a> (170)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe/download">link</a> (130)</center> </td><td><center> <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">link</a> (390)</center> </td></tr>
+</table>
+</center><p> The "size" column is the size of the uncompressed data and it also gives the memory requirements for caching the entire dataset using the <a class="el" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">GeographicLib::Geoid::CacheAll</a> method. At a minimum you should install egm96-5 and either egm2008-1 or egm2008-2_5. Many applications use the EGM96 geoid, however the use of EGM2008 is growing. (EGM84 is rarely used now.)</p>
+<p>For Linux and Unix systems, GeographicLib provides a shell script geographiclib-get-geoids (typically installed in /usr/local/sbin) which automates the process of downloading and installing the geoid data. For example </p>
+<div class="fragment"><pre class="fragment">
+   geographiclib-get-geoids best # to install egm84-15, egm96-5, egm2008-1
+   geographiclib-get-geoids -h   # for help
+</pre></div><p> This script should be run as a user with write access to the installation directory, which is typically /usr/local/share/GeographicLib (this can be overridden with the -p flag), and the data will then be placed in the "geoids" subdirectory.</p>
+<p>Windows users should download and run the Windows installers. These will prompt for an installation directory with the default being </p>
+<div class="fragment"><pre class="fragment">
+   C:/Documents and Settings/All Users/Application Data/GeographicLib
+</pre></div><p> (which you probably should not change) and the data is installed in the "geoids" sub-directory.</p>
+<p>Otherwise download <em>either</em> the tar.bz2 file <em>or</em> the zip file (they have the same contents). If possible use the tar.bz2 files, since these are compressed about 2 times better than the zip file. To unpack these, run, for example </p>
 <div class="fragment"><pre class="fragment">
    mkdir -p /usr/local/share/GeographicLib
-   tar xfjC egm96-5.tar.bz2 /usr/local/share/GeographicLib
-   tar xfjC egm2008-2_5.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC egm96-5.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC egm2008-2_5.tar.bz2 /usr/local/share/GeographicLib
    etc.
-</pre></div><p> or </p>
-<div class="fragment"><pre class="fragment">
-   mkdir -p /usr/local/share/GeographicLib
-   cd /usr/local/share/GeographicLib
-   unzip ~-/egm96-5.zip
-   unzip ~-/egm2008-2_5.zip
-   etc.
-</pre></div><p> Geoid uses a compile time default (specified by the GEOID_DEFAULT_PATH macro) to locate the datasets. This is</p>
+</pre></div><p> and, again, the data will be placed in the "geoids" subdirectory.</p>
+<p>However you install the geoid data, all the datasets should be installed in the same directory. <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> and <a href="GeoidEval.1.html">GeoidEval</a> uses a compile time default to locate the datasets. This is</p>
 <ul>
 <li>/usr/local/share/GeographicLib/geoids, for non-Windows systems</li>
-<li>C:/cygwin/usr/local/share/GeographicLib/geoids, for Windows systems</li>
+<li>C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids, for Windows systems</li>
 </ul>
-<p>This may be overridden at run-time by defining the GEOID_PATH environment variable. Finally, the path may be set using the optional second argument to the GeographicLib::Geoid::Geoid constructor.</p>
-<p>The sizes of these datasets are </p>
-<div class="fragment"><pre class="fragment">
-   name         geoid    grid           sizes (MB)
-                                 tar.bz2    zip    disk
-   egm84-30     EGM84    30'      0.5       0.5     0.5
-   egm84-15     EGM84    15'      1.5       1.9     2.0
-   egm96-15     EGM96    15'      1.5       1.9     2.0
-   egm96-5      EGM96     5'      9.8        16      18
-   egm2008-5    EGM2008   5'       10        16      18
-   egm2008-2_5  EGM2008   2.5'     34        62      72
-   egm2008-1    EGM2008   1'      155       372     445
-</pre></div><p> The final "disk" column is the size of the uncompressed data and it also gives the memory requirements for caching the entire dataset using the <a class="el" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">GeographicLib::Geoid::CacheAll</a> method.</p>
+<p>consistent with the examples above. This may be overridden at run-time by defining the GEOID_PATH environment variable. Finally, the path may be set using the optional second argument to the <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> constructor or with the "-d" flag to <a href="GeoidEval.1.html">GeoidEval</a>. Supplying the "-h" flag to <a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path for that utility. The "-v" flag causes GeoidEval to report the full path name of the data file it uses.</p>
 <h2><a class="anchor" id="geoidformat"></a>
 The format of the geoid data files</h2>
 <p>The gridded data used by the <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class is stored in 16-bit PGM files. Thus the data for egm96-5 might be stored in the file</p>
@@ -135,7 +148,7 @@ The format of the geoid data files</h2>
    rm -f $TEMP
 </pre></div><h2><a class="anchor" id="geoidinterp"></a>
 Interpolating the geoid data</h2>
-<p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> evaluates the geoid height is by bilinear or cubic interpolation. The gradient of the geoid height is obtained by differentiating the interpolated height and referencing the result to distance on the WGS84 ellipsoid.</p>
+<p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> evaluates the geoid height using bilinear or cubic interpolation. The gradient of the geoid height is obtained by differentiating the interpolated height and referencing the result to distance on the WGS84 ellipsoid.</p>
 <p>The bilinear interpolation is based on the values at the 4 corners of the enclosing cell. The interpolated height is a continuous function of position; however the gradient has discontinuities are cell boundaries. The quantization of the data files exacerbates the errors in the gradients.</p>
 <p>The cubic interpolation is a least-squares fit to the values on a 12-point stencil with weights as follows: </p>
 <div class="fragment"><pre class="fragment">
@@ -144,23 +157,34 @@ Interpolating the geoid data</h2>
    1 2 2 1
    . 1 1 .
 </pre></div><p> The cubic is constrained to be independent of longitude when evaluating the height at one of the poles. Cubic interpolation is considerably more accurate than bilinear interpolation; however, in this implementation there are small discontinuities in the heights are cell boundaries. The over-constrained cubic fit slightly reduces the quantization errors on average.</p>
-<p>The algorithm for the least squares fit is taken from, F. H. Lesh, Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30 (1959). This algorithm is not part of Geographic::Geoid; instead it is implemented as <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a> code which is used to precompute the matrices to convert the function values on the stencil into the coefficients from the cubic polynomial. This code is included as a comment in <a class="el" href="Geoid_8cpp.html" title="Implementation for GeographicLib::Geoid class.">Geoid.cpp</a>.</p>
-<p>The interpolations methods are quick and give good accuracy. Here is a summary of the combined quantization and interpolation errors for the heights. </p>
-<div class="fragment"><pre class="fragment">
-                                  bilinear error    cubic error
-   name         geoid    grid     max     rms       max     rms
-   egm84-30     EGM84    30'      1.546m  70mm      0.274m  14mm
-   egm84-15     EGM84    15'      0.413m  18mm      0.020m   1mm
-   egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
-   egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
-   egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
-   egm2008-2_5  EGM2008   2.5'    0.135m   3mm      0.031m   1mm
-   egm2008-1    EGM2008   1'      0.025m   1mm      0.003m   1mm
-</pre></div><p> The errors are with respect the the specific NGA earth gravity model (not to any "real" geoid). The RMS values are obtained using 5 million uniformly distributed random points. The maximum values are obtained by evaluating the errors using a different grid with points at or near the centers of the original grid. (The RMS difference between EGM96 and EGM2008 is about 0.5m. The RMS difference between EGM84 and EGM96 is about 1.5m.)</p>
+<p>The algorithm for the least squares fit is taken from, F. H. Lesh, Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30 (1959). This algorithm is not part of <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a>; instead it is implemented as <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a> code which is used to precompute the matrices to convert the function values on the stencil into the coefficients from the cubic polynomial. This code is included as a comment in <a class="el" href="Geoid_8cpp.html" title="Implementation for GeographicLib::Geoid class.">Geoid.cpp</a>.</p>
+<p>The interpolation methods are quick and give good accuracy. Here is a summary of the combined quantization and interpolation errors for the heights. </p>
+<center><table class="doxtable">
+<caption align="bottom">Interpolation errors for geoid heights</caption>
+<tr>
+<th rowspan="2">name </th><th rowspan="2">geoid </th><th rowspan="2">grid </th><th colspan="2"><center>bilinear error</center> </th><th colspan="2"><center>cubic error</center> </th></tr>
+<tr>
+<th><center>max</center></th><th><center>rms</center> </th><th><center>max</center></th><th><center>rms</center> </th></tr>
+<tr>
+<td>egm84-30 </td><td>EGM84 </td><td><center>30' </center> </td><td><center>1.546 m</center></td><td><center>70 mm</center> </td><td><center>0.274 m</center></td><td><center>14 mm</center> </td></tr>
+<tr>
+<td>egm84-15 </td><td>EGM84 </td><td><center>15' </center> </td><td><center>0.413 m</center></td><td><center>18 mm</center> </td><td><center>0.020 m</center></td><td><center> 1 mm</center> </td></tr>
+<tr>
+<td>egm96-15 </td><td>EGM96 </td><td><center>15' </center> </td><td><center>1.152 m</center></td><td><center>40 mm</center> </td><td><center>0.169 m</center></td><td><center> 7 mm</center> </td></tr>
+<tr>
+<td>egm96-5 </td><td>EGM96 </td><td><center> 5' </center> </td><td><center>0.140 m</center></td><td><center> 5 mm</center> </td><td><center>0.003 m</center></td><td><center> 1 mm</center> </td></tr>
+<tr>
+<td>egm2008-5 </td><td>EGM2008</td><td><center> 5' </center> </td><td><center>0.478 m</center></td><td><center>12 mm</center> </td><td><center>0.294 m</center></td><td><center> 5 mm</center> </td></tr>
+<tr>
+<td>egm2008-2_5</td><td>EGM2008</td><td><center> 2.5'</center> </td><td><center>0.135 m</center></td><td><center> 3 mm</center> </td><td><center>0.031 m</center></td><td><center> 1 mm</center> </td></tr>
+<tr>
+<td>egm2008-1 </td><td>EGM2008</td><td><center> 1' </center> </td><td><center>0.025 m</center></td><td><center> 1 mm</center> </td><td><center>0.003 m</center></td><td><center> 1 mm</center> </td></tr>
+</table>
+</center><p> The errors are with respect the the specific NGA earth gravity model (not to any "real" geoid). The RMS values are obtained using 5 million uniformly distributed random points. The maximum values are obtained by evaluating the errors using a different grid with points at or near the centers of the original grid. (The RMS difference between EGM96 and EGM2008 is about 0.5m. The RMS difference between EGM84 and EGM96 is about 1.5m.)</p>
 <h2><a class="anchor" id="geoidcache"></a>
 Caching the geoid data</h2>
 <p>A simple way of calling Geoid is as follows </p>
-<div class="fragment"><pre class="fragment"><span class="preprocessor">   #include &quot;<a class="code" href="Geoid_8hpp.html" title="Header for GeographicLib::Geoid class.">GeographicLib/Geoid.hpp</a>&quot;</span>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">   #include &lt;<a class="code" href="Geoid_8hpp.html" title="Header for GeographicLib::Geoid class.">GeographicLib/Geoid.hpp</a>&gt;</span>
 <span class="preprocessor">   #include &lt;iostream&gt;</span>
    ...
    <a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> g(<span class="stringliteral">&quot;egm96-5&quot;</span>);
@@ -191,8 +215,8 @@ Test data for geoids</h2>
 <li>EGM2008 height (meters, accurate to 1 mm)</li>
 </ul>
 <p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs. In the case of the EGM84 and EGM96, the programs were compiled (with gfortran) and run under Linux. In the case of EGM2008, the prescription results in NaNs (possibly because of uninitialized variables in the program?), so the data was generated with the precompiled binary that NGA supplies for Windows.</p>
-<center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<center> Back to <a class="el" href="organization.html">Code organization</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

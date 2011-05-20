@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
-      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_b16414b5a70597b640ccac2a9ec4fe3e.html">include</a>      </li>
+      <li><a class="el" href="dir_b11e475971f7ccfb9ef63a8a3653f2dc.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,11 +47,11 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_HPP &quot;$Id: Geocentric.hpp 6967 2011-02-19 15:53:41Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_HPP &quot;$Id: e3512898a482b7eccb92d2ca020e63aef5614446 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;vector&gt;</span>
-<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;algorithm&gt;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;vector&gt;</span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;algorithm&gt;</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00016"></a>00016 
 <a name="l00017"></a>00017 <span class="keyword">namespace </span>GeographicLib {
 <a name="l00018"></a>00018 <span class="comment"></span>
@@ -77,11 +77,11 @@
 <a name="l00038"></a>00038 <span class="comment">   * results for all finite inputs (even if \e h is infinite).  The changes are</span>
 <a name="l00039"></a>00039 <span class="comment">   * described in Appendix B of</span>
 <a name="l00040"></a>00040 <span class="comment">   * - C. F. F. Karney,</span>
-<a name="l00041"></a>00041 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215&quot;&gt;Geodesics</span>
+<a name="l00041"></a>00041 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;Geodesics</span>
 <a name="l00042"></a>00042 <span class="comment">   *   on an ellipsoid of revolution&lt;/a&gt;,</span>
 <a name="l00043"></a>00043 <span class="comment">   *   Feb. 2011;</span>
 <a name="l00044"></a>00044 <span class="comment">   *   preprint</span>
-<a name="l00045"></a>00045 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215&quot;&gt;arxiv:1102.1215&lt;/a&gt;.</span>
+<a name="l00045"></a>00045 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;arxiv:1102.1215v1&lt;/a&gt;.</span>
 <a name="l00046"></a>00046 <span class="comment">   * .</span>
 <a name="l00047"></a>00047 <span class="comment">   * See \ref geocentric for more information.</span>
 <a name="l00048"></a>00048 <span class="comment">   *</span>
@@ -91,21 +91,21 @@
 <a name="l00052"></a>00052 <span class="comment">   * ellipsoid.  See \ref geocentric for further information on the errors.</span>
 <a name="l00053"></a>00053 <span class="comment">   **********************************************************************/</span>
 <a name="l00054"></a>00054 
-<a name="l00055"></a><a class="code" href="classGeographicLib_1_1Geocentric.html">00055</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> {
+<a name="l00055"></a><a class="code" href="classGeographicLib_1_1Geocentric.html">00055</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> {
 <a name="l00056"></a>00056   <span class="keyword">private</span>:
 <a name="l00057"></a>00057     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
 <a name="l00058"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a8904c4eadcf94e3803743e8cd9ffbc1c">00058</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>;
-<a name="l00059"></a>00059     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim = 3, dim2 = dim * dim;
-<a name="l00060"></a>00060     <span class="keyword">const</span> real _a, _r, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
-<a name="l00061"></a>00061     <span class="keyword">static</span> <span class="keyword">inline</span> real sq(real x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> x * x; }
+<a name="l00059"></a>00059     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim_ = 3;
+<a name="l00060"></a>00060     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim2_ = dim_ * dim_;
+<a name="l00061"></a>00061     <span class="keyword">const</span> real _a, _r, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
 <a name="l00062"></a>00062     <span class="comment">// Actually this can be static because it doesn&#39;t depend on the ellipsoid.</span>
 <a name="l00063"></a>00063     <span class="comment">// But let&#39;s be more general than that.</span>
-<a name="l00064"></a>00064     <span class="keywordtype">void</span> Rotation(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sphi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> cphi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> slam, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> clam,
-<a name="l00065"></a>00065                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00066"></a>00066     <span class="keywordtype">void</span> IntForward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; z,
-<a name="l00067"></a>00067                     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00068"></a>00068     <span class="keywordtype">void</span> IntReverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> z, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; h,
-<a name="l00069"></a>00069                     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00064"></a>00064     <span class="keywordtype">void</span> Rotation(real sphi, real cphi, real slam, real clam,
+<a name="l00065"></a>00065                   real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00066"></a>00066     <span class="keywordtype">void</span> IntForward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
+<a name="l00067"></a>00067                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00068"></a>00068     <span class="keywordtype">void</span> IntReverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
+<a name="l00069"></a>00069                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
 <a name="l00070"></a>00070   <span class="keyword">public</span>:
 <a name="l00071"></a>00071 <span class="comment"></span>
 <a name="l00072"></a>00072 <span class="comment">    /**</span>
@@ -119,7 +119,7 @@
 <a name="l00080"></a>00080 <span class="comment">     * An exception is thrown if either of the axes of the ellipsoid is</span>
 <a name="l00081"></a>00081 <span class="comment">     * non-positive.</span>
 <a name="l00082"></a>00082 <span class="comment">     **********************************************************************/</span>
-<a name="l00083"></a>00083     <a class="code" href="classGeographicLib_1_1Geocentric.html#a7afcc9727c59871a34a3af2498d3d5fd">Geocentric</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> a, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> r);
+<a name="l00083"></a>00083     <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>(real a, real r);
 <a name="l00084"></a>00084 <span class="comment"></span>
 <a name="l00085"></a>00085 <span class="comment">    /**</span>
 <a name="l00086"></a>00086 <span class="comment">     * Convert from geodetic to geocentric coordinates.</span>
@@ -134,7 +134,7 @@
 <a name="l00095"></a>00095 <span class="comment">     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in</span>
 <a name="l00096"></a>00096 <span class="comment">     * the range [-180, 360].</span>
 <a name="l00097"></a>00097 <span class="comment">     **********************************************************************/</span>
-<a name="l00098"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a6d144979a9c0a5d12f343736a0432a3a">00098</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1Geocentric.html#a6d144979a9c0a5d12f343736a0432a3a">Forward</a>(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z)
+<a name="l00098"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a6d144979a9c0a5d12f343736a0432a3a">00098</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z)
 <a name="l00099"></a>00099       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00100"></a>00100       IntForward(lat, lon, h, x, y, z, NULL);
 <a name="l00101"></a>00101     }
@@ -155,13 +155,13 @@
 <a name="l00116"></a>00116 <span class="comment">     * Pre-multiplying a unit vector in local cartesian coordinates (east,</span>
 <a name="l00117"></a>00117 <span class="comment">     * north, up) by \e M transforms the vector to geocentric coordinates.</span>
 <a name="l00118"></a>00118 <span class="comment">     **********************************************************************/</span>
-<a name="l00119"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a63c5d08013e385a80fb1b9c0beee592a">00119</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1Geocentric.html#a6d144979a9c0a5d12f343736a0432a3a">Forward</a>(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
+<a name="l00119"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a63c5d08013e385a80fb1b9c0beee592a">00119</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
 <a name="l00120"></a>00120                  std::vector&lt;real&gt;&amp; M)
 <a name="l00121"></a>00121       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00122"></a>00122       real t[dim2];
+<a name="l00122"></a>00122       real t[dim2_];
 <a name="l00123"></a>00123       IntForward(lat, lon, h, x, y, z, t);
-<a name="l00124"></a>00124       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2)
-<a name="l00125"></a>00125         copy(t, t + dim2, M.begin());
+<a name="l00124"></a>00124       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_)
+<a name="l00125"></a>00125         copy(t, t + dim2_, M.begin());
 <a name="l00126"></a>00126     }
 <a name="l00127"></a>00127 <span class="comment"></span>
 <a name="l00128"></a>00128 <span class="comment">    /**</span>
@@ -183,7 +183,7 @@
 <a name="l00144"></a>00144 <span class="comment">     * e&lt;sup&gt;2&lt;/sup&gt;) / sqrt(1 - \e e&lt;sup&gt;2&lt;/sup&gt; sin&lt;sup&gt;2&lt;/sup&gt;\e lat).  The</span>
 <a name="l00145"></a>00145 <span class="comment">     * value of \e lon returned is in the range [-180, 180).</span>
 <a name="l00146"></a>00146 <span class="comment">     **********************************************************************/</span>
-<a name="l00147"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">00147</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">Reverse</a>(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h)
+<a name="l00147"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">00147</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h)
 <a name="l00148"></a>00148       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00149"></a>00149       IntReverse(x, y, z, lat, lon, h, NULL);
 <a name="l00150"></a>00150     }
@@ -204,13 +204,13 @@
 <a name="l00165"></a>00165 <span class="comment">     * of \e M transforms the vector to local cartesian coordinates (east,</span>
 <a name="l00166"></a>00166 <span class="comment">     * north, up).</span>
 <a name="l00167"></a>00167 <span class="comment">     **********************************************************************/</span>
-<a name="l00168"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a4ade6e9e0b6abf54d1628e89a461411e">00168</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">Reverse</a>(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
+<a name="l00168"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a4ade6e9e0b6abf54d1628e89a461411e">00168</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
 <a name="l00169"></a>00169                  std::vector&lt;real&gt;&amp; M)
 <a name="l00170"></a>00170       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00171"></a>00171       real t[dim2];
+<a name="l00171"></a>00171       real t[dim2_];
 <a name="l00172"></a>00172       IntReverse(x, y, z, lat, lon, h, t);
-<a name="l00173"></a>00173       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2)
-<a name="l00174"></a>00174         copy(t, t + dim2, M.begin());
+<a name="l00173"></a>00173       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_)
+<a name="l00174"></a>00174         copy(t, t + dim2_, M.begin());
 <a name="l00175"></a>00175     }
 <a name="l00176"></a>00176 <span class="comment"></span>
 <a name="l00177"></a>00177 <span class="comment">    /** \name Inspector functions</span>
@@ -234,14 +234,15 @@
 <a name="l00195"></a>00195 <span class="comment">     * A global instantiation of Geocentric with the parameters for the WGS84</span>
 <a name="l00196"></a>00196 <span class="comment">     * ellipsoid.</span>
 <a name="l00197"></a>00197 <span class="comment">     **********************************************************************/</span>
-<a name="l00198"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">00198</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">WGS84</a>;
+<a name="l00198"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">00198</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> WGS84;
 <a name="l00199"></a>00199   };
 <a name="l00200"></a>00200 
 <a name="l00201"></a>00201 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00202"></a>00202 <span class="preprocessor">#endif</span>
+<a name="l00202"></a>00202 
+<a name="l00203"></a>00203 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOCENTRIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

@@ -34,4 +34,4 @@ end
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
-% $Id: geoidheight.m 6897 2010-11-19 16:44:47Z karney $
+% $Id: 1e73f6f8dbc961f5021d6fe342f5922f4c47592c $

@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6906 2010-12-02 22:10:56Z karney $
+# $Id: e3aadea47d146f9a6ed64d480beac875691f56d3 $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -51,7 +51,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
-CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_HEADER = $(top_builddir)/include/GeographicLib/Config-ac.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
@@ -88,7 +88,7 @@ libGeographic_la_OBJECTS = $(am_libGeographic_la_OBJECTS)
 libGeographic_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(libGeographic_la_LDFLAGS) $(LDFLAGS) -o $@
-DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include/GeographicLib
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 am__mv = mv -f
@@ -280,10 +280,11 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/TransverseMercatorExact.hpp \
 		../include/GeographicLib/TransverseMercator.hpp \
-		../include/GeographicLib/UTMUPS.hpp
+		../include/GeographicLib/UTMUPS.hpp \
+		../include/GeographicLib/Config.h
 
 geoids_dir = $(datadir)/GeographicLib/geoids
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk CMakeLists.txt
 all: all-am
 
 .SUFFIXES:
@@ -606,6 +607,12 @@ uninstall-am: uninstall-libLTLIBRARIES
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-libLTLIBRARIES
 
+
+../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h
+	egrep '\bVERSION\b|\bHAVE_LONG_DOUBLE\b' $< | \
+	sed -e s/VERSION/GEOGRAPHICLIB_VERSION_STRING/ > $@
+
+$(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

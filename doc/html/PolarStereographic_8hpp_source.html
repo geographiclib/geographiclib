@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
-      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_b16414b5a70597b640ccac2a9ec4fe3e.html">include</a>      </li>
+      <li><a class="el" href="dir_b11e475971f7ccfb9ef63a8a3653f2dc.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -41,15 +41,15 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file PolarStereographic.hpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Header for GeographicLib::PolarStereographic class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010) &lt;charles@karney.com&gt;</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
 <a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: PolarStereographic.hpp 6906 2010-12-02 22:10:56Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: 75b815b23a06168b724d4bc6779bad53029ede58 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
 <a name="l00015"></a>00015 <span class="keyword">namespace </span>GeographicLib {
 <a name="l00016"></a>00016 <span class="comment"></span>
@@ -65,15 +65,15 @@
 <a name="l00026"></a>00026 <span class="comment">   * This is a straightforward implementation of the equations in Snyder except</span>
 <a name="l00027"></a>00027 <span class="comment">   * that Newton&#39;s method is used to invert the projection.</span>
 <a name="l00028"></a>00028 <span class="comment">   **********************************************************************/</span>
-<a name="l00029"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html">00029</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> {
+<a name="l00029"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html">00029</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> {
 <a name="l00030"></a>00030   <span class="keyword">private</span>:
 <a name="l00031"></a>00031     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
 <a name="l00032"></a>00032     <span class="comment">// _Cx used to be _C but g++ 3.4 has a macro of that name</span>
 <a name="l00033"></a>00033     <span class="keyword">const</span> real _a, _r, _f, _e2, _e, _e2m, _Cx, _c;
 <a name="l00034"></a>00034     real _k0;
-<a name="l00035"></a>00035     <span class="keyword">static</span> <span class="keyword">const</span> real tol, overflow;
-<a name="l00036"></a>00036     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit = 5;
-<a name="l00037"></a>00037     <span class="keyword">static</span> <span class="keyword">inline</span> real sq(real x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> x * x; }
+<a name="l00035"></a>00035     <span class="keyword">static</span> <span class="keyword">const</span> real tol_;
+<a name="l00036"></a>00036     <span class="keyword">static</span> <span class="keyword">const</span> real overflow_;
+<a name="l00037"></a>00037     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 5;
 <a name="l00038"></a>00038     <span class="comment">// Return e * atanh(e * x) for f &gt;= 0, else return</span>
 <a name="l00039"></a>00039     <span class="comment">// - sqrt(-e2) * atan( sqrt(-e2) * x) for f &lt; 0</span>
 <a name="l00040"></a>00040     <span class="keyword">inline</span> real eatanhe(real x) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
@@ -93,7 +93,7 @@
 <a name="l00054"></a>00054 <span class="comment">     * An exception is thrown if either of the axes of the ellipsoid is</span>
 <a name="l00055"></a>00055 <span class="comment">     * not positive \e a or if \e k0 is not positive.</span>
 <a name="l00056"></a>00056 <span class="comment">     **********************************************************************/</span>
-<a name="l00057"></a>00057     <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a56558071847ee7d71674ac29a23ec653">PolarStereographic</a>(real a, real r, real k0);
+<a name="l00057"></a>00057     <a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a>(real a, real r, real k0);
 <a name="l00058"></a>00058 <span class="comment"></span>
 <a name="l00059"></a>00059 <span class="comment">    /**</span>
 <a name="l00060"></a>00060 <span class="comment">     * Set the scale for the projection.</span>
@@ -105,7 +105,7 @@
 <a name="l00066"></a>00066 <span class="comment">     * thrown if \e k is not positive or if \e lat is not in the range (-90,</span>
 <a name="l00067"></a>00067 <span class="comment">     * 90].</span>
 <a name="l00068"></a>00068 <span class="comment">     **********************************************************************/</span>
-<a name="l00069"></a>00069     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a3f957214eb1d1248277a680e4c4ceed5">SetScale</a>(real lat, real k = real(1));
+<a name="l00069"></a>00069     <span class="keywordtype">void</span> SetScale(real lat, real k = <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1));
 <a name="l00070"></a>00070 <span class="comment"></span>
 <a name="l00071"></a>00071 <span class="comment">    /**</span>
 <a name="l00072"></a>00072 <span class="comment">     * Forward projection, from geographic to polar stereographic.</span>
@@ -123,7 +123,7 @@
 <a name="l00084"></a>00084 <span class="comment">     * (-90, 90] for \e northp = true and in the range [-90, 90) for \e northp</span>
 <a name="l00085"></a>00085 <span class="comment">     * = false; \e lon should be in the range [-180, 360].</span>
 <a name="l00086"></a>00086 <span class="comment">     **********************************************************************/</span>
-<a name="l00087"></a>00087     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(<span class="keywordtype">bool</span> northp, real lat, real lon,
+<a name="l00087"></a>00087     <span class="keywordtype">void</span> Forward(<span class="keywordtype">bool</span> northp, real lat, real lon,
 <a name="l00088"></a>00088                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
 <a name="l00089"></a>00089 <span class="comment"></span>
 <a name="l00090"></a>00090 <span class="comment">    /**</span>
@@ -141,25 +141,25 @@
 <a name="l00102"></a>00102 <span class="comment">     * No false easting or northing is added.  The value of \e lon returned is</span>
 <a name="l00103"></a>00103 <span class="comment">     * in the range [-180, 180).</span>
 <a name="l00104"></a>00104 <span class="comment">     **********************************************************************/</span>
-<a name="l00105"></a>00105     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(<span class="keywordtype">bool</span> northp, real x, real y,
+<a name="l00105"></a>00105     <span class="keywordtype">void</span> Reverse(<span class="keywordtype">bool</span> northp, real x, real y,
 <a name="l00106"></a>00106                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
 <a name="l00107"></a>00107 <span class="comment"></span>
 <a name="l00108"></a>00108 <span class="comment">    /**</span>
 <a name="l00109"></a>00109 <span class="comment">     * PolarStereographic::Forward without returning the convergence and scale.</span>
 <a name="l00110"></a>00110 <span class="comment">     **********************************************************************/</span>
-<a name="l00111"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ac2fe4c9524ec35f8d05336555f96e1b1">00111</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(<span class="keywordtype">bool</span> northp, real lat, real lon,
+<a name="l00111"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ac2fe4c9524ec35f8d05336555f96e1b1">00111</a>     <span class="keywordtype">void</span> Forward(<span class="keywordtype">bool</span> northp, real lat, real lon,
 <a name="l00112"></a>00112                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00113"></a>00113       real gamma, k;
-<a name="l00114"></a>00114       <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(northp, lat, lon, x, y, gamma, k);
+<a name="l00114"></a>00114       Forward(northp, lat, lon, x, y, gamma, k);
 <a name="l00115"></a>00115     }
 <a name="l00116"></a>00116 <span class="comment"></span>
 <a name="l00117"></a>00117 <span class="comment">    /**</span>
 <a name="l00118"></a>00118 <span class="comment">     * PolarStereographic::Reverse without returning the convergence and scale.</span>
 <a name="l00119"></a>00119 <span class="comment">     **********************************************************************/</span>
-<a name="l00120"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a16572cc552eeb24ebf84319cdcd6652e">00120</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(<span class="keywordtype">bool</span> northp, real x, real y,
+<a name="l00120"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a16572cc552eeb24ebf84319cdcd6652e">00120</a>     <span class="keywordtype">void</span> Reverse(<span class="keywordtype">bool</span> northp, real x, real y,
 <a name="l00121"></a>00121                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00122"></a>00122       real gamma, k;
-<a name="l00123"></a>00123       <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(northp, x, y, lat, lon, gamma, k);
+<a name="l00123"></a>00123       Reverse(northp, x, y, lat, lon, gamma, k);
 <a name="l00124"></a>00124     }
 <a name="l00125"></a>00125 <span class="comment"></span>
 <a name="l00126"></a>00126 <span class="comment">    /** \name Inspector functions</span>
@@ -191,15 +191,15 @@
 <a name="l00152"></a>00152 <span class="comment">     * and the UPS scale factor.  However, unlike UPS, no false easting or</span>
 <a name="l00153"></a>00153 <span class="comment">     * northing is added.</span>
 <a name="l00154"></a>00154 <span class="comment">     **********************************************************************/</span>
-<a name="l00155"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a2db6bcb1b59a6ddc6087ee04c64c9825">00155</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a2db6bcb1b59a6ddc6087ee04c64c9825">UPS</a>;
+<a name="l00155"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a2db6bcb1b59a6ddc6087ee04c64c9825">00155</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> UPS;
 <a name="l00156"></a>00156   };
 <a name="l00157"></a>00157 
 <a name="l00158"></a>00158 } <span class="comment">// namespace GeographicLib</span>
 <a name="l00159"></a>00159 
-<a name="l00160"></a>00160 <span class="preprocessor">#endif</span>
+<a name="l00160"></a>00160 <span class="preprocessor">#endif  // GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

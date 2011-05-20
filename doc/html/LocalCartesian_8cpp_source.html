@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
+      <li><a class="el" href="dir_bef474d3441323eeb40ad6ee1f890a93.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -45,9 +45,9 @@
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
-<a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="LocalCartesian_8hpp.html" title="Header for GeographicLib::LocalCartesian class.">GeographicLib/LocalCartesian.hpp</a>&quot;</span>
+<a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="LocalCartesian_8hpp.html" title="Header for GeographicLib::LocalCartesian class.">GeographicLib/LocalCartesian.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="LocalCartesian_8cpp.html#a0917de4aed4abb985b1e2830077aea45">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP &quot;$Id: LocalCartesian.cpp 6952 2011-02-14 20:26:44Z karney $&quot;</span>
+<a name="l00012"></a><a class="code" href="LocalCartesian_8cpp.html#a0917de4aed4abb985b1e2830077aea45">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP &quot;$Id: 532b27a24bfcffa9fffa73d85be34d5e294d36f1 $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="LocalCartesian_8cpp.html#a0917de4aed4abb985b1e2830077aea45">GEOGRAPHICLIB_LOCALCARTESIAN_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="LocalCartesian_8hpp.html#a628d4dcde137e8249cb7fdbcaab30acd">GEOGRAPHICLIB_LOCALCARTESIAN_HPP</a>)
@@ -71,18 +71,18 @@
 <a name="l00033"></a>00033     _earth.Rotation(sphi, cphi, slam, clam, _r);
 <a name="l00034"></a>00034   }
 <a name="l00035"></a>00035 
-<a name="l00036"></a>00036   <span class="keywordtype">void</span> LocalCartesian::MatrixMultiply(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00037"></a>00037     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t[dim2];
-<a name="l00038"></a>00038     copy(M, M + dim2, t);
-<a name="l00039"></a>00039     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; dim2; ++i) {
-<a name="l00040"></a>00040       <span class="keywordtype">size_t</span> row = i / dim, col = i % dim;
+<a name="l00036"></a>00036   <span class="keywordtype">void</span> LocalCartesian::MatrixMultiply(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00037"></a>00037     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t[dim2_];
+<a name="l00038"></a>00038     copy(M, M + dim2_, t);
+<a name="l00039"></a>00039     <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; dim2_; ++i) {
+<a name="l00040"></a>00040       <span class="keywordtype">size_t</span> row = i / dim_, col = i % dim_;
 <a name="l00041"></a>00041       M[i] = _r[row] * t[col] + _r[row+3] * t[col+3] + _r[row+6] * t[col+6];
 <a name="l00042"></a>00042     }
 <a name="l00043"></a>00043   }
 <a name="l00044"></a>00044 
 <a name="l00045"></a>00045   <span class="keywordtype">void</span> LocalCartesian::IntForward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h,
 <a name="l00046"></a>00046                                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; z,
-<a name="l00047"></a>00047                                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00047"></a>00047                                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00048"></a>00048     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> xc, yc, zc;
 <a name="l00049"></a>00049     _earth.IntForward(lat, lon, h, xc, yc, zc, M);
 <a name="l00050"></a>00050     xc -= _x0; yc -= _y0; zc -= _z0;
@@ -95,7 +95,7 @@
 <a name="l00057"></a>00057 
 <a name="l00058"></a>00058   <span class="keywordtype">void</span> LocalCartesian::IntReverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> z,
 <a name="l00059"></a>00059                                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; h,
-<a name="l00060"></a>00060                                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00060"></a>00060                                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00061"></a>00061     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
 <a name="l00062"></a>00062       xc = _x0 + _r[0] * x + _r[1] * y + _r[2] * z,
 <a name="l00063"></a>00063       yc = _y0 + _r[3] * x + _r[4] * y + _r[5] * z,
@@ -108,7 +108,7 @@
 <a name="l00070"></a>00070 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

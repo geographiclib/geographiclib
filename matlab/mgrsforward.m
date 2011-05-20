@@ -29,4 +29,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: mgrsforward.m 6927 2011-01-20 13:06:59Z karney $
+% $Id: 4b4cd94bd27f6cf54501e499e1303e316f1f38f2 $

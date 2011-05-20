@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2011-02-22" "GeographicLib 1.8" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2011-05-20" "GeographicLib 1.9" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -143,6 +143,8 @@ Planimeter \-\- compute the area of geodesic polygons
 .IX Header "SYNOPSIS"
 \&\fBPlanimeter\fR [ \fB\-s\fR ] [ \fB\-r\fR ] [ \fB\-e\fR \fIa\fR \fIr\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
+[ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
+[ \fB\-\-output\-file\fR \fIoutfile\fR ]
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 Measure the area of a geodesic polygon.  Reads polygon vertices from
@@ -180,13 +182,26 @@ sphere.  Specify \fIr\fR < 0 for a prolate ellipsoid.  By default, the
 \&\s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137m, \fIr\fR = 298.257223563.
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
-print version.
+print version and exit.
 .IP "\fB\-h\fR" 4
 .IX Item "-h"
-print usage.
+print usage and exit.
 .IP "\fB\-\-help\fR" 4
 .IX Item "--help"
-print full documentation.
+print full documentation and exit.
+.IP "\fB\-\-input\-file\fR" 4
+.IX Item "--input-file"
+read input from the file \fIinfile\fR instead of from standard input; a file
+name of \*(L"\-\*(R" stands for standard input.
+.IP "\fB\-\-input\-string\fR" 4
+.IX Item "--input-string"
+read input from the string \fIinstring\fR instead of from standard input.
+All the semicolons in \fIinstring\fR are converted to newlines before the
+reading begins.
+.IP "\fB\-\-output\-file\fR" 4
+.IX Item "--output-file"
+write output to the file \fIoutfile\fR instead of to standard output; a
+file name of \*(L"\-\*(R" stands for standard output.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 Example (the area of the 100km \s-1MGRS\s0 square 18SWK)
@@ -233,3 +248,6 @@ ellipsoid of revolution\fR, Feb. 2011; preprint
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 \&\fBPlanimeter\fR was written by Charles Karney.
+.SH "HISTORY"
+.IX Header "HISTORY"
+\&\fBGeoidEval\fR was added to GeographicLib in version 1.4.

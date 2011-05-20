@@ -30,4 +30,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: utmupsreverse.m 6927 2011-01-20 13:06:59Z karney $
+% $Id: ff2c02e8bb30b4188f8726e3258349a3fd381a71 $
