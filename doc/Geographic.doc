@@ -43,8 +43,13 @@ The code is available for download at
   GeographicLib-1.9.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
-have identical contents.)  There is also a binary installer for Windows
-available at
+have identical contents.)  Alternatively you can get the latest stable release
+using git \verbatim
+  git clone git://geographiclib.git.sourceforge.net/gitroot/geographiclib/geographiclib-release
+  cd geographiclib-release
+  git checkout stable
+\endverbatim
+There is also a binary installer for Windows available at
 - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9-win32.exe/download">
   GeographicLib-1.9-win32.exe</a>
 .
@@ -391,20 +396,22 @@ with Visual Studio 2005.)
 
 \section maintainer Maintainer tasks
 
-Check the code out of subversion with \verbatim
-  svn co https://geographiclib.svn.sourceforge.net/svnroot/geographiclib/trunk/GeographicLib
+Check the code out of git with \verbatim
+  git clone git://geographiclib.git.sourceforge.net/gitroot/geographiclib/geographiclib
 \endverbatim
-The html version of the documentation and the formatted man pages not
-checked into subversion.  However provided you are on a Unix-like system
-with doxygen, pod2man, and pod2html installed, then the
-<code>MAINTAINER</code> configuration variable in cmake will be
-set to ON.  In this case, the html documentation and formatted man pages
-will be created when running \verbatim
-  make \endverbatim
-following the cmake configuration.  In addition \verbatim
+In order to configure the files needed by autoconfigure, run \verbatim
+  sh autogen.sh \endverbatim
+in the top level directory.  The html version of the documentation and
+the formatted man pages not checked into git.  Provided you are running
+on a system with doxygen, pod2man, and pod2html installed, then you can
+create these by building the system using cmake (the
+<code>MAINTAINER</code> configuration variable set to ON if the
+necessary tools are found) or configure.   In the
+case of cmake, you much in addition run \verbatim
   make dist \endverbatim
-will copy the documentation back into the source tree and package the
-resulting source tree for distribution as \verbatim
+which will copy the documentation from the build directory back into the
+source tree and package the resulting source tree for distribution as
+\verbatim
   GeographicLib-1.9.tar.gz
   GeographicLib-1.9.zip \endverbatim
 Finally, \verbatim
