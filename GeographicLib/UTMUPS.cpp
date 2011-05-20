@@ -2,23 +2,25 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#include <cmath>
-#include <algorithm>
-#include <stdexcept>
-#include <limits>
 #include "GeographicLib/UTMUPS.hpp"
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/PolarStereographic.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
+#include "GeographicLib/Constants.hpp"
+#include <cmath>
+#include <algorithm>
+#include <stdexcept>
+#include <limits>
 
-namespace {
-  char RCSID[] = "$Id: UTMUPS.cpp 6535 2009-02-10 22:37:07Z ckarney $";
-  char RCSID_H[] = UTMUPS_HPP;
-}
+#define UTMUPS_CPP "$Id: UTMUPS.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+
+RCSID_DECL(UTMUPS_CPP)
+RCSID_DECL(UTMUPS_HPP)
 
 namespace GeographicLib {
 

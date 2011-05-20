@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6569 2009-03-01 21:01:04Z ckarney $
+# $Id: 00README.txt 6586 2009-03-31 00:24:54Z ckarney $
 
 A library for geographic projections.
 
@@ -43,6 +43,7 @@ Files
     tm.mac -- Maxima code for high precision TM
     ellint.mac -- Maxima code for elliptic functions needed by tm.mac
     tmseries.mac -- Maxima code for series approximations for TM
+    geod.mac -- Maxima code for series approximates for Geodesic
 
     gauss-laborde-graticule-a.{png,pdf} -- Fig. 1
     gauss-krueger-graticule-a.{png,pdf} -- Fig. 2
@@ -51,7 +52,28 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-03 version of the library.
+This is the 2009-04 version of the library.
+
+Changes between 2009-04 and 2009-03 versions:
+
+  * Use compile-time constants to select the order of series in
+    GeographicLib::TransverseMercator.
+
+  * 2x unroll of Clenshaw summation to avoid data shuffling.
+
+  * Simplification of GeographicLib::EllipticFunction::E.
+
+  * Use STATIC_ASSERT for compile-time checking of constants.
+
+  * Improvements to GeographicLib::Geodesic:
+    + compile-time option to change order of series used,
+    + post maxima code for generating the series,
+    + tune the order of series for double,
+    + improvements in the selection of starting points for Newton's
+      method,
+    + accept and return spherical arc lengths,
+    + works with both oblate and prolate spheroids,
+    + add -a, -e, -b options to \ref geod utility.
 
 Changes between 2009-03 and 2009-02 versions:
 

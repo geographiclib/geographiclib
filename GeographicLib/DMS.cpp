@@ -2,21 +2,22 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #include "GeographicLib/DMS.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
 #include <iomanip>
 
-namespace {
-  char RCSID[] = "$Id: DMS.cpp 6572 2009-03-01 22:41:48Z ckarney $";
-  char RCSID_H[] = DMS_HPP;
-}
+#define DMS_CPP "$Id: DMS.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+
+RCSID_DECL(DMS_CPP)
+RCSID_DECL(DMS_HPP)
 
 namespace GeographicLib {
 

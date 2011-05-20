@@ -2,9 +2,9 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  *
  * Compile with
  *
@@ -13,17 +13,17 @@
  * See \ref cartconvert for usage information.
  **********************************************************************/
 
+#include "GeographicLib/Geocentric.hpp"
+#include "GeographicLib/LocalCartesian.hpp"
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include "GeographicLib/Geocentric.hpp"
-#include "GeographicLib/LocalCartesian.hpp"
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]\n\
-$Id: CartConvert.cpp 6553 2009-02-24 03:10:01Z ckarney $\n\
+$Id: CartConvert.cpp 6578 2009-03-15 14:30:38Z ckarney $\n\
 \n\
 Convert geodetic coordinates to either geocentric or local cartesian\n\
 coordinates.  Geocentric coordinates have the origin at the center of the\n\

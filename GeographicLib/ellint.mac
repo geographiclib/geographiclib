@@ -3,7 +3,7 @@
 Written by Charles Karney <charles@karney.com>
 http://charles.karney.info/geographic
 
-$Id: ellint.mac 6500 2009-01-11 21:22:41Z ckarney $
+$Id: ellint.mac 6580 2009-03-27 20:40:13Z ckarney $
 
 */
 
@@ -92,7 +92,8 @@ Numericshe Mathematik 7, 78-90 (1965)
 
 */
 
-sncndn(x,mc):=block([bo, a, b, c, d, l, sn, cn, dn],
+sncndn(x,mc):=block([bo, a, b, c, d, l, sn, cn, dn, m, n],
+  local(m, n),
   if mc # 0 then (
     bo:is(mc < 0b0),
     if bo then (

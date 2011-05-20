@@ -2,9 +2,9 @@
  * \file GeoConvert.cpp
  * \brief Command line utility for geographic coordinate conversions
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  *
  * Compile with
  *
@@ -13,17 +13,17 @@
  * See \ref geoconvert for usage information.
  **********************************************************************/
 
+#include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <stdexcept>
 #include <iomanip>
-#include "GeographicLib/GeoCoords.hpp"
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]\n\
-$Id: GeoConvert.cpp 6559 2009-02-28 16:49:53Z ckarney $\n\
+$Id: GeoConvert.cpp 6578 2009-03-15 14:30:38Z ckarney $\n\
 \n\
 Convert geographic coordinates to\n\
 \n\

@@ -2,19 +2,21 @@
  * \file MGRS.cpp
  * \brief Implementation for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #include "GeographicLib/MGRS.hpp"
 #include "GeographicLib/UTMUPS.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <stdexcept>
 #include <limits>
 
-namespace {
-  char RCSID[] = "$Id: MGRS.cpp 6553 2009-02-24 03:10:01Z ckarney $";
-  char RCSID_H[] = MGRS_HPP;
-}
+#define MGRS_CPP "$Id: MGRS.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+
+RCSID_DECL(MGRS_CPP)
+RCSID_DECL(MGRS_HPP)
 
 namespace GeographicLib {
 

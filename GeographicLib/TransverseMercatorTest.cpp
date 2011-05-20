@@ -2,9 +2,9 @@
  * \file TransverseMercatorTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  *
  * Compile with
  *
@@ -13,17 +13,17 @@
  * See \ref transversemercatortest for usage information.
  **********************************************************************/
 
-#include <string>
-#include <iostream>
-#include <iomanip>
 #include "GeographicLib/EllipticFunction.hpp"
 #include "GeographicLib/TransverseMercatorExact.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
+#include <string>
+#include <iostream>
+#include <iomanip>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "TransverseMercatorTest [-r] [-t|-s]\n\
-$Id: TransverseMercatorTest.cpp 6558 2009-02-27 23:42:54Z ckarney $\n\
+$Id: TransverseMercatorTest.cpp 6578 2009-03-15 14:30:38Z ckarney $\n\
 \n\
 Convert between geographic coordinates and transverse Mercator coordinates.\n\
 \n\

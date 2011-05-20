@@ -2,13 +2,13 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(DMS_HPP)
-#define DMS_HPP "$Id: DMS.hpp 6572 2009-03-01 22:41:48Z ckarney $"
+#define DMS_HPP "$Id: DMS.hpp 6573 2009-03-06 20:33:50Z ckarney $"
 
 #include <string>
 #include <sstream>

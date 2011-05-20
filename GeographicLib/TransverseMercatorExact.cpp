@@ -2,9 +2,9 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  *
  * The relevant section of Lee's paper is part V, pp 67&ndash;101,
  * <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
@@ -42,16 +42,17 @@
 #include <limits>
 #include <algorithm>
 
-namespace {
-  char RCSID[] = "$Id: TransverseMercatorExact.cpp 6568 2009-03-01 17:58:41Z ckarney $";
-  char RCSID_H[] = TRANSVERSEMERCATOREXACT_HPP;
-}
+#define TRANSVERSEMERCATOREXACT_CPP "$Id: TransverseMercatorExact.cpp 6582 2009-03-27 22:10:18Z ckarney $"
+
+RCSID_DECL(TRANSVERSEMERCATOREXACT_CPP)
+RCSID_DECL(TRANSVERSEMERCATOREXACT_HPP)
 
 namespace GeographicLib {
 
   using namespace std;
 
-  const double TransverseMercatorExact::tol = numeric_limits<double>::epsilon();
+  const double TransverseMercatorExact::tol =
+    numeric_limits<double>::epsilon();
   const double TransverseMercatorExact::tol1 = 0.1 * sqrt(tol);
   const double TransverseMercatorExact::tol2 = 0.1 * tol;
   const double TransverseMercatorExact::taytol = pow(tol, 0.6);
@@ -60,11 +61,11 @@ namespace GeographicLib {
     (double)(numeric_limits<double>::digits)
     /log((double)(numeric_limits<double>::radix)) + 2;
 
-  TransverseMercatorExact::TransverseMercatorExact(double a, double invf,
+  TransverseMercatorExact::TransverseMercatorExact(double a, double r,
 						   double k0, bool extendp)
     throw()
     : _a(a)
-    , _f(1 / invf)
+    , _f(1 / r)
     , _k0(k0)
     , _mu(_f * (2 - _f))	// e^2
     , _mv(1 - _mu)		// 1 - e^2
@@ -76,10 +77,10 @@ namespace GeographicLib {
   {}
 
   const TransverseMercatorExact
-  TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_invf(),
+  TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
 			       Constants::UTM_k0());
 
-  double  TransverseMercatorExact::psi(double phi) const throw() {
+  double TransverseMercatorExact::psi(double phi) const throw() {
     double s = sin(phi);
     // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
     // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
@@ -114,7 +115,8 @@ namespace GeographicLib {
 				     double& psi, double& lam) const throw() {
     // Lee 54.17 but write
     // atanh(snu * dnv) = asinh(snu * dnv / sqrt(cnu^2 + _mv * snu^2 * snv^2))
-    // atanh(_e * snu / dnv) = asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
+    // atanh(_e * snu / dnv) =
+    //         asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
     double
       d1 = sqrt(sq(cnu) + _mv * sq(snu * snv)),
       d2 = sqrt(_mu * sq(cnu) + _mv * sq(cnv));
@@ -204,8 +206,8 @@ namespace GeographicLib {
   }
 
   // Invert zeta using Newton's method
-  void  TransverseMercatorExact::zetainv(double psi, double lam,
-					 double& u, double& v) const throw() {
+  void TransverseMercatorExact::zetainv(double psi, double lam,
+					double& u, double& v) const throw() {
     if (zetainv0(psi, lam, u, v))
       return;
     double stol2 = tol2 / sq(max(psi, 1.0));
@@ -248,7 +250,8 @@ namespace GeographicLib {
 					 double snu, double cnu, double dnu,
 					 double v,
 					 double snv, double cnv, double dnv,
-					 double& du, double& dv) const throw() {
+					 double& du, double& dv)
+    const throw() {
     // Reciprocal of 55.9: dw/ds = dn(w)^2/_mv, expanding complex dn(w) using
     // A+S 16.21.4
     double d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
@@ -260,8 +263,8 @@ namespace GeographicLib {
   }
 
   // Starting point for sigmainv
-  bool  TransverseMercatorExact::sigmainv0(double xi, double eta,
-					   double& u, double& v) const throw() {
+  bool TransverseMercatorExact::sigmainv0(double xi, double eta,
+					  double& u, double& v) const throw() {
     bool retval = false;
     if (eta > 1.25 * _Ev.KE() ||
 	(xi < -0.25 * _Eu.E() && xi < eta - _Ev.KE())) {
@@ -310,8 +313,8 @@ namespace GeographicLib {
   }
 
   // Invert sigma using Newton's method
-  void  TransverseMercatorExact::sigmainv(double xi, double eta,
-					  double& u, double& v) const throw() {
+  void TransverseMercatorExact::sigmainv(double xi, double eta,
+					 double& u, double& v) const throw() {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9

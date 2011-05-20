@@ -6,23 +6,23 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://charles.karney.info/geographic/
  **********************************************************************/
-// $Id: Geographic.doc 6572 2009-03-01 22:41:48Z ckarney $
+// $Id: Geographic.doc 6596 2009-03-31 21:52:50Z ckarney $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-03
-\date 2009-03-01
+\version 2009-04
+\date 2009-04-01
 
 \section abstract Abstract
 
 %GeographicLib is a small set of <a href="annotated.html">C++
-classes</a> to perform conversions between geographic, UTM, UPS, MGRS,
-geocentric, and local cartesian coordinates.  In this application, the
-errors are close to round-off (about 5 nm).  It is specialized for use
-with the WGS84 but can be adapted for use with other ellipsoids.  In
-addition, various properties of the \ref transversemercator are
-described and a new accurate algorithm for \ref geodesic is given.
+classes</a> for performing conversions between geographic, UTM, UPS,
+MGRS, geocentric, and local cartesian coordinates and for solving
+geodesic problems.  The emphasis is on returning accurate results with
+errors close to round-off (about 5&ndash;15 nm).  In addition, various
+properties of the \ref transversemercator are described and an accurate
+algorithm for \ref geodesic is given.
 
 \section download Download
 
@@ -51,6 +51,7 @@ http://charles.karney.info/geographic/
    - \ref testgeod
    - \ref geoderrors
    - \ref geodtodo
+   - \ref geodseries
  - \ref geocentric
  - \ref utilities
    - \ref geoconvert
@@ -112,6 +113,9 @@ Visual Studio 2005
 The section \ref transversemercator documents various properties of this
 projection.
 
+The section \ref geodesic documents (still rather incompletely) the
+method of solving the geodesic problem.
+
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
 report any you find to <charles@karney.com>.
 
@@ -149,6 +153,9 @@ The following steps will get you started with %GeographicLib:
    on the library.
  - Read the section, \ref transversemercator, for more information on
    this projection.
+ - If you use the library frequently, install it to $(PREFIX) =
+   /usr/local with
+   - make install
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
@@ -246,7 +253,7 @@ GeographicLib/ directory prefix.  If compiling within the %GeographicLib
 directory, ".." should be included in the header search path (e.g.,
 with -I..).  The cpp files implementing the classes include "using
 namespace std;", however, for portability, the headers files and the
-test programs do not.
+utility programs do not.
 
 There's an "install" target in the Makefile which installs the library
 components into \$(PREFIX)/lib, \$(PREFIX)/include/GeographicLib,
@@ -705,9 +712,9 @@ select an order from 4 thru 8.
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
 n) and / indicates real division (3/5 = 0.6).  The equations need to be
 converted to Horner form, but are here left in expanded form so that
-they can be easily truncated to lower order in n.  Some of the integers
-here are not representable as 32-bit integers and will need to be
-included as double literals.
+they can be easily truncated to lower order in \e n.  Some of the
+integers here are not representable as 32-bit integers and will need to
+be included as double literals.
 
 Eq. (01) [\e A in Kr&uuml;ger, p. 12, eq. (5)]
 \verbatim
@@ -956,7 +963,7 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page geodesic Geodesics on the Ellipsoid
+\page geodesic Geodesics on the Spheroid
 
 <center>
 Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
@@ -978,7 +985,7 @@ References
 
 \section geoddesc Description of algorithm
 
-The shortest path between two points on the ellipsoid at (\e lat1, \e
+The shortest path between two points on a spheroid at (\e lat1, \e
 lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is \e
 s12 and the geodesic from point 1 to point 2 has azimuths \e azi1 and \e
 azi2 at the two end points.  (The azimuth is the heading measured
@@ -988,7 +995,7 @@ heading that takes you beyond point 2 not back to point 1.)
 Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2,
 \e lon2, \e azi2.  This is the <b>direct</b> geodesic problem.  (If \e s12
 is sufficiently large that the geodesic wraps more than halfway around
-the earth, there will be a true geodesic between the points with a
+the earth, there will be another geodesic between the points with a
 smaller \e s12.)
 
 Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1,
@@ -998,18 +1005,18 @@ multiple solutions (all with the same \e s12, of course), all the
 solutions can be easily generated once a particular solution is
 provided.
 
-On a sphere, the geodesic is a great circle.  On the ellipsoid, the
+On a sphere, the geodesic is a great circle.  On the spheroid, the
 problem is usually solved by transferring the geodesic to an "auxiliary
 sphere" where the latitude \e phi has been replaced by the reduced
 latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).  On this
 sphere, the geodesic is again a great circle and the azimuth is the same
-as on the ellipsoid.  However, the ellipsoidal distance is related to
-the great circle distance by an integral; and the ellipsoidal longitude
+as on the spheroid.  However, the spheroidal distance is related to
+the great circle distance by an integral; and the spheroidal longitude
 is similarly related to the longitude on the auxiliary sphere.  Williams
 (2002) gives the necessary integrals.
 
 A popular method of doing geodesic calculations is due to Vincenty
-(1975).  This entails expanding the integrals in powers of the ellipsoid
+(1975).  This entails expanding the integrals in powers of the spheroid
 flattening, and then solving both the direct and inverse problems by
 iteration.  This approach has three drawbacks:
  - The series are cast into a "nested" form which makes them difficult
@@ -1022,7 +1029,7 @@ iteration.  This approach has three drawbacks:
    this case.
  .
 Here we reformulate the geodesic problem with three goals:
- - Accuracy to round-off.  We achieve an accuracy of 12 nm using
+ - Accuracy to round-off.  We achieve an accuracy of 15 nm using
    doubles.
  - Always yield a solution.  The direct problem is trivial.  In the
    case of inverse problem, the geodesic is returned.  (And in the event
@@ -1030,11 +1037,24 @@ Here we reformulate the geodesic problem with three goals:
  - Employ a non-iterative or rapidly converging iterative scheme.
 
 We derive higher-order series for the distance and longitude integrals
-using Maxima.  In this release, we use an 8th-order expansion.  The
-series is evaluated by a combination of Horner's method and Clenshaw
-summation.  For the direct problem, we use a reversion of the series for
-the distance to compute the spherical arc length and thereby complete
-the solution without the need to iterate.
+using <a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>.  In this
+release, we use a 6th-order expansion for the distance integral and a
+5th-order expansion for the longitude integral.  This is sufficient to
+maintain accuracy for doubles.  However, preprocessor macros
+GEOD_TAU_ORD (default 6) and GEOD_ETA_ORD (default 5) can be used to
+select any order up to 8.  (If using long doubles, with a 64-bit
+fraction, it's necessary to set GEOD_TAU_ORD to 7 and GEOD_ETA_ORD to
+6.)  The series is evaluated by a combination of Horner's method and
+Clenshaw summation.  For the direct problem, we use a reversion of the
+series for the distance to compute the spherical arc length and thereby
+complete the solution without the need to iterate.
+
+The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the
+series for the distance and longitude integrals.  In addition this
+includes code to format the results for inclusion into C++ code.  You
+will need to have Maxima installed to use this code.  The comments at
+the top of <a href="geod.mac">geod.mac</a> illustrate how to run it.  It
+takes about 10s to generate the 8th order series.
 
 For the inverse problem, we rearrange the points so that the point 1 is
 the one closest to a pole and is in the southern hemisphere and the
@@ -1045,13 +1065,19 @@ The longitude is an increasing function of \e alpha1 and we use Newton's
 method to determine the value of \e alpha1 for which the longitude
 matches \e lon2.  This then gives the desired geodesic.
 
+This class also returns the arc length on the auxiliary sphere and
+allows distances to be specified in these terms.  See the -a option to
+\ref geod.
+
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
  - http://charles.karney.info/geographic/GeodTest.dat.gz
  .
 This is about 25 MB (compressed).  This consists of a set of geodesics
-for the WGS84 ellipsoid.
+for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
+members &mdash; about 1/2 MB, compressed) is available at
+ - http://charles.karney.info/geographic/GeodTest-short.dat.gz
 
 Each line of the test set gives 7 space delimited numbers
  - latitude for point 1, \e lat1 (degrees, exact)
@@ -1074,9 +1100,9 @@ a multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e lon2
 in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
 180<sup>o</sup>].
 
-The direct calculation uses an expansion of the
-geodesic equations accurate to \e f<sup>20</sup> (approximately 1 part
-in 10<sup>50</sup>) and is computed with with
+The direct calculation uses an expansion of the geodesic equations
+accurate to \e f<sup>20</sup> (approximately 1 part in 10<sup>50</sup>)
+and is computed with with
 <a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
 fpprec set to 100 (so the errors in the data are probably 1/2 of the
 values quoted above).
@@ -1096,7 +1122,7 @@ The contents of the file are as follows:
 running between vertices are truncated to a multiple of 0.1 pm and this
 is used to determine point 2.
 
-This data can be fed to the Geod utility as follows
+This data can be fed to the \ref geod utility as follows
  - Direct from point 1:
 \verbatim
   gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./Geod
@@ -1122,12 +1148,16 @@ geodesic (in the same order as the test set).
 Another much smaller set of test points has been culled from the
 literature on geodesics.  These are all for the International Ellipsoid
 (\e a = 6378388 m, \e f = 1/297.0).  The endpoints are taken from
+
+ - H. F. Rainsford, <a href="http://dx.doi.org/10.1007/BF02527187">
+   Long geodesics on the ellipsoid</a>,
+   Bull. Geodesique 37, 12&ndash;22 (1955).
  - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
    geodesy, Part II</a>, Ohio State Univ. (March 1993).
  - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
    computation of long geodesics on the ellipsoid through Gaussian
    quadrature</a>,
-   Journal of Geodesy 53, 165&ndash;177 (1979).
+   J. Geodesy 53, 165&ndash;177 (1979).
  - B.K. Meade, Discussion of results obtained from the Bowring formulas
    developed for solutions of the geodetic inverse and great elliptic
    inverse, Survey Review 33 (261) 477&ndash;487 (1996).
@@ -1202,7 +1232,7 @@ No      azi1                      azi2                      s12
 \section geoderrors Accuracy of geodesic calculation
 
 We regard all the test data as "exact".  For each member of the test
-set, 7 error distances are computed.
+set, 8 error distances are computed.
  -# Compute the direct problem from point 1, compare position of
     resulting point 2 with the exact result.
  -# Using point 2 and its azimuth given in (1), run the geodesic
@@ -1210,18 +1240,28 @@ set, 7 error distances are computed.
     point 1.
  -# Similar to (1) with points 1 and 2 interchanged.
  -# Similar to (2) with points 1 and 2 interchanged.
- -# Solve the inverse problem between points 1 and 2.  Compare the
-    distance with the exact result.
+ -# Solve the inverse problem between points 1 and 2.  Compare \e s12
+    with the exact result.
  -# Using the azimuth at point 1 found in (5), compute the direct
     problem from point 1 and compare the position of the resulting point
     2 with the exact result.
  -# Similar to (6) with points 1 and 2 interchanged.
+ -# Use the results of (5) to compute the position of the midpoint of
+    the geodesic by a direct calculation from both ends with distance
+    +/-\e s12/2.  Compare the resulting positions.  In addition, if \e
+    s12 < \e a/2 (where \e a is the equatorial radius of the spheroid),
+    then similarly compare the calcuated positions on the geodesic \e a
+    beyond either end of the line starting at both endpoints (i.e., with
+    distances +/-\e a and +/-(\e s12 + \e a)).
  .
-To guard against a canceling error, the calculations in (2), (4), (6),
-and (7) use a long double version of the direct geodesic calculation
-(which is about 2000 times more accurate than the double version).  The
-maximum of the resulting errors in less than 12 nm for the double
-version and 6 pm for the long double version.
+The last check verifies that \e azi1 and \e azi2 returned by the inverse
+solution correspond to the same path and is important, e.g., when point
+1 and point 2 are near opposite poles.  To guard against a canceling
+error, the calculations in (2), (4), (6), (7), and (8) use a long double
+version of the direct geodesic calculation (which is about 2000 times
+more accurate than the double version).  The maximum of the resulting
+errors in less than 15 nm for the double version and 7 pm for the long
+double version.
 
 None of the checks listed above directly compares the computed azimuths
 with the exact values.  The problem is that tiny changes in the
@@ -1242,12 +1282,15 @@ length.  However the azimuths at point 1 are
  - Point 1 to 2a: 89.999991621683687489
  - Point 1 to 2b: 89.998510960829763754
  - difference: -5.3"
-
+ .
 and the two geodesics are separated by about 160 m at their midpoints.
+(This "unstable" case is generated by running the direct geodesic
+calculation with azi1 = 90<sup>o</sup> and arc length of
+180<sup>o</sup>.)
 
 So instead of directly quoting the errors in the azimuths, we must use
 the back-to-front formulation: The azimuths returned are the correct
-azimuths for some geodesic with end-points within 12 nm of the given
+azimuths for some geodesic with end-points within 15 nm of the given
 end-points.
 
 \section geodtodo Loose ends on geodesics
@@ -1259,14 +1302,20 @@ taking the limit \e eps -> 0 from above.
 The following prescription allows you to ascertain when there are
 multiple solutions to the inverse problem and to generate the complete
 set.
- - \e lat1 = \e -lat2 (with neither at a pole).  If \e azi1 = \e azi2
-   then the geodesic is unique.  Otherwise there are two geodesics and
-   the second one is obtained by setting [\e azi1, \e azi2] = [\e azi2,
-   \e azi1].  (This occurs when the longitude difference is near +/-
-   180<sup>o</sup>.)
+ - \e lat1 = \e -lat2 (with neither at a pole).  If \e azi1 = \e azi2,
+   the geodesic is unique.  Otherwise there are two geodesics and the
+   second one is obtained by setting [\e azi1, \e azi2] = [\e azi2, \e
+   azi1].  (This occurs when the longitude difference is near +/-
+   180<sup>o</sup> for oblate spheroids.)
+ - \e lon2 = \e lon1 +/- 180<sup>o</sup> (with neither at a pole).  If \e
+   azi1 = 0<sup>o</sup> or +/- 180<sup>o</sup>, the geodesic is unique.
+   Otherwise there are two geodesics and the second one is obtained by
+   setting [\e azi1, \e azi2] = [-\e azi1, -\e azi2].  (This occurs when
+   the \e lat2 is near -\e lat1 for prolate spheroids.)
  - Points 1 and 2 at opposite poles.  There are infinitely many
    geodesics which can be generated by setting [\e azi1, \e azi2] = [\e
-   azi1, \e azi2] + [\e d, -\e d], for arbitrary \e d.
+   azi1, \e azi2] + [\e d, -\e d], for arbitrary \e d.  (For spheres,
+   this prescription applies when points 1 and 2 are antipodal.)
  - \e s12 = 0 (coincident points).  There are infinitely many geodesics
    which can be generated by setting [\e azi1, \e azi2] = [\e azi1, \e
    azi2] + [\e d, \e d], for arbitrary \e d.
@@ -1300,33 +1349,327 @@ azimuths.
 The evaluation of the derivative for Newton's method for the inverse
 problem is a straightforward application of the chain rule for
 derivatives.  In evaluating the derivative of the longitude function,
-the derivative with respect to cos<sup>2</sup> \e alpha is carried out by
-differentiating the series.  However the derivative with respect to \e
-sigma (the limit of the integral) just gives the integrand.
+the derivative with respect to cos<sup>2</sup> \e alpha<sub>0</sub> is
+carried out by differentiating the series.  However the derivative with
+respect to \e sigma (the limit of the integral) just gives the
+integrand.
+
+Convergence failures with Newton's method for the inverse problem is
+signaled by negating the distance (and the arc distance) and by
+reversing the azimuths.  This convention was chosen as it allows both
+detection of the problem and subsequent use of the values (assuming that
+they are approximately correct).  It is expected that the method
+converges for all models of the earth and for any two input
+points. Please report all cases where this does not happen.
 
 Geographic coordinates which are close to zero are quantized (by adding
-and subtracting 1/16).  This allows certain cases of underflow to be
+and subtracting 1/16 deg).  This allows certain cases of underflow to be
 avoided.  This limits the accuracy to which coordinates can be specified
 to 0.7 pm.  This should not be a problem since the overall accuracy of
-the algorithms is only 12 nm.
+the algorithms is only 15 nm.
+
+You can specify a \e negative flattening to get a prolate spheroid.  The
+rule is that \e b is the radius of the axis of symmetry (the polar
+radius), that \e a is the equatorial radius, and that \e b = \e a (1 -
+\e f).  The direct solution needed no modification.  The inverse
+solution required a generalization in the way starting points for
+Newton's method are chosen; in addition a test are added to the case
+when the endpoints are on the same meridian to determine if a shorter
+non-meridional geodesic exists.
+
+Most planets and satellites are approximated by oblate spheroids.
+However, satellites whose rotation frequency is tidally locked to a
+month may be prolate (as example is Saturn's moon, Tethys).  Such
+satellites are typically considerably more eccentric that the earth and
+it may be necessary to increase the order of the series used in order to
+maintain accuracy.
 
 GeodesicLine::Position provides a way of doing a series of direct
-calculations for a single geodesic.  This is about 2.5 faster than
-calling Geodesic::Direct.  On a 2.6 GHz Intel machine (g++, version
-4.3.0, -O3), calls to Geodesic::Direct take 1.1 us, calls to
-GeodesicLine::Position take 0.44 us, and calls to Geodesic::Inverse take
-3.4 us.
+calculations for a single geodesic.  This is about 2.1 times faster than
+calling Geodesic::Direct.  A speed-up by a further factor of 1.6 is
+obtained with the direct calculation if the distance is expressed in
+terms of the spherical arc length.
+
+On a 2.6 GHz Intel machine (g++, version 4.3.0, -O3), timings are as
+follows:
+ - Geodesic::Direct 0.87 us
+ - GeodesicLine::Position 0.41 us (arcmode = false)
+ - GeodesicLine::Position 0.25 us (arcmode = true)
+ - Geodesic::Inverse 2.6 us
+ .
+Timing for Geodesic::Inverse is a mean.  Individual calls may take a few
+times longer because of the need to do additional Newton iterations.
+Mean number of Newton iterations is about 3, but this increases (rarely)
+to 17 with some values of the arguments.
 
 Future work:
- - The use of 8th order series is overkill.  (At this order, the long
-   double calculation is still accurate.)  I will generate the code for
-   all orders 4 (approximately corresponding to Vincenty) thru 8 and
-   make them selectable through preprocessor macros.
- - The mean number of Newton's iterations is about 3.  However in some
-   cases more than 20 iterations are required.  Improved starting points
-   are needed.
- - I'll provide the Maxima code used to generate the series and further
-   documentation.
+ - More documentation.
+ - Testing on inverse solution for prolate spheroids.
+ - More thorough analysis of Newton's method for inverse problem
+
+\section geodseries Expansions for geodesics
+
+In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
+f) and / indicates real division (3/5 = 0.6).  The equations need to be
+converted to Horner form, but are here left in expanded form so that
+they can be easily truncated to lower order.  Some of the integers here
+are not representable as 32-bit integers and will need to be included as
+double literals.  These expansions were obtained using the the Maxima
+code, <a href="geod.mac">geod.mac</a>.
+
+In the expansions below, we have
+ - \e alpha<sub>0</sub> is the azimuth at the equator crossing
+ - \e lambda is the longitude measured from the equator crossing
+ - \e chi is the spherical longitude
+ - \e sigma is the spherical arc length
+ - \e f is the flattening
+ - \e e<sup>2</sup> = \e f (2 - \e f)
+ - \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 - \e e<sup>2</sup>)
+ - \e mu = cos<sup>2</sup> <i>alpha</i><sub>0</sub>
+ - \e u<sup>2</sup> = \e e'<sup>2</sup> \e mu
+
+The formula for distance is
+
+&nbsp; &nbsp; \e s/\e b = \e T \e tau(\e sigma)
+
+where
+
+&nbsp; &nbsp; \e tau(\e sigma) =
+\e sigma + sum<sub>\e k = 1</sub> \e t<sub>\e k</sub> sin(2 \e k \e sigma)
+
+and
+
+\verbatim
+T = 1 + 1/4 * u^2
+      - 3/64 * u^4
+      + 5/256 * u^6
+      - 175/16384 * u^8
+      + 441/65536 * u^10
+      - 4851/1048576 * u^12
+      + 14157/4194304 * u^14
+      - 2760615/1073741824 * u^16
+      + 8690825/4294967296 * u^18
+      - 112285459/68719476736 * u^20;
+\endverbatim
+
+\verbatim
+t[1] = - 1/8 * u^2
+       + 1/16 * u^4
+       - 37/1024 * u^6
+       + 47/2048 * u^8
+       - 511/32768 * u^10
+       + 731/65536 * u^12
+       - 278701/33554432 * u^14
+       + 428731/67108864 * u^16
+       - 5418073/1073741824 * u^18
+       + 8749793/2147483648 * u^20;
+t[2] = - 1/256 * u^4
+       + 1/256 * u^6
+       - 27/8192 * u^8
+       + 11/4096 * u^10
+       - 18313/8388608 * u^12
+       + 15003/8388608 * u^14
+       - 397645/268435456 * u^16
+       + 83293/67108864 * u^18
+       - 72262623/68719476736 * u^20;
+t[3] = - 1/3072 * u^6
+       + 1/2048 * u^8
+       - 141/262144 * u^10
+       + 835/1572864 * u^12
+       - 16747/33554432 * u^14
+       + 30765/67108864 * u^16
+       - 2682923/6442450944 * u^18
+       + 1617153/4294967296 * u^20;
+t[4] = - 5/131072 * u^8
+       + 5/65536 * u^10
+       - 217/2097152 * u^12
+       + 251/2097152 * u^14
+       - 136971/1073741824 * u^16
+       + 34827/268435456 * u^18
+       - 1101617/8589934592 * u^20;
+t[5] = - 7/1310720 * u^10
+       + 7/524288 * u^12
+       - 721/33554432 * u^14
+       + 1911/67108864 * u^16
+       - 72831/2147483648 * u^18
+       + 812499/21474836480 * u^20;
+t[6] = - 7/8388608 * u^12
+       + 21/8388608 * u^14
+       - 1251/268435456 * u^16
+       + 467/67108864 * u^18
+       - 5034357/549755813888 * u^20;
+t[7] = - 33/234881024 * u^14
+       + 33/67108864 * u^16
+       - 17853/17179869184 * u^18
+       + 59301/34359738368 * u^20;
+t[8] = - 429/17179869184 * u^16
+       + 429/4294967296 * u^18
+       - 32461/137438953472 * u^20;
+t[9] = - 715/154618822656 * u^18
+       + 715/34359738368 * u^20;
+t[10] = - 2431/2748779069440 * u^20;
+\endverbatim
+
+The function \e tau(\e sigma) may be inverted by series reversion giving
+
+&nbsp; &nbsp; \e sigma(\e tau) =
+\e tau + sum<sub>\e k = 1</sub> \e t'<sub>\e k</sub> sin(2 \e k \e tau)
+
+where
+
+\verbatim
+t'[1] = + 1/8 * u^2
+        - 1/16 * u^4
+        + 71/2048 * u^6
+        - 85/4096 * u^8
+        + 20797/1572864 * u^10
+        - 27953/3145728 * u^12
+        + 7553633/1207959552 * u^14
+        - 11062823/2415919104 * u^16
+        + 2682713311/773094113280 * u^18
+        - 1395694493/515396075520 * u^20;
+t'[2] = + 5/256 * u^4
+        - 5/256 * u^6
+        + 383/24576 * u^8
+        - 143/12288 * u^10
+        + 429221/50331648 * u^12
+        - 314863/50331648 * u^14
+        + 112064929/24159191040 * u^16
+        - 21102289/6039797760 * u^18
+        + 397736513957/148434069749760 * u^20;
+t'[3] = + 29/6144 * u^6
+        - 29/4096 * u^8
+        + 969/131072 * u^10
+        - 5255/786432 * u^12
+        + 377717/67108864 * u^14
+        - 613683/134217728 * u^16
+        + 1881152099/515396075520 * u^18
+        - 994859817/343597383680 * u^20;
+t'[4] = + 539/393216 * u^8
+        - 539/196608 * u^10
+        + 111407/31457280 * u^12
+        - 118621/31457280 * u^14
+        + 174543337/48318382080 * u^16
+        - 7849109/2415919104 * u^18
+        + 22813445269/8117488189440 * u^20;
+t'[5] = + 3467/7864320 * u^10
+        - 3467/3145728 * u^12
+        + 512629/301989888 * u^14
+        - 1258579/603979776 * u^16
+        + 2428500439/1082331758592 * u^18
+        - 8020213657/3607772528640 * u^20;
+t'[6] = + 38081/251658240 * u^12
+        - 38081/83886080 * u^14
+        + 15260583/18790481920 * u^16
+        - 3185249/2818572288 * u^18
+        + 13018081899/9620726743040 * u^20;
+t'[7] = + 459485/8455716864 * u^14
+        - 459485/2415919104 * u^16
+        + 149837213/386547056640 * u^18
+        - 155441239/257698037760 * u^20;
+t'[8] = + 109167851/5411658792960 * u^16
+        - 109167851/1352914698240 * u^18
+        + 71916631739/389639433093120 * u^20;
+t'[9] = + 83141299/10823317585920 * u^18
+        - 83141299/2405181685760 * u^20;
+t'[10] = + 9303339907/3117115464744960 * u^20;
+\endverbatim
+
+The longitude is given in terms of the spherical longitude by
+
+&nbsp; &nbsp;
+\e lambda - \e chi = sin \e alpha<sub>0</sub> \e H \e eta(\e sigma)
+
+where
+
+&nbsp; &nbsp; \e eta(\e sigma) =
+\e sigma + sum<sub>\e k = 1</sub> \e h<sub>\e k</sub> sin(2 \e k \e sigma)
+
+and
+
+\verbatim
+H = - f
+    + mu/4 * f^2
+    + (4*mu-3*mu^2)/16 * f^3
+    + (32*mu-54*mu^2+25*mu^3)/128 * f^4
+    + (256*mu-720*mu^2+720*mu^3-245*mu^4)/1024 * f^5
+    + (1024*mu-4224*mu^2+6800*mu^3-4900*mu^4+1323*mu^5)/4096 * f^6
+    + (4096*mu-23040*mu^2+52800*mu^3-60200*mu^4+34020*mu^5
+                                                  -7623*mu^6)/16384 * f^7
+    + (65536*mu-479232*mu^2+1459200*mu^3-2332400*mu^4+2063880*mu^5
+                                   -960498*mu^6+184041*mu^7)/262144 * f^8
+    + (1048576*mu-9633792*mu^2+37273600*mu^3-78086400*mu^4
+       +95961600*mu^5-69440448*mu^6+27483456*mu^7
+                                             -4601025*mu^8)/4194304 * f^9
+    + (4194304*mu-47185920*mu^2+224788480*mu^3-591073280*mu^4
+       +943923456*mu^5-942568704*mu^6+577152576*mu^7-198764280*mu^8
+                                           +29548805*mu^9)/16777216 * f^10;
+\endverbatim
+
+\verbatim
+h[1] = + mu/8 * f
+       + (4*mu-3*mu^2)/32 * f^2
+       + (64*mu-112*mu^2+51*mu^3)/512 * f^3
+       + (256*mu-768*mu^2+764*mu^3-255*mu^4)/2048 * f^4
+       + (512*mu-2304*mu^2+3724*mu^3-2646*mu^4+701*mu^5)/4096 * f^5
+       + (8192*mu-51200*mu^2+118720*mu^3-134064*mu^4+74558*mu^5
+                                                 -16411*mu^6)/65536 * f^6
+       + (262144*mu-2162688*mu^2+6707200*mu^3-10659328*mu^4
+                    +9306208*mu^5-4262272*mu^6+803251*mu^7)/2097152 * f^7
+       + (1048576*mu-11010048*mu^2+43638784*mu^3-91205632*mu^4
+          +110840000*mu^5-79065664*mu^6+30816920*mu^7
+                                             -5080225*mu^8)/8388608 * f^8
+       + (2097152*mu-27262976*mu^2+133726208*mu^3-351862784*mu^4
+          +556816256*mu^5-548927040*mu^6+331385728*mu^7
+                            -112483562*mu^8+16484371*mu^9)/16777216 * f^9;
+h[2] = + mu^2/64 * f^2
+       + (18*mu^2-13*mu^3)/512 * f^3
+       + (120*mu^2-190*mu^3+79*mu^4)/2048 * f^4
+       + (704*mu^2-1816*mu^3+1610*mu^4-487*mu^5)/8192 * f^5
+       + (15360*mu^2-56960*mu^3+80360*mu^4-51072*mu^5
+                                                +12299*mu^6)/131072 * f^6
+       + (319488*mu^2-1587200*mu^3+3154560*mu^4-3149568*mu^5
+                                 +1579066*mu^6-317733*mu^7)/2097152 * f^7
+       + (1605632*mu^2-10207232*mu^3+26700800*mu^4-37129344*mu^5
+                 +29005488*mu^6-12074982*mu^7+2092939*mu^8)/8388608 * f^8
+       + (3932160*mu^2-30965760*mu^3+102043648*mu^4-184860928*mu^5
+          +199652832*mu^6-128773244*mu^7+45968708*mu^8
+                                            -7010071*mu^9)/16777216 * f^9;
+h[3] = + 5*mu^3/1536 * f^3
+       + (24*mu^3-17*mu^4)/2048 * f^4
+       + (1360*mu^3-2056*mu^4+813*mu^5)/49152 * f^5
+       + (5280*mu^3-12712*mu^4+10567*mu^5-3008*mu^6)/98304 * f^6
+       + (583680*mu^3-1980928*mu^4+2588016*mu^5-1534256*mu^6
+                                              +346689*mu^7)/6291456 * f^7
+       + (3727360*mu^3-16658432*mu^4+30323072*mu^5-28018000*mu^6
+                              +13101384*mu^7-2474307*mu^8)/25165824 * f^8
+       + (11239424*mu^3-63307776*mu^4+150174912*mu^5-191880096*mu^6
+               +139037856*mu^7-54087918*mu^8+8813923*mu^9)/50331648 * f^9;
+h[4] = + 7*mu^4/8192 * f^4
+       + (70*mu^4-49*mu^5)/16384 * f^5
+       + (860*mu^4-1266*mu^5+485*mu^6)/65536 * f^6
+       + (66640*mu^4-154232*mu^5+123082*mu^6-33633*mu^7)/2097152 * f^7
+       + (557760*mu^4-1799088*mu^5+2238200*mu^6-1265846*mu^7
+                                              +273437*mu^8)/8388608 * f^8
+       + (2110976*mu^4-8875616*mu^5+15271984*mu^6-13386428*mu^7
+                               +5956948*mu^8-1073747*mu^9)/16777216 * f^9;
+h[5] = + 21*mu^5/81920 * f^5
+       + (108*mu^5-75*mu^6)/65536 * f^6
+       + (13104*mu^5-18960*mu^6+7107*mu^7)/2097152 * f^7
+       + (152320*mu^5-343632*mu^6+266632*mu^7-70753*mu^8)/8388608 * f^8
+       + (3745728*mu^5-11689376*mu^6+14058888*mu^7-7686170*mu^8
+                                            +1605635*mu^9)/83886080 * f^9;
+h[6] = + 11*mu^6/131072 * f^6
+       + (1386*mu^6-957*mu^7)/2097152 * f^7
+       + (75152*mu^6-107426*mu^7+39633*mu^8)/25165824 * f^8
+       + (255024*mu^6-565114*mu^7+429583*mu^8-111507*mu^9)/25165824 * f^9;
+h[7] = + 429*mu^7/14680064 * f^7
+       + (2288*mu^7-1573*mu^8)/8388608 * f^8
+       + (96096*mu^7-136136*mu^8+49621*mu^9)/67108864 * f^9;
+h[8] = + 715*mu^8/67108864 * f^8
+       + (7722*mu^8-5291*mu^9)/67108864 * f^9;
+h[9] = + 2431*mu^9/603979776 * f^9;
+\endverbatim
 
 <center>
 Back to \ref transversemercator.  Forward to \ref geocentric.  Up to \ref contents.
@@ -1450,8 +1793,7 @@ Examples:
 Compile with "make GeoConvert" or with
 
 g++ -g -O3 -I.. -o GeoConvert GeoConvert.cpp GeoCoords.cpp MGRS.cpp
-UTMUPS.cpp DMS.cpp Constants.cpp TransverseMercator.cpp
-PolarStereographic.cpp
+UTMUPS.cpp DMS.cpp TransverseMercator.cpp PolarStereographic.cpp
 
 Here is the usage (obtained from "GeoConvert -h")
 \verbatim
@@ -1551,8 +1893,7 @@ Examples:
 Compile with "make TransverseMercatorTest" or with
 
 g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp
-TransverseMercatorExact.cpp Constants.cpp EllipticFunction.cpp
-TransverseMercator.cpp
+TransverseMercatorExact.cpp EllipticFunction.cpp TransverseMercator.cpp
 
 Note that, unlike \ref geoconvert, TransverseMercatorTest has no
 facility for dealing with angles in degrees, minutes, and seconds, and
@@ -1616,19 +1957,20 @@ Example (route from JFK Airport to Singapore Changi Airport)
 
 Compile with "make Geod" or with
 
-g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp Constants.cpp
+g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp
 
 Here is the usage (obtained from "Geod -h")
 
 \verbatim
-Usage: Geod [-l lat1 lon1 azi1 | -i] [-n] [-d] [-f] [-p prec] [-h]
+Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]
+            [-d] [-b] [-f] [-p prec] [-h]
 
 Perform geodesic calculations.
 
-The shortest path between two points on the ellipsoid at (lat1, lon1)
-and (lat2, lon2) is called the geodesic.  Its length is s12 and the
-geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two
-end points.
+The shortest path between two points on the spheroid at (lat1, lon1) and
+(lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic
+from point 1 to point 2 has azimuths azi1 and azi2 at the two end
+points.
 
 Geod operates in one of three modes:
 
@@ -1645,19 +1987,31 @@ Geod operates in one of three modes:
     geodesic calculation.  It reads lines containing "lat1 lon1 lat2
     lon2" and prints the corresponding values of "azi1 azi2 s12".
 
-By default, the WGS84 ellipsoid is used.  With the -n option, it uses
-the international ellipsoid (major radius 6378388 m, inverse flattening
-297).
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the spheroid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
+spheroid.  The -n option uses the international ellipsoid (equivalent to
+"-e 6378388 297").
 
 Output of angles is as decimal degrees.  If -d is specified the output
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  By default, latitude precedes
 longitude for each point; however on input either may be given first by
-appending N or S to the latitude and E or W to the longitude.  s12 is
-always given in meters.
+appending N or S to the latitude and E or W to the longitude.  Azimuths
+(measured clockwise from north) give the heading of the geodesic.  The
+azimuth azi2 is the forward azimuth (the heading beyond point 2).  If
+the -b flag is given, azi2 is converted to a back azimuth (the direction
+back to point 1) for output.
 
-The output lines consist of the three quantities needs to complete the
+s12 is given in meters, unless the -a flag is given.  In that case, s12
+(on both input and output) are given in terms of arc length on the
+auxiliary sphere (measured in degrees).  In these terms, 180 degrees is
+the distance from one equator crossing to the next or from the minimum
+latitude to the maximum latitude.  Distances greater than 180 degrees do
+not correspond to shortest paths.
+
+The output lines consist of the three quantities needed to complete the
 specification of the geodesic.  With the -f option, each line of output
 is a complete geodesic specification consisting of seven quantities
 
@@ -1687,7 +2041,7 @@ Examples:
 Compile with "make CartConvert" or with
 
 g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp
-LocalCartesian.cpp Constants.cpp
+LocalCartesian.cpp
 
 Note that, unlike \ref geoconvert, CartConvert has no
 facility for dealing with angles in degrees, minutes, and seconds, and
@@ -1729,8 +2083,24 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-03
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-04
    (current)</a>
+  - Use compile-time constants to select the order of series in
+    GeographicLib::TransverseMercator.
+  - 2x unroll of Clenshaw summation to avoid data shuffling.
+  - Simplification of GeographicLib::EllipticFunction::E.
+  - Use STATIC_ASSERT for compile-time checking of constants.
+  - Improvements to GeographicLib::Geodesic:
+    - compile-time option to change order of series used,
+    - post Maxima code for generating the series,
+    - tune the order of series for double,
+    - improvements in the selection of starting points for Newton's
+      method,
+    - accept and return spherical arc lengths,
+    - works with both oblate and prolate spheroids,
+    - add -a, -e, -b options to \ref geod utility.
+
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-03.tgz">2009-03</a>
   - Add Geographic::Geodesic and the \ref geod utility.
   - Declare when no exceptions are thrown by functions.
   - Minor changes to GeographicLib::DMS class.
@@ -1749,20 +2119,19 @@ list of changes.
   - Gather the documentation on the utility programs onto one page.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-01.tgz">2009-01</a>
-  - First proper release of library
-  - More robust GeographicLib::TransverseMercatorExact
-    - Introduce \e extendp version of constructor
-    - Test against extended test data
-    - Optimize starting positions for Newton's method
-    - Fix behavior near all singularities
-    - Fix order dependence in C++ start-up code
-  - Documentation on transverse Mercator projection
-    - Improved method of computing scale and convergence
+  - First proper release of library.
+  - More robust GeographicLib::TransverseMercatorExact:
+    - Introduce \e extendp version of constructor,
+    - Test against extended test data,
+    - Optimize starting positions for Newton's method,
+    - Fix behavior near all singularities,
+    - Fix order dependence in C++ start-up code,
+    - Improved method of computing scale and convergence.
+  - Documentation on transverse Mercator projection.
   - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
 
  - 2008-09
-  - Ad hoc posting of information on the transverse Mercator
-    projection
+  - Ad hoc posting of information on the transverse Mercator projection.
 
 <center>
 Back to \ref utilities.  Up to \ref contents.

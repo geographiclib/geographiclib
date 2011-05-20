@@ -2,17 +2,34 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(CONSTANTS_HPP)
-#define CONSTANTS_HPP "$Id: Constants.hpp 6568 2009-03-01 17:58:41Z ckarney $"
+#define CONSTANTS_HPP "$Id: Constants.hpp 6592 2009-03-31 21:34:38Z ckarney $"
 
-namespace {
-  char CONSTANTS_RCSID_H[] = CONSTANTS_HPP;
-}
+/**
+ * A simple compile-time assert.  This is designed to be compatible with the
+ * C++0X static_assert.
+ **********************************************************************/
+#if !defined(STATIC_ASSERT)
+#define STATIC_ASSERT(cond,reason) { enum{ STATIC_ASSERT_ENUM=1/int(cond) }; }
+#endif
+
+#if defined(__GNUC__)
+// Suppress "defined but not used" warnings
+#define RCSID_DECL(x) namespace \
+{ char VAR_ ## x [] __attribute__((unused)) = x; }
+#else
+/**
+ * Insertion of RCS Id strings into the object file.
+ **********************************************************************/
+#define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
+#endif
+
+RCSID_DECL(CONSTANTS_HPP)
 
 namespace GeographicLib {
 
@@ -28,6 +45,7 @@ namespace GeographicLib {
      * pi
      **********************************************************************/
     static inline double pi() throw()
+    // good for about 123-bit accuracy
     { return 3.141592653589793238462643383279502884; }
     /**
      * Factor to convert from degrees to radians
@@ -42,9 +60,9 @@ namespace GeographicLib {
      **********************************************************************/
     static inline double WGS84_a() throw() { return 6378137 * meter(); }
     /**
-     * Inverse flattening of WGS84 ellipsoid
+     * Reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
-    static inline double WGS84_invf() throw() { return 298.257223563; }
+    static inline double WGS84_r() throw() { return 298.257223563; }
     /**
      * Central scale factor for UTM
      **********************************************************************/
@@ -70,7 +88,8 @@ namespace GeographicLib {
     ///@}
 
     /**
-     * Factor to convert from nautical miles (approximately 1 arc minute) to meters.
+     * Factor to convert from nautical miles (approximately 1 arc minute) to
+     * meters.
      **********************************************************************/
     static inline double nauticalmile() throw() { return 1852 * meter(); }
 

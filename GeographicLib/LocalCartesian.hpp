@@ -2,12 +2,13 @@
  * \file LocalCartesian.hpp
  * \brief Header for GeographicLib::LocalCartesian class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(LOCALCARTESIAN_HPP)
-#define LOCALCARTESIAN_HPP "$Id: LocalCartesian.hpp 6538 2009-02-14 13:47:53Z ckarney $"
+#define LOCALCARTESIAN_HPP "$Id: LocalCartesian.hpp 6573 2009-03-06 20:33:50Z ckarney $"
 
 #include "GeographicLib/Geocentric.hpp"
 

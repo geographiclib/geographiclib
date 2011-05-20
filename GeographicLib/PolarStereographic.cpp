@@ -2,27 +2,28 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #include "GeographicLib/PolarStereographic.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <limits>
 
-namespace {
-  char RCSID[] = "$Id: PolarStereographic.cpp 6568 2009-03-01 17:58:41Z ckarney $";
-  char RCSID_H[] = POLARSTEREOGRAPHIC_HPP;
-}
+#define POLARSTEREOGRAPHIC_CPP "$Id: PolarStereographic.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+
+RCSID_DECL(POLARSTEREOGRAPHIC_CPP)
+RCSID_DECL(POLARSTEREOGRAPHIC_HPP)
 
 namespace GeographicLib {
 
   using namespace std;
 
-  PolarStereographic::PolarStereographic(double a, double invf, double k0)
+  PolarStereographic::PolarStereographic(double a, double r, double k0)
     throw()
     : _a(a)
-    , _f(invf > 0 ? 1 / invf : 0)
+    , _f(r > 0 ? 1 / r : 0)
     , _k0(k0)
     , _e(sqrt(_f * (2 - _f)))
     , _e2m(1 - sq(_e))
@@ -32,7 +33,7 @@ namespace GeographicLib {
   {}
 
   const PolarStereographic
-  PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_invf(),
+  PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_r(),
 			  Constants::UPS_k0());
 
   void PolarStereographic::Forward(bool northp, double lat, double lon,

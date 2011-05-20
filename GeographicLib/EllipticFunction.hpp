@@ -2,12 +2,13 @@
  * \file EllipticFunction.hpp
  * \brief Header for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(ELLIPTICFUNCTION_HPP)
-#define ELLIPTICFUNCTION_HPP "$Id: EllipticFunction.hpp 6535 2009-02-10 22:37:07Z ckarney $"
+#define ELLIPTICFUNCTION_HPP "$Id: EllipticFunction.hpp 6573 2009-03-06 20:33:50Z ckarney $"
 
 
 namespace GeographicLib {

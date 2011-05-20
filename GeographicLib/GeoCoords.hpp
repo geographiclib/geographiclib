@@ -2,13 +2,13 @@
  * \file GeoCoords.hpp
  * \brief Header for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #ifndef GEOCOORDS_HPP
-#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6543 2009-02-17 11:36:37Z ckarney $"
+#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6573 2009-03-06 20:33:50Z ckarney $"
 
 #include <cmath>
 #include <string>

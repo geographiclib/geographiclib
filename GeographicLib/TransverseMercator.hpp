@@ -2,12 +2,13 @@
  * \file TransverseMercator.hpp
  * \brief Header for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(TRANSVERSEMERCATOR_HPP)
-#define TRANSVERSEMERCATOR_HPP "$Id: TransverseMercator.hpp 6556 2009-02-26 15:44:49Z ckarney $"
+#define TRANSVERSEMERCATOR_HPP "$Id: TransverseMercator.hpp 6578 2009-03-15 14:30:38Z ckarney $"
 
 #include <cmath>
 
@@ -49,8 +50,7 @@ namespace GeographicLib {
 
   class TransverseMercator {
   private:
-    static const int maxpow =
-      TM_TX_MAXPOW > 8 ? 8 : (TM_TX_MAXPOW < 4 ? 4 : TM_TX_MAXPOW);
+    static const int maxpow = TM_TX_MAXPOW;
     static const double tol;
     static const int numit = 5;
     const double _a, _f, _k0, _e2, _e, _e2m,  _n;
@@ -84,11 +84,11 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters), inverse flattening \e
-     * invf, and central scale factor \e k0.  Setting \e invf <= 0 implies \e
-     * invf = inf or flattening = 0 (i.e., a sphere).
+     * Constructor for a ellipsoid radius \e a (meters), reciprocal flattening
+     * \e r, and central scale factor \e k0.  Setting \e r <= 0 implies \e r =
+     * inf or flattening = 0 (i.e., a sphere).
      **********************************************************************/
-    TransverseMercator(double a, double invf, double k0) throw();
+    TransverseMercator(double a, double r, double k0) throw();
 
     /**
      * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to

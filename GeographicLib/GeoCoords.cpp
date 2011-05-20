@@ -2,24 +2,25 @@
  * \file GeoCoords.cpp
  * \brief Implementation for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * http://charles.karney.info/geographic
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
+#include "GeographicLib/GeoCoords.hpp"
+#include "GeographicLib/MGRS.hpp"
+#include "GeographicLib/DMS.hpp"
+#include "GeographicLib/Constants.hpp"
 #include <vector>
 #include <sstream>
 #include <stdexcept>
 #include <iomanip>
 #include <cerrno>
-#include "GeographicLib/GeoCoords.hpp"
-#include "GeographicLib/MGRS.hpp"
-#include "GeographicLib/DMS.hpp"
 
-namespace {
-  char RCSID[] = "$Id: GeoCoords.cpp 6555 2009-02-25 16:04:25Z ckarney $";
-  char RCSID_H[] = GEOCOORDS_HPP;
-}
+#define GEOCOORDS_CPP "$Id: GeoCoords.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+
+RCSID_DECL(GEOCOORDS_CPP)
+RCSID_DECL(GEOCOORDS_HPP)
 
 namespace GeographicLib {
 

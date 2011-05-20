@@ -1,4 +1,4 @@
-# $Id: Makefile 6571 2009-03-01 21:55:01Z ckarney $
+# $Id: Makefile 6593 2009-03-31 21:40:10Z ckarney $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -12,6 +12,7 @@ CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 CPPFLAGS = -I..
 LDFLAGS = $(LIBRARY)
 
+INSTALL = install -b
 PREFIX = /usr/local
 # After installation, use these values of CPPFLAGS and LDFLAGS
 
@@ -61,21 +62,21 @@ FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
 	gauss-krueger-graticule-a thompson-tm-graticule-a
 
-MAXIMASOURCES = tm.mac ellint.mac tmseries.mac
+MAXIMASOURCES = tm.mac ellint.mac tmseries.mac geod.mac
 
 install: install-lib install-headers install-progs
 
 install-lib: $(LIBRARY)
 	test -f $(PREFIX)/lib || mkdir -p $(PREFIX)/lib
-	install -m 644 $^ $(PREFIX)/lib
+	$(INSTALL) -m 644 $^ $(PREFIX)/lib
 
 install-headers: $(HEADERS)
 	test -f $(PREFIX)/include/GeographicLib || mkdir -p $(PREFIX)/include/GeographicLib
-	install -m 644 $^ $(PREFIX)/include/GeographicLib
+	$(INSTALL) -m 644 $^ $(PREFIX)/include/GeographicLib
 
 install-progs: $(PROGRAMS)
 	test -f $(PREFIX)/bin || mkdir -p $(PREFIX)/bin
-	install $^ $(PREFIX)/bin
+	$(INSTALL) $^ $(PREFIX)/bin
 
 doc: Doxyfile Geographic.doc \
 	$(HEADERS) $(ALLSOURCES) \

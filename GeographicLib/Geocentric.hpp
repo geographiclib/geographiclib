@@ -2,12 +2,13 @@
  * \file Geocentric.hpp
  * \brief Header for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #if !defined(GEOCENTRIC_HPP)
-#define GEOCENTRIC_HPP "$Id: Geocentric.hpp 6559 2009-02-28 16:49:53Z ckarney $"
+#define GEOCENTRIC_HPP "$Id: Geocentric.hpp 6578 2009-03-15 14:30:38Z ckarney $"
 
 #include <cmath>
 
@@ -60,11 +61,11 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid radius \e a (meters) and inverse flattening
-     * \e invf.  Setting \e invf <= 0 implies \e invf = inf or flattening = 0
+     * Constructor for a ellipsoid radius \e a (meters) and reciprocal
+     * flattening \e r.  Setting \e r <= 0 implies \e r = inf or flattening = 0
      * (i.e., a sphere).
      **********************************************************************/
-    Geocentric(double a, double invf) throw();
+    Geocentric(double a, double r) throw();
 
     /**
      * Convert from geodetic coordinates \e lat, \e lon (degrees), \e h

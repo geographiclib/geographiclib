@@ -2,8 +2,9 @@
  * \file LocalCartesian.cpp
  * \brief Implementation for GeographicLib::LocalCartesian class
  *
- * Copyright (c) Charles Karney (2008) <charles@karney.com>
- * and licensed under the LGPL.
+ * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://charles.karney.info/geographic/
  **********************************************************************/
 
 #include "GeographicLib/LocalCartesian.hpp"
@@ -11,10 +12,10 @@
 #include <cmath>
 #include <stdexcept>
 
-namespace {
-  char RCSID[] = "$Id: LocalCartesian.cpp 6568 2009-03-01 17:58:41Z ckarney $";
-  char RCSID_H[] = LOCALCARTESIAN_HPP;
-}
+#define LOCALCARTESIAN_CPP "$Id: LocalCartesian.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+
+RCSID_DECL(LOCALCARTESIAN_CPP)
+RCSID_DECL(LOCALCARTESIAN_HPP)
 
 namespace GeographicLib {
 
