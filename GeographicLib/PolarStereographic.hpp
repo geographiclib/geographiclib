@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(POLARSTEREOGRAPHIC_HPP)
-#define POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6599 2009-04-24 15:26:06Z ckarney $"
+#if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6670 2009-08-14 21:58:46Z ckarney $"
 
 #include <cmath>
 

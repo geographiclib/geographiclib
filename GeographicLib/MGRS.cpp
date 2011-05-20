@@ -13,10 +13,10 @@
 #include <stdexcept>
 #include <limits>
 
-#define MGRS_CPP "$Id: MGRS.cpp 6578 2009-03-15 14:30:38Z ckarney $"
+#define GEOGRAPHICLIB_MGRS_CPP "$Id: MGRS.cpp 6670 2009-08-14 21:58:46Z ckarney $"
 
-RCSID_DECL(MGRS_CPP)
-RCSID_DECL(MGRS_HPP)
+RCSID_DECL(GEOGRAPHICLIB_MGRS_CPP)
+RCSID_DECL(GEOGRAPHICLIB_MGRS_HPP)
 
 namespace GeographicLib {
 

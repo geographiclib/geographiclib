@@ -8,8 +8,8 @@
  **********************************************************************/
 
 
-#if !defined(UTMUPS_HPP)
-#define UTMUPS_HPP "$Id: UTMUPS.hpp 6639 2009-06-01 12:04:21Z ckarney $"
+#if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
+#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: UTMUPS.hpp 6670 2009-08-14 21:58:46Z ckarney $"
 
 #include <string>
 #include <sstream>

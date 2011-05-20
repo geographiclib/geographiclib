@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(LOCALCARTESIAN_HPP)
-#define LOCALCARTESIAN_HPP "$Id: LocalCartesian.hpp 6602 2009-04-26 21:49:28Z ckarney $"
+#if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
+#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: LocalCartesian.hpp 6670 2009-08-14 21:58:46Z ckarney $"
 
 #include "GeographicLib/Geocentric.hpp"
 

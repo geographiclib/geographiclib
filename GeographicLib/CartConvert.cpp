@@ -2,13 +2,13 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp LocalCartesian.cpp Constants.cpp
+ *   g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp LocalCartesian.cpp
  *
  * See \ref cartconvert for usage information.
  **********************************************************************/
@@ -24,7 +24,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]\n\
-$Id: CartConvert.cpp 6599 2009-04-24 15:26:06Z ckarney $\n\
+$Id: CartConvert.cpp 6658 2009-08-12 00:40:59Z ckarney $\n\
 \n\
 Convert geodetic coordinates to either geocentric or local cartesian\n\
 coordinates.  Geocentric coordinates have the origin at the center of the\n\
@@ -41,7 +41,7 @@ cartesian coordinates x, y, z (meters) are printed on standard output.\n\
 \n\
 If -r is given the reverse transformation is performed.\n\
 \n\
--h prints this help\n";
+-h prints this help.\n";
   return retval;
 }
 
@@ -66,10 +66,10 @@ int main(int argc, char* argv[]) {
 
   if (localcartesian) {
     if ( !(-90 <= latlonh0[0] && latlonh0[0] <= 90) ) {
-      std::cerr << "Latitude not in range [-90, 90]\\n";
+      std::cerr << "Latitude not in range [-90, 90]\n";
       return 1;
     } else if ( !(-180 <= latlonh0[1] && latlonh0[1] <= 360) ) {
-      std::cerr << "Longitude not in range [-180, 360]\\n";
+      std::cerr << "Longitude not in range [-180, 360]\n";
       return 1;
     }
   }

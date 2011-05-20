@@ -2,13 +2,13 @@
  * \file Geod.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2008, 2009) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://charles.karney.info/geographic/
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp Constants.cpp
+ *   g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp
  *
  * See \ref geod for usage information.
  **********************************************************************/
@@ -27,11 +27,11 @@ int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]\n\
             [-d] [-b] [-f] [-p prec] [-h]\n\
-$Id: Geod.cpp 6609 2009-04-30 21:28:45Z ckarney $\n\
+$Id: Geod.cpp 6668 2009-08-14 10:30:38Z ckarney $\n\
 \n\
 Perform geodesic calculations.\n\
 \n\
-The shortest path between two points on the spheroid at (lat1, lon1) and\n\
+The shortest path between two points on the ellipsoid at (lat1, lon1) and\n\
 (lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic\n\
 from point 1 to point 2 has azimuths azi1 and azi2 at the two end\n\
 points.  The reduced length of the geodesic, m12, is defined such that\n\
@@ -55,9 +55,9 @@ Geod operates in one of three modes:\n\
     lon2\" and prints the corresponding values of \"azi1 azi2 s12 m12\".\n\
 \n\
 By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
-equatorial radius of the spheroid to \"a\" and the reciprocal flattening\n\
+equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
 to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-spheroid.  The -n option uses the international ellipsoid (equivalent to\n\
+ellipsoid.  The -n option uses the international ellipsoid (equivalent to\n\
 \"-e 6378388 297\").\n\
 \n\
 Output of angles is as decimal degrees.  If -d is specified the output\n\

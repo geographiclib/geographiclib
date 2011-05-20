@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(ELLIPTICFUNCTION_HPP)
-#define ELLIPTICFUNCTION_HPP "$Id: EllipticFunction.hpp 6642 2009-06-02 20:51:05Z ckarney $"
+#if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: EllipticFunction.hpp 6670 2009-08-14 21:58:46Z ckarney $"
 
 namespace GeographicLib {
 

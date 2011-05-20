@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(DMS_HPP)
-#define DMS_HPP "$Id: DMS.hpp 6573 2009-03-06 20:33:50Z ckarney $"
+#if !defined(GEOGRAPHICLIB_DMS_HPP)
+#define GEOGRAPHICLIB_DMS_HPP "$Id: DMS.hpp 6670 2009-08-14 21:58:46Z ckarney $"
 
 #include <string>
 #include <sstream>

@@ -8,7 +8,7 @@
  *
  * Compile with
  *
- *   g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp TransverseMercatorExact.cpp Constants.cpp EllipticFunction.cpp TransverseMercator.cpp
+ *   g++ -g -O3 -I.. -o TransverseMercatorTest TransverseMercatorTest.cpp TransverseMercatorExact.cpp EllipticFunction.cpp TransverseMercator.cpp
  *
  * See \ref transversemercatortest for usage information.
  **********************************************************************/
@@ -18,12 +18,14 @@
 #include "GeographicLib/TransverseMercator.hpp"
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
+#include <stdexcept>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "TransverseMercatorTest [-r] [-t|-s]\n\
-$Id: TransverseMercatorTest.cpp 6578 2009-03-15 14:30:38Z ckarney $\n\
+$Id: TransverseMercatorTest.cpp 6669 2009-08-14 17:06:23Z ckarney $\n\
 \n\
 Convert between geographic coordinates and transverse Mercator coordinates.\n\
 \n\
@@ -87,30 +89,38 @@ int main(int argc, char* argv[]) {
   const GeographicLib::TransverseMercator& TMS =
     GeographicLib::TransverseMercator::UTM;
 
+  std::string s;
+  int retval = 0;
   std::cout << std::setprecision(16);
-  while (true) {
-    double lat, lon, x, y;
-    if (reverse)
-      std::cin >> x >> y;
-    else
-      std::cin >> lat >> lon;
-    if (!std::cin.good())
-      break;
-    double gamma, k;
-    if (reverse) {
-      if (series)
-	TMS.Reverse(0.0, x, y, lat, lon, gamma, k);
-      else
-	TME.Reverse(0.0, x, y, lat, lon, gamma, k);
-    } else {
-      if (series)
-	TMS.Forward(0.0, lat, lon, x, y, gamma, k);
-      else
-	TME.Forward(0.0, lat, lon, x, y, gamma, k);
+  while (std::getline(std::cin, s)) {
+    try {
+      std::istringstream str(s);
+      double lat, lon, x, y;
+      if (!(reverse ?
+	    (str >> x >> y) :
+	    (str >> lat >> lon)))
+	throw  std::out_of_range("Incomplete input: " + s);
+      double gamma, k;
+      if (reverse) {
+	if (series)
+	  TMS.Reverse(0.0, x, y, lat, lon, gamma, k);
+	else
+	  TME.Reverse(0.0, x, y, lat, lon, gamma, k);
+      } else {
+	if (series)
+	  TMS.Forward(0.0, lat, lon, x, y, gamma, k);
+	else
+	  TME.Forward(0.0, lat, lon, x, y, gamma, k);
+      }
+      std::cout << lat << " " << lon << " "
+		<< x << " " << y << " "
+		<< gamma << " " << k << "\n";
     }
-    std::cout << lat << " " << lon << " "
-	      << x << " " << y << " "
-	      << gamma << " " << k << "\n";
+    catch (std::out_of_range& e) {
+      std::cout << "ERROR: " << e.what() << "\n";
+      retval = 1;
+    }
   }
-  return 0;
+
+  return retval;
 }

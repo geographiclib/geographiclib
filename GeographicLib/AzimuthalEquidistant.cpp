@@ -10,36 +10,42 @@
 #include "GeographicLib/AzimuthalEquidistant.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <cmath>
-#include <stdexcept>
+#include <limits>
 
-#define AZIMUTHALEQUIDISTANT_CPP "$Id: AzimuthalEquidistant.cpp 6604 2009-04-27 16:03:22Z ckarney $"
+#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP "$Id: AzimuthalEquidistant.cpp 6670 2009-08-14 21:58:46Z ckarney $"
 
-RCSID_DECL(AZIMUTHALEQUIDISTANT_CPP)
-RCSID_DECL(AZIMUTHALEQUIDISTANT_HPP)
+RCSID_DECL(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP)
+RCSID_DECL(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
 
 namespace GeographicLib {
 
   using namespace std;
 
+  const double AzimuthalEquidistant::eps =
+    0.01 * sqrt(numeric_limits<double>::min());
+
   void AzimuthalEquidistant::Forward(double lat0, double lon0,
 				     double lat, double lon,
 				     double& x, double& y,
-				     double& azi, double& m) const throw() {
-    double s, azi0;
-    _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
+				     double& azi, double& rk) const throw() {
+    double sig, s, azi0, m;
+    sig = _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
     azi0 *= Constants::degree();
     x = s * sin(azi0);
     y = s * cos(azi0);
+    rk = sig > eps ? m / s : 1;
   }
 
   void AzimuthalEquidistant::Reverse(double lat0, double lon0,
 				     double x, double y,
 				     double& lat, double& lon,
-				     double& azi, double& m) const throw() {
+				     double& azi, double& rk) const throw() {
     double
       azi0 = atan2(x, y) / Constants::degree(),
       s = hypot(x, y);
-    _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);
+    double sig, m;
+    sig = _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);
+    rk = sig > eps ? m / s : 1;
   }
 
 } // namespace GeographicLib

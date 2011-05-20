@@ -7,8 +7,8 @@
  * http://charles.karney.info/geographic/
  **********************************************************************/
 
-#if !defined(CONSTANTS_HPP)
-#define CONSTANTS_HPP "$Id: Constants.hpp 6592 2009-03-31 21:34:38Z ckarney $"
+#if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6670 2009-08-14 21:58:46Z ckarney $"
 
 /**
  * A simple compile-time assert.  This is designed to be compatible with the
@@ -29,7 +29,7 @@
 #define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
 #endif
 
-RCSID_DECL(CONSTANTS_HPP)
+RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
 
 namespace GeographicLib {
 

@@ -17,16 +17,16 @@
 #include <iomanip>
 #include <cerrno>
 
-#define GEOCOORDS_CPP "$Id: GeoCoords.cpp 6621 2009-05-18 12:44:31Z ckarney $"
+#define GEOGRAPHICLIB_GEOCOORDS_CPP "$Id: GeoCoords.cpp 6670 2009-08-14 21:58:46Z ckarney $"
 
-RCSID_DECL(GEOCOORDS_CPP)
-RCSID_DECL(GEOCOORDS_HPP)
+RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_CPP)
+RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_HPP)
 
 namespace GeographicLib {
 
   using namespace std;
 
-  void GeoCoords::Reset(const std::string& s) {
+  void GeoCoords::Reset(const std::string& s, bool centerp) {
     vector<string> sa;
     bool in = false;
     for (unsigned i = 0; i < s.size(); ++i) {
@@ -41,7 +41,7 @@ namespace GeographicLib {
     }
     if (sa.size() == 1) {
       int prec;
-      MGRS::Reverse(sa[0], _zone, _northp, _easting, _northing, prec);
+      MGRS::Reverse(sa[0], _zone, _northp, _easting, _northing, prec, centerp);
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
 		      _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {

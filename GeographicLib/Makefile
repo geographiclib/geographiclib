@@ -1,8 +1,8 @@
-# $Id: Makefile 6602 2009-04-26 21:49:28Z ckarney $
+# $Id: Makefile 6658 2009-08-12 00:40:59Z ckarney $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
-PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod
+PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest
 
 all: $(PROGRAMS) $(LIBRARY)
 
@@ -21,7 +21,7 @@ PREFIX = /usr/local
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic AzimuthalEquidistant
+	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner
 
 HEADERS = Constants.hpp $(patsubst %,%.hpp,$(MODULES))
 SOURCES = $(patsubst %,%.cpp,$(MODULES))
@@ -38,6 +38,7 @@ GeoConvert: GeoConvert.o
 TransverseMercatorTest: TransverseMercatorTest.o
 CartConvert: CartConvert.o
 Geod: Geod.o
+EquidistantTest: EquidistantTest.o
 
 Constants.o: Constants.hpp
 DMS.o: DMS.hpp
@@ -57,6 +58,7 @@ TransverseMercatorTest.o: EllipticFunction.hpp TransverseMercatorExact.hpp \
 	TransverseMercator.hpp
 CartConvert.o: Geocentric.hpp LocalCartesian.hpp
 Geod.o: Geodesic.hpp DMS.hpp
+EquidistantTest.o: Geodesic.hpp AzimuthalEquidistant.hpp CassiniSoldner.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \

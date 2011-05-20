@@ -12,10 +12,10 @@
 #include <algorithm>
 #include <limits>
 
-#define GEOCENTRIC_CPP "$Id: Geocentric.cpp 6601 2009-04-26 20:52:06Z ckarney $"
+#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: Geocentric.cpp 6670 2009-08-14 21:58:46Z ckarney $"
 
-RCSID_DECL(GEOCENTRIC_CPP)
-RCSID_DECL(GEOCENTRIC_HPP)
+RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
+RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 
 namespace GeographicLib {
 

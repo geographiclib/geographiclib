@@ -14,10 +14,10 @@
 #include <stdexcept>
 #include <iomanip>
 
-#define DMS_CPP "$Id: DMS.cpp 6599 2009-04-24 15:26:06Z ckarney $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: DMS.cpp 6670 2009-08-14 21:58:46Z ckarney $"
 
-RCSID_DECL(DMS_CPP)
-RCSID_DECL(DMS_HPP)
+RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
+RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
 
 namespace GeographicLib {
 
