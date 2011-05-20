@@ -8,8 +8,7 @@
  **********************************************************************/
 
 #if !defined(ELLIPTICFUNCTION_HPP)
-#define ELLIPTICFUNCTION_HPP "$Id: EllipticFunction.hpp 6573 2009-03-06 20:33:50Z ckarney $"
-
+#define ELLIPTICFUNCTION_HPP "$Id: EllipticFunction.hpp 6642 2009-06-02 20:51:05Z ckarney $"
 
 namespace GeographicLib {
 

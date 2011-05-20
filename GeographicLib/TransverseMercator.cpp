@@ -35,7 +35,7 @@
  * 12th order is given in \ref tmseries.)
  *
  * Other equivalent implementations are given in
- *  - http://www.ign.fr/telechargement/MPro/geodesie/CIRCE/NTG_76.pdf
+ *  - http://www.ign.fr/DISPLAY/000/526/702/5267021/NTG_76.pdf
  *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
  **********************************************************************/
 
@@ -43,7 +43,7 @@
 #include "GeographicLib/Constants.hpp"
 #include <limits>
 
-#define TRANSVERSEMERCATOR_CPP "$Id: TransverseMercator.cpp 6599 2009-04-24 15:26:06Z ckarney $"
+#define TRANSVERSEMERCATOR_CPP "$Id: TransverseMercator.cpp 6645 2009-07-17 13:32:52Z ckarney $"
 
 RCSID_DECL(TRANSVERSEMERCATOR_CPP)
 RCSID_DECL(TRANSVERSEMERCATOR_HPP)
