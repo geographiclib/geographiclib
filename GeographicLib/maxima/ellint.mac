@@ -1,0 +1,159 @@
+/*
+
+Written by Charles Karney <charles@karney.com>
+http://geographiclib.sourceforge.net/
+
+$Id: ellint.mac 6720 2009-10-17 23:13:57Z ckarney $
+
+*/
+
+/* Implementation of methods given in
+
+B. C. Carlson
+Computation of elliptic integrals
+Numerical Algorithms 10, 13-26 (1995)
+
+*/
+
+/* fpprec:120$  Should be set outside */
+etol:0.1b0^fpprec$ /* For Carlson */
+ca:sqrt(etol)$  /* For Bulirsch */
+eps:0.1b0^fpprec$ /* For eirx */
+pi:bfloat(%pi)$
+ratprint:false$
+rf(x,y,z) := block(
+  [a0:(x+y+z)/3, q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,n,e2,e3],
+  q:(3*etol)^(-1/6)*max(abs(a0-x),abs(a0-y),abs(a0-z)),
+  an:a0,
+  n:0,
+  while q >= abs(an) do (
+    n:n+1,
+    ln:sqrt(x0)*sqrt(y0)+sqrt(y0)*sqrt(z0)+sqrt(z0)*sqrt(x0),
+    an:(an+ln)/4,
+    x0:(x0+ln)/4,
+    y0:(y0+ln)/4,
+    z0:(z0+ln)/4,
+    q:q/4),
+  xx:(a0-x)/(4^n*an),
+  yy:(a0-y)/(4^n*an),
+  zz:-xx-yy,
+  e2:xx*yy-zz^2,
+  e3:xx*yy*zz,
+  (1-e2/10+e3/14+e2^2/24-3*e2*e3/44) / sqrt(an))$
+rd(x,y,z) := block(
+  [a0:(x+y+3*z)/5, q,x0:x,y0:y,z0:z,an,ln,xx,yy,zz,n,e2,e3,e4,e5,s],
+  q:(etol/4)^(-1/6)*max(abs(a0-x),abs(a0-y),abs(a0-z)),
+  an:a0,
+  n:0,
+  s:0,
+  while q >= abs(an) do (
+    ln:sqrt(x0)*sqrt(y0)+sqrt(y0)*sqrt(z0)+sqrt(z0)*sqrt(x0),
+    s:s+1/(4^n*sqrt(z0)*(z0+ln)),
+    n:n+1,
+    an:(an+ln)/4,
+    x0:(x0+ln)/4,
+    y0:(y0+ln)/4,
+    z0:(z0+ln)/4,
+    q:q/4),
+  xx:(a0-x)/(4^n*an),
+  yy:(a0-y)/(4^n*an),
+  zz:-(xx+yy)/3,
+  e2:xx*yy-6*zz^2,
+  e3:(3*xx*yy-8*zz^2)*zz,
+  e4:3*(xx*yy-zz^2)*zz^2,
+  e5:xx*yy*zz^3,
+  (1-3*e2/14+e3/6+9*e2^2/88-3*e4/22-9*e2*e3/52+3*e5/26)/(4^n*an*sqrt(an))
+  +3*s)$
+
+/* R_G(x,y,0) */
+rg0(x,y) := block(
+  [x0:sqrt(x),y0:sqrt(y),xn,yn,t,s,n],
+  xn:x0,
+  yn:y0,
+  n:0,
+  s:0,
+  while abs(xn-yn) >= 2.7b0 * sqrt(etol) * abs(xn) do (
+    t:(xn+yn)/2,
+    yn:sqrt(xn*yn),
+    xn:t,
+    n:n+1,
+    s:s+(xn-yn)^2*2^(n-2)),
+   ((x0+y0)^2/4 - s)*pi/(2*(xn+yn)) )$
+
+/* k^2 = m */
+ec(m):=2*rg0(1b0-m,1b0)$
+kc(m):=rf(0b0,1b0-m,1b0)$
+
+/* Implementation of methods given in
+
+Roland Bulirsch
+Numerical Calculation of Elliptic Integrals and Elliptic Functions
+Numericshe Mathematik 7, 78-90 (1965)
+
+*/
+
+sncndn(x,mc):=block([bo, a, b, c, d, l, sn, cn, dn, m, n],
+  local(m, n),
+  if mc # 0 then (
+    bo:is(mc < 0b0),
+    if bo then (
+      d:1-mc,
+      mc:-mc/d,
+      d:sqrt(d),
+      x:d*x),
+    dn:a:1,
+    for i:0 thru 12 do (
+      l:i,
+      m[i]:a,
+      n[i]:mc:sqrt(mc),
+      c:(a+mc)/2,
+      if abs(a-mc)<=ca*a then return(false),
+      mc:a*mc,
+      a:c
+      ),
+    x:c*x,
+    sn:sin(x),
+    cn:sin(pi/2-x),
+    if sn#0b0 then (
+      a:cn/sn,
+      c:a*c,
+      for i:l step -1 thru 0 do (
+        b:m[i],
+        a:c*a,
+        c:dn*c,
+        dn:(n[i]+a)/(b+a),
+        a:c/b
+        ),
+      a:1/sqrt(c*c+1b0),
+      sn:if sn<0b0 then -a else a,
+      cn:c*sn
+      ),
+    if bo then (
+      a:dn,
+      dn:cn,
+      cn:a,
+      sn:sn/d
+      )
+    ) else /* mc = 0 */ (
+    sn:tanh(x),
+    dn:cn:sech(x)
+/*    d:exp(x), a:1/d, b:a+d, cn:dn:2/b,
+    if x < 0.3b0 then (
+      d:x*x*x*x,
+      d:(d*(d*(d*(d+93024b0)+3047466240b0)+24135932620800b0)+
+        20274183401472000b0)/60822550204416000b0,
+      sn:cn*(x*x*x*d+sin(x))
+      ) else
+    sn:(d-a)/b */
+    ),
+  [sn,cn,dn]
+  )$
+
+/* Versions of incomplete functions in terms of Jacobi elliptic function
+with u = am(phi) real and in [0,K(m)] */
+eirx(sn,cn,dn,m,ec):=block([t],
+  t:if abs(sn) < eps then abs(sn) else
+  (rf((cn/sn)^2,(dn/sn)^2,1/sn^2)-m/3b0*rd((cn/sn)^2,(dn/sn)^2,1/sn^2)),
+  if cn < 0 then t:2*ec - t,
+  if sn < 0 then t:-t,
+  t)$
