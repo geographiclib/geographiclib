@@ -1,0 +1,178 @@
+# $Id: NEWS 6796 2010-01-06 23:00:28Z karney $
+
+A reverse chronological list of changes to GeographicLib
+
+For more information, see
+
+    http://geographiclib.sourceforge.net/
+
+The current version of the library is 1.0.
+
+Changes between 1.0 (released 2010-01-07) and 2009-11 versions:
+
+  * Add autoconf configuration files.
+
+  * BUG FIX: Improve initial guess for Newton's method in
+    PolarStereographic.Reverse.  (Previously this failed to converge
+    when the co-latitude exceeded about 130 deg.)
+
+  * Constructors for TransverseMercator, TransverseMercatorExact,
+    PolarStereographic, Geocentric, and Geodesic now check for obvious
+    problems with their arguments and throw an exception if necessary.
+
+  * Most classes now include inspector functions such as MajorRadius()
+    so that you can determine how instances were constructed.
+
+  * Add GeographicLib::LambertConformalConic class.
+
+  * Add GeographicLib::PolarStereographic::SetScale to allow the
+    latitude of true scale to be specified.
+
+  * Add solution and project files for Visual Studio 2008.
+
+  * Add GeographicLib::GeographicErr for exceptions.
+
+  * GeographicLib::Geoid changes:
+    + BUG FIX: fix typo in GeographicLib::Geoid::Cache which could cause
+      a segmentation fault in some cases when the cached area spanned
+      the prime meridian.
+    + Include sufficient edge data to allow heights to be returned for
+      cached area without disk reads;
+    + Add inspector functions to query the extent of the cache.
+
+Changes between 2009-11 and 2009-10 versions:
+
+  * Allow specification of "closest UTM zone" in GeographicLib::UTMUPS
+    and GeoConvert (via -t option).
+
+  * Utilities now complain is there are too many tokens on input lines.
+
+  * Include real-to-real versions of GeographicLib::DMS::Decode and
+    GeographicLib::DMS::Encode.
+
+  * More house-cleaning changes:
+    + Ensure that functions which return results through reference
+      arguments do not alter the arguments when an exception is thrown.
+    + Improve accuracy of GeographicLib::MGRS::Forward.
+    + Include more information in some error messages.
+    + Improve accuracy of inverse hypobolic functions.
+    + Fix the way GeographicLib::Math functions handle different
+      precisions.
+
+Changes between 2009-10 and 2009-09 versions:
+
+  * Change web site to http://geographiclib.sourceforge.net
+
+  * Several house-cleaning changes:
+    + Change from the a flat directory structure to a more easily
+      maintained one.
+    + Introduce Math class for common mathematical functions (in
+      Constants.hpp).
+    + Use Math::real as the type for all real quantities.  By default this
+      is typedefed to double; and the library should be installed this
+      way.
+    + Eliminate const reference members of AzimuthalEquidistant,
+      CassiniSoldner and LocalCartesian so that they may be copied.
+    + Make several constructors explicit.  Disallow some constructors.
+      Disallow copy constructor/assignment for Geoid.
+    + Document least square formulas in Geoid.cpp.
+    + Use unsigned long long for files positions of geoid files in Geoid.
+    + Introduce optional mgrslimits argument in UTMUPS::Forward and
+      UTMUPS::Reverse to enforce stricter MGRS limits on eastings and
+      northings.in
+    + Add 64-bit targets in Visual Studio project files.
+
+Changes between 2009-09 and 2009-08 versions:
+
+  * Add GeographicLib::Geoid and GeoidEval utility.
+
+Changes between 2009-08 and 2009-07 versions:
+
+  * Add GeographicLib::CassiniSoldner class and EquidistantTest utility.
+
+  * Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
+    sometimes returned.
+
+  * INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
+    of the azimuthal scale instead of the reduced length.
+
+  * Add -n option to GeoConvert.
+
+Changes between 2009-07 and 2009-06 versions:
+
+  * Speed up the series inversion code in tmseries.mac and geod.mac.
+
+  * Reference Borkowski in section on Geocentric coordinates.
+
+Changes between 2009-06 and 2009-05 versions:
+
+  * Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
+
+  * Clean up code in GeographicLib::Geodesic.
+
+Changes between 2009-05 and 2009-04 versions:
+
+  * Improvements to GeographicLib::Geodesic:
+    + more economical series expansions,
+    + return reduced length (as does the Geod utility),
+    + improved calculation of starting point for inverse method,
+    + use reduced length to give derivative for Newton's method.
+
+  * Add AzimuthalEquidistant class.
+
+  + Make GeographicLib::Geocentric, GeographicLib::TransverseMercator,
+    and GeographicLib::PolarStereographic classes work with prolate
+    ellipsoids.
+
+  * CartConvert checks its inputs more carefully.
+
+  * Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
+
+Changes between 2009-04 and 2009-03 versions:
+
+  * Use compile-time constants to select the order of series in
+    GeographicLib::TransverseMercator.
+
+  * 2x unroll of Clenshaw summation to avoid data shuffling.
+
+  * Simplification of GeographicLib::EllipticFunction::E.
+
+  * Use STATIC_ASSERT for compile-time checking of constants.
+
+  * Improvements to GeographicLib::Geodesic:
+    + compile-time option to change order of series used,
+    + post maxima code for generating the series,
+    + tune the order of series for double,
+    + improvements in the selection of starting points for Newton's
+      method,
+    + accept and return spherical arc lengths,
+    + works with both oblate and prolate spheroids,
+    + add -a, -e, -b options to the Geod utility.
+
+Changes between 2009-03 and 2009-02 versions:
+
+  * Add GeographicLib::Geodesic and the Geod utility.
+
+  * Declare when no exceptions are thrown by functions.
+
+  * Minor changes to GeographicLib::DMS class.
+
+  * Use invf = 0 to mean a sphere in constructors to some classes.
+
+  * The makefile creates a library and includes an install target.
+
+  * Rename GeographicLib::ECEF to GeographicLib::Geocentric, ECEFConvert
+    to CartConvert.
+
+  * Use inline functions to define constant doubles in Constants.hpp.
+
+Changes between 2009-02 and 2009-01 versions:
+
+  * Fix documentation of constructors (flattening -> inverse
+    flattening).
+
+  * Use std versions of math functions.
+
+  * Add ECEF and LocalCartesian classes and ECEFConvert utility.
+
+  * Gather the documentation on the utility programs onto one page.

@@ -1,0 +1,54 @@
+# $Id: INSTALL 6792 2010-01-06 20:26:18Z karney $
+
+Installation instructions of GeographicLib
+
+(1) On Linux and systems with GNU C++
+
+(a) Compiles the code:
+
+    make
+
+(b) Make the documentation (requires Doxygen)
+
+    make doc
+
+(c) Install the headers and library
+
+    make install
+
+This installs into /usr/local.  To install elsewhere, use, e.g.,
+
+    make PREFIX=/opt/local install
+
+(d) Install the documentation
+
+    make install-doc
+
+You can provide a PREFIX here too.  You can access the documentation also at
+
+    http://geographiclib.sourceforge.net/html
+
+(2) With autoconf
+
+(a) Run
+
+    ./configure
+
+and then repeat the steps above.  If you want the library to be
+installed in a different location, run
+
+    ./configure --prefix=/opt/local
+
+This procedue overwrites the Makefile used in (1).  To revert to
+non-autoconf method, do
+
+    echo include Makefile.mk > Makefile
+
+(3) With Visual Studio 2005 (version 8) or 2008 (version 9).
+
+(a) load the solution file windows/GeographicLib-vc9.sln (or -vc8) into
+Visual Studio 2008 (or 2005) and build the solution.
+
+
+
+
