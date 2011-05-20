@@ -1,0 +1,17 @@
+CartConvert
+EquidistantTest
+GeoConvert
+Geod
+GeoidEval
+TransverseMercatorTest
+.deps
+.libs
+Makefile.in
+Makefile
+Planimeter
+TAGS
+*.usage
+CMakeFiles
+cmake_install.cmake
+geographiclib-get-geoids
+*.log

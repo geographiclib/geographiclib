@@ -1,0 +1,29 @@
+AUTHORS ident text
+INSTALL ident text
+NEWS ident text
+Doxyfile ident text
+*.bib ident text
+*.cgi ident text
+*.cpp ident text
+*.h ident text
+*.hpp ident text
+*.htaccess text
+*.html ident text
+*.iss ident text
+*.m ident text
+*.mac ident text
+*.pod ident text
+*.tex ident text
+*.txt ident text
+makefile-admin ident eol=lf
+*.ac ident eol=lf
+*.am ident eol=lf
+*.in ident eol=lf
+*.mk ident eol=lf
+*.sh ident eol=lf
+*.eps -text
+*.pdf -text
+*.png -text
+*.sln eol=crlf
+*.vcproj eol=crlf
+*.vcxproj eol=crlf

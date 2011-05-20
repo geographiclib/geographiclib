@@ -1,0 +1,17 @@
+*.ncb
+*.suo
+*.user
+CartConvert.vcproj.SARNOFF.ckarney.user
+Debug
+Debug64
+EquidistantTest.vcproj.SARNOFF.ckarney.user
+GeoConvert.vcproj.SARNOFF.ckarney.user
+Geod.vcproj.SARNOFF.ckarney.user
+GeographicLib.suo
+GeographicLib.vcproj.SARNOFF.ckarney.user
+GeoidEval.vcproj.SARNOFF.ckarney.user
+Release
+Release64
+TransverseMercatorTest.vcproj.SARNOFF.ckarney.user
+UpgradeLog.XML
+_UpgradeReport_Files
