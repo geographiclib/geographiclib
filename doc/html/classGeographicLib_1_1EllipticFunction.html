@@ -45,6 +45,7 @@
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1EllipticFunction.html#a184174d29953891896b41c597c34eb9a">E</a> () const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1EllipticFunction.html#a12bcdf2c3fc7bcb165318822171328f7">KE</a> () const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1EllipticFunction.html#a0b8d63970c4276503d03d4133ee6c321">sncndn</a> (real x, real &amp;sn, real &amp;cn, real &amp;dn) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1EllipticFunction.html#a8be312b5da54b01f2976416aa82e7d08">E</a> (real phi) const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1EllipticFunction.html#af1b3b2265bca5d2b52c17ca44dabffa8">E</a> (real sn, real cn, real dn) const   throw ()</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
@@ -77,7 +78,7 @@
       </table>
 </div>
 <div class="memdoc">
-<p>Constructor with parameter <em>m</em>. </p>
+<p>Constructor with parameter <em>m</em> which must lie in [0, 1]. (No checking is done.) </p>
 
 <p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00124">124</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
 
@@ -100,7 +101,7 @@
 <div class="memdoc">
 <p>The parameter <em>m</em>. </p>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00064">64</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00065">65</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -120,7 +121,7 @@
 <div class="memdoc">
 <p>The complementary parameter <em>m'</em> = (1 - <em>m</em>). </p>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00069">69</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00070">70</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -140,7 +141,7 @@
 <div class="memdoc">
 <p>The complete integral of first kind, <em>K</em>(<em>m</em>). </p>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00074">74</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00075">75</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -160,7 +161,7 @@
 <div class="memdoc">
 <p>The complete integral of second kind, <em>E</em>(<em>m</em>). </p>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00079">79</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00080">80</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -180,7 +181,7 @@
 <div class="memdoc">
 <p>The difference <em>K</em>(<em>m</em>) - <em>E</em>(<em>m</em>) (which can be computed directly). </p>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00084">84</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00085">85</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -226,6 +227,27 @@
 
 </div>
 </div>
+<a class="anchor" id="a8be312b5da54b01f2976416aa82e7d08"></a><!-- doxytag: member="GeographicLib::EllipticFunction::E" ref="a8be312b5da54b01f2976416aa82e7d08" args="(real phi) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::EllipticFunction::E </td>
+          <td>(</td>
+          <td class="paramtype">real&nbsp;</td>
+          <td class="paramname"> <em>phi</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const  throw ()</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>The incomplete integral of the second kind = int sqrt(1 - <em>m</em> sin<sup>2</sup>(<em>phi</em>)) <em>dphi</em>. </p>
+
+<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00212">212</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="af1b3b2265bca5d2b52c17ca44dabffa8"></a><!-- doxytag: member="GeographicLib::EllipticFunction::E" ref="af1b3b2265bca5d2b52c17ca44dabffa8" args="(real sn, real cn, real dn) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -267,7 +289,7 @@
 <li><a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

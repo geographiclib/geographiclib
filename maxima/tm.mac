@@ -5,7 +5,7 @@ Arbitrary precision Transverse Mercator Projection
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id: tm.mac 6824 2010-04-19 14:25:10Z karney $
+$Id: tm.mac 6841 2010-07-11 20:46:32Z karney $
 
 The parameters for the transformation are set by
 
@@ -118,7 +118,7 @@ expm1(x) := block([y : exp(bfloat(x)),z],
 /* Some versions of Maxima have a buggy sinh */
 snh(x) := block([u : expm1(x)],
   (u / (u + 1)) * (u + 2) /2);
-    
+
 /* Real only */
 psi_phi(phi):=block([s:sin(phi)],
   asinh(s/max(cos(phi),0.1b0*tol)) - e * atnh(e * s))$
@@ -283,7 +283,7 @@ ll(x,y):=block([sigma,thom,jacr,jaci,psi,lam,phi,gam,scale,c],
 
 Uses the array functions
 
- a1_a[i](n), s_z_a[i](z,n), s_z_d[i](z,n), z_s_a[i](s,n), z_s_d[i](s,n),
+ a1_a[i](n), zeta_a[i](z,n), zeta_d[i](z,n), zetap_a[i](s,n), zetap_d[i](s,n),
 
 defined in tmseries.mac.
 */
@@ -298,8 +298,8 @@ tms(phi,lam,i):=block([psi,xip,etap,z,sigma,sp,gam,k,b1],
   gam:atan(tan(xip)*tanh(etap)),
   z:xip+%i*etap,
   b1:a1_a[i](n),
-  sigma:rectform(b1*s_z_a[i](z,n)),
-  sp:rectform(s_z_d[i](z,n)),
+  sigma:rectform(b1*zeta_a[i](z,n)),
+  sp:rectform(zeta_d[i](z,n)),
   gam : gam - atan2(imagpart(sp),realpart(sp)),
   k : k * b1 * cabs(sp),
   [imagpart(sigma)*k0*a,realpart(sigma)*k0*a,gam/degree,k*k0])$
@@ -310,8 +310,8 @@ lls(x,y,i):=block([sigma,b1,s,z,zp,xip,etap,s,c,r,gam,k,lam,psi,phi],
   sigma:y/(a*k0)+%i*x/(a*k0),
   b1:a1_a[i](n),
   s:rectform(sigma/b1),
-  z:rectform(z_s_a[i](s,n)),
-  zp:rectform(z_s_d[i](s,n)),
+  z:rectform(zetap_a[i](s,n)),
+  zp:rectform(zetap_d[i](s,n)),
   gam : atan2(imagpart(zp), realpart(zp)),
   k : b1 / cabs(zp),
   xip:realpart(z),

@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6816 2010-02-05 21:03:10Z karney $
+# $Id: Makefile.am 6829 2010-05-21 15:12:33Z karney $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -741,6 +741,7 @@ uninstall-am:
 
 
 dist-hook:
+	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \

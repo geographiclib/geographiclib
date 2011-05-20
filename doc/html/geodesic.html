@@ -289,20 +289,20 @@ Miscellaneous information on geodesics</a></h2>
 <p>You can specify a <em>negative</em> flattening to get a prolate ellipsoid. The rule is that <em>b</em> is the radius of the axis of symmetry (the polar radius), that <em>a</em> is the equatorial radius, and that <em>b</em> = <em>a</em> (1 - <em>f</em>). The direct solution needed no modification. The inverse solution required a generalization in the way starting points for Newton's method are chosen; in addition a test are added to the case when the endpoints are on the same meridian to determine if a shorter non-meridional geodesic exists.</p>
 <p>Most planets and satellites are approximated by oblate ellipsoids. However, satellites whose rotation frequency is tidally locked to a month may be prolate (as example is Saturn's moon, Tethys). Such satellites are typically considerably more eccentric that the earth and it may be necessary to increase the order of the series used in order to maintain accuracy.</p>
 <p>GeodesicLine::Position provides a way of doing a series of direct calculations for a single geodesic. This is about 2.1 times faster than calling Geodesic::Direct. A speed-up by a further factor of 1.6 is obtained with the direct calculation if the distance is expressed in terms of the spherical arc length.</p>
-<p>On a 2.6 GHz Intel machine (g++, version 4.3.0, -O3), timings are as follows:</p>
+<p>On a 2.66 GHz Intel machine (g++, version 4.4.0, -O3), timings are as follows:</p>
 <ul>
-<li>Geodesic::Direct 0.93 us</li>
-<li>GeodesicLine::Position 0.43 us (arcmode = false)</li>
-<li>GeodesicLine::Position 0.27 us (arcmode = true)</li>
-<li>Geodesic::Inverse 2.6 us</li>
+<li>Geodesic::Direct 0.96 us</li>
+<li>GeodesicLine::Position 0.45 us (arcmode = false)</li>
+<li>GeodesicLine::Position 0.29 us (arcmode = true)</li>
+<li>Geodesic::Inverse 2.8 us</li>
 </ul>
-<p>The timing for Geodesic::Inverse is a mean. Individual calls may take a few times longer because of the need to do additional Newton iterations. Mean number of Newton iterations is about 3, but this increases (rarely) to 17 with some values of the arguments.</p>
+<p>The timing for Geodesic::Inverse is a mean. Individual calls may take a few times longer because of the need to do additional Newton iterations. Mean number of Newton iterations is about 3, but this increases (rarely) to 16 with some values of the arguments.</p>
 <p>Future work:</p>
 <ul>
 <li>More documentation.</li>
 </ul>
 <center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

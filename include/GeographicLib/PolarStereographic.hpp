@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6807 2010-02-01 11:26:34Z karney $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6841 2010-07-11 20:46:32Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -29,9 +29,9 @@ namespace GeographicLib {
   class PolarStereographic {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _e2, _e, _e2m, _c;
+    const real _a, _r, _f, _e2, _e, _e2m, _C, _c;
     real _k0;
-    static const real tol;
+    static const real tol, overflow;
     static const int numit = 5;
     static inline real sq(real x) throw() { return x * x; }
     // Return e * atanh(e * x) for f >= 0, else return

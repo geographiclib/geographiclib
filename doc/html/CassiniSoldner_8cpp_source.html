@@ -25,7 +25,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-  <div class="navpath"><a class="el" href="dir_b99e15f269dc183379bcdcb16b1e9e4a.html">src</a>
+  <div class="navpath"><a class="el" href="dir_c26009eb9c9f1099c22b25da9c3a809e.html">src</a>
   </div>
 </div>
 <div class="contents">
@@ -41,7 +41,7 @@
 <a name="l00010"></a>00010 
 <a name="l00011"></a>00011 <span class="preprocessor">#include &quot;<a class="code" href="CassiniSoldner_8hpp.html" title="Header for GeographicLib::CassiniSoldner class.">GeographicLib/CassiniSoldner.hpp</a>&quot;</span>
 <a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="CassiniSoldner_8cpp.html#a91edbe2e2eaf2776b80aecf2107909d4">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_CASSINISOLDNER_CPP &quot;$Id: CassiniSoldner.cpp 6827 2010-05-20 19:56:18Z karney $&quot;</span>
+<a name="l00013"></a><a class="code" href="CassiniSoldner_8cpp.html#a91edbe2e2eaf2776b80aecf2107909d4">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_CASSINISOLDNER_CPP &quot;$Id: CassiniSoldner.cpp 6830 2010-05-31 20:02:10Z karney $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="CassiniSoldner_8cpp.html#a91edbe2e2eaf2776b80aecf2107909d4">GEOGRAPHICLIB_CASSINISOLDNER_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="CassiniSoldner_8hpp.html#ab674f10f5e4e3b25dc68c65fa408e315">GEOGRAPHICLIB_CASSINISOLDNER_HPP</a>)
@@ -65,7 +65,7 @@
 <a name="l00034"></a>00034   }
 <a name="l00035"></a>00035 
 <a name="l00036"></a><a class="code" href="classGeographicLib_1_1CassiniSoldner.html#a37656c7551b10ad75a40758d0bba570d">00036</a>   <span class="keywordtype">void</span> CassiniSoldner::Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y,
-<a name="l00037"></a>00037                                <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; m) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00037"></a>00037                                <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00038"></a>00038     <span class="keywordflow">if</span> (!Init())
 <a name="l00039"></a>00039       <span class="keywordflow">return</span>;
 <a name="l00040"></a>00040     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> dlon = AngNormalize(lon - LongitudeOrigin());
@@ -96,7 +96,7 @@
 <a name="l00065"></a>00065     azi = AngNormalize(azi2);
 <a name="l00066"></a>00066     <a class="code" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> perp = _earth.Line(lat, dlon, azi2);
 <a name="l00067"></a>00067     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M12;
-<a name="l00068"></a>00068     perp.<a class="code" href="classGeographicLib_1_1GeodesicLine.html#a681434e9e50876320e6a854744fba692">Scale</a>(-sig12, M12, m);
+<a name="l00068"></a>00068     perp.<a class="code" href="classGeographicLib_1_1GeodesicLine.html#a681434e9e50876320e6a854744fba692">Scale</a>(-sig12, M12, rk);
 <a name="l00069"></a>00069 
 <a name="l00070"></a>00070     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
 <a name="l00071"></a>00071       alp0 = perp.<a class="code" href="classGeographicLib_1_1GeodesicLine.html#ad117912c4fc4ef29bf4050c9be3267f2">EquatorialAzimuth</a>() * Constants::degree(),
@@ -111,7 +111,7 @@
 <a name="l00080"></a>00080   }
 <a name="l00081"></a>00081 
 <a name="l00082"></a><a class="code" href="classGeographicLib_1_1CassiniSoldner.html#aea917b790f577026184a0bb262102db4">00082</a>   <span class="keywordtype">void</span> CassiniSoldner::Reverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon,
-<a name="l00083"></a>00083                                <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; m) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00083"></a>00083                                <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00084"></a>00084     <span class="keywordflow">if</span> (!Init())
 <a name="l00085"></a>00085       <span class="keywordflow">return</span>;
 <a name="l00086"></a>00086     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat1, lon1;
@@ -120,12 +120,12 @@
 <a name="l00089"></a>00089     <a class="code" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> perp = _earth.Line(lat1, lon1, azi0 + 90);
 <a name="l00090"></a>00090     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sig12 = perp.<a class="code" href="classGeographicLib_1_1GeodesicLine.html#a402d75ac784e4da9f54960357c76e334">Position</a>(x, lat, lon, azi, m0);
 <a name="l00091"></a>00091     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M21;
-<a name="l00092"></a>00092     perp.<a class="code" href="classGeographicLib_1_1GeodesicLine.html#a681434e9e50876320e6a854744fba692">Scale</a>(sig12, m, M21);
+<a name="l00092"></a>00092     perp.<a class="code" href="classGeographicLib_1_1GeodesicLine.html#a681434e9e50876320e6a854744fba692">Scale</a>(sig12, rk, M21);
 <a name="l00093"></a>00093   }
 <a name="l00094"></a>00094 
 <a name="l00095"></a>00095 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -90,7 +90,7 @@
 <div class="memdoc">
 <p>Constructor for a ellipsoid radius <em>a</em> (meters), reciprocal flattening <em>r</em>, and central scale factor <em>k0</em>. Setting <em>r</em> &lt;= 0 implies <em>r</em> = inf or flattening = 0 (i.e., a sphere). An exception is thrown if <em>a</em> or <em>k0</em> is not positive. </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00024">24</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00027">27</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
 </div>
 </div>
@@ -121,9 +121,9 @@
 <div class="memdoc">
 <p>Alter the scale for the projection so that on latitude <em>lat</em>, the scale is <em>k</em> (default 1). <em>lat</em> is interpreted in the context a projection centered at the north pole. The allows a "latitude of true scale" to be specified. An exception is thrown if <em>k</em> is not positive. </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00098">98</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00121">121</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
-<p>References <a class="el" href="PolarStereographic_8cpp_source.html#l00045">Forward()</a>.</p>
+<p>References <a class="el" href="PolarStereographic_8cpp_source.html#l00069">Forward()</a>.</p>
 
 </div>
 </div>
@@ -183,11 +183,11 @@
 <div class="memdoc">
 <p>Convert from latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees) to polar stereographic easting <em>x</em> (meters) and northing <em>y</em> (meters). The projection is about the pole given by <em>northp</em> (false means south, true means north). Also return the meridian convergence <em>gamma</em> (degrees) and the scale <em>k</em>. No false easting or northing is added. <em>lat</em> should be in the range (-90, 90] for <em>northp</em> = true and in the range [-90, 90) for <em>northp</em> = false; <em>lon</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00045">45</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00069">69</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00264">GeographicLib::Constants::degree()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00277">GeographicLib::Constants::degree()</a>, and <a class="el" href="Constants_8hpp_source.html#l00095">GeographicLib::Math::hypot()</a>.</p>
 
-<p>Referenced by <a class="el" href="UTMUPS_8cpp_source.html#l00068">GeographicLib::UTMUPS::Forward()</a>, and <a class="el" href="PolarStereographic_8cpp_source.html#l00098">SetScale()</a>.</p>
+<p>Referenced by <a class="el" href="UTMUPS_8cpp_source.html#l00068">GeographicLib::UTMUPS::Forward()</a>, and <a class="el" href="PolarStereographic_8cpp_source.html#l00121">SetScale()</a>.</p>
 
 </div>
 </div>
@@ -247,9 +247,9 @@
 <div class="memdoc">
 <p>Convert from polar stereogrphic easting <em>x</em> (meters) and northing <em>y</em> (meters) to latitude <em>lat</em> (degrees) and longitude <em>lon</em> (degrees) . The hemisphere is given by <em>northp</em> (false means south, true means north). Also return the meridian convergence <em>gamma</em> (degrees) and the scale <em>k</em>. No false easting or northing is added. The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00067">67</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00091">91</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00264">GeographicLib::Constants::degree()</a>, and <a class="el" href="Constants_8hpp_source.html#l00095">GeographicLib::Math::hypot()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00277">GeographicLib::Constants::degree()</a>, and <a class="el" href="Constants_8hpp_source.html#l00095">GeographicLib::Math::hypot()</a>.</p>
 
 <p>Referenced by <a class="el" href="UTMUPS_8cpp_source.html#l00111">GeographicLib::UTMUPS::Reverse()</a>.</p>
 
@@ -339,7 +339,7 @@
 <li><a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

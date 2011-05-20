@@ -25,7 +25,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-  <div class="navpath"><a class="el" href="dir_56f89e674cabfe85f75fb5b67e3acad8.html">tools</a>
+  <div class="navpath"><a class="el" href="dir_eb945f93c8e334dbe49e50552094e1e5.html">tools</a>
   </div>
 </div>
 <div class="contents">
@@ -54,7 +54,7 @@
 <a name="l00023"></a><a class="code" href="TransverseMercatorTest_8cpp.html#a6d56053f6f3356e8245153827c7f40ae">00023</a> <span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a6d56053f6f3356e8245153827c7f40ae">usage</a>(<span class="keywordtype">int</span> retval) {
 <a name="l00024"></a>00024   ( retval ? std::cerr : std::cout ) &lt;&lt;
 <a name="l00025"></a>00025 <span class="stringliteral">&quot;TransverseMercatorTest [-r] [-t|-s]\n\</span>
-<a name="l00026"></a>00026 <span class="stringliteral">$Id: TransverseMercatorTest.cpp 6827 2010-05-20 19:56:18Z karney $\n\</span>
+<a name="l00026"></a>00026 <span class="stringliteral">$Id: TransverseMercatorTest.cpp 6830 2010-05-31 20:02:10Z karney $\n\</span>
 <a name="l00027"></a>00027 <span class="stringliteral">\n\</span>
 <a name="l00028"></a>00028 <span class="stringliteral">Convert between geographic coordinates and transverse Mercator coordinates.\n\</span>
 <a name="l00029"></a>00029 <span class="stringliteral">\n\</span>
@@ -108,7 +108,7 @@
 <a name="l00077"></a>00077 
 <a name="l00078"></a>00078   real e, a;
 <a name="l00079"></a>00079   <span class="keywordflow">if</span> (testing) {
-<a name="l00080"></a>00080     e = <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.1L);
+<a name="l00080"></a>00080     e = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(10);
 <a name="l00081"></a>00081     EllipticFunction temp(e * e);
 <a name="l00082"></a>00082     a = 1/temp.E();
 <a name="l00083"></a>00083   }
@@ -121,7 +121,7 @@
 <a name="l00090"></a>00090 
 <a name="l00091"></a>00091   std::string s;
 <a name="l00092"></a>00092   <span class="keywordtype">int</span> retval = 0;
-<a name="l00093"></a>00093   std::cout &lt;&lt; std::setprecision(16);
+<a name="l00093"></a>00093   std::cout &lt;&lt; std::fixed;
 <a name="l00094"></a>00094   <span class="keywordflow">while</span> (std::getline(std::cin, s)) {
 <a name="l00095"></a>00095     <span class="keywordflow">try</span> {
 <a name="l00096"></a>00096       std::istringstream str(s);
@@ -149,19 +149,23 @@
 <a name="l00118"></a>00118         <span class="keywordflow">else</span>
 <a name="l00119"></a>00119           TME.Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), lat, lon, x, y, gamma, k);
 <a name="l00120"></a>00120       }
-<a name="l00121"></a>00121       std::cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot; &quot;</span>
-<a name="l00122"></a>00122                 &lt;&lt; gamma &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; k &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-<a name="l00123"></a>00123     }
-<a name="l00124"></a>00124     <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {
-<a name="l00125"></a>00125       std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-<a name="l00126"></a>00126       retval = 1;
+<a name="l00121"></a>00121       std::cout &lt;&lt; std::setprecision(15)
+<a name="l00122"></a>00122                 &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span>
+<a name="l00123"></a>00123                 &lt;&lt; std::setprecision(10)
+<a name="l00124"></a>00124                 &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot; &quot;</span>
+<a name="l00125"></a>00125                 &lt;&lt; std::setprecision(16)
+<a name="l00126"></a>00126                 &lt;&lt; gamma &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; k &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
 <a name="l00127"></a>00127     }
-<a name="l00128"></a>00128   }
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130   <span class="keywordflow">return</span> retval;
-<a name="l00131"></a>00131 }
+<a name="l00128"></a>00128     <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {
+<a name="l00129"></a>00129       std::cout &lt;&lt; <span class="stringliteral">&quot;ERROR: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+<a name="l00130"></a>00130       retval = 1;
+<a name="l00131"></a>00131     }
+<a name="l00132"></a>00132   }
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134   <span class="keywordflow">return</span> retval;
+<a name="l00135"></a>00135 }
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6796 2010-01-06 23:00:28Z karney $
+# $Id: 00README.txt 6845 2010-07-21 10:23:46Z karney $
 
 A library for geographic projections.
 
@@ -29,9 +29,11 @@ Files
       LocalCartesian.[ch]pp -- local cartesian coordinates
       Geodesic.[ch]pp -- geodesic calculatiosn
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
+      Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection
+      Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
 
     tools/
       GeoConvert.cpp -- geographic conversion utility

@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6822 2010-03-11 13:10:13Z flovergine $
+# $Id: Makefile.am 6830 2010-05-31 20:02:10Z karney $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -216,6 +216,7 @@ nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/GeoCoords.hpp \
 				GeographicLib/Geodesic.hpp \
 				GeographicLib/Geoid.hpp \
+				GeographicLib/Gnomonic.hpp \
 				GeographicLib/LambertConformalConic.hpp \
 				GeographicLib/LocalCartesian.hpp \
 				GeographicLib/MGRS.hpp \

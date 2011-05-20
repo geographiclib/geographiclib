@@ -59,14 +59,13 @@
 <li>All <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates truncate to legal 100km blocks. All <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates with a legal 100km block prefix are legal (even though the latitude band letter may now belong to a neighboring band).</li>
 <li>The range of UTM/UPS coordinates allowed for conversion to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates is the maximum consistent with staying within the letter ranges of the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> scheme.</li>
 </ul>
-<p>The <a href="http://www.nga.mil">NGA</a> software package <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a> also provides conversions to and from <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>. Version 2.4.2 (and earlier) suffers from some drawbacks:</p>
+<p>The <a href="http://www.nga.mil">NGA</a> software package <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a> also provides conversions to and from <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>. Version 3.0 (and earlier) suffers from some drawbacks:</p>
 <ul>
-<li>Conversions to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate return the closest grid corner. This is contrary to the normal standard of grid systems (which is to return the coordinates of the enclosing square) and results in illegal <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates being returned</li>
 <li>Inconsistent rules are used to determine the whether a particular <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate is legal. A more systematic approach is taken here.</li>
 <li>The underlying projections are not very accurately implemented. </li>
 </ul>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00056">56</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00052">52</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a91de10ebde478dbb85b3c7d057ff97b9"></a><!-- doxytag: member="GeographicLib::MGRS::Forward" ref="a91de10ebde478dbb85b3c7d057ff97b9" args="(int zone, bool northp, real x, real y, int prec, std::string &amp;mgrs)" -->
 <div class="memitem">
@@ -279,7 +278,7 @@
 <div class="memdoc">
 <p>The major radius of the ellipsoid (meters). This is the value for the WGS84 ellipsoid because <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates are based on this ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00228">228</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00224">224</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
 </div>
 </div>
@@ -299,7 +298,7 @@
 <div class="memdoc">
 <p>The inverse flattening of the ellipsoid. This is the value for the WGS84 ellipsoid because <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates are based on this ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00234">234</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00230">230</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
 </div>
 </div>
@@ -315,7 +314,7 @@
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00097">97</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00093">93</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
 </div>
 </div>
@@ -324,7 +323,7 @@
 <li><a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

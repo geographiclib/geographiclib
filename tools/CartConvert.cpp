@@ -21,7 +21,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: CartConvert [-r] [-l lat0 lon0 h0] [-e a r] [-h]\n\
-$Id: CartConvert.cpp 6827 2010-05-20 19:56:18Z karney $\n\
+$Id: CartConvert.cpp 6830 2010-05-31 20:02:10Z karney $\n\
 \n\
 Convert geodetic coordinates to either geocentric or local cartesian\n\
 coordinates.  Geocentric coordinates have the origin at the center of the\n\
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
 
   std::string s;
   int retval = 0;
-  std::cout << std::setprecision(16);
+  std::cout << std::fixed;
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
@@ -116,13 +116,17 @@ int main(int argc, char* argv[]) {
           lc.Reverse(x, y, z, lat, lon, h);
         else
           ec.Reverse(x, y, z, lat, lon, h);
-        std::cout << lat << " " << lon << " " << h << "\n";
+        std::cout << std::setprecision(15)
+                  << lat << " " << lon << " "
+                  << std::setprecision(12)
+                  << h << "\n";
       } else {
         if (localcartesian)
           lc.Forward(lat, lon, h, x, y, z);
         else
           ec.Forward(lat, lon, h, x, y, z);
-        std::cout << x << " " << y << " " << z << "\n";
+        std::cout << std::setprecision(10)
+                  << x << " " << y << " " << z << "\n";
       }
     }
     catch (const std::exception& e) {

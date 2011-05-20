@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6827 2010-05-20 19:56:18Z karney $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6842 2010-07-16 20:51:06Z karney $"
 
 /**
  * A simple compile-time assert.  This is designed to be compatible with the
@@ -21,7 +21,7 @@
 #if defined(__GNUC__)
 // Suppress "defined but not used" warnings
 #define RCSID_DECL(x) namespace \
-{ char VAR_ ## x [] __attribute__((unused)) = x; }
+{ char VAR_ ## x [] __attribute__((used)) = x; }
 #else
 /**
  * Insertion of RCS Id strings into the object file.
@@ -105,6 +105,10 @@ namespace GeographicLib {
     { return _hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
+    static inline long double hypot(long double x, long double y) throw()
+    { return _hypot(x, y); }
+#endif
 #else
     // Use overloading to define generic versions
     static inline double hypot(double x, double y) throw()
@@ -237,6 +241,15 @@ namespace GeographicLib {
 #else
       return std::isfinite(x) != 0;
 #endif
+    }
+
+    /**
+     * Return a NaN if available, otherwise return the max real.
+     **********************************************************************/
+    static inline real NaN() throw() {
+      return std::numeric_limits<real>::has_quiet_NaN ?
+        std::numeric_limits<real>::quiet_NaN() :
+        std::numeric_limits<real>::max();
     }
   };
 

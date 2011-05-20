@@ -29,6 +29,8 @@
  * <tr><td>k^2    <td>mu      <td>elliptic function parameter
  * <tr><td>k'^2   <td>mv      <td>elliptic function complementary parameter
  * <tr><td>m      <td>k       <td>scale
+ * <tr><td>zeta   <td>zeta    <td>complex longitude = Mercator = chi in paper
+ * <tr><td>s      <td>sigma   <td>complex GK = zeta in paper
  * </table></center>
  *
  * Minor alterations have been made in some of Lee's expressions in an
@@ -39,7 +41,7 @@
 
 #include "GeographicLib/TransverseMercatorExact.hpp"
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: TransverseMercatorExact.cpp 6813 2010-02-03 13:57:19Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: TransverseMercatorExact.cpp 6842 2010-07-16 20:51:06Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
@@ -92,7 +94,9 @@ namespace GeographicLib {
   }
 
   Math::real TransverseMercatorExact::taupinv(real taup) const throw() {
-    real tau = taup;
+    real
+      tau = taup,
+      stol = tol * max(real(1), abs(taup));
     for (int i = 0; i < numit; ++i) {
       real
         tau1 = Math::hypot(real(1), tau),
@@ -101,7 +105,7 @@ namespace GeographicLib {
         dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _mv * sq(tau)) /
         ( (sig1 * tau1 - sig * tau) * _mv * tau1 );
       tau += dtau;
-      if (abs(dtau) < tol * max(real(1), tau))
+      if (abs(dtau) < stol)
         break;
     }
     return tau;

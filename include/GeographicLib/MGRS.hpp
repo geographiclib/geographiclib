@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
-#define GEOGRAPHICLIB_MGRS_HPP "$Id: MGRS.hpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_MGRS_HPP "$Id: MGRS.hpp 6843 2010-07-18 21:18:17Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include "GeographicLib/UTMUPS.hpp"
@@ -43,12 +43,8 @@ namespace GeographicLib {
    *
    * The <a href="http://www.nga.mil">NGA</a> software package
    * <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a>
-   * also provides conversions to and from MGRS.  Version 2.4.2 (and earlier)
+   * also provides conversions to and from MGRS.  Version 3.0 (and earlier)
    * suffers from some drawbacks:
-   * - Conversions to MGRS coordinate return the closest grid corner.  This is
-   *   contrary to the normal standard of grid systems (which is to return the
-   *   coordinates of the enclosing square) and results in illegal MGRS
-   *   coordinates being returned
    * - Inconsistent rules are used to determine the whether a particular MGRS
    *   coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.

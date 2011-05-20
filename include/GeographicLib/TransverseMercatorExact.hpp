@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6824 2010-04-19 14:25:10Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6835 2010-06-15 21:37:16Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include "GeographicLib/EllipticFunction.hpp"
@@ -42,7 +42,7 @@ namespace GeographicLib {
    *
    * This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger
    * method, GeographicLib::TransverseMercator, taking about 11 us for a
-   * combined forward and reverse projection on a 2.6 GHz Intel machine (g++,
+   * combined forward and reverse projection on a 2.66 GHz Intel machine (g++,
    * version 4.3.0, -O3).
    *
    * The ellipsoid parameters and the central scale are set in the constructor.

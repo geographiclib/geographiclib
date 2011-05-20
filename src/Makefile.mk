@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6805 2010-01-28 21:18:14Z karney $
+# $Id: Makefile.mk 6835 2010-06-15 21:37:16Z karney $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -10,7 +10,7 @@ INCLUDEPATH = ../include
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
-	Geoid LambertConformalConic
+	Geoid LambertConformalConic Gnomonic
 
 HEADERS = Constants.hpp $(addsuffix .hpp,$(MODULES))
 SOURCES = $(addsuffix .cpp,$(MODULES))
@@ -59,5 +59,6 @@ AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Constants.hpp Geodesic.hpp
 CassiniSoldner.o: CassiniSoldner.hpp Constants.hpp Geodesic.hpp
 Geoid.o: Constants.hpp Geoid.hpp
 LambertConformalConic.o: Constants.hpp LambertConformalConic.hpp
+Gnomonic.o: Gnomonic.hpp Constants.hpp Geodesic.hpp
 
 .PHONY: all install list clean

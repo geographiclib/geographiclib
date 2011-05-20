@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6827 2010-05-20 19:56:18Z karney $
+# $Id: Makefile.am 6830 2010-05-31 20:02:10Z karney $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_srcdir)/include 
@@ -39,6 +39,7 @@ Geod_SOURCES = Geod.cpp \
 EquidistantTest_SOURCES = EquidistantTest.cpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
 	../include/GeographicLib/CassiniSoldner.hpp \
+	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp

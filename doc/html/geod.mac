@@ -5,7 +5,7 @@ Compute the series expansions for the spheroidal geodesic problem.
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id: geod.mac 6826 2010-05-12 14:35:16Z karney $
+$Id: geod.mac 6835 2010-06-15 21:37:16Z karney $
 
 There are 4 sections in this file
 
@@ -79,8 +79,8 @@ Write
 
 Then the Lagrange Inversion Theorem
 
-   J. L. Lagrange, Nouvelle méthode pour résoudre les équations
-   littérales par le moyen des séries, Mém. de l'Acad. Roy. des Sciences
+   J. L. Lagrange, Nouvelle methode pour resoudre les equations
+   litterales par le moyen des series, Mem. de l'Acad. Roy. des Sciences
    de Berlin 24, 251-326 (1768, publ. 1770), Sec. 16,
    http://books.google.com/books?id=YywPAAAAIAAJ&pg=PA25
 

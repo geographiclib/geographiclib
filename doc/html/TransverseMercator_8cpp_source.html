@@ -25,7 +25,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-  <div class="navpath"><a class="el" href="dir_b99e15f269dc183379bcdcb16b1e9e4a.html">src</a>
+  <div class="navpath"><a class="el" href="dir_c26009eb9c9f1099c22b25da9c3a809e.html">src</a>
   </div>
 </div>
 <div class="contents">
@@ -72,7 +72,7 @@
 <a name="l00041"></a>00041 
 <a name="l00042"></a>00042 <span class="preprocessor">#include &quot;<a class="code" href="TransverseMercator_8hpp.html" title="Header for GeographicLib::TransverseMercator class.">GeographicLib/TransverseMercator.hpp</a>&quot;</span>
 <a name="l00043"></a>00043 
-<a name="l00044"></a><a class="code" href="TransverseMercator_8cpp.html#ab09ba83d5531a4ca91dc8ce82ae98084">00044</a> <span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP &quot;$Id: TransverseMercator.cpp 6807 2010-02-01 11:26:34Z karney $&quot;</span>
+<a name="l00044"></a><a class="code" href="TransverseMercator_8cpp.html#ab09ba83d5531a4ca91dc8ce82ae98084">00044</a> <span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP &quot;$Id: TransverseMercator.cpp 6843 2010-07-18 21:18:17Z karney $&quot;</span>
 <a name="l00045"></a>00045 <span class="preprocessor"></span>
 <a name="l00046"></a>00046 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="TransverseMercator_8cpp.html#ab09ba83d5531a4ca91dc8ce82ae98084">GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP</a>)
 <a name="l00047"></a>00047 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="TransverseMercator_8hpp.html#abbbe2faaff284db3183ddf3afcbf5623">GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP</a>)
@@ -289,10 +289,10 @@
 <a name="l00258"></a>00258     <span class="keywordflow">if</span> (lat &lt; 90) {
 <a name="l00259"></a>00259       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
 <a name="l00260"></a>00260         c = max(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), cos(lam)), <span class="comment">// cos(pi/2) might be negative</span>
-<a name="l00261"></a>00261         tau = tanx(phi),
+<a name="l00261"></a>00261         tau = tan(phi),
 <a name="l00262"></a>00262         secphi = <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau),
-<a name="l00263"></a>00263         sig = sinh( eatanhe(sin(phi)) ),
-<a name="l00264"></a>00264         taup = (<a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), sig) * tau - sig * secphi);
+<a name="l00263"></a>00263         sig = sinh( eatanhe(tau / secphi) ),
+<a name="l00264"></a>00264         taup = <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), sig) * tau - sig * secphi;
 <a name="l00265"></a>00265       xip = atan2(taup, c);
 <a name="l00266"></a>00266       <span class="comment">// Used to be</span>
 <a name="l00267"></a>00267       <span class="comment">//   etap = Math::atanh(sin(lam) / cosh(psi));</span>
@@ -417,7 +417,7 @@
 <a name="l00386"></a>00386     <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
 <a name="l00387"></a>00387     <span class="comment">// This undoes the steps in Forward.  The wrinkles are: (1) Use of the</span>
 <a name="l00388"></a>00388     <span class="comment">// reverted series to express zeta&apos; in terms of zeta. (2) Newton&apos;s method</span>
-<a name="l00389"></a>00389     <span class="comment">// to solve for phi in terms of psi.</span>
+<a name="l00389"></a>00389     <span class="comment">// to solve for phi in terms of tan(phi).</span>
 <a name="l00390"></a>00390     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
 <a name="l00391"></a>00391       xi = y / (_a1 * _k0),
 <a name="l00392"></a>00392       eta = x / (_a1 * _k0);
@@ -475,53 +475,54 @@
 <a name="l00444"></a>00444       r = <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(s, c);
 <a name="l00445"></a>00445     <span class="keywordflow">if</span> (r &gt; 0) {
 <a name="l00446"></a>00446       lam = atan2(s, c);        <span class="comment">// Krueger p 17 (25)</span>
-<a name="l00447"></a>00447       <span class="comment">// Use Newton&apos;s&lt; method to solve for tau</span>
+<a name="l00447"></a>00447       <span class="comment">// Use Newton&apos;s method to solve for tau</span>
 <a name="l00448"></a>00448       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
 <a name="l00449"></a>00449         taup = sin(xip)/r,
-<a name="l00450"></a>00450         tau = taup;
-<a name="l00451"></a>00451       <span class="comment">// min iterations = 1, max iterations = 2; mean = 1.99</span>
-<a name="l00452"></a>00452       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numit; ++i) {
-<a name="l00453"></a>00453         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00454"></a>00454           tau1 = <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau),
-<a name="l00455"></a>00455           sig = sinh( eatanhe( tau / tau1 ) ),
-<a name="l00456"></a>00456           sig1 =  <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), sig),
-<a name="l00457"></a>00457           dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _e2m * sq(tau)) /
-<a name="l00458"></a>00458           ( (sig1 * tau1 - sig * tau) * _e2m * tau1 );
-<a name="l00459"></a>00459         tau += dtau;
-<a name="l00460"></a>00460         <span class="keywordflow">if</span> (abs(dtau) &lt; tol * max(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau))
-<a name="l00461"></a>00461           <span class="keywordflow">break</span>;
-<a name="l00462"></a>00462       }
-<a name="l00463"></a>00463       phi = atan(tau);
-<a name="l00464"></a>00464       gamma += atan(tanx(xip) * tanh(etap)); <span class="comment">// Krueger p 19 (31)</span>
-<a name="l00465"></a>00465       <span class="comment">// Note cos(phi&apos;) * cosh(eta&apos;) = r</span>
-<a name="l00466"></a>00466       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau) * r;
-<a name="l00467"></a>00467     } <span class="keywordflow">else</span> {
-<a name="l00468"></a>00468       phi = <a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">Constants::pi</a>()/2;
-<a name="l00469"></a>00469       lam = 0;
-<a name="l00470"></a>00470       k *= _c;
-<a name="l00471"></a>00471     }
-<a name="l00472"></a>00472     lat = phi / <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>() * xisign;
-<a name="l00473"></a>00473     lon = lam / <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>();
-<a name="l00474"></a>00474     <span class="keywordflow">if</span> (backside)
-<a name="l00475"></a>00475       lon = 180 - lon;
-<a name="l00476"></a>00476     lon *= etasign;
-<a name="l00477"></a>00477     <span class="comment">// Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)</span>
-<a name="l00478"></a>00478     <span class="keywordflow">if</span> (lon + lon0 &gt;= 180)
-<a name="l00479"></a>00479       lon += lon0 - 360;
-<a name="l00480"></a>00480     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lon + lon0 &lt; -180)
-<a name="l00481"></a>00481       lon += lon0 + 360;
-<a name="l00482"></a>00482     <span class="keywordflow">else</span>
-<a name="l00483"></a>00483       lon += lon0;
-<a name="l00484"></a>00484     gamma /= <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>();
-<a name="l00485"></a>00485     <span class="keywordflow">if</span> (backside)
-<a name="l00486"></a>00486       gamma = 180 - gamma;
-<a name="l00487"></a>00487     gamma *= xisign * etasign;
-<a name="l00488"></a>00488     k *= _k0;
-<a name="l00489"></a>00489   }
-<a name="l00490"></a>00490 
-<a name="l00491"></a>00491 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00450"></a>00450         tau = taup,
+<a name="l00451"></a>00451         stol = tol * max(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), abs(taup));
+<a name="l00452"></a>00452       <span class="comment">// min iterations = 1, max iterations = 2; mean = 1.99</span>
+<a name="l00453"></a>00453       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; numit; ++i) {
+<a name="l00454"></a>00454         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00455"></a>00455           tau1 = <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau),
+<a name="l00456"></a>00456           sig = sinh( eatanhe( tau / tau1 ) ),
+<a name="l00457"></a>00457           sig1 =  <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), sig),
+<a name="l00458"></a>00458           dtau = - (sig1 * tau - sig * tau1 - taup) * (1 + _e2m * sq(tau)) /
+<a name="l00459"></a>00459           ( (sig1 * tau1 - sig * tau) * _e2m * tau1 );
+<a name="l00460"></a>00460         tau += dtau;
+<a name="l00461"></a>00461         <span class="keywordflow">if</span> (abs(dtau) &lt; stol)
+<a name="l00462"></a>00462           <span class="keywordflow">break</span>;
+<a name="l00463"></a>00463       }
+<a name="l00464"></a>00464       phi = atan(tau);
+<a name="l00465"></a>00465       gamma += atan(tanx(xip) * tanh(etap)); <span class="comment">// Krueger p 19 (31)</span>
+<a name="l00466"></a>00466       <span class="comment">// Note cos(phi&apos;) * cosh(eta&apos;) = r</span>
+<a name="l00467"></a>00467       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), tau) * r;
+<a name="l00468"></a>00468     } <span class="keywordflow">else</span> {
+<a name="l00469"></a>00469       phi = <a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">Constants::pi</a>()/2;
+<a name="l00470"></a>00470       lam = 0;
+<a name="l00471"></a>00471       k *= _c;
+<a name="l00472"></a>00472     }
+<a name="l00473"></a>00473     lat = phi / <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>() * xisign;
+<a name="l00474"></a>00474     lon = lam / <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>();
+<a name="l00475"></a>00475     <span class="keywordflow">if</span> (backside)
+<a name="l00476"></a>00476       lon = 180 - lon;
+<a name="l00477"></a>00477     lon *= etasign;
+<a name="l00478"></a>00478     <span class="comment">// Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)</span>
+<a name="l00479"></a>00479     <span class="keywordflow">if</span> (lon + lon0 &gt;= 180)
+<a name="l00480"></a>00480       lon += lon0 - 360;
+<a name="l00481"></a>00481     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (lon + lon0 &lt; -180)
+<a name="l00482"></a>00482       lon += lon0 + 360;
+<a name="l00483"></a>00483     <span class="keywordflow">else</span>
+<a name="l00484"></a>00484       lon += lon0;
+<a name="l00485"></a>00485     gamma /= <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Constants::degree</a>();
+<a name="l00486"></a>00486     <span class="keywordflow">if</span> (backside)
+<a name="l00487"></a>00487       gamma = 180 - gamma;
+<a name="l00488"></a>00488     gamma *= xisign * etasign;
+<a name="l00489"></a>00489     k *= _k0;
+<a name="l00490"></a>00490   }
+<a name="l00491"></a>00491 
+<a name="l00492"></a>00492 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

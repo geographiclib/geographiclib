@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6829 2010-05-21 15:12:33Z karney $
+# $Id: Makefile.am 6845 2010-07-21 10:23:46Z karney $
 
 AUTOMAKE_OPTIONS = foreign
 
@@ -14,6 +14,7 @@ EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
 			 Makefile.mk windows maxima doc 
 
 dist-hook:
+	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \

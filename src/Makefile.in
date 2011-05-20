@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6792 2010-01-06 20:26:18Z karney $
+# $Id: Makefile.am 6830 2010-05-31 20:02:10Z karney $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -80,9 +80,10 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libGeographic_la_LIBADD =
 am_libGeographic_la_OBJECTS = AzimuthalEquidistant.lo \
 	CassiniSoldner.lo DMS.lo EllipticFunction.lo Geocentric.lo \
-	GeoCoords.lo Geodesic.lo Geoid.lo LambertConformalConic.lo \
-	LocalCartesian.lo MGRS.lo PolarStereographic.lo \
-	TransverseMercator.lo TransverseMercatorExact.lo UTMUPS.lo
+	GeoCoords.lo Geodesic.lo Geoid.lo Gnomonic.lo \
+	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
+	PolarStereographic.lo TransverseMercator.lo \
+	TransverseMercatorExact.lo UTMUPS.lo
 libGeographic_la_OBJECTS = $(am_libGeographic_la_OBJECTS)
 libGeographic_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -249,6 +250,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		GeoCoords.cpp \
 		Geodesic.cpp \
 		Geoid.cpp \
+		Gnomonic.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
@@ -265,6 +267,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geodesic.hpp \
 		../include/GeographicLib/Geoid.hpp \
+		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
@@ -357,6 +360,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geocentric.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geodesic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geoid.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Gnomonic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LambertConformalConic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LocalCartesian.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MGRS.Plo@am__quote@

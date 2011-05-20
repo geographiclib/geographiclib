@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id: TransverseMercator.hpp 6824 2010-04-19 14:25:10Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id: TransverseMercator.hpp 6843 2010-07-18 21:18:17Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 

@@ -25,7 +25,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-  <div class="navpath"><a class="el" href="dir_b99e15f269dc183379bcdcb16b1e9e4a.html">src</a>
+  <div class="navpath"><a class="el" href="dir_c26009eb9c9f1099c22b25da9c3a809e.html">src</a>
   </div>
 </div>
 <div class="contents">
@@ -43,7 +43,7 @@
 <br/></td></tr>
 </p>
 <tr><td colspan="2"><h2>Defines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="TransverseMercatorExact_8cpp.html#a019dc2a5f6ac9aa9ba03ad8dd974e438">GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP</a>&nbsp;&nbsp;&nbsp;&quot;$Id: TransverseMercatorExact.cpp 6813 2010-02-03 13:57:19Z karney $&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="TransverseMercatorExact_8cpp.html#a019dc2a5f6ac9aa9ba03ad8dd974e438">GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP</a>&nbsp;&nbsp;&nbsp;&quot;$Id: TransverseMercatorExact.cpp 6842 2010-07-16 20:51:06Z karney $&quot;</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Implementation for <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">GeographicLib::TransverseMercatorExact</a> class. </p>
@@ -102,6 +102,16 @@
 </td><td><p>k </p>
 </td><td><p>scale </p>
 </td></tr>
+<tr>
+<td><p>zeta </p>
+</td><td><p>zeta </p>
+</td><td><p>complex longitude = Mercator = chi in paper </p>
+</td></tr>
+<tr>
+<td><p>s </p>
+</td><td><p>sigma </p>
+</td><td><p>complex GK = zeta in paper </p>
+</td></tr>
 </table>
 </center><p>Minor alterations have been made in some of Lee's expressions in an attempt to control round-off. For example atanh(sin(phi)) is replaced by asinh(tan(phi)) which maintains accuracy near phi = pi/2. Such changes are noted in the code. </p>
 
@@ -112,18 +122,18 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP&nbsp;&nbsp;&nbsp;&quot;$Id: TransverseMercatorExact.cpp 6813 2010-02-03 13:57:19Z karney $&quot;</td>
+          <td class="memname">#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP&nbsp;&nbsp;&nbsp;&quot;$Id: TransverseMercatorExact.cpp 6842 2010-07-16 20:51:06Z karney $&quot;</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00042">42</a> of file <a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00044">44</a> of file <a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

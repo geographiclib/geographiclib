@@ -224,7 +224,7 @@ TransverseMercatorTest</a></h2>
 <li>echo 260e5 100e5 | TransverseMercatorTest -r<br/>
 =&gt; -0.02 90.00 26000000 10000000 90.01 18.47</li>
 </ul>
-<p>Note that, unlike <a class="el" href="utilities.html#geoconvert">GeoConvert</a>, TransverseMercatorTest has no no ability to change the precision of the output.</p>
+<p>Note that, unlike <a class="el" href="utilities.html#geoconvert">GeoConvert</a>, TransverseMercatorTest has no ability to change the precision of the output.</p>
 <p>Here is the usage (obtained from "TranverseMercatorTest -h") </p>
 <div class="fragment"><pre class="fragment">
 TransverseMercatorTest [-r] [-t|-s]
@@ -270,10 +270,10 @@ CartConvert</a></h2>
 <li>echo 30000 30000 0 | CartConvert -r<br/>
 =&gt; 6.483 45 -6335709.73</li>
 </ul>
-<p>Note that, unlike <a class="el" href="utilities.html#geoconvert">GeoConvert</a>, CartConvert has no no ability to change the precision of the output.</p>
+<p>Note that, unlike <a class="el" href="utilities.html#geoconvert">GeoConvert</a>, CartConvert has no ability to change the precision of the output.</p>
 <p>Here is the usage (obtained from "CartConvert -h") </p>
 <div class="fragment"><pre class="fragment">
-Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]
+Usage: CartConvert [-r] [-l lat0 lon0 h0] [-e a r] [-h]
 
 Convert geodetic coordinates to either geocentric or local cartesian
 coordinates.  Geocentric coordinates have the origin at the center of the
@@ -295,10 +295,10 @@ cartesian coordinates x, y, z (meters) are printed on standard output.
 
 If -r is given the reverse transformation is performed.
 
--h prints this help
+-h prints this help.
 </pre></div><h2><a class="anchor" id="equidistanttest">
 EquidistantTest</a></h2>
-<p>EquidistantTest is a command line utility for performing azimuthal equidistant and Cassini-Soldner projections using <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> and <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a>. These projections are both defined in terms of geodesics.</p>
+<p>EquidistantTest is a command line utility for performing azimuthal equidistant, gnomonic, and Cassini-Soldner projections using <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a>, <a class="el" href="classGeographicLib_1_1Gnomonic.html" title="Gnomonic Projection.">GeographicLib::Gnomonic</a>, and <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a>. These projections are all defined in terms of geodesics.</p>
 <p>Examples (position of Caen in the Cassini-Soldner projection with origin at the Paris Observatory)</p>
 <ul>
 <li>echo 48.648 -2.007 | EquidistantTest -c 48.836 2.337<br/>
@@ -306,33 +306,40 @@ EquidistantTest</a></h2>
 <li>echo -319919 -11791 | EquidistantTest -c 48.836 2.337 -r<br/>
 =&gt; 48.648 -2.007 86.7 0.999</li>
 </ul>
-<p>Note that, unlike <a class="el" href="utilities.html#geoconvert">GeoConvert</a>, EquidistantTest has no no ability to change the precision of the output.</p>
+<p>Note that, unlike <a class="el" href="utilities.html#geoconvert">GeoConvert</a>, EquidistantTest has no ability to change the precision of the output.</p>
 <p>Here is the usage (obtained from "EquidistantTest -h") </p>
 <div class="fragment"><pre class="fragment">
-Usage: EquidistantTest [-c lat0 lon0] [-z lat0 lon0] [-r] [-h]
+Usage: EquidistantTest -(c|z|g) lat0 lon0 [-r] [-e a r] [-h]
 
-Convert geodetic coordinates to either azimuthal equidistant or
-Cassini-Soldner coordinates.  The center of the projection (lat0, lon0)
-is specified by either the -c option (for Cassini-Soldner) or -z option
-(for azimuthal equidistant).  At least one of these options must be
-given (the last one given is used).  The WGS84 model of the earth is
-used.
+Perform projections based on geodesics.  Convert geodetic coordinates to
+either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.
+The center of the projection (lat0, lon0) is specified by either the -c
+option (for Cassini-Soldner), the -z option (for azimuthal equidistant),
+or the -g option (for gnomonic).  At least one of these options must be
+given (the last one given is used).
+
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r &lt; 0 for a prolate
+ellipsoid.
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) latitude and longitude (degrees or DMS).
 For each set of geodetic coordinates, the corresponding projected
 coordinates x, y (meters) are printed on standard output together with
 the azimuth azi (degrees) and reciprocal scale rk.  For Cassini-Soldner,
-azi is the bearing of the easting direction and the scale in the
-northing direction is 1/rk.  For azimuthal equidistant, azi is the
-bearing of the radial direction and the scale in the azimuthal direction
-is 1/rk
+azi is the bearing of the easting direction and the scale in the easting
+direction is 1 and the scale in the northing direction is 1/rk.  For
+azimuthal equidistant and gnomonic, azi is the bearing of the radial
+direction and the scale in the azimuthal direction is 1/rk.  For
+azimuthal equidistant and gnomonic, the scales in the radial direction
+are 1 and 1/rk^2, respectively.
 
 If -r is given the reverse transformation is performed.  x and y are
 given on standard input and each line of the standard output gives
 latitude, longitude, azi, and rk.
 
--h prints this help
+-h prints this help.
 </pre></div><h2><a class="anchor" id="geoideval">
 GeoidEval</a></h2>
 <p>Evaluate the height of the geoid by interpolating into a grid via <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a>. There is an online interface to this utility at <a href="http://geographiclib.sourceforge.net/cgi-bin/Geoid">http://geographiclib.sourceforge.net/cgi-bin/Geoid</a></p>
@@ -408,7 +415,7 @@ to standard error.
 
 -h prints this help.
 </pre></div><center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="old.html">Old Versions</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

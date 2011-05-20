@@ -9,7 +9,7 @@
 
 #include "GeographicLib/EllipticFunction.hpp"
 
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6803 2010-01-11 12:11:39Z karney $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6838 2010-06-22 21:26:37Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
@@ -207,6 +207,11 @@ namespace GeographicLib {
     if (sn < 0)
       ei = -ei;
     return ei;
+  }
+
+  Math::real EllipticFunction::E(real phi) const throw() {
+    real sn = sin(phi);
+    return E(sn, cos(phi), sqrt(1 - _m * sn * sn));
   }
 
 } // namespace GeographicLib

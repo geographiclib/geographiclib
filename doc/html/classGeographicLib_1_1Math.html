@@ -47,6 +47,7 @@
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">atanh</a> (<a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x)  throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">cbrt</a> (<a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x)  throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#aa0e4daf4f9d6f5f381653a8c99c1e635">isfinite</a> (<a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x)  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">NaN</a> ()  throw ()</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Mathematical functions needed by GeographicLib. </p>
@@ -99,7 +100,7 @@
 
 <p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00095">95</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00179">asinh()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00214">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00625">GeographicLib::GeodesicLine::Position()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00384">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00067">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00191">GeographicLib::LambertConformalConic::Reverse()</a>, and <a class="el" href="Geocentric_8cpp_source.html#l00053">GeographicLib::Geocentric::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00183">asinh()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00214">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00069">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00625">GeographicLib::GeodesicLine::Position()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00384">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00091">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00191">GeographicLib::LambertConformalConic::Reverse()</a>, and <a class="el" href="Geocentric_8cpp_source.html#l00053">GeographicLib::Geocentric::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -120,7 +121,7 @@
 <div class="memdoc">
 <p>Return exp(<em>x</em>) - 1 accurate near <em>x</em> = 0. This is taken from N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd Edition (SIAM, 2002), Sec 1.14.1, p 19. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00126">126</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00130">130</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="LambertConformalConic_8cpp_source.html#l00149">GeographicLib::LambertConformalConic::Forward()</a>.</p>
 
@@ -143,9 +144,9 @@
 <div class="memdoc">
 <p>Return log(<em>x</em> + 1) accurate near <em>x</em> = 0. This is taken See D. Goldberg, <a href="http://docs.sun.com/source/806-3568/ncg_goldberg.html">What every computer scientist should know about floating-point arithmetic</a> (1991), Theorem 4. See also, Higham (op. cit.), Answer to Problem 1.5, p 528. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00154">154</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00158">158</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00179">asinh()</a>, <a class="el" href="Constants_8hpp_source.html#l00199">atanh()</a>, and <a class="el" href="LambertConformalConic_8cpp_source.html#l00191">GeographicLib::LambertConformalConic::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00183">asinh()</a>, <a class="el" href="Constants_8hpp_source.html#l00203">atanh()</a>, and <a class="el" href="LambertConformalConic_8cpp_source.html#l00191">GeographicLib::LambertConformalConic::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -166,9 +167,9 @@
 <div class="memdoc">
 <p>Return asinh(<em>x</em>). This is defined in terms of <a class="el" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">Math::log1p</a>(<em>x</em>) in order to maintain accuracy near <em>x</em> = 0. In addition, the odd parity of the function is enforced. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00179">179</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00183">183</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00095">hypot()</a>, and <a class="el" href="Constants_8hpp_source.html#l00154">log1p()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00095">hypot()</a>, and <a class="el" href="Constants_8hpp_source.html#l00158">log1p()</a>.</p>
 
 <p>Referenced by <a class="el" href="TransverseMercator_8cpp_source.html#l00214">GeographicLib::TransverseMercator::Forward()</a>.</p>
 
@@ -191,9 +192,9 @@
 <div class="memdoc">
 <p>Return atanh(<em>x</em>). This is defined in terms of <a class="el" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">Math::log1p</a>(<em>x</em>) in order to maintain accuracy near <em>x</em> = 0. In addition, the odd parity of the function is enforced. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00199">199</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00203">203</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00154">log1p()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00158">log1p()</a>.</p>
 
 </div>
 </div>
@@ -214,7 +215,7 @@
 <div class="memdoc">
 <p>Return the real cube root of <em>x</em>. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00217">217</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00221">221</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geocentric_8cpp_source.html#l00053">GeographicLib::Geocentric::Reverse()</a>.</p>
 
@@ -237,7 +238,27 @@
 <div class="memdoc">
 <p>Return true if number is finite, false if NaN or infinite. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00232">232</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00236">236</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a28304be9b5cb17eeb7413b059604a154"></a><!-- doxytag: member="GeographicLib::Math::NaN" ref="a28304be9b5cb17eeb7413b059604a154" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> GeographicLib::Math::NaN </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td>  throw ()<code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Return a NaN if available, otherwise return the max real. </p>
+
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00249">249</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -245,7 +266,7 @@
 <li><a class="el" href="Constants_8hpp_source.html">Constants.hpp</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

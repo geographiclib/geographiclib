@@ -156,7 +156,7 @@
 
 <p>References <a class="el" href="DMS_8hpp_source.html#l00051">LATITUDE</a>, <a class="el" href="DMS_8hpp_source.html#l00051">LONGITUDE</a>, and <a class="el" href="DMS_8hpp_source.html#l00051">NONE</a>.</p>
 
-<p>Referenced by <a class="el" href="DMS_8cpp_source.html#l00199">DecodeAngle()</a>, <a class="el" href="DMS_8cpp_source.html#l00208">DecodeAzimuth()</a>, and <a class="el" href="DMS_8cpp_source.html#l00167">DecodeLatLon()</a>.</p>
+<p>Referenced by <a class="el" href="DMS_8cpp_source.html#l00198">DecodeAngle()</a>, <a class="el" href="DMS_8cpp_source.html#l00207">DecodeAzimuth()</a>, and <a class="el" href="DMS_8cpp_source.html#l00166">DecodeLatLon()</a>.</p>
 
 </div>
 </div>
@@ -255,7 +255,7 @@
 <div class="memdoc">
 <p>Convert two strings <em>dmsa</em> and <em>dmsb</em> to a latitude, <em>lat</em>, and longitude, <em>lon</em>. By default, the <em>lat</em> (resp., <em>lon</em>) is assigned to the results of decoding <em>dmsa</em> (resp., <em>dmsb</em>). However this is overridden if either <em>dmsa</em> or <em>dmsb</em> contain a latitude or longitude hemisphere designator (N, S, E, W). Throws an error if the decoded numbers are out of the ranges [-90<sup>o</sup>, 90<sup>o</sup>] for latitude and [-180<sup>o</sup>, 360<sup>o</sup>] for longitude and, in which case <em>lat</em> and <em>lon</em> are unchanged. Finally the longitude is reduced to the range [-180<sup>o</sup>, 180<sup>o</sup>). </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00167">167</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00166">166</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8cpp_source.html#l00027">Decode()</a>, <a class="el" href="DMS_8hpp_source.html#l00051">LATITUDE</a>, <a class="el" href="DMS_8hpp_source.html#l00051">LONGITUDE</a>, and <a class="el" href="DMS_8hpp_source.html#l00051">NONE</a>.</p>
 
@@ -280,7 +280,7 @@
 <div class="memdoc">
 <p>Convert a string <em>angstr</em> to an angle in degrees. No hemisphere designator is allowed and no check is done on the range of the result. </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00199">199</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00198">198</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8cpp_source.html#l00027">Decode()</a>, and <a class="el" href="DMS_8hpp_source.html#l00051">NONE</a>.</p>
 
@@ -303,7 +303,7 @@
 <div class="memdoc">
 <p>Convert a string <em>azistr</em> to an azimuth in degrees. A hemisphere designator E/W can be used; the result is multiplied by -1 if W is present. Throws an error if the result is out of the range [-180<sup>o</sup>, 360<sup>o</sup>]. Finally the azimuth is reduced to the range [-180<sup>o</sup>, 180<sup>o</sup>). </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00208">208</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00207">207</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8cpp_source.html#l00027">Decode()</a>, and <a class="el" href="DMS_8hpp_source.html#l00051">LATITUDE</a>.</p>
 
@@ -354,7 +354,7 @@
 </ul>
 <p>The integer parts of the minutes and seconds components are always given with 2 digits. </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00220">220</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00219">219</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8hpp_source.html#l00051">AZIMUTH</a>, <a class="el" href="DMS_8hpp_source.html#l00057">DEGREE</a>, <a class="el" href="DMS_8hpp_source.html#l00051">LATITUDE</a>, <a class="el" href="DMS_8hpp_source.html#l00057">MINUTE</a>, <a class="el" href="DMS_8hpp_source.html#l00051">NONE</a>, and <a class="el" href="DMS_8hpp_source.html#l00057">SECOND</a>.</p>
 
@@ -396,7 +396,7 @@
 
 <p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00149">149</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
 
-<p>References <a class="el" href="DMS_8hpp_source.html#l00057">DEGREE</a>, <a class="el" href="DMS_8cpp_source.html#l00220">Encode()</a>, <a class="el" href="DMS_8hpp_source.html#l00057">MINUTE</a>, <a class="el" href="DMS_8hpp_source.html#l00052">NUMBER</a>, and <a class="el" href="DMS_8hpp_source.html#l00057">SECOND</a>.</p>
+<p>References <a class="el" href="DMS_8hpp_source.html#l00057">DEGREE</a>, <a class="el" href="DMS_8cpp_source.html#l00219">Encode()</a>, <a class="el" href="DMS_8hpp_source.html#l00057">MINUTE</a>, <a class="el" href="DMS_8hpp_source.html#l00052">NUMBER</a>, and <a class="el" href="DMS_8hpp_source.html#l00057">SECOND</a>.</p>
 
 </div>
 </div>
@@ -483,7 +483,7 @@
 <li><a class="el" href="DMS_8cpp_source.html">DMS.cpp</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

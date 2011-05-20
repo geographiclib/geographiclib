@@ -25,7 +25,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-  <div class="navpath"><a class="el" href="dir_50f390d007e2978e4938be195712f89f.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5d64ffe5365416b93f1195b3933d7e00.html">GeographicLib</a>
+  <div class="navpath"><a class="el" href="dir_0a4615532513640046986332574a49f3.html">include</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_ccd154737a77e5584514711a9b7a5c25.html">GeographicLib</a>
   </div>
 </div>
 <div class="contents">
@@ -39,7 +39,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: PolarStereographic.hpp 6807 2010-02-01 11:26:34Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: PolarStereographic.hpp 6841 2010-07-11 20:46:32Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 
@@ -60,9 +60,9 @@
 <a name="l00029"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html">00029</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> {
 <a name="l00030"></a>00030   <span class="keyword">private</span>:
 <a name="l00031"></a>00031     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
-<a name="l00032"></a>00032     <span class="keyword">const</span> real _a, _r, _f, _e2, _e, _e2m, _c;
+<a name="l00032"></a>00032     <span class="keyword">const</span> real _a, _r, _f, _e2, _e, _e2m, _C, _c;
 <a name="l00033"></a>00033     real _k0;
-<a name="l00034"></a>00034     <span class="keyword">static</span> <span class="keyword">const</span> real tol;
+<a name="l00034"></a>00034     <span class="keyword">static</span> <span class="keyword">const</span> real tol, overflow;
 <a name="l00035"></a>00035     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit = 5;
 <a name="l00036"></a>00036     <span class="keyword">static</span> <span class="keyword">inline</span> real sq(real x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> x * x; }
 <a name="l00037"></a>00037     <span class="comment">// Return e * atanh(e * x) for f &gt;= 0, else return</span>
@@ -143,7 +143,7 @@
 <a name="l00112"></a>00112 
 <a name="l00113"></a>00113 <span class="preprocessor">#endif</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

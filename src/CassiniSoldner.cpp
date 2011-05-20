@@ -10,7 +10,7 @@
 
 #include "GeographicLib/CassiniSoldner.hpp"
 
-#define GEOGRAPHICLIB_CASSINISOLDNER_CPP "$Id: CassiniSoldner.cpp 6827 2010-05-20 19:56:18Z karney $"
+#define GEOGRAPHICLIB_CASSINISOLDNER_CPP "$Id: CassiniSoldner.cpp 6830 2010-05-31 20:02:10Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_CPP)
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
@@ -34,7 +34,7 @@ namespace GeographicLib {
   }
 
   void CassiniSoldner::Forward(real lat, real lon, real& x, real& y,
-                               real& azi, real& m) const throw() {
+                               real& azi, real& rk) const throw() {
     if (!Init())
       return;
     real dlon = AngNormalize(lon - LongitudeOrigin());
@@ -65,7 +65,7 @@ namespace GeographicLib {
     azi = AngNormalize(azi2);
     GeodesicLine perp = _earth.Line(lat, dlon, azi2);
     real M12;
-    perp.Scale(-sig12, M12, m);
+    perp.Scale(-sig12, M12, rk);
 
     real
       alp0 = perp.EquatorialAzimuth() * Constants::degree(),
@@ -80,7 +80,7 @@ namespace GeographicLib {
   }
 
   void CassiniSoldner::Reverse(real x, real y, real& lat, real& lon,
-                               real& azi, real& m) const throw() {
+                               real& azi, real& rk) const throw() {
     if (!Init())
       return;
     real lat1, lon1;
@@ -89,7 +89,7 @@ namespace GeographicLib {
     GeodesicLine perp = _earth.Line(lat1, lon1, azi0 + 90);
     real sig12 = perp.Position(x, lat, lon, azi, m0);
     real M21;
-    perp.Scale(sig12, m, M21);
+    perp.Scale(sig12, rk, M21);
   }
 
 } // namespace GeographicLib

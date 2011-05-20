@@ -15,7 +15,7 @@
 
 @SET_MAKE@
 
-#  $Id: Makefile.am 6825 2010-05-05 15:18:25Z karney $
+#  $Id: Makefile.am 6830 2010-05-31 20:02:10Z karney $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -192,6 +192,7 @@ $(top_srcdir)/include/GeographicLib/Geocentric.hpp \
 $(top_srcdir)/include/GeographicLib/GeoCoords.hpp \
 $(top_srcdir)/include/GeographicLib/Geodesic.hpp \
 $(top_srcdir)/include/GeographicLib/Geoid.hpp \
+$(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 $(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
 $(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
 $(top_srcdir)/include/GeographicLib/MGRS.hpp \
@@ -209,6 +210,7 @@ $(top_srcdir)/src/Geocentric.cpp \
 $(top_srcdir)/src/GeoCoords.cpp \
 $(top_srcdir)/src/Geodesic.cpp \
 $(top_srcdir)/src/Geoid.cpp \
+$(top_srcdir)/src/Gnomonic.cpp \
 $(top_srcdir)/src/LambertConformalConic.cpp \
 $(top_srcdir)/src/LocalCartesian.cpp \
 $(top_srcdir)/src/MGRS.cpp \

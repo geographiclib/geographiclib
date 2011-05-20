@@ -25,7 +25,7 @@
       <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
     </ul>
   </div>
-  <div class="navpath"><a class="el" href="dir_b99e15f269dc183379bcdcb16b1e9e4a.html">src</a>
+  <div class="navpath"><a class="el" href="dir_c26009eb9c9f1099c22b25da9c3a809e.html">src</a>
   </div>
 </div>
 <div class="contents">
@@ -40,7 +40,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="EllipticFunction_8hpp.html" title="Header for GeographicLib::EllipticFunction class.">GeographicLib/EllipticFunction.hpp</a>&quot;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="EllipticFunction_8cpp.html#a7843c8be162380a81bdd1c48d00a475b">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP &quot;$Id: EllipticFunction.cpp 6803 2010-01-11 12:11:39Z karney $&quot;</span>
+<a name="l00012"></a><a class="code" href="EllipticFunction_8cpp.html#a7843c8be162380a81bdd1c48d00a475b">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP &quot;$Id: EllipticFunction.cpp 6838 2010-06-22 21:26:37Z karney $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="EllipticFunction_8cpp.html#a7843c8be162380a81bdd1c48d00a475b">GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="EllipticFunction_8hpp.html#a94cb49e5d48fa1a0399e4303f1ad162a">GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP</a>)
@@ -240,9 +240,14 @@
 <a name="l00209"></a>00209     <span class="keywordflow">return</span> ei;
 <a name="l00210"></a>00210   }
 <a name="l00211"></a>00211 
-<a name="l00212"></a>00212 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00212"></a><a class="code" href="classGeographicLib_1_1EllipticFunction.html#a8be312b5da54b01f2976416aa82e7d08">00212</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1EllipticFunction.html#a184174d29953891896b41c597c34eb9a">EllipticFunction::E</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> phi) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00213"></a>00213     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sn = sin(phi);
+<a name="l00214"></a>00214     <span class="keywordflow">return</span> E(sn, cos(phi), sqrt(1 - _m * sn * sn));
+<a name="l00215"></a>00215   }
+<a name="l00216"></a>00216 
+<a name="l00217"></a>00217 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 21 May 2010 for GeographicLib by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 21 Jul 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
