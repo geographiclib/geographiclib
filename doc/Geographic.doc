@@ -405,9 +405,9 @@ in the top level directory.  The html version of the documentation and
 the formatted man pages not checked into git.  Provided you are running
 on a system with doxygen, pod2man, and pod2html installed, then you can
 create these by building the system using cmake (the
-<code>MAINTAINER</code> configuration variable set to ON if the
+<code>MAINTAINER</code> configuration variable set to ON, if the
 necessary tools are found) or configure.   In the
-case of cmake, you much in addition run \verbatim
+case of cmake, you must in addition run \verbatim
   make dist \endverbatim
 which will copy the documentation from the build directory back into the
 source tree and package the resulting source tree for distribution as
