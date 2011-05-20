@@ -112,7 +112,7 @@ The format of the geoid data files</h2>
 <p>You can use gdal_translate to convert the data files to a standard GeoTiff, e.g., with </p>
 <div class="fragment"><pre class="fragment">
    gdal_translate -ot Float32 -scale 0 65000 -108 87 egm96-5.pgm egm96-5.tif
-</pre></div><p> The arguments to -scale here are specific to the Offset and Scale parameters used in the pgm file (note 65000 * 0.003 - 108 = 87). You can check these by running <a class="el" href="utilities.html#geoideval">GeoidEval</a> with the "-v" option.</p>
+</pre></div><p> The arguments to -scale here are specific to the Offset and Scale parameters used in the pgm file (note 65000 * 0.003 - 108 = 87). You can check these by running <a href="GeoidEval.1.html">GeoidEval</a> with the "-v" option.</p>
 <p>Finally, here is a sample script which uses GDAL to create a 1-degree squared grid of geoid heights at 3" resolution (matching DTED1) by bilinear interpolation. </p>
 <div class="fragment"><pre class="fragment">
    #! /bin/sh
@@ -170,7 +170,11 @@ Caching the geoid data</h2>
    ...
 </pre></div><p>The first call to g(lat, lon) causes the data for the stencil points (4 points for bilinear interpolation and 12 for cubic interpolation) to be read and the interpolated value returned. A simple 0th-order caching scheme is provided by default, so that, if the second and subsequent points falls within the same grid cell, the data values are not reread from the file. This is adequate for most interactive use and also minimizes disk accesses for the case when a continuous track is being followed.</p>
 <p>If a large quantity of geoid calculations are needed, the calculation can be speeded up by preloading the data for a rectangular block with <a class="el" href="classGeographicLib_1_1Geoid.html#a52b5dc2d976796046aaeb8765e4a9c0f">GeographicLib::Geoid::CacheArea</a> or the entire dataset with <a class="el" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">GeographicLib::Geoid::CacheAll</a>. If the requested points lie within the cached area, the cached data values are used; otherwise the data is read from disk as before. Caching all the data is a reasonable choice for the 5' grids and coarser. Caching all the data for the 1' grid will require 0.5GB of RAM and should only be used on systems with sufficient memory.</p>
-<p>The use of caching does not affect the values returned. Because of the caching and the random file access, this class is <em>not</em> thread safe; i.e., a single instantiation cannot be safely used by multiple threads. If multiple threads need to calculate geoid heights they should all construct thread-local instantiations.</p>
+<p>The use of caching does not affect the values returned. Because of the caching and the random file access, this class is <em>not</em> normally thread safe; i.e., a single instantiation cannot be safely used by multiple threads. If multiple threads need to calculate geoid heights, there are two alternatives:</p>
+<ul>
+<li>they should all construct thread-local instantiations.</li>
+<li><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> should be constructed with <em>threadsafe</em> = true. This causes all the data to be read at the time of construction (and if this fails, an exception is thrown), the data file to be closed and the single-cell caching to be turned off. The resulting object may then be shared safely between threads.</li>
+</ul>
 <h2><a class="anchor" id="testgeoid"></a>
 Test data for geoids</h2>
 <p>A test set for the geoid models is available at</p>
@@ -188,7 +192,7 @@ Test data for geoids</h2>
 </ul>
 <p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs. In the case of the EGM84 and EGM96, the programs were compiled (with gfortran) and run under Linux. In the case of EGM2008, the prescription results in NaNs (possibly because of uninitialized variables in the program?), so the data was generated with the precompiled binary that NGA supplies for Windows.</p>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

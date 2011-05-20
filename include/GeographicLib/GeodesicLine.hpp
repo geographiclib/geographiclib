@@ -2,13 +2,13 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: GeodesicLine.hpp 6875 2010-10-02 19:31:54Z karney $"
+#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: GeodesicLine.hpp 6950 2011-02-11 04:09:24Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include "GeographicLib/Geodesic.hpp"
@@ -61,8 +61,18 @@ namespace GeographicLib {
    \endcode
    * Similarly, a vector can be used to hold GeodesicLine objects.
    *
-   * The calculations are accurate to better than 12 nm.  (See \ref geoderrors
-   * for details.)
+   * The calculations are accurate to better than 15 nm.  See Sec. 9 of
+   * <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a> for details.
+   *
+   * The algorithms are described in
+   * - C. F. F. Karney,
+   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   on an ellipsoid of revolution</a>,
+   *   Feb. 2011;
+   *   preprint
+   *   <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a>.
+   * .
+   * For more information on geodesics see \ref geodesic.
    **********************************************************************/
 
   class GeodesicLine {
@@ -537,7 +547,7 @@ namespace GeographicLib {
      * the equator in a northward direction.
      **********************************************************************/
     Math::real EquatorialAzimuth() const throw() {
-      return Init() ? atan2(_salp0, _calp0) / Math::degree() : 0;
+      return Init() ? atan2(_salp0, _calp0) / Math::degree<real>() : 0;
     }
 
     /**
@@ -545,7 +555,7 @@ namespace GeographicLib {
      * crossing and point 1.
      **********************************************************************/
     Math::real EquatorialArc() const throw() {
-      return Init() ? atan2(_ssig1, _csig1) / Math::degree() : 0;
+      return Init() ? atan2(_ssig1, _csig1) / Math::degree<real>() : 0;
     }
 
     /**

@@ -2,14 +2,15 @@
  * \file TransverseMercatorTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with TransverseMercatorExact.o
  * EllipticFunction.o TransverseMercator.o
  *
- * See \ref transversemercatortest for usage information.
+ * See the <a href="TransverseMercatorTest.1.html">man page</a> for usage
+ * information.
  **********************************************************************/
 
 #include "GeographicLib/EllipticFunction.hpp"
@@ -19,42 +20,7 @@
 #include <iostream>
 #include <sstream>
 
-int usage(int retval) {
-  ( retval ? std::cerr : std::cout ) <<
-"TransverseMercatorTest [-r] [-t|-s]\n\
-$Id: TransverseMercatorTest.cpp 6905 2010-12-01 21:28:56Z karney $\n\
-\n\
-Convert between geographic coordinates and transverse Mercator coordinates.\n\
-\n\
-Read lines with latitude and longitude (or easting and northing if -r is\n\
-specified) from standard input and print latitude, longitude, easting,\n\
-northing, convergence, and scale.  Units are degrees (or DMS) and meters.\n\
-\n\
-By default, the WGS84 is ellipsoid is used, central meridian = 0, UTM\n\
-central scale (0.9996), and false easting and false northing are zero.\n\
-\n\
-If -r is given, the reverse projection is performed (the inputs are easting\n\
-and northing).\n\
-\n\
-If -s is given, the sixth-order Krueger series approximation to the\n\
-transverse Mercator projection is used instead of the exact projection.\n\
-\n\
-If -t is specified, an ellipsoid of eccentricity 0.1 is used, central scale\n\
-= 1, 1/4 meridian distance = 1.  In addition, the cut in the exact\n\
-transverse Mercator projection at northing = 0 is removed.  The domain of\n\
-latitude (lat) and longitude (lon) is the union of\n\
-    lat in [0, 90]  and lon in [0, 90]\n\
-    lat in (-90, 0] and lon in [81, 90]\n\
-The domain of easting (x) and northing (x) is the union of\n\
-    x in [0, inf)       and y in [0, 1]\n\
-    x in [1.71..., inf) and y in (-inf, 0]\n\
-\n\
--s and -t are mutually exclusive (the last flag specified is the operative\n\
-one).\n\
-\n\
--h prints this help.\n";
-  return retval;
-}
+#include "TransverseMercatorTest.usage"
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
@@ -70,8 +36,14 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-s") {
       testing = false;
       series = true;
+    } else if (arg == "--version") {
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id: TransverseMercatorTest.cpp 6978 2011-02-21 22:42:11Z karney $\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      return 0;
     } else
-      return usage(arg != "-h");
+      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   real e, a;

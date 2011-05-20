@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
+      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -86,7 +86,7 @@
 <a name="l00048"></a>00048       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Illegal zone requested &quot;</span> + str(setzone));
 <a name="l00049"></a>00049     <span class="keywordflow">if</span> (setzone &gt;= <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">MINZONE</a> || setzone == <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">INVALID</a>)
 <a name="l00050"></a>00050       <span class="keywordflow">return</span> setzone;
-<a name="l00051"></a>00051     <span class="keywordflow">if</span> (<a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">Math::isnan</a>(lat) || <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">Math::isnan</a>(lon)) <span class="comment">// Check if lat or lon is a NaN</span>
+<a name="l00051"></a>00051     <span class="keywordflow">if</span> (<a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>(lat) || <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>(lon)) <span class="comment">// Check if lat or lon is a NaN</span>
 <a name="l00052"></a>00052       <span class="keywordflow">return</span> INVALID;
 <a name="l00053"></a>00053     <span class="comment">// Assume lon is in [-180, 360].</span>
 <a name="l00054"></a>00054     <span class="keywordflow">if</span> (setzone == <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aacc8f89ac6144b1e445ca21cbe9a2533">UTM</a> || (lat &gt;= -80 &amp;&amp; lat &lt; 84)) {
@@ -115,7 +115,7 @@
 <a name="l00077"></a>00077     <span class="keywordflow">if</span> (zone1 == <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">INVALID</a>) {
 <a name="l00078"></a>00078       zone = zone1;
 <a name="l00079"></a>00079       northp = northp1;
-<a name="l00080"></a>00080       x = y = gamma = k = <a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">Math::NaN</a>();
+<a name="l00080"></a>00080       x = y = gamma = k = <a class="code" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">Math::NaN</a>();
 <a name="l00081"></a>00081       <span class="keywordflow">return</span>;
 <a name="l00082"></a>00082     }
 <a name="l00083"></a>00083     real x1, y1, gamma1, k1;
@@ -157,8 +157,8 @@
 <a name="l00119"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">00119</a>   <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">UTMUPS::Reverse</a>(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, real x, real y,
 <a name="l00120"></a>00120                        real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k,
 <a name="l00121"></a>00121                        <span class="keywordtype">bool</span> mgrslimits) {
-<a name="l00122"></a>00122     <span class="keywordflow">if</span> (zone == <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">INVALID</a> || <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">Math::isnan</a>(x) || <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">Math::isnan</a>(y)) {
-<a name="l00123"></a>00123       lat = lon = gamma = k = <a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">Math::NaN</a>();
+<a name="l00122"></a>00122     <span class="keywordflow">if</span> (zone == <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">INVALID</a> || <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>(x) || <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>(y)) {
+<a name="l00123"></a>00123       lat = lon = gamma = k = <a class="code" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">Math::NaN</a>();
 <a name="l00124"></a>00124       <span class="keywordflow">return</span>;
 <a name="l00125"></a>00125     }
 <a name="l00126"></a>00126     <span class="keywordflow">if</span> (! (zone &gt;= <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">MINZONE</a> &amp;&amp; zone &lt;= <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">MAXZONE</a>))
@@ -269,7 +269,7 @@
 <a name="l00231"></a>00231 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

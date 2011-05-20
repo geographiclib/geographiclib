@@ -15,7 +15,7 @@
 
 @SET_MAKE@
 
-#  $Id: Makefile.am 6906 2010-12-02 22:10:56Z karney $
+#  $Id: Makefile.am 6958 2011-02-18 04:12:27Z karney $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -176,11 +176,6 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-FIGURES = gauss-krueger-graticule thompson-tm-graticule \
-	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
-	gauss-krueger-graticule-a thompson-tm-graticule-a \
-	gauss-krueger-error
-
 EXTRAFILES = tmseries30.html geodseries30.html
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
@@ -232,6 +227,16 @@ $(top_srcdir)/tools/GeoidEval.cpp \
 $(top_srcdir)/tools/Planimeter.cpp \
 $(top_srcdir)/tools/TransverseMercatorTest.cpp
 
+MANPAGES = \
+CartConvert.1.html \
+EquidistantTest.1.html \
+GeoConvert.1.html \
+Geod.1.html \
+GeoidEval.1.html \
+Planimeter.1.html \
+TransverseMercatorTest.1.html
+
+PODFIX = sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
 all: all-am
 
 .SUFFIXES:
@@ -339,11 +344,11 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-local mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic
+distclean-am: clean-am distclean-generic distclean-local
 
 dvi: dvi-am
 
@@ -406,7 +411,7 @@ uninstall-am:
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	clean-local distclean distclean-generic distclean-libtool \
+	distclean distclean-generic distclean-libtool distclean-local \
 	distdir dvi dvi-am html html-am info info-am install \
 	install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
@@ -418,19 +423,32 @@ uninstall-am:
 	uninstall uninstall-am
 
 
-doc: html/index.html
-html/index.html: Doxyfile Geographic.doc \
-	$(HPPFILES) $(ALLSOURCES) \
-	$(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES)) \
-	$(EXTRAFILES)
-	rm -rf html/*
-	doxygen
-	for f in $(FIGURES); do cp -p $$f.pdf $$f.png html/; done
-	for f in $(EXTRAFILES); do cp -p $$f html/; done
-	for f in $(top_srcdir)/maxima/*.mac; do cp -p $$f html/.; done
+doc: man html/index.html
+man: $(MANPAGES)
 
-clean-local:
-	rm -rf html
+CartConvert.1.html: $(top_srcdir)/tools/CartConvert.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+EquidistantTest.1.html: $(top_srcdir)/tools/EquidistantTest.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+GeoConvert.1.html: $(top_srcdir)/tools/GeoConvert.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+Geod.1.html: $(top_srcdir)/tools/Geod.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+GeoidEval.1.html: $(top_srcdir)/tools/GeoidEval.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+Planimeter.1.html: $(top_srcdir)/tools/Planimeter.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+TransverseMercatorTest.1.html: $(top_srcdir)/tools/TransverseMercatorTest.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
+
+html/index.html: Doxyfile Geographic.doc \
+	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
+	if test -d html; then rm -rf html/*; else mkdir html; fi
+	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac html/
+	doxygen
+
+distclean-local:
+	rm -rf html $(MANPAGES)
 
 install-doc: doc
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html

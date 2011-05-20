@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
+      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -88,7 +88,7 @@
 <a name="l00050"></a><a class="code" href="classGeographicLib_1_1MGRS.html#a37f9dd9b12dbc74381116d842be47ccd">00050</a>   <span class="keywordtype">void</span> MGRS::Forward(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, real x, real y, real lat,
 <a name="l00051"></a>00051                      <span class="keywordtype">int</span> prec, std::string&amp; mgrs) {
 <a name="l00052"></a>00052     <span class="keywordflow">if</span> (zone == <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">UTMUPS::INVALID</a> ||
-<a name="l00053"></a>00053         <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">Math::isnan</a>(x) || <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">Math::isnan</a>(y) || <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">Math::isnan</a>(lat)) {
+<a name="l00053"></a>00053         <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>(x) || <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>(y) || <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>(lat)) {
 <a name="l00054"></a>00054       prec = -1;
 <a name="l00055"></a>00055       mgrs = <span class="stringliteral">&quot;INVALID&quot;</span>;
 <a name="l00056"></a>00056       <span class="keywordflow">return</span>;
@@ -190,7 +190,7 @@
 <a name="l00152"></a>00152         toupper(mgrs[2]) == <span class="charliteral">&#39;V&#39;</span>) {
 <a name="l00153"></a>00153       zone = UTMUPS::INVALID;
 <a name="l00154"></a>00154       northp = <span class="keyword">false</span>;
-<a name="l00155"></a>00155       x = y = <a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">Math::NaN</a>();
+<a name="l00155"></a>00155       x = y = <a class="code" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">Math::NaN</a>();
 <a name="l00156"></a>00156       prec = -1;
 <a name="l00157"></a>00157       <span class="keywordflow">return</span>;
 <a name="l00158"></a>00158     }
@@ -373,7 +373,7 @@
 <a name="l00335"></a>00335 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

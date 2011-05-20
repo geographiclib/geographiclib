@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
+      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -52,7 +52,7 @@
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;sstream&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;iomanip&gt;</span>
 <a name="l00016"></a>00016 
-<a name="l00017"></a><a class="code" href="GeoCoords_8cpp.html#a8ca6643c26cc3909b0935409c1dbc403">00017</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCOORDS_CPP &quot;$Id: GeoCoords.cpp 6905 2010-12-01 21:28:56Z karney $&quot;</span>
+<a name="l00017"></a><a class="code" href="GeoCoords_8cpp.html#a8ca6643c26cc3909b0935409c1dbc403">00017</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCOORDS_CPP &quot;$Id: GeoCoords.cpp 6921 2010-12-31 14:34:50Z karney $&quot;</span>
 <a name="l00018"></a>00018 <span class="preprocessor"></span>
 <a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeoCoords_8cpp.html#a8ca6643c26cc3909b0935409c1dbc403">GEOGRAPHICLIB_GEOCOORDS_CPP</a>)
 <a name="l00020"></a>00020 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeoCoords_8hpp.html#a20841ff1ac217be34150ce32c5ad4bb8">GEOGRAPHICLIB_GEOCOORDS_HPP</a>)
@@ -152,13 +152,13 @@
 <a name="l00114"></a>00114     prec = max(-5, min(9, prec));
 <a name="l00115"></a>00115     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> scale = prec &lt; 0 ? pow(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(10), -prec) : <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1);
 <a name="l00116"></a>00116     os &lt;&lt; <a class="code" href="classGeographicLib_1_1UTMUPS.html#a3410e1e221158962f34147255653818f">UTMUPS::EncodeZone</a>(zone, _northp) &lt;&lt; fixed &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>);
-<a name="l00117"></a>00117     <span class="keywordflow">if</span> (easting == easting) {
+<a name="l00117"></a>00117     <span class="keywordflow">if</span> (<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(easting)) {
 <a name="l00118"></a>00118       os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; setprecision(max(0, prec)) &lt;&lt; easting / scale;
 <a name="l00119"></a>00119       <span class="keywordflow">if</span> (prec &lt; 0 &amp;&amp; abs(easting / scale) &gt; <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))
 <a name="l00120"></a>00120         os &lt;&lt; setw(-prec) &lt;&lt; 0;
 <a name="l00121"></a>00121     } <span class="keywordflow">else</span>
 <a name="l00122"></a>00122       os &lt;&lt; <span class="stringliteral">&quot; nan&quot;</span>;
-<a name="l00123"></a>00123     <span class="keywordflow">if</span> (northing == northing) {
+<a name="l00123"></a>00123     <span class="keywordflow">if</span> (<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(northing)) {
 <a name="l00124"></a>00124       os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; setprecision(max(0, prec)) &lt;&lt; northing / scale;
 <a name="l00125"></a>00125       <span class="keywordflow">if</span> (prec &lt; 0 &amp;&amp; abs(northing / scale) &gt; <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))
 <a name="l00126"></a>00126         os &lt;&lt; setw(-prec) &lt;&lt; 0;
@@ -194,7 +194,7 @@
 <a name="l00156"></a>00156 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

@@ -130,9 +130,7 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>An exception is thrown if <em>a</em> or <em>k0</em> is not positive or if <em>stdlat</em> is not in the range [-90, 90]. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00029">29</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
-
-<p>References <a class="el" href="Constants_8hpp_source.html#l00131">GeographicLib::Math::degree()</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00030">30</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
 </div>
 </div>
@@ -191,9 +189,7 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>An exception is thrown if <em>a</em> or <em>k0</em> is not positive or if <em>stdlat1</em> or <em>stdlat2</em> is not in the range [-90, 90]. In addition, an exception is thrown if <em>stdlat1</em> and <em>stdlat2</em> are opposite poles. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00056">56</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
-
-<p>References <a class="el" href="Constants_8hpp_source.html#l00131">GeographicLib::Math::degree()</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00057">57</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
 </div>
 </div>
@@ -266,7 +262,7 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>This allows parallels close to the poles to be specified accurately. This routine computes the latitude of origin and the azimuthal scale at this latitude. If <em>dlat</em> = abs(<em>lat2</em> - <em>lat1</em>) &lt;= 160<sup>o</sup>, then the error in the latitude of origin is less than 4.5e-14<sup>o</sup>. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00086">86</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00087">87</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
 </div>
 </div>
@@ -305,9 +301,9 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>This allows a "latitude of conformality" to be specified. An exception is thrown if <em>k</em> is not positive or if <em>lat</em> is not in the range (-90, 90). </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00423">423</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00432">432</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00371">Forward()</a>.</p>
+<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00380">Forward()</a>.</p>
 
 </div>
 </div>
@@ -380,11 +376,9 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>The latitude origin is given by AlbersEqualArea::LatitudeOrigin(). No false easting or northing is added and <em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. The values of <em>x</em> and <em>y</em> returned for points which project to infinity (i.e., one or both of the poles) will be large but finite. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00371">371</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00380">380</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00131">GeographicLib::Math::degree()</a>.</p>
-
-<p>Referenced by <a class="el" href="AlbersEqualArea_8hpp_source.html#l00220">Forward()</a>, and <a class="el" href="AlbersEqualArea_8cpp_source.html#l00423">SetScale()</a>.</p>
+<p>Referenced by <a class="el" href="AlbersEqualArea_8hpp_source.html#l00220">Forward()</a>, and <a class="el" href="AlbersEqualArea_8cpp_source.html#l00432">SetScale()</a>.</p>
 
 </div>
 </div>
@@ -457,9 +451,9 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>The latitude origin is given by AlbersEqualArea::LatitudeOrigin(). No false easting or northing is added. <em>lon0</em> should be in the range [-180, 360]. The value of <em>lon</em> returned is in the range [-180, 180). The value of <em>lat</em> returned is in the range [-90,90]. If the input point is outside the legal projected space the nearest pole is returned. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00401">401</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00410">410</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00131">GeographicLib::Math::degree()</a>, and <a class="el" href="Constants_8hpp_source.html#l00141">GeographicLib::Math::hypot()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00160">GeographicLib::Math::hypot()</a>.</p>
 
 <p>Referenced by <a class="el" href="AlbersEqualArea_8hpp_source.html#l00230">Reverse()</a>.</p>
 
@@ -511,7 +505,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00220">220</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
-<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00371">Forward()</a>.</p>
+<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00380">Forward()</a>.</p>
 
 </div>
 </div>
@@ -561,7 +555,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00230">230</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
-<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00401">Reverse()</a>.</p>
+<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00410">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -700,7 +694,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

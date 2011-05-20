@@ -14,7 +14,7 @@
 #include <sstream>
 #include <iomanip>
 
-#define GEOGRAPHICLIB_GEOCOORDS_CPP "$Id: GeoCoords.cpp 6905 2010-12-01 21:28:56Z karney $"
+#define GEOGRAPHICLIB_GEOCOORDS_CPP "$Id: GeoCoords.cpp 6921 2010-12-31 14:34:50Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_HPP)
@@ -114,13 +114,13 @@ namespace GeographicLib {
     prec = max(-5, min(9, prec));
     real scale = prec < 0 ? pow(real(10), -prec) : real(1);
     os << UTMUPS::EncodeZone(zone, _northp) << fixed << setfill('0');
-    if (easting == easting) {
+    if (Math::isfinite(easting)) {
       os << " " << setprecision(max(0, prec)) << easting / scale;
       if (prec < 0 && abs(easting / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else
       os << " nan";
-    if (northing == northing) {
+    if (Math::isfinite(northing)) {
       os << " " << setprecision(max(0, prec)) << northing / scale;
       if (prec < 0 && abs(northing / scale) > real(0.5))
         os << setw(-prec) << 0;

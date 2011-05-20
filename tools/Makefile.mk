@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6861 2010-09-06 21:29:08Z karney $
+# $Id: Makefile.mk 6958 2011-02-18 04:12:27Z karney $
 
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval Planimeter
@@ -30,6 +30,9 @@ VPATH = ../include/GeographicLib
 clean:
 	rm -f *.o
 
+distclean:
+	rm -f *.usage
+
 GeoConvert: GeoConvert.o
 TransverseMercatorTest: TransverseMercatorTest.o
 CartConvert: CartConvert.o
@@ -38,22 +41,31 @@ EquidistantTest: EquidistantTest.o
 GeoidEval: GeoidEval.o
 Planimeter: Planimeter.o
 
-GeoConvert.o: Constants.hpp DMS.hpp GeoCoords.hpp UTMUPS.hpp
-TransverseMercatorTest.o: Constants.hpp DMS.hpp EllipticFunction.hpp \
-	TransverseMercator.hpp TransverseMercatorExact.hpp
-CartConvert.o: Constants.hpp DMS.hpp Geocentric.hpp LocalCartesian.hpp
-Geod.o: Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
-EquidistantTest.o: AzimuthalEquidistant.hpp CassiniSoldner.hpp Gnomonic.hpp \
-	 Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
-GeoidEval.o: Constants.hpp DMS.hpp GeoCoords.hpp Geoid.hpp
-Planimeter.o: Constants.hpp DMS.hpp GeoCoords.hpp Geodesic.hpp GeodesicLine.hpp
+%.usage: %.pod
+	sh makeusage.sh $< > $@
+
+GeoConvert.o: GeoConvert.usage Constants.hpp DMS.hpp GeoCoords.hpp \
+	UTMUPS.hpp
+TransverseMercatorTest.o: TransverseMercatorTest.usage Constants.hpp \
+	DMS.hpp EllipticFunction.hpp TransverseMercator.hpp \
+	TransverseMercatorExact.hpp
+CartConvert.o: CartConvert.usage Constants.hpp DMS.hpp Geocentric.hpp \
+	LocalCartesian.hpp
+Geod.o: Geod.usage Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
+EquidistantTest.o: EquidistantTest.usage AzimuthalEquidistant.hpp \
+	CassiniSoldner.hpp Gnomonic.hpp Constants.hpp DMS.hpp Geodesic.hpp \
+	GeodesicLine.hpp
+GeoidEval.o: GeoidEval.usage Constants.hpp DMS.hpp GeoCoords.hpp Geoid.hpp
+Planimeter.o: Planimeter.usage Constants.hpp DMS.hpp GeoCoords.hpp \
+	Geodesic.hpp GeodesicLine.hpp
 
 INSTALL = install -b
 PREFIX = /usr/local
 DEST = $(PREFIX)/bin
 
 list:
-	@echo $(addsuffix .cpp,$(PROGRAMS))
+	@echo $(addsuffix .cpp,$(PROGRAMS)) $(addsuffix .pod,$(PROGRAMS)) \
+	$(addsuffix .usage,$(PROGRAMS))
 
 install: $(PROGRAMS)
 	test -f $(DEST) || mkdir -p $(DEST)

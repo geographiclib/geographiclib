@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_79e1098902e66f6a177d48994037d882.html">include</a>      </li>
-      <li><a class="el" href="dir_fc11a85e9c9bbeb660c2eea06dda837b.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
+      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -41,13 +41,13 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file UTMUPS.hpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Header for GeographicLib::UTMUPS class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010) &lt;charles@karney.com&gt;</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
 <a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_UTMUPS_HPP)</span>
-<a name="l00011"></a><a class="code" href="UTMUPS_8hpp.html#aab4dce5d203c0d98ae740800332ed9d9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_UTMUPS_HPP &quot;$Id: UTMUPS.hpp 6905 2010-12-01 21:28:56Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="UTMUPS_8hpp.html#aab4dce5d203c0d98ae740800332ed9d9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_UTMUPS_HPP &quot;$Id: UTMUPS.hpp 6937 2011-02-01 20:17:13Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;sstream&gt;</span>
@@ -334,24 +334,25 @@
 <a name="l00295"></a>00295 <span class="comment">     * (The WGS84 value is returned because the UTM and UPS projections are</span>
 <a name="l00296"></a>00296 <span class="comment">     * based on this ellipsoid.)</span>
 <a name="l00297"></a>00297 <span class="comment">     **********************************************************************/</span>
-<a name="l00298"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">00298</a>     static <a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::real <a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">MajorRadius</a>() throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a53f39f52837f47490fbdf7332a37dd8b">Constants::WGS84_a</a>(); }
-<a name="l00299"></a>00299 <span class="comment"></span>
-<a name="l00300"></a>00300 <span class="comment">    /**</span>
-<a name="l00301"></a>00301 <span class="comment">     * @return \e r the inverse flattening of the WGS84 ellipsoid.</span>
-<a name="l00302"></a>00302 <span class="comment">     *</span>
-<a name="l00303"></a>00303 <span class="comment">     * (The WGS84 value is returned because the UTM and UPS projections are</span>
-<a name="l00304"></a>00304 <span class="comment">     * based on this ellipsoid.)</span>
-<a name="l00305"></a>00305 <span class="comment">     **********************************************************************/</span>
-<a name="l00306"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">00306</a>     <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">InverseFlattening</a>() throw()
-<a name="l00307"></a>00307     { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a199810de7ff3351be6473d20ef045789">Constants::WGS84_r</a>(); }<span class="comment"></span>
-<a name="l00308"></a>00308 <span class="comment">    ///@}</span>
-<a name="l00309"></a>00309 <span class="comment"></span>  };
-<a name="l00310"></a>00310 
-<a name="l00311"></a>00311 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00312"></a>00312 <span class="preprocessor">#endif</span>
+<a name="l00298"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">00298</a>     static <a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::real <a class="code" href="classGeographicLib_1_1UTMUPS.html#a293aa30508096d49db77a23917ea1092">MajorRadius</a>() throw()
+<a name="l00299"></a>00299     { <span class="keywordflow">return</span> Constants::WGS84_a&lt;real&gt;(); }
+<a name="l00300"></a>00300 <span class="comment"></span>
+<a name="l00301"></a>00301 <span class="comment">    /**</span>
+<a name="l00302"></a>00302 <span class="comment">     * @return \e r the inverse flattening of the WGS84 ellipsoid.</span>
+<a name="l00303"></a>00303 <span class="comment">     *</span>
+<a name="l00304"></a>00304 <span class="comment">     * (The WGS84 value is returned because the UTM and UPS projections are</span>
+<a name="l00305"></a>00305 <span class="comment">     * based on this ellipsoid.)</span>
+<a name="l00306"></a>00306 <span class="comment">     **********************************************************************/</span>
+<a name="l00307"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">00307</a>     <span class="keyword">static</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1UTMUPS.html#a3de827995b6327282bfe95fcab99ebb2">InverseFlattening</a>() throw()
+<a name="l00308"></a>00308     { <span class="keywordflow">return</span> Constants::WGS84_r&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00309"></a>00309 <span class="comment">    ///@}</span>
+<a name="l00310"></a>00310 <span class="comment"></span>  };
+<a name="l00311"></a>00311 
+<a name="l00312"></a>00312 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00313"></a>00313 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

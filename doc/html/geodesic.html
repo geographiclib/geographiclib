@@ -25,74 +25,15 @@
 <h1>Geodesics on the Ellipsoid </h1>  </div>
 </div>
 <div class="contents">
-<center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p><a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> and <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> provide accurate solutions to the direct and inverse geodesic problems. The <a class="el" href="utilities.html#geod">Geod</a> utility provides an interface to these classes. <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> implements the azimuthal equidistant projection in terms of geodesics. <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> implements a transverse cylindrical equidistant projection in terms of geodesics. The <a class="el" href="utilities.html#equidistanttest">EquidistantTest</a> utility provides an interface to these projections.</p>
+<center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p><a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> and <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> provide accurate solutions to the direct and inverse geodesic problems. The <a href="Geod.1.html">Geod</a> utility provides an interface to these classes. <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> implements the azimuthal equidistant projection in terms of geodesics. <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> implements a transverse cylindrical equidistant projection in terms of geodesics. The <a href="EquidistantTest.1.html">EquidistantTest</a> utility provides an interface to these projections.</p>
 <p>References</p>
 <ul>
 <li>F. W. Bessel, <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation of longitude and latitude from geodesic measurements (1825)</a>, Astron. Nachr. 331(8), 852-861 (2010); translated by C. F. F. Karney and R. E. Deakin. Preprint: <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.</li>
-<li>F. R. Helmert, Die Mathematischen und Physikalischen Theorieen der H&ouml;heren Geod&auml;sie, vol. 1 (Teubner, Leipzig, 1880).</li>
-<li>E. B. Christoffel, Allgemeine Theorie der geod&auml;tischen Dreiecke (1868), in "Gesammelte Mathematische Abhandlungen", vol. 1, chap. 16, pp. 297&ndash;346 (Teubner, Leipzig, 1910).</li>
-<li>H. F. Rainsford, <a href="http://dx.doi.org/10.1007/BF02527187">Long geodesics on the ellipsoid</a>, Bull. Geod. 37 (1), 12&ndash;22 (1955).</li>
-<li>T. Vincenty, <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">Direct and Inverse Solutions of Geodesics on the Ellipsoid with Application of Nested Equations</a>, Survey Review 23 (176), 88&ndash;93 (1975).</li>
+<li>F. R. Helmert, <a href="http://geographiclib.sf.net/geodesic-papers/helmert80-en.pdf">Mathematical and Physical Theories of Higher Geodesy, Part 1 (1880)</a>, Aeronautical Chart and Information Center (St. Louis, 1964), Chaps. 5&ndash;7.</li>
 <li>J. Danielsen, The Area under the Geodesic, Survey Review 30 (232), 61&ndash;66 (1989).</li>
-<li>A collection of some older papers on geodesics is available at <a href="http://trac.osgeo.org/proj/wiki/GeodesicCalculations#TheHistory">http://trac.osgeo.org/proj/wiki/GeodesicCalculations#TheHistory</a></li>
+<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>; resource page <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.</li>
+<li>A collection of some papers on geodesics is available at <a href="http://geographiclib.sf.net/geodesic-papers/biblio.html">http://geographiclib.sf.net/geodesic-papers/biblio.html</a></li>
 </ul>
-<h2><a class="anchor" id="geoddesc"></a>
-Description of algorithm</h2>
-<p>The shortest path between two points on a ellipsoid at (<em>lat1</em>, <em>lon1</em>) and (<em>lat2</em>, <em>lon2</em>) is called the geodesic. Its length is <em>s12</em> and the geodesic from point 1 to point 2 has azimuths <em>azi1</em> and <em>azi2</em> at the two end points. (The azimuth is the heading measured clockwise from north. <em>azi2</em> is the "forward" azimuth, i.e., the heading that takes you beyond point 2 not back to point 1.) The reduced length of the geodesic, <em>m12</em>, is the rate at which the second point moves as the geodesic is rotated about the first point. Christoffel (1868) proved that this is equal to the rate at which the first point moves when the geodesic is rotated about the second point.</p>
-<p>Given <em>lat1</em>, <em>lon1</em>, <em>azi1</em>, and <em>s12</em>, we can determine <em>lat2</em>, <em>lon2</em>, <em>azi2</em>, <em>m12</em>. This is the <b>direct</b> geodesic problem. (If <em>s12</em> is sufficiently large that the geodesic wraps more than halfway around the earth, there will be another geodesic between the points with a smaller <em>s12</em>.)</p>
-<p>Given <em>lat1</em>, <em>lon1</em>, <em>lat2</em>, and <em>lon2</em>, we can determine <em>azi1</em>, <em>azi2</em>, <em>s12</em>, <em>m12</em>. This is the <b>inverse</b> geodesic problem. Usually, the solution to the inverse problem is unique. In cases where there are multiple solutions (all with the same <em>s12</em>, of course), all the solutions can be easily generated once a particular solution is provided.</p>
-<p>The framework for solving geodesic problems on the ellipsoid was laid down by Bessel (1825) who showed how the problem may be transferred to an "auxiliary sphere" where the latitude <em>phi</em> has been replaced by the reduced latitude <em>beta</em> where tan(<em>beta</em>) = (1 - <em>f</em>) tan(<em>phi</em>). On this sphere, the geodesic is a great circle and the azimuth is the same as on the ellipsoid. However, the ellipsoidal distance is related to the great circle distance by an integral; and the ellipsoidal longitude is similarly related to the longitude on the auxiliary sphere. In the case of small <em>f</em>, Bessel developed series expansions for the integrals and provided a systematic solution to the direct problem. Helmert (1880) extended Bessel's treatment by giving an expression for the reduced length of a geodesic for the ellipsoid. The "azimuthal scale" of the azimuthal equidistant projection about point 1 is given by <em>s12/<em>m12</em>.</em> </p>
-<p>The algorithms included here are based on the work of Bessel (1825) and Helmert (1880). Key points are:</p>
-<ul>
-<li>Inclusion of sufficient terms in the series to give accuracy at the round-off level for doubles and long doubles.</li>
-<li>Reverting the distance series so that the direct problem can be solved non-iteratively.</li>
-<li>Calculation of the reduced length for the geodesic.</li>
-<li>Solution the inverse problem via Newton's method, using the reduced length to compute the needed derivative.</li>
-</ul>
-<p>Vincenty (1975) has provided algorithms for the direct and inverse geodesic problems based in the series given by Rainsford (1955) (based, in turn, on Bessel). However Vincenty's methods were designed for use on the desk calculators of that era and are not optimal (in terms of accuracy and robustness) for a general purpose computer. The distinguishing features of the algorithms presented here compared to Vincenty's are:</p>
-<ul>
-<li>Accuracy to close to the round-off limit (i.e., 15 nm for doubles).</li>
-<li>Complete solution of the inverse problem. (Vincenty's inverse algorithm sometimes fails.)</li>
-<li>Return the reduced length of the geodesic.</li>
-</ul>
-<p>The series expansions for the integrals are obtained using <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>. In this release, we use a 6th-order expansions. This is sufficient to maintain accuracy for doubles for the SRMmax ellipsoid (<em>a</em> = 6400 km, <em>f</em> = 1/150). However, the preprocessor macro GEOD_ORD can be used to select any order up to 8. (If using long doubles, with a 64-bit fraction, the default order is 7.) The series is evaluated by a combination of Horner's method and Clenshaw summation. For the direct problem, we use a reversion of the series for the distance to compute the spherical arc length and thereby complete the solution without the need to iterate.</p>
-<p>The Maxima code, <a href="geod.mac">geod.mac</a>, used to derive the series for the distance and longitude integrals. In addition this includes code to format the results for inclusion into C++ code. You will need to have Maxima installed to use this code. The comments at the top of <a href="geod.mac">geod.mac</a> illustrate how to run it. It takes about 10s to generate the 8th order series.</p>
-<p>For the inverse problem, we rearrange the points so that the point 1 is the one closest to a pole and is in the southern hemisphere and the point 2 is to the north and east of point 1. We consider geodesics leaving point 1 with azimuth <em>alpha1</em> in [0, pi] and we determine the longitude where these geodesics first intersect the latitude = <em>lat2</em>. The longitude is an increasing function of <em>alpha1</em> and we use Newton's method to determine the value of <em>alpha1</em> for which the longitude matches <em>lon2</em>. This then gives the desired geodesic.</p>
-<p>This class also returns the arc length <em>a12</em> on the auxiliary sphere and allows distances to be specified in these terms. See the -a option to <a class="el" href="utilities.html#geod">Geod</a>.</p>
-<h2><a class="anchor" id="geodarea"></a>
-Geodesic area</h2>
-<p>Area computations are supported via <em>S12</em> the area between the geodesic and the equator, i.e., the area of the quadrilateral with vertices </p>
-<div class="fragment"><pre class="fragment">
-  (phi1, lambda1); (phi2, lambda2);
-  (0,    lambda1); (0,    lambda2);
-</pre></div><p> In a reformulation of Danielsen's method, <em>S12</em> may be expressed as </p>
-<div class="fragment"><pre class="fragment">
-  S12 = S(sigma2) - S(sigma1)
-  S(sigma) = c^2*alpha + e^2*a^2 * cos(alpha0)*sin(alpha0) * I4(sigma)
-  I4(sigma) = - integrate(
-       (t(ep^2) - t(k^2*sin(sigma)^2)) / (ep^2 - k^2*sin(sigma)^2),
-       sigma)
-  t(x) = sqrt(1+1/x) * asinh(sqrt(x)) + x
-
-  a = major radius
-  c = authalic radius (area of ellipsoid = 4*pi*c^2)
-  e = eccentricity
-  ep = second eccentricity, ep^2 = e^2/(1-e^2)
-  alpha = azimuth of geodesic
-  alpha0 = azimuth at the equator crossing
-  k = ep*cos(alpha0)
-  sigma = arc length on auxiliary sphere (measured from the equator)
-</pre></div><p> The term <em>I4</em>(<em>sigma</em>) can be expanded as a trigonometric series which is amenable to Clenshaw summation; see <a class="el" href="geodesic.html#geodseries">Expansions for geodesics</a>. Using <em>S12</em>, it is simple to compute the area of any geodesic polygon. This functionality is provided by <a class="el" href="utilities.html#planimeter">Planimeter</a>.</p>
-<p>A major source of errors in this formulation (particularly for small polygons) is round-off when computing <em>E<sub>12</sub></em> = <em>alpha<sub>2</sub></em> - <em>alpha<sub>1</sub></em>. However, <em>E<sub>12</sub></em> is merely the geodesic access for a geodesic quadilateral on a <em>sphere</em> with vertices </p>
-<div class="fragment"><pre class="fragment">
-  (beta1, omega1); (beta2, omega2);
-  (0,     omega1); (0,     omega2);
-</pre></div><p> where <em>beta</em> is the latitude on the sphere and <em>omega</em> the longitude. <em>E<sub>12</sub></em> is also the area of the quadrilateral on a unit sphere. When computing areas when the end-points of the Geodesic are given, GeographicLib uses </p>
-<div class="fragment"><pre class="fragment">
-                                tan(beta1/2) + tan(beta2/2)  
-  tan(E12/2) = tan(omega12/2) -------------------------------
-                              1 + tan(beta1/2) * tan(beta2/2)
-</pre></div><p> where <em>omega<sub>12</sub></em> = <em>omega<sub>2</sub></em> - <em>omega<sub>1</sub></em>. This result can be derived from the formula for the area of a spherical triangle in terms of two edges and the included angle; it is the spherical generalization of the familiar trapezoidal formula for plane areas (<em>x<sub>2</sub></em> - <em>x<sub>1</sub></em>) (<em>y<sub>1</sub></em> + <em>y<sub>2</sub></em>)/2. Summing <em>E<sub>12</sub></em> over all the edges of a spherical polygon provides an accurate method of computing its area.</p>
 <h2><a class="anchor" id="testgeod"></a>
 Test data for geodesics</h2>
 <p>A test set a geodesics is available at</p>
@@ -117,7 +58,7 @@ Test data for geodesics</h2>
 <li>the area under the geodesic, <em>S12</em> (m<sup>2</sup>, accurate to 1 mm<sup>2</sup>)</li>
 </ul>
 <p>These are computed using as direct geodesic calculations with the given <em>lat1</em>, <em>lon1</em>, <em>azi1</em>, and <em>s12</em>. The distance <em>s12</em> always corresponds to an arc length <em>a12</em> &lt;= 180<sup>o</sup>, so the given geodesics give the shortest paths from point 1 to point 2. For simplicity and without loss of generality, <em>lat1</em> is chosen in [0<sup>o</sup>, 90<sup>o</sup>], <em>lon1</em> is taken to be zero, <em>azi1</em> is chosen in [0<sup>o</sup>, 180<sup>o</sup>]. Furthermore, <em>lat1</em> and <em>azi1</em> are taken to be multiples of 10<sup>-12</sup> deg and <em>s12</em> is a multiple of 0.1 um in [0 m, 20003931.4586254 m]. This results <em>lon2</em> in [0<sup>o</sup>, 180<sup>o</sup>] and <em>azi2</em> in [0<sup>o</sup>, 180<sup>o</sup>].</p>
-<p>The direct calculation uses an expansion of the geodesic equations accurate to <em>f<sup>20</sup></em> (approximately 1 part in 10<sup>50</sup>) and is computed with with <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s bfloats and fpprec set to 100 (so the errors in the data are probably 1/2 of the values quoted above).</p>
+<p>The direct calculation uses an expansion of the geodesic equations accurate to <em>f<sup>30</sup></em> (approximately 1 part in 10<sup>50</sup>) and is computed with with <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s bfloats and fpprec set to 100 (so the errors in the data are probably 1/2 of the values quoted above).</p>
 <p>The contents of the file are as follows:</p>
 <ul>
 <li>100000 entries randomly distributed</li>
@@ -131,7 +72,7 @@ Test data for geodesics</h2>
 <li>50000 entries ending close to vertices</li>
 </ul>
 <p>(a total of 500000 entries). The values for <em>s12</em> for the geodesics running between vertices are truncated to a multiple of 0.1 pm and this is used to determine point 2.</p>
-<p>This data can be fed to the <a class="el" href="utilities.html#geod">Geod</a> utility as follows</p>
+<p>This data can be fed to the <a href="Geod.1.html">Geod</a> utility as follows</p>
 <ul>
 <li>Direct from point 1: <div class="fragment"><pre class="fragment">
   gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./Geod
@@ -145,29 +86,19 @@ Test data for geodesics</h2>
 </pre></div> This should yield columns 3, 6, 7, and 9 of the test set.</li>
 </ul>
 <p>Add, e.g., "-p 6", to the call to Geod to change the precision of the output. Adding "-f" causes Geod to print all 9 fields specifying the geodesic (in the same order as the test set).</p>
-<h2><a class="anchor" id="geoderrors"></a>
-Accuracy of geodesic calculation</h2>
-<p>We regard all the test data as "exact". For each member of the test set, 6 error distances are computed. (The direct problem is solved from both ends and the maximum of the errors is used.)</p>
-<ol type="1">
-<li>The error in the position of point 2 for the direct problem.</li>
-<li>Error in the direction of geodesic at point 2 for the direct problem scaled by the major radius. (This is the direction in 3D space to allow canceling variations in longitude and azimuth near the poles.)</li>
-<li>Error in m12 for the direct problem.</li>
-<li>Error in s12 for the inverse problem.</li>
-<li>Error in the azimuths at points 1 and 2 for the inverse problem scaled by m12.</li>
-<li>Consistency of the azimuths at points 1 and 2 for the inverse problem. Compute geodesic from each endpoint using the computed azimuths; compare positions on each geodesic at midpoint (for long geodesics) or a distance equal to the major radius beyond each end of the geodesic (for short geodesics).</li>
-</ol>
-<p>The last check verifies that <em>azi1</em> and <em>azi2</em> returned by the inverse solution correspond to the same path and is important, e.g., when point 1 and point 2 are near opposite poles. To guard against a canceling error, the calculations in last error estimate use a long double version of the direct geodesic calculation (which is about 2000 times more accurate than the double version). The maximum of the resulting errors in less than 15 nm for the double version and 7 pm for the long double version.</p>
 <h2><a class="anchor" id="geodseries"></a>
 Expansions for geodesics</h2>
-<p>We give here the series expansions for the various geodesic integrals valid to order <em>f</em><sup>8</sup>.</p>
+<p>We give here the series expansions for the various geodesic integrals valid to order <em>f</em><sup>10</sup>. In this release of the code, we use a 6th-order expansions. This is sufficient to maintain accuracy for doubles for the SRMmax ellipsoid (<em>a</em> = 6400 km, <em>f</em> = 1/150). However, the preprocessor macro GEOD_ORD can be used to select any order up to 8. (If using long doubles, with a 64-bit fraction, the default order is 7.) The series expanded to order <em>f</em><sup>30</sup> are given in <a href="geodseries30.html">geodseries30.html</a>.</p>
 <p>In the formulas below ^ indicates exponentiation (<em>f^3</em> = <em>f*<em>f*<em>f</em>)</em> and</em> / indicates real division (3/5 = 0.6). The equations need to be converted to Horner form, but are here left in expanded form so that they can be easily truncated to lower order. These expansions were obtained using the the Maxima code, <a href="geod.mac">geod.mac</a>.</p>
-<p>The series expanded to order <em>f</em><sup>30</sup> are given in <a href="geodseries30.html">geodseries30.html</a>.</p>
 <p>In the expansions below, we have</p>
 <ul>
+<li><em>alpha</em> is the azimuth</li>
 <li><em>alpha<sub>0</sub></em> is the azimuth at the equator crossing</li>
 <li><em>lambda</em> is the longitude measured from the equator crossing</li>
 <li><em>omega</em> is the spherical longitude</li>
 <li><em>sigma</em> is the spherical arc length</li>
+<li><em>a</em> is the equatorial radius</li>
+<li><em>b</em> is the polar semi-axis</li>
 <li><em>f</em> is the flattening</li>
 <li><em>e<sup>2</sup></em> = <em>f</em> (2 - <em>f</em>)</li>
 <li><em>e'<sup>2</sup></em> = <em>e<sup>2</sup>/</em>(1 - <em>e<sup>2</sup></em>)</li>
@@ -187,28 +118,39 @@ Expansions for geodesics</h2>
 A1 = (1 + 1/4 * eps^2
         + 1/64 * eps^4
         + 1/256 * eps^6
-        + 25/16384 * eps^8) / (1 - eps);
+        + 25/16384 * eps^8
+        + 49/65536 * eps^10) / (1 - eps);
 </pre></div><div class="fragment"><pre class="fragment">
 C1[1] = - 1/2 * eps
         + 3/16 * eps^3
         - 1/32 * eps^5
-        + 19/2048 * eps^7;
+        + 19/2048 * eps^7
+        - 3/4096 * eps^9;
 C1[2] = - 1/16 * eps^2
         + 1/32 * eps^4
         - 9/2048 * eps^6
-        + 7/4096 * eps^8;
+        + 7/4096 * eps^8
+        + 1/65536 * eps^10;
 C1[3] = - 1/48 * eps^3
         + 3/256 * eps^5
-        - 3/2048 * eps^7;
+        - 3/2048 * eps^7
+        + 17/24576 * eps^9;
 C1[4] = - 5/512 * eps^4
         + 3/512 * eps^6
-        - 11/16384 * eps^8;
+        - 11/16384 * eps^8
+        + 3/8192 * eps^10;
 C1[5] = - 7/1280 * eps^5
-        + 7/2048 * eps^7;
+        + 7/2048 * eps^7
+        - 3/8192 * eps^9;
 C1[6] = - 7/2048 * eps^6
-        + 9/4096 * eps^8;
-C1[7] = - 33/14336 * eps^7;
-C1[8] = - 429/262144 * eps^8;
+        + 9/4096 * eps^8
+        - 117/524288 * eps^10;
+C1[7] = - 33/14336 * eps^7
+        + 99/65536 * eps^9;
+C1[8] = - 429/262144 * eps^8
+        + 143/131072 * eps^10;
+C1[9] = - 715/589824 * eps^9;
+C1[10] = - 2431/2621440 * eps^10;
 </pre></div><p>The function <em>tau</em>(<em>sigma</em>) = <em>s/</em>(<em>b</em> <em>A1</em>) = <em>sigma</em> + <em>B1</em>(<em>sigma</em>) may be inverted by series reversion giving</p>
 <p>&nbsp; &nbsp; <em>sigma</em>(<em>tau</em>) = <em>tau</em> + sum<sub><em>j</em> = 1</sub> <em>C1'<sub>j</sub></em> sin(2 <em>j</em> <em>tau</em>)</p>
 <p>where</p>
@@ -216,23 +158,33 @@ C1[8] = - 429/262144 * eps^8;
 C1'[1] = + 1/2 * eps
          - 9/32 * eps^3
          + 205/1536 * eps^5
-         - 4879/73728 * eps^7;
+         - 4879/73728 * eps^7
+         + 9039/327680 * eps^9;
 C1'[2] = + 5/16 * eps^2
          - 37/96 * eps^4
          + 1335/4096 * eps^6
-         - 86171/368640 * eps^8;
+         - 86171/368640 * eps^8
+         + 4119073/28311552 * eps^10;
 C1'[3] = + 29/96 * eps^3
          - 75/128 * eps^5
-         + 2901/4096 * eps^7;
+         + 2901/4096 * eps^7
+         - 443327/655360 * eps^9;
 C1'[4] = + 539/1536 * eps^4
          - 2391/2560 * eps^6
-         + 1082857/737280 * eps^8;
+         + 1082857/737280 * eps^8
+         - 2722891/1548288 * eps^10;
 C1'[5] = + 3467/7680 * eps^5
-         - 28223/18432 * eps^7;
+         - 28223/18432 * eps^7
+         + 1361343/458752 * eps^9;
 C1'[6] = + 38081/61440 * eps^6
-         - 733437/286720 * eps^8;
-C1'[7] = + 459485/516096 * eps^7;
-C1'[8] = + 109167851/82575360 * eps^8;
+         - 733437/286720 * eps^8
+         + 10820079/1835008 * eps^10;
+C1'[7] = + 459485/516096 * eps^7
+         - 709743/163840 * eps^9;
+C1'[8] = + 109167851/82575360 * eps^8
+         - 550835669/74317824 * eps^10;
+C1'[9] = + 83141299/41287680 * eps^9;
+C1'[10] = + 9303339907/2972712960 * eps^10;
 </pre></div><p>The reduced length is given by</p>
 <p>&nbsp; &nbsp; <em>m/<em>b</em> =</em> sqrt(1 + <em>k<sup>2</sup></em> sin<sup>2</sup><em>sigma<sub>2</sub></em>) cos <em>sigma<sub>1</sub></em> sin <em>sigma<sub>2</sub></em> <br/>
  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; - sqrt(1 + <em>k<sup>2</sup></em> sin<sup>2</sup><em>sigma<sub>1</sub></em>) sin <em>sigma<sub>1</sub></em> cos <em>sigma<sub>2</sub></em> <br/>
@@ -245,28 +197,39 @@ C1'[8] = + 109167851/82575360 * eps^8;
 A2 = (1 + 1/4 * eps^2
         + 9/64 * eps^4
         + 25/256 * eps^6
-        + 1225/16384 * eps^8) * (1 - eps);
+        + 1225/16384 * eps^8
+        + 3969/65536 * eps^10) * (1 - eps);
 </pre></div><div class="fragment"><pre class="fragment">
 C2[1] = + 1/2 * eps
         + 1/16 * eps^3
         + 1/32 * eps^5
-        + 41/2048 * eps^7;
+        + 41/2048 * eps^7
+        + 59/4096 * eps^9;
 C2[2] = + 3/16 * eps^2
         + 1/32 * eps^4
         + 35/2048 * eps^6
-        + 47/4096 * eps^8;
+        + 47/4096 * eps^8
+        + 557/65536 * eps^10;
 C2[3] = + 5/48 * eps^3
         + 5/256 * eps^5
-        + 23/2048 * eps^7;
+        + 23/2048 * eps^7
+        + 191/24576 * eps^9;
 C2[4] = + 35/512 * eps^4
         + 7/512 * eps^6
-        + 133/16384 * eps^8;
+        + 133/16384 * eps^8
+        + 47/8192 * eps^10;
 C2[5] = + 63/1280 * eps^5
-        + 21/2048 * eps^7;
+        + 21/2048 * eps^7
+        + 51/8192 * eps^9;
 C2[6] = + 77/2048 * eps^6
-        + 33/4096 * eps^8;
-C2[7] = + 429/14336 * eps^7;
-C2[8] = + 6435/262144 * eps^8;
+        + 33/4096 * eps^8
+        + 2607/524288 * eps^10;
+C2[7] = + 429/14336 * eps^7
+        + 429/65536 * eps^9;
+C2[8] = + 6435/262144 * eps^8
+        + 715/131072 * eps^10;
+C2[9] = + 12155/589824 * eps^9;
+C2[10] = + 46189/2621440 * eps^10;
 </pre></div><p>The longitude is given in terms of the spherical longitude by</p>
 <p>&nbsp; &nbsp; <em>lambda</em> = <em>omega</em> - <em>f</em> sin <em>alpha<sub>0</sub></em> <em>I3</em>(<em>sigma</em>)</p>
 <p>where</p>
@@ -274,115 +237,124 @@ C2[8] = + 6435/262144 * eps^8;
  &nbsp; &nbsp; <em>B3</em>(<em>sigma</em>) = sum<sub><em>j</em> = 1</sub> <em>C3<sub>j</sub></em> sin(2 <em>j</em> <em>sigma</em>)</p>
 <p>and</p>
 <div class="fragment"><pre class="fragment">
-A3 = 1 - (1/2 - 1/2*n) * eps
-       - (1/4 + 1/8*n - 3/8*n^2) * eps^2
-       - (1/16 + 3/16*n + 1/16*n^2 - 5/16*n^3) * eps^3
-       - (3/64 + 1/32*n + 5/32*n^2 + 5/128*n^3) * eps^4
-       - (3/128 + 5/128*n + 5/256*n^2) * eps^5
-       - (5/256 + 15/1024*n) * eps^6
-       - 25/2048 * eps^7;
+A3 = 1 - (1/2 - 1/2 * n) * eps
+       - (1/4 + 1/8 * n - 3/8 * n^2) * eps^2
+       - (1/16 + 3/16 * n + 1/16 * n^2 - 5/16 * n^3) * eps^3
+       - (3/64 + 1/32 * n + 5/32 * n^2 + 5/128 * n^3 - 35/128 * n^4) * eps^4
+       - (3/128 + 5/128 * n + 5/256 * n^2 + 35/256 * n^3 + 7/256 * n^4) * eps^5
+       - (5/256 + 15/1024 * n + 35/1024 * n^2 + 7/512 * n^3) * eps^6
+       - (25/2048 + 35/2048 * n + 21/2048 * n^2) * eps^7
+       - (175/16384 + 35/4096 * n) * eps^8
+       - 245/32768 * eps^9;
 </pre></div><div class="fragment"><pre class="fragment">
-C3[1] = + (1/4 - 1/4*n) * eps
-        + (1/8 - 1/8*n^2) * eps^2
-        + (3/64 + 3/64*n - 1/64*n^2 - 5/64*n^3) * eps^3
-        + (5/128 + 1/64*n + 1/64*n^2 - 1/64*n^3) * eps^4
-        + (3/128 + 11/512*n + 3/512*n^2) * eps^5
-        + (21/1024 + 5/512*n) * eps^6
-        + 243/16384 * eps^7;
-C3[2] = + (1/16 - 3/32*n + 1/32*n^2) * eps^2
-        + (3/64 - 1/32*n - 3/64*n^2 + 1/32*n^3) * eps^3
-        + (3/128 + 1/128*n - 9/256*n^2 - 3/128*n^3) * eps^4
-        + (5/256 + 1/256*n - 1/128*n^2) * eps^5
-        + (27/2048 + 69/8192*n) * eps^6
-        + 187/16384 * eps^7;
-C3[3] = + (5/192 - 3/64*n + 5/192*n^2 - 1/192*n^3) * eps^3
-        + (3/128 - 5/192*n - 1/64*n^2 + 5/192*n^3) * eps^4
-        + (7/512 - 1/384*n - 77/3072*n^2) * eps^5
-        + (3/256 - 1/1024*n) * eps^6
-        + 139/16384 * eps^7;
-C3[4] = + (7/512 - 7/256*n + 5/256*n^2 - 7/1024*n^3) * eps^4
-        + (7/512 - 5/256*n - 7/2048*n^2) * eps^5
-        + (9/1024 - 43/8192*n) * eps^6
-        + 127/16384 * eps^7;
-C3[5] = + (21/2560 - 9/512*n + 15/1024*n^2) * eps^5
-        + (9/1024 - 15/1024*n) * eps^6
-        + 99/16384 * eps^7;
-C3[6] = + (11/2048 - 99/8192*n) * eps^6
-        + 99/16384 * eps^7;
-C3[7] = + 429/114688 * eps^7;
-</pre></div><p>The formula for area between the geodesic and the equator (see <a class="el" href="geodesic.html#geodarea">Geodesic area</a>) involves the function <em>I4</em>(<em>sigma</em>) which can be expanded as</p>
+C3[1] = + (1/4 - 1/4 * n) * eps
+        + (1/8 - 1/8 * n^2) * eps^2
+        + (3/64 + 3/64 * n - 1/64 * n^2 - 5/64 * n^3) * eps^3
+        + (5/128 + 1/64 * n + 1/64 * n^2 - 1/64 * n^3 - 7/128 * n^4) * eps^4
+        + (3/128 + 11/512 * n + 3/512 * n^2 + 1/256 * n^3 - 7/512 * n^4) * eps^5
+        + (21/1024 + 5/512 * n + 13/1024 * n^2 + 1/512 * n^3) * eps^6
+        + (243/16384 + 189/16384 * n + 83/16384 * n^2) * eps^7
+        + (435/32768 + 109/16384 * n) * eps^8
+        + 345/32768 * eps^9;
+C3[2] = + (1/16 - 3/32 * n + 1/32 * n^2) * eps^2
+        + (3/64 - 1/32 * n - 3/64 * n^2 + 1/32 * n^3) * eps^3
+        + (3/128 + 1/128 * n - 9/256 * n^2 - 3/128 * n^3 + 7/256 * n^4) * eps^4
+        + (5/256 + 1/256 * n - 1/128 * n^2 - 7/256 * n^3 - 3/256 * n^4) * eps^5
+        + (27/2048 + 69/8192 * n - 39/8192 * n^2 - 47/4096 * n^3) * eps^6
+        + (187/16384 + 39/8192 * n + 31/16384 * n^2) * eps^7
+        + (287/32768 + 47/8192 * n) * eps^8
+        + 255/32768 * eps^9;
+C3[3] = + (5/192 - 3/64 * n + 5/192 * n^2 - 1/192 * n^3) * eps^3
+        + (3/128 - 5/192 * n - 1/64 * n^2 + 5/192 * n^3 - 1/128 * n^4) * eps^4
+        + (7/512 - 1/384 * n - 77/3072 * n^2 + 5/3072 * n^3 + 65/3072 * n^4) * eps^5
+        + (3/256 - 1/1024 * n - 71/6144 * n^2 - 47/3072 * n^3) * eps^6
+        + (139/16384 + 143/49152 * n - 383/49152 * n^2) * eps^7
+        + (243/32768 + 95/49152 * n) * eps^8
+        + 581/98304 * eps^9;
+C3[4] = + (7/512 - 7/256 * n + 5/256 * n^2 - 7/1024 * n^3 + 1/1024 * n^4) * eps^4
+        + (7/512 - 5/256 * n - 7/2048 * n^2 + 9/512 * n^3 - 21/2048 * n^4) * eps^5
+        + (9/1024 - 43/8192 * n - 129/8192 * n^2 + 39/4096 * n^3) * eps^6
+        + (127/16384 - 23/8192 * n - 165/16384 * n^2) * eps^7
+        + (193/32768 + 3/8192 * n) * eps^8
+        + 171/32768 * eps^9;
+C3[5] = + (21/2560 - 9/512 * n + 15/1024 * n^2 - 7/1024 * n^3 + 9/5120 * n^4) * eps^5
+        + (9/1024 - 15/1024 * n + 3/2048 * n^2 + 57/5120 * n^3) * eps^6
+        + (99/16384 - 91/16384 * n - 781/81920 * n^2) * eps^7
+        + (179/32768 - 55/16384 * n) * eps^8
+        + 141/32768 * eps^9;
+C3[6] = + (11/2048 - 99/8192 * n + 275/24576 * n^2 - 77/12288 * n^3) * eps^6
+        + (99/16384 - 275/24576 * n + 55/16384 * n^2) * eps^7
+        + (143/32768 - 253/49152 * n) * eps^8
+        + 33/8192 * eps^9;
+C3[7] = + (429/114688 - 143/16384 * n + 143/16384 * n^2) * eps^7
+        + (143/32768 - 143/16384 * n) * eps^8
+        + 429/131072 * eps^9;
+C3[8] = + (715/262144 - 429/65536 * n) * eps^8
+        + 429/131072 * eps^9;
+C3[9] = + 2431/1179648 * eps^9;
+</pre></div><p>The formula for area between the geodesic and the equator is given in Sec. 15 of <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a> in terms of <em>S</em>,</p>
+<p>&nbsp; &nbsp; <em>S</em> = <em>c<sup>2</sup></em> <em>alpha</em> + <em>e<sup>2</sup></em> <em>a<sup>2</sup></em> cos <em>alpha<sub>0</sub></em> sin <em>alpha<sub>0</sub></em> <em>I4</em>(<em>sigma</em>)</p>
+<p>where</p>
 <p>&nbsp; &nbsp; <em>I4</em>(<em>sigma</em>) = sum<sub><em>j</em> = 0</sub> <em>C4<sub>j</sub></em> cos((2<em>j</em> + 1) <em>sigma</em>)</p>
 <p>with</p>
 <div class="fragment"><pre class="fragment">
-C4[0] = + (2/3 - 1/15*ep2 + 4/105*ep2^2 - 8/315*ep2^3 + 64/3465*ep2^4 - 128/9009*ep2^5 + 512/45045*ep2^6 - 1024/109395*ep2^7)
-        - (1/20 - 1/35*ep2 + 2/105*ep2^2 - 16/1155*ep2^3 + 32/3003*ep2^4 - 128/15015*ep2^5 + 256/36465*ep2^6) * k2
-        + (1/42 - 1/63*ep2 + 8/693*ep2^2 - 80/9009*ep2^3 + 64/9009*ep2^4 - 128/21879*ep2^5) * k2^2
-        - (1/72 - 1/99*ep2 + 10/1287*ep2^2 - 8/1287*ep2^3 + 112/21879*ep2^4) * k2^3
-        + (1/110 - 1/143*ep2 + 4/715*ep2^2 - 56/12155*ep2^3) * k2^4
-        - (1/156 - 1/195*ep2 + 14/3315*ep2^2) * k2^5
-        + (1/210 - 1/255*ep2) * k2^6
-        - 1/272 * k2^7;
-C4[1] = + (1/180 - 1/315*ep2 + 2/945*ep2^2 - 16/10395*ep2^3 + 32/27027*ep2^4 - 128/135135*ep2^5 + 256/328185*ep2^6) * k2
-        - (1/252 - 1/378*ep2 + 4/2079*ep2^2 - 40/27027*ep2^3 + 32/27027*ep2^4 - 64/65637*ep2^5) * k2^2
-        + (1/360 - 1/495*ep2 + 2/1287*ep2^2 - 8/6435*ep2^3 + 112/109395*ep2^4) * k2^3
-        - (1/495 - 2/1287*ep2 + 8/6435*ep2^2 - 112/109395*ep2^3) * k2^4
-        + (5/3276 - 1/819*ep2 + 2/1989*ep2^2) * k2^5
-        - (1/840 - 1/1020*ep2) * k2^6
-        + 7/7344 * k2^7;
-C4[2] = + (1/2100 - 1/3150*ep2 + 4/17325*ep2^2 - 8/45045*ep2^3 + 32/225225*ep2^4 - 64/546975*ep2^5) * k2^2
-        - (1/1800 - 1/2475*ep2 + 2/6435*ep2^2 - 8/32175*ep2^3 + 112/546975*ep2^4) * k2^3
-        + (1/1925 - 2/5005*ep2 + 8/25025*ep2^2 - 16/60775*ep2^3) * k2^4
-        - (1/2184 - 1/2730*ep2 + 1/3315*ep2^2) * k2^5
-        + (1/2520 - 1/3060*ep2) * k2^6
-        - 7/20400 * k2^7;
-C4[3] = + (1/17640 - 1/24255*ep2 + 2/63063*ep2^2 - 8/315315*ep2^3 + 16/765765*ep2^4) * k2^3
-        - (1/10780 - 1/14014*ep2 + 2/35035*ep2^2 - 4/85085*ep2^3) * k2^4
-        + (5/45864 - 1/11466*ep2 + 1/13923*ep2^2) * k2^5
-        - (1/8820 - 1/10710*ep2) * k2^6
-        + 1/8976 * k2^7;
-C4[4] = + (1/124740 - 1/162162*ep2 + 2/405405*ep2^2 - 4/984555*ep2^3) * k2^4
-        - (1/58968 - 1/73710*ep2 + 1/89505*ep2^2) * k2^5
-        + (1/41580 - 1/50490*ep2) * k2^6
-        - 7/242352 * k2^7;
-C4[5] = + (1/792792 - 1/990990*ep2 + 1/1203345*ep2^2) * k2^5
-        - (1/304920 - 1/370260*ep2) * k2^6
-        + 7/1283568 * k2^7;
-C4[6] = + (1/4684680 - 1/5688540*ep2) * k2^6
-        - 1/1516944 * k2^7;
-C4[7] = + 1/26254800 * k2^7;
-</pre></div><h2><a class="anchor" id="geodmisc"></a>
-Miscellaneous information on geodesics</h2>
-<p>When either point is at a pole, the azimuth is defined by keeping the longitude fixed and writing <em>lat</em> = 90 - <em>eps</em> or -90 + <em>eps</em> and taking the limit <em>eps</em> -&gt; 0 from above.</p>
-<p>The following prescription allows you to ascertain when there are multiple solutions to the inverse problem and to generate the complete set.</p>
-<ul>
-<li><em>lat1</em> = <em>-lat2</em> (with neither at a pole). If <em>azi1</em> = <em>azi2</em>, the geodesic is unique. Otherwise there are two geodesics and the second one is obtained by setting [<em>azi1</em>, <em>azi2</em>] = [<em>azi2</em>, <em>azi1</em>]. (This occurs when the longitude difference is near +/- 180<sup>o</sup> for oblate ellipsoids.)</li>
-<li><em>lon2</em> = <em>lon1</em> +/- 180<sup>o</sup> (with neither at a pole). If <em>azi1</em> = 0<sup>o</sup> or +/- 180<sup>o</sup>, the geodesic is unique. Otherwise there are two geodesics and the second one is obtained by setting [<em>azi1</em>, <em>azi2</em>] = [-<em>azi1</em>, -<em>azi2</em>]. (This occurs when the <em>lat2</em> is near -<em>lat1</em> for prolate ellipsoids.)</li>
-<li>Points 1 and 2 at opposite poles. There are infinitely many geodesics which can be generated by setting [<em>azi1</em>, <em>azi2</em>] = [<em>azi1</em>, <em>azi2</em>] + [<em>d</em>, -<em>d</em>], for arbitrary <em>d</em>. (For spheres, this prescription applies when points 1 and 2 are antipodal.)</li>
-<li><em>s12</em> = 0 (coincident points). There are infinitely many geodesics which can be generated by setting [<em>azi1</em>, <em>azi2</em>] = [<em>azi1</em>, <em>azi2</em>] + [<em>d</em>, <em>d</em>], for arbitrary <em>d</em>.</li>
-</ul>
-<p>A rather large fraction of the code in <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> deals merely with the spherical trigonometry required to do great circle calculations. When high accuracy is required, care has to be taken to use stable methods for computing angles. Typically, we represent angles internally with the pair [sin(<em>theta</em>), cos(<em>theta</em>)]. This expands the number of representable angles by about 4; in particular, it allows angles very close to all the cardinal points to be resolved. We use expressions for sin(<em>theta</em>) and cos(<em>theta</em>) which avoid large cancellations. Having a comprehensive test set as described in <a class="el" href="geodesic.html#testgeod">Test data for geodesics</a> helps to identify problems. This representation allows input arguments which are multiples of 90<sup>o</sup> to be represented exactly.</p>
-<p>The code for the inverse treats equatorial and meridional geodesics specially. All other case are handled by the same code (implementing Newton's method) with tests to select appropriate starting guess in difference regimes. Specifying a zero inverse flattening in Geodesic constructor is equivalent to zero flattening (i.e., a sphere). The method accommodates this case without any special coding.</p>
-<p>In order to limits the enumeration of cases, the inverse problem is brought to a canonical form by interchanging the points and changing the signs of the coordinates. The effect of these changes are undone at the end by applying sign changes to the final calls to atan2 to give the azimuths.</p>
-<p>The derivative needed for Newton's method for the inverse problem is given in terms of the reduced length. The reduced length can also be used to apply Newton's method to solve problems such as finding the distance between a point and a geodesic line.</p>
-<p>Convergence failures with Newton's method for the inverse problem is signaled by negating the distance (and the arc distance and reduced length) and by reversing the azimuths. This convention was chosen as it allows both detection of the problem and subsequent use of the values (assuming that they are approximately correct). It is expected that the method converges for all models of the earth and for any two input points. Please report all cases where this does not happen.</p>
-<p>Geographic coordinates which are close to zero are quantized (by adding and subtracting 1/16 deg). This allows certain cases of underflow to be avoided. This limits the accuracy to which coordinates can be specified to 0.7 pm. This should not be a problem since the overall accuracy of the algorithms is only 15 nm.</p>
-<p>You can specify a <em>negative</em> flattening to get a prolate ellipsoid. The rule is that <em>b</em> is the radius of the axis of symmetry (the polar radius), that <em>a</em> is the equatorial radius, and that <em>b</em> = <em>a</em> (1 - <em>f</em>). The direct solution needed no modification. The inverse solution required a generalization in the way starting points for Newton's method are chosen; in addition a test are added to the case when the endpoints are on the same meridian to determine if a shorter non-meridional geodesic exists.</p>
-<p>Most planets and satellites are approximated by oblate ellipsoids. However, satellites whose rotation frequency is tidally locked to a month may be prolate (as example is Saturn's moon, Tethys). Such satellites are typically considerably more eccentric that the earth and it may be necessary to increase the order of the series used in order to maintain accuracy.</p>
-<p>GeodesicLine::Position provides a way of doing a series of direct calculations for a single geodesic. This is about 2.4 times faster than calling Geodesic::Direct. A speed-up by a further factor of 1.2 is obtained with the direct calculation if the distance is expressed in terms of the spherical arc length.</p>
-<p>On a 2.66 GHz Intel machine (g++, version 4.4.4, -O3), timings are as follows:</p>
-<ul>
-<li>Geodesic::Direct 0.88 us</li>
-<li>GeodesicLine::Position 0.37 us</li>
-<li>GeodesicLine::ArcPosition 0.31 us</li>
-<li>Geodesic::Inverse 2.62 us</li>
-</ul>
-<p>The timing for Geodesic::Inverse is a mean. Individual calls may take a few times longer because of the need to do additional Newton iterations. Mean number of Newton iterations is about 3, but this increases (rarely) to 16 with some values of the arguments.</p>
-<p>Future work:</p>
-<ul>
-<li>More documentation.</li>
-</ul>
-<center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+C4[0] = + (2/3 - 1/15 * ep2 + 4/105 * ep2^2 - 8/315 * ep2^3 + 64/3465 * ep2^4 - 128/9009 * ep2^5 + 512/45045 * ep2^6 - 1024/109395 * ep2^7 + 16384/2078505 * ep2^8 - 32768/4849845 * ep2^9)
+        - (1/20 - 1/35 * ep2 + 2/105 * ep2^2 - 16/1155 * ep2^3 + 32/3003 * ep2^4 - 128/15015 * ep2^5 + 256/36465 * ep2^6 - 4096/692835 * ep2^7 + 8192/1616615 * ep2^8) * k2
+        + (1/42 - 1/63 * ep2 + 8/693 * ep2^2 - 80/9009 * ep2^3 + 64/9009 * ep2^4 - 128/21879 * ep2^5 + 2048/415701 * ep2^6 - 4096/969969 * ep2^7) * k2^2
+        - (1/72 - 1/99 * ep2 + 10/1287 * ep2^2 - 8/1287 * ep2^3 + 112/21879 * ep2^4 - 1792/415701 * ep2^5 + 512/138567 * ep2^6) * k2^3
+        + (1/110 - 1/143 * ep2 + 4/715 * ep2^2 - 56/12155 * ep2^3 + 896/230945 * ep2^4 - 768/230945 * ep2^5) * k2^4
+        - (1/156 - 1/195 * ep2 + 14/3315 * ep2^2 - 224/62985 * ep2^3 + 64/20995 * ep2^4) * k2^5
+        + (1/210 - 1/255 * ep2 + 16/4845 * ep2^2 - 32/11305 * ep2^3) * k2^6
+        - (1/272 - 1/323 * ep2 + 6/2261 * ep2^2) * k2^7
+        + (1/342 - 1/399 * ep2) * k2^8
+        - 1/420 * k2^9;
+C4[1] = + (1/180 - 1/315 * ep2 + 2/945 * ep2^2 - 16/10395 * ep2^3 + 32/27027 * ep2^4 - 128/135135 * ep2^5 + 256/328185 * ep2^6 - 4096/6235515 * ep2^7 + 8192/14549535 * ep2^8) * k2
+        - (1/252 - 1/378 * ep2 + 4/2079 * ep2^2 - 40/27027 * ep2^3 + 32/27027 * ep2^4 - 64/65637 * ep2^5 + 1024/1247103 * ep2^6 - 2048/2909907 * ep2^7) * k2^2
+        + (1/360 - 1/495 * ep2 + 2/1287 * ep2^2 - 8/6435 * ep2^3 + 112/109395 * ep2^4 - 1792/2078505 * ep2^5 + 512/692835 * ep2^6) * k2^3
+        - (1/495 - 2/1287 * ep2 + 8/6435 * ep2^2 - 112/109395 * ep2^3 + 1792/2078505 * ep2^4 - 512/692835 * ep2^5) * k2^4
+        + (5/3276 - 1/819 * ep2 + 2/1989 * ep2^2 - 32/37791 * ep2^3 + 64/88179 * ep2^4) * k2^5
+        - (1/840 - 1/1020 * ep2 + 4/4845 * ep2^2 - 8/11305 * ep2^3) * k2^6
+        + (7/7344 - 7/8721 * ep2 + 2/2907 * ep2^2) * k2^7
+        - (2/2565 - 4/5985 * ep2) * k2^8
+        + 1/1540 * k2^9;
+C4[2] = + (1/2100 - 1/3150 * ep2 + 4/17325 * ep2^2 - 8/45045 * ep2^3 + 32/225225 * ep2^4 - 64/546975 * ep2^5 + 1024/10392525 * ep2^6 - 2048/24249225 * ep2^7) * k2^2
+        - (1/1800 - 1/2475 * ep2 + 2/6435 * ep2^2 - 8/32175 * ep2^3 + 112/546975 * ep2^4 - 1792/10392525 * ep2^5 + 512/3464175 * ep2^6) * k2^3
+        + (1/1925 - 2/5005 * ep2 + 8/25025 * ep2^2 - 16/60775 * ep2^3 + 256/1154725 * ep2^4 - 1536/8083075 * ep2^5) * k2^4
+        - (1/2184 - 1/2730 * ep2 + 1/3315 * ep2^2 - 16/62985 * ep2^3 + 32/146965 * ep2^4) * k2^5
+        + (1/2520 - 1/3060 * ep2 + 4/14535 * ep2^2 - 8/33915 * ep2^3) * k2^6
+        - (7/20400 - 7/24225 * ep2 + 2/8075 * ep2^2) * k2^7
+        + (14/47025 - 4/15675 * ep2) * k2^8
+        - 1/3850 * k2^9;
+C4[3] = + (1/17640 - 1/24255 * ep2 + 2/63063 * ep2^2 - 8/315315 * ep2^3 + 16/765765 * ep2^4 - 256/14549535 * ep2^5 + 512/33948915 * ep2^6) * k2^3
+        - (1/10780 - 1/14014 * ep2 + 2/35035 * ep2^2 - 4/85085 * ep2^3 + 64/1616615 * ep2^4 - 384/11316305 * ep2^5) * k2^4
+        + (5/45864 - 1/11466 * ep2 + 1/13923 * ep2^2 - 16/264537 * ep2^3 + 32/617253 * ep2^4) * k2^5
+        - (1/8820 - 1/10710 * ep2 + 8/101745 * ep2^2 - 16/237405 * ep2^3) * k2^6
+        + (1/8976 - 1/10659 * ep2 + 2/24871 * ep2^2) * k2^7
+        - (1/9405 - 2/21945 * ep2) * k2^8
+        + 1/10010 * k2^9;
+C4[4] = + (1/124740 - 1/162162 * ep2 + 2/405405 * ep2^2 - 4/984555 * ep2^3 + 64/18706545 * ep2^4 - 128/43648605 * ep2^5) * k2^4
+        - (1/58968 - 1/73710 * ep2 + 1/89505 * ep2^2 - 16/1700595 * ep2^3 + 32/3968055 * ep2^4) * k2^5
+        + (1/41580 - 1/50490 * ep2 + 8/479655 * ep2^2 - 16/1119195 * ep2^3) * k2^6
+        - (7/242352 - 7/287793 * ep2 + 2/95931 * ep2^2) * k2^7
+        + (7/220077 - 2/73359 * ep2) * k2^8
+        - 1/30030 * k2^9;
+C4[5] = + (1/792792 - 1/990990 * ep2 + 1/1203345 * ep2^2 - 16/22863555 * ep2^3 + 32/53348295 * ep2^4) * k2^5
+        - (1/304920 - 1/370260 * ep2 + 4/1758735 * ep2^2 - 8/4103715 * ep2^3) * k2^6
+        + (7/1283568 - 7/1524237 * ep2 + 2/508079 * ep2^2) * k2^7
+        - (2/268983 - 4/627627 * ep2) * k2^8
+        + 1/110110 * k2^9;
+C4[6] = + (1/4684680 - 1/5688540 * ep2 + 4/27020565 * ep2^2 - 8/63047985 * ep2^3) * k2^6
+        - (1/1516944 - 1/1801371 * ep2 + 2/4203199 * ep2^2) * k2^7
+        + (2/1589445 - 4/3708705 * ep2) * k2^8
+        - 1/520520 * k2^9;
+C4[7] = + (1/26254800 - 1/31177575 * ep2 + 2/72747675 * ep2^2) * k2^7
+        - (1/7335900 - 1/8558550 * ep2) * k2^8
+        + 1/3403400 * k2^9;
+C4[8] = + (1/141338340 - 1/164894730 * ep2) * k2^8
+        - 1/34714680 * k2^9;
+C4[9] = + 1/737176440 * k2^9;
+</pre></div><center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

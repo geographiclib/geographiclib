@@ -1,0 +1,82 @@
+#define GEOGRAPHICLIB_VERSION "1.8"
+#define PROGRAM_NAME "CartConvert"
+
+int usage(int retval, bool brief) {
+  if (brief)
+    ( retval ? std::cerr : std::cout ) << "Usage:\n\
+    CartConvert [ -r ] [ -l lat0 lon0 h0 ] [ -e a r ] [ --version | -h |\n\
+    --help ]\n\
+\n\
+For full documentation type:\n\
+    CartConvert --help\n\
+or visit:\n\
+    http://geographiclib.sf.net/html/CartConvert.1.html\n";
+  else
+    ( retval ? std::cerr : std::cout ) << "Man page:\n\
+NAME\n\
+       CartConvert -- convert geodetic coordinates to geocentric or local\n\
+       cartesian\n\
+\n\
+SYNOPSIS\n\
+       CartConvert [ -r ] [ -l lat0 lon0 h0 ] [ -e a r ] [ --version | -h |\n\
+       --help ]\n\
+\n\
+DESCRIPTION\n\
+       Convert geodetic coordinates to either geocentric or local cartesian\n\
+       coordinates.  Geocentric coordinates have the origin at the center of\n\
+       the earth, with the z axis going thru the north pole, and the x axis\n\
+       thru latitidude = 0, longitude = 0.  By default, the conversion is to\n\
+       geocentric coordinates.  Specifying -l lat0 lon0 h0 causes a local\n\
+       coordinate system to be used with the origin at latitude = lat0,\n\
+       longitude = lon0, height = h0, z normal to the ellipsoid and y due\n\
+       north.\n\
+\n\
+       Geodetic coordinates are provided on standard input as a set of lines\n\
+       containing (blank separated) latitude, longitude (decimal degrees or\n\
+       degrees, minutes and seconds), and height (meters).  For each set of\n\
+       geodetic coordinates, the corresponding cartesian coordinates x, y, z\n\
+       (meters) are printed on standard output.\n\
+\n\
+OPTIONS\n\
+       -r  perform the reverse projection.  x, y, z are given on standard\n\
+           input and each line of standard output gives latitude, longitude,\n\
+           height.\n\
+\n\
+       -e  specify the ellipsoid via a r; the equatorial radius is a and the\n\
+           reciprocal flattening is r.  Setting r = 0 results in a sphere.\n\
+           Specify r < 0 for a prolate ellipsoid.  By default, the WGS84\n\
+           ellipsoid is used, a = 6378137m, r = 298.257223563.\n\
+\n\
+       --version\n\
+           print version.\n\
+\n\
+       -h  print usage.\n\
+\n\
+       --help\n\
+           print full documentation.\n\
+\n\
+EXAMPLES\n\
+          echo 33.3 44.4 6000 | CartConvert\n\
+          => 3816209.60 3737108.55 3485109.57\n\
+          echo 33.3 44.4 6000 | CartConvert -l 33 44 20\n\
+          => 37288.97 33374.29 5783.64\n\
+          echo 30000 30000 0 | CartConvert -r\n\
+          => 6.483 45 -6335709.73\n\
+\n\
+ERRORS\n\
+       An illegal line of input will print an error message to standard output\n\
+       beginning with \"ERROR:\" and causes CartConvert to return an exit code\n\
+       of 1.  However, an error does not cause CartConvert to terminate;\n\
+       following lines will be converted.\n\
+\n\
+SEE ALSO\n\
+       CartConvert is a part of GeographicLib, <http://geographiclib.sf.net>.\n\
+       The algorithm for converting geocentric to geodetic coordinates is\n\
+       given in Appendix B of C. F. F. Karney, Geodesics on an ellipsoid of\n\
+       revolution, Feb. 2011; preprint <http://arxiv.org/abs/1102.1215>.\n\
+\n\
+AUTHOR\n\
+       CartConvert was written by Charles Karney.\n\
+";
+    return retval;
+}

@@ -1,4 +1,4 @@
-# $Id: Makefile.mk 6906 2010-12-02 22:10:56Z karney $
+# $Id: Makefile.mk 6958 2011-02-18 04:12:27Z karney $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
@@ -12,39 +12,38 @@ HEADERS = Constants.hpp $(patsubst %,../include/GeographicLib/%.hpp,$(MODULES))
 SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
 	$(patsubst %,../tools/%.cpp,$(PROGRAMS))
 
-FIGURES = gauss-krueger-graticule thompson-tm-graticule \
-	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
-	gauss-krueger-graticule-a thompson-tm-graticule-a \
-	gauss-krueger-error
-FIGURESOURCES = $(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES))
-
 EXTRAFILES = tmseries30.html geodseries30.html
+HTMLMANPAGES = $(addsuffix .1.html,$(PROGRAMS))
+
+%.1.html: %.pod
+	pod2html --noindex $^ | sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g > $@
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
 
-doc: html/index.html
+doc: man html/index.html
 
 VPATH = ../src ../include/GeographicLib ../tools ../maxima
 
+man: $(HTMLMANPAGES)
+
 html/index.html: Doxyfile Geographic.doc \
-	$(HEADERS) $(ALLSOURCES) $(FIGURESOURCES) $(MAXIMASOURCES) $(EXTRAFILES)
+	$(HEADERS) $(ALLSOURCES) $(MAXIMASOURCES) $(EXTRAFILES) \
+	$(HTMLMANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
-	for f in $(FIGURESOURCES); do cp -p $$f html/; done
-	for f in $(MAXIMASOURCES); do cp -p $$f html/; done
-	for f in $(EXTRAFILES); do cp -p $$f html/; done
+	cp -p $(MAXIMAASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) html/
 	doxygen
 
 PREFIX = /usr/local
 DEST = $(PREFIX)/share/GeographicLib/doc/html
 INSTALL = install -b
 
-install: html/index.html
+install: man html/index.html
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 html/* $(DEST)/
 list:
-	@echo Doxyfile Geographic.doc $(FIGURESOURCES) $(EXTRAFILES)
-clean:
-	rm -rf html
+	@echo Doxyfile Geographic.doc $(EXTRAFILES)
+distclean:
+	rm -rf html $(MANPAGES)
 
 .PHONY: doc install list clean

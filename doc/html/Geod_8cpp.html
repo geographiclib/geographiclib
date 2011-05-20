@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_01be9539ccefa9b526e2e658881b59b7.html">tools</a>      </li>
+      <li><a class="el" href="dir_f0cd0a94c27b816d12e5ff1a9ae56734.html">tools</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,6 +47,7 @@
 <code>#include &quot;<a class="el" href="DMS_8hpp_source.html">GeographicLib/DMS.hpp</a>&quot;</code><br/>
 <code>#include &lt;iostream&gt;</code><br/>
 <code>#include &lt;sstream&gt;</code><br/>
+<code>#include &quot;Geod.usage&quot;</code><br/>
 
 <p><a href="Geod_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -55,7 +56,6 @@ Typedefs</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">GeographicLib::Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a></td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Geod_8cpp.html#a6d56053f6f3356e8245153827c7f40ae">usage</a> (int retval)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Geod_8cpp.html#a816c824309c06ba9fce8978d534c8a59">LatLonString</a> (<a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, int prec, bool dms)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Geod_8cpp.html#ade33c0d3b83c6fcbf2fc612d5c6a7172">AzimuthString</a> (<a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> azi, int prec, bool dms)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Geod_8cpp.html#a600021136749afe8d757335563b5b544">DistanceStrings</a> (<a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> s12, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> a12, bool full, bool arcmode, int prec, bool dms)</td></tr>
@@ -64,9 +64,9 @@ Functions</h2></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Command line utility for geodesic calculations. </p>
-<p>Copyright (c) Charles Karney (2009, 2010) &lt;<a href="mailto:charles@karney.com">charles@karney.com</a>&gt; and licensed under the LGPL. For more information, see <a href="http://geographiclib.sourceforge.net/">http://geographiclib.sourceforge.net/</a></p>
+<p>Copyright (c) Charles Karney (2009, 2010, 2011) &lt;<a href="mailto:charles@karney.com">charles@karney.com</a>&gt; and licensed under the LGPL. For more information, see <a href="http://geographiclib.sourceforge.net/">http://geographiclib.sourceforge.net/</a></p>
 <p>Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o</p>
-<p>See <a class="el" href="utilities.html#geod">Geod</a> for usage information. </p>
+<p>See the <a href="Geod.1.html">man page</a> for usage information. </p>
 
 <p>Definition in file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
 <hr/><h2>Typedef Documentation</h2>
@@ -81,31 +81,11 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00090">90</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00023">23</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a6d56053f6f3356e8245153827c7f40ae"></a><!-- doxytag: member="Geod.cpp::usage" ref="a6d56053f6f3356e8245153827c7f40ae" args="(int retval)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int usage </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>retval</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00020">20</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="a816c824309c06ba9fce8978d534c8a59"></a><!-- doxytag: member="Geod.cpp::LatLonString" ref="a816c824309c06ba9fce8978d534c8a59" args="(real lat, real lon, int prec, bool dms)" -->
 <div class="memitem">
 <div class="memproto">
@@ -143,11 +123,11 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00092">92</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00025">25</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8cpp_source.html#l00258">GeographicLib::DMS::Encode()</a>, <a class="el" href="DMS_8hpp_source.html#l00060">GeographicLib::DMS::LATITUDE</a>, <a class="el" href="DMS_8hpp_source.html#l00065">GeographicLib::DMS::LONGITUDE</a>, and <a class="el" href="DMS_8hpp_source.html#l00076">GeographicLib::DMS::NUMBER</a>.</p>
 
-<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00126">main()</a>.</p>
+<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00059">main()</a>.</p>
 
 </div>
 </div>
@@ -182,11 +162,11 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00101">101</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00034">34</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8hpp_source.html#l00071">GeographicLib::DMS::AZIMUTH</a>, <a class="el" href="DMS_8cpp_source.html#l00258">GeographicLib::DMS::Encode()</a>, and <a class="el" href="DMS_8hpp_source.html#l00076">GeographicLib::DMS::NUMBER</a>.</p>
 
-<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00126">main()</a>.</p>
+<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00059">main()</a>.</p>
 
 </div>
 </div>
@@ -239,11 +219,11 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00107">107</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00040">40</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8cpp_source.html#l00258">GeographicLib::DMS::Encode()</a>, <a class="el" href="DMS_8hpp_source.html#l00055">GeographicLib::DMS::NONE</a>, and <a class="el" href="DMS_8hpp_source.html#l00076">GeographicLib::DMS::NUMBER</a>.</p>
 
-<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00126">main()</a>.</p>
+<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00059">main()</a>.</p>
 
 </div>
 </div>
@@ -272,11 +252,11 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00121">121</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00054">54</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
 
 <p>References <a class="el" href="DMS_8cpp_source.html#l00028">GeographicLib::DMS::Decode()</a>, and <a class="el" href="DMS_8cpp_source.html#l00237">GeographicLib::DMS::DecodeAngle()</a>.</p>
 
-<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00126">main()</a>.</p>
+<p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00059">main()</a>.</p>
 
 </div>
 </div>
@@ -305,14 +285,14 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00126">126</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geod_8cpp_source.html#l00059">59</a> of file <a class="el" href="Geod_8cpp_source.html">Geod.cpp</a>.</p>
 
-<p>References <a class="el" href="Geod_8cpp_source.html#l00101">AzimuthString()</a>, <a class="el" href="DMS_8cpp_source.html#l00028">GeographicLib::DMS::Decode()</a>, <a class="el" href="DMS_8cpp_source.html#l00246">GeographicLib::DMS::DecodeAzimuth()</a>, <a class="el" href="DMS_8cpp_source.html#l00205">GeographicLib::DMS::DecodeLatLon()</a>, <a class="el" href="Geod_8cpp_source.html#l00107">DistanceStrings()</a>, <a class="el" href="DMS_8cpp_source.html#l00258">GeographicLib::DMS::Encode()</a>, <a class="el" href="Geod_8cpp_source.html#l00092">LatLonString()</a>, <a class="el" href="DMS_8hpp_source.html#l00076">GeographicLib::DMS::NUMBER</a>, <a class="el" href="Geod_8cpp_source.html#l00121">ReadDistance()</a>, <a class="el" href="CartConvert_8cpp_source.html#l00020">usage()</a>, <a class="el" href="Constants_8hpp_source.html#l00408">GeographicLib::Constants::WGS84_a()</a>, and <a class="el" href="Constants_8hpp_source.html#l00412">GeographicLib::Constants::WGS84_r()</a>.</p>
+<p>References <a class="el" href="Geod_8cpp_source.html#l00034">AzimuthString()</a>, <a class="el" href="DMS_8cpp_source.html#l00028">GeographicLib::DMS::Decode()</a>, <a class="el" href="DMS_8cpp_source.html#l00246">GeographicLib::DMS::DecodeAzimuth()</a>, <a class="el" href="DMS_8cpp_source.html#l00205">GeographicLib::DMS::DecodeLatLon()</a>, <a class="el" href="Geod_8cpp_source.html#l00040">DistanceStrings()</a>, <a class="el" href="DMS_8cpp_source.html#l00258">GeographicLib::DMS::Encode()</a>, <a class="el" href="Geod_8cpp_source.html#l00025">LatLonString()</a>, <a class="el" href="DMS_8hpp_source.html#l00076">GeographicLib::DMS::NUMBER</a>, and <a class="el" href="Geod_8cpp_source.html#l00054">ReadDistance()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

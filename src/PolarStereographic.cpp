@@ -2,14 +2,14 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/PolarStereographic.hpp"
 
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: PolarStereographic.cpp 6906 2010-12-02 22:10:56Z karney $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: PolarStereographic.cpp 6937 2011-02-01 20:17:13Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
@@ -44,8 +44,9 @@ namespace GeographicLib {
   }
 
   const PolarStereographic
-  PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_r(),
-                          Constants::UPS_k0());
+  PolarStereographic::UPS(Constants::WGS84_a<real>(),
+                          Constants::WGS84_r<real>(),
+                          Constants::UPS_k0<real>());
 
   // This formulation converts to conformal coordinates by tau = tan(phi) and
   // tau' = tan(phi') where phi' is the conformal latitude.  The formulas are:
@@ -73,7 +74,7 @@ namespace GeographicLib {
     const throw() {
     lat *= northp ? 1 : -1;
     real
-      phi = lat * Math::degree(),
+      phi = lat * Math::degree<real>(),
       tau = lat != -90 ? tan(phi) : -overflow,
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
@@ -85,7 +86,7 @@ namespace GeographicLib {
       _k0;
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real
-      lam = lon * Math::degree();
+      lam = lon * Math::degree<real>();
     x = rho * (lon == -180 ? 0 : sin(lam));
     y = (northp ? -rho : rho) * (abs(lon) == 90 ? 0 : cos(lam));
     gamma = northp ? lon : -lon;
@@ -116,8 +117,8 @@ namespace GeographicLib {
       phi = atan(tau),
       secphi = Math::hypot(real(1), tau);
     k = rho != 0 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / sq(secphi)) : _k0;
-    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree() : 90);
-    lon = -atan2( -x, northp ? -y : y ) / Math::degree();
+    lat = (northp ? 1 : -1) * (rho != 0 ? phi / Math::degree<real>() : 90);
+    lon = -atan2( -x, northp ? -y : y ) / Math::degree<real>();
     gamma = northp ? lon : -lon;
   }
 

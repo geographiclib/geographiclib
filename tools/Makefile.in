@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6861 2010-09-06 21:29:08Z karney $
+# $Id: Makefile.am 6958 2011-02-18 04:12:27Z karney $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -247,6 +247,7 @@ AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_srcdir)/include 
 LDADD = $(top_builddir)/src/libGeographic.la
 DEPS = $(top_builddir)/src/libGeographic.la
+SUFFIXES = .pod .usage
 GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
@@ -294,11 +295,19 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk \
+	GeoConvert.pod GeoConvert.usage \
+	TransverseMercatorTest.pod TransverseMercatorTest.usage \
+	CartConvert.pod CartConvert.usage \
+	Geod.pod Geod.usage \
+	EquidistantTest.pod EquidistantTest.usage \
+	GeoidEval.pod GeoidEval.usage \
+	Planimeter.pod Planimeter.usage
+
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .cpp .lo .o .obj
+.SUFFIXES: .pod .usage .cpp .lo .o .obj
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -635,6 +644,17 @@ uninstall-am: uninstall-binPROGRAMS
 	pdf pdf-am ps ps-am tags uninstall uninstall-am \
 	uninstall-binPROGRAMS
 
+
+.pod.usage:
+	sh makeusage.sh $< > $@
+
+GeoConvert.o: GeoConvert.usage
+TransverseMercatorTest.o: TransverseMercatorTest.usage
+CartConvert.o: CartConvert.usage
+Geod.o: Geod.usage
+EquidistantTest.o: EquidistantTest.usage
+GeoidEval.o: GeoidEval.usage
+Planimeter.o: Planimeter.usage
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

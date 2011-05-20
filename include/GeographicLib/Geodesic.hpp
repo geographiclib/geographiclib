@@ -2,13 +2,13 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
-#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: Geodesic.hpp 6876 2010-10-18 13:47:55Z karney $"
+#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: Geodesic.hpp 6950 2011-02-11 04:09:24Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -26,6 +26,7 @@ namespace GeographicLib {
   /**
    * \brief %Geodesic calculations
    *
+
    * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
    * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
    * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
@@ -89,9 +90,17 @@ namespace GeographicLib {
    * Additional functionality if provided by the GeodesicLine class, which
    * allows a sequence of points along a geodesic to be computed.
    *
-   * The calculations are accurate to better than 15 nm.  (See \ref geoderrors
-   * for details.)
+   * The calculations are accurate to better than 15 nm.  See Sec. 9 of
+   * <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a> for details.
    *
+   * The algorithms are described in
+   * - C. F. F. Karney,
+   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   on an ellipsoid of revolution</a>,
+   *   Feb. 2011;
+   *   preprint
+   *   <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a>.
+   * .
    * For more information on geodesics see \ref geodesic.
    **********************************************************************/
 
@@ -762,7 +771,8 @@ namespace GeographicLib {
      *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the
      *   polygon.
      **********************************************************************/
-    Math::real EllipsoidArea() const throw() { return 4 * Math::pi() * _c2; }
+    Math::real EllipsoidArea() const throw()
+    { return 4 * Math::pi<real>() * _c2; }
     ///@}
 
     /**

@@ -2,12 +2,14 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
  *
- * See \ref geod for usage information.
+ * See the <a href="Planimeter.1.html">man page</a> for usage
+ * information.
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
@@ -15,42 +17,50 @@
 #include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
 
-int usage(int retval) {
-  ( retval ? std::cerr : std::cout ) <<
-"Usage: Planimeter [-s] [-r] [-e a r] [-h]\n\
-$Id: Planimeter.cpp 6911 2010-12-09 23:13:55Z karney $\n\
-\n\
-Measure the area of a geodesic polygon.  Reads polygon vertices from\n\
-standard input, one per line.  Vertices may be given as latitude and\n\
-longitude, UTM/UPS, or MGRS coordinates (interpreted in the same way as\n\
-GeoConvert).  (MGRS coordinates signify the center of the corresponing\n\
-MGRS square.)  The end of input, a blank line, or a line which can't be\n\
-interpreted as a vertex signals the end of one polygon and the start of\n\
-the next.  For each polygon print a summary line with the number of\n\
-points, the perimeter (in meters), and the area (in meters^2).\n\
-\n\
-By default, areas are traversed in a counter-clockwise sense (in other\n\
-words, the included area is to the left of the perimeter) and a\n\
-positive area is returned.  By this rule, a polygon tranversed in a\n\
-clockwise sense will return the area of ellipsoid excluded by the\n\
-polygon; however, if the -s option is given, the signed area will be\n\
-returned.  If the -r option is given, the included area is to the right\n\
-of the perimeter.  The -s and -r flags are toggles; repeating one of\n\
-then reverses the previous setting.  Only simple polygons are supported\n\
-for the area computation.  Polygons may include one or both poles.\n\
-\n\
-By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
-equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
-to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-ellipsoid.\n\
-\n\
--h prints this help.\n";
-  return retval;
-}
+#include "Planimeter.usage"
 
 int main(int argc, char* argv[]) {
   using namespace GeographicLib;
   typedef Math::real real;
+
+  class Accumulator {
+    // Compute a sum at double precision.  This is Algorithm 4.1, of T. Ogita,
+    // S. M. Rump, S. Oishi, Accurate sum and dot product, SIAM J. Sci. Comp.,
+    // 26(6) 1955-1988 (2005).
+  private:
+    // _s accumulates for the straight sum
+    // _t accumulates the errors.
+    real _s, _t;
+    // Error free transformation of a sum;
+    // see Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
+    static inline real sum(real u, real v, real& t) {
+      volatile real s = u + v;
+      volatile real up = s - v;
+      volatile real vpp = s - up;
+      up -= u;
+      vpp -= v;
+      t = -(up + vpp);
+      // u + v =       s      + t
+      //       = round(u + v) + t
+      return s;
+    }
+  public:
+    Accumulator() throw() : _s(0), _t(0) {};
+    void Clear() throw() { _s = 0; _t = 0; }
+    // Accumulate y
+    void Add(real y) throw() {
+      _s = sum(_s, y, y);
+      _t += y;
+    }
+    void Negate() throw() { _s *= -1; _t *= -1; }
+    // Return sum + y (don't accumulate)
+    real Sum(real y) const throw() {
+      real s = sum(_s, y, y);
+      return s + (_t + y);
+    }
+    // Return sum
+    real Sum() const throw() { return _s + _t; }
+  };
 
   class GeodesicPolygon {
   private:
@@ -58,7 +68,8 @@ int main(int argc, char* argv[]) {
     const real _area0;          // Full ellipsoid area
     unsigned _num;
     int _crossings;
-    real _area, _perimeter, _lat0, _lon0, _lat1, _lon1;
+    Accumulator _area, _perimeter;
+    real _lat0, _lon0, _lat1, _lon1;
     // Copied from Geodesic class
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
@@ -86,7 +97,8 @@ int main(int argc, char* argv[]) {
     void Clear() throw() {
       _num = 0;
       _crossings = 0;
-      _area = _perimeter = 0;
+      _area.Clear();
+      _perimeter.Clear();
       _lat0 = _lon0 = _lat1 = _lon1 = 0;
     }
     void AddPoint(real lat, real lon) throw() {
@@ -98,13 +110,12 @@ int main(int argc, char* argv[]) {
         _g.GenInverse(_lat1, _lon1, lat, lon,
                       Geodesic::DISTANCE | Geodesic::AREA,
                       s12, t, t, t, t, t, S12);
-        _perimeter += s12;
-        if (_area + S12 > _area0/2)
-          _area += S12 - _area0;
-        else if (_area + S12 <= -_area0/2)
-          _area += S12 + _area0;
-        else
-          _area += S12;
+        _perimeter.Add(s12);
+        _area.Add(S12);
+        if (_area.Sum() > _area0/2)
+          _area.Add(-_area0);
+        else if (_area.Sum() <= -_area0/2)
+          _area.Add(_area0);
         _crossings += transit(_lon1, lon);
         _lat1 = lat;
         _lon1 = lon;
@@ -121,44 +132,44 @@ int main(int argc, char* argv[]) {
       _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
                     Geodesic::DISTANCE | Geodesic::AREA,
                     s12, t, t, t, t, t, S12);
-      perimeter = _perimeter + s12;
-      area = _area;
-      if (area + S12 > _area0/2)
-        area += S12 - _area0;
-      else if (area + S12 <= -_area0/2)
-        area += S12 + _area0;
-      else
-        area += S12;
+      perimeter = _perimeter.Sum(s12);
+      Accumulator area1(_area);
+      area1.Add(S12);
+      if (area1.Sum() > _area0/2)
+        area1.Add(-_area0);
+      else if (area1.Sum() <= -_area0/2)
+        area1.Add(_area0);
       int crossings = _crossings + transit(_lon1, _lon0);
       if (crossings & 1) {
-        if (area < 0)
-          area += _area0/2;
+        if (area1.Sum() < 0)
+          area1.Sum(_area0/2);
         else
-          area -= _area0/2;
+          area1.Sum(-_area0/2);
       }
       // area is with the clockwise sense.  If !reverse convert to
       // counter-clockwise convention.
       if (!reverse)
-        area *= -1;
+        area1.Negate();
       // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
       if (sign) {
-        if (area > _area0/2)
-          area -= _area0;
-        else if (area <= -_area0/2)
-          area += _area0;
+        if (area1.Sum() > _area0/2)
+          area1.Add(-_area0);
+        else if (area1.Sum() <= -_area0/2)
+          area1.Add(_area0);
       } else {
-        if (area >= _area0)
-          area -= _area0;
-        else if (area < 0)
-          area += _area0;
+        if (area1.Sum() >= _area0)
+          area1.Add(-_area0);
+        else if (area1.Sum() < 0)
+          area1.Add(_area0);
       }
+      area = area1.Sum();
       return _num;
     }
   };
 
   real
-    a = Constants::WGS84_a(),
-    r = Constants::WGS84_r();
+    a = Constants::WGS84_a<real>(),
+    r = Constants::WGS84_r<real>();
   bool reverse = false, sign = false;
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
@@ -167,7 +178,7 @@ int main(int argc, char* argv[]) {
     else if (arg == "-s")
       sign = !sign;
     else if (arg == "-e") {
-      if (m + 2 >= argc) return usage(1);
+      if (m + 2 >= argc) return usage(1, true);
       try {
         a = DMS::Decode(std::string(argv[m + 1]));
         r = DMS::Decode(std::string(argv[m + 2]));
@@ -177,8 +188,14 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       m += 2;
+    } else if (arg == "--version") {
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id: Planimeter.cpp 6978 2011-02-21 22:42:11Z karney $\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      return 0;
     } else
-      return usage(arg != "-h");
+      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   const Geodesic geod(a, r);

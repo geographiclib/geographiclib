@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
+      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -66,7 +66,7 @@
 <a name="l00028"></a>00028 
 <a name="l00029"></a>00029 <span class="preprocessor">#include &quot;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&quot;</span>
 <a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">00031</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_CPP &quot;$Id: GeodesicLine.cpp 6876 2010-10-18 13:47:55Z karney $&quot;</span>
+<a name="l00031"></a><a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">00031</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_CPP &quot;$Id: GeodesicLine.cpp 6921 2010-12-31 14:34:50Z karney $&quot;</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
 <a name="l00033"></a>00033 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">GEOGRAPHICLIB_GEODESICLINE_CPP</a>)
 <a name="l00034"></a>00034 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeodesicLine_8hpp.html#a45305d595b59bfb061a5a0c6e1044485">GEOGRAPHICLIB_GEODESICLINE_HPP</a>)
@@ -94,13 +94,13 @@
 <a name="l00056"></a>00056     _lon1 = lon1;
 <a name="l00057"></a>00057     _azi1 = azi1;
 <a name="l00058"></a>00058     <span class="comment">// alp1 is in [0, pi]</span>
-<a name="l00059"></a>00059     real alp1 = azi1 * Math::degree();
+<a name="l00059"></a>00059     real alp1 = azi1 * Math::degree&lt;real&gt;();
 <a name="l00060"></a>00060     <span class="comment">// Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing</span>
 <a name="l00061"></a>00061     <span class="comment">// problems directly than to skirt them.</span>
 <a name="l00062"></a>00062     _salp1 =     azi1  == -180 ? 0 : sin(alp1);
 <a name="l00063"></a>00063     _calp1 = abs(azi1) ==   90 ? 0 : cos(alp1);
 <a name="l00064"></a>00064     real cbet1, sbet1, phi;
-<a name="l00065"></a>00065     phi = lat1 * Math::degree();
+<a name="l00065"></a>00065     phi = lat1 * Math::degree&lt;real&gt;();
 <a name="l00066"></a>00066     <span class="comment">// Ensure cbet1 = +epsilon at poles</span>
 <a name="l00067"></a>00067     sbet1 = _f1 * sin(phi);
 <a name="l00068"></a>00068     cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
@@ -179,7 +179,7 @@
 <a name="l00141"></a>00141     real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
 <a name="l00142"></a>00142     <span class="keywordflow">if</span> (arcmode) {
 <a name="l00143"></a>00143       <span class="comment">// Interpret s12_a12 as spherical arc length</span>
-<a name="l00144"></a>00144       sig12 = s12_a12 * Math::degree();
+<a name="l00144"></a>00144       sig12 = s12_a12 * Math::degree&lt;real&gt;();
 <a name="l00145"></a>00145       real s12a = abs(s12_a12);
 <a name="l00146"></a>00146       s12a -= 180 * floor(s12a / 180);
 <a name="l00147"></a>00147       ssig12 = s12a ==  0 ? 0 : sin(sig12);
@@ -231,7 +231,7 @@
 <a name="l00193"></a>00193       lam12 = omg12 + _A3c *
 <a name="l00194"></a>00194         ( sig12 + (Geodesic::SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, _C3a, nC3-1)
 <a name="l00195"></a>00195                    - _B31));
-<a name="l00196"></a>00196       lon12 = lam12 / Math::degree();
+<a name="l00196"></a>00196       lon12 = lam12 / Math::degree&lt;real&gt;();
 <a name="l00197"></a>00197       <span class="comment">// Can&#39;t use AngNormalize because longitude might have wrapped multiple</span>
 <a name="l00198"></a>00198       <span class="comment">// times.</span>
 <a name="l00199"></a>00199       lon12 = lon12 - 360 * floor(lon12/360 + <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5));
@@ -239,11 +239,11 @@
 <a name="l00201"></a>00201     }
 <a name="l00202"></a>00202 
 <a name="l00203"></a>00203     <span class="keywordflow">if</span> (outmask &amp; LATITUDE)
-<a name="l00204"></a>00204       lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree();
+<a name="l00204"></a>00204       lat2 = atan2(sbet2, _f1 * cbet2) / Math::degree&lt;real&gt;();
 <a name="l00205"></a>00205 
 <a name="l00206"></a>00206     <span class="keywordflow">if</span> (outmask &amp; AZIMUTH)
 <a name="l00207"></a>00207       <span class="comment">// minus signs give range [-180, 180). 0- converts -0 to +0.</span>
-<a name="l00208"></a>00208       azi2 = 0 - atan2(-salp2, calp2) / Math::degree();
+<a name="l00208"></a>00208       azi2 = 0 - atan2(-salp2, calp2) / Math::degree&lt;real&gt;();
 <a name="l00209"></a>00209 
 <a name="l00210"></a>00210     <span class="keywordflow">if</span> (outmask &amp; (REDUCEDLENGTH | GEODESICSCALE)) {
 <a name="l00211"></a>00211       real
@@ -299,13 +299,13 @@
 <a name="l00261"></a>00261       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
 <a name="l00262"></a>00262     }
 <a name="l00263"></a>00263 
-<a name="l00264"></a>00264     <span class="keywordflow">return</span> arcmode ? s12_a12 : sig12 /  Math::degree();
+<a name="l00264"></a>00264     <span class="keywordflow">return</span> arcmode ? s12_a12 : sig12 /  Math::degree&lt;real&gt;();
 <a name="l00265"></a>00265   }
 <a name="l00266"></a>00266 } <span class="comment">// namespace GeographicLib</span>
 <a name="l00267"></a>00267 
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

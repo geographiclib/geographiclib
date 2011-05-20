@@ -2,16 +2,16 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6920 2010-12-21 15:51:15Z karney $
+# $Id: Makefile.am 6958 2011-02-18 04:12:27Z karney $
 
 AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src tools doc include
+SUBDIRS = src tools doc include man
 
 EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
-			 Makefile.mk windows maxima matlab doc 
+			 Makefile.mk windows maxima matlab doc man
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \

@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_GEOID_CPP "$Id: Geoid.cpp 6918 2010-12-21 12:56:07Z karney $"
+#define GEOGRAPHICLIB_GEOID_CPP "$Id: Geoid.cpp 6967 2011-02-19 15:53:41Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
@@ -24,9 +24,12 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOID_DEFAULT_PATH "/usr/local/share/GeographicLib/geoids"
 #endif
 #endif
+#if !defined(GEOID_DEFAULT_NAME)
+#define GEOID_DEFAULT_NAME "egm96-5"
+#endif
 
 #if defined(_MSC_VER)
-// Squelch warnings about unsafe use of getenv
+// Squelch warnings about unsafe use of getenv and copy
 #pragma warning (disable: 4996)
 #endif
 
@@ -37,8 +40,8 @@ namespace GeographicLib {
   // This is the transfer matrix for a 3rd order fit with a 12-point stencil
   // with weights
   //
-  //  \ x -1  0  1  2
-  //  y
+  //   \x -1  0  1  2
+  //   y
   //  -1   .  1  1  .
   //   0   1  2  2  1
   //   1   1  2  2  1
@@ -203,16 +206,14 @@ namespace GeographicLib {
     : _name(name)
     , _dir(path)
     , _cubic(cubic)
-    , _a( Constants::WGS84_a() )
-    , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
-    , _degree( Math::degree() )
+    , _a( Constants::WGS84_a<real>() )
+    , _e2( (2 - 1/Constants::WGS84_r<real>())/Constants::WGS84_r<real>() )
+    , _degree( Math::degree<real>() )
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
     if (_dir.empty())
-      _dir = GeoidPath();
-    if (_dir.empty())
-      _dir = DefaultPath();
+      _dir = DefaultGeoidPath();
     _filename = _dir + "/" + _name + ".pgm";
     _file.open(_filename.c_str(), ios::binary);
     if (!(_file.good()))
@@ -532,5 +533,21 @@ namespace GeographicLib {
     if (geoidpath)
       path = string(geoidpath);
     return path;
+  }
+
+  std::string Geoid::DefaultGeoidPath() {
+    string path;
+    char* geoidpath = getenv("GEOID_PATH");
+    if (geoidpath)
+      path = string(geoidpath);
+    return path.length() ? path : string(GEOID_DEFAULT_PATH);
+  }
+
+  std::string Geoid::DefaultGeoidName() {
+    string name;
+    char* geoidname = getenv("GEOID_NAME");
+    if (geoidname)
+      name = string(geoidname);
+    return name.length() ? name : string(GEOID_DEFAULT_NAME);
   }
 }

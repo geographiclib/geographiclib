@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_79e1098902e66f6a177d48994037d882.html">include</a>      </li>
-      <li><a class="el" href="dir_fc11a85e9c9bbeb660c2eea06dda837b.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
+      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -41,13 +41,13 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file Geoid.hpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Header for GeographicLib::Geoid class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2009, 2010) &lt;charles@karney.com&gt;</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
 <a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEOID_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geoid_8hpp.html#a81966978f2fe7fad1effabc667a99820">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOID_HPP &quot;$Id: Geoid.hpp 6910 2010-12-08 22:01:30Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="Geoid_8hpp.html#a81966978f2fe7fad1effabc667a99820">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOID_HPP &quot;$Id: Geoid.hpp 6937 2011-02-01 20:17:13Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;string&gt;</span>
@@ -441,34 +441,55 @@
 <a name="l00402"></a>00402 <span class="comment">     * (The WGS84 value is returned because the supported geoid models are all</span>
 <a name="l00403"></a>00403 <span class="comment">     * based on this ellipsoid.)</span>
 <a name="l00404"></a>00404 <span class="comment">     **********************************************************************/</span>
-<a name="l00405"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aada99465d9ddfc1b34ccf2ef3d86dbd7">00405</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aada99465d9ddfc1b34ccf2ef3d86dbd7">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a53f39f52837f47490fbdf7332a37dd8b">Constants::WGS84_a</a>(); }
-<a name="l00406"></a>00406 <span class="comment"></span>
-<a name="l00407"></a>00407 <span class="comment">    /**</span>
-<a name="l00408"></a>00408 <span class="comment">     * @return \e r the inverse flattening of the WGS84 ellipsoid.</span>
-<a name="l00409"></a>00409 <span class="comment">     *</span>
-<a name="l00410"></a>00410 <span class="comment">     * (The WGS84 value is returned because the supported geoid models are all</span>
-<a name="l00411"></a>00411 <span class="comment">     * based on this ellipsoid.)</span>
-<a name="l00412"></a>00412 <span class="comment">     **********************************************************************/</span>
-<a name="l00413"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a19fd88ada94ee9b3b063e9ff097fd2e5">00413</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a19fd88ada94ee9b3b063e9ff097fd2e5">InverseFlattening</a>() <span class="keyword">const</span> throw()
-<a name="l00414"></a>00414     { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a199810de7ff3351be6473d20ef045789">Constants::WGS84_r</a>(); }<span class="comment"></span>
-<a name="l00415"></a>00415 <span class="comment">    ///@}</span>
-<a name="l00416"></a>00416 <span class="comment"></span><span class="comment"></span>
-<a name="l00417"></a>00417 <span class="comment">    /**</span>
-<a name="l00418"></a>00418 <span class="comment">     * Return the compile-time default path for the geoid data files.</span>
-<a name="l00419"></a>00419 <span class="comment">     **********************************************************************/</span>
-<a name="l00420"></a>00420     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1Geoid.html#ae842364ff8109822f1994e8c1db1f8d6">DefaultPath</a>();
-<a name="l00421"></a>00421 <span class="comment"></span>
-<a name="l00422"></a>00422 <span class="comment">    /**</span>
-<a name="l00423"></a>00423 <span class="comment">     * Return the value of the environment variable GEOID_PATH.</span>
-<a name="l00424"></a>00424 <span class="comment">     **********************************************************************/</span>
-<a name="l00425"></a>00425     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1Geoid.html#a30c5150e914c27ccc73c3a24f1ae8f59">GeoidPath</a>();
-<a name="l00426"></a>00426   };
-<a name="l00427"></a>00427 
-<a name="l00428"></a>00428 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00429"></a>00429 <span class="preprocessor">#endif</span>
+<a name="l00405"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aada99465d9ddfc1b34ccf2ef3d86dbd7">00405</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aada99465d9ddfc1b34ccf2ef3d86dbd7">MajorRadius</a>() <span class="keyword">const</span> throw()
+<a name="l00406"></a>00406     { <span class="keywordflow">return</span> Constants::WGS84_a&lt;real&gt;(); }
+<a name="l00407"></a>00407 <span class="comment"></span>
+<a name="l00408"></a>00408 <span class="comment">    /**</span>
+<a name="l00409"></a>00409 <span class="comment">     * @return \e r the inverse flattening of the WGS84 ellipsoid.</span>
+<a name="l00410"></a>00410 <span class="comment">     *</span>
+<a name="l00411"></a>00411 <span class="comment">     * (The WGS84 value is returned because the supported geoid models are all</span>
+<a name="l00412"></a>00412 <span class="comment">     * based on this ellipsoid.)</span>
+<a name="l00413"></a>00413 <span class="comment">     **********************************************************************/</span>
+<a name="l00414"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a19fd88ada94ee9b3b063e9ff097fd2e5">00414</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a19fd88ada94ee9b3b063e9ff097fd2e5">InverseFlattening</a>() <span class="keyword">const</span> throw()
+<a name="l00415"></a>00415     { <span class="keywordflow">return</span> Constants::WGS84_r&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00416"></a>00416 <span class="comment">    ///@}</span>
+<a name="l00417"></a>00417 <span class="comment"></span><span class="comment"></span>
+<a name="l00418"></a>00418 <span class="comment">    /**</span>
+<a name="l00419"></a>00419 <span class="comment">     * @return the default path for geoid data files.</span>
+<a name="l00420"></a>00420 <span class="comment">     *</span>
+<a name="l00421"></a>00421 <span class="comment">     * This is the value of the environment variable GEOID_PATH, if set,</span>
+<a name="l00422"></a>00422 <span class="comment">     * otherwise, it is a compile-time default.</span>
+<a name="l00423"></a>00423 <span class="comment">     **********************************************************************/</span>
+<a name="l00424"></a>00424     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1Geoid.html#a2daf81f5c648cf190a83981f441ab08f">DefaultGeoidPath</a>();
+<a name="l00425"></a>00425 <span class="comment"></span>
+<a name="l00426"></a>00426 <span class="comment">    /**</span>
+<a name="l00427"></a>00427 <span class="comment">     * @return the default name for the geoid.</span>
+<a name="l00428"></a>00428 <span class="comment">     *</span>
+<a name="l00429"></a>00429 <span class="comment">     * This is the value of the environment variable GEOID_NAME, if set,</span>
+<a name="l00430"></a>00430 <span class="comment">     * otherwise, it is &quot;egm96-5&quot;.  The Geoid class does not use this function;</span>
+<a name="l00431"></a>00431 <span class="comment">     * it is just provided as a convenience for a calling program when</span>
+<a name="l00432"></a>00432 <span class="comment">     * constructing a Geoid object.</span>
+<a name="l00433"></a>00433 <span class="comment">     **********************************************************************/</span>
+<a name="l00434"></a>00434     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1Geoid.html#a048865342b2b12ed2272e547209381fd">DefaultGeoidName</a>();
+<a name="l00435"></a>00435 <span class="comment"></span>
+<a name="l00436"></a>00436 <span class="comment">    /**</span>
+<a name="l00437"></a>00437 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; Return the compile-time default path for the geoid</span>
+<a name="l00438"></a>00438 <span class="comment">     * data files.</span>
+<a name="l00439"></a>00439 <span class="comment">     **********************************************************************/</span>
+<a name="l00440"></a>00440     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1Geoid.html#ae842364ff8109822f1994e8c1db1f8d6">DefaultPath</a>();
+<a name="l00441"></a>00441 <span class="comment"></span>
+<a name="l00442"></a>00442 <span class="comment">    /**</span>
+<a name="l00443"></a>00443 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; Return the value of the environment variable</span>
+<a name="l00444"></a>00444 <span class="comment">     * GEOID_PATH.</span>
+<a name="l00445"></a>00445 <span class="comment">     **********************************************************************/</span>
+<a name="l00446"></a>00446     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1Geoid.html#a30c5150e914c27ccc73c3a24f1ae8f59">GeoidPath</a>();
+<a name="l00447"></a>00447   };
+<a name="l00448"></a>00448 
+<a name="l00449"></a>00449 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00450"></a>00450 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

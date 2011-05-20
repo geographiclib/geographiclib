@@ -62,7 +62,11 @@ Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Gnomonic Projection. </p>
-<p>Gnomonic projection centered at an arbitrary position <em>C</em> on the ellipsoid. The projection of <em>P</em> is defined as follows: compute the geodesic line from <em>C</em> to <em>P</em>; compute the reduced length <em>m12</em>, geodesic scale <em>M12</em>, and <em>rho</em> = <em>m12/<em>M12</em>;</em> finally <em>x</em> = <em>rho</em> sin <em>azi1</em>; <em>y</em> = <em>rho</em> cos <em>azi1</em>, where <em>azi1</em> is the azimuth of the geodesic at <em>C</em>. The Forward and Reverse methods also return the azimuth <em>azi</em> of the geodesic at <em>P</em> and reciprocal scale <em>rk</em> in the azimuthal direction. The scale in the radial direction if 1/<em>rk<sup>2</sup></em>.</p>
+<p>Gnomonic projection centered at an arbitrary position <em>C</em> on the ellipsoid. This projection is derived in Section 13 of</p>
+<ul>
+<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.</li>
+</ul>
+<p>The projection of <em>P</em> is defined as follows: compute the geodesic line from <em>C</em> to <em>P</em>; compute the reduced length <em>m12</em>, geodesic scale <em>M12</em>, and <em>rho</em> = <em>m12/<em>M12</em>;</em> finally <em>x</em> = <em>rho</em> sin <em>azi1</em>; <em>y</em> = <em>rho</em> cos <em>azi1</em>, where <em>azi1</em> is the azimuth of the geodesic at <em>C</em>. The <a class="el" href="classGeographicLib_1_1Gnomonic.html#ab851ea19db5671f8d4a4151820bc6853">Gnomonic::Forward</a> and <a class="el" href="classGeographicLib_1_1Gnomonic.html#afccbed660a482ef73d33ad16406ee626">Gnomonic::Reverse</a> methods also return the azimuth <em>azi</em> of the geodesic at <em>P</em> and reciprocal scale <em>rk</em> in the azimuthal direction. The scale in the radial direction if 1/<em>rk<sup>2</sup></em>.</p>
 <p>For a sphere, <em>rho</em> is reduces to <em>a</em> tan(<em>s12/<em>a</em>)</em>, where <em>s12</em> is the length of the geodesic from <em>C</em> to <em>P</em>, and the gnomonic projection has the property that all geodesics appear as straight lines. For an ellipsoid, this property holds only for geodesics interesting the centers. However geodesic segments close to the center are approximately straight.</p>
 <p>Consider a geodesic segment of length <em>l</em>. Let <em>T</em> be the point on the geodesic (extended if necessary) closest to <em>C</em> the center of the projection and <em>t</em> be the distance <em>CT</em>. To lowest order, the maximum deviation (as a true distance) of the corresponding gnomonic line segment (i.e., with the same end points) from the geodesic is<br/>
  <br/>
@@ -74,12 +78,12 @@ Public Member Functions</h2></td></tr>
 <p><b>CAUTION:</b> The definition of this projection for a sphere is standard. However, there is no standard for how it should be extended to an ellipsoid. The choices are:</p>
 <ul>
 <li>Declare that the projection is undefined for an ellipsoid.</li>
-<li>Project to a tangent plane from the center of the ellipsoid. This causes great ellipses to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a great ellipse. This was proposed by Roy Williams, Geometry of Navigation (Horwood, Chichester, 1998).</li>
+<li>Project to a tangent plane from the center of the ellipsoid. This causes great ellipses to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a great ellipse. This was proposed by independently by Bowring and Williams in 1997.</li>
 <li>Project to the conformal sphere with the constant of integration chosen so that the values of the latitude match for the center point and perform a central projection onto the plane tangent to the conformal sphere at the center point. This causes normal sections through the center point to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a normal section. This was proposed by I. G. Letoval'tsev, Generalization of the Gnomonic Projection for a Spheroid and the Principal Geodetic Problems Involved in the Alignment of Surface Routes, Geodesy and Aerophotography (5), 271-274 (1963).</li>
 <li>The projection given here. This causes geodesics close to the center point to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a geodesic. </li>
 </ul>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00082">82</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00090">90</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a2ac973ebbd7aaf18c451b152cd92db99"></a><!-- doxytag: member="GeographicLib::Gnomonic::Gnomonic" ref="a2ac973ebbd7aaf18c451b152cd92db99" args="(const Geodesic &amp;earth=Geodesic::WGS84)" -->
 <div class="memitem">
@@ -104,7 +108,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00097">97</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00105">105</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -187,7 +191,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00023">23</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00159">Forward()</a>.</p>
+<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00167">Forward()</a>.</p>
 
 </div>
 </div>
@@ -269,7 +273,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00042">42</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00168">Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00176">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -323,7 +327,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#ab851ea19db5671f8d4a4151820bc6853">Gnomonic::Forward</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00159">159</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00167">167</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 <p>References <a class="el" href="Gnomonic_8cpp_source.html#l00023">Forward()</a>.</p>
 
@@ -379,7 +383,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#afccbed660a482ef73d33ad16406ee626">Gnomonic::Reverse</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00168">168</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00176">176</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 <p>References <a class="el" href="Gnomonic_8cpp_source.html#l00042">Reverse()</a>.</p>
 
@@ -401,9 +405,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00181">181</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00189">189</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
-<p>References <a class="el" href="Geodesic_8hpp_source.html#l00750">GeographicLib::Geodesic::MajorRadius()</a>.</p>
+<p>References <a class="el" href="Geodesic_8hpp_source.html#l00759">GeographicLib::Geodesic::MajorRadius()</a>.</p>
 
 </div>
 </div>
@@ -423,9 +427,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. A value of 0 is returned for a sphere (infinite inverse flattening). </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00188">188</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00196">196</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
-<p>References <a class="el" href="Geodesic_8hpp_source.html#l00757">GeographicLib::Geodesic::InverseFlattening()</a>.</p>
+<p>References <a class="el" href="Geodesic_8hpp_source.html#l00766">GeographicLib::Geodesic::InverseFlattening()</a>.</p>
 
 </div>
 </div>
@@ -434,7 +438,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

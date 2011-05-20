@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
+      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -48,7 +48,7 @@
 <a name="l00010"></a>00010 
 <a name="l00011"></a>00011 <span class="preprocessor">#include &quot;<a class="code" href="CassiniSoldner_8hpp.html" title="Header for GeographicLib::CassiniSoldner class.">GeographicLib/CassiniSoldner.hpp</a>&quot;</span>
 <a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="CassiniSoldner_8cpp.html#a91edbe2e2eaf2776b80aecf2107909d4">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_CASSINISOLDNER_CPP &quot;$Id: CassiniSoldner.cpp 6875 2010-10-02 19:31:54Z karney $&quot;</span>
+<a name="l00013"></a><a class="code" href="CassiniSoldner_8cpp.html#a91edbe2e2eaf2776b80aecf2107909d4">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_CASSINISOLDNER_CPP &quot;$Id: CassiniSoldner.cpp 6921 2010-12-31 14:34:50Z karney $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="CassiniSoldner_8cpp.html#a91edbe2e2eaf2776b80aecf2107909d4">GEOGRAPHICLIB_CASSINISOLDNER_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="CassiniSoldner_8hpp.html#ab674f10f5e4e3b25dc68c65fa408e315">GEOGRAPHICLIB_CASSINISOLDNER_HPP</a>)
@@ -67,7 +67,7 @@
 <a name="l00029"></a>00029                             Geodesic::DISTANCE | Geodesic::DISTANCE_IN |
 <a name="l00030"></a>00030                             Geodesic::AZIMUTH);
 <a name="l00031"></a>00031     real
-<a name="l00032"></a>00032       phi = LatitudeOrigin() * Math::degree(),
+<a name="l00032"></a>00032       phi = LatitudeOrigin() * Math::degree&lt;real&gt;(),
 <a name="l00033"></a>00033       f = _earth.InverseFlattening() != 0 ? 1 / _earth.InverseFlattening() : 0;
 <a name="l00034"></a>00034     _sbet0 = (1 - f) * sin(phi);
 <a name="l00035"></a>00035     _cbet0 = abs(LatitudeOrigin()) == 90 ? 0 : cos(phi);
@@ -110,13 +110,13 @@
 <a name="l00072"></a>00072                      t, t, t, t, t, t, rk, t);
 <a name="l00073"></a>00073 
 <a name="l00074"></a>00074     real
-<a name="l00075"></a>00075       alp0 = perp.EquatorialAzimuth() * Math::degree(),
+<a name="l00075"></a>00075       alp0 = perp.EquatorialAzimuth() * Math::degree&lt;real&gt;(),
 <a name="l00076"></a>00076       calp0 = cos(alp0), salp0 = sin(alp0),
 <a name="l00077"></a>00077       sbet1 = lat &gt;=0 ? calp0 : -calp0,
 <a name="l00078"></a>00078       cbet1 = abs(dlon) &lt;= 90 ? abs(salp0) : -abs(salp0),
 <a name="l00079"></a>00079       sbet01 = sbet1 * _cbet0 - cbet1 * _sbet0,
 <a name="l00080"></a>00080       cbet01 = cbet1 * _cbet0 + sbet1 * _sbet0,
-<a name="l00081"></a>00081       sig01 = atan2(sbet01, cbet01) / Math::degree();
+<a name="l00081"></a>00081       sig01 = atan2(sbet01, cbet01) / Math::degree&lt;real&gt;();
 <a name="l00082"></a>00082     _meridian.GenPosition(<span class="keyword">true</span>, sig01,
 <a name="l00083"></a>00083                           Geodesic::DISTANCE,
 <a name="l00084"></a>00084                           t, t, t, y, t, t, t, t);
@@ -135,7 +135,7 @@
 <a name="l00097"></a>00097 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

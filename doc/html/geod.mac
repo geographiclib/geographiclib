@@ -5,7 +5,15 @@ Compute the series expansions for the spheroidal geodesic problem.
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id: geod.mac 6858 2010-09-06 13:52:31Z karney $
+$Id: geod.mac 6976 2011-02-21 11:05:24Z karney $
+
+Reference:
+
+   Charles F. F. Karney,
+   Geodesics on an ellipsoid of revolution,
+   Feb. 2011.
+   preprint http://arxiv.org/abs/1102.1215
+   resource page http://geographiclib.sf.net/geod.html
 
 There are 4 sections in this file
 

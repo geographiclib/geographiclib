@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_29116c7d4afdd7998dc4eecaf27d5581.html">src</a>      </li>
+      <li><a class="el" href="dir_b6dff8fdfd5d70bd61ba562840823df9.html">src</a>      </li>
     </ul>
   </div>
 </div>
@@ -40,7 +40,7 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file DMS.cpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Implementation for GeographicLib::DMS class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010) &lt;charles@karney.com&gt;</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
 <a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
@@ -48,7 +48,7 @@
 <a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&quot;</span>
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: DMS.cpp 6915 2010-12-18 14:28:46Z karney $&quot;</span>
+<a name="l00013"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: DMS.cpp 6956 2011-02-17 23:20:13Z karney $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">GEOGRAPHICLIB_DMS_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8hpp.html#a844e4c8afc70c59c842f4553ce40b9c6">GEOGRAPHICLIB_DMS_HPP</a>)
@@ -212,9 +212,9 @@
 <a name="l00174"></a>00174     <span class="comment">// Strip off sign and trailing 0s</span>
 <a name="l00175"></a>00175     t = t.substr(p0, p1 + 1 - p0);  <span class="comment">// Length at least 3</span>
 <a name="l00176"></a>00176     <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;NAN&quot;</span> || t == <span class="stringliteral">&quot;1.#QNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#SNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#IND&quot;</span>)
-<a name="l00177"></a>00177       <span class="keywordflow">return</span> sign * <a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">Math::NaN</a>();
+<a name="l00177"></a>00177       <span class="keywordflow">return</span> sign * <a class="code" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">Math::NaN</a>();
 <a name="l00178"></a>00178     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;INF&quot;</span> || t == <span class="stringliteral">&quot;1.#INF&quot;</span>)
-<a name="l00179"></a>00179       <span class="keywordflow">return</span> sign * <a class="code" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">Math::infinity</a>();
+<a name="l00179"></a>00179       <span class="keywordflow">return</span> sign * <a class="code" href="classGeographicLib_1_1Math.html#a4e8a86ff2039262e99b8e41070cc2223">Math::infinity</a>();
 <a name="l00180"></a>00180     <span class="keywordflow">return</span> 0;
 <a name="l00181"></a>00181   }
 <a name="l00182"></a>00182 
@@ -288,7 +288,7 @@
 <a name="l00250"></a>00250       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Azimuth &quot;</span> + azistr
 <a name="l00251"></a>00251                           + <span class="stringliteral">&quot; has a latitude hemisphere, N/S&quot;</span>);
 <a name="l00252"></a>00252     <span class="keywordflow">if</span> (azi &lt; -180 || azi &gt; 360)
-<a name="l00253"></a>00253       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Azimuth &quot;</span> + azistr + <span class="stringliteral">&quot;d not in range [-180d,360d]&quot;</span>);
+<a name="l00253"></a>00253       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Azimuth &quot;</span> + azistr + <span class="stringliteral">&quot; not in range [-180d,360d]&quot;</span>);
 <a name="l00254"></a>00254     <span class="keywordflow">if</span> (azi &gt;= 180) azi -= 360;
 <a name="l00255"></a>00255     <span class="keywordflow">return</span> azi;
 <a name="l00256"></a>00256   }
@@ -296,7 +296,7 @@
 <a name="l00258"></a><a class="code" href="classGeographicLib_1_1DMS.html#a3e36baa6114d46f82a8900d002784369">00258</a>   <span class="keywordtype">string</span> <a class="code" href="classGeographicLib_1_1DMS.html#a3e36baa6114d46f82a8900d002784369">DMS::Encode</a>(real angle, <a class="code" href="classGeographicLib_1_1DMS.html#ab9fa04b3a9156f36f18852eed9b7ce09">component</a> trailing, <span class="keywordtype">unsigned</span> prec, <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a> ind) {
 <a name="l00259"></a>00259     <span class="comment">// Assume check on range of input angle has been made by calling</span>
 <a name="l00260"></a>00260     <span class="comment">// routine (which might be able to offer a better diagnostic).</span>
-<a name="l00261"></a>00261     <span class="keywordflow">if</span> (!<a class="code" href="classGeographicLib_1_1Math.html#aa0e4daf4f9d6f5f381653a8c99c1e635">Math::isfinite</a>(angle))
+<a name="l00261"></a>00261     <span class="keywordflow">if</span> (!<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(angle))
 <a name="l00262"></a>00262       <span class="keywordflow">return</span> angle &lt; 0 ? string(<span class="stringliteral">&quot;-inf&quot;</span>) :
 <a name="l00263"></a>00263         (angle &gt; 0 ? string(<span class="stringliteral">&quot;inf&quot;</span>) : string(<span class="stringliteral">&quot;nan&quot;</span>));
 <a name="l00264"></a>00264 
@@ -368,7 +368,7 @@
 <a name="l00330"></a>00330 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

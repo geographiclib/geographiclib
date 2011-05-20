@@ -2,12 +2,13 @@
  * \file LambertConformalConic.hpp
  * \brief Header for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: LambertConformalConic.hpp 6916 2010-12-20 23:03:47Z karney $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: LambertConformalConic.hpp 6937 2011-02-01 20:17:13Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
@@ -47,11 +48,15 @@ namespace GeographicLib {
    * latitude of origin.  However these are can be simply included by the
    * calling function.  For example the Pennsylvania South state coordinate
    * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
-   * EPSG:3364</a>) is obtained by: \code const double a =
-   * GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80 lat1 = 39
-   * + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels k1 = 1, // scale
-   * lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin fe = 600000, fn =
-   * 0; // false easting and northing
+   * EPSG:3364</a>) is obtained by:
+   \code
+   const double
+     a = GeographicLib::Constants::WGS84_a<double>(),
+     r = 298.257222101,                        // GRS80
+     lat1 = 39 + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels
+     k1 = 1,                                   // scale
+     lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin
+     fe = 600000, fn = 0;                      // false easting and northing
    // Set up basic projection
    const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
    double x0, y0;

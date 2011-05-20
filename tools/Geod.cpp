@@ -2,13 +2,14 @@
  * \file Geod.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
  *
- * See \ref geod for usage information.
+ * See the <a href="Geod.1.html">man page</a> for usage
+ * information.
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
@@ -17,75 +18,7 @@
 #include <iostream>
 #include <sstream>
 
-int usage(int retval) {
-  ( retval ? std::cerr : std::cout ) <<
-"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-e a r]\n\
-            [-d] [-b] [-f] [-p prec] [-h]\n\
-$Id: Geod.cpp 6905 2010-12-01 21:28:56Z karney $\n\
-\n\
-Perform geodesic calculations.\n\
-\n\
-The shortest path between two points on the ellipsoid at (lat1, lon1) and\n\
-(lat2, lon2) is called the geodesic.  Its length is s12 and the geodesic\n\
-from point 1 to point 2 has azimuths azi1 and azi2 at the two end\n\
-points.  The reduced length of the geodesic, m12, is defined such that\n\
-if the initial azimuth is perturbed by dazi1 (radians) then the second\n\
-point is displaced by m12*dazi1 in the direction perpendicular to the\n\
-geodesic.  On a flat surface, we have m12 = s12.\n\
-\n\
-Geod operates in one of three modes:\n\
-\n\
-(1) It accepts lines on the standard input containing \"lat1 lon1 azi1\n\
-    s12\" and prints \"lat2 lon2 azi2 m12\" on standard output.  This is\n\
-    the direct geodesic calculation.\n\
-\n\
-(2) Command line arguments \"-l lat1 lon1 azi1\" specify a geodesic line.\n\
-    Geod then accepts a sequence of s12 values (one per line) on\n\
-    standard input and prints \"lat2 lon2 azi2 m12\" for each.  This\n\
-    generates a sequence of points on a single geodesic.\n\
-\n\
-(3) With the -i command line argument, Geod performs the inverse\n\
-    geodesic calculation.  It reads lines containing \"lat1 lon1 lat2\n\
-    lon2\" and prints the corresponding values of \"azi1 azi2 s12 m12\".\n\
-\n\
-By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
-equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
-to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-ellipsoid.\n\
-\n\
-Output of angles is as decimal degrees.  If -d is specified the output\n\
-is as degrees, minutes, seconds.  Input can be in either style.  d, ',\n\
-and \" are used to denote degrees, minutes, and seconds, with the least\n\
-significant designator optional.  By default, latitude precedes\n\
-longitude for each point; however on input either may be given first by\n\
-appending N or S to the latitude and E or W to the longitude.  Azimuths\n\
-(measured clockwise from north) give the heading of the geodesic.  The\n\
-azimuth azi2 is the forward azimuth (the heading beyond point 2).  If\n\
-the -b flag is given, azi2 is converted to a back azimuth (the direction\n\
-back to point 1) for output.\n\
-\n\
-s12 is given in meters, unless the -a flag is given.  In that case, s12\n\
-(on both input and output) are given as the arc length on the auxiliary\n\
-sphere a12 (measured in degrees).  In these terms, 180 degrees is the\n\
-distance from one equator crossing to the next or from the minimum\n\
-latitude to the maximum latitude.  Distances greater than 180 degrees do\n\
-not correspond to shortest paths.  m12 is always given in meters.\n\
-\n\
-The output lines consist of the four quantities needed to complete the\n\
-specification of the geodesic.  With the -f option, each line of output\n\
-is a complete geodesic specification consisting of nine quantities\n\
-\n\
-    lat1 lon1 azi1 lat2 lon2 azi2 s12 a12 m12\n\
-\n\
-where here s12 is the distance and a12 the arc length.\n\
-\n\
--p prec (default 3) gives the precision of the output relative to 1m.\n\
-The minimum value of prec is 0 (1 m accuracy) and the maximum value is\n\
-10 (0.1 nm accuracy, but then the last digits are unreliable).\n\
-\n\
--h prints this help.\n";
-  return retval;
-}
+#include "Geod.usage"
 
 typedef GeographicLib::Math::real real;
 
@@ -128,8 +61,8 @@ int main(int argc, char* argv[]) {
   bool linecalc = false, inverse = false, arcmode = false,
     dms = false, full = false;
   real
-    a = Constants::WGS84_a(),
-    r = Constants::WGS84_r();
+    a = Constants::WGS84_a<real>(),
+    r = Constants::WGS84_r<real>();
   real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
   real azi2sense = 0;
   int prec = 3;
@@ -144,7 +77,7 @@ int main(int argc, char* argv[]) {
     else if (arg == "-l") {
       inverse = false;
       linecalc = true;
-      if (m + 3 >= argc) return usage(1);
+      if (m + 3 >= argc) return usage(1, true);
       try {
         DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
                           lat1, lon1);
@@ -155,11 +88,11 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       m += 3;
-    } else if (arg == "-n") {
+    } else if (arg == "-n") {   // Deprecated and so not documented
       a = 6378388;
       r = 297;
     } else if (arg == "-e") {
-      if (m + 2 >= argc) return usage(1);
+      if (m + 2 >= argc) return usage(1, true);
       try {
         a = DMS::Decode(std::string(argv[m + 1]));
         r = DMS::Decode(std::string(argv[m + 2]));
@@ -177,15 +110,21 @@ int main(int argc, char* argv[]) {
     else if (arg == "-f")
       full = true;
     else if (arg == "-p") {
-      if (++m == argc) return usage(1);
+      if (++m == argc) return usage(1, true);
       std::istringstream str(argv[m]);
       char c;
       if (!(str >> prec) || (str >> c)) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
       }
+    } else if (arg == "--version") {
+      std::cout
+        << PROGRAM_NAME
+        << ": $Id: Geod.cpp 6978 2011-02-21 22:42:11Z karney $\n"
+        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
+      return 0;
     } else
-      return usage(arg != "-h");
+      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
   }
 
   const Geodesic geod(a, r);

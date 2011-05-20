@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6861 2010-09-06 21:29:08Z karney $
+# $Id: Makefile.am 6958 2011-02-18 04:12:27Z karney $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_srcdir)/include 
@@ -11,6 +11,19 @@ LDADD = $(top_builddir)/src/libGeographic.la
 DEPS = $(top_builddir)/src/libGeographic.la
 
 bin_PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest GeoidEval Planimeter
+
+SUFFIXES = .pod .usage
+
+.pod.usage:
+	sh makeusage.sh $< > $@
+
+GeoConvert.o: GeoConvert.usage
+TransverseMercatorTest.o: TransverseMercatorTest.usage
+CartConvert.o: CartConvert.usage
+Geod.o: Geod.usage
+EquidistantTest.o: EquidistantTest.usage
+GeoidEval.o: GeoidEval.usage
+Planimeter.o: Planimeter.usage
 
 GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
@@ -59,4 +72,11 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk \
+	GeoConvert.pod GeoConvert.usage \
+	TransverseMercatorTest.pod TransverseMercatorTest.usage \
+	CartConvert.pod CartConvert.usage \
+	Geod.pod Geod.usage \
+	EquidistantTest.pod EquidistantTest.usage \
+	GeoidEval.pod GeoidEval.usage \
+	Planimeter.pod Planimeter.usage

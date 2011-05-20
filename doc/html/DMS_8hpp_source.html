@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_79e1098902e66f6a177d48994037d882.html">include</a>      </li>
-      <li><a class="el" href="dir_fc11a85e9c9bbeb660c2eea06dda837b.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
+      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -41,13 +41,13 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file DMS.hpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Header for GeographicLib::DMS class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010) &lt;charles@karney.com&gt;</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
 <a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_DMS_HPP)</span>
-<a name="l00011"></a><a class="code" href="DMS_8hpp.html#a844e4c8afc70c59c842f4553ce40b9c6">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_DMS_HPP &quot;$Id: DMS.hpp 6911 2010-12-09 23:13:55Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="DMS_8hpp.html#a844e4c8afc70c59c842f4553ce40b9c6">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_DMS_HPP &quot;$Id: DMS.hpp 6954 2011-02-16 14:36:56Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;sstream&gt;</span>
@@ -166,7 +166,7 @@
 <a name="l00127"></a>00127 <span class="comment">     * @param[in] d degrees.</span>
 <a name="l00128"></a>00128 <span class="comment">     * @param[in] m arc minutes.</span>
 <a name="l00129"></a>00129 <span class="comment">     * @param[in] s arc seconds.</span>
-<a name="l00130"></a>00130 <span class="comment">     * @return angle (degress)</span>
+<a name="l00130"></a>00130 <span class="comment">     * @return angle (degrees)</span>
 <a name="l00131"></a>00131 <span class="comment">     *</span>
 <a name="l00132"></a>00132 <span class="comment">     * This does not propagate the sign on \e d to the other components, so</span>
 <a name="l00133"></a>00133 <span class="comment">     * -3d20&#39; would need to be represented as - DMS::Decode(3.0, 20.0) or</span>
@@ -236,15 +236,15 @@
 <a name="l00197"></a>00197 <span class="comment">     * @param[in] prec the number of digits after the decimal point for the</span>
 <a name="l00198"></a>00198 <span class="comment">     *   trailing component.</span>
 <a name="l00199"></a>00199 <span class="comment">     * @param[in] ind DMS::flag value indicated additional formatting.</span>
-<a name="l00200"></a>00200 <span class="comment">     * @return formatting string</span>
+<a name="l00200"></a>00200 <span class="comment">     * @return formatted string</span>
 <a name="l00201"></a>00201 <span class="comment">     *</span>
 <a name="l00202"></a>00202 <span class="comment">     * The interpretation of \e ind is as follows:</span>
 <a name="l00203"></a>00203 <span class="comment">     * - ind == DMS::NONE, signed result no leading zeros on degrees except in</span>
 <a name="l00204"></a>00204 <span class="comment">     *   the units place, e.g., -8d03&#39;.</span>
 <a name="l00205"></a>00205 <span class="comment">     * - ind == DMS::LATITUDE, trailing N or S hemisphere designator, no sign,</span>
-<a name="l00206"></a>00206 <span class="comment">     *   pad degress to 2 digits, e.g., 08d03&#39;S.</span>
+<a name="l00206"></a>00206 <span class="comment">     *   pad degrees to 2 digits, e.g., 08d03&#39;S.</span>
 <a name="l00207"></a>00207 <span class="comment">     * - ind == DMS::LONGITUDE, trailing E or W hemisphere designator, no</span>
-<a name="l00208"></a>00208 <span class="comment">     *   sign, pad degress to 3 digits, e.g., 008d03&#39;W.</span>
+<a name="l00208"></a>00208 <span class="comment">     *   sign, pad degrees to 3 digits, e.g., 008d03&#39;W.</span>
 <a name="l00209"></a>00209 <span class="comment">     * - ind == DMS::AZIMUTH, convert to the range [0, 360&lt;sup&gt;o&lt;/sup&gt;), no</span>
 <a name="l00210"></a>00210 <span class="comment">     *   sign, pad degrees to 3 digits, , e.g., 351d57&#39;.</span>
 <a name="l00211"></a>00211 <span class="comment">     * .</span>
@@ -261,7 +261,7 @@
 <a name="l00222"></a>00222 <span class="comment">     * @param[in] angle input angle (degrees)</span>
 <a name="l00223"></a>00223 <span class="comment">     * @param[in] prec the precision relative to 1 degree.</span>
 <a name="l00224"></a>00224 <span class="comment">     * @param[in] ind DMS::flag value indicated additional formatting.</span>
-<a name="l00225"></a>00225 <span class="comment">     * @return formatting string</span>
+<a name="l00225"></a>00225 <span class="comment">     * @return formatted string</span>
 <a name="l00226"></a>00226 <span class="comment">     *</span>
 <a name="l00227"></a>00227 <span class="comment">     * \e prec indicates the precision relative to 1 degree, e.g., \e prec = 3</span>
 <a name="l00228"></a>00228 <span class="comment">     * gives a result accurate to 0.1&#39; and \e prec = 4 gives a result accurate</span>
@@ -271,7 +271,7 @@
 <a name="l00232"></a>00232 <span class="comment">     **********************************************************************/</span>
 <a name="l00233"></a><a class="code" href="classGeographicLib_1_1DMS.html#a87dd4a3eea0be6d3a45c8390e725aeb9">00233</a>     <span class="keyword">static</span> std::string <a class="code" href="classGeographicLib_1_1DMS.html#a87dd4a3eea0be6d3a45c8390e725aeb9">Encode</a>(real angle, <span class="keywordtype">unsigned</span> prec, <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a> ind = <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869adc80eee37727cca42f9805cfefb83fc1">NONE</a>) {
 <a name="l00234"></a>00234       <span class="keywordflow">if</span> (ind == <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869a5a65ec03b2682ad76873829167882518">NUMBER</a>) {
-<a name="l00235"></a>00235         <span class="keywordflow">if</span> (!<a class="code" href="classGeographicLib_1_1Math.html#aa0e4daf4f9d6f5f381653a8c99c1e635">Math::isfinite</a>(angle))
+<a name="l00235"></a>00235         <span class="keywordflow">if</span> (!<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(angle))
 <a name="l00236"></a>00236           <span class="keywordflow">return</span> angle &lt; 0 ? std::string(<span class="stringliteral">&quot;-inf&quot;</span>) :
 <a name="l00237"></a>00237             (angle &gt; 0 ? std::string(<span class="stringliteral">&quot;inf&quot;</span>) : std::string(<span class="stringliteral">&quot;nan&quot;</span>));
 <a name="l00238"></a>00238         std::ostringstream s;
@@ -315,7 +315,7 @@
 <a name="l00276"></a>00276 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

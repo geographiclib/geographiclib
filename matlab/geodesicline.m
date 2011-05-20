@@ -31,9 +31,10 @@ function latlong = geodesicline(lat1, lon1, azi1, distances, a, r)
   error('Error: executing .m file instead of compiled routine');
 end
 % geodesicline.m
-% Matlab .m file for geographic to UTM/UPS conversions
+% Matlab .m file for computing points along a geodesic
 %
-% Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
-% the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
+% licensed under the LGPL.  For more information, see
+% http://geographiclib.sourceforge.net/
 %
-% $Id: geodesicline.m 6896 2010-11-18 22:43:19Z karney $
+% $Id: geodesicline.m 6927 2011-01-20 13:06:59Z karney $

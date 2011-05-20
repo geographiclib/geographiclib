@@ -2,13 +2,13 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
-#define GEOGRAPHICLIB_GEOID_HPP "$Id: Geoid.hpp 6910 2010-12-08 22:01:30Z karney $"
+#define GEOGRAPHICLIB_GEOID_HPP "$Id: Geoid.hpp 6937 2011-02-01 20:17:13Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include <string>
@@ -402,7 +402,8 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return Constants::WGS84_a(); }
+    Math::real MajorRadius() const throw()
+    { return Constants::WGS84_a<real>(); }
 
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
@@ -411,16 +412,36 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real InverseFlattening() const throw()
-    { return Constants::WGS84_r(); }
+    { return Constants::WGS84_r<real>(); }
     ///@}
 
     /**
-     * Return the compile-time default path for the geoid data files.
+     * @return the default path for geoid data files.
+     *
+     * This is the value of the environment variable GEOID_PATH, if set,
+     * otherwise, it is a compile-time default.
+     **********************************************************************/
+    static std::string DefaultGeoidPath();
+
+    /**
+     * @return the default name for the geoid.
+     *
+     * This is the value of the environment variable GEOID_NAME, if set,
+     * otherwise, it is "egm96-5".  The Geoid class does not use this function;
+     * it is just provided as a convenience for a calling program when
+     * constructing a Geoid object.
+     **********************************************************************/
+    static std::string DefaultGeoidName();
+
+    /**
+     * <b>DEPRECATED</b> Return the compile-time default path for the geoid
+     * data files.
      **********************************************************************/
     static std::string DefaultPath();
 
     /**
-     * Return the value of the environment variable GEOID_PATH.
+     * <b>DEPRECATED</b> Return the value of the environment variable
+     * GEOID_PATH.
      **********************************************************************/
     static std::string GeoidPath();
   };

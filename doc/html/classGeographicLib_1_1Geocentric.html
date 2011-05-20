@@ -35,7 +35,8 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <h1>GeographicLib::Geocentric Class Reference</h1>  </div>
 </div>
@@ -52,7 +53,9 @@
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geocentric.html#a7afcc9727c59871a34a3af2498d3d5fd">Geocentric</a> (real a, real r)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geocentric.html#a6d144979a9c0a5d12f343736a0432a3a">Forward</a> (real lat, real lon, real h, real &amp;x, real &amp;y, real &amp;z) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geocentric.html#a63c5d08013e385a80fb1b9c0beee592a">Forward</a> (real lat, real lon, real h, real &amp;x, real &amp;y, real &amp;z, std::vector&lt; real &gt; &amp;M) const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">Reverse</a> (real x, real y, real z, real &amp;lat, real &amp;lon, real &amp;h) const   throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geocentric.html#a4ade6e9e0b6abf54d1628e89a461411e">Reverse</a> (real x, real y, real z, real &amp;lat, real &amp;lon, real &amp;h, std::vector&lt; real &gt; &amp;M) const   throw ()</td></tr>
 <tr><td colspan="2"><div class="groupHeader">Inspector functions</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp59c92495387f56c5711d0f52918a49b2"></a> </p>
 </div></td></tr>
@@ -61,18 +64,25 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="classGeographicLib_1_1Geocentric.html">Geocentric</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">WGS84</a></td></tr>
+<tr><td colspan="2"><h2><a name="friends"></a>
+Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Geocentric.html#a8904c4eadcf94e3803743e8cd9ffbc1c">LocalCartesian</a></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Geocentric coordinates </p>
-<p>Convert between geodetic coordinates latitude = <em>lat</em>, longitude = <em>lon</em>, height = <em>h</em> (measured vertically from the surface of the ellipsoid) to geocentric coordinates (<em>x</em>, <em>y</em>, <em>z</em>). The origin of geocentric coordinates is at the center of the earth. The <em>z</em> axis goes thru the north pole, <em>lat</em> = 90<sup>o</sup>. The <em>x</em> axis goes thru <em>lat</em> = 0, <em>lon</em> = 0. <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> coordinates are also known as earth centered, earth fixed (ECEF) coordinates.</p>
+<p>Convert between geodetic coordinates latitude = <em>lat</em>, longitude = <em>lon</em>, height = <em>h</em> (measured vertically from the surface of the ellipsoid) to geocentric coordinates (<em>x</em>, <em>y</em>, <em>z</em>). The origin of geocentric coordinates is at the center of the earth. The <em>z</em> axis goes thru the north pole, <em>lat</em> = 90<sup>o</sup>. The <em>x</em> axis goes thru <em>lat</em> = 0, <em>lon</em> = 0. Geocentric coordinates are also known as earth centered, earth fixed (ECEF) coordinates.</p>
 <p>The conversion from geographic to geocentric coordinates is straightforward. For the reverse transformation we use</p>
 <ul>
 <li>H. Vermeille, <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">Direct transformation from geocentric coordinates to geodetic coordinates</a>, J. Geodesy 76, 451&ndash;454 (2002).</li>
 </ul>
-<p>Several changes have been made to ensure that the method returns accurate results for all finite inputs (even if <em>h</em> is infinite). See <a class="el" href="geocentric.html">Geocentric coordinates</a> for details.</p>
+<p>Several changes have been made to ensure that the method returns accurate results for all finite inputs (even if <em>h</em> is infinite). The changes are described in Appendix B of</p>
+<ul>
+<li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.</li>
+</ul>
+<p>See <a class="el" href="geocentric.html">Geocentric coordinates</a> for more information.</p>
 <p>The errors in these routines are close to round-off. Specifically, for points within 5000 km of the surface of the ellipsoid (either inside or outside the ellipsoid), the error is bounded by 7 nm for the WGS84 ellipsoid. See <a class="el" href="geocentric.html">Geocentric coordinates</a> for further information on the errors. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00045">45</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00055">55</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a7afcc9727c59871a34a3af2498d3d5fd"></a><!-- doxytag: member="GeographicLib::Geocentric::Geocentric" ref="a7afcc9727c59871a34a3af2498d3d5fd" args="(real a, real r)" -->
 <div class="memitem">
@@ -108,7 +118,7 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>An exception is thrown if either of the axes of the ellipsoid is non-positive. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8cpp_source.html#l00021">21</a> of file <a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8cpp_source.html#l00026">26</a> of file <a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a>.</p>
 
 </div>
 </div>
@@ -156,7 +166,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td> const  throw ()</td>
+          <td></td><td></td><td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -175,9 +185,80 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p><em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8cpp_source.html#l00040">40</a> of file <a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00098">98</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00131">GeographicLib::Math::degree()</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a63c5d08013e385a80fb1b9c0beee592a"></a><!-- doxytag: member="GeographicLib::Geocentric::Forward" ref="a63c5d08013e385a80fb1b9c0beee592a" args="(real lat, real lon, real h, real &amp;x, real &amp;y, real &amp;z, std::vector&lt; real &gt; &amp;M) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GeographicLib::Geocentric::Forward </td>
+          <td>(</td>
+          <td class="paramtype">real&nbsp;</td>
+          <td class="paramname"> <em>lat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real&nbsp;</td>
+          <td class="paramname"> <em>lon</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real&nbsp;</td>
+          <td class="paramname"> <em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real &amp;&nbsp;</td>
+          <td class="paramname"> <em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real &amp;&nbsp;</td>
+          <td class="paramname"> <em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real &amp;&nbsp;</td>
+          <td class="paramname"> <em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; real &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>M</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Convert from geodetic to geocentric coordinates and return rotation matrix.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>lat</em>&nbsp;</td><td>latitude of point (degrees). </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>lon</em>&nbsp;</td><td>longitude of point (degrees). </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>h</em>&nbsp;</td><td>height of point above the ellipsoid (meters). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td>geocentric coordinate (meters). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>y</em>&nbsp;</td><td>geocentric coordinate (meters). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>z</em>&nbsp;</td><td>geocentric coordinate (meters). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>M</em>&nbsp;</td><td>if the length of the vector is 9, fill with the rotation matrix in row-major order.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Pre-multiplying a unit vector in local cartesian coordinates (east, north, up) by <em>M</em> transforms the vector to geocentric coordinates. </p>
+
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00119">119</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -224,7 +305,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td> const  throw ()</td>
+          <td></td><td></td><td> const  throw ()<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -243,9 +324,80 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>In general there are multiple solutions and the result which maximizes <em>h</em> is returned. If there are still multiple solutions with different latitutes (applies only if <em>z</em> = 0), then the solution with <em>lat</em> &gt; 0 is returned. If there are still multiple solutions with different longitudes (applies only if <em>x</em> = <em>y</em> = 0) then <em>lon</em> = 0 is returned. The value of <em>h</em> returned satisfies <em>h</em> &gt;= - <em>a</em> (1 - <em>e<sup>2</sup></em>) / sqrt(1 - <em>e<sup>2</sup></em> sin<sup>2</sup><em>lat</em>). The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8cpp_source.html#l00055">55</a> of file <a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00147">147</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00292">GeographicLib::Math::cbrt()</a>, <a class="el" href="Constants_8hpp_source.html#l00131">GeographicLib::Math::degree()</a>, and <a class="el" href="Constants_8hpp_source.html#l00141">GeographicLib::Math::hypot()</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a4ade6e9e0b6abf54d1628e89a461411e"></a><!-- doxytag: member="GeographicLib::Geocentric::Reverse" ref="a4ade6e9e0b6abf54d1628e89a461411e" args="(real x, real y, real z, real &amp;lat, real &amp;lon, real &amp;h, std::vector&lt; real &gt; &amp;M) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GeographicLib::Geocentric::Reverse </td>
+          <td>(</td>
+          <td class="paramtype">real&nbsp;</td>
+          <td class="paramname"> <em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real&nbsp;</td>
+          <td class="paramname"> <em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real&nbsp;</td>
+          <td class="paramname"> <em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real &amp;&nbsp;</td>
+          <td class="paramname"> <em>lat</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real &amp;&nbsp;</td>
+          <td class="paramname"> <em>lon</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">real &amp;&nbsp;</td>
+          <td class="paramname"> <em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; real &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>M</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Convert from geocentric to geodetic to coordinates.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td>geocentric coordinate (meters). </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>y</em>&nbsp;</td><td>geocentric coordinate (meters). </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>z</em>&nbsp;</td><td>geocentric coordinate (meters). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>lat</em>&nbsp;</td><td>latitude of point (degrees). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>lon</em>&nbsp;</td><td>longitude of point (degrees). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>h</em>&nbsp;</td><td>height of point above the ellipsoid (meters). </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>M</em>&nbsp;</td><td>if the length of the vector is 9, fill with the rotation matrix in row-major order.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Pre-multiplying a unit vector in geocentric coordinates by the transpose of <em>M</em> transforms the vector to local cartesian coordinates (east, north, up). </p>
+
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00168">168</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -265,9 +417,9 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00110">110</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00184">184</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="LocalCartesian_8hpp_source.html#l00134">GeographicLib::LocalCartesian::MajorRadius()</a>.</p>
+<p>Referenced by <a class="el" href="LocalCartesian_8hpp_source.html#l00193">GeographicLib::LocalCartesian::MajorRadius()</a>.</p>
 
 </div>
 </div>
@@ -287,9 +439,25 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. This is the value used in the constructor. A value of 0 is returned for a sphere (infinite inverse flattening). </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00117">117</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00191">191</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="LocalCartesian_8hpp_source.html#l00142">GeographicLib::LocalCartesian::InverseFlattening()</a>.</p>
+<p>Referenced by <a class="el" href="LocalCartesian_8hpp_source.html#l00201">GeographicLib::LocalCartesian::InverseFlattening()</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" id="a8904c4eadcf94e3803743e8cd9ffbc1c"></a><!-- doxytag: member="GeographicLib::Geocentric::LocalCartesian" ref="a8904c4eadcf94e3803743e8cd9ffbc1c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classGeographicLib_1_1LocalCartesian.html">LocalCartesian</a><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00058">58</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -306,7 +474,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> with the parameters for the WGS84 ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00124">124</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00198">198</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -315,7 +483,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

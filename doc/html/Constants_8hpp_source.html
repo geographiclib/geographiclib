@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_79e1098902e66f6a177d48994037d882.html">include</a>      </li>
-      <li><a class="el" href="dir_fc11a85e9c9bbeb660c2eea06dda837b.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_f624aa4962e92581e36e10adf24cfc84.html">include</a>      </li>
+      <li><a class="el" href="dir_0f324d7550514966066ff24c6d4b8a42.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -41,13 +41,13 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file Constants.hpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Header for GeographicLib::Constants class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010) &lt;charles@karney.com&gt;</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
 <a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)</span>
-<a name="l00011"></a><a class="code" href="Constants_8hpp.html#a16d93570265d8037f7dc7d5d026b2aa4">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CONSTANTS_HPP &quot;$Id: Constants.hpp 6918 2010-12-21 12:56:07Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="Constants_8hpp.html#a16d93570265d8037f7dc7d5d026b2aa4">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CONSTANTS_HPP &quot;$Id: Constants.hpp 6967 2011-02-19 15:53:41Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span><span class="comment"></span>
 <a name="l00013"></a>00013 <span class="comment">/**</span>
 <a name="l00014"></a>00014 <span class="comment"> * Are C++0X math functions available?</span>
@@ -160,391 +160,450 @@
 <a name="l00121"></a>00121 <span class="comment">    /**</span>
 <a name="l00122"></a>00122 <span class="comment">     * @return \e pi</span>
 <a name="l00123"></a>00123 <span class="comment">     **********************************************************************/</span>
-<a name="l00124"></a><a class="code" href="classGeographicLib_1_1Math.html#abb031de2a30d6fbac4c634b344e46df4">00124</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#abb031de2a30d6fbac4c634b344e46df4">pi</a>() throw()
-<a name="l00125"></a>00125     <span class="comment">// good for about 168-bit accuracy</span>
-<a name="l00126"></a>00126     { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>(3.1415926535897932384626433832795028841971693993751L); }
-<a name="l00127"></a>00127 <span class="comment"></span>
+<a name="l00124"></a>00124     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00125"></a><a class="code" href="classGeographicLib_1_1Math.html#a55d06bfccddf52b1c1066962af738b75">00125</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a55d06bfccddf52b1c1066962af738b75">pi</a>() throw()
+<a name="l00126"></a>00126     <span class="comment">// good for about 168-bit accuracy</span>
+<a name="l00127"></a>00127     { <span class="keywordflow">return</span> T(3.1415926535897932384626433832795028841971693993751L); }<span class="comment"></span>
 <a name="l00128"></a>00128 <span class="comment">    /**</span>
-<a name="l00129"></a>00129 <span class="comment">     * @return the number of radians in a degree.</span>
+<a name="l00129"></a>00129 <span class="comment">     * A synonym for pi&lt;real&gt;().</span>
 <a name="l00130"></a>00130 <span class="comment">     **********************************************************************/</span>
-<a name="l00131"></a><a class="code" href="classGeographicLib_1_1Math.html#a5bb8bea024e11eb402ecbcf9bae28bb5">00131</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a5bb8bea024e11eb402ecbcf9bae28bb5">degree</a>() throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#abb031de2a30d6fbac4c634b344e46df4">pi</a>() / 180; }
-<a name="l00132"></a>00132 
-<a name="l00133"></a>00133 <span class="preprocessor">#if defined(DOXYGEN)</span>
-<a name="l00134"></a>00134 <span class="preprocessor"></span><span class="comment">    /**</span>
-<a name="l00135"></a>00135 <span class="comment">     * The hypotenuse function avoiding underflow and overflow.</span>
-<a name="l00136"></a>00136 <span class="comment">     *</span>
-<a name="l00137"></a>00137 <span class="comment">     * @param[in] x</span>
-<a name="l00138"></a>00138 <span class="comment">     * @param[in] y</span>
-<a name="l00139"></a>00139 <span class="comment">     * @return sqrt(\e x&lt;sup&gt;2&lt;/sup&gt; + \e y&lt;sup&gt;2&lt;/sup&gt;).</span>
-<a name="l00140"></a>00140 <span class="comment">     **********************************************************************/</span>
-<a name="l00141"></a><a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">00141</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x, <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> y) <span class="keywordflow">throw</span>() {
-<a name="l00142"></a>00142       x = std::abs(x);
-<a name="l00143"></a>00143       y = std::abs(y);
-<a name="l00144"></a>00144       <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>
-<a name="l00145"></a>00145         a = std::max(x, y),
-<a name="l00146"></a>00146         b = std::min(x, y) / a;
-<a name="l00147"></a>00147       <span class="keywordflow">return</span> a * std::sqrt(1 + b * b);
-<a name="l00148"></a>00148     }
-<a name="l00149"></a>00149 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
-<a name="l00150"></a>00150 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y) <span class="keywordflow">throw</span>() {<span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">std::hypot</a>(x, y);}
-<a name="l00151"></a>00151 <span class="preprocessor">#elif defined(_MSC_VER)</span>
-<a name="l00152"></a>00152 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
-<a name="l00153"></a>00153     { <span class="keywordflow">return</span> _hypot(x, y); }
-<a name="l00154"></a>00154     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y) <span class="keywordflow">throw</span>()
-<a name="l00155"></a>00155     { <span class="keywordflow">return</span> _hypotf(x, y); }
-<a name="l00156"></a>00156 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
-<a name="l00157"></a>00157 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x, <span class="keywordtype">long</span> <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
-<a name="l00158"></a>00158     { <span class="keywordflow">return</span> _hypot(x, y); }
-<a name="l00159"></a>00159 <span class="preprocessor">#endif</span>
-<a name="l00160"></a>00160 <span class="preprocessor"></span><span class="preprocessor">#else</span>
-<a name="l00161"></a>00161 <span class="preprocessor"></span>    <span class="comment">// Use overloading to define generic versions</span>
-<a name="l00162"></a>00162     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
-<a name="l00163"></a>00163     { <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">return ::hypot</a>(x, y); }
-<a name="l00164"></a>00164     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y) <span class="keywordflow">throw</span>()
-<a name="l00165"></a>00165     { return ::hypotf(x, y); }
-<a name="l00166"></a>00166 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
-<a name="l00167"></a>00167 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x, <span class="keywordtype">long</span> <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
-<a name="l00168"></a>00168     { return ::hypotl(x, y); }
-<a name="l00169"></a>00169 <span class="preprocessor">#endif</span>
-<a name="l00170"></a>00170 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00171"></a>00171 <span class="preprocessor"></span>
-<a name="l00172"></a>00172 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
-<a name="l00173"></a>00173 <span class="preprocessor"></span><span class="comment">    /**</span>
-<a name="l00174"></a>00174 <span class="comment">     * exp(\e x) - 1 accurate near \e x = 0.  This is taken from</span>
-<a name="l00175"></a>00175 <span class="comment">     * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd</span>
-<a name="l00176"></a>00176 <span class="comment">     * Edition (SIAM, 2002), Sec 1.14.1, p 19.</span>
-<a name="l00177"></a>00177 <span class="comment">     *</span>
-<a name="l00178"></a>00178 <span class="comment">     * @param[in] x</span>
-<a name="l00179"></a>00179 <span class="comment">     * @return exp(\e x) - 1.</span>
-<a name="l00180"></a>00180 <span class="comment">     **********************************************************************/</span>
-<a name="l00181"></a><a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">00181</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">expm1</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00182"></a>00182       <span class="keyword">volatile</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>
-<a name="l00183"></a>00183         y = std::exp(x),
-<a name="l00184"></a>00184         z = y - 1;
-<a name="l00185"></a>00185       <span class="comment">// The reasoning here is similar to that for log1p.  The expression</span>
-<a name="l00186"></a>00186       <span class="comment">// mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -</span>
-<a name="l00187"></a>00187       <span class="comment">// 1)/log(y) is a slowly varying quantity near y = 1 and is accurately</span>
-<a name="l00188"></a>00188       <span class="comment">// computed.</span>
-<a name="l00189"></a>00189       <span class="keywordflow">return</span> std::abs(x) &gt; 1 ? z : z == 0 ?  x : x * z / std::log(y);
-<a name="l00190"></a>00190     }
-<a name="l00191"></a>00191 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
-<a name="l00192"></a>00192 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">expm1</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">std::expm1</a>(x); }
-<a name="l00193"></a>00193 <span class="preprocessor">#else</span>
-<a name="l00194"></a>00194 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">expm1</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">return ::expm1</a>(x); }
-<a name="l00195"></a>00195     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">expm1</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::expm1f(x); }
-<a name="l00196"></a>00196 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
-<a name="l00197"></a>00197 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a41ba2f9f4a29bcf69269b2c69263177d">expm1</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
-<a name="l00198"></a>00198     { return ::expm1l(x); }
-<a name="l00199"></a>00199 <span class="preprocessor">#endif</span>
-<a name="l00200"></a>00200 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00201"></a>00201 <span class="preprocessor"></span>
-<a name="l00202"></a>00202 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
-<a name="l00203"></a>00203 <span class="preprocessor"></span><span class="comment">    /**</span>
-<a name="l00204"></a>00204 <span class="comment">     * log(\e x + 1) accurate near \e x = 0.  This is taken See</span>
-<a name="l00205"></a>00205 <span class="comment">     * D. Goldberg,</span>
-<a name="l00206"></a>00206 <span class="comment">     * &lt;a href=&quot;http://docs.sun.com/source/806-3568/ncg_goldberg.html&quot;&gt; What</span>
-<a name="l00207"></a>00207 <span class="comment">     * every computer scientist should know about floating-point arithmetic&lt;/a&gt;</span>
-<a name="l00208"></a>00208 <span class="comment">     * (1991), Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5,</span>
-<a name="l00209"></a>00209 <span class="comment">     * p 528.</span>
-<a name="l00210"></a>00210 <span class="comment">     *</span>
-<a name="l00211"></a>00211 <span class="comment">     * @param[in] x</span>
-<a name="l00212"></a>00212 <span class="comment">     * @return log(\e x + 1).</span>
-<a name="l00213"></a>00213 <span class="comment">     **********************************************************************/</span>
-<a name="l00214"></a><a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">00214</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">log1p</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00215"></a>00215       <span class="keyword">volatile</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>
-<a name="l00216"></a>00216         y = 1 + x,
-<a name="l00217"></a>00217         z = y - 1;
-<a name="l00218"></a>00218       <span class="comment">// Here&#39;s the explanation for this magic: y = 1 + z, exactly, and z</span>
-<a name="l00219"></a>00219       <span class="comment">// approx x, thus log(y)/z (which is nearly constant near z = 0) returns</span>
-<a name="l00220"></a>00220       <span class="comment">// a good approximation to the true log(1 + x)/x.  The multiplication x *</span>
-<a name="l00221"></a>00221       <span class="comment">// (log(y)/z) introduces little additional error.</span>
-<a name="l00222"></a>00222       <span class="keywordflow">return</span> z == 0 ? x : x * std::log(y) / z;
-<a name="l00223"></a>00223     }
-<a name="l00224"></a>00224 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
-<a name="l00225"></a>00225 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">log1p</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">std::log1p</a>(x); }
-<a name="l00226"></a>00226 <span class="preprocessor">#else</span>
-<a name="l00227"></a>00227 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">log1p</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">return ::log1p</a>(x); }
-<a name="l00228"></a>00228     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">log1p</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::log1pf(x); }
-<a name="l00229"></a>00229 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
-<a name="l00230"></a>00230 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">log1p</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
-<a name="l00231"></a>00231     { return ::log1pl(x); }
-<a name="l00232"></a>00232 <span class="preprocessor">#endif</span>
-<a name="l00233"></a>00233 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00234"></a>00234 <span class="preprocessor"></span>
-<a name="l00235"></a>00235 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
-<a name="l00236"></a>00236 <span class="preprocessor"></span><span class="comment">    /**</span>
-<a name="l00237"></a>00237 <span class="comment">     * The inverse hyperbolic sine function.  This is defined in terms of</span>
-<a name="l00238"></a>00238 <span class="comment">     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In</span>
-<a name="l00239"></a>00239 <span class="comment">     * addition, the odd parity of the function is enforced.</span>
-<a name="l00240"></a>00240 <span class="comment">     *</span>
-<a name="l00241"></a>00241 <span class="comment">     * @param[in] x</span>
-<a name="l00242"></a>00242 <span class="comment">     * @return asinh(\e x).</span>
-<a name="l00243"></a>00243 <span class="comment">     **********************************************************************/</span>
-<a name="l00244"></a><a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">00244</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">asinh</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00245"></a>00245       <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> y = std::abs(x);     <span class="comment">// Enforce odd parity</span>
-<a name="l00246"></a>00246       y = <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">log1p</a>(y * (1 + y/(<a class="code" href="classGeographicLib_1_1Math.html#acdb3b600c45fbe2688efd8f733afda9d">hypot</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>(1), y) + 1)));
-<a name="l00247"></a>00247       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
-<a name="l00248"></a>00248     }
-<a name="l00249"></a>00249 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
-<a name="l00250"></a>00250 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">asinh</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">std::asinh</a>(x); }
-<a name="l00251"></a>00251 <span class="preprocessor">#else</span>
-<a name="l00252"></a>00252 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">asinh</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">return ::asinh</a>(x); }
-<a name="l00253"></a>00253     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">asinh</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::asinhf(x); }
-<a name="l00254"></a>00254 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
-<a name="l00255"></a>00255 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a1271a86b5bbe764c3a1ac4fdee2a2dab">asinh</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
-<a name="l00256"></a>00256     { return ::asinhl(x); }
-<a name="l00257"></a>00257 <span class="preprocessor">#endif</span>
-<a name="l00258"></a>00258 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00259"></a>00259 <span class="preprocessor"></span>
-<a name="l00260"></a>00260 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
-<a name="l00261"></a>00261 <span class="preprocessor"></span><span class="comment">    /**</span>
-<a name="l00262"></a>00262 <span class="comment">     * The inverse hyperbolic tangent function.  This is defined in terms of</span>
-<a name="l00263"></a>00263 <span class="comment">     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In</span>
-<a name="l00264"></a>00264 <span class="comment">     * addition, the odd parity of the function is enforced.</span>
-<a name="l00265"></a>00265 <span class="comment">     *</span>
-<a name="l00266"></a>00266 <span class="comment">     * @param[in] x</span>
-<a name="l00267"></a>00267 <span class="comment">     * @return atanh(\e x).</span>
-<a name="l00268"></a>00268 <span class="comment">     **********************************************************************/</span>
-<a name="l00269"></a><a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">00269</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">atanh</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00270"></a>00270       <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> y = std::abs(x);     <span class="comment">// Enforce odd parity</span>
-<a name="l00271"></a>00271       y = <a class="code" href="classGeographicLib_1_1Math.html#a9920f2bebdede14a62db3453f14498d3">log1p</a>(2 * y/(1 - y))/2;
-<a name="l00272"></a>00272       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
-<a name="l00273"></a>00273     }
-<a name="l00274"></a>00274 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
-<a name="l00275"></a>00275 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> <a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">atanh</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">std::atanh</a>(x); }
+<a name="l00131"></a><a class="code" href="classGeographicLib_1_1Math.html#abb031de2a30d6fbac4c634b344e46df4">00131</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#abb031de2a30d6fbac4c634b344e46df4">pi</a>() throw() { <span class="keywordflow">return</span> pi&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00132"></a>00132 <span class="comment">    /**</span>
+<a name="l00133"></a>00133 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; A synonym for pi&lt;extened&gt;().</span>
+<a name="l00134"></a>00134 <span class="comment">     **********************************************************************/</span>
+<a name="l00135"></a><a class="code" href="classGeographicLib_1_1Math.html#a91d1a17265156f570708c0889fca2f13">00135</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">extended</a> <a class="code" href="classGeographicLib_1_1Math.html#a91d1a17265156f570708c0889fca2f13">epi</a>() throw() { <span class="keywordflow">return</span> pi&lt;extended&gt;(); }
+<a name="l00136"></a>00136 <span class="comment"></span>
+<a name="l00137"></a>00137 <span class="comment">    /**</span>
+<a name="l00138"></a>00138 <span class="comment">     * @return the number of radians in a degree.</span>
+<a name="l00139"></a>00139 <span class="comment">     **********************************************************************/</span>
+<a name="l00140"></a>00140     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00141"></a><a class="code" href="classGeographicLib_1_1Math.html#a3d84677a4dfd6c2149c16426544eaf6c">00141</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a3d84677a4dfd6c2149c16426544eaf6c">degree</a>() throw() { <span class="keywordflow">return</span> pi&lt;T&gt;() / T(180); }<span class="comment"></span>
+<a name="l00142"></a>00142 <span class="comment">    /**</span>
+<a name="l00143"></a>00143 <span class="comment">     * A synonym for degree&lt;real&gt;().</span>
+<a name="l00144"></a>00144 <span class="comment">     **********************************************************************/</span>
+<a name="l00145"></a><a class="code" href="classGeographicLib_1_1Math.html#a5bb8bea024e11eb402ecbcf9bae28bb5">00145</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a5bb8bea024e11eb402ecbcf9bae28bb5">degree</a>() throw() { <span class="keywordflow">return</span> degree&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00146"></a>00146 <span class="comment">    /**</span>
+<a name="l00147"></a>00147 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; A synonym for degree&lt;extened&gt;().</span>
+<a name="l00148"></a>00148 <span class="comment">     **********************************************************************/</span>
+<a name="l00149"></a><a class="code" href="classGeographicLib_1_1Math.html#af8e63c641cce6cfdd59651edb5b0a723">00149</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">extended</a> <a class="code" href="classGeographicLib_1_1Math.html#af8e63c641cce6cfdd59651edb5b0a723">edegree</a>() throw() { <span class="keywordflow">return</span> degree&lt;extended&gt;(); }
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151 <span class="preprocessor">#if defined(DOXYGEN)</span>
+<a name="l00152"></a>00152 <span class="preprocessor"></span><span class="comment">    /**</span>
+<a name="l00153"></a>00153 <span class="comment">     * The hypotenuse function avoiding underflow and overflow.</span>
+<a name="l00154"></a>00154 <span class="comment">     *</span>
+<a name="l00155"></a>00155 <span class="comment">     * @param[in] x</span>
+<a name="l00156"></a>00156 <span class="comment">     * @param[in] y</span>
+<a name="l00157"></a>00157 <span class="comment">     * @return sqrt(\e x&lt;sup&gt;2&lt;/sup&gt; + \e y&lt;sup&gt;2&lt;/sup&gt;).</span>
+<a name="l00158"></a>00158 <span class="comment">     **********************************************************************/</span>
+<a name="l00159"></a>00159     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00160"></a><a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">00160</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(T x, T y) <span class="keywordflow">throw</span>() {
+<a name="l00161"></a>00161       x = std::abs(x);
+<a name="l00162"></a>00162       y = std::abs(y);
+<a name="l00163"></a>00163       T a = std::max(x, y),
+<a name="l00164"></a>00164         b = std::min(x, y) / a;
+<a name="l00165"></a>00165       <span class="keywordflow">return</span> a * std::sqrt(1 + b * b);
+<a name="l00166"></a>00166     }
+<a name="l00167"></a>00167 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
+<a name="l00168"></a>00168 <span class="preprocessor"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00169"></a>00169     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(T x, T y) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">std::hypot</a>(x, y); }
+<a name="l00170"></a>00170 <span class="preprocessor">#elif defined(_MSC_VER)</span>
+<a name="l00171"></a>00171 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
+<a name="l00172"></a>00172     { <span class="keywordflow">return</span> _hypot(x, y); }
+<a name="l00173"></a>00173     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y) <span class="keywordflow">throw</span>()
+<a name="l00174"></a>00174     { <span class="keywordflow">return</span> _hypotf(x, y); }
+<a name="l00175"></a>00175 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
+<a name="l00176"></a>00176 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x, <span class="keywordtype">long</span> <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
+<a name="l00177"></a>00177     { <span class="keywordflow">return</span> _hypot(x, y); }
+<a name="l00178"></a>00178 <span class="preprocessor">#endif</span>
+<a name="l00179"></a>00179 <span class="preprocessor"></span><span class="preprocessor">#else</span>
+<a name="l00180"></a>00180 <span class="preprocessor"></span>    <span class="comment">// Use overloading to define generic versions</span>
+<a name="l00181"></a>00181     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
+<a name="l00182"></a>00182     { <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">return ::hypot</a>(x, y); }
+<a name="l00183"></a>00183     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y) <span class="keywordflow">throw</span>()
+<a name="l00184"></a>00184     { return ::hypotf(x, y); }
+<a name="l00185"></a>00185 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
+<a name="l00186"></a>00186 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x, <span class="keywordtype">long</span> <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
+<a name="l00187"></a>00187     { return ::hypotl(x, y); }
+<a name="l00188"></a>00188 <span class="preprocessor">#endif</span>
+<a name="l00189"></a>00189 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00190"></a>00190 <span class="preprocessor"></span>
+<a name="l00191"></a>00191 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
+<a name="l00192"></a>00192 <span class="preprocessor"></span><span class="comment">    /**</span>
+<a name="l00193"></a>00193 <span class="comment">     * exp(\e x) - 1 accurate near \e x = 0.  This is taken from</span>
+<a name="l00194"></a>00194 <span class="comment">     * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd</span>
+<a name="l00195"></a>00195 <span class="comment">     * Edition (SIAM, 2002), Sec 1.14.1, p 19.</span>
+<a name="l00196"></a>00196 <span class="comment">     *</span>
+<a name="l00197"></a>00197 <span class="comment">     * @param[in] x</span>
+<a name="l00198"></a>00198 <span class="comment">     * @return exp(\e x) - 1.</span>
+<a name="l00199"></a>00199 <span class="comment">     **********************************************************************/</span>
+<a name="l00200"></a>00200     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00201"></a><a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">00201</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">expm1</a>(T x) <span class="keywordflow">throw</span>() {
+<a name="l00202"></a>00202       <span class="keyword">volatile</span> T
+<a name="l00203"></a>00203         y = std::exp(x),
+<a name="l00204"></a>00204         z = y - 1;
+<a name="l00205"></a>00205       <span class="comment">// The reasoning here is similar to that for log1p.  The expression</span>
+<a name="l00206"></a>00206       <span class="comment">// mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -</span>
+<a name="l00207"></a>00207       <span class="comment">// 1)/log(y) is a slowly varying quantity near y = 1 and is accurately</span>
+<a name="l00208"></a>00208       <span class="comment">// computed.</span>
+<a name="l00209"></a>00209       <span class="keywordflow">return</span> std::abs(x) &gt; 1 ? z : z == 0 ?  x : x * z / std::log(y);
+<a name="l00210"></a>00210     }
+<a name="l00211"></a>00211 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
+<a name="l00212"></a>00212 <span class="preprocessor"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00213"></a>00213     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">expm1</a>(T x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">std::expm1</a>(x); }
+<a name="l00214"></a>00214 <span class="preprocessor">#else</span>
+<a name="l00215"></a>00215 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">expm1</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">return ::expm1</a>(x); }
+<a name="l00216"></a>00216     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">expm1</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::expm1f(x); }
+<a name="l00217"></a>00217 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
+<a name="l00218"></a>00218 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a71afd1ae80f942a0b90d65f7784bf2f8">expm1</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
+<a name="l00219"></a>00219     { return ::expm1l(x); }
+<a name="l00220"></a>00220 <span class="preprocessor">#endif</span>
+<a name="l00221"></a>00221 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00222"></a>00222 <span class="preprocessor"></span>
+<a name="l00223"></a>00223 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
+<a name="l00224"></a>00224 <span class="preprocessor"></span><span class="comment">    /**</span>
+<a name="l00225"></a>00225 <span class="comment">     * log(\e x + 1) accurate near \e x = 0.  This is taken See</span>
+<a name="l00226"></a>00226 <span class="comment">     * D. Goldberg,</span>
+<a name="l00227"></a>00227 <span class="comment">     * &lt;a href=&quot;http://docs.sun.com/source/806-3568/ncg_goldberg.html&quot;&gt; What</span>
+<a name="l00228"></a>00228 <span class="comment">     * every computer scientist should know about floating-point arithmetic&lt;/a&gt;</span>
+<a name="l00229"></a>00229 <span class="comment">     * (1991), Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5,</span>
+<a name="l00230"></a>00230 <span class="comment">     * p 528.</span>
+<a name="l00231"></a>00231 <span class="comment">     *</span>
+<a name="l00232"></a>00232 <span class="comment">     * @param[in] x</span>
+<a name="l00233"></a>00233 <span class="comment">     * @return log(\e x + 1).</span>
+<a name="l00234"></a>00234 <span class="comment">     **********************************************************************/</span>
+<a name="l00235"></a>00235     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00236"></a><a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">00236</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">log1p</a>(T x) <span class="keywordflow">throw</span>() {
+<a name="l00237"></a>00237       <span class="keyword">volatile</span> T
+<a name="l00238"></a>00238         y = 1 + x,
+<a name="l00239"></a>00239         z = y - 1;
+<a name="l00240"></a>00240       <span class="comment">// Here&#39;s the explanation for this magic: y = 1 + z, exactly, and z</span>
+<a name="l00241"></a>00241       <span class="comment">// approx x, thus log(y)/z (which is nearly constant near z = 0) returns</span>
+<a name="l00242"></a>00242       <span class="comment">// a good approximation to the true log(1 + x)/x.  The multiplication x *</span>
+<a name="l00243"></a>00243       <span class="comment">// (log(y)/z) introduces little additional error.</span>
+<a name="l00244"></a>00244       <span class="keywordflow">return</span> z == 0 ? x : x * std::log(y) / z;
+<a name="l00245"></a>00245     }
+<a name="l00246"></a>00246 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
+<a name="l00247"></a>00247 <span class="preprocessor"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00248"></a>00248     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">log1p</a>(T x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">std::log1p</a>(x); }
+<a name="l00249"></a>00249 <span class="preprocessor">#else</span>
+<a name="l00250"></a>00250 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">log1p</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">return ::log1p</a>(x); }
+<a name="l00251"></a>00251     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">log1p</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::log1pf(x); }
+<a name="l00252"></a>00252 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
+<a name="l00253"></a>00253 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">log1p</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
+<a name="l00254"></a>00254     { return ::log1pl(x); }
+<a name="l00255"></a>00255 <span class="preprocessor">#endif</span>
+<a name="l00256"></a>00256 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00257"></a>00257 <span class="preprocessor"></span>
+<a name="l00258"></a>00258 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
+<a name="l00259"></a>00259 <span class="preprocessor"></span><span class="comment">    /**</span>
+<a name="l00260"></a>00260 <span class="comment">     * The inverse hyperbolic sine function.  This is defined in terms of</span>
+<a name="l00261"></a>00261 <span class="comment">     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In</span>
+<a name="l00262"></a>00262 <span class="comment">     * addition, the odd parity of the function is enforced.</span>
+<a name="l00263"></a>00263 <span class="comment">     *</span>
+<a name="l00264"></a>00264 <span class="comment">     * @param[in] x</span>
+<a name="l00265"></a>00265 <span class="comment">     * @return asinh(\e x).</span>
+<a name="l00266"></a>00266 <span class="comment">     **********************************************************************/</span>
+<a name="l00267"></a>00267     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00268"></a><a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">00268</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">asinh</a>(T x) <span class="keywordflow">throw</span>() {
+<a name="l00269"></a>00269       T y = std::abs(x);     <span class="comment">// Enforce odd parity</span>
+<a name="l00270"></a>00270       y = <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">log1p</a>(y * (1 + y/(<a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">hypot</a>(T(1), y) + 1)));
+<a name="l00271"></a>00271       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
+<a name="l00272"></a>00272     }
+<a name="l00273"></a>00273 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
+<a name="l00274"></a>00274 <span class="preprocessor"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00275"></a>00275     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">asinh</a>(T x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">std::asinh</a>(x); }
 <a name="l00276"></a>00276 <span class="preprocessor">#else</span>
-<a name="l00277"></a>00277 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">atanh</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">return ::atanh</a>(x); }
-<a name="l00278"></a>00278     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">atanh</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::atanhf(x); }
+<a name="l00277"></a>00277 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">asinh</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">return ::asinh</a>(x); }
+<a name="l00278"></a>00278     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">asinh</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::asinhf(x); }
 <a name="l00279"></a>00279 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
-<a name="l00280"></a>00280 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#afd1fced228b796061c72fd4afa842728">atanh</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
-<a name="l00281"></a>00281     { return ::atanhl(x); }
+<a name="l00280"></a>00280 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#ab0998a80c8946d1c016c1bc4810a0698">asinh</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
+<a name="l00281"></a>00281     { return ::asinhl(x); }
 <a name="l00282"></a>00282 <span class="preprocessor">#endif</span>
 <a name="l00283"></a>00283 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
 <a name="l00284"></a>00284 <span class="preprocessor"></span>
 <a name="l00285"></a>00285 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
 <a name="l00286"></a>00286 <span class="preprocessor"></span><span class="comment">    /**</span>
-<a name="l00287"></a>00287 <span class="comment">     * The cube root function.</span>
-<a name="l00288"></a>00288 <span class="comment">     *</span>
-<a name="l00289"></a>00289 <span class="comment">     * @param[in] x</span>
-<a name="l00290"></a>00290 <span class="comment">     * @return the real cube root of \e x.</span>
-<a name="l00291"></a>00291 <span class="comment">     **********************************************************************/</span>
-<a name="l00292"></a><a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">00292</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">cbrt</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00293"></a>00293       <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> y = std::pow(std::abs(x), 1/<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>(3)); <span class="comment">// Return the real cube root</span>
-<a name="l00294"></a>00294       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
-<a name="l00295"></a>00295     }
-<a name="l00296"></a>00296 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
-<a name="l00297"></a>00297 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> <a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">cbrt</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">std::cbrt</a>(x); }
-<a name="l00298"></a>00298 <span class="preprocessor">#else</span>
-<a name="l00299"></a>00299 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">cbrt</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">return ::cbrt</a>(x); }
-<a name="l00300"></a>00300     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">cbrt</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::cbrtf(x); }
-<a name="l00301"></a>00301 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
-<a name="l00302"></a>00302 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">cbrt</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { return ::cbrtl(x); }
-<a name="l00303"></a>00303 <span class="preprocessor">#endif</span>
-<a name="l00304"></a>00304 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00305"></a>00305 <span class="preprocessor"></span><span class="comment"></span>
-<a name="l00306"></a>00306 <span class="comment">    /**</span>
-<a name="l00307"></a>00307 <span class="comment">     * Test for finiteness.</span>
-<a name="l00308"></a>00308 <span class="comment">     *</span>
-<a name="l00309"></a>00309 <span class="comment">     * @param[in] x</span>
-<a name="l00310"></a>00310 <span class="comment">     * @return true if number is finite, false if NaN or infinite.</span>
-<a name="l00311"></a>00311 <span class="comment">     **********************************************************************/</span>
-<a name="l00312"></a><a class="code" href="classGeographicLib_1_1Math.html#aa0e4daf4f9d6f5f381653a8c99c1e635">00312</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Math.html#aa0e4daf4f9d6f5f381653a8c99c1e635">isfinite</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00313"></a>00313 <span class="preprocessor">#if defined(DOXYGEN)</span>
-<a name="l00314"></a>00314 <span class="preprocessor"></span>      <span class="keywordflow">return</span> std::abs(x) &lt;= std::numeric_limits&lt;real&gt;::max();
-<a name="l00315"></a>00315 <span class="preprocessor">#elif (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
-<a name="l00316"></a>00316 <span class="preprocessor"></span>      <span class="keywordflow">return</span> _finite(x) != 0;
-<a name="l00317"></a>00317 <span class="preprocessor">#else</span>
-<a name="l00318"></a>00318 <span class="preprocessor"></span>      <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#aa0e4daf4f9d6f5f381653a8c99c1e635">std::isfinite</a>(x);
-<a name="l00319"></a>00319 <span class="preprocessor">#endif</span>
-<a name="l00320"></a>00320 <span class="preprocessor"></span>    }
-<a name="l00321"></a>00321 <span class="comment"></span>
-<a name="l00322"></a>00322 <span class="comment">    /**</span>
-<a name="l00323"></a>00323 <span class="comment">     * The NaN (not a number)</span>
-<a name="l00324"></a>00324 <span class="comment">     *</span>
-<a name="l00325"></a>00325 <span class="comment">     * @return NaN if available, otherwise return the max real.</span>
-<a name="l00326"></a>00326 <span class="comment">     **********************************************************************/</span>
-<a name="l00327"></a><a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">00327</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">NaN</a>() throw() {
-<a name="l00328"></a>00328       <span class="keywordflow">return</span> std::numeric_limits&lt;real&gt;::has_quiet_NaN ?
-<a name="l00329"></a>00329         std::numeric_limits&lt;real&gt;::quiet_NaN() :
-<a name="l00330"></a>00330         std::numeric_limits&lt;real&gt;::max();
-<a name="l00331"></a>00331     }
-<a name="l00332"></a>00332 <span class="comment"></span>
-<a name="l00333"></a>00333 <span class="comment">    /**</span>
-<a name="l00334"></a>00334 <span class="comment">     * Test for NaN.</span>
-<a name="l00335"></a>00335 <span class="comment">     *</span>
-<a name="l00336"></a>00336 <span class="comment">     * @param[in] x</span>
-<a name="l00337"></a>00337 <span class="comment">     * @return true if argument is a NaN.</span>
-<a name="l00338"></a>00338 <span class="comment">     **********************************************************************/</span>
-<a name="l00339"></a><a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">00339</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">isnan</a>(<a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00340"></a>00340 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
-<a name="l00341"></a>00341 <span class="preprocessor"></span>      <span class="keywordflow">return</span> x != x;
-<a name="l00342"></a>00342 <span class="preprocessor">#else</span>
-<a name="l00343"></a>00343 <span class="preprocessor"></span>      <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">std::isnan</a>(x);
-<a name="l00344"></a>00344 <span class="preprocessor">#endif</span>
-<a name="l00345"></a>00345 <span class="preprocessor"></span>    }
-<a name="l00346"></a>00346 <span class="comment"></span>
-<a name="l00347"></a>00347 <span class="comment">    /**</span>
-<a name="l00348"></a>00348 <span class="comment">     * Infinity</span>
-<a name="l00349"></a>00349 <span class="comment">     *</span>
-<a name="l00350"></a>00350 <span class="comment">     * @return infinity if available, otherwise return the max real.</span>
-<a name="l00351"></a>00351 <span class="comment">     **********************************************************************/</span>
-<a name="l00352"></a><a class="code" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">00352</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">infinity</a>() throw() {
-<a name="l00353"></a>00353       <span class="keywordflow">return</span> std::numeric_limits&lt;real&gt;::has_infinity ?
-<a name="l00354"></a>00354         <a class="code" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">std::numeric_limits&lt;real&gt;::infinity</a>() :
-<a name="l00355"></a>00355         std::numeric_limits&lt;real&gt;::max();
-<a name="l00356"></a>00356     }
-<a name="l00357"></a>00357 <span class="comment"></span>
-<a name="l00358"></a>00358 <span class="comment">    /**</span>
-<a name="l00359"></a>00359 <span class="comment">     * @return \e pi in extended precision</span>
-<a name="l00360"></a>00360 <span class="comment">     **********************************************************************/</span>
-<a name="l00361"></a><a class="code" href="classGeographicLib_1_1Math.html#a91d1a17265156f570708c0889fca2f13">00361</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">extended</a> <a class="code" href="classGeographicLib_1_1Math.html#a91d1a17265156f570708c0889fca2f13">epi</a>() throw()
-<a name="l00362"></a>00362     <span class="comment">// good for about 168-bit accuracy</span>
-<a name="l00363"></a>00363     { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">extended</a>(3.1415926535897932384626433832795028841971693993751L); }
-<a name="l00364"></a>00364 <span class="comment"></span>
-<a name="l00365"></a>00365 <span class="comment">    /**</span>
-<a name="l00366"></a>00366 <span class="comment">     * @return the number of radians in a degree in extended precision.</span>
-<a name="l00367"></a>00367 <span class="comment">     **********************************************************************/</span>
-<a name="l00368"></a><a class="code" href="classGeographicLib_1_1Math.html#af8e63c641cce6cfdd59651edb5b0a723">00368</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">extended</a> <a class="code" href="classGeographicLib_1_1Math.html#af8e63c641cce6cfdd59651edb5b0a723">edegree</a>() throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a91d1a17265156f570708c0889fca2f13">epi</a>() / 180; }
-<a name="l00369"></a>00369   };
-<a name="l00370"></a>00370 <span class="comment"></span>
-<a name="l00371"></a>00371 <span class="comment">  /**</span>
-<a name="l00372"></a>00372 <span class="comment">   * \brief %Constants needed by %GeographicLib</span>
-<a name="l00373"></a>00373 <span class="comment">   *</span>
-<a name="l00374"></a>00374 <span class="comment">   * Define constants specifying the WGS84 ellipsoid, the UTM and UPS</span>
-<a name="l00375"></a>00375 <span class="comment">   * projections, and various unit conversions.</span>
-<a name="l00376"></a>00376 <span class="comment">   **********************************************************************/</span>
-<a name="l00377"></a><a class="code" href="classGeographicLib_1_1Constants.html">00377</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1Constants.html" title="Constants needed by GeographicLib">Constants</a> {
-<a name="l00378"></a>00378   <span class="keyword">private</span>:
-<a name="l00379"></a>00379     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
-<a name="l00380"></a>00380     <a class="code" href="classGeographicLib_1_1Constants.html" title="Constants needed by GeographicLib">Constants</a>();                <span class="comment">// Disable constructor</span>
-<a name="l00381"></a>00381 
-<a name="l00382"></a>00382   <span class="keyword">public</span>:<span class="comment"></span>
+<a name="l00287"></a>00287 <span class="comment">     * The inverse hyperbolic tangent function.  This is defined in terms of</span>
+<a name="l00288"></a>00288 <span class="comment">     * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In</span>
+<a name="l00289"></a>00289 <span class="comment">     * addition, the odd parity of the function is enforced.</span>
+<a name="l00290"></a>00290 <span class="comment">     *</span>
+<a name="l00291"></a>00291 <span class="comment">     * @param[in] x</span>
+<a name="l00292"></a>00292 <span class="comment">     * @return atanh(\e x).</span>
+<a name="l00293"></a>00293 <span class="comment">     **********************************************************************/</span>
+<a name="l00294"></a>00294     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00295"></a><a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">00295</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">atanh</a>(T x) <span class="keywordflow">throw</span>() {
+<a name="l00296"></a>00296       T y = std::abs(x);     <span class="comment">// Enforce odd parity</span>
+<a name="l00297"></a>00297       y = <a class="code" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">log1p</a>(2 * y/(1 - y))/2;
+<a name="l00298"></a>00298       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
+<a name="l00299"></a>00299     }
+<a name="l00300"></a>00300 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
+<a name="l00301"></a>00301 <span class="preprocessor"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00302"></a>00302     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">atanh</a>(T x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">std::atanh</a>(x); }
+<a name="l00303"></a>00303 <span class="preprocessor">#else</span>
+<a name="l00304"></a>00304 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">atanh</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">return ::atanh</a>(x); }
+<a name="l00305"></a>00305     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">atanh</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::atanhf(x); }
+<a name="l00306"></a>00306 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
+<a name="l00307"></a>00307 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">atanh</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>()
+<a name="l00308"></a>00308     { return ::atanhl(x); }
+<a name="l00309"></a>00309 <span class="preprocessor">#endif</span>
+<a name="l00310"></a>00310 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00311"></a>00311 <span class="preprocessor"></span>
+<a name="l00312"></a>00312 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
+<a name="l00313"></a>00313 <span class="preprocessor"></span><span class="comment">    /**</span>
+<a name="l00314"></a>00314 <span class="comment">     * The cube root function.</span>
+<a name="l00315"></a>00315 <span class="comment">     *</span>
+<a name="l00316"></a>00316 <span class="comment">     * @param[in] x</span>
+<a name="l00317"></a>00317 <span class="comment">     * @return the real cube root of \e x.</span>
+<a name="l00318"></a>00318 <span class="comment">     **********************************************************************/</span>
+<a name="l00319"></a>00319     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00320"></a><a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">00320</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">cbrt</a>(T x) <span class="keywordflow">throw</span>() {
+<a name="l00321"></a>00321       T y = std::pow(std::abs(x), 1/T(3)); <span class="comment">// Return the real cube root</span>
+<a name="l00322"></a>00322       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
+<a name="l00323"></a>00323     }
+<a name="l00324"></a>00324 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
+<a name="l00325"></a>00325 <span class="preprocessor"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00326"></a>00326     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">cbrt</a>(T x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">std::cbrt</a>(x); }
+<a name="l00327"></a>00327 <span class="preprocessor">#else</span>
+<a name="l00328"></a>00328 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">cbrt</a>(<span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">return ::cbrt</a>(x); }
+<a name="l00329"></a>00329     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">cbrt</a>(<span class="keywordtype">float</span> x) <span class="keywordflow">throw</span>() { return ::cbrtf(x); }
+<a name="l00330"></a>00330 <span class="preprocessor">#if !defined(__NO_LONG_DOUBLE_MATH)</span>
+<a name="l00331"></a>00331 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">cbrt</a>(<span class="keywordtype">long</span> <span class="keywordtype">double</span> x) <span class="keywordflow">throw</span>() { return ::cbrtl(x); }
+<a name="l00332"></a>00332 <span class="preprocessor">#endif</span>
+<a name="l00333"></a>00333 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00334"></a>00334 <span class="preprocessor"></span><span class="comment"></span>
+<a name="l00335"></a>00335 <span class="comment">    /**</span>
+<a name="l00336"></a>00336 <span class="comment">     * Test for finiteness.</span>
+<a name="l00337"></a>00337 <span class="comment">     *</span>
+<a name="l00338"></a>00338 <span class="comment">     * @param[in] x</span>
+<a name="l00339"></a>00339 <span class="comment">     * @return true if number is finite, false if NaN or infinite.</span>
+<a name="l00340"></a>00340 <span class="comment">     **********************************************************************/</span>
+<a name="l00341"></a>00341     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00342"></a><a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">00342</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">isfinite</a>(T x) <span class="keywordflow">throw</span>() {
+<a name="l00343"></a>00343 <span class="preprocessor">#if defined(DOXYGEN)</span>
+<a name="l00344"></a>00344 <span class="preprocessor"></span>      <span class="keywordflow">return</span> std::abs(x) &lt;= std::numeric_limits&lt;T&gt;::max();
+<a name="l00345"></a>00345 <span class="preprocessor">#elif (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
+<a name="l00346"></a>00346 <span class="preprocessor"></span>      <span class="keywordflow">return</span> _finite(x) != 0;
+<a name="l00347"></a>00347 <span class="preprocessor">#else</span>
+<a name="l00348"></a>00348 <span class="preprocessor"></span>      <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">std::isfinite</a>(x);
+<a name="l00349"></a>00349 <span class="preprocessor">#endif</span>
+<a name="l00350"></a>00350 <span class="preprocessor"></span>    }
+<a name="l00351"></a>00351 <span class="comment"></span>
+<a name="l00352"></a>00352 <span class="comment">    /**</span>
+<a name="l00353"></a>00353 <span class="comment">     * The NaN (not a number)</span>
+<a name="l00354"></a>00354 <span class="comment">     *</span>
+<a name="l00355"></a>00355 <span class="comment">     * @return NaN if available, otherwise return the max real.</span>
+<a name="l00356"></a>00356 <span class="comment">     **********************************************************************/</span>
+<a name="l00357"></a>00357     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00358"></a><a class="code" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">00358</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">NaN</a>() throw() {
+<a name="l00359"></a>00359       <span class="keywordflow">return</span> std::numeric_limits&lt;T&gt;::has_quiet_NaN ?
+<a name="l00360"></a>00360         std::numeric_limits&lt;T&gt;::quiet_NaN() :
+<a name="l00361"></a>00361         std::numeric_limits&lt;T&gt;::max();
+<a name="l00362"></a>00362     }<span class="comment"></span>
+<a name="l00363"></a>00363 <span class="comment">    /**</span>
+<a name="l00364"></a>00364 <span class="comment">     * A synonym for NaN&lt;real&gt;().</span>
+<a name="l00365"></a>00365 <span class="comment">     **********************************************************************/</span>
+<a name="l00366"></a><a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">00366</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">NaN</a>() throw() { <span class="keywordflow">return</span> NaN&lt;real&gt;(); }
+<a name="l00367"></a>00367 <span class="comment"></span>
+<a name="l00368"></a>00368 <span class="comment">    /**</span>
+<a name="l00369"></a>00369 <span class="comment">     * Test for NaN.</span>
+<a name="l00370"></a>00370 <span class="comment">     *</span>
+<a name="l00371"></a>00371 <span class="comment">     * @param[in] x</span>
+<a name="l00372"></a>00372 <span class="comment">     * @return true if argument is a NaN.</span>
+<a name="l00373"></a>00373 <span class="comment">     **********************************************************************/</span>
+<a name="l00374"></a>00374     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00375"></a><a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">00375</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">isnan</a>(T x) <span class="keywordflow">throw</span>() {
+<a name="l00376"></a>00376 <span class="preprocessor">#if defined(DOXYGEN) || (defined(_MSC_VER) &amp;&amp; !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)</span>
+<a name="l00377"></a>00377 <span class="preprocessor"></span>      <span class="keywordflow">return</span> x != x;
+<a name="l00378"></a>00378 <span class="preprocessor">#else</span>
+<a name="l00379"></a>00379 <span class="preprocessor"></span>      <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">std::isnan</a>(x);
+<a name="l00380"></a>00380 <span class="preprocessor">#endif</span>
+<a name="l00381"></a>00381 <span class="preprocessor"></span>    }
+<a name="l00382"></a>00382 <span class="comment"></span>
 <a name="l00383"></a>00383 <span class="comment">    /**</span>
-<a name="l00384"></a>00384 <span class="comment">     * @return \e pi.  This duplicates Math::pi().</span>
-<a name="l00385"></a>00385 <span class="comment">     **********************************************************************/</span>
-<a name="l00386"></a><a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">00386</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">pi</a>() throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">Math::pi</a>(); }<span class="comment"></span>
-<a name="l00387"></a>00387 <span class="comment">    /**</span>
-<a name="l00388"></a>00388 <span class="comment">     * @return the number of radians in a degree.  This duplicates</span>
-<a name="l00389"></a>00389 <span class="comment">     * Math::degree().</span>
-<a name="l00390"></a>00390 <span class="comment">     **********************************************************************/</span>
-<a name="l00391"></a><a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">00391</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">degree</a>() throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Math::degree</a>(); }<span class="comment"></span>
-<a name="l00392"></a>00392 <span class="comment">    /**</span>
-<a name="l00393"></a>00393 <span class="comment">     * @return the number of radians in an arcminute.</span>
-<a name="l00394"></a>00394 <span class="comment">     **********************************************************************/</span>
-<a name="l00395"></a><a class="code" href="classGeographicLib_1_1Constants.html#a8f8e6d3bd08abb72b686a0f4398b587b">00395</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a8f8e6d3bd08abb72b686a0f4398b587b">arcminute</a>() throw() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Math::degree</a>() / 60; }<span class="comment"></span>
-<a name="l00396"></a>00396 <span class="comment">    /**</span>
-<a name="l00397"></a>00397 <span class="comment">     * @return the number of radians in an arcsecond.</span>
-<a name="l00398"></a>00398 <span class="comment">     **********************************************************************/</span>
-<a name="l00399"></a><a class="code" href="classGeographicLib_1_1Constants.html#a04858f922295d2a04bb021eecac07179">00399</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a04858f922295d2a04bb021eecac07179">arcsecond</a>() throw()
-<a name="l00400"></a>00400     { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">Math::degree</a>() / 3600; }
-<a name="l00401"></a>00401 <span class="comment"></span>
-<a name="l00402"></a>00402 <span class="comment">    /** \name Ellipsoid parameters</span>
-<a name="l00403"></a>00403 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00404"></a>00404 <span class="comment">    ///@{</span>
-<a name="l00405"></a>00405 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00406"></a>00406 <span class="comment">     * @return the equatorial radius of WGS84 ellipsoid</span>
-<a name="l00407"></a>00407 <span class="comment">     **********************************************************************/</span>
-<a name="l00408"></a><a class="code" href="classGeographicLib_1_1Constants.html#a53f39f52837f47490fbdf7332a37dd8b">00408</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a53f39f52837f47490fbdf7332a37dd8b">WGS84_a</a>() throw() { <span class="keywordflow">return</span> 6378137 * <a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">meter</a>(); }<span class="comment"></span>
-<a name="l00409"></a>00409 <span class="comment">    /**</span>
-<a name="l00410"></a>00410 <span class="comment">     * @return the reciprocal flattening of WGS84 ellipsoid</span>
-<a name="l00411"></a>00411 <span class="comment">     **********************************************************************/</span>
-<a name="l00412"></a><a class="code" href="classGeographicLib_1_1Constants.html#a199810de7ff3351be6473d20ef045789">00412</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a199810de7ff3351be6473d20ef045789">WGS84_r</a>() throw() { <span class="keywordflow">return</span> real(298.257223563L); }<span class="comment"></span>
-<a name="l00413"></a>00413 <span class="comment">    /**</span>
-<a name="l00414"></a>00414 <span class="comment">     * @return the central scale factor for UTM</span>
-<a name="l00415"></a>00415 <span class="comment">     **********************************************************************/</span>
-<a name="l00416"></a><a class="code" href="classGeographicLib_1_1Constants.html#aebbe37ebfb407a851f72caa95e5dc94f">00416</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#aebbe37ebfb407a851f72caa95e5dc94f">UTM_k0</a>() throw() {<span class="keywordflow">return</span> real(0.9996L); }<span class="comment"></span>
-<a name="l00417"></a>00417 <span class="comment">    /**</span>
-<a name="l00418"></a>00418 <span class="comment">     * @return the central scale factor for UPS</span>
-<a name="l00419"></a>00419 <span class="comment">     **********************************************************************/</span>
-<a name="l00420"></a><a class="code" href="classGeographicLib_1_1Constants.html#a49d415263ee320d1a63a857f784439a3">00420</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a49d415263ee320d1a63a857f784439a3">UPS_k0</a>() throw() { <span class="keywordflow">return</span> real(0.994L); }<span class="comment"></span>
-<a name="l00421"></a>00421 <span class="comment">    ///@}</span>
-<a name="l00422"></a>00422 <span class="comment"></span><span class="comment"></span>
-<a name="l00423"></a>00423 <span class="comment">    /** \name SI units</span>
-<a name="l00424"></a>00424 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00425"></a>00425 <span class="comment">    ///@{</span>
-<a name="l00426"></a>00426 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00427"></a>00427 <span class="comment">     * @return the number of meters in a meter.</span>
-<a name="l00428"></a>00428 <span class="comment">     *</span>
-<a name="l00429"></a>00429 <span class="comment">     * This is unity, but this lets the internal system of units be changed if</span>
-<a name="l00430"></a>00430 <span class="comment">     * necessary.</span>
-<a name="l00431"></a>00431 <span class="comment">     **********************************************************************/</span>
-<a name="l00432"></a><a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">00432</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">meter</a>() throw() { <span class="keywordflow">return</span> real(1); }<span class="comment"></span>
-<a name="l00433"></a>00433 <span class="comment">    /**</span>
-<a name="l00434"></a>00434 <span class="comment">     * @return the number of meters in a kilometer.</span>
-<a name="l00435"></a>00435 <span class="comment">     **********************************************************************/</span>
-<a name="l00436"></a><a class="code" href="classGeographicLib_1_1Constants.html#a4ec5a9d91ab0ccbd3bd921cda4bfc836">00436</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a4ec5a9d91ab0ccbd3bd921cda4bfc836">kilometer</a>() throw() { <span class="keywordflow">return</span> 1000 * <a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">meter</a>(); }<span class="comment"></span>
-<a name="l00437"></a>00437 <span class="comment">    /**</span>
-<a name="l00438"></a>00438 <span class="comment">     * @return the number of meters in a nautical mile (approximately 1 arc</span>
-<a name="l00439"></a>00439 <span class="comment">     *   minute)</span>
-<a name="l00440"></a>00440 <span class="comment">     **********************************************************************/</span>
-<a name="l00441"></a><a class="code" href="classGeographicLib_1_1Constants.html#afedc242aa3ee9b3bf9c72d6d81fc6740">00441</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#afedc242aa3ee9b3bf9c72d6d81fc6740">nauticalmile</a>() throw() { <span class="keywordflow">return</span> 1852 * <a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">meter</a>(); }<span class="comment"></span>
-<a name="l00442"></a>00442 <span class="comment">    ///@}</span>
-<a name="l00443"></a>00443 <span class="comment"></span><span class="comment"></span>
-<a name="l00444"></a>00444 <span class="comment">    /** \name Anachronistic British units</span>
-<a name="l00445"></a>00445 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00446"></a>00446 <span class="comment">    ///@{</span>
-<a name="l00447"></a>00447 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00448"></a>00448 <span class="comment">     * @return the number of meters in an international foot.</span>
-<a name="l00449"></a>00449 <span class="comment">     **********************************************************************/</span>
-<a name="l00450"></a><a class="code" href="classGeographicLib_1_1Constants.html#ac69f40e7e56c71bc72011c7591f7bef9">00450</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#ac69f40e7e56c71bc72011c7591f7bef9">foot</a>() throw()
-<a name="l00451"></a>00451     { <span class="keywordflow">return</span> real(0.0254L) * 12 * <a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">meter</a>(); }<span class="comment"></span>
-<a name="l00452"></a>00452 <span class="comment">    /**</span>
-<a name="l00453"></a>00453 <span class="comment">     * @return the number of meters in a yard.</span>
-<a name="l00454"></a>00454 <span class="comment">     **********************************************************************/</span>
-<a name="l00455"></a><a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">00455</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">yard</a>() throw() { <span class="keywordflow">return</span> 3 * <a class="code" href="classGeographicLib_1_1Constants.html#ac69f40e7e56c71bc72011c7591f7bef9">foot</a>(); }<span class="comment"></span>
-<a name="l00456"></a>00456 <span class="comment">    /**</span>
-<a name="l00457"></a>00457 <span class="comment">     * @return the number of meters in a fathom.</span>
-<a name="l00458"></a>00458 <span class="comment">     **********************************************************************/</span>
-<a name="l00459"></a><a class="code" href="classGeographicLib_1_1Constants.html#a51cf3e97984ac301b1f27b667b360be0">00459</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a51cf3e97984ac301b1f27b667b360be0">fathom</a>() throw() { <span class="keywordflow">return</span> 2 * <a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">yard</a>(); }<span class="comment"></span>
+<a name="l00384"></a>00384 <span class="comment">     * Infinity</span>
+<a name="l00385"></a>00385 <span class="comment">     *</span>
+<a name="l00386"></a>00386 <span class="comment">     * @return infinity if available, otherwise return the max real.</span>
+<a name="l00387"></a>00387 <span class="comment">     **********************************************************************/</span>
+<a name="l00388"></a>00388     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00389"></a><a class="code" href="classGeographicLib_1_1Math.html#a4e8a86ff2039262e99b8e41070cc2223">00389</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Math.html#a4e8a86ff2039262e99b8e41070cc2223">infinity</a>() throw() {
+<a name="l00390"></a>00390       <span class="keywordflow">return</span> std::numeric_limits&lt;T&gt;::has_infinity ?
+<a name="l00391"></a>00391         <a class="code" href="classGeographicLib_1_1Math.html#a4e8a86ff2039262e99b8e41070cc2223">std::numeric_limits&lt;T&gt;::infinity</a>() :
+<a name="l00392"></a>00392         std::numeric_limits&lt;T&gt;::max();
+<a name="l00393"></a>00393     }<span class="comment"></span>
+<a name="l00394"></a>00394 <span class="comment">    /**</span>
+<a name="l00395"></a>00395 <span class="comment">     * A synonym for infinity&lt;real&gt;().</span>
+<a name="l00396"></a>00396 <span class="comment">     **********************************************************************/</span>
+<a name="l00397"></a><a class="code" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">00397</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> <a class="code" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">infinity</a>() throw() { <span class="keywordflow">return</span> infinity&lt;real&gt;(); }
+<a name="l00398"></a>00398   };
+<a name="l00399"></a>00399 <span class="comment"></span>
+<a name="l00400"></a>00400 <span class="comment">  /**</span>
+<a name="l00401"></a>00401 <span class="comment">   * \brief %Constants needed by %GeographicLib</span>
+<a name="l00402"></a>00402 <span class="comment">   *</span>
+<a name="l00403"></a>00403 <span class="comment">   * Define constants specifying the WGS84 ellipsoid, the UTM and UPS</span>
+<a name="l00404"></a>00404 <span class="comment">   * projections, and various unit conversions.</span>
+<a name="l00405"></a>00405 <span class="comment">   **********************************************************************/</span>
+<a name="l00406"></a><a class="code" href="classGeographicLib_1_1Constants.html">00406</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1Constants.html" title="Constants needed by GeographicLib">Constants</a> {
+<a name="l00407"></a>00407   <span class="keyword">private</span>:
+<a name="l00408"></a>00408     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
+<a name="l00409"></a>00409     <a class="code" href="classGeographicLib_1_1Constants.html" title="Constants needed by GeographicLib">Constants</a>();                <span class="comment">// Disable constructor</span>
+<a name="l00410"></a>00410 
+<a name="l00411"></a>00411   <span class="keyword">public</span>:<span class="comment"></span>
+<a name="l00412"></a>00412 <span class="comment">    /**</span>
+<a name="l00413"></a>00413 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; A synonym for Math::pi&lt;real&gt;().</span>
+<a name="l00414"></a>00414 <span class="comment">     **********************************************************************/</span>
+<a name="l00415"></a><a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">00415</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a7db7f25653721739d057673f7530ff14">pi</a>() throw() { <span class="keywordflow">return</span> Math::pi&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00416"></a>00416 <span class="comment">    /**</span>
+<a name="l00417"></a>00417 <span class="comment">     * A synonym for Math::degree&lt;real&gt;().</span>
+<a name="l00418"></a>00418 <span class="comment">     **********************************************************************/</span>
+<a name="l00419"></a><a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">00419</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a26ff02acd8141a815428cddf0ff3ff66">degree</a>() throw() { <span class="keywordflow">return</span> Math::degree&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00420"></a>00420 <span class="comment">    /**</span>
+<a name="l00421"></a>00421 <span class="comment">     * @return the number of radians in an arcminute.</span>
+<a name="l00422"></a>00422 <span class="comment">     **********************************************************************/</span>
+<a name="l00423"></a><a class="code" href="classGeographicLib_1_1Constants.html#a8f8e6d3bd08abb72b686a0f4398b587b">00423</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a8f8e6d3bd08abb72b686a0f4398b587b">arcminute</a>() throw()
+<a name="l00424"></a>00424     { <span class="keywordflow">return</span> Math::degree&lt;real&gt;() / 60; }<span class="comment"></span>
+<a name="l00425"></a>00425 <span class="comment">    /**</span>
+<a name="l00426"></a>00426 <span class="comment">     * @return the number of radians in an arcsecond.</span>
+<a name="l00427"></a>00427 <span class="comment">     **********************************************************************/</span>
+<a name="l00428"></a><a class="code" href="classGeographicLib_1_1Constants.html#a04858f922295d2a04bb021eecac07179">00428</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a04858f922295d2a04bb021eecac07179">arcsecond</a>() throw()
+<a name="l00429"></a>00429     { <span class="keywordflow">return</span> Math::degree&lt;real&gt;() / 3600; }
+<a name="l00430"></a>00430 <span class="comment"></span>
+<a name="l00431"></a>00431 <span class="comment">    /** \name Ellipsoid parameters</span>
+<a name="l00432"></a>00432 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00433"></a>00433 <span class="comment">    ///@{</span>
+<a name="l00434"></a>00434 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00435"></a>00435 <span class="comment">     * @return the equatorial radius of WGS84 ellipsoid</span>
+<a name="l00436"></a>00436 <span class="comment">     **********************************************************************/</span>
+<a name="l00437"></a>00437     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00438"></a><a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">00438</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">WGS84_a</a>() throw() { <span class="keywordflow">return</span> T(6378137) * meter&lt;T&gt;(); }<span class="comment"></span>
+<a name="l00439"></a>00439 <span class="comment">    /**</span>
+<a name="l00440"></a>00440 <span class="comment">     * A synonym for WGS84_a&lt;real&gt;().</span>
+<a name="l00441"></a>00441 <span class="comment">     **********************************************************************/</span>
+<a name="l00442"></a><a class="code" href="classGeographicLib_1_1Constants.html#a53f39f52837f47490fbdf7332a37dd8b">00442</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a53f39f52837f47490fbdf7332a37dd8b">WGS84_a</a>() throw() { <span class="keywordflow">return</span> WGS84_a&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00443"></a>00443 <span class="comment">    /**</span>
+<a name="l00444"></a>00444 <span class="comment">     * @return the reciprocal flattening of WGS84 ellipsoid</span>
+<a name="l00445"></a>00445 <span class="comment">     **********************************************************************/</span>
+<a name="l00446"></a>00446     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00447"></a><a class="code" href="classGeographicLib_1_1Constants.html#aa886c9955848d0fe9204b1a14f7ae43f">00447</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Constants.html#aa886c9955848d0fe9204b1a14f7ae43f">WGS84_r</a>() throw() {
+<a name="l00448"></a>00448       <span class="comment">// 298.257223563 = 3393 * 87903691 / 1000000000</span>
+<a name="l00449"></a>00449       <span class="keywordflow">return</span> (T(3393) * T(87903691)) / T(1000000000);
+<a name="l00450"></a>00450     }<span class="comment"></span>
+<a name="l00451"></a>00451 <span class="comment">    /**</span>
+<a name="l00452"></a>00452 <span class="comment">     * A synonym for WGS84_r&lt;real&gt;().</span>
+<a name="l00453"></a>00453 <span class="comment">     **********************************************************************/</span>
+<a name="l00454"></a><a class="code" href="classGeographicLib_1_1Constants.html#a199810de7ff3351be6473d20ef045789">00454</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a199810de7ff3351be6473d20ef045789">WGS84_r</a>() throw() { <span class="keywordflow">return</span> WGS84_r&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00455"></a>00455 <span class="comment">    /**</span>
+<a name="l00456"></a>00456 <span class="comment">     * @return the central scale factor for UTM</span>
+<a name="l00457"></a>00457 <span class="comment">     **********************************************************************/</span>
+<a name="l00458"></a>00458     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00459"></a><a class="code" href="classGeographicLib_1_1Constants.html#a76c804fc143b26086a296d05ed09fe4f">00459</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Constants.html#a76c804fc143b26086a296d05ed09fe4f">UTM_k0</a>() throw() {<span class="keywordflow">return</span> T(9996) / T(10000); } <span class="comment">// 0.9996</span><span class="comment"></span>
 <a name="l00460"></a>00460 <span class="comment">    /**</span>
-<a name="l00461"></a>00461 <span class="comment">     * @return the number of meters in a chain.</span>
+<a name="l00461"></a>00461 <span class="comment">     * A synonym for UTM_k0&lt;real&gt;().</span>
 <a name="l00462"></a>00462 <span class="comment">     **********************************************************************/</span>
-<a name="l00463"></a><a class="code" href="classGeographicLib_1_1Constants.html#ac4f3792bce075999b0c9b9485e4079d0">00463</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#ac4f3792bce075999b0c9b9485e4079d0">chain</a>() throw() { <span class="keywordflow">return</span> 22 * <a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">yard</a>(); }<span class="comment"></span>
+<a name="l00463"></a><a class="code" href="classGeographicLib_1_1Constants.html#aebbe37ebfb407a851f72caa95e5dc94f">00463</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#aebbe37ebfb407a851f72caa95e5dc94f">UTM_k0</a>() throw() { <span class="keywordflow">return</span> UTM_k0&lt;real&gt;(); }<span class="comment"></span>
 <a name="l00464"></a>00464 <span class="comment">    /**</span>
-<a name="l00465"></a>00465 <span class="comment">     * @return the number of meters in a furlong.</span>
+<a name="l00465"></a>00465 <span class="comment">     * @return the central scale factor for UPS</span>
 <a name="l00466"></a>00466 <span class="comment">     **********************************************************************/</span>
-<a name="l00467"></a><a class="code" href="classGeographicLib_1_1Constants.html#a824d39311cf43f916d4ac19e46da3713">00467</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a824d39311cf43f916d4ac19e46da3713">furlong</a>() throw() { <span class="keywordflow">return</span> 10 * <a class="code" href="classGeographicLib_1_1Constants.html#ac4f3792bce075999b0c9b9485e4079d0">chain</a>(); }<span class="comment"></span>
-<a name="l00468"></a>00468 <span class="comment">    /**</span>
-<a name="l00469"></a>00469 <span class="comment">     * @return the number of meters in a statute mile.</span>
-<a name="l00470"></a>00470 <span class="comment">     **********************************************************************/</span>
-<a name="l00471"></a><a class="code" href="classGeographicLib_1_1Constants.html#a49cb7b828f7c85c36761d47b8db6518c">00471</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a49cb7b828f7c85c36761d47b8db6518c">mile</a>() throw() { <span class="keywordflow">return</span> 8 * <a class="code" href="classGeographicLib_1_1Constants.html#a824d39311cf43f916d4ac19e46da3713">furlong</a>(); }<span class="comment"></span>
-<a name="l00472"></a>00472 <span class="comment">    ///@}</span>
-<a name="l00473"></a>00473 <span class="comment"></span><span class="comment"></span>
-<a name="l00474"></a>00474 <span class="comment">    /** \name Anachronistic US units</span>
-<a name="l00475"></a>00475 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00476"></a>00476 <span class="comment">    ///@{</span>
-<a name="l00477"></a>00477 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00478"></a>00478 <span class="comment">     * @return the number of meters in a US survey foot.</span>
-<a name="l00479"></a>00479 <span class="comment">     **********************************************************************/</span>
-<a name="l00480"></a><a class="code" href="classGeographicLib_1_1Constants.html#a7faf6e7435791c0a8061296a79c0be08">00480</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a7faf6e7435791c0a8061296a79c0be08">surveyfoot</a>() throw()
-<a name="l00481"></a>00481     { <span class="keywordflow">return</span> real(1200) / real(3937) * <a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">meter</a>(); }<span class="comment"></span>
-<a name="l00482"></a>00482 <span class="comment">    ///@}</span>
-<a name="l00483"></a>00483 <span class="comment"></span>  };
-<a name="l00484"></a>00484 <span class="comment"></span>
-<a name="l00485"></a>00485 <span class="comment">  /**</span>
-<a name="l00486"></a>00486 <span class="comment">   * \brief %Exception handling for %GeographicLib</span>
-<a name="l00487"></a>00487 <span class="comment">   *</span>
-<a name="l00488"></a>00488 <span class="comment">   * A class to handle exceptions.  It&#39;s derived off std::runtime_error so it</span>
-<a name="l00489"></a>00489 <span class="comment">   * can be caught by the usual catch clauses.</span>
-<a name="l00490"></a>00490 <span class="comment">   **********************************************************************/</span>
-<a name="l00491"></a><a class="code" href="classGeographicLib_1_1GeographicErr.html">00491</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a> : <span class="keyword">public</span> std::runtime_error {
-<a name="l00492"></a>00492   <span class="keyword">public</span>:
-<a name="l00493"></a>00493 <span class="comment"></span>
-<a name="l00494"></a>00494 <span class="comment">    /**</span>
-<a name="l00495"></a>00495 <span class="comment">     * Constructor</span>
-<a name="l00496"></a>00496 <span class="comment">     *</span>
-<a name="l00497"></a>00497 <span class="comment">     * @param[in] msg a string message, which is accessible in the catch</span>
-<a name="l00498"></a>00498 <span class="comment">     *   clause, via what().</span>
-<a name="l00499"></a>00499 <span class="comment">     **********************************************************************/</span>
-<a name="l00500"></a><a class="code" href="classGeographicLib_1_1GeographicErr.html#ae0f338af58f073657b012c8a9a64b006">00500</a>     <a class="code" href="classGeographicLib_1_1GeographicErr.html#ae0f338af58f073657b012c8a9a64b006">GeographicErr</a>(<span class="keyword">const</span> std::string&amp; msg) : std::runtime_error(msg) {}
-<a name="l00501"></a>00501   };
-<a name="l00502"></a>00502 
-<a name="l00503"></a>00503 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00504"></a>00504 
-<a name="l00505"></a>00505 <span class="preprocessor">#endif</span>
+<a name="l00467"></a>00467     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00468"></a><a class="code" href="classGeographicLib_1_1Constants.html#ae48baa0a561e58acb2574f07e7acda1f">00468</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Constants.html#ae48baa0a561e58acb2574f07e7acda1f">UPS_k0</a>() throw() { <span class="keywordflow">return</span> T(994) / T(1000); } <span class="comment">// 0.994</span><span class="comment"></span>
+<a name="l00469"></a>00469 <span class="comment">    /**</span>
+<a name="l00470"></a>00470 <span class="comment">     * A synonym for UPS_k0&lt;real&gt;().</span>
+<a name="l00471"></a>00471 <span class="comment">     **********************************************************************/</span>
+<a name="l00472"></a><a class="code" href="classGeographicLib_1_1Constants.html#a49d415263ee320d1a63a857f784439a3">00472</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a49d415263ee320d1a63a857f784439a3">UPS_k0</a>() throw() { <span class="keywordflow">return</span> UPS_k0&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00473"></a>00473 <span class="comment">    ///@}</span>
+<a name="l00474"></a>00474 <span class="comment"></span><span class="comment"></span>
+<a name="l00475"></a>00475 <span class="comment">    /** \name SI units</span>
+<a name="l00476"></a>00476 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00477"></a>00477 <span class="comment">    ///@{</span>
+<a name="l00478"></a>00478 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00479"></a>00479 <span class="comment">     * @return the number of meters in a meter.</span>
+<a name="l00480"></a>00480 <span class="comment">     *</span>
+<a name="l00481"></a>00481 <span class="comment">     * This is unity, but this lets the internal system of units be changed if</span>
+<a name="l00482"></a>00482 <span class="comment">     * necessary.</span>
+<a name="l00483"></a>00483 <span class="comment">     **********************************************************************/</span>
+<a name="l00484"></a>00484     <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;
+<a name="l00485"></a><a class="code" href="classGeographicLib_1_1Constants.html#aa1f90367063bc442ef165907650ef1f0">00485</a>     <span class="keyword">static</span> <span class="keyword">inline</span> T <a class="code" href="classGeographicLib_1_1Constants.html#aa1f90367063bc442ef165907650ef1f0">meter</a>() throw() { <span class="keywordflow">return</span> T(1); }<span class="comment"></span>
+<a name="l00486"></a>00486 <span class="comment">    /**</span>
+<a name="l00487"></a>00487 <span class="comment">     * A synonym for meter&lt;real&gt;().</span>
+<a name="l00488"></a>00488 <span class="comment">     **********************************************************************/</span>
+<a name="l00489"></a><a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">00489</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#afeffc10d6b8171b39a50949cac149063">meter</a>() throw() { <span class="keywordflow">return</span> meter&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00490"></a>00490 <span class="comment">    /**</span>
+<a name="l00491"></a>00491 <span class="comment">     * @return the number of meters in a kilometer.</span>
+<a name="l00492"></a>00492 <span class="comment">     **********************************************************************/</span>
+<a name="l00493"></a><a class="code" href="classGeographicLib_1_1Constants.html#a4ec5a9d91ab0ccbd3bd921cda4bfc836">00493</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a4ec5a9d91ab0ccbd3bd921cda4bfc836">kilometer</a>() throw()
+<a name="l00494"></a>00494     { <span class="keywordflow">return</span> 1000 * meter&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00495"></a>00495 <span class="comment">    /**</span>
+<a name="l00496"></a>00496 <span class="comment">     * @return the number of meters in a nautical mile (approximately 1 arc</span>
+<a name="l00497"></a>00497 <span class="comment">     *   minute)</span>
+<a name="l00498"></a>00498 <span class="comment">     **********************************************************************/</span>
+<a name="l00499"></a><a class="code" href="classGeographicLib_1_1Constants.html#afedc242aa3ee9b3bf9c72d6d81fc6740">00499</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#afedc242aa3ee9b3bf9c72d6d81fc6740">nauticalmile</a>() throw()
+<a name="l00500"></a>00500     { <span class="keywordflow">return</span> 1852 * meter&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00501"></a>00501 <span class="comment">    ///@}</span>
+<a name="l00502"></a>00502 <span class="comment"></span><span class="comment"></span>
+<a name="l00503"></a>00503 <span class="comment">    /** \name Anachronistic British units</span>
+<a name="l00504"></a>00504 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00505"></a>00505 <span class="comment">    ///@{</span>
+<a name="l00506"></a>00506 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00507"></a>00507 <span class="comment">     * @return the number of meters in an international foot.</span>
+<a name="l00508"></a>00508 <span class="comment">     **********************************************************************/</span>
+<a name="l00509"></a><a class="code" href="classGeographicLib_1_1Constants.html#ac69f40e7e56c71bc72011c7591f7bef9">00509</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#ac69f40e7e56c71bc72011c7591f7bef9">foot</a>() throw()
+<a name="l00510"></a>00510     { <span class="keywordflow">return</span> real(0.0254L) * 12 * meter&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00511"></a>00511 <span class="comment">    /**</span>
+<a name="l00512"></a>00512 <span class="comment">     * @return the number of meters in a yard.</span>
+<a name="l00513"></a>00513 <span class="comment">     **********************************************************************/</span>
+<a name="l00514"></a><a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">00514</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">yard</a>() throw() { <span class="keywordflow">return</span> 3 * <a class="code" href="classGeographicLib_1_1Constants.html#ac69f40e7e56c71bc72011c7591f7bef9">foot</a>(); }<span class="comment"></span>
+<a name="l00515"></a>00515 <span class="comment">    /**</span>
+<a name="l00516"></a>00516 <span class="comment">     * @return the number of meters in a fathom.</span>
+<a name="l00517"></a>00517 <span class="comment">     **********************************************************************/</span>
+<a name="l00518"></a><a class="code" href="classGeographicLib_1_1Constants.html#a51cf3e97984ac301b1f27b667b360be0">00518</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a51cf3e97984ac301b1f27b667b360be0">fathom</a>() throw() { <span class="keywordflow">return</span> 2 * <a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">yard</a>(); }<span class="comment"></span>
+<a name="l00519"></a>00519 <span class="comment">    /**</span>
+<a name="l00520"></a>00520 <span class="comment">     * @return the number of meters in a chain.</span>
+<a name="l00521"></a>00521 <span class="comment">     **********************************************************************/</span>
+<a name="l00522"></a><a class="code" href="classGeographicLib_1_1Constants.html#ac4f3792bce075999b0c9b9485e4079d0">00522</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#ac4f3792bce075999b0c9b9485e4079d0">chain</a>() throw() { <span class="keywordflow">return</span> 22 * <a class="code" href="classGeographicLib_1_1Constants.html#a00057328caa45bc216d18243786920c2">yard</a>(); }<span class="comment"></span>
+<a name="l00523"></a>00523 <span class="comment">    /**</span>
+<a name="l00524"></a>00524 <span class="comment">     * @return the number of meters in a furlong.</span>
+<a name="l00525"></a>00525 <span class="comment">     **********************************************************************/</span>
+<a name="l00526"></a><a class="code" href="classGeographicLib_1_1Constants.html#a824d39311cf43f916d4ac19e46da3713">00526</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a824d39311cf43f916d4ac19e46da3713">furlong</a>() throw() { <span class="keywordflow">return</span> 10 * <a class="code" href="classGeographicLib_1_1Constants.html#ac4f3792bce075999b0c9b9485e4079d0">chain</a>(); }<span class="comment"></span>
+<a name="l00527"></a>00527 <span class="comment">    /**</span>
+<a name="l00528"></a>00528 <span class="comment">     * @return the number of meters in a statute mile.</span>
+<a name="l00529"></a>00529 <span class="comment">     **********************************************************************/</span>
+<a name="l00530"></a><a class="code" href="classGeographicLib_1_1Constants.html#a49cb7b828f7c85c36761d47b8db6518c">00530</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a49cb7b828f7c85c36761d47b8db6518c">mile</a>() throw() { <span class="keywordflow">return</span> 8 * <a class="code" href="classGeographicLib_1_1Constants.html#a824d39311cf43f916d4ac19e46da3713">furlong</a>(); }<span class="comment"></span>
+<a name="l00531"></a>00531 <span class="comment">    ///@}</span>
+<a name="l00532"></a>00532 <span class="comment"></span><span class="comment"></span>
+<a name="l00533"></a>00533 <span class="comment">    /** \name Anachronistic US units</span>
+<a name="l00534"></a>00534 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00535"></a>00535 <span class="comment">    ///@{</span>
+<a name="l00536"></a>00536 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00537"></a>00537 <span class="comment">     * @return the number of meters in a US survey foot.</span>
+<a name="l00538"></a>00538 <span class="comment">     **********************************************************************/</span>
+<a name="l00539"></a><a class="code" href="classGeographicLib_1_1Constants.html#a7faf6e7435791c0a8061296a79c0be08">00539</a>     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Constants.html#a7faf6e7435791c0a8061296a79c0be08">surveyfoot</a>() throw()
+<a name="l00540"></a>00540     { <span class="keywordflow">return</span> real(1200) / real(3937) * meter&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00541"></a>00541 <span class="comment">    ///@}</span>
+<a name="l00542"></a>00542 <span class="comment"></span>  };
+<a name="l00543"></a>00543 <span class="comment"></span>
+<a name="l00544"></a>00544 <span class="comment">  /**</span>
+<a name="l00545"></a>00545 <span class="comment">   * \brief %Exception handling for %GeographicLib</span>
+<a name="l00546"></a>00546 <span class="comment">   *</span>
+<a name="l00547"></a>00547 <span class="comment">   * A class to handle exceptions.  It&#39;s derived off std::runtime_error so it</span>
+<a name="l00548"></a>00548 <span class="comment">   * can be caught by the usual catch clauses.</span>
+<a name="l00549"></a>00549 <span class="comment">   **********************************************************************/</span>
+<a name="l00550"></a><a class="code" href="classGeographicLib_1_1GeographicErr.html">00550</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a> : <span class="keyword">public</span> std::runtime_error {
+<a name="l00551"></a>00551   <span class="keyword">public</span>:
+<a name="l00552"></a>00552 <span class="comment"></span>
+<a name="l00553"></a>00553 <span class="comment">    /**</span>
+<a name="l00554"></a>00554 <span class="comment">     * Constructor</span>
+<a name="l00555"></a>00555 <span class="comment">     *</span>
+<a name="l00556"></a>00556 <span class="comment">     * @param[in] msg a string message, which is accessible in the catch</span>
+<a name="l00557"></a>00557 <span class="comment">     *   clause, via what().</span>
+<a name="l00558"></a>00558 <span class="comment">     **********************************************************************/</span>
+<a name="l00559"></a><a class="code" href="classGeographicLib_1_1GeographicErr.html#ae0f338af58f073657b012c8a9a64b006">00559</a>     <a class="code" href="classGeographicLib_1_1GeographicErr.html#ae0f338af58f073657b012c8a9a64b006">GeographicErr</a>(<span class="keyword">const</span> std::string&amp; msg) : std::runtime_error(msg) {}
+<a name="l00560"></a>00560   };
+<a name="l00561"></a>00561 
+<a name="l00562"></a>00562 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00563"></a>00563 
+<a name="l00564"></a>00564 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Feb 22 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

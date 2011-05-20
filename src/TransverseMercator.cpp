@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
@@ -41,7 +41,7 @@
 
 #include "GeographicLib/TransverseMercator.hpp"
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: TransverseMercator.cpp 6905 2010-12-01 21:28:56Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: TransverseMercator.cpp 6937 2011-02-01 20:17:13Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
@@ -210,8 +210,9 @@ namespace GeographicLib {
   }
 
   const TransverseMercator
-  TransverseMercator::UTM(Constants::WGS84_a(), Constants::WGS84_r(),
-                          Constants::UTM_k0());
+  TransverseMercator::UTM(Constants::WGS84_a<real>(),
+                          Constants::WGS84_r<real>(),
+                          Constants::UTM_k0<real>());
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,
                                    real& x, real& y, real& gamma, real& k)
@@ -237,8 +238,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     real
-      phi = lat * Math::degree(),
-      lam = lon * Math::degree();
+      phi = lat * Math::degree<real>(),
+      lam = lon * Math::degree<real>();
     // phi = latitude
     // phi' = conformal latitude
     // psi = isometric latitude
@@ -282,7 +283,7 @@ namespace GeographicLib {
       // instead of psip).
       k = sqrt(_e2m + _e2 * sq(cos(phi))) * secphi / Math::hypot(taup, c);
     } else {
-      xip = Math::pi()/2;
+      xip = Math::pi<real>()/2;
       etap = 0;
       gamma = lam;
       k = _c;
@@ -374,8 +375,8 @@ namespace GeographicLib {
     // Gauss-Krueger TM.
     gamma -= atan2(yi1, yr1);
     k *= _b1 * Math::hypot(yr1, yi1);
-    gamma /= Math::degree();
-    y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
+    gamma /= Math::degree<real>();
+    y = _a1 * _k0 * (backside ? Math::pi<real>() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
       gamma = 180 - gamma;
@@ -398,9 +399,9 @@ namespace GeographicLib {
       etasign = eta < 0 ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
-    bool backside = xi > Math::pi()/2;
+    bool backside = xi > Math::pi<real>()/2;
     if (backside)
-      xi = Math::pi() - xi;
+      xi = Math::pi<real>() - xi;
     real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
@@ -468,12 +469,12 @@ namespace GeographicLib {
       // Note cos(phi') * cosh(eta') = r
       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * Math::hypot(real(1), tau) * r;
     } else {
-      phi = Math::pi()/2;
+      phi = Math::pi<real>()/2;
       lam = 0;
       k *= _c;
     }
-    lat = phi / Math::degree() * xisign;
-    lon = lam / Math::degree();
+    lat = phi / Math::degree<real>() * xisign;
+    lon = lam / Math::degree<real>();
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
@@ -484,7 +485,7 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    gamma /= Math::degree();
+    gamma /= Math::degree<real>();
     if (backside)
       gamma = 180 - gamma;
     gamma *= xisign * etasign;

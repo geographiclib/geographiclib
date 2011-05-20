@@ -1,0 +1,236 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">
+<title>Geod -- perform geodesic calculations</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#input">INPUT</a></li>
+	<li><a href="#auxiliary_sphere">AUXILIARY SPHERE</a></li>
+	<li><a href="#precision">PRECISION</a></li>
+	<li><a href="#errors">ERRORS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>Geod -- perform geodesic calculations</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>Geod</strong> [ <strong>-i</strong> | <strong>-l</strong> <em>lat1</em> <em>lon1</em> <em>azi1</em> ] [ <strong>-a</strong> ] [ <strong>-e</strong> <em>a</em> <em>r</em> ]
+[ <strong>-d</strong> ] [ <strong>-b</strong> ] [ <strong>-f</strong> ] [ <strong>-p</strong> <em>prec</em> ]
+[ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p>The shortest path between two points on the ellipsoid at (<em>lat1</em>,
+<em>lon1</em>) and (<em>lat2</em>, <em>lon2</em>) is called the geodesic.  Its length is
+<em>s12</em> and the geodesic from point 1 to point 2 has azimuths <em>azi1</em> and
+<em>azi2</em> at the two end points.  The reduced length of the
+geodesic, <em>m12</em>, is defined such that if the initial azimuth is
+perturbed by d<em>azi1</em> (radians) then the second point is displaced by
+<em>m12</em>*d<em>azi1</em> in the direction perpendicular to the geodesic.  On a
+flat surface, we have <em>m12</em> = <em>s12</em>.</p>
+<p><strong>Geod</strong> operates in one of three modes:</p>
+<ol>
+<li>
+<p>By default, <strong>Geod</strong> accepts lines on the standard input containing
+<em>lat1</em> <em>lon1</em> <em>azi1</em> <em>s12</em> and prints <em>lat2</em> <em>lon2</em> <em>azi2</em> <em>m12</em>
+on standard output.  This is the direct geodesic calculation.</p>
+</li>
+<li>
+<p>Command line arguments <strong>-l</strong> <em>lat1</em> <em>lon1</em> <em>azi1</em> specify a geodesic line.
+<strong>Geod</strong> then accepts a sequence of <em>s12</em> values (one per line) on
+standard input and prints <em>lat2</em> <em>lon2</em> <em>azi2</em> <em>m12</em> for each.  This
+generates a sequence of points on a single geodesic.</p>
+</li>
+<li>
+<p>With the <strong>-i</strong> command line argument, <strong>Geod</strong> performs the inverse
+geodesic calculation.  It reads lines containing <em>lat1</em> <em>lon1</em> <em>lat2</em>
+<em>lon2</em> and prints the corresponding values of <em>azi1</em> <em>azi2</em> <em>s12</em> <em>m12</em>.</p>
+</li>
+</ol>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="i" class="item"><strong>-i</strong></a></strong></dt>
+
+<dd>
+<p>perform an inverse geodesic calculation (see 3 above).</p>
+</dd>
+<dt><strong><a name="l" class="item"><strong>-l</strong></a></strong></dt>
+
+<dd>
+<p>line mode (see 2 above); generate a sequence of points along the
+geodesic specified by <em>lat1</em> <em>lon1</em> <em>azi1</em>.</p>
+</dd>
+<dt><strong><a name="a" class="item"><strong>-a</strong></a></strong></dt>
+
+<dd>
+<p>arc mode; on input <em>and</em> output <em>s12</em> is replaced by <em>a12</em> the arc
+length (in degrees) on the auxiliary sphere.  See <a href="#auxiliary_sphere">AUXILIARY SPHERE</a>.</p>
+</dd>
+<dt><strong><a name="e" class="item"><strong>-e</strong></a></strong></dt>
+
+<dd>
+<p>specify the ellipsoid via <em>a</em> <em>r</em>; the equatorial radius is <em>a</em> and
+the reciprocal flattening is <em>r</em>.  Setting <em>r</em> = 0 results in a
+sphere.  Specify <em>r</em> &lt; 0 for a prolate ellipsoid.  By default, the
+WGS84 ellipsoid is used, <em>a</em> = 6378137m, <em>r</em> = 298.257223563.</p>
+</dd>
+<dt><strong><a name="d" class="item"><strong>-d</strong></a></strong></dt>
+
+<dd>
+<p>output angles as degrees, minutes, seconds instead of decimal degrees.</p>
+</dd>
+<dt><strong><a name="b" class="item"><strong>-b</strong></a></strong></dt>
+
+<dd>
+<p>report the <em>back</em> azimuth at point 2 instead of the forward azimuth.</p>
+</dd>
+<dt><strong><a name="f" class="item"><strong>-f</strong></a></strong></dt>
+
+<dd>
+<p>full output; each line of output consists of 9 quantities: <em>lat1</em>
+<em>lon1</em> <em>azi1</em> <em>lat2</em> <em>lon2</em> <em>azi2</em> <em>s12</em> <em>a12</em> <em>m12</em>.</p>
+</dd>
+<dt><strong><a name="p" class="item"><strong>-p</strong></a></strong></dt>
+
+<dd>
+<p>set the precision to <em>prec</em> (default 3); <em>prec</em> is the precision
+relative to 1m.  See <a href="#precision">PRECISION</a>.</p>
+</dd>
+<dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
+
+<dd>
+<p>print version.</p>
+</dd>
+<dt><strong><a name="h" class="item"><strong>-h</strong></a></strong></dt>
+
+<dd>
+<p>print usage.</p>
+</dd>
+<dt><strong><a name="help" class="item"><strong>--help</strong></a></strong></dt>
+
+<dd>
+<p>print full documentation.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="input">INPUT</a></h1>
+<p><strong>Geod</strong> measures all angles in degrees and all lengths (<em>s12</em>, <em>m12</em>)
+in meters.  On input angles (latitude, longitude, azimuth, arc length)
+can be as decimal degrees or degrees (d), minutes ('), seconds (&quot;).  A
+decimal point can only appear in the least significant component and the
+designator (d, ', or &quot;) for this component is optional; thus <code>40d30</code>,
+<code>40d30'</code>, <code>40.5d</code>, and <code>40.5</code> are all equivalent.  By default,
+latitude precedes longitude for each point; however on input either may
+be given first by appending (or prepending) <em>N</em> or <em>S</em> to the latitude
+and <em>E</em> or <em>W</em> to the longitude.  Azimuths are measured clockwise from
+north; however this may be overridden with <em>E</em> or <em>W</em>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="auxiliary_sphere">AUXILIARY SPHERE</a></h1>
+<p>Geodesics on the ellipsoid can be transferred to the <em>auxiliary sphere</em>
+on which the distance is measured in terms of the arc length <em>a12</em>
+(measured in degrees) instead of <em>s12</em>.  In terms of <em>a12</em>, 180
+degrees is the distance from one equator crossing to the next or from
+the minimum latitude to the maximum latitude.  Geodesics with <em>a12</em>
+&gt; 180 degrees do not correspond to shortest paths.  With the <strong>-a</strong>
+flag, <em>s12</em> (on both input and output) is replaced by <em>a12</em>.  The
+<strong>-a</strong> flag does <em>not</em> affect the full output given by the <strong>-f</strong> flag
+(which always includes both <em>s12</em> and <em>a12</em>).  <em>m12</em> is always given
+in meters.</p>
+<p>
+</p>
+<hr />
+<h1><a name="precision">PRECISION</a></h1>
+<p><em>prec</em> gives precision of
+the output with <em>prec</em> = 0 giving 1m precision, <em>prec</em> = 3 giving 1mm
+precision, etc.  <em>prec</em> is the number of digits after the decimal point
+for lengths.  For decimal degrees, the number of digits after the
+decimal point is 5 + <em>prec</em>.  For DMS (degree, minute, seconds) output,
+the number of digits after the decimal point in the seconds component
+is 1 + <em>prec</em>.  The minimum value of <em>prec</em> is 0 and the maximum is 10.</p>
+<p>
+</p>
+<hr />
+<h1><a name="errors">ERRORS</a></h1>
+<p>An illegal line of input will print an error message to standard output
+beginning with <code>ERROR:</code> and causes <strong>Geod</strong> to return an exit code of 1.
+However, an error does not cause <strong>Geod</strong> to terminate; following lines
+will be converted.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>Route from JFK Airport to Singapore Changi Airport:</p>
+<pre>
+   echo &quot;40d38'23N&quot; &quot;073d46'44W&quot; &quot;01d21'33N&quot; &quot;103d59'22E&quot; |
+   Geod -i -d -p 0</pre>
+<pre>
+   003d18'29.9&quot; 177d29'09.2&quot; 15347628 4302458</pre>
+<p>Waypoints on the route at intervals of 2000km:</p>
+<pre>
+   for ((i = 0; i &lt;= 16; i += 2)); do echo ${i}000000;done |
+   Geod -l &quot;40d38'23N&quot; &quot;073d46'44W&quot; &quot;003d18'29.9&quot; -d -p 0</pre>
+<pre>
+   40d38'23.0&quot;N 073d46'44.0&quot;W 003d18'29.9&quot; 0
+   58d34'45.1&quot;N 071d49'36.7&quot;W 004d48'48.8&quot; 1967419
+   76d22'28.4&quot;N 065d32'17.8&quot;W 010d41'38.4&quot; 3743642
+   84d50'28.0&quot;N 075d04'39.2&quot;E 150d55'00.9&quot; 5156905
+   67d26'20.3&quot;N 098d00'51.2&quot;E 173d27'20.3&quot; 6070415
+   49d33'03.2&quot;N 101d06'52.6&quot;E 176d07'54.3&quot; 6394568
+   31d34'16.5&quot;N 102d30'46.3&quot;E 177d03'08.4&quot; 6095725
+   13d31'56.0&quot;N 103d26'50.7&quot;E 177d24'55.0&quot; 5200700
+   04d32'05.7&quot;S 104d14'48.7&quot;E 177d28'43.6&quot; 3795596</pre>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><strong>Geod</strong> is a part of GeographicLib, <a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>.  The
+algorithms are described in C. F. F. Karney, <em>Geodesics on an ellipsoid
+of revolution</em>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p><strong>Geod</strong> was written by Charles Karney.</p>
+
+</body>
+
+</html>

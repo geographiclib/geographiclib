@@ -2,7 +2,7 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -10,7 +10,7 @@
 #include "GeographicLib/DMS.hpp"
 #include <algorithm>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: DMS.cpp 6915 2010-12-18 14:28:46Z karney $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: DMS.cpp 6956 2011-02-17 23:20:13Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -250,7 +250,7 @@ namespace GeographicLib {
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
     if (azi < -180 || azi > 360)
-      throw GeographicErr("Azimuth " + azistr + "d not in range [-180d,360d]");
+      throw GeographicErr("Azimuth " + azistr + " not in range [-180d,360d]");
     if (azi >= 180) azi -= 360;
     return azi;
   }
