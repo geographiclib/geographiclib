@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
-#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: Geodesic.hpp 6720 2009-10-17 23:13:57Z ckarney $"
+#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: Geodesic.hpp 6754 2009-11-02 22:56:41Z karney $"
 
 #if !defined(GEOD_TAU_ORD)
 /**
@@ -129,7 +129,7 @@ namespace GeographicLib {
       // degrees.)  We use this to avoid having to deal with near singular
       // cases when x is non-zero but tiny (e.g., 1.0e-200).
       const real z = real(0.0625); // 1/16
-      real y = std::abs(x);
+      volatile real y = std::abs(x);
       // The compiler mustn't "simplify" z - (z - y) to y
       y = y < z ? z - (z - y) : y;
       return x < 0 ? -y : y;

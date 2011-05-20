@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
-#define GEOGRAPHICLIB_MGRS_HPP "$Id: MGRS.hpp 6720 2009-10-17 23:13:57Z ckarney $"
+#define GEOGRAPHICLIB_MGRS_HPP "$Id: MGRS.hpp 6750 2009-10-29 22:19:37Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
@@ -159,7 +159,7 @@ namespace GeographicLib {
      * UPS coordinates are truncated to requested precision to determine the
      * MGRS coordinate.  Thus in UTM zone 38N, the square area with easting in
      * [444 km, 445 km) and northing in [3688 km, 3689 km) maps to MGRS
-     * coordinate 38SMB4488 (at \e prec = 2, 1km), Kulani Sq., Baghdad.
+     * coordinate 38SMB4488 (at \e prec = 2, 1km), Khulani Sq., Baghdad.
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion to
      * MGRS coordinate.  Thus for \e zone > 0, the MGRS coordinate begins with
@@ -173,6 +173,9 @@ namespace GeographicLib {
      * of a band boundary.  For prec in [6, 11], the conversion is accurate to
      * roundoff.
      *
+     * Return the result via a reference argument to avoid the overhead of
+     * allocating a potentially large number of small strings.  If an error is
+     * thrown, then \e mgrs is unchanged.
      **********************************************************************/
     static void Forward(int zone, bool northp, real x, real y,
                         int prec, std::string& mgrs);
@@ -212,6 +215,8 @@ namespace GeographicLib {
      * from MGRS coordinate.  The conversion is exact for prec in [0, 5].  With
      * centerp = true the conversion from MGRS to geographic and back is
      * stable.  This is not assured if \e centerp = false.
+     *
+     * If an error is thrown, then the arguments are unchanged.
      **********************************************************************/
     static void Reverse(const std::string& mgrs,
                         int& zone, bool& northp, real& x, real& y,

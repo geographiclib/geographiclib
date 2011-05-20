@@ -22,7 +22,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]\n\
-$Id: CartConvert.cpp 6720 2009-10-17 23:13:57Z ckarney $\n\
+$Id: CartConvert.cpp 6754 2009-11-02 22:56:41Z karney $\n\
 \n\
 Convert geodetic coordinates to either geocentric or local cartesian\n\
 coordinates.  Geocentric coordinates have the origin at the center of the\n\
@@ -88,6 +88,9 @@ int main(int argc, char* argv[]) {
             (str >> x >> y >> z) :
             (str >> lat >> lon >> h)))
         throw  std::out_of_range("Incomplete input: " + s);
+      std::string strc;
+      if (str >> strc)
+        throw std::out_of_range("Extraneous input: " + strc);
       if (reverse) {
         if (localcartesian)
           lc.Reverse(x, y, z, lat, lon, h);

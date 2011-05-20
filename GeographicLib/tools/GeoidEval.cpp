@@ -27,8 +27,8 @@ int usage(int retval) {
     geoidpath = "UNDEFINED";
   ( retval ? std::cerr : std::cout ) <<
 "Usage:\n\
-  Geoid [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]\n\
-$Id: GeoidEval.cpp 6720 2009-10-17 23:13:57Z ckarney $\n\
+  GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]\n\
+$Id: GeoidEval.cpp 6754 2009-11-02 22:56:41Z karney $\n\
 \n\
 Read in positions on standard input and print out the corresponding\n\
 geoid heights on standard output.  In addition print the northly and\n\
@@ -41,7 +41,7 @@ degrees or degrees, minutes, and seconds.  The latitude should be\n\
 given first, unless at least one hemisphere desiginator is\n\
 provided.  Thus 33.5 40.25 may be specified as 40d15E 33d30N.\n\
 \n\
-By default the EGM96 Geoid is used with a 5\' grid.  This may be\n\
+By default the EGM96 geoid is used with a 5\' grid.  This may be\n\
 overriden with the -n option.  The name specified should be one of\n\
 \n\
                                   bilinear error    cubic error\n\
@@ -169,6 +169,9 @@ int main(int argc, char* argv[]) {
         std::string stra, strb;
         if (!(str >> stra >> strb))
           throw std::out_of_range("Incomplete input: " + s);
+        std::string strc;
+        if (str >> strc)
+          throw std::out_of_range("Extraneous input: " + strc);
         real lat, lon;
         GeographicLib::DMS::DecodeLatLon(stra, strb, lat, lon);
         real gradn, grade;

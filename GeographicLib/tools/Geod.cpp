@@ -24,7 +24,7 @@ int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]\n\
             [-d] [-b] [-f] [-p prec] [-h]\n\
-$Id: Geod.cpp 6720 2009-10-17 23:13:57Z ckarney $\n\
+$Id: Geod.cpp 6754 2009-11-02 22:56:41Z karney $\n\
 \n\
 Perform geodesic calculations.\n\
 \n\
@@ -242,6 +242,9 @@ int main(int argc, char* argv[]) {
         std::string slat1, slon1, slat2, slon2;
         if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
           throw std::out_of_range("Incomplete input: " + s);
+        std::string strc;
+        if (str >> strc)
+          throw std::out_of_range("Extraneous input: " + strc);
         GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
         GeographicLib::DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
         a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
@@ -258,12 +261,18 @@ int main(int argc, char* argv[]) {
           std::string ss12;
           if (!(str >> ss12))
             throw std::out_of_range("Incomplete input: " + s);
+          std::string strc;
+          if (str >> strc)
+            throw std::out_of_range("Extraneous input: " + strc);
           s12 = ReadDistance(ss12, arcmode);
           a12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
         } else {
           std::string slat1, slon1, sazi1, ss12;
           if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
             throw std::out_of_range("Incomplete input: " + s);
+          std::string strc;
+          if (str >> strc)
+            throw std::out_of_range("Extraneous input: " + strc);
           GeographicLib::DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           azi1 = ReadAzimuth(sazi1);
           s12 = ReadDistance(ss12, arcmode);

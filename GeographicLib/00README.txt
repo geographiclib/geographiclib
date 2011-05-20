@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6720 2009-10-17 23:13:57Z ckarney $
+# $Id: 00README.txt 6730 2009-10-20 22:16:00Z karney $
 
 A library for geographic projections.
 
@@ -67,6 +67,8 @@ Files
 This is the 2009-10 version of the library.
 
 Changes between 2009-10 and 2009-09 versions:
+
+  * Change web site to http://geographiclib.sourceforge.net
 
   * Several house-cleaning changes:
     + Change from the a flat directory structure to a more easily

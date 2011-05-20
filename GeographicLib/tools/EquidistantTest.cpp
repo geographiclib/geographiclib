@@ -25,7 +25,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: EquidistantTest [-c lat0 lon0] [-z lat0 lon0] [-r] [-h]\n\
-$Id: EquidistantTest.cpp 6720 2009-10-17 23:13:57Z ckarney $\n\
+$Id: EquidistantTest.cpp 6754 2009-11-02 22:56:41Z karney $\n\
 \n\
 Convert geodetic coordinates to either azimuthal equidistant or\n\
 Cassini-Soldner coordinates.  The center of the projection (lat0, lon0)\n\
@@ -103,6 +103,9 @@ int main(int argc, char* argv[]) {
             (str >> x >> y) :
             (str >> lat >> lon)))
         throw std::out_of_range("Incomplete input: " + s);
+      std::string strc;
+      if (str >> strc)
+        throw std::out_of_range("Extraneous input: " + strc);
       if (reverse) {
         if (cassini)
           cs.Reverse(x, y, lat, lon, a, m);
