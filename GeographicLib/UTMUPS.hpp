@@ -9,7 +9,7 @@
 
 
 #if !defined(UTMUPS_HPP)
-#define UTMUPS_HPP "$Id: UTMUPS.hpp 6573 2009-03-06 20:33:50Z ckarney $"
+#define UTMUPS_HPP "$Id: UTMUPS.hpp 6639 2009-06-01 12:04:21Z ckarney $"
 
 #include <string>
 #include <sstream>
@@ -152,6 +152,33 @@ namespace GeographicLib {
       double gamma, k;
       Reverse(zone, northp, x, y, lat, lon, gamma, k);
     }
+
+    /**
+     * Decode a UTM/UPS zone string, \e zonestr, returning the resulting \e
+     * zone and hemisphere thru \e northp (true for northern and false for
+     * southern hemispheres).  For UTM, \e zonestr has the form of a zone
+     * number in the range [1,60] followed by a hemisphere letter, N or S.  For
+     * UPS, it consists just of the hemisphere letter.  The returned value of
+     * \e zone is 0 for UPS.  Note well that "38S" indicates the southern
+     * hemisphere of zone 38 and not latitude band S, [32,40].  N, 01S, 2N, 38S
+     * are legal.  0N, 001S, 61N, 38P are illegal.
+     **********************************************************************/
+    static void DecodeZone(const std::string& zonestr,
+			   int& zone, bool& northp);
+
+    /**
+     * Encode a UTM/UPS zone string given the \e zone and hemisphere \e northp.
+     * \e zone must be in the range [0,60] with \e zone = 0 indicating UPS (but
+     * the resulting string does not contain "0").  This reverses DecodeZone.
+     **********************************************************************/
+    static std::string EncodeZone(int zone, bool northp);
+
+    /**
+     * The shift necessary to align N and S halves of a UTM zone
+     * (10<sup>7</sup>).
+     **********************************************************************/
+    static double UTMShift() throw();
+
   };
 
 } // namespace GeographicLib

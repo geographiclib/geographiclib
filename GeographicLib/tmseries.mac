@@ -5,7 +5,7 @@ Compute series approximations for Transverse Mercator Projection
 Written by Charles Karney <charles@karney.com>
 http://charles.karney.info/geographic
 
-$Id: tmseries.mac 6501 2009-01-11 21:36:41Z ckarney $
+$Id: tmseries.mac 6632 2009-05-29 17:49:53Z ckarney $
 
 Compute coefficient for forward and inverse trigonometric series for
 conversion from conformal latitude to rectifying latitude.  This prints
@@ -70,7 +70,7 @@ load("revert.mac")$
    e2 = e^2
    phi = geodetic latitude
    beta = conformal latitude
-   z = Gauss-Laborde TM
+   z = Gauss-Schreiber TM
    w = Thompson projection (scaled by 2*kc/%pi)
    psi = isometric latitude
    s = UTM projection (scaled by 2*ec/%pi)

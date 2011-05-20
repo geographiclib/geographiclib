@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(MGRS_HPP)
-#define MGRS_HPP "$Id: MGRS.hpp 6573 2009-03-06 20:33:50Z ckarney $"
+#define MGRS_HPP "$Id: MGRS.hpp 6621 2009-05-18 12:44:31Z ckarney $"
 
 #include <cmath>
 #include <algorithm>
@@ -101,8 +101,7 @@ namespace GeographicLib {
       int ilat = int(std::floor(lat));
       return (std::max)(-10, (std::min)(9, (ilat + 80)/8 - 10));
     }
-    // These are protected also so that UTMUPS can access them.
-    friend class GeoCoords;	// GeoCoords accesses utmNshift
+    // UTMUPS access these enums
     enum {
       tile = 100000,		// Size MGRS blocks
       minutmcol = 1,

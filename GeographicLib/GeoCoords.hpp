@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #ifndef GEOCOORDS_HPP
-#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6573 2009-03-06 20:33:50Z ckarney $"
+#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6621 2009-05-18 12:44:31Z ckarney $"
 
 #include <cmath>
 #include <string>
@@ -61,14 +61,12 @@ namespace GeographicLib {
       _alt_zone = _zone;
     }
     void UTMUPSString(int zone, double easting, double northing,
-		   int prec, std::string& utm) const;
+		      int prec, std::string& utm) const;
     void FixHemisphere();
 #if defined(_MSC_VER)
     static inline int isfinite(double x) throw() { return _finite(x); }
 #else
     static inline int isfinite(double x) throw() { return std::isfinite(x); }
-    static inline int isnan(double x) throw() { return std::isnan(x); }
-    static inline int isinf(double x) throw() { return std::isinf(x); }
 #endif
   public:
 

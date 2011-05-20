@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6611 2009-05-01 12:51:44Z ckarney $
+# $Id: 00README.txt 6636 2009-06-01 11:08:33Z ckarney $
 
 A library for geographic projections.
 
@@ -53,9 +53,15 @@ Files
     gauss-krueger-convergence-scale.{png,pdf} -- Fig. 5
     thompson-tm-graticule.{png,pdf} -- Fig. 6
 
-This is the 2009-05 version of the library.
+This is the 2009-06 version of the library.
 
-Changes between 2009-05 and 2009-03 versions:
+Changes between 2009-06 and 2009-05 versions:
+
+  * Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
+
+  * Clean up code in GeographicLib::Geodesic.
+
+Changes between 2009-05 and 2009-04 versions:
 
   * Improvements to GeographicLib::Geodesic:
     + more economical series expansions,

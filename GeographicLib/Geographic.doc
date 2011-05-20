@@ -6,13 +6,13 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://charles.karney.info/geographic/
  **********************************************************************/
-// $Id: Geographic.doc 6611 2009-05-01 12:51:44Z ckarney $
+// $Id: Geographic.doc 6636 2009-06-01 11:08:33Z ckarney $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-05
-\date 2009-05-01
+\version 2009-06
+\date 2009-06-01
 
 \section abstract Abstract
 
@@ -918,7 +918,7 @@ are given here where \e ep2 = \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 -
 \endverbatim
 
 Unfortunately, expansions of this type are much more messy at higher
-order.  Therefore, For greater accuracy, directly differentiate the
+order.  Therefore, for greater accuracy, directly differentiate the
 series involving \e h' or \e h.  The accumulation of the sum can be
 carried out at the same time as the transformation itself (and the
 calculation slots into a Clenshaw summation very easily).  The
@@ -2051,8 +2051,12 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-05
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-06
    (current)</a>
+  - Add routines to decode and encode zone+hemisphere to GeographicLib::UTMUPS.
+  - Clean up code in GeographicLib::Geodesic.
+
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-05</a>
   - Improvements to GeographicLib::Geodesic:
     - more economical series expansions,
     - return reduced length (as does the \ref geod utility),
