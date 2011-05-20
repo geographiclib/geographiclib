@@ -8,9 +8,10 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
-#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: Gnomonic.hpp 6845 2010-07-21 10:23:46Z karney $"
+#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: Gnomonic.hpp 6867 2010-09-11 13:04:26Z karney $"
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/Constants.hpp"
 
 namespace GeographicLib {
@@ -35,16 +36,16 @@ namespace GeographicLib {
    * However geodesic segments close to the center are approximately straight.
    *
    * Consider a geodesic segment of length \e l.  Let \e T be the point on the
-   * geodesic closest to \e C the center of the projection and \e t be the
-   * distance \e CT.  To lowest order, the maximum deviation (as a true
-   * distance) of the corresponding gnomonic line segment (i.e., with the same
-   * end points) from the geodesic is<br>
+   * geodesic (extended if necessary) closest to \e C the center of the
+   * projection and \e t be the distance \e CT.  To lowest order, the maximum
+   * deviation (as a true distance) of the corresponding gnomonic line segment
+   * (i.e., with the same end points) from the geodesic is<br>
    * <br>
    * (\e K(T) - \e K(C)) \e l<sup>2</sup> \e t / 32.<br>
    * <br>
    * where \e K is the Gaussian curvature.
    *
-   * This result applies for any surface.  For an allipsoid of revoluation,
+   * This result applies for any surface.  For an allipsoid of revolution,
    * consider all geodesics whose end points are within a distance \e r of \e
    * C.  For a given \e r, the deviation is maximum when the latitude of \e C
    * is 45<sup>o</sup>, when endpoints are a distance \e r away, and when their
@@ -52,9 +53,8 @@ namespace GeographicLib {
    * To lowest order in \e r and the flattening \e f, the deviation is \e f
    * (\e r/2\e a)<sup>3</sup> \e r.
    *
-   * The conversions all take place using a GeographicLib::Geodesic object (by
-   * default GeographicLib::Geodesic::WGS84).  For more information on
-   * geodesics see \ref geodesic.
+   * The conversions all take place using a Geodesic object (by default
+   * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
    *
    * <b>CAUTION:</b> The definition of this projection for a sphere is
    * standard.  However, there is no standard for how it should be extended to
@@ -86,12 +86,14 @@ namespace GeographicLib {
     const Geodesic _earth;
     real _a, _f;
     static const real eps0, eps;
-    static const int numit = 10;
+    static const int numit = 5;
   public:
 
     /**
-     * Constructor for Gnomonic setting the Geodesic object to use
-     * for geodesic calculations.  By default this uses the WGS84 ellipsoid.
+     * Constructor for Gnomonic.
+     *
+     * @param[in] earth the Geodesic object to use for geodesic calculations.
+     *   By default this uses the WGS84 ellipsoid.
      **********************************************************************/
     explicit Gnomonic(const Geodesic& earth = Geodesic::WGS84)
       throw()
@@ -102,55 +104,91 @@ namespace GeographicLib {
     {}
 
     /**
-     * Convert from latitude \e lat (degrees) and longitude \e lon (degrees) to
-     * gnomonic easting \e x (meters) and northing \e y (meters).  The center
-     * of the projection is at latitude \e lat0 (degrees) and longitude \e lon0
-     * (degrees).  Also return the azimuth \e azi (degrees) and the reciprocal
-     * of the azimuthal scale \e rk.  \e lat0 and \e lat should be in the range
-     * [-90, 90] and \e lon0 and \e lon should be in the range [-180, 360].
-     * The scale of the projection is 1/\e rk<sup>2</sup> in the "radial"
-     * direction, \e azi clockwise from true north, and is 1/\e rk in the
-     * direction perpendicular to this.  If the point lies "over the horizon",
-     * i.e., if \e rk <= 0, then NaNs are returned for \e x and \e y (the
-     * correct values are returned for \e azi and \e rk).  A call to Forward
-     * followed by a call to Reverse will return the original (\e lat, \e lon)
-     * (to within roundoff) provided the point in not over the horizon.
+     * Forward projection, from geographic to gnomonic.
+     *
+     * @param[in] lat0 latitude of center point of projection (degrees).
+     * @param[in] lon0 longitude of center point of projection (degrees).
+     * @param[in] lat latitude of point (degrees).
+     * @param[in] lon longitude of point (degrees).
+     * @param[out] x easting of point (meters).
+     * @param[out] y northing of point (meters).
+     * @param[out] azi azimuth of geodesic at point (degrees).
+     * @param[out] rk reciprocal of azimuthal scale at point.
+     *
+     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e
+     * lon should be in the range [-180, 360].  The scale of the projection is
+     * 1/\e rk<sup>2</sup> in the "radial" direction, \e azi clockwise from
+     * true north, and is 1/\e rk in the direction perpendicular to this.  If
+     * the point lies "over the horizon", i.e., if \e rk <= 0, then NaNs are
+     * returned for \e x and \e y (the correct values are returned for \e azi
+     * and \e rk).  A call to Forward followed by a call to Reverse will return
+     * the original (\e lat, \e lon) (to within roundoff) provided the point in
+     * not over the horizon.
      **********************************************************************/
     void Forward(real lat0, real lon0, real lat, real lon,
                  real& x, real& y, real& azi, real& rk) const throw();
 
     /**
-     * Convert from gnomonic easting \e x (meters) and northing \e y (meters)
-     * to latitude \e lat (degrees) and longitude \e lon (degrees).  The center
-     * of the projection is at latitude \e lat0 (degrees) and longitude \e lon0
-     * (degrees).  Also return the azimuth \e azi (degrees) and the reciprocal
-     * of the azimuthal scale \e rk.  \e lat0 should be in the range [-90, 90]
-     * and \e lon0 should be in the range [-180, 360].  \e lat will be in the
-     * range [-90, 90] and \e lon will be in the range [-180, 180).  The scale
-     * of the projection is 1/\e rk<sup>2</sup> in the "radial" direction, \e
-     * azi clockwise from true north, and is 1/\e rk in the direction
-     * perpendicular to this.  Even though all inputs should return a valid \e
-     * lat and \e lon, it's possible that the procedure fails to converge for
-     * very large \e x or \e y; in this case NaNs are returned for all the
-     * output arguments.  A call to Reverse followed by a call to Forward will
-     * return the original (\e x, \e y) (to roundoff).
+     * Reverse projection, from gnomonic to geographic.
+     *
+     * @param[in] lat0 latitude of center point of projection (degrees).
+     * @param[in] lon0 longitude of center point of projection (degrees).
+     * @param[in] x easting of point (meters).
+     * @param[in] y northing of point (meters).
+     * @param[out] lat latitude of point (degrees).
+     * @param[out] lon longitude of point (degrees).
+     * @param[out] azi azimuth of geodesic at point (degrees).
+     * @param[out] rk reciprocal of azimuthal scale at point.
+     *
+     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the
+     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon
+     * will be in the range [-180, 180).  The scale of the projection is 1/\e
+     * rk<sup>2</sup> in the "radial" direction, \e azi clockwise from true
+     * north, and is 1/\e rk in the direction perpendicular to this.  Even
+     * though all inputs should return a valid \e lat and \e lon, it's possible
+     * that the procedure fails to converge for very large \e x or \e y; in
+     * this case NaNs are returned for all the output arguments.  A call to
+     * Reverse followed by a call to Forward will return the original (\e x, \e
+     * y) (to roundoff).
      **********************************************************************/
     void Reverse(real lat0, real lon0, real x, real y,
                  real& lat, real& lon, real& azi, real& rk) const throw();
 
     /**
-     * The major radius of the ellipsoid (meters).  This is that value of \e a
-     * inherited from the Geodesic object used in the constructor.
+     * Gnomonic::Forward without returning the azimuth and scale.
+     **********************************************************************/
+    void Forward(real lat0, real lon0, real lat, real lon,
+                 real& x, real& y) const throw() {
+      real azi, rk;
+      Forward(lat0, lon0, lat, lon, x, y, azi, rk);
+    }
+
+    /**
+     * Gnomonic::Reverse without returning the azimuth and scale.
+     **********************************************************************/
+    void Reverse(real lat0, real lon0, real x, real y,
+                 real& lat, real& lon) const throw() {
+      real azi, rk;
+      Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
+    }
+
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
+    /**
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is that value of \e r
-     * inherited from the Geodesic object used in the constructor.  A value of
-     * 0 is returned for a sphere (infinite inverse flattening).
+     * @return \e r the inverse flattening of the ellipsoid.  This is the
+     *   value inherited from the Geodesic object used in the constructor.  A
+     *   value of 0 is returned for a sphere (infinite inverse flattening).
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }
+    ///@}
   };
 
 } // namespace GeographicLib

@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6845 2010-07-21 10:23:46Z karney $
+# $Id: 00README.txt 6867 2010-09-11 13:04:26Z karney $
 
 A library for geographic projections.
 
@@ -27,7 +27,8 @@ Files
       DMS.[ch]pp -- handle degrees minutes seconds
       Geocentric.[ch]pp -- geocentric coordinates
       LocalCartesian.[ch]pp -- local cartesian coordinates
-      Geodesic.[ch]pp -- geodesic calculatiosn
+      Geodesic.[ch]pp -- geodesic calculations
+      GeodesicLine.[ch]pp -- calculations on a single geodesic
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
       Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
@@ -38,10 +39,11 @@ Files
     tools/
       GeoConvert.cpp -- geographic conversion utility
       TransverseMercatorTest.cpp -- TM tester
-      Geod -- geodesic utility
+      Geod.cpp -- geodesic utility
       CartConvert.cpp -- convert to geocentric and local cartesian
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
+      Planimeter.cpp -- computer polygon areas
 
     windows/
       GeographicLib-vc9.sln -- MS Studio 2008 solution
@@ -49,6 +51,7 @@ Files
       GeoConvert-vc9.vcproj -- project for GeoConvert
       TransverseMercatorTest-vc9.vcproj -- project for TransverseMercatorTest
       Geod-vc9.vcproj -- project for Geod
+      Planimeter-vc9.vcproj -- project for Planimeter
       CartConvert-vc9.vcproj -- project for CartConvert
       EquidistantTest-vc9.vcproj -- project for EquidistantTest
       GeoidEval-vc9.vcproj -- project for GeoidEval

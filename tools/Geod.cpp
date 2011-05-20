@@ -6,12 +6,13 @@
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geodesic.o DMS.o
+ * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
  *
  * See \ref geod for usage information.
  **********************************************************************/
 
 #include "GeographicLib/Geodesic.hpp"
+#include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <iomanip>
@@ -19,9 +20,9 @@
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
-"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]\n\
+"Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-e a r]\n\
             [-d] [-b] [-f] [-p prec] [-h]\n\
-$Id: Geod.cpp 6827 2010-05-20 19:56:18Z karney $\n\
+$Id: Geod.cpp 6863 2010-09-08 21:28:58Z karney $\n\
 \n\
 Perform geodesic calculations.\n\
 \n\
@@ -51,8 +52,7 @@ Geod operates in one of three modes:\n\
 By default, the WGS84 ellipsoid is used.  Specifying \"-e a r\" sets the\n\
 equatorial radius of the ellipsoid to \"a\" and the reciprocal flattening\n\
 to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate\n\
-ellipsoid.  The -n option uses the international ellipsoid (equivalent to\n\
-\"-e 6378388 297\").\n\
+ellipsoid.\n\
 \n\
 Output of angles is as decimal degrees.  If -d is specified the output\n\
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',\n\
@@ -230,7 +230,10 @@ int main(int argc, char* argv[]) {
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           s12 = ReadDistance(ss12, arcmode);
-          a12 = l.Position(s12, lat2, lon2, azi2, m12, arcmode);
+          if (arcmode)
+            l.ArcPosition(s12, lat2, lon2, azi2, a12, m12);
+          else
+            a12 = l.Position(s12, lat2, lon2, azi2, m12);
         } else {
           std::string slat1, slon1, sazi1, ss12;
           if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
@@ -241,8 +244,10 @@ int main(int argc, char* argv[]) {
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           azi1 = DMS::DecodeAzimuth(sazi1);
           s12 = ReadDistance(ss12, arcmode);
-          a12 =
-            geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12, arcmode);
+          if (arcmode)
+            geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12, m12);
+          else
+            a12 = geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
         }
         if (arcmode)
           std::swap(s12, a12);

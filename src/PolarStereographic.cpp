@@ -9,7 +9,7 @@
 
 #include "GeographicLib/PolarStereographic.hpp"
 
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: PolarStereographic.cpp 6841 2010-07-11 20:46:32Z karney $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: PolarStereographic.cpp 6858 2010-09-06 13:52:31Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
@@ -31,8 +31,8 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
-    , _C(exp(eatanhe(real(1))))
-    , _c( (1 - _f) * _C )
+    , _Cx(exp(eatanhe(real(1))))
+    , _c( (1 - _f) * _Cx )
     , _k0(k0)
   {
     if (!(_a > 0))
@@ -95,7 +95,7 @@ namespace GeographicLib {
       rho = Math::hypot(x, y),
       t = rho / (2 * _k0 * _a / _c),
       taup = (1 / t - t) / 2,
-      tau = taup * _C,
+      tau = taup * _Cx,
       stol = tol * max(real(1), abs(taup));
     // min iterations = 1, max iterations = 2; mean = 1.99
     for (int i = 0; i < numit; ++i) {

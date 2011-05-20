@@ -41,7 +41,7 @@
 
 #include "GeographicLib/TransverseMercator.hpp"
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: TransverseMercator.cpp 6843 2010-07-18 21:18:17Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: TransverseMercator.cpp 6856 2010-08-23 12:10:55Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
@@ -71,6 +71,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(_k0 > 0))
       throw GeographicErr("Scale is not positive");
     // If coefficents might overflow an int, convert them to double (and they

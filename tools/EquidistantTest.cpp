@@ -7,8 +7,8 @@
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geodesic.o AzimuthalEquidistant.o
- * Gnomonic.o CassiniSoldner.o
+ * Compile with -I../include and link with Geodesic.o GeodesicLine.o
+ * AzimuthalEquidistant.o Gnomonic.o CassiniSoldner.o
  *
  * See \ref equidistanttest for usage information.
  **********************************************************************/
@@ -25,7 +25,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: EquidistantTest -(c|z|g) lat0 lon0 [-r] [-e a r] [-h]\n\
-$Id: EquidistantTest.cpp 6844 2010-07-18 23:57:58Z karney $\n\
+$Id: EquidistantTest.cpp 6859 2010-09-06 14:45:33Z karney $\n\
 \n\
 Perform projections based on geodesics.  Convert geodetic coordinates to\n\
 either azimuthal equidistant, Cassini-Soldner, or gnomonic coordinates.\n\

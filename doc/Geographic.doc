@@ -6,13 +6,13 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: Geographic.doc 6846 2010-07-21 15:37:28Z karney $
+// $Id: Geographic.doc 6868 2010-09-12 10:27:11Z karney $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.3
-\date 2010-07-21
+\version 1.4
+\date 2010-09-12
 
 \section abstract Abstract
 
@@ -38,10 +38,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">
-  geographiclib-1.3.tar.gz</a>
-- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.zip/download">
-  geographiclib-1.3.zip</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
+  geographiclib-1.4.tar.gz</a>
+- <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.zip/download">
+  geographiclib-1.4.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)
@@ -76,6 +76,7 @@ For more information, see http://geographiclib.sourceforge.net/
  - \ref utilities
    - \ref geoconvert
    - \ref geod
+   - \ref planimeter
    - \ref transversemercatortest
    - \ref cartconvert
    - \ref equidistanttest
@@ -155,15 +156,15 @@ Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 
 The following steps will get you started with %GeographicLib:
  - Download the
-   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">
+   <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">
    source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.3.tar.gz
+   - tar xfpvz geographiclib-1.4.tar.gz
    .
-   This will create a geographiclib-1.3 directory.  (Alternatively,
+   This will create a geographiclib-1.4 directory.  (Alternatively,
    download and unpack the zip file.)
- - Change to the geographiclib-1.3 directory
-   - cd geographiclib-1.3
+ - Change to the geographiclib-1.4 directory
+   - cd geographiclib-1.4
  - Create the library and the utility programs
    - make all
    .
@@ -335,7 +336,7 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
  - Charles F. F. Karney,
    <a href="http://arxiv.org/abs/1002.1417">
    Transverse Mercator with an accuracy of a few nanometers,</a>
-   Feb. 2010,
+   Feb. 2010, revised July 2010,
    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
  .
 <a href="http://geographiclib.sourceforge.net/tm.html">
@@ -980,6 +981,9 @@ References
    Solutions of Geodesics on the Ellipsoid with Application of Nested
    Equations</a>,
    Survey Review 23 (176), 88&ndash;93 (1975).
+ - J. Danielsen,
+   The Area under the Geodesic,
+   Survey Review 30 (232), 61&ndash;66 (1989).
  - A collection of some older papers on geodesics is available at
    http://trac.osgeo.org/proj/wiki/GeodesicCalculations#TheHistory
 
@@ -1026,9 +1030,6 @@ m12.
 
 The algorithms included here are based on the work of Bessel (1826) and
 Helmert (1880).  Key points are:
-  - Extension of Bessel's method for removing half the terms in the
-    series expansions to the longitude integral.  This also accelerates
-    the convergence of the series.
   - Inclusion of sufficient terms in the series to give accuracy at the
     round-off level for doubles and long doubles.
   - Reverting the distance series so that the direct problem can be
@@ -1081,13 +1082,19 @@ This class also returns the arc length \e a12 on the auxiliary sphere
 and allows distances to be specified in these terms.  See the -a option
 to \ref geod.
 
+Area computations are supported via \e S12 the area between the geodesic
+and the equator.  This uses Danielsen's method extended to higher order
+and with the terms rearranged to facilitate the use of Clenshaw
+summation.  Using this function, it is simple to compute the area of any
+geodesic polygon.  This functionality is provided by \ref planimeter.
+
 \section testgeod Test data for geodesics
 
 A test set a geodesics is available at
  - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest.dat.gz/download">
    GeodTest.dat.gz</a>
  .
-This is about 34 MB (compressed).  This consists of a set of geodesics
+This is about 39 MB (compressed).  This consists of a set of geodesics
 for the WGS84 ellipsoid.  A subset of this (consisting of 1/50 of the
 members &mdash; about 690 kB, compressed) is available at
  - <a href="http://sourceforge.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
@@ -1104,6 +1111,8 @@ Each line of the test set gives 9 space delimited numbers
  - arc distance on the auxiliary sphere, \e a12 (degrees, accurate to
    10<sup>-18</sup> deg)
  - reduced length of the geodesic, \e m12 (meters, accurate to 0.1 pm)
+ - the area under the geodesic, \e S12 (m<sup>2</sup>, accurate to
+   1 mm<sup>2</sup>)
  .
 These are computed using as direct geodesic calculations with the given
 \e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
@@ -1216,8 +1225,10 @@ In the expansions below, we have
  - \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 - \e e<sup>2</sup>)
  - \e k<sup>2</sup> = \e e'<sup>2</sup> cos<sup>2</sup> \e alpha<sub>0</sub>
    = 4 \e eps / (1 - \e eps)<sup>2</sup>
- - \e del = (\e f - \e eps) / (1 - \e eps)
- - \e nu = \e eps / \e del
+ - \e n = \e f / (2 - \e f)
+ - \e c<sup>2</sup> = \e a<sup>2</sup>/2 + \e b<sup>2</sup>/2 (tanh<sup>-1</sup> \e e)/\e e
+ - \e ep2 = \e e'<sup>2</sup>
+ - \e k2 = \e k<sup>2</sup>
 
 The formula for distance is
 
@@ -1356,44 +1367,99 @@ sum<sub>\e j = 1</sub> \e C3<sub>j</sub> sin(2 \e j \e sigma)
 and
 
 \verbatim
-A3 = (2 - f) / (2 - del) * (1
-        - 1/16 * nu^2 * del^3
-        - 1/64 * nu^4 * del^4
-        + 1/64 * nu^2 * del^5
-        + (1/64 * nu^2 + 1/64 * nu^4 - 1/128 * nu^6) * del^6
-        + (3/256 * nu^2 + 7/1024 * nu^4 + 15/2048 * nu^6) * del^7);
+A3 = 1 - (1/2 - 1/2*n) * eps
+       - (1/4 + 1/8*n - 3/8*n^2) * eps^2
+       - (1/16 + 3/16*n + 1/16*n^2 - 5/16*n^3) * eps^3
+       - (3/64 + 1/32*n + 5/32*n^2 + 5/128*n^3) * eps^4
+       - (3/128 + 5/128*n + 5/256*n^2) * eps^5
+       - (5/256 + 15/1024*n) * eps^6
+       - 25/2048 * eps^7;
 \endverbatim
 
 \verbatim
-C3[1] = + 1/4 * eps
-        - 1/8 * eps*del
-        - (1/16 + 1/64 * nu^2) * eps*del^2
-        - (1/32 + 1/128 * nu^2) * eps*del^3
-        - (1/64 - 1/128 * nu^2 + 1/128 * nu^4) * eps*del^4
-        - (1/128 - 1/128 * nu^2 - 3/1024 * nu^4) * eps*del^5
-        - (1/256 - 5/1024 * nu^2 - 5/1024 * nu^4 + 61/16384 * nu^6) * eps*del^6;
-C3[2] = + 1/16 * eps^2
-        - 3/64 * eps^2*del
-        - (1/64 + 1/128 * nu^2) * eps^2*del^2
-        - 1/256 * eps^2*del^3
-        + (5/1024 * nu^2 - 7/2048 * nu^4) * eps^2*del^4
-        + (1/1024 + 3/1024 * nu^2 + 37/16384 * nu^4) * eps^2*del^5;
-C3[3] = + 5/192 * eps^3
-        - 3/128 * eps^3*del
-        - (1/192 + 7/1536 * nu^2) * eps^3*del^2
-        + 1/768 * nu^2 * eps^3*del^3
-        + (1/1024 + 35/12288 * nu^2 - 91/49152 * nu^4) * eps^3*del^4;
-C3[4] = + 7/512 * eps^4
-        - 7/512 * eps^4*del
-        - (1/512 + 3/1024 * nu^2) * eps^4*del^2
-        + (5/8192 + 23/16384 * nu^2) * eps^4*del^3;
-C3[5] = + 21/2560 * eps^5
-        - 9/1024 * eps^5*del
-        - (3/4096 + 33/16384 * nu^2) * eps^5*del^2;
-C3[6] = + 11/2048 * eps^6
-        - 99/16384 * eps^6*del;
+C3[1] = + (1/4 - 1/4*n) * eps
+        + (1/8 - 1/8*n^2) * eps^2
+        + (3/64 + 3/64*n - 1/64*n^2 - 5/64*n^3) * eps^3
+        + (5/128 + 1/64*n + 1/64*n^2 - 1/64*n^3) * eps^4
+        + (3/128 + 11/512*n + 3/512*n^2) * eps^5
+        + (21/1024 + 5/512*n) * eps^6
+        + 243/16384 * eps^7;
+C3[2] = + (1/16 - 3/32*n + 1/32*n^2) * eps^2
+        + (3/64 - 1/32*n - 3/64*n^2 + 1/32*n^3) * eps^3
+        + (3/128 + 1/128*n - 9/256*n^2 - 3/128*n^3) * eps^4
+        + (5/256 + 1/256*n - 1/128*n^2) * eps^5
+        + (27/2048 + 69/8192*n) * eps^6
+        + 187/16384 * eps^7;
+C3[3] = + (5/192 - 3/64*n + 5/192*n^2 - 1/192*n^3) * eps^3
+        + (3/128 - 5/192*n - 1/64*n^2 + 5/192*n^3) * eps^4
+        + (7/512 - 1/384*n - 77/3072*n^2) * eps^5
+        + (3/256 - 1/1024*n) * eps^6
+        + 139/16384 * eps^7;
+C3[4] = + (7/512 - 7/256*n + 5/256*n^2 - 7/1024*n^3) * eps^4
+        + (7/512 - 5/256*n - 7/2048*n^2) * eps^5
+        + (9/1024 - 43/8192*n) * eps^6
+        + 127/16384 * eps^7;
+C3[5] = + (21/2560 - 9/512*n + 15/1024*n^2) * eps^5
+        + (9/1024 - 15/1024*n) * eps^6
+        + 99/16384 * eps^7;
+C3[6] = + (11/2048 - 99/8192*n) * eps^6
+        + 99/16384 * eps^7;
 C3[7] = + 429/114688 * eps^7;
 \endverbatim
+
+The formula for area between the geodesic and the equator is
+
+&nbsp; &nbsp;
+Area = \e c<sup>2</sup> \e Gamma + \e e<sup>2</sup> \e a<sup>2</sup>
+cos \e alpha<sub>0</sub> sin \e alpha<sub>0</sub> \e I4(\e sigma)
+
+where
+
+&nbsp; &nbsp; \e Gamma = geodesic excess<br>
+&nbsp; &nbsp; \e I4(\e sigma) =
+sum<sub>\e j = 0</sub> \e C4<sub>j</sub> cos((2\e j + 1) \e sigma)
+
+and
+
+\verbatim
+C4[0] = + (2/3 - 1/15*ep2 + 4/105*ep2^2 - 8/315*ep2^3 + 64/3465*ep2^4 - 128/9009*ep2^5 + 512/45045*ep2^6 - 1024/109395*ep2^7)
+        - (1/20 - 1/35*ep2 + 2/105*ep2^2 - 16/1155*ep2^3 + 32/3003*ep2^4 - 128/15015*ep2^5 + 256/36465*ep2^6) * k2
+        + (1/42 - 1/63*ep2 + 8/693*ep2^2 - 80/9009*ep2^3 + 64/9009*ep2^4 - 128/21879*ep2^5) * k2^2
+        - (1/72 - 1/99*ep2 + 10/1287*ep2^2 - 8/1287*ep2^3 + 112/21879*ep2^4) * k2^3
+        + (1/110 - 1/143*ep2 + 4/715*ep2^2 - 56/12155*ep2^3) * k2^4
+        - (1/156 - 1/195*ep2 + 14/3315*ep2^2) * k2^5
+        + (1/210 - 1/255*ep2) * k2^6
+        - 1/272 * k2^7;
+C4[1] = + (1/180 - 1/315*ep2 + 2/945*ep2^2 - 16/10395*ep2^3 + 32/27027*ep2^4 - 128/135135*ep2^5 + 256/328185*ep2^6) * k2
+        - (1/252 - 1/378*ep2 + 4/2079*ep2^2 - 40/27027*ep2^3 + 32/27027*ep2^4 - 64/65637*ep2^5) * k2^2
+        + (1/360 - 1/495*ep2 + 2/1287*ep2^2 - 8/6435*ep2^3 + 112/109395*ep2^4) * k2^3
+        - (1/495 - 2/1287*ep2 + 8/6435*ep2^2 - 112/109395*ep2^3) * k2^4
+        + (5/3276 - 1/819*ep2 + 2/1989*ep2^2) * k2^5
+        - (1/840 - 1/1020*ep2) * k2^6
+        + 7/7344 * k2^7;
+C4[2] = + (1/2100 - 1/3150*ep2 + 4/17325*ep2^2 - 8/45045*ep2^3 + 32/225225*ep2^4 - 64/546975*ep2^5) * k2^2
+        - (1/1800 - 1/2475*ep2 + 2/6435*ep2^2 - 8/32175*ep2^3 + 112/546975*ep2^4) * k2^3
+        + (1/1925 - 2/5005*ep2 + 8/25025*ep2^2 - 16/60775*ep2^3) * k2^4
+        - (1/2184 - 1/2730*ep2 + 1/3315*ep2^2) * k2^5
+        + (1/2520 - 1/3060*ep2) * k2^6
+        - 7/20400 * k2^7;
+C4[3] = + (1/17640 - 1/24255*ep2 + 2/63063*ep2^2 - 8/315315*ep2^3 + 16/765765*ep2^4) * k2^3
+        - (1/10780 - 1/14014*ep2 + 2/35035*ep2^2 - 4/85085*ep2^3) * k2^4
+        + (5/45864 - 1/11466*ep2 + 1/13923*ep2^2) * k2^5
+        - (1/8820 - 1/10710*ep2) * k2^6
+        + 1/8976 * k2^7;
+C4[4] = + (1/124740 - 1/162162*ep2 + 2/405405*ep2^2 - 4/984555*ep2^3) * k2^4
+        - (1/58968 - 1/73710*ep2 + 1/89505*ep2^2) * k2^5
+        + (1/41580 - 1/50490*ep2) * k2^6
+        - 7/242352 * k2^7;
+C4[5] = + (1/792792 - 1/990990*ep2 + 1/1203345*ep2^2) * k2^5
+        - (1/304920 - 1/370260*ep2) * k2^6
+        + 7/1283568 * k2^7;
+C4[6] = + (1/4684680 - 1/5688540*ep2) * k2^6
+        - 1/1516944 * k2^7;
+C4[7] = + 1/26254800 * k2^7;
+\endverbatim
+
 
 \section geodmisc Miscellaneous information on geodesics
 
@@ -1491,10 +1557,10 @@ terms of the spherical arc length.
 
 On a 2.66 GHz Intel machine (g++, version 4.4.0, -O3), timings are as
 follows:
- - Geodesic::Direct 0.96 us
- - GeodesicLine::Position 0.45 us (arcmode = false)
- - GeodesicLine::Position 0.29 us (arcmode = true)
- - Geodesic::Inverse 2.8 us
+ - Geodesic::Direct 0.88 us
+ - GeodesicLine::Position 0.37 us
+ - GeodesicLine::ArcPosition 0.31 us
+ - Geodesic::Inverse 2.62 us
  .
 The timing for Geodesic::Inverse is a mean.  Individual calls may take a
 few times longer because of the need to do additional Newton iterations.
@@ -1869,7 +1935,7 @@ about 1.5m.)
 \section geoidcache Caching the geoid data
 
 A simple way of calling Geoid is as follows
-\verbatim
+\code
    #include "GeographicLib/Geoid.hpp"
    #include <iostream>
    ...
@@ -1878,7 +1944,7 @@ A simple way of calling Geoid is as follows
    while (std::cin >> lat >> lon)
       std::cout << g(lat, lon) << "\n";
    ...
-\endverbatim
+\endcode
 
 The first call to g(lat, lon) causes the data for the stencil points (4
 points for bilinear interpolation and 12 for cubic interpolation) to be
@@ -2077,7 +2143,7 @@ Example (route from JFK Airport to Singapore Changi Airport)
 
 Here is the usage (obtained from "Geod -h")
 \verbatim
-Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-n | -e a r]
+Usage: Geod [-l lat1 lon1 azi1 | -i] [-a] [-e a r]
             [-d] [-b] [-f] [-p prec] [-h]
 
 Perform geodesic calculations.
@@ -2108,8 +2174,7 @@ Geod operates in one of three modes:
 By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
 equatorial radius of the ellipsoid to "a" and the reciprocal flattening
 to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
-ellipsoid.  The -n option uses the international ellipsoid (equivalent to
-"-e 6378388 297").
+ellipsoid.
 
 Output of angles is as decimal degrees.  If -d is specified the output
 is as degrees, minutes, seconds.  Input can be in either style.  d, ',
@@ -2140,6 +2205,68 @@ where here s12 is the distance and a12 the arc length.
 -p prec (default 3) gives the precision of the output relative to 1m.
 The minimum value of prec is 0 (1 m accuracy) and the maximum value is
 10 (0.1 nm accuracy, but then the last digits are unreliable).
+
+-h prints this help.
+\endverbatim
+
+\section planimeter Planimeter
+
+Planimeter is a command line utility for determining the area of
+geodesic polygons via GeographicLib::Geodesic.
+
+Example (the area of the 100km MGRS square 18SWK)
+ - Planimeter <<EOF\n
+   18N 500000 4400000\n
+   18N 500000 4500000\n
+   18N 600000 4500000\n
+   18N 600000 4400000\n
+   EOF\n
+   => 4 400139.53295860 10007388597.191
+
+The following code takes the output from gdalinfo and reports the area
+covered by the data (assuming the edges of the image are geodesics).
+\code
+#! /bin/sh
+egrep '^((Upper|Lower) (Left|Right)|Center) ' |
+sed -e 's/d /d/g' -e "s/' /'/g" | tr -s '(),\r\t' ' ' | awk '{
+    if ($1 $2 == "UpperLeft")
+	ul = $6 " "  $5;
+    else if ($1 $2 == "LowerLeft")
+	ll = $6 " "  $5;
+    else if ($1 $2 == "UpperRight")
+	ur = $6 " "  $5;
+    else if ($1 $2 == "LowerRight")
+	lr = $6 " "  $5;
+    else if ($1 == "Center") {
+	printf "%s\n%s\n%s\n%s\n\n", ul, ur, lr, ll;
+	ul = ll = ur = lr = "";
+    }
+}
+' | Planimeter | cut -f3 -d' '
+\endcode
+
+Here is the usage (obtained from "Planimeter -h")
+\verbatim
+Usage: Planimeter [-e a r] [-h]
+
+Measure the area of a geodesic polygon.  Reads polygon vertices from
+standard input, one per line.  Vertices may be given as latitude and
+longitude, UTM/UPS, or MGRS coordinates (interpreted in the same way as
+GeoConvert).  (MGRS coordinates signify the center of the corresponing
+MGRS square.)  The end of input, a blank line, or a line which can't be
+interpreted as a vertex signals the end of one polygon and the start of
+the next.  For each polygon print a summary line with the number of
+points, the perimeter (in meters), and the area (in meters^2).  Areas
+are traversed in a clockwise sense (in other words, the included area
+is to the right of the perimeter).  By this rule, a polygon tranversed
+in a counter-clockwise sense will return the area of ellipsoid excluded
+by the polygon.  Only simple polygons are supported for the area
+computation.  Polygons may include one or both poles.
+
+By default, the WGS84 ellipsoid is used.  Specifying "-e a r" sets the
+equatorial radius of the ellipsoid to "a" and the reciprocal flattening
+to r.  Setting r = 0 results in a sphere.  Specify r < 0 for a prolate
+ellipsoid.
 
 -h prints this help.
 \endverbatim
@@ -2302,7 +2429,10 @@ Example: the height of the EGM96 geoid at Timbuktu
    28.7068 -0.02e-6 -1.73e-6
  .
 The first number is the height of the geoid and the 2nd and 3rd are its
-slopes in the northerly and easterly direction.
+slopes in the northerly and easterly direction.  Convert a point in UTM
+zone 18N from MSL to HAE
+ - echo 531595 4468135 23 | GeoidEval -msltohae -z 18N\n=>
+   531595 4468135 -10.842
 
 In addition, this utility requires the installation of the geoid data
 files; see \ref geoidinst for details
@@ -2310,16 +2440,27 @@ files; see \ref geoidinst for details
 Here is the usage (obtained from "GeoidEval -h")
 \verbatim
 Usage:
-  GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] [-v] [-h]
+  GeoidEval [-n name] [-d dir] [-l] [-a] [-c south west north east] \
+            [-z zone] [-msltohae] [-haetomsl] [-v] [-h]
 
 Read in positions on standard input and print out the corresponding
-geoid heights on standard output.  In addition print the northly and
+geoid heights on standard output.  In addition print the northerly and
 easterly gradients of the geoid height (i.e., the rate at which the
 geoid height changes per unit distance along the WGS84 ellipsoid in
 the specified directions).
 
 Positions are given as latitude and longitude, UTM/UPS, or MGRS, in
-any of the formats accepted by GeoConvert.
+any of the formats accepted by GeoConvert.  (MGRS coordinates signify
+the center of the corresponing MGRS square.)  If the -z option is
+specified then the specified zone is prepended to each line of input
+(which must be in UTM/UPS coordinates).  This allows a file with UTM
+eastings and northings in a single zone to be used as standard input.
+
+With the -msltohae or -haetomsl options, each line of input should
+also include a height (in meters) as the last item.  In this case the
+height is converted in the indicated direction and the input line is
+echoed to standard output with the height adjusted, thereby allowing
+vertical datum of 3d data to be changed.
 
 By default the EGM96 geoid is used with a 5' grid.  This may be
 overriden with the -n option.  The name specified should be one of
@@ -2355,7 +2496,7 @@ By default, the data file is randomly read to compute the geoid
 heights at the input positions.  Usually this is sufficient for
 interactive use.  If many heights are to be computed, GeoidEval
 allows a block of data to be read into memory and heights within the
-corresponding rectangle can then be computed without any disk acces.
+corresponding rectangle can then be computed without any disk access.
 If -a is specified all the geoid data is read; in the case of
 egm2008-1, this requires about 0.5 GB of RAM.  The -c option allows
 a rectangle of data to be cached.  The evaluation of heights
@@ -2389,7 +2530,36 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (current, released 2010-07-21)</a>
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.4.tar.gz/download">1.4 (current, released 2010-09-12)</a>
+  - Changes to GeographicLib::Geodesic and GeographicLib::GeodesicLine:
+    - FIX BUG in Geodesic::Inverse with prolate ellipsoids;
+    - add area computations to Geodesic::Direct and Geodesic::Inverse;
+    - add geodesic areas to geodesic test set;
+    - make GeodesicLine constructor public;
+    - change longitude series in Geodesic into Helmert-like form;
+    - ensure that equatorial geodesics have cos(alpha0) = 0 identically;
+    - generalize interface for Geodesic and GeodesicLine;
+    - split GeodesicLine and Geodesic into different files;
+    - signal convergence failure in Geodesic::Inverse with NaNs;
+    - deprecate one function in Geodesic and two functions in
+      GeodesicLine;
+    - deprecate -n option for \ref geod.
+    .
+    WARNING: These changes may break binary compatibility with previous
+    versions of %GeographicLib.  However, the library is source
+    compatible (with the proviso that GeographicLib/GeodesicLine.hpp may
+    now need to be included).
+  - Add the \ref planimeter utility for computing the areas of
+    geodesic polygons.
+  - Improve iterative solution of GeographicLib::Gnomonic::Reverse.
+  - Add GeographicLib::Geoid::ConvertHeight.
+  - Add -msltohae, -haetomsl, and -z options to \ref geoideval.
+  - Constructors check that minor radius is positive.
+  - Add overloaded Forward and Reverse functions to the projection
+    classes which don't return the convergence (or azimuth) and scale.
+  - Document function parameters and return values consistently.
+
+ - <a href="http://sourceforge.net/projects/geographiclib/files/distrib/geographiclib-1.3.tar.gz/download">1.3 (released 2010-07-21)</a>
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
     gnomonic projection.
   - Add -g and -e options to \ref equidistanttest.

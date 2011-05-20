@@ -41,7 +41,7 @@
 
 #include "GeographicLib/TransverseMercatorExact.hpp"
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: TransverseMercatorExact.cpp 6842 2010-07-16 20:51:06Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: TransverseMercatorExact.cpp 6856 2010-08-23 12:10:55Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
@@ -76,6 +76,8 @@ namespace GeographicLib {
       throw GeographicErr("Major radius is not positive");
     if (!(_r > 0))
       throw GeographicErr("Inverse flattening is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(_k0 > 0))
       throw GeographicErr("Scale is not positive");
   }

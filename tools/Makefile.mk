@@ -1,7 +1,7 @@
-# $Id: Makefile.mk 6830 2010-05-31 20:02:10Z karney $
+# $Id: Makefile.mk 6861 2010-09-06 21:29:08Z karney $
 
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
-	GeoidEval
+	GeoidEval Planimeter
 
 all: $(PROGRAMS)
 
@@ -36,15 +36,17 @@ CartConvert: CartConvert.o
 Geod: Geod.o
 EquidistantTest: EquidistantTest.o
 GeoidEval: GeoidEval.o
+Planimeter: Planimeter.o
 
 GeoConvert.o: Constants.hpp DMS.hpp GeoCoords.hpp UTMUPS.hpp
 TransverseMercatorTest.o: Constants.hpp DMS.hpp EllipticFunction.hpp \
 	TransverseMercator.hpp TransverseMercatorExact.hpp
 CartConvert.o: Constants.hpp DMS.hpp Geocentric.hpp LocalCartesian.hpp
-Geod.o: Constants.hpp DMS.hpp Geodesic.hpp
+Geod.o: Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
 EquidistantTest.o: AzimuthalEquidistant.hpp CassiniSoldner.hpp Gnomonic.hpp \
-	 Constants.hpp DMS.hpp Geodesic.hpp
+	 Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
 GeoidEval.o: Constants.hpp DMS.hpp GeoCoords.hpp Geoid.hpp
+Planimeter.o: Constants.hpp DMS.hpp GeoCoords.hpp Geodesic.hpp GeodesicLine.hpp
 
 INSTALL = install -b
 PREFIX = /usr/local

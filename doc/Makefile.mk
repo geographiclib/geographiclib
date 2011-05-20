@@ -1,8 +1,9 @@
-# $Id: Makefile.mk 6830 2010-05-31 20:02:10Z karney $
+# $Id: Makefile.mk 6859 2010-09-06 14:45:33Z karney $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic AzimuthalEquidistant CassiniSoldner \
+	LocalCartesian Geodesic GeodesicLine \
+	AzimuthalEquidistant CassiniSoldner \
 	Geoid Gnomonic
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval

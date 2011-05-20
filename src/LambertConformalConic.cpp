@@ -9,7 +9,7 @@
 
 #include "GeographicLib/LambertConformalConic.hpp"
 
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: LambertConformalConic.cpp 6816 2010-02-05 21:03:10Z karney $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: LambertConformalConic.cpp 6856 2010-08-23 12:10:55Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
@@ -38,6 +38,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
@@ -61,6 +63,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
@@ -91,6 +95,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
     if (!(k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (coslat1 == 0 || coslat2 == 0)

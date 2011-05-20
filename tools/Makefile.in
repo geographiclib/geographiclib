@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6830 2010-05-31 20:02:10Z karney $
+# $Id: Makefile.am 6861 2010-09-06 21:29:08Z karney $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -43,7 +43,7 @@ host_triplet = @host@
 target_triplet = @target@
 bin_PROGRAMS = GeoConvert$(EXEEXT) TransverseMercatorTest$(EXEEXT) \
 	CartConvert$(EXEEXT) Geod$(EXEEXT) EquidistantTest$(EXEEXT) \
-	GeoidEval$(EXEEXT)
+	GeoidEval$(EXEEXT) Planimeter$(EXEEXT)
 subdir = tools
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -79,6 +79,10 @@ am_GeoidEval_OBJECTS = GeoidEval.$(OBJEXT)
 GeoidEval_OBJECTS = $(am_GeoidEval_OBJECTS)
 GeoidEval_LDADD = $(LDADD)
 GeoidEval_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+am_Planimeter_OBJECTS = Planimeter.$(OBJEXT)
+Planimeter_OBJECTS = $(am_Planimeter_OBJECTS)
+Planimeter_LDADD = $(LDADD)
+Planimeter_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
 am_TransverseMercatorTest_OBJECTS = TransverseMercatorTest.$(OBJEXT)
 TransverseMercatorTest_OBJECTS = $(am_TransverseMercatorTest_OBJECTS)
 TransverseMercatorTest_LDADD = $(LDADD)
@@ -108,10 +112,10 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(CartConvert_SOURCES) $(EquidistantTest_SOURCES) \
 	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeoidEval_SOURCES) \
-	$(TransverseMercatorTest_SOURCES)
+	$(Planimeter_SOURCES) $(TransverseMercatorTest_SOURCES)
 DIST_SOURCES = $(CartConvert_SOURCES) $(EquidistantTest_SOURCES) \
 	$(GeoConvert_SOURCES) $(Geod_SOURCES) $(GeoidEval_SOURCES) \
-	$(TransverseMercatorTest_SOURCES)
+	$(Planimeter_SOURCES) $(TransverseMercatorTest_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -265,7 +269,8 @@ CartConvert_SOURCES = CartConvert.cpp \
 Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
-	../include/GeographicLib/Geodesic.hpp
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicLine.hpp
 
 EquidistantTest_SOURCES = EquidistantTest.cpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -273,13 +278,21 @@ EquidistantTest_SOURCES = EquidistantTest.cpp \
 	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
-	../include/GeographicLib/Geodesic.hpp
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicLine.hpp
 
 GeoidEval_SOURCES = GeoidEval.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/Geoid.hpp
+
+Planimeter_SOURCES = Planimeter.cpp \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/GeoCoords.hpp \
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicLine.hpp
 
 EXTRA_DIST = Makefile.mk
 all: all-am
@@ -374,6 +387,9 @@ Geod$(EXEEXT): $(Geod_OBJECTS) $(Geod_DEPENDENCIES)
 GeoidEval$(EXEEXT): $(GeoidEval_OBJECTS) $(GeoidEval_DEPENDENCIES) 
 	@rm -f GeoidEval$(EXEEXT)
 	$(CXXLINK) $(GeoidEval_OBJECTS) $(GeoidEval_LDADD) $(LIBS)
+Planimeter$(EXEEXT): $(Planimeter_OBJECTS) $(Planimeter_DEPENDENCIES) 
+	@rm -f Planimeter$(EXEEXT)
+	$(CXXLINK) $(Planimeter_OBJECTS) $(Planimeter_LDADD) $(LIBS)
 TransverseMercatorTest$(EXEEXT): $(TransverseMercatorTest_OBJECTS) $(TransverseMercatorTest_DEPENDENCIES) 
 	@rm -f TransverseMercatorTest$(EXEEXT)
 	$(CXXLINK) $(TransverseMercatorTest_OBJECTS) $(TransverseMercatorTest_LDADD) $(LIBS)
@@ -389,6 +405,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoConvert.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geod.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoidEval.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Planimeter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercatorTest.Po@am__quote@
 
 .cpp.o:

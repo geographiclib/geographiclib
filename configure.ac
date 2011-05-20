@@ -1,8 +1,8 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-dnl $Id: configure.ac 6845 2010-07-21 10:23:46Z karney $
+dnl $Id: configure.ac 6867 2010-09-11 13:04:26Z karney $
 
-AC_INIT([GeographicLib],[1.3],[charles@karney.com])
+AC_INIT([GeographicLib],[1.4],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -22,9 +22,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=3
+LT_CURRENT=4
 LT_REVISION=0
-LT_AGE=2
+LT_AGE=0
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)

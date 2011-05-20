@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
-#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: GeoCoords.hpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: GeoCoords.hpp 6867 2010-09-11 13:04:26Z karney $"
 
 #include "GeographicLib/UTMUPS.hpp"
 #include "GeographicLib/Constants.hpp"
@@ -61,6 +61,9 @@ namespace GeographicLib {
     void FixHemisphere();
   public:
 
+    /** \name Initializing the GeoCoords object
+     **********************************************************************/
+    ///@{
     /**
      * The default contructor is equivalent to \e latitude = 90<sup>o</sup>, \e
      * longitude = 0<sup>o</sup>.
@@ -76,6 +79,13 @@ namespace GeographicLib {
     { CopyToAlt(); }
 
     /**
+     * Construct from a string.
+     *
+     * @param[in] s 1-element, 2-element, or 3-element string representation of
+     *   the position.
+     * @param[in] centerp governs the interpretation of MGRS coordinates (see
+     *   below).
+     *
      * Parse as a string and interpret it as a geographic position.  The input
      * string is broken into space (or comma) separated pieces and Basic
      * decision on which format is based on number of components
@@ -144,31 +154,37 @@ namespace GeographicLib {
     { Reset(s, centerp); }
 
     /**
-     * Specify the location in terms of \e latitude (degrees) and \e longitude
-     * (degrees).  Use \e zone to force the UTM/UPS representation to use a
-     * specified zone using the rules given in UTMUPS::zonespec.
+     * Construct from geographic coordinates.
+     *
+     * @param[in] latitude (degrees).
+     * @param[in] longitude (degrees).
+     * @param[in] zone if specified, force the UTM/UPS representation to use a
+     *   specified zone using the rules given in UTMUPS::zonespec.
      **********************************************************************/
     GeoCoords(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
       Reset(latitude, longitude, zone);
     }
 
     /**
-     * Specify the location in terms of UPS/UPS \e zone (zero means UPS),
-     * hemisphere \e northp (false means south, true means north), \e easting
-     * (meters) and \e northing (meters).
+     * Construct from UTM/UPS coordinates.
+     *
+     * @param[in] zone UTM zone (zero means UPS).
+     * @param[in] northp hemisphere (true means north, false means south).
+     * @param[in] easting (meters).
+     * @param[in] northing (meters).
      **********************************************************************/
     GeoCoords(int zone, bool northp, real easting, real northing) {
       Reset(zone, northp, easting, northing);
     }
 
     /**
-     * Reset the location as a 1-element, 2-element, or 3-element string.  See
-     * GeoCoords(const string& s, bool centerp).
+     * Reset the location from a string.  See
+     * GeoCoords(const std::string& s, bool centerp).
      **********************************************************************/
     void Reset(const std::string& s, bool centerp = true);
 
     /**
-     * Reset the location in terms of \e latitude and \e longitude.  See
+     * Reset the location in terms of geographic coordinates.  See
      * GeoCoords(real latitude, real longitude, int zone).
      **********************************************************************/
     void Reset(real latitude, real longitude, int zone = UTMUPS::STANDARD) {
@@ -183,9 +199,8 @@ namespace GeographicLib {
     }
 
     /**
-     * Reset the location in terms of UPS/UPS \e zone, hemisphere \e northp, \e
-     * easting, and \e northing.  See GeoCoords(int zone, bool northp,
-     * real easting, real northing).
+     * Reset the location in terms of UPS/UPS coordinates.  See
+     * GeoCoords(int zone, bool northp, real easting, real northing).
      **********************************************************************/
     void Reset(int zone, bool northp, real easting, real northing) {
       UTMUPS::Reverse(zone, northp, easting, northing,
@@ -197,59 +212,71 @@ namespace GeographicLib {
       FixHemisphere();
       CopyToAlt();
     }
+    ///@}
 
+    /** \name Querying the GeoCoords object
+     **********************************************************************/
+    ///@{
     /**
-     * Return latitude (degrees)
+     * @return latitude (degrees)
      **********************************************************************/
     Math::real Latitude() const throw() { return _lat; }
 
     /**
-     * Return longitude (degrees)
+     * @return longitude (degrees)
      **********************************************************************/
     Math::real Longitude() const throw() { return _long; }
 
     /**
-     * Return easting (meters)
+     * @return easting (meters)
      **********************************************************************/
     Math::real Easting() const throw() { return _easting; }
 
     /**
-     * Return northing (meters)
+     * @return northing (meters)
      **********************************************************************/
     Math::real Northing() const throw() { return _northing; }
 
     /**
-     * Return meridian convergence (degrees) for the UTM/UPS projection.
+     * @return meridian convergence (degrees) for the UTM/UPS projection.
      **********************************************************************/
     Math::real Convergence() const throw() { return _gamma; }
 
     /**
-     * Return scale for the UTM/UPS projection.
+     * @return scale for the UTM/UPS projection.
      **********************************************************************/
     Math::real Scale() const throw() { return _k; }
 
     /**
-     * Return hemisphere (false means south, true means north).
+     * @return hemisphere (false means south, true means north).
      **********************************************************************/
     bool Northp() const throw() { return _northp; }
 
     /**
-     * Return hemisphere letter N or S.
+     * @return hemisphere letter N or S.
      **********************************************************************/
     char Hemisphere() const throw() { return _northp ? 'N' : 'S'; }
 
     /**
-     * Return the zone corresponding to the input (return 0 for UPS).
+     * @return the zone corresponding to the input (return 0 for UPS).
      **********************************************************************/
     int Zone() const throw() { return _zone; }
 
+    ///@}
+
+    /** \name Setting and querying the alternate zone
+     **********************************************************************/
+    ///@{
     /**
-     * Use zone number, \e zone, for the alternate representation.  See
-     * UTMUPS::zonespec for more information on the interpretation of \e zone.
-     * Note that \e zone == UTMUPS::STANDARD (the default) use the standard UPS
-     * or UTM zone, UTMUPS::MATCH does nothing retaining the existing alternate
-     * representation.  Before this is called the alternate zone is the input
-     * zone.
+     * Specify alternate zone number.
+     *
+     * @param[in] zone zone number for the alternate representation.
+     *
+     * See UTMUPS::zonespec for more information on the interpretation of \e
+     * zone.  Note that \e zone == UTMUPS::STANDARD (the default) use the
+     * standard UPS or UTM zone, UTMUPS::MATCH does nothing retaining the
+     * existing alternate representation.  Before this is called the alternate
+     * zone is the input zone.
      **********************************************************************/
     void SetAltZone(int zone = UTMUPS::STANDARD) const {
       if (zone == UTMUPS::MATCH)
@@ -267,33 +294,42 @@ namespace GeographicLib {
     }
 
     /**
-     * Returns the current alternate zone (return 0 for UPS).
+     * @return current alternate zone (return 0 for UPS).
      **********************************************************************/
     int AltZone() const throw() { return _alt_zone; }
 
     /**
-     * Return easting (meters) for alternate zone.
+     * @return easting (meters) for alternate zone.
      **********************************************************************/
     Math::real AltEasting() const throw() { return _alt_easting; }
 
     /**
-     * Return northing (meters) for alternate zone.
+     * @return northing (meters) for alternate zone.
      **********************************************************************/
     Math::real AltNorthing() const throw() { return _alt_northing; }
 
     /**
-     * Return meridian convergence (degrees) for altermate zone.
+     * @return meridian convergence (degrees) for altermate zone.
      **********************************************************************/
     Math::real AltConvergence() const throw() { return _alt_gamma; }
 
     /**
-     * Return scale for altermate zone.
+     * @return scale for altermate zone.
      **********************************************************************/
     Math::real AltScale() const throw() { return _alt_k; }
+    ///@}
 
+    /** \name String representations of the GeoCoords object
+     **********************************************************************/
+    ///@{
     /**
-     * Return string with latitude and longitude as signed decimal degrees.
-     * Precision \e prec specifies accuracy of representation as follows:
+     * String representation with latitude and longitude as signed decimal
+     * degrees.
+     *
+     * @param[in] prec precision (relative to about 1m).
+     * @return decimal latitude/longitude string representation.
+     *
+     * Precision specifies accuracy of representation as follows:
      * - prec = -5 (min), 1d
      * - prec = 0, 10<sup>-5</sup>d (about 1m)
      * - prec = 3, 10<sup>-8</sup>d
@@ -302,9 +338,13 @@ namespace GeographicLib {
     std::string GeoRepresentation(int prec = 0) const;
 
     /**
-     * Return string with latitude and longitude as degrees, minutes, seconds,
-     * and hemisphere.  Precision \e prec specifies accuracy of representation
-     * as follows:
+     * String representation with latitude and longitude as degrees, minutes,
+     * seconds, and hemisphere.
+     *
+     * @param[in] prec precision (relative to about 1m)
+     * @return DMS latitude/longitude string representation.
+     *
+     * Precision specifies accuracy of representation as follows:
      * - prec = -5 (min), 1d
      * - prec = -4, 0.1d
      * - prec = -3, 1'
@@ -317,11 +357,15 @@ namespace GeographicLib {
     std::string DMSRepresentation(int prec = 0) const;
 
     /**
-     * Return MGRS string.  This gives the coordinates of the enclosing grid
-     * square with size given by the precision \e prec.  Thus 38N 444180
-     * 3684790 converted to a MGRS coordinate at precision -2 (100m) is
-     * 38SMB441847 and not 38SMB442848.  Precision \e prec specifies the
-     * precision of the MSGRS string as follows:
+     * MGRS string.
+     *
+     * @param[in] prec precision (relative to about 1m).
+     * @return MGRS string.
+     *
+     * This gives the coordinates of the enclosing grid square with size given
+     * by the precision.  Thus 38N 444180 3684790 converted to a MGRS
+     * coordinate at precision -2 (100m) is 38SMB441847 and not 38SMB442848.
+     * \e prec specifies the precision of the MSGRS string as follows:
      * - prec = -5 (min), 100km
      * - prec = -4, 10km
      * - prec = -3, 1km
@@ -334,9 +378,13 @@ namespace GeographicLib {
     std::string MGRSRepresentation(int prec = 0) const;
 
     /**
-     * Return string consisting of UTM/UPS zone designator, easting, and
-     * northing,  Precision \e prec specifies accuracy of representation
-     * as follows:
+     * UTM/UPS string.
+     *
+     * @param[in] prec precision (relative to about 1m)
+     * @return UTM/UPS string representation: zone designator, easting, and
+     *   northing.
+     *
+     * Precision specifies accuracy of representation as follows:
      * - prec = -5 (min), 100km
      * - prec = -3, 1km
      * - prec = 0, 1m
@@ -347,32 +395,37 @@ namespace GeographicLib {
     std::string UTMUPSRepresentation(int prec = 0) const;
 
     /**
-     * Return MGRS string using alternative zone.  See MGRSRepresentation for
-     * the interpretation of \e prec.
+     * MGRS string for the alternate zone.  See GeoCoords::MGRSRepresentation.
      **********************************************************************/
     std::string AltMGRSRepresentation(int prec = 0) const;
 
     /**
-     * Return string consisting of alternate UTM/UPS zone designator, easting,
-     * and northing.  See UTMUPSRepresentation for the interpretation of \e
-     * prec.
+     * UTM/UPS string for the alternate zone.  See
+     * GeoCoords::UTMUPSRepresentation.
      **********************************************************************/
     std::string AltUTMUPSRepresentation(int prec = 0) const;
+    ///@}
 
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
     /**
-     * The major radius of the ellipsoid (meters).  This is the value for the
-     * WGS84 ellipsoid because the UTM and UPS projections are based on this
-     * ellipsoid.
+     * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).
+     *
+     * (The WGS84 values is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
      **********************************************************************/
     Math::real MajorRadius() const throw() { return UTMUPS::MajorRadius(); }
 
     /**
-     * The inverse flattening of the ellipsoid.  This is the value for the
-     * WGS84 ellipsoid because the UTM and UPS projections are based on this
-     * ellipsoid.
+     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 values is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return UTMUPS::InverseFlattening(); }
+    ///@}
   };
 
 } // namespace GeographicLib

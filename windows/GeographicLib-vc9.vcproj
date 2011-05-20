@@ -316,6 +316,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\GeodesicLine.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\AzimuthalEquidistant.cpp"
 				>
 			</File>
@@ -387,6 +391,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/Geodesic.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/GeodesicLine.hpp"
 				>
 			</File>
 			<File

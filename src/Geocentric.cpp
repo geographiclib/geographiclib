@@ -9,7 +9,7 @@
 
 #include "GeographicLib/Geocentric.hpp"
 
-#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: Geocentric.cpp 6827 2010-05-20 19:56:18Z karney $"
+#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: Geocentric.cpp 6856 2010-08-23 12:10:55Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -30,6 +30,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
+    if (!(_f < 1))
+      throw GeographicErr("Minor radius is not positive");
   }
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a(),

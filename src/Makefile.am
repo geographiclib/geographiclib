@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6830 2010-05-31 20:02:10Z karney $
+# $Id: Makefile.am 6859 2010-09-06 14:45:33Z karney $
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 
@@ -16,6 +16,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		Geocentric.cpp \
 		GeoCoords.cpp \
 		Geodesic.cpp \
+		GeodesicLine.cpp \
 		Geoid.cpp \
 		Gnomonic.cpp \
 		LambertConformalConic.cpp \
@@ -33,6 +34,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/GeoCoords.hpp \
 		../include/GeographicLib/Geodesic.hpp \
+		../include/GeographicLib/GeodesicLine.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
