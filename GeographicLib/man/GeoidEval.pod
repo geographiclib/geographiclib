@@ -10,18 +10,20 @@ B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
 [ B<-a> | B<-c> I<south> I<west> I<north> I<east> ]
 [ B<-z> I<zone> ] [ B<--msltohae> ] [ B<--haetomsl> ]
 [ B<-v> ] [ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
 
-B<GeoidEval> in positions on standard input and print out the corresponding
-geoid heights on standard output.  In addition print the northerly and
-easterly gradients of the geoid height (i.e., the rate at which the
-geoid height changes per unit distance along the WGS84 ellipsoid in
-the specified directions).
+B<GeoidEval> in positions on standard input and print out the
+corresponding geoid heights on standard output.  Also print the
+northerly and easterly gradients of the geoid height (i.e., the rate at
+which the geoid height changes per unit distance along the WGS84
+ellipsoid in the specified directions).
 
-Positions are given as latitude and longitude, UTM/UPS, or MGRS, in
-any of the formats accepted by GeoConvert(1).  (MGRS coordinates signify
-the I<center> of the corresponing MGRS square.)  If the B<-z> option is
+Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any
+of the formats accepted by GeoConvert(1).  (MGRS coordinates signify the
+I<center> of the corresponing MGRS square.)  If the B<-z> option is
 specified then the specified zone is prepended to each line of input
 (which must be in UTM/UPS coordinates).  This allows a file with UTM
 eastings and northings in a single zone to be used as standard input.
@@ -32,11 +34,13 @@ eastings and northings in a single zone to be used as standard input.
 
 =item B<-n>
 
-use geoid I<name> instead of the default C<egm96-5>.  See L<GEOIDS|geoids>.
+use geoid I<name> instead of the default C<egm96-5>.  See
+L<GEOIDS|geoids>.
 
 =item B<-d>
 
-read geoid data from I<dir> instead of the default.  See L<GEOIDS|geoids>.
+read geoid data from I<dir> instead of the default.  See
+L<GEOIDS|geoids>.
 
 =item B<-l>
 
@@ -49,8 +53,8 @@ cache the entire data set in memory.  See L<CACHE|cache>.
 
 =item B<-c>
 
-cache the data bounded by I<south> I<west> I<north> I<east> in memory.  See
-L<CACHE|cache>.
+cache the data bounded by I<south> I<west> I<north> I<east> in memory.
+See L<CACHE|cache>.
 
 =item B<-z>
 
@@ -61,7 +65,8 @@ when the input consists of UTM/UPS eastings and northings.
 
 standard input should include a final token on each line which is
 treated as a height (in meters) above the geoid and the output echoes
-the input line with the height converted to height above ellipsoid (HAE).
+the input line with the height converted to height above ellipsoid
+(HAE).
 
 =item B<--haetomsl>
 
@@ -76,15 +81,31 @@ the input.
 
 =item B<--version>
 
-print version.
+print version and exit.
 
 =item B<-h>
 
-print usage.
+print usage, the default geoid path and name, and exit.
 
 =item B<--help>
 
-print full documentation.
+print full documentation and exit.
+
+=item B<--input-file>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string>
+
+read input from the string I<instring> instead of from standard input.
+All the semicolons in I<instring> are converted to newlines before the
+reading begins.
+
+=item B<--output-file>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
 
 =back
 
@@ -108,12 +129,16 @@ installed):
 By default, the C<egm96-5> geoid is used.  This may changed by setting
 the environment variable C<GEOID_NAME> or with the B<-n> option.  The
 errors listed here are estimates of the quantization and interpolation
-errors in the reported heights compared to the specified geoid.
+errors in the reported heights compared to the specified geoid.  As a
+result of the way that the geoid data is stored, the calculation of
+gradients can result in large quantization errors.  This is particularly
+acute at high latitudes and for the easterly gradient.
 
 The geoid data will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variable
-C<GEOID_PATH> or with the B<-d> option.  Use the B<-v> option to
-ascertain the full path name of the data file.
+C<GEOID_PATH> or with the B<-d> option.  The B<-h> option prints the
+default geoid path and name.  Use the B<-v> option to ascertain the full
+path name of the data file.
 
 Instructions for downloading and installing geoid data are available at
 L<http://geographiclib.sf.net/html/geoid.html#geoidinst>.
@@ -162,15 +187,20 @@ disk overhead.
 
 =item B<GEOID_NAME>
 
-Override the compile-time default geoid name of C<egm96-5>.  If the
-B<-n> I<name> option is used then I<name> takes precedence.
+Override the compile-time default geoid name of C<egm96-5>.  The B<-h>
+option reports the value of B<GEOID_NAME>, if defined, otherwise it
+reports the compile-time value.  If the B<-n> I<name> option is used,
+then I<name> takes precedence.
 
 =item B<GEOID_PATH>
 
 Override the compile-time default geoid path.  This is typically
-C</usr/local/share/GeographicLib/geoids> on Unix or Linux systems and
-C<C:/cygwin/usr/local/share/GeographicLib/geoids> on Windows systems.
-If the B<-d> I<dir> option is used then I<dir> takes precedence.
+C</usr/local/share/GeographicLib/geoids> on Unix-like systems and
+C<C:/Documents and Settings/All Users/Application
+Data/GeographicLib/geoids> on Windows systems.  The B<-h> option reports
+the value of B<GEOID_PATH>, if defined, otherwise it reports the
+compile-time value.  If the B<-d> I<dir> option is used, then I<dir>
+takes precedence.
 
 =back
 
@@ -243,3 +273,7 @@ L<http://geographiclib.sf.net>.
 =head1 AUTHOR
 
 B<GeoidEval> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<GeoidEval> was added to GeographicLib in 2009-09.

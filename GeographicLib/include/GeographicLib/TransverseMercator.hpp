@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Constants.hpp>
 
 #if !defined(TM_TX_MAXPOW)
 /**
@@ -68,21 +68,21 @@ namespace GeographicLib {
    * See \ref transversemercator for a discussion of this projection.
    **********************************************************************/
 
-  class TransverseMercator {
+  class GEOGRAPHIC_EXPORT TransverseMercator {
   private:
     typedef Math::real real;
-    static const int maxpow = TM_TX_MAXPOW;
-    static const real tol, overflow;
-    static const int numit = 5;
+    static const int maxpow_ = TM_TX_MAXPOW;
+    static const real tol_;
+    static const real overflow_;
+    static const int numit_ = 5;
     const real _a, _r, _f, _k0, _e2, _e, _e2m,  _c, _n;
     // _alp[0] and _bet[0] unused
-    real _a1, _b1, _alp[maxpow + 1], _bet[maxpow + 1];
-    static inline real sq(real x) throw() { return x * x; }
+    real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) throw() {
       real t = std::tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
-      return x >= 0 ? (!(t < 0) ? t : overflow) : (!(t >= 0) ? t : -overflow);
+      return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
     }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
@@ -190,4 +190,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP

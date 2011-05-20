@@ -8,7 +8,8 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 
 PREFIX = /usr/local
 LIBNAME = GeographicLib
-HEADERS = $(LIBNAME)/Constants.hpp $(patsubst %,$(LIBNAME)/%.hpp,$(MODULES))
+HEADERS = $(LIBNAME)/Constants.hpp $(LIBNAME)/Config.h \
+	$(patsubst %,$(LIBNAME)/%.hpp,$(MODULES))
 DEST = $(PREFIX)/include/$(LIBNAME)
 
 INSTALL=install -b

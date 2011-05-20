@@ -2,7 +2,7 @@
  * \file LocalCartesian.hpp
  * \brief Header for GeographicLib::LocalCartesian class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -10,8 +10,8 @@
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
 #define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id$"
 
-#include "GeographicLib/Geocentric.hpp"
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Geocentric.hpp>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -29,18 +29,19 @@ namespace GeographicLib {
    * Geocentric object (by default Geocentric::WGS84).
    **********************************************************************/
 
-  class LocalCartesian {
+  class GEOGRAPHIC_EXPORT LocalCartesian {
   private:
     typedef Math::real real;
-    static const size_t dim = 3, dim2 = dim * dim;
+    static const size_t dim_ = 3;
+    static const size_t dim2_ = dim_ * dim_;
     const Geocentric _earth;
     real _lat0, _lon0, _h0;
-    real _x0, _y0, _z0, _r[dim2];
+    real _x0, _y0, _z0, _r[dim2_];
     void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
-                    real M[dim2]) const throw();
+                    real M[dim2_]) const throw();
     void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
-                    real M[dim2]) const throw();
-    void MatrixMultiply(real M[dim2]) const throw();
+                    real M[dim2_]) const throw();
+    void MatrixMultiply(real M[dim2_]) const throw();
   public:
 
     /**
@@ -118,10 +119,10 @@ namespace GeographicLib {
     void Forward(real lat, real lon, real h, real& x, real& y, real& z,
                  std::vector<real>& M)
       const throw()  {
-      real t[dim2];
+      real t[dim2_];
       IntForward(lat, lon, h, x, y, z, t);
-      if (M.end() == M.begin() + dim2)
-        copy(t, t + dim2, M.begin());
+      if (M.end() == M.begin() + dim2_)
+        copy(t, t + dim2_, M.begin());
     }
 
     /**
@@ -161,10 +162,10 @@ namespace GeographicLib {
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
       const throw() {
-      real t[dim2];
+      real t[dim2_];
       IntReverse(x, y, z, lat, lon, h, t);
-      if (M.end() == M.begin() + dim2)
-        copy(t, t + dim2, M.begin());
+      if (M.end() == M.begin() + dim2_)
+        copy(t, t + dim2_, M.begin());
     }
 
     /** \name Inspector functions
@@ -205,4 +206,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_LOCALCARTESIAN_HPP

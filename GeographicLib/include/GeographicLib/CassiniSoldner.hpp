@@ -2,17 +2,17 @@
  * \file CassiniSoldner.hpp
  * \brief Header for GeographicLib::CassiniSoldner class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
+ * licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
 #define GEOGRAPHICLIB_CASSINISOLDNER_HPP "$Id$"
 
-#include "GeographicLib/Geodesic.hpp"
-#include "GeographicLib/GeodesicLine.hpp"
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicLine.hpp>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -59,16 +59,16 @@ namespace GeographicLib {
    * respectively, (\e lat1, \e lon1) and (\e lat, \e lon).
    **********************************************************************/
 
-  class CassiniSoldner {
+  class GEOGRAPHIC_EXPORT CassiniSoldner {
   private:
     typedef Math::real real;
     const Geodesic _earth;
     GeodesicLine _meridian;
     real _sbet0, _cbet0;
-    static const real eps1, eps2;
-    static const unsigned maxit =  10;
+    static const real eps1_;
+    static const real eps2_;
+    static const unsigned maxit_ =  10;
 
-    static inline real sq(real x) throw() { return x * x; }
     // The following private helper functions are copied from Geodesic.
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
@@ -225,4 +225,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_CASSINISOLDNER_HPP

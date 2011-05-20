@@ -2,7 +2,7 @@ dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 dnl $Id$
 
-AC_INIT([GeographicLib],[1.8],[charles@karney.com])
+AC_INIT([GeographicLib],[1.9],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -16,14 +16,14 @@ dnl the need to be in sync with autoconf/automake.
 dnl
 AM_MAINTAINER_MODE
 
-AC_CONFIG_HEADERS(config.h)
+AC_CONFIG_HEADERS(include/GeographicLib/Config-ac.h)
 
 dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
 LT_CURRENT=7
-LT_REVISION=0
+LT_REVISION=1
 LT_AGE=2
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -42,6 +42,7 @@ AC_CHECK_HEADERS([float.h])
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_C_INLINE
+AC_TYPE_LONG_DOUBLE
 
 # Checks for library functions.
 AC_FUNC_STRTOD

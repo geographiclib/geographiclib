@@ -2,16 +2,16 @@
  * \file AzimuthalEquidistant.hpp
  * \brief Header for GeographicLib::AzimuthalEquidistant class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
+ * licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id$"
 
-#include "GeographicLib/Geodesic.hpp"
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -32,11 +32,11 @@ namespace GeographicLib {
    * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
    **********************************************************************/
 
-  class AzimuthalEquidistant {
+  class GEOGRAPHIC_EXPORT AzimuthalEquidistant {
   private:
     typedef Math::real real;
     const Geodesic _earth;
-    static const real eps;
+    static const real eps_;
   public:
 
     /**
@@ -132,4 +132,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP

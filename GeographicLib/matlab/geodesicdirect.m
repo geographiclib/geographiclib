@@ -21,6 +21,7 @@ function latlong = geodesicdirect(geodesic, a, r)
 %
 %   a = major radius (meters)
 %   r = reciprocal flattening (0 means a sphere)
+%   If a and r are omitted, the WGS84 values are used.
 %
 %   This is an interface to the GeographicLib C++ routine
 %       Geodesic::Direct

@@ -1,9 +1,16 @@
 # $Id$
 
-PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
-	GeoidEval Planimeter
+PROGRAMS = GeoConvert \
+	TransverseMercatorProj \
+	CartConvert \
+	Geod \
+	GeodesicProj \
+	GeoidEval \
+	Planimeter \
+	ConicProj
+SCRIPTS = geographiclib-get-geoids
 
-all: $(PROGRAMS)
+all: $(PROGRAMS) $(SCRIPTS)
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -15,59 +22,64 @@ LIBPATH = ../src
 # INCLUDEPATH = $(PREFIX)/include
 # LIBPATH = $(PREFIX)/lib
 
+PREFIX = /usr/local
+GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
+
 CC = g++ -g
 CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
 
-CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES)
+CPPFLAGS = -I$(INCLUDEPATH) -I../man $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
-
 
 $(PROGRAMS): $(LIBPATH)/$(LIBRARY)
 	$(CC) -o $@ $@.o $(LDLIBS)
 
-VPATH = ../include/GeographicLib
+VPATH = ../include/GeographicLib ../man
 
 clean:
-	rm -f *.o
-
-distclean:
-	rm -f *.usage
+	rm -f *.o $(SCRIPTS)
 
 GeoConvert: GeoConvert.o
-TransverseMercatorTest: TransverseMercatorTest.o
+TransverseMercatorProj: TransverseMercatorProj.o
 CartConvert: CartConvert.o
 Geod: Geod.o
-EquidistantTest: EquidistantTest.o
+GeodesicProj: GeodesicProj.o
 GeoidEval: GeoidEval.o
 Planimeter: Planimeter.o
+ConicProj: ConicProj.o
 
-%.usage: %.pod
-	sh makeusage.sh $< > $@
-
-GeoConvert.o: GeoConvert.usage Constants.hpp DMS.hpp GeoCoords.hpp \
-	UTMUPS.hpp
-TransverseMercatorTest.o: TransverseMercatorTest.usage Constants.hpp \
-	DMS.hpp EllipticFunction.hpp TransverseMercator.hpp \
+GeoConvert.o: GeoConvert.usage Constants.hpp Config.h DMS.hpp \
+	GeoCoords.hpp UTMUPS.hpp
+TransverseMercatorProj.o: TransverseMercatorProj.usage Constants.hpp \
+	Config.h DMS.hpp EllipticFunction.hpp TransverseMercator.hpp \
 	TransverseMercatorExact.hpp
-CartConvert.o: CartConvert.usage Constants.hpp DMS.hpp Geocentric.hpp \
-	LocalCartesian.hpp
-Geod.o: Geod.usage Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp
-EquidistantTest.o: EquidistantTest.usage AzimuthalEquidistant.hpp \
-	CassiniSoldner.hpp Gnomonic.hpp Constants.hpp DMS.hpp Geodesic.hpp \
+CartConvert.o: CartConvert.usage Constants.hpp Config.h DMS.hpp \
+	Geocentric.hpp LocalCartesian.hpp
+Geod.o: Geod.usage Constants.hpp Config.h DMS.hpp Geodesic.hpp \
 	GeodesicLine.hpp
-GeoidEval.o: GeoidEval.usage Constants.hpp DMS.hpp GeoCoords.hpp Geoid.hpp
-Planimeter.o: Planimeter.usage Constants.hpp DMS.hpp GeoCoords.hpp \
+GeodesicProj.o: GeodesicProj.usage AzimuthalEquidistant.hpp \
+	CassiniSoldner.hpp Gnomonic.hpp Constants.hpp Config.h DMS.hpp \
 	Geodesic.hpp GeodesicLine.hpp
+GeoidEval.o: GeoidEval.usage Constants.hpp Config.h DMS.hpp \
+	GeoCoords.hpp Geoid.hpp
+Planimeter.o: Planimeter.usage Constants.hpp Config.h DMS.hpp \
+	GeoCoords.hpp Geodesic.hpp GeodesicLine.hpp
+ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
+	Constants.hpp Config.h DMS.hpp LambertConformalConic.hpp
+
+geographiclib-get-geoids: geographiclib-get-geoids.sh
+	sed -e "s%@GEOID_DEFAULT_PATH@%$(GEOID_DEFAULT_PATH)%" $< > $@
+	chmod +x $@
 
 INSTALL = install -b
-PREFIX = /usr/local
 DEST = $(PREFIX)/bin
+SDEST = $(PREFIX)/sbin
 
 list:
-	@echo $(addsuffix .cpp,$(PROGRAMS)) $(addsuffix .pod,$(PROGRAMS)) \
-	$(addsuffix .usage,$(PROGRAMS))
+	@echo $(addsuffix .cpp,$(PROGRAMS))
 
-install: $(PROGRAMS)
+install: $(PROGRAMS) $(SCRIPTS)
 	test -f $(DEST) || mkdir -p $(DEST)
-	$(INSTALL) $^ $(DEST)
-
+	$(INSTALL) $(PROGRAMS) $(DEST)
+	test -f $(SDEST) || mkdir -p $(SDEST)
+	$(INSTALL) $(SCRIPTS) $(SDEST)

@@ -157,6 +157,7 @@
     <ClInclude Include="../include/GeographicLib/TransverseMercator.hpp" />
     <ClInclude Include="../include/GeographicLib/TransverseMercatorExact.hpp" />
     <ClInclude Include="../include/GeographicLib/UTMUPS.hpp" />
+    <ClInclude Include="../include/GeographicLib/Config.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="../src/AlbersEqualArea.cpp" />

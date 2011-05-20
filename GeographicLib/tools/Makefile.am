@@ -5,25 +5,28 @@
 # $Id$
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
-INCLUDES = -I$(top_srcdir)/include 
+INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/man
 
 LDADD = $(top_builddir)/src/libGeographic.la
 DEPS = $(top_builddir)/src/libGeographic.la
 
-bin_PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest GeoidEval Planimeter
+bin_PROGRAMS = GeoConvert \
+	TransverseMercatorProj \
+	CartConvert \
+	Geod \
+	GeodesicProj \
+	GeoidEval \
+	Planimeter \
+	ConicProj
 
-SUFFIXES = .pod .usage
-
-.pod.usage:
-	sh makeusage.sh $< > $@
-
-GeoConvert.o: GeoConvert.usage
-TransverseMercatorTest.o: TransverseMercatorTest.usage
-CartConvert.o: CartConvert.usage
-Geod.o: Geod.usage
-EquidistantTest.o: EquidistantTest.usage
-GeoidEval.o: GeoidEval.usage
-Planimeter.o: Planimeter.usage
+GeoConvert.o: ../man/GeoConvert.usage
+TransverseMercatorProj.o: ../man/TransverseMercatorProj.usage
+CartConvert.o: ../man/CartConvert.usage
+Geod.o: ../man/Geod.usage
+GeodesicProj.o: ../man/GeodesicProj.usage
+GeoidEval.o: ../man/GeoidEval.usage
+Planimeter.o: ../man/Planimeter.usage
+ConicProj.o: ../man/ConicProj.usage
 
 GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
@@ -31,7 +34,7 @@ GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/UTMUPS.hpp
 
-TransverseMercatorTest_SOURCES = TransverseMercatorTest.cpp \
+TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/EllipticFunction.hpp \
@@ -50,7 +53,7 @@ Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
-EquidistantTest_SOURCES = EquidistantTest.cpp \
+GeodesicProj_SOURCES = GeodesicProj.cpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
 	../include/GeographicLib/CassiniSoldner.hpp \
 	../include/GeographicLib/Gnomonic.hpp \
@@ -72,11 +75,18 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
-EXTRA_DIST = Makefile.mk \
-	GeoConvert.pod GeoConvert.usage \
-	TransverseMercatorTest.pod TransverseMercatorTest.usage \
-	CartConvert.pod CartConvert.usage \
-	Geod.pod Geod.usage \
-	EquidistantTest.pod EquidistantTest.usage \
-	GeoidEval.pod GeoidEval.usage \
-	Planimeter.pod Planimeter.usage
+ConicProj_SOURCES = ConicProj.cpp \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/AlbersEqualArea.hpp \
+	../include/GeographicLib/LamberConformalConic.hpp
+
+sbin_SCRIPTS = geographiclib-get-geoids
+
+geoids_dir = $(datadir)/GeographicLib/geoids
+geographiclib-get-geoids: geographiclib-get-geoids.sh
+	sed -e "s%@GEOID_DEFAULT_PATH@%$(geoids_dir)%" $< > $@
+	chmod +x $@
+
+CLEANFILES = geographiclib-get-geoids
+EXTRA_DIST = Makefile.mk CMakeLists.txt geographiclib-get-geoids.sh

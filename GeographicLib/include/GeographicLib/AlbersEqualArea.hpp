@@ -2,15 +2,16 @@
  * \file AlbersEqualArea.hpp
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
 #define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
 #include <algorithm>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -50,16 +51,20 @@ namespace GeographicLib {
    * for specifying a false easting or false northing or a different latitude
    * of origin.
    **********************************************************************/
-  class AlbersEqualArea {
+  class GEOGRAPHIC_EXPORT AlbersEqualArea {
   private:
     typedef Math::real real;
     const real _a, _r, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
     real _sign, _lat0, _k0;
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
-    static const real eps, epsx, epsx2, tol, tol0, ahypover;
-    static const int numit = 5;   // Newton iterations in Reverse
-    static const int numit0 = 20; // Newton iterations in Init
-    static inline real sq(real x) throw() { return x * x; }
+    static const real eps_;
+    static const real epsx_;
+    static const real epsx2_;
+    static const real tol_;
+    static const real tol0_;
+    static const real ahypover_;
+    static const int numit_ = 5;   // Newton iterations in Reverse
+    static const int numit0_ = 20; // Newton iterations in Init
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
     // atanh(      e   * x)/      e   if f > 0
     // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
@@ -88,7 +93,7 @@ namespace GeographicLib {
     static inline real Dsn(real x, real y, real sx, real sy) throw() {
       // sx = x/hyp(x)
       real t = x * y;
-      return t > 0 ? (x + y) * sq( (sx * sy)/t ) / (sx + sy) :
+      return t > 0 ? (x + y) * Math::sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
@@ -289,4 +294,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_ALBERSEQUALAREA_HPP

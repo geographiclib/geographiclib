@@ -10,10 +10,16 @@
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOGRAPHICLIB_GEOID_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
 #include <string>
 #include <vector>
 #include <fstream>
+#include <GeographicLib/Constants.hpp>
+
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs vector
+#pragma warning (push)
+#pragma warning (disable: 4251)
+#endif
 
 namespace GeographicLib {
 
@@ -42,7 +48,9 @@ namespace GeographicLib {
    * be calculated.  The gradient is defined as the rate of change of the geoid
    * as a function of position on the ellipsoid.  This uses the parameters for
    * the WGS84 ellipsoid.  The gradient defined in terms of the interpolated
-   * heights.
+   * heights.  As a result of the way that the geoid data is stored, the
+   * calculation of gradients can result in large quantization errors.  This is
+   * particularly acute at high latitudes and for the easterly gradient.
    *
    * This class is typically \e not thread safe in that a single instantiation
    * cannot be safely used by multiple threads because of the way the object
@@ -55,15 +63,17 @@ namespace GeographicLib {
    * safe.
    **********************************************************************/
 
-  class Geoid {
+  class GEOGRAPHIC_EXPORT Geoid {
   private:
     typedef Math::real real;
-    static const unsigned stencilsize = 12;
-    static const unsigned nterms = ((3 + 1) * (3 + 2))/2; // for a cubic fit
-    static const real c0, c0n, c0s;
-    static const real c3[stencilsize * nterms];
-    static const real c3n[stencilsize * nterms];
-    static const real c3s[stencilsize * nterms];
+    static const unsigned stencilsize_ = 12;
+    static const unsigned nterms_ = ((3 + 1) * (3 + 2))/2; // for a cubic fit
+    static const real c0_;
+    static const real c0n_;
+    static const real c0s_;
+    static const real c3_[stencilsize_ * nterms_];
+    static const real c3n_[stencilsize_ * nterms_];
+    static const real c3s_[stencilsize_ * nterms_];
 
     std::string _name, _dir, _filename;
     const bool _cubic;
@@ -83,7 +93,7 @@ namespace GeographicLib {
     // Cell cache
     mutable int _ix, _iy;
     mutable real _v00, _v01, _v10, _v11;
-    mutable real _t[nterms];
+    mutable real _t[nterms_];
     void filepos(int ix, int iy) const {
       _file.seekg(
 #if !(defined(__GNUC__) && __GNUC__ < 4)
@@ -447,4 +457,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#pragma warning (pop)
 #endif
+
+#endif  // GEOGRAPHICLIB_GEOID_HPP

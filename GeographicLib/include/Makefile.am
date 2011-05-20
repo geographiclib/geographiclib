@@ -29,4 +29,4 @@ geoids_dir=$(datadir)/GeographicLib/geoids
 
 DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
 
-EXTRA_DIST = Makefile.mk
+EXTRA_DIST = Makefile.mk GeographicLib/CMakeLists.txt GeographicLib/Config.h.in

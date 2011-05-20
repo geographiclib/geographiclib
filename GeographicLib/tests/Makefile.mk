@@ -1,6 +1,6 @@
 # $Id$
 
-PROGRAMS = ProjTest TMTest GeodTest ConicTest NaNTester
+PROGRAMS = ProjTest TMTest GeodTest ConicTest NaNTester PASouth
 
 all: $(PROGRAMS)
 
@@ -37,6 +37,7 @@ GeodTest: GeodTest.o
 GeodTestL: GeodTestL.o
 ConicTest: ConicTest.o
 NaNTester: NaNTester.o
+PASouth: PASouth.o
 ProjTest.o: Constants.hpp LambertConformalConic.hpp PolarStereographic.hpp \
 	TransverseMercator.hpp TransverseMercatorExact.hpp
 TMTest.o: Constants.hpp TransverseMercator.hpp TransverseMercatorExact.hpp \
@@ -45,6 +46,7 @@ GeodTest.o: Constants.hpp Geodesic.hpp
 ConicTest.o: Constants.hpp LambertConformalConic.hpp AlbersEqualArea.hpp
 NaNTester.o: Constants.hpp EllipticFunction.hpp TransverseMercator.hpp \
 	TransverseMercatorExact.hpp PolarStereographic.hpp
+PASouth.o: Constants.hpp LambertConformalConic.hpp DMS.hpp
 
 GeodTestL.o: GeodTest.cpp Constants.hpp Geodesic.hpp \
 	../include/GeographicLibL/Constants.hpp \

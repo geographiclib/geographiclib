@@ -11,11 +11,12 @@ Files
 
     00README.txt  -- this file
     AUTHORS -- the authors of the library
-    COPYING -- the LGPL license, v. 3
+    COPYING.txt -- the LGPL license, v. 3
     INSTALL -- brief installation instructions
     NEWS -- a history of changes
 
     include/GeographicLib/ and src/
+      Config.h.in, Config.h -- system dependent configuration
       Constants.hpp -- WGS84 constants
       PolarStereographic.[ch]pp -- polar stereographic projection
       TransverseMercator.[ch]pp -- transverse Mercator projection
@@ -90,5 +91,6 @@ Files
     man/
       *.1 -- man pages in nroff format
 
-    Makefile -- Unix/Linux makefile (invokes make in the other directories)
+    Makefile.mk -- Unix/Linux makefiles
     configure -- autoconf configuration script
+    CMakeLists.txt -- cmake configuration files

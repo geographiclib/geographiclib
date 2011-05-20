@@ -2,12 +2,12 @@
  * \file EllipticFunction.cpp
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#include "GeographicLib/EllipticFunction.hpp"
+#include <GeographicLib/EllipticFunction.hpp>
 
 #define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id$"
 
@@ -18,14 +18,14 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real EllipticFunction::tol =
+  const Math::real EllipticFunction::tol_ =
     numeric_limits<real>::epsilon() * real(0.01);
-  const Math::real EllipticFunction::tolRF = pow(3 * tol, 1/real(6));
-  const Math::real EllipticFunction::tolRD =
-    pow(real(0.25) * tol, 1/real(6));
-  const Math::real EllipticFunction::tolRG0 = real(2.7) * sqrt(tol);
-  const Math::real EllipticFunction::tolJAC = sqrt(tol);
-  const Math::real EllipticFunction::tolJAC1 = sqrt(6 * tol);
+  const Math::real EllipticFunction::tolRF_ = pow(3 * tol_, 1/real(6));
+  const Math::real EllipticFunction::tolRD_ =
+    pow(real(0.25) * tol_, 1/real(6));
+  const Math::real EllipticFunction::tolRG0_ = real(2.7) * sqrt(tol_);
+  const Math::real EllipticFunction::tolJAC_ = sqrt(tol_);
+  const Math::real EllipticFunction::tolJAC1_ = sqrt(6 * tol_);
 
   /*
    * Implementation of methods given in
@@ -40,7 +40,7 @@ namespace GeographicLib {
     real
       a0 = (x + y + z)/3,
       an = a0,
-      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRF,
+      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRF_,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -68,7 +68,7 @@ namespace GeographicLib {
     real
       a0 = (x + y + 3 * z)/5,
       an = a0,
-      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRD,
+      q = max(max(abs(a0-x), abs(a0-y)), abs(a0-z)) / tolRD_,
       x0 = x,
       y0 = y,
       z0 = z,
@@ -108,7 +108,7 @@ namespace GeographicLib {
       yn = y0,
       s = 0,
       mul = real(0.25);
-    while (abs(xn-yn) >= tolRG0 * abs(xn)) {
+    while (abs(xn-yn) >= tolRG0_ * abs(xn)) {
       // Max 4 trips
       real t = (xn + yn) /2;
       yn = sqrt(xn * yn);
@@ -125,7 +125,7 @@ namespace GeographicLib {
     : _m(m)
     , _m1(1 - m)
       // Don't initialize _kc, _ec, _kec since this constructor might be called
-      // before the static real constants tolRF, etc., are initialized.
+      // before the static real constants tolRF_, etc., are initialized.
     , _init(false)
   {}
 
@@ -156,14 +156,14 @@ namespace GeographicLib {
     if (_m1 != 0) {
       real mc = _m1;
       real c;
-      real m[num], n[num];
+      real m[num_], n[num_];
       unsigned l = 0;
-      for (real a = 1; l < num; ++l) {
+      for (real a = 1; l < num_; ++l) {
         // Max 5 trips
         m[l] = a;
         n[l] = mc = sqrt(mc);
         c = (a + mc) / 2;
-        if (!(abs(a - mc) > tolJAC * a)) {
+        if (!(abs(a - mc) > tolJAC_ * a)) {
           ++l;
           break;
         }

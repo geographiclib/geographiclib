@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
 #define GEOGRAPHICLIB_GEODESIC_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Constants.hpp>
 
 #if !defined(GEOD_ORD)
 /**
@@ -91,31 +91,36 @@ namespace GeographicLib {
    * allows a sequence of points along a geodesic to be computed.
    *
    * The calculations are accurate to better than 15 nm.  See Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a> for details.
+   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for details.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    *   on an ellipsoid of revolution</a>,
    *   Feb. 2011;
    *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a>.
+   *   <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>.
    * .
    * For more information on geodesics see \ref geodesic.
    **********************************************************************/
 
-  class Geodesic {
+  class GEOGRAPHIC_EXPORT Geodesic {
   private:
     typedef Math::real real;
     friend class GeodesicLine;
-    static const int nA1 = GEOD_ORD, nC1 = GEOD_ORD, nC1p = GEOD_ORD,
-      nA2 = GEOD_ORD, nC2 = GEOD_ORD,
-      nA3 = GEOD_ORD, nA3x = nA3,
-      nC3 = GEOD_ORD, nC3x = (nC3 * (nC3 - 1)) / 2,
-      nC4 = GEOD_ORD, nC4x = (nC4 * (nC4 + 1)) / 2;
-    static const unsigned maxit = 50;
+    static const int nA1_ = GEOD_ORD;
+    static const int nC1_ = GEOD_ORD;
+    static const int nC1p_ = GEOD_ORD;
+    static const int nA2_ = GEOD_ORD;
+    static const int nC2_ = GEOD_ORD;
+    static const int nA3_ = GEOD_ORD;
+    static const int nA3x_ = nA3_;
+    static const int nC3_ = GEOD_ORD;
+    static const int nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
+    static const int nC4_ = GEOD_ORD;
+    static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
+    static const unsigned maxit_ = 50;
 
-    static inline real sq(real x) throw() { return x * x; }
     void Lengths(real eps, real sig12,
                  real ssig1, real csig1, real ssig2, real csig2,
                  real cbet1, real cbet2,
@@ -136,9 +141,13 @@ namespace GeographicLib {
                   real C1a[], real C2a[], real C3a[])
       const throw();
 
-    static const real eps2, tol0, tol1, tol2, xthresh;
+    static const real eps2_;
+    static const real tol0_;
+    static const real tol1_;
+    static const real tol2_;
+    static const real xthresh_;
     const real _a, _r, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _A3x[nA3x], _C3x[nC3x], _C4x[nC4x];
+    real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
     static real SinCosSeries(bool sinp,
                              real sinx, real cosx, const real c[], int n)
       throw();
@@ -818,4 +827,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-#endif
+
+#endif  // GEOGRAPHICLIB_GEODESIC_HPP

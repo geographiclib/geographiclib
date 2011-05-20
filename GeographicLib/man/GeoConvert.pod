@@ -9,6 +9,8 @@ GeoConvert -- convert geographic coordinates
 B<GeoConvert> [ B<-g> | B<-d> | B<-u> | B<-m> | B<-c> ] [ B<-p> I<prec> ]
 [ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ]
 [ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
 
@@ -27,10 +29,11 @@ is used (I<a> = 6378137m, I<f> = 1/298.257223563).
 2 tokens (output options B<-g> or B<-d>) given as I<latitude>
 I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
-significant designator optional.  Latitude is given first; however, on
-input, either may be given first by appending or prepending I<N> or I<S>
-to the latitude and I<E> or I<W> to the longitude.  For example, the
-following are all equivalent
+significant designator optional.  (See L<QUOTING|quoting> for how to
+quote the charachers ' and " when entering coordinates on the command
+line.)  Latitude is given first; however, on input, either may be given
+first by appending or prepending I<N> or I<S> to the latitude and I<E>
+or I<W> to the longitude.  For example, the following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
@@ -112,15 +115,31 @@ square instead of the center; see L<MGRS|mgrs>.
 
 =item B<--version>
 
-print version.
+print version and exit.
 
 =item B<-h>
 
-print usage.
+print usage and exit.
 
 =item B<--help>
 
-print full documentation.
+print full documentation and exit.
+
+=item B<--input-file>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string>
+
+read input from the string I<instring> instead of from standard input.
+All the semicolons in I<instring> are converted to newlines before the
+reading begins.
+
+=item B<--output-file>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
 
 =back
 
@@ -179,6 +198,40 @@ designator I<N> or I<S> and I<not> an MGRS latitude band letter.
 Convert the MGRS latitude band letter to a hemisphere as follows:
 replace I<C> thru I<M> by I<S>; replace I<N> thru I<X> by I<N>.
 
+=head1 QUOTING
+
+Unfortunately the characters ' and " have special meanings in many
+shells and have to be entered with care.
+
+=over
+
+=item Unix shells (sh, bash, tsch)
+
+The special characters can be quoted by preceding them with a \
+(backslash).  Alternatively you can quote a ' with a pair of "s.  The
+two alternatives are illustrated by
+
+   echo 30d30\'30\" "30d30'30" | GeoConvert -d -p -1
+   => 30d30'30"N 030d30'30"E
+
+=item Windows command shell (cmd)
+
+The ' character needs no quoting and the " character can be quoted by a
+^.  However this quoting is usually unnecessary because the trailing
+designator can be omitted.  Thus
+
+   echo 30d30'30^" 30d30'30 | GeoConvert -d -p -1
+   => 30d30'30"N 030d30'30"E
+
+=item Input from a file
+
+No quoting need be done if the input from a file.  Thus each line of the
+file C<input.txt> should just contain the plain coordinates.
+
+  GeoConvert -d -p -1 < input.txt
+
+=back
+
 =head1 EXAMPLES
 
    echo 38SMB4488 | GeoConvert         => 33.33424 44.40363
@@ -231,3 +284,7 @@ L<http://arxiv.org/abs/1002.1417>.
 =head1 AUTHOR
 
 B<GeoConvert> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<GeoConvert> was added to GeographicLib in 2009-01.

@@ -10,8 +10,8 @@
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
-#include "GeographicLib/EllipticFunction.hpp"
+#include <GeographicLib/Constants.hpp>
+#include <GeographicLib/EllipticFunction.hpp>
 
 namespace GeographicLib {
 
@@ -64,20 +64,23 @@ namespace GeographicLib {
    * See \ref transversemercator for a discussion of this projection.
    **********************************************************************/
 
-  class TransverseMercatorExact {
+  class GEOGRAPHIC_EXPORT TransverseMercatorExact {
   private:
     typedef Math::real real;
-    static const real tol, tol1, tol2, taytol, overflow;
-    static const int numit = 10;
+    static const real tol_;
+    static const real tol1_;
+    static const real tol2_;
+    static const real taytol_;
+    static const real overflow_;
+    static const int numit_ = 10;
     const real _a, _r, _f, _k0, _mu, _mv, _e, _ep2;
     const bool _extendp;
     const EllipticFunction _Eu, _Ev;
-    static inline real sq(real x) throw() { return x * x; }
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) throw() {
       real t = std::tan(x);
       // Write the tests this way to ensure that tanx(NaN()) is NaN()
-      return x >= 0 ? (!(t < 0) ? t : overflow) : (!(t >= 0) ? t : -overflow);
+      return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
     }
 
     real taup(real tau) const throw();
@@ -247,4 +250,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP

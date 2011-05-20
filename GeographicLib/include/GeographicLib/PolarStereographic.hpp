@@ -2,7 +2,7 @@
  * \file PolarStereographic.hpp
  * \brief Header for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -10,7 +10,7 @@
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -26,15 +26,15 @@ namespace GeographicLib {
    * This is a straightforward implementation of the equations in Snyder except
    * that Newton's method is used to invert the projection.
    **********************************************************************/
-  class PolarStereographic {
+  class GEOGRAPHIC_EXPORT PolarStereographic {
   private:
     typedef Math::real real;
     // _Cx used to be _C but g++ 3.4 has a macro of that name
     const real _a, _r, _f, _e2, _e, _e2m, _Cx, _c;
     real _k0;
-    static const real tol, overflow;
-    static const int numit = 5;
-    static inline real sq(real x) throw() { return x * x; }
+    static const real tol_;
+    static const real overflow_;
+    static const int numit_ = 5;
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
     inline real eatanhe(real x) const throw() {
@@ -157,4 +157,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP

@@ -45,41 +45,25 @@ $(top_srcdir)/src/TransverseMercator.cpp \
 $(top_srcdir)/src/TransverseMercatorExact.cpp \
 $(top_srcdir)/src/UTMUPS.cpp \
 $(top_srcdir)/tools/CartConvert.cpp \
-$(top_srcdir)/tools/EquidistantTest.cpp \
+$(top_srcdir)/tools/ConicProj.cpp \
+$(top_srcdir)/tools/GeodesicProj.cpp \
 $(top_srcdir)/tools/GeoConvert.cpp \
 $(top_srcdir)/tools/Geod.cpp \
 $(top_srcdir)/tools/GeoidEval.cpp \
 $(top_srcdir)/tools/Planimeter.cpp \
-$(top_srcdir)/tools/TransverseMercatorTest.cpp
+$(top_srcdir)/tools/TransverseMercatorProj.cpp
 
 MANPAGES = \
-CartConvert.1.html \
-EquidistantTest.1.html \
-GeoConvert.1.html \
-Geod.1.html \
-GeoidEval.1.html \
-Planimeter.1.html \
-TransverseMercatorTest.1.html
+../man/CartConvert.1.html \
+../man/ConicProj.1.html \
+../man/GeodesicProj.1.html \
+../man/GeoConvert.1.html \
+../man/Geod.1.html \
+../man/GeoidEval.1.html \
+../man/Planimeter.1.html \
+../man/TransverseMercatorProj.1.html
 
-PODFIX= sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
-
-doc: man html/index.html
-man: $(MANPAGES)
-
-CartConvert.1.html: $(top_srcdir)/tools/CartConvert.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-EquidistantTest.1.html: $(top_srcdir)/tools/EquidistantTest.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-GeoConvert.1.html: $(top_srcdir)/tools/GeoConvert.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-Geod.1.html: $(top_srcdir)/tools/Geod.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-GeoidEval.1.html: $(top_srcdir)/tools/GeoidEval.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-Planimeter.1.html: $(top_srcdir)/tools/Planimeter.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
-TransverseMercatorTest.1.html: $(top_srcdir)/tools/TransverseMercatorTest.pod
-	pod2html --noindex $^ | $(PODFIX) > $@
+doc: html/index.html
 
 html/index.html: Doxyfile Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
@@ -88,7 +72,7 @@ html/index.html: Doxyfile Geographic.doc \
 	doxygen
 
 distclean-local:
-	rm -rf html $(MANPAGES)
+	rm -rf html
 
 install-doc: doc
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html

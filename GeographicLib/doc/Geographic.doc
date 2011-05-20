@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.8
-\date 2011-02-22
+\version 1.9
+\date 2011-mm-dd
 
 \section abstract Abstract
 
@@ -21,9 +21,8 @@ classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for geoid height
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
-5&ndash;15 nm).  In addition, various properties of the \ref
-transversemercator are described and an accurate algorithm for \ref
-geodesic is given.
+5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
+transversemercator have been developed for this library.
 
 This library is <i>not</i> a general purpose projection library; use
 <a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
@@ -34,40 +33,39 @@ cures several of the defects of that package.
 \section download Download
 
 The main project page is at
-- <a href="http://sf.net/projects/geographiclib">
-  http://sf.net/projects/geographiclib </a>
+- <a href="http://sourceforge.net/projects/geographiclib">
+  http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">
-  geographiclib-1.8.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.zip/download">
-  geographiclib-1.8.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">
+  GeographicLib-1.9.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.zip/download">
+  GeographicLib-1.9.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
-have identical contents.)
-
+have identical contents.)  There is also a binary installer for Windows
+available at
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9-win32.exe/download">
+  GeographicLib-1.9-win32.exe</a>
+.
 It is licensed under the
 <a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">LGPL</a>.
 For more information, see http://geographiclib.sourceforge.net/
 
 \section contents Contents
  - \ref intro
+ - \ref install
  - \ref start
+ - \ref utilities
  - \ref organization
- - \ref transversemercator
-   - \ref testmerc
-   - \ref tmseries
+ - \ref geoid
  - \ref geodesic
    - \ref testgeod
    - \ref geodseries
+ - \ref transversemercator
+   - \ref testmerc
+   - \ref tmseries
  - \ref geocentric
- - \ref geoid
-   - \ref geoidinst
-   - \ref geoidformat
-   - \ref geoidinterp
-   - \ref geoidcache
-   - \ref testgeoid
- - \ref utilities
  - \ref old
 
 <center>
@@ -79,7 +77,7 @@ Forward to \ref intro.
 \page intro Introduction
 
 <center>
-Forward to \ref organization.  Up to \ref contents.
+Forward to \ref install.  Up to \ref contents.
 </center>
 
 %GeographicLib offers a C++ interfaces to a small (but important!) set
@@ -121,67 +119,410 @@ the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 4.4 under Linux, with g++
 4.2 under Mac OS X, and with MS Visual Studio 2008.
 
+The section \ref geodesic documents the method of solving the geodesic
+problem.
+
 The section \ref transversemercator documents various properties of this
 projection.
-
-The section \ref geodesic documents (still rather incompletely) the
-method of solving the geodesic problem.
 
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
 report any you find to <charles@karney.com>.
 
 <center>
-Forward to \ref start.  Up to \ref contents.
+Forward to \ref install.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page start Getting Started
+\page install Installing %GeographicLib
 
 <center>
-Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
+Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
-The following steps will get you started with %GeographicLib:
- - Download the
-   <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">
-   source</a>.
- - Unpack the tar file somewhere convenient with, e.g.,
-   - tar xfpvz geographiclib-1.8.tar.gz
-   .
-   This will create a geographiclib-1.8 directory.  (Alternatively,
-   download and unpack the zip file.)
- - Change to the geographiclib-1.8 directory
-   - cd geographiclib-1.8
- - Create the library and the utility programs
-   - make all
-   .
-   The compiled utility programs are in the tools directory.
- - windows/GeographicLib-vc9.sln (resp. vc8) is MS Visual Studio 2008
-   (resp. 2005) solution file which compiles the library and the utility
-   programs under Windows.  (Visual Studio 2010 is also supported with a
-   vc10 suffix.)
- - Try out <a href="GeoConvert.1.html">GeoConvert</a> (for help, type cd
-   tools; ./GeoConvert --help)
-   - echo 33.3 44.4 | ./GeoConvert -m -p -3
-   - echo 38SMB4484 | ./GeoConvert -d
- - Similarly, try out <a href="Geod.1.html">Geod</a>,
-   <a href="Planimeter.1.html">Planimeter</a>,
-   <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>,
-   <a href="CartConvert.1.html">CartConvert</a>, and
-   <a href="EquidistantTest.1.html">EquidistantTest</a>.
-   <a href="GeoidEval.1.html">GeoidEval</a> requires the installation
-   of geoid data, see \ref geoidinst.
+%GeographicLib has been developed under Linux with the g++ compiler (versions
+4.0 and later) and under Windows with Visual Studio 2005, 2008, and
+2010.  Earlier versions were tested also under Darwin and Solaris.  It
+should compile on a wide range of other systems.  First
+download either
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">
+GeographicLib-1.9.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9.zip/download">
+GeographicLib-1.9.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9-win32.exe/download">
+GeographicLib-1.9-win32.exe</a> for binary installation under Windows).
+Then pick one of the first five options below:
+- \ref cmake.  This is the preferred installation method as it will work
+  on the widest range of platforms.  However it requires that you have
+  <a href="http://www.cmake.org">cmake</a> installed.
+- \ref autoconf.  This method works for most Unix-like systems,
+  including Linux and Mac OS X.
+- \ref gnu.  This is a simple installation method that works with g++
+  GNU make on Linux and many Unix platforms.
+- \ref windows.  This is a simple installation method that works with
+  Visual Studio 2005 and 2008 under Windows.  Use cmake if you use
+  Visual Studio 2010.
+- \ref windowsbin.  Use this installation method if you only need to the
+  the utility programs supplied with %GeographicLib.  (This method also
+  installs the header files and the static library for use by Visual
+  Studio 2010.)
+- \ref matlab.  Some of the functionality is exposed to Matlab and
+  Octave.  This requires compiling interface routines in Matlab or
+  Octave.
+- \ref maintainer.  This describes addition tasks of interest only to
+  the maintainers of this code.
+.
+This section documents only how to install the software.  If you wish to
+use %GeographicLib to evaluate  geoid heights, then you must also
+install geoid data files.  See \ref geoidinst for instructions.
+
+\section cmake Installation with cmake
+
+This is the recommended method of installation; however it requires that
+<a href="http://www.cmake.org">cmake</a> be installed on your system.
+This permits %GeographicLib to be built either as a shared or a static
+library on a wide variety of systems.  cmake can also determine the
+capababilities of your system and adjust the compilation of the
+libraries and examples appropriately.
+
+cmake is available for most computer platforms.  On Linux systems cmake
+will typically one of the standard packages and can be installed by a
+command like
+  \verbatim
+  yum install cmake \endverbatim
+(executed as root).  On other systems, download a binary
+installer from http://www.cmake.org click on download, and save and run
+the appropriate installer.  Run the cmake command with no argumens to
+get help.  Other useful tools are ccmake and cmake-gui which offer
+curses and graphical interfaces to cmake.  Building under cmake depends
+on whether it is targeting an IDE (interactive development environment)
+or generating Unix-style makefiles.  The instructions below have been
+tested with makefiles and g++ on Linux and with the Visual Studio IDE on
+Windows.
+
+Here are the steps to compile and install %GeographicLib:
+- Unpack the source, running one of \verbatim
+  tar xfpz GeographicLib-1.9.tar.gz
+  unzip -q GeographicLib-1.9.zip \endverbatim
+  then enter the directory created \verbatim
+  cd GeographicLib-1.9 \endverbatim
+- Create a separate build directory and enter it, for example, \verbatim
+  mkdir BUILD
+  cd BUILD\endverbatim
+- Run cmake, pointing it to the parent directory (..).  On Linux,
+  Unix, and MaxOSX systems, the command is \verbatim
+  cmake .. \endverbatim
+  For Windows, the command is typically one of \verbatim
+  cmake -G "Visual Studio 10" ..
+  cmake -G "Visual Studio 9 2008" ..
+  cmake -G "Visual Studio 8 2005" .. \endverbatim
+  If you need to rerun cmake, use \verbatim
+  cmake . \endverbatim
+  possibly including some options via <code>-D</code> (see the next step).
+- cmake allows you to configure how %GeographicLib is built and installed by
+  supplying options, for example \verbatim
+  cmake -D CMAKE_INSTALL_PREFIX=/tmp/geographic . \endverbatim
+  The options you might need to change are
+  - <code>CMAKE_INSTALL_PREFIX</code> (default: /usr/local
+    on non-Windows systems, C:/Program Files/GeographicLib on Windows
+    systems) specifies where the library will be installed.  If you just
+    want to try the library to see if it suits your needs, pick
+    <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic, for example, and set
+    <code>GEOGRAPHIC_SHARED_LIB</code>=OFF.
+  - <code>GEOGRAPHICLIB_GEOID_PATH</code> (default:
+    /usr/local/share/GeographicLib/geoids for non-Windows systems,
+    C:/Documents and Settings/All Users/Application
+    Data/GeographicLib/geoids for Windows systems) specifies the default
+    location for the geoid datasets for use by GeographicLib::Geoid.
+    See \ref geoidinst for more information.
+  - <code>GEOGRAPHIC_SHARED_LIB</code> (default: ON for
+    non-Windows systems, OFF for Windows systems)
+    determines whether a shared or static library is built.  The default
+    is OFF for Windows because there's no standard place to install the
+    dlls.  In addition, on Windows, the tests only work with static
+    libraries.
+  - <code>CMAKE_BUILD_TYPE</code> (default: Release).  This
+    flags only affects non-IDE compile environments (like make + g++).
+    The default is actually blank, but this is treated as
+    Release.  Choose one of
+    \verbatim
+  Debug
+  Release
+  RelWithDebInfo
+  MinSizeRel
+\endverbatim
+    (With IDE compile environments, you get to select the build type in
+    the IDE.)
+  - <code>MAINTAINER</code> (default: ON for non-Windows environments
+    provided doxygen, pod2man, and pod2html are found).  This affects
+    whether the targets for creating source packages are activated.
+    See \ref maintainer for details.
+- Build and install the software.  In non-IDE environments, run
+  \verbatim
+  make         # compile the library and the examples
+  make test    # run some tests
+  make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
+\endverbatim
+  On IDE environments, run your IDE (e.g., Visual Studio), load
+  GeographicLib.sln, pick the build type (e.g., Release), and select "Build
+  Solution".  If this succeeds, select "RUN_TESTS" to build.  Finally,
+  select "INSTALL" to build.
+- The headers, library, and utilities are installed in the
+  include/GeographicLib, lib, and bin directories under
+  <code>CMAKE_INSTALL_PREFIX</code>.  (dll dynamic libraries are
+  installed in bin.)  For documentation, open
+  <a href="index.html">
+  share/doc/GeographicLib/html/index.html</a> in a web browser.
+
+\section autoconf Installation using the autoconfigure tools
+
+The method works on most Unix-like systems including Linux and Mac OS X.
+Here are the steps to compile and install %GeographicLib:
+- Unpack the source, running \verbatim
+  tar xfpz GeographicLib-1.9.tar.gz \endverbatim
+  then enter the directory created \verbatim
+  cd GeographicLib-1.9 \endverbatim
+- Configure the software with \verbatim
+  ./configure \endverbatim
+- By default %GeographlicLib will be installed under /usr/local.
+  You can change this with, for example \verbatim
+  ./configure --prefix=/tmp/geographic \endverbatim
+- Compile and install the software with \verbatim
+  make
+  make install \endverbatim
+- The headers, library, and utilities are installed in the
+  include/GeographicLib, lib, and bin directories under
+  <code>prefix</code>.  For documentation, open
+  <a href="index.html">
+  share/doc/GeographicLib/html/index.html</a> in a web browser.
+
+\section gnu Installation with GNU compiler and Make
+
+This method requires the standard GNU suite of tools, in particular make
+and g++.  This builds a static library and the examples.
+
+Here are the steps to compile and install %GeographicLib:
+- Unpack the source, running \verbatim
+  tar xfpz GeographicLib-1.9.tar.gz \endverbatim
+  then enter the directory created \verbatim
+  cd GeographicLib-1.9 \endverbatim
+- Build and install the software: \verbatim
+  make             # compile the library and the examples
+  make install     # as root
+  make install-doc # as root \endverbatim
+  The installation is in directories under /usr/local.  You
+  can specify a different installation directory with, for example,
+  \verbatim
+  make PREFIX=/tmp/geographic install \endverbatim
+- The headers, library, and utilities are installed in the
+  include/GeographicLib, lib, and bin directories under
+  <code>PREFIX</code>.  For documentation, open
+  <a href="index.html">
+  share/doc/GeographicLib/html/index.html</a> in a web browser.
+
+\section windows Installation on Windows
+
+This method requires Visual Studio 2008 (or 2005).  This builds a static
+library and the examples.  If you only have Visual Studio 2010, use
+cmake to create the necessary solution file.  %GeographicLib does not
+compile correctly with Visual Studio 2003.
+- Unpack the source, running \verbatim
+  unzip -q GeographicLib-1.9.zip \endverbatim
+- Open GeographicLib-1.9/windows/GeographicLib-vc9.sln in Visual Studio
+  2008 (for Visual Studio 2005, replace -vc9 by -vc8).
+- Pick the build type (e.g., Release), and select "Build
+  Solution".
+- The library and the compiled examples are in the
+  windows/Release.
+- Copy the library windows/Release/Geographic.lib and the
+  headers in include/GeographicLib somewhere convenient.  The
+  headers should remain in a directory named %GeographicLib.
+  For documentation, open
+  <a href="index.html">doc/html/index.html</a> in a web
+  browser.
+
+\section windowsbin Using a binary installer for Windows.
+
+Download and run
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9-win32.exe/download">
+GeographicLib-1.9-win32.exe</a>:
+ - read the LGPL license agreement,
+ - select whether you want your PATH modified,
+ - select the destination folder, by default
+   C:/Program Files/GeographicLib-1.9.
+ - select the start menu folder,
+ - and install.
+ .
+The start menu will now include links to the documentation for the
+library and for the utilities (and a link for uninstalling the library).
+If you ask for your PATH to be modified, it will include
+C:/Program Files/GeographicLib-1.9/bin where the utilities are
+installed.  This installer was built using Visual Studio 10 (2010) in
+Release mode.
+
+\section matlab Compiling the Matlab interface
+
+The matlab directory contains some rudimentary interface code so that
+%GeographicLib can be accessed from Matlab (or Octave).  This requires
+that you have built %GeographicLib with a compiler known to Matlab.  The
+compiler can be specified by \code
+  mex -setup \endcode
+All the interface functions can be compiled with by invoking \code
+  geographiclibinterface \endcode
+from within Matlab.  This functionality has not been extensively
+tested.  The available functions are:
+ - geodesicdirect: solve direct geodesic problem
+ - geodesicinverse: solve inverse geodesic problem
+ - geodesicline: compute points along a geodesic
+ - utmupsforward: convert geographic coordinates to UTM/UPS
+ - utmupsreverse: convert UTM/UPS coordinates to geographic
+ - mgrsforward: convert UTM/UPS coordinates to MGRS
+ - mgrsreverse: convert UTM/UPS coordinates to MGRS
+ - geoidheight: compute geoid height
+ .
+These routines just offer a simple interface to the corresponding C++
+class.  Use the help function to get documentation, e.g., \code
+  help geodesicdirect \endcode
+Other useful functions, e.g., to convert from geographic
+coordinates to MGRS can easily be written with Matlab code.
+
+Note that geoidheight, when used with Matlab 2008a and compiled with
+Visual Studio 2008 causes Matlab to crash.  (The problem does not occur
+with Visual Studio 2005.)
+
+\section maintainer Maintainer tasks
+
+Check the code out of subversion with \verbatim
+  svn co https://geographiclib.svn.sourceforge.net/svnroot/geographiclib/trunk/GeographicLib
+\endverbatim
+The html version of the documentation and the formatted man pages not
+checked into subversion.  However provided you are on a Unix-like system
+with doxygen, pod2man, and pod2html installed, then the
+<code>MAINTAINER</code> configuration variable in cmake will be
+set to ON.  In this case, the html documentation and formatted man pages
+will be created when running \verbatim
+  make \endverbatim
+following the cmake configuration.  In addition \verbatim
+  make dist \endverbatim
+will copy the documentation back into the source tree and package the
+resulting source tree for distribution as \verbatim
+  GeographicLib-1.9.tar.gz
+  GeographicLib-1.9.zip \endverbatim
+Finally, \verbatim
+  make package \endverbatim
+or building PACKAGE in Visual Studio will create a binary installer for
+%GeographicLib.  For Windows, this requires in the installation of
+<a href="http://nsis.sourceforge.net">NSIS</a>.
+
+<center>
+Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page start Getting started
+
+<center>
+Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
+</center>
+
+Much (but not all!) of the useful functionality of %GeographicLib is
+available via simple command line utilities.  See \ref utilities for
+documentation on these.
+
+In order to use %GeographicLib from C++ code, you will need to
+- Include the header files for the %GeographicLib classes in your code.
+  E.g., \code
+  #include <GeographicLib/LambertConformalConic.hpp> \endcode
+- Include the GeographicLib:: namespace prefix to the %GeographicLib classes,
+  or include \code
+  using namespace GeographicLib; \endcode
+  in your code.
+- Tell the compiler where to find the header files.  With g++ and with
+  /usr/local specified as the installation directory,
+  this is accomplished with \verbatim
+  g++ -c -g -O3 -I/usr/local/include testprogram.cpp
+\endverbatim
+  With Visual Studio, specify the include directory in the IDE via,
+  e.g.,
+  \verbatim
+C/C++ -> General -> Additional Include Directories = C:\Program Files\GeographicLib\include
+\endverbatim
+- Tell the linker the name, Geographic, and location of the
+  library.  Using g++ as the linker, you would use \verbatim
+  g++ -g -o testprogram -L/usr/local/lib -lGeographic testprogram.o
+\endverbatim
+  With Visual Studio, you supply this information in the IDE via,
+  e.g.,
+  \verbatim
+Linker -> Input -> Additional Dependencies = Geographic.lib
+Linker -> General -> Additional Library DIrectories = C:\Program Files\GeographicLib\include
+\endverbatim
+  Note that the library name is Geographic and not %GeographicLib.
+- Tell the runtime environment where to find the shared library
+  (assuming you compiled %GeographicLib as a shared library).  With g++,
+  this is accomplished by modifying the link line above to read. \verbatim
+  g++ -g -o testprogram -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic testprogram.o
+\endverbatim
+  On Windows, you need to ensure that Geographic.dll is in
+  the same directory as your executable or else include the directory
+  containing the dll in your <code>PATH</code>.
+- For Windows, ensure that you build the library with the same version
+  of the compiler and you use for your code.  In addition, you have
+  to build a separate debug version of the library when you can
+  compiling your code in debug mode.
+
+Here is a very simple test code, which convert the point 38.95N 75.17W
+(Philadelphia) to the Pennsylvania South coordinate system:
+\code
+#include <iostream>
+#include <iomanip>
+
+#include <GeographicLib/Constants.hpp>
+#include <GeographicLib/DMS.hpp>
+#include <GeographicLib/LambertConformalConic.hpp>
+
+int main() {
+  using namespace GeographicLib;
+  double 
+    // These are the constants for Pennsylvania South, EPSG:3364
+    // http://www.spatialreference.org/ref/epsg/3364/
+    a = Constants::WGS84_a(),   // major radius
+    r = 298.257222101,          // inverse flattening (GRS80)
+    lat1 = DMS::Decode(40,58),  // standard parallel 1
+    lat2 = DMS::Decode(39,56),  // standard parallel 2
+    k1 = 1,                     // scale on std parallels
+    lat0 =  DMS::Decode(39,20), // latitude of origin
+    lon0 = -DMS::Decode(77,45), // longitude of origin
+    fe = 600000,                // false easting
+    fn = 0;                     // false northing
+  LambertConformalConic PASouth(a, r, lat1, lat2, k1);
+  double x0, y0;
+  PASouth.Forward(lon0, lat0, lon0, x0, y0); // Transform origin point
+  x0 -= fe; y0 -= fn;           // Combine result with false origin
+
+  double lat = 39.95, lon = -75.17;    // Philadelphia
+  double x, y;
+  PASouth.Forward(lon0, lat, lon, x, y);
+  x -= x0; y -= y0;             // Philadelphia in PA South coordinates
+
+  std::cout << std::fixed << std::setprecision(3)
+            << x << " " << y << "\n";
+  return 0;
+}
+\endcode
+If you copy this code to testprogram.cpp, and compile, link, and run it
+according to the instructions above, it should print out \verbatim
+  820444.831 71691.798
+\endverbatim
+
+The next steps are:
+ - Learn about and run the \ref utilities.
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
-   on the library.
- - Read the section, \ref transversemercator, for more information on
-   this projection.
- - If you use the library frequently, install it, e.g., to \$(PREFIX) =
-   /usr/local with
-   - make PREFIX=/usr/local install install-doc
- - There is an interface for some %GeographicLib classes to Matlab and
-   Octave.  The geographiclibinterface function in the matlab
-   directory compiles the interface routines.
+   on the classes in the library.
+ - Look at the source code for the utilites in the tools directory for
+   more examples of using %GeographicLib from C++ code, e.g.,
+   GeodesicProj.cpp is a program to performing various geodesic
+   projections.
 
 Here's a list of some of the abbreviations used here with links to the
 corresponding Wikipedia articles:
@@ -197,18 +538,85 @@ corresponding Wikipedia articles:
    EGM</a>, Earth Gravity Model.
 
 <center>
-Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
+Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page utilities Utility Programs
+
+<center>
+Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
+</center>
+
+Various utility programs are provided with %GeographicLib.  These should
+be installed in a directory included in your PATH (e.g.,
+/usr/local/bin).  These programs are wrapper programs that invoke
+the underlying functionality provided by the library.
+
+The utlilities are
+ - <a href="GeoConvert.1.html">
+   <b>GeoConvert</b></a>: convert geographic coordinates using
+   GeographicLib::GeoCoords.
+ - <a href="Geod.1.html">
+   <b>Geod</b></a>: perform geodesic calculations using
+   GeographicLib::Geodesic and GeographicLib::GeodesicLine.
+ - <a href="Planimeter.1.html">
+   <b>Planimeter</b></a>: compute the area of geodesic polygons using
+   the area facilities provided by GeographicLib::Geodesic.
+ - <a href="TransverseMercatorProj.1.html">
+   <b>TransverseMercatorProj</b></a>: convert between geographic
+   and transverse Mercator.  This is for testing
+   GeographicLib::TransverseMercatorExact and
+   GeographicLib::TransverseMercator.
+ - <a href="CartConvert.1.html">
+   <b>CartConvert</b></a>: convert geodetic coordinates to geocentric or
+   local cartesian using GeographicLib::Geocentric and
+   GeographicLib::LocalCartesian.
+ - <a href="GeodesicProj.1.html">
+   <b>GeodesicProj</b></a>: perform projections based on geodesics
+   using GeographicLib::AzimuthalEquidistant, GeographicLib::Gnomonic,
+   and GeographicLib::CassiniSoldner.
+ - <a href="ConicProj.1.html">
+   <b>ConicProj</b></a>: perform conic projections using
+   GeographicLib::LambertConformalConic and
+   GeographicLib::AlbersEqualArea.
+ - <a href="GeoidEval.1.html">
+   <b>GeoidEval</b></a>: look up geoid heights using
+   GeographicLib::Geoid.
+ .
+The documentation for these utilities is in the form of man pages.  This
+documentation can be accessed by clicking on the utility name in the
+list above, running the man command on Unix-like systems, or by invoking
+the utility with the --help option.  A brief summary of usage is given
+by invoking the utility with the -h option.  The version of the utility
+is given by the --version option.
+
+The utilities all accept data on standard input, transform it in some
+way, and print the results on standard output.  This makes the utilities
+easy to use within scripts to transform tabular data; however they can
+also be used interactively, often with the input supplied via a pipe,
+e.g.,
+ - echo 38SMB4488 | GeoConvert -d
+
+Online versions of three of these utilities are provided:
+ - <a href="http://geographiclib.sf.net/cgi-bin/GeoConvert">GeoConvert</a>
+ - <a href="http://geographiclib.sf.net/cgi-bin/Geod">Geod</a>
+ - <a href="http://geographiclib.sf.net/cgi-bin/GeoidEval">GeoidEval</a>
+
+<center>
+Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page organization Code organization
 
 <center>
-Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
+Back to \ref utilities.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
 Here is a brief description of the relationship between the various
-components of %GeographicLib.
+components of %GeographicLib.  All of these are defined in the
+GeographicLib namespace.
 
 GeographicLib::TransverseMercator, GeographicLib::PolarStereographic,
 GeographicLib::LambertConformalConic, and GeographicLib::AlbersEqualArea
@@ -217,8 +625,8 @@ specify the ellipsoid and the forward and reverse projections are
 implemented as const member functions.  TransverseMercator uses
 Kr&uuml;ger's series which have been extended to sixth order in the
 square of the eccentricity.  PolarStereographic, LambertConformalConic,
-and AlbersEqualArea use the exact formulas for the projections (from
-Snyder).
+and AlbersEqualArea use the exact formulas for the projections (e.g.,
+from Snyder).
 
 GeographicLib::TransverseMercator::UTM and
 GeographicLib::PolarStereographic::UPS are const static instantiations
@@ -248,14 +656,13 @@ GeographicLib::GeoCoords holds a single geographic location which may be
 specified as latitude and longitude, UTM or UPS, or MGRS.  Member
 functions are provided to convert between coordinate systems and to
 provide formatted representations of them.
-
 <a href="GeoConvert.1.html">GeoConvert</a> is a simple command line
 utility to provide access to the GeoCoords class.
 
 GeographicLib::TransverseMercatorExact is a drop in replacement for
 TransverseMercator which uses the exact formulas, based on elliptic
 functions, for the projection as given by Lee.
-<a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a> is a
+<a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a> is a
 simple command line utility to test to the TransverseMercator and
 TransverseMercatorExact.
 
@@ -272,7 +679,7 @@ point.  <a href="Geod.1.html">Geod</a> is a simple command line utility
 to perform geodesic calculations.  GeographicLib::AzimuthalEquidistant,
 GeographicLib::CassiniSoldner, and GeographicLib::Gnomonic are
 projections based on the Geodesic class.
-<a href="EquidistantTest.1.html">EquidistantTest</a> is a command
+<a href="GeodesicProj.1.html">GeodesicProj</a> is a command
 line utility to exercise these projections.
 
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
@@ -291,37 +698,12 @@ installation of data files for the various geoid models; see \ref
 geoidinst for details.
 
 GeographicLib::Constants, GeographicLib::Math, GeographicLib::DMS, and
-GeographicLib::EllipticFunction are utility classes which are used
-internally by the library.  One important definition is
-GeographicLib::Math::real_t which is the type used for real numbers.
-This allows the library to be easily switched to using floats, doubles,
-or long doubles.  However all the testing has been with real_t set to
-double and the library should be installed in this way.
-
-In order to avoid name clashes, all there classes are in the
-GeographicLib namespace.  The header files are included with the
-GeographicLib/ directory prefix.  If compiling within the
-%GeographicLib/src or %GeographicLib/tools directories, "../include"
-should be included in the header search path (e.g., with -I../include).
-The cpp files implementing the classes include "using namespace std;",
-however, the headers files and the utility programs do not.
-
-There's an "install" target in the Makefile which installs the library
-components into \$(PREFIX)/lib, \$(PREFIX)/include/GeographicLib,
-\$(PREFIX)/bin, \$(PREFIX)/share/GeographicLib/doc.  Once installed, the
-library can be used by setting
-  - INCLUDEPATH = \$(PREFIX)/include
-  - LIBPATH = \$(PREFIX)/lib
-  .
-in tools/Makefile.
-
-The following definitions can be used in your Makefile when using
-%GeographicLib, once it has been installed:
-  - PREFIX = /usr/local
-  - CPPFLAGS = -I\$(PREFIX)/lib
-  - LDLIBS = -Wl,"-rpath=$(PREFIX)/lib" -L\$(PREFIX)/lib -lGeographic
-  - CC = g++ -g
-  - CXXFLAGS = -g -Wall -O3
+GeographicLib::EllipticFunction, GeographicLib::Accumulator are utility
+classes which are used internally by the library.  One important
+definition is GeographicLib::Math::real which is the type used for
+real numbers.  This allows the library to be easily switched to using
+floats, doubles, or long doubles.  However all the testing has been with
+real set to double and the library should be installed in this way.
 
 In general, the constructors for the classes in %GeographicLib check
 their arguments and throw GeographicLib::GeographicErr exceptions with a
@@ -343,258 +725,491 @@ designation by UTMUPS.  "INVALID" is the corresponding invalid MGRS
 string.  NaNs allow the projection of polylines which are separated by
 NaNs; in this format they can be easily plotted in Matlab.
 
+A note about portability.  For the most part, the code uses standard C++
+and should be able to be deployed on any system with a modern C++
+compiler.  System dependencies come into
+ - GeographicLib::Math -- GeographicLib needs to define functions such
+   as atanh for systems that lack them.  The system dependence will
+   disappear with the adoption of C++0x because the needed functions are
+   part of that standard.
+ - use of long double -- the type is used only for testing.  On systems
+   which lack this data type the cmake and autoconf configuration
+   methods should detect its absence and omit the code that depends on
+   it.
+ - GeographicLib::Geoid -- this class uses a system-dependent default
+   path for looking up geoid datasets.  It also relies on getenv to find
+   the value of the environment variables
+
 <center>
-Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
+Back to \ref utilities.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page transversemercator Transverse Mercator Projection
+\page geoid Geoid height
 
 <center>
 Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
-GeographicLib::TransverseMercator and
-GeographicLib::TransverseMercatorExact provide accurate implelmentations
-of the transverse Mercator projection.  The
- <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>
-utility provides an interface to these classes.
+The gravitational equipotential surface approximately coinciding with
+mean sea level is called the geoid.  The GeographicLib::Geoid class and
+the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height
+of the geoid above the WGS84 ellipsoid.  This can be used to convert
+heights above mean sea level to heights above the WGS84 ellipoid.
+Because the normal to the ellipsoid differs from the normal to the geoid
+(the direction of a plumb line) there is a slight ambiguity in the
+measurement of heights; however for heights up to 10km this ambiguity is
+only 1mm.
 
-References
- - L. Kr&uuml;ger, <a
-   href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
-   Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
-   the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
-   New Series 52, 172 pp. (1912).
- - L. P. Lee,
-   Conformal Projections Based on Elliptic Functions,
-   (B. V. Gutsell, Toronto, 1976), 128pp.,
-   ISBN: 0919870163
-   (Also appeared as:
-   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
-   Part V, pp. 67&ndash;101,
-   <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
-   Projections Based On Jacobian Elliptic Functions</a>.
- - C. F. F. Karney,
-   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
-   Transverse Mercator with an accuracy of a few nanometers,</a>
-   J. Geodesy (2011);
-   preprint
-   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
-   resource page
-   <a href="http://geographiclib.sf.net/tm.html">tm.html</a>.
+The geoid is usually approximated by an "earth gravity model" (EGM).
+The models published by the NGA are:
+- EGM84:
+  http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
+- EGM96:
+  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+- EGM2008:
+  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+.
+GeographicLib::Geoid offers a uniform way to handle all 3 geoids at a
+variety of grid resolutions.  (In contrast, the software tools that NGA
+offers are different for each geoid, and the interpolation programs are
+different for each grid resolution.  In addition these tools are written
+in Fortran with is nowadays difficult to integrate with other software.)
+
+Unlike other components of %GeographicLib, there is a appreciable error
+in the results obtained (at best, the RMS error is 1mm).  However the
+class provides methods to report the maximum and RMS errors in the
+results.  The class also returns the gradient of the geoid.  This can be
+used to estimate the direction of a plumb line relative to the WGS84
+ellipsoid.
+
+Go to
+ - \ref geoidinst
+ - \ref geoidformat
+ - \ref geoidinterp
+ - \ref geoidcache
+ - \ref testgeoid
+
+\section geoidinst Installing the geoid datasets
+
+The geoid heights are computed using interpolation into a rectangular
+grid.  The grids are read from data files which have been are computed
+using the NGA synthesis programs in the case of the EGM84 and EGM96
+models and using the NGA binary gridded data files in the case of
+EGM2008.  These data files are available for download:
+
+<center>
+<table>
+<caption>Available geoid data files</caption>
+<tr>
+ <th rowspan="2">name         <th rowspan="2">geoid    <th rowspan="2">grid
+ <th rowspan="2">size\n(MB)
+ <th colspan="3"><center>Download Links (size, MB)</center></th>
+<tr>
+ <th>tar file</th>
+ <th>Windows\n installer</th>
+ <th>zip file</th>
+<tr>
+ <td>egm84-30
+ <td>EGM84
+ <td><center>30'</center>
+ <td><center>0.6</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">
+ link</a> (0.5)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.exe/download">
+ link</a> (0.8)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">
+ link</a> (0.5)</center>
+<tr>
+ <td>egm84-15
+ <td>EGM84
+ <td><center>15'</center>
+ <td><center>2.1</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">
+ link</a> (1.5)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.exe/download">
+ link</a> (1.9)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">
+ link</a> (2.0)</center>
+<tr>
+ <td>egm96-15
+ <td>EGM96
+ <td><center>15'</center>
+ <td><center>2.1</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">
+ link</a> (1.5)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.exe/download">
+ link</a> (1.9)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">
+ link</a> (2.0)</center>
+<tr>
+ <td>egm96-5
+ <td>EGM96
+ <td><center>5'</center>
+ <td><center> 19</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">
+ link</a> (11)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.exe/download">
+ link</a> (11)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">
+ link</a> (17)</center>
+<tr>
+ <td>egm2008-5
+ <td>EGM2008
+ <td><center>5'</center>
+ <td><center> 19</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">
+ link</a> (11)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.exe/download">
+ link</a> (11)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">
+ link</a> (17)</center>
+<tr>
+ <td>egm2008-2_5
+ <td>EGM2008
+ <td><center>2.5'</center>
+ <td><center> 75</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">
+ link</a> (35)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.exe/download">
+ link</a> (33)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">
+ link</a> (65)</center>
+<tr>
+ <td>egm2008-1
+ <td>EGM2008
+ <td><center>1'</center>
+ <td><center>470</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">
+ link</a> (170)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.exe/download">
+ link</a> (130)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">
+ link</a> (390)</center>
+</table>
+</center>
+The "size" column is the size of the uncompressed data and it also
+gives the memory requirements for caching the entire dataset using the
+GeographicLib::Geoid::CacheAll method.
+At a minimum you should install egm96-5 and either egm2008-1 or
+egm2008-2_5.  Many applications use the EGM96 geoid, however the use of
+EGM2008 is growing. (EGM84 is rarely used now.)
+
+For Linux and Unix systems, %GeographicLib provides a shell script
+geographiclib-get-geoids (typically installed in /usr/local/sbin) which
+automates the process of downloading and installing the geoid data.  For
+example
+\verbatim
+   geographiclib-get-geoids best # to install egm84-15, egm96-5, egm2008-1
+   geographiclib-get-geoids -h   # for help
+\endverbatim
+This script should be run as a user with write access to the
+installation directory, which is typically
+/usr/local/share/GeographicLib (this can be overridden with the -p
+flag), and the data will then be placed in the "geoids" subdirectory.
+
+Windows users should download and run the Windows installers.  These
+will prompt for an installation directory with the default being
+\verbatim
+   C:/Documents and Settings/All Users/Application Data/GeographicLib
+\endverbatim
+(which you probably should not change) and the data is installed in the
+"geoids" sub-directory.
+
+Otherwise download \e either the tar.bz2 file \e or the zip file (they
+have the same contents).  If possible use the tar.bz2 files, since these
+are compressed about 2 times better than the zip file.  To unpack these,
+run, for example
+\verbatim
+   mkdir -p /usr/local/share/GeographicLib
+   tar xofjC egm96-5.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC egm2008-2_5.tar.bz2 /usr/local/share/GeographicLib
+   etc.
+\endverbatim
+and, again, the data will be placed in the "geoids" subdirectory.
+
+However you install the geoid data, all the datasets should
+be installed in the same directory.  GeographicLib::Geoid and
+<a href="GeoidEval.1.html">GeoidEval</a> uses a compile time default to
+locate the datasets.  This is
+- /usr/local/share/GeographicLib/geoids, for non-Windows systems
+- C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids,
+  for Windows systems
+.
+consistent with the examples above.  This may be overridden at run-time
+by defining the GEOID_PATH environment variable.  Finally, the path may
+be set using the optional second argument to the
+GeographicLib::Geoid constructor or with the "-d" flag to 
+<a href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to
+<a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid
+path for that utility.  The "-v" flag causes GeoidEval to report the
+full path name of the data file it uses.
+
+\section geoidformat The format of the geoid data files
+
+The gridded data used by the GeographicLib::Geoid class is stored in
+16-bit PGM files.  Thus the data for egm96-5 might be stored in the file
+- /usr/local/share/GeographicLib/geoids/egm96-5.pgm
+.
+PGM simple graphic format with the following properties
+- it is well documented
+  <a href="http://netpbm.sf.net/doc/pgm.html">here</a>;
+- there are no separate "little-endian" and "big-endian" versions;
+- it uses 1 or 2 bytes per pixel;
+- pixels can be randomly accessed;
+- comments can be added to the file header;
+- it is sufficiently simple that it can be easily read without using the
+  <a href="http://netpbm.sf.net/doc/libnetpbm.html">libnetpbm</a>
+  library (and thus we avoid adding a software dependency to
+  %GeographicLib).
+.
+The major drawback of this format is that since there are only 65535
+possible pixel values, the height must be quantized to 3mm.  However,
+the resulting quantization error (up to 1.5mm) is typically smaller than
+the linear interpolation errors.  The comments in the header for
+egm96-5 are
+\verbatim
+   # Geoid file in PGM format for the GeographicLib::Geoid class
+   # Description WGS84 EGM96, 5-minute grid
+   # URL http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+   # DateTime 2009-08-29 18:45:03
+   # MaxBilinearError 0.140
+   # RMSBilinearError 0.005
+   # MaxCubicError 0.003
+   # RMSCubicError 0.001
+   # Offset -108
+   # Scale 0.003
+   # Origin 90N 0E
+   # AREA_OR_POINT Point
+   # Vertical_Datum WGS84
+\endverbatim
+Of these lines, the Scale and Offset lines are required and define the
+conversion from pixel value to height (in meters) using \e height =
+\e offset + \e scale \e pixel.  The Geoid constructor also reads the
+Description, DataTime, and error lines (if present) and stores the
+resulting data so that it can be returned by
+GeographicLib::Geoid::Description, GeographicLib::Geoid::DateTime,
+GeographicLib::Geoid::MaxError, and GeographicLib::Geoid::RMSError
+methods.  The other lines serve as additional documentation but are not
+used by this class.  Accompanying egm96-5.pgm (and similarly with the
+other geoid data files) are two files egm96-5.wld and
+egm96-5.pgm.aux.xml.  The first is an ESRI "world" file and the second
+supplies complete projection metadata for use by
+<a href="http://www.gdal.org">GDAL</a>.  Neither of these files is read
+by GeographicLib::Geoid.
+
+You can use gdal_translate to convert the data files to a standard
+GeoTiff, e.g., with
+\verbatim
+   gdal_translate -ot Float32 -scale 0 65000 -108 87 egm96-5.pgm egm96-5.tif
+\endverbatim
+The arguments to -scale here are specific to the Offset and Scale
+parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
+can check these by running <a href="GeoidEval.1.html">GeoidEval</a> with
+the "-v" option.
+
+Finally, here is a sample script which uses GDAL to create a 1-degree
+squared grid of geoid heights at 3&quot; resolution (matching DTED1) by
+bilinear interpolation.
+\verbatim
+   #! /bin/sh
+   lat=37
+   lon=067
+   res=3                           # resolution in seconds
+   TEMP=`mktemp junkXXXXXXXXXX`    # temporary file for GDAL
+   gdalwarp -q -te `echo $lon $lat $res | awk '{
+       lon = $1; lat = $2; res = $3;
+       printf "%.14f %.14f %.14f %.14f",
+           lon  -0.5*res/3600, lat  -0.5*res/3600,
+           lon+1+0.5*res/3600, lat+1+0.5*res/3600;
+   }'` -ts $((3600/res+1)) $((3600/res+1)) -r bilinear egm96-5.tif $TEMP
+   gdal_translate -quiet \
+       -mo AREA_OR_POINT=Point \
+       -mo Description="WGS84 EGM96, $res-second grid" \
+       -mo Vertical_Datum=WGS84 \
+       -mo Tie_Point_Location=pixel_corner \
+       $TEMP e$lon-n$lat.tif
+   rm -f $TEMP
+\endverbatim
+
+\section geoidinterp Interpolating the geoid data
+
+GeographicLib::Geoid evaluates the geoid height using bilinear or cubic
+interpolation.  The gradient of the geoid height is obtained by
+differentiating the interpolated height and referencing the result to
+distance on the WGS84 ellipsoid.
+
+The bilinear interpolation is based on the values at the 4 corners of
+the enclosing cell.  The interpolated height is a continuous function of
+position; however the gradient has discontinuities are cell boundaries.
+The quantization of the data files exacerbates the errors in the
+gradients.
+
+The cubic interpolation is a least-squares fit to the values on a
+12-point stencil with weights as follows:
+\verbatim
+   . 1 1 .
+   1 2 2 1
+   1 2 2 1
+   . 1 1 .
+\endverbatim
+The cubic is constrained to be independent of longitude when evaluating
+the height at one of the poles.  Cubic interpolation is considerably
+more accurate than bilinear interpolation; however, in this
+implementation there are small discontinuities in the heights are cell
+boundaries.  The over-constrained cubic fit slightly reduces the
+quantization errors on average.
+
+The algorithm for the least squares fit is taken from, F. H. Lesh,
+Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30
+(1959).  This algorithm is not part of GeographicLib::Geoid; instead it is
+implemented as
+<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
+code which is used to precompute the matrices to convert the function
+values on the stencil into the coefficients from the cubic polynomial.
+This code is included as a comment in Geoid.cpp.
+
+The interpolation methods are quick and give good accuracy.  Here is a
+summary of the combined quantization and interpolation errors for the
+heights.
+<center><table>
+<caption>Interpolation errors for geoid heights</caption>
+<tr>
+ <th rowspan="2">name
+ <th rowspan="2">geoid
+ <th rowspan="2">grid
+ <th colspan="2"><center>bilinear error</center></th>
+ <th colspan="2"><center>cubic error</center></th>
+<tr>
+ <th><center>max</center><th><center>rms</center>
+ <th><center>max</center><th><center>rms</center>
+<tr>
+ <td>egm84-30   <td>EGM84  <td><center>30'  </center>
+ <td><center>1.546 m</center><td><center>70 mm</center>
+ <td><center>0.274 m</center><td><center>14 mm</center>
+<tr>
+ <td>egm84-15   <td>EGM84  <td><center>15'  </center>
+ <td><center>0.413 m</center><td><center>18 mm</center>
+ <td><center>0.020 m</center><td><center> 1 mm</center>
+<tr>
+ <td>egm96-15   <td>EGM96  <td><center>15'  </center>
+ <td><center>1.152 m</center><td><center>40 mm</center>
+ <td><center>0.169 m</center><td><center> 7 mm</center>
+<tr>
+ <td>egm96-5    <td>EGM96  <td><center> 5'  </center>
+ <td><center>0.140 m</center><td><center> 5 mm</center>
+ <td><center>0.003 m</center><td><center> 1 mm</center>
+<tr>
+ <td>egm2008-5  <td>EGM2008<td><center> 5'  </center>
+ <td><center>0.478 m</center><td><center>12 mm</center>
+ <td><center>0.294 m</center><td><center> 5 mm</center>
+<tr>
+ <td>egm2008-2_5<td>EGM2008<td><center> 2.5'</center>
+ <td><center>0.135 m</center><td><center> 3 mm</center>
+ <td><center>0.031 m</center><td><center> 1 mm</center>
+<tr>
+ <td>egm2008-1  <td>EGM2008<td><center> 1'  </center>
+ <td><center>0.025 m</center><td><center> 1 mm</center>
+ <td><center>0.003 m</center><td><center> 1 mm</center>
+</table></center>
+The errors are with respect the the specific NGA earth gravity model
+(not to any "real" geoid).  The RMS values are obtained using 5 million
+uniformly distributed random points.  The maximum values are obtained by
+evaluating the errors using a different grid with points at or near the
+centers of the original grid.  (The RMS difference between EGM96 and
+EGM2008 is about 0.5m.  The RMS difference between EGM84 and EGM96 is
+about 1.5m.)
+
+\section geoidcache Caching the geoid data
+
+A simple way of calling Geoid is as follows
+\code
+   #include <GeographicLib/Geoid.hpp>
+   #include <iostream>
+   ...
+   GeographicLib::Geoid g("egm96-5");
+   double lat, lon;
+   while (std::cin >> lat >> lon)
+      std::cout << g(lat, lon) << "\n";
+   ...
+\endcode
+
+The first call to g(lat, lon) causes the data for the stencil points (4
+points for bilinear interpolation and 12 for cubic interpolation) to be
+read and the interpolated value returned.  A simple 0th-order caching
+scheme is provided by default, so that, if the second and subsequent
+points falls within the same grid cell, the data values are not reread
+from the file.  This is adequate for most interactive use and also
+minimizes disk accesses for the case when a continuous track is being
+followed.
+
+If a large quantity of geoid calculations are needed, the calculation
+can be speeded up by preloading the data for a rectangular block with
+GeographicLib::Geoid::CacheArea or the entire dataset with
+GeographicLib::Geoid::CacheAll.  If the requested points lie within the
+cached area, the cached data values are used; otherwise the data is read
+from disk as before.  Caching all the data is a reasonable choice for
+the 5' grids and coarser.  Caching all the data for the 1' grid will
+require 0.5GB of RAM and should only be used on systems with sufficient
+memory.
+
+The use of caching does not affect the values returned.  Because of the
+caching and the random file access, this class is \e not normally thread
+safe; i.e., a single instantiation cannot be safely used by multiple
+threads.  If multiple threads need to calculate geoid heights, there are
+two alternatives:
+ - they should all construct thread-local instantiations.
+ - GeographicLib::Geoid should be constructed with \e threadsafe = true.
+   This causes all the data to be read at the time of construction (and
+   if this fails, an exception is thrown), the data file to be closed
+   and the single-cell caching to be turned off.  The resulting object
+   may then be shared safely between threads.
+
+\section testgeoid Test data for geoids
+
+A test set for the geoid models is available at
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
+   GeoidHeight.dat.gz</a>
  .
-The algorithm for GeographicLib::TransverseMercator is based on
-Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
-based on Lee (1976).
-
-\section testmerc Test data for the transverse Mercator projection
-
-A test set for the transverse Mercator projection is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz/download">
-   TMcoords.dat.gz</a>
- .
-This is about 17 MB (compressed).  This test set consists of a set of
-geographic coordinates together with the corresponding transverse
-Mercator coordinates.  The WGS84 ellipsoid is used, with central
-meridian 0<sup>o</sup>, central scale factor 0.9996 (the UTM value),
-false easting = false northing = 0 m.
+This is about 10 MB (compressed).  This test set consists of a set of
+500000 geographic coordinates together with the corresponding geoid
+heights according to various earth gravity models.
 
 Each line of the test set gives 6 space delimited numbers
  - latitude (degrees, exact)
- - longitude (degrees, exact &mdash; see below)
- - easting (meters, accurate to 0.1 pm)
- - northing (meters, accurate to 0.1 pm)
- - meridian convergence (degrees, accurate to 10<sup>-18</sup> deg)
- - scale (accurate to 10<sup>-20</sup>)
+ - longitude (degrees, exact)
+ - EGM84 height (meters, accurate to 1 mm)
+ - EGM96 height (meters, accurate to 0.1 mm)
+ - EGM2008 height (meters, accurate to 1 mm)
  .
-The latitude and longitude are all multiples of 10<sup>-12</sup> deg and
-should be regarded as exact, except that longitude =
-82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
-degrees.  These results are computed using Lee's formulas with
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
-bfloats and fpprec set to 80 (so the errors in the data are probably 1/2
-of the values quoted above).  The Maxima code,
-<a href="tm.mac">tm.mac</a> and <a href="ellint.mac">ellint.mac</a>,
-used to prepare this data set is included in the distribution.  You will
-need to have Maxima installed to use this code.  The comments at the top
-of <a href="tm.mac">tm.mac</a> illustrate how to run it.
-
-The contents of the file are as follows:
- - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
- - 1000 entries randomly distributed on lat in [0, 90], lon = 0;
- - 1000 entries randomly distributed on lat = 0, lon in [0, 90];
- - 1000 entries randomly distributed on lat in [0, 90], lon = 90;
- - 1000 entries close to lat = 90 with lon in [0, 90];
- - 1000 entries close to lat = 0, lon = 0 with lat >= 0, lon >= 0;
- - 1000 entries close to lat = 0, lon = 90 with lat >= 0, lon <= 90;
- - 2000 entries close to lat = 0, lon = 90 (1 - \e e) with lat >= 0;
- - 25000 entries randomly distributed in lat
-   in [-89, 0], lon in [90 (1 - \e e), 90];
- - 1000 entries randomly distributed on lat in [-89, 0], lon = 90;
- - 1000 entries randomly distributed on lat in [-89, 0], lon = 90 (1 - \e e);
- - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon <= 90);
- - 1000 entries close to lat = 0, lon = 90 (1 - \e e)
-   (lat < 0, lon <= 90 (1 - \e e));
- .
-(a total of 287000 entries).  The entries for lat < 0<sup>o</sup> and
-lon in [90<sup>o</sup> (1 - \e e), 90<sup>o</sup>] use the "extended"
-domain for the transverse Mercator projection explained in Sec. 5 of
-<a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.  The first
-258000 entries have lat >= 0<sup>o</sup> and are suitable for testing
-implementations following the standard convention.
-
-\section tmseries Series approximation for transverse Mercator
-
-Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  This is accurate to about 200 nm within the UTM
-domain.  Here we present the series extended to 10th order.  By default,
-GeographicLib::TransverseMercator uses the 6th-order approximation. The
-preprocessor variable TM_TX_MAXPOW can be used to select an order from 4
-thru 8.  The series expanded to order <i>n</i><sup>30</sup> are given in
-<a href="tmseries30.html"> tmseries30.html</a>.
-
-In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
-n) and / indicates real division (3/5 = 0.6).  The equations need to be
-converted to Horner form, but are here left in expanded form so that
-they can be easily truncated to lower order in \e n.  Some of the
-integers here are not representable as 32-bit integers and will need to
-be included as double literals.
-
-\e A in Kr&uuml;ger, p. 12, eq. (5)
-\verbatim
-  A = a/(n + 1) * (1 + 1/4 * n^2
-                     + 1/64 * n^4
-                     + 1/256 * n^6
-                     + 25/16384 * n^8
-                     + 49/65536 * n^10);
-\endverbatim
-
-\e gamma in Kr&uuml;ger, p. 21, eq. (41)
-\verbatim
-alpha[1] =   1/2 * n
-           - 2/3 * n^2
-           + 5/16 * n^3
-           + 41/180 * n^4
-           - 127/288 * n^5
-           + 7891/37800 * n^6
-           + 72161/387072 * n^7
-           - 18975107/50803200 * n^8
-           + 60193001/290304000 * n^9
-           + 134592031/1026432000 * n^10;
-alpha[2] =   13/48 * n^2
-           - 3/5 * n^3
-           + 557/1440 * n^4
-           + 281/630 * n^5
-           - 1983433/1935360 * n^6
-           + 13769/28800 * n^7
-           + 148003883/174182400 * n^8
-           - 705286231/465696000 * n^9
-           + 1703267974087/3218890752000 * n^10;
-alpha[3] =   61/240 * n^3
-           - 103/140 * n^4
-           + 15061/26880 * n^5
-           + 167603/181440 * n^6
-           - 67102379/29030400 * n^7
-           + 79682431/79833600 * n^8
-           + 6304945039/2128896000 * n^9
-           - 6601904925257/1307674368000 * n^10;
-alpha[4] =   49561/161280 * n^4
-           - 179/168 * n^5
-           + 6601661/7257600 * n^6
-           + 97445/49896 * n^7
-           - 40176129013/7664025600 * n^8
-           + 138471097/66528000 * n^9
-           + 48087451385201/5230697472000 * n^10;
-alpha[5] =   34729/80640 * n^5
-           - 3418889/1995840 * n^6
-           + 14644087/9123840 * n^7
-           + 2605413599/622702080 * n^8
-           - 31015475399/2583060480 * n^9
-           + 5820486440369/1307674368000 * n^10;
-alpha[6] =   212378941/319334400 * n^6
-           - 30705481/10378368 * n^7
-           + 175214326799/58118860800 * n^8
-           + 870492877/96096000 * n^9
-           - 1328004581729009/47823519744000 * n^10;
-alpha[7] =   1522256789/1383782400 * n^7
-           - 16759934899/3113510400 * n^8
-           + 1315149374443/221405184000 * n^9
-           + 71809987837451/3629463552000 * n^10;
-alpha[8] =   1424729850961/743921418240 * n^8
-           - 256783708069/25204608000 * n^9
-           + 2468749292989891/203249958912000 * n^10;
-alpha[9] =   21091646195357/6080126976000 * n^9
-           - 67196182138355857/3379030566912000 * n^10;
-alpha[10]=   77911515623232821/12014330904576000 * n^10;
-\endverbatim
-
-\e beta in Kr&uuml;ger, p. 18, eq. (26*)
-\verbatim
- beta[1] =   1/2 * n
-           - 2/3 * n^2
-           + 37/96 * n^3
-           - 1/360 * n^4
-           - 81/512 * n^5
-           + 96199/604800 * n^6
-           - 5406467/38707200 * n^7
-           + 7944359/67737600 * n^8
-           - 7378753979/97542144000 * n^9
-           + 25123531261/804722688000 * n^10;
- beta[2] =   1/48 * n^2
-           + 1/15 * n^3
-           - 437/1440 * n^4
-           + 46/105 * n^5
-           - 1118711/3870720 * n^6
-           + 51841/1209600 * n^7
-           + 24749483/348364800 * n^8
-           - 115295683/1397088000 * n^9
-           + 5487737251099/51502252032000 * n^10;
- beta[3] =   17/480 * n^3
-           - 37/840 * n^4
-           - 209/4480 * n^5
-           + 5569/90720 * n^6
-           + 9261899/58060800 * n^7
-           - 6457463/17740800 * n^8
-           + 2473691167/9289728000 * n^9
-           - 852549456029/20922789888000 * n^10;
- beta[4] =   4397/161280 * n^4
-           - 11/504 * n^5
-           - 830251/7257600 * n^6
-           + 466511/2494800 * n^7
-           + 324154477/7664025600 * n^8
-           - 937932223/3891888000 * n^9
-           - 89112264211/5230697472000 * n^10;
- beta[5] =   4583/161280 * n^5
-           - 108847/3991680 * n^6
-           - 8005831/63866880 * n^7
-           + 22894433/124540416 * n^8
-           + 112731569449/557941063680 * n^9
-           - 5391039814733/10461394944000 * n^10;
- beta[6] =   20648693/638668800 * n^6
-           - 16363163/518918400 * n^7
-           - 2204645983/12915302400 * n^8
-           + 4543317553/18162144000 * n^9
-           + 54894890298749/167382319104000 * n^10;
- beta[7] =   219941297/5535129600 * n^7
-           - 497323811/12454041600 * n^8
-           - 79431132943/332107776000 * n^9
-           + 4346429528407/12703122432000 * n^10;
- beta[8] =   191773887257/3719607091200 * n^8
-           - 17822319343/336825216000 * n^9
-           - 497155444501631/1422749712384000 * n^10;
- beta[9] =   11025641854267/158083301376000 * n^9
-           - 492293158444691/6758061133824000 * n^10;
- beta[10]=   7028504530429621/72085985427456000 * n^10;
-\endverbatim
-
-The high-order expansions for \e alpha and \e beta were produced by the
-Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
-distribution).  To run, start Maxima and enter
-\verbatim
-  load("tmseries.mac")$
-\endverbatim
-Further instructions are included at the top of the file.
+The latitude and longitude are all multiples of 10<sup>-6</sup> deg and
+should be regarded as exact.  The geoid heights are computed using the
+harmonic NGA synthesis programs.  In the case of the EGM84 and EGM96,
+the programs were compiled (with gfortran) and run under Linux.  In the
+case of EGM2008, the prescription results in NaNs (possibly because of
+uninitialized variables in the program?), so the data was generated with
+the precompiled binary that NGA supplies for Windows.
 
 <center>
 Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
@@ -604,7 +1219,7 @@ Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 \page geodesic Geodesics on the Ellipsoid
 
 <center>
-Back to \ref transversemercator.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref geoid.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
@@ -614,7 +1229,7 @@ classes.  GeographicLib::AzimuthalEquidistant implements the azimuthal
 equidistant projection in terms of geodesics.
 GeographicLib::CassiniSoldner implements a transverse cylindrical
 equidistant projection in terms of geodesics.  The
-<a href="EquidistantTest.1.html">EquidistantTest</a> utility provides an
+<a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an
 interface to these projections.
 
 References
@@ -633,14 +1248,14 @@ References
    The Area under the Geodesic,
    Survey Review 30 (232), 61&ndash;66 (1989).
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215">
+   <a href="http://arxiv.org/abs/1102.1215v1">
    Geodesics on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>;
+   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>;
    resource page
    <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.
  - A collection of some papers on geodesics is available at
-   http://geographiclib.sf.net/geodesic-papers/biblio.html
+   http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
 
 \section testgeod Test data for geodesics
 
@@ -991,7 +1606,7 @@ C3[9] = + 2431/1179648 * eps^9;
 
 The formula for area between the geodesic and the equator is given in
 Sec. 15 of
-<a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>
+<a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>
 in terms of \e S,
 
 &nbsp; &nbsp;
@@ -1064,14 +1679,267 @@ C4[9] = + 1/737176440 * k2^9;
 \endverbatim
 
 <center>
-Back to \ref transversemercator.  Forward to \ref geocentric.  Up to \ref contents.
+Back to \ref geoid.  Forward to \ref transversemercator.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page transversemercator Transverse Mercator Projection
+
+<center>
+Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
+</center>
+
+GeographicLib::TransverseMercator and
+GeographicLib::TransverseMercatorExact provide accurate implelmentations
+of the transverse Mercator projection.  The
+ <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+utility provides an interface to these classes.
+
+References
+ - L. Kr&uuml;ger, <a
+   href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+   Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
+   the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
+   New Series 52, 172 pp. (1912).
+ - L. P. Lee,
+   Conformal Projections Based on Elliptic Functions,
+   (B. V. Gutsell, Toronto, 1976), 128pp.,
+   ISBN: 0919870163
+   (Also appeared as:
+   Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
+   Part V, pp. 67&ndash;101,
+   <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal
+   Projections Based On Jacobian Elliptic Functions</a>.
+ - C. F. F. Karney,
+   <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
+   Transverse Mercator with an accuracy of a few nanometers,</a>
+   J. Geodesy (2011);
+   preprint
+   <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
+   resource page
+   <a href="http://geographiclib.sf.net/tm.html">tm.html</a>.
+ .
+The algorithm for GeographicLib::TransverseMercator is based on
+Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
+based on Lee (1976).
+
+\section testmerc Test data for the transverse Mercator projection
+
+A test set for the transverse Mercator projection is available at
+ - <a href="http://sf.net/projects/geographiclib/files/testdata/TMcoords.dat.gz/download">
+   TMcoords.dat.gz</a>
+ .
+This is about 17 MB (compressed).  This test set consists of a set of
+geographic coordinates together with the corresponding transverse
+Mercator coordinates.  The WGS84 ellipsoid is used, with central
+meridian 0<sup>o</sup>, central scale factor 0.9996 (the UTM value),
+false easting = false northing = 0 m.
+
+Each line of the test set gives 6 space delimited numbers
+ - latitude (degrees, exact)
+ - longitude (degrees, exact &mdash; see below)
+ - easting (meters, accurate to 0.1 pm)
+ - northing (meters, accurate to 0.1 pm)
+ - meridian convergence (degrees, accurate to 10<sup>-18</sup> deg)
+ - scale (accurate to 10<sup>-20</sup>)
+ .
+The latitude and longitude are all multiples of 10<sup>-12</sup> deg and
+should be regarded as exact, except that longitude =
+82.63627282416406551 should be interpreted as exactly 90 (1 - \e e)
+degrees.  These results are computed using Lee's formulas with
+<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
+bfloats and fpprec set to 80 (so the errors in the data are probably 1/2
+of the values quoted above).  The Maxima code,
+<a href="tm.mac">tm.mac</a> and <a href="ellint.mac">ellint.mac</a>,
+used to prepare this data set is included in the distribution.  You will
+need to have Maxima installed to use this code.  The comments at the top
+of <a href="tm.mac">tm.mac</a> illustrate how to run it.
+
+The contents of the file are as follows:
+ - 250000 entries randomly distributed in lat in [0, 90], lon in [0, 90];
+ - 1000 entries randomly distributed on lat in [0, 90], lon = 0;
+ - 1000 entries randomly distributed on lat = 0, lon in [0, 90];
+ - 1000 entries randomly distributed on lat in [0, 90], lon = 90;
+ - 1000 entries close to lat = 90 with lon in [0, 90];
+ - 1000 entries close to lat = 0, lon = 0 with lat >= 0, lon >= 0;
+ - 1000 entries close to lat = 0, lon = 90 with lat >= 0, lon <= 90;
+ - 2000 entries close to lat = 0, lon = 90 (1 - \e e) with lat >= 0;
+ - 25000 entries randomly distributed in lat
+   in [-89, 0], lon in [90 (1 - \e e), 90];
+ - 1000 entries randomly distributed on lat in [-89, 0], lon = 90;
+ - 1000 entries randomly distributed on lat in [-89, 0], lon = 90 (1 - \e e);
+ - 1000 entries close to lat = 0, lon = 90 (lat < 0, lon <= 90);
+ - 1000 entries close to lat = 0, lon = 90 (1 - \e e)
+   (lat < 0, lon <= 90 (1 - \e e));
+ .
+(a total of 287000 entries).  The entries for lat < 0<sup>o</sup> and
+lon in [90<sup>o</sup> (1 - \e e), 90<sup>o</sup>] use the "extended"
+domain for the transverse Mercator projection explained in Sec. 5 of
+<a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.  The first
+258000 entries have lat >= 0<sup>o</sup> and are suitable for testing
+implementations following the standard convention.
+
+\section tmseries Series approximation for transverse Mercator
+
+Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
+Mercator projection.  This is accurate to about 200 nm within the UTM
+domain.  Here we present the series extended to 10th order.  By default,
+GeographicLib::TransverseMercator uses the 6th-order approximation. The
+preprocessor variable TM_TX_MAXPOW can be used to select an order from 4
+thru 8.  The series expanded to order <i>n</i><sup>30</sup> are given in
+<a href="tmseries30.html"> tmseries30.html</a>.
+
+In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
+n) and / indicates real division (3/5 = 0.6).  The equations need to be
+converted to Horner form, but are here left in expanded form so that
+they can be easily truncated to lower order in \e n.  Some of the
+integers here are not representable as 32-bit integers and will need to
+be included as double literals.
+
+\e A in Kr&uuml;ger, p. 12, eq. (5)
+\verbatim
+  A = a/(n + 1) * (1 + 1/4 * n^2
+                     + 1/64 * n^4
+                     + 1/256 * n^6
+                     + 25/16384 * n^8
+                     + 49/65536 * n^10);
+\endverbatim
+
+\e gamma in Kr&uuml;ger, p. 21, eq. (41)
+\verbatim
+alpha[1] =   1/2 * n
+           - 2/3 * n^2
+           + 5/16 * n^3
+           + 41/180 * n^4
+           - 127/288 * n^5
+           + 7891/37800 * n^6
+           + 72161/387072 * n^7
+           - 18975107/50803200 * n^8
+           + 60193001/290304000 * n^9
+           + 134592031/1026432000 * n^10;
+alpha[2] =   13/48 * n^2
+           - 3/5 * n^3
+           + 557/1440 * n^4
+           + 281/630 * n^5
+           - 1983433/1935360 * n^6
+           + 13769/28800 * n^7
+           + 148003883/174182400 * n^8
+           - 705286231/465696000 * n^9
+           + 1703267974087/3218890752000 * n^10;
+alpha[3] =   61/240 * n^3
+           - 103/140 * n^4
+           + 15061/26880 * n^5
+           + 167603/181440 * n^6
+           - 67102379/29030400 * n^7
+           + 79682431/79833600 * n^8
+           + 6304945039/2128896000 * n^9
+           - 6601904925257/1307674368000 * n^10;
+alpha[4] =   49561/161280 * n^4
+           - 179/168 * n^5
+           + 6601661/7257600 * n^6
+           + 97445/49896 * n^7
+           - 40176129013/7664025600 * n^8
+           + 138471097/66528000 * n^9
+           + 48087451385201/5230697472000 * n^10;
+alpha[5] =   34729/80640 * n^5
+           - 3418889/1995840 * n^6
+           + 14644087/9123840 * n^7
+           + 2605413599/622702080 * n^8
+           - 31015475399/2583060480 * n^9
+           + 5820486440369/1307674368000 * n^10;
+alpha[6] =   212378941/319334400 * n^6
+           - 30705481/10378368 * n^7
+           + 175214326799/58118860800 * n^8
+           + 870492877/96096000 * n^9
+           - 1328004581729009/47823519744000 * n^10;
+alpha[7] =   1522256789/1383782400 * n^7
+           - 16759934899/3113510400 * n^8
+           + 1315149374443/221405184000 * n^9
+           + 71809987837451/3629463552000 * n^10;
+alpha[8] =   1424729850961/743921418240 * n^8
+           - 256783708069/25204608000 * n^9
+           + 2468749292989891/203249958912000 * n^10;
+alpha[9] =   21091646195357/6080126976000 * n^9
+           - 67196182138355857/3379030566912000 * n^10;
+alpha[10]=   77911515623232821/12014330904576000 * n^10;
+\endverbatim
+
+\e beta in Kr&uuml;ger, p. 18, eq. (26*)
+\verbatim
+ beta[1] =   1/2 * n
+           - 2/3 * n^2
+           + 37/96 * n^3
+           - 1/360 * n^4
+           - 81/512 * n^5
+           + 96199/604800 * n^6
+           - 5406467/38707200 * n^7
+           + 7944359/67737600 * n^8
+           - 7378753979/97542144000 * n^9
+           + 25123531261/804722688000 * n^10;
+ beta[2] =   1/48 * n^2
+           + 1/15 * n^3
+           - 437/1440 * n^4
+           + 46/105 * n^5
+           - 1118711/3870720 * n^6
+           + 51841/1209600 * n^7
+           + 24749483/348364800 * n^8
+           - 115295683/1397088000 * n^9
+           + 5487737251099/51502252032000 * n^10;
+ beta[3] =   17/480 * n^3
+           - 37/840 * n^4
+           - 209/4480 * n^5
+           + 5569/90720 * n^6
+           + 9261899/58060800 * n^7
+           - 6457463/17740800 * n^8
+           + 2473691167/9289728000 * n^9
+           - 852549456029/20922789888000 * n^10;
+ beta[4] =   4397/161280 * n^4
+           - 11/504 * n^5
+           - 830251/7257600 * n^6
+           + 466511/2494800 * n^7
+           + 324154477/7664025600 * n^8
+           - 937932223/3891888000 * n^9
+           - 89112264211/5230697472000 * n^10;
+ beta[5] =   4583/161280 * n^5
+           - 108847/3991680 * n^6
+           - 8005831/63866880 * n^7
+           + 22894433/124540416 * n^8
+           + 112731569449/557941063680 * n^9
+           - 5391039814733/10461394944000 * n^10;
+ beta[6] =   20648693/638668800 * n^6
+           - 16363163/518918400 * n^7
+           - 2204645983/12915302400 * n^8
+           + 4543317553/18162144000 * n^9
+           + 54894890298749/167382319104000 * n^10;
+ beta[7] =   219941297/5535129600 * n^7
+           - 497323811/12454041600 * n^8
+           - 79431132943/332107776000 * n^9
+           + 4346429528407/12703122432000 * n^10;
+ beta[8] =   191773887257/3719607091200 * n^8
+           - 17822319343/336825216000 * n^9
+           - 497155444501631/1422749712384000 * n^10;
+ beta[9] =   11025641854267/158083301376000 * n^9
+           - 492293158444691/6758061133824000 * n^10;
+ beta[10]=   7028504530429621/72085985427456000 * n^10;
+\endverbatim
+
+The high-order expansions for \e alpha and \e beta were produced by the
+Maxima program <a href="tmseries.mac">tmseries.mac</a> (included in the
+distribution).  To run, start Maxima and enter
+\verbatim
+  load("tmseries.mac")$
+\endverbatim
+Further instructions are included at the top of the file.
+
+<center>
+Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page geocentric Geocentric coordinates
 
 <center>
-Back to \ref geodesic.  Forward to \ref geoid.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
 </center>
 
 The implementation of GeographicLib::Geocentric::Reverse is adapted from
@@ -1086,10 +1954,10 @@ restriction and to improve the numerical accuracy.  Now the method is
 accurate for all inputs (even if \e h is infinite).  The changes are
 described in Appendix B of
  - C. F. F. Karney,
-   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011; preprint
-   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
+   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
 
 The problems encountered near the center of the ellipsoid are:
  - There's a potential division by zero in the definition of \e s. The
@@ -1170,405 +2038,47 @@ However the choice of independent variables in these methods leads
 to a loss of accuracy for points near the equatorial plane.
 
 <center>
-Back to \ref geodesic.  Forward to \ref geoid.  Up to \ref contents.
+Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
 
-</center>
-**********************************************************************/
-/**
-\page geoid Geoid height
-
-<center>
-Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
-</center>
-
-The gravitational equipotential surface approximately coinciding with
-mean sea level is called the geoid.  The GeographicLib::Geoid class
-evaluates the height of the geoid above the WGS84 ellipsoid.  This can
-be used to convert heights above mean sea level to heights above the
-WGS84 ellipoid.  Because the normal to the ellipsoid differs from the
-normal to the geoid (the direction of a plumb line) there is a slight
-ambiguity in the measurement of heights; however for heights up to 10km
-this ambiguity is only 1mm.
-
-The geoid is usually approximated by an "earth gravity model".  The
-models published by the NGA are:
-- EGM84:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
-- EGM96:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
-- EGM2008:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
-.
-GeographicLib::Geoid offers a uniform way to handle all 3 geoids at a
-variety of grid resolutions.  (In contrast, the software tools that NGA
-offers are different for each geoid, and the interpolation programs are
-different for each grid resolution.  In addition these tools are written
-in Fortran with is nowadays difficult to integrate with other software.)
-
-Unlike other components of %GeographicLib, there is a appreciable error
-in the results obtained (at best, the RMS error is 1mm).  However the
-class provides methods to report the maximum and RMS errors in the
-results.
-
-The class also returns the gradient of the geoid.  This can be used to
-estimate the direction of a plumb line relative to the WGS84 ellipsoid.
-
-\section geoidinst Installing the datasets
-
-The geoid heights are computed using interpolation into a rectangular
-grid.  The grids are read from data files which have been are computed
-using the NGA synthesis programs in the case of the EGM84 and EGM96
-models and using the NGA binary gridded data files in the case of
-EGM2008.  These data files are available for download:
-- EGM84,    30' grid:
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-30.zip/download">zip</a>.
-- EGM84,    15' grid:
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm84-15.zip/download">zip</a>.
-- EGM96,    15' grid:
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-15.zip/download">zip</a>.
-- EGM96,     5' grid:
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm96-5.zip/download">zip</a>.
-- EGM2008,   5' grid:
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-5.zip/download">zip</a>.
-- EGM2008, 2.5' grid:
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-2_5.zip/download">zip</a>.
-- EGM2008,   1' grid:
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.tar.bz2/download">tar.bz2</a>,
-  <a href="http://sf.net/projects/geographiclib/files/geoids-distrib/egm2008-1.zip/download">zip</a>.
-
-Download \e either the tar.bz2 file \e or zip file (they have the same
-contents).  If possible use the tar.bz2 format, since bzip2 compresses
-these files about 2 times better than zip.  The data in tar and zip
-files both unpack into a "geoids" directory and, for convenience, all
-the data should be unpacked in the same parent directory.  For example
-\verbatim
-   mkdir -p /usr/local/share/GeographicLib
-   tar xfjC egm96-5.tar.bz2 /usr/local/share/GeographicLib
-   tar xfjC egm2008-2_5.tar.bz2 /usr/local/share/GeographicLib
-   etc.
-\endverbatim
-or
-\verbatim
-   mkdir -p /usr/local/share/GeographicLib
-   cd /usr/local/share/GeographicLib
-   unzip ~-/egm96-5.zip
-   unzip ~-/egm2008-2_5.zip
-   etc.
-\endverbatim
-Geoid uses a compile time default (specified by the GEOID_DEFAULT_PATH
-macro) to locate the datasets.  This is
-- /usr/local/share/GeographicLib/geoids, for non-Windows systems
-- C:/cygwin/usr/local/share/GeographicLib/geoids, for Windows systems
-.
-This may be overridden at run-time by defining the GEOID_PATH
-environment variable.  Finally, the path may be set using the optional
-second argument to the GeographicLib::Geoid::Geoid constructor.
-
-The sizes of these datasets are
-\verbatim
-   name         geoid    grid           sizes (MB)
-                                 tar.bz2    zip    disk
-   egm84-30     EGM84    30'      0.5       0.5     0.5
-   egm84-15     EGM84    15'      1.5       1.9     2.0
-   egm96-15     EGM96    15'      1.5       1.9     2.0
-   egm96-5      EGM96     5'      9.8        16      18
-   egm2008-5    EGM2008   5'       10        16      18
-   egm2008-2_5  EGM2008   2.5'     34        62      72
-   egm2008-1    EGM2008   1'      155       372     445
-\endverbatim
-The final "disk" column is the size of the uncompressed data and it also
-gives the memory requirements for caching the entire dataset using the
-GeographicLib::Geoid::CacheAll method.
-
-\section geoidformat The format of the geoid data files
-
-The gridded data used by the GeographicLib::Geoid class is stored in
-16-bit PGM files.  Thus the data for egm96-5 might be stored in the file
-- /usr/local/share/GeographicLib/geoids/egm96-5.pgm
-.
-PGM simple graphic format with the following properties
-- it is well documented
-  <a href="http://netpbm.sf.net/doc/pgm.html">here</a>;
-- there are no separate "little-endian" and "big-endian" versions;
-- it uses 1 or 2 bytes per pixel;
-- pixels can be randomly accessed;
-- comments can be added to the file header;
-- it is sufficiently simple that it can be easily read without using the
-  <a href="http://netpbm.sf.net/doc/libnetpbm.html">libnetpbm</a>
-  library (and thus we avoid adding a software dependency to
-  %GeographicLib).
-.
-The major drawback of this format is that since there are only 65535
-possible pixel values, the height must be quantized to 3mm.  However,
-the resulting quantization error (up to 1.5mm) is typically smaller than
-the linear interpolation errors.  The comments in the header for
-egm96-5 are
-\verbatim
-   # Geoid file in PGM format for the GeographicLib::Geoid class
-   # Description WGS84 EGM96, 5-minute grid
-   # URL http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
-   # DateTime 2009-08-29 18:45:03
-   # MaxBilinearError 0.140
-   # RMSBilinearError 0.005
-   # MaxCubicError 0.003
-   # RMSCubicError 0.001
-   # Offset -108
-   # Scale 0.003
-   # Origin 90N 0E
-   # AREA_OR_POINT Point
-   # Vertical_Datum WGS84
-\endverbatim
-Of these lines, the Scale and Offset lines are required and define the
-conversion from pixel value to height (in meters) using \e height =
-\e offset + \e scale \e pixel.  The Geoid constructor also reads the
-Description, DataTime, and error lines (if present) and stores the
-resulting data so that it can be returned by
-GeographicLib::Geoid::Description, GeographicLib::Geoid::DateTime,
-GeographicLib::Geoid::MaxError, and GeographicLib::Geoid::RMSError
-methods.  The other lines serve as additional documentation but are not
-used by this class.  Accompanying egm96-5.pgm (and similarly with the
-other geoid data files) are two files egm96-5.wld and
-egm96-5.pgm.aux.xml.  The first is an ESRI "world" file and the second
-supplies complete projection metadata for use by
-<a href="http://www.gdal.org">GDAL</a>.  Neither of these files is read
-by GeographicLib::Geoid.
-
-You can use gdal_translate to convert the data files to a standard
-GeoTiff, e.g., with
-\verbatim
-   gdal_translate -ot Float32 -scale 0 65000 -108 87 egm96-5.pgm egm96-5.tif
-\endverbatim
-The arguments to -scale here are specific to the Offset and Scale
-parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
-can check these by running <a href="GeoidEval.1.html">GeoidEval</a> with
-the "-v" option.
-
-Finally, here is a sample script which uses GDAL to create a 1-degree
-squared grid of geoid heights at 3&quot; resolution (matching DTED1) by
-bilinear interpolation.
-\verbatim
-   #! /bin/sh
-   lat=37
-   lon=067
-   res=3                           # resolution in seconds
-   TEMP=`mktemp junkXXXXXXXXXX`    # temporary file for GDAL
-   gdalwarp -q -te `echo $lon $lat $res | awk '{
-       lon = $1; lat = $2; res = $3;
-       printf "%.14f %.14f %.14f %.14f",
-           lon  -0.5*res/3600, lat  -0.5*res/3600,
-           lon+1+0.5*res/3600, lat+1+0.5*res/3600;
-   }'` -ts $((3600/res+1)) $((3600/res+1)) -r bilinear egm96-5.tif $TEMP
-   gdal_translate -quiet \
-       -mo AREA_OR_POINT=Point \
-       -mo Description="WGS84 EGM96, $res-second grid" \
-       -mo Vertical_Datum=WGS84 \
-       -mo Tie_Point_Location=pixel_corner \
-       $TEMP e$lon-n$lat.tif
-   rm -f $TEMP
-\endverbatim
-
-\section geoidinterp Interpolating the geoid data
-
-GeographicLib::Geoid evaluates the geoid height is by bilinear or cubic
-interpolation.  The gradient of the geoid height is obtained by
-differentiating the interpolated height and referencing the result to
-distance on the WGS84 ellipsoid.
-
-The bilinear interpolation is based on the values at the 4 corners of
-the enclosing cell.  The interpolated height is a continuous function of
-position; however the gradient has discontinuities are cell boundaries.
-The quantization of the data files exacerbates the errors in the
-gradients.
-
-The cubic interpolation is a least-squares fit to the values on a
-12-point stencil with weights as follows:
-\verbatim
-   . 1 1 .
-   1 2 2 1
-   1 2 2 1
-   . 1 1 .
-\endverbatim
-The cubic is constrained to be independent of longitude when evaluating
-the height at one of the poles.  Cubic interpolation is considerably
-more accurate than bilinear interpolation; however, in this
-implementation there are small discontinuities in the heights are cell
-boundaries.  The over-constrained cubic fit slightly reduces the
-quantization errors on average.
-
-The algorithm for the least squares fit is taken from, F. H. Lesh,
-Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29-30
-(1959).  This algorithm is not part of Geographic::Geoid; instead it is
-implemented as
-<a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
-code which is used to precompute the matrices to convert the function
-values on the stencil into the coefficients from the cubic polynomial.
-This code is included as a comment in Geoid.cpp.
-
-The interpolations methods are quick and give good accuracy.  Here is a
-summary of the combined quantization and interpolation errors for the
-heights.
-\verbatim
-                                  bilinear error    cubic error
-   name         geoid    grid     max     rms       max     rms
-   egm84-30     EGM84    30'      1.546m  70mm      0.274m  14mm
-   egm84-15     EGM84    15'      0.413m  18mm      0.020m   1mm
-   egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
-   egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
-   egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
-   egm2008-2_5  EGM2008   2.5'    0.135m   3mm      0.031m   1mm
-   egm2008-1    EGM2008   1'      0.025m   1mm      0.003m   1mm
-\endverbatim
-The errors are with respect the the specific NGA earth gravity model
-(not to any "real" geoid).  The RMS values are obtained using 5 million
-uniformly distributed random points.  The maximum values are obtained by
-evaluating the errors using a different grid with points at or near the
-centers of the original grid.  (The RMS difference between EGM96 and
-EGM2008 is about 0.5m.  The RMS difference between EGM84 and EGM96 is
-about 1.5m.)
-
-\section geoidcache Caching the geoid data
-
-A simple way of calling Geoid is as follows
-\code
-   #include "GeographicLib/Geoid.hpp"
-   #include <iostream>
-   ...
-   GeographicLib::Geoid g("egm96-5");
-   double lat, lon;
-   while (std::cin >> lat >> lon)
-      std::cout << g(lat, lon) << "\n";
-   ...
-\endcode
-
-The first call to g(lat, lon) causes the data for the stencil points (4
-points for bilinear interpolation and 12 for cubic interpolation) to be
-read and the interpolated value returned.  A simple 0th-order caching
-scheme is provided by default, so that, if the second and subsequent
-points falls within the same grid cell, the data values are not reread
-from the file.  This is adequate for most interactive use and also
-minimizes disk accesses for the case when a continuous track is being
-followed.
-
-If a large quantity of geoid calculations are needed, the calculation
-can be speeded up by preloading the data for a rectangular block with
-GeographicLib::Geoid::CacheArea or the entire dataset with
-GeographicLib::Geoid::CacheAll.  If the requested points lie within the
-cached area, the cached data values are used; otherwise the data is read
-from disk as before.  Caching all the data is a reasonable choice for
-the 5' grids and coarser.  Caching all the data for the 1' grid will
-require 0.5GB of RAM and should only be used on systems with sufficient
-memory.
-
-The use of caching does not affect the values returned.  Because of the
-caching and the random file access, this class is \e not normally thread
-safe; i.e., a single instantiation cannot be safely used by multiple
-threads.  If multiple threads need to calculate geoid heights, there are
-two alternatives:
- - they should all construct thread-local instantiations.
- - GeographicLib::Geoid should be constructed with \e threadsafe = true.
-   This causes all the data to be read at the time of construction (and
-   if this fails, an exception is thrown), the data file to be closed
-   and the single-cell caching to be turned off.  The resulting object
-   may then be shared safely between threads.
-
-\section testgeoid Test data for geoids
-
-A test set for the geoid models is available at
- - <a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">
-   GeoidHeight.dat.gz</a>
- .
-This is about 10 MB (compressed).  This test set consists of a set of
-500000 geographic coordinates together with the corresponding geoid
-heights according to various earth gravity models.
-
-Each line of the test set gives 6 space delimited numbers
- - latitude (degrees, exact)
- - longitude (degrees, exact)
- - EGM84 height (meters, accurate to 1 mm)
- - EGM96 height (meters, accurate to 0.1 mm)
- - EGM2008 height (meters, accurate to 1 mm)
- .
-The latitude and longitude are all multiples of 10<sup>-6</sup> deg and
-should be regarded as exact.  The geoid heights are computed using the
-harmonic NGA synthesis programs.  In the case of the EGM84 and EGM96,
-the programs were compiled (with gfortran) and run under Linux.  In the
-case of EGM2008, the prescription results in NaNs (possibly because of
-uninitialized variables in the program?), so the data was generated with
-the precompiled binary that NGA supplies for Windows.
-
-<center>
-Back to \ref geocentric.  Forward to \ref utilities.  Up to \ref contents.
-</center>
-**********************************************************************/
-/**
-\page utilities Utility Programs
-
-<center>
-Back to \ref geoid.  Forward to \ref old.  Up to \ref contents.
-</center>
-
-Various utility programs are provided with %GeographicLib.  These should
-be installed in a directory included in your PATH (e.g.,
-/usr/local/bin).  These programs are merely wrapper programs that invoke
-the underlying functionality provided by the library.  The utilities all
-accept data on standard input, transform it in some way, and print the
-results on standard output.  This makes the utilities easy to use within
-scripts to transform tabular data; however they can also be used
-interactively, often with the input supplied via a pipe, e.g.,
-
- - echo 38SMB4488 | GeoConvert -d
-
-The utlilities are
-
- - <a href="GeoConvert.1.html"><b>GeoConvert</b></a>: convert geographic
-   coordinates using GeographicLib::GeoCoords.  There is an online
-   interface to this utility at
-   http://geographiclib.sf.net/cgi-bin/GeoConvert
- - <a href="Geod.1.html"><b>Geod</b></a>: perform geodesic calculations
-   using GeographicLib::Geodesic and GeographicLib::GeodesicLine.  There
-   is an online interface to this utility at
-   http://geographiclib.sf.net/cgi-bin/Geod
- - <a href="Planimeter.1.html"><b>Planimeter</b></a>: compute the area of
-   geodesic polygons using the area facilities provided by
-   GeographicLib::Geodesic.
- - <a href="TransverseMercatorTest.1.html"><b>TransverseMercatorTest</b></a>:
-   convert between geographic and transverse Mercator.  This is for testing
-   GeographicLib::TransverseMercatorExact and
-   GeographicLib::TransverseMercator.
- - <a href="CartConvert.1.html"><b>CartConvert</b></a>: convert geodetic
-   coordinates to geocentric or local cartesian using
-   GeographicLib::Geocentric and GeographicLib::LocalCartesian.
- - <a href="EquidistantTest.1.html"><b>EquidistantTest</b></a>: perform
-   projections based on geodesics using
-   GeographicLib::AzimuthalEquidistant, GeographicLib::Gnomonic, and
-   GeographicLib::CassiniSoldner.
- - <a href="GeoidEval.1.html"><b>GeoidEval</b></a>: look up geoid
-   heights using GeographicLib::Geoid.  There is an online interface to
-   this utility at http://geographiclib.sf.net/cgi-bin/GeoidEval
- .
-Click on the utility name to read the documentation for the utility.
-
-<center>
-Back to \ref geoid.  Forward to \ref old.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page old Old Versions
 
 <center>
-Back to \ref utilities.  Up to \ref contents.
+Back to \ref geocentric.  Up to \ref contents.
 </center>
 
 List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (not released yet, 2011-mm-dd)</a>
+  - FIX BUG in area returned by
+    <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.
+  - FIX BUG in error message reported when DMS::Decode reads the string
+    "5d.".
+  - FIX BUG in AlbersEqualArea::Reverse (lon0 not being used).
+  - Ensure that all exceptions thrown in the \ref utilities are caught.
+  - Avoid using catch within GeographicLib::DMS.
+  - Move GeographicLib::Accumulator class from Planimeter.cpp to
+    Constants.hpp.
+  - Add Math::sq<T>.
+  - Simplify \ref geoidinst
+    - add geographiclib-get-geoids for Unix-like systems;
+    - add installers for Windows.
+  - Provide cmake support:
+    - build binary installer for Windows;
+    - include regression tests;
+    - add --input-string, --input-file, --output-file options to the
+      \ref utilities to support tests.
+  - Rename utility EquidistantTest as
+    <a href="GeodesicProj.1.html">GeodesicProj</a> and
+    TransverseMercatorTest as
+    <a href="TransverseMercatorProj.1.html">
+    TransverseMercatorProj</a>.
+  - Add <a href="ConicProj.1.html"> ConicProj</a>.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a>
   - Optionally return rotation matrix from GeographicLib::Geocentric and
@@ -1662,11 +2172,11 @@ number.)
   - Add GeographicLib::Gnomonic, the ellipsoid generalization of the
     gnomonic projection.
   - Add -g and -e options to
-    <a href="EquidistantTest.1.html">EquidistantTest</a>.
+    <a href="GeodesicProj.1.html">EquidistantTest</a>.
   - Use fixed-point notation for output from
     <a href="CartConvert.1.html">CartConvert</a>,
-    <a href="EquidistantTest.1.html">EquidistantTest</a>,
-    <a href="TransverseMercatorTest.1.html">TransverseMercatorTest</a>.
+    <a href="GeodesicProj.1.html">EquidistantTest</a>,
+    <a href="TransverseMercatorProj.1.html">TransverseMercatorTest</a>.
   - PolarStereographic:
     - Improved conversion to conformal coordinates;
     - Fix bug with scale at opposite pole;
@@ -1780,7 +2290,7 @@ number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-08.tgz/download">2009-08</a>
   - Add GeographicLib::CassiniSoldner class and
-    <a href="EquidistantTest.1.html">EquidistantTest</a> utility.
+    <a href="GeodesicProj.1.html">EquidistantTest</a> utility.
   - Fix bug in GeographicLib::Geodesic::Inverse where NaNs were
     sometimes returned.
   - INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
@@ -1860,6 +2370,6 @@ number.)
   - Ad hoc posting of information on the transverse Mercator projection.
 
 <center>
-Back to \ref utilities.  Up to \ref contents.
+Back to \ref geocentric.  Up to \ref contents.
 </center>
 **********************************************************************/

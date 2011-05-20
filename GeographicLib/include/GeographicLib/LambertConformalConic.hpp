@@ -10,8 +10,8 @@
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
 #define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
 #include <algorithm>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -28,7 +28,7 @@ namespace GeographicLib {
    * differences have been used to transform the expressions into ones which
    * may be evaluated accurately and that Newton's method is used to invert the
    * projection.  In this implementation, the projection correctly becomes the
-   * Mercator projection or the polar sterographic projection when the standard
+   * Mercator_ projection or the polar sterographic projection when the standard
    * latitude is the equator or a pole.  The accuracy of the projections is
    * about 10 nm.
    *
@@ -53,9 +53,9 @@ namespace GeographicLib {
    const double
      a = GeographicLib::Constants::WGS84_a<double>(),
      r = 298.257222101,                        // GRS80
-     lat1 = 39 + 56/60.0, lat2 = 40 + 58/60.0, // standard parallels
+     lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
      k1 = 1,                                   // scale
-     lat0 = 39 + 20/60.0, lon0 =-75 - 45/60.0, // origin
+     lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, // origin
      fe = 600000, fn = 0;                      // false easting and northing
    // Set up basic projection
    const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
@@ -78,15 +78,17 @@ namespace GeographicLib {
    std::cout << lat << " " << lon << "\n";
    \endcode
    **********************************************************************/
-  class LambertConformalConic {
+  class GEOGRAPHIC_EXPORT LambertConformalConic {
   private:
     typedef Math::real real;
     const real _a, _r, _f, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
-    static const real eps, epsx, tol, ahypover;
-    static const int numit = 5;
-    static inline real sq(real x) throw() { return x * x; }
+    static const real eps_;
+    static const real epsx_;
+    static const real tol_;
+    static const real ahypover_;
+    static const int numit_ = 5;
     static inline real hyp(real x) throw() { return Math::hypot(real(1), x); }
     // e * atanh(e * x) = log( ((1 + e*x)/(1 - e*x))^(e/2) ) if f >= 0
     // - sqrt(-e2) * atan( sqrt(-e2) * x)                    if f < 0
@@ -98,7 +100,7 @@ namespace GeographicLib {
     // See: W. M. Kahan and R. J. Fateman,
     // Symbolic computation of divided differences,
     // SIGSAM Bull. 33(3), 7-28 (1999)
-    // http://doi.acm.org/10.1145/334714.334716
+    // http://dx.doi.org/10.1145/334714.334716
     // http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
     //
     // General rules
@@ -116,7 +118,7 @@ namespace GeographicLib {
     static inline real Dsn(real x, real y, real sx, real sy) throw() {
       // sx = x/hyp(x)
       real t = x * y;
-      return t > 0 ? (x + y) * sq( (sx * sy)/t ) / (sx + sy) :
+      return t > 0 ? (x + y) * Math::sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
@@ -329,11 +331,11 @@ namespace GeographicLib {
     /**
      * A global instantiation of LambertConformalConic with the WGS84
      * ellipsoid, \e stdlat = 0, and \e k0 = 1.  This degenerates to the
-     * Mercator projection.
+     * Mercator_ projection.
      **********************************************************************/
     static const LambertConformalConic Mercator;
   };
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP

@@ -1,0 +1,8 @@
+// $Id$
+
+#define GEOGRAPHICLIB_VERSION_STRING "@GeographicLib_VERSION_STRING@"
+#define GEOGRAPHICLIB_GEOID_PATH "@GEOGRAPHICLIB_GEOID_PATH@"
+
+// These are macros which affect the building of the library
+#cmakedefine GEOGRAPHIC_SHARED_LIB 1
+#cmakedefine HAVE_LONG_DOUBLE 1

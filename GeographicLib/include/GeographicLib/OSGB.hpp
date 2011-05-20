@@ -2,17 +2,24 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
 #define GEOGRAPHICLIB_OSGB_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
-#include "GeographicLib/TransverseMercator.hpp"
 #include <string>
 #include <sstream>
+#include <GeographicLib/Constants.hpp>
+#include <GeographicLib/TransverseMercator.hpp>
+
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs string
+#pragma warning (push)
+#pragma warning (disable: 4251)
+#endif
 
 namespace GeographicLib {
 
@@ -33,26 +40,26 @@ namespace GeographicLib {
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).
    **********************************************************************/
-  class OSGB {
+  class GEOGRAPHIC_EXPORT OSGB {
   private:
     typedef Math::real real;
-    static const std::string letters;
-    static const std::string digits;
-    static const TransverseMercator OSGBTM;
-    static const real northoffset;
+    static const std::string letters_;
+    static const std::string digits_;
+    static const TransverseMercator OSGBTM_;
+    static const real northoffset_;
     enum {
-      base = 10,
-      tile = 100000,
-      tilelevel = 5,
-      tilegrid = 5,
-      tileoffx = 2 * tilegrid,
-      tileoffy = 1 * tilegrid,
-      minx = - tileoffx * tile,
-      miny = - tileoffy * tile,
-      maxx = (tilegrid*tilegrid - tileoffx) * tile,
-      maxy = (tilegrid*tilegrid - tileoffy) * tile,
+      base_ = 10,
+      tile_ = 100000,
+      tilelevel_ = 5,
+      tilegrid_ = 5,
+      tileoffx_ = 2 * tilegrid_,
+      tileoffy_ = 1 * tilegrid_,
+      minx_ = - tileoffx_ * tile_,
+      miny_ = - tileoffy_ * tile_,
+      maxx_ = (tilegrid_*tilegrid_ - tileoffx_) * tile_,
+      maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_,
       // Maximum precision is um
-      maxprec = 5 + 6,
+      maxprec_ = 5 + 6,
     };
     static real computenorthoffset() throw();
     static void CheckCoords(real x, real y);
@@ -82,9 +89,9 @@ namespace GeographicLib {
      **********************************************************************/
     static void Forward(real lat, real lon,
                         real& x, real& y, real& gamma, real& k) throw() {
-      OSGBTM.Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
+      OSGBTM_.Forward(OriginLongitude(), lat, lon, x, y, gamma, k);
       x += FalseEasting();
-      y += northoffset;
+      y += northoffset_;
     }
 
     /**
@@ -103,8 +110,8 @@ namespace GeographicLib {
     static void Reverse(real x, real y,
                         real& lat, real& lon, real& gamma, real& k) throw() {
       x -= FalseEasting();
-      y -= northoffset;
-      OSGBTM.Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
+      y -= northoffset_;
+      OSGBTM_.Reverse(OriginLongitude(), x, y, lat, lon, gamma, k);
     }
 
     /**
@@ -159,8 +166,8 @@ namespace GeographicLib {
      * @param[in] centerp if true (default), return center of the grid square,
      *   else return SW (lower left) corner.
      *
-     * The grid reference must be of the form: two letters (not including I)
-     * followed by an even number of digits (up to 22).
+     * The grid reference must be of the form: two letters_ (not including I)
+     * followed by an even number of digits_ (up to 22).
      **********************************************************************/
     static void GridReference(const std::string& gridref,
                               real& x, real& y, int& prec,
@@ -177,18 +184,19 @@ namespace GeographicLib {
      * projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real MajorRadius() throw()
-    { return real(6377563.396032066440602120008397385037L); }
+    // result is about 6377563.3960320664406 m
+    { return real(20923713) * std::pow(real(10), real(0.48401603L) - 1); }
 
     /**
      * @return \e r the inverse flattening of the Airy 1830 ellipsoid.
      *
      * For the Airy 1830 ellipsoid, \e a = 20923713 ft and \e b = 20853810 ft;
      * thus the inverse flattening = 20923713/(20923713 - 20853810) =
-     * 2324857/7767 = 299.32496459...  (The Airy 1830 value is returned because
-     * the OSGB projection is based on this ellipsoid.)
+     * 299.32496459...  (The Airy 1830 value is returned because the OSGB
+     * projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real InverseFlattening() throw()
-    { return real(2324857)/real(7767); }
+    { return real(20923713) / real(20923713 - 20853810); }
 
     /**
      * @return \e k0 central scale for the OSGB projection (0.9996012717).
@@ -220,4 +228,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#pragma warning (pop)
+#endif
+
 #endif

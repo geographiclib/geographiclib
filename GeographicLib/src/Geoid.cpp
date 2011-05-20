@@ -7,7 +7,7 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#include "GeographicLib/Geoid.hpp"
+#include <GeographicLib/Geoid.hpp>
 #include <sstream>
 #include <cstdlib>
 #include <algorithm>
@@ -18,10 +18,16 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 
 #if !defined(GEOID_DEFAULT_PATH)
+#if defined(GEOGRAPHICLIB_GEOID_PATH)
+// Use cmake supplied value is available
+#define GEOID_DEFAULT_PATH GEOGRAPHICLIB_GEOID_PATH
+#else
 #if defined(_MSC_VER)
-#define GEOID_DEFAULT_PATH "C:/cygwin/usr/local/share/GeographicLib/geoids"
+#define GEOID_DEFAULT_PATH \
+  "C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids"
 #else
 #define GEOID_DEFAULT_PATH "/usr/local/share/GeographicLib/geoids"
+#endif
 #endif
 #endif
 #if !defined(GEOID_DEFAULT_NAME)
@@ -29,7 +35,7 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 #endif
 
 #if defined(_MSC_VER)
-// Squelch warnings about unsafe use of getenv and copy
+// Squelch warnings about unsafe use of getenv
 #pragma warning (disable: 4996)
 #endif
 
@@ -101,8 +107,8 @@ namespace GeographicLib {
   // genmatrix(yc,1,length(warr)).abs(c3).genmatrix(yd,length(pows),1)),2)$
   // c3:c0*c3$
 
-  const Math::real Geoid::c0 = 240; // Common denominator
-  const Math::real Geoid::c3[stencilsize * nterms] = {
+  const Math::real Geoid::c0_ = 240; // Common denominator
+  const Math::real Geoid::c3_[stencilsize_ * nterms_] = {
       9, -18, -88,    0,  96,   90,   0,   0, -60, -20,
      -9,  18,   8,    0, -96,   30,   0,   0,  60, -20,
       9, -88, -18,   90,  96,    0, -20, -60,   0,   0,
@@ -151,8 +157,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3n).genmatrix(yd,length(pows),1)),2)$
   // c3n:c0n*c3n$
 
-  const Math::real Geoid::c0n = 372; // Common denominator
-  const Math::real Geoid::c3n[stencilsize * nterms] = {
+  const Math::real Geoid::c0n_ = 372; // Common denominator
+  const Math::real Geoid::c3n_[stencilsize_ * nterms_] = {
       0, 0, -131, 0,  138,  144, 0,   0, -102, -31,
       0, 0,    7, 0, -138,   42, 0,   0,  102, -31,
      62, 0,  -31, 0,    0,  -62, 0,   0,    0,  31,
@@ -185,8 +191,8 @@ namespace GeographicLib {
   //     genmatrix(yc,1,length(warr)).abs(c3s).genmatrix(yd,length(pows),1)),2)$
   // c3s:c0s*c3s$
 
-  const Math::real Geoid::c0s = 372; // Common denominator
-  const Math::real Geoid::c3s[stencilsize * nterms] = {
+  const Math::real Geoid::c0s_ = 372; // Common denominator
+  const Math::real Geoid::c3s_[stencilsize_ * nterms_] = {
      18,  -36, -122,   0,  120,  135, 0,   0,  -84, -31,
     -18,   36,   -2,   0, -120,   51, 0,   0,   84, -31,
      36, -165,  -27,  93,  147,   -9, 0, -93,   18,   0,
@@ -322,7 +328,7 @@ namespace GeographicLib {
     iy += (_height - 1)/2;
     ix += ix < 0 ? _width : ix >= _width ? -_width : 0;
     real v00 = 0, v01 = 0, v10 = 0, v11 = 0;
-    real t[nterms];
+    real t[nterms_];
 
     if (_threadsafe || !(ix == _ix && iy == _iy)) {
       if (!_cubic) {
@@ -331,7 +337,7 @@ namespace GeographicLib {
         v10 = rawval(ix    , iy + 1);
         v11 = rawval(ix + 1, iy + 1);
       } else {
-        real v[stencilsize];
+        real v[stencilsize_];
         int k = 0;
         v[k++] = rawval(ix    , iy - 1);
         v[k++] = rawval(ix + 1, iy - 1);
@@ -346,12 +352,12 @@ namespace GeographicLib {
         v[k++] = rawval(ix    , iy + 2);
         v[k++] = rawval(ix + 1, iy + 2);
 
-        const real* c3x = iy == 0 ? c3n : iy == _height - 2 ? c3s : c3;
-        real c0x = iy == 0 ? c0n : iy == _height - 2 ? c0s : c0;
-        for (unsigned i = 0; i < nterms; ++i) {
+        const real* c3x = iy == 0 ? c3n_ : iy == _height - 2 ? c3s_ : c3_;
+        real c0x = iy == 0 ? c0n_ : iy == _height - 2 ? c0s_ : c0_;
+        for (unsigned i = 0; i < nterms_; ++i) {
           t[i] = 0;
-          for (unsigned j = 0; j < stencilsize; ++j)
-            t[i] += v[j] * c3x[nterms * j + i];
+          for (unsigned j = 0; j < stencilsize_; ++j)
+            t[i] += v[j] * c3x[nterms_ * j + i];
           t[i] /= c0x;
         }
       }
@@ -362,7 +368,7 @@ namespace GeographicLib {
         v10 = _v10;
         v11 = _v11;
       } else
-        copy(_t, _t + nterms, t);
+        copy(_t, _t + nterms_, t);
     }
     if (!_cubic) {
       real
@@ -421,7 +427,7 @@ namespace GeographicLib {
       if (!_threadsafe) {
         _ix = ix;
         _iy = iy;
-        copy(t, t + nterms, _t);
+        copy(t, t + nterms_, _t);
       }
       return h;
     }
@@ -550,4 +556,5 @@ namespace GeographicLib {
       name = string(geoidname);
     return name.length() ? name : string(GEOID_DEFAULT_NAME);
   }
-}
+
+} // namespace GeographicLib

@@ -2,16 +2,16 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#include "GeographicLib/UTMUPS.hpp"
-#include "GeographicLib/MGRS.hpp"
-#include "GeographicLib/PolarStereographic.hpp"
-#include "GeographicLib/TransverseMercator.hpp"
+#include <GeographicLib/UTMUPS.hpp>
 #include <iomanip>
+#include <GeographicLib/MGRS.hpp>
+#include <GeographicLib/PolarStereographic.hpp>
+#include <GeographicLib/TransverseMercator.hpp>
 
 #define GEOGRAPHICLIB_UTMUPS_CPP "$Id$"
 
@@ -22,26 +22,27 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real UTMUPS::falseeasting[4] =
-    { MGRS::upseasting * MGRS::tile, MGRS::upseasting * MGRS::tile,
-      MGRS::utmeasting * MGRS::tile, MGRS::utmeasting* MGRS::tile };
-  const Math::real UTMUPS::falsenorthing[4] =
-    { MGRS::upseasting * MGRS::tile, MGRS::upseasting * MGRS::tile,
-      MGRS::maxutmSrow * MGRS::tile, MGRS::minutmNrow * MGRS::tile };
-  const Math::real UTMUPS::mineasting[4] =
-    { MGRS::minupsSind * MGRS::tile,  MGRS::minupsNind * MGRS::tile,
-      MGRS::minutmcol * MGRS::tile,  MGRS::minutmcol * MGRS::tile };
-  const Math::real UTMUPS::maxeasting[4] =
-    { MGRS::maxupsSind * MGRS::tile,  MGRS::maxupsNind * MGRS::tile,
-      MGRS::maxutmcol * MGRS::tile,  MGRS::maxutmcol * MGRS::tile };
-  const Math::real UTMUPS::minnorthing[4] =
-    { MGRS::minupsSind * MGRS::tile,  MGRS::minupsNind * MGRS::tile,
-      MGRS::minutmSrow * MGRS::tile,
-      (MGRS::minutmNrow + MGRS::minutmSrow - MGRS::maxutmSrow) * MGRS::tile };
-  const Math::real UTMUPS::maxnorthing[4] =
-    { MGRS::maxupsSind * MGRS::tile,  MGRS::maxupsNind * MGRS::tile,
-      (MGRS::maxutmSrow + MGRS::maxutmNrow - MGRS::minutmNrow) * MGRS::tile,
-      MGRS::maxutmNrow * MGRS::tile };
+  const Math::real UTMUPS::falseeasting_[4] =
+    { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
+      MGRS::utmeasting_ * MGRS::tile_, MGRS::utmeasting_ * MGRS::tile_ };
+  const Math::real UTMUPS::falsenorthing_[4] =
+    { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
+      MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
+  const Math::real UTMUPS::mineasting_[4] =
+    { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
+      MGRS::minutmcol_ * MGRS::tile_,  MGRS::minutmcol_ * MGRS::tile_ };
+  const Math::real UTMUPS::maxeasting_[4] =
+    { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
+      MGRS::maxutmcol_ * MGRS::tile_,  MGRS::maxutmcol_ * MGRS::tile_ };
+  const Math::real UTMUPS::minnorthing_[4] =
+    { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
+      MGRS::minutmSrow_ * MGRS::tile_,
+      (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
+      * MGRS::tile_ };
+  const Math::real UTMUPS::maxnorthing_[4] =
+    { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
+      (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
+      MGRS::maxutmNrow_ * MGRS::tile_ };
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
     if (setzone < MINPSEUDOZONE || setzone > MAXZONE)
@@ -102,8 +103,8 @@ namespace GeographicLib {
       PolarStereographic::UPS.Forward(northp1, lat, lon, x1, y1, gamma1, k1);
     }
     int ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
-    x1 += falseeasting[ind];
-    y1 += falsenorthing[ind];
+    x1 += falseeasting_[ind];
+    y1 += falsenorthing_[ind];
     if (! CheckCoords(zone1 != UPS, northp1, x1, y1, mgrslimits, false) )
       throw GeographicErr("Latitude " + str(lat) + ", longitude " + str(lon)
                           + " out of legal range for "
@@ -128,8 +129,8 @@ namespace GeographicLib {
     bool utmp = zone != UPS;
     CheckCoords(utmp, northp, x, y, mgrslimits);
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-    x -= falseeasting[ind];
-    y -= falsenorthing[ind];
+    x -= falseeasting_[ind];
+    y -= falsenorthing_[ind];
     if (utmp)
       TransverseMercator::UTM.Reverse(CentralMeridian(zone),
                                       x, y, lat, lon, gamma, k);
@@ -148,25 +149,25 @@ namespace GeographicLib {
                            bool mgrslimits, bool throwp) {
     // Limits are all multiples of 100km and are all closed on the both ends.
     // Failure tests are such that NaNs succeed.
-    real slop = mgrslimits ? 0 : MGRS::tile;
+    real slop = mgrslimits ? 0 : MGRS::tile_;
     int ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-    if (x < mineasting[ind] - slop || x > maxeasting[ind] + slop) {
+    if (x < mineasting_[ind] - slop || x > maxeasting_[ind] + slop) {
       if (!throwp) return false;
       throw GeographicErr("Easting " + str(x/1000) + "km not in "
                           + (mgrslimits ? "MGRS/" : "")
                           + (utmp ? "UTM" : "UPS") + " range for "
                           + (northp ? "N" : "S" ) + " hemisphere ["
-                          + str((mineasting[ind] - slop)/1000) + "km, "
-                          + str((maxeasting[ind] + slop)/1000) + "km]");
+                          + str((mineasting_[ind] - slop)/1000) + "km, "
+                          + str((maxeasting_[ind] + slop)/1000) + "km]");
     }
-    if (y < minnorthing[ind] - slop || y > maxnorthing[ind] + slop) {
+    if (y < minnorthing_[ind] - slop || y > maxnorthing_[ind] + slop) {
       if (!throwp) return false;
       throw GeographicErr("Northing " + str(y/1000) + "km not in "
                           + (mgrslimits ? "MGRS/" : "")
                           + (utmp ? "UTM" : "UPS") + " range for "
                           + (northp ? "N" : "S" ) + " hemisphere ["
-                          + str((minnorthing[ind] - slop)/1000) + "km, "
-                          + str((maxnorthing[ind] + slop)/1000) + "km]");
+                          + str((minnorthing_[ind] - slop)/1000) + "km, "
+                          + str((maxnorthing_[ind] + slop)/1000) + "km]");
     }
     return true;
   }
@@ -226,6 +227,6 @@ namespace GeographicLib {
     return os.str();
   }
 
-  Math::real UTMUPS::UTMShift() throw() { return real(MGRS::utmNshift); }
+  Math::real UTMUPS::UTMShift() throw() { return real(MGRS::utmNshift_); }
 
 } // namespace GeographicLib

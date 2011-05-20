@@ -10,8 +10,8 @@
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
 #define GEOGRAPHICLIB_UTMUPS_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
 #include <sstream>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -56,15 +56,15 @@ namespace GeographicLib {
    *   UPS coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
    **********************************************************************/
-  class UTMUPS {
+  class GEOGRAPHIC_EXPORT UTMUPS {
   private:
     typedef Math::real real;
-    static const real falseeasting[4];
-    static const real falsenorthing[4];
-    static const real mineasting[4];
-    static const real maxeasting[4];
-    static const real minnorthing[4];
-    static const real maxnorthing[4];
+    static const real falseeasting_[4];
+    static const real falsenorthing_[4];
+    static const real mineasting_[4];
+    static const real maxeasting_[4];
+    static const real minnorthing_[4];
+    static const real maxnorthing_[4];
     static real CentralMeridian(int zone) throw()
     { return real(6 * zone - 183); }
     template<typename T> static std::string str(T x) {
@@ -310,4 +310,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-#endif
+
+#endif  // GEOGRAPHICLIB_UTMUPS_HPP

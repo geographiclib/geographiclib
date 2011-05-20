@@ -10,8 +10,8 @@
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
 #define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id$"
 
-#include "GeographicLib/UTMUPS.hpp"
-#include "GeographicLib/Constants.hpp"
+#include <GeographicLib/UTMUPS.hpp>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -40,7 +40,7 @@ namespace GeographicLib {
    * Once the input string has been parsed, you can print the result out in any
    * of the formats, decimal degrees, degrees minutes seconds, MGRS, UTM/UPS.
    **********************************************************************/
-  class GeoCoords {
+  class GEOGRAPHIC_EXPORT GeoCoords {
   private:
     typedef Math::real real;
     real _lat, _long, _easting, _northing, _gamma, _k;
@@ -429,4 +429,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
 #endif  // GEOGRAPHICLIB_GEOCOORDS_HPP

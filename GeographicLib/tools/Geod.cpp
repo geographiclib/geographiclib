@@ -12,11 +12,14 @@
  * information.
  **********************************************************************/
 
-#include "GeographicLib/Geodesic.hpp"
-#include "GeographicLib/GeodesicLine.hpp"
-#include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <sstream>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicLine.hpp>
+#include <GeographicLib/DMS.hpp>
 
 #include "Geod.usage"
 
@@ -57,153 +60,210 @@ real ReadDistance(const std::string& s, bool arcmode) {
 }
 
 int main(int argc, char* argv[]) {
-  using namespace GeographicLib;
-  bool linecalc = false, inverse = false, arcmode = false,
-    dms = false, full = false;
-  real
-    a = Constants::WGS84_a<real>(),
-    r = Constants::WGS84_r<real>();
-  real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
-  real azi2sense = 0;
-  int prec = 3;
+  try {
+    using namespace GeographicLib;
+    bool linecalc = false, inverse = false, arcmode = false,
+      dms = false, full = false;
+    real
+      a = Constants::WGS84_a<real>(),
+      r = Constants::WGS84_r<real>();
+    real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
+    real azi2sense = 0;
+    int prec = 3;
+    std::string istring, ifile, ofile;
 
-  for (int m = 1; m < argc; ++m) {
-    std::string arg(argv[m]);
-    if (arg == "-i") {
-      inverse = true;
-      linecalc = false;
-    } else if (arg == "-a")
-      arcmode = true;
-    else if (arg == "-l") {
-      inverse = false;
-      linecalc = true;
-      if (m + 3 >= argc) return usage(1, true);
-      try {
-        DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                          lat1, lon1);
-        azi1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
+    for (int m = 1; m < argc; ++m) {
+      std::string arg(argv[m]);
+      if (arg == "-i") {
+        inverse = true;
+        linecalc = false;
+      } else if (arg == "-a")
+        arcmode = true;
+      else if (arg == "-l") {
+        inverse = false;
+        linecalc = true;
+        if (m + 3 >= argc) return usage(1, true);
+        try {
+          DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                            lat1, lon1);
+          azi1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
+          return 1;
+        }
+        m += 3;
+      } else if (arg == "-n") {   // Deprecated and so not documented
+        a = 6378388;
+        r = 297;
+      } else if (arg == "-e") {
+        if (m + 2 >= argc) return usage(1, true);
+        try {
+          a = DMS::Decode(std::string(argv[m + 1]));
+          r = DMS::Decode(std::string(argv[m + 2]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+          return 1;
+        }
+        m += 2;
       }
-      catch (const std::exception& e) {
-        std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
-        return 1;
-      }
-      m += 3;
-    } else if (arg == "-n") {   // Deprecated and so not documented
-      a = 6378388;
-      r = 297;
-    } else if (arg == "-e") {
-      if (m + 2 >= argc) return usage(1, true);
-      try {
-        a = DMS::Decode(std::string(argv[m + 1]));
-        r = DMS::Decode(std::string(argv[m + 2]));
-      }
-      catch (const std::exception& e) {
-        std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
-        return 1;
-      }
-      m += 2;
-    }
-    else if (arg == "-d")
-      dms = true;
-    else if (arg == "-b")
-      azi2sense = 180;
-    else if (arg == "-f")
-      full = true;
-    else if (arg == "-p") {
-      if (++m == argc) return usage(1, true);
-      std::istringstream str(argv[m]);
-      char c;
-      if (!(str >> prec) || (str >> c)) {
+      else if (arg == "-d")
+        dms = true;
+      else if (arg == "-b")
+        azi2sense = 180;
+      else if (arg == "-f")
+        full = true;
+      else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        std::istringstream str(argv[m]);
+        char c;
+        if (!(str >> prec) || (str >> c)) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
+        }
+      } else if (arg == "--input-string") {
+        if (++m == argc) return usage(1, true);
+        istring = argv[m];
+      } else if (arg == "--input-file") {
+        if (++m == argc) return usage(1, true);
+        ifile = argv[m];
+      } else if (arg == "--output-file") {
+        if (++m == argc) return usage(1, true);
+        ofile = argv[m];
+      } else if (arg == "--version") {
+        std::cout
+          << argv[0]
+          << ": $Id$\n"
+          << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
+        return 0;
+      } else
+        return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
+    }
+
+    if (!ifile.empty() && !istring.empty()) {
+      std::cerr << "Cannot specify --input-string and --input-file together\n";
+      return 1;
+    }
+    if (ifile == "-") ifile.clear();
+    std::ifstream infile;
+    std::istringstream instring;
+    if (!ifile.empty()) {
+      infile.open(ifile.c_str());
+      if (!infile.is_open()) {
+        std::cerr << "Cannot open " << ifile << " for reading\n";
+        return 1;
       }
-    } else if (arg == "--version") {
-      std::cout
-        << PROGRAM_NAME
-        << ": $Id$\n"
-        << "GeographicLib version " << GEOGRAPHICLIB_VERSION << "\n";
-      return 0;
-    } else
-      return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
-  }
+    } else if (!istring.empty()) {
+      std::string::size_type m = 0;
+      while (true) {
+        m = istring.find(';', m);
+        if (m == std::string::npos)
+          break;
+        istring[m] = '\n';
+      }
+      instring.str(istring);
+    }
+    std::istream* input = !ifile.empty() ? &infile :
+      (!istring.empty() ? &instring : &std::cin);
 
-  const Geodesic geod(a, r);
-  GeodesicLine l;
-  if (linecalc)
-    l = geod.Line(lat1, lon1, azi1);
+    std::ofstream outfile;
+    if (ofile == "-") ofile.clear();
+    if (!ofile.empty()) {
+      outfile.open(ofile.c_str());
+      if (!outfile.is_open()) {
+        std::cerr << "Cannot open " << ofile << " for wrting\n";
+        return 1;
+      }
+    }
+    std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-  // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
-  // 10^-11 sec (= 0.3 nm).
-  prec = std::min(10, std::max(0, prec));
-  std::string s;
-  int retval = 0;
-  while (std::getline(std::cin, s)) {
-    try {
-      std::istringstream str(s);
-      if (inverse) {
-        std::string slat1, slon1, slat2, slon2;
-        if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
-          throw GeographicErr("Incomplete input: " + s);
-        std::string strc;
-        if (str >> strc)
-          throw GeographicErr("Extraneous input: " + strc);
-        DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
-        DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-        a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
-        if (full)
-          std::cout << LatLonString(lat1, lon1, prec, dms) << " ";
-        std::cout << AzimuthString(azi1, prec, dms) << " ";
-        if (full)
-          std::cout << LatLonString(lat2, lon2, prec, dms) << " ";
-        std::cout << AzimuthString(azi2 + azi2sense, prec, dms) << " "
-                  << DistanceStrings(s12, a12, full, arcmode, prec, dms) << " "
-                  << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
-      } else {
-        if (linecalc) {
-          std::string ss12;
-          if (!(str >> ss12))
-            throw GeographicErr("Incomplete input: " + s);
-          std::string strc;
-          if (str >> strc)
-            throw GeographicErr("Extraneous input: " + strc);
-          s12 = ReadDistance(ss12, arcmode);
-          if (arcmode)
-            l.ArcPosition(s12, lat2, lon2, azi2, a12, m12);
-          else
-            a12 = l.Position(s12, lat2, lon2, azi2, m12);
-        } else {
-          std::string slat1, slon1, sazi1, ss12;
-          if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
+    const Geodesic geod(a, r);
+    GeodesicLine l;
+    if (linecalc)
+      l = geod.Line(lat1, lon1, azi1);
+
+    // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
+    // 10^-11 sec (= 0.3 nm).
+    prec = std::min(10, std::max(0, prec));
+    std::string s;
+    int retval = 0;
+    while (std::getline(*input, s)) {
+      try {
+        std::istringstream str(s);
+        if (inverse) {
+          std::string slat1, slon1, slat2, slon2;
+          if (!(str >> slat1 >> slon1 >> slat2 >> slon2))
             throw GeographicErr("Incomplete input: " + s);
           std::string strc;
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
-          azi1 = DMS::DecodeAzimuth(sazi1);
-          s12 = ReadDistance(ss12, arcmode);
+          DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
+          a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
+          if (full)
+            *output << LatLonString(lat1, lon1, prec, dms) << " ";
+          *output << AzimuthString(azi1, prec, dms) << " ";
+          if (full)
+            *output << LatLonString(lat2, lon2, prec, dms) << " ";
+          *output << AzimuthString(azi2 + azi2sense, prec, dms) << " "
+                  << DistanceStrings(s12, a12, full, arcmode, prec, dms) << " "
+                  << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
+        } else {
+          if (linecalc) {
+            std::string ss12;
+            if (!(str >> ss12))
+              throw GeographicErr("Incomplete input: " + s);
+            std::string strc;
+            if (str >> strc)
+              throw GeographicErr("Extraneous input: " + strc);
+            s12 = ReadDistance(ss12, arcmode);
+            if (arcmode)
+              l.ArcPosition(s12, lat2, lon2, azi2, a12, m12);
+            else
+              a12 = l.Position(s12, lat2, lon2, azi2, m12);
+          } else {
+            std::string slat1, slon1, sazi1, ss12;
+            if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
+              throw GeographicErr("Incomplete input: " + s);
+            std::string strc;
+            if (str >> strc)
+              throw GeographicErr("Extraneous input: " + strc);
+            DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
+            azi1 = DMS::DecodeAzimuth(sazi1);
+            s12 = ReadDistance(ss12, arcmode);
+            if (arcmode)
+              geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12, m12);
+            else
+              a12 = geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
+          }
           if (arcmode)
-            geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12, m12);
-          else
-            a12 = geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
-        }
-        if (arcmode)
-          std::swap(s12, a12);
-        if (full)
-          std::cout << LatLonString(lat1, lon1, prec, dms) << " "
+            std::swap(s12, a12);
+          if (full)
+            *output << LatLonString(lat1, lon1, prec, dms) << " "
                     << AzimuthString(azi1, prec, dms) << " ";
-        std::cout << LatLonString(lat2, lon2, prec, dms) << " "
+          *output << LatLonString(lat2, lon2, prec, dms) << " "
                   << AzimuthString(azi2 + azi2sense, prec, dms);
-        if (full)
-          std::cout << " "
+          if (full)
+            *output << " "
                     << DistanceStrings(s12, a12, full, arcmode, prec, dms);
-        std::cout << " " << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
+          *output << " " << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
+        }
+      }
+      catch (const std::exception& e) {
+        // Write error message cout so output lines match input lines
+        *output << "ERROR: " << e.what() << "\n";
+        retval = 1;
       }
     }
-    catch (const std::exception& e) {
-      // Write error message cout so output lines match input lines
-      std::cout << "ERROR: " << e.what() << "\n";
-      retval = 1;
-    }
+    return retval;
   }
-  return retval;
+  catch (const std::exception& e) {
+    std::cerr << "Caught exception: " << e.what() << "\n";
+    return 1;
+  }
+  catch (...) {
+    std::cerr << "Caught unknown exception\n";
+    return 1;
+  }
 }

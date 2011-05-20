@@ -10,8 +10,8 @@
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
 #define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
-#include "GeographicLib/Geodesic.hpp"
+#include <GeographicLib/Constants.hpp>
+#include <GeographicLib/Geodesic.hpp>
 
 namespace GeographicLib {
 
@@ -28,8 +28,8 @@ namespace GeographicLib {
    #include <iostream>
    #include <iomanip>
    #include <cmath>
-   #include "GeographicLib/Geodesic.hpp"
-   #include "GeographicLib/GeodesicLine.hpp"
+   #include <GeographicLib/Geodesic.hpp>
+   #include <GeographicLib/GeodesicLine.hpp>
 
    int main() {
      // Print waypoints between JFK and SIN at
@@ -62,37 +62,39 @@ namespace GeographicLib {
    * Similarly, a vector can be used to hold GeodesicLine objects.
    *
    * The calculations are accurate to better than 15 nm.  See Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a> for details.
+   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for details.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    *   on an ellipsoid of revolution</a>,
    *   Feb. 2011;
    *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a>.
+   *   <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>.
    * .
    * For more information on geodesics see \ref geodesic.
    **********************************************************************/
 
-  class GeodesicLine {
+  class GEOGRAPHIC_EXPORT GeodesicLine {
   private:
     typedef Math::real real;
     friend class Geodesic;
-    static const int nC1 = Geodesic::nC1, nC1p = Geodesic::nC1p,
-      nC2 = Geodesic::nC2, nC3 = Geodesic::nC3, nC4 = Geodesic::nC4;
+    static const int nC1_ = Geodesic::nC1_;
+    static const int nC1p_ = Geodesic::nC1p_;
+    static const int nC2_ = Geodesic::nC2_;
+    static const int nC3_ = Geodesic::nC3_;
+    static const int nC4_ = Geodesic::nC4_;
 
     real _lat1, _lon1, _azi1;
     real _a, _r, _b, _c2, _f1, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
       _A1m1, _A2m1, _A3c, _B11, _B21, _B31, _A4, _B41;
     // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
-    real _C1a[nC1 + 1], _C1pa[nC1p + 1], _C2a[nC2 + 1], _C3a[nC3],
-      _C4a[nC4];    // all the elements of _C4a are used
+    real _C1a[nC1_ + 1], _C1pa[nC1p_ + 1], _C2a[nC2_ + 1], _C3a[nC3_],
+      _C4a[nC4_];    // all the elements of _C4a are used
     bool _areap;
     unsigned _caps;
 
-    static inline real sq(real x) throw() { return x * x; }
     enum captype {
       CAP_NONE = Geodesic::CAP_NONE,
       CAP_C1   = Geodesic::CAP_C1,
@@ -630,4 +632,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-#endif
+
+#endif  // GEOGRAPHICLIB_GEODESICLINE_HPP

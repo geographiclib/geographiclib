@@ -2,7 +2,7 @@
  * \file MGRS.hpp
  * \brief Header for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -10,9 +10,15 @@
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
 #define GEOGRAPHICLIB_MGRS_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
-#include "GeographicLib/UTMUPS.hpp"
 #include <sstream>
+#include <GeographicLib/Constants.hpp>
+#include <GeographicLib/UTMUPS.hpp>
+
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs string
+#pragma warning (push)
+#pragma warning (disable: 4251)
+#endif
 
 namespace GeographicLib {
 
@@ -51,36 +57,36 @@ namespace GeographicLib {
    *   coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
    **********************************************************************/
-  class MGRS {
+  class GEOGRAPHIC_EXPORT MGRS {
   private:
     typedef Math::real real;
-    // The smallest length s.t., 1.0e7 - eps < 1.0e7 (approx 1.9 nm)
-    static const real eps;
-    // The smallest angle s.t., 90 - eps < 90 (approx 50e-12 arcsec)
-    static const real angeps;
-    static const std::string hemispheres;
-    static const std::string utmcols[3];
-    static const std::string utmrow;
-    static const std::string upscols[4];
-    static const std::string upsrows[2];
-    static const std::string latband;
-    static const std::string upsband;
-    static const std::string digits;
+    // The smallest length s.t., 1.0e7 - eps_ < 1.0e7 (approx 1.9 nm)
+    static const real eps_;
+    // The smallest angle s.t., 90 - eps_ < 90 (approx 50e-12 arcsec)
+    static const real angeps_;
+    static const std::string hemispheres_;
+    static const std::string utmcols_[3];
+    static const std::string utmrow_;
+    static const std::string upscols_[4];
+    static const std::string upsrows_[2];
+    static const std::string latband_;
+    static const std::string upsband_;
+    static const std::string digits_;
 
-    static const int mineasting[4];
-    static const int maxeasting[4];
-    static const int minnorthing[4];
-    static const int maxnorthing[4];
+    static const int mineasting_[4];
+    static const int maxeasting_[4];
+    static const int minnorthing_[4];
+    static const int maxnorthing_[4];
     enum {
-      base = 10,
+      base_ = 10,
       // Top-level tiles are 10^5 m = 100km on a side
-      tilelevel = 5,
+      tilelevel_ = 5,
       // Period of UTM row letters
-      utmrowperiod = 20,
+      utmrowperiod_ = 20,
       // Row letters are shifted by 5 for even zones
-      utmevenrowshift = 5,
+      utmevenrowshift_ = 5,
       // Maximum precision is um
-      maxprec = 5 + 6,
+      maxprec_ = 5 + 6,
     };
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int lookup(const std::string& s, char c) throw() {
@@ -101,21 +107,21 @@ namespace GeographicLib {
     }
     // UTMUPS access these enums
     enum {
-      tile = 100000,            // Size MGRS blocks
-      minutmcol = 1,
-      maxutmcol = 9,
-      minutmSrow = 10,
-      maxutmSrow = 100,         // Also used for UTM S false northing
-      minutmNrow = 0,           // Also used for UTM N false northing
-      maxutmNrow = 95,
-      minupsSind = 8,           // These 4 ind's apply to easting and northing
-      maxupsSind = 32,
-      minupsNind = 13,
-      maxupsNind = 27,
-      upseasting = 20,          // Also used for UPS false northing
-      utmeasting = 5,           // UTM false easting
+      tile_ = 100000,            // Size MGRS blocks
+      minutmcol_ = 1,
+      maxutmcol_ = 9,
+      minutmSrow_ = 10,
+      maxutmSrow_ = 100,         // Also used for UTM S false northing
+      minutmNrow_ = 0,           // Also used for UTM N false northing
+      maxutmNrow_ = 95,
+      minupsSind_ = 8,           // These 4 ind's apply to easting and northing
+      maxupsSind_ = 32,
+      minupsNind_ = 13,
+      maxupsNind_ = 27,
+      upseasting_ = 20,          // Also used for UPS false northing
+      utmeasting_ = 5,           // UTM false easting
       // Difference between S hemisphere northing and N hemisphere northing
-      utmNshift = (maxutmSrow - minutmNrow) * tile
+      utmNshift_ = (maxutmSrow_ - minutmNrow_) * tile_
     };
     MGRS();                     // Disable constructor
 
@@ -273,4 +279,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#pragma warning (pop)
 #endif
+
+#endif  // GEOGRAPHICLIB_MGRS_HPP

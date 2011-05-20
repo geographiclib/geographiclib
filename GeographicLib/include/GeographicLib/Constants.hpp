@@ -10,39 +10,52 @@
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
 #define GEOGRAPHICLIB_CONSTANTS_HPP "$Id$"
 
+#include <GeographicLib/Config.h>
+
 /**
  * Are C++0X math functions available?
  **********************************************************************/
 #if !defined(GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
-#if defined(__GXX_EXPERIMENTAL_CXX0X__)
-#define GEOGRAPHICLIB_CPLUSPLUS0X_MATH 1
-#else
-#define GEOGRAPHICLIB_CPLUSPLUS0X_MATH 0
-#endif
+#  if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#    define GEOGRAPHICLIB_CPLUSPLUS0X_MATH 1
+#  else
+#    define GEOGRAPHICLIB_CPLUSPLUS0X_MATH 0
+#  endif
 #endif
 
 /**
  * A compile-time assert.  Use C++0X static_assert, if available.
  **********************************************************************/
 #if !defined(STATIC_ASSERT)
-#if defined(__GXX_EXPERIMENTAL_CXX0X__)
-#define STATIC_ASSERT static_assert
-#elif defined(_MSC_VER) && _MSC_VER >= 1600
-#define STATIC_ASSERT static_assert
-#else
-#define STATIC_ASSERT(cond,reason) { enum{ STATIC_ASSERT_ENUM=1/int(cond) }; }
-#endif
+#  if defined(__GXX_EXPERIMENTAL_CXX0X__)
+#    define STATIC_ASSERT static_assert
+#  elif defined(_MSC_VER) && _MSC_VER >= 1600
+#    define STATIC_ASSERT static_assert
+#  else
+#    define STATIC_ASSERT(cond,reason) \
+            { enum{ STATIC_ASSERT_ENUM = 1/int(cond) }; }
+#  endif
 #endif
 
 #if defined(__GNUC__)
 // Suppress "defined but not used" warnings
-#define RCSID_DECL(x) namespace \
+#  define RCSID_DECL(x) namespace \
 { char VAR_ ## x [] __attribute__((used)) = x; }
 #else
 /**
  * Insertion of RCS Id strings into the object file.
  **********************************************************************/
-#define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
+#  define RCSID_DECL(x) namespace { char VAR_ ## x [] = x; }
+#endif
+
+#if defined(_WIN32) && defined(GEOGRAPHIC_SHARED_LIB)
+#  if defined(Geographic_EXPORTS)
+#    define GEOGRAPHIC_EXPORT __declspec(dllexport)
+#  else
+#    define GEOGRAPHIC_EXPORT __declspec(dllimport)
+#  endif
+#else
+#  define GEOGRAPHIC_EXPORT
 #endif
 
 RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
@@ -56,11 +69,6 @@ RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
  * same as double.
  **********************************************************************/
 #define GEOGRAPHICLIB_PREC 1
-#endif
-
-#if defined(__CYGWIN__) && defined(__GNUC__) && __GNUC__ < 4
-// g++ 3.x under cygwin doesn't have long double
-#define __NO_LONG_DOUBLE_MATH 1
 #endif
 
 #include <cmath>
@@ -84,7 +92,7 @@ namespace GeographicLib {
    * to provide generic versions of the functions.  In addition define a real
    * type to be used by %GeographicLib.
    **********************************************************************/
-  class Math {
+  class GEOGRAPHIC_EXPORT Math {
   private:
     void dummy() {
       STATIC_ASSERT((GEOGRAPHICLIB_PREC) >= 0 && (GEOGRAPHICLIB_PREC) <= 2,
@@ -93,7 +101,7 @@ namespace GeographicLib {
     Math();                     // Disable constructor
   public:
 
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     /**
      * The extended precision type for real numbers, used for some testing.
      * This is long double on computers with this type; otherwise it is double.
@@ -122,9 +130,7 @@ namespace GeographicLib {
      * @return \e pi
      **********************************************************************/
     template<typename T>
-    static inline T pi() throw()
-    // good for about 168-bit accuracy
-    { return T(3.1415926535897932384626433832795028841971693993751L); }
+    static inline T pi() throw() { return std::atan2(T(0), -T(1)); }
     /**
      * A synonym for pi<real>().
      **********************************************************************/
@@ -147,6 +153,14 @@ namespace GeographicLib {
      * <b>DEPRECATED</b> A synonym for degree<extened>().
      **********************************************************************/
     static inline extended edegree() throw() { return degree<extended>(); }
+
+    /**
+     * Square a number.
+     * @param[in] x
+     * @return \e x<sup>2</sup>.
+     **********************************************************************/
+    template<typename T>
+    static inline T sq(T x) throw() { return x * x; }
 
 #if defined(DOXYGEN)
     /**
@@ -172,7 +186,7 @@ namespace GeographicLib {
     { return _hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     static inline long double hypot(long double x, long double y) throw()
     { return _hypot(x, y); }
 #endif
@@ -182,7 +196,7 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return ::hypotf(x, y); }
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     static inline long double hypot(long double x, long double y) throw()
     { return ::hypotl(x, y); }
 #endif
@@ -214,7 +228,7 @@ namespace GeographicLib {
 #else
     static inline double expm1(double x) throw() { return ::expm1(x); }
     static inline float expm1(float x) throw() { return ::expm1f(x); }
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     static inline long double expm1(long double x) throw()
     { return ::expm1l(x); }
 #endif
@@ -249,7 +263,7 @@ namespace GeographicLib {
 #else
     static inline double log1p(double x) throw() { return ::log1p(x); }
     static inline float log1p(float x) throw() { return ::log1pf(x); }
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     static inline long double log1p(long double x) throw()
     { return ::log1pl(x); }
 #endif
@@ -276,7 +290,7 @@ namespace GeographicLib {
 #else
     static inline double asinh(double x) throw() { return ::asinh(x); }
     static inline float asinh(float x) throw() { return ::asinhf(x); }
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     static inline long double asinh(long double x) throw()
     { return ::asinhl(x); }
 #endif
@@ -303,7 +317,7 @@ namespace GeographicLib {
 #else
     static inline double atanh(double x) throw() { return ::atanh(x); }
     static inline float atanh(float x) throw() { return ::atanhf(x); }
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     static inline long double atanh(long double x) throw()
     { return ::atanhl(x); }
 #endif
@@ -327,7 +341,7 @@ namespace GeographicLib {
 #else
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
     static inline float cbrt(float x) throw() { return ::cbrtf(x); }
-#if !defined(__NO_LONG_DOUBLE_MATH)
+#if defined(HAVE_LONG_DOUBLE)
     static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
 #endif
 #endif
@@ -403,7 +417,7 @@ namespace GeographicLib {
    * Define constants specifying the WGS84 ellipsoid, the UTM and UPS
    * projections, and various unit conversions.
    **********************************************************************/
-  class Constants {
+  class GEOGRAPHIC_EXPORT Constants {
   private:
     typedef Math::real real;
     Constants();                // Disable constructor
@@ -445,8 +459,8 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T>
     static inline T WGS84_r() throw() {
-      // 298.257223563 = 3393 * 87903691 / 1000000000
-      return (T(3393) * T(87903691)) / T(1000000000);
+      // 298.257223563
+      return T(298) + T(257223563) / T(1000000000);
     }
     /**
      * A synonym for WGS84_r<real>().
@@ -542,9 +556,207 @@ namespace GeographicLib {
   };
 
   /**
-   * \brief %Exception handling for %GeographicLib
+   * \brief An accumulator for sums.
    *
-   * A class to handle exceptions.  It's derived off std::runtime_error so it
+   * This allow many numbers of floating point type \e T to be added together
+   * with twice the normal precision.  Thus if \e T is double, the effective
+   * precision of the sum is 106 bits or about 32 decimal places.  The core
+   * idea is the error free transformation of a sum, D. E. Knuth, TAOCP, Vol 2,
+   * 4.2.2, Theorem B.
+   *
+   * Two implementations are provided.  The "fast" one is an implementation of
+   * Algorithm 4.1, of T. Ogita, S. M. Rump, S. Oishi,
+   * <a href="http://dx.doi.org/10.1137/030601818"> Accurate sum and dot
+   * product</a>, SIAM J. Sci. Comp., 26(6) 1955-1988 (2005).  The accumulator
+   * is represented by a two numbers _s + _t where _s is the result of the
+   * normal sum and _t accumulates (approximately) the exact roundoff errors in
+   * the summation of _s.
+   *
+   * The slow "non-fast" implementation follows J. R. Shewchuk,
+   * <a href="http://dx.doi.org/10.1007/PL00009321"> Adaptive Precision
+   * Floating-Point Arithmetic and Fast Robust Geometric Predicates</a>,
+   * Discrete & Computational Geometry 18(3) 305-363 (1997).  In this case,
+   * with each addition of a number to the accumulator, _s and _t are adjusted
+   * so that _s represents the sum to an accuracy of 1 ulp.  This may result in
+   * considerably greater accuracy than the fast implementation (depending on
+   * the input data).
+   *
+   * Approximate timings (summing vector<double> per addition)
+   * - double:                      2ns = 1
+   * - Accumulator<double, true>:   7ns = 3.5
+   * - Accumulator<double, true>:  21ns = 10 -- Optimize() on each addition
+   * - Accumulator<double, false>: 23ns = 11
+   * .
+   * Thus the slow method is about 3 times slower than the fast method.
+   * However all times are negligible with the typical timings for geodesic
+   * calculations whic are roughly 2us.  Thus the default mode it taken to be
+   * slow, \e fast = false.
+   *
+   * In the documentation of the member functions, \e sum stands for the value
+   * currently held in the accumulator.
+   **********************************************************************/
+  template<typename T = Math::real, bool fast = false>
+  class Accumulator {
+  private:
+    // _s accumulates for the straight sum
+    // _t accumulates the errors.
+    T _s, _t;
+    // Error free transformation of a sum.  Note that t can be the same as one
+    // of the first two arguments.
+    static inline T sum(T u, T v, T& t) {
+      volatile T s = u + v;
+      volatile T up = s - v;
+      volatile T vpp = s - up;
+      up -= u;
+      vpp -= v;
+      t = -(up + vpp);
+      // u + v =       s      + t
+      //       = round(u + v) + t
+      return s;
+    }
+    // Same as sum, but requires abs(u) >= abs(v).  This isn't currently used.
+    static inline T fastsum(T u, T v, T& t) {
+      volatile T s = u + v;
+      volatile T vp = s - u;
+      t = v - vp;
+      return s;
+    }
+    void Add(T y) throw() {
+      if (fast) {
+        _s = sum(_s, y, y);     // Accumulate sum to _s with error in y;
+        _t += y;                // accumulate y in _t
+      } else {                  // Here's Shewchuk's solution...
+        T u;                    // hold exact sum as [s, t, u]
+        y  = sum(y, _t,  u);    // Accumulate starting at least significant end
+        _s = sum(y, _s, _t);
+        // Start is _s, _t decreasing and non-adjacent.  Sum is now (s + t + u)
+        // exactly with s, t, u non-adjacent and in decreasing order (except
+        // for possible zeros).  The following code tries to normalize the
+        // result.  Ideally, we want _s = round(s+t+u) and _u = round(s+t+u -
+        // _s).  The follow does an approximate job (and maintains the
+        // decreasing non-adjacent property).  Here are two "failures" using
+        // 3-bit floats:
+        //
+        // Case 1: _s is not equal to round(s+t+u) -- off by 1 ulp
+        // [12, -1] - 8 -> [4, 0, -1] -> [4, -1] = 3 should be [3, 0] = 3
+        //
+        // Case 2: _s+_t is not as close to s+t+u as it shold be
+        // [64, 5] + 4 -> [64, 8, 1] -> [64,  8] = 72 (off by 1)
+        //                    should be [80, -7] = 73 (exact)
+        //
+        // "Fixing" these problems is probably not worth the expense.  The
+        // representation inevitably leads to small errors in the accumulated
+        // values.  The additional errors illustrated here amount to 1 ulp of
+        // the less significant word during each addition to the Accumulator
+        // and an additional possible error of 1 ulp in the reported sum.
+        //
+        // Incidentally, the "ideal" representation described above is not
+        // canonical, because _s = round(_s + _t) may not be true.  For
+        // example, with 3-bit floats:
+        //
+        // [128, 16] + 1 -> [160, -16] -- 160 = round(145).
+        // But [160, 0] - 16 -> [128, 16] -- 128 = round(144).
+        //
+        if (_s == 0)            // This implies t == 0,
+          _s = u;               // so result is u
+        else
+          _t += u;              // otherwise just accumulate u to t.
+      }
+    }
+    // Perhaps these should both be _s + _t?
+    T Sum() const throw() { return fast ? _s + _t : _s; }
+    T Sum(T y) const throw() {
+      Accumulator a(*this);
+      a.Add(y);
+      return a.Sum();
+    }
+  public:
+    /**
+     * Construct from a \e T.  This is not declared explicit, so that you can
+     * write <code>Accumulator<double> a = 5;</code>.
+     *
+     * @param[in] y set \e sum = \e y.
+     **********************************************************************/
+    Accumulator(T y = T(0)) throw() : _s(y), _t(0) {
+      STATIC_ASSERT(!std::numeric_limits<T>::is_integer,
+                    "Accumulator type is not floating point");
+    };
+    /**
+     * Set the accumulator to a number.
+     *
+     * @param[in] y set \e sum = \e y.
+     **********************************************************************/
+    Accumulator& operator=(T y) throw() { _s = y; _t = 0; return *this; }
+    /**
+     * Return the value held in the accumulator.
+     *
+     * @return \e sum.
+     **********************************************************************/
+    T operator()() const throw() { return Sum(); }
+    /**
+     * Return the result of adding a number to \e sum (but don't change \e sum).
+     *
+     * @param[in] y the number to be added to the sum.
+     * @return \e sum + \e y.
+     **********************************************************************/
+    T operator()(T y) const throw() { return Sum(y); }
+    /**
+     * Add a number to the accumulator.
+     *
+     * @param[in] y set \e sum += \e y.
+     **********************************************************************/
+    Accumulator& operator+=(T y) throw() { Add(y); return *this; }
+    /**
+     * Subtract a number from the accumulator.
+     *
+     * @param[in] y set \e sum -= \e y.
+     **********************************************************************/
+    Accumulator& operator-=(T y) throw() { Add(-y); return *this; }
+    /**
+     * Multiply accumulator by an integer.  To avoid loss of accuracy, use only
+     * integers such that \e n * \e T is exactly representable as a \e T (i.e.,
+     * +/- powers of two).  Use \e n = -1 to negate \e sum.
+     *
+     * @param[in] n set \e sum *= \e n.
+     **********************************************************************/
+    Accumulator& operator*=(int n) throw() { _s *= n; _t *= n; return *this; }
+    /**
+     * Optimize how \e sum is stored in the accumulator.  This is a no-op for
+     * the non-fast implementation.  It is rarely necessary to do this; however
+     * the accuracy might be improved if this function is called every time a
+     * million numbers (for example) have been added to the accumulator.
+     **********************************************************************/
+    void Optimize() throw() { if (fast) _s = sum(_s, _t, _t); }
+    /**
+     * Test equality of an Accumulator with a number.
+     **********************************************************************/
+    bool operator==(T y) const throw() { return Sum() == y; }
+    /**
+     * Test inequality of an Accumulator with a number.
+     **********************************************************************/
+    bool operator!=(T y) const throw() { return Sum() != y; }
+    /**
+     * Less operator on an Accumulator and a number.
+     **********************************************************************/
+    bool operator<(T y) const throw() { return Sum() < y; }
+    /**
+     * Less or equal operator on an Accumulator and a number.
+     **********************************************************************/
+    bool operator<=(T y) const throw() { return Sum() <= y; }
+    /**
+     * Greater operator on an Accumulator and a number.
+     **********************************************************************/
+    bool operator>(T y) const throw() { return Sum() > y; }
+    /**
+     * Greater or equal operator on an Accumulator and a number.
+     **********************************************************************/
+    bool operator>=(T y) const throw() { return Sum() >= y; }
+  };
+
+  /**
+   * \brief Exception handling for %GeographicLib
+   *
+   * A class to handle exceptions.  It's derived from std::runtime_error so it
    * can be caught by the usual catch clauses.
    **********************************************************************/
   class GeographicErr : public std::runtime_error {
@@ -561,4 +773,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif
+#endif  // GEOGRAPHICLIB_CONSTANTS_HPP

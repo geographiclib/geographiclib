@@ -2,8 +2,8 @@
  * \file GeodesicLine.cpp
  * \brief Implementation for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
+ * licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
@@ -26,7 +26,7 @@
  * - s and c prefixes mean sin and cos
  **********************************************************************/
 
-#include "GeographicLib/GeodesicLine.hpp"
+#include <GeographicLib/GeodesicLine.hpp>
 
 #define GEOGRAPHICLIB_GEODESICLINE_CPP "$Id$"
 
@@ -65,7 +65,7 @@ namespace GeographicLib {
     phi = lat1 * Math::degree<real>();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
-    cbet1 = abs(lat1) == 90 ? Geodesic::eps2 : cos(phi);
+    cbet1 = abs(lat1) == 90 ? Geodesic::eps2_ : cos(phi);
     Geodesic::SinCosNorm(sbet1, cbet1);
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -87,19 +87,19 @@ namespace GeographicLib {
     Geodesic::SinCosNorm(_ssig1, _csig1); // sig1 in (-pi, pi]
     Geodesic::SinCosNorm(_somg1, _comg1);
 
-    _k2 = sq(_calp0) * g._ep2;
+    _k2 = Math::sq(_calp0) * g._ep2;
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
 
     if (_caps & CAP_C1) {
       _A1m1 =  Geodesic::A1m1f(eps);
       Geodesic::C1f(eps, _C1a);
-      _B11 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C1a, nC1);
+      _B11 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C1a, nC1_);
       real s = sin(_B11), c = cos(_B11);
       // tau1 = sig1 + B11
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
       // Not necessary because C1pa reverts C1a
-      //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p);
+      //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_);
     }
 
     if (_caps & CAP_C1p)
@@ -108,20 +108,20 @@ namespace GeographicLib {
     if (_caps & CAP_C2) {
       _A2m1 =  Geodesic::A2m1f(eps);
       Geodesic::C2f(eps, _C2a);
-      _B21 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C2a, nC2);
+      _B21 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C2a, nC2_);
     }
 
     if (_caps & CAP_C3) {
       g.C3f(eps, _C3a);
       _A3c = -g._f * _salp0 * g.A3f(eps);
-      _B31 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C3a, nC3-1);
+      _B31 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C3a, nC3_-1);
     }
 
     if (_caps & CAP_C4) {
       g.C4f(_k2, _C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-      _A4 = sq(g._a) * _calp0 * _salp0 * g._e2;
-      _B41 = Geodesic::SinCosSeries(false, _ssig1, _csig1, _C4a, nC4);
+      _A4 = Math::sq(g._a) * _calp0 * _salp0 * g._e2;
+      _B41 = Geodesic::SinCosSeries(false, _ssig1, _csig1, _C4a, nC4_);
     }
   }
 
@@ -155,7 +155,7 @@ namespace GeographicLib {
       // tau2 = tau1 + tau12
       B12 = - Geodesic::SinCosSeries(true, _stau1 * c + _ctau1 * s,
                                      _ctau1 * c - _stau1 * s,
-                                     _C1pa, nC1p);
+                                     _C1pa, nC1p_);
       sig12 = tau12 - (B12 - _B11);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
@@ -168,7 +168,7 @@ namespace GeographicLib {
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
       if (arcmode)
-        B12 = Geodesic::SinCosSeries(true, ssig2, csig2, _C1a, nC1);
+        B12 = Geodesic::SinCosSeries(true, ssig2, csig2, _C1a, nC1_);
       AB1 = (1 + _A1m1) * (B12 - _B11);
     }
     // sin(bet2) = cos(alp0) * sin(sig2)
@@ -177,7 +177,7 @@ namespace GeographicLib {
     cbet2 = Math::hypot(_salp0, _calp0 * csig2);
     if (cbet2 == 0)
       // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
-      cbet2 = csig2 = Geodesic::eps2;
+      cbet2 = csig2 = Geodesic::eps2_;
     // tan(omg2) = sin(alp0) * tan(sig2)
     somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
@@ -191,7 +191,7 @@ namespace GeographicLib {
 
     if (outmask & LONGITUDE) {
       lam12 = omg12 + _A3c *
-        ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3-1)
+        ( sig12 + (Geodesic::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
                    - _B31));
       lon12 = lam12 / Math::degree<real>();
       // Can't use AngNormalize because longitude might have wrapped multiple
@@ -209,11 +209,11 @@ namespace GeographicLib {
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
       real
-        ssig1sq = sq(_ssig1),
-        ssig2sq = sq( ssig2),
+        ssig1sq = Math::sq(_ssig1),
+        ssig2sq = Math::sq( ssig2),
         w1 = sqrt(1 + _k2 * ssig1sq),
         w2 = sqrt(1 + _k2 * ssig2sq),
-        B22 = Geodesic::SinCosSeries(true, ssig2, csig2, _C2a, nC2),
+        B22 = Geodesic::SinCosSeries(true, ssig2, csig2, _C2a, nC2_),
         AB2 = (1 + _A2m1) * (B22 - _B21),
         J12 = (_A1m1 - _A2m1) * sig12 + (AB1 - AB2);
       if (outmask & REDUCEDLENGTH)
@@ -231,7 +231,7 @@ namespace GeographicLib {
 
     if (outmask & AREA) {
       real
-        B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4);
+        B42 = Geodesic::SinCosSeries(false, ssig2, csig2, _C4a, nC4_);
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalized
@@ -241,7 +241,7 @@ namespace GeographicLib {
         // salp12 = -0 and alp12 = -180.  However this depends on the sign being
         // attached to 0 correctly.  The following ensures the correct behavior.
         if (salp12 == 0 && calp12 < 0) {
-          salp12 = Geodesic::eps2 * _calp1;
+          salp12 = Geodesic::eps2_ * _calp1;
           calp12 = -1;
         }
       } else {
@@ -256,12 +256,12 @@ namespace GeographicLib {
         salp12 = _calp0 * _salp0 *
           (csig12 <= 0 ? _csig1 * (1 - csig12) + ssig12 * _ssig1 :
            ssig12 * (_csig1 * ssig12 / (1 + csig12) + _ssig1));
-        calp12 = sq(_salp0) + sq(_calp0) * _csig1 * csig2;
+        calp12 = Math::sq(_salp0) + Math::sq(_calp0) * _csig1 * csig2;
       }
       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
 
     return arcmode ? s12_a12 : sig12 /  Math::degree<real>();
   }
-} // namespace GeographicLib
 
+} // namespace GeographicLib

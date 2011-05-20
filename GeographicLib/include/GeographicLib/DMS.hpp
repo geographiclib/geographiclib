@@ -10,9 +10,15 @@
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
 #define GEOGRAPHICLIB_DMS_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
 #include <sstream>
 #include <iomanip>
+#include <GeographicLib/Constants.hpp>
+
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs string
+#pragma warning (push)
+#pragma warning (disable: 4251)
+#endif
 
 namespace GeographicLib {
 
@@ -21,9 +27,9 @@ namespace GeographicLib {
    *
    * Parse a string representing degree, minutes, and seconds and return the
    * angle in degrees and format an angle in degrees as degree, minutes, and
-   * seconds.
+   * seconds.  In addition, handle NANs and infinities on input and output.
    **********************************************************************/
-  class DMS {
+  class GEOGRAPHIC_EXPORT DMS {
   private:
     typedef Math::real real;
     static int lookup(const std::string& s, char c) throw() {
@@ -33,11 +39,11 @@ namespace GeographicLib {
     template<typename T> static std::string str(T x) {
       std::ostringstream s; s << x; return s.str();
     }
-    static const std::string hemispheres;
-    static const std::string signs;
-    static const std::string digits;
-    static const std::string dmsindicators;
-    static const std::string components[3];
+    static const std::string hemispheres_;
+    static const std::string signs_;
+    static const std::string digits_;
+    static const std::string dmsindicators_;
+    static const std::string components_[3];
     static Math::real NumMatch(const std::string& s);
     DMS();                      // Disable constructor
 
@@ -106,12 +112,12 @@ namespace GeographicLib {
      * @return angle (degrees).
      *
      * Degrees, minutes, and seconds are indicated by the letters d, ', &quot;,
-     * and these components may only be given in this order.  Any (but not all)
-     * components may be omitted.  The last component indicator may be omitted
+     * and these components_ may only be given in this order.  Any (but not all)
+     * components_ may be omitted.  The last component indicator may be omitted
      * and is assumed to be tbe next smallest unit (thus 33d10 is interpreted
      * as 33d10').  The final component may be a decimal fraction but the
-     * non-final components must be integers.  The integer parts of the minutes
-     * and seconds components must be less than 60.  A single leading sign is
+     * non-final components_ must be integers.  The integer parts of the minutes
+     * and seconds components_ must be less than 60.  A single leading sign is
      * permitted.  A hemisphere designator (N, E, W, S) may be added to tbe
      * beginning or end of the string.  The result is multiplied by the implied
      * signed of the hemisphere designator (negative for S and W).  In addition
@@ -129,7 +135,7 @@ namespace GeographicLib {
      * @param[in] s arc seconds.
      * @return angle (degrees)
      *
-     * This does not propagate the sign on \e d to the other components, so
+     * This does not propagate the sign on \e d to the other components_, so
      * -3d20' would need to be represented as - DMS::Decode(3.0, 20.0) or
      * DMS::Decode(-3.0, -20.0).
      **********************************************************************/
@@ -145,7 +151,7 @@ namespace GeographicLib {
     static Math::real Decode(const std::string& str);
 
     /**
-     * Convert a pait of strings to latitude and longitude.
+     * Convert a pair of strings to latitude and longitude.
      *
      * @param[in] dmsa first string.
      * @param[in] dmsb second string.
@@ -194,7 +200,7 @@ namespace GeographicLib {
      * @param[in] angle input angle (degrees)
      * @param[in] trailing DMS::component value indicating the trailing units
      *   on the string and this is given as a decimal number if necessary.
-     * @param[in] prec the number of digits after the decimal point for the
+     * @param[in] prec the number of digits_ after the decimal point for the
      *   trailing component.
      * @param[in] ind DMS::flag value indicated additional formatting.
      * @return formatted string
@@ -203,14 +209,14 @@ namespace GeographicLib {
      * - ind == DMS::NONE, signed result no leading zeros on degrees except in
      *   the units place, e.g., -8d03'.
      * - ind == DMS::LATITUDE, trailing N or S hemisphere designator, no sign,
-     *   pad degrees to 2 digits, e.g., 08d03'S.
+     *   pad degrees to 2 digits_, e.g., 08d03'S.
      * - ind == DMS::LONGITUDE, trailing E or W hemisphere designator, no
-     *   sign, pad degrees to 3 digits, e.g., 008d03'W.
+     *   sign, pad degrees to 3 digits_, e.g., 008d03'W.
      * - ind == DMS::AZIMUTH, convert to the range [0, 360<sup>o</sup>), no
-     *   sign, pad degrees to 3 digits, , e.g., 351d57'.
+     *   sign, pad degrees to 3 digits_, , e.g., 351d57'.
      * .
-     * The integer parts of the minutes and seconds components are always given
-     * with 2 digits.
+     * The integer parts of the minutes and seconds components_ are always given
+     * with 2 digits_.
      **********************************************************************/
     static std::string Encode(real angle, component trailing, unsigned prec,
                               flag ind = NONE);
@@ -273,4 +279,8 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
+#if defined(_MSC_VER)
+#pragma warning (pop)
 #endif
+
+#endif  // GEOGRAPHICLIB_DMS_HPP

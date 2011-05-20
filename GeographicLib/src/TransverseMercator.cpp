@@ -39,7 +39,7 @@
  *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
  **********************************************************************/
 
-#include "GeographicLib/TransverseMercator.hpp"
+#include <GeographicLib/TransverseMercator.hpp>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id$"
 
@@ -50,11 +50,11 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real TransverseMercator::tol =
+  const Math::real TransverseMercator::tol_ =
     real(0.1)*sqrt(numeric_limits<real>::epsilon());
-  // Overflow value s.t. atan(overflow) = pi/2
-  const Math::real TransverseMercator::overflow =
-    1 / sq(numeric_limits<real>::epsilon());
+  // Overflow value s.t. atan(overflow_) = pi/2
+  const Math::real TransverseMercator::overflow_ =
+    1 / Math::sq(numeric_limits<real>::epsilon());
 
   TransverseMercator::TransverseMercator(real a, real r, real k0)
     : _a(a)
@@ -75,10 +75,10 @@ namespace GeographicLib {
       throw GeographicErr("Minor radius is not positive");
     if (!(_k0 > 0))
       throw GeographicErr("Scale is not positive");
-    // If coefficents might overflow an int, convert them to double (and they
+    // If coefficents might overflow_ an int, convert them to double (and they
     // are all exactly representable as doubles).
-    real nx = sq(_n);
-    switch (maxpow) {
+    real nx = Math::sq(_n);
+    switch (maxpow_) {
     case 4:
       _b1 = 1/(1+_n)*(nx*(nx+16)+64)/64;
       _alp[1] = _n*(_n*(_n*(164*_n+225)-480)+360)/720;
@@ -202,7 +202,7 @@ namespace GeographicLib {
       _bet[8] = 191773887257.0*nx/3719607091200.0;
       break;
     default:
-      STATIC_ASSERT(maxpow >= 4 && maxpow <= 8, "Bad value of maxpow");
+      STATIC_ASSERT(maxpow_ >= 4 && maxpow_ <= 8, "Bad value of maxpow_");
     }
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.
@@ -281,7 +281,7 @@ namespace GeographicLib {
       // This form has cancelling errors.  This property is lost if cosh(psip)
       // is replaced by 1/cos(phi), even though it's using "primary" data (phi
       // instead of psip).
-      k = sqrt(_e2m + _e2 * sq(cos(phi))) * secphi / Math::hypot(taup, c);
+      k = sqrt(_e2m + _e2 * Math::sq(cos(phi))) * secphi / Math::hypot(taup, c);
     } else {
       xip = Math::pi<real>()/2;
       etap = 0;
@@ -299,11 +299,11 @@ namespace GeographicLib {
     // The conversion from conformal to rectifying latitude can be expresses as
     // a series in _n:
     //
-    //   zeta = zeta' + sum(h[j-1]' * sin(2 * j * zeta'), j = 1..maxpow)
+    //   zeta = zeta' + sum(h[j-1]' * sin(2 * j * zeta'), j = 1..maxpow_)
     //
     // where h[j]' = O(_n^j).  The reversion of this series gives
     //
-    //   zeta' = zeta - sum(h[j-1] * sin(2 * j * zeta), j = 1..maxpow)
+    //   zeta' = zeta - sum(h[j-1] * sin(2 * j * zeta), j = 1..maxpow_)
     //
     // which is used in Reverse.
     //
@@ -328,7 +328,7 @@ namespace GeographicLib {
     //    a(n, x) = 2 * cos(x)
     //    b(n, x) = -1
     //    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = n*x, B = x ]
-    //    N = maxpow
+    //    N = maxpow_
     //    c[k] = _alp[k]
     //    S = y[1] * sin(x)
     //
@@ -345,12 +345,12 @@ namespace GeographicLib {
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta')
-    int n = maxpow;
+    int n = maxpow_;
     real
       xi0 = (n & 1 ? _alp[n] : 0), eta0 = 0,
       xi1 = 0, eta1 = 0;
     real                        // Accumulators for dzeta/dzeta'
-      yr0 = (n & 1 ? 2 * maxpow * _alp[n--] : 0), yi0 = 0,
+      yr0 = (n & 1 ? 2 * maxpow_ * _alp[n--] : 0), yi0 = 0,
       yr1 = 0, yi1 = 0;
     while (n) {
       xi1  = ar * xi0 - ai * eta0 - xi1 + _alp[n];
@@ -406,12 +406,12 @@ namespace GeographicLib {
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
       ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
-    int n = maxpow;
+    int n = maxpow_;
     real                        // Accumulators for zeta'
       xip0 = (n & 1 ? -_bet[n] : 0), etap0 = 0,
       xip1 = 0, etap1 = 0;
     real                        // Accumulators for dzeta'/dzeta
-      yr0 = (n & 1 ? - 2 * maxpow * _bet[n--] : 0), yi0 = 0,
+      yr0 = (n & 1 ? - 2 * maxpow_ * _bet[n--] : 0), yi0 = 0,
       yr1 = 0, yi1 = 0;
     while (n) {
       xip1  = ar * xip0 - ai * etap0 - xip1 - _bet[n];
@@ -451,14 +451,14 @@ namespace GeographicLib {
       real
         taup = sin(xip)/r,
         tau = taup,
-        stol = tol * max(real(1), abs(taup));
+        stol = tol_ * max(real(1), abs(taup));
       // min iterations = 1, max iterations = 2; mean = 1.99
-      for (int i = 0; i < numit; ++i) {
+      for (int i = 0; i < numit_; ++i) {
         real
           tau1 = Math::hypot(real(1), tau),
           sig = sinh( eatanhe( tau / tau1 ) ),
           taupa = Math::hypot(real(1), sig) * tau - sig * tau1,
-          dtau = (taup - taupa) * (1 + _e2m * sq(tau)) /
+          dtau = (taup - taupa) * (1 + _e2m * Math::sq(tau)) /
           ( _e2m * tau1 * Math::hypot(real(1), taupa) );
         tau += dtau;
         if (!(abs(dtau) >= stol))
@@ -467,7 +467,8 @@ namespace GeographicLib {
       phi = atan(tau);
       gamma += atan(tanx(xip) * tanh(etap)); // Krueger p 19 (31)
       // Note cos(phi') * cosh(eta') = r
-      k *= sqrt(_e2m + _e2 * sq(cos(phi))) * Math::hypot(real(1), tau) * r;
+      k *= sqrt(_e2m + _e2 * Math::sq(cos(phi))) *
+        Math::hypot(real(1), tau) * r;
     } else {
       phi = Math::pi<real>()/2;
       lam = 0;

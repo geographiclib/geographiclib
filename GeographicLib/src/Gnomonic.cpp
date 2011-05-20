@@ -2,11 +2,12 @@
  * \file Gnomonic.cpp
  * \brief Implementation for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#include "GeographicLib/Gnomonic.hpp"
+#include <GeographicLib/Gnomonic.hpp>
 
 #define GEOGRAPHICLIB_GNOMONIC_CPP "$Id$"
 
@@ -17,8 +18,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real Gnomonic::eps0 = numeric_limits<real>::epsilon();
-  const Math::real Gnomonic::eps = real(0.01) * sqrt(eps0);
+  const Math::real Gnomonic::eps0_ = numeric_limits<real>::epsilon();
+  const Math::real Gnomonic::eps_ = real(0.01) * sqrt(eps0_);
 
   void Gnomonic::Forward(real lat0, real lon0, real lat, real lon,
                          real& x, real& y, real& azi, real& rk)
@@ -54,7 +55,7 @@ namespace GeographicLib {
                                   Geodesic::AZIMUTH | Geodesic::DISTANCE_IN |
                                   Geodesic::REDUCEDLENGTH |
                                   Geodesic::GEODESICSCALE));
-    int count = numit, trip = 0;
+    int count = numit_, trip = 0;
     real lat1, lon1, azi1, M;
     while (count--) {
       real m, t;
@@ -65,7 +66,7 @@ namespace GeographicLib {
       // else solve 1/rho(s) = 1/rho with d(1/rho(s))/ds = -1/m^2
       real ds = little ? (m/M - rho) * M * M : (rho - M/m) * m * m;
       s -= ds;
-      if (!(abs(ds) >= eps * _a))
+      if (!(abs(ds) >= eps_ * _a))
         ++trip;
     }
     if (trip) {
@@ -74,4 +75,5 @@ namespace GeographicLib {
       lat = lon = azi = rk = Math::NaN();
     return;
   }
+
 } // namespace GeographicLib

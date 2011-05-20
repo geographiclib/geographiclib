@@ -8,6 +8,8 @@ CartConvert -- convert geodetic coordinates to geocentric or local cartesian
 
 B<CartConvert> [ B<-r> ] [ B<-l> I<lat0> I<lon0> I<h0> ] [ B<-e> I<a> I<r> ]
 [ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
 
@@ -45,15 +47,31 @@ WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
 
 =item B<--version>
 
-print version.
+print version and exit.
 
 =item B<-h>
 
-print usage.
+print usage and exit.
 
 =item B<--help>
 
-print full documentation.
+print full documentation and exit.
+
+=item B<--input-file>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string>
+
+read input from the string I<instring> instead of from standard input.
+All the semicolons in I<instring> are converted to newlines before the
+reading begins.
+
+=item B<--output-file>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
 
 =back
 
@@ -84,3 +102,8 @@ L<http://arxiv.org/abs/1102.1215>.
 =head1 AUTHOR
 
 B<CartConvert> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<CartConvert> was added to GeographicLib in 2009-02.  Prior to 2009-03
+it was called ECEFConvert.

@@ -7,17 +7,12 @@
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#include "GeographicLib/Geocentric.hpp"
+#include <GeographicLib/Geocentric.hpp>
 
 #define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id$"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
-
-#if defined(_MSC_VER)
-// Squelch warnings about unsafe use of copy
-#pragma warning (disable: 4996)
-#endif
 
 namespace GeographicLib {
 
@@ -28,9 +23,9 @@ namespace GeographicLib {
     , _r(r)
     , _f(_r != 0 ? 1 / _r : 0)
     , _e2(_f * (2 - _f))
-    , _e2m(sq(1 - _f))          // 1 - _e2
+    , _e2m(Math::sq(1 - _f))          // 1 - _e2
     , _e2a(abs(_e2))
-    , _e4a(sq(_e2))
+    , _e4a(Math::sq(_e2))
     , _maxrad(2 * _a / numeric_limits<real>::epsilon())
   {
     if (!(_a > 0))
@@ -41,34 +36,17 @@ namespace GeographicLib {
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a<real>(),
                                      Constants::WGS84_r<real>());
-  /*
-  void Geocentric::Forward(real lat, real lon, real h,
-                           real& x, real& y, real& z) const throw() {
-    lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
-    real
-      phi = lat * Math::degree<real>(),
-      lam = lon * Math::degree<real>(),
-      sphi = sin(phi),
-      cphi = abs(lat) == 90 ? 0 : cos(phi),
-      n = _a/sqrt(1 - _e2 * sq(sphi)),
-      slam = lon == -180 ? 0 : sin(lam),
-      clam = abs(lon) == 90 ? 0 : cos(lam);
-    z = ( _e2m * n + h) * sphi;
-    x = (n + h) * cphi;
-    y = x * slam;
-    x *= clam;
-  }
-*/
+
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& x, real& y, real& z,
-                              real M[dim2]) const throw() {
+                              real M[dim2_]) const throw() {
     lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
     real
       phi = lat * Math::degree<real>(),
       lam = lon * Math::degree<real>(),
       sphi = sin(phi),
       cphi = abs(lat) == 90 ? 0 : cos(phi),
-      n = _a/sqrt(1 - _e2 * sq(sphi)),
+      n = _a/sqrt(1 - _e2 * Math::sq(sphi)),
       slam = lon == -180 ? 0 : sin(lam),
       clam = abs(lon) == 90 ? 0 : cos(lam);
     z = ( _e2m * n + h) * sphi;
@@ -81,7 +59,7 @@ namespace GeographicLib {
 
   void Geocentric::IntReverse(real x, real y, real z,
                               real& lat, real& lon, real& h,
-                              real M[dim2]) const throw() {
+                              real M[dim2_]) const throw() {
     real
       R = Math::hypot(x, y),
       slam = R ? y / R : 0,
@@ -113,8 +91,8 @@ namespace GeographicLib {
       // Treat prolate spheroids by swapping R and z here and by switching
       // the arguments to phi = atan2(...) at the end.
       real
-        p = sq(R / _a),
-        q = _e2m * sq(z / _a),
+        p = Math::sq(R / _a),
+        q = _e2m * Math::sq(z / _a),
         r = (p + q - _e4a) / 6;
       if (_f < 0) swap(p, q);
       if ( !(_e4a * q == 0 && r <= 0) ) {
@@ -122,7 +100,7 @@ namespace GeographicLib {
           // Avoid possible division by zero when r = 0 by multiplying
           // equations for s and t by r^3 and r, resp.
           S = _e4a * p * q / 4, // S = r^3 * s
-          r2 = sq(r),
+          r2 = Math::sq(r),
           r3 = r * r2,
           disc =  S * (2 * r3 + S);
         real u = r;
@@ -144,7 +122,7 @@ namespace GeographicLib {
           u += 2 * r * cos(ang / 3);
         }
         real
-          v = sqrt(sq(u) + _e4a * q), // guaranteed positive
+          v = sqrt(Math::sq(u) + _e4a * q), // guaranteed positive
           // Avoid loss of accuracy when u < 0.  Underflow doesn't occur in
           // e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
           uv = u < 0 ? _e4a * q / (v - u) : u + v, // u+v, guaranteed positive
@@ -152,7 +130,7 @@ namespace GeographicLib {
           w = max(real(0), _e2a * (uv - q) / (2 * v)),
           // Rearrange expression for k to avoid loss of accuracy due to
           // subtraction.  Division by 0 not possible because uv > 0, w >= 0.
-          k = uv / (sqrt(uv + sq(w)) + w),
+          k = uv / (sqrt(uv + Math::sq(w)) + w),
           k1 = _f >= 0 ? k : k - _e2,
           k2 = _f >= 0 ? k + _e2 : k,
           d = k1 * R / k2,
@@ -185,7 +163,7 @@ namespace GeographicLib {
   }
 
   void Geocentric::Rotation(real sphi, real cphi, real slam, real clam,
-                             real M[dim2]) const throw() {
+                             real M[dim2_]) const throw() {
     // This rotation matrix is given by the following quaternion operations
     // qrot(lam, [0,0,1]) * qrot(phi, [0,-1,0]) * [1,1,1,1]/2
     // or

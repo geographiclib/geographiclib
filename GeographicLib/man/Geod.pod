@@ -9,6 +9,8 @@ Geod -- perform geodesic calculations
 B<Geod> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ] [ B<-e> I<a> I<r> ]
 [ B<-d> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ]
 [ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
 
@@ -91,15 +93,31 @@ relative to 1m.  See L<PRECISION|precision>.
 
 =item B<--version>
 
-print version.
+print version and exit.
 
 =item B<-h>
 
-print usage.
+print usage and exit.
 
 =item B<--help>
 
-print full documentation.
+print full documentation and exit.
+
+=item B<--input-file>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string>
+
+read input from the string I<instring> instead of from standard input.
+All the semicolons in I<instring> are converted to newlines before the
+reading begins.
+
+=item B<--output-file>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
 
 =back
 
@@ -179,3 +197,7 @@ of revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
 =head1 AUTHOR
 
 B<Geod> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<Geod> was added to GeographicLib in 2009-03.

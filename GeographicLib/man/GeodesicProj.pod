@@ -2,12 +2,14 @@
 
 =head1 NAME
 
-EquidistantTest -- perform projections based on geodesics
+GeodesicProj -- perform projections based on geodesics
 
 =head1 SYNOPSIS
 
-B<EquidistantTest> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
+B<GeodesicProj> ( B<-z> | B<-c> | B<-g> ) I<lat0> I<lon0> [ B<-r> ]
 [ B<-e> I<a> I<r> ] [ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
 
@@ -65,39 +67,60 @@ WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
 
 =item B<--version>
 
-print version.
+print version and exit.
 
 =item B<-h>
 
-print usage.
+print usage and exit.
 
 =item B<--help>
 
-print full documentation.
+print full documentation and exit.
+
+=item B<--input-file>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string>
+
+read input from the string I<instring> instead of from standard input.
+All the semicolons in I<instring> are converted to newlines before the
+reading begins.
+
+=item B<--output-file>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
 
 =back
 
 =head1 EXAMPLES
 
-   echo 48.648 -2.007 | EquidistantTest -c 48.836 2.337
+   echo 48.648 -2.007 | GeodesicProj -c 48.836 2.337
    => -319919 -11791 86.7 0.999
-   echo -319919 -11791 | EquidistantTest -c 48.836 2.337 -r
+   echo -319919 -11791 | GeodesicProj -c 48.836 2.337 -r
    => 48.648 -2.007 86.7 0.999
 
 =head1 ERRORS
 
 An illegal line of input will print an error message to standard output
-beginning with C<ERROR:> and causes B<EquidistantTest> to return an exit
-code of 1.  However, an error does not cause B<EquidistantTest> to
+beginning with C<ERROR:> and causes B<GeodesicProj> to return an exit
+code of 1.  However, an error does not cause B<GeodesicProj> to
 terminate; following lines will be converted.
 
 =head1 SEE ALSO
 
-B<EquidistantTest> is a part of GeographicLib,
+B<GeodesicProj> is a part of GeographicLib,
 L<http://geographiclib.sf.net>.  The ellipsoidal gnomonic projection is
 derived in Section 13 of C. F. F. Karney, I<Geodesics on an ellipsoid of
 revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
 
 =head1 AUTHOR
 
-B<EquidistantTest> was written by Charles Karney.
+B<GeodesicProj> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<GeodesicProj> was added to GeographicLib in 2009-08.  Prior to version
+1.9 it was called EquidistantTest.

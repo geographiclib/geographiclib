@@ -8,14 +8,14 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src tools doc include man
+SUBDIRS = src man tools doc include
 
-EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
-			 Makefile.mk windows maxima matlab doc man
+EXTRA_DIST = AUTHORS 00README.txt COPYING.txt NEWS INSTALL \
+	Makefile.mk CMakeLists.txt \
+	windows maxima matlab man doc
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
-	find $(distdir)/doc -maxdepth 1 -type f -name '*.tmp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		\( ! -name '*.sln' -a ! -name '*.vc*proj' -a ! -name '*.mk' \)| \
@@ -24,19 +24,23 @@ dist-hook:
 		\( ! -name '*.cpp' -a ! -name '*.m' -a ! -name '*.mk' \) | \
 		xargs rm -rf ; \
 	find $(distdir) \
-		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -o -name '*~' \)| \
+		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
-
+	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
+	\"$(PACKAGE_VERSION)\" > $(distdir)/include/GeographicLib/Config.h
 # Custom rules
 
-all-local: doc
+all-local: man doc
 install-data-local: install-doc
 
-doc:
+doc: man
 	$(MAKE) -C doc doc
 
 install-doc:
 	$(MAKE) -C doc install-doc
 
-.PHONY: doc install-doc
+man:
+	$(MAKE) -C man man
+
+.PHONY: doc install-doc man

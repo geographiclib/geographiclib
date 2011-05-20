@@ -288,6 +288,28 @@ ll(x,y):=block([sigma,thom,jacr,jaci,psi,lam,phi,gam,scale,c],
   else (gam : lam, scale : 1b0),
   [phi/degree,lam/degree,gam/degree,k0*scale])$
 
+/* Return lat/lon/x/y for a point specified in Thompson coords */
+/* Pick u in [0, kcu] and v in [0, kcv] */
+lltm(u,v):=block([jacr,jaci,psi,lam,phi,c,gam,scale,sigma,x,y],
+  u:bfloat(u), v:bfloat(v),
+  jacr:sncndn(u,1-e2),
+  jaci:sncndn(v,e2),
+  psi:psi_thom(u+%i*v),
+  sigma:sigma_thom(u+%i*v),
+  x:imagpart(sigma)*k0*a,y:realpart(sigma)*k0*a,
+  lam:bfloat(imagpart(psi)),
+  psi:bfloat(realpart(psi)),
+  phi:phi_psi(psi),
+  c:cos(phi),
+  if c > tol1 then (
+    gam:atan2((1-e2)*jacr[1]*jaci[1]*jaci[2],
+      jacr[2]*jacr[3]*jaci[3]),
+    scale:sqrt(1-e2 + e2 * c^2)/c*
+    sqrt(((1-e2)*jaci[1]^2 + (jacr[2]*jaci[3])^2)/
+      (e2*jacr[2]^2 + (1-e2)*jaci[2]^2)))
+  else (gam : lam, scale : 1b0),
+  [phi/degree,lam/degree,x,y,gam/degree,k0*scale])$
+
 /* Gauss-Krueger series to order n^i forward
 
 Uses the array functions

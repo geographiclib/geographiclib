@@ -4,12 +4,8 @@
 
 SOURCE=$1
 NAME=`basename $SOURCE .pod`
-VERSION=`grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1`
 
 cat<<EOF
-#define GEOGRAPHICLIB_VERSION "$VERSION"
-#define PROGRAM_NAME "$NAME"
-
 int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n\\

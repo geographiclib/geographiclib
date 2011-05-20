@@ -10,9 +10,9 @@
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id$"
 
-#include "GeographicLib/Constants.hpp"
 #include <vector>
 #include <algorithm>
+#include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
 
@@ -38,11 +38,11 @@ namespace GeographicLib {
    * results for all finite inputs (even if \e h is infinite).  The changes are
    * described in Appendix B of
    * - C. F. F. Karney,
-   *   <a href="http://arxiv.org/abs/1102.1215">Geodesics
+   *   <a href="http://arxiv.org/abs/1102.1215v1">Geodesics
    *   on an ellipsoid of revolution</a>,
    *   Feb. 2011;
    *   preprint
-   *   <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
+   *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
    * See \ref geocentric for more information.
    *
@@ -52,21 +52,21 @@ namespace GeographicLib {
    * ellipsoid.  See \ref geocentric for further information on the errors.
    **********************************************************************/
 
-  class Geocentric {
+  class GEOGRAPHIC_EXPORT Geocentric {
   private:
     typedef Math::real real;
     friend class LocalCartesian;
-    static const size_t dim = 3, dim2 = dim * dim;
+    static const size_t dim_ = 3;
+    static const size_t dim2_ = dim_ * dim_;
     const real _a, _r, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
-    static inline real sq(real x) throw() { return x * x; }
     // Actually this can be static because it doesn't depend on the ellipsoid.
     // But let's be more general than that.
     void Rotation(real sphi, real cphi, real slam, real clam,
-                  real M[dim2]) const throw();
+                  real M[dim2_]) const throw();
     void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
-                    real M[dim2]) const throw();
+                    real M[dim2_]) const throw();
     void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
-                    real M[dim2]) const throw();
+                    real M[dim2_]) const throw();
   public:
 
     /**
@@ -119,10 +119,10 @@ namespace GeographicLib {
     void Forward(real lat, real lon, real h, real& x, real& y, real& z,
                  std::vector<real>& M)
       const throw() {
-      real t[dim2];
+      real t[dim2_];
       IntForward(lat, lon, h, x, y, z, t);
-      if (M.end() == M.begin() + dim2)
-        copy(t, t + dim2, M.begin());
+      if (M.end() == M.begin() + dim2_)
+        copy(t, t + dim2_, M.begin());
     }
 
     /**
@@ -168,10 +168,10 @@ namespace GeographicLib {
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
       const throw() {
-      real t[dim2];
+      real t[dim2_];
       IntReverse(x, y, z, lat, lon, h, t);
-      if (M.end() == M.begin() + dim2)
-        copy(t, t + dim2, M.begin());
+      if (M.end() == M.begin() + dim2_)
+        copy(t, t + dim2_, M.begin());
     }
 
     /** \name Inspector functions
@@ -199,4 +199,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-#endif
+
+#endif  // GEOGRAPHICLIB_GEOCENTRIC_HPP

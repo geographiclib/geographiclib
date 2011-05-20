@@ -2,10 +2,10 @@
 
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
-SUBDIRS = src tools doc man
+SUBDIRS = src man tools doc
 ALLDIRS = include $(SUBDIRS) maxima matlab windows
 
-all: src tools man
+all: src man tools
 
 $(SUBDIRS):
 	$(MAKE) -C $@
@@ -13,6 +13,7 @@ $(SUBDIRS):
 tools: src
 install: install-headers install-lib install-tools install-man
 clean: clean-src clean-tools clean-doc clean-man
+distclean: clean distclean-doc distclean-man
 install-headers:
 	$(MAKE) -C include install
 install-lib:
@@ -31,9 +32,14 @@ clean-doc:
 	$(MAKE) -C doc clean
 clean-man:
 	$(MAKE) -C man clean
+distclean-doc:
+	$(MAKE) -C doc distclean
+distclean-man:
+	$(MAKE) -C man distclean
 
 list:
-	@for f in 00README.txt COPYING AUTHORS NEWS Makefile $(MAKEFILE); do \
+	@for f in 00README.txt COPYING.txt AUTHORS NEWS Makefile \
+	$(MAKEFILE); do \
 	  echo $$f; \
 	done
 	@for d in $(ALLDIRS); do \
