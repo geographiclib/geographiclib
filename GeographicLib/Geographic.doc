@@ -6,22 +6,23 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://charles.karney.info/geographic/
  **********************************************************************/
-// $Id: Geographic.doc 6531 2009-01-30 15:01:40Z ckarney $
+// $Id: Geographic.doc 6572 2009-03-01 22:41:48Z ckarney $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 2009-02
-\date 2009-01-30
+\version 2009-03
+\date 2009-03-01
 
 \section abstract Abstract
 
-GeographicLib is a small set of C++ classes to perform conversions
-between geographic, UTM, UPS, MGRS, ECEF, and local cartesian
-coordinates.  In this application, the errors are close to round-off
-(about 5 nm).  It is specialized for use with the WGS84 but can be
-adapted for use with other ellipsoids.  In addition, various properties
-of the transverse Mercator projection are described.
+%GeographicLib is a small set of <a href="annotated.html">C++
+classes</a> to perform conversions between geographic, UTM, UPS, MGRS,
+geocentric, and local cartesian coordinates.  In this application, the
+errors are close to round-off (about 5 nm).  It is specialized for use
+with the WGS84 but can be adapted for use with other ellipsoids.  In
+addition, various properties of the \ref transversemercator are
+described and a new accurate algorithm for \ref geodesic is given.
 
 \section download Download
 
@@ -30,7 +31,7 @@ The code is available for download at either of
 - http://charles.karney.info/geographic/Geographic.zip
 .
 (The two archives have identical contents; however, the text files in
-the zip achive have Windows-style line endings.)
+the zip archive have Windows-style line endings.)
 
 It is licensed under the LGPL.  For more information, see
 http://charles.karney.info/geographic/
@@ -42,13 +43,20 @@ http://charles.karney.info/geographic/
  - \ref transversemercator
    - \ref tmvarious
    - \ref extend
-   - \ref testset
-   - \ref errors
-   - \ref series
+   - \ref testmerc
+   - \ref tmerrors
+   - \ref tmseries
+ - \ref geodesic
+   - \ref geoddesc
+   - \ref testgeod
+   - \ref geoderrors
+   - \ref geodtodo
+ - \ref geocentric
  - \ref utilities
    - \ref geoconvert
    - \ref transversemercatortest
-   - \ref ecefconvert
+   - \ref geod
+   - \ref cartconvert
  - \ref old
 
 <center>
@@ -63,24 +71,26 @@ Forward to \ref intro.
 Forward to \ref organization.  Up to \ref contents.
 </center>
 
-GeographicLib offers a C++ interfaces to a small (but important!) set of
+%GeographicLib offers a C++ interfaces to a small (but important!) set of
 geographic transformations.  It grew out of a desire to improve on the
 <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
-present, GeographicLib provides UTM, UPS, MGRS, ECEF, and local
-cartesian projections.
+present, %GeographicLib provides UTM, UPS, MGRS, geocentric, and local
+cartesian projections, and classes for geodesic calculations.
 
-The goals of GeographicLib are:
+The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
    about 5 nm.  Even though in many geographic applications 1 cm is
    considered "accurate enough", there is little penalty in providing
    much better accuracy.  If situations where a faster approximate
-   algorithm is necessary, GeographicLib offers an accurate benchmark to
+   algorithm is necessary, %GeographicLib offers an accurate benchmark to
    guide the development.
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
-   GeographicLib::ECEF.Reverse will return accurate geodetic coordinates
-   even for points close to the center of the earth.
+   GeographicLib::Geodesic::Inverse works for anti-podal points.
+   Similarly, GeographicLib::Geocentric.Reverse will return accurate
+   geodetic coordinates even for points close to the center of the
+   earth.
  - C++ interface.  For the projection methods, this allows encapsulation
    of the ellipsoid parameters.
  - Emphasis on projections necessary for analysing military data.
@@ -90,7 +100,7 @@ The goals of GeographicLib are:
  - Well defined and stable conventions for the conversion between
    UTM/UPS to MGRS coordinates.
  - Detailed internal documentation on the algorithms.  For the most part
-   GeographicLib uses published algorithms and references are given.  If
+   %GeographicLib uses published algorithms and references are given.  If
    changes have been made (usually to improve the numerical accuracy),
    these are described in the code.
 
@@ -116,15 +126,15 @@ Forward to \ref start.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
 </center>
 
-The following steps will get you started with GeographicLib:
+The following steps will get you started with %GeographicLib:
  - Download the <a
    href="http://charles.karney.info/geographic/Geographic.tgz">source</a>.
  - Unpack the tar file somewhere convenient with, e.g.,
    - tar xfpvz Geographic.tgz
    .
-   This will create a GeographicLib directory.
- - Change to the GeographicLib directory
-   - cd GeographicLib
+   This will create a %GeographicLib directory.
+ - Change to the %GeographicLib directory
+   - cd %GeographicLib
  - Create the utility programs and (optionally) the documentation
    - make all doc
  - GeographicLib.sln is MS Visual Studio 2005 solution file which
@@ -132,7 +142,8 @@ The following steps will get you started with GeographicLib:
  - Try out \ref geoconvert (for help, type ./GeoConvert -h)
    - echo 33.3 44.4 | ./GeoConvert -m -p -3
    - echo 38SMB4484 | ./GeoConvert -d
- - Similarly, try out \ref transversemercatortest and \ref ecefconvert.
+ - Similarly, try out \ref transversemercatortest, \ref geod, and
+   \ref cartconvert.
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
    on the library.
@@ -149,8 +160,6 @@ corresponding Wikipedia articles:
    UPS</a>, Universal Polar Stereographic coordinate system.
  - <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">
    MGRS</a>, Military Grid Reference System.
- - <a href="http://en.wikipedia.org/wiki/ECEF">
-   ECEF</a>, Earth-Centered, Earth-Fixed coordinate system.
 
 <center>
 Back to \ref intro.  Forward to \ref organization.  Up to \ref contents.
@@ -164,7 +173,7 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 </center>
 
 Here is a brief description of the relationship between the various
-components of GeographicLib.
+components of %GeographicLib.
 
 GeographicLib::TransverseMercator and GeographicLib::PolarStereographic
 provide the basic projections.  The constructors for these classes
@@ -204,28 +213,48 @@ the GeoCoords class.
 GeographicLib::TransverseMercatorExact is a drop in replacement for
 TransverseMercator which uses the exact formulas, based on elliptic
 functions, for the projection as given by Lee.  \ref
-transversemercatortest is a simple command-line utility to test to the
+transversemercatortest is a simple command line utility to test to the
 TransverseMercator and TransverseMercatorExact.
 
-GeographicLib::ECEF and GeographicLib::LocalCartesian convert between
-geodetic and ECEF or a local cartesian system.  The constructor for ECEF
+GeographicLib::Geodesic and GeographicLib::GeodesicLine perform geodesic
+calculations.  The constructor for GeographicLib::Geodesic specifies the
+ellipsoid and the direct and inverse calculations are implemented as
+const member functions.  GeographicLib::Geocentric::WGS84 is a const
+static instantiation of Geodesic specific for the WGS84 ellipsoid.  In
+order to perform a series of direct geodesic calculations on a single
+line, the GeographicLib::GeodesicLine class can be used.  This packages
+all the information needed to specify a geodesic.  A const member
+function returns the coordinates a specified distance from the starting
+point.  \ref geod is a simple command line utility to perform geodesic
+calculations.
+
+GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
+geodetic and geocentric or a local cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
-implemented as const member functions.  GeographicLib::ECEF::WGS84 is a
-const static instantiation of ECEF specific for the WGS84 ellipsoid.
-\ref ecefconvert is a simple command line utility to provide access to
+implemented as const member functions.  GeographicLib::Geocentric::WGS84 is a
+const static instantiation of Geocentric specific for the WGS84 ellipsoid.
+\ref cartconvert is a simple command line utility to provide access to
 these classes.
 
 GeographicLib::Constants, GeographicLib::DMS, and
-GeographicLib::EllipticFunction are utility classes with are used
+GeographicLib::EllipticFunction are utility classes which are used
 internally by the library.
 
 In order to avoid name clashes, all there classes are in the
 GeographicLib namespace.  The header files are included with the
-GeographicLib/ directory prefix.  If compiling within the GeographicLib
+GeographicLib/ directory prefix.  If compiling within the %GeographicLib
 directory, ".." should be included in the header search path (e.g.,
 with -I..).  The cpp files implementing the classes include "using
 namespace std;", however, for portability, the headers files and the
 test programs do not.
+
+There's an "install" target in the Makefile which installs the library
+components into \$(PREFIX)/lib, \$(PREFIX)/include/GeographicLib,
+\$(PREFIX)/bin.  Once installed, the library can be used by setting
+  - CPPFLAGS=-I\$(PREFIX)/include
+  - LDFLAGS=-L\$(PREFIX)/lib -lGeographic
+  .
+in the Makefile.
 
 The low level projection classes, TransverseMercator and
 PolarStereographic, do not throw exceptions.  UTMUPS, MGRS, and
@@ -241,7 +270,7 @@ Back to \ref start.  Forward to \ref transversemercator.  Up to \ref contents.
 \page transversemercator Transverse Mercator Projection
 
 <center>
-Back to \ref organization.  Forward to \ref utilities.  Up to \ref contents.
+Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 \b NOTE: The figures in this section are relatively small in order to
@@ -267,7 +296,7 @@ The primary sources for the material presented here are:
    New Series 52, 172 pp. (1912).
    The derives the series solution for the transverse Mercator
    projection of an ellipsoid.  This gives very good accuracy and this
-   method or an extension of it to higher-order provide the most accurate
+   method or an extension of it to higher-order provides the most accurate
    algorithms for the projection valid in some zone near the central
    meridian.  It is also of interest to see the systematic use of
    logarithms in the pre-electronic and pre-mechanical age (when
@@ -537,15 +566,16 @@ same projected position.  In the extended domain, the Thompson and the
 Gauss-Kr&uuml;ger projections are not tightly tied to the globe but can
 slip around it longitudinally.
 
-\section testset Test data for the transverse Mercator projection
+\section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
  - http://charles.karney.info/geographic/TMcoords.dat.gz
-
-This test set consists of a set of geographic coordinates together with
-the corresponding transverse Mercator coordinates.  The WGS84 ellipsoid
-is used, with central meridian 0<sup>o</sup>, central scale factor
-0.9996 (the UTM value), false easting = false northing = 0 m.
+ .
+This is about 17 MB (compressed).  This test set consists of a set of
+geographic coordinates together with the corresponding transverse
+Mercator coordinates.  The WGS84 ellipsoid is used, with central
+meridian 0<sup>o</sup>, central scale factor 0.9996 (the UTM value),
+false easting = false northing = 0 m.
 
 Each line of the test set gives 6 space delimited numbers
  - latitude (degrees, exact)
@@ -599,7 +629,7 @@ scale at lat = 0<sup>o</sup>, lon = 90<sup>o</sup> (1 - \e e)).  We
 account for this by expressing the error as the sum of a constant and a
 term proportional to the gradient of the quantity being measured.
 
-\section errors Numerical errors
+\section tmerrors Accuracy of transverse Mercator projection
 
 Errors in GeographicLib::TransverseMercatorExact.  For both Forward and
 Reverse projections
@@ -658,7 +688,7 @@ If GeographicLib::TransverseMercator is compiled with TM_TX_MAXPOW = 4
 to give the 4th-order approximation, then the error is about 210 nm
 for |\e x| <= 500 km (the region used for UTM coordinates).
 
-\section series Series approximation for transverse Mercator
+\section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
 Mercator projection.  The method entails performing first a
@@ -922,14 +952,490 @@ distribution).  To run, start Maxima and enter
 Further instructions are included at the top of the file.
 
 <center>
-Back to \ref organization.  Forward to \ref utilities.  Up to \ref contents.
+Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page geodesic Geodesics on the Ellipsoid
+
+<center>
+Back to \ref transversemercator.  Forward to \ref utilities.  Up to \ref contents.
+</center>
+
+GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
+solutions to the direct and inverse geodesic problems.  The \ref geod
+utility provides an interface to these classes.
+
+References
+ - T. Vincenty,
+   <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">Direct and Inverse
+   Solutions of Geodesics on the Ellipsoid with Application of Nested
+   Equations</a>,
+   Survey Review 22 (176), 88&ndash;93 (1975).
+ - E. A. Williams,
+   <a href="http://williams.best.vwh.net/ellipsoid/ellipsoid.html">
+   Navigation on the Spheroidal Earth</a> (March 2002).
+
+\section geoddesc Description of algorithm
+
+The shortest path between two points on the ellipsoid at (\e lat1, \e
+lon1) and (\e lat2, \e lon2) is called the geodesic.  Its length is \e
+s12 and the geodesic from point 1 to point 2 has azimuths \e azi1 and \e
+azi2 at the two end points.  (The azimuth is the heading measured
+clockwise from north.  \e azi2 is the "forward" azimuth, i.e., the
+heading that takes you beyond point 2 not back to point 1.)
+
+Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2,
+\e lon2, \e azi2.  This is the <b>direct</b> geodesic problem.  (If \e s12
+is sufficiently large that the geodesic wraps more than halfway around
+the earth, there will be a true geodesic between the points with a
+smaller \e s12.)
+
+Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1,
+\e azi2, \e s12.  This is the <b>inverse</b> geodesic problem.  Usually, the
+solution to the inverse problem is unique.  In cases where there are
+multiple solutions (all with the same \e s12, of course), all the
+solutions can be easily generated once a particular solution is
+provided.
+
+On a sphere, the geodesic is a great circle.  On the ellipsoid, the
+problem is usually solved by transferring the geodesic to an "auxiliary
+sphere" where the latitude \e phi has been replaced by the reduced
+latitude \e beta where tan(\e beta) = (1 - \e f) tan(\e phi).  On this
+sphere, the geodesic is again a great circle and the azimuth is the same
+as on the ellipsoid.  However, the ellipsoidal distance is related to
+the great circle distance by an integral; and the ellipsoidal longitude
+is similarly related to the longitude on the auxiliary sphere.  Williams
+(2002) gives the necessary integrals.
+
+A popular method of doing geodesic calculations is due to Vincenty
+(1975).  This entails expanding the integrals in powers of the ellipsoid
+flattening, and then solving both the direct and inverse problems by
+iteration.  This approach has three drawbacks:
+ - The series are cast into a "nested" form which makes them difficult
+   to extend to higher order.  This limits the accuracy of this method
+   to about 0.5 mm.
+ - A simple iteration scheme is employed to solve the equations.  This
+   is inelegant and slow.
+ - The iteration scheme for the inverse problem is unstable for points
+   which are nearly anti-podal.  Thus the method yields no solution in
+   this case.
+ .
+Here we reformulate the geodesic problem with three goals:
+ - Accuracy to round-off.  We achieve an accuracy of 12 nm using
+   doubles.
+ - Always yield a solution.  The direct problem is trivial.  In the
+   case of inverse problem, the geodesic is returned.  (And in the event
+   that there are multiple geodesics, one of them is returned.)
+ - Employ a non-iterative or rapidly converging iterative scheme.
+
+We derive higher-order series for the distance and longitude integrals
+using Maxima.  In this release, we use an 8th-order expansion.  The
+series is evaluated by a combination of Horner's method and Clenshaw
+summation.  For the direct problem, we use a reversion of the series for
+the distance to compute the spherical arc length and thereby complete
+the solution without the need to iterate.
+
+For the inverse problem, we rearrange the points so that the point 1 is
+the one closest to a pole and is in the southern hemisphere and the
+point 2 is to the north and east of point 1.  We consider geodesics
+leaving point 1 with azimuth \e alpha1 in [0, pi] and we determine the
+longitude where these geodesics first intersect the latitude = \e lat2.
+The longitude is an increasing function of \e alpha1 and we use Newton's
+method to determine the value of \e alpha1 for which the longitude
+matches \e lon2.  This then gives the desired geodesic.
+
+\section testgeod Test data for geodesics
+
+A test set a geodesics is available at
+ - http://charles.karney.info/geographic/GeodTest.dat.gz
+ .
+This is about 25 MB (compressed).  This consists of a set of geodesics
+for the WGS84 ellipsoid.
+
+Each line of the test set gives 7 space delimited numbers
+ - latitude for point 1, \e lat1 (degrees, exact)
+ - longitude for point 1, \e lon1 (degrees, always 0)
+ - azimuth for point 1, \e azi1 (clockwise from north in degrees, exact)
+ - latitude for point 2, \e lat2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - longitude for point 2, \e lon2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - azimuth for point 2, \e azi2 (degrees, accurate to 10<sup>-18</sup> deg)
+ - geodesic distance from point 1 to point 2, \e s12 (meters, exact)
+ .
+These are computed using as direct geodesic calculations with the given
+\e lat1, \e lon1, \e azi1, and \e s12.  The distance \e s12 always
+corresponds to an arc length on the auxiliary sphere of pi or less, so
+the given geodesics give the shortest paths from point 1 to point 2.
+For simplicity and without loss of generality, \e lat1 is chosen in
+[0<sup>o</sup>, 90<sup>o</sup>], \e lon1 is taken to be zero, \e azi1
+is chosen in [0<sup>o</sup>, 180<sup>o</sup>].  Furthermore, \e lat1 and
+\e azi1 are taken to be multiples of 10<sup>-12</sup> deg and \e s12 is
+a multiple of 0.1 um in [0 m, 20003931.4586254 m].  This results \e lon2
+in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
+180<sup>o</sup>].
+
+The direct calculation uses an expansion of the
+geodesic equations accurate to \e f<sup>20</sup> (approximately 1 part
+in 10<sup>50</sup>) and is computed with with
+<a href="http://en.wikipedia.org/wiki/Maxima">Maxima</a>'s bfloats and
+fpprec set to 100 (so the errors in the data are probably 1/2 of the
+values quoted above).
+
+The contents of the file are as follows:
+ - 100000 entries randomly distributed
+ - 50000 entries which are nearly antipodal
+ - 50000 entries with short distances
+ - 50000 entries with one end near a pole
+ - 50000 entries with both ends near opposite poles
+ - 50000 entries which are nearly meridional
+ - 50000 entries which are nearly equatorial
+ - 50000 entries running between vertices (\e azi1 = \e azi2 = 90<sup>o</sup>)
+ - 50000 entries ending close to vertices
+ .
+(a total of 500000 entries).  The values for \e s12 for the geodesics
+running between vertices are truncated to a multiple of 0.1 pm and this
+is used to determine point 2.
+
+This data can be fed to the Geod utility as follows
+ - Direct from point 1:
+\verbatim
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,3,7 | ./Geod
+\endverbatim
+   This should yield columns 4, 5, and 6 of the test set.
+ - Direct from point 2:
+\verbatim
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f4,5,6,7 |
+  sed "s/ \([^ ]*$\)/ -\1/" | ./Geod
+\endverbatim
+   (The sed command negates the distance.)  This should yield columns 1,
+   2, and 3 of the test set.
+ - Inverse between points 1 and 2:
+\verbatim
+  gunzip -c GeodTest.dat.gz | cut -d' ' -f1,2,4,5 | ./Geod -i
+\endverbatim
+   This should yield columns 3, 6, and 7 of the test set.
+ .
+Add, e.g., "-p 6", to the call to Geod to change the precision of the
+output.  Adding "-f" causes Geod to print all 7 fields specifying the
+geodesic (in the same order as the test set).
+
+Another much smaller set of test points has been culled from the
+literature on geodesics.  These are all for the International Ellipsoid
+(\e a = 6378388 m, \e f = 1/297.0).  The endpoints are taken from
+ - R. H. Rapp, <a href="http://hdl.handle.net/1811/24409">Geometric
+   geodesy, Part II</a>, Ohio State Univ. (March 1993).
+ - T. Saito, <a href="http://dx.doi.org/10.1007/BF02521087">The
+   computation of long geodesics on the ellipsoid through Gaussian
+   quadrature</a>,
+   Journal of Geodesy 53, 165&ndash;177 (1979).
+ - B.K. Meade, Discussion of results obtained from the Bowring formulas
+   developed for solutions of the geodetic inverse and great elliptic
+   inverse, Survey Review 33 (261) 477&ndash;487 (1996).
+ .
+However some of the results quoted for the inverse problem in these
+papers are inaccurate.  Accurate data are given here.  The end points
+are
+\verbatim
+No     lat1              lat2            lon2 - lon1
+
+00 37d19'54.95367"   26d07'42.83946"   41d28'35.50729"
+01 35d16'11.24862"   67d22'14.77638"  137d47'28.31435"
+02  1d00'00"         -0d59'53.83076"  179d17'48.02997"
+03  1d00'00"          1d01'15.18952"  179d46'17.84244"
+04 41d41'45.88"     -41d41'46.20"     179d59'59.44"
+05  0d00'00"          0d00'00"        179d41'49.78063"
+06 30d00'00"        -30d00'00"        179d40'00"
+07 60d00'00"        -59d59'00"        179d50'00"
+08 30d00'00"        -29d50'00"        179d48'00"
+09 30d00'00"        -29d55'00"        179d48'00"
+10 34d28'44.76421"  -34d28'44.76421"  179d30'00"
+11  0d00'00"          0d00'00"        179d23'38.18182"
+12 34d28'44.764213" -34d28'44.764213" 179d30'00"
+13 56d41'58.297496" -56d41'58.297496" 179d40'00"
+14 29d45'00"         29d45'00.23848"    0d00'00.25626"
+15 41d41'45.88"      41d41'46.2"        0d00'00.56"
+16 46d00'00"         46d00'01"          0d00'01.816"
+17 40d00'00"         40d00'02"          0d00'04.75"
+18 38d00'00"         38d00'04.765"      0d00'05.554"
+19 30d00'00"         37d53'32.46584"  116d19'16.68843"
+20 30d19'54.95367"  -30d11'50.15681"  179d58'17.84244"
+21  0d39'49.12586"   -0d45'14.13112"  179d58'17.84244"
+22  0d00'54.95367"    0d00'42.83946"  179d28'17.84244"
+23 40d00'00"        -40d00'05.75932"  179d55'15.59578"
+24 37d00'00"         28d15'36.69535"    2d37'39.52918"
+25 38d30'45"        -35d25'35"        179d45'00"
+26 60d00'00"        -60d00'00"        179d41'47"
+\endverbatim
+and the geodesics are given by
+\verbatim
+No      azi1                      azi2                      s12
+
+00  95d27'59.63088905553491" 118d05'58.96160858886728"  4085966.7025902201825
+01  15d44'23.74849770324814" 144d55'39.92147266777383"  8084823.8382961415712
+02  88d59'59.99897053696689"  91d00'06.11835637659787" 19959999.9998034962728
+03   4d59'59.9999565312182"  174d59'59.88480004914149" 19780006.5587880182731
+04 179d58'49.16247860972594"   0d01'10.83761892414861" 20004566.7228054132931
+05  30d00'00.00002084815889" 149d59'59.99997915184111" 19996147.416826781925
+06  39d24'51.80601183179472" 140d35'08.19398816820528" 19994364.6068583984182
+07  29d11'51.07006518417487" 150d49'06.86792886226858" 20000433.9629039632049
+08  16d02'28.33895348073478" 163d59'10.33689436714454" 19983420.1535833515076
+09  18d38'12.55689701007199" 161d22'45.43724069005652" 19992241.7634404403113
+10  89d59'59.78608904242135"  90d00'00.21391095757865" 19981603.2781440234735
+11  89d59'51.5863776476884"   90d00'08.4136223523116"  19970827.8695289752144
+12  90d00'00.00000000479721"  90d00'00.00000000479721" 19981603.2781440234735
+13  90d00'00.0000006754891"   90d00'00.0000006754891"  19994364.6068583984183
+14  43d09'29.0634310812721"   43d09'29.19059165112047"       10.0665488514951
+15  52d40'39.39067110974434"  52d40'39.76317180931766"       16.2839750636094
+16  51d41'11.54166708300919"  51d41'12.8479912183896"        49.8037586266135
+17  61d18'00.21784992705284"  61d18'03.27110871411274"      128.4581417556041
+18  42d41'10.35602545797828"  42d41'13.77545984493403"      199.8717376568129
+19  45d00'00.00000438165649" 129d08'12.32600911217221" 10002499.999860115911
+20   2d23'52.10812966032674" 177d36'19.67010864697937" 19989590.5480170316779
+21 177d39'39.01010365081902"   2d20'21.15303599834387" 19994529.4454322340309
+22  54d08'27.73161935117439" 125d51'32.27232710890937" 19977290.7711390609949
+23 170d15'10.8812277902834"    9d44'49.94565915545135" 20003827.8511392345191
+24 164d59'59.99997936397788" 166d25'16.2593819478948"   1000000.0001515200393
+25   3d22'19.5694402667547"  176d45'41.43721792855263" 19661438.0251956080829
+26  90d00'00.00891264563132"  90d00'00.00891264563132" 19996104.3689008382234
+\endverbatim
+
+\section geoderrors Accuracy of geodesic calculation
+
+We regard all the test data as "exact".  For each member of the test
+set, 7 error distances are computed.
+ -# Compute the direct problem from point 1, compare position of
+    resulting point 2 with the exact result.
+ -# Using point 2 and its azimuth given in (1), run the geodesic
+    backward to recompute point 1.  Compare this with the original
+    point 1.
+ -# Similar to (1) with points 1 and 2 interchanged.
+ -# Similar to (2) with points 1 and 2 interchanged.
+ -# Solve the inverse problem between points 1 and 2.  Compare the
+    distance with the exact result.
+ -# Using the azimuth at point 1 found in (5), compute the direct
+    problem from point 1 and compare the position of the resulting point
+    2 with the exact result.
+ -# Similar to (6) with points 1 and 2 interchanged.
+ .
+To guard against a canceling error, the calculations in (2), (4), (6),
+and (7) use a long double version of the direct geodesic calculation
+(which is about 2000 times more accurate than the double version).  The
+maximum of the resulting errors in less than 12 nm for the double
+version and 6 pm for the long double version.
+
+None of the checks listed above directly compares the computed azimuths
+with the exact values.  The problem is that tiny changes in the
+positions of the points may sometimes lead to large changes in azimuths.
+Obvious examples of this are when the two points are close to opposite
+poles or when they are very close to each other.
+
+A less obvious case is when the latitudes of the two points are equal
+and opposite and the azimuths are close to +/- 90<sup>o</sup>.  For
+example, consider to points on the WGS84 ellipsoid
+ - Point 1: 30N 0E
+ - Point 2a: 30S 179.47701999975666E
+ - Point 2b: 29.999999999999996S 179.47701999975666E
+ .
+The two endpoints 2a and 2b are about 0.4nm apart and consequently the
+two geodesics (from 1 to 2a and from 1 to 2b) are very nearly the same
+length.  However the azimuths at point 1 are
+ - Point 1 to 2a: 89.999991621683687489
+ - Point 1 to 2b: 89.998510960829763754
+ - difference: -5.3"
+
+and the two geodesics are separated by about 160 m at their midpoints.
+
+So instead of directly quoting the errors in the azimuths, we must use
+the back-to-front formulation: The azimuths returned are the correct
+azimuths for some geodesic with end-points within 12 nm of the given
+end-points.
+
+\section geodtodo Loose ends on geodesics
+
+When either point is at a pole, the azimuth is defined by keeping the
+longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
+taking the limit \e eps -> 0 from above.
+
+The following prescription allows you to ascertain when there are
+multiple solutions to the inverse problem and to generate the complete
+set.
+ - \e lat1 = \e -lat2 (with neither at a pole).  If \e azi1 = \e azi2
+   then the geodesic is unique.  Otherwise there are two geodesics and
+   the second one is obtained by setting [\e azi1, \e azi2] = [\e azi2,
+   \e azi1].  (This occurs when the longitude difference is near +/-
+   180<sup>o</sup>.)
+ - Points 1 and 2 at opposite poles.  There are infinitely many
+   geodesics which can be generated by setting [\e azi1, \e azi2] = [\e
+   azi1, \e azi2] + [\e d, -\e d], for arbitrary \e d.
+ - \e s12 = 0 (coincident points).  There are infinitely many geodesics
+   which can be generated by setting [\e azi1, \e azi2] = [\e azi1, \e
+   azi2] + [\e d, \e d], for arbitrary \e d.
+
+A rather large fraction of the code in GeographicLib::Geodesic deals
+merely with the spherical trigonometry required to do great circle
+calculations.  When high accuracy is required, care has to be taken to
+use stable methods for computing angles.  Typically, we represent angles
+internally with the pair [sin(\e theta), cos(\e theta)].  This expands
+the number of representable angles by about 4; in particular, it allows
+angles very close to all the cardinal points to be resolved.  We use
+expressions for sin(\e theta) and cos(\e theta) which avoid large
+cancellations.  Having a comprehensive test set as described in \ref
+testgeod helps to identify problems.  This representation allows input
+arguments which are multiples of 90<sup>o</sup> to be represented
+exactly.
+
+The code for the inverse treats equatorial and meridional geodesics
+specially.  All other case are handled by the same code (implementing
+Newton's method) with tests to select appropriate starting guess in
+difference regimes.  Specifying a zero inverse flattening in Geodesic
+constructor is equivalent to zero flattening (i.e., a sphere).  The
+method accommodates this case without any special coding.
+
+In order to limits the enumeration of cases, the inverse problem is
+brought to a canonical form by interchanging the points and changing the
+signs of the coordinates.  The effect of these changes are undone at the
+end by applying sign changes to the final calls to atan2 to give the
+azimuths.
+
+The evaluation of the derivative for Newton's method for the inverse
+problem is a straightforward application of the chain rule for
+derivatives.  In evaluating the derivative of the longitude function,
+the derivative with respect to cos<sup>2</sup> \e alpha is carried out by
+differentiating the series.  However the derivative with respect to \e
+sigma (the limit of the integral) just gives the integrand.
+
+Geographic coordinates which are close to zero are quantized (by adding
+and subtracting 1/16).  This allows certain cases of underflow to be
+avoided.  This limits the accuracy to which coordinates can be specified
+to 0.7 pm.  This should not be a problem since the overall accuracy of
+the algorithms is only 12 nm.
+
+GeodesicLine::Position provides a way of doing a series of direct
+calculations for a single geodesic.  This is about 2.5 faster than
+calling Geodesic::Direct.  On a 2.6 GHz Intel machine (g++, version
+4.3.0, -O3), calls to Geodesic::Direct take 1.1 us, calls to
+GeodesicLine::Position take 0.44 us, and calls to Geodesic::Inverse take
+3.4 us.
+
+Future work:
+ - The use of 8th order series is overkill.  (At this order, the long
+   double calculation is still accurate.)  I will generate the code for
+   all orders 4 (approximately corresponding to Vincenty) thru 8 and
+   make them selectable through preprocessor macros.
+ - The mean number of Newton's iterations is about 3.  However in some
+   cases more than 20 iterations are required.  Improved starting points
+   are needed.
+ - I'll provide the Maxima code used to generate the series and further
+   documentation.
+
+<center>
+Back to \ref transversemercator.  Forward to \ref geocentric.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page geocentric Geocentric coordinates
+
+<center>
+Back to \ref geodesic.  Forward to \ref utilities.  Up to \ref contents.
+</center>
+
+The implementation of GeographicLib::Geocentric::Reverse is adapted from
+ - H. Vermeille,
+   <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">
+   Direct transformation from geocentric coordinates to geodetic
+   coordinates</a>, J. Geodesy 76, 451&ndash;454 (2002).
+
+This provides a closed-form solution but can't directly be applied close to
+the center of the earth.  Several changes have been made to remove this
+restriction and to improve the numerical accuracy.  Now the method is
+accurate for all inputs (even if \e h is infinite).
+
+The problems encountered near the center of the ellipsoid are:
+ - There's a potential division by zero in the definition of \e s. The
+   equations are easily reformulated to avoid this problem.
+ - \e t<sup>3</sup> may be negative.  This is OK; we just take the real root.
+ - The solution for \e t may be complex.  However this leads to 3 real roots
+   for \e u/\e r.  It's then just a matter of picking the one that computes
+   the geodetic result which minimizes |\e h| and which avoids large
+   round-off errors.
+ - Some of the equations result in a large loss of accuracy due to
+   subtracting nearly equal quantities.  E.g., \e k= sqrt(\e u + \e v + \e
+   w<sup>2</sup>) - \e w is inaccurate if \e u + \e v is small; we can fix
+   this by writing \e k = (\e u + \e v)/(sqrt(\e u + \e v + \e w<sup>2</sup>)
+   + \e w).
+
+The error is computed as follows.  Write a version of
+Geocentric::WGS84.Forward which uses long doubles (including using long
+doubles for the WGS84 parameters).  Generate random (long double) geodetic
+coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
+WGS84.Forward to obtain the corresponding (long double) geocentric
+coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that \e h0 >= - \e
+a (1 - \e e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e
+lat0), which ensures that (\e lat0, \e lon0, \e h0) is the principal
+geodetic inverse of (\e x0, \e y0, \e z0).]  Because the forward calculation
+is numerically stable and because long doubles (on Linux systems using g++)
+provide 11 bits additional accuracy (about 3.3 decimal digits), we regard
+this set of test data as exact.
+
+Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
+compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
+Convert (\e lat1 - \e lat0, \e lon1 - \e lon0) to a distance, \e ds, on the
+surface of the ellipsoid and define \e err = hypot(\e ds, \e h1 - \e h0).
+For |\e h0| < 5000 km, we have \e err < 7 nm.
+
+This methodology is not very useful very far from the globe, because the
+absolute errors in the approximate geodetic height become large, or within
+50 km of the center of the earth, because of errors in computing the
+approximate geodetic latitude.  To illustrate the second issue, the maximum
+value of \e err for \e h0 < 0 is about 80 mm.  The error is maximum close to
+the circle given by geocentric coordinates satisfying hypot(\e x, \e y) = \e
+a \e e<sup>2</sup> (= 42.7 km), \e z = 0.  (This is the center of meridional
+curvature for \e lat = 0.)  The geodetic latitude for these points is \e lat
+= 0.  However, if we move 1 nm towards the center of the earth, the geodetic
+latitude becomes 0.04", a distance of 1.4 m from the equator.  If, instead,
+we move 1 nm up, the geodetic latitude becomes 7.45", a distance of 229 m
+from the equator.  In light of this, Reverse does quite well in this
+vicinity.
+
+To obtain a practical measure of the error for the general case we define
+- <i>err</i><sub>h</sub> = |\e h1 - \e h0| / max(1, \e h0 / \e a)
+- for \e h0 > 0, <i>err</i><sub>out</sub> = \e ds
+- for \e h0 < 0, apply the long double version of WGS84.Forward to (\e lat1,
+  \e lon1, \e h1) to give (\e x1, \e y1, \e z1) and compute
+  <i>err</i><sub>in</sub> = hypot(\e x1 - \e x0, \e y1 - \e y0, \e z1 - \e
+  z0).
+.
+We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
+and <i>err</i><sub>in</sub> < 7 nm.
+
+The testing has been confined to the WGS84 ellipsoid.  The method will work
+for all ellipsoids used in terrestrial geodesy.  However, the central region,
+which leads to multiple real roots for the cubic equation in Reverse, pokes
+outside the ellipsoid (at the poles) for ellipsoids with \e e > 1/sqrt(2).
+Reverse has not been analysed for this case.  Similarly ellipsoids which are
+very nearly spherical near yield inaccurate results due to underflow; in the
+other hand, the case of the sphere, \e f = 0, is treated specially and gives
+accurate results.
+
+Another comparable method is T. Fukushima,
+<a href="http://dx.doi.org/10.1007/s001900050271"> Fast transform from
+geocentric to geodetic coordinates</a>, J. Geodesy 73, 603&ndash;610 (2003).
+This is an iterative method and is somewhat faster than Geocentric.Reverse.
+However, because of the choice of independent variable in Newton's
+iteration, accuracy is lost for points near the equatorial plane.  As a
+consequence, the maximum error \e err near the center of meridional
+curvature for \e lat = 0 is about 50 m (as opposed to 8 mm for
+WGS84.Reverse).
+
+<center>
+Back to \ref geodesic.  Forward to \ref utilities.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page utilities Utility Programs
 
 <center>
-Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
+Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
 
 \section geoconvert GeoConvert
@@ -959,7 +1465,8 @@ Convert geographic coordinates to
     -m MGRS
     -c meridian convergence and scale
 
-Geographic coordinates are given on standard input as:
+The WGS84 model of the earth is used.  Geographic coordinates are given on
+standard input as:
 
 Latitude and longitude (decimal degrees or degrees minutes seconds).  d,
 ', and " are used to denote degrees, minutes, and seconds, with the least
@@ -1008,7 +1515,7 @@ the standard zone.
 
 -z zone sets the zone for output.  Use zone = 0 to specify UPS.
 
--s uses the standard zone
+-s uses the standard zone.
 
 For example, the point
 
@@ -1026,7 +1533,7 @@ then
     echo 31CEM6066227959 | GeoConvert -p -3 -m -s    ==> 32CMS4328
     echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917
 
--h prints this help
+-h prints this help.
 \endverbatim
 
 \section transversemercatortest TransverseMercatorTest
@@ -1083,41 +1590,120 @@ The domain of easting (x) and northing (x) is the union of
 -s and -t are mutually exclusive (the last flag specified is the operative
 one).
 
--h prints this help
+-h prints this help.
 \endverbatim
 
-\section ecefconvert ECEFConvert
+\section geod Geod
 
-ECEFConvert is a command line utility for geodetic to cartesian
-coordinate conversions via GeographicLib::ECEF and
+Geod is a command line utility for geodesic calculations.
+
+Example (route from JFK Airport to Singapore Changi Airport)
+ - echo "40d38'23N" "073d46'44W" "01d21'33N" "103d59'22E" |\n
+   ./Geod -i -d -p 0\n
+   => 003d18'29.9" 177d29'09.2" 15347628
+ - for ((i = 0; i <= 16; i += 2)); do echo ${i}000000;done |\n
+   ./Geod -l "40d38'23N" "073d46'44W" "003d18'29.9" -d -p 0\n
+   => way points at intervals of 2000 km on route\n
+   40d38'23.0"N 073d46'44.0"W 003d18'29.9"\n
+   58d34'45.1"N 071d49'36.7"W 004d48'48.8"\n
+   76d22'28.4"N 065d32'17.8"W 010d41'38.4"\n
+   84d50'28.0"N 075d04'39.2"E 150d55'00.9"\n
+   67d26'20.3"N 098d00'51.2"E 173d27'20.3"\n
+   49d33'03.2"N 101d06'52.6"E 176d07'54.3"\n
+   31d34'16.5"N 102d30'46.3"E 177d03'08.4"\n
+   13d31'56.0"N 103d26'50.7"E 177d24'55.0"\n
+   04d32'05.7"S 104d14'48.7"E 177d28'43.6"
+
+Compile with "make Geod" or with
+
+g++ -g -O3 -I.. -o Geod Geod.cpp Geodesic.cpp DMS.cpp Constants.cpp
+
+Here is the usage (obtained from "Geod -h")
+
+\verbatim
+Usage: Geod [-l lat1 lon1 azi1 | -i] [-n] [-d] [-f] [-p prec] [-h]
+
+Perform geodesic calculations.
+
+The shortest path between two points on the ellipsoid at (lat1, lon1)
+and (lat2, lon2) is called the geodesic.  Its length is s12 and the
+geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two
+end points.
+
+Geod operates in one of three modes:
+
+(1) It accepts lines on the standard input containing "lat1 lon1 azi1
+    s12" and prints "lat2 lon2 azi2" on standard output.  This is the
+    direct geodesic calculation.
+
+(2) Command line arguments "-l lat1 lon1 azi1" specify a geodesic line.
+    Geod then accepts a sequence of s12 values (one per line) on
+    standard input and prints "lat2 lon2 azi2" for each.  This generates
+    a sequence of points on a single geodesic.
+
+(3) With the -i command line argument, Geod performs the inverse
+    geodesic calculation.  It reads lines containing "lat1 lon1 lat2
+    lon2" and prints the corresponding values of "azi1 azi2 s12".
+
+By default, the WGS84 ellipsoid is used.  With the -n option, it uses
+the international ellipsoid (major radius 6378388 m, inverse flattening
+297).
+
+Output of angles is as decimal degrees.  If -d is specified the output
+is as degrees, minutes, seconds.  Input can be in either style.  d, ',
+and " are used to denote degrees, minutes, and seconds, with the least
+significant designator optional.  By default, latitude precedes
+longitude for each point; however on input either may be given first by
+appending N or S to the latitude and E or W to the longitude.  s12 is
+always given in meters.
+
+The output lines consist of the three quantities needs to complete the
+specification of the geodesic.  With the -f option, each line of output
+is a complete geodesic specification consisting of seven quantities
+
+    lat1 lon1 azi1 lat2 lon2 azi2 s12
+
+-p prec (default 3) gives the precision of the output relative to 1m.
+The minimum value of prec is 0 (1 m accuracy) and the maximum value is
+10 (0.1 nm accuracy, but then the last digits are unreliable).
+
+-h prints this help.
+\endverbatim
+
+\section cartconvert CartConvert
+
+CartConvert is a command line utility for geodetic to cartesian
+coordinate conversions via GeographicLib::Geocentric and
 GeographicLib::LocalCartesian.
 
 Examples:
- - echo 33.3 44.4 6000 | ./ECEFConvert\n=>
+ - echo 33.3 44.4 6000 | ./CartConvert\n=>
    3816209.60 3737108.55 3485109.57
- - echo 33.3 44.4 6000 | ./ECEFConvert -l 33 44\n=>
-   37288.97 33374.29 5803.64
- - echo 30000 30000 0 | ./ECEFConvert -r\n=>
+ - echo 33.3 44.4 6000 | ./CartConvert -l 33 44 20\n=>
+   37288.97 33374.29 5783.64
+ - echo 30000 30000 0 | ./CartConvert -r\n=>
    6.483 45 -6335709.73
 
-Compile with "make ECEFConvert" or with
+Compile with "make CartConvert" or with
 
-g++ -g -O3 -I.. -o ECEFConvert ECEFConvert.cpp ECEF.cpp
+g++ -g -O3 -I.. -o CartConvert CartConvert.cpp Geocentric.cpp
 LocalCartesian.cpp Constants.cpp
 
-Note that, unlike \ref geoconvert, ECEFConvert has no
+Note that, unlike \ref geoconvert, CartConvert has no
 facility for dealing with angles in degrees, minutes, and seconds, and
 no ability to change the precision of the output.
 
-Here is the usage (obtained from "ECEFConvert -h")
+Here is the usage (obtained from "CartConvert -h")
 \verbatim
-Usage: ECEFConvert [-r] [-l lat0 lon0] [-h]
+Usage: CartConvert [-r] [-l lat0 lon0 h0] [-h]
 
-Convert geodetic coordinates to either earth centered earth fixed (ECEF) or
-local cartesian coordinates.  By default conversion is to ECEF coordinates.
-Specifying -l lat0 lon0 causes a local coordinate system to be used with
-the origin at latitude = lat0, longitude = lon0, height = 0, z normal to
-the ellipsoid and y due north.
+Convert geodetic coordinates to either geocentric or local cartesian
+coordinates.  Geocentric coordinates have the origin at the center of the
+earth, with the z axis going thru the north pole, and the x axis thru lat =
+0, lon = 0.  By default, the conversion is to geocentric coordinates.
+Specifying -l lat0 lon0 h0 causes a local coordinate system to be used with
+the origin at latitude = lat0, longitude = lon0, height = h0, z normal to
+the ellipsoid and y due north.  The WGS84 model of the earth is used.
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) latitude, longitude (decimal degrees), and
@@ -1130,7 +1716,7 @@ If -r is given the reverse transformation is performed.
 \endverbatim
 
 <center>
-Back to \ref  transversemercator.  Forward to \ref old.  Up to \ref contents.
+Back to \ref geocentric.  Forward to \ref old.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
@@ -1143,30 +1729,40 @@ Back to \ref utilities.  Up to \ref contents.
 List of versions in reverse chronological order together with a brief
 list of changes.
 
- - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-02
+ - <a href="http://charles.karney.info/geographic/Geographic.tgz">2009-03
    (current)</a>
+  - Add Geographic::Geodesic and the \ref geod utility.
+  - Declare when no exceptions are thrown by functions.
+  - Minor changes to GeographicLib::DMS class.
+  - Use invf = 0 to mean a sphere in constructors to some classes.
+  - The makefile creates a library and includes an install target.
+  - Rename Geographic::ECEF to Geographic::Geocentric, ECEFConvert to
+    \ref cartconvert.
+  - Use inline functions to define constant doubles in Constants.hpp.
+
+ - <a href="http://charles.karney.info/geographic/Geographic-2009-02.tgz">2009-02</a>
   - Fix documentation of constructors (flattening -> inverse
     flattening).
   - Use std versions of math functions.
   - Add GeographicLib::ECEF and GeographicLib::LocalCartesian classes
-    and \ref ecefconvert utility.
+    and the ECEFConvert utility.
   - Gather the documentation on the utility programs onto one page.
 
  - <a href="http://charles.karney.info/geographic/Geographic-2009-01.tgz">2009-01</a>
-    - First proper release of library
-    - More robust GeographicLib::TransverseMercatorExact
-      - Introduce \e extendp version of constructor
-      - Test against extended test data
-      - Optimize starting positions for Newton's method
-      - Fix behavoir near all singularities
-      - Fix order dependence in C++ start-up code
-    - Documentation on transverse Mercator projection
-      - Improved method of computing scale and convergence
-    - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
+  - First proper release of library
+  - More robust GeographicLib::TransverseMercatorExact
+    - Introduce \e extendp version of constructor
+    - Test against extended test data
+    - Optimize starting positions for Newton's method
+    - Fix behavior near all singularities
+    - Fix order dependence in C++ start-up code
+  - Documentation on transverse Mercator projection
+    - Improved method of computing scale and convergence
+  - Add GeographicLib::MGRS, GeographicLib::UTMUPS, etc.
 
  - 2008-09
-    - Ad hoc posting of information on the transverse Mercator
-      projection
+  - Ad hoc posting of information on the transverse Mercator
+    projection
 
 <center>
 Back to \ref utilities.  Up to \ref contents.

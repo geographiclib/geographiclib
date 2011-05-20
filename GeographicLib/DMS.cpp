@@ -14,7 +14,7 @@
 #include <iomanip>
 
 namespace {
-  char RCSID[] = "$Id: DMS.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: DMS.cpp 6572 2009-03-01 22:41:48Z ckarney $";
   char RCSID_H[] = DMS_HPP;
 }
 
@@ -28,7 +28,7 @@ namespace GeographicLib {
   const string DMS::dmsindicators = "D'\"";
   const string DMS::components[] = {"degrees", "minutes", "seconds"};
 
-  double DMS::Decode(const string& dms, flag& ind) {
+  double DMS::Decode(const std::string& dms, flag& ind) {
     double sign = 1;
     unsigned
       beg = 0,
@@ -77,22 +77,21 @@ namespace GeographicLib {
     double fcurrent = 0;
     unsigned ncurrent = 0, p = beg;
     bool pointseen = false;
-    double mult = 0;
+    unsigned digcount = 0;
     while (p < end) {
       char x = dms[p++];
       if ((k = lookup(digits, x)) >= 0) {
 	++ncurrent;
-	if (pointseen) {
-	  mult *= 0.1;
-	  fcurrent += k * mult;
-	} else
+	if (digcount > 0)
+	  ++digcount;		// Count of decimal digits
+	else
 	  icurrent = 10 * icurrent + k;
       } else if (x == '.') {
 	if (pointseen)
 	  throw out_of_range("Multiple decimal points in "
 			     + dms.substr(beg, end - beg));
 	pointseen = true;
-	mult = 1;
+	digcount = 1;
       } else if ((k = lookup(dmsindicators, x)) >= 0) {
 	if (unsigned(k) == npiece - 1)
 	  throw out_of_range("Repeated " + components[k]
@@ -106,14 +105,16 @@ namespace GeographicLib {
 	  throw out_of_range("Missing numbers in " + components[k]
 			     + " component of "
 			     + dms.substr(beg, end - beg));
+	if (digcount > 1) {
+	  istringstream s(dms.substr(p-digcount-1, digcount));
+	  s >> fcurrent;
+	}
 	ipieces[k] = icurrent;
 	fpieces[k] = icurrent + fcurrent;
 	if (p < end) {
 	  npiece = k + 1;
-	  icurrent = 0;
-	  fcurrent = 0;
-	  ncurrent = 0;
-	  mult = 0;
+	  icurrent = fcurrent = 0;
+	  ncurrent = digcount = 0;
 	}
       } else if (lookup(signs, x) >= 0)
 	throw out_of_range("Internal sign in DMS string "
@@ -131,10 +132,14 @@ namespace GeographicLib {
 	throw out_of_range("Missing numbers in " + components[k]
 			   + " component of "
 			   + dms.substr(beg, end - beg));
+      if (digcount > 1) {
+	istringstream s(dms.substr(p - digcount, digcount));
+	s >> fcurrent;
+      }
       ipieces[npiece] = icurrent;
       fpieces[npiece] = icurrent + fcurrent;
     }
-    if (pointseen && mult == 0)
+    if (pointseen && digcount == 0)
       throw out_of_range("Decimal point in non-terminal component of "
 			 + dms.substr(beg, end - beg));
     // Note that we accept 59.999999... even though it rounds to 60.
@@ -147,6 +152,40 @@ namespace GeographicLib {
     // Assume check on range of result is made by calling routine (which might
     // be able to offer a better diagnostic).
     return sign * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
+  }
+
+  void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
+			 double& lat, double& lon) {
+      double a, b;
+      flag ia, ib;
+      a = Decode(stra, ia);
+      b = Decode(strb, ib);
+      if (ia == NONE && ib == NONE) {
+	// Default to lat, long
+	ia = LATITUDE;
+	ib = LONGITUDE;
+      } else if (ia == NONE)
+	ia = flag(LATITUDE + LONGITUDE - ib);
+      else if (ib == NONE)
+	ib = flag(LATITUDE + LONGITUDE - ia);
+      if (ia == ib)
+	throw out_of_range("Both " + stra + " and " + strb +
+			   " interpreted as "
+			   + (ia == LATITUDE ? "latitudes"
+			      : "longitudes"));
+      if (ia == LATITUDE) {
+	lat = a; lon = b;
+      } else {
+	lat = b; lon = a;
+      }
+      if (! (lat >= -90 && lat <= 90))
+	throw out_of_range("Latitude " + str(lat) +
+			   "d not in [-90d, 90d]");
+      if (! (lon >= -180 && lon <= 360))
+	throw out_of_range("Latitude " + str(lon) +
+			   "d not in [-180d, 360d]");
+      if (lon >= 180)
+	lon -= 360;
   }
 
   string DMS::Encode(double angle, component trailing, unsigned prec,
@@ -162,8 +201,11 @@ namespace GeographicLib {
       scale *= 60;
     for (unsigned i = 0; i < prec; ++i)
       scale *= 10;
+    if (ind == AZIMUTH)
+      angle -= floor(angle/360) * 360;
     int sign = angle < 0 ? -1 : 1;
     angle *= sign;
+      
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
     double
@@ -189,12 +231,12 @@ namespace GeographicLib {
     switch (trailing) {
     case DEGREE:
       if (ind != NONE)
-	s << setw(1 + ind + prec + (prec ? 1 : 0));
+	s << setw(1 + min(int(ind), 2) + prec + (prec ? 1 : 0));
       s << setprecision(prec) << pieces[0];
       break;
     default:
       if (ind != NONE)
-	s << setw(1 + ind);
+	s << setw(1 + min(int(ind), 2));
       s << setprecision(0) << pieces[0] << char(tolower(dmsindicators[0]));
       switch (trailing) {
       case MINUTE:
@@ -210,7 +252,7 @@ namespace GeographicLib {
 	break;
       }
     }
-    if (ind != NONE)
+    if (ind != NONE && ind != AZIMUTH)
       s << hemispheres[(ind == LATITUDE ? 0 : 2) + (sign < 0 ? 0 : 1)];
     return s.str();
   }

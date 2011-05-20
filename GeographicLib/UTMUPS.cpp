@@ -16,7 +16,7 @@
 #include "GeographicLib/TransverseMercator.hpp"
 
 namespace {
-  char RCSID[] = "$Id: UTMUPS.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: UTMUPS.cpp 6535 2009-02-10 22:37:07Z ckarney $";
   char RCSID_H[] = UTMUPS_HPP;
 }
 
@@ -45,7 +45,7 @@ namespace GeographicLib {
       (MGRS::maxutmSrow + MGRS::maxutmNrow - MGRS::minutmNrow) * MGRS::tile,
       MGRS::maxutmNrow * MGRS::tile };
 
-  int UTMUPS::StandardZone(double lat, double lon) {
+  int UTMUPS::StandardZone(double lat, double lon)  throw() {
     // Assume lon is in [-180, 360].
     int zone;
     int ilat = int(floor(lat));

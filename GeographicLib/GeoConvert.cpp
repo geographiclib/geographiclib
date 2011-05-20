@@ -23,7 +23,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-h]\n\
-$Id: GeoConvert.cpp 6526 2009-01-27 21:51:07Z ckarney $\n\
+$Id: GeoConvert.cpp 6559 2009-02-28 16:49:53Z ckarney $\n\
 \n\
 Convert geographic coordinates to\n\
 \n\
@@ -33,10 +33,11 @@ Convert geographic coordinates to\n\
     -m MGRS\n\
     -c meridian convergence and scale\n\
 \n\
-Geographic coordinates are given on standard input as:\n\
+The WGS84 model of the earth is used.  Geographic coordinates are given on\n\
+standard input as:\n\
 \n\
 Latitude and longitude (decimal degrees or degrees minutes seconds).  d,\n\
-\', and \" are used to denote degrees, minutes, and seconds, with the least\n\
+', and \" are used to denote degrees, minutes, and seconds, with the least\n\
 significant designator optional.  Latitude is given first unless a\n\
 hemisphere is specified, e.g., the following are all equivalent\n\
 \n\
@@ -82,7 +83,7 @@ the standard zone.\n\
 \n\
 -z zone sets the zone for output.  Use zone = 0 to specify UPS.\n\
 \n\
--s uses the standard zone\n\
+-s uses the standard zone.\n\
 \n\
 For example, the point\n\
 \n\
@@ -100,7 +101,7 @@ then\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -s    ==> 32CMS4328\n\
     echo 31CEM6066227959 | GeoConvert -p -3 -m -z 0  ==>   BBZ1917\n\
 \n\
--h prints this help\n";
+-h prints this help.\n";
   return retval;
 }
 
@@ -146,10 +147,7 @@ int main(int argc, char* argv[]) {
     std::cerr << "Zone " << zone << "not in [0, 60]\n";
     return 1;
   }
-  while (true) {
-    std::getline(std::cin, s);
-    if (!std::cin.good())
-      break;
+  while (std::getline(std::cin, s)) {
     try {
       p.Reset(s);
       if (zone != -2)
@@ -182,6 +180,7 @@ int main(int argc, char* argv[]) {
       }
     }
     catch (std::out_of_range& e) {
+      // Write error message cout so output lines match input lines
       os = std::string("ERROR: ") + e.what();
       retval = 1;
     }

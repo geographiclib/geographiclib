@@ -23,7 +23,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "TransverseMercatorTest [-r] [-t|-s]\n\
-$Id: TransverseMercatorTest.cpp 6519 2009-01-20 03:40:56Z ckarney $\n\
+$Id: TransverseMercatorTest.cpp 6558 2009-02-27 23:42:54Z ckarney $\n\
 \n\
 Convert between geographic coordinates and transverse Mercator coordinates.\n\
 \n\
@@ -53,7 +53,7 @@ The domain of easting (x) and northing (x) is the union of\n\
 -s and -t are mutually exclusive (the last flag specified is the operative\n\
 one).\n\
 \n\
--h prints this help\n";
+-h prints this help.\n";
   return retval;
 }
 

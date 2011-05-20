@@ -11,7 +11,7 @@
 #include <limits>
 
 namespace {
-  char RCSID[] = "$Id: PolarStereographic.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: PolarStereographic.cpp 6568 2009-03-01 17:58:41Z ckarney $";
   char RCSID_H[] = POLARSTEREOGRAPHIC_HPP;
 }
 
@@ -20,8 +20,9 @@ namespace GeographicLib {
   using namespace std;
 
   PolarStereographic::PolarStereographic(double a, double invf, double k0)
+    throw()
     : _a(a)
-    , _f(1 / invf)
+    , _f(invf > 0 ? 1 / invf : 0)
     , _k0(k0)
     , _e(sqrt(_f * (2 - _f)))
     , _e2m(1 - sq(_e))
@@ -31,15 +32,15 @@ namespace GeographicLib {
   {}
 
   const PolarStereographic
-  PolarStereographic::UPS(Constants::WGS84_a, Constants::WGS84_invf,
-			  Constants::UPS_k0);
+  PolarStereographic::UPS(Constants::WGS84_a(), Constants::WGS84_invf(),
+			  Constants::UPS_k0());
 
   void PolarStereographic::Forward(bool northp, double lat, double lon,
 				   double& x, double& y,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     double theta = 90 - (northp ? lat : -lat); //  the colatitude
     double rho;
-    theta *= Constants::degree;
+    theta *= Constants::degree();
     double
       ecos = _e * cos(theta),
       f = pow((1 + ecos)/(1 - ecos), _e/2),
@@ -48,7 +49,7 @@ namespace GeographicLib {
     rho = _a * _k0 * t2 / _c;		   // Snyder (21-33)
     k = m < numeric_limits<double>::epsilon() ? _k0 : rho / (_a * m);
     double
-      lam = lon * Constants::degree;
+      lam = lon * Constants::degree();
     x = rho * sin(lam);
     y = (northp ? -rho : rho) * cos(lam);
     gamma = northp ? lon : -lon;
@@ -56,11 +57,11 @@ namespace GeographicLib {
 
   void PolarStereographic::Reverse(bool northp, double x, double y,
 				   double& lat, double& lon,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     double
       rho = hypot(x, y),
       t2 = rho * _c / (_a * _k0),
-      theta = Constants::pi/2,	// initial estimate of colatitude
+      theta = Constants::pi()/2,	// initial estimate of colatitude
       ecos = _e * cos(theta);
     // Solve from theta using Newton's method on Snyder (15-9) which converges
     // more rapidly than the iteration procedure given by Snyder (7-9).  First
@@ -78,9 +79,9 @@ namespace GeographicLib {
       if (abs(dtheta) < _tol)
 	break;
     }
-    lat = (northp ? 1 : -1) * (90 - theta / Constants::degree);
-    // Result is in [-180, 180)
-    lon = rho == 0 ? 0 : -atan2( -x, northp ? -y : y ) / Constants::degree;
+    lat = (northp ? 1 : -1) * (90 - theta / Constants::degree());
+    // Result is in [-180, 180).  Assume atan2(0,0) = 0.
+    lon = -atan2( -x, northp ? -y : y ) / Constants::degree();
     double m = sin(theta) / sqrt(1 - sq(ecos));
     k = m == 0 ? _k0 : rho / (_a * m);
     gamma = northp ? lon : -lon;

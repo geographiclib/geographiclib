@@ -12,7 +12,7 @@
 #include <limits>
 
 namespace {
-  char RCSID[] = "$Id: MGRS.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: MGRS.cpp 6553 2009-02-24 03:10:01Z ckarney $";
   char RCSID_H[] = MGRS_HPP;
 }
 
@@ -51,7 +51,7 @@ namespace GeographicLib {
       maxutmNrow + (maxutmSrow - minutmNrow), maxutmNrow };
 
   void MGRS::Forward(int zone, bool northp, double x, double y, double lat,
-		     int prec, string& mgrs) {
+		     int prec, std::string& mgrs) {
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
     if (!(zone >= 0 || zone <= 60))
@@ -123,7 +123,7 @@ namespace GeographicLib {
   }
 
   void MGRS::Forward(int zone, bool northp, double x, double y,
-		     int prec, string& mgrs) {
+		     int prec, std::string& mgrs) {
     double lat, lon;
     if (zone)
       UTMUPS::Reverse(zone, northp, x, y, lat, lon);
@@ -133,7 +133,7 @@ namespace GeographicLib {
     Forward(zone, northp, x, y, lat, prec, mgrs);
   }
 
-  void MGRS::Reverse(const string& mgrs,
+  void MGRS::Reverse(const std::string& mgrs,
 		     int& zone, bool& northp, double& x, double& y,
 		     int& prec, bool centerp) {
     int
@@ -277,7 +277,7 @@ namespace GeographicLib {
     }
   }
 
-  int MGRS::UTMRow(int iband, int icol, int irow) {
+  int MGRS::UTMRow(int iband, int icol, int irow) throw() {
     // Input is MGRS (periodic) row index and output is true row index.  Band
     // index is in [-10, 10) (as returned by LatitudeBand).  Column index
     // origin is easting = 100km.  Returns maxutmSrow if irow and iband are

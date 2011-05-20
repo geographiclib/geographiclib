@@ -31,7 +31,7 @@
  * If the preprocessor variable TM_TX_MAXPOW is set to an integer between 4 and
  * 8, then this specifies the order of the series used for the forward and
  * reverse transformations.  The default value is 6.  (The series accurate to
- * 12th order is given in \ref series.)
+ * 12th order is given in \ref tmseries.)
  *
  * Other equivalent implementations are given in
  *  - http://www.ign.fr/telechargement/MPro/geodesie/CIRCE/NTG_76.pdf
@@ -43,7 +43,7 @@
 #include <limits>
 
 namespace {
-  char RCSID[] = "$Id: TransverseMercator.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: TransverseMercator.cpp 6568 2009-03-01 17:58:41Z ckarney $";
   char RCSID_H[] = TRANSVERSEMERCATOR_HPP;
 }
 
@@ -55,13 +55,13 @@ namespace GeographicLib {
     0.1*sqrt(numeric_limits<double>::epsilon());
 
   TransverseMercator::TransverseMercator(double a, double invf, double k0)
+    throw()
     : _a(a)
-    , _f(1 / invf)
+    , _f(invf > 0 ? 1 / invf : 0)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(_e2))
     , _e2m(1 - _e2)
-    , _ep2(_e2 / _e2m)
     , _n(_f / (2 - _f))
   {
 #if TM_TX_MAXPOW <= 4
@@ -171,12 +171,12 @@ namespace GeographicLib {
   }
 
   const TransverseMercator
-  TransverseMercator::UTM(Constants::WGS84_a, Constants::WGS84_invf,
-			  Constants::UTM_k0);
+  TransverseMercator::UTM(Constants::WGS84_a(), Constants::WGS84_invf(),
+			  Constants::UTM_k0());
 
   void TransverseMercator::Forward(double lon0, double lat, double lon,
 				   double& x, double& y,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
       lon -= lon0 - 360;
@@ -198,8 +198,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     double
-      phi = lat * Constants::degree,
-      lam = lon * Constants::degree;
+      phi = lat * Constants::degree(),
+      lam = lon * Constants::degree();
     // q is isometric latitude
     // JHS 154 has
     //
@@ -236,7 +236,7 @@ namespace GeographicLib {
       // and cos(beta) * cosh(etap) = 1/hypot(sinh(q), cos(lam))
       k = sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) / hypot(sinh(q), cos(lam));
     } else {
-      xip = Constants::pi/2;
+      xip = Constants::pi()/2;
       etap = 0;
       gamma = lam;
       // See, for example, Lee (1976), p 100.
@@ -294,7 +294,7 @@ namespace GeographicLib {
     //    b(n, x) = -1
     //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = n*x, B = x ]
     //    c[0] = 1; c[k] = 2*k*_hp[k-1]
-    //    S = (c[0] - y[2])  + y[1] * cos(x)
+    //    S = (c[0] - y[2]) + y[1] * cos(x)
     double
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
@@ -326,8 +326,8 @@ namespace GeographicLib {
     // Gauss-Krueger TM.
     gamma -= atan2(yi2, yr2);
     k *= _b1 * hypot(yr2, yi2);
-    gamma /= Constants::degree;
-    y = _a1 * _k0 * (backside ? Constants::pi - xi : xi) * latsign;
+    gamma /= Constants::degree();
+    y = _a1 * _k0 * (backside ? Constants::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
       gamma = 180 - gamma;
@@ -337,7 +337,7 @@ namespace GeographicLib {
 
   void TransverseMercator::Reverse(double lon0, double x, double y,
 				   double& lat, double& lon,
-				   double& gamma, double& k) const {
+				   double& gamma, double& k) const throw() {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of q.
@@ -350,9 +350,9 @@ namespace GeographicLib {
       etasign = eta < 0 ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
-    bool backside = xi > Constants::pi/2;
+    bool backside = xi > Constants::pi()/2;
     if (backside)
-      xi = Constants::pi - xi;
+      xi = Constants::pi() - xi;
     double
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta),
@@ -417,12 +417,12 @@ namespace GeographicLib {
       // Note cos(beta) * cosh(etap) = r
       k *= sqrt(_e2m + _e2 * sq(cos(phi))) * cosh(qp) * r;
     } else {
-      phi = Constants::pi/2;
+      phi = Constants::pi()/2;
       lam = 0;
       k *= sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) );
     }
-    lat = phi / Constants::degree * xisign;
-    lon = lam / Constants::degree;
+    lat = phi / Constants::degree() * xisign;
+    lon = lam / Constants::degree();
     if (backside)
       lon = 180 - lon;
     lon *= etasign;
@@ -433,7 +433,7 @@ namespace GeographicLib {
       lon += lon0 + 360;
     else
       lon += lon0;
-    gamma /= Constants::degree;
+    gamma /= Constants::degree();
     if (backside)
       gamma = 180 - gamma;
     gamma *= xisign * etasign;

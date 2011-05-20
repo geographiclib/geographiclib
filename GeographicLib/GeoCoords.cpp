@@ -17,7 +17,7 @@
 #include "GeographicLib/DMS.hpp"
 
 namespace {
-  char RCSID[] = "$Id: GeoCoords.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: GeoCoords.cpp 6555 2009-02-25 16:04:25Z ckarney $";
   char RCSID_H[] = GEOCOORDS_HPP;
 }
 
@@ -25,7 +25,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void GeoCoords::Reset(const string& s) {
+  void GeoCoords::Reset(const std::string& s) {
     vector<string> sa;
     bool in = false;
     for (unsigned i = 0; i < s.size(); ++i) {
@@ -44,30 +44,7 @@ namespace GeographicLib {
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
 		      _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
-      double a, b;
-      DMS::flag ia, ib;
-      a = DMS::Decode(sa[0], ia);
-      b = DMS::Decode(sa[1], ib);
-      if (ia == DMS::NONE && ib == DMS::NONE) {
-	// Default to lat, long
-	ia = DMS::LATITUDE;
-	ib = DMS::LONGITUDE;
-      } else if (ia == DMS::NONE)
-	ia = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ib);
-      else if (ib == DMS::NONE)
-	ib = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ia);
-      if (ia == ib)
-	throw out_of_range("Both " + sa[0] + " and " + sa[1] +
-			   " interpreted as "
-			   + (ia == DMS::LATITUDE ? "latitudes"
-			      : "longitudes"));
-      if (ia == DMS::LATITUDE) {
-	_lat = a;
-	_long = b;
-      } else {
-	_lat = b;
-	_long = a;
-      }
+      DMS::DecodeLatLon(sa[0], sa[1], _lat, _long);
       UTMUPS::Forward( _lat, _long,
 		       _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {
@@ -101,7 +78,7 @@ namespace GeographicLib {
 	const char* c = sa[coordind + i].c_str();
 	errno = 0;
 	double x = strtod(c, &q);
-	if (errno ==  ERANGE || isnan(x) || isinf(x))
+	if (errno ==  ERANGE || !isfinite(x))
 	  throw out_of_range("Number " + sa[coordind + i] + " out of range");
 	if (q - c != int(sa[coordind + i].size()))
 	  throw out_of_range(string("Extra text in UTM/UPS ") +
@@ -153,7 +130,7 @@ namespace GeographicLib {
   }
 
   void GeoCoords::UTMUPSString(int zone, double easting, double northing,
-			       int prec, string& utm) const {
+			       int prec, std::string& utm) const {
     ostringstream os;
     os << fixed << setfill('0');
     if (zone)

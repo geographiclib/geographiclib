@@ -43,7 +43,7 @@
 #include <algorithm>
 
 namespace {
-  char RCSID[] = "$Id: TransverseMercatorExact.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: TransverseMercatorExact.cpp 6568 2009-03-01 17:58:41Z ckarney $";
   char RCSID_H[] = TRANSVERSEMERCATOREXACT_HPP;
 }
 
@@ -62,23 +62,24 @@ namespace GeographicLib {
 
   TransverseMercatorExact::TransverseMercatorExact(double a, double invf,
 						   double k0, bool extendp)
+    throw()
     : _a(a)
     , _f(1 / invf)
     , _k0(k0)
-    , _mu(_f * (2 - _f))
-    , _mv(1 - _mu)
+    , _mu(_f * (2 - _f))	// e^2
+    , _mv(1 - _mu)		// 1 - e^2
     , _e(sqrt(_mu))
-    , _ep2(_mu/_mv)
+    , _ep2(_mu / _mv)		// e^2 / (1 - e^2)
     , _extendp(extendp)
     , _Eu(_mu)
     , _Ev(_mv)
   {}
 
   const TransverseMercatorExact
-  TransverseMercatorExact::UTM(Constants::WGS84_a, Constants::WGS84_invf,
-			       Constants::UTM_k0);
+  TransverseMercatorExact::UTM(Constants::WGS84_a(), Constants::WGS84_invf(),
+			       Constants::UTM_k0());
 
-  double  TransverseMercatorExact::psi(double phi) const {
+  double  TransverseMercatorExact::psi(double phi) const throw() {
     double s = sin(phi);
     // Lee 9.4.  Rewrite atanh(sin(phi)) = asinh(tan(phi)) which is more
     // accurate.  Write tan(phi) this way to ensure that sign(tan(phi)) =
@@ -86,7 +87,7 @@ namespace GeographicLib {
     return asinh(s / max(cos(phi), 0.1 * tol)) - _e * atanh(_e * s);
   }
 
-  double TransverseMercatorExact::psiinv(double psi) const {
+  double TransverseMercatorExact::psiinv(double psi) const throw() {
     // This is the inverse of psi.  Use Newton's method to solve for q in
     //
     //   psi = q - e * atanh(e * tanh(q))
@@ -110,7 +111,7 @@ namespace GeographicLib {
 				     double snu, double cnu, double dnu,
 				     double v,
 				     double snv, double cnv, double dnv,
-				     double& psi, double& lam) const {
+				     double& psi, double& lam) const throw() {
     // Lee 54.17 but write
     // atanh(snu * dnv) = asinh(snu * dnv / sqrt(cnu^2 + _mv * snu^2 * snv^2))
     // atanh(_e * snu / dnv) = asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
@@ -130,7 +131,7 @@ namespace GeographicLib {
 					double snu, double cnu, double dnu,
 					double v,
 					double snv, double cnv, double dnv,
-					double& du, double& dv) const {
+					double& du, double& dv) const throw() {
     // Lee 54.21 but write (1 - dnu^2 * snv^2) = (cnv^2 + _mu * snu^2 * snv^2)
     // (see A+S 16.21.4)
     double d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
@@ -140,11 +141,11 @@ namespace GeographicLib {
 
   // Starting point for zetainv
   bool TransverseMercatorExact::zetainv0(double psi, double lam,
-					  double& u, double& v) const {
+					  double& u, double& v) const throw() {
     bool retval = false;
-    if (psi < -_e * Constants::pi/4 &&
-	lam > (1 - 2 * _e) * Constants::pi/2 &&
-	psi < lam - (1 - _e) * Constants::pi/2) {
+    if (psi < -_e * Constants::pi()/4 &&
+	lam > (1 - 2 * _e) * Constants::pi()/2 &&
+	psi < lam - (1 - _e) * Constants::pi()/2) {
       // N.B. this branch is normally not taken because psi < 0 is converted
       // psi > 0 by Forward.
       //
@@ -156,13 +157,13 @@ namespace GeographicLib {
       // Inverting this gives:
       double
 	psix = 1 - psi / _e,
-	lamx = (Constants::pi/2 - lam) / _e;
+	lamx = (Constants::pi()/2 - lam) / _e;
       u = asinh(sin(lamx) / hypot(cos(lamx), sinh(psix))) * (1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
       u = _Eu.K() - u;
       v = _Ev.K() - v;
-    } else if (psi < _e * Constants::pi/2 &&
-	       lam > (1 - 2 * _e) * Constants::pi/2) {
+    } else if (psi < _e * Constants::pi()/2 &&
+	       lam > (1 - 2 * _e) * Constants::pi()/2) {
       // At w = w0 = i * Ev.K(), we have
       //
       //     zeta = zeta0 = i * (1 - _e) * pi/2
@@ -175,14 +176,14 @@ namespace GeographicLib {
       // When inverting this, we map arg(w - w0) = [-90, 0] to
       // arg(zeta - zeta0) = [-90, 180]
       double
-	dlam = lam - (1 - _e) * Constants::pi/2,
+	dlam = lam - (1 - _e) * Constants::pi()/2,
 	rad = hypot(psi, dlam),
 	// atan2(dlam-psi, psi+dlam) + 45d gives arg(zeta - zeta0) in range
 	// [-135, 225).  Subtracting 180 (since multiplier is negative) makes
 	// range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
 	// [-105, 15).  In particular the range [-90, 180] in zeta space maps
 	// to [-90, 0] in w space as required.
-	ang = atan2(dlam-psi, psi+dlam) - 0.75 * Constants::pi;
+	ang = atan2(dlam-psi, psi+dlam) - 0.75 * Constants::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol;
       rad = pow(3 / (_mv * _e) * rad, 1/3.0);
@@ -196,15 +197,15 @@ namespace GeographicLib {
       v = asinh(sin(lam) / hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
-      u *= _Eu.K() / (Constants::pi/2);
-      v *= _Eu.K() / (Constants::pi/2);
+      u *= _Eu.K() / (Constants::pi()/2);
+      v *= _Eu.K() / (Constants::pi()/2);
     }
     return retval;
   }
 
   // Invert zeta using Newton's method
   void  TransverseMercatorExact::zetainv(double psi, double lam,
-					 double& u, double& v) const {
+					 double& u, double& v) const throw() {
     if (zetainv0(psi, lam, u, v))
       return;
     double stol2 = tol2 / sq(max(psi, 1.0));
@@ -235,7 +236,7 @@ namespace GeographicLib {
 				      double snu, double cnu, double dnu,
 				      double v,
 				      double snv, double cnv, double dnv,
-				      double& xi, double& eta) const {
+				      double& xi, double& eta) const throw() {
     // Lee 55.4 writing
     // dnu^2 + dnv^2 - 1 = _mu * cnu^2 + _mv * cnv^2
     double d = _mu * sq(cnu) + _mv * sq(cnv);
@@ -247,7 +248,7 @@ namespace GeographicLib {
 					 double snu, double cnu, double dnu,
 					 double v,
 					 double snv, double cnv, double dnv,
-					 double& du, double& dv) const {
+					 double& du, double& dv) const throw() {
     // Reciprocal of 55.9: dw/ds = dn(w)^2/_mv, expanding complex dn(w) using
     // A+S 16.21.4
     double d = _mv * sq(sq(cnv) + _mu * sq(snu * snv));
@@ -260,7 +261,7 @@ namespace GeographicLib {
 
   // Starting point for sigmainv
   bool  TransverseMercatorExact::sigmainv0(double xi, double eta,
-					   double& u, double& v) const {
+					   double& u, double& v) const throw() {
     bool retval = false;
     if (eta > 1.25 * _Ev.KE() ||
 	(xi < -0.25 * _Eu.E() && xi < eta - _Ev.KE())) {
@@ -293,7 +294,7 @@ namespace GeographicLib {
 	rad = hypot(xi, deta),
 	// Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
 	// discussion in zetainv0 on the cut for ang.
-	ang = atan2(deta-xi, xi+deta) - 0.75 * Constants::pi;
+	ang = atan2(deta-xi, xi+deta) - 0.75 * Constants::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol;
       rad = pow(3 / _mv * rad, 1/3.0);
@@ -310,7 +311,7 @@ namespace GeographicLib {
 
   // Invert sigma using Newton's method
   void  TransverseMercatorExact::sigmainv(double xi, double eta,
-					  double& u, double& v) const {
+					  double& u, double& v) const throw() {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
@@ -339,7 +340,7 @@ namespace GeographicLib {
   void TransverseMercatorExact::Scale(double phi, double lam,
 				      double snu, double cnu, double dnu,
 				      double snv, double cnv, double dnv,
-				      double& gamma, double& k) const {
+				      double& gamma, double& k) const throw() {
     double
       c = cos(phi),
       s = sin(lam),
@@ -384,7 +385,8 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::Forward(double lon0, double lat, double lon,
 					double& x, double& y,
-					double& gamma, double& k) const {
+					double& gamma, double& k)
+    const throw() {
     // Avoid losing a bit of accuracy in lon (assuming lon0 is an integer)
     if (lon - lon0 > 180)
       lon -= lon0 - 360;
@@ -406,8 +408,8 @@ namespace GeographicLib {
       lon = 180 - lon;
     }
     double
-      phi = lat * Constants::degree,
-      lam = lon * Constants::degree;
+      phi = lat * Constants::degree(),
+      lam = lon * Constants::degree();
 
     // u,v = coordinates for the Thompson TM, Lee 54
     double u, v;
@@ -432,7 +434,7 @@ namespace GeographicLib {
     x = eta * _a * _k0 * lonsign;
 
     Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Constants::degree;
+    gamma /= Constants::degree();
     if (backside)
       gamma = 180 - gamma;
     gamma *= latsign * lonsign;
@@ -441,7 +443,8 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::Reverse(double lon0, double x, double y,
 					double& lat, double& lon,
-					double& gamma, double& k) const {
+					double& gamma, double& k)
+    const throw() {
     // This undoes the steps in Forward.
     double
       xi = y / (_a * _k0),
@@ -472,15 +475,15 @@ namespace GeographicLib {
       double psi;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, psi, lam);
       phi = psiinv(psi);
-      lat = phi / Constants::degree;
-      lon = lam / Constants::degree;
+      lat = phi / Constants::degree();
+      lon = lam / Constants::degree();
     } else {
-      phi = Constants::pi/2;
+      phi = Constants::pi()/2;
       lat = 90;
       lon = lam = 0;
     }
     Scale(phi, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
-    gamma /= Constants::degree;
+    gamma /= Constants::degree();
     if (backside)
       lon = 180 - lon;
     lon *= lonsign;

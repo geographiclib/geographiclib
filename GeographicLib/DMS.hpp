@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(DMS_HPP)
-#define DMS_HPP "$Id: DMS.hpp 6497 2009-01-10 12:14:10Z ckarney $"
+#define DMS_HPP "$Id: DMS.hpp 6572 2009-03-01 22:41:48Z ckarney $"
 
 #include <string>
 #include <sstream>
@@ -16,7 +16,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Convert between degrees to DMS representation.
+   * \brief Convert between degrees to %DMS representation.
    *
    * Parse a string representing degree, minutes, and seconds and return the
    * angle in degrees and format an angle in degrees as degree, minutes, and
@@ -24,7 +24,7 @@ namespace GeographicLib {
    **********************************************************************/
   class DMS {
   private:
-    static int lookup(const std::string& s, char c) {
+    static int lookup(const std::string& s, char c) throw() {
       std::string::size_type r = s.find(toupper(c));
       return r == std::string::npos ? -1 : int(r);
     }
@@ -38,8 +38,19 @@ namespace GeographicLib {
     static const std::string components[3];
 
   public:
-    enum flag { NONE = 0, LATITUDE = 1, LONGITUDE = 2 };
+
+    /**
+     * Indicator for presence of hemisphere indicator (N/S/E/W) on latitudes
+     * and longitudes.  AZIMUTH is used in Encode to indicate output in [000,
+     * 360) with no letter indicator.
+     **********************************************************************/
+    enum flag { NONE = 0, LATITUDE = 1, LONGITUDE = 2, AZIMUTH = 3 };
+
+    /**
+     * Indicator for trailing units on an angle.
+     **********************************************************************/
     enum component { DEGREE = 0, MINUTE = 1, SECOND = 2 };
+
     /**
      * Read a string \e dms in DMS format and return the resulting angle in
      * degrees.  Degrees, minutes, and seconds are indicated by the letters d,
@@ -57,6 +68,17 @@ namespace GeographicLib {
      * longitude (E or W).
      **********************************************************************/
     static double Decode(const std::string& dms, flag& ind);
+
+    /**
+     * Convert two strings \e dmsa and \e dmsb to a latitude, \e lat, and
+     * longitude, \e lon.  By default, the \e lat (resp., \e lon) is assigned
+     * to the results of decoding \e dmsa (resp., \e dmsb).  However this is
+     * overridden if either \e dmsa or \e dmsb contain a latitude or longitude
+     * hemisphere designator (N, S, E, W).
+     **********************************************************************/
+    static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
+			     double& lat, double& lon);
+
     /**
      * Convert \e degree into a DMS string.  \e trailing indicates the least
      * significant component of the string (and this component is given as a
@@ -73,6 +95,7 @@ namespace GeographicLib {
 			      component trailing,
 			      unsigned prec,
 			      flag ind = NONE);
+
     /**
      * Convert \e degree into a DMS string selecting the trailing component
      * based on \e prec.  \e prec indicates the precision relative to 1 degree,

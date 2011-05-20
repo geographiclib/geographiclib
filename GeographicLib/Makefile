@@ -1,23 +1,42 @@
-# $Id: Makefile 6526 2009-01-27 21:51:07Z ckarney $
-TARGET = GeoConvert TransverseMercatorTest ECEFConvert
-all: $(TARGET)
+# $Id: Makefile 6571 2009-03-01 21:55:01Z ckarney $
 
-CC = g++
+LIBSTEM = Geographic
+LIBRARY = lib$(LIBSTEM).a
+PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod
+
+all: $(PROGRAMS) $(LIBRARY)
+
+CC = g++ -g
+CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+
 CPPFLAGS = -I..
-CXXFLAGS = -g -Wall -pedantic -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+LDFLAGS = $(LIBRARY)
 
-HEADERS = Constants.hpp DMS.hpp EllipticFunction.hpp GeoCoords.hpp MGRS.hpp \
-	PolarStereographic.hpp TransverseMercator.hpp \
-	TransverseMercatorExact.hpp UTMUPS.hpp ECEF.hpp LocalCartesian.hpp
+PREFIX = /usr/local
+# After installation, use these values of CPPFLAGS and LDFLAGS
 
-SOURCES = $(patsubst %.hpp,%.cpp,$(HEADERS)) \
-	GeoConvert.cpp TransverseMercatorTest.cpp ECEFConvert.cpp
+# CPPFLAGS = -I$(PREFIX)/include
+# LDFLAGS = -L$(PREFIX)/lib -l$(LIBSTEM)
 
-GeoConvert: GeoConvert.o GeoCoords.o MGRS.o UTMUPS.o DMS.o Constants.o \
-	TransverseMercator.o PolarStereographic.o
-TransverseMercatorTest: TransverseMercatorTest.o TransverseMercatorExact.o \
-	Constants.o EllipticFunction.o TransverseMercator.o
-ECEFConvert: ECEFConvert.o ECEF.o LocalCartesian.o Constants.o
+MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
+	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
+	LocalCartesian Geodesic
+
+HEADERS = Constants.hpp $(patsubst %,%.hpp,$(MODULES))
+SOURCES = $(patsubst %,%.cpp,$(MODULES))
+OBJECTS = $(patsubst %,%.o,$(MODULES))
+ALLSOURCES = $(SOURCES) $(patsubst %,%.cpp,$(PROGRAMS))
+
+$(LIBRARY): $(OBJECTS)
+	$(AR) r $@ $?
+
+$(PROGRAMS): $(LIBRARY)
+	$(CC) -o $@ $@.o $(LDFLAGS)
+
+GeoConvert: GeoConvert.o
+TransverseMercatorTest: TransverseMercatorTest.o
+CartConvert: CartConvert.o
+Geod: Geod.o
 
 Constants.o: Constants.hpp
 DMS.o: DMS.hpp
@@ -29,12 +48,14 @@ TransverseMercator.o: TransverseMercator.hpp Constants.hpp
 TransverseMercatorExact.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
 	Constants.hpp
 UTMUPS.o: UTMUPS.hpp MGRS.hpp PolarStereographic.hpp TransverseMercator.hpp
-ECEF.o: ECEF.hpp Constants.hpp
-LocalCartesian.o: LocalCartesian.hpp ECEF.hpp Constants.hpp
-ECEFConvert.o: ECEF.hpp LocalCartesian.hpp Constants.hpp
+Geocentric.o: Geocentric.hpp Constants.hpp
+LocalCartesian.o: LocalCartesian.hpp Geocentric.hpp Constants.hpp
+Geodesic.o: Geodesic.hpp Constants.hpp
 GeoConvert.o: GeoCoords.hpp UTMUPS.hpp
-TransverseMercatorTest.o: TransverseMercatorExact.hpp EllipticFunction.hpp \
-	TransverseMercator.hpp Constants.hpp
+TransverseMercatorTest.o: EllipticFunction.hpp TransverseMercatorExact.hpp \
+	TransverseMercator.hpp
+CartConvert.o: Geocentric.hpp LocalCartesian.hpp
+Geod.o: Geodesic.hpp DMS.hpp
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
@@ -42,8 +63,22 @@ FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 
 MAXIMASOURCES = tm.mac ellint.mac tmseries.mac
 
+install: install-lib install-headers install-progs
+
+install-lib: $(LIBRARY)
+	test -f $(PREFIX)/lib || mkdir -p $(PREFIX)/lib
+	install -m 644 $^ $(PREFIX)/lib
+
+install-headers: $(HEADERS)
+	test -f $(PREFIX)/include/GeographicLib || mkdir -p $(PREFIX)/include/GeographicLib
+	install -m 644 $^ $(PREFIX)/include/GeographicLib
+
+install-progs: $(PROGRAMS)
+	test -f $(PREFIX)/bin || mkdir -p $(PREFIX)/bin
+	install $^ $(PREFIX)/bin
+
 doc: Doxyfile Geographic.doc \
-	$(HEADERS) $(SOURCES) \
+	$(HEADERS) $(ALLSOURCES) \
 	$(addsuffix .pdf,$(FIGURES)) $(addsuffix .png,$(FIGURES))
 	rm -rf html/*
 	doxygen
@@ -52,4 +87,4 @@ doc: Doxyfile Geographic.doc \
 	touch $@
 
 clean:
-	rm -f *.o
+	rm -f *.o $(LIBRARY)

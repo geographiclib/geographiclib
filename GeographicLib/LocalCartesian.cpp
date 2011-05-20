@@ -7,12 +7,12 @@
  **********************************************************************/
 
 #include "GeographicLib/LocalCartesian.hpp"
-#include "GeographicLib/ECEF.hpp"
 #include "GeographicLib/Constants.hpp"
 #include <cmath>
+#include <stdexcept>
 
 namespace {
-  char RCSID[] = "$Id: LocalCartesian.cpp 6520 2009-01-22 20:59:05Z ckarney $";
+  char RCSID[] = "$Id: LocalCartesian.cpp 6568 2009-03-01 17:58:41Z ckarney $";
   char RCSID_H[] = LOCALCARTESIAN_HPP;
 }
 
@@ -20,29 +20,30 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void LocalCartesian::Reset(double lat0, double lon0) {
+  void LocalCartesian::Reset(double lat0, double lon0, double h0) throw() {
     _lat0 = lat0;
-    _lon0 = lon0;
-    ECEF::WGS84.Forward(lat0, lon0, 0.0, _x0, _y0, _z0);
+    _lon0 = lon0 >= 180 ? lon0 - 360 : lon0 < -180 ? lon0 + 360 : lon0;
+    _h0 = h0;
+    _earth.Forward(_lat0, _lon0, _h0, _x0, _y0, _z0);
     double
-      phi = lat0 * Constants::degree,
+      phi = lat0 * Constants::degree(),
       sphi = sin(phi),
       cphi = cos(phi),
-      lam = lon0 * Constants::degree,
+      lam = lon0 * Constants::degree(),
       slam = sin(lam),
       clam = cos(lam);
-    // Local x axis in ECEF coords
+    // Local x axis in geocentric coords
     _rxx = -slam; _rxy = clam; _rxz = 0;
-    // Local y axis in ECEF coords
+    // Local y axis in geocentric coords
     _ryx = -clam * sphi; _ryy = -slam * sphi; _ryz = cphi;
-    // Local z axis in ECEF coords
+    // Local z axis in geocentric coords
     _rzx = clam * cphi; _rzy = slam * cphi; _rzz = sphi;
   }
 
   void LocalCartesian::Forward(double lat, double lon, double h,
-			       double& x, double& y, double& z) const {
+			       double& x, double& y, double& z) const throw() {
     double xc, yc, zc;
-    ECEF::WGS84.Forward(lat, lon, h, xc, yc, zc);
+    _earth.Forward(lat, lon, h, xc, yc, zc);
     xc -= _x0; yc -= _y0; zc -= _z0;
     x = _rxx * xc + _rxy * yc + _rxz * zc;
     y = _ryx * xc + _ryy * yc + _ryz * zc;
@@ -50,12 +51,13 @@ namespace GeographicLib {
   }
 
   void LocalCartesian::Reverse(double x, double y, double z,
-			       double& lat, double& lon, double& h) const {
+			       double& lat, double& lon, double& h)
+    const throw() {
     double
       xc = _x0 + _rxx * x + _ryx * y + _rzx * z,
       yc = _y0 + _rxy * x + _ryy * y + _rzy * z,
       zc = _z0 + _rxz * x + _ryz * y + _rzz * z;
-    ECEF::WGS84.Reverse(xc, yc, zc, lat, lon, h);
+    _earth.Reverse(xc, yc, zc, lat, lon, h);
   }
 
 } // namespace GeographicLib

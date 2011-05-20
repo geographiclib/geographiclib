@@ -8,12 +8,15 @@
  **********************************************************************/
 
 #ifndef GEOCOORDS_HPP
-#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6520 2009-01-22 20:59:05Z ckarney $"
+#define GEOCOORDS_HPP "$Id: GeoCoords.hpp 6543 2009-02-17 11:36:37Z ckarney $"
 
 #include <cmath>
 #include <string>
 #include <cstdlib>
 #include "GeographicLib/UTMUPS.hpp"
+#if defined(_MSC_VER)
+#include <float.h>		// For _finite
+#endif
 
 namespace GeographicLib {
 
@@ -50,7 +53,7 @@ namespace GeographicLib {
     mutable double _alt_easting, _alt_northing, _alt_gamma, _alt_k;
     mutable int _alt_zone;
 
-    void CopyToAlt() const {
+    void CopyToAlt() const throw() {
       _alt_easting = _easting;
       _alt_northing = _northing;
       _alt_gamma = _gamma;
@@ -61,18 +64,19 @@ namespace GeographicLib {
 		   int prec, std::string& utm) const;
     void FixHemisphere();
 #if defined(_MSC_VER)
-    static inline int isnan(double x) { return 0; }
-    static inline int isinf(double x) { return 0; }
+    static inline int isfinite(double x) throw() { return _finite(x); }
 #else
-    static inline int isnan(double x) { return std::isnan(x); }
-    static inline int isinf(double x) { return std::isinf(x); }
+    static inline int isfinite(double x) throw() { return std::isfinite(x); }
+    static inline int isnan(double x) throw() { return std::isnan(x); }
+    static inline int isinf(double x) throw() { return std::isinf(x); }
 #endif
   public:
+
     /**
      * The default contructor is equivalent to \e latitude = 90<sup>o</sup>, \e
      * longitude = 0<sup>o</sup>.
      **********************************************************************/
-    GeoCoords()
+    GeoCoords() throw()
       // This is the N pole
       : _lat(90.0)
       , _long(0.0)
@@ -81,6 +85,7 @@ namespace GeographicLib {
       , _northp(true)
       , _zone(0)
     { CopyToAlt();}
+
     /**
      * Parse as a string and interpret it as a geographic position.  The input
      * string is broken into space (or comma) separated pieces and Basic
@@ -122,7 +127,9 @@ namespace GeographicLib {
      * - 40.508333333
      * .
      * all specify the same angle.  The leading sign applies to all components
-     * so -1d30 is -(1+30/60) = -1.5.
+     * so -1d30 is -(1+30/60) = -1.5.  Latitudes must be in the range [-90, 90]
+     * and longitudes in the range [-180, 360].  Internally longitudes are
+     * reduced to the range [-180, 180).
      *
      * UTM/UPS parsing.  For UTM zones (-80 <= Lat <= 84), the zone designator
      * is made up of a zone number (for 1 to 60) and a hemisphere letter (N or
@@ -139,6 +146,7 @@ namespace GeographicLib {
      * - 38SMB44148470   = 38N 444145 3684705
      **********************************************************************/
     GeoCoords(const std::string& s) { Reset(s); }
+
     /**
      * Specify the location in terms of \e latitude (degrees) and \e longitude
      * (degrees).  Use \e zone to force the UTM/UPS representation to use
@@ -148,6 +156,7 @@ namespace GeographicLib {
     GeoCoords(double latitude, double longitude, int zone = -1) {
       Reset(latitude, longitude, zone);
     }
+
     /**
      * Specify the location in terms of UPS/UPS \e zone (zero means UPS),
      * hemisphere \e northp (false means south, true means north), \e easting
@@ -156,11 +165,13 @@ namespace GeographicLib {
     GeoCoords(int zone, bool northp, double easting, double northing) {
       Reset(zone, northp, easting, northing);
     }
+
     /**
      * Reset the location as a 1-element, 2-element, or 3-element string.  See
      * GeoCoords(const string& s).
      **********************************************************************/
     void Reset(const std::string& s);
+
     /**
      * Reset the location in terms of \e latitude and \e longitude.  See
      * GeoCoords(double latitude, double longitude, int zone).
@@ -171,8 +182,11 @@ namespace GeographicLib {
       UTMUPS::Forward(_lat, _long,
 		      _zone, _northp, _easting, _northing, _gamma, _k,
 		      zone);
+      if (_long >= 180)
+	_long -= 360;
       CopyToAlt();
     }
+
     /**
      * Reset the location in terms of UPS/UPS \e zone, hemisphere \e northp, \e
      * easting, and \e northing.  See GeoCoords(int zone, bool northp, double
@@ -188,42 +202,52 @@ namespace GeographicLib {
       FixHemisphere();
       CopyToAlt();
     }
+
     /**
      * Return latitude (degrees)
      **********************************************************************/
-    double Latitude() const { return _lat; }
+    double Latitude() const throw() { return _lat; }
+
     /**
      * Return longitude (degrees)
      **********************************************************************/
-    double Longitude() const { return _long; }
+    double Longitude() const throw() { return _long; }
+
     /**
      * Return easting (meters)
      **********************************************************************/
-    double Easting() const { return _easting; }
+    double Easting() const throw() { return _easting; }
+
     /**
      * Return northing (meters)
      **********************************************************************/
-    double Northing() const { return _northing; }
+    double Northing() const throw() { return _northing; }
+
     /**
      * Return meridian convergence (degrees) for the UTM/UPS projection.
      **********************************************************************/
-    double Convergence() const { return _gamma; }
+    double Convergence() const throw() { return _gamma; }
+
     /**
      * Return scale for the UTM/UPS projection.
      **********************************************************************/
-    double Scale() const { return _k; }
+    double Scale() const throw() { return _k; }
+
     /**
      * Return hemisphere (false means south, true means north).
      **********************************************************************/
-    bool Northp() const { return _northp; }
+    bool Northp() const throw() { return _northp; }
+
     /**
      * Return hemisphere letter N or S.
      **********************************************************************/
-    char Hemisphere() const { return _northp ? 'N' : 'S'; }
+    char Hemisphere() const throw() { return _northp ? 'N' : 'S'; }
+
     /**
      * Return the zone corresponding to the input (return 0 for UPS).
      **********************************************************************/
-    int Zone() const { return _zone; }
+    int Zone() const throw() { return _zone; }
+
     /**
      * Set the zone (default, -1, means use the standard zone) for the
      * alternate representation.  Before this is called the alternate zone is
@@ -241,26 +265,31 @@ namespace GeographicLib {
 			zone);
       }
     }
+
     /**
      * Returns the current alternate zone (return 0 for UPS).
      **********************************************************************/
-    int AltZone() const { return _alt_zone; }
+    int AltZone() const throw() { return _alt_zone; }
+
     /**
      * Return easting (meters) for alternate zone.
      **********************************************************************/
-    double AltEasting() const { return _alt_easting; }
+    double AltEasting() const throw() { return _alt_easting; }
+
     /**
      * Return northing (meters) for alternate zone.
      **********************************************************************/
-    double AltNorthing() const { return _alt_northing; }
+    double AltNorthing() const throw() { return _alt_northing; }
+
     /**
      * Return meridian convergence (degrees) for altermate zone.
      **********************************************************************/
-    double AltConvergence() const { return _alt_gamma; }
+    double AltConvergence() const throw() { return _alt_gamma; }
+
     /**
      * Return scale for altermate zone.
      **********************************************************************/
-    double AltScale() const { return _alt_k; }
+    double AltScale() const throw() { return _alt_k; }
 
     /**
      * Return string with latitude and longitude as signed decimal degrees.
@@ -271,6 +300,7 @@ namespace GeographicLib {
      * - prec = 9 (max), 10<sup>-14</sup>d
      **********************************************************************/
     std::string GeoRepresentation(int prec = 0) const;
+
     /**
      * Return string with latitude and longitude as degrees, minutes, seconds,
      * and hemisphere.  Precision \e prec specifies accuracy of representation
@@ -285,6 +315,7 @@ namespace GeographicLib {
      * - prec = 10 (max), 10<sup>-11</sup>"
      **********************************************************************/
     std::string DMSRepresentation(int prec = 0) const;
+
     /**
      * Return MGRS string.  This gives the coordinates of the enclosing grid
      * square with size given by the precision \e prec.  Thus 38N 444180
@@ -301,6 +332,7 @@ namespace GeographicLib {
      * - prec = 6 (max), 1um
      **********************************************************************/
     std::string MGRSRepresentation(int prec = 0) const;
+
     /**
      * Return string consisting of UTM/UPS zone designator, easting, and
      * northing,  Precision \e prec specifies accuracy of representation
@@ -313,11 +345,13 @@ namespace GeographicLib {
      * - prec = 9 (max), 1nm
      **********************************************************************/
     std::string UTMUPSRepresentation(int prec = 0) const;
+
     /**
      * Return MGRS string using alternative zone.  See MGRSRepresentation for
      * the interpretation of \e prec.
      **********************************************************************/
     std::string AltMGRSRepresentation(int prec = 0) const;
+
     /**
      * Return string consisting of alternate UTM/UPS zone designator, easting,
      * and northing.  See UTMUPSRepresentation for the interpretation of \e
