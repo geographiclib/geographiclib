@@ -1,4 +1,4 @@
-# $Id: NEWS 6898 2010-11-19 19:21:49Z karney $
+# $Id: NEWS 6902 2010-11-23 15:29:26Z karney $
 
 A reverse chronological list of changes to GeographicLib
 
@@ -6,7 +6,12 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.5.
+The current version of the library is 1.6.
+
+Change between 1.6 (released 2010-11-23) and 1.5 versions:
+
+  * FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by
+    Dave Edwards).
 
 Changes between 1.5 (released 2010-11-19) and 1.4 versions:
 
