@@ -3,8 +3,8 @@ function mgrs = mgrsreverse(utmups)
 %
 %   utmups = mgrsreverse(mgrs);
 %
-%   mgrs is a vector of M MGRS strings.  The first white-space
-%   delimited word in each string is used.
+%   mgrs is a M x 1 cell array of MGRS strings, e.g.,
+%       mgrsreverse({ '38SMB4488'; '12TUK3393' })
 %
 %   utmups is an M x 5 matrix
 %       easting = utmups(:,1) in meters
@@ -31,4 +31,4 @@ end
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
-% $Id: mgrsreverse.m 6895 2010-11-18 19:54:04Z karney $
+% $Id: mgrsreverse.m 6916 2010-12-20 23:03:47Z karney $

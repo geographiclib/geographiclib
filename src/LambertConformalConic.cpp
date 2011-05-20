@@ -2,14 +2,13 @@
  * \file LambertConformalConic.cpp
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/LambertConformalConic.hpp"
 
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: LambertConformalConic.cpp 6897 2010-11-19 16:44:47Z karney $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: LambertConformalConic.cpp 6915 2010-12-18 14:28:46Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
@@ -74,10 +73,6 @@ namespace GeographicLib {
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
     if (!(abs(stdlat2) <= 90))
       throw GeographicErr("Standard latitude 2 not in [-90, 90]");
-    if (abs(stdlat1) == 90 || abs(stdlat2) == 90)
-      if (!(stdlat1 == stdlat2))
-        throw GeographicErr
-          ("Standard latitudes must be equal is either is a pole");
     real
       phi1 = stdlat1 * Math::degree(),
       phi2 = stdlat2 * Math::degree();
@@ -349,7 +344,7 @@ namespace GeographicLib {
       psi = Math::asinh(tchi),
       theta = _n * lam, stheta = sin(theta), ctheta = cos(theta),
       dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0),
-      drho = - _scale * (2 * _nc < 1 ?
+      drho = - _scale * (2 * _nc < 1 && dpsi != 0 ?
                          (exp(sq(_nc)/(1 + _n) * psi ) *
                           (tchi > 0 ? 1/(scchi + tchi) : (scchi - tchi))
                           - (_t0nm1 + 1))/(-_n) :
@@ -424,12 +419,12 @@ namespace GeographicLib {
         dtphi = (tchi - tchia) * (1 + _e2m * sq(tphi)) /
         ( _e2m * scphi * hyp(tchia) );
       tphi += dtphi;
-      if (abs(dtphi) < stol)
+      if (!(abs(dtphi) >= stol))
         break;
     }
     // log(t) = -asinh(tan(chi)) = -psi
     gamma = atan2(nx, y1);
-    double
+    real
       phi = _sign * atan(tphi),
       scbet = hyp(_fm * tphi), scchi = hyp(tchi),
       lam = _n != 0 ? gamma / _n : x / y1;
@@ -443,7 +438,7 @@ namespace GeographicLib {
     else
       lon += lon0;
     k = _k0 * (scbet/_scbet0) /
-      (exp( - (sq(_nc)/(1 + _n)) * dpsi )
+      (exp(_nc != 0 ? - (sq(_nc)/(1 + _n)) * dpsi : 0)
        * (tchi >= 0 ? scchi + tchi : 1 / (scchi - tchi)) / (_scchi0 + _tchi0));
     gamma /= _sign * Math::degree();
   }
@@ -454,7 +449,7 @@ namespace GeographicLib {
     if (!(abs(lat) <= 90))
       throw GeographicErr("Latitude for SetScale not in [-90, 90]");
     if (abs(lat) == 90 && !(_nc == 0 && lat * _n > 0))
-      throw GeographicErr("Incompatible polar latitude in SecScale");
+      throw GeographicErr("Incompatible polar latitude in SetScale");
     real x, y, gamma, kold;
     Forward(0, lat, 0, x, y, gamma, kold);
     k /= kold;

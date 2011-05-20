@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
-#define GEOGRAPHICLIB_DMS_HPP "$Id: DMS.hpp 6866 2010-09-11 02:15:29Z karney $"
+#define GEOGRAPHICLIB_DMS_HPP "$Id: DMS.hpp 6911 2010-12-09 23:13:55Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include <sstream>
@@ -38,6 +38,7 @@ namespace GeographicLib {
     static const std::string digits;
     static const std::string dmsindicators;
     static const std::string components[3];
+    static Math::real NumMatch(const std::string& s);
     DMS();                      // Disable constructor
 
   public:
@@ -46,7 +47,7 @@ namespace GeographicLib {
      * Indicator for presence of hemisphere indicator (N/S/E/W) on latitudes
      * and longitudes.
      **********************************************************************/
-    enum flag { 
+    enum flag {
       /**
        * No indicator present.
        * @hideinitializer
@@ -231,6 +232,9 @@ namespace GeographicLib {
      **********************************************************************/
     static std::string Encode(real angle, unsigned prec, flag ind = NONE) {
       if (ind == NUMBER) {
+        if (!Math::isfinite(angle))
+          return angle < 0 ? std::string("-inf") :
+            (angle > 0 ? std::string("inf") : std::string("nan"));
         std::ostringstream s;
         s << std::fixed << std::setprecision(prec) << angle;
         return s.str();

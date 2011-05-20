@@ -2,13 +2,12 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
-#define GEOGRAPHICLIB_OSGB_HPP "$Id: OSGB.hpp 6881 2010-10-29 22:13:52Z karney $"
+#define GEOGRAPHICLIB_OSGB_HPP "$Id: OSGB.hpp 6911 2010-12-09 23:13:55Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include "GeographicLib/TransverseMercator.hpp"
@@ -18,7 +17,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Ordnance Survery grid system for Great Britain
+   * \brief Ordnance Survey grid system for Great Britain
    *
    * The class implements the coordinate system used by the Ordnance Survey for
    * maps of Great Britain and conversions to the grid reference system.
@@ -29,7 +28,7 @@ namespace GeographicLib {
    * - <a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidetonationalgrid/page1.html">
    * Guide to National Grid</a>
    *
-   * \b WARNING: the latitudes and longitudes for the Ordnance Survery grid
+   * \b WARNING: the latitudes and longitudes for the Ordnance Survey grid
    * system do not use the WGS84 datum.  Do not use the values returned by this
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).

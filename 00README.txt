@@ -1,4 +1,4 @@
-# $Id: 00README.txt 6896 2010-11-18 22:43:19Z karney $
+# $Id: 00README.txt 6917 2010-12-20 23:18:33Z karney $
 
 A library for geographic projections.
 
@@ -34,6 +34,7 @@ Files
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection
+      AlbersEqualArea.[ch]pp -- Albers equal area projection
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
       OSGB.[ch]pp -- Ordnance Survey grid system
 
@@ -48,7 +49,7 @@ Files
 
     windows/
       GeographicLib-vc9.sln -- MS Studio 2008 solution
-      GeographicLib-vc9.vcproj -- project for library
+      Geographic-vc9.vcproj -- project for library
       GeoConvert-vc9.vcproj -- project for GeoConvert
       TransverseMercatorTest-vc9.vcproj -- project for TransverseMercatorTest
       Geod-vc9.vcproj -- project for Geod
@@ -57,6 +58,7 @@ Files
       EquidistantTest-vc9.vcproj -- project for EquidistantTest
       GeoidEval-vc9.vcproj -- project for GeoidEval
       also files for MS Studio 2005 (with vc8)
+      also files for MS Studio 2010 (with vc10)
 
     maxima/
       tm.mac -- Maxima code for high precision TM

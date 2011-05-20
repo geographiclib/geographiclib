@@ -2,14 +2,15 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6876 2010-10-18 13:47:55Z karney $
+# $Id: Makefile.am 6906 2010-12-02 22:10:56Z karney $
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 
 lib_LTLIBRARIES = libGeographic.la
 
 libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)	
-libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
+libGeographic_la_SOURCES = AlbersEqualArea.cpp \
+		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
 		DMS.cpp \
 		EllipticFunction.cpp \
@@ -27,6 +28,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
 		../include/GeographicLib/CassiniSoldner.hpp \
 		../include/GeographicLib/Constants.hpp \

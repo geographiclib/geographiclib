@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6876 2010-10-18 13:47:55Z karney $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: PolarStereographic.hpp 6906 2010-12-02 22:10:56Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -59,11 +59,12 @@ namespace GeographicLib {
     /**
      * Set the scale for the projection.
      *
-     * @param[in] lat (degrees).
+     * @param[in] lat (degrees) assuming \e northp = true.
      * @param[in] k scale at latitude \e lat (default 1).
      *
      * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive.
+     * thrown if \e k is not positive or if \e lat is not in the range (-90,
+     * 90].
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 

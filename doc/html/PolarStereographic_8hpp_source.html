@@ -47,7 +47,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: PolarStereographic.hpp 6876 2010-10-18 13:47:55Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: PolarStereographic.hpp 6906 2010-12-02 22:10:56Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 
@@ -98,107 +98,108 @@
 <a name="l00059"></a>00059 <span class="comment">    /**</span>
 <a name="l00060"></a>00060 <span class="comment">     * Set the scale for the projection.</span>
 <a name="l00061"></a>00061 <span class="comment">     *</span>
-<a name="l00062"></a>00062 <span class="comment">     * @param[in] lat (degrees).</span>
+<a name="l00062"></a>00062 <span class="comment">     * @param[in] lat (degrees) assuming \e northp = true.</span>
 <a name="l00063"></a>00063 <span class="comment">     * @param[in] k scale at latitude \e lat (default 1).</span>
 <a name="l00064"></a>00064 <span class="comment">     *</span>
 <a name="l00065"></a>00065 <span class="comment">     * This allows a &quot;latitude of true scale&quot; to be specified.  An exception is</span>
-<a name="l00066"></a>00066 <span class="comment">     * thrown if \e k is not positive.</span>
-<a name="l00067"></a>00067 <span class="comment">     **********************************************************************/</span>
-<a name="l00068"></a>00068     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a3f957214eb1d1248277a680e4c4ceed5">SetScale</a>(real lat, real k = real(1));
-<a name="l00069"></a>00069 <span class="comment"></span>
-<a name="l00070"></a>00070 <span class="comment">    /**</span>
-<a name="l00071"></a>00071 <span class="comment">     * Forward projection, from geographic to polar stereographic.</span>
-<a name="l00072"></a>00072 <span class="comment">     *</span>
-<a name="l00073"></a>00073 <span class="comment">     * @param[in] northp the pole which is the center of projection (true means</span>
-<a name="l00074"></a>00074 <span class="comment">     *   north, false means south).</span>
-<a name="l00075"></a>00075 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00076"></a>00076 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00077"></a>00077 <span class="comment">     * @param[out] x easting of point (meters).</span>
-<a name="l00078"></a>00078 <span class="comment">     * @param[out] y northing of point (meters).</span>
-<a name="l00079"></a>00079 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
-<a name="l00080"></a>00080 <span class="comment">     * @param[out] k scale of projection at point.</span>
-<a name="l00081"></a>00081 <span class="comment">     *</span>
-<a name="l00082"></a>00082 <span class="comment">     * No false easting or northing is added.  \e lat should be in the range</span>
-<a name="l00083"></a>00083 <span class="comment">     * (-90, 90] for \e northp = true and in the range [-90, 90) for \e northp</span>
-<a name="l00084"></a>00084 <span class="comment">     * = false; \e lon should be in the range [-180, 360].</span>
-<a name="l00085"></a>00085 <span class="comment">     **********************************************************************/</span>
-<a name="l00086"></a>00086     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(<span class="keywordtype">bool</span> northp, real lat, real lon,
-<a name="l00087"></a>00087                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00088"></a>00088 <span class="comment"></span>
-<a name="l00089"></a>00089 <span class="comment">    /**</span>
-<a name="l00090"></a>00090 <span class="comment">     * Reverse projection, from polar stereographic to geographic.</span>
-<a name="l00091"></a>00091 <span class="comment">     *</span>
-<a name="l00092"></a>00092 <span class="comment">     * @param[in] northp the pole which is the center of projection (true means</span>
-<a name="l00093"></a>00093 <span class="comment">     *   north, false means south).</span>
-<a name="l00094"></a>00094 <span class="comment">     * @param[in] x easting of point (meters).</span>
-<a name="l00095"></a>00095 <span class="comment">     * @param[in] y northing of point (meters).</span>
-<a name="l00096"></a>00096 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00097"></a>00097 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00098"></a>00098 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
-<a name="l00099"></a>00099 <span class="comment">     * @param[out] k scale of projection at point.</span>
-<a name="l00100"></a>00100 <span class="comment">     *</span>
-<a name="l00101"></a>00101 <span class="comment">     * No false easting or northing is added.  The value of \e lon returned is</span>
-<a name="l00102"></a>00102 <span class="comment">     * in the range [-180, 180).</span>
-<a name="l00103"></a>00103 <span class="comment">     **********************************************************************/</span>
-<a name="l00104"></a>00104     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(<span class="keywordtype">bool</span> northp, real x, real y,
-<a name="l00105"></a>00105                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00106"></a>00106 <span class="comment"></span>
-<a name="l00107"></a>00107 <span class="comment">    /**</span>
-<a name="l00108"></a>00108 <span class="comment">     * PolarStereographic::Forward without returning the convergence and scale.</span>
-<a name="l00109"></a>00109 <span class="comment">     **********************************************************************/</span>
-<a name="l00110"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ac2fe4c9524ec35f8d05336555f96e1b1">00110</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(<span class="keywordtype">bool</span> northp, real lat, real lon,
-<a name="l00111"></a>00111                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00112"></a>00112       real gamma, k;
-<a name="l00113"></a>00113       <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(northp, lat, lon, x, y, gamma, k);
-<a name="l00114"></a>00114     }
-<a name="l00115"></a>00115 <span class="comment"></span>
-<a name="l00116"></a>00116 <span class="comment">    /**</span>
-<a name="l00117"></a>00117 <span class="comment">     * PolarStereographic::Reverse without returning the convergence and scale.</span>
-<a name="l00118"></a>00118 <span class="comment">     **********************************************************************/</span>
-<a name="l00119"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a16572cc552eeb24ebf84319cdcd6652e">00119</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(<span class="keywordtype">bool</span> northp, real x, real y,
-<a name="l00120"></a>00120                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00121"></a>00121       real gamma, k;
-<a name="l00122"></a>00122       <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(northp, x, y, lat, lon, gamma, k);
-<a name="l00123"></a>00123     }
-<a name="l00124"></a>00124 <span class="comment"></span>
-<a name="l00125"></a>00125 <span class="comment">    /** \name Inspector functions</span>
-<a name="l00126"></a>00126 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00127"></a>00127 <span class="comment">    ///@{</span>
-<a name="l00128"></a>00128 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00129"></a>00129 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
-<a name="l00130"></a>00130 <span class="comment">     *   the value used in the constructor.</span>
-<a name="l00131"></a>00131 <span class="comment">     **********************************************************************/</span>
-<a name="l00132"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ab1746576356a2409f34d9527064adfdd">00132</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#ab1746576356a2409f34d9527064adfdd">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
-<a name="l00133"></a>00133 <span class="comment"></span>
-<a name="l00134"></a>00134 <span class="comment">    /**</span>
-<a name="l00135"></a>00135 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.  This is the</span>
-<a name="l00136"></a>00136 <span class="comment">     *   value used in the constructor.  A value of 0 is returned for a sphere</span>
-<a name="l00137"></a>00137 <span class="comment">     *   (infinite inverse flattening).</span>
-<a name="l00138"></a>00138 <span class="comment">     **********************************************************************/</span>
-<a name="l00139"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">00139</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
-<a name="l00140"></a>00140 <span class="comment"></span>
-<a name="l00141"></a>00141 <span class="comment">    /**</span>
-<a name="l00142"></a>00142 <span class="comment">     * The central scale for the projection.  This is the value of \e k0 used</span>
-<a name="l00143"></a>00143 <span class="comment">     * in the constructor and is the scale at the pole unless overridden by</span>
-<a name="l00144"></a>00144 <span class="comment">     * PolarStereographic::SetScale.</span>
-<a name="l00145"></a>00145 <span class="comment">     **********************************************************************/</span>
-<a name="l00146"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ad6f7bd8a35208d91706ac8c258387e6f">00146</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#ad6f7bd8a35208d91706ac8c258387e6f">CentralScale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _k0; }<span class="comment"></span>
-<a name="l00147"></a>00147 <span class="comment">    ///@}</span>
-<a name="l00148"></a>00148 <span class="comment"></span><span class="comment"></span>
-<a name="l00149"></a>00149 <span class="comment">    /**</span>
-<a name="l00150"></a>00150 <span class="comment">     * A global instantiation of PolarStereographic with the WGS84 ellipsoid</span>
-<a name="l00151"></a>00151 <span class="comment">     * and the UPS scale factor.  However, unlike UPS, no false easting or</span>
-<a name="l00152"></a>00152 <span class="comment">     * northing is added.</span>
-<a name="l00153"></a>00153 <span class="comment">     **********************************************************************/</span>
-<a name="l00154"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a2db6bcb1b59a6ddc6087ee04c64c9825">00154</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a2db6bcb1b59a6ddc6087ee04c64c9825">UPS</a>;
-<a name="l00155"></a>00155   };
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159 <span class="preprocessor">#endif</span>
+<a name="l00066"></a>00066 <span class="comment">     * thrown if \e k is not positive or if \e lat is not in the range (-90,</span>
+<a name="l00067"></a>00067 <span class="comment">     * 90].</span>
+<a name="l00068"></a>00068 <span class="comment">     **********************************************************************/</span>
+<a name="l00069"></a>00069     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a3f957214eb1d1248277a680e4c4ceed5">SetScale</a>(real lat, real k = real(1));
+<a name="l00070"></a>00070 <span class="comment"></span>
+<a name="l00071"></a>00071 <span class="comment">    /**</span>
+<a name="l00072"></a>00072 <span class="comment">     * Forward projection, from geographic to polar stereographic.</span>
+<a name="l00073"></a>00073 <span class="comment">     *</span>
+<a name="l00074"></a>00074 <span class="comment">     * @param[in] northp the pole which is the center of projection (true means</span>
+<a name="l00075"></a>00075 <span class="comment">     *   north, false means south).</span>
+<a name="l00076"></a>00076 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00077"></a>00077 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00078"></a>00078 <span class="comment">     * @param[out] x easting of point (meters).</span>
+<a name="l00079"></a>00079 <span class="comment">     * @param[out] y northing of point (meters).</span>
+<a name="l00080"></a>00080 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
+<a name="l00081"></a>00081 <span class="comment">     * @param[out] k scale of projection at point.</span>
+<a name="l00082"></a>00082 <span class="comment">     *</span>
+<a name="l00083"></a>00083 <span class="comment">     * No false easting or northing is added.  \e lat should be in the range</span>
+<a name="l00084"></a>00084 <span class="comment">     * (-90, 90] for \e northp = true and in the range [-90, 90) for \e northp</span>
+<a name="l00085"></a>00085 <span class="comment">     * = false; \e lon should be in the range [-180, 360].</span>
+<a name="l00086"></a>00086 <span class="comment">     **********************************************************************/</span>
+<a name="l00087"></a>00087     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(<span class="keywordtype">bool</span> northp, real lat, real lon,
+<a name="l00088"></a>00088                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00089"></a>00089 <span class="comment"></span>
+<a name="l00090"></a>00090 <span class="comment">    /**</span>
+<a name="l00091"></a>00091 <span class="comment">     * Reverse projection, from polar stereographic to geographic.</span>
+<a name="l00092"></a>00092 <span class="comment">     *</span>
+<a name="l00093"></a>00093 <span class="comment">     * @param[in] northp the pole which is the center of projection (true means</span>
+<a name="l00094"></a>00094 <span class="comment">     *   north, false means south).</span>
+<a name="l00095"></a>00095 <span class="comment">     * @param[in] x easting of point (meters).</span>
+<a name="l00096"></a>00096 <span class="comment">     * @param[in] y northing of point (meters).</span>
+<a name="l00097"></a>00097 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00098"></a>00098 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00099"></a>00099 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
+<a name="l00100"></a>00100 <span class="comment">     * @param[out] k scale of projection at point.</span>
+<a name="l00101"></a>00101 <span class="comment">     *</span>
+<a name="l00102"></a>00102 <span class="comment">     * No false easting or northing is added.  The value of \e lon returned is</span>
+<a name="l00103"></a>00103 <span class="comment">     * in the range [-180, 180).</span>
+<a name="l00104"></a>00104 <span class="comment">     **********************************************************************/</span>
+<a name="l00105"></a>00105     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(<span class="keywordtype">bool</span> northp, real x, real y,
+<a name="l00106"></a>00106                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00107"></a>00107 <span class="comment"></span>
+<a name="l00108"></a>00108 <span class="comment">    /**</span>
+<a name="l00109"></a>00109 <span class="comment">     * PolarStereographic::Forward without returning the convergence and scale.</span>
+<a name="l00110"></a>00110 <span class="comment">     **********************************************************************/</span>
+<a name="l00111"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ac2fe4c9524ec35f8d05336555f96e1b1">00111</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(<span class="keywordtype">bool</span> northp, real lat, real lon,
+<a name="l00112"></a>00112                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00113"></a>00113       real gamma, k;
+<a name="l00114"></a>00114       <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">Forward</a>(northp, lat, lon, x, y, gamma, k);
+<a name="l00115"></a>00115     }
+<a name="l00116"></a>00116 <span class="comment"></span>
+<a name="l00117"></a>00117 <span class="comment">    /**</span>
+<a name="l00118"></a>00118 <span class="comment">     * PolarStereographic::Reverse without returning the convergence and scale.</span>
+<a name="l00119"></a>00119 <span class="comment">     **********************************************************************/</span>
+<a name="l00120"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a16572cc552eeb24ebf84319cdcd6652e">00120</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(<span class="keywordtype">bool</span> northp, real x, real y,
+<a name="l00121"></a>00121                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00122"></a>00122       real gamma, k;
+<a name="l00123"></a>00123       <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">Reverse</a>(northp, x, y, lat, lon, gamma, k);
+<a name="l00124"></a>00124     }
+<a name="l00125"></a>00125 <span class="comment"></span>
+<a name="l00126"></a>00126 <span class="comment">    /** \name Inspector functions</span>
+<a name="l00127"></a>00127 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00128"></a>00128 <span class="comment">    ///@{</span>
+<a name="l00129"></a>00129 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00130"></a>00130 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
+<a name="l00131"></a>00131 <span class="comment">     *   the value used in the constructor.</span>
+<a name="l00132"></a>00132 <span class="comment">     **********************************************************************/</span>
+<a name="l00133"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ab1746576356a2409f34d9527064adfdd">00133</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#ab1746576356a2409f34d9527064adfdd">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
+<a name="l00134"></a>00134 <span class="comment"></span>
+<a name="l00135"></a>00135 <span class="comment">    /**</span>
+<a name="l00136"></a>00136 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.  This is the</span>
+<a name="l00137"></a>00137 <span class="comment">     *   value used in the constructor.  A value of 0 is returned for a sphere</span>
+<a name="l00138"></a>00138 <span class="comment">     *   (infinite inverse flattening).</span>
+<a name="l00139"></a>00139 <span class="comment">     **********************************************************************/</span>
+<a name="l00140"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">00140</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00141"></a>00141 <span class="comment"></span>
+<a name="l00142"></a>00142 <span class="comment">    /**</span>
+<a name="l00143"></a>00143 <span class="comment">     * The central scale for the projection.  This is the value of \e k0 used</span>
+<a name="l00144"></a>00144 <span class="comment">     * in the constructor and is the scale at the pole unless overridden by</span>
+<a name="l00145"></a>00145 <span class="comment">     * PolarStereographic::SetScale.</span>
+<a name="l00146"></a>00146 <span class="comment">     **********************************************************************/</span>
+<a name="l00147"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#ad6f7bd8a35208d91706ac8c258387e6f">00147</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#ad6f7bd8a35208d91706ac8c258387e6f">CentralScale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _k0; }<span class="comment"></span>
+<a name="l00148"></a>00148 <span class="comment">    ///@}</span>
+<a name="l00149"></a>00149 <span class="comment"></span><span class="comment"></span>
+<a name="l00150"></a>00150 <span class="comment">    /**</span>
+<a name="l00151"></a>00151 <span class="comment">     * A global instantiation of PolarStereographic with the WGS84 ellipsoid</span>
+<a name="l00152"></a>00152 <span class="comment">     * and the UPS scale factor.  However, unlike UPS, no false easting or</span>
+<a name="l00153"></a>00153 <span class="comment">     * northing is added.</span>
+<a name="l00154"></a>00154 <span class="comment">     **********************************************************************/</span>
+<a name="l00155"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a2db6bcb1b59a6ddc6087ee04c64c9825">00155</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a2db6bcb1b59a6ddc6087ee04c64c9825">UPS</a>;
+<a name="l00156"></a>00156   };
+<a name="l00157"></a>00157 
+<a name="l00158"></a>00158 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00159"></a>00159 
+<a name="l00160"></a>00160 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

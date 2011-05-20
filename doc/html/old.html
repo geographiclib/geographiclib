@@ -27,8 +27,20 @@
 <div class="contents">
 <center> Back to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
 <ul>
-<li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (current, released 2010-11-23)</a><ul>
-<li>FIX BUG introduced in <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> in version 1.5 (found by Dave Edwards).</li>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.7.tar.gz/download">1.7 (current, released 2010-12-21)</a><ul>
+<li>FIX BUG in scale returned by <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a085d37693f5e95fd650b7f59f61ab744">GeographicLib::LambertConformalConic::Reverse</a>.</li>
+<li>Add <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">GeographicLib::AlbersEqualArea</a> projection.</li>
+<li>Library created by Visual Studio is Geographic.lib instead of GeographicLib.lib (compatible with makefiles).</li>
+<li>Make classes NaN aware.</li>
+<li>Use cell arrays for MGRS strings in Matlab.</li>
+<li>Add solution/project files for Visual Studio 2010 (32-bit only).</li>
+<li>Use C++0X static_assert and math functions, if available.</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.6.tar.gz/download">1.6 (released 2010-11-23)</a><ul>
+<li>FIX BUG introduced in <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> in version 1.5 (found by Dave Edwards).</li>
 </ul>
 </li>
 </ul>
@@ -38,9 +50,9 @@
 <li>Add -s and -r flags to <a class="el" href="utilities.html#planimeter">Planimeter</a>.</li>
 <li>Improve the accuracy of <a class="el" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">GeographicLib::LambertConformalConic</a> using divided differences.</li>
 <li>FIX BUG in meridian convergence returned by LambertConformalConic::Forward.</li>
-<li>Add optional threadsafe parameter to <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> constructor. WARNING: This changes may break binary compatibility with previous versions of GeographicLib. However, the library is source compatible.</li>
-<li>Add <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">GeographicLib::OSGB</a>.</li>
-<li>Matlab and Octave interfaces to <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">GeographicLib::UTMUPS</a>, <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">GeographicLib::MGRS</a>, <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a>, <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> provided.</li>
+<li>Add optional threadsafe parameter to <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> constructor. WARNING: This changes may break binary compatibility with previous versions of GeographicLib. However, the library is source compatible.</li>
+<li>Add <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">GeographicLib::OSGB</a>.</li>
+<li>Matlab and Octave interfaces to <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">GeographicLib::UTMUPS</a>, <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">GeographicLib::MGRS</a>, <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a>, <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> provided.</li>
 <li>Minor changes<ul>
 <li>explicitly turn on optimization in Visual Studio 2008 projects;</li>
 <li>add missing dependencies in some Makefiles;</li>
@@ -145,7 +157,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 <li>Add <a class="el" href="classGeographicLib_1_1PolarStereographic.html#a3f957214eb1d1248277a680e4c4ceed5">GeographicLib::PolarStereographic::SetScale</a> to allow the latitude of true scale to be specified.</li>
 <li>Add solution and project files for Visual Studio 2008.</li>
 <li>Add <a class="el" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicLib::GeographicErr</a> for exceptions.</li>
-<li><a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> changes:<ul>
+<li><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> changes:<ul>
 <li>BUG FIX: fix typo in <a class="el" href="classGeographicLib_1_1Geoid.html#ade5715c0d1428a409383b1acd2cbe9be">GeographicLib::Geoid::Cache</a> which could cause a segmentation fault in some cases when the cached area spanned the prime meridian.</li>
 <li>Include sufficient edge data to allow heights to be returned for cached area without disk reads;</li>
 <li>Add inspector functions to query the extent of the cache.</li>
@@ -190,7 +202,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </ul>
 <ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-09.tgz/download">2009-09</a><ul>
-<li>Add <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> and <a class="el" href="utilities.html#geoideval">GeoidEval</a> utility.</li>
+<li>Add <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> and <a class="el" href="utilities.html#geoideval">GeoidEval</a> utility.</li>
 </ul>
 </li>
 </ul>
@@ -297,7 +309,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

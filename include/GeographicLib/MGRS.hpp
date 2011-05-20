@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
-#define GEOGRAPHICLIB_MGRS_HPP "$Id: MGRS.hpp 6876 2010-10-18 13:47:55Z karney $"
+#define GEOGRAPHICLIB_MGRS_HPP "$Id: MGRS.hpp 6911 2010-12-09 23:13:55Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include "GeographicLib/UTMUPS.hpp"
@@ -130,7 +130,7 @@ namespace GeographicLib {
      * @param[in] y (meters).
      * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
-     * 
+     *
      * \e prec specifies the precision of the MSGRS string as follows:
      * - prec = 0 (min), 100km
      * - prec = 1, 10km
@@ -182,6 +182,9 @@ namespace GeographicLib {
      * neighboring latitude band letter may be given if the point is within 5nm
      * of a band boundary.  For prec in [6, 11], the conversion is accurate to
      * roundoff.
+     *
+     * If \e x or \e y is NaN or if \e zone is UTMUPS::INVALID, the returned
+     * MGRS string is "INVALID".
      *
      * Return the result via a reference argument to avoid the overhead of
      * allocating a potentially large number of small strings.  If an error is

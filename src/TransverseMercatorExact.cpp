@@ -41,7 +41,7 @@
 
 #include "GeographicLib/TransverseMercatorExact.hpp"
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: TransverseMercatorExact.cpp 6897 2010-11-19 16:44:47Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: TransverseMercatorExact.cpp 6905 2010-12-01 21:28:56Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
@@ -106,7 +106,7 @@ namespace GeographicLib {
         dtau = (taup - taupa) * (1 + _mv * sq(tau)) /
         ( _mv * tau1 * Math::hypot(real(1), taupa) );
       tau += dtau;
-      if (abs(dtau) < stol)
+      if (!(abs(dtau) >= stol))
         break;
     }
     return tau;
@@ -236,7 +236,7 @@ namespace GeographicLib {
       if (trip)
         break;
       real delw2 = sq(delu) + sq(delv);
-      if (delw2 < stol2)
+      if (!(delw2 >= stol2))
         ++trip;
     }
   }
@@ -337,7 +337,7 @@ namespace GeographicLib {
       if (trip)
         break;
       real delw2 = sq(delu) + sq(delv);
-      if (delw2 < tol2)
+      if (!(delw2 >= tol2))
         ++trip;
     }
   }

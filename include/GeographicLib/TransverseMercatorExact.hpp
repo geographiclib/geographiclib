@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6876 2010-10-18 13:47:55Z karney $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: TransverseMercatorExact.hpp 6905 2010-12-01 21:28:56Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include "GeographicLib/EllipticFunction.hpp"
@@ -69,7 +69,8 @@ namespace GeographicLib {
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) throw() {
       real t = std::tan(x);
-      return x >= 0 ? (t >= 0 ? t : overflow) : (t < 0 ? t : -overflow);
+      // Write the tests this way to ensure that tanx(NaN()) is NaN()
+      return x >= 0 ? (!(t < 0) ? t : overflow) : (!(t >= 0) ? t : -overflow);
     }
 
     real taup(real tau) const throw();

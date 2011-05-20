@@ -2,13 +2,12 @@
  * \file LambertConformalConic.hpp
  * \brief Header for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: LambertConformalConic.hpp 6898 2010-11-19 19:21:49Z karney $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: LambertConformalConic.hpp 6916 2010-12-20 23:03:47Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include <algorithm>
@@ -35,27 +34,24 @@ namespace GeographicLib {
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
    * two standard parallels is converted into a single standard parallel, the
-   * latitude of tangency (also the latitude of minimum scale).  This latitude
-   * is also used as the latitude of origin which is returned by
-   * LambertConformalConic::OriginLatitude.  The scale on the latitude of
-   * origin is given by LambertConformalConic::CentralScale.  The case with two
-   * distinct standard parallels where one is a pole is singular and is
-   * disallowed.  The central meridian (which is a trivial shift
-   * of the longitude) is specified as the \e lon0 argument of the
-   * LambertConformalConic::Forward and LambertConformalConic::Reverse
-   * functions.  There is no provision in this class for specifying a false
-   * easting or false northing or a different latitude of origin.  However
-   * these are can be simply included by the calling function.  For example the
-   * Pennsylvania South state coordinate system
-   * (<a href="http://www.spatialreference.org/ref/epsg/3364/"> EPSG:3364</a>)
-   * is obtained by:
-   \code
-   const double
-     a = GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80
-     lat1 = 39 + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels
-     k1 = 1,                                   // scale
-     lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin
-     fe = 600000, fn = 0;                      // false easting and northing
+   * latitude of tangency (also the latitude of minimum scale), with a scale
+   * specified on this parallel.  This latitude is also used as the latitude of
+   * origin which is returned by LambertConformalConic::OriginLatitude.  The
+   * scale on the latitude of origin is given by
+   * LambertConformalConic::CentralScale.  The case with two distinct standard
+   * parallels where one is a pole is singular and is disallowed.  The central
+   * meridian (which is a trivial shift of the longitude) is specified as the
+   * \e lon0 argument of the LambertConformalConic::Forward and
+   * LambertConformalConic::Reverse functions.  There is no provision in this
+   * class for specifying a false easting or false northing or a different
+   * latitude of origin.  However these are can be simply included by the
+   * calling function.  For example the Pennsylvania South state coordinate
+   * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
+   * EPSG:3364</a>) is obtained by: \code const double a =
+   * GeographicLib::Constants::WGS84_a(), r = 298.257222101, // GRS80 lat1 = 39
+   * + 56/60.0, lat1 = 40 + 58/60.0, // standard parallels k1 = 1, // scale
+   * lat0 = 39 + 20/60.0, lon0 = 75 + 45/60.0, // origin fe = 600000, fn =
+   * 0; // false easting and northing
    // Set up basic projection
    const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
    double x0, y0;
@@ -103,7 +99,9 @@ namespace GeographicLib {
     // General rules
     // h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)
     // h(x) = f(x)*g(x):
-    //        Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
+    //        Dh(x,y) = Df(x,y)*g(x) + Dg(x,y)*f(y)
+    //                = Df(x,y)*g(y) + Dg(x,y)*f(x)
+    //                = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // hyp(x) = sqrt(1+x^2): Dhyp(x,y) = (x+y)/(hyp(x)+hyp(y))
     static inline real Dhyp(real x, real y, real hx, real hy) throw()
@@ -113,13 +111,13 @@ namespace GeographicLib {
     static inline real Dsn(real x, real y, real sx, real sy) throw() {
       // sx = x/hyp(x)
       real t = x * y;
-      return t > 0 ? (x+y) * sq( (sx*sy)/t ) / (sx+sy) :
-        (x-y != 0 ? (sx-sy) / (x-y) : 1);
+      return t > 0 ? (x + y) * sq( (sx * sy)/t ) / (sx + sy) :
+        (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Dlog1p(x,y) = log1p((x-y)/(1+y)/(x-y)
     static inline real Dlog1p(real x, real y) throw() {
       real t = x - y; if (t < 0) { t = -t; y = x; }
-      return t != 0 ? Math::log1p(t/(1+y)) / t : 1/(1+x);
+      return t != 0 ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
     static inline real Dexp(real x, real y) throw() {
@@ -149,7 +147,7 @@ namespace GeographicLib {
     }
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const throw() {
-      real t = x - y, d = (1 - _e2 * x * y);
+      real t = x - y, d = 1 - _e2 * x * y;
       return t != 0 ? eatanhe(t / d) / t : _e2 / d;
     }
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) throw();
@@ -163,7 +161,7 @@ namespace GeographicLib {
      *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
      *   indicates a prolate ellipsoid.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
-     * @param[in] k0 scale on standard parallel.
+     * @param[in] k0 scale on the standard parallel.
      *
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
      * is not in the range [-90, 90].
@@ -184,7 +182,7 @@ namespace GeographicLib {
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1
      * or \e stdlat2 is not in the range [-90, 90].  In addition, if either \e
      * stdlat1 or \e stdlat2 is a pole, then an exception is thrown if \e
-     * stdlat1 is not equal \e stdlat2
+     * stdlat1 is not equal \e stdlat2.
      **********************************************************************/
     LambertConformalConic(real a, real r, real stdlat1, real stdlat2, real k1);
 
@@ -204,10 +202,12 @@ namespace GeographicLib {
      * This allows parallels close to the poles to be specified accurately.
      * This routine computes the latitude of origin and the scale at this
      * latitude.  In the case where \e lat1 and \e lat2 are different, the
-     * errors in this routines are as follows: if abs(\e lat2 - \e lat1) <=
-     * 160<sup>o</sup> and max(abs(\e lat1), abs(\e lat2)) <=
-     * 89.9999<sup>o</sup>, then the error in the latitude of origin is less
-     * than 4e-14d and the relative error in the scale is less than 7e-15.
+     * errors in this routines are as follows: if \e dlat = abs(\e lat2 - \e
+     * lat1) <= 160<sup>o</sup> and max(abs(\e lat1), abs(\e lat2)) <= 90 -
+     * min(0.0002, 2.2e-6(180 - \e dlat), 6e-8\e dlat<sup>2</sup>) (in
+     * degrees), then the error in the latitude of origin is less than
+     * 4.5e-14<sup>o</sup> and the relative error in the scale is less than
+     * 7e-15.
      **********************************************************************/
     LambertConformalConic(real a, real r,
                           real sinlat1, real coslat1,
@@ -221,7 +221,8 @@ namespace GeographicLib {
      * @param[in] k scale at latitude \e lat (default 1).
      *
      * This allows a "latitude of true scale" to be specified.  An exception is
-     * thrown if \e k is not positive.
+     * thrown if \e k is not positive or if \e stdlat is not in the range [-90,
+     * 90]
      **********************************************************************/
     void SetScale(real lat, real k = real(1));
 
@@ -315,14 +316,14 @@ namespace GeographicLib {
 
     /**
      * @return central scale for the projection.  This is the scale on the
-     *   latitude of origin..
+     *   latitude of origin.
      **********************************************************************/
     Math::real CentralScale() const throw() { return _k0; }
     ///@}
 
     /**
-     * A global instantiation of LambertConformalConic with the WGS84 ellipsoid
-     * and the UPS scale factor and \e stdlat = 0.  This degenerates to the
+     * A global instantiation of LambertConformalConic with the WGS84
+     * ellipsoid, \e stdlat = 0, and \e k0 = 1.  This degenerates to the
      * Mercator projection.
      **********************************************************************/
     static const LambertConformalConic Mercator;

@@ -10,9 +10,9 @@
 // [Unix]
 // mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic geodesicdirect.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographicLib geodesicdirect.cpp
+// mex -I../include -L../windows/Release -lGeographic geodesicdirect.cpp
 
-// "$Id: geodesicdirect.cpp 6897 2010-11-19 16:44:47Z karney $";
+// "$Id: geodesicdirect.cpp 6906 2010-12-02 22:10:56Z karney $";
 
 #include "GeographicLib/Geodesic.hpp"
 #include "mex.h"

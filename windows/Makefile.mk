@@ -1,10 +1,10 @@
-# $Id: Makefile.mk 6869 2010-09-22 15:50:45Z karney $
+# $Id: Makefile.mk 6903 2010-12-01 21:24:44Z karney $
 
 PROGRAMS = GeoConvert TransverseMercatorTest CartConvert Geod EquidistantTest \
 	GeoidEval Planimeter
 
-VSPROJECTS = $(addsuffix -vc8.vcproj,GeographicLib $(PROGRAMS)) \
-	$(addsuffix -vc9.vcproj,GeographicLib $(PROGRAMS))
+VSPROJECTS = $(addsuffix -vc8.vcproj,Geographic $(PROGRAMS)) \
+	$(addsuffix -vc9.vcproj,Geographic $(PROGRAMS))
 
 all:
 	@:

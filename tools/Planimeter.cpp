@@ -2,9 +2,8 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
  *
@@ -15,13 +14,11 @@
 #include "GeographicLib/DMS.hpp"
 #include "GeographicLib/GeoCoords.hpp"
 #include <iostream>
-#include <iomanip>
-#include <sstream>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: Planimeter [-s] [-r] [-e a r] [-h]\n\
-$Id: Planimeter.cpp 6869 2010-09-22 15:50:45Z karney $\n\
+$Id: Planimeter.cpp 6911 2010-12-09 23:13:55Z karney $\n\
 \n\
 Measure the area of a geodesic polygon.  Reads polygon vertices from\n\
 standard input, one per line.  Vertices may be given as latitude and\n\
@@ -187,7 +184,6 @@ int main(int argc, char* argv[]) {
   const Geodesic geod(a, r);
   GeodesicPolygon poly(geod);
   GeoCoords p;
-  std::cout << std::fixed;
 
   std::string s;
   real perimeter, area;
@@ -195,13 +191,15 @@ int main(int argc, char* argv[]) {
   while (std::getline(std::cin, s)) {
     try {
       p.Reset(s);
+      if (p.Latitude() != p.Latitude() || p.Longitude() != p.Longitude())
+        throw GeographicErr("NAN");
     }
     catch (const GeographicErr&) {
       num = poly.Compute(reverse, sign, perimeter, area);
       if (num > 0)
         std::cout << num << " "
-                  << std::setprecision(8) << perimeter << " "
-                  << std::setprecision(4) << area << "\n";
+                  << DMS::Encode(perimeter, 8, DMS::NUMBER) << " "
+                  << DMS::Encode(area, 4, DMS::NUMBER) << "\n";
       poly.Clear();
       continue;
     }
@@ -209,9 +207,9 @@ int main(int argc, char* argv[]) {
   }
   num = poly.Compute(reverse, sign, perimeter, area);
   if (num > 0)
-    std::cout << num << " "
-              << std::setprecision(8) << perimeter << " "
-              << std::setprecision(4) << area << "\n";
+        std::cout << num << " "
+                  << DMS::Encode(perimeter, 8, DMS::NUMBER) << " "
+                  << DMS::Encode(area, 4, DMS::NUMBER) << "\n";
   poly.Clear();
   return 0;
 }

@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6876 2010-10-18 13:47:55Z karney $
+# $Id: Makefile.am 6906 2010-12-02 22:10:56Z karney $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -78,12 +78,12 @@ am__base_list = \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libGeographic_la_LIBADD =
-am_libGeographic_la_OBJECTS = AzimuthalEquidistant.lo \
-	CassiniSoldner.lo DMS.lo EllipticFunction.lo Geocentric.lo \
-	GeoCoords.lo Geodesic.lo GeodesicLine.lo Geoid.lo Gnomonic.lo \
-	LambertConformalConic.lo LocalCartesian.lo MGRS.lo OSGB.lo \
-	PolarStereographic.lo TransverseMercator.lo \
-	TransverseMercatorExact.lo UTMUPS.lo
+am_libGeographic_la_OBJECTS = AlbersEqualArea.lo \
+	AzimuthalEquidistant.lo CassiniSoldner.lo DMS.lo \
+	EllipticFunction.lo Geocentric.lo GeoCoords.lo Geodesic.lo \
+	GeodesicLine.lo Geoid.lo Gnomonic.lo LambertConformalConic.lo \
+	LocalCartesian.lo MGRS.lo OSGB.lo PolarStereographic.lo \
+	TransverseMercator.lo TransverseMercatorExact.lo UTMUPS.lo
 libGeographic_la_OBJECTS = $(am_libGeographic_la_OBJECTS)
 libGeographic_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -242,7 +242,8 @@ top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 lib_LTLIBRARIES = libGeographic.la
 libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)	
-libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
+libGeographic_la_SOURCES = AlbersEqualArea.cpp \
+		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
 		DMS.cpp \
 		EllipticFunction.cpp \
@@ -260,6 +261,7 @@ libGeographic_la_SOURCES = AzimuthalEquidistant.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
 		../include/GeographicLib/CassiniSoldner.hpp \
 		../include/GeographicLib/Constants.hpp \
@@ -356,6 +358,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AlbersEqualArea.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AzimuthalEquidistant.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CassiniSoldner.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DMS.Plo@am__quote@

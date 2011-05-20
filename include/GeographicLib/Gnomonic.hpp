@@ -2,13 +2,12 @@
  * \file Gnomonic.hpp
  * \brief Header for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
-#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: Gnomonic.hpp 6867 2010-09-11 13:04:26Z karney $"
+#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: Gnomonic.hpp 6911 2010-12-09 23:13:55Z karney $"
 
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/GeodesicLine.hpp"

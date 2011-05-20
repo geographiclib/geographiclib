@@ -15,21 +15,20 @@ function geographiclibinterface;
 % Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
-% $Id: geographiclibinterface.m 6897 2010-11-19 16:44:47Z karney $
+% $Id: geographiclibinterface.m 6904 2010-12-01 21:26:41Z karney $
   funs = {'geodesicdirect', 'geodesicinverse', 'geodesicline', ...
 	  'geoidheight', ...
 	  'utmupsforward', 'utmupsreverse', ...
 	  'mgrsforward', 'mgrsreverse'};
+  lib='Geographic';
   if ispc,
     warning(['geoidheight (compiled with Visual Studio 2008) ',...
 	     'causes Matlab (2008a) to CRASH']);
     incdir='../include';
     libdir='../windows/Release';
-    lib='GeographicLib';
   else
     incdir='/usr/local/include';
     libdir='/usr/local/lib';
-    lib='Geographic';
   end
   for i=1:size(funs,2),
     fprintf('Compiling %s...', funs{i});

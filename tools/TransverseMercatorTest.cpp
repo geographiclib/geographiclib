@@ -18,12 +18,11 @@
 #include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <sstream>
-#include <iomanip>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "TransverseMercatorTest [-r] [-t|-s]\n\
-$Id: TransverseMercatorTest.cpp 6830 2010-05-31 20:02:10Z karney $\n\
+$Id: TransverseMercatorTest.cpp 6905 2010-12-01 21:28:56Z karney $\n\
 \n\
 Convert between geographic coordinates and transverse Mercator coordinates.\n\
 \n\
@@ -118,12 +117,12 @@ int main(int argc, char* argv[]) {
         else
           TME.Forward(real(0), lat, lon, x, y, gamma, k);
       }
-      std::cout << std::setprecision(15)
-                << lat << " " << lon << " "
-                << std::setprecision(10)
-                << x << " " << y << " "
-                << std::setprecision(16)
-                << gamma << " " << k << "\n";
+      std::cout << DMS::Encode(lat, 15, DMS::NUMBER) << " "
+                << DMS::Encode(lon, 15, DMS::NUMBER) << " "
+                << DMS::Encode(x, 10, DMS::NUMBER) << " "
+                << DMS::Encode(y, 10, DMS::NUMBER) << " "
+                << DMS::Encode(gamma, 16, DMS::NUMBER) << " "
+                << DMS::Encode(k, 16, DMS::NUMBER) << "\n";
     }
     catch (const std::exception& e) {
       std::cout << "ERROR: " << e.what() << "\n";

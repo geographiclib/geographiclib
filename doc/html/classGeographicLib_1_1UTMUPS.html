@@ -51,17 +51,18 @@
 <tr><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">enum &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7">zonespec</a> { <br/>
-&nbsp;&nbsp;<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9">MINPSEUDOZONE</a> =  -3, 
+&nbsp;&nbsp;<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9">MINPSEUDOZONE</a> =  -4, 
+<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">INVALID</a> =  -4, 
 <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320">MATCH</a> =  -3, 
 <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aacc8f89ac6144b1e445ca21cbe9a2533">UTM</a> =  -2, 
-<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">STANDARD</a> =  -1, 
 <br/>
-&nbsp;&nbsp;<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ac22db7e136b6e06fba7c3c06b5888362">MAXPSEUDOZONE</a> =  -1, 
+&nbsp;&nbsp;<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">STANDARD</a> =  -1, 
+<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ac22db7e136b6e06fba7c3c06b5888362">MAXPSEUDOZONE</a> =  -1, 
 <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">MINZONE</a> =  0, 
 <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">UPS</a> =  0, 
-<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a1413e6cc83d4bf1eb4ad1c0f1d745eb6">MINUTMZONE</a> =  1, 
 <br/>
-&nbsp;&nbsp;<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ae8e04ab8df50a062c1fe277a6880bc19">MAXUTMZONE</a> =  60, 
+&nbsp;&nbsp;<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a1413e6cc83d4bf1eb4ad1c0f1d745eb6">MINUTMZONE</a> =  1, 
+<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ae8e04ab8df50a062c1fe277a6880bc19">MAXUTMZONE</a> =  60, 
 <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">MAXZONE</a> =  60
 <br/>
  }</td></tr>
@@ -112,6 +113,9 @@ Static Public Member Functions</h2></td></tr>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9"></a><!-- doxytag: member="MINPSEUDOZONE" ref="a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9" args="" -->MINPSEUDOZONE</em>&nbsp;</td><td>
 <p>The smallest pseudo-zone number. </p>
+</td></tr>
+<tr><td valign="top"><em><a class="anchor" id="a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0"></a><!-- doxytag: member="INVALID" ref="a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0" args="" -->INVALID</em>&nbsp;</td><td>
+<p>A marker for an undefined or invalid zone. Equivalent to NaN. </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320"></a><!-- doxytag: member="MATCH" ref="a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320" args="" -->MATCH</em>&nbsp;</td><td>
 <p>If a coordinate already include zone information (e.g., it is an <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate), use that, otherwise apply the <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">UTMUPS::STANDARD</a> rules. </p>
@@ -188,13 +192,13 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>This is exact. If the optional argument <em>setzone</em> is given then use that zone if it is non-negative, otherwise apply the rules given in <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7">UTMUPS::zonespec</a>. Throws an error if <em>setzone</em> is outsize the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9">UTMUPS::MINPSEUDOZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>] = [-3, 60]. </p>
+<p>This is exact. If the optional argument <em>setzone</em> is given then use that zone if it is non-negative, otherwise apply the rules given in <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7">UTMUPS::zonespec</a>. Throws an error if <em>setzone</em> is outsize the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a058ac8a834bbc78ce73d9b37a1a5dfb9">UTMUPS::MINPSEUDOZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>] = [-4, 60]. </p>
 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00046">46</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00139">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00123">MINZONE</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00106">UTM</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00098">INVALID</a>, <a class="el" href="Constants_8hpp_source.html#l00339">GeographicLib::Math::isnan()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00143">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00127">MINZONE</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00110">UTM</a>.</p>
 
-<p>Referenced by <a class="el" href="UTMUPS_8cpp_source.html#l00068">Forward()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00281">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
+<p>Referenced by <a class="el" href="UTMUPS_8cpp_source.html#l00070">Forward()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00281">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
 
 </div>
 </div>
@@ -288,11 +292,11 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <p>The prefered zone for the result can be specified with <em>setzone</em>, see <a class="el" href="classGeographicLib_1_1UTMUPS.html#a62623c295d1b43318a9fa762c3da94ea">UTMUPS::StandardZone</a>. Throw error if the resulting easting or northing is outside the allowed range (see Reverse), in which case the arguments are unchanged. This also returns meridian convergence <em>gamma</em> (degrees) and scale <em>k</em>. The accuracy of the conversion is about 5nm. </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00068">68</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00070">70</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="PolarStereographic_8cpp_source.html#l00069">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="UTMUPS_8cpp_source.html#l00046">StandardZone()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00127">UPS</a>, <a class="el" href="PolarStereographic_8hpp_source.html#l00154">GeographicLib::PolarStereographic::UPS</a>, and <a class="el" href="TransverseMercator_8hpp_source.html#l00180">GeographicLib::TransverseMercator::UTM</a>.</p>
+<p>References <a class="el" href="PolarStereographic_8cpp_source.html#l00071">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00098">INVALID</a>, <a class="el" href="Constants_8hpp_source.html#l00327">GeographicLib::Math::NaN()</a>, <a class="el" href="UTMUPS_8cpp_source.html#l00046">StandardZone()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00131">UPS</a>, <a class="el" href="PolarStereographic_8hpp_source.html#l00155">GeographicLib::PolarStereographic::UPS</a>, and <a class="el" href="TransverseMercator_8hpp_source.html#l00181">GeographicLib::TransverseMercator::UTM</a>.</p>
 
-<p>Referenced by <a class="el" href="UTMUPS_8hpp_source.html#l00228">Forward()</a>, <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00281">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
+<p>Referenced by <a class="el" href="UTMUPS_8hpp_source.html#l00232">Forward()</a>, <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00281">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
 
 </div>
 </div>
@@ -382,11 +386,11 @@ Static Public Member Functions</h2></td></tr>
 <p>UPS eastings and northings are allowed to be in the range [1200km, 2800km] in the northern hemisphere and in [700km, 3100km] in the southern hemisphere.</p>
 <p>These ranges are 100km larger than allowed for the conversions to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>. (100km is the maximum extra padding consistent with eastings remaining non-negative.) This allows generous overlaps between zones and UTM and UPS. If <em>mgrslimits</em> = true, then all the ranges are shrunk by 100km so that they agree with the stricter <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> ranges. No checks are performed besides these (e.g., to limit the distance outside the standard zone boundaries). </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00111">111</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00119">119</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00139">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00123">MINZONE</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00091">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8hpp_source.html#l00154">GeographicLib::PolarStereographic::UPS</a>, and <a class="el" href="TransverseMercator_8hpp_source.html#l00180">GeographicLib::TransverseMercator::UTM</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00098">INVALID</a>, <a class="el" href="Constants_8hpp_source.html#l00339">GeographicLib::Math::isnan()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00143">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00127">MINZONE</a>, <a class="el" href="Constants_8hpp_source.html#l00327">GeographicLib::Math::NaN()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00094">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8hpp_source.html#l00155">GeographicLib::PolarStereographic::UPS</a>, and <a class="el" href="TransverseMercator_8hpp_source.html#l00181">GeographicLib::TransverseMercator::UTM</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00238">Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00242">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -452,9 +456,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">UTMUPS::Forward</a> without returning convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00228">228</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00232">232</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00068">Forward()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00070">Forward()</a>.</p>
 
 </div>
 </div>
@@ -514,9 +518,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">UTMUPS::Reverse</a> without returning convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00238">238</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00242">242</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00111">Reverse()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00119">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -559,13 +563,13 @@ Static Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>For UTM, <em>zonestr</em> has the form of a zone number in the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a1413e6cc83d4bf1eb4ad1c0f1d745eb6">UTMUPS::MINUTMZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ae8e04ab8df50a062c1fe277a6880bc19">UTMUPS::MAXUTMZONE</a>] = [1, 60] followed by a hemisphere letter, N or S. For UPS, it consists just of the hemisphere letter. The returned value of <em>zone</em> is <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">UTMUPS::UPS</a> = 0 for UPS. Note well that "38S" indicates the southern hemisphere of zone 38 and not latitude band S, [32, 40]. N, 01S, 2N, 38S are legal. 0N, 001S, 61N, 38P are illegal. Throws an error is the zone string is malformed. </p>
+<p>For UTM, <em>zonestr</em> has the form of a zone number in the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a1413e6cc83d4bf1eb4ad1c0f1d745eb6">UTMUPS::MINUTMZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7ae8e04ab8df50a062c1fe277a6880bc19">UTMUPS::MAXUTMZONE</a>] = [1, 60] followed by a hemisphere letter, N or S. For UPS, it consists just of the hemisphere letter. The returned value of <em>zone</em> is <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">UTMUPS::UPS</a> = 0 for UPS. Note well that "38S" indicates the southern hemisphere of zone 38 and not latitude band S, [32, 40]. N, 01S, 2N, 38S are legal. 0N, 001S, 61N, 38P are illegal. INV is a special value for which the returned value of <em>is</em> <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">UTMUPS::INVALID</a>. Throws an error is the zone string is malformed. </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00162">162</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00174">174</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00135">MAXUTMZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00131">MINUTMZONE</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00127">UPS</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00139">MAXUTMZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00135">MINUTMZONE</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00131">UPS</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoConvert_8cpp_source.html#l00118">main()</a>, and <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>.</p>
+<p>Referenced by <a class="el" href="GeoConvert_8cpp_source.html#l00117">main()</a>, and <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>.</p>
 
 </div>
 </div>
@@ -602,11 +606,11 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>string represention of zone and hemisphere.</dd></dl>
-<p><em>zone</em> must be in the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">UTMUPS::MINZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>] = [0, 60] with <em>zone</em> = <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">UTMUPS::UPS</a>, 0, indicating UPS (but the resulting string does not contain "0"). This reverses <a class="el" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">UTMUPS::DecodeZone</a>. </p>
+<p><em>zone</em> must be in the range [<a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">UTMUPS::MINZONE</a>, <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>] = [0, 60] with <em>zone</em> = <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a40256f9ab9f277957f8ab697bcd2fd42">UTMUPS::UPS</a>, 0, indicating UPS (but the resulting string does not contain "0"). <em>zone</em> may also be <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">UTMUPS::INVALID</a>, in which case the returned string is "INV". This reverses <a class="el" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">UTMUPS::DecodeZone</a>. </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00197">197</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00217">217</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00139">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00123">MINZONE</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00127">UPS</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00098">INVALID</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00143">MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00127">MINZONE</a>, and <a class="el" href="UTMUPS_8hpp_source.html#l00131">UPS</a>.</p>
 
 </div>
 </div>
@@ -626,7 +630,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>shift (meters) necessary to align N and S halves of a UTM zone (10<sup>7</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00207">207</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00229">229</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
 </div>
 </div>
@@ -647,9 +651,9 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the WGS84 ellipsoid (meters).</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00291">291</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00298">298</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00355">GeographicLib::Constants::WGS84_a()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00408">GeographicLib::Constants::WGS84_a()</a>.</p>
 
 </div>
 </div>
@@ -670,9 +674,9 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the WGS84 ellipsoid.</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00299">299</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00306">306</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00359">GeographicLib::Constants::WGS84_r()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00412">GeographicLib::Constants::WGS84_r()</a>.</p>
 
 </div>
 </div>
@@ -681,7 +685,7 @@ Static Public Member Functions</h2></td></tr>
 <li><a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

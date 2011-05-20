@@ -14,14 +14,13 @@
 
 #include "GeographicLib/GeoCoords.hpp"
 #include "GeographicLib/DMS.hpp"
-#include <iostream>
 #include <sstream>
-#include <iomanip>
+#include <iostream>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-t] [-n] [-h]\n\
-$Id: GeoConvert.cpp 6827 2010-05-20 19:56:18Z karney $\n\
+$Id: GeoConvert.cpp 6905 2010-12-01 21:28:56Z karney $\n\
 \n\
 Convert geographic coordinates to\n\
 \n\

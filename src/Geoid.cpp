@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_GEOID_CPP "$Id: Geoid.cpp 6900 2010-11-23 14:44:39Z karney $"
+#define GEOGRAPHICLIB_GEOID_CPP "$Id: Geoid.cpp 6918 2010-12-21 12:56:07Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
@@ -206,7 +206,7 @@ namespace GeographicLib {
     , _a( Constants::WGS84_a() )
     , _e2( (2 - 1/Constants::WGS84_r())/Constants::WGS84_r() )
     , _degree( Math::degree() )
-    , _eps( sqrt(numeric_limits<real>::epsilon()) ) 
+    , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
     if (_dir.empty())
@@ -234,7 +234,8 @@ namespace GeographicLib {
         if (!(is >> commentid >> key) || commentid != "#")
           continue;
         if (key == "Description" || key =="DateTime") {
-          string::size_type p = s.find_first_not_of(" \t", is.tellg());
+          string::size_type p =
+            s.find_first_not_of(" \t", unsigned(is.tellg()));
           if (p != string::npos)
             (key == "Description" ? _description : _datetime) = s.substr(p);
         } else if (key == "Offset") {
@@ -305,6 +306,10 @@ namespace GeographicLib {
 
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
+    if (Math::isnan(lat) || Math::isnan(lon)) {
+      if (gradp) gradn = grade = Math::NaN();
+      return Math::NaN();
+    }
     real
       fx =  lon * _rlonres,
       fy = -lat * _rlatres;

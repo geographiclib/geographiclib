@@ -68,7 +68,8 @@ Namespaces</h2></td></tr>
 </p>
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Constants_8hpp.html#a16d93570265d8037f7dc7d5d026b2aa4">GEOGRAPHICLIB_CONSTANTS_HPP</a>&nbsp;&nbsp;&nbsp;&quot;$Id: Constants.hpp 6891 2010-11-16 16:10:53Z karney $&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Constants_8hpp.html#a16d93570265d8037f7dc7d5d026b2aa4">GEOGRAPHICLIB_CONSTANTS_HPP</a>&nbsp;&nbsp;&nbsp;&quot;$Id: Constants.hpp 6918 2010-12-21 12:56:07Z karney $&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Constants_8hpp.html#a6cdc2f4c764d4116788cc5c24625e75d">GEOGRAPHICLIB_CPLUSPLUS0X_MATH</a>&nbsp;&nbsp;&nbsp;0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(cond, reason)&nbsp;&nbsp;&nbsp;{ enum{ STATIC_ASSERT_ENUM=1/int(cond) }; }</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(x)&nbsp;&nbsp;&nbsp;namespace { char VAR_ ## x [] = x; }</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Constants_8hpp.html#a8df061fdb3d6e90d150d4fdd749f96b1">GEOGRAPHICLIB_PREC</a>&nbsp;&nbsp;&nbsp;1</td></tr>
@@ -84,13 +85,29 @@ Defines</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GEOGRAPHICLIB_CONSTANTS_HPP&nbsp;&nbsp;&nbsp;&quot;$Id: Constants.hpp 6891 2010-11-16 16:10:53Z karney $&quot;</td>
+          <td class="memname">#define GEOGRAPHICLIB_CONSTANTS_HPP&nbsp;&nbsp;&nbsp;&quot;$Id: Constants.hpp 6918 2010-12-21 12:56:07Z karney $&quot;</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00011">11</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6cdc2f4c764d4116788cc5c24625e75d"></a><!-- doxytag: member="Constants.hpp::GEOGRAPHICLIB_CPLUSPLUS0X_MATH" ref="a6cdc2f4c764d4116788cc5c24625e75d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define GEOGRAPHICLIB_CPLUSPLUS0X_MATH&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Are C++0X math functions available? </p>
+
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00020">20</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -118,9 +135,9 @@ Defines</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>A simple compile-time assert. This is designed to be compatible with the C++0X static_assert. </p>
+<p>A compile-time assert. Use C++0X static_assert, if available. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00018">18</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00033">33</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="TransverseMercator_8cpp_source.html#l00059">GeographicLib::TransverseMercator::TransverseMercator()</a>.</p>
 
@@ -143,7 +160,7 @@ Defines</h2></td></tr>
 <div class="memdoc">
 <p>Insertion of RCS Id strings into the object file. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00029">29</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00045">45</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -159,12 +176,12 @@ Defines</h2></td></tr>
 <div class="memdoc">
 <p>The precision of floating point numbers used in GeographicLib. 0 means float; 1 (default) means double; 2 means long double. Nearly all the testing has been carried out with doubles and that's the recommended configuration. Note that with Microsoft Visual Studio, long double is the same as double. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00042">42</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00058">58</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

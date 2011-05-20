@@ -161,13 +161,14 @@ Friends</h2></td></tr>
 <p>All allowed UTM and UPS coordinates may now be converted to legal <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates with the proviso that eastings and northings on the upper boundaries are silently reduced by about 4nm to place them <em>within</em> the allowed range. (This includes reducing a southern hemisphere northing of 10000km by 4nm so that it is placed in latitude band M.) The UTM or UPS coordinates are truncated to requested precision to determine the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate. Thus in UTM zone 38N, the square area with easting in [444 km, 445 km) and northing in [3688 km, 3689 km) maps to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate 38SMB4488 (at <em>prec</em> = 2, 1km), Khulani Sq., Baghdad.</p>
 <p>The UTM/UPS selection and the UTM zone is preserved in the conversion to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate. Thus for <em>zone</em> &gt; 0, the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate begins with the zone number followed by one of [C&ndash;M] for the southern hemisphere and [N&ndash;X] for the northern hemisphere. For <em>zone</em> = 0, the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates begins with one of [AB] for the southern hemisphere and [XY] for the northern hemisphere.</p>
 <p>The conversion to the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> is exact for prec in [0, 5] except that a neighboring latitude band letter may be given if the point is within 5nm of a band boundary. For prec in [6, 11], the conversion is accurate to roundoff.</p>
+<p>If <em>x</em> or <em>y</em> is NaN or if <em>zone</em> is <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">UTMUPS::INVALID</a>, the returned <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string is "INVALID".</p>
 <p>Return the result via a reference argument to avoid the overhead of allocating a potentially large number of small strings. If an error is thrown, then <em>mgrs</em> is unchanged. </p>
 
-<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00126">126</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00132">132</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
 
-<p>References <a class="el" href="MGRS_8cpp_source.html#l00137">Reverse()</a>.</p>
+<p>References <a class="el" href="MGRS_8cpp_source.html#l00143">Reverse()</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoCoords_8cpp_source.html#l00112">GeographicLib::GeoCoords::AltMGRSRepresentation()</a>, and <a class="el" href="GeoCoords_8cpp_source.html#l00104">GeographicLib::GeoCoords::MGRSRepresentation()</a>.</p>
+<p>Referenced by <a class="el" href="GeoCoords_8cpp_source.html#l00102">GeographicLib::GeoCoords::AltMGRSRepresentation()</a>, and <a class="el" href="GeoCoords_8cpp_source.html#l00094">GeographicLib::GeoCoords::MGRSRepresentation()</a>.</p>
 
 </div>
 </div>
@@ -241,6 +242,8 @@ Friends</h2></td></tr>
 <p>The latitude is ignored for <em>zone</em> = 0 (UPS); otherwise the latitude is used to determine the latitude band and this is checked for consistency using the same tests as Reverse. </p>
 
 <p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00050">50</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
+
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00098">GeographicLib::UTMUPS::INVALID</a>, and <a class="el" href="Constants_8hpp_source.html#l00339">GeographicLib::Math::isnan()</a>.</p>
 
 </div>
 </div>
@@ -320,9 +323,11 @@ Friends</h2></td></tr>
 <p>The UTM/UPS selection and the UTM zone is preserved in the conversion from <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate. The conversion is exact for prec in [0, 5]. With centerp = true the conversion from <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> to geographic and back is stable. This is not assured if <em>centerp</em> = false.</p>
 <p>If an error is thrown, then the arguments are unchanged. </p>
 
-<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00137">137</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00143">143</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="MGRS_8cpp_source.html#l00126">Forward()</a>, and <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00327">GeographicLib::Math::NaN()</a>.</p>
+
+<p>Referenced by <a class="el" href="MGRS_8cpp_source.html#l00132">Forward()</a>, and <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>.</p>
 
 </div>
 </div>
@@ -343,7 +348,7 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the WGS84 ellipsoid (meters).</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00259">259</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00262">262</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
 </div>
 </div>
@@ -364,7 +369,7 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the WGS84 ellipsoid.</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00267">267</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00270">270</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
 </div>
 </div>
@@ -389,7 +394,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

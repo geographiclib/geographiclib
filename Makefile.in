@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6898 2010-11-19 19:21:49Z karney $
+# $Id: Makefile.am 6920 2010-12-21 15:51:15Z karney $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -745,7 +745,7 @@ dist-hook:
 	find $(distdir)/doc -maxdepth 1 -type f -name '*.tmp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
-		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \
+		\( ! -name '*.sln' -a ! -name '*.vc*proj' -a ! -name '*.mk' \)| \
 		xargs rm -f ; \
 	find $(distdir)/matlab -type f \
 		\( ! -name '*.cpp' -a ! -name '*.m' -a ! -name '*.mk' \) | \

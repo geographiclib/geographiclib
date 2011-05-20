@@ -40,7 +40,7 @@
 </div>
 <div class="contents">
 <!-- doxytag: class="GeographicLib::OSGB" -->
-<p>Ordnance Survery grid system for Great Britain.  
+<p>Ordnance Survey grid system for Great Britain.  
 <a href="#_details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="OSGB_8hpp_source.html">GeographicLib/OSGB.hpp</a>&gt;</code></p>
@@ -67,16 +67,16 @@ Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1OSGB.html#ab27e19f7688f6b472d217b31aeae079c">FalseEasting</a> ()  throw ()</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
-<p>Ordnance Survery grid system for Great Britain. </p>
+<p>Ordnance Survey grid system for Great Britain. </p>
 <p>The class implements the coordinate system used by the Ordnance Survey for maps of Great Britain and conversions to the grid reference system.</p>
 <p>See</p>
 <ul>
 <li><a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/docs/A_Guide_to_Coordinate_Systems_in_Great_Britain.pdf">A guide to coordinate systems in Great Britain</a></li>
 <li><a href="http://www.ordnancesurvey.co.uk/oswebsite/gps/information/coordinatesystemsinfo/guidetonationalgrid/page1.html">Guide to National Grid</a></li>
 </ul>
-<p><b>WARNING:</b> the latitudes and longitudes for the Ordnance Survery grid system do not use the WGS84 datum. Do not use the values returned by this class in the <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>, <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>, or <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a> classes without first converting the datum (and vice versa). </p>
+<p><b>WARNING:</b> the latitudes and longitudes for the Ordnance Survey grid system do not use the WGS84 datum. Do not use the values returned by this class in the <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>, <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>, or <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">Geoid</a> classes without first converting the datum (and vice versa). </p>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00037">37</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00036">36</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 <hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a92618eea9870908e11446875d80aab6b"></a><!-- doxytag: member="GeographicLib::OSGB::Forward" ref="a92618eea9870908e11446875d80aab6b" args="(real lat, real lon, real &amp;x, real &amp;y, real &amp;gamma, real &amp;k)" -->
 <div class="memitem">
@@ -126,7 +126,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Forward projection, from geographic to <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> coordinates.</p>
+<p>Forward projection, from geographic to <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> coordinates.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>lat</em>&nbsp;</td><td>latitude of point (degrees). </td></tr>
@@ -140,11 +140,11 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <p><em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00084">84</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00083">83</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
-<p>References <a class="el" href="OSGB_8hpp_source.html#l00218">FalseEasting()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, and <a class="el" href="OSGB_8hpp_source.html#l00208">OriginLongitude()</a>.</p>
+<p>References <a class="el" href="OSGB_8hpp_source.html#l00217">FalseEasting()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, and <a class="el" href="OSGB_8hpp_source.html#l00207">OriginLongitude()</a>.</p>
 
-<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00114">Forward()</a>.</p>
+<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00113">Forward()</a>.</p>
 
 </div>
 </div>
@@ -196,7 +196,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Reverse projection, from <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> coordinates to geographic.</p>
+<p>Reverse projection, from <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> coordinates to geographic.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td>easting of point (meters). </td></tr>
@@ -210,11 +210,11 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <p>The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00104">104</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00103">103</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
-<p>References <a class="el" href="OSGB_8hpp_source.html#l00218">FalseEasting()</a>, <a class="el" href="OSGB_8hpp_source.html#l00208">OriginLongitude()</a>, and <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>.</p>
+<p>References <a class="el" href="OSGB_8hpp_source.html#l00217">FalseEasting()</a>, <a class="el" href="OSGB_8hpp_source.html#l00207">OriginLongitude()</a>, and <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>.</p>
 
-<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00122">Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00121">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -256,9 +256,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1OSGB.html#a92618eea9870908e11446875d80aab6b">OSGB::Forward</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00114">114</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00113">113</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
-<p>References <a class="el" href="OSGB_8hpp_source.html#l00084">Forward()</a>.</p>
+<p>References <a class="el" href="OSGB_8hpp_source.html#l00083">Forward()</a>.</p>
 
 </div>
 </div>
@@ -300,9 +300,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1OSGB.html#ae006380e574858a81011752dd1d4af60">OSGB::Reverse</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00122">122</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00121">121</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
-<p>References <a class="el" href="OSGB_8hpp_source.html#l00104">Reverse()</a>.</p>
+<p>References <a class="el" href="OSGB_8hpp_source.html#l00103">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -342,7 +342,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Convert <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> coordinates to a grid reference.</p>
+<p>Convert <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> coordinates to a grid reference.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td>easting of point (meters). </td></tr>
@@ -365,7 +365,7 @@ Static Public Member Functions</h2></td></tr>
 </ul>
 <p>The easting must be in the range [-1000 km, 1500 km) and the northing must be in the range [-500 km, 2000 km). An exception is thrown if either the easting and northing is outside these bounds. These bounds are consistent with rules for the letter designations for the grid system. </p>
 
-<p>Definition at line <a class="el" href="OSGB_8cpp_source.html#l00036">36</a> of file <a class="el" href="OSGB_8cpp_source.html">OSGB.cpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8cpp_source.html#l00035">35</a> of file <a class="el" href="OSGB_8cpp_source.html">OSGB.cpp</a>.</p>
 
 </div>
 </div>
@@ -411,7 +411,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Convert <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> coordinates to a grid reference.</p>
+<p>Convert <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> coordinates to a grid reference.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gridref</em>&nbsp;</td><td>National Grid reference. </td></tr>
@@ -424,7 +424,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <p>The grid reference must be of the form: two letters (not including I) followed by an even number of digits (up to 22). </p>
 
-<p>Definition at line <a class="el" href="OSGB_8cpp_source.html#l00083">83</a> of file <a class="el" href="OSGB_8cpp_source.html">OSGB.cpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8cpp_source.html#l00082">82</a> of file <a class="el" href="OSGB_8cpp_source.html">OSGB.cpp</a>.</p>
 
 </div>
 </div>
@@ -443,9 +443,9 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the Airy 1830 ellipsoid (meters).</dd></dl>
-<p>This is 20923713 ft converted to meters using the rule 1 ft = 10^(9.48401603-10) m. (The Airy 1830 value is returned because the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> projection is based on this ellipsoid.) </p>
+<p>This is 20923713 ft converted to meters using the rule 1 ft = 10^(9.48401603-10) m. (The Airy 1830 value is returned because the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> projection is based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00180">180</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00179">179</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
 </div>
 </div>
@@ -464,9 +464,9 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the Airy 1830 ellipsoid.</dd></dl>
-<p>For the Airy 1830 ellipsoid, <em>a</em> = 20923713 ft and <em>b</em> = 20853810 ft; thus the inverse flattening = 20923713/(20923713 - 20853810) = 2324857/7767 = 299.32496459... (The Airy 1830 value is returned because the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> projection is based on this ellipsoid.) </p>
+<p>For the Airy 1830 ellipsoid, <em>a</em> = 20923713 ft and <em>b</em> = 20853810 ft; thus the inverse flattening = 20923713/(20923713 - 20853810) = 2324857/7767 = 299.32496459... (The Airy 1830 value is returned because the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> projection is based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00191">191</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00190">190</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
 </div>
 </div>
@@ -484,9 +484,9 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd><em>k0</em> central scale for the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> projection (0.9996012717). </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><em>k0</em> central scale for the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> projection (0.9996012717). </dd></dl>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00197">197</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00196">196</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
 </div>
 </div>
@@ -504,9 +504,9 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>latitude of the origin for the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> projection (49 degrees). </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>latitude of the origin for the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> projection (49 degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00203">203</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00202">202</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
 </div>
 </div>
@@ -524,11 +524,11 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>longitude of the origin for the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> projection (-2 degrees). </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>longitude of the origin for the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> projection (-2 degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00208">208</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00207">207</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00084">Forward()</a>, and <a class="el" href="OSGB_8hpp_source.html#l00104">Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00083">Forward()</a>, and <a class="el" href="OSGB_8hpp_source.html#l00103">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -546,9 +546,9 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>false northing the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> projection (-100000 meters). </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>false northing the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> projection (-100000 meters). </dd></dl>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00213">213</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00212">212</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
 </div>
 </div>
@@ -566,11 +566,11 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>false easting the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survery grid system for Great Britain.">OSGB</a> projection (400000 meters). </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>false easting the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">OSGB</a> projection (400000 meters). </dd></dl>
 
-<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00218">218</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
+<p>Definition at line <a class="el" href="OSGB_8hpp_source.html#l00217">217</a> of file <a class="el" href="OSGB_8hpp_source.html">OSGB.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00084">Forward()</a>, and <a class="el" href="OSGB_8hpp_source.html#l00104">Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="OSGB_8hpp_source.html#l00083">Forward()</a>, and <a class="el" href="OSGB_8hpp_source.html#l00103">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -579,7 +579,7 @@ Static Public Member Functions</h2></td></tr>
 <li><a class="el" href="OSGB_8cpp_source.html">OSGB.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

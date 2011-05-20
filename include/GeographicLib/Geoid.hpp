@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
-#define GEOGRAPHICLIB_GEOID_HPP "$Id: Geoid.hpp 6888 2010-11-13 15:19:42Z karney $"
+#define GEOGRAPHICLIB_GEOID_HPP "$Id: Geoid.hpp 6910 2010-12-08 22:01:30Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 #include <string>
@@ -18,7 +18,7 @@
 namespace GeographicLib {
 
   /**
-   * \brief Computing the height of the geoid
+   * \brief Looking up the height of the geoid
    *
    * This class evaluated the height of one of the standard geoids, EGM84,
    * EGM96, or EGM2008 by bilinear or cubic interpolation into a rectangular

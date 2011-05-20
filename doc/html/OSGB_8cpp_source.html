@@ -40,161 +40,160 @@
 <a name="l00002"></a>00002 <span class="comment"> * \file OSGB.cpp</span>
 <a name="l00003"></a>00003 <span class="comment"> * \brief Implementation for GeographicLib::OSGB class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
-<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010) &lt;charles@karney.com&gt;</span>
-<a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
-<a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
-<a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
-<a name="l00009"></a>00009 
-<a name="l00010"></a>00010 <span class="preprocessor">#include &lt;iostream&gt;</span>
-<a name="l00011"></a>00011 <span class="preprocessor">#include &quot;<a class="code" href="OSGB_8hpp.html" title="Header for GeographicLib::OSGB class.">GeographicLib/OSGB.hpp</a>&quot;</span>
-<a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="OSGB_8cpp.html#af7fa9aa83a3be95cccc572fc3b399b58">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_OSGB_CPP &quot;$Id: OSGB.cpp 6881 2010-10-29 22:13:52Z karney $&quot;</span>
-<a name="l00014"></a>00014 <span class="preprocessor"></span>
-<a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="OSGB_8cpp.html#af7fa9aa83a3be95cccc572fc3b399b58">GEOGRAPHICLIB_OSGB_CPP</a>)
-<a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="OSGB_8hpp.html#a786c5942146679103feb716bea66a0a7">GEOGRAPHICLIB_OSGB_HPP</a>)
-<a name="l00017"></a>00017 
-<a name="l00018"></a>00018 namespace GeographicLib {
-<a name="l00019"></a>00019 
-<a name="l00020"></a>00020   <span class="keyword">using namespace </span>std;
-<a name="l00021"></a>00021 
-<a name="l00022"></a>00022   <span class="keyword">const</span> <span class="keywordtype">string</span> OSGB::letters = <span class="stringliteral">&quot;ABCDEFGHJKLMNOPQRSTUVWXYZ&quot;</span>;
-<a name="l00023"></a>00023   <span class="keyword">const</span> <span class="keywordtype">string</span> OSGB::digits = <span class="stringliteral">&quot;0123456789&quot;</span>;
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025   <span class="keyword">const</span> TransverseMercator
-<a name="l00026"></a>00026   OSGB::OSGBTM(MajorRadius(), InverseFlattening(), CentralScale());
-<a name="l00027"></a>00027 
-<a name="l00028"></a>00028   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> OSGB::computenorthoffset() <span class="keywordflow">throw</span>() {
-<a name="l00029"></a>00029     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, y;
-<a name="l00030"></a>00030     OSGBTM.Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), OriginLatitude(), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), x, y);
-<a name="l00031"></a>00031     <span class="keywordflow">return</span> FalseNorthing() - y;
-<a name="l00032"></a>00032   }
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> OSGB::northoffset = computenorthoffset();
-<a name="l00035"></a>00035 
-<a name="l00036"></a><a class="code" href="classGeographicLib_1_1OSGB.html#a0a79e8f2babae1eb0305a0e728fea8c8">00036</a>   <span class="keywordtype">void</span> OSGB::GridReference(real x, real y, <span class="keywordtype">int</span> prec, std::string&amp; gridref) {
-<a name="l00037"></a>00037     CheckCoords(x, y);
-<a name="l00038"></a>00038     <span class="keywordflow">if</span> (!(prec &gt;= 0 || prec &lt;= maxprec))
-<a name="l00039"></a>00039       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB precision &quot;</span> + str(prec) + <span class="stringliteral">&quot; not in [0, &quot;</span>
-<a name="l00040"></a>00040                           + str(<span class="keywordtype">int</span>(maxprec)) + <span class="stringliteral">&quot;]&quot;</span>);
-<a name="l00041"></a>00041     <span class="keywordtype">char</span> grid[2 + 2 * maxprec];
-<a name="l00042"></a>00042     <span class="keywordtype">int</span>
-<a name="l00043"></a>00043       xh = int(floor(x)) / tile,
-<a name="l00044"></a>00044       yh = int(floor(y)) / tile;
-<a name="l00045"></a>00045     real
-<a name="l00046"></a>00046       xf = x - tile * xh,
-<a name="l00047"></a>00047       yf = y - tile * yh;
-<a name="l00048"></a>00048     xh += tileoffx;
-<a name="l00049"></a>00049     yh += tileoffy;
-<a name="l00050"></a>00050     <span class="keywordtype">int</span> z = 0;
-<a name="l00051"></a>00051     grid[z++] = letters[(tilegrid - (yh / tilegrid) - 1)
-<a name="l00052"></a>00052                         * tilegrid + (xh / tilegrid)];
-<a name="l00053"></a>00053     grid[z++] = letters[(tilegrid - (yh % tilegrid) - 1)
-<a name="l00054"></a>00054                         * tilegrid + (xh % tilegrid)];
-<a name="l00055"></a>00055     real mult = pow(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(base), max(tilelevel - prec, 0));
-<a name="l00056"></a>00056     <span class="keywordtype">int</span>
-<a name="l00057"></a>00057       ix = int(floor(xf / mult)),
-<a name="l00058"></a>00058       iy = int(floor(yf / mult));
-<a name="l00059"></a>00059     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = min(prec, <span class="keywordtype">int</span>(tilelevel)); c--;) {
-<a name="l00060"></a>00060       grid[z + c] = digits[ ix % base ];
-<a name="l00061"></a>00061       ix /= base;
-<a name="l00062"></a>00062       grid[z + c + prec] = digits[ iy % base ];
-<a name="l00063"></a>00063       iy /= base;
-<a name="l00064"></a>00064     }
-<a name="l00065"></a>00065     <span class="keywordflow">if</span> (prec &gt; tilelevel) {
-<a name="l00066"></a>00066       xf -= floor(xf / mult);
-<a name="l00067"></a>00067       yf -= floor(yf / mult);
-<a name="l00068"></a>00068       mult = pow(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(base), prec - tilelevel);
-<a name="l00069"></a>00069       ix = int(floor(xf * mult));
-<a name="l00070"></a>00070       iy = int(floor(yf * mult));
-<a name="l00071"></a>00071       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = prec - tilelevel; c--;) {
-<a name="l00072"></a>00072         grid[z + c + tilelevel] = digits[ ix % base ];
-<a name="l00073"></a>00073         ix /= base;
-<a name="l00074"></a>00074         grid[z + c + tilelevel + prec] = digits[ iy % base ];
-<a name="l00075"></a>00075         iy /= base;
-<a name="l00076"></a>00076       }
-<a name="l00077"></a>00077     }
-<a name="l00078"></a>00078     <span class="keywordtype">int</span> mlen = z + 2 * prec;
-<a name="l00079"></a>00079     gridref.resize(mlen);
-<a name="l00080"></a>00080     copy(grid, grid + mlen, gridref.begin());
-<a name="l00081"></a>00081   }
-<a name="l00082"></a>00082 
-<a name="l00083"></a><a class="code" href="classGeographicLib_1_1OSGB.html#a3693cfef49442747750e8393c81014aa">00083</a>   <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1OSGB.html#a0a79e8f2babae1eb0305a0e728fea8c8">OSGB::GridReference</a>(<span class="keyword">const</span> std::string&amp; gridref,
-<a name="l00084"></a>00084                            real&amp; x, real&amp; y, <span class="keywordtype">int</span>&amp; prec,
-<a name="l00085"></a>00085                            <span class="keywordtype">bool</span> centerp) {
-<a name="l00086"></a>00086     <span class="keywordtype">int</span>
-<a name="l00087"></a>00087       len = int(gridref.size()),
-<a name="l00088"></a>00088       p = 0;
-<a name="l00089"></a>00089     <span class="keywordtype">char</span> grid[2 + 2 * maxprec];
-<a name="l00090"></a>00090     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; len; ++i) {
-<a name="l00091"></a>00091       <span class="keywordflow">if</span> (!isspace(gridref[i])) {
-<a name="l00092"></a>00092         <span class="keywordflow">if</span> (p &gt;= 2 + 2 * maxprec)
-<a name="l00093"></a>00093           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB string &quot;</span> + gridref + <span class="stringliteral">&quot; too long&quot;</span>);
-<a name="l00094"></a>00094         grid[p++] = gridref[i];
-<a name="l00095"></a>00095       }
-<a name="l00096"></a>00096     }
-<a name="l00097"></a>00097     len = p;
-<a name="l00098"></a>00098     p = 0;
-<a name="l00099"></a>00099     <span class="keywordflow">if</span> (len &lt; 2)
-<a name="l00100"></a>00100       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB string &quot;</span> + gridref + <span class="stringliteral">&quot; too short&quot;</span>);
-<a name="l00101"></a>00101     <span class="keywordflow">if</span> (len % 2)
-<a name="l00102"></a>00102       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB string &quot;</span> + gridref +
-<a name="l00103"></a>00103                           <span class="stringliteral">&quot; has odd number of characters&quot;</span>);
-<a name="l00104"></a>00104     <span class="keywordtype">int</span>
-<a name="l00105"></a>00105       xh = 0,
-<a name="l00106"></a>00106       yh = 0;
-<a name="l00107"></a>00107     <span class="keywordflow">while</span> (p &lt; 2) {
-<a name="l00108"></a>00108       <span class="keywordtype">int</span> i = lookup(letters, grid[p++]);
-<a name="l00109"></a>00109       <span class="keywordflow">if</span> (i &lt; 0)
-<a name="l00110"></a>00110         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Illegal prefix character &quot;</span> + gridref);
-<a name="l00111"></a>00111       yh = yh * tilegrid + tilegrid - (i / tilegrid) - 1;
-<a name="l00112"></a>00112       xh = xh * tilegrid + (i % tilegrid);
-<a name="l00113"></a>00113     }
-<a name="l00114"></a>00114     xh -= tileoffx;
-<a name="l00115"></a>00115     yh -= tileoffy;
-<a name="l00116"></a>00116 
-<a name="l00117"></a>00117     <span class="keywordtype">int</span> prec1 = (len - p)/2;
-<a name="l00118"></a>00118     real
-<a name="l00119"></a>00119       unit = tile,
-<a name="l00120"></a>00120       x1 = unit * xh,
-<a name="l00121"></a>00121       y1 = unit * yh;
-<a name="l00122"></a>00122     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; prec1; ++i) {
-<a name="l00123"></a>00123       unit /= base;
-<a name="l00124"></a>00124       <span class="keywordtype">int</span>
-<a name="l00125"></a>00125         ix = lookup(digits, grid[p + i]),
-<a name="l00126"></a>00126         iy = lookup(digits, grid[p + i + prec1]);
-<a name="l00127"></a>00127       <span class="keywordflow">if</span> (ix &lt; 0 || iy &lt; 0)
-<a name="l00128"></a>00128         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Encountered a non-digit in &quot;</span> + gridref);
-<a name="l00129"></a>00129       x1 += unit * ix;
-<a name="l00130"></a>00130       y1 += unit * iy;
-<a name="l00131"></a>00131     }
-<a name="l00132"></a>00132     <span class="keywordflow">if</span> (centerp) {
-<a name="l00133"></a>00133       x1 += unit/2;
-<a name="l00134"></a>00134       y1 += unit/2;
-<a name="l00135"></a>00135     }
-<a name="l00136"></a>00136     x = x1;
-<a name="l00137"></a>00137     y = y1;
-<a name="l00138"></a>00138     prec = prec1;
-<a name="l00139"></a>00139   }
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141   <span class="keywordtype">void</span> OSGB::CheckCoords(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y) {
-<a name="l00142"></a>00142     <span class="comment">// Limits are all multiples of 100km and are all closed on the lower end</span>
-<a name="l00143"></a>00143     <span class="comment">// and open on the upper end -- and this is reflected in the error</span>
-<a name="l00144"></a>00144     <span class="comment">// messages.</span>
-<a name="l00145"></a>00145     <span class="keywordflow">if</span> (! (x &gt;= minx &amp;&amp; x &lt; maxx) )
-<a name="l00146"></a>00146       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Easting &quot;</span> + str(<span class="keywordtype">int</span>(floor(x/1000)))
-<a name="l00147"></a>00147                           + <span class="stringliteral">&quot;km not in OSGB range [&quot;</span>
-<a name="l00148"></a>00148                           + str(minx/1000) + <span class="stringliteral">&quot;km, &quot;</span>
-<a name="l00149"></a>00149                           + str(maxx/1000) + <span class="stringliteral">&quot;km)&quot;</span>);
-<a name="l00150"></a>00150     <span class="keywordflow">if</span> (! (y &gt;= miny &amp;&amp; y &lt; maxy) )
-<a name="l00151"></a>00151       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Northing &quot;</span> + str(<span class="keywordtype">int</span>(floor(y/1000)))
-<a name="l00152"></a>00152                           + <span class="stringliteral">&quot;km not in OSGB range [&quot;</span>
-<a name="l00153"></a>00153                           + str(miny/1000) + <span class="stringliteral">&quot;km, &quot;</span>
-<a name="l00154"></a>00154                           + str(maxy/1000) + <span class="stringliteral">&quot;km)&quot;</span>);
-<a name="l00155"></a>00155   }
-<a name="l00156"></a>00156 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2010) &lt;charles@karney.com&gt; and licensed under</span>
+<a name="l00006"></a>00006 <span class="comment"> * the LGPL.  For more information, see http://geographiclib.sourceforge.net/</span>
+<a name="l00007"></a>00007 <span class="comment"> **********************************************************************/</span>
+<a name="l00008"></a>00008 
+<a name="l00009"></a>00009 <span class="preprocessor">#include &lt;iostream&gt;</span>
+<a name="l00010"></a>00010 <span class="preprocessor">#include &quot;<a class="code" href="OSGB_8hpp.html" title="Header for GeographicLib::OSGB class.">GeographicLib/OSGB.hpp</a>&quot;</span>
+<a name="l00011"></a>00011 
+<a name="l00012"></a><a class="code" href="OSGB_8cpp.html#af7fa9aa83a3be95cccc572fc3b399b58">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_OSGB_CPP &quot;$Id: OSGB.cpp 6911 2010-12-09 23:13:55Z karney $&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor"></span>
+<a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="OSGB_8cpp.html#af7fa9aa83a3be95cccc572fc3b399b58">GEOGRAPHICLIB_OSGB_CPP</a>)
+<a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="OSGB_8hpp.html#a786c5942146679103feb716bea66a0a7">GEOGRAPHICLIB_OSGB_HPP</a>)
+<a name="l00016"></a>00016 
+<a name="l00017"></a>00017 namespace GeographicLib {
+<a name="l00018"></a>00018 
+<a name="l00019"></a>00019   <span class="keyword">using namespace </span>std;
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021   <span class="keyword">const</span> <span class="keywordtype">string</span> OSGB::letters = <span class="stringliteral">&quot;ABCDEFGHJKLMNOPQRSTUVWXYZ&quot;</span>;
+<a name="l00022"></a>00022   <span class="keyword">const</span> <span class="keywordtype">string</span> OSGB::digits = <span class="stringliteral">&quot;0123456789&quot;</span>;
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024   <span class="keyword">const</span> TransverseMercator
+<a name="l00025"></a>00025   OSGB::OSGBTM(MajorRadius(), InverseFlattening(), CentralScale());
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> OSGB::computenorthoffset() <span class="keywordflow">throw</span>() {
+<a name="l00028"></a>00028     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, y;
+<a name="l00029"></a>00029     OSGBTM.Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), OriginLatitude(), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), x, y);
+<a name="l00030"></a>00030     <span class="keywordflow">return</span> FalseNorthing() - y;
+<a name="l00031"></a>00031   }
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> OSGB::northoffset = computenorthoffset();
+<a name="l00034"></a>00034 
+<a name="l00035"></a><a class="code" href="classGeographicLib_1_1OSGB.html#a0a79e8f2babae1eb0305a0e728fea8c8">00035</a>   <span class="keywordtype">void</span> OSGB::GridReference(real x, real y, <span class="keywordtype">int</span> prec, std::string&amp; gridref) {
+<a name="l00036"></a>00036     CheckCoords(x, y);
+<a name="l00037"></a>00037     <span class="keywordflow">if</span> (!(prec &gt;= 0 || prec &lt;= maxprec))
+<a name="l00038"></a>00038       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB precision &quot;</span> + str(prec) + <span class="stringliteral">&quot; not in [0, &quot;</span>
+<a name="l00039"></a>00039                           + str(<span class="keywordtype">int</span>(maxprec)) + <span class="stringliteral">&quot;]&quot;</span>);
+<a name="l00040"></a>00040     <span class="keywordtype">char</span> grid[2 + 2 * maxprec];
+<a name="l00041"></a>00041     <span class="keywordtype">int</span>
+<a name="l00042"></a>00042       xh = int(floor(x)) / tile,
+<a name="l00043"></a>00043       yh = int(floor(y)) / tile;
+<a name="l00044"></a>00044     real
+<a name="l00045"></a>00045       xf = x - tile * xh,
+<a name="l00046"></a>00046       yf = y - tile * yh;
+<a name="l00047"></a>00047     xh += tileoffx;
+<a name="l00048"></a>00048     yh += tileoffy;
+<a name="l00049"></a>00049     <span class="keywordtype">int</span> z = 0;
+<a name="l00050"></a>00050     grid[z++] = letters[(tilegrid - (yh / tilegrid) - 1)
+<a name="l00051"></a>00051                         * tilegrid + (xh / tilegrid)];
+<a name="l00052"></a>00052     grid[z++] = letters[(tilegrid - (yh % tilegrid) - 1)
+<a name="l00053"></a>00053                         * tilegrid + (xh % tilegrid)];
+<a name="l00054"></a>00054     real mult = pow(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(base), max(tilelevel - prec, 0));
+<a name="l00055"></a>00055     <span class="keywordtype">int</span>
+<a name="l00056"></a>00056       ix = int(floor(xf / mult)),
+<a name="l00057"></a>00057       iy = int(floor(yf / mult));
+<a name="l00058"></a>00058     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = min(prec, <span class="keywordtype">int</span>(tilelevel)); c--;) {
+<a name="l00059"></a>00059       grid[z + c] = digits[ ix % base ];
+<a name="l00060"></a>00060       ix /= base;
+<a name="l00061"></a>00061       grid[z + c + prec] = digits[ iy % base ];
+<a name="l00062"></a>00062       iy /= base;
+<a name="l00063"></a>00063     }
+<a name="l00064"></a>00064     <span class="keywordflow">if</span> (prec &gt; tilelevel) {
+<a name="l00065"></a>00065       xf -= floor(xf / mult);
+<a name="l00066"></a>00066       yf -= floor(yf / mult);
+<a name="l00067"></a>00067       mult = pow(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(base), prec - tilelevel);
+<a name="l00068"></a>00068       ix = int(floor(xf * mult));
+<a name="l00069"></a>00069       iy = int(floor(yf * mult));
+<a name="l00070"></a>00070       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> c = prec - tilelevel; c--;) {
+<a name="l00071"></a>00071         grid[z + c + tilelevel] = digits[ ix % base ];
+<a name="l00072"></a>00072         ix /= base;
+<a name="l00073"></a>00073         grid[z + c + tilelevel + prec] = digits[ iy % base ];
+<a name="l00074"></a>00074         iy /= base;
+<a name="l00075"></a>00075       }
+<a name="l00076"></a>00076     }
+<a name="l00077"></a>00077     <span class="keywordtype">int</span> mlen = z + 2 * prec;
+<a name="l00078"></a>00078     gridref.resize(mlen);
+<a name="l00079"></a>00079     copy(grid, grid + mlen, gridref.begin());
+<a name="l00080"></a>00080   }
+<a name="l00081"></a>00081 
+<a name="l00082"></a><a class="code" href="classGeographicLib_1_1OSGB.html#a3693cfef49442747750e8393c81014aa">00082</a>   <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1OSGB.html#a0a79e8f2babae1eb0305a0e728fea8c8">OSGB::GridReference</a>(<span class="keyword">const</span> std::string&amp; gridref,
+<a name="l00083"></a>00083                            real&amp; x, real&amp; y, <span class="keywordtype">int</span>&amp; prec,
+<a name="l00084"></a>00084                            <span class="keywordtype">bool</span> centerp) {
+<a name="l00085"></a>00085     <span class="keywordtype">int</span>
+<a name="l00086"></a>00086       len = int(gridref.size()),
+<a name="l00087"></a>00087       p = 0;
+<a name="l00088"></a>00088     <span class="keywordtype">char</span> grid[2 + 2 * maxprec];
+<a name="l00089"></a>00089     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; len; ++i) {
+<a name="l00090"></a>00090       <span class="keywordflow">if</span> (!isspace(gridref[i])) {
+<a name="l00091"></a>00091         <span class="keywordflow">if</span> (p &gt;= 2 + 2 * maxprec)
+<a name="l00092"></a>00092           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB string &quot;</span> + gridref + <span class="stringliteral">&quot; too long&quot;</span>);
+<a name="l00093"></a>00093         grid[p++] = gridref[i];
+<a name="l00094"></a>00094       }
+<a name="l00095"></a>00095     }
+<a name="l00096"></a>00096     len = p;
+<a name="l00097"></a>00097     p = 0;
+<a name="l00098"></a>00098     <span class="keywordflow">if</span> (len &lt; 2)
+<a name="l00099"></a>00099       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB string &quot;</span> + gridref + <span class="stringliteral">&quot; too short&quot;</span>);
+<a name="l00100"></a>00100     <span class="keywordflow">if</span> (len % 2)
+<a name="l00101"></a>00101       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;OSGB string &quot;</span> + gridref +
+<a name="l00102"></a>00102                           <span class="stringliteral">&quot; has odd number of characters&quot;</span>);
+<a name="l00103"></a>00103     <span class="keywordtype">int</span>
+<a name="l00104"></a>00104       xh = 0,
+<a name="l00105"></a>00105       yh = 0;
+<a name="l00106"></a>00106     <span class="keywordflow">while</span> (p &lt; 2) {
+<a name="l00107"></a>00107       <span class="keywordtype">int</span> i = lookup(letters, grid[p++]);
+<a name="l00108"></a>00108       <span class="keywordflow">if</span> (i &lt; 0)
+<a name="l00109"></a>00109         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Illegal prefix character &quot;</span> + gridref);
+<a name="l00110"></a>00110       yh = yh * tilegrid + tilegrid - (i / tilegrid) - 1;
+<a name="l00111"></a>00111       xh = xh * tilegrid + (i % tilegrid);
+<a name="l00112"></a>00112     }
+<a name="l00113"></a>00113     xh -= tileoffx;
+<a name="l00114"></a>00114     yh -= tileoffy;
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116     <span class="keywordtype">int</span> prec1 = (len - p)/2;
+<a name="l00117"></a>00117     real
+<a name="l00118"></a>00118       unit = tile,
+<a name="l00119"></a>00119       x1 = unit * xh,
+<a name="l00120"></a>00120       y1 = unit * yh;
+<a name="l00121"></a>00121     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; prec1; ++i) {
+<a name="l00122"></a>00122       unit /= base;
+<a name="l00123"></a>00123       <span class="keywordtype">int</span>
+<a name="l00124"></a>00124         ix = lookup(digits, grid[p + i]),
+<a name="l00125"></a>00125         iy = lookup(digits, grid[p + i + prec1]);
+<a name="l00126"></a>00126       <span class="keywordflow">if</span> (ix &lt; 0 || iy &lt; 0)
+<a name="l00127"></a>00127         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Encountered a non-digit in &quot;</span> + gridref);
+<a name="l00128"></a>00128       x1 += unit * ix;
+<a name="l00129"></a>00129       y1 += unit * iy;
+<a name="l00130"></a>00130     }
+<a name="l00131"></a>00131     <span class="keywordflow">if</span> (centerp) {
+<a name="l00132"></a>00132       x1 += unit/2;
+<a name="l00133"></a>00133       y1 += unit/2;
+<a name="l00134"></a>00134     }
+<a name="l00135"></a>00135     x = x1;
+<a name="l00136"></a>00136     y = y1;
+<a name="l00137"></a>00137     prec = prec1;
+<a name="l00138"></a>00138   }
+<a name="l00139"></a>00139 
+<a name="l00140"></a>00140   <span class="keywordtype">void</span> OSGB::CheckCoords(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y) {
+<a name="l00141"></a>00141     <span class="comment">// Limits are all multiples of 100km and are all closed on the lower end</span>
+<a name="l00142"></a>00142     <span class="comment">// and open on the upper end -- and this is reflected in the error</span>
+<a name="l00143"></a>00143     <span class="comment">// messages.</span>
+<a name="l00144"></a>00144     <span class="keywordflow">if</span> (! (x &gt;= minx &amp;&amp; x &lt; maxx) )
+<a name="l00145"></a>00145       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Easting &quot;</span> + str(<span class="keywordtype">int</span>(floor(x/1000)))
+<a name="l00146"></a>00146                           + <span class="stringliteral">&quot;km not in OSGB range [&quot;</span>
+<a name="l00147"></a>00147                           + str(minx/1000) + <span class="stringliteral">&quot;km, &quot;</span>
+<a name="l00148"></a>00148                           + str(maxx/1000) + <span class="stringliteral">&quot;km)&quot;</span>);
+<a name="l00149"></a>00149     <span class="keywordflow">if</span> (! (y &gt;= miny &amp;&amp; y &lt; maxy) )
+<a name="l00150"></a>00150       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib">GeographicErr</a>(<span class="stringliteral">&quot;Northing &quot;</span> + str(<span class="keywordtype">int</span>(floor(y/1000)))
+<a name="l00151"></a>00151                           + <span class="stringliteral">&quot;km not in OSGB range [&quot;</span>
+<a name="l00152"></a>00152                           + str(miny/1000) + <span class="stringliteral">&quot;km, &quot;</span>
+<a name="l00153"></a>00153                           + str(maxy/1000) + <span class="stringliteral">&quot;km)&quot;</span>);
+<a name="l00154"></a>00154   }
+<a name="l00155"></a>00155 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

@@ -15,13 +15,12 @@
 #include "GeographicLib/LocalCartesian.hpp"
 #include "GeographicLib/DMS.hpp"
 #include <iostream>
-#include <iomanip>
 #include <sstream>
 
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: CartConvert [-r] [-l lat0 lon0 h0] [-e a r] [-h]\n\
-$Id: CartConvert.cpp 6830 2010-05-31 20:02:10Z karney $\n\
+$Id: CartConvert.cpp 6905 2010-12-01 21:28:56Z karney $\n\
 \n\
 Convert geodetic coordinates to either geocentric or local cartesian\n\
 coordinates.  Geocentric coordinates have the origin at the center of the\n\
@@ -92,7 +91,6 @@ int main(int argc, char* argv[]) {
 
   std::string s;
   int retval = 0;
-  std::cout << std::fixed;
   while (std::getline(std::cin, s)) {
     try {
       std::istringstream str(s);
@@ -116,17 +114,17 @@ int main(int argc, char* argv[]) {
           lc.Reverse(x, y, z, lat, lon, h);
         else
           ec.Reverse(x, y, z, lat, lon, h);
-        std::cout << std::setprecision(15)
-                  << lat << " " << lon << " "
-                  << std::setprecision(12)
-                  << h << "\n";
+        std::cout << DMS::Encode(lat, 15, DMS::NUMBER) << " "
+                  << DMS::Encode(lon, 15, DMS::NUMBER) << " "
+                  << DMS::Encode(h, 12, DMS::NUMBER) << "\n";
       } else {
         if (localcartesian)
           lc.Forward(lat, lon, h, x, y, z);
         else
           ec.Forward(lat, lon, h, x, y, z);
-        std::cout << std::setprecision(10)
-                  << x << " " << y << " " << z << "\n";
+        std::cout << DMS::Encode(x, 10, DMS::NUMBER) << " "
+                  << DMS::Encode(y, 10, DMS::NUMBER) << " "
+                  << DMS::Encode(z, 10, DMS::NUMBER) << "\n";
       }
     }
     catch (const std::exception& e) {

@@ -25,14 +25,14 @@
 <h1>Geoid height </h1>  </div>
 </div>
 <div class="contents">
-<center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> class evaluates the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10km this ambiguity is only 1mm.</p>
+<center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class evaluates the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10km this ambiguity is only 1mm.</p>
 <p>The geoid is usually approximated by an "earth gravity model". The models published by the NGA are:</p>
 <ul>
 <li>EGM84: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html</a></li>
 <li>EGM96: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html</a></li>
 <li>EGM2008: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008</a></li>
 </ul>
-<p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> offers a uniform way to handle all 3 geoids at a variety of grid resolutions. (In contrast, the software tools that NGA offers are different for each geoid, and the interpolation programs are different for each grid resolution. In addition these tools are written in Fortran with is nowadays difficult to integrate with other software.)</p>
+<p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> offers a uniform way to handle all 3 geoids at a variety of grid resolutions. (In contrast, the software tools that NGA offers are different for each geoid, and the interpolation programs are different for each grid resolution. In addition these tools are written in Fortran with is nowadays difficult to integrate with other software.)</p>
 <p>Unlike other components of GeographicLib, there is a appreciable error in the results obtained (at best, the RMS error is 1mm). However the class provides methods to report the maximum and RMS errors in the results.</p>
 <p>The class also returns the gradient of the geoid. This can be used to estimate the direction of a plumb line relative to the WGS84 ellipsoid.</p>
 <h2><a class="anchor" id="geoidinst"></a>
@@ -80,7 +80,7 @@ Installing the datasets</h2>
 </pre></div><p> The final "disk" column is the size of the uncompressed data and it also gives the memory requirements for caching the entire dataset using the <a class="el" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">GeographicLib::Geoid::CacheAll</a> method.</p>
 <h2><a class="anchor" id="geoidformat"></a>
 The format of the geoid data files</h2>
-<p>The gridded data used by the <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> class is stored in 16-bit PGM files. Thus the data for egm96-5 might be stored in the file</p>
+<p>The gridded data used by the <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class is stored in 16-bit PGM files. Thus the data for egm96-5 might be stored in the file</p>
 <ul>
 <li>/usr/local/share/GeographicLib/geoids/egm96-5.pgm</li>
 </ul>
@@ -108,7 +108,7 @@ The format of the geoid data files</h2>
    # Origin 90N 0E
    # AREA_OR_POINT Point
    # Vertical_Datum WGS84
-</pre></div><p> Of these lines, the Scale and Offset lines are required and define the conversion from pixel value to height (in meters) using <em>height</em> = <em>offset</em> + <em>scale</em> <em>pixel</em>. The Geoid constructor also reads the Description, DataTime, and error lines (if present) and stores the resulting data so that it can be returned by <a class="el" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">GeographicLib::Geoid::Description</a>, <a class="el" href="classGeographicLib_1_1Geoid.html#a9cd7304b5df37001f4ad3c91cdbc56f4">GeographicLib::Geoid::DateTime</a>, <a class="el" href="classGeographicLib_1_1Geoid.html#aff538da14578a02c551b411a899e567a">GeographicLib::Geoid::MaxError</a>, and <a class="el" href="classGeographicLib_1_1Geoid.html#a207f98316d20a5b9d47846e559c5e2a2">GeographicLib::Geoid::RMSError</a> methods. The other lines serve as additional documentation but are not used by this class. Accompanying egm96-5.pgm (and similarly with the other geoid data files) are two files egm96-5.wld and egm96-5.pgm.aux.xml. The first is an ESRI "world" file and the second supplies complete projection metadata for use by <a href="http://www.gdal.org">GDAL</a>. Neither of these files is read by <a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a>.</p>
+</pre></div><p> Of these lines, the Scale and Offset lines are required and define the conversion from pixel value to height (in meters) using <em>height</em> = <em>offset</em> + <em>scale</em> <em>pixel</em>. The Geoid constructor also reads the Description, DataTime, and error lines (if present) and stores the resulting data so that it can be returned by <a class="el" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">GeographicLib::Geoid::Description</a>, <a class="el" href="classGeographicLib_1_1Geoid.html#a9cd7304b5df37001f4ad3c91cdbc56f4">GeographicLib::Geoid::DateTime</a>, <a class="el" href="classGeographicLib_1_1Geoid.html#aff538da14578a02c551b411a899e567a">GeographicLib::Geoid::MaxError</a>, and <a class="el" href="classGeographicLib_1_1Geoid.html#a207f98316d20a5b9d47846e559c5e2a2">GeographicLib::Geoid::RMSError</a> methods. The other lines serve as additional documentation but are not used by this class. Accompanying egm96-5.pgm (and similarly with the other geoid data files) are two files egm96-5.wld and egm96-5.pgm.aux.xml. The first is an ESRI "world" file and the second supplies complete projection metadata for use by <a href="http://www.gdal.org">GDAL</a>. Neither of these files is read by <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a>.</p>
 <p>You can use gdal_translate to convert the data files to a standard GeoTiff, e.g., with </p>
 <div class="fragment"><pre class="fragment">
    gdal_translate -ot Float32 -scale 0 65000 -108 87 egm96-5.pgm egm96-5.tif
@@ -135,7 +135,7 @@ The format of the geoid data files</h2>
    rm -f $TEMP
 </pre></div><h2><a class="anchor" id="geoidinterp"></a>
 Interpolating the geoid data</h2>
-<p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> evaluates the geoid height is by bilinear or cubic interpolation. The gradient of the geoid height is obtained by differentiating the interpolated height and referencing the result to distance on the WGS84 ellipsoid.</p>
+<p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> evaluates the geoid height is by bilinear or cubic interpolation. The gradient of the geoid height is obtained by differentiating the interpolated height and referencing the result to distance on the WGS84 ellipsoid.</p>
 <p>The bilinear interpolation is based on the values at the 4 corners of the enclosing cell. The interpolated height is a continuous function of position; however the gradient has discontinuities are cell boundaries. The quantization of the data files exacerbates the errors in the gradients.</p>
 <p>The cubic interpolation is a least-squares fit to the values on a 12-point stencil with weights as follows: </p>
 <div class="fragment"><pre class="fragment">
@@ -163,7 +163,7 @@ Caching the geoid data</h2>
 <div class="fragment"><pre class="fragment"><span class="preprocessor">   #include &quot;<a class="code" href="Geoid_8hpp.html" title="Header for GeographicLib::Geoid class.">GeographicLib/Geoid.hpp</a>&quot;</span>
 <span class="preprocessor">   #include &lt;iostream&gt;</span>
    ...
-   <a class="code" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">GeographicLib::Geoid</a> g(<span class="stringliteral">&quot;egm96-5&quot;</span>);
+   <a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> g(<span class="stringliteral">&quot;egm96-5&quot;</span>);
    <span class="keywordtype">double</span> lat, lon;
    <span class="keywordflow">while</span> (std::cin &gt;&gt; lat &gt;&gt; lon)
       std::cout &lt;&lt; g(lat, lon) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
@@ -188,7 +188,7 @@ Test data for geoids</h2>
 </ul>
 <p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs. In the case of the EGM84 and EGM96, the programs were compiled (with gfortran) and run under Linux. In the case of EGM2008, the prescription results in NaNs (possibly because of uninitialized variables in the program?), so the data was generated with the precompiled binary that NGA supplies for Windows.</p>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

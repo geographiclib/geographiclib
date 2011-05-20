@@ -47,7 +47,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEOID_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geoid_8hpp.html#a81966978f2fe7fad1effabc667a99820">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOID_HPP &quot;$Id: Geoid.hpp 6888 2010-11-13 15:19:42Z karney $&quot;</span>
+<a name="l00011"></a><a class="code" href="Geoid_8hpp.html#a81966978f2fe7fad1effabc667a99820">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOID_HPP &quot;$Id: Geoid.hpp 6910 2010-12-08 22:01:30Z karney $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &quot;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;string&gt;</span>
@@ -57,7 +57,7 @@
 <a name="l00018"></a>00018 <span class="keyword">namespace </span>GeographicLib {
 <a name="l00019"></a>00019 <span class="comment"></span>
 <a name="l00020"></a>00020 <span class="comment">  /**</span>
-<a name="l00021"></a>00021 <span class="comment">   * \brief Computing the height of the geoid</span>
+<a name="l00021"></a>00021 <span class="comment">   * \brief Looking up the height of the geoid</span>
 <a name="l00022"></a>00022 <span class="comment">   *</span>
 <a name="l00023"></a>00023 <span class="comment">   * This class evaluated the height of one of the standard geoids, EGM84,</span>
 <a name="l00024"></a>00024 <span class="comment">   * EGM96, or EGM2008 by bilinear or cubic interpolation into a rectangular</span>
@@ -94,7 +94,7 @@
 <a name="l00055"></a>00055 <span class="comment">   * safe.</span>
 <a name="l00056"></a>00056 <span class="comment">   **********************************************************************/</span>
 <a name="l00057"></a>00057 
-<a name="l00058"></a><a class="code" href="classGeographicLib_1_1Geoid.html">00058</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a> {
+<a name="l00058"></a><a class="code" href="classGeographicLib_1_1Geoid.html">00058</a>   <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">Geoid</a> {
 <a name="l00059"></a>00059   <span class="keyword">private</span>:
 <a name="l00060"></a>00060     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> real;
 <a name="l00061"></a>00061     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> stencilsize = 12;
@@ -168,8 +168,8 @@
 <a name="l00129"></a>00129     }
 <a name="l00130"></a>00130     real height(real lat, real lon, <span class="keywordtype">bool</span> gradp,
 <a name="l00131"></a>00131                 real&amp; grade, real&amp; gradn) <span class="keyword">const</span>;
-<a name="l00132"></a>00132     <a class="code" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>&amp;);            <span class="comment">// copy constructor not allowed</span>
-<a name="l00133"></a>00133     <a class="code" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>&amp;); <span class="comment">// copy assignment not allowed</span>
+<a name="l00132"></a>00132     <a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">Geoid</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">Geoid</a>&amp;);            <span class="comment">// copy constructor not allowed</span>
+<a name="l00133"></a>00133     <a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">Geoid</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">Geoid</a>&amp;); <span class="comment">// copy assignment not allowed</span>
 <a name="l00134"></a>00134   <span class="keyword">public</span>:
 <a name="l00135"></a>00135 <span class="comment"></span>
 <a name="l00136"></a>00136 <span class="comment">    /**</span>
@@ -218,7 +218,7 @@
 <a name="l00179"></a>00179 <span class="comment">     * be thrown), the data file is closed, and single-cell caching is turned</span>
 <a name="l00180"></a>00180 <span class="comment">     * off; this results in a Geoid object which \e is thread safe.</span>
 <a name="l00181"></a>00181 <span class="comment">     **********************************************************************/</span>
-<a name="l00182"></a>00182     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1Geoid.html" title="Computing the height of the geoid.">Geoid</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> std::string&amp; path = <span class="stringliteral">&quot;&quot;</span>,
+<a name="l00182"></a>00182     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">Geoid</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keyword">const</span> std::string&amp; path = <span class="stringliteral">&quot;&quot;</span>,
 <a name="l00183"></a>00183                    <span class="keywordtype">bool</span> cubic = <span class="keyword">true</span>, <span class="keywordtype">bool</span> threadsafe = <span class="keyword">false</span>);
 <a name="l00184"></a>00184 <span class="comment"></span>
 <a name="l00185"></a>00185 <span class="comment">    /**</span>
@@ -468,7 +468,7 @@
 <a name="l00429"></a>00429 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

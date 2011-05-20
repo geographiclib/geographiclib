@@ -79,7 +79,7 @@ Public Member Functions</h2></td></tr>
 <li>The projection given here. This causes geodesics close to the center point to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a geodesic. </li>
 </ul>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00083">83</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00082">82</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a2ac973ebbd7aaf18c451b152cd92db99"></a><!-- doxytag: member="GeographicLib::Gnomonic::Gnomonic" ref="a2ac973ebbd7aaf18c451b152cd92db99" args="(const Geodesic &amp;earth=Geodesic::WGS84)" -->
 <div class="memitem">
@@ -104,7 +104,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00098">98</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00097">97</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -185,9 +185,9 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p><em>lat0</em> and <em>lat</em> should be in the range [-90, 90] and <em>lon0</em> and <em>lon</em> should be in the range [-180, 360]. The scale of the projection is 1/<em>rk<sup>2</sup></em> in the "radial" direction, <em>azi</em> clockwise from true north, and is 1/<em>rk</em> in the direction perpendicular to this. If the point lies "over the horizon", i.e., if <em>rk</em> &lt;= 0, then NaNs are returned for <em>x</em> and <em>y</em> (the correct values are returned for <em>azi</em> and <em>rk</em>). A call to Forward followed by a call to Reverse will return the original (<em>lat</em>, <em>lon</em>) (to within roundoff) provided the point in not over the horizon. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00024">24</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00023">23</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00160">Forward()</a>.</p>
+<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00159">Forward()</a>.</p>
 
 </div>
 </div>
@@ -267,9 +267,9 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p><em>lat0</em> should be in the range [-90, 90] and <em>lon0</em> should be in the range [-180, 360]. <em>lat</em> will be in the range [-90, 90] and <em>lon</em> will be in the range [-180, 180). The scale of the projection is 1/<em>rk<sup>2</sup></em> in the "radial" direction, <em>azi</em> clockwise from true north, and is 1/<em>rk</em> in the direction perpendicular to this. Even though all inputs should return a valid <em>lat</em> and <em>lon</em>, it's possible that the procedure fails to converge for very large <em>x</em> or <em>y</em>; in this case NaNs are returned for all the output arguments. A call to Reverse followed by a call to Forward will return the original (<em>x</em>, <em>y</em>) (to roundoff). </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00043">43</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00042">42</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00169">Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Gnomonic_8hpp_source.html#l00168">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -323,9 +323,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#ab851ea19db5671f8d4a4151820bc6853">Gnomonic::Forward</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00160">160</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00159">159</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
-<p>References <a class="el" href="Gnomonic_8cpp_source.html#l00024">Forward()</a>.</p>
+<p>References <a class="el" href="Gnomonic_8cpp_source.html#l00023">Forward()</a>.</p>
 
 </div>
 </div>
@@ -379,9 +379,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#afccbed660a482ef73d33ad16406ee626">Gnomonic::Reverse</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00169">169</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00168">168</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
-<p>References <a class="el" href="Gnomonic_8cpp_source.html#l00043">Reverse()</a>.</p>
+<p>References <a class="el" href="Gnomonic_8cpp_source.html#l00042">Reverse()</a>.</p>
 
 </div>
 </div>
@@ -401,7 +401,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00182">182</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00181">181</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 <p>References <a class="el" href="Geodesic_8hpp_source.html#l00750">GeographicLib::Geodesic::MajorRadius()</a>.</p>
 
@@ -423,7 +423,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. A value of 0 is returned for a sphere (infinite inverse flattening). </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00189">189</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00188">188</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 <p>References <a class="el" href="Geodesic_8hpp_source.html#l00757">GeographicLib::Geodesic::InverseFlattening()</a>.</p>
 
@@ -434,7 +434,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

@@ -9,7 +9,7 @@
 
 #include "GeographicLib/EllipticFunction.hpp"
 
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6875 2010-10-02 19:31:54Z karney $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: EllipticFunction.cpp 6905 2010-12-01 21:28:56Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
@@ -163,7 +163,7 @@ namespace GeographicLib {
         m[l] = a;
         n[l] = mc = sqrt(mc);
         c = (a + mc) / 2;
-        if (abs(a - mc) <= tolJAC * a) {
+        if (!(abs(a - mc) > tolJAC * a)) {
           ++l;
           break;
         }

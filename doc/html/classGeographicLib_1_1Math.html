@@ -64,6 +64,8 @@ Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#aa28f6bc0b4daa428dfbea8a26e54bf2c">cbrt</a> (<a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x)  throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#aa0e4daf4f9d6f5f381653a8c99c1e635">isfinite</a> (<a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x)  throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#a28304be9b5cb17eeb7413b059604a154">NaN</a> ()  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#afdd9ce247494867f3f892e735bb23f7e">isnan</a> (<a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> x)  throw ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">infinity</a> ()  throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">extended</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#a91d1a17265156f570708c0889fca2f13">epi</a> ()  throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#a7d80ecd28029cd214b568b38c8ef6f0f">extended</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#af8e63c641cce6cfdd59651edb5b0a723">edegree</a> ()  throw ()</td></tr>
 </table>
@@ -71,7 +73,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Mathematical functions needed by GeographicLib. </p>
 <p>Define mathematical functions in order to localize system dependencies and to provide generic versions of the functions. In addition define a real type to be used by GeographicLib. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00071">71</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00087">87</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 <hr/><h2>Member Typedef Documentation</h2>
 <a class="anchor" id="a7d80ecd28029cd214b568b38c8ef6f0f"></a><!-- doxytag: member="GeographicLib::Math::extended" ref="a7d80ecd28029cd214b568b38c8ef6f0f" args="" -->
 <div class="memitem">
@@ -85,7 +87,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>The extended precision type for real numbers, used for some testing. This is long double on computers with this type; otherwise it is double. </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00085">85</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00101">101</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -101,7 +103,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>The real type for GeographicLib. Nearly all the testing has been done with <em>real</em> = double. However, the algorithms should also work with float and long double (where available). </p>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00096">96</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00112">112</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -122,9 +124,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>pi</em> </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00108">108</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00124">124</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00115">degree()</a>, <a class="el" href="Geodesic_8hpp_source.html#l00765">GeographicLib::Geodesic::EllipsoidArea()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00432">GeographicLib::TransverseMercatorExact::Reverse()</a>, and <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00131">degree()</a>, <a class="el" href="Geodesic_8hpp_source.html#l00765">GeographicLib::Geodesic::EllipsoidArea()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00432">GeographicLib::TransverseMercatorExact::Reverse()</a>, and <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -144,11 +146,11 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the number of radians in a degree. </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00115">115</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00131">131</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00108">pi()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00124">pi()</a>.</p>
 
-<p>Referenced by <a class="el" href="GeodesicLine_8hpp_source.html#l00547">GeographicLib::GeodesicLine::EquatorialArc()</a>, <a class="el" href="GeodesicLine_8hpp_source.html#l00539">GeographicLib::GeodesicLine::EquatorialAzimuth()</a>, <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00371">GeographicLib::TransverseMercatorExact::Forward()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00069">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00322">GeographicLib::LambertConformalConic::Forward()</a>, <a class="el" href="Geocentric_8cpp_source.html#l00040">GeographicLib::Geocentric::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00031">GeographicLib::LambertConformalConic::LambertConformalConic()</a>, <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00432">GeographicLib::TransverseMercatorExact::Reverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00091">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00368">GeographicLib::LambertConformalConic::Reverse()</a>, and <a class="el" href="Geocentric_8cpp_source.html#l00055">GeographicLib::Geocentric::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="AlbersEqualArea_8cpp_source.html#l00029">GeographicLib::AlbersEqualArea::AlbersEqualArea()</a>, <a class="el" href="GeodesicLine_8hpp_source.html#l00547">GeographicLib::GeodesicLine::EquatorialArc()</a>, <a class="el" href="GeodesicLine_8hpp_source.html#l00539">GeographicLib::GeodesicLine::EquatorialAzimuth()</a>, <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00371">GeographicLib::TransverseMercatorExact::Forward()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00071">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00317">GeographicLib::LambertConformalConic::Forward()</a>, <a class="el" href="Geocentric_8cpp_source.html#l00040">GeographicLib::Geocentric::Forward()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00371">GeographicLib::AlbersEqualArea::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00030">GeographicLib::LambertConformalConic::LambertConformalConic()</a>, <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00432">GeographicLib::TransverseMercatorExact::Reverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00094">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00363">GeographicLib::LambertConformalConic::Reverse()</a>, <a class="el" href="Geocentric_8cpp_source.html#l00055">GeographicLib::Geocentric::Reverse()</a>, and <a class="el" href="AlbersEqualArea_8cpp_source.html#l00401">GeographicLib::AlbersEqualArea::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -186,9 +188,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>sqrt(<em>x<sup>2</sup></em> + <em>y<sup>2</sup></em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00125">125</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00141">141</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00222">asinh()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00069">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00091">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00368">GeographicLib::LambertConformalConic::Reverse()</a>, and <a class="el" href="Geocentric_8cpp_source.html#l00055">GeographicLib::Geocentric::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00244">asinh()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00071">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00094">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00363">GeographicLib::LambertConformalConic::Reverse()</a>, <a class="el" href="Geocentric_8cpp_source.html#l00055">GeographicLib::Geocentric::Reverse()</a>, and <a class="el" href="AlbersEqualArea_8cpp_source.html#l00401">GeographicLib::AlbersEqualArea::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -216,7 +218,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>exp(<em>x</em>) - 1. </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00163">163</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00181">181</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -244,9 +246,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>log(<em>x</em> + 1). </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00194">194</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00214">214</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00222">asinh()</a>, <a class="el" href="Constants_8hpp_source.html#l00245">atanh()</a>, and <a class="el" href="LambertConformalConic_8cpp_source.html#l00368">GeographicLib::LambertConformalConic::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00244">asinh()</a>, <a class="el" href="Constants_8hpp_source.html#l00269">atanh()</a>, and <a class="el" href="LambertConformalConic_8cpp_source.html#l00363">GeographicLib::LambertConformalConic::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -274,11 +276,11 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>asinh(<em>x</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00222">222</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00244">244</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00125">hypot()</a>, and <a class="el" href="Constants_8hpp_source.html#l00194">log1p()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00141">hypot()</a>, and <a class="el" href="Constants_8hpp_source.html#l00214">log1p()</a>.</p>
 
-<p>Referenced by <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, and <a class="el" href="LambertConformalConic_8cpp_source.html#l00322">GeographicLib::LambertConformalConic::Forward()</a>.</p>
+<p>Referenced by <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, and <a class="el" href="LambertConformalConic_8cpp_source.html#l00317">GeographicLib::LambertConformalConic::Forward()</a>.</p>
 
 </div>
 </div>
@@ -306,9 +308,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>atanh(<em>x</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00245">245</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00269">269</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00194">log1p()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00214">log1p()</a>.</p>
 
 </div>
 </div>
@@ -336,7 +338,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the real cube root of <em>x</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00266">266</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00292">292</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geocentric_8cpp_source.html#l00055">GeographicLib::Geocentric::Reverse()</a>.</p>
 
@@ -366,7 +368,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if number is finite, false if NaN or infinite. </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00284">284</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00312">312</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="DMS_8cpp_source.html#l00258">GeographicLib::DMS::Encode()</a>.</p>
 
 </div>
 </div>
@@ -387,9 +391,60 @@ Static Public Member Functions</h2></td></tr>
 <p>The NaN (not a number)</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>NaN if available, otherwise return the max real. </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00299">299</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00327">327</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>.</p>
+<p>Referenced by <a class="el" href="UTMUPS_8cpp_source.html#l00070">GeographicLib::UTMUPS::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00119">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="UTMUPS_8cpp_source.html#l00119">GeographicLib::UTMUPS::Reverse()</a>, and <a class="el" href="MGRS_8cpp_source.html#l00143">GeographicLib::MGRS::Reverse()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afdd9ce247494867f3f892e735bb23f7e"></a><!-- doxytag: member="GeographicLib::Math::isnan" ref="afdd9ce247494867f3f892e735bb23f7e" args="(real x)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool GeographicLib::Math::isnan </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&nbsp;</td>
+          <td class="paramname"> <em>x</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td>  throw ()<code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Test for NaN.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>x</em>&nbsp;</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>true if argument is a NaN. </dd></dl>
+
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00339">339</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="MGRS_8cpp_source.html#l00050">GeographicLib::MGRS::Forward()</a>, <a class="el" href="UTMUPS_8cpp_source.html#l00119">GeographicLib::UTMUPS::Reverse()</a>, and <a class="el" href="UTMUPS_8cpp_source.html#l00046">GeographicLib::UTMUPS::StandardZone()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1606218c36b8d7c60a5ad5847a94ab9c"></a><!-- doxytag: member="GeographicLib::Math::infinity" ref="a1606218c36b8d7c60a5ad5847a94ab9c" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a> GeographicLib::Math::infinity </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td>  throw ()<code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Infinity</p>
+<dl class="return"><dt><b>Returns:</b></dt><dd>infinity if available, otherwise return the max real. </dd></dl>
+
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00352">352</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -409,9 +464,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>pi</em> in extended precision </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00308">308</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00361">361</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00315">edegree()</a>.</p>
+<p>Referenced by <a class="el" href="Constants_8hpp_source.html#l00368">edegree()</a>.</p>
 
 </div>
 </div>
@@ -431,9 +486,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the number of radians in a degree in extended precision. </dd></dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00315">315</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00368">368</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00308">epi()</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00361">epi()</a>.</p>
 
 </div>
 </div>
@@ -441,7 +496,7 @@ Static Public Member Functions</h2></td></tr>
 <li><a class="el" href="Constants_8hpp_source.html">Constants.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 23 2010 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 21 2010 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

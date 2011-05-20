@@ -36,9 +36,6 @@
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
 				Name="VCMIDLTool"
 			/>
 			<Tool
@@ -64,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GeographicLib.lib"
+				AdditionalDependencies="Geographic.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"
@@ -113,9 +110,6 @@
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
 				Name="VCMIDLTool"
 			/>
 			<Tool
@@ -139,7 +133,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GeographicLib.lib"
+				AdditionalDependencies="Geographic.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"
@@ -189,9 +183,6 @@
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
 				Name="VCMIDLTool"
 				TargetEnvironment="3"
 			/>
@@ -218,7 +209,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GeographicLib.lib"
+				AdditionalDependencies="Geographic.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"
@@ -267,9 +258,6 @@
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
 				Name="VCMIDLTool"
 				TargetEnvironment="3"
 			/>
@@ -294,7 +282,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GeographicLib.lib"
+				AdditionalDependencies="Geographic.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(OutDir)"
 				GenerateDebugInformation="true"

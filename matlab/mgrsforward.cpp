@@ -10,9 +10,9 @@
 // [Unix]
 // mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic mgrsforward.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographicLib mgrsforward.cpp
+// mex -I../include -L../windows/Release -lGeographic mgrsforward.cpp
 
-// "$Id: mgrsforward.cpp 6895 2010-11-18 19:54:04Z karney $";
+// "$Id: mgrsforward.cpp 6906 2010-12-02 22:10:56Z karney $";
 
 #include "GeographicLib/MGRS.hpp"
 #include "mex.h"
@@ -52,17 +52,15 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   int m = mxGetM(prhs[0]);
-  const unsigned mgrslen = 2 * prec + 5;
-  int dims[] = {m, int(mgrslen)};
-  plhs[0] = mxCreateCharArray(2, dims);
+  plhs[0] = mxCreateCellArray(1, &m);
 
   double* x = mxGetPr(prhs[0]);
   double* y = x + m;
   double* zone = x + 2*m;
   double* hemi = x + 3*m;
 
-  mxChar* mgrs = mxGetChars(plhs[0]);
   string mgrsstr;
+  mxArray* mgrs = plhs[0];
 
   for (int i = 0; i < m; ++i) {
     try {
@@ -78,9 +76,6 @@ void mexFunction( int nlhs, mxArray* plhs[],
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
     }
-    unsigned retlen = min(unsigned(mgrsstr.size()), mgrslen);
-    for (unsigned k = 0; k < mgrslen; ++k)
-      mgrs[i + k * m] = (k + retlen >= mgrslen ?
-                         mgrsstr[k + retlen - mgrslen] : ' ');
+    mxSetCell(mgrs, i, mxCreateString(mgrsstr.c_str()));
   }
 }

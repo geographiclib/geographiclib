@@ -2,14 +2,13 @@
  * \file Gnomonic.cpp
  * \brief Implementation for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2009, 2010) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include "GeographicLib/Gnomonic.hpp"
 
-#define GEOGRAPHICLIB_GNOMONIC_CPP "$Id: Gnomonic.cpp 6875 2010-10-02 19:31:54Z karney $"
+#define GEOGRAPHICLIB_GNOMONIC_CPP "$Id: Gnomonic.cpp 6911 2010-12-09 23:13:55Z karney $"
 
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_HPP)
@@ -66,7 +65,7 @@ namespace GeographicLib {
       // else solve 1/rho(s) = 1/rho with d(1/rho(s))/ds = -1/m^2
       real ds = little ? (m/M - rho) * M * M : (rho - M/m) * m * m;
       s -= ds;
-      if (abs(ds) < eps * _a)
+      if (!(abs(ds) >= eps * _a))
         ++trip;
     }
     if (trip) {
