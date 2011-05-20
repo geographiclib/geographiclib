@@ -1,11 +1,11 @@
-#  $Id: Makefile.am 6805 2010-01-28 21:18:14Z karney $
+#  $Id: Makefile.am 6825 2010-05-05 15:18:25Z karney $
 
 FIGURES = gauss-krueger-graticule thompson-tm-graticule \
 	gauss-krueger-convergence-scale gauss-schreiber-graticule-a \
 	gauss-krueger-graticule-a thompson-tm-graticule-a \
 	gauss-krueger-error
 
-EXTRAFILES = tmseries30.html
+EXTRAFILES = tmseries30.html geodseries30.html
 
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -63,6 +63,6 @@ clean-local:
 	rm -rf html
 
 install-doc: doc
-	$(INSTALL) -d $(docdir)/html
-	$(INSTALL) -m 644 html/* $(docdir)/html
+	$(INSTALL) -d $(DESTDIR)$(docdir)/html
+	$(INSTALL) -m 644 html/* $(DESTDIR)$(docdir)/html
 

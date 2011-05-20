@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6817 2010-02-08 14:42:35Z karney $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: Constants.hpp 6827 2010-05-20 19:56:18Z karney $"
 
 /**
  * A simple compile-time assert.  This is designed to be compatible with the
@@ -111,8 +111,10 @@ namespace GeographicLib {
     { return ::hypot(x, y); }
     static inline float hypot(float x, float y) throw()
     { return ::hypotf(x, y); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double hypot(long double x, long double y) throw()
     { return ::hypotl(x, y); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -134,8 +136,10 @@ namespace GeographicLib {
 #else
     static inline double expm1(double x) throw() { return ::expm1(x); }
     static inline float expm1(float x) throw() { return ::expm1f(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double expm1(long double x) throw()
     { return ::expm1l(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -160,15 +164,17 @@ namespace GeographicLib {
 #else
     static inline double log1p(double x) throw() { return ::log1p(x); }
     static inline float log1p(float x) throw() { return ::log1pf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double log1p(long double x) throw()
     { return ::log1pl(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return asinh(\e x).  This is defined in terms of log1p(\e x) in order to
-     * maintain accuracy near \e x = 0.  In addition, the odd parity of the
-     * function is enforced.
+     * Return asinh(\e x).  This is defined in terms of Math::log1p(\e x) in
+     * order to maintain accuracy near \e x = 0.  In addition, the odd parity
+     * of the function is enforced.
      **********************************************************************/
     static inline real asinh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
@@ -178,15 +184,17 @@ namespace GeographicLib {
 #else
     static inline double asinh(double x) throw() { return ::asinh(x); }
     static inline float asinh(float x) throw() { return ::asinhf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double asinh(long double x) throw()
     { return ::asinhl(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
     /**
-     * Return atanh(\e x).  This is defined in terms of log1p(\e x) in order to
-     * maintain accuracy near \e x = 0.  In addition, the odd parity of the
-     * function is enforced.
+     * Return atanh(\e x).  This is defined in terms of Math::log1p(\e x) in
+     * order to maintain accuracy near \e x = 0.  In addition, the odd parity
+     * of the function is enforced.
      **********************************************************************/
     static inline real atanh(real x) throw() {
       real y = std::abs(x);     // Enforce odd parity
@@ -196,8 +204,10 @@ namespace GeographicLib {
 #else
     static inline double atanh(double x) throw() { return ::atanh(x); }
     static inline float atanh(float x) throw() { return ::atanhf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double atanh(long double x) throw()
     { return ::atanhl(x); }
+#endif
 #endif
 
 #if defined(DOXYGEN) || defined(_MSC_VER)
@@ -211,21 +221,23 @@ namespace GeographicLib {
 #else
     static inline double cbrt(double x) throw() { return ::cbrt(x); }
     static inline float cbrt(float x) throw() { return ::cbrtf(x); }
+#if !defined(__NO_LONG_DOUBLE_MATH)
     static inline long double cbrt(long double x) throw() { return ::cbrtl(x); }
 #endif
+#endif
 
-#if defined(DOXYGEN)
     /**
      * Return true if number is finite, false if NaN or infinite.
      **********************************************************************/
     static inline bool isfinite(real x) throw() {
-      return std::abs(x) < std::numeric_limits<real>::max();
-    }
+#if defined(DOXYGEN)
+      return std::abs(x) <= std::numeric_limits<real>::max();
 #elif defined(_MSC_VER)
-    static inline real isfinite(real x) throw() { return _finite(x); }
+      return _finite(x) != 0;
 #else
-    static inline real isfinite(real x) throw() { return std::isfinite(x); }
+      return std::isfinite(x) != 0;
 #endif
+    }
   };
 
   /**

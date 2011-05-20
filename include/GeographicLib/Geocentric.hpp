@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
-#define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id: Geocentric.hpp 6785 2010-01-05 22:15:42Z karney $"
+#define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id: Geocentric.hpp 6827 2010-05-20 19:56:18Z karney $"
 
 #include "GeographicLib/Constants.hpp"
 
@@ -45,7 +45,7 @@ namespace GeographicLib {
   class Geocentric {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _e2, _e2m, _ax, _e2x, _e4x, _e2mx, _maxrad;
+    const real _a, _r, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
     static inline real sq(real x) throw() { return x * x; }
   public:
 

@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6816 2010-02-05 21:03:10Z karney $
+# $Id: Makefile.am 6829 2010-05-21 15:12:33Z karney $
 
 AUTOMAKE_OPTIONS = foreign
 
@@ -19,7 +19,7 @@ dist-hook:
 		\( ! -name '*.sln' -a ! -name '*.vcproj' -a ! -name '*.mk' \)| \
 		xargs rm -f ; \
 	find $(distdir) \
-		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -name '*~' \)| \
+		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -o -name '*~' \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 

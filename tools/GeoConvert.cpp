@@ -13,6 +13,7 @@
  **********************************************************************/
 
 #include "GeographicLib/GeoCoords.hpp"
+#include "GeographicLib/DMS.hpp"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -20,7 +21,7 @@
 int usage(int retval) {
   ( retval ? std::cerr : std::cout ) <<
 "Usage: GeoConvert [-g|-d|-u|-m|-c] [-p prec] [-z zone] [-s] [-t] [-n] [-h]\n\
-$Id: GeoConvert.cpp 6785 2010-01-05 22:15:42Z karney $\n\
+$Id: GeoConvert.cpp 6827 2010-05-20 19:56:18Z karney $\n\
 \n\
 Convert geographic coordinates to\n\
 \n\
@@ -86,7 +87,9 @@ true north.\n\
 UTM/UPS and MGRS are given in zone of the input if applicable, otherwise in\n\
 the standard zone.\n\
 \n\
--z zone sets the zone for output.  Use zone = 0 to specify UPS.\n\
+-z zone sets the zone for output.  Use either a positive number for a UTM\n\
+zone or zone = 0 to specify UPS.  Alternatively use a zone+hemisphere\n\
+designation (and the hemisphere is ignored).\n\
 \n\
 -s uses the standard UPS and UTM zone boundaries.\n\
 \n\
@@ -122,7 +125,7 @@ int main(int argc, char* argv[]) {
   bool centerp = true;
 
   for (int m = 1; m < argc; ++m) {
-    std::string arg = std::string(argv[m]);
+    std::string arg(argv[m]);
     if (arg == "-g")
       outputmode = GEOGRAPHIC;
     else if (arg == "-d")
@@ -137,17 +140,31 @@ int main(int argc, char* argv[]) {
       centerp = false;
     else if (arg == "-p") {
       if (++m == argc) return usage(1);
-      std::string a = std::string(argv[m]);
-      std::istringstream str(a);
-      if (!(str >> prec)) return usage(1);
+      std::istringstream str(argv[m]);
+      char c;
+      if (!(str >> prec) || (str >> c)) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+      }
     } else if (arg == "-z") {
       if (++m == argc) return usage(1);
-      std::string a = std::string(argv[m]);
-      std::istringstream str(a);
-      if (!(str >> zone)) return usage(1);
-      if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE)) {
-        std::cerr << "Zone " << zone << " not in [0, 60]\n";
-        return 1;
+      std::string zonestr(argv[m]);
+      try {
+        bool northp;
+        UTMUPS::DecodeZone(zonestr, zone, northp);
+      }
+      catch (const std::exception&) {
+        std::istringstream str(zonestr);
+        char c;
+        if (!(str >> zone) || (str >> c)) {
+          std::cerr << "Zone " << zonestr
+                    << " is not a number or zone+hemisphere\n";
+          return 1;
+        }
+        if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE)) {
+          std::cerr << "Zone " << zone << " not in [0, 60]\n";
+          return 1;
+        }
       }
     } else if (arg == "-s")
       zone = UTMUPS::STANDARD;
@@ -184,12 +201,10 @@ int main(int argc, char* argv[]) {
           real
             gamma = p.AltConvergence(),
             k = p.AltScale();
-          std::ostringstream ss;
-          ss << std::fixed
-             << std::setprecision(std::max(-5, std::min(8, prec)) + 5) << gamma
-             << " "
-             << std::setprecision(std::max(-5, std::min(8, prec)) + 7) << k;
-          os = ss.str();
+          os =
+            DMS::Encode(gamma, std::max(-5, std::min(8, prec)) + 5, DMS::NUMBER)
+            + " " +
+            DMS::Encode(k, std::max(-5, std::min(8, prec)) + 7, DMS::NUMBER);
         }
       }
     }

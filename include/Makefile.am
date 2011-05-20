@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: Makefile.am 6792 2010-01-06 20:26:18Z karney $
+# $Id: Makefile.am 6822 2010-03-11 13:10:13Z flovergine $
 
 nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/CassiniSoldner.hpp \
@@ -21,8 +21,8 @@ nobase_include_HEADERS = GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/TransverseMercator.hpp \
 				GeographicLib/UTMUPS.hpp
 
-geoid_dir=$(datadir)/GeographicLib/geoids
+geoids_dir=$(datadir)/GeographicLib/geoids
 
-DEFS=-DGEOID_DEFAULT_PATH=\"$(geoid_dir)\"  @DEFS@
+DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
 
 EXTRA_DIST = Makefile.mk
