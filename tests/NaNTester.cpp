@@ -1,0 +1,113 @@
+/**
+ * \file ProjTest.cpp
+ * \brief Command line utility for testing transverse Mercator projections
+ *
+ * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * and licensed under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
+ **********************************************************************/
+
+#include "GeographicLib/EllipticFunction.hpp"
+#include "GeographicLib/TransverseMercator.hpp"
+#include "GeographicLib/TransverseMercatorExact.hpp"
+#include "GeographicLib/PolarStereographic.hpp"
+#include <iostream>
+#include <cassert>
+
+using namespace GeographicLib;
+using namespace std;
+
+int main() {
+  {
+    Math::real x, y, gamma, k;
+    x = y = gamma = k = 0;
+    PolarStereographic::UPS.Forward(true, Math::NaN(), 30.0, x, y, gamma, k);
+    cout << x << " " << y << " " << k << "\n";
+    x = y = gamma = k = 0;
+    PolarStereographic::UPS.Forward(false, -80.0, Math::NaN(), x, y, gamma, k);
+    cout << x << " " << y << " " << gamma << "\n";
+  }
+  {
+    Math::real lat, lon, gamma, k;
+    lat = lon = gamma = k = 0;
+    PolarStereographic::UPS.Reverse(true, Math::NaN(), 0.0, lat, lon, gamma, k);
+    cout << lat << " " << lon << " " << gamma << " " << k << "\n";
+    lat = lon = gamma = k = 0;
+    PolarStereographic::UPS.Reverse(false,0.0, Math::NaN(), lat, lon, gamma, k);
+    cout << lat << " " << lon << " " << gamma << " " << k << "\n";
+  }
+  {
+    Math::real x, y, gamma, k;
+    x = y = gamma = k = 0;
+    TransverseMercator::UTM.Forward(0.0, Math::NaN(), 0.0, x, y, gamma, k);
+    cout << x << " " << y << " " << gamma << " " << k << "\n";
+    x = y = gamma = k = 0;
+    TransverseMercator::UTM.Forward(0.0, 0.0, Math::NaN(), x, y, gamma, k);
+    cout << x << " " << y << " " << gamma << " " << k << "\n";
+    x = y = gamma = k = 0;
+    TransverseMercator::UTM.Forward(Math::NaN(), 0.0, 0.0, x, y, gamma, k);
+    cout << x << " " << y << " " << gamma << " " << k << "\n";
+  }
+  {
+    Math::real lat, lon, gamma, k;
+    lat = lon = gamma = k = 0;
+    TransverseMercator::UTM.Reverse(0.0, Math::NaN(), 0.0, lat, lon, gamma, k);
+    cout << lat << " " << lon << " " << gamma << " " << k << "\n";
+    lat = lon = gamma = k = 0;
+    TransverseMercator::UTM.Reverse(0.0, 0.0, Math::NaN(), lat, lon, gamma, k);
+    cout << lat << " " << lon << " " << gamma << " " << k << "\n";
+    lat = lon = gamma = k = 0;
+    TransverseMercator::UTM.Reverse(Math::NaN(), 0.0, 0.0, lat, lon, gamma, k);
+    cout << lon << "\n";
+  }
+  {
+    Math::real x, y, gamma, k;
+    x = y = gamma = k = 0;
+    TransverseMercatorExact::UTM.Forward(0.0, Math::NaN(), 0.0, x, y, gamma, k);
+    cout << x << " " << y << " " << gamma << " " << k << "\n";
+    x = y = gamma = k = 0;
+    TransverseMercatorExact::UTM.Forward(0.0, 0.0, Math::NaN(), x, y, gamma, k);
+    cout << x << " " << y << " " << gamma << " " << k << "\n";
+    x = y = gamma = k = 0;
+    TransverseMercatorExact::UTM.Forward(Math::NaN(), 0.0, 0.0, x, y, gamma, k);
+    cout << x << " " << y << " " << gamma << " " << k << "\n";
+  }
+  {
+    Math::real lat, lon, gamma, k;
+    lat = lon = gamma = k = 0;
+    TransverseMercatorExact::UTM.Reverse(0.0, Math::NaN(), 0.0,
+                                         lat, lon, gamma, k);
+    cout << lat << " " << lon << " " << gamma << " " << k << "\n";
+    lat = lon = gamma = k = 0;
+    TransverseMercatorExact::UTM.Reverse(0.0, 0.0, Math::NaN(),
+                                         lat, lon, gamma, k);
+    cout << lat << " " << lon << " " << gamma << " " << k << "\n";
+    lat = lon = gamma = k = 0;
+    TransverseMercatorExact::UTM.Reverse(Math::NaN(), 0.0, 0.0,
+                                         lat, lon, gamma, k);
+    cout << lon << "\n";
+  }
+  {
+    EllipticFunction e(Math::NaN());
+    Math::real sn, cn, dn;
+    cout << " m " << e.m()
+         << " m1 " << e.m1()
+         << " K " << e.K()
+         << " E " << e.E()
+         << " KE " << e.KE() << "\n";
+    sn = cn = dn = 0;
+    e.sncndn(0.1, sn, cn, dn);
+    cout << " sncndn " << sn << " " << cn << " " << dn
+         << " E(phi) " << e.E(0.1)
+         << " E(sncndn) " << e.E(sn, cn, dn) << "\n";
+  }
+  {
+    EllipticFunction e(0.1);
+    Math::real sn, cn, dn;
+    sn = cn = dn = 0;
+    e.sncndn(Math::NaN(), sn, cn, dn);
+    cout << " sncndn " << sn << " " << cn << " " << dn
+         << " E(phi) " << e.E(Math::NaN())
+         << " E(sncndn) " << e.E(sn, cn, dn) << "\n";
+  }
+}

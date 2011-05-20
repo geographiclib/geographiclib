@@ -1,0 +1,27 @@
+# $Id$
+
+These files contain the source code for GeogragphicLib.
+
+The original version numbering scheme is by year and month, e.g.,
+Geographic-2009-11.tgz.
+
+Currently the library uses libtool's version numbering scheme (interface
+and revision), e.g., geographiclib-2.1.tar.gz.
+
+Usually you will only need to download the latest version.
+
+The files are packaged as either a compressed tar file (tar.gz or tgz)
+or a zip file.  (The two archives have identical contents.)
+
+The library is documented at
+
+  http://geographiclib.sourceforge.net/html/index.html
+
+For information on the changes between versions, see
+
+  http://geographiclib.sourceforge.net/html/old.html
+
+If you want to use the GeographicLib::Geoid class, you will also need to
+download one of the geoid models from
+
+  http://sourceforge.net/projects/geographiclib/files/geoids-distrib

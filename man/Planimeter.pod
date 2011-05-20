@@ -1,0 +1,132 @@
+=for comment $Id$
+
+=head1 NAME
+
+Planimeter -- compute the area of geodesic polygons
+
+=head1 SYNOPSIS
+
+B<Planimeter> [ B<-s> ] [ B<-r> ] [ B<-e> I<a> I<r> ]
+[ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--output-file> I<outfile> ]
+
+=head1 DESCRIPTION
+
+Measure the area of a geodesic polygon.  Reads polygon vertices from
+standard input, one per line.  Vertices may be given as latitude and
+longitude, UTM/UPS, or MGRS coordinates, interpreted in the same way as
+GeoConvert(1).  (MGRS coordinates signify the center of the corresponing
+MGRS square.)  The end of input, a blank line, or a line which can't be
+interpreted as a vertex signals the end of one polygon and the start of
+the next.  For each polygon print a summary line with the number of
+points, the perimeter (in meters), and the area (in meters^2).
+
+By default, areas are traversed in a counter-clockwise sense (in other
+words, the included area is to the left of the perimeter) and a positive
+area is returned.  By this rule, a polygon tranversed in a clockwise
+sense will return the area of ellipsoid excluded by the polygon;
+however, if the B<-s> option is given, the signed area will be returned.
+If the B<-r> option is given, the included area is to the right of the
+perimeter.  Only simple polygons are supported for the area computation.
+Polygons may include one or both poles.
+
+=head1 OPTIONS
+
+=over
+
+=item B<-s>
+
+return a signed result for the area.  (This is a toggle; repeating the
+option undoes this setting.)
+
+=item B<-r>
+
+reverse the traversal rule so that clockwise traversal yields a positive
+result.  (This is a toggle; repeating the option undoes this setting.)
+
+=item B<-e>
+
+specify the ellipsoid via I<a> I<r>; the equatorial radius is I<a> and
+the reciprocal flattening is I<r>.  Setting I<r> = 0 results in a
+sphere.  Specify I<r> E<lt> 0 for a prolate ellipsoid.  By default, the
+WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
+
+=item B<--version>
+
+print version and exit.
+
+=item B<-h>
+
+print usage and exit.
+
+=item B<--help>
+
+print full documentation and exit.
+
+=item B<--input-file>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string>
+
+read input from the string I<instring> instead of from standard input.
+All the semicolons in I<instring> are converted to newlines before the
+reading begins.
+
+=item B<--output-file>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
+
+=back
+
+=head1 EXAMPLES
+
+Example (the area of the 100km MGRS square 18SWK)
+
+   Planimeter <<EOF
+   18N 500000 4400000
+   18N 600000 4400000
+   18N 600000 4500000
+   18N 500000 4500000
+   EOF
+   => 4 400139.53295860 10007388597.1913
+
+The following code takes the output from gdalinfo and reports the area
+covered by the data (assuming the edges of the image are geodesics).
+
+   #! /bin/sh
+   egrep '^((Upper|Lower) (Left|Right)|Center) ' |
+   sed -e 's/d /d/g' -e "s/' /'/g" | tr -s '(),\r\t' ' ' | awk '{
+       if ($1 $2 == "UpperLeft")
+	   ul = $6 " "  $5;
+       else if ($1 $2 == "LowerLeft")
+	   ll = $6 " "  $5;
+       else if ($1 $2 == "UpperRight")
+	   ur = $6 " "  $5;
+       else if ($1 $2 == "LowerRight")
+	   lr = $6 " "  $5;
+       else if ($1 == "Center") {
+	   printf "%s\n%s\n%s\n%s\n\n", ul, ll, lr, ur;
+	   ul = ll = ur = lr = "";
+       }
+   }
+   ' | Planimeter | cut -f3 -d' '
+
+=head1 SEE ALSO
+
+GeoConvert(1).  B<Planimeter> is a part of GeographicLib,
+L<http://geographiclib.sf.net>.  The algorithm for the area of geodesic
+polygon is given in Section 15 of C. F. F. Karney, I<Geodesics on an
+ellipsoid of revolution>, Feb. 2011; preprint
+L<http://arxiv.org/abs/1102.1215>.
+
+=head1 AUTHOR
+
+B<Planimeter> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<GeoidEval> was added to GeographicLib in version 1.4.

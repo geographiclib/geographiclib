@@ -1,0 +1,23 @@
+# $Id$
+
+NOTE: It's not necessary to download this file to use GeographicLib.
+
+TMCoords.dat.gz contains 287000 points giving the transformation between
+geographic coordinates and the transverse Mercator projection. The WGS84
+ellipsoid is used, with central meridian 0 deg, central scale factor
+0.9996 (the UTM value), false easting = false northing = 0 m.  Each line
+of the file contains:
+
+  * latitude (degrees, exact)
+  * longitude (degrees, exact)
+  * easting (meters, accurate to 0.1 pm)
+  * northing (meters, accurate to 0.1 pm)
+  * meridian convergence (degrees, accurate to 10^-18 deg)
+  * scale (accurate to 10^-20)
+
+For testing standard transverse Mercator algorithms use only the first
+258000 entries which have lat >= 0.
+
+For more information, see
+
+  http://geographiclib.sourceforge.net/html/transversemercator.html#testmerc

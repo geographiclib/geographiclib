@@ -1,0 +1,23 @@
+# $Id$
+
+NOTE: It's not necessary to download these files to use GeographicLib.
+
+GeodTest.dat.gz contains 500000 geodesics for the WGS84 ellipsoid.  Each
+line of the file contains:
+
+  * latitude for point 1, lat1 (degrees, exact)
+  * longitude for point 1, lon1 (degrees, always 0)
+  * azimuth for point 1, azi1 (clockwise from north in degrees, exact)
+  * latitude for point 2, lat2 (degrees, accurate to 10^-18 deg)
+  * longitude for point 2, lon2 (degrees, accurate to 10^-18 deg)
+  * azimuth for point 2, azi2 (degrees, accurate to 10^-18 deg)
+  * geodesic distance from point 1 to point 2, s12 (meters, exact)
+  * arc distance on the auxiliary sphere, a12 (degrees, accurate to 10^-18 deg)
+  * reduced length of the geodesic, m12 (meters, accurate to 0.1 pm)
+  * the area under the geodesic, S12 (m^2, accurate to 1 mm^2)
+
+GeodTest-short.dat.gz contains every 50th line of GeodTest.dat.gz.
+
+For more information, see
+
+ http://geographiclib.sourceforge.net/html/geodesic.html#testgeod
