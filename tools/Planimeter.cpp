@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
     real
       a = Constants::WGS84_a<real>(),
       r = Constants::WGS84_r<real>();
-    bool reverse = false, sign = false;
+    bool reverse = false, sign = true;
     std::string istring, ifile, ofile;
 
     for (int m = 1; m < argc; ++m) {

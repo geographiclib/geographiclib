@@ -6,7 +6,7 @@ Planimeter -- compute the area of geodesic polygons
 
 =head1 SYNOPSIS
 
-B<Planimeter> [ B<-s> ] [ B<-r> ] [ B<-e> I<a> I<r> ]
+B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-e> I<a> I<r> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
 [ B<--output-file> I<outfile> ]
@@ -22,28 +22,35 @@ interpreted as a vertex signals the end of one polygon and the start of
 the next.  For each polygon print a summary line with the number of
 points, the perimeter (in meters), and the area (in meters^2).
 
-By default, areas are traversed in a counter-clockwise sense (in other
-words, the included area is to the left of the perimeter) and a positive
-area is returned.  By this rule, a polygon tranversed in a clockwise
-sense will return the area of ellipsoid excluded by the polygon;
-however, if the B<-s> option is given, the signed area will be returned.
-If the B<-r> option is given, the included area is to the right of the
-perimeter.  Only simple polygons are supported for the area computation.
+By default, polygons traversed in a counter-clockwise direction return a
+positive area and those traversed in a clockwise direction return a
+negative area.  This sign convention is reversed if the B<-r> option is
+given.
+
+Of course, encircling an area in the clockwise direction is equivalent
+to encircling the rest of the ellipsoid in the counter-clockwise
+direction.  The default interpretation used by B<Planimeter> is the one
+that results in a smaller magnitude of area; i.e., the magnitude of the
+area is less than or equal to one half the total area of the ellipsoid.
+If the B<-s> option is given, then the interpretation used is the one
+that results in a positive area; i.e., the area is positive and less
+than the total area of the ellipsoid.
+
+Only simple polygons are supported for the area computation.
 Polygons may include one or both poles.
 
 =head1 OPTIONS
 
 =over
 
-=item B<-s>
-
-return a signed result for the area.  (This is a toggle; repeating the
-option undoes this setting.)
-
 =item B<-r>
 
-reverse the traversal rule so that clockwise traversal yields a positive
-result.  (This is a toggle; repeating the option undoes this setting.)
+toggle whether counter-clockwise traveral of the polygon returns a
+positive (the default) or negative result.
+
+=item B<-s>
+
+toggle whether to return a signed result (the default) or not.
 
 =item B<-e>
 
@@ -129,4 +136,4 @@ B<Planimeter> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<GeoidEval> was added to GeographicLib in version 1.4.
+B<Planimeter> was added to GeographicLib in version 1.4.

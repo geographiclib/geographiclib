@@ -2086,6 +2086,8 @@ number.)
     <a href="TransverseMercatorProj.1.html">
     TransverseMercatorProj</a>.
   - Add <a href="ConicProj.1.html"> ConicProj</a>.
+  - Reverse the initial sense of the -s option for
+    <a href="Planimeter.1.html">Planimeter</a>.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a>
   - Optionally return rotation matrix from GeographicLib::Geocentric and
