@@ -10,7 +10,40 @@ The current version of the library is 1.9.
 
 Changes between 1.9 (released 2011-mm-dd) and 1.8 versions:
 
-  * cmake support etc.
+  * FIX BUG in area returned by Planimeter for pole encircling polygons.
+
+  * FIX BUG in error message reported when DMS::Decode reads the string
+    "5d.".
+
+  * FIX BUG in AlbersEqualArea::Reverse (lon0 not being used).
+
+  * Ensure that all exceptions thrown in the Utility Programs are
+    caught.
+
+  * Avoid using catch within GeographicLib::DMS.
+
+  * Move Accumulator class from Planimeter.cpp to Constants.hpp.
+
+  * Add Math::sq<T>.
+
+  * Simplify Installing the geoid datasets
+    + add geographiclib-get-geoids for Unix-like systems;
+    + add installers for Windows.
+
+  * Provide cmake support:
+    + build binary installer for Windows;
+    + include regression tests;
+    + add --input-string, --input-file, --output-file options to the
+      Utility Programs to support tests.
+
+  * Rename utility EquidistantTest as GeodesicProj and
+    TransverseMercatorTest as TransverseMercatorProj.
+
+  * Add ConicProj.
+
+  * Reverse the initial sense of the -s option for Planimeter.
+
+  * Migrate source from subversion to git.
 
 Changes between 1.8 (released 2011-02-22) and 1.7 versions:
 

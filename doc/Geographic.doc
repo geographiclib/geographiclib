@@ -399,18 +399,20 @@ with Visual Studio 2005.)
 Check the code out of git with \verbatim
   git clone git://geographiclib.git.sourceforge.net/gitroot/geographiclib/geographiclib
 \endverbatim
-In order to configure the files needed by autoconfigure, run \verbatim
+The autoconf configuration script, the html version of the
+documentation, and the formatted man pages not checked into git.  In
+order to create the autoconf configuration script, run \verbatim
   sh autogen.sh \endverbatim
-in the top level directory.  The html version of the documentation and
-the formatted man pages not checked into git.  Provided you are running
-on a system with doxygen, pod2man, and pod2html installed, then you can
-create these by building the system using cmake (the
+in the top level directory.  Provided you are running on a system with
+doxygen, pod2man, and pod2html installed, then you can create the
+documentation and the man pages by building the system using cmake (the
 <code>MAINTAINER</code> configuration variable set to ON, if the
 necessary tools are found) or configure.   In the
 case of cmake, you must in addition run \verbatim
   make dist \endverbatim
-which will copy the documentation from the build directory back into the
-source tree and package the resulting source tree for distribution as
+which will copy the documentation and man pages from the build directory
+back into the source tree and package the resulting source tree for
+distribution as
 \verbatim
   GeographicLib-1.9.tar.gz
   GeographicLib-1.9.zip \endverbatim
@@ -463,7 +465,7 @@ C/C++ -> General -> Additional Include Directories = C:\Program Files\Geographic
 Linker -> Input -> Additional Dependencies = Geographic.lib
 Linker -> General -> Additional Library DIrectories = C:\Program Files\GeographicLib\include
 \endverbatim
-  Note that the library name is Geographic and not %GeographicLib.
+  Note that the library name is <b>Geographic</b> and not %GeographicLib.
 - Tell the runtime environment where to find the shared library
   (assuming you compiled %GeographicLib as a shared library).  With g++,
   this is accomplished by modifying the link line above to read. \verbatim
@@ -2080,14 +2082,15 @@ number.)
     - include regression tests;
     - add --input-string, --input-file, --output-file options to the
       \ref utilities to support tests.
-  - Rename utility EquidistantTest as
-    <a href="GeodesicProj.1.html">GeodesicProj</a> and
-    TransverseMercatorTest as
-    <a href="TransverseMercatorProj.1.html">
-    TransverseMercatorProj</a>.
+  - Rename utility EquidistantTest as <a href="GeodesicProj.1.html">
+    GeodesicProj</a> and TransverseMercatorTest as
+    <a href="TransverseMercatorProj.1.html"> TransverseMercatorProj</a>.
   - Add <a href="ConicProj.1.html"> ConicProj</a>.
   - Reverse the initial sense of the -s option for
-    <a href="Planimeter.1.html">Planimeter</a>.
+    <a href="Planimeter.1.html"> Planimeter</a>.
+  - Migrate source from subversion to
+    <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">
+    git</a>.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a>
   - Optionally return rotation matrix from GeographicLib::Geocentric and

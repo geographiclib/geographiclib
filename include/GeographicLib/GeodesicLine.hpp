@@ -32,18 +32,18 @@ namespace GeographicLib {
    #include <GeographicLib/GeodesicLine.hpp>
 
    int main() {
-     // Print waypoints between JFK and SIN at
-     // approximately 100km intervals.
+     // Print waypoints between JFK and SIN at approximately
+     // equal 100km intervals
      double
        lat1 = 40.640, lon1 = -73.779, // JFK
-       lat2 = 1.359, lon2 = 177.486;  // SIN
+       lat2 =  1.359, lon2 = 177.486; // SIN
      const GeographicLib::Geodesic&
        g = GeographicLib::Geodesic::WGS84;
-     double azi1, azi2,
-       a12 = g.Inverse(lat1, lon1, lat2, lon2, azi1, azi2);
-     double ds = 100e3;  // Nominal distance between points = 100 km
-     int num = std::ceil(a12/ (90 * ds / 10e6)); // 90 deg = 10e6 m
-     double da = a12/num;              // Arc length between points
+     double s12, azi1, azi2,
+       a12 = g.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);
+     double ds = 100e3;   // Nominal distance between points = 100 km
+     int num = std::ceil(s12 / ds); // Number of intervals
+     double da = a12/num;           // Arc length of each interval
      const GeographicLib::GeodesicLine l(g, lat1, lon1, azi1);
      std::cout << std::fixed << std::setprecision(3);
      for (int i = 0; i <= num; ++i) {

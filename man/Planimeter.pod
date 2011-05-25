@@ -108,13 +108,13 @@ covered by the data (assuming the edges of the image are geodesics).
    egrep '^((Upper|Lower) (Left|Right)|Center) ' |
    sed -e 's/d /d/g' -e "s/' /'/g" | tr -s '(),\r\t' ' ' | awk '{
        if ($1 $2 == "UpperLeft")
-	   ul = $6 " "  $5;
+	   ul = $6 " " $5;
        else if ($1 $2 == "LowerLeft")
-	   ll = $6 " "  $5;
+	   ll = $6 " " $5;
        else if ($1 $2 == "UpperRight")
-	   ur = $6 " "  $5;
+	   ur = $6 " " $5;
        else if ($1 $2 == "LowerRight")
-	   lr = $6 " "  $5;
+	   lr = $6 " " $5;
        else if ($1 == "Center") {
 	   printf "%s\n%s\n%s\n%s\n\n", ul, ll, lr, ur;
 	   ul = ll = ur = lr = "";
@@ -124,11 +124,9 @@ covered by the data (assuming the edges of the image are geodesics).
 
 =head1 SEE ALSO
 
-GeoConvert(1).  B<Planimeter> is a part of GeographicLib,
-L<http://geographiclib.sf.net>.  The algorithm for the area of geodesic
-polygon is given in Section 15 of C. F. F. Karney, I<Geodesics on an
-ellipsoid of revolution>, Feb. 2011; preprint
-L<http://arxiv.org/abs/1102.1215>.
+GeoConvert(1).  The algorithm for the area of geodesic polygon is given
+in Section 15 of C. F. F. Karney, I<Geodesics on an ellipsoid of
+revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
 
 =head1 AUTHOR
 
@@ -136,4 +134,5 @@ B<Planimeter> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<Planimeter> was added to GeographicLib in version 1.4.
+B<Planimeter> was added to GeographicLib,
+L<http://geographiclib.sf.net>, in version 1.4.
