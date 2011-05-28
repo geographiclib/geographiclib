@@ -127,18 +127,18 @@ Friends</h2></td></tr>
 <span class="preprocessor">   #include &lt;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&gt;</span>
 
    <span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
-     <span class="comment">// Print waypoints between JFK and SIN at</span>
-     <span class="comment">// approximately 100km intervals.</span>
+     <span class="comment">// Print waypoints between JFK and SIN at approximately</span>
+     <span class="comment">// equal 100km intervals</span>
      <span class="keywordtype">double</span>
        lat1 = 40.640, lon1 = -73.779, <span class="comment">// JFK</span>
-       lat2 = 1.359, lon2 = 177.486;  <span class="comment">// SIN</span>
+       lat2 =  1.359, lon2 = 177.486; <span class="comment">// SIN</span>
      <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a>&amp;
        g = <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">GeographicLib::Geodesic::WGS84</a>;
-     <span class="keywordtype">double</span> azi1, azi2,
-       a12 = g.<a class="code" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Inverse</a>(lat1, lon1, lat2, lon2, azi1, azi2);
-     <span class="keywordtype">double</span> ds = 100e3;  <span class="comment">// Nominal distance between points = 100 km</span>
-     <span class="keywordtype">int</span> num = std::ceil(a12/ (90 * ds / 10e6)); <span class="comment">// 90 deg = 10e6 m</span>
-     <span class="keywordtype">double</span> da = a12/num;              <span class="comment">// Arc length between points</span>
+     <span class="keywordtype">double</span> s12, azi1, azi2,
+       a12 = g.<a class="code" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Inverse</a>(lat1, lon1, lat2, lon2, s12, azi1, azi2);
+     <span class="keywordtype">double</span> ds = 100e3;   <span class="comment">// Nominal distance between points = 100 km</span>
+     <span class="keywordtype">int</span> num = std::ceil(s12 / ds); <span class="comment">// Number of intervals</span>
+     <span class="keywordtype">double</span> da = a12/num;           <span class="comment">// Arc length of each interval</span>
      <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> l(g, lat1, lon1, azi1);
      std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(3);
      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= num; ++i) {
@@ -1449,7 +1449,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="GeodesicLine_8cpp_source.html">GeodesicLine.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

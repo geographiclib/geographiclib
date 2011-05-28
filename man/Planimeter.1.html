@@ -42,7 +42,7 @@
 </p>
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
-<p><strong>Planimeter</strong> [ <strong>-s</strong> ] [ <strong>-r</strong> ] [ <strong>-e</strong> <em>a</em> <em>r</em> ]
+<p><strong>Planimeter</strong> [ <strong>-r</strong> ] [ <strong>-s</strong> ] [ <strong>-e</strong> <em>a</em> <em>r</em> ]
 [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
 [ <strong>--output-file</strong> <em>outfile</em> ]</p>
@@ -58,30 +58,35 @@ MGRS square.)  The end of input, a blank line, or a line which can't be
 interpreted as a vertex signals the end of one polygon and the start of
 the next.  For each polygon print a summary line with the number of
 points, the perimeter (in meters), and the area (in meters^2).</p>
-<p>By default, areas are traversed in a counter-clockwise sense (in other
-words, the included area is to the left of the perimeter) and a positive
-area is returned.  By this rule, a polygon tranversed in a clockwise
-sense will return the area of ellipsoid excluded by the polygon;
-however, if the <strong>-s</strong> option is given, the signed area will be returned.
-If the <strong>-r</strong> option is given, the included area is to the right of the
-perimeter.  Only simple polygons are supported for the area computation.
+<p>By default, polygons traversed in a counter-clockwise direction return a
+positive area and those traversed in a clockwise direction return a
+negative area.  This sign convention is reversed if the <strong>-r</strong> option is
+given.</p>
+<p>Of course, encircling an area in the clockwise direction is equivalent
+to encircling the rest of the ellipsoid in the counter-clockwise
+direction.  The default interpretation used by <strong>Planimeter</strong> is the one
+that results in a smaller magnitude of area; i.e., the magnitude of the
+area is less than or equal to one half the total area of the ellipsoid.
+If the <strong>-s</strong> option is given, then the interpretation used is the one
+that results in a positive area; i.e., the area is positive and less
+than the total area of the ellipsoid.</p>
+<p>Only simple polygons are supported for the area computation.
 Polygons may include one or both poles.</p>
 <p>
 </p>
 <hr />
 <h1><a name="options">OPTIONS</a></h1>
 <dl>
-<dt><strong><a name="s" class="item"><strong>-s</strong></a></strong></dt>
-
-<dd>
-<p>return a signed result for the area.  (This is a toggle; repeating the
-option undoes this setting.)</p>
-</dd>
 <dt><strong><a name="r" class="item"><strong>-r</strong></a></strong></dt>
 
 <dd>
-<p>reverse the traversal rule so that clockwise traversal yields a positive
-result.  (This is a toggle; repeating the option undoes this setting.)</p>
+<p>toggle whether counter-clockwise traveral of the polygon returns a
+positive (the default) or negative result.</p>
+</dd>
+<dt><strong><a name="s" class="item"><strong>-s</strong></a></strong></dt>
+
+<dd>
+<p>toggle whether to return a signed result (the default) or not.</p>
 </dd>
 <dt><strong><a name="e" class="item"><strong>-e</strong></a></strong></dt>
 
@@ -146,13 +151,13 @@ covered by the data (assuming the edges of the image are geodesics).</p>
    egrep '^((Upper|Lower) (Left|Right)|Center) ' |
    sed -e 's/d /d/g' -e &quot;s/' /'/g&quot; | tr -s '(),\r\t' ' ' | awk '{
        if ($1 $2 == &quot;UpperLeft&quot;)
-           ul = $6 &quot; &quot;  $5;
+           ul = $6 &quot; &quot; $5;
        else if ($1 $2 == &quot;LowerLeft&quot;)
-           ll = $6 &quot; &quot;  $5;
+           ll = $6 &quot; &quot; $5;
        else if ($1 $2 == &quot;UpperRight&quot;)
-           ur = $6 &quot; &quot;  $5;
+           ur = $6 &quot; &quot; $5;
        else if ($1 $2 == &quot;LowerRight&quot;)
-           lr = $6 &quot; &quot;  $5;
+           lr = $6 &quot; &quot; $5;
        else if ($1 == &quot;Center&quot;) {
            printf &quot;%s\n%s\n%s\n%s\n\n&quot;, ul, ll, lr, ur;
            ul = ll = ur = lr = &quot;&quot;;
@@ -163,11 +168,9 @@ covered by the data (assuming the edges of the image are geodesics).</p>
 </p>
 <hr />
 <h1><a name="see_also">SEE ALSO</a></h1>
-<p><a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a>.  <strong>Planimeter</strong> is a part of GeographicLib,
-<a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>.  The algorithm for the area of geodesic
-polygon is given in Section 15 of C. F. F. Karney, <em>Geodesics on an
-ellipsoid of revolution</em>, Feb. 2011; preprint
-<a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.</p>
+<p><a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a>.  The algorithm for the area of geodesic polygon is given
+in Section 15 of C. F. F. Karney, <em>Geodesics on an ellipsoid of
+revolution</em>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.</p>
 <p>
 </p>
 <hr />
@@ -177,7 +180,8 @@ ellipsoid of revolution</em>, Feb. 2011; preprint
 </p>
 <hr />
 <h1><a name="history">HISTORY</a></h1>
-<p><strong>GeoidEval</strong> was added to GeographicLib in version 1.4.</p>
+<p><strong>Planimeter</strong> was added to GeographicLib,
+<a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>, in version 1.4.</p>
 
 </body>
 

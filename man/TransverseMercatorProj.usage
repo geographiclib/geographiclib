@@ -100,19 +100,19 @@ AUTHOR\n\
        TransverseMercatorProj was written by Charles Karney.\n\
 \n\
 SEE ALSO\n\
-       TransverseMercatorTest is a part of GeographicLib,\n\
-       <http://geographiclib.sf.net>.  The algorithms for the transverse\n\
-       Mercator projection are described in C. F. F. Karney, Transverse\n\
-       Mercator with an accuracy of a few nanometers, J. Geod (2011); DOI\n\
+       The algorithms for the transverse Mercator projection are described in\n\
+       C. F. F. Karney, Transverse Mercator with an accuracy of a few\n\
+       nanometers, J. Geod (2011); DOI\n\
        <http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint\n\
        <http://arxiv.org/abs/1002.1417>.  The explanation of the extended\n\
        domain of the projection with the -t option is given in Section 5 of\n\
        this paper.\n\
 \n\
 HISTORY\n\
-       TransverseMercatorProj was added to GeographicLib in 2009-01.  Prior to\n\
-       version 1.9 it was called TransverseMercatorTest (and its interface was\n\
-       slightly different).\n\
+       TransverseMercatorProj was added to GeographicLib,\n\
+       <http://geographiclib.sf.net>, in 2009-01.  Prior to version 1.9 it was\n\
+       called TransverseMercatorTest (and its interface was slightly\n\
+       different).\n\
 ";
     return retval;
 }

@@ -27,7 +27,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_ee44ed294507ef2c655a7d283bcddb0d.html">tools</a>      </li>
+      <li><a class="el" href="dir_e2c8d08384fc7d4322a58a0f022a7dbf.html">tools</a>      </li>
     </ul>
   </div>
 </div>
@@ -70,7 +70,7 @@
 <a name="l00032"></a>00032     <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> _area0;          <span class="comment">// Full ellipsoid area</span>
 <a name="l00033"></a>00033     <span class="keywordtype">unsigned</span> _num;
 <a name="l00034"></a>00034     <span class="keywordtype">int</span> _crossings;
-<a name="l00035"></a>00035     Accumulator&lt;real&gt; _area, _perimeter;
+<a name="l00035"></a>00035     Accumulator&lt;real&gt; _areasum, _perimetersum;
 <a name="l00036"></a>00036     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> _lat0, _lon0, _lat1, _lon1;
 <a name="l00037"></a>00037     <span class="comment">// Copied from Geodesic class</span>
 <a name="l00038"></a>00038     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> AngNormalize(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() {
@@ -99,8 +99,8 @@
 <a name="l00061"></a>00061     <span class="keywordtype">void</span> Clear() throw() {
 <a name="l00062"></a>00062       _num = 0;
 <a name="l00063"></a>00063       _crossings = 0;
-<a name="l00064"></a>00064       _area = 0;
-<a name="l00065"></a>00065       _perimeter = 0;
+<a name="l00064"></a>00064       _areasum = 0;
+<a name="l00065"></a>00065       _perimetersum = 0;
 <a name="l00066"></a>00066       _lat0 = _lon0 = _lat1 = _lon1 = 0;
 <a name="l00067"></a>00067     }
 <a name="l00068"></a>00068     <span class="keywordtype">void</span> AddPoint(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon) <span class="keywordflow">throw</span>() {
@@ -112,8 +112,8 @@
 <a name="l00074"></a>00074         _g.GenInverse(_lat1, _lon1, lat, lon,
 <a name="l00075"></a>00075                       <a class="code" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828a0fe3400fb8dcc92274fbac2839cc4e0d">Geodesic::DISTANCE</a> | <a class="code" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828a9aea7d24f8e437d6ea38defbe4ec9b14">Geodesic::AREA</a>,
 <a name="l00076"></a>00076                       s12, t, t, t, t, t, S12);
-<a name="l00077"></a>00077         _perimeter += s12;
-<a name="l00078"></a>00078         _area += S12;
+<a name="l00077"></a>00077         _perimetersum += s12;
+<a name="l00078"></a>00078         _areasum += S12;
 <a name="l00079"></a>00079         _crossings += transit(_lon1, lon);
 <a name="l00080"></a>00080         _lat1 = lat;
 <a name="l00081"></a>00081         _lon1 = lon;
@@ -130,29 +130,29 @@
 <a name="l00092"></a>00092       _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
 <a name="l00093"></a>00093                     <a class="code" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828a0fe3400fb8dcc92274fbac2839cc4e0d">Geodesic::DISTANCE</a> | <a class="code" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828a9aea7d24f8e437d6ea38defbe4ec9b14">Geodesic::AREA</a>,
 <a name="l00094"></a>00094                     s12, t, t, t, t, t, S12);
-<a name="l00095"></a>00095       perimeter = _perimeter(s12);
-<a name="l00096"></a>00096       Accumulator&lt;real&gt; area1(_area);
-<a name="l00097"></a>00097       area1 += S12;
+<a name="l00095"></a>00095       perimeter = _perimetersum(s12);
+<a name="l00096"></a>00096       Accumulator&lt;real&gt; tempsum(_areasum);
+<a name="l00097"></a>00097       tempsum += S12;
 <a name="l00098"></a>00098       <span class="keywordtype">int</span> crossings = _crossings + transit(_lon1, _lon0);
 <a name="l00099"></a>00099       <span class="keywordflow">if</span> (crossings &amp; 1)
-<a name="l00100"></a>00100         area1 += (area1 &lt; 0 ? 1 : -1) * _area0/2;
+<a name="l00100"></a>00100         tempsum += (tempsum &lt; 0 ? 1 : -1) * _area0/2;
 <a name="l00101"></a>00101       <span class="comment">// area is with the clockwise sense.  If !reverse convert to</span>
 <a name="l00102"></a>00102       <span class="comment">// counter-clockwise convention.</span>
 <a name="l00103"></a>00103       <span class="keywordflow">if</span> (!reverse)
-<a name="l00104"></a>00104         area1 *= -1;
+<a name="l00104"></a>00104         tempsum *= -1;
 <a name="l00105"></a>00105       <span class="comment">// If sign put area in (-area0/2, area0/2], else put area in [0, area0)</span>
 <a name="l00106"></a>00106       <span class="keywordflow">if</span> (sign) {
-<a name="l00107"></a>00107         <span class="keywordflow">if</span> (area1 &gt; _area0/2)
-<a name="l00108"></a>00108           area1 -= _area0;
-<a name="l00109"></a>00109         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (area1 &lt;= -_area0/2)
-<a name="l00110"></a>00110           area1 += _area0;
+<a name="l00107"></a>00107         <span class="keywordflow">if</span> (tempsum &gt; _area0/2)
+<a name="l00108"></a>00108           tempsum -= _area0;
+<a name="l00109"></a>00109         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (tempsum &lt;= -_area0/2)
+<a name="l00110"></a>00110           tempsum += _area0;
 <a name="l00111"></a>00111       } <span class="keywordflow">else</span> {
-<a name="l00112"></a>00112         <span class="keywordflow">if</span> (area1 &gt;= _area0)
-<a name="l00113"></a>00113           area1 -= _area0;
-<a name="l00114"></a>00114         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (area1 &lt; 0)
-<a name="l00115"></a>00115           area1 += _area0;
+<a name="l00112"></a>00112         <span class="keywordflow">if</span> (tempsum &gt;= _area0)
+<a name="l00113"></a>00113           tempsum -= _area0;
+<a name="l00114"></a>00114         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (tempsum &lt; 0)
+<a name="l00115"></a>00115           tempsum += _area0;
 <a name="l00116"></a>00116       }
-<a name="l00117"></a>00117       area = area1();
+<a name="l00117"></a>00117       area = tempsum();
 <a name="l00118"></a>00118       <span class="keywordflow">return</span> _num;
 <a name="l00119"></a>00119     }
 <a name="l00120"></a>00120   };
@@ -167,7 +167,7 @@
 <a name="l00129"></a>00129     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
 <a name="l00130"></a>00130       a = Constants::WGS84_a&lt;real&gt;(),
 <a name="l00131"></a>00131       r = Constants::WGS84_r&lt;real&gt;();
-<a name="l00132"></a>00132     <span class="keywordtype">bool</span> reverse = <span class="keyword">false</span>, sign = <span class="keyword">false</span>;
+<a name="l00132"></a>00132     <span class="keywordtype">bool</span> reverse = <span class="keyword">false</span>, sign = <span class="keyword">true</span>;
 <a name="l00133"></a>00133     std::string istring, ifile, ofile;
 <a name="l00134"></a>00134 
 <a name="l00135"></a>00135     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> m = 1; m &lt; argc; ++m) {
@@ -199,7 +199,7 @@
 <a name="l00161"></a>00161       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--version&quot;</span>) {
 <a name="l00162"></a>00162         std::cout
 <a name="l00163"></a>00163           &lt;&lt; argv[0]
-<a name="l00164"></a>00164           &lt;&lt; <span class="stringliteral">&quot;: $Id: f409a4d3d680251b0bcda3c5f1e4ecdec2e8f87b $\n&quot;</span>
+<a name="l00164"></a>00164           &lt;&lt; <span class="stringliteral">&quot;: $Id: 99a1039711c6abf2493e87f756a04f48f4f5f32f $\n&quot;</span>
 <a name="l00165"></a>00165           &lt;&lt; <span class="stringliteral">&quot;GeographicLib version &quot;</span> &lt;&lt; GEOGRAPHICLIB_VERSION_STRING &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
 <a name="l00166"></a>00166         <span class="keywordflow">return</span> 0;
 <a name="l00167"></a>00167       } <span class="keywordflow">else</span>
@@ -291,7 +291,7 @@
 <a name="l00253"></a>00253 }
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

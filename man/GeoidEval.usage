@@ -216,14 +216,14 @@ EXAMPLES\n\
           => 531595 4468135 -10.842\n\
 \n\
 SEE ALSO\n\
-       GeoConvert(1).  GeoidEval is a part of GeographicLib,\n\
-       <http://geographiclib.sf.net>.\n\
+       GeoConvert(1).\n\
 \n\
 AUTHOR\n\
        GeoidEval was written by Charles Karney.\n\
 \n\
 HISTORY\n\
-       GeoidEval was added to GeographicLib in 2009-09.\n\
+       GeoidEval was added to GeographicLib, <http://geographiclib.sf.net>, in\n\
+       2009-09.\n\
 ";
     return retval;
 }

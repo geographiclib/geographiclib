@@ -27,8 +27,8 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_b16414b5a70597b640ccac2a9ec4fe3e.html">include</a>      </li>
-      <li><a class="el" href="dir_b11e475971f7ccfb9ef63a8a3653f2dc.html">GeographicLib</a>      </li>
+      <li><a class="el" href="dir_eac0065f7a95116a5b9c89b0a003cd73.html">include</a>      </li>
+      <li><a class="el" href="dir_240167bcc3430643faf028aba09d3c9e.html">GeographicLib</a>      </li>
     </ul>
   </div>
 </div>
@@ -47,7 +47,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)</span>
-<a name="l00011"></a><a class="code" href="GeodesicLine_8hpp.html#a45305d595b59bfb061a5a0c6e1044485">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_HPP &quot;$Id: 76d4a1c847449bd86fcc57b0c0b982f1b389c19a $&quot;</span>
+<a name="l00011"></a><a class="code" href="GeodesicLine_8hpp.html#a45305d595b59bfb061a5a0c6e1044485">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_HPP &quot;$Id: 5d443e356d7037207c0298f930948d0712c2fe3d $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
@@ -71,18 +71,18 @@
 <a name="l00032"></a>00032 <span class="comment">   #include &lt;GeographicLib/GeodesicLine.hpp&gt;</span>
 <a name="l00033"></a>00033 <span class="comment"></span>
 <a name="l00034"></a>00034 <span class="comment">   int main() {</span>
-<a name="l00035"></a>00035 <span class="comment">     // Print waypoints between JFK and SIN at</span>
-<a name="l00036"></a>00036 <span class="comment">     // approximately 100km intervals.</span>
+<a name="l00035"></a>00035 <span class="comment">     // Print waypoints between JFK and SIN at approximately</span>
+<a name="l00036"></a>00036 <span class="comment">     // equal 100km intervals</span>
 <a name="l00037"></a>00037 <span class="comment">     double</span>
 <a name="l00038"></a>00038 <span class="comment">       lat1 = 40.640, lon1 = -73.779, // JFK</span>
-<a name="l00039"></a>00039 <span class="comment">       lat2 = 1.359, lon2 = 177.486;  // SIN</span>
+<a name="l00039"></a>00039 <span class="comment">       lat2 =  1.359, lon2 = 177.486; // SIN</span>
 <a name="l00040"></a>00040 <span class="comment">     const GeographicLib::Geodesic&amp;</span>
 <a name="l00041"></a>00041 <span class="comment">       g = GeographicLib::Geodesic::WGS84;</span>
-<a name="l00042"></a>00042 <span class="comment">     double azi1, azi2,</span>
-<a name="l00043"></a>00043 <span class="comment">       a12 = g.Inverse(lat1, lon1, lat2, lon2, azi1, azi2);</span>
-<a name="l00044"></a>00044 <span class="comment">     double ds = 100e3;  // Nominal distance between points = 100 km</span>
-<a name="l00045"></a>00045 <span class="comment">     int num = std::ceil(a12/ (90 * ds / 10e6)); // 90 deg = 10e6 m</span>
-<a name="l00046"></a>00046 <span class="comment">     double da = a12/num;              // Arc length between points</span>
+<a name="l00042"></a>00042 <span class="comment">     double s12, azi1, azi2,</span>
+<a name="l00043"></a>00043 <span class="comment">       a12 = g.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);</span>
+<a name="l00044"></a>00044 <span class="comment">     double ds = 100e3;   // Nominal distance between points = 100 km</span>
+<a name="l00045"></a>00045 <span class="comment">     int num = std::ceil(s12 / ds); // Number of intervals</span>
+<a name="l00046"></a>00046 <span class="comment">     double da = a12/num;           // Arc length of each interval</span>
 <a name="l00047"></a>00047 <span class="comment">     const GeographicLib::GeodesicLine l(g, lat1, lon1, azi1);</span>
 <a name="l00048"></a>00048 <span class="comment">     std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(3);</span>
 <a name="l00049"></a>00049 <span class="comment">     for (int i = 0; i &lt;= num; ++i) {</span>
@@ -675,7 +675,7 @@
 <a name="l00636"></a>00636 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEODESICLINE_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

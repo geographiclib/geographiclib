@@ -42,7 +42,7 @@ C/C++ -&gt; General -&gt; Additional Include Directories = C:\Program Files\Geog
 </pre></div> With Visual Studio, you supply this information in the IDE via, e.g., <div class="fragment"><pre class="fragment">
 Linker -&gt; Input -&gt; Additional Dependencies = Geographic.lib
 Linker -&gt; General -&gt; Additional Library DIrectories = C:\Program Files\GeographicLib\include
-</pre></div> Note that the library name is Geographic and not GeographicLib.</li>
+</pre></div> Note that the library name is <b>Geographic</b> and not GeographicLib.</li>
 <li>Tell the runtime environment where to find the shared library (assuming you compiled GeographicLib as a shared library). With g++, this is accomplished by modifying the link line above to read. <div class="fragment"><pre class="fragment">
   g++ -g -o testprogram -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic testprogram.o
 </pre></div> On Windows, you need to ensure that Geographic.dll is in the same directory as your executable or else include the directory containing the dll in your <code>PATH</code>.</li>
@@ -103,7 +103,7 @@ Linker -&gt; General -&gt; Additional Library DIrectories = C:\Program Files\Geo
 <li><a href="http://en.wikipedia.org/wiki/Geoid">EGM</a>, Earth Gravity Model.</li>
 </ul>
 <center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

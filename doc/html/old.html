@@ -27,7 +27,7 @@
 <div class="contents">
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
 <ul>
-<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (not released yet, 2011-mm-dd)</a><ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (current, released 2011-05-28)</a><ul>
 <li>FIX BUG in area returned by <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.</li>
 <li>FIX BUG in error message reported when DMS::Decode reads the string "5d.".</li>
 <li>FIX BUG in AlbersEqualArea::Reverse (lon0 not being used).</li>
@@ -48,11 +48,13 @@
 </li>
 <li>Rename utility EquidistantTest as <a href="GeodesicProj.1.html">GeodesicProj</a> and TransverseMercatorTest as <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>.</li>
 <li>Add <a href="ConicProj.1.html">ConicProj</a>.</li>
+<li>Reverse the initial sense of the -s option for <a href="Planimeter.1.html">Planimeter</a>.</li>
+<li>Migrate source from subversion to <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">git</a>.</li>
 </ul>
 </li>
 </ul>
 <ul>
-<li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a><ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (released 2011-02-22)</a><ul>
 <li>Optionally return rotation matrix from <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">GeographicLib::Geocentric</a> and <a class="el" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">GeographicLib::LocalCartesian</a>.</li>
 <li>For the <a class="el" href="utilities.html">Utility Programs</a>, supply man pages, -h prints the synopsis, --help prints the man page, --version prints the version.</li>
 <li>Use accurate summation in <a href="Planimeter.1.html">Planimeter</a>.</li>
@@ -351,7 +353,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri May 20 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

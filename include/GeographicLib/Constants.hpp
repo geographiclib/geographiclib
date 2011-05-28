@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: ce50ed2bb04fc205229a8e365993a1e8076d1b3b $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 484b008f7c73d568472abe2cc8fcbdfbc81a63af $"
 
 #include <GeographicLib/Config.h>
 
@@ -589,7 +589,7 @@ namespace GeographicLib {
    * .
    * Thus the slow method is about 3 times slower than the fast method.
    * However all times are negligible with the typical timings for geodesic
-   * calculations whic are roughly 2us.  Thus the default mode it taken to be
+   * calculations which are roughly 2us.  Thus the default mode is taken to be
    * slow, \e fast = false.
    *
    * In the documentation of the member functions, \e sum stands for the value

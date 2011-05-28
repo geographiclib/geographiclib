@@ -1,4 +1,4 @@
-=for comment $Id: d4808cdb42e5a3b394183f004e3b2c2060ab1181 $
+=for comment $Id: 6cab3a008c00e1a506322cf43babe3c266952619 $
 
 =head1 NAME
 
@@ -190,9 +190,9 @@ Waypoints on the route at intervals of 2000km:
 
 =head1 SEE ALSO
 
-B<Geod> is a part of GeographicLib, L<http://geographiclib.sf.net>.  The
-algorithms are described in C. F. F. Karney, I<Geodesics on an ellipsoid
-of revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
+The algorithms are described in C. F. F. Karney, I<Geodesics on an
+ellipsoid of revolution>, Feb. 2011; preprint
+L<http://arxiv.org/abs/1102.1215>.
 
 =head1 AUTHOR
 
@@ -200,4 +200,5 @@ B<Geod> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<Geod> was added to GeographicLib in 2009-03.
+B<Geod> was added to GeographicLib, L<http://geographiclib.sf.net>, in
+2009-03.

@@ -1,4 +1,4 @@
-# $Id: 8d69771cbf47258dea83ce2dc381adb2f38aecb9 $
+# $Id: 6edcea04c5eb3974f2a82b41e9452e36e5c59ff0 $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)

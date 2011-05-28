@@ -1,4 +1,4 @@
-=for comment $Id: 420459bd7869b3b9766e6cc47e91ec3f7efaafa4 $
+=for comment $Id: 2d0d17ed4af03fb2e741e1c1c8817d932bb97a27 $
 
 =head1 NAME
 
@@ -267,8 +267,7 @@ Convert a point in UTM zone 18N from MSL to HAE
 
 =head1 SEE ALSO
 
-GeoConvert(1).  B<GeoidEval> is a part of GeographicLib,
-L<http://geographiclib.sf.net>.
+GeoConvert(1).
 
 =head1 AUTHOR
 
@@ -276,4 +275,5 @@ B<GeoidEval> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<GeoidEval> was added to GeographicLib in 2009-09.
+B<GeoidEval> was added to GeographicLib, L<http://geographiclib.sf.net>,
+in 2009-09.

@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2011-05-20" "GeographicLib 1.9" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2011-05-25" "GeographicLib 1.9" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -141,7 +141,7 @@
 Planimeter \-\- compute the area of geodesic polygons
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-\&\fBPlanimeter\fR [ \fB\-s\fR ] [ \fB\-r\fR ] [ \fB\-e\fR \fIa\fR \fIr\fR ]
+\&\fBPlanimeter\fR [ \fB\-r\fR ] [ \fB\-s\fR ] [ \fB\-e\fR \fIa\fR \fIr\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
 [ \fB\-\-output\-file\fR \fIoutfile\fR ]
@@ -156,24 +156,31 @@ interpreted as a vertex signals the end of one polygon and the start of
 the next.  For each polygon print a summary line with the number of
 points, the perimeter (in meters), and the area (in meters^2).
 .PP
-By default, areas are traversed in a counter-clockwise sense (in other
-words, the included area is to the left of the perimeter) and a positive
-area is returned.  By this rule, a polygon tranversed in a clockwise
-sense will return the area of ellipsoid excluded by the polygon;
-however, if the \fB\-s\fR option is given, the signed area will be returned.
-If the \fB\-r\fR option is given, the included area is to the right of the
-perimeter.  Only simple polygons are supported for the area computation.
+By default, polygons traversed in a counter-clockwise direction return a
+positive area and those traversed in a clockwise direction return a
+negative area.  This sign convention is reversed if the \fB\-r\fR option is
+given.
+.PP
+Of course, encircling an area in the clockwise direction is equivalent
+to encircling the rest of the ellipsoid in the counter-clockwise
+direction.  The default interpretation used by \fBPlanimeter\fR is the one
+that results in a smaller magnitude of area; i.e., the magnitude of the
+area is less than or equal to one half the total area of the ellipsoid.
+If the \fB\-s\fR option is given, then the interpretation used is the one
+that results in a positive area; i.e., the area is positive and less
+than the total area of the ellipsoid.
+.PP
+Only simple polygons are supported for the area computation.
 Polygons may include one or both poles.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
-.IP "\fB\-s\fR" 4
-.IX Item "-s"
-return a signed result for the area.  (This is a toggle; repeating the
-option undoes this setting.)
 .IP "\fB\-r\fR" 4
 .IX Item "-r"
-reverse the traversal rule so that clockwise traversal yields a positive
-result.  (This is a toggle; repeating the option undoes this setting.)
+toggle whether counter-clockwise traveral of the polygon returns a
+positive (the default) or negative result.
+.IP "\fB\-s\fR" 4
+.IX Item "-s"
+toggle whether to return a signed result (the default) or not.
 .IP "\fB\-e\fR" 4
 .IX Item "-e"
 specify the ellipsoid via \fIa\fR \fIr\fR; the equatorial radius is \fIa\fR and
@@ -224,13 +231,13 @@ covered by the data (assuming the edges of the image are geodesics).
 \&   egrep \*(Aq^((Upper|Lower) (Left|Right)|Center) \*(Aq |
 \&   sed \-e \*(Aqs/d /d/g\*(Aq \-e "s/\*(Aq /\*(Aq/g" | tr \-s \*(Aq(),\er\et\*(Aq \*(Aq \*(Aq | awk \*(Aq{
 \&       if ($1 $2 == "UpperLeft")
-\&           ul = $6 " "  $5;
+\&           ul = $6 " " $5;
 \&       else if ($1 $2 == "LowerLeft")
-\&           ll = $6 " "  $5;
+\&           ll = $6 " " $5;
 \&       else if ($1 $2 == "UpperRight")
-\&           ur = $6 " "  $5;
+\&           ur = $6 " " $5;
 \&       else if ($1 $2 == "LowerRight")
-\&           lr = $6 " "  $5;
+\&           lr = $6 " " $5;
 \&       else if ($1 == "Center") {
 \&           printf "%s\en%s\en%s\en%s\en\en", ul, ll, lr, ur;
 \&           ul = ll = ur = lr = "";
@@ -240,14 +247,13 @@ covered by the data (assuming the edges of the image are geodesics).
 .Ve
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
-\&\fIGeoConvert\fR\|(1).  \fBPlanimeter\fR is a part of GeographicLib,
-<http://geographiclib.sf.net>.  The algorithm for the area of geodesic
-polygon is given in Section 15 of C. F. F. Karney, \fIGeodesics on an
-ellipsoid of revolution\fR, Feb. 2011; preprint
-<http://arxiv.org/abs/1102.1215>.
+\&\fIGeoConvert\fR\|(1).  The algorithm for the area of geodesic polygon is given
+in Section 15 of C. F. F. Karney, \fIGeodesics on an ellipsoid of
+revolution\fR, Feb. 2011; preprint <http://arxiv.org/abs/1102.1215>.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 \&\fBPlanimeter\fR was written by Charles Karney.
 .SH "HISTORY"
 .IX Header "HISTORY"
-\&\fBGeoidEval\fR was added to GeographicLib in version 1.4.
+\&\fBPlanimeter\fR was added to GeographicLib,
+<http://geographiclib.sf.net>, in version 1.4.

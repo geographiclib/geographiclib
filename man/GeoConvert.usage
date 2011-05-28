@@ -216,7 +216,6 @@ ABBREVIATIONS\n\
            World Geodetic System 1984, <http://en.wikipedia.org/wiki/WGS84>.\n\
 \n\
 SEE ALSO\n\
-       GeoConvert is a part of GeographicLib, <http://geographiclib.sf.net>.\n\
        The algorithms for the transverse Mercator projection are described in\n\
        C. F. F. Karney, Transverse Mercator with an accuracy of a few\n\
        nanometers, J. Geod (2011); DOI\n\
@@ -227,7 +226,8 @@ AUTHOR\n\
        GeoConvert was written by Charles Karney.\n\
 \n\
 HISTORY\n\
-       GeoConvert was added to GeographicLib in 2009-01.\n\
+       GeoConvert was added to GeographicLib, <http://geographiclib.sf.net>,\n\
+       in 2009-01.\n\
 ";
     return retval;
 }

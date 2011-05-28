@@ -1,4 +1,4 @@
-=for comment $Id: b25bec75d0dcd6739f2ab78b0b930f02adddf232 $
+=for comment $Id: 5d4f611f5acfcf367737d7b0a9f15016d9ced2ea $
 
 =head1 NAME
 
@@ -274,10 +274,9 @@ L<http://en.wikipedia.org/wiki/WGS84>.
 
 =head1 SEE ALSO
 
-B<GeoConvert> is a part of GeographicLib,
-L<http://geographiclib.sf.net>.  The algorithms for the transverse
-Mercator projection are described in C. F. F. Karney, I<Transverse
-Mercator with an accuracy of a few nanometers>, J. Geod (2011); DOI
+The algorithms for the transverse Mercator projection are described in
+C. F. F. Karney, I<Transverse Mercator with an accuracy of a few
+nanometers>, J. Geod (2011); DOI
 L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
 L<http://arxiv.org/abs/1002.1417>.
 
@@ -287,4 +286,5 @@ B<GeoConvert> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<GeoConvert> was added to GeographicLib in 2009-01.
+B<GeoConvert> was added to GeographicLib,
+L<http://geographiclib.sf.net>, in 2009-01.
