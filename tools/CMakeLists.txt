@@ -28,7 +28,8 @@ install (TARGETS ${TOOLS} DESTINATION bin)
 
 if (NOT WIN32)
   set (GEOID_SCRIPT geographiclib-get-geoids)
-  add_custom_target (${GEOID_SCRIPT} ALL 
+  add_custom_target (get-geoids-script ALL DEPENDS ${GEOID_SCRIPT})
+  add_custom_command (OUTPUT ${GEOID_SCRIPT}
     COMMAND
       sed -e "s%@GEOID_DEFAULT_PATH@%${GEOGRAPHICLIB_GEOID_PATH}%"
 	${CMAKE_CURRENT_SOURCE_DIR}/${GEOID_SCRIPT}.sh >
