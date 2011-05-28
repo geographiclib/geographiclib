@@ -589,7 +589,7 @@ namespace GeographicLib {
    * .
    * Thus the slow method is about 3 times slower than the fast method.
    * However all times are negligible with the typical timings for geodesic
-   * calculations whic are roughly 2us.  Thus the default mode it taken to be
+   * calculations which are roughly 2us.  Thus the default mode is taken to be
    * slow, \e fast = false.
    *
    * In the documentation of the member functions, \e sum stands for the value

@@ -12,7 +12,7 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 1.9
-\date 2011-mm-dd
+\date 2011-05-28
 
 \section abstract Abstract
 
@@ -2063,7 +2063,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (not released yet, 2011-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (current, released 2011-05-28)</a>
   - FIX BUG in area returned by
     <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.
   - FIX BUG in error message reported when DMS::Decode reads the string
@@ -2092,7 +2092,7 @@ number.)
     <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">
     git</a>.
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (current, released 2011-02-22)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (released 2011-02-22)</a>
   - Optionally return rotation matrix from GeographicLib::Geocentric and
     GeographicLib::LocalCartesian.
   - For the \ref utilities, supply man pages, -h prints the synopsis,

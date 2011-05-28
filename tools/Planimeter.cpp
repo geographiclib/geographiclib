@@ -32,7 +32,7 @@ namespace GeographicLib {
     const real _area0;          // Full ellipsoid area
     unsigned _num;
     int _crossings;
-    Accumulator<real> _area, _perimeter;
+    Accumulator<real> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
     // Copied from Geodesic class
     static inline real AngNormalize(real x) throw() {
@@ -61,8 +61,8 @@ namespace GeographicLib {
     void Clear() throw() {
       _num = 0;
       _crossings = 0;
-      _area = 0;
-      _perimeter = 0;
+      _areasum = 0;
+      _perimetersum = 0;
       _lat0 = _lon0 = _lat1 = _lon1 = 0;
     }
     void AddPoint(real lat, real lon) throw() {
@@ -74,8 +74,8 @@ namespace GeographicLib {
         _g.GenInverse(_lat1, _lon1, lat, lon,
                       Geodesic::DISTANCE | Geodesic::AREA,
                       s12, t, t, t, t, t, S12);
-        _perimeter += s12;
-        _area += S12;
+        _perimetersum += s12;
+        _areasum += S12;
         _crossings += transit(_lon1, lon);
         _lat1 = lat;
         _lon1 = lon;
@@ -92,29 +92,29 @@ namespace GeographicLib {
       _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
                     Geodesic::DISTANCE | Geodesic::AREA,
                     s12, t, t, t, t, t, S12);
-      perimeter = _perimeter(s12);
-      Accumulator<real> area1(_area);
-      area1 += S12;
+      perimeter = _perimetersum(s12);
+      Accumulator<real> tempsum(_areasum);
+      tempsum += S12;
       int crossings = _crossings + transit(_lon1, _lon0);
       if (crossings & 1)
-        area1 += (area1 < 0 ? 1 : -1) * _area0/2;
+        tempsum += (tempsum < 0 ? 1 : -1) * _area0/2;
       // area is with the clockwise sense.  If !reverse convert to
       // counter-clockwise convention.
       if (!reverse)
-        area1 *= -1;
+        tempsum *= -1;
       // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
       if (sign) {
-        if (area1 > _area0/2)
-          area1 -= _area0;
-        else if (area1 <= -_area0/2)
-          area1 += _area0;
+        if (tempsum > _area0/2)
+          tempsum -= _area0;
+        else if (tempsum <= -_area0/2)
+          tempsum += _area0;
       } else {
-        if (area1 >= _area0)
-          area1 -= _area0;
-        else if (area1 < 0)
-          area1 += _area0;
+        if (tempsum >= _area0)
+          tempsum -= _area0;
+        else if (tempsum < 0)
+          tempsum += _area0;
       }
-      area = area1();
+      area = tempsum();
       return _num;
     }
   };

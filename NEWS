@@ -8,7 +8,7 @@ For more information, see
 
 The current version of the library is 1.9.
 
-Changes between 1.9 (released 2011-mm-dd) and 1.8 versions:
+Changes between 1.9 (released 2011-05-28) and 1.8 versions:
 
   * FIX BUG in area returned by Planimeter for pole encircling polygons.
 
