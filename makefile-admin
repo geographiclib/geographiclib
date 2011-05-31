@@ -20,7 +20,7 @@ distrib-doc:
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
-	rsync -av --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib release-notes $(DATASTAGE)/
+	rsync -av --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib $(DATASTAGE)/
 	rsync --exclude '*~' --exclude '#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,geoids-distrib,release-notes} $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/
 
 distrib-cgi:

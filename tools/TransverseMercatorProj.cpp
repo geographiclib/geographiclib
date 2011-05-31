@@ -1,6 +1,6 @@
 /**
  * \file TransverseMercatorProj.cpp
- * \brief Command line utility for testing transverse Mercator projections
+ * \brief Command line utility for transverse Mercator projections
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see

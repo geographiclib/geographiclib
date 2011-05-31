@@ -1,7 +1,6 @@
 /**
  * \file ConicProj.cpp
- * \brief Command line utility for azimuthal equidistant and Cassini-Soldner
- * projections
+ * \brief Command line utility for conical projections
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
