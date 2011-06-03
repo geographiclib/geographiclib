@@ -32,7 +32,7 @@ CPPFLAGS = -I$(INCLUDEPATH) -I../man $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
 
 $(PROGRAMS): $(LIBPATH)/$(LIBRARY)
-	$(CC) -o $@ $@.o $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $@ $@.o $(LDLIBS)
 
 VPATH = ../include/GeographicLib ../man
 
