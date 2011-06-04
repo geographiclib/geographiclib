@@ -108,7 +108,7 @@ The goals of %GeographicLib are:
    earth.
  - C++ interface.  For the projection methods, this allows encapsulation
    of the ellipsoid parameters.
- - Emphasis on projections necessary for analysing military data.
+ - Emphasis on projections necessary for analyzing military data.
  - Uniform treatment of UTM/UPS.  The GeographicLib::UTMUPS class treats
    UPS as zone 0.  This simplifies conversions between UTM and UPS
    coordinates, etc.
@@ -186,7 +186,7 @@ This is the recommended method of installation; however it requires that
 <a href="http://www.cmake.org">cmake</a> be installed on your system.
 This permits %GeographicLib to be built either as a shared or a static
 library on a wide variety of systems.  cmake can also determine the
-capababilities of your system and adjust the compilation of the
+capabilities of your system and adjust the compilation of the
 libraries and examples appropriately.
 
 cmake is available for most computer platforms.  On Linux systems cmake
@@ -196,7 +196,7 @@ command like
   yum install cmake \endverbatim
 (executed as root).  On other systems, download a binary
 installer from http://www.cmake.org click on download, and save and run
-the appropriate installer.  Run the cmake command with no argumens to
+the appropriate installer.  Run the cmake command with no arguments to
 get help.  Other useful tools are ccmake and cmake-gui which offer
 curses and graphical interfaces to cmake.  Building under cmake depends
 on whether it is targeting an IDE (interactive development environment)
@@ -463,7 +463,7 @@ C/C++ -> General -> Additional Include Directories = C:\Program Files\Geographic
   e.g.,
   \verbatim
 Linker -> Input -> Additional Dependencies = Geographic.lib
-Linker -> General -> Additional Library DIrectories = C:\Program Files\GeographicLib\include
+Linker -> General -> Additional Library Directories = C:\Program Files\GeographicLib\include
 \endverbatim
   Note that the library name is <b>Geographic</b> and not %GeographicLib.
 - Tell the runtime environment where to find the shared library
@@ -528,7 +528,7 @@ The next steps are:
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
    on the classes in the library.
- - Look at the source code for the utilites in the tools directory for
+ - Look at the source code for the utilities in the tools directory for
    more examples of using %GeographicLib from C++ code, e.g.,
    GeodesicProj.cpp is a program to performing various geodesic
    projections.
@@ -764,7 +764,7 @@ The gravitational equipotential surface approximately coinciding with
 mean sea level is called the geoid.  The GeographicLib::Geoid class and
 the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height
 of the geoid above the WGS84 ellipsoid.  This can be used to convert
-heights above mean sea level to heights above the WGS84 ellipoid.
+heights above mean sea level to heights above the WGS84 ellipsoid.
 Because the normal to the ellipsoid differs from the normal to the geoid
 (the direction of a plumb line) there is a slight ambiguity in the
 measurement of heights; however for heights up to 10km this ambiguity is
@@ -1016,7 +1016,7 @@ egm96-5 are
 Of these lines, the Scale and Offset lines are required and define the
 conversion from pixel value to height (in meters) using \e height =
 \e offset + \e scale \e pixel.  The Geoid constructor also reads the
-Description, DataTime, and error lines (if present) and stores the
+Description, DateTime, and error lines (if present) and stores the
 resulting data so that it can be returned by
 GeographicLib::Geoid::Description, GeographicLib::Geoid::DateTime,
 GeographicLib::Geoid::MaxError, and GeographicLib::Geoid::RMSError
@@ -1174,7 +1174,7 @@ minimizes disk accesses for the case when a continuous track is being
 followed.
 
 If a large quantity of geoid calculations are needed, the calculation
-can be speeded up by preloading the data for a rectangular block with
+can be sped up by preloading the data for a rectangular block with
 GeographicLib::Geoid::CacheArea or the entire dataset with
 GeographicLib::Geoid::CacheAll.  If the requested points lie within the
 cached area, the cached data values are used; otherwise the data is read
@@ -1381,7 +1381,8 @@ In the expansions below, we have
  - \e k<sup>2</sup> = \e e'<sup>2</sup> cos<sup>2</sup> \e alpha<sub>0</sub>
    = 4 \e eps / (1 - \e eps)<sup>2</sup>
  - \e n = \e f / (2 - \e f)
- - \e c<sup>2</sup> = \e a<sup>2</sup>/2 + \e b<sup>2</sup>/2 (tanh<sup>-1</sup> \e e)/\e e
+ - \e c<sup>2</sup> = \e a<sup>2</sup>/2 +
+   \e b<sup>2</sup>/2 (tanh<sup>-1</sup> \e e)/\e e
  - \e ep2 = \e e'<sup>2</sup>
  - \e k2 = \e k<sup>2</sup>
 
@@ -1699,7 +1700,7 @@ Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
 </center>
 
 GeographicLib::TransverseMercator and
-GeographicLib::TransverseMercatorExact provide accurate implelmentations
+GeographicLib::TransverseMercatorExact provide accurate implementations
 of the transverse Mercator projection.  The
  <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
 utility provides an interface to these classes.
@@ -2030,7 +2031,7 @@ The testing has been confined to the WGS84 ellipsoid.  The method will work
 for all ellipsoids used in terrestrial geodesy.  However, the central region,
 which leads to multiple real roots for the cubic equation in Reverse, pokes
 outside the ellipsoid (at the poles) for ellipsoids with \e e > 1/sqrt(2).
-Reverse has not been analysed for this case.  Similarly ellipsoids which are
+Reverse has not been analyzed for this case.  Similarly ellipsoids which are
 very nearly spherical near yield inaccurate results due to underflow; in the
 other hand, the case of the sphere, \e f = 0, is treated specially and gives
 accurate results.
@@ -2272,7 +2273,7 @@ number.)
       arguments do not alter the arguments when an exception is thrown.
     - Improve accuracy of GeographicLib::MGRS::Forward.
     - Include more information in some error messages.
-    - Improve accuracy of inverse hypobolic functions.
+    - Improve accuracy of inverse hyperbolic functions.
     - Fix the way GeographicLib::Math functions handle different precisions.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-10.tgz/download">2009-10</a>
