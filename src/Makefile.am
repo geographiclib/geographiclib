@@ -4,7 +4,7 @@
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 # $Id$
 
-AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
+AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 
 lib_LTLIBRARIES = libGeographic.la
 
