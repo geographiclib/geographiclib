@@ -8,11 +8,11 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc include
+SUBDIRS = src man tools doc include matlab
 
 EXTRA_DIST = AUTHORS 00README.txt COPYING.txt NEWS INSTALL \
 	Makefile.mk CMakeLists.txt \
-	windows maxima matlab man doc
+	windows maxima man doc
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
@@ -32,7 +32,7 @@ dist-hook:
 # Custom rules
 
 all-local: man doc
-install-data-local: install-doc
+install-data-local: install-doc install-matlab
 
 doc: man
 	$(MAKE) -C doc doc
@@ -42,5 +42,8 @@ install-doc:
 
 man:
 	$(MAKE) -C man man
+
+install-matlab:
+	$(MAKE) -C matlab install-matlab
 
 .PHONY: doc install-doc man

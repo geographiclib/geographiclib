@@ -65,6 +65,7 @@ add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
+add_subdirectory (matlab)
 
 if (MAINTAINER)
   add_custom_target (distrib-all)

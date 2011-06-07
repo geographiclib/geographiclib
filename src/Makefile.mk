@@ -21,7 +21,7 @@ SOURCES = $(addsuffix .cpp,$(MODULES))
 OBJECTS = $(addsuffix .o,$(MODULES))
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+CXXFLAGS = -g -Wall -Wextra -O3
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES) \
 	-DGEOID_DEFAULT_PATH=\"$(GEOID_DEFAULT_PATH)\" 
