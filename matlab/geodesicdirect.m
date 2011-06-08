@@ -8,7 +8,7 @@ function [latlong, aux] = geodesicdirect(geodesic, a, r)
 %       latitude of point 1 = latlong(:,1) in degrees
 %       longitude of point 1 = latlong(:,2) in degrees
 %       azimuth at point 1 = latlong(:,3) in degrees
-%       distance = latlong(:,4) in meters
+%       distance to point 2 = latlong(:,4) in meters
 %
 %   latlong is an M x 3 matrix
 %       latitude of point 2 = geodesic(:,1) in degrees

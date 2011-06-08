@@ -24,7 +24,7 @@ function [utmups, prec] = mgrsreverse(utmups)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       MGRS::Reverse
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % mgrsreverse.m

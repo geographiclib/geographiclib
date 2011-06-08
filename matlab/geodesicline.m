@@ -7,7 +7,7 @@ function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, r)
 %   lat1 is the latitude of point 1 (scalar) in degrees
 %   lon1 is the longitude of point 1 (scalar) in degrees
 %   azi1 is the azimuth at point 1 (scalar) in degrees
-%   distances is an M x 1 vector of distances in meters
+%   distances is an M x 1 vector of distances to point 2 in meters
 %
 %   latlong is an M x 3 matrix
 %       latitude of point 2 = geodesic(:,1) in degrees

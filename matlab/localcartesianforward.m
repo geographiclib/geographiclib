@@ -7,8 +7,8 @@ function [localcartesian, rot] = localcartesianforward(geodetic, a, r)
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees
 %       lon0 = origin(1,2) in degrees
-%       h0 = origin(1,3) in meters or 0 m
-%   geodetic is an M x 3 matrix
+%       h0 = origin(1,3) in meters (default 0 m)
+%   geodetic is an M x 3 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
 %       h = geodetic(:,3) in meters
@@ -29,7 +29,7 @@ function [localcartesian, rot] = localcartesianforward(geodetic, a, r)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       LocalCartesian::Forward
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % localcartesianforward.m

@@ -4,12 +4,12 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, r)
 %   [geodetic, rot] = geocentricreverse(geocentric);
 %   [geodetic, rot] = geocentricreverse(geocentric, a, r);
 %
-%   geocentric is an M x 3 matrix
+%   geocentric is an M x 3 matrix of geocentric coordinates
 %       x = geocentric(:,1) in meters
 %       y = geocentric(:,2) in meters
 %       z = geocentric(:,3) in meters
 %
-%   geodetic is an M x 3 matrix
+%   geodetic is an M x 3 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
 %       h = geodetic(:,3) in meters
@@ -25,7 +25,7 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, r)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       Geocentric::Reverse
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % geocentricreverse.m

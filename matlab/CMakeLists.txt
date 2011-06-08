@@ -5,7 +5,7 @@ file (GLOB MATLAB_INTERFACES *.cpp)
 install (FILES ${MATLAB_FILES} ${MATLAB_INTERFACES}
   DESTINATION share/GeographicLib/matlab)
 
-if (HAVE_MEX)
+if (WIN32 AND HAVE_MEX)
   add_custom_target (MATLAB-all ALL)
   foreach (INTERFACE ${MATLAB_INTERFACES})
     get_filename_component (TARGET ${INTERFACE} NAME_WE)
@@ -23,4 +23,4 @@ if (HAVE_MEX)
       DESTINATION share/GeographicLib/matlab
       CONFIGURATIONS Release)
   endforeach (INTERFACE)
-endif (HAVE_MEX)
+endif (WIN32 AND HAVE_MEX)

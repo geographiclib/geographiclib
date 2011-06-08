@@ -7,13 +7,13 @@ function [geodetic, rot] = localcartesianreverse(localcartesian, a, r)
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees
 %       lon0 = origin(1,2) in degrees
-%       h0 = origin(1,3) in meters or 0 m
+%       h0 = origin(1,3) in meters (default 0 m)
 %   cartesian is an M x 3 matrix of local cartesian coordinates
 %       x = cartesian(:,1) in meters
 %       y = cartesian(:,2) in meters
 %       z = cartesian(:,3) in meters
 %
-%   geodetic is an M x 3 matrix
+%   geodetic is an M x 3 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
 %       h = geodetic(:,3) in meters
@@ -29,7 +29,7 @@ function [geodetic, rot] = localcartesianreverse(localcartesian, a, r)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       LocalCartesian::Reverse
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % localcartesianreverse.m

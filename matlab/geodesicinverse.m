@@ -13,7 +13,7 @@ function [geodesic, aux] = geodesicinverse(latlong, a, r)
 %   geodesic is an M x 3 matrix
 %       azimuth at point 1 = geodesic(:,1) in degrees
 %       azimuth at point 2 = geodesic(:,2) in degrees
-%       distance = geodesic(:,3) in meters
+%       distance between points 1 and 2 = geodesic(:,3) in meters
 %   aux is an M x 4 matrix
 %       reduced length = aux(:,1) in meters
 %       geodesic scale 1 to 2 = aux(:,2)

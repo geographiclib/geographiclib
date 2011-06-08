@@ -21,7 +21,7 @@ function [latlong, scale] = utmupsreverse(utmups)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       UTMUPS::Reverse
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % utmupsreverse.m

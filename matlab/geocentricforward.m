@@ -4,12 +4,12 @@ function [geocentric, rot] = geocentricforward(geodetic, a, r)
 %   [geocentric, rot] = geocentricforward(geodetic);
 %   [geocentric, rot] = geocentricforward(geodetic, a, r);
 %
-%   geodetic is an M x 3 matrix
+%   geodetic is an M x 3 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
 %       h = geodetic(:,3) in meters
 %
-%   geocentric is an M x 3 matrix
+%   geocentric is an M x 3 matrix of geocentric coordinates
 %       x = geocentric(:,1) in meters
 %       y = geocentric(:,2) in meters
 %       z = geocentric(:,3) in meters
@@ -24,7 +24,7 @@ function [geocentric, rot] = geocentricforward(geodetic, a, r)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       Geocentric::Forward
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % geocentricforward.m

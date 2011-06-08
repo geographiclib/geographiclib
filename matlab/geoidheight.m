@@ -1,8 +1,8 @@
 function [height, gradient] = geoidheight(latlong, geoidname, geoiddir)
 %geoidheight  Compute geoid height
 %
-%   CAUTION: THIS MAY CAUSE MATLAB TO CRASH!!  This occurs the interface
-%   was compiled with the  Visual Studio 2008 as the compiler.
+%   CAUTION: THIS MAY CAUSE MATLAB TO CRASH!!  This occurs when the interface
+%   is compiled with Visual Studio 2008.
 %
 %   [height, gradient] = geoidheight(latlong);
 %   [height, gradient] = geoidheight(latlong, geoidname);
@@ -15,11 +15,11 @@ function [height, gradient] = geoidheight(latlong, geoidname, geoiddir)
 %       egm84-30  egm84-15
 %       egm96-15  egm96-5
 %       egm2008-5 egm2008-2_5 egm2008-1
-%   geoiddir is the direcortory containing the geoid models (default empty
+%   geoiddir is the directory containing the geoid models (default empty
 %       string meaning system default)
 %
 %   height is an M x 1 matrix
-%       geoidheight = height(:,1) in meters
+%       geoidheight = height(:,1) height of geoid in meters
 %   gradient is the gradient of the geoid height
 %       gradn = gradient(:,1) gradient of height in northerly direction
 %       grade = gradient(:,2) gradient of height in easterly direction
