@@ -27,8 +27,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     mexErrMsgTxt("One input argument required.");
   if (nrhs > 2)
     mexErrMsgTxt("More than two input arguments specified.");
-  else if (nlhs > 1)
-    mexErrMsgTxt("Only one output argument can be specified.");
+  else if (nlhs > 2)
+    mexErrMsgTxt("More than two output arguments specified.");
 
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
     mexErrMsgTxt("latlong coordinates are not of type double.");
@@ -52,30 +52,41 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateDoubleMatrix(m, 6, mxREAL);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
 
+  plhs[0] = mxCreateDoubleMatrix(m, 4, mxREAL);
   double* x = mxGetPr(plhs[0]);
   double* y = x + m;
   double* zone = x + 2*m;
   double* hemi = x + 3*m;
-  double* gamma = x + 4*m;
-  double* k = x + 5*m;
+  double* gamma = NULL;
+  double* k = NULL;
+  bool scale = nlhs == 2;
+
+  if (scale) {
+    plhs[1] = mxCreateDoubleMatrix(m, 2, mxREAL);
+    gamma = mxGetPr(plhs[1]);
+    k = gamma + m;
+  }
 
   for (int i = 0; i < m; ++i) {
     int ZONE;
     bool HEMI;
     try {
-      UTMUPS::Forward(lat[i], lon[i], ZONE, HEMI, x[i], y[i], gamma[i], k[i],
-                      setzone);
+      if (scale)
+        UTMUPS::Forward(lat[i], lon[i], ZONE, HEMI, x[i], y[i], gamma[i], k[i],
+                        setzone);
+      else
+        UTMUPS::Forward(lat[i], lon[i], ZONE, HEMI, x[i], y[i], setzone);
       zone[i] = ZONE;
       hemi[i] = HEMI ? 1 : 0;
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      x[i] = y[i] = gamma[i] = k[i] = Math::NaN();
+      x[i] = y[i] = Math::NaN();
+      if (scale) gamma[i] = k[i] = Math::NaN();
       zone[i] = UTMUPS::INVALID; hemi[i] = 0;
     }
   }

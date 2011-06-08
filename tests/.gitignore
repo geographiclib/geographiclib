@@ -4,3 +4,4 @@ ConicTest
 GeodTest
 NaNTester
 PASouth
+*.errs

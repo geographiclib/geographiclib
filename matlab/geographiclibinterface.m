@@ -39,7 +39,8 @@ function geographiclibinterface(incdir, libdir);
 	  'utmupsforward', 'utmupsreverse', ...
 	  'mgrsforward', 'mgrsreverse'};
   lib='Geographic';
-  if (strcmp(mex.getCompilerConfigurations().Manufacturer, 'Microsoft') && ..
+  if (ispc && ...
+      strcmp(mex.getCompilerConfigurations().Manufacturer, 'Microsoft') && ...
       strcmp(mex.getCompilerConfigurations().Version, '9.0'))
     warning(['geoidheight compiled with Visual Studio 2008 ',...
 	     'causes Matlab to CRASH']);
@@ -69,7 +70,7 @@ function geographiclibinterface(incdir, libdir);
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], [funs{i} '.cpp'] );
     else
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], ['-Wl,-rpath=' libdir], ...
-        [funs{i} '.cpp'] );
+	   '-Wall', '-Wextra', [funs{i} '.cpp'] );
     end
     fprintf(' done.\n');
   end

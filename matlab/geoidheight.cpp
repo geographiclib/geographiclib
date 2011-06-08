@@ -17,7 +17,7 @@
 #include "GeographicLib/Geoid.hpp"
 #include "mex.h"
 #include <string>
-
+ 
 using namespace std;
 using namespace GeographicLib;
 
@@ -28,8 +28,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     mexErrMsgTxt("One input argument required.");
   if (nrhs > 3)
     mexErrMsgTxt("More than three input arguments specified.");
-  else if (nlhs > 1)
-    mexErrMsgTxt("Only one output argument can be specified.");
+  else if (nlhs > 2)
+    mexErrMsgTxt("More than two output arguments specified.");
 
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
     mexErrMsgTxt("latlong coordinates are not of type double.");
@@ -38,14 +38,21 @@ void mexFunction( int nlhs, mxArray* plhs[],
     mexErrMsgTxt("latlong coordinates must be M x 2 matrix.");
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
 
+  plhs[0] = mxCreateDoubleMatrix(m, 1, mxREAL);
   double* h = mxGetPr(plhs[0]);
-  double* gradn = h + m;
-  double* grade = h + 2*m;
+  double* gradn = NULL;
+  double* grade = NULL;
+  bool gradient = nlhs == 2;
+
+  if (gradient) {
+    plhs[1] = mxCreateDoubleMatrix(m, 2, mxREAL);
+    gradn = mxGetPr(plhs[1]);
+    grade = gradn + m;
+  }
 
   string geoidname("egm96-5");
   if (nrhs > 1) {
@@ -86,11 +93,15 @@ void mexFunction( int nlhs, mxArray* plhs[],
           throw GeographicErr("Invalid latitude");
         if (lon[i] < -180 || lon[i] > 360)
           throw GeographicErr("Invalid longitude");
-        h[i] = g(lat[i], lon[i], gradn[i], grade[i]);
+        if (gradient)
+          h[i] = g(lat[i], lon[i], gradn[i], grade[i]);
+        else
+          h[i] = g(lat[i], lon[i]);
       }
       catch (const std::exception& e) {
         mexWarnMsgTxt(e.what());
-        h[i] = gradn[i] = grade[i] = Math::NaN();
+        h[i] = Math::NaN();
+        if (gradient) gradn[i] = grade[i] = h[i];
       }
     }
   }

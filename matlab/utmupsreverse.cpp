@@ -25,8 +25,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   if (nrhs != 1)
     mexErrMsgTxt("One input argument required.");
-  else if (nlhs > 1)
-    mexErrMsgTxt("Only one output argument can be specified.");
+  else if (nlhs > 2)
+    mexErrMsgTxt("More than two output arguments specified.");
 
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
     mexErrMsgTxt("utmups coordinates are not of type double.");
@@ -35,17 +35,24 @@ void mexFunction( int nlhs, mxArray* plhs[],
     mexErrMsgTxt("utmups coordinates must be M x 4 matrix.");
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateDoubleMatrix(m, 4, mxREAL);
 
   double* x = mxGetPr(prhs[0]);
   double* y = x + m;
   double* zone = x + 2*m;
   double* hemi = x + 3*m;
 
+  plhs[0] = mxCreateDoubleMatrix(m, 2, mxREAL);
   double* lat = mxGetPr(plhs[0]);
   double* lon = lat + m;
-  double* gamma = lat + 2*m;
-  double* k = lat + 3*m;
+  double* gamma = NULL;
+  double* k = NULL;
+  bool scale = nlhs == 2;
+
+  if (scale) {
+    plhs[1] = mxCreateDoubleMatrix(m, 2, mxREAL);
+    gamma = mxGetPr(plhs[1]);
+    k = gamma + m;
+  }
 
   for (int i = 0; i < m; ++i) {
     try {
@@ -55,11 +62,15 @@ void mexFunction( int nlhs, mxArray* plhs[],
       bool HEMI = (hemi[i] != 0);
       if (HEMI && (hemi[i] != 1))
         throw GeographicErr("Hemisphere is not 0 or 1");
-      UTMUPS::Reverse(ZONE, HEMI, x[i], y[i], lat[i], lon[i], gamma[i], k[i]);
+      if (scale)
+        UTMUPS::Reverse(ZONE, HEMI, x[i], y[i], lat[i], lon[i], gamma[i], k[i]);
+      else
+        UTMUPS::Reverse(ZONE, HEMI, x[i], y[i], lat[i], lon[i]);
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      lat[i] = lon[i] = gamma[i] = k[i] = Math::NaN();
+      lat[i] = lon[i] = Math::NaN();
+      if (scale) gamma[i] = k[i] = Math::NaN();
     }
   }
 }

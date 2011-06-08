@@ -52,7 +52,6 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateCellArray(1, &m);
 
   double* x = mxGetPr(prhs[0]);
   double* y = x + m;
@@ -60,6 +59,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   double* hemi = x + 3*m;
 
   string mgrsstr;
+  plhs[0] = mxCreateCellArray(1, &m);
   mxArray* mgrs = plhs[0];
 
   for (int i = 0; i < m; ++i) {

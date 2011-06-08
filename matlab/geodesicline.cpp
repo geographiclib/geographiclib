@@ -29,8 +29,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     mexErrMsgTxt("More than three input arguments specified.");
   if (nrhs == 5)
     mexErrMsgTxt("Must specify repicrocal flattening with the major radius.");
-  else if (nlhs > 1)
-    mexErrMsgTxt("Only one output argument can be specified.");
+  else if (nlhs > 2)
+    mexErrMsgTxt("More than two output arguments specified.");
 
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) &&
          mxGetNumberOfElements(prhs[0]) == 1 ))
@@ -66,17 +66,26 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   int m = mxGetM(prhs[3]);
-  plhs[0] = mxCreateDoubleMatrix(m, 7, mxREAL);
 
   double* s12 = mxGetPr(prhs[3]);
 
+  plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* lat2 = mxGetPr(plhs[0]);
   double* lon2 = lat2 + m;
   double* azi2 = lat2 + 2*m;
-  double* m12 = lat2 + 3*m;
-  double* M12 = lat2 + 4*m;
-  double* M21 = lat2 + 5*m;
-  double* S12 = lat2 + 6*m;
+  double* m12 = NULL;
+  double* M12 = NULL;
+  double* M21 = NULL;
+  double* S12 = NULL;
+  bool aux = nlhs == 2;
+
+  if (aux) {
+    plhs[1] = mxCreateDoubleMatrix(m, 4, mxREAL);
+    m12 = mxGetPr(plhs[1]);
+    M12 = m12 + m;
+    M21 = m12 + 2*m;
+    S12 = m12 + 3*m;
+  }
 
   try {
     const Geodesic g(a, r);
@@ -88,8 +97,11 @@ void mexFunction( int nlhs, mxArray* plhs[],
       throw GeographicErr("Invalid azimuth");
     const GeodesicLine l(g, lat1, lon1, azi1);
     for (int i = 0; i < m; ++i)
-      l.Position(s12[i],
-                 lat2[i], lon2[i], azi2[i], m12[i], M12[i], M21[i], S12[i]);
+      if (aux)
+        l.Position(s12[i], lat2[i], lon2[i], azi2[i],
+                   m12[i], M12[i], M21[i], S12[i]);
+      else
+        l.Position(s12[i], lat2[i], lon2[i], azi2[i]);
   }
   catch (const std::exception& e) {
     mexErrMsgTxt(e.what());

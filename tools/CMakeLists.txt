@@ -21,7 +21,7 @@ foreach (TOOL ${TOOLS})
     OBJECT_DEPENDS ${MANDIR}/${TOOL}.usage)
 
   target_link_libraries (${TOOL} Geographic)
-# set_target_properties (${TOOL} PROPERTIES VERSION "${LIBVERSIONFULL}")
+
 endforeach (TOOL)
 
 install (TARGETS ${TOOLS} DESTINATION bin)
