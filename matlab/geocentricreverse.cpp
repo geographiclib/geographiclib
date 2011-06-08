@@ -2,7 +2,7 @@
  * \file geocentricreverse.cpp
  * \brief Matlab mex file for UTM/UPS to geographic conversions
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
+ * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
  * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
 
