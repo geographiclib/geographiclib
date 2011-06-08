@@ -25,9 +25,9 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   if (nrhs < 4)
     mexErrMsgTxt("Four input arguments required.");
-  if (nrhs > 6)
+  else if (nrhs > 6)
     mexErrMsgTxt("More than three input arguments specified.");
-  if (nrhs == 5)
+  else if (nrhs == 5)
     mexErrMsgTxt("Must specify repicrocal flattening with the major radius.");
   else if (nlhs > 2)
     mexErrMsgTxt("More than two output arguments specified.");

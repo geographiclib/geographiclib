@@ -12,7 +12,11 @@ geoidheight.cpp \
 mgrsforward.cpp \
 mgrsreverse.cpp \
 utmupsforward.cpp \
-utmupsreverse.cpp
+utmupsreverse.cpp \
+geocentricforward.cpp \
+geocentricreverse.cpp \
+localcartesianforward.cpp \
+localcartesianreverse.cpp
 
 MATLAB_DOC = \
 geodesicdirect.m \
@@ -22,7 +26,11 @@ geoidheight.m \
 mgrsforward.m \
 mgrsreverse.m \
 utmupsforward.m \
-utmupsreverse.m
+utmupsreverse.m \
+geocentricforward.m \
+geocentricreverse.m \
+localcartesianforward.m \
+localcartesianreverse.m
 
 MATLAB_COMPILESCRIPT = geographiclibinterface.m
 

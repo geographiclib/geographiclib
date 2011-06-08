@@ -26,7 +26,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   if (nrhs < 1)
     mexErrMsgTxt("One input argument required.");
-  if (nrhs > 3)
+  else if (nrhs > 3)
     mexErrMsgTxt("More than three input arguments specified.");
   else if (nlhs > 2)
     mexErrMsgTxt("More than two output arguments specified.");

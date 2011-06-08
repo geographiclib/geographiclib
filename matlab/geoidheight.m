@@ -32,7 +32,8 @@ end
 % geoidheight.m
 % Matlab .m file for looking up geoid heights
 %
-% Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
-% the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+% under the LGPL.  For more information, see
+% http://geographiclib.sourceforge.net/
 %
 % $Id$

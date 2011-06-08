@@ -2,7 +2,8 @@
 
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \
-	geoidheight
+	geoidheight geocentricforward geocentricreverse \
+	localcartesianforward localcartesianreverse
 
 MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS))
 

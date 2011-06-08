@@ -25,15 +25,15 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   if (nrhs < 1)
     mexErrMsgTxt("One input argument required.");
-  if (nrhs > 3)
+  else if (nrhs > 3)
     mexErrMsgTxt("More than three input arguments specified.");
-  if (nrhs == 2)
+  else if (nrhs == 2)
     mexErrMsgTxt("Must specify repicrocal flattening with the major radius.");
   else if (nlhs > 2)
     mexErrMsgTxt("More than two output arguments specified.");
 
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
-    mexErrMsgTxt("geodesics are not of type double.");
+    mexErrMsgTxt("geodesic coordinates are not of type double.");
 
   if (mxGetN(prhs[0]) != 4)
     mexErrMsgTxt("geodesic coordinates must be M x 4 matrix.");
