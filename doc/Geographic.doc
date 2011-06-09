@@ -2114,6 +2114,14 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (not released yet 2011-06-dd)</a>
+  - Improvements to Matlab/Octave interface:
+     - add {geocentric,localcartesian}{forward,reverse};
+     - make geographiclibinterface more general;
+     - install the source for the interface;
+     - cmake compiles the interface if ENABLE_MATLAB=ON;
+     - include compiled interface with Windows binary installer.
+
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (current, released 2011-05-28)</a>
   - FIX BUG in area returned by
     <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.

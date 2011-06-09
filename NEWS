@@ -6,7 +6,16 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.9.
+The current version of the library is 1.10.
+
+Changes between 1.10 (released 2011-06-dd) and 1.9 versions:
+
+  * Improvements to Matlab/Octave interface:
+     + add {geocentric,localcartesian}{forward,reverse};
+     + make geographiclibinterface more general;
+     + install the source for the interface;
+     + cmake compiles the interface if ENABLE_MATLAB=ON;
+     + include compiled interface with Windows binary installer.
 
 Changes between 1.9 (released 2011-05-28) and 1.8 versions:
 

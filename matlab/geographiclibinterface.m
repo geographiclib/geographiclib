@@ -72,7 +72,7 @@ function geographiclibinterface(incdir, libdir);
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], [funs{i} '.cpp'] );
     else
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], ['-Wl,-rpath=' libdir], ...
-	   '-Wall', '-Wextra', [funs{i} '.cpp'] );
+	   [funs{i} '.cpp'] );
     end
     fprintf(' done.\n');
   end

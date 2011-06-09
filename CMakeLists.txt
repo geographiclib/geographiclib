@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 9)
+set (GeographicLib_VERSION_MINOR 10)
 set (GeographicLib_VERSION_STRING
      ${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR})
 set (LIBVERSION 5)
