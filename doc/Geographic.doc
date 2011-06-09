@@ -11,8 +11,8 @@
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.9
-\date 2011-05-28
+\version 1.10
+\date 2011-06-dd
 
 \section abstract Abstract
 
@@ -37,10 +37,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">
-  GeographicLib-1.9.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.zip/download">
-  GeographicLib-1.9.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">
+  GeographicLib-1.10.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.zip/download">
+  GeographicLib-1.10.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
@@ -50,8 +50,8 @@ using git \verbatim
   git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9-win32.exe/download">
-  GeographicLib-1.9-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10-win32.exe/download">
+  GeographicLib-1.10-win32.exe</a>
 .
 It is licensed under the
 <a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">LGPL</a>.
@@ -149,12 +149,12 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">
-GeographicLib-1.9.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9.zip/download">
-GeographicLib-1.9.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9-win32.exe/download">
-GeographicLib-1.9-win32.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">
+GeographicLib-1.10.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10.zip/download">
+GeographicLib-1.10.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10-win32.exe/download">
+GeographicLib-1.10-win32.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -206,10 +206,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.9.tar.gz
-  unzip -q GeographicLib-1.9.zip \endverbatim
+  tar xfpz GeographicLib-1.10.tar.gz
+  unzip -q GeographicLib-1.10.zip \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.9 \endverbatim
+  cd GeographicLib-1.10 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -288,9 +288,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.9.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.10.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.9 \endverbatim
+  cd GeographicLib-1.10 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
 - By default %GeographlicLib will be installed under /usr/local.
@@ -315,9 +315,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.9.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.10.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.9 \endverbatim
+  cd GeographicLib-1.10 \endverbatim
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root
@@ -342,8 +342,8 @@ library and the examples.  If you only have Visual Studio 2010, use
 cmake to create the necessary solution file.  %GeographicLib does not
 compile correctly with Visual Studio 2003.
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.9.zip \endverbatim
-- Open GeographicLib-1.9/windows/GeographicLib-vc9.sln in Visual Studio
+  unzip -q GeographicLib-1.10.zip \endverbatim
+- Open GeographicLib-1.10/windows/GeographicLib-vc9.sln in Visual Studio
   2008 (for Visual Studio 2005, replace -vc9 by -vc8).
 - Pick the build type (e.g., Release), and select "Build
   Solution".
@@ -362,19 +362,19 @@ compile correctly with Visual Studio 2003.
 \section windowsbin Using a binary installer for Windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.9-win32.exe/download">
-GeographicLib-1.9-win32.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10-win32.exe/download">
+GeographicLib-1.10-win32.exe</a>:
  - read the LGPL license agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
-   C:/Program Files/GeographicLib-1.9.
+   C:/Program Files/GeographicLib-1.10.
  - select the start menu folder,
  - and install.
  .
 The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
-C:/Program Files/GeographicLib-1.9/bin where the utilities are
+C:/Program Files/GeographicLib-1.10/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
@@ -391,15 +391,15 @@ ENABLE_MATLAB=ON when installing with cmake, this interface is built.
 Similarly the binary installer for Windows includes the compiled
 interface.  To use either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.9/libexec/GeographicLib/matlab'
+  addpath 'C:/Program Files/GeographicLib-1.10/libexec/GeographicLib/matlab'
 \endverbatim
 in Matlab or Octave.  If you need to compile the interface or to
 recompile it for a different platform, start Matlab or Octave and run,
 e.g., \code
   mex -setup
-  cd  'C:/Program Files/GeographicLib-1.9/libexec/GeographicLib/matlab'
+  cd  'C:/Program Files/GeographicLib-1.10/libexec/GeographicLib/matlab'
   help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.9');
+  geographiclibinterface('C:/Program Files/GeographicLib-1.10');
   addpath(pwd);
 \endcode
 The first command allows you to select the compiler to use (which
@@ -463,8 +463,8 @@ which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as
 \verbatim
-  GeographicLib-1.9.tar.gz
-  GeographicLib-1.9.zip \endverbatim
+  GeographicLib-1.10.tar.gz
+  GeographicLib-1.10.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
