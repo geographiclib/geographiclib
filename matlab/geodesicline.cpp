@@ -12,10 +12,10 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geodesicline.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/GeodesicLine.hpp"
-#include "mex.h"
+#include <GeographicLib/GeodesicLine.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;

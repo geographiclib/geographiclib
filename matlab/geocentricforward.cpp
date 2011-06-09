@@ -12,10 +12,11 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geocentricforward.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/Geocentric.hpp"
-#include "mex.h"
+#include <algorithm>
+#include <GeographicLib/Geocentric.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;
@@ -58,6 +59,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* x = mxGetPr(plhs[0]);
+  std::fill(x, x + 3*m, Math::NaN());
   double* y = x + m;
   double* z = x + 2*m;
   double* rot = NULL;
@@ -66,29 +68,18 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (rotp) {
     plhs[1] = mxCreateDoubleMatrix(m, 9, mxREAL);
     rot = mxGetPr(plhs[1]);
+    std::fill(rot, rot + 9*m, Math::NaN());
   }
 
   try {
     std::vector<double> rotv(rotp ? 9 : 0);
     const Geocentric c(a, r);
     for (int i = 0; i < m; ++i) {
-      try {
-        if (abs(lat[i]) > 90)
-          throw GeographicErr("Invalid latitude");
-        if (lon[i] < -180 || lon[i] > 360)
-          throw GeographicErr("Invalid longitude");
+      if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
         c.Forward(lat[i], lon[i], h[i], x[i], y[i], z[i], rotv);
         if (rotp) {
           for (int k = 0; k < 9; ++k)
             rot[m * k + i] = rotv[k];
-        }
-      }
-      catch (const std::exception& e) {
-        mexWarnMsgTxt(e.what());
-        x[i] = y[i] = z[i] = Math::NaN();
-        if (rotp) {
-          for (int k = 0; k < 9; ++k)
-            rot[m * k + i] = Math::NaN();
         }
       }
     }

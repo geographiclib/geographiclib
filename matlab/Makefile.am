@@ -36,7 +36,7 @@ MATLAB_COMPILESCRIPT = geographiclibinterface.m
 
 MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT)
 
-matlabdir=$(datadir)/GeographicLib/matlab
+matlabdir=$(libexecdir)/GeographicLib/matlab
 install-matlab:
 	$(INSTALL) -d $(DESTDIR)$(matlabdir)
 	$(INSTALL) -m 644 $(MATLAB_ALL) $(DESTDIR)$(matlabdir)

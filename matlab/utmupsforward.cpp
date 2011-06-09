@@ -12,10 +12,10 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic utmupsforward.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/UTMUPS.hpp"
-#include "mex.h"
+#include <GeographicLib/UTMUPS.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;

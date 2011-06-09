@@ -7,7 +7,7 @@ FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 
 MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS))
 
-DEST = $(PREFIX)/share/GeographicLib/matlab
+DEST = $(PREFIX)/libexec/GeographicLib/matlab
 INSTALL=install -b
 
 all:

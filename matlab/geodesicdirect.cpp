@@ -12,10 +12,11 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geodesicdirect.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/Geodesic.hpp"
-#include "mex.h"
+#include <algorithm>
+#include <GeographicLib/Geodesic.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;
@@ -59,6 +60,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* lat2 = mxGetPr(plhs[0]);
+  std::fill(lat2, lat2 + 3*m, Math::NaN());
   double* lon2 = lat2 + m;
   double* azi2 = lat2 + 2*m;
   double* m12 = NULL;
@@ -70,6 +72,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (aux) {
     plhs[1] = mxCreateDoubleMatrix(m, 4, mxREAL);
     m12 = mxGetPr(plhs[1]);
+    std::fill(m12, m12 + 4*m, Math::NaN());
     M12 = m12 + m;
     M21 = m12 + 2*m;
     S12 = m12 + 3*m;
@@ -78,24 +81,15 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     const Geodesic g(a, r);
     for (int i = 0; i < m; ++i) {
-      try {
-        if (abs(lat1[i]) > 90)
-          throw GeographicErr("Invalid latitude");
-        if (lon1[i] < -180 || lon1[i] > 360)
-          throw GeographicErr("Invalid longitude");
-        if (azi1[i] < -180 || azi1[i] > 360)
-          throw GeographicErr("Invalid azimuth");
+      if (!(abs(lat1[i]) > 90) &&
+          !(lon1[i] < -180 || lon1[i] > 360) &&
+          !(azi1[i] < -180 || azi1[i] > 360)) {
         if (aux) 
           g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
                    lat2[i], lon2[i], azi2[i], m12[i], M12[i], M21[i], S12[i]);
         else
           g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
                    lat2[i], lon2[i], azi2[i]);
-      }
-      catch (const std::exception& e) {
-        mexWarnMsgTxt(e.what());
-        lat2[i] = lon2[i] = azi2[i] = Math::NaN();
-        if (aux) m12[i] = M12[i] = M21[i] = S12[i] = Math::NaN();
       }
     }
   }

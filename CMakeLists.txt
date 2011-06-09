@@ -15,6 +15,7 @@ if (WIN32)
 else (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
 endif (WIN32)
+option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
 
 if (WIN32)
   set (GEOGRAPHICLIB_GEOID_PATH
@@ -45,6 +46,24 @@ if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
 else (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
   set (MAINTAINER OFF CACHE BOOL "Allow build of additional components")
 endif (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
+
+if (ENABLE_MATLAB)
+  if (NOT WIN32)
+    find_program (HAVE_MEX mkoctfile)
+    if (HAVE_MEX)
+      set (MEX "mkoctfile")
+      set (MEXEXT "mex") 
+    endif (HAVE_MEX)
+  else (NOT WIN32)
+    find_program (HAVE_MEX mex.bat)
+    if (HAVE_MEX)
+      set (MEX "mex")
+      set (MEXEXT "mexw32")
+    endif (HAVE_MEX)
+  endif (NOT WIN32)
+else (ENABLE_MATLAB)
+  set (HAVE_MEX OFF)
+endif (ENABLE_MATLAB)
 
 # Set a default build type for single-configuration
 # CMake generators if no build type is set.

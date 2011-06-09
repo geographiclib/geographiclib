@@ -16,7 +16,7 @@ function geographiclibinterface(incdir, libdir);
 %
 % This has been tested with
 %
-%   Octave 3.2.2 and g++ 4.4.4 under Linux
+%   Octave 3.2.3 and g++ 4.4.4 under Linux
 %   Matlab 2007a and Visual Studio 2005 under Windows
 %   Matlab 2008a and Visual Studio 2005 under Windows
 %   Matlab 2008a and Visual Studio 2008 under Windows (*)

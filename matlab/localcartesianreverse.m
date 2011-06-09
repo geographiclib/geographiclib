@@ -1,4 +1,4 @@
-function [geodetic, rot] = localcartesianreverse(localcartesian, a, r)
+function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, r)
 %localcartesianreverse  Convert local cartesian coordinates to geographic
 %
 %   [geodetic, rot] = localcartesianreverse(origin, cartesian);
@@ -33,7 +33,7 @@ function [geodetic, rot] = localcartesianreverse(localcartesian, a, r)
   error('Error: executing .m file instead of compiled routine');
 end
 % localcartesianreverse.m
-% Matlab .m file for localcartesian to geographic conversions
+% Matlab .m file for local cartesian to geographic conversions
 %
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and
 % licensed under the LGPL.  For more information, see

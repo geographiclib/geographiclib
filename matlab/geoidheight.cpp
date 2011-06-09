@@ -12,11 +12,12 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geoidheight.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/Geoid.hpp"
-#include "mex.h"
 #include <string>
+#include <algorithm>
+#include <GeographicLib/Geoid.hpp>
+#include <mex.h>
  
 using namespace std;
 using namespace GeographicLib;
@@ -44,6 +45,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   plhs[0] = mxCreateDoubleMatrix(m, 1, mxREAL);
   double* h = mxGetPr(plhs[0]);
+  std::fill(h, h + m, Math::NaN());
   double* gradn = NULL;
   double* grade = NULL;
   bool gradient = nlhs == 2;
@@ -51,6 +53,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (gradient) {
     plhs[1] = mxCreateDoubleMatrix(m, 2, mxREAL);
     gradn = mxGetPr(plhs[1]);
+    std::fill(gradn, gradn + 2*m, Math::NaN());
     grade = gradn + m;
   }
 
@@ -88,20 +91,13 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     const Geoid g(geoidname, geoiddir);
     for (int i = 0; i < m; ++i) {
-      try {
-        if (abs(lat[i]) > 90)
-          throw GeographicErr("Invalid latitude");
-        if (lon[i] < -180 || lon[i] > 360)
-          throw GeographicErr("Invalid longitude");
+      if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
+        // g() can throw an exception, e.g., because of an I/O failure.  Treat
+        // this as fatal.
         if (gradient)
           h[i] = g(lat[i], lon[i], gradn[i], grade[i]);
         else
           h[i] = g(lat[i], lon[i]);
-      }
-      catch (const std::exception& e) {
-        mexWarnMsgTxt(e.what());
-        h[i] = Math::NaN();
-        if (gradient) gradn[i] = grade[i] = h[i];
       }
     }
   }

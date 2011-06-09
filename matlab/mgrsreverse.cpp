@@ -12,10 +12,10 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic mgrsreverse.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/MGRS.hpp"
-#include "mex.h"
+#include <GeographicLib/MGRS.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;

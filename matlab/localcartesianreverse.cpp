@@ -12,10 +12,10 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic localcartesianreverse.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/LocalCartesian.hpp"
-#include "mex.h"
+#include <GeographicLib/LocalCartesian.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;

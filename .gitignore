@@ -15,6 +15,7 @@
 *.ncb
 *.suo
 *.exe
+*-core
 BUILD*
 CMakeCache.txt
 CMakeFiles

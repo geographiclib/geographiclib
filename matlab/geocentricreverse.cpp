@@ -12,10 +12,10 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geocentricreverse.cpp
 
-// "$Id$";
+// $Id$
 
-#include "GeographicLib/Geocentric.hpp"
-#include "mex.h"
+#include <GeographicLib/Geocentric.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;

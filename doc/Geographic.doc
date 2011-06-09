@@ -257,6 +257,10 @@ Here are the steps to compile and install %GeographicLib:
 \endverbatim
     (With IDE compile environments, you get to select the build type in
     the IDE.)
+  - <code>ENABLE_MATLAB</code> (default: OFF).  Set this to ON to get
+    cmake to try to compile and install the Matlab/Octave interface.  At
+    present this is compiled for Matlab under Windows and for Octave
+    under Linux.
   - <code>MAINTAINER</code> (default: ON for non-Windows environments
     provided doxygen, pod2man, and pod2html are found).  This affects
     whether the targets for creating source packages are activated.
@@ -274,7 +278,8 @@ Here are the steps to compile and install %GeographicLib:
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
   <code>CMAKE_INSTALL_PREFIX</code>.  (dll dynamic libraries are
-  installed in bin.)  For documentation, open
+  installed in bin.)  The Matlab/Octave interface is installed in
+  libexec/GeographicLib/matlab.  For documentation, open
   <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
@@ -296,7 +301,10 @@ Here are the steps to compile and install %GeographicLib:
   make install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>prefix</code>.  For documentation, open
+  <code>prefix</code>.  This installation method does not compile
+  the Matlab/Octave interface;  however the source for the interface is
+  installed in libexec/GeographicLib/matlab, see \ref matlab of
+  instructions on compiling the interface.  For documentation, open
   <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
@@ -320,7 +328,10 @@ Here are the steps to compile and install %GeographicLib:
   make PREFIX=/tmp/geographic install \endverbatim
 - The headers, library, and utilities are installed in the
   include/GeographicLib, lib, and bin directories under
-  <code>PREFIX</code>.  For documentation, open
+  <code>PREFIX</code>.  This installation method does not compile
+  the Matlab/Octave interface;  however the source for the interface is
+  installed in libexec/GeographicLib/matlab, see \ref matlab of
+  instructions on compiling the interface.  For documentation, open
   <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
@@ -340,8 +351,11 @@ compile correctly with Visual Studio 2003.
   windows/Release.
 - Copy the library windows/Release/Geographic.lib and the
   headers in include/GeographicLib somewhere convenient.  The
-  headers should remain in a directory named %GeographicLib.
-  For documentation, open
+  headers should remain in a directory named %GeographicLib.  If you
+  expect to use the Matlab/Octave interface, copy matlab/*.m and
+  matlab/*.cpp to a directory in your matlab/octave path, see \ref
+  matlab for instructions on compiling the interface.  For documentation,
+  open
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
@@ -361,38 +375,73 @@ The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
 C:/Program Files/GeographicLib-1.9/bin where the utilities are
-installed.  This installer was built using Visual Studio 10 (2010) in
-Release mode.
+installed.  The headers and library are installed in the
+include/GeographicLib and lib folders.  The Matlab interface is
+installed in the libexec/GeographicLib/matlab folder.  Add this to your
+path in Matlab to access this interface.  This installer was built using
+Visual Studio 10 (2010) in Release mode.  The Matlab interface was
+compiled with Matlab R2010b, however it may work with other versions of
+Matlab (e.g., R2008a).
 
 \section matlab Compiling the Matlab interface
 
 The matlab directory contains some rudimentary interface code so that
-%GeographicLib can be accessed from Matlab (or Octave).  This requires
-that you have built %GeographicLib with a compiler known to Matlab.  The
-compiler can be specified by \code
-  mex -setup \endcode
-All the interface functions can be compiled with by invoking \code
-  geographiclibinterface \endcode
-from within Matlab.  This functionality has not been extensively
-tested.  The available functions are:
+%GeographicLib can be accessed from Matlab or Octave.  If you set
+ENABLE_MATLAB=ON when installing with cmake, this interface is built.
+Similarly the binary installer for Windows includes the compiled
+interface.  To use either of these, run one of (for example) \verbatim
+  addpath /usr/local/libexec/GeographicLib/matlab
+  addpath 'C:/Program Files/GeographicLib-1.9/libexec/GeographicLib/matlab'
+\endverbatim
+in Matlab or Octave.  If you need to compile the interface or to
+recompile it for a different platform, start Matlab or Octave and run,
+e.g., \code
+  mex -setup
+  cd  'C:/Program Files/GeographicLib-1.9/libexec/GeographicLib/matlab'
+  help geographiclibinterface
+  geographiclibinterface('C:/Program Files/GeographicLib-1.9');
+  addpath(pwd);
+\endcode
+The first command allows you to select the compiler to use (which
+probably should be the same as that used to compile %GeographicLib).
+The available functions are:
  - geodesicdirect: solve direct geodesic problem
+   (see GeographicLib::Geodesic::Direct)
  - geodesicinverse: solve inverse geodesic problem
+   (see GeographicLib::Geodesic::Inverse)
  - geodesicline: compute points along a geodesic
+   (see GeographicLib::GeodesicLine::Position)
  - utmupsforward: convert geographic coordinates to UTM/UPS
+   (see GeographicLib::UTMUPS::Forward)
  - utmupsreverse: convert UTM/UPS coordinates to geographic
+   (see GeographicLib::UTMUPS::Reverse)
  - mgrsforward: convert UTM/UPS coordinates to MGRS
- - mgrsreverse: convert UTM/UPS coordinates to MGRS
+   (see GeographicLib::MGRS::Forward)
+ - mgrsreverse: convert MGRS coordinates to UTM/UPS
+   (see GeographicLib::MGRS::Reverse)
  - geoidheight: compute geoid height
+   (see GeographicLib::Geoid::operator()())
+ - geocentricforward: convert geographic coordinates to geocentric
+   (see GeographicLib::Geocentric::Forward)
+ - geocentricreverse: convert geocentric coordinates to geographic
+   (see GeographicLib::Geocentric::Reverse)
+ - localcartesianforward: convert geographic coordinates to local cartesian
+   (see GeographicLib::LocalCartesian::Forward)
+ - localcartesianreverse: convert local cartesian coordinates to geographic
+   (see GeographicLib::LocalCartesian::Reverse)
  .
 These routines just offer a simple interface to the corresponding C++
 class.  Use the help function to get documentation, e.g., \code
   help geodesicdirect \endcode
+Unfortunately, the help function does not work for compiled functions in
+Octave; in this case, just list the .m file, e.g., \code
+  system 'less geodesicdirect.m' \endcode
 Other useful functions, e.g., to convert from geographic
 coordinates to MGRS can easily be written with Matlab code.
 
-Note that geoidheight, when used with Matlab 2008a and compiled with
-Visual Studio 2008 causes Matlab to crash.  (The problem does not occur
-with Visual Studio 2005.)
+Note that geoidheight, when compiled with Visual Studio 2008 causes
+Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
+Visual Studio 2010.)
 
 \section maintainer Maintainer tasks
 
@@ -434,8 +483,9 @@ Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
 </center>
 
 Much (but not all!) of the useful functionality of %GeographicLib is
-available via simple command line utilities.  See \ref utilities for
-documentation on these.
+available via simple command line utilities.  Interfaces to some of them
+are available via the web.  See \ref utilities for documentation on
+these.
 
 In order to use %GeographicLib from C++ code, you will need to
 - Include the header files for the %GeographicLib classes in your code.
