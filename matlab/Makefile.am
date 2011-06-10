@@ -45,4 +45,4 @@ install:
 clean-local:
 	rm -rf *.mex* *.oct
 
-EXTRA_DIST = Makefile.mk CMakeList.txt $(MATLAB_ALL)
+EXTRA_DIST = Makefile.mk CMakeLists.txt $(MATLAB_ALL)

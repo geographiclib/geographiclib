@@ -5,8 +5,10 @@ FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geoidheight geocentricforward geocentricreverse \
 	localcartesianforward localcartesianreverse
 
+MATLAB_COMPILESCRIPT = geographiclibinterface.m
+
 MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS)) \
-	 geographiclibinterface.m
+	 $(MATLAB_COMPILESCRIPT)
 
 DEST = $(PREFIX)/libexec/GeographicLib/matlab
 INSTALL=install -b
