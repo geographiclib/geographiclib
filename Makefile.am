@@ -18,13 +18,13 @@ dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
-		\( ! -name '*.sln' -a ! -name '*.vc*proj' -a ! -name '*.mk' \)| \
+		! \( -name '*.sln' -o -name '*.vc*proj' -o -name '*.mk' \)| \
 		xargs rm -f ; \
 	find $(distdir)/matlab -type f \
-		\( ! -name '*.cpp' -a ! -name '*.m' -a ! -name '*.mk' \) | \
+		! \( -name '*.cpp' -o -name '*.m' -o -name 'Makefile.*' -o -name CMakeLists.txt \) | \
 		xargs rm -rf ; \
 	find $(distdir) \
-		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' \)| \
+		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
