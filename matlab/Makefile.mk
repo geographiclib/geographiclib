@@ -5,7 +5,8 @@ FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geoidheight geocentricforward geocentricreverse \
 	localcartesianforward localcartesianreverse
 
-MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS))
+MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS)) \
+	 geographiclibinterface.m
 
 DEST = $(PREFIX)/libexec/GeographicLib/matlab
 INSTALL=install -b
@@ -21,6 +22,6 @@ clean:
 	rm -f *.mex* *.oct
 
 list:
-	@echo geographiclibinterface.m $(MATLABFILES)
+	@echo $(MATLABFILES)
 
 .PHONY: all install list clean

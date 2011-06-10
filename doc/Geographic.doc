@@ -320,8 +320,7 @@ Here are the steps to compile and install %GeographicLib:
   cd GeographicLib-1.10 \endverbatim
 - Build and install the software: \verbatim
   make             # compile the library and the examples
-  make install     # as root
-  make install-doc # as root \endverbatim
+  make install     # as root \endverbatim
   The installation is in directories under /usr/local.  You
   can specify a different installation directory with, for example,
   \verbatim

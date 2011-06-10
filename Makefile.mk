@@ -11,7 +11,8 @@ $(SUBDIRS):
 	$(MAKE) -C $@
 
 tools: src
-install: install-headers install-lib install-tools install-man install-matlab
+install: install-headers install-lib install-tools install-man install-doc \
+	install-matlab
 clean: clean-src clean-tools clean-doc clean-man clean-matlab
 distclean: clean distclean-doc distclean-man
 install-headers:
