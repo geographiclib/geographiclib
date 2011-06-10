@@ -79,7 +79,7 @@ ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
-	../include/GeographicLib/LamberConformalConic.hpp
+	../include/GeographicLib/LambertConformalConic.hpp
 
 sbin_SCRIPTS = geographiclib-get-geoids
 
