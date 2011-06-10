@@ -8,7 +8,7 @@ set (GeographicLib_VERSION_MINOR 10)
 set (GeographicLib_VERSION_STRING
      ${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR})
 set (LIBVERSION 5)
-set (LIBVERSIONFULL 5.2.1)
+set (LIBVERSIONFULL 5.2.2)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
