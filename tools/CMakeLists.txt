@@ -1,4 +1,4 @@
-# $Id: d8839e841a402273ed02fd99c59a7209525a90b9 $
+# $Id: c28cf8dee004eacfae32f9668adfed84f35cc96d $
 
 if (MAINTAINER)
   set (MANDIR ${PROJECT_BINARY_DIR}/man)
@@ -21,7 +21,7 @@ foreach (TOOL ${TOOLS})
     OBJECT_DEPENDS ${MANDIR}/${TOOL}.usage)
 
   target_link_libraries (${TOOL} Geographic)
-# set_target_properties (${TOOL} PROPERTIES VERSION "${LIBVERSIONFULL}")
+
 endforeach (TOOL)
 
 install (TARGETS ${TOOLS} DESTINATION bin)

@@ -2,9 +2,9 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: e3aadea47d146f9a6ed64d480beac875691f56d3 $
+# $Id: 67fd47edafe07e5db8d080efd4d1490dd6b6922b $
 
-AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
+AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 
 lib_LTLIBRARIES = libGeographic.la
 

@@ -12,12 +12,13 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geoidheight.cpp
 
-// "$Id: c752cd7a02925cc13e6a6306581e38696555bfd4 $";
+// $Id: 6f2eef107567b5db61493ffdc784b819cdea7020 $
 
-#include "GeographicLib/Geoid.hpp"
-#include "mex.h"
 #include <string>
-
+#include <algorithm>
+#include <GeographicLib/Geoid.hpp>
+#include <mex.h>
+ 
 using namespace std;
 using namespace GeographicLib;
 
@@ -26,10 +27,10 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   if (nrhs < 1)
     mexErrMsgTxt("One input argument required.");
-  if (nrhs > 3)
+  else if (nrhs > 3)
     mexErrMsgTxt("More than three input arguments specified.");
-  else if (nlhs > 1)
-    mexErrMsgTxt("Only one output argument can be specified.");
+  else if (nlhs > 2)
+    mexErrMsgTxt("More than two output arguments specified.");
 
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
     mexErrMsgTxt("latlong coordinates are not of type double.");
@@ -38,14 +39,23 @@ void mexFunction( int nlhs, mxArray* plhs[],
     mexErrMsgTxt("latlong coordinates must be M x 2 matrix.");
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
 
+  plhs[0] = mxCreateDoubleMatrix(m, 1, mxREAL);
   double* h = mxGetPr(plhs[0]);
-  double* gradn = h + m;
-  double* grade = h + 2*m;
+  std::fill(h, h + m, Math::NaN());
+  double* gradn = NULL;
+  double* grade = NULL;
+  bool gradient = nlhs == 2;
+
+  if (gradient) {
+    plhs[1] = mxCreateDoubleMatrix(m, 2, mxREAL);
+    gradn = mxGetPr(plhs[1]);
+    std::fill(gradn, gradn + 2*m, Math::NaN());
+    grade = gradn + m;
+  }
 
   string geoidname("egm96-5");
   if (nrhs > 1) {
@@ -81,16 +91,13 @@ void mexFunction( int nlhs, mxArray* plhs[],
   try {
     const Geoid g(geoidname, geoiddir);
     for (int i = 0; i < m; ++i) {
-      try {
-        if (abs(lat[i]) > 90)
-          throw GeographicErr("Invalid latitude");
-        if (lon[i] < -180 || lon[i] > 360)
-          throw GeographicErr("Invalid longitude");
-        h[i] = g(lat[i], lon[i], gradn[i], grade[i]);
-      }
-      catch (const std::exception& e) {
-        mexWarnMsgTxt(e.what());
-        h[i] = gradn[i] = grade[i] = Math::NaN();
+      if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
+        // g() can throw an exception, e.g., because of an I/O failure.  Treat
+        // this as fatal.
+        if (gradient)
+          h[i] = g(lat[i], lon[i], gradn[i], grade[i]);
+        else
+          h[i] = g(lat[i], lon[i]);
       }
     }
   }

@@ -1,7 +1,6 @@
 /**
  * \file GeodesicProj.cpp
- * \brief Command line utility for azimuthal equidistant and Cassini-Soldner
- * projections
+ * \brief Command line utility for geodesic projections
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
@@ -80,7 +79,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 6dfddfd7929b2d436c913f756852ca43bb551bf5 $\n"
+          << ": $Id: 8b2e9f9438416344cf48c9a4b501714eba8fe7aa $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

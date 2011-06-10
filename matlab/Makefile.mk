@@ -1,18 +1,29 @@
-# $Id: c26d5af8f3ff807ccf3f27ec7627cf21d1efa5c9 $
+# $Id: d2f4c0e366210492ebb4d4a0b230a1c3462cd1f7 $
 
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \
-	geoidheight
+	geoidheight geocentricforward geocentricreverse \
+	localcartesianforward localcartesianreverse
 
-MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS))
+MATLAB_COMPILESCRIPT = geographiclibinterface.m
+
+MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS)) \
+	 $(MATLAB_COMPILESCRIPT)
+
+DEST = $(PREFIX)/libexec/GeographicLib/matlab
+INSTALL=install -b
 
 all:
 	@:
+
 install:
-	@:
+	test -d $(DEST) || mkdir -p $(DEST)
+	$(INSTALL) -m 644 $(MATLABFILES) $(DEST)/
+
 clean:
-	@:
+	rm -f *.mex* *.oct
+
 list:
-	@echo geographiclibinterface.m $(MATLABFILES)
+	@echo $(MATLABFILES)
 
 .PHONY: all install list clean

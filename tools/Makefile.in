@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 1c4efce45d07aceb3b9df6177549d584224532e3 $
+# $Id: e5e4102ed14cc67e6671d80b0402058f8df70b66 $
 
 
 VPATH = @srcdir@
@@ -327,7 +327,7 @@ ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
-	../include/GeographicLib/LamberConformalConic.hpp
+	../include/GeographicLib/LambertConformalConic.hpp
 
 sbin_SCRIPTS = geographiclib-get-geoids
 geoids_dir = $(datadir)/GeographicLib/geoids

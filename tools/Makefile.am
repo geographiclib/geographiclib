@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 1c4efce45d07aceb3b9df6177549d584224532e3 $
+# $Id: e5e4102ed14cc67e6671d80b0402058f8df70b66 $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/man
@@ -79,7 +79,7 @@ ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
-	../include/GeographicLib/LamberConformalConic.hpp
+	../include/GeographicLib/LambertConformalConic.hpp
 
 sbin_SCRIPTS = geographiclib-get-geoids
 

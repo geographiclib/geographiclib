@@ -1,20 +1,21 @@
-# $Id: 6edcea04c5eb3974f2a82b41e9452e36e5c59ff0 $
+# $Id: f22ec54a263bb996bf7d1e87bc8bf3cd600828b3 $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 9)
+set (GeographicLib_VERSION_MINOR 10)
 set (GeographicLib_VERSION_STRING
      ${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR})
 set (LIBVERSION 5)
-set (LIBVERSIONFULL 5.2.1)
+set (LIBVERSIONFULL 5.2.2)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
 else (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
 endif (WIN32)
+option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
 
 if (WIN32)
   set (GEOGRAPHICLIB_GEOID_PATH
@@ -37,12 +38,32 @@ if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_DOXYGEN doxygen)
+else (NOT WIN32)
+  find_program (HAVE_MEX mex.bat)
 endif (NOT WIN32)
 if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
   set (MAINTAINER ON CACHE BOOL "Allow build of additional components")
 else (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
   set (MAINTAINER OFF CACHE BOOL "Allow build of additional components")
 endif (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
+
+if (ENABLE_MATLAB)
+  if (NOT WIN32)
+    find_program (HAVE_MEX mkoctfile)
+    if (HAVE_MEX)
+      set (MEX "mkoctfile")
+      set (MEXEXT "mex") 
+    endif (HAVE_MEX)
+  else (NOT WIN32)
+    find_program (HAVE_MEX mex.bat)
+    if (HAVE_MEX)
+      set (MEX "mex")
+      set (MEXEXT "mexw32")
+    endif (HAVE_MEX)
+  endif (NOT WIN32)
+else (ENABLE_MATLAB)
+  set (HAVE_MEX OFF)
+endif (ENABLE_MATLAB)
 
 # Set a default build type for single-configuration
 # CMake generators if no build type is set.
@@ -65,6 +86,7 @@ add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
+add_subdirectory (matlab)
 
 if (MAINTAINER)
   add_custom_target (distrib-all)

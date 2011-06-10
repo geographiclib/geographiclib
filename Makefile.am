@@ -2,29 +2,29 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 6241737b4e67938cbba582b2611283c538842d65 $
+# $Id: f966bcf78a8764b147f5b6318a1b8cb3578730ee $
 
 AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc include
+SUBDIRS = src man tools doc include matlab
 
 EXTRA_DIST = AUTHORS 00README.txt COPYING.txt NEWS INSTALL \
 	Makefile.mk CMakeLists.txt \
-	windows maxima matlab man doc
+	windows maxima man doc
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
-		\( ! -name '*.sln' -a ! -name '*.vc*proj' -a ! -name '*.mk' \)| \
+		! \( -name '*.sln' -o -name '*.vc*proj' -o -name '*.mk' \)| \
 		xargs rm -f ; \
 	find $(distdir)/matlab -type f \
-		\( ! -name '*.cpp' -a ! -name '*.m' -a ! -name '*.mk' \) | \
+		! \( -name '*.cpp' -o -name '*.m' -o -name 'Makefile.*' -o -name CMakeLists.txt \) | \
 		xargs rm -rf ; \
 	find $(distdir) \
-		\( -name .svn -o -name .git -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' \)| \
+		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
@@ -32,7 +32,7 @@ dist-hook:
 # Custom rules
 
 all-local: man doc
-install-data-local: install-doc
+install-data-local: install-doc # install-matlab
 
 doc: man
 	$(MAKE) -C doc doc
@@ -43,4 +43,7 @@ install-doc:
 man:
 	$(MAKE) -C man man
 
-.PHONY: doc install-doc man
+# install-matlab:
+# 	$(MAKE) -C matlab install-matlab
+
+.PHONY: doc install-doc man install-matlab

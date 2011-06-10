@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: e3aadea47d146f9a6ed64d480beac875691f56d3 $
+# $Id: 67fd47edafe07e5db8d080efd4d1490dd6b6922b $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -239,7 +239,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -funroll-loops -finline-functions -fomit-frame-pointer
+AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 lib_LTLIBRARIES = libGeographic.la
 libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)	
 libGeographic_la_SOURCES = AlbersEqualArea.cpp \

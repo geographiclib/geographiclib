@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 5c6131ee06c345784d071e643d987e1e9adb3e64 $
+# $Id: 73eb6291bcbea32faf1dcac08533c66b90666954 $
 
 nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/AzimuthalEquidistant.hpp \
@@ -23,7 +23,8 @@ nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/PolarStereographic.hpp \
 				GeographicLib/TransverseMercatorExact.hpp \
 				GeographicLib/TransverseMercator.hpp \
-				GeographicLib/UTMUPS.hpp
+				GeographicLib/UTMUPS.hpp \
+				GeographicLib/Config.h
 
 geoids_dir=$(datadir)/GeographicLib/geoids
 

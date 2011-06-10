@@ -1,4 +1,4 @@
-# $Id: 4f1282395c7b8213d38b5bc2fc66047f1305f1bb $
+# $Id: feaa5860a8c7cfd1158a769c3ba84cb0654791ea $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -21,7 +21,7 @@ SOURCES = $(addsuffix .cpp,$(MODULES))
 OBJECTS = $(addsuffix .o,$(MODULES))
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+CXXFLAGS = -g -Wall -Wextra -O3
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES) \
 	-DGEOID_DEFAULT_PATH=\"$(GEOID_DEFAULT_PATH)\" 

@@ -1,8 +1,8 @@
-function geodesic = geodesicinverse(latlong, a, r)
+function [geodesic, aux] = geodesicinverse(latlong, a, r)
 %geodesicinverse  Solve inverse geodesic problem
 %
-%   geodesic = geodesicinverse(latlong);
-%   geodesic = geodesicinverse(latlong, a, r);
+%   [geodesic, aux] = geodesicinverse(latlong);
+%   [geodesic, aux] = geodesicinverse(latlong, a, r);
 %
 %   latlong is an M x 4 matrix
 %       latitude of point 1 = latlong(:,1) in degrees
@@ -10,14 +10,15 @@ function geodesic = geodesicinverse(latlong, a, r)
 %       latitude of point 2 = latlong(:,3) in degrees
 %       longitude of point 2 = latlong(:,4) in degrees
 %
-%   geodesic is an M x 7 matrix
+%   geodesic is an M x 3 matrix
 %       azimuth at point 1 = geodesic(:,1) in degrees
 %       azimuth at point 2 = geodesic(:,2) in degrees
-%       distance = geodesic(:,3) in meters
-%       reduced length = geodesic(:,4) in meters
-%       geodesic scale 1 to 2 = geodesic(:,5)
-%       geodesic scale 2 to 1 = geodesic(:,6)
-%       area under geodesic = geodesic(:,7) in meters^2
+%       distance between points 1 and 2 = geodesic(:,3) in meters
+%   aux is an M x 4 matrix
+%       reduced length = aux(:,1) in meters
+%       geodesic scale 1 to 2 = aux(:,2)
+%       geodesic scale 2 to 1 = aux(:,3)
+%       area under geodesic = aux(:,4) in meters^2
 %
 %   a = major radius (meters)
 %   r = reciprocal flattening (0 means a sphere)
@@ -35,4 +36,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 6a0cb2ef6e34d91834bf63f70d9c6c64c474bfdc $
+% $Id: 8f32b7c19b4da474e7a475e8a31f068b853b107f $

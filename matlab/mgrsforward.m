@@ -19,7 +19,7 @@ function mgrs = mgrsforward(utmups, prec)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       MGRS::Forward
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % mgrsforward.m
@@ -29,4 +29,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 4b4cd94bd27f6cf54501e499e1303e316f1f38f2 $
+% $Id: 18e97d9090906292fdb6f666b950feba1f9e559d $

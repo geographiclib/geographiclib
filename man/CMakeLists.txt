@@ -1,4 +1,4 @@
-# $Id: 9287a1a50cec392589ee44f3d94cf551d00b0dfa $
+# $Id: cfa62a0c7fc5d22ad5ac58e5029b446275b4fdcd $
 
 if (MAINTAINER)
   add_custom_target (distrib-man)
@@ -56,6 +56,6 @@ if (MAINTAINER)
         cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f"` > /dev/null 2>&1 ||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
-else (MAINTAINER)
-  install (FILES ${MANPAGES} DESTINATION man/man1)
 endif (MAINTAINER)
+
+install (FILES ${MANPAGES} DESTINATION share/man/man1)

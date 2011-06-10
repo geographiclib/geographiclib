@@ -1,4 +1,4 @@
-# $Id: 5ee17385b9db14c3aaee80d693ddfe85d55ae6be $
+# $Id: 537104d6be72440ac165e606b29bf837c1bde0ee $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -32,7 +32,7 @@ CPPFLAGS = -I$(INCLUDEPATH) -I../man $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
 
 $(PROGRAMS): $(LIBPATH)/$(LIBRARY)
-	$(CC) -o $@ $@.o $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $@ $@.o $(LDLIBS)
 
 VPATH = ../include/GeographicLib ../man
 

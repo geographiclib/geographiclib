@@ -12,10 +12,10 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic mgrsforward.cpp
 
-// "$Id: cef9f6f437b8dbcf1eb072a8d6ff04caf00cc1e2 $";
+// $Id: 8ff3a738c4e5fc70aba668a91c666766e19f4a34 $
 
-#include "GeographicLib/MGRS.hpp"
-#include "mex.h"
+#include <GeographicLib/MGRS.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;
@@ -25,7 +25,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   if (nrhs < 1)
     mexErrMsgTxt("One input argument required.");
-  if (nrhs > 2)
+  else if (nrhs > 2)
     mexErrMsgTxt("More than two input arguments specified.");
   else if (nlhs > 1)
     mexErrMsgTxt("Only one output argument can be specified.");
@@ -52,7 +52,6 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateCellArray(1, &m);
 
   double* x = mxGetPr(prhs[0]);
   double* y = x + m;
@@ -60,6 +59,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   double* hemi = x + 3*m;
 
   string mgrsstr;
+  plhs[0] = mxCreateCellArray(1, &m);
   mxArray* mgrs = plhs[0];
 
   for (int i = 0; i < m; ++i) {

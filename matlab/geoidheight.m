@@ -1,12 +1,12 @@
-function height = geoidheight(latlong, geoidname, geoiddir)
+function [height, gradient] = geoidheight(latlong, geoidname, geoiddir)
 %geoidheight  Compute geoid height
 %
-%   CAUTION: THIS MAY CAUSE MATLAB TO CRASH!!  This occurs with Matlab
-%   2008a when using Visual Studio 2008 as the compiler.
+%   CAUTION: THIS MAY CAUSE MATLAB TO CRASH!!  This occurs when the interface
+%   is compiled with Visual Studio 2008.
 %
-%   height = geoidheight(latlong);
-%   height = geoidheight(latlong, geoidname);
-%   height = geoidheight(latlong, geoidname, geoiddir);
+%   [height, gradient] = geoidheight(latlong);
+%   [height, gradient] = geoidheight(latlong, geoidname);
+%   [height, gradient] = geoidheight(latlong, geoidname, geoiddir);
 %
 %   latlong is an M x 2 matrix
 %       latitude = latlong(:,1) in degrees
@@ -15,13 +15,14 @@ function height = geoidheight(latlong, geoidname, geoiddir)
 %       egm84-30  egm84-15
 %       egm96-15  egm96-5
 %       egm2008-5 egm2008-2_5 egm2008-1
-%   geoiddir is the direcortory containing the geoid models (default empty
+%   geoiddir is the directory containing the geoid models (default empty
 %       string meaning system default)
 %
-%   height is an M x 3 matrix
-%       geoidheight = utmups(:,1) in meters
-%       gradn = utmups(:,2) gradient of height in northerly direction
-%       grade = utmups(:,3) gradient of height in easterly direction
+%   height is an M x 1 matrix
+%       geoidheight = height(:,1) height of geoid in meters
+%   gradient is the gradient of the geoid height
+%       gradn = gradient(:,1) gradient of height in northerly direction
+%       grade = gradient(:,2) gradient of height in easterly direction
 %
 %   This is an interface to the GeographicLib C++ routine
 %       Geoid::operator()
@@ -31,7 +32,8 @@ end
 % geoidheight.m
 % Matlab .m file for looking up geoid heights
 %
-% Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
-% the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+% under the LGPL.  For more information, see
+% http://geographiclib.sourceforge.net/
 %
-% $Id: 1e73f6f8dbc961f5021d6fe342f5922f4c47592c $
+% $Id: 1959d9a1bbda3f3dd465799051a5dc1515bc84ee $

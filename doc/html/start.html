@@ -25,7 +25,7 @@
 <h1>Getting started </h1>  </div>
 </div>
 <div class="contents">
-<center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>Much (but not all!) of the useful functionality of GeographicLib is available via simple command line utilities. See <a class="el" href="utilities.html">Utility Programs</a> for documentation on these.</p>
+<center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>Much (but not all!) of the useful functionality of GeographicLib is available via simple command line utilities. Interfaces to some of them are available via the web. See <a class="el" href="utilities.html">Utility Programs</a> for documentation on these.</p>
 <p>In order to use GeographicLib from C++ code, you will need to</p>
 <ul>
 <li>Include the header files for the GeographicLib classes in your code. E.g., <div class="fragment"><pre class="fragment"><span class="preprocessor">  #include &lt;<a class="code" href="LambertConformalConic_8hpp.html" title="Header for GeographicLib::LambertConformalConic class.">GeographicLib/LambertConformalConic.hpp</a>&gt;</span> 
@@ -38,13 +38,13 @@
 C/C++ -&gt; General -&gt; Additional Include Directories = C:\Program Files\GeographicLib\include
 </pre></div></li>
 <li>Tell the linker the name, Geographic, and location of the library. Using g++ as the linker, you would use <div class="fragment"><pre class="fragment">
-  g++ -g -o testprogram -L/usr/local/lib -lGeographic testprogram.o
+  g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
 </pre></div> With Visual Studio, you supply this information in the IDE via, e.g., <div class="fragment"><pre class="fragment">
 Linker -&gt; Input -&gt; Additional Dependencies = Geographic.lib
-Linker -&gt; General -&gt; Additional Library DIrectories = C:\Program Files\GeographicLib\include
+Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\GeographicLib\include
 </pre></div> Note that the library name is <b>Geographic</b> and not GeographicLib.</li>
 <li>Tell the runtime environment where to find the shared library (assuming you compiled GeographicLib as a shared library). With g++, this is accomplished by modifying the link line above to read. <div class="fragment"><pre class="fragment">
-  g++ -g -o testprogram -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic testprogram.o
+  g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
 </pre></div> On Windows, you need to ensure that Geographic.dll is in the same directory as your executable or else include the directory containing the dll in your <code>PATH</code>.</li>
 <li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode.</li>
 </ul>
@@ -92,7 +92,7 @@ Linker -&gt; General -&gt; Additional Library DIrectories = C:\Program Files\Geo
 <li>Learn about and run the <a class="el" href="utilities.html">Utility Programs</a>.</li>
 <li>Read the section, <a class="el" href="organization.html">Code organization</a>, for an overview of the library.</li>
 <li>Browse the <a href="annotated.html">Class List</a> for full documentation on the classes in the library.</li>
-<li>Look at the source code for the utilites in the tools directory for more examples of using GeographicLib from C++ code, e.g., <a class="el" href="GeodesicProj_8cpp.html" title="Command line utility for azimuthal equidistant and Cassini-Soldner projections.">GeodesicProj.cpp</a> is a program to performing various geodesic projections.</li>
+<li>Look at the source code for the utilities in the tools directory for more examples of using GeographicLib from C++ code, e.g., <a class="el" href="GeodesicProj_8cpp.html" title="Command line utility for geodesic projections.">GeodesicProj.cpp</a> is a program to performing various geodesic projections.</li>
 </ul>
 <p>Here's a list of some of the abbreviations used here with links to the corresponding Wikipedia articles:</p>
 <ul>
@@ -103,7 +103,7 @@ Linker -&gt; General -&gt; Additional Library DIrectories = C:\Program Files\Geo
 <li><a href="http://en.wikipedia.org/wiki/Geoid">EGM</a>, Earth Gravity Model.</li>
 </ul>
 <center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat May 28 2011 for GeographicLib by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Jun 10 2011 for GeographicLib by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

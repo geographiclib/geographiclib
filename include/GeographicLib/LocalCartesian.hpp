@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: f9346d8010f4b5b4e74a65961b472c73578dfbfe $"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: d20959dd365321594acba2a7dea5cd4dedfbf66a $"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -119,10 +119,12 @@ namespace GeographicLib {
     void Forward(real lat, real lon, real h, real& x, real& y, real& z,
                  std::vector<real>& M)
       const throw()  {
-      real t[dim2_];
-      IntForward(lat, lon, h, x, y, z, t);
-      if (M.end() == M.begin() + dim2_)
+      if (M.end() == M.begin() + dim2_) {
+        real t[dim2_];
+        IntForward(lat, lon, h, x, y, z, t);
         copy(t, t + dim2_, M.begin());
+      } else
+        IntForward(lat, lon, h, x, y, z, NULL);
     }
 
     /**
@@ -162,10 +164,12 @@ namespace GeographicLib {
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
       const throw() {
-      real t[dim2_];
-      IntReverse(x, y, z, lat, lon, h, t);
-      if (M.end() == M.begin() + dim2_)
+      if (M.end() == M.begin() + dim2_) {
+        real t[dim2_];
+        IntReverse(x, y, z, lat, lon, h, t);
         copy(t, t + dim2_, M.begin());
+      } else
+        IntReverse(x, y, z, lat, lon, h, NULL);
     }
 
     /** \name Inspector functions

@@ -1,8 +1,8 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-dnl $Id: 3e81db3af223de52180e4c6721af7c34a4027713 $
+dnl $Id: b735c8f0495fad9fce393b0f652f5c323d88f2d3 $
 
-AC_INIT([GeographicLib],[1.9],[charles@karney.com])
+AC_INIT([GeographicLib],[1.10],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -23,7 +23,7 @@ dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
 LT_CURRENT=7
-LT_REVISION=1
+LT_REVISION=2
 LT_AGE=2
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
@@ -61,5 +61,6 @@ include/Makefile
 tools/Makefile
 doc/Makefile
 man/Makefile
+matlab/Makefile
 ])
 AC_OUTPUT

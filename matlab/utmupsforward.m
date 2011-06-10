@@ -1,20 +1,21 @@
-function utmups = utmupsforward(latlong, setzone)
+function [utmups, scale] = utmupsforward(latlong, setzone)
 %utmupsforward  Convert geographic coordinates to UTM/UPS
 %
-%   utmups = utmupsforward(latlong);
-%   utmups = utmupsforward(latlong, setzone);
+%   [utmups, scale] = utmupsforward(latlong);
+%   [utmups, scale] = utmupsforward(latlong, setzone);
 %
 %   latlong is an M x 2 matrix
 %       latitude = latlong(:,1) in degrees
 %       longitude = latlong(:,2) in degrees
 %
-%   utmups is an M x 6 matrix
+%   utmups is an M x 4 matrix
 %       easting = utmups(:,1) in meters
 %       northing = utmups(:,2) in meters
 %       zone = utmups(:,3)
 %       hemi = utmups(:,4)
-%       gamma = utmups(:,5) meridian convergence in degrees
-%       k = utmups(:,6) scale
+%   scale is an M x 2 matrix
+%       gamma = scale(:,1) meridian convergence in degrees
+%       k = scale(:,2) scale
 %
 %   zone = 0 for UPS, zone = [1,60] for UTM
 %   hemi = 0 for southern hemisphere, hemi = 1 for northern hemisphere
@@ -27,13 +28,14 @@ function utmups = utmupsforward(latlong, setzone)
 %
 %   This is an interface to the GeographicLib C++ routine
 %       UTMUPS::Forward
-%   See the documenation on this function for more information.
+%   See the documentation on this function for more information.
   error('Error: executing .m file instead of compiled routine');
 end
 % utmupsforward.m
 % Matlab .m file for geographic to UTM/UPS conversions
 %
-% Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
-% the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+% Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+% under the LGPL.  For more information, see
+% http://geographiclib.sourceforge.net/
 %
-% $Id: b81cf582f574543d9510b1d7943b66d9ffab26d5 $
+% $Id: bd76e0e61e121369e47cf5cceaed3a652520def0 $

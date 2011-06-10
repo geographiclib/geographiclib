@@ -1,4 +1,4 @@
-# $Id: a9b9973c2674e10695153399386543c1c6b0f24f $
+# $Id: 2ad5cb2c12b9ffc49548228f684460d42fbe518e $
 
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
@@ -11,8 +11,9 @@ $(SUBDIRS):
 	$(MAKE) -C $@
 
 tools: src
-install: install-headers install-lib install-tools install-man
-clean: clean-src clean-tools clean-doc clean-man
+install: install-headers install-lib install-tools install-man install-doc \
+	install-matlab
+clean: clean-src clean-tools clean-doc clean-man clean-matlab
 distclean: clean distclean-doc distclean-man
 install-headers:
 	$(MAKE) -C include install
@@ -24,6 +25,8 @@ install-doc: doc
 	$(MAKE) -C doc install
 install-man: man
 	$(MAKE) -C man install
+install-matlab: matlab
+	$(MAKE) -C matlab install
 clean-src:
 	$(MAKE) -C src clean
 clean-tools:
@@ -32,6 +35,8 @@ clean-doc:
 	$(MAKE) -C doc clean
 clean-man:
 	$(MAKE) -C man clean
+clean-matlab: matlab
+	$(MAKE) -C matlab clean
 distclean-doc:
 	$(MAKE) -C doc distclean
 distclean-man:
@@ -49,6 +54,7 @@ list:
 
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 
-.PHONY: all $(SUBDIRS) \
-	install install-headers install-lib install-tools install-doc \
-	clean clean-src clean-tools clean-doc list package
+.PHONY: all $(SUBDIRS) install \
+	install-headers install-lib install-tools install-man install-matlab \
+	clean clean-src clean-tools clean-doc clean-man clean-matlab \
+	distclean distclean-doc distclean-man

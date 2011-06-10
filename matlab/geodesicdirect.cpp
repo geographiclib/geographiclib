@@ -12,10 +12,11 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geodesicdirect.cpp
 
-// "$Id: 831f8ceaceeee91b6861a55e93eacb2a8f9a65c4 $";
+// $Id: 035764e37d7336b6eca1ee47cd6159a599247d7c $
 
-#include "GeographicLib/Geodesic.hpp"
-#include "mex.h"
+#include <algorithm>
+#include <GeographicLib/Geodesic.hpp>
+#include <mex.h>
 
 using namespace std;
 using namespace GeographicLib;
@@ -25,15 +26,15 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   if (nrhs < 1)
     mexErrMsgTxt("One input argument required.");
-  if (nrhs > 3)
+  else if (nrhs > 3)
     mexErrMsgTxt("More than three input arguments specified.");
-  if (nrhs == 2)
+  else if (nrhs == 2)
     mexErrMsgTxt("Must specify repicrocal flattening with the major radius.");
-  else if (nlhs > 1)
-    mexErrMsgTxt("Only one output argument can be specified.");
+  else if (nlhs > 2)
+    mexErrMsgTxt("More than two output arguments specified.");
 
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
-    mexErrMsgTxt("geodesics are not of type double.");
+    mexErrMsgTxt("geodesic coordinates are not of type double.");
 
   if (mxGetN(prhs[0]) != 4)
     mexErrMsgTxt("geodesic coordinates must be M x 4 matrix.");
@@ -51,38 +52,44 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   int m = mxGetM(prhs[0]);
-  plhs[0] = mxCreateDoubleMatrix(m, 7, mxREAL);
 
   double* lat1 = mxGetPr(prhs[0]);
   double* lon1 = lat1 + m;
   double* azi1 = lat1 + 2*m;
   double* s12 = lat1 + 3*m;
 
+  plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* lat2 = mxGetPr(plhs[0]);
+  std::fill(lat2, lat2 + 3*m, Math::NaN());
   double* lon2 = lat2 + m;
   double* azi2 = lat2 + 2*m;
-  double* m12 = lat2 + 3*m;
-  double* M12 = lat2 + 4*m;
-  double* M21 = lat2 + 5*m;
-  double* S12 = lat2 + 6*m;
+  double* m12 = NULL;
+  double* M12 = NULL;
+  double* M21 = NULL;
+  double* S12 = NULL;
+  bool aux = nlhs == 2;
+
+  if (aux) {
+    plhs[1] = mxCreateDoubleMatrix(m, 4, mxREAL);
+    m12 = mxGetPr(plhs[1]);
+    std::fill(m12, m12 + 4*m, Math::NaN());
+    M12 = m12 + m;
+    M21 = m12 + 2*m;
+    S12 = m12 + 3*m;
+  }
 
   try {
     const Geodesic g(a, r);
     for (int i = 0; i < m; ++i) {
-      try {
-        if (abs(lat1[i]) > 90)
-          throw GeographicErr("Invalid latitude");
-        if (lon1[i] < -180 || lon1[i] > 360)
-          throw GeographicErr("Invalid longitude");
-        if (azi1[i] < -180 || azi1[i] > 360)
-          throw GeographicErr("Invalid azimuth");
-        g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
-                 lat2[i], lon2[i], azi2[i], m12[i], M12[i], M21[i], S12[i]);
-      }
-      catch (const std::exception& e) {
-        mexWarnMsgTxt(e.what());
-        lat2[i] = lon2[i] = azi2[i]
-          = m12[i] = M12[i] = M21[i] = S12[i] = Math::NaN();
+      if (!(abs(lat1[i]) > 90) &&
+          !(lon1[i] < -180 || lon1[i] > 360) &&
+          !(azi1[i] < -180 || azi1[i] > 360)) {
+        if (aux) 
+          g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
+                   lat2[i], lon2[i], azi2[i], m12[i], M12[i], M21[i], S12[i]);
+        else
+          g.Direct(lat1[i], lon1[i], azi1[i], s12[i],
+                   lat2[i], lon2[i], azi2[i]);
       }
     }
   }

@@ -1,7 +1,6 @@
 /**
  * \file ConicProj.cpp
- * \brief Command line utility for azimuthal equidistant and Cassini-Soldner
- * projections
+ * \brief Command line utility for conical projections
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
@@ -106,7 +105,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: a4261f34cd15cbd30c961f893dc036342bcdb749 $\n"
+          << ": $Id: 51f8e8dcbd0fefa69c2f1695774d3ccca910eb36 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
