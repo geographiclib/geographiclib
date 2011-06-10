@@ -31,8 +31,9 @@ dist-hook:
 	\"$(PACKAGE_VERSION)\" > $(distdir)/include/GeographicLib/Config.h
 # Custom rules
 
+install: all
 all-local: man doc
-install-data-local: install-doc install-matlab
+install-data-local: install-doc # install-matlab
 
 doc: man
 	$(MAKE) -C doc doc
@@ -43,7 +44,7 @@ install-doc:
 man:
 	$(MAKE) -C man man
 
-install-matlab:
-	$(MAKE) -C matlab install-matlab
+# install-matlab:
+# 	$(MAKE) -C matlab install-matlab
 
-.PHONY: doc install-doc man
+.PHONY: doc install-doc man install-matlab

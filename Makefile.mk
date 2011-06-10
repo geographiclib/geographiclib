@@ -12,7 +12,7 @@ $(SUBDIRS):
 
 tools: src
 install: install-headers install-lib install-tools install-man install-matlab
-clean: clean-src clean-tools clean-doc clean-man
+clean: clean-src clean-tools clean-doc clean-man clean-matlab
 distclean: clean distclean-doc distclean-man
 install-headers:
 	$(MAKE) -C include install
@@ -34,6 +34,8 @@ clean-doc:
 	$(MAKE) -C doc clean
 clean-man:
 	$(MAKE) -C man clean
+clean-matlab: matlab
+	$(MAKE) -C matlab clean
 distclean-doc:
 	$(MAKE) -C doc distclean
 distclean-man:
@@ -51,6 +53,7 @@ list:
 
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 
-.PHONY: all $(SUBDIRS) \
-	install install-headers install-lib install-tools install-doc \
-	clean clean-src clean-tools clean-doc list package
+.PHONY: all $(SUBDIRS) install \
+	install-headers install-lib install-tools install-man install-matlab \
+	clean clean-src clean-tools clean-doc clean-man clean-matlab \
+	distclean distclean-doc distclean-man

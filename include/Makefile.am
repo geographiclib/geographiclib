@@ -23,7 +23,8 @@ nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/PolarStereographic.hpp \
 				GeographicLib/TransverseMercatorExact.hpp \
 				GeographicLib/TransverseMercator.hpp \
-				GeographicLib/UTMUPS.hpp
+				GeographicLib/UTMUPS.hpp \
+				GeographicLib/Config.h
 
 geoids_dir=$(datadir)/GeographicLib/geoids
 

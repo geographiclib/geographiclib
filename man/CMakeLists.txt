@@ -56,6 +56,6 @@ if (MAINTAINER)
         cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f"` > /dev/null 2>&1 ||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
-else (MAINTAINER)
-  install (FILES ${MANPAGES} DESTINATION man/man1)
 endif (MAINTAINER)
+
+install (FILES ${MANPAGES} DESTINATION share/man/man1)
