@@ -24,9 +24,10 @@ function [height, gradient] = geoidheight(latlong, geoidname, geoiddir)
 %       gradn = gradient(:,1) gradient of height in northerly direction
 %       grade = gradient(:,2) gradient of height in easterly direction
 %
-%   This is an interface to the GeographicLib C++ routine
-%       Geoid::operator()
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     Geoid::operator()
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1Geoid.html
   error('Error: executing .m file instead of compiled routine');
 end
 % geoidheight.m

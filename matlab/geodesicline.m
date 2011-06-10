@@ -27,9 +27,10 @@ function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, r)
 %       geodesicdirect([repmat([lat1, lon1, azi1],size(distances)), ...
 %                       distances], a, r)
 %
-%   This is an interface to the GeographicLib C++ routine
-%       GeodesicLine::Position
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     GeodesicLine::Position
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1GeodesicLine.html
   error('Error: executing .m file instead of compiled routine');
 end
 % geodesicline.m

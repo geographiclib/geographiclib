@@ -26,9 +26,10 @@ function [utmups, scale] = utmupsforward(latlong, setzone)
 %       -1, use the standard assigment (the default)
 %       -2, use closest UTM zone
 %
-%   This is an interface to the GeographicLib C++ routine
-%       UTMUPS::Forward
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     UTMUPS::Forward
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1UTMUPS.html
   error('Error: executing .m file instead of compiled routine');
 end
 % utmupsforward.m

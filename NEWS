@@ -8,7 +8,7 @@ For more information, see
 
 The current version of the library is 1.10.
 
-Changes between 1.10 (released 2011-06-dd) and 1.9 versions:
+Changes between 1.10 (released 2011-06-11) and 1.9 versions:
 
   * Improvements to Matlab/Octave interface:
      + add {geocentric,localcartesian}{forward,reverse};
@@ -18,6 +18,8 @@ Changes between 1.10 (released 2011-06-dd) and 1.9 versions:
      + include compiled interface with Windows binary installer.
 
   * FIX BUG: Config.h not installed with autoconf.
+
+  * FIX BUG: cmake installed in man/man1 instead of share/man/man1.
 
 Changes between 1.9 (released 2011-05-28) and 1.8 versions:
 

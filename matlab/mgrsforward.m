@@ -17,9 +17,10 @@ function mgrs = mgrsforward(utmups, prec)
 %
 %   mgrs is a M x 1 cell array of MGRS strings.
 %
-%   This is an interface to the GeographicLib C++ routine
-%       MGRS::Forward
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     MGRS::Forward
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1MGRS.html
   error('Error: executing .m file instead of compiled routine');
 end
 % mgrsforward.m

@@ -12,7 +12,7 @@
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 1.10
-\date 2011-06-dd
+\date 2011-06-11
 
 \section abstract Abstract
 
@@ -23,6 +23,8 @@ calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
 5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.
+The functionality of the library can be accessed from user code, from
+the \ref utilities provided, or via the \ref matlab.
 
 This library is <i>not</i> a general purpose projection library; use
 <a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
@@ -122,7 +124,9 @@ The goals of %GeographicLib are:
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 4.4 under Linux, with g++
-4.2 under Mac OS X, and with MS Visual Studio 2008.
+4.2 under Mac OS X, and with MS Visual Studio 2008 and 2010.
+
+\ref matlab for some of the key classes are also provided.
 
 The section \ref geodesic documents the method of solving the geodesic
 problem.
@@ -377,18 +381,19 @@ C:/Program Files/GeographicLib-1.10/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
-path in Matlab to access this interface.  This installer was built using
-Visual Studio 10 (2010) in Release mode.  The Matlab interface was
-compiled with Matlab R2010b, however it may work with other versions of
-Matlab (e.g., R2008a).
+path in Matlab to access this interface.  The binaries were built using
+Visual Studio 10 (2010) for Win32 in Release mode.  The Matlab interface
+was compiled with Matlab R2010b, however it works with some other
+versions of Matlab (e.g., R2008a).
 
-\section matlab Compiling the Matlab interface
+\section matlab Matlab and Octave interfaces
 
-The matlab directory contains some rudimentary interface code so that
-%GeographicLib can be accessed from Matlab or Octave.  If you set
+The matlab directory contains interface code so that some %GeographicLib
+classes can be accessed from Matlab or Octave.  If you set
 ENABLE_MATLAB=ON when installing with cmake, this interface is built.
 Similarly the binary installer for Windows includes the compiled
-interface.  To use either of these, run one of (for example) \verbatim
+interface (compiled using Visual Studio 10 and Matlab 2010b).  To use
+either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
   addpath 'C:/Program Files/GeographicLib-1.10/libexec/GeographicLib/matlab'
 \endverbatim
@@ -2113,7 +2118,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (released 2011-06-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (released 2011-06-11)</a>
   - Improvements to Matlab/Octave interface:
      - add {geocentric,localcartesian}{forward,reverse};
      - make geographiclibinterface more general;
@@ -2121,6 +2126,7 @@ number.)
      - cmake compiles the interface if ENABLE_MATLAB=ON;
      - include compiled interface with Windows binary installer.
   - FIX BUG: Config.h not installed with autoconf.
+  - FIX BUG: cmake installed in man/man1 instead of share/man/man1.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (released 2011-05-28)</a>
   - FIX BUG in area returned by
