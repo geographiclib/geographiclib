@@ -19,9 +19,10 @@ function [latlong, scale] = utmupsreverse(utmups)
 %       gamma = scale(:,1) meridian convergence in degrees
 %       k = scale(:,2) scale
 %
-%   This is an interface to the GeographicLib C++ routine
-%       UTMUPS::Reverse
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     UTMUPS::Reverse
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1MGRS.html
   error('Error: executing .m file instead of compiled routine');
 end
 % utmupsreverse.m
@@ -31,4 +32,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 8e2c128b1d06b18736742d5bb66ed8fa3b2d8091 $
+% $Id: a3c0f15a9f723cf512958743f65424190ecf8535 $

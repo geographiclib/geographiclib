@@ -23,9 +23,10 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, r)
 %   r = reciprocal flattening (0 means a sphere)
 %   If a and r are omitted, the WGS84 values are used.
 %
-%   This is an interface to the GeographicLib C++ routine
-%       Geocentric::Reverse
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     Geocentric::Reverse
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1Geocentric.html
   error('Error: executing .m file instead of compiled routine');
 end
 % geocentricreverse.m
@@ -35,4 +36,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: cfed53daf5a7a5d74a4701f4872676978cd34415 $
+% $Id: dcacc1cb0f315d8e6227ba3959381f1aff27eb6e $

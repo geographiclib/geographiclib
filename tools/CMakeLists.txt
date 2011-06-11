@@ -1,4 +1,4 @@
-# $Id: c28cf8dee004eacfae32f9668adfed84f35cc96d $
+# $Id: ce5ab81e57d15d48d88d74e7cb0737a448f04245 $
 
 if (MAINTAINER)
   set (MANDIR ${PROJECT_BINARY_DIR}/man)
@@ -23,6 +23,11 @@ foreach (TOOL ${TOOLS})
   target_link_libraries (${TOOL} Geographic)
 
 endforeach (TOOL)
+
+if (NOT WIN32)
+  set_target_properties(${TOOLS} PROPERTIES
+    INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
+endif (NOT WIN32)
 
 install (TARGETS ${TOOLS} DESTINATION bin)
 

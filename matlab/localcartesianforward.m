@@ -27,9 +27,10 @@ function [cartesian, rot] = localcartesianforward(origin, geodetic, a, r)
 %   r = reciprocal flattening (0 means a sphere)
 %   If a and r are omitted, the WGS84 values are used.
 %
-%   This is an interface to the GeographicLib C++ routine
-%       LocalCartesian::Forward
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     LocalCartesian::Forward
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1LocalCartesian.html
   error('Error: executing .m file instead of compiled routine');
 end
 % localcartesianforward.m
@@ -38,4 +39,4 @@ end
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
-% $Id: c88e30bed41bd87c23c51cbf4193919acd5e66b8 $
+% $Id: f19d5a73238853b147fef171c7e9266891675543 $

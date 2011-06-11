@@ -31,9 +31,9 @@ function geographiclibinterface(incdir, libdir);
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
 % under the LGPL.  For more information, see
-% http://geographiclib.sourceforge.net/
+% http://geographiclib.sf.net/html/install.html#matlab
 %
-% $Id: 00aeb3d2f899081f4de39b34670dfec4cfe2e890 $
+% $Id: d7933d08c77e8a71eef40ac075164f65d77d97d8 $
   funs = {'geodesicdirect', 'geodesicinverse', 'geodesicline', ...
 	  'geoidheight', ...
 	  'utmupsforward', 'utmupsreverse', ...

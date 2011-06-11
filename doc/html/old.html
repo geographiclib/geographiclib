@@ -27,7 +27,7 @@
 <div class="contents">
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
 <ul>
-<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (released 2011-06-dd)</a><ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (released 2011-06-11)</a><ul>
 <li>Improvements to Matlab/Octave interface:<ul>
 <li>add {geocentric,localcartesian}{forward,reverse};</li>
 <li>make geographiclibinterface more general;</li>
@@ -36,7 +36,12 @@
 <li>include compiled interface with Windows binary installer.</li>
 </ul>
 </li>
-<li>FIX BUG: Config.h not installed with autoconf.</li>
+<li>Fix various configuration issues<ul>
+<li>autoconf did not install Config.h;</li>
+<li>cmake installed in man/man1 instead of share/man/man1;</li>
+<li>cmake did not set the rpath on the tools.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

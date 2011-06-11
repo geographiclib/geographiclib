@@ -24,9 +24,10 @@ function [latlong, aux] = geodesicdirect(geodesic, a, r)
 %   r = reciprocal flattening (0 means a sphere)
 %   If a and r are omitted, the WGS84 values are used.
 %
-%   This is an interface to the GeographicLib C++ routine
-%       Geodesic::Direct
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     Geodesic::Direct
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1Geodesic.html
   error('Error: executing .m file instead of compiled routine');
 end
 % geodesicdirect.m
@@ -36,4 +37,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 9f7d073a4a8e3562278255f4c1fd1ce1cbd67ba0 $
+% $Id: 31128354b2796542180f7d6bc3706810ae4597eb $

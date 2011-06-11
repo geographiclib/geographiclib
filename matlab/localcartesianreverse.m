@@ -27,9 +27,10 @@ function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, r)
 %   r = reciprocal flattening (0 means a sphere)
 %   If a and r are omitted, the WGS84 values are used.
 %
-%   This is an interface to the GeographicLib C++ routine
-%       LocalCartesian::Reverse
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     LocalCartesian::Reverse
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1LocalCartesian.html
   error('Error: executing .m file instead of compiled routine');
 end
 % localcartesianreverse.m
@@ -39,4 +40,4 @@ end
 % licensed under the LGPL.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 9e9ac842d32a0868cd38c3974413e4cc85306e5d $
+% $Id: 8804b06b2a8b5ced59c70d9afcec83341ef7761f $

@@ -22,9 +22,10 @@ function [geocentric, rot] = geocentricforward(geodetic, a, r)
 %   r = reciprocal flattening (0 means a sphere)
 %   If a and r are omitted, the WGS84 values are used.
 %
-%   This is an interface to the GeographicLib C++ routine
-%       Geocentric::Forward
-%   See the documentation on this function for more information.
+% This is an interface to the GeographicLib C++ routine
+%     Geocentric::Forward
+% See the documentation on this function for more information:
+% http://geographiclib.sf.net/html/classGeographicLib_1_1Geocentric.html
   error('Error: executing .m file instead of compiled routine');
 end
 % geocentricforward.m
@@ -33,4 +34,4 @@ end
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
-% $Id: 88db3c5fa5e50fc1ce1c4bd0ab9066079040c949 $
+% $Id: e9c3257b65cea8066ff1d60cc9ccf3d08f0abe91 $
