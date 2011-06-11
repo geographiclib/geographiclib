@@ -522,10 +522,11 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   Note that the library name is <b>Geographic</b> and not %GeographicLib.
 - Tell the runtime environment where to find the shared library
   (assuming you compiled %GeographicLib as a shared library).  With g++,
-  this is accomplished by modifying the link line above to read. \verbatim
+  this is accomplished by modifying the link line above to read \verbatim
   g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
 \endverbatim
-  On Windows, you need to ensure that Geographic.dll is in
+  (Alternatively, you can use ldconfig to search in /usr/local/lib
+  automatically.)  On Windows, you need to ensure that Geographic.dll is in
   the same directory as your executable or else include the directory
   containing the dll in your <code>PATH</code>.
 - For Windows, ensure that you build the library with the same version
@@ -2125,8 +2126,10 @@ number.)
      - install the source for the interface;
      - cmake compiles the interface if ENABLE_MATLAB=ON;
      - include compiled interface with Windows binary installer.
-  - FIX BUG: Config.h not installed with autoconf.
-  - FIX BUG: cmake installed in man/man1 instead of share/man/man1.
+  - Fix various configuration issues
+     - autoconf did not install Config.h;
+     - cmake installed in man/man1 instead of share/man/man1;
+     - cmake did not set the rpath on the tools.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.9.tar.gz/download">1.9 (released 2011-05-28)</a>
   - FIX BUG in area returned by

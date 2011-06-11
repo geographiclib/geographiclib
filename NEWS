@@ -17,7 +17,10 @@ Changes between 1.10 (released 2011-06-11) and 1.9 versions:
      + cmake compiles the interface if ENABLE_MATLAB=ON;
      + include compiled interface with Windows binary installer.
 
-  * FIX BUG: Config.h not installed with autoconf.
+  * Fix various configuration issues
+     + autoconf did not install Config.h;
+     + cmake installed in man/man1 instead of share/man/man1;
+     + cmake did not set the rpath on the tools.
 
   * FIX BUG: cmake installed in man/man1 instead of share/man/man1.
 
