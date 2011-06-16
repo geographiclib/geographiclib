@@ -120,10 +120,10 @@ template<class wreal, class test, class treal, class ref, class rreal>
 void GeodError(const test& tgeod, const ref& rgeod,
                wreal lat1, wreal lon1, wreal azi1,
                wreal lat2, wreal lon2, wreal azi2,
-               wreal s12, wreal a12, wreal m12, wreal S12,
+               wreal s12, wreal /*a12*/, wreal m12, wreal S12,
                std::vector<wreal>& err) {
   treal tlat1, tlon1, tazi1, tlat2, tlon2, tazi2, ts12, tm12a, tm12b,
-    tM12, tM21, tS12a, tS12b, ta12;
+    tM12, tM21, tS12a, tS12b /*, ta12*/;
   rreal rlat1, rlon1, razi1, rlat2, rlon2, razi2, rm12;
   tgeod.Direct(lat1, lon1, azi1,  s12, tlat2, tlon2, tazi2, tm12a,
                tM12, tM21, tS12a);
@@ -139,8 +139,8 @@ void GeodError(const test& tgeod, const ref& rgeod,
   err[2] = max(abs(tm12a - m12), abs(tm12b + m12));
   err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / rgeod.MajorRadius();
 
-  ta12 = tgeod.Inverse(lat1, lon1, lat2, lon2, ts12, tazi1, tazi2, tm12a,
-                       tM12, tM21, tS12a);
+  /* ta12 = */ tgeod.Inverse(lat1, lon1, lat2, lon2, ts12, tazi1, tazi2, tm12a,
+                             tM12, tM21, tS12a);
   tS12a -= rgeod.EllipsoidArea() * ((tazi2-azi2)-(tazi1-azi1))/720;
   err[3] = abs(ts12 - s12);
   err[4] = max(abs(angdiff(azi1, tazi1)), abs(angdiff(azi2, tazi2))) *

@@ -26,7 +26,7 @@ PREFIX = /usr/local
 GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+CXXFLAGS = -g -Wall -Wextra -O3
 
 CPPFLAGS = -I$(INCLUDEPATH) -I../man $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)

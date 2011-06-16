@@ -15,7 +15,7 @@ LIBPATH = ../src
 # LIBPATH = $(PREFIX)/lib
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+CXXFLAGS = -g -Wall -Wextra -O3
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)
