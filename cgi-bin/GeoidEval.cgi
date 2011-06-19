@@ -18,17 +18,18 @@ POSITION2=
 HEIGHT96=
 HEIGHT84=
 HEIGHT2008=
+set -o pipefail
 if test "$INPUT"; then
     HEIGHT96=`echo $INPUT |
-    GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm96-5`
+    GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm96-5 | head -1`
     if test $? -eq 0; then
-	POSITION1=`echo $INPUT | $EXECDIR/GeoConvert`
+	POSITION1=`echo $INPUT | $EXECDIR/GeoConvert | head -1`
 	POSITION1=`geohack $POSITION1 $POSITION1 Black`
-	POSITION2=\(`echo $INPUT | $EXECDIR/GeoConvert -d -p -1`\)
+	POSITION2=\(`echo $INPUT | $EXECDIR/GeoConvert -d -p -1 | head -1`\)
 	HEIGHT2008=`echo $INPUT |
-	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm2008-1`
+	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm2008-1 | head -1`
 	HEIGHT84=`echo $INPUT |
-	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm84-15`
+	GEOID_PATH=$GEOID_PATH $EXECDIR/$COMMAND -n egm84-15 | head -1`
 	HEIGHT2008=`echo $HEIGHT2008 | cut -f1 -d' '`
 	HEIGHT96=`echo $HEIGHT96 | cut -f1 -d' '`
 	HEIGHT84=`echo $HEIGHT84 | cut -f1 -d' '`
@@ -110,6 +111,10 @@ cat <<EOF
         16.776 -3.009
         16d47' -3d1'
         W3d0'34" N16d46'33"</pre>
+      The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
+      the documentation on the
+      <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
+	GeoConvert</a> utility).
     </p>
     <p>
       <a href="http://geographiclib.sourceforge.net/html/GeoidEval.1.html">
@@ -133,7 +138,7 @@ cat <<EOF
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-02-18)</address>
+      (2011-06-19)</address>
     <a href="http://sourceforge.net">
       <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2" border="0" alt="SourceForge.net" />
     </a>

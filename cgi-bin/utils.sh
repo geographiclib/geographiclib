@@ -7,10 +7,13 @@ lookuprawkey () {
     echo "$QUERY" | tr '&' '\n' | grep "^$KEY=" | tail -1 | cut -f2- -d=
 }
 
-# Decode raw value translating %XX and converting + and , to space
+# Decode raw value translating %XX, CR-LF to LF, and converting + and ,
+# to space
 decodevalue () {
     echo "$1" | sed \
-	-e 's/\\/%5C/g' -e 's/%\([0-9a-fA-f][0-9a-fA-F]\)/\\x\1/g' -e s/%/%%/g |
+	-e 's/\\/%5C/g' \
+	-e 's/%0[dD]%0[aA]/%0A/g' \
+	-e 's/%\([0-9a-fA-F][0-9a-fA-F]\)/\\x\1/g' -e s/%/%%/g |
     xargs -d '\n' printf | tr -s '+,\t' ' ' | sed -e 's/^ //' -e 's/ $//'
 }
 

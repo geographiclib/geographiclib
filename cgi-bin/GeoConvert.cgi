@@ -22,20 +22,21 @@ LOCD=
 LOCU=
 LOCM=
 GEOH=
+set -o pipefail
 if test "$INPUT"; then
-    LOCG=`echo $INPUT | $EXECDIR/$COMMAND`
+    LOCG=`echo $INPUT | $EXECDIR/$COMMAND | head -1`
     if test $? -eq 0; then
-	GEOH=`echo $INPUT | $EXECDIR/$COMMAND -p 1`
+	GEOH=`echo $INPUT | $EXECDIR/$COMMAND -p 1 | head -1`
 	LOCG=`geohack $GEOH $LOCG Blue`
-	LOCD=\(`echo $INPUT | $EXECDIR/$COMMAND -d`\)
+	LOCD=\(`echo $INPUT | $EXECDIR/$COMMAND -d | head -1`\)
 	case $ZONE in
 	    -3 ) ;;
 	    -2 ) COMMAND="$COMMAND -t";;
 	    -1 ) COMMAND="$COMMAND -s";;
 	    * ) COMMAND="$COMMAND -z $ZONE"
 	esac
-	LOCU=`echo $INPUT | $EXECDIR/$COMMAND -u`
-	LOCM=`echo $INPUT | $EXECDIR/$COMMAND -m`
+	LOCU=`echo $INPUT | $EXECDIR/$COMMAND -u | head -1`
+	LOCM=`echo $INPUT | $EXECDIR/$COMMAND -m | head -1`
     fi
     # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
@@ -221,7 +222,7 @@ cat <<EOF
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-02-18)</address>
+      (2011-06-19)</address>
     <a href="http://sourceforge.net">
       <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2" border="0" alt="SourceForge.net" />
     </a>

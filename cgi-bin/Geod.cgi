@@ -32,12 +32,12 @@ STATUS=
 POSITION1=
 POSITION2=
 DIST12=
+set -o pipefail
 if test "$INPUT"; then
-    COMMANDLINE="echo $INPUT | $COMMAND"
-    OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -f`
+    OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -f | head -1`
     if test $? -eq 0; then
 	STATUS=OK
-	OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX`
+	OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX | head -1`
 	POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
 	POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
 	POSG1="`echo $OUTPUTG | cut -f1-2 -d' '`"
@@ -284,7 +284,7 @@ cat <<EOF
     <hr>
     <address><a href="http://charles.karney.info/">Charles Karney</a>
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-02-18)</address>
+      (2011-06-19)</address>
     <a href="http://sourceforge.net">
       <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2" border="0" alt="SourceForge.net" />
     </a>

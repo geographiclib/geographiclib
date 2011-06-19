@@ -82,11 +82,16 @@ namespace GeographicLib {
       }
       ++_num;
     }
-    unsigned Compute(bool reverse, bool sign,
+    unsigned Compute(bool line, bool reverse, bool sign,
                      real& perimeter, real& area) const throw() {
       real s12, S12, t;
       if (_num < 2) {
         perimeter = area = 0;
+        return _num;
+      }
+      if (line) {
+        perimeter = _perimetersum();
+        area = 0;
         return _num;
       }
       _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
@@ -129,7 +134,7 @@ int main(int argc, char* argv[]) {
     real
       a = Constants::WGS84_a<real>(),
       r = Constants::WGS84_r<real>();
-    bool reverse = false, sign = true;
+    bool reverse = false, sign = true, line = false;
     std::string istring, ifile, ofile;
 
     for (int m = 1; m < argc; ++m) {
@@ -138,6 +143,8 @@ int main(int argc, char* argv[]) {
         reverse = !reverse;
       else if (arg == "-s")
         sign = !sign;
+      else if (arg == "-l")
+        line = !line;
       else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
@@ -225,20 +232,26 @@ int main(int argc, char* argv[]) {
         }
       }
       if (endpoly) {
-        num = poly.Compute(reverse, sign, perimeter, area);
-        if (num > 0)
+        num = poly.Compute(line, reverse, sign, perimeter, area);
+        if (num > 0) {
           *output << num << " "
-                  << DMS::Encode(perimeter, 8, DMS::NUMBER) << " "
-                  << DMS::Encode(area, 4, DMS::NUMBER) << "\n";
+                  << DMS::Encode(perimeter, 8, DMS::NUMBER);
+          if (!line)
+            *output << " " << DMS::Encode(area, 4, DMS::NUMBER);
+          *output << "\n";
+        }
         poly.Clear();
       } else
         poly.AddPoint(p.Latitude(), p.Longitude());
     }
-    num = poly.Compute(reverse, sign, perimeter, area);
-    if (num > 0)
+    num = poly.Compute(line, reverse, sign, perimeter, area);
+    if (num > 0) {
       *output << num << " "
-              << DMS::Encode(perimeter, 8, DMS::NUMBER) << " "
-              << DMS::Encode(area, 4, DMS::NUMBER) << "\n";
+              << DMS::Encode(perimeter, 8, DMS::NUMBER);
+      if (!line)
+        *output << " " << DMS::Encode(area, 4, DMS::NUMBER);
+      *output << "\n";
+    }
     poly.Clear();
     return 0;
   }

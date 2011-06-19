@@ -24,7 +24,7 @@ distrib-files:
 	rsync --exclude '*~' --exclude '#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,geoids-distrib} $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/
 
 distrib-cgi:
-	for f in GeoConvert Geod GeoidEval printlogs; do \
+	for f in GeoConvert Geod GeoidEval Planimeter printlogs; do \
 	  a=cgi-bin/$$f.cgi; b=$(WEBSTAGE)/cgi-bin/$$f; \
 	  cmp $$a $$b > /dev/null || install $$a $$b; done
 	for f in utils; do \
