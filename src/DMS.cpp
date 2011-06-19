@@ -211,7 +211,10 @@ namespace GeographicLib {
       // On some platforms, is >> num gobbles final E in 1234E, so look for
       // last character which is legal as the final character in a number
       // (digit or period).
-      int pos = min(int(is.tellg()), int(str.find_last_of("0123456789.")) + 1);
+      int pos = int(is.tellg()); // Returns -1 at end of string?
+      if (pos < 0)
+        pos = int(str.size());
+      pos = min(pos, int(str.find_last_of("0123456789.")) + 1);
       if (pos != int(str.size())) {
         errormsg = "Extra text " + str.substr(pos) + " in number " + str;
         break;
