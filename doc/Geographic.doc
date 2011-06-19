@@ -665,6 +665,7 @@ e.g.,
 Online versions of three of these utilities are provided:
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoConvert">GeoConvert</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/Geod">Geod</a>
+ - <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoidEval">GeoidEval</a>
 
 <center>
@@ -2118,6 +2119,10 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (not released yet)</a>
+  - Add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
+    calculations.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (released 2011-06-11)</a>
   - Improvements to Matlab/Octave interface:
