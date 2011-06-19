@@ -30,6 +30,7 @@ namespace GeographicLib {
     typedef Math::real real;
     const Geodesic& _g;
     const real _area0;          // Full ellipsoid area
+    const bool _polyline;       // Assume polyline (don't close and skip area)
     unsigned _num;
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;
@@ -52,9 +53,10 @@ namespace GeographicLib {
       return cross;
     }
   public:
-    GeodesicPolygon(const Geodesic& g) throw()
+    GeodesicPolygon(const Geodesic& g, bool polyline) throw()
       : _g(g)
       , _area0(_g.EllipsoidArea())
+      , _polyline(polyline)
     {
       Clear();
     }
@@ -72,24 +74,27 @@ namespace GeographicLib {
       } else {
         real s12, S12, t;
         _g.GenInverse(_lat1, _lon1, lat, lon,
-                      Geodesic::DISTANCE | Geodesic::AREA,
+                      Geodesic::DISTANCE |
+                      (_polyline ? 0 : Geodesic::AREA),
                       s12, t, t, t, t, t, S12);
         _perimetersum += s12;
-        _areasum += S12;
-        _crossings += transit(_lon1, lon);
+        if (!_polyline) {
+          _areasum += S12;
+          _crossings += transit(_lon1, lon);
+        }
         _lat1 = lat;
         _lon1 = lon;
       }
       ++_num;
     }
-    unsigned Compute(bool line, bool reverse, bool sign,
+    unsigned Compute(bool reverse, bool sign,
                      real& perimeter, real& area) const throw() {
       real s12, S12, t;
       if (_num < 2) {
         perimeter = area = 0;
         return _num;
       }
-      if (line) {
+      if (_polyline) {
         perimeter = _perimetersum();
         area = 0;
         return _num;
@@ -134,7 +139,7 @@ int main(int argc, char* argv[]) {
     real
       a = Constants::WGS84_a<real>(),
       r = Constants::WGS84_r<real>();
-    bool reverse = false, sign = true, line = false;
+    bool reverse = false, sign = true, polyline = false;
     std::string istring, ifile, ofile;
 
     for (int m = 1; m < argc; ++m) {
@@ -144,7 +149,7 @@ int main(int argc, char* argv[]) {
       else if (arg == "-s")
         sign = !sign;
       else if (arg == "-l")
-        line = !line;
+        polyline = !polyline;
       else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
@@ -213,7 +218,7 @@ int main(int argc, char* argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     const Geodesic geod(a, r);
-    GeodesicPolygon poly(geod);
+    GeodesicPolygon poly(geod, polyline);
     GeoCoords p;
 
     std::string s;
@@ -224,7 +229,7 @@ int main(int argc, char* argv[]) {
       if (!endpoly) {
         try {
           p.Reset(s);
-          if (p.Latitude() != p.Latitude() || p.Longitude() != p.Longitude())
+          if (Math::isnan(p.Latitude()) || Math::isnan(p.Longitude()))
             endpoly = true;
         }
         catch (const GeographicErr&) {
@@ -232,11 +237,11 @@ int main(int argc, char* argv[]) {
         }
       }
       if (endpoly) {
-        num = poly.Compute(line, reverse, sign, perimeter, area);
+        num = poly.Compute(reverse, sign, perimeter, area);
         if (num > 0) {
           *output << num << " "
                   << DMS::Encode(perimeter, 8, DMS::NUMBER);
-          if (!line)
+          if (!polyline)
             *output << " " << DMS::Encode(area, 4, DMS::NUMBER);
           *output << "\n";
         }
@@ -244,11 +249,11 @@ int main(int argc, char* argv[]) {
       } else
         poly.AddPoint(p.Latitude(), p.Longitude());
     }
-    num = poly.Compute(line, reverse, sign, perimeter, area);
+    num = poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
       *output << num << " "
               << DMS::Encode(perimeter, 8, DMS::NUMBER);
-      if (!line)
+      if (!polyline)
         *output << " " << DMS::Encode(area, 4, DMS::NUMBER);
       *output << "\n";
     }
