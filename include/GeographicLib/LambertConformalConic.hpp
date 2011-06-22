@@ -52,13 +52,13 @@ namespace GeographicLib {
    \code
    const double
      a = GeographicLib::Constants::WGS84_a<double>(),
-     r = 298.257222101,                        // GRS80
+     f = 1/298.257222101,                      // GRS80
      lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
      k1 = 1,                                   // scale
      lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, // origin
      fe = 600000, fn = 0;                      // false easting and northing
    // Set up basic projection
-   const GeographicLib::LambertConformalConic PASouth(a, r, lat1, lat2, k1);
+   const GeographicLib::LambertConformalConic PASouth(a, f, lat1, lat2, k1);
    double x0, y0;
    {
      // Transform origin point
@@ -81,7 +81,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT LambertConformalConic {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _fm, _e2, _e, _e2m;
+    const real _a, _f, _r, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
     static const real eps_;
@@ -164,24 +164,24 @@ namespace GeographicLib {
      * Constructor with a single standard parallel.
      *
      * @param[in] a equatorial radius of ellipsoid (meters)
-     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
-     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
-     *   indicates a prolate ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 scale on the standard parallel.
      *
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
      * is not in the range [-90, 90].
      **********************************************************************/
-    LambertConformalConic(real a, real r, real stdlat, real k0);
+    LambertConformalConic(real a, real f, real stdlat, real k0);
 
     /**
      * Constructor with two standard parallels.
      *
      * @param[in] a equatorial radius of ellipsoid (meters)
-     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
-     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
-     *   indicates a prolate ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 scale on the standard parallels.
@@ -191,15 +191,15 @@ namespace GeographicLib {
      * stdlat1 or \e stdlat2 is a pole, then an exception is thrown if \e
      * stdlat1 is not equal \e stdlat2.
      **********************************************************************/
-    LambertConformalConic(real a, real r, real stdlat1, real stdlat2, real k1);
+    LambertConformalConic(real a, real f, real stdlat1, real stdlat2, real k1);
 
     /**
      * Constructor with two standard parallels specified by sines and cosines.
      *
      * @param[in] a equatorial radius of ellipsoid (meters)
-     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
-     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
-     *   indicates a prolate ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] sinlat1 sine of first standard parallel.
      * @param[in] coslat1 cosine of first standard parallel.
      * @param[in] sinlat2 sine of second standard parallel.
@@ -216,7 +216,7 @@ namespace GeographicLib {
      * 4.5e-14<sup>o</sup> and the relative error in the scale is less than
      * 7e-15.
      **********************************************************************/
-    LambertConformalConic(real a, real r,
+    LambertConformalConic(real a, real f,
                           real sinlat1, real coslat1,
                           real sinlat2, real coslat2,
                           real k1);
@@ -306,9 +306,13 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value used in the constructor.  A value of 0 is returned for a sphere
-     *   (infinite inverse flattening).
+     * @return \e f the  flattening of the ellipsoid.  This is the
+     *   value used in the constructor. 
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 

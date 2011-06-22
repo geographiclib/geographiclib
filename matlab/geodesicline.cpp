@@ -2,8 +2,9 @@
  * \file geodesicline.cpp
  * \brief Matlab mex file for geographic to UTM/UPS conversions
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 // Compile in Matlab with
@@ -53,7 +54,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[3]) != 1)
     mexErrMsgTxt("distances must be M x 1 matrix.");
 
-  double a = Constants::WGS84_a(), r = Constants::WGS84_r();
+  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
   if (nrhs == 6) {
     if (!( mxIsDouble(prhs[4]) && !mxIsComplex(prhs[4]) &&
            mxGetNumberOfElements(prhs[4]) == 1 ))
@@ -62,7 +63,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     if (!( mxIsDouble(prhs[5]) && !mxIsComplex(prhs[5]) &&
            mxGetNumberOfElements(prhs[5]) == 1 ))
       mexErrMsgTxt("reciprocal flattening is not a real scalar.");
-    r = mxGetScalar(prhs[5]);
+    f = mxGetScalar(prhs[5]);
   }
 
   int m = mxGetM(prhs[3]);
@@ -88,7 +89,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   try {
-    const Geodesic g(a, r);
+    const Geodesic g(a, f);
     if (abs(lat1) > 90)
       throw GeographicErr("Invalid latitude");
     if (lon1 < -180 || lon1 > 360)

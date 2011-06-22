@@ -188,6 +188,17 @@ namespace GeographicLib {
     { return real(20923713) * std::pow(real(10), real(0.48401603L) - 1); }
 
     /**
+     * @return \e f the inverse flattening of the Airy 1830 ellipsoid.
+     *
+     * For the Airy 1830 ellipsoid, \e a = 20923713 ft and \e b = 20853810 ft;
+     * thus the flattening = (20923713 - 20853810)/20923713 =
+     * 1/299.32496459...  (The Airy 1830 value is returned because the OSGB
+     * projection is based on this ellipsoid.)
+     **********************************************************************/
+    static Math::real Flattening() throw()
+    { return  real(20923713 - 20853810) / real(20923713); }
+
+    /**
      * @return \e r the inverse flattening of the Airy 1830 ellipsoid.
      *
      * For the Airy 1830 ellipsoid, \e a = 20923713 ft and \e b = 20853810 ft;
@@ -195,8 +206,7 @@ namespace GeographicLib {
      * 299.32496459...  (The Airy 1830 value is returned because the OSGB
      * projection is based on this ellipsoid.)
      **********************************************************************/
-    static Math::real InverseFlattening() throw()
-    { return real(20923713) / real(20923713 - 20853810); }
+    static Math::real InverseFlattening() throw() { return 1/Flattening(); }
 
     /**
      * @return \e k0 central scale for the OSGB projection (0.9996012717).

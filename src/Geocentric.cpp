@@ -18,10 +18,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geocentric::Geocentric(real a, real r)
+  Geocentric::Geocentric(real a, real f)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _e2(_f * (2 - _f))
     , _e2m(Math::sq(1 - _f))          // 1 - _e2
     , _e2a(abs(_e2))
@@ -35,7 +35,7 @@ namespace GeographicLib {
   }
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a<real>(),
-                                     Constants::WGS84_r<real>());
+                                     Constants::WGS84_f<real>());
 
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& x, real& y, real& z,

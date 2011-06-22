@@ -2,7 +2,7 @@
  * \file GeoCoords.hpp
  * \brief Header for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
@@ -416,6 +416,14 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real MajorRadius() const throw() { return UTMUPS::MajorRadius(); }
+
+    /**
+     * @return \e f the flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 value is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
+     **********************************************************************/
+    Math::real Flattening() const throw() { return UTMUPS::Flattening(); }
 
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.

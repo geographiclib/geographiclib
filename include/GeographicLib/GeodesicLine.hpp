@@ -86,7 +86,7 @@ namespace GeographicLib {
     static const int nC4_ = Geodesic::nC4_;
 
     real _lat1, _lon1, _azi1;
-    real _a, _r, _b, _c2, _f1, _salp0, _calp0, _k2,
+    real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _stau1, _ctau1, _somg1, _comg1,
       _A1m1, _A2m1, _A3c, _B11, _B21, _B31, _A4, _B41;
     // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
@@ -532,24 +532,26 @@ namespace GeographicLib {
     /**
      * @return \e lat1 the latitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Latitude() const throw() { return Init() ? _lat1 : 0; }
+    Math::real Latitude() const throw() { return Init() ? _lat1 : Math::NaN(); }
 
     /**
      * @return \e lon1 the longitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Longitude() const throw() { return Init() ? _lon1 : 0; }
+    Math::real Longitude() const throw()
+    { return Init() ? _lon1 : Math::NaN(); }
 
     /**
      * @return \e azi1 the azimuth (degrees) of the geodesic line at point 1.
      **********************************************************************/
-    Math::real Azimuth() const throw() { return Init() ? _azi1 : 0; }
+    Math::real Azimuth() const throw() { return Init() ? _azi1 : Math::NaN(); }
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
      * the equator in a northward direction.
      **********************************************************************/
     Math::real EquatorialAzimuth() const throw() {
-      return Init() ? atan2(_salp0, _calp0) / Math::degree<real>() : 0;
+      return Init() ?
+        atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN();
     }
 
     /**
@@ -557,21 +559,28 @@ namespace GeographicLib {
      * crossing and point 1.
      **********************************************************************/
     Math::real EquatorialArc() const throw() {
-      return Init() ? atan2(_ssig1, _csig1) / Math::degree<real>() : 0;
+      return Init() ?
+        atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN();
     }
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return Init() ? _a : 0; }
+    Math::real MajorRadius() const throw() { return Init() ? _a : Math::NaN(); }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value inherited from the Geodesic object used in the constructor.  A
-     *   value of 0 is returned for a sphere (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value
+     *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return Init() ? _r : 0; }
+    Math::real Flattening() const throw() { return Init() ? _f : Math::NaN(); }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.  This is the value
+     *   inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real InverseFlattening() const throw()
+    { return Init() ? 1/_f : Math::NaN(); }
 
     /**
      * @return \e caps the computational capabilities that this object was

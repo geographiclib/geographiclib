@@ -39,7 +39,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[0]) != 3)
     mexErrMsgTxt("geodetic coordinates must be M x 3 matrix.");
 
-  double a = Constants::WGS84_a(), r = Constants::WGS84_r();
+  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
   if (nrhs == 3) {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
@@ -48,7 +48,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))
       mexErrMsgTxt("reciprocal flattening is not a real scalar.");
-    r = mxGetScalar(prhs[2]);
+    f = mxGetScalar(prhs[2]);
   }
 
   int m = mxGetM(prhs[0]);
@@ -73,7 +73,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   try {
     std::vector<double> rotv(rotp ? 9 : 0);
-    const Geocentric c(a, r);
+    const Geocentric c(a, f);
     for (int i = 0; i < m; ++i) {
       if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
         c.Forward(lat[i], lon[i], h[i], x[i], y[i], z[i], rotv);

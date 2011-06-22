@@ -1,8 +1,8 @@
-function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, r)
+function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
 %geodesicline  Compute points along a geodesic
 %
 %   [latlong, aux] = geodesicline(lat1, lon1, azi1, distances)
-%   [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, r)
+%   [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, f)
 %
 %   lat1 is the latitude of point 1 (scalar) in degrees
 %   lon1 is the longitude of point 1 (scalar) in degrees
@@ -20,12 +20,12 @@ function [latlong, aux] = geodesicline(lat1, lon1, azi1, distances, a, r)
 %       area under geodesic = aux(:,4) in meters^2
 %
 %   a = major radius (meters)
-%   r = reciprocal flattening (0 means a sphere)
-%   If a and r are omitted, the WGS84 values are used.
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
 %
 %   The result is the same as produced by
 %       geodesicdirect([repmat([lat1, lon1, azi1],size(distances)), ...
-%                       distances], a, r)
+%                       distances], a, f)
 %
 % This is an interface to the GeographicLib C++ routine
 %     GeodesicLine::Position

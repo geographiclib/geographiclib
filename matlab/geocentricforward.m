@@ -1,8 +1,8 @@
-function [geocentric, rot] = geocentricforward(geodetic, a, r)
+function [geocentric, rot] = geocentricforward(geodetic, a, f)
 %geocentricforward  Convert geographic coordinates to geocentric
 %
 %   [geocentric, rot] = geocentricforward(geodetic);
-%   [geocentric, rot] = geocentricforward(geodetic, a, r);
+%   [geocentric, rot] = geocentricforward(geodetic, a, f);
 %
 %   geodetic is an M x 3 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
@@ -19,8 +19,8 @@ function [geocentric, rot] = geocentricforward(geodetic, a, r)
 %           by M transforms the vector to geocentric coordinates.
 %
 %   a = major radius (meters)
-%   r = reciprocal flattening (0 means a sphere)
-%   If a and r are omitted, the WGS84 values are used.
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
 %
 % This is an interface to the GeographicLib C++ routine
 %     Geocentric::Forward

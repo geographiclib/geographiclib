@@ -1,8 +1,8 @@
-function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, r)
+function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %localcartesianreverse  Convert local cartesian coordinates to geographic
 %
 %   [geodetic, rot] = localcartesianreverse(origin, cartesian);
-%   [geodetic, rot] = localcartesianreverse(origin, cartesian, a, r);
+%   [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f);
 %
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees
@@ -24,8 +24,8 @@ function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, r)
 %           coordinates at (lat, lon, h).
 %
 %   a = major radius (meters)
-%   r = reciprocal flattening (0 means a sphere)
-%   If a and r are omitted, the WGS84 values are used.
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
 %
 % This is an interface to the GeographicLib C++ routine
 %     LocalCartesian::Reverse

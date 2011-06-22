@@ -73,7 +73,7 @@ namespace GeographicLib {
     static const real taytol_;
     static const real overflow_;
     static const int numit_ = 10;
-    const real _a, _r, _f, _k0, _mu, _mv, _e, _ep2;
+    const real _a, _f, _r, _k0, _mu, _mv, _e, _ep2;
     const bool _extendp;
     const EllipticFunction _Eu, _Ev;
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
@@ -119,7 +119,8 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with
      *
      * @param[in] a equatorial radius (meters)
-     * @param[in] r reciprocal flattening.
+     * @param[in] f flattening of ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] k0 central scale factor.
      * @param[in] extendp use extended domain.
      *
@@ -154,14 +155,14 @@ namespace GeographicLib {
      * discussion of the treatment of the branch cut.
      *
      * The method will work for all ellipsoids used in terrestial geodesy.  The
-     * method cannot be applied directly to the case of a sphere (\e r = inf)
+     * method cannot be applied directly to the case of a sphere (\e f = 0)
      * because some the constants characterizing this method diverge in that
-     * limit, and in practise, \e r should be smaller than about
-     * 1/numeric_limits< real >::%epsilon().  However, TransverseMercator
-     * treats the sphere exactly.  An exception is thrown if either axis of the
-     * ellipsoid or \e k0 is not positive or if \e r < 1.
+     * limit, and in practise, \e f should be larger than about numeric_limits<
+     * real >::%epsilon().  However, TransverseMercator treats the sphere
+     * exactly.  An exception is thrown if either axis of the ellipsoid or \e
+     * k0 is not positive or if \e f <= 0.
      **********************************************************************/
-    TransverseMercatorExact(real a, real r, real k0, bool extendp = false);
+    TransverseMercatorExact(real a, real f, real k0, bool extendp = false);
 
     /**
      * Forward projection, from geographic to transverse Mercator.
@@ -227,9 +228,13 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value used in the constructor.  A value of 0 is returned for a sphere
-     *   (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value used in
+     *   the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 

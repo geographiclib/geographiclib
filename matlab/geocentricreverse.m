@@ -1,8 +1,8 @@
-function [geodetic, rot] = geocentricreverse(geocentric, a, r)
+function [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %geocentricreverse  Convert geocentric coordinates to geographic
 %
 %   [geodetic, rot] = geocentricreverse(geocentric);
-%   [geodetic, rot] = geocentricreverse(geocentric, a, r);
+%   [geodetic, rot] = geocentricreverse(geocentric, a, f);
 %
 %   geocentric is an M x 3 matrix of geocentric coordinates
 %       x = geocentric(:,1) in meters
@@ -20,8 +20,8 @@ function [geodetic, rot] = geocentricreverse(geocentric, a, r)
 %           (east, north, up).
 %
 %   a = major radius (meters)
-%   r = reciprocal flattening (0 means a sphere)
-%   If a and r are omitted, the WGS84 values are used.
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
 %
 % This is an interface to the GeographicLib C++ routine
 %     Geocentric::Reverse

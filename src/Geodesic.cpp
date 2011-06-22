@@ -47,10 +47,10 @@ namespace GeographicLib {
   const Math::real Geodesic::tol2_ = sqrt(numeric_limits<real>::epsilon());
   const Math::real Geodesic::xthresh_ = 1000 * tol2_;
 
-  Geodesic::Geodesic(real a, real r)
+  Geodesic::Geodesic(real a, real f)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / Math::sq(_f1))       // e2 / (1 - e2)
@@ -72,7 +72,7 @@ namespace GeographicLib {
   }
 
   const Geodesic Geodesic::WGS84(Constants::WGS84_a<real>(),
-                                 Constants::WGS84_r<real>());
+                                 Constants::WGS84_f<real>());
 
   Math::real Geodesic::SinCosSeries(bool sinp,
                                     real sinx, real cosx,

@@ -299,6 +299,15 @@ namespace GeographicLib {
     { return Constants::WGS84_a<real>(); }
 
     /**
+     * @return \e f the flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 value is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
+     **********************************************************************/
+    static Math::real Flattening() throw()
+    { return Constants::WGS84_f<real>(); }
+
+    /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      *
      * (The WGS84 value is returned because the UTM and UPS projections are

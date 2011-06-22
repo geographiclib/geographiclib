@@ -75,7 +75,7 @@ namespace GeographicLib {
     static const real tol_;
     static const real overflow_;
     static const int numit_ = 5;
-    const real _a, _r, _f, _k0, _e2, _e, _e2m,  _c, _n;
+    const real _a, _f, _r, _k0, _e2, _e, _e2m,  _c, _n;
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
@@ -95,15 +95,15 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with
      *
      * @param[in] a equatorial radius (meters)
-     * @param[in] r reciprocal flattening.  Setting \e r = 0 implies \e r = inf
-     *   or flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
-     *   ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] k0 central scale factor.
      *
      * An exception is thrown if either of the axes of the ellipsoid or \e k0
      * is not positive.
      **********************************************************************/
-    TransverseMercator(real a, real r, real k0);
+    TransverseMercator(real a, real f, real k0);
 
     /**
      * Forward projection, from geographic to transverse Mercator.
@@ -167,9 +167,13 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value used in the constructor.  A value of 0 is returned for a sphere
-     *   (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value used in
+     *   the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 

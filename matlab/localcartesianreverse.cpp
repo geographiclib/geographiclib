@@ -48,7 +48,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[1]) != 3)
     mexErrMsgTxt("local cartesian coordinates must be M x 3 matrix.");
 
-  double a = Constants::WGS84_a(), r = Constants::WGS84_r();
+  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
   if (nrhs == 4) {
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))
@@ -57,7 +57,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     if (!( mxIsDouble(prhs[3]) && !mxIsComplex(prhs[3]) &&
            mxGetNumberOfElements(prhs[3]) == 1 ))
       mexErrMsgTxt("reciprocal flattening is not a real scalar.");
-    r = mxGetScalar(prhs[3]);
+    f = mxGetScalar(prhs[3]);
   }
 
   int m = mxGetM(prhs[1]);
@@ -80,7 +80,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   try {
     std::vector<double> rotv(rotp ? 9 : 0);
-    const Geocentric c(a, r);
+    const Geocentric c(a, f);
     if (abs(lat0) > 90)
       throw GeographicErr("Invalid latitude");
     if (lon0 < -180 || lon0 > 360)

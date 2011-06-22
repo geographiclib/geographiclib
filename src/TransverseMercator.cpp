@@ -56,10 +56,10 @@ namespace GeographicLib {
   const Math::real TransverseMercator::overflow_ =
     1 / Math::sq(numeric_limits<real>::epsilon());
 
-  TransverseMercator::TransverseMercator(real a, real r, real k0)
+  TransverseMercator::TransverseMercator(real a, real f, real k0)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -211,7 +211,7 @@ namespace GeographicLib {
 
   const TransverseMercator
   TransverseMercator::UTM(Constants::WGS84_a<real>(),
-                          Constants::WGS84_r<real>(),
+                          Constants::WGS84_f<real>(),
                           Constants::UTM_k0<real>());
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,

@@ -1,8 +1,8 @@
-function [latlong, aux] = geodesicdirect(geodesic, a, r)
+function [latlong, aux] = geodesicdirect(geodesic, a, f)
 %geodesicdirect  Solve direct geodesic problem
 %
 %   [latlong, aux] = geodesicdirect(geodesic)
-%   [latlong, aux] = geodesicdirect(geodesic, a, r)
+%   [latlong, aux] = geodesicdirect(geodesic, a, f)
 %
 %   geodesic is an M x 4 matrix
 %       latitude of point 1 = latlong(:,1) in degrees
@@ -21,8 +21,8 @@ function [latlong, aux] = geodesicdirect(geodesic, a, r)
 %       area under geodesic = aux(:,4) in meters^2
 %
 %   a = major radius (meters)
-%   r = reciprocal flattening (0 means a sphere)
-%   If a and r are omitted, the WGS84 values are used.
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
 %
 % This is an interface to the GeographicLib C++ routine
 %     Geodesic::Direct

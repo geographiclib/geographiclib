@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
     typedef Math::real real;
     real
       a = Constants::WGS84_a<real>(),
-      r = Constants::WGS84_r<real>();
+      f = Constants::WGS84_f<real>();
     bool reverse = false, sign = true, polyline = false;
     std::string istring, ifile, ofile;
 
@@ -154,7 +154,7 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           a = DMS::Decode(std::string(argv[m + 1]));
-          r = DMS::Decode(std::string(argv[m + 2]));
+          f = DMS::Decode(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -217,7 +217,7 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    const Geodesic geod(a, r);
+    const Geodesic geod(a, f);
     GeodesicPolygon poly(geod, polyline);
     GeoCoords p;
 
@@ -242,7 +242,7 @@ int main(int argc, char* argv[]) {
           *output << num << " "
                   << DMS::Encode(perimeter, 8, DMS::NUMBER);
           if (!polyline)
-            *output << " " << DMS::Encode(area, 4, DMS::NUMBER);
+            *output << " " << DMS::Encode(area, 3, DMS::NUMBER);
           *output << "\n";
         }
         poly.Clear();
@@ -254,7 +254,7 @@ int main(int argc, char* argv[]) {
       *output << num << " "
               << DMS::Encode(perimeter, 8, DMS::NUMBER);
       if (!polyline)
-        *output << " " << DMS::Encode(area, 4, DMS::NUMBER);
+        *output << " " << DMS::Encode(area, 3, DMS::NUMBER);
       *output << "\n";
     }
     poly.Clear();

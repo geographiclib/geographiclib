@@ -26,11 +26,11 @@ namespace GeographicLib {
     real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
     + 2;
 
-  LambertConformalConic::LambertConformalConic(real a, real r,
+  LambertConformalConic::LambertConformalConic(real a, real f,
                                                real stdlat, real k0)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -51,12 +51,12 @@ namespace GeographicLib {
     Init(sphi, cphi, sphi, cphi, k0);
   }
 
-  LambertConformalConic::LambertConformalConic(real a, real r,
+  LambertConformalConic::LambertConformalConic(real a, real f,
                                                real stdlat1, real stdlat2,
                                                real k1)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -79,13 +79,13 @@ namespace GeographicLib {
          sin(phi2), abs(stdlat2) != 90 ? cos(phi2) : 0, k1);
   }
 
-  LambertConformalConic::LambertConformalConic(real a, real r,
+  LambertConformalConic::LambertConformalConic(real a, real f,
                                                real sinlat1, real coslat1,
                                                real sinlat2, real coslat2,
                                                real k1)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -320,7 +320,7 @@ namespace GeographicLib {
 
   const LambertConformalConic
   LambertConformalConic::Mercator(Constants::WGS84_a<real>(),
-                                  Constants::WGS84_r<real>(),
+                                  Constants::WGS84_f<real>(),
                                   real(0), real(1));
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,

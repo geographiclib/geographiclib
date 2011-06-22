@@ -455,13 +455,22 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return WGS84_a<real>(); }
     /**
+     * @return the flattening of WGS84 ellipsoid
+     **********************************************************************/
+    template<typename T>
+    static inline T WGS84_f() throw() {
+      // 1/298.257223563
+      return T(1) / ( T(298) + T(257223563) / T(1000000000) );
+    }
+    /**
+     * A synonym for WGS84_f<real>().
+     **********************************************************************/
+    static inline Math::real WGS84_f() throw() { return WGS84_f<real>(); }
+    /**
      * @return the reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
     template<typename T>
-    static inline T WGS84_r() throw() {
-      // 298.257223563
-      return T(298) + T(257223563) / T(1000000000);
-    }
+    static inline T WGS84_r() throw() { return 1/WGS84_f<T>(); }
     /**
      * A synonym for WGS84_r<real>().
      **********************************************************************/

@@ -58,7 +58,7 @@ namespace GeographicLib {
     friend class LocalCartesian;
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
-    const real _a, _r, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
+    const real _a, _f, _r, _e2, _e2m, _e2a, _e4a, _maxrad;
     // Actually this can be static because it doesn't depend on the ellipsoid.
     // But let's be more general than that.
     void Rotation(real sphi, real cphi, real slam, real clam,
@@ -73,14 +73,14 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with
      *
      * @param[in] a equatorial radius (meters)
-     * @param[in] r reciprocal flattening.  Setting \e r = 0 implies \e r = inf
-     *   or flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
-     *   ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      *
      * An exception is thrown if either of the axes of the ellipsoid is
      * non-positive.
      **********************************************************************/
-    Geocentric(real a, real r);
+    Geocentric(real a, real f);
 
     /**
      * Convert from geodetic to geocentric coordinates.
@@ -188,9 +188,13 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value used in the constructor.  A value of 0 is returned for a sphere
-     *   (infinite inverse flattening).
+     * @return \e f the  flattening of the ellipsoid.  This is the
+     *   value used in the constructor. 
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
     ///@}

@@ -41,7 +41,7 @@ namespace GeographicLib {
                              real lat1, real lon1, real azi1,
                              unsigned caps) throw()
     : _a(g._a)
-    , _r(g._r)
+    , _f(g._f)
     , _b(g._b)
     , _c2(g._c2)
     , _f1(g._f1)

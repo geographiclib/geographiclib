@@ -30,7 +30,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     // _Cx used to be _C but g++ 3.4 has a macro of that name
-    const real _a, _r, _f, _e2, _e, _e2m, _Cx, _c;
+    const real _a, _f, _r, _e2, _e, _e2m, _Cx, _c;
     real _k0;
     static const real tol_;
     static const real overflow_;
@@ -46,15 +46,15 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with
      *
      * @param[in] a equatorial radius (meters)
-     * @param[in] r reciprocal flattening.  Setting \e r = 0 implies \e r = inf
-     *   or flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
-     *   ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] k0 central scale factor.
      *
      * An exception is thrown if either of the axes of the ellipsoid is
      * not positive \e a or if \e k0 is not positive.
      **********************************************************************/
-    PolarStereographic(real a, real r, real k0);
+    PolarStereographic(real a, real f, real k0);
 
     /**
      * Set the scale for the projection.
@@ -133,9 +133,13 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value used in the constructor.  A value of 0 is returned for a sphere
-     *   (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value used in
+     *   the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 

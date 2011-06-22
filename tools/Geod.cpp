@@ -66,8 +66,8 @@ int main(int argc, char* argv[]) {
       dms = false, full = false;
     real
       a = Constants::WGS84_a<real>(),
-      r = Constants::WGS84_r<real>();
-    real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12;
+      f = Constants::WGS84_f<real>();
+    real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12, M12, M21, S12;
     real azi2sense = 0;
     int prec = 3;
     std::string istring, ifile, ofile;
@@ -95,12 +95,12 @@ int main(int argc, char* argv[]) {
         m += 3;
       } else if (arg == "-n") {   // Deprecated and so not documented
         a = 6378388;
-        r = 297;
+        f = 1/real(297);
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
           a = DMS::Decode(std::string(argv[m + 1]));
-          r = DMS::Decode(std::string(argv[m + 2]));
+          f = DMS::Decode(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -178,7 +178,7 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    const Geodesic geod(a, r);
+    const Geodesic geod(a, f);
     GeodesicLine l;
     if (linecalc)
       l = geod.Line(lat1, lon1, azi1);
@@ -200,15 +200,22 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1);
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2);
-          a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2, m12);
+          a12 = geod.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2,
+                             m12, M12, M21, S12);
           if (full)
             *output << LatLonString(lat1, lon1, prec, dms) << " ";
           *output << AzimuthString(azi1, prec, dms) << " ";
           if (full)
             *output << LatLonString(lat2, lon2, prec, dms) << " ";
           *output << AzimuthString(azi2 + azi2sense, prec, dms) << " "
-                  << DistanceStrings(s12, a12, full, arcmode, prec, dms) << " "
-                  << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
+                  << DistanceStrings(s12, a12, full, arcmode, prec, dms);
+          if (full)
+            *output << " " << DMS::Encode(m12, prec, DMS::NUMBER)
+                    << " " << DMS::Encode(M12, prec+7, DMS::NUMBER)
+                    << " " << DMS::Encode(M21, prec+7, DMS::NUMBER)
+                    << " " << DMS::Encode(S12, std::max(prec-7, 0),
+                                          DMS::NUMBER);
+          *output << "\n";
         } else {
           if (linecalc) {
             std::string ss12;
@@ -219,9 +226,9 @@ int main(int argc, char* argv[]) {
               throw GeographicErr("Extraneous input: " + strc);
             s12 = ReadDistance(ss12, arcmode);
             if (arcmode)
-              l.ArcPosition(s12, lat2, lon2, azi2, a12, m12);
+              l.ArcPosition(s12, lat2, lon2, azi2, a12, m12, M12, M21, S12);
             else
-              a12 = l.Position(s12, lat2, lon2, azi2, m12);
+              a12 = l.Position(s12, lat2, lon2, azi2, m12, M12, M21, S12);
           } else {
             std::string slat1, slon1, sazi1, ss12;
             if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
@@ -233,9 +240,11 @@ int main(int argc, char* argv[]) {
             azi1 = DMS::DecodeAzimuth(sazi1);
             s12 = ReadDistance(ss12, arcmode);
             if (arcmode)
-              geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12, m12);
+              geod.ArcDirect(lat1, lon1, azi1, s12, lat2, lon2, azi2, a12,
+                             m12, M12, M21, S12);
             else
-              a12 = geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
+              a12 = geod.Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2,
+                                m12, M12, M21, S12);
           }
           if (arcmode)
             std::swap(s12, a12);
@@ -246,8 +255,13 @@ int main(int argc, char* argv[]) {
                   << AzimuthString(azi2 + azi2sense, prec, dms);
           if (full)
             *output << " "
-                    << DistanceStrings(s12, a12, full, arcmode, prec, dms);
-          *output << " " << DMS::Encode(m12, prec, DMS::NUMBER) << "\n";
+                    << DistanceStrings(s12, a12, full, arcmode, prec, dms)
+                    << " " << DMS::Encode(m12, prec, DMS::NUMBER)
+                    << " " << DMS::Encode(M12, prec+7, DMS::NUMBER)
+                    << " " << DMS::Encode(M21, prec+7, DMS::NUMBER)
+                    << " " << DMS::Encode(S12, std::max(prec-7, 0),
+                                          DMS::NUMBER);
+          *output << "\n";
         }
       }
       catch (const std::exception& e) {

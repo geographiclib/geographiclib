@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     real lat1 = 0, lat2 = 0, lon0 = 0, k1 = 1;
     real
       a = Constants::WGS84_a<real>(),
-      r = Constants::WGS84_r<real>();
+      f = Constants::WGS84_f<real>();
     std::string istring, ifile, ofile;
 
     for (int m = 1; m < argc; ++m) {
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           a = DMS::Decode(std::string(argv[m + 1]));
-          r = DMS::Decode(std::string(argv[m + 2]));
+          f = DMS::Decode(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -156,10 +156,10 @@ int main(int argc, char* argv[]) {
     }
 
     const LambertConformalConic lproj =
-      lcc ? LambertConformalConic(a, r, lat1, lat2, k1)
+      lcc ? LambertConformalConic(a, f, lat1, lat2, k1)
       : LambertConformalConic(1, 0, 0, 0, 1);
     const AlbersEqualArea aproj =
-      albers ? AlbersEqualArea(a, r, lat1, lat2, k1)
+      albers ? AlbersEqualArea(a, f, lat1, lat2, k1)
       : AlbersEqualArea(1, 0, 0, 0, 1);
 
     std::string s;

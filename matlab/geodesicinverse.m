@@ -1,8 +1,8 @@
-function [geodesic, aux] = geodesicinverse(latlong, a, r)
+function [geodesic, aux] = geodesicinverse(latlong, a, f)
 %geodesicinverse  Solve inverse geodesic problem
 %
 %   [geodesic, aux] = geodesicinverse(latlong);
-%   [geodesic, aux] = geodesicinverse(latlong, a, r);
+%   [geodesic, aux] = geodesicinverse(latlong, a, f);
 %
 %   latlong is an M x 4 matrix
 %       latitude of point 1 = latlong(:,1) in degrees
@@ -21,8 +21,8 @@ function [geodesic, aux] = geodesicinverse(latlong, a, r)
 %       area under geodesic = aux(:,4) in meters^2
 %
 %   a = major radius (meters)
-%   r = reciprocal flattening (0 means a sphere)
-%   If a and r are omitted, the WGS84 values are used.
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
 %
 % This is an interface to the GeographicLib C++ routine
 %     Geodesic::Inverse

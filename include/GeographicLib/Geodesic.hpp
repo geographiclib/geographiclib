@@ -64,9 +64,10 @@ namespace GeographicLib {
    *   by \e dazi1 (radians), the the second point is displaced \e m12 \e dazi1
    *   in the direction \e azi2 + 90<sup>o</sup>.  The quantity \e m12 is
    *   called the "reduced length" and is symmetric under interchange of the
-   *   two points.  On a flat surface, we have \e m12 = \e s12.  The ratio \e
-   *   s12/\e m12 gives the azimuthal scale for an azimuthal equidistant
-   *   projection.
+   *   two points.  On a curved surface the reduced length obeys a symmetry
+   *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e
+   *   s12.  The ratio \e s12/\e m12 gives the azimuthal scale for an azimuthal
+   *   equidistant projection.
    * - <i>geodesic scale</i>.  Consider a reference geodesic and a second
    *   geodesic parallel to this one at point 1 and separated by a small
    *   distance \e dt.  The separation of the two geodesics at point 2 is \e
@@ -85,13 +86,20 @@ namespace GeographicLib {
    * Overloaded versions of Geodesic::Direct, Geodesic::ArcDirect, and
    * Geodesic::Inverse allow these quantities to be returned.  In addition
    * there are general functions Geodesic::GenDirect, and Geodesic::GenInverse
-   * which allow an arbitrary set of results to be computed.
+   * which allow an arbitrary set of results to be computed.  The quantities \e
+   * m12, \e M12, \e M21 which all specify the behavior of nearby geodesics
+   * obey addition rules.  Let points 1, 2, and 3 all lie on a single geodesic,
+   * then
+   * - \e m13 = \e m12 \e M23 + \e m23 \e M21
+   * - \e M13 = \e M12 \e M23 - (1 - \e M12 \e M21) \e m23 / \e m12
+   * - \e M31 = \e M32 \e M21 - (1 - \e M23 \e M32) \e m12 / \e m23
    *
-   * Additional functionality if provided by the GeodesicLine class, which
+   * Additional functionality is provided by the GeodesicLine class, which
    * allows a sequence of points along a geodesic to be computed.
    *
    * The calculations are accurate to better than 15 nm.  See Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for details.
+   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>
+   * for details.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -146,7 +154,7 @@ namespace GeographicLib {
     static const real tol1_;
     static const real tol2_;
     static const real xthresh_;
-    const real _a, _r, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+    const real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
     static real SinCosSeries(bool sinp,
                              real sinx, real cosx, const real c[], int n)
@@ -270,14 +278,14 @@ namespace GeographicLib {
      * Constructor for a ellipsoid with
      *
      * @param[in] a equatorial radius (meters)
-     * @param[in] r reciprocal flattening.  Setting \e r = 0 implies \e r = inf
-     *   or flattening = 0 (i.e., a sphere).  Negative \e r indicates a prolate
-     *   ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      *
      * An exception is thrown if either of the axes of the ellipsoid is
      * non-positive.
      **********************************************************************/
-    Geodesic(real a, real r);
+    Geodesic(real a, real f);
     ///@}
 
     /** \name Direct geodesic problem specified in terms of distance.
@@ -768,9 +776,13 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value used in the constructor.  A value of 0 is returned for a sphere
-     *   (infinite inverse flattening).
+     * @return \e f the  flattening of the ellipsoid.  This is the
+     *   value used in the constructor. 
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 

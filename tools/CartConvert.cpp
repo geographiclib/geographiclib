@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     bool localcartesian = false, reverse = false;
     real
       a = Constants::WGS84_a<real>(),
-      r = Constants::WGS84_r<real>();
+      f = Constants::WGS84_f<real>();
     real lat0 = 0, lon0 = 0, h0 = 0;
     std::string istring, ifile, ofile;
 
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           a = DMS::Decode(std::string(argv[m + 1]));
-          r = DMS::Decode(std::string(argv[m + 2]));
+          f = DMS::Decode(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    const Geocentric ec(a, r);
+    const Geocentric ec(a, f);
     const LocalCartesian lc(lat0, lon0, h0, ec);
 
     std::string s;

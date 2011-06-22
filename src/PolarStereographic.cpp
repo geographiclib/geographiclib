@@ -24,10 +24,10 @@ namespace GeographicLib {
   const Math::real PolarStereographic::overflow_ =
     1 / Math::sq(numeric_limits<real>::epsilon());
 
-  PolarStereographic::PolarStereographic(real a, real r, real k0)
+  PolarStereographic::PolarStereographic(real a, real f, real k0)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
@@ -45,7 +45,7 @@ namespace GeographicLib {
 
   const PolarStereographic
   PolarStereographic::UPS(Constants::WGS84_a<real>(),
-                          Constants::WGS84_r<real>(),
+                          Constants::WGS84_f<real>(),
                           Constants::UPS_k0<real>());
 
   // This formulation converts to conformal coordinates by tau = tan(phi) and

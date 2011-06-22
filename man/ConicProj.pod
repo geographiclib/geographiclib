@@ -8,7 +8,7 @@ ConicProj -- perform conic projections
 
 B<ConicProj> ( B<-c> | B<-a> ) I<lat1> I<lat2>
 [ B<-l> I<lon0> ] [ B<-k> I<k1> ] [ B<-r> ]
-[ B<-e> I<a> I<r> ] [ B<--version> | B<-h> | B<--help> ]
+[ B<-e> I<a> I<f> ] [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
 [ B<--output-file> I<outfile> ]
 
@@ -65,10 +65,11 @@ I<gamma>, and I<k>.
 
 =item B<-e>
 
-specify the ellipsoid via I<a> I<r>; the equatorial radius is I<a> and
-the reciprocal flattening is I<r>.  Setting I<r> = 0 results in a
-sphere.  Specify I<r> E<lt> 0 for a prolate ellipsoid.  By default, the
-WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
+specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
+the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
+I<f> E<lt> 0 for a prolate ellipsoid.  If I<f> E<gt> 1, the flattening
+is set to 1/I<f>.  By default, the WGS84 ellipsoid is used, I<a> =
+6378137m, I<f> = 1/298.257223563.
 
 =item B<--version>
 

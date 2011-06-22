@@ -58,11 +58,11 @@ namespace GeographicLib {
   // Overflow value s.t. atan(overflow_) = pi/2
   const Math::real TransverseMercatorExact::overflow_ = 1 / Math::sq(tol_);
 
-  TransverseMercatorExact::TransverseMercatorExact(real a, real r, real k0,
+  TransverseMercatorExact::TransverseMercatorExact(real a, real f, real k0,
                                                    bool extendp)
     : _a(a)
-    , _r(r)
-    , _f(1 / _r)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _k0(k0)
     , _mu(_f * (2 - _f))        // e^2
     , _mv(1 - _mu)              // 1 - e^2
@@ -74,8 +74,8 @@ namespace GeographicLib {
   {
     if (!(_a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_r > 0))
-      throw GeographicErr("Inverse flattening is not positive");
+    if (!(_f > 0))
+      throw GeographicErr("Flattening is not positive");
     if (!(_f < 1))
       throw GeographicErr("Minor radius is not positive");
     if (!(_k0 > 0))
@@ -84,7 +84,7 @@ namespace GeographicLib {
 
   const TransverseMercatorExact
   TransverseMercatorExact::UTM(Constants::WGS84_a<real>(),
-                               Constants::WGS84_r<real>(),
+                               Constants::WGS84_f<real>(),
                                Constants::UTM_k0<real>());
 
   // tau = tan(phi), taup = sinh(psi)

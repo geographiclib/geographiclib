@@ -121,9 +121,14 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value inherited from the Geodesic object used in the constructor.  A
-     *   value of 0 is returned for a sphere (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value
+     *   inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _earth.Flattening(); }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.  This is the value
+     *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }

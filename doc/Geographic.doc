@@ -550,7 +550,7 @@ int main() {
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
-    r = 298.257222101,          // inverse flattening (GRS80)
+    f = 1/298.257222101,        // flattening (GRS80)
     lat1 = DMS::Decode(40,58),  // standard parallel 1
     lat2 = DMS::Decode(39,56),  // standard parallel 2
     k1 = 1,                     // scale on std parallels
@@ -558,7 +558,7 @@ int main() {
     lon0 = -DMS::Decode(77,45), // longitude of origin
     fe = 600000,                // false easting
     fn = 0;                     // false northing
-  LambertConformalConic PASouth(a, r, lat1, lat2, k1);
+  LambertConformalConic PASouth(a, f, lat1, lat2, k1);
   double x0, y0;
   PASouth.Forward(lon0, lat0, lon0, x0, y0); // Transform origin point
   x0 -= fe; y0 -= fn;           // Combine result with false origin
@@ -1334,7 +1334,7 @@ members &mdash; about 690 kB, compressed) is available at
  - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
    GeodTest-short.dat.gz</a>
 
-Each line of the test set gives 9 space delimited numbers
+Each line of the test set gives 10 space delimited numbers
  - latitude for point 1, \e lat1 (degrees, exact)
  - longitude for point 1, \e lon1 (degrees, always 0)
  - azimuth for point 1, \e azi1 (clockwise from north in degrees, exact)
@@ -1403,8 +1403,9 @@ follows
    This should yield columns 3, 6, 7, and 9 of the test set.
  .
 Add, e.g., "-p 6", to the call to Geod to change the precision of the
-output.  Adding "-f" causes Geod to print all 9 fields specifying the
-geodesic (in the same order as the test set).
+output.  Adding "-f" causes Geod to print 12 fields specifying the
+geodesic; these include the 10 fields in the test set plus the geodesic
+scales \e M12 and \e M21 which are inserted between \e m12 and \e S12.
 
 \section geodseries Expansions for geodesics
 
@@ -2121,9 +2122,22 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (not released yet)</a>
-  - Add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
-    calculations.
+  - Changes to <a href="Planimeter.1.html">Planimeter</a>:
+    - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
+      calculations;
+    - trim precision of area to 3 decimal places.
+  - <a href="Geod.1.html">Geod</a> no longer reports the reduced length
+    by default; however the -f flag still reports this and in addition
+    gives the geodesic scales and the geodesic area.
   - FIX BUG: accommodate tellg() returning -1 at end of string.
+  - Change way flattening of the ellipsoid is specified:
+    - constructors take \e f argument which is taken to be the
+      flattening if \e f &lt; 1 and the inverse flattening otherwise.
+      This is a compatible change for spheres and oblate ellipsoids.  It
+      is an INCOMPATIBLE change for prolate ellipsoids.
+    - the -e arguments to the \ref utilities are handled similarly;
+    - most classes have a Flattening() member function;
+    - InverseFlattening() now returns inf for a sphere (instead of 0).
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (released 2011-06-11)</a>
   - Improvements to Matlab/Octave interface:

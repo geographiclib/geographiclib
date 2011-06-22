@@ -54,7 +54,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT AlbersEqualArea {
   private:
     typedef Math::real real;
-    const real _a, _r, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
+    const real _a, _f, _r, _fm, _e2, _e, _e2m, _qZ, _qx;
     real _sign, _lat0, _k0;
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
     static const real eps_;
@@ -112,24 +112,24 @@ namespace GeographicLib {
      * Constructor with a single standard parallel.
      *
      * @param[in] a equatorial radius of ellipsoid (meters)
-     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
-     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
-     *   indicates a prolate ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] stdlat standard parallel (degrees), the circle of tangency.
      * @param[in] k0 azimuthal scale on the standard parallel.
      *
      * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat
      * is not in the range [-90, 90].
      **********************************************************************/
-    AlbersEqualArea(real a, real r, real stdlat, real k0);
+    AlbersEqualArea(real a, real f, real stdlat, real k0);
 
     /**
      * Constructor with two standard parallels.
      *
      * @param[in] a equatorial radius of ellipsoid (meters)
-     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
-     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
-     *   indicates a prolate ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] stdlat1 first standard parallel (degrees).
      * @param[in] stdlat2 second standard parallel (degrees).
      * @param[in] k1 azimuthal scale on the standard parallels.
@@ -138,15 +138,15 @@ namespace GeographicLib {
      * or \e stdlat2 is not in the range [-90, 90].  In addition, an exception
      * is thrown if \e stdlat1 and \e stdlat2 are opposite poles.
      **********************************************************************/
-    AlbersEqualArea(real a, real r, real stdlat1, real stdlat2, real k1);
+    AlbersEqualArea(real a, real f, real stdlat1, real stdlat2, real k1);
 
     /**
      * Constructor with two standard parallels specified by sines and cosines.
      *
      * @param[in] a equatorial radius of ellipsoid (meters)
-     * @param[in] r reciprocal flattening of ellipsoid.  Setting \e r = 0
-     *   implies \e r = inf or flattening = 0 (i.e., a sphere).  Negative \e r
-     *   indicates a prolate ellipsoid.
+     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
+     *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
+     *   to 1/\e f.
      * @param[in] sinlat1 sine of first standard parallel.
      * @param[in] coslat1 cosine of first standard parallel.
      * @param[in] sinlat2 sine of second standard parallel.
@@ -159,7 +159,7 @@ namespace GeographicLib {
      * then the error in the latitude of origin is less than
      * 4.5e-14<sup>o</sup>.
      **********************************************************************/
-    AlbersEqualArea(real a, real r,
+    AlbersEqualArea(real a, real f,
                     real sinlat1, real coslat1,
                     real sinlat2, real coslat2,
                     real k1);
@@ -248,9 +248,13 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value used in the constructor.  A value of 0 is returned for a sphere
-     *   (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value used in
+     *   the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+
+    /**
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }
 

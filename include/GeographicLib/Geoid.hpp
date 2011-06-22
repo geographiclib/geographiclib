@@ -416,6 +416,14 @@ namespace GeographicLib {
     { return Constants::WGS84_a<real>(); }
 
     /**
+     * @return \e f the flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 value is returned because the supported geoid models are all
+     * based on this ellipsoid.)
+     **********************************************************************/
+    Math::real Flattening() const throw() { return Constants::WGS84_f<real>(); }
+
+    /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
      *
      * (The WGS84 value is returned because the supported geoid models are all

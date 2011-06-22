@@ -40,8 +40,8 @@ namespace GeographicLib {
    *   identity.  (This is affected in predictable ways by errors in
    *   determining the latitude band and by loss of precision in the MGRS
    *   coordinates.)
-   * - All MGRS coordinates truncate to legal 100km blocks.  All MGRS
-   *   coordinates with a legal 100km block prefix are legal (even though the
+   * - All MGRS coordinates truncate to legal 100 km blocks.  All MGRS
+   *   coordinates with a legal 100 km block prefix are legal (even though the
    *   latitude band letter may now belong to a neighboring band).
    * - The range of UTM/UPS coordinates allowed for conversion to MGRS
    *   coordinates is the maximum consistent with staying within the letter
@@ -79,7 +79,7 @@ namespace GeographicLib {
     static const int maxnorthing_[4];
     enum {
       base_ = 10,
-      // Top-level tiles are 10^5 m = 100km on a side
+      // Top-level tiles are 10^5 m = 100 km on a side
       tilelevel_ = 5,
       // Period of UTM row letters
       utmrowperiod_ = 20,
@@ -138,14 +138,14 @@ namespace GeographicLib {
      * @param[out] mgrs MGRS string.
      *
      * \e prec specifies the precision of the MSGRS string as follows:
-     * - prec = 0 (min), 100km
-     * - prec = 1, 10km
-     * - prec = 2, 1km
-     * - prec = 3, 100m
-     * - prec = 4, 10m
-     * - prec = 5, 1m
-     * - prec = 6, 0.1m
-     * - prec = 11 (max), 1um
+     * - prec = 0 (min), 100 km
+     * - prec = 1, 10 km
+     * - prec = 2, 1 km
+     * - prec = 3, 100 m
+     * - prec = 4, 10 m
+     * - prec = 5, 1 m
+     * - prec = 6, 0.1 m
+     * - prec = 11 (max), 1 um
      *
      * UTM eastings are allowed to be in the range [100 km, 900 km], northings
      * are allowed to be in in [0 km, 9500 km] for the northern hemisphere and
@@ -169,13 +169,13 @@ namespace GeographicLib {
      *
      * All allowed UTM and UPS coordinates may now be converted to legal MGRS
      * coordinates with the proviso that eastings and northings on the upper
-     * boundaries are silently reduced by about 4nm to place them \e within the
+     * boundaries are silently reduced by about 4 nm to place them \e within the
      * allowed range.  (This includes reducing a southern hemisphere northing
-     * of 10000km by 4nm so that it is placed in latitude band M.)  The UTM or
+     * of 10000 km by 4 nm so that it is placed in latitude band M.)  The UTM or
      * UPS coordinates are truncated to requested precision to determine the
      * MGRS coordinate.  Thus in UTM zone 38N, the square area with easting in
      * [444 km, 445 km) and northing in [3688 km, 3689 km) maps to MGRS
-     * coordinate 38SMB4488 (at \e prec = 2, 1km), Khulani Sq., Baghdad.
+     * coordinate 38SMB4488 (at \e prec = 2, 1 km), Khulani Sq., Baghdad.
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion to
      * MGRS coordinate.  Thus for \e zone > 0, the MGRS coordinate begins with
@@ -235,7 +235,7 @@ namespace GeographicLib {
      * (The leading 0 may be dropped from an input MGRS coordinate for UTM
      * zones 1&ndash;9.)  In addition, MGRS coordinates with a neighboring
      * latitude band letter are permitted provided that some portion of the
-     * 100km block is within the given latitude band.  Thus
+     * 100 km block is within the given latitude band.  Thus
      *   - 38VLS and 38WLS are allowed (latitude 64N intersects the square
      *     38[VW]LS); but 38VMS is not permitted (all of 38VMS is north of 64N)
      *   - 38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
@@ -266,6 +266,14 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real MajorRadius() throw() { return UTMUPS::MajorRadius(); }
+
+    /**
+     * @return \e f the flattening of the WGS84 ellipsoid.
+     *
+     * (The WGS84 value is returned because the UTM and UPS projections are
+     * based on this ellipsoid.)
+     **********************************************************************/
+    static Math::real Flattening() throw() { return UTMUPS::Flattening(); }
 
     /**
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
