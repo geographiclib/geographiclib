@@ -91,7 +91,7 @@ Math::extended dist(Math::extended lat0, Math::extended lon0,
     phi = lat0 * degree(),
     cphi = abs(lat0) <= 45 ? cos(phi) : sin((90 - abs(lat0)) * degree()),
     a = GeographicLibL::Constants::WGS84_a() * degree(),
-    f = 1 / GeographicLibL::Constants::WGS84_r(),
+    f = GeographicLibL::Constants::WGS84_f(),
     e2 = f * (2 - f),
     sinphi = sin(phi),
     n = 1/sqrt(1 - e2 * sinphi * sinphi),
@@ -295,10 +295,10 @@ int main(int argc, char* argv[]) {
     }
   }
   else if (accuracytest || coverage) {
-    const Geodesic geod(Constants::WGS84_a(), Constants::WGS84_r());
+    const Geodesic geod(Constants::WGS84_a(), Constants::WGS84_f());
 
     const GeographicLibL::Geodesic geodl(GeographicLibL::Constants::WGS84_a(),
-                                         GeographicLibL::Constants::WGS84_r());
+                                         GeographicLibL::Constants::WGS84_f());
     typedef GeographicLibL::Math::real reale;
     const unsigned NUMERR = 7;
 

@@ -21,14 +21,13 @@
 #include <stdexcept>
 
 GeographicLib::Math::extended
-dist(GeographicLib::Math::extended a, GeographicLib::Math::extended r,
+dist(GeographicLib::Math::extended a, GeographicLib::Math::extended f,
      GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
      GeographicLib::Math::extended lat1, GeographicLib::Math::extended lon1) {
   using namespace GeographicLib;
   typedef Math::extended extended;
   extended
     phi = lat0 * Math::degree<extended>(),
-    f = r != 0 ? 1/r : 0,
     e2 = f * (2 - f),
     sinphi = sin(phi),
     n = 1/sqrt(1 - e2 * sinphi * sinphi),
@@ -90,7 +89,7 @@ int main(int argc, char* argv[]) {
   bool lambert = true;
   bool albers = false;
   bool checkstdlats = false;
-  real a = Constants::WGS84_a(), r = Constants::WGS84_r();
+  real a = Constants::WGS84_a(), f = Constants::WGS84_f();
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
     if (arg == "-l") {
@@ -105,7 +104,7 @@ int main(int argc, char* argv[]) {
       if (m + 2 >= argc) return usage(1);
       try {
         a = DMS::Decode(std::string(argv[m + 1]));
-        r = DMS::Decode(std::string(argv[m + 2]));
+        f = DMS::DecodeFraction(std::string(argv[m + 2]));
       }
       catch (const std::exception& e) {
         std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -145,11 +144,11 @@ int main(int argc, char* argv[]) {
                      : sin(colat2 * Math::degree<extended>()));
         lat1 *= sign1;
         lat2 *= sign2;
-        const LambertConformalConic lam(a, r, /* real(lat1), real(lat2), */
+        const LambertConformalConic lam(a, f, /* real(lat1), real(lat2), */
                                         real(sinlat1), real(coslat1),
                                         real(sinlat2), real(coslat2),
                                         real(1));
-        const AlbersEqualArea alb(a, r, /* real(lat1), real(lat2), */
+        const AlbersEqualArea alb(a, f, /* real(lat1), real(lat2), */
                                         real(sinlat1), real(coslat1),
                                         real(sinlat2), real(coslat2),
                                         real(1));
@@ -183,10 +182,10 @@ int main(int argc, char* argv[]) {
                                   cos(colat00 * Math::degree<extended>()))),
           coslat0 = real(lat00 < 45 ? cos(lat00 * Math::degree<extended>())
                          : sin(colat00 * Math::degree<extended>()));
-        const LambertConformalConic lcc(a, r,
+        const LambertConformalConic lcc(a, f,
                                         sinlat0, coslat0, sinlat0, coslat0,
                                         real(1));
-        const AlbersEqualArea alb(a, r,
+        const AlbersEqualArea alb(a, f,
                                   sinlat0, coslat0, sinlat0, coslat0,
                                   real(1));
         real maxerrf = 0, maxerrr = 0, maxerrkf = 0, maxerrkr = 0;
@@ -214,7 +213,7 @@ int main(int argc, char* argv[]) {
             alb.Reverse(real(0), real(x), real(y), latb, lonb, gammab, kb);
           else
             lcc.Reverse(real(0), real(x), real(y), latb, lonb, gammab, kb);
-          real errr = dist(extended(a), extended(r),
+          real errr = dist(extended(a), extended(f),
                            lat, lon, extended(latb), extended(lonb));
           /*
           std::cout << latb << " " << lonb << " " << xa << " " << ya << " "

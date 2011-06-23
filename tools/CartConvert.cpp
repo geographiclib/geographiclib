@@ -55,7 +55,8 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           a = DMS::Decode(std::string(argv[m + 1]));
-          f = DMS::Decode(std::string(argv[m + 2]));
+          f = DMS::DecodeFraction(std::string(argv[m + 2]));
+        std::cerr << f << "\n";
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";

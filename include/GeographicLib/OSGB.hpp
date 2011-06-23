@@ -199,12 +199,8 @@ namespace GeographicLib {
     { return  real(20923713 - 20853810) / real(20923713); }
 
     /**
+     * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the Airy 1830 ellipsoid.
-     *
-     * For the Airy 1830 ellipsoid, \e a = 20923713 ft and \e b = 20853810 ft;
-     * thus the inverse flattening = 20923713/(20923713 - 20853810) =
-     * 299.32496459...  (The Airy 1830 value is returned because the OSGB
-     * projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real InverseFlattening() throw() { return 1/Flattening(); }
 

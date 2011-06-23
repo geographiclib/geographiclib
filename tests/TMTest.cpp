@@ -24,14 +24,13 @@
 using namespace GeographicLib;
 
 GeographicLib::Math::real
-dist(GeographicLib::Math::real a, GeographicLib::Math::real r,
+dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
   typedef Math::real real;
   real
     phi = real(lat0) * Math::degree<real>(),
-    f = r != 0 ? 1/r : 0,
     e2 = f * (2 - f),
     sinphi = sin(phi),
     n = 1/sqrt(1 - e2 * sinphi * sinphi),
@@ -109,7 +108,7 @@ int main(int argc, char* argv[]) {
       }
     } else {
       const TransverseMercatorExact tm(Constants::WGS84_a(),
-                                       Constants::WGS84_r(),
+                                       Constants::WGS84_f(),
                                        Constants::UTM_k0(),
                                        true);
       if (timefor) {
@@ -149,13 +148,13 @@ int main(int argc, char* argv[]) {
     d[nbins - 1] = 10001966;
     const TransverseMercator& tm = TransverseMercator::UTM;
     const TransverseMercatorExact tme(Constants::WGS84_a(),
-                                      Constants::WGS84_r(),
+                                      Constants::WGS84_f(),
                                       Constants::UTM_k0(),
                                       true);
     real
       a = series ? tm.MajorRadius() : tme.MajorRadius(),
-      r = series ? tm.InverseFlattening() : tme.InverseFlattening();
-    const Geodesic geod(a, r);
+      f = series ? tm.Flattening() : tme.Flattening();
+    const Geodesic geod(a, f);
     Math::extended lat0l, lon0l, x0l, y0l, gam0l, k0l;
     while (std::cin >> lat0l >> lon0l >> x0l >> y0l >> gam0l >> k0l) {
       real
@@ -185,7 +184,7 @@ int main(int argc, char* argv[]) {
         tm.Reverse(0, x0, y0, lat, lon, gam, k);
       } else
         tme.Reverse(0, x0, y0, lat, lon, gam, k);
-      errr = dist(a, r, lat0l, lon0l, lat, lon);
+      errr = dist(a, f, lat0l, lon0l, lat, lon);
       errgr = real(std::abs(Math::extended(gam) - gam0));
       errkr = real(std::abs(Math::extended(k) - k0));
 

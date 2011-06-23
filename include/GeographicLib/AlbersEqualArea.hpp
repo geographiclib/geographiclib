@@ -254,6 +254,7 @@ namespace GeographicLib {
     Math::real Flattening() const throw() { return _f; }
 
     /**
+     * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw() { return _r; }

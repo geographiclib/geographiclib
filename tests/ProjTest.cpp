@@ -120,14 +120,13 @@ public:
 };
 
 GeographicLib::Math::real
-dist(GeographicLib::Math::real a, GeographicLib::Math::real r,
+dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat0, GeographicLib::Math::real lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
   typedef Math::real real;
   real
     phi = lat0 * Math::degree<real>(),
-    f = r != 0 ? 1/r : 0,
     e2 = f * (2 - f),
     sinphi = sin(phi),
     n = 1/sqrt(1 - e2 * sinphi * sinphi),
@@ -167,16 +166,16 @@ int main(int argc, char* argv[]) {
     DataFile proj(projf);
     if (geo.coords() != "Geodetic")
       throw std::out_of_range("Unsupported coordinates " + geo.coords());
-    real a, r;
+    real a, f;
     if (geo.datum() == "WGE") {
       a = Constants::WGS84_a();
-      r = Constants::WGS84_r();
+      f = Constants::WGS84_f();
     } else if (geo.datum() == "Test_sphere") {
       a = 20000000/Math::pi<real>();
-      r = 0;
+      f = 0;
     } else if (geo.datum() == "Test_SRMmax") {
       a = 6400000;
-      r = 150;
+      f = 1/150.0;
     } else
       throw std::out_of_range("Unsupported datum " + geo.datum());
     if (proj.datum() != geo.datum())
@@ -225,7 +224,7 @@ int main(int argc, char* argv[]) {
       if (Math::isfinite(latts)) {
         if (latts < 0)
           lat0 = -lat0;
-        LambertConformalConic tx(a, r, lat0, 1);
+        LambertConformalConic tx(a, f, lat0, 1);
         real x, y, gam, k;
         tx.Forward(0, latts, 10, x, y, gam, k);
         k1 = 1/k;
@@ -241,11 +240,11 @@ int main(int argc, char* argv[]) {
       type = tm;
     } else
       throw std::out_of_range("Unsupported projection " + proj.proj());
-    LambertConformalConic tx(a, r, lat1, lat2, k1);
-    PolarStereographic txa(a, r, k1);
-    TransverseMercator txb(a, r, k1);
-    TransverseMercatorExact txc(a, r == 0 ? 0.1/eps : r, k1);
-    std::cout << a << " " << r << " " << k1 << " " << type << "\n";
+    LambertConformalConic tx(a, f, lat1, lat2, k1);
+    PolarStereographic txa(a, f, k1);
+    TransverseMercator txb(a, f, k1);
+    TransverseMercatorExact txc(a, f == 0 ? 0.1/eps : f, k1);
+    std::cout << a << " 1/" << 1/f << " " << k1 << " " << type << "\n";
     real x0, y0, gam, k;
     if (type == lcc)
       tx.Forward(lon0, lat0, lon0, x0, y0, gam, k);
@@ -275,7 +274,7 @@ int main(int argc, char* argv[]) {
         txb.Reverse(lon0, x, y, lat, lon, gam, k);
         break;
       }
-      real errr = dist(a, r, lata, lona, lat, lon);
+      real errr = dist(a, f, lata, lona, lat, lon);
       maxerrr = std::max(errr, maxerrr);
       if (!(errr < 1e-6))
         std::cout << "REV: "

@@ -151,6 +151,15 @@ namespace GeographicLib {
     static Math::real Decode(const std::string& str);
 
     /**
+     * Convert a string to a real number treating the case where the string is
+     * a simple fraction.
+     *
+     * @param[in] str string input.
+     * @return decoded number.
+     **********************************************************************/
+    static Math::real DecodeFraction(const std::string& str);
+
+    /**
      * Convert a pair of strings to latitude and longitude.
      *
      * @param[in] dmsa first string.

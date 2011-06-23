@@ -22,7 +22,7 @@ namespace GeographicLib {
   const string OSGB::digits_ = "0123456789";
 
   const TransverseMercator
-  OSGB::OSGBTM_(MajorRadius(), InverseFlattening(), CentralScale());
+  OSGB::OSGBTM_(MajorRadius(), Flattening(), CentralScale());
 
   Math::real OSGB::computenorthoffset() throw() {
     real x, y;

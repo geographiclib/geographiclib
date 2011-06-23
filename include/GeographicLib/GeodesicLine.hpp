@@ -576,8 +576,8 @@ namespace GeographicLib {
     Math::real Flattening() const throw() { return Init() ? _f : Math::NaN(); }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the value
-     *   inherited from the Geodesic object used in the constructor.
+     * <b>DEPRECATED</b>
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return Init() ? 1/_f : Math::NaN(); }
@@ -598,6 +598,7 @@ namespace GeographicLib {
     }
     ///@}
 
+/// \cond DEPRECATED
     /** \name Deprecated Functions
      **********************************************************************/
     ///@{
@@ -637,6 +638,7 @@ namespace GeographicLib {
       ArcPosition(a12, lat2, lon2, azi2, s12, M12, M21);
     }
     ///@}
+/// \endcond
 
   };
 

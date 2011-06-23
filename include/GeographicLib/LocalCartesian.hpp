@@ -205,8 +205,8 @@ namespace GeographicLib {
     { return _earth.Flattening(); }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the value
-     *   inherited from the Geocentric object used in the constructor.
+     * <b>DEPRECATED</b>
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }

@@ -227,6 +227,15 @@ namespace GeographicLib {
     return num;
   }
 
+  Math::real DMS::DecodeFraction(const std::string& str) {
+    string::size_type delim = str.find('/');
+    if (!(delim != string::npos && delim >= 1 && delim + 2 <= str.size()))
+      return Decode(str);
+    else
+      // delim in [1, size() - 2]
+      return Decode(str.substr(0, delim)) / Decode(str.substr(delim + 1));
+  }
+
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
                          real& lat, real& lon) {
       real a, b;

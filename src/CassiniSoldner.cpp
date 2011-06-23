@@ -30,7 +30,7 @@ namespace GeographicLib {
                             Geodesic::AZIMUTH);
     real
       phi = LatitudeOrigin() * Math::degree<real>(),
-      f = _earth.InverseFlattening() != 0 ? 1 / _earth.InverseFlattening() : 0;
+      f = _earth.Flattening();
     _sbet0 = (1 - f) * sin(phi);
     _cbet0 = abs(LatitudeOrigin()) == 90 ? 0 : cos(phi);
     SinCosNorm(_sbet0, _cbet0);

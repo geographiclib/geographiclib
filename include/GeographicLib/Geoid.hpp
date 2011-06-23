@@ -424,13 +424,11 @@ namespace GeographicLib {
     Math::real Flattening() const throw() { return Constants::WGS84_f<real>(); }
 
     /**
+     * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
-     *
-     * (The WGS84 value is returned because the supported geoid models are all
-     * based on this ellipsoid.)
      **********************************************************************/
     Math::real InverseFlattening() const throw()
-    { return Constants::WGS84_r<real>(); }
+    { return 1/Constants::WGS84_f<real>(); }
     ///@}
 
     /**
@@ -451,6 +449,7 @@ namespace GeographicLib {
      **********************************************************************/
     static std::string DefaultGeoidName();
 
+/// \cond DEPRECATED
     /**
      * <b>DEPRECATED</b> Return the compile-time default path for the geoid
      * data files.
@@ -462,6 +461,7 @@ namespace GeographicLib {
      * GEOID_PATH.
      **********************************************************************/
     static std::string GeoidPath();
+/// \endcond
   };
 
 } // namespace GeographicLib

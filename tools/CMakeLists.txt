@@ -74,13 +74,12 @@ set_tests_properties (Geod1
   PROPERTIES PASS_REGULAR_EXPRESSION "49\\.01467 2\\.56106 111\\.62947")
 # Check fix for antipodal prolate bug found 2010-09-04
 add_test (Geod2
-  Geod -i -p 0 -e 6.4e6 -0.0066666666666666667
-    --input-string "0.07476 0 -0.07476 180")
+  Geod -i -p 0 -e 6.4e6 -1/150 --input-string "0.07476 0 -0.07476 180")
 set_tests_properties (Geod2
   PROPERTIES PASS_REGULAR_EXPRESSION "90\\.00078 90\\.00078 20106193")
 # Another check for similar bug
 add_test (Geod3
-  Geod -i -p 0 -e 6.4e6 -0.0066666666666666667 --input-string "0.1 0 -0.1 180")
+  Geod -i -p 0 -e 6.4e6 -1/150 --input-string "0.1 0 -0.1 180")
 set_tests_properties (Geod3
   PROPERTIES PASS_REGULAR_EXPRESSION "90\\.00105 90\\.00105 20106193")
 # Check fix for short line bug found 2010-05-21
@@ -125,9 +124,9 @@ set_tests_properties (ConicProj0
   "39\\.95[0-9]+ -75\\.17[0-9]+ 1\\.67[0-9]+ 0\\.99[0-9]+")
 
 add_test (CartConvert0
-  CartConvert -e 6.4e6 0.01 -r --input-string "10e3 0 1e3")
+  CartConvert -e 6.4e6 1/100 -r --input-string "10e3 0 1e3")
 add_test (CartConvert1
-  CartConvert -e 6.4e6 -0.01 -r --input-string "1e3 0 10e3")
+  CartConvert -e 6.4e6 -1/100 -r --input-string "1e3 0 10e3")
 set_tests_properties (CartConvert0
   PROPERTIES PASS_REGULAR_EXPRESSION
   "85\\.57[0-9]+ 0\\.0[0]+ -6334614\\.[0-9]+")

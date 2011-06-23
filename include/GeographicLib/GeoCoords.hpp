@@ -426,10 +426,8 @@ namespace GeographicLib {
     Math::real Flattening() const throw() { return UTMUPS::Flattening(); }
 
     /**
+     * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the WGS84 ellipsoid.
-     *
-     * (The WGS84 value is returned because the UTM and UPS projections are
-     * based on this ellipsoid.)
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return UTMUPS::InverseFlattening(); }
