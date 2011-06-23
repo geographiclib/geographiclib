@@ -30,7 +30,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   else if (nrhs > 3)
     mexErrMsgTxt("More than three input arguments specified.");
   else if (nrhs == 2)
-    mexErrMsgTxt("Must specify repicrocal flattening with the major radius.");
+    mexErrMsgTxt("Must specify flattening with the major radius.");
   else if (nlhs > 2)
     mexErrMsgTxt("More than two output arguments specified.");
 
@@ -48,7 +48,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     a = mxGetScalar(prhs[1]);
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))
-      mexErrMsgTxt("reciprocal flattening is not a real scalar.");
+      mexErrMsgTxt("flattening is not a real scalar.");
     f = mxGetScalar(prhs[2]);
   }
 

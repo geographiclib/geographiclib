@@ -56,7 +56,7 @@ toggle whether to return a signed result (the default) or not.
 
 toggle whether the vertices represent a polygon (the default) or a
 polyline.  For a polyline, the number of points and the length of the
-path joining them is returned.  The path is not closed and the area is
+path joining them is returned; the path is not closed and the area is
 not reported.
 
 =item B<-e>

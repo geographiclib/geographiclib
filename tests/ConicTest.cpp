@@ -111,6 +111,7 @@ int main(int argc, char* argv[]) {
         return 1;
       }
       m += 2;
+      if (f > 1) f = 1/f;
     } else
       return usage(arg != "-h");
   }
