@@ -69,11 +69,11 @@ namespace GeographicLib {
     , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
     , _n(_f / (2 - _f))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(_k0 > 0))
+    if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
     // If coefficents might overflow_ an int, convert them to double (and they
     // are all exactly representable as doubles).

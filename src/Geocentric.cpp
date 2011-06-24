@@ -28,9 +28,9 @@ namespace GeographicLib {
     , _e4a(Math::sq(_e2))
     , _maxrad(2 * _a / numeric_limits<real>::epsilon())
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
   }
 

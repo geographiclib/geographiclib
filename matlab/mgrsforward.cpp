@@ -42,13 +42,13 @@ void mexFunction( int nlhs, mxArray* plhs[],
   else {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
-      mexErrMsgTxt("precision is not an integera.");
+      mexErrMsgTxt("Precision is not an integer.");
     double rprec = mxGetScalar(prhs[1]);
     prec = int(rprec);
     if (double(prec) != rprec)
-      mexErrMsgTxt("precision is not an integerb.");
+      mexErrMsgTxt("Precision is not an integer.");
     if (prec < 0 || prec > 11)
-      mexErrMsgTxt("precision outside the legal range [0, 11].");
+      mexErrMsgTxt("Precision outside the legal range [0, 11].");
   }
 
   int m = mxGetM(prhs[0]);

@@ -62,9 +62,9 @@ namespace GeographicLib {
             sqrt(abs(_e2))))/2) // authalic radius squared
     , _etol2(tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_b) && _b < 0))
       throw GeographicErr("Minor radius is not positive");
     A3coeff();
     C3coeff();

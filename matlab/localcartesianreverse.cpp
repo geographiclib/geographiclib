@@ -52,11 +52,11 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (nrhs == 4) {
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))
-      mexErrMsgTxt("major radius is not a real scalar.");
+      mexErrMsgTxt("Major radius is not a real scalar.");
     a = mxGetScalar(prhs[2]);
     if (!( mxIsDouble(prhs[3]) && !mxIsComplex(prhs[3]) &&
            mxGetNumberOfElements(prhs[3]) == 1 ))
-      mexErrMsgTxt("flattening is not a real scalar.");
+      mexErrMsgTxt("Flattening is not a real scalar.");
     f = mxGetScalar(prhs[3]);
   }
 

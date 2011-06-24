@@ -39,11 +39,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k0 > 0))
+    if (!(Math::isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90, 90]");
@@ -67,11 +67,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k1 > 0))
+    if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
@@ -98,11 +98,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k1 > 0))
+    if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
@@ -119,7 +119,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::Init(real sphi1, real cphi1,
-                                   real sphi2, real cphi2, real k1) throw() {
+                             real sphi2, real cphi2, real k1) throw() {
     {
       real r;
       r = Math::hypot(sphi1, cphi1);
@@ -441,7 +441,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::SetScale(real lat, real k) {
-    if (!(k > 0))
+    if (!(Math::isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) < 90))
       throw GeographicErr("Latitude for SetScale not in (-90, 90)");
