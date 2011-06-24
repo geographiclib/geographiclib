@@ -64,7 +64,7 @@ namespace GeographicLib {
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(Math::isfinite(_b) && _b < 0))
+    if (!(Math::isfinite(_b) && _b > 0))
       throw GeographicErr("Minor radius is not positive");
     A3coeff();
     C3coeff();
