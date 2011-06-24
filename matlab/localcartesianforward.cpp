@@ -12,7 +12,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic localcartesianforward.cpp
 
-// $Id: b2755ecd585c4ffa862a7c62e81fac8eac111506 $
+// $Id: 9dfd07d81c16bb78fcf162b605a6dbf0c9afc437 $
 
 #include <algorithm>
 #include <GeographicLib/LocalCartesian.hpp>
@@ -29,7 +29,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   else if (nrhs > 4)
     mexErrMsgTxt("More than four input arguments specified.");
   else if (nrhs == 3)
-    mexErrMsgTxt("Must specify repicrocal flattening with the major radius.");
+    mexErrMsgTxt("Must specify flattening with the major radius.");
   else if (nlhs > 2)
     mexErrMsgTxt("More than two output arguments specified.");
 
@@ -49,16 +49,16 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[1]) != 3)
     mexErrMsgTxt("geodetic coordinates must be M x 3 matrix.");
 
-  double a = Constants::WGS84_a(), r = Constants::WGS84_r();
+  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
   if (nrhs == 4) {
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))
-      mexErrMsgTxt("major radius is not a real scalar.");
+      mexErrMsgTxt("Major radius is not a real scalar.");
     a = mxGetScalar(prhs[2]);
     if (!( mxIsDouble(prhs[3]) && !mxIsComplex(prhs[3]) &&
            mxGetNumberOfElements(prhs[3]) == 1 ))
-      mexErrMsgTxt("reciprocal flattening is not a real scalar.");
-    r = mxGetScalar(prhs[3]);
+      mexErrMsgTxt("Flattening is not a real scalar.");
+    f = mxGetScalar(prhs[3]);
   }
 
   int m = mxGetM(prhs[1]);
@@ -83,7 +83,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   try {
     std::vector<double> rotv(rotp ? 9 : 0);
-    const Geocentric c(a, r);
+    const Geocentric c(a, f);
     if (abs(lat0) > 90)
       throw GeographicErr("Invalid latitude");
     if (lon0 < -180 || lon0 > 360)

@@ -12,13 +12,13 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geoidheight.cpp
 
-// $Id: 6f2eef107567b5db61493ffdc784b819cdea7020 $
+// $Id: 1505d94ce532385cd362bbf6ac54c887e2423984 $
 
 #include <string>
 #include <algorithm>
 #include <GeographicLib/Geoid.hpp>
 #include <mex.h>
- 
+
 using namespace std;
 using namespace GeographicLib;
 

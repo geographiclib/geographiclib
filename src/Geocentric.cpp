@@ -9,7 +9,7 @@
 
 #include <GeographicLib/Geocentric.hpp>
 
-#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: ac9fb90a9b26bd149fe3e34d0bfa77290bf481d1 $"
+#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: d2116694ab7e6ac3c3defd0e4c709341d40e6a7f $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -18,24 +18,24 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geocentric::Geocentric(real a, real r)
+  Geocentric::Geocentric(real a, real f)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _e2(_f * (2 - _f))
     , _e2m(Math::sq(1 - _f))          // 1 - _e2
     , _e2a(abs(_e2))
     , _e4a(Math::sq(_e2))
     , _maxrad(2 * _a / numeric_limits<real>::epsilon())
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
   }
 
   const Geocentric Geocentric::WGS84(Constants::WGS84_a<real>(),
-                                     Constants::WGS84_r<real>());
+                                     Constants::WGS84_f<real>());
 
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& x, real& y, real& z,

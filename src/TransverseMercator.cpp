@@ -41,7 +41,7 @@
 
 #include <GeographicLib/TransverseMercator.hpp>
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: 0e57dc6aea71d696de38e04935b936eb4ebe967c $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: 220f4b45be898ecac08876ef258e97ecc61f6e78 $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
@@ -56,10 +56,10 @@ namespace GeographicLib {
   const Math::real TransverseMercator::overflow_ =
     1 / Math::sq(numeric_limits<real>::epsilon());
 
-  TransverseMercator::TransverseMercator(real a, real r, real k0)
+  TransverseMercator::TransverseMercator(real a, real f, real k0)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -69,11 +69,11 @@ namespace GeographicLib {
     , _c( sqrt(_e2m) * exp(eatanhe(real(1))) )
     , _n(_f / (2 - _f))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(_k0 > 0))
+    if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
     // If coefficents might overflow_ an int, convert them to double (and they
     // are all exactly representable as doubles).
@@ -211,7 +211,7 @@ namespace GeographicLib {
 
   const TransverseMercator
   TransverseMercator::UTM(Constants::WGS84_a<real>(),
-                          Constants::WGS84_r<real>(),
+                          Constants::WGS84_f<real>(),
                           Constants::UTM_k0<real>());
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,

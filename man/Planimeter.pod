@@ -1,4 +1,4 @@
-=for comment $Id: 61f4216c8cabd0dd19caf0178bd6351e04f26f18 $
+=for comment $Id: 356207a7c5a643e3fe0fdf92046f62ce9ea2e3a8 $
 
 =head1 NAME
 
@@ -6,7 +6,7 @@ Planimeter -- compute the area of geodesic polygons
 
 =head1 SYNOPSIS
 
-B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-e> I<a> I<r> ]
+B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-l> ] [ B<-e> I<a> I<f> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
 [ B<--output-file> I<outfile> ]
@@ -36,8 +36,8 @@ If the B<-s> option is given, then the interpretation used is the one
 that results in a positive area; i.e., the area is positive and less
 than the total area of the ellipsoid.
 
-Only simple polygons are supported for the area computation.
-Polygons may include one or both poles.
+Only simple polygons are supported for the area computation.  Polygons
+may include one or both poles.  There is no need to close the polygon.
 
 =head1 OPTIONS
 
@@ -52,12 +52,21 @@ positive (the default) or negative result.
 
 toggle whether to return a signed result (the default) or not.
 
+=item B<-l>
+
+toggle whether the vertices represent a polygon (the default) or a
+polyline.  For a polyline, the number of points and the length of the
+path joining them is returned; the path is not closed and the area is
+not reported.
+
 =item B<-e>
 
-specify the ellipsoid via I<a> I<r>; the equatorial radius is I<a> and
-the reciprocal flattening is I<r>.  Setting I<r> = 0 results in a
-sphere.  Specify I<r> E<lt> 0 for a prolate ellipsoid.  By default, the
-WGS84 ellipsoid is used, I<a> = 6378137m, I<r> = 298.257223563.
+specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
+the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
+I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
+is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
+1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137m, I<f>
+= 1/298.257223563.
 
 =item B<--version>
 

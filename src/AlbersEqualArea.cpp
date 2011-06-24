@@ -9,7 +9,7 @@
 
 #include <GeographicLib/AlbersEqualArea.hpp>
 
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_CPP "$Id: 8516a354eb5da9cf6018140c95a25dd2a316ca4f $"
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_CPP "$Id: e8ee07f91f7b216a8cc28ea103a8c9159e9a9d8c $"
 
 RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
@@ -27,11 +27,10 @@ namespace GeographicLib {
     real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
     + 2;
 
-  AlbersEqualArea::AlbersEqualArea(real a, real r,
-                                   real stdlat, real k0)
+  AlbersEqualArea::AlbersEqualArea(real a, real f, real stdlat, real k0)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -39,11 +38,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k0 > 0))
+    if (!(Math::isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90, 90]");
@@ -54,12 +53,11 @@ namespace GeographicLib {
     Init(sphi, cphi, sphi, cphi, k0);
   }
 
-  AlbersEqualArea::AlbersEqualArea(real a, real r,
-                                   real stdlat1, real stdlat2,
+  AlbersEqualArea::AlbersEqualArea(real a, real f, real stdlat1, real stdlat2,
                                    real k1)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -67,11 +65,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k1 > 0))
+    if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
@@ -84,13 +82,13 @@ namespace GeographicLib {
          sin(phi2), abs(stdlat2) != 90 ? cos(phi2) : 0, k1);
   }
 
-  AlbersEqualArea::AlbersEqualArea(real a, real r,
-                                               real sinlat1, real coslat1,
-                                               real sinlat2, real coslat2,
-                                               real k1)
+  AlbersEqualArea::AlbersEqualArea(real a, real f,
+                                   real sinlat1, real coslat1,
+                                   real sinlat2, real coslat2,
+                                   real k1)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -98,11 +96,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k1 > 0))
+    if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
@@ -119,7 +117,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::Init(real sphi1, real cphi1,
-                                   real sphi2, real cphi2, real k1) throw() {
+                             real sphi2, real cphi2, real k1) throw() {
     {
       real r;
       r = Math::hypot(sphi1, cphi1);
@@ -276,19 +274,19 @@ namespace GeographicLib {
 
   const AlbersEqualArea
   AlbersEqualArea::CylindricalEqualArea(Constants::WGS84_a<real>(),
-                                        Constants::WGS84_r<real>(),
+                                        Constants::WGS84_f<real>(),
                                         real(0), real(1), real(0), real(1),
                                         real(1));
 
   const AlbersEqualArea
   AlbersEqualArea::AzimuthalEqualAreaNorth(Constants::WGS84_a<real>(),
-                                           Constants::WGS84_r<real>(),
+                                           Constants::WGS84_f<real>(),
                                            real(1), real(0), real(1), real(0),
                                            real(1));
 
   const AlbersEqualArea
   AlbersEqualArea::AzimuthalEqualAreaSouth(Constants::WGS84_a<real>(),
-                                           Constants::WGS84_r<real>(),
+                                           Constants::WGS84_f<real>(),
                                            real(-1), real(0), real(-1), real(0),
                                            real(1));
 
@@ -441,7 +439,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::SetScale(real lat, real k) {
-    if (!(k > 0))
+    if (!(Math::isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) < 90))
       throw GeographicErr("Latitude for SetScale not in (-90, 90)");

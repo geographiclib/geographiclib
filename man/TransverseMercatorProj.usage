@@ -2,7 +2,7 @@ int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n\
     TransverseMercatorProj [ -s | -t ] [ -l lon0 ] [ -k k1 ] [ -r ] [ -e a\n\
-    r ] [ --version | -h | --help ] [ --input-file infile | --input-string\n\
+    f ] [ --version | -h | --help ] [ --input-file infile | --input-string\n\
     instring ] [ --output-file outfile ]\n\
 \n\
 For full documentation type:\n\
@@ -16,7 +16,7 @@ NAME\n\
 \n\
 SYNOPSIS\n\
        TransverseMercatorProj [ -s | -t ] [ -l lon0 ] [ -k k1 ] [ -r ] [ -e a\n\
-       r ] [ --version | -h | --help ] [ --input-file infile | --input-string\n\
+       f ] [ --version | -h | --help ] [ --input-file infile | --input-string\n\
        instring ] [ --output-file outfile ]\n\
 \n\
 DESCRIPTION\n\
@@ -48,10 +48,13 @@ OPTIONS\n\
            input and each line of standard output gives latitude, longitude,\n\
            gamma, and k.\n\
 \n\
-       -e  specify the ellipsoid via a r; the equatorial radius is a and the\n\
-           reciprocal flattening is r.  Setting r = 0 results in a sphere.\n\
-           Specify r < 0 for a prolate ellipsoid.  By default, the WGS84\n\
-           ellipsoid is used, a = 6378137m, r = 298.257223563.\n\
+       -e  specify the ellipsoid via a f; the equatorial radius is a and the\n\
+           flattening is f.  Setting f = 0 results in a sphere.  Specify f < 0\n\
+           for a prolate ellipsoid.  A simple fraction, e.g., 1/297, is\n\
+           allowed for f.  (Also, if f > 1, the flattening is set to 1/f.)  By\n\
+           default, the WGS84 ellipsoid is used, a = 6378137m, f =\n\
+           1/298.257223563.  If the exact algorithm is used, f must be\n\
+           positive.\n\
 \n\
        --version\n\
            print version and exit.\n\
@@ -103,6 +106,7 @@ SEE ALSO\n\
        The algorithms for the transverse Mercator projection are described in\n\
        C. F. F. Karney, Transverse Mercator with an accuracy of a few\n\
        nanometers, J. Geod (2011); DOI\n\
+       http://dx.doi.org/10.1007/s00190-011-0445-3\n\
        <http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint\n\
        <http://arxiv.org/abs/1002.1417>.  The explanation of the extended\n\
        domain of the projection with the -t option is given in Section 5 of\n\

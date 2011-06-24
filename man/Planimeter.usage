@@ -1,9 +1,9 @@
 int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n\
-    Planimeter [ -r ] [ -s ] [ -e a r ] [ --version | -h | --help ] [\n\
-    --input-file infile | --input-string instring ] [ --output-file outfile\n\
-    ]\n\
+    Planimeter [ -r ] [ -s ] [ -l ] [ -e a f ] [ --version | -h | --help ]\n\
+    [ --input-file infile | --input-string instring ] [ --output-file\n\
+    outfile ]\n\
 \n\
 For full documentation type:\n\
     Planimeter --help\n\
@@ -15,9 +15,9 @@ NAME\n\
        Planimeter -- compute the area of geodesic polygons\n\
 \n\
 SYNOPSIS\n\
-       Planimeter [ -r ] [ -s ] [ -e a r ] [ --version | -h | --help ] [\n\
-       --input-file infile | --input-string instring ] [ --output-file outfile\n\
-       ]\n\
+       Planimeter [ -r ] [ -s ] [ -l ] [ -e a f ] [ --version | -h | --help ]\n\
+       [ --input-file infile | --input-string instring ] [ --output-file\n\
+       outfile ]\n\
 \n\
 DESCRIPTION\n\
        Measure the area of a geodesic polygon.  Reads polygon vertices from\n\
@@ -45,7 +45,7 @@ DESCRIPTION\n\
        the total area of the ellipsoid.\n\
 \n\
        Only simple polygons are supported for the area computation.  Polygons\n\
-       may include one or both poles.\n\
+       may include one or both poles.  There is no need to close the polygon.\n\
 \n\
 OPTIONS\n\
        -r  toggle whether counter-clockwise traveral of the polygon returns a\n\
@@ -53,10 +53,17 @@ OPTIONS\n\
 \n\
        -s  toggle whether to return a signed result (the default) or not.\n\
 \n\
-       -e  specify the ellipsoid via a r; the equatorial radius is a and the\n\
-           reciprocal flattening is r.  Setting r = 0 results in a sphere.\n\
-           Specify r < 0 for a prolate ellipsoid.  By default, the WGS84\n\
-           ellipsoid is used, a = 6378137m, r = 298.257223563.\n\
+       -l  toggle whether the vertices represent a polygon (the default) or a\n\
+           polyline.  For a polyline, the number of points and the length of\n\
+           the path joining them is returned; the path is not closed and the\n\
+           area is not reported.\n\
+\n\
+       -e  specify the ellipsoid via a f; the equatorial radius is a and the\n\
+           flattening is f.  Setting f = 0 results in a sphere.  Specify f < 0\n\
+           for a prolate ellipsoid.  A simple fraction, e.g., 1/297, is\n\
+           allowed for f.  (Also, if f > 1, the flattening is set to 1/f.)  By\n\
+           default, the WGS84 ellipsoid is used, a = 6378137m, f =\n\
+           1/298.257223563.\n\
 \n\
        --version\n\
            print version and exit.\n\

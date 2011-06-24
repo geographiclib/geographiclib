@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
-#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: bf3b7f9f87a997fd135064f9b3233ef267eb8394 $"
+#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: dfab3affb3ed4ae149ff2fdf04c4e30503126308 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -107,8 +107,7 @@ namespace GeographicLib {
       throw()
       : _earth(earth)
       , _a(_earth.MajorRadius())
-      , _f(_earth.InverseFlattening() ?
-           1/std::abs(_earth.InverseFlattening()) : 0)
+      , _f(_earth.Flattening())
     {}
 
     /**
@@ -190,9 +189,14 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value inherited from the Geodesic object used in the constructor.  A
-     *   value of 0 is returned for a sphere (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value
+     *   inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _earth.Flattening(); }
+
+    /**
+     * <b>DEPRECATED</b>
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }

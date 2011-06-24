@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
     bool localcartesian = false, reverse = false;
     real
       a = Constants::WGS84_a<real>(),
-      r = Constants::WGS84_r<real>();
+      f = Constants::WGS84_f<real>();
     real lat0 = 0, lon0 = 0, h0 = 0;
     std::string istring, ifile, ofile;
 
@@ -55,7 +55,8 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           a = DMS::Decode(std::string(argv[m + 1]));
-          r = DMS::Decode(std::string(argv[m + 2]));
+          f = DMS::DecodeFraction(std::string(argv[m + 2]));
+        std::cerr << f << "\n";
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 0f97d34be752abc4abfa9f3e48c1424c4175460e $\n"
+          << ": $Id: 1f2c632327129738aff8da0c17fb3c81cfe69fc9 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -118,7 +119,7 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    const Geocentric ec(a, r);
+    const Geocentric ec(a, f);
     const LocalCartesian lc(lat0, lon0, h0, ec);
 
     std::string s;

@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_GEOID_CPP "$Id: cf3cb89bd1c502ad3e1cbf85d0216623aad8da71 $"
+#define GEOGRAPHICLIB_GEOID_CPP "$Id: e7bd39191004f6594f9ccb661503e39abf62ae83 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
@@ -213,7 +213,7 @@ namespace GeographicLib {
     , _dir(path)
     , _cubic(cubic)
     , _a( Constants::WGS84_a<real>() )
-    , _e2( (2 - 1/Constants::WGS84_r<real>())/Constants::WGS84_r<real>() )
+    , _e2( (2 - Constants::WGS84_f<real>()) * Constants::WGS84_f<real>() )
     , _degree( Math::degree<real>() )
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
@@ -529,6 +529,7 @@ namespace GeographicLib {
     }
   }
 
+/// \cond DEPRECATED
   std::string Geoid::DefaultPath() {
     return string(GEOID_DEFAULT_PATH);
   }
@@ -540,6 +541,7 @@ namespace GeographicLib {
       path = string(geoidpath);
     return path;
   }
+/// \endcond
 
   std::string Geoid::DefaultGeoidPath() {
     string path;

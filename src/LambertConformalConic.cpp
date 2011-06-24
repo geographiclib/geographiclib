@@ -9,7 +9,7 @@
 
 #include <GeographicLib/LambertConformalConic.hpp>
 
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: f58932c7b1e4a67a68ee9a422b21bf69f34e669d $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: d633086205271f5ed370555bd0a7d38feb6ede84 $"
 
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
@@ -26,21 +26,21 @@ namespace GeographicLib {
     real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
     + 2;
 
-  LambertConformalConic::LambertConformalConic(real a, real r,
+  LambertConformalConic::LambertConformalConic(real a, real f,
                                                real stdlat, real k0)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k0 > 0))
+    if (!(Math::isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90, 90]");
@@ -51,22 +51,22 @@ namespace GeographicLib {
     Init(sphi, cphi, sphi, cphi, k0);
   }
 
-  LambertConformalConic::LambertConformalConic(real a, real r,
+  LambertConformalConic::LambertConformalConic(real a, real f,
                                                real stdlat1, real stdlat2,
                                                real k1)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k1 > 0))
+    if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
@@ -79,23 +79,23 @@ namespace GeographicLib {
          sin(phi2), abs(stdlat2) != 90 ? cos(phi2) : 0, k1);
   }
 
-  LambertConformalConic::LambertConformalConic(real a, real r,
+  LambertConformalConic::LambertConformalConic(real a, real f,
                                                real sinlat1, real coslat1,
                                                real sinlat2, real coslat2,
                                                real k1)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(k1 > 0))
+    if (!(Math::isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
       throw GeographicErr("Standard latitude 1 not in [-90, 90]");
@@ -320,7 +320,7 @@ namespace GeographicLib {
 
   const LambertConformalConic
   LambertConformalConic::Mercator(Constants::WGS84_a<real>(),
-                                  Constants::WGS84_r<real>(),
+                                  Constants::WGS84_f<real>(),
                                   real(0), real(1));
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
@@ -454,7 +454,7 @@ namespace GeographicLib {
   }
 
   void LambertConformalConic::SetScale(real lat, real k) {
-    if (!(k > 0))
+    if (!(Math::isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) <= 90))
       throw GeographicErr("Latitude for SetScale not in [-90, 90]");

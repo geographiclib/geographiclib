@@ -6,13 +6,13 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: 16433295c4e8be297002f4e684c50d23ea1d9a77 $
+// $Id: f92774cc8b591aca8ba52c81e3ed5dfee55e07e2 $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
-\version 1.10
-\date 2011-06-11
+\version 1.11
+\date 2011-mm-dd
 
 \section abstract Abstract
 
@@ -39,10 +39,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">
-  GeographicLib-1.10.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.zip/download">
-  GeographicLib-1.10.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">
+  GeographicLib-1.11.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.zip/download">
+  GeographicLib-1.11.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
@@ -52,8 +52,8 @@ using git \verbatim
   git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10-win32.exe/download">
-  GeographicLib-1.10-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">
+  GeographicLib-1.11-win32.exe</a>
 .
 It is licensed under the
 <a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">LGPL</a>.
@@ -153,12 +153,12 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">
-GeographicLib-1.10.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10.zip/download">
-GeographicLib-1.10.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10-win32.exe/download">
-GeographicLib-1.10-win32.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">
+GeographicLib-1.11.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11.zip/download">
+GeographicLib-1.11.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">
+GeographicLib-1.11-win32.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -210,10 +210,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.10.tar.gz
-  unzip -q GeographicLib-1.10.zip \endverbatim
+  tar xfpz GeographicLib-1.11.tar.gz
+  unzip -q GeographicLib-1.11.zip \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.10 \endverbatim
+  cd GeographicLib-1.11 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -292,9 +292,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.10.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.11.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.10 \endverbatim
+  cd GeographicLib-1.11 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
 - By default %GeographlicLib will be installed under /usr/local.
@@ -319,9 +319,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.10.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.11.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.10 \endverbatim
+  cd GeographicLib-1.11 \endverbatim
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root \endverbatim
@@ -345,8 +345,8 @@ library and the examples.  If you only have Visual Studio 2010, use
 cmake to create the necessary solution file.  %GeographicLib does not
 compile correctly with Visual Studio 2003.
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.10.zip \endverbatim
-- Open GeographicLib-1.10/windows/GeographicLib-vc9.sln in Visual Studio
+  unzip -q GeographicLib-1.11.zip \endverbatim
+- Open GeographicLib-1.11/windows/GeographicLib-vc9.sln in Visual Studio
   2008 (for Visual Studio 2005, replace -vc9 by -vc8).
 - Pick the build type (e.g., Release), and select "Build
   Solution".
@@ -365,19 +365,19 @@ compile correctly with Visual Studio 2003.
 \section windowsbin Using a binary installer for Windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.10-win32.exe/download">
-GeographicLib-1.10-win32.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">
+GeographicLib-1.11-win32.exe</a>:
  - read the LGPL license agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
-   C:/Program Files/GeographicLib-1.10.
+   C:/Program Files/GeographicLib-1.11.
  - select the start menu folder,
  - and install.
  .
 The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
-C:/Program Files/GeographicLib-1.10/bin where the utilities are
+C:/Program Files/GeographicLib-1.11/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
@@ -395,15 +395,15 @@ Similarly the binary installer for Windows includes the compiled
 interface (compiled using Visual Studio 10 and Matlab 2010b).  To use
 either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.10/libexec/GeographicLib/matlab'
+  addpath 'C:/Program Files/GeographicLib-1.11/libexec/GeographicLib/matlab'
 \endverbatim
 in Matlab or Octave.  If you need to compile the interface or to
 recompile it for a different platform, start Matlab or Octave and run,
 e.g., \code
   mex -setup
-  cd  'C:/Program Files/GeographicLib-1.10/libexec/GeographicLib/matlab'
+  cd  'C:/Program Files/GeographicLib-1.11/libexec/GeographicLib/matlab'
   help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.10');
+  geographiclibinterface('C:/Program Files/GeographicLib-1.11');
   addpath(pwd);
 \endcode
 The first command allows you to select the compiler to use (which
@@ -467,8 +467,8 @@ which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as
 \verbatim
-  GeographicLib-1.10.tar.gz
-  GeographicLib-1.10.zip \endverbatim
+  GeographicLib-1.11.tar.gz
+  GeographicLib-1.11.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -550,7 +550,7 @@ int main() {
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
-    r = 298.257222101,          // inverse flattening (GRS80)
+    f = 1/298.257222101,        // flattening (GRS80)
     lat1 = DMS::Decode(40,58),  // standard parallel 1
     lat2 = DMS::Decode(39,56),  // standard parallel 2
     k1 = 1,                     // scale on std parallels
@@ -558,7 +558,7 @@ int main() {
     lon0 = -DMS::Decode(77,45), // longitude of origin
     fe = 600000,                // false easting
     fn = 0;                     // false northing
-  LambertConformalConic PASouth(a, r, lat1, lat2, k1);
+  LambertConformalConic PASouth(a, f, lat1, lat2, k1);
   double x0, y0;
   PASouth.Forward(lon0, lat0, lon0, x0, y0); // Transform origin point
   x0 -= fe; y0 -= fn;           // Combine result with false origin
@@ -665,6 +665,7 @@ e.g.,
 Online versions of three of these utilities are provided:
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoConvert">GeoConvert</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/Geod">Geod</a>
+ - <a href="http://geographiclib.sf.net/cgi-bin/Planimeter">Planimeter</a>
  - <a href="http://geographiclib.sf.net/cgi-bin/GeoidEval">GeoidEval</a>
 
 <center>
@@ -740,11 +741,12 @@ line, the GeographicLib::GeodesicLine class can be used.  This packages
 all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
 point.  <a href="Geod.1.html">Geod</a> is a simple command line utility
-to perform geodesic calculations.  GeographicLib::AzimuthalEquidistant,
-GeographicLib::CassiniSoldner, and GeographicLib::Gnomonic are
-projections based on the Geodesic class.
-<a href="GeodesicProj.1.html">GeodesicProj</a> is a command
-line utility to exercise these projections.
+to perform geodesic calculations.  <a href="Planimeter.1.html">Geod</a>
+is a command line utility to compute the area of geodesic polygons.
+GeographicLib::AzimuthalEquidistant, GeographicLib::CassiniSoldner, and
+GeographicLib::Gnomonic are projections based on the Geodesic class.
+<a href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility
+to exercise these projections.
 
 GeographicLib::Geocentric and GeographicLib::LocalCartesian convert between
 geodetic and geocentric or a local cartesian system.  The constructor for
@@ -1333,7 +1335,7 @@ members &mdash; about 690 kB, compressed) is available at
  - <a href="http://sf.net/projects/geographiclib/files/testdata/GeodTest-short.dat.gz/download">
    GeodTest-short.dat.gz</a>
 
-Each line of the test set gives 9 space delimited numbers
+Each line of the test set gives 10 space delimited numbers
  - latitude for point 1, \e lat1 (degrees, exact)
  - longitude for point 1, \e lon1 (degrees, always 0)
  - azimuth for point 1, \e azi1 (clockwise from north in degrees, exact)
@@ -1402,8 +1404,9 @@ follows
    This should yield columns 3, 6, 7, and 9 of the test set.
  .
 Add, e.g., "-p 6", to the call to Geod to change the precision of the
-output.  Adding "-f" causes Geod to print all 9 fields specifying the
-geodesic (in the same order as the test set).
+output.  Adding "-f" causes Geod to print 12 fields specifying the
+geodesic; these include the 10 fields in the test set plus the geodesic
+scales \e M12 and \e M21 which are inserted between \e m12 and \e S12.
 
 \section geodseries Expansions for geodesics
 
@@ -2118,6 +2121,29 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (released 2011-mm-dd)</a>
+  - Changes to <a href="Planimeter.1.html">Planimeter</a>:
+    - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
+      calculations;
+    - trim precision of area to 3 decimal places.
+  - <a href="Geod.1.html">Geod</a> no longer reports the reduced length
+    by default; however the -f flag still reports this and in addition
+    gives the geodesic scales and the geodesic area.
+  - FIX BUG: accommodate tellg() returning -1 at end of string.
+  - Change way flattening of the ellipsoid is specified:
+    - constructors take \e f argument which is taken to be the
+      flattening if \e f &lt; 1 and the inverse flattening otherwise.
+      This is a compatible change for spheres and oblate ellipsoids.  It
+      is an INCOMPATIBLE change for prolate ellipsoids.
+    - the -e arguments to the \ref utilities are handled similarly; in
+      addition, simple fractions, e.g., 1/297, can be used for the
+      flattening.
+    - introduce Constants::WGS84_f() for the WGS84 flattening (and
+      deprecate Constants::WGS84_r() for the inverse flattening);
+    - most classes have a Flattening() member function;
+    - InverseFlattening() has been deprecated (and now returns inf for a
+      sphere, instead of 0).
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.10.tar.gz/download">1.10 (released 2011-06-11)</a>
   - Improvements to Matlab/Octave interface:

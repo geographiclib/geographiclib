@@ -29,7 +29,7 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESIC_CPP "$Id: 568c320066d8c254ded8cc1994ad008ed3234d17 $"
+#define GEOGRAPHICLIB_GEODESIC_CPP "$Id: 437240e3e27ad7d2072c0adbc1fa7473aa586076 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_HPP)
@@ -47,10 +47,10 @@ namespace GeographicLib {
   const Math::real Geodesic::tol2_ = sqrt(numeric_limits<real>::epsilon());
   const Math::real Geodesic::xthresh_ = 1000 * tol2_;
 
-  Geodesic::Geodesic(real a, real r)
+  Geodesic::Geodesic(real a, real f)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / Math::sq(_f1))       // e2 / (1 - e2)
@@ -62,9 +62,9 @@ namespace GeographicLib {
             sqrt(abs(_e2))))/2) // authalic radius squared
     , _etol2(tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_b) && _b > 0))
       throw GeographicErr("Minor radius is not positive");
     A3coeff();
     C3coeff();
@@ -72,7 +72,7 @@ namespace GeographicLib {
   }
 
   const Geodesic Geodesic::WGS84(Constants::WGS84_a<real>(),
-                                 Constants::WGS84_r<real>());
+                                 Constants::WGS84_f<real>());
 
   Math::real Geodesic::SinCosSeries(bool sinp,
                                     real sinx, real cosx,
@@ -224,7 +224,7 @@ namespace GeographicLib {
     real omg12;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
-         // Mimic the way Lambda12 works with calp1 = 0
+        // Mimic the way Lambda12 works with calp1 = 0
         (_f <= 0 || lam12 <= Math::pi<real>() - _f * Math::pi<real>())) {
 
       // Geodesic runs along equator

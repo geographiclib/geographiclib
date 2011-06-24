@@ -9,7 +9,7 @@
 
 #include <GeographicLib/OSGB.hpp>
 
-#define GEOGRAPHICLIB_OSGB_CPP "$Id: f8fee09f303cd4380b53c566924e639a65e6fcb9 $"
+#define GEOGRAPHICLIB_OSGB_CPP "$Id: 8c272cbd91448cf8133a7735aeb81ab7db7547ff $"
 
 RCSID_DECL(GEOGRAPHICLIB_OSGB_CPP)
 RCSID_DECL(GEOGRAPHICLIB_OSGB_HPP)
@@ -22,7 +22,7 @@ namespace GeographicLib {
   const string OSGB::digits_ = "0123456789";
 
   const TransverseMercator
-  OSGB::OSGBTM_(MajorRadius(), InverseFlattening(), CentralScale());
+  OSGB::OSGBTM_(MajorRadius(), Flattening(), CentralScale());
 
   Math::real OSGB::computenorthoffset() throw() {
     real x, y;

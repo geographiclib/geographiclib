@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
-#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: 280b3ae1d12d4ed1f8a429abf99be36a0546c309 $"
+#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: d860994613fb8833812d850ab154d98aa4c883b6 $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>
@@ -299,13 +299,20 @@ namespace GeographicLib {
     { return Constants::WGS84_a<real>(); }
 
     /**
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     * @return \e f the flattening of the WGS84 ellipsoid.
      *
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
+    static Math::real Flattening() throw()
+    { return Constants::WGS84_f<real>(); }
+
+    /**
+     * <b>DEPRECATED</b>
+     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     **********************************************************************/
     static Math::real InverseFlattening() throw()
-    { return Constants::WGS84_r<real>(); }
+    { return 1/Constants::WGS84_f<real>(); }
     ///@}
   };
 

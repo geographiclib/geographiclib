@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
-#define GEOGRAPHICLIB_DMS_HPP "$Id: 782c1f225888b3c0b4ff19d0b677e549bd36fa1c $"
+#define GEOGRAPHICLIB_DMS_HPP "$Id: 5b4f8ca628248d9f4ad044627eabe6f5918c0c2d $"
 
 #include <sstream>
 #include <iomanip>
@@ -149,6 +149,15 @@ namespace GeographicLib {
      * @return decoded number.
      **********************************************************************/
     static Math::real Decode(const std::string& str);
+
+    /**
+     * Convert a string to a real number treating the case where the string is
+     * a simple fraction.
+     *
+     * @param[in] str string input.
+     * @return decoded number.
+     **********************************************************************/
+    static Math::real DecodeFraction(const std::string& str);
 
     /**
      * Convert a pair of strings to latitude and longitude.

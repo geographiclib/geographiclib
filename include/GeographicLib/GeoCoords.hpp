@@ -2,13 +2,13 @@
  * \file GeoCoords.hpp
  * \brief Header for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010) <charles@karney.com>
+ * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
  * and licensed under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
-#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: 43489a5a6c17b341fd293b326d0340e719df01e9 $"
+#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: 99a8aac8540818e46115bc98694955d146e53fef $"
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -418,10 +418,16 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return UTMUPS::MajorRadius(); }
 
     /**
-     * @return \e r the inverse flattening of the WGS84 ellipsoid.
+     * @return \e f the flattening of the WGS84 ellipsoid.
      *
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
+     **********************************************************************/
+    Math::real Flattening() const throw() { return UTMUPS::Flattening(); }
+
+    /**
+     * <b>DEPRECATED</b>
+     * @return \e r the inverse flattening of the WGS84 ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return UTMUPS::InverseFlattening(); }

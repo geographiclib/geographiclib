@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
-#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id: 526db2f041dd6d71d05acd60c7429ad2835ab79e $"
+#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id: 5b471fba64d7706c552fa21bcc6b70e8283837a0 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -121,9 +121,14 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
     /**
-     * @return \e r the inverse flattening of the ellipsoid.  This is the
-     *   value inherited from the Geodesic object used in the constructor.  A
-     *   value of 0 is returned for a sphere (infinite inverse flattening).
+     * @return \e f the flattening of the ellipsoid.  This is the value
+     *   inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _earth.Flattening(); }
+
+    /**
+     * <b>DEPRECATED</b>
+     * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
     { return _earth.InverseFlattening(); }

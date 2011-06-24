@@ -2,8 +2,9 @@
  * \file geodesicline.cpp
  * \brief Matlab mex file for geographic to UTM/UPS conversions
  *
- * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 // Compile in Matlab with
@@ -12,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geodesicline.cpp
 
-// $Id: d63cf5ca9122b151a07245acdba7237e1431d492 $
+// $Id: 8e3877a3774e9f1104481ec4fabadcb953dab38c $
 
 #include <GeographicLib/GeodesicLine.hpp>
 #include <mex.h>
@@ -28,7 +29,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   else if (nrhs > 6)
     mexErrMsgTxt("More than three input arguments specified.");
   else if (nrhs == 5)
-    mexErrMsgTxt("Must specify repicrocal flattening with the major radius.");
+    mexErrMsgTxt("Must specify flattening with the major radius.");
   else if (nlhs > 2)
     mexErrMsgTxt("More than two output arguments specified.");
 
@@ -53,16 +54,16 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[3]) != 1)
     mexErrMsgTxt("distances must be M x 1 matrix.");
 
-  double a = Constants::WGS84_a(), r = Constants::WGS84_r();
+  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
   if (nrhs == 6) {
     if (!( mxIsDouble(prhs[4]) && !mxIsComplex(prhs[4]) &&
            mxGetNumberOfElements(prhs[4]) == 1 ))
-      mexErrMsgTxt("major radius is not a real scalar.");
+      mexErrMsgTxt("Major radius is not a real scalar.");
     a = mxGetScalar(prhs[4]);
     if (!( mxIsDouble(prhs[5]) && !mxIsComplex(prhs[5]) &&
            mxGetNumberOfElements(prhs[5]) == 1 ))
-      mexErrMsgTxt("reciprocal flattening is not a real scalar.");
-    r = mxGetScalar(prhs[5]);
+      mexErrMsgTxt("Flattening is not a real scalar.");
+    f = mxGetScalar(prhs[5]);
   }
 
   int m = mxGetM(prhs[3]);
@@ -88,7 +89,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   }
 
   try {
-    const Geodesic g(a, r);
+    const Geodesic g(a, f);
     if (abs(lat1) > 90)
       throw GeographicErr("Invalid latitude");
     if (lon1 < -180 || lon1 > 360)

@@ -12,7 +12,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic mgrsforward.cpp
 
-// $Id: 8ff3a738c4e5fc70aba668a91c666766e19f4a34 $
+// $Id: 9b8b800782ed49f3b2885ae8df8b3546702d6437 $
 
 #include <GeographicLib/MGRS.hpp>
 #include <mex.h>
@@ -42,13 +42,13 @@ void mexFunction( int nlhs, mxArray* plhs[],
   else {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
-      mexErrMsgTxt("precision is not an integera.");
+      mexErrMsgTxt("Precision is not an integer.");
     double rprec = mxGetScalar(prhs[1]);
     prec = int(rprec);
     if (double(prec) != rprec)
-      mexErrMsgTxt("precision is not an integerb.");
+      mexErrMsgTxt("Precision is not an integer.");
     if (prec < 0 || prec > 11)
-      mexErrMsgTxt("precision outside the legal range [0, 11].");
+      mexErrMsgTxt("Precision outside the legal range [0, 11].");
   }
 
   int m = mxGetM(prhs[0]);

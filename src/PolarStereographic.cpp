@@ -9,7 +9,7 @@
 
 #include <GeographicLib/PolarStereographic.hpp>
 
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: 341beb4d857b861a25927af7146f2b98b9b136fe $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: a4e2b3c347901f162bfbc05501c48fd07c328161 $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
@@ -24,10 +24,10 @@ namespace GeographicLib {
   const Math::real PolarStereographic::overflow_ =
     1 / Math::sq(numeric_limits<real>::epsilon());
 
-  PolarStereographic::PolarStereographic(real a, real r, real k0)
+  PolarStereographic::PolarStereographic(real a, real f, real k0)
     : _a(a)
-    , _r(r)
-    , _f(_r != 0 ? 1 / _r : 0)
+    , _f(f <= 1 ? f : 1/f)
+    , _r(1/f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
@@ -35,17 +35,17 @@ namespace GeographicLib {
     , _c( (1 - _f) * _Cx )
     , _k0(k0)
   {
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(_f < 1))
+    if (!(Math::isfinite(_f) && _f < 1))
       throw GeographicErr("Minor radius is not positive");
-    if (!(_k0 > 0))
+    if (!(Math::isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
   }
 
   const PolarStereographic
   PolarStereographic::UPS(Constants::WGS84_a<real>(),
-                          Constants::WGS84_r<real>(),
+                          Constants::WGS84_f<real>(),
                           Constants::UPS_k0<real>());
 
   // This formulation converts to conformal coordinates by tau = tan(phi) and
@@ -124,7 +124,7 @@ namespace GeographicLib {
   }
 
   void PolarStereographic::SetScale(real lat, real k) {
-    if (!(k > 0))
+    if (!(Math::isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(-90 < lat && lat <= 90))
       throw GeographicErr("Latitude must be in (-90d, 90d]");

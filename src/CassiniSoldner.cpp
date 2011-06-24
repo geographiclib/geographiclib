@@ -10,7 +10,7 @@
 
 #include <GeographicLib/CassiniSoldner.hpp>
 
-#define GEOGRAPHICLIB_CASSINISOLDNER_CPP "$Id: b675373cef7f2788759e95439fda7f170f9b9653 $"
+#define GEOGRAPHICLIB_CASSINISOLDNER_CPP "$Id: 515e379acecb3f53da8aac0bf2b19ed8f1356ac1 $"
 
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_CPP)
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
@@ -30,7 +30,7 @@ namespace GeographicLib {
                             Geodesic::AZIMUTH);
     real
       phi = LatitudeOrigin() * Math::degree<real>(),
-      f = _earth.InverseFlattening() != 0 ? 1 / _earth.InverseFlattening() : 0;
+      f = _earth.Flattening();
     _sbet0 = (1 - f) * sin(phi);
     _cbet0 = abs(LatitudeOrigin()) == 90 ? 0 : cos(phi);
     SinCosNorm(_sbet0, _cbet0);

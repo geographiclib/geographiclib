@@ -1,4 +1,4 @@
-# $Id: 537104d6be72440ac165e606b29bf837c1bde0ee $
+# $Id: b67d78481518e3a58f3d8c6d3bfa88474ec189c9 $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -26,7 +26,7 @@ PREFIX = /usr/local
 GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
 
 CC = g++ -g
-CXXFLAGS = -g -Wall -O3 -funroll-loops -finline-functions -fomit-frame-pointer
+CXXFLAGS = -g -Wall -Wextra -O3
 
 CPPFLAGS = -I$(INCLUDEPATH) -I../man $(DEFINES)
 LDLIBS = -L$(LIBPATH) -l$(LIBSTEM)

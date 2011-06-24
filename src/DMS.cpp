@@ -10,7 +10,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: d9e140041598b867448f2a3b47cf5a5cc3ec8ab7 $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: 46b9077ee90da9f251fd1d085b552634a19b875b $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -225,6 +225,15 @@ namespace GeographicLib {
     if (num == 0)
       throw GeographicErr(errormsg);
     return num;
+  }
+
+  Math::real DMS::DecodeFraction(const std::string& str) {
+    string::size_type delim = str.find('/');
+    if (!(delim != string::npos && delim >= 1 && delim + 2 <= str.size()))
+      return Decode(str);
+    else
+      // delim in [1, size() - 2]
+      return Decode(str.substr(0, delim)) / Decode(str.substr(delim + 1));
   }
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,

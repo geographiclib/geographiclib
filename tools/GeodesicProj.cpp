@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     real lat0 = 0, lon0 = 0;
     real
       a = Constants::WGS84_a<real>(),
-      r = Constants::WGS84_r<real>();
+      f = Constants::WGS84_f<real>();
     std::string istring, ifile, ofile;
 
     for (int m = 1; m < argc; ++m) {
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
         if (m + 2 >= argc) return usage(1, true);
         try {
           a = DMS::Decode(std::string(argv[m + 1]));
-          r = DMS::Decode(std::string(argv[m + 2]));
+          f = DMS::DecodeFraction(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 8b2e9f9438416344cf48c9a4b501714eba8fe7aa $\n"
+          << ": $Id: 53695475a8ce83eaab13f09c76cb9975218556e7 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
       return 1;
     }
 
-    const Geodesic geod(a, r);
+    const Geodesic geod(a, f);
     const CassiniSoldner cs = cassini ?
       CassiniSoldner(lat0, lon0, geod) : CassiniSoldner(geod);
     const AzimuthalEquidistant az(geod);

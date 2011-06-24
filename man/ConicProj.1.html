@@ -44,7 +44,7 @@
 <h1><a name="synopsis">SYNOPSIS</a></h1>
 <p><strong>ConicProj</strong> ( <strong>-c</strong> | <strong>-a</strong> ) <em>lat1</em> <em>lat2</em>
 [ <strong>-l</strong> <em>lon0</em> ] [ <strong>-k</strong> <em>k1</em> ] [ <strong>-r</strong> ]
-[ <strong>-e</strong> <em>a</em> <em>r</em> ] [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
+[ <strong>-e</strong> <em>a</em> <em>f</em> ] [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
 [ <strong>--output-file</strong> <em>outfile</em> ]</p>
 <p>
@@ -107,10 +107,12 @@ input and each line of standard output gives <em>latitude</em>, <em>longitude</e
 <dt><strong><a name="e" class="item"><strong>-e</strong></a></strong></dt>
 
 <dd>
-<p>specify the ellipsoid via <em>a</em> <em>r</em>; the equatorial radius is <em>a</em> and
-the reciprocal flattening is <em>r</em>.  Setting <em>r</em> = 0 results in a
-sphere.  Specify <em>r</em> &lt; 0 for a prolate ellipsoid.  By default, the
-WGS84 ellipsoid is used, <em>a</em> = 6378137m, <em>r</em> = 298.257223563.</p>
+<p>specify the ellipsoid via <em>a</em> <em>f</em>; the equatorial radius is <em>a</em> and
+the flattening is <em>f</em>.  Setting <em>f</em> = 0 results in a sphere.  Specify
+<em>f</em> &lt; 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
+is allowed for <em>f</em>.  (Also, if <em>f</em> &gt; 1, the flattening is set to
+1/<em>f</em>.)  By default, the WGS84 ellipsoid is used, <em>a</em> = 6378137m, <em>f</em>
+= 1/298.257223563.</p>
 </dd>
 <dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
 

@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 484b008f7c73d568472abe2cc8fcbdfbc81a63af $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 1019e0f59cd5d18039884c7d0218d1783ef5b5cf $"
 
 #include <GeographicLib/Config.h>
 
@@ -135,10 +135,12 @@ namespace GeographicLib {
      * A synonym for pi<real>().
      **********************************************************************/
     static inline real pi() throw() { return pi<real>(); }
+/// \cond DEPRECATED
     /**
      * <b>DEPRECATED</b> A synonym for pi<extened>().
      **********************************************************************/
     static inline extended epi() throw() { return pi<extended>(); }
+/// \endcond
 
     /**
      * @return the number of radians in a degree.
@@ -149,10 +151,12 @@ namespace GeographicLib {
      * A synonym for degree<real>().
      **********************************************************************/
     static inline real degree() throw() { return degree<real>(); }
+/// \cond DEPRECATED
     /**
      * <b>DEPRECATED</b> A synonym for degree<extened>().
      **********************************************************************/
     static inline extended edegree() throw() { return degree<extended>(); }
+/// \endcond
 
     /**
      * Square a number.
@@ -423,10 +427,12 @@ namespace GeographicLib {
     Constants();                // Disable constructor
 
   public:
+/// \cond DEPRECATED
     /**
      * <b>DEPRECATED</b> A synonym for Math::pi<real>().
      **********************************************************************/
     static inline Math::real pi() throw() { return Math::pi<real>(); }
+/// \endcond
     /**
      * A synonym for Math::degree<real>().
      **********************************************************************/
@@ -455,14 +461,25 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return WGS84_a<real>(); }
     /**
+     * @return the flattening of WGS84 ellipsoid
+     **********************************************************************/
+    template<typename T>
+    static inline T WGS84_f() throw() {
+      // 1/298.257223563
+      return T(1) / ( T(298) + T(257223563) / T(1000000000) );
+    }
+    /**
+     * A synonym for WGS84_f<real>().
+     **********************************************************************/
+    static inline Math::real WGS84_f() throw() { return WGS84_f<real>(); }
+    /**
+     * <b>DEPRECATED</b>
      * @return the reciprocal flattening of WGS84 ellipsoid
      **********************************************************************/
     template<typename T>
-    static inline T WGS84_r() throw() {
-      // 298.257223563
-      return T(298) + T(257223563) / T(1000000000);
-    }
+    static inline T WGS84_r() throw() { return 1/WGS84_f<T>(); }
     /**
+     * <b>DEPRECATED</b>
      * A synonym for WGS84_r<real>().
      **********************************************************************/
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }

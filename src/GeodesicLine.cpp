@@ -28,7 +28,7 @@
 
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESICLINE_CPP "$Id: 3d87c121ff7239da5e139738b31e5b383c8f18ee $"
+#define GEOGRAPHICLIB_GEODESICLINE_CPP "$Id: ce44d077226c065d080f616b59baf86daaea0a62 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_HPP)
@@ -41,7 +41,7 @@ namespace GeographicLib {
                              real lat1, real lon1, real azi1,
                              unsigned caps) throw()
     : _a(g._a)
-    , _r(g._r)
+    , _f(g._f)
     , _b(g._b)
     , _c2(g._c2)
     , _f1(g._f1)

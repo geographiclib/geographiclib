@@ -1,7 +1,7 @@
 int usage(int retval, bool brief) {
   if (brief)
     ( retval ? std::cerr : std::cout ) << "Usage:\n\
-    Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a r ] [ -d ] [ -b ] [ -f ]\n\
+    Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d ] [ -b ] [ -f ]\n\
     [ -p prec ] [ --version | -h | --help ] [ --input-file infile |\n\
     --input-string instring ] [ --output-file outfile ]\n\
 \n\
@@ -15,7 +15,7 @@ NAME\n\
        Geod -- perform geodesic calculations\n\
 \n\
 SYNOPSIS\n\
-       Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a r ] [ -d ] [ -b ] [ -f ]\n\
+       Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d ] [ -b ] [ -f ]\n\
        [ -p prec ] [ --version | -h | --help ] [ --input-file infile |\n\
        --input-string instring ] [ --output-file outfile ]\n\
 \n\
@@ -23,25 +23,22 @@ DESCRIPTION\n\
        The shortest path between two points on the ellipsoid at (lat1, lon1)\n\
        and (lat2, lon2) is called the geodesic.  Its length is s12 and the\n\
        geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two\n\
-       end points.  The reduced length of the geodesic, m12, is defined such\n\
-       that if the initial azimuth is perturbed by dazi1 (radians) then the\n\
-       second point is displaced by m12*dazi1 in the direction perpendicular\n\
-       to the geodesic.  On a flat surface, we have m12 = s12.\n\
+       end points.\n\
 \n\
        Geod operates in one of three modes:\n\
 \n\
        1.  By default, Geod accepts lines on the standard input containing\n\
-           lat1 lon1 azi1 s12 and prints lat2 lon2 azi2 m12 on standard\n\
-           output.  This is the direct geodesic calculation.\n\
+           lat1 lon1 azi1 s12 and prints lat2 lon2 azi2 on standard output.\n\
+           This is the direct geodesic calculation.\n\
 \n\
        2.  Command line arguments -l lat1 lon1 azi1 specify a geodesic line.\n\
            Geod then accepts a sequence of s12 values (one per line) on\n\
-           standard input and prints lat2 lon2 azi2 m12 for each.  This\n\
-           generates a sequence of points on a single geodesic.\n\
+           standard input and prints lat2 lon2 azi2 for each.  This generates\n\
+           a sequence of points on a single geodesic.\n\
 \n\
        3.  With the -i command line argument, Geod performs the inverse\n\
            geodesic calculation.  It reads lines containing lat1 lon1 lat2\n\
-           lon2 and prints the corresponding values of azi1 azi2 s12 m12.\n\
+           lon2 and prints the corresponding values of azi1 azi2 s12.\n\
 \n\
 OPTIONS\n\
        -i  perform an inverse geodesic calculation (see 3 above).\n\
@@ -52,18 +49,22 @@ OPTIONS\n\
        -a  arc mode; on input and output s12 is replaced by a12 the arc length\n\
            (in degrees) on the auxiliary sphere.  See \"AUXILIARY SPHERE\".\n\
 \n\
-       -e  specify the ellipsoid via a r; the equatorial radius is a and the\n\
-           reciprocal flattening is r.  Setting r = 0 results in a sphere.\n\
-           Specify r < 0 for a prolate ellipsoid.  By default, the WGS84\n\
-           ellipsoid is used, a = 6378137m, r = 298.257223563.\n\
+       -e  specify the ellipsoid via a f; the equatorial radius is a and the\n\
+           flattening is f.  Setting f = 0 results in a sphere.  Specify f < 0\n\
+           for a prolate ellipsoid.  A simple fraction, e.g., 1/297, is\n\
+           allowed for f.  (Also, if f > 1, the flattening is set to 1/f.)  By\n\
+           default, the WGS84 ellipsoid is used, a = 6378137m, f =\n\
+           1/298.257223563.\n\
 \n\
        -d  output angles as degrees, minutes, seconds instead of decimal\n\
            degrees.\n\
 \n\
        -b  report the back azimuth at point 2 instead of the forward azimuth.\n\
 \n\
-       -f  full output; each line of output consists of 9 quantities: lat1\n\
-           lon1 azi1 lat2 lon2 azi2 s12 a12 m12.\n\
+       -f  full output; each line of output consists of 12 quantities: lat1\n\
+           lon1 azi1 lat2 lon2 azi2 s12 a12 m12 M12 M21 S12.  a12 is described\n\
+           in AUXILIARY SPHERE.  The four quantities m12, M12, M21, and S12\n\
+           are described in \"ADDITIONAL QUANTITIES\".\n\
 \n\
        -p  set the precision to prec (default 3); prec is the precision\n\
            relative to 1m.  See PRECISION.\n\
@@ -90,16 +91,16 @@ OPTIONS\n\
            file name of \"-\" stands for standard output.\n\
 \n\
 INPUT\n\
-       Geod measures all angles in degrees and all lengths (s12, m12) in\n\
-       meters.  On input angles (latitude, longitude, azimuth, arc length) can\n\
-       be as decimal degrees or degrees (d), minutes ('), seconds (\").  A\n\
-       decimal point can only appear in the least significant component and\n\
-       the designator (d, ', or \") for this component is optional; thus\n\
-       \"40d30\", \"40d30'\", \"40.5d\", and 40.5 are all equivalent.  By default,\n\
-       latitude precedes longitude for each point; however on input either may\n\
-       be given first by appending (or prepending) N or S to the latitude and\n\
-       E or W to the longitude.  Azimuths are measured clockwise from north;\n\
-       however this may be overridden with E or W.\n\
+       Geod measures all angles in degrees and all lengths (s12) in meters.\n\
+       On input angles (latitude, longitude, azimuth, arc length) can be as\n\
+       decimal degrees or degrees (d), minutes ('), seconds (\").  A decimal\n\
+       point can only appear in the least significant component and the\n\
+       designator (d, ', or \") for this component is optional; thus \"40d30\",\n\
+       \"40d30'\", \"40.5d\", and 40.5 are all equivalent.  By default, latitude\n\
+       precedes longitude for each point; however on input either may be given\n\
+       first by appending (or prepending) N or S to the latitude and E or W to\n\
+       the longitude.  Azimuths are measured clockwise from north; however\n\
+       this may be overridden with E or W.\n\
 \n\
 AUXILIARY SPHERE\n\
        Geodesics on the ellipsoid can be transferred to the auxiliary sphere\n\
@@ -110,7 +111,31 @@ AUXILIARY SPHERE\n\
        not correspond to shortest paths.  With the -a flag, s12 (on both input\n\
        and output) is replaced by a12.  The -a flag does not affect the full\n\
        output given by the -f flag (which always includes both s12 and a12).\n\
-       m12 is always given in meters.\n\
+\n\
+ADDITIONAL QUANTITIES\n\
+       The -f flag reports four addtional quantities.\n\
+\n\
+       The reduced length of the geodesic, m12, is defined such that if the\n\
+       initial azimuth is perturbed by dazi1 (radians) then the second point\n\
+       is displaced by m12 dazi1 in the direction perpendicular to the\n\
+       geodesic.  m12 is given in meters.  On a curved surface the reduced\n\
+       length obeys a symmetry relation, m12 + m21 = 0.  On a flat surface, we\n\
+       have m12 = s12.\n\
+\n\
+       M12 and M21 are geodesic scales.  If two geodesics are parallel at\n\
+       point 1 and separated by a small distance dt, then they are separated\n\
+       by a distance M12 dt at point 2.  M21 is defined similarly (with the\n\
+       geodesics being parallel to one another at point 2).  M12 and M21 are\n\
+       dimensionless quantities.  On a flat surface, we have M12 = M21 = 1.\n\
+\n\
+       If points 1, 2, and 3 lie on a single geodesic, then the following\n\
+       addition rules hold, m13 = m12 M23 + m23 M21, M13 = M12 M23 - (1 - M12\n\
+       M21) m23 / m12, and M31 = M32 M21 - (1 - M23 M32) m12 / m23.\n\
+\n\
+       Finally, S12 is the area between the geodesic from point 1 to point 2\n\
+       and the equator; i.e., it is the area, measured counter-clockwise, of\n\
+       the quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2), and\n\
+       (lat2,lon2).  It is given in meters^2.\n\
 \n\
 PRECISION\n\
        prec gives precision of the output with prec = 0 giving 1m precision,\n\

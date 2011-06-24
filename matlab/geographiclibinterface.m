@@ -33,26 +33,26 @@ function geographiclibinterface(incdir, libdir);
 % under the LGPL.  For more information, see
 % http://geographiclib.sf.net/html/install.html#matlab
 %
-% $Id: d7933d08c77e8a71eef40ac075164f65d77d97d8 $
+% $Id: 0289baf20398707066b37ed019886709826ea511 $
   funs = {'geodesicdirect', 'geodesicinverse', 'geodesicline', ...
-	  'geoidheight', ...
-	  'utmupsforward', 'utmupsreverse', ...
-	  'mgrsforward', 'mgrsreverse', ...
-	  'geocentricforward', 'geocentricreverse', ...
-	  'localcartesianforward', 'localcartesianreverse'};
+          'geoidheight', ...
+          'utmupsforward', 'utmupsreverse', ...
+          'mgrsforward', 'mgrsreverse', ...
+          'geocentricforward', 'geocentricreverse', ...
+          'localcartesianforward', 'localcartesianreverse'};
   lib='Geographic';
   if (ispc && ...
       strcmp(mex.getCompilerConfigurations().Manufacturer, 'Microsoft') && ...
       strcmp(mex.getCompilerConfigurations().Version, '9.0'))
     warning(['geoidheight compiled with Visual Studio 2008 ',...
-	     'causes Matlab to CRASH']);
+             'causes Matlab to CRASH']);
   end
   if (nargin < 2)
     if (nargin == 0)
       if ispc,
-	installdir = 'C:/Program Files/GeographicLib';
+        installdir = 'C:/Program Files/GeographicLib';
       else
-	installdir = '/usr/local';
+        installdir = '/usr/local';
       end
     else
       installdir = incdir;
@@ -72,7 +72,7 @@ function geographiclibinterface(incdir, libdir);
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], [funs{i} '.cpp'] );
     else
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], ['-Wl,-rpath=' libdir], ...
-	   [funs{i} '.cpp'] );
+           [funs{i} '.cpp'] );
     end
     fprintf(' done.\n');
   end

@@ -1,8 +1,8 @@
-function [cartesian, rot] = localcartesianforward(origin, geodetic, a, r)
+function [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
 %localcartesianforward  Convert geographic coordinates to local cartesian
 %
 %   [cartesian, rot] = localcartesianforward(origin, geodetic);
-%   [cartesian, rot] = localcartesianforward(origin, geodetic, a, r);
+%   [cartesian, rot] = localcartesianforward(origin, geodetic, a, f);
 %
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees
@@ -24,8 +24,8 @@ function [cartesian, rot] = localcartesianforward(origin, geodetic, a, r)
 %           (lat0, lon0, h0)
 %
 %   a = major radius (meters)
-%   r = reciprocal flattening (0 means a sphere)
-%   If a and r are omitted, the WGS84 values are used.
+%   f = flattening (0 means a sphere)
+%   If a and f are omitted, the WGS84 values are used.
 %
 % This is an interface to the GeographicLib C++ routine
 %     LocalCartesian::Forward
@@ -39,4 +39,4 @@ end
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
 % the LGPL.  For more information, see http://geographiclib.sourceforge.net/
 %
-% $Id: f19d5a73238853b147fef171c7e9266891675543 $
+% $Id: 6d9a075fb82d7b53939387814d5720c5269bb957 $
