@@ -7,7 +7,7 @@
 
 int main() {
   using namespace GeographicLib;
-  double 
+  double
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius

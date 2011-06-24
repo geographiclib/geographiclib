@@ -224,7 +224,7 @@ namespace GeographicLib {
     real omg12;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
-         // Mimic the way Lambda12 works with calp1 = 0
+        // Mimic the way Lambda12 works with calp1 = 0
         (_f <= 0 || lam12 <= Math::pi<real>() - _f * Math::pi<real>())) {
 
       // Geodesic runs along equator

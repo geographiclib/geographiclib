@@ -27,8 +27,7 @@ namespace GeographicLib {
     real(numeric_limits<real>::digits) * log(real(numeric_limits<real>::radix))
     + 2;
 
-  AlbersEqualArea::AlbersEqualArea(real a, real f,
-                                   real stdlat, real k0)
+  AlbersEqualArea::AlbersEqualArea(real a, real f, real stdlat, real k0)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _r(1/f)
@@ -54,8 +53,7 @@ namespace GeographicLib {
     Init(sphi, cphi, sphi, cphi, k0);
   }
 
-  AlbersEqualArea::AlbersEqualArea(real a, real f,
-                                   real stdlat1, real stdlat2,
+  AlbersEqualArea::AlbersEqualArea(real a, real f, real stdlat1, real stdlat2,
                                    real k1)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)

@@ -66,8 +66,8 @@ Math::extended angdiff(Math::extended a1, Math::extended a2) {
 }
 
 Math::extended azidiff(Math::extended lat,
-		       Math::extended lon1, Math::extended lon2,
-		       Math::extended azi1, Math::extended azi2) {
+                       Math::extended lon1, Math::extended lon2,
+                       Math::extended azi1, Math::extended azi2) {
   Math::extended
     phi = lat * degree(),
     alpha1 = azi1 * degree(),

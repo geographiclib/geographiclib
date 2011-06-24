@@ -189,7 +189,7 @@ namespace GeographicLib {
 
     /**
      * @return \e f the  flattening of the ellipsoid.  This is the
-     *   value used in the constructor. 
+     *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }
 

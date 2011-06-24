@@ -18,7 +18,7 @@
 #include <algorithm>
 #include <GeographicLib/Geoid.hpp>
 #include <mex.h>
- 
+
 using namespace std;
 using namespace GeographicLib;
 
