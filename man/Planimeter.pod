@@ -67,6 +67,9 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137m, I<f>
 = 1/298.257223563.
+If entering vertices as UTM/UPS or MGRS coordinates, use the default
+ellipsoid, since the conversion of these coordinates to latitude and
+longitude uses the WGS84 parameters.
 
 =item B<--version>
 

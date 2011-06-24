@@ -83,7 +83,7 @@ report the I<back> azimuth at point 2 instead of the forward azimuth.
 
 full output; each line of output consists of 12 quantities: I<lat1>
 I<lon1> I<azi1> I<lat2> I<lon2> I<azi2> I<s12> I<a12> I<m12> I<M12>
-I<M21> I<S12>.  I<a12> is described in I<AUXILIARY SPHERE>.  The four
+I<M21> I<S12>.  I<a12> is described in L<AUXILIARY SPHERE>.  The four
 quantities I<m12>, I<M12>, I<M21>, and I<S12> are described in
 L<ADDITIONAL QUANTITIES>.
 

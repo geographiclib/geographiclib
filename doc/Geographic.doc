@@ -2133,12 +2133,12 @@ number.)
   - FIX BUG: accommodate tellg() returning -1 at end of string.
   - Change way flattening of the ellipsoid is specified:
     - constructors take \e f argument which is taken to be the
-      flattening if \e f &lt; 1 and the inverse flattening otherwise.
-      This is a compatible change for spheres and oblate ellipsoids.  It
-      is an INCOMPATIBLE change for prolate ellipsoids.
+      flattening if \e f &lt; 1 and the inverse flattening otherwise
+      (this is a compatible change for spheres and oblate ellipsoids, but it
+      is an INCOMPATIBLE change for prolate ellipsoids);
     - the -e arguments to the \ref utilities are handled similarly; in
       addition, simple fractions, e.g., 1/297, can be used for the
-      flattening.
+      flattening;
     - introduce Constants::WGS84_f() for the WGS84 flattening (and
       deprecate Constants::WGS84_r() for the inverse flattening);
     - most classes have a Flattening() member function;
