@@ -127,7 +127,7 @@ namespace GeographicLib {
 #endif
 
     /**
-     * @return \e pi
+     * @return \e pi.
      **********************************************************************/
     template<typename T>
     static inline T pi() throw() { return std::atan2(T(0), -T(1)); }
@@ -452,7 +452,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return the equatorial radius of WGS84 ellipsoid
+     * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
     template<typename T>
     static inline T WGS84_a() throw() { return T(6378137) * meter<T>(); }
@@ -461,11 +461,10 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return WGS84_a<real>(); }
     /**
-     * @return the flattening of WGS84 ellipsoid
+     * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
     template<typename T>
     static inline T WGS84_f() throw() {
-      // 1/298.257223563
       return T(1) / ( T(298) + T(257223563) / T(1000000000) );
     }
     /**
@@ -474,7 +473,7 @@ namespace GeographicLib {
     static inline Math::real WGS84_f() throw() { return WGS84_f<real>(); }
     /**
      * <b>DEPRECATED</b>
-     * @return the reciprocal flattening of WGS84 ellipsoid
+     * @return the reciprocal flattening of WGS84 ellipsoid.
      **********************************************************************/
     template<typename T>
     static inline T WGS84_r() throw() { return 1/WGS84_f<T>(); }
@@ -484,19 +483,19 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
-     * @return the central scale factor for UTM
+     * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
     template<typename T>
-    static inline T UTM_k0() throw() {return T(9996) / T(10000); } // 0.9996
+    static inline T UTM_k0() throw() {return T(9996) / T(10000); }
     /**
      * A synonym for UTM_k0<real>().
      **********************************************************************/
     static inline Math::real UTM_k0() throw() { return UTM_k0<real>(); }
     /**
-     * @return the central scale factor for UPS
+     * @return the central scale factor for UPS (0.994).
      **********************************************************************/
     template<typename T>
-    static inline T UPS_k0() throw() { return T(994) / T(1000); } // 0.994
+    static inline T UPS_k0() throw() { return T(994) / T(1000); }
     /**
      * A synonym for UPS_k0<real>().
      **********************************************************************/

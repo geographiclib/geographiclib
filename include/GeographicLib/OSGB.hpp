@@ -191,7 +191,7 @@ namespace GeographicLib {
      * @return \e f the inverse flattening of the Airy 1830 ellipsoid.
      *
      * For the Airy 1830 ellipsoid, \e a = 20923713 ft and \e b = 20853810 ft;
-     * thus the flattening = (20923713 - 20853810)/20923713 =
+     * thus the flattening = (20923713 - 20853810)/20923713 = 7767/2324857 =
      * 1/299.32496459...  (The Airy 1830 value is returned because the OSGB
      * projection is based on this ellipsoid.)
      **********************************************************************/

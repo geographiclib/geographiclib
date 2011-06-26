@@ -2131,7 +2131,7 @@ number.)
   - <a href="Geod.1.html">Geod</a> no longer reports the reduced length
     by default; however the -f flag still reports this and in addition
     gives the geodesic scales and the geodesic area.
-  - FIX COMPILER-SPECIFIC BUGS in inverse geodesic calculations.
+  - FIX BUGS (compiler-specific) in inverse geodesic calculations.
   - FIX BUG: accommodate tellg() returning -1 at end of string.
   - Change way flattening of the ellipsoid is specified:
     - constructors take \e f argument which is taken to be the
@@ -2141,8 +2141,9 @@ number.)
     - the -e arguments to the \ref utilities are handled similarly; in
       addition, simple fractions, e.g., 1/297, can be used for the
       flattening;
-    - introduce Constants::WGS84_f() for the WGS84 flattening (and
-      deprecate Constants::WGS84_r() for the inverse flattening);
+    - introduce GeographicLib::Constants::WGS84_f() for the WGS84
+      flattening (and deprecate Constants::WGS84_r() for the inverse
+      flattening);
     - most classes have a Flattening() member function;
     - InverseFlattening() has been deprecated (and now returns inf for a
       sphere, instead of 0).
@@ -2169,7 +2170,7 @@ number.)
   - Avoid using catch within GeographicLib::DMS.
   - Move GeographicLib::Accumulator class from Planimeter.cpp to
     Constants.hpp.
-  - Add Math::sq<T>.
+  - Add GeographicLib::Math::sq<T>.
   - Simplify \ref geoidinst
     - add geographiclib-get-geoids for Unix-like systems;
     - add installers for Windows.
