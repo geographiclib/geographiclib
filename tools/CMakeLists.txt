@@ -85,15 +85,45 @@ set_tests_properties (Geod3
 # Check fix for short line bug found 2010-05-21
 add_test (Geod4
   Geod -i --input-string "36.493349428792 0 36.49334942879201 .0000008")
-set_tests_properties (Geod4
-  PROPERTIES PASS_REGULAR_EXPRESSION
-  "89\\.99999948 89\\.99999996 0\\.072")
+set_tests_properties (Geod4 PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 0\\.072")
 # Check fix for point2=pole bug found 2010-05-03 (but only with long double)
 add_test (Geod5
   Geod -p 0 --input-string "0.01777745589997 30 0 10e6")
 set_tests_properties (Geod5
   PROPERTIES PASS_REGULAR_EXPRESSION
   "90\\.00000 -150\\.00000 -180\\.00000;90\\.00000 30\\.00000 0\\.00000")
+
+# Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
+add_test (Geod6 Geod -i --input-string
+  "88.202499451857 0 -88.202499451857 179.981022032992859592")
+add_test (Geod7 Geod -i --input-string
+  "89.262080389218 0 -89.262080389218 179.992207982775375662")
+add_test (Geod8 Geod -i --input-string
+  "89.333123580033 0 -89.333123580032997687 179.99295812360148422")
+set_tests_properties (Geod6
+  PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 20003898.214")
+set_tests_properties (Geod7
+  PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 20003925.854")
+set_tests_properties (Geod8
+  PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 20003926.881")
+
+# Check fix for volatile x bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
+add_test (Geod9 Geod -i --input-string
+  "56.320923501171 0 -56.320923501171 179.664747671772880215")
+set_tests_properties (Geod9
+  PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19993558.287")
+
+# Check fix for adjust tol1_ bug found 2011-06-25 (Visual Studio 10 rel + debug)
+add_test (Geod10 Geod -i --input-string
+  "52.784459512564 0 -52.784459512563990912 179.634407464943777557")
+set_tests_properties (Geod10
+  PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19991596.095")
+
+# Check fix for bet2 = -bet1 bug found 2011-06-25 (Visual Studio 10 rel + debug)
+add_test (Geod11 Geod -i --input-string
+  "48.522876735459 0 -48.52287673545898293 179.599720456223079643")
+set_tests_properties (Geod11
+  PROPERTIES PASS_REGULAR_EXPRESSION ".* .* 19989144.774")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (Planimeter0 Planimeter --input-string "89 0;89 90;89 180;89 270")
@@ -115,6 +145,11 @@ set_tests_properties (Planimeter3
   "3 30022685\\.[0-9]+ 63758202715511\\.[0-9]+")
 set_tests_properties (Planimeter4
   PROPERTIES PASS_REGULAR_EXPRESSION "3 20020719\\.[0-9]+")
+# Check fix for Planimeter pole crossing bug found 2011-06-24
+add_test (Planimeter5 Planimeter --input-string "89,0.1;89,90.1;89,-179.9")
+set_tests_properties (Planimeter5
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "3 539297\\.[0-9]+ 1247615283[89]\\.[0-9]+")
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (ConicProj0

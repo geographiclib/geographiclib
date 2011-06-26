@@ -2126,10 +2126,12 @@ number.)
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:
     - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
       calculations;
-    - trim precision of area to 3 decimal places.
+    - trim precision of area to 3 decimal places;
+    - FIX BUG with pole crossing edges (due to compiler optimization).
   - <a href="Geod.1.html">Geod</a> no longer reports the reduced length
     by default; however the -f flag still reports this and in addition
     gives the geodesic scales and the geodesic area.
+  - FIX COMPILER-SPECIFIC BUGS in inverse geodesic calculations.
   - FIX BUG: accommodate tellg() returning -1 at end of string.
   - Change way flattening of the ellipsoid is specified:
     - constructors take \e f argument which is taken to be the

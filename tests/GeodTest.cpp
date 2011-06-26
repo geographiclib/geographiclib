@@ -80,6 +80,8 @@ Math::extended azidiff(Math::extended lat,
   return res;
 }
 
+// This gives an overestimat of the error by as much as a factor of pi, e.g.,
+// if lat0 = 0, 89.99999999999996, lon0 = 0, lat1 = 90, lon2 = 180.
 Math::extended dist(Math::extended lat0, Math::extended lon0,
                     Math::extended lat1, Math::extended lon1) {
   //  typedef GeographicLibL::Math::real real;

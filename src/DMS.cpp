@@ -192,7 +192,8 @@ namespace GeographicLib {
       return 0;
     // Strip off sign and trailing 0s
     t = t.substr(p0, p1 + 1 - p0);  // Length at least 3
-    if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND")
+    if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
+        t == "1.#R")
       return sign * Math::NaN();
     else if (t == "INF" || t == "1.#INF")
       return sign * Math::infinity();

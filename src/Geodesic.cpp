@@ -43,7 +43,10 @@ namespace GeographicLib {
   //   eps2_ + epsilon() == epsilon()
   const Math::real Geodesic::eps2_ = sqrt(numeric_limits<real>::min());
   const Math::real Geodesic::tol0_ = numeric_limits<real>::epsilon();
-  const Math::real Geodesic::tol1_ = 100 * tol0_;
+  // Increase multiplier in defn of tol1_ from 100 to 200 to fix inverse case
+  // 52.784459512564 0 -52.784459512563990912 179.634407464943777557
+  // which otherwise failed for Visual Studio 10 (Release and Debug)
+  const Math::real Geodesic::tol1_ = 200 * tol0_;
   const Math::real Geodesic::tol2_ = sqrt(numeric_limits<real>::epsilon());
   const Math::real Geodesic::xthresh_ = 1000 * tol2_;
 
@@ -172,6 +175,22 @@ namespace GeographicLib {
     cbet2 = abs(lat2) == 90 ? eps2_ : cos(phi);
     SinCosNorm(sbet2, cbet2);
 
+    // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
+    // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
+    // a better measure.  This logic is used in assigning calp2 in Lambda12.
+    // Sometimes these quantities vanish and in that case we force bet2 = +/-
+    // bet1 exactly.  An example where is is necessary is the inverse problem
+    // 48.522876735459 0 -48.52287673545898293 179.599720456223079643
+    // which failed with Visual Studio 10 (Release and Debug)
+
+    if (cbet1 < -sbet1) {
+      if (cbet2 == cbet1)
+        sbet2 = sbet2 < 0 ? sbet1 : -sbet1;
+    } else {
+      if (abs(sbet2) == -sbet1)
+        cbet2 = cbet1;
+    }
+
     real
       lam12 = lon12 * Math::degree<real>(),
       slam12 = lon12 == 180 ? 0 : sin(lam12),
@@ -267,7 +286,6 @@ namespace GeographicLib {
           real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
-
           if (!(abs(v) > eps2_) || !(trip < 1)) {
             if (!(abs(v) <= max(tol1_, ov)))
               numit = maxit_;
@@ -513,8 +531,14 @@ namespace GeographicLib {
       sig12 = -1,               // Return value
       // bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
       sbet12 = sbet2 * cbet1 - cbet2 * sbet1,
-      cbet12 = cbet2 * cbet1 + sbet2 * sbet1,
-      sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
+      cbet12 = cbet2 * cbet1 + sbet2 * sbet1;
+    // Volatile declaration needed to fix inverse cases
+    // 88.202499451857 0 -88.202499451857 179.981022032992859592
+    // 89.262080389218 0 -89.262080389218 179.992207982775375662
+    // 89.333123580033 0 -89.333123580032997687 179.99295812360148422 
+    // which otherwise fail with g++ 4.4.4 x86 -O3
+    volatile real sbet12a = sbet2 * cbet1;
+    sbet12a += cbet2 * sbet1;
 
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       lam12 <= Math::pi<real>() / 6;
@@ -545,7 +569,11 @@ namespace GeographicLib {
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
       // is at origin and singular point is at y = 0, x = -1.
-      real x, y, lamscale, betscale;
+      real y, lamscale, betscale;
+      // Volatile declaration needed to fix inverse case
+      // 56.320923501171 0 -56.320923501171 179.664747671772880215
+      // which otherwise fails with g++ 4.4.4 x86 -O3
+      volatile real x;
       if (_f >= 0) {            // In fact f == 0 does not get here
         // x = dlong, y = dlat
         {
@@ -563,12 +591,13 @@ namespace GeographicLib {
         real
           cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
           bet12a = atan2(sbet12a, cbet12a);
-        real m0, dummy;
+        real m12a, m0, dummy;
         // In the case of lon12 = 180, this repeats a calculation made in
         // Inverse.
         Lengths(_n, Math::pi<real>() + bet12a, sbet1, -cbet1, sbet2, cbet2,
-                cbet1, cbet2, dummy, x, m0, false, dummy, dummy, C1a, C2a);
-        x = -1 + x/(_f1 * cbet1 * cbet2 * m0 * Math::pi<real>());
+                cbet1, cbet2, dummy, m12a, m0, false,
+                dummy, dummy, C1a, C2a);
+        x = -1 + m12a/(_f1 * cbet1 * cbet2 * m0 * Math::pi<real>());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi<real>();
         lamscale = betscale / cbet1;
@@ -578,9 +607,9 @@ namespace GeographicLib {
       if (y > -tol1_ && x >  -1 - xthresh_) {
         // strip near cut
         if (_f >= 0) {
-          salp1 = min(real( 1), -x); calp1 = - sqrt(1 - Math::sq(salp1));
+          salp1 = min(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
         } else {
-          calp1 = max(real(x > -tol1_ ? 0 : -1),  x);
+          calp1 = max(real(x > -tol1_ ? 0 : -1),  real(x));
           salp1 = sqrt(1 - Math::sq(calp1));
         }
       } else {

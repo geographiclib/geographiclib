@@ -38,7 +38,14 @@ namespace GeographicLib {
     // Copied from Geodesic class
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-      return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+      //
+      // g++ 4.4.4 holds a temporary in an extended register causing an error
+      // with the triangle 89,0.1;89,90.1;89,-179.9.  The volatile declaration
+      // fixes this.  (The bug probably triggered because transit and
+      // AngNormalize are inline functions.  So don't port this change over to
+      // Geodesic.hpp.)
+      volatile real y = x;
+      return y >= 180 ? y - 360 : y < -180 ? y + 360 : y;
     }
     static inline int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
