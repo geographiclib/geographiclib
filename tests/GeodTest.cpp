@@ -52,10 +52,6 @@ also checked.\n\
   return retval;
 }
 
-Math::extended degree() {
-  return atan2(1.0L,1.0L)/45.0L;
-}
-
 Math::extended angdiff(Math::extended a1, Math::extended a2) {
   Math::extended d = a2 - a1;
   if (d >= 180)
@@ -69,10 +65,10 @@ Math::extended azidiff(Math::extended lat,
                        Math::extended lon1, Math::extended lon2,
                        Math::extended azi1, Math::extended azi2) {
   Math::extended
-    phi = lat * degree(),
-    alpha1 = azi1 * degree(),
-    alpha2 = azi2 * degree(),
-    dlam = angdiff(lon1, lon2) * degree();
+    phi = lat * Math::degree<Math::extended>(),
+    alpha1 = azi1 * Math::degree<Math::extended>(),
+    alpha2 = azi2 * Math::degree<Math::extended>(),
+    dlam = angdiff(lon1, lon2) * Math::degree<Math::extended>();
   Math::extended res = sin(alpha2-alpha1)*cos(dlam)
     -cos(alpha2-alpha1)*sin(dlam)*sin(phi)
     // -sin(alpha1)*cos(alpha2)*(1-cos(dlam))*cos(phi)*cos(phi)
@@ -80,8 +76,6 @@ Math::extended azidiff(Math::extended lat,
   return res;
 }
 
-// This gives an overestimat of the error by as much as a factor of pi, e.g.,
-// if lat0 = 0, 89.99999999999996, lon0 = 0, lat1 = 90, lon2 = 180.
 Math::extended dist(Math::extended lat0, Math::extended lon0,
                     Math::extended lat1, Math::extended lon1) {
   //  typedef GeographicLibL::Math::real real;
@@ -90,21 +84,37 @@ Math::extended dist(Math::extended lat0, Math::extended lon0,
   //    WGS84.Inverse(real(lat0), real(lon0), real(lat1), real(lon1), s12);
   //  return Math::extended(s12);
   Math::extended
-    phi = lat0 * degree(),
-    cphi = abs(lat0) <= 45 ? cos(phi) : sin((90 - abs(lat0)) * degree()),
-    a = GeographicLibL::Constants::WGS84_a() * degree(),
-    f = GeographicLibL::Constants::WGS84_f(),
-    e2 = f * (2 - f),
-    sinphi = sin(phi),
-    n = 1/sqrt(1 - e2 * sinphi * sinphi),
-    // See Wikipedia article on latitude
-    degreeLon = a * cphi * n,
-    degreeLat = a * (1 - e2) * n * n * n,
-    dlon = angdiff(lon1, lon0),
-    dlat = lat1 - lat0;
-  dlat *= degreeLat;
-  dlon *= degreeLon;
-  return GeographicLibL::Math::hypot(dlat, dlon);
+    a = GeographicLib::Constants::WGS84_a<Math::extended>() *
+        Math::degree<Math::extended>(),
+    f = GeographicLib::Constants::WGS84_f<Math::extended>();
+  if (abs(lat0 + lat1) > Math::extended(179.998)) {
+    // Near pole, transform into polar coordinates
+    Math::extended
+      r0 = 90 - abs(lat0),
+      r1 = 90 - abs(lat1),
+      lam0 = lon0 * Math::degree<Math::extended>(),
+      lam1 = lon1 * Math::degree<Math::extended>();
+    return (a / (1 - f)) *
+      GeographicLib::Math::hypot
+      (r0 * cos(lam0) - r1 * cos(lam1), r0 * sin(lam0) - r1 * sin(lam1));
+  } else {
+    // Otherwise use cylindrical formula
+    Math::extended
+      phi = lat0 * Math::degree<Math::extended>(),
+      cphi = abs(lat0) <= 45 ? cos(phi)
+      : sin((90 - abs(lat0)) * Math::degree<Math::extended>()),
+      e2 = f * (2 - f),
+      sinphi = sin(phi),
+      n = 1/sqrt(1 - e2 * sinphi * sinphi),
+      // See Wikipedia article on latitude
+      degreeLon = a * cphi * n,
+      degreeLat = a * (1 - e2) * n * n * n,
+      dlon = angdiff(lon1, lon0),
+      dlat = lat1 - lat0;
+    dlat *= degreeLat;
+    dlon *= degreeLon;
+    return GeographicLib::Math::hypot(dlat, dlon);
+  }
 }
 
 // wreal is precision of args.
@@ -146,11 +156,11 @@ void GeodError(const test& tgeod, const ref& rgeod,
   tS12a -= rgeod.EllipsoidArea() * ((tazi2-azi2)-(tazi1-azi1))/720;
   err[3] = abs(ts12 - s12);
   err[4] = max(abs(angdiff(azi1, tazi1)), abs(angdiff(azi2, tazi2))) *
-    degree() * abs(m12);
+    Math::degree<Math::extended>() * abs(m12);
   if (treal(lat1) + treal(lat2) == 0)
     err[4] = min(err[4],
                  max(abs(angdiff(azi1, tazi2)), abs(angdiff(azi2, tazi1))) *
-                 degree() * abs(m12));
+                 Math::degree<Math::extended>() * abs(m12));
   // m12 and S12 are very sensitive with the inverse problem near conjugacy
   if (!(s12 > rgeod.MajorRadius() && m12 < 10e3)) {
     err[2] = max(err[2], wreal(abs(tm12a - m12)));
