@@ -6,13 +6,13 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: c87146f3ed8a34703d08033c55fbcd6974d528ff $
+// $Id: c5e09f25ac1e27086735fc0dade0caec7f46b0bd $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
 <charles@karney.com>
 \version 1.11
-\date 2011-mm-dd
+\date 2011-06-27
 
 \section abstract Abstract
 
@@ -2122,7 +2122,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (released 2011-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (released 2011-06-27)</a>
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:
     - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
       calculations;
