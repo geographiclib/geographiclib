@@ -8,7 +8,34 @@ For more information, see
 
 The current version of the library is 1.11.
 
-Changes between 1.11 (released 2011-mm-dd) and 1.10 versions:
+Changes between 1.11 (released 2011-06-27) and 1.10 versions:
+
+  * Changes to Planimeter:
+    + add -l flag to Planimeter for polyline calculations;
+    + trim precision of area to 3 decimal places;
+    + FIX BUG with pole crossing edges (due to compiler optimization).
+
+  * Geod no longer reports the reduced length by default; however the -f
+    flag still reports this and in addition gives the geodesic scales
+    and the geodesic area.
+
+  * FIX BUGS (compiler-specific) in inverse geodesic calculations.
+
+  * FIX BUG: accommodate tellg() returning -1 at end of string.
+
+  * Change way flattening of the ellipsoid is specified:
+    + constructors take f argument which is taken to be the flattening
+      if f < 1 and the inverse flattening otherwise (this is a
+      compatible change for spheres and oblate ellipsoids, but it is an
+      INCOMPATIBLE change for prolate ellipsoids);
+    + the -e arguments to the Utility Programs are handled similarly; in
+      addition, simple fractions, e.g., 1/297, can be used for the
+      flattening;
+    + introduce Constants::WGS84_f() for the WGS84 flattening (and
+      deprecate Constants::WGS84_r() for the inverse flattening);
+    + most classes have a Flattening() member function;
+    + InverseFlattening() has been deprecated (and now returns inf for a
+      sphere, instead of 0).
 
 Changes between 1.10 (released 2011-06-11) and 1.9 versions:
 
