@@ -6,7 +6,7 @@
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * LGPL.  For more information, see http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: f92774cc8b591aca8ba52c81e3ed5dfee55e07e2 $
+// $Id: c87146f3ed8a34703d08033c55fbcd6974d528ff $
 /**
 \mainpage Geographic library
 \author <a href="http://charles.karney.info/">Charles Karney</a>
@@ -2126,21 +2126,24 @@ number.)
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:
     - add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline
       calculations;
-    - trim precision of area to 3 decimal places.
+    - trim precision of area to 3 decimal places;
+    - FIX BUG with pole crossing edges (due to compiler optimization).
   - <a href="Geod.1.html">Geod</a> no longer reports the reduced length
     by default; however the -f flag still reports this and in addition
     gives the geodesic scales and the geodesic area.
+  - FIX BUGS (compiler-specific) in inverse geodesic calculations.
   - FIX BUG: accommodate tellg() returning -1 at end of string.
   - Change way flattening of the ellipsoid is specified:
     - constructors take \e f argument which is taken to be the
-      flattening if \e f &lt; 1 and the inverse flattening otherwise.
-      This is a compatible change for spheres and oblate ellipsoids.  It
-      is an INCOMPATIBLE change for prolate ellipsoids.
+      flattening if \e f &lt; 1 and the inverse flattening otherwise
+      (this is a compatible change for spheres and oblate ellipsoids, but it
+      is an INCOMPATIBLE change for prolate ellipsoids);
     - the -e arguments to the \ref utilities are handled similarly; in
       addition, simple fractions, e.g., 1/297, can be used for the
-      flattening.
-    - introduce Constants::WGS84_f() for the WGS84 flattening (and
-      deprecate Constants::WGS84_r() for the inverse flattening);
+      flattening;
+    - introduce GeographicLib::Constants::WGS84_f() for the WGS84
+      flattening (and deprecate Constants::WGS84_r() for the inverse
+      flattening);
     - most classes have a Flattening() member function;
     - InverseFlattening() has been deprecated (and now returns inf for a
       sphere, instead of 0).
@@ -2167,7 +2170,7 @@ number.)
   - Avoid using catch within GeographicLib::DMS.
   - Move GeographicLib::Accumulator class from Planimeter.cpp to
     Constants.hpp.
-  - Add Math::sq<T>.
+  - Add GeographicLib::Math::sq<T>.
   - Simplify \ref geoidinst
     - add geographiclib-get-geoids for Unix-like systems;
     - add installers for Windows.

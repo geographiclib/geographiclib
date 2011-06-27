@@ -63,7 +63,10 @@ OPTIONS\n\
            for a prolate ellipsoid.  A simple fraction, e.g., 1/297, is\n\
            allowed for f.  (Also, if f > 1, the flattening is set to 1/f.)  By\n\
            default, the WGS84 ellipsoid is used, a = 6378137m, f =\n\
-           1/298.257223563.\n\
+           1/298.257223563.  If entering vertices as UTM/UPS or MGRS\n\
+           coordinates, use the default ellipsoid, since the conversion of\n\
+           these coordinates to latitude and longitude uses the WGS84\n\
+           parameters.\n\
 \n\
        --version\n\
            print version and exit.\n\

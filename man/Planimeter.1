@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2011-06-24" "GeographicLib 1.11" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2011-06-27" "GeographicLib 1.11" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -187,6 +187,9 @@ the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
 1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137m, \fIf\fR
 = 1/298.257223563.
+If entering vertices as \s-1UTM/UPS\s0 or \s-1MGRS\s0 coordinates, use the default
+ellipsoid, since the conversion of these coordinates to latitude and
+longitude uses the \s-1WGS84\s0 parameters.
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 print version and exit.

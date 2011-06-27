@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 1019e0f59cd5d18039884c7d0218d1783ef5b5cf $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 4aca66343d10b60147ea54b9ede6cc7f05e0916d $"
 
 #include <GeographicLib/Config.h>
 
@@ -65,7 +65,8 @@ RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
  * The precision of floating point numbers used in %GeographicLib.  0 means
  * float; 1 (default) means double; 2 means long double.  Nearly all the
  * testing has been carried out with doubles and that's the recommended
- * configuration.  Note that with Microsoft Visual Studio, long double is the
+ * configuration.  In order for long double to be used, HAVE_LONG_DOUBLE needs
+ * to be defined.  Note that with Microsoft Visual Studio, long double is the
  * same as double.
  **********************************************************************/
 #define GEOGRAPHICLIB_PREC 1
@@ -127,7 +128,7 @@ namespace GeographicLib {
 #endif
 
     /**
-     * @return \e pi
+     * @return \e pi.
      **********************************************************************/
     template<typename T>
     static inline T pi() throw() { return std::atan2(T(0), -T(1)); }
@@ -452,7 +453,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return the equatorial radius of WGS84 ellipsoid
+     * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
     template<typename T>
     static inline T WGS84_a() throw() { return T(6378137) * meter<T>(); }
@@ -461,11 +462,10 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return WGS84_a<real>(); }
     /**
-     * @return the flattening of WGS84 ellipsoid
+     * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
     template<typename T>
     static inline T WGS84_f() throw() {
-      // 1/298.257223563
       return T(1) / ( T(298) + T(257223563) / T(1000000000) );
     }
     /**
@@ -474,7 +474,7 @@ namespace GeographicLib {
     static inline Math::real WGS84_f() throw() { return WGS84_f<real>(); }
     /**
      * <b>DEPRECATED</b>
-     * @return the reciprocal flattening of WGS84 ellipsoid
+     * @return the reciprocal flattening of WGS84 ellipsoid.
      **********************************************************************/
     template<typename T>
     static inline T WGS84_r() throw() { return 1/WGS84_f<T>(); }
@@ -484,19 +484,19 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
-     * @return the central scale factor for UTM
+     * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
     template<typename T>
-    static inline T UTM_k0() throw() {return T(9996) / T(10000); } // 0.9996
+    static inline T UTM_k0() throw() {return T(9996) / T(10000); }
     /**
      * A synonym for UTM_k0<real>().
      **********************************************************************/
     static inline Math::real UTM_k0() throw() { return UTM_k0<real>(); }
     /**
-     * @return the central scale factor for UPS
+     * @return the central scale factor for UPS (0.994).
      **********************************************************************/
     template<typename T>
-    static inline T UPS_k0() throw() { return T(994) / T(1000); } // 0.994
+    static inline T UPS_k0() throw() { return T(994) / T(1000); }
     /**
      * A synonym for UPS_k0<real>().
      **********************************************************************/

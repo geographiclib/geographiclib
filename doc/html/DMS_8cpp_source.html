@@ -59,7 +59,7 @@
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: 46b9077ee90da9f251fd1d085b552634a19b875b $&quot;</span>
+<a name="l00013"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: 1ef7e1d795307bca524bb8612633dee4f26683b7 $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">GEOGRAPHICLIB_DMS_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8hpp.html#a844e4c8afc70c59c842f4553ce40b9c6">GEOGRAPHICLIB_DMS_HPP</a>)
@@ -241,179 +241,180 @@
 <a name="l00192"></a>00192       <span class="keywordflow">return</span> 0;
 <a name="l00193"></a>00193     <span class="comment">// Strip off sign and trailing 0s</span>
 <a name="l00194"></a>00194     t = t.substr(p0, p1 + 1 - p0);  <span class="comment">// Length at least 3</span>
-<a name="l00195"></a>00195     <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;NAN&quot;</span> || t == <span class="stringliteral">&quot;1.#QNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#SNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#IND&quot;</span>)
-<a name="l00196"></a>00196       <span class="keywordflow">return</span> sign * Math::NaN();
-<a name="l00197"></a>00197     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;INF&quot;</span> || t == <span class="stringliteral">&quot;1.#INF&quot;</span>)
-<a name="l00198"></a>00198       <span class="keywordflow">return</span> sign * Math::infinity();
-<a name="l00199"></a>00199     <span class="keywordflow">return</span> 0;
-<a name="l00200"></a>00200   }
-<a name="l00201"></a>00201 
-<a name="l00202"></a><a class="code" href="classGeographicLib_1_1DMS.html#a479643a36afe95497b89f812ae1a34c7">00202</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::Decode(<span class="keyword">const</span> std::string&amp; str) {
-<a name="l00203"></a>00203     istringstream is(str);
-<a name="l00204"></a>00204     <span class="keywordtype">string</span> errormsg;
-<a name="l00205"></a>00205     real num;
-<a name="l00206"></a>00206     <span class="keywordflow">do</span> {                       <span class="comment">// Executed once (provides the ability to break)</span>
-<a name="l00207"></a>00207       <span class="keywordflow">if</span> (!(is &gt;&gt; num)) {
-<a name="l00208"></a>00208         errormsg = <span class="stringliteral">&quot;Could not read number: &quot;</span> + str;
-<a name="l00209"></a>00209         <span class="keywordflow">break</span>;
-<a name="l00210"></a>00210       }
-<a name="l00211"></a>00211       <span class="comment">// On some platforms, is &gt;&gt; num gobbles final E in 1234E, so look for</span>
-<a name="l00212"></a>00212       <span class="comment">// last character which is legal as the final character in a number</span>
-<a name="l00213"></a>00213       <span class="comment">// (digit or period).</span>
-<a name="l00214"></a>00214       <span class="keywordtype">int</span> pos = int(is.tellg()); <span class="comment">// Returns -1 at end of string?</span>
-<a name="l00215"></a>00215       <span class="keywordflow">if</span> (pos &lt; 0)
-<a name="l00216"></a>00216         pos = int(str.size());
-<a name="l00217"></a>00217       pos = min(pos, <span class="keywordtype">int</span>(str.find_last_of(<span class="stringliteral">&quot;0123456789.&quot;</span>)) + 1);
-<a name="l00218"></a>00218       <span class="keywordflow">if</span> (pos != <span class="keywordtype">int</span>(str.size())) {
-<a name="l00219"></a>00219         errormsg = <span class="stringliteral">&quot;Extra text &quot;</span> + str.substr(pos) + <span class="stringliteral">&quot; in number &quot;</span> + str;
-<a name="l00220"></a>00220         <span class="keywordflow">break</span>;
-<a name="l00221"></a>00221       }
-<a name="l00222"></a>00222       <span class="keywordflow">return</span> num;
-<a name="l00223"></a>00223     } <span class="keywordflow">while</span> (<span class="keyword">false</span>);
-<a name="l00224"></a>00224     num = NumMatch(str);
-<a name="l00225"></a>00225     <span class="keywordflow">if</span> (num == 0)
-<a name="l00226"></a>00226       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(errormsg);
-<a name="l00227"></a>00227     <span class="keywordflow">return</span> num;
-<a name="l00228"></a>00228   }
-<a name="l00229"></a>00229 
-<a name="l00230"></a><a class="code" href="classGeographicLib_1_1DMS.html#ab12cf64c97e6ee4a7a7e3f87a8629c3d">00230</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::DecodeFraction(<span class="keyword">const</span> std::string&amp; str) {
-<a name="l00231"></a>00231     string::size_type delim = str.find(<span class="charliteral">&#39;/&#39;</span>);
-<a name="l00232"></a>00232     <span class="keywordflow">if</span> (!(delim != string::npos &amp;&amp; delim &gt;= 1 &amp;&amp; delim + 2 &lt;= str.size()))
-<a name="l00233"></a>00233       <span class="keywordflow">return</span> Decode(str);
-<a name="l00234"></a>00234     <span class="keywordflow">else</span>
-<a name="l00235"></a>00235       <span class="comment">// delim in [1, size() - 2]</span>
-<a name="l00236"></a>00236       <span class="keywordflow">return</span> Decode(str.substr(0, delim)) / Decode(str.substr(delim + 1));
-<a name="l00237"></a>00237   }
-<a name="l00238"></a>00238 
-<a name="l00239"></a><a class="code" href="classGeographicLib_1_1DMS.html#a9b6d1f79b4427f5076b98098d470228d">00239</a>   <span class="keywordtype">void</span> DMS::DecodeLatLon(<span class="keyword">const</span> std::string&amp; stra, <span class="keyword">const</span> std::string&amp; strb,
-<a name="l00240"></a>00240                          real&amp; lat, real&amp; lon) {
-<a name="l00241"></a>00241       real a, b;
-<a name="l00242"></a>00242       <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a> ia, ib;
-<a name="l00243"></a>00243       a = Decode(stra, ia);
-<a name="l00244"></a>00244       b = Decode(strb, ib);
-<a name="l00245"></a>00245       <span class="keywordflow">if</span> (ia == NONE &amp;&amp; ib == NONE) {
-<a name="l00246"></a>00246         <span class="comment">// Default to lat, long</span>
-<a name="l00247"></a>00247         ia = LATITUDE;
-<a name="l00248"></a>00248         ib = LONGITUDE;
-<a name="l00249"></a>00249       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (ia == NONE)
-<a name="l00250"></a>00250         ia = <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a>(LATITUDE + LONGITUDE - ib);
-<a name="l00251"></a>00251       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (ib == NONE)
-<a name="l00252"></a>00252         ib = <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a>(LATITUDE + LONGITUDE - ia);
-<a name="l00253"></a>00253       <span class="keywordflow">if</span> (ia == ib)
-<a name="l00254"></a>00254         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Both &quot;</span> + stra + <span class="stringliteral">&quot; and &quot;</span>
-<a name="l00255"></a>00255                             + strb + <span class="stringliteral">&quot; interpreted as &quot;</span>
-<a name="l00256"></a>00256                             + (ia == LATITUDE ? <span class="stringliteral">&quot;latitudes&quot;</span> : <span class="stringliteral">&quot;longitudes&quot;</span>));
-<a name="l00257"></a>00257       real
-<a name="l00258"></a>00258         lat1 = ia == LATITUDE ? a : b,
-<a name="l00259"></a>00259         lon1 = ia == LATITUDE ? b : a;
-<a name="l00260"></a>00260       <span class="keywordflow">if</span> (lat1 &lt; -90 || lat1 &gt; 90)
-<a name="l00261"></a>00261         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lat1) + <span class="stringliteral">&quot;d not in [-90d, 90d]&quot;</span>);
-<a name="l00262"></a>00262       <span class="keywordflow">if</span> (lon1 &lt; -180 || lon1 &gt; 360)
-<a name="l00263"></a>00263         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lon1)
-<a name="l00264"></a>00264                             + <span class="stringliteral">&quot;d not in [-180d, 360d]&quot;</span>);
-<a name="l00265"></a>00265       <span class="keywordflow">if</span> (lon1 &gt;= 180)
-<a name="l00266"></a>00266         lon1 -= 360;
-<a name="l00267"></a>00267       lat = lat1;
-<a name="l00268"></a>00268       lon = lon1;
-<a name="l00269"></a>00269   }
-<a name="l00270"></a>00270 
-<a name="l00271"></a><a class="code" href="classGeographicLib_1_1DMS.html#a868248d72f6b0bf2dae18a15d741ac43">00271</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::DecodeAngle(<span class="keyword">const</span> std::string&amp; angstr) {
-<a name="l00272"></a>00272     <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">DMS::flag</a> ind;
-<a name="l00273"></a>00273     real ang = Decode(angstr, ind);
-<a name="l00274"></a>00274     <span class="keywordflow">if</span> (ind != DMS::NONE)
-<a name="l00275"></a>00275       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Arc angle &quot;</span> + angstr
-<a name="l00276"></a>00276                           + <span class="stringliteral">&quot; includes a hemisphere, N/E/W/S&quot;</span>);
-<a name="l00277"></a>00277     <span class="keywordflow">return</span> ang;
-<a name="l00278"></a>00278   }
-<a name="l00279"></a>00279 
-<a name="l00280"></a><a class="code" href="classGeographicLib_1_1DMS.html#a0512cc1275e089138e1550efbee421d9">00280</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::DecodeAzimuth(<span class="keyword">const</span> std::string&amp; azistr) {
-<a name="l00281"></a>00281     <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">DMS::flag</a> ind;
-<a name="l00282"></a>00282     real azi = Decode(azistr, ind);
-<a name="l00283"></a>00283     <span class="keywordflow">if</span> (ind == DMS::LATITUDE)
-<a name="l00284"></a>00284       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Azimuth &quot;</span> + azistr
-<a name="l00285"></a>00285                           + <span class="stringliteral">&quot; has a latitude hemisphere, N/S&quot;</span>);
-<a name="l00286"></a>00286     <span class="keywordflow">if</span> (azi &lt; -180 || azi &gt; 360)
-<a name="l00287"></a>00287       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Azimuth &quot;</span> + azistr + <span class="stringliteral">&quot; not in range [-180d,360d]&quot;</span>);
-<a name="l00288"></a>00288     <span class="keywordflow">if</span> (azi &gt;= 180) azi -= 360;
-<a name="l00289"></a>00289     <span class="keywordflow">return</span> azi;
-<a name="l00290"></a>00290   }
-<a name="l00291"></a>00291 
-<a name="l00292"></a><a class="code" href="classGeographicLib_1_1DMS.html#a3e36baa6114d46f82a8900d002784369">00292</a>   <span class="keywordtype">string</span> DMS::Encode(real angle, <a class="code" href="classGeographicLib_1_1DMS.html#ab9fa04b3a9156f36f18852eed9b7ce09">component</a> trailing, <span class="keywordtype">unsigned</span> prec, <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a> ind) {
-<a name="l00293"></a>00293     <span class="comment">// Assume check on range of input angle has been made by calling</span>
-<a name="l00294"></a>00294     <span class="comment">// routine (which might be able to offer a better diagnostic).</span>
-<a name="l00295"></a>00295     <span class="keywordflow">if</span> (!Math::isfinite(angle))
-<a name="l00296"></a>00296       <span class="keywordflow">return</span> angle &lt; 0 ? string(<span class="stringliteral">&quot;-inf&quot;</span>) :
-<a name="l00297"></a>00297         (angle &gt; 0 ? string(<span class="stringliteral">&quot;inf&quot;</span>) : string(<span class="stringliteral">&quot;nan&quot;</span>));
-<a name="l00298"></a>00298 
-<a name="l00299"></a>00299     <span class="comment">// 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).</span>
-<a name="l00300"></a>00300     <span class="comment">// This suffices to give full real precision for numbers in [-90,90]</span>
-<a name="l00301"></a>00301     prec = min(15 - 2 * <span class="keywordtype">unsigned</span>(trailing), prec);
-<a name="l00302"></a>00302     real scale = 1;
-<a name="l00303"></a>00303     <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; unsigned(trailing); ++i)
-<a name="l00304"></a>00304       scale *= 60;
-<a name="l00305"></a>00305     <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; prec; ++i)
-<a name="l00306"></a>00306       scale *= 10;
-<a name="l00307"></a>00307     <span class="keywordflow">if</span> (ind == AZIMUTH)
-<a name="l00308"></a>00308       angle -= floor(angle/360) * 360;
-<a name="l00309"></a>00309     <span class="keywordtype">int</span> sign = angle &lt; 0 ? -1 : 1;
-<a name="l00310"></a>00310     angle *= sign;
-<a name="l00311"></a>00311 
-<a name="l00312"></a>00312     <span class="comment">// Break off integer part to preserve precision in manipulation of</span>
-<a name="l00313"></a>00313     <span class="comment">// fractional part.</span>
-<a name="l00314"></a>00314     real
-<a name="l00315"></a>00315       idegree = floor(angle),
-<a name="l00316"></a>00316       fdegree = floor((angle - idegree) * scale + <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5)) / scale;
-<a name="l00317"></a>00317     <span class="keywordflow">if</span> (fdegree &gt;= 1) {
-<a name="l00318"></a>00318       idegree += 1;
-<a name="l00319"></a>00319       fdegree -= 1;
-<a name="l00320"></a>00320     }
-<a name="l00321"></a>00321     real pieces[3] = {fdegree, 0, 0};
-<a name="l00322"></a>00322     <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 1; i &lt;= unsigned(trailing); ++i) {
-<a name="l00323"></a>00323       real
-<a name="l00324"></a>00324         ip = floor(pieces[i - 1]),
-<a name="l00325"></a>00325         fp = pieces[i - 1] - ip;
-<a name="l00326"></a>00326       pieces[i] = fp * 60;
-<a name="l00327"></a>00327       pieces[i - 1] = ip;
-<a name="l00328"></a>00328     }
-<a name="l00329"></a>00329     pieces[0] += idegree;
-<a name="l00330"></a>00330     ostringstream s;
-<a name="l00331"></a>00331     s &lt;&lt; fixed  &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>);
-<a name="l00332"></a>00332     <span class="keywordflow">if</span> (ind == NONE &amp;&amp; sign &lt; 0)
-<a name="l00333"></a>00333       s &lt;&lt; <span class="charliteral">&#39;-&#39;</span>;
-<a name="l00334"></a>00334     <span class="keywordflow">switch</span> (trailing) {
-<a name="l00335"></a>00335     <span class="keywordflow">case</span> DEGREE:
-<a name="l00336"></a>00336       <span class="keywordflow">if</span> (ind != NONE)
-<a name="l00337"></a>00337         s &lt;&lt; setw(1 + min(<span class="keywordtype">int</span>(ind), 2) + prec + (prec ? 1 : 0));
-<a name="l00338"></a>00338       s &lt;&lt; setprecision(prec) &lt;&lt; pieces[0];
-<a name="l00339"></a>00339       <span class="comment">// Don&#39;t include degree designator (d) if it is the trailing component.</span>
-<a name="l00340"></a>00340       <span class="keywordflow">break</span>;
-<a name="l00341"></a>00341     <span class="keywordflow">default</span>:
-<a name="l00342"></a>00342       <span class="keywordflow">if</span> (ind != NONE)
-<a name="l00343"></a>00343         s &lt;&lt; setw(1 + min(<span class="keywordtype">int</span>(ind), 2));
-<a name="l00344"></a>00344       s &lt;&lt; setprecision(0) &lt;&lt; pieces[0] &lt;&lt; char(tolower(dmsindicators_[0]));
-<a name="l00345"></a>00345       <span class="keywordflow">switch</span> (trailing) {
-<a name="l00346"></a>00346       <span class="keywordflow">case</span> MINUTE:
-<a name="l00347"></a>00347         s &lt;&lt; setw(2 + prec + (prec ? 1 : 0)) &lt;&lt; setprecision(prec)
-<a name="l00348"></a>00348           &lt;&lt; pieces[1] &lt;&lt;  char(tolower(dmsindicators_[1]));
-<a name="l00349"></a>00349         <span class="keywordflow">break</span>;
-<a name="l00350"></a>00350       <span class="keywordflow">case</span> SECOND:
-<a name="l00351"></a>00351         s &lt;&lt; setw(2) &lt;&lt; pieces[1] &lt;&lt;  char(tolower(dmsindicators_[1]))
-<a name="l00352"></a>00352           &lt;&lt; setw(2 + prec + (prec ? 1 : 0)) &lt;&lt; setprecision(prec)
-<a name="l00353"></a>00353           &lt;&lt; pieces[2] &lt;&lt;  char(tolower(dmsindicators_[2]));
-<a name="l00354"></a>00354         <span class="keywordflow">break</span>;
-<a name="l00355"></a>00355       <span class="keywordflow">default</span>:
-<a name="l00356"></a>00356         <span class="keywordflow">break</span>;
-<a name="l00357"></a>00357       }
-<a name="l00358"></a>00358     }
-<a name="l00359"></a>00359     <span class="keywordflow">if</span> (ind != NONE &amp;&amp; ind != AZIMUTH)
-<a name="l00360"></a>00360       s &lt;&lt; hemispheres_[(ind == LATITUDE ? 0 : 2) + (sign &lt; 0 ? 0 : 1)];
-<a name="l00361"></a>00361     <span class="keywordflow">return</span> s.str();
-<a name="l00362"></a>00362   }
-<a name="l00363"></a>00363 
-<a name="l00364"></a>00364 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00195"></a>00195     <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;NAN&quot;</span> || t == <span class="stringliteral">&quot;1.#QNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#SNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#IND&quot;</span> ||
+<a name="l00196"></a>00196         t == <span class="stringliteral">&quot;1.#R&quot;</span>)
+<a name="l00197"></a>00197       <span class="keywordflow">return</span> sign * Math::NaN();
+<a name="l00198"></a>00198     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;INF&quot;</span> || t == <span class="stringliteral">&quot;1.#INF&quot;</span>)
+<a name="l00199"></a>00199       <span class="keywordflow">return</span> sign * Math::infinity();
+<a name="l00200"></a>00200     <span class="keywordflow">return</span> 0;
+<a name="l00201"></a>00201   }
+<a name="l00202"></a>00202 
+<a name="l00203"></a><a class="code" href="classGeographicLib_1_1DMS.html#a479643a36afe95497b89f812ae1a34c7">00203</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::Decode(<span class="keyword">const</span> std::string&amp; str) {
+<a name="l00204"></a>00204     istringstream is(str);
+<a name="l00205"></a>00205     <span class="keywordtype">string</span> errormsg;
+<a name="l00206"></a>00206     real num;
+<a name="l00207"></a>00207     <span class="keywordflow">do</span> {                       <span class="comment">// Executed once (provides the ability to break)</span>
+<a name="l00208"></a>00208       <span class="keywordflow">if</span> (!(is &gt;&gt; num)) {
+<a name="l00209"></a>00209         errormsg = <span class="stringliteral">&quot;Could not read number: &quot;</span> + str;
+<a name="l00210"></a>00210         <span class="keywordflow">break</span>;
+<a name="l00211"></a>00211       }
+<a name="l00212"></a>00212       <span class="comment">// On some platforms, is &gt;&gt; num gobbles final E in 1234E, so look for</span>
+<a name="l00213"></a>00213       <span class="comment">// last character which is legal as the final character in a number</span>
+<a name="l00214"></a>00214       <span class="comment">// (digit or period).</span>
+<a name="l00215"></a>00215       <span class="keywordtype">int</span> pos = int(is.tellg()); <span class="comment">// Returns -1 at end of string?</span>
+<a name="l00216"></a>00216       <span class="keywordflow">if</span> (pos &lt; 0)
+<a name="l00217"></a>00217         pos = int(str.size());
+<a name="l00218"></a>00218       pos = min(pos, <span class="keywordtype">int</span>(str.find_last_of(<span class="stringliteral">&quot;0123456789.&quot;</span>)) + 1);
+<a name="l00219"></a>00219       <span class="keywordflow">if</span> (pos != <span class="keywordtype">int</span>(str.size())) {
+<a name="l00220"></a>00220         errormsg = <span class="stringliteral">&quot;Extra text &quot;</span> + str.substr(pos) + <span class="stringliteral">&quot; in number &quot;</span> + str;
+<a name="l00221"></a>00221         <span class="keywordflow">break</span>;
+<a name="l00222"></a>00222       }
+<a name="l00223"></a>00223       <span class="keywordflow">return</span> num;
+<a name="l00224"></a>00224     } <span class="keywordflow">while</span> (<span class="keyword">false</span>);
+<a name="l00225"></a>00225     num = NumMatch(str);
+<a name="l00226"></a>00226     <span class="keywordflow">if</span> (num == 0)
+<a name="l00227"></a>00227       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(errormsg);
+<a name="l00228"></a>00228     <span class="keywordflow">return</span> num;
+<a name="l00229"></a>00229   }
+<a name="l00230"></a>00230 
+<a name="l00231"></a><a class="code" href="classGeographicLib_1_1DMS.html#ab12cf64c97e6ee4a7a7e3f87a8629c3d">00231</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::DecodeFraction(<span class="keyword">const</span> std::string&amp; str) {
+<a name="l00232"></a>00232     string::size_type delim = str.find(<span class="charliteral">&#39;/&#39;</span>);
+<a name="l00233"></a>00233     <span class="keywordflow">if</span> (!(delim != string::npos &amp;&amp; delim &gt;= 1 &amp;&amp; delim + 2 &lt;= str.size()))
+<a name="l00234"></a>00234       <span class="keywordflow">return</span> Decode(str);
+<a name="l00235"></a>00235     <span class="keywordflow">else</span>
+<a name="l00236"></a>00236       <span class="comment">// delim in [1, size() - 2]</span>
+<a name="l00237"></a>00237       <span class="keywordflow">return</span> Decode(str.substr(0, delim)) / Decode(str.substr(delim + 1));
+<a name="l00238"></a>00238   }
+<a name="l00239"></a>00239 
+<a name="l00240"></a><a class="code" href="classGeographicLib_1_1DMS.html#a9b6d1f79b4427f5076b98098d470228d">00240</a>   <span class="keywordtype">void</span> DMS::DecodeLatLon(<span class="keyword">const</span> std::string&amp; stra, <span class="keyword">const</span> std::string&amp; strb,
+<a name="l00241"></a>00241                          real&amp; lat, real&amp; lon) {
+<a name="l00242"></a>00242       real a, b;
+<a name="l00243"></a>00243       <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a> ia, ib;
+<a name="l00244"></a>00244       a = Decode(stra, ia);
+<a name="l00245"></a>00245       b = Decode(strb, ib);
+<a name="l00246"></a>00246       <span class="keywordflow">if</span> (ia == NONE &amp;&amp; ib == NONE) {
+<a name="l00247"></a>00247         <span class="comment">// Default to lat, long</span>
+<a name="l00248"></a>00248         ia = LATITUDE;
+<a name="l00249"></a>00249         ib = LONGITUDE;
+<a name="l00250"></a>00250       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (ia == NONE)
+<a name="l00251"></a>00251         ia = <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a>(LATITUDE + LONGITUDE - ib);
+<a name="l00252"></a>00252       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (ib == NONE)
+<a name="l00253"></a>00253         ib = <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a>(LATITUDE + LONGITUDE - ia);
+<a name="l00254"></a>00254       <span class="keywordflow">if</span> (ia == ib)
+<a name="l00255"></a>00255         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Both &quot;</span> + stra + <span class="stringliteral">&quot; and &quot;</span>
+<a name="l00256"></a>00256                             + strb + <span class="stringliteral">&quot; interpreted as &quot;</span>
+<a name="l00257"></a>00257                             + (ia == LATITUDE ? <span class="stringliteral">&quot;latitudes&quot;</span> : <span class="stringliteral">&quot;longitudes&quot;</span>));
+<a name="l00258"></a>00258       real
+<a name="l00259"></a>00259         lat1 = ia == LATITUDE ? a : b,
+<a name="l00260"></a>00260         lon1 = ia == LATITUDE ? b : a;
+<a name="l00261"></a>00261       <span class="keywordflow">if</span> (lat1 &lt; -90 || lat1 &gt; 90)
+<a name="l00262"></a>00262         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lat1) + <span class="stringliteral">&quot;d not in [-90d, 90d]&quot;</span>);
+<a name="l00263"></a>00263       <span class="keywordflow">if</span> (lon1 &lt; -180 || lon1 &gt; 360)
+<a name="l00264"></a>00264         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lon1)
+<a name="l00265"></a>00265                             + <span class="stringliteral">&quot;d not in [-180d, 360d]&quot;</span>);
+<a name="l00266"></a>00266       <span class="keywordflow">if</span> (lon1 &gt;= 180)
+<a name="l00267"></a>00267         lon1 -= 360;
+<a name="l00268"></a>00268       lat = lat1;
+<a name="l00269"></a>00269       lon = lon1;
+<a name="l00270"></a>00270   }
+<a name="l00271"></a>00271 
+<a name="l00272"></a><a class="code" href="classGeographicLib_1_1DMS.html#a868248d72f6b0bf2dae18a15d741ac43">00272</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::DecodeAngle(<span class="keyword">const</span> std::string&amp; angstr) {
+<a name="l00273"></a>00273     <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">DMS::flag</a> ind;
+<a name="l00274"></a>00274     real ang = Decode(angstr, ind);
+<a name="l00275"></a>00275     <span class="keywordflow">if</span> (ind != DMS::NONE)
+<a name="l00276"></a>00276       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Arc angle &quot;</span> + angstr
+<a name="l00277"></a>00277                           + <span class="stringliteral">&quot; includes a hemisphere, N/E/W/S&quot;</span>);
+<a name="l00278"></a>00278     <span class="keywordflow">return</span> ang;
+<a name="l00279"></a>00279   }
+<a name="l00280"></a>00280 
+<a name="l00281"></a><a class="code" href="classGeographicLib_1_1DMS.html#a0512cc1275e089138e1550efbee421d9">00281</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> DMS::DecodeAzimuth(<span class="keyword">const</span> std::string&amp; azistr) {
+<a name="l00282"></a>00282     <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">DMS::flag</a> ind;
+<a name="l00283"></a>00283     real azi = Decode(azistr, ind);
+<a name="l00284"></a>00284     <span class="keywordflow">if</span> (ind == DMS::LATITUDE)
+<a name="l00285"></a>00285       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Azimuth &quot;</span> + azistr
+<a name="l00286"></a>00286                           + <span class="stringliteral">&quot; has a latitude hemisphere, N/S&quot;</span>);
+<a name="l00287"></a>00287     <span class="keywordflow">if</span> (azi &lt; -180 || azi &gt; 360)
+<a name="l00288"></a>00288       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Azimuth &quot;</span> + azistr + <span class="stringliteral">&quot; not in range [-180d,360d]&quot;</span>);
+<a name="l00289"></a>00289     <span class="keywordflow">if</span> (azi &gt;= 180) azi -= 360;
+<a name="l00290"></a>00290     <span class="keywordflow">return</span> azi;
+<a name="l00291"></a>00291   }
+<a name="l00292"></a>00292 
+<a name="l00293"></a><a class="code" href="classGeographicLib_1_1DMS.html#a3e36baa6114d46f82a8900d002784369">00293</a>   <span class="keywordtype">string</span> DMS::Encode(real angle, <a class="code" href="classGeographicLib_1_1DMS.html#ab9fa04b3a9156f36f18852eed9b7ce09">component</a> trailing, <span class="keywordtype">unsigned</span> prec, <a class="code" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869">flag</a> ind) {
+<a name="l00294"></a>00294     <span class="comment">// Assume check on range of input angle has been made by calling</span>
+<a name="l00295"></a>00295     <span class="comment">// routine (which might be able to offer a better diagnostic).</span>
+<a name="l00296"></a>00296     <span class="keywordflow">if</span> (!Math::isfinite(angle))
+<a name="l00297"></a>00297       <span class="keywordflow">return</span> angle &lt; 0 ? string(<span class="stringliteral">&quot;-inf&quot;</span>) :
+<a name="l00298"></a>00298         (angle &gt; 0 ? string(<span class="stringliteral">&quot;inf&quot;</span>) : string(<span class="stringliteral">&quot;nan&quot;</span>));
+<a name="l00299"></a>00299 
+<a name="l00300"></a>00300     <span class="comment">// 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).</span>
+<a name="l00301"></a>00301     <span class="comment">// This suffices to give full real precision for numbers in [-90,90]</span>
+<a name="l00302"></a>00302     prec = min(15 - 2 * <span class="keywordtype">unsigned</span>(trailing), prec);
+<a name="l00303"></a>00303     real scale = 1;
+<a name="l00304"></a>00304     <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; unsigned(trailing); ++i)
+<a name="l00305"></a>00305       scale *= 60;
+<a name="l00306"></a>00306     <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; prec; ++i)
+<a name="l00307"></a>00307       scale *= 10;
+<a name="l00308"></a>00308     <span class="keywordflow">if</span> (ind == AZIMUTH)
+<a name="l00309"></a>00309       angle -= floor(angle/360) * 360;
+<a name="l00310"></a>00310     <span class="keywordtype">int</span> sign = angle &lt; 0 ? -1 : 1;
+<a name="l00311"></a>00311     angle *= sign;
+<a name="l00312"></a>00312 
+<a name="l00313"></a>00313     <span class="comment">// Break off integer part to preserve precision in manipulation of</span>
+<a name="l00314"></a>00314     <span class="comment">// fractional part.</span>
+<a name="l00315"></a>00315     real
+<a name="l00316"></a>00316       idegree = floor(angle),
+<a name="l00317"></a>00317       fdegree = floor((angle - idegree) * scale + <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5)) / scale;
+<a name="l00318"></a>00318     <span class="keywordflow">if</span> (fdegree &gt;= 1) {
+<a name="l00319"></a>00319       idegree += 1;
+<a name="l00320"></a>00320       fdegree -= 1;
+<a name="l00321"></a>00321     }
+<a name="l00322"></a>00322     real pieces[3] = {fdegree, 0, 0};
+<a name="l00323"></a>00323     <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 1; i &lt;= unsigned(trailing); ++i) {
+<a name="l00324"></a>00324       real
+<a name="l00325"></a>00325         ip = floor(pieces[i - 1]),
+<a name="l00326"></a>00326         fp = pieces[i - 1] - ip;
+<a name="l00327"></a>00327       pieces[i] = fp * 60;
+<a name="l00328"></a>00328       pieces[i - 1] = ip;
+<a name="l00329"></a>00329     }
+<a name="l00330"></a>00330     pieces[0] += idegree;
+<a name="l00331"></a>00331     ostringstream s;
+<a name="l00332"></a>00332     s &lt;&lt; fixed  &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>);
+<a name="l00333"></a>00333     <span class="keywordflow">if</span> (ind == NONE &amp;&amp; sign &lt; 0)
+<a name="l00334"></a>00334       s &lt;&lt; <span class="charliteral">&#39;-&#39;</span>;
+<a name="l00335"></a>00335     <span class="keywordflow">switch</span> (trailing) {
+<a name="l00336"></a>00336     <span class="keywordflow">case</span> DEGREE:
+<a name="l00337"></a>00337       <span class="keywordflow">if</span> (ind != NONE)
+<a name="l00338"></a>00338         s &lt;&lt; setw(1 + min(<span class="keywordtype">int</span>(ind), 2) + prec + (prec ? 1 : 0));
+<a name="l00339"></a>00339       s &lt;&lt; setprecision(prec) &lt;&lt; pieces[0];
+<a name="l00340"></a>00340       <span class="comment">// Don&#39;t include degree designator (d) if it is the trailing component.</span>
+<a name="l00341"></a>00341       <span class="keywordflow">break</span>;
+<a name="l00342"></a>00342     <span class="keywordflow">default</span>:
+<a name="l00343"></a>00343       <span class="keywordflow">if</span> (ind != NONE)
+<a name="l00344"></a>00344         s &lt;&lt; setw(1 + min(<span class="keywordtype">int</span>(ind), 2));
+<a name="l00345"></a>00345       s &lt;&lt; setprecision(0) &lt;&lt; pieces[0] &lt;&lt; char(tolower(dmsindicators_[0]));
+<a name="l00346"></a>00346       <span class="keywordflow">switch</span> (trailing) {
+<a name="l00347"></a>00347       <span class="keywordflow">case</span> MINUTE:
+<a name="l00348"></a>00348         s &lt;&lt; setw(2 + prec + (prec ? 1 : 0)) &lt;&lt; setprecision(prec)
+<a name="l00349"></a>00349           &lt;&lt; pieces[1] &lt;&lt;  char(tolower(dmsindicators_[1]));
+<a name="l00350"></a>00350         <span class="keywordflow">break</span>;
+<a name="l00351"></a>00351       <span class="keywordflow">case</span> SECOND:
+<a name="l00352"></a>00352         s &lt;&lt; setw(2) &lt;&lt; pieces[1] &lt;&lt;  char(tolower(dmsindicators_[1]))
+<a name="l00353"></a>00353           &lt;&lt; setw(2 + prec + (prec ? 1 : 0)) &lt;&lt; setprecision(prec)
+<a name="l00354"></a>00354           &lt;&lt; pieces[2] &lt;&lt;  char(tolower(dmsindicators_[2]));
+<a name="l00355"></a>00355         <span class="keywordflow">break</span>;
+<a name="l00356"></a>00356       <span class="keywordflow">default</span>:
+<a name="l00357"></a>00357         <span class="keywordflow">break</span>;
+<a name="l00358"></a>00358       }
+<a name="l00359"></a>00359     }
+<a name="l00360"></a>00360     <span class="keywordflow">if</span> (ind != NONE &amp;&amp; ind != AZIMUTH)
+<a name="l00361"></a>00361       s &lt;&lt; hemispheres_[(ind == LATITUDE ? 0 : 2) + (sign &lt; 0 ? 0 : 1)];
+<a name="l00362"></a>00362     <span class="keywordflow">return</span> s.str();
+<a name="l00363"></a>00363   }
+<a name="l00364"></a>00364 
+<a name="l00365"></a>00365 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Jun 24 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 27 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

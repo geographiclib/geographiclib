@@ -63,7 +63,7 @@ OPTIONS\n\
 \n\
        -f  full output; each line of output consists of 12 quantities: lat1\n\
            lon1 azi1 lat2 lon2 azi2 s12 a12 m12 M12 M21 S12.  a12 is described\n\
-           in AUXILIARY SPHERE.  The four quantities m12, M12, M21, and S12\n\
+           in \"AUXILIARY SPHERE\".  The four quantities m12, M12, M21, and S12\n\
            are described in \"ADDITIONAL QUANTITIES\".\n\
 \n\
        -p  set the precision to prec (default 3); prec is the precision\n\

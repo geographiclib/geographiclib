@@ -41,15 +41,17 @@
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (released 2011-mm-dd)</a><ul>
 <li>Changes to <a href="Planimeter.1.html">Planimeter</a>:<ul>
 <li>add -l flag to <a href="Planimeter.1.html">Planimeter</a> for polyline calculations;</li>
-<li>trim precision of area to 3 decimal places.</li>
+<li>trim precision of area to 3 decimal places;</li>
+<li>FIX BUG with pole crossing edges (due to compiler optimization).</li>
 </ul>
 </li>
 <li><a href="Geod.1.html">Geod</a> no longer reports the reduced length by default; however the -f flag still reports this and in addition gives the geodesic scales and the geodesic area.</li>
+<li>FIX BUGS (compiler-specific) in inverse geodesic calculations.</li>
 <li>FIX BUG: accommodate tellg() returning -1 at end of string.</li>
 <li>Change way flattening of the ellipsoid is specified:<ul>
-<li>constructors take <em>f</em> argument which is taken to be the flattening if <em>f</em> &lt; 1 and the inverse flattening otherwise. This is a compatible change for spheres and oblate ellipsoids. It is an INCOMPATIBLE change for prolate ellipsoids.</li>
-<li>the -e arguments to the <a class="el" href="utilities.html">Utility Programs</a> are handled similarly; in addition, simple fractions, e.g., 1/297, can be used for the flattening.</li>
-<li>introduce Constants::WGS84_f() for the WGS84 flattening (and deprecate Constants::WGS84_r() for the inverse flattening);</li>
+<li>constructors take <em>f</em> argument which is taken to be the flattening if <em>f</em> &lt; 1 and the inverse flattening otherwise (this is a compatible change for spheres and oblate ellipsoids, but it is an INCOMPATIBLE change for prolate ellipsoids);</li>
+<li>the -e arguments to the <a class="el" href="utilities.html">Utility Programs</a> are handled similarly; in addition, simple fractions, e.g., 1/297, can be used for the flattening;</li>
+<li>introduce <a class="el" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">GeographicLib::Constants::WGS84_f()</a> for the WGS84 flattening (and deprecate Constants::WGS84_r() for the inverse flattening);</li>
 <li>most classes have a Flattening() member function;</li>
 <li>InverseFlattening() has been deprecated (and now returns inf for a sphere, instead of 0).</li>
 </ul>
@@ -84,7 +86,7 @@
 <li>Ensure that all exceptions thrown in the <a class="el" href="utilities.html">Utility Programs</a> are caught.</li>
 <li>Avoid using catch within <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">GeographicLib::DMS</a>.</li>
 <li>Move <a class="el" href="classGeographicLib_1_1Accumulator.html" title="An accumulator for sums.">GeographicLib::Accumulator</a> class from <a class="el" href="Planimeter_8cpp.html" title="Command line utility for measuring the area of geodesic polygons.">Planimeter.cpp</a> to <a class="el" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">Constants.hpp</a>.</li>
-<li>Add Math::sq&lt;T&gt;.</li>
+<li>Add <a class="el" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">GeographicLib::Math::sq&lt;T&gt;</a>.</li>
 <li>Simplify <a class="el" href="geoid.html#geoidinst">Installing the geoid datasets</a><ul>
 <li>add geographiclib-get-geoids for Unix-like systems;</li>
 <li>add installers for Windows.</li>
@@ -403,7 +405,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Jun 24 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 27 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
