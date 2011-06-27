@@ -7,20 +7,11 @@
 #include <iomanip>
 #include <sstream>
 
-#if !defined(USE_LONG_DOUBLE_GEOGRAPHICLIB)
-#define USE_LONG_DOUBLE_GEOGRAPHICLIB 0
-#endif
-
 #include "GeographicLib/Geodesic.hpp"
 #include "GeographicLib/GeodesicLine.hpp"
 #include "GeographicLib/Constants.hpp"
-#if USE_LONG_DOUBLE_GEOGRAPHICLIB
-#include "GeographicLibL/Geodesic.hpp"
-#include "GeographicLibL/GeodesicLine.hpp"
-#include "GeographicLibL/Constants.hpp"
-#else
+// Allow for mixed libraries?
 namespace GeographicLibL = GeographicLib;
-#endif
 #include <cmath>
 #include <vector>
 #include <utility>
@@ -42,11 +33,6 @@ Check GeographicLib::Geodesic class.\n\
 -t1 time GeodecicLine with angles using synthetic data\n\
 -t2 time Geodecic::Direct using synthetic data\n\
 -t3 time Geodecic::Inverse with synthetic data\n\
-\n\
-If compiled with -DUSE_LONG_DOUBLE_GEOGRAPHICLIB then -a uses a long\n\
-double version of GeographicLib (namespace = GeographicLibL) for\n\
-checking the accuracy.  The accuracy of the long double version is\n\
-also checked.\n\
 \n\
 -c requires an instrumented version of Geodesic.\n";
   return retval;
@@ -228,20 +214,20 @@ int main(int argc, char* argv[]) {
   if (timing) {
     const Geodesic& geod = Geodesic::WGS84;
     unsigned cnt = 0;
-    double s = 0;
-    double dl;
+    Math::real s = 0;
+    Math::real dl;
     switch (timecase) {
     case 0:
       // Time Line
       dl = 2e7/1000;
       for (int i = 0; i <= 90; ++i) {
-        double lat1 = i;
+        Math::real lat1 = i;
         for (int j = 0; j <= 180; ++j) {
-          double azi1 = j;
+          Math::real azi1 = j;
           const GeodesicLine l(geod, lat1, 0.0, azi1);
           for (int k = 0; k <= 1000; ++k) {
-            double s12 = dl * k;
-            double lat2, lon2;
+            Math::real s12 = dl * k;
+            Math::real lat2, lon2;
             l.Position(s12, lat2, lon2);
             ++cnt;
             s += lat2;
@@ -254,13 +240,13 @@ int main(int argc, char* argv[]) {
       // Time Line ang
       dl = 180.0/1000;
       for (int i = 0; i <= 90; ++i) {
-        double lat1 = i;
+        Math::real lat1 = i;
         for (int j = 0; j <= 180; ++j) {
-          double azi1 = j;
+          Math::real azi1 = j;
           GeodesicLine l(geod, lat1, 0.0, azi1);
           for (int k = 0; k <= 1000; ++k) {
-            double s12 = dl * k;
-            double lat2, lon2;
+            Math::real s12 = dl * k;
+            Math::real lat2, lon2;
             l.ArcPosition(s12, lat2, lon2);
             ++cnt;
             s += lat2;
@@ -273,12 +259,12 @@ int main(int argc, char* argv[]) {
       // Time Direct
       dl = 2e7/200;
       for (int i = 0; i <= 90; ++i) {
-        double lat1 = i;
+        Math::real lat1 = i;
         for (int j = 0; j <= 180; ++j) {
-          double azi1 = j;
+          Math::real azi1 = j;
           for (int k = 0; k <= 200; ++k) {
-            double s12 = dl * k;
-            double lat2, lon2;
+            Math::real s12 = dl * k;
+            Math::real lat2, lon2;
             geod.Direct(lat1, 0.0, azi1, s12, lat2, lon2);
             ++cnt;
             s += lat2;
@@ -290,12 +276,12 @@ int main(int argc, char* argv[]) {
     case 3:
       // Time Inverse
       for (int i = 0; i <= 179; ++i) {
-        double lat1 = i * 0.5;
+        Math::real lat1 = i * 0.5;
         for (int j = -179; j <= 179; ++j) {
-          double lat2 = j * 0.5;
+          Math::real lat2 = j * 0.5;
           for (int k = 0; k <= 359; ++k) {
-            double lon2 = k * 0.5;
-            double s12;
+            Math::real lon2 = k * 0.5;
+            Math::real s12;
             geod.Inverse(lat1, 0.0, lat2, lon2, s12);
             ++cnt;
             s += s12;
@@ -318,11 +304,6 @@ int main(int argc, char* argv[]) {
     vector<Math::extended> erra(NUMERR);
     vector<Math::extended> err(NUMERR, 0.0);
     vector<unsigned> errind(NUMERR);
-#if USE_LONG_DOUBLE_GEOGRAPHICLIB
-    vector<Math::extended> errla(NUMERR);
-    vector<Math::extended> errl(NUMERR, 0.0);
-    vector<unsigned> errlind(NUMERR);
-#endif
     unsigned cnt = 0;
 
     while (true) {
@@ -334,7 +315,7 @@ int main(int argc, char* argv[]) {
         break;
       if (coverage) {
 #if defined(GEOD_DIAG) && GEOD_DIAG
-        double
+        Math::real
           lat1 = lat1l, lon1 = lon1l,
           lat2 = lat2l, lon2 = lon2l,
           azi1, azi2, s12, m12;
@@ -355,34 +336,14 @@ int main(int argc, char* argv[]) {
             errind[i] = cnt;
           }
         }
-#if USE_LONG_DOUBLE_GEOGRAPHICLIB
-        GeodError< Math::extended,
-          GeographicLibL::Geodesic, GeographicLibL::Math::real,
-          GeographicLibL::Geodesic, GeographicLibL::Math::real >
-          (geodl, geodl, lat1l, lon1l, azi1l,
-           lat2l, lon2l, azi2l,
-           s12l, a12l, m12l, S12l,
-           errla);
-        for (unsigned i = 0; i < NUMERR; ++i) {
-          if (GeographicLibL::Math::isfinite(errl[i]) &&
-              !(errla[i] <= errl[i])) {
-            errl[i] = errla[i];
-            errlind[i] = cnt;
-          }
-        }
-#endif
         ++cnt;
       }
     }
     if (accuracytest) {
+      Math::extended mult = sizeof(Math::real) > sizeof(double) ? 1e12l : 1e9l;
       for (unsigned i = 0; i < NUMERR; ++i)
-        cout << i << " " << 1e9l * err[i]
+        cout << i << " " << mult * err[i]
              << " " << errind[i] << "\n";
-#if USE_LONG_DOUBLE_GEOGRAPHICLIB
-      for (unsigned i = 0; i < NUMERR; ++i)
-        cout << i << " " << 1e12l * errl[i]
-             << " " << errlind[i] << "\n";
-#endif
     }
   }
 }

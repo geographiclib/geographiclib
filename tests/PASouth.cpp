@@ -7,7 +7,7 @@
 
 int main() {
   using namespace GeographicLib;
-  double
+  Math::real
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
@@ -20,12 +20,12 @@ int main() {
     fe = 600000,                // false easting
     fn = 0;                     // false northing
   LambertConformalConic PASouth(a, r, lat1, lat2, k1);
-  double x0, y0;
+  Math::real x0, y0;
   PASouth.Forward(lon0, lat0, lon0, x0, y0); // Transform origin point
   x0 -= fe; y0 -= fn;           // Combine result with false origin
 
-  double lat = 39.95, lon = -75.17;    // Philadelphia
-  double x, y;
+  Math::real lat = 39.95, lon = -75.17; // Philadelphia
+  Math::real x, y;
   PASouth.Forward(lon0, lat, lon, x, y);
   x -= x0; y -= y0;             // Philadelphia in PA South coordinates
 

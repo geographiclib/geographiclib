@@ -65,7 +65,8 @@ RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
  * The precision of floating point numbers used in %GeographicLib.  0 means
  * float; 1 (default) means double; 2 means long double.  Nearly all the
  * testing has been carried out with doubles and that's the recommended
- * configuration.  Note that with Microsoft Visual Studio, long double is the
+ * configuration.  In order for long double to be used, HAVE_LONG_DOUBLE needs
+ * to be defined.  Note that with Microsoft Visual Studio, long double is the
  * same as double.
  **********************************************************************/
 #define GEOGRAPHICLIB_PREC 1
