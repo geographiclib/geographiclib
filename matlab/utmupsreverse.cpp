@@ -69,8 +69,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      lat[i] = lon[i] = Math::NaN();
-      if (scale) gamma[i] = k[i] = Math::NaN();
+      lat[i] = lon[i] = Math::NaN<double>();
+      if (scale) gamma[i] = k[i] = Math::NaN<double>();
     }
   }
 }

@@ -312,16 +312,16 @@ namespace GeographicLib {
         if (numit >= maxit_) {
           // Signal failure.
           if (outmask & DISTANCE)
-            s12 = Math::NaN();
+            s12 = Math::NaN<real>();
           if (outmask & AZIMUTH)
-            azi1 = azi2 = Math::NaN();
+            azi1 = azi2 = Math::NaN<real>();
           if (outmask & REDUCEDLENGTH)
-            m12 = Math::NaN();
+            m12 = Math::NaN<real>();
           if (outmask & GEODESICSCALE)
-            M12 = M21 = Math::NaN();
+            M12 = M21 = Math::NaN<real>();
           if (outmask & AREA)
-            S12 = Math::NaN();
-          return Math::NaN();
+            S12 = Math::NaN<real>();
+          return Math::NaN<real>();
         }
 
         {

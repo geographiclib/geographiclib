@@ -39,7 +39,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[0]) != 3)
     mexErrMsgTxt("geodetic coordinates must be M x 3 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 3) {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
@@ -59,7 +59,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* x = mxGetPr(plhs[0]);
-  std::fill(x, x + 3*m, Math::NaN());
+  std::fill(x, x + 3*m, Math::NaN<double>());
   double* y = x + m;
   double* z = x + 2*m;
   double* rot = NULL;
@@ -68,7 +68,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (rotp) {
     plhs[1] = mxCreateDoubleMatrix(m, 9, mxREAL);
     rot = mxGetPr(plhs[1]);
-    std::fill(rot, rot + 9*m, Math::NaN());
+    std::fill(rot, rot + 9*m, Math::NaN<double>());
   }
 
   try {

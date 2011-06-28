@@ -54,7 +54,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[3]) != 1)
     mexErrMsgTxt("distances must be M x 1 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 6) {
     if (!( mxIsDouble(prhs[4]) && !mxIsComplex(prhs[4]) &&
            mxGetNumberOfElements(prhs[4]) == 1 ))

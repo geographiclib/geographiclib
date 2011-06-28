@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
   bool lambert = true;
   bool albers = false;
   bool checkstdlats = false;
-  real a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  real a = Constants::WGS84_a<real>(), f = Constants::WGS84_f<real>();
   for (int m = 1; m < argc; ++m) {
     std::string arg(argv[m]);
     if (arg == "-l") {

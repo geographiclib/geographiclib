@@ -107,9 +107,9 @@ int main(int argc, char* argv[]) {
           }
       }
     } else {
-      const TransverseMercatorExact tm(Constants::WGS84_a(),
-                                       Constants::WGS84_f(),
-                                       Constants::UTM_k0(),
+      const TransverseMercatorExact tm(Constants::WGS84_a<real>(),
+                                       Constants::WGS84_f<real>(),
+                                       Constants::UTM_k0<real>(),
                                        true);
       if (timefor) {
         real x, y, gam, k;
@@ -147,9 +147,9 @@ int main(int argc, char* argv[]) {
     d[0] = 10e3;
     d[nbins - 1] = 10001966;
     const TransverseMercator& tm = TransverseMercator::UTM;
-    const TransverseMercatorExact tme(Constants::WGS84_a(),
-                                      Constants::WGS84_f(),
-                                      Constants::UTM_k0(),
+    const TransverseMercatorExact tme(Constants::WGS84_a<real>(),
+                                      Constants::WGS84_f<real>(),
+                                      Constants::UTM_k0<real>(),
                                       true);
     real
       a = series ? tm.MajorRadius() : tme.MajorRadius(),

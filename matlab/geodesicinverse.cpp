@@ -40,7 +40,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[0]) != 4)
     mexErrMsgTxt("latlong coordinates must be M x 4 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 3) {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
@@ -61,7 +61,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* azi1 = mxGetPr(plhs[0]);
-  std::fill(azi1, azi1 + 3*m, Math::NaN());
+  std::fill(azi1, azi1 + 3*m, Math::NaN<double>());
   double* azi2 = azi1 + m;
   double* s12 = azi1 + 2*m;
   double* m12 = NULL;
@@ -73,7 +73,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (aux) {
     plhs[1] = mxCreateDoubleMatrix(m, 4, mxREAL);
     m12 = mxGetPr(plhs[1]);
-    std::fill(m12, m12 + 4*m, Math::NaN());
+    std::fill(m12, m12 + 4*m, Math::NaN<double>());
     M12 = m12 + m;
     M21 = m12 + 2*m;
     S12 = m12 + 3*m;

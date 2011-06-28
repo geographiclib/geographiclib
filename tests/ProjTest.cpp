@@ -52,7 +52,7 @@ public:
     _istr = (file.empty() || file == "-") ? &std::cin : &_fstr;
     _coords = _proj = _datum = "NONE";
     _lon0 = _fe = _fn = _latts = _lonfp = _lat0 = _k0 = _lat1 = _lat2
-      = std::numeric_limits<real>::quiet_NaN();
+      = GeographicLib::Math::NaN<real>();
     std::string s;
     while (getline(*_istr, s)) {
       if (s.empty() || s[0] == '#')
@@ -168,8 +168,8 @@ int main(int argc, char* argv[]) {
       throw std::out_of_range("Unsupported coordinates " + geo.coords());
     real a, f;
     if (geo.datum() == "WGE") {
-      a = Constants::WGS84_a();
-      f = Constants::WGS84_f();
+      a = Constants::WGS84_a<real>();
+      f = Constants::WGS84_f<real>();
     } else if (geo.datum() == "Test_sphere") {
       a = 20000000/Math::pi<real>();
       f = 0;

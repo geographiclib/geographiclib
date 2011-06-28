@@ -21,74 +21,87 @@ int main() {
   {
     Math::real x, y, gamma, k;
     x = y = gamma = k = 0;
-    PolarStereographic::UPS.Forward(true, Math::NaN(), 30.0, x, y, gamma, k);
+    PolarStereographic::UPS.Forward(true, Math::NaN<Math::real>(), 30.0,
+                                    x, y, gamma, k);
     cout << x << " " << y << " " << k << "\n";
     x = y = gamma = k = 0;
-    PolarStereographic::UPS.Forward(false, -80.0, Math::NaN(), x, y, gamma, k);
+    PolarStereographic::UPS.Forward(false, -80.0, Math::NaN<Math::real>(),
+                                    x, y, gamma, k);
     cout << x << " " << y << " " << gamma << "\n";
   }
   {
     Math::real lat, lon, gamma, k;
     lat = lon = gamma = k = 0;
-    PolarStereographic::UPS.Reverse(true, Math::NaN(), 0.0, lat, lon, gamma, k);
+    PolarStereographic::UPS.Reverse(true, Math::NaN<Math::real>(), 0.0,
+                                    lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    PolarStereographic::UPS.Reverse(false,0.0, Math::NaN(), lat, lon, gamma, k);
+    PolarStereographic::UPS.Reverse(false,0.0, Math::NaN<Math::real>(),
+                                    lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
   }
   {
     Math::real x, y, gamma, k;
     x = y = gamma = k = 0;
-    TransverseMercator::UTM.Forward(0.0, Math::NaN(), 0.0, x, y, gamma, k);
+    TransverseMercator::UTM.Forward(0.0, Math::NaN<Math::real>(), 0.0,
+                                    x, y, gamma, k);
     cout << x << " " << y << " " << gamma << " " << k << "\n";
     x = y = gamma = k = 0;
-    TransverseMercator::UTM.Forward(0.0, 0.0, Math::NaN(), x, y, gamma, k);
+    TransverseMercator::UTM.Forward(0.0, 0.0, Math::NaN<Math::real>(),
+                                    x, y, gamma, k);
     cout << x << " " << y << " " << gamma << " " << k << "\n";
     x = y = gamma = k = 0;
-    TransverseMercator::UTM.Forward(Math::NaN(), 0.0, 0.0, x, y, gamma, k);
+    TransverseMercator::UTM.Forward(Math::NaN<Math::real>(), 0.0, 0.0,
+                                    x, y, gamma, k);
     cout << x << " " << y << " " << gamma << " " << k << "\n";
   }
   {
     Math::real lat, lon, gamma, k;
     lat = lon = gamma = k = 0;
-    TransverseMercator::UTM.Reverse(0.0, Math::NaN(), 0.0, lat, lon, gamma, k);
+    TransverseMercator::UTM.Reverse(0.0, Math::NaN<Math::real>(), 0.0,
+                                    lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    TransverseMercator::UTM.Reverse(0.0, 0.0, Math::NaN(), lat, lon, gamma, k);
+    TransverseMercator::UTM.Reverse(0.0, 0.0, Math::NaN<Math::real>(),
+                                    lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    TransverseMercator::UTM.Reverse(Math::NaN(), 0.0, 0.0, lat, lon, gamma, k);
+    TransverseMercator::UTM.Reverse(Math::NaN<Math::real>(), 0.0, 0.0,
+                                    lat, lon, gamma, k);
     cout << lon << "\n";
   }
   {
     Math::real x, y, gamma, k;
     x = y = gamma = k = 0;
-    TransverseMercatorExact::UTM.Forward(0.0, Math::NaN(), 0.0, x, y, gamma, k);
+    TransverseMercatorExact::UTM.Forward(0.0, Math::NaN<Math::real>(), 0.0,
+                                         x, y, gamma, k);
     cout << x << " " << y << " " << gamma << " " << k << "\n";
     x = y = gamma = k = 0;
-    TransverseMercatorExact::UTM.Forward(0.0, 0.0, Math::NaN(), x, y, gamma, k);
+    TransverseMercatorExact::UTM.Forward(0.0, 0.0, Math::NaN<Math::real>(),
+                                         x, y, gamma, k);
     cout << x << " " << y << " " << gamma << " " << k << "\n";
     x = y = gamma = k = 0;
-    TransverseMercatorExact::UTM.Forward(Math::NaN(), 0.0, 0.0, x, y, gamma, k);
+    TransverseMercatorExact::UTM.Forward(Math::NaN<Math::real>(), 0.0, 0.0,
+                                         x, y, gamma, k);
     cout << x << " " << y << " " << gamma << " " << k << "\n";
   }
   {
     Math::real lat, lon, gamma, k;
     lat = lon = gamma = k = 0;
-    TransverseMercatorExact::UTM.Reverse(0.0, Math::NaN(), 0.0,
+    TransverseMercatorExact::UTM.Reverse(0.0, Math::NaN<Math::real>(), 0.0,
                                          lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    TransverseMercatorExact::UTM.Reverse(0.0, 0.0, Math::NaN(),
+    TransverseMercatorExact::UTM.Reverse(0.0, 0.0, Math::NaN<Math::real>(),
                                          lat, lon, gamma, k);
     cout << lat << " " << lon << " " << gamma << " " << k << "\n";
     lat = lon = gamma = k = 0;
-    TransverseMercatorExact::UTM.Reverse(Math::NaN(), 0.0, 0.0,
+    TransverseMercatorExact::UTM.Reverse(Math::NaN<Math::real>(), 0.0, 0.0,
                                          lat, lon, gamma, k);
     cout << lon << "\n";
   }
   {
-    EllipticFunction e(Math::NaN());
+    EllipticFunction e(Math::NaN<Math::real>());
     Math::real sn, cn, dn;
     cout << " m " << e.m()
          << " m1 " << e.m1()
@@ -105,9 +118,9 @@ int main() {
     EllipticFunction e(0.1);
     Math::real sn, cn, dn;
     sn = cn = dn = 0;
-    e.sncndn(Math::NaN(), sn, cn, dn);
+    e.sncndn(Math::NaN<Math::real>(), sn, cn, dn);
     cout << " sncndn " << sn << " " << cn << " " << dn
-         << " E(phi) " << e.E(Math::NaN())
+         << " E(phi) " << e.E(Math::NaN<Math::real>())
          << " E(sncndn) " << e.E(sn, cn, dn) << "\n";
   }
 }

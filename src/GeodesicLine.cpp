@@ -135,7 +135,7 @@ namespace GeographicLib {
     outmask &= _caps & OUT_ALL;
     if (!( Init() && (arcmode || (_caps & DISTANCE_IN & OUT_ALL)) ))
       // Uninitialized or impossible distance calculation requested
-      return Math::NaN();
+      return Math::NaN<real>();
 
     // Avoid warning about uninitialized B12.
     real sig12, ssig12, csig12, B12 = 0, AB1 = 0;

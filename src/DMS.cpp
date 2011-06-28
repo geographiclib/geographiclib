@@ -194,9 +194,9 @@ namespace GeographicLib {
     t = t.substr(p0, p1 + 1 - p0);  // Length at least 3
     if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
         t == "1.#R")
-      return sign * Math::NaN();
+      return sign * Math::NaN<real>();
     else if (t == "INF" || t == "1.#INF")
-      return sign * Math::infinity();
+      return sign * Math::infinity<real>();
     return 0;
   }
 

@@ -10,7 +10,7 @@ int main() {
   Math::real
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
-    a = Constants::WGS84_a(),   // major radius
+    a = Constants::WGS84_a<Math::real>(), // major radius
     r = 298.257222101,          // inverse flattening (GRS80)
     lat1 = DMS::Decode(40,58),  // standard parallel 1
     lat2 = DMS::Decode(39,56),  // standard parallel 2

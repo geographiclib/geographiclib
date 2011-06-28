@@ -314,8 +314,8 @@ namespace GeographicLib {
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
     if (Math::isnan(lat) || Math::isnan(lon)) {
-      if (gradp) gradn = grade = Math::NaN();
-      return Math::NaN();
+      if (gradp) gradn = grade = Math::NaN<real>();
+      return Math::NaN<real>();
     }
     real
       fx =  lon * _rlonres,

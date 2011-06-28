@@ -532,18 +532,20 @@ namespace GeographicLib {
     /**
      * @return \e lat1 the latitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Latitude() const throw() { return Init() ? _lat1 : Math::NaN(); }
+    Math::real Latitude() const throw()
+    { return Init() ? _lat1 : Math::NaN<real>(); }
 
     /**
      * @return \e lon1 the longitude of point 1 (degrees).
      **********************************************************************/
     Math::real Longitude() const throw()
-    { return Init() ? _lon1 : Math::NaN(); }
+    { return Init() ? _lon1 : Math::NaN<real>(); }
 
     /**
      * @return \e azi1 the azimuth (degrees) of the geodesic line at point 1.
      **********************************************************************/
-    Math::real Azimuth() const throw() { return Init() ? _azi1 : Math::NaN(); }
+    Math::real Azimuth() const throw()
+    { return Init() ? _azi1 : Math::NaN<real>(); }
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
@@ -551,7 +553,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EquatorialAzimuth() const throw() {
       return Init() ?
-        atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN();
+        atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN<real>();
     }
 
     /**
@@ -560,27 +562,29 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EquatorialArc() const throw() {
       return Init() ?
-        atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN();
+        atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN<real>();
     }
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return Init() ? _a : Math::NaN(); }
+    Math::real MajorRadius() const throw()
+    { return Init() ? _a : Math::NaN<real>(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return Init() ? _f : Math::NaN(); }
+    Math::real Flattening() const throw()
+    { return Init() ? _f : Math::NaN<real>(); }
 
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
-    { return Init() ? 1/_f : Math::NaN(); }
+    { return Init() ? 1/_f : Math::NaN<real>(); }
 
     /**
      * @return \e caps the computational capabilities that this object was

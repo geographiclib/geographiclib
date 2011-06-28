@@ -45,7 +45,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   plhs[0] = mxCreateDoubleMatrix(m, 1, mxREAL);
   double* h = mxGetPr(plhs[0]);
-  std::fill(h, h + m, Math::NaN());
+  std::fill(h, h + m, Math::NaN<double>());
   double* gradn = NULL;
   double* grade = NULL;
   bool gradient = nlhs == 2;
@@ -53,7 +53,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (gradient) {
     plhs[1] = mxCreateDoubleMatrix(m, 2, mxREAL);
     gradn = mxGetPr(plhs[1]);
-    std::fill(gradn, gradn + 2*m, Math::NaN());
+    std::fill(gradn, gradn + 2*m, Math::NaN<double>());
     grade = gradn + m;
   }
 

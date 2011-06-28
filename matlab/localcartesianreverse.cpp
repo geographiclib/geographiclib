@@ -48,7 +48,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[1]) != 3)
     mexErrMsgTxt("local cartesian coordinates must be M x 3 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 4) {
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))

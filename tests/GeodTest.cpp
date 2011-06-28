@@ -293,10 +293,12 @@ int main(int argc, char* argv[]) {
     }
   }
   else if (accuracytest || coverage) {
-    const Geodesic geod(Constants::WGS84_a(), Constants::WGS84_f());
+    const Geodesic geod(Constants::WGS84_a<Math::real>(),
+                        Constants::WGS84_f<Math::real>());
 
-    const GeographicLibL::Geodesic geodl(GeographicLibL::Constants::WGS84_a(),
-                                         GeographicLibL::Constants::WGS84_f());
+    const GeographicLibL::Geodesic geodl
+      (GeographicLibL::Constants::WGS84_a<Math::real>(),
+       GeographicLibL::Constants::WGS84_f<Math::real>());
     typedef GeographicLibL::Math::real reale;
     const unsigned NUMERR = 7;
 

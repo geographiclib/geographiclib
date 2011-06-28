@@ -85,8 +85,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      x[i] = y[i] = Math::NaN();
-      if (scale) gamma[i] = k[i] = Math::NaN();
+      x[i] = y[i] = Math::NaN<double>();
+      if (scale) gamma[i] = k[i] = Math::NaN<double>();
       zone[i] = UTMUPS::INVALID; hemi[i] = 0;
     }
   }

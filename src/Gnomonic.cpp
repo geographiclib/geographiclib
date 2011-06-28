@@ -31,7 +31,7 @@ namespace GeographicLib {
                       t, azi0, azi, m, M, t, t);
     rk = M;
     if (M <= 0)
-      x = y = Math::NaN();
+      x = y = Math::NaN<real>();
     else {
       real rho = m/M;
       azi0 *= Math::degree<real>();
@@ -72,7 +72,7 @@ namespace GeographicLib {
     if (trip) {
       lat = lat1; lon = lon1; azi = azi1; rk = M;
     } else
-      lat = lon = azi = rk = Math::NaN();
+      lat = lon = azi = rk = Math::NaN<real>();
     return;
   }
 
