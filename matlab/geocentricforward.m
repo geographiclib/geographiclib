@@ -4,10 +4,10 @@ function [geocentric, rot] = geocentricforward(geodetic, a, f)
 %   [geocentric, rot] = geocentricforward(geodetic);
 %   [geocentric, rot] = geocentricforward(geodetic, a, f);
 %
-%   geodetic is an M x 3 matrix of geodetic coordinates
+%   geodetic is an M x 3 or M x 2 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
-%       h = geodetic(:,3) in meters
+%       h = geodetic(:,3) in meters (default 0 m)
 %
 %   geocentric is an M x 3 matrix of geocentric coordinates
 %       x = geocentric(:,1) in meters

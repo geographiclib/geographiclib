@@ -8,10 +8,10 @@ function [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
 %       lat0 = origin(1,1) in degrees
 %       lon0 = origin(1,2) in degrees
 %       h0 = origin(1,3) in meters (default 0 m)
-%   geodetic is an M x 3 matrix of geodetic coordinates
+%   geodetic is an M x 3 or M x 2 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
-%       h = geodetic(:,3) in meters
+%       h = geodetic(:,3) in meters (default 0 m)
 %
 %   cartesian is an M x 3 matrix of local cartesian coordinates
 %       x = cartesian(:,1) in meters

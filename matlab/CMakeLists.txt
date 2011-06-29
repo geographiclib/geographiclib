@@ -6,6 +6,12 @@ install (FILES ${MATLAB_FILES} ${MATLAB_INTERFACES}
   DESTINATION libexec/GeographicLib/matlab)
 
 if (HAVE_MEX)
+  if (WIN32)
+    include (InstallRequiredSystemLibraries)
+    install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+      DESTINATION libexec/GeographicLib/matlab
+      CONFIGURATIONS Release)
+  endif (WIN32)
   add_custom_target (matlab-all ALL)
   foreach (INTERFACE ${MATLAB_INTERFACES})
     get_filename_component (TARGET ${INTERFACE} NAME_WE)

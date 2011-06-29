@@ -36,8 +36,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (!( mxIsDouble(prhs[0]) && !mxIsComplex(prhs[0]) ))
     mexErrMsgTxt("geodetic coordinates are not of type double.");
 
-  if (mxGetN(prhs[0]) != 3)
-    mexErrMsgTxt("geodetic coordinates must be M x 3 matrix.");
+  if (!(mxGetN(prhs[0]) == 3 || mxGetN(prhs[0]) == 2))
+    mexErrMsgTxt("geodetic coordinates must be an M x 3 or M x 2 matrix.");
 
   double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 3) {
@@ -55,7 +55,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   double* lat = mxGetPr(prhs[0]);
   double* lon = lat + m;
-  double* h = lat + 2*m;
+  bool haveh = mxGetN(prhs[0]) == 3;
+  double* h = haveh ? lat + 2*m : NULL;
 
   plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* x = mxGetPr(plhs[0]);
@@ -76,7 +77,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     const Geocentric c(a, f);
     for (int i = 0; i < m; ++i) {
       if (!(abs(lat[i]) > 90) && !(lon[i] < -180 || lon[i] > 360)) {
-        c.Forward(lat[i], lon[i], h[i], x[i], y[i], z[i], rotv);
+        c.Forward(lat[i], lon[i], haveh ? h[i] : 0.0, x[i], y[i], z[i], rotv);
         if (rotp) {
           for (int k = 0; k < 9; ++k)
             rot[m * k + i] = rotv[k];
