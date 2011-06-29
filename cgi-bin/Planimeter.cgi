@@ -110,10 +110,10 @@ cat <<EOF
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>
       calculates the perimeter and area of a geodesic polygon for the
-      WGS84 ellipsoid.  Clockwise traversal of a polygon results in a
-      positive area.  Only simple polygons are supported for the area
-      computation.  There is no need to close the polygon.  Polygons may
-      include one or both poles.
+      WGS84 ellipsoid.  Counter-clockwise traversal of a polygon results
+      in a positive area.  Only simple polygons are supported for the
+      area computation.  There is no need to close the polygon.
+      Polygons may include one or both poles.
     </p>
     <p>
       In polyline mode,
