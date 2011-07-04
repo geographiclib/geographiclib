@@ -1,8 +1,8 @@
 function [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
 %localcartesianforward  Convert geographic coordinates to local cartesian
 %
-%   [cartesian, rot] = localcartesianforward(origin, geodetic);
-%   [cartesian, rot] = localcartesianforward(origin, geodetic, a, f);
+%   [cartesian, rot] = localcartesianforward(origin, geodetic)
+%   [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
 %
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees

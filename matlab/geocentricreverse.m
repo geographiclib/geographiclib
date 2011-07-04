@@ -1,8 +1,8 @@
 function [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %geocentricreverse  Convert geocentric coordinates to geographic
 %
-%   [geodetic, rot] = geocentricreverse(geocentric);
-%   [geodetic, rot] = geocentricreverse(geocentric, a, f);
+%   [geodetic, rot] = geocentricreverse(geocentric)
+%   [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %
 %   geocentric is an M x 3 matrix of geocentric coordinates
 %       x = geocentric(:,1) in meters

@@ -392,7 +392,7 @@ The matlab directory contains interface code so that some %GeographicLib
 classes can be accessed from Matlab or Octave.  If you set
 ENABLE_MATLAB=ON when installing with cmake, this interface is built.
 Similarly the binary installer for Windows includes the compiled
-interface (compiled using Visual Studio 10 and Matlab 2010b).  To use
+interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
 either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
   addpath 'C:/Program Files/GeographicLib-1.11/libexec/GeographicLib/matlab'
@@ -1095,7 +1095,7 @@ parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
 can check these by running <a href="GeoidEval.1.html">GeoidEval</a> with
 the "-v" option.
 
-Finally, here is a sample script which uses GDAL to create a 1-degree
+Here is a sample script which uses GDAL to create a 1-degree
 squared grid of geoid heights at 3&quot; resolution (matching DTED1) by
 bilinear interpolation.
 \verbatim
@@ -1118,6 +1118,30 @@ bilinear interpolation.
        $TEMP e$lon-n$lat.tif
    rm -f $TEMP
 \endverbatim
+
+Because the pgm files are uncompressed, they can take up a lot of room.
+Some compressed formats compress in tiles and so might be compatible
+with the requirement that the data can be randomly accessed.  In
+particular gdal_translate can be used to convert the pgm files to
+compressed tiff files with
+\verbatim
+gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 \
+   -co TILED=YES -co BLOCKXSIZE=256 -co BLOCKYSIZE=256 \
+   egmyy-g.pgm egmyy-g.tif
+\endverbatim
+The resulting files sizes are
+\verbatim
+                  pgm    tif
+    egm84-30      0.6M   0.5M
+    egm84-15      2.1M   1.4M
+    egm96-15      2.1M   1.5M
+    egm96-5        19M   8.5M
+    egm2008-5      19M   9.8M
+    egm2008-2_5    75M    28M
+    egm2008-1     470M    97M
+\endverbatim
+Currently, there are no plans for %GeographicLib to support this
+compressed format.
 
 \section geoidinterp Interpolating the geoid data
 

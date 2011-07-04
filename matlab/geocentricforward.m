@@ -1,8 +1,8 @@
 function [geocentric, rot] = geocentricforward(geodetic, a, f)
 %geocentricforward  Convert geographic coordinates to geocentric
 %
-%   [geocentric, rot] = geocentricforward(geodetic);
-%   [geocentric, rot] = geocentricforward(geodetic, a, f);
+%   [geocentric, rot] = geocentricforward(geodetic)
+%   [geocentric, rot] = geocentricforward(geodetic, a, f)
 %
 %   geodetic is an M x 3 or M x 2 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees

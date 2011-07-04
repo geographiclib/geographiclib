@@ -1,8 +1,8 @@
 function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %localcartesianreverse  Convert local cartesian coordinates to geographic
 %
-%   [geodetic, rot] = localcartesianreverse(origin, cartesian);
-%   [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f);
+%   [geodetic, rot] = localcartesianreverse(origin, cartesian)
+%   [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees

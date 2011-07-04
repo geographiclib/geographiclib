@@ -1,7 +1,7 @@
 function [latlong, scale] = utmupsreverse(utmups)
 %utmupsreverse  Convert UTM/UPS coordinates to geographic
 %
-%   [latlong, scale] = utmupsreverse(utmups);
+%   [latlong, scale] = utmupsreverse(utmups)
 %
 %   utmups is an M x 4 matrix
 %       easting = utmups(:,1) in meters

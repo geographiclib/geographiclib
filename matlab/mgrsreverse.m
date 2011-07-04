@@ -1,7 +1,7 @@
 function [utmups, prec] = mgrsreverse(utmups)
 %mgrsreverse  Convert UTM/UPS coordinates to MGRS
 %
-%   [utmups, prec] = mgrsreverse(mgrs);
+%   [utmups, prec] = mgrsreverse(mgrs)
 %
 %   mgrs is a M x 1 cell array of MGRS strings, e.g.,
 %       mgrsreverse({ '38SMB4488'; '12TUK3393' })

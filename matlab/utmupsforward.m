@@ -1,8 +1,8 @@
 function [utmups, scale] = utmupsforward(latlong, setzone)
 %utmupsforward  Convert geographic coordinates to UTM/UPS
 %
-%   [utmups, scale] = utmupsforward(latlong);
-%   [utmups, scale] = utmupsforward(latlong, setzone);
+%   [utmups, scale] = utmupsforward(latlong)
+%   [utmups, scale] = utmupsforward(latlong, setzone)
 %
 %   latlong is an M x 2 matrix
 %       latitude = latlong(:,1) in degrees

@@ -592,9 +592,10 @@ namespace GeographicLib {
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
      * taking the limit \e eps -> 0 from above.  If the routine fails to
-     * converge, then all the requested outputs are set to Math::NaN().  This
-     * is not expected to happen with ellipsoidal models of the earth; please
-     * report all cases where this occurs.
+     * converge, then all the requested outputs are set to Math::NaN().  (Test
+     * for such results with Math::isnan.)  This is not expected to happen with
+     * ellipsoidal models of the earth; please report all cases where this
+     * occurs.
      *
      * The following functions are overloaded versions of Geodesic::Inverse
      * which omit some of the output parameters.  Note, however, that the arc

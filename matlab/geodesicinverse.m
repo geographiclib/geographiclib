@@ -1,8 +1,8 @@
 function [geodesic, aux] = geodesicinverse(latlong, a, f)
 %geodesicinverse  Solve inverse geodesic problem
 %
-%   [geodesic, aux] = geodesicinverse(latlong);
-%   [geodesic, aux] = geodesicinverse(latlong, a, f);
+%   [geodesic, aux] = geodesicinverse(latlong)
+%   [geodesic, aux] = geodesicinverse(latlong, a, f)
 %
 %   latlong is an M x 4 matrix
 %       latitude of point 1 = latlong(:,1) in degrees
