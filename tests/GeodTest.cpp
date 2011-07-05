@@ -135,7 +135,8 @@ void GeodError(const test& tgeod, const ref& rgeod,
                abs(azidiff(lat1, lon1, tlon1, azi1, tazi1))) *
     rgeod.MajorRadius();
   err[2] = max(abs(tm12a - m12), abs(tm12b + m12));
-  err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / rgeod.MajorRadius();
+  if (!Math::isnan(S12))
+    err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / rgeod.MajorRadius();
 
   /* ta12 = */ tgeod.Inverse(lat1, lon1, lat2, lon2, ts12, tazi1, tazi2, tm12a,
                              tM12, tM21, tS12a);
@@ -150,7 +151,8 @@ void GeodError(const test& tgeod, const ref& rgeod,
   // m12 and S12 are very sensitive with the inverse problem near conjugacy
   if (!(s12 > rgeod.MajorRadius() && m12 < 10e3)) {
     err[2] = max(err[2], wreal(abs(tm12a - m12)));
-    err[6] = max(err[6], wreal(abs(tS12a - S12) / rgeod.MajorRadius()));
+    if (!Math::isnan(S12))
+      err[6] = max(err[6], wreal(abs(tS12a - S12) / rgeod.MajorRadius()));
   }
   if (s12 > rgeod.MajorRadius()) {
     rgeod.Direct(lat1, lon1, tazi1,   ts12/2, rlat2, rlon2, razi2, rm12);
@@ -307,14 +309,17 @@ int main(int argc, char* argv[]) {
     vector<Math::extended> err(NUMERR, 0.0);
     vector<unsigned> errind(NUMERR);
     unsigned cnt = 0;
-
-    while (true) {
+    string s;
+    while (getline(cin, s)) {
+      istringstream str(s);
       Math::extended lat1l, lon1l, azi1l, lat2l, lon2l, azi2l,
         s12l, a12l, m12l, S12l;
-      if (!(cin >> lat1l >> lon1l >> azi1l
-            >> lat2l >> lon2l >> azi2l
-            >> s12l >> a12l >> m12l >> S12l))
+      if (!(str >> lat1l >> lon1l >> azi1l
+                >> lat2l >> lon2l >> azi2l
+                >> s12l >> a12l >> m12l))
         break;
+      if (!(str >> S12l))
+        S12l = Math::NaN();
       if (coverage) {
 #if defined(GEOD_DIAG) && GEOD_DIAG
         Math::real

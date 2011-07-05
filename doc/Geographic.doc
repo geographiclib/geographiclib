@@ -525,10 +525,14 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   this is accomplished by modifying the link line above to read \verbatim
   g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
 \endverbatim
-  (Alternatively, you can use ldconfig to search in /usr/local/lib
-  automatically.)  On Windows, you need to ensure that Geographic.dll is in
-  the same directory as your executable or else include the directory
-  containing the dll in your <code>PATH</code>.
+  (There are two other ways to specify the location of shared libraries
+  at runtime: (1) define the environment variable
+  <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
+  directories to search; (2) AS ROOT, specify /usr/local/lib as a
+  directory searched by ldconfig(8).)  On Windows, you need to ensure
+  that Geographic.dll is in the same directory as your executable or
+  else include the directory containing the dll in your
+  <code>PATH</code>.
 - For Windows, ensure that you build the library with the same version
   of the compiler and you use for your code.  In addition, you have
   to build a separate debug version of the library when you can
