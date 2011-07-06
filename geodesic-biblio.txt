@@ -533,6 +533,13 @@ $Id$
  * A. R. Clarke,[[BR]]
    ''Geodesy'' (Clarendon Press, Oxford, 1880), Chap. 6.[[BR]]
    http://books.google.com/books?id=lfIoAAAAYAAJ&pg=PA124
+ * F. Joachimsthal,[[BR]]
+   ''Anwendung der Differential- und Integralrechnung auf die
+   allgemeine Theorie der Flächen und der Linien doppelter Krümmung
+   [Application of differential and integral calculus to the
+   general theory of surfaces and lines of double curvature]''
+   (Teubner, Leipzig, 1872), Chap. 9, pp. 131--157.[[BR]]
+   http://books.google.com/books?id=BvQoAAAAYAAJ&pg=PA131
  * I. Todhunter,[[BR]]
    ''A history of the mathematical theories of attraction and the figure of
    the earth from the time of Newton to that of Laplace'',
@@ -628,6 +635,11 @@ $Id$
    between two points on a spheroid'',
    Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
    http://books.google.com/books?id=kN4zAQAAIAAJ&pg=PA206
+ * J. Knoblauch,[[BR]]
+   ''Einleitung in die allgemeine Theorie der krummen Flächen
+   [Introduction to the general theory of curved surfaces]''
+   (Teubner, Leipzig, 1888), Secs. 53--59, pp. 137--159.[[BR]]
+   http://books.google.com/books?id=zPdMAAAAMAAJ&pg=PA137
  * O. Börsch,[[BR]]
    ''Geodätische Literatur [Geodetic Bibliography]''
    (Internationale Erdmessung, 1889).[[BR]]
@@ -655,6 +667,13 @@ $Id$
    http://books.google.com/books?id=YsAKAAAAIAAJ&pg=PA161 [[BR]]
    unreadable page:
    http://geographiclib.sf.net/geodesic-papers/forsyth96b-add.pdf
+ * R. Fricke,[[BR]]
+   ''Kurzgefasste Vorlesungen über verschiedene Gebiete der  
+   höheren Mathematik mit Berücksichtigung der Anwendungen
+   [Concise lectures on various areas of higher mathematics, with
+   applications]''
+   (Teubner, Leipzig 1900), Chap. 5, Sec. 3, pp. 293--305.[[BR]]
+   http://books.google.com/books?id=bSsLAAAAYAAJ&pg=PA293
  * L. P. Eisenhart,[[BR]]
    ''A Treatise on the Differential Geometry of Curves and Surfaces'',
    (Ginn & Co., Boston, 1909).[[BR]]
