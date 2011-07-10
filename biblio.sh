@@ -25,9 +25,10 @@ cat <<'EOF'
     <p>This bibliography was started on 2009-06-06 (at
       <a href=" http://trac.osgeo.org/proj/wiki/GeodesicCalculations">
         http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>).
-      The latest update was on
+      The last update was on
 EOF
-head -1 $1 | cut -f4 -d' ' | sed 's/$/./'
+git log --date=short $1 | head -3 | tail -1 | tr -s ' ' '	' |
+cut -f2 | sed 's/$/./'
 cat <<EOF
     </p>
     <ul>
