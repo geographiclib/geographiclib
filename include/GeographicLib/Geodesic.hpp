@@ -134,8 +134,8 @@ namespace GeographicLib {
                  real cbet1, real cbet2,
                  real& s12s, real& m12a, real& m0,
                  bool scalep, real& M12, real& M21,
-                 real tc[], real zc[]) const throw();
-    static real Astroid(real R, real z) throw();
+                 real C1a[], real C2a[]) const throw();
+    static real Astroid(real x, real y) throw();
     real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
                       real lam12,
                       real& salp1, real& calp1,
@@ -149,11 +149,12 @@ namespace GeographicLib {
                   real C1a[], real C2a[], real C3a[])
       const throw();
 
-    static const real eps2_;
+    static const real tiny_;
     static const real tol0_;
     static const real tol1_;
     static const real tol2_;
     static const real xthresh_;
+    // _r is OBSOLETE, can be removed
     const real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
     static real SinCosSeries(bool sinp,
@@ -718,9 +719,9 @@ namespace GeographicLib {
      * The arc length is always computed and returned as the function value.
      **********************************************************************/
     Math::real GenInverse(real lat1, real lon1, real lat2, real lon2,
-                       unsigned outmask,
-                       real& s12, real& azi1, real& azi2,
-                       real& m12, real& M12, real& M21, real& S12)
+                          unsigned outmask,
+                          real& s12, real& azi1, real& azi2,
+                          real& m12, real& M12, real& M21, real& S12)
       const throw();
     ///@}
 

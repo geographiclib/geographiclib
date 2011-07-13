@@ -65,7 +65,7 @@ namespace GeographicLib {
     phi = lat1 * Math::degree<real>();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
-    cbet1 = abs(lat1) == 90 ? Geodesic::eps2_ : cos(phi);
+    cbet1 = abs(lat1) == 90 ? Geodesic::tiny_ : cos(phi);
     Geodesic::SinCosNorm(sbet1, cbet1);
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -113,14 +113,14 @@ namespace GeographicLib {
 
     if (_caps & CAP_C3) {
       g.C3f(eps, _C3a);
-      _A3c = -g._f * _salp0 * g.A3f(eps);
+      _A3c = -_f * _salp0 * g.A3f(eps);
       _B31 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C3a, nC3_-1);
     }
 
     if (_caps & CAP_C4) {
       g.C4f(_k2, _C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-      _A4 = Math::sq(g._a) * _calp0 * _salp0 * g._e2;
+      _A4 = Math::sq(_a) * _calp0 * _salp0 * g._e2;
       _B41 = Geodesic::SinCosSeries(false, _ssig1, _csig1, _C4a, nC4_);
     }
   }
@@ -177,7 +177,7 @@ namespace GeographicLib {
     cbet2 = Math::hypot(_salp0, _calp0 * csig2);
     if (cbet2 == 0)
       // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
-      cbet2 = csig2 = Geodesic::eps2_;
+      cbet2 = csig2 = Geodesic::tiny_;
     // tan(omg2) = sin(alp0) * tan(sig2)
     somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
@@ -241,7 +241,7 @@ namespace GeographicLib {
         // salp12 = -0 and alp12 = -180.  However this depends on the sign being
         // attached to 0 correctly.  The following ensures the correct behavior.
         if (salp12 == 0 && calp12 < 0) {
-          salp12 = Geodesic::eps2_ * _calp1;
+          salp12 = Geodesic::tiny_ * _calp1;
           calp12 = -1;
         }
       } else {
@@ -261,7 +261,7 @@ namespace GeographicLib {
       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
     }
 
-    return arcmode ? s12_a12 : sig12 /  Math::degree<real>();
+    return arcmode ? s12_a12 : sig12 / Math::degree<real>();
   }
 
 } // namespace GeographicLib

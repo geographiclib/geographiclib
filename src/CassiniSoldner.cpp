@@ -21,7 +21,7 @@ namespace GeographicLib {
 
   const Math::real CassiniSoldner::eps1_ =
     real(0.01) * sqrt(numeric_limits<real>::epsilon());
-  const Math::real CassiniSoldner::eps2_ = sqrt(numeric_limits<real>::min());
+  const Math::real CassiniSoldner::tiny_ = sqrt(numeric_limits<real>::min());
 
   void CassiniSoldner::Reset(real lat0, real lon0) throw() {
     _meridian = _earth.Line(lat0, lon0, real(0),
@@ -44,7 +44,7 @@ namespace GeographicLib {
     real sig12, s12, azi1, azi2;
     lat = AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
-    if (sig12 < 100 * eps2_)
+    if (sig12 < 100 * tiny_)
       sig12 = s12 = 0;
     sig12 *= real(0.5);
     s12 *= real(0.5);

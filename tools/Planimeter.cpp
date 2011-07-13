@@ -81,8 +81,7 @@ namespace GeographicLib {
       } else {
         real s12, S12, t;
         _g.GenInverse(_lat1, _lon1, lat, lon,
-                      Geodesic::DISTANCE |
-                      (_polyline ? 0 : Geodesic::AREA),
+                      Geodesic::DISTANCE | (_polyline ? 0 : Geodesic::AREA),
                       s12, t, t, t, t, t, S12);
         _perimetersum += s12;
         if (!_polyline) {

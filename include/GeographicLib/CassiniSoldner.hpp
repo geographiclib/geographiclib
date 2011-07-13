@@ -66,7 +66,7 @@ namespace GeographicLib {
     GeodesicLine _meridian;
     real _sbet0, _cbet0;
     static const real eps1_;
-    static const real eps2_;
+    static const real tiny_;
     static const unsigned maxit_ =  10;
 
     // The following private helper functions are copied from Geodesic.
