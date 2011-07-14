@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
   <head>
+    <!-- $Id$ -->
     <title>Geodesic calculations</title>
     <meta name="description" content="Geodesic calculations" />
     <meta name="author" content="Charles F. F. Karney">
@@ -165,10 +166,12 @@ function GeodesicArea(input) {
       <h3><a class="anchor" id="inverse">Inverse problem</h3>
       <p>
 	Find the shortest path between two points on the earth.  The
-	path is characterized by its length <i>s12</i> and its azimuth at
-	the two ends <i>azi1</i> and <i>azi2</i>.  The sample
+	path is characterized by its length <i>s12</i> and its azimuth
+	at the two ends <i>azi1</i> and <i>azi2</i>.  The sample
 	calculation finds the shortest path between Wellington, New
-	Zealand, and Salamanca, Spain.
+	Zealand, and Salamanca, Spain.  (For this example, the NGS
+	geodesic calculator returns a result which is 3.3 km too long
+	with an azimuth which is off by 10 degrees.)
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>
         (as signed decimal degrees):</p>
@@ -249,8 +252,8 @@ function GeodesicArea(input) {
 	between the intermediate points and <i>maxk</i>, the maximum
 	number of intervals the geodesic is broken into.  The output
 	gives a sequence of positions <i>lat, lon</i> together with the
-	corresponding azimuths <i>azi</i>.  The example shows the path
-	from JFK to Singapore's Changi Airport.
+	corresponding azimuths <i>azi</i>.  The sample shows the path
+	from JFK to Singapore's Changi Airport at about 1000 km intervals.Z
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2 ds12 maxk&rdquo;</i>
         (as signed decimal degrees and meters):</p>
@@ -281,7 +284,10 @@ function GeodesicArea(input) {
 	itself).  Counter-clockwise traversal of the polygon results in
 	a positive area.  The polygon can encircle one or both poles.
 	The example gives the approximate perimeter (in m) and area (in
-	m<sup>2</sup>) of Antarctica.
+	m<sup>2</sup>) of Antarctica.  (For this example, Google Earth
+	Pro returns an area which is 30 times too large!  However this
+	is a little unfair, since Google Earth Pro has no concept of
+	polygons which encircle a pole.)
       </p>
       <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>
         (as signed decimal degrees):</p>

@@ -35,9 +35,9 @@ distrib-cgi:
 distrib-js:
 	for f in geod-calc.html \
 	GeographicLib/{Math,Geodesic{,Line,Polygon}}.js; do \
-	  a=javascript/$$f; b=$(WEBSTAGE)/scripts/$$f; \
+	  a=javascript/$$f; b=$(WEBSTAGE)/htdocs/scripts/$$f; \
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
-	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/scripts $(USER),geographiclib@web.sourceforge.net:./htdocs/
+	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/htdocs/scripts $(USER),geographiclib@web.sourceforge.net:./htdocs/
 
 TAGS:
 	for d in include src tools; do \
