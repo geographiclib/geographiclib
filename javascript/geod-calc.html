@@ -148,6 +148,9 @@ function GeodesicArea(input) {
 	<a href="http://geographiclib.sourceforge.net/geod-errata.html">
 	  <b>errata</b></a>.
       </blockquote>
+      This page is just provides a basic interface.  There's no fancy
+      parsing of geographic coordinates.  Enter latitudes and longitudes
+      as signed decimal degrees.
     <p>
       Jump to:
       <ul>
@@ -166,9 +169,11 @@ function GeodesicArea(input) {
 	path is characterized by its length <i>s12</i> and its azimuth
 	at the two ends <i>azi1</i> and <i>azi2</i>.  The sample
 	calculation finds the shortest path between Wellington, New
-	Zealand, and Salamanca, Spain.  (For this example, the NGS
-	geodesic calculator returns a result which is 3.3 km too long
-	with an azimuth which is off by 10 degrees.)
+	Zealand, and Salamanca, Spain.  (For this example, the
+	<a href="http://www.ngs.noaa.gov/">NGS</a>
+	<a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
+        inverse geodesic calculator</a> returns a result which is 3.3 km
+	too long with an azimuth which is off by 10 degrees.)
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>
         (as signed decimal degrees):</p>
@@ -282,7 +287,7 @@ function GeodesicArea(input) {
 	geodesics.  The polygon must be simple (i.e., must not intersect
 	itself).  Counter-clockwise traversal of the polygon results in
 	a positive area.  The polygon can encircle one or both poles.
-	The example gives the approximate perimeter (in m) and area (in
+	The sample gives the approximate perimeter (in m) and area (in
 	m<sup>2</sup>) of Antarctica.  (For this example, Google Earth
 	Pro returns an area which is 30 times too large!  However this
 	is a little unfair, since Google Earth has no concept of
