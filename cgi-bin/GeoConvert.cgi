@@ -1,4 +1,12 @@
 #! /bin/sh
+#
+# GeoConvert.cgi
+# cgi script for geographic coordinate conversion
+#
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+# under the LGPL.  For more information, see
+# http://geographiclib.sourceforge.net/
+#
 # $Id$
 . ./utils.sh
 OPTION=`lookupkey "$QUERY_STRING" option`
@@ -220,7 +228,7 @@ cat <<EOF
       and compile GeographicLib.
     </p>
     <hr>
-    <address><a href="http://charles.karney.info/">Charles Karney</a>
+    <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2011-06-19)</address>
     <a href="http://sourceforge.net">

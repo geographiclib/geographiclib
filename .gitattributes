@@ -10,6 +10,7 @@ Doxyfile ident text
 *.htaccess text
 *.html ident text
 *.iss ident text
+*.js ident text
 *.m ident text
 *.mac ident text
 *.pod ident text

@@ -1,0 +1,1027 @@
+/**
+ * Geodesic.js
+ * Transcription of Geodesic.[ch]pp into javascript.
+ *
+ * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+ * under the LGPL.  For more information, see
+ * http://geographiclib.sourceforge.net/
+ *
+ * $Id$
+ **********************************************************************/
+
+// Load AFTER Math.js
+
+GeographicLib.Geodesic = {};
+GeographicLib.GeodesicLine = {};
+
+(function() {
+  var m = GeographicLib.Math;
+  var g = GeographicLib.Geodesic;
+  var l = GeographicLib.GeodesicLine;
+  g.GEOD_ORD = 6;
+  g.nA1_ = g.GEOD_ORD;
+  g.nC1_ = g.GEOD_ORD;
+  g.nC1p_ = g.GEOD_ORD;
+  g.nA2_ = g.GEOD_ORD;
+  g.nC2_ = g.GEOD_ORD;
+  g.nA3_ = g.GEOD_ORD;
+  g.nA3x_ = g.nA3_;
+  g.nC3_ = g.GEOD_ORD;
+  g.nC3x_ = (g.nC3_ * (g.nC3_ - 1)) / 2;
+  g.nC4_ = g.GEOD_ORD;
+  g.nC4x_ = (g.nC4_ * (g.nC4_ + 1)) / 2;
+  g.maxit_ = 50;
+  g.tiny_ = Math.sqrt(Number.MIN_VALUE);
+  g.tol0_ = m.epsilon;
+  g.tol1_ = 200 * g.tol0_;
+  g.tol2_ = Math.sqrt(m.epsilon);
+  g.xthresh_ = 1000 * g.tol2_;
+
+  g.Astroid = function(x, y) {
+    // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive
+    // root k.  This solution is adapted from Geocentric::Reverse.
+    var k;
+    var
+    p = m.sq(x),
+    q = m.sq(y),
+    r = (p + q - 1) / 6;
+    if ( !(q == 0 && r <= 0) ) {
+      var
+      // Avoid possible division by zero when r = 0 by multiplying
+      // equations for s and t by r^3 and r, resp.
+      S = p * q / 4,    // S = r^3 * s
+      r2 = m.sq(r),
+      r3 = r * r2,
+      // The discrimant of the quadratic equation for T3.  This is
+      // zero on the evolute curve p^(1/3)+q^(1/3) = 1
+      disc =  S * (S + 2 * r3);
+      var u = r;
+      if (disc >= 0) {
+        var T3 = S + r3;
+        // Pick the sign on the sqrt to maximize abs(T3).  This
+        // minimizes loss of precision due to cancellation.  The
+        // result is unchanged because of the way the T is used
+        // in definition of u.
+        T3 += T3 < 0 ? -Math.sqrt(disc)
+          : Math.sqrt(disc); // T3 = (r * t)^3
+        // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
+        var T = m.cbrt(T3); // T = r * t
+        // T can be zero; but then r2 / T -> 0.
+        u += T + (T != 0 ? r2 / T : 0);
+      } else {
+        // T is complex, but the way u is defined the result is real.
+        var ang = Math.atan2(Math.sqrt(-disc), -(S + r3));
+        // There are three possible cube roots.  We choose the
+        // root which avoids cancellation.  Note that disc < 0
+        // implies that r < 0.
+        u += 2 * r * Math.cos(ang / 3);
+      }
+      var
+      v = Math.sqrt(m.sq(u) + q),    // guaranteed positive
+      // Avoid loss of accuracy when u < 0.
+      uv = u < 0 ? q / (v - u) : u + v, // u+v, guaranteed positive
+      w = (uv - q) / (2 * v);           // positive?
+      // Rearrange expression for k to avoid loss of accuracy due to
+      // subtraction.  Division by 0 not possible because uv > 0, w >= 0.
+      k = uv / (Math.sqrt(uv + m.sq(w)) + w); // guaranteed positive
+    } else {               // q == 0 && r <= 0
+      // y = 0 with |x| <= 1.  Handle this case directly.
+      // for y small, positive root is k = abs(y)/sqrt(1-x^2)
+      k = 0;
+    }
+    return k;
+  }
+
+  g.SinCosSeries = function(sinp, sinx, cosx, c, n) {
+    // Evaluate
+    // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
+    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
+    // using Clenshaw summation.  N.B. c[0] is unused for sin series
+    // Approx operation count = (n + 5) mult and (2 * n + 2) add
+    var k  = n + (sinp ? 1 : 0); // Point to one beyond last element
+    var
+    ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
+    y0 = n & 1 ? c[--k] : 0, y1 = 0;          // accumulators for sum
+    // Now n is even
+    n = Math.floor(n/2);
+    while (n--) {
+      // Unroll loop x 2, so accumulators return to their original role
+      y1 = ar * y0 - y1 + c[--k];
+      y0 = ar * y1 - y0 + c[--k];
+    }
+    return sinp
+      ? 2 * sinx * cosx * y0    // sin(2 * x) * y0
+      : cosx * (y0 - y1);       // cos(x) * (y0 - y1)
+  }
+
+  g.AngNormalize = function(x) {
+    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
+    return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+  }
+
+  g.AngRound = function(x) {
+    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
+    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
+    // is about 1000 times more resolution than we get with angles around 90
+    // degrees.)  We use this to avoid having to deal with near singular
+    // cases when x is non-zero but tiny (e.g., 1.0e-200).
+    var z = 1/16;
+    var y = Math.abs(x);
+    // The compiler mustn't "simplify" z - (z - y) to y
+    y = y < z ? z - (z - y) : y;
+    return x < 0 ? -y : y;
+  }
+
+  g.A1m1f = function(eps) {
+    var
+    eps2 = m.sq(eps),
+    t = eps2*(eps2*(eps2+4)+64)/256;
+    return (t + eps) / (1 - eps);
+  }
+
+  g.C1f = function(eps, c) {
+    var
+    eps2 = m.sq(eps),
+    d = eps;
+    c[1] = d*((6-eps2)*eps2-16)/32;
+    d *= eps;
+    c[2] = d*((64-9*eps2)*eps2-128)/2048;
+    d *= eps;
+    c[3] = d*(9*eps2-16)/768;
+    d *= eps;
+    c[4] = d*(3*eps2-5)/512;
+    d *= eps;
+    c[5] = -7*d/1280;
+    d *= eps;
+    c[6] = -7*d/2048;
+  }
+
+  g.C1pf = function(eps, c) {
+    var
+    eps2 = m.sq(eps),
+    d = eps;
+    c[1] = d*(eps2*(205*eps2-432)+768)/1536;
+    d *= eps;
+    c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
+    d *= eps;
+    c[3] = d*(116-225*eps2)/384;
+    d *= eps;
+    c[4] = d*(2695-7173*eps2)/7680;
+    d *= eps;
+    c[5] = 3467*d/7680;
+    d *= eps;
+    c[6] = 38081*d/61440;
+  }
+
+  g.A2m1f = function(eps) {
+    var
+    eps2 = m.sq(eps),
+    t = eps2*(eps2*(25*eps2+36)+64)/256;
+    return t * (1 - eps) - eps;
+  }
+
+  g.C2f = function(eps, c) {
+    var
+    eps2 = m.sq(eps),
+    d = eps;
+    c[1] = d*(eps2*(eps2+2)+16)/32;
+    d *= eps;
+    c[2] = d*(eps2*(35*eps2+64)+384)/2048;
+    d *= eps;
+    c[3] = d*(15*eps2+80)/768;
+    d *= eps;
+    c[4] = d*(7*eps2+35)/512;
+    d *= eps;
+    c[5] = 63*d/1280;
+    d *= eps;
+    c[6] = 77*d/2048;
+  }
+  g.CAP_NONE = 0;
+  g.CAP_C1   = 1<<0;
+  g.CAP_C1p  = 1<<1;
+  g.CAP_C2   = 1<<2;
+  g.CAP_C3   = 1<<3;
+  g.CAP_C4   = 1<<4;
+  g.CAP_ALL  = 0x1F;
+  g.OUT_ALL  = 0x7F80;
+  g.NONE          = 0;
+  g.LATITUDE      = 1<<7  | g.CAP_NONE;
+  g.LONGITUDE     = 1<<8  | g.CAP_C3;
+  g.AZIMUTH       = 1<<9  | g.CAP_NONE;
+  g.DISTANCE      = 1<<10 | g.CAP_C1;
+  g.DISTANCE_IN   = 1<<11 | g.CAP_C1 | g.CAP_C1p;
+  g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
+  g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
+  g.AREA          = 1<<14 | g.CAP_C4;
+  g.ALL           = g.OUT_ALL| g.CAP_ALL;
+
+  g.Geodesic = function(a, f) {
+    this._a = a;
+    this._f = f <= 1 ? f : 1/f;
+    this._f1 = 1 - this._f;
+    this._e2 = this._f * (2 - this._f);
+    this._ep2 = this._e2 / m.sq(this._f1);      // e2 / (1 - e2)
+    this._n = this._f / ( 2 - this._f);
+    this._b = this._a * this._f1;
+    // authalic radius squared
+    this._c2 = (m.sq(this._a) + m.sq(this._b) *
+                (this._e2 == 0 ? 1 :
+                 (this._e2 > 0 ? m.atanh(Math.sqrt(this._e2)) :
+                  Math.atan(Math.sqrt(-this._e2))) /
+                 Math.sqrt(Math.abs(this._e2))))/2;
+    this._etol2 = g.tol2_ / Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
+    if (!(isFinite(this._a) && this._a > 0))
+      throw new Error("Major radius is not positive");
+    if (!(isFinite(this._b) && this._b > 0))
+      throw new Error("Minor radius is not positive");
+    this._A3x = new Array(g.nA3x_);
+    this._C3x = new Array(g.nC3x_);
+    this._C4x = new Array(g.nC4x_);
+    this.A3coeff();
+    this.C3coeff();
+    this.C4coeff();
+  }
+
+  g.Geodesic.prototype.A3coeff = function() {
+    var _n = this._n;
+    this._A3x[0] = 1;
+    this._A3x[1] = (_n-1)/2;
+    this._A3x[2] = (_n*(3*_n-1)-2)/8;
+    this._A3x[3] = ((-_n-3)*_n-1)/16;
+    this._A3x[4] = (-2*_n-3)/64;
+    this._A3x[5] = -3/128;
+  }
+
+  g.Geodesic.prototype.C3coeff = function() {
+    var _n = this._n;
+    this._C3x[0] = (1-_n)/4;
+    this._C3x[1] = (1-_n*_n)/8;
+    this._C3x[2] = ((3-_n)*_n+3)/64;
+    this._C3x[3] = (2*_n+5)/128;
+    this._C3x[4] = 3/128;
+    this._C3x[5] = ((_n-3)*_n+2)/32;
+    this._C3x[6] = ((-3*_n-2)*_n+3)/64;
+    this._C3x[7] = (_n+3)/128;
+    this._C3x[8] = 5/256;
+    this._C3x[9] = (_n*(5*_n-9)+5)/192;
+    this._C3x[10] = (9-10*_n)/384;
+    this._C3x[11] = 7/512;
+    this._C3x[12] = (7-14*_n)/512;
+    this._C3x[13] = 7/512;
+    this._C3x[14] = 21/2560;
+  }
+
+  g.Geodesic.prototype.C4coeff = function() {
+    var _ep2 = this._ep2;
+    this._C4x[0] = (_ep2*(_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)+
+                    30030)/45045;
+    this._C4x[1] = (_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)/60060;
+    this._C4x[2] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/18018;
+    this._C4x[3] = ((104-80*_ep2)*_ep2-143)/10296;
+    this._C4x[4] = (13-10*_ep2)/1430;
+    this._C4x[5] = -1/156;
+    this._C4x[6] = (_ep2*(_ep2*(_ep2*(640*_ep2-832)+1144)-1716)+3003)/540540;
+    this._C4x[7] = (_ep2*(_ep2*(160*_ep2-208)+286)-429)/108108;
+    this._C4x[8] = (_ep2*(80*_ep2-104)+143)/51480;
+    this._C4x[9] = (10*_ep2-13)/6435;
+    this._C4x[10] = 5/3276;
+    this._C4x[11] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/900900;
+    this._C4x[12] = ((104-80*_ep2)*_ep2-143)/257400;
+    this._C4x[13] = (13-10*_ep2)/25025;
+    this._C4x[14] = -1/2184;
+    this._C4x[15] = (_ep2*(80*_ep2-104)+143)/2522520;
+    this._C4x[16] = (10*_ep2-13)/140140;
+    this._C4x[17] = 5/45864;
+    this._C4x[18] = (13-10*_ep2)/1621620;
+    this._C4x[19] = -1/58968;
+    this._C4x[20] = 1/792792;
+  }
+
+  g.Geodesic.prototype.A3f = function(eps) {
+    // Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
+    var  v = 0;
+    for (var i = g.nA3x_; i; )
+      v = eps * v + this._A3x[--i];
+    return v;
+  }
+
+  g.Geodesic.prototype.C3f = function(eps, c) {
+    // Evaluation C3 coeffs by Horner's method
+    // Elements c[1] thru c[nC3_ - 1] are set
+    for (var j = g.nC3x_, k = g.nC3_ - 1; k; ) {
+      var t = 0;
+      for (var i = g.nC3_ - k; i; --i)
+        t = eps * t + this._C3x[--j];
+      c[k--] = t;
+    }
+
+    var mult = 1;
+    for (var k = 1; k < g.nC3_; ) {
+      mult *= eps;
+      c[k++] *= mult;
+    }
+  }
+
+  g.Geodesic.prototype.C4f = function(k2, c) {
+    // Evaluation C4 coeffs by Horner's method
+    // Elements c[0] thru c[nC4_ - 1] are set
+    for (var j = g.nC4x_, k = g.nC4_; k; ) {
+      var t = 0;
+      for (var i = g.nC4_ - k + 1; i; --i)
+        t = k2 * t + this._C4x[--j];
+      c[--k] = t;
+    }
+
+    var mult = 1;
+    for (var k = 1; k < g.nC4_; ) {
+      mult *= k2;
+      c[k++] *= mult;
+    }
+  }
+
+  // args = s12b, m12a, m0, M12, M21
+  g.Geodesic.prototype.Lengths = function(eps, sig12,
+                                          ssig1, csig1, ssig2, csig2,
+                                          cbet1, cbet2, scalep,
+                                          args, C1a, C2a) {
+    // Return m12a = (reduced length)/_a; also calculate s12b =
+    // distance/_b, and m0 = coefficient of secular term in
+    // expression for reduced length.
+    g.C1f(eps, C1a);
+    g.C2f(eps, C2a);
+    var
+    A1m1 = g.A1m1f(eps),
+    AB1 = (1 + A1m1) * (g.SinCosSeries(true, ssig2, csig2, C1a, g.nC1_) -
+                        g.SinCosSeries(true, ssig1, csig1, C1a, g.nC1_)),
+    A2m1 = g.A2m1f(eps),
+    AB2 = (1 + A2m1) * (g.SinCosSeries(true, ssig2, csig2, C2a, g.nC2_) -
+                        g.SinCosSeries(true, ssig1, csig1, C2a, g.nC2_)),
+    cbet1sq = m.sq(cbet1),
+    cbet2sq = m.sq(cbet2),
+    w1 = Math.sqrt(1 - this._e2 * cbet1sq),
+    w2 = Math.sqrt(1 - this._e2 * cbet2sq),
+    // Make sure it's OK to have repeated dummy arguments
+    m0x = A1m1 - A2m1,
+    J12 = m0x * sig12 + (AB1 - AB2);
+    args.m0 = m0x;
+    // Missing a factor of _a.
+    // Add parens around (csig1 * ssig2) and (ssig1 * csig2) to
+    // ensure accurate cancellation in the case of coincident
+    // points.
+    args.m12a = (w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
+      - this._f1 * csig1 * csig2 * J12;
+    // Missing a factor of _b
+    args.s12b =  (1 + A1m1) * sig12 + AB1;
+    if (scalep) {
+      var csig12 = csig1 * csig2 + ssig1 * ssig2;
+      J12 *= this._f1;
+      args.M12 = csig12 +
+        (this._e2 * (cbet1sq - cbet2sq) * ssig2 / (w1 + w2)
+         - csig2 * J12) * ssig1 / w1;
+      args.M21 = csig12 -
+        (this._e2 * (cbet1sq - cbet2sq) * ssig1 / (w1 + w2)
+         - csig1 * J12) * ssig2 / w2;
+    }
+  }
+
+  // args = salp1, calp1, salp2, calp2
+  g.Geodesic.prototype.InverseStart = function(sbet1, cbet1,
+                                               sbet2, cbet2, lam12,
+                                               args, C1a, C2a) {
+    // Return a starting point for Newton's method in salp1 and calp1
+    // (function value is -1).  If Newton's method doesn't need to be
+    // used, return also salp2 and calp2 and function value is sig12.
+    // salp2, calp2 only updated if return val >= 0.
+    var
+    sig12 = -1,               // Return value
+    // bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
+    sbet12 = sbet2 * cbet1 - cbet2 * sbet1,
+    cbet12 = cbet2 * cbet1 + sbet2 * sbet1;
+    // Volatile declaration needed to fix inverse cases
+    // 88.202499451857 0 -88.202499451857 179.981022032992859592
+    // 89.262080389218 0 -89.262080389218 179.992207982775375662
+    // 89.333123580033 0 -89.333123580032997687 179.99295812360148422
+    // which otherwise fail with g++ 4.4.4 x86 -O3
+    var sbet12a = sbet2 * cbet1;
+    sbet12a += cbet2 * sbet1;
+
+    var shortline = cbet12 >= 0 && sbet12 < 0.5 &&
+      lam12 <= Math.PI / 6;
+    var
+    omg12 = shortline ?
+      lam12 / Math.sqrt(1 - this._e2 * m.sq(cbet1)) : lam12,
+    somg12 = Math.sin(omg12), comg12 = Math.cos(omg12);
+
+    args.salp1 = cbet2 * somg12;
+    args.calp1 = comg12 >= 0 ?
+      sbet12 + cbet2 * sbet1 * m.sq(somg12) / (1 + comg12) :
+      sbet12a - cbet2 * sbet1 * m.sq(somg12) / (1 - comg12);
+
+    var
+    ssig12 = m.hypot(args.salp1, args.calp1),
+    csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
+
+    if (shortline && ssig12 < this._etol2) {
+      // really short lines
+      args.salp2 = cbet1 * somg12;
+      args.calp2 = sbet12 - cbet1 * sbet2 * m.sq(somg12) / (1 + comg12);
+      var t = m.hypot(args.salp2, args.calp2);
+      args.salp2 /= t; args.calp2 /= t;
+      // SinCosNorm(args.salp2, args.calp2);
+      // Set return value
+      sig12 = Math.atan2(ssig12, csig12);
+    } else if (csig12 >= 0 ||
+               ssig12 >= 3 * Math.abs(this._f) * Math.PI * m.sq(cbet1)) {
+      // Nothing to do, zeroth order spherical approximation is OK
+    } else {
+      // Scale lam12 and bet2 to x, y coordinate system where antipodal
+      // point is at origin and singular point is at y = 0, x = -1.
+      var y, lamscale, betscale;
+      // Volatile declaration needed to fix inverse case
+      // 56.320923501171 0 -56.320923501171 179.664747671772880215
+      // which otherwise fails with g++ 4.4.4 x86 -O3
+      var x;
+      if (this._f >= 0) {       // In fact f == 0 does not get here
+        // x = dlong, y = dlat
+        {
+          var
+          k2 = m.sq(sbet1) * this._ep2,
+          eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
+          lamscale = this._f * cbet1 * this.A3f(eps) * Math.PI;
+        }
+        betscale = lamscale * cbet1;
+
+        x = (lam12 - Math.PI) / lamscale;
+        y = sbet12a / betscale;
+      } else {          // _f < 0
+        // x = dlat, y = dlong
+        var
+        cbet12a = cbet2 * cbet1 - sbet2 * sbet1,
+        bet12a = Math.atan2(sbet12a, cbet12a);
+        var m12a, m0;
+        // In the case of lon12 = 180, this repeats a calculation made
+        // in Inverse.
+        var nargs = {};
+        this.Lengths(this._n, Math.PI + bet12a,
+                     sbet1, -cbet1, sbet2, cbet2,
+                     cbet1, cbet2, false, nargs, C1a, C2a);
+        m12a = nargs.m12a; m0 = nargs.m0;
+        x = -1 + m12a/(this._f1 * cbet1 * cbet2 * m0 * Math.PI);
+        betscale = x < -0.01 ? sbet12a / x :
+          -this._f * m.sq(cbet1) * Math.PI;
+        lamscale = betscale / cbet1;
+        y = (lam12 - Math.PI) / lamscale;
+      }
+
+      if (y > -g.tol1_ && x >  -1 - g.xthresh_) {
+        // strip near cut
+        if (this._f >= 0) {
+          args.salp1 = Math.min(1, -x);
+          args.calp1 = - Math.sqrt(1 - m.sq(args.salp1));
+        } else {
+          args.calp1 = Math.max(x > -g.tol1_ ? 0 : -1,  x);
+          args.salp1 = Math.sqrt(1 - m.sq(args.calp1));
+        }
+      } else {
+        // Estimate omega12, by solving the astroid problem.
+        var k = g.Astroid(x, y);
+        // estimate omg12a = pi - omg12
+        var
+        omg12a = lamscale *
+          ( this._f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k ),
+        somg12 = Math.sin(omg12a), comg12 = -Math.cos(omg12a);
+        // Update spherical estimate of alp1 using omg12 instead of
+        // lam12
+        args.salp1 = cbet2 * somg12;
+        args.calp1 = sbet12a -
+          cbet2 * sbet1 * m.sq(somg12) / (1 - comg12);
+      }
+    }
+    var t = m.hypot(args.salp1, args.calp1);
+    args.salp1 /= t; args.calp1 /= t;
+    // SinCosNorm(args.salp1, args.calp1);
+    return sig12;
+  }
+
+  // args = salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
+  // domg12, dlam12,
+  g.Geodesic.prototype.Lambda12 = function(sbet1, cbet1, sbet2, cbet2,
+                                           salp1, calp1, diffp,
+                                           args, C1a, C2a, C3a) {
+    if (sbet1 == 0 && calp1 == 0)
+      // Break degeneracy of equatorial line.  This case has already been
+      // handled.
+      calp1 = -g.tiny_;
+
+    var
+    // sin(alp1) * cos(bet1) = sin(alp0),
+    salp0 = salp1 * cbet1,
+    calp0 = m.hypot(calp1, salp1 * sbet1); // calp0 > 0
+
+    var somg1, comg1, somg2, comg2, omg12, lam12;
+    // tan(bet1) = tan(sig1) * cos(alp1)
+    // tan(omg1) = sin(alp0) * tan(sig1) = tan(omg1)=tan(alp1)*sin(bet1)
+    args.ssig1 = sbet1; somg1 = salp0 * sbet1;
+    args.csig1 = comg1 = calp1 * cbet1;
+    var t = m.hypot(args.ssig1, args.csig1);
+    args.ssig1 /= t; args.csig1 /= t;
+    // SinCosNorm(args.ssig1, args.csig1);
+    var t = m.hypot(args.somg1, args.comg1);
+    args.somg1 /= t; args.comg1 /= t;
+    // SinCosNorm(args.somg1, args.comg1);
+
+    // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
+    // about this case, since this can yield singularities in the Newton
+    // iteration.
+    // sin(alp2) * cos(bet2) = sin(alp0),
+    args.salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
+    // calp2 = sqrt(1 - sq(salp2))
+    //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
+    // and subst for calp0 and rearrange to give (choose positive sqrt
+    // to give alp2 in [0, pi/2]).
+    args.calp2 = cbet2 != cbet1 || Math.abs(sbet2) != -sbet1 ?
+      Math.sqrt(m.sq(calp1 * cbet1) + (cbet1 < -sbet1 ?
+                                       (cbet2 - cbet1) * (cbet1 + cbet2) :
+                                       (sbet1 - sbet2) * (sbet1 + sbet2)))
+      / cbet2 : Math.abs(calp1);
+    // tan(bet2) = tan(sig2) * cos(alp2)
+    // tan(omg2) = sin(alp0) * tan(sig2).
+    args.ssig2 = sbet2; somg2 = salp0 * sbet2;
+    args.csig2 = comg2 = args.calp2 * cbet2;
+    var t = m.hypot(args.ssig2, args.csig2);
+    args.ssig2 /= t; args.csig2 /= t;
+    // SinCosNorm(args.ssig2, args.csig2);
+    var t = m.hypot(args.somg2, args.comg2);
+    args.somg2 /= t; args.comg2 /= t;
+    // SinCosNorm(args.somg2, args.comg2);
+
+    // sig12 = sig2 - sig1, limit to [0, pi]
+    args.sig12 = Math.atan2(Math.max(args.csig1 * args.ssig2 -
+                                     args.ssig1 * args.csig2, 0),
+                            args.csig1 * args.csig2 + args.ssig1 * args.ssig2);
+
+    // omg12 = omg2 - omg1, limit to [0, pi]
+    omg12 = Math.atan2(Math.max(comg1 * somg2 - somg1 * comg2, 0),
+                       comg1 * comg2 + somg1 * somg2);
+    var B312, h0;
+    var k2 = m.sq(calp0) * this._ep2;
+    args.eps = k2 / (2 * (1 + Math.sqrt(1 + k2)) + k2);
+    this.C3f(args.eps, C3a);
+    B312 = (g.SinCosSeries(true, args.ssig2, args.csig2, C3a, g.nC3_-1) -
+            g.SinCosSeries(true, args.ssig1, args.csig1, C3a, g.nC3_-1));
+    h0 = -this._f * this.A3f(args.eps);
+    args.domg12 = salp0 * h0 * (args.sig12 + B312);
+    lam12 = omg12 + args.domg12;
+
+    if (diffp) {
+      if (args.calp2 == 0)
+        args.dlam12 =
+        - 2 * Math.sqrt(1 - this._e2 * m.sq(cbet1)) / sbet1;
+      else {
+        var nargs = {};
+        this.Lengths(args.eps, args.sig12,
+                     args.ssig1, args.csig1, args.ssig2, args.csig2,
+                     cbet1, cbet2, false, nargs, C1a, C2a);
+        args.dlam12 = nargs.m12a;
+        args.dlam12 /= args.calp2 * cbet2;
+      }
+    }
+
+    return lam12;
+  }
+
+  // args = s12, azi1, azi2, m12, M12, M21, S12
+  g.Geodesic.prototype.GenInverse = function(lat1, lon1, lat2, lon2,
+                                             outmask, args) {
+    outmask &= g.OUT_ALL;
+    lon1 = g.AngNormalize(lon1);
+    var lon12 = g.AngNormalize(g.AngNormalize(lon2) - lon1);
+    // If very close to being on the same meridian, then make it so.
+    // Not sure this is necessary...
+    lon12 = g.AngRound(lon12);
+    // Make longitude difference positive.
+    var lonsign = lon12 >= 0 ? 1 : -1;
+    lon12 *= lonsign;
+    if (lon12 == 180)
+      lonsign = 1;
+    // If really close to the equator, treat as on equator.
+    lat1 = g.AngRound(lat1);
+    lat2 = g.AngRound(lat2);
+    // Swap points so that point with higher (abs) latitude is point 1
+    var swapp = Math.abs(lat1) >= Math.abs(lat2) ? 1 : -1;
+    if (swapp < 0) {
+      lonsign *= -1;
+      var t = lat1;
+      lat1 = lat2;
+      lat2 = t;
+      // swap(lat1, lat2);
+    }
+    // Make lat1 <= 0
+    var latsign = lat1 < 0 ? 1 : -1;
+    lat1 *= latsign;
+    lat2 *= latsign;
+    // Now we have
+    //
+    //     0 <= lon12 <= 180
+    //     -90 <= lat1 <= 0
+    //     lat1 <= lat2 <= -lat1
+    //
+    // longsign, swapp, latsign register the transformation to bring the
+    // coordinates to this canonical form.  In all cases, 1 means no
+    // change was made.  We make these transformations so that there are
+    // few cases to check, e.g., on verifying quadrants in atan2.  In
+    // addition, this enforces some symmetries in the results returned.
+
+    var phi, sbet1, cbet1, sbet2, cbet2, s12x, m12x;
+
+    phi = lat1 * m.degree;
+    // Ensure cbet1 = +epsilon at poles
+    sbet1 = this._f1 * Math.sin(phi);
+    cbet1 = lat1 == -90 ? g.tiny_ : Math.cos(phi);
+    var t = m.hypot(sbet1, cbet1);
+    sbet1 /= t; cbet1 /= t;
+    // SinCosNorm(sbet1, cbet1);
+
+    phi = lat2 * m.degree;
+    // Ensure cbet2 = +epsilon at poles
+    sbet2 = this._f1 * Math.sin(phi);
+    cbet2 = Math.abs(lat2) == 90 ? tiny_ : Math.cos(phi);
+    var t = m.hypot(sbet2, cbet2);
+    sbet2 /= t; cbet2 /= t;
+    // SinCosNorm(sbet2, cbet2);
+
+    // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of
+    // the |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2)
+    // + sbet1 is a better measure.  This logic is used in assigning
+    // calp2 in Lambda12.  Sometimes these quantities vanish and in that
+    // case we force bet2 = +/- bet1 exactly.  An example where is is
+    // necessary is the inverse problem
+    // 48.522876735459 0 -48.52287673545898293 179.599720456223079643
+    // which failed with Visual Studio 10 (Release and Debug)
+
+    if (cbet1 < -sbet1) {
+      if (cbet2 == cbet1)
+        sbet2 = sbet2 < 0 ? sbet1 : -sbet1;
+    } else {
+      if (Math.abs(sbet2) == -sbet1)
+        cbet2 = cbet1;
+    }
+
+    var
+    lam12 = lon12 * m.degree,
+    slam12 = lon12 == 180 ? 0 : Math.sin(lam12),
+    clam12 = Math.cos(lam12);   // lon12 == 90 isn't interesting
+
+    var a12, sig12, calp1, salp1, calp2, salp2;
+    // index zero elements of these arrays are unused
+    var
+    C1a = new Array(g.nC1_ + 1),
+    C2a = new Array(g.nC2_ + 1),
+    C3a = new Array(g.nC3_);
+
+    var meridian = lat1 == -90 || slam12 == 0;
+
+    if (meridian) {
+
+      // Endpoints are on a single full meridian, so the geodesic might
+      // lie on a meridian.
+
+      calp1 = clam12; salp1 = slam12; // Head to the target longitude
+      calp2 = 1; salp2 = 0;           // At the target we're heading north
+
+      var
+      // tan(bet) = tan(sig) * cos(alp),
+      ssig1 = sbet1, csig1 = calp1 * cbet1,
+      ssig2 = sbet2, csig2 = calp2 * cbet2;
+
+      // sig12 = sig2 - sig1
+      sig12 = Math.atan2(Math.max(csig1 * ssig2 - ssig1 * csig2, 0),
+                         csig1 * csig2 + ssig1 * ssig2);
+      {
+        var nargs = {};
+        this.Lengths(this._n, sig12, ssig1, csig1, ssig2, csig2,
+                     cbet1, cbet2, (outmask & g.GEODESICSCALE) != 0,
+                     nargs, C1a, C2a);
+        s12x = nargs.s12b;
+        m12x = nargs.m12a;
+        // Ignore m0
+        if ((outmask & g.GEODESICSCALE) != 0) {
+          args.M12 = nargs.M12;
+          args.M21 = nargs.M21;
+        }
+      }
+      // Add the check for sig12 since zero length geodesics might yield
+      // m12 < 0.  Test case was
+      //
+      //    echo 20.001 0 20.001 0 | Geod -i
+      //
+      // In fact, we will have sig12 > pi/2 for meridional geodesic
+      // which is not a shortest path.
+      if (sig12 < 1 || m12x >= 0) {
+        m12x *= this._a;
+        s12x *= this._b;
+        a12 = sig12 / m.degree;
+      } else
+        // m12 < 0, i.e., prolate and too close to anti-podal
+        meridian = false;
+    }
+
+    var omg12;
+    if (!meridian &&
+        sbet1 == 0 &&   // and sbet2 == 0
+        // Mimic the way Lambda12 works with calp1 = 0
+        (this._f <= 0 || lam12 <= Math.PI - this._f * Math.PI)) {
+
+      // Geodesic runs along equator
+      calp1 = calp2 = 0; salp1 = salp2 = 1;
+      s12x = this._a * lam12;
+      m12x = this._b * Math.sin(lam12 / this._f1);
+      if (outmask & g.GEODESICSCALE)
+        args.M12 = args.M21 = Math.cos(lam12 / this._f1);
+      a12 = lon12 / this._f1;
+      sig12 = lam12 / this._f1;
+
+    } else if (!meridian) {
+
+      // Now point1 and point2 belong within a hemisphere bounded by a
+      // meridian and geodesic is neither meridional or equatorial.
+
+      // Figure a starting point for Newton's method
+      var nargs = {};
+      sig12 = this.InverseStart(sbet1, cbet1, sbet2, cbet2,
+                                lam12,
+                                nargs,
+                                salp1, calp1, salp2, calp2,
+                                C1a, C2a);
+      salp1 = nargs.salp1;
+      calp1 = nargs.calp1;
+
+      if (sig12 >= 0) {
+        salp2 = nargs.salp2;
+        calp2 = nargs.calp2;
+        // Short lines (InverseStart sets salp2, calp2)
+        var w1 = Math.sqrt(1 - this._e2 * m.sq(cbet1));
+        s12x = sig12 * this._a * w1;
+        m12x = m.sq(w1) * this._a / this._f1 *
+          Math.sin(sig12 * this._f1 / w1);
+        if (outmask & g.GEODESICSCALE)
+          args.M12 = args.M21 = Math.cos(sig12 * this._f1 / w1);
+        a12 = sig12 / m.degree;
+        omg12 = lam12 / w1;
+      } else {
+
+        // Newton's method
+        var ssig1, csig1, ssig2, csig2, eps;
+        var ov = 0;
+        var numit = 0;
+        for (var trip = 0; numit < g.maxit_; ++numit) {
+          var dv;
+          var nargs = {};
+          var v = this.Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
+                                trip < 1, nargs, C1a, C2a, C3a) - lam12;
+          salp2 = nargs.salp2;
+          calp2 = nargs.calp2;
+          sig12 = nargs.sig12;
+          ssig1 = nargs.ssig1;
+          csig1 = nargs.csig1;
+          ssig2 = nargs.ssig2;
+          csig2 = nargs.csig2;
+          eps = nargs.eps;
+          omg12 = nargs.domg12;
+          if (trip < 1) dv = nargs.dlam12;
+
+          if (!(Math.abs(v) > g.tiny_) || !(trip < 1)) {
+            if (!(Math.abs(v) <= Math.max(g.tol1_, ov)))
+              numit = g.maxit_;
+            break;
+          }
+          var
+          dalp1 = -v/dv;
+          var
+          sdalp1 = Math.sin(dalp1), cdalp1 = Math.cos(dalp1),
+          nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+          calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+          salp1 = Math.max(0, nsalp1);
+          var t = m.hypot(salp1, calp1);
+          salp1 /= t; calp1 /= t;
+          // SinCosNorm(salp1, calp1);
+          // In some regimes we don't get quadratic convergence because
+          // slope -> 0.  So use convergence conditions based on epsilon
+          // instead of sqrt(epsilon).  The first criterion is a test on
+          // abs(v) against 100 * epsilon.  The second takes credit for
+          // an anticipated reduction in abs(v) by v/ov (due to the
+          // latest update in alp1) and checks this against epsilon.
+          if (!(Math.abs(v) >= g.tol1_ && m.sq(v) >= ov * g.tol0_))
+            ++trip;
+          ov = Math.abs(v);
+        }
+
+        if (numit >= g.maxit_) {
+          // Signal failure.
+          if (outmask & g.DISTANCE)
+            args.s12 = Number.NaN;
+          if (outmask & g.AZIMUTH)
+            args.azi1 = args.azi2 = Number.NaN;
+          if (outmask & g.REDUCEDLENGTH)
+            args.m12 = Number.NaN;
+          if (outmask & g.GEODESICSCALE)
+            args.M12 = args.M21 = Number.NaN;
+          if (outmask & g.AREA)
+            args.S12 = Number.NaN;
+          return Number.NaN;
+        }
+
+        {
+          var nargs = {};
+          this.Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
+                       cbet1, cbet2, (outmask & g.GEODESICSCALE) != 0,
+                       nargs, C1a, C2a);
+          s12x = nargs.s12b;
+          m12x = nargs.m12a;
+          // Ignore m0
+          if ((outmask & g.GEODESICSCALE) != 0) {
+            args.M12 = nargs.M12;
+            args.M21 = nargs.M21;
+          }
+        }
+        m12x *= this._a;
+        s12x *= this._b;
+        a12 = sig12 / m.degree;
+        omg12 = lam12 - omg12;
+      }
+    }
+
+    if (outmask & g.DISTANCE)
+      args.s12 = 0 + s12x;      // Convert -0 to 0
+
+    if (outmask & g.REDUCEDLENGTH)
+      args.m12 = 0 + m12x;      // Convert -0 to 0
+
+    if (outmask & g.AREA) {
+      var
+      // From Lambda12: sin(alp1) * cos(bet1) = sin(alp0)
+      salp0 = salp1 * cbet1,
+      calp0 = m.hypot(calp1, salp1 * sbet1); // calp0 > 0
+      var alp12;
+      if (calp0 != 0 && salp0 != 0) {
+        var
+        // From Lambda12: tan(bet) = tan(sig) * cos(alp)
+        ssig1 = sbet1, csig1 = calp1 * cbet1,
+        ssig2 = sbet2, csig2 = calp2 * cbet2,
+        k2 = m.sq(calp0) * this._ep2,
+        // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
+        A4 = m.sq(this._a) * calp0 * salp0 * this._e2;
+        var t = m.hypot(ssig1, csig1);
+        ssig1 /= t; csig1 /= t;
+        // SinCosNorm(ssig1, csig1);
+        var t = m.hypot(ssig2, csig2);
+        ssig2 /= t; csig2 /= t;
+        // SinCosNorm(ssig2, csig2);
+        var C4a = new Array(g.nC4_);
+        this.C4f(k2, C4a);
+        var
+        B41 = g.SinCosSeries(false, ssig1, csig1, C4a, g.nC4_),
+        B42 = g.SinCosSeries(false, ssig2, csig2, C4a, g.nC4_);
+        args.S12 = A4 * (B42 - B41);
+      } else
+        // Avoid problems with indeterminate sig1, sig2 on equator
+        args.S12 = 0;
+      if (!meridian &&
+          omg12 < 0.75 * Math.PI && // Long difference too big
+          sbet2 - sbet1 < 1.75) {   // Lat difference too big
+          // Use tan(Gamma/2) = tan(omg12/2)
+          // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
+          // with tan(x/2) = sin(x)/(1+cos(x))
+          var
+        somg12 = Math.sin(omg12), domg12 = 1 + Math.cos(omg12),
+        dbet1 = 1 + cbet1, dbet2 = 1 + cbet2;
+        alp12 = 2 * Math.atan2( somg12 * (sbet1*dbet2 + sbet2*dbet1),
+                                domg12 * (sbet1*sbet2 + dbet1*dbet2) );
+      } else {
+        // alp12 = alp2 - alp1, used in atan2 so no need to normalize
+        var
+        salp12 = salp2 * calp1 - calp2 * salp1,
+        calp12 = calp2 * calp1 + salp2 * salp1;
+        // The right thing appears to happen if alp1 = +/-180 and alp2 =
+        // 0, viz salp12 = -0 and alp12 = -180.  However this depends on
+        // the sign being attached to 0 correctly.  The following
+        // ensures the correct behavior.
+        if (salp12 == 0 && calp12 < 0) {
+          salp12 = g.tiny_ * calp1;
+          calp12 = -1;
+        }
+        alp12 = Math.atan2(salp12, calp12);
+      }
+      args.S12 += this._c2 * alp12;
+      args.S12 *= swapp * lonsign * latsign;
+      // Convert -0 to 0
+      args.S12 += 0;
+    }
+
+    // Convert calp, salp to azimuth accounting for lonsign, swapp, latsign.
+    if (swapp < 0) {
+      var t = salp1;
+      salp1 = salp2;
+      salp2 = t;
+      // swap(salp1, salp2);
+      var t = calp1;
+      calp1 = calp2;
+      calp2 = t;
+      // swap(calp1, calp2);
+      if (outmask & g.GEODESICSCALE) {
+        var t = args.M12;
+        args.M12 = args.M21;
+        args.M21 = t;
+        // swap(args.M12, args.M21);
+      }
+    }
+
+    salp1 *= swapp * lonsign; calp1 *= swapp * latsign;
+    salp2 *= swapp * lonsign; calp2 *= swapp * latsign;
+
+    if (outmask & g.AZIMUTH) {
+      // minus signs give range [-180, 180). 0- converts -0 to +0.
+      args.azi1 = 0 - Math.atan2(-salp1, calp1) / m.degree;
+      args.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
+    }
+
+    // Returned value in [0, 180]
+    return a12;
+  }
+
+  // args = lat2, lon2, azi2, s12, m12, M12, M21, S12
+  g.Geodesic.prototype.GenDirect = function (lat1, lon1, azi1,
+                                             arcmode, s12_a12, outmask,
+                                             args) {
+    var line = new l.GeodesicLine
+    (this, lat1, lon1, azi1,
+     // Automatically supply DISTANCE_IN if necessary
+     outmask | (arcmode ? g.NONE : g.DISTANCE_IN));
+    return line.GenPosition(arcmode, s12_a12, outmask, args);
+  }
+
+  g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
+    if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
+    if (!(Math.abs(lat1) <= 90))
+      throw new Error("lat1 must be in [-90, 90]");
+    if (!(Math.abs(lat2) <= 90))
+      throw new Error("lat2 must be in [-90, 90]");
+    if (!(lon1 >= -180 && lon1 <= 360))
+      throw new Error("lon1 must be in [-180, 360]");
+    if (!(lon2 >= -180 && lon2 <= 360))
+      throw new Error("lon2 must be in [-180, 360]");
+    if (lon1 >= 180) lon1 -= 360;
+    if (lon2 >= 180) lon2 -= 360;
+
+    var result = { lat1: lat1, lon1: lon1, lat2: lat2, lon2: lon2 };
+    result.a12 = this.GenInverse(lat1, lon1, lat2, lon2, outmask, result);
+    
+    return result;
+  }
+
+  g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
+    if (!outmask) outmask = g.LATITUDE | g.LONGITUDE | g.AZIMUTH;
+    if (!(Math.abs(lat1) <= 90))
+      throw new Error("lat1 must be in [-90, 90]");
+    if (!(lon1 >= -180 && lon1 <= 360))
+      throw new Error("lon1 must be in [-180, 360]");
+    if (!(azi1 >= -180 && azi1 <= 360))
+      throw new Error("azi1 must be in [-180, 360]");
+    if (!(isFinite(s12)))
+      throw new Error("s12 must be a finite number");
+    if (lon1 >= 180) lon1 -= 360;
+    if (azi1 >= 180) azi1 -= 360;
+
+    var result = { lat1: lat1, lon1: lon1, azi1: azi1, s12: s12 };
+    result.a12 = this.GenDirect(lat1, lon1, azi1, false, s12, outmask, result);
+    
+    return result;
+  }
+
+  g.Geodesic.prototype.Path = function(lat1, lon1, lat2, lon2, ds12, maxk) {
+    var t = this.Inverse(lat1, lon1, lat2, lon2);
+    if (!maxk) maxk = 20;
+    if (!(ds12 > 0))
+      throw new Error("ds12 must be a positive number")
+    var
+    k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
+    points = new Array(k + 1);
+    points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
+    points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
+    if (k > 1) {
+      var line = new l.GeodesicLine(this, t.lat1, t.lon1, t.azi1, 
+                                    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
+      da12 = t.a12/k;
+      for (var i = 1; i < k; ++i) {
+        var args = {};
+        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH,
+                         args);
+        points[i] = {lat: args.lat2, lon: args.lon2, azi: args.azi2};
+      }
+    }
+    return points;
+  }
+
+  g.WGS84 = new g.Geodesic(GeographicLib.Constants.WGS84.a,
+                           GeographicLib.Constants.WGS84.f);
+})();

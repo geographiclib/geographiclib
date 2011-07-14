@@ -1,4 +1,12 @@
 #! /bin/sh
+#
+# printlogs.cgi
+# cgi script for printing error logs
+#
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+# under the LGPL.  For more information, see
+# http://geographiclib.sourceforge.net/
+#
 # $Id$
 echo Content-type: text/html
 echo

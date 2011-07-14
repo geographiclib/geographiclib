@@ -97,12 +97,13 @@ namespace GeographicLib {
                      real& perimeter, real& area) const throw() {
       real s12, S12, t;
       if (_num < 2) {
-        perimeter = area = 0;
+        perimeter = 0;
+        if (!_polyline)
+          area = 0;
         return _num;
       }
       if (_polyline) {
         perimeter = _perimetersum();
-        area = 0;
         return _num;
       }
       _g.GenInverse(_lat1, _lon1, _lat0, _lon0,

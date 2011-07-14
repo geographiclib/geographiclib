@@ -337,10 +337,10 @@ namespace GeographicLib {
     }
 
     if (outmask & DISTANCE)
-      s12 = s12x;
+      s12 = 0 + s12x;           // Convert -0 to 0
 
     if (outmask & REDUCEDLENGTH)
-      m12 = m12x;
+      m12 = 0 + m12x;           // Convert -0 to 0
 
     if (outmask & AREA) {
       real

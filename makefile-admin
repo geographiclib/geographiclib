@@ -32,6 +32,13 @@ distrib-cgi:
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
+distrib-js:
+	for f in geod-calc.html \
+	GeographicLib/{Math,Geodesic{,Line,Polygon}}.js; do \
+	  a=javascript/$$f; b=$(WEBSTAGE)/scripts/$$f; \
+	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
+	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/scripts $(USER),geographiclib@web.sourceforge.net:./htdocs/
+
 TAGS:
 	for d in include src tools; do \
 	  $(MAKE) -s -C $$d list | tr ' ' '\n' | grep -v '/Config\.h$$' | \
