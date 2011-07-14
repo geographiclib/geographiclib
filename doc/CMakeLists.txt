@@ -15,6 +15,8 @@ endforeach (TOOL)
 if (MAINTAINER)
   file (GLOB SOURCES ../src/*.cpp ../include/GeographicLib/*.hpp ../tools/*.cpp)
   file (GLOB EXTRA_FILES ../maxima/*.mac tmseries30.html geodseries30.html)
+  file (GLOB SCRIPTDRIVERS scripts/*.html)
+  file (GLOB JSSCRIPTS scripts/GeographicLib/*.js)
   add_custom_target (doc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxygen.log)
   add_dependencies (doc htmlman)
@@ -29,6 +31,9 @@ if (MAINTAINER)
     COMMENT "Generating html documentation tree")
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
     DESTINATION share/doc/GeographicLib)
+  install (FILES ${SCRIPTDRIVERS} DESTINATION share/doc/GeographicLib/scripts)
+  install (FILES ${JSSCRIPTS}
+    DESTINATION share/doc/GeographicLib/scripts/GeographicLib)
 
   add_custom_target (distrib-doc)
   add_dependencies (distrib-doc doc distrib-man)

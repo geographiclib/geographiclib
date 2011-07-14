@@ -14,6 +14,8 @@ SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
 
 EXTRAFILES = tmseries30.html geodseries30.html
 HTMLMANPAGES = 	$(patsubst %,../man/%.1.html,$(PROGRAMS))
+SCRIPTDRIVERS = $(wildcard scripts/*.html)
+JSSCRIPTS = $(wildcard scripts/GeographicLib/*.js)
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
@@ -28,14 +30,22 @@ html/index.html: Doxyfile Geographic.doc \
 	doxygen
 
 PREFIX = /usr/local
-DEST = $(PREFIX)/share/doc/GeographicLib/html
+DEST = $(PREFIX)/share/doc/GeographicLib
+DOCDEST = $(DEST)/html
+SCRIPTDEST = $(DEST)/scripts
 INSTALL = install -b
 
 install: html/index.html
-	test -d $(DEST) || mkdir -p $(DEST)
-	$(INSTALL) -m 644 html/* $(DEST)/
+	test -d $(DOCDEST) || mkdir -p $(DOCDEST)
+	$(INSTALL) -m 644 html/* $(DOCDEST)/
+	test -d $(SCRIPTDEST)/GeographicLib || \
+	mkdir -p $(SCRIPTDEST)/GeographicLib
+	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(SCRIPTDEST)/
+	$(INSTALL) -m 644 $(JSSCRIPTS) $(SCRIPTDEST)/GeographicLib/
+
 list:
-	@echo Doxyfile Geographic.doc $(EXTRAFILES)
+	@echo Doxyfile Geographic.doc $(EXTRAFILES) \
+	$(SCRIPTDRIVERS) $(JSSCRIPTS)
 
 distclean:
 	rm -rf html

@@ -2,6 +2,13 @@
 
 EXTRAFILES = tmseries30.html geodseries30.html
 
+SCRIPTDRIVERS = scripts/geod-calc.html
+JSSCRIPTS = \
+scripts/GeographicLib/Math.js \
+scripts/GeographicLib/Geodesic.js \
+scripts/GeographicLib/GeodesicLine.js \
+scripts/GeographicLib/PolygonArea.js
+
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
 $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -79,3 +86,7 @@ distclean-local:
 install-doc: doc
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
 	$(INSTALL) -m 644 html/* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
+	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
+	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib
+	$(INSTALL) -m 644 $(JSSCRIPTS) $(DESTDIR)$(docdir)/scripts/GeographicLib
