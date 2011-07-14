@@ -3,7 +3,7 @@
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \
 	geoidheight geocentricforward geocentricreverse \
-	localcartesianforward localcartesianreverse
+	localcartesianforward localcartesianreverse polygonarea
 
 MATLAB_COMPILESCRIPT = geographiclibinterface.m
 

@@ -415,6 +415,8 @@ The available functions are:
    (see GeographicLib::Geodesic::Inverse)
  - geodesicline: compute points along a geodesic
    (see GeographicLib::GeodesicLine::Position)
+ - polygonarea: compute area of a geodesic polygon
+   (see GeographicLib::PolygonArea)
  - utmupsforward: convert geographic coordinates to UTM/UPS
    (see GeographicLib::UTMUPS::Forward)
  - utmupsreverse: convert UTM/UPS coordinates to geographic
@@ -439,7 +441,7 @@ class.  Use the help function to get documentation, e.g., \code
   help geodesicdirect \endcode
 Unfortunately, the help function does not work for compiled functions in
 Octave; in this case, just list the .m file, e.g., \code
-  system 'less geodesicdirect.m' \endcode
+  type geodesicdirect \endcode
 Other useful functions, e.g., to convert from geographic
 coordinates to MGRS can easily be written with Matlab code.
 

@@ -16,7 +16,8 @@ utmupsreverse.cpp \
 geocentricforward.cpp \
 geocentricreverse.cpp \
 localcartesianforward.cpp \
-localcartesianreverse.cpp
+localcartesianreverse.cpp \
+polygonarea.cpp
 
 MATLAB_DOC = \
 geodesicdirect.m \
@@ -30,7 +31,8 @@ utmupsreverse.m \
 geocentricforward.m \
 geocentricreverse.m \
 localcartesianforward.m \
-localcartesianreverse.m
+localcartesianreverse.m \
+polygonarea.m
 
 MATLAB_COMPILESCRIPT = geographiclibinterface.m
 

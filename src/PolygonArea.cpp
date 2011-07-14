@@ -24,9 +24,9 @@ namespace GeographicLib {
       _lon0 = _lon1 = lon;
     } else {
       real s12, S12, t;
-      _g.GenInverse(_lat1, _lon1, lat, lon,
-                    Geodesic::DISTANCE | (_polyline ? 0 : Geodesic::AREA),
-                    s12, t, t, t, t, t, S12);
+      _earth.GenInverse(_lat1, _lon1, lat, lon,
+                        Geodesic::DISTANCE | (_polyline ? 0 : Geodesic::AREA),
+                        s12, t, t, t, t, t, S12);
       _perimetersum += s12;
       if (!_polyline) {
         _areasum += S12;
@@ -51,9 +51,9 @@ namespace GeographicLib {
       perimeter = _perimetersum();
       return _num;
     }
-    _g.GenInverse(_lat1, _lon1, _lat0, _lon0,
-                  Geodesic::DISTANCE | Geodesic::AREA,
-                  s12, t, t, t, t, t, S12);
+    _earth.GenInverse(_lat1, _lon1, _lat0, _lon0,
+                      Geodesic::DISTANCE | Geodesic::AREA,
+                      s12, t, t, t, t, t, S12);
     perimeter = _perimetersum(s12);
     Accumulator<real> tempsum(_areasum);
     tempsum += S12;

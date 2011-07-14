@@ -80,6 +80,7 @@ Files
       geodesicinverse.{cpp,m} -- Matlab code for the inverse geodesic problem
       geodesicline.{cpp,m} -- Matlab code for geodesic lines
       geoidheight.{cpp,m} -- Matlab code to look up geoid heights
+      polygonarea.{cpp,m} -- Matlab code for polygon areas
 
     doc/
       Doxyfile -- Doxygen config file

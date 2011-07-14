@@ -112,7 +112,7 @@ namespace GeographicLib {
      *
      * @param[in] reverse if true then clockwise (instead of counter-clockwise)
      *   traversal counts as a positive area.
-     * @param[in] signed if true then return a signed result for the area if
+     * @param[in] sign if true then return a signed result for the area if
      *   the polygon is traversed in the "wrong" direction instead of returning
      *   the area for the rest of the earth.
      * @param[out] perimeter the perimeter of the polygon or length of the
@@ -131,7 +131,7 @@ namespace GeographicLib {
      *
      * @param[in] reverse if true then clockwise (instead of counter-clockwise)
      *   traversal counts as a positive area.
-     * @param[in] signed if true then return a signed result for the area if
+     * @param[in] sign if true then return a signed result for the area if
      *   the polygon is traversed in the "wrong" direction instead of returning
      *   the area for the rest of the earth.
      * @param[out] perimeter the perimeter of the polygon or length of the
