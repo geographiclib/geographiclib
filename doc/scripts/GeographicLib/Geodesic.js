@@ -12,10 +12,31 @@
  * perform the basic geodesic calculations.  These return an object with
  * (some) of the following fields:
  *
- *   lat1, lon1, azi1, lat2, lon2, azi2, s12, a12, m12, M12, M21, S12.
+ *   lat1 latitude of point 1
+ *   lon1 longitude of point 1
+ *   azi1 azimuth of line at point 1
+ *   lat2 latitude of point 2
+ *   lon2 longitude of point 2
+ *   azi2 azimuth of line at point 2
+ *   s12 distance from 1 to 2
+ *   a12 arc length on auxiliary sphere from 1 to 2
+ *   m12 reduced length of geodesic
+ *   M12 geodesic scale 2 relative to 1
+ *   M21 geodesic scale 1 relative to 2
+ *   S12 area between geodesic and equator
  *
  * outmask determines which fields get included and if outmask is
- * omitted, then only the basic geodesic fields are computed.
+ * omitted, then only the basic geodesic fields are computed.  The mask
+ * is an or'ed combination of the following values
+ *
+ *   GeographicLib.Geodesic.LATITUDE
+ *   GeographicLib.Geodesic.LONGITUDE
+ *   GeographicLib.Geodesic.AZIMUTH
+ *   GeographicLib.Geodesic.DISTANCE
+ *   GeographicLib.Geodesic.REDUCEDLENGTH
+ *   GeographicLib.Geodesic.GEODESICSCALE
+ *   GeographicLib.Geodesic.AREA
+ *   GeographicLib.Geodesic.ALL
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the LGPL.  For more information, see

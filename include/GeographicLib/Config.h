@@ -1,4 +1,2 @@
-// $Id$
-// This will be overwritten by ./configure
-
-#define GEOGRAPHICLIB_VERSION_STRING "Unconfigured"
+#define HAVE_LONG_DOUBLE 1
+#define GEOGRAPHICLIB_VERSION_STRING "1.12"
