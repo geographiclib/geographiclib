@@ -63,7 +63,7 @@ GeodesicProj.o: GeodesicProj.usage AzimuthalEquidistant.hpp \
 GeoidEval.o: GeoidEval.usage Constants.hpp Config.h DMS.hpp \
 	GeoCoords.hpp Geoid.hpp
 Planimeter.o: Planimeter.usage Constants.hpp Config.h DMS.hpp \
-	GeoCoords.hpp Geodesic.hpp GeodesicLine.hpp
+	GeoCoords.hpp PolygonArea.hpp Geodesic.hpp
 ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
 	Constants.hpp Config.h DMS.hpp LambertConformalConic.hpp
 

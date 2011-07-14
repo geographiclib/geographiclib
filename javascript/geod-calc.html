@@ -25,7 +25,7 @@
     <script src="GeographicLib/Math.js"></script>
     <script src="GeographicLib/Geodesic.js"></script>
     <script src="GeographicLib/GeodesicLine.js"></script>
-    <script src="GeographicLib/GeodesicPolygon.js"></script>
+    <script src="GeographicLib/PolygonArea.js"></script>
     <script>
 function GeodesicInverse(input) {
   var result = {};
@@ -116,10 +116,9 @@ function GeodesicArea(input) {
       if (pos[0] == "") pos.shift();
       t[i] = {lat: parseFloat(pos[0]), lon: parseFloat(pos[1])};
     }
-    t = GeographicLib.GeodesicPolygon.Area(GeographicLib.Geodesic.WGS84,
-			t, false);
+    t = GeographicLib.PolygonArea.Area(GeographicLib.Geodesic.WGS84, t, false);
     result.status = "OK";
-    result.area = t.num + " " +
+    result.area = t.number + " " +
       t.perimeter.toFixed(8) + " " + t.area.toFixed(3);
   }
   catch (e) {
@@ -129,9 +128,7 @@ function GeodesicArea(input) {
   return result;
 }
     </script>
-
   </head>
-
   <body>
     <div>
       <h2>Geodesic calculations</h2>
@@ -181,14 +178,14 @@ function GeodesicArea(input) {
       <p>
         <input type="button" value="compute" 
 	       onclick="var t = GeodesicInverse(input.value);
-			status.value = t.status;
+			statusa.value = t.status;
 			p1.value = t.p1;
 			p2.value = t.p2;
 			s12.value = t.s12;" />
       </p>
       <p>
 	status:
-        <input name="status" size=50 readonly />
+        <input name="statusa" size=50 readonly />
       </p>
       <p>
 	lat1 lon1 azi1:
@@ -221,14 +218,14 @@ function GeodesicArea(input) {
       <p>
         <input type="button" value="compute" 
 	       onclick="var t = GeodesicDirect(input.value);
-			status.value = t.status;
+			statusb.value = t.status;
 			p1.value = t.p1;
 			p2.value = t.p2;
 			s12.value = t.s12;" />
       </p>
       <p>
 	status:
-        <input name="status" size=50 readonly />
+        <input name="statusb" size=50 readonly />
       </p>
       <p>
 	lat1 lon1 azi1:
@@ -253,7 +250,9 @@ function GeodesicArea(input) {
 	number of intervals the geodesic is broken into.  The output
 	gives a sequence of positions <i>lat, lon</i> together with the
 	corresponding azimuths <i>azi</i>.  The sample shows the path
-	from JFK to Singapore's Changi Airport at about 1000 km intervals.Z
+	from JFK to Singapore's Changi Airport at about 1000 km
+	intervals.  (In this example, the path taken by Google Earth
+	deviates from the shortest path by about 2.9 km.)
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2 ds12 maxk&rdquo;</i>
         (as signed decimal degrees and meters):</p>
@@ -263,12 +262,12 @@ function GeodesicArea(input) {
       <p>
         <input type="button" value="compute" 
 	       onclick="var t = GeodesicPath(input.value);
-			status.value = t.status;
+			statusc.value = t.status;
 			points.value = t.points;" />
       </p>
       <p>
 	status:
-        <input name="status" size=50 readonly />
+        <input name="statusc" size=50 readonly />
       </p>
       <p>
 	points (lat lon azi):<br>
@@ -286,7 +285,7 @@ function GeodesicArea(input) {
 	The example gives the approximate perimeter (in m) and area (in
 	m<sup>2</sup>) of Antarctica.  (For this example, Google Earth
 	Pro returns an area which is 30 times too large!  However this
-	is a little unfair, since Google Earth Pro has no concept of
+	is a little unfair, since Google Earth has no concept of
 	polygons which encircle a pole.)
       </p>
       <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>
@@ -315,12 +314,12 @@ function GeodesicArea(input) {
       <p>
         <input type="button" value="compute" 
 	       onclick="var t = GeodesicArea(input.value);
-			status.value = t.status;
+			statusd.value = t.status;
 			area.value = t.area;" />
       </p>
       <p>
 	status:
-        <input name="status" size=50 readonly />
+        <input name="statusd" size=50 readonly />
       </p>
       <p>
 	number perimeter area:

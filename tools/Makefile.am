@@ -72,8 +72,8 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
-	../include/GeographicLib/Geodesic.hpp \
-	../include/GeographicLib/GeodesicLine.hpp
+	../include/GeographicLib/PolygonArea.hpp \
+	../include/GeographicLib/Geodesic.hpp
 
 ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/Constants.hpp \

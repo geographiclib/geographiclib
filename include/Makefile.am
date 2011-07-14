@@ -14,6 +14,7 @@ nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/GeoCoords.hpp \
 				GeographicLib/Geodesic.hpp \
 				GeographicLib/GeodesicLine.hpp \
+				GeographicLib/PolygonArea.hpp \
 				GeographicLib/Geoid.hpp \
 				GeographicLib/Gnomonic.hpp \
 				GeographicLib/LambertConformalConic.hpp \

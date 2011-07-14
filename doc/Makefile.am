@@ -20,6 +20,7 @@ $(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
 $(top_srcdir)/include/GeographicLib/MGRS.hpp \
 $(top_srcdir)/include/GeographicLib/OSGB.hpp \
 $(top_srcdir)/include/GeographicLib/PolarStereographic.hpp \
+$(top_srcdir)/include/GeographicLib/PolygonArea.hpp \
 $(top_srcdir)/include/GeographicLib/TransverseMercatorExact.hpp \
 $(top_srcdir)/include/GeographicLib/TransverseMercator.hpp \
 $(top_srcdir)/include/GeographicLib/UTMUPS.hpp
@@ -41,6 +42,7 @@ $(top_srcdir)/src/LocalCartesian.cpp \
 $(top_srcdir)/src/MGRS.cpp \
 $(top_srcdir)/src/OSGB.cpp \
 $(top_srcdir)/src/PolarStereographic.cpp \
+$(top_srcdir)/src/PolygonArea.cpp \
 $(top_srcdir)/src/TransverseMercator.cpp \
 $(top_srcdir)/src/TransverseMercatorExact.cpp \
 $(top_srcdir)/src/UTMUPS.cpp \

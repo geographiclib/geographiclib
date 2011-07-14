@@ -30,6 +30,7 @@ Files
       LocalCartesian.[ch]pp -- local cartesian coordinates
       Geodesic.[ch]pp -- geodesic calculations
       GeodesicLine.[ch]pp -- calculations on a single geodesic
+      PolygonArea.[ch]pp -- polygon area
       AzimuthalEquidistant.[ch]pp -- azimuthal equidistant projection
       Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection

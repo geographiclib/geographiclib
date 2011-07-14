@@ -310,6 +310,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\PolygonArea.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\AzimuthalEquidistant.cpp"
 				>
 			</File>
@@ -393,6 +397,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/GeodesicLine.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/PolygonArea.hpp"
 				>
 			</File>
 			<File

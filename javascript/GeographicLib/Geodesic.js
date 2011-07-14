@@ -2,6 +2,21 @@
  * Geodesic.js
  * Transcription of Geodesic.[ch]pp into javascript.
  *
+ * See the documentation for the C++ class.  The conversion is mostly a
+ * literal conversion from C++.  However there are two javascript-ready
+ * interface routines.
+ *
+ *   GeographicLib.Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2, outmask);
+ *   GeographicLib.Geodesic.WGS84.Direct(lat1, lon1, azi1, s12, outmask);
+ *
+ * perform the basic geodesic calculations.  These return an object with
+ * (some) of the following fields:
+ *
+ *   lat1, lon1, azi1, lat2, lon2, azi2, s12, a12, m12, M12, M21, S12.
+ *
+ * outmask determines which fields get included and if outmask is
+ * omitted, then only the basic geodesic fields are computed.
+ *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
@@ -996,30 +1011,6 @@ GeographicLib.GeodesicLine = {};
     result.a12 = this.GenDirect(lat1, lon1, azi1, false, s12, outmask, result);
     
     return result;
-  }
-
-  g.Geodesic.prototype.Path = function(lat1, lon1, lat2, lon2, ds12, maxk) {
-    var t = this.Inverse(lat1, lon1, lat2, lon2);
-    if (!maxk) maxk = 20;
-    if (!(ds12 > 0))
-      throw new Error("ds12 must be a positive number")
-    var
-    k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
-    points = new Array(k + 1);
-    points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
-    points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
-    if (k > 1) {
-      var line = new l.GeodesicLine(this, t.lat1, t.lon1, t.azi1, 
-                                    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
-      da12 = t.a12/k;
-      for (var i = 1; i < k; ++i) {
-        var args = {};
-        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH,
-                         args);
-        points[i] = {lat: args.lat2, lon: args.lon2, azi: args.azi2};
-      }
-    }
-    return points;
   }
 
   g.WGS84 = new g.Geodesic(GeographicLib.Constants.WGS84.a,

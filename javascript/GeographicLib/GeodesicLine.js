@@ -2,6 +2,18 @@
  * GeodesicLine.js
  * Transcription of GeodesicLine.[ch]pp into javascript.
  *
+ * See the documentation for the C++ class.  The conversion is mostly a
+ * literal conversion from C++.  However there are two javascript-ready
+ * interface routines.
+ *
+ *   GeographicLib.Geodesic.WGS84.Path(lat1, lon1, lat2, lon2, ds12, maxk);
+ *
+ * splits a geodesic line into k equal pieces which are no longer than
+ * about ds12 (but k cannot exceed maxk, default 20), and returns a
+ * vector of length k + 1 of objects with fields
+ *
+ *   lat, lon, azi
+ *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the LGPL.  For more information, see
  * http://geographiclib.sourceforge.net/
@@ -252,6 +264,30 @@
     }
 
     return arcmode ? s12_a12 : sig12 / m.degree;
+  }
+
+  g.Geodesic.prototype.Path = function(lat1, lon1, lat2, lon2, ds12, maxk) {
+    var t = this.Inverse(lat1, lon1, lat2, lon2);
+    if (!maxk) maxk = 20;
+    if (!(ds12 > 0))
+      throw new Error("ds12 must be a positive number")
+    var
+    k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
+    points = new Array(k + 1);
+    points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
+    points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
+    if (k > 1) {
+      var line = new l.GeodesicLine(this, t.lat1, t.lon1, t.azi1, 
+                                    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
+      da12 = t.a12/k;
+      for (var i = 1; i < k; ++i) {
+        var args = {};
+        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH,
+                         args);
+        points[i] = {lat: args.lat2, lon: args.lon2, azi: args.azi2};
+      }
+    }
+    return points;
   }
 
 })();
