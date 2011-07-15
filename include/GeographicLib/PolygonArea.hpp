@@ -75,9 +75,9 @@ namespace GeographicLib {
      * @param[in] earth the Geodesic object to use for geodesic calculations.
      *   By default this uses the WGS84 ellipsoid.
      * @param[in] polyline if true that treat the points as defining a polyline
-     *   instead of a polygon.
+     *   instead of a polygon (default = false).
      **********************************************************************/
-    PolygonArea(const Geodesic& earth, bool polyline) throw()
+    PolygonArea(const Geodesic& earth, bool polyline = false) throw()
       : _earth(earth)
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)

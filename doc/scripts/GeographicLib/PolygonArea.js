@@ -6,8 +6,7 @@
  * literal conversion from C++.  However there are two javascript-ready
  * interface routines.
  *
- *   GeographicLib.PolygonArea.Area(GeographicLib.Geodesic.WGS84,
- *                                  points, polyline);
+ *   GeographicLib.Geodesic.WGS84.Area(points, polyline);
  *
  * computes the area of a polygon with vertices given by an array
  * points, each of whose elements contains lat and lon fields.  The
@@ -15,9 +14,9 @@
  *
  *   number, perimeter, area
  *
- * There is no need to "close" the polygon.  If polyline is true, that
- * the points denote a polyline and its length is returned as the
- * perimeter (and the area is not calculated).
+ * There is no need to "close" the polygon.  If polyline (default =
+ * false) is true, that the points denote a polyline and its length is
+ * returned as the perimeter (and the area is not calculated).
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the LGPL.  For more information, see
@@ -51,7 +50,7 @@ GeographicLib.PolygonArea = {};
   p.PolygonArea = function(earth, polyline) {
     this._earth = earth;
     this._area0 = 4 * Math.PI * earth._c2;
-    this._polyline = polyline;
+    this._polyline = !polyline ? false : polyline;
     if (!this._polyline)
       this._areasum = new a.Accumulator(0);
     this._perimetersum = new a.Accumulator(0);
@@ -85,21 +84,22 @@ GeographicLib.PolygonArea = {};
     ++this._num;
   }
 
-  // args = perimeter, area
-  p.PolygonArea.prototype.Compute = function(reverse, sign, args) {
+  // return number, perimeter, area
+  p.PolygonArea.prototype.Compute = function(reverse, sign) {
+    var vals = {number: this._num};
     if (this._num < 2) {
-      args.perimeter = 0;
+      vals.perimeter = 0;
       if (!this._polyline)
-        args.area = 0;
-      return this._num;
+        vals.area = 0;
+      return vals;
     }
     if (this._polyline) {
-      args.perimeter = this._perimetersum.Sum();
-      return this._num;
+      vals.perimeter = this._perimetersum.Sum();
+      return vals;
     }
     var t = this._earth.Inverse(this._lat1, this._lon1, this._lat0, this._lon0,
 				g.DISTANCE | g.AREA);
-    args.perimeter = this._perimetersum.Sum(t.s12);
+    vals.perimeter = this._perimetersum.Sum(t.s12);
     var tempsum = new a.Accumulator(this._areasum);
     tempsum.Add(t.S12);
     var crossings = this._crossings + p.transit(this._lon1, this._lon0);
@@ -121,17 +121,19 @@ GeographicLib.PolygonArea = {};
       else if (tempsum < 0)
         tempsum.Add( this._area0);
     }
-    args.area = tempsum.Sum();
-    return this._num;
+    vals.area = tempsum.Sum();
+    return vals;
   }
 
   p.Area = function(earth, points, polyline) {
     var poly = new p.PolygonArea(earth, polyline);
     for (var i = 0; i < points.length; ++i)
       poly.AddPoint(points[i].lat, points[i].lon);
-    var result = {};
-    result.number = poly.Compute(false, true, result);
-    return result;
+    return poly.Compute(false, true);
+  }
+
+  g.Geodesic.prototype.Area = function(points, polyline) {
+    return p.Area(this, points, polyline);
   }
 
 })();

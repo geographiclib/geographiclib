@@ -128,13 +128,16 @@
     }
   }
 
-  // args = lat2, lon2, azi2, s12, m12, M12, M21, S12
+  // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   l.GeodesicLine.prototype.GenPosition = function(arcmode, s12_a12,
-                                                  outmask, args) {
+                                                  outmask) {
+    var vals = {};
     outmask &= this._caps & g.OUT_ALL;
-    if (!( arcmode || (this._caps & g.DISTANCE_IN & g.OUT_ALL) ))
+    if (!( arcmode || (this._caps & g.DISTANCE_IN & g.OUT_ALL) )) {
       // Uninitialized or impossible distance calculation requested
-      return Number.NaN();
+      vals.a12 = Number.NaN();
+      return vals;
+    }
 
     // Avoid warning about uninitialized B12.
     var sig12, ssig12, csig12, B12 = 0, AB1 = 0;
@@ -186,7 +189,7 @@
                        comg2 * this._comg1 + somg2 * this._somg1);
 
     if (outmask & g.DISTANCE)
-      args.s12 = arcmode ? this._b * ((1 + this._A1m1) * sig12 + AB1) : s12_a12;
+      vals.s12 = arcmode ? this._b * ((1 + this._A1m1) * sig12 + AB1) : s12_a12;
 
     if (outmask & g.LONGITUDE) {
       lam12 = omg12 + this._A3c *
@@ -196,15 +199,15 @@
       // Can't use AngNormalize because longitude might have wrapped multiple
       // times.
       lon12 = lon12 - 360 * Math.floor(lon12/360 + 0.5);
-      args.lon2 = g.AngNormalize(this._lon1 + lon12);
+      vals.lon2 = g.AngNormalize(this._lon1 + lon12);
     }
 
     if (outmask & g.LATITUDE)
-      args.lat2 = Math.atan2(sbet2, this._f1 * cbet2) / m.degree;
+      vals.lat2 = Math.atan2(sbet2, this._f1 * cbet2) / m.degree;
 
     if (outmask & g.AZIMUTH)
       // minus signs give range [-180, 180). 0- converts -0 to +0.
-      args.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
+      vals.azi2 = 0 - Math.atan2(-salp2, calp2) / m.degree;
 
     if (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       var
@@ -218,13 +221,13 @@
       if (outmask & g.REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
-        args.m12 = this._b * ((w2 * (this._csig1 * ssig2) -
+        vals.m12 = this._b * ((w2 * (this._csig1 * ssig2) -
                                w1 * (this._ssig1 * csig2))
                               - this._csig1 * csig2 * J12);
       if (outmask & g.GEODESICSCALE) {
-        args.M12 = csig12 + (this._k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
+        vals.M12 = csig12 + (this._k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
                              - csig2 * J12) * this._ssig1 / w1;
-        args.M21 = csig12 - (this._k2 * (ssig2sq - ssig1sq) * this._ssig1 /
+        vals.M21 = csig12 - (this._k2 * (ssig2sq - ssig1sq) * this._ssig1 /
                              (w1 + w2)
                              - this._csig1 * J12) * ssig2 / w2;
       }
@@ -259,11 +262,12 @@
            ssig12 * (this._csig1 * ssig12 / (1 + csig12) + this._ssig1));
         calp12 = m.sq(this._salp0) + m.sq(this._calp0) * this._csig1 * csig2;
       }
-      args.S12 = this._c2 * Math.atan2(salp12, calp12) +
+      vals.S12 = this._c2 * Math.atan2(salp12, calp12) +
         this._A4 * (B42 - this._B41);
     }
 
-    return arcmode ? s12_a12 : sig12 / m.degree;
+    vals.a12 = arcmode ? s12_a12 : sig12 / m.degree;
+    return vals;
   }
 
   g.Geodesic.prototype.Path = function(lat1, lon1, lat2, lon2, ds12, maxk) {
@@ -281,10 +285,9 @@
                                     g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
       da12 = t.a12/k;
       for (var i = 1; i < k; ++i) {
-        var args = {};
-        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH,
-                         args);
-        points[i] = {lat: args.lat2, lon: args.lon2, azi: args.azi2};
+        var vals =
+        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH);
+        points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
       }
     }
     return points;

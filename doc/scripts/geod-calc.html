@@ -32,7 +32,7 @@ function GeodesicInverse(input) {
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2
     var t = new String(input);
-    t = t.split(/\s+/,6);
+    t = t.split(/[\s,]+/,6);
     if (t[0] == "") t.shift();
     t = GeographicLib.Geodesic.WGS84.Inverse
     (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]));
@@ -58,7 +58,7 @@ function GeodesicDirect(input) {
   try {
     // Input is a blank-delimited line: lat1 lon1 azi1 s12
     var t = new String(input);
-    t = t.split(/\s+/,6);
+    t = t.split(/[\s,]+/,6);
     if (t[0] == "") t.shift();
     t = GeographicLib.Geodesic.WGS84.Direct
     (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]));
@@ -84,7 +84,7 @@ function GeodesicPath(input) {
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2 ds12 maxnum
     var t = new String(input);
-    t = t.split(/\s+/,8);
+    t = t.split(/[\s,]+/,8);
     if (t[0] == "") t.shift();
     t = GeographicLib.Geodesic.WGS84.Path
     (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]),
@@ -112,11 +112,11 @@ function GeodesicArea(input) {
     if (t[0] == "") t.shift();
     if (t[t.length-1] == "") t.pop();
     for (var i = 0; i < t.length; ++i) {
-      var pos = t[i].split(/\s+/,5);
+      var pos = t[i].split(/[\s,]+/,5);
       if (pos[0] == "") pos.shift();
       t[i] = {lat: parseFloat(pos[0]), lon: parseFloat(pos[1])};
     }
-    t = GeographicLib.PolygonArea.Area(GeographicLib.Geodesic.WGS84, t, false);
+    t = GeographicLib.Geodesic.WGS84.Area(t);
     result.status = "OK";
     result.area = t.number + " " +
       t.perimeter.toFixed(8) + " " + t.area.toFixed(3);
@@ -150,7 +150,9 @@ function GeodesicArea(input) {
       </blockquote>
       This page just provides a basic interface.  There's no fancy
       parsing of geographic coordinates.  Enter latitudes and longitudes
-      as signed decimal degrees.
+      as signed decimal degrees using spaces or commas as separators.
+      The number of digits given in the output roughly reflects the
+      accuracy of the results.
     <p>
       Jump to:
       <ul>
@@ -171,13 +173,13 @@ function GeodesicArea(input) {
 	Zealand, and Salamanca, Spain.  (For this example, the
 	<a href="http://www.ngs.noaa.gov/">NGS</a>
 	<a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
-        inverse geodesic calculator</a> returns a result which is 3.3 km
-	too long with an azimuth which is off by 10 degrees.)
+        inverse geodesic calculator</a> returns a result which is 1.2 km
+	too long with an azimuth which is off by 3 degrees.)
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>
         (as signed decimal degrees):</p>
       <p>input: 
-        <input name="input" size=72 value="-41.3 174.8 41.0 -5.5" />
+        <input name="input" size=72 value="-41.32 174.81 40.96 -5.50" />
       </p>
       <p>
         <input type="button" value="compute" 
@@ -295,24 +297,24 @@ function GeodesicArea(input) {
       <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>
         (as signed decimal degrees):</p>
       <p>points (lat lon):<br>
-        <textarea name="input" cols=36 rows=13>-63.1 -58
--72.9 -74
+        <textarea name="input" cols=36 rows=13>-63.1  -58
+-72.9  -74
 -71.9 -102
 -74.9 -102
 -74.3 -131
 -77.5 -163
--77.4 163
--71.7 172
--65.9 140
--65.7 113
--66.6 88
--66.9 59
--69.8 25
--70.0 -4
--71.0 -14
--77.3 -33
--77.9 -46
--74.7 -61
+-77.4  163
+-71.7  172
+-65.9  140
+-65.7  113
+-66.6 	88
+-66.9 	59
+-69.8 	25
+-70.0   -4
+-71.0  -14
+-77.3  -33
+-77.9  -46
+-74.7  -61
 </textarea>
       </p>
       <p>
@@ -333,7 +335,7 @@ function GeodesicArea(input) {
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-07-13)</address>
+      (2011-07-14)</address>
     <br>
     <a href="http://sourceforge.net">
       <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2"
