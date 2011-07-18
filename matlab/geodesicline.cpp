@@ -74,6 +74,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   double* lat2 = mxGetPr(plhs[0]);
   double* lon2 = lat2 + m;
   double* azi2 = lat2 + 2*m;
+  double* a12 = NULL;
   double* m12 = NULL;
   double* M12 = NULL;
   double* M21 = NULL;
@@ -81,11 +82,12 @@ void mexFunction( int nlhs, mxArray* plhs[],
   bool aux = nlhs == 2;
 
   if (aux) {
-    plhs[1] = mxCreateDoubleMatrix(m, 4, mxREAL);
-    m12 = mxGetPr(plhs[1]);
-    M12 = m12 + m;
-    M21 = m12 + 2*m;
-    S12 = m12 + 3*m;
+    plhs[1] = mxCreateDoubleMatrix(m, 5, mxREAL);
+    a12 = mxGetPr(plhs[1]);
+    m12 = a12 + m;
+    M12 = a12 + 2*m;
+    M21 = a12 + 3*m;
+    S12 = a12 + 4*m;
   }
 
   try {
@@ -99,8 +101,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     const GeodesicLine l(g, lat1, lon1, azi1);
     for (int i = 0; i < m; ++i)
       if (aux)
-        l.Position(s12[i], lat2[i], lon2[i], azi2[i],
-                   m12[i], M12[i], M21[i], S12[i]);
+        a12[i] = l.Position(s12[i], lat2[i], lon2[i], azi2[i],
+                            m12[i], M12[i], M21[i], S12[i]);
       else
         l.Position(s12[i], lat2[i], lon2[i], azi2[i]);
   }
