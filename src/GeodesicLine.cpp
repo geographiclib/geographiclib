@@ -91,7 +91,7 @@ namespace GeographicLib {
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
 
     if (_caps & CAP_C1) {
-      _A1m1 =  Geodesic::A1m1f(eps);
+      _A1m1 = Geodesic::A1m1f(eps);
       Geodesic::C1f(eps, _C1a);
       _B11 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C1a, nC1_);
       real s = sin(_B11), c = cos(_B11);
@@ -106,7 +106,7 @@ namespace GeographicLib {
       Geodesic::C1pf(eps, _C1pa);
 
     if (_caps & CAP_C2) {
-      _A2m1 =  Geodesic::A2m1f(eps);
+      _A2m1 = Geodesic::A2m1f(eps);
       Geodesic::C2f(eps, _C2a);
       _B21 = Geodesic::SinCosSeries(true, _ssig1, _csig1, _C2a, nC2_);
     }

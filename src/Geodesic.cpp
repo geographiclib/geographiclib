@@ -210,7 +210,7 @@ namespace GeographicLib {
       calp2 = 1; salp2 = 0;           // At the target we're heading north
 
       real
-        // tan(bet) = tan(sig) * cos(alp),
+        // tan(bet) = tan(sig) * cos(alp)
         ssig1 = sbet1, csig1 = calp1 * cbet1,
         ssig2 = sbet2, csig2 = calp2 * cbet2;
 
@@ -252,7 +252,7 @@ namespace GeographicLib {
       if (outmask & GEODESICSCALE)
         M12 = M21 = cos(lam12 / _f1);
       a12 = lon12 / _f1;
-      sig12 = lam12 / _f1;
+      sig12 = omg12 = lam12 / _f1;
 
     } else if (!meridian) {
 
@@ -367,9 +367,10 @@ namespace GeographicLib {
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0;
+
       if (!meridian &&
           omg12 < real(0.75) * Math::pi<real>() && // Long difference too big
-          sbet2 - sbet1 < real(1.75)) {           // Lat difference too big
+          sbet2 - sbet1 < real(1.75)) {            // Lat difference too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))
@@ -644,7 +645,7 @@ namespace GeographicLib {
       calp1 = -tiny_;
 
     real
-      // sin(alp1) * cos(bet1) = sin(alp0),
+      // sin(alp1) * cos(bet1) = sin(alp0)
       salp0 = salp1 * cbet1,
       calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
@@ -659,7 +660,7 @@ namespace GeographicLib {
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
     // iteration.
-    // sin(alp2) * cos(bet2) = sin(alp0),
+    // sin(alp2) * cos(bet2) = sin(alp0)
     salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
     // calp2 = sqrt(1 - sq(salp2))
     //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
