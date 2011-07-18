@@ -1,6 +1,19 @@
 # GeographicLib.py
 # Python interface routines for GeographicLib.
 #
+# This is a rather literal translation of the following classes from
+# GeographicLib: Math, Accumulator, Geodesic, GeodesicLine, PolygonArea.
+# See the documentation for the C++ class for more information at
+#
+#    http://geographiclib.sourceforge.net/html/annotated.html
+#
+# The algorithms are derived in
+#
+#    Charles F. F. Karney,
+#    Geodesics on an ellipsoid of revolution, Feb. 2011,
+#    http://arxiv.org/abs/1102.1215
+#    errata: http://geographiclib.sourceforge.net/geod-errata.html
+#
 ######################################################################
 # GeographicLib.Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2, outmask)
 # GeographicLib.Geodesic.WGS84.Direct(lat1, lon1, azi1, s12, outmask)
