@@ -35,7 +35,7 @@
     this._azi1 = azi1;
     // alp1 is in [0, pi]
     var alp1 = azi1 * m.degree;
-    // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
+    // Enforce sin(pi) == 0 and cos(pi/2) == 0.	 Better to face the ensuing
     // problems directly than to skirt them.
     this._salp1 =     azi1  == -180 ? 0 : Math.sin(alp1);
     this._calp1 = Math.abs(azi1) ==   90 ? 0 : Math.cos(alp1);
@@ -80,7 +80,7 @@
       this._C1a = new Array(g.nC1_ + 1);
       g.C1f(eps, this._C1a);
       this._B11 = g.SinCosSeries(true, this._ssig1, this._csig1,
-                                 this._C1a, g.nC1_);
+				 this._C1a, g.nC1_);
       var s = Math.sin(this._B11), c = Math.cos(this._B11);
       // tau1 = sig1 + B11
       this._stau1 = this._ssig1 * c + this._csig1 * s;
@@ -99,7 +99,7 @@
       this._C2a = new Array(g.nC2_ + 1);
       g.C2f(eps, this._C2a);
       this._B21 = g.SinCosSeries(true, this._ssig1, this._csig1,
-                                 this._C2a, g.nC2_);
+				 this._C2a, g.nC2_);
     }
 
     if (this._caps & g.CAP_C3) {
@@ -107,22 +107,22 @@
       geod.C3f(eps, this._C3a);
       this._A3c = -this._f * this._salp0 * geod.A3f(eps);
       this._B31 = g.SinCosSeries(true, this._ssig1, this._csig1,
-                                 this._C3a, g.nC3_-1);
+				 this._C3a, g.nC3_-1);
     }
 
     if (this._caps & g.CAP_C4) {
-      this._C4a = new Array(g.nC4_);    // all the elements of _C4a are used
+      this._C4a = new Array(g.nC4_);	// all the elements of _C4a are used
       geod.C4f(this._k2, this._C4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       this._A4 = m.sq(this._a) * this._calp0 * this._salp0 * geod._e2;
       this._B41 = g.SinCosSeries(false, this._ssig1, this._csig1,
-                                 this._C4a, g.nC4_);
+				 this._C4a, g.nC4_);
     }
   }
 
   // return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
   l.GeodesicLine.prototype.GenPosition = function(arcmode, s12_a12,
-                                                  outmask) {
+						  outmask) {
     var vals = {};
     outmask &= this._caps & g.OUT_ALL;
     if (!( arcmode || (this._caps & g.DISTANCE_IN & g.OUT_ALL) )) {
@@ -138,7 +138,7 @@
       sig12 = s12_a12 * m.degree;
       var s12a = Math.abs(s12_a12);
       s12a -= 180 * Math.floor(s12a / 180);
-      ssig12 = s12a ==  0 ? 0 : Math.sin(sig12);
+      ssig12 = s12a ==	0 ? 0 : Math.sin(sig12);
       csig12 = s12a == 90 ? 0 : Math.cos(sig12);
     } else {
       // Interpret s12_a12 as distance
@@ -148,8 +148,8 @@
       c = Math.cos(tau12);
       // tau2 = tau1 + tau12
       B12 = - g.SinCosSeries(true, this._stau1 * c + this._ctau1 * s,
-                                   this._ctau1 * c - this._stau1 * s,
-                                   this._C1pa, g.nC1p_);
+				   this._ctau1 * c - this._stau1 * s,
+				   this._C1pa, g.nC1p_);
       sig12 = tau12 - (B12 - this._B11);
       ssig12 = Math.sin(sig12);
       csig12 = Math.cos(sig12);
@@ -162,7 +162,7 @@
     csig2 = this._csig1 * csig12 - this._ssig1 * ssig12;
     if (outmask & (g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE)) {
       if (arcmode)
-        B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
+	B12 = g.SinCosSeries(true, ssig2, csig2, this._C1a, g.nC1_);
       AB1 = (1 + this._A1m1) * (B12 - this._B11);
     }
     // sin(bet2) = cos(alp0) * sin(sig2)
@@ -173,20 +173,20 @@
       // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
       cbet2 = csig2 = g.tiny_;
     // tan(omg2) = sin(alp0) * tan(sig2)
-    somg2 = this._salp0 * ssig2; comg2 = csig2;  // No need to normalize
+    somg2 = this._salp0 * ssig2; comg2 = csig2;	 // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = this._salp0; calp2 = this._calp0 * csig2; // No need to normalize
     // omg12 = omg2 - omg1
     omg12 = Math.atan2(somg2 * this._comg1 - comg2 * this._somg1,
-                       comg2 * this._comg1 + somg2 * this._somg1);
+		       comg2 * this._comg1 + somg2 * this._somg1);
 
     if (outmask & g.DISTANCE)
       vals.s12 = arcmode ? this._b * ((1 + this._A1m1) * sig12 + AB1) : s12_a12;
 
     if (outmask & g.LONGITUDE) {
       lam12 = omg12 + this._A3c *
-        ( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a, g.nC3_-1)
-                   - this._B31));
+	( sig12 + (g.SinCosSeries(true, ssig2, csig2, this._C3a, g.nC3_-1)
+		   - this._B31));
       lon12 = lam12 / m.degree;
       // Can't use AngNormalize because longitude might have wrapped multiple
       // times.
@@ -211,17 +211,17 @@
       AB2 = (1 + this._A2m1) * (B22 - this._B21),
       J12 = (this._A1m1 - this._A2m1) * sig12 + (AB1 - AB2);
       if (outmask & g.REDUCEDLENGTH)
-        // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
-        // accurate cancellation in the case of coincident points.
-        vals.m12 = this._b * ((w2 * (this._csig1 * ssig2) -
-                               w1 * (this._ssig1 * csig2))
-                              - this._csig1 * csig2 * J12);
+	// Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
+	// accurate cancellation in the case of coincident points.
+	vals.m12 = this._b * ((w2 * (this._csig1 * ssig2) -
+			       w1 * (this._ssig1 * csig2))
+			      - this._csig1 * csig2 * J12);
       if (outmask & g.GEODESICSCALE) {
-        vals.M12 = csig12 + (this._k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
-                             - csig2 * J12) * this._ssig1 / w1;
-        vals.M21 = csig12 - (this._k2 * (ssig2sq - ssig1sq) * this._ssig1 /
-                             (w1 + w2)
-                             - this._csig1 * J12) * ssig2 / w2;
+	vals.M12 = csig12 + (this._k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
+			     - csig2 * J12) * this._ssig1 / w1;
+	vals.M21 = csig12 - (this._k2 * (ssig2sq - ssig1sq) * this._ssig1 /
+			     (w1 + w2)
+			     - this._csig1 * J12) * ssig2 / w2;
       }
     }
 
@@ -230,37 +230,36 @@
       B42 = g.SinCosSeries(false, ssig2, csig2, this._C4a, g.nC4_);
       var salp12, calp12;
       if (this._calp0 == 0 || this._salp0 == 0) {
-        // alp12 = alp2 - alp1, used in atan2 so no need to normalized
-        salp12 = salp2 * this._calp1 - calp2 * this._salp1;
-        calp12 = calp2 * this._calp1 + salp2 * this._salp1;
-        // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-        // salp12 = -0 and alp12 = -180.  However this depends on the sign being
-        // attached to 0 correctly.  The following ensures the correct behavior.
-        if (salp12 == 0 && calp12 < 0) {
-          salp12 = g.tiny_ * this._calp1;
-          calp12 = -1;
-        }
+	// alp12 = alp2 - alp1, used in atan2 so no need to normalized
+	salp12 = salp2 * this._calp1 - calp2 * this._salp1;
+	calp12 = calp2 * this._calp1 + salp2 * this._salp1;
+	// The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
+	// salp12 = -0 and alp12 = -180.  However this depends on the sign being
+	// attached to 0 correctly.  The following ensures the correct behavior.
+	if (salp12 == 0 && calp12 < 0) {
+	  salp12 = g.tiny_ * this._calp1;
+	  calp12 = -1;
+	}
       } else {
-        // tan(alp) = tan(alp0) * sec(sig)
-        // tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
-        // = calp0 * salp0 * (csig1-csig2) / (salp0^2 + calp0^2 * csig1*csig2)
-        // If csig12 > 0, write
-        //   csig1 - csig2 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
-        // else
-        //   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 * ssig1
-        // No need to normalize
-        salp12 = this._calp0 * this._salp0 *
-          (csig12 <= 0 ? this._csig1 * (1 - csig12) + ssig12 * this._ssig1 :
-           ssig12 * (this._csig1 * ssig12 / (1 + csig12) + this._ssig1));
-        calp12 = m.sq(this._salp0) + m.sq(this._calp0) * this._csig1 * csig2;
+	// tan(alp) = tan(alp0) * sec(sig)
+	// tan(alp2-alp1) = (tan(alp2) -tan(alp1)) / (tan(alp2)*tan(alp1)+1)
+	// = calp0 * salp0 * (csig1-csig2) / (salp0^2 + calp0^2 * csig1*csig2)
+	// If csig12 > 0, write
+	//   csig1 - csig2 = ssig12 * (csig1 * ssig12 / (1 + csig12) + ssig1)
+	// else
+	//   csig1 - csig2 = csig1 * (1 - csig12) + ssig12 * ssig1
+	// No need to normalize
+	salp12 = this._calp0 * this._salp0 *
+	  (csig12 <= 0 ? this._csig1 * (1 - csig12) + ssig12 * this._ssig1 :
+	   ssig12 * (this._csig1 * ssig12 / (1 + csig12) + this._ssig1));
+	calp12 = m.sq(this._salp0) + m.sq(this._calp0) * this._csig1 * csig2;
       }
       vals.S12 = this._c2 * Math.atan2(salp12, calp12) +
-        this._A4 * (B42 - this._B41);
+	this._A4 * (B42 - this._B41);
     }
 
     vals.a12 = arcmode ? s12_a12 : sig12 / m.degree;
     return vals;
   }
-
 
 })();

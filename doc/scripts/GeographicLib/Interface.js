@@ -54,7 +54,7 @@
  *   number, perimeter, area
  *
  * There is no need to "close" the polygon.  If polyline (default =
- * false) is true, that the points denote a polyline and its length is
+ * false) is true, then the points denote a polyline and its length is
  * returned as the perimeter (and the area is not calculated).
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
@@ -196,4 +196,3 @@
   }
 
 })();
-
