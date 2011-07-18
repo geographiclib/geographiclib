@@ -367,9 +367,9 @@ class Geodesic(object):
                  math.sqrt(abs(self._e2))))/2
     self._etol2 = Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
     if not(Math.isfinite(self._a) and self._a > 0):
-      raise TypeError("Major radius is not positive")
+      raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
-      raise TypeError("Minor radius is not positive")
+      raise ValueError("Minor radius is not positive")
     self._A3x = range(Geodesic.nA3x_)
     self._C3x = range(Geodesic.nC3x_)
     self._C4x = range(Geodesic.nC4x_)
@@ -950,21 +950,21 @@ class Geodesic(object):
 
   def CheckPosition(lat, lon):
     if not (abs(lat) <= 90):
-      raise TypeError("latitude " + str(lat) + " not in [-90, 90]")
+      raise ValueError("latitude " + str(lat) + " not in [-90, 90]")
     if not (lon >= -180 and lon <= 360):
-      raise TypeError("longitude " + str(lon) + " not in [-180, 360]")
+      raise ValueError("longitude " + str(lon) + " not in [-180, 360]")
     return Geodesic.AngNormalize(lon)
   CheckPosition = staticmethod(CheckPosition)
 
   def CheckAzimuth(azi):
     if not (azi >= -180 and azi <= 360):
-      raise TypeError("azimuth " + str(azi) + " not in [-180, 360]")
+      raise ValueError("azimuth " + str(azi) + " not in [-180, 360]")
     return Geodesic.AngNormalize(azi)
   CheckAzimuth = staticmethod(CheckAzimuth)
 
   def CheckDistance(s):
     if not (Math.isfinite(s)):
-      raise TypeError("distance " + str(s) + " not a finite number")
+      raise ValueError("distance " + str(s) + " not a finite number")
   CheckDistance = staticmethod(CheckDistance)
 
   def Inverse(self, lat1, lon1, lat2, lon2, outmask = DISTANCE | AZIMUTH):
