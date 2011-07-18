@@ -33,7 +33,7 @@ distrib-cgi:
 	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-js:
-	for f in geod-calc.html \
+	for f in geod-calc.html geod-google.html \
 	GeographicLib/{Math,Geodesic{,Line},PolygonArea,Interface}.js; do \
 	  a=doc/scripts/$$f; b=$(WEBSTAGE)/htdocs/scripts/$$f; \
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done

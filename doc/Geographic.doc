@@ -24,8 +24,11 @@ returning accurate results with errors close to round-off (about
 5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.
 The functionality of the library can be accessed from user code, from
-the \ref utilities provided, or via the \ref matlab.  Check out
-<a href="../scripts/geod-calc.html">geod-calc</a>.
+the \ref utilities provided, or via the \ref matlab.  For a sample of
+the geodesic capabilities, check out the
+<a href="../scripts/geod-calc.html">online geodesic calculator</a> and
+the script for displaying
+<a href="../scripts/geod-google.html">geodesics in Google Maps</a>
 
 This library is <i>not</i> a general purpose projection library; use
 <a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
@@ -2155,7 +2158,7 @@ number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-mm-dd)</a>
   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
-  - Provide javascript implementation of geodesic routines.
+  - Provide javascript and python implementations of geodesic routines.
   - Fix Windows installer to include runtime dlls for Matlab.
   - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
   - Geodesic routines in Matlab return a12 as first column of aux return

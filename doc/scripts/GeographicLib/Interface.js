@@ -36,7 +36,8 @@
  *   GeographicLib.Geodesic.ALL
  *
  **********************************************************************
- * GeographicLib.Geodesic.WGS84.Path(lat1, lon1, lat2, lon2, ds12, maxk);
+ * GeographicLib.Geodesic.WGS84.InversePath(lat1, lon1, lat2, lon2, ds12, maxk);
+ * GeographicLib.Geodesic.WGS84.DirectPath(lat1, lon1, azi1, s12, ds12, maxk);
  *
  * splits a geodesic line into k equal pieces which are no longer than
  * about ds12 (but k cannot exceed maxk, default 20), and returns a
@@ -80,6 +81,7 @@
   g.Geodesic.CheckAzimuth = function(azi) {
     if (!(azi >= -180 && azi <= 360))
       throw new Error("longitude " + azi + " not in [-180, 360]");
+    return g.AngNormalize(azi)
   }
 
   g.Geodesic.CheckDistance = function(s) {
@@ -112,8 +114,34 @@
     return result;
   }
 
-  g.Geodesic.prototype.Path = function(lat1, lon1, lat2, lon2, ds12, maxk) {
+  g.Geodesic.prototype.InversePath =
+    function(lat1, lon1, lat2, lon2, ds12, maxk) {
     var t = this.Inverse(lat1, lon1, lat2, lon2);
+    if (!maxk) maxk = 20;
+    if (!(ds12 > 0))
+      throw new Error("ds12 must be a positive number")
+    var
+    k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
+    points = new Array(k + 1);
+    points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
+    points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
+    if (k > 1) {
+      var line = new l.GeodesicLine(this, t.lat1, t.lon1, t.azi1,
+				    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
+      da12 = t.a12/k;
+      var vals;
+      for (var i = 1; i < k; ++i) {
+	vals =
+	line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH);
+	points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
+      }
+    }
+    return points;
+  }
+
+  g.Geodesic.prototype.DirectPath =
+    function(lat1, lon1, azi1, s12, ds12, maxk) {
+    var t = this.Direct(lat1, lon1, azi1, s12);
     if (!maxk) maxk = 20;
     if (!(ds12 > 0))
       throw new Error("ds12 must be a positive number")

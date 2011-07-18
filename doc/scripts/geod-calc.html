@@ -81,14 +81,14 @@ function GeodesicDirect(input) {
   return result;
 }
 
-function GeodesicPath(input) {
+function GeodesicInversePath(input) {
   var result = {};
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2 ds12 maxnum
     var t = new String(input);
     t = t.split(/[\s,]+/,8);
     if (t[0] == "") t.shift();
-    t = geod.Path
+    t = geod.InversePath
     (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]),
      parseFloat(t[4]), parseInt(t[5]));
     result.status = "OK";
@@ -162,6 +162,8 @@ function GeodesicArea(input) {
 	<li><a href="#direct">Direct problem</a></li>
 	<li><a href="#path">Geodesic path</a></li>
 	<li><a href="#area">Polygon area</a></li>
+	<li><a href="geod-google.html">Geodesic lines, circles, and
+	envelopes in Google Maps</a></li>
       </ul>
     </p>
     <hr>
@@ -269,7 +271,7 @@ function GeodesicArea(input) {
       </p>
       <p>
         <input type="button" value="compute" 
-	       onclick="var t = GeodesicPath(input.value);
+	       onclick="var t = GeodesicInversePath(input.value);
 			statusc.value = t.status;
 			points.value = t.points;" />
       </p>

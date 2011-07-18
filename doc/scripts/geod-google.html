@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- $Id$ -->
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>Geodesic lines, circles, envelopes in Google Maps</title>
+    <meta name="description"
+	  content="Geodesic lines, circles, envelopes in Google Maps" />
+    <meta name="author" content="Charles F. F. Karney">
+    <meta name="keywords"
+	  content="geodesics,
+		   geodesic distance,
+		   geographic distance,
+		   shortest path,
+		   direct geodesic problem,
+		   inverse geodesic problem,
+		   distance and azimuth,
+		   distance and heading,
+		   range and bearing,
+		   geographic circle,
+		   geodesic envelope,
+		   geodesic astroid,
+		   latitude and longitude,
+		   Google Maps,
+		   WGS84 ellipsoid,
+		   GeographicLib" /> 
+    <link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css"
+	  rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="GeographicLib/Math.js"></script>
+    <script type="text/javascript" src="GeographicLib/Geodesic.js"></script>
+    <script type="text/javascript" src="GeographicLib/GeodesicLine.js"></script>
+    <script type="text/javascript" src="GeographicLib/PolygonArea.js"></script>
+    <script type="text/javascript" src="GeographicLib/Interface.js"></script>
+    <script type="text/javascript"
+	    src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry">
+    </script>
+    <script type="text/javascript">
+var geod = GeographicLib.Geodesic.WGS84;
+var geodesic, circle, envelope;
+
+function initialize() {
+  var myOptions = {
+    zoom: 8,
+    center: new google.maps.LatLng(41.3, -5.5),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+
+  var geodesicOptions = {
+    strokeColor: '#0000FF',
+    strokeOpacity: 1,
+    strokeWeight: 3,
+    geodesic: true
+  }
+  geodesic = new google.maps.Polyline(geodesicOptions);
+  geodesic.setMap(map);
+
+  var circleOptions = {
+    strokeColor: '#00FF00',
+    strokeOpacity: 1,
+    strokeWeight: 3,
+    geodesic: true
+  }
+  circle = new google.maps.Polyline(circleOptions);
+  circle.setMap(map);
+
+  var envelopeOptions = {
+    strokeColor: '#FF0000',
+    strokeOpacity: 1,
+    strokeWeight: 3,
+    geodesic: true
+  }
+  envelope = new google.maps.Polyline(envelopeOptions);
+  envelope.setMap(map);
+
+}
+
+function GeodesicInverse(input) {
+  var result = {};
+  try {
+    // Input is a blank-delimited line: lat1 lon1 lat2 lon2
+    var t = new String(input);
+    t = t.split(/[\s,]+/,6);
+    if (t[0] == "") t.shift();
+    var v =  geod.Inverse(parseFloat(t[0]), parseFloat(t[1]),
+			     parseFloat(t[2]), parseFloat(t[3]));
+    result.status = "OK";
+    result.p1 =
+      v.lat1.toFixed(13) + " " + v.lon1.toFixed(13) + " " + v.azi1.toFixed(13);
+    result.p2 =
+      v.lat2.toFixed(13) + " " + v.lon2.toFixed(13) + " " + v.azi2.toFixed(13);
+    result.s12 =
+      v.s12.toFixed(8);
+    draw(v);
+  }
+  catch (e) {
+    result.status = "ERROR: " + e.message;
+    result.p1 = "";
+    result.p2 = "";
+    result.s12 = "";
+  }
+  return result;
+}
+function GeodesicDirect(input) {
+  var result = {};
+  try {
+    // Input is a blank-delimited line: lat1 lon1 azi1 s12
+    var t = new String(input);
+    t = t.split(/[\s,]+/,6);
+    if (t[0] == "") t.shift();
+    var v =  geod.Direct(parseFloat(t[0]), parseFloat(t[1]),
+			     parseFloat(t[2]), parseFloat(t[3]));
+    result.status = "OK";
+    result.p1 =
+      v.lat1.toFixed(13) + " " + v.lon1.toFixed(13) + " " + v.azi1.toFixed(13);
+    result.p2 =
+      v.lat2.toFixed(13) + " " + v.lon2.toFixed(13) + " " + v.azi2.toFixed(13);
+    result.s12 =
+      v.s12.toFixed(8);
+    draw(v);
+  }
+  catch (e) {
+    result.status = "ERROR: " + e.message;
+    result.p1 = "";
+    result.p2 = "";
+    result.s12 = "";
+  }
+  return result;
+}
+
+function draw(v) {
+  var points = geod.DirectPath(v.lat1, v.lon1, v.azi1, v.s12,
+			100000, 100);
+  clearPaths();
+  var k, path;
+
+  path = geodesic.getPath();
+  for (k = 0; k < points.length; ++k)
+    path.push(new google.maps.LatLng(points[k].lat, points[k].lon));
+  points = geod.Circle(v.lat1, v.lon1, v.azi1, v.s12, 72);
+  path = circle.getPath();
+  for (k = 0; k < points.length; ++k)
+    path.push(new google.maps.LatLng(points[k].lat, points[k].lon));
+  points = geod.Envelope(v.lat1, v.lon1, 72);
+  path = envelope.getPath();
+  for (k = 0; k < points.length; ++k)
+    path.push(new google.maps.LatLng(points[k].lat, points[k].lon));
+}
+
+function clearPaths() {
+  cPath = geodesic.getPath();
+  while (cPath.getLength()) {
+    cPath.pop();
+  }
+  cPath = circle.getPath();
+  while (cPath.getLength()) {
+    cPath.pop();
+  }
+  cPath = envelope.getPath();
+  while (cPath.getLength()) {
+    cPath.pop();
+  }
+}
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="map_canvas"
+	 style="position:relative; border: 1px solid black; width:99.5%;
+	 height:75%;">
+    </div>
+    <div>
+      <p>
+	Direct:&nbsp;&nbsp;
+	<input id="inputb" size=60 value="-41.32 174.81 135 60000e3" />
+	<input type="button" value="compute" 
+	       onclick="var t = GeodesicDirect(document.getElementById('inputb').value);
+			document.getElementById('status').value = t.status;
+			document.getElementById('p1').value = t.p1;
+			document.getElementById('p2').value = t.p2;
+			document.getElementById('s12').value = t.s12;" />
+      </p>
+      <p>
+	Inverse:
+	<input id="inputa" size=60 value="-41.32 174.81 40.96 -5.50" />
+	<input type="button" value="compute" 
+	       onclick="var t = GeodesicInverse(document.getElementById('inputa').value);
+			document.getElementById('status').value = t.status;
+			document.getElementById('p1').value = t.p1;
+			document.getElementById('p2').value = t.p2;
+			document.getElementById('s12').value = t.s12;" />
+      </p>
+      <p>
+	lat1 lon1 azi1: <input type="text" "readonly" id="p1" size=60>
+      </p>
+      <p>
+	lat2 lon2 azi2: <input type="text" "readonly" id="p2" size=60>
+      </p>
+      <p>
+	s12: <input type="text" "readonly" id="s12" size=20>
+	&nbsp;&nbsp; status: <input "readonly" id="status" size=30>
+    </p>
+  </div>
+  </body>
+</html>
