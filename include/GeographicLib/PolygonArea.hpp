@@ -27,10 +27,12 @@ namespace GeographicLib {
    *   preprint
    *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    *
-   * This class lets you add vertices one at a time to the polygon.  At any
-   * point you can ask for the perimeter and area so far.  There's an option to
-   * treat the points as defining a polyline instead of a polygon; in that
-   * case, only the perimeter is computed.
+   * This class lets you add vertices one at a time to the polygon.  The area
+   * and perimeter are accumulated in two times the standard floating point
+   * precision to guard against the loss of accuracy with many-sided polygons.
+   * At any point you can ask for the perimeter and area so far.  There's an
+   * option to treat the points as defining a polyline instead of a polygon; in
+   * that case, only the perimeter is computed.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT PolygonArea {
@@ -39,6 +41,7 @@ namespace GeographicLib {
     const Geodesic& _earth;
     const real _area0;          // Full ellipsoid area
     const bool _polyline;       // Assume polyline (don't close and skip area)
+    const unsigned _mask;
     unsigned _num;
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;
@@ -64,7 +67,7 @@ namespace GeographicLib {
       real lon12 = -AngNormalize(lon1 - lon2); // In (-180, 180]
       int cross =
         lon1 < 0 && lon2 >= 0 && lon12 > 0 ? 1 :
-        lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0;
+        (lon2 < 0 && lon1 >= 0 && lon12 < 0 ? -1 : 0);
       return cross;
     }
   public:
@@ -81,6 +84,7 @@ namespace GeographicLib {
       : _earth(earth)
       , _area0(_earth.EllipsoidArea())
       , _polyline(polyline)
+      , _mask(Geodesic::DISTANCE | (_polyline ? 0 : Geodesic::AREA))
     {
       Clear();
     }
@@ -125,29 +129,31 @@ namespace GeographicLib {
                      real& perimeter, real& area) const throw();
 
     /**
-     * Return the results assuming a final test point is added; however, the
-     * data for the test point is not saved.  This lets you report a running
-     * result for the perimeter and area as the user moves the mouse cursor.
+     * Return the results assuming a tentative final test point is added;
+     * however, the data for the test point is not saved.  This lets you report
+     * a running result for the perimeter and area as the user moves the mouse
+     * cursor.  Ordinary floating point arithmetic is used to accumulate the
+     * data for the test point; thus the area and perimeter returned are less
+     * accurate than if AddPoint and Compute are used.
      *
+     * @param[in] lat the latitude of the test point (degrees).
+     * @param[in] lon the longitude of the test point (degrees).
      * @param[in] reverse if true then clockwise (instead of counter-clockwise)
      *   traversal counts as a positive area.
      * @param[in] sign if true then return a signed result for the area if
      *   the polygon is traversed in the "wrong" direction instead of returning
      *   the area for the rest of the earth.
-     * @param[out] perimeter the perimeter of the polygon or length of the
-     *   polyline (meters).
-     * @param[out] area the area of the polygon (meters^2); only set if
-     *   polyline is false in the constructor.
-     * @param[in] lat the latitude of the test point (degrees).
-     * @param[in] lon the longitude of the test point (degrees).
+     * @param[out] perimeter the approximate perimeter of the polygon or length
+     *   of the polyline (meters).
+     * @param[out] area the approximate area of the polygon (meters^2); only
+     *   set if polyline is false in the constructor.
      * @return the number of points.
      *
      * \e lat should be in the range [-90, 90] and \e lon should be in the
      * range [-180, 360].
      **********************************************************************/
-    unsigned Compute(bool reverse, bool sign,
-                     real& perimeter, real& area,
-                     real lat, real lon) const throw();
+    unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
+                         real& perimeter, real& area) const throw();
   };
 
 } // namespace GeographicLib
