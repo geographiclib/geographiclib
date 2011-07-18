@@ -129,34 +129,23 @@ namespace GeographicLib {
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit_ = 50;
 
-    void Lengths(real eps, real sig12,
-                 real ssig1, real csig1, real ssig2, real csig2,
-                 real cbet1, real cbet2,
-                 real& s12s, real& m12a, real& m0,
-                 bool scalep, real& M12, real& M21,
-                 real C1a[], real C2a[]) const throw();
-    static real Astroid(real x, real y) throw();
-    real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
-                      real lam12,
-                      real& salp1, real& calp1,
-                      real& salp2, real& calp2,
-                      real C1a[], real C2a[]) const throw();
-    real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
-                  real salp1, real calp1,
-                  real& salp2, real& calp2, real& sig12,
-                  real& ssig1, real& csig1, real& ssig2, real& csig2,
-                  real& eps, real& domg12, bool diffp, real& dlam12,
-                  real C1a[], real C2a[], real C3a[])
-      const throw();
-
     static const real tiny_;
     static const real tol0_;
     static const real tol1_;
     static const real tol2_;
     static const real xthresh_;
-    // _r is OBSOLETE, can be removed
-    const real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
+
+    enum captype {
+      CAP_NONE = 0U,
+      CAP_C1   = 1U<<0,
+      CAP_C1p  = 1U<<1,
+      CAP_C2   = 1U<<2,
+      CAP_C3   = 1U<<3,
+      CAP_C4   = 1U<<4,
+      CAP_ALL  = 0x1FU,
+      OUT_ALL  = 0x7F80U,
+    };
+
     static real SinCosSeries(bool sinp,
                              real sinx, real cosx, const real c[], int n)
       throw();
@@ -181,6 +170,31 @@ namespace GeographicLib {
       sinx /= r;
       cosx /= r;
     }
+    static real Astroid(real x, real y) throw();
+
+    // _r is OBSOLETE, can be removed
+    const real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+    real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
+
+    void Lengths(real eps, real sig12,
+                 real ssig1, real csig1, real ssig2, real csig2,
+                 real cbet1, real cbet2,
+                 real& s12s, real& m12a, real& m0,
+                 bool scalep, real& M12, real& M21,
+                 real C1a[], real C2a[]) const throw();
+    real InverseStart(real sbet1, real cbet1, real sbet2, real cbet2,
+                      real lam12,
+                      real& salp1, real& calp1,
+                      real& salp2, real& calp2,
+                      real C1a[], real C2a[]) const throw();
+    real Lambda12(real sbet1, real cbet1, real sbet2, real cbet2,
+                  real salp1, real calp1,
+                  real& salp2, real& calp2, real& sig12,
+                  real& ssig1, real& csig1, real& ssig2, real& csig2,
+                  real& eps, real& domg12, bool diffp, real& dlam12,
+                  real C1a[], real C2a[], real C3a[])
+      const throw();
+
     // These are Maxima generated functions to provide series approximations to
     // the integrals for the ellipsoidal geodesic.
     static real A1m1f(real eps) throw();
@@ -188,6 +202,7 @@ namespace GeographicLib {
     static void C1pf(real eps, real c[]) throw();
     static real A2m1f(real eps) throw();
     static void C2f(real eps, real c[]) throw();
+
     void A3coeff() throw();
     real A3f(real eps) const throw();
     void C3coeff() throw();
@@ -195,16 +210,6 @@ namespace GeographicLib {
     void C4coeff() throw();
     void C4f(real k2, real c[]) const throw();
 
-    enum captype {
-      CAP_NONE = 0U,
-      CAP_C1   = 1U<<0,
-      CAP_C1p  = 1U<<1,
-      CAP_C2   = 1U<<2,
-      CAP_C3   = 1U<<3,
-      CAP_C4   = 1U<<4,
-      CAP_ALL  = 0x1FU,
-      OUT_ALL  = 0x7F80U,
-    };
   public:
 
     /**

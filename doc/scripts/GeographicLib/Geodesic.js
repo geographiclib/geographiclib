@@ -2,41 +2,8 @@
  * Geodesic.js
  * Transcription of Geodesic.[ch]pp into javascript.
  *
- * See the documentation for the C++ class.  The conversion is mostly a
- * literal conversion from C++.  However there are two javascript-ready
- * interface routines.
- *
- *   GeographicLib.Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2, outmask);
- *   GeographicLib.Geodesic.WGS84.Direct(lat1, lon1, azi1, s12, outmask);
- *
- * perform the basic geodesic calculations.  These return an object with
- * (some) of the following fields:
- *
- *   lat1 latitude of point 1
- *   lon1 longitude of point 1
- *   azi1 azimuth of line at point 1
- *   lat2 latitude of point 2
- *   lon2 longitude of point 2
- *   azi2 azimuth of line at point 2
- *   s12 distance from 1 to 2
- *   a12 arc length on auxiliary sphere from 1 to 2
- *   m12 reduced length of geodesic
- *   M12 geodesic scale 2 relative to 1
- *   M21 geodesic scale 1 relative to 2
- *   S12 area between geodesic and equator
- *
- * outmask determines which fields get included and if outmask is
- * omitted, then only the basic geodesic fields are computed.  The mask
- * is an or'ed combination of the following values
- *
- *   GeographicLib.Geodesic.LATITUDE
- *   GeographicLib.Geodesic.LONGITUDE
- *   GeographicLib.Geodesic.AZIMUTH
- *   GeographicLib.Geodesic.DISTANCE
- *   GeographicLib.Geodesic.REDUCEDLENGTH
- *   GeographicLib.Geodesic.GEODESICSCALE
- *   GeographicLib.Geodesic.AREA
- *   GeographicLib.Geodesic.ALL
+ * See the documentation for the C++ class.  The conversion is a literal
+ * conversion from C++.
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the LGPL.  For more information, see
@@ -73,6 +40,64 @@ GeographicLib.GeodesicLine = {};
   g.tol2_ = Math.sqrt(m.epsilon);
   g.xthresh_ = 1000 * g.tol2_;
 
+  g.CAP_NONE = 0;
+  g.CAP_C1   = 1<<0;
+  g.CAP_C1p  = 1<<1;
+  g.CAP_C2   = 1<<2;
+  g.CAP_C3   = 1<<3;
+  g.CAP_C4   = 1<<4;
+  g.CAP_ALL  = 0x1F;
+  g.OUT_ALL  = 0x7F80;
+  g.NONE          = 0;
+  g.LATITUDE      = 1<<7  | g.CAP_NONE;
+  g.LONGITUDE     = 1<<8  | g.CAP_C3;
+  g.AZIMUTH       = 1<<9  | g.CAP_NONE;
+  g.DISTANCE      = 1<<10 | g.CAP_C1;
+  g.DISTANCE_IN   = 1<<11 | g.CAP_C1 | g.CAP_C1p;
+  g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
+  g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
+  g.AREA          = 1<<14 | g.CAP_C4;
+  g.ALL           = g.OUT_ALL| g.CAP_ALL;
+
+  g.SinCosSeries = function(sinp, sinx, cosx, c, n) {
+    // Evaluate
+    // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
+    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
+    // using Clenshaw summation.  N.B. c[0] is unused for sin series
+    // Approx operation count = (n + 5) mult and (2 * n + 2) add
+    var k  = n + (sinp ? 1 : 0); // Point to one beyond last element
+    var
+    ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
+    y0 = n & 1 ? c[--k] : 0, y1 = 0;          // accumulators for sum
+    // Now n is even
+    n = Math.floor(n/2);
+    while (n--) {
+      // Unroll loop x 2, so accumulators return to their original role
+      y1 = ar * y0 - y1 + c[--k];
+      y0 = ar * y1 - y0 + c[--k];
+    }
+    return sinp
+      ? 2 * sinx * cosx * y0    // sin(2 * x) * y0
+      : cosx * (y0 - y1);       // cos(x) * (y0 - y1)
+  }
+
+  g.AngNormalize = function(x) {
+    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
+    return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+  }
+
+  g.AngRound = function(x) {
+    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
+    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
+    // is about 1000 times more resolution than we get with angles around 90
+    // degrees.)  We use this to avoid having to deal with near singular
+    // cases when x is non-zero but tiny (e.g., 1.0e-200).
+    var z = 1/16;
+    var y = Math.abs(x);
+    // The compiler mustn't "simplify" z - (z - y) to y
+    y = y < z ? z - (z - y) : y;
+    return x < 0 ? -y : y;
+  }
   g.Astroid = function(x, y) {
     // Solve k^4+2*k^3-(x^2+y^2-1)*k^2-2*y^2*k-y^2 = 0 for positive
     // root k.  This solution is adapted from Geocentric::Reverse.
@@ -126,46 +151,6 @@ GeographicLib.GeodesicLine = {};
       k = 0;
     }
     return k;
-  }
-
-  g.SinCosSeries = function(sinp, sinx, cosx, c, n) {
-    // Evaluate
-    // y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
-    //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
-    // using Clenshaw summation.  N.B. c[0] is unused for sin series
-    // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    var k  = n + (sinp ? 1 : 0); // Point to one beyond last element
-    var
-    ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-    y0 = n & 1 ? c[--k] : 0, y1 = 0;          // accumulators for sum
-    // Now n is even
-    n = Math.floor(n/2);
-    while (n--) {
-      // Unroll loop x 2, so accumulators return to their original role
-      y1 = ar * y0 - y1 + c[--k];
-      y0 = ar * y1 - y0 + c[--k];
-    }
-    return sinp
-      ? 2 * sinx * cosx * y0    // sin(2 * x) * y0
-      : cosx * (y0 - y1);       // cos(x) * (y0 - y1)
-  }
-
-  g.AngNormalize = function(x) {
-    // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-    return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
-  }
-
-  g.AngRound = function(x) {
-    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    // is about 1000 times more resolution than we get with angles around 90
-    // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).
-    var z = 1/16;
-    var y = Math.abs(x);
-    // The compiler mustn't "simplify" z - (z - y) to y
-    y = y < z ? z - (z - y) : y;
-    return x < 0 ? -y : y;
   }
 
   g.A1m1f = function(eps) {
@@ -232,24 +217,6 @@ GeographicLib.GeodesicLine = {};
     d *= eps;
     c[6] = 77*d/2048;
   }
-  g.CAP_NONE = 0;
-  g.CAP_C1   = 1<<0;
-  g.CAP_C1p  = 1<<1;
-  g.CAP_C2   = 1<<2;
-  g.CAP_C3   = 1<<3;
-  g.CAP_C4   = 1<<4;
-  g.CAP_ALL  = 0x1F;
-  g.OUT_ALL  = 0x7F80;
-  g.NONE          = 0;
-  g.LATITUDE      = 1<<7  | g.CAP_NONE;
-  g.LONGITUDE     = 1<<8  | g.CAP_C3;
-  g.AZIMUTH       = 1<<9  | g.CAP_NONE;
-  g.DISTANCE      = 1<<10 | g.CAP_C1;
-  g.DISTANCE_IN   = 1<<11 | g.CAP_C1 | g.CAP_C1p;
-  g.REDUCEDLENGTH = 1<<12 | g.CAP_C1 | g.CAP_C2;
-  g.GEODESICSCALE = 1<<13 | g.CAP_C1 | g.CAP_C2;
-  g.AREA          = 1<<14 | g.CAP_C4;
-  g.ALL           = g.OUT_ALL| g.CAP_ALL;
 
   g.Geodesic = function(a, f) {
     this._a = a;
@@ -501,8 +468,8 @@ GeographicLib.GeodesicLine = {};
         // In the case of lon12 = 180, this repeats a calculation made
         // in Inverse.
         var nvals = this.Lengths(this._n, Math.PI + bet12a,
-				 sbet1, -cbet1, sbet2, cbet2,
-				 cbet1, cbet2, false, C1a, C2a);
+                                 sbet1, -cbet1, sbet2, cbet2,
+                                 cbet1, cbet2, false, C1a, C2a);
         m12a = nvals.m12a; m0 = nvals.m0;
         x = -1 + m12a/(this._f1 * cbet1 * cbet2 * m0 * Math.PI);
         betscale = x < -0.01 ? sbet12a / x :
@@ -553,7 +520,7 @@ GeographicLib.GeodesicLine = {};
       calp1 = -g.tiny_;
 
     var
-    // sin(alp1) * cos(bet1) = sin(alp0),
+    // sin(alp1) * cos(bet1) = sin(alp0)
     salp0 = salp1 * cbet1,
     calp0 = m.hypot(calp1, salp1 * sbet1); // calp0 > 0
 
@@ -572,7 +539,7 @@ GeographicLib.GeodesicLine = {};
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
     // iteration.
-    // sin(alp2) * cos(bet2) = sin(alp0),
+    // sin(alp2) * cos(bet2) = sin(alp0)
     vals.salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
     // calp2 = sqrt(1 - sq(salp2))
     //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
@@ -618,8 +585,8 @@ GeographicLib.GeodesicLine = {};
         - 2 * Math.sqrt(1 - this._e2 * m.sq(cbet1)) / sbet1;
       else {
         var nvals = this.Lengths(vals.eps, vals.sig12,
-				 vals.ssig1, vals.csig1, vals.ssig2, vals.csig2,
-				 cbet1, cbet2, false, C1a, C2a);
+                                 vals.ssig1, vals.csig1, vals.ssig2, vals.csig2,
+                                 cbet1, cbet2, false, C1a, C2a);
         vals.dlam12 = nvals.m12a;
         vals.dlam12 /= vals.calp2 * cbet2;
       }
@@ -727,7 +694,7 @@ GeographicLib.GeodesicLine = {};
       calp2 = 1; salp2 = 0;           // At the target we're heading north
 
       var
-      // tan(bet) = tan(sig) * cos(alp),
+      // tan(bet) = tan(sig) * cos(alp)
       ssig1 = sbet1, csig1 = calp1 * cbet1,
       ssig2 = sbet2, csig2 = calp2 * cbet2;
 
@@ -736,8 +703,8 @@ GeographicLib.GeodesicLine = {};
                          csig1 * csig2 + ssig1 * ssig2);
       {
         var nvals = this.Lengths(this._n, sig12, ssig1, csig1, ssig2, csig2,
-				 cbet1, cbet2, (outmask & g.GEODESICSCALE) != 0,
-				 C1a, C2a);
+                                 cbet1, cbet2, (outmask & g.GEODESICSCALE) != 0,
+                                 C1a, C2a);
         s12x = nvals.s12b;
         m12x = nvals.m12a;
         // Ignore m0
@@ -775,7 +742,7 @@ GeographicLib.GeodesicLine = {};
       if (outmask & g.GEODESICSCALE)
         vals.M12 = vals.M21 = Math.cos(lam12 / this._f1);
       vals.a12 = lon12 / this._f1;
-      sig12 = lam12 / this._f1;
+      sig12 = omg12 = lam12 / this._f1;
 
     } else if (!meridian) {
 
@@ -784,8 +751,7 @@ GeographicLib.GeodesicLine = {};
 
       // Figure a starting point for Newton's method
       var nvals = this.InverseStart(sbet1, cbet1, sbet2, cbet2, lam12,
-				    salp1, calp1, salp2, calp2,
-				    C1a, C2a);
+                                    C1a, C2a);
       sig12 = nvals.sig12;
       salp1 = nvals.salp1;
       calp1 = nvals.calp1;
@@ -811,8 +777,8 @@ GeographicLib.GeodesicLine = {};
         for (var trip = 0; numit < g.maxit_; ++numit) {
           var dv;
           var nvals = this.Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
-				    trip < 1, C1a, C2a, C3a);
-	  var v = nvals.lam12 - lam12;
+                                    trip < 1, C1a, C2a, C3a);
+          var v = nvals.lam12 - lam12;
           salp2 = nvals.salp2;
           calp2 = nvals.calp2;
           sig12 = nvals.sig12;
@@ -862,15 +828,15 @@ GeographicLib.GeodesicLine = {};
             vals.M12 = vals.M21 = Number.NaN;
           if (outmask & g.AREA)
             vals.S12 = Number.NaN;
-	  vals.a12 = Number.NaN;
+          vals.a12 = Number.NaN;
           return vals;
         }
 
         {
           var nvals = this.Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
-				   cbet1, cbet2,
-				   (outmask & g.GEODESICSCALE) != 0,
-				   C1a, C2a);
+                                   cbet1, cbet2,
+                                   (outmask & g.GEODESICSCALE) != 0,
+                                   C1a, C2a);
           s12x = nvals.s12b;
           m12x = nvals.m12a;
           // Ignore m0
@@ -992,46 +958,6 @@ GeographicLib.GeodesicLine = {};
      // Automatically supply DISTANCE_IN if necessary
      outmask | (arcmode ? g.NONE : g.DISTANCE_IN));
     return line.GenPosition(arcmode, s12_a12, outmask);
-  }
-
-  g.Geodesic.prototype.Inverse = function(lat1, lon1, lat2, lon2, outmask) {
-    if (!outmask) outmask = g.DISTANCE | g.AZIMUTH;
-    if (!(Math.abs(lat1) <= 90))
-      throw new Error("lat1 must be in [-90, 90]");
-    if (!(Math.abs(lat2) <= 90))
-      throw new Error("lat2 must be in [-90, 90]");
-    if (!(lon1 >= -180 && lon1 <= 360))
-      throw new Error("lon1 must be in [-180, 360]");
-    if (!(lon2 >= -180 && lon2 <= 360))
-      throw new Error("lon2 must be in [-180, 360]");
-    if (lon1 >= 180) lon1 -= 360;
-    if (lon2 >= 180) lon2 -= 360;
-
-    var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
-    result.lat1 = lat1; result.lon1 = lon1;
-    result.lat2 = lat2; result.lon2 = lon2;
-    
-    return result;
-  }
-
-  g.Geodesic.prototype.Direct = function(lat1, lon1, azi1, s12, outmask) {
-    if (!outmask) outmask = g.LATITUDE | g.LONGITUDE | g.AZIMUTH;
-    if (!(Math.abs(lat1) <= 90))
-      throw new Error("lat1 must be in [-90, 90]");
-    if (!(lon1 >= -180 && lon1 <= 360))
-      throw new Error("lon1 must be in [-180, 360]");
-    if (!(azi1 >= -180 && azi1 <= 360))
-      throw new Error("azi1 must be in [-180, 360]");
-    if (!(isFinite(s12)))
-      throw new Error("s12 must be a finite number");
-    if (lon1 >= 180) lon1 -= 360;
-    if (azi1 >= 180) azi1 -= 360;
-
-    var result = this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
-    result.lat1 = lat1; result.lon1 = lon1;
-    result.azi1 = azi1; result.s12 = s12;
-    
-    return result;
   }
 
   g.WGS84 = new g.Geodesic(GeographicLib.Constants.WGS84.a,

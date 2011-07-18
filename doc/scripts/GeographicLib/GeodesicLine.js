@@ -2,17 +2,8 @@
  * GeodesicLine.js
  * Transcription of GeodesicLine.[ch]pp into javascript.
  *
- * See the documentation for the C++ class.  The conversion is mostly a
- * literal conversion from C++.  However there are two javascript-ready
- * interface routines.
- *
- *   GeographicLib.Geodesic.WGS84.Path(lat1, lon1, lat2, lon2, ds12, maxk);
- *
- * splits a geodesic line into k equal pieces which are no longer than
- * about ds12 (but k cannot exceed maxk, default 20), and returns a
- * vector of length k + 1 of objects with fields
- *
- *   lat, lon, azi
+ * See the documentation for the C++ class.  The conversion is a literal
+ * conversion from C++.
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the LGPL.  For more information, see
@@ -32,6 +23,7 @@
     this._a = geod._a;
     this._f = geod._f;
     this._b = geod._b;
+    this._c2 = geod._c2;
     this._f1 = geod._f1;
     this._caps = !caps ? g.ALL : (caps | g.LATITUDE | g.AZIMUTH);
     azi1 = g.AngNormalize(azi1);
@@ -84,7 +76,7 @@
     var eps = this._k2 / (2 * (1 + Math.sqrt(1 + this._k2)) + this._k2);
 
     if (this._caps & g.CAP_C1) {
-      this._A1m1 =  g.A1m1f(eps);
+      this._A1m1 = g.A1m1f(eps);
       this._C1a = new Array(g.nC1_ + 1);
       g.C1f(eps, this._C1a);
       this._B11 = g.SinCosSeries(true, this._ssig1, this._csig1,
@@ -103,7 +95,7 @@
     }
 
     if (this._caps & g.CAP_C2) {
-      this._A2m1 =  g.A2m1f(eps);
+      this._A2m1 = g.A2m1f(eps);
       this._C2a = new Array(g.nC2_ + 1);
       g.C2f(eps, this._C2a);
       this._B21 = g.SinCosSeries(true, this._ssig1, this._csig1,
@@ -270,27 +262,5 @@
     return vals;
   }
 
-  g.Geodesic.prototype.Path = function(lat1, lon1, lat2, lon2, ds12, maxk) {
-    var t = this.Inverse(lat1, lon1, lat2, lon2);
-    if (!maxk) maxk = 20;
-    if (!(ds12 > 0))
-      throw new Error("ds12 must be a positive number")
-    var
-    k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
-    points = new Array(k + 1);
-    points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
-    points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
-    if (k > 1) {
-      var line = new l.GeodesicLine(this, t.lat1, t.lon1, t.azi1, 
-                                    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
-      da12 = t.a12/k;
-      for (var i = 1; i < k; ++i) {
-        var vals =
-        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH);
-        points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
-      }
-    }
-    return points;
-  }
 
 })();

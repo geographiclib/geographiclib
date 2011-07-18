@@ -22,11 +22,13 @@
 		   online calculator,
 		   WGS84 ellipsoid,
 		   GeographicLib" /> 
-    <script src="GeographicLib/Math.js"></script>
-    <script src="GeographicLib/Geodesic.js"></script>
-    <script src="GeographicLib/GeodesicLine.js"></script>
-    <script src="GeographicLib/PolygonArea.js"></script>
-    <script>
+    <script type="text/javascript" src="GeographicLib/Math.js"></script>
+    <script type="text/javascript" src="GeographicLib/Geodesic.js"></script>
+    <script type="text/javascript" src="GeographicLib/GeodesicLine.js"></script>
+    <script type="text/javascript" src="GeographicLib/PolygonArea.js"></script>
+    <script type="text/javascript" src="GeographicLib/Interface.js"></script>
+    <script type="text/javascript">
+var geod = GeographicLib.Geodesic.WGS84;
 function GeodesicInverse(input) {
   var result = {};
   try {
@@ -34,7 +36,7 @@ function GeodesicInverse(input) {
     var t = new String(input);
     t = t.split(/[\s,]+/,6);
     if (t[0] == "") t.shift();
-    t = GeographicLib.Geodesic.WGS84.Inverse
+    t = geod.Inverse
     (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]));
     result.status = "OK";
     result.p1 =
@@ -60,7 +62,7 @@ function GeodesicDirect(input) {
     var t = new String(input);
     t = t.split(/[\s,]+/,6);
     if (t[0] == "") t.shift();
-    t = GeographicLib.Geodesic.WGS84.Direct
+    t = geod.Direct
     (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]));
     result.status = "OK";
     result.p1 =
@@ -86,7 +88,7 @@ function GeodesicPath(input) {
     var t = new String(input);
     t = t.split(/[\s,]+/,8);
     if (t[0] == "") t.shift();
-    t = GeographicLib.Geodesic.WGS84.Path
+    t = geod.Path
     (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]),
      parseFloat(t[4]), parseInt(t[5]));
     result.status = "OK";
@@ -116,7 +118,7 @@ function GeodesicArea(input) {
       if (pos[0] == "") pos.shift();
       t[i] = {lat: parseFloat(pos[0]), lon: parseFloat(pos[1])};
     }
-    t = GeographicLib.Geodesic.WGS84.Area(t);
+    t = geod.Area(t);
     result.status = "OK";
     result.area = t.number + " " +
       t.perimeter.toFixed(8) + " " + t.area.toFixed(3);

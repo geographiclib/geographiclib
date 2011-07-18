@@ -15,6 +15,7 @@
 *.ncb
 *.suo
 *.exe
+*.pyc
 *-core
 BUILD*
 CMakeCache.txt
