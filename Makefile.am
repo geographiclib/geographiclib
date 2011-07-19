@@ -12,10 +12,11 @@ SUBDIRS = src man tools doc include matlab
 
 EXTRA_DIST = AUTHORS 00README.txt COPYING.txt NEWS INSTALL \
 	Makefile.mk CMakeLists.txt \
-	windows maxima man doc
+	windows maxima man doc python
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
+	find $(distdir)/python -mindepth 1 ! -name '*.py' | xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		! \( -name '*.sln' -o -name '*.vc*proj' -o -name '*.mk' \)| \
