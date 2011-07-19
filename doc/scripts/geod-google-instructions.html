@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- $Id$ -->
+    <title>
+      Geodesic lines, circles, envelopes in Google Maps (instructions)
+    </title>
+    <meta name="description"
+	  content="Geodesic lines, circles,
+		   envelopes in Google Maps (instructions)" />
+    <meta name="author" content="Charles F. F. Karney">
+  </head>
+  <body>
+    <h2>
+      Geodesic lines, circles, envelopes in Google Maps (instructions)
+    </h2>
+    <p>
+      The <a href="geod-google.html">page</a> allows you to draw
+      accurate ellipsoidal geodesics on Google Maps.  You can specify the
+      geodesic in one of two forms
+      <ul>
+	<li>
+	  the direct form: specify a starting point, an azimuth and a
+	  distance as <i>lat1 lon1 azi1 s12</i> as decimal degrees and
+	  meters;
+	<li>
+	  the inverse form: specify the two end points as <i>lat1 lon1
+	    lat2 lon2</i> as decimal degrees.
+      </ul>
+      Click on the corresponding "compute" button.  The display then shows
+      <ul>
+	<li>the requested geodesic as a <font color="blue">blue
+	  line</font>; the WGS84 ellipsoid model is used;
+	<li>the geodesic circle as a <font color="green">green
+	  curve</font>; this shows the locus of points a
+	  distance <i>s12</i> from <i>lat1, lon1</i>;
+	<li>the geodesic envelopes as <font color="red">red
+	  curves</font>; all the geodesics emanating from <i>lat1,
+	  lon1</i> are tangent to the envelopes (providing they are
+	  extended far enough).
+      </ul>
+    </p>
+    <p>
+      The sample data has <i>lat1, lon1</i> in Wellington, New
+      Zealand, <i>lat2, lon2</i> in Salamanca, Spain, and <i>s12</i>
+      about 1.5 times the earth's circumference.  Try clicking on the
+      "compute" button next to the "Direct:" input box when the page
+      first loads.  You can navigate around the map using the normal
+      Google Map controls.
+    </p>
+    <p>
+      A text-only geodesic calculator is
+      available <a href="geod-calc.html">here</a>.  This solves inverse
+      and direct geodesic problems, computes intermediate points on a
+      geodesic, and finds the area of a geodesic polygon.
+    <p>
+      The Javascipt code for computing the geodesic lines, circles, and
+      envelopes is part of 
+      <a href="http://geographiclib.sourceforge.net/">GeographicLib</a>.
+      The algorithms are derived in
+      <blockquote>
+	Charles F. F. Karney,
+	<a href="http://arxiv.org/abs/1102.1215">
+	<i>Geodesics on an ellipsoid of revolution</i></a>,<br>
+	Feb. 2011,
+	<a href="http://arxiv.org/abs/1102.1215">arXiv:1102.1215</a>
+	(<a href="http://arxiv.org/pdf/1102.1215">pdf</a>),
+	<a href="http://geographiclib.sourceforge.net/geod-errata.html">
+	  <b>errata</b></a>.
+      </blockquote>
+    </p>
+    <hr>
+    <address>Charles Karney
+      <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
+      (2011-07-19)</address>
+    <br>
+    <a href="http://geographiclib.sourceforge.net">
+      <img
+	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
+	 border="0" height="15" width="80" alt="SourceForge.net" />
+    </a>
+  </body>
+</html>

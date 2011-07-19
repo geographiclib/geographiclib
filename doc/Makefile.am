@@ -2,7 +2,11 @@
 
 EXTRAFILES = tmseries30.html geodseries30.html
 
-SCRIPTDRIVERS = scripts/geod-calc.html scripts/geod-google.html
+SCRIPTDRIVERS = \
+scripts/geod-calc.html \
+scripts/geod-google.html \
+scripts/geod-google-instuctions.html
+
 JSSCRIPTS = \
 scripts/GeographicLib/Math.js \
 scripts/GeographicLib/Geodesic.js \
