@@ -18,8 +18,8 @@
 # GeographicLib.Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2, outmask)
 # GeographicLib.Geodesic.WGS84.Direct(lat1, lon1, azi1, s12, outmask)
 #
-# perform the basic geodesic calculations.  These return an object with
-# (some) of the following fields:
+# perform the basic geodesic calculations.  These return a dictionary
+# with (some) of the following entries:
 #
 #   lat1 latitude of point 1
 #   lon1 longitude of point 1
@@ -71,6 +71,7 @@ import math
 
 class Math(object):
   """Additional math routines for GeographicLib"""
+
   epsilon = math.pow(2.0, -52)
   minval = math.pow(2.0, -1022)
   maxval = math.pow(2.0, 1023) * (2 - epsilon)
@@ -90,11 +91,13 @@ class Math(object):
 
 class Constants(object):
   """WGS84 constants"""
+
   WGS84_a = 6378137             # meters
   WGS84_f = 1/298.257223563
 
 class Accumulator(object):
   """Like math.fsum, but allows a running sum"""
+
   def sum(u, v):
     # Error free transformation of a sum.  Note that t can be the same as one
     # of the first two arguments.
@@ -170,6 +173,7 @@ class Accumulator(object):
 
 class Geodesic(object):
   """Solve geodesic problem"""
+
   GEOD_ORD = 6
   nA1_ = GEOD_ORD
   nC1_ = GEOD_ORD
@@ -364,12 +368,15 @@ class Geodesic(object):
   C2f = staticmethod(C2f)
 
   def __init__(self, a, f):
-    self._a = a
-    self._a = a
-    self._f = f if f <= 1 else 1.0/f
+    """Construct a Geodesic object for ellipsoid with major radius a and
+    flattening f.
+    """
+
+    self._a = float(a)
+    self._f = float(f) if f <= 1 else 1.0/f
     self._f1 = 1 - self._f
     self._e2 = self._f * (2 - self._f)
-    self._ep2 = self._e2 / Math.sq(self._f1)      # e2 / (1 - e2)
+    self._ep2 = self._e2 / Math.sq(self._f1) # e2 / (1 - e2)
     self._n = self._f / ( 2 - self._f)
     self._b = self._a * self._f1
     # authalic radius squared
@@ -981,6 +988,37 @@ class Geodesic(object):
   CheckDistance = staticmethod(CheckDistance)
 
   def Inverse(self, lat1, lon1, lat2, lon2, outmask = DISTANCE | AZIMUTH):
+    """Solve the inverse geodesic problem.  Compute geodesic between
+    (lat1, lon1) and (lat2, lon2).  Return a dictionary with (some) of
+    the following entries:
+
+      lat1 latitude of point 1
+      lon1 longitude of point 1
+      azi1 azimuth of line at point 1
+      lat2 latitude of point 2
+      lon2 longitude of point 2
+      azi2 azimuth of line at point 2
+      s12 distance from 1 to 2
+      a12 arc length on auxiliary sphere from 1 to 2
+      m12 reduced length of geodesic
+      M12 geodesic scale 2 relative to 1
+      M21 geodesic scale 1 relative to 2
+      S12 area between geodesic and equator
+
+    outmask determines which fields get included and if outmask is
+    omitted, then only the basic geodesic fields are computed.  The mask
+    is an or'ed combination of the following values
+
+      GeographicLib.Geodesic.LATITUDE
+      GeographicLib.Geodesic.LONGITUDE
+      GeographicLib.Geodesic.AZIMUTH
+      GeographicLib.Geodesic.DISTANCE
+      GeographicLib.Geodesic.REDUCEDLENGTH
+      GeographicLib.Geodesic.GEODESICSCALE
+      GeographicLib.Geodesic.AREA
+      GeographicLib.Geodesic.ALL
+    """
+
     lon1 = Geodesic.CheckPosition(lat1, lon1)
     lon2 = Geodesic.CheckPosition(lat2, lon2)
 
@@ -1008,6 +1046,37 @@ class Geodesic(object):
 
   def Direct(self, lat1, lon1, azi1, s12,
              outmask = LATITUDE | LONGITUDE | AZIMUTH):
+    """Solve the direct geodesic problem.  Compute geodesic starting at
+    (lat1, lon1) with azimuth azi1 and length s12.  Return a dictionary
+    with (some) of the following entries:
+
+      lat1 latitude of point 1
+      lon1 longitude of point 1
+      azi1 azimuth of line at point 1
+      lat2 latitude of point 2
+      lon2 longitude of point 2
+      azi2 azimuth of line at point 2
+      s12 distance from 1 to 2
+      a12 arc length on auxiliary sphere from 1 to 2
+      m12 reduced length of geodesic
+      M12 geodesic scale 2 relative to 1
+      M21 geodesic scale 1 relative to 2
+      S12 area between geodesic and equator
+
+    outmask determines which fields get included and if outmask is
+    omitted, then only the basic geodesic fields are computed.  The mask
+    is an or'ed combination of the following values
+
+      GeographicLib.Geodesic.LATITUDE
+      GeographicLib.Geodesic.LONGITUDE
+      GeographicLib.Geodesic.AZIMUTH
+      GeographicLib.Geodesic.DISTANCE
+      GeographicLib.Geodesic.REDUCEDLENGTH
+      GeographicLib.Geodesic.GEODESICSCALE
+      GeographicLib.Geodesic.AREA
+      GeographicLib.Geodesic.ALL
+    """
+
     lon1 = Geodesic.CheckPosition(lat1, lon1)
     azi1 = Geodesic.CheckAzimuth(azi1)
     Geodesic.CheckDistance(s12)
@@ -1027,6 +1096,18 @@ class Geodesic(object):
     return result
 
   def Area(self, points, polyline = False):
+    """Compute the area of a geodesic polygon given by points, an array
+    of dicrionaries with entries lat and lon.  Return a dicrionary with
+    entries
+
+      number the number of verices
+      perimeter the perimeter
+      area the area (counter-clockwise traversal positive)
+
+    If polyline is set to True, then the points define a polyline
+    instead of a polygon and the area is not returned.
+    """
+
     for p in points:
       Geodesic.CheckPosition(p['lat'], p['lon'])
     num, perimeter, area = PolygonArea.Area(self, points, polyline)
