@@ -40,13 +40,12 @@ var geod = GeographicLib.Geodesic.WGS84;
 var geodesic, circle, envelope;
 
 function initialize() {
-  var myOptions = {
+  var mapOptions = {
     zoom: 8,
     center: new google.maps.LatLng(41.3, -5.5),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
-
-  map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+  map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
 
   var geodesicOptions = {
     strokeColor: '#0000FF',
@@ -72,9 +71,11 @@ function initialize() {
     strokeWeight: 3,
     geodesic: true
   }
-  envelope = new google.maps.Polyline(envelopeOptions);
-  envelope.setMap(map);
-
+  envelope = new Array(4);
+  for (var i = 0; i < 4; ++i) {
+    envelope[i] = new google.maps.Polyline(envelopeOptions);
+    envelope[i].setMap(map);
+  }
 }
 
 function GeodesicInverse(input) {
@@ -134,7 +135,7 @@ function draw(v) {
   var points = geod.DirectPath(v.lat1, v.lon1, v.azi1, v.s12,
 			100000, 100);
   clearPaths();
-  var k, path;
+  var i, k, path;
 
   path = geodesic.getPath();
   for (k = 0; k < points.length; ++k)
@@ -143,24 +144,22 @@ function draw(v) {
   path = circle.getPath();
   for (k = 0; k < points.length; ++k)
     path.push(new google.maps.LatLng(points[k].lat, points[k].lon));
-  points = geod.Envelope(v.lat1, v.lon1, 72);
-  path = envelope.getPath();
-  for (k = 0; k < points.length; ++k)
-    path.push(new google.maps.LatLng(points[k].lat, points[k].lon));
+  for (i = 0; i < 4; ++i) {
+    points = geod.Envelope(v.lat1, v.lon1, 72, i+1);
+    path = envelope[i].getPath();
+    for (k = 0; k < points.length; ++k)
+      path.push(new google.maps.LatLng(points[k].lat, points[k].lon));
+  }
 }
 
 function clearPaths() {
   cPath = geodesic.getPath();
-  while (cPath.getLength()) {
-    cPath.pop();
-  }
+  while (cPath.getLength()) cPath.pop();
   cPath = circle.getPath();
-  while (cPath.getLength()) {
-    cPath.pop();
-  }
-  cPath = envelope.getPath();
-  while (cPath.getLength()) {
-    cPath.pop();
+  while (cPath.getLength()) cPath.pop();
+  for (var i = 0; i < 4; ++i) {
+    cPath = envelope[i].getPath();
+    while (cPath.getLength()) cPath.pop();
   }
 }
     </script>
@@ -202,6 +201,12 @@ function clearPaths() {
 	&nbsp;&nbsp; status: <input "readonly" id="status" size=30>
 	&nbsp;&nbsp; code from
 	<a href="http://geographiclib.sourceforge.net/">GeographicLib</a>
+	at
+	<a href="http://geographiclib.sourceforge.net">
+	  <img
+	     src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
+	     border="0" height="15" width="80" alt="SourceForge.net" />
+	</a>
     </p>
   </div>
   </body>

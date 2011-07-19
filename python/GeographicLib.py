@@ -1096,7 +1096,7 @@ class Geodesic(object):
 
   def Area(self, points, polyline = False):
     """Compute the area of a geodesic polygon given by points, an array
-    of dicrionaries with entries lat and lon.  Return a dicrionary with
+    of dictionaries with entries lat and lon.  Return a dictionary with
     entries
 
       number the number of verices

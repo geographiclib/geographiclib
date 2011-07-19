@@ -203,13 +203,14 @@
     return points;
   }
 
-  g.Geodesic.prototype.Envelope = function(lat1, lon1, k) {
+  g.Geodesic.prototype.Envelope = function(lat1, lon1, k, ord) {
     if (!(Math.abs(lat1) <= 90))
       throw new Error("lat1 must be in [-90, 90]");
     if (!(lon1 >= -180 && lon1 <= 360))
       throw new Error("lon1 must be in [-180, 360]");
     if (lon1 >= 180) lon1 -= 360;
     if (!k || k < 4) k = 24;
+    if (!ord) ord = 1;
     var points = new Array(k + 1);
     var vals, line, s12, j;
     for (var i = 0; i <= k; ++i) {
@@ -217,7 +218,7 @@
       line = new l.GeodesicLine(this, lat1, lon1, azi1, 
 				g.LATITUDE | g.LONGITUDE | g.DISTANCE_IN |
 				g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
-      vals = line.GenPosition(true, 180,
+      vals = line.GenPosition(true, 180 * ord,
 			      g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
       j = 0;
       while (true) {
