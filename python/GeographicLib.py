@@ -77,7 +77,7 @@ class Math(object):
 
 class Constants(object):
   """WGS84 constants"""
-  WGS84_a = 6378137             # meters
+  WGS84_a = 6378137.0           # meters
   WGS84_f = 1/298.257223563
 
 class Accumulator(object):
