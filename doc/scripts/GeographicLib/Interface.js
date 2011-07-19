@@ -1,6 +1,21 @@
 /**
  * Interface.js
- * Javascript interface routines for GeographicLib.
+ * Javascript interface routines for the geodesic routines GeographicLib.
+ *
+ * This provides javascript-style interfaces to Math.js, Geodesic.js,
+ * GeodesicLine.js, and PolygonArea.js which, in turn, are rather
+ * literal translations of the following classes from GeographicLib:
+ * Math, Accumulator, Geodesic, GeodesicLib, PolygonArea.  See the
+ * documentation for the C++ class for more information at
+ *
+ *    http://geographiclib.sourceforge.net/html/annotated.html
+ *
+ * The algorithms are derived in
+ *
+ *    Charles F. F. Karney,
+ *    Geodesics on an ellipsoid of revolution, Feb. 2011,
+ *    http://arxiv.org/abs/1102.1215
+ *    errata: http://geographiclib.sourceforge.net/geod-errata.html
  *
  **********************************************************************
  * GeographicLib.Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2, outmask);
@@ -208,7 +223,7 @@
       while (true) {
 	// Solve m12(s12) = 0 by Newton's method using dm12/ds12 = M21
 	s12 = vals.s12 - vals.m12/vals.M21;
-	if (Math.abs(vals.m12) < 0.01 || ++j > 10)
+	if (Math.abs(vals.m12) < line._a * g.tol2_ * 0.1 || ++j > 10)
 	  break;
 	vals = line.GenPosition(false, s12,
 				g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
