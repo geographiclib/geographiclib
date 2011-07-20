@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::MGRS class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
-#define GEOGRAPHICLIB_MGRS_HPP "$Id: e69a6ec0376f85352407c6c889b6de31aab2f2d3 $"
+#define GEOGRAPHICLIB_MGRS_HPP "$Id: ec89e8a2c1c4a41fb7c08b0a9fd287116516f6a5 $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>

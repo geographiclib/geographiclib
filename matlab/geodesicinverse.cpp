@@ -3,7 +3,7 @@
  * \brief Matlab mex file for geographic to UTM/UPS conversions
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -13,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geodesicinverse.cpp
 
-// $Id: 2ac5d602e946d2ccfdb912b53d696620ca18d569 $
+// $Id: 34511e257400d8e41ad6b657289b091554122ec1 $
 
 #include <algorithm>
 #include <GeographicLib/Geodesic.hpp>
@@ -40,7 +40,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[0]) != 4)
     mexErrMsgTxt("latlong coordinates must be M x 4 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 3) {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))
@@ -61,9 +61,10 @@ void mexFunction( int nlhs, mxArray* plhs[],
 
   plhs[0] = mxCreateDoubleMatrix(m, 3, mxREAL);
   double* azi1 = mxGetPr(plhs[0]);
-  std::fill(azi1, azi1 + 3*m, Math::NaN());
+  std::fill(azi1, azi1 + 3*m, Math::NaN<double>());
   double* azi2 = azi1 + m;
   double* s12 = azi1 + 2*m;
+  double* a12 = NULL;
   double* m12 = NULL;
   double* M12 = NULL;
   double* M21 = NULL;
@@ -71,12 +72,13 @@ void mexFunction( int nlhs, mxArray* plhs[],
   bool aux = nlhs == 2;
 
   if (aux) {
-    plhs[1] = mxCreateDoubleMatrix(m, 4, mxREAL);
-    m12 = mxGetPr(plhs[1]);
-    std::fill(m12, m12 + 4*m, Math::NaN());
-    M12 = m12 + m;
-    M21 = m12 + 2*m;
-    S12 = m12 + 3*m;
+    plhs[1] = mxCreateDoubleMatrix(m, 5, mxREAL);
+    a12 = mxGetPr(plhs[1]);
+    std::fill(a12, a12 + 5*m, Math::NaN<double>());
+    m12 = a12 + m;
+    M12 = a12 + 2*m;
+    M21 = a12 + 3*m;
+    S12 = a12 + 4*m;
   }
 
   try {
@@ -86,8 +88,9 @@ void mexFunction( int nlhs, mxArray* plhs[],
           !(lon1[i] < -180 || lon1[i] > 360 ||
             lon2[i] < -180 || lon2[i] > 360)) {
         if (aux)
-          g.Inverse(lat1[i], lon1[i], lat2[i], lon2[i],
-                    s12[i], azi1[i], azi2[i], m12[i], M12[i], M21[i], S12[i]);
+          a12[i] = g.Inverse(lat1[i], lon1[i], lat2[i], lon2[i],
+                             s12[i], azi1[i], azi2[i],
+                             m12[i], M12[i], M21[i], S12[i]);
         else
           g.Inverse(lat1[i], lon1[i], lat2[i], lon2[i],
                     s12[i], azi1[i], azi2[i]);

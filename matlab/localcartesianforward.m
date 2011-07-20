@@ -1,17 +1,17 @@
 function [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
 %localcartesianforward  Convert geographic coordinates to local cartesian
 %
-%   [cartesian, rot] = localcartesianforward(origin, geodetic);
-%   [cartesian, rot] = localcartesianforward(origin, geodetic, a, f);
+%   [cartesian, rot] = localcartesianforward(origin, geodetic)
+%   [cartesian, rot] = localcartesianforward(origin, geodetic, a, f)
 %
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees
 %       lon0 = origin(1,2) in degrees
 %       h0 = origin(1,3) in meters (default 0 m)
-%   geodetic is an M x 3 matrix of geodetic coordinates
+%   geodetic is an M x 3 or M x 2 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
-%       h = geodetic(:,3) in meters
+%       h = geodetic(:,3) in meters (default 0 m)
 %
 %   cartesian is an M x 3 matrix of local cartesian coordinates
 %       x = cartesian(:,1) in meters
@@ -37,6 +37,7 @@ end
 % Matlab .m file for geographic to local cartesian conversions
 %
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
-% the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+% the MIT/X11 License.  For more information, see
+% http://geographiclib.sourceforge.net/
 %
-% $Id: 6d9a075fb82d7b53939387814d5720c5269bb957 $
+% $Id: fdc671d6023a46268b868154bf94777c9b14f5fa $

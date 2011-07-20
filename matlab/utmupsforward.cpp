@@ -3,7 +3,8 @@
  * \brief Matlab mex file for geographic to UTM/UPS conversions
  *
  * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 // Compile in Matlab with
@@ -12,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic utmupsforward.cpp
 
-// $Id: 14afd5797395fd0eb51fe6c72129cfcc3a789b72 $
+// $Id: 49d10e3d6e74fdafab64d0f50fe175ff5b9f8622 $
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <mex.h>
@@ -85,8 +86,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      x[i] = y[i] = Math::NaN();
-      if (scale) gamma[i] = k[i] = Math::NaN();
+      x[i] = y[i] = Math::NaN<double>();
+      if (scale) gamma[i] = k[i] = Math::NaN<double>();
       zone[i] = UTMUPS::INVALID; hemi[i] = 0;
     }
   }

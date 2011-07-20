@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::UTMUPS class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -13,7 +13,7 @@
 #include <GeographicLib/PolarStereographic.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
 
-#define GEOGRAPHICLIB_UTMUPS_CPP "$Id: a5d0822d4065b1865458972aa10d781db6d548b3 $"
+#define GEOGRAPHICLIB_UTMUPS_CPP "$Id: 3c1fb210730eb1435b45850a22f2ae21175039be $"
 
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)
@@ -78,7 +78,7 @@ namespace GeographicLib {
     if (zone1 == INVALID) {
       zone = zone1;
       northp = northp1;
-      x = y = gamma = k = Math::NaN();
+      x = y = gamma = k = Math::NaN<real>();
       return;
     }
     real x1, y1, gamma1, k1;
@@ -121,7 +121,7 @@ namespace GeographicLib {
                        real& lat, real& lon, real& gamma, real& k,
                        bool mgrslimits) {
     if (zone == INVALID || Math::isnan(x) || Math::isnan(y)) {
-      lat = lon = gamma = k = Math::NaN();
+      lat = lon = gamma = k = Math::NaN<real>();
       return;
     }
     if (! (zone >= MINZONE && zone <= MAXZONE))

@@ -5,10 +5,10 @@
 # Francesco P. Lovergine <frankie@debian.org>
 #
 # Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the LGPL.  For more information, see
+# under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: 0c834f27a50129fded25eca65fee49d5d648b21a $
+# $Id: b9f2a749578b6678ad915fb91c28d7f11e582e43 $
 
 GEOID_DEFAULT_PATH="@GEOID_DEFAULT_PATH@"
 DEFAULTDIR=`dirname "$GEOID_DEFAULT_PATH"`

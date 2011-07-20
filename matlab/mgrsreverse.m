@@ -1,7 +1,7 @@
 function [utmups, prec] = mgrsreverse(utmups)
 %mgrsreverse  Convert UTM/UPS coordinates to MGRS
 %
-%   [utmups, prec] = mgrsreverse(mgrs);
+%   [utmups, prec] = mgrsreverse(mgrs)
 %
 %   mgrs is a M x 1 cell array of MGRS strings, e.g.,
 %       mgrsreverse({ '38SMB4488'; '12TUK3393' })
@@ -32,7 +32,7 @@ end
 % Matlab .m file for MGRS to UTM/UPS conversions
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
-% licensed under the LGPL.  For more information, see
+% licensed under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 635c9ce4cdab045ae013b6da019fcdcec450b88a $
+% $Id: b04bd9800243ee766cb0d63b0318bc42464c410c $

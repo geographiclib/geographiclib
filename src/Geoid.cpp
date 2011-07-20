@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::Geoid class
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_GEOID_CPP "$Id: e7bd39191004f6594f9ccb661503e39abf62ae83 $"
+#define GEOGRAPHICLIB_GEOID_CPP "$Id: 24d33b014bac086140fb2e0f304992054ffdc5b3 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
@@ -314,8 +314,8 @@ namespace GeographicLib {
   Math::real Geoid::height(real lat, real lon, bool gradp,
                            real& gradn, real& grade) const {
     if (Math::isnan(lat) || Math::isnan(lon)) {
-      if (gradp) gradn = grade = Math::NaN();
-      return Math::NaN();
+      if (gradp) gradn = grade = Math::NaN<real>();
+      return Math::NaN<real>();
     }
     real
       fx =  lon * _rlonres,

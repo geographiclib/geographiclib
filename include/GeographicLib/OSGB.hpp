@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::OSGB class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
-#define GEOGRAPHICLIB_OSGB_HPP "$Id: 42b12900bf7035d62562ca4d97ea930e69db8caf $"
+#define GEOGRAPHICLIB_OSGB_HPP "$Id: 5460ecf2cc63586e97d0f4b1217816ef03fa2cbf $"
 
 #include <string>
 #include <sstream>

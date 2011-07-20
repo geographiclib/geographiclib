@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::GeodesicLine class
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: 7621f104dea2ed253fbcf6173ffc8f2c23c3d67b $"
+#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: 592ae103b61c941eff6b856e0b20fe973e5656e1 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -92,7 +92,7 @@ namespace GeographicLib {
     // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
     real _C1a[nC1_ + 1], _C1pa[nC1p_ + 1], _C2a[nC2_ + 1], _C3a[nC3_],
       _C4a[nC4_];    // all the elements of _C4a are used
-    bool _areap;
+    bool _areap;     // _areap is OBSOLETE, can be removed
     unsigned _caps;
 
     enum captype {
@@ -532,18 +532,20 @@ namespace GeographicLib {
     /**
      * @return \e lat1 the latitude of point 1 (degrees).
      **********************************************************************/
-    Math::real Latitude() const throw() { return Init() ? _lat1 : Math::NaN(); }
+    Math::real Latitude() const throw()
+    { return Init() ? _lat1 : Math::NaN<real>(); }
 
     /**
      * @return \e lon1 the longitude of point 1 (degrees).
      **********************************************************************/
     Math::real Longitude() const throw()
-    { return Init() ? _lon1 : Math::NaN(); }
+    { return Init() ? _lon1 : Math::NaN<real>(); }
 
     /**
      * @return \e azi1 the azimuth (degrees) of the geodesic line at point 1.
      **********************************************************************/
-    Math::real Azimuth() const throw() { return Init() ? _azi1 : Math::NaN(); }
+    Math::real Azimuth() const throw()
+    { return Init() ? _azi1 : Math::NaN<real>(); }
 
     /**
      * @return \e azi0 the azimuth (degrees) of the geodesic line as it crosses
@@ -551,7 +553,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EquatorialAzimuth() const throw() {
       return Init() ?
-        atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN();
+        atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN<real>();
     }
 
     /**
@@ -560,27 +562,29 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EquatorialArc() const throw() {
       return Init() ?
-        atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN();
+        atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN<real>();
     }
 
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return Init() ? _a : Math::NaN(); }
+    Math::real MajorRadius() const throw()
+    { return Init() ? _a : Math::NaN<real>(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return Init() ? _f : Math::NaN(); }
+    Math::real Flattening() const throw()
+    { return Init() ? _f : Math::NaN<real>(); }
 
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
     Math::real InverseFlattening() const throw()
-    { return Init() ? 1/_f : Math::NaN(); }
+    { return Init() ? 1/_f : Math::NaN<real>(); }
 
     /**
      * @return \e caps the computational capabilities that this object was

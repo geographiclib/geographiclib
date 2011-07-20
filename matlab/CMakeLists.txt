@@ -1,4 +1,4 @@
-# $Id: 55f8cac568c6dc5b38d5aa9390e0b56d9cfb05fe $
+# $Id: c516a653df73ee7d84cee13e47b78096b2a76218 $
 
 file (GLOB MATLAB_FILES *.m)
 file (GLOB MATLAB_INTERFACES *.cpp)
@@ -6,6 +6,12 @@ install (FILES ${MATLAB_FILES} ${MATLAB_INTERFACES}
   DESTINATION libexec/GeographicLib/matlab)
 
 if (HAVE_MEX)
+  if (WIN32)
+    include (InstallRequiredSystemLibraries)
+    install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+      DESTINATION libexec/GeographicLib/matlab
+      CONFIGURATIONS Release)
+  endif (WIN32)
   add_custom_target (matlab-all ALL)
   foreach (INTERFACE ${MATLAB_INTERFACES})
     get_filename_component (TARGET ${INTERFACE} NAME_WE)

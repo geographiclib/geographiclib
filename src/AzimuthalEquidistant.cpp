@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::AzimuthalEquidistant class
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the LGPL.  For more information, see
+ * licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/AzimuthalEquidistant.hpp>
 
-#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP "$Id: 3c3530a7a2e4795333231580ee3516541c9f198d $"
+#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP "$Id: ae8d0d172251bc3177e23ee6a75313fe39ca1857 $"
 
 RCSID_DECL(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_CPP)
 RCSID_DECL(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)

@@ -3,7 +3,7 @@
  * \brief Command line utility for geodesic calculations
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o DMS.o
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 22dea500d2c431e86ddcada82ebd217a6c5d694a $\n"
+          << ": $Id: 5e6171ffdb1d5cd2e0848bc287f1295b401a5339 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

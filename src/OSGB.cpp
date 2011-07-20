@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::OSGB class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/OSGB.hpp>
 
-#define GEOGRAPHICLIB_OSGB_CPP "$Id: 8c272cbd91448cf8133a7735aeb81ab7db7547ff $"
+#define GEOGRAPHICLIB_OSGB_CPP "$Id: 00e5a28f46b62b8cabf13dd15fc638433993b73f $"
 
 RCSID_DECL(GEOGRAPHICLIB_OSGB_CPP)
 RCSID_DECL(GEOGRAPHICLIB_OSGB_HPP)

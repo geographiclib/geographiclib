@@ -52,13 +52,13 @@
 <a name="l00003"></a>00003 <span class="comment"> * \brief Implementation for GeographicLib::MGRS class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
 <a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
-<a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
+<a name="l00006"></a>00006 <span class="comment"> * and licensed under the MIT/X11 License.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="MGRS_8hpp.html" title="Header for GeographicLib::MGRS class.">GeographicLib/MGRS.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="MGRS_8cpp.html#a7882927f72a62a7131868e387edd4dac">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_MGRS_CPP &quot;$Id: 635f96a908ac2c7eedabea246625b4f51882d83f $&quot;</span>
+<a name="l00012"></a><a class="code" href="MGRS_8cpp.html#a7882927f72a62a7131868e387edd4dac">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_MGRS_CPP &quot;$Id: 3ca20cb20eab2ac06189b1b60393a82a0f7d0890 $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MGRS_8cpp.html#a7882927f72a62a7131868e387edd4dac">GEOGRAPHICLIB_MGRS_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MGRS_8hpp.html#a1c5e778121820c6ec16b6180ffab51ac">GEOGRAPHICLIB_MGRS_HPP</a>)
@@ -201,7 +201,7 @@
 <a name="l00152"></a>00152         toupper(mgrs[2]) == <span class="charliteral">&#39;V&#39;</span>) {
 <a name="l00153"></a>00153       zone = UTMUPS::INVALID;
 <a name="l00154"></a>00154       northp = <span class="keyword">false</span>;
-<a name="l00155"></a>00155       x = y = Math::NaN();
+<a name="l00155"></a>00155       x = y = Math::NaN&lt;real&gt;();
 <a name="l00156"></a>00156       prec = -1;
 <a name="l00157"></a>00157       <span class="keywordflow">return</span>;
 <a name="l00158"></a>00158     }
@@ -384,7 +384,7 @@
 <a name="l00335"></a>00335 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 27 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

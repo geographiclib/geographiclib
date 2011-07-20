@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 73eb6291bcbea32faf1dcac08533c66b90666954 $
+# $Id: b942b5672eb595269e8399aaa3e2026cb5489d9b $
 
 nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/AzimuthalEquidistant.hpp \
@@ -14,6 +14,7 @@ nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/GeoCoords.hpp \
 				GeographicLib/Geodesic.hpp \
 				GeographicLib/GeodesicLine.hpp \
+				GeographicLib/PolygonArea.hpp \
 				GeographicLib/Geoid.hpp \
 				GeographicLib/Gnomonic.hpp \
 				GeographicLib/LambertConformalConic.hpp \

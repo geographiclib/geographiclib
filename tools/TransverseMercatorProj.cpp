@@ -3,7 +3,7 @@
  * \brief Command line utility for transverse Mercator projections
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with TransverseMercatorExact.o
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 277dbd072174459f82567cd1a8826286a8d9caf3 $\n"
+          << ": $Id: 289ddef742896af3c31452df5e92611475ce9621 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

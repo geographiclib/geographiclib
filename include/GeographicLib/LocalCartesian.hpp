@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::LocalCartesian class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: 1f16fc06cd148ecb87836a52fad12dc36a69a52b $"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: 245e250778ab49feb229bcb178d720e56994f30e $"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>

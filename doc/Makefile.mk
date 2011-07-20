@@ -1,8 +1,8 @@
-# $Id: d26c5e99fecae4af7d3a08d76c5a03d4abb99e39 $
+# $Id: 73cd5313c78d53d6d5437ad164ab9b5743bb0db4 $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic GeodesicLine \
+	LocalCartesian Geodesic GeodesicLine PolygonArea \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid Gnomonic OSGB AlbersEqualArea
 PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
@@ -14,6 +14,8 @@ SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \
 
 EXTRAFILES = tmseries30.html geodseries30.html
 HTMLMANPAGES = 	$(patsubst %,../man/%.1.html,$(PROGRAMS))
+SCRIPTDRIVERS = $(wildcard scripts/*.html)
+JSSCRIPTS = $(wildcard scripts/GeographicLib/*.js)
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(patsubst %,../maxima/%.mac,$(MAXIMA))
@@ -24,18 +26,27 @@ html/index.html: Doxyfile Geographic.doc \
 	$(HEADERS) $(ALLSOURCES) $(MAXIMASOURCES) $(EXTRAFILES) \
 	$(HTMLMANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
-	cp -p $(MAXIMASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) html/
+	cp -p $(MAXIMASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) \
+	../LICENSE.txt html/
 	doxygen
 
 PREFIX = /usr/local
-DEST = $(PREFIX)/share/doc/GeographicLib/html
+DEST = $(PREFIX)/share/doc/GeographicLib
+DOCDEST = $(DEST)/html
+SCRIPTDEST = $(DEST)/scripts
 INSTALL = install -b
 
 install: html/index.html
-	test -d $(DEST) || mkdir -p $(DEST)
-	$(INSTALL) -m 644 html/* $(DEST)/
+	test -d $(DOCDEST) || mkdir -p $(DOCDEST)
+	$(INSTALL) -m 644 html/* $(DOCDEST)/
+	test -d $(SCRIPTDEST)/GeographicLib || \
+	mkdir -p $(SCRIPTDEST)/GeographicLib
+	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(SCRIPTDEST)/
+	$(INSTALL) -m 644 $(JSSCRIPTS) $(SCRIPTDEST)/GeographicLib/
+
 list:
-	@echo Doxyfile Geographic.doc $(EXTRAFILES)
+	@echo Doxyfile Geographic.doc $(EXTRAFILES) \
+	$(SCRIPTDRIVERS) $(JSSCRIPTS)
 
 distclean:
 	rm -rf html

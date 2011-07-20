@@ -1,6 +1,18 @@
-#  $Id: dd71e3e33f33a3b211dd865159dca4f84401586c $
+#  $Id: c49312857979e9749688ebd28e7f1d6e437154cd $
 
 EXTRAFILES = tmseries30.html geodseries30.html
+
+SCRIPTDRIVERS = \
+scripts/geod-calc.html \
+scripts/geod-google.html \
+scripts/geod-google-instructions.html
+
+JSSCRIPTS = \
+scripts/GeographicLib/Math.js \
+scripts/GeographicLib/Geodesic.js \
+scripts/GeographicLib/GeodesicLine.js \
+scripts/GeographicLib/Interface.js \
+scripts/GeographicLib/PolygonArea.js
 
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
@@ -20,6 +32,7 @@ $(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
 $(top_srcdir)/include/GeographicLib/MGRS.hpp \
 $(top_srcdir)/include/GeographicLib/OSGB.hpp \
 $(top_srcdir)/include/GeographicLib/PolarStereographic.hpp \
+$(top_srcdir)/include/GeographicLib/PolygonArea.hpp \
 $(top_srcdir)/include/GeographicLib/TransverseMercatorExact.hpp \
 $(top_srcdir)/include/GeographicLib/TransverseMercator.hpp \
 $(top_srcdir)/include/GeographicLib/UTMUPS.hpp
@@ -41,6 +54,7 @@ $(top_srcdir)/src/LocalCartesian.cpp \
 $(top_srcdir)/src/MGRS.cpp \
 $(top_srcdir)/src/OSGB.cpp \
 $(top_srcdir)/src/PolarStereographic.cpp \
+$(top_srcdir)/src/PolygonArea.cpp \
 $(top_srcdir)/src/TransverseMercator.cpp \
 $(top_srcdir)/src/TransverseMercatorExact.cpp \
 $(top_srcdir)/src/UTMUPS.cpp \
@@ -68,7 +82,8 @@ doc: html/index.html
 html/index.html: Doxyfile Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
-	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac html/
+	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac \
+	$(top_srcdir)/LICENSE.txt html/
 	doxygen
 
 distclean-local:
@@ -77,3 +92,7 @@ distclean-local:
 install-doc: doc
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
 	$(INSTALL) -m 644 html/* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
+	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
+	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib
+	$(INSTALL) -m 644 $(JSSCRIPTS) $(DESTDIR)$(docdir)/scripts/GeographicLib

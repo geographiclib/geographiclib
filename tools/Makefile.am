@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: e5e4102ed14cc67e6671d80b0402058f8df70b66 $
+# $Id: 4c2d2e3000517fc4336f01b1da759f49aee9102a $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/man
@@ -72,8 +72,8 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
-	../include/GeographicLib/Geodesic.hpp \
-	../include/GeographicLib/GeodesicLine.hpp
+	../include/GeographicLib/PolygonArea.hpp \
+	../include/GeographicLib/Geodesic.hpp
 
 ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/Constants.hpp \

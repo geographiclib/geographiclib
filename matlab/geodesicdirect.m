@@ -14,11 +14,12 @@ function [latlong, aux] = geodesicdirect(geodesic, a, f)
 %       latitude of point 2 = geodesic(:,1) in degrees
 %       longitude of point 2 = geodesic(:,2) in degrees
 %       azimuth at point 2 = geodesic(:,3) in degrees
-%   aux is an M x 4 matrix
-%       reduced length = aux(:,1) in meters
-%       geodesic scale 1 to 2 = aux(:,2)
-%       geodesic scale 2 to 1 = aux(:,3)
-%       area under geodesic = aux(:,4) in meters^2
+%   aux is an M x 5 matrix
+%       spherical arc length = aux(:,1) in degrees
+%       reduced length = aux(:,2) in meters
+%       geodesic scale 1 to 2 = aux(:,3)
+%       geodesic scale 2 to 1 = aux(:,4)
+%       area under geodesic = aux(:,5) in meters^2
 %
 %   a = major radius (meters)
 %   f = flattening (0 means a sphere)
@@ -34,7 +35,7 @@ end
 % Matlab .m file for solving direct geodesic problem
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
-% licensed under the LGPL.  For more information, see
+% licensed under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 763b350881db209bc99926fe065279a3df0facc4 $
+% $Id: edeee2fe9d9c273cfa9d7512139223f70c464cc1 $

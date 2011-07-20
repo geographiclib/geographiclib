@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::MGRS class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/MGRS.hpp>
 
-#define GEOGRAPHICLIB_MGRS_CPP "$Id: 635f96a908ac2c7eedabea246625b4f51882d83f $"
+#define GEOGRAPHICLIB_MGRS_CPP "$Id: 3ca20cb20eab2ac06189b1b60393a82a0f7d0890 $"
 
 RCSID_DECL(GEOGRAPHICLIB_MGRS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_MGRS_HPP)
@@ -152,7 +152,7 @@ namespace GeographicLib {
         toupper(mgrs[2]) == 'V') {
       zone = UTMUPS::INVALID;
       northp = false;
-      x = y = Math::NaN();
+      x = y = Math::NaN<real>();
       prec = -1;
       return;
     }

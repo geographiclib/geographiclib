@@ -52,7 +52,7 @@
 <a name="l00003"></a>00003 <span class="comment"> * \brief Implementation for GeographicLib::GeodesicLine class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
 <a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2009, 2010, 2011) &lt;charles@karney.com&gt; and</span>
-<a name="l00006"></a>00006 <span class="comment"> * licensed under the LGPL.  For more information, see</span>
+<a name="l00006"></a>00006 <span class="comment"> * licensed under the MIT/X11 License.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> *</span>
 <a name="l00009"></a>00009 <span class="comment"> * This is a reformulation of the geodesic problem.  The notation is as</span>
@@ -77,7 +77,7 @@
 <a name="l00028"></a>00028 
 <a name="l00029"></a>00029 <span class="preprocessor">#include &lt;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&gt;</span>
 <a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">00031</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_CPP &quot;$Id: ce44d077226c065d080f616b59baf86daaea0a62 $&quot;</span>
+<a name="l00031"></a><a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">00031</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESICLINE_CPP &quot;$Id: 28c54f82006e464a7c605d50962641b8931f87db $&quot;</span>
 <a name="l00032"></a>00032 <span class="preprocessor"></span>
 <a name="l00033"></a>00033 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeodesicLine_8cpp.html#a8c325bf3ebfa8126888b62b16495d64e">GEOGRAPHICLIB_GEODESICLINE_CPP</a>)
 <a name="l00034"></a>00034 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeodesicLine_8hpp.html#a45305d595b59bfb061a5a0c6e1044485">GEOGRAPHICLIB_GEODESICLINE_HPP</a>)
@@ -114,7 +114,7 @@
 <a name="l00065"></a>00065     phi = lat1 * Math::degree&lt;real&gt;();
 <a name="l00066"></a>00066     <span class="comment">// Ensure cbet1 = +epsilon at poles</span>
 <a name="l00067"></a>00067     sbet1 = _f1 * sin(phi);
-<a name="l00068"></a>00068     cbet1 = abs(lat1) == 90 ? Geodesic::eps2_ : cos(phi);
+<a name="l00068"></a>00068     cbet1 = abs(lat1) == 90 ? Geodesic::tiny_ : cos(phi);
 <a name="l00069"></a>00069     Geodesic::SinCosNorm(sbet1, cbet1);
 <a name="l00070"></a>00070 
 <a name="l00071"></a>00071     <span class="comment">// Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),</span>
@@ -140,7 +140,7 @@
 <a name="l00091"></a>00091     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
 <a name="l00092"></a>00092 
 <a name="l00093"></a>00093     <span class="keywordflow">if</span> (_caps &amp; CAP_C1) {
-<a name="l00094"></a>00094       _A1m1 =  Geodesic::A1m1f(eps);
+<a name="l00094"></a>00094       _A1m1 = Geodesic::A1m1f(eps);
 <a name="l00095"></a>00095       Geodesic::C1f(eps, _C1a);
 <a name="l00096"></a>00096       _B11 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C1a, nC1_);
 <a name="l00097"></a>00097       real s = sin(_B11), c = cos(_B11);
@@ -155,21 +155,21 @@
 <a name="l00106"></a>00106       Geodesic::C1pf(eps, _C1pa);
 <a name="l00107"></a>00107 
 <a name="l00108"></a>00108     <span class="keywordflow">if</span> (_caps &amp; CAP_C2) {
-<a name="l00109"></a>00109       _A2m1 =  Geodesic::A2m1f(eps);
+<a name="l00109"></a>00109       _A2m1 = Geodesic::A2m1f(eps);
 <a name="l00110"></a>00110       Geodesic::C2f(eps, _C2a);
 <a name="l00111"></a>00111       _B21 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C2a, nC2_);
 <a name="l00112"></a>00112     }
 <a name="l00113"></a>00113 
 <a name="l00114"></a>00114     <span class="keywordflow">if</span> (_caps &amp; CAP_C3) {
 <a name="l00115"></a>00115       g.C3f(eps, _C3a);
-<a name="l00116"></a>00116       _A3c = -g._f * _salp0 * g.A3f(eps);
+<a name="l00116"></a>00116       _A3c = -_f * _salp0 * g.A3f(eps);
 <a name="l00117"></a>00117       _B31 = Geodesic::SinCosSeries(<span class="keyword">true</span>, _ssig1, _csig1, _C3a, nC3_-1);
 <a name="l00118"></a>00118     }
 <a name="l00119"></a>00119 
 <a name="l00120"></a>00120     <span class="keywordflow">if</span> (_caps &amp; CAP_C4) {
 <a name="l00121"></a>00121       g.C4f(_k2, _C4a);
 <a name="l00122"></a>00122       <span class="comment">// Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)</span>
-<a name="l00123"></a>00123       _A4 = Math::sq(g._a) * _calp0 * _salp0 * g._e2;
+<a name="l00123"></a>00123       _A4 = Math::sq(_a) * _calp0 * _salp0 * g._e2;
 <a name="l00124"></a>00124       _B41 = Geodesic::SinCosSeries(<span class="keyword">false</span>, _ssig1, _csig1, _C4a, nC4_);
 <a name="l00125"></a>00125     }
 <a name="l00126"></a>00126   }
@@ -184,7 +184,7 @@
 <a name="l00135"></a>00135     outmask &amp;= _caps &amp; OUT_ALL;
 <a name="l00136"></a>00136     <span class="keywordflow">if</span> (!( Init() &amp;&amp; (arcmode || (_caps &amp; DISTANCE_IN &amp; OUT_ALL)) ))
 <a name="l00137"></a>00137       <span class="comment">// Uninitialized or impossible distance calculation requested</span>
-<a name="l00138"></a>00138       <span class="keywordflow">return</span> Math::NaN();
+<a name="l00138"></a>00138       <span class="keywordflow">return</span> Math::NaN&lt;real&gt;();
 <a name="l00139"></a>00139 
 <a name="l00140"></a>00140     <span class="comment">// Avoid warning about uninitialized B12.</span>
 <a name="l00141"></a>00141     real sig12, ssig12, csig12, B12 = 0, AB1 = 0;
@@ -226,7 +226,7 @@
 <a name="l00177"></a>00177     cbet2 = Math::hypot(_salp0, _calp0 * csig2);
 <a name="l00178"></a>00178     <span class="keywordflow">if</span> (cbet2 == 0)
 <a name="l00179"></a>00179       <span class="comment">// I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case</span>
-<a name="l00180"></a>00180       cbet2 = csig2 = Geodesic::eps2_;
+<a name="l00180"></a>00180       cbet2 = csig2 = Geodesic::tiny_;
 <a name="l00181"></a>00181     <span class="comment">// tan(omg2) = sin(alp0) * tan(sig2)</span>
 <a name="l00182"></a>00182     somg2 = _salp0 * ssig2; comg2 = csig2;  <span class="comment">// No need to normalize</span>
 <a name="l00183"></a>00183     <span class="comment">// tan(alp0) = cos(sig2)*tan(alp2)</span>
@@ -290,7 +290,7 @@
 <a name="l00241"></a>00241         <span class="comment">// salp12 = -0 and alp12 = -180.  However this depends on the sign being</span>
 <a name="l00242"></a>00242         <span class="comment">// attached to 0 correctly.  The following ensures the correct behavior.</span>
 <a name="l00243"></a>00243         <span class="keywordflow">if</span> (salp12 == 0 &amp;&amp; calp12 &lt; 0) {
-<a name="l00244"></a>00244           salp12 = Geodesic::eps2_ * _calp1;
+<a name="l00244"></a>00244           salp12 = Geodesic::tiny_ * _calp1;
 <a name="l00245"></a>00245           calp12 = -1;
 <a name="l00246"></a>00246         }
 <a name="l00247"></a>00247       } <span class="keywordflow">else</span> {
@@ -310,13 +310,13 @@
 <a name="l00261"></a>00261       S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
 <a name="l00262"></a>00262     }
 <a name="l00263"></a>00263 
-<a name="l00264"></a>00264     <span class="keywordflow">return</span> arcmode ? s12_a12 : sig12 /  Math::degree&lt;real&gt;();
+<a name="l00264"></a>00264     <span class="keywordflow">return</span> arcmode ? s12_a12 : sig12 / Math::degree&lt;real&gt;();
 <a name="l00265"></a>00265   }
 <a name="l00266"></a>00266 
 <a name="l00267"></a>00267 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 27 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

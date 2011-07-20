@@ -3,7 +3,7 @@
  * \brief Matlab mex file for geographic to UTM/UPS conversions
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -13,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geodesicline.cpp
 
-// $Id: 8e3877a3774e9f1104481ec4fabadcb953dab38c $
+// $Id: b9fc11298e24782384ce62dacfa4c32995190d0f $
 
 #include <GeographicLib/GeodesicLine.hpp>
 #include <mex.h>
@@ -54,7 +54,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[3]) != 1)
     mexErrMsgTxt("distances must be M x 1 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 6) {
     if (!( mxIsDouble(prhs[4]) && !mxIsComplex(prhs[4]) &&
            mxGetNumberOfElements(prhs[4]) == 1 ))
@@ -74,6 +74,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   double* lat2 = mxGetPr(plhs[0]);
   double* lon2 = lat2 + m;
   double* azi2 = lat2 + 2*m;
+  double* a12 = NULL;
   double* m12 = NULL;
   double* M12 = NULL;
   double* M21 = NULL;
@@ -81,11 +82,12 @@ void mexFunction( int nlhs, mxArray* plhs[],
   bool aux = nlhs == 2;
 
   if (aux) {
-    plhs[1] = mxCreateDoubleMatrix(m, 4, mxREAL);
-    m12 = mxGetPr(plhs[1]);
-    M12 = m12 + m;
-    M21 = m12 + 2*m;
-    S12 = m12 + 3*m;
+    plhs[1] = mxCreateDoubleMatrix(m, 5, mxREAL);
+    a12 = mxGetPr(plhs[1]);
+    m12 = a12 + m;
+    M12 = a12 + 2*m;
+    M21 = a12 + 3*m;
+    S12 = a12 + 4*m;
   }
 
   try {
@@ -99,8 +101,8 @@ void mexFunction( int nlhs, mxArray* plhs[],
     const GeodesicLine l(g, lat1, lon1, azi1);
     for (int i = 0; i < m; ++i)
       if (aux)
-        l.Position(s12[i], lat2[i], lon2[i], azi2[i],
-                   m12[i], M12[i], M21[i], S12[i]);
+        a12[i] = l.Position(s12[i], lat2[i], lon2[i], azi2[i],
+                            m12[i], M12[i], M21[i], S12[i]);
       else
         l.Position(s12[i], lat2[i], lon2[i], azi2[i]);
   }

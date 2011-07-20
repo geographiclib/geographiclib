@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: a24daa6b2dd0b235e5fec96f5499ebb7af980f96 $
+# $Id: a8293d05276359f975210af0269924eddf6e800b $
 
 MATLAB_INTERFACE = \
 geodesicdirect.cpp \
@@ -16,7 +16,8 @@ utmupsreverse.cpp \
 geocentricforward.cpp \
 geocentricreverse.cpp \
 localcartesianforward.cpp \
-localcartesianreverse.cpp
+localcartesianreverse.cpp \
+polygonarea.cpp
 
 MATLAB_DOC = \
 geodesicdirect.m \
@@ -30,7 +31,8 @@ utmupsreverse.m \
 geocentricforward.m \
 geocentricreverse.m \
 localcartesianforward.m \
-localcartesianreverse.m
+localcartesianreverse.m \
+polygonarea.m
 
 MATLAB_COMPILESCRIPT = geographiclibinterface.m
 

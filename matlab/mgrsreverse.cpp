@@ -3,7 +3,8 @@
  * \brief Matlab mex file for UTM/UPS to MGRS conversions
  *
  * Copyright (c) Charles Karney (2010) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 // Compile in Matlab with
@@ -12,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic mgrsreverse.cpp
 
-// $Id: cdcca735752a2511db775caceadbb436d1feecdb $
+// $Id: f161049f92f32d28c2f64e66debf3e5c3ac5796a $
 
 #include <GeographicLib/MGRS.hpp>
 #include <mex.h>
@@ -67,7 +68,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     }
     catch (const std::exception& e) {
       mexWarnMsgTxt(e.what());
-      x[i] = y[i] = Math::NaN();
+      x[i] = y[i] = Math::NaN<double>();
       zone[i] = UTMUPS::INVALID; hemi[i] = 0;
       if (precp) prec[i] = -1;
     }

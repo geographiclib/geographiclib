@@ -1,8 +1,8 @@
-# $Id: 73c53dea178abd7300904ae145208ead071960de $
+# $Id: 7627acd181f4dd1d618e2d46f3414859911d0bc1 $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic GeodesicLine \
+	LocalCartesian Geodesic GeodesicLine PolygonArea \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea
 
@@ -12,7 +12,7 @@ HEADERS = $(LIBNAME)/Constants.hpp $(LIBNAME)/Config.h \
 	$(patsubst %,$(LIBNAME)/%.hpp,$(MODULES))
 DEST = $(PREFIX)/include/$(LIBNAME)
 
-INSTALL=install -b
+INSTALL = install -b
 
 all:
 	@:

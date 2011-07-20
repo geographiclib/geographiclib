@@ -3,7 +3,7 @@
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geocentric.o LocalCartesian.o
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 1f2c632327129738aff8da0c17fb3c81cfe69fc9 $\n"
+          << ": $Id: d1b58fd04860644a4b1752039b0b3bc97c5f0a46 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

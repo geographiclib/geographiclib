@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::LocalCartesian class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/LocalCartesian.hpp>
 
-#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP "$Id: 532b27a24bfcffa9fffa73d85be34d5e294d36f1 $"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP "$Id: 91ab70f2e428933a3d80af57f593ee3ab2a9a3ac $"
 
 RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)

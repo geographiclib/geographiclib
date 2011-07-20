@@ -4,9 +4,9 @@ function [height, gradient] = geoidheight(latlong, geoidname, geoiddir)
 %   CAUTION: THIS MAY CAUSE MATLAB TO CRASH!!  This occurs when the interface
 %   is compiled with Visual Studio 2008.
 %
-%   [height, gradient] = geoidheight(latlong);
-%   [height, gradient] = geoidheight(latlong, geoidname);
-%   [height, gradient] = geoidheight(latlong, geoidname, geoiddir);
+%   [height, gradient] = geoidheight(latlong)
+%   [height, gradient] = geoidheight(latlong, geoidname)
+%   [height, gradient] = geoidheight(latlong, geoidname, geoiddir)
 %
 %   latlong is an M x 2 matrix
 %       latitude = latlong(:,1) in degrees
@@ -34,7 +34,7 @@ end
 % Matlab .m file for looking up geoid heights
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
-% under the LGPL.  For more information, see
+% under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 347bf68c8478e149b9d6bd5b84a7a10261f81b04 $
+% $Id: 519a47a6a226677a008a17b23e1acaf44ddd8c03 $

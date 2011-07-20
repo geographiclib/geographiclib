@@ -1,16 +1,15 @@
-
 /**
  * \file CassiniSoldner.cpp
  * \brief Implementation for GeographicLib::CassiniSoldner class
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the LGPL.  For more information, see
+ * licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/CassiniSoldner.hpp>
 
-#define GEOGRAPHICLIB_CASSINISOLDNER_CPP "$Id: 515e379acecb3f53da8aac0bf2b19ed8f1356ac1 $"
+#define GEOGRAPHICLIB_CASSINISOLDNER_CPP "$Id: 6c8f6eb2df254926f154605fbc81b99bbc279955 $"
 
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_CPP)
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
@@ -21,7 +20,7 @@ namespace GeographicLib {
 
   const Math::real CassiniSoldner::eps1_ =
     real(0.01) * sqrt(numeric_limits<real>::epsilon());
-  const Math::real CassiniSoldner::eps2_ = sqrt(numeric_limits<real>::min());
+  const Math::real CassiniSoldner::tiny_ = sqrt(numeric_limits<real>::min());
 
   void CassiniSoldner::Reset(real lat0, real lon0) throw() {
     _meridian = _earth.Line(lat0, lon0, real(0),
@@ -44,7 +43,7 @@ namespace GeographicLib {
     real sig12, s12, azi1, azi2;
     lat = AngRound(lat);
     sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
-    if (sig12 < 100 * eps2_)
+    if (sig12 < 100 * tiny_)
       sig12 = s12 = 0;
     sig12 *= real(0.5);
     s12 *= real(0.5);

@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::AzimuthalEquidistant class
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the LGPL.  For more information, see
+ * licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
-#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id: 5b471fba64d7706c552fa21bcc6b70e8283837a0 $"
+#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id: f711f34c879ebd191d3aa27530964550336dd248 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>

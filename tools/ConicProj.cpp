@@ -3,7 +3,7 @@
  * \brief Command line utility for conical projections
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geodesic.o GeodesicLine.o
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 668b78e8fe1bdb84064327e42cdf49d741a7738a $\n"
+          << ": $Id: 26d78ea1f6dfc49df260403de6319f51651bb2cf $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

@@ -1,191 +1,191 @@
 int usage(int retval, bool brief) {
   if (brief)
-    ( retval ? std::cerr : std::cout ) << "Usage:\n\
-    Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d ] [ -b ] [ -f ]\n\
-    [ -p prec ] [ --version | -h | --help ] [ --input-file infile |\n\
-    --input-string instring ] [ --output-file outfile ]\n\
-\n\
-For full documentation type:\n\
-    Geod --help\n\
-or visit:\n\
-    http://geographiclib.sf.net/html/Geod.1.html\n";
+    ( retval ? std::cerr : std::cout ) << "Usage:\n"
+"    Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d ] [ -b ] [ -f ]\n"
+"    [ -p prec ] [ --version | -h | --help ] [ --input-file infile |\n"
+"    --input-string instring ] [ --output-file outfile ]\n"
+"\n"
+"For full documentation type:\n"
+"    Geod --help\n"
+"or visit:\n"
+"    http://geographiclib.sf.net/html/Geod.1.html\n";
   else
-    ( retval ? std::cerr : std::cout ) << "Man page:\n\
-NAME\n\
-       Geod -- perform geodesic calculations\n\
-\n\
-SYNOPSIS\n\
-       Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d ] [ -b ] [ -f ]\n\
-       [ -p prec ] [ --version | -h | --help ] [ --input-file infile |\n\
-       --input-string instring ] [ --output-file outfile ]\n\
-\n\
-DESCRIPTION\n\
-       The shortest path between two points on the ellipsoid at (lat1, lon1)\n\
-       and (lat2, lon2) is called the geodesic.  Its length is s12 and the\n\
-       geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two\n\
-       end points.\n\
-\n\
-       Geod operates in one of three modes:\n\
-\n\
-       1.  By default, Geod accepts lines on the standard input containing\n\
-           lat1 lon1 azi1 s12 and prints lat2 lon2 azi2 on standard output.\n\
-           This is the direct geodesic calculation.\n\
-\n\
-       2.  Command line arguments -l lat1 lon1 azi1 specify a geodesic line.\n\
-           Geod then accepts a sequence of s12 values (one per line) on\n\
-           standard input and prints lat2 lon2 azi2 for each.  This generates\n\
-           a sequence of points on a single geodesic.\n\
-\n\
-       3.  With the -i command line argument, Geod performs the inverse\n\
-           geodesic calculation.  It reads lines containing lat1 lon1 lat2\n\
-           lon2 and prints the corresponding values of azi1 azi2 s12.\n\
-\n\
-OPTIONS\n\
-       -i  perform an inverse geodesic calculation (see 3 above).\n\
-\n\
-       -l  line mode (see 2 above); generate a sequence of points along the\n\
-           geodesic specified by lat1 lon1 azi1.\n\
-\n\
-       -a  arc mode; on input and output s12 is replaced by a12 the arc length\n\
-           (in degrees) on the auxiliary sphere.  See \"AUXILIARY SPHERE\".\n\
-\n\
-       -e  specify the ellipsoid via a f; the equatorial radius is a and the\n\
-           flattening is f.  Setting f = 0 results in a sphere.  Specify f < 0\n\
-           for a prolate ellipsoid.  A simple fraction, e.g., 1/297, is\n\
-           allowed for f.  (Also, if f > 1, the flattening is set to 1/f.)  By\n\
-           default, the WGS84 ellipsoid is used, a = 6378137m, f =\n\
-           1/298.257223563.\n\
-\n\
-       -d  output angles as degrees, minutes, seconds instead of decimal\n\
-           degrees.\n\
-\n\
-       -b  report the back azimuth at point 2 instead of the forward azimuth.\n\
-\n\
-       -f  full output; each line of output consists of 12 quantities: lat1\n\
-           lon1 azi1 lat2 lon2 azi2 s12 a12 m12 M12 M21 S12.  a12 is described\n\
-           in \"AUXILIARY SPHERE\".  The four quantities m12, M12, M21, and S12\n\
-           are described in \"ADDITIONAL QUANTITIES\".\n\
-\n\
-       -p  set the precision to prec (default 3); prec is the precision\n\
-           relative to 1m.  See PRECISION.\n\
-\n\
-       --version\n\
-           print version and exit.\n\
-\n\
-       -h  print usage and exit.\n\
-\n\
-       --help\n\
-           print full documentation and exit.\n\
-\n\
-       --input-file\n\
-           read input from the file infile instead of from standard input; a\n\
-           file name of \"-\" stands for standard input.\n\
-\n\
-       --input-string\n\
-           read input from the string instring instead of from standard input.\n\
-           All the semicolons in instring are converted to newlines before the\n\
-           reading begins.\n\
-\n\
-       --output-file\n\
-           write output to the file outfile instead of to standard output; a\n\
-           file name of \"-\" stands for standard output.\n\
-\n\
-INPUT\n\
-       Geod measures all angles in degrees and all lengths (s12) in meters.\n\
-       On input angles (latitude, longitude, azimuth, arc length) can be as\n\
-       decimal degrees or degrees (d), minutes ('), seconds (\").  A decimal\n\
-       point can only appear in the least significant component and the\n\
-       designator (d, ', or \") for this component is optional; thus \"40d30\",\n\
-       \"40d30'\", \"40.5d\", and 40.5 are all equivalent.  By default, latitude\n\
-       precedes longitude for each point; however on input either may be given\n\
-       first by appending (or prepending) N or S to the latitude and E or W to\n\
-       the longitude.  Azimuths are measured clockwise from north; however\n\
-       this may be overridden with E or W.\n\
-\n\
-AUXILIARY SPHERE\n\
-       Geodesics on the ellipsoid can be transferred to the auxiliary sphere\n\
-       on which the distance is measured in terms of the arc length a12\n\
-       (measured in degrees) instead of s12.  In terms of a12, 180 degrees is\n\
-       the distance from one equator crossing to the next or from the minimum\n\
-       latitude to the maximum latitude.  Geodesics with a12 > 180 degrees do\n\
-       not correspond to shortest paths.  With the -a flag, s12 (on both input\n\
-       and output) is replaced by a12.  The -a flag does not affect the full\n\
-       output given by the -f flag (which always includes both s12 and a12).\n\
-\n\
-ADDITIONAL QUANTITIES\n\
-       The -f flag reports four addtional quantities.\n\
-\n\
-       The reduced length of the geodesic, m12, is defined such that if the\n\
-       initial azimuth is perturbed by dazi1 (radians) then the second point\n\
-       is displaced by m12 dazi1 in the direction perpendicular to the\n\
-       geodesic.  m12 is given in meters.  On a curved surface the reduced\n\
-       length obeys a symmetry relation, m12 + m21 = 0.  On a flat surface, we\n\
-       have m12 = s12.\n\
-\n\
-       M12 and M21 are geodesic scales.  If two geodesics are parallel at\n\
-       point 1 and separated by a small distance dt, then they are separated\n\
-       by a distance M12 dt at point 2.  M21 is defined similarly (with the\n\
-       geodesics being parallel to one another at point 2).  M12 and M21 are\n\
-       dimensionless quantities.  On a flat surface, we have M12 = M21 = 1.\n\
-\n\
-       If points 1, 2, and 3 lie on a single geodesic, then the following\n\
-       addition rules hold, m13 = m12 M23 + m23 M21, M13 = M12 M23 - (1 - M12\n\
-       M21) m23 / m12, and M31 = M32 M21 - (1 - M23 M32) m12 / m23.\n\
-\n\
-       Finally, S12 is the area between the geodesic from point 1 to point 2\n\
-       and the equator; i.e., it is the area, measured counter-clockwise, of\n\
-       the quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2), and\n\
-       (lat2,lon2).  It is given in meters^2.\n\
-\n\
-PRECISION\n\
-       prec gives precision of the output with prec = 0 giving 1m precision,\n\
-       prec = 3 giving 1mm precision, etc.  prec is the number of digits after\n\
-       the decimal point for lengths.  For decimal degrees, the number of\n\
-       digits after the decimal point is 5 + prec.  For DMS (degree, minute,\n\
-       seconds) output, the number of digits after the decimal point in the\n\
-       seconds component is 1 + prec.  The minimum value of prec is 0 and the\n\
-       maximum is 10.\n\
-\n\
-ERRORS\n\
-       An illegal line of input will print an error message to standard output\n\
-       beginning with \"ERROR:\" and causes Geod to return an exit code of 1.\n\
-       However, an error does not cause Geod to terminate; following lines\n\
-       will be converted.\n\
-\n\
-EXAMPLES\n\
-       Route from JFK Airport to Singapore Changi Airport:\n\
-\n\
-          echo \"40d38'23N\" \"073d46'44W\" \"01d21'33N\" \"103d59'22E\" |\n\
-          Geod -i -d -p 0\n\
-\n\
-          003d18'29.9\" 177d29'09.2\" 15347628 4302458\n\
-\n\
-       Waypoints on the route at intervals of 2000km:\n\
-\n\
-          for ((i = 0; i <= 16; i += 2)); do echo ${i}000000;done |\n\
-          Geod -l \"40d38'23N\" \"073d46'44W\" \"003d18'29.9\" -d -p 0\n\
-\n\
-          40d38'23.0\"N 073d46'44.0\"W 003d18'29.9\" 0\n\
-          58d34'45.1\"N 071d49'36.7\"W 004d48'48.8\" 1967419\n\
-          76d22'28.4\"N 065d32'17.8\"W 010d41'38.4\" 3743642\n\
-          84d50'28.0\"N 075d04'39.2\"E 150d55'00.9\" 5156905\n\
-          67d26'20.3\"N 098d00'51.2\"E 173d27'20.3\" 6070415\n\
-          49d33'03.2\"N 101d06'52.6\"E 176d07'54.3\" 6394568\n\
-          31d34'16.5\"N 102d30'46.3\"E 177d03'08.4\" 6095725\n\
-          13d31'56.0\"N 103d26'50.7\"E 177d24'55.0\" 5200700\n\
-          04d32'05.7\"S 104d14'48.7\"E 177d28'43.6\" 3795596\n\
-\n\
-SEE ALSO\n\
-       The algorithms are described in C. F. F. Karney, Geodesics on an\n\
-       ellipsoid of revolution, Feb. 2011; preprint\n\
-       <http://arxiv.org/abs/1102.1215>.\n\
-\n\
-AUTHOR\n\
-       Geod was written by Charles Karney.\n\
-\n\
-HISTORY\n\
-       Geod was added to GeographicLib, <http://geographiclib.sf.net>, in\n\
-       2009-03.\n\
-";
+    ( retval ? std::cerr : std::cout ) << "Man page:\n"
+"NAME\n"
+"       Geod -- perform geodesic calculations\n"
+"\n"
+"SYNOPSIS\n"
+"       Geod [ -i | -l lat1 lon1 azi1 ] [ -a ] [ -e a f ] [ -d ] [ -b ] [ -f ]\n"
+"       [ -p prec ] [ --version | -h | --help ] [ --input-file infile |\n"
+"       --input-string instring ] [ --output-file outfile ]\n"
+"\n"
+"DESCRIPTION\n"
+"       The shortest path between two points on the ellipsoid at (lat1, lon1)\n"
+"       and (lat2, lon2) is called the geodesic.  Its length is s12 and the\n"
+"       geodesic from point 1 to point 2 has azimuths azi1 and azi2 at the two\n"
+"       end points.\n"
+"\n"
+"       Geod operates in one of three modes:\n"
+"\n"
+"       1.  By default, Geod accepts lines on the standard input containing\n"
+"           lat1 lon1 azi1 s12 and prints lat2 lon2 azi2 on standard output.\n"
+"           This is the direct geodesic calculation.\n"
+"\n"
+"       2.  Command line arguments -l lat1 lon1 azi1 specify a geodesic line.\n"
+"           Geod then accepts a sequence of s12 values (one per line) on\n"
+"           standard input and prints lat2 lon2 azi2 for each.  This generates\n"
+"           a sequence of points on a single geodesic.\n"
+"\n"
+"       3.  With the -i command line argument, Geod performs the inverse\n"
+"           geodesic calculation.  It reads lines containing lat1 lon1 lat2\n"
+"           lon2 and prints the corresponding values of azi1 azi2 s12.\n"
+"\n"
+"OPTIONS\n"
+"       -i  perform an inverse geodesic calculation (see 3 above).\n"
+"\n"
+"       -l  line mode (see 2 above); generate a sequence of points along the\n"
+"           geodesic specified by lat1 lon1 azi1.\n"
+"\n"
+"       -a  arc mode; on input and output s12 is replaced by a12 the arc length\n"
+"           (in degrees) on the auxiliary sphere.  See \"AUXILIARY SPHERE\".\n"
+"\n"
+"       -e  specify the ellipsoid via a f; the equatorial radius is a and the\n"
+"           flattening is f.  Setting f = 0 results in a sphere.  Specify f < 0\n"
+"           for a prolate ellipsoid.  A simple fraction, e.g., 1/297, is\n"
+"           allowed for f.  (Also, if f > 1, the flattening is set to 1/f.)  By\n"
+"           default, the WGS84 ellipsoid is used, a = 6378137m, f =\n"
+"           1/298.257223563.\n"
+"\n"
+"       -d  output angles as degrees, minutes, seconds instead of decimal\n"
+"           degrees.\n"
+"\n"
+"       -b  report the back azimuth at point 2 instead of the forward azimuth.\n"
+"\n"
+"       -f  full output; each line of output consists of 12 quantities: lat1\n"
+"           lon1 azi1 lat2 lon2 azi2 s12 a12 m12 M12 M21 S12.  a12 is described\n"
+"           in \"AUXILIARY SPHERE\".  The four quantities m12, M12, M21, and S12\n"
+"           are described in \"ADDITIONAL QUANTITIES\".\n"
+"\n"
+"       -p  set the precision to prec (default 3); prec is the precision\n"
+"           relative to 1m.  See PRECISION.\n"
+"\n"
+"       --version\n"
+"           print version and exit.\n"
+"\n"
+"       -h  print usage and exit.\n"
+"\n"
+"       --help\n"
+"           print full documentation and exit.\n"
+"\n"
+"       --input-file\n"
+"           read input from the file infile instead of from standard input; a\n"
+"           file name of \"-\" stands for standard input.\n"
+"\n"
+"       --input-string\n"
+"           read input from the string instring instead of from standard input.\n"
+"           All the semicolons in instring are converted to newlines before the\n"
+"           reading begins.\n"
+"\n"
+"       --output-file\n"
+"           write output to the file outfile instead of to standard output; a\n"
+"           file name of \"-\" stands for standard output.\n"
+"\n"
+"INPUT\n"
+"       Geod measures all angles in degrees and all lengths (s12) in meters.\n"
+"       On input angles (latitude, longitude, azimuth, arc length) can be as\n"
+"       decimal degrees or degrees (d), minutes ('), seconds (\").  A decimal\n"
+"       point can only appear in the least significant component and the\n"
+"       designator (d, ', or \") for this component is optional; thus \"40d30\",\n"
+"       \"40d30'\", \"40.5d\", and 40.5 are all equivalent.  By default, latitude\n"
+"       precedes longitude for each point; however on input either may be given\n"
+"       first by appending (or prepending) N or S to the latitude and E or W to\n"
+"       the longitude.  Azimuths are measured clockwise from north; however\n"
+"       this may be overridden with E or W.\n"
+"\n"
+"AUXILIARY SPHERE\n"
+"       Geodesics on the ellipsoid can be transferred to the auxiliary sphere\n"
+"       on which the distance is measured in terms of the arc length a12\n"
+"       (measured in degrees) instead of s12.  In terms of a12, 180 degrees is\n"
+"       the distance from one equator crossing to the next or from the minimum\n"
+"       latitude to the maximum latitude.  Geodesics with a12 > 180 degrees do\n"
+"       not correspond to shortest paths.  With the -a flag, s12 (on both input\n"
+"       and output) is replaced by a12.  The -a flag does not affect the full\n"
+"       output given by the -f flag (which always includes both s12 and a12).\n"
+"\n"
+"ADDITIONAL QUANTITIES\n"
+"       The -f flag reports four addtional quantities.\n"
+"\n"
+"       The reduced length of the geodesic, m12, is defined such that if the\n"
+"       initial azimuth is perturbed by dazi1 (radians) then the second point\n"
+"       is displaced by m12 dazi1 in the direction perpendicular to the\n"
+"       geodesic.  m12 is given in meters.  On a curved surface the reduced\n"
+"       length obeys a symmetry relation, m12 + m21 = 0.  On a flat surface, we\n"
+"       have m12 = s12.\n"
+"\n"
+"       M12 and M21 are geodesic scales.  If two geodesics are parallel at\n"
+"       point 1 and separated by a small distance dt, then they are separated\n"
+"       by a distance M12 dt at point 2.  M21 is defined similarly (with the\n"
+"       geodesics being parallel to one another at point 2).  M12 and M21 are\n"
+"       dimensionless quantities.  On a flat surface, we have M12 = M21 = 1.\n"
+"\n"
+"       If points 1, 2, and 3 lie on a single geodesic, then the following\n"
+"       addition rules hold, m13 = m12 M23 + m23 M21, M13 = M12 M23 - (1 - M12\n"
+"       M21) m23 / m12, and M31 = M32 M21 - (1 - M23 M32) m12 / m23.\n"
+"\n"
+"       Finally, S12 is the area between the geodesic from point 1 to point 2\n"
+"       and the equator; i.e., it is the area, measured counter-clockwise, of\n"
+"       the quadrilateral with corners (lat1,lon1), (0,lon1), (0,lon2), and\n"
+"       (lat2,lon2).  It is given in meters^2.\n"
+"\n"
+"PRECISION\n"
+"       prec gives precision of the output with prec = 0 giving 1m precision,\n"
+"       prec = 3 giving 1mm precision, etc.  prec is the number of digits after\n"
+"       the decimal point for lengths.  For decimal degrees, the number of\n"
+"       digits after the decimal point is 5 + prec.  For DMS (degree, minute,\n"
+"       seconds) output, the number of digits after the decimal point in the\n"
+"       seconds component is 1 + prec.  The minimum value of prec is 0 and the\n"
+"       maximum is 10.\n"
+"\n"
+"ERRORS\n"
+"       An illegal line of input will print an error message to standard output\n"
+"       beginning with \"ERROR:\" and causes Geod to return an exit code of 1.\n"
+"       However, an error does not cause Geod to terminate; following lines\n"
+"       will be converted.\n"
+"\n"
+"EXAMPLES\n"
+"       Route from JFK Airport to Singapore Changi Airport:\n"
+"\n"
+"          echo \"40d38'23N\" \"073d46'44W\" \"01d21'33N\" \"103d59'22E\" |\n"
+"          Geod -i -d -p 0\n"
+"\n"
+"          003d18'29.9\" 177d29'09.2\" 15347628 4302458\n"
+"\n"
+"       Waypoints on the route at intervals of 2000km:\n"
+"\n"
+"          for ((i = 0; i <= 16; i += 2)); do echo ${i}000000;done |\n"
+"          Geod -l \"40d38'23N\" \"073d46'44W\" \"003d18'29.9\" -d -p 0\n"
+"\n"
+"          40d38'23.0\"N 073d46'44.0\"W 003d18'29.9\" 0\n"
+"          58d34'45.1\"N 071d49'36.7\"W 004d48'48.8\" 1967419\n"
+"          76d22'28.4\"N 065d32'17.8\"W 010d41'38.4\" 3743642\n"
+"          84d50'28.0\"N 075d04'39.2\"E 150d55'00.9\" 5156905\n"
+"          67d26'20.3\"N 098d00'51.2\"E 173d27'20.3\" 6070415\n"
+"          49d33'03.2\"N 101d06'52.6\"E 176d07'54.3\" 6394568\n"
+"          31d34'16.5\"N 102d30'46.3\"E 177d03'08.4\" 6095725\n"
+"          13d31'56.0\"N 103d26'50.7\"E 177d24'55.0\" 5200700\n"
+"          04d32'05.7\"S 104d14'48.7\"E 177d28'43.6\" 3795596\n"
+"\n"
+"SEE ALSO\n"
+"       The algorithms are described in C. F. F. Karney, Geodesics on an\n"
+"       ellipsoid of revolution, Feb. 2011; preprint\n"
+"       <http://arxiv.org/abs/1102.1215>.\n"
+"\n"
+"AUTHOR\n"
+"       Geod was written by Charles Karney.\n"
+"\n"
+"HISTORY\n"
+"       Geod was added to GeographicLib, <http://geographiclib.sf.net>, in\n"
+"       2009-03.\n"
+;
     return retval;
 }

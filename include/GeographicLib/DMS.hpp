@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::DMS class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
-#define GEOGRAPHICLIB_DMS_HPP "$Id: 5b4f8ca628248d9f4ad044627eabe6f5918c0c2d $"
+#define GEOGRAPHICLIB_DMS_HPP "$Id: 3d0c051c53cf51014788621dda01462bb08e2d8c $"
 
 #include <sstream>
 #include <iomanip>

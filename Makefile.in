@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: f966bcf78a8764b147f5b6318a1b8cb3578730ee $
+# $Id: 94de532894e5d0cdf1f8371006461d1265d66ddf $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -241,10 +241,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = src man tools doc include matlab
-EXTRA_DIST = AUTHORS 00README.txt COPYING.txt NEWS INSTALL \
+SUBDIRS = src man tools doc include matlab python
+EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
 	Makefile.mk CMakeLists.txt \
-	windows maxima man doc
+	windows maxima man doc python
 
 all: all-recursive
 
@@ -754,7 +754,7 @@ dist-hook:
 		! \( -name '*.cpp' -o -name '*.m' -o -name 'Makefile.*' -o -name CMakeLists.txt \) | \
 		xargs rm -rf ; \
 	find $(distdir) \
-		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' \)| \
+		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' -o -name '*.pyc' \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
@@ -776,7 +776,7 @@ man:
 # install-matlab:
 # 	$(MAKE) -C matlab install-matlab
 
-.PHONY: doc install-doc man install-matlab
+.PHONY: doc install-doc man install-matlab install-python
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

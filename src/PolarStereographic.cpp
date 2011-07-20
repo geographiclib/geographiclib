@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/PolarStereographic.hpp>
 
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: a4e2b3c347901f162bfbc05501c48fd07c328161 $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: 47fd64f6123e4d3242445502b36144eebfca791d $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)

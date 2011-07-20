@@ -1,8 +1,8 @@
 function [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %geocentricreverse  Convert geocentric coordinates to geographic
 %
-%   [geodetic, rot] = geocentricreverse(geocentric);
-%   [geodetic, rot] = geocentricreverse(geocentric, a, f);
+%   [geodetic, rot] = geocentricreverse(geocentric)
+%   [geodetic, rot] = geocentricreverse(geocentric, a, f)
 %
 %   geocentric is an M x 3 matrix of geocentric coordinates
 %       x = geocentric(:,1) in meters
@@ -33,7 +33,7 @@ end
 % Matlab .m file for geocentric to geographic conversions
 %
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and
-% licensed under the LGPL.  For more information, see
+% licensed under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: c282717c320cccc4d56f5bd8242efe7b93877680 $
+% $Id: f43cd7eb9b7d5d48f4de6b30d2d7c9c5b0742583 $

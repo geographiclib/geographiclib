@@ -1,9 +1,9 @@
-# $Id: d2f4c0e366210492ebb4d4a0b230a1c3462cd1f7 $
+# $Id: c2bd6a29f9a2244a74ab3f3b6ca8d96f37e05763 $
 
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \
 	geoidheight geocentricforward geocentricreverse \
-	localcartesianforward localcartesianreverse
+	localcartesianforward localcartesianreverse polygonarea
 
 MATLAB_COMPILESCRIPT = geographiclibinterface.m
 
@@ -11,7 +11,7 @@ MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS)) \
 	 $(MATLAB_COMPILESCRIPT)
 
 DEST = $(PREFIX)/libexec/GeographicLib/matlab
-INSTALL=install -b
+INSTALL = install -b
 
 all:
 	@:

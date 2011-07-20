@@ -3,7 +3,7 @@
  * \brief Command line utility for geographic coordinate conversions
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with GeoCoords.o MGRS.o UTMUPS.o DMS.o
@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: a1a3586bb30ff0d72f7f306d33defc01c359f80b $\n"
+          << ": $Id: 2580dbc18906315c44ace4856059c6fca7a14981 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

@@ -4,15 +4,16 @@
  * \brief Documentation for GeographicLib
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
- * LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: c5e09f25ac1e27086735fc0dade0caec7f46b0bd $
+// $Id: 33270f2e9f30093a32bc167e672dbcbdd1e155df $
 /**
 \mainpage Geographic library
-\author <a href="http://charles.karney.info/">Charles Karney</a>
+\author Charles Karney
 <charles@karney.com>
-\version 1.11
-\date 2011-06-27
+\version 1.12
+\date 2011-mm-dd
 
 \section abstract Abstract
 
@@ -24,7 +25,11 @@ returning accurate results with errors close to round-off (about
 5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.
 The functionality of the library can be accessed from user code, from
-the \ref utilities provided, or via the \ref matlab.
+the \ref utilities provided, or via the \ref other.  For a sample of
+the geodesic capabilities, check out the
+<a href="../scripts/geod-calc.html">online geodesic calculator</a> and
+the script for displaying
+<a href="../scripts/geod-google.html">geodesics in Google Maps</a>
 
 This library is <i>not</i> a general purpose projection library; use
 <a href="http://trac.osgeo.org/proj/">proj.4</a> for that.  On the other
@@ -39,10 +44,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">
-  GeographicLib-1.11.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.zip/download">
-  GeographicLib-1.11.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">
+  GeographicLib-1.12.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.zip/download">
+  GeographicLib-1.12.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
@@ -52,12 +57,13 @@ using git \verbatim
   git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">
-  GeographicLib-1.11-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">
+  GeographicLib-1.12-win32.exe</a>
 .
 It is licensed under the
-<a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">LGPL</a>.
-For more information, see http://geographiclib.sourceforge.net/
+<a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
+see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
+For more information, see http://geographiclib.sourceforge.net/.  
 
 \section contents Contents
  - \ref intro
@@ -65,6 +71,7 @@ For more information, see http://geographiclib.sourceforge.net/
  - \ref start
  - \ref utilities
  - \ref organization
+ - \ref other
  - \ref geoid
  - \ref geodesic
    - \ref testgeod
@@ -126,7 +133,8 @@ the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 4.4 under Linux, with g++
 4.2 under Mac OS X, and with MS Visual Studio 2008 and 2010.
 
-\ref matlab for some of the key classes are also provided.
+Matlab, Javascript, and Python interfaces are provided to portions of
+%GeographicLib; see \ref other.
 
 The section \ref geodesic documents the method of solving the geodesic
 problem.
@@ -153,12 +161,12 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">
-GeographicLib-1.11.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11.zip/download">
-GeographicLib-1.11.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">
-GeographicLib-1.11-win32.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">
+GeographicLib-1.12.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12.zip/download">
+GeographicLib-1.12.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">
+GeographicLib-1.12-win32.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -174,9 +182,6 @@ Then pick one of the first five options below:
   the utility programs supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
-- \ref matlab.  Some of the functionality is exposed to Matlab and
-  Octave.  This requires compiling interface routines in Matlab or
-  Octave.
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -210,10 +215,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.11.tar.gz
-  unzip -q GeographicLib-1.11.zip \endverbatim
+  tar xfpz GeographicLib-1.12.tar.gz
+  unzip -q GeographicLib-1.12.zip \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.11 \endverbatim
+  cd GeographicLib-1.12 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -292,9 +297,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.11.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.12.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.11 \endverbatim
+  cd GeographicLib-1.12 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
 - By default %GeographlicLib will be installed under /usr/local.
@@ -319,9 +324,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.11.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.12.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.11 \endverbatim
+  cd GeographicLib-1.12 \endverbatim
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root \endverbatim
@@ -345,8 +350,8 @@ library and the examples.  If you only have Visual Studio 2010, use
 cmake to create the necessary solution file.  %GeographicLib does not
 compile correctly with Visual Studio 2003.
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.11.zip \endverbatim
-- Open GeographicLib-1.11/windows/GeographicLib-vc9.sln in Visual Studio
+  unzip -q GeographicLib-1.12.zip \endverbatim
+- Open GeographicLib-1.12/windows/GeographicLib-vc9.sln in Visual Studio
   2008 (for Visual Studio 2005, replace -vc9 by -vc8).
 - Pick the build type (e.g., Release), and select "Build
   Solution".
@@ -365,19 +370,19 @@ compile correctly with Visual Studio 2003.
 \section windowsbin Using a binary installer for Windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">
-GeographicLib-1.11-win32.exe</a>:
- - read the LGPL license agreement,
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">
+GeographicLib-1.12-win32.exe</a>:
+ - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
-   C:/Program Files/GeographicLib-1.11.
+   C:/Program Files/GeographicLib-1.12.
  - select the start menu folder,
  - and install.
  .
 The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
-C:/Program Files/GeographicLib-1.11/bin where the utilities are
+C:/Program Files/GeographicLib-1.12/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
@@ -385,67 +390,6 @@ path in Matlab to access this interface.  The binaries were built using
 Visual Studio 10 (2010) for Win32 in Release mode.  The Matlab interface
 was compiled with Matlab R2010b, however it works with some other
 versions of Matlab (e.g., R2008a).
-
-\section matlab Matlab and Octave interfaces
-
-The matlab directory contains interface code so that some %GeographicLib
-classes can be accessed from Matlab or Octave.  If you set
-ENABLE_MATLAB=ON when installing with cmake, this interface is built.
-Similarly the binary installer for Windows includes the compiled
-interface (compiled using Visual Studio 10 and Matlab 2010b).  To use
-either of these, run one of (for example) \verbatim
-  addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.11/libexec/GeographicLib/matlab'
-\endverbatim
-in Matlab or Octave.  If you need to compile the interface or to
-recompile it for a different platform, start Matlab or Octave and run,
-e.g., \code
-  mex -setup
-  cd  'C:/Program Files/GeographicLib-1.11/libexec/GeographicLib/matlab'
-  help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.11');
-  addpath(pwd);
-\endcode
-The first command allows you to select the compiler to use (which
-probably should be the same as that used to compile %GeographicLib).
-The available functions are:
- - geodesicdirect: solve direct geodesic problem
-   (see GeographicLib::Geodesic::Direct)
- - geodesicinverse: solve inverse geodesic problem
-   (see GeographicLib::Geodesic::Inverse)
- - geodesicline: compute points along a geodesic
-   (see GeographicLib::GeodesicLine::Position)
- - utmupsforward: convert geographic coordinates to UTM/UPS
-   (see GeographicLib::UTMUPS::Forward)
- - utmupsreverse: convert UTM/UPS coordinates to geographic
-   (see GeographicLib::UTMUPS::Reverse)
- - mgrsforward: convert UTM/UPS coordinates to MGRS
-   (see GeographicLib::MGRS::Forward)
- - mgrsreverse: convert MGRS coordinates to UTM/UPS
-   (see GeographicLib::MGRS::Reverse)
- - geoidheight: compute geoid height
-   (see GeographicLib::Geoid::operator()())
- - geocentricforward: convert geographic coordinates to geocentric
-   (see GeographicLib::Geocentric::Forward)
- - geocentricreverse: convert geocentric coordinates to geographic
-   (see GeographicLib::Geocentric::Reverse)
- - localcartesianforward: convert geographic coordinates to local cartesian
-   (see GeographicLib::LocalCartesian::Forward)
- - localcartesianreverse: convert local cartesian coordinates to geographic
-   (see GeographicLib::LocalCartesian::Reverse)
- .
-These routines just offer a simple interface to the corresponding C++
-class.  Use the help function to get documentation, e.g., \code
-  help geodesicdirect \endcode
-Unfortunately, the help function does not work for compiled functions in
-Octave; in this case, just list the .m file, e.g., \code
-  system 'less geodesicdirect.m' \endcode
-Other useful functions, e.g., to convert from geographic
-coordinates to MGRS can easily be written with Matlab code.
-
-Note that geoidheight, when compiled with Visual Studio 2008 causes
-Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
-Visual Studio 2010.)
 
 \section maintainer Maintainer tasks
 
@@ -467,8 +411,8 @@ which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as
 \verbatim
-  GeographicLib-1.11.tar.gz
-  GeographicLib-1.11.zip \endverbatim
+  GeographicLib-1.12.tar.gz
+  GeographicLib-1.12.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -525,10 +469,14 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   this is accomplished by modifying the link line above to read \verbatim
   g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
 \endverbatim
-  (Alternatively, you can use ldconfig to search in /usr/local/lib
-  automatically.)  On Windows, you need to ensure that Geographic.dll is in
-  the same directory as your executable or else include the directory
-  containing the dll in your <code>PATH</code>.
+  (There are two other ways to specify the location of shared libraries
+  at runtime: (1) define the environment variable
+  <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
+  directories to search; (2) as <b>root</b>, specify /usr/local/lib as a
+  directory searched by ldconfig(8).)  On Windows, you need to ensure
+  that Geographic.dll is in the same directory as your executable or
+  else include the directory containing the dll in your
+  <code>PATH</code>.
 - For Windows, ensure that you build the library with the same version
   of the compiler and you use for your code.  In addition, you have
   to build a separate debug version of the library when you can
@@ -676,7 +624,7 @@ Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
 \page organization Code organization
 
 <center>
-Back to \ref utilities.  Forward to \ref geoid.  Up to \ref contents.
+Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 
 Here is a brief description of the relationship between the various
@@ -807,14 +755,131 @@ compiler.  System dependencies come into
    the value of the environment variables
 
 <center>
-Back to \ref utilities.  Forward to \ref geoid.  Up to \ref contents.
+Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page other Other interfaces
+
+<center>
+Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
+</center>
+
+- \ref matlab.
+- \ref javascript.
+- \ref python.
+
+\section matlab Matlab and Octave interfaces
+
+The matlab directory contains interface code so that some %GeographicLib
+classes can be accessed from Matlab or Octave.  If you set
+ENABLE_MATLAB=ON when installing with cmake, this interface is built.
+Similarly the binary installer for Windows includes the compiled
+interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
+either of these, run one of (for example) \verbatim
+  addpath /usr/local/libexec/GeographicLib/matlab
+  addpath 'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
+\endverbatim
+in Matlab or Octave.  If you need to compile the interface or to
+recompile it for a different platform, start Matlab or Octave and run,
+e.g., \code
+  mex -setup
+  cd  'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
+  help geographiclibinterface
+  geographiclibinterface('C:/Program Files/GeographicLib-1.12');
+  addpath(pwd);
+\endcode
+The first command allows you to select the compiler to use (which
+probably should be the same as that used to compile %GeographicLib).
+The available functions are:
+ - geodesicdirect: solve direct geodesic problem
+   (see GeographicLib::Geodesic::Direct)
+ - geodesicinverse: solve inverse geodesic problem
+   (see GeographicLib::Geodesic::Inverse)
+ - geodesicline: compute points along a geodesic
+   (see GeographicLib::GeodesicLine::Position)
+ - polygonarea: compute area of a geodesic polygon
+   (see GeographicLib::PolygonArea)
+ - utmupsforward: convert geographic coordinates to UTM/UPS
+   (see GeographicLib::UTMUPS::Forward)
+ - utmupsreverse: convert UTM/UPS coordinates to geographic
+   (see GeographicLib::UTMUPS::Reverse)
+ - mgrsforward: convert UTM/UPS coordinates to MGRS
+   (see GeographicLib::MGRS::Forward)
+ - mgrsreverse: convert MGRS coordinates to UTM/UPS
+   (see GeographicLib::MGRS::Reverse)
+ - geoidheight: compute geoid height
+   (see GeographicLib::Geoid::operator()())
+ - geocentricforward: convert geographic coordinates to geocentric
+   (see GeographicLib::Geocentric::Forward)
+ - geocentricreverse: convert geocentric coordinates to geographic
+   (see GeographicLib::Geocentric::Reverse)
+ - localcartesianforward: convert geographic coordinates to local cartesian
+   (see GeographicLib::LocalCartesian::Forward)
+ - localcartesianreverse: convert local cartesian coordinates to geographic
+   (see GeographicLib::LocalCartesian::Reverse)
+ .
+These routines just offer a simple interface to the corresponding C++
+class.  Use the help function to get documentation, e.g., \code
+  help geodesicdirect \endcode
+Unfortunately, the help function does not work for compiled functions in
+Octave; in this case, just list the .m file, e.g., \code
+  type geodesicdirect \endcode
+Other useful functions, e.g., to convert from geographic
+coordinates to MGRS can easily be written with Matlab code.
+
+Note that geoidheight, when compiled with Visual Studio 2008 causes
+Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
+Visual Studio 2010.)
+
+\section javascript Javascript interface
+
+The directory doc/scripts/GeographicLib contains the core geodesic
+functionality translated into Javascript.  See Interface.js for a simple
+Javascript interface to these routines (documented near the top of the
+file).  Examples of using this interface are
+- a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
+  the solution of direct and inverse geodesic problem, finding
+  intermediate points on a geodesic line, and computing the area of a
+  geodesic polygon.
+- <a href="../scripts/geod-google.html">displaying geodesics in Google
+  Maps</a> which shows the geodesic, the geodesic circle, and various
+  geodesic envelopes.
+
+\section python Python interface
+
+The file python/GeographicLib.py (which is installed as
+PREFIX/share/GeographicLib/python) contains the core geodesic
+functionality translated into Python.  To using this, execute, for
+example,
+\code
+>>> import sys
+>>> sys.path.append("/usr/local/share/GeographicLib/python");
+>>> from GeographicLib import Geodesic, GeodesicLine
+>>> help(Geodesic.__init__)
+>>> help(Geodesic.Inverse)
+>>> help(Geodesic.Direct)
+>>> help(Geodesic.Line)
+>>> help(Geodesic.Area)
+>>> help(GeodesicLine.Position)
+>>> Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+>>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+>>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+>>> line.Position(10000e3)
+>>> def p(lat,lon): return {'lat': lat,'lon': lon}
+...
+>>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
+\endcode
+
+<center>
+Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page geoid Geoid height
 
 <center>
-Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 The gravitational equipotential surface approximately coinciding with
@@ -1095,7 +1160,7 @@ parameters used in the pgm file (note 65000 * 0.003 - 108 = 87).  You
 can check these by running <a href="GeoidEval.1.html">GeoidEval</a> with
 the "-v" option.
 
-Finally, here is a sample script which uses GDAL to create a 1-degree
+Here is a sample script which uses GDAL to create a 1-degree
 squared grid of geoid heights at 3&quot; resolution (matching DTED1) by
 bilinear interpolation.
 \verbatim
@@ -1118,6 +1183,30 @@ bilinear interpolation.
        $TEMP e$lon-n$lat.tif
    rm -f $TEMP
 \endverbatim
+
+Because the pgm files are uncompressed, they can take up a lot of room.
+Some compressed formats compress in tiles and so might be compatible
+with the requirement that the data can be randomly accessed.  In
+particular gdal_translate can be used to convert the pgm files to
+compressed tiff files with
+\verbatim
+gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 \
+   -co TILED=YES -co BLOCKXSIZE=256 -co BLOCKYSIZE=256 \
+   egmyy-g.pgm egmyy-g.tif
+\endverbatim
+The resulting files sizes are
+\verbatim
+                  pgm    tif
+    egm84-30      0.6M   0.5M
+    egm84-15      2.1M   1.4M
+    egm96-15      2.1M   1.5M
+    egm96-5        19M   8.5M
+    egm2008-5      19M   9.8M
+    egm2008-2_5    75M    28M
+    egm2008-1     470M    97M
+\endverbatim
+Currently, there are no plans for %GeographicLib to support this
+compressed format.
 
 \section geoidinterp Interpolating the geoid data
 
@@ -1278,7 +1367,7 @@ uninitialized variables in the program?), so the data was generated with
 the precompiled binary that NGA supplies for Windows.
 
 <center>
-Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
@@ -2121,6 +2210,15 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-mm-dd)</a>
+  - Change license to MIT/X11.
+  - Add GeographicLib::PolygonArea class and equivalent Matlab function.
+  - Provide javascript and python implementations of geodesic routines.
+  - Fix Windows installer to include runtime dlls for Matlab.
+  - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
+  - Geodesic routines in Matlab return a12 as first column of aux return
+    value (incompatible change).
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (released 2011-06-27)</a>
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:

@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id: 62d2975148c072f824730134ca6b1cbc659250f0 $"
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id: e29eed8bc763c20ae10131ef13f243c3b99bd37b $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>

@@ -1,8 +1,8 @@
 function [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %localcartesianreverse  Convert local cartesian coordinates to geographic
 %
-%   [geodetic, rot] = localcartesianreverse(origin, cartesian);
-%   [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f);
+%   [geodetic, rot] = localcartesianreverse(origin, cartesian)
+%   [geodetic, rot] = localcartesianreverse(origin, cartesian, a, f)
 %
 %   origin is a 1 x 3 or 1 x 2 matrix
 %       lat0 = origin(1,1) in degrees
@@ -37,7 +37,7 @@ end
 % Matlab .m file for local cartesian to geographic conversions
 %
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and
-% licensed under the LGPL.  For more information, see
+% licensed under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 85bffdb356c227f50b35e92aec41c75fe2e4b639 $
+% $Id: d125a552e78aaec23ab0069c078301fa3e66569f $

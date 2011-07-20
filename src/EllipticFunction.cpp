@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/EllipticFunction.hpp>
 
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: 61d72123fa1bc21026db59fbb5970764d02ce1b2 $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP "$Id: b49b2463da73146e86e05f5092ed1699c9616959 $"
 
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)

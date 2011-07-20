@@ -1,4 +1,4 @@
-# $Id: 46f32f486018ca52b220c086efd37a42980c0459 $
+# $Id: 41a969fd9784a7f1a1137ed0ffd00d924c58f8bc $
 PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
 	GeoidEval Planimeter ConicProj
 
@@ -27,7 +27,7 @@ VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
 
 all: $(MANPAGES) $(USAGE) $(HTMLMAN)
 
-INSTALL=install -b
+INSTALL = install -b
 
 install:
 	test -d $(DEST) || mkdir -p $(DEST)

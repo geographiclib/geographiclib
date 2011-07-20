@@ -154,6 +154,7 @@
     <ClInclude Include="../include/GeographicLib/MGRS.hpp" />
     <ClInclude Include="../include/GeographicLib/OSGB.hpp" />
     <ClInclude Include="../include/GeographicLib/PolarStereographic.hpp" />
+    <ClInclude Include="../include/GeographicLib/PolygonArea.hpp" />
     <ClInclude Include="../include/GeographicLib/TransverseMercator.hpp" />
     <ClInclude Include="../include/GeographicLib/TransverseMercatorExact.hpp" />
     <ClInclude Include="../include/GeographicLib/UTMUPS.hpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="../src/MGRS.cpp" />
     <ClCompile Include="../src/OSGB.cpp" />
     <ClCompile Include="../src/PolarStereographic.cpp" />
+    <ClCompile Include="../src/PolygonArea.cpp" />
     <ClCompile Include="../src/TransverseMercator.cpp" />
     <ClCompile Include="../src/TransverseMercatorExact.cpp" />
     <ClCompile Include="../src/UTMUPS.cpp" />

@@ -1,4 +1,4 @@
-# $Id: feaa5860a8c7cfd1158a769c3ba84cb0654791ea $
+# $Id: 19bf54dc7ead4871bc7f5c1f2f1304d07bfb57c1 $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -12,7 +12,7 @@ GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic GeodesicLine \
+	LocalCartesian Geodesic GeodesicLine PolygonArea \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea
 
@@ -60,6 +60,7 @@ Geocentric.o: Geocentric.hpp Constants.hpp Config.h
 LocalCartesian.o: LocalCartesian.hpp Constants.hpp Config.h Geocentric.hpp
 Geodesic.o: Geodesic.hpp Constants.hpp Config.h GeodesicLine.hpp
 GeodesicLine.o: GeodesicLine.hpp Constants.hpp Config.h Geodesic.hpp
+PolygonArea.o: PolygonArea.hpp Constants.hpp Config.h Geodesic.hpp
 AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Constants.hpp Config.h \
 	Geodesic.hpp
 CassiniSoldner.o: CassiniSoldner.hpp Constants.hpp Config.h Geodesic.hpp

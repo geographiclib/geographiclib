@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::UTMUPS class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
-#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: d860994613fb8833812d850ab154d98aa4c883b6 $"
+#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: 3f219712008c744df44a62261bbc796837676872 $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>

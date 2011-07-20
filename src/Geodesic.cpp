@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::Geodesic class
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
@@ -29,7 +29,7 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESIC_CPP "$Id: d41bd1e7284c4eecfa7f8612345e471dbdc9e696 $"
+#define GEOGRAPHICLIB_GEODESIC_CPP "$Id: 882a45c5b9a1d8ba11eda21d5b647a90447d33ac $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_HPP)
@@ -39,9 +39,9 @@ namespace GeographicLib {
   using namespace std;
 
   // Underflow guard.  We require
-  //   eps2_ * epsilon() > 0
-  //   eps2_ + epsilon() == epsilon()
-  const Math::real Geodesic::eps2_ = sqrt(numeric_limits<real>::min());
+  //   tiny_ * epsilon() > 0
+  //   tiny_ + epsilon() == epsilon()
+  const Math::real Geodesic::tiny_ = sqrt(numeric_limits<real>::min());
   const Math::real Geodesic::tol0_ = numeric_limits<real>::epsilon();
   // Increase multiplier in defn of tol1_ from 100 to 200 to fix inverse case
   // 52.784459512564 0 -52.784459512563990912 179.634407464943777557
@@ -111,10 +111,9 @@ namespace GeographicLib {
                                  real& lat2, real& lon2, real& azi2,
                                  real& s12, real& m12, real& M12, real& M21,
                                  real& S12) const throw() {
-    return
-      GeodesicLine(*this, lat1, lon1, azi1,
-                   // Automatically supply DISTANCE_IN if necessary
-                   outmask | (arcmode ? NONE : DISTANCE_IN))
+    return GeodesicLine(*this, lat1, lon1, azi1,
+                        // Automatically supply DISTANCE_IN if necessary
+                        outmask | (arcmode ? NONE : DISTANCE_IN))
       .                         // Note the dot!
       GenPosition(arcmode, s12_a12, outmask,
                   lat2, lon2, azi2, s12, m12, M12, M21, S12);
@@ -166,13 +165,13 @@ namespace GeographicLib {
     phi = lat1 * Math::degree<real>();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
-    cbet1 = lat1 == -90 ? eps2_ : cos(phi);
+    cbet1 = lat1 == -90 ? tiny_ : cos(phi);
     SinCosNorm(sbet1, cbet1);
 
     phi = lat2 * Math::degree<real>();
     // Ensure cbet2 = +epsilon at poles
     sbet2 = _f1 * sin(phi);
-    cbet2 = abs(lat2) == 90 ? eps2_ : cos(phi);
+    cbet2 = abs(lat2) == 90 ? tiny_ : cos(phi);
     SinCosNorm(sbet2, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
@@ -211,7 +210,7 @@ namespace GeographicLib {
       calp2 = 1; salp2 = 0;           // At the target we're heading north
 
       real
-        // tan(bet) = tan(sig) * cos(alp),
+        // tan(bet) = tan(sig) * cos(alp)
         ssig1 = sbet1, csig1 = calp1 * cbet1,
         ssig2 = sbet2, csig2 = calp2 * cbet2;
 
@@ -253,7 +252,7 @@ namespace GeographicLib {
       if (outmask & GEODESICSCALE)
         M12 = M21 = cos(lam12 / _f1);
       a12 = lon12 / _f1;
-      sig12 = lam12 / _f1;
+      sig12 = omg12 = lam12 / _f1;
 
     } else if (!meridian) {
 
@@ -286,7 +285,7 @@ namespace GeographicLib {
           real v = Lambda12(sbet1, cbet1, sbet2, cbet2, salp1, calp1,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             eps, omg12, trip < 1, dv, C1a, C2a, C3a) - lam12;
-          if (!(abs(v) > eps2_) || !(trip < 1)) {
+          if (!(abs(v) > tiny_) || !(trip < 1)) {
             if (!(abs(v) <= max(tol1_, ov)))
               numit = maxit_;
             break;
@@ -312,16 +311,16 @@ namespace GeographicLib {
         if (numit >= maxit_) {
           // Signal failure.
           if (outmask & DISTANCE)
-            s12 = Math::NaN();
+            s12 = Math::NaN<real>();
           if (outmask & AZIMUTH)
-            azi1 = azi2 = Math::NaN();
+            azi1 = azi2 = Math::NaN<real>();
           if (outmask & REDUCEDLENGTH)
-            m12 = Math::NaN();
+            m12 = Math::NaN<real>();
           if (outmask & GEODESICSCALE)
-            M12 = M21 = Math::NaN();
+            M12 = M21 = Math::NaN<real>();
           if (outmask & AREA)
-            S12 = Math::NaN();
-          return Math::NaN();
+            S12 = Math::NaN<real>();
+          return Math::NaN<real>();
         }
 
         {
@@ -338,10 +337,10 @@ namespace GeographicLib {
     }
 
     if (outmask & DISTANCE)
-      s12 = s12x;
+      s12 = 0 + s12x;           // Convert -0 to 0
 
     if (outmask & REDUCEDLENGTH)
-      m12 = m12x;
+      m12 = 0 + m12x;           // Convert -0 to 0
 
     if (outmask & AREA) {
       real
@@ -362,15 +361,16 @@ namespace GeographicLib {
         real C4a[nC4_];
         C4f(k2, C4a);
         real
-          B41 = Geodesic::SinCosSeries(false, ssig1, csig1, C4a, nC4_),
-          B42 = Geodesic::SinCosSeries(false, ssig2, csig2, C4a, nC4_);
+          B41 = SinCosSeries(false, ssig1, csig1, C4a, nC4_),
+          B42 = SinCosSeries(false, ssig2, csig2, C4a, nC4_);
         S12 = A4 * (B42 - B41);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0;
+
       if (!meridian &&
           omg12 < real(0.75) * Math::pi<real>() && // Long difference too big
-          sbet2 - sbet1 < real(1.75)) {           // Lat difference too big
+          sbet2 - sbet1 < real(1.75)) {            // Lat difference too big
         // Use tan(Gamma/2) = tan(omg12/2)
         // * (tan(bet1/2)+tan(bet2/2))/(1+tan(bet1/2)*tan(bet2/2))
         // with tan(x/2) = sin(x)/(1+cos(x))
@@ -389,7 +389,7 @@ namespace GeographicLib {
         // being attached to 0 correctly.  The following ensures the correct
         // behavior.
         if (salp12 == 0 && calp12 < 0) {
-          salp12 = Geodesic::eps2_ * calp1;
+          salp12 = tiny_ * calp1;
           calp12 = -1;
         }
         alp12 = atan2(salp12, calp12);
@@ -535,7 +535,7 @@ namespace GeographicLib {
     // Volatile declaration needed to fix inverse cases
     // 88.202499451857 0 -88.202499451857 179.981022032992859592
     // 89.262080389218 0 -89.262080389218 179.992207982775375662
-    // 89.333123580033 0 -89.333123580032997687 179.99295812360148422 
+    // 89.333123580033 0 -89.333123580032997687 179.99295812360148422
     // which otherwise fail with g++ 4.4.4 x86 -O3
     volatile real sbet12a = sbet2 * cbet1;
     sbet12a += cbet2 * sbet1;
@@ -565,7 +565,6 @@ namespace GeographicLib {
     } else if (csig12 >= 0 ||
                ssig12 >= 3 * abs(_f) * Math::pi<real>() * Math::sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
-
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
       // is at origin and singular point is at y = 0, x = -1.
@@ -643,10 +642,10 @@ namespace GeographicLib {
     if (sbet1 == 0 && calp1 == 0)
       // Break degeneracy of equatorial line.  This case has already been
       // handled.
-      calp1 = -eps2_;
+      calp1 = -tiny_;
 
     real
-      // sin(alp1) * cos(bet1) = sin(alp0),
+      // sin(alp1) * cos(bet1) = sin(alp0)
       salp0 = salp1 * cbet1,
       calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
 
@@ -661,7 +660,7 @@ namespace GeographicLib {
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
     // iteration.
-    // sin(alp2) * cos(bet2) = sin(alp0),
+    // sin(alp2) * cos(bet2) = sin(alp0)
     salp2 = cbet2 != cbet1 ? salp0 / cbet2 : salp1;
     // calp2 = sqrt(1 - sq(salp2))
     //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
@@ -758,23 +757,23 @@ namespace GeographicLib {
   // The scale factor A1-1 = mean value of I1-1
   Math::real Geodesic::A1m1f(real eps) throw() {
     real
-      eps2_ = Math::sq(eps),
+      eps2 = Math::sq(eps),
       t;
     switch (nA1_/2) {
     case 0:
       t = 0;
       break;
     case 1:
-      t = eps2_/4;
+      t = eps2/4;
       break;
     case 2:
-      t = eps2_*(eps2_+16)/64;
+      t = eps2*(eps2+16)/64;
       break;
     case 3:
-      t = eps2_*(eps2_*(eps2_+4)+64)/256;
+      t = eps2*(eps2*(eps2+4)+64)/256;
       break;
     case 4:
-      t = eps2_*(eps2_*(eps2_*(25*eps2_+64)+256)+4096)/16384;
+      t = eps2*(eps2*(eps2*(25*eps2+64)+256)+4096)/16384;
       break;
     default:
       STATIC_ASSERT(nA1_ >= 0 && nA1_ <= 8, "Bad value of nA1_");
@@ -786,7 +785,7 @@ namespace GeographicLib {
   // The coefficients C1[l] in the Fourier expansion of B1
   void Geodesic::C1f(real eps, real c[]) throw() {
     real
-      eps2_ = Math::sq(eps),
+      eps2 = Math::sq(eps),
       d = eps;
     switch (nC1_) {
     case 0:
@@ -800,72 +799,72 @@ namespace GeographicLib {
       c[2] = -d/16;
       break;
     case 3:
-      c[1] = d*(3*eps2_-8)/16;
+      c[1] = d*(3*eps2-8)/16;
       d *= eps;
       c[2] = -d/16;
       d *= eps;
       c[3] = -d/48;
       break;
     case 4:
-      c[1] = d*(3*eps2_-8)/16;
+      c[1] = d*(3*eps2-8)/16;
       d *= eps;
-      c[2] = d*(eps2_-2)/32;
+      c[2] = d*(eps2-2)/32;
       d *= eps;
       c[3] = -d/48;
       d *= eps;
       c[4] = -5*d/512;
       break;
     case 5:
-      c[1] = d*((6-eps2_)*eps2_-16)/32;
+      c[1] = d*((6-eps2)*eps2-16)/32;
       d *= eps;
-      c[2] = d*(eps2_-2)/32;
+      c[2] = d*(eps2-2)/32;
       d *= eps;
-      c[3] = d*(9*eps2_-16)/768;
+      c[3] = d*(9*eps2-16)/768;
       d *= eps;
       c[4] = -5*d/512;
       d *= eps;
       c[5] = -7*d/1280;
       break;
     case 6:
-      c[1] = d*((6-eps2_)*eps2_-16)/32;
+      c[1] = d*((6-eps2)*eps2-16)/32;
       d *= eps;
-      c[2] = d*((64-9*eps2_)*eps2_-128)/2048;
+      c[2] = d*((64-9*eps2)*eps2-128)/2048;
       d *= eps;
-      c[3] = d*(9*eps2_-16)/768;
+      c[3] = d*(9*eps2-16)/768;
       d *= eps;
-      c[4] = d*(3*eps2_-5)/512;
+      c[4] = d*(3*eps2-5)/512;
       d *= eps;
       c[5] = -7*d/1280;
       d *= eps;
       c[6] = -7*d/2048;
       break;
     case 7:
-      c[1] = d*(eps2_*(eps2_*(19*eps2_-64)+384)-1024)/2048;
+      c[1] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
       d *= eps;
-      c[2] = d*((64-9*eps2_)*eps2_-128)/2048;
+      c[2] = d*((64-9*eps2)*eps2-128)/2048;
       d *= eps;
-      c[3] = d*((72-9*eps2_)*eps2_-128)/6144;
+      c[3] = d*((72-9*eps2)*eps2-128)/6144;
       d *= eps;
-      c[4] = d*(3*eps2_-5)/512;
+      c[4] = d*(3*eps2-5)/512;
       d *= eps;
-      c[5] = d*(35*eps2_-56)/10240;
+      c[5] = d*(35*eps2-56)/10240;
       d *= eps;
       c[6] = -7*d/2048;
       d *= eps;
       c[7] = -33*d/14336;
       break;
     case 8:
-      c[1] = d*(eps2_*(eps2_*(19*eps2_-64)+384)-1024)/2048;
+      c[1] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
       d *= eps;
-      c[2] = d*(eps2_*(eps2_*(7*eps2_-18)+128)-256)/4096;
+      c[2] = d*(eps2*(eps2*(7*eps2-18)+128)-256)/4096;
       d *= eps;
-      c[3] = d*((72-9*eps2_)*eps2_-128)/6144;
+      c[3] = d*((72-9*eps2)*eps2-128)/6144;
       d *= eps;
-      c[4] = d*((96-11*eps2_)*eps2_-160)/16384;
+      c[4] = d*((96-11*eps2)*eps2-160)/16384;
       d *= eps;
-      c[5] = d*(35*eps2_-56)/10240;
+      c[5] = d*(35*eps2-56)/10240;
       d *= eps;
-      c[6] = d*(9*eps2_-14)/4096;
+      c[6] = d*(9*eps2-14)/4096;
       d *= eps;
       c[7] = -33*d/14336;
       d *= eps;
@@ -879,7 +878,7 @@ namespace GeographicLib {
   // The coefficients C1p[l] in the Fourier expansion of B1p
   void Geodesic::C1pf(real eps, real c[]) throw() {
     real
-      eps2_ = Math::sq(eps),
+      eps2 = Math::sq(eps),
       d = eps;
     switch (nC1p_) {
     case 0:
@@ -893,72 +892,72 @@ namespace GeographicLib {
       c[2] = 5*d/16;
       break;
     case 3:
-      c[1] = d*(16-9*eps2_)/32;
+      c[1] = d*(16-9*eps2)/32;
       d *= eps;
       c[2] = 5*d/16;
       d *= eps;
       c[3] = 29*d/96;
       break;
     case 4:
-      c[1] = d*(16-9*eps2_)/32;
+      c[1] = d*(16-9*eps2)/32;
       d *= eps;
-      c[2] = d*(30-37*eps2_)/96;
+      c[2] = d*(30-37*eps2)/96;
       d *= eps;
       c[3] = 29*d/96;
       d *= eps;
       c[4] = 539*d/1536;
       break;
     case 5:
-      c[1] = d*(eps2_*(205*eps2_-432)+768)/1536;
+      c[1] = d*(eps2*(205*eps2-432)+768)/1536;
       d *= eps;
-      c[2] = d*(30-37*eps2_)/96;
+      c[2] = d*(30-37*eps2)/96;
       d *= eps;
-      c[3] = d*(116-225*eps2_)/384;
+      c[3] = d*(116-225*eps2)/384;
       d *= eps;
       c[4] = 539*d/1536;
       d *= eps;
       c[5] = 3467*d/7680;
       break;
     case 6:
-      c[1] = d*(eps2_*(205*eps2_-432)+768)/1536;
+      c[1] = d*(eps2*(205*eps2-432)+768)/1536;
       d *= eps;
-      c[2] = d*(eps2_*(4005*eps2_-4736)+3840)/12288;
+      c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
       d *= eps;
-      c[3] = d*(116-225*eps2_)/384;
+      c[3] = d*(116-225*eps2)/384;
       d *= eps;
-      c[4] = d*(2695-7173*eps2_)/7680;
+      c[4] = d*(2695-7173*eps2)/7680;
       d *= eps;
       c[5] = 3467*d/7680;
       d *= eps;
       c[6] = 38081*d/61440;
       break;
     case 7:
-      c[1] = d*(eps2_*((9840-4879*eps2_)*eps2_-20736)+36864)/73728;
+      c[1] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
       d *= eps;
-      c[2] = d*(eps2_*(4005*eps2_-4736)+3840)/12288;
+      c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
       d *= eps;
-      c[3] = d*(eps2_*(8703*eps2_-7200)+3712)/12288;
+      c[3] = d*(eps2*(8703*eps2-7200)+3712)/12288;
       d *= eps;
-      c[4] = d*(2695-7173*eps2_)/7680;
+      c[4] = d*(2695-7173*eps2)/7680;
       d *= eps;
-      c[5] = d*(41604-141115*eps2_)/92160;
+      c[5] = d*(41604-141115*eps2)/92160;
       d *= eps;
       c[6] = 38081*d/61440;
       d *= eps;
       c[7] = 459485*d/516096;
       break;
     case 8:
-      c[1] = d*(eps2_*((9840-4879*eps2_)*eps2_-20736)+36864)/73728;
+      c[1] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
       d *= eps;
-      c[2] = d*(eps2_*((120150-86171*eps2_)*eps2_-142080)+115200)/368640;
+      c[2] = d*(eps2*((120150-86171*eps2)*eps2-142080)+115200)/368640;
       d *= eps;
-      c[3] = d*(eps2_*(8703*eps2_-7200)+3712)/12288;
+      c[3] = d*(eps2*(8703*eps2-7200)+3712)/12288;
       d *= eps;
-      c[4] = d*(eps2_*(1082857*eps2_-688608)+258720)/737280;
+      c[4] = d*(eps2*(1082857*eps2-688608)+258720)/737280;
       d *= eps;
-      c[5] = d*(41604-141115*eps2_)/92160;
+      c[5] = d*(41604-141115*eps2)/92160;
       d *= eps;
-      c[6] = d*(533134-2200311*eps2_)/860160;
+      c[6] = d*(533134-2200311*eps2)/860160;
       d *= eps;
       c[7] = 459485*d/516096;
       d *= eps;
@@ -972,23 +971,23 @@ namespace GeographicLib {
   // The scale factor A2-1 = mean value of I2-1
   Math::real Geodesic::A2m1f(real eps) throw() {
     real
-      eps2_ = Math::sq(eps),
+      eps2 = Math::sq(eps),
       t;
     switch (nA2_/2) {
     case 0:
       t = 0;
       break;
     case 1:
-      t = eps2_/4;
+      t = eps2/4;
       break;
     case 2:
-      t = eps2_*(9*eps2_+16)/64;
+      t = eps2*(9*eps2+16)/64;
       break;
     case 3:
-      t = eps2_*(eps2_*(25*eps2_+36)+64)/256;
+      t = eps2*(eps2*(25*eps2+36)+64)/256;
       break;
     case 4:
-      t = eps2_*(eps2_*(eps2_*(1225*eps2_+1600)+2304)+4096)/16384;
+      t = eps2*(eps2*(eps2*(1225*eps2+1600)+2304)+4096)/16384;
       break;
     default:
       STATIC_ASSERT(nA2_ >= 0 && nA2_ <= 8, "Bad value of nA2_");
@@ -1000,7 +999,7 @@ namespace GeographicLib {
   // The coefficients C2[l] in the Fourier expansion of B2
   void Geodesic::C2f(real eps, real c[]) throw() {
     real
-      eps2_ = Math::sq(eps),
+      eps2 = Math::sq(eps),
       d = eps;
     switch (nC2_) {
     case 0:
@@ -1014,72 +1013,72 @@ namespace GeographicLib {
       c[2] = 3*d/16;
       break;
     case 3:
-      c[1] = d*(eps2_+8)/16;
+      c[1] = d*(eps2+8)/16;
       d *= eps;
       c[2] = 3*d/16;
       d *= eps;
       c[3] = 5*d/48;
       break;
     case 4:
-      c[1] = d*(eps2_+8)/16;
+      c[1] = d*(eps2+8)/16;
       d *= eps;
-      c[2] = d*(eps2_+6)/32;
+      c[2] = d*(eps2+6)/32;
       d *= eps;
       c[3] = 5*d/48;
       d *= eps;
       c[4] = 35*d/512;
       break;
     case 5:
-      c[1] = d*(eps2_*(eps2_+2)+16)/32;
+      c[1] = d*(eps2*(eps2+2)+16)/32;
       d *= eps;
-      c[2] = d*(eps2_+6)/32;
+      c[2] = d*(eps2+6)/32;
       d *= eps;
-      c[3] = d*(15*eps2_+80)/768;
+      c[3] = d*(15*eps2+80)/768;
       d *= eps;
       c[4] = 35*d/512;
       d *= eps;
       c[5] = 63*d/1280;
       break;
     case 6:
-      c[1] = d*(eps2_*(eps2_+2)+16)/32;
+      c[1] = d*(eps2*(eps2+2)+16)/32;
       d *= eps;
-      c[2] = d*(eps2_*(35*eps2_+64)+384)/2048;
+      c[2] = d*(eps2*(35*eps2+64)+384)/2048;
       d *= eps;
-      c[3] = d*(15*eps2_+80)/768;
+      c[3] = d*(15*eps2+80)/768;
       d *= eps;
-      c[4] = d*(7*eps2_+35)/512;
+      c[4] = d*(7*eps2+35)/512;
       d *= eps;
       c[5] = 63*d/1280;
       d *= eps;
       c[6] = 77*d/2048;
       break;
     case 7:
-      c[1] = d*(eps2_*(eps2_*(41*eps2_+64)+128)+1024)/2048;
+      c[1] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
       d *= eps;
-      c[2] = d*(eps2_*(35*eps2_+64)+384)/2048;
+      c[2] = d*(eps2*(35*eps2+64)+384)/2048;
       d *= eps;
-      c[3] = d*(eps2_*(69*eps2_+120)+640)/6144;
+      c[3] = d*(eps2*(69*eps2+120)+640)/6144;
       d *= eps;
-      c[4] = d*(7*eps2_+35)/512;
+      c[4] = d*(7*eps2+35)/512;
       d *= eps;
-      c[5] = d*(105*eps2_+504)/10240;
+      c[5] = d*(105*eps2+504)/10240;
       d *= eps;
       c[6] = 77*d/2048;
       d *= eps;
       c[7] = 429*d/14336;
       break;
     case 8:
-      c[1] = d*(eps2_*(eps2_*(41*eps2_+64)+128)+1024)/2048;
+      c[1] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
       d *= eps;
-      c[2] = d*(eps2_*(eps2_*(47*eps2_+70)+128)+768)/4096;
+      c[2] = d*(eps2*(eps2*(47*eps2+70)+128)+768)/4096;
       d *= eps;
-      c[3] = d*(eps2_*(69*eps2_+120)+640)/6144;
+      c[3] = d*(eps2*(69*eps2+120)+640)/6144;
       d *= eps;
-      c[4] = d*(eps2_*(133*eps2_+224)+1120)/16384;
+      c[4] = d*(eps2*(133*eps2+224)+1120)/16384;
       d *= eps;
-      c[5] = d*(105*eps2_+504)/10240;
+      c[5] = d*(105*eps2+504)/10240;
       d *= eps;
-      c[6] = d*(33*eps2_+154)/4096;
+      c[6] = d*(33*eps2+154)/4096;
       d *= eps;
       c[7] = 429*d/14336;
       d *= eps;

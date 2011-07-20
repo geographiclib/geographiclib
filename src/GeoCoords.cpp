@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::GeoCoords class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -14,7 +14,7 @@
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/DMS.hpp>
 
-#define GEOGRAPHICLIB_GEOCOORDS_CPP "$Id: dbf22fe26fa69a0b24698a6ff4e428d79dac7b66 $"
+#define GEOGRAPHICLIB_GEOCOORDS_CPP "$Id: 089e4239e74488ed85e25b358aa487e693c43d0b $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCOORDS_HPP)

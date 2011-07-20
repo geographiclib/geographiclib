@@ -3,7 +3,8 @@
  * \brief Matlab mex file for UTM/UPS to geographic conversions
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 // Compile in Matlab with
@@ -12,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic geocentricreverse.cpp
 
-// $Id: 79b4ab24071d79011dbd12bd69f94a860d10fad5 $
+// $Id: e07cf8bd723b1549b92102586969cd612f42056f $
 
 #include <GeographicLib/Geocentric.hpp>
 #include <mex.h>
@@ -38,7 +39,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[0]) != 3)
     mexErrMsgTxt("geocentric coordinates must be M x 3 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 3) {
     if (!( mxIsDouble(prhs[1]) && !mxIsComplex(prhs[1]) &&
            mxGetNumberOfElements(prhs[1]) == 1 ))

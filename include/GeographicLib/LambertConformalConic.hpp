@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::LambertConformalConic class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: 36261b322b57fd7a06c53868842661888a202041 $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: b2f2b9bc4827fa14f7c090daebd1a5429b32791a $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>

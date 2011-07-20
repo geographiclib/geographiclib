@@ -1,10 +1,11 @@
 #! /bin/sh
 # Convert a pod file into a usage function for the GeographicLib utilities.
-# $Id: 846183727a30fafee05ef400314fd897c5c5fcea $
+# $Id: b30e390f45730799e56eb08d7450008f1b1bb540 $
 
 SOURCE=$1
 NAME=`basename $SOURCE .pod`
 
+(
 cat<<EOF
 int usage(int retval, bool brief) {
   if (brief)
@@ -32,3 +33,5 @@ cat <<EOF
     return retval;
 }
 EOF
+) | # Break long strings assuming that files don't contain the ~ character
+tr '\n' '~' | sed -e's/\\~/"~"/g' -e's/""//g' | tr '~' '\n'

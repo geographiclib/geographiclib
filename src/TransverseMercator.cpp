@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This implementation follows closely
@@ -41,7 +41,7 @@
 
 #include <GeographicLib/TransverseMercator.hpp>
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: 220f4b45be898ecac08876ef258e97ecc61f6e78 $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: e0e2727f0e2b3822bb066e0362e2a05fc6193b02 $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)

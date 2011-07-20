@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/LambertConformalConic.hpp>
 
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: d633086205271f5ed370555bd0a7d38feb6ede84 $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: fc3fcfdae2dca5dae83298e61b19cf91a30069fd $"
 
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)

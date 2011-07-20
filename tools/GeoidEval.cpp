@@ -3,7 +3,7 @@
  * \brief Command line utility for evaluation geoid heights
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile with -I../include and link with Geoid.o DMS.o
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: c6e05c453e80eecea0228a09609de19270116273 $\n"
+          << ": $Id: fbae1ec93734f13474d4ea5149cd272904df0e77 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else {

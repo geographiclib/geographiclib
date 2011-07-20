@@ -36,14 +36,13 @@
 <div class="title">Installing GeographicLib </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="start.html">Getting started</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib has been developed under Linux with the g++ compiler (versions 4.0 and later) and under Windows with Visual Studio 2005, 2008, and 2010. Earlier versions were tested also under Darwin and Solaris. It should compile on a wide range of other systems. First download either <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">GeographicLib-1.11.tar.gz</a> or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11.zip/download">GeographicLib-1.11.zip</a> (or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">GeographicLib-1.11-win32.exe</a> for binary installation under Windows). Then pick one of the first five options below:</p>
+<div class="textblock"><center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="start.html">Getting started</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib has been developed under Linux with the g++ compiler (versions 4.0 and later) and under Windows with Visual Studio 2005, 2008, and 2010. Earlier versions were tested also under Darwin and Solaris. It should compile on a wide range of other systems. First download either <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">GeographicLib-1.12.tar.gz</a> or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12.zip/download">GeographicLib-1.12.zip</a> (or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">GeographicLib-1.12-win32.exe</a> for binary installation under Windows). Then pick one of the first five options below:</p>
 <ul>
 <li><a class="el" href="install.html#cmake">Installation with cmake</a>. This is the preferred installation method as it will work on the widest range of platforms. However it requires that you have <a href="http://www.cmake.org">cmake</a> installed.</li>
 <li><a class="el" href="install.html#autoconf">Installation using the autoconfigure tools</a>. This method works for most Unix-like systems, including Linux and Mac OS X.</li>
 <li><a class="el" href="install.html#gnu">Installation with GNU compiler and Make</a>. This is a simple installation method that works with g++ GNU make on Linux and many Unix platforms.</li>
 <li><a class="el" href="install.html#windows">Installation on Windows</a>. This is a simple installation method that works with Visual Studio 2005 and 2008 under Windows. Use cmake if you use Visual Studio 2010.</li>
 <li><a class="el" href="install.html#windowsbin">Using a binary installer for Windows.</a>. Use this installation method if you only need to the the utility programs supplied with GeographicLib. (This method also installs the header files and the static library for use by Visual Studio 2010.)</li>
-<li><a class="el" href="install.html#matlab">Matlab and Octave interfaces</a>. Some of the functionality is exposed to Matlab and Octave. This requires compiling interface routines in Matlab or Octave.</li>
 <li><a class="el" href="install.html#maintainer">Maintainer tasks</a>. This describes addition tasks of interest only to the maintainers of this code.</li>
 </ul>
 <p>This section documents only how to install the software. If you wish to use GeographicLib to evaluate geoid heights, then you must also install geoid data files. See <a class="el" href="geoid.html#geoidinst">Installing the geoid datasets</a> for instructions.</p>
@@ -56,9 +55,9 @@ Installation with cmake</h2>
 <p>Here are the steps to compile and install GeographicLib:</p>
 <ul>
 <li>Unpack the source, running one of <div class="fragment"><pre class="fragment">
-  tar xfpz GeographicLib-1.11.tar.gz
-  unzip -q GeographicLib-1.11.zip </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
-  cd GeographicLib-1.11 </pre></div></li>
+  tar xfpz GeographicLib-1.12.tar.gz
+  unzip -q GeographicLib-1.12.zip </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
+  cd GeographicLib-1.12 </pre></div></li>
 <li>Create a separate build directory and enter it, for example, <div class="fragment"><pre class="fragment">
   mkdir BUILD
   cd BUILD</pre></div></li>
@@ -96,8 +95,8 @@ Installation using the autoconfigure tools</h2>
 <p>The method works on most Unix-like systems including Linux and Mac OS X. Here are the steps to compile and install GeographicLib:</p>
 <ul>
 <li>Unpack the source, running <div class="fragment"><pre class="fragment">
-  tar xfpz GeographicLib-1.11.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
-  cd GeographicLib-1.11 </pre></div></li>
+  tar xfpz GeographicLib-1.12.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
+  cd GeographicLib-1.12 </pre></div></li>
 <li>Configure the software with <div class="fragment"><pre class="fragment">
   ./configure </pre></div></li>
 <li>By default GeographlicLib will be installed under /usr/local. You can change this with, for example <div class="fragment"><pre class="fragment">
@@ -105,7 +104,7 @@ Installation using the autoconfigure tools</h2>
 <li>Compile and install the software with <div class="fragment"><pre class="fragment">
   make
   make install </pre></div></li>
-<li>The headers, library, and utilities are installed in the include/GeographicLib, lib, and bin directories under <code>prefix</code>. This installation method does not compile the Matlab/Octave interface; however the source for the interface is installed in libexec/GeographicLib/matlab, see <a class="el" href="install.html#matlab">Matlab and Octave interfaces</a> of instructions on compiling the interface. For documentation, open <a href="index.html">share/doc/GeographicLib/html/index.html</a> in a web browser.</li>
+<li>The headers, library, and utilities are installed in the include/GeographicLib, lib, and bin directories under <code>prefix</code>. This installation method does not compile the Matlab/Octave interface; however the source for the interface is installed in libexec/GeographicLib/matlab, see <a class="el" href="other.html#matlab">Matlab and Octave interfaces</a> of instructions on compiling the interface. For documentation, open <a href="index.html">share/doc/GeographicLib/html/index.html</a> in a web browser.</li>
 </ul>
 <h2><a class="anchor" id="gnu"></a>
 Installation with GNU compiler and Make</h2>
@@ -113,70 +112,37 @@ Installation with GNU compiler and Make</h2>
 <p>Here are the steps to compile and install GeographicLib:</p>
 <ul>
 <li>Unpack the source, running <div class="fragment"><pre class="fragment">
-  tar xfpz GeographicLib-1.11.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
-  cd GeographicLib-1.11 </pre></div></li>
+  tar xfpz GeographicLib-1.12.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
+  cd GeographicLib-1.12 </pre></div></li>
 <li>Build and install the software: <div class="fragment"><pre class="fragment">
   make             # compile the library and the examples
   make install     # as root </pre></div> The installation is in directories under /usr/local. You can specify a different installation directory with, for example, <div class="fragment"><pre class="fragment">
   make PREFIX=/tmp/geographic install </pre></div></li>
-<li>The headers, library, and utilities are installed in the include/GeographicLib, lib, and bin directories under <code>PREFIX</code>. This installation method does not compile the Matlab/Octave interface; however the source for the interface is installed in libexec/GeographicLib/matlab, see <a class="el" href="install.html#matlab">Matlab and Octave interfaces</a> of instructions on compiling the interface. For documentation, open <a href="index.html">share/doc/GeographicLib/html/index.html</a> in a web browser.</li>
+<li>The headers, library, and utilities are installed in the include/GeographicLib, lib, and bin directories under <code>PREFIX</code>. This installation method does not compile the Matlab/Octave interface; however the source for the interface is installed in libexec/GeographicLib/matlab, see <a class="el" href="other.html#matlab">Matlab and Octave interfaces</a> of instructions on compiling the interface. For documentation, open <a href="index.html">share/doc/GeographicLib/html/index.html</a> in a web browser.</li>
 </ul>
 <h2><a class="anchor" id="windows"></a>
 Installation on Windows</h2>
 <p>This method requires Visual Studio 2008 (or 2005). This builds a static library and the examples. If you only have Visual Studio 2010, use cmake to create the necessary solution file. GeographicLib does not compile correctly with Visual Studio 2003.</p>
 <ul>
 <li>Unpack the source, running <div class="fragment"><pre class="fragment">
-  unzip -q GeographicLib-1.11.zip </pre></div></li>
-<li>Open GeographicLib-1.11/windows/GeographicLib-vc9.sln in Visual Studio 2008 (for Visual Studio 2005, replace -vc9 by -vc8).</li>
+  unzip -q GeographicLib-1.12.zip </pre></div></li>
+<li>Open GeographicLib-1.12/windows/GeographicLib-vc9.sln in Visual Studio 2008 (for Visual Studio 2005, replace -vc9 by -vc8).</li>
 <li>Pick the build type (e.g., Release), and select "Build
   Solution".</li>
 <li>The library and the compiled examples are in the windows/Release.</li>
-<li>Copy the library windows/Release/Geographic.lib and the headers in include/GeographicLib somewhere convenient. The headers should remain in a directory named GeographicLib. If you expect to use the Matlab/Octave interface, copy matlab/*.m and matlab/*.cpp to a directory in your matlab/octave path, see <a class="el" href="install.html#matlab">Matlab and Octave interfaces</a> for instructions on compiling the interface. For documentation, open <a href="index.html">doc/html/index.html</a> in a web browser.</li>
+<li>Copy the library windows/Release/Geographic.lib and the headers in include/GeographicLib somewhere convenient. The headers should remain in a directory named GeographicLib. If you expect to use the Matlab/Octave interface, copy matlab/*.m and matlab/*.cpp to a directory in your matlab/octave path, see <a class="el" href="other.html#matlab">Matlab and Octave interfaces</a> for instructions on compiling the interface. For documentation, open <a href="index.html">doc/html/index.html</a> in a web browser.</li>
 </ul>
 <h2><a class="anchor" id="windowsbin"></a>
 Using a binary installer for Windows.</h2>
-<p>Download and run <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.11-win32.exe/download">GeographicLib-1.11-win32.exe</a>:</p>
+<p>Download and run <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">GeographicLib-1.12-win32.exe</a>:</p>
 <ul>
-<li>read the LGPL license agreement,</li>
+<li>read the MIT/X11 License agreement,</li>
 <li>select whether you want your PATH modified,</li>
-<li>select the destination folder, by default C:/Program Files/GeographicLib-1.11.</li>
+<li>select the destination folder, by default C:/Program Files/GeographicLib-1.12.</li>
 <li>select the start menu folder,</li>
 <li>and install.</li>
 </ul>
-<p>The start menu will now include links to the documentation for the library and for the utilities (and a link for uninstalling the library). If you ask for your PATH to be modified, it will include C:/Program Files/GeographicLib-1.11/bin where the utilities are installed. The headers and library are installed in the include/GeographicLib and lib folders. The Matlab interface is installed in the libexec/GeographicLib/matlab folder. Add this to your path in Matlab to access this interface. The binaries were built using Visual Studio 10 (2010) for Win32 in Release mode. The Matlab interface was compiled with Matlab R2010b, however it works with some other versions of Matlab (e.g., R2008a).</p>
-<h2><a class="anchor" id="matlab"></a>
-Matlab and Octave interfaces</h2>
-<p>The matlab directory contains interface code so that some GeographicLib classes can be accessed from Matlab or Octave. If you set ENABLE_MATLAB=ON when installing with cmake, this interface is built. Similarly the binary installer for Windows includes the compiled interface (compiled using Visual Studio 10 and Matlab 2010b). To use either of these, run one of (for example) </p>
-<div class="fragment"><pre class="fragment">
-  addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.11/libexec/GeographicLib/matlab'
-</pre></div><p> in Matlab or Octave. If you need to compile the interface or to recompile it for a different platform, start Matlab or Octave and run, e.g., </p>
-<div class="fragment"><pre class="fragment">  mex -setup
-  cd  <span class="stringliteral">&#39;C:/Program Files/GeographicLib-1.11/libexec/GeographicLib/matlab&#39;</span>
-  help geographiclibinterface
-  geographiclibinterface(<span class="stringliteral">&#39;C:/Program Files/GeographicLib-1.11&#39;</span>);
-  addpath(pwd);
-</pre></div><p> The first command allows you to select the compiler to use (which probably should be the same as that used to compile GeographicLib). The available functions are:</p>
-<ul>
-<li>geodesicdirect: solve direct geodesic problem (see <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">GeographicLib::Geodesic::Direct</a>)</li>
-<li>geodesicinverse: solve inverse geodesic problem (see <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">GeographicLib::Geodesic::Inverse</a>)</li>
-<li>geodesicline: compute points along a geodesic (see <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeographicLib::GeodesicLine::Position</a>)</li>
-<li>utmupsforward: convert geographic coordinates to UTM/UPS (see <a class="el" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">GeographicLib::UTMUPS::Forward</a>)</li>
-<li>utmupsreverse: convert UTM/UPS coordinates to geographic (see <a class="el" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">GeographicLib::UTMUPS::Reverse</a>)</li>
-<li>mgrsforward: convert UTM/UPS coordinates to MGRS (see <a class="el" href="classGeographicLib_1_1MGRS.html#a91de10ebde478dbb85b3c7d057ff97b9">GeographicLib::MGRS::Forward</a>)</li>
-<li>mgrsreverse: convert MGRS coordinates to UTM/UPS (see <a class="el" href="classGeographicLib_1_1MGRS.html#a066b79e78cd85bf4b50df50808bed7e3">GeographicLib::MGRS::Reverse</a>)</li>
-<li>geoidheight: compute geoid height (see <a class="el" href="classGeographicLib_1_1Geoid.html#accb63bfbbadae10af79b3a3028a3045a">GeographicLib::Geoid::operator()()</a>)</li>
-<li>geocentricforward: convert geographic coordinates to geocentric (see <a class="el" href="classGeographicLib_1_1Geocentric.html#a6d144979a9c0a5d12f343736a0432a3a">GeographicLib::Geocentric::Forward</a>)</li>
-<li>geocentricreverse: convert geocentric coordinates to geographic (see <a class="el" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">GeographicLib::Geocentric::Reverse</a>)</li>
-<li>localcartesianforward: convert geographic coordinates to local cartesian (see <a class="el" href="classGeographicLib_1_1LocalCartesian.html#a6426e95f904f224eabedb8fcd17fe537">GeographicLib::LocalCartesian::Forward</a>)</li>
-<li>localcartesianreverse: convert local cartesian coordinates to geographic (see <a class="el" href="classGeographicLib_1_1LocalCartesian.html#ac34878de3ae995e7d54f0347a1f34118">GeographicLib::LocalCartesian::Reverse</a>)</li>
-</ul>
-<p>These routines just offer a simple interface to the corresponding C++ class. Use the help function to get documentation, e.g., </p>
-<div class="fragment"><pre class="fragment">  help geodesicdirect 
-</pre></div><p> Unfortunately, the help function does not work for compiled functions in Octave; in this case, just list the .m file, e.g., </p>
-<div class="fragment"><pre class="fragment">  system <span class="stringliteral">&#39;less geodesicdirect.m&#39;</span> 
-</pre></div><p> Other useful functions, e.g., to convert from geographic coordinates to MGRS can easily be written with Matlab code.</p>
-<p>Note that geoidheight, when compiled with Visual Studio 2008 causes Matlab to crash. (The problem does not occur with Visual Studio 2005 or Visual Studio 2010.)</p>
+<p>The start menu will now include links to the documentation for the library and for the utilities (and a link for uninstalling the library). If you ask for your PATH to be modified, it will include C:/Program Files/GeographicLib-1.12/bin where the utilities are installed. The headers and library are installed in the include/GeographicLib and lib folders. The Matlab interface is installed in the libexec/GeographicLib/matlab folder. Add this to your path in Matlab to access this interface. The binaries were built using Visual Studio 10 (2010) for Win32 in Release mode. The Matlab interface was compiled with Matlab R2010b, however it works with some other versions of Matlab (e.g., R2008a).</p>
 <h2><a class="anchor" id="maintainer"></a>
 Maintainer tasks</h2>
 <p>Check the code out of git with </p>
@@ -188,12 +154,12 @@ Maintainer tasks</h2>
 <div class="fragment"><pre class="fragment">
   make dist </pre></div><p> which will copy the documentation and man pages from the build directory back into the source tree and package the resulting source tree for distribution as </p>
 <div class="fragment"><pre class="fragment">
-  GeographicLib-1.11.tar.gz
-  GeographicLib-1.11.zip </pre></div><p> Finally, </p>
+  GeographicLib-1.12.tar.gz
+  GeographicLib-1.12.zip </pre></div><p> Finally, </p>
 <div class="fragment"><pre class="fragment">
   make package </pre></div><p> or building PACKAGE in Visual Studio will create a binary installer for GeographicLib. For Windows, this requires in the installation of <a href="http://nsis.sourceforge.net">NSIS</a>.</p>
 <center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="start.html">Getting started</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 27 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

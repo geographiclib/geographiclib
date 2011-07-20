@@ -1,8 +1,8 @@
 function [geodesic, aux] = geodesicinverse(latlong, a, f)
 %geodesicinverse  Solve inverse geodesic problem
 %
-%   [geodesic, aux] = geodesicinverse(latlong);
-%   [geodesic, aux] = geodesicinverse(latlong, a, f);
+%   [geodesic, aux] = geodesicinverse(latlong)
+%   [geodesic, aux] = geodesicinverse(latlong, a, f)
 %
 %   latlong is an M x 4 matrix
 %       latitude of point 1 = latlong(:,1) in degrees
@@ -14,11 +14,12 @@ function [geodesic, aux] = geodesicinverse(latlong, a, f)
 %       azimuth at point 1 = geodesic(:,1) in degrees
 %       azimuth at point 2 = geodesic(:,2) in degrees
 %       distance between points 1 and 2 = geodesic(:,3) in meters
-%   aux is an M x 4 matrix
-%       reduced length = aux(:,1) in meters
-%       geodesic scale 1 to 2 = aux(:,2)
-%       geodesic scale 2 to 1 = aux(:,3)
-%       area under geodesic = aux(:,4) in meters^2
+%   aux is an M x 5 matrix
+%       spherical arc length = aux(:,1) in degrees
+%       reduced length = aux(:,2) in meters
+%       geodesic scale 1 to 2 = aux(:,3)
+%       geodesic scale 2 to 1 = aux(:,4)
+%       area under geodesic = aux(:,5) in meters^2
 %
 %   a = major radius (meters)
 %   f = flattening (0 means a sphere)
@@ -34,7 +35,7 @@ end
 % Matlab .m file for solving inverse geodesic problem
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
-% licensed under the LGPL.  For more information, see
+% licensed under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 3842b4fb4cb634a7eb93cd52e2d0cd9fc80f4487 $
+% $Id: 44fec214f6813db5c4fb8a24cfede46d2586309d $

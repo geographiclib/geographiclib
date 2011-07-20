@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::Gnomonic class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/Gnomonic.hpp>
 
-#define GEOGRAPHICLIB_GNOMONIC_CPP "$Id: 44ee2c90112e5a6dae1e06a9decdaef4ef035ae4 $"
+#define GEOGRAPHICLIB_GNOMONIC_CPP "$Id: ddfc40043c2ece9374244eedfe91d2e2b108645d $"
 
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GNOMONIC_HPP)
@@ -31,7 +31,7 @@ namespace GeographicLib {
                       t, azi0, azi, m, M, t, t);
     rk = M;
     if (M <= 0)
-      x = y = Math::NaN();
+      x = y = Math::NaN<real>();
     else {
       real rho = m/M;
       azi0 *= Math::degree<real>();
@@ -72,7 +72,7 @@ namespace GeographicLib {
     if (trip) {
       lat = lat1; lon = lon1; azi = azi1; rk = M;
     } else
-      lat = lon = azi = rk = Math::NaN();
+      lat = lon = azi = rk = Math::NaN<real>();
     return;
   }
 

@@ -3,7 +3,8 @@
  * \brief Matlab mex file for UTM/UPS to geographic conversions
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 // Compile in Matlab with
@@ -12,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic localcartesianreverse.cpp
 
-// $Id: 56cf8cb169c5bb152a165557e60efb98bc1b2332 $
+// $Id: 0a761c46799fbf7b23af088c14147114b7d84848 $
 
 #include <GeographicLib/LocalCartesian.hpp>
 #include <mex.h>
@@ -48,7 +49,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
   if (mxGetN(prhs[1]) != 3)
     mexErrMsgTxt("local cartesian coordinates must be M x 3 matrix.");
 
-  double a = Constants::WGS84_a(), f = Constants::WGS84_f();
+  double a = Constants::WGS84_a<double>(), f = Constants::WGS84_f<double>();
   if (nrhs == 4) {
     if (!( mxIsDouble(prhs[2]) && !mxIsComplex(prhs[2]) &&
            mxGetNumberOfElements(prhs[2]) == 1 ))

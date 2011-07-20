@@ -52,14 +52,14 @@
 <a name="l00003"></a>00003 <span class="comment"> * \brief Implementation for GeographicLib::DMS class</span>
 <a name="l00004"></a>00004 <span class="comment"> *</span>
 <a name="l00005"></a>00005 <span class="comment"> * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) &lt;charles@karney.com&gt;</span>
-<a name="l00006"></a>00006 <span class="comment"> * and licensed under the LGPL.  For more information, see</span>
+<a name="l00006"></a>00006 <span class="comment"> * and licensed under the MIT/X11 License.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: 1ef7e1d795307bca524bb8612633dee4f26683b7 $&quot;</span>
+<a name="l00013"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: b7223d87d1533257947bf21f0d90f700aaabe39c $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">GEOGRAPHICLIB_DMS_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8hpp.html#a844e4c8afc70c59c842f4553ce40b9c6">GEOGRAPHICLIB_DMS_HPP</a>)
@@ -243,9 +243,9 @@
 <a name="l00194"></a>00194     t = t.substr(p0, p1 + 1 - p0);  <span class="comment">// Length at least 3</span>
 <a name="l00195"></a>00195     <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;NAN&quot;</span> || t == <span class="stringliteral">&quot;1.#QNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#SNAN&quot;</span> || t == <span class="stringliteral">&quot;1.#IND&quot;</span> ||
 <a name="l00196"></a>00196         t == <span class="stringliteral">&quot;1.#R&quot;</span>)
-<a name="l00197"></a>00197       <span class="keywordflow">return</span> sign * Math::NaN();
+<a name="l00197"></a>00197       <span class="keywordflow">return</span> sign * Math::NaN&lt;real&gt;();
 <a name="l00198"></a>00198     <span class="keywordflow">else</span> <span class="keywordflow">if</span> (t == <span class="stringliteral">&quot;INF&quot;</span> || t == <span class="stringliteral">&quot;1.#INF&quot;</span>)
-<a name="l00199"></a>00199       <span class="keywordflow">return</span> sign * Math::infinity();
+<a name="l00199"></a>00199       <span class="keywordflow">return</span> sign * Math::infinity&lt;real&gt;();
 <a name="l00200"></a>00200     <span class="keywordflow">return</span> 0;
 <a name="l00201"></a>00201   }
 <a name="l00202"></a>00202 
@@ -414,7 +414,7 @@
 <a name="l00365"></a>00365 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Mon Jun 27 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

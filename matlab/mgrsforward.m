@@ -1,8 +1,8 @@
 function mgrs = mgrsforward(utmups, prec)
 %mgrsforward  Convert UTM/UPS coordinates to MGRS
 %
-%   mgrs = mgrsforward(utmups);
-%   mgrs = mgrsforward(utmups, prec);
+%   mgrs = mgrsforward(utmups)
+%   mgrs = mgrsforward(utmups, prec)
 %
 %   utmups is an M x 4 matrix
 %       easting = utmups(:,1) in meters
@@ -27,7 +27,7 @@ end
 % Matlab .m file for UTM/UPS to MGRS conversions
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
-% licensed under the LGPL.  For more information, see
+% licensed under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: 42e5b9a9f840549babd326bb1208cd3d61deea7d $
+% $Id: 57f3730b6e64bd895c1644a69b90a39388a1f816 $

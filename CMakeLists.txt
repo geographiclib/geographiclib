@@ -1,14 +1,14 @@
-# $Id: ddd17a6a3d708ebf52ced96554d4a48cf5fa3039 $
+# $Id: 3c4d96dbc3121eb97d98ea8e074f5f234cd45885 $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 11)
+set (GeographicLib_VERSION_MINOR 12)
 set (GeographicLib_VERSION_STRING
      ${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR})
 set (LIBVERSION 5)
-set (LIBVERSIONFULL 5.2.3)
+set (LIBVERSIONFULL 5.3.0)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -85,6 +85,7 @@ add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
+add_subdirectory (python)
 
 if (MAINTAINER)
   add_custom_target (distrib-all)
@@ -121,7 +122,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/(status|libtool)\$"
   "/stamp-"
   "/junk"
-  "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|cmake|log|exe)\$"
+  "/octave-core"
+  "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|cmake|log|exe|pyc)\$"
   "\\\\.(mex|mexw32|mexa64)\$"
   "/(Release|Debug|Win32)"
   "\\\\.cache/"
@@ -133,7 +135,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/(fix-permissions|autogen|biblio)\\\\.sh"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.html" )
 set (CPACK_SOURCE_GENERATOR TGZ)
-set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/COPYING.txt)
+set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
   "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION_STRING}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")

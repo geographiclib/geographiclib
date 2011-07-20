@@ -1,8 +1,8 @@
 function [utmups, scale] = utmupsforward(latlong, setzone)
 %utmupsforward  Convert geographic coordinates to UTM/UPS
 %
-%   [utmups, scale] = utmupsforward(latlong);
-%   [utmups, scale] = utmupsforward(latlong, setzone);
+%   [utmups, scale] = utmupsforward(latlong)
+%   [utmups, scale] = utmupsforward(latlong, setzone)
 %
 %   latlong is an M x 2 matrix
 %       latitude = latlong(:,1) in degrees
@@ -36,7 +36,7 @@ end
 % Matlab .m file for geographic to UTM/UPS conversions
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
-% under the LGPL.  For more information, see
+% under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
-% $Id: c4bba40f532c290233d2a372f2c85a33363bb522 $
+% $Id: 8160e1e84c6c5fb707b89cc429562926805bc3f3 $

@@ -3,14 +3,14 @@
  * \brief Implementation for GeographicLib::DMS class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/DMS.hpp>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: 1ef7e1d795307bca524bb8612633dee4f26683b7 $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: b7223d87d1533257947bf21f0d90f700aaabe39c $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -194,9 +194,9 @@ namespace GeographicLib {
     t = t.substr(p0, p1 + 1 - p0);  // Length at least 3
     if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
         t == "1.#R")
-      return sign * Math::NaN();
+      return sign * Math::NaN<real>();
     else if (t == "INF" || t == "1.#INF")
-      return sign * Math::infinity();
+      return sign * Math::infinity<real>();
     return 0;
   }
 

@@ -1,13 +1,13 @@
 function [geocentric, rot] = geocentricforward(geodetic, a, f)
 %geocentricforward  Convert geographic coordinates to geocentric
 %
-%   [geocentric, rot] = geocentricforward(geodetic);
-%   [geocentric, rot] = geocentricforward(geodetic, a, f);
+%   [geocentric, rot] = geocentricforward(geodetic)
+%   [geocentric, rot] = geocentricforward(geodetic, a, f)
 %
-%   geodetic is an M x 3 matrix of geodetic coordinates
+%   geodetic is an M x 3 or M x 2 matrix of geodetic coordinates
 %       lat = geodetic(:,1) in degrees
 %       lon = geodetic(:,2) in degrees
-%       h = geodetic(:,3) in meters
+%       h = geodetic(:,3) in meters (default 0 m)
 %
 %   geocentric is an M x 3 matrix of geocentric coordinates
 %       x = geocentric(:,1) in meters
@@ -32,6 +32,7 @@ end
 % Matlab .m file for geographic to geocentric conversions
 %
 % Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
-% the LGPL.  For more information, see http://geographiclib.sourceforge.net/
+% the MIT/X11 License.  For more information, see
+% http://geographiclib.sourceforge.net/
 %
-% $Id: f35b89e514e0621a67ede6dc9270ef921cee00c1 $
+% $Id: 387cbf93121f049b4c2398c520072c86d6767fe7 $

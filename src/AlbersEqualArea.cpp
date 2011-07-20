@@ -3,13 +3,13 @@
  * \brief Implementation for GeographicLib::AlbersEqualArea class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/AlbersEqualArea.hpp>
 
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_CPP "$Id: e8ee07f91f7b216a8cc28ea103a8c9159e9a9d8c $"
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_CPP "$Id: 352fea7ad6b2b0dbb1ba36b8894f70edc9d51973 $"
 
 RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)

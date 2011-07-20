@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::GeoCoords class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
-#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: 99a8aac8540818e46115bc98694955d146e53fef $"
+#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id: d7bac63e51ac0d5aeb4b27c87f7f5ebaf8baa134 $"
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <GeographicLib/Constants.hpp>

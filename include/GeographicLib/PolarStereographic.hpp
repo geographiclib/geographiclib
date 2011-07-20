@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::PolarStereographic class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: d87b9c7de659fb35a42845b63ae1e5b8239db032 $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: 461ca662af89d37e5276ab029e7c6959d5bbdd74 $"
 
 #include <GeographicLib/Constants.hpp>
 

@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::EllipticFunction class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: 8e5a2b0b4722672f75bb33acb8233a78f00d8839 $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: d792b6c69cf47621f2fbee02854010cebba9feac $"
 
 #include <GeographicLib/Constants.hpp>
 

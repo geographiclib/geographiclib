@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 67fd47edafe07e5db8d080efd4d1490dd6b6922b $
+# $Id: 1ae5be99e5dbd19acbfa8cf2d7bc9ff826bfdf35 $
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 
@@ -25,6 +25,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		MGRS.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
+		PolygonArea.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
@@ -45,6 +46,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/MGRS.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
+		../include/GeographicLib/PolygonArea.hpp \
 		../include/GeographicLib/TransverseMercatorExact.hpp \
 		../include/GeographicLib/TransverseMercator.hpp \
 		../include/GeographicLib/UTMUPS.hpp \

@@ -1,4 +1,4 @@
-# $Id: b67d78481518e3a58f3d8c6d3bfa88474ec189c9 $
+# $Id: 1b82339f8f20690c9e5f0812b7bdffa92f9dd889 $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -63,7 +63,7 @@ GeodesicProj.o: GeodesicProj.usage AzimuthalEquidistant.hpp \
 GeoidEval.o: GeoidEval.usage Constants.hpp Config.h DMS.hpp \
 	GeoCoords.hpp Geoid.hpp
 Planimeter.o: Planimeter.usage Constants.hpp Config.h DMS.hpp \
-	GeoCoords.hpp Geodesic.hpp GeodesicLine.hpp
+	GeoCoords.hpp PolygonArea.hpp Geodesic.hpp
 ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
 	Constants.hpp Config.h DMS.hpp LambertConformalConic.hpp
 

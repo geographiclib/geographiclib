@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::CassiniSoldner class
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the LGPL.  For more information, see
+ * licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
-#define GEOGRAPHICLIB_CASSINISOLDNER_HPP "$Id: 4ef919febf6e2388065e651dd606b0bf3b7443ce $"
+#define GEOGRAPHICLIB_CASSINISOLDNER_HPP "$Id: ffa72d53546c2066064723afc1f0a4c6dfadc2f0 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -66,7 +66,7 @@ namespace GeographicLib {
     GeodesicLine _meridian;
     real _sbet0, _cbet0;
     static const real eps1_;
-    static const real eps2_;
+    static const real tiny_;
     static const unsigned maxit_ =  10;
 
     // The following private helper functions are copied from Geodesic.

@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::Constants class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 4aca66343d10b60147ea54b9ede6cc7f05e0916d $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 2e66eb23d891da9e1b56b244c368ed0c6c0663e2 $"
 
 #include <GeographicLib/Config.h>
 
@@ -189,8 +189,14 @@ namespace GeographicLib {
 #elif defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }
+#if (_MSC_VER < 1400)
+    /* Visual C++ 7.1/VS .NET 2003 does not have _hypotf() */
+    static inline float hypot(float x, float y) throw()
+    { return float(_hypot(x, y)); }
+#else
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
+#endif
 #if defined(HAVE_LONG_DOUBLE)
     static inline long double hypot(long double x, long double y) throw()
     { return _hypot(x, y); }

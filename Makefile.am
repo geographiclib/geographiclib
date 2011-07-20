@@ -2,17 +2,17 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: f966bcf78a8764b147f5b6318a1b8cb3578730ee $
+# $Id: 94de532894e5d0cdf1f8371006461d1265d66ddf $
 
 AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc include matlab
+SUBDIRS = src man tools doc include matlab python
 
-EXTRA_DIST = AUTHORS 00README.txt COPYING.txt NEWS INSTALL \
+EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
 	Makefile.mk CMakeLists.txt \
-	windows maxima man doc
+	windows maxima man doc python
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
@@ -24,7 +24,7 @@ dist-hook:
 		! \( -name '*.cpp' -o -name '*.m' -o -name 'Makefile.*' -o -name CMakeLists.txt \) | \
 		xargs rm -rf ; \
 	find $(distdir) \
-		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' \)| \
+		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' -o -name '*.pyc' \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
@@ -46,4 +46,4 @@ man:
 # install-matlab:
 # 	$(MAKE) -C matlab install-matlab
 
-.PHONY: doc install-doc man install-matlab
+.PHONY: doc install-doc man install-matlab install-python

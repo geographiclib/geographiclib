@@ -3,12 +3,12 @@
  * \brief Header for GeographicLib::Gnomonic class
  *
  * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
-#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: dfab3affb3ed4ae149ff2fdf04c4e30503126308 $"
+#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: 8a8a791b2f8ace09e181271d0988615a3fe28ef0 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
