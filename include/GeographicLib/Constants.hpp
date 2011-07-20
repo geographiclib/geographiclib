@@ -189,8 +189,14 @@ namespace GeographicLib {
 #elif defined(_MSC_VER)
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }
+#if (_MSC_VER < 1400)
+    /* Visual C++ 7.1/VS .NET 2003 does not have _hypotf() */
+    static inline float hypot(float x, float y) throw()
+    { return float(_hypot(x, y)); }
+#else
     static inline float hypot(float x, float y) throw()
     { return _hypotf(x, y); }
+#endif
 #if defined(HAVE_LONG_DOUBLE)
     static inline long double hypot(long double x, long double y) throw()
     { return _hypot(x, y); }

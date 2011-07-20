@@ -5,6 +5,7 @@
 SOURCE=$1
 NAME=`basename $SOURCE .pod`
 
+(
 cat<<EOF
 int usage(int retval, bool brief) {
   if (brief)
@@ -32,3 +33,5 @@ cat <<EOF
     return retval;
 }
 EOF
+) | # Break long strings assuming that files don't contain the ~ character
+tr '\n' '~' | sed -e's/\\~/"~"/g' -e's/""//g' | tr '~' '\n'
