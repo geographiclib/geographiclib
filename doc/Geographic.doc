@@ -866,7 +866,7 @@ example,
 >>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
 >>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
 >>> line.Position(10000e3)
->>> def p(lat,lon): return {'lat':lat,'lon':lon}
+>>> def p(lat,lon): return {'lat': lat,'lon': lon}
 ...
 >>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
 \endcode
@@ -2212,6 +2212,7 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-mm-dd)</a>
+  - Change license to MIT/X11.
   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
   - Provide javascript and python implementations of geodesic routines.
   - Fix Windows installer to include runtime dlls for Matlab.
