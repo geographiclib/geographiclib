@@ -231,8 +231,10 @@ cat <<EOF
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
       (2011-06-19)</address>
-    <a href="http://sourceforge.net">
-      <img src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=2" border="0" alt="SourceForge.net" />
+    <a href="http://geographiclib.sourceforge.net">
+      <img
+	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
+	 border="0" height="15" width="80" alt="SourceForge.net" />
     </a>
   </body>
 </html>
