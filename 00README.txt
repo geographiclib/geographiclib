@@ -3,7 +3,7 @@
 A library for geographic projections.
 
 Written by Charles Karney <charles@karney.com> and licensed under
-the LGPL.  For more information, see
+the MIT/X11 License.  For more information, see
 
     http://geographiclib.sourceforge.net/
 
@@ -11,7 +11,7 @@ Files
 
     00README.txt  -- this file
     AUTHORS -- the authors of the library
-    COPYING.txt -- the LGPL license, v. 3
+    LICENSE.txt -- the MIT/X11 License
     INSTALL -- brief installation instructions
     NEWS -- a history of changes
 
@@ -48,8 +48,6 @@ Files
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
       Planimeter.cpp -- computer polygon areas
-      *.pod -- plain old documentation
-      *.usage -- documentation for incorporation into executables
 
     windows/
       GeographicLib-vc9.sln -- MS Studio 2008 solution
@@ -87,11 +85,17 @@ Files
       Geographic.doc -- main page of Doxygen documentation
       geodseries30.html -- geodesic series to 30th order
       tmseries30.html -- transverse Mercator series to 30th order
-      *.1.html -- man pages in html format
       html/* -- directory with built documentation
+      scripts/*.html -- demonstrations of the Javascript interface
+      scripts/GeographicLib/*.js -- Javascript implementation of geodesics
 
     man/
+      *.pod -- plain old documentation
       *.1 -- man pages in nroff format
+      *.1.html -- man pages in html format
+      *.usage -- documentation for incorporation into executables
+
+    python/GeographicLib.py -- Python implementation of geodesics
 
     Makefile.mk -- Unix/Linux makefiles
     configure -- autoconf configuration script

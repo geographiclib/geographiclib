@@ -14,7 +14,8 @@ endforeach (TOOL)
 
 if (MAINTAINER)
   file (GLOB SOURCES ../src/*.cpp ../include/GeographicLib/*.hpp ../tools/*.cpp)
-  file (GLOB EXTRA_FILES ../maxima/*.mac tmseries30.html geodseries30.html)
+  file (GLOB EXTRA_FILES ../maxima/*.mac tmseries30.html geodseries30.html
+    ../LICENSE.txt)
   file (GLOB SCRIPTDRIVERS scripts/*.html)
   file (GLOB JSSCRIPTS scripts/GeographicLib/*.js)
   add_custom_target (doc ALL

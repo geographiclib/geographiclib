@@ -3,7 +3,7 @@
  * \brief Header for GeographicLib::EllipticFunction class
  *
  * Copyright (c) Charles Karney (2008, 2009, 2011) <charles@karney.com>
- * and licensed under the LGPL.  For more information, see
+ * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 

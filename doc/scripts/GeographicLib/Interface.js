@@ -17,6 +17,9 @@
  *    http://arxiv.org/abs/1102.1215
  *    errata: http://geographiclib.sourceforge.net/geod-errata.html
  *
+ * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************
  * GeographicLib.Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2, outmask);
  * GeographicLib.Geodesic.WGS84.Direct(lat1, lon1, azi1, s12, outmask);
@@ -72,10 +75,6 @@
  * There is no need to "close" the polygon.  If polyline (default =
  * false) is true, then the points denote a polyline and its length is
  * returned as the perimeter (and the area is not calculated).
- *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
- * http://geographiclib.sourceforge.net/
  *
  * $Id$
  **********************************************************************/

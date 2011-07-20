@@ -4,7 +4,8 @@
  * \brief Documentation for GeographicLib
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
- * LGPL.  For more information, see http://geographiclib.sourceforge.net/
+ * MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 // $Id$
 /**
@@ -60,8 +61,9 @@ There is also a binary installer for Windows available at
   GeographicLib-1.12-win32.exe</a>
 .
 It is licensed under the
-<a href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">LGPL</a>.
-For more information, see http://geographiclib.sourceforge.net/
+<a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
+see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
+For more information, see http://geographiclib.sourceforge.net/.  
 
 \section contents Contents
  - \ref intro
@@ -371,7 +373,7 @@ compile correctly with Visual Studio 2003.
 Download and run
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">
 GeographicLib-1.12-win32.exe</a>:
- - read the LGPL license agreement,
+ - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
    C:/Program Files/GeographicLib-1.12.

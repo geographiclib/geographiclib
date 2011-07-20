@@ -32,7 +32,7 @@ end
 % Matlab .m file for MGRS to UTM/UPS conversions
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and
-% licensed under the LGPL.  For more information, see
+% licensed under the MIT/X11 License.  For more information, see
 % http://geographiclib.sourceforge.net/
 %
 % $Id$

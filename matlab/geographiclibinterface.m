@@ -30,7 +30,7 @@ function geographiclibinterface(incdir, libdir);
 % Run 'mex -setup' to configure the C++ compiler for Matlab to use.
 %
 % Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
-% under the LGPL.  For more information, see
+% under the MIT/X11 License.  For more information, see
 % http://geographiclib.sf.net/html/install.html#matlab
 %
 % $Id$

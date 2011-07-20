@@ -3,7 +3,7 @@
  * \brief Matlab mex file for computing the area of a geodesicpolygon
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
- * under the LGPL.  For more information, see
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 

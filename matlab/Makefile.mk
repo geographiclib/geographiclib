@@ -11,7 +11,7 @@ MATLABFILES = $(addsuffix .cpp,$(FUNCTIONS)) $(addsuffix .m,$(FUNCTIONS)) \
 	 $(MATLAB_COMPILESCRIPT)
 
 DEST = $(PREFIX)/libexec/GeographicLib/matlab
-INSTALL=install -b
+INSTALL = install -b
 
 all:
 	@:

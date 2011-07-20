@@ -27,7 +27,7 @@ VERSION:=$(shell grep '\bVERSION=' ../configure | cut -f2 -d\' | head -1)
 
 all: $(MANPAGES) $(USAGE) $(HTMLMAN)
 
-INSTALL=install -b
+INSTALL = install -b
 
 install:
 	test -d $(DEST) || mkdir -p $(DEST)

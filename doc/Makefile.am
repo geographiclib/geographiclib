@@ -5,7 +5,7 @@ EXTRAFILES = tmseries30.html geodseries30.html
 SCRIPTDRIVERS = \
 scripts/geod-calc.html \
 scripts/geod-google.html \
-scripts/geod-google-instuctions.html
+scripts/geod-google-instructions.html
 
 JSSCRIPTS = \
 scripts/GeographicLib/Math.js \
@@ -82,7 +82,8 @@ doc: html/index.html
 html/index.html: Doxyfile Geographic.doc \
 	$(HPPFILES) $(ALLSOURCES) $(EXTRAFILES) $(MANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
-	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac html/
+	cp -p $(EXTRAFILES) $(MANPAGES) $(top_srcdir)/maxima/*.mac \
+	$(top_srcdir)/LICENSE.txt html/
 	doxygen
 
 distclean-local:

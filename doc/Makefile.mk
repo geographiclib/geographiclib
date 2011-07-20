@@ -26,7 +26,8 @@ html/index.html: Doxyfile Geographic.doc \
 	$(HEADERS) $(ALLSOURCES) $(MAXIMASOURCES) $(EXTRAFILES) \
 	$(HTMLMANPAGES)
 	if test -d html; then rm -rf html/*; else mkdir html; fi
-	cp -p $(MAXIMASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) html/
+	cp -p $(MAXIMASOURCES) $(EXTRAFILES) $(HTMLMANPAGES) \
+	../LICENSE.txt html/
 	doxygen
 
 PREFIX = /usr/local

@@ -12,7 +12,7 @@ HEADERS = $(LIBNAME)/Constants.hpp $(LIBNAME)/Config.h \
 	$(patsubst %,$(LIBNAME)/%.hpp,$(MODULES))
 DEST = $(PREFIX)/include/$(LIBNAME)
 
-INSTALL=install -b
+INSTALL = install -b
 
 all:
 	@:

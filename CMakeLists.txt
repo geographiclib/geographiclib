@@ -85,6 +85,7 @@ add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
+add_subdirectory (python)
 
 if (MAINTAINER)
   add_custom_target (distrib-all)
@@ -134,7 +135,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/(fix-permissions|autogen|biblio)\\\\.sh"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.html" )
 set (CPACK_SOURCE_GENERATOR TGZ)
-set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/COPYING.txt)
+set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
   "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION_STRING}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
