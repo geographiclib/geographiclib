@@ -58,10 +58,28 @@
  * GeographicLib.Geodesic.WGS84.DirectPath(lat1, lon1, azi1, s12, ds12, maxk);
  *
  * splits a geodesic line into k equal pieces which are no longer than
- * about ds12 (but k cannot exceed maxk, default 20), and returns a
- * vector of length k + 1 of objects with fields
+ * about ds12 (but k cannot exceed maxk, default 20), and returns an
+ * array of length k + 1 of objects with fields
  *
  *   lat, lon, azi
+ *
+ **********************************************************************
+ * GeographicLib.Geodesic.Envelope(lat1, lon1, azi1, s12, k)
+ *
+ * return the geodesic circle of radius s12 centered on the point lat1,
+ * lon1.  k equally spaced azimuths starting at azi1 are computed.  This
+ * returns an array of k + 1 points with fields lat and lon (with the
+ * first and last points matching).
+ *
+ **********************************************************************
+ * GeographicLib.Geodesic.Envelope(lat1, lon1, k, ord);
+ *
+ * returns the ord'th order envelope for geodesics emanating from lat1,
+ * lon1.  This is located approximately circumference * ord/2 from the
+ * point.  Thus odd numbered envelopes are centered at the antipodal
+ * point and even number envelopes are centered on the point itself.
+ * This returns an array of k + 1 points with fields lat and lon (with
+ * the first and last points matching).
  *
  **********************************************************************
  * GeographicLib.Geodesic.WGS84.Area(points, polyline);

@@ -25,7 +25,7 @@ returning accurate results with errors close to round-off (about
 5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
 transversemercator have been developed for this library.
 The functionality of the library can be accessed from user code, from
-the \ref utilities provided, or via the \ref matlab.  For a sample of
+the \ref utilities provided, or via the \ref other.  For a sample of
 the geodesic capabilities, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
@@ -71,6 +71,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref start
  - \ref utilities
  - \ref organization
+ - \ref other
  - \ref geoid
  - \ref geodesic
    - \ref testgeod
@@ -132,7 +133,8 @@ the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 4.4 under Linux, with g++
 4.2 under Mac OS X, and with MS Visual Studio 2008 and 2010.
 
-\ref matlab for some of the key classes are also provided.
+Matlab, Javascript, and Python interfaces are provided to portions of
+%GeographicLib; see \ref other.
 
 The section \ref geodesic documents the method of solving the geodesic
 problem.
@@ -180,9 +182,6 @@ Then pick one of the first five options below:
   the utility programs supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
-- \ref matlab.  Some of the functionality is exposed to Matlab and
-  Octave.  This requires compiling interface routines in Matlab or
-  Octave.
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -391,69 +390,6 @@ path in Matlab to access this interface.  The binaries were built using
 Visual Studio 10 (2010) for Win32 in Release mode.  The Matlab interface
 was compiled with Matlab R2010b, however it works with some other
 versions of Matlab (e.g., R2008a).
-
-\section matlab Matlab and Octave interfaces
-
-The matlab directory contains interface code so that some %GeographicLib
-classes can be accessed from Matlab or Octave.  If you set
-ENABLE_MATLAB=ON when installing with cmake, this interface is built.
-Similarly the binary installer for Windows includes the compiled
-interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
-either of these, run one of (for example) \verbatim
-  addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
-\endverbatim
-in Matlab or Octave.  If you need to compile the interface or to
-recompile it for a different platform, start Matlab or Octave and run,
-e.g., \code
-  mex -setup
-  cd  'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
-  help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.12');
-  addpath(pwd);
-\endcode
-The first command allows you to select the compiler to use (which
-probably should be the same as that used to compile %GeographicLib).
-The available functions are:
- - geodesicdirect: solve direct geodesic problem
-   (see GeographicLib::Geodesic::Direct)
- - geodesicinverse: solve inverse geodesic problem
-   (see GeographicLib::Geodesic::Inverse)
- - geodesicline: compute points along a geodesic
-   (see GeographicLib::GeodesicLine::Position)
- - polygonarea: compute area of a geodesic polygon
-   (see GeographicLib::PolygonArea)
- - utmupsforward: convert geographic coordinates to UTM/UPS
-   (see GeographicLib::UTMUPS::Forward)
- - utmupsreverse: convert UTM/UPS coordinates to geographic
-   (see GeographicLib::UTMUPS::Reverse)
- - mgrsforward: convert UTM/UPS coordinates to MGRS
-   (see GeographicLib::MGRS::Forward)
- - mgrsreverse: convert MGRS coordinates to UTM/UPS
-   (see GeographicLib::MGRS::Reverse)
- - geoidheight: compute geoid height
-   (see GeographicLib::Geoid::operator()())
- - geocentricforward: convert geographic coordinates to geocentric
-   (see GeographicLib::Geocentric::Forward)
- - geocentricreverse: convert geocentric coordinates to geographic
-   (see GeographicLib::Geocentric::Reverse)
- - localcartesianforward: convert geographic coordinates to local cartesian
-   (see GeographicLib::LocalCartesian::Forward)
- - localcartesianreverse: convert local cartesian coordinates to geographic
-   (see GeographicLib::LocalCartesian::Reverse)
- .
-These routines just offer a simple interface to the corresponding C++
-class.  Use the help function to get documentation, e.g., \code
-  help geodesicdirect \endcode
-Unfortunately, the help function does not work for compiled functions in
-Octave; in this case, just list the .m file, e.g., \code
-  type geodesicdirect \endcode
-Other useful functions, e.g., to convert from geographic
-coordinates to MGRS can easily be written with Matlab code.
-
-Note that geoidheight, when compiled with Visual Studio 2008 causes
-Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
-Visual Studio 2010.)
 
 \section maintainer Maintainer tasks
 
@@ -688,7 +624,7 @@ Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
 \page organization Code organization
 
 <center>
-Back to \ref utilities.  Forward to \ref geoid.  Up to \ref contents.
+Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 
 Here is a brief description of the relationship between the various
@@ -819,14 +755,131 @@ compiler.  System dependencies come into
    the value of the environment variables
 
 <center>
-Back to \ref utilities.  Forward to \ref geoid.  Up to \ref contents.
+Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page other Other interfaces
+
+<center>
+Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
+</center>
+
+- \ref matlab.
+- \ref javascript.
+- \ref python.
+
+\section matlab Matlab and Octave interfaces
+
+The matlab directory contains interface code so that some %GeographicLib
+classes can be accessed from Matlab or Octave.  If you set
+ENABLE_MATLAB=ON when installing with cmake, this interface is built.
+Similarly the binary installer for Windows includes the compiled
+interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
+either of these, run one of (for example) \verbatim
+  addpath /usr/local/libexec/GeographicLib/matlab
+  addpath 'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
+\endverbatim
+in Matlab or Octave.  If you need to compile the interface or to
+recompile it for a different platform, start Matlab or Octave and run,
+e.g., \code
+  mex -setup
+  cd  'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
+  help geographiclibinterface
+  geographiclibinterface('C:/Program Files/GeographicLib-1.12');
+  addpath(pwd);
+\endcode
+The first command allows you to select the compiler to use (which
+probably should be the same as that used to compile %GeographicLib).
+The available functions are:
+ - geodesicdirect: solve direct geodesic problem
+   (see GeographicLib::Geodesic::Direct)
+ - geodesicinverse: solve inverse geodesic problem
+   (see GeographicLib::Geodesic::Inverse)
+ - geodesicline: compute points along a geodesic
+   (see GeographicLib::GeodesicLine::Position)
+ - polygonarea: compute area of a geodesic polygon
+   (see GeographicLib::PolygonArea)
+ - utmupsforward: convert geographic coordinates to UTM/UPS
+   (see GeographicLib::UTMUPS::Forward)
+ - utmupsreverse: convert UTM/UPS coordinates to geographic
+   (see GeographicLib::UTMUPS::Reverse)
+ - mgrsforward: convert UTM/UPS coordinates to MGRS
+   (see GeographicLib::MGRS::Forward)
+ - mgrsreverse: convert MGRS coordinates to UTM/UPS
+   (see GeographicLib::MGRS::Reverse)
+ - geoidheight: compute geoid height
+   (see GeographicLib::Geoid::operator()())
+ - geocentricforward: convert geographic coordinates to geocentric
+   (see GeographicLib::Geocentric::Forward)
+ - geocentricreverse: convert geocentric coordinates to geographic
+   (see GeographicLib::Geocentric::Reverse)
+ - localcartesianforward: convert geographic coordinates to local cartesian
+   (see GeographicLib::LocalCartesian::Forward)
+ - localcartesianreverse: convert local cartesian coordinates to geographic
+   (see GeographicLib::LocalCartesian::Reverse)
+ .
+These routines just offer a simple interface to the corresponding C++
+class.  Use the help function to get documentation, e.g., \code
+  help geodesicdirect \endcode
+Unfortunately, the help function does not work for compiled functions in
+Octave; in this case, just list the .m file, e.g., \code
+  type geodesicdirect \endcode
+Other useful functions, e.g., to convert from geographic
+coordinates to MGRS can easily be written with Matlab code.
+
+Note that geoidheight, when compiled with Visual Studio 2008 causes
+Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
+Visual Studio 2010.)
+
+\section javascript Javascript interface
+
+The directory doc/scripts/GeographicLib contains the core geodesic
+functionality translated into Javascript.  See Interface.js for a simple
+Javascript interface to these routines (documented near the top of the
+file).  Examples of using this interface are
+- a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
+  the solution of direct and inverse geodesic problem, finding
+  intermediate points on a geodesic line, and computing the area of a
+  geodesic polygon.
+- <a href="../scripts/geod-google.html">displaying geodesics in Google
+  Maps</a> which shows the geodesic, the geodesic circle, and various
+  geodesic envelopes.
+
+\section python Python interface
+
+The file python/GeographicLib.py (which is installed as
+PREFIX/share/GeographicLib/python) contains the core geodesic
+functionality translated into Python.  To using this, execute, for
+example,
+\code
+>>> import sys
+>>> sys.path.append("/usr/local/share/GeographicLib/python");
+>>> from GeographicLib import Geodesic, GeodesicLine
+>>> help(Geodesic.__init__)
+>>> help(Geodesic.Inverse)
+>>> help(Geodesic.Direct)
+>>> help(Geodesic.Line)
+>>> help(Geodesic.Area)
+>>> help(GeodesicLine.Position)
+>>> Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+>>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+>>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+>>> line.Position(10000e3)
+>>> def p(lat,lon): return {'lat':lat,'lon':lon}
+...
+>>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
+\endcode
+
+<center>
+Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page geoid Geoid height
 
 <center>
-Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 The gravitational equipotential surface approximately coinciding with
@@ -1314,7 +1367,7 @@ uninitialized variables in the program?), so the data was generated with
 the precompiled binary that NGA supplies for Windows.
 
 <center>
-Back to \ref organization.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**

@@ -615,7 +615,7 @@ class Geodesic(object):
           salp1 = math.sqrt(1 - Math.sq(calp1))
       else:
         # Estimate omega12, by solving the astroid problem.
-        k = Astroid(x, y)
+        k = Geodesic.Astroid(x, y)
         # estimate omg12a = pi - omg12
         omg12a = lamscale * ( -x * k/(1 + k) if self._f >= 0
                                else -y * (1 + k)/k )
@@ -1094,6 +1094,29 @@ class Geodesic(object):
     if outmask & Geodesic.AREA: result['S12'] = S12
     return result
 
+  def Line(self, lat1, lon1, azi1, caps = ALL):
+    """Return a GeodesicLine object to compute points along a geodesic
+    starting at lat1, lon1, with azimuth azi1.  caps is an or'ed
+    combination of bit the following values indicating the capabilities
+    of the return object
+
+      GeographicLib.Geodesic.LATITUDE
+      GeographicLib.Geodesic.LONGITUDE
+      GeographicLib.Geodesic.AZIMUTH
+      GeographicLib.Geodesic.DISTANCE
+      GeographicLib.Geodesic.REDUCEDLENGTH
+      GeographicLib.Geodesic.GEODESICSCALE
+      GeographicLib.Geodesic.AREA
+      GeographicLib.Geodesic.DISTANCE_IN
+      GeographicLib.Geodesic.ALL
+    """
+    lon1 = Geodesic.CheckPosition(lat1, lon1)
+    azi1 = Geodesic.CheckAzimuth(azi1)
+    return GeodesicLine(
+      self, lat1, lon1, azi1,
+      # Automatically supply DISTANCE_IN
+      caps | Geodesic.DISTANCE_IN)
+
   def Area(self, points, polyline = False):
     """Compute the area of a geodesic polygon given by points, an array
     of dictionaries with entries lat and lon.  Return a dictionary with
@@ -1336,6 +1359,54 @@ class GeodesicLine(object):
 
     a12 = s12_a12 if arcmode else sig12 / Math.degree
     return a12, lat2, lon2, azi2, s12, m12, M12, M21, S12
+
+  def Position(self, s12,
+               outmask = Geodesic.LATITUDE | Geodesic.LONGITUDE |
+               Geodesic.AZIMUTH):
+    """Return the point a distance s12 along the geodesic line.  Return
+    a dictionary with (some) of the following entries:
+
+      lat1 latitude of point 1
+      lon1 longitude of point 1
+      azi1 azimuth of line at point 1
+      lat2 latitude of point 2
+      lon2 longitude of point 2
+      azi2 azimuth of line at point 2
+      s12 distance from 1 to 2
+      a12 arc length on auxiliary sphere from 1 to 2
+      m12 reduced length of geodesic
+      M12 geodesic scale 2 relative to 1
+      M21 geodesic scale 1 relative to 2
+      S12 area between geodesic and equator
+
+    outmask determines which fields get included and if outmask is
+    omitted, then only the basic geodesic fields are computed.  The mask
+    is an or'ed combination of the following values
+
+      GeographicLib.Geodesic.LATITUDE
+      GeographicLib.Geodesic.LONGITUDE
+      GeographicLib.Geodesic.AZIMUTH
+      GeographicLib.Geodesic.DISTANCE
+      GeographicLib.Geodesic.REDUCEDLENGTH
+      GeographicLib.Geodesic.GEODESICSCALE
+      GeographicLib.Geodesic.AREA
+      GeographicLib.Geodesic.ALL
+    """
+    Geodesic.CheckDistance(s12)
+    result = {'lat1': self._lat1, 'lon1': self._lon1, 'azi1': self._azi1,
+              's12': s12}
+    a12, lat2, lon2, azi2, s12, m12, M12, M21, S12 = self.GenPosition(
+      False, s12, outmask)
+    outmask &= Geodesic.OUT_ALL
+    result['a12'] = a12
+    if outmask & Geodesic.LATITUDE: result['lat2'] = lat2
+    if outmask & Geodesic.LONGITUDE: result['lon2'] = lon2
+    if outmask & Geodesic.AZIMUTH: result['azi2'] = azi2
+    if outmask & Geodesic.REDUCEDLENGTH: result['m12'] = m12
+    if outmask & Geodesic.GEODESICSCALE:
+      result['M12'] = M12; result['M21'] = M21
+    if outmask & Geodesic.AREA: result['S12'] = S12
+    return result
 
 class PolygonArea(object):
   """Area of a geodesic polygon"""
