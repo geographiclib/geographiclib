@@ -88,7 +88,7 @@ namespace GeographicLib {
     perimeter = _perimetersum();
     real tempsum = _polyline ? 0 : _areasum();
     int crossings = _crossings, num = _num + 1;
-    for (int i = 0; i < _polyline ? 1 : 2; ++i) {
+    for (int i = 0; i < (_polyline ? 1 : 2); ++i) {
       real s12, S12, t;
       _earth.GenInverse(i == 0 ? _lat1 : lat, i == 0 ? _lon1 : lon,
                         i != 0 ? _lat0 : lat, i != 0 ? _lon0 : lon,

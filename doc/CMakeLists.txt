@@ -46,4 +46,9 @@ if (MAINTAINER)
 else (MAINTAINER)
   install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/html
     DESTINATION share/doc/GeographicLib)
+  file (GLOB SCRIPTDRIVERS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/*.html)
+  file (GLOB JSSCRIPTS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/GeographicLib/*.js)
+  install (FILES ${SCRIPTDRIVERS} DESTINATION share/doc/GeographicLib/scripts)
+  install (FILES ${JSSCRIPTS}
+    DESTINATION share/doc/GeographicLib/scripts/GeographicLib)
 endif (MAINTAINER)

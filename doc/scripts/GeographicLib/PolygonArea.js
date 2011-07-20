@@ -126,7 +126,7 @@ GeographicLib.PolygonArea = {};
     var tempsum = this._polyline ? 0 : this._areasum.Sum();
     var crossings = this._crossings;
     var t;
-    for (var i = 0; i < this._polyline ? 1 : 2; ++i) {
+    for (var i = 0; i < (this._polyline ? 1 : 2); ++i) {
       t = this._earth.Inverse
       (i == 0 ? this._lat1 : lat, i == 0 ? this._lon1 : lon,
        i != 0 ? this._lat0 : lat, i != 0 ? this._lon0 : lon,
