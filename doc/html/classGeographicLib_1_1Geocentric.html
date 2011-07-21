@@ -270,9 +270,14 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>Pre-multiplying a unit vector in local cartesian coordinates (east, north, up) by <em>M</em> transforms the vector to geocentric coordinates. </p>
+<p>Let <em>v</em> be a unit vector located at (<em>lat</em>, <em>lon</em>, <em>h</em>). We can express <em>v</em> as <em>column</em> vectors in one of two ways</p>
+<ul>
+<li>in east, north, up coordinates (where the components are relative to a local coordinate system at (<em>lat</em>, <em>lon</em>, <em>h</em>)); call this representation <em>v1</em>.</li>
+<li>in geocentric <em>x</em>, <em>y</em>, <em>z</em> coordinates; call this representation <em>v0</em>.</li>
+</ul>
+<p>Then we have <em>v0</em> = <em>M</em> . <em>v1</em>. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00119">119</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00126">126</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -338,7 +343,7 @@ Friends</h2></td></tr>
 </dl>
 <p>In general there are multiple solutions and the result which maximizes <em>h</em> is returned. If there are still multiple solutions with different latitutes (applies only if <em>z</em> = 0), then the solution with <em>lat</em> &gt; 0 is returned. If there are still multiple solutions with different longitudes (applies only if <em>x</em> = <em>y</em> = 0) then <em>lon</em> = 0 is returned. The value of <em>h</em> returned satisfies <em>h</em> &gt;= - <em>a</em> (1 - <em>e<sup>2</sup></em>) / sqrt(1 - <em>e<sup>2</sup></em> sin<sup>2</sup><em>lat</em>). The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00149">149</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00156">156</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -411,9 +416,14 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>Pre-multiplying a unit vector in geocentric coordinates by the transpose of <em>M</em> transforms the vector to local cartesian coordinates (east, north, up). </p>
+<p>Let <em>v</em> be a unit vector located at (<em>lat</em>, <em>lon</em>, <em>h</em>). We can express <em>v</em> as <em>column</em> vectors in one of two ways</p>
+<ul>
+<li>in east, north, up coordinates (where the components are relative to a local coordinate system at (<em>lat</em>, <em>lon</em>, <em>h</em>)); call this representation <em>v1</em>.</li>
+<li>in geocentric <em>x</em>, <em>y</em>, <em>z</em> coordinates; call this representation <em>v0</em>.</li>
+</ul>
+<p>Then we have <em>v1</em> = <em>M^T</em> . <em>v0</em>, where <em>M^T</em> is the transpose of <em>M</em>. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00170">170</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00184">184</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -432,7 +442,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00188">188</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00202">202</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -451,7 +461,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00194">194</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00208">208</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -471,7 +481,7 @@ Friends</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00200">200</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00214">214</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -504,7 +514,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> with the parameters for the WGS84 ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00207">207</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00221">221</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -513,7 +523,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

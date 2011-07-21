@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>GeographicLib: Other interfaces</title>
+<title>GeographicLib: Other interfaces (Javascript, Python, Matlab, Octave)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -33,15 +33,41 @@
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">Other interfaces </div>  </div>
+<div class="title">Other interfaces (Javascript, Python, Matlab, Octave) </div>  </div>
 </div>
 <div class="contents">
 <div class="textblock"><center> Back to <a class="el" href="organization.html">Code organization</a>. Forward to <a class="el" href="geoid.html">Geoid height</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><ul>
-<li><a class="el" href="other.html#matlab">Matlab and Octave interfaces</a>.</li>
 <li><a class="el" href="other.html#javascript">Javascript interface</a>.</li>
 <li><a class="el" href="other.html#python">Python interface</a>.</li>
+<li><a class="el" href="other.html#matlab">Matlab and Octave interfaces</a>.</li>
 </ul>
-<h2><a class="anchor" id="matlab"></a>
+<h2><a class="anchor" id="javascript"></a>
+Javascript interface</h2>
+<p>The directory doc/scripts/GeographicLib contains the core geodesic functionality translated into Javascript. See Interface.js for a simple Javascript interface to these routines (documented near the top of the file). Examples of using this interface are</p>
+<ul>
+<li>a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing the solution of direct and inverse geodesic problem, finding intermediate points on a geodesic line, and computing the area of a geodesic polygon.</li>
+<li><a href="../scripts/geod-google.html">displaying geodesics in Google Maps</a> which shows the geodesic, the geodesic circle, and various geodesic envelopes.</li>
+</ul>
+<h2><a class="anchor" id="python"></a>
+Python interface</h2>
+<p>The file python/GeographicLib.py (which is installed as PREFIX/share/GeographicLib/python) contains the core geodesic functionality translated into Python. An example of using this interface is </p>
+<div class="fragment"><pre class="fragment">&gt;&gt;&gt; <span class="keyword">import</span> sys
+&gt;&gt;&gt; sys.path.append(<span class="stringliteral">&quot;/usr/local/share/GeographicLib/python&quot;</span>);
+&gt;&gt;&gt; from GeographicLib <span class="keyword">import</span> Geodesic, GeodesicLine
+&gt;&gt;&gt; help(Geodesic.__init__)
+&gt;&gt;&gt; help(Geodesic.Inverse)
+&gt;&gt;&gt; help(Geodesic.Direct)
+&gt;&gt;&gt; help(Geodesic.Line)
+&gt;&gt;&gt; help(Geodesic.Area)
+&gt;&gt;&gt; help(GeodesicLine.Position)
+&gt;&gt;&gt; Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+&gt;&gt;&gt; Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+&gt;&gt;&gt; line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+&gt;&gt;&gt; line.Position(10000e3)
+&gt;&gt;&gt; def p(lat,lon): return {<span class="stringliteral">&#39;lat&#39;</span>: lat,<span class="stringliteral">&#39;lon&#39;</span>: lon}
+...
+&gt;&gt;&gt; Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
+</pre></div><h2><a class="anchor" id="matlab"></a>
 Matlab and Octave interfaces</h2>
 <p>The matlab directory contains interface code so that some GeographicLib classes can be accessed from Matlab or Octave. If you set ENABLE_MATLAB=ON when installing with cmake, this interface is built. Similarly the binary installer for Windows includes the compiled interface (compiled using Visual Studio 10 and Matlab R2010b). To use either of these, run one of (for example) </p>
 <div class="fragment"><pre class="fragment">
@@ -75,34 +101,8 @@ Matlab and Octave interfaces</h2>
 <div class="fragment"><pre class="fragment">  type geodesicdirect 
 </pre></div><p> Other useful functions, e.g., to convert from geographic coordinates to MGRS can easily be written with Matlab code.</p>
 <p>Note that geoidheight, when compiled with Visual Studio 2008 causes Matlab to crash. (The problem does not occur with Visual Studio 2005 or Visual Studio 2010.)</p>
-<h2><a class="anchor" id="javascript"></a>
-Javascript interface</h2>
-<p>The directory doc/scripts/GeographicLib contains the core geodesic functionality translated into Javascript. See Interface.js for a simple Javascript interface to these routines (documented near the top of the file). Examples of using this interface are</p>
-<ul>
-<li>a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing the solution of direct and inverse geodesic problem, finding intermediate points on a geodesic line, and computing the area of a geodesic polygon.</li>
-<li><a href="../scripts/geod-google.html">displaying geodesics in Google Maps</a> which shows the geodesic, the geodesic circle, and various geodesic envelopes.</li>
-</ul>
-<h2><a class="anchor" id="python"></a>
-Python interface</h2>
-<p>The file python/GeographicLib.py (which is installed as PREFIX/share/GeographicLib/python) contains the core geodesic functionality translated into Python. To using this, execute, for example, </p>
-<div class="fragment"><pre class="fragment">&gt;&gt;&gt; <span class="keyword">import</span> sys
-&gt;&gt;&gt; sys.path.append(<span class="stringliteral">&quot;/usr/local/share/GeographicLib/python&quot;</span>);
-&gt;&gt;&gt; from GeographicLib <span class="keyword">import</span> Geodesic, GeodesicLine
-&gt;&gt;&gt; help(Geodesic.__init__)
-&gt;&gt;&gt; help(Geodesic.Inverse)
-&gt;&gt;&gt; help(Geodesic.Direct)
-&gt;&gt;&gt; help(Geodesic.Line)
-&gt;&gt;&gt; help(Geodesic.Area)
-&gt;&gt;&gt; help(GeodesicLine.Position)
-&gt;&gt;&gt; Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
-&gt;&gt;&gt; Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
-&gt;&gt;&gt; line = Geodesic.WGS84.Line(40.6, -73.8, 45)
-&gt;&gt;&gt; line.Position(10000e3)
-&gt;&gt;&gt; def p(lat,lon): return {<span class="stringliteral">&#39;lat&#39;</span>: lat,<span class="stringliteral">&#39;lon&#39;</span>: lon}
-...
-&gt;&gt;&gt; Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
-</pre></div><center> Back to <a class="el" href="organization.html">Code organization</a>. Forward to <a class="el" href="geoid.html">Geoid height</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
+<center> Back to <a class="el" href="organization.html">Code organization</a>. Forward to <a class="el" href="geoid.html">Geoid height</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
+<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

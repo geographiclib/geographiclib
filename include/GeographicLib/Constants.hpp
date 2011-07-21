@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 2e66eb23d891da9e1b56b244c368ed0c6c0663e2 $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: d38ac71ad012dd3652e229545db677f1a5e24899 $"
 
 #include <GeographicLib/Config.h>
 
@@ -190,7 +190,7 @@ namespace GeographicLib {
     static inline double hypot(double x, double y) throw()
     { return _hypot(x, y); }
 #if (_MSC_VER < 1400)
-    /* Visual C++ 7.1/VS .NET 2003 does not have _hypotf() */
+    // Visual C++ 7.1/VS .NET 2003 does not have _hypotf()
     static inline float hypot(float x, float y) throw()
     { return float(_hypot(x, y)); }
 #else

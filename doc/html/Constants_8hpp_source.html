@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)</span>
-<a name="l00011"></a><a class="code" href="Constants_8hpp.html#a16d93570265d8037f7dc7d5d026b2aa4">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CONSTANTS_HPP &quot;$Id: 2e66eb23d891da9e1b56b244c368ed0c6c0663e2 $&quot;</span>
+<a name="l00011"></a><a class="code" href="Constants_8hpp.html#a16d93570265d8037f7dc7d5d026b2aa4">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CONSTANTS_HPP &quot;$Id: d38ac71ad012dd3652e229545db677f1a5e24899 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;GeographicLib/Config.h&gt;</span>
 <a name="l00014"></a>00014 <span class="comment"></span>
@@ -240,7 +240,7 @@
 <a name="l00190"></a>00190 <span class="preprocessor"></span>    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">double</span> hypot(<span class="keywordtype">double</span> x, <span class="keywordtype">double</span> y) <span class="keywordflow">throw</span>()
 <a name="l00191"></a>00191     { <span class="keywordflow">return</span> _hypot(x, y); }
 <a name="l00192"></a>00192 <span class="preprocessor">#if (_MSC_VER &lt; 1400)</span>
-<a name="l00193"></a>00193 <span class="preprocessor"></span>    <span class="comment">/* Visual C++ 7.1/VS .NET 2003 does not have _hypotf() */</span>
+<a name="l00193"></a>00193 <span class="preprocessor"></span>    <span class="comment">// Visual C++ 7.1/VS .NET 2003 does not have _hypotf()</span>
 <a name="l00194"></a>00194     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">float</span> hypot(<span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y) <span class="keywordflow">throw</span>()
 <a name="l00195"></a>00195     { <span class="keywordflow">return</span> float(_hypot(x, y)); }
 <a name="l00196"></a>00196 <span class="preprocessor">#else</span>
@@ -849,7 +849,7 @@
 <a name="l00799"></a>00799 <span class="preprocessor">#endif  // GEOGRAPHICLIB_CONSTANTS_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

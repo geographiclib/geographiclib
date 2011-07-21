@@ -340,9 +340,14 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>Pre-multiplying a unit vector in local cartesian coordinates at (lat, lon, h) by <em>M</em> transforms the vector to local cartesian coordinates at (lat0, lon0, h0). </p>
+<p>Let <em>v</em> be a unit vector located at (<em>lat</em>, <em>lon</em>, <em>h</em>). We can express <em>v</em> as <em>column</em> vectors in one of two ways</p>
+<ul>
+<li>in east, north, up coordinates (where the components are relative to a local coordinate system at (<em>lat</em>, <em>lon</em>, <em>h</em>)); call this representation <em>v1</em>.</li>
+<li>in <em>x</em>, <em>y</em>, <em>z</em> coordinates (where the components are relative to the local coordinate system at (<em>lat0</em>, <em>lon0</em>, <em>h0</em>)); call this representation <em>v0</em>.</li>
+</ul>
+<p>Then we have <em>v0</em> = <em>M</em> . <em>v1</em>. </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00119">119</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00126">126</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -408,7 +413,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00142">142</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00149">149</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -481,9 +486,14 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>Pre-multiplying a unit vector in local cartesian coordinates at (lat0, lon0, h0) by the transpose of <em>M</em> transforms the vector to local cartesian coordinates at (lat, lon, h). </p>
+<p>Let <em>v</em> be a unit vector located at (<em>lat</em>, <em>lon</em>, <em>h</em>). We can express <em>v</em> as <em>column</em> vectors in one of two ways</p>
+<ul>
+<li>in east, north, up coordinates (where the components are relative to a local coordinate system at (<em>lat</em>, <em>lon</em>, <em>h</em>)); call this representation <em>v1</em>.</li>
+<li>in <em>x</em>, <em>y</em>, <em>z</em> coordinates (where the components are relative to the local coordinate system at (<em>lat0</em>, <em>lon0</em>, <em>h0</em>)); call this representation <em>v0</em>.</li>
+</ul>
+<p>Then we have <em>v1</em> = <em>M^T</em> . <em>v0</em>, where <em>M^T</em> is the transpose of <em>M</em>. </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00164">164</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00179">179</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -502,7 +512,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>latitude of the origin (degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00181">181</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00196">196</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -521,7 +531,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>longitude of the origin (degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00186">186</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00201">201</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -540,7 +550,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>height of the origin (meters). </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00191">191</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00206">206</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -559,7 +569,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value of <em>a</em> inherited from the <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00198">198</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00213">213</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -578,7 +588,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00204">204</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00219">219</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -598,7 +608,7 @@ Public Member Functions</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00211">211</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00226">226</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -607,7 +617,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="LocalCartesian_8cpp_source.html">LocalCartesian.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Wed Jul 20 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
