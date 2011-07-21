@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.12
-\date 2011-mm-dd
+\date 2011-07-21
 
 \section abstract Abstract
 
@@ -765,9 +765,48 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
-- \ref matlab.
 - \ref javascript.
 - \ref python.
+- \ref matlab.
+
+\section javascript Javascript interface
+
+The directory doc/scripts/GeographicLib contains the core geodesic
+functionality translated into Javascript.  See Interface.js for a simple
+Javascript interface to these routines (documented near the top of the
+file).  Examples of using this interface are
+- a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
+  the solution of direct and inverse geodesic problem, finding
+  intermediate points on a geodesic line, and computing the area of a
+  geodesic polygon.
+- <a href="../scripts/geod-google.html">displaying geodesics in Google
+  Maps</a> which shows the geodesic, the geodesic circle, and various
+  geodesic envelopes.
+
+\section python Python interface
+
+The file python/GeographicLib.py (which is installed as
+PREFIX/share/GeographicLib/python) contains the core geodesic
+functionality translated into Python.  To using this, execute, for
+example,
+\code
+>>> import sys
+>>> sys.path.append("/usr/local/share/GeographicLib/python");
+>>> from GeographicLib import Geodesic, GeodesicLine
+>>> help(Geodesic.__init__)
+>>> help(Geodesic.Inverse)
+>>> help(Geodesic.Direct)
+>>> help(Geodesic.Line)
+>>> help(Geodesic.Area)
+>>> help(GeodesicLine.Position)
+>>> Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+>>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+>>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+>>> line.Position(10000e3)
+>>> def p(lat,lon): return {'lat': lat,'lon': lon}
+...
+>>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
+\endcode
 
 \section matlab Matlab and Octave interfaces
 
@@ -831,45 +870,6 @@ coordinates to MGRS can easily be written with Matlab code.
 Note that geoidheight, when compiled with Visual Studio 2008 causes
 Matlab to crash.  (The problem does not occur with Visual Studio 2005 or
 Visual Studio 2010.)
-
-\section javascript Javascript interface
-
-The directory doc/scripts/GeographicLib contains the core geodesic
-functionality translated into Javascript.  See Interface.js for a simple
-Javascript interface to these routines (documented near the top of the
-file).  Examples of using this interface are
-- a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
-  the solution of direct and inverse geodesic problem, finding
-  intermediate points on a geodesic line, and computing the area of a
-  geodesic polygon.
-- <a href="../scripts/geod-google.html">displaying geodesics in Google
-  Maps</a> which shows the geodesic, the geodesic circle, and various
-  geodesic envelopes.
-
-\section python Python interface
-
-The file python/GeographicLib.py (which is installed as
-PREFIX/share/GeographicLib/python) contains the core geodesic
-functionality translated into Python.  To using this, execute, for
-example,
-\code
->>> import sys
->>> sys.path.append("/usr/local/share/GeographicLib/python");
->>> from GeographicLib import Geodesic, GeodesicLine
->>> help(Geodesic.__init__)
->>> help(Geodesic.Inverse)
->>> help(Geodesic.Direct)
->>> help(Geodesic.Line)
->>> help(Geodesic.Area)
->>> help(GeodesicLine.Position)
->>> Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
->>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
->>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
->>> line.Position(10000e3)
->>> def p(lat,lon): return {'lat': lat,'lon': lon}
-...
->>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
-\endcode
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -2211,14 +2211,16 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a>
   - Change license to MIT/X11.
   - Add GeographicLib::PolygonArea class and equivalent Matlab function.
-  - Provide javascript and python implementations of geodesic routines.
+  - Provide Javascript and Python implementations of geodesic routines.
   - Fix Windows installer to include runtime dlls for Matlab.
   - Fix (innocuous) unassigned variable in Geodesic::GenInverse.
   - Geodesic routines in Matlab return a12 as first column of aux return
     value (incompatible change).
+  - A couple of code changes to enable compilation with Visual Studio
+    2003.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.11.tar.gz/download">1.11 (released 2011-06-27)</a>
   - Changes to <a href="Planimeter.1.html">Planimeter</a>:

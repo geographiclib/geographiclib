@@ -19,50 +19,25 @@
 # http://geographiclib.sourceforge.net/
 #
 ######################################################################
-# GeographicLib.Geodesic.WGS84.Inverse(lat1, lon1, lat2, lon2, outmask)
-# GeographicLib.Geodesic.WGS84.Direct(lat1, lon1, azi1, s12, outmask)
 #
-# perform the basic geodesic calculations.  These return a dictionary
-# with (some) of the following entries:
+# A usage sample:
 #
-#   lat1 latitude of point 1
-#   lon1 longitude of point 1
-#   azi1 azimuth of line at point 1
-#   lat2 latitude of point 2
-#   lon2 longitude of point 2
-#   azi2 azimuth of line at point 2
-#   s12 distance from 1 to 2
-#   a12 arc length on auxiliary sphere from 1 to 2
-#   m12 reduced length of geodesic
-#   M12 geodesic scale 2 relative to 1
-#   M21 geodesic scale 1 relative to 2
-#   S12 area between geodesic and equator
-#
-# outmask determines which fields get included and if outmask is
-# omitted, then only the basic geodesic fields are computed.  The mask
-# is an or'ed combination of the following values
-#
-#   GeographicLib.Geodesic.LATITUDE
-#   GeographicLib.Geodesic.LONGITUDE
-#   GeographicLib.Geodesic.AZIMUTH
-#   GeographicLib.Geodesic.DISTANCE
-#   GeographicLib.Geodesic.REDUCEDLENGTH
-#   GeographicLib.Geodesic.GEODESICSCALE
-#   GeographicLib.Geodesic.AREA
-#   GeographicLib.Geodesic.ALL
-#
-######################################################################
-# GeographicLib.Geodesic.WGS84.Area(points, polyline)
-#
-# computes the area of a polygon with vertices given by an array
-# points, each of whose elements contains lat and lon fields.	The
-# function returns an object with fields.
-#
-#   number, perimeter, area
-#
-# There is no need to "close" the polygon.  If polyline (default =
-# False) is True, then the points denote a polyline and its length is
-# returned as the perimeter (and the area is not calculated).
+# >>> import sys
+# >>> sys.path.append("/usr/local/share/GeographicLib/python");
+# >>> from GeographicLib import Geodesic, GeodesicLine
+# >>> help(Geodesic.__init__)
+# >>> help(Geodesic.Inverse)
+# >>> help(Geodesic.Direct)
+# >>> help(Geodesic.Line)
+# >>> help(Geodesic.Area)
+# >>> help(GeodesicLine.Position)
+# >>> Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+# >>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+# >>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+# >>> line.Position(10000e3)
+# >>> def p(lat,lon): return {'lat': lat,'lon': lon}
+# ...
+# >>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
 #
 # $Id$
 ######################################################################
@@ -91,6 +66,7 @@ class Math(object):
 
 class Constants(object):
   """WGS84 constants"""
+
   WGS84_a = 6378137.0           # meters
   WGS84_f = 1/298.257223563
 
@@ -1110,6 +1086,7 @@ class Geodesic(object):
       GeographicLib.Geodesic.DISTANCE_IN
       GeographicLib.Geodesic.ALL
     """
+
     lon1 = Geodesic.CheckPosition(lat1, lon1)
     azi1 = Geodesic.CheckAzimuth(azi1)
     return GeodesicLine(
@@ -1126,8 +1103,9 @@ class Geodesic(object):
       perimeter the perimeter
       area the area (counter-clockwise traversal positive)
 
-    If polyline is set to True, then the points define a polyline
-    instead of a polygon and the area is not returned.
+    There is no need to "close" the polygon.  If polyline is set to
+    True, then the points define a polyline instead of a polygon, the
+    length is returned as the perimeter, and the area is not returned.
     """
 
     for p in points:
@@ -1392,6 +1370,7 @@ class GeodesicLine(object):
       GeographicLib.Geodesic.AREA
       GeographicLib.Geodesic.ALL
     """
+
     Geodesic.CheckDistance(s12)
     result = {'lat1': self._lat1, 'lon1': self._lon1, 'azi1': self._azi1,
               's12': s12}
@@ -1410,6 +1389,7 @@ class GeodesicLine(object):
 
 class PolygonArea(object):
   """Area of a geodesic polygon"""
+
   def transit(lon1, lon2):
     # Return 1 or -1 if crossing prime meridian in east or west direction.
     # Otherwise return zero.

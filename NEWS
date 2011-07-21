@@ -6,7 +6,26 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.11.
+The current version of the library is 1.12.
+
+Changes between 1.11 (released 2011-07-21) and 1.11 versions:
+
+  * Change license to MIT/X11.
+
+  * Add GeographicLib::PolygonArea class and equivalent Matlab function.
+
+  * Provide Javascript and Python implementations of geodesic routines.
+
+  * Fix Windows installer to include runtime dlls for Matlab.
+
+  * Fix (innocuous) unassigned variable in Geodesic::GenInverse.
+
+  * Geodesic routines in Matlab return a12 as first column of aux return
+    value (incompatible change).
+
+  * A couple of code changes to enable compilation with Visual Studio
+    2003.
+
 
 Changes between 1.11 (released 2011-06-27) and 1.10 versions:
 
