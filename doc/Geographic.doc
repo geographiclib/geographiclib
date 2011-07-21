@@ -26,7 +26,7 @@ returning accurate results with errors close to round-off (about
 transversemercator have been developed for this library.
 The functionality of the library can be accessed from user code, from
 the \ref utilities provided, or via the \ref other.  For a sample of
-the geodesic capabilities, check out the
+the geodesic capabilities in Javascript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -759,7 +759,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page other Other interfaces
+\page other Other interfaces (Javascript, Python, Matlab, Octave)
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -787,8 +787,8 @@ file).  Examples of using this interface are
 
 The file python/GeographicLib.py (which is installed as
 PREFIX/share/GeographicLib/python) contains the core geodesic
-functionality translated into Python.  To using this, execute, for
-example,
+functionality translated into Python.  An example of using this
+interface is
 \code
 >>> import sys
 >>> sys.path.append("/usr/local/share/GeographicLib/python");

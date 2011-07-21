@@ -113,8 +113,15 @@ namespace GeographicLib {
      * @param[out] M if the length of the vector is 9, fill with the rotation
      *   matrix in row-major order.
      *
-     * Pre-multiplying a unit vector in local cartesian coordinates (east,
-     * north, up) by \e M transforms the vector to geocentric coordinates.
+     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
+     * express \e v as \e column vectors in one of two ways
+     * - in east, north, up coordinates (where the components are relative to a
+     *   local coordinate system at (\e lat, \e lon, \e h)); call this
+     *   representation \e v1.
+     * - in geocentric \e x, \e y, \e z coordinates; call this representation
+     *   \e v0.
+     * .
+     * Then we have \e v0 = \e M . \e v1.
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z,
                  std::vector<real>& M)
@@ -163,9 +170,16 @@ namespace GeographicLib {
      * @param[out] M if the length of the vector is 9, fill with the rotation
      *   matrix in row-major order.
      *
-     * Pre-multiplying a unit vector in geocentric coordinates by the transpose
-     * of \e M transforms the vector to local cartesian coordinates (east,
-     * north, up).
+     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can
+     * express \e v as \e column vectors in one of two ways
+     * - in east, north, up coordinates (where the components are relative to a
+     *   local coordinate system at (\e lat, \e lon, \e h)); call this
+     *   representation \e v1.
+     * - in geocentric \e x, \e y, \e z coordinates; call this representation
+     *   \e v0.
+     * .
+     * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e
+     * M.
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
