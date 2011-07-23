@@ -26,7 +26,6 @@ Changes between 1.11 (released 2011-07-21) and 1.11 versions:
   * A couple of code changes to enable compilation with Visual Studio
     2003.
 
-
 Changes between 1.11 (released 2011-06-27) and 1.10 versions:
 
   * Changes to Planimeter:
