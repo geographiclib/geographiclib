@@ -449,19 +449,6 @@ namespace GeographicLib {
      **********************************************************************/
     static std::string DefaultGeoidName();
 
-/// \cond DEPRECATED
-    /**
-     * <b>DEPRECATED</b> Return the compile-time default path for the geoid
-     * data files.
-     **********************************************************************/
-    static std::string DefaultPath();
-
-    /**
-     * <b>DEPRECATED</b> Return the value of the environment variable
-     * GEOID_PATH.
-     **********************************************************************/
-    static std::string GeoidPath();
-/// \endcond
   };
 
 } // namespace GeographicLib

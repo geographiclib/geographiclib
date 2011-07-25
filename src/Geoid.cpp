@@ -529,20 +529,6 @@ namespace GeographicLib {
     }
   }
 
-/// \cond DEPRECATED
-  std::string Geoid::DefaultPath() {
-    return string(GEOID_DEFAULT_PATH);
-  }
-
-  std::string Geoid::GeoidPath() {
-    string path;
-    char* geoidpath = getenv("GEOID_PATH");
-    if (geoidpath)
-      path = string(geoidpath);
-    return path;
-  }
-/// \endcond
-
   std::string Geoid::DefaultGeoidPath() {
     string path;
     char* geoidpath = getenv("GEOID_PATH");

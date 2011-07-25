@@ -4,11 +4,11 @@ cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 12)
+set (GeographicLib_VERSION_MINOR 13)
 set (GeographicLib_VERSION_STRING
      ${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR})
-set (LIBVERSION 5)
-set (LIBVERSIONFULL 5.3.0)
+set (LIBVERSION 9)
+set (LIBVERSIONFULL 9.0.0)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)

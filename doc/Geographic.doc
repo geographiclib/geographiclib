@@ -689,8 +689,10 @@ line, the GeographicLib::GeodesicLine class can be used.  This packages
 all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
 point.  <a href="Geod.1.html">Geod</a> is a simple command line utility
-to perform geodesic calculations.  <a href="Planimeter.1.html">Geod</a>
-is a command line utility to compute the area of geodesic polygons.
+to perform geodesic calculations.  GeographicLib::PolygonArea is a class
+which compute the area of geodesic polygons using the Geodesic class and
+<a href="Planimeter.1.html">Geod</a> is a command line utility for the
+same purpose.
 GeographicLib::AzimuthalEquidistant, GeographicLib::CassiniSoldner, and
 GeographicLib::Gnomonic are projections based on the Geodesic class.
 <a href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility
@@ -2210,6 +2212,10 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.13 (released 2011-mm-dd)</a>
+  - Withdraw some deprecated routines.
+  - Allow default copy assigment to work for most classes.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a>
   - Change license to MIT/X11.

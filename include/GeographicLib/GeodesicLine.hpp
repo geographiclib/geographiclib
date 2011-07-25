@@ -601,48 +601,6 @@ namespace GeographicLib {
     }
     ///@}
 
-/// \cond DEPRECATED
-    /** \name Deprecated Functions
-     **********************************************************************/
-    ///@{
-
-    /**
-     * <b>DEPRECATED</b>.  Return the latitude, \e lat2, longitude, \e lon2,
-     * and forward azimuth, \e azi2 (degrees) of the point 2 which is a
-     * distance, \e s12 (in meters), from point 1.  Also return the reduced
-     * length \e m12 (meters).  \e s12 can be signed.  If \e arcmode (default
-     * false) is set to true, \e s12 is interpreted as the arc length \e a12
-     * (in degrees) on the auxiliary sphere.  Returned value is the arc length
-     * \e a12 (degrees) if \e arcmode is false, otherwise it is the distance \e
-     * s12 (meters).
-     **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2,
-                        real& azi2, real &m12, bool arcmode)
-      const throw() {
-      if (arcmode) {
-        real s12x;
-        ArcPosition(s12, lat2, lon2, azi2, s12x, m12);
-        return s12x;
-      } else
-        return Position(s12, lat2, lon2, azi2, m12);
-    }
-
-    /**
-     * <b>DEPRECATED</b>.  Return the scale of the geodesic line extending an
-     * arc length \e a12 (degrees) from point 1 to point 2.  \e M12 (a number)
-     * measures the convergence of initially parallel geodesics.  It is defined
-     * by the following construction: starting at point 1 proceed at azimuth \e
-     * azi1 + 90<sup>o</sup> a small distance \e dt; turn -90<sup>o</sup> and
-     * proceed a distance \e s12 (\e not the arc length \e a12); the distance
-     * to point 2 is given by \e M12 \e dt.  \e M21 is defined analogously.
-     **********************************************************************/
-    void Scale(real a12, real& M12, real& M21) const throw() {
-      real lat2, lon2, azi2, s12;
-      ArcPosition(a12, lat2, lon2, azi2, s12, M12, M21);
-    }
-    ///@}
-/// \endcond
-
   };
 
 } // namespace GeographicLib

@@ -136,12 +136,6 @@ namespace GeographicLib {
      * A synonym for pi<real>().
      **********************************************************************/
     static inline real pi() throw() { return pi<real>(); }
-/// \cond DEPRECATED
-    /**
-     * <b>DEPRECATED</b> A synonym for pi<extened>().
-     **********************************************************************/
-    static inline extended epi() throw() { return pi<extended>(); }
-/// \endcond
 
     /**
      * @return the number of radians in a degree.
@@ -152,12 +146,6 @@ namespace GeographicLib {
      * A synonym for degree<real>().
      **********************************************************************/
     static inline real degree() throw() { return degree<real>(); }
-/// \cond DEPRECATED
-    /**
-     * <b>DEPRECATED</b> A synonym for degree<extened>().
-     **********************************************************************/
-    static inline extended edegree() throw() { return degree<extended>(); }
-/// \endcond
 
     /**
      * Square a number.
@@ -434,12 +422,6 @@ namespace GeographicLib {
     Constants();                // Disable constructor
 
   public:
-/// \cond DEPRECATED
-    /**
-     * <b>DEPRECATED</b> A synonym for Math::pi<real>().
-     **********************************************************************/
-    static inline Math::real pi() throw() { return Math::pi<real>(); }
-/// \endcond
     /**
      * A synonym for Math::degree<real>().
      **********************************************************************/

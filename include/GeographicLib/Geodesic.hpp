@@ -809,41 +809,6 @@ namespace GeographicLib {
      **********************************************************************/
     static const Geodesic WGS84;
 
-/// \cond DEPRECATED
-    /** \name Deprecated function.
-     **********************************************************************/
-    ///@{
-    /**
-     * <b>DEPRECATED</b> Perform the direct geodesic calculation.  Given a
-     * latitude, \e lat1, longitude, \e lon1, and azimuth \e azi1 (degrees) for
-     * point 1 and a range, \e s12 (meters) from point 1 to point 2, return the
-     * latitude, \e lat2, longitude, \e lon2, and forward azimuth, \e azi2
-     * (degrees) for point 2 and the reduced length \e m12 (meters).  If either
-     * point is at a pole, the azimuth is defined by keeping the longitude
-     * fixed and writing \e lat = 90 - \e eps or -90 + \e eps and taking the
-     * limit \e eps -> 0 from above.  If \e arcmode (default false) is set to
-     * true, \e s12 is interpreted as the arc length \e a12 (degrees) on the
-     * auxiliary sphere.  An arc length greater that 180 degrees results in a
-     * geodesic which is not a shortest path.  For a prolate ellipsoid, an
-     * additional condition is necessary for a shortest path: the longitudinal
-     * extent must not exceed of 180 degrees.  Returned value is the arc length
-     * \e a12 (degrees) if \e arcmode is false, otherwise it is the distance \e
-     * s12 (meters).
-     **********************************************************************/
-    Math::real Direct(real lat1, real lon1, real azi1, real s12_a12,
-                      real& lat2, real& lon2, real& azi2, real& m12,
-                      bool arcmode) const throw() {
-      if (arcmode) {
-        real a12 = s12_a12, s12;
-        ArcDirect(lat1, lon1, azi1, a12, lat2, lon2, azi2, s12, m12);
-        return s12;
-      } else {
-        real s12 = s12_a12;
-        return Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
-      }
-    }
-    ///@}
-/// \endcond
   };
 
 } // namespace GeographicLib

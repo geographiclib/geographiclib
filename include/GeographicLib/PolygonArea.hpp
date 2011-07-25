@@ -154,6 +154,23 @@ namespace GeographicLib {
      **********************************************************************/
     unsigned TestCompute(real lat, real lon, bool reverse, bool sign,
                          real& perimeter, real& area) const throw();
+
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
+    /**
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+
+    Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
+
+    /**
+     * @return \e f the flattening of the ellipsoid.  This is the value
+     *   inherited from the Geodesic object used in the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _earth.Flattening(); }
+    ///@}
   };
 
 } // namespace GeographicLib

@@ -93,9 +93,6 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 3;
-      } else if (arg == "-n") {   // Deprecated and so not documented
-        a = 6378388;
-        f = 1/real(297);
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
