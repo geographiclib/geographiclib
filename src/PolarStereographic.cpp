@@ -27,7 +27,6 @@ namespace GeographicLib {
   PolarStereographic::PolarStereographic(real a, real f, real k0)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)

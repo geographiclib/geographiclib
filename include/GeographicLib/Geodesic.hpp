@@ -172,8 +172,7 @@ namespace GeographicLib {
     }
     static real Astroid(real x, real y) throw();
 
-    // _r is OBSOLETE, can be removed
-    real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+    real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
 
     void Lengths(real eps, real sig12,
@@ -792,7 +791,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a

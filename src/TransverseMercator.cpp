@@ -59,7 +59,6 @@ namespace GeographicLib {
   TransverseMercator::TransverseMercator(real a, real f, real k0)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))

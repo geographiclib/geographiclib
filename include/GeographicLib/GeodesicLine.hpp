@@ -92,7 +92,6 @@ namespace GeographicLib {
     // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
     real _C1a[nC1_ + 1], _C1pa[nC1p_ + 1], _C2a[nC2_ + 1], _C3a[nC3_],
       _C4a[nC4_];    // all the elements of _C4a are used
-    bool _areap;     // _areap is OBSOLETE, can be removed
     unsigned _caps;
 
     enum captype {

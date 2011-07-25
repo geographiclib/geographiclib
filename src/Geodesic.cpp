@@ -53,7 +53,6 @@ namespace GeographicLib {
   Geodesic::Geodesic(real a, real f)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / Math::sq(_f1))       // e2 / (1 - e2)

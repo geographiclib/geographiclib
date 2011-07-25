@@ -75,7 +75,7 @@ namespace GeographicLib {
     static const real tol_;
     static const real overflow_;
     static const int numit_ = 5;
-    real _a, _f, _r, _k0, _e2, _e, _e2m,  _c, _n;
+    real _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
@@ -176,7 +176,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * @return \e k0 central scale for the projection.  This is the value of \e
