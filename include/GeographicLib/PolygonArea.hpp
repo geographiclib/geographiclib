@@ -38,10 +38,10 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT PolygonArea {
   private:
     typedef Math::real real;
-    const Geodesic& _earth;
-    const real _area0;          // Full ellipsoid area
-    const bool _polyline;       // Assume polyline (don't close and skip area)
-    const unsigned _mask;
+    Geodesic _earth;
+    real _area0;                // Full ellipsoid area
+    bool _polyline;             // Assume polyline (don't close and skip area)
+    unsigned _mask;
     unsigned _num;
     int _crossings;
     Accumulator<real> _areasum, _perimetersum;

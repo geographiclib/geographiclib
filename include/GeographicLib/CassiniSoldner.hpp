@@ -62,7 +62,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT CassiniSoldner {
   private:
     typedef Math::real real;
-    const Geodesic _earth;
+    Geodesic _earth;
     GeodesicLine _meridian;
     real _sbet0, _cbet0;
     static const real eps1_;

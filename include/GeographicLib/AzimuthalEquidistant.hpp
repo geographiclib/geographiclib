@@ -35,7 +35,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT AzimuthalEquidistant {
   private:
     typedef Math::real real;
-    const Geodesic _earth;
+    Geodesic _earth;
     static const real eps_;
   public:
 

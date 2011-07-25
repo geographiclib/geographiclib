@@ -34,7 +34,7 @@ namespace GeographicLib {
     typedef Math::real real;
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
-    const Geocentric _earth;
+    Geocentric _earth;
     real _lat0, _lon0, _h0;
     real _x0, _y0, _z0, _r[dim2_];
     void IntForward(real lat, real lon, real h, real& x, real& y, real& z,

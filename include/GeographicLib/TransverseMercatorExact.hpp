@@ -73,9 +73,9 @@ namespace GeographicLib {
     static const real taytol_;
     static const real overflow_;
     static const int numit_ = 10;
-    const real _a, _f, _r, _k0, _mu, _mv, _e, _ep2;
-    const bool _extendp;
-    const EllipticFunction _Eu, _Ev;
+    real _a, _f, _r, _k0, _mu, _mv, _e, _ep2;
+    bool _extendp;
+    EllipticFunction _Eu, _Ev;
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) throw() {
       real t = std::tan(x);

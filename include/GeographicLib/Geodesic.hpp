@@ -173,7 +173,7 @@ namespace GeographicLib {
     static real Astroid(real x, real y) throw();
 
     // _r is OBSOLETE, can be removed
-    const real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+    real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
 
     void Lengths(real eps, real sig12,

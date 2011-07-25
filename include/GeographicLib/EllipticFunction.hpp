@@ -52,7 +52,7 @@ namespace GeographicLib {
     static real RF(real x, real y, real z) throw();
     static real RD(real x, real y, real z) throw();
     static real RG0(real x, real y) throw();
-    const real _m, _m1;
+    real _m, _m1;
     mutable bool _init;
     mutable real _kc, _ec, _kec;
     bool Init() const throw();

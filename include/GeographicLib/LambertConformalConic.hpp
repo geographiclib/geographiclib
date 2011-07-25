@@ -81,7 +81,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT LambertConformalConic {
   private:
     typedef Math::real real;
-    const real _a, _f, _r, _fm, _e2, _e, _e2m;
+    real _a, _f, _r, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
     static const real eps_;

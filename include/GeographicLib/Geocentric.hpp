@@ -58,7 +58,7 @@ namespace GeographicLib {
     friend class LocalCartesian;
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
-    const real _a, _f, _r, _e2, _e2m, _e2a, _e4a, _maxrad;
+    real _a, _f, _r, _e2, _e2m, _e2a, _e4a, _maxrad;
     // Actually this can be static because it doesn't depend on the ellipsoid.
     // But let's be more general than that.
     void Rotation(real sphi, real cphi, real slam, real clam,

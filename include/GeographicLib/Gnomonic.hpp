@@ -90,7 +90,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT Gnomonic {
   private:
     typedef Math::real real;
-    const Geodesic _earth;
+    Geodesic _earth;
     real _a, _f;
     static const real eps0_;
     static const real eps_;
