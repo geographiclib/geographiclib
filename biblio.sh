@@ -74,15 +74,14 @@ END {
 }'
 cat <<'EOF'
     </ul>
-    <p>
-      <a href="..">GeographicLib home</a>
-      <br>
-      <a href="http://geographiclib.sourceforge.net">
-	<img
-	   src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
-	   border="0" height="15" width="80" alt="SourceForge.net" />
-      </a>
-    </p>
+    <hr>
+    <a href="..">GeographicLib home</a>
+    <br>
+    <a href="http://geographiclib.sourceforge.net">
+      <img
+	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"
+	 border="0" height="15" width="80" alt="SourceForge.net" />
+    </a>
   </body>
 </html>
 EOF
