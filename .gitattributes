@@ -31,3 +31,4 @@ makefile-admin ident eol=lf
 *.vcproj eol=crlf
 *.vcxproj eol=crlf
 *.kml text
+*.kmz -text

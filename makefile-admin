@@ -12,7 +12,7 @@ geodesic-papers/biblio.html: geodesic-biblio.txt biblio.sh
 	sh biblio.sh $< > $@
 
 distrib-html: geodesic-papers/biblio.html
-	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '#*' --delete --delete-excluded index.html tm.html tm-graticule.kml geod.html geod-errata.html bessel-errata.html geodesic-papers $(WEBSTAGE)/htdocs/
+	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '#*' --delete --delete-excluded index.html tm.html tm-graticule.km[lz] geod.html geod-errata.html bessel-errata.html geodesic-papers $(WEBSTAGE)/htdocs/
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-doc:
