@@ -83,7 +83,7 @@ GeographicLib.GeodesicLine = {};
 
   g.AngNormalize = function(x) {
     // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-    return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+    return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
   }
 
   g.AngRound = function(x) {

@@ -39,7 +39,7 @@ namespace GeographicLib {
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& x, real& y, real& z,
                               real M[dim2_]) const throw() {
-    lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
+    lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
     real
       phi = lat * Math::degree<real>(),
       lam = lon * Math::degree<real>(),

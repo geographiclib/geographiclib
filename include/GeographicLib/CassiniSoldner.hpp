@@ -72,7 +72,7 @@ namespace GeographicLib {
     // The following private helper functions are copied from Geodesic.
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-      return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+      return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
     }
     static inline real AngRound(real x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57

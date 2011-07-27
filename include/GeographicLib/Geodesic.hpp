@@ -16,7 +16,8 @@
 /**
  * The order of the expansions used by Geodesic.
  **********************************************************************/
-#define GEOD_ORD (GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 3 : 7)
+#define GEOD_ORD \
+  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 3 : 7))
 #endif
 
 namespace GeographicLib {
@@ -151,7 +152,7 @@ namespace GeographicLib {
       throw();
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-      return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+      return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
     }
     static inline real AngRound(real x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57

@@ -326,7 +326,7 @@ namespace GeographicLib {
     fx -= ix;
     fy -= iy;
     iy += (_height - 1)/2;
-    ix += ix < 0 ? _width : ix >= _width ? -_width : 0;
+    ix += ix < 0 ? _width : (ix >= _width ? -_width : 0);
     real v00 = 0, v01 = 0, v10 = 0, v11 = 0;
     real t[nterms_];
 
@@ -352,8 +352,8 @@ namespace GeographicLib {
         v[k++] = rawval(ix    , iy + 2);
         v[k++] = rawval(ix + 1, iy + 2);
 
-        const real* c3x = iy == 0 ? c3n_ : iy == _height - 2 ? c3s_ : c3_;
-        real c0x = iy == 0 ? c0n_ : iy == _height - 2 ? c0s_ : c0_;
+        const real* c3x = iy == 0 ? c3n_ : (iy == _height - 2 ? c3s_ : c3_);
+        real c0x = iy == 0 ? c0n_ : (iy == _height - 2 ? c0s_ : c0_);
         for (unsigned i = 0; i < nterms_; ++i) {
           t[i] = 0;
           for (unsigned j = 0; j < stencilsize_; ++j)
@@ -479,8 +479,8 @@ namespace GeographicLib {
       iw = 0;
       ie = _width - 1;
     } else {
-      ie += iw < 0 ? _width : iw >= _width ? -_width : 0;
-      iw += iw < 0 ? _width : iw >= _width ? -_width : 0;
+      ie += iw < 0 ? _width : (iw >= _width ? -_width : 0);
+      iw += iw < 0 ? _width : (iw >= _width ? -_width : 0);
     }
     int oysize = int(_data.size());
     _xsize = ie - iw + 1;

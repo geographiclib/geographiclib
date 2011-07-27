@@ -18,7 +18,7 @@
  * TM_TX_MAXPOW can be set to any integer in [4, 8].
  **********************************************************************/
 #define TM_TX_MAXPOW \
-(GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 4 : 8)
+  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 4 : 8))
 #endif
 
 namespace GeographicLib {

@@ -56,7 +56,7 @@ namespace GeographicLib {
       // AngNormalize are inline functions.  So don't port this change over to
       // Geodesic.hpp.)
       volatile real y = x;
-      return y >= 180 ? y - 360 : y < -180 ? y + 360 : y;
+      return y >= 180 ? y - 360 : (y < -180 ? y + 360 : y);
     }
     static inline int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.

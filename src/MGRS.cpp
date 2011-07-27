@@ -206,7 +206,7 @@ namespace GeographicLib {
       icol = icol + minutmcol_;
     } else {
       bool eastp = iband & 1;
-      icol += eastp ? upseasting_ : northp1 ? minupsNind_ : minupsSind_;
+      icol += eastp ? upseasting_ : (northp1 ? minupsNind_ : minupsSind_);
       irow += northp1 ? minupsNind_ : minupsSind_;
     }
     int prec1 = (len - p)/2;
