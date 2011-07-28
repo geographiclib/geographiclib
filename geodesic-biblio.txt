@@ -307,7 +307,7 @@ $Id$
    Phil. Mag. '''67'''(336), 241--249 and '''67'''(337), 340--352 (1826).[[BR]]
    http://books.google.com/books?id=PkwwAAAAIAAJ&pg=PA241 [[BR]]
    http://books.google.com/books?id=PkwwAAAAIAAJ&pg=PA340 [[BR]]
-   ''Mr. Ivory's mode of finding the length of  the geodetic curve'',
+   ''Mr. Ivory's mode of finding the length of the geodetic curve'',
    Quart. Jour. Roy. Inst. '''21'''(42), 361--363 (1826).[[BR]]
    http://geographiclib.sf.net/geodesic-papers/quartjour26-extracts.pdf
    [[BR]]F. W. Bessel,
@@ -668,7 +668,7 @@ $Id$
    unreadable page:
    http://geographiclib.sf.net/geodesic-papers/forsyth96b-add.pdf
  * R. Fricke,[[BR]]
-   ''Kurzgefasste Vorlesungen über verschiedene Gebiete der  
+   ''Kurzgefasste Vorlesungen über verschiedene Gebiete der
    höheren Mathematik mit Berücksichtigung der Anwendungen
    [Concise lectures on various areas of higher mathematics, with
    applications]''
@@ -680,7 +680,7 @@ $Id$
    http://books.google.com/books?id=hkENAAAAYAAJ
  * P. D. Thomas,[[BR]]
    ''Conformal Projections in Geodesy and Cartography'',
-   Spec. Pub 251 (US Coast and Geodetic Survey, 1952), pp. 63--66.[[BR]]
+   Spec. Pub. 251 (US Coast and Geodetic Survey, 1952), pp. 63--66.[[BR]]
    http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no2511952.pdf
  * P. D. Thomas,[[BR]]
    ''Spheroidal Geodesics, Reference Systems, and Local Geometry'',
