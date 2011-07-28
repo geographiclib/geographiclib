@@ -49,7 +49,7 @@ $Id$
    (Durand, Paris, 1743).[[BR]]
    http://books.google.com/books?id=X6wWAAAAQAAJ
  * L. Euler,[[BR]]
-   ''Methodus inveniendi Lineas curvas maximi minimive proprietate
+   ''Methodus inveniendi lineas curvas maximi minimive proprietate
    gaudentes [A method for finding curved lines enjoying properties of
    maximum or minimum]''
    (Bousquet, Lausanne, 1744).[[BR]]
@@ -213,7 +213,7 @@ $Id$
    http://books.google.com/books?id=BtM2AAAAMAAJ&pg=PA115 [[BR]]
      A line traced in the manner we have now been describing, or deduced from
      trigonometrical measures, by the means we have indicated, is called
-     a ''geodetic'' or ''geodesic line'': it has the property of being
+     a ''geodetic'' or ''geodesic line:'' it has the property of being
      the shortest which can be drawn between its two extremities on the
      surface of the earth; and it is therefore the proper itinerary
      measure of the distance between those two points.

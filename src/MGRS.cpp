@@ -99,7 +99,7 @@ namespace GeographicLib {
       int iband = (northp ? 2 : 0) + (eastp ? 1 : 0);
       mgrs1[z++] = upsband_[iband];
       mgrs1[z++] = upscols_[iband][xh - (eastp ? upseasting_ :
-                                       northp ? minupsNind_ : minupsSind_)];
+                                         (northp ? minupsNind_ : minupsSind_))];
       mgrs1[z++] = upsrows_[northp][yh - (northp ? minupsNind_ : minupsSind_)];
     }
     real mult = pow(real(base_), max(tilelevel_ - prec, 0));
