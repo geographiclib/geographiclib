@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>tm-graticule</name>
+    <name>tm-grid</name>
     <StyleMap id="m_ylw-pushpin">
       <Pair>
 	<key>normal</key>
@@ -74,7 +74,7 @@
     </Style>
     <Folder>
       <name>transverse-mercator</name>
-      <description>Reverse graticule for transverse Mercator projection for WGS84 ellipsoid.</description>
+      <description>Transverse Mercator grid mapped to the WGS84 ellipsoid.</description>
       <Placemark>
 	<name>x=+00</name>
 	<styleUrl>#m_ylw-pushpin</styleUrl>
@@ -3288,7 +3288,7 @@
     <Folder>
       <name>spherical-transverse-mercator</name>
       <visibility>0</visibility>
-      <description>Reverse graticule for spherical transverse Mercator projection conformally mapped to the WGS84 ellipsoid.</description>
+      <description>Spherical transverse Mercator grid conformally mapped to the WGS84 ellipsoid.</description>
       <Placemark>
 	<name>x=+00</name>
 	<visibility>0</visibility>
