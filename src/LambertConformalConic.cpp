@@ -415,9 +415,10 @@ namespace GeographicLib {
 
     // Use Newton's method to solve for tphi
     real
-      tphi = tchi,
+      // See comment in TransverseMercator.cpp about the initial guess
+      tphi = tchi/_e2m,
       stol = tol_ * max(real(1), abs(tchi));
-    // min iterations = 1, max iterations = 2; mean = 1.99
+    // min iterations = 1, max iterations = 2; mean = 1.94
     for (int i = 0; i < numit_; ++i) {
       real
         scphi = hyp(tphi),

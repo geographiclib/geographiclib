@@ -449,9 +449,14 @@ namespace GeographicLib {
       // Use Newton's method to solve for tau
       real
         taup = sin(xip)/r,
-        tau = taup,
+        // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
+        // tau = taup/_e2m as a starting guess.  Only 1 iteration is needed for
+        // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead,
+        // tau = taup is used the mean number of iterations increases to 1.99
+        // (2 iterations are needed except near tau = 0).
+        tau = taup/_e2m,
         stol = tol_ * max(real(1), abs(taup));
-      // min iterations = 1, max iterations = 2; mean = 1.99
+      // min iterations = 1, max iterations = 2; mean = 1.94
       for (int i = 0; i < numit_; ++i) {
         real
           tau1 = Math::hypot(real(1), tau),
