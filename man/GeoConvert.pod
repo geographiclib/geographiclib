@@ -31,14 +31,16 @@ I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See L<QUOTING|quoting> for how to
 quote the charachers ' and " when entering coordinates on the command
-line.)  Latitude is given first; however, on input, either may be given
-first by appending or prepending I<N> or I<S> to the latitude and I<E>
-or I<W> to the longitude.  For example, the following are all equivalent
+line.)  Alternatively, : may be used to separate the various components.
+Latitude is given first; however, on input, either may be given first by
+appending or prepending I<N> or I<S> to the latitude and I<E> or I<W> to
+the longitude.  For example, the following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
     33d18'N 44d24'E
     44d24 33d18N
+    33:18 44:24
 
 =item B<UTM/UPS>
 
@@ -214,6 +216,8 @@ two alternatives are illustrated by
    echo 30d30\'30\" "30d30'30" | GeoConvert -d -p -1
    => 30d30'30"N 030d30'30"E
 
+Alternatively use colon separators, e.g., 30:30:30.
+
 =item Windows command shell (cmd)
 
 The ' character needs no quoting and the " character can be quoted by a
@@ -222,6 +226,8 @@ designator can be omitted.  Thus
 
    echo 30d30'30^" 30d30'30 | GeoConvert -d -p -1
    => 30d30'30"N 030d30'30"E
+
+Alternatively use colon separators, e.g., 30:30:30.
 
 =item Input from a file
 

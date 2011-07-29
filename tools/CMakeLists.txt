@@ -64,6 +64,9 @@ add_test (GeoConvert3 GeoConvert --junk)
 set_tests_properties (GeoConvert3 PROPERTIES WILL_FAIL ON)
 add_test (GeoConvert4 GeoConvert --input-string garbage)
 set_tests_properties (GeoConvert4 PROPERTIES WILL_FAIL ON)
+# Check fix for DMS::Decode bug fixed on 2011-03-22
+add_test (GeoConvert5 GeoConvert --input-string "5d. 0")
+set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
 
 add_test (Geod0 Geod -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (Geod0

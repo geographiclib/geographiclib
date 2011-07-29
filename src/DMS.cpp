@@ -22,7 +22,7 @@ namespace GeographicLib {
   const string DMS::hemispheres_ = "SNWE";
   const string DMS::signs_ = "-+";
   const string DMS::digits_ = "0123456789";
-  const string DMS::dmsindicators_ = "D'\"";
+  const string DMS::dmsindicators_ = "D'\":";
   const string DMS::components_[] = {"degrees", "minutes", "seconds"};
 
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
@@ -95,6 +95,14 @@ namespace GeographicLib {
           pointseen = true;
           digcount = 1;
         } else if ((k = lookup(dmsindicators_, x)) >= 0) {
+          if (k >= 3) {
+            if (p == end) {
+              errormsg = "Illegal for : to appear at the end of " +
+                dms.substr(beg, end - beg);
+              break;
+            }
+            k = npiece;
+          }
           if (unsigned(k) == npiece - 1) {
             errormsg = "Repeated " + components_[k] +
               " component in " + dms.substr(beg, end - beg);
