@@ -111,19 +111,20 @@ namespace GeographicLib {
      *   hemisphere indicator.
      * @return angle (degrees).
      *
-     * Degrees, minutes, and seconds are indicated by the letters d, ', &quot;,
-     * and these components may only be given in this order.  Any (but not all)
-     * components may be omitted.  The last component indicator may be omitted
-     * and is assumed to be tbe next smallest unit (thus 33d10 is interpreted
-     * as 33d10').  The final component may be a decimal fraction but the
-     * non-final components must be integers.  Instead of d, ', and &quot;,
-     * colons may be used as <i>separators</i> (numbers must appear before and
-     * after each :); thus 50d30'10.3&quot; may be written as 50:30:10.3, 5.5'
+     * Degrees, minutes, and seconds are indicated by the characters d, ',
+     * &quot;, and these components may only be given in this order.  Any (but
+     * not all) components may be omitted.  The last component indicator may be
+     * omitted and is assumed to be tbe next smallest unit (thus 33d10 is
+     * interpreted as 33d10').  The final component may be a decimal fraction
+     * but the non-final components must be integers.  Instead of using d, ',
+     * and &quot; to indicate degrees, minutes, and seconds, : may be used to
+     * <i>separate</i> these components (numbers must appear before and after
+     * each colon); thus 50d30'10.3&quot; may be written as 50:30:10.3, 5.5'
      * may be written 0:5.5, and so on.  The integer parts of the minutes and
      * seconds components must be less than 60.  A single leading sign is
      * permitted.  A hemisphere designator (N, E, W, S) may be added to tbe
      * beginning or end of the string.  The result is multiplied by the implied
-     * signed of the hemisphere designator (negative for S and W).  In addition
+     * sign of the hemisphere designator (negative for S and W).  In addition
      * \e ind is set to DMS::LATITUDE if N or S is present, to DMS::LONGITUDE
      * if E or W is present, and to DMS::NONE otherwise.  Throws an error on a
      * malformed string.  No check is performed on the range of the result.
