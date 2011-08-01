@@ -27,32 +27,85 @@ namespace GeographicLib {
 
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     string errormsg;
+    string dmsa = dms;
+    {
+      string::size_type p = 0;
+      // Convert degree symbol (U+00b0 = UTF-8 c2 b0) to d
+      while (true) {
+        p = dmsa.find("\xc2\xb0", p, 2);
+        if (p == string::npos)
+          break;
+        dmsa = dmsa.replace(p, 2, 1, 'd');
+      }
+      p = 0;
+      // Convert degree symbol (b0) to d
+      while (true) {
+        p = dmsa.find("\xb0", p, 1);
+        if (p == string::npos)
+          break;
+        dmsa = dmsa.replace(p, 1, 1, 'd');
+      }
+      p = 0;
+      // Convert masculine ordinal indicator (U+00ba = UTF-8 c2 ba) to d
+      // Sometimes used for degree
+      while (true) {
+        p = dmsa.find("\xc2\xba", p, 2);
+        if (p == string::npos)
+          break;
+        dmsa = dmsa.replace(p, 2, 1, 'd');
+      }
+      p = 0;
+      // Convert masculine ordinal indicator (ba) to d
+      // Sometimes used for degree
+      while (true) {
+        p = dmsa.find("\xba", p, 1);
+        if (p == string::npos)
+          break;
+        dmsa = dmsa.replace(p, 1, 1, 'd');
+      }
+      p = 0;
+      // Convert prime (U+2032 = UTF-8 e2 80 b2) to '
+      while (true) {
+        p = dmsa.find("\xe2\x80\xb2", p, 3);
+        if (p == string::npos)
+          break;
+        dmsa = dmsa.replace(p, 3, 1, '\'');
+      }
+      p = 0;
+      // Convert double prime (U+2033 = UTF-8 e2 80 b3) to "
+      while (true) {
+        p = dmsa.find("\xe2\x80\xb3", p, 3);
+        if (p == string::npos)
+          break;
+        dmsa = dmsa.replace(p, 3, 1, '"');
+      }
+    }
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
       unsigned
         beg = 0,
-        end = unsigned(dms.size());
-      while (beg < end && isspace(dms[beg]))
+        end = unsigned(dmsa.size());
+      while (beg < end && isspace(dmsa[beg]))
         ++beg;
-      while (beg < end && isspace(dms[end - 1]))
+      while (beg < end && isspace(dmsa[end - 1]))
         --end;
       flag ind1 = NONE;
       int k = -1;
-      if (end > beg && (k = lookup(hemispheres_, dms[beg])) >= 0) {
+      if (end > beg && (k = lookup(hemispheres_, dmsa[beg])) >= 0) {
         ind1 = (k / 2) ? LONGITUDE : LATITUDE;
         sign = k % 2 ? 1 : -1;
         ++beg;
       }
-      if (end > beg && (k = lookup(hemispheres_, dms[end-1])) >= 0) {
+      if (end > beg && (k = lookup(hemispheres_, dmsa[end-1])) >= 0) {
         if (k >= 0) {
           if (ind1 != NONE) {
-            if (toupper(dms[beg - 1]) == toupper(dms[end - 1]))
-              errormsg = "Repeated hemisphere indicators " + str(dms[beg - 1])
-                + " in " + dms.substr(beg - 1, end - beg + 1);
+            if (toupper(dmsa[beg - 1]) == toupper(dmsa[end - 1]))
+              errormsg = "Repeated hemisphere indicators " + str(dmsa[beg - 1])
+                + " in " + dmsa.substr(beg - 1, end - beg + 1);
             else
               errormsg = "Contradictory hemisphere indicators "
-                + str(dms[beg - 1]) + " and " + str(dms[end - 1]) + " in "
-                + dms.substr(beg - 1, end - beg + 1);
+                + str(dmsa[beg - 1]) + " and " + str(dmsa[end - 1]) + " in "
+                + dmsa.substr(beg - 1, end - beg + 1);
             break;
           }
           ind1 = (k / 2) ? LONGITUDE : LATITUDE;
@@ -60,14 +113,14 @@ namespace GeographicLib {
           --end;
         }
       }
-      if (end > beg && (k = lookup(signs_, dms[beg])) >= 0) {
+      if (end > beg && (k = lookup(signs_, dmsa[beg])) >= 0) {
         if (k >= 0) {
           sign *= k ? 1 : -1;
           ++beg;
         }
       }
       if (end == beg) {
-        errormsg = "Empty or incomplete DMS string " + dms;
+        errormsg = "Empty or incomplete DMS string " + dmsa;
         break;
       }
       real ipieces[] = {0, 0, 0};
@@ -79,7 +132,7 @@ namespace GeographicLib {
       bool pointseen = false;
       unsigned digcount = 0;
       while (p < end) {
-        char x = dms[p++];
+        char x = dmsa[p++];
         if ((k = lookup(digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0)
@@ -89,7 +142,7 @@ namespace GeographicLib {
         } else if (x == '.') {
           if (pointseen) {
             errormsg = "Multiple decimal points in "
-              + dms.substr(beg, end - beg);
+              + dmsa.substr(beg, end - beg);
             break;
           }
           pointseen = true;
@@ -98,28 +151,28 @@ namespace GeographicLib {
           if (k >= 3) {
             if (p == end) {
               errormsg = "Illegal for : to appear at the end of " +
-                dms.substr(beg, end - beg);
+                dmsa.substr(beg, end - beg);
               break;
             }
             k = npiece;
           }
           if (unsigned(k) == npiece - 1) {
             errormsg = "Repeated " + components_[k] +
-              " component in " + dms.substr(beg, end - beg);
+              " component in " + dmsa.substr(beg, end - beg);
             break;
           } else if (unsigned(k) < npiece) {
             errormsg = components_[k] + " component follows "
               + components_[npiece - 1] + " component in "
-              + dms.substr(beg, end - beg);
+              + dmsa.substr(beg, end - beg);
             break;
           }
           if (ncurrent == 0) {
             errormsg = "Missing numbers in " + components_[k] +
-              " component of " + dms.substr(beg, end - beg);
+              " component of " + dmsa.substr(beg, end - beg);
             break;
           }
           if (digcount > 1) {
-            istringstream s(dms.substr(p - digcount - 1, digcount));
+            istringstream s(dmsa.substr(p - digcount - 1, digcount));
             s >> fcurrent;
           }
           ipieces[k] = icurrent;
@@ -131,29 +184,29 @@ namespace GeographicLib {
           }
         } else if (lookup(signs_, x) >= 0) {
           errormsg = "Internal sign in DMS string "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         } else {
           errormsg = "Illegal character " + str(x) + " in DMS string "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         }
       }
       if (!errormsg.empty())
         break;
-      if (lookup(dmsindicators_, dms[p - 1]) < 0) {
+      if (lookup(dmsindicators_, dmsa[p - 1]) < 0) {
         if (npiece >= 3) {
           errormsg = "Extra text following seconds in DMS string "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         }
         if (ncurrent == 0) {
           errormsg = "Missing numbers in trailing component of "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         }
         if (digcount > 1) {
-          istringstream s(dms.substr(p - digcount, digcount));
+          istringstream s(dmsa.substr(p - digcount, digcount));
           s >> fcurrent;
         }
         ipieces[npiece] = icurrent;
@@ -161,7 +214,7 @@ namespace GeographicLib {
       }
       if (pointseen && digcount == 0) {
         errormsg = "Decimal point in non-terminal component of "
-          + dms.substr(beg, end - beg);
+          + dmsa.substr(beg, end - beg);
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
@@ -178,7 +231,7 @@ namespace GeographicLib {
       // might be able to offer a better diagnostic).
       return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
     } while (false);
-    real val = NumMatch(dms);
+    real val = NumMatch(dmsa);
     if (val == 0)
       throw GeographicErr(errormsg);
     else

@@ -170,7 +170,7 @@ namespace GeographicLib {
       throw GeographicErr("More than 2 digits_ at start of MGRS "
                           + mgrs.substr(0, p));
     if (len - p < 3)
-      throw GeographicErr("MGRS string " + mgrs + " too short");
+      throw GeographicErr("MGRS string too short " + mgrs);
     bool utmp = zone1 != 0;
     int zonem1 = zone1 - 1;
     const string& band = utmp ? latband_ : upsband_;

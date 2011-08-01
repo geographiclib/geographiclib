@@ -2216,7 +2216,10 @@ number.)
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.13 (released 2011-mm-dd)</a>
   - Withdraw some deprecated routines.
   - Allow default copy assigment to work for most classes.
-  - Allow : to be used as a DMS separator.
+  - Changes to GeographicLib::DMS::Decode(const std::string&, flag&)
+    - allow : to be used as a DMS separator;
+    - accept Unicode symbols for degrees, minutes seconds (coded as
+      UTF-8).
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a>
   - Change license to MIT/X11.
