@@ -136,7 +136,7 @@ namespace GeographicLib {
         if ((k = lookup(digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0)
-            ++digcount;           // Count of decimal digits_
+            ++digcount;         // Count of decimal digits
           else
             icurrent = 10 * icurrent + k;
         } else if (x == '.') {
@@ -300,53 +300,53 @@ namespace GeographicLib {
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
                          real& lat, real& lon, bool swaplatlong) {
-      real a, b;
-      flag ia, ib;
-      a = Decode(stra, ia);
-      b = Decode(strb, ib);
-      if (ia == NONE && ib == NONE) {
-        // Default to lat, long unless swaplatlong
-        ia = swaplatlong ? LONGITUDE : LATITUDE;
-        ib = swaplatlong ? LATITUDE : LONGITUDE;
-      } else if (ia == NONE)
-        ia = flag(LATITUDE + LONGITUDE - ib);
-      else if (ib == NONE)
-        ib = flag(LATITUDE + LONGITUDE - ia);
-      if (ia == ib)
-        throw GeographicErr("Both " + stra + " and "
-                            + strb + " interpreted as "
-                            + (ia == LATITUDE ? "latitudes" : "longitudes"));
-      real
-        lat1 = ia == LATITUDE ? a : b,
-        lon1 = ia == LATITUDE ? b : a;
-      if (lat1 < -90 || lat1 > 90)
-        throw GeographicErr("Latitude " + str(lat1) + "d not in [-90d, 90d]");
-      if (lon1 < -180 || lon1 > 360)
-        throw GeographicErr("Latitude " + str(lon1)
-                            + "d not in [-180d, 360d]");
-      if (lon1 >= 180)
-        lon1 -= 360;
-      lat = lat1;
-      lon = lon1;
+    real a, b;
+    flag ia, ib;
+    a = Decode(stra, ia);
+    b = Decode(strb, ib);
+    if (ia == NONE && ib == NONE) {
+      // Default to lat, long unless swaplatlong
+      ia = swaplatlong ? LONGITUDE : LATITUDE;
+      ib = swaplatlong ? LATITUDE : LONGITUDE;
+    } else if (ia == NONE)
+      ia = flag(LATITUDE + LONGITUDE - ib);
+    else if (ib == NONE)
+      ib = flag(LATITUDE + LONGITUDE - ia);
+    if (ia == ib)
+      throw GeographicErr("Both " + stra + " and "
+                          + strb + " interpreted as "
+                          + (ia == LATITUDE ? "latitudes" : "longitudes"));
+    real
+      lat1 = ia == LATITUDE ? a : b,
+      lon1 = ia == LATITUDE ? b : a;
+    if (lat1 < -90 || lat1 > 90)
+      throw GeographicErr("Latitude " + str(lat1) + "d not in [-90d, 90d]");
+    if (lon1 < -180 || lon1 > 360)
+      throw GeographicErr("Latitude " + str(lon1)
+                          + "d not in [-180d, 360d]");
+    if (lon1 >= 180)
+      lon1 -= 360;
+    lat = lat1;
+    lon = lon1;
   }
 
   Math::real DMS::DecodeAngle(const std::string& angstr) {
-    DMS::flag ind;
+    flag ind;
     real ang = Decode(angstr, ind);
-    if (ind != DMS::NONE)
+    if (ind != NONE)
       throw GeographicErr("Arc angle " + angstr
                           + " includes a hemisphere, N/E/W/S");
     return ang;
   }
 
   Math::real DMS::DecodeAzimuth(const std::string& azistr) {
-    DMS::flag ind;
+    flag ind;
     real azi = Decode(azistr, ind);
-    if (ind == DMS::LATITUDE)
+    if (ind == LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
     if (azi < -180 || azi > 360)
-      throw GeographicErr("Azimuth " + azistr + " not in range [-180d,360d]");
+      throw GeographicErr("Azimuth " + azistr + " not in range [-180d, 360d]");
     if (azi >= 180) azi -= 360;
     return azi;
   }
