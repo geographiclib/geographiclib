@@ -26,18 +26,22 @@
     <script type="text/javascript" src="GeographicLib/Geodesic.js"></script>
     <script type="text/javascript" src="GeographicLib/GeodesicLine.js"></script>
     <script type="text/javascript" src="GeographicLib/PolygonArea.js"></script>
+    <script type="text/javascript" src="GeographicLib/DMS.js"></script>
     <script type="text/javascript" src="GeographicLib/Interface.js"></script>
     <script type="text/javascript">
 var geod = GeographicLib.Geodesic.WGS84;
+var dms = GeographicLib.DMS;
 function GeodesicInverse(input) {
   var result = {};
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2
     var t = new String(input);
-    t = t.split(/[\s,]+/,6);
-    if (t[0] == "") t.shift();
-    t = geod.Inverse
-    (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]));
+    t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,6);
+    if (t.length != 4)
+      throw new Error("Need 4 input items");
+    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
+    t = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon);
     result.status = "OK";
     result.p1 =
       t.lat1.toFixed(13) + " " + t.lon1.toFixed(13) + " " + t.azi1.toFixed(13);
@@ -60,10 +64,13 @@ function GeodesicDirect(input) {
   try {
     // Input is a blank-delimited line: lat1 lon1 azi1 s12
     var t = new String(input);
-    t = t.split(/[\s,]+/,6);
-    if (t[0] == "") t.shift();
-    t = geod.Direct
-    (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]));
+    t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,6);
+    if (t.length != 4)
+      throw new Error("Need 4 input items");
+    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    var azi1 = GeographicLib.DMS.DecodeAzimuth(t[2]);
+    var s12 = parseFloat(t[3]);
+    t = geod.Direct(p1.lat, p1.lon, azi1, s12);
     result.status = "OK";
     result.p1 =
       t.lat1.toFixed(13) + " " + t.lon1.toFixed(13) + " " + t.azi1.toFixed(13);
@@ -86,11 +93,17 @@ function GeodesicInversePath(input) {
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2 ds12 maxnum
     var t = new String(input);
+    t = t.replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,8);
+    if (t.length != 6)
+      throw new Error("Need 6 input items");
+    var p1 = GeographicLib.DMS.DecodeLatLon(t[0], t[1]);
+    var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
+    var ds12 = parseFloat(t[4]);
+    var maxnum = parseInt(t[5]);
+    var t = new String(input);
     t = t.split(/[\s,]+/,8);
     if (t[0] == "") t.shift();
-    t = geod.InversePath
-    (parseFloat(t[0]), parseFloat(t[1]), parseFloat(t[2]), parseFloat(t[3]),
-     parseFloat(t[4]), parseInt(t[5]));
+    t = geod.InversePath(p1.lat, p1.lon, p2.lat, p2.lon, ds12, maxnum);
     result.status = "OK";
     result.points = ""
     for (var i = 0; i < t.length; ++i)
@@ -114,9 +127,10 @@ function GeodesicArea(input) {
     if (t[0] == "") t.shift();
     if (t[t.length-1] == "") t.pop();
     for (var i = 0; i < t.length; ++i) {
-      var pos = t[i].split(/[\s,]+/,5);
-      if (pos[0] == "") pos.shift();
-      t[i] = {lat: parseFloat(pos[0]), lon: parseFloat(pos[1])};
+      var pos = t[i].replace(/^\s+/,"").replace(/\s+$/,"").split(/[\s,]+/,4);
+      if (pos.length != 2)
+	throw new Error("Need 2 items on each line");
+      t[i] = dms.DecodeLatLon(pos[0], pos[1]);
     }
     t = geod.Area(t);
     result.status = "OK";
@@ -154,12 +168,13 @@ function GeodesicArea(input) {
 	<a href="http://geographiclib.sourceforge.net/geod-errata.html">
 	  <b>errata</b></a>.
       </blockquote>
-      This page just provides a basic interface.  There's no fancy
-      parsing of geographic coordinates.  Enter latitudes and longitudes
-      as signed decimal degrees using spaces or commas as separators.
-      The number of digits given in the output roughly reflects the
-      accuracy of the results.  A slicker page where the geodesics are
-      incorporated into Google Maps is
+      This page just provides a basic interface.  Enter latitudes,
+      longitudes, and azimuths as signed decimal degrees (or degrees,
+      minutes, and seconds, e.g. 20&#xb0;30&#x2032;40&#x2033;N or
+      20d30'40&quot;E) and distances as meters using spaces or commas as
+      separators.  The number of digits given in the output roughly
+      reflects the accuracy of the results.  A slicker page where the
+      geodesics are incorporated into Google Maps is
       given <a href="geod-google.html">here</a>.
     <p>
       Jump to:
@@ -186,8 +201,7 @@ function GeodesicArea(input) {
         inverse geodesic calculator</a> returns a result which is 1.2 km
 	too long with an azimuth which is off by 3 degrees.)
       </p>
-      <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>
-        (as signed decimal degrees):</p>
+      <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>:</p>
       <p>input: 
         <input name="input" size=72 value="-41.32 174.81 40.96 -5.50" />
       </p>
@@ -226,8 +240,7 @@ function GeodesicArea(input) {
 	at the destination <i>azi2</i>.  The sample calculation shows
 	the result of travelling 10000 km NE from JFK airport.
       </p>
-      <p>Enter <i>&ldquo;lat1 lon1 azi1 s12&rdquo;</i>
-        (as signed decimal degrees and meters):</p>
+      <p>Enter <i>&ldquo;lat1 lon1 azi1 s12&rdquo;</i></p>
       <p>input: 
         <input name="input" size=72 value="40.6 -73.8 45 10000e3" />
       </p>
@@ -270,8 +283,7 @@ function GeodesicArea(input) {
 	intervals.  (In this example, the path taken by Google Earth
 	deviates from the shortest path by about 2.9 km.)
       </p>
-      <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2 ds12 maxk&rdquo;</i>
-        (as signed decimal degrees and meters):</p>
+      <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2 ds12 maxk&rdquo;</i>:</p>
       <p>input: 
         <input name="input" size=72 value="40.6 -73.8 1.4 104 1000e3 20" />
       </p>
@@ -304,8 +316,7 @@ function GeodesicArea(input) {
 	is a little unfair, since Google Earth has no concept of
 	polygons which encircle a pole.)
       </p>
-      <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>
-        (as signed decimal degrees):</p>
+      <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>:</p>
       <p>points (lat lon):<br>
         <textarea name="input" cols=36 rows=13>-63.1  -58
 -72.9  -74
@@ -345,7 +356,7 @@ function GeodesicArea(input) {
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-07-20)</address>
+      (2011-08-02)</address>
     <br>
     <a href="http://geographiclib.sourceforge.net">
       <img

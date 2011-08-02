@@ -19,11 +19,16 @@ GeographicLib.DMS = {};
   d.lookup = function(s, c) {
     return s.indexOf(c.toUpperCase());
   }
-
+  d.zerofill = function(s, n) {
+    return String("0000").substr(0, Math.max(0, Math.min(4, n-s.length))) +
+      s;
+  }
   d.hemispheres_ = "SNWE";
   d.signs_ = "-+";
   d.digits_ = "0123456789";
   d.dmsindicators_ = "D'\":";
+  // d.dmsindicatorsu_ = "\u00b0\u2032\u2033"; // Unicode variants
+  d.dmsindicatorsu_ = "\u00b0'\""; // Use degree symbol
   d.components_ = ["degrees", "minutes", "seconds"];
   d.NONE = 0;
   d.LATITUDE = 1;
@@ -45,7 +50,7 @@ GeographicLib.DMS = {};
     dmsa = dmsa.replace(/\u2033/g, '"');
     dmsa = dmsa.replace(/^\s+/, "");
     dmsa = dmsa.replace(/\s+$/, "");
-    do {                       // Executed once (provides the ability to break)
+    do {		// Executed once (provides the ability to break)
       var sign = 1;
       var beg = 0, end = dmsa.length;
       var ind1 = d.NONE;
@@ -256,12 +261,12 @@ GeographicLib.DMS = {};
     var ang = vals.val, ind = vals.ind;
     if (ind != d.NONE)
       throw new Error("Arc angle " + angstr
-                          + " includes a hemisphere, N/E/W/S");
+                      + " includes a hemisphere, N/E/W/S");
     return ang;
   }
 
   d.DecodeAzimuth = function(azistr) {
-    var vals = d.Decode(angstr);
+    var vals = d.Decode(azistr);
     var azi = vals.val, ind = vals.ind;
     if (ind == d.LATITUDE)
       throw GeographicErr("Azimuth " + azistr
@@ -275,13 +280,14 @@ GeographicLib.DMS = {};
   d.Encode = function(angle, trailing, prec, ind) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
+    if (!ind) ind = d.NONE;
     if (!isFinite(angle))
       return angle < 0 ? String("-inf") :
-        (angle > 0 ? String("inf") : String("nan"));
+      (angle > 0 ? String("inf") : String("nan"));
 
     // 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).
     // This suffices to give full real precision for numbers in [-90,90]
-    prec = min(15 - 2 * trailing, prec);
+    prec = Math.min(15 - 2 * trailing, prec);
     var scale = 1, i;
     for (i = 0; i < trailing; ++i)
       scale *= 60;
@@ -295,8 +301,8 @@ GeographicLib.DMS = {};
     // Break off integer part to preserve precision in manipulation of
     // fractional part.
     var
-      idegree = Math.floor(angle),
-      fdegree = Math.floor((angle - idegree) * scale + 0.5) / scale;
+    idegree = Math.floor(angle),
+    fdegree = Math.floor((angle - idegree) * scale + 0.5) / scale;
     if (fdegree >= 1) {
       idegree += 1;
       fdegree -= 1;
@@ -304,8 +310,8 @@ GeographicLib.DMS = {};
     var pieces = [fdegree, 0, 0];
     for (i = 1; i <= trailing; ++i) {
       var
-        ip = Math.floor(pieces[i - 1]),
-        fp = pieces[i - 1] - ip;
+      ip = Math.floor(pieces[i - 1]),
+      fp = pieces[i - 1] - ip;
       pieces[i] = fp * 60;
       pieces[i - 1] = ip;
     }
@@ -315,24 +321,24 @@ GeographicLib.DMS = {};
       s += '-';
     switch (trailing) {
     case d.DEGREE:
-      // if (ind != NONE)
-      //   s << setw(1 + min(int(ind), 2) + prec + (prec ? 1 : 0));
-      s += pieces[0].toFixed(prec);
-      // Don't include degree designator (d) if it is the trailing component.
+      s += d.zerofill(pieces[0].toFixed(prec),
+		      ind == d.NONE ? 0 :
+		      1 + Math.min(ind, 2) + prec + (prec ? 1 : 0)) +
+	d.dmsindicatorsu_.charAt(0);
       break;
     default:
-      // if (ind != NONE)
-      //   s << setw(1 + min(int(ind), 2));
-      s += pieces[0].toFixed(0) + d.dmsindicators_.charAt(0).toLowerCase();
+      s += d.zerofill(pieces[0].toFixed(0),
+		      ind == d.NONE ? 0 : 1 + Math.min(ind, 2)) +
+	d.dmsindicatorsu_.charAt(0);
       switch (trailing) {
       case d.MINUTE:
-        // setw(2 + prec + (prec ? 1 : 0))
-	s += pieces[1].toFixed(prec) + d.dmsindicators_.charAt(1).toLowerCase();
+	s += d.zerofill(pieces[1].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
+	  d.dmsindicatorsu_.charAt(1);
         break;
       case d.SECOND:
-	// setw(2)
-	s += pieces[1].toFixed(0) + d.dmsindicators_.charAt(1).toLowerCase();
-	s += pieces[2].toFixed(prec) + d.dmsindicators_.charAt(2).toLowerCase();
+	s += d.zerofill(pieces[1].toFixed(0), 2) + d.dmsindicatorsu_.charAt(1);
+	s += d.zerofill(pieces[2].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
+	  d.dmsindicatorsu_.charAt(2);
         break;
       default:
         break;
@@ -341,7 +347,7 @@ GeographicLib.DMS = {};
     if (ind != d.NONE && ind != d.AZIMUTH)
       s += d.hemispheres_.charAt((ind == d.LATITUDE ? 0 : 2) +
 				 (sign < 0 ? 0 : 1));
-    return s.str();
+    return s;
   }
 
 })();
