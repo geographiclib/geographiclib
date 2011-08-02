@@ -11,8 +11,9 @@ JSSCRIPTS = \
 scripts/GeographicLib/Math.js \
 scripts/GeographicLib/Geodesic.js \
 scripts/GeographicLib/GeodesicLine.js \
-scripts/GeographicLib/Interface.js \
-scripts/GeographicLib/PolygonArea.js
+scripts/GeographicLib/PolygonArea.js \
+scripts/GeographicLib/DMS.js \
+scripts/GeographicLib/Interface.js
 
 HPPFILES = \
 $(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \

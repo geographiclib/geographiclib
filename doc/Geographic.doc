@@ -2223,7 +2223,8 @@ number.)
       GeographicLib::DMS and GeographicLib::GeoCoords functions to make
       longitude precede latitude;
     - also <a href="GeoConvert.1.html">GeoConvert</a> has a -w option to
-      make longitude precede latitude on input and output.
+      make longitude precede latitude on input and output;
+    - implement functionality of GeographicLib::DMS in Javascript.
   - Slight improvement in starting guess for solution of geographic
     latitude in terms of conformal latitude in TransverseMercator,
     TransverseMercatorExact, and LambertConformalConic.

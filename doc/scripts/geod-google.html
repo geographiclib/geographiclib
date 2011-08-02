@@ -163,6 +163,7 @@ function draw(v) {
     for (k = 0; k < points.length; ++k)
       path.push(new google.maps.LatLng(points[k].lat, points[k].lon));
   }
+  map.panTo(new google.maps.LatLng(v.lat2, v.lon2));
 }
 
 function clearPaths() {
