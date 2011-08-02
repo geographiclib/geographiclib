@@ -23,7 +23,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  void GeoCoords::Reset(const std::string& s, bool centerp) {
+  void GeoCoords::Reset(const std::string& s, bool centerp, bool swaplatlong) {
     vector<string> sa;
     const char* spaces = " \t\n\v\f\r,"; // Include comma as a space
     for (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
@@ -39,7 +39,7 @@ namespace GeographicLib {
       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
                       _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
-      DMS::DecodeLatLon(sa[0], sa[1], _lat, _long);
+      DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, swaplatlong);
       UTMUPS::Forward( _lat, _long,
                        _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {
@@ -66,26 +66,30 @@ namespace GeographicLib {
   }
 
 
-  string GeoCoords::GeoRepresentation(int prec) const {
+  string GeoCoords::GeoRepresentation(int prec, bool swaplatlong) const {
     prec = max(0, min(9, prec) + 5);
     ostringstream os;
     os << fixed << setprecision(prec);
-    if (_lat == _lat)
-      os << _lat;
+    real a = swaplatlong ? _long : _lat;
+    real b = swaplatlong ? _lat : _long;
+    if (!Math::isnan(a))
+      os << a;
     else
       os << "nan";
     os << " ";
-    if (_long == _long)
-      os << _long;
+    if (!Math::isnan(b))
+      os << b;
     else
       os << "nan";
     return os.str();
   }
 
-  string GeoCoords::DMSRepresentation(int prec) const {
+  string GeoCoords::DMSRepresentation(int prec, bool swaplatlong) const {
     prec = max(0, min(10, prec) + 5);
-    return DMS::Encode(_lat, unsigned(prec), DMS::LATITUDE) +
-      " " + DMS::Encode(_long, unsigned(prec), DMS::LONGITUDE);
+    return DMS::Encode(swaplatlong ? _long : _lat, unsigned(prec),
+                       swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE) +
+      " " + DMS::Encode(swaplatlong ? _lat : _long, unsigned(prec),
+                        swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE);
   }
 
   string GeoCoords::MGRSRepresentation(int prec) const {
@@ -140,7 +144,7 @@ namespace GeographicLib {
 
   void GeoCoords::FixHemisphere() {
     if (_lat == 0 || (_northp && _lat >= 0) || (!_northp && _lat < 0) ||
-        _lat != _lat)
+        Math::isnan(_lat))
       // Allow either hemisphere for equator
       return;
     if (_zone != UTMUPS::UPS) {

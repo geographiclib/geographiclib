@@ -85,6 +85,8 @@ namespace GeographicLib {
      *   the position.
      * @param[in] centerp governs the interpretation of MGRS coordinates (see
      *   below).
+     * @param[in] swaplatlong governs the interpretation of geographic
+     *   coordinates (see below).
      *
      * Parse as a string and interpret it as a geographic position.  The input
      * string is broken into space (or comma) separated pieces and Basic
@@ -108,8 +110,10 @@ namespace GeographicLib {
      *   -  897039 3708229 37N
      *
      * Latitude and Longitude parsing.  Latitude precedes longitude, unless a
-     * N, S, E, W hemisphere designator is used on one or both coordinates.
-     * Thus
+     * N, S, E, W hemisphere designator is used on one or both coordinates.  If
+     * \e swaplatlong = true (default is false), then longitude precedes
+     * latitude in the absence of a hemisphere designator.  Thus (with \e
+     * swaplatlong = false)
      * - 40 -75
      * - N40 W75
      * - -75 N40
@@ -150,8 +154,9 @@ namespace GeographicLib {
      * - 38SMB4484       = 38N 444000 3684000
      * - 38SMB44148470   = 38N 444140 3684700
      **********************************************************************/
-    explicit GeoCoords(const std::string& s, bool centerp = true)
-    { Reset(s, centerp); }
+    explicit GeoCoords(const std::string& s,
+                       bool centerp = true, bool swaplatlong = false)
+    { Reset(s, centerp, swaplatlong); }
 
     /**
      * Construct from geographic coordinates.
@@ -179,9 +184,10 @@ namespace GeographicLib {
 
     /**
      * Reset the location from a string.  See
-     * GeoCoords(const std::string& s, bool centerp).
+     * GeoCoords(const std::string& s, bool centerp, bool swaplatlong).
      **********************************************************************/
-    void Reset(const std::string& s, bool centerp = true);
+    void Reset(const std::string& s,
+               bool centerp = true, bool swaplatlong = false);
 
     /**
      * Reset the location in terms of geographic coordinates.  See
@@ -327,6 +333,7 @@ namespace GeographicLib {
      * degrees.
      *
      * @param[in] prec precision (relative to about 1m).
+     * @param[in] swaplatlong if true give longitude first (default = false)
      * @return decimal latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
@@ -335,13 +342,14 @@ namespace GeographicLib {
      * - prec = 3, 10<sup>-8</sup>d
      * - prec = 9 (max), 10<sup>-14</sup>d
      **********************************************************************/
-    std::string GeoRepresentation(int prec = 0) const;
+    std::string GeoRepresentation(int prec = 0, bool swaplatlong = false) const;
 
     /**
      * String representation with latitude and longitude as degrees, minutes,
      * seconds, and hemisphere.
      *
      * @param[in] prec precision (relative to about 1m)
+     * @param[in] swaplatlong if true give longitude first (default = false)
      * @return DMS latitude/longitude string representation.
      *
      * Precision specifies accuracy of representation as follows:
@@ -354,7 +362,7 @@ namespace GeographicLib {
      * - prec = 1, 0.01"
      * - prec = 10 (max), 10<sup>-11</sup>"
      **********************************************************************/
-    std::string DMSRepresentation(int prec = 0) const;
+    std::string DMSRepresentation(int prec = 0, bool swaplatlong = false) const;
 
     /**
      * MGRS string.

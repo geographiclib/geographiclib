@@ -2214,12 +2214,21 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.13 (released 2011-mm-dd)</a>
-  - Withdraw some deprecated routines.
+  - Changes to I/O:
+    - allow : to be used as a DMS separator in
+      GeographicLib::DMS::Decode(const std::string&, flag&);
+    - also accept Unicode symbols for degrees, minutes seconds (coded as
+      UTF-8);
+    - provide \e swaplatlong optional argument to various
+      GeographicLib::DMS and GeographicLib::GeoCoords functions to make
+      longitude precede latitude;
+    - also <a href="GeoConvert.1.html">GeoConvert</a> has a -w option to
+      make longitude precede latitude on input and output.
+  - Slight improvement in starting guess for solution of geographic
+    latitude in terms of conformal latitude in TransverseMercator,
+    TransverseMercatorExact, and LambertConformalConic.
   - Allow default copy assigment to work for most classes.
-  - Changes to GeographicLib::DMS::Decode(const std::string&, flag&)
-    - allow : to be used as a DMS separator;
-    - accept Unicode symbols for degrees, minutes seconds (coded as
-      UTF-8).
+  - Withdraw some deprecated routines.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a>
   - Change license to MIT/X11.

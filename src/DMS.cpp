@@ -299,15 +299,15 @@ namespace GeographicLib {
   }
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
-                         real& lat, real& lon) {
+                         real& lat, real& lon, bool swaplatlong) {
       real a, b;
       flag ia, ib;
       a = Decode(stra, ia);
       b = Decode(strb, ib);
       if (ia == NONE && ib == NONE) {
-        // Default to lat, long
-        ia = LATITUDE;
-        ib = LONGITUDE;
+        // Default to lat, long unless swaplatlong
+        ia = swaplatlong ? LONGITUDE : LATITUDE;
+        ib = swaplatlong ? LATITUDE : LONGITUDE;
       } else if (ia == NONE)
         ia = flag(LATITUDE + LONGITUDE - ib);
       else if (ib == NONE)

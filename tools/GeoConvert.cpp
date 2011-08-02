@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
     int outputmode = GEOGRAPHIC;
     int prec = 0;
     int zone = UTMUPS::MATCH;
-    bool centerp = true;
+    bool centerp = true, swaplatlong = false;
     std::string istring, ifile, ofile;
 
     for (int m = 1; m < argc; ++m) {
@@ -48,6 +48,8 @@ int main(int argc, char* argv[]) {
         outputmode = CONVERGENCE;
       else if (arg == "-n")
         centerp = false;
+      else if (arg == "-w")
+        swaplatlong = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         std::istringstream str(argv[m]);
@@ -143,14 +145,14 @@ int main(int argc, char* argv[]) {
 
     while (std::getline(*input, s)) {
       try {
-        p.Reset(s, centerp);
+        p.Reset(s, centerp, swaplatlong);
         p.SetAltZone(zone);
         switch (outputmode) {
         case GEOGRAPHIC:
-          os = p.GeoRepresentation(prec);
+          os = p.GeoRepresentation(prec, swaplatlong);
           break;
         case DMS:
-          os = p.DMSRepresentation(prec);
+          os = p.DMSRepresentation(prec, swaplatlong);
           break;
         case UTMUPS:
           os = p.AltUTMUPSRepresentation(prec);
