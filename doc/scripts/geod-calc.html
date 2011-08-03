@@ -29,9 +29,26 @@
     <script type="text/javascript" src="GeographicLib/DMS.js"></script>
     <script type="text/javascript" src="GeographicLib/Interface.js"></script>
     <script type="text/javascript">
+<!--
 var geod = GeographicLib.Geodesic.WGS84;
 var dms = GeographicLib.DMS;
-function GeodesicInverse(input) {
+function formatpoint(lat, lon, azi, dmsformat, prec) {
+  prec += 5;
+  if (dmsformat) {
+    var trail = prec < 2 ? dms.DEGREE :
+      (prec < 4 ? dms.MINUTE : dms.SECOND);
+    prec = prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4);
+    return (dms.Encode(lat, trail, prec, dms.LATITUDE) + " " +
+	    dms.Encode(lon, trail, prec, dms.LONGITUDE) + " " +
+	    dms.Encode(azi, trail, prec, dms.AZIMUTH));
+  } else {
+    return (lat.toFixed(prec) + " " +
+	    lon.toFixed(prec) + " " +
+	    azi .toFixed(prec));
+  }
+}
+
+function GeodesicInverse(input, dmsformat, prec) {
   var result = {};
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2
@@ -43,12 +60,9 @@ function GeodesicInverse(input) {
     var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
     t = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon);
     result.status = "OK";
-    result.p1 =
-      t.lat1.toFixed(13) + " " + t.lon1.toFixed(13) + " " + t.azi1.toFixed(13);
-    result.p2 =
-      t.lat2.toFixed(13) + " " + t.lon2.toFixed(13) + " " + t.azi2.toFixed(13);
-    result.s12 =
-      t.s12.toFixed(8);
+    result.p1 = formatpoint(t.lat1, t.lon1, t.azi1, dmsformat, prec);
+    result.p2 = formatpoint(t.lat2, t.lon2, t.azi2, dmsformat, prec);
+    result.s12 = t.s12.toFixed(prec);
   }
   catch (e) {
     result.status = "ERROR: " + e.message;
@@ -59,7 +73,7 @@ function GeodesicInverse(input) {
   return result;
 }
 
-function GeodesicDirect(input) {
+function GeodesicDirect(input, dmsformat, prec) {
   var result = {};
   try {
     // Input is a blank-delimited line: lat1 lon1 azi1 s12
@@ -72,12 +86,9 @@ function GeodesicDirect(input) {
     var s12 = parseFloat(t[3]);
     t = geod.Direct(p1.lat, p1.lon, azi1, s12);
     result.status = "OK";
-    result.p1 =
-      t.lat1.toFixed(13) + " " + t.lon1.toFixed(13) + " " + t.azi1.toFixed(13);
-    result.p2 =
-      t.lat2.toFixed(13) + " " + t.lon2.toFixed(13) + " " + t.azi2.toFixed(13);
-    result.s12 =
-      t.s12.toFixed(8);
+    result.p1 = formatpoint(t.lat1, t.lon1, t.azi1, dmsformat, prec);
+    result.p2 = formatpoint(t.lat2, t.lon2, t.azi2, dmsformat, prec);
+    result.s12 = t.s12.toFixed(prec);
   }
   catch (e) {
     result.status = "ERROR: " + e.message;
@@ -88,7 +99,7 @@ function GeodesicDirect(input) {
   return result;
 }
 
-function GeodesicInversePath(input) {
+function GeodesicInversePath(input, dmsformat, prec) {
   var result = {};
   try {
     // Input is a blank-delimited line: lat1 lon1 lat2 lon2 ds12 maxnum
@@ -107,8 +118,8 @@ function GeodesicInversePath(input) {
     result.status = "OK";
     result.points = ""
     for (var i = 0; i < t.length; ++i)
-      result.points += t[i].lat.toFixed(13) + " " + t[i].lon.toFixed(13)
-      + " " + t[i].azi.toFixed(13) + "\n";
+      result.points +=
+      formatpoint(t[i].lat, t[i].lon, t[i].azi, dmsformat, prec) + "\n";
   }
   catch (e) {
     result.status = "ERROR: " + e.message;
@@ -143,6 +154,7 @@ function GeodesicArea(input) {
   }
   return result;
 }
+//-->
     </script>
   </head>
   <body>
@@ -172,10 +184,10 @@ function GeodesicArea(input) {
       longitudes, and azimuths as signed degrees (or degrees, minutes,
       and seconds, e.g. 20&deg;30&prime;40&Prime;N or
       20d30&apos;40&quot;E) and distances as meters using spaces or
-      commas as separators.  The number of digits given in the output
-      roughly reflects the accuracy of the results.  A slicker page
-      where the geodesics are incorporated into Google Maps is
-      given <a href="geod-google.html">here</a>.
+      commas as separators.  The results are accurate to about
+      15&nbsp;nm (or 0.1&nbsp;m<sup>2</sup> per vertex for areas).  A
+      slicker page where the geodesics are incorporated into Google Maps
+      is given <a href="geod-google.html">here</a>.
     <p>
       Jump to:
       <ul>
@@ -188,7 +200,7 @@ function GeodesicArea(input) {
       </ul>
     </p>
     <hr>
-    <form>
+    <form name="inverse" >
       <h3><a class="anchor" id="inverse">Inverse problem</h3>
       <p>
 	Find the shortest path between two points on the earth.  The
@@ -206,24 +218,48 @@ function GeodesicArea(input) {
         <input name="input" size=72 value="-41.32 174.81 40.96 -5.50" />
       </p>
       <p>
+	Output format:&nbsp;&nbsp;<label for="ig">
+	  <input type="radio" value="g" name="format" id="ig" checked>
+	  decimal degrees
+	</label>&nbsp;
+	<label for="id">
+	  <input type="radio" value="d" name="format" id="id">
+	  degrees minutes seconds
+	</label><br>
+	Output precision:&nbsp;&nbsp;<select name="prec" size=1>
+	  <option value='0'> 1m 0.00001d 0.1"</option>
+	  <option value='1'> 100mm 0.01"</option>
+	  <option value='2'> 10mm 0.001"</option>
+	  <option value='3' selected> 1mm 0.0001"</option>
+	  <option value='4'> 100um 0.00001"</option>
+	  <option value='5'> 10um 0.000001"</option>
+	  <option value='6'> 1um 0.0000001"</option>
+	  <option value='7'> 100nm 0.00000001"</option>
+	  <option value='8'> 10nm 0.000000001"</option>
+	  <option value='9'> 1nm 0.0000000001"</option>
+	</select>
+      </p>
+      <p>
         <input type="button" value="compute" 
-	       onclick="var t = GeodesicInverse(input.value);
-			statusa.value = t.status;
-			p1.value = t.p1;
-			p2.value = t.p2;
-			s12.value = t.s12;" />
+	       onclick="var t = GeodesicInverse(document.inverse.input.value,
+			        document.inverse.format[1].checked,
+				document.inverse.prec.selectedIndex);
+			document.inverse.status.value = t.status;
+			document.inverse.p1.value = t.p1;
+			document.inverse.p2.value = t.p2;
+			document.inverse.s12.value = t.s12;" />
       </p>
       <p>
 	status:
-        <input name="statusa" size=50 readonly />
+        <input name="status" size=50 readonly />
       </p>
       <p>
 	lat1 lon1 azi1:
-        <input name="p1" size=70 readonly />
+        <input name="p1" size=75 readonly />
       </p>
       <p>
 	lat2 lon2 azi2:
-        <input name="p2" size=70 readonly />
+        <input name="p2" size=75 readonly />
       </p>
       <p>
 	s12:
@@ -231,7 +267,7 @@ function GeodesicArea(input) {
       </p>
     </form>
     <hr>
-    <form>
+    <form name="direct">
       <h3><a class="anchor" id="direct">Direct problem</h3>
       <p>
 	Find the destination traveling a given distance along a geodesic
@@ -245,24 +281,48 @@ function GeodesicArea(input) {
         <input name="input" size=72 value="40.6 -73.8 45 10000e3" />
       </p>
       <p>
+	Output format:&nbsp;&nbsp;<label for="dg">
+	  <input type="radio" value="g" name="format" id="dg" checked>
+	  decimal degrees
+	</label>&nbsp;
+	<label for="dd">
+	  <input type="radio" value="d" name="format" id="dd">
+	  degrees minutes seconds
+	</label><br>
+	Output precision:&nbsp;&nbsp;<select name="prec" size=1>
+	  <option value='0'> 1m 0.00001d 0.1"</option>
+	  <option value='1'> 100mm 0.01"</option>
+	  <option value='2'> 10mm 0.001"</option>
+	  <option value='3' selected> 1mm 0.0001"</option>
+	  <option value='4'> 100um 0.00001"</option>
+	  <option value='5'> 10um 0.000001"</option>
+	  <option value='6'> 1um 0.0000001"</option>
+	  <option value='7'> 100nm 0.00000001"</option>
+	  <option value='8'> 10nm 0.000000001"</option>
+	  <option value='9'> 1nm 0.0000000001"</option>
+	</select>
+      </p>
+      <p>
         <input type="button" value="compute" 
-	       onclick="var t = GeodesicDirect(input.value);
-			statusb.value = t.status;
-			p1.value = t.p1;
-			p2.value = t.p2;
-			s12.value = t.s12;" />
+	       onclick="var t = GeodesicDirect(document.direct.input.value,
+			        document.direct.format[1].checked,
+				document.direct.prec.selectedIndex);
+			document.direct.status.value = t.status;
+			document.direct.p1.value = t.p1;
+			document.direct.p2.value = t.p2;
+			document.direct.s12.value = t.s12;" />
       </p>
       <p>
 	status:
-        <input name="statusb" size=50 readonly />
+        <input name="status" size=50 readonly />
       </p>
       <p>
 	lat1 lon1 azi1:
-        <input name="p1" size=70 readonly />
+        <input name="p1" size=75 readonly />
       </p>
       <p>
 	lat2 lon2 azi2:
-        <input name="p2" size=70 readonly />
+        <input name="p2" size=75 readonly />
       </p>
       <p>
 	s12:
@@ -270,7 +330,7 @@ function GeodesicArea(input) {
       </p>
     </form>
     <hr>
-    <form>
+    <form name="path">
       <h3><a class="anchor" id="path">Geodesic path</h3>
       <p>
 	Find intermediate points along a geodesic.  In addition to
@@ -288,22 +348,46 @@ function GeodesicArea(input) {
         <input name="input" size=72 value="40.6 -73.8 1.4 104 1000e3 20" />
       </p>
       <p>
+	Output format:&nbsp;&nbsp;<label for="pg">
+	  <input type="radio" value="g" name="format" id="pg" checked>
+	  decimal degrees
+	</label>&nbsp;
+	<label for="pd">
+	  <input type="radio" value="d" name="format" id="pd">
+	  degrees minutes seconds
+	</label><br>
+	Output precision:&nbsp;&nbsp;<select name="prec" size=1>
+	  <option value='0' selected> 1m 0.00001d 0.1"</option>
+	  <option value='1'> 100mm 0.01"</option>
+	  <option value='2'> 10mm 0.001"</option>
+	  <option value='3'> 1mm 0.0001"</option>
+	  <option value='4'> 100um 0.00001"</option>
+	  <option value='5'> 10um 0.000001"</option>
+	  <option value='6'> 1um 0.0000001"</option>
+	  <option value='7'> 100nm 0.00000001"</option>
+	  <option value='8'> 10nm 0.000000001"</option>
+	  <option value='9'> 1nm 0.0000000001"</option>
+	</select>
+      </p>
+      <p>
         <input type="button" value="compute" 
-	       onclick="var t = GeodesicInversePath(input.value);
-			statusc.value = t.status;
-			points.value = t.points;" />
+	       onclick="var t = GeodesicInversePath(document.path.input.value,
+			        document.path.format[1].checked,
+				document.path.prec.selectedIndex);
+			document.path.status.value = t.status;
+			document.path.points.value = t.points;" />
       </p>
       <p>
 	status:
-        <input name="statusc" size=50 readonly />
+        <input name="status" size=50 readonly />
       </p>
       <p>
 	points (lat lon azi):<br>
-        <textarea name="points" cols=60 rows=21 readonly></textarea>
+        <textarea name="points" cols=70 rows=21 readonly></textarea>
       </p>
     </form>
     <hr>
-    <form>
+    <form name="area">
       <h3><a class="anchor" id="area">Polygon area</h3>
       <p>
 	Compute the perimeter and area of a polygon whose sides are
@@ -340,13 +424,13 @@ function GeodesicArea(input) {
       </p>
       <p>
         <input type="button" value="compute" 
-	       onclick="var t = GeodesicArea(input.value);
-			statusd.value = t.status;
-			area.value = t.area;" />
+	       onclick="var t = GeodesicArea(document.area.input.value);
+			document.area.status.value = t.status;
+			document.area.area.value = t.area;" />
       </p>
       <p>
 	status:
-        <input name="statusd" size=50 readonly />
+        <input name="status" size=50 readonly />
       </p>
       <p>
 	number perimeter area:

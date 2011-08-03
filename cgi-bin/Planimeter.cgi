@@ -144,8 +144,9 @@ cat <<EOF
       causes the reading of vertices to be stopped.
     </p>
     <p>
-      The result for the perimeter is accurate to about 15 nm per vertex.  The
-      result for the area is accurate to about 0.1 m<sup>2</sup> per vertex.
+      The result for the perimeter is accurate to about 15&nbsp;nm per
+      vertex.  The result for the area is accurate to about
+      0.1&nbsp;m<sup>2</sup> per vertex.
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>,
       which is a simple wrapper of the

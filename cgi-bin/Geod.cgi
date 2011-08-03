@@ -261,7 +261,7 @@ cat <<EOF
       distance <em>s12</em> is in meters.
     </p>
     <p>
-      Geod is accurate to about 15 nm and gives solutions for the
+      Geod is accurate to about 15&nbsp;nm and gives solutions for the
       inverse problem for any pair of points.  Most other geodesic
       calculators fail for some inputs; for example, compare the
       inverse result given by Geod for the antipodal points (N30, E0)
@@ -281,8 +281,12 @@ cat <<EOF
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
-      This web interface illustrates a subset of its capabilities.  If
-      you wish to use Geod directly,
+      This web interface illustrates a subset of its capabilities.
+      Geodesics can also be computed using Javascript; see the
+      <a href="../scripts/geod-calc.html">Javascript geodesic
+	calculator</a> and
+      <a href="../scripts/geod-google.html">geodesics on Google
+      maps</a>.  If you wish to use Geod directly,
       <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
       and compile GeographicLib.  The algorithms are described

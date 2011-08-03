@@ -112,7 +112,7 @@ cat <<EOF
         EGM96</a>,
       <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
             EGM2008</a>.
-      The RMS error in the interpolated height is about 1 mm.
+      The RMS error in the interpolated height is about 1&nbsp;mm.
       Give the position in terms of latitude and longitude, for example
       (these all refer to the position of Timbuktu):
       <pre>

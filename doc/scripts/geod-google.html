@@ -80,6 +80,22 @@ function initialize() {
   }
 }
 
+function formatpoint(lat, lon, azi, dmsformat, prec) {
+  prec += 5;
+  if (dmsformat) {
+    var trail = prec < 2 ? dms.DEGREE :
+      (prec < 4 ? dms.MINUTE : dms.SECOND);
+    prec = prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4);
+    return (dms.Encode(lat, trail, prec, dms.LATITUDE) + " " +
+	    dms.Encode(lon, trail, prec, dms.LONGITUDE) + " " +
+	    dms.Encode(azi, trail, prec, dms.AZIMUTH));
+  } else {
+    return (lat.toFixed(prec) + " " +
+	    lon.toFixed(prec) + " " +
+	    azi .toFixed(prec));
+  }
+}
+
 function GeodesicInverse(input) {
   var result = {};
   try {
@@ -92,15 +108,9 @@ function GeodesicInverse(input) {
     var p2 = GeographicLib.DMS.DecodeLatLon(t[2], t[3]);
     var v = geod.Inverse(p1.lat, p1.lon, p2.lat, p2.lon);
     result.status = "OK";
-    result.p1 =
-      dms.Encode(v.lat1, dms.SECOND, 4, dms.LATITUDE) + " " +
-      dms.Encode(v.lon1, dms.SECOND, 4, dms.LONGITUDE) + " " +
-      dms.Encode(v.azi1, dms.SECOND, 4, dms.AZIMUTH);
-    result.p2 =
-      dms.Encode(v.lat2, dms.SECOND, 4, dms.LATITUDE) + " " +
-      dms.Encode(v.lon2, dms.SECOND, 4, dms.LONGITUDE) + " " +
-      dms.Encode(v.azi2, dms.SECOND, 4, dms.AZIMUTH);
-    result.s12 = v.s12.toFixed(3);
+    result.p1 = formatpoint(v.lat1, v.lon1, v.azi1, true, 0);
+    result.p2 = formatpoint(v.lat2, v.lon2, v.azi2, true, 0);
+    result.s12 = v.s12.toFixed(0);
     draw(v);
   }
   catch (e) {
@@ -124,15 +134,9 @@ function GeodesicDirect(input) {
     var s12 = parseFloat(t[3]);
     var v =  geod.Direct(p1.lat, p1.lon, azi1, s12);
     result.status = "OK";
-    result.p1 =
-      dms.Encode(v.lat1, dms.SECOND, 4, dms.LATITUDE) + " " +
-      dms.Encode(v.lon1, dms.SECOND, 4, dms.LONGITUDE) + " " +
-      dms.Encode(v.azi1, dms.SECOND, 4, dms.AZIMUTH);
-    result.p2 =
-      dms.Encode(v.lat2, dms.SECOND, 4, dms.LATITUDE) + " " +
-      dms.Encode(v.lon2, dms.SECOND, 4, dms.LONGITUDE) + " " +
-      dms.Encode(v.azi2, dms.SECOND, 4, dms.AZIMUTH);
-    result.s12 = v.s12.toFixed(3);
+    result.p1 = formatpoint(v.lat1, v.lon1, v.azi1, true, 0);
+    result.p2 = formatpoint(v.lat2, v.lon2, v.azi2, true, 0);
+    result.s12 = v.s12.toFixed(0);
     draw(v);
   }
   catch (e) {
