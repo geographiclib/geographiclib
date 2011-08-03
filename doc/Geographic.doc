@@ -2217,9 +2217,9 @@ number.)
   - Changes to I/O:
     - allow : to be used as a DMS separator in
       GeographicLib::DMS::Decode(const std::string&, flag&);
-    - also accept Unicode symbols for degrees, minutes seconds (coded as
-      UTF-8);
-    - provide \e swaplatlong optional argument to various
+    - also accept Unicode symbols for degrees, minutes, and seconds
+      (coded as UTF-8);
+    - provide optional \e swaplatlong argument to various
       GeographicLib::DMS and GeographicLib::GeoCoords functions to make
       longitude precede latitude;
     - also <a href="GeoConvert.1.html">GeoConvert</a> has a -w option to
