@@ -28,58 +28,12 @@ namespace GeographicLib {
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     string errormsg;
     string dmsa = dms;
-    {
-      string::size_type p = 0;
-      // Convert degree symbol (U+00b0 = UTF-8 c2 b0) to d
-      while (true) {
-        p = dmsa.find("\xc2\xb0", p, 2);
-        if (p == string::npos)
-          break;
-        dmsa = dmsa.replace(p, 2, 1, 'd');
-      }
-      p = 0;
-      // Convert degree symbol (b0) to d
-      while (true) {
-        p = dmsa.find("\xb0", p, 1);
-        if (p == string::npos)
-          break;
-        dmsa = dmsa.replace(p, 1, 1, 'd');
-      }
-      p = 0;
-      // Convert masculine ordinal indicator (U+00ba = UTF-8 c2 ba) to d
-      // Sometimes used for degree
-      while (true) {
-        p = dmsa.find("\xc2\xba", p, 2);
-        if (p == string::npos)
-          break;
-        dmsa = dmsa.replace(p, 2, 1, 'd');
-      }
-      p = 0;
-      // Convert masculine ordinal indicator (ba) to d
-      // Sometimes used for degree
-      while (true) {
-        p = dmsa.find("\xba", p, 1);
-        if (p == string::npos)
-          break;
-        dmsa = dmsa.replace(p, 1, 1, 'd');
-      }
-      p = 0;
-      // Convert prime (U+2032 = UTF-8 e2 80 b2) to '
-      while (true) {
-        p = dmsa.find("\xe2\x80\xb2", p, 3);
-        if (p == string::npos)
-          break;
-        dmsa = dmsa.replace(p, 3, 1, '\'');
-      }
-      p = 0;
-      // Convert double prime (U+2033 = UTF-8 e2 80 b3) to "
-      while (true) {
-        p = dmsa.find("\xe2\x80\xb3", p, 3);
-        if (p == string::npos)
-          break;
-        dmsa = dmsa.replace(p, 3, 1, '"');
-      }
-    }
+    replace(dmsa, "\xc2\xb0", 'd'); // degree symbol (U+00b0 = UTF-8 c2 b0)
+    replace(dmsa, "\xc2\xba", 'd'); // alt symbol (U+00ba = UTF-8 c2 ba)
+    replace(dmsa, "\xe2\x80\xb2", '\''); // prime (U+2032 = UTF-8 e2 80 b2)
+    replace(dmsa, "\xe2\x80\xb3", '\''); // dbl prime (U+2033 = UTF-8 e2 80 b3)
+    replace(dmsa, "\xb0", 'd');          // bare degree symbol (b0)
+    replace(dmsa, "\xba", 'd');          // bare alt symbol (ba)
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
       unsigned

@@ -22,7 +22,7 @@ fi
 test "$FORMAT" || FORMAT=g
 test "$AZF2" || AZF2=f
 test "$PREC" || PREC=3
-test "$TYPE" || TYPE=i
+test "$TYPE" || TYPE=I
 AZX="faz2"
 test "$AZF2" = b && AZX="baz2"
 
@@ -31,7 +31,7 @@ COMMAND=Geod
 EXECDIR=../bin
 F='<font color="blue">'
 G='</font>'
-test $TYPE = d || COMMAND="$COMMAND -$TYPE"
+test $TYPE = D || COMMAND="$COMMAND -i"
 COMMANDX="$COMMAND -f -p 1"
 test $FORMAT = g || COMMAND="$COMMAND -$FORMAT"
 test $AZF2 = f || COMMAND="$COMMAND -$AZF2"
@@ -53,13 +53,13 @@ if test "$INPUT"; then
 	AZI1="`echo $OUTPUT | cut -f3 -d' '`"
 	AZI2="`echo $OUTPUT | cut -f6 -d' '`"
 	DIST12="`echo $OUTPUT | cut -f7 -d' '`"
-	if test "$TYPE" = d; then
-	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $(encodevalue "$AZI1")
-	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)\ $(encodevalue "$AZI2")$G
+	if test "$TYPE" = D; then
+	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $(convertdeg "$AZI1")
+	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)\ $(convertdeg "$AZI2")$G
 	    DIST12=$(encodevalue "$DIST12")
 	else
-	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $F$(encodevalue "$AZI1")$G
-	    POSITION2=$(geohack $POSG2 $POS2 Black)\ $F$(encodevalue "$AZI2")$G
+	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $F$(convertdeg "$AZI1")$G
+	    POSITION2=$(geohack $POSG2 $POS2 Black)\ $F$(convertdeg "$AZI2")$G
 	    DIST12=$F$(encodevalue "$DIST12")$G
 	fi
     else
@@ -105,42 +105,44 @@ cat <<EOF
         Geodesic calculation:
         <table>
           <tr>
-            <td>
+            <td valign='baseline'>
               &nbsp;&nbsp;&nbsp;
-              <input type="radio" name="type" value="i"
-                     `test "$TYPE" = i && echo CHECKED`>
+	      <label for='I'>
+		<input type="radio" name="type" value="I" id='I'
+                       `test "$TYPE" = I && echo CHECKED`>
+		&nbsp;Inverse:&nbsp;
+	      </label>
             </td>
-            <td>
-              Inverse:
-            </td>
-            <td>
+            <td valign='baseline'>
               <em>lat1 lon1 lat2 lon2</em>
             </td>
-            <td>
+            <td valign='baseline'>
               &rarr; <em>azi1 azi2 s12</em>
             </td>
+          </tr>
           <tr>
-          <tr>
-            <td>
+            <td valign='baseline'>
               &nbsp;&nbsp;&nbsp;
-              <input type="radio" name="type" value="d"
-                     `test "$TYPE" = d && echo CHECKED`>
+	      <label for='D'>
+		<input type="radio" name="type" value="D" id='D'
+                       `test "$TYPE" = D && echo CHECKED`>
+		&nbsp;Direct:&nbsp;
+	      </label>
             </td>
-            <td>
-              Direct:
-            </td>
-            <td>
+            <td valign='baseline'>
               <em>lat1 lon1 azi1 s12</em>
             </td>
-            <td>
+            <td valign='baseline'>
               &rarr; <em>lat2 lon2 azi2</em>
             </td>
-          <tr>
+          </tr>
         </table>
       </p>
       <p>
-        Input (ex. &laquo;<tt>40.6 -73.8 49d01'N 2d33'E</tt>&raquo; [inverse],
-	&laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo; [direct]):
+        Input (ex. &laquo;<tt>40.6 -73.8 49&deg;01'N 2&deg;33'E</tt>&raquo;
+	[inverse],
+	&laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo;
+	[direct]):
 	<br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=72 value="$INPUTENC">
@@ -160,8 +162,9 @@ EOF
 ) | while read c desc; do
     CHECKED=
     test "$c" = "$FORMAT" && CHECKED=CHECKED
-    echo "<td>&nbsp;"
-    echo "<input type=\"radio\" name=\"format\" value=\"$c\" $CHECKED> $desc"
+    echo "<td>&nbsp;<label for='$c'>"
+    echo "<input type='radio' name='format' value='$c' id='$c' $CHECKED>"
+    echo "$desc</label>"
     echo "</td>"
 done
 cat <<EOF
@@ -179,9 +182,9 @@ EOF
 ) | while read c desc; do
     CHECKED=
     test "$c" = "$AZF2" && CHECKED=CHECKED
-    echo "<td>&nbsp;"
-    echo "<input type=\"radio\" name=\"azi2\" value=\"$c\" $CHECKED> $desc"
-    echo "</td>"
+    echo "<td>&nbsp;<label for='$c'>"
+    echo "<input type='radio' name='azi2' value='$c' id='$c' $CHECKED>"
+    echo "$desc</label></td>"
 done
 cat <<EOF
           </tr>
@@ -208,7 +211,7 @@ EOF
 ) | while read p desc; do
     SELECTED=
     test "$p" = "$PREC" && SELECTED=SELECTED
-    echo "<option $SELECTED value=\"$p\"> $desc<br>"
+    echo "<option $SELECTED value='$p'> $desc</option>"
 done
 cat <<EOF
               </select>
@@ -253,7 +256,7 @@ cat <<EOF
       <pre>
         16.776 -3.009
         16d47' -3d1'
-        W3d0'34" N16d46'33"</pre>
+        W3&deg;0'34" N16&deg;46'33"</pre>
       Azimuths are given in degress clockwise from north.  The
       distance <em>s12</em> is in meters.
     </p>
@@ -292,7 +295,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-06-19)</address>
+      (2011-08-03)</address>
     <a href="http://geographiclib.sourceforge.net">
       <img
 	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"

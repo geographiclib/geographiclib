@@ -178,7 +178,7 @@
     if (!(ds12 > 0))
       throw new Error("ds12 must be a positive number")
     var
-    k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
+    k = Math.max(1, Math.min(maxk, Math.ceil(Math.abs(t.s12)/ds12))),
     points = new Array(k + 1);
     points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
     points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};

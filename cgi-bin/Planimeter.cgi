@@ -135,7 +135,7 @@ cat <<EOF
       <pre>
         16.776 -3.009
         16d47' -3d1'
-        W3d0'34" N16d46'33"</pre>
+        W3&deg;0'34" N16&deg;46'33"</pre>
       The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
       the documentation on the
       <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">

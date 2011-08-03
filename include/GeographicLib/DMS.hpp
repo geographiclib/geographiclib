@@ -39,6 +39,16 @@ namespace GeographicLib {
     template<typename T> static std::string str(T x) {
       std::ostringstream s; s << x; return s.str();
     }
+    // Replace all occurrences of pat by c
+    static void replace(std::string& s, const std::string& pat, char c) {
+      std::string::size_type p = 0;
+      while (true) {
+        p = s.find(pat, p);
+        if (p == std::string::npos)
+          break;
+        s.replace(p, pat.length(), 1, c);
+      }
+    }
     static const std::string hemispheres_;
     static const std::string signs_;
     static const std::string digits_;

@@ -102,13 +102,13 @@ EOF
 ) | while read z name; do
     SELECTED=
     test "$z" = "$ZONE" && SELECTED=SELECTED
-    echo "<option $SELECTED value=\"$z\">$name"
+    echo "<option $SELECTED value=\"$z\">$name</option>"
 done
 for ((z=1; z<=60; ++z)); do
     SELECTED=
     test "$z" = "$ZONE" && SELECTED=SELECTED
     name="UTM zone $z"
-    echo "<option $SELECTED value=\"$z\">$name"
+    echo "<option $SELECTED value=\"$z\">$name</option>"
 done
 cat <<EOF
             </select>
@@ -141,7 +141,7 @@ EOF
 ) | while read p desc; do
     SELECTED=
     test "$p" = "$PREC" && SELECTED=SELECTED
-    echo "<option $SELECTED value=\"$p\">$desc"
+    echo "<option $SELECTED value=\"$p\">$desc</option>"
 done
 cat <<EOF
             </select>
@@ -158,7 +158,7 @@ cat <<EOF
         Results:
 <font size="4"><pre>
     input   = `encodevalue "$INPUT"`
-    lat lon = $F$LOCG `encodevalue "$LOCD"`$G
+    lat lon = $F$LOCG `convertdeg "$LOCD"`$G
     <a href="http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">UTM</a>/<a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">UPS</a> = $F`encodevalue "$LOCU"`$G
     <a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>    = $F`encodevalue "$LOCM"`$G</pre></font>
       </p>
@@ -180,7 +180,7 @@ cat <<EOF
     Latitude and longitude:       MGRS:
         83.627 -32.664                24XWT783908
         W32d40 N83d37.6               YUB17770380
-        83d37'39"N 32d39'52"W     UTM:
+        83&deg;37'39"N 32&deg;39'52"W     UTM:
     UPS:                              25N 504158 9286521
         N 1617772 1403805             430000 9290000 26N</pre>
       <b>Notes:</b>
@@ -230,7 +230,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-06-19)</address>
+      (2011-08-03)</address>
     <a href="http://geographiclib.sourceforge.net">
       <img
 	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"

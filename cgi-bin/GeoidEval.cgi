@@ -92,7 +92,7 @@ cat <<EOF
       <p>
         Geoid height:
 <font size="4"><pre>
-    lat lon = $POSITION1 `encodevalue "$POSITION2"`
+    lat lon = $POSITION1 `convertdeg "$POSITION2"`
     geoid heights (m)
 	<a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">EGM2008</a> = $F`encodevalue "$HEIGHT2008"`$G
 	<a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">EGM96</a>   = $F`encodevalue "$HEIGHT96"`$G
@@ -118,7 +118,7 @@ cat <<EOF
       <pre>
         16.776 -3.009
         16d47' -3d1'
-        W3d0'34" N16d46'33"</pre>
+        W3&deg;0'34" N16&deg;46'33"</pre>
       The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
       the documentation on the
       <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
