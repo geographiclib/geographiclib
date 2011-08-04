@@ -223,7 +223,8 @@ two alternatives are illustrated by
    echo 30d30\'30\" "30d30'30" | GeoConvert -d -p -1
    => 30d30'30"N 030d30'30"E
 
-Alternatively use colon separators, e.g., 30:30:30.
+Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.
 
 =item Windows command shell (cmd)
 
@@ -234,7 +235,8 @@ designator can be omitted.  Thus
    echo 30d30'30^" 30d30'30 | GeoConvert -d -p -1
    => 30d30'30"N 030d30'30"E
 
-Alternatively use colon separators, e.g., 30:30:30.
+Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.
 
 =item Input from a file
 
