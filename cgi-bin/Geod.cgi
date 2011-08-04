@@ -206,7 +206,6 @@ EOF
 6 1um 0.0000001"
 7 100nm 0.00000001"
 8 10nm 0.000000001"
-9 1nm 0.0000000001"
 EOF
 ) | while read p desc; do
     SELECTED=
