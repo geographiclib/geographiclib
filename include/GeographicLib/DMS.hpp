@@ -143,7 +143,7 @@ namespace GeographicLib {
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20d30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5
-     *   - 4d0'9, 4d9", 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
+     *   - 4d0'9, 4d9", 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
      *     04:.15
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
      *   - 4d5"4', 4::5, 4:5:, :4:5, 4d4.5'4", -N20.5, 1.8e2d, 4:60,

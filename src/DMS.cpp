@@ -31,9 +31,10 @@ namespace GeographicLib {
     replace(dmsa, "\xc2\xb0", 'd'); // degree symbol (U+00b0 = UTF-8 c2 b0)
     replace(dmsa, "\xc2\xba", 'd'); // alt symbol (U+00ba = UTF-8 c2 ba)
     replace(dmsa, "\xe2\x80\xb2", '\''); // prime (U+2032 = UTF-8 e2 80 b2)
-    replace(dmsa, "\xe2\x80\xb3", '\''); // dbl prime (U+2033 = UTF-8 e2 80 b3)
+    replace(dmsa, "\xe2\x80\xb3", '"');  // dbl prime (U+2033 = UTF-8 e2 80 b3)
     replace(dmsa, "\xb0", 'd');          // bare degree symbol (b0)
     replace(dmsa, "\xba", 'd');          // bare alt symbol (ba)
+    replace(dmsa, "''", '"');            // '' -> "
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
       unsigned
