@@ -212,7 +212,8 @@ function GeodesicArea(input) {
 	<a href="http://www.ngs.noaa.gov/">NGS</a>
 	<a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
         inverse geodesic calculator</a> returns a result which is 1.2 km
-	too long with an azimuth which is off by 3 degrees.)
+	too long with an azimuth which is off by 3 degrees.)  To perform
+	the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>:</p>
       <p>input: 
@@ -240,7 +241,7 @@ function GeodesicArea(input) {
 	</select>
       </p>
       <p>
-        <input type="button" value="compute" 
+        <input type="button" value="COMPUTE" 
 	       onclick="var t = GeodesicInverse(document.inverse.input.value,
 			        document.inverse.format[1].checked,
 				document.inverse.prec.selectedIndex);
@@ -254,15 +255,15 @@ function GeodesicArea(input) {
         <input name="status" size=50 readonly />
       </p>
       <p>
-	lat1 lon1 azi1:
+	lat1 lon1 <font color='blue'>azi1</font>:
         <input name="p1" size=75 readonly />
       </p>
       <p>
-	lat2 lon2 azi2:
+	lat2 lon2 <font color='blue'>azi2</font>:
         <input name="p2" size=75 readonly />
       </p>
       <p>
-	s12:
+	<font color='blue'>s12</font>:
         <input name="s12" size=25 readonly />
       </p>
     </form>
@@ -274,7 +275,8 @@ function GeodesicArea(input) {
 	with a given azimuth at the starting point.  The destination is
 	characterized by its position <i>lat2, lon2</i> and its azimuth
 	at the destination <i>azi2</i>.  The sample calculation shows
-	the result of travelling 10000 km NE from JFK airport.
+	the result of travelling 10000 km NE from JFK airport.  To perform
+	the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 azi1 s12&rdquo;</i></p>
       <p>input: 
@@ -302,7 +304,7 @@ function GeodesicArea(input) {
 	</select>
       </p>
       <p>
-        <input type="button" value="compute" 
+        <input type="button" value="COMPUTE" 
 	       onclick="var t = GeodesicDirect(document.direct.input.value,
 			        document.direct.format[1].checked,
 				document.direct.prec.selectedIndex);
@@ -320,7 +322,7 @@ function GeodesicArea(input) {
         <input name="p1" size=75 readonly />
       </p>
       <p>
-	lat2 lon2 azi2:
+	<font color='blue'>lat2 lon2 azi2</font>:
         <input name="p2" size=75 readonly />
       </p>
       <p>
@@ -340,7 +342,8 @@ function GeodesicArea(input) {
 	corresponding azimuths <i>azi</i>.  The sample shows the path
 	from JFK to Singapore's Changi Airport at about 1000 km
 	intervals.  (In this example, the path taken by Google Earth
-	deviates from the shortest path by about 2.9 km.)
+	deviates from the shortest path by about 2.9 km.)  To perform
+	the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2 ds12 maxk&rdquo;</i>:</p>
       <p>input: 
@@ -368,7 +371,7 @@ function GeodesicArea(input) {
 	</select>
       </p>
       <p>
-        <input type="button" value="compute" 
+        <input type="button" value="COMPUTE" 
 	       onclick="var t = GeodesicInversePath(document.path.input.value,
 			        document.path.format[1].checked,
 				document.path.prec.selectedIndex);
@@ -396,7 +399,8 @@ function GeodesicArea(input) {
 	m<sup>2</sup>) of Antarctica.  (For this example, Google Earth
 	Pro returns an area which is 30 times too large!  However this
 	is a little unfair, since Google Earth has no concept of
-	polygons which encircle a pole.)
+	polygons which encircle a pole.)  To perform
+	the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>:</p>
       <p>points (lat lon):<br>
@@ -421,7 +425,7 @@ function GeodesicArea(input) {
 </textarea>
       </p>
       <p>
-        <input type="button" value="compute" 
+        <input type="button" value="COMPUTE" 
 	       onclick="var t = GeodesicArea(document.area.input.value);
 			document.area.status.value = t.status;
 			document.area.area.value = t.area;" />
