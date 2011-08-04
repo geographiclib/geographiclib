@@ -2,8 +2,9 @@
 <html>
   <head>
     <!-- $Id$ -->
-    <title>Geodesic calculations</title>
-    <meta name="description" content="Geodesic calculations" />
+    <title>Geodesic calculations for an ellipsoid done right</title>
+    <meta name="description"
+	  content="Geodesic calculations for an ellipsoid done right" />
     <meta name="author" content="Charles F. F. Karney">
     <meta name="keywords"
 	  content="geodesics,
@@ -128,7 +129,7 @@ function GeodesicInversePath(input, dmsformat, prec) {
   return result;
 }
 
-function GeodesicArea(input) {
+function GeodesicArea(input, polyline) {
   var result = {};
   try {
     // Input is a newline-delimited points;
@@ -143,10 +144,12 @@ function GeodesicArea(input) {
 	throw new Error("Need 2 items on each line");
       t[i] = dms.DecodeLatLon(pos[0], pos[1]);
     }
-    t = geod.Area(t);
+    t = geod.Area(t, polyline);
     result.status = "OK";
     result.area = t.number + " " +
-      t.perimeter.toFixed(8) + " " + t.area.toFixed(3);
+      t.perimeter.toFixed(8);
+    if (!polyline)
+      result.area += " " + t.area.toFixed(3);
   }
   catch (e) {
     result.status = "ERROR: " + e.message;
@@ -159,7 +162,7 @@ function GeodesicArea(input) {
   </head>
   <body>
     <div>
-      <h2>Geodesic calculations</h2>
+      <h2>Geodesic calculations for an ellipsoid done right</h2>
     </div>
     <p>
       This page illustrates the geodesic routines available in
@@ -391,16 +394,19 @@ function GeodesicArea(input) {
     <form name="area">
       <h3><a class="anchor" id="area">Polygon area</h3>
       <p>
-	Compute the perimeter and area of a polygon whose sides are
+	Find the perimeter and area of a polygon whose sides are
 	geodesics.  The polygon must be simple (i.e., must not intersect
-	itself).  Counter-clockwise traversal of the polygon results in
+	itself).  (There's no need to ensure that the polygon is
+	closed.)  Counter-clockwise traversal of the polygon results in
 	a positive area.  The polygon can encircle one or both poles.
 	The sample gives the approximate perimeter (in m) and area (in
 	m<sup>2</sup>) of Antarctica.  (For this example, Google Earth
 	Pro returns an area which is 30 times too large!  However this
 	is a little unfair, since Google Earth has no concept of
-	polygons which encircle a pole.)  To perform
-	the calculation, press the &ldquo;COMPUTE&rdquo; button.
+	polygons which encircle a pole.)  If the <i>polyline</i> option
+	is selected then just the length of the line joining the points
+	is is returned.  To perform the calculation, press the
+	&ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter points, one per line, as <i>&ldquo;lat lon&rdquo;</i>:</p>
       <p>points (lat lon):<br>
@@ -425,8 +431,19 @@ function GeodesicArea(input) {
 </textarea>
       </p>
       <p>
+	Treat points as:&nbsp;&nbsp;<label for="lg">
+	  <input type="radio" value="p" name="polyline" id="lg" checked>
+	  polygon
+	</label>&nbsp;
+	<label for="ll">
+	  <input type="radio" value="l" name="polyline" id="ll">
+	  polyline
+	</label>
+      </p>
+      <p>
         <input type="button" value="COMPUTE" 
-	       onclick="var t = GeodesicArea(document.area.input.value);
+	       onclick="var t = GeodesicArea(document.area.input.value,
+			document.area.polyline[1].checked);
 			document.area.status.value = t.status;
 			document.area.area.value = t.area;" />
       </p>
