@@ -163,8 +163,7 @@ namespace GeographicLib {
      * @param[in] lat latitude of point (degrees).
      * @param[in] lon longitude of point (degrees).
      * @param[out] zone the UTM zone (zero means UPS).
-     * @param[out] northp hemisphere of location (true means northern, false
-     *   means southern).
+     * @param[out] northp hemisphere (true means north, false means south).
      * @param[out] x easting of point (meters).
      * @param[out] y northing of point (meters).
      * @param[out] gamma meridian convergence at point (degrees).
@@ -188,8 +187,7 @@ namespace GeographicLib {
      * Reverse projection, from  UTM/UPS to geographic.
      *
      * @param[in] zone the UTM zone (zero means UPS).
-     * @param[in] northp hemisphere of location (true means northern, false
-     *   means southern).
+     * @param[in] northp hemisphere (true means north, false means south).
      * @param[in] x easting of point (meters).
      * @param[in] y northing of point (meters).
      * @param[out] lat latitude of point (degrees).
@@ -250,8 +248,7 @@ namespace GeographicLib {
      *
      * @param[in] zonestr string represention of zone and hemisphere.
      * @param[out] zone the UTM zone (zero means UPS).
-     * @param[out] northp the hemisphere (true means northern, false
-     *   means southern).
+     * @param[out] northp hemisphere (true means north, false means south).
      *
      * For UTM, \e zonestr has the form of a zone number in the range
      * [UTMUPS::MINUTMZONE, UTMUPS::MAXUTMZONE] = [1, 60] followed by a
@@ -268,8 +265,7 @@ namespace GeographicLib {
      * Encode a UTM/UPS zone string.
      *
      * @param[out] zone the UTM zone (zero means UPS).
-     * @param[out] northp the hemisphere (true means northern, false
-     *   means southern).
+     * @param[out] northp hemisphere (true means north, false means south).
      * @return string represention of zone and hemisphere.
      *
      * \e zone must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,
