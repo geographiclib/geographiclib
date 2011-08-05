@@ -6,9 +6,13 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.12.
+The current version of the library is 1.13.
 
-Changes between 1.11 (released 2011-07-21) and 1.11 versions:
+Changes between 1.13 (released 2011-mm-dd) and 1.12 versions:
+
+  * TO BE COMPLETED
+
+Changes between 1.12 (released 2011-07-21) and 1.11 versions:
 
   * Change license to MIT/X11.
 
