@@ -132,8 +132,8 @@ namespace GeographicLib {
      *
      * @param[in] zone UTM zone (zero means UPS).
      * @param[in] northp hemisphere (true means north, false means south).
-     * @param[in] x (meters).
-     * @param[in] y (meters).
+     * @param[in] x easting of point (meters).
+     * @param[in] y northing of point (meters).
      * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
      *
@@ -205,8 +205,8 @@ namespace GeographicLib {
      *
      * @param[in] zone UTM zone (zero means UPS).
      * @param[in] northp hemisphere (true means north, false means south).
-     * @param[in] x (meters).
-     * @param[in] y (meters).
+     * @param[in] x easting of point (meters).
+     * @param[in] y northing of point (meters).
      * @param[in] lat latitude (degrees).
      * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
@@ -224,8 +224,8 @@ namespace GeographicLib {
      * @param[in] mgrs MGRS string.
      * @param[out] zone UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
-     * @param[out] x (meters).
-     * @param[out] y (meters).
+     * @param[out] x easting of point (meters).
+     * @param[out] y northing of point (meters).
      * @param[out] prec precision relative to 100 km.
      * @param[in] centerp if true (default), return center of the MGRS square,
      *   else return SW (lower left) corner.
