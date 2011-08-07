@@ -773,10 +773,16 @@ Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 
 \section javascript Javascript interface
 
-The directory doc/scripts/GeographicLib contains the core geodesic
-functionality translated into Javascript.  See Interface.js for a simple
-Javascript interface to these routines (documented near the top of the
-file).  Examples of using this interface are
+The directory doc/scripts/GeographicLib contains the classes
+- GeographicLib::Math
+- GeographicLib::Geodesic
+- GeographicLib::GeodesicLine
+- GeographicLib::PolygonArea
+- GeographicLib::DMS
+.
+translated into Javascript.  See Interface.js for a simple Javascript
+interface to these routines (documented near the top of the file).
+Examples of using this interface are
 - a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
   the solution of direct and inverse geodesic problem, finding
   intermediate points on a geodesic line, and computing the area of a
@@ -788,9 +794,13 @@ file).  Examples of using this interface are
 \section python Python interface
 
 The file python/GeographicLib.py (which is installed as
-PREFIX/share/GeographicLib/python) contains the core geodesic
-functionality translated into Python.  An example of using this
-interface is
+PREFIX/share/GeographicLib/python) contains the classes
+- GeographicLib::Math
+- GeographicLib::Geodesic
+- GeographicLib::GeodesicLine
+- GeographicLib::PolygonArea
+.
+translated into Python.  An example of using this interface is
 \code
 >>> import sys
 >>> sys.path.append("/usr/local/share/GeographicLib/python");
