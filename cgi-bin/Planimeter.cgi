@@ -121,10 +121,7 @@ cat <<EOF
       WGS84 ellipsoid.  Counter-clockwise traversal of a polygon results
       in a positive area.  Only simple polygons are supported for the
       area computation.  There is no need to close the polygon.
-      Polygons may include one or both poles.
-    </p>
-    <p>
-      In polyline mode,
+      Polygons may include one or both poles.  In polyline mode,
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>
       calculates the length of the geodesic path joining the points.
@@ -147,6 +144,8 @@ cat <<EOF
       The result for the perimeter is accurate to about 15&nbsp;nm per
       vertex.  The result for the area is accurate to about
       0.1&nbsp;m<sup>2</sup> per vertex.
+    </p>
+    <p>
       <a href="http://geographiclib.sourceforge.net/html/Planimeter.1.html">
         Planimeter</a>,
       which is a simple wrapper of the
@@ -155,6 +154,9 @@ cat <<EOF
       is one of the utilities provided
       with <a href="http://geographiclib.sourceforge.net/">
         GeographicLib</a>.
+      Geodesic areas can also be computed using Javascript; see the
+      <a href="../scripts/geod-calc.html">Javascript geodesic
+	calculator</a>.
       If you wish to use Planimeter directly,
       <a href="http://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>

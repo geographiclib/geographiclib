@@ -72,7 +72,7 @@ namespace GeographicLib {
       // exactly with s, t, u non-adjacent and in decreasing order (except for
       // possible zeros).  The following code tries to normalize the result.
       // Ideally, we want _s = round(s+t+u) and _u = round(s+t+u - _s).  The
-      // follow does an approximate job (and maintains the decreasing
+      // following does an approximate job (and maintains the decreasing
       // non-adjacent property).  Here are two "failures" using 3-bit floats:
       //
       // Case 1: _s is not equal to round(s+t+u) -- off by 1 ulp
