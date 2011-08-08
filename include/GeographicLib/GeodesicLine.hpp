@@ -222,7 +222,7 @@ namespace GeographicLib {
      * calculations).  The object can be set with a call to Geodesic::Line.
      * Use Init() to test whether object is still in this uninitialized state.
      **********************************************************************/
-    GeodesicLine() throw() : _caps(0U) {};
+    GeodesicLine() throw() : _caps(0U) {}
     ///@}
 
     /** \name Position in terms of distance

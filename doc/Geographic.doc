@@ -731,7 +731,8 @@ should ensure that the arguments are legitimate.  However, the functions
 implemented by UTMUPS, MGRS, and GeoCoords do check their arguments and
 may throw GeographicLib::GeographicErr exceptions.  Similarly Geoid may
 throw exceptions on file errors.  If a function does throw an exception,
-then the function arguments used for return values will not be altered.
+then the function arguments used for return values will not have been
+altered.
 
 %GeographicLib attempts to act sensibly with NaNs.  NaNs in constructors
 typically throw errors (an exception is GeodesicLine).  However, calling
@@ -775,6 +776,7 @@ Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 
 The directory doc/scripts/GeographicLib contains the classes
 - GeographicLib::Math
+- GeographicLib::Accumulator
 - GeographicLib::Geodesic
 - GeographicLib::GeodesicLine
 - GeographicLib::PolygonArea
@@ -796,6 +798,7 @@ Examples of using this interface are
 The file python/GeographicLib.py (which is installed as
 PREFIX/share/GeographicLib/python) contains the classes
 - GeographicLib::Math
+- GeographicLib::Accumulator
 - GeographicLib::Geodesic
 - GeographicLib::GeodesicLine
 - GeographicLib::PolygonArea
@@ -2240,6 +2243,9 @@ number.)
     TransverseMercatorExact, and LambertConformalConic.
   - Allow default copy assigment to work for most classes.
   - Withdraw some deprecated routines.
+  - Remove "fast" GeographicLib::Accumulator method.
+  - Put GeographicLib::Math and GeographicLib::Accumulator in their own
+    header files.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a>
   - Change license to MIT/X11.

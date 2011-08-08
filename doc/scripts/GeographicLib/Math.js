@@ -1,6 +1,7 @@
 /**
  * Math.js
- * Transcription of Constants.hpp into javascript.
+ * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
+ * javascript.
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see

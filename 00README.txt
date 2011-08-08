@@ -18,6 +18,8 @@ Files
     include/GeographicLib/ and src/
       Config.h.in, Config.h -- system dependent configuration
       Constants.hpp -- WGS84 constants
+      Math.hpp -- math routines
+      Accumulator.hpp -- quad precision adder
       PolarStereographic.[ch]pp -- polar stereographic projection
       TransverseMercator.[ch]pp -- transverse Mercator projection
       UTMUPS.[ch]pp -- UTM and UPS

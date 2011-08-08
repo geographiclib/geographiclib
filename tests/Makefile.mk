@@ -34,15 +34,18 @@ GeodTest: GeodTest.o
 ConicTest: ConicTest.o
 NaNTester: NaNTester.o
 PASouth: PASouth.o
-ProjTest.o: Constants.hpp LambertConformalConic.hpp PolarStereographic.hpp \
-	TransverseMercator.hpp TransverseMercatorExact.hpp
-TMTest.o: Constants.hpp TransverseMercator.hpp TransverseMercatorExact.hpp \
-	Geodesic.hpp
-GeodTest.o: Constants.hpp Geodesic.hpp
-ConicTest.o: Constants.hpp LambertConformalConic.hpp AlbersEqualArea.hpp
-NaNTester.o: Constants.hpp EllipticFunction.hpp TransverseMercator.hpp \
-	TransverseMercatorExact.hpp PolarStereographic.hpp
-PASouth.o: Constants.hpp LambertConformalConic.hpp DMS.hpp
+ProjTest.o: Constants.hpp Math.hpp LambertConformalConic.hpp \
+	PolarStereographic.hpp TransverseMercator.hpp \
+	TransverseMercatorExact.hpp
+TMTest.o: Constants.hpp Math.hpp TransverseMercator.hpp \
+	TransverseMercatorExact.hpp Geodesic.hpp
+GeodTest.o: Constants.hpp Math.hpp Geodesic.hpp
+ConicTest.o: Constants.hpp Math.hpp LambertConformalConic.hpp \
+	AlbersEqualArea.hpp
+NaNTester.o: Constants.hpp Math.hpp EllipticFunction.hpp \
+	TransverseMercator.hpp TransverseMercatorExact.hpp \
+	PolarStereographic.hpp
+PASouth.o: Constants.hpp Math.hpp LambertConformalConic.hpp DMS.hpp
 
 INSTALL = install -b
 PREFIX = /usr/local

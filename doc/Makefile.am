@@ -16,6 +16,7 @@ scripts/GeographicLib/DMS.js \
 scripts/GeographicLib/Interface.js
 
 HPPFILES = \
+$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
 $(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
 $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
 $(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
@@ -30,6 +31,7 @@ $(top_srcdir)/include/GeographicLib/Geoid.hpp \
 $(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 $(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
 $(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
+$(top_srcdir)/include/GeographicLib/Math.hpp \
 $(top_srcdir)/include/GeographicLib/MGRS.hpp \
 $(top_srcdir)/include/GeographicLib/OSGB.hpp \
 $(top_srcdir)/include/GeographicLib/PolarStereographic.hpp \

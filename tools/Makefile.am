@@ -30,12 +30,14 @@ ConicProj.o: ../man/ConicProj.usage
 
 GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/UTMUPS.hpp
 
 TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/EllipticFunction.hpp \
 	../include/GeographicLib/TransverseMercator.hpp \
@@ -43,12 +45,14 @@ TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 
 CartConvert_SOURCES = CartConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geocentric.hpp \
 	../include/GeographicLib/LocalCartesian.hpp
 
 Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
@@ -58,25 +62,30 @@ GeodesicProj_SOURCES = GeodesicProj.cpp \
 	../include/GeographicLib/CassiniSoldner.hpp \
 	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
 GeoidEval_SOURCES = GeoidEval.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/Geoid.hpp
 
 Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/PolygonArea.hpp \
+	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/Geodesic.hpp
 
 ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
 	../include/GeographicLib/LambertConformalConic.hpp

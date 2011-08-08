@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
+#include <GeographicLib/Accumulator.hpp>
 
 namespace GeographicLib {
 

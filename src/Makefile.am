@@ -29,6 +29,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		../include/GeographicLib/Accumulator.hpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
 		../include/GeographicLib/CassiniSoldner.hpp \
@@ -43,6 +44,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
+		../include/GeographicLib/Math.hpp \
 		../include/GeographicLib/MGRS.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
