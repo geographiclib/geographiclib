@@ -31,8 +31,8 @@ namespace GeographicLib {
    * Discrete & Computational Geometry 18(3) 305-363 (1997).
    *
    * Approximate timings (summing a vector<double>)
-   * - double:               2ns = 1
-   * - Accumulator<double>: 23ns = 11
+   * - double:               2ns
+   * - Accumulator<double>: 23ns
    *
    * In the documentation of the member functions, \e sum stands for the value
    * currently held in the accumulator.

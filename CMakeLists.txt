@@ -124,7 +124,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/junk"
   "/octave-core"
   "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|cmake|log|exe|pyc)\$"
-  "\\\\.(mex|mexw32|mexa64)\$"
+  "\\\\.(mex|mexw32|mexa64|kml|kmz)\$"
   "/(Release|Debug|Win32)"
   "\\\\.cache/"
   "proj.*\\\\.user\$"
