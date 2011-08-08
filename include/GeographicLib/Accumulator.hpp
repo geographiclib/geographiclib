@@ -40,8 +40,7 @@ namespace GeographicLib {
   template<typename T = Math::real>
   class GEOGRAPHIC_EXPORT Accumulator {
   private:
-    // _s accumulates for the straight sum
-    // _t accumulates the errors.
+    // _s + _t accumulates for the sum.
     T _s, _t;
     // Error free transformation of a sum.  Note that t can be the same as one
     // of the first two arguments.
@@ -65,8 +64,8 @@ namespace GeographicLib {
     }
     void Add(T y) throw() {
       // Here's Shewchuk's solution...
-      T u;                    // hold exact sum as [s, t, u]
-      y  = sum(y, _t,  u);    // Accumulate starting at least significant end
+      T u;                      // hold exact sum as [s, t, u]
+      y  = sum(y, _t,  u);      // Accumulate starting at least significant end
       _s = sum(y, _s, _t);
       // Start is _s, _t decreasing and non-adjacent.  Sum is now (s + t + u)
       // exactly with s, t, u non-adjacent and in decreasing order (except for
@@ -95,17 +94,15 @@ namespace GeographicLib {
       // [128, 16] + 1 -> [160, -16] -- 160 = round(145).
       // But [160, 0] - 16 -> [128, 16] -- 128 = round(144).
       //
-      if (_s == 0)            // This implies t == 0,
-        _s = u;               // so result is u
+      if (_s == 0)              // This implies t == 0,
+        _s = u;                 // so result is u
       else
-        _t += u;              // otherwise just accumulate u to t.
+        _t += u;                // otherwise just accumulate u to t.
     }
-    // Perhaps these should both be _s + _t?
-    T Sum() const throw() { return _s; }
     T Sum(T y) const throw() {
       Accumulator a(*this);
       a.Add(y);
-      return a.Sum();
+      return a._s;
     }
   public:
     /**
@@ -129,7 +126,7 @@ namespace GeographicLib {
      *
      * @return \e sum.
      **********************************************************************/
-    T operator()() const throw() { return Sum(); }
+    T operator()() const throw() { return _s; }
     /**
      * Return the result of adding a number to \e sum (but don't change \e sum).
      *
@@ -160,27 +157,27 @@ namespace GeographicLib {
     /**
      * Test equality of an Accumulator with a number.
      **********************************************************************/
-    bool operator==(T y) const throw() { return Sum() == y; }
+    bool operator==(T y) const throw() { return _s == y; }
     /**
      * Test inequality of an Accumulator with a number.
      **********************************************************************/
-    bool operator!=(T y) const throw() { return Sum() != y; }
+    bool operator!=(T y) const throw() { return _s != y; }
     /**
      * Less operator on an Accumulator and a number.
      **********************************************************************/
-    bool operator<(T y) const throw() { return Sum() < y; }
+    bool operator<(T y) const throw() { return _s < y; }
     /**
      * Less or equal operator on an Accumulator and a number.
      **********************************************************************/
-    bool operator<=(T y) const throw() { return Sum() <= y; }
+    bool operator<=(T y) const throw() { return _s <= y; }
     /**
      * Greater operator on an Accumulator and a number.
      **********************************************************************/
-    bool operator>(T y) const throw() { return Sum() > y; }
+    bool operator>(T y) const throw() { return _s > y; }
     /**
      * Greater or equal operator on an Accumulator and a number.
      **********************************************************************/
-    bool operator>=(T y) const throw() { return Sum() >= y; }
+    bool operator>=(T y) const throw() { return _s >= y; }
   };
 
 } // namespace GeographicLib
