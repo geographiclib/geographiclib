@@ -4,6 +4,7 @@ NEWS ident text
 Doxyfile ident text
 *.bib ident text
 *.cgi ident text
+*.cmake ident text
 *.cpp ident text
 *.h ident text
 *.hpp ident text

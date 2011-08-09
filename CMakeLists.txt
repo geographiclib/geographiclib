@@ -123,7 +123,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/stamp-"
   "/junk"
   "/octave-core"
-  "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|cmake|log|exe|pyc)\$"
+  "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|log|exe|pyc)\$"
   "\\\\.(mex|mexw32|mexa64|kml|kmz)\$"
   "/(Release|Debug|Win32)"
   "\\\\.cache/"
