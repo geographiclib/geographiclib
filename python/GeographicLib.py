@@ -590,9 +590,41 @@ class Geodesic(object):
           calp1 = max((0.0 if x > -Geodesic.tol1_ else -1.0),  x)
           salp1 = math.sqrt(1 - Math.sq(calp1))
       else:
-        # Estimate omega12, by solving the astroid problem.
+        # Estimate alp1, by solving the astroid problem.
+        #
+        # Could estimate alpha1 = theta + pi/2, directly, i.e.,
+        #   calp1 = y/k; salp1 = -x/(1+k);  for _f >= 0
+        #   calp1 = x/(1+k); salp1 = -y/k;  for _f < 0 (need to check)
+        #
+        # However, it's better to estimate omg12 from astroid and use
+        # spherical formula to compute alp1.  This reduces the mean number of
+        # Newton iterations for astroid cases from 2.24 (min 0, max 6) to 2.12
+        # (min 0 max 5).  The changes in the number of iterations are as
+        # follows:
+        #
+        # change percent
+        #    1       5
+        #    0      78
+        #   -1      16
+        #   -2       0.6
+        #   -3       0.04
+        #   -4       0.002
+        #
+        # The histogram of iterations is (m = number of iterations estimating
+        # alp1 directly, n = number of iterations estimating via omg12, total
+        # number of trials = 148605):
+        #
+        #  iter    m      n
+        #    0   148    186
+        #    1 13046  13845
+        #    2 93315 102225
+        #    3 36189  32341
+        #    4  5396      7
+        #    5   455      1
+        #    6    56      0
+        #
+        # Because omg12 is near pi, estimate work with omg12a = pi - omg12
         k = Geodesic.Astroid(x, y)
-        # estimate omg12a = pi - omg12
         omg12a = lamscale * ( -x * k/(1 + k) if self._f >= 0
                                else -y * (1 + k)/k )
         somg12 = math.sin(omg12a); comg12 = -math.cos(omg12a)

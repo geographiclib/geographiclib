@@ -488,12 +488,43 @@ GeographicLib.GeodesicLine = {};
 	  vals.salp1 = Math.sqrt(1 - m.sq(vals.calp1));
 	}
       } else {
-	// Estimate omega12, by solving the astroid problem.
+        // Estimate alp1, by solving the astroid problem.
+        //
+        // Could estimate alpha1 = theta + pi/2, directly, i.e.,
+        //   calp1 = y/k; salp1 = -x/(1+k);  for _f >= 0
+        //   calp1 = x/(1+k); salp1 = -y/k;  for _f < 0 (need to check)
+        //
+        // However, it's better to estimate omg12 from astroid and use
+        // spherical formula to compute alp1.  This reduces the mean number of
+        // Newton iterations for astroid cases from 2.24 (min 0, max 6) to 2.12
+        // (min 0 max 5).  The changes in the number of iterations are as
+        // follows:
+        //
+        // change percent
+        //    1       5
+        //    0      78
+        //   -1      16
+        //   -2       0.6
+        //   -3       0.04
+        //   -4       0.002
+        //
+        // The histogram of iterations is (m = number of iterations estimating
+        // alp1 directly, n = number of iterations estimating via omg12, total
+        // number of trials = 148605):
+        //
+        //  iter    m      n
+        //    0   148    186
+        //    1 13046  13845
+        //    2 93315 102225
+        //    3 36189  32341
+        //    4  5396      7
+        //    5   455      1
+        //    6    56      0
+        //
+        // Because omg12 is near pi, estimate work with omg12a = pi - omg12
 	var k = g.Astroid(x, y);
-	// estimate omg12a = pi - omg12
 	var
-	omg12a = lamscale *
-	  ( this._f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k ),
+	omg12a = lamscale * ( this._f >= 0 ? -x * k/(1 + k) : -y * (1 + k)/k ),
 	somg12 = Math.sin(omg12a), comg12 = -Math.cos(omg12a);
 	// Update spherical estimate of alp1 using omg12 instead of
 	// lam12
