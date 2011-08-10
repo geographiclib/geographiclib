@@ -1,0 +1,46 @@
+# $Id$
+# Look for GeographicLib
+# Set
+#  GEOGRAPHICLIB_FOUND = TRUE
+#  GEOGRAPHICLIB_INCLUDE_DIRS = /usr/local/include
+#  GEOGRAPHICLIB_LIBRARIES = /usr/local/lib/libGeographic.so
+#  GEOGRAPHICLIB_LIBRARY_DIRS = /usr/local/lib
+
+message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
+set (GeographicLib_VERSION_MAJOR "@GeographicLib_VERSION_MAJOR@")
+set (GeographicLib_VERSION_MINOR "@GeographicLib_VERSION_MINOR@")
+set (GeographicLib_VERSION_STRING "@GeographicLib_VERSION_STRING@")
+message (STATUS "GeographicLib configuration, version " ${GeographicLib_VERSION_STRING})
+
+# Tell the user project where to find our headers and libraries
+if (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
+  set (GEOGRAPHICLIB_ROOT_DIR "@GEOGRAPHICLIB_ROOT_DIR@")
+  set (GEOGRAPHICLIB_INCLUDE_DIRS "@GEOGRAPHICLIB_INCLUDE_DIRS@")
+  set (GEOGRAPHICLIB_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/src")
+else (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
+  get_filename_component (GEOGRAPHICLIB_SELF_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+  get_filename_component (GEOGRAPHICLIB_ROOT_DIR
+    "${GEOGRAPHICLIB_SELF_DIR}/@GEOGRAPHICLIB_ROOT_DIR@" ABSOLUTE)
+  set (GEOGRAPHICLIB_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
+  set (GEOGRAPHICLIB_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/lib")
+endif (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
+
+foreach (p ${GEOGRAPHICLIB_INCLUDE_DIRS})
+  # Only check first include dir
+  if (NOT EXISTS "${p}/GeographicLib/Config.h")
+    unset (GEOGRAPHICLIB_INCLUDE_DIRS)
+    unset (GEOGRAPHICLIB_LIRBARY_DIRS)
+  endif (NOT EXISTS "${p}/GeographicLib/Config.h")
+  break (p ${GEOGRAPHICLIB_INCLUDE_DIRS})
+endforeach (p ${GEOGRAPHICLIB_INCLUDE_DIRS})
+
+if (DEFINED GEOGRAPHICLIB_INCLUDE_DIRS)
+  include ("@GEOGRAPHICLIB_CMAKE_DIR@/GeographicLibDepends.cmake")
+  set (GEOGRAPHICLIB_LIBRARIES Geographic)
+endif (DEFINED GEOGRAPHICLIB_INCLUDE_DIRS)
+
+include (FindPackageHandleStandardArgs)
+find_package_handle_standard_args (GeographicLib DEFAULT_MSG
+  GEOGRAPHICLIB_LIBRARY_DIRS GEOGRAPHICLIB_LIBRARIES GEOGRAPHICLIB_INCLUDE_DIRS)
+mark_as_advanced (GEOGRAPHICLIB_LIBRARY_DIRS GEOGRAPHICLIB_LIBRARIES
+  GEOGRAPHICLIB_INCLUDE_DIRS)

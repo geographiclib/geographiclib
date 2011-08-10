@@ -6,7 +6,7 @@ project (GeographicLib)
 set (GeographicLib_VERSION_MAJOR 1)
 set (GeographicLib_VERSION_MINOR 13)
 set (GeographicLib_VERSION_STRING
-     ${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR})
+     "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (LIBVERSION 9)
 set (LIBVERSIONFULL 9.0.0)
 
@@ -86,6 +86,40 @@ add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python)
+
+if (WIN32)
+  set(INSTALL_CMAKE_DIR "cmake")
+else (WIN32)
+  set(INSTALL_CMAKE_DIR
+    "share/cmake/${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION_STRING}")
+endif (WIN32)
+
+export (TARGETS Geographic ${TOOLS}
+  FILE "${PROJECT_BINARY_DIR}/GeographicLibDepends.cmake")
+
+export (PACKAGE GeographicLib)
+
+set (GEOGRAPHICLIB_ROOT_DIR "${PROJECT_BINARY_DIR}")
+set (GEOGRAPHICLIB_INCLUDE_DIRS
+  "${PROJECT_BINARY_DIR}/include" "${PROJECT_SOURCE_DIR}/include" )
+set (GEOGRAPHICLIB_LIBRARY_DIRS "${PROJECT_BINARY_DIR}/src")
+set (GEOGRAPHICLIB_CMAKE_DIR "${PROJECT_BINARY_DIR}")
+configure_file (cmake/geographiclib-config.cmake.in
+  "${PROJECT_BINARY_DIR}/geographiclib-config.cmake" @ONLY)
+
+install (EXPORT GeographicLibDepends DESTINATION "${INSTALL_CMAKE_DIR}")
+
+if (WIN32)
+  set (GEOGRAPHICLIB_ROOT_DIR "..")
+else (WIN32)
+  set (GEOGRAPHICLIB_ROOT_DIR "../../..")
+endif (WIN32)
+set (GEOGRAPHICLIB_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
+configure_file (cmake/geographiclib-config.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake" @ONLY)
+install (FILES
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}")
 
 if (MAINTAINER)
   add_custom_target (distrib-all)

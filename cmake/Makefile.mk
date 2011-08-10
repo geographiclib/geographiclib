@@ -7,6 +7,6 @@ install:
 clean:
 	@:
 list:
-	@echo FindGeographicLib.cmake
+	@echo FindGeographicLib.cmake geographiclib-config.cmake.in
 
 .PHONY: all install list clean

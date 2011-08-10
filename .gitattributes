@@ -23,6 +23,7 @@ makefile-admin ident eol=lf
 *.am ident eol=lf
 *.in ident eol=lf
 *.h.in ident text
+*.cmake.in ident text
 *.mk ident eol=lf
 *.sh ident eol=lf
 *.eps -text

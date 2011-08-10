@@ -17,7 +17,8 @@ EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
 	find $(distdir)/cmake -type f \
-		! \(-name '*.cmake' -o -name '*.mk' \) | xargs rm -rf ; \
+		! \(-name '*.cmake' -o -name '*.cmake.in' -o -name '*.mk' \) \
+		| xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		! \( -name '*.sln' -o -name '*.vc*proj' -o -name '*.mk' \)| \

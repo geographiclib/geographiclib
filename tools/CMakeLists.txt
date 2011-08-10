@@ -29,7 +29,7 @@ if (NOT WIN32)
     INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 endif (NOT WIN32)
 
-install (TARGETS ${TOOLS} DESTINATION bin)
+install (TARGETS ${TOOLS} EXPORT GeographicLibDepends DESTINATION bin)
 
 if (NOT WIN32)
   set (GEOID_SCRIPT geographiclib-get-geoids)
