@@ -3,14 +3,16 @@
 # Set
 #  GEOGRAPHICLIB_FOUND = TRUE
 #  GEOGRAPHICLIB_INCLUDE_DIRS = /usr/local/include
-#  GEOGRAPHICLIB_LIBRARIES = /usr/local/lib/libGeographic.so
+#  GEOGRAPHICLIB_LIBRARIES = Geographic
 #  GEOGRAPHICLIB_LIBRARY_DIRS = /usr/local/lib
+#  GEOGRAPHICLIB_VERSION_{MAJOR,MINOR,STRING}
 
 message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
-set (GeographicLib_VERSION_MAJOR "@GeographicLib_VERSION_MAJOR@")
-set (GeographicLib_VERSION_MINOR "@GeographicLib_VERSION_MINOR@")
-set (GeographicLib_VERSION_STRING "@GeographicLib_VERSION_STRING@")
-message (STATUS "GeographicLib configuration, version " ${GeographicLib_VERSION_STRING})
+set (GEOGRAPHICLIB_VERSION_MAJOR "@GeographicLib_VERSION_MAJOR@")
+set (GEOGRAPHICLIB_VERSION_MINOR "@GeographicLib_VERSION_MINOR@")
+set (GEOGRAPHICLIB_VERSION_STRING "@GeographicLib_VERSION_STRING@")
+message (STATUS "GeographicLib configuration, version "
+  ${GEOGRAPHICLIB_VERSION_STRING})
 
 # Tell the user project where to find our headers and libraries
 if (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
@@ -29,7 +31,10 @@ foreach (p ${GEOGRAPHICLIB_INCLUDE_DIRS})
   # Only check first include dir
   if (NOT EXISTS "${p}/GeographicLib/Config.h")
     unset (GEOGRAPHICLIB_INCLUDE_DIRS)
-    unset (GEOGRAPHICLIB_LIRBARY_DIRS)
+    unset (GEOGRAPHICLIB_LIBRARY_DIRS)
+    unset (GEOGRAPHICLIB_VERSION_MAJOR)
+    unset (GEOGRAPHICLIB_VERSION_MINOR)
+    unset (GEOGRAPHICLIB_VERSION_STRING)
   endif (NOT EXISTS "${p}/GeographicLib/Config.h")
   break (p ${GEOGRAPHICLIB_INCLUDE_DIRS})
 endforeach (p ${GEOGRAPHICLIB_INCLUDE_DIRS})

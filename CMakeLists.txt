@@ -225,8 +225,4 @@ if (MAINTAINER)
   add_dependencies (dist distrib-all)
 endif (MAINTAINER)
 
-if (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
-  # testing doesn't work for windows with shared libraries because the
-  # dlls are not found
-  enable_testing ()
-endif (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
+enable_testing ()

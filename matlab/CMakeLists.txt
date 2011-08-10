@@ -9,8 +9,7 @@ if (HAVE_MEX)
   if (WIN32)
     include (InstallRequiredSystemLibraries)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-      DESTINATION libexec/GeographicLib/matlab
-      CONFIGURATIONS Release)
+      DESTINATION libexec/GeographicLib/matlab)
   endif (WIN32)
   add_custom_target (matlab-all ALL)
   foreach (INTERFACE ${MATLAB_INTERFACES})
@@ -39,7 +38,16 @@ if (HAVE_MEX)
     endif (WIN32)
     add_dependencies (matlab-all matlab-${TARGET})
     install (PROGRAMS ${TARGET_INTERFACE}
-      DESTINATION libexec/GeographicLib/matlab
-      CONFIGURATIONS Release)
+      DESTINATION libexec/GeographicLib/matlab)
   endforeach (INTERFACE)
+  if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
+    get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic
+      "LOCATION_${CMAKE_CFG_INTDIR}")
+    add_custom_command (TARGET matlab-all POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy ${GEOGRAPHIC_LIBRARY_FILE} ./)
+    get_filename_component (GEOGRAPHIC_LIBRARY_NAME
+      ${GEOGRAPHIC_LIBRARY_FILE} NAME)
+    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOGRAPHIC_LIBRARY_NAME}
+      DESTINATION libexec/GeographicLib/matlab)
+  endif (WIN32 AND GEOGRAPHIC_SHARED_LIB)
 endif (HAVE_MEX)

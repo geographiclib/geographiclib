@@ -10,12 +10,10 @@ endif (GEOGRAPHIC_SHARED_LIB)
 
 target_link_libraries (Geographic)
 if (WIN32)
-  set_target_properties (Geographic PROPERTIES
-    VERSION "${LIBVERSIONFULL}" )
+  set_target_properties (Geographic PROPERTIES VERSION "${LIBVERSIONFULL}" )
 else (WIN32)
   set_target_properties (Geographic PROPERTIES
-    VERSION "${LIBVERSIONFULL}"
-    SOVERSION "${LIBVERSION}" )
+    VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
 endif (WIN32)
 install (TARGETS Geographic
   EXPORT GeographicLibDepends

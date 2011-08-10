@@ -45,11 +45,15 @@ if (NOT WIN32)
     DESTINATION sbin)
 endif (NOT WIN32)
 
-if (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
-  # testing doesn't work for windows with shared libraries because the
-  # dlls are not found
-  enable_testing ()
-endif (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
+if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
+  get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic
+    "LOCATION_${CMAKE_CFG_INTDIR}")
+  add_custom_command (TARGET tools POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy ${GEOGRAPHIC_LIBRARY_FILE} ${CMAKE_CFG_INTDIR}/)
+endif (WIN32 AND GEOGRAPHIC_SHARED_LIB)
+
+enable_testing ()
 
 add_test (GeoConvert0 GeoConvert -p -3 -m --input-string "33.3 44.4")
 set_tests_properties (GeoConvert0

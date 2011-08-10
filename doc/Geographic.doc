@@ -252,8 +252,7 @@ Here are the steps to compile and install %GeographicLib:
     non-Windows systems, OFF for Windows systems)
     determines whether a shared or static library is built.  The default
     is OFF for Windows because there's no standard place to install the
-    dlls.  In addition, on Windows, the tests only work with static
-    libraries.
+    dlls.
   - <code>CMAKE_BUILD_TYPE</code> (default: Release).  This
     flags only affects non-IDE compile environments (like make + g++).
     The default is actually blank, but this is treated as
