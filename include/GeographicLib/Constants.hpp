@@ -168,6 +168,36 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real nauticalmile() throw()
     { return 1852 * meter<real>(); }
+
+    /**
+     * @return the number of square meters in a square meter.
+     *
+     * This is unity, but this lets the internal system of units be changed if
+     * necessary.
+     **********************************************************************/
+    template<typename T>
+      static inline T square_meter() throw()
+    { return meter<real>() * meter<real>(); }
+    /**
+     * A synonym for square_meter<real>().
+     **********************************************************************/
+    static inline Math::real square_meter() throw()
+    { return square_meter<real>(); }
+    /**
+     * @return the number of square meters in a hectare.
+     **********************************************************************/
+    static inline Math::real hectare() throw()
+    { return 10000 * square_meter<real>(); }
+    /**
+     * @return the number of square meters in a square kilometer.
+     **********************************************************************/
+    static inline Math::real square_kilometer() throw()
+    { return kilometer() * kilometer(); }
+    /**
+     * @return the number of square meters in a square nautical mile.
+     **********************************************************************/
+    static inline Math::real square_nauticalmile() throw()
+    { return nauticalmile() * nauticalmile(); }
     ///@}
 
     /** \name Anachronistic British units
@@ -198,6 +228,14 @@ namespace GeographicLib {
      * @return the number of meters in a statute mile.
      **********************************************************************/
     static inline Math::real mile() throw() { return 8 * furlong(); }
+    /**
+     * @return the number of square meters in an acre.
+     **********************************************************************/
+    static inline Math::real acre() throw() { return chain() * furlong(); }
+    /**
+     * @return the number of square meters in a square statute mile.
+     **********************************************************************/
+    static inline Math::real square_mile() throw() { return mile() * mile(); }
     ///@}
 
     /** \name Anachronistic US units
