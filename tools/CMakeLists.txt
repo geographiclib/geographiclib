@@ -25,7 +25,7 @@ foreach (TOOL ${TOOLS})
 endforeach (TOOL)
 
 if (NOT WIN32)
-  set_target_properties(${TOOLS} PROPERTIES
+  set_target_properties (${TOOLS} PROPERTIES
     INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 endif (NOT WIN32)
 

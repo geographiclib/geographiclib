@@ -476,6 +476,21 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   that Geographic.dll is in the same directory as your executable or
   else include the directory containing the dll in your
   <code>PATH</code>.
+- If you're using cmake to configure and build your project, then
+  instead of the previous three steps, insert \verbatim
+  find_package (GeographicLib)
+  include_directories (${GEOGRAPHICLIB_INCLUDE_DIRS})
+  target_link_libraries (program ${GEOGRAPHICLIB_LIBRARIES})
+  if (NOT WIN32)
+    set_target_properties (program PROPERTIES
+      INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${GEOGRAPHICLIB_LIBRARY_DIRS}")
+  endif (NOT WIN32) \endverbatim
+  into appropriate places in your CMakeLists.txt files.  Assuming that
+  you configured and installed GeographicLib with cmake (or that you
+  used the binary installer for Windows), then the find_package command
+  should find the library and set the required cmake variables.
+  Otherwise, copy cmake/FindGeographicLib.cmake to somewhere in your
+  <code>CMAKE_MODULE_PATH</code>.
 - For Windows, ensure that you build the library with the same version
   of the compiler and you use for your code.  In addition, you have
   to build a separate debug version of the library when you can
@@ -2246,6 +2261,11 @@ number.)
     header files.
   - Remove unused "fast" GeographicLib::Accumulator method.
   - Withdraw some deprecated routines.
+  - cmake changes:
+    - include FindGeographic.cmake in distribution;
+    - building with cmake creates and installs
+      geographiclib-config.cmake;
+    - better support for building a shared library under Windows.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a>
   - Change license to MIT/X11.
