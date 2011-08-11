@@ -92,7 +92,7 @@ cat <<EOF
 		   latitude and longitude,
 		   online calculator,
 		   WGS84 ellipsoid,
-		   GeographicLib" /> 
+		   GeographicLib" />
   </head>
   <body>
     <h3>
@@ -267,7 +267,7 @@ cat <<EOF
       and (S30, E180) where the geodesic follows a meridian with the
       <b>wrong</b> result returned by the
       <a href="http://www.ngs.noaa.gov/">
-        NGS</a> online 
+        NGS</a> online
       <a href="http://www.ngs.noaa.gov/cgi-bin/Inv_Fwd/inverse2.prl">
         inverse geodesic calculator</a>.
     </p>

@@ -63,7 +63,7 @@ There is also a binary installer for Windows available at
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
-For more information, see http://geographiclib.sourceforge.net/.  
+For more information, see http://geographiclib.sourceforge.net/.
 
 \section contents Contents
  - \ref intro
@@ -513,7 +513,7 @@ Here is a very simple test code, which convert the point 38.95N 75.17W
 
 int main() {
   using namespace GeographicLib;
-  double 
+  double
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
@@ -1125,7 +1125,7 @@ locate the datasets.  This is
 consistent with the examples above.  This may be overridden at run-time
 by defining the GEOID_PATH environment variable.  Finally, the path may
 be set using the optional second argument to the
-GeographicLib::Geoid constructor or with the "-d" flag to 
+GeographicLib::Geoid constructor or with the "-d" flag to
 <a href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to
 <a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid
 path for that utility.  The "-v" flag causes GeoidEval to report the

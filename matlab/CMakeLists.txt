@@ -21,7 +21,7 @@ if (HAVE_MEX)
 	COMMAND
 	  ${MEX}
 	    -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
-	    -L${PROJECT_BINARY_DIR}/src/${CMAKE_CFG_INTDIR} -lGeographic 
+	    -L${PROJECT_BINARY_DIR}/src/${CMAKE_CFG_INTDIR} -lGeographic
 	    ${INTERFACE}
 	COMMENT "Building matlab interface for ${TARGET}"
 	DEPENDS ${INTERFACE} Geographic)

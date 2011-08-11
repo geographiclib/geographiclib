@@ -129,7 +129,7 @@
     var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
     result.lat1 = lat1; result.lon1 = lon1;
     result.lat2 = lat2; result.lon2 = lon2;
-    
+
     return result;
   }
 
@@ -142,7 +142,7 @@
     var result = this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
     result.lat1 = lat1; result.lon1 = lon1;
     result.azi1 = azi1; result.s12 = s12;
-    
+
     return result;
   }
 
@@ -232,7 +232,7 @@
     var vals, line, s12, j;
     for (var i = 0; i <= k; ++i) {
       var azi1 = -180 + i * 360 / k;
-      line = new l.GeodesicLine(this, lat1, lon1, azi1, 
+      line = new l.GeodesicLine(this, lat1, lon1, azi1,
 				g.LATITUDE | g.LONGITUDE | g.DISTANCE_IN |
 				g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
       vals = line.GenPosition(true, 180 * ord,

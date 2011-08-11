@@ -22,7 +22,7 @@
 		   latitude and longitude,
 		   online calculator,
 		   WGS84 ellipsoid,
-		   GeographicLib" /> 
+		   GeographicLib" />
     <script type="text/javascript" src="GeographicLib/Math.js"></script>
     <script type="text/javascript" src="GeographicLib/Geodesic.js"></script>
     <script type="text/javascript" src="GeographicLib/GeodesicLine.js"></script>
@@ -219,7 +219,7 @@ function GeodesicArea(input, polyline) {
 	the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2&rdquo;</i>:</p>
-      <p>input: 
+      <p>input:
         <input name="input" size=72 value="-41.32 174.81 40.96 -5.50" />
       </p>
       <p>
@@ -244,7 +244,7 @@ function GeodesicArea(input, polyline) {
 	</select>
       </p>
       <p>
-        <input type="button" value="COMPUTE" 
+        <input type="button" value="COMPUTE"
 	       onclick="var t = GeodesicInverse(document.inverse.input.value,
 			        document.inverse.format[1].checked,
 				document.inverse.prec.selectedIndex);
@@ -282,7 +282,7 @@ function GeodesicArea(input, polyline) {
 	the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 azi1 s12&rdquo;</i>:</p>
-      <p>input: 
+      <p>input:
         <input name="input" size=72 value="40.6 -73.8 45 10000e3" />
       </p>
       <p>
@@ -307,7 +307,7 @@ function GeodesicArea(input, polyline) {
 	</select>
       </p>
       <p>
-        <input type="button" value="COMPUTE" 
+        <input type="button" value="COMPUTE"
 	       onclick="var t = GeodesicDirect(document.direct.input.value,
 			        document.direct.format[1].checked,
 				document.direct.prec.selectedIndex);
@@ -349,7 +349,7 @@ function GeodesicArea(input, polyline) {
 	the calculation, press the &ldquo;COMPUTE&rdquo; button.
       </p>
       <p>Enter <i>&ldquo;lat1 lon1 lat2 lon2 ds12 maxk&rdquo;</i>:</p>
-      <p>input: 
+      <p>input:
         <input name="input" size=72 value="40.6 -73.8 1.4 104 1000e3 20" />
       </p>
       <p>
@@ -374,7 +374,7 @@ function GeodesicArea(input, polyline) {
 	</select>
       </p>
       <p>
-        <input type="button" value="COMPUTE" 
+        <input type="button" value="COMPUTE"
 	       onclick="var t = GeodesicInversePath(document.path.input.value,
 			        document.path.format[1].checked,
 				document.path.prec.selectedIndex);
@@ -441,7 +441,7 @@ function GeodesicArea(input, polyline) {
 	</label>
       </p>
       <p>
-        <input type="button" value="COMPUTE" 
+        <input type="button" value="COMPUTE"
 	       onclick="var t = GeodesicArea(document.area.input.value,
 			document.area.polyline[1].checked);
 			document.area.status.value = t.status;

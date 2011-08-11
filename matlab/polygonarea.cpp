@@ -66,7 +66,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     plhs[1] = mxCreateDoubleMatrix(1, 1, mxREAL);
     perimeter = mxGetPr(plhs[1]);
   }
-  
+
   try {
     const Geodesic g(a, f);
     PolygonArea p(g, false);

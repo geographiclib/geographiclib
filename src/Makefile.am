@@ -8,7 +8,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 
 lib_LTLIBRARIES = libGeographic.la
 
-libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)	
+libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \

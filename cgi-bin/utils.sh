@@ -46,7 +46,7 @@ lookupcheckkey () {
     test `echo "$VALUE" | tr -d '[ -~\n\t]' | wc -c` -ne 0 &&
     echo `date +"%F %T"` Unprintable "$RAWVAL" >> ../persistent/utilities.log
     echo "$VALUE"
-}    
+}
 
 # Encode a string for inclusion into HTML.
 encodevalue () {

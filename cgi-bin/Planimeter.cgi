@@ -70,7 +70,7 @@ cat <<EOF
 		   latitude and longitude,
 		   online calculator,
 		   WGS84 ellipsoid,
-		   GeographicLib" /> 
+		   GeographicLib" />
   </head>
   <body>
     <h3>

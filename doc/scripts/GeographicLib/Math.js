@@ -124,7 +124,7 @@ GeographicLib.Accumulator = {};
     else
       this._t += u;		// otherwise just accumulate u to t.
   }
-  
+
   a.Accumulator.prototype.Sum = function(y) {
     if (!y)
       return this._s;

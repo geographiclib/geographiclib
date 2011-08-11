@@ -431,7 +431,7 @@ $Id$
    ''De la ligne géodésique sur un ellipsoïde quelconque
    [The geodesic on an arbitrary ellipsoid]'',
    Jour. Liouville '''9''', 401--408 (1844).[[BR]]
-   http://books.google.com/books?id=7oYGAAAAYAAJ&pg=PA401	
+   http://books.google.com/books?id=7oYGAAAAYAAJ&pg=PA401
  * J. Liouville,[[BR]]
    ''Sur la théorie générale des surfaces
    [On the general theory of surfaces]'',

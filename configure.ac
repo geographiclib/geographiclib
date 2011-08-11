@@ -11,7 +11,7 @@ AM_INIT_AUTOMAKE
 
 dnl
 dnl This directive is deprecated by someone, but I prefer to avoid
-dnl running autotools if not required explicitly. The reason is 
+dnl running autotools if not required explicitly. The reason is
 dnl the need to be in sync with autoconf/automake.
 dnl
 AM_MAINTAINER_MODE
@@ -53,7 +53,7 @@ AC_SEARCH_LIBS([sqrt],[m])
 
 dnl
 dnl Add here new file to be generated
-dnl 
+dnl
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
