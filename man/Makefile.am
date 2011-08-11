@@ -72,7 +72,7 @@ Planimeter.1.html: Planimeter.pod
 TransverseMercatorProj.1.html: TransverseMercatorProj.pod
 	pod2html --noindex $^ | $(PODFIX) > $@
 
-EXTRA_DIST = Makefile.mk CMakeList.txt makeusage.sh \
+EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod Geod.pod GeodesicProj.pod \
 	GeoidEval.pod Planimeter.pod \
