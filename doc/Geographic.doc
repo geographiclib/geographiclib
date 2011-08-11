@@ -478,18 +478,22 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   <code>PATH</code>.
 - If you're using cmake to configure and build your project, then
   instead of the previous three steps, insert \verbatim
-  find_package (GeographicLib)
+  # Put in your top-level CMakeLists.txt
+  find_package (GeographicLib 1.9 REQUIRED)
+  # In the top-level CMakeList.txt or whereever your code is compiled
   include_directories (${GEOGRAPHICLIB_INCLUDE_DIRS})
-  target_link_libraries (program ${GEOGRAPHICLIB_LIBRARIES})
+  # In the CMakeList.txt where you define your executable targets
+  target_link_libraries (program1 ${GEOGRAPHICLIB_LIBRARIES})
+  target_link_libraries (program2 ${GEOGRAPHICLIB_LIBRARIES})
   if (NOT WIN32)
-    set_target_properties (program PROPERTIES
+    set_target_properties (program1 program2 PROPERTIES
       INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${GEOGRAPHICLIB_LIBRARY_DIRS}")
   endif (NOT WIN32) \endverbatim
-  into appropriate places in your CMakeLists.txt files.  Assuming that
-  you configured and installed GeographicLib with cmake (or that you
-  used the binary installer for Windows), then the find_package command
-  should find the library and set the required cmake variables.
-  Otherwise, copy cmake/FindGeographicLib.cmake to somewhere in your
+  in your CMakeLists.txt files (as noted).  Assuming that you configured
+  and installed GeographicLib with cmake (or that you used the binary
+  installer for Windows), then the find_package command should find the
+  library and set the required cmake variables.  Otherwise, copy
+  cmake/FindGeographicLib.cmake to somewhere in your
   <code>CMAKE_MODULE_PATH</code>.
 - For Windows, ensure that you build the library with the same version
   of the compiler and you use for your code.  In addition, you have

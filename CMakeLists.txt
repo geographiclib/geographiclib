@@ -3,10 +3,10 @@
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
-set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 13)
-set (GeographicLib_VERSION_STRING
-     "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+set (GEOGRAPHICLIB_VERSION_MAJOR 1)
+set (GEOGRAPHICLIB_VERSION_MINOR 13)
+set (GEOGRAPHICLIB_VERSION
+     "${GEOGRAPHICLIB_VERSION_MAJOR}.${GEOGRAPHICLIB_VERSION_MINOR}")
 set (LIBVERSION 9)
 set (LIBVERSIONFULL 9.0.0)
 
@@ -91,7 +91,7 @@ if (WIN32)
   set(INSTALL_CMAKE_DIR "cmake")
 else (WIN32)
   set(INSTALL_CMAKE_DIR
-    "share/cmake/${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION_STRING}")
+    "share/cmake/${CMAKE_PROJECT_NAME}-${GEOGRAPHICLIB_VERSION}")
 endif (WIN32)
 
 export (TARGETS Geographic ${TOOLS}
@@ -106,6 +106,8 @@ set (GEOGRAPHICLIB_LIBRARY_DIRS "${PROJECT_BINARY_DIR}/src")
 set (GEOGRAPHICLIB_CMAKE_DIR "${PROJECT_BINARY_DIR}")
 configure_file (cmake/geographiclib-config.cmake.in
   "${PROJECT_BINARY_DIR}/geographiclib-config.cmake" @ONLY)
+configure_file (cmake/geographiclib-config-version.cmake.in
+  "${PROJECT_BINARY_DIR}/geographiclib-config-version.cmake" @ONLY)
 
 install (EXPORT GeographicLibDepends DESTINATION "${INSTALL_CMAKE_DIR}")
 
@@ -117,8 +119,13 @@ endif (WIN32)
 set (GEOGRAPHICLIB_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
 configure_file (cmake/geographiclib-config.cmake.in
   "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake" @ONLY)
+configure_file (cmake/geographiclib-config-version.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake" @ONLY)
 install (FILES
   "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}")
+install (FILES
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake"
   DESTINATION "${INSTALL_CMAKE_DIR}")
 
 if (MAINTAINER)
@@ -127,8 +134,8 @@ if (MAINTAINER)
 endif (MAINTAINER)
 
 include (InstallRequiredSystemLibraries)
-set (CPACK_PACKAGE_VERSION_MAJOR ${GeographicLib_VERSION_MAJOR})
-set (CPACK_PACKAGE_VERSION_MINOR ${GeographicLib_VERSION_MINOR})
+set (CPACK_PACKAGE_VERSION_MAJOR ${GEOGRAPHICLIB_VERSION_MAJOR})
+set (CPACK_PACKAGE_VERSION_MINOR ${GEOGRAPHICLIB_VERSION_MINOR})
 set (CPACK_PACKAGE_VERSION_PATCH 0)
 set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
@@ -171,7 +178,7 @@ set (CPACK_SOURCE_IGNORE_FILES
 set (CPACK_SOURCE_GENERATOR TGZ)
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
-  "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION_STRING}")
+  "${CMAKE_PROJECT_NAME}-${GEOGRAPHICLIB_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
@@ -179,7 +186,7 @@ if (WIN32)
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   set (CPACK_NSIS_PACKAGE_NAME
-    "${CMAKE_PROJECT_NAME} ${GeographicLib_VERSION_STRING}")
+    "${CMAKE_PROJECT_NAME} ${GEOGRAPHICLIB_VERSION}")
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
@@ -208,7 +215,7 @@ if (MAINTAINER)
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       echo include Makefile.mk > Makefile &&
       echo "\\#define" GEOGRAPHICLIB_VERSION_STRING
-      \\"${GeographicLib_VERSION_STRING}\\" > include/GeographicLib/Config.h
+      \\"${GEOGRAPHICLIB_VERSION}\\" > include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html
