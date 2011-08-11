@@ -3,7 +3,7 @@
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
 SUBDIRS = src man tools doc
-ALLDIRS = include $(SUBDIRS) maxima matlab python windows
+ALLDIRS = include $(SUBDIRS) maxima matlab python windows cmake
 
 all: src man tools
 
