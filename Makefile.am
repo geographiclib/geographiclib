@@ -8,24 +8,17 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc include matlab python
+SUBDIRS = src man tools doc include matlab python cmake
 
 EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
-	Makefile.mk CMakeLists.txt \
-	cmake windows maxima man doc python
+	Makefile.mk CMakeLists.txt windows maxima doc
 
 dist-hook:
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf ; \
-	find $(distdir)/cmake -type f \
-		! \(-name '*.cmake' -o -name '*.cmake.in' -o -name '*.mk' \) \
-		| xargs rm -rf ; \
 	find $(distdir)/windows -mindepth 1 -type d | xargs rm -rf ; \
 	find $(distdir)/windows -type f \
 		! \( -name '*.sln' -o -name '*.vc*proj' -o -name '*.mk' \)| \
 		xargs rm -f ; \
-	find $(distdir)/matlab -type f \
-		! \( -name '*.cpp' -o -name '*.m' -o -name 'Makefile.*' -o -name CMakeLists.txt \) | \
-		xargs rm -rf ; \
 	find $(distdir) \
 		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.cmake' -o -name '*.tmp' -o -name '*.pyc' \)| \
 		xargs rm -rf ; \

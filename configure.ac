@@ -63,5 +63,6 @@ doc/Makefile
 man/Makefile
 matlab/Makefile
 python/Makefile
+cmake/Makefile
 ])
 AC_OUTPUT
