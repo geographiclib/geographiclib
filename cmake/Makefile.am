@@ -8,7 +8,7 @@ cmakedir=$(datadir)/cmake/GeographicLib
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(cmakedir)
-	$(INSTALL) -m 644 FindGeographicLib.cmake $(DESTDIR)$(matlabdir)
+	$(INSTALL) -m 644 FindGeographicLib.cmake $(DESTDIR)$(cmakedir)
 
 EXTRA_DIST = Makefile.mk FindGeographicLib.cmake \
 	geographiclib-config-version.cmake.in geographiclib-config.cmake.in
