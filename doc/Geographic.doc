@@ -174,7 +174,7 @@ Then pick one of the first five options below:
 - \ref autoconf.  This method works for most Unix-like systems,
   including Linux and Mac OS X.
 - \ref gnu.  This is a simple installation method that works with g++
-  GNU make on Linux and many Unix platforms.
+  and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
   Visual Studio 2005 and 2008 under Windows.  Use cmake if you use
   Visual Studio 2010.
@@ -480,7 +480,7 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   instead of the previous three steps, insert \verbatim
   # Put in your top-level CMakeLists.txt
   find_package (GeographicLib 1.9 REQUIRED)
-  # In the top-level CMakeList.txt or whereever your code is compiled
+  # In the top-level CMakeList.txt or wherever your code is compiled
   include_directories (${GeographicLib_INCLUDE_DIRS})
   # In the CMakeList.txt where you define your executable targets
   target_link_libraries (program1 ${GeographicLib_LIBRARIES})

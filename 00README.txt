@@ -102,3 +102,6 @@ Files
     Makefile.mk -- Unix/Linux makefiles
     configure -- autoconf configuration script
     CMakeLists.txt -- cmake configuration files
+    cmake/
+      FindGeographicLib.cmake -- cmake find script
+      *.cmake.in -- cmake config templates
