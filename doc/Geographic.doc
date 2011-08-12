@@ -838,7 +838,7 @@ An example of using this interface is
 >>> line.Position( 5000e3)
 >>> line.Position(10000e3)
 >>> # Computing the area of a geodesic polygon
-... def p(lat,lon): return {'lat': lat,'lon': lon}
+... def p(lat,lon): return {'lat': lat, 'lon': lon}
 ...
 >>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
 >>> # Introductory help

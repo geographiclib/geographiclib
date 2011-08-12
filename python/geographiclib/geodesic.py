@@ -45,7 +45,7 @@ class Geodesic(object):
     line.Position(10000e3)
 
     # Computing the area of a geodesic polygon
-    def p(lat,lon): return {'lat': lat,'lon': lon}
+    def p(lat,lon): return {'lat': lat, 'lon': lon}
 
     Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
 
@@ -268,7 +268,7 @@ class Geodesic(object):
     # authalic radius squared
     self._c2 = (Math.sq(self._a) + Math.sq(self._b) *
                 (1 if self._e2 == 0 else
-                 (math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
+                 (Math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
     self._etol2 = Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))

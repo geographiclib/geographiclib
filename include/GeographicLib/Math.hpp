@@ -201,7 +201,7 @@ namespace GeographicLib {
 
 #if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
     /**
-     * log(\e x + 1) accurate near \e x = 0.
+     * log(1 + \e x) accurate near \e x = 0.
      *
      * This is taken from D. Goldberg,
      * <a href="http://dx.doi.org/10.1145/103162.103163">What every computer
@@ -209,7 +209,7 @@ namespace GeographicLib {
      * Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5, p 528.
      *
      * @param[in] x
-     * @return log(\e x + 1).
+     * @return log(1 + \e x).
      **********************************************************************/
     template<typename T>
     static inline T log1p(T x) throw() {

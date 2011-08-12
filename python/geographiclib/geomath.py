@@ -34,17 +34,39 @@ class Math(object):
   degree = math.pi/180
   nan = float("nan")
   inf = float("inf")
+
   def sq(x):
     """Square a number"""
 
     return x * x
   sq = staticmethod(sq)
+
   def cbrt(x):
     """Real cube root of a number"""
 
     y = math.pow(abs(x), 1/3.0)
     return y if x >= 0 else -y
   cbrt = staticmethod(cbrt)
+
+  def log1p(x):
+    """log(1 + x) accurate for small x (missing from python 2.5.2)"""
+
+    y = 1 + x
+    z = y - 1
+    # Here's the explanation for this magic: y = 1 + z, exactly, and z
+    # approx x, thus log(y)/z (which is nearly constant near z = 0) returns
+    # a good approximation to the true log(1 + x)/x.  The multiplication x *
+    # (log(y)/z) introduces little additional error.
+    return x if z == 0 else x * math.log(y) / z
+  log1p = staticmethod(log1p)
+
+  def atanh(x):
+    """atanh(x) (missing from python 2.5.2)"""
+    y = abs(x)                  # Enforce odd parity
+    y = Math.log1p(2 * y/(1 - y))/2
+    return -y if x < 0 else y
+  atanh = staticmethod(atanh)
+
   def isfinite(x):
     """Test for finiteness"""
 
