@@ -1,5 +1,22 @@
+# geodesiccapability.py
+#
+# This gathers the capability constants need by geodesic.py and
+# geodesicline.py.  See the documentation for the
+# GeographicLib::Geodesic class for more information at
+#
+#    http://geographiclib.sourceforge.net/html/annotated.html
+#
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+# under the MIT/X11 License.  For more information, see
+# http://geographiclib.sourceforge.net/
+#
+# $Id$
+######################################################################
+
 class GeodesicCapability(object):
-  """Capability constants for Geodesic"""
+  """
+  Capability constants shared between Geodesic and GeodesicLine.
+  """
 
   CAP_NONE = 0
   CAP_C1   = 1<<0

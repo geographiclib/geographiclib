@@ -1,3 +1,25 @@
+# geodesicline.py
+#
+# This is a rather literal translation of the
+# GeographicLib::GeodesicLine class to python.  See the documentation
+# for the C++ class for more information at
+#
+#    http://geographiclib.sourceforge.net/html/annotated.html
+#
+# The algorithms are derived in
+#
+#    Charles F. F. Karney,
+#    Geodesics on an ellipsoid of revolution, Feb. 2011,
+#    http://arxiv.org/abs/1102.1215
+#    errata: http://geographiclib.sourceforge.net/geod-errata.html
+#
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+# under the MIT/X11 License.  For more information, see
+# http://geographiclib.sourceforge.net/
+#
+# $Id$
+######################################################################
+
 import math
 from geographiclib.geomath import Math
 from geographiclib.geodesiccapability import GeodesicCapability
@@ -229,7 +251,8 @@ class GeodesicLine(object):
   def Position(self, s12,
                outmask = GeodesicCapability.LATITUDE |
                GeodesicCapability.LONGITUDE | GeodesicCapability.AZIMUTH):
-    """Return the point a distance s12 along the geodesic line.  Return
+    """
+    Return the point a distance s12 along the geodesic line.  Return
     a dictionary with (some) of the following entries:
 
       lat1 latitude of point 1
@@ -249,14 +272,14 @@ class GeodesicLine(object):
     omitted, then only the basic geodesic fields are computed.  The mask
     is an or'ed combination of the following values
 
-      GeographicLib.Geodesic.LATITUDE
-      GeographicLib.Geodesic.LONGITUDE
-      GeographicLib.Geodesic.AZIMUTH
-      GeographicLib.Geodesic.DISTANCE
-      GeographicLib.Geodesic.REDUCEDLENGTH
-      GeographicLib.Geodesic.GEODESICSCALE
-      GeographicLib.Geodesic.AREA
-      GeographicLib.Geodesic.ALL
+      Geodesic.LATITUDE
+      Geodesic.LONGITUDE
+      Geodesic.AZIMUTH
+      Geodesic.DISTANCE
+      Geodesic.REDUCEDLENGTH
+      Geodesic.GEODESICSCALE
+      Geodesic.AREA
+      Geodesic.ALL
     """
 
     from geographiclib.geodesic import Geodesic

@@ -1,10 +1,62 @@
+# geodesic.py
+#
+# This is a rather literal translation of the GeographicLib::Geodesic
+# class to python.  See the documentation for the C++ class for more
+# information at
+#
+#    http://geographiclib.sourceforge.net/html/annotated.html
+#
+# The algorithms are derived in
+#
+#    Charles F. F. Karney,
+#    Geodesics on an ellipsoid of revolution, Feb. 2011,
+#    http://arxiv.org/abs/1102.1215
+#    errata: http://geographiclib.sourceforge.net/geod-errata.html
+#
+# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+# under the MIT/X11 License.  For more information, see
+# http://geographiclib.sourceforge.net/
+#
+# $Id$
+######################################################################
+
 import math
 from geographiclib.geomath import Math
 from geographiclib.constants import Constants
 from geographiclib.geodesiccapability import GeodesicCapability
 
 class Geodesic(object):
-  """Solve geodesic problem"""
+  """
+  Solve geodesic problems.  The following illustrates its use:
+
+    import sys
+    sys.path.append("/home/ckarney/geographiclib/python/site-package");
+    from geographiclib.geodesic import Geodesic
+
+    # The inverse problem
+    Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+
+    # The direct problem
+    Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+
+    # How to obtain several points along a geodesic
+    line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+    line.Position(10000e3)
+
+    # Computing the area of a polygon
+    def p(lat,lon): return {'lat': lat,'lon': lon}
+
+    Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
+
+  Documentation on these routines is available, via
+
+    help(Geodesic.__init__)
+    help(Geodesic.Inverse)
+    help(Geodesic.Direct)
+    help(Geodesic.Line)
+    help(line.Position)
+    help(Geodesic.Area)
+  """
 
   GEOD_ORD = 6
   nA1_ = GEOD_ORD
@@ -200,7 +252,8 @@ class Geodesic(object):
   C2f = staticmethod(C2f)
 
   def __init__(self, a, f):
-    """Construct a Geodesic object for ellipsoid with major radius a and
+    """
+    Construct a Geodesic object for ellipsoid with major radius a and
     flattening f.
     """
 
@@ -852,7 +905,8 @@ class Geodesic(object):
   CheckDistance = staticmethod(CheckDistance)
 
   def Inverse(self, lat1, lon1, lat2, lon2, outmask = DISTANCE | AZIMUTH):
-    """Solve the inverse geodesic problem.  Compute geodesic between
+    """
+    Solve the inverse geodesic problem.  Compute geodesic between
     (lat1, lon1) and (lat2, lon2).  Return a dictionary with (some) of
     the following entries:
 
@@ -911,7 +965,8 @@ class Geodesic(object):
 
   def Direct(self, lat1, lon1, azi1, s12,
              outmask = LATITUDE | LONGITUDE | AZIMUTH):
-    """Solve the direct geodesic problem.  Compute geodesic starting at
+    """
+    Solve the direct geodesic problem.  Compute geodesic starting at
     (lat1, lon1) with azimuth azi1 and length s12.  Return a dictionary
     with (some) of the following entries:
 
@@ -961,7 +1016,8 @@ class Geodesic(object):
     return result
 
   def Line(self, lat1, lon1, azi1, caps = ALL):
-    """Return a GeodesicLine object to compute points along a geodesic
+    """
+    Return a GeodesicLine object to compute points along a geodesic
     starting at lat1, lon1, with azimuth azi1.  caps is an or'ed
     combination of bit the following values indicating the capabilities
     of the return object
@@ -986,8 +1042,9 @@ class Geodesic(object):
       caps | Geodesic.DISTANCE_IN)
 
   def Area(self, points, polyline = False):
-    """Compute the area of a geodesic polygon given by points, an array
-    of dictionaries with entries lat and lon.  Return a dictionary with
+    """
+    Compute the area of a geodesic polygon given by points, an array of
+    dictionaries with entries lat and lon.  Return a dictionary with
     entries
 
       number the number of verices
