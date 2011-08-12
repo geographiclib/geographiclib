@@ -84,7 +84,7 @@ add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
-add_subdirectory (python)
+add_subdirectory (python/geographiclib)
 
 if (WIN32)
   set(INSTALL_CMAKE_DIR "cmake")
@@ -96,7 +96,8 @@ endif (WIN32)
 export (TARGETS Geographic ${TOOLS}
   FILE "${PROJECT_BINARY_DIR}/GeographicLibDepends.cmake")
 
-export (PACKAGE GeographicLib)
+# Don't want cmake to look in build trees, so don't do
+# export (PACKAGE GeographicLib)
 
 set (GEOGRAPHICLIB_ROOT_DIR "${PROJECT_BINARY_DIR}")
 set (GeographicLib_INCLUDE_DIRS
