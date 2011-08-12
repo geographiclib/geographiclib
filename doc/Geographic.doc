@@ -814,32 +814,35 @@ Examples of using this interface are
 
 \section python Python interface
 
-The file python/GeographicLib.py (which is installed as
-PREFIX/share/GeographicLib/python) contains the classes
+A python implementation of the geodesic routines from GeographicLib are
+provided in the python/geographiclib directory (which is installed as
+PREFIX/lib/python/site-packages/geographiclib).  This contains
+implementations of the classes
 - GeographicLib::Math
 - GeographicLib::Accumulator
 - GeographicLib::Geodesic
 - GeographicLib::GeodesicLine
 - GeographicLib::PolygonArea
 .
-translated into Python.  An example of using this interface is
+An example of using this interface is
 \code
 >>> import sys
->>> sys.path.append("/usr/local/share/GeographicLib/python");
->>> from GeographicLib import Geodesic, GeodesicLine
->>> help(Geodesic.__init__)
->>> help(Geodesic.Inverse)
->>> help(Geodesic.Direct)
->>> help(Geodesic.Line)
->>> help(Geodesic.Area)
->>> help(GeodesicLine.Position)
->>> Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
->>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
->>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+>>> sys.path.append("/usr/local/lib/python/site-packages");
+>>> from geographiclib.geodesic import Geodesic
+>>> # The geodesic inverse problem
+... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+>>> # The geodesic direct problem
+... Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+>>> # How to obtain several points along a geodesic
+... line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+>>> line.Position( 5000e3)
 >>> line.Position(10000e3)
->>> def p(lat,lon): return {'lat': lat,'lon': lon}
+>>> # Computing the area of a geodesic polygon
+... def p(lat,lon): return {'lat': lat,'lon': lon}
 ...
 >>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
+>>> # Introductory help
+... help(Geodesic)
 \endcode
 
 \section matlab Matlab and Octave interfaces
@@ -2265,6 +2268,7 @@ number.)
   - Put GeographicLib::Math and GeographicLib::Accumulator in their own
     header files.
   - Remove unused "fast" GeographicLib::Accumulator method.
+  - Reorganize the \ref python.
   - Withdraw some deprecated routines.
   - cmake changes:
     - include FindGeographic.cmake in distribution;

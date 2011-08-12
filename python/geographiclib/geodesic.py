@@ -27,28 +27,29 @@ from geographiclib.geodesiccapability import GeodesicCapability
 
 class Geodesic(object):
   """
-  Solve geodesic problems.  The following illustrates its use:
+  Solve geodesic problems.  The following illustrates its use
 
     import sys
-    sys.path.append("/home/ckarney/geographiclib/python/site-package");
+    sys.path.append("/usr/local/lib/python/site-packages");
     from geographiclib.geodesic import Geodesic
 
-    # The inverse problem
+    # The geodesic inverse problem
     Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
 
-    # The direct problem
+    # The geodesic direct problem
     Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
 
     # How to obtain several points along a geodesic
     line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+    line.Position( 5000e3)
     line.Position(10000e3)
 
-    # Computing the area of a polygon
+    # Computing the area of a geodesic polygon
     def p(lat,lon): return {'lat': lat,'lon': lon}
 
     Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
 
-  Documentation on these routines is available, via
+  Documentation on these routines is available via
 
     help(Geodesic.__init__)
     help(Geodesic.Inverse)
