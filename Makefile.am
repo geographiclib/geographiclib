@@ -20,7 +20,7 @@ dist-hook:
 		! \( -name '*.sln' -o -name '*.vc*proj' -o -name '*.mk' \)| \
 		xargs rm -f ; \
 	find $(distdir) \
-		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.tmp' -o -name '*.pyc' -o -name geographiclib.js \)| \
+		\( -name .svn -o -name '.git*' -o -name CVS -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.tmp' -o -name '*.pyc' -o -name '*.bak' -o -name '*.BAK' -o -name geographiclib.js \)| \
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 	echo '#define' GEOGRAPHICLIB_VERSION_STRING \
