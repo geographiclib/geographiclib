@@ -1,4 +1,4 @@
-=for comment $Id: 47fb2d737e55aa220bef119390d7cdc2b1ad8e93 $
+=for comment $Id: 6a4d948e895ac5821fa0cf4a34c992bc5441b964 $
 
 =head1 NAME
 
@@ -128,7 +128,7 @@ B<TransverseMercatorProj> was written by Charles Karney.
 
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, I<Transverse Mercator with an accuracy of a few
-nanometers>, J. Geod (2011); DOI
+nanometers>, J. Geod B<85>(8), 475-485 (Aug. 2011); DOI
 L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
 L<http://arxiv.org/abs/1002.1417>.  The explanation of the extended
 domain of the projection with the B<-t> option is given in Section 5 of

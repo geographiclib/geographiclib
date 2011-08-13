@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEODESIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geodesic_8hpp.html#ab538cb707d6ff36056dd372c7e9e6d7e">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESIC_HPP &quot;$Id: 08483b14e89af4913976c07a8a2fb1770ea54454 $&quot;</span>
+<a name="l00011"></a><a class="code" href="Geodesic_8hpp.html#ab538cb707d6ff36056dd372c7e9e6d7e">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEODESIC_HPP &quot;$Id: a9dc85ae0526d5af9797527673a442036ec47ba7 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
@@ -66,164 +66,164 @@
 <a name="l00016"></a>00016 <span class="preprocessor"></span><span class="comment">/**</span>
 <a name="l00017"></a>00017 <span class="comment"> * The order of the expansions used by Geodesic.</span>
 <a name="l00018"></a>00018 <span class="comment"> **********************************************************************/</span>
-<a name="l00019"></a><a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">00019</a> <span class="preprocessor">#define GEOD_ORD (GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 3 : 7)</span>
-<a name="l00020"></a>00020 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00021"></a>00021 <span class="preprocessor"></span>
-<a name="l00022"></a>00022 <span class="keyword">namespace </span>GeographicLib {
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024   <span class="keyword">class </span>GeodesicLine;
-<a name="l00025"></a>00025 <span class="comment"></span>
-<a name="l00026"></a>00026 <span class="comment">  /**</span>
-<a name="l00027"></a>00027 <span class="comment">   * \brief %Geodesic calculations</span>
-<a name="l00028"></a>00028 <span class="comment">   *</span>
-<a name="l00029"></a>00029 <span class="comment"></span>
-<a name="l00030"></a>00030 <span class="comment">   * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)</span>
-<a name="l00031"></a>00031 <span class="comment">   * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and</span>
-<a name="l00032"></a>00032 <span class="comment">   * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at</span>
-<a name="l00033"></a>00033 <span class="comment">   * the two end points.  (The azimuth is the heading measured clockwise from</span>
-<a name="l00034"></a>00034 <span class="comment">   * north.  \e azi2 is the &quot;forward&quot; azimuth, i.e., the heading that takes you</span>
-<a name="l00035"></a>00035 <span class="comment">   * beyond point 2 not back to point 1.)</span>
-<a name="l00036"></a>00036 <span class="comment">   *</span>
-<a name="l00037"></a>00037 <span class="comment">   * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e</span>
-<a name="l00038"></a>00038 <span class="comment">   * lon2, and \e azi2.  This is the \e direct geodesic problem and its</span>
-<a name="l00039"></a>00039 <span class="comment">   * solution is given by the function Geodesic::Direct.  (If \e s12 is</span>
-<a name="l00040"></a>00040 <span class="comment">   * sufficiently large that the geodesic wraps more than halfway around the</span>
-<a name="l00041"></a>00041 <span class="comment">   * earth, there will be another geodesic between the points with a smaller \e</span>
-<a name="l00042"></a>00042 <span class="comment">   * s12.)</span>
-<a name="l00043"></a>00043 <span class="comment">   *</span>
-<a name="l00044"></a>00044 <span class="comment">   * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e</span>
-<a name="l00045"></a>00045 <span class="comment">   * azi2, and \e s12.  This is the \e inverse geodesic problem, whose solution</span>
-<a name="l00046"></a>00046 <span class="comment">   * is given by Geodesic::Inverse.  Usually, the solution to the inverse</span>
-<a name="l00047"></a>00047 <span class="comment">   * problem is unique.  In cases where there are muliple solutions (all with</span>
-<a name="l00048"></a>00048 <span class="comment">   * the same \e s12, of course), all the solutions can be easily generated</span>
-<a name="l00049"></a>00049 <span class="comment">   * once a particular solution is provided.</span>
-<a name="l00050"></a>00050 <span class="comment">   *</span>
-<a name="l00051"></a>00051 <span class="comment">   * The standard way of specifying the direct problem is the specify the</span>
-<a name="l00052"></a>00052 <span class="comment">   * distance \e s12 to the second point.  However it is sometimes useful</span>
-<a name="l00053"></a>00053 <span class="comment">   * instead to specify the the arc length \e a12 (in degrees) on the auxiliary</span>
-<a name="l00054"></a>00054 <span class="comment">   * sphere.  This is a mathematical construct used in solving the geodesic</span>
-<a name="l00055"></a>00055 <span class="comment">   * problems.  The solution of the direct problem in this form is provide by</span>
-<a name="l00056"></a>00056 <span class="comment">   * Geodesic::ArcDirect.  An arc length in excess of 180&lt;sup&gt;o&lt;/sup&gt; indicates</span>
-<a name="l00057"></a>00057 <span class="comment">   * that the geodesic is not a shortest path.  In addition, the arc length</span>
-<a name="l00058"></a>00058 <span class="comment">   * between an equatorial crossing and the next extremum of latitude for a</span>
-<a name="l00059"></a>00059 <span class="comment">   * geodesic is 90&lt;sup&gt;o&lt;/sup&gt;.</span>
-<a name="l00060"></a>00060 <span class="comment">   *</span>
-<a name="l00061"></a>00061 <span class="comment">   * This class can also calculate several other quantities related to</span>
-<a name="l00062"></a>00062 <span class="comment">   * geodesics.  These are:</span>
-<a name="l00063"></a>00063 <span class="comment">   * - &lt;i&gt;reduced length&lt;/i&gt;.  If we fix the first point and increase \e azi1</span>
-<a name="l00064"></a>00064 <span class="comment">   *   by \e dazi1 (radians), the the second point is displaced \e m12 \e dazi1</span>
-<a name="l00065"></a>00065 <span class="comment">   *   in the direction \e azi2 + 90&lt;sup&gt;o&lt;/sup&gt;.  The quantity \e m12 is</span>
-<a name="l00066"></a>00066 <span class="comment">   *   called the &quot;reduced length&quot; and is symmetric under interchange of the</span>
-<a name="l00067"></a>00067 <span class="comment">   *   two points.  On a curved surface the reduced length obeys a symmetry</span>
-<a name="l00068"></a>00068 <span class="comment">   *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e</span>
-<a name="l00069"></a>00069 <span class="comment">   *   s12.  The ratio \e s12/\e m12 gives the azimuthal scale for an azimuthal</span>
-<a name="l00070"></a>00070 <span class="comment">   *   equidistant projection.</span>
-<a name="l00071"></a>00071 <span class="comment">   * - &lt;i&gt;geodesic scale&lt;/i&gt;.  Consider a reference geodesic and a second</span>
-<a name="l00072"></a>00072 <span class="comment">   *   geodesic parallel to this one at point 1 and separated by a small</span>
-<a name="l00073"></a>00073 <span class="comment">   *   distance \e dt.  The separation of the two geodesics at point 2 is \e</span>
-<a name="l00074"></a>00074 <span class="comment">   *   M12 \e dt where \e M12 is called the &quot;geodesic scale&quot;.  \e M21 is</span>
-<a name="l00075"></a>00075 <span class="comment">   *   defined similarly (with the geodesics being parallel at point 2).  On a</span>
-<a name="l00076"></a>00076 <span class="comment">   *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives</span>
-<a name="l00077"></a>00077 <span class="comment">   *   the scale of the Cassini-Soldner projection.</span>
-<a name="l00078"></a>00078 <span class="comment">   * - &lt;i&gt;area&lt;/i&gt;.  Consider the quadrilateral bounded by the following lines:</span>
-<a name="l00079"></a>00079 <span class="comment">   *   the geodesic from point 1 to point 2, the meridian from point 2 to the</span>
-<a name="l00080"></a>00080 <span class="comment">   *   equator, the equator from \e lon2 to \e lon1, the meridian from the</span>
-<a name="l00081"></a>00081 <span class="comment">   *   equator to point 1.  The area of this quadrilateral is represented by \e</span>
-<a name="l00082"></a>00082 <span class="comment">   *   S12 with a clockwise traversal of the perimeter counting as a positive</span>
-<a name="l00083"></a>00083 <span class="comment">   *   area and it can be used to compute the area of any simple geodesic</span>
-<a name="l00084"></a>00084 <span class="comment">   *   polygon.</span>
-<a name="l00085"></a>00085 <span class="comment">   *</span>
-<a name="l00086"></a>00086 <span class="comment">   * Overloaded versions of Geodesic::Direct, Geodesic::ArcDirect, and</span>
-<a name="l00087"></a>00087 <span class="comment">   * Geodesic::Inverse allow these quantities to be returned.  In addition</span>
-<a name="l00088"></a>00088 <span class="comment">   * there are general functions Geodesic::GenDirect, and Geodesic::GenInverse</span>
-<a name="l00089"></a>00089 <span class="comment">   * which allow an arbitrary set of results to be computed.  The quantities \e</span>
-<a name="l00090"></a>00090 <span class="comment">   * m12, \e M12, \e M21 which all specify the behavior of nearby geodesics</span>
-<a name="l00091"></a>00091 <span class="comment">   * obey addition rules.  Let points 1, 2, and 3 all lie on a single geodesic,</span>
-<a name="l00092"></a>00092 <span class="comment">   * then</span>
-<a name="l00093"></a>00093 <span class="comment">   * - \e m13 = \e m12 \e M23 + \e m23 \e M21</span>
-<a name="l00094"></a>00094 <span class="comment">   * - \e M13 = \e M12 \e M23 - (1 - \e M12 \e M21) \e m23 / \e m12</span>
-<a name="l00095"></a>00095 <span class="comment">   * - \e M31 = \e M32 \e M21 - (1 - \e M23 \e M32) \e m12 / \e m23</span>
-<a name="l00096"></a>00096 <span class="comment">   *</span>
-<a name="l00097"></a>00097 <span class="comment">   * Additional functionality is provided by the GeodesicLine class, which</span>
-<a name="l00098"></a>00098 <span class="comment">   * allows a sequence of points along a geodesic to be computed.</span>
-<a name="l00099"></a>00099 <span class="comment">   *</span>
-<a name="l00100"></a>00100 <span class="comment">   * The calculations are accurate to better than 15 nm.  See Sec. 9 of</span>
-<a name="l00101"></a>00101 <span class="comment">   * &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;arXiv:1102.1215v1&lt;/a&gt;</span>
-<a name="l00102"></a>00102 <span class="comment">   * for details.</span>
-<a name="l00103"></a>00103 <span class="comment">   *</span>
-<a name="l00104"></a>00104 <span class="comment">   * The algorithms are described in</span>
-<a name="l00105"></a>00105 <span class="comment">   * - C. F. F. Karney,</span>
-<a name="l00106"></a>00106 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;Geodesics</span>
-<a name="l00107"></a>00107 <span class="comment">   *   on an ellipsoid of revolution&lt;/a&gt;,</span>
-<a name="l00108"></a>00108 <span class="comment">   *   Feb. 2011;</span>
-<a name="l00109"></a>00109 <span class="comment">   *   preprint</span>
-<a name="l00110"></a>00110 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;arXiv:1102.1215v1&lt;/a&gt;.</span>
-<a name="l00111"></a>00111 <span class="comment">   * .</span>
-<a name="l00112"></a>00112 <span class="comment">   * For more information on geodesics see \ref geodesic.</span>
-<a name="l00113"></a>00113 <span class="comment">   **********************************************************************/</span>
-<a name="l00114"></a>00114 
-<a name="l00115"></a><a class="code" href="classGeographicLib_1_1Geodesic.html">00115</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> {
-<a name="l00116"></a>00116   <span class="keyword">private</span>:
-<a name="l00117"></a>00117     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00118"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#ac4a8bd684285e00b12427c052697a106">00118</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a>;
-<a name="l00119"></a>00119     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA1_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00120"></a>00120     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC1_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00121"></a>00121     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC1p_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00122"></a>00122     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA2_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00123"></a>00123     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC2_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00124"></a>00124     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA3_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00125"></a>00125     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA3x_ = nA3_;
-<a name="l00126"></a>00126     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC3_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00127"></a>00127     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
-<a name="l00128"></a>00128     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC4_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
-<a name="l00129"></a>00129     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
-<a name="l00130"></a>00130     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> maxit_ = 50;
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132     <span class="keyword">static</span> <span class="keyword">const</span> real tiny_;
-<a name="l00133"></a>00133     <span class="keyword">static</span> <span class="keyword">const</span> real tol0_;
-<a name="l00134"></a>00134     <span class="keyword">static</span> <span class="keyword">const</span> real tol1_;
-<a name="l00135"></a>00135     <span class="keyword">static</span> <span class="keyword">const</span> real tol2_;
-<a name="l00136"></a>00136     <span class="keyword">static</span> <span class="keyword">const</span> real xthresh_;
-<a name="l00137"></a>00137 
-<a name="l00138"></a>00138     <span class="keyword">enum</span> captype {
-<a name="l00139"></a>00139       CAP_NONE = 0U,
-<a name="l00140"></a>00140       CAP_C1   = 1U&lt;&lt;0,
-<a name="l00141"></a>00141       CAP_C1p  = 1U&lt;&lt;1,
-<a name="l00142"></a>00142       CAP_C2   = 1U&lt;&lt;2,
-<a name="l00143"></a>00143       CAP_C3   = 1U&lt;&lt;3,
-<a name="l00144"></a>00144       CAP_C4   = 1U&lt;&lt;4,
-<a name="l00145"></a>00145       CAP_ALL  = 0x1FU,
-<a name="l00146"></a>00146       OUT_ALL  = 0x7F80U,
-<a name="l00147"></a>00147     };
-<a name="l00148"></a>00148 
-<a name="l00149"></a>00149     <span class="keyword">static</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> SinCosSeries(<span class="keywordtype">bool</span> sinp,
-<a name="l00150"></a>00150                              <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sinx, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> cosx, <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[], <span class="keywordtype">int</span> n)
-<a name="l00151"></a>00151       <span class="keywordflow">throw</span>();
-<a name="l00152"></a>00152     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> AngNormalize(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00153"></a>00153       <span class="comment">// Place angle in [-180, 180).  Assumes x is in [-540, 540).</span>
-<a name="l00154"></a>00154       <span class="keywordflow">return</span> x &gt;= 180 ? x - 360 : x &lt; -180 ? x + 360 : x;
-<a name="l00155"></a>00155     }
-<a name="l00156"></a>00156     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> AngRound(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() {
-<a name="l00157"></a>00157       <span class="comment">// The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57</span>
-<a name="l00158"></a>00158       <span class="comment">// for reals = 0.7 pm on the earth if x is an angle in degrees.  (This</span>
-<a name="l00159"></a>00159       <span class="comment">// is about 1000 times more resolution than we get with angles around 90</span>
-<a name="l00160"></a>00160       <span class="comment">// degrees.)  We use this to avoid having to deal with near singular</span>
-<a name="l00161"></a>00161       <span class="comment">// cases when x is non-zero but tiny (e.g., 1.0e-200).</span>
-<a name="l00162"></a>00162       <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> z = <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.0625); <span class="comment">// 1/16</span>
-<a name="l00163"></a>00163       <span class="keyword">volatile</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y = std::abs(x);
-<a name="l00164"></a>00164       <span class="comment">// The compiler mustn&#39;t &quot;simplify&quot; z - (z - y) to y</span>
-<a name="l00165"></a>00165       y = y &lt; z ? z - (z - y) : y;
-<a name="l00166"></a>00166       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
-<a name="l00167"></a>00167     }
-<a name="l00168"></a>00168     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> SinCosNorm(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; sinx, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; cosx) <span class="keywordflow">throw</span>() {
-<a name="l00169"></a>00169       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> r = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(sinx, cosx);
-<a name="l00170"></a>00170       sinx /= r;
-<a name="l00171"></a>00171       cosx /= r;
-<a name="l00172"></a>00172     }
-<a name="l00173"></a>00173     <span class="keyword">static</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Astroid(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y) <span class="keywordflow">throw</span>();
-<a name="l00174"></a>00174 
-<a name="l00175"></a>00175     <span class="comment">// _r is OBSOLETE, can be removed</span>
-<a name="l00176"></a>00176     <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+<a name="l00019"></a><a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">00019</a> <span class="preprocessor">#define GEOD_ORD \</span>
+<a name="l00020"></a>00020 <span class="preprocessor">  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 3 : 7))</span>
+<a name="l00021"></a>00021 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00022"></a>00022 <span class="preprocessor"></span>
+<a name="l00023"></a>00023 <span class="keyword">namespace </span>GeographicLib {
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025   <span class="keyword">class </span>GeodesicLine;
+<a name="l00026"></a>00026 <span class="comment"></span>
+<a name="l00027"></a>00027 <span class="comment">  /**</span>
+<a name="l00028"></a>00028 <span class="comment">   * \brief %Geodesic calculations</span>
+<a name="l00029"></a>00029 <span class="comment">   *</span>
+<a name="l00030"></a>00030 <span class="comment"></span>
+<a name="l00031"></a>00031 <span class="comment">   * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)</span>
+<a name="l00032"></a>00032 <span class="comment">   * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and</span>
+<a name="l00033"></a>00033 <span class="comment">   * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at</span>
+<a name="l00034"></a>00034 <span class="comment">   * the two end points.  (The azimuth is the heading measured clockwise from</span>
+<a name="l00035"></a>00035 <span class="comment">   * north.  \e azi2 is the &quot;forward&quot; azimuth, i.e., the heading that takes you</span>
+<a name="l00036"></a>00036 <span class="comment">   * beyond point 2 not back to point 1.)</span>
+<a name="l00037"></a>00037 <span class="comment">   *</span>
+<a name="l00038"></a>00038 <span class="comment">   * Given \e lat1, \e lon1, \e azi1, and \e s12, we can determine \e lat2, \e</span>
+<a name="l00039"></a>00039 <span class="comment">   * lon2, and \e azi2.  This is the \e direct geodesic problem and its</span>
+<a name="l00040"></a>00040 <span class="comment">   * solution is given by the function Geodesic::Direct.  (If \e s12 is</span>
+<a name="l00041"></a>00041 <span class="comment">   * sufficiently large that the geodesic wraps more than halfway around the</span>
+<a name="l00042"></a>00042 <span class="comment">   * earth, there will be another geodesic between the points with a smaller \e</span>
+<a name="l00043"></a>00043 <span class="comment">   * s12.)</span>
+<a name="l00044"></a>00044 <span class="comment">   *</span>
+<a name="l00045"></a>00045 <span class="comment">   * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e</span>
+<a name="l00046"></a>00046 <span class="comment">   * azi2, and \e s12.  This is the \e inverse geodesic problem, whose solution</span>
+<a name="l00047"></a>00047 <span class="comment">   * is given by Geodesic::Inverse.  Usually, the solution to the inverse</span>
+<a name="l00048"></a>00048 <span class="comment">   * problem is unique.  In cases where there are muliple solutions (all with</span>
+<a name="l00049"></a>00049 <span class="comment">   * the same \e s12, of course), all the solutions can be easily generated</span>
+<a name="l00050"></a>00050 <span class="comment">   * once a particular solution is provided.</span>
+<a name="l00051"></a>00051 <span class="comment">   *</span>
+<a name="l00052"></a>00052 <span class="comment">   * The standard way of specifying the direct problem is the specify the</span>
+<a name="l00053"></a>00053 <span class="comment">   * distance \e s12 to the second point.  However it is sometimes useful</span>
+<a name="l00054"></a>00054 <span class="comment">   * instead to specify the the arc length \e a12 (in degrees) on the auxiliary</span>
+<a name="l00055"></a>00055 <span class="comment">   * sphere.  This is a mathematical construct used in solving the geodesic</span>
+<a name="l00056"></a>00056 <span class="comment">   * problems.  The solution of the direct problem in this form is provide by</span>
+<a name="l00057"></a>00057 <span class="comment">   * Geodesic::ArcDirect.  An arc length in excess of 180&lt;sup&gt;o&lt;/sup&gt; indicates</span>
+<a name="l00058"></a>00058 <span class="comment">   * that the geodesic is not a shortest path.  In addition, the arc length</span>
+<a name="l00059"></a>00059 <span class="comment">   * between an equatorial crossing and the next extremum of latitude for a</span>
+<a name="l00060"></a>00060 <span class="comment">   * geodesic is 90&lt;sup&gt;o&lt;/sup&gt;.</span>
+<a name="l00061"></a>00061 <span class="comment">   *</span>
+<a name="l00062"></a>00062 <span class="comment">   * This class can also calculate several other quantities related to</span>
+<a name="l00063"></a>00063 <span class="comment">   * geodesics.  These are:</span>
+<a name="l00064"></a>00064 <span class="comment">   * - &lt;i&gt;reduced length&lt;/i&gt;.  If we fix the first point and increase \e azi1</span>
+<a name="l00065"></a>00065 <span class="comment">   *   by \e dazi1 (radians), the the second point is displaced \e m12 \e dazi1</span>
+<a name="l00066"></a>00066 <span class="comment">   *   in the direction \e azi2 + 90&lt;sup&gt;o&lt;/sup&gt;.  The quantity \e m12 is</span>
+<a name="l00067"></a>00067 <span class="comment">   *   called the &quot;reduced length&quot; and is symmetric under interchange of the</span>
+<a name="l00068"></a>00068 <span class="comment">   *   two points.  On a curved surface the reduced length obeys a symmetry</span>
+<a name="l00069"></a>00069 <span class="comment">   *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e</span>
+<a name="l00070"></a>00070 <span class="comment">   *   s12.  The ratio \e s12/\e m12 gives the azimuthal scale for an azimuthal</span>
+<a name="l00071"></a>00071 <span class="comment">   *   equidistant projection.</span>
+<a name="l00072"></a>00072 <span class="comment">   * - &lt;i&gt;geodesic scale&lt;/i&gt;.  Consider a reference geodesic and a second</span>
+<a name="l00073"></a>00073 <span class="comment">   *   geodesic parallel to this one at point 1 and separated by a small</span>
+<a name="l00074"></a>00074 <span class="comment">   *   distance \e dt.  The separation of the two geodesics at point 2 is \e</span>
+<a name="l00075"></a>00075 <span class="comment">   *   M12 \e dt where \e M12 is called the &quot;geodesic scale&quot;.  \e M21 is</span>
+<a name="l00076"></a>00076 <span class="comment">   *   defined similarly (with the geodesics being parallel at point 2).  On a</span>
+<a name="l00077"></a>00077 <span class="comment">   *   flat surface, we have \e M12 = \e M21 = 1.  The quantity 1/\e M12 gives</span>
+<a name="l00078"></a>00078 <span class="comment">   *   the scale of the Cassini-Soldner projection.</span>
+<a name="l00079"></a>00079 <span class="comment">   * - &lt;i&gt;area&lt;/i&gt;.  Consider the quadrilateral bounded by the following lines:</span>
+<a name="l00080"></a>00080 <span class="comment">   *   the geodesic from point 1 to point 2, the meridian from point 2 to the</span>
+<a name="l00081"></a>00081 <span class="comment">   *   equator, the equator from \e lon2 to \e lon1, the meridian from the</span>
+<a name="l00082"></a>00082 <span class="comment">   *   equator to point 1.  The area of this quadrilateral is represented by \e</span>
+<a name="l00083"></a>00083 <span class="comment">   *   S12 with a clockwise traversal of the perimeter counting as a positive</span>
+<a name="l00084"></a>00084 <span class="comment">   *   area and it can be used to compute the area of any simple geodesic</span>
+<a name="l00085"></a>00085 <span class="comment">   *   polygon.</span>
+<a name="l00086"></a>00086 <span class="comment">   *</span>
+<a name="l00087"></a>00087 <span class="comment">   * Overloaded versions of Geodesic::Direct, Geodesic::ArcDirect, and</span>
+<a name="l00088"></a>00088 <span class="comment">   * Geodesic::Inverse allow these quantities to be returned.  In addition</span>
+<a name="l00089"></a>00089 <span class="comment">   * there are general functions Geodesic::GenDirect, and Geodesic::GenInverse</span>
+<a name="l00090"></a>00090 <span class="comment">   * which allow an arbitrary set of results to be computed.  The quantities \e</span>
+<a name="l00091"></a>00091 <span class="comment">   * m12, \e M12, \e M21 which all specify the behavior of nearby geodesics</span>
+<a name="l00092"></a>00092 <span class="comment">   * obey addition rules.  Let points 1, 2, and 3 all lie on a single geodesic,</span>
+<a name="l00093"></a>00093 <span class="comment">   * then</span>
+<a name="l00094"></a>00094 <span class="comment">   * - \e m13 = \e m12 \e M23 + \e m23 \e M21</span>
+<a name="l00095"></a>00095 <span class="comment">   * - \e M13 = \e M12 \e M23 - (1 - \e M12 \e M21) \e m23 / \e m12</span>
+<a name="l00096"></a>00096 <span class="comment">   * - \e M31 = \e M32 \e M21 - (1 - \e M23 \e M32) \e m12 / \e m23</span>
+<a name="l00097"></a>00097 <span class="comment">   *</span>
+<a name="l00098"></a>00098 <span class="comment">   * Additional functionality is provided by the GeodesicLine class, which</span>
+<a name="l00099"></a>00099 <span class="comment">   * allows a sequence of points along a geodesic to be computed.</span>
+<a name="l00100"></a>00100 <span class="comment">   *</span>
+<a name="l00101"></a>00101 <span class="comment">   * The calculations are accurate to better than 15 nm.  See Sec. 9 of</span>
+<a name="l00102"></a>00102 <span class="comment">   * &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;arXiv:1102.1215v1&lt;/a&gt;</span>
+<a name="l00103"></a>00103 <span class="comment">   * for details.</span>
+<a name="l00104"></a>00104 <span class="comment">   *</span>
+<a name="l00105"></a>00105 <span class="comment">   * The algorithms are described in</span>
+<a name="l00106"></a>00106 <span class="comment">   * - C. F. F. Karney,</span>
+<a name="l00107"></a>00107 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;Geodesics</span>
+<a name="l00108"></a>00108 <span class="comment">   *   on an ellipsoid of revolution&lt;/a&gt;,</span>
+<a name="l00109"></a>00109 <span class="comment">   *   Feb. 2011;</span>
+<a name="l00110"></a>00110 <span class="comment">   *   preprint</span>
+<a name="l00111"></a>00111 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;arXiv:1102.1215v1&lt;/a&gt;.</span>
+<a name="l00112"></a>00112 <span class="comment">   * .</span>
+<a name="l00113"></a>00113 <span class="comment">   * For more information on geodesics see \ref geodesic.</span>
+<a name="l00114"></a>00114 <span class="comment">   **********************************************************************/</span>
+<a name="l00115"></a>00115 
+<a name="l00116"></a><a class="code" href="classGeographicLib_1_1Geodesic.html">00116</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> {
+<a name="l00117"></a>00117   <span class="keyword">private</span>:
+<a name="l00118"></a>00118     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00119"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#ac4a8bd684285e00b12427c052697a106">00119</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a>;
+<a name="l00120"></a>00120     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA1_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00121"></a>00121     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC1_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00122"></a>00122     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC1p_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00123"></a>00123     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA2_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00124"></a>00124     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC2_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00125"></a>00125     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA3_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00126"></a>00126     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nA3x_ = nA3_;
+<a name="l00127"></a>00127     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC3_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00128"></a>00128     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC3x_ = (nC3_ * (nC3_ - 1)) / 2;
+<a name="l00129"></a>00129     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC4_ = <a class="code" href="Geodesic_8hpp.html#a1927ca941a173c95631417cbd8cc8e0c">GEOD_ORD</a>;
+<a name="l00130"></a>00130     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
+<a name="l00131"></a>00131     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">unsigned</span> maxit_ = 50;
+<a name="l00132"></a>00132 
+<a name="l00133"></a>00133     <span class="keyword">static</span> <span class="keyword">const</span> real tiny_;
+<a name="l00134"></a>00134     <span class="keyword">static</span> <span class="keyword">const</span> real tol0_;
+<a name="l00135"></a>00135     <span class="keyword">static</span> <span class="keyword">const</span> real tol1_;
+<a name="l00136"></a>00136     <span class="keyword">static</span> <span class="keyword">const</span> real tol2_;
+<a name="l00137"></a>00137     <span class="keyword">static</span> <span class="keyword">const</span> real xthresh_;
+<a name="l00138"></a>00138 
+<a name="l00139"></a>00139     <span class="keyword">enum</span> captype {
+<a name="l00140"></a>00140       CAP_NONE = 0U,
+<a name="l00141"></a>00141       CAP_C1   = 1U&lt;&lt;0,
+<a name="l00142"></a>00142       CAP_C1p  = 1U&lt;&lt;1,
+<a name="l00143"></a>00143       CAP_C2   = 1U&lt;&lt;2,
+<a name="l00144"></a>00144       CAP_C3   = 1U&lt;&lt;3,
+<a name="l00145"></a>00145       CAP_C4   = 1U&lt;&lt;4,
+<a name="l00146"></a>00146       CAP_ALL  = 0x1FU,
+<a name="l00147"></a>00147       OUT_ALL  = 0x7F80U,
+<a name="l00148"></a>00148     };
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150     <span class="keyword">static</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> SinCosSeries(<span class="keywordtype">bool</span> sinp,
+<a name="l00151"></a>00151                              <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sinx, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> cosx, <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[], <span class="keywordtype">int</span> n)
+<a name="l00152"></a>00152       <span class="keywordflow">throw</span>();
+<a name="l00153"></a>00153     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> AngNormalize(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() {
+<a name="l00154"></a>00154       <span class="comment">// Place angle in [-180, 180).  Assumes x is in [-540, 540).</span>
+<a name="l00155"></a>00155       <span class="keywordflow">return</span> x &gt;= 180 ? x - 360 : (x &lt; -180 ? x + 360 : x);
+<a name="l00156"></a>00156     }
+<a name="l00157"></a>00157     <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> AngRound(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x) <span class="keywordflow">throw</span>() {
+<a name="l00158"></a>00158       <span class="comment">// The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57</span>
+<a name="l00159"></a>00159       <span class="comment">// for reals = 0.7 pm on the earth if x is an angle in degrees.  (This</span>
+<a name="l00160"></a>00160       <span class="comment">// is about 1000 times more resolution than we get with angles around 90</span>
+<a name="l00161"></a>00161       <span class="comment">// degrees.)  We use this to avoid having to deal with near singular</span>
+<a name="l00162"></a>00162       <span class="comment">// cases when x is non-zero but tiny (e.g., 1.0e-200).</span>
+<a name="l00163"></a>00163       <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> z = <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.0625); <span class="comment">// 1/16</span>
+<a name="l00164"></a>00164       <span class="keyword">volatile</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y = std::abs(x);
+<a name="l00165"></a>00165       <span class="comment">// The compiler mustn&#39;t &quot;simplify&quot; z - (z - y) to y</span>
+<a name="l00166"></a>00166       y = y &lt; z ? z - (z - y) : y;
+<a name="l00167"></a>00167       <span class="keywordflow">return</span> x &lt; 0 ? -y : y;
+<a name="l00168"></a>00168     }
+<a name="l00169"></a>00169     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> SinCosNorm(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; sinx, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; cosx) <span class="keywordflow">throw</span>() {
+<a name="l00170"></a>00170       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> r = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(sinx, cosx);
+<a name="l00171"></a>00171       sinx /= r;
+<a name="l00172"></a>00172       cosx /= r;
+<a name="l00173"></a>00173     }
+<a name="l00174"></a>00174     <span class="keyword">static</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Astroid(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y) <span class="keywordflow">throw</span>();
+<a name="l00175"></a>00175 
+<a name="l00176"></a>00176     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
 <a name="l00177"></a>00177     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
 <a name="l00178"></a>00178 
 <a name="l00179"></a>00179     <span class="keywordtype">void</span> Lengths(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sig12,
@@ -842,7 +842,7 @@
 <a name="l00792"></a>00792 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
 <a name="l00793"></a>00793 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
 <a name="l00794"></a>00794 <span class="comment">     **********************************************************************/</span>
-<a name="l00795"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#ab64c9662ce24d7a658924db0c85f8b2d">00795</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#ab64c9662ce24d7a658924db0c85f8b2d">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00795"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#ab64c9662ce24d7a658924db0c85f8b2d">00795</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#ab64c9662ce24d7a658924db0c85f8b2d">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
 <a name="l00796"></a>00796 <span class="comment"></span>
 <a name="l00797"></a>00797 <span class="comment">    /**</span>
 <a name="l00798"></a>00798 <span class="comment">     * @return total area of ellipsoid in meters&lt;sup&gt;2&lt;/sup&gt;.  The area of a</span>
@@ -859,50 +859,15 @@
 <a name="l00809"></a>00809 <span class="comment">     * ellipsoid.</span>
 <a name="l00810"></a>00810 <span class="comment">     **********************************************************************/</span>
 <a name="l00811"></a><a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">00811</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">WGS84</a>;
-<a name="l00812"></a>00812 <span class="comment"></span>
-<a name="l00813"></a>00813 <span class="comment">/// \cond DEPRECATED</span>
-<a name="l00814"></a>00814 <span class="comment"></span><span class="comment">    /** \name Deprecated function.</span>
-<a name="l00815"></a>00815 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00816"></a>00816 <span class="comment">    ///@{</span>
-<a name="l00817"></a>00817 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00818"></a>00818 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; Perform the direct geodesic calculation.  Given a</span>
-<a name="l00819"></a>00819 <span class="comment">     * latitude, \e lat1, longitude, \e lon1, and azimuth \e azi1 (degrees) for</span>
-<a name="l00820"></a>00820 <span class="comment">     * point 1 and a range, \e s12 (meters) from point 1 to point 2, return the</span>
-<a name="l00821"></a>00821 <span class="comment">     * latitude, \e lat2, longitude, \e lon2, and forward azimuth, \e azi2</span>
-<a name="l00822"></a>00822 <span class="comment">     * (degrees) for point 2 and the reduced length \e m12 (meters).  If either</span>
-<a name="l00823"></a>00823 <span class="comment">     * point is at a pole, the azimuth is defined by keeping the longitude</span>
-<a name="l00824"></a>00824 <span class="comment">     * fixed and writing \e lat = 90 - \e eps or -90 + \e eps and taking the</span>
-<a name="l00825"></a>00825 <span class="comment">     * limit \e eps -&gt; 0 from above.  If \e arcmode (default false) is set to</span>
-<a name="l00826"></a>00826 <span class="comment">     * true, \e s12 is interpreted as the arc length \e a12 (degrees) on the</span>
-<a name="l00827"></a>00827 <span class="comment">     * auxiliary sphere.  An arc length greater that 180 degrees results in a</span>
-<a name="l00828"></a>00828 <span class="comment">     * geodesic which is not a shortest path.  For a prolate ellipsoid, an</span>
-<a name="l00829"></a>00829 <span class="comment">     * additional condition is necessary for a shortest path: the longitudinal</span>
-<a name="l00830"></a>00830 <span class="comment">     * extent must not exceed of 180 degrees.  Returned value is the arc length</span>
-<a name="l00831"></a>00831 <span class="comment">     * \e a12 (degrees) if \e arcmode is false, otherwise it is the distance \e</span>
-<a name="l00832"></a>00832 <span class="comment">     * s12 (meters).</span>
-<a name="l00833"></a>00833 <span class="comment">     **********************************************************************/</span>
-<a name="l00834"></a>00834     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Direct(real lat1, real lon1, real azi1, real s12_a12,
-<a name="l00835"></a>00835                       real&amp; lat2, real&amp; lon2, real&amp; azi2, real&amp; m12,
-<a name="l00836"></a>00836                       <span class="keywordtype">bool</span> arcmode) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00837"></a>00837       <span class="keywordflow">if</span> (arcmode) {
-<a name="l00838"></a>00838         real a12 = s12_a12, s12;
-<a name="l00839"></a>00839         ArcDirect(lat1, lon1, azi1, a12, lat2, lon2, azi2, s12, m12);
-<a name="l00840"></a>00840         <span class="keywordflow">return</span> s12;
-<a name="l00841"></a>00841       } <span class="keywordflow">else</span> {
-<a name="l00842"></a>00842         real s12 = s12_a12;
-<a name="l00843"></a>00843         <span class="keywordflow">return</span> Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
-<a name="l00844"></a>00844       }
-<a name="l00845"></a>00845     }<span class="comment"></span>
-<a name="l00846"></a>00846 <span class="comment">    ///@}</span>
-<a name="l00847"></a>00847 <span class="comment">/// \endcond</span>
-<a name="l00848"></a>00848 <span class="comment"></span>  };
-<a name="l00849"></a>00849 
-<a name="l00850"></a>00850 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00851"></a>00851 
-<a name="l00852"></a>00852 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEODESIC_HPP</span>
+<a name="l00812"></a>00812 
+<a name="l00813"></a>00813   };
+<a name="l00814"></a>00814 
+<a name="l00815"></a>00815 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00816"></a>00816 
+<a name="l00817"></a>00817 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEODESIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

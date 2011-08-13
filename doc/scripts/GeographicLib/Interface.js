@@ -94,7 +94,7 @@
  * false) is true, then the points denote a polyline and its length is
  * returned as the perimeter (and the area is not calculated).
  *
- * $Id: 862ba95b532a3e49fbc16d3d015dfb40b2ae1a03 $
+ * $Id: 13bc9dd535c3dbf9eafbb18be0dcd8320cbbdb45 $
  **********************************************************************/
 
 (function() {
@@ -129,7 +129,7 @@
     var result = this.GenInverse(lat1, lon1, lat2, lon2, outmask);
     result.lat1 = lat1; result.lon1 = lon1;
     result.lat2 = lat2; result.lon2 = lon2;
-    
+
     return result;
   }
 
@@ -142,7 +142,7 @@
     var result = this.GenDirect(lat1, lon1, azi1, false, s12, outmask);
     result.lat1 = lat1; result.lon1 = lon1;
     result.azi1 = azi1; result.s12 = s12;
-    
+
     return result;
   }
 
@@ -178,7 +178,7 @@
     if (!(ds12 > 0))
       throw new Error("ds12 must be a positive number")
     var
-    k = Math.max(1, Math.min(maxk, Math.ceil(t.s12/ds12))),
+    k = Math.max(1, Math.min(maxk, Math.ceil(Math.abs(t.s12)/ds12))),
     points = new Array(k + 1);
     points[0] = {lat: t.lat1, lon: t.lon1, azi: t.azi1};
     points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
@@ -232,7 +232,7 @@
     var vals, line, s12, j;
     for (var i = 0; i <= k; ++i) {
       var azi1 = -180 + i * 360 / k;
-      line = new l.GeodesicLine(this, lat1, lon1, azi1, 
+      line = new l.GeodesicLine(this, lat1, lon1, azi1,
 				g.LATITUDE | g.LONGITUDE | g.DISTANCE_IN |
 				g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
       vals = line.GenPosition(true, 180 * ord,

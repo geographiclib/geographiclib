@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)</span>
-<a name="l00011"></a><a class="code" href="TransverseMercatorExact_8hpp.html#a33c80ffd2f74ea9ed9dd4c11bf9e1198">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP &quot;$Id: 73f66e3f4714382bfde874d68feccb2c71a2b8af $&quot;</span>
+<a name="l00011"></a><a class="code" href="TransverseMercatorExact_8hpp.html#a33c80ffd2f74ea9ed9dd4c11bf9e1198">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP &quot;$Id: 1e7fe9ef31424d255892679d74ac0ae492c2334a $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="EllipticFunction_8hpp.html" title="Header for GeographicLib::EllipticFunction class.">GeographicLib/EllipticFunction.hpp</a>&gt;</span>
@@ -80,7 +80,7 @@
 <a name="l00030"></a>00030 <span class="comment">   *  - C. F. F. Karney,</span>
 <a name="l00031"></a>00031 <span class="comment">   *    &lt;a href=&quot;http://dx.doi.org/10.1007/s00190-011-0445-3&quot;&gt;</span>
 <a name="l00032"></a>00032 <span class="comment">   *    Transverse Mercator with an accuracy of a few nanometers,&lt;/a&gt;</span>
-<a name="l00033"></a>00033 <span class="comment">   *    J. Geodesy (2011);</span>
+<a name="l00033"></a>00033 <span class="comment">   *    J. Geodesy 85(8), 475-485 (Aug. 2011);</span>
 <a name="l00034"></a>00034 <span class="comment">   *    preprint</span>
 <a name="l00035"></a>00035 <span class="comment">   *    &lt;a href=&quot;http://arxiv.org/abs/1002.1417&quot;&gt;arXiv:1002.1417&lt;/a&gt;.</span>
 <a name="l00036"></a>00036 <span class="comment">   *</span>
@@ -123,9 +123,9 @@
 <a name="l00073"></a>00073     <span class="keyword">static</span> <span class="keyword">const</span> real taytol_;
 <a name="l00074"></a>00074     <span class="keyword">static</span> <span class="keyword">const</span> real overflow_;
 <a name="l00075"></a>00075     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 10;
-<a name="l00076"></a>00076     <span class="keyword">const</span> real _a, _f, _r, _k0, _mu, _mv, _e, _ep2;
-<a name="l00077"></a>00077     <span class="keyword">const</span> <span class="keywordtype">bool</span> _extendp;
-<a name="l00078"></a>00078     <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1EllipticFunction.html" title="Elliptic functions needed for TransverseMercatorExact.">EllipticFunction</a> _Eu, _Ev;
+<a name="l00076"></a>00076     real _a, _f, _k0, _mu, _mv, _e, _ep2;
+<a name="l00077"></a>00077     <span class="keywordtype">bool</span> _extendp;
+<a name="l00078"></a>00078     <a class="code" href="classGeographicLib_1_1EllipticFunction.html" title="Elliptic functions needed for TransverseMercatorExact.">EllipticFunction</a> _Eu, _Ev;
 <a name="l00079"></a>00079     <span class="comment">// tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right</span>
 <a name="l00080"></a>00080     <span class="keyword">static</span> <span class="keyword">inline</span> real tanx(real x) <span class="keywordflow">throw</span>() {
 <a name="l00081"></a>00081       real t = std::tan(x);
@@ -287,7 +287,7 @@
 <a name="l00237"></a>00237 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
 <a name="l00238"></a>00238 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
 <a name="l00239"></a>00239 <span class="comment">     **********************************************************************/</span>
-<a name="l00240"></a><a class="code" href="classGeographicLib_1_1TransverseMercatorExact.html#a9c4df948ed85f96273c04414fc6871df">00240</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1TransverseMercatorExact.html#a9c4df948ed85f96273c04414fc6871df">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00240"></a><a class="code" href="classGeographicLib_1_1TransverseMercatorExact.html#a9c4df948ed85f96273c04414fc6871df">00240</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1TransverseMercatorExact.html#a9c4df948ed85f96273c04414fc6871df">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
 <a name="l00241"></a>00241 <span class="comment"></span>
 <a name="l00242"></a>00242 <span class="comment">    /**</span>
 <a name="l00243"></a>00243 <span class="comment">     * @return \e k0 central scale for the projection.  This is the value of \e</span>
@@ -309,7 +309,7 @@
 <a name="l00259"></a>00259 <span class="preprocessor">#endif  // GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

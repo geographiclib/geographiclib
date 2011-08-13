@@ -9,7 +9,7 @@
 
 #include <GeographicLib/AlbersEqualArea.hpp>
 
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_CPP "$Id: 352fea7ad6b2b0dbb1ba36b8894f70edc9d51973 $"
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_CPP "$Id: 0d5956dd3b809da30cb36c3792cae2898583c7be $"
 
 RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_CPP)
 RCSID_DECL(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
@@ -30,7 +30,6 @@ namespace GeographicLib {
   AlbersEqualArea::AlbersEqualArea(real a, real f, real stdlat, real k0)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -57,7 +56,6 @@ namespace GeographicLib {
                                    real k1)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -88,7 +86,6 @@ namespace GeographicLib {
                                    real k1)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))

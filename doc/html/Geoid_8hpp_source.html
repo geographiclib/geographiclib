@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEOID_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geoid_8hpp.html#a81966978f2fe7fad1effabc667a99820">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOID_HPP &quot;$Id: c7fbce09c004d4ffcce66d6d59c7163f2c581948 $&quot;</span>
+<a name="l00011"></a><a class="code" href="Geoid_8hpp.html#a81966978f2fe7fad1effabc667a99820">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOID_HPP &quot;$Id: 777922a79bee93ab90a258e58a4d2e4fb1b665c5 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;string&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;vector&gt;</span>
@@ -250,280 +250,268 @@
 <a name="l00200"></a>00200 <span class="comment">     * @param[in] north latitude (degrees) of the north edge of the cached area.</span>
 <a name="l00201"></a>00201 <span class="comment">     * @param[in] east longitude (degrees) of the east edge of the cached area.</span>
 <a name="l00202"></a>00202 <span class="comment">     *</span>
-<a name="l00203"></a>00203 <span class="comment">     * Cache the data for the specified rectangular area .  \e east is always</span>
-<a name="l00204"></a>00204 <span class="comment">     * interpreted as being east of \e west, if necessary by adding</span>
-<a name="l00205"></a>00205 <span class="comment">     * 360&lt;sup&gt;o&lt;/sup&gt; to its value.  This may throw an error because of</span>
-<a name="l00206"></a>00206 <span class="comment">     * insufficent memory or because of an error reading the data from the</span>
-<a name="l00207"></a>00207 <span class="comment">     * file.  In this case, you can catch the error and either do nothing (you</span>
-<a name="l00208"></a>00208 <span class="comment">     * will have no cache in this case) or try again with a smaller area.  \e</span>
-<a name="l00209"></a>00209 <span class="comment">     * south and \e north should be in the range [-90, 90]; \e west and \e east</span>
-<a name="l00210"></a>00210 <span class="comment">     * should be in the range [-180, 360].  An exception is thrown if this</span>
-<a name="l00211"></a>00211 <span class="comment">     * routine is called on a thread safe Geoid.</span>
-<a name="l00212"></a>00212 <span class="comment">     **********************************************************************/</span>
-<a name="l00213"></a>00213     <span class="keywordtype">void</span> CacheArea(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> south, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> west, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> north, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> east) <span class="keyword">const</span>;
-<a name="l00214"></a>00214 <span class="comment"></span>
-<a name="l00215"></a>00215 <span class="comment">    /**</span>
-<a name="l00216"></a>00216 <span class="comment">     * Cache all the data.  On most computers, this is fast for data sets with</span>
-<a name="l00217"></a>00217 <span class="comment">     * grid resolution of 5&#39; or coarser.  For a 1&#39; grid, the required RAM is</span>
-<a name="l00218"></a>00218 <span class="comment">     * 450MB; a 2.5&#39; grid needs 72MB; and a 5&#39; grid needs 18MB.  This may throw</span>
-<a name="l00219"></a>00219 <span class="comment">     * an error because of insufficent memory or because of an error reading</span>
-<a name="l00220"></a>00220 <span class="comment">     * the data from the file.  In this case, you can catch the error and</span>
-<a name="l00221"></a>00221 <span class="comment">     * either do nothing (you will have no cache in this case) or try using</span>
-<a name="l00222"></a>00222 <span class="comment">     * Geoid::CacheArea on a specific area.  An exception is thrown if this</span>
-<a name="l00223"></a>00223 <span class="comment">     * routine is called on a thread safe Geoid.</span>
-<a name="l00224"></a>00224 <span class="comment">     **********************************************************************/</span>
-<a name="l00225"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">00225</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">CacheAll</a>()<span class="keyword"> const </span>{ CacheArea(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(-90), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0),
-<a name="l00226"></a>00226                                       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(90), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(360)); }
-<a name="l00227"></a>00227 <span class="comment"></span>
-<a name="l00228"></a>00228 <span class="comment">    /**</span>
-<a name="l00229"></a>00229 <span class="comment">     * Clear the cache.  This never throws an error.  (This does nothing with a</span>
-<a name="l00230"></a>00230 <span class="comment">     * thread safe Geoid.)</span>
-<a name="l00231"></a>00231 <span class="comment">     **********************************************************************/</span>
-<a name="l00232"></a>00232     <span class="keywordtype">void</span> CacheClear() <span class="keyword">const</span> throw();
-<a name="l00233"></a>00233 <span class="comment"></span>
-<a name="l00234"></a>00234 <span class="comment">    ///@}</span>
-<a name="l00235"></a>00235 <span class="comment"></span><span class="comment"></span>
-<a name="l00236"></a>00236 <span class="comment">    /** \name Compute geoid heights</span>
-<a name="l00237"></a>00237 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00238"></a>00238 <span class="comment">    ///@{</span>
-<a name="l00239"></a>00239 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00240"></a>00240 <span class="comment">     * Compute the geoid height at a point</span>
-<a name="l00241"></a>00241 <span class="comment">     *</span>
-<a name="l00242"></a>00242 <span class="comment">     * @param[in] lat latitude of the point (degrees).</span>
-<a name="l00243"></a>00243 <span class="comment">     * @param[in] lon longitude of the point (degrees).</span>
-<a name="l00244"></a>00244 <span class="comment">     * @return geoid height (meters).</span>
-<a name="l00245"></a>00245 <span class="comment">     *</span>
-<a name="l00246"></a>00246 <span class="comment">     * The latitude should be in [-90, 90] and longitude should bein</span>
-<a name="l00247"></a>00247 <span class="comment">     * [-180,360].  This may throw an error because of an error reading data</span>
-<a name="l00248"></a>00248 <span class="comment">     * from disk.  However, it will not throw if (\e lat, \e lon) is within a</span>
-<a name="l00249"></a>00249 <span class="comment">     * successfully cached area.</span>
-<a name="l00250"></a>00250 <span class="comment">     **********************************************************************/</span>
-<a name="l00251"></a><a class="code" href="classGeographicLib_1_1Geoid.html#accb63bfbbadae10af79b3a3028a3045a">00251</a>     <a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::real operator()(real lat, real lon)<span class="keyword"> const </span>{
-<a name="l00252"></a>00252       real gradn, grade;
-<a name="l00253"></a>00253       <span class="keywordflow">return</span> height(lat, lon, <span class="keyword">false</span>, gradn, grade);
-<a name="l00254"></a>00254     }
-<a name="l00255"></a>00255 <span class="comment"></span>
-<a name="l00256"></a>00256 <span class="comment">    /**</span>
-<a name="l00257"></a>00257 <span class="comment">     * Compute the geoid height and gradient at a point</span>
-<a name="l00258"></a>00258 <span class="comment">     *</span>
-<a name="l00259"></a>00259 <span class="comment">     * @param[in] lat latitude of the point (degrees).</span>
-<a name="l00260"></a>00260 <span class="comment">     * @param[in] lon longitude of the point (degrees).</span>
-<a name="l00261"></a>00261 <span class="comment">     * @param[out] gradn northerly gradient (dimensionless).</span>
-<a name="l00262"></a>00262 <span class="comment">     * @param[out] grade easterly gradient (dimensionless).</span>
-<a name="l00263"></a>00263 <span class="comment">     * @return geoid height (meters).</span>
-<a name="l00264"></a>00264 <span class="comment">     *</span>
-<a name="l00265"></a>00265 <span class="comment">     * The latitude should be in [-90, 90] and longitude should be in [-180,</span>
-<a name="l00266"></a>00266 <span class="comment">     * 360].  This may throw an error because of an error reading data from</span>
-<a name="l00267"></a>00267 <span class="comment">     * disk.  However, it will not throw if (\e lat, \e lon) is within a</span>
-<a name="l00268"></a>00268 <span class="comment">     * successfully cached area.</span>
-<a name="l00269"></a>00269 <span class="comment">     **********************************************************************/</span>
-<a name="l00270"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a3bb5740c3a38a77caeb5eabd54c77cbc">00270</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a3bb5740c3a38a77caeb5eabd54c77cbc">operator()</a>(real lat, real lon, real&amp; gradn, real&amp; grade)<span class="keyword"> const </span>{
-<a name="l00271"></a>00271       <span class="keywordflow">return</span> height(lat, lon, <span class="keyword">true</span>, gradn, grade);
-<a name="l00272"></a>00272     }
-<a name="l00273"></a>00273 <span class="comment"></span>
-<a name="l00274"></a>00274 <span class="comment">    /**</span>
-<a name="l00275"></a>00275 <span class="comment">     * Convert a height above the geoid to a height above the ellipsoid and</span>
-<a name="l00276"></a>00276 <span class="comment">     * vice versa.</span>
-<a name="l00277"></a>00277 <span class="comment">     *</span>
-<a name="l00278"></a>00278 <span class="comment">     * @param[in] lat latitude of the point (degrees).</span>
-<a name="l00279"></a>00279 <span class="comment">     * @param[in] lon longitude of the point (degrees).</span>
-<a name="l00280"></a>00280 <span class="comment">     * @param[in] h height of the point (degrees).</span>
-<a name="l00281"></a>00281 <span class="comment">     * @param[in] d a Geoid::convertflag specifying the direction of the</span>
-<a name="l00282"></a>00282 <span class="comment">     *   conversion; Geoid::GEOIDTOELLIPSOID means convert a height above the</span>
-<a name="l00283"></a>00283 <span class="comment">     *   geoid to a height above the ellipsoid; Geoid::ELLIPSOIDTOGEOID means</span>
-<a name="l00284"></a>00284 <span class="comment">     *   convert a height above the ellipsoid to a height above the geoid.</span>
-<a name="l00285"></a>00285 <span class="comment">     * @return converted height (meters).</span>
-<a name="l00286"></a>00286 <span class="comment">     **********************************************************************/</span>
-<a name="l00287"></a><a class="code" href="classGeographicLib_1_1Geoid.html#adf98d0f0d881893a4f5ff711a3be0e04">00287</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> ConvertHeight(real lat, real lon, real h,
-<a name="l00288"></a>00288                              <a class="code" href="classGeographicLib_1_1Geoid.html#a58ddbd0fd48c25b361f45bdb70dadb96">convertflag</a> d)<span class="keyword"> const </span>{
-<a name="l00289"></a>00289       real gradn, grade;
-<a name="l00290"></a>00290       <span class="keywordflow">return</span> h + <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(d) * height(lat, lon, <span class="keyword">true</span>, gradn, grade);
-<a name="l00291"></a>00291     }
-<a name="l00292"></a>00292 <span class="comment"></span>
-<a name="l00293"></a>00293 <span class="comment">    ///@}</span>
-<a name="l00294"></a>00294 <span class="comment"></span><span class="comment"></span>
-<a name="l00295"></a>00295 <span class="comment">    /** \name Inspector functions</span>
-<a name="l00296"></a>00296 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00297"></a>00297 <span class="comment">    ///@{</span>
-<a name="l00298"></a>00298 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00299"></a>00299 <span class="comment">     * @return geoid description, if available, in the data file; if</span>
-<a name="l00300"></a>00300 <span class="comment">     *   absent, return &quot;NONE&quot;.</span>
-<a name="l00301"></a>00301 <span class="comment">     **********************************************************************/</span>
-<a name="l00302"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">00302</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">Description</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _description; }
-<a name="l00303"></a>00303 <span class="comment"></span>
-<a name="l00304"></a>00304 <span class="comment">    /**</span>
-<a name="l00305"></a>00305 <span class="comment">     * @return date of the data file; if absent, return &quot;UNKNOWN&quot;.</span>
-<a name="l00306"></a>00306 <span class="comment">     **********************************************************************/</span>
-<a name="l00307"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a9cd7304b5df37001f4ad3c91cdbc56f4">00307</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a9cd7304b5df37001f4ad3c91cdbc56f4">DateTime</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _datetime; }
-<a name="l00308"></a>00308 <span class="comment"></span>
-<a name="l00309"></a>00309 <span class="comment">    /**</span>
-<a name="l00310"></a>00310 <span class="comment">     * @return full file name used to load the geoid data.</span>
-<a name="l00311"></a>00311 <span class="comment">     **********************************************************************/</span>
-<a name="l00312"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a07e5f704f2684ce5acf824b7e0b17d30">00312</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a07e5f704f2684ce5acf824b7e0b17d30">GeoidFile</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _filename; }
-<a name="l00313"></a>00313 <span class="comment"></span>
-<a name="l00314"></a>00314 <span class="comment">    /**</span>
-<a name="l00315"></a>00315 <span class="comment">     * @return &quot;name&quot; used to load the geoid data (from the first argument of</span>
-<a name="l00316"></a>00316 <span class="comment">     *   the constructor).</span>
-<a name="l00317"></a>00317 <span class="comment">     **********************************************************************/</span>
-<a name="l00318"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aa244668a189e35ce5ff248fb8fa2e57b">00318</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#aa244668a189e35ce5ff248fb8fa2e57b">GeoidName</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _name; }
-<a name="l00319"></a>00319 <span class="comment"></span>
-<a name="l00320"></a>00320 <span class="comment">    /**</span>
-<a name="l00321"></a>00321 <span class="comment">     * @return directory used to load the geoid data.</span>
-<a name="l00322"></a>00322 <span class="comment">     **********************************************************************/</span>
-<a name="l00323"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a83b17b17045c49984bcdd032e637155e">00323</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a83b17b17045c49984bcdd032e637155e">GeoidDirectory</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _dir; }
-<a name="l00324"></a>00324 <span class="comment"></span>
-<a name="l00325"></a>00325 <span class="comment">    /**</span>
-<a name="l00326"></a>00326 <span class="comment">     * @return interpolation method (&quot;cubic&quot; or &quot;bilinear&quot;).</span>
-<a name="l00327"></a>00327 <span class="comment">     **********************************************************************/</span>
-<a name="l00328"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a0ddfefaef196023486fc7642af45cf96">00328</a>     <span class="keyword">const</span> std::string Interpolation()<span class="keyword"> const</span>
-<a name="l00329"></a>00329 <span class="keyword">    </span>{ <span class="keywordflow">return</span> std::string(_cubic ? <span class="stringliteral">&quot;cubic&quot;</span> : <span class="stringliteral">&quot;bilinear&quot;</span>); }
-<a name="l00330"></a>00330 <span class="comment"></span>
-<a name="l00331"></a>00331 <span class="comment">    /**</span>
-<a name="l00332"></a>00332 <span class="comment">     * @return estimate of the maximum interpolation and quantization error</span>
-<a name="l00333"></a>00333 <span class="comment">     *   (meters).</span>
-<a name="l00334"></a>00334 <span class="comment">     *</span>
-<a name="l00335"></a>00335 <span class="comment">     * This relies on the value being stored in the data file.  If the value is</span>
-<a name="l00336"></a>00336 <span class="comment">     * absent, return -1.</span>
-<a name="l00337"></a>00337 <span class="comment">     **********************************************************************/</span>
-<a name="l00338"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aff538da14578a02c551b411a899e567a">00338</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aff538da14578a02c551b411a899e567a">MaxError</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _maxerror; }
-<a name="l00339"></a>00339 <span class="comment"></span>
-<a name="l00340"></a>00340 <span class="comment">    /**</span>
-<a name="l00341"></a>00341 <span class="comment">     * @return estimate of the RMS interpolation and quantization error</span>
-<a name="l00342"></a>00342 <span class="comment">     *   (meters).</span>
-<a name="l00343"></a>00343 <span class="comment">     *</span>
-<a name="l00344"></a>00344 <span class="comment">     * This relies on the value being stored in the data file.  If the value is</span>
-<a name="l00345"></a>00345 <span class="comment">     * absent, return -1.</span>
-<a name="l00346"></a>00346 <span class="comment">     **********************************************************************/</span>
-<a name="l00347"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a207f98316d20a5b9d47846e559c5e2a2">00347</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a207f98316d20a5b9d47846e559c5e2a2">RMSError</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _rmserror; }
-<a name="l00348"></a>00348 <span class="comment"></span>
-<a name="l00349"></a>00349 <span class="comment">    /**</span>
-<a name="l00350"></a>00350 <span class="comment">     * @return offset (meters).</span>
-<a name="l00351"></a>00351 <span class="comment">     *</span>
-<a name="l00352"></a>00352 <span class="comment">     * This in used in converting from the pixel values in the data file to</span>
-<a name="l00353"></a>00353 <span class="comment">     * geoid heights.</span>
-<a name="l00354"></a>00354 <span class="comment">     **********************************************************************/</span>
-<a name="l00355"></a><a class="code" href="classGeographicLib_1_1Geoid.html#ac798950a643e4286aa8d3bb8cd9b0815">00355</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#ac798950a643e4286aa8d3bb8cd9b0815">Offset</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _offset; }
-<a name="l00356"></a>00356 <span class="comment"></span>
-<a name="l00357"></a>00357 <span class="comment">    /**</span>
-<a name="l00358"></a>00358 <span class="comment">     * @return scale (meters).</span>
-<a name="l00359"></a>00359 <span class="comment">     *</span>
-<a name="l00360"></a>00360 <span class="comment">     * This in used in converting from the pixel values in the data file to</span>
-<a name="l00361"></a>00361 <span class="comment">     * geoid heights.</span>
-<a name="l00362"></a>00362 <span class="comment">     **********************************************************************/</span>
-<a name="l00363"></a><a class="code" href="classGeographicLib_1_1Geoid.html#ab2346300c12ff7e70d35e08479ecede1">00363</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#ab2346300c12ff7e70d35e08479ecede1">Scale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _scale; }
-<a name="l00364"></a>00364 <span class="comment"></span>
-<a name="l00365"></a>00365 <span class="comment">    /**</span>
-<a name="l00366"></a>00366 <span class="comment">     * @return true if the object is constructed to be thread safe.</span>
-<a name="l00367"></a>00367 <span class="comment">     **********************************************************************/</span>
-<a name="l00368"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a286e947c13592f21e45cbdd404b283c7">00368</a>     <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Geoid.html#a286e947c13592f21e45cbdd404b283c7">ThreadSafe</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _threadsafe; }
-<a name="l00369"></a>00369 <span class="comment"></span>
-<a name="l00370"></a>00370 <span class="comment">    /**</span>
-<a name="l00371"></a>00371 <span class="comment">     * @return true if a data cache is active.</span>
-<a name="l00372"></a>00372 <span class="comment">     **********************************************************************/</span>
-<a name="l00373"></a><a class="code" href="classGeographicLib_1_1Geoid.html#ade5715c0d1428a409383b1acd2cbe9be">00373</a>     <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Geoid.html#ade5715c0d1428a409383b1acd2cbe9be">Cache</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _cache; }
-<a name="l00374"></a>00374 <span class="comment"></span>
-<a name="l00375"></a>00375 <span class="comment">    /**</span>
-<a name="l00376"></a>00376 <span class="comment">     * @return west edge of the cached area; the cache includes this edge.</span>
-<a name="l00377"></a>00377 <span class="comment">     **********************************************************************/</span>
-<a name="l00378"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aa0d2e119f089ee4182987ddd3faaf62a">00378</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aa0d2e119f089ee4182987ddd3faaf62a">CacheWest</a>() <span class="keyword">const</span> throw() {
-<a name="l00379"></a>00379       <span class="keywordflow">return</span> _cache ? ((_xoffset + (_xsize == _width ? 0 : _cubic)
-<a name="l00380"></a>00380                         + _width/2) % _width - _width/2) / _rlonres :
-<a name="l00381"></a>00381         0;
-<a name="l00382"></a>00382     }
-<a name="l00383"></a>00383 <span class="comment"></span>
-<a name="l00384"></a>00384 <span class="comment">    /**</span>
-<a name="l00385"></a>00385 <span class="comment">     * @return east edge of the cached area; the cache excludes this edge.</span>
-<a name="l00386"></a>00386 <span class="comment">     **********************************************************************/</span>
-<a name="l00387"></a><a class="code" href="classGeographicLib_1_1Geoid.html#acb34cfbcfb8be2794b16a3d18209dbbe">00387</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#acb34cfbcfb8be2794b16a3d18209dbbe">CacheEast</a>() <span class="keyword">const</span> throw() {
-<a name="l00388"></a>00388       <span class="keywordflow">return</span>  _cache ?
-<a name="l00389"></a>00389         CacheWest() +
-<a name="l00390"></a>00390         (_xsize - (_xsize == _width ? 0 : 1 + 2 * _cubic)) / _rlonres :
-<a name="l00391"></a>00391         0;
-<a name="l00392"></a>00392     }
-<a name="l00393"></a>00393 <span class="comment"></span>
-<a name="l00394"></a>00394 <span class="comment">    /**</span>
-<a name="l00395"></a>00395 <span class="comment">     * @return north edge of the cached area; the cache includes this edge.</span>
-<a name="l00396"></a>00396 <span class="comment">     **********************************************************************/</span>
-<a name="l00397"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a26742332938bb8f22be23c979ffb02a1">00397</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a26742332938bb8f22be23c979ffb02a1">CacheNorth</a>() <span class="keyword">const</span> throw() {
-<a name="l00398"></a>00398       <span class="keywordflow">return</span> _cache ? 90 - (_yoffset + _cubic) / _rlatres : 0;
-<a name="l00399"></a>00399     }
-<a name="l00400"></a>00400 <span class="comment"></span>
-<a name="l00401"></a>00401 <span class="comment">    /**</span>
-<a name="l00402"></a>00402 <span class="comment">     * @return south edge of the cached area; the cache excludes this edge</span>
-<a name="l00403"></a>00403 <span class="comment">     *   unless it&#39;s the south pole.</span>
-<a name="l00404"></a>00404 <span class="comment">     **********************************************************************/</span>
-<a name="l00405"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aa3db8f9639eb231539376e4617a3d59e">00405</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aa3db8f9639eb231539376e4617a3d59e">CacheSouth</a>() <span class="keyword">const</span> throw() {
-<a name="l00406"></a>00406       <span class="keywordflow">return</span> _cache ? 90 - ( _yoffset + _ysize - 1 - _cubic) / _rlatres : 0;
-<a name="l00407"></a>00407     }
-<a name="l00408"></a>00408 <span class="comment"></span>
-<a name="l00409"></a>00409 <span class="comment">    /**</span>
-<a name="l00410"></a>00410 <span class="comment">     * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).</span>
-<a name="l00411"></a>00411 <span class="comment">     *</span>
-<a name="l00412"></a>00412 <span class="comment">     * (The WGS84 value is returned because the supported geoid models are all</span>
-<a name="l00413"></a>00413 <span class="comment">     * based on this ellipsoid.)</span>
-<a name="l00414"></a>00414 <span class="comment">     **********************************************************************/</span>
-<a name="l00415"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aada99465d9ddfc1b34ccf2ef3d86dbd7">00415</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> MajorRadius() <span class="keyword">const</span> throw()
-<a name="l00416"></a>00416     { <span class="keywordflow">return</span> Constants::WGS84_a&lt;real&gt;(); }
-<a name="l00417"></a>00417 <span class="comment"></span>
-<a name="l00418"></a>00418 <span class="comment">    /**</span>
-<a name="l00419"></a>00419 <span class="comment">     * @return \e f the flattening of the WGS84 ellipsoid.</span>
-<a name="l00420"></a>00420 <span class="comment">     *</span>
-<a name="l00421"></a>00421 <span class="comment">     * (The WGS84 value is returned because the supported geoid models are all</span>
-<a name="l00422"></a>00422 <span class="comment">     * based on this ellipsoid.)</span>
-<a name="l00423"></a>00423 <span class="comment">     **********************************************************************/</span>
-<a name="l00424"></a><a class="code" href="classGeographicLib_1_1Geoid.html#abd2076cab3455b816e9477cdb410b187">00424</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#abd2076cab3455b816e9477cdb410b187">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> Constants::WGS84_f&lt;real&gt;(); }
-<a name="l00425"></a>00425 <span class="comment"></span>
-<a name="l00426"></a>00426 <span class="comment">    /**</span>
-<a name="l00427"></a>00427 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
-<a name="l00428"></a>00428 <span class="comment">     * @return \e r the inverse flattening of the WGS84 ellipsoid.</span>
-<a name="l00429"></a>00429 <span class="comment">     **********************************************************************/</span>
-<a name="l00430"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a19fd88ada94ee9b3b063e9ff097fd2e5">00430</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
-<a name="l00431"></a>00431     { <span class="keywordflow">return</span> 1/Constants::WGS84_f&lt;real&gt;(); }<span class="comment"></span>
-<a name="l00432"></a>00432 <span class="comment">    ///@}</span>
-<a name="l00433"></a>00433 <span class="comment"></span><span class="comment"></span>
-<a name="l00434"></a>00434 <span class="comment">    /**</span>
-<a name="l00435"></a>00435 <span class="comment">     * @return the default path for geoid data files.</span>
-<a name="l00436"></a>00436 <span class="comment">     *</span>
-<a name="l00437"></a>00437 <span class="comment">     * This is the value of the environment variable GEOID_PATH, if set,</span>
-<a name="l00438"></a>00438 <span class="comment">     * otherwise, it is a compile-time default.</span>
-<a name="l00439"></a>00439 <span class="comment">     **********************************************************************/</span>
-<a name="l00440"></a>00440     <span class="keyword">static</span> std::string DefaultGeoidPath();
-<a name="l00441"></a>00441 <span class="comment"></span>
-<a name="l00442"></a>00442 <span class="comment">    /**</span>
-<a name="l00443"></a>00443 <span class="comment">     * @return the default name for the geoid.</span>
-<a name="l00444"></a>00444 <span class="comment">     *</span>
-<a name="l00445"></a>00445 <span class="comment">     * This is the value of the environment variable GEOID_NAME, if set,</span>
-<a name="l00446"></a>00446 <span class="comment">     * otherwise, it is &quot;egm96-5&quot;.  The Geoid class does not use this function;</span>
-<a name="l00447"></a>00447 <span class="comment">     * it is just provided as a convenience for a calling program when</span>
-<a name="l00448"></a>00448 <span class="comment">     * constructing a Geoid object.</span>
-<a name="l00449"></a>00449 <span class="comment">     **********************************************************************/</span>
-<a name="l00450"></a>00450     <span class="keyword">static</span> std::string DefaultGeoidName();
-<a name="l00451"></a>00451 <span class="comment"></span>
-<a name="l00452"></a>00452 <span class="comment">/// \cond DEPRECATED</span>
-<a name="l00453"></a>00453 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00454"></a>00454 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; Return the compile-time default path for the geoid</span>
-<a name="l00455"></a>00455 <span class="comment">     * data files.</span>
-<a name="l00456"></a>00456 <span class="comment">     **********************************************************************/</span>
-<a name="l00457"></a>00457     <span class="keyword">static</span> std::string DefaultPath();
-<a name="l00458"></a>00458 <span class="comment"></span>
-<a name="l00459"></a>00459 <span class="comment">    /**</span>
-<a name="l00460"></a>00460 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt; Return the value of the environment variable</span>
-<a name="l00461"></a>00461 <span class="comment">     * GEOID_PATH.</span>
-<a name="l00462"></a>00462 <span class="comment">     **********************************************************************/</span>
-<a name="l00463"></a>00463     <span class="keyword">static</span> std::string GeoidPath();<span class="comment"></span>
-<a name="l00464"></a>00464 <span class="comment">/// \endcond</span>
-<a name="l00465"></a>00465 <span class="comment"></span>  };
-<a name="l00466"></a>00466 
-<a name="l00467"></a>00467 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00468"></a>00468 
-<a name="l00469"></a>00469 <span class="preprocessor">#if defined(_MSC_VER)</span>
-<a name="l00470"></a>00470 <span class="preprocessor"></span><span class="preprocessor">#pragma warning (pop)</span>
-<a name="l00471"></a>00471 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00472"></a>00472 <span class="preprocessor"></span>
-<a name="l00473"></a>00473 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOID_HPP</span>
+<a name="l00203"></a>00203 <span class="comment">     * Cache the data for the specified &quot;rectangular&quot; area bounded by the</span>
+<a name="l00204"></a>00204 <span class="comment">     * parallels \e south and \e north and the meridians \e west and \e east.</span>
+<a name="l00205"></a>00205 <span class="comment">     * \e east is always interpreted as being east of \e west, if necessary by</span>
+<a name="l00206"></a>00206 <span class="comment">     * adding 360&lt;sup&gt;o&lt;/sup&gt; to its value.  This may throw an error because of</span>
+<a name="l00207"></a>00207 <span class="comment">     * insufficent memory or because of an error reading the data from the</span>
+<a name="l00208"></a>00208 <span class="comment">     * file.  In this case, you can catch the error and either do nothing (you</span>
+<a name="l00209"></a>00209 <span class="comment">     * will have no cache in this case) or try again with a smaller area.  \e</span>
+<a name="l00210"></a>00210 <span class="comment">     * south and \e north should be in the range [-90, 90]; \e west and \e east</span>
+<a name="l00211"></a>00211 <span class="comment">     * should be in the range [-180, 360].  An exception is thrown if this</span>
+<a name="l00212"></a>00212 <span class="comment">     * routine is called on a thread safe Geoid.</span>
+<a name="l00213"></a>00213 <span class="comment">     **********************************************************************/</span>
+<a name="l00214"></a>00214     <span class="keywordtype">void</span> CacheArea(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> south, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> west, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> north, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> east) <span class="keyword">const</span>;
+<a name="l00215"></a>00215 <span class="comment"></span>
+<a name="l00216"></a>00216 <span class="comment">    /**</span>
+<a name="l00217"></a>00217 <span class="comment">     * Cache all the data.  On most computers, this is fast for data sets with</span>
+<a name="l00218"></a>00218 <span class="comment">     * grid resolution of 5&#39; or coarser.  For a 1&#39; grid, the required RAM is</span>
+<a name="l00219"></a>00219 <span class="comment">     * 450MB; a 2.5&#39; grid needs 72MB; and a 5&#39; grid needs 18MB.  This may throw</span>
+<a name="l00220"></a>00220 <span class="comment">     * an error because of insufficent memory or because of an error reading</span>
+<a name="l00221"></a>00221 <span class="comment">     * the data from the file.  In this case, you can catch the error and</span>
+<a name="l00222"></a>00222 <span class="comment">     * either do nothing (you will have no cache in this case) or try using</span>
+<a name="l00223"></a>00223 <span class="comment">     * Geoid::CacheArea on a specific area.  An exception is thrown if this</span>
+<a name="l00224"></a>00224 <span class="comment">     * routine is called on a thread safe Geoid.</span>
+<a name="l00225"></a>00225 <span class="comment">     **********************************************************************/</span>
+<a name="l00226"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">00226</a>     <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1Geoid.html#a482c6482d5ab4c5d661210327848170e">CacheAll</a>()<span class="keyword"> const </span>{ CacheArea(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(-90), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0),
+<a name="l00227"></a>00227                                       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(90), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(360)); }
+<a name="l00228"></a>00228 <span class="comment"></span>
+<a name="l00229"></a>00229 <span class="comment">    /**</span>
+<a name="l00230"></a>00230 <span class="comment">     * Clear the cache.  This never throws an error.  (This does nothing with a</span>
+<a name="l00231"></a>00231 <span class="comment">     * thread safe Geoid.)</span>
+<a name="l00232"></a>00232 <span class="comment">     **********************************************************************/</span>
+<a name="l00233"></a>00233     <span class="keywordtype">void</span> CacheClear() <span class="keyword">const</span> throw();
+<a name="l00234"></a>00234 <span class="comment"></span>
+<a name="l00235"></a>00235 <span class="comment">    ///@}</span>
+<a name="l00236"></a>00236 <span class="comment"></span><span class="comment"></span>
+<a name="l00237"></a>00237 <span class="comment">    /** \name Compute geoid heights</span>
+<a name="l00238"></a>00238 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00239"></a>00239 <span class="comment">    ///@{</span>
+<a name="l00240"></a>00240 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00241"></a>00241 <span class="comment">     * Compute the geoid height at a point</span>
+<a name="l00242"></a>00242 <span class="comment">     *</span>
+<a name="l00243"></a>00243 <span class="comment">     * @param[in] lat latitude of the point (degrees).</span>
+<a name="l00244"></a>00244 <span class="comment">     * @param[in] lon longitude of the point (degrees).</span>
+<a name="l00245"></a>00245 <span class="comment">     * @return geoid height (meters).</span>
+<a name="l00246"></a>00246 <span class="comment">     *</span>
+<a name="l00247"></a>00247 <span class="comment">     * The latitude should be in [-90, 90] and longitude should bein</span>
+<a name="l00248"></a>00248 <span class="comment">     * [-180,360].  This may throw an error because of an error reading data</span>
+<a name="l00249"></a>00249 <span class="comment">     * from disk.  However, it will not throw if (\e lat, \e lon) is within a</span>
+<a name="l00250"></a>00250 <span class="comment">     * successfully cached area.</span>
+<a name="l00251"></a>00251 <span class="comment">     **********************************************************************/</span>
+<a name="l00252"></a><a class="code" href="classGeographicLib_1_1Geoid.html#accb63bfbbadae10af79b3a3028a3045a">00252</a>     <a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::real operator()(real lat, real lon)<span class="keyword"> const </span>{
+<a name="l00253"></a>00253       real gradn, grade;
+<a name="l00254"></a>00254       <span class="keywordflow">return</span> height(lat, lon, <span class="keyword">false</span>, gradn, grade);
+<a name="l00255"></a>00255     }
+<a name="l00256"></a>00256 <span class="comment"></span>
+<a name="l00257"></a>00257 <span class="comment">    /**</span>
+<a name="l00258"></a>00258 <span class="comment">     * Compute the geoid height and gradient at a point</span>
+<a name="l00259"></a>00259 <span class="comment">     *</span>
+<a name="l00260"></a>00260 <span class="comment">     * @param[in] lat latitude of the point (degrees).</span>
+<a name="l00261"></a>00261 <span class="comment">     * @param[in] lon longitude of the point (degrees).</span>
+<a name="l00262"></a>00262 <span class="comment">     * @param[out] gradn northerly gradient (dimensionless).</span>
+<a name="l00263"></a>00263 <span class="comment">     * @param[out] grade easterly gradient (dimensionless).</span>
+<a name="l00264"></a>00264 <span class="comment">     * @return geoid height (meters).</span>
+<a name="l00265"></a>00265 <span class="comment">     *</span>
+<a name="l00266"></a>00266 <span class="comment">     * The latitude should be in [-90, 90] and longitude should be in [-180,</span>
+<a name="l00267"></a>00267 <span class="comment">     * 360].  This may throw an error because of an error reading data from</span>
+<a name="l00268"></a>00268 <span class="comment">     * disk.  However, it will not throw if (\e lat, \e lon) is within a</span>
+<a name="l00269"></a>00269 <span class="comment">     * successfully cached area.</span>
+<a name="l00270"></a>00270 <span class="comment">     **********************************************************************/</span>
+<a name="l00271"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a3bb5740c3a38a77caeb5eabd54c77cbc">00271</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a3bb5740c3a38a77caeb5eabd54c77cbc">operator()</a>(real lat, real lon, real&amp; gradn, real&amp; grade)<span class="keyword"> const </span>{
+<a name="l00272"></a>00272       <span class="keywordflow">return</span> height(lat, lon, <span class="keyword">true</span>, gradn, grade);
+<a name="l00273"></a>00273     }
+<a name="l00274"></a>00274 <span class="comment"></span>
+<a name="l00275"></a>00275 <span class="comment">    /**</span>
+<a name="l00276"></a>00276 <span class="comment">     * Convert a height above the geoid to a height above the ellipsoid and</span>
+<a name="l00277"></a>00277 <span class="comment">     * vice versa.</span>
+<a name="l00278"></a>00278 <span class="comment">     *</span>
+<a name="l00279"></a>00279 <span class="comment">     * @param[in] lat latitude of the point (degrees).</span>
+<a name="l00280"></a>00280 <span class="comment">     * @param[in] lon longitude of the point (degrees).</span>
+<a name="l00281"></a>00281 <span class="comment">     * @param[in] h height of the point (degrees).</span>
+<a name="l00282"></a>00282 <span class="comment">     * @param[in] d a Geoid::convertflag specifying the direction of the</span>
+<a name="l00283"></a>00283 <span class="comment">     *   conversion; Geoid::GEOIDTOELLIPSOID means convert a height above the</span>
+<a name="l00284"></a>00284 <span class="comment">     *   geoid to a height above the ellipsoid; Geoid::ELLIPSOIDTOGEOID means</span>
+<a name="l00285"></a>00285 <span class="comment">     *   convert a height above the ellipsoid to a height above the geoid.</span>
+<a name="l00286"></a>00286 <span class="comment">     * @return converted height (meters).</span>
+<a name="l00287"></a>00287 <span class="comment">     **********************************************************************/</span>
+<a name="l00288"></a><a class="code" href="classGeographicLib_1_1Geoid.html#adf98d0f0d881893a4f5ff711a3be0e04">00288</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> ConvertHeight(real lat, real lon, real h,
+<a name="l00289"></a>00289                              <a class="code" href="classGeographicLib_1_1Geoid.html#a58ddbd0fd48c25b361f45bdb70dadb96">convertflag</a> d)<span class="keyword"> const </span>{
+<a name="l00290"></a>00290       real gradn, grade;
+<a name="l00291"></a>00291       <span class="keywordflow">return</span> h + <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(d) * height(lat, lon, <span class="keyword">true</span>, gradn, grade);
+<a name="l00292"></a>00292     }
+<a name="l00293"></a>00293 <span class="comment"></span>
+<a name="l00294"></a>00294 <span class="comment">    ///@}</span>
+<a name="l00295"></a>00295 <span class="comment"></span><span class="comment"></span>
+<a name="l00296"></a>00296 <span class="comment">    /** \name Inspector functions</span>
+<a name="l00297"></a>00297 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00298"></a>00298 <span class="comment">    ///@{</span>
+<a name="l00299"></a>00299 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00300"></a>00300 <span class="comment">     * @return geoid description, if available, in the data file; if</span>
+<a name="l00301"></a>00301 <span class="comment">     *   absent, return &quot;NONE&quot;.</span>
+<a name="l00302"></a>00302 <span class="comment">     **********************************************************************/</span>
+<a name="l00303"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">00303</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">Description</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _description; }
+<a name="l00304"></a>00304 <span class="comment"></span>
+<a name="l00305"></a>00305 <span class="comment">    /**</span>
+<a name="l00306"></a>00306 <span class="comment">     * @return date of the data file; if absent, return &quot;UNKNOWN&quot;.</span>
+<a name="l00307"></a>00307 <span class="comment">     **********************************************************************/</span>
+<a name="l00308"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a9cd7304b5df37001f4ad3c91cdbc56f4">00308</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a9cd7304b5df37001f4ad3c91cdbc56f4">DateTime</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _datetime; }
+<a name="l00309"></a>00309 <span class="comment"></span>
+<a name="l00310"></a>00310 <span class="comment">    /**</span>
+<a name="l00311"></a>00311 <span class="comment">     * @return full file name used to load the geoid data.</span>
+<a name="l00312"></a>00312 <span class="comment">     **********************************************************************/</span>
+<a name="l00313"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a07e5f704f2684ce5acf824b7e0b17d30">00313</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a07e5f704f2684ce5acf824b7e0b17d30">GeoidFile</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _filename; }
+<a name="l00314"></a>00314 <span class="comment"></span>
+<a name="l00315"></a>00315 <span class="comment">    /**</span>
+<a name="l00316"></a>00316 <span class="comment">     * @return &quot;name&quot; used to load the geoid data (from the first argument of</span>
+<a name="l00317"></a>00317 <span class="comment">     *   the constructor).</span>
+<a name="l00318"></a>00318 <span class="comment">     **********************************************************************/</span>
+<a name="l00319"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aa244668a189e35ce5ff248fb8fa2e57b">00319</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#aa244668a189e35ce5ff248fb8fa2e57b">GeoidName</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _name; }
+<a name="l00320"></a>00320 <span class="comment"></span>
+<a name="l00321"></a>00321 <span class="comment">    /**</span>
+<a name="l00322"></a>00322 <span class="comment">     * @return directory used to load the geoid data.</span>
+<a name="l00323"></a>00323 <span class="comment">     **********************************************************************/</span>
+<a name="l00324"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a83b17b17045c49984bcdd032e637155e">00324</a>     <span class="keyword">const</span> std::string&amp; <a class="code" href="classGeographicLib_1_1Geoid.html#a83b17b17045c49984bcdd032e637155e">GeoidDirectory</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _dir; }
+<a name="l00325"></a>00325 <span class="comment"></span>
+<a name="l00326"></a>00326 <span class="comment">    /**</span>
+<a name="l00327"></a>00327 <span class="comment">     * @return interpolation method (&quot;cubic&quot; or &quot;bilinear&quot;).</span>
+<a name="l00328"></a>00328 <span class="comment">     **********************************************************************/</span>
+<a name="l00329"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a0ddfefaef196023486fc7642af45cf96">00329</a>     <span class="keyword">const</span> std::string Interpolation()<span class="keyword"> const</span>
+<a name="l00330"></a>00330 <span class="keyword">    </span>{ <span class="keywordflow">return</span> std::string(_cubic ? <span class="stringliteral">&quot;cubic&quot;</span> : <span class="stringliteral">&quot;bilinear&quot;</span>); }
+<a name="l00331"></a>00331 <span class="comment"></span>
+<a name="l00332"></a>00332 <span class="comment">    /**</span>
+<a name="l00333"></a>00333 <span class="comment">     * @return estimate of the maximum interpolation and quantization error</span>
+<a name="l00334"></a>00334 <span class="comment">     *   (meters).</span>
+<a name="l00335"></a>00335 <span class="comment">     *</span>
+<a name="l00336"></a>00336 <span class="comment">     * This relies on the value being stored in the data file.  If the value is</span>
+<a name="l00337"></a>00337 <span class="comment">     * absent, return -1.</span>
+<a name="l00338"></a>00338 <span class="comment">     **********************************************************************/</span>
+<a name="l00339"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aff538da14578a02c551b411a899e567a">00339</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aff538da14578a02c551b411a899e567a">MaxError</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _maxerror; }
+<a name="l00340"></a>00340 <span class="comment"></span>
+<a name="l00341"></a>00341 <span class="comment">    /**</span>
+<a name="l00342"></a>00342 <span class="comment">     * @return estimate of the RMS interpolation and quantization error</span>
+<a name="l00343"></a>00343 <span class="comment">     *   (meters).</span>
+<a name="l00344"></a>00344 <span class="comment">     *</span>
+<a name="l00345"></a>00345 <span class="comment">     * This relies on the value being stored in the data file.  If the value is</span>
+<a name="l00346"></a>00346 <span class="comment">     * absent, return -1.</span>
+<a name="l00347"></a>00347 <span class="comment">     **********************************************************************/</span>
+<a name="l00348"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a207f98316d20a5b9d47846e559c5e2a2">00348</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a207f98316d20a5b9d47846e559c5e2a2">RMSError</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _rmserror; }
+<a name="l00349"></a>00349 <span class="comment"></span>
+<a name="l00350"></a>00350 <span class="comment">    /**</span>
+<a name="l00351"></a>00351 <span class="comment">     * @return offset (meters).</span>
+<a name="l00352"></a>00352 <span class="comment">     *</span>
+<a name="l00353"></a>00353 <span class="comment">     * This in used in converting from the pixel values in the data file to</span>
+<a name="l00354"></a>00354 <span class="comment">     * geoid heights.</span>
+<a name="l00355"></a>00355 <span class="comment">     **********************************************************************/</span>
+<a name="l00356"></a><a class="code" href="classGeographicLib_1_1Geoid.html#ac798950a643e4286aa8d3bb8cd9b0815">00356</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#ac798950a643e4286aa8d3bb8cd9b0815">Offset</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _offset; }
+<a name="l00357"></a>00357 <span class="comment"></span>
+<a name="l00358"></a>00358 <span class="comment">    /**</span>
+<a name="l00359"></a>00359 <span class="comment">     * @return scale (meters).</span>
+<a name="l00360"></a>00360 <span class="comment">     *</span>
+<a name="l00361"></a>00361 <span class="comment">     * This in used in converting from the pixel values in the data file to</span>
+<a name="l00362"></a>00362 <span class="comment">     * geoid heights.</span>
+<a name="l00363"></a>00363 <span class="comment">     **********************************************************************/</span>
+<a name="l00364"></a><a class="code" href="classGeographicLib_1_1Geoid.html#ab2346300c12ff7e70d35e08479ecede1">00364</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#ab2346300c12ff7e70d35e08479ecede1">Scale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _scale; }
+<a name="l00365"></a>00365 <span class="comment"></span>
+<a name="l00366"></a>00366 <span class="comment">    /**</span>
+<a name="l00367"></a>00367 <span class="comment">     * @return true if the object is constructed to be thread safe.</span>
+<a name="l00368"></a>00368 <span class="comment">     **********************************************************************/</span>
+<a name="l00369"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a286e947c13592f21e45cbdd404b283c7">00369</a>     <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Geoid.html#a286e947c13592f21e45cbdd404b283c7">ThreadSafe</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _threadsafe; }
+<a name="l00370"></a>00370 <span class="comment"></span>
+<a name="l00371"></a>00371 <span class="comment">    /**</span>
+<a name="l00372"></a>00372 <span class="comment">     * @return true if a data cache is active.</span>
+<a name="l00373"></a>00373 <span class="comment">     **********************************************************************/</span>
+<a name="l00374"></a><a class="code" href="classGeographicLib_1_1Geoid.html#ade5715c0d1428a409383b1acd2cbe9be">00374</a>     <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Geoid.html#ade5715c0d1428a409383b1acd2cbe9be">Cache</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _cache; }
+<a name="l00375"></a>00375 <span class="comment"></span>
+<a name="l00376"></a>00376 <span class="comment">    /**</span>
+<a name="l00377"></a>00377 <span class="comment">     * @return west edge of the cached area; the cache includes this edge.</span>
+<a name="l00378"></a>00378 <span class="comment">     **********************************************************************/</span>
+<a name="l00379"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aa0d2e119f089ee4182987ddd3faaf62a">00379</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aa0d2e119f089ee4182987ddd3faaf62a">CacheWest</a>() <span class="keyword">const</span> throw() {
+<a name="l00380"></a>00380       <span class="keywordflow">return</span> _cache ? ((_xoffset + (_xsize == _width ? 0 : _cubic)
+<a name="l00381"></a>00381                         + _width/2) % _width - _width/2) / _rlonres :
+<a name="l00382"></a>00382         0;
+<a name="l00383"></a>00383     }
+<a name="l00384"></a>00384 <span class="comment"></span>
+<a name="l00385"></a>00385 <span class="comment">    /**</span>
+<a name="l00386"></a>00386 <span class="comment">     * @return east edge of the cached area; the cache excludes this edge.</span>
+<a name="l00387"></a>00387 <span class="comment">     **********************************************************************/</span>
+<a name="l00388"></a><a class="code" href="classGeographicLib_1_1Geoid.html#acb34cfbcfb8be2794b16a3d18209dbbe">00388</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#acb34cfbcfb8be2794b16a3d18209dbbe">CacheEast</a>() <span class="keyword">const</span> throw() {
+<a name="l00389"></a>00389       <span class="keywordflow">return</span>  _cache ?
+<a name="l00390"></a>00390         CacheWest() +
+<a name="l00391"></a>00391         (_xsize - (_xsize == _width ? 0 : 1 + 2 * _cubic)) / _rlonres :
+<a name="l00392"></a>00392         0;
+<a name="l00393"></a>00393     }
+<a name="l00394"></a>00394 <span class="comment"></span>
+<a name="l00395"></a>00395 <span class="comment">    /**</span>
+<a name="l00396"></a>00396 <span class="comment">     * @return north edge of the cached area; the cache includes this edge.</span>
+<a name="l00397"></a>00397 <span class="comment">     **********************************************************************/</span>
+<a name="l00398"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a26742332938bb8f22be23c979ffb02a1">00398</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#a26742332938bb8f22be23c979ffb02a1">CacheNorth</a>() <span class="keyword">const</span> throw() {
+<a name="l00399"></a>00399       <span class="keywordflow">return</span> _cache ? 90 - (_yoffset + _cubic) / _rlatres : 0;
+<a name="l00400"></a>00400     }
+<a name="l00401"></a>00401 <span class="comment"></span>
+<a name="l00402"></a>00402 <span class="comment">    /**</span>
+<a name="l00403"></a>00403 <span class="comment">     * @return south edge of the cached area; the cache excludes this edge</span>
+<a name="l00404"></a>00404 <span class="comment">     *   unless it&#39;s the south pole.</span>
+<a name="l00405"></a>00405 <span class="comment">     **********************************************************************/</span>
+<a name="l00406"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aa3db8f9639eb231539376e4617a3d59e">00406</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#aa3db8f9639eb231539376e4617a3d59e">CacheSouth</a>() <span class="keyword">const</span> throw() {
+<a name="l00407"></a>00407       <span class="keywordflow">return</span> _cache ? 90 - ( _yoffset + _ysize - 1 - _cubic) / _rlatres : 0;
+<a name="l00408"></a>00408     }
+<a name="l00409"></a>00409 <span class="comment"></span>
+<a name="l00410"></a>00410 <span class="comment">    /**</span>
+<a name="l00411"></a>00411 <span class="comment">     * @return \e a the equatorial radius of the WGS84 ellipsoid (meters).</span>
+<a name="l00412"></a>00412 <span class="comment">     *</span>
+<a name="l00413"></a>00413 <span class="comment">     * (The WGS84 value is returned because the supported geoid models are all</span>
+<a name="l00414"></a>00414 <span class="comment">     * based on this ellipsoid.)</span>
+<a name="l00415"></a>00415 <span class="comment">     **********************************************************************/</span>
+<a name="l00416"></a><a class="code" href="classGeographicLib_1_1Geoid.html#aada99465d9ddfc1b34ccf2ef3d86dbd7">00416</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> MajorRadius() <span class="keyword">const</span> throw()
+<a name="l00417"></a>00417     { <span class="keywordflow">return</span> Constants::WGS84_a&lt;real&gt;(); }
+<a name="l00418"></a>00418 <span class="comment"></span>
+<a name="l00419"></a>00419 <span class="comment">    /**</span>
+<a name="l00420"></a>00420 <span class="comment">     * @return \e f the flattening of the WGS84 ellipsoid.</span>
+<a name="l00421"></a>00421 <span class="comment">     *</span>
+<a name="l00422"></a>00422 <span class="comment">     * (The WGS84 value is returned because the supported geoid models are all</span>
+<a name="l00423"></a>00423 <span class="comment">     * based on this ellipsoid.)</span>
+<a name="l00424"></a>00424 <span class="comment">     **********************************************************************/</span>
+<a name="l00425"></a><a class="code" href="classGeographicLib_1_1Geoid.html#abd2076cab3455b816e9477cdb410b187">00425</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geoid.html#abd2076cab3455b816e9477cdb410b187">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> Constants::WGS84_f&lt;real&gt;(); }
+<a name="l00426"></a>00426 <span class="comment"></span>
+<a name="l00427"></a>00427 <span class="comment">    /**</span>
+<a name="l00428"></a>00428 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
+<a name="l00429"></a>00429 <span class="comment">     * @return \e r the inverse flattening of the WGS84 ellipsoid.</span>
+<a name="l00430"></a>00430 <span class="comment">     **********************************************************************/</span>
+<a name="l00431"></a><a class="code" href="classGeographicLib_1_1Geoid.html#a19fd88ada94ee9b3b063e9ff097fd2e5">00431</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
+<a name="l00432"></a>00432     { <span class="keywordflow">return</span> 1/Constants::WGS84_f&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00433"></a>00433 <span class="comment">    ///@}</span>
+<a name="l00434"></a>00434 <span class="comment"></span><span class="comment"></span>
+<a name="l00435"></a>00435 <span class="comment">    /**</span>
+<a name="l00436"></a>00436 <span class="comment">     * @return the default path for geoid data files.</span>
+<a name="l00437"></a>00437 <span class="comment">     *</span>
+<a name="l00438"></a>00438 <span class="comment">     * This is the value of the environment variable GEOID_PATH, if set,</span>
+<a name="l00439"></a>00439 <span class="comment">     * otherwise, it is a compile-time default.</span>
+<a name="l00440"></a>00440 <span class="comment">     **********************************************************************/</span>
+<a name="l00441"></a>00441     <span class="keyword">static</span> std::string DefaultGeoidPath();
+<a name="l00442"></a>00442 <span class="comment"></span>
+<a name="l00443"></a>00443 <span class="comment">    /**</span>
+<a name="l00444"></a>00444 <span class="comment">     * @return the default name for the geoid.</span>
+<a name="l00445"></a>00445 <span class="comment">     *</span>
+<a name="l00446"></a>00446 <span class="comment">     * This is the value of the environment variable GEOID_NAME, if set,</span>
+<a name="l00447"></a>00447 <span class="comment">     * otherwise, it is &quot;egm96-5&quot;.  The Geoid class does not use this function;</span>
+<a name="l00448"></a>00448 <span class="comment">     * it is just provided as a convenience for a calling program when</span>
+<a name="l00449"></a>00449 <span class="comment">     * constructing a Geoid object.</span>
+<a name="l00450"></a>00450 <span class="comment">     **********************************************************************/</span>
+<a name="l00451"></a>00451     <span class="keyword">static</span> std::string DefaultGeoidName();
+<a name="l00452"></a>00452 
+<a name="l00453"></a>00453   };
+<a name="l00454"></a>00454 
+<a name="l00455"></a>00455 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00456"></a>00456 
+<a name="l00457"></a>00457 <span class="preprocessor">#if defined(_MSC_VER)</span>
+<a name="l00458"></a>00458 <span class="preprocessor"></span><span class="preprocessor">#pragma warning (pop)</span>
+<a name="l00459"></a>00459 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00460"></a>00460 <span class="preprocessor"></span>
+<a name="l00461"></a>00461 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOID_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

@@ -1,15 +1,16 @@
-# $Id: 7627acd181f4dd1d618e2d46f3414859911d0bc1 $
+# $Id: 86a2861d6f9546348071094bc8b7414baede1478 $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
 	LocalCartesian Geodesic GeodesicLine PolygonArea \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea
+EXTRAHEADERS = Constants Math Accumulator
 
 PREFIX = /usr/local
 LIBNAME = GeographicLib
-HEADERS = $(LIBNAME)/Constants.hpp $(LIBNAME)/Config.h \
-	$(patsubst %,$(LIBNAME)/%.hpp,$(MODULES))
+HEADERS = $(LIBNAME)/Config.h \
+	$(patsubst %,$(LIBNAME)/%.hpp,$(EXTRAHEADERS) $(MODULES))
 DEST = $(PREFIX)/include/$(LIBNAME)
 
 INSTALL = install -b

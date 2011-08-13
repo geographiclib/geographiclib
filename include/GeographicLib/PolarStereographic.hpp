@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: 461ca662af89d37e5276ab029e7c6959d5bbdd74 $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: babda3abc04257e799b84de8aaaec20082b960e0 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -30,7 +30,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     // _Cx used to be _C but g++ 3.4 has a macro of that name
-    const real _a, _f, _r, _e2, _e, _e2m, _Cx, _c;
+    real _a, _f, _e2, _e, _e2m, _Cx, _c;
     real _k0;
     static const real tol_;
     static const real overflow_;
@@ -142,7 +142,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * The central scale for the projection.  This is the value of \e k0 used

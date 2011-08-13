@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 935602d644ee065a4abb2aa73b98836b9e62b44d $
+# $Id: 078083ae9e711ab6a6e88f40fb95d85f456bc8e4 $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -244,7 +244,7 @@ POD2MAN = pod2man --center="GeographicLib Utilities" \
 PODFIX = sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' -e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
 man1_MANS = $(MANPAGES)
 SUFFIXES = .pod .1 .usage
-EXTRA_DIST = makeusage.sh \
+EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod Geod.pod GeodesicProj.pod \
 	GeoidEval.pod Planimeter.pod \

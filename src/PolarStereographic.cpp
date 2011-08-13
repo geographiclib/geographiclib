@@ -9,7 +9,7 @@
 
 #include <GeographicLib/PolarStereographic.hpp>
 
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: 47fd64f6123e4d3242445502b36144eebfca791d $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: 3985d9122f00e7ca98b1eb81c15de5a281fbe0bb $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
@@ -27,7 +27,6 @@ namespace GeographicLib {
   PolarStereographic::PolarStereographic(real a, real f, real k0)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
     , _e2m(1 - _e2)
@@ -84,7 +83,7 @@ namespace GeographicLib {
     rho *= 2 * _k0 * _a / _c;
     k = lat != 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :
       _k0;
-    lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
+    lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
     real
       lam = lon * Math::degree<real>();
     x = rho * (lon == -180 ? 0 : sin(lam));

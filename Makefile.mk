@@ -1,9 +1,9 @@
-# $Id: 5578b7a1e2bdf2d003350a1721cb316679cc9889 $
+# $Id: 992ccb8c754771196be86b557a304ab6355dd0c9 $
 
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
 SUBDIRS = src man tools doc
-ALLDIRS = include $(SUBDIRS) maxima matlab python windows
+ALLDIRS = include $(SUBDIRS) maxima matlab python windows cmake
 
 all: src man tools
 
@@ -11,8 +11,8 @@ $(SUBDIRS):
 	$(MAKE) -C $@
 
 tools: src
-install: install-headers install-lib install-tools install-man install-doc \
-	install-matlab install-python
+install: install-headers install-lib install-tools install-man install-cmake \
+	install-doc install-matlab install-python
 clean: clean-src clean-tools clean-doc clean-man clean-matlab clean-python
 distclean: clean distclean-doc distclean-man
 install-headers:
@@ -21,6 +21,8 @@ install-lib:
 	$(MAKE) -C src install
 install-tools: src
 	$(MAKE) -C tools install
+install-cmake:
+	$(MAKE) -C cmake install
 install-doc: doc
 	$(MAKE) -C doc install
 install-man: man
@@ -59,6 +61,7 @@ list:
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 
 .PHONY: all $(SUBDIRS) install \
-	install-headers install-lib install-tools install-man install-matlab \
-	install-python clean clean-src clean-tools clean-doc clean-man \
-	clean-matlab clean-python distclean distclean-doc distclean-man
+	install-headers install-lib install-tools install-cmake install-man \
+	install-matlab install-python \
+	clean clean-src clean-tools clean-doc clean-man clean-matlab \
+	clean-python distclean distclean-doc distclean-man

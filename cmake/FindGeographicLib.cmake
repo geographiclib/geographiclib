@@ -1,0 +1,32 @@
+# $Id: 19e15da16267903c945c4163b24be13e4e4b6ddc $
+#
+# Look for GeographicLib
+#
+# Set
+#  GEOGRAPHICLIB_FOUND = TRUE
+#  GeographicLib_INCLUDE_DIRS = /usr/local/include
+#  GeographicLib_LIBRARIES = /usr/local/lib/libGeographic.so
+#  GeographicLib_LIBRARY_DIRS = /usr/local/lib
+
+find_library (GeographicLib_LIBRARIES Geographic
+  PATHS "${CMAKE_INSTALL_PREFIX}/../GeographicLib/lib")
+
+if (GeographicLib_LIBRARIES)
+  get_filename_component (GeographicLib_LIBRARY_DIRS
+    "${GeographicLib_LIBRARIES}" PATH)
+  get_filename_component (GEOGRAPHICLIB_ROOT_DIR
+    "${GeographicLib_LIBRARY_DIRS}" PATH)
+  set (GeographicLib_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
+  unset (GEOGRAPHICLIB_ROOT_DIR)
+  if (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
+    unset (GeographicLib_INCLUDE_DIRS)
+    unset (GeographicLib_LIBRARIES)
+    unset (GeographicLib_LIBRARY_DIRS)
+  endif (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
+endif (GeographicLib_LIBRARIES)
+
+include (FindPackageHandleStandardArgs)
+find_package_handle_standard_args (GeographicLib DEFAULT_MSG
+  GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES GeographicLib_INCLUDE_DIRS)
+mark_as_advanced (GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES
+  GeographicLib_INCLUDE_DIRS)

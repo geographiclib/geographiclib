@@ -1,8 +1,11 @@
-# $Id: a8536304680ae3fee858ff4a5c78a081ea9a049b $
+# $Id: c57d9935a4847a2f5564fc68da6b3275ba36221d $
 
-PYTHONFILES = GeographicLib.py
+MODULES = __init__ geomath constants accumulator geodesiccapability \
+	geodesic geodesicline polygonarea
+PACKAGE=geographiclib
+PYTHON_FILES = $(patsubst %,$(PACKAGE)/%.py,$(MODULES))
 
-DEST = $(PREFIX)/share/GeographicLib/python
+DEST = $(PREFIX)/lib/python/site-packages/$(PACKAGE)
 INSTALL = install -b
 
 all:
@@ -10,12 +13,12 @@ all:
 
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
-	$(INSTALL) -m 644 $(PYTHONFILES) $(DEST)/
+	$(INSTALL) -m 644 $(PYTHON_FILES) $(DEST)/
 
 clean:
-	rm -f *.pyc
+	rm -f *.pyc $(PACKAGE)/*.pyc
 
 list:
-	@echo $(PYTHONFILES)
+	@echo Makefile.am $(PACKAGE)/CMakeLists.txt $(PYTHONFILES)
 
 .PHONY: all install list clean

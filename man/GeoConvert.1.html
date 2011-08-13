@@ -49,7 +49,7 @@
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
 <p><strong>GeoConvert</strong> [ <strong>-g</strong> | <strong>-d</strong> | <strong>-u</strong> | <strong>-m</strong> | <strong>-c</strong> ] [ <strong>-p</strong> <em>prec</em> ]
-[ <strong>-z</strong> <em>zone</em> | <strong>-s</strong> | <strong>-t</strong> ] [ <strong>-n</strong> ]
+[ <strong>-z</strong> <em>zone</em> | <strong>-s</strong> | <strong>-t</strong> ] [ <strong>-n</strong> ] [ <strong>-w</strong> ]
 [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
 [ <strong>--output-file</strong> <em>outfile</em> ]</p>
@@ -73,14 +73,17 @@ is used (<em>a</em> = 6378137m, <em>f</em> = 1/298.257223563).</p>
 and &quot; are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See <a href="#quoting">QUOTING</a> for how to
 quote the charachers ' and &quot; when entering coordinates on the command
-line.)  Latitude is given first; however, on input, either may be given
-first by appending or prepending <em>N</em> or <em>S</em> to the latitude and <em>E</em>
-or <em>W</em> to the longitude.  For example, the following are all equivalent</p>
+line.)  Alternatively, : may be used to separate the various components.
+Latitude is given first (unless the <strong>-w</strong> option is given); however, on
+input, either may be given first by appending or prepending <em>N</em> or <em>S</em>
+to the latitude and <em>E</em> or <em>W</em> to the longitude.  For example, the
+following are all equivalent</p>
 <pre>
     33.3 44.4
     E44.4 N33.3
     33d18'N 44d24'E
-    44d24 33d18N</pre>
+    44d24 33d18N
+    33:18 44:24</pre>
 </dd>
 <dt><strong><a name="utm_ups" class="item"><strong>UTM/UPS</strong></a></strong></dt>
 
@@ -166,6 +169,13 @@ See <a href="#zone">ZONE</a>.</p>
 <dd>
 <p>on input, MGRS coordinates refer to the south-west corner of the MGRS
 square instead of the center; see <a href="#mgrs">MGRS</a>.</p>
+</dd>
+<dt><strong><a name="w" class="item"><strong>-w</strong></a></strong></dt>
+
+<dd>
+<p>on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, <em>N</em>, <em>S</em>,<em>E</em>,
+<em>W</em>).</p>
 </dd>
 <dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
 
@@ -273,6 +283,8 @@ two alternatives are illustrated by</p>
 <pre>
    echo 30d30\'30\&quot; &quot;30d30'30&quot; | GeoConvert -d -p -1
    =&gt; 30d30'30&quot;N 030d30'30&quot;E</pre>
+<p>Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.</p>
 </dd>
 <dt><strong><a name="shell" class="item">Windows command shell (cmd)</a></strong></dt>
 
@@ -283,6 +295,8 @@ designator can be omitted.  Thus</p>
 <pre>
    echo 30d30'30^&quot; 30d30'30 | GeoConvert -d -p -1
    =&gt; 30d30'30&quot;N 030d30'30&quot;E</pre>
+<p>Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.</p>
 </dd>
 <dt><strong><a name="input_from_a_file" class="item">Input from a file</a></strong></dt>
 
@@ -346,7 +360,7 @@ following lines will be converted.</p>
 <h1><a name="see_also">SEE ALSO</a></h1>
 <p>The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, <em>Transverse Mercator with an accuracy of a few
-nanometers</em>, J. Geod (2011); DOI
+nanometers</em>, J. Geod <strong>85</strong>(8), 475-485 (Aug. 2011); DOI
 <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">http://dx.doi.org/10.1007/s00190-011-0445-3</a>; preprint
 <a href="http://arxiv.org/abs/1002.1417">http://arxiv.org/abs/1002.1417</a>.</p>
 <p>

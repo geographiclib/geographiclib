@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: 461ca662af89d37e5276ab029e7c6959d5bbdd74 $&quot;</span>
+<a name="l00011"></a><a class="code" href="PolarStereographic_8hpp.html#a7450566a6ed1475dc10f7c0dc85f5dd9">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP &quot;$Id: babda3abc04257e799b84de8aaaec20082b960e0 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
@@ -80,7 +80,7 @@
 <a name="l00030"></a>00030   <span class="keyword">private</span>:
 <a name="l00031"></a>00031     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
 <a name="l00032"></a>00032     <span class="comment">// _Cx used to be _C but g++ 3.4 has a macro of that name</span>
-<a name="l00033"></a>00033     <span class="keyword">const</span> real _a, _f, _r, _e2, _e, _e2m, _Cx, _c;
+<a name="l00033"></a>00033     real _a, _f, _e2, _e, _e2m, _Cx, _c;
 <a name="l00034"></a>00034     real _k0;
 <a name="l00035"></a>00035     <span class="keyword">static</span> <span class="keyword">const</span> real tol_;
 <a name="l00036"></a>00036     <span class="keyword">static</span> <span class="keyword">const</span> real overflow_;
@@ -192,7 +192,7 @@
 <a name="l00142"></a>00142 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
 <a name="l00143"></a>00143 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
 <a name="l00144"></a>00144 <span class="comment">     **********************************************************************/</span>
-<a name="l00145"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">00145</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00145"></a><a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">00145</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1PolarStereographic.html#a969a21c3df38517a081e233ae90c098e">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
 <a name="l00146"></a>00146 <span class="comment"></span>
 <a name="l00147"></a>00147 <span class="comment">    /**</span>
 <a name="l00148"></a>00148 <span class="comment">     * The central scale for the projection.  This is the value of \e k0 used</span>
@@ -215,7 +215,7 @@
 <a name="l00165"></a>00165 <span class="preprocessor">#endif  // GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

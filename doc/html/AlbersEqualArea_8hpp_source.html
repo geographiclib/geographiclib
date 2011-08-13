@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)</span>
-<a name="l00011"></a><a class="code" href="AlbersEqualArea_8hpp.html#aa9494d369d907d2b285fcb2f45b4689c">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP &quot;$Id: e29eed8bc763c20ae10131ef13f243c3b99bd37b $&quot;</span>
+<a name="l00011"></a><a class="code" href="AlbersEqualArea_8hpp.html#aa9494d369d907d2b285fcb2f45b4689c">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP &quot;$Id: eee2b79bf8f65888c9a3b75a6b5be04ada04e985 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
@@ -104,7 +104,7 @@
 <a name="l00054"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html">00054</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> {
 <a name="l00055"></a>00055   <span class="keyword">private</span>:
 <a name="l00056"></a>00056     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00057"></a>00057     <span class="keyword">const</span> real _a, _f, _r, _fm, _e2, _e, _e2m, _qZ, _qx;
+<a name="l00057"></a>00057     real _a, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
 <a name="l00058"></a>00058     real _sign, _lat0, _k0;
 <a name="l00059"></a>00059     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
 <a name="l00060"></a>00060     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
@@ -307,7 +307,7 @@
 <a name="l00257"></a>00257 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
 <a name="l00258"></a>00258 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
 <a name="l00259"></a>00259 <span class="comment">     **********************************************************************/</span>
-<a name="l00260"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">00260</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00260"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">00260</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
 <a name="l00261"></a>00261 <span class="comment"></span>
 <a name="l00262"></a>00262 <span class="comment">    /**</span>
 <a name="l00263"></a>00263 <span class="comment">     * @return latitude of the origin for the projection (degrees).</span>
@@ -352,7 +352,7 @@
 <a name="l00302"></a>00302 <span class="preprocessor">#endif  // GEOGRAPHICLIB_ALBERSEQUALAREA_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

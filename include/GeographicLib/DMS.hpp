@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
-#define GEOGRAPHICLIB_DMS_HPP "$Id: 3d0c051c53cf51014788621dda01462bb08e2d8c $"
+#define GEOGRAPHICLIB_DMS_HPP "$Id: 16d1a2985b695804891175f5537abff45cd24592 $"
 
 #include <sstream>
 #include <iomanip>
@@ -38,6 +38,16 @@ namespace GeographicLib {
     }
     template<typename T> static std::string str(T x) {
       std::ostringstream s; s << x; return s.str();
+    }
+    // Replace all occurrences of pat by c
+    static void replace(std::string& s, const std::string& pat, char c) {
+      std::string::size_type p = 0;
+      while (true) {
+        p = s.find(pat, p);
+        if (p == std::string::npos)
+          break;
+        s.replace(p, pat.length(), 1, c);
+      }
     }
     static const std::string hemispheres_;
     static const std::string signs_;
@@ -107,23 +117,46 @@ namespace GeographicLib {
      * Convert a string in DMS to an angle.
      *
      * @param[in] dms string input.
-     * @param[out] ind a DMS::flag value indicating the presence of a
+     * @param[out] ind a DMS::flag value signalling the presence of a
      *   hemisphere indicator.
      * @return angle (degrees).
      *
-     * Degrees, minutes, and seconds are indicated by the letters d, ', &quot;,
-     * and these components_ may only be given in this order.  Any (but not all)
-     * components_ may be omitted.  The last component indicator may be omitted
-     * and is assumed to be tbe next smallest unit (thus 33d10 is interpreted
-     * as 33d10').  The final component may be a decimal fraction but the
-     * non-final components_ must be integers.  The integer parts of the minutes
-     * and seconds components_ must be less than 60.  A single leading sign is
-     * permitted.  A hemisphere designator (N, E, W, S) may be added to tbe
-     * beginning or end of the string.  The result is multiplied by the implied
-     * signed of the hemisphere designator (negative for S and W).  In addition
-     * \e ind is set to DMS::LATITUDE if N or S is present, to DMS::LONGITUDE
-     * if E or W is present, and to DMS::NONE otherwise.  Throws an error on a
-     * malformed string.  No check is performed on the range of the result.
+     * Degrees, minutes, and seconds are indicated by the characters d, '
+     * (single quote), &quot; (double quote), and these components may only be
+     * given in this order.  Any (but not all) components may be omitted and
+     * other symbols (e.g., the <sup>o</sup> symbol for degrees and the unicode
+     * prime and double prime symbols for minutes and seconds) may be
+     * substituted.  The last component indicator may be omitted and is assumed
+     * to be the next smallest unit (thus 33d10 is interpreted as 33d10').  The
+     * final component may be a decimal fraction but the non-final components
+     * must be integers.  Instead of using d, ', and &quot; to indicate
+     * degrees, minutes, and seconds, : (colon) may be used to <i>separate</i>
+     * these components (numbers must appear before and after each colon); thus
+     * 50d30'10.3&quot; may be written as 50:30:10.3, 5.5' may be written
+     * 0:5.5, and so on.  The integer parts of the minutes and seconds
+     * components must be less than 60.  A single leading sign is permitted.  A
+     * hemisphere designator (N, E, W, S) may be added to the beginning or end
+     * of the string.  The result is multiplied by the implied sign of the
+     * hemisphere designator (negative for S and W).  In addition \e ind is set
+     * to DMS::LATITUDE if N or S is present, to DMS::LONGITUDE if E or W is
+     * present, and to DMS::NONE otherwise.  Throws an error on a malformed
+     * string.  No check is performed on the range of the result.  Examples of
+     * legal and illegal strings are
+     * - <i>LEGAL</i> (all the entries on each line are equivalent)
+     *   - -20.51125, 20d30'40.5&quot;S, -20d30'40.5, -20d30.675,
+     *     N-20d30'40.5&quot;, -20:30:40.5
+     *   - 4d0'9, 4d9", 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
+     *     04:.15
+     * - <i>ILLEGAL</i> (the exception thrown explains the problem)
+     *   - 4d5"4', 4::5, 4:5:, :4:5, 4d4.5'4", -N20.5, 1.8e2d, 4:60,
+     *     4d-5'
+     *
+     * <b>NOTE:</b> At present, all the string handling in the C++
+     * implementation %GeographicLib is with 8-bit characters.  The support for
+     * unicode symbols for degrees, minutes, and seconds is therefore via the
+     * <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The
+     * Javascript implementation of this class uses unicode natively, of
+     * course.)
      **********************************************************************/
     static Math::real Decode(const std::string& dms, flag& ind);
 
@@ -135,7 +168,7 @@ namespace GeographicLib {
      * @param[in] s arc seconds.
      * @return angle (degrees)
      *
-     * This does not propagate the sign on \e d to the other components_, so
+     * This does not propagate the sign on \e d to the other components, so
      * -3d20' would need to be represented as - DMS::Decode(3.0, 20.0) or
      * DMS::Decode(-3.0, -20.0).
      **********************************************************************/
@@ -166,6 +199,8 @@ namespace GeographicLib {
      * @param[in] dmsb second string.
      * @param[out] lat latitude.
      * @param[out] lon longitude.
+     * @param[in] swaplatlong if true assume longitude is given before latitude
+     *   in the absence of hemisphere designators (default false).
      *
      * By default, the \e lat (resp., \e lon) is assigned to the results of
      * decoding \e dmsa (resp., \e dmsb).  However this is overridden if either
@@ -177,7 +212,7 @@ namespace GeographicLib {
      * range [-180<sup>o</sup>, 180<sup>o</sup>).
      **********************************************************************/
     static void DecodeLatLon(const std::string& dmsa, const std::string& dmsb,
-                             real& lat, real& lon);
+                             real& lat, real& lon, bool swaplatlong = false);
 
     /**
      * Convert a string to an angle in degrees.
@@ -209,7 +244,7 @@ namespace GeographicLib {
      * @param[in] angle input angle (degrees)
      * @param[in] trailing DMS::component value indicating the trailing units
      *   on the string and this is given as a decimal number if necessary.
-     * @param[in] prec the number of digits_ after the decimal point for the
+     * @param[in] prec the number of digits after the decimal point for the
      *   trailing component.
      * @param[in] ind DMS::flag value indicated additional formatting.
      * @return formatted string
@@ -218,14 +253,14 @@ namespace GeographicLib {
      * - ind == DMS::NONE, signed result no leading zeros on degrees except in
      *   the units place, e.g., -8d03'.
      * - ind == DMS::LATITUDE, trailing N or S hemisphere designator, no sign,
-     *   pad degrees to 2 digits_, e.g., 08d03'S.
+     *   pad degrees to 2 digits, e.g., 08d03'S.
      * - ind == DMS::LONGITUDE, trailing E or W hemisphere designator, no
-     *   sign, pad degrees to 3 digits_, e.g., 008d03'W.
+     *   sign, pad degrees to 3 digits, e.g., 008d03'W.
      * - ind == DMS::AZIMUTH, convert to the range [0, 360<sup>o</sup>), no
-     *   sign, pad degrees to 3 digits_, , e.g., 351d57'.
+     *   sign, pad degrees to 3 digits, , e.g., 351d57'.
      * .
-     * The integer parts of the minutes and seconds components_ are always given
-     * with 2 digits_.
+     * The integer parts of the minutes and seconds components are always given
+     * with 2 digits.
      **********************************************************************/
     static std::string Encode(real angle, component trailing, unsigned prec,
                               flag ind = NONE);

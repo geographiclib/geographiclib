@@ -361,6 +361,14 @@
 				>
 			</File>
 			<File
+				RelativePath="../include/GeographicLib/Math.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Accumulator.hpp"
+				>
+			</File>
+			<File
 				RelativePath="../include/GeographicLib/MGRS.hpp"
 				>
 			</File>

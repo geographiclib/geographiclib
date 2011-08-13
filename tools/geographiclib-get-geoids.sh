@@ -8,7 +8,7 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: b9f2a749578b6678ad915fb91c28d7f11e582e43 $
+# $Id: d461681c29b1248b04717e1c3c2c7bdca2c7e5c6 $
 
 GEOID_DEFAULT_PATH="@GEOID_DEFAULT_PATH@"
 DEFAULTDIR=`dirname "$GEOID_DEFAULT_PATH"`
@@ -22,7 +22,7 @@ heights.  These datasets are NGA earth gravity models evaluated on a
 rectangular grid in latitude and longitude.  geoid is one of more of the
 names from this table:
 
-                                  size (MB)  
+                                  size (MB)
   name         geoid    grid    tar.bz2  disk
   egm84-30     EGM84    30'      0.5      0.6
   egm84-15     EGM84    15'      1.5      2.1
@@ -107,7 +107,7 @@ else
     echo Cannot write in directory $PARENTDIR/geoids 1>&2
     exit 1
 fi
-    
+
 set -e
 
 cat > $TEMP/all <<EOF

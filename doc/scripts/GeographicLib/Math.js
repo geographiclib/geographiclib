@@ -1,12 +1,13 @@
 /**
  * Math.js
- * Transcription of Constants.hpp into javascript.
+ * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
+ * javascript.
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * $Id: 7ba945b155d20f3f17ed0609ab8be29302768f29 $
+ * $Id: 36efcaec8cb7c1450969ba155c73d2b9bb09fe40 $
  **********************************************************************/
 
 var GeographicLib; if (!GeographicLib) GeographicLib = {};
@@ -123,7 +124,7 @@ GeographicLib.Accumulator = {};
     else
       this._t += u;		// otherwise just accumulate u to t.
   }
-  
+
   a.Accumulator.prototype.Sum = function(y) {
     if (!y)
       return this._s;

@@ -1,4 +1,4 @@
-# $Id: 2e7d9d3d22ef9adf86d2e874e78364f894c936ef $
+# $Id: c5c25d0bd174f570c2160d207a010e41e6ad565b $
 
 A reverse chronological list of changes to GeographicLib
 
@@ -6,9 +6,42 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.12.
+The current version of the library is 1.13.
 
-Changes between 1.11 (released 2011-07-21) and 1.11 versions:
+Changes between 1.13 (released 2011-08-13) and 1.12 versions:
+
+  * Changes to I/O:
+    + allow : (colon) to be used as a DMS separator in DMS::Decode;
+    + also accept Unicode symbols for degrees, minutes, and seconds
+      (coded as UTF-8);
+    + provide optional swaplatlong argument to various DMS and GeoCoords
+      functions to make longitude precede latitude;
+    + GeoConvert now has a -w option to make longitude precede latitude
+      on input and output;
+    + include a Javascript version of DMS.
+
+  * Slight improvement in starting guess for solution of geographic
+    latitude in terms of conformal latitude in TransverseMercator,
+    TransverseMercatorExact, and LambertConformalConic.
+
+  * For most classes, get rid of const member variables so that the
+    default copy assigment works.
+
+  * Put Math and Accumulator in their own header files.
+
+  * Remove unused "fast" GeographicLib::Accumulator method.
+
+  * Reorganize the Python interface.
+
+  * Withdraw some deprecated routines.
+
+  * cmake changes:
+    + include FindGeographic.cmake in distribution;
+    + building with cmake creates and installs
+      geographiclib-config.cmake;
+    + better support for building a shared library under Windows.
+
+Changes between 1.12 (released 2011-07-21) and 1.11 versions:
 
   * Change license to MIT/X11.
 
@@ -25,7 +58,6 @@ Changes between 1.11 (released 2011-07-21) and 1.11 versions:
 
   * A couple of code changes to enable compilation with Visual Studio
     2003.
-
 
 Changes between 1.11 (released 2011-06-27) and 1.10 versions:
 

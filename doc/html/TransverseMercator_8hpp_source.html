@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)</span>
-<a name="l00011"></a><a class="code" href="TransverseMercator_8hpp.html#abbbe2faaff284db3183ddf3afcbf5623">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP &quot;$Id: e72f3f875456c5cd776e697abcb0cdfeca8a7e72 $&quot;</span>
+<a name="l00011"></a><a class="code" href="TransverseMercator_8hpp.html#abbbe2faaff284db3183ddf3afcbf5623">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP &quot;$Id: c59b9988116b53613878bbe265ae9fb3afa1d62f $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
@@ -68,7 +68,7 @@
 <a name="l00018"></a>00018 <span class="comment"> * TM_TX_MAXPOW can be set to any integer in [4, 8].</span>
 <a name="l00019"></a>00019 <span class="comment"> **********************************************************************/</span>
 <a name="l00020"></a><a class="code" href="TransverseMercator_8hpp.html#a823820984cba9dabe0517925bf18c77b">00020</a> <span class="preprocessor">#define TM_TX_MAXPOW \</span>
-<a name="l00021"></a>00021 <span class="preprocessor">(GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 4 : 8)</span>
+<a name="l00021"></a>00021 <span class="preprocessor">  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 4 : 8))</span>
 <a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
 <a name="l00023"></a>00023 <span class="preprocessor"></span>
 <a name="l00024"></a>00024 <span class="keyword">namespace </span>GeographicLib {
@@ -86,7 +86,7 @@
 <a name="l00036"></a>00036 <span class="comment">   *  - C. F. F. Karney,</span>
 <a name="l00037"></a>00037 <span class="comment">   *    &lt;a href=&quot;http://dx.doi.org/10.1007/s00190-011-0445-3&quot;&gt;</span>
 <a name="l00038"></a>00038 <span class="comment">   *    Transverse Mercator with an accuracy of a few nanometers,&lt;/a&gt;</span>
-<a name="l00039"></a>00039 <span class="comment">   *    J. Geodesy (2011);</span>
+<a name="l00039"></a>00039 <span class="comment">   *    J. Geodesy 85(8), 475-485 (Aug. 2011);</span>
 <a name="l00040"></a>00040 <span class="comment">   *    preprint</span>
 <a name="l00041"></a>00041 <span class="comment">   *    &lt;a href=&quot;http://arxiv.org/abs/1002.1417&quot;&gt;arXiv:1002.1417&lt;/a&gt;.</span>
 <a name="l00042"></a>00042 <span class="comment">   *</span>
@@ -125,7 +125,7 @@
 <a name="l00075"></a>00075     <span class="keyword">static</span> <span class="keyword">const</span> real tol_;
 <a name="l00076"></a>00076     <span class="keyword">static</span> <span class="keyword">const</span> real overflow_;
 <a name="l00077"></a>00077     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 5;
-<a name="l00078"></a>00078     <span class="keyword">const</span> real _a, _f, _r, _k0, _e2, _e, _e2m,  _c, _n;
+<a name="l00078"></a>00078     real _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
 <a name="l00079"></a>00079     <span class="comment">// _alp[0] and _bet[0] unused</span>
 <a name="l00080"></a>00080     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
 <a name="l00081"></a>00081     <span class="comment">// tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right</span>
@@ -226,7 +226,7 @@
 <a name="l00176"></a>00176 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
 <a name="l00177"></a>00177 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
 <a name="l00178"></a>00178 <span class="comment">     **********************************************************************/</span>
-<a name="l00179"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#a5b5a56027507ae2aa08ab5b43a4bddc5">00179</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a5b5a56027507ae2aa08ab5b43a4bddc5">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00179"></a><a class="code" href="classGeographicLib_1_1TransverseMercator.html#a5b5a56027507ae2aa08ab5b43a4bddc5">00179</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1TransverseMercator.html#a5b5a56027507ae2aa08ab5b43a4bddc5">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
 <a name="l00180"></a>00180 <span class="comment"></span>
 <a name="l00181"></a>00181 <span class="comment">    /**</span>
 <a name="l00182"></a>00182 <span class="comment">     * @return \e k0 central scale for the projection.  This is the value of \e</span>
@@ -248,7 +248,7 @@
 <a name="l00198"></a>00198 <span class="preprocessor">#endif  // GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

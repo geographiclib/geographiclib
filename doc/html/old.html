@@ -38,6 +38,31 @@
 <div class="contents">
 <div class="textblock"><center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
 <ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a><ul>
+<li>Changes to I/O:<ul>
+<li>allow : (colon) to be used as a DMS separator in <a class="el" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">GeographicLib::DMS::Decode(const std::string&amp;, flag&amp;)</a>;</li>
+<li>also accept Unicode symbols for degrees, minutes, and seconds (coded as UTF-8);</li>
+<li>provide optional <em>swaplatlong</em> argument to various <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">GeographicLib::DMS</a> and <a class="el" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeographicLib::GeoCoords</a> functions to make longitude precede latitude;</li>
+<li><a href="GeoConvert.1.html">GeoConvert</a> now has a -w option to make longitude precede latitude on input and output;</li>
+<li>include a Javascript version of <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">GeographicLib::DMS</a>.</li>
+</ul>
+</li>
+<li>Slight improvement in starting guess for solution of geographic latitude in terms of conformal latitude in TransverseMercator, TransverseMercatorExact, and LambertConformalConic.</li>
+<li>For most classes, get rid of const member variables so that the default copy assigment works.</li>
+<li>Put <a class="el" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">GeographicLib::Math</a> and <a class="el" href="classGeographicLib_1_1Accumulator.html" title="An accumulator for sums.">GeographicLib::Accumulator</a> in their own header files.</li>
+<li>Remove unused "fast" <a class="el" href="classGeographicLib_1_1Accumulator.html" title="An accumulator for sums.">GeographicLib::Accumulator</a> method.</li>
+<li>Reorganize the <a class="el" href="other.html#python">Python interface</a>.</li>
+<li>Withdraw some deprecated routines.</li>
+<li>cmake changes:<ul>
+<li>include FindGeographic.cmake in distribution;</li>
+<li>building with cmake creates and installs geographiclib-config.cmake;</li>
+<li>better support for building a shared library under Windows.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a><ul>
 <li>Change license to MIT/X11.</li>
 <li>Add <a class="el" href="classGeographicLib_1_1PolygonArea.html" title="Polygon Areas.">GeographicLib::PolygonArea</a> class and equivalent Matlab function.</li>
@@ -417,7 +442,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

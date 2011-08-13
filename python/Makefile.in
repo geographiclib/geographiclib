@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 77379c1b9083dfe1035768975ebcc0a57c54c246 $
+# $Id: b75fb5d984762fb0561a58c045954047407e4de6 $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -111,7 +111,7 @@ OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 OTOOL = @OTOOL@
 OTOOL64 = @OTOOL64@
-PACKAGE = @PACKAGE@
+PACKAGE = geographiclib
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
@@ -183,10 +183,18 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-PYTHON_INTERFACE = GeographicLib.py
-PYTHON_ALL = $(PYTHON_INTERFACE)
-pythondir = $(datadir)/GeographicLib/python
-EXTRA_DIST = Makefile.mk CMakeLists.txt $(PYTHON_ALL)
+PYTHON_FILES = \
+	$(PACKAGE)/__init__.py \
+	$(PACKAGE)/geomath.py \
+	$(PACKAGE)/constants.py \
+	$(PACKAGE)/accumulator.py \
+	$(PACKAGE)/geodesiccapability.py \
+	$(PACKAGE)/geodesic.py \
+	$(PACKAGE)/geodesicline.py \
+	$(PACKAGE)/polygonarea.py
+
+pythondir = $(libdir)/python/site-packages/$(PACKAGE)
+EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES)
 all: all-am
 
 .SUFFIXES:
@@ -374,10 +382,10 @@ uninstall-am:
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(pythondir)
-	$(INSTALL) -m 644 $(PYTHON_ALL) $(DESTDIR)$(pythondir)
+	$(INSTALL) -m 644 $(PYTHON_FILES) $(DESTDIR)$(pythondir)
 
 clean-local:
-	rm -rf *.pyc
+	rm -rf $(PACKAGE)/*.pyc
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

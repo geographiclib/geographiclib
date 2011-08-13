@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: 7ec9e1a810dc0eb527d0e20c69df60ac1a2ba499 $"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: 6504c3f72ff159d17ddbd6e5bb483f0945438b9a $"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -34,7 +34,7 @@ namespace GeographicLib {
     typedef Math::real real;
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
-    const Geocentric _earth;
+    Geocentric _earth;
     real _lat0, _lon0, _h0;
     real _x0, _y0, _z0, _r[dim2_];
     void IntForward(real lat, real lon, real h, real& x, real& y, real& z,

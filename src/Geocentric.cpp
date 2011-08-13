@@ -9,7 +9,7 @@
 
 #include <GeographicLib/Geocentric.hpp>
 
-#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: 5b1c078cfa934b320cc6589131f5276686a32116 $"
+#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: 17c3f8d6cd82a95f7f7f09a31fad32c3651c12ed $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -21,7 +21,6 @@ namespace GeographicLib {
   Geocentric::Geocentric(real a, real f)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _e2(_f * (2 - _f))
     , _e2m(Math::sq(1 - _f))          // 1 - _e2
     , _e2a(abs(_e2))
@@ -40,7 +39,7 @@ namespace GeographicLib {
   void Geocentric::IntForward(real lat, real lon, real h,
                               real& x, real& y, real& z,
                               real M[dim2_]) const throw() {
-    lon = lon >= 180 ? lon - 360 : lon < -180 ? lon + 360 : lon;
+    lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
     real
       phi = lat * Math::degree<real>(),
       lam = lon * Math::degree<real>(),

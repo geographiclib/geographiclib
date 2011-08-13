@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="LambertConformalConic_8hpp.html#aac2fbd995d5b75016781c58b97093c67">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP &quot;$Id: b2f2b9bc4827fa14f7c090daebd1a5429b32791a $&quot;</span>
+<a name="l00011"></a><a class="code" href="LambertConformalConic_8hpp.html#aac2fbd995d5b75016781c58b97093c67">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP &quot;$Id: d07238fb7f335a5bca6341c8af421bc624e41427 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
@@ -131,7 +131,7 @@
 <a name="l00081"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html">00081</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> {
 <a name="l00082"></a>00082   <span class="keyword">private</span>:
 <a name="l00083"></a>00083     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00084"></a>00084     <span class="keyword">const</span> real _a, _f, _r, _fm, _e2, _e, _e2m;
+<a name="l00084"></a>00084     real _a, _f, _fm, _e2, _e, _e2m;
 <a name="l00085"></a>00085     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
 <a name="l00086"></a>00086     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
 <a name="l00087"></a>00087     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
@@ -365,7 +365,7 @@
 <a name="l00315"></a>00315 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
 <a name="l00316"></a>00316 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
 <a name="l00317"></a>00317 <span class="comment">     **********************************************************************/</span>
-<a name="l00318"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#a2dcd66922112771c232d686e7bcc5f31">00318</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#a2dcd66922112771c232d686e7bcc5f31">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }
+<a name="l00318"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#a2dcd66922112771c232d686e7bcc5f31">00318</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#a2dcd66922112771c232d686e7bcc5f31">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
 <a name="l00319"></a>00319 <span class="comment"></span>
 <a name="l00320"></a>00320 <span class="comment">    /**</span>
 <a name="l00321"></a>00321 <span class="comment">     * @return latitude of the origin for the projection (degrees).</span>
@@ -396,7 +396,7 @@
 <a name="l00346"></a>00346 <span class="preprocessor">#endif  // GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

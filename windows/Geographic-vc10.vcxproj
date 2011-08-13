@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="../include/GeographicLib/Accumulator.hpp" />
     <ClInclude Include="../include/GeographicLib/AlbersEqualArea.hpp" />
     <ClInclude Include="../include/GeographicLib/AzimuthalEquidistant.hpp" />
     <ClInclude Include="../include/GeographicLib/CassiniSoldner.hpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="../include/GeographicLib/LambertConformalConic.hpp" />
     <ClInclude Include="../include/GeographicLib/LocalCartesian.hpp" />
     <ClInclude Include="../include/GeographicLib/MGRS.hpp" />
+    <ClInclude Include="../include/GeographicLib/Math.hpp" />
     <ClInclude Include="../include/GeographicLib/OSGB.hpp" />
     <ClInclude Include="../include/GeographicLib/PolarStereographic.hpp" />
     <ClInclude Include="../include/GeographicLib/PolygonArea.hpp" />

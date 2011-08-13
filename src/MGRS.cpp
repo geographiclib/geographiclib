@@ -9,7 +9,7 @@
 
 #include <GeographicLib/MGRS.hpp>
 
-#define GEOGRAPHICLIB_MGRS_CPP "$Id: 3ca20cb20eab2ac06189b1b60393a82a0f7d0890 $"
+#define GEOGRAPHICLIB_MGRS_CPP "$Id: 620acaa8978f74c06f17fd4e880642ac221abd6d $"
 
 RCSID_DECL(GEOGRAPHICLIB_MGRS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_MGRS_HPP)
@@ -99,7 +99,7 @@ namespace GeographicLib {
       int iband = (northp ? 2 : 0) + (eastp ? 1 : 0);
       mgrs1[z++] = upsband_[iband];
       mgrs1[z++] = upscols_[iband][xh - (eastp ? upseasting_ :
-                                       northp ? minupsNind_ : minupsSind_)];
+                                         (northp ? minupsNind_ : minupsSind_))];
       mgrs1[z++] = upsrows_[northp][yh - (northp ? minupsNind_ : minupsSind_)];
     }
     real mult = pow(real(base_), max(tilelevel_ - prec, 0));
@@ -170,7 +170,7 @@ namespace GeographicLib {
       throw GeographicErr("More than 2 digits_ at start of MGRS "
                           + mgrs.substr(0, p));
     if (len - p < 3)
-      throw GeographicErr("MGRS string " + mgrs + " too short");
+      throw GeographicErr("MGRS string too short " + mgrs);
     bool utmp = zone1 != 0;
     int zonem1 = zone1 - 1;
     const string& band = utmp ? latband_ : upsband_;
@@ -206,7 +206,7 @@ namespace GeographicLib {
       icol = icol + minutmcol_;
     } else {
       bool eastp = iband & 1;
-      icol += eastp ? upseasting_ : northp1 ? minupsNind_ : minupsSind_;
+      icol += eastp ? upseasting_ : (northp1 ? minupsNind_ : minupsSind_);
       irow += northp1 ? minupsNind_ : minupsSind_;
     }
     int prec1 = (len - p)/2;

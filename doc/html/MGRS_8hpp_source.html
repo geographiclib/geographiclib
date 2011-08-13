@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_MGRS_HPP)</span>
-<a name="l00011"></a><a class="code" href="MGRS_8hpp.html#a1c5e778121820c6ec16b6180ffab51ac">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_MGRS_HPP &quot;$Id: ec89e8a2c1c4a41fb7c08b0a9fd287116516f6a5 $&quot;</span>
+<a name="l00011"></a><a class="code" href="MGRS_8hpp.html#a1c5e778121820c6ec16b6180ffab51ac">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_MGRS_HPP &quot;$Id: b9b6a35bcdd5b270cdc3088be87e422efc9b3053 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;sstream&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
@@ -182,8 +182,8 @@
 <a name="l00132"></a>00132 <span class="comment">     *</span>
 <a name="l00133"></a>00133 <span class="comment">     * @param[in] zone UTM zone (zero means UPS).</span>
 <a name="l00134"></a>00134 <span class="comment">     * @param[in] northp hemisphere (true means north, false means south).</span>
-<a name="l00135"></a>00135 <span class="comment">     * @param[in] x (meters).</span>
-<a name="l00136"></a>00136 <span class="comment">     * @param[in] y (meters).</span>
+<a name="l00135"></a>00135 <span class="comment">     * @param[in] x easting of point (meters).</span>
+<a name="l00136"></a>00136 <span class="comment">     * @param[in] y northing of point (meters).</span>
 <a name="l00137"></a>00137 <span class="comment">     * @param[in] prec precision relative to 100 km.</span>
 <a name="l00138"></a>00138 <span class="comment">     * @param[out] mgrs MGRS string.</span>
 <a name="l00139"></a>00139 <span class="comment">     *</span>
@@ -255,8 +255,8 @@
 <a name="l00205"></a>00205 <span class="comment">     *</span>
 <a name="l00206"></a>00206 <span class="comment">     * @param[in] zone UTM zone (zero means UPS).</span>
 <a name="l00207"></a>00207 <span class="comment">     * @param[in] northp hemisphere (true means north, false means south).</span>
-<a name="l00208"></a>00208 <span class="comment">     * @param[in] x (meters).</span>
-<a name="l00209"></a>00209 <span class="comment">     * @param[in] y (meters).</span>
+<a name="l00208"></a>00208 <span class="comment">     * @param[in] x easting of point (meters).</span>
+<a name="l00209"></a>00209 <span class="comment">     * @param[in] y northing of point (meters).</span>
 <a name="l00210"></a>00210 <span class="comment">     * @param[in] lat latitude (degrees).</span>
 <a name="l00211"></a>00211 <span class="comment">     * @param[in] prec precision relative to 100 km.</span>
 <a name="l00212"></a>00212 <span class="comment">     * @param[out] mgrs MGRS string.</span>
@@ -274,8 +274,8 @@
 <a name="l00224"></a>00224 <span class="comment">     * @param[in] mgrs MGRS string.</span>
 <a name="l00225"></a>00225 <span class="comment">     * @param[out] zone UTM zone (zero means UPS).</span>
 <a name="l00226"></a>00226 <span class="comment">     * @param[out] northp hemisphere (true means north, false means south).</span>
-<a name="l00227"></a>00227 <span class="comment">     * @param[out] x (meters).</span>
-<a name="l00228"></a>00228 <span class="comment">     * @param[out] y (meters).</span>
+<a name="l00227"></a>00227 <span class="comment">     * @param[out] x easting of point (meters).</span>
+<a name="l00228"></a>00228 <span class="comment">     * @param[out] y northing of point (meters).</span>
 <a name="l00229"></a>00229 <span class="comment">     * @param[out] prec precision relative to 100 km.</span>
 <a name="l00230"></a>00230 <span class="comment">     * @param[in] centerp if true (default), return center of the MGRS square,</span>
 <a name="l00231"></a>00231 <span class="comment">     *   else return SW (lower left) corner.</span>
@@ -343,7 +343,7 @@
 <a name="l00293"></a>00293 <span class="preprocessor">#endif  // GEOGRAPHICLIB_MGRS_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

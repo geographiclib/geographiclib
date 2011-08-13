@@ -1,4 +1,4 @@
-=for comment $Id: 5d4f611f5acfcf367737d7b0a9f15016d9ced2ea $
+=for comment $Id: 99180920845768cf62e2bed8f5aa23344e12977b $
 
 =head1 NAME
 
@@ -7,7 +7,7 @@ GeoConvert -- convert geographic coordinates
 =head1 SYNOPSIS
 
 B<GeoConvert> [ B<-g> | B<-d> | B<-u> | B<-m> | B<-c> ] [ B<-p> I<prec> ]
-[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ]
+[ B<-z> I<zone> | B<-s> | B<-t> ] [ B<-n> ] [ B<-w> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
 [ B<--output-file> I<outfile> ]
@@ -31,14 +31,17 @@ I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See L<QUOTING|quoting> for how to
 quote the charachers ' and " when entering coordinates on the command
-line.)  Latitude is given first; however, on input, either may be given
-first by appending or prepending I<N> or I<S> to the latitude and I<E>
-or I<W> to the longitude.  For example, the following are all equivalent
+line.)  Alternatively, : may be used to separate the various components.
+Latitude is given first (unless the B<-w> option is given); however, on
+input, either may be given first by appending or prepending I<N> or I<S>
+to the latitude and I<E> or I<W> to the longitude.  For example, the
+following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
     33d18'N 44d24'E
     44d24 33d18N
+    33:18 44:24
 
 =item B<UTM/UPS>
 
@@ -112,6 +115,12 @@ similar to B<-s> but forces UPS regions to the closest UTM zone.
 
 on input, MGRS coordinates refer to the south-west corner of the MGRS
 square instead of the center; see L<MGRS|mgrs>.
+
+=item B<-w>
+
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, I<N>, I<S>,I<E>,
+I<W>).
 
 =item B<--version>
 
@@ -214,6 +223,9 @@ two alternatives are illustrated by
    echo 30d30\'30\" "30d30'30" | GeoConvert -d -p -1
    => 30d30'30"N 030d30'30"E
 
+Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.
+
 =item Windows command shell (cmd)
 
 The ' character needs no quoting and the " character can be quoted by a
@@ -222,6 +234,9 @@ designator can be omitted.  Thus
 
    echo 30d30'30^" 30d30'30 | GeoConvert -d -p -1
    => 30d30'30"N 030d30'30"E
+
+Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.
 
 =item Input from a file
 
@@ -276,7 +291,7 @@ L<http://en.wikipedia.org/wiki/WGS84>.
 
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, I<Transverse Mercator with an accuracy of a few
-nanometers>, J. Geod (2011); DOI
+nanometers>, J. Geod B<85>(8), 475-485 (Aug. 2011); DOI
 L<http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
 L<http://arxiv.org/abs/1002.1417>.
 

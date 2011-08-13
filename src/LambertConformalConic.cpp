@@ -9,7 +9,7 @@
 
 #include <GeographicLib/LambertConformalConic.hpp>
 
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: fc3fcfdae2dca5dae83298e61b19cf91a30069fd $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP "$Id: 49cf52a6eb8923b93efee2e901063c921699930a $"
 
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
@@ -30,7 +30,6 @@ namespace GeographicLib {
                                                real stdlat, real k0)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -56,7 +55,6 @@ namespace GeographicLib {
                                                real k1)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -85,7 +83,6 @@ namespace GeographicLib {
                                                real k1)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -418,9 +415,10 @@ namespace GeographicLib {
 
     // Use Newton's method to solve for tphi
     real
-      tphi = tchi,
+      // See comment in TransverseMercator.cpp about the initial guess
+      tphi = tchi/_e2m,
       stol = tol_ * max(real(1), abs(tchi));
-    // min iterations = 1, max iterations = 2; mean = 1.99
+    // min iterations = 1, max iterations = 2; mean = 1.94
     for (int i = 0; i < numit_; ++i) {
       real
         scphi = hyp(tphi),

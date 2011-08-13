@@ -147,8 +147,8 @@ Friends</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">zone</td><td>UTM zone (zero means UPS). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">northp</td><td>hemisphere (true means north, false means south). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>(meters). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>(meters). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>easting of point (meters). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>northing of point (meters). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">prec</td><td>precision relative to 100 km. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">mgrs</td><td><a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string.</td></tr>
   </table>
@@ -237,8 +237,8 @@ Friends</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">zone</td><td>UTM zone (zero means UPS). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">northp</td><td>hemisphere (true means north, false means south). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>(meters). </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>(meters). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td>easting of point (meters). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">y</td><td>northing of point (meters). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">lat</td><td>latitude (degrees). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">prec</td><td>precision relative to 100 km. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">mgrs</td><td><a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string.</td></tr>
@@ -311,8 +311,8 @@ Friends</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">mgrs</td><td><a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">zone</td><td>UTM zone (zero means UPS). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">northp</td><td>hemisphere (true means north, false means south). </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">x</td><td>(meters). </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">y</td><td>(meters). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">x</td><td>easting of point (meters). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">y</td><td>northing of point (meters). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">prec</td><td>precision relative to 100 km. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">centerp</td><td>if true (default), return center of the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> square, else return SW (lower left) corner.</td></tr>
   </table>
@@ -349,7 +349,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00268">268</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00298">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00294">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
 
 </div>
 </div>
@@ -371,7 +371,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00276">276</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00307">GeographicLib::UTMUPS::Flattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00303">GeographicLib::UTMUPS::Flattening()</a>.</p>
 
 </div>
 </div>
@@ -393,7 +393,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00282">282</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00314">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00310">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

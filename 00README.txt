@@ -1,4 +1,4 @@
-# $Id: 5eb70c16e334528b6c0548947744aa6889d2fc72 $
+# $Id: ea4e4e472c61e32b6ea509cebdec8ebc19a69abc $
 
 A library for geographic projections.
 
@@ -18,6 +18,8 @@ Files
     include/GeographicLib/ and src/
       Config.h.in, Config.h -- system dependent configuration
       Constants.hpp -- WGS84 constants
+      Math.hpp -- math routines
+      Accumulator.hpp -- quad precision adder
       PolarStereographic.[ch]pp -- polar stereographic projection
       TransverseMercator.[ch]pp -- transverse Mercator projection
       UTMUPS.[ch]pp -- UTM and UPS
@@ -100,3 +102,6 @@ Files
     Makefile.mk -- Unix/Linux makefiles
     configure -- autoconf configuration script
     CMakeLists.txt -- cmake configuration files
+    cmake/
+      FindGeographicLib.cmake -- cmake find script
+      *.cmake.in -- cmake config templates

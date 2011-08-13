@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)</span>
-<a name="l00011"></a><a class="code" href="EllipticFunction_8hpp.html#a94cb49e5d48fa1a0399e4303f1ad162a">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP &quot;$Id: d792b6c69cf47621f2fbee02854010cebba9feac $&quot;</span>
+<a name="l00011"></a><a class="code" href="EllipticFunction_8hpp.html#a94cb49e5d48fa1a0399e4303f1ad162a">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP &quot;$Id: 1ed2e0020530f29db210a5816bd9990ce5cd05f5 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 
@@ -102,7 +102,7 @@
 <a name="l00052"></a>00052     <span class="keyword">static</span> real RF(real x, real y, real z) <span class="keywordflow">throw</span>();
 <a name="l00053"></a>00053     <span class="keyword">static</span> real RD(real x, real y, real z) <span class="keywordflow">throw</span>();
 <a name="l00054"></a>00054     <span class="keyword">static</span> real RG0(real x, real y) <span class="keywordflow">throw</span>();
-<a name="l00055"></a>00055     <span class="keyword">const</span> real _m, _m1;
+<a name="l00055"></a>00055     real _m, _m1;
 <a name="l00056"></a>00056     <span class="keyword">mutable</span> <span class="keywordtype">bool</span> _init;
 <a name="l00057"></a>00057     <span class="keyword">mutable</span> real _kc, _ec, _kec;
 <a name="l00058"></a>00058     <span class="keywordtype">bool</span> Init() <span class="keyword">const</span> <span class="keywordflow">throw</span>();
@@ -182,7 +182,7 @@
 <a name="l00132"></a>00132 <span class="preprocessor">#endif  // GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

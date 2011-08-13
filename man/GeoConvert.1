@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2011-07-21" "GeographicLib 1.12" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2011-08-13" "GeographicLib 1.13" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -134,7 +134,7 @@ GeoConvert \-\- convert geographic coordinates
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 \&\fBGeoConvert\fR [ \fB\-g\fR | \fB\-d\fR | \fB\-u\fR | \fB\-m\fR | \fB\-c\fR ] [ \fB\-p\fR \fIprec\fR ]
-[ \fB\-z\fR \fIzone\fR | \fB\-s\fR | \fB\-t\fR ] [ \fB\-n\fR ]
+[ \fB\-z\fR \fIzone\fR | \fB\-s\fR | \fB\-t\fR ] [ \fB\-n\fR ] [ \fB\-w\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
 [ \fB\-\-output\-file\fR \fIoutfile\fR ]
@@ -154,15 +154,18 @@ is used (\fIa\fR = 6378137m, \fIf\fR = 1/298.257223563).
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See \s-1QUOTING\s0 for how to
 quote the charachers ' and " when entering coordinates on the command
-line.)  Latitude is given first; however, on input, either may be given
-first by appending or prepending \fIN\fR or \fIS\fR to the latitude and \fIE\fR
-or \fIW\fR to the longitude.  For example, the following are all equivalent
+line.)  Alternatively, : may be used to separate the various components.
+Latitude is given first (unless the \fB\-w\fR option is given); however, on
+input, either may be given first by appending or prepending \fIN\fR or \fIS\fR
+to the latitude and \fIE\fR or \fIW\fR to the longitude.  For example, the
+following are all equivalent
 .Sp
-.Vb 4
+.Vb 5
 \&    33.3 44.4
 \&    E44.4 N33.3
 \&    33d18\*(AqN 44d24\*(AqE
 \&    44d24 33d18N
+\&    33:18 44:24
 .Ve
 .IP "\fB\s-1UTM/UPS\s0\fR" 4
 .IX Item "UTM/UPS"
@@ -225,6 +228,11 @@ similar to \fB\-s\fR but forces \s-1UPS\s0 regions to the closest \s-1UTM\s0 zon
 .IX Item "-n"
 on input, \s-1MGRS\s0 coordinates refer to the south-west corner of the \s-1MGRS\s0
 square instead of the center; see \s-1MGRS\s0.
+.IP "\fB\-w\fR" 4
+.IX Item "-w"
+on input and output, longitude precedes latitude (except that on input
+this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR,\fIE\fR,
+\&\fIW\fR).
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 print version and exit.
@@ -319,6 +327,9 @@ two alternatives are illustrated by
 \&   echo 30d30\e\*(Aq30\e" "30d30\*(Aq30" | GeoConvert \-d \-p \-1
 \&   => 30d30\*(Aq30"N 030d30\*(Aq30"E
 .Ve
+.Sp
+Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.
 .IP "Windows command shell (cmd)" 4
 .IX Item "Windows command shell (cmd)"
 The ' character needs no quoting and the " character can be quoted by a
@@ -329,6 +340,9 @@ designator can be omitted.  Thus
 \&   echo 30d30\*(Aq30^" 30d30\*(Aq30 | GeoConvert \-d \-p \-1
 \&   => 30d30\*(Aq30"N 030d30\*(Aq30"E
 .Ve
+.Sp
+Alternatively use colon separators, e.g., 30:30:30, which need no
+quoting.
 .IP "Input from a file" 4
 .IX Item "Input from a file"
 No quoting need be done if the input from a file.  Thus each line of the
@@ -373,7 +387,7 @@ World Geodetic System 1984,
 .IX Header "SEE ALSO"
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, \fITransverse Mercator with an accuracy of a few
-nanometers\fR, J. Geod (2011); \s-1DOI\s0
+nanometers\fR, J. Geod \fB85\fR(8), 475\-485 (Aug. 2011); \s-1DOI\s0
 http://dx.doi.org/10.1007/s00190\-011\-0445\-3 <http://dx.doi.org/10.1007/s00190-011-0445-3>; preprint
 <http://arxiv.org/abs/1002.1417>.
 .SH "AUTHOR"

@@ -1,8 +1,8 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-dnl $Id: 22e3fc55e3495a0995a50b53ec484047d96a1681 $
+dnl $Id: 32bbda89be26a6df6d035fdb5a513f7b87946cdf $
 
-AC_INIT([GeographicLib],[1.12],[charles@karney.com])
+AC_INIT([GeographicLib],[1.13],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -11,7 +11,7 @@ AM_INIT_AUTOMAKE
 
 dnl
 dnl This directive is deprecated by someone, but I prefer to avoid
-dnl running autotools if not required explicitly. The reason is 
+dnl running autotools if not required explicitly. The reason is
 dnl the need to be in sync with autoconf/automake.
 dnl
 AM_MAINTAINER_MODE
@@ -22,9 +22,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=8
+LT_CURRENT=9
 LT_REVISION=0
-LT_AGE=3
+LT_AGE=0
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
@@ -53,7 +53,7 @@ AC_SEARCH_LIBS([sqrt],[m])
 
 dnl
 dnl Add here new file to be generated
-dnl 
+dnl
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
@@ -63,5 +63,6 @@ doc/Makefile
 man/Makefile
 matlab/Makefile
 python/Makefile
+cmake/Makefile
 ])
 AC_OUTPUT

@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: 73f66e3f4714382bfde874d68feccb2c71a2b8af $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: 1e7fe9ef31424d255892679d74ac0ae492c2334a $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -30,7 +30,7 @@ namespace GeographicLib {
    *  - C. F. F. Karney,
    *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
-   *    J. Geodesy (2011);
+   *    J. Geodesy 85(8), 475-485 (Aug. 2011);
    *    preprint
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
@@ -73,9 +73,9 @@ namespace GeographicLib {
     static const real taytol_;
     static const real overflow_;
     static const int numit_ = 10;
-    const real _a, _f, _r, _k0, _mu, _mv, _e, _ep2;
-    const bool _extendp;
-    const EllipticFunction _Eu, _Ev;
+    real _a, _f, _k0, _mu, _mv, _e, _ep2;
+    bool _extendp;
+    EllipticFunction _Eu, _Ev;
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
     static inline real tanx(real x) throw() {
       real t = std::tan(x);
@@ -237,7 +237,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * @return \e k0 central scale for the projection.  This is the value of \e

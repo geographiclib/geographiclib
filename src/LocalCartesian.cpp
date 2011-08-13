@@ -9,7 +9,7 @@
 
 #include <GeographicLib/LocalCartesian.hpp>
 
-#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP "$Id: 91ab70f2e428933a3d80af57f593ee3ab2a9a3ac $"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP "$Id: 6ed67e9d08ee6c081dfac02cca13f42b52f0ebfa $"
 
 RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_CPP)
 RCSID_DECL(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
@@ -20,7 +20,7 @@ namespace GeographicLib {
 
   void LocalCartesian::Reset(real lat0, real lon0, real h0) throw() {
     _lat0 = lat0;
-    _lon0 = lon0 >= 180 ? lon0 - 360 : lon0 < -180 ? lon0 + 360 : lon0;
+    _lon0 = lon0 >= 180 ? lon0 - 360 : (lon0 < -180 ? lon0 + 360 : lon0);
     _h0 = h0;
     _earth.Forward(_lat0, _lon0, _h0, _x0, _y0, _z0);
     real

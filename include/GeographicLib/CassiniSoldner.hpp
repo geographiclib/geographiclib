@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
-#define GEOGRAPHICLIB_CASSINISOLDNER_HPP "$Id: ffa72d53546c2066064723afc1f0a4c6dfadc2f0 $"
+#define GEOGRAPHICLIB_CASSINISOLDNER_HPP "$Id: 2527a0e24486c29c443a79173a18def243c091c3 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -62,7 +62,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT CassiniSoldner {
   private:
     typedef Math::real real;
-    const Geodesic _earth;
+    Geodesic _earth;
     GeodesicLine _meridian;
     real _sbet0, _cbet0;
     static const real eps1_;
@@ -72,7 +72,7 @@ namespace GeographicLib {
     // The following private helper functions are copied from Geodesic.
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-      return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+      return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
     }
     static inline real AngRound(real x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57

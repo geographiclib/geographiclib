@@ -58,7 +58,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="LocalCartesian_8hpp.html" title="Header for GeographicLib::LocalCartesian class.">GeographicLib/LocalCartesian.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="LocalCartesian_8cpp.html#a0917de4aed4abb985b1e2830077aea45">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP &quot;$Id: 91ab70f2e428933a3d80af57f593ee3ab2a9a3ac $&quot;</span>
+<a name="l00012"></a><a class="code" href="LocalCartesian_8cpp.html#a0917de4aed4abb985b1e2830077aea45">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_LOCALCARTESIAN_CPP &quot;$Id: 6ed67e9d08ee6c081dfac02cca13f42b52f0ebfa $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="LocalCartesian_8cpp.html#a0917de4aed4abb985b1e2830077aea45">GEOGRAPHICLIB_LOCALCARTESIAN_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="LocalCartesian_8hpp.html#a628d4dcde137e8249cb7fdbcaab30acd">GEOGRAPHICLIB_LOCALCARTESIAN_HPP</a>)
@@ -69,7 +69,7 @@
 <a name="l00020"></a>00020 
 <a name="l00021"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a85b9c15b843cf6a84be08e0cc4de9122">00021</a>   <span class="keywordtype">void</span> LocalCartesian::Reset(real lat0, real lon0, real h0) <span class="keywordflow">throw</span>() {
 <a name="l00022"></a>00022     _lat0 = lat0;
-<a name="l00023"></a>00023     _lon0 = lon0 &gt;= 180 ? lon0 - 360 : lon0 &lt; -180 ? lon0 + 360 : lon0;
+<a name="l00023"></a>00023     _lon0 = lon0 &gt;= 180 ? lon0 - 360 : (lon0 &lt; -180 ? lon0 + 360 : lon0);
 <a name="l00024"></a>00024     _h0 = h0;
 <a name="l00025"></a>00025     _earth.Forward(_lat0, _lon0, _h0, _x0, _y0, _z0);
 <a name="l00026"></a>00026     real
@@ -119,7 +119,7 @@
 <a name="l00070"></a>00070 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

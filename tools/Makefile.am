@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 4c2d2e3000517fc4336f01b1da759f49aee9102a $
+# $Id: 8412d5e30465ae7e645fb3386cc85947cea9a2da $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/man
@@ -30,12 +30,14 @@ ConicProj.o: ../man/ConicProj.usage
 
 GeoConvert_SOURCES = GeoConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/UTMUPS.hpp
 
 TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/EllipticFunction.hpp \
 	../include/GeographicLib/TransverseMercator.hpp \
@@ -43,12 +45,14 @@ TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 
 CartConvert_SOURCES = CartConvert.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geocentric.hpp \
 	../include/GeographicLib/LocalCartesian.hpp
 
 Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
@@ -58,25 +62,30 @@ GeodesicProj_SOURCES = GeodesicProj.cpp \
 	../include/GeographicLib/CassiniSoldner.hpp \
 	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/GeodesicLine.hpp
 
 GeoidEval_SOURCES = GeoidEval.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/Geoid.hpp
 
 Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/PolygonArea.hpp \
+	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/Geodesic.hpp
 
 ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
 	../include/GeographicLib/LambertConformalConic.hpp

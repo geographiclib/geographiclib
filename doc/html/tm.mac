@@ -5,13 +5,13 @@ Arbitrary precision Transverse Mercator Projection
 Written by Charles Karney <charles@karney.com>
 http://geographiclib.sourceforge.net/
 
-$Id: 1bea483c7461b05cb617de87735b8afef2245496 $
+$Id: 688c810de1f36d1e2239f39a973835acfc5a8649 $
 
 Reference:
 
    Charles F. F. Karney,
    Transverse Mercator with an accuracy of a few nanometers,
-   J. Geodesy (2011).
+   J. Geodesy 85(8), 475-485 (Aug. 2011).
    DOI 10.1007/s00190-011-0445-3
    preprint http://arxiv.org/abs/1002.1417
    resource page http://geographiclib.sf.net/tm.html

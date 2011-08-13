@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)
-#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: 8a8a791b2f8ace09e181271d0988615a3fe28ef0 $"
+#define GEOGRAPHICLIB_GNOMONIC_HPP "$Id: 6be96232d6e0dbfbeb56fdad884a09cdb8e82303 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -90,7 +90,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT Gnomonic {
   private:
     typedef Math::real real;
-    const Geodesic _earth;
+    Geodesic _earth;
     real _a, _f;
     static const real eps0_;
     static const real eps_;

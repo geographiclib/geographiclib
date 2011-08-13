@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
-#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id: f711f34c879ebd191d3aa27530964550336dd248 $"
+#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id: 48f5a84645ea5925a2e7826adb07a42fe091d09f $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -35,7 +35,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT AzimuthalEquidistant {
   private:
     typedef Math::real real;
-    const Geodesic _earth;
+    Geodesic _earth;
     static const real eps_;
   public:
 

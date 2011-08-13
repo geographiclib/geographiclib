@@ -80,7 +80,7 @@ Static Public Attributes</h2></td></tr>
 <p>This uses Kr&uuml;ger's method which evaluates the projection and its inverse in terms of a series. See</p>
 <ul>
 <li>L. Kr&uuml;ger, <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28">Konforme Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New Series 52, 172 pp. (1912).</li>
-<li>C. F. F. Karney, <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">Transverse Mercator with an accuracy of a few nanometers,</a> J. Geodesy (2011); preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.</li>
+<li>C. F. F. Karney, <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">Transverse Mercator with an accuracy of a few nanometers,</a> J. Geodesy 85(8), 475-485 (Aug. 2011); preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.</li>
 </ul>
 <p>Kr&uuml;ger's method has been extended from 4th to 6th order. The maximum errors is 5 nm (ground distance) for all positions within 35 degrees of the central meridian. The error in the convergence is 2e-15" and the relative error in the scale is 6e-12%%. See Sec. 4 of <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details. The speed penalty in going to 6th order is only about 1%. <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a> is an alternative implementation of the projection using exact formulas which yield accurate (to 8 nm) results over the entire ellipsoid.</p>
 <p>The ellipsoid parameters and the central scale are set in the constructor. The central meridian (which is a trivial shift of the longitude) is specified as the <em>lon0</em> argument of the <a class="el" href="classGeographicLib_1_1TransverseMercator.html#a07d73a6d94e2434cbb937978d61a5ae7">TransverseMercator::Forward</a> and <a class="el" href="classGeographicLib_1_1TransverseMercator.html#a15611aee4e3707e155278bab02403a07">TransverseMercator::Reverse</a> functions. The latitude of origin is taken to be the equator. There is no provision in this class for specifying a false easting or false northing or a different latitude of origin. However these are can be simply included by the calling funtcion. For example, the <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a> class applies the false easting and false northing for the UTM projections. A more complicated example is the British National Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">EPSG:7405</a>) which requires the use of a latitude of origin. This is implemented by the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">GeographicLib::OSGB</a> class.</p>
@@ -132,7 +132,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00059">59</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00367">GeographicLib::Math::isfinite()</a>, <a class="el" href="Constants_8hpp_source.html#l00168">GeographicLib::Math::sq()</a>, and <a class="el" href="Constants_8hpp_source.html#l00035">STATIC_ASSERT</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00321">GeographicLib::Math::isfinite()</a>, <a class="el" href="Math_8hpp_source.html#l00122">GeographicLib::Math::sq()</a>, and <a class="el" href="Constants_8hpp_source.html#l00024">STATIC_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -206,9 +206,9 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>No false easting or northing is added. <em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00217">217</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00216">216</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00293">GeographicLib::Math::asinh()</a>, <a class="el" href="Constants_8hpp_source.html#l00179">GeographicLib::Math::hypot()</a>, and <a class="el" href="Constants_8hpp_source.html#l00168">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00247">GeographicLib::Math::asinh()</a>, <a class="el" href="Math_8hpp_source.html#l00133">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00122">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -281,9 +281,9 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>No false easting or northing is added. <em>lon0</em> should be in the range [-180, 360]. The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00387">387</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00386">386</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00179">GeographicLib::Math::hypot()</a>, and <a class="el" href="Constants_8hpp_source.html#l00168">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00133">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00122">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -482,7 +482,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

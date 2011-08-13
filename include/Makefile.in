@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: b942b5672eb595269e8399aaa3e2026cb5489d9b $
+# $Id: f9e4240a50daff78de8ec134787300c40594a8bd $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -210,7 +210,8 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
+nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
+				GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/AzimuthalEquidistant.hpp \
 				GeographicLib/CassiniSoldner.hpp \
 				GeographicLib/Constants.hpp \
@@ -226,6 +227,7 @@ nobase_include_HEADERS = GeographicLib/AlbersEqualArea.hpp \
 				GeographicLib/LambertConformalConic.hpp \
 				GeographicLib/LocalCartesian.hpp \
 				GeographicLib/MGRS.hpp \
+				GeographicLib/Math.hpp \
 				GeographicLib/OSGB.hpp \
 				GeographicLib/PolarStereographic.hpp \
 				GeographicLib/TransverseMercatorExact.hpp \

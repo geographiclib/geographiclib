@@ -93,9 +93,6 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 3;
-      } else if (arg == "-n") {   // Deprecated and so not documented
-        a = 6378388;
-        f = 1/real(297);
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
@@ -134,7 +131,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 5e6171ffdb1d5cd2e0848bc287f1295b401a5339 $\n"
+          << ": $Id: 977f151bfa7d4548dd9fd72c38cc59edd90f4eb5 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

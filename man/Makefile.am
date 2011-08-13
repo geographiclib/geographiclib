@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 935602d644ee065a4abb2aa73b98836b9e62b44d $
+# $Id: 078083ae9e711ab6a6e88f40fb95d85f456bc8e4 $
 
 MANPAGES = \
 CartConvert.1 \
@@ -72,7 +72,7 @@ Planimeter.1.html: Planimeter.pod
 TransverseMercatorProj.1.html: TransverseMercatorProj.pod
 	pod2html --noindex $^ | $(PODFIX) > $@
 
-EXTRA_DIST =  makeusage.sh \
+EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod Geod.pod GeodesicProj.pod \
 	GeoidEval.pod Planimeter.pod \
@@ -88,4 +88,3 @@ EXTRA_DIST =  makeusage.sh \
 
 distclean-local:
 	rm -rf *.usage *.1.html *.1
-

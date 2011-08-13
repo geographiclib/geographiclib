@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id: e29eed8bc763c20ae10131ef13f243c3b99bd37b $"
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id: eee2b79bf8f65888c9a3b75a6b5be04ada04e985 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -54,7 +54,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT AlbersEqualArea {
   private:
     typedef Math::real real;
-    const real _a, _f, _r, _fm, _e2, _e, _e2m, _qZ, _qx;
+    real _a, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
     real _sign, _lat0, _k0;
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
     static const real eps_;
@@ -257,7 +257,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * @return latitude of the origin for the projection (degrees).

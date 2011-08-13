@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: d792b6c69cf47621f2fbee02854010cebba9feac $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: 1ed2e0020530f29db210a5816bd9990ce5cd05f5 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -52,7 +52,7 @@ namespace GeographicLib {
     static real RF(real x, real y, real z) throw();
     static real RD(real x, real y, real z) throw();
     static real RG0(real x, real y) throw();
-    const real _m, _m1;
+    real _m, _m1;
     mutable bool _init;
     mutable real _kc, _ec, _kec;
     bool Init() const throw();

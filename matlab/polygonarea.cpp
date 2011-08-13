@@ -13,7 +13,7 @@
 // [Windows]
 // mex -I../include -L../windows/Release -lGeographic polygonarea.cpp
 
-// $Id: caafda5dbef60e3f6a5299e5767cb620a58d6ea0 $
+// $Id: ac62243d666c5cadad8ba8b6c923224c8ae41e4a $
 
 #include <algorithm>
 #include <GeographicLib/PolygonArea.hpp>
@@ -66,7 +66,7 @@ void mexFunction( int nlhs, mxArray* plhs[],
     plhs[1] = mxCreateDoubleMatrix(1, 1, mxREAL);
     perimeter = mxGetPr(plhs[1]);
   }
-  
+
   try {
     const Geodesic g(a, f);
     PolygonArea p(g, false);

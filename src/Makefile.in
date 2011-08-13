@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 1ae5be99e5dbd19acbfa8cf2d7bc9ff826bfdf35 $
+# $Id: 4ac697dcb7488a05d57758ef498caa5675063f3c $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -245,7 +245,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 lib_LTLIBRARIES = libGeographic.la
-libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)	
+libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
@@ -266,6 +266,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		../include/GeographicLib/Accumulator.hpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
 		../include/GeographicLib/CassiniSoldner.hpp \
@@ -280,6 +281,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
+		../include/GeographicLib/Math.hpp \
 		../include/GeographicLib/MGRS.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \

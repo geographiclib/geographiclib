@@ -1,4 +1,4 @@
-#  $Id: c49312857979e9749688ebd28e7f1d6e437154cd $
+#  $Id: 3513515f549a6356c4e60722b50fb66082d2ed27 $
 
 EXTRAFILES = tmseries30.html geodseries30.html
 
@@ -11,10 +11,12 @@ JSSCRIPTS = \
 scripts/GeographicLib/Math.js \
 scripts/GeographicLib/Geodesic.js \
 scripts/GeographicLib/GeodesicLine.js \
-scripts/GeographicLib/Interface.js \
-scripts/GeographicLib/PolygonArea.js
+scripts/GeographicLib/PolygonArea.js \
+scripts/GeographicLib/DMS.js \
+scripts/GeographicLib/Interface.js
 
 HPPFILES = \
+$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
 $(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
 $(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
 $(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
@@ -29,6 +31,7 @@ $(top_srcdir)/include/GeographicLib/Geoid.hpp \
 $(top_srcdir)/include/GeographicLib/Gnomonic.hpp \
 $(top_srcdir)/include/GeographicLib/LambertConformalConic.hpp \
 $(top_srcdir)/include/GeographicLib/LocalCartesian.hpp \
+$(top_srcdir)/include/GeographicLib/Math.hpp \
 $(top_srcdir)/include/GeographicLib/MGRS.hpp \
 $(top_srcdir)/include/GeographicLib/OSGB.hpp \
 $(top_srcdir)/include/GeographicLib/PolarStereographic.hpp \

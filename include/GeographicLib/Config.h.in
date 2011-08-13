@@ -1,6 +1,6 @@
-// $Id: d74c7a9ff40070355abc580349c5793aea4af603 $
+// $Id: e54e54c733ab8437d88c7beff09a839323d871ce $
 
-#define GEOGRAPHICLIB_VERSION_STRING "@GeographicLib_VERSION_STRING@"
+#define GEOGRAPHICLIB_VERSION_STRING "@GeographicLib_VERSION@"
 #define GEOGRAPHICLIB_GEOID_PATH "@GEOGRAPHICLIB_GEOID_PATH@"
 
 // These are macros which affect the building of the library

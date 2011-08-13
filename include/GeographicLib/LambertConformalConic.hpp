@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: b2f2b9bc4827fa14f7c090daebd1a5429b32791a $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: d07238fb7f335a5bca6341c8af421bc624e41427 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -81,7 +81,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT LambertConformalConic {
   private:
     typedef Math::real real;
-    const real _a, _f, _r, _fm, _e2, _e, _e2m;
+    real _a, _f, _fm, _e2, _e, _e2m;
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0;
     static const real eps_;
@@ -315,7 +315,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * @return latitude of the origin for the projection (degrees).

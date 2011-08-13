@@ -7,13 +7,13 @@
  * MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: 8573ef8360241d9b48fb0e1c3d22115b9606f97e $
+// $Id: 0c7c1f333a5ef7d9d02859a1e5185421455ebe19 $
 /**
 \mainpage Geographic library
 \author Charles Karney
 <charles@karney.com>
-\version 1.12
-\date 2011-07-21
+\version 1.13
+\date 2011-08-13
 
 \section abstract Abstract
 
@@ -44,10 +44,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">
-  GeographicLib-1.12.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.zip/download">
-  GeographicLib-1.12.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">
+  GeographicLib-1.13.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.zip/download">
+  GeographicLib-1.13.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
@@ -57,13 +57,13 @@ using git \verbatim
   git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">
-  GeographicLib-1.12-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13-win32.exe/download">
+  GeographicLib-1.13-win32.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
-For more information, see http://geographiclib.sourceforge.net/.  
+For more information, see http://geographiclib.sourceforge.net/.
 
 \section contents Contents
  - \ref intro
@@ -161,12 +161,12 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">
-GeographicLib-1.12.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12.zip/download">
-GeographicLib-1.12.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">
-GeographicLib-1.12-win32.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">
+GeographicLib-1.13.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13.zip/download">
+GeographicLib-1.13.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13-win32.exe/download">
+GeographicLib-1.13-win32.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -174,7 +174,7 @@ Then pick one of the first five options below:
 - \ref autoconf.  This method works for most Unix-like systems,
   including Linux and Mac OS X.
 - \ref gnu.  This is a simple installation method that works with g++
-  GNU make on Linux and many Unix platforms.
+  and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
   Visual Studio 2005 and 2008 under Windows.  Use cmake if you use
   Visual Studio 2010.
@@ -215,10 +215,10 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.12.tar.gz
-  unzip -q GeographicLib-1.12.zip \endverbatim
+  tar xfpz GeographicLib-1.13.tar.gz
+  unzip -q GeographicLib-1.13.zip \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.12 \endverbatim
+  cd GeographicLib-1.13 \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -252,8 +252,7 @@ Here are the steps to compile and install %GeographicLib:
     non-Windows systems, OFF for Windows systems)
     determines whether a shared or static library is built.  The default
     is OFF for Windows because there's no standard place to install the
-    dlls.  In addition, on Windows, the tests only work with static
-    libraries.
+    dlls.
   - <code>CMAKE_BUILD_TYPE</code> (default: Release).  This
     flags only affects non-IDE compile environments (like make + g++).
     The default is actually blank, but this is treated as
@@ -297,9 +296,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.12.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.13.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.12 \endverbatim
+  cd GeographicLib-1.13 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
 - By default %GeographlicLib will be installed under /usr/local.
@@ -324,9 +323,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.12.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.13.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.12 \endverbatim
+  cd GeographicLib-1.13 \endverbatim
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root \endverbatim
@@ -350,8 +349,8 @@ library and the examples.  If you only have Visual Studio 2010, use
 cmake to create the necessary solution file.  %GeographicLib does not
 compile correctly with Visual Studio 2003.
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.12.zip \endverbatim
-- Open GeographicLib-1.12/windows/GeographicLib-vc9.sln in Visual Studio
+  unzip -q GeographicLib-1.13.zip \endverbatim
+- Open GeographicLib-1.13/windows/GeographicLib-vc9.sln in Visual Studio
   2008 (for Visual Studio 2005, replace -vc9 by -vc8).
 - Pick the build type (e.g., Release), and select "Build
   Solution".
@@ -370,19 +369,19 @@ compile correctly with Visual Studio 2003.
 \section windowsbin Using a binary installer for Windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.12-win32.exe/download">
-GeographicLib-1.12-win32.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13-win32.exe/download">
+GeographicLib-1.13-win32.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
-   C:/Program Files/GeographicLib-1.12.
+   C:/Program Files/GeographicLib-1.13.
  - select the start menu folder,
  - and install.
  .
 The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
-C:/Program Files/GeographicLib-1.12/bin where the utilities are
+C:/Program Files/GeographicLib-1.13/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
@@ -411,8 +410,8 @@ which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as
 \verbatim
-  GeographicLib-1.12.tar.gz
-  GeographicLib-1.12.zip \endverbatim
+  GeographicLib-1.13.tar.gz
+  GeographicLib-1.13.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -477,6 +476,26 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   that Geographic.dll is in the same directory as your executable or
   else include the directory containing the dll in your
   <code>PATH</code>.
+- If you're using cmake to configure and build your project, then
+  instead of the previous three steps, insert \verbatim
+  # Put in your top-level CMakeLists.txt
+  find_package (GeographicLib 1.9 REQUIRED)
+  # In the top-level CMakeList.txt or wherever your code is compiled
+  include_directories (${GeographicLib_INCLUDE_DIRS})
+  # In the CMakeList.txt where you define your executable targets
+  target_link_libraries (program1 ${GeographicLib_LIBRARIES})
+  target_link_libraries (program2 ${GeographicLib_LIBRARIES})
+  if (NOT WIN32)
+    set_target_properties (program1 program2 PROPERTIES
+      INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${GeographicLib_LIBRARY_DIRS}")
+  endif (NOT WIN32) \endverbatim
+  in your CMakeLists.txt files (as noted).  Assuming that you configured
+  and installed GeographicLib with cmake (or that you used the binary
+  installer for Windows), then the find_package command should find the
+  library and set the required cmake variables (including
+  <code>GEOGRAPHICLIB_FOUND = TRUE</code>).  Otherwise, copy
+  cmake/FindGeographicLib.cmake to somewhere in your
+  <code>CMAKE_MODULE_PATH</code>.
 - For Windows, ensure that you build the library with the same version
   of the compiler and you use for your code.  In addition, you have
   to build a separate debug version of the library when you can
@@ -494,7 +513,7 @@ Here is a very simple test code, which convert the point 38.95N 75.17W
 
 int main() {
   using namespace GeographicLib;
-  double 
+  double
     // These are the constants for Pennsylvania South, EPSG:3364
     // http://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
@@ -689,8 +708,10 @@ line, the GeographicLib::GeodesicLine class can be used.  This packages
 all the information needed to specify a geodesic.  A const member
 function returns the coordinates a specified distance from the starting
 point.  <a href="Geod.1.html">Geod</a> is a simple command line utility
-to perform geodesic calculations.  <a href="Planimeter.1.html">Geod</a>
-is a command line utility to compute the area of geodesic polygons.
+to perform geodesic calculations.  GeographicLib::PolygonArea is a class
+which compute the area of geodesic polygons using the Geodesic class and
+<a href="Planimeter.1.html">Geod</a> is a command line utility for the
+same purpose.
 GeographicLib::AzimuthalEquidistant, GeographicLib::CassiniSoldner, and
 GeographicLib::Gnomonic are projections based on the Geodesic class.
 <a href="GeodesicProj.1.html">GeodesicProj</a> is a command line utility
@@ -729,7 +750,8 @@ should ensure that the arguments are legitimate.  However, the functions
 implemented by UTMUPS, MGRS, and GeoCoords do check their arguments and
 may throw GeographicLib::GeographicErr exceptions.  Similarly Geoid may
 throw exceptions on file errors.  If a function does throw an exception,
-then the function arguments used for return values will not be altered.
+then the function arguments used for return values will not have been
+altered.
 
 %GeographicLib attempts to act sensibly with NaNs.  NaNs in constructors
 typically throw errors (an exception is GeodesicLine).  However, calling
@@ -771,10 +793,17 @@ Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 
 \section javascript Javascript interface
 
-The directory doc/scripts/GeographicLib contains the core geodesic
-functionality translated into Javascript.  See Interface.js for a simple
-Javascript interface to these routines (documented near the top of the
-file).  Examples of using this interface are
+The directory doc/scripts/GeographicLib contains the classes
+- GeographicLib::Math
+- GeographicLib::Accumulator
+- GeographicLib::Geodesic
+- GeographicLib::GeodesicLine
+- GeographicLib::PolygonArea
+- GeographicLib::DMS
+.
+translated into Javascript.  See Interface.js for a simple Javascript
+interface to these routines (documented near the top of the file).
+Examples of using this interface are
 - a <a href="../scripts/geod-calc.html">geodesic calculator</a> showing
   the solution of direct and inverse geodesic problem, finding
   intermediate points on a geodesic line, and computing the area of a
@@ -782,30 +811,44 @@ file).  Examples of using this interface are
 - <a href="../scripts/geod-google.html">displaying geodesics in Google
   Maps</a> which shows the geodesic, the geodesic circle, and various
   geodesic envelopes.
+.
+These examples include a "stripped" version of the Javascript code, \code
+<script type="text/javascript"
+        src="http://geographiclib.sf.net/scripts/geographiclib.js">
+</script>\endcode
+which loads faster.
 
 \section python Python interface
 
-The file python/GeographicLib.py (which is installed as
-PREFIX/share/GeographicLib/python) contains the core geodesic
-functionality translated into Python.  An example of using this
-interface is
+A python implementation of the geodesic routines from GeographicLib are
+provided in the python/geographiclib directory (which is installed as
+PREFIX/lib/python/site-packages/geographiclib).  This contains
+implementations of the classes
+- GeographicLib::Math
+- GeographicLib::Accumulator
+- GeographicLib::Geodesic
+- GeographicLib::GeodesicLine
+- GeographicLib::PolygonArea
+.
+An example of using this interface is
 \code
 >>> import sys
->>> sys.path.append("/usr/local/share/GeographicLib/python");
->>> from GeographicLib import Geodesic, GeodesicLine
->>> help(Geodesic.__init__)
->>> help(Geodesic.Inverse)
->>> help(Geodesic.Direct)
->>> help(Geodesic.Line)
->>> help(Geodesic.Area)
->>> help(GeodesicLine.Position)
->>> Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
->>> Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
->>> line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+>>> sys.path.append("/usr/local/lib/python/site-packages");
+>>> from geographiclib.geodesic import Geodesic
+>>> # The geodesic inverse problem
+... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
+>>> # The geodesic direct problem
+... Geodesic.WGS84.Direct(40.6, -73.8, 45, 10000e3)
+>>> # How to obtain several points along a geodesic
+... line = Geodesic.WGS84.Line(40.6, -73.8, 45)
+>>> line.Position( 5000e3)
 >>> line.Position(10000e3)
->>> def p(lat,lon): return {'lat': lat,'lon': lon}
+>>> # Computing the area of a geodesic polygon
+... def p(lat,lon): return {'lat': lat, 'lon': lon}
 ...
 >>> Geodesic.WGS84.Area([p(0, 0), p(0, 90), p(90, 0)])
+>>> # Introductory help
+... help(Geodesic)
 \endcode
 
 \section matlab Matlab and Octave interfaces
@@ -817,15 +860,15 @@ Similarly the binary installer for Windows includes the compiled
 interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
 either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
+  addpath 'C:/Program Files/GeographicLib-1.13/libexec/GeographicLib/matlab'
 \endverbatim
 in Matlab or Octave.  If you need to compile the interface or to
 recompile it for a different platform, start Matlab or Octave and run,
 e.g., \code
   mex -setup
-  cd  'C:/Program Files/GeographicLib-1.12/libexec/GeographicLib/matlab'
+  cd  'C:/Program Files/GeographicLib-1.13/libexec/GeographicLib/matlab'
   help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.12');
+  geographiclibinterface('C:/Program Files/GeographicLib-1.13');
   addpath(pwd);
 \endcode
 The first command allows you to select the compiler to use (which
@@ -1091,7 +1134,7 @@ locate the datasets.  This is
 consistent with the examples above.  This may be overridden at run-time
 by defining the GEOID_PATH environment variable.  Finally, the path may
 be set using the optional second argument to the
-GeographicLib::Geoid constructor or with the "-d" flag to 
+GeographicLib::Geoid constructor or with the "-d" flag to
 <a href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to
 <a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid
 path for that utility.  The "-v" flag causes GeoidEval to report the
@@ -1870,7 +1913,7 @@ References
  - C. F. F. Karney,
    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers,</a>
-   J. Geodesy (2011);
+   J. Geodesy 85(8), 475&ndash;485 (Aug. 2011);
    preprint
    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>;
    resource page
@@ -2210,6 +2253,34 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a>
+  - Changes to I/O:
+    - allow : (colon) to be used as a DMS separator in
+      GeographicLib::DMS::Decode(const std::string&, flag&);
+    - also accept Unicode symbols for degrees, minutes, and seconds
+      (coded as UTF-8);
+    - provide optional \e swaplatlong argument to various
+      GeographicLib::DMS and GeographicLib::GeoCoords functions to make
+      longitude precede latitude;
+    - <a href="GeoConvert.1.html">GeoConvert</a> now has a -w option to
+      make longitude precede latitude on input and output;
+    - include a Javascript version of GeographicLib::DMS.
+  - Slight improvement in starting guess for solution of geographic
+    latitude in terms of conformal latitude in TransverseMercator,
+    TransverseMercatorExact, and LambertConformalConic.
+  - For most classes, get rid of const member variables so that the
+    default copy assigment works.
+  - Put GeographicLib::Math and GeographicLib::Accumulator in their own
+    header files.
+  - Remove unused "fast" GeographicLib::Accumulator method.
+  - Reorganize the \ref python.
+  - Withdraw some deprecated routines.
+  - cmake changes:
+    - include FindGeographic.cmake in distribution;
+    - building with cmake creates and installs
+      geographiclib-config.cmake;
+    - better support for building a shared library under Windows.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.12.tar.gz/download">1.12 (released 2011-07-21)</a>
   - Change license to MIT/X11.

@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
-#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: 08483b14e89af4913976c07a8a2fb1770ea54454 $"
+#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: a9dc85ae0526d5af9797527673a442036ec47ba7 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -16,7 +16,8 @@
 /**
  * The order of the expansions used by Geodesic.
  **********************************************************************/
-#define GEOD_ORD (GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 3 : 7)
+#define GEOD_ORD \
+  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 3 : 7))
 #endif
 
 namespace GeographicLib {
@@ -151,7 +152,7 @@ namespace GeographicLib {
       throw();
     static inline real AngNormalize(real x) throw() {
       // Place angle in [-180, 180).  Assumes x is in [-540, 540).
-      return x >= 180 ? x - 360 : x < -180 ? x + 360 : x;
+      return x >= 180 ? x - 360 : (x < -180 ? x + 360 : x);
     }
     static inline real AngRound(real x) throw() {
       // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
@@ -172,8 +173,7 @@ namespace GeographicLib {
     }
     static real Astroid(real x, real y) throw();
 
-    // _r is OBSOLETE, can be removed
-    const real _a, _f, _r, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+    real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
 
     void Lengths(real eps, real sig12,
@@ -792,7 +792,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a
@@ -810,41 +810,6 @@ namespace GeographicLib {
      **********************************************************************/
     static const Geodesic WGS84;
 
-/// \cond DEPRECATED
-    /** \name Deprecated function.
-     **********************************************************************/
-    ///@{
-    /**
-     * <b>DEPRECATED</b> Perform the direct geodesic calculation.  Given a
-     * latitude, \e lat1, longitude, \e lon1, and azimuth \e azi1 (degrees) for
-     * point 1 and a range, \e s12 (meters) from point 1 to point 2, return the
-     * latitude, \e lat2, longitude, \e lon2, and forward azimuth, \e azi2
-     * (degrees) for point 2 and the reduced length \e m12 (meters).  If either
-     * point is at a pole, the azimuth is defined by keeping the longitude
-     * fixed and writing \e lat = 90 - \e eps or -90 + \e eps and taking the
-     * limit \e eps -> 0 from above.  If \e arcmode (default false) is set to
-     * true, \e s12 is interpreted as the arc length \e a12 (degrees) on the
-     * auxiliary sphere.  An arc length greater that 180 degrees results in a
-     * geodesic which is not a shortest path.  For a prolate ellipsoid, an
-     * additional condition is necessary for a shortest path: the longitudinal
-     * extent must not exceed of 180 degrees.  Returned value is the arc length
-     * \e a12 (degrees) if \e arcmode is false, otherwise it is the distance \e
-     * s12 (meters).
-     **********************************************************************/
-    Math::real Direct(real lat1, real lon1, real azi1, real s12_a12,
-                      real& lat2, real& lon2, real& azi2, real& m12,
-                      bool arcmode) const throw() {
-      if (arcmode) {
-        real a12 = s12_a12, s12;
-        ArcDirect(lat1, lon1, azi1, a12, lat2, lon2, azi2, s12, m12);
-        return s12;
-      } else {
-        real s12 = s12_a12;
-        return Direct(lat1, lon1, azi1, s12, lat2, lon2, azi2, m12);
-      }
-    }
-    ///@}
-/// \endcond
   };
 
 } // namespace GeographicLib

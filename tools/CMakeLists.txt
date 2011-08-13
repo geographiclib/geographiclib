@@ -1,4 +1,4 @@
-# $Id: 7ed055699557ee77eba53c4759c40f4fdcf23bfc $
+# $Id: a40a617a58d28e3be937a82c07827240999dfbd5 $
 
 if (MAINTAINER)
   set (MANDIR ${PROJECT_BINARY_DIR}/man)
@@ -25,11 +25,11 @@ foreach (TOOL ${TOOLS})
 endforeach (TOOL)
 
 if (NOT WIN32)
-  set_target_properties(${TOOLS} PROPERTIES
+  set_target_properties (${TOOLS} PROPERTIES
     INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 endif (NOT WIN32)
 
-install (TARGETS ${TOOLS} DESTINATION bin)
+install (TARGETS ${TOOLS} EXPORT GeographicLibDepends DESTINATION bin)
 
 if (NOT WIN32)
   set (GEOID_SCRIPT geographiclib-get-geoids)
@@ -45,11 +45,15 @@ if (NOT WIN32)
     DESTINATION sbin)
 endif (NOT WIN32)
 
-if (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
-  # testing doesn't work for windows with shared libraries because the
-  # dlls are not found
-  enable_testing ()
-endif (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
+if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
+  get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic
+    "LOCATION_${CMAKE_CFG_INTDIR}")
+  add_custom_command (TARGET tools POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E
+    copy ${GEOGRAPHIC_LIBRARY_FILE} ${CMAKE_CFG_INTDIR}/)
+endif (WIN32 AND GEOGRAPHIC_SHARED_LIB)
+
+enable_testing ()
 
 add_test (GeoConvert0 GeoConvert -p -3 -m --input-string "33.3 44.4")
 set_tests_properties (GeoConvert0
@@ -64,6 +68,9 @@ add_test (GeoConvert3 GeoConvert --junk)
 set_tests_properties (GeoConvert3 PROPERTIES WILL_FAIL ON)
 add_test (GeoConvert4 GeoConvert --input-string garbage)
 set_tests_properties (GeoConvert4 PROPERTIES WILL_FAIL ON)
+# Check fix for DMS::Decode bug fixed on 2011-03-22
+add_test (GeoConvert5 GeoConvert --input-string "5d. 0")
+set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
 
 add_test (Geod0 Geod -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (Geod0

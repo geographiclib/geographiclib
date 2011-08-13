@@ -1,4 +1,4 @@
-# $Id: 25ab8606d2b4f0bd0b7fb5fa5acf6722de1079cc $
+# $Id: 6fb1cb4c0055a74fd865e39752b7d34bb17abd04 $
 
 file (GLOB SOURCES *.cpp)
 
@@ -10,14 +10,13 @@ endif (GEOGRAPHIC_SHARED_LIB)
 
 target_link_libraries (Geographic)
 if (WIN32)
-  set_target_properties (Geographic PROPERTIES
-    VERSION "${LIBVERSIONFULL}" )
+  set_target_properties (Geographic PROPERTIES VERSION "${LIBVERSIONFULL}" )
 else (WIN32)
   set_target_properties (Geographic PROPERTIES
-    VERSION "${LIBVERSIONFULL}"
-    SOVERSION "${LIBVERSION}" )
+    VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
 endif (WIN32)
 install (TARGETS Geographic
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
-    ARCHIVE DESTINATION lib)
+  EXPORT GeographicLibDepends
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)

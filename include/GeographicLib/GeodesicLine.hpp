@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: 592ae103b61c941eff6b856e0b20fe973e5656e1 $"
+#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: c9e1bf8dbc2a53c2dd3f1569b5b7ddc73cd4315e $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -92,7 +92,6 @@ namespace GeographicLib {
     // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
     real _C1a[nC1_ + 1], _C1pa[nC1p_ + 1], _C2a[nC2_ + 1], _C3a[nC3_],
       _C4a[nC4_];    // all the elements of _C4a are used
-    bool _areap;     // _areap is OBSOLETE, can be removed
     unsigned _caps;
 
     enum captype {
@@ -223,7 +222,7 @@ namespace GeographicLib {
      * calculations).  The object can be set with a call to Geodesic::Line.
      * Use Init() to test whether object is still in this uninitialized state.
      **********************************************************************/
-    GeodesicLine() throw() : _caps(0U) {};
+    GeodesicLine() throw() : _caps(0U) {}
     ///@}
 
     /** \name Position in terms of distance
@@ -601,48 +600,6 @@ namespace GeographicLib {
       return (_caps & testcaps) == testcaps;
     }
     ///@}
-
-/// \cond DEPRECATED
-    /** \name Deprecated Functions
-     **********************************************************************/
-    ///@{
-
-    /**
-     * <b>DEPRECATED</b>.  Return the latitude, \e lat2, longitude, \e lon2,
-     * and forward azimuth, \e azi2 (degrees) of the point 2 which is a
-     * distance, \e s12 (in meters), from point 1.  Also return the reduced
-     * length \e m12 (meters).  \e s12 can be signed.  If \e arcmode (default
-     * false) is set to true, \e s12 is interpreted as the arc length \e a12
-     * (in degrees) on the auxiliary sphere.  Returned value is the arc length
-     * \e a12 (degrees) if \e arcmode is false, otherwise it is the distance \e
-     * s12 (meters).
-     **********************************************************************/
-    Math::real Position(real s12, real& lat2, real& lon2,
-                        real& azi2, real &m12, bool arcmode)
-      const throw() {
-      if (arcmode) {
-        real s12x;
-        ArcPosition(s12, lat2, lon2, azi2, s12x, m12);
-        return s12x;
-      } else
-        return Position(s12, lat2, lon2, azi2, m12);
-    }
-
-    /**
-     * <b>DEPRECATED</b>.  Return the scale of the geodesic line extending an
-     * arc length \e a12 (degrees) from point 1 to point 2.  \e M12 (a number)
-     * measures the convergence of initially parallel geodesics.  It is defined
-     * by the following construction: starting at point 1 proceed at azimuth \e
-     * azi1 + 90<sup>o</sup> a small distance \e dt; turn -90<sup>o</sup> and
-     * proceed a distance \e s12 (\e not the arc length \e a12); the distance
-     * to point 2 is given by \e M12 \e dt.  \e M21 is defined analogously.
-     **********************************************************************/
-    void Scale(real a12, real& M12, real& M21) const throw() {
-      real lat2, lon2, azi2, s12;
-      ArcPosition(a12, lat2, lon2, azi2, s12, M12, M21);
-    }
-    ///@}
-/// \endcond
 
   };
 

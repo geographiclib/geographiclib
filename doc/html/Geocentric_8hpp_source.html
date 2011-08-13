@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_HPP &quot;$Id: 8f8b1d77b1719a8254cc7b3a7c1482731f175b08 $&quot;</span>
+<a name="l00011"></a><a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_HPP &quot;$Id: be669ce9c6549259c44bc2047e890d368c09377f $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;vector&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;algorithm&gt;</span>
@@ -108,7 +108,7 @@
 <a name="l00058"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a8904c4eadcf94e3803743e8cd9ffbc1c">00058</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>;
 <a name="l00059"></a>00059     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim_ = 3;
 <a name="l00060"></a>00060     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim2_ = dim_ * dim_;
-<a name="l00061"></a>00061     <span class="keyword">const</span> real _a, _f, _r, _e2, _e2m, _e2a, _e4a, _maxrad;
+<a name="l00061"></a>00061     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
 <a name="l00062"></a>00062     <span class="comment">// Actually this can be static because it doesn&#39;t depend on the ellipsoid.</span>
 <a name="l00063"></a>00063     <span class="comment">// But let&#39;s be more general than that.</span>
 <a name="l00064"></a>00064     <span class="keywordtype">void</span> Rotation(real sphi, real cphi, real slam, real clam,
@@ -261,7 +261,7 @@
 <a name="l00211"></a>00211 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
 <a name="l00212"></a>00212 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
 <a name="l00213"></a>00213 <span class="comment">     **********************************************************************/</span>
-<a name="l00214"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#aa947dd7275c12692b03d6ff43d217d13">00214</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#aa947dd7275c12692b03d6ff43d217d13">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _r; }<span class="comment"></span>
+<a name="l00214"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#aa947dd7275c12692b03d6ff43d217d13">00214</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#aa947dd7275c12692b03d6ff43d217d13">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }<span class="comment"></span>
 <a name="l00215"></a>00215 <span class="comment">    ///@}</span>
 <a name="l00216"></a>00216 <span class="comment"></span><span class="comment"></span>
 <a name="l00217"></a>00217 <span class="comment">    /**</span>
@@ -276,7 +276,7 @@
 <a name="l00226"></a>00226 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOCENTRIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

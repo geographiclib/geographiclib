@@ -10,7 +10,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: b7223d87d1533257947bf21f0d90f700aaabe39c $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: 96750965935bfd5404dfa361e7c4b3a9ee207135 $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -22,37 +22,45 @@ namespace GeographicLib {
   const string DMS::hemispheres_ = "SNWE";
   const string DMS::signs_ = "-+";
   const string DMS::digits_ = "0123456789";
-  const string DMS::dmsindicators_ = "D'\"";
+  const string DMS::dmsindicators_ = "D'\":";
   const string DMS::components_[] = {"degrees", "minutes", "seconds"};
 
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     string errormsg;
+    string dmsa = dms;
+    replace(dmsa, "\xc2\xb0", 'd'); // degree symbol (U+00b0 = UTF-8 c2 b0)
+    replace(dmsa, "\xc2\xba", 'd'); // alt symbol (U+00ba = UTF-8 c2 ba)
+    replace(dmsa, "\xe2\x80\xb2", '\''); // prime (U+2032 = UTF-8 e2 80 b2)
+    replace(dmsa, "\xe2\x80\xb3", '"');  // dbl prime (U+2033 = UTF-8 e2 80 b3)
+    replace(dmsa, "\xb0", 'd');          // bare degree symbol (b0)
+    replace(dmsa, "\xba", 'd');          // bare alt symbol (ba)
+    replace(dmsa, "''", '"');            // '' -> "
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
       unsigned
         beg = 0,
-        end = unsigned(dms.size());
-      while (beg < end && isspace(dms[beg]))
+        end = unsigned(dmsa.size());
+      while (beg < end && isspace(dmsa[beg]))
         ++beg;
-      while (beg < end && isspace(dms[end - 1]))
+      while (beg < end && isspace(dmsa[end - 1]))
         --end;
       flag ind1 = NONE;
       int k = -1;
-      if (end > beg && (k = lookup(hemispheres_, dms[beg])) >= 0) {
+      if (end > beg && (k = lookup(hemispheres_, dmsa[beg])) >= 0) {
         ind1 = (k / 2) ? LONGITUDE : LATITUDE;
         sign = k % 2 ? 1 : -1;
         ++beg;
       }
-      if (end > beg && (k = lookup(hemispheres_, dms[end-1])) >= 0) {
+      if (end > beg && (k = lookup(hemispheres_, dmsa[end-1])) >= 0) {
         if (k >= 0) {
           if (ind1 != NONE) {
-            if (toupper(dms[beg - 1]) == toupper(dms[end - 1]))
-              errormsg = "Repeated hemisphere indicators " + str(dms[beg - 1])
-                + " in " + dms.substr(beg - 1, end - beg + 1);
+            if (toupper(dmsa[beg - 1]) == toupper(dmsa[end - 1]))
+              errormsg = "Repeated hemisphere indicators " + str(dmsa[beg - 1])
+                + " in " + dmsa.substr(beg - 1, end - beg + 1);
             else
               errormsg = "Contradictory hemisphere indicators "
-                + str(dms[beg - 1]) + " and " + str(dms[end - 1]) + " in "
-                + dms.substr(beg - 1, end - beg + 1);
+                + str(dmsa[beg - 1]) + " and " + str(dmsa[end - 1]) + " in "
+                + dmsa.substr(beg - 1, end - beg + 1);
             break;
           }
           ind1 = (k / 2) ? LONGITUDE : LATITUDE;
@@ -60,14 +68,14 @@ namespace GeographicLib {
           --end;
         }
       }
-      if (end > beg && (k = lookup(signs_, dms[beg])) >= 0) {
+      if (end > beg && (k = lookup(signs_, dmsa[beg])) >= 0) {
         if (k >= 0) {
           sign *= k ? 1 : -1;
           ++beg;
         }
       }
       if (end == beg) {
-        errormsg = "Empty or incomplete DMS string " + dms;
+        errormsg = "Empty or incomplete DMS string " + dmsa;
         break;
       }
       real ipieces[] = {0, 0, 0};
@@ -79,39 +87,47 @@ namespace GeographicLib {
       bool pointseen = false;
       unsigned digcount = 0;
       while (p < end) {
-        char x = dms[p++];
+        char x = dmsa[p++];
         if ((k = lookup(digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0)
-            ++digcount;           // Count of decimal digits_
+            ++digcount;         // Count of decimal digits
           else
             icurrent = 10 * icurrent + k;
         } else if (x == '.') {
           if (pointseen) {
             errormsg = "Multiple decimal points in "
-              + dms.substr(beg, end - beg);
+              + dmsa.substr(beg, end - beg);
             break;
           }
           pointseen = true;
           digcount = 1;
         } else if ((k = lookup(dmsindicators_, x)) >= 0) {
+          if (k >= 3) {
+            if (p == end) {
+              errormsg = "Illegal for : to appear at the end of " +
+                dmsa.substr(beg, end - beg);
+              break;
+            }
+            k = npiece;
+          }
           if (unsigned(k) == npiece - 1) {
             errormsg = "Repeated " + components_[k] +
-              " component in " + dms.substr(beg, end - beg);
+              " component in " + dmsa.substr(beg, end - beg);
             break;
           } else if (unsigned(k) < npiece) {
             errormsg = components_[k] + " component follows "
               + components_[npiece - 1] + " component in "
-              + dms.substr(beg, end - beg);
+              + dmsa.substr(beg, end - beg);
             break;
           }
           if (ncurrent == 0) {
             errormsg = "Missing numbers in " + components_[k] +
-              " component of " + dms.substr(beg, end - beg);
+              " component of " + dmsa.substr(beg, end - beg);
             break;
           }
           if (digcount > 1) {
-            istringstream s(dms.substr(p - digcount - 1, digcount));
+            istringstream s(dmsa.substr(p - digcount - 1, digcount));
             s >> fcurrent;
           }
           ipieces[k] = icurrent;
@@ -123,29 +139,29 @@ namespace GeographicLib {
           }
         } else if (lookup(signs_, x) >= 0) {
           errormsg = "Internal sign in DMS string "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         } else {
           errormsg = "Illegal character " + str(x) + " in DMS string "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         }
       }
       if (!errormsg.empty())
         break;
-      if (lookup(dmsindicators_, dms[p - 1]) < 0) {
+      if (lookup(dmsindicators_, dmsa[p - 1]) < 0) {
         if (npiece >= 3) {
           errormsg = "Extra text following seconds in DMS string "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         }
         if (ncurrent == 0) {
           errormsg = "Missing numbers in trailing component of "
-            + dms.substr(beg, end - beg);
+            + dmsa.substr(beg, end - beg);
           break;
         }
         if (digcount > 1) {
-          istringstream s(dms.substr(p - digcount, digcount));
+          istringstream s(dmsa.substr(p - digcount, digcount));
           s >> fcurrent;
         }
         ipieces[npiece] = icurrent;
@@ -153,7 +169,7 @@ namespace GeographicLib {
       }
       if (pointseen && digcount == 0) {
         errormsg = "Decimal point in non-terminal component of "
-          + dms.substr(beg, end - beg);
+          + dmsa.substr(beg, end - beg);
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
@@ -170,7 +186,7 @@ namespace GeographicLib {
       // might be able to offer a better diagnostic).
       return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
     } while (false);
-    real val = NumMatch(dms);
+    real val = NumMatch(dmsa);
     if (val == 0)
       throw GeographicErr(errormsg);
     else
@@ -238,54 +254,54 @@ namespace GeographicLib {
   }
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
-                         real& lat, real& lon) {
-      real a, b;
-      flag ia, ib;
-      a = Decode(stra, ia);
-      b = Decode(strb, ib);
-      if (ia == NONE && ib == NONE) {
-        // Default to lat, long
-        ia = LATITUDE;
-        ib = LONGITUDE;
-      } else if (ia == NONE)
-        ia = flag(LATITUDE + LONGITUDE - ib);
-      else if (ib == NONE)
-        ib = flag(LATITUDE + LONGITUDE - ia);
-      if (ia == ib)
-        throw GeographicErr("Both " + stra + " and "
-                            + strb + " interpreted as "
-                            + (ia == LATITUDE ? "latitudes" : "longitudes"));
-      real
-        lat1 = ia == LATITUDE ? a : b,
-        lon1 = ia == LATITUDE ? b : a;
-      if (lat1 < -90 || lat1 > 90)
-        throw GeographicErr("Latitude " + str(lat1) + "d not in [-90d, 90d]");
-      if (lon1 < -180 || lon1 > 360)
-        throw GeographicErr("Latitude " + str(lon1)
-                            + "d not in [-180d, 360d]");
-      if (lon1 >= 180)
-        lon1 -= 360;
-      lat = lat1;
-      lon = lon1;
+                         real& lat, real& lon, bool swaplatlong) {
+    real a, b;
+    flag ia, ib;
+    a = Decode(stra, ia);
+    b = Decode(strb, ib);
+    if (ia == NONE && ib == NONE) {
+      // Default to lat, long unless swaplatlong
+      ia = swaplatlong ? LONGITUDE : LATITUDE;
+      ib = swaplatlong ? LATITUDE : LONGITUDE;
+    } else if (ia == NONE)
+      ia = flag(LATITUDE + LONGITUDE - ib);
+    else if (ib == NONE)
+      ib = flag(LATITUDE + LONGITUDE - ia);
+    if (ia == ib)
+      throw GeographicErr("Both " + stra + " and "
+                          + strb + " interpreted as "
+                          + (ia == LATITUDE ? "latitudes" : "longitudes"));
+    real
+      lat1 = ia == LATITUDE ? a : b,
+      lon1 = ia == LATITUDE ? b : a;
+    if (lat1 < -90 || lat1 > 90)
+      throw GeographicErr("Latitude " + str(lat1) + "d not in [-90d, 90d]");
+    if (lon1 < -180 || lon1 > 360)
+      throw GeographicErr("Latitude " + str(lon1)
+                          + "d not in [-180d, 360d]");
+    if (lon1 >= 180)
+      lon1 -= 360;
+    lat = lat1;
+    lon = lon1;
   }
 
   Math::real DMS::DecodeAngle(const std::string& angstr) {
-    DMS::flag ind;
+    flag ind;
     real ang = Decode(angstr, ind);
-    if (ind != DMS::NONE)
+    if (ind != NONE)
       throw GeographicErr("Arc angle " + angstr
                           + " includes a hemisphere, N/E/W/S");
     return ang;
   }
 
   Math::real DMS::DecodeAzimuth(const std::string& azistr) {
-    DMS::flag ind;
+    flag ind;
     real azi = Decode(azistr, ind);
-    if (ind == DMS::LATITUDE)
+    if (ind == LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
     if (azi < -180 || azi > 360)
-      throw GeographicErr("Azimuth " + azistr + " not in range [-180d,360d]");
+      throw GeographicErr("Azimuth " + azistr + " not in range [-180d, 360d]");
     if (azi >= 180) azi -= 360;
     return azi;
   }

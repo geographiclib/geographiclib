@@ -94,9 +94,9 @@
 <a name="l00045"></a>00045         cacheall = <span class="keyword">false</span>;
 <a name="l00046"></a>00046         cachearea = <span class="keyword">true</span>;
 <a name="l00047"></a>00047         <span class="keywordflow">try</span> {
-<a name="l00048"></a>00048           <a class="code" href="classGeographicLib_1_1DMS.html#a9b6d1f79b4427f5076b98098d470228d">DMS::DecodeLatLon</a>(std::string(argv[m + 1]), std::string(argv[m + 2]),
+<a name="l00048"></a>00048           <a class="code" href="classGeographicLib_1_1DMS.html#a2d38adcfecb7a41865092e870e19730f">DMS::DecodeLatLon</a>(std::string(argv[m + 1]), std::string(argv[m + 2]),
 <a name="l00049"></a>00049                             caches, cachew);
-<a name="l00050"></a>00050           <a class="code" href="classGeographicLib_1_1DMS.html#a9b6d1f79b4427f5076b98098d470228d">DMS::DecodeLatLon</a>(std::string(argv[m + 3]), std::string(argv[m + 4]),
+<a name="l00050"></a>00050           <a class="code" href="classGeographicLib_1_1DMS.html#a2d38adcfecb7a41865092e870e19730f">DMS::DecodeLatLon</a>(std::string(argv[m + 3]), std::string(argv[m + 4]),
 <a name="l00051"></a>00051                             cachen, cachee);
 <a name="l00052"></a>00052         }
 <a name="l00053"></a>00053         <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {
@@ -237,7 +237,7 @@
 <a name="l00188"></a>00188             height = <a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(s.substr(pa + 1, pb - pa));
 <a name="l00189"></a>00189             s = s.substr(0, px + 1);
 <a name="l00190"></a>00190           }
-<a name="l00191"></a>00191           p.<a class="code" href="classGeographicLib_1_1GeoCoords.html#a8c5ba10e104ee04e0543fca6a33af874">Reset</a>(zone + s);
+<a name="l00191"></a>00191           p.<a class="code" href="classGeographicLib_1_1GeoCoords.html#a4a1e0a65a8a344dfe519fcbf25078e37">Reset</a>(zone + s);
 <a name="l00192"></a>00192           <span class="keywordflow">if</span> (heightmult) {
 <a name="l00193"></a>00193             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h = g(p.<a class="code" href="classGeographicLib_1_1GeoCoords.html#a1bc1bb3a2377fa6b70be046dcf5d3e97">Latitude</a>(), p.<a class="code" href="classGeographicLib_1_1GeoCoords.html#a7db5459efae411dfebec758a8244a95a">Longitude</a>());
 <a name="l00194"></a>00194             *output &lt;&lt; s &lt;&lt; <span class="stringliteral">&quot; &quot;</span>
@@ -276,7 +276,7 @@
 <a name="l00227"></a>00227 }
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

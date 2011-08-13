@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
-#define GEOGRAPHICLIB_GEOID_HPP "$Id: c7fbce09c004d4ffcce66d6d59c7163f2c581948 $"
+#define GEOGRAPHICLIB_GEOID_HPP "$Id: 777922a79bee93ab90a258e58a4d2e4fb1b665c5 $"
 
 #include <string>
 #include <vector>
@@ -200,9 +200,10 @@ namespace GeographicLib {
      * @param[in] north latitude (degrees) of the north edge of the cached area.
      * @param[in] east longitude (degrees) of the east edge of the cached area.
      *
-     * Cache the data for the specified rectangular area .  \e east is always
-     * interpreted as being east of \e west, if necessary by adding
-     * 360<sup>o</sup> to its value.  This may throw an error because of
+     * Cache the data for the specified "rectangular" area bounded by the
+     * parallels \e south and \e north and the meridians \e west and \e east.
+     * \e east is always interpreted as being east of \e west, if necessary by
+     * adding 360<sup>o</sup> to its value.  This may throw an error because of
      * insufficent memory or because of an error reading the data from the
      * file.  In this case, you can catch the error and either do nothing (you
      * will have no cache in this case) or try again with a smaller area.  \e
@@ -449,19 +450,6 @@ namespace GeographicLib {
      **********************************************************************/
     static std::string DefaultGeoidName();
 
-/// \cond DEPRECATED
-    /**
-     * <b>DEPRECATED</b> Return the compile-time default path for the geoid
-     * data files.
-     **********************************************************************/
-    static std::string DefaultPath();
-
-    /**
-     * <b>DEPRECATED</b> Return the value of the environment variable
-     * GEOID_PATH.
-     **********************************************************************/
-    static std::string GeoidPath();
-/// \endcond
   };
 
 } // namespace GeographicLib

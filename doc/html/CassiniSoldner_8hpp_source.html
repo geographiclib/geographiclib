@@ -58,7 +58,7 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)</span>
-<a name="l00011"></a><a class="code" href="CassiniSoldner_8hpp.html#ab674f10f5e4e3b25dc68c65fa408e315">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CASSINISOLDNER_HPP &quot;$Id: ffa72d53546c2066064723afc1f0a4c6dfadc2f0 $&quot;</span>
+<a name="l00011"></a><a class="code" href="CassiniSoldner_8hpp.html#ab674f10f5e4e3b25dc68c65fa408e315">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CASSINISOLDNER_HPP &quot;$Id: 2527a0e24486c29c443a79173a18def243c091c3 $&quot;</span>
 <a name="l00012"></a>00012 <span class="preprocessor"></span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&gt;</span>
@@ -112,7 +112,7 @@
 <a name="l00062"></a><a class="code" href="classGeographicLib_1_1CassiniSoldner.html">00062</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">CassiniSoldner</a> {
 <a name="l00063"></a>00063   <span class="keyword">private</span>:
 <a name="l00064"></a>00064     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00065"></a>00065     <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> _earth;
+<a name="l00065"></a>00065     <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> _earth;
 <a name="l00066"></a>00066     <a class="code" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> _meridian;
 <a name="l00067"></a>00067     real _sbet0, _cbet0;
 <a name="l00068"></a>00068     <span class="keyword">static</span> <span class="keyword">const</span> real eps1_;
@@ -122,7 +122,7 @@
 <a name="l00072"></a>00072     <span class="comment">// The following private helper functions are copied from Geodesic.</span>
 <a name="l00073"></a>00073     <span class="keyword">static</span> <span class="keyword">inline</span> real AngNormalize(real x) <span class="keywordflow">throw</span>() {
 <a name="l00074"></a>00074       <span class="comment">// Place angle in [-180, 180).  Assumes x is in [-540, 540).</span>
-<a name="l00075"></a>00075       <span class="keywordflow">return</span> x &gt;= 180 ? x - 360 : x &lt; -180 ? x + 360 : x;
+<a name="l00075"></a>00075       <span class="keywordflow">return</span> x &gt;= 180 ? x - 360 : (x &lt; -180 ? x + 360 : x);
 <a name="l00076"></a>00076     }
 <a name="l00077"></a>00077     <span class="keyword">static</span> <span class="keyword">inline</span> real AngRound(real x) <span class="keywordflow">throw</span>() {
 <a name="l00078"></a>00078       <span class="comment">// The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57</span>
@@ -283,7 +283,7 @@
 <a name="l00233"></a>00233 <span class="preprocessor">#endif  // GEOGRAPHICLIB_CASSINISOLDNER_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

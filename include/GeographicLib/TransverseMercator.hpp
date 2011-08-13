@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id: e72f3f875456c5cd776e697abcb0cdfeca8a7e72 $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id: c59b9988116b53613878bbe265ae9fb3afa1d62f $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -18,7 +18,7 @@
  * TM_TX_MAXPOW can be set to any integer in [4, 8].
  **********************************************************************/
 #define TM_TX_MAXPOW \
-(GEOGRAPHICLIB_PREC == 1 ? 6 : GEOGRAPHICLIB_PREC == 0 ? 4 : 8)
+  (GEOGRAPHICLIB_PREC == 1 ? 6 : (GEOGRAPHICLIB_PREC == 0 ? 4 : 8))
 #endif
 
 namespace GeographicLib {
@@ -36,7 +36,7 @@ namespace GeographicLib {
    *  - C. F. F. Karney,
    *    <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>
-   *    J. Geodesy (2011);
+   *    J. Geodesy 85(8), 475-485 (Aug. 2011);
    *    preprint
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
@@ -75,7 +75,7 @@ namespace GeographicLib {
     static const real tol_;
     static const real overflow_;
     static const int numit_ = 5;
-    const real _a, _f, _r, _k0, _e2, _e, _e2m,  _c, _n;
+    real _a, _f, _k0, _e2, _e, _e2m,  _c, _n;
     // _alp[0] and _bet[0] unused
     real _a1, _b1, _alp[maxpow_ + 1], _bet[maxpow_ + 1];
     // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
@@ -176,7 +176,7 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return _r; }
+    Math::real InverseFlattening() const throw() { return 1/_f; }
 
     /**
      * @return \e k0 central scale for the projection.  This is the value of \e

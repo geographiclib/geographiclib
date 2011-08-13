@@ -41,7 +41,7 @@
 
 #include <GeographicLib/TransverseMercator.hpp>
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: e0e2727f0e2b3822bb066e0362e2a05fc6193b02 $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP "$Id: f31c1c6527c52ab14cce51605fa7a95cad0ecc98 $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
@@ -59,7 +59,6 @@ namespace GeographicLib {
   TransverseMercator::TransverseMercator(real a, real f, real k0)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
     , _e(sqrt(abs(_e2)))
@@ -450,9 +449,14 @@ namespace GeographicLib {
       // Use Newton's method to solve for tau
       real
         taup = sin(xip)/r,
-        tau = taup,
+        // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
+        // tau = taup/_e2m as a starting guess.  Only 1 iteration is needed for
+        // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead,
+        // tau = taup is used the mean number of iterations increases to 1.99
+        // (2 iterations are needed except near tau = 0).
+        tau = taup/_e2m,
         stol = tol_ * max(real(1), abs(taup));
-      // min iterations = 1, max iterations = 2; mean = 1.99
+      // min iterations = 1, max iterations = 2; mean = 1.94
       for (int i = 0; i < numit_; ++i) {
         real
           tau1 = Math::hypot(real(1), tau),

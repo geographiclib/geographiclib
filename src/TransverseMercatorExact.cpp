@@ -41,7 +41,7 @@
 
 #include <GeographicLib/TransverseMercatorExact.hpp>
 
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: ea1d777887c89344e441c8e323849a91533a61cb $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP "$Id: a31a14bf3b2f89f58b76c205ba57875c09bd6cbe $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
@@ -62,7 +62,6 @@ namespace GeographicLib {
                                                    bool extendp)
     : _a(a)
     , _f(f <= 1 ? f : 1/f)
-    , _r(1/f)
     , _k0(k0)
     , _mu(_f * (2 - _f))        // e^2
     , _mv(1 - _mu)              // 1 - e^2
@@ -97,8 +96,10 @@ namespace GeographicLib {
 
   Math::real TransverseMercatorExact::taupinv(real taup) const throw() {
     real
-      tau = taup,
+      // See comment in TransverseMercator.cpp about the initial guess
+      tau = taup/_mv,
       stol = tol_ * max(real(1), abs(taup));
+    // min iterations = 1, max iterations = 2; mean = 1.94
     for (int i = 0; i < numit_; ++i) {
       real
         tau1 = Math::hypot(real(1), tau),
@@ -123,9 +124,9 @@ namespace GeographicLib {
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
-      t1 = (d1 ? snu * dnv / d1 : snu < 0 ? -overflow_ : overflow_),
+      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow_ : overflow_)),
       t2 = (d2 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
-            snu < 0 ? -overflow_ : overflow_);
+            (snu < 0 ? -overflow_ : overflow_));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)
     taup = t1 * Math::hypot(real(1), t2) - t2 * Math::hypot(real(1), t1);

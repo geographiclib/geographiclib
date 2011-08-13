@@ -12,7 +12,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_GEOID_CPP "$Id: 24d33b014bac086140fb2e0f304992054ffdc5b3 $"
+#define GEOGRAPHICLIB_GEOID_CPP "$Id: 4340046fa88d94c62cc57a665e207ffcedef153f $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
@@ -326,7 +326,7 @@ namespace GeographicLib {
     fx -= ix;
     fy -= iy;
     iy += (_height - 1)/2;
-    ix += ix < 0 ? _width : ix >= _width ? -_width : 0;
+    ix += ix < 0 ? _width : (ix >= _width ? -_width : 0);
     real v00 = 0, v01 = 0, v10 = 0, v11 = 0;
     real t[nterms_];
 
@@ -352,8 +352,8 @@ namespace GeographicLib {
         v[k++] = rawval(ix    , iy + 2);
         v[k++] = rawval(ix + 1, iy + 2);
 
-        const real* c3x = iy == 0 ? c3n_ : iy == _height - 2 ? c3s_ : c3_;
-        real c0x = iy == 0 ? c0n_ : iy == _height - 2 ? c0s_ : c0_;
+        const real* c3x = iy == 0 ? c3n_ : (iy == _height - 2 ? c3s_ : c3_);
+        real c0x = iy == 0 ? c0n_ : (iy == _height - 2 ? c0s_ : c0_);
         for (unsigned i = 0; i < nterms_; ++i) {
           t[i] = 0;
           for (unsigned j = 0; j < stencilsize_; ++j)
@@ -479,8 +479,8 @@ namespace GeographicLib {
       iw = 0;
       ie = _width - 1;
     } else {
-      ie += iw < 0 ? _width : iw >= _width ? -_width : 0;
-      iw += iw < 0 ? _width : iw >= _width ? -_width : 0;
+      ie += iw < 0 ? _width : (iw >= _width ? -_width : 0);
+      iw += iw < 0 ? _width : (iw >= _width ? -_width : 0);
     }
     int oysize = int(_data.size());
     _xsize = ie - iw + 1;
@@ -528,20 +528,6 @@ namespace GeographicLib {
       throw GeographicErr(string("Error filling cache ") + e.what());
     }
   }
-
-/// \cond DEPRECATED
-  std::string Geoid::DefaultPath() {
-    return string(GEOID_DEFAULT_PATH);
-  }
-
-  std::string Geoid::GeoidPath() {
-    string path;
-    char* geoidpath = getenv("GEOID_PATH");
-    if (geoidpath)
-      path = string(geoidpath);
-    return path;
-  }
-/// \endcond
 
   std::string Geoid::DefaultGeoidPath() {
     string path;

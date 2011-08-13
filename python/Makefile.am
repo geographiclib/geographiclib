@@ -2,19 +2,26 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 77379c1b9083dfe1035768975ebcc0a57c54c246 $
+# $Id: b75fb5d984762fb0561a58c045954047407e4de6 $
 
-PYTHON_INTERFACE = GeographicLib.py
+PACKAGE=geographiclib
+PYTHON_FILES = \
+	$(PACKAGE)/__init__.py \
+	$(PACKAGE)/geomath.py \
+	$(PACKAGE)/constants.py \
+	$(PACKAGE)/accumulator.py \
+	$(PACKAGE)/geodesiccapability.py \
+	$(PACKAGE)/geodesic.py \
+	$(PACKAGE)/geodesicline.py \
+	$(PACKAGE)/polygonarea.py
 
-PYTHON_ALL = $(PYTHON_INTERFACE)
-
-pythondir=$(datadir)/GeographicLib/python
+pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 
 install:
 	$(INSTALL) -d $(DESTDIR)$(pythondir)
-	$(INSTALL) -m 644 $(PYTHON_ALL) $(DESTDIR)$(pythondir)
+	$(INSTALL) -m 644 $(PYTHON_FILES) $(DESTDIR)$(pythondir)
 
 clean-local:
-	rm -rf *.pyc
+	rm -rf $(PACKAGE)/*.pyc
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt $(PYTHON_ALL)
+EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES)

@@ -1,14 +1,14 @@
-# $Id: 3c4d96dbc3121eb97d98ea8e074f5f234cd45885 $
+# $Id: ebe0fca373aa85fef4ff54bda6c8ec3df5ffaeef $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 12)
-set (GeographicLib_VERSION_STRING
-     ${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR})
-set (LIBVERSION 5)
-set (LIBVERSIONFULL 5.3.0)
+set (GeographicLib_VERSION_MINOR 13)
+set (GeographicLib_VERSION
+     "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+set (LIBVERSION 9)
+set (LIBVERSIONFULL 9.0.0)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -50,7 +50,7 @@ if (ENABLE_MATLAB)
     find_program (HAVE_MEX mkoctfile)
     if (HAVE_MEX)
       set (MEX "mkoctfile")
-      set (MEXEXT "mex") 
+      set (MEXEXT "mex")
     endif (HAVE_MEX)
   else (NOT WIN32)
     find_program (HAVE_MEX mex.bat)
@@ -70,8 +70,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
 if (NOT WIN32)
-  set (CMAKE_CXX_FLAGS
-       "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif (NOT WIN32)
 
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
@@ -85,7 +84,49 @@ add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
-add_subdirectory (python)
+add_subdirectory (python/geographiclib)
+
+if (WIN32)
+  set(INSTALL_CMAKE_DIR "cmake")
+else (WIN32)
+  set(INSTALL_CMAKE_DIR
+    "share/cmake/${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
+endif (WIN32)
+
+export (TARGETS Geographic ${TOOLS}
+  FILE "${PROJECT_BINARY_DIR}/GeographicLibDepends.cmake")
+
+# Don't want cmake to look in build trees, so don't do
+# export (PACKAGE GeographicLib)
+
+set (GEOGRAPHICLIB_ROOT_DIR "${PROJECT_BINARY_DIR}")
+set (GeographicLib_INCLUDE_DIRS
+  "${PROJECT_BINARY_DIR}/include" "${PROJECT_SOURCE_DIR}/include" )
+set (GeographicLib_LIBRARY_DIRS "${PROJECT_BINARY_DIR}/src")
+set (GEOGRAPHICLIB_CMAKE_DIR "${PROJECT_BINARY_DIR}")
+configure_file (cmake/geographiclib-config.cmake.in
+  "${PROJECT_BINARY_DIR}/geographiclib-config.cmake" @ONLY)
+configure_file (cmake/geographiclib-config-version.cmake.in
+  "${PROJECT_BINARY_DIR}/geographiclib-config-version.cmake" @ONLY)
+
+install (EXPORT GeographicLibDepends DESTINATION "${INSTALL_CMAKE_DIR}")
+
+if (WIN32)
+  set (GEOGRAPHICLIB_ROOT_DIR "..")
+else (WIN32)
+  set (GEOGRAPHICLIB_ROOT_DIR "../../..")
+endif (WIN32)
+set (GEOGRAPHICLIB_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
+configure_file (cmake/geographiclib-config.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake" @ONLY)
+configure_file (cmake/geographiclib-config-version.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake" @ONLY)
+install (FILES
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}")
+install (FILES
+  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}")
 
 if (MAINTAINER)
   add_custom_target (distrib-all)
@@ -123,8 +164,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/stamp-"
   "/junk"
   "/octave-core"
-  "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|cmake|log|exe|pyc)\$"
-  "\\\\.(mex|mexw32|mexa64)\$"
+  "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|log|exe|pyc)\$"
+  "\\\\.(mex|mexw32|mexa64|kml|kmz)\$"
   "/(Release|Debug|Win32)"
   "\\\\.cache/"
   "proj.*\\\\.user\$"
@@ -132,12 +173,13 @@ set (CPACK_SOURCE_IGNORE_FILES
   "tools/[A-Za-z]+\$"
   "tools/geographiclib-get-geoids\$"
   "tools/.*\\\\.usage\$"
-  "/(fix-permissions|autogen|biblio)\\\\.sh"
+  "scripts/geographiclib.js\$"
+  "/(fix-permissions|autogen|biblio|js-compress)\\\\.sh"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.html" )
 set (CPACK_SOURCE_GENERATOR TGZ)
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
-  "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION_STRING}")
+  "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
@@ -145,7 +187,7 @@ if (WIN32)
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   set (CPACK_NSIS_PACKAGE_NAME
-    "${CMAKE_PROJECT_NAME} ${GeographicLib_VERSION_STRING}")
+    "${CMAKE_PROJECT_NAME} ${GeographicLib_VERSION}")
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
@@ -174,7 +216,7 @@ if (MAINTAINER)
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       echo include Makefile.mk > Makefile &&
       echo "\\#define" GEOGRAPHICLIB_VERSION_STRING
-      \\"${GeographicLib_VERSION_STRING}\\" > include/GeographicLib/Config.h
+      \\"${GeographicLib_VERSION}\\" > include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       touch man/*.usage man/*.1 man/*.1.html && touch doc/html/index.html
@@ -191,8 +233,4 @@ if (MAINTAINER)
   add_dependencies (dist distrib-all)
 endif (MAINTAINER)
 
-if (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
-  # testing doesn't work for windows with shared libraries because the
-  # dlls are not found
-  enable_testing ()
-endif (NOT WIN32 OR NOT GEOGRAPHIC_SHARED_LIB)
+enable_testing ()

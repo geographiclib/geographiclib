@@ -81,7 +81,7 @@ Static Public Attributes</h2></td></tr>
 <p>Implementation of the Transverse Mercator Projection given in</p>
 <ul>
 <li>L. P. Lee, <a href="http://dx.doi.org/10.3138/X687-1574-4325-WM62">Conformal Projections Based On Jacobian Elliptic Functions</a>, Part V of Conformal Projections Based on Elliptic Functions, (B. V. Gutsell, Toronto, 1976), 128pp., ISBN: 0919870163 (also appeared as: Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).</li>
-<li>C. F. F. Karney, <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">Transverse Mercator with an accuracy of a few nanometers,</a> J. Geodesy (2011); preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.</li>
+<li>C. F. F. Karney, <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">Transverse Mercator with an accuracy of a few nanometers,</a> J. Geodesy 85(8), 475-485 (Aug. 2011); preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.</li>
 </ul>
 <p>Lee's gives the correct results for forward and reverse transformations subject to the branch cut rules (see the description of the <em>extendp</em> argument to the constructor). The maximum error is about 8 nm (ground distance) for the forward and reverse transformations. The error in the convergence is 2e-15", the relative error in the scale is 7e-12%%. See Sec. 3 of <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details. The method is "exact" in the sense that the errors are close to the round-off limit and that no changes are needed in the algorithms for them to be used with reals of a higher precision. Thus the errors using long double (with a 64-bit fraction) are about 2000 times smaller than using double (with a 53-bit fraction).</p>
 <p>This algorithm is about 4.5 times slower than the 6th-order Kr&uuml;ger method, <a class="el" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a>, taking about 11 us for a combined forward and reverse projection on a 2.66 GHz Intel machine (g++, version 4.3.0, -O3).</p>
@@ -156,7 +156,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00061">61</a> of file <a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00367">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00321">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -230,7 +230,7 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>No false easting or northing is added. <em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00376">376</a> of file <a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00377">377</a> of file <a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a>.</p>
 
 </div>
 </div>
@@ -303,7 +303,7 @@ Static Public Attributes</h2></td></tr>
 </dl>
 <p>No false easting or northing is added. <em>lon0</em> should be in the range [-180, 360]. The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00437">437</a> of file <a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00438">438</a> of file <a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a>.</p>
 
 </div>
 </div>
@@ -502,7 +502,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="TransverseMercatorExact_8cpp_source.html">TransverseMercatorExact.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Jul 21 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
