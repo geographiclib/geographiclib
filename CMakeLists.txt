@@ -173,7 +173,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "tools/[A-Za-z]+\$"
   "tools/geographiclib-get-geoids\$"
   "tools/.*\\\\.usage\$"
-  "/(fix-permissions|autogen|biblio)\\\\.sh"
+  "scripts/geographiclib.js\$"
+  "/(fix-permissions|autogen|biblio|js-compress)\\\\.sh"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.html" )
 set (CPACK_SOURCE_GENERATOR TGZ)
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

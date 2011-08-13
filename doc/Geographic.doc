@@ -811,6 +811,12 @@ Examples of using this interface are
 - <a href="../scripts/geod-google.html">displaying geodesics in Google
   Maps</a> which shows the geodesic, the geodesic circle, and various
   geodesic envelopes.
+.
+These examples include a "stripped" version of the Javascript code, \code
+<script type="text/javascript"
+        src="http://geographiclib.sf.net/scripts/geographiclib.js">
+</script>\endcode
+which loads faster.
 
 \section python Python interface
 

@@ -242,9 +242,9 @@ GeographicLib.DMS = {};
     else if (ib == d.NONE)
       ib = d.LATITUDE + d.LONGITUDE - ia;
     if (ia == ib)
-      throw GeographicErr("Both " + stra + " and "
-                          + strb + " interpreted as "
-                          + (ia == d.LATITUDE ? "latitudes" : "longitudes"));
+      throw new Error("Both " + stra + " and "
+		      + strb + " interpreted as "
+		      + (ia == d.LATITUDE ? "latitudes" : "longitudes"));
     var lat = ia == d.LATITUDE ? a : b, lon = ia == d.LATITUDE ? b : a;
     if (lat < -90 || lat > 90)
       throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
@@ -270,10 +270,10 @@ GeographicLib.DMS = {};
     var vals = d.Decode(azistr);
     var azi = vals.val, ind = vals.ind;
     if (ind == d.LATITUDE)
-      throw GeographicErr("Azimuth " + azistr
-                          + " has a latitude hemisphere, N/S");
+      throw new Error("Azimuth " + azistr
+		      + " has a latitude hemisphere, N/S");
     if (azi < -180 || azi > 360)
-      throw GeographicErr("Azimuth " + azistr + " not in range [-180d, 360d]");
+      throw new Error("Azimuth " + azistr + " not in range [-180d, 360d]");
     if (azi >= 180) azi -= 360;
     return azi;
   }
