@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.13
-\date 2011-mm-dd
+\date 2011-08-13
 
 \section abstract Abstract
 
@@ -2254,7 +2254,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a>
   - Changes to I/O:
     - allow : (colon) to be used as a DMS separator in
       GeographicLib::DMS::Decode(const std::string&, flag&);

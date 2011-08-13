@@ -8,9 +8,38 @@ For more information, see
 
 The current version of the library is 1.13.
 
-Changes between 1.13 (released 2011-mm-dd) and 1.12 versions:
+Changes between 1.13 (released 2011-08-13) and 1.12 versions:
 
-  * TO BE COMPLETED
+  * Changes to I/O:
+    + allow : (colon) to be used as a DMS separator in DMS::Decode;
+    + also accept Unicode symbols for degrees, minutes, and seconds
+      (coded as UTF-8);
+    + provide optional swaplatlong argument to various DMS and GeoCoords
+      functions to make longitude precede latitude;
+    + GeoConvert now has a -w option to make longitude precede latitude
+      on input and output;
+    + include a Javascript version of DMS.
+
+  * Slight improvement in starting guess for solution of geographic
+    latitude in terms of conformal latitude in TransverseMercator,
+    TransverseMercatorExact, and LambertConformalConic.
+
+  * For most classes, get rid of const member variables so that the
+    default copy assigment works.
+
+  * Put Math and Accumulator in their own header files.
+
+  * Remove unused "fast" GeographicLib::Accumulator method.
+
+  * Reorganize the Python interface.
+
+  * Withdraw some deprecated routines.
+
+  * cmake changes:
+    + include FindGeographic.cmake in distribution;
+    + building with cmake creates and installs
+      geographiclib-config.cmake;
+    + better support for building a shared library under Windows.
 
 Changes between 1.12 (released 2011-07-21) and 1.11 versions:
 
