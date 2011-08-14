@@ -118,7 +118,8 @@ cat <<EOF
       <pre>
         16.776 -3.009
         16d47' -3d1'
-        W3&deg;0'34" N16&deg;46'33"</pre>
+        W3&deg;0'34" N16&deg;46'33"
+        3:0:34W 16:46:33N</pre>
       The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
       the documentation on the
       <a href="http://geographiclib.sourceforge.net/html/GeoConvert.1.html">
@@ -146,7 +147,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2011-06-19)</address>
+      (2011-08-14)</address>
     <a href="http://geographiclib.sourceforge.net">
       <img
 	 src="http://sourceforge.net/sflogo.php?group_id=283628&amp;type=9"

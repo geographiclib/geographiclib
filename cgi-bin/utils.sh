@@ -18,18 +18,23 @@ decodevalue () {
 }
 
 # Apply conversions for the various degree, minute, and second symbols
-# %B0 %BA %81%8B  -> d (maybe add &deg;)
-# %91 %92 %26%238242%3B (&#8242;) %81%8C -> ' (%27)
-# %93 %94 %26%238243%3B (&#8243;) %81%8D -> " (%22)
+# %A0 -> nothing (non-breaking space)
+# [%C2]%B0 [%C2]%BA %81%8B  -> d (maybe add &deg;)
+# %91 %92 [%C2]%B4 %E2%80%B2 %26%238242%3B (&#8242;) %81%8C -> ' (%27)
+# %93 %94 %E2%80%B3 %26%238243%3B (&#8243;) %81%8D -> " (%22)
 # Remove left/right guillemot symbols %AB %BB used to quote examples.
 # Then convert ' ' -> "
 translate () {
     echo "$1" | sed \
-	-e 's/%[AB]B//g' \
-	-e 's/%B0/d/g' -e 's/%BA/d/g' -e 's/%9[12]/%27/g' -e 's/%9[34]/%22/g' \
+	-e 's/%C2%A0//g' -e 's/%A0//g' \
+	-e 's/%C2%[AB]B//g' -e 's/%[AB]B//g' \
+	-e 's/%C2%B0/d/g' -e 's/%C2%BA/d/g' -e 's/%C2%B4/%27/g' \
+	-e 's/%B0/d/g' -e 's/%BA/d/g' -e 's/%B4/%27/g' \
+	-e 's/%9[12]/%27/g' -e 's/%9[34]/%22/g' \
+	-e 's/%E2%80%B2/%27/g' -e 's/%E2%80%B3/%22/g' \
 	-e 's/%26%238242%3B/%27/g' -e 's/%26%238243%3B/%22/g' \
 	-e 's/%81%8B/d/g' -e 's/%81%8C/%27/g' -e 's/%81%8D/%22/g' \
-	-e 's/%27%27/%22/g'
+	-e 's/%B4/%27/g' -e 's/%27%27/%22/g'
 }
 
 # Look up and decode a key
