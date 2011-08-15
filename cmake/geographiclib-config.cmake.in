@@ -15,15 +15,14 @@ message (STATUS "GeographicLib configuration, version "
   ${GeographicLib_VERSION})
 
 # Tell the user project where to find our headers and libraries
+get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 if (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
   set (GEOGRAPHICLIB_ROOT_DIR "@GEOGRAPHICLIB_ROOT_DIR@")
   set (GeographicLib_INCLUDE_DIRS "@GeographicLib_INCLUDE_DIRS@")
   set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/src")
 else (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
-  get_filename_component (GEOGRAPHICLIB_SELF_DIR
-    ${CMAKE_CURRENT_LIST_FILE} PATH)
   get_filename_component (GEOGRAPHICLIB_ROOT_DIR
-    "${GEOGRAPHICLIB_SELF_DIR}/@GEOGRAPHICLIB_ROOT_DIR@" ABSOLUTE)
+    "${_DIR}/@GEOGRAPHICLIB_ROOT_DIR@" ABSOLUTE)
   set (GeographicLib_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
   set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/lib")
 endif (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
@@ -39,7 +38,7 @@ foreach (p ${GeographicLib_INCLUDE_DIRS})
 endforeach (p ${GeographicLib_INCLUDE_DIRS})
 
 if (DEFINED GeographicLib_INCLUDE_DIRS)
-  include ("@GEOGRAPHICLIB_CMAKE_DIR@/GeographicLibDepends.cmake")
+  include ("${_DIR}/GeographicLibDepends.cmake")
   set (GeographicLib_LIBRARIES Geographic)
 endif (DEFINED GeographicLib_INCLUDE_DIRS)
 
