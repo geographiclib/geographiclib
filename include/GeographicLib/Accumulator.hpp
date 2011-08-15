@@ -12,8 +12,6 @@
 
 #include <GeographicLib/Constants.hpp>
 
-RCSID_DECL(GEOGRAPHICLIB_ACCUMULATOR_HPP)
-
 namespace GeographicLib {
 
   /**

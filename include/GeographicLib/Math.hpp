@@ -25,8 +25,6 @@
 #  endif
 #endif
 
-RCSID_DECL(GEOGRAPHICLIB_MATH_HPP)
-
 #if !defined(GEOGRAPHICLIB_PREC)
 /**
  * The precision of floating point numbers used in %GeographicLib.  0 means

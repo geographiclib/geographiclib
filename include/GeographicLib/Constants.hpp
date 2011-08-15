@@ -47,8 +47,6 @@
 #  define GEOGRAPHIC_EXPORT
 #endif
 
-RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
-
 #include <stdexcept>
 #include <GeographicLib/Math.hpp>
 
