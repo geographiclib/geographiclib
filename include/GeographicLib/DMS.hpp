@@ -145,10 +145,10 @@ namespace GeographicLib {
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20d30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5
-     *   - 4d0'9, 4d9", 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
+     *   - 4d0'9, 4d9&quot;, 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
      *     04:.15
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
-     *   - 4d5"4', 4::5, 4:5:, :4:5, 4d4.5'4", -N20.5, 1.8e2d, 4:60,
+     *   - 4d5&quot;4', 4::5, 4:5:, :4:5, 4d4.5'4&quot;, -N20.5, 1.8e2d, 4:60,
      *     4d-5'
      *
      * <b>NOTE:</b> At present, all the string handling in the C++
@@ -162,19 +162,20 @@ namespace GeographicLib {
      * seconds:
      * - degrees:
      *   - d, D lower and upper case letters
-     *   - \\u00b0 degree symbol
-     *   - \\u00ba masculine ordinal indicator
+     *   - U+00b0 degree symbol
+     *   - U+00ba masculine ordinal indicator
+     *   - U+2070 superscript zero
      * - minutes:
      *   - ' apostrophe
-     *   - \\u2032 prime
-     *   - \\u00b4 acute accent
+     *   - U+2032 prime
+     *   - U+00b4 acute accent
      * - seconds:
-     *   - " quotation mark
-     *   - \\u2033 double prime
+     *   - &quot; quotation mark
+     *   - U+2033 double prime
      *   - '&nbsp;' any two consecutive symbols for minutes
      * .
-     * The codes with a leading zero byte, e.g., \\u00b0, are accepted in their
-     * UTF-8 coded form \\xc2\\xb0 and as a single byte \\xb0.
+     * The codes with a leading zero byte, e.g., U+00b0, are accepted in their
+     * UTF-8 coded form 0xc2 0xb0 and as a single byte 0xb0.
      **********************************************************************/
     static Math::real Decode(const std::string& dms, flag& ind);
 
@@ -257,7 +258,7 @@ namespace GeographicLib {
     static Math::real DecodeAzimuth(const std::string& azistr);
 
     /**
-     * Convert angle (in degrees) into a DMS string.
+     * Convert angle (in degrees) into a DMS string (using d, ', and &quot;).
      *
      * @param[in] angle input angle (degrees)
      * @param[in] trailing DMS::component value indicating the trailing units
@@ -284,8 +285,8 @@ namespace GeographicLib {
                               flag ind = NONE);
 
     /**
-     * Convert angle into a DMS string selecting the trailing component
-     * based on the precision.
+     * Convert angle into a DMS string (using d, ', and &quot;) selecting the
+     * trailing component based on the precision.
      *
      * @param[in] angle input angle (degrees)
      * @param[in] prec the precision relative to 1 degree.

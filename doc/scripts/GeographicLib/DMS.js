@@ -46,6 +46,7 @@ GeographicLib.DMS = {};
     var dmsa = dms;
     dmsa = dmsa.replace(/\u00b0/g, 'd');
     dmsa = dmsa.replace(/\u00ba/g, 'd');
+    dmsa = dmsa.replace(/\u2070/g, 'd');
     dmsa = dmsa.replace(/\u2032/g, '\'');
     dmsa = dmsa.replace(/\u00b4/g, '\'');
     dmsa = dmsa.replace(/\u2033/g, '"');

@@ -32,6 +32,7 @@ namespace GeographicLib {
     string dmsa = dms;
     replace(dmsa, "\xc2\xb0", 'd'); // degree symbol (U+00b0 = UTF-8 c2 b0)
     replace(dmsa, "\xc2\xba", 'd'); // alt symbol (U+00ba = UTF-8 c2 ba)
+    replace(dmsa, "\xe2\x81\xb0", 'd');  // sup zero (U+2070 = UTF-8 e2 81 b0)
     replace(dmsa, "\xe2\x80\xb2", '\''); // prime (U+2032 = UTF-8 e2 80 b2)
     replace(dmsa, "\xc2\xb4", '\'');     // acute accent (U+00b4 = UTF-8 c2 b4)
     replace(dmsa, "\xe2\x80\xb3", '"');  // dbl prime (U+2033 = UTF-8 e2 80 b3)
