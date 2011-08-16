@@ -157,6 +157,24 @@ namespace GeographicLib {
      * <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The
      * Javascript implementation of this class uses unicode natively, of
      * course.)
+     *
+     * Here is the list of Unicode symbols supported for degrees, minutes,
+     * seconds:
+     * - degrees:
+     *   - d, D lower and upper case letters
+     *   - \\u00b0 degree symbol
+     *   - \\u00ba masculine ordinal indicator
+     * - minutes:
+     *   - ' apostrophe
+     *   - \\u2032 prime
+     *   - \\u00b4 acute accent
+     * - seconds:
+     *   - " quotation mark
+     *   - \\u2033 double prime
+     *   - '&nbsp;' any two consecutive symbols for minutes
+     * .
+     * The codes with a leading zero byte, e.g., \\u00b0, are accepted in their
+     * UTF-8 coded form \\xc2\\xb0 and as a single byte \\xb0.
      **********************************************************************/
     static Math::real Decode(const std::string& dms, flag& ind);
 
