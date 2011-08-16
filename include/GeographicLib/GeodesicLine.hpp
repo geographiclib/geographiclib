@@ -62,7 +62,8 @@ namespace GeographicLib {
    * Similarly, a vector can be used to hold GeodesicLine objects.
    *
    * The calculations are accurate to better than 15 nm.  See Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for details.
+   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+   * details.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
