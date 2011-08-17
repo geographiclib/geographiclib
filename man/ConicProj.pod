@@ -34,6 +34,15 @@ convergence I<gamma> (degrees) and (azimuthal) scale I<k>.  For Albers
 equal area, the radial scale is 1/I<k>.  The meridian convergence is the
 bearing of the I<y> axis measured clockwise from true north.
 
+Special cases of the Lambert conformal projection are the Mercator
+projection (the standard latitudes equal and opposite) and the polar
+stereographic projection (both standard latitudes correspond to the same
+pole).  Special cases of the Albers equal area projection are the
+cylindrical equal area projection (the standard latitudes equal and
+opposite), the Lambert azimuthal equal area projection (both standard
+latitude corresponds to the same pole), and the Lambert equal area conic
+projection (one standard parallel is at a pole).
+
 =head1 OPTIONS
 
 =over
