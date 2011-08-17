@@ -166,8 +166,8 @@ namespace GeographicLib {
      * @param[in] centerp if true (default), return center of the grid square,
      *   else return SW (lower left) corner.
      *
-     * The grid reference must be of the form: two letters_ (not including I)
-     * followed by an even number of digits_ (up to 22).
+     * The grid reference must be of the form: two letters (not including I)
+     * followed by an even number of digits (up to 22).
      **********************************************************************/
     static void GridReference(const std::string& gridref,
                               real& x, real& y, int& prec,
