@@ -162,7 +162,10 @@ The cubic is constrained to be independent of longitude when evaluating
 the height at one of the poles.  Cubic interpolation is considerably
 more accurate than bilinear; however it results in small discontinuities
 in the returned height on cell boundaries.  The gradients are computed
-by differentiating the interpolated results.
+by differentiating the interpolated results.  As a result of the way
+that the geoid data is stored, the calculation of gradients can result
+in large quantization errors.  This is particularly acute for fine
+grids, at high latitudes, and for the easterly gradient.
 
 =head1 CACHE
 

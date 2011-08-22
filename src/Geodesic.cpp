@@ -698,9 +698,10 @@ namespace GeographicLib {
     // and subst for calp0 and rearrange to give (choose positive sqrt
     // to give alp2 in [0, pi/2]).
     calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
-      sqrt(Math::sq(calp1 * cbet1) + (cbet1 < -sbet1 ?
-                                (cbet2 - cbet1) * (cbet1 + cbet2) :
-                                (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
+      sqrt(Math::sq(calp1 * cbet1) +
+           (cbet1 < -sbet1 ?
+            (cbet2 - cbet1) * (cbet1 + cbet2) :
+            (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
       abs(calp1);
     // tan(bet2) = tan(sig2) * cos(alp2)
     // tan(omg2) = sin(alp0) * tan(sig2).

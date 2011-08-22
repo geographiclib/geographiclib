@@ -50,7 +50,8 @@ namespace GeographicLib {
    * the WGS84 ellipsoid.  The gradient defined in terms of the interpolated
    * heights.  As a result of the way that the geoid data is stored, the
    * calculation of gradients can result in large quantization errors.  This is
-   * particularly acute at high latitudes and for the easterly gradient.
+   * particularly acute for fine grids, at high latitudes, and for the easterly
+   * gradient.
    *
    * This class is typically \e not thread safe in that a single instantiation
    * cannot be safely used by multiple threads because of the way the object
