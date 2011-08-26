@@ -52,9 +52,8 @@ The code is available for download at
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
 using git \verbatim
-  git clone git://geographiclib.git.sourceforge.net/gitroot/geographiclib/geographiclib-release
-  cd geographiclib-release
-  git checkout stable
+  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib
+  cd geographiclib; git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
 - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13-win32.exe/download">
@@ -216,9 +215,11 @@ Windows.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
   tar xfpz GeographicLib-1.13.tar.gz
-  unzip -q GeographicLib-1.13.zip \endverbatim
-  then enter the directory created \verbatim
-  cd GeographicLib-1.13 \endverbatim
+  unzip -q GeographicLib-1.13.zip
+  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib \endverbatim
+  then enter the directory created with one of \verbatim
+  cd GeographicLib-1.13
+  cd geographiclib; git checkout stable \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -393,7 +394,7 @@ versions of Matlab (e.g., R2008a).
 \section maintainer Maintainer tasks
 
 Check the code out of git with \verbatim
-  git clone git://geographiclib.git.sourceforge.net/gitroot/geographiclib/geographiclib
+  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib
 \endverbatim
 The autoconf configuration script, the html version of the
 documentation, and the formatted man pages not checked into git.  In
@@ -787,6 +788,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
+Interfaces to subsets of %GeographicLib are available in other languages
 - \ref javascript.
 - \ref python.
 - \ref matlab.
@@ -2357,7 +2359,7 @@ number.)
   - Reverse the initial sense of the -s option for
     <a href="Planimeter.1.html"> Planimeter</a>.
   - Migrate source from subversion to
-    <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">
+    <a href="http://geographiclib.git.sf.net/git/gitweb-index.cgi">
     git</a>.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (released 2011-02-22)</a>

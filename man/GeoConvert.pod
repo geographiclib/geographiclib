@@ -31,11 +31,13 @@ I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See L<QUOTING|quoting> for how to
 quote the charachers ' and " when entering coordinates on the command
-line.)  Alternatively, : may be used to separate the various components.
-Latitude is given first (unless the B<-w> option is given); however, on
-input, either may be given first by appending or prepending I<N> or I<S>
-to the latitude and I<E> or I<W> to the longitude.  For example, the
-following are all equivalent
+line.)  Various unicode characters (encoded with UTF-8) may also be used
+to denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols.  Alternatively, : (colon) may be used to separate
+the various components.  Latitude is given first (unless the B<-w>
+option is given); however, on input, either may be given first by
+appending or prepending I<N> or I<S> to the latitude and I<E> or I<W> to
+the longitude.  For example, the following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
