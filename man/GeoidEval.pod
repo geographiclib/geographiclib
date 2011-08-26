@@ -117,14 +117,14 @@ following geoid tables are available (however, some may not be
 installed):
 
                                   bilinear error    cubic error
-   name         geoid    grid     max     rms       max     rms
-   egm84-30     EGM84    30'      1.546m  70mm      0.274m  14mm
-   egm84-15     EGM84    15'      0.413m  18mm      0.020m   1mm
-   egm96-15     EGM96    15'      1.152m  40mm      0.169m   7mm
-   egm96-5      EGM96     5'      0.140m   5mm      0.003m   1mm
-   egm2008-5    EGM2008   5'      0.478m  12mm      0.294m   5mm
-   egm2008-2_5  EGM2008   2.5'    0.135m   3mm      0.031m   1mm
-   egm2008-1    EGM2008   1'      0.025m   1mm      0.003m   1mm
+   name         geoid    grid     max      rms      max      rms
+   egm84-30     EGM84    30'      1.546 m  70 mm    0.274 m  14 mm
+   egm84-15     EGM84    15'      0.413 m  18 mm    0.020 m   1 mm
+   egm96-15     EGM96    15'      1.152 m  40 mm    0.169 m   7 mm
+   egm96-5      EGM96     5'      0.140 m   5 mm    0.003 m   1 mm
+   egm2008-5    EGM2008   5'      0.478 m  12 mm    0.294 m   5 mm
+   egm2008-2_5  EGM2008   2.5'    0.135 m   3 mm    0.031 m   1 mm
+   egm2008-1    EGM2008   1'      0.025 m   1 mm    0.003 m   1 mm
 
 By default, the C<egm96-5> geoid is used.  This may changed by setting
 the environment variable C<GEOID_NAME> or with the B<-n> option.  The
@@ -144,7 +144,7 @@ Instructions for downloading and installing geoid data are available at
 L<http://geographiclib.sf.net/html/geoid.html#geoidinst>.
 
 B<NOTE>: all the geoids above apply to the WGS84 ellipsoid (I<a> =
-6378137m, I<f> = 1/298.257223563) only.
+6378137 m, I<f> = 1/298.257223563) only.
 
 =head1 INTERPOLATION
 

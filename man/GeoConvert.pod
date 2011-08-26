@@ -20,7 +20,7 @@ by the options on standard output.  The input is interpreted in one of
 three different ways depending on how many space or comma delimited
 tokens there are on the line.  The options B<-g>, B<-d>, B<-u>, and B<-m>
 govern the format of output.  In all cases, the WGS84 model of the earth
-is used (I<a> = 6378137m, I<f> = 1/298.257223563).
+is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 
 =over
 
@@ -96,7 +96,7 @@ degrees clockwise from true north.
 =item B<-p>
 
 set the precision to I<prec> (default 0); I<prec> is the precision
-relative to 1m.  See L<PRECISION|precision>.
+relative to 1 m.  See L<PRECISION|precision>.
 
 =item B<-z>
 
@@ -156,8 +156,8 @@ file name of "-" stands for standard output.
 
 =head1 PRECISION
 
-I<prec> gives precision of the output with I<prec> = 0 giving 1m
-precision, I<prec> = 3 giving 1mm precision, etc.  I<prec> is the number
+I<prec> gives precision of the output with I<prec> = 0 giving 1 m
+precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the number
 of digits after the decimal point for UTM/UPS.  The number of digits per
 coordinate for MGRS is 5 + I<prec>.  For decimal degrees, the number of
 digits after the decimal point is 5 + I<prec>.  For DMS (degree, minute,

@@ -68,8 +68,8 @@ specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
 the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
 I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
-1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137m, I<f>
-= 1/298.257223563.
+1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
+I<f> = 1/298.257223563.
 
 =item B<-d>
 
@@ -90,7 +90,7 @@ L<ADDITIONAL QUANTITIES>.
 =item B<-p>
 
 set the precision to I<prec> (default 3); I<prec> is the precision
-relative to 1m.  See L<PRECISION|precision>.
+relative to 1 m.  See L<PRECISION|precision>.
 
 =item B<--version>
 
@@ -178,13 +178,13 @@ the quadrilateral with corners (I<lat1>,I<lon1>), (0,I<lon1>),
 
 =head1 PRECISION
 
-I<prec> gives precision of the output with I<prec> = 0 giving 1m
-precision, I<prec> = 3 giving 1mm precision, etc.  I<prec> is the number
-of digits after the decimal point for lengths.  For decimal degrees, the
-number of digits after the decimal point is 5 + I<prec>.  For DMS
-(degree, minute, seconds) output, the number of digits after the decimal
-point in the seconds component is 1 + I<prec>.  The minimum value of
-I<prec> is 0 and the maximum is 10.
+I<prec> gives precision of the output with I<prec> = 0 giving 1 m
+precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the
+number of digits after the decimal point for lengths.  For decimal
+degrees, the number of digits after the decimal point is 5 + I<prec>.
+For DMS (degree, minute, seconds) output, the number of digits after the
+decimal point in the seconds component is 1 + I<prec>.  The minimum
+value of I<prec> is 0 and the maximum is 10.
 
 =head1 ERRORS
 
