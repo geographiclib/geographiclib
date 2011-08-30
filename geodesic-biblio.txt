@@ -501,10 +501,9 @@ $Id$
  * E. B. Christoffel,[[BR]]
    ''Allgemeine Theorie der geodätischen Dreiecke
    [General theory of geodesic triangles]'',
-   Math. Abhand. König. Akad. der Wiss. zu Berlin '''8''', 119--176 (1868),
-   in ''Gesammelte Mathematische Abhandlungen'',
-   Vol. 1 (Teubner, Leipzig, 1910), Chap. 16, pp. 297--346.[[BR]]
-   http://books.google.com/books?id=9W9tAAAAMAAJ&pg=PA297
+   Math. Abhand. König. Akad. der Wiss. zu Berlin '''8''',
+   119--176 (1868).[[BR]]
+   http://books.google.com/books?id=EEtFAAAAcAAJ&pg=PA119
  * E. Beltrami,[[BR]]
    ''Risoluzione del Problema: Riportare i punti di una superficie sopra
    un piano in modo che le linee geodetiche vengano rappresentate da
