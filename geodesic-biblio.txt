@@ -129,7 +129,7 @@ $Id$
    Translation with commentary: ''Celestial Mechanics'' by N. Bowditch, Vol. 2
    (Boston, 1832), pp. 358--491.[[BR]]
    http://geographiclib.sf.net/geodesic-papers/laplace99a.pdf
- * J. B. J. Delambre, A. M. Legendre,[[BR]]
+ * J. B. J. Delambre and A. M. Legendre,[[BR]]
    ''Méthodes analytiques pour la Détermination d'un arc du Méridien
    [Analytical methods for determination an arc of the meridian]''
    (Crapelet, Paris, 1799).[[BR]]
