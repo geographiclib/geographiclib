@@ -129,6 +129,11 @@ $Id$
    Translation with commentary: ''Celestial Mechanics'' by N. Bowditch, Vol. 2
    (Boston, 1832), pp. 358--491.[[BR]]
    http://geographiclib.sf.net/geodesic-papers/laplace99a.pdf
+ * J. B. J. Delambre, A. M. Legendre,[[BR]]
+   ''Méthodes analytiques pour la Détermination d'un arc du Méridien
+   [Analytical methods for determination an arc of the meridian]''
+   (Crapelet, Paris, 1799).[[BR]]
+   http://books.google.com/books?id=DBAOAAAAQAAJ
  * A. M. Legendre,[[BR]]
    ''Mémoire sur les opérations trigonométriques, dont les résultats
    dépendent de la figure de la terre [Trigonometric operations which
@@ -187,7 +192,7 @@ $Id$
    Part 3: '''2'''(2), 1--58 (Bologna, 1810);
    Addendum: Mem. dell'Imp. Reg. Ist. del Regno Lombardo-Veneto '''4''',
    325--331 (Milan, 1833).[[BR]]
-   http://www.archive.org/stream/memoriedellistit11isti#page/118 [[BR]]
+   http://books.google.com/books?id=SydFAAAAcAAJ&pg=PA118 [[BR]]
    http://www.archive.org/stream/memoriedellistit21isti#page/1 [[BR]]
    http://www.archive.org/stream/memoriedellistit22isti#page/1 [[BR]]
    http://books.google.com/books?id=6bsAAAAAYAAJ&pg=PA325 [[BR]]
