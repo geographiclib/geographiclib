@@ -165,7 +165,7 @@ $Id$
    http://geographiclib.sf.net/geodesic-papers/legendre25-fig.pdf
  * J. G. Soldner,[[BR]]
    ''Über die kürzeste Linie auf dem Sphäroide
-   [The shortest line on a spheroid]'',
+   [The shortest line on the spheroid]'',
    Monat. Corr. Zach '''11''', 7--23 (Gotha, 1805).[[BR]]
    http://books.google.com/books?id=454AAAAAMAAJ&pg=PA5
  * J. G. Soldner,[[BR]]
