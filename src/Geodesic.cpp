@@ -686,7 +686,7 @@ namespace GeographicLib {
     ssig1 = sbet1; somg1 = salp0 * sbet1;
     csig1 = comg1 = calp1 * cbet1;
     SinCosNorm(ssig1, csig1);
-    SinCosNorm(somg1, comg1);
+    // SinCosNorm(somg1, comg1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -708,7 +708,7 @@ namespace GeographicLib {
     ssig2 = sbet2; somg2 = salp0 * sbet2;
     csig2 = comg2 = calp2 * cbet2;
     SinCosNorm(ssig2, csig2);
-    SinCosNorm(somg2, comg2);
+    // SinCosNorm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),

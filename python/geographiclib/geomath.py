@@ -13,6 +13,7 @@
 # $Id$
 ######################################################################
 
+import sys
 import math
 
 class Math(object):
@@ -51,6 +52,9 @@ class Math(object):
   def log1p(x):
     """log(1 + x) accurate for small x (missing from python 2.5.2)"""
 
+    if sys.version_info > (2, 6):
+      return math.log1p(x)
+
     y = 1 + x
     z = y - 1
     # Here's the explanation for this magic: y = 1 + z, exactly, and z
@@ -62,6 +66,10 @@ class Math(object):
 
   def atanh(x):
     """atanh(x) (missing from python 2.5.2)"""
+
+    if sys.version_info > (2, 6):
+      return math.atanh(x)
+
     y = abs(x)                  # Enforce odd parity
     y = Math.log1p(2 * y/(1 - y))/2
     return -y if x < 0 else y

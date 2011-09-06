@@ -53,7 +53,7 @@ GeographicLib.DMS = {};
     dmsa = dmsa.replace(/''/g, '"');
     dmsa = dmsa.replace(/^\s+/, "");
     dmsa = dmsa.replace(/\s+$/, "");
-    do {		// Executed once (provides the ability to break)
+    do {                       // Executed once (provides the ability to break)
       var sign = 1;
       var beg = 0, end = dmsa.length;
       var ind1 = d.NONE;
@@ -64,18 +64,18 @@ GeographicLib.DMS = {};
         ++beg;
       }
       if (end > beg &&
-	  (k = d.lookup(d.hemispheres_, dmsa.charAt(end-1))) >= 0) {
+          (k = d.lookup(d.hemispheres_, dmsa.charAt(end-1))) >= 0) {
         if (k >= 0) {
           if (ind1 != d.NONE) {
             if (dmsa.charAt(beg - 1).toUpperCase() ==
-		dmsa.charAt(end - 1).toUpperCase())
+                dmsa.charAt(end - 1).toUpperCase())
               errormsg = "Repeated hemisphere indicators " +
-	      dmsa.charAt(beg - 1) + " in " +
-	      dmsa.substr(beg - 1, end - beg + 1);
+              dmsa.charAt(beg - 1) + " in " +
+              dmsa.substr(beg - 1, end - beg + 1);
             else
               errormsg = "Contradictory hemisphere indicators " +
-	      dmsa.charAt(beg - 1) + " and " + dmsa.charAt(end - 1) + " in " +
-	      dmsa.substr(beg - 1, end - beg + 1);
+              dmsa.charAt(beg - 1) + " and " + dmsa.charAt(end - 1) + " in " +
+              dmsa.substr(beg - 1, end - beg + 1);
             break;
           }
           ind1 = (k & 2) ? d.LONGITUDE : d.LATITUDE;
@@ -106,7 +106,7 @@ GeographicLib.DMS = {};
         if ((k = d.lookup(d.digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0)
-            ++digcount;		// Count of decimal digits
+            ++digcount;         // Count of decimal digits
           else
             icurrent = 10 * icurrent + k;
         } else if (x == '.') {
@@ -142,7 +142,7 @@ GeographicLib.DMS = {};
             break;
           }
           if (digcount > 1) {
-	    fcurrent = parseFloat(dmsa.substr(p - digcount - 1, digcount));
+            fcurrent = parseFloat(dmsa.substr(p - digcount - 1, digcount));
           }
           ipieces[k] = icurrent;
           fpieces[k] = icurrent + fcurrent;
@@ -175,7 +175,7 @@ GeographicLib.DMS = {};
           break;
         }
         if (digcount > 1) {
-	  fcurrent = parseFloat(dmsa.substr(p - digcount, digcount));
+          fcurrent = parseFloat(dmsa.substr(p - digcount, digcount));
         }
         ipieces[npiece] = icurrent;
         fpieces[npiece] = icurrent + fcurrent;
@@ -218,7 +218,7 @@ GeographicLib.DMS = {};
     if (p1 + 1 < p0 + 3)
       return 0;
     // Strip off sign and trailing 0s
-    t = t.substr(p0, p1 + 1 - p0);  // Length at least 3
+    t = t.substr(p0, p1 + 1 - p0); // Length at least 3
     if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
         t == "1.#R")
       return sign * Number.NaN;
@@ -245,8 +245,8 @@ GeographicLib.DMS = {};
       ib = d.LATITUDE + d.LONGITUDE - ia;
     if (ia == ib)
       throw new Error("Both " + stra + " and "
-		      + strb + " interpreted as "
-		      + (ia == d.LATITUDE ? "latitudes" : "longitudes"));
+                      + strb + " interpreted as "
+                      + (ia == d.LATITUDE ? "latitudes" : "longitudes"));
     var lat = ia == d.LATITUDE ? a : b, lon = ia == d.LATITUDE ? b : a;
     if (lat < -90 || lat > 90)
       throw new Error("Latitude " + lat + "d not in [-90d, 90d]");
@@ -273,7 +273,7 @@ GeographicLib.DMS = {};
     var azi = vals.val, ind = vals.ind;
     if (ind == d.LATITUDE)
       throw new Error("Azimuth " + azistr
-		      + " has a latitude hemisphere, N/S");
+                      + " has a latitude hemisphere, N/S");
     if (azi < -180 || azi > 360)
       throw new Error("Azimuth " + azistr + " not in range [-180d, 360d]");
     if (azi >= 180) azi -= 360;
@@ -325,23 +325,23 @@ GeographicLib.DMS = {};
     switch (trailing) {
     case d.DEGREE:
       s += d.zerofill(pieces[0].toFixed(prec),
-		      ind == d.NONE ? 0 :
-		      1 + Math.min(ind, 2) + prec + (prec ? 1 : 0)) +
-	d.dmsindicatorsu_.charAt(0);
+                      ind == d.NONE ? 0 :
+                      1 + Math.min(ind, 2) + prec + (prec ? 1 : 0)) +
+        d.dmsindicatorsu_.charAt(0);
       break;
     default:
       s += d.zerofill(pieces[0].toFixed(0),
-		      ind == d.NONE ? 0 : 1 + Math.min(ind, 2)) +
-	d.dmsindicatorsu_.charAt(0);
+                      ind == d.NONE ? 0 : 1 + Math.min(ind, 2)) +
+        d.dmsindicatorsu_.charAt(0);
       switch (trailing) {
       case d.MINUTE:
-	s += d.zerofill(pieces[1].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
-	  d.dmsindicatorsu_.charAt(1);
+        s += d.zerofill(pieces[1].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
+          d.dmsindicatorsu_.charAt(1);
         break;
       case d.SECOND:
-	s += d.zerofill(pieces[1].toFixed(0), 2) + d.dmsindicatorsu_.charAt(1);
-	s += d.zerofill(pieces[2].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
-	  d.dmsindicatorsu_.charAt(2);
+        s += d.zerofill(pieces[1].toFixed(0), 2) + d.dmsindicatorsu_.charAt(1);
+        s += d.zerofill(pieces[2].toFixed(prec), 2 + prec + (prec ? 1 : 0)) +
+          d.dmsindicatorsu_.charAt(2);
         break;
       default:
         break;
@@ -349,7 +349,7 @@ GeographicLib.DMS = {};
     }
     if (ind != d.NONE && ind != d.AZIMUTH)
       s += d.hemispheres_.charAt((ind == d.LATITUDE ? 0 : 2) +
-				 (sign < 0 ? 0 : 1));
+                                 (sign < 0 ? 0 : 1));
     return s;
   }
 

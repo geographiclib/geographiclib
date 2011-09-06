@@ -112,7 +112,7 @@ class Geodesic(object):
     else:
       y0 = 0
     # Now n is even
-    n /= 2
+    n //= 2
     while n:                    # while n--:
       n -= 1
       # Unroll loop x 2, so accumulators return to their original role
@@ -566,7 +566,7 @@ class Geodesic(object):
     ssig1 = sbet1; somg1 = salp0 * sbet1
     csig1 = comg1 = calp1 * cbet1
     ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
-    somg1, comg1 = Geodesic.SinCosNorm(somg1, comg1)
+    # SinCosNorm(somg1, comg1); -- don't need to normalize!
 
     # Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     # about this case, since this can yield singularities in the Newton
@@ -586,7 +586,7 @@ class Geodesic(object):
     ssig2 = sbet2; somg2 = salp0 * sbet2
     csig2 = comg2 = calp2 * cbet2
     ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
-    somg2, comg2 = Geodesic.SinCosNorm(somg2, comg2)
+    # SinCosNorm(somg2, comg2); -- don't need to normalize!
 
     # sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = math.atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),

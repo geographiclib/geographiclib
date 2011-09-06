@@ -63,8 +63,8 @@ GeographicLib.PolygonArea = {};
       var t = this._earth.Inverse(this._lat1, this._lon1, lat, lon, this._mask);
       this._perimetersum.Add(t.s12);
       if (!this._polyline) {
-	this._areasum.Add(t.S12);
-	this._crossings += p.transit(this._lon1, lon);
+        this._areasum.Add(t.S12);
+        this._crossings += p.transit(this._lon1, lon);
       }
       this._lat1 = lat;
       this._lon1 = lon;
@@ -78,7 +78,7 @@ GeographicLib.PolygonArea = {};
     if (this._num < 2) {
       vals.perimeter = 0;
       if (!this._polyline)
-	vals.area = 0;
+        vals.area = 0;
       return vals;
     }
     if (this._polyline) {
@@ -86,7 +86,7 @@ GeographicLib.PolygonArea = {};
       return vals;
     }
     var t = this._earth.Inverse(this._lat1, this._lon1, this._lat0, this._lon0,
-				this._mask);
+                                this._mask);
     vals.perimeter = this._perimetersum.Sum(t.s12);
     var tempsum = new a.Accumulator(this._areasum);
     tempsum.Add(t.S12);
@@ -100,14 +100,14 @@ GeographicLib.PolygonArea = {};
     // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
     if (sign) {
       if (tempsum.Sum() > this._area0/2)
-	tempsum.Add( -this._area0 );
+        tempsum.Add( -this._area0 );
       else if (tempsum.Sum() <= -this._area0/2)
-	tempsum.Add( +this._area0 );
+        tempsum.Add( +this._area0 );
     } else {
       if (tempsum.Sum() >= this._area0)
-	tempsum.Add( -this._area0 );
+        tempsum.Add( -this._area0 );
       else if (tempsum < 0)
-	tempsum.Add( -this._area0 );
+        tempsum.Add( -this._area0 );
     }
     vals.area = tempsum.Sum();
     return vals;
@@ -119,7 +119,7 @@ GeographicLib.PolygonArea = {};
     if (this._num == 0) {
       vals.perimeter = 0;
       if (!this._polyline)
-	vals.area = 0;
+        vals.area = 0;
       return vals;
     }
     vals.perimeter = this._perimetersum.Sum();
@@ -133,9 +133,9 @@ GeographicLib.PolygonArea = {};
        this._mask);
       vals.perimeter += t.s12;
       if (!this._polyline) {
-	tempsum += t.S12;
-	crossings += p.transit(i == 0 ? this._lon1 : lon,
-			       i != 0 ? this._lon0 : lon);
+        tempsum += t.S12;
+        crossings += p.transit(i == 0 ? this._lon1 : lon,
+                               i != 0 ? this._lon0 : lon);
       }
     }
 
@@ -151,14 +151,14 @@ GeographicLib.PolygonArea = {};
     // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
     if (sign) {
       if (tempsum > this._area0/2)
-	tempsum -= this._area0;
+        tempsum -= this._area0;
       else if (tempsum <= -this._area0/2)
-	tempsum += this._area0;
+        tempsum += this._area0;
     } else {
       if (tempsum >= this._area0)
-	tempsum -= this._area0;
+        tempsum -= this._area0;
       else if (tempsum < 0)
-	tempsum += this._area0;
+        tempsum += this._area0;
     }
     vals.area = tempsum;
     return vals;
