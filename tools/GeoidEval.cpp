@@ -55,9 +55,9 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 4;
-      } else if (arg == "--msltohae" || arg == "-msltohae")
+      } else if (arg == "--msltohae")
         heightmult = Geoid::GEOIDTOELLIPSOID;
-      else if (arg == "--haetomsl" || arg == "-haetomsl")
+      else if (arg == "--haetomsl")
         heightmult = Geoid::ELLIPSOIDTOGEOID;
       else if (arg == "-z") {
         if (++m == argc) return usage(1, true);
@@ -173,27 +173,52 @@ int main(int argc, char* argv[]) {
       }
 
       GeoCoords p;
-      std::string s;
+      std::string s, suff;
       const char* spaces = " \t\n\v\f\r,"; // Include comma as space
       while (std::getline(*input, s)) {
         try {
           real height = 0;
           if (heightmult) {
-            std::string::size_type pb = s.find_last_not_of(spaces);
-            std::string::size_type pa = s.find_last_of(spaces, pb);
-            std::string::size_type px = s.find_last_not_of(spaces, pa);
-            if (pa == std::string::npos || pb == std::string::npos ||
-                px == std::string::npos)
-              throw GeographicErr("Incomplete input: " + s);
-            height = DMS::Decode(s.substr(pa + 1, pb - pa));
-            s = s.substr(0, px + 1);
+            if (zone.empty()) {
+              // Treat last token as height
+              // pb = last char of last token
+              // pa = last char preceding white space
+              // px = last char of 2nd last token
+              std::string::size_type pb = s.find_last_not_of(spaces);
+              std::string::size_type pa = s.find_last_of(spaces, pb);
+              std::string::size_type px = s.find_last_not_of(spaces, pa);
+              if (pa == std::string::npos || pb == std::string::npos ||
+                  px == std::string::npos)
+                throw GeographicErr("Incomplete input: " + s);
+              height = DMS::Decode(s.substr(pa + 1, pb - pa));
+              s = s.substr(0, pa);
+            } else {
+              // Expect easting northing height intensity...
+              std::string::size_type pa = s.find_first_not_of(spaces);
+              // Skip over two tokens
+              for (int i = 0; i < 2; ++i) {
+                if (pa != std::string::npos)
+                  pa = s.find_first_of(spaces, pa);
+                if (pa != std::string::npos)
+                  pa = s.find_first_not_of(spaces, pa);
+              }
+              if (pa == std::string::npos)
+                throw GeographicErr("Incomplete input: " + s);
+              std::string::size_type pb = s.find_first_of(spaces, pa);
+              if (pb == std::string::npos) pb = s.length();
+              // third token is [pa, pb)
+              height = DMS::Decode(s.substr(pa, pb - pa));
+              suff = s.substr(pb);
+              s = s.substr(0, pa - 1);
+            }
           }
           p.Reset(zone + s);
           if (heightmult) {
             real h = g(p.Latitude(), p.Longitude());
             *output << s << " "
                     << DMS::Encode(height + real(heightmult) * h,
-                                   3, DMS::NUMBER) << "\n";
+                                   3, DMS::NUMBER)
+                    << suff << "\n";
           } else {
             real gradn, grade;
             real h = g(p.Latitude(), p.Longitude(), gradn, grade);

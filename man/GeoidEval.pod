@@ -66,13 +66,15 @@ when the input consists of UTM/UPS eastings and northings.
 standard input should include a final token on each line which is
 treated as a height (in meters) above the geoid and the output echoes
 the input line with the height converted to height above ellipsoid
-(HAE).
+(HAE).  If B<-z> I<zone> is specified then the I<third> token is treated
+as the height; this makes it possible to convert LIDAR data where each
+line consists of: easting northing height intensity.
 
 =item B<--haetomsl>
 
-standard input should include a final token on each line which is
-treated as a height (in meters) above the ellipsoid and the output
-echoes the input line with the height converted to height above geoid.
+this is similar to B<--msltohae> except that the height token is treated
+as a height (in meters) above the ellipsoid and the output echoes the
+input line with the height converted to height above the geoid (MSL).
 
 =item B<-v>
 

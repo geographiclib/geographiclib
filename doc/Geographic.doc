@@ -2259,7 +2259,10 @@ number.)
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-mm-dd)</a>
   - Ensure that geographiclib-config.cmake is relocatable.
   - Allow more unicode symbols to be used in GeographicLib::DMS::Decode.
-  - Documentation fixes.
+  - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
+    used to convert the height datum for LIDAR data.
+  - Modest speed-up of Geodesic::Inverse.
+  - Various documentation fixes.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a>
   - Changes to I/O:
