@@ -13,6 +13,7 @@
  **********************************************************************/
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -30,9 +31,10 @@ int main(int argc, char* argv[]) {
     real caches, cachew, cachen, cachee;
     std::string dir;
     std::string geoid = Geoid::DefaultGeoidName();
-    std::string zone;
     Geoid::convertflag heightmult = Geoid::NONE;
     std::string istring, ifile, ofile;
+    bool northp = false;
+    int zonenum = UTMUPS::INVALID;
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -61,15 +63,16 @@ int main(int argc, char* argv[]) {
         heightmult = Geoid::ELLIPSOIDTOGEOID;
       else if (arg == "-z") {
         if (++m == argc) return usage(1, true);
-        zone = argv[m];
-        bool northp;
-        int zonenum;
+        std::string zone = argv[m];
         try {
           UTMUPS::DecodeZone(zone, zonenum, northp);
-          zone += ' ';
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding zone: " << e.what() << "\n";
+          return 1;
+        }
+        if (!(zonenum >= UTMUPS::MINZONE && zonenum <= UTMUPS::MAXZONE)) {
+          std::cerr << "Illegal zone " << zone << "\n";
           return 1;
         }
       } else if (arg == "-n") {
@@ -178,46 +181,49 @@ int main(int argc, char* argv[]) {
       while (std::getline(*input, s)) {
         try {
           real height = 0;
-          if (heightmult) {
-            if (zone.empty()) {
+          if (zonenum != UTMUPS::INVALID) {
+            // Expect "easting northing" if heightmult == 0, or
+            // "easting northing height" if heightmult != 0.
+            std::string::size_type pa = 0, pb = 0;
+            real easting = 0, northing = 0;
+            for (int i = 0; i < (heightmult ? 3 : 2); ++i) {
+              if (pb == std::string::npos)
+                throw GeographicErr("Incomplete input: " + s);
+              // Start of i'th token
+              pa = s.find_first_not_of(spaces, pb);
+              if (pa == std::string::npos)
+                throw GeographicErr("Incomplete input: " + s);
+              // End of i'th token
+              pb = s.find_first_of(spaces, pa);
+              (i == 2 ? height : (i == 0 ? easting : northing)) =
+                DMS::Decode(s.substr(pa,
+                                     pb == std::string::npos ? pb : pb - pa));
+            }
+            p.Reset(zonenum, northp, easting, northing);
+            if (heightmult) {
+              suff = pb == std::string::npos ? "" : s.substr(pb);
+              s = s.substr(0, pa);
+            }
+          } else {
+            if (heightmult) {
               // Treat last token as height
               // pb = last char of last token
               // pa = last char preceding white space
               // px = last char of 2nd last token
               std::string::size_type pb = s.find_last_not_of(spaces);
               std::string::size_type pa = s.find_last_of(spaces, pb);
-              std::string::size_type px = s.find_last_not_of(spaces, pa);
-              if (pa == std::string::npos || pb == std::string::npos ||
-                  px == std::string::npos)
+              if (pa == std::string::npos || pb == std::string::npos)
                 throw GeographicErr("Incomplete input: " + s);
               height = DMS::Decode(s.substr(pa + 1, pb - pa));
-              s = s.substr(0, pa);
-            } else {
-              // Expect easting northing height intensity...
-              std::string::size_type pa = s.find_first_not_of(spaces);
-              // Skip over two tokens
-              for (int i = 0; i < 2; ++i) {
-                if (pa != std::string::npos)
-                  pa = s.find_first_of(spaces, pa);
-                if (pa != std::string::npos)
-                  pa = s.find_first_not_of(spaces, pa);
-              }
-              if (pa == std::string::npos)
-                throw GeographicErr("Incomplete input: " + s);
-              std::string::size_type pb = s.find_first_of(spaces, pa);
-              if (pb == std::string::npos) pb = s.length();
-              // third token is [pa, pb)
-              height = DMS::Decode(s.substr(pa, pb - pa));
-              suff = s.substr(pb);
-              s = s.substr(0, pa - 1);
+              s = s.substr(0, pa + 1);
             }
+            p.Reset(s);
           }
-          p.Reset(zone + s);
           if (heightmult) {
             real h = g(p.Latitude(), p.Longitude());
-            *output << s << " "
+            *output << s
                     << DMS::Encode(height + real(heightmult) * h,
-                                   3, DMS::NUMBER)
+                                   4, DMS::NUMBER)
                     << suff << "\n";
           } else {
             real gradn, grade;
