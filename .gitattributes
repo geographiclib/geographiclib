@@ -12,6 +12,7 @@ Doxyfile ident text
 *.html ident text
 *.iss ident text
 *.js ident text
+*.pro ident text
 *.py ident text
 *.m ident text
 *.mac ident text
