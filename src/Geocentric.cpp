@@ -104,7 +104,7 @@ namespace GeographicLib {
           disc =  S * (2 * r3 + S);
         real u = r;
         if (disc >= 0) {
-          real T3 = r3 + S;
+          real T3 = S + r3;
           // Pick the sign on the sqrt to maximize abs(T3).  This minimizes
           // loss of precision due to cancellation.  The result is unchanged
           // because of the way the T is used in definition of u.
