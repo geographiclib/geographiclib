@@ -32,10 +32,7 @@ INSTALL = install -b
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(MANPAGES) $(DEST)/
-list:
-	@echo $(PODSRC) $(MANPAGES) $(USAGE) $(HTMLMAN)
-
 distclean:
 	rm -f *.1 *.usage *.1.html
 
-.PHONY: all install list clean
+.PHONY: all install clean

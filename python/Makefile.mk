@@ -14,11 +14,7 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(PYTHON_FILES) $(DEST)/
-
 clean:
 	rm -f *.pyc $(PACKAGE)/*.pyc
 
-list:
-	@echo Makefile.am $(PACKAGE)/CMakeLists.txt $(PYTHONFILES)
-
-.PHONY: all install list clean
+.PHONY: all install clean

@@ -48,16 +48,6 @@ distclean-doc:
 distclean-man:
 	$(MAKE) -C man distclean
 
-list:
-	@for f in 00README.txt LICENSE.txt AUTHORS NEWS Makefile \
-	$(MAKEFILE); do \
-	  echo $$f; \
-	done
-	@for d in $(ALLDIRS); do \
-	  (echo $(MAKEFILE); $(MAKE) -s -C $$d list) | tr ' ' '\n' | \
-	  while read f; do echo $$d/$$f; done; \
-	done
-
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 
 .PHONY: all $(SUBDIRS) install \

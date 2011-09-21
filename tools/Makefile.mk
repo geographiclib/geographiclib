@@ -75,9 +75,6 @@ INSTALL = install -b
 DEST = $(PREFIX)/bin
 SDEST = $(PREFIX)/sbin
 
-list:
-	@echo $(addsuffix .cpp,$(PROGRAMS))
-
 install: $(PROGRAMS) $(SCRIPTS)
 	test -f $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) $(PROGRAMS) $(DEST)

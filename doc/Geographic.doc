@@ -181,6 +181,7 @@ Then pick one of the first five options below:
   the utility programs supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
+- \ref qt.  This XXX
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -390,6 +391,24 @@ path in Matlab to access this interface.  The binaries were built using
 Visual Studio 10 (2010) for Win32 in Release mode.  The Matlab interface
 was compiled with Matlab R2010b, however it works with some other
 versions of Matlab (e.g., R2008a).
+
+\section qt Building the library under Qt
+
+This method requires builds the library (not the utility programs) under
+Qt.  This is useful if you need to link a Qt project with %GeographicLib
+to ensure that the library is compatible with your project.
+
+Here are the steps to compile %GeographicLib with Qt:
+- Unpack the source, running \verbatim
+  tar xfpz GeographicLib-1.14.tar.gz \endverbatim
+  then enter the src subdirectory \verbatim
+  cd GeographicLib-1.14/src \endverbatim
+- Configure and build the library: \verbatim
+  qmake Geographic.pro   # configure the project
+  make                   # build the library \endverbatim
+- The library will be in the src directory (or the src/release or
+  src/debug directory under Windows).  The headers are in
+  include/GeographicLib.
 
 \section maintainer Maintainer tasks
 
@@ -2263,6 +2282,7 @@ number.)
     used to convert the height datum for LIDAR data.
   - Modest speed-up of Geodesic::Inverse.
   - Various documentation fixes.
+  - Supply a minimal Qt qmake project file for library src/Geographic.pro
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a>
   - Changes to I/O:

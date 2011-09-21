@@ -43,12 +43,7 @@ install: html/index.html
 	mkdir -p $(SCRIPTDEST)/GeographicLib
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(SCRIPTDEST)/
 	$(INSTALL) -m 644 $(JSSCRIPTS) $(SCRIPTDEST)/GeographicLib/
-
-list:
-	@echo Doxyfile Geographic.doc $(EXTRAFILES) \
-	$(SCRIPTDRIVERS) $(JSSCRIPTS)
-
 distclean:
 	rm -rf html
 
-.PHONY: doc install list clean
+.PHONY: doc install clean

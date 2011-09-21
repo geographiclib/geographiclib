@@ -19,8 +19,5 @@ install:
 	@:
 clean:
 	@:
-list:
-	@echo $(VSPROJECTS) \
-	GeographicLib-vc8.sln GeographicLib-vc9.sln GeographicLib-vc10.sln 
 
-.PHONY: all install list clean
+.PHONY: all install clean

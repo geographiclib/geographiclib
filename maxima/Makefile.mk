@@ -9,7 +9,5 @@ install:
 	@:
 clean:
 	@:
-list:
-	@echo $(MAXIMASOURCES)
 
-.PHONY: all install list clean
+.PHONY: all install clean

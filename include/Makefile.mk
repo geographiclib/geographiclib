@@ -21,10 +21,7 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(HEADERS) $(DEST)/
-list:
-	@echo $(HEADERS)
-
 clean:
 	@:
 
-.PHONY: all install list clean
+.PHONY: all install clean

@@ -51,10 +51,6 @@ INSTALL = install -b
 PREFIX = /usr/local
 DEST = $(PREFIX)/bin
 
-list:
-	@echo $(addsuffix .cpp,$(PROGRAMS))
-
 install: $(PROGRAMS)
 	test -f $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) $^ $(DEST)
-

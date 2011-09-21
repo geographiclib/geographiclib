@@ -19,11 +19,7 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(MATLABFILES) $(DEST)/
-
 clean:
 	rm -f *.mex* *.oct
 
-list:
-	@echo $(MATLABFILES)
-
-.PHONY: all install list clean
+.PHONY: all install clean

@@ -39,8 +39,6 @@ install: $(LIBRARY)
 	test -f $(PREFIX)/lib || mkdir -p $(PREFIX)/lib
 	$(INSTALL) -m 644 $^ $(PREFIX)/lib
 
-list:
-	@echo $(SOURCES)
 clean:
 	rm -f *.o $(LIBRARY)
 
@@ -76,4 +74,4 @@ Gnomonic.o: Gnomonic.hpp Constants.hpp Math.hpp Config.h Geodesic.hpp
 OSGB.o: OSGB.hpp Constants.hpp Math.hpp Config.h TransverseMercator.hpp
 AlbersEqualArea.o: AlbersEqualArea.hpp Constants.hpp Math.hpp Config.h
 
-.PHONY: all install list clean
+.PHONY: all install clean
