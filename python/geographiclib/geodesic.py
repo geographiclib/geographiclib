@@ -612,6 +612,8 @@ class Geodesic(object):
         dummy, dlam12, dummy, dummy, dummy = self.Lengths(
           eps, sig12, ssig1, csig1, ssig2, csig2, cbet1, cbet2, False, C1a, C2a)
         dlam12 /= calp2 * cbet2
+    else:
+      dlam12 = Math.nan
 
     return (lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
             domg12, dlam12)
@@ -795,7 +797,7 @@ class Geodesic(object):
           # checks this against epsilon.
           if not(abs(v) >= Geodesic.tol1_ and
                  Math.sq(v) >= ov * Geodesic.tol0_):
-            ++trip
+            trip += 1
           ov = abs(v)
           numit += 1
 
