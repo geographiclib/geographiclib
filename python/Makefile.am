@@ -23,6 +23,6 @@ install:
 	$(INSTALL) -m 644 setup.py $(DESTDIR)$(pythondir)/../
 
 clean-local:
-	rm -rf $(PACKAGE)/*.pyc
+	rm -rf *.pyc $(PACKAGE)/*.pyc
 
 EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) setup.py

@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.14
-\date 2011-mm-dd
+\date 2011-09-30
 
 \section abstract Abstract
 
@@ -2294,7 +2294,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a>
   - Ensure that geographiclib-config.cmake is relocatable.
   - Allow more unicode symbols to be used in GeographicLib::DMS::Decode.
   - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
@@ -2305,8 +2305,8 @@ number.)
     - include setup.py for easy installation;
     - python only distibution is available at
       http://pypi.python.org/pypi/geographiclib
-  - Supply a minimal Qt qmake project file for library src/Geographic.pro.
-  - Various documentation fixes.
+  - Supply a minimal Qt qmake project file for library
+    src/Geographic.pro.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a>
   - Changes to I/O:
