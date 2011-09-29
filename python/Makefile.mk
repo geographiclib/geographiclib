@@ -14,6 +14,7 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(PYTHON_FILES) $(DEST)/
+	$(INSTALL) -m 644 ../setup.py $(DEST)/../
 clean:
 	rm -f *.pyc $(PACKAGE)/*.pyc
 
