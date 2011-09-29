@@ -20,8 +20,9 @@ pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 install:
 	$(INSTALL) -d $(DESTDIR)$(pythondir)
 	$(INSTALL) -m 644 $(PYTHON_FILES) $(DESTDIR)$(pythondir)
+	$(INSTALL) -m 644 setup.py $(DESTDIR)$(pythondir)/..
 
 clean-local:
 	rm -rf $(PACKAGE)/*.pyc
 
-EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES)
+EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) setup.py

@@ -44,12 +44,13 @@ distrib-js: doc/scripts/geographiclib.js
 	  cmp $$a $$b > /dev/null || install -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/htdocs/scripts $(USER),geographiclib@web.sourceforge.net:./htdocs/
 
+distrib-python: python/setup.py
+	cd python && python setup.py sdist --formats=gztar,zip upload
+
 TAGS:
 	for d in include src tools; do \
 	  $(MAKE) -s -C $$d list | tr ' ' '\n' | grep -v '/Config\.h$$' | \
 	  while read f; do echo $$d/$$f; done; \
 	done | xargs etags
 
-.PHONY: distrib-html distrib-doc distrib-files distrib-cgi TAGS
-
-
+.PHONY: distrib-html distrib-doc distrib-files distrib-cgi distrib-js distrib-python TAGS

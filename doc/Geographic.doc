@@ -851,10 +851,26 @@ implementations of the classes
 - GeographicLib::GeodesicLine
 - GeographicLib::PolygonArea
 .
-An example of using this interface is
-\code
+You can also download the python interface independent of the rest of
+%GeographicLib from
+- <a href="http://pypi.python.org/pypi/geographiclib">
+  http://pypi.python.org/pypi/geographiclib</a>
+.
+and then unpack the .tar.gz or .zip file.
+
+You can "install" these routines, so that they are in python's path
+with, for example \verbatim
+  cd /usr/local/lib/python/site-packages
+  python setup.py install
+\endverbatim
+(this will require root privileges).  Or else you can set the path
+within python using \code
 >>> import sys
 >>> sys.path.append("/usr/local/lib/python/site-packages");
+\endcode
+
+An example of using this interface is
+\code
 >>> from geographiclib.geodesic import Geodesic
 >>> # The geodesic inverse problem
 ... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
@@ -871,6 +887,9 @@ An example of using this interface is
 >>> # Introductory help
 ... help(Geodesic)
 \endcode
+
+(Note: The initial version of setup.py was provided by Andrew MacIntyre
+of the Australian Communications and Media Authority.)
 
 \section matlab Matlab and Octave interfaces
 
@@ -2281,8 +2300,13 @@ number.)
   - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
     used to convert the height datum for LIDAR data.
   - Modest speed-up of Geodesic::Inverse.
+  - Changes in python interface:
+    - FIX BUG in transcription of Geodesic::Inverse;
+    - include setup.py for easy installation;
+    - python only distibution is available at
+      http://pypi.python.org/pypi/geographiclib
+  - Supply a minimal Qt qmake project file for library src/Geographic.pro.
   - Various documentation fixes.
-  - Supply a minimal Qt qmake project file for library src/Geographic.pro
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a>
   - Changes to I/O:
