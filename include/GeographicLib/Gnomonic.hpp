@@ -28,6 +28,13 @@ namespace GeographicLib {
    *   preprint
    *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
    * .
+   * See also Section 8 of
+   * - C. F. F. Karney,
+   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
+   *   Sept. 2011;
+   *   preprint
+   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
+   * .
    * The projection of \e P is defined as follows: compute the
    * geodesic line from \e C to \e P; compute the reduced length \e m12,
    * geodesic scale \e M12, and \e rho = \e m12/\e M12; finally \e x = \e rho

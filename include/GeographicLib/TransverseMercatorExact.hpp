@@ -58,6 +58,10 @@ namespace GeographicLib {
    * taken to be the equator.  See the documentation on TransverseMercator for
    * how to include a false easting, false northing, or a latitude of origin.
    *
+   * See <a href="http://geographiclib.sourceforge.net/tm-grid.kmz"
+   * type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
+   * illustration of the transverse Mercator grid in Google Earth.
+   *
    * See TransverseMercatorExact.cpp for more information on the
    * implementation.
    *

@@ -27,6 +27,13 @@ namespace GeographicLib {
    *   Feb. 2011;
    *   preprint
    *   <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   * .
+   * See also Section 6 of
+   * - C. F. F. Karney,
+   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
+   *   Sept. 2011;
+   *   preprint
+   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
    *
    * This class lets you add vertices one at a time to the polygon.  The area
    * and perimeter are accumulated in two times the standard floating point

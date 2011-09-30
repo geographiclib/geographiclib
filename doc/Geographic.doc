@@ -1492,6 +1492,11 @@ References
    <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>;
    resource page
    <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.
+ - C. F. F. Karney,
+   <a href="http://arxiv.org/abs/1109.4448">
+   Algorithms for geodesics</a>,
+   Sept. 2011, preprint
+   <a href="http://arxiv.org/abs/1109.4448">arXiv:1109.4448</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
 
@@ -1962,6 +1967,10 @@ References
 The algorithm for GeographicLib::TransverseMercator is based on
 Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
 based on Lee (1976).
+
+See <a href="http://geographiclib.sourceforge.net/tm-grid.kmz"
+type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
+illustration of the exact transverse Mercator grid in Google Earth.
 
 \section testmerc Test data for the transverse Mercator projection
 

@@ -166,7 +166,12 @@ cat <<EOF
       <a href="http://arxiv.org/abs/1102.1215"><i>Geodesics
 	on an ellipsoid of revolution</i></a>,
       Feb. 2011; preprint
-      <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.
+      <a href="http://arxiv.org/abs/1102.1215">arxiv:1102.1215</a>.  See also
+      C. F. F. Karney,
+      <a href="http://arxiv.org/abs/1109.4448"><i>Algorithms for
+      geodesics</i></a>,
+      Sept. 2011; preprint
+      <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
     </p>
     <hr>
     <address>Charles Karney
