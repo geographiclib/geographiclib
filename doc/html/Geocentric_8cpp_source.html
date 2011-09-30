@@ -58,7 +58,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="Geocentric_8hpp.html" title="Header for GeographicLib::Geocentric class.">GeographicLib/Geocentric.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="Geocentric_8cpp.html#a290e33302d7c35b9465d73f33dcb0774">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_CPP &quot;$Id: 17c3f8d6cd82a95f7f7f09a31fad32c3651c12ed $&quot;</span>
+<a name="l00012"></a><a class="code" href="Geocentric_8cpp.html#a290e33302d7c35b9465d73f33dcb0774">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_CPP &quot;$Id: c883e179e267a6502d04a65bda7a5467aeb2367b $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geocentric_8cpp.html#a290e33302d7c35b9465d73f33dcb0774">GEOGRAPHICLIB_GEOCENTRIC_CPP</a>)
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">GEOGRAPHICLIB_GEOCENTRIC_HPP</a>)
@@ -153,7 +153,7 @@
 <a name="l00104"></a>00104           disc =  S * (2 * r3 + S);
 <a name="l00105"></a>00105         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> u = r;
 <a name="l00106"></a>00106         <span class="keywordflow">if</span> (disc &gt;= 0) {
-<a name="l00107"></a>00107           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> T3 = r3 + S;
+<a name="l00107"></a>00107           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> T3 = S + r3;
 <a name="l00108"></a>00108           <span class="comment">// Pick the sign on the sqrt to maximize abs(T3).  This minimizes</span>
 <a name="l00109"></a>00109           <span class="comment">// loss of precision due to cancellation.  The result is unchanged</span>
 <a name="l00110"></a>00110           <span class="comment">// because of the way the T is used in definition of u.</span>
@@ -230,7 +230,7 @@
 <a name="l00181"></a>00181 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

@@ -1,4 +1,4 @@
-# $Id: 288282296aa80489daf89db9fb183e2c82dc04ef $
+# $Id: 0d173c64d38567dc806ace24a52bd09ebb61175d $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -74,9 +74,6 @@ geographiclib-get-geoids: geographiclib-get-geoids.sh
 INSTALL = install -b
 DEST = $(PREFIX)/bin
 SDEST = $(PREFIX)/sbin
-
-list:
-	@echo $(addsuffix .cpp,$(PROGRAMS))
 
 install: $(PROGRAMS) $(SCRIPTS)
 	test -f $(DEST) || mkdir -p $(DEST)

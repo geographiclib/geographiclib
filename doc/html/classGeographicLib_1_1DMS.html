@@ -204,9 +204,32 @@ Static Public Member Functions</h2></td></tr>
 </ul>
 </li>
 </ul>
-<p><b>NOTE:</b> At present, all the string handling in the C++ implementation GeographicLib is with 8-bit characters. The support for unicode symbols for degrees, minutes, and seconds is therefore via the <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding. (The Javascript implementation of this class uses unicode natively, of course.) </p>
+<p><b>NOTE:</b> At present, all the string handling in the C++ implementation GeographicLib is with 8-bit characters. The support for unicode symbols for degrees, minutes, and seconds is therefore via the <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding. (The Javascript implementation of this class uses unicode natively, of course.)</p>
+<p>Here is the list of Unicode symbols supported for degrees, minutes, seconds:</p>
+<ul>
+<li>degrees:<ul>
+<li>d, D lower and upper case letters</li>
+<li>U+00b0 degree symbol</li>
+<li>U+00ba masculine ordinal indicator</li>
+<li>U+2070 superscript zero</li>
+</ul>
+</li>
+<li>minutes:<ul>
+<li>' apostrophe</li>
+<li>U+2032 prime</li>
+<li>U+00b4 acute accent</li>
+</ul>
+</li>
+<li>seconds:<ul>
+<li>" quotation mark</li>
+<li>U+2033 double prime</li>
+<li>'&#160;' any two consecutive symbols for minutes</li>
+</ul>
+</li>
+</ul>
+<p>The codes with a leading zero byte, e.g., U+00b0, are accepted in their UTF-8 coded form 0xc2 0xb0 and as a single byte 0xb0. </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00028">28</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00030">30</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00026">main()</a>, and <a class="el" href="Geod_8cpp_source.html#l00057">ReadDistance()</a>.</p>
 
@@ -254,7 +277,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>angle (degrees)</dd></dl>
 <p>This does not propagate the sign on <em>d</em> to the other components, so -3d20' would need to be represented as - <a class="el" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(3.0, 20.0) or <a class="el" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(-3.0, -20.0). </p>
 
-<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00175">175</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00194">194</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
 
 </div>
 </div>
@@ -281,7 +304,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>decoded number. </dd></dl>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00219">219</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00224">224</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 </div>
 </div>
@@ -308,7 +331,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>decoded number. </dd></dl>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00247">247</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00252">252</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -369,7 +392,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <p>By default, the <em>lat</em> (resp., <em>lon</em>) is assigned to the results of decoding <em>dmsa</em> (resp., <em>dmsb</em>). However this is overridden if either <em>dmsa</em> or <em>dmsb</em> contain a latitude or longitude hemisphere designator (N, S, E, W). Throws an error if the decoded numbers are out of the ranges [-90<sup>o</sup>, 90<sup>o</sup>] for latitude and [-180<sup>o</sup>, 360<sup>o</sup>] for longitude and, in which case <em>lat</em> and <em>lon</em> are unchanged. Finally the longitude is reduced to the range [-180<sup>o</sup>, 180<sup>o</sup>). </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00256">256</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00261">261</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -399,7 +422,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>angle (degrees)</dd></dl>
 <p>No hemisphere designator is allowed and no check is done on the range of the result. </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00288">288</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00293">293</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00057">ReadDistance()</a>.</p>
 
@@ -429,7 +452,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>azimuth (degrees)</dd></dl>
 <p>A hemisphere designator E/W can be used; the result is multiplied by -1 if W is present. Throws an error if the result is out of the range [-180<sup>o</sup>, 360<sup>o</sup>]. Finally the azimuth is reduced to the range [-180<sup>o</sup>, 180<sup>o</sup>). </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00297">297</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00302">302</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00062">main()</a>.</p>
 
@@ -471,7 +494,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Convert angle (in degrees) into a <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a> string.</p>
+<p>Convert angle (in degrees) into a <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a> string (using d, ', and ").</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">angle</td><td>input angle (degrees) </td></tr>
@@ -491,7 +514,7 @@ Static Public Member Functions</h2></td></tr>
 </ul>
 <p>The integer parts of the minutes and seconds components are always given with 2 digits. </p>
 
-<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00309">309</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8cpp_source.html#l00314">314</a> of file <a class="el" href="DMS_8cpp_source.html">DMS.cpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00037">AzimuthString()</a>, <a class="el" href="Geod_8cpp_source.html#l00043">DistanceStrings()</a>, <a class="el" href="Geod_8cpp_source.html#l00028">LatLonString()</a>, and <a class="el" href="CartConvert_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -527,7 +550,7 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Convert angle into a <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a> string selecting the trailing component based on the precision.</p>
+<p>Convert angle into a <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a> string (using d, ', and ") selecting the trailing component based on the precision.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">angle</td><td>input angle (degrees) </td></tr>
@@ -539,9 +562,9 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>formatted string</dd></dl>
 <p><em>prec</em> indicates the precision relative to 1 degree, e.g., <em>prec</em> = 3 gives a result accurate to 0.1' and <em>prec</em> = 4 gives a result accurate to 1". <em>ind</em> is interpreted as in <a class="el" href="classGeographicLib_1_1DMS.html#a3e36baa6114d46f82a8900d002784369">DMS::Encode</a> with the additional facility at <a class="el" href="classGeographicLib_1_1DMS.html#a7a1101fd2577636863753baae3e54869a5a65ec03b2682ad76873829167882518">DMS::NUMBER</a> treats <em>angle</em> a number in fixed format with precision <em>prec</em>. </p>
 
-<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00283">283</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00302">302</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00321">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00319">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -585,7 +608,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00305">305</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00324">324</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
 
 </div>
 </div>
@@ -636,7 +659,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00317">317</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="DMS_8hpp_source.html#l00336">336</a> of file <a class="el" href="DMS_8hpp_source.html">DMS.hpp</a>.</p>
 
 </div>
 </div>
@@ -645,7 +668,7 @@ Static Public Member Functions</h2></td></tr>
 <li><a class="el" href="DMS_8cpp_source.html">DMS.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

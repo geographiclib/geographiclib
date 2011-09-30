@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: a4d80d707a4ea58d795008b5dd9180fc99bfd4ca $\n"
+          << ": $Id: 5fd0c8bb5785c1d34cabff7cb3a135c237e6ef01 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
     if (!ofile.empty()) {
       outfile.open(ofile.c_str());
       if (!outfile.is_open()) {
-        std::cerr << "Cannot open " << ofile << " for wrting\n";
+        std::cerr << "Cannot open " << ofile << " for writing\n";
         return 1;
       }
     }

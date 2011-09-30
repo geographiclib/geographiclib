@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: d07238fb7f335a5bca6341c8af421bc624e41427 $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: 22e444fc38e3e8b49a56c7a22121ddeb78c230b9 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -28,7 +28,7 @@ namespace GeographicLib {
    * differences have been used to transform the expressions into ones which
    * may be evaluated accurately and that Newton's method is used to invert the
    * projection.  In this implementation, the projection correctly becomes the
-   * Mercator_ projection or the polar sterographic projection when the standard
+   * Mercator projection or the polar sterographic projection when the standard
    * latitude is the equator or a pole.  The accuracy of the projections is
    * about 10 nm.
    *
@@ -336,7 +336,7 @@ namespace GeographicLib {
     /**
      * A global instantiation of LambertConformalConic with the WGS84
      * ellipsoid, \e stdlat = 0, and \e k0 = 1.  This degenerates to the
-     * Mercator_ projection.
+     * Mercator projection.
      **********************************************************************/
     static const LambertConformalConic Mercator;
   };

@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: b75fb5d984762fb0561a58c045954047407e4de6 $
+# $Id: 6af1e9ce67d777ac0a350508da14ebcc9efc5d2c $
 
 PACKAGE=geographiclib
 PYTHON_FILES = \
@@ -20,8 +20,9 @@ pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 install:
 	$(INSTALL) -d $(DESTDIR)$(pythondir)
 	$(INSTALL) -m 644 $(PYTHON_FILES) $(DESTDIR)$(pythondir)
+	$(INSTALL) -m 644 setup.py $(DESTDIR)$(pythondir)/../
 
 clean-local:
-	rm -rf $(PACKAGE)/*.pyc
+	rm -rf *.pyc $(PACKAGE)/*.pyc
 
-EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES)
+EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) setup.py

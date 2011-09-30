@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2011-08-13" "GeographicLib 1.13" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2011-09-29" "GeographicLib 1.14" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -146,7 +146,7 @@ by the options on standard output.  The input is interpreted in one of
 three different ways depending on how many space or comma delimited
 tokens there are on the line.  The options \fB\-g\fR, \fB\-d\fR, \fB\-u\fR, and \fB\-m\fR
 govern the format of output.  In all cases, the \s-1WGS84\s0 model of the earth
-is used (\fIa\fR = 6378137m, \fIf\fR = 1/298.257223563).
+is used (\fIa\fR = 6378137 m, \fIf\fR = 1/298.257223563).
 .IP "\fBgeographic\fR" 4
 .IX Item "geographic"
 2 tokens (output options \fB\-g\fR or \fB\-d\fR) given as \fIlatitude\fR
@@ -154,11 +154,13 @@ is used (\fIa\fR = 6378137m, \fIf\fR = 1/298.257223563).
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See \s-1QUOTING\s0 for how to
 quote the charachers ' and " when entering coordinates on the command
-line.)  Alternatively, : may be used to separate the various components.
-Latitude is given first (unless the \fB\-w\fR option is given); however, on
-input, either may be given first by appending or prepending \fIN\fR or \fIS\fR
-to the latitude and \fIE\fR or \fIW\fR to the longitude.  For example, the
-following are all equivalent
+line.)  Various unicode characters (encoded with \s-1UTF\-8\s0) may also be used
+to denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols.  Alternatively, : (colon) may be used to separate
+the various components.  Latitude is given first (unless the \fB\-w\fR
+option is given); however, on input, either may be given first by
+appending or prepending \fIN\fR or \fIS\fR to the latitude and \fIE\fR or \fIW\fR to
+the longitude.  For example, the following are all equivalent
 .Sp
 .Vb 5
 \&    33.3 44.4
@@ -211,7 +213,7 @@ degrees clockwise from true north.
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 set the precision to \fIprec\fR (default 0); \fIprec\fR is the precision
-relative to 1m.  See \s-1PRECISION\s0.
+relative to 1 m.  See \s-1PRECISION\s0.
 .IP "\fB\-z\fR" 4
 .IX Item "-z"
 set the zone to \fIzone\fR for output.  Use either 0 < \fIzone\fR <= 60
@@ -257,8 +259,8 @@ write output to the file \fIoutfile\fR instead of to standard output; a
 file name of \*(L"\-\*(R" stands for standard output.
 .SH "PRECISION"
 .IX Header "PRECISION"
-\&\fIprec\fR gives precision of the output with \fIprec\fR = 0 giving 1m
-precision, \fIprec\fR = 3 giving 1mm precision, etc.  \fIprec\fR is the number
+\&\fIprec\fR gives precision of the output with \fIprec\fR = 0 giving 1 m
+precision, \fIprec\fR = 3 giving 1 mm precision, etc.  \fIprec\fR is the number
 of digits after the decimal point for \s-1UTM/UPS\s0.  The number of digits per
 coordinate for \s-1MGRS\s0 is 5 + \fIprec\fR.  For decimal degrees, the number of
 digits after the decimal point is 5 + \fIprec\fR.  For \s-1DMS\s0 (degree, minute,

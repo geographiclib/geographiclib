@@ -12,7 +12,7 @@
 #include <GeographicLib/Constants.hpp>
 
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
-#define GEOGRAPHICLIB_MATH_HPP "$Id: 3cbbb78592353a07832269674df0f17bb6291e97 $"
+#define GEOGRAPHICLIB_MATH_HPP "$Id: 30d442ca2b676500169652c4157fd2c263a19d6c $"
 
 /**
  * Are C++0X math functions available?
@@ -24,8 +24,6 @@
 #    define GEOGRAPHICLIB_CPLUSPLUS0X_MATH 0
 #  endif
 #endif
-
-RCSID_DECL(GEOGRAPHICLIB_MATH_HPP)
 
 #if !defined(GEOGRAPHICLIB_PREC)
 /**

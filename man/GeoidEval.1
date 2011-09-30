@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOIDEVAL 1"
-.TH GEOIDEVAL 1 "2011-08-13" "GeographicLib 1.13" "GeographicLib Utilities"
+.TH GEOIDEVAL 1 "2011-09-29" "GeographicLib 1.14" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -183,12 +183,14 @@ when the input consists of \s-1UTM/UPS\s0 eastings and northings.
 standard input should include a final token on each line which is
 treated as a height (in meters) above the geoid and the output echoes
 the input line with the height converted to height above ellipsoid
-(\s-1HAE\s0).
+(\s-1HAE\s0).  If \fB\-z\fR \fIzone\fR is specified then the \fIthird\fR token is treated
+as the height; this makes it possible to convert \s-1LIDAR\s0 data where each
+line consists of: easting northing height intensity.
 .IP "\fB\-\-haetomsl\fR" 4
 .IX Item "--haetomsl"
-standard input should include a final token on each line which is
-treated as a height (in meters) above the ellipsoid and the output
-echoes the input line with the height converted to height above geoid.
+this is similar to \fB\-\-msltohae\fR except that the height token is treated
+as a height (in meters) above the ellipsoid and the output echoes the
+input line with the height converted to height above the geoid (\s-1MSL\s0).
 .IP "\fB\-v\fR" 4
 .IX Item "-v"
 print information about the geoid on standard error before processing
@@ -224,14 +226,14 @@ installed):
 .PP
 .Vb 9
 \&                                  bilinear error    cubic error
-\&   name         geoid    grid     max     rms       max     rms
-\&   egm84\-30     EGM84    30\*(Aq      1.546m  70mm      0.274m  14mm
-\&   egm84\-15     EGM84    15\*(Aq      0.413m  18mm      0.020m   1mm
-\&   egm96\-15     EGM96    15\*(Aq      1.152m  40mm      0.169m   7mm
-\&   egm96\-5      EGM96     5\*(Aq      0.140m   5mm      0.003m   1mm
-\&   egm2008\-5    EGM2008   5\*(Aq      0.478m  12mm      0.294m   5mm
-\&   egm2008\-2_5  EGM2008   2.5\*(Aq    0.135m   3mm      0.031m   1mm
-\&   egm2008\-1    EGM2008   1\*(Aq      0.025m   1mm      0.003m   1mm
+\&   name         geoid    grid     max      rms      max      rms
+\&   egm84\-30     EGM84    30\*(Aq      1.546 m  70 mm    0.274 m  14 mm
+\&   egm84\-15     EGM84    15\*(Aq      0.413 m  18 mm    0.020 m   1 mm
+\&   egm96\-15     EGM96    15\*(Aq      1.152 m  40 mm    0.169 m   7 mm
+\&   egm96\-5      EGM96     5\*(Aq      0.140 m   5 mm    0.003 m   1 mm
+\&   egm2008\-5    EGM2008   5\*(Aq      0.478 m  12 mm    0.294 m   5 mm
+\&   egm2008\-2_5  EGM2008   2.5\*(Aq    0.135 m   3 mm    0.031 m   1 mm
+\&   egm2008\-1    EGM2008   1\*(Aq      0.025 m   1 mm    0.003 m   1 mm
 .Ve
 .PP
 By default, the \f(CW\*(C`egm96\-5\*(C'\fR geoid is used.  This may changed by setting
@@ -252,7 +254,7 @@ Instructions for downloading and installing geoid data are available at
 <http://geographiclib.sf.net/html/geoid.html#geoidinst>.
 .PP
 \&\fB\s-1NOTE\s0\fR: all the geoids above apply to the \s-1WGS84\s0 ellipsoid (\fIa\fR =
-6378137m, \fIf\fR = 1/298.257223563) only.
+6378137 m, \fIf\fR = 1/298.257223563) only.
 .SH "INTERPOLATION"
 .IX Header "INTERPOLATION"
 Cubic interpolation is used to compute the geoid height unless \fB\-l\fR is
@@ -271,7 +273,10 @@ The cubic is constrained to be independent of longitude when evaluating
 the height at one of the poles.  Cubic interpolation is considerably
 more accurate than bilinear; however it results in small discontinuities
 in the returned height on cell boundaries.  The gradients are computed
-by differentiating the interpolated results.
+by differentiating the interpolated results.  As a result of the way
+that the geoid data is stored, the calculation of gradients can result
+in large quantization errors.  This is particularly acute for fine
+grids, at high latitudes, and for the easterly gradient.
 .SH "CACHE"
 .IX Header "CACHE"
 By default, the data file is randomly read to compute the geoid heights

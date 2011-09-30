@@ -1,4 +1,4 @@
-# $Id: 86a2861d6f9546348071094bc8b7414baede1478 $
+# $Id: da35a9a983cd00affd326d1364381995512affde $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
@@ -21,10 +21,7 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(HEADERS) $(DEST)/
-list:
-	@echo $(HEADERS)
-
 clean:
 	@:
 
-.PHONY: all install list clean
+.PHONY: all install clean

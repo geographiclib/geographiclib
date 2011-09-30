@@ -1,4 +1,4 @@
-# $Id: c2bd6a29f9a2244a74ab3f3b6ca8d96f37e05763 $
+# $Id: 2e3bb10fb00f675941b80294bf69a64d97a1f29b $
 
 FUNCTIONS = utmupsforward utmupsreverse mgrsforward mgrsreverse \
 	geodesicdirect geodesicinverse geodesicline \
@@ -19,11 +19,7 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(MATLABFILES) $(DEST)/
-
 clean:
 	rm -f *.mex* *.oct
 
-list:
-	@echo $(MATLABFILES)
-
-.PHONY: all install list clean
+.PHONY: all install clean

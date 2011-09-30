@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 4ac697dcb7488a05d57758ef498caa5675063f3c $
+# $Id: 22900dc9ce2f813a281a1d73c79aae98b0479523 $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -292,7 +292,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/Config.h
 
 geoids_dir = $(datadir)/GeographicLib/geoids
-EXTRA_DIST = Makefile.mk CMakeLists.txt
+EXTRA_DIST = Makefile.mk CMakeLists.txt Geographic.pro
 all: all-am
 
 .SUFFIXES:

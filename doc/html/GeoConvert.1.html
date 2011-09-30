@@ -63,7 +63,7 @@ by the options on standard output.  The input is interpreted in one of
 three different ways depending on how many space or comma delimited
 tokens there are on the line.  The options <strong>-g</strong>, <strong>-d</strong>, <strong>-u</strong>, and <strong>-m</strong>
 govern the format of output.  In all cases, the WGS84 model of the earth
-is used (<em>a</em> = 6378137m, <em>f</em> = 1/298.257223563).</p>
+is used (<em>a</em> = 6378137 m, <em>f</em> = 1/298.257223563).</p>
 <dl>
 <dt><strong><a name="geographic" class="item"><strong>geographic</strong></a></strong></dt>
 
@@ -73,11 +73,13 @@ is used (<em>a</em> = 6378137m, <em>f</em> = 1/298.257223563).</p>
 and &quot; are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See <a href="#quoting">QUOTING</a> for how to
 quote the charachers ' and &quot; when entering coordinates on the command
-line.)  Alternatively, : may be used to separate the various components.
-Latitude is given first (unless the <strong>-w</strong> option is given); however, on
-input, either may be given first by appending or prepending <em>N</em> or <em>S</em>
-to the latitude and <em>E</em> or <em>W</em> to the longitude.  For example, the
-following are all equivalent</p>
+line.)  Various unicode characters (encoded with UTF-8) may also be used
+to denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols.  Alternatively, : (colon) may be used to separate
+the various components.  Latitude is given first (unless the <strong>-w</strong>
+option is given); however, on input, either may be given first by
+appending or prepending <em>N</em> or <em>S</em> to the latitude and <em>E</em> or <em>W</em> to
+the longitude.  For example, the following are all equivalent</p>
 <pre>
     33.3 44.4
     E44.4 N33.3
@@ -144,7 +146,7 @@ degrees clockwise from true north.</p>
 
 <dd>
 <p>set the precision to <em>prec</em> (default 0); <em>prec</em> is the precision
-relative to 1m.  See <a href="#precision">PRECISION</a>.</p>
+relative to 1 m.  See <a href="#precision">PRECISION</a>.</p>
 </dd>
 <dt><strong><a name="z" class="item"><strong>-z</strong></a></strong></dt>
 
@@ -216,8 +218,8 @@ file name of &quot;-&quot; stands for standard output.</p>
 </p>
 <hr />
 <h1><a name="precision">PRECISION</a></h1>
-<p><em>prec</em> gives precision of the output with <em>prec</em> = 0 giving 1m
-precision, <em>prec</em> = 3 giving 1mm precision, etc.  <em>prec</em> is the number
+<p><em>prec</em> gives precision of the output with <em>prec</em> = 0 giving 1 m
+precision, <em>prec</em> = 3 giving 1 mm precision, etc.  <em>prec</em> is the number
 of digits after the decimal point for UTM/UPS.  The number of digits per
 coordinate for MGRS is 5 + <em>prec</em>.  For decimal degrees, the number of
 digits after the decimal point is 5 + <em>prec</em>.  For DMS (degree, minute,

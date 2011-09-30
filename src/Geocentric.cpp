@@ -9,7 +9,7 @@
 
 #include <GeographicLib/Geocentric.hpp>
 
-#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: 17c3f8d6cd82a95f7f7f09a31fad32c3651c12ed $"
+#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: c883e179e267a6502d04a65bda7a5467aeb2367b $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -104,7 +104,7 @@ namespace GeographicLib {
           disc =  S * (2 * r3 + S);
         real u = r;
         if (disc >= 0) {
-          real T3 = r3 + S;
+          real T3 = S + r3;
           // Pick the sign on the sqrt to maximize abs(T3).  This minimizes
           // loss of precision due to cancellation.  The result is unchanged
           // because of the way the T is used in definition of u.

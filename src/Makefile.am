@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 4ac697dcb7488a05d57758ef498caa5675063f3c $
+# $Id: 22900dc9ce2f813a281a1d73c79aae98b0479523 $
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 
@@ -64,4 +64,4 @@ geoids_dir=$(datadir)/GeographicLib/geoids
 
 DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt
+EXTRA_DIST = Makefile.mk CMakeLists.txt Geographic.pro

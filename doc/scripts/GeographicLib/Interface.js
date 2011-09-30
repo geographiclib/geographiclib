@@ -17,6 +17,10 @@
  *    http://arxiv.org/abs/1102.1215
  *    errata: http://geographiclib.sourceforge.net/geod-errata.html
  *
+ *    Charles F. F. Karney,
+ *    Algorithms for geodesics, Sept. 2011,
+ *    http://arxiv.org/abs/1109.4448
+ *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
@@ -85,7 +89,7 @@
  * GeographicLib.Geodesic.WGS84.Area(points, polyline);
  *
  * computes the area of a polygon with vertices given by an array
- * points, each of whose elements contains lat and lon fields.	The
+ * points, each of whose elements contains lat and lon fields.  The
  * function returns an object with fields.
  *
  *   number, perimeter, area
@@ -94,7 +98,7 @@
  * false) is true, then the points denote a polyline and its length is
  * returned as the perimeter (and the area is not calculated).
  *
- * $Id: 13bc9dd535c3dbf9eafbb18be0dcd8320cbbdb45 $
+ * $Id: 4fd0ab19a40a653c3e232cb9eddfb0a117dcfbde $
  **********************************************************************/
 
 (function() {
@@ -113,7 +117,7 @@
   g.Geodesic.CheckAzimuth = function(azi) {
     if (!(azi >= -180 && azi <= 360))
       throw new Error("longitude " + azi + " not in [-180, 360]");
-    return g.AngNormalize(azi)
+    return g.AngNormalize(azi);
   }
 
   g.Geodesic.CheckDistance = function(s) {
@@ -159,13 +163,13 @@
     points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
     if (k > 1) {
       var line = new l.GeodesicLine(this, t.lat1, t.lon1, t.azi1,
-				    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
+                                    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
       da12 = t.a12/k;
       var vals;
       for (var i = 1; i < k; ++i) {
-	vals =
-	line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH);
-	points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
+        vals =
+        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH);
+        points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
       }
     }
     return points;
@@ -184,13 +188,13 @@
     points[k] = {lat: t.lat2, lon: t.lon2, azi: t.azi2};
     if (k > 1) {
       var line = new l.GeodesicLine(this, t.lat1, t.lon1, t.azi1,
-				    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
+                                    g.LATITUDE | g.LONGITUDE | g.AZIMUTH),
       da12 = t.a12/k;
       var vals;
       for (var i = 1; i < k; ++i) {
-	vals =
-	line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH);
-	points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
+        vals =
+        line.GenPosition(true, i * da12, g.LATITUDE | g.LONGITUDE | g.AZIMUTH);
+        points[i] = {lat: vals.lat2, lon: vals.lon2, azi: vals.azi2};
       }
     }
     return points;
@@ -214,7 +218,7 @@
       var azi1a = azi1 + (k - i) * 360 / k; // Traverse circle counter-clocwise
       if (azi1a >= 180) azi1a -= 360;
       vals =
-	this.GenDirect(lat1, lon1, azi1a, false, s12, g.LATITUDE | g.LONGITUDE);
+        this.GenDirect(lat1, lon1, azi1a, false, s12, g.LATITUDE | g.LONGITUDE);
       points[i] = {lat: vals.lat2, lon: vals.lon2};
     }
     return points;
@@ -233,18 +237,18 @@
     for (var i = 0; i <= k; ++i) {
       var azi1 = -180 + i * 360 / k;
       line = new l.GeodesicLine(this, lat1, lon1, azi1,
-				g.LATITUDE | g.LONGITUDE | g.DISTANCE_IN |
-				g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
+                                g.LATITUDE | g.LONGITUDE | g.DISTANCE_IN |
+                                g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
       vals = line.GenPosition(true, 180 * ord,
-			      g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
+                              g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
       j = 0;
       while (true) {
-	// Solve m12(s12) = 0 by Newton's method using dm12/ds12 = M21
-	s12 = vals.s12 - vals.m12/vals.M21;
-	if (Math.abs(vals.m12) < line._a * g.tol2_ * 0.1 || ++j > 10)
-	  break;
-	vals = line.GenPosition(false, s12,
-				g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
+        // Solve m12(s12) = 0 by Newton's method using dm12/ds12 = M21
+        s12 = vals.s12 - vals.m12/vals.M21;
+        if (Math.abs(vals.m12) < line._a * g.tol2_ * 0.1 || ++j > 10)
+          break;
+        vals = line.GenPosition(false, s12,
+                                g.DISTANCE | g.REDUCEDLENGTH | g.GEODESICSCALE);
       }
       vals = line.GenPosition(false, s12, g.LATITUDE | g.LONGITUDE);
       points[i] = {lat: vals.lat2, lon: vals.lon2};

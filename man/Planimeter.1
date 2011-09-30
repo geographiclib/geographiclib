@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2011-08-13" "GeographicLib 1.13" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2011-09-29" "GeographicLib 1.14" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -185,11 +185,10 @@ specify the ellipsoid via \fIa\fR \fIf\fR; the equatorial radius is \fIa\fR and
 the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 \&\fIf\fR < 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
-1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137m, \fIf\fR
-= 1/298.257223563.
-If entering vertices as \s-1UTM/UPS\s0 or \s-1MGRS\s0 coordinates, use the default
-ellipsoid, since the conversion of these coordinates to latitude and
-longitude uses the \s-1WGS84\s0 parameters.
+1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
+\&\fIf\fR = 1/298.257223563.  If entering vertices as \s-1UTM/UPS\s0 or \s-1MGRS\s0
+coordinates, use the default ellipsoid, since the conversion of these
+coordinates to latitude and longitude uses the \s-1WGS84\s0 parameters.
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 print version and exit.
@@ -252,7 +251,9 @@ covered by the data (assuming the edges of the image are geodesics).
 .IX Header "SEE ALSO"
 \&\fIGeoConvert\fR\|(1).  The algorithm for the area of geodesic polygon is given
 in Section 15 of C. F. F. Karney, \fIGeodesics on an ellipsoid of
-revolution\fR, Feb. 2011; preprint <http://arxiv.org/abs/1102.1215>.
+revolution\fR, Feb. 2011; preprint <http://arxiv.org/abs/1102.1215>.  See
+also Section 6 of C. F. F. Karney, \fIAlgorithms for geodesics\fR,
+Sept. 2011; preprint <http://arxiv.org/abs/1109.4448>.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 \&\fBPlanimeter\fR was written by Charles Karney.

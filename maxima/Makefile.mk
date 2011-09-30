@@ -1,4 +1,4 @@
-# $Id: 46ea48c30b46597075c4729396125e8bc95ba167 $
+# $Id: 51c7fc1cd5e30c0da414d752529eca09a8f036b9 $
 
 MAXIMA = tm ellint tmseries geod
 MAXIMASOURCES = $(addsuffix .mac,$(MAXIMA))
@@ -9,7 +9,5 @@ install:
 	@:
 clean:
 	@:
-list:
-	@echo $(MAXIMASOURCES)
 
-.PHONY: all install list clean
+.PHONY: all install clean

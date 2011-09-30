@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: 1e7fe9ef31424d255892679d74ac0ae492c2334a $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: 779cb64ba88ff77e42e606e9b186649f78b73064 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -57,6 +57,10 @@ namespace GeographicLib {
    * and TransverseMercatorExact::Reverse functions.  The latitude of origin is
    * taken to be the equator.  See the documentation on TransverseMercator for
    * how to include a false easting, false northing, or a latitude of origin.
+   *
+   * See <a href="http://geographiclib.sourceforge.net/tm-grid.kmz"
+   * type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
+   * illustration of the transverse Mercator grid in Google Earth.
    *
    * See TransverseMercatorExact.cpp for more information on the
    * implementation.

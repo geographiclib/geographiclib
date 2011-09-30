@@ -108,8 +108,8 @@ length (in degrees) on the auxiliary sphere.  See <a href="#auxiliary_sphere">AU
 the flattening is <em>f</em>.  Setting <em>f</em> = 0 results in a sphere.  Specify
 <em>f</em> &lt; 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for <em>f</em>.  (Also, if <em>f</em> &gt; 1, the flattening is set to
-1/<em>f</em>.)  By default, the WGS84 ellipsoid is used, <em>a</em> = 6378137m, <em>f</em>
-= 1/298.257223563.</p>
+1/<em>f</em>.)  By default, the WGS84 ellipsoid is used, <em>a</em> = 6378137 m,
+<em>f</em> = 1/298.257223563.</p>
 </dd>
 <dt><strong><a name="d" class="item"><strong>-d</strong></a></strong></dt>
 
@@ -134,7 +134,7 @@ quantities <em>m12</em>, <em>M12</em>, <em>M21</em>, and <em>S12</em> are descri
 
 <dd>
 <p>set the precision to <em>prec</em> (default 3); <em>prec</em> is the precision
-relative to 1m.  See <a href="#precision">PRECISION</a>.</p>
+relative to 1 m.  See <a href="#precision">PRECISION</a>.</p>
 </dd>
 <dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
 
@@ -228,13 +228,13 @@ the quadrilateral with corners (<em>lat1</em>,<em>lon1</em>), (0,<em>lon1</em>),
 </p>
 <hr />
 <h1><a name="precision">PRECISION</a></h1>
-<p><em>prec</em> gives precision of the output with <em>prec</em> = 0 giving 1m
-precision, <em>prec</em> = 3 giving 1mm precision, etc.  <em>prec</em> is the number
-of digits after the decimal point for lengths.  For decimal degrees, the
-number of digits after the decimal point is 5 + <em>prec</em>.  For DMS
-(degree, minute, seconds) output, the number of digits after the decimal
-point in the seconds component is 1 + <em>prec</em>.  The minimum value of
-<em>prec</em> is 0 and the maximum is 10.</p>
+<p><em>prec</em> gives precision of the output with <em>prec</em> = 0 giving 1 m
+precision, <em>prec</em> = 3 giving 1 mm precision, etc.  <em>prec</em> is the
+number of digits after the decimal point for lengths.  For decimal
+degrees, the number of digits after the decimal point is 5 + <em>prec</em>.
+For DMS (degree, minute, seconds) output, the number of digits after the
+decimal point in the seconds component is 1 + <em>prec</em>.  The minimum
+value of <em>prec</em> is 0 and the maximum is 10.</p>
 <p>
 </p>
 <hr />
@@ -273,7 +273,9 @@ will be converted.</p>
 <h1><a name="see_also">SEE ALSO</a></h1>
 <p>The algorithms are described in C. F. F. Karney, <em>Geodesics on an
 ellipsoid of revolution</em>, Feb. 2011; preprint
-<a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.</p>
+<a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.  See also C. F. F. Karney,
+<em>Algorithms for geodesics</em>, Sept. 2011; preprint
+<a href="http://arxiv.org/abs/1109.4448">http://arxiv.org/abs/1109.4448</a>.</p>
 <p>
 </p>
 <hr />

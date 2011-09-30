@@ -78,7 +78,7 @@
 <a name="l00029"></a>00029 <span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
 <a name="l00030"></a>00030 <span class="preprocessor">#include &lt;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&gt;</span>
 <a name="l00031"></a>00031 
-<a name="l00032"></a><a class="code" href="Geodesic_8cpp.html#a61dcde881d6a80b561fc2b4c4b327883">00032</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESIC_CPP &quot;$Id: ac5347a9b8a486191d736b6e1025d05779a6e8d6 $&quot;</span>
+<a name="l00032"></a><a class="code" href="Geodesic_8cpp.html#a61dcde881d6a80b561fc2b4c4b327883">00032</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEODESIC_CPP &quot;$Id: bb7076fe49bd0464d48ec5bc77d97f5dcc79eedb $&quot;</span>
 <a name="l00033"></a>00033 <span class="preprocessor"></span>
 <a name="l00034"></a>00034 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geodesic_8cpp.html#a61dcde881d6a80b561fc2b4c4b327883">GEOGRAPHICLIB_GEODESIC_CPP</a>)
 <a name="l00035"></a>00035 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geodesic_8hpp.html#ab538cb707d6ff36056dd372c7e9e6d7e">GEOGRAPHICLIB_GEODESIC_HPP</a>)
@@ -735,7 +735,7 @@
 <a name="l00686"></a>00686     ssig1 = sbet1; somg1 = salp0 * sbet1;
 <a name="l00687"></a>00687     csig1 = comg1 = calp1 * cbet1;
 <a name="l00688"></a>00688     SinCosNorm(ssig1, csig1);
-<a name="l00689"></a>00689     SinCosNorm(somg1, comg1);
+<a name="l00689"></a>00689     <span class="comment">// SinCosNorm(somg1, comg1); -- don&#39;t need to normalize!</span>
 <a name="l00690"></a>00690 
 <a name="l00691"></a>00691     <span class="comment">// Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful</span>
 <a name="l00692"></a>00692     <span class="comment">// about this case, since this can yield singularities in the Newton</span>
@@ -747,760 +747,761 @@
 <a name="l00698"></a>00698     <span class="comment">// and subst for calp0 and rearrange to give (choose positive sqrt</span>
 <a name="l00699"></a>00699     <span class="comment">// to give alp2 in [0, pi/2]).</span>
 <a name="l00700"></a>00700     calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
-<a name="l00701"></a>00701       sqrt(<a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(calp1 * cbet1) + (cbet1 &lt; -sbet1 ?
-<a name="l00702"></a>00702                                 (cbet2 - cbet1) * (cbet1 + cbet2) :
-<a name="l00703"></a>00703                                 (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
-<a name="l00704"></a>00704       abs(calp1);
-<a name="l00705"></a>00705     <span class="comment">// tan(bet2) = tan(sig2) * cos(alp2)</span>
-<a name="l00706"></a>00706     <span class="comment">// tan(omg2) = sin(alp0) * tan(sig2).</span>
-<a name="l00707"></a>00707     ssig2 = sbet2; somg2 = salp0 * sbet2;
-<a name="l00708"></a>00708     csig2 = comg2 = calp2 * cbet2;
-<a name="l00709"></a>00709     SinCosNorm(ssig2, csig2);
-<a name="l00710"></a>00710     SinCosNorm(somg2, comg2);
-<a name="l00711"></a>00711 
-<a name="l00712"></a>00712     <span class="comment">// sig12 = sig2 - sig1, limit to [0, pi]</span>
-<a name="l00713"></a>00713     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0)),
-<a name="l00714"></a>00714                   csig1 * csig2 + ssig1 * ssig2);
-<a name="l00715"></a>00715 
-<a name="l00716"></a>00716     <span class="comment">// omg12 = omg2 - omg1, limit to [0, pi]</span>
-<a name="l00717"></a>00717     omg12 = atan2(max(comg1 * somg2 - somg1 * comg2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0)),
-<a name="l00718"></a>00718                   comg1 * comg2 + somg1 * somg2);
-<a name="l00719"></a>00719     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> B312, h0;
-<a name="l00720"></a>00720     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> k2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(calp0) * _ep2;
-<a name="l00721"></a>00721     eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
-<a name="l00722"></a>00722     C3f(eps, C3a);
-<a name="l00723"></a>00723     B312 = (SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, C3a, nC3_-1) -
-<a name="l00724"></a>00724             SinCosSeries(<span class="keyword">true</span>, ssig1, csig1, C3a, nC3_-1));
-<a name="l00725"></a>00725     h0 = -_f * A3f(eps);
-<a name="l00726"></a>00726     domg12 = salp0 * h0 * (sig12 + B312);
-<a name="l00727"></a>00727     lam12 = omg12 + domg12;
-<a name="l00728"></a>00728 
-<a name="l00729"></a>00729     <span class="keywordflow">if</span> (diffp) {
-<a name="l00730"></a>00730       <span class="keywordflow">if</span> (calp2 == 0)
-<a name="l00731"></a>00731         dlam12 = - 2 * sqrt(1 - _e2 * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(cbet1)) / sbet1;
-<a name="l00732"></a>00732       <span class="keywordflow">else</span> {
-<a name="l00733"></a>00733         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> dummy;
-<a name="l00734"></a>00734         Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
-<a name="l00735"></a>00735                 cbet1, cbet2, dummy, dlam12, dummy,
-<a name="l00736"></a>00736                 <span class="keyword">false</span>, dummy, dummy,  C1a, C2a);
-<a name="l00737"></a>00737         dlam12 /= calp2 * cbet2;
-<a name="l00738"></a>00738       }
-<a name="l00739"></a>00739     }
-<a name="l00740"></a>00740 
-<a name="l00741"></a>00741     <span class="keywordflow">return</span> lam12;
-<a name="l00742"></a>00742   }
-<a name="l00743"></a>00743 
-<a name="l00744"></a>00744   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Geodesic::A3f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00745"></a>00745     <span class="comment">// Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner&#39;s method</span>
-<a name="l00746"></a>00746     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> v = 0;
-<a name="l00747"></a>00747     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = nA3x_; i; )
-<a name="l00748"></a>00748       v = eps * v + _A3x[--i];
-<a name="l00749"></a>00749     <span class="keywordflow">return</span> v;
-<a name="l00750"></a>00750   }
-<a name="l00751"></a>00751 
-<a name="l00752"></a>00752   <span class="keywordtype">void</span> Geodesic::C3f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00753"></a>00753     <span class="comment">// Evaluation C3 coeffs by Horner&#39;s method</span>
-<a name="l00754"></a>00754     <span class="comment">// Elements c[1] thru c[nC3_ - 1] are set</span>
-<a name="l00755"></a>00755     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = nC3x_, k = nC3_ - 1; k; ) {
-<a name="l00756"></a>00756       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t = 0;
-<a name="l00757"></a>00757       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = nC3_ - k; i; --i)
-<a name="l00758"></a>00758         t = eps * t + _C3x[--j];
-<a name="l00759"></a>00759       c[k--] = t;
-<a name="l00760"></a>00760     }
-<a name="l00761"></a>00761 
-<a name="l00762"></a>00762     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> mult = 1;
-<a name="l00763"></a>00763     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt; nC3_; ) {
-<a name="l00764"></a>00764       mult *= eps;
-<a name="l00765"></a>00765       c[k++] *= mult;
-<a name="l00766"></a>00766     }
-<a name="l00767"></a>00767   }
-<a name="l00768"></a>00768 
-<a name="l00769"></a>00769   <span class="keywordtype">void</span> Geodesic::C4f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> k2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00770"></a>00770     <span class="comment">// Evaluation C4 coeffs by Horner&#39;s method</span>
-<a name="l00771"></a>00771     <span class="comment">// Elements c[0] thru c[nC4_ - 1] are set</span>
-<a name="l00772"></a>00772     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = nC4x_, k = nC4_; k; ) {
-<a name="l00773"></a>00773       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t = 0;
-<a name="l00774"></a>00774       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = nC4_ - k + 1; i; --i)
-<a name="l00775"></a>00775         t = k2 * t + _C4x[--j];
-<a name="l00776"></a>00776       c[--k] = t;
-<a name="l00777"></a>00777     }
-<a name="l00778"></a>00778 
-<a name="l00779"></a>00779     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> mult = 1;
-<a name="l00780"></a>00780     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt; nC4_; ) {
-<a name="l00781"></a>00781       mult *= k2;
-<a name="l00782"></a>00782       c[k++] *= mult;
-<a name="l00783"></a>00783     }
-<a name="l00784"></a>00784   }
-<a name="l00785"></a>00785 
-<a name="l00786"></a>00786   <span class="comment">// Generated by Maxima on 2010-09-04 10:26:17-04:00</span>
-<a name="l00787"></a>00787 
-<a name="l00788"></a>00788   <span class="comment">// The scale factor A1-1 = mean value of I1-1</span>
-<a name="l00789"></a>00789   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Geodesic::A1m1f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps) <span class="keywordflow">throw</span>() {
-<a name="l00790"></a>00790     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00791"></a>00791       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
-<a name="l00792"></a>00792       t;
-<a name="l00793"></a>00793     <span class="keywordflow">switch</span> (nA1_/2) {
-<a name="l00794"></a>00794     <span class="keywordflow">case</span> 0:
-<a name="l00795"></a>00795       t = 0;
-<a name="l00796"></a>00796       <span class="keywordflow">break</span>;
-<a name="l00797"></a>00797     <span class="keywordflow">case</span> 1:
-<a name="l00798"></a>00798       t = eps2/4;
-<a name="l00799"></a>00799       <span class="keywordflow">break</span>;
-<a name="l00800"></a>00800     <span class="keywordflow">case</span> 2:
-<a name="l00801"></a>00801       t = eps2*(eps2+16)/64;
-<a name="l00802"></a>00802       <span class="keywordflow">break</span>;
-<a name="l00803"></a>00803     <span class="keywordflow">case</span> 3:
-<a name="l00804"></a>00804       t = eps2*(eps2*(eps2+4)+64)/256;
-<a name="l00805"></a>00805       <span class="keywordflow">break</span>;
-<a name="l00806"></a>00806     <span class="keywordflow">case</span> 4:
-<a name="l00807"></a>00807       t = eps2*(eps2*(eps2*(25*eps2+64)+256)+4096)/16384;
-<a name="l00808"></a>00808       <span class="keywordflow">break</span>;
-<a name="l00809"></a>00809     <span class="keywordflow">default</span>:
-<a name="l00810"></a>00810       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nA1_ &gt;= 0 &amp;&amp; nA1_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nA1_&quot;</span>);
-<a name="l00811"></a>00811       t = 0;
-<a name="l00812"></a>00812     }
-<a name="l00813"></a>00813     <span class="keywordflow">return</span> (t + eps) / (1 - eps);
-<a name="l00814"></a>00814   }
-<a name="l00815"></a>00815 
-<a name="l00816"></a>00816   <span class="comment">// The coefficients C1[l] in the Fourier expansion of B1</span>
-<a name="l00817"></a>00817   <span class="keywordtype">void</span> Geodesic::C1f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keywordflow">throw</span>() {
-<a name="l00818"></a>00818     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00819"></a>00819       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
-<a name="l00820"></a>00820       d = eps;
-<a name="l00821"></a>00821     <span class="keywordflow">switch</span> (nC1_) {
-<a name="l00822"></a>00822     <span class="keywordflow">case</span> 0:
-<a name="l00823"></a>00823       <span class="keywordflow">break</span>;
-<a name="l00824"></a>00824     <span class="keywordflow">case</span> 1:
-<a name="l00825"></a>00825       c[1] = -d/2;
-<a name="l00826"></a>00826       <span class="keywordflow">break</span>;
-<a name="l00827"></a>00827     <span class="keywordflow">case</span> 2:
-<a name="l00828"></a>00828       c[1] = -d/2;
-<a name="l00829"></a>00829       d *= eps;
-<a name="l00830"></a>00830       c[2] = -d/16;
-<a name="l00831"></a>00831       <span class="keywordflow">break</span>;
-<a name="l00832"></a>00832     <span class="keywordflow">case</span> 3:
-<a name="l00833"></a>00833       c[1] = d*(3*eps2-8)/16;
-<a name="l00834"></a>00834       d *= eps;
-<a name="l00835"></a>00835       c[2] = -d/16;
-<a name="l00836"></a>00836       d *= eps;
-<a name="l00837"></a>00837       c[3] = -d/48;
-<a name="l00838"></a>00838       <span class="keywordflow">break</span>;
-<a name="l00839"></a>00839     <span class="keywordflow">case</span> 4:
-<a name="l00840"></a>00840       c[1] = d*(3*eps2-8)/16;
-<a name="l00841"></a>00841       d *= eps;
-<a name="l00842"></a>00842       c[2] = d*(eps2-2)/32;
-<a name="l00843"></a>00843       d *= eps;
-<a name="l00844"></a>00844       c[3] = -d/48;
-<a name="l00845"></a>00845       d *= eps;
-<a name="l00846"></a>00846       c[4] = -5*d/512;
-<a name="l00847"></a>00847       <span class="keywordflow">break</span>;
-<a name="l00848"></a>00848     <span class="keywordflow">case</span> 5:
-<a name="l00849"></a>00849       c[1] = d*((6-eps2)*eps2-16)/32;
-<a name="l00850"></a>00850       d *= eps;
-<a name="l00851"></a>00851       c[2] = d*(eps2-2)/32;
-<a name="l00852"></a>00852       d *= eps;
-<a name="l00853"></a>00853       c[3] = d*(9*eps2-16)/768;
-<a name="l00854"></a>00854       d *= eps;
-<a name="l00855"></a>00855       c[4] = -5*d/512;
-<a name="l00856"></a>00856       d *= eps;
-<a name="l00857"></a>00857       c[5] = -7*d/1280;
-<a name="l00858"></a>00858       <span class="keywordflow">break</span>;
-<a name="l00859"></a>00859     <span class="keywordflow">case</span> 6:
-<a name="l00860"></a>00860       c[1] = d*((6-eps2)*eps2-16)/32;
-<a name="l00861"></a>00861       d *= eps;
-<a name="l00862"></a>00862       c[2] = d*((64-9*eps2)*eps2-128)/2048;
-<a name="l00863"></a>00863       d *= eps;
-<a name="l00864"></a>00864       c[3] = d*(9*eps2-16)/768;
-<a name="l00865"></a>00865       d *= eps;
-<a name="l00866"></a>00866       c[4] = d*(3*eps2-5)/512;
-<a name="l00867"></a>00867       d *= eps;
-<a name="l00868"></a>00868       c[5] = -7*d/1280;
-<a name="l00869"></a>00869       d *= eps;
-<a name="l00870"></a>00870       c[6] = -7*d/2048;
-<a name="l00871"></a>00871       <span class="keywordflow">break</span>;
-<a name="l00872"></a>00872     <span class="keywordflow">case</span> 7:
-<a name="l00873"></a>00873       c[1] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
-<a name="l00874"></a>00874       d *= eps;
-<a name="l00875"></a>00875       c[2] = d*((64-9*eps2)*eps2-128)/2048;
-<a name="l00876"></a>00876       d *= eps;
-<a name="l00877"></a>00877       c[3] = d*((72-9*eps2)*eps2-128)/6144;
-<a name="l00878"></a>00878       d *= eps;
-<a name="l00879"></a>00879       c[4] = d*(3*eps2-5)/512;
-<a name="l00880"></a>00880       d *= eps;
-<a name="l00881"></a>00881       c[5] = d*(35*eps2-56)/10240;
-<a name="l00882"></a>00882       d *= eps;
-<a name="l00883"></a>00883       c[6] = -7*d/2048;
-<a name="l00884"></a>00884       d *= eps;
-<a name="l00885"></a>00885       c[7] = -33*d/14336;
-<a name="l00886"></a>00886       <span class="keywordflow">break</span>;
-<a name="l00887"></a>00887     <span class="keywordflow">case</span> 8:
-<a name="l00888"></a>00888       c[1] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
-<a name="l00889"></a>00889       d *= eps;
-<a name="l00890"></a>00890       c[2] = d*(eps2*(eps2*(7*eps2-18)+128)-256)/4096;
-<a name="l00891"></a>00891       d *= eps;
-<a name="l00892"></a>00892       c[3] = d*((72-9*eps2)*eps2-128)/6144;
-<a name="l00893"></a>00893       d *= eps;
-<a name="l00894"></a>00894       c[4] = d*((96-11*eps2)*eps2-160)/16384;
-<a name="l00895"></a>00895       d *= eps;
-<a name="l00896"></a>00896       c[5] = d*(35*eps2-56)/10240;
-<a name="l00897"></a>00897       d *= eps;
-<a name="l00898"></a>00898       c[6] = d*(9*eps2-14)/4096;
-<a name="l00899"></a>00899       d *= eps;
-<a name="l00900"></a>00900       c[7] = -33*d/14336;
-<a name="l00901"></a>00901       d *= eps;
-<a name="l00902"></a>00902       c[8] = -429*d/262144;
-<a name="l00903"></a>00903       <span class="keywordflow">break</span>;
-<a name="l00904"></a>00904     <span class="keywordflow">default</span>:
-<a name="l00905"></a>00905       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC1_ &gt;= 0 &amp;&amp; nC1_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC1_&quot;</span>);
-<a name="l00906"></a>00906     }
-<a name="l00907"></a>00907   }
-<a name="l00908"></a>00908 
-<a name="l00909"></a>00909   <span class="comment">// The coefficients C1p[l] in the Fourier expansion of B1p</span>
-<a name="l00910"></a>00910   <span class="keywordtype">void</span> Geodesic::C1pf(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keywordflow">throw</span>() {
-<a name="l00911"></a>00911     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00912"></a>00912       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
-<a name="l00913"></a>00913       d = eps;
-<a name="l00914"></a>00914     <span class="keywordflow">switch</span> (nC1p_) {
-<a name="l00915"></a>00915     <span class="keywordflow">case</span> 0:
-<a name="l00916"></a>00916       <span class="keywordflow">break</span>;
-<a name="l00917"></a>00917     <span class="keywordflow">case</span> 1:
-<a name="l00918"></a>00918       c[1] = d/2;
-<a name="l00919"></a>00919       <span class="keywordflow">break</span>;
-<a name="l00920"></a>00920     <span class="keywordflow">case</span> 2:
-<a name="l00921"></a>00921       c[1] = d/2;
-<a name="l00922"></a>00922       d *= eps;
-<a name="l00923"></a>00923       c[2] = 5*d/16;
-<a name="l00924"></a>00924       <span class="keywordflow">break</span>;
-<a name="l00925"></a>00925     <span class="keywordflow">case</span> 3:
-<a name="l00926"></a>00926       c[1] = d*(16-9*eps2)/32;
-<a name="l00927"></a>00927       d *= eps;
-<a name="l00928"></a>00928       c[2] = 5*d/16;
-<a name="l00929"></a>00929       d *= eps;
-<a name="l00930"></a>00930       c[3] = 29*d/96;
-<a name="l00931"></a>00931       <span class="keywordflow">break</span>;
-<a name="l00932"></a>00932     <span class="keywordflow">case</span> 4:
-<a name="l00933"></a>00933       c[1] = d*(16-9*eps2)/32;
-<a name="l00934"></a>00934       d *= eps;
-<a name="l00935"></a>00935       c[2] = d*(30-37*eps2)/96;
-<a name="l00936"></a>00936       d *= eps;
-<a name="l00937"></a>00937       c[3] = 29*d/96;
-<a name="l00938"></a>00938       d *= eps;
-<a name="l00939"></a>00939       c[4] = 539*d/1536;
-<a name="l00940"></a>00940       <span class="keywordflow">break</span>;
-<a name="l00941"></a>00941     <span class="keywordflow">case</span> 5:
-<a name="l00942"></a>00942       c[1] = d*(eps2*(205*eps2-432)+768)/1536;
-<a name="l00943"></a>00943       d *= eps;
-<a name="l00944"></a>00944       c[2] = d*(30-37*eps2)/96;
-<a name="l00945"></a>00945       d *= eps;
-<a name="l00946"></a>00946       c[3] = d*(116-225*eps2)/384;
-<a name="l00947"></a>00947       d *= eps;
-<a name="l00948"></a>00948       c[4] = 539*d/1536;
-<a name="l00949"></a>00949       d *= eps;
-<a name="l00950"></a>00950       c[5] = 3467*d/7680;
-<a name="l00951"></a>00951       <span class="keywordflow">break</span>;
-<a name="l00952"></a>00952     <span class="keywordflow">case</span> 6:
-<a name="l00953"></a>00953       c[1] = d*(eps2*(205*eps2-432)+768)/1536;
-<a name="l00954"></a>00954       d *= eps;
-<a name="l00955"></a>00955       c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
-<a name="l00956"></a>00956       d *= eps;
-<a name="l00957"></a>00957       c[3] = d*(116-225*eps2)/384;
-<a name="l00958"></a>00958       d *= eps;
-<a name="l00959"></a>00959       c[4] = d*(2695-7173*eps2)/7680;
-<a name="l00960"></a>00960       d *= eps;
-<a name="l00961"></a>00961       c[5] = 3467*d/7680;
-<a name="l00962"></a>00962       d *= eps;
-<a name="l00963"></a>00963       c[6] = 38081*d/61440;
-<a name="l00964"></a>00964       <span class="keywordflow">break</span>;
-<a name="l00965"></a>00965     <span class="keywordflow">case</span> 7:
-<a name="l00966"></a>00966       c[1] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
-<a name="l00967"></a>00967       d *= eps;
-<a name="l00968"></a>00968       c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
-<a name="l00969"></a>00969       d *= eps;
-<a name="l00970"></a>00970       c[3] = d*(eps2*(8703*eps2-7200)+3712)/12288;
-<a name="l00971"></a>00971       d *= eps;
-<a name="l00972"></a>00972       c[4] = d*(2695-7173*eps2)/7680;
-<a name="l00973"></a>00973       d *= eps;
-<a name="l00974"></a>00974       c[5] = d*(41604-141115*eps2)/92160;
-<a name="l00975"></a>00975       d *= eps;
-<a name="l00976"></a>00976       c[6] = 38081*d/61440;
-<a name="l00977"></a>00977       d *= eps;
-<a name="l00978"></a>00978       c[7] = 459485*d/516096;
-<a name="l00979"></a>00979       <span class="keywordflow">break</span>;
-<a name="l00980"></a>00980     <span class="keywordflow">case</span> 8:
-<a name="l00981"></a>00981       c[1] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
-<a name="l00982"></a>00982       d *= eps;
-<a name="l00983"></a>00983       c[2] = d*(eps2*((120150-86171*eps2)*eps2-142080)+115200)/368640;
-<a name="l00984"></a>00984       d *= eps;
-<a name="l00985"></a>00985       c[3] = d*(eps2*(8703*eps2-7200)+3712)/12288;
-<a name="l00986"></a>00986       d *= eps;
-<a name="l00987"></a>00987       c[4] = d*(eps2*(1082857*eps2-688608)+258720)/737280;
-<a name="l00988"></a>00988       d *= eps;
-<a name="l00989"></a>00989       c[5] = d*(41604-141115*eps2)/92160;
-<a name="l00990"></a>00990       d *= eps;
-<a name="l00991"></a>00991       c[6] = d*(533134-2200311*eps2)/860160;
-<a name="l00992"></a>00992       d *= eps;
-<a name="l00993"></a>00993       c[7] = 459485*d/516096;
-<a name="l00994"></a>00994       d *= eps;
-<a name="l00995"></a>00995       c[8] = 109167851*d/82575360;
-<a name="l00996"></a>00996       <span class="keywordflow">break</span>;
-<a name="l00997"></a>00997     <span class="keywordflow">default</span>:
-<a name="l00998"></a>00998       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC1p_ &gt;= 0 &amp;&amp; nC1p_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC1p_&quot;</span>);
-<a name="l00999"></a>00999     }
-<a name="l01000"></a>01000   }
-<a name="l01001"></a>01001 
-<a name="l01002"></a>01002   <span class="comment">// The scale factor A2-1 = mean value of I2-1</span>
-<a name="l01003"></a>01003   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Geodesic::A2m1f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps) <span class="keywordflow">throw</span>() {
-<a name="l01004"></a>01004     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l01005"></a>01005       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
-<a name="l01006"></a>01006       t;
-<a name="l01007"></a>01007     <span class="keywordflow">switch</span> (nA2_/2) {
-<a name="l01008"></a>01008     <span class="keywordflow">case</span> 0:
-<a name="l01009"></a>01009       t = 0;
-<a name="l01010"></a>01010       <span class="keywordflow">break</span>;
-<a name="l01011"></a>01011     <span class="keywordflow">case</span> 1:
-<a name="l01012"></a>01012       t = eps2/4;
-<a name="l01013"></a>01013       <span class="keywordflow">break</span>;
-<a name="l01014"></a>01014     <span class="keywordflow">case</span> 2:
-<a name="l01015"></a>01015       t = eps2*(9*eps2+16)/64;
-<a name="l01016"></a>01016       <span class="keywordflow">break</span>;
-<a name="l01017"></a>01017     <span class="keywordflow">case</span> 3:
-<a name="l01018"></a>01018       t = eps2*(eps2*(25*eps2+36)+64)/256;
-<a name="l01019"></a>01019       <span class="keywordflow">break</span>;
-<a name="l01020"></a>01020     <span class="keywordflow">case</span> 4:
-<a name="l01021"></a>01021       t = eps2*(eps2*(eps2*(1225*eps2+1600)+2304)+4096)/16384;
-<a name="l01022"></a>01022       <span class="keywordflow">break</span>;
-<a name="l01023"></a>01023     <span class="keywordflow">default</span>:
-<a name="l01024"></a>01024       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nA2_ &gt;= 0 &amp;&amp; nA2_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nA2_&quot;</span>);
-<a name="l01025"></a>01025       t = 0;
-<a name="l01026"></a>01026     }
-<a name="l01027"></a>01027     <span class="keywordflow">return</span> t * (1 - eps) - eps;
-<a name="l01028"></a>01028   }
-<a name="l01029"></a>01029 
-<a name="l01030"></a>01030   <span class="comment">// The coefficients C2[l] in the Fourier expansion of B2</span>
-<a name="l01031"></a>01031   <span class="keywordtype">void</span> Geodesic::C2f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keywordflow">throw</span>() {
-<a name="l01032"></a>01032     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l01033"></a>01033       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
-<a name="l01034"></a>01034       d = eps;
-<a name="l01035"></a>01035     <span class="keywordflow">switch</span> (nC2_) {
-<a name="l01036"></a>01036     <span class="keywordflow">case</span> 0:
-<a name="l01037"></a>01037       <span class="keywordflow">break</span>;
-<a name="l01038"></a>01038     <span class="keywordflow">case</span> 1:
-<a name="l01039"></a>01039       c[1] = d/2;
-<a name="l01040"></a>01040       <span class="keywordflow">break</span>;
-<a name="l01041"></a>01041     <span class="keywordflow">case</span> 2:
-<a name="l01042"></a>01042       c[1] = d/2;
-<a name="l01043"></a>01043       d *= eps;
-<a name="l01044"></a>01044       c[2] = 3*d/16;
-<a name="l01045"></a>01045       <span class="keywordflow">break</span>;
-<a name="l01046"></a>01046     <span class="keywordflow">case</span> 3:
-<a name="l01047"></a>01047       c[1] = d*(eps2+8)/16;
-<a name="l01048"></a>01048       d *= eps;
-<a name="l01049"></a>01049       c[2] = 3*d/16;
-<a name="l01050"></a>01050       d *= eps;
-<a name="l01051"></a>01051       c[3] = 5*d/48;
-<a name="l01052"></a>01052       <span class="keywordflow">break</span>;
-<a name="l01053"></a>01053     <span class="keywordflow">case</span> 4:
-<a name="l01054"></a>01054       c[1] = d*(eps2+8)/16;
-<a name="l01055"></a>01055       d *= eps;
-<a name="l01056"></a>01056       c[2] = d*(eps2+6)/32;
-<a name="l01057"></a>01057       d *= eps;
-<a name="l01058"></a>01058       c[3] = 5*d/48;
-<a name="l01059"></a>01059       d *= eps;
-<a name="l01060"></a>01060       c[4] = 35*d/512;
-<a name="l01061"></a>01061       <span class="keywordflow">break</span>;
-<a name="l01062"></a>01062     <span class="keywordflow">case</span> 5:
-<a name="l01063"></a>01063       c[1] = d*(eps2*(eps2+2)+16)/32;
-<a name="l01064"></a>01064       d *= eps;
-<a name="l01065"></a>01065       c[2] = d*(eps2+6)/32;
-<a name="l01066"></a>01066       d *= eps;
-<a name="l01067"></a>01067       c[3] = d*(15*eps2+80)/768;
-<a name="l01068"></a>01068       d *= eps;
-<a name="l01069"></a>01069       c[4] = 35*d/512;
-<a name="l01070"></a>01070       d *= eps;
-<a name="l01071"></a>01071       c[5] = 63*d/1280;
-<a name="l01072"></a>01072       <span class="keywordflow">break</span>;
-<a name="l01073"></a>01073     <span class="keywordflow">case</span> 6:
-<a name="l01074"></a>01074       c[1] = d*(eps2*(eps2+2)+16)/32;
-<a name="l01075"></a>01075       d *= eps;
-<a name="l01076"></a>01076       c[2] = d*(eps2*(35*eps2+64)+384)/2048;
-<a name="l01077"></a>01077       d *= eps;
-<a name="l01078"></a>01078       c[3] = d*(15*eps2+80)/768;
-<a name="l01079"></a>01079       d *= eps;
-<a name="l01080"></a>01080       c[4] = d*(7*eps2+35)/512;
-<a name="l01081"></a>01081       d *= eps;
-<a name="l01082"></a>01082       c[5] = 63*d/1280;
-<a name="l01083"></a>01083       d *= eps;
-<a name="l01084"></a>01084       c[6] = 77*d/2048;
-<a name="l01085"></a>01085       <span class="keywordflow">break</span>;
-<a name="l01086"></a>01086     <span class="keywordflow">case</span> 7:
-<a name="l01087"></a>01087       c[1] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
-<a name="l01088"></a>01088       d *= eps;
-<a name="l01089"></a>01089       c[2] = d*(eps2*(35*eps2+64)+384)/2048;
-<a name="l01090"></a>01090       d *= eps;
-<a name="l01091"></a>01091       c[3] = d*(eps2*(69*eps2+120)+640)/6144;
-<a name="l01092"></a>01092       d *= eps;
-<a name="l01093"></a>01093       c[4] = d*(7*eps2+35)/512;
-<a name="l01094"></a>01094       d *= eps;
-<a name="l01095"></a>01095       c[5] = d*(105*eps2+504)/10240;
-<a name="l01096"></a>01096       d *= eps;
-<a name="l01097"></a>01097       c[6] = 77*d/2048;
-<a name="l01098"></a>01098       d *= eps;
-<a name="l01099"></a>01099       c[7] = 429*d/14336;
-<a name="l01100"></a>01100       <span class="keywordflow">break</span>;
-<a name="l01101"></a>01101     <span class="keywordflow">case</span> 8:
-<a name="l01102"></a>01102       c[1] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
-<a name="l01103"></a>01103       d *= eps;
-<a name="l01104"></a>01104       c[2] = d*(eps2*(eps2*(47*eps2+70)+128)+768)/4096;
-<a name="l01105"></a>01105       d *= eps;
-<a name="l01106"></a>01106       c[3] = d*(eps2*(69*eps2+120)+640)/6144;
-<a name="l01107"></a>01107       d *= eps;
-<a name="l01108"></a>01108       c[4] = d*(eps2*(133*eps2+224)+1120)/16384;
-<a name="l01109"></a>01109       d *= eps;
-<a name="l01110"></a>01110       c[5] = d*(105*eps2+504)/10240;
-<a name="l01111"></a>01111       d *= eps;
-<a name="l01112"></a>01112       c[6] = d*(33*eps2+154)/4096;
-<a name="l01113"></a>01113       d *= eps;
-<a name="l01114"></a>01114       c[7] = 429*d/14336;
-<a name="l01115"></a>01115       d *= eps;
-<a name="l01116"></a>01116       c[8] = 6435*d/262144;
-<a name="l01117"></a>01117       <span class="keywordflow">break</span>;
-<a name="l01118"></a>01118     <span class="keywordflow">default</span>:
-<a name="l01119"></a>01119       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC2_ &gt;= 0 &amp;&amp; nC2_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC2_&quot;</span>);
-<a name="l01120"></a>01120     }
-<a name="l01121"></a>01121   }
-<a name="l01122"></a>01122 
-<a name="l01123"></a>01123   <span class="comment">// The scale factor A3 = mean value of I3</span>
-<a name="l01124"></a>01124   <span class="keywordtype">void</span> Geodesic::A3coeff() throw() {
-<a name="l01125"></a>01125     <span class="keywordflow">switch</span> (nA3_) {
-<a name="l01126"></a>01126     <span class="keywordflow">case</span> 0:
-<a name="l01127"></a>01127       <span class="keywordflow">break</span>;
-<a name="l01128"></a>01128     <span class="keywordflow">case</span> 1:
-<a name="l01129"></a>01129       _A3x[0] = 1;
-<a name="l01130"></a>01130       <span class="keywordflow">break</span>;
-<a name="l01131"></a>01131     <span class="keywordflow">case</span> 2:
-<a name="l01132"></a>01132       _A3x[0] = 1;
-<a name="l01133"></a>01133       _A3x[1] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2);
-<a name="l01134"></a>01134       <span class="keywordflow">break</span>;
-<a name="l01135"></a>01135     <span class="keywordflow">case</span> 3:
-<a name="l01136"></a>01136       _A3x[0] = 1;
-<a name="l01137"></a>01137       _A3x[1] = (_n-1)/2;
-<a name="l01138"></a>01138       _A3x[2] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(4);
-<a name="l01139"></a>01139       <span class="keywordflow">break</span>;
-<a name="l01140"></a>01140     <span class="keywordflow">case</span> 4:
-<a name="l01141"></a>01141       _A3x[0] = 1;
-<a name="l01142"></a>01142       _A3x[1] = (_n-1)/2;
-<a name="l01143"></a>01143       _A3x[2] = (-_n-2)/8;
-<a name="l01144"></a>01144       _A3x[3] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16);
-<a name="l01145"></a>01145       <span class="keywordflow">break</span>;
-<a name="l01146"></a>01146     <span class="keywordflow">case</span> 5:
-<a name="l01147"></a>01147       _A3x[0] = 1;
-<a name="l01148"></a>01148       _A3x[1] = (_n-1)/2;
-<a name="l01149"></a>01149       _A3x[2] = (_n*(3*_n-1)-2)/8;
-<a name="l01150"></a>01150       _A3x[3] = (-3*_n-1)/16;
-<a name="l01151"></a>01151       _A3x[4] = -3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(64);
-<a name="l01152"></a>01152       <span class="keywordflow">break</span>;
-<a name="l01153"></a>01153     <span class="keywordflow">case</span> 6:
-<a name="l01154"></a>01154       _A3x[0] = 1;
-<a name="l01155"></a>01155       _A3x[1] = (_n-1)/2;
-<a name="l01156"></a>01156       _A3x[2] = (_n*(3*_n-1)-2)/8;
-<a name="l01157"></a>01157       _A3x[3] = ((-_n-3)*_n-1)/16;
-<a name="l01158"></a>01158       _A3x[4] = (-2*_n-3)/64;
-<a name="l01159"></a>01159       _A3x[5] = -3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
-<a name="l01160"></a>01160       <span class="keywordflow">break</span>;
-<a name="l01161"></a>01161     <span class="keywordflow">case</span> 7:
-<a name="l01162"></a>01162       _A3x[0] = 1;
-<a name="l01163"></a>01163       _A3x[1] = (_n-1)/2;
-<a name="l01164"></a>01164       _A3x[2] = (_n*(3*_n-1)-2)/8;
-<a name="l01165"></a>01165       _A3x[3] = (_n*(_n*(5*_n-1)-3)-1)/16;
-<a name="l01166"></a>01166       _A3x[4] = ((-10*_n-2)*_n-3)/64;
-<a name="l01167"></a>01167       _A3x[5] = (-5*_n-3)/128;
-<a name="l01168"></a>01168       _A3x[6] = -5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(256);
-<a name="l01169"></a>01169       <span class="keywordflow">break</span>;
-<a name="l01170"></a>01170     <span class="keywordflow">case</span> 8:
-<a name="l01171"></a>01171       _A3x[0] = 1;
-<a name="l01172"></a>01172       _A3x[1] = (_n-1)/2;
-<a name="l01173"></a>01173       _A3x[2] = (_n*(3*_n-1)-2)/8;
-<a name="l01174"></a>01174       _A3x[3] = (_n*(_n*(5*_n-1)-3)-1)/16;
-<a name="l01175"></a>01175       _A3x[4] = (_n*((-5*_n-20)*_n-4)-6)/128;
-<a name="l01176"></a>01176       _A3x[5] = ((-5*_n-10)*_n-6)/256;
-<a name="l01177"></a>01177       _A3x[6] = (-15*_n-20)/1024;
-<a name="l01178"></a>01178       _A3x[7] = -25/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2048);
-<a name="l01179"></a>01179       <span class="keywordflow">break</span>;
-<a name="l01180"></a>01180     <span class="keywordflow">default</span>:
-<a name="l01181"></a>01181       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nA3_ &gt;= 0 &amp;&amp; nA3_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nA3_&quot;</span>);
-<a name="l01182"></a>01182     }
-<a name="l01183"></a>01183   }
-<a name="l01184"></a>01184 
-<a name="l01185"></a>01185   <span class="comment">// The coefficients C3[l] in the Fourier expansion of B3</span>
-<a name="l01186"></a>01186   <span class="keywordtype">void</span> Geodesic::C3coeff() throw() {
-<a name="l01187"></a>01187     <span class="keywordflow">switch</span> (nC3_) {
-<a name="l01188"></a>01188     <span class="keywordflow">case</span> 0:
-<a name="l01189"></a>01189       <span class="keywordflow">break</span>;
-<a name="l01190"></a>01190     <span class="keywordflow">case</span> 1:
-<a name="l01191"></a>01191       <span class="keywordflow">break</span>;
-<a name="l01192"></a>01192     <span class="keywordflow">case</span> 2:
-<a name="l01193"></a>01193       _C3x[0] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(4);
-<a name="l01194"></a>01194       <span class="keywordflow">break</span>;
-<a name="l01195"></a>01195     <span class="keywordflow">case</span> 3:
-<a name="l01196"></a>01196       _C3x[0] = (1-_n)/4;
-<a name="l01197"></a>01197       _C3x[1] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8);
-<a name="l01198"></a>01198       _C3x[2] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16);
-<a name="l01199"></a>01199       <span class="keywordflow">break</span>;
-<a name="l01200"></a>01200     <span class="keywordflow">case</span> 4:
-<a name="l01201"></a>01201       _C3x[0] = (1-_n)/4;
-<a name="l01202"></a>01202       _C3x[1] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8);
-<a name="l01203"></a>01203       _C3x[2] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(64);
-<a name="l01204"></a>01204       _C3x[3] = (2-3*_n)/32;
-<a name="l01205"></a>01205       _C3x[4] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(64);
-<a name="l01206"></a>01206       _C3x[5] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(192);
-<a name="l01207"></a>01207       <span class="keywordflow">break</span>;
-<a name="l01208"></a>01208     <span class="keywordflow">case</span> 5:
-<a name="l01209"></a>01209       _C3x[0] = (1-_n)/4;
-<a name="l01210"></a>01210       _C3x[1] = (1-_n*_n)/8;
-<a name="l01211"></a>01211       _C3x[2] = (3*_n+3)/64;
-<a name="l01212"></a>01212       _C3x[3] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
-<a name="l01213"></a>01213       _C3x[4] = ((_n-3)*_n+2)/32;
-<a name="l01214"></a>01214       _C3x[5] = (3-2*_n)/64;
-<a name="l01215"></a>01215       _C3x[6] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
-<a name="l01216"></a>01216       _C3x[7] = (5-9*_n)/192;
-<a name="l01217"></a>01217       _C3x[8] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
-<a name="l01218"></a>01218       _C3x[9] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(512);
-<a name="l01219"></a>01219       <span class="keywordflow">break</span>;
-<a name="l01220"></a>01220     <span class="keywordflow">case</span> 6:
-<a name="l01221"></a>01221       _C3x[0] = (1-_n)/4;
-<a name="l01222"></a>01222       _C3x[1] = (1-_n*_n)/8;
-<a name="l01223"></a>01223       _C3x[2] = ((3-_n)*_n+3)/64;
-<a name="l01224"></a>01224       _C3x[3] = (2*_n+5)/128;
-<a name="l01225"></a>01225       _C3x[4] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
-<a name="l01226"></a>01226       _C3x[5] = ((_n-3)*_n+2)/32;
-<a name="l01227"></a>01227       _C3x[6] = ((-3*_n-2)*_n+3)/64;
-<a name="l01228"></a>01228       _C3x[7] = (_n+3)/128;
-<a name="l01229"></a>01229       _C3x[8] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(256);
-<a name="l01230"></a>01230       _C3x[9] = (_n*(5*_n-9)+5)/192;
-<a name="l01231"></a>01231       _C3x[10] = (9-10*_n)/384;
-<a name="l01232"></a>01232       _C3x[11] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(512);
-<a name="l01233"></a>01233       _C3x[12] = (7-14*_n)/512;
-<a name="l01234"></a>01234       _C3x[13] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(512);
-<a name="l01235"></a>01235       _C3x[14] = 21/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2560);
-<a name="l01236"></a>01236       <span class="keywordflow">break</span>;
-<a name="l01237"></a>01237     <span class="keywordflow">case</span> 7:
-<a name="l01238"></a>01238       _C3x[0] = (1-_n)/4;
-<a name="l01239"></a>01239       _C3x[1] = (1-_n*_n)/8;
-<a name="l01240"></a>01240       _C3x[2] = (_n*((-5*_n-1)*_n+3)+3)/64;
-<a name="l01241"></a>01241       _C3x[3] = (_n*(2*_n+2)+5)/128;
-<a name="l01242"></a>01242       _C3x[4] = (11*_n+12)/512;
-<a name="l01243"></a>01243       _C3x[5] = 21/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1024);
-<a name="l01244"></a>01244       _C3x[6] = ((_n-3)*_n+2)/32;
-<a name="l01245"></a>01245       _C3x[7] = (_n*(_n*(2*_n-3)-2)+3)/64;
-<a name="l01246"></a>01246       _C3x[8] = ((2-9*_n)*_n+6)/256;
-<a name="l01247"></a>01247       _C3x[9] = (_n+5)/256;
-<a name="l01248"></a>01248       _C3x[10] = 27/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2048);
-<a name="l01249"></a>01249       _C3x[11] = (_n*((5-_n)*_n-9)+5)/192;
-<a name="l01250"></a>01250       _C3x[12] = ((-6*_n-10)*_n+9)/384;
-<a name="l01251"></a>01251       _C3x[13] = (21-4*_n)/1536;
-<a name="l01252"></a>01252       _C3x[14] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(256);
-<a name="l01253"></a>01253       _C3x[15] = (_n*(10*_n-14)+7)/512;
-<a name="l01254"></a>01254       _C3x[16] = (7-10*_n)/512;
-<a name="l01255"></a>01255       _C3x[17] = 9/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1024);
-<a name="l01256"></a>01256       _C3x[18] = (21-45*_n)/2560;
-<a name="l01257"></a>01257       _C3x[19] = 9/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1024);
-<a name="l01258"></a>01258       _C3x[20] = 11/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2048);
-<a name="l01259"></a>01259       <span class="keywordflow">break</span>;
-<a name="l01260"></a>01260     <span class="keywordflow">case</span> 8:
-<a name="l01261"></a>01261       _C3x[0] = (1-_n)/4;
-<a name="l01262"></a>01262       _C3x[1] = (1-_n*_n)/8;
-<a name="l01263"></a>01263       _C3x[2] = (_n*((-5*_n-1)*_n+3)+3)/64;
-<a name="l01264"></a>01264       _C3x[3] = (_n*((2-2*_n)*_n+2)+5)/128;
-<a name="l01265"></a>01265       _C3x[4] = (_n*(3*_n+11)+12)/512;
-<a name="l01266"></a>01266       _C3x[5] = (10*_n+21)/1024;
-<a name="l01267"></a>01267       _C3x[6] = 243/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
-<a name="l01268"></a>01268       _C3x[7] = ((_n-3)*_n+2)/32;
-<a name="l01269"></a>01269       _C3x[8] = (_n*(_n*(2*_n-3)-2)+3)/64;
-<a name="l01270"></a>01270       _C3x[9] = (_n*((-6*_n-9)*_n+2)+6)/256;
-<a name="l01271"></a>01271       _C3x[10] = ((1-2*_n)*_n+5)/256;
-<a name="l01272"></a>01272       _C3x[11] = (69*_n+108)/8192;
-<a name="l01273"></a>01273       _C3x[12] = 187/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
-<a name="l01274"></a>01274       _C3x[13] = (_n*((5-_n)*_n-9)+5)/192;
-<a name="l01275"></a>01275       _C3x[14] = (_n*(_n*(10*_n-6)-10)+9)/384;
-<a name="l01276"></a>01276       _C3x[15] = ((-77*_n-8)*_n+42)/3072;
-<a name="l01277"></a>01277       _C3x[16] = (12-_n)/1024;
-<a name="l01278"></a>01278       _C3x[17] = 139/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
-<a name="l01279"></a>01279       _C3x[18] = (_n*((20-7*_n)*_n-28)+14)/1024;
-<a name="l01280"></a>01280       _C3x[19] = ((-7*_n-40)*_n+28)/2048;
-<a name="l01281"></a>01281       _C3x[20] = (72-43*_n)/8192;
-<a name="l01282"></a>01282       _C3x[21] = 127/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
-<a name="l01283"></a>01283       _C3x[22] = (_n*(75*_n-90)+42)/5120;
-<a name="l01284"></a>01284       _C3x[23] = (9-15*_n)/1024;
-<a name="l01285"></a>01285       _C3x[24] = 99/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
-<a name="l01286"></a>01286       _C3x[25] = (44-99*_n)/8192;
-<a name="l01287"></a>01287       _C3x[26] = 99/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
-<a name="l01288"></a>01288       _C3x[27] = 429/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(114688);
-<a name="l01289"></a>01289       <span class="keywordflow">break</span>;
-<a name="l01290"></a>01290     <span class="keywordflow">default</span>:
-<a name="l01291"></a>01291       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC3_ &gt;= 0 &amp;&amp; nC3_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC3_&quot;</span>);
-<a name="l01292"></a>01292     }
-<a name="l01293"></a>01293   }
-<a name="l01294"></a>01294 
-<a name="l01295"></a>01295   <span class="comment">// The coefficients C4[l] in the Fourier expansion of I4</span>
-<a name="l01296"></a>01296   <span class="keywordtype">void</span> Geodesic::C4coeff() throw() {
-<a name="l01297"></a>01297     <span class="keywordflow">switch</span> (nC4_) {
-<a name="l01298"></a>01298     <span class="keywordflow">case</span> 0:
-<a name="l01299"></a>01299       <span class="keywordflow">break</span>;
-<a name="l01300"></a>01300     <span class="keywordflow">case</span> 1:
-<a name="l01301"></a>01301       _C4x[0] = 2/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(3);
-<a name="l01302"></a>01302       <span class="keywordflow">break</span>;
-<a name="l01303"></a>01303     <span class="keywordflow">case</span> 2:
-<a name="l01304"></a>01304       _C4x[0] = (10-_ep2)/15;
-<a name="l01305"></a>01305       _C4x[1] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(20);
-<a name="l01306"></a>01306       _C4x[2] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(180);
-<a name="l01307"></a>01307       <span class="keywordflow">break</span>;
-<a name="l01308"></a>01308     <span class="keywordflow">case</span> 3:
-<a name="l01309"></a>01309       _C4x[0] = (_ep2*(4*_ep2-7)+70)/105;
-<a name="l01310"></a>01310       _C4x[1] = (4*_ep2-7)/140;
-<a name="l01311"></a>01311       _C4x[2] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(42);
-<a name="l01312"></a>01312       _C4x[3] = (7-4*_ep2)/1260;
-<a name="l01313"></a>01313       _C4x[4] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(252);
-<a name="l01314"></a>01314       _C4x[5] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2100);
-<a name="l01315"></a>01315       <span class="keywordflow">break</span>;
-<a name="l01316"></a>01316     <span class="keywordflow">case</span> 4:
-<a name="l01317"></a>01317       _C4x[0] = (_ep2*((12-8*_ep2)*_ep2-21)+210)/315;
-<a name="l01318"></a>01318       _C4x[1] = ((12-8*_ep2)*_ep2-21)/420;
-<a name="l01319"></a>01319       _C4x[2] = (3-2*_ep2)/126;
-<a name="l01320"></a>01320       _C4x[3] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(72);
-<a name="l01321"></a>01321       _C4x[4] = (_ep2*(8*_ep2-12)+21)/3780;
-<a name="l01322"></a>01322       _C4x[5] = (2*_ep2-3)/756;
-<a name="l01323"></a>01323       _C4x[6] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(360);
-<a name="l01324"></a>01324       _C4x[7] = (3-2*_ep2)/6300;
-<a name="l01325"></a>01325       _C4x[8] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1800);
-<a name="l01326"></a>01326       _C4x[9] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(17640);
-<a name="l01327"></a>01327       <span class="keywordflow">break</span>;
-<a name="l01328"></a>01328     <span class="keywordflow">case</span> 5:
-<a name="l01329"></a>01329       _C4x[0] = (_ep2*(_ep2*(_ep2*(64*_ep2-88)+132)-231)+2310)/3465;
-<a name="l01330"></a>01330       _C4x[1] = (_ep2*(_ep2*(64*_ep2-88)+132)-231)/4620;
-<a name="l01331"></a>01331       _C4x[2] = (_ep2*(16*_ep2-22)+33)/1386;
-<a name="l01332"></a>01332       _C4x[3] = (8*_ep2-11)/792;
-<a name="l01333"></a>01333       _C4x[4] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(110);
-<a name="l01334"></a>01334       _C4x[5] = (_ep2*((88-64*_ep2)*_ep2-132)+231)/41580;
-<a name="l01335"></a>01335       _C4x[6] = ((22-16*_ep2)*_ep2-33)/8316;
-<a name="l01336"></a>01336       _C4x[7] = (11-8*_ep2)/3960;
-<a name="l01337"></a>01337       _C4x[8] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(495);
-<a name="l01338"></a>01338       _C4x[9] = (_ep2*(16*_ep2-22)+33)/69300;
-<a name="l01339"></a>01339       _C4x[10] = (8*_ep2-11)/19800;
-<a name="l01340"></a>01340       _C4x[11] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1925);
-<a name="l01341"></a>01341       _C4x[12] = (11-8*_ep2)/194040;
-<a name="l01342"></a>01342       _C4x[13] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(10780);
-<a name="l01343"></a>01343       _C4x[14] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(124740);
-<a name="l01344"></a>01344       <span class="keywordflow">break</span>;
-<a name="l01345"></a>01345     <span class="keywordflow">case</span> 6:
-<a name="l01346"></a>01346       _C4x[0] = (_ep2*(_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)+
-<a name="l01347"></a>01347                 30030)/45045;
-<a name="l01348"></a>01348       _C4x[1] = (_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)/60060;
-<a name="l01349"></a>01349       _C4x[2] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/18018;
-<a name="l01350"></a>01350       _C4x[3] = ((104-80*_ep2)*_ep2-143)/10296;
-<a name="l01351"></a>01351       _C4x[4] = (13-10*_ep2)/1430;
-<a name="l01352"></a>01352       _C4x[5] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(156);
-<a name="l01353"></a>01353       _C4x[6] = (_ep2*(_ep2*(_ep2*(640*_ep2-832)+1144)-1716)+3003)/540540;
-<a name="l01354"></a>01354       _C4x[7] = (_ep2*(_ep2*(160*_ep2-208)+286)-429)/108108;
-<a name="l01355"></a>01355       _C4x[8] = (_ep2*(80*_ep2-104)+143)/51480;
-<a name="l01356"></a>01356       _C4x[9] = (10*_ep2-13)/6435;
-<a name="l01357"></a>01357       _C4x[10] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(3276);
-<a name="l01358"></a>01358       _C4x[11] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/900900;
-<a name="l01359"></a>01359       _C4x[12] = ((104-80*_ep2)*_ep2-143)/257400;
-<a name="l01360"></a>01360       _C4x[13] = (13-10*_ep2)/25025;
-<a name="l01361"></a>01361       _C4x[14] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2184);
-<a name="l01362"></a>01362       _C4x[15] = (_ep2*(80*_ep2-104)+143)/2522520;
-<a name="l01363"></a>01363       _C4x[16] = (10*_ep2-13)/140140;
-<a name="l01364"></a>01364       _C4x[17] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(45864);
-<a name="l01365"></a>01365       _C4x[18] = (13-10*_ep2)/1621620;
-<a name="l01366"></a>01366       _C4x[19] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(58968);
-<a name="l01367"></a>01367       _C4x[20] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(792792);
-<a name="l01368"></a>01368       <span class="keywordflow">break</span>;
-<a name="l01369"></a>01369     <span class="keywordflow">case</span> 7:
-<a name="l01370"></a>01370       _C4x[0] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(512*_ep2-640)+832)-1144)+1716)-
-<a name="l01371"></a>01371                 3003)+30030)/45045;
-<a name="l01372"></a>01372       _C4x[1] = (_ep2*(_ep2*(_ep2*(_ep2*(512*_ep2-640)+832)-1144)+1716)-
-<a name="l01373"></a>01373                 3003)/60060;
-<a name="l01374"></a>01374       _C4x[2] = (_ep2*(_ep2*(_ep2*(128*_ep2-160)+208)-286)+429)/18018;
-<a name="l01375"></a>01375       _C4x[3] = (_ep2*(_ep2*(64*_ep2-80)+104)-143)/10296;
-<a name="l01376"></a>01376       _C4x[4] = (_ep2*(8*_ep2-10)+13)/1430;
-<a name="l01377"></a>01377       _C4x[5] = (4*_ep2-5)/780;
-<a name="l01378"></a>01378       _C4x[6] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(210);
-<a name="l01379"></a>01379       _C4x[7] = (_ep2*(_ep2*(_ep2*((640-512*_ep2)*_ep2-832)+1144)-1716)+
-<a name="l01380"></a>01380                 3003)/540540;
-<a name="l01381"></a>01381       _C4x[8] = (_ep2*(_ep2*((160-128*_ep2)*_ep2-208)+286)-429)/108108;
-<a name="l01382"></a>01382       _C4x[9] = (_ep2*((80-64*_ep2)*_ep2-104)+143)/51480;
-<a name="l01383"></a>01383       _C4x[10] = ((10-8*_ep2)*_ep2-13)/6435;
-<a name="l01384"></a>01384       _C4x[11] = (5-4*_ep2)/3276;
-<a name="l01385"></a>01385       _C4x[12] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(840);
-<a name="l01386"></a>01386       _C4x[13] = (_ep2*(_ep2*(_ep2*(128*_ep2-160)+208)-286)+429)/900900;
-<a name="l01387"></a>01387       _C4x[14] = (_ep2*(_ep2*(64*_ep2-80)+104)-143)/257400;
-<a name="l01388"></a>01388       _C4x[15] = (_ep2*(8*_ep2-10)+13)/25025;
-<a name="l01389"></a>01389       _C4x[16] = (4*_ep2-5)/10920;
-<a name="l01390"></a>01390       _C4x[17] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2520);
-<a name="l01391"></a>01391       _C4x[18] = (_ep2*((80-64*_ep2)*_ep2-104)+143)/2522520;
-<a name="l01392"></a>01392       _C4x[19] = ((10-8*_ep2)*_ep2-13)/140140;
-<a name="l01393"></a>01393       _C4x[20] = (5-4*_ep2)/45864;
-<a name="l01394"></a>01394       _C4x[21] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8820);
-<a name="l01395"></a>01395       _C4x[22] = (_ep2*(8*_ep2-10)+13)/1621620;
-<a name="l01396"></a>01396       _C4x[23] = (4*_ep2-5)/294840;
-<a name="l01397"></a>01397       _C4x[24] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(41580);
-<a name="l01398"></a>01398       _C4x[25] = (5-4*_ep2)/3963960;
-<a name="l01399"></a>01399       _C4x[26] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(304920);
-<a name="l01400"></a>01400       _C4x[27] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(4684680);
-<a name="l01401"></a>01401       <span class="keywordflow">break</span>;
-<a name="l01402"></a>01402     <span class="keywordflow">case</span> 8:
-<a name="l01403"></a>01403       _C4x[0] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*((8704-7168*_ep2)*_ep2-10880)+
-<a name="l01404"></a>01404                 14144)-19448)+29172)-51051)+510510)/765765;
-<a name="l01405"></a>01405       _C4x[1] = (_ep2*(_ep2*(_ep2*(_ep2*((8704-7168*_ep2)*_ep2-10880)+14144)-
-<a name="l01406"></a>01406                 19448)+29172)-51051)/1021020;
-<a name="l01407"></a>01407       _C4x[2] = (_ep2*(_ep2*(_ep2*((2176-1792*_ep2)*_ep2-2720)+3536)-4862)+
-<a name="l01408"></a>01408                 7293)/306306;
-<a name="l01409"></a>01409       _C4x[3] = (_ep2*(_ep2*((1088-896*_ep2)*_ep2-1360)+1768)-2431)/175032;
-<a name="l01410"></a>01410       _C4x[4] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/24310;
-<a name="l01411"></a>01411       _C4x[5] = ((68-56*_ep2)*_ep2-85)/13260;
-<a name="l01412"></a>01412       _C4x[6] = (17-14*_ep2)/3570;
-<a name="l01413"></a>01413       _C4x[7] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(272);
-<a name="l01414"></a>01414       _C4x[8] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(7168*_ep2-8704)+10880)-14144)+
-<a name="l01415"></a>01415                 19448)-29172)+51051)/9189180;
-<a name="l01416"></a>01416       _C4x[9] = (_ep2*(_ep2*(_ep2*(_ep2*(1792*_ep2-2176)+2720)-3536)+4862)-
-<a name="l01417"></a>01417                 7293)/1837836;
-<a name="l01418"></a>01418       _C4x[10] = (_ep2*(_ep2*(_ep2*(896*_ep2-1088)+1360)-1768)+2431)/875160;
-<a name="l01419"></a>01419       _C4x[11] = (_ep2*(_ep2*(112*_ep2-136)+170)-221)/109395;
-<a name="l01420"></a>01420       _C4x[12] = (_ep2*(56*_ep2-68)+85)/55692;
-<a name="l01421"></a>01421       _C4x[13] = (14*_ep2-17)/14280;
-<a name="l01422"></a>01422       _C4x[14] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(7344);
-<a name="l01423"></a>01423       _C4x[15] = (_ep2*(_ep2*(_ep2*((2176-1792*_ep2)*_ep2-2720)+3536)-4862)+
-<a name="l01424"></a>01424                 7293)/15315300;
-<a name="l01425"></a>01425       _C4x[16] = (_ep2*(_ep2*((1088-896*_ep2)*_ep2-1360)+1768)-2431)/4375800;
-<a name="l01426"></a>01426       _C4x[17] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/425425;
-<a name="l01427"></a>01427       _C4x[18] = ((68-56*_ep2)*_ep2-85)/185640;
-<a name="l01428"></a>01428       _C4x[19] = (17-14*_ep2)/42840;
-<a name="l01429"></a>01429       _C4x[20] = -7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(20400);
-<a name="l01430"></a>01430       _C4x[21] = (_ep2*(_ep2*(_ep2*(896*_ep2-1088)+1360)-1768)+2431)/42882840;
-<a name="l01431"></a>01431       _C4x[22] = (_ep2*(_ep2*(112*_ep2-136)+170)-221)/2382380;
-<a name="l01432"></a>01432       _C4x[23] = (_ep2*(56*_ep2-68)+85)/779688;
-<a name="l01433"></a>01433       _C4x[24] = (14*_ep2-17)/149940;
-<a name="l01434"></a>01434       _C4x[25] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8976);
-<a name="l01435"></a>01435       _C4x[26] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/27567540;
-<a name="l01436"></a>01436       _C4x[27] = ((68-56*_ep2)*_ep2-85)/5012280;
-<a name="l01437"></a>01437       _C4x[28] = (17-14*_ep2)/706860;
-<a name="l01438"></a>01438       _C4x[29] = -7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(242352);
-<a name="l01439"></a>01439       _C4x[30] = (_ep2*(56*_ep2-68)+85)/67387320;
-<a name="l01440"></a>01440       _C4x[31] = (14*_ep2-17)/5183640;
-<a name="l01441"></a>01441       _C4x[32] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1283568);
-<a name="l01442"></a>01442       _C4x[33] = (17-14*_ep2)/79639560;
-<a name="l01443"></a>01443       _C4x[34] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1516944);
-<a name="l01444"></a>01444       _C4x[35] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(26254800);
-<a name="l01445"></a>01445       <span class="keywordflow">break</span>;
-<a name="l01446"></a>01446     <span class="keywordflow">default</span>:
-<a name="l01447"></a>01447       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC3_ &gt;= 0 &amp;&amp; nC4_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC4_&quot;</span>);
-<a name="l01448"></a>01448     }
-<a name="l01449"></a>01449   }
-<a name="l01450"></a>01450 
-<a name="l01451"></a>01451 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00701"></a>00701       sqrt(<a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(calp1 * cbet1) +
+<a name="l00702"></a>00702            (cbet1 &lt; -sbet1 ?
+<a name="l00703"></a>00703             (cbet2 - cbet1) * (cbet1 + cbet2) :
+<a name="l00704"></a>00704             (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
+<a name="l00705"></a>00705       abs(calp1);
+<a name="l00706"></a>00706     <span class="comment">// tan(bet2) = tan(sig2) * cos(alp2)</span>
+<a name="l00707"></a>00707     <span class="comment">// tan(omg2) = sin(alp0) * tan(sig2).</span>
+<a name="l00708"></a>00708     ssig2 = sbet2; somg2 = salp0 * sbet2;
+<a name="l00709"></a>00709     csig2 = comg2 = calp2 * cbet2;
+<a name="l00710"></a>00710     SinCosNorm(ssig2, csig2);
+<a name="l00711"></a>00711     <span class="comment">// SinCosNorm(somg2, comg2); -- don&#39;t need to normalize!</span>
+<a name="l00712"></a>00712 
+<a name="l00713"></a>00713     <span class="comment">// sig12 = sig2 - sig1, limit to [0, pi]</span>
+<a name="l00714"></a>00714     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0)),
+<a name="l00715"></a>00715                   csig1 * csig2 + ssig1 * ssig2);
+<a name="l00716"></a>00716 
+<a name="l00717"></a>00717     <span class="comment">// omg12 = omg2 - omg1, limit to [0, pi]</span>
+<a name="l00718"></a>00718     omg12 = atan2(max(comg1 * somg2 - somg1 * comg2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0)),
+<a name="l00719"></a>00719                   comg1 * comg2 + somg1 * somg2);
+<a name="l00720"></a>00720     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> B312, h0;
+<a name="l00721"></a>00721     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> k2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(calp0) * _ep2;
+<a name="l00722"></a>00722     eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2);
+<a name="l00723"></a>00723     C3f(eps, C3a);
+<a name="l00724"></a>00724     B312 = (SinCosSeries(<span class="keyword">true</span>, ssig2, csig2, C3a, nC3_-1) -
+<a name="l00725"></a>00725             SinCosSeries(<span class="keyword">true</span>, ssig1, csig1, C3a, nC3_-1));
+<a name="l00726"></a>00726     h0 = -_f * A3f(eps);
+<a name="l00727"></a>00727     domg12 = salp0 * h0 * (sig12 + B312);
+<a name="l00728"></a>00728     lam12 = omg12 + domg12;
+<a name="l00729"></a>00729 
+<a name="l00730"></a>00730     <span class="keywordflow">if</span> (diffp) {
+<a name="l00731"></a>00731       <span class="keywordflow">if</span> (calp2 == 0)
+<a name="l00732"></a>00732         dlam12 = - 2 * sqrt(1 - _e2 * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(cbet1)) / sbet1;
+<a name="l00733"></a>00733       <span class="keywordflow">else</span> {
+<a name="l00734"></a>00734         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> dummy;
+<a name="l00735"></a>00735         Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
+<a name="l00736"></a>00736                 cbet1, cbet2, dummy, dlam12, dummy,
+<a name="l00737"></a>00737                 <span class="keyword">false</span>, dummy, dummy,  C1a, C2a);
+<a name="l00738"></a>00738         dlam12 /= calp2 * cbet2;
+<a name="l00739"></a>00739       }
+<a name="l00740"></a>00740     }
+<a name="l00741"></a>00741 
+<a name="l00742"></a>00742     <span class="keywordflow">return</span> lam12;
+<a name="l00743"></a>00743   }
+<a name="l00744"></a>00744 
+<a name="l00745"></a>00745   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Geodesic::A3f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00746"></a>00746     <span class="comment">// Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner&#39;s method</span>
+<a name="l00747"></a>00747     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> v = 0;
+<a name="l00748"></a>00748     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = nA3x_; i; )
+<a name="l00749"></a>00749       v = eps * v + _A3x[--i];
+<a name="l00750"></a>00750     <span class="keywordflow">return</span> v;
+<a name="l00751"></a>00751   }
+<a name="l00752"></a>00752 
+<a name="l00753"></a>00753   <span class="keywordtype">void</span> Geodesic::C3f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00754"></a>00754     <span class="comment">// Evaluation C3 coeffs by Horner&#39;s method</span>
+<a name="l00755"></a>00755     <span class="comment">// Elements c[1] thru c[nC3_ - 1] are set</span>
+<a name="l00756"></a>00756     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = nC3x_, k = nC3_ - 1; k; ) {
+<a name="l00757"></a>00757       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t = 0;
+<a name="l00758"></a>00758       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = nC3_ - k; i; --i)
+<a name="l00759"></a>00759         t = eps * t + _C3x[--j];
+<a name="l00760"></a>00760       c[k--] = t;
+<a name="l00761"></a>00761     }
+<a name="l00762"></a>00762 
+<a name="l00763"></a>00763     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> mult = 1;
+<a name="l00764"></a>00764     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt; nC3_; ) {
+<a name="l00765"></a>00765       mult *= eps;
+<a name="l00766"></a>00766       c[k++] *= mult;
+<a name="l00767"></a>00767     }
+<a name="l00768"></a>00768   }
+<a name="l00769"></a>00769 
+<a name="l00770"></a>00770   <span class="keywordtype">void</span> Geodesic::C4f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> k2, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00771"></a>00771     <span class="comment">// Evaluation C4 coeffs by Horner&#39;s method</span>
+<a name="l00772"></a>00772     <span class="comment">// Elements c[0] thru c[nC4_ - 1] are set</span>
+<a name="l00773"></a>00773     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = nC4x_, k = nC4_; k; ) {
+<a name="l00774"></a>00774       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t = 0;
+<a name="l00775"></a>00775       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = nC4_ - k + 1; i; --i)
+<a name="l00776"></a>00776         t = k2 * t + _C4x[--j];
+<a name="l00777"></a>00777       c[--k] = t;
+<a name="l00778"></a>00778     }
+<a name="l00779"></a>00779 
+<a name="l00780"></a>00780     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> mult = 1;
+<a name="l00781"></a>00781     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = 1; k &lt; nC4_; ) {
+<a name="l00782"></a>00782       mult *= k2;
+<a name="l00783"></a>00783       c[k++] *= mult;
+<a name="l00784"></a>00784     }
+<a name="l00785"></a>00785   }
+<a name="l00786"></a>00786 
+<a name="l00787"></a>00787   <span class="comment">// Generated by Maxima on 2010-09-04 10:26:17-04:00</span>
+<a name="l00788"></a>00788 
+<a name="l00789"></a>00789   <span class="comment">// The scale factor A1-1 = mean value of I1-1</span>
+<a name="l00790"></a>00790   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Geodesic::A1m1f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps) <span class="keywordflow">throw</span>() {
+<a name="l00791"></a>00791     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00792"></a>00792       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
+<a name="l00793"></a>00793       t;
+<a name="l00794"></a>00794     <span class="keywordflow">switch</span> (nA1_/2) {
+<a name="l00795"></a>00795     <span class="keywordflow">case</span> 0:
+<a name="l00796"></a>00796       t = 0;
+<a name="l00797"></a>00797       <span class="keywordflow">break</span>;
+<a name="l00798"></a>00798     <span class="keywordflow">case</span> 1:
+<a name="l00799"></a>00799       t = eps2/4;
+<a name="l00800"></a>00800       <span class="keywordflow">break</span>;
+<a name="l00801"></a>00801     <span class="keywordflow">case</span> 2:
+<a name="l00802"></a>00802       t = eps2*(eps2+16)/64;
+<a name="l00803"></a>00803       <span class="keywordflow">break</span>;
+<a name="l00804"></a>00804     <span class="keywordflow">case</span> 3:
+<a name="l00805"></a>00805       t = eps2*(eps2*(eps2+4)+64)/256;
+<a name="l00806"></a>00806       <span class="keywordflow">break</span>;
+<a name="l00807"></a>00807     <span class="keywordflow">case</span> 4:
+<a name="l00808"></a>00808       t = eps2*(eps2*(eps2*(25*eps2+64)+256)+4096)/16384;
+<a name="l00809"></a>00809       <span class="keywordflow">break</span>;
+<a name="l00810"></a>00810     <span class="keywordflow">default</span>:
+<a name="l00811"></a>00811       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nA1_ &gt;= 0 &amp;&amp; nA1_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nA1_&quot;</span>);
+<a name="l00812"></a>00812       t = 0;
+<a name="l00813"></a>00813     }
+<a name="l00814"></a>00814     <span class="keywordflow">return</span> (t + eps) / (1 - eps);
+<a name="l00815"></a>00815   }
+<a name="l00816"></a>00816 
+<a name="l00817"></a>00817   <span class="comment">// The coefficients C1[l] in the Fourier expansion of B1</span>
+<a name="l00818"></a>00818   <span class="keywordtype">void</span> Geodesic::C1f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keywordflow">throw</span>() {
+<a name="l00819"></a>00819     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00820"></a>00820       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
+<a name="l00821"></a>00821       d = eps;
+<a name="l00822"></a>00822     <span class="keywordflow">switch</span> (nC1_) {
+<a name="l00823"></a>00823     <span class="keywordflow">case</span> 0:
+<a name="l00824"></a>00824       <span class="keywordflow">break</span>;
+<a name="l00825"></a>00825     <span class="keywordflow">case</span> 1:
+<a name="l00826"></a>00826       c[1] = -d/2;
+<a name="l00827"></a>00827       <span class="keywordflow">break</span>;
+<a name="l00828"></a>00828     <span class="keywordflow">case</span> 2:
+<a name="l00829"></a>00829       c[1] = -d/2;
+<a name="l00830"></a>00830       d *= eps;
+<a name="l00831"></a>00831       c[2] = -d/16;
+<a name="l00832"></a>00832       <span class="keywordflow">break</span>;
+<a name="l00833"></a>00833     <span class="keywordflow">case</span> 3:
+<a name="l00834"></a>00834       c[1] = d*(3*eps2-8)/16;
+<a name="l00835"></a>00835       d *= eps;
+<a name="l00836"></a>00836       c[2] = -d/16;
+<a name="l00837"></a>00837       d *= eps;
+<a name="l00838"></a>00838       c[3] = -d/48;
+<a name="l00839"></a>00839       <span class="keywordflow">break</span>;
+<a name="l00840"></a>00840     <span class="keywordflow">case</span> 4:
+<a name="l00841"></a>00841       c[1] = d*(3*eps2-8)/16;
+<a name="l00842"></a>00842       d *= eps;
+<a name="l00843"></a>00843       c[2] = d*(eps2-2)/32;
+<a name="l00844"></a>00844       d *= eps;
+<a name="l00845"></a>00845       c[3] = -d/48;
+<a name="l00846"></a>00846       d *= eps;
+<a name="l00847"></a>00847       c[4] = -5*d/512;
+<a name="l00848"></a>00848       <span class="keywordflow">break</span>;
+<a name="l00849"></a>00849     <span class="keywordflow">case</span> 5:
+<a name="l00850"></a>00850       c[1] = d*((6-eps2)*eps2-16)/32;
+<a name="l00851"></a>00851       d *= eps;
+<a name="l00852"></a>00852       c[2] = d*(eps2-2)/32;
+<a name="l00853"></a>00853       d *= eps;
+<a name="l00854"></a>00854       c[3] = d*(9*eps2-16)/768;
+<a name="l00855"></a>00855       d *= eps;
+<a name="l00856"></a>00856       c[4] = -5*d/512;
+<a name="l00857"></a>00857       d *= eps;
+<a name="l00858"></a>00858       c[5] = -7*d/1280;
+<a name="l00859"></a>00859       <span class="keywordflow">break</span>;
+<a name="l00860"></a>00860     <span class="keywordflow">case</span> 6:
+<a name="l00861"></a>00861       c[1] = d*((6-eps2)*eps2-16)/32;
+<a name="l00862"></a>00862       d *= eps;
+<a name="l00863"></a>00863       c[2] = d*((64-9*eps2)*eps2-128)/2048;
+<a name="l00864"></a>00864       d *= eps;
+<a name="l00865"></a>00865       c[3] = d*(9*eps2-16)/768;
+<a name="l00866"></a>00866       d *= eps;
+<a name="l00867"></a>00867       c[4] = d*(3*eps2-5)/512;
+<a name="l00868"></a>00868       d *= eps;
+<a name="l00869"></a>00869       c[5] = -7*d/1280;
+<a name="l00870"></a>00870       d *= eps;
+<a name="l00871"></a>00871       c[6] = -7*d/2048;
+<a name="l00872"></a>00872       <span class="keywordflow">break</span>;
+<a name="l00873"></a>00873     <span class="keywordflow">case</span> 7:
+<a name="l00874"></a>00874       c[1] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
+<a name="l00875"></a>00875       d *= eps;
+<a name="l00876"></a>00876       c[2] = d*((64-9*eps2)*eps2-128)/2048;
+<a name="l00877"></a>00877       d *= eps;
+<a name="l00878"></a>00878       c[3] = d*((72-9*eps2)*eps2-128)/6144;
+<a name="l00879"></a>00879       d *= eps;
+<a name="l00880"></a>00880       c[4] = d*(3*eps2-5)/512;
+<a name="l00881"></a>00881       d *= eps;
+<a name="l00882"></a>00882       c[5] = d*(35*eps2-56)/10240;
+<a name="l00883"></a>00883       d *= eps;
+<a name="l00884"></a>00884       c[6] = -7*d/2048;
+<a name="l00885"></a>00885       d *= eps;
+<a name="l00886"></a>00886       c[7] = -33*d/14336;
+<a name="l00887"></a>00887       <span class="keywordflow">break</span>;
+<a name="l00888"></a>00888     <span class="keywordflow">case</span> 8:
+<a name="l00889"></a>00889       c[1] = d*(eps2*(eps2*(19*eps2-64)+384)-1024)/2048;
+<a name="l00890"></a>00890       d *= eps;
+<a name="l00891"></a>00891       c[2] = d*(eps2*(eps2*(7*eps2-18)+128)-256)/4096;
+<a name="l00892"></a>00892       d *= eps;
+<a name="l00893"></a>00893       c[3] = d*((72-9*eps2)*eps2-128)/6144;
+<a name="l00894"></a>00894       d *= eps;
+<a name="l00895"></a>00895       c[4] = d*((96-11*eps2)*eps2-160)/16384;
+<a name="l00896"></a>00896       d *= eps;
+<a name="l00897"></a>00897       c[5] = d*(35*eps2-56)/10240;
+<a name="l00898"></a>00898       d *= eps;
+<a name="l00899"></a>00899       c[6] = d*(9*eps2-14)/4096;
+<a name="l00900"></a>00900       d *= eps;
+<a name="l00901"></a>00901       c[7] = -33*d/14336;
+<a name="l00902"></a>00902       d *= eps;
+<a name="l00903"></a>00903       c[8] = -429*d/262144;
+<a name="l00904"></a>00904       <span class="keywordflow">break</span>;
+<a name="l00905"></a>00905     <span class="keywordflow">default</span>:
+<a name="l00906"></a>00906       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC1_ &gt;= 0 &amp;&amp; nC1_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC1_&quot;</span>);
+<a name="l00907"></a>00907     }
+<a name="l00908"></a>00908   }
+<a name="l00909"></a>00909 
+<a name="l00910"></a>00910   <span class="comment">// The coefficients C1p[l] in the Fourier expansion of B1p</span>
+<a name="l00911"></a>00911   <span class="keywordtype">void</span> Geodesic::C1pf(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keywordflow">throw</span>() {
+<a name="l00912"></a>00912     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00913"></a>00913       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
+<a name="l00914"></a>00914       d = eps;
+<a name="l00915"></a>00915     <span class="keywordflow">switch</span> (nC1p_) {
+<a name="l00916"></a>00916     <span class="keywordflow">case</span> 0:
+<a name="l00917"></a>00917       <span class="keywordflow">break</span>;
+<a name="l00918"></a>00918     <span class="keywordflow">case</span> 1:
+<a name="l00919"></a>00919       c[1] = d/2;
+<a name="l00920"></a>00920       <span class="keywordflow">break</span>;
+<a name="l00921"></a>00921     <span class="keywordflow">case</span> 2:
+<a name="l00922"></a>00922       c[1] = d/2;
+<a name="l00923"></a>00923       d *= eps;
+<a name="l00924"></a>00924       c[2] = 5*d/16;
+<a name="l00925"></a>00925       <span class="keywordflow">break</span>;
+<a name="l00926"></a>00926     <span class="keywordflow">case</span> 3:
+<a name="l00927"></a>00927       c[1] = d*(16-9*eps2)/32;
+<a name="l00928"></a>00928       d *= eps;
+<a name="l00929"></a>00929       c[2] = 5*d/16;
+<a name="l00930"></a>00930       d *= eps;
+<a name="l00931"></a>00931       c[3] = 29*d/96;
+<a name="l00932"></a>00932       <span class="keywordflow">break</span>;
+<a name="l00933"></a>00933     <span class="keywordflow">case</span> 4:
+<a name="l00934"></a>00934       c[1] = d*(16-9*eps2)/32;
+<a name="l00935"></a>00935       d *= eps;
+<a name="l00936"></a>00936       c[2] = d*(30-37*eps2)/96;
+<a name="l00937"></a>00937       d *= eps;
+<a name="l00938"></a>00938       c[3] = 29*d/96;
+<a name="l00939"></a>00939       d *= eps;
+<a name="l00940"></a>00940       c[4] = 539*d/1536;
+<a name="l00941"></a>00941       <span class="keywordflow">break</span>;
+<a name="l00942"></a>00942     <span class="keywordflow">case</span> 5:
+<a name="l00943"></a>00943       c[1] = d*(eps2*(205*eps2-432)+768)/1536;
+<a name="l00944"></a>00944       d *= eps;
+<a name="l00945"></a>00945       c[2] = d*(30-37*eps2)/96;
+<a name="l00946"></a>00946       d *= eps;
+<a name="l00947"></a>00947       c[3] = d*(116-225*eps2)/384;
+<a name="l00948"></a>00948       d *= eps;
+<a name="l00949"></a>00949       c[4] = 539*d/1536;
+<a name="l00950"></a>00950       d *= eps;
+<a name="l00951"></a>00951       c[5] = 3467*d/7680;
+<a name="l00952"></a>00952       <span class="keywordflow">break</span>;
+<a name="l00953"></a>00953     <span class="keywordflow">case</span> 6:
+<a name="l00954"></a>00954       c[1] = d*(eps2*(205*eps2-432)+768)/1536;
+<a name="l00955"></a>00955       d *= eps;
+<a name="l00956"></a>00956       c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
+<a name="l00957"></a>00957       d *= eps;
+<a name="l00958"></a>00958       c[3] = d*(116-225*eps2)/384;
+<a name="l00959"></a>00959       d *= eps;
+<a name="l00960"></a>00960       c[4] = d*(2695-7173*eps2)/7680;
+<a name="l00961"></a>00961       d *= eps;
+<a name="l00962"></a>00962       c[5] = 3467*d/7680;
+<a name="l00963"></a>00963       d *= eps;
+<a name="l00964"></a>00964       c[6] = 38081*d/61440;
+<a name="l00965"></a>00965       <span class="keywordflow">break</span>;
+<a name="l00966"></a>00966     <span class="keywordflow">case</span> 7:
+<a name="l00967"></a>00967       c[1] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
+<a name="l00968"></a>00968       d *= eps;
+<a name="l00969"></a>00969       c[2] = d*(eps2*(4005*eps2-4736)+3840)/12288;
+<a name="l00970"></a>00970       d *= eps;
+<a name="l00971"></a>00971       c[3] = d*(eps2*(8703*eps2-7200)+3712)/12288;
+<a name="l00972"></a>00972       d *= eps;
+<a name="l00973"></a>00973       c[4] = d*(2695-7173*eps2)/7680;
+<a name="l00974"></a>00974       d *= eps;
+<a name="l00975"></a>00975       c[5] = d*(41604-141115*eps2)/92160;
+<a name="l00976"></a>00976       d *= eps;
+<a name="l00977"></a>00977       c[6] = 38081*d/61440;
+<a name="l00978"></a>00978       d *= eps;
+<a name="l00979"></a>00979       c[7] = 459485*d/516096;
+<a name="l00980"></a>00980       <span class="keywordflow">break</span>;
+<a name="l00981"></a>00981     <span class="keywordflow">case</span> 8:
+<a name="l00982"></a>00982       c[1] = d*(eps2*((9840-4879*eps2)*eps2-20736)+36864)/73728;
+<a name="l00983"></a>00983       d *= eps;
+<a name="l00984"></a>00984       c[2] = d*(eps2*((120150-86171*eps2)*eps2-142080)+115200)/368640;
+<a name="l00985"></a>00985       d *= eps;
+<a name="l00986"></a>00986       c[3] = d*(eps2*(8703*eps2-7200)+3712)/12288;
+<a name="l00987"></a>00987       d *= eps;
+<a name="l00988"></a>00988       c[4] = d*(eps2*(1082857*eps2-688608)+258720)/737280;
+<a name="l00989"></a>00989       d *= eps;
+<a name="l00990"></a>00990       c[5] = d*(41604-141115*eps2)/92160;
+<a name="l00991"></a>00991       d *= eps;
+<a name="l00992"></a>00992       c[6] = d*(533134-2200311*eps2)/860160;
+<a name="l00993"></a>00993       d *= eps;
+<a name="l00994"></a>00994       c[7] = 459485*d/516096;
+<a name="l00995"></a>00995       d *= eps;
+<a name="l00996"></a>00996       c[8] = 109167851*d/82575360;
+<a name="l00997"></a>00997       <span class="keywordflow">break</span>;
+<a name="l00998"></a>00998     <span class="keywordflow">default</span>:
+<a name="l00999"></a>00999       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC1p_ &gt;= 0 &amp;&amp; nC1p_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC1p_&quot;</span>);
+<a name="l01000"></a>01000     }
+<a name="l01001"></a>01001   }
+<a name="l01002"></a>01002 
+<a name="l01003"></a>01003   <span class="comment">// The scale factor A2-1 = mean value of I2-1</span>
+<a name="l01004"></a>01004   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Geodesic::A2m1f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps) <span class="keywordflow">throw</span>() {
+<a name="l01005"></a>01005     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l01006"></a>01006       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
+<a name="l01007"></a>01007       t;
+<a name="l01008"></a>01008     <span class="keywordflow">switch</span> (nA2_/2) {
+<a name="l01009"></a>01009     <span class="keywordflow">case</span> 0:
+<a name="l01010"></a>01010       t = 0;
+<a name="l01011"></a>01011       <span class="keywordflow">break</span>;
+<a name="l01012"></a>01012     <span class="keywordflow">case</span> 1:
+<a name="l01013"></a>01013       t = eps2/4;
+<a name="l01014"></a>01014       <span class="keywordflow">break</span>;
+<a name="l01015"></a>01015     <span class="keywordflow">case</span> 2:
+<a name="l01016"></a>01016       t = eps2*(9*eps2+16)/64;
+<a name="l01017"></a>01017       <span class="keywordflow">break</span>;
+<a name="l01018"></a>01018     <span class="keywordflow">case</span> 3:
+<a name="l01019"></a>01019       t = eps2*(eps2*(25*eps2+36)+64)/256;
+<a name="l01020"></a>01020       <span class="keywordflow">break</span>;
+<a name="l01021"></a>01021     <span class="keywordflow">case</span> 4:
+<a name="l01022"></a>01022       t = eps2*(eps2*(eps2*(1225*eps2+1600)+2304)+4096)/16384;
+<a name="l01023"></a>01023       <span class="keywordflow">break</span>;
+<a name="l01024"></a>01024     <span class="keywordflow">default</span>:
+<a name="l01025"></a>01025       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nA2_ &gt;= 0 &amp;&amp; nA2_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nA2_&quot;</span>);
+<a name="l01026"></a>01026       t = 0;
+<a name="l01027"></a>01027     }
+<a name="l01028"></a>01028     <span class="keywordflow">return</span> t * (1 - eps) - eps;
+<a name="l01029"></a>01029   }
+<a name="l01030"></a>01030 
+<a name="l01031"></a>01031   <span class="comment">// The coefficients C2[l] in the Fourier expansion of B2</span>
+<a name="l01032"></a>01032   <span class="keywordtype">void</span> Geodesic::C2f(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> eps, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> c[]) <span class="keywordflow">throw</span>() {
+<a name="l01033"></a>01033     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l01034"></a>01034       eps2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(eps),
+<a name="l01035"></a>01035       d = eps;
+<a name="l01036"></a>01036     <span class="keywordflow">switch</span> (nC2_) {
+<a name="l01037"></a>01037     <span class="keywordflow">case</span> 0:
+<a name="l01038"></a>01038       <span class="keywordflow">break</span>;
+<a name="l01039"></a>01039     <span class="keywordflow">case</span> 1:
+<a name="l01040"></a>01040       c[1] = d/2;
+<a name="l01041"></a>01041       <span class="keywordflow">break</span>;
+<a name="l01042"></a>01042     <span class="keywordflow">case</span> 2:
+<a name="l01043"></a>01043       c[1] = d/2;
+<a name="l01044"></a>01044       d *= eps;
+<a name="l01045"></a>01045       c[2] = 3*d/16;
+<a name="l01046"></a>01046       <span class="keywordflow">break</span>;
+<a name="l01047"></a>01047     <span class="keywordflow">case</span> 3:
+<a name="l01048"></a>01048       c[1] = d*(eps2+8)/16;
+<a name="l01049"></a>01049       d *= eps;
+<a name="l01050"></a>01050       c[2] = 3*d/16;
+<a name="l01051"></a>01051       d *= eps;
+<a name="l01052"></a>01052       c[3] = 5*d/48;
+<a name="l01053"></a>01053       <span class="keywordflow">break</span>;
+<a name="l01054"></a>01054     <span class="keywordflow">case</span> 4:
+<a name="l01055"></a>01055       c[1] = d*(eps2+8)/16;
+<a name="l01056"></a>01056       d *= eps;
+<a name="l01057"></a>01057       c[2] = d*(eps2+6)/32;
+<a name="l01058"></a>01058       d *= eps;
+<a name="l01059"></a>01059       c[3] = 5*d/48;
+<a name="l01060"></a>01060       d *= eps;
+<a name="l01061"></a>01061       c[4] = 35*d/512;
+<a name="l01062"></a>01062       <span class="keywordflow">break</span>;
+<a name="l01063"></a>01063     <span class="keywordflow">case</span> 5:
+<a name="l01064"></a>01064       c[1] = d*(eps2*(eps2+2)+16)/32;
+<a name="l01065"></a>01065       d *= eps;
+<a name="l01066"></a>01066       c[2] = d*(eps2+6)/32;
+<a name="l01067"></a>01067       d *= eps;
+<a name="l01068"></a>01068       c[3] = d*(15*eps2+80)/768;
+<a name="l01069"></a>01069       d *= eps;
+<a name="l01070"></a>01070       c[4] = 35*d/512;
+<a name="l01071"></a>01071       d *= eps;
+<a name="l01072"></a>01072       c[5] = 63*d/1280;
+<a name="l01073"></a>01073       <span class="keywordflow">break</span>;
+<a name="l01074"></a>01074     <span class="keywordflow">case</span> 6:
+<a name="l01075"></a>01075       c[1] = d*(eps2*(eps2+2)+16)/32;
+<a name="l01076"></a>01076       d *= eps;
+<a name="l01077"></a>01077       c[2] = d*(eps2*(35*eps2+64)+384)/2048;
+<a name="l01078"></a>01078       d *= eps;
+<a name="l01079"></a>01079       c[3] = d*(15*eps2+80)/768;
+<a name="l01080"></a>01080       d *= eps;
+<a name="l01081"></a>01081       c[4] = d*(7*eps2+35)/512;
+<a name="l01082"></a>01082       d *= eps;
+<a name="l01083"></a>01083       c[5] = 63*d/1280;
+<a name="l01084"></a>01084       d *= eps;
+<a name="l01085"></a>01085       c[6] = 77*d/2048;
+<a name="l01086"></a>01086       <span class="keywordflow">break</span>;
+<a name="l01087"></a>01087     <span class="keywordflow">case</span> 7:
+<a name="l01088"></a>01088       c[1] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
+<a name="l01089"></a>01089       d *= eps;
+<a name="l01090"></a>01090       c[2] = d*(eps2*(35*eps2+64)+384)/2048;
+<a name="l01091"></a>01091       d *= eps;
+<a name="l01092"></a>01092       c[3] = d*(eps2*(69*eps2+120)+640)/6144;
+<a name="l01093"></a>01093       d *= eps;
+<a name="l01094"></a>01094       c[4] = d*(7*eps2+35)/512;
+<a name="l01095"></a>01095       d *= eps;
+<a name="l01096"></a>01096       c[5] = d*(105*eps2+504)/10240;
+<a name="l01097"></a>01097       d *= eps;
+<a name="l01098"></a>01098       c[6] = 77*d/2048;
+<a name="l01099"></a>01099       d *= eps;
+<a name="l01100"></a>01100       c[7] = 429*d/14336;
+<a name="l01101"></a>01101       <span class="keywordflow">break</span>;
+<a name="l01102"></a>01102     <span class="keywordflow">case</span> 8:
+<a name="l01103"></a>01103       c[1] = d*(eps2*(eps2*(41*eps2+64)+128)+1024)/2048;
+<a name="l01104"></a>01104       d *= eps;
+<a name="l01105"></a>01105       c[2] = d*(eps2*(eps2*(47*eps2+70)+128)+768)/4096;
+<a name="l01106"></a>01106       d *= eps;
+<a name="l01107"></a>01107       c[3] = d*(eps2*(69*eps2+120)+640)/6144;
+<a name="l01108"></a>01108       d *= eps;
+<a name="l01109"></a>01109       c[4] = d*(eps2*(133*eps2+224)+1120)/16384;
+<a name="l01110"></a>01110       d *= eps;
+<a name="l01111"></a>01111       c[5] = d*(105*eps2+504)/10240;
+<a name="l01112"></a>01112       d *= eps;
+<a name="l01113"></a>01113       c[6] = d*(33*eps2+154)/4096;
+<a name="l01114"></a>01114       d *= eps;
+<a name="l01115"></a>01115       c[7] = 429*d/14336;
+<a name="l01116"></a>01116       d *= eps;
+<a name="l01117"></a>01117       c[8] = 6435*d/262144;
+<a name="l01118"></a>01118       <span class="keywordflow">break</span>;
+<a name="l01119"></a>01119     <span class="keywordflow">default</span>:
+<a name="l01120"></a>01120       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC2_ &gt;= 0 &amp;&amp; nC2_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC2_&quot;</span>);
+<a name="l01121"></a>01121     }
+<a name="l01122"></a>01122   }
+<a name="l01123"></a>01123 
+<a name="l01124"></a>01124   <span class="comment">// The scale factor A3 = mean value of I3</span>
+<a name="l01125"></a>01125   <span class="keywordtype">void</span> Geodesic::A3coeff() throw() {
+<a name="l01126"></a>01126     <span class="keywordflow">switch</span> (nA3_) {
+<a name="l01127"></a>01127     <span class="keywordflow">case</span> 0:
+<a name="l01128"></a>01128       <span class="keywordflow">break</span>;
+<a name="l01129"></a>01129     <span class="keywordflow">case</span> 1:
+<a name="l01130"></a>01130       _A3x[0] = 1;
+<a name="l01131"></a>01131       <span class="keywordflow">break</span>;
+<a name="l01132"></a>01132     <span class="keywordflow">case</span> 2:
+<a name="l01133"></a>01133       _A3x[0] = 1;
+<a name="l01134"></a>01134       _A3x[1] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2);
+<a name="l01135"></a>01135       <span class="keywordflow">break</span>;
+<a name="l01136"></a>01136     <span class="keywordflow">case</span> 3:
+<a name="l01137"></a>01137       _A3x[0] = 1;
+<a name="l01138"></a>01138       _A3x[1] = (_n-1)/2;
+<a name="l01139"></a>01139       _A3x[2] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(4);
+<a name="l01140"></a>01140       <span class="keywordflow">break</span>;
+<a name="l01141"></a>01141     <span class="keywordflow">case</span> 4:
+<a name="l01142"></a>01142       _A3x[0] = 1;
+<a name="l01143"></a>01143       _A3x[1] = (_n-1)/2;
+<a name="l01144"></a>01144       _A3x[2] = (-_n-2)/8;
+<a name="l01145"></a>01145       _A3x[3] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16);
+<a name="l01146"></a>01146       <span class="keywordflow">break</span>;
+<a name="l01147"></a>01147     <span class="keywordflow">case</span> 5:
+<a name="l01148"></a>01148       _A3x[0] = 1;
+<a name="l01149"></a>01149       _A3x[1] = (_n-1)/2;
+<a name="l01150"></a>01150       _A3x[2] = (_n*(3*_n-1)-2)/8;
+<a name="l01151"></a>01151       _A3x[3] = (-3*_n-1)/16;
+<a name="l01152"></a>01152       _A3x[4] = -3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(64);
+<a name="l01153"></a>01153       <span class="keywordflow">break</span>;
+<a name="l01154"></a>01154     <span class="keywordflow">case</span> 6:
+<a name="l01155"></a>01155       _A3x[0] = 1;
+<a name="l01156"></a>01156       _A3x[1] = (_n-1)/2;
+<a name="l01157"></a>01157       _A3x[2] = (_n*(3*_n-1)-2)/8;
+<a name="l01158"></a>01158       _A3x[3] = ((-_n-3)*_n-1)/16;
+<a name="l01159"></a>01159       _A3x[4] = (-2*_n-3)/64;
+<a name="l01160"></a>01160       _A3x[5] = -3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
+<a name="l01161"></a>01161       <span class="keywordflow">break</span>;
+<a name="l01162"></a>01162     <span class="keywordflow">case</span> 7:
+<a name="l01163"></a>01163       _A3x[0] = 1;
+<a name="l01164"></a>01164       _A3x[1] = (_n-1)/2;
+<a name="l01165"></a>01165       _A3x[2] = (_n*(3*_n-1)-2)/8;
+<a name="l01166"></a>01166       _A3x[3] = (_n*(_n*(5*_n-1)-3)-1)/16;
+<a name="l01167"></a>01167       _A3x[4] = ((-10*_n-2)*_n-3)/64;
+<a name="l01168"></a>01168       _A3x[5] = (-5*_n-3)/128;
+<a name="l01169"></a>01169       _A3x[6] = -5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(256);
+<a name="l01170"></a>01170       <span class="keywordflow">break</span>;
+<a name="l01171"></a>01171     <span class="keywordflow">case</span> 8:
+<a name="l01172"></a>01172       _A3x[0] = 1;
+<a name="l01173"></a>01173       _A3x[1] = (_n-1)/2;
+<a name="l01174"></a>01174       _A3x[2] = (_n*(3*_n-1)-2)/8;
+<a name="l01175"></a>01175       _A3x[3] = (_n*(_n*(5*_n-1)-3)-1)/16;
+<a name="l01176"></a>01176       _A3x[4] = (_n*((-5*_n-20)*_n-4)-6)/128;
+<a name="l01177"></a>01177       _A3x[5] = ((-5*_n-10)*_n-6)/256;
+<a name="l01178"></a>01178       _A3x[6] = (-15*_n-20)/1024;
+<a name="l01179"></a>01179       _A3x[7] = -25/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2048);
+<a name="l01180"></a>01180       <span class="keywordflow">break</span>;
+<a name="l01181"></a>01181     <span class="keywordflow">default</span>:
+<a name="l01182"></a>01182       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nA3_ &gt;= 0 &amp;&amp; nA3_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nA3_&quot;</span>);
+<a name="l01183"></a>01183     }
+<a name="l01184"></a>01184   }
+<a name="l01185"></a>01185 
+<a name="l01186"></a>01186   <span class="comment">// The coefficients C3[l] in the Fourier expansion of B3</span>
+<a name="l01187"></a>01187   <span class="keywordtype">void</span> Geodesic::C3coeff() throw() {
+<a name="l01188"></a>01188     <span class="keywordflow">switch</span> (nC3_) {
+<a name="l01189"></a>01189     <span class="keywordflow">case</span> 0:
+<a name="l01190"></a>01190       <span class="keywordflow">break</span>;
+<a name="l01191"></a>01191     <span class="keywordflow">case</span> 1:
+<a name="l01192"></a>01192       <span class="keywordflow">break</span>;
+<a name="l01193"></a>01193     <span class="keywordflow">case</span> 2:
+<a name="l01194"></a>01194       _C3x[0] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(4);
+<a name="l01195"></a>01195       <span class="keywordflow">break</span>;
+<a name="l01196"></a>01196     <span class="keywordflow">case</span> 3:
+<a name="l01197"></a>01197       _C3x[0] = (1-_n)/4;
+<a name="l01198"></a>01198       _C3x[1] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8);
+<a name="l01199"></a>01199       _C3x[2] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16);
+<a name="l01200"></a>01200       <span class="keywordflow">break</span>;
+<a name="l01201"></a>01201     <span class="keywordflow">case</span> 4:
+<a name="l01202"></a>01202       _C3x[0] = (1-_n)/4;
+<a name="l01203"></a>01203       _C3x[1] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8);
+<a name="l01204"></a>01204       _C3x[2] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(64);
+<a name="l01205"></a>01205       _C3x[3] = (2-3*_n)/32;
+<a name="l01206"></a>01206       _C3x[4] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(64);
+<a name="l01207"></a>01207       _C3x[5] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(192);
+<a name="l01208"></a>01208       <span class="keywordflow">break</span>;
+<a name="l01209"></a>01209     <span class="keywordflow">case</span> 5:
+<a name="l01210"></a>01210       _C3x[0] = (1-_n)/4;
+<a name="l01211"></a>01211       _C3x[1] = (1-_n*_n)/8;
+<a name="l01212"></a>01212       _C3x[2] = (3*_n+3)/64;
+<a name="l01213"></a>01213       _C3x[3] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
+<a name="l01214"></a>01214       _C3x[4] = ((_n-3)*_n+2)/32;
+<a name="l01215"></a>01215       _C3x[5] = (3-2*_n)/64;
+<a name="l01216"></a>01216       _C3x[6] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
+<a name="l01217"></a>01217       _C3x[7] = (5-9*_n)/192;
+<a name="l01218"></a>01218       _C3x[8] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
+<a name="l01219"></a>01219       _C3x[9] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(512);
+<a name="l01220"></a>01220       <span class="keywordflow">break</span>;
+<a name="l01221"></a>01221     <span class="keywordflow">case</span> 6:
+<a name="l01222"></a>01222       _C3x[0] = (1-_n)/4;
+<a name="l01223"></a>01223       _C3x[1] = (1-_n*_n)/8;
+<a name="l01224"></a>01224       _C3x[2] = ((3-_n)*_n+3)/64;
+<a name="l01225"></a>01225       _C3x[3] = (2*_n+5)/128;
+<a name="l01226"></a>01226       _C3x[4] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(128);
+<a name="l01227"></a>01227       _C3x[5] = ((_n-3)*_n+2)/32;
+<a name="l01228"></a>01228       _C3x[6] = ((-3*_n-2)*_n+3)/64;
+<a name="l01229"></a>01229       _C3x[7] = (_n+3)/128;
+<a name="l01230"></a>01230       _C3x[8] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(256);
+<a name="l01231"></a>01231       _C3x[9] = (_n*(5*_n-9)+5)/192;
+<a name="l01232"></a>01232       _C3x[10] = (9-10*_n)/384;
+<a name="l01233"></a>01233       _C3x[11] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(512);
+<a name="l01234"></a>01234       _C3x[12] = (7-14*_n)/512;
+<a name="l01235"></a>01235       _C3x[13] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(512);
+<a name="l01236"></a>01236       _C3x[14] = 21/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2560);
+<a name="l01237"></a>01237       <span class="keywordflow">break</span>;
+<a name="l01238"></a>01238     <span class="keywordflow">case</span> 7:
+<a name="l01239"></a>01239       _C3x[0] = (1-_n)/4;
+<a name="l01240"></a>01240       _C3x[1] = (1-_n*_n)/8;
+<a name="l01241"></a>01241       _C3x[2] = (_n*((-5*_n-1)*_n+3)+3)/64;
+<a name="l01242"></a>01242       _C3x[3] = (_n*(2*_n+2)+5)/128;
+<a name="l01243"></a>01243       _C3x[4] = (11*_n+12)/512;
+<a name="l01244"></a>01244       _C3x[5] = 21/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1024);
+<a name="l01245"></a>01245       _C3x[6] = ((_n-3)*_n+2)/32;
+<a name="l01246"></a>01246       _C3x[7] = (_n*(_n*(2*_n-3)-2)+3)/64;
+<a name="l01247"></a>01247       _C3x[8] = ((2-9*_n)*_n+6)/256;
+<a name="l01248"></a>01248       _C3x[9] = (_n+5)/256;
+<a name="l01249"></a>01249       _C3x[10] = 27/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2048);
+<a name="l01250"></a>01250       _C3x[11] = (_n*((5-_n)*_n-9)+5)/192;
+<a name="l01251"></a>01251       _C3x[12] = ((-6*_n-10)*_n+9)/384;
+<a name="l01252"></a>01252       _C3x[13] = (21-4*_n)/1536;
+<a name="l01253"></a>01253       _C3x[14] = 3/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(256);
+<a name="l01254"></a>01254       _C3x[15] = (_n*(10*_n-14)+7)/512;
+<a name="l01255"></a>01255       _C3x[16] = (7-10*_n)/512;
+<a name="l01256"></a>01256       _C3x[17] = 9/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1024);
+<a name="l01257"></a>01257       _C3x[18] = (21-45*_n)/2560;
+<a name="l01258"></a>01258       _C3x[19] = 9/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1024);
+<a name="l01259"></a>01259       _C3x[20] = 11/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2048);
+<a name="l01260"></a>01260       <span class="keywordflow">break</span>;
+<a name="l01261"></a>01261     <span class="keywordflow">case</span> 8:
+<a name="l01262"></a>01262       _C3x[0] = (1-_n)/4;
+<a name="l01263"></a>01263       _C3x[1] = (1-_n*_n)/8;
+<a name="l01264"></a>01264       _C3x[2] = (_n*((-5*_n-1)*_n+3)+3)/64;
+<a name="l01265"></a>01265       _C3x[3] = (_n*((2-2*_n)*_n+2)+5)/128;
+<a name="l01266"></a>01266       _C3x[4] = (_n*(3*_n+11)+12)/512;
+<a name="l01267"></a>01267       _C3x[5] = (10*_n+21)/1024;
+<a name="l01268"></a>01268       _C3x[6] = 243/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
+<a name="l01269"></a>01269       _C3x[7] = ((_n-3)*_n+2)/32;
+<a name="l01270"></a>01270       _C3x[8] = (_n*(_n*(2*_n-3)-2)+3)/64;
+<a name="l01271"></a>01271       _C3x[9] = (_n*((-6*_n-9)*_n+2)+6)/256;
+<a name="l01272"></a>01272       _C3x[10] = ((1-2*_n)*_n+5)/256;
+<a name="l01273"></a>01273       _C3x[11] = (69*_n+108)/8192;
+<a name="l01274"></a>01274       _C3x[12] = 187/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
+<a name="l01275"></a>01275       _C3x[13] = (_n*((5-_n)*_n-9)+5)/192;
+<a name="l01276"></a>01276       _C3x[14] = (_n*(_n*(10*_n-6)-10)+9)/384;
+<a name="l01277"></a>01277       _C3x[15] = ((-77*_n-8)*_n+42)/3072;
+<a name="l01278"></a>01278       _C3x[16] = (12-_n)/1024;
+<a name="l01279"></a>01279       _C3x[17] = 139/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
+<a name="l01280"></a>01280       _C3x[18] = (_n*((20-7*_n)*_n-28)+14)/1024;
+<a name="l01281"></a>01281       _C3x[19] = ((-7*_n-40)*_n+28)/2048;
+<a name="l01282"></a>01282       _C3x[20] = (72-43*_n)/8192;
+<a name="l01283"></a>01283       _C3x[21] = 127/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
+<a name="l01284"></a>01284       _C3x[22] = (_n*(75*_n-90)+42)/5120;
+<a name="l01285"></a>01285       _C3x[23] = (9-15*_n)/1024;
+<a name="l01286"></a>01286       _C3x[24] = 99/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
+<a name="l01287"></a>01287       _C3x[25] = (44-99*_n)/8192;
+<a name="l01288"></a>01288       _C3x[26] = 99/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(16384);
+<a name="l01289"></a>01289       _C3x[27] = 429/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(114688);
+<a name="l01290"></a>01290       <span class="keywordflow">break</span>;
+<a name="l01291"></a>01291     <span class="keywordflow">default</span>:
+<a name="l01292"></a>01292       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC3_ &gt;= 0 &amp;&amp; nC3_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC3_&quot;</span>);
+<a name="l01293"></a>01293     }
+<a name="l01294"></a>01294   }
+<a name="l01295"></a>01295 
+<a name="l01296"></a>01296   <span class="comment">// The coefficients C4[l] in the Fourier expansion of I4</span>
+<a name="l01297"></a>01297   <span class="keywordtype">void</span> Geodesic::C4coeff() throw() {
+<a name="l01298"></a>01298     <span class="keywordflow">switch</span> (nC4_) {
+<a name="l01299"></a>01299     <span class="keywordflow">case</span> 0:
+<a name="l01300"></a>01300       <span class="keywordflow">break</span>;
+<a name="l01301"></a>01301     <span class="keywordflow">case</span> 1:
+<a name="l01302"></a>01302       _C4x[0] = 2/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(3);
+<a name="l01303"></a>01303       <span class="keywordflow">break</span>;
+<a name="l01304"></a>01304     <span class="keywordflow">case</span> 2:
+<a name="l01305"></a>01305       _C4x[0] = (10-_ep2)/15;
+<a name="l01306"></a>01306       _C4x[1] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(20);
+<a name="l01307"></a>01307       _C4x[2] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(180);
+<a name="l01308"></a>01308       <span class="keywordflow">break</span>;
+<a name="l01309"></a>01309     <span class="keywordflow">case</span> 3:
+<a name="l01310"></a>01310       _C4x[0] = (_ep2*(4*_ep2-7)+70)/105;
+<a name="l01311"></a>01311       _C4x[1] = (4*_ep2-7)/140;
+<a name="l01312"></a>01312       _C4x[2] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(42);
+<a name="l01313"></a>01313       _C4x[3] = (7-4*_ep2)/1260;
+<a name="l01314"></a>01314       _C4x[4] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(252);
+<a name="l01315"></a>01315       _C4x[5] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2100);
+<a name="l01316"></a>01316       <span class="keywordflow">break</span>;
+<a name="l01317"></a>01317     <span class="keywordflow">case</span> 4:
+<a name="l01318"></a>01318       _C4x[0] = (_ep2*((12-8*_ep2)*_ep2-21)+210)/315;
+<a name="l01319"></a>01319       _C4x[1] = ((12-8*_ep2)*_ep2-21)/420;
+<a name="l01320"></a>01320       _C4x[2] = (3-2*_ep2)/126;
+<a name="l01321"></a>01321       _C4x[3] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(72);
+<a name="l01322"></a>01322       _C4x[4] = (_ep2*(8*_ep2-12)+21)/3780;
+<a name="l01323"></a>01323       _C4x[5] = (2*_ep2-3)/756;
+<a name="l01324"></a>01324       _C4x[6] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(360);
+<a name="l01325"></a>01325       _C4x[7] = (3-2*_ep2)/6300;
+<a name="l01326"></a>01326       _C4x[8] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1800);
+<a name="l01327"></a>01327       _C4x[9] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(17640);
+<a name="l01328"></a>01328       <span class="keywordflow">break</span>;
+<a name="l01329"></a>01329     <span class="keywordflow">case</span> 5:
+<a name="l01330"></a>01330       _C4x[0] = (_ep2*(_ep2*(_ep2*(64*_ep2-88)+132)-231)+2310)/3465;
+<a name="l01331"></a>01331       _C4x[1] = (_ep2*(_ep2*(64*_ep2-88)+132)-231)/4620;
+<a name="l01332"></a>01332       _C4x[2] = (_ep2*(16*_ep2-22)+33)/1386;
+<a name="l01333"></a>01333       _C4x[3] = (8*_ep2-11)/792;
+<a name="l01334"></a>01334       _C4x[4] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(110);
+<a name="l01335"></a>01335       _C4x[5] = (_ep2*((88-64*_ep2)*_ep2-132)+231)/41580;
+<a name="l01336"></a>01336       _C4x[6] = ((22-16*_ep2)*_ep2-33)/8316;
+<a name="l01337"></a>01337       _C4x[7] = (11-8*_ep2)/3960;
+<a name="l01338"></a>01338       _C4x[8] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(495);
+<a name="l01339"></a>01339       _C4x[9] = (_ep2*(16*_ep2-22)+33)/69300;
+<a name="l01340"></a>01340       _C4x[10] = (8*_ep2-11)/19800;
+<a name="l01341"></a>01341       _C4x[11] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1925);
+<a name="l01342"></a>01342       _C4x[12] = (11-8*_ep2)/194040;
+<a name="l01343"></a>01343       _C4x[13] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(10780);
+<a name="l01344"></a>01344       _C4x[14] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(124740);
+<a name="l01345"></a>01345       <span class="keywordflow">break</span>;
+<a name="l01346"></a>01346     <span class="keywordflow">case</span> 6:
+<a name="l01347"></a>01347       _C4x[0] = (_ep2*(_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)+
+<a name="l01348"></a>01348                 30030)/45045;
+<a name="l01349"></a>01349       _C4x[1] = (_ep2*(_ep2*((832-640*_ep2)*_ep2-1144)+1716)-3003)/60060;
+<a name="l01350"></a>01350       _C4x[2] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/18018;
+<a name="l01351"></a>01351       _C4x[3] = ((104-80*_ep2)*_ep2-143)/10296;
+<a name="l01352"></a>01352       _C4x[4] = (13-10*_ep2)/1430;
+<a name="l01353"></a>01353       _C4x[5] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(156);
+<a name="l01354"></a>01354       _C4x[6] = (_ep2*(_ep2*(_ep2*(640*_ep2-832)+1144)-1716)+3003)/540540;
+<a name="l01355"></a>01355       _C4x[7] = (_ep2*(_ep2*(160*_ep2-208)+286)-429)/108108;
+<a name="l01356"></a>01356       _C4x[8] = (_ep2*(80*_ep2-104)+143)/51480;
+<a name="l01357"></a>01357       _C4x[9] = (10*_ep2-13)/6435;
+<a name="l01358"></a>01358       _C4x[10] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(3276);
+<a name="l01359"></a>01359       _C4x[11] = (_ep2*((208-160*_ep2)*_ep2-286)+429)/900900;
+<a name="l01360"></a>01360       _C4x[12] = ((104-80*_ep2)*_ep2-143)/257400;
+<a name="l01361"></a>01361       _C4x[13] = (13-10*_ep2)/25025;
+<a name="l01362"></a>01362       _C4x[14] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2184);
+<a name="l01363"></a>01363       _C4x[15] = (_ep2*(80*_ep2-104)+143)/2522520;
+<a name="l01364"></a>01364       _C4x[16] = (10*_ep2-13)/140140;
+<a name="l01365"></a>01365       _C4x[17] = 5/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(45864);
+<a name="l01366"></a>01366       _C4x[18] = (13-10*_ep2)/1621620;
+<a name="l01367"></a>01367       _C4x[19] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(58968);
+<a name="l01368"></a>01368       _C4x[20] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(792792);
+<a name="l01369"></a>01369       <span class="keywordflow">break</span>;
+<a name="l01370"></a>01370     <span class="keywordflow">case</span> 7:
+<a name="l01371"></a>01371       _C4x[0] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(512*_ep2-640)+832)-1144)+1716)-
+<a name="l01372"></a>01372                 3003)+30030)/45045;
+<a name="l01373"></a>01373       _C4x[1] = (_ep2*(_ep2*(_ep2*(_ep2*(512*_ep2-640)+832)-1144)+1716)-
+<a name="l01374"></a>01374                 3003)/60060;
+<a name="l01375"></a>01375       _C4x[2] = (_ep2*(_ep2*(_ep2*(128*_ep2-160)+208)-286)+429)/18018;
+<a name="l01376"></a>01376       _C4x[3] = (_ep2*(_ep2*(64*_ep2-80)+104)-143)/10296;
+<a name="l01377"></a>01377       _C4x[4] = (_ep2*(8*_ep2-10)+13)/1430;
+<a name="l01378"></a>01378       _C4x[5] = (4*_ep2-5)/780;
+<a name="l01379"></a>01379       _C4x[6] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(210);
+<a name="l01380"></a>01380       _C4x[7] = (_ep2*(_ep2*(_ep2*((640-512*_ep2)*_ep2-832)+1144)-1716)+
+<a name="l01381"></a>01381                 3003)/540540;
+<a name="l01382"></a>01382       _C4x[8] = (_ep2*(_ep2*((160-128*_ep2)*_ep2-208)+286)-429)/108108;
+<a name="l01383"></a>01383       _C4x[9] = (_ep2*((80-64*_ep2)*_ep2-104)+143)/51480;
+<a name="l01384"></a>01384       _C4x[10] = ((10-8*_ep2)*_ep2-13)/6435;
+<a name="l01385"></a>01385       _C4x[11] = (5-4*_ep2)/3276;
+<a name="l01386"></a>01386       _C4x[12] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(840);
+<a name="l01387"></a>01387       _C4x[13] = (_ep2*(_ep2*(_ep2*(128*_ep2-160)+208)-286)+429)/900900;
+<a name="l01388"></a>01388       _C4x[14] = (_ep2*(_ep2*(64*_ep2-80)+104)-143)/257400;
+<a name="l01389"></a>01389       _C4x[15] = (_ep2*(8*_ep2-10)+13)/25025;
+<a name="l01390"></a>01390       _C4x[16] = (4*_ep2-5)/10920;
+<a name="l01391"></a>01391       _C4x[17] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(2520);
+<a name="l01392"></a>01392       _C4x[18] = (_ep2*((80-64*_ep2)*_ep2-104)+143)/2522520;
+<a name="l01393"></a>01393       _C4x[19] = ((10-8*_ep2)*_ep2-13)/140140;
+<a name="l01394"></a>01394       _C4x[20] = (5-4*_ep2)/45864;
+<a name="l01395"></a>01395       _C4x[21] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8820);
+<a name="l01396"></a>01396       _C4x[22] = (_ep2*(8*_ep2-10)+13)/1621620;
+<a name="l01397"></a>01397       _C4x[23] = (4*_ep2-5)/294840;
+<a name="l01398"></a>01398       _C4x[24] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(41580);
+<a name="l01399"></a>01399       _C4x[25] = (5-4*_ep2)/3963960;
+<a name="l01400"></a>01400       _C4x[26] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(304920);
+<a name="l01401"></a>01401       _C4x[27] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(4684680);
+<a name="l01402"></a>01402       <span class="keywordflow">break</span>;
+<a name="l01403"></a>01403     <span class="keywordflow">case</span> 8:
+<a name="l01404"></a>01404       _C4x[0] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*((8704-7168*_ep2)*_ep2-10880)+
+<a name="l01405"></a>01405                 14144)-19448)+29172)-51051)+510510)/765765;
+<a name="l01406"></a>01406       _C4x[1] = (_ep2*(_ep2*(_ep2*(_ep2*((8704-7168*_ep2)*_ep2-10880)+14144)-
+<a name="l01407"></a>01407                 19448)+29172)-51051)/1021020;
+<a name="l01408"></a>01408       _C4x[2] = (_ep2*(_ep2*(_ep2*((2176-1792*_ep2)*_ep2-2720)+3536)-4862)+
+<a name="l01409"></a>01409                 7293)/306306;
+<a name="l01410"></a>01410       _C4x[3] = (_ep2*(_ep2*((1088-896*_ep2)*_ep2-1360)+1768)-2431)/175032;
+<a name="l01411"></a>01411       _C4x[4] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/24310;
+<a name="l01412"></a>01412       _C4x[5] = ((68-56*_ep2)*_ep2-85)/13260;
+<a name="l01413"></a>01413       _C4x[6] = (17-14*_ep2)/3570;
+<a name="l01414"></a>01414       _C4x[7] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(272);
+<a name="l01415"></a>01415       _C4x[8] = (_ep2*(_ep2*(_ep2*(_ep2*(_ep2*(7168*_ep2-8704)+10880)-14144)+
+<a name="l01416"></a>01416                 19448)-29172)+51051)/9189180;
+<a name="l01417"></a>01417       _C4x[9] = (_ep2*(_ep2*(_ep2*(_ep2*(1792*_ep2-2176)+2720)-3536)+4862)-
+<a name="l01418"></a>01418                 7293)/1837836;
+<a name="l01419"></a>01419       _C4x[10] = (_ep2*(_ep2*(_ep2*(896*_ep2-1088)+1360)-1768)+2431)/875160;
+<a name="l01420"></a>01420       _C4x[11] = (_ep2*(_ep2*(112*_ep2-136)+170)-221)/109395;
+<a name="l01421"></a>01421       _C4x[12] = (_ep2*(56*_ep2-68)+85)/55692;
+<a name="l01422"></a>01422       _C4x[13] = (14*_ep2-17)/14280;
+<a name="l01423"></a>01423       _C4x[14] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(7344);
+<a name="l01424"></a>01424       _C4x[15] = (_ep2*(_ep2*(_ep2*((2176-1792*_ep2)*_ep2-2720)+3536)-4862)+
+<a name="l01425"></a>01425                 7293)/15315300;
+<a name="l01426"></a>01426       _C4x[16] = (_ep2*(_ep2*((1088-896*_ep2)*_ep2-1360)+1768)-2431)/4375800;
+<a name="l01427"></a>01427       _C4x[17] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/425425;
+<a name="l01428"></a>01428       _C4x[18] = ((68-56*_ep2)*_ep2-85)/185640;
+<a name="l01429"></a>01429       _C4x[19] = (17-14*_ep2)/42840;
+<a name="l01430"></a>01430       _C4x[20] = -7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(20400);
+<a name="l01431"></a>01431       _C4x[21] = (_ep2*(_ep2*(_ep2*(896*_ep2-1088)+1360)-1768)+2431)/42882840;
+<a name="l01432"></a>01432       _C4x[22] = (_ep2*(_ep2*(112*_ep2-136)+170)-221)/2382380;
+<a name="l01433"></a>01433       _C4x[23] = (_ep2*(56*_ep2-68)+85)/779688;
+<a name="l01434"></a>01434       _C4x[24] = (14*_ep2-17)/149940;
+<a name="l01435"></a>01435       _C4x[25] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(8976);
+<a name="l01436"></a>01436       _C4x[26] = (_ep2*((136-112*_ep2)*_ep2-170)+221)/27567540;
+<a name="l01437"></a>01437       _C4x[27] = ((68-56*_ep2)*_ep2-85)/5012280;
+<a name="l01438"></a>01438       _C4x[28] = (17-14*_ep2)/706860;
+<a name="l01439"></a>01439       _C4x[29] = -7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(242352);
+<a name="l01440"></a>01440       _C4x[30] = (_ep2*(56*_ep2-68)+85)/67387320;
+<a name="l01441"></a>01441       _C4x[31] = (14*_ep2-17)/5183640;
+<a name="l01442"></a>01442       _C4x[32] = 7/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1283568);
+<a name="l01443"></a>01443       _C4x[33] = (17-14*_ep2)/79639560;
+<a name="l01444"></a>01444       _C4x[34] = -1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1516944);
+<a name="l01445"></a>01445       _C4x[35] = 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(26254800);
+<a name="l01446"></a>01446       <span class="keywordflow">break</span>;
+<a name="l01447"></a>01447     <span class="keywordflow">default</span>:
+<a name="l01448"></a>01448       <a class="code" href="Constants_8hpp.html#a8f24445c1bccd69b63e365aa5d5bb129">STATIC_ASSERT</a>(nC3_ &gt;= 0 &amp;&amp; nC4_ &lt;= 8, <span class="stringliteral">&quot;Bad value of nC4_&quot;</span>);
+<a name="l01449"></a>01449     }
+<a name="l01450"></a>01450   }
+<a name="l01451"></a>01451 
+<a name="l01452"></a>01452 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

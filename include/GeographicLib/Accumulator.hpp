@@ -8,11 +8,9 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ACCUMULATOR_HPP)
-#define GEOGRAPHICLIB_ACCUMULATOR_HPP "$Id: 1be1836ceb147e0d84543a2b4572a722b17c8e2e $"
+#define GEOGRAPHICLIB_ACCUMULATOR_HPP "$Id: a33a908abf92c801d781b41a4e175bb50b3f8680 $"
 
 #include <GeographicLib/Constants.hpp>
-
-RCSID_DECL(GEOGRAPHICLIB_ACCUMULATOR_HPP)
 
 namespace GeographicLib {
 

@@ -1,4 +1,4 @@
-=for comment $Id: 070be510a4551de2eab7d070cb0d1c5f147ec2c5 $
+=for comment $Id: b25a833315795410c7d63d6466bdd570126d7b40 $
 
 =head1 NAME
 
@@ -65,11 +65,10 @@ specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
 the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
 I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
-1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137m, I<f>
-= 1/298.257223563.
-If entering vertices as UTM/UPS or MGRS coordinates, use the default
-ellipsoid, since the conversion of these coordinates to latitude and
-longitude uses the WGS84 parameters.
+1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
+I<f> = 1/298.257223563.  If entering vertices as UTM/UPS or MGRS
+coordinates, use the default ellipsoid, since the conversion of these
+coordinates to latitude and longitude uses the WGS84 parameters.
 
 =item B<--version>
 
@@ -138,7 +137,10 @@ covered by the data (assuming the edges of the image are geodesics).
 
 GeoConvert(1).  The algorithm for the area of geodesic polygon is given
 in Section 15 of C. F. F. Karney, I<Geodesics on an ellipsoid of
-revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.
+revolution>, Feb. 2011; preprint L<http://arxiv.org/abs/1102.1215>.  See
+also Section 6 of C. F. F. Karney, I<Algorithms for geodesics>,
+Sept. 2011; preprint L<http://arxiv.org/abs/1109.4448>.
+
 
 =head1 AUTHOR
 

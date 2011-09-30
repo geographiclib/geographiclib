@@ -1,4 +1,4 @@
-# $Id: 992ccb8c754771196be86b557a304ab6355dd0c9 $
+# $Id: 35334b3609333ad2c87f9d3d6dab1165d59d377c $
 
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
@@ -47,16 +47,6 @@ distclean-doc:
 	$(MAKE) -C doc distclean
 distclean-man:
 	$(MAKE) -C man distclean
-
-list:
-	@for f in 00README.txt LICENSE.txt AUTHORS NEWS Makefile \
-	$(MAKEFILE); do \
-	  echo $$f; \
-	done
-	@for d in $(ALLDIRS); do \
-	  (echo $(MAKEFILE); $(MAKE) -s -C $$d list) | tr ' ' '\n' | \
-	  while read f; do echo $$d/$$f; done; \
-	done
 
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 

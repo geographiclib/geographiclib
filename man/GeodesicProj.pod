@@ -1,4 +1,4 @@
-=for comment $Id: 9bd33c61c921eb6324c9089bb9665d0c64b34e1b $
+=for comment $Id: 141713240cad0f3339d9fdfca0d590571056014a $
 
 =head1 NAME
 
@@ -64,8 +64,8 @@ specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
 the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
 I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
-1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137m, I<f>
-= 1/298.257223563.
+1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
+I<f> = 1/298.257223563.
 
 =item B<--version>
 
@@ -115,7 +115,9 @@ terminate; following lines will be converted.
 
 The ellipsoidal gnomonic projection is derived in Section 13 of
 C. F. F. Karney, I<Geodesics on an ellipsoid of revolution>, Feb. 2011;
-preprint L<http://arxiv.org/abs/1102.1215>.
+preprint L<http://arxiv.org/abs/1102.1215>.  See also Section 8 of
+C. F. F. Karney, I<Algorithms for geodesics>, Sept. 2011; preprint
+L<http://arxiv.org/abs/1109.4448>.
 
 =head1 AUTHOR
 

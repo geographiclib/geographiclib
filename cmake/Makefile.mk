@@ -1,4 +1,4 @@
-# $Id: d26683d079d4281363f2aa6c5bbdbe83e607c387 $
+# $Id: 9c58123e002564d0252e543c70539b5a79df36a6 $
 
 DEST = $(PREFIX)/share/cmake/GeographicLib
 
@@ -9,10 +9,7 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 FindGeographicLib.cmake $(DEST)
-list:
-	@echo FindGeographicLib.cmake \
-	geographiclib-config.cmake.in geographiclib-config-version.cmake.in
 clean:
 	@:
 
-.PHONY: all install list clean
+.PHONY: all install clean

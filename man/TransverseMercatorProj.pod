@@ -1,4 +1,4 @@
-=for comment $Id: 6a4d948e895ac5821fa0cf4a34c992bc5441b964 $
+=for comment $Id: 248f693fda581ab7d8c6fbefc2cfebb5b4aec9ef $
 
 =head1 NAME
 
@@ -61,8 +61,8 @@ specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
 the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
 I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
-1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137m, I<f>
-= 1/298.257223563.  If the exact algorithm is used, I<f> must be
+1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
+I<f> = 1/298.257223563.  If the exact algorithm is used, I<f> must be
 positive.
 
 =item B<--version>

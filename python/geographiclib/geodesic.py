@@ -13,11 +13,15 @@
 #    http://arxiv.org/abs/1102.1215
 #    errata: http://geographiclib.sourceforge.net/geod-errata.html
 #
+#    Charles F. F. Karney,
+#    Algorithms for geodesics, Sept. 2011,
+#    http://arxiv.org/abs/1109.4448
+#
 # Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: dd3b96861daa23cd415cb289218b5af87a83996e $
+# $Id: 934455797175f95753028cff1f18013329149034 $
 ######################################################################
 
 import math
@@ -112,7 +116,7 @@ class Geodesic(object):
     else:
       y0 = 0
     # Now n is even
-    n /= 2
+    n //= 2
     while n:                    # while n--:
       n -= 1
       # Unroll loop x 2, so accumulators return to their original role
@@ -566,7 +570,7 @@ class Geodesic(object):
     ssig1 = sbet1; somg1 = salp0 * sbet1
     csig1 = comg1 = calp1 * cbet1
     ssig1, csig1 = Geodesic.SinCosNorm(ssig1, csig1)
-    somg1, comg1 = Geodesic.SinCosNorm(somg1, comg1)
+    # SinCosNorm(somg1, comg1); -- don't need to normalize!
 
     # Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     # about this case, since this can yield singularities in the Newton
@@ -586,7 +590,7 @@ class Geodesic(object):
     ssig2 = sbet2; somg2 = salp0 * sbet2
     csig2 = comg2 = calp2 * cbet2
     ssig2, csig2 = Geodesic.SinCosNorm(ssig2, csig2)
-    somg2, comg2 = Geodesic.SinCosNorm(somg2, comg2)
+    # SinCosNorm(somg2, comg2); -- don't need to normalize!
 
     # sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = math.atan2(max(csig1 * ssig2 - ssig1 * csig2, 0.0),
@@ -612,6 +616,8 @@ class Geodesic(object):
         dummy, dlam12, dummy, dummy, dummy = self.Lengths(
           eps, sig12, ssig1, csig1, ssig2, csig2, cbet1, cbet2, False, C1a, C2a)
         dlam12 /= calp2 * cbet2
+    else:
+      dlam12 = Math.nan
 
     return (lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
             domg12, dlam12)
@@ -795,7 +801,7 @@ class Geodesic(object):
           # checks this against epsilon.
           if not(abs(v) >= Geodesic.tol1_ and
                  Math.sq(v) >= ov * Geodesic.tol0_):
-            ++trip
+            trip += 1
           ov = abs(v)
           numit += 1
 

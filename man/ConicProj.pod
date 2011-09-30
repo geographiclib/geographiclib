@@ -1,4 +1,4 @@
-=for comment $Id: 25c250e14f7203365f4581cc8a8dfe9f20ae4d09 $
+=for comment $Id: fb20e2c28b200e5fda7dafc62cd4e89219d36c8c $
 
 =head1 NAME
 
@@ -33,6 +33,15 @@ I<y>, (meters) are printed on standard output together with the meridian
 convergence I<gamma> (degrees) and (azimuthal) scale I<k>.  For Albers
 equal area, the radial scale is 1/I<k>.  The meridian convergence is the
 bearing of the I<y> axis measured clockwise from true north.
+
+Special cases of the Lambert conformal projection are the Mercator
+projection (the standard latitudes equal and opposite) and the polar
+stereographic projection (both standard latitudes correspond to the same
+pole).  Special cases of the Albers equal area projection are the
+cylindrical equal area projection (the standard latitudes equal and
+opposite), the Lambert azimuthal equal area projection (both standard
+latitude corresponds to the same pole), and the Lambert equal area conic
+projection (one standard parallel is at a pole).
 
 =head1 OPTIONS
 
@@ -69,8 +78,8 @@ specify the ellipsoid via I<a> I<f>; the equatorial radius is I<a> and
 the flattening is I<f>.  Setting I<f> = 0 results in a sphere.  Specify
 I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
-1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137m, I<f>
-= 1/298.257223563.
+1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
+I<f> = 1/298.257223563.
 
 =item B<--version>
 

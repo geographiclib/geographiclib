@@ -1,14 +1,14 @@
-# $Id: ebe0fca373aa85fef4ff54bda6c8ec3df5ffaeef $
+# $Id: 07e8f40b0a81881dd5a495cf14f89cfda4756ac7 $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 13)
+set (GeographicLib_VERSION_MINOR 14)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.0.0)
+set (LIBVERSIONFULL 9.0.1)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)

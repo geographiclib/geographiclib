@@ -38,6 +38,22 @@
 <div class="contents">
 <div class="textblock"><center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
 <ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a><ul>
+<li>Ensure that geographiclib-config.cmake is relocatable.</li>
+<li>Allow more unicode symbols to be used in <a class="el" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">GeographicLib::DMS::Decode</a>.</li>
+<li>Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be used to convert the height datum for LIDAR data.</li>
+<li>Modest speed-up of Geodesic::Inverse.</li>
+<li>Changes in python interface:<ul>
+<li>FIX BUG in transcription of Geodesic::Inverse;</li>
+<li>include setup.py for easy installation;</li>
+<li>python only distibution is available at <a href="http://pypi.python.org/pypi/geographiclib">http://pypi.python.org/pypi/geographiclib</a></li>
+</ul>
+</li>
+<li>Supply a minimal Qt qmake project file for library src/Geographic.pro.</li>
+</ul>
+</li>
+</ul>
+<ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a><ul>
 <li>Changes to I/O:<ul>
 <li>allow : (colon) to be used as a DMS separator in <a class="el" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">GeographicLib::DMS::Decode(const std::string&amp;, flag&amp;)</a>;</li>
@@ -138,7 +154,7 @@
 <li>Rename utility EquidistantTest as <a href="GeodesicProj.1.html">GeodesicProj</a> and TransverseMercatorTest as <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>.</li>
 <li>Add <a href="ConicProj.1.html">ConicProj</a>.</li>
 <li>Reverse the initial sense of the -s option for <a href="Planimeter.1.html">Planimeter</a>.</li>
-<li>Migrate source from subversion to <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">git</a>.</li>
+<li>Migrate source from subversion to <a href="http://geographiclib.git.sf.net/git/gitweb-index.cgi">git</a>.</li>
 </ul>
 </li>
 </ul>
@@ -442,7 +458,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Aug 13 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

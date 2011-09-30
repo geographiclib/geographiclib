@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "CONICPROJ 1"
-.TH CONICPROJ 1 "2011-08-13" "GeographicLib 1.13" "GeographicLib Utilities"
+.TH CONICPROJ 1 "2011-09-29" "GeographicLib 1.14" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -159,6 +159,15 @@ coordinates, the corresponding projected easting, \fIx\fR, and northing,
 convergence \fIgamma\fR (degrees) and (azimuthal) scale \fIk\fR.  For Albers
 equal area, the radial scale is 1/\fIk\fR.  The meridian convergence is the
 bearing of the \fIy\fR axis measured clockwise from true north.
+.PP
+Special cases of the Lambert conformal projection are the Mercator
+projection (the standard latitudes equal and opposite) and the polar
+stereographic projection (both standard latitudes correspond to the same
+pole).  Special cases of the Albers equal area projection are the
+cylindrical equal area projection (the standard latitudes equal and
+opposite), the Lambert azimuthal equal area projection (both standard
+latitude corresponds to the same pole), and the Lambert equal area conic
+projection (one standard parallel is at a pole).
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 .IP "\fB\-c\fR" 4
@@ -187,8 +196,8 @@ specify the ellipsoid via \fIa\fR \fIf\fR; the equatorial radius is \fIa\fR and
 the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 \&\fIf\fR < 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
-1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137m, \fIf\fR
-= 1/298.257223563.
+1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
+\&\fIf\fR = 1/298.257223563.
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 print version and exit.

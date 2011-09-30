@@ -103,11 +103,10 @@ not reported.</p>
 the flattening is <em>f</em>.  Setting <em>f</em> = 0 results in a sphere.  Specify
 <em>f</em> &lt; 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for <em>f</em>.  (Also, if <em>f</em> &gt; 1, the flattening is set to
-1/<em>f</em>.)  By default, the WGS84 ellipsoid is used, <em>a</em> = 6378137m, <em>f</em>
-= 1/298.257223563.
-If entering vertices as UTM/UPS or MGRS coordinates, use the default
-ellipsoid, since the conversion of these coordinates to latitude and
-longitude uses the WGS84 parameters.</p>
+1/<em>f</em>.)  By default, the WGS84 ellipsoid is used, <em>a</em> = 6378137 m,
+<em>f</em> = 1/298.257223563.  If entering vertices as UTM/UPS or MGRS
+coordinates, use the default ellipsoid, since the conversion of these
+coordinates to latitude and longitude uses the WGS84 parameters.</p>
 </dd>
 <dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
 
@@ -183,7 +182,9 @@ covered by the data (assuming the edges of the image are geodesics).</p>
 <h1><a name="see_also">SEE ALSO</a></h1>
 <p><a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a>.  The algorithm for the area of geodesic polygon is given
 in Section 15 of C. F. F. Karney, <em>Geodesics on an ellipsoid of
-revolution</em>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.</p>
+revolution</em>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215">http://arxiv.org/abs/1102.1215</a>.  See
+also Section 6 of C. F. F. Karney, <em>Algorithms for geodesics</em>,
+Sept. 2011; preprint <a href="http://arxiv.org/abs/1109.4448">http://arxiv.org/abs/1109.4448</a>.</p>
 <p>
 </p>
 <hr />

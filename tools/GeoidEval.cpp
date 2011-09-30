@@ -13,6 +13,7 @@
  **********************************************************************/
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -30,9 +31,10 @@ int main(int argc, char* argv[]) {
     real caches, cachew, cachen, cachee;
     std::string dir;
     std::string geoid = Geoid::DefaultGeoidName();
-    std::string zone;
     Geoid::convertflag heightmult = Geoid::NONE;
     std::string istring, ifile, ofile;
+    bool northp = false;
+    int zonenum = UTMUPS::INVALID;
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -55,21 +57,22 @@ int main(int argc, char* argv[]) {
           return 1;
         }
         m += 4;
-      } else if (arg == "--msltohae" || arg == "-msltohae")
+      } else if (arg == "--msltohae")
         heightmult = Geoid::GEOIDTOELLIPSOID;
-      else if (arg == "--haetomsl" || arg == "-haetomsl")
+      else if (arg == "--haetomsl")
         heightmult = Geoid::ELLIPSOIDTOGEOID;
       else if (arg == "-z") {
         if (++m == argc) return usage(1, true);
-        zone = argv[m];
-        bool northp;
-        int zonenum;
+        std::string zone = argv[m];
         try {
           UTMUPS::DecodeZone(zone, zonenum, northp);
-          zone += ' ';
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding zone: " << e.what() << "\n";
+          return 1;
+        }
+        if (!(zonenum >= UTMUPS::MINZONE && zonenum <= UTMUPS::MAXZONE)) {
+          std::cerr << "Illegal zone " << zone << "\n";
           return 1;
         }
       } else if (arg == "-n") {
@@ -94,7 +97,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: fbae1ec93734f13474d4ea5149cd272904df0e77 $\n"
+          << ": $Id: 709eeeca19d98d534d0b37d2724078a7ed3ac449 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else {
@@ -138,7 +141,7 @@ int main(int argc, char* argv[]) {
     if (!ofile.empty()) {
       outfile.open(ofile.c_str());
       if (!outfile.is_open()) {
-        std::cerr << "Cannot open " << ofile << " for wrting\n";
+        std::cerr << "Cannot open " << ofile << " for writing\n";
         return 1;
       }
     }
@@ -173,27 +176,55 @@ int main(int argc, char* argv[]) {
       }
 
       GeoCoords p;
-      std::string s;
+      std::string s, suff;
       const char* spaces = " \t\n\v\f\r,"; // Include comma as space
       while (std::getline(*input, s)) {
         try {
           real height = 0;
-          if (heightmult) {
-            std::string::size_type pb = s.find_last_not_of(spaces);
-            std::string::size_type pa = s.find_last_of(spaces, pb);
-            std::string::size_type px = s.find_last_not_of(spaces, pa);
-            if (pa == std::string::npos || pb == std::string::npos ||
-                px == std::string::npos)
-              throw GeographicErr("Incomplete input: " + s);
-            height = DMS::Decode(s.substr(pa + 1, pb - pa));
-            s = s.substr(0, px + 1);
+          if (zonenum != UTMUPS::INVALID) {
+            // Expect "easting northing" if heightmult == 0, or
+            // "easting northing height" if heightmult != 0.
+            std::string::size_type pa = 0, pb = 0;
+            real easting = 0, northing = 0;
+            for (int i = 0; i < (heightmult ? 3 : 2); ++i) {
+              if (pb == std::string::npos)
+                throw GeographicErr("Incomplete input: " + s);
+              // Start of i'th token
+              pa = s.find_first_not_of(spaces, pb);
+              if (pa == std::string::npos)
+                throw GeographicErr("Incomplete input: " + s);
+              // End of i'th token
+              pb = s.find_first_of(spaces, pa);
+              (i == 2 ? height : (i == 0 ? easting : northing)) =
+                DMS::Decode(s.substr(pa,
+                                     pb == std::string::npos ? pb : pb - pa));
+            }
+            p.Reset(zonenum, northp, easting, northing);
+            if (heightmult) {
+              suff = pb == std::string::npos ? "" : s.substr(pb);
+              s = s.substr(0, pa);
+            }
+          } else {
+            if (heightmult) {
+              // Treat last token as height
+              // pb = last char of last token
+              // pa = last char preceding white space
+              // px = last char of 2nd last token
+              std::string::size_type pb = s.find_last_not_of(spaces);
+              std::string::size_type pa = s.find_last_of(spaces, pb);
+              if (pa == std::string::npos || pb == std::string::npos)
+                throw GeographicErr("Incomplete input: " + s);
+              height = DMS::Decode(s.substr(pa + 1, pb - pa));
+              s = s.substr(0, pa + 1);
+            }
+            p.Reset(s);
           }
-          p.Reset(zone + s);
           if (heightmult) {
             real h = g(p.Latitude(), p.Longitude());
-            *output << s << " "
+            *output << s
                     << DMS::Encode(height + real(heightmult) * h,
-                                   3, DMS::NUMBER) << "\n";
+                                   4, DMS::NUMBER)
+                    << suff << "\n";
           } else {
             real gradn, grade;
             real h = g(p.Latitude(), p.Longitude(), gradn, grade);

@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
-#define GEOGRAPHICLIB_DMS_HPP "$Id: 16d1a2985b695804891175f5537abff45cd24592 $"
+#define GEOGRAPHICLIB_DMS_HPP "$Id: 6fd4aeaf5388bb95ff1c45bece948f4dea2e1d5e $"
 
 #include <sstream>
 #include <iomanip>
@@ -145,10 +145,10 @@ namespace GeographicLib {
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20d30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5
-     *   - 4d0'9, 4d9", 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
+     *   - 4d0'9, 4d9&quot;, 4d9'', 4:0:9, 004:00:09, 4.0025, 4.0025d, 4d0.15,
      *     04:.15
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
-     *   - 4d5"4', 4::5, 4:5:, :4:5, 4d4.5'4", -N20.5, 1.8e2d, 4:60,
+     *   - 4d5&quot;4', 4::5, 4:5:, :4:5, 4d4.5'4&quot;, -N20.5, 1.8e2d, 4:60,
      *     4d-5'
      *
      * <b>NOTE:</b> At present, all the string handling in the C++
@@ -157,6 +157,25 @@ namespace GeographicLib {
      * <a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The
      * Javascript implementation of this class uses unicode natively, of
      * course.)
+     *
+     * Here is the list of Unicode symbols supported for degrees, minutes,
+     * seconds:
+     * - degrees:
+     *   - d, D lower and upper case letters
+     *   - U+00b0 degree symbol
+     *   - U+00ba masculine ordinal indicator
+     *   - U+2070 superscript zero
+     * - minutes:
+     *   - ' apostrophe
+     *   - U+2032 prime
+     *   - U+00b4 acute accent
+     * - seconds:
+     *   - &quot; quotation mark
+     *   - U+2033 double prime
+     *   - '&nbsp;' any two consecutive symbols for minutes
+     * .
+     * The codes with a leading zero byte, e.g., U+00b0, are accepted in their
+     * UTF-8 coded form 0xc2 0xb0 and as a single byte 0xb0.
      **********************************************************************/
     static Math::real Decode(const std::string& dms, flag& ind);
 
@@ -239,7 +258,7 @@ namespace GeographicLib {
     static Math::real DecodeAzimuth(const std::string& azistr);
 
     /**
-     * Convert angle (in degrees) into a DMS string.
+     * Convert angle (in degrees) into a DMS string (using d, ', and &quot;).
      *
      * @param[in] angle input angle (degrees)
      * @param[in] trailing DMS::component value indicating the trailing units
@@ -266,8 +285,8 @@ namespace GeographicLib {
                               flag ind = NONE);
 
     /**
-     * Convert angle into a DMS string selecting the trailing component
-     * based on the precision.
+     * Convert angle into a DMS string (using d, ', and &quot;) selecting the
+     * trailing component based on the precision.
      *
      * @param[in] angle input angle (degrees)
      * @param[in] prec the precision relative to 1 degree.

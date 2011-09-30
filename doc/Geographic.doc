@@ -7,13 +7,13 @@
  * MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: 0c7c1f333a5ef7d9d02859a1e5185421455ebe19 $
+// $Id: 56412e564b3f53f927b9ba1fc3676aa400dbd2c1 $
 /**
 \mainpage Geographic library
 \author Charles Karney
 <charles@karney.com>
-\version 1.13
-\date 2011-08-13
+\version 1.14
+\date 2011-09-30
 
 \section abstract Abstract
 
@@ -44,21 +44,20 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">
-  GeographicLib-1.13.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.zip/download">
-  GeographicLib-1.13.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">
+  GeographicLib-1.14.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.zip/download">
+  GeographicLib-1.14.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
 using git \verbatim
-  git clone git://geographiclib.git.sourceforge.net/gitroot/geographiclib/geographiclib-release
-  cd geographiclib-release
-  git checkout stable
+  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib
+  cd geographiclib; git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13-win32.exe/download">
-  GeographicLib-1.13-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14-win32.exe/download">
+  GeographicLib-1.14-win32.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -161,12 +160,12 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">
-GeographicLib-1.13.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13.zip/download">
-GeographicLib-1.13.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13-win32.exe/download">
-GeographicLib-1.13-win32.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">
+GeographicLib-1.14.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14.zip/download">
+GeographicLib-1.14.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14-win32.exe/download">
+GeographicLib-1.14-win32.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -182,6 +181,7 @@ Then pick one of the first five options below:
   the utility programs supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
+- \ref qt.  This XXX
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -215,10 +215,12 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.13.tar.gz
-  unzip -q GeographicLib-1.13.zip \endverbatim
-  then enter the directory created \verbatim
-  cd GeographicLib-1.13 \endverbatim
+  tar xfpz GeographicLib-1.14.tar.gz
+  unzip -q GeographicLib-1.14.zip
+  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib \endverbatim
+  then enter the directory created with one of \verbatim
+  cd GeographicLib-1.14
+  cd geographiclib; git checkout stable \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
   cd BUILD\endverbatim
@@ -296,9 +298,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.13.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.14.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.13 \endverbatim
+  cd GeographicLib-1.14 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
 - By default %GeographlicLib will be installed under /usr/local.
@@ -323,9 +325,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.13.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.14.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.13 \endverbatim
+  cd GeographicLib-1.14 \endverbatim
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root \endverbatim
@@ -349,8 +351,8 @@ library and the examples.  If you only have Visual Studio 2010, use
 cmake to create the necessary solution file.  %GeographicLib does not
 compile correctly with Visual Studio 2003.
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.13.zip \endverbatim
-- Open GeographicLib-1.13/windows/GeographicLib-vc9.sln in Visual Studio
+  unzip -q GeographicLib-1.14.zip \endverbatim
+- Open GeographicLib-1.14/windows/GeographicLib-vc9.sln in Visual Studio
   2008 (for Visual Studio 2005, replace -vc9 by -vc8).
 - Pick the build type (e.g., Release), and select "Build
   Solution".
@@ -369,19 +371,19 @@ compile correctly with Visual Studio 2003.
 \section windowsbin Using a binary installer for Windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.13-win32.exe/download">
-GeographicLib-1.13-win32.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14-win32.exe/download">
+GeographicLib-1.14-win32.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
-   C:/Program Files/GeographicLib-1.13.
+   C:/Program Files/GeographicLib-1.14.
  - select the start menu folder,
  - and install.
  .
 The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
-C:/Program Files/GeographicLib-1.13/bin where the utilities are
+C:/Program Files/GeographicLib-1.14/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
@@ -390,10 +392,28 @@ Visual Studio 10 (2010) for Win32 in Release mode.  The Matlab interface
 was compiled with Matlab R2010b, however it works with some other
 versions of Matlab (e.g., R2008a).
 
+\section qt Building the library under Qt
+
+This method requires builds the library (not the utility programs) under
+Qt.  This is useful if you need to link a Qt project with %GeographicLib
+to ensure that the library is compatible with your project.
+
+Here are the steps to compile %GeographicLib with Qt:
+- Unpack the source, running \verbatim
+  tar xfpz GeographicLib-1.14.tar.gz \endverbatim
+  then enter the src subdirectory \verbatim
+  cd GeographicLib-1.14/src \endverbatim
+- Configure and build the library: \verbatim
+  qmake Geographic.pro   # configure the project
+  make                   # build the library \endverbatim
+- The library will be in the src directory (or the src/release or
+  src/debug directory under Windows).  The headers are in
+  include/GeographicLib.
+
 \section maintainer Maintainer tasks
 
 Check the code out of git with \verbatim
-  git clone git://geographiclib.git.sourceforge.net/gitroot/geographiclib/geographiclib
+  git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib
 \endverbatim
 The autoconf configuration script, the html version of the
 documentation, and the formatted man pages not checked into git.  In
@@ -410,8 +430,8 @@ which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as
 \verbatim
-  GeographicLib-1.13.tar.gz
-  GeographicLib-1.13.zip \endverbatim
+  GeographicLib-1.14.tar.gz
+  GeographicLib-1.14.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -787,6 +807,7 @@ Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
 
+Interfaces to subsets of %GeographicLib are available in other languages
 - \ref javascript.
 - \ref python.
 - \ref matlab.
@@ -830,10 +851,26 @@ implementations of the classes
 - GeographicLib::GeodesicLine
 - GeographicLib::PolygonArea
 .
-An example of using this interface is
-\code
+You can also download the python interface independent of the rest of
+%GeographicLib from
+- <a href="http://pypi.python.org/pypi/geographiclib">
+  http://pypi.python.org/pypi/geographiclib</a>
+.
+and then unpack the .tar.gz or .zip file.
+
+You can "install" these routines, so that they are in python's path
+with, for example \verbatim
+  cd /usr/local/lib/python/site-packages
+  python setup.py install
+\endverbatim
+(this will require root privileges).  Or else you can set the path
+within python using \code
 >>> import sys
 >>> sys.path.append("/usr/local/lib/python/site-packages");
+\endcode
+
+An example of using this interface is
+\code
 >>> from geographiclib.geodesic import Geodesic
 >>> # The geodesic inverse problem
 ... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
@@ -851,6 +888,9 @@ An example of using this interface is
 ... help(Geodesic)
 \endcode
 
+(Note: The initial version of setup.py was provided by Andrew MacIntyre
+of the Australian Communications and Media Authority.)
+
 \section matlab Matlab and Octave interfaces
 
 The matlab directory contains interface code so that some %GeographicLib
@@ -860,15 +900,15 @@ Similarly the binary installer for Windows includes the compiled
 interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
 either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.13/libexec/GeographicLib/matlab'
+  addpath 'C:/Program Files/GeographicLib-1.14/libexec/GeographicLib/matlab'
 \endverbatim
 in Matlab or Octave.  If you need to compile the interface or to
 recompile it for a different platform, start Matlab or Octave and run,
 e.g., \code
   mex -setup
-  cd  'C:/Program Files/GeographicLib-1.13/libexec/GeographicLib/matlab'
+  cd 'C:/Program Files/GeographicLib-1.14/libexec/GeographicLib/matlab'
   help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.13');
+  geographiclibinterface('C:/Program Files/GeographicLib-1.14');
   addpath(pwd);
 \endcode
 The first command allows you to select the compiler to use (which
@@ -932,8 +972,8 @@ of the geoid above the WGS84 ellipsoid.  This can be used to convert
 heights above mean sea level to heights above the WGS84 ellipsoid.
 Because the normal to the ellipsoid differs from the normal to the geoid
 (the direction of a plumb line) there is a slight ambiguity in the
-measurement of heights; however for heights up to 10km this ambiguity is
-only 1mm.
+measurement of heights; however for heights up to 10 km this ambiguity
+is only 1 mm.
 
 The geoid is usually approximated by an "earth gravity model" (EGM).
 The models published by the NGA are:
@@ -951,7 +991,7 @@ different for each grid resolution.  In addition these tools are written
 in Fortran with is nowadays difficult to integrate with other software.)
 
 Unlike other components of %GeographicLib, there is a appreciable error
-in the results obtained (at best, the RMS error is 1mm).  However the
+in the results obtained (at best, the RMS error is 1 mm).  However the
 class provides methods to report the maximum and RMS errors in the
 results.  The class also returns the gradient of the geoid.  This can be
 used to estimate the direction of a plumb line relative to the WGS84
@@ -1159,9 +1199,9 @@ PGM simple graphic format with the following properties
   %GeographicLib).
 .
 The major drawback of this format is that since there are only 65535
-possible pixel values, the height must be quantized to 3mm.  However,
-the resulting quantization error (up to 1.5mm) is typically smaller than
-the linear interpolation errors.  The comments in the header for
+possible pixel values, the height must be quantized to 3 mm.  However,
+the resulting quantization error (up to 1.5 mm) is typically smaller
+than the linear interpolation errors.  The comments in the header for
 egm96-5 are
 \verbatim
    # Geoid file in PGM format for the GeographicLib::Geoid class
@@ -1239,14 +1279,14 @@ gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 \
 \endverbatim
 The resulting files sizes are
 \verbatim
-                  pgm    tif
-    egm84-30      0.6M   0.5M
-    egm84-15      2.1M   1.4M
-    egm96-15      2.1M   1.5M
-    egm96-5        19M   8.5M
-    egm2008-5      19M   9.8M
-    egm2008-2_5    75M    28M
-    egm2008-1     470M    97M
+                  pgm      tif
+    egm84-30      0.6 MB   0.5 MB
+    egm84-15      2.1 MB   1.4 MB
+    egm96-15      2.1 MB   1.5 MB
+    egm96-5        19 MB   8.5 MB
+    egm2008-5      19 MB   9.8 MB
+    egm2008-2_5    75 MB    28 MB
+    egm2008-1     470 MB    97 MB
 \endverbatim
 Currently, there are no plans for %GeographicLib to support this
 compressed format.
@@ -1336,8 +1376,8 @@ The errors are with respect the the specific NGA earth gravity model
 uniformly distributed random points.  The maximum values are obtained by
 evaluating the errors using a different grid with points at or near the
 centers of the original grid.  (The RMS difference between EGM96 and
-EGM2008 is about 0.5m.  The RMS difference between EGM84 and EGM96 is
-about 1.5m.)
+EGM2008 is about 0.5 m.  The RMS difference between EGM84 and EGM96 is
+about 1.5 m.)
 
 \section geoidcache Caching the geoid data
 
@@ -1369,7 +1409,7 @@ GeographicLib::Geoid::CacheAll.  If the requested points lie within the
 cached area, the cached data values are used; otherwise the data is read
 from disk as before.  Caching all the data is a reasonable choice for
 the 5' grids and coarser.  Caching all the data for the 1' grid will
-require 0.5GB of RAM and should only be used on systems with sufficient
+require 0.5 GB of RAM and should only be used on systems with sufficient
 memory.
 
 The use of caching does not affect the values returned.  Because of the
@@ -1452,6 +1492,11 @@ References
    <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>;
    resource page
    <a href="http://geographiclib.sf.net/geod.html">geod.html</a>.
+ - C. F. F. Karney,
+   <a href="http://arxiv.org/abs/1109.4448">
+   Algorithms for geodesics</a>,
+   Sept. 2011, preprint
+   <a href="http://arxiv.org/abs/1109.4448">arXiv:1109.4448</a>.
  - A collection of some papers on geodesics is available at
    http://geographiclib.sourceforge.net/geodesic-papers/biblio.html
 
@@ -1923,6 +1968,10 @@ The algorithm for GeographicLib::TransverseMercator is based on
 Kr&uuml;ger (1912); that for GeographicLib::TransverseMercatorExact is
 based on Lee (1976).
 
+See <a href="http://geographiclib.sourceforge.net/tm-grid.kmz"
+type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
+illustration of the exact transverse Mercator grid in Google Earth.
+
 \section testmerc Test data for the transverse Mercator projection
 
 A test set for the transverse Mercator projection is available at
@@ -2254,6 +2303,20 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a>
+  - Ensure that geographiclib-config.cmake is relocatable.
+  - Allow more unicode symbols to be used in GeographicLib::DMS::Decode.
+  - Modify <a href="GeoidEval.1.html">GeoidEval</a> so that it can be
+    used to convert the height datum for LIDAR data.
+  - Modest speed-up of Geodesic::Inverse.
+  - Changes in python interface:
+    - FIX BUG in transcription of Geodesic::Inverse;
+    - include setup.py for easy installation;
+    - python only distibution is available at
+      http://pypi.python.org/pypi/geographiclib
+  - Supply a minimal Qt qmake project file for library
+    src/Geographic.pro.
+
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.13.tar.gz/download">1.13 (released 2011-08-13)</a>
   - Changes to I/O:
     - allow : (colon) to be used as a DMS separator in
@@ -2357,7 +2420,7 @@ number.)
   - Reverse the initial sense of the -s option for
     <a href="Planimeter.1.html"> Planimeter</a>.
   - Migrate source from subversion to
-    <a href="http://geographiclib.git.sourceforge.net/git/gitweb-index.cgi">
+    <a href="http://geographiclib.git.sf.net/git/gitweb-index.cgi">
     git</a>.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (released 2011-02-22)</a>

@@ -1,4 +1,4 @@
-# $Id: c5c25d0bd174f570c2160d207a010e41e6ad565b $
+# $Id: 91879938022605cb5b57f61af874b53ae114a7a3 $
 
 A reverse chronological list of changes to GeographicLib
 
@@ -6,7 +6,27 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.13.
+The current version of the library is 1.14.
+
+Changes between 1.14 (released 2011-09-30) and 1.13 versions:
+
+  * Ensure that geographiclib-config.cmake is relocatable.
+
+  * Allow more unicode symbols to be used in DMS::Decode.
+
+  * Modify GeoidEval so that it can be used to convert the height datum
+    for LIDAR data.
+
+  * Modest speed-up of Geodesic::Inverse.
+
+  * Changes in python interface:
+    + FIX BUG in transcription of Geodesic::Inverse;
+    + include setup.py for easy installation;
+    + python only distibution is available at
+      http://pypi.python.org/pypi/geographiclib
+
+  * Supply a minimal Qt qmake project file for library
+    src/Geographic.pro.
 
 Changes between 1.13 (released 2011-08-13) and 1.12 versions:
 

@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOD 1"
-.TH GEOD 1 "2011-08-13" "GeographicLib 1.13" "GeographicLib Utilities"
+.TH GEOD 1 "2011-09-29" "GeographicLib 1.14" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -178,8 +178,8 @@ specify the ellipsoid via \fIa\fR \fIf\fR; the equatorial radius is \fIa\fR and
 the flattening is \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 \&\fIf\fR < 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for \fIf\fR.  (Also, if \fIf\fR > 1, the flattening is set to
-1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137m, \fIf\fR
-= 1/298.257223563.
+1/\fIf\fR.)  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR = 6378137 m,
+\&\fIf\fR = 1/298.257223563.
 .IP "\fB\-d\fR" 4
 .IX Item "-d"
 output angles as degrees, minutes, seconds instead of decimal degrees.
@@ -196,7 +196,7 @@ quantities \fIm12\fR, \fIM12\fR, \fIM21\fR, and \fIS12\fR are described in
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 set the precision to \fIprec\fR (default 3); \fIprec\fR is the precision
-relative to 1m.  See \s-1PRECISION\s0.
+relative to 1 m.  See \s-1PRECISION\s0.
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 print version and exit.
@@ -272,13 +272,13 @@ the quadrilateral with corners (\fIlat1\fR,\fIlon1\fR), (0,\fIlon1\fR),
 (0,\fIlon2\fR), and (\fIlat2\fR,\fIlon2\fR).  It is given in meters^2.
 .SH "PRECISION"
 .IX Header "PRECISION"
-\&\fIprec\fR gives precision of the output with \fIprec\fR = 0 giving 1m
-precision, \fIprec\fR = 3 giving 1mm precision, etc.  \fIprec\fR is the number
-of digits after the decimal point for lengths.  For decimal degrees, the
-number of digits after the decimal point is 5 + \fIprec\fR.  For \s-1DMS\s0
-(degree, minute, seconds) output, the number of digits after the decimal
-point in the seconds component is 1 + \fIprec\fR.  The minimum value of
-\&\fIprec\fR is 0 and the maximum is 10.
+\&\fIprec\fR gives precision of the output with \fIprec\fR = 0 giving 1 m
+precision, \fIprec\fR = 3 giving 1 mm precision, etc.  \fIprec\fR is the
+number of digits after the decimal point for lengths.  For decimal
+degrees, the number of digits after the decimal point is 5 + \fIprec\fR.
+For \s-1DMS\s0 (degree, minute, seconds) output, the number of digits after the
+decimal point in the seconds component is 1 + \fIprec\fR.  The minimum
+value of \fIprec\fR is 0 and the maximum is 10.
 .SH "ERRORS"
 .IX Header "ERRORS"
 An illegal line of input will print an error message to standard output
@@ -316,7 +316,9 @@ Waypoints on the route at intervals of 2000km:
 .IX Header "SEE ALSO"
 The algorithms are described in C. F. F. Karney, \fIGeodesics on an
 ellipsoid of revolution\fR, Feb. 2011; preprint
-<http://arxiv.org/abs/1102.1215>.
+<http://arxiv.org/abs/1102.1215>.  See also C. F. F. Karney,
+\&\fIAlgorithms for geodesics\fR, Sept. 2011; preprint
+<http://arxiv.org/abs/1109.4448>.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 \&\fBGeod\fR was written by Charles Karney.

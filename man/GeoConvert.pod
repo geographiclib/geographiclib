@@ -1,4 +1,4 @@
-=for comment $Id: 99180920845768cf62e2bed8f5aa23344e12977b $
+=for comment $Id: 0756e07880abeff0883692cbb79e081e018c4054 $
 
 =head1 NAME
 
@@ -20,7 +20,7 @@ by the options on standard output.  The input is interpreted in one of
 three different ways depending on how many space or comma delimited
 tokens there are on the line.  The options B<-g>, B<-d>, B<-u>, and B<-m>
 govern the format of output.  In all cases, the WGS84 model of the earth
-is used (I<a> = 6378137m, I<f> = 1/298.257223563).
+is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 
 =over
 
@@ -31,11 +31,13 @@ I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See L<QUOTING|quoting> for how to
 quote the charachers ' and " when entering coordinates on the command
-line.)  Alternatively, : may be used to separate the various components.
-Latitude is given first (unless the B<-w> option is given); however, on
-input, either may be given first by appending or prepending I<N> or I<S>
-to the latitude and I<E> or I<W> to the longitude.  For example, the
-following are all equivalent
+line.)  Various unicode characters (encoded with UTF-8) may also be used
+to denote degrees, minutes, and seconds, e.g., the degree, prime, and
+double prime symbols.  Alternatively, : (colon) may be used to separate
+the various components.  Latitude is given first (unless the B<-w>
+option is given); however, on input, either may be given first by
+appending or prepending I<N> or I<S> to the latitude and I<E> or I<W> to
+the longitude.  For example, the following are all equivalent
 
     33.3 44.4
     E44.4 N33.3
@@ -94,7 +96,7 @@ degrees clockwise from true north.
 =item B<-p>
 
 set the precision to I<prec> (default 0); I<prec> is the precision
-relative to 1m.  See L<PRECISION|precision>.
+relative to 1 m.  See L<PRECISION|precision>.
 
 =item B<-z>
 
@@ -154,8 +156,8 @@ file name of "-" stands for standard output.
 
 =head1 PRECISION
 
-I<prec> gives precision of the output with I<prec> = 0 giving 1m
-precision, I<prec> = 3 giving 1mm precision, etc.  I<prec> is the number
+I<prec> gives precision of the output with I<prec> = 0 giving 1 m
+precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the number
 of digits after the decimal point for UTM/UPS.  The number of digits per
 coordinate for MGRS is 5 + I<prec>.  For decimal degrees, the number of
 digits after the decimal point is 5 + I<prec>.  For DMS (degree, minute,

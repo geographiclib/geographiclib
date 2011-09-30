@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: c9e1bf8dbc2a53c2dd3f1569b5b7ddc73cd4315e $"
+#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: d48cbce07611a1f8ca015a4d97eedc83c8c3770a $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -62,7 +62,8 @@ namespace GeographicLib {
    * Similarly, a vector can be used to hold GeodesicLine objects.
    *
    * The calculations are accurate to better than 15 nm.  See Sec. 9 of
-   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for details.
+   * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
+   * details.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -71,6 +72,11 @@ namespace GeographicLib {
    *   Feb. 2011;
    *   preprint
    *   <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>.
+   * - C. F. F. Karney,
+   *   <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>,
+   *   Sept. 2011;
+   *   preprint
+   *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
    * .
    * For more information on geodesics see \ref geodesic.
    **********************************************************************/

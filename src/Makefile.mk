@@ -1,4 +1,4 @@
-# $Id: fc7a7e3551445d24ea8aedfeeff7bc937ed5cffd $
+# $Id: 5db2891355d37b0f94d9a0188b1693351e65a231 $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -39,8 +39,6 @@ install: $(LIBRARY)
 	test -f $(PREFIX)/lib || mkdir -p $(PREFIX)/lib
 	$(INSTALL) -m 644 $^ $(PREFIX)/lib
 
-list:
-	@echo $(SOURCES)
 clean:
 	rm -f *.o $(LIBRARY)
 
@@ -76,4 +74,4 @@ Gnomonic.o: Gnomonic.hpp Constants.hpp Math.hpp Config.h Geodesic.hpp
 OSGB.o: OSGB.hpp Constants.hpp Math.hpp Config.h TransverseMercator.hpp
 AlbersEqualArea.o: AlbersEqualArea.hpp Constants.hpp Math.hpp Config.h
 
-.PHONY: all install list clean
+.PHONY: all install clean

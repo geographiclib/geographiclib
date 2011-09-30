@@ -29,7 +29,7 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESIC_CPP "$Id: ac5347a9b8a486191d736b6e1025d05779a6e8d6 $"
+#define GEOGRAPHICLIB_GEODESIC_CPP "$Id: bb7076fe49bd0464d48ec5bc77d97f5dcc79eedb $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_HPP)
@@ -686,7 +686,7 @@ namespace GeographicLib {
     ssig1 = sbet1; somg1 = salp0 * sbet1;
     csig1 = comg1 = calp1 * cbet1;
     SinCosNorm(ssig1, csig1);
-    SinCosNorm(somg1, comg1);
+    // SinCosNorm(somg1, comg1); -- don't need to normalize!
 
     // Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
     // about this case, since this can yield singularities in the Newton
@@ -698,16 +698,17 @@ namespace GeographicLib {
     // and subst for calp0 and rearrange to give (choose positive sqrt
     // to give alp2 in [0, pi/2]).
     calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
-      sqrt(Math::sq(calp1 * cbet1) + (cbet1 < -sbet1 ?
-                                (cbet2 - cbet1) * (cbet1 + cbet2) :
-                                (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
+      sqrt(Math::sq(calp1 * cbet1) +
+           (cbet1 < -sbet1 ?
+            (cbet2 - cbet1) * (cbet1 + cbet2) :
+            (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
       abs(calp1);
     // tan(bet2) = tan(sig2) * cos(alp2)
     // tan(omg2) = sin(alp0) * tan(sig2).
     ssig2 = sbet2; somg2 = salp0 * sbet2;
     csig2 = comg2 = calp2 * cbet2;
     SinCosNorm(ssig2, csig2);
-    SinCosNorm(somg2, comg2);
+    // SinCosNorm(somg2, comg2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
     sig12 = atan2(max(csig1 * ssig2 - ssig1 * csig2, real(0)),

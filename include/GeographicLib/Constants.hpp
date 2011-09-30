@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 0ca861c6aa90824636e1f47472a8a8feeab268d0 $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 199f3b1a85b240770f47ab44ded6f87b3f69f28e $"
 
 #include <GeographicLib/Config.h>
 
@@ -46,8 +46,6 @@
 #else
 #  define GEOGRAPHIC_EXPORT
 #endif
-
-RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
 
 #include <stdexcept>
 #include <GeographicLib/Math.hpp>

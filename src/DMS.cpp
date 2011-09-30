@@ -10,10 +10,12 @@
 #include <GeographicLib/DMS.hpp>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: 96750965935bfd5404dfa361e7c4b3a9ee207135 $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: 297517a7ec0449b347932ae97cd3d3914aa439e2 $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
+RCSID_DECL(GEOGRAPHICLIB_CONSTANTS_HPP)
+RCSID_DECL(GEOGRAPHICLIB_MATH_HPP)
 
 namespace GeographicLib {
 
@@ -30,10 +32,13 @@ namespace GeographicLib {
     string dmsa = dms;
     replace(dmsa, "\xc2\xb0", 'd'); // degree symbol (U+00b0 = UTF-8 c2 b0)
     replace(dmsa, "\xc2\xba", 'd'); // alt symbol (U+00ba = UTF-8 c2 ba)
+    replace(dmsa, "\xe2\x81\xb0", 'd');  // sup zero (U+2070 = UTF-8 e2 81 b0)
     replace(dmsa, "\xe2\x80\xb2", '\''); // prime (U+2032 = UTF-8 e2 80 b2)
+    replace(dmsa, "\xc2\xb4", '\'');     // acute accent (U+00b4 = UTF-8 c2 b4)
     replace(dmsa, "\xe2\x80\xb3", '"');  // dbl prime (U+2033 = UTF-8 e2 80 b3)
     replace(dmsa, "\xb0", 'd');          // bare degree symbol (b0)
     replace(dmsa, "\xba", 'd');          // bare alt symbol (ba)
+    replace(dmsa, "\xb4", 'd');          // bare acute accent (b4)
     replace(dmsa, "''", '"');            // '' -> "
     do {                       // Executed once (provides the ability to break)
       int sign = 1;

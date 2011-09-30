@@ -1,4 +1,4 @@
-# $Id: 09c3e7df74cec6b95a8a047fea3630eefd82c8e8 $
+# $Id: cd64a8085ba700fe065775d8299f84ce35a8d0d5 $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -19,8 +19,5 @@ install:
 	@:
 clean:
 	@:
-list:
-	@echo $(VSPROJECTS) \
-	GeographicLib-vc8.sln GeographicLib-vc9.sln GeographicLib-vc10.sln 
 
-.PHONY: all install list clean
+.PHONY: all install clean
