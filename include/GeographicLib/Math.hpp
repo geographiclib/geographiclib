@@ -60,7 +60,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT Math {
   private:
     void dummy() {
-      STATIC_ASSERT((GEOGRAPHICLIB_PREC) >= 0 && (GEOGRAPHICLIB_PREC) <= 2,
+      STATIC_ASSERT(GEOGRAPHICLIB_PREC >= 0 && GEOGRAPHICLIB_PREC <= 2,
                     "Bad value of precision");
     }
     Math();                     // Disable constructor
@@ -80,7 +80,8 @@ namespace GeographicLib {
     /**
      * The real type for %GeographicLib. Nearly all the testing has been done
      * with \e real = double.  However, the algorithms should also work with
-     * float and long double (where available).
+     * float and long double (where available).  (<b>CAUTION</b>: reasonable
+     * accuracy typically cannot be obtained using floats.)
      **********************************************************************/
     typedef double real;
 #elif GEOGRAPHICLIB_PREC == 0

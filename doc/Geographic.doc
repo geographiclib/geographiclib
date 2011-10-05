@@ -858,8 +858,8 @@ You can also download the python interface independent of the rest of
 .
 and then unpack the .tar.gz or .zip file.
 
-You can "install" these routines, so that they are in python's path
-with, for example \verbatim
+You can "install" these routines, so that they are in python's default
+path with, for example \verbatim
   cd /usr/local/lib/python/site-packages
   python setup.py install
 \endverbatim
@@ -869,8 +869,7 @@ within python using \code
 >>> sys.path.append("/usr/local/lib/python/site-packages");
 \endcode
 
-An example of using this interface is
-\code
+An example of using this interface is \code
 >>> from geographiclib.geodesic import Geodesic
 >>> # The geodesic inverse problem
 ... Geodesic.WGS84.Inverse(-41.32, 174.81, 40.96, -5.50)
