@@ -81,10 +81,10 @@ namespace GeographicLib {
     // F[l] = q^l * P[l+m,m](theta)/P[m,m](theta)
     //
     // (See Holmes + Featherstone, Eq. (11))
-    // alpha[l] = cos(theta) * q *
-    //          sqrt((2*m+2*l+1)*(2*m+2*l+3)/((l+1)*(2*m+l+1)))
-    // beta[l+1] = - q^2 * sqrt((l+1)*(2*m+l+1)*(2*m+2*l+5)/
-    //                         ((l+2)*(2*m+l+2)*(2*m+2*l+1)))
+    // alpha[l] = cos(theta) * q * sqrt(((2*n+1)*(2*n+3))/
+    //                                  ((n-m+1)*(n+m+1)))
+    // beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
+    //                          ((n-m+2)*(n+m+2)*(2*n+1)))
     //
     // In this F[0] = 1 and beta[0] = 0 so the sum is given by y[0].
     // 
@@ -141,21 +141,15 @@ namespace GeographicLib {
     for (int m = N; m >= 0; --m) { // m = N .. 0
       // Initialize inner sum
       T wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0; // w[N - m + 1], w[N - m + 2]
-      for (int l = N - m; l >= 0; --l) {     // l = N - m .. 0
+      for (int n = N; n >= m; --n) {        // n = N .. m; l = N - m .. 0
         --k;
         // alpha[l], beta[l + 1]
-        alp = tq * sqrt((T(2 * m + 2 * l + 1) * (2 * m + 2 * l + 3)) /
-                      (T(l + 1) * (2 * m + l + 1)));
-        bet = - q2 * sqrt((T(l + 1) * (2 * m + l + 1) * (2 * m + 2 * l + 5)) /
-                        (T(l + 2) * (2 * m + l + 2) * (2 * m + 2 * l + 1)));
-        if (false && m == 1286 && l == 0)
-          cerr << alp << " " << bet << " "
-                    << wc1 << " " << wc2 << " "
-                    << ws1 << " " << ws2 << "\n";
+        alp = tq * sqrt((T(2 * n + 1) * (2 * n + 3)) /
+                        (T(n - m + 1) * (n + m + 1)));
+        bet = - q2 * sqrt((T(n - m + 1) * (n + m + 1) * (2 * n + 5)) /
+                          (T(n - m + 2) * (n + m + 2) * (2 * n + 1)));
         w = alp * wc1 + bet * wc2 + scale_ * T(C[k]); wc2 = wc1; wc1 = w;
         w = alp * ws1 + bet * ws2 + scale_ * T(S[k]); ws2 = ws1; ws1 = w;
-        //        if (Math::isnan(w))
-        //          cerr << m << " " << l << "\n";
       }
       // Now w1 = w[0], w2 = w[1]
       T Cv = wc1, Sv = ws1;
@@ -210,6 +204,7 @@ namespace GeographicLib {
     // Pbar' is derivative of Pbar w.r.t. theta
     // Pbar'[n,m] = 1/u*(n*t*Pbar[n,m] - f[n,m]*Pbar[n-1,m])
     // where f[n,m] = sqrt((n-m)*(n+m)*(2*n+1)/(2*n-1))
+    // Pbar'[m,m] = 1/u*(m*t*Pbar[m,m])
     //
     // P'[m,m] = m/(m-1)*u*sqrt((2*m+1)/(2*m)) * P'[m-1,m-1]
     return 0;

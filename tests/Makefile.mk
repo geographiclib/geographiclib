@@ -1,6 +1,6 @@
 # $Id$
 
-PROGRAMS = ProjTest TMTest GeodTest ConicTest NaNTester PASouth
+PROGRAMS = ProjTest TMTest GeodTest ConicTest NaNTester PASouth HarmTest
 
 all: $(PROGRAMS)
 
@@ -34,6 +34,7 @@ GeodTest: GeodTest.o
 ConicTest: ConicTest.o
 NaNTester: NaNTester.o
 PASouth: PASouth.o
+HarmTest: HarmTest.o
 ProjTest.o: Constants.hpp Math.hpp LambertConformalConic.hpp \
 	PolarStereographic.hpp TransverseMercator.hpp \
 	TransverseMercatorExact.hpp
@@ -46,6 +47,7 @@ NaNTester.o: Constants.hpp Math.hpp EllipticFunction.hpp \
 	TransverseMercator.hpp TransverseMercatorExact.hpp \
 	PolarStereographic.hpp
 PASouth.o: Constants.hpp Math.hpp LambertConformalConic.hpp DMS.hpp
+HarmTest.o: Constants.hpp Math.hpp SphericalHarmonic.hpp
 
 INSTALL = install -b
 PREFIX = /usr/local
