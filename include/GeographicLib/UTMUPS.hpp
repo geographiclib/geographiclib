@@ -148,7 +148,7 @@ namespace GeographicLib {
      *
      * @param[in] lat latitude (degrees).
      * @param[in] lon longitude (degrees).
-     * @param[in] setzone zone override (optional)
+     * @param[in] setzone zone override (optional).
      *
      * This is exact.  If the optional argument \e setzone is given then use
      * that zone if it is non-negative, otherwise apply the rules given in
