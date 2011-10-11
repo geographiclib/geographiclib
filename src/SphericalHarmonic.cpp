@@ -23,7 +23,7 @@ namespace GeographicLib {
   const SphericalHarmonic::T SphericalHarmonic::scale_ =
     pow(T(numeric_limits<T>::radix), -numeric_limits<T>::max_exponent/2);
   const SphericalHarmonic::T SphericalHarmonic::eps_ =
-    sqrt(sqrt(numeric_limits<T>::min()));
+    Math::sq(numeric_limits<T>::epsilon());
 
   Math::extended SphericalHarmonic::Value(int N,
                                       const std::vector<double>& C,
@@ -34,7 +34,7 @@ namespace GeographicLib {
     //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
     //
     // R. E. Deakin, Derivatives of the earth's potentials, Geomatics Research
-    // Australasia (68), 31-60. , (June 1998)
+    // Australasia (68), 31-60, (June 1998)
     //
     // Let
     //
@@ -150,6 +150,8 @@ namespace GeographicLib {
                           (T(n - m + 2) * (n + m + 2) * (2 * n + 1)));
         w = alp * wc1 + bet * wc2 + scale_ * T(C[k]); wc2 = wc1; wc1 = w;
         w = alp * ws1 + bet * ws2 + scale_ * T(S[k]); ws2 = ws1; ws1 = w;
+        //        std::cerr << "C[" << n << "," << m << "]:" << C[k]
+        //                  << ",S[" << n << "," << m << "]:" << S[k] << ",\n";
       }
       // Now w1 = w[0], w2 = w[1]
       T Cv = wc1, Sv = ws1;
@@ -251,89 +253,81 @@ namespace GeographicLib {
     T vrc1 = 0, vrc2 = 0, vrs1 = 0, vrs2 = 0; // vr[N + 1], vr[N + 2]
     T vlc1 = 0, vlc2 = 0, vls1 = 0, vls2 = 0; // vl[N + 1], vl[N + 2]
     T vtc1 = 0, vtc2 = 0, vts1 = 0, vts2 = 0; // vt[N + 1], vt[N + 2]
-    // alpha, beta, temp values
-    T alp, bet, w, v = 0, vr = 0, vl = 0, vt = 0, vtn = 0;
-    T wtcc = 0, wtcs = 0;
-    T vtnc1 = 0, vtnc2 = 0, vtns1 = 0, vtns2 = 0; // vtn[N + 1], vtn[N + 2]
+    T wtc = 0, wts = 0;                     // previous Values of wtc1 wts1
     for (int m = N; m >= 0; --m) { // m = N .. 0
       // Initialize inner sum
       T wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0;     // w[N - m + 1], w[N - m + 2]
       T wrc1 = 0, wrc2 = 0, wrs1 = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
-      // Pbar'[n,m] = 1/u*(n*t*Pbar[n,m] - f[n,m]*Pbar[n-1,m])
-      // wta accumulates C[k]*n*Pbar[n,m]
-      // wtb accumulates C[k+1]*f[n+1,m]*Pbar[n,m]
-      // wtc accumulates C[n,m-1]*e[n,m-1]*Pbar[n,m] (for m > 0)
-      T wtac1 = 0, wtac2 = 0, wtas1 = 0, wtas2 = 0; // wta[N-m+1], wta[N-m+2]
-      T wtbc1 = 0, wtbc2 = 0, wtbs1 = 0, wtbs2 = 0; // wtb[N-m+1], wtb[N-m+2]
-      T wtcc1 = 0, wtcc2 = 0, wtcs1 = 0, wtcs2 = 0; // wtc[N-m+1], wtc[N-m+2]
-      T Ck = 0, Sk = 0;
+      // wt accumulates C[n,m-1]*e[n,m-1]*Pbar[n,m] (for m > 0)
+      T wtc1 = 0, wtc2 = 0, wts1 = 0, wts2 = 0; // wt[N-m+1], wt[N-m+2]
       for (int n = N; n >= m; --n) {            // n = N .. m; l = N - m .. 0
         --k;
         // alpha[l], beta[l + 1]
-        alp = tq * sqrt((T(2 * n + 1) * (2 * n + 3)) /
-                        (T(n - m + 1) * (n + m + 1)));
-        bet = - q2 * sqrt((T(n - m + 1) * (n + m + 1) * (2 * n + 5)) /
-                          (T(n - m + 2) * (n + m + 2) * (2 * n + 1)));
-        T f = sqrt((T(n + 1 - m) * (n + 1 + m) * (2 * n + 3))/T(2*n + 1));
-        w = alp * wtbc1 + bet * wtbc2 + f * Ck; wtbc2 = wtbc1; wtbc1 = w;
-        w = alp * wtbs1 + bet * wtbs2 + f * Sk; wtbs2 = wtbs1; wtbs1 = w;
-        Ck = scale_ * T(C[k]); Sk = scale_ * T(S[k]);
+        T w,
+          alp = tq * sqrt((T(2 * n + 1) * (2 * n + 3)) /
+                          (T(n - m + 1) * (n + m + 1))),
+          bet = - q2 * sqrt((T(n - m + 1) * (n + m + 1) * (2 * n + 5)) /
+                            (T(n - m + 2) * (n + m + 2) * (2 * n + 1)));
+        T Ck = scale_ * T(C[k]), Sk = scale_ * T(S[k]);
         w = alp * wc1 + bet * wc2 + Ck; wc2 = wc1; wc1 = w;
         w = alp * ws1 + bet * ws2 + Sk; ws2 = ws1; ws1 = w;
         w = alp * wrc1 + bet * wrc2 + (n + 1) * Ck; wrc2 = wrc1; wrc1 = w;
         w = alp * wrs1 + bet * wrs2 + (n + 1) * Sk; wrs2 = wrs1; wrs1 = w;
-        w = alp * wtac1 + bet * wtac2 + n * Ck; wtac2 = wtac1; wtac1 = w;
-        w = alp * wtas1 + bet * wtas2 + n * Sk; wtas2 = wtas1; wtas1 = w;
         if (m) {
-          double e = sqrt(T(n + m ) * (n - m + 1) / T(m == 1 ? 2 : 1));
+          T e = sqrt(T(n + m ) * (n - m + 1) / T(m > 1 ? 1 : 2));
           // e[n,m-1] = sqrt((n+m)*(n-m+1)/(m == 1 ? 2 : 1))
-          w = alp * wtcc1 + bet * wtcc2 + e * scale_ * T(C[k - (N - m + 1)]);
-          wtcc2 = wtcc1; wtcc1 = w;
-          w = alp * wtcs1 + bet * wtcs2 + e * scale_ * T(S[k - (N - m + 1)]);
-          wtcs2 = wtcs1; wtcs1 = w;
+          w = alp * wtc1 + bet * wtc2 + e * scale_ * T(C[k - (N - m + 1)]);
+          wtc2 = wtc1; wtc1 = w;
+          w = alp * wts1 + bet * wts2 + e * scale_ * T(S[k - (N - m + 1)]);
+          wts2 = wts1; wts1 = w;
         }
       }
       // Now w1 = w[0], w2 = w[1]
       T Cv = wc1, Sv = ws1;
       T Cvr = wrc1, Svr = wrs1;
-      T Cvt = t * wtac1 - q * wtbc1, Svt = t * wtas1 - q * wtbs1;
       // Pbar'[n,m] = m*t/u*Pbar[n,m] - e[n,m]*Pbar[n,m+1])
-      T Cvtn = m * tu * wc1 - q * u * sqrt(T(2*m+3) * (m ? 1 : 2) /T(2*m+2)) * wtcc,
-        Svtn = m * tu * ws1 - q * u * sqrt(T(2*m+3) * (m ? 1 : 2) / T(2*m+2)) * wtcs;
-      wtcc = wtcc1; wtcs = wtcs1;
+      T e = uq * sqrt(T(2 * m + 3) * (m ? 1 : 2) / T(2 * m + 2)),
+        Cvt = m * tu * wc1 - e * wtc, Svt = m * tu * ws1 - e * wts;
+      wtc = wtc1; wts = wts1;   // Save values of wt[cs]1 for next time
       if (m > 0) {
         // alpha[m], beta[m + 1]
-        alp = clam * sqrt((2 * T(2 * m + 3)) / (m + 1)) * uq;
-        bet = - sqrt((T(2 * m + 3) * (2 * m + 5)) /
-                     (4 * T(m + 1) * (m + 2))) * uq2;
+        T v,
+          alp = clam * sqrt((2 * T(2 * m + 3)) / (m + 1)) * uq,
+          bet = - sqrt((T(2 * m + 3) * (2 * m + 5)) /
+                       (4 * T(m + 1) * (m + 2))) * uq2;
         v = alp * vc1 + bet * vc2 + Cv; vc2 = vc1; vc1 = v;
         v = alp * vs1 + bet * vs2 + Sv; vs2 = vs1; vs1 = v;
-        vr = alp * vrc1 + bet * vrc2 + Cvr; vrc2 = vrc1; vrc1 = vr;
-        vr = alp * vrs1 + bet * vrs2 + Svr; vrs2 = vrs1; vrs1 = vr;
-        vl = alp * vlc1 + bet * vlc2 + m * Sv; vlc2 = vlc1; vlc1 = vl;
-        vl = alp * vls1 + bet * vls2 - m * Cv; vls2 = vls1; vls1 = vl;
-        vt = alp * vtc1 + bet * vtc2 + Cvt; vtc2 = vtc1; vtc1 = vt;
-        vt = alp * vts1 + bet * vts2 + Svt; vts2 = vts1; vts1 = vt;
-        vtn = alp * vtnc1 + bet * vtnc2 + Cvtn; vtnc2 = vtnc1; vtnc1 = vtn;
-        vtn = alp * vtns1 + bet * vtns2 + Svtn; vtns2 = vtns1; vtns1 = vtn;
+        v = alp * vrc1 + bet * vrc2 + Cvr; vrc2 = vrc1; vrc1 = v;
+        v = alp * vrs1 + bet * vrs2 + Svr; vrs2 = vrs1; vrs1 = v;
+        v = alp * vlc1 + bet * vlc2 + m * Sv; vlc2 = vlc1; vlc1 = v;
+        v = alp * vls1 + bet * vls2 - m * Cv; vls2 = vls1; vls1 = v;
+        v = alp * vtc1 + bet * vtc2 + Cvt; vtc2 = vtc1; vtc1 = v;
+        v = alp * vts1 + bet * vts2 + Svt; vts2 = vts1; vts1 = v;
       } else {
-        alp = sqrt(T(3)) * uq;          // F[1]/(q*clam) or F[1]/(q*slam)
-        bet = - sqrt(T(15)/4) * uq2;    // beta[1]/q
-        v = q * (Cv +  alp * (clam * vc1 + slam * vs1) + bet * vc2);
-        vr = q * (Cvr +  alp * (clam * vrc1 + slam * vrs1) + bet * vrc2);
-        vl = q * (alp * (clam * vlc1 + slam * vls1) + bet * vlc2);
-        vt = q * (Cvt +  alp * (clam * vtc1 + slam * vts1) + bet * vtc2);
-        vtn = q * (Cvtn +  alp * (clam * vtnc1 + slam * vtns1) + bet * vtnc2);
+        T
+          alp = sqrt(T(3)) * uq,       // F[1]/(q*clam) or F[1]/(q*slam)
+          bet = - sqrt(T(15)/4) * uq2, // beta[1]/q
+          qs = q / scale_;
+        vc1 = qs * (Cv +  alp * (clam * vc1 + slam * vs1) + bet * vc2);
+        qs /= r;
+        vrc1 = -qs * (Cvr +  alp * (clam * vrc1 + slam * vrs1) + bet * vrc2);
+        vlc1 = qs / u * (alp * (clam * vlc1 + slam * vls1) + bet * vlc2);
+        vtc1 = qs * (Cvt +  alp * (clam * vtc1 + slam * vts1) + bet * vtc2);
       }
     }
     if (k != 0)
       throw GeographicErr("Logic screw up");
 
-    gradx = work(- vr / (r * scale_));
-    grady = work(vl / scale_);
-    gradz = work(vt / (u * scale_));
-    gradz = work(vtn / scale_);
-    return work(v / scale_);
+    if (false) {
+      gradx = work(vrc1);
+      gradz = work(vtc1);
+      grady = work(vlc1);
+    } else {
+      gradx = work(clam * (u * vrc1 + t * vtc1) - slam * vlc1);
+      grady = work(slam * (u * vrc1 + t * vtc1) + clam * vlc1);
+      gradz = work(        t * vrc1 - u * vtc1               );
+    }
+    return work(vc1);
   }
 
 } // namespace GeographicLib

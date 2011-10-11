@@ -1,8 +1,10 @@
-ProjTest
-TMTest
+*.errs
+/HarmTest
+/HarmTest-ld
 ConicTest
 GeodTest
 NaNTester
 PASouth
-*.errs
+ProjTest
+TMTest
 vintest*

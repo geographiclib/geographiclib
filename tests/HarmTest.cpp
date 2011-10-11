@@ -4,10 +4,9 @@
 #include <vector>
 #include <GeographicLib/SphericalHarmonic.hpp>
 
-typedef GeographicLib::SphericalHarmonic::work real;
-
 using namespace GeographicLib;
 int main() {
+  typedef GeographicLib::SphericalHarmonic::work work;
   try {
     int type = 2;
     int N;
@@ -40,59 +39,31 @@ int main() {
     }
     //    for (int i = 0; i < k; ++i)
     //      std::cout << i << " " << C[i] << " " << S[i] << "\n";
-    real lat, lon;
+    work lat, lon;
     std::cout << std::setprecision(17);
-    real a(1.0L), r(1.201L);
+    work a(0.9L), r(1.2L);
     while (std::cin >> lat >> lon) {
-      real
-        phi = Math::degree<real>() * lat,
-        lam = Math::degree<real>() * lon,
-        x = r * cos(phi) * cos(lam),
-        y = r * cos(phi) * sin(lam),
+      work
+        phi = Math::degree<work>() * lat,
+        lam = Math::degree<work>() * lon,
+        x = r * (abs(lat) == 90 ? 0 : cos(phi)) * cos(lam),
+        y = r * (abs(lat) == 90 ? 0 : cos(phi)) * sin(lam),
         z = r * sin(phi);
       std::cout << SphericalHarmonic::Value(N, C, S, x, y, z, a)
                 << "\n";
-      real
-        d = 1e-6,
-        dr1 = (SphericalHarmonic::Value(N, C, S,
-                                        (r+d) * cos(phi) * cos(lam),
-                                        (r+d) * cos(phi) * sin(lam),
-                                        (r+d) * sin(phi),
-                                        a) -
-               SphericalHarmonic::Value(N, C, S,
-                                        (r-d) * cos(phi) * cos(lam),
-                                        (r-d) * cos(phi) * sin(lam),
-                                        (r-d) * sin(phi),
-                                        a)) / (2 * d),
-        dr2;
-      real
-        dl1 = (SphericalHarmonic::Value(N, C, S,
-                                        r * cos(phi) * cos(lam+d),
-                                        r * cos(phi) * sin(lam+d),
-                                        r * sin(phi),
-                                        a) -
-               SphericalHarmonic::Value(N, C, S,
-                                        r * cos(phi) * cos(lam-d),
-                                        r * cos(phi) * sin(lam-d),
-                                        r * sin(phi),
-                                        a)) / (2 * d),
-        dl2;
-      real
-        dt1 = (SphericalHarmonic::Value(N, C, S,
-                                        r * cos(phi+d) * cos(lam),
-                                        r * cos(phi+d) * sin(lam),
-                                        r * sin(phi+d),
-                                        a) -         
-               SphericalHarmonic::Value(N, C, S,     
-                                        r * cos(phi-d) * cos(lam),
-                                        r * cos(phi-d) * sin(lam),
-                                        r * sin(phi-d),
-                                        a)) / (- 2 * d),
-        dt2;
-      SphericalHarmonic::Value(N, C, S, x, y, z, a, dr2, dl2, dt2);
-      std::cout << dr1 << " " << dr2 << "\n"
-                << dl1 << " " << dl2 << "\n"
-                << dt1 << " " << dt2 << "\n";
+      work
+        d = 1e-7L,
+        dx1 = (SphericalHarmonic::Value(N, C, S, x+d, y, z, a) -
+               SphericalHarmonic::Value(N, C, S, x-d, y, z, a))/(2*d),
+        dy1 = (SphericalHarmonic::Value(N, C, S, x, y+d, z, a) -
+               SphericalHarmonic::Value(N, C, S, x, y-d, z, a))/(2*d),
+        dz1 = (SphericalHarmonic::Value(N, C, S, x, y, z+d, a) -
+               SphericalHarmonic::Value(N, C, S, x, y, z-d, a))/(2*d),
+        dx2, dy2, dz2;
+      SphericalHarmonic::Value(N, C, S, x, y, z, a, dx2, dy2, dz2);
+      std::cout << dx1 << " " << dx2 << "\n"
+                << dy1 << " " << dy2 << "\n"
+                << dz1 << " " << dz2 << "\n";
     }
   }
   catch (const std::exception& e) {
