@@ -21,12 +21,13 @@ namespace GeographicLib {
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic {
   public:
-    typedef Math::real work;
-    typedef Math::real T;
+    typedef Math::extended work;
+    typedef Math::extended T;
   private:
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static const T scale_;
+    // Move latitudes near the pole off the axis by this amount.
     static const T eps_;
   public:
     /**
@@ -71,7 +72,7 @@ namespace GeographicLib {
      * <i>C</i><sub>33</sub>.
      * The first (\e N + 1) elements of \e S should be 0.
      **********************************************************************/
-    static Math::real Value(int N,
+    static Math::extended Value(int N,
                             const std::vector<double>& C,
                             const std::vector<double>& S,
                             work x, work y, work z, work a);
@@ -91,7 +92,7 @@ namespace GeographicLib {
      * @return \e V the spherical harmonic sum.
      *
      **********************************************************************/
-    static Math::real Value(int N,
+    static Math::extended Value(int N,
                             const std::vector<double>& C,
                             const std::vector<double>& S,
                             work x, work y, work z, work a,
