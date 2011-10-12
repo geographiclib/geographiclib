@@ -95,6 +95,11 @@ namespace GeographicLib {
                             const std::vector<double>& S,
                             real x, real y, real z, real a,
                             real& gradx, real& grady, real& gradz);
+    static Math::real Value2(int N,
+                            const std::vector<double>& C,
+                            const std::vector<double>& S,
+                            real x, real y, real z, real a,
+                            real& gradx, real& grady, real& gradz);
   };
 
 } // namespace GeographicLib

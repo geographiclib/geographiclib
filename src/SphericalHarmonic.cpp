@@ -9,6 +9,7 @@
 
 #include <GeographicLib/SphericalHarmonic.hpp>
 #include <iostream>
+#include <iomanip>
 #include <limits>
 
 #define GEOGRAPHICLIB_SPHERICALHARMONIC_CPP "$Id$"
@@ -81,7 +82,9 @@ namespace GeographicLib {
     // Sc[m] = sum(l,0,N-m) C[l+m,m] * q^l * P[l+m,m](theta)/P[m,m](theta)
     // F[l] = q^l * P[l+m,m](theta)/P[m,m](theta)
     //
-    // (See Holmes + Featherstone, Eq. (11))
+    // See Holmes + Featherstone, Eq. (11):
+    // P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * P[n-1,m] -
+    //          sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
     // alpha[l] = cos(theta) * q * sqrt(((2*n+1)*(2*n+3))/
     //                                  ((n-m+1)*(n+m+1)))
     // beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
@@ -102,7 +105,9 @@ namespace GeographicLib {
     //
     // Let F[m] = q^(m+1) * cos(m*lambda) * P[m,m](theta) [or sin(m*lambda)]
     //
-    // (See Holmes + Featherstone, Eq. (13) and
+    // See Holmes + Featherstone, Eq. (13)
+    // P[m,m] = u * sqrt((2*m+1)/((m>1?2:1)*m)) * P[m-1,m-1]
+    // and
     // cos((m+1)*lambda) = 2*cos(lambda)*cos(m*lambda) - cos((m-1)*lambda)
     // alpha[m] = 2*cos(lambda) * sqrt((2*m+3)/(2*(m+1))) * sin(theta) * q
     //          =   cos(lambda) * sqrt( 2*(2*m+3)/(m+1) ) * sin(theta) * q
@@ -243,36 +248,42 @@ namespace GeographicLib {
       q = a/r;
     real
       q2 = Math::sq(q),
-      tq = t * q,
       uq = u * q,
       uq2 = Math::sq(uq),
-      tu = t / u;
-
+      tu = t / u,
+      tu2 = t / Math::sq(u);
+    std::cerr << std::setprecision(16);// << t << "\n";
     // Initialize outer sum
     real vc1 = 0, vc2 = 0, vs1 = 0, vs2 = 0;     // v[N + 1], v[N + 2]
     real vrc1 = 0, vrc2 = 0, vrs1 = 0, vrs2 = 0; // vr[N + 1], vr[N + 2]
     real vlc1 = 0, vlc2 = 0, vls1 = 0, vls2 = 0; // vl[N + 1], vl[N + 2]
     real vtc1 = 0, vtc2 = 0, vts1 = 0, vts2 = 0; // vt[N + 1], vt[N + 2]
     real wtc = 0, wts = 0;                     // previous Values of wtc1 wts1
+    real vtnc1 = 0, vtnc2 = 0, vtns1 = 0, vtns2 = 0; // vtn[N + 1], vtn[N + 2]
     for (int m = N; m >= 0; --m) { // m = N .. 0
       // Initialize inner sum
       real wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0;     // w[N - m + 1], w[N - m + 2]
       real wrc1 = 0, wrc2 = 0, wrs1 = 0, wrs2 = 0; // wr[N-m+1], wr[N-m+2]
       // wt accumulates C[n,m-1]*e[n,m-1]*Pbar[n,m] (for m > 0)
       real wtc1 = 0, wtc2 = 0, wts1 = 0, wts2 = 0; // wt[N-m+1], wt[N-m+2]
+      real wtnc1 = 0, wtnc2 = 0, wtns1 = 0, wtns2 = 0; // wtn[N-m+1], wtn[N-m+2]
       for (int n = N; n >= m; --n) {            // n = N .. m; l = N - m .. 0
         --k;
         // alpha[l], beta[l + 1]
         real w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1)),
-          alp = tq * sqrt(w * (2 * n + 3)),
+          alpx = q * sqrt(w * (2 * n + 3)),
+          alp = t * alpx,
           bet = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2))),
           R = scale_ * real(C[k]);
         w = alp * wc1  + bet * wc2  +           R; wc2  = wc1 ; wc1  = w;
         w = alp * wrc1 + bet * wrc2 + (n + 1) * R; wrc2 = wrc1; wrc1 = w;
+        w = alp * wtnc1 + bet * wtnc2 + alpx * wc2; wtnc2 = wtnc1 ; wtnc1  = w;
         if (m) {
           R = scale_ * real(S[k]);
           w = alp * ws1  + bet * ws2  +           R; ws2  = ws1 ; ws1  = w;
           w = alp * wrs1 + bet * wrs2 + (n + 1) * R; wrs2 = wrs1; wrs1 = w;
+          w = alp * wtns1 + bet * wtns2 + alpx * ws2;
+          wtns2 = wtns1 ; wtns1  = w;
           // e[n,m-1]
           real e = sqrt((real(n + m) * (n - m + 1)) / real(m > 1 ? 1 : 2));
           w = alp * wtc1 + bet * wtc2 + e * scale_ * real(C[k - (N - m + 1)]);
@@ -280,6 +291,11 @@ namespace GeographicLib {
           w = alp * wts1 + bet * wts2 + e * scale_ * real(S[k - (N - m + 1)]);
           wts2 = wts1; wts1 = w;
         }
+        /*
+        std::cerr << m << " " << n << " "
+                  << wc1/scale_ << " " 
+                  << wtnc1/scale_ << "\n";
+        */
       }
       // Now w1 = w[0], w2 = w[1]
       real Cv = wc1, Sv = ws1;
@@ -289,6 +305,7 @@ namespace GeographicLib {
         Cvt = m * tu * wc1 - e * wtc,
         Svt = m * tu * ws1 - e * wts;
       wtc = wtc1; wts = wts1;   // Save values of wt[cs]1 for next time
+      real Cvtn = wtnc1 - m*Cv*tu2, Svtn = wtns1 - m*Sv*tu2;
       if (m > 0) {
         // alpha[m], beta[m + 1]
         real v,
@@ -303,6 +320,8 @@ namespace GeographicLib {
         v = alp * vls1 + bet * vls2 - m * Cv; vls2 = vls1; vls1 = v;
         v = alp * vtc1 + bet * vtc2 + Cvt; vtc2 = vtc1; vtc1 = v;
         v = alp * vts1 + bet * vts2 + Svt; vts2 = vts1; vts1 = v;
+        v = alp * vtnc1 + bet * vtnc2 + Cvtn; vtnc2 = vtnc1; vtnc1 = v;
+        v = alp * vtns1 + bet * vtns2 + Svtn; vtns2 = vtns1; vtns1 = v;
       } else {
         real
           alp = sqrt(real(3)) * uq,       // F[1]/(q*clam) or F[1]/(q*slam)
@@ -312,16 +331,106 @@ namespace GeographicLib {
         qs /= r;
         vrc1 = -qs * (Cvr +  alp * (clam * vrc1 + slam * vrs1) + bet * vrc2);
         vlc1 = qs / u * (alp * (clam * vlc1 + slam * vls1) + bet * vlc2);
-        vtc1 = qs * (Cvt +  alp * (clam * vtc1 + slam * vts1) + bet * vtc2);
+        vtc1 = qs * (Cvt + alp * (clam * vtc1 + slam * vts1) + bet * vtc2);
+        vtnc1 = -u * qs * (Cvtn + alp * (clam * vtnc1 + slam * vtns1) + bet * vtnc2);
       }
     }
     if (k != 0)
       throw GeographicErr("Logic screw up");
 
+    std::cerr << vrc1 << " " << vtc1 << " " << vlc1 << "\n";
+
+    std::cerr << vtc1 << " " << vtnc1 << "\n";
     gradx = clam * (u * vrc1 + t * vtc1) - slam * vlc1;
     grady = slam * (u * vrc1 + t * vtc1) + clam * vlc1;
     gradz =         t * vrc1 - u * vtc1               ;
     return vc1;
   }
+
+  Math::real SphericalHarmonic::Value2(int N,
+                                      const std::vector<double>& C,
+                                      const std::vector<double>& S,
+                                      real X, real Y, real Z,
+                                      real a,
+                                      real& gradx, real& grady, real& gradz) {
+
+    real
+      r     = sqrt(X*X + Y*Y + Z*Z),
+      r2    = r*r,
+      q     = a/r,
+      q2    = q*q,
+      p     = sqrt(X*X + Y*Y),
+      t     = Z/r,             /* sin(psi)  */
+      u     = p/r;             /* cos(psi)  */
+    real lam = atan2(Y, X);
+    /*--- Compute disturbing potential T by Clenshaw summation technique.   */
+    /*    NOTE: When computing T, the coefficient C(n=0,m=0) must be 0.0    */
+    real T = 0, Tr = 0, Tt  = 0, Tl  = 0.0;
+    int k = (N+1)*(N+2)/2;
+    for(int m=N; m>=0; m--) {
+      real Sc = 0, Ss = 0, Sc1 = 0, Ss1 = 0.0;
+      real Src = 0, Srs = 0, Src1 = 0, Srs1  = 0.0;
+      real Stc = 0, Sts  =0, Stc1  =0, Sts1  = 0.0;
+      for (int n=N; n>=m; n--)  {
+        --k;
+        real
+          np1 = real(n+1),
+          x   = sqrt(real(n+m+1))*sqrt(real(n-m+1)),
+          y   = sqrt(real(n+m+2))*sqrt(real(n-m+2)),
+          a1  = q*(real(n+n+1))/x,
+          a1t = a1*t,
+          b2  = -q2*x/y,
+          Cnm = C[k] * sqrt(real(2*n+1)*(m?2:1)),
+          Snm = S[k] * sqrt(real(2*n+1)*(m?2:1));
+        /*--- sums for disturbing potential T   */
+        real Sc2 = Sc1;
+        Sc1 = Sc;
+        Sc  = (a1t*Sc1) + (b2*Sc2) + Cnm;
+        real Ss2 = Ss1;
+        Ss1 = Ss;
+        Ss  = (a1t*Ss1) + (b2*Ss2) + Snm;
+        /*--- sums for derivative Tr = dT/dr  */
+        real Src2 = Src1;
+        Src1 = Src;
+        Src  = (a1t*Src1) + (b2*Src2) - (np1*Cnm);
+        real Srs2 = Srs1;
+        Srs1 = Srs;
+        Srs  = (a1t*Srs1) + (b2*Srs2) - (np1*Snm);
+        /*--- sums for derivative Tt = dT/dt  */
+        real Stc2 = Stc1;
+        Stc1 = Stc;
+        Stc  = (a1*Sc1) + (a1t*Stc1) + (b2*Stc2);
+        real Sts2 = Sts1;
+        Sts1 = Sts;
+        Sts  = (a1*Ss1) + (a1t*Sts1) + (b2*Sts2);
+
+      } /*--- end of n loop in Clenshaw summation  */
+
+      real m1  = real(m),
+        x   = sqrt(real(m+m+1)),
+        y   = sqrt(real(m+m+2)),
+        a1  = q*x/y,
+        a1u = a1*u,
+        a1t = a1*t;
+      Tr  = (a1u*Tr)  + (Src*cos(m*lam)) + (Srs*sin(m*lam));
+      Tt  = (a1u*Tt)  + (Stc*cos(m*lam)) + (Sts*sin(m*lam)) - (a1t/u*T);
+      Tl  = (a1u*Tl)  + (m1*((Ss*cos(m*lam))-(Sc*sin(m*lam))));
+      T   = (a1u*T)   + (Sc*cos(m*lam))  + (Ss*sin(m*lam));
+    } /*--- end of m loop and Clenshaw summation */
+
+    T  = a/r*T;
+    Tr = a/r2*Tr;
+    Tt = -u*a/r2*Tt;
+    Tl = a/r2/u*Tl;
+
+    std::cerr << Tr << " " << Tt << " " << Tl << "\n";
+
+    gradx = 0;//clam * (u * vrc1 + t * vtc1) - slam * vlc1;
+    grady = 0;//slam * (u * vrc1 + t * vtc1) + clam * vlc1;
+    gradz = 0;//        t * vrc1 - u * vtc1               ;
+
+    return T;
+  }
+
 
 } // namespace GeographicLib
