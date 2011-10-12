@@ -6,7 +6,7 @@
 
 using namespace GeographicLib;
 int main() {
-  typedef GeographicLib::SphericalHarmonic::work work;
+  typedef GeographicLib::Math::real real;
   try {
     int type = 2;
     int N;
@@ -39,19 +39,17 @@ int main() {
     }
     //    for (int i = 0; i < k; ++i)
     //      std::cout << i << " " << C[i] << " " << S[i] << "\n";
-    work lat, lon;
+    real lat, lon;
     std::cout << std::setprecision(17);
-    work a(0.9L), r(1.2L);
+    real a(0.9L), r(1.2L);
     while (std::cin >> lat >> lon) {
-      work
-        phi = Math::degree<work>() * lat,
-        lam = Math::degree<work>() * lon,
+      real
+        phi = Math::degree<real>() * lat,
+        lam = Math::degree<real>() * lon,
         x = r * (abs(lat) == 90 ? 0 : cos(phi)) * cos(lam),
         y = r * (abs(lat) == 90 ? 0 : cos(phi)) * sin(lam),
         z = r * sin(phi);
-      std::cout << SphericalHarmonic::Value(N, C, S, x, y, z, a)
-                << "\n";
-      work
+      real
         d = 1e-7L,
         dx1 = (SphericalHarmonic::Value(N, C, S, x+d, y, z, a) -
                SphericalHarmonic::Value(N, C, S, x-d, y, z, a))/(2*d),
@@ -60,7 +58,10 @@ int main() {
         dz1 = (SphericalHarmonic::Value(N, C, S, x, y, z+d, a) -
                SphericalHarmonic::Value(N, C, S, x, y, z-d, a))/(2*d),
         dx2, dy2, dz2;
-      SphericalHarmonic::Value(N, C, S, x, y, z, a, dx2, dy2, dz2);
+      real
+        v1 = SphericalHarmonic::Value(N, C, S, x, y, z, a),
+        v2 = SphericalHarmonic::Value(N, C, S, x, y, z, a, dx2, dy2, dz2);
+      std::cout << v1 << " " << v2 << "\n";
       std::cout << dx1 << " " << dx2 << "\n"
                 << dy1 << " " << dy2 << "\n"
                 << dz1 << " " << dz2 << "\n";

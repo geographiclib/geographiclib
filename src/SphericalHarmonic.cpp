@@ -20,15 +20,16 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const SphericalHarmonic::T SphericalHarmonic::scale_ =
-    pow(T(numeric_limits<T>::radix), -numeric_limits<T>::max_exponent/2);
-  const SphericalHarmonic::T SphericalHarmonic::eps_ =
-    Math::sq(numeric_limits<T>::epsilon());
+  const Math::real SphericalHarmonic::scale_ =
+    pow(real(numeric_limits<real>::radix),
+        -numeric_limits<real>::max_exponent/2);
+  const Math::real SphericalHarmonic::eps_ =
+    Math::sq(numeric_limits<real>::epsilon());
 
-  Math::extended SphericalHarmonic::Value(int N,
+  Math::real SphericalHarmonic::Value(int N,
                                       const std::vector<double>& C,
                                       const std::vector<double>& S,
-                                      work x, work y, work z, work a) {
+                                      real x, real y, real z, real a) {
     //
     // Evaluate sums via Clenshaw method.  See
     //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
@@ -121,66 +122,65 @@ namespace GeographicLib {
     if (! (C.size() == k && S.size() == k) )
       throw GeographicErr("Vectors of coefficients  are the wrong size");
 
-    T
-      p = Math::hypot(T(x), T(y)),
-      clam = p ? T(x)/p : 1,    // At pole, pick lambda = 0
-      slam = p ? T(y)/p : 0,
-      r = Math::hypot(T(z), p),
-      t = r ? T(z)/r : 0,         // At origin, pick theta = pi/2 (equator)
+    real
+      p = Math::hypot(x, y),
+      clam = p ? x/p : 1,    // At pole, pick lambda = 0
+      slam = p ? y/p : 0,
+      r = Math::hypot(z, p),
+      t = r ? z/r : 0,         // At origin, pick theta = pi/2 (equator)
       u = r ? max(p/r, eps_) : 1, // Avoid the pole
-      q = T(a)/r;
-    T
+      q = a/r;
+    real
       q2 = Math::sq(q),
       tq = t * q,
       uq = u * q,
       uq2 = Math::sq(uq);
 
     // Initialize outer sum
-    T vc1 = 0, vc2 = 0, vs1 = 0, vs2 = 0; // v[N + 1], v[N + 2]
-    T alp, bet, w, v = 0;          // alpha, beta, temporary values of w and v
+    real vc1 = 0, vc2 = 0, vs1 = 0, vs2 = 0; // v[N + 1], v[N + 2]
+    real alp, bet, w, v = 0;       // alpha, beta, temporary values of w and v
     for (int m = N; m >= 0; --m) { // m = N .. 0
       // Initialize inner sum
-      T wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0; // w[N - m + 1], w[N - m + 2]
-      for (int n = N; n >= m; --n) {        // n = N .. m; l = N - m .. 0
+      real wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0; // w[N - m + 1], w[N - m + 2]
+      for (int n = N; n >= m; --n) {           // n = N .. m; l = N - m .. 0
         --k;
         // alpha[l], beta[l + 1]
-        alp = tq * sqrt((T(2 * n + 1) * (2 * n + 3)) /
-                        (T(n - m + 1) * (n + m + 1)));
-        bet = - q2 * sqrt((T(n - m + 1) * (n + m + 1) * (2 * n + 5)) /
-                          (T(n - m + 2) * (n + m + 2) * (2 * n + 1)));
-        w = alp * wc1 + bet * wc2 + scale_ * T(C[k]); wc2 = wc1; wc1 = w;
-        w = alp * ws1 + bet * ws2 + scale_ * T(S[k]); ws2 = ws1; ws1 = w;
+        alp = tq * sqrt((real(2 * n + 1) * (2 * n + 3)) /
+                        (real(n - m + 1) * (n + m + 1)));
+        bet = - q2 * sqrt((real(n - m + 1) * (n + m + 1) * (2 * n + 5)) /
+                          (real(n - m + 2) * (n + m + 2) * (2 * n + 1)));
+        w = alp * wc1 + bet * wc2 + scale_ * real(C[k]); wc2 = wc1; wc1 = w;
+        w = alp * ws1 + bet * ws2 + scale_ * real(S[k]); ws2 = ws1; ws1 = w;
         //        std::cerr << "C[" << n << "," << m << "]:" << C[k]
         //                  << ",S[" << n << "," << m << "]:" << S[k] << ",\n";
       }
       // Now w1 = w[0], w2 = w[1]
-      T Cv = wc1, Sv = ws1;
+      real Cv = wc1, Sv = ws1;
       if (m > 0) {
         // alpha[m], beta[m + 1]
-        alp = clam * sqrt((2 * T(2 * m + 3)) / (m + 1)) * uq;
-        bet = - sqrt((T(2 * m + 3) * (2 * m + 5)) /
-                   (4 * T(m + 1) * (m + 2))) * uq2;
+        alp = clam * sqrt((2 * real(2 * m + 3)) / (m + 1)) * uq;
+        bet = - sqrt((real(2 * m + 3) * (2 * m + 5)) /
+                   (4 * real(m + 1) * (m + 2))) * uq2;
         v = alp * vc1 + bet * vc2 + Cv; vc2 = vc1; vc1 = v;
         v = alp * vs1 + bet * vs2 + Sv; vs2 = vs1; vs1 = v;
       } else {
-        alp = sqrt(T(3)) * uq;          // F[1]/(q*clam) or F[1]/(q*slam)
-        bet = - sqrt(T(15)/4) * uq2;    // beta[1]/q
+        alp = sqrt(real(3)) * uq;          // F[1]/(q*clam) or F[1]/(q*slam)
+        bet = - sqrt(real(15)/4) * uq2;    // beta[1]/q
         v = q * (Cv +  alp * (clam * vc1 + slam * vs1) + bet * vc2);
       }
     }
     if (k != 0)
       throw GeographicErr("Logic screw up");
 
-    return work(v/scale_);
+    return v/scale_;
   }
 
-  Math::extended SphericalHarmonic::Value(int N,
+  Math::real SphericalHarmonic::Value(int N,
                                       const std::vector<double>& C,
                                       const std::vector<double>& S,
-                                      work x, work y, work z,
-                                      work a,
-                                      work& gradx, work& grady,
-                                      work& gradz) {
+                                      real x, real y, real z,
+                                      real a,
+                                      real& gradx, real& grady, real& gradz) {
     // V(x, y, z) = sum(n=0..N)[ q^(n+1) * sum(m=0..n)[
     //   (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
     //   Pbar[n,m](cos(theta)) ] ]
@@ -233,15 +233,15 @@ namespace GeographicLib {
     if (! (C.size() == k && S.size() == k) )
       throw GeographicErr("Vectors of coefficients  are the wrong size");
 
-    T
-      p = Math::hypot(T(x), T(y)),
-      clam = p ? T(x)/p : 1,    // At pole, pick lambda = 0
-      slam = p ? T(y)/p : 0,
-      r = Math::hypot(T(z), p),
-      t = r ? T(z)/r : 0,         // At origin, pick theta = pi/2 (equator)
+    real
+      p = Math::hypot(x, y),
+      clam = p ? x/p : 1,    // At pole, pick lambda = 0
+      slam = p ? y/p : 0,
+      r = Math::hypot(z, p),
+      t = r ? z/r : 0,         // At origin, pick theta = pi/2 (equator)
       u = r ? max(p/r, eps_) : 1, // Avoid the pole
-      q = T(a)/r;
-    T
+      q = a/r;
+    real
       q2 = Math::sq(q),
       tq = t * q,
       uq = u * q,
@@ -249,52 +249,52 @@ namespace GeographicLib {
       tu = t / u;
 
     // Initialize outer sum
-    T vc1 = 0, vc2 = 0, vs1 = 0, vs2 = 0;     // v[N + 1], v[N + 2]
-    T vrc1 = 0, vrc2 = 0, vrs1 = 0, vrs2 = 0; // vr[N + 1], vr[N + 2]
-    T vlc1 = 0, vlc2 = 0, vls1 = 0, vls2 = 0; // vl[N + 1], vl[N + 2]
-    T vtc1 = 0, vtc2 = 0, vts1 = 0, vts2 = 0; // vt[N + 1], vt[N + 2]
-    T wtc = 0, wts = 0;                     // previous Values of wtc1 wts1
+    real vc1 = 0, vc2 = 0, vs1 = 0, vs2 = 0;     // v[N + 1], v[N + 2]
+    real vrc1 = 0, vrc2 = 0, vrs1 = 0, vrs2 = 0; // vr[N + 1], vr[N + 2]
+    real vlc1 = 0, vlc2 = 0, vls1 = 0, vls2 = 0; // vl[N + 1], vl[N + 2]
+    real vtc1 = 0, vtc2 = 0, vts1 = 0, vts2 = 0; // vt[N + 1], vt[N + 2]
+    real wtc = 0, wts = 0;                     // previous Values of wtc1 wts1
     for (int m = N; m >= 0; --m) { // m = N .. 0
       // Initialize inner sum
-      T wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0;     // w[N - m + 1], w[N - m + 2]
-      T wrc1 = 0, wrc2 = 0, wrs1 = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
+      real wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0;     // w[N - m + 1], w[N - m + 2]
+      real wrc1 = 0, wrc2 = 0, wrs1 = 0, wrs2 = 0; // wr[N-m+1], wr[N-m+2]
       // wt accumulates C[n,m-1]*e[n,m-1]*Pbar[n,m] (for m > 0)
-      T wtc1 = 0, wtc2 = 0, wts1 = 0, wts2 = 0; // wt[N-m+1], wt[N-m+2]
+      real wtc1 = 0, wtc2 = 0, wts1 = 0, wts2 = 0; // wt[N-m+1], wt[N-m+2]
       for (int n = N; n >= m; --n) {            // n = N .. m; l = N - m .. 0
         --k;
         // alpha[l], beta[l + 1]
-        T w,
-          alp = tq * sqrt((T(2 * n + 1) * (2 * n + 3)) /
-                          (T(n - m + 1) * (n + m + 1))),
-          bet = - q2 * sqrt((T(n - m + 1) * (n + m + 1) * (2 * n + 5)) /
-                            (T(n - m + 2) * (n + m + 2) * (2 * n + 1)));
-        T Ck = scale_ * T(C[k]), Sk = scale_ * T(S[k]);
-        w = alp * wc1 + bet * wc2 + Ck; wc2 = wc1; wc1 = w;
-        w = alp * ws1 + bet * ws2 + Sk; ws2 = ws1; ws1 = w;
-        w = alp * wrc1 + bet * wrc2 + (n + 1) * Ck; wrc2 = wrc1; wrc1 = w;
-        w = alp * wrs1 + bet * wrs2 + (n + 1) * Sk; wrs2 = wrs1; wrs1 = w;
+        real w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1)),
+          alp = tq * sqrt(w * (2 * n + 3)),
+          bet = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2))),
+          R = scale_ * real(C[k]);
+        w = alp * wc1  + bet * wc2  +           R; wc2  = wc1 ; wc1  = w;
+        w = alp * wrc1 + bet * wrc2 + (n + 1) * R; wrc2 = wrc1; wrc1 = w;
         if (m) {
-          T e = sqrt(T(n + m ) * (n - m + 1) / T(m > 1 ? 1 : 2));
-          // e[n,m-1] = sqrt((n+m)*(n-m+1)/(m == 1 ? 2 : 1))
-          w = alp * wtc1 + bet * wtc2 + e * scale_ * T(C[k - (N - m + 1)]);
+          R = scale_ * real(S[k]);
+          w = alp * ws1  + bet * ws2  +           R; ws2  = ws1 ; ws1  = w;
+          w = alp * wrs1 + bet * wrs2 + (n + 1) * R; wrs2 = wrs1; wrs1 = w;
+          // e[n,m-1]
+          real e = sqrt((real(n + m) * (n - m + 1)) / real(m > 1 ? 1 : 2));
+          w = alp * wtc1 + bet * wtc2 + e * scale_ * real(C[k - (N - m + 1)]);
           wtc2 = wtc1; wtc1 = w;
-          w = alp * wts1 + bet * wts2 + e * scale_ * T(S[k - (N - m + 1)]);
+          w = alp * wts1 + bet * wts2 + e * scale_ * real(S[k - (N - m + 1)]);
           wts2 = wts1; wts1 = w;
         }
       }
       // Now w1 = w[0], w2 = w[1]
-      T Cv = wc1, Sv = ws1;
-      T Cvr = wrc1, Svr = wrs1;
+      real Cv = wc1, Sv = ws1;
+      real Cvr = wrc1, Svr = wrs1;
       // Pbar'[n,m] = m*t/u*Pbar[n,m] - e[n,m]*Pbar[n,m+1])
-      T e = uq * sqrt(T(2 * m + 3) * (m ? 1 : 2) / T(2 * m + 2)),
-        Cvt = m * tu * wc1 - e * wtc, Svt = m * tu * ws1 - e * wts;
+      real e = uq * sqrt(real(2 * m + 3) * (m ? 1 : 2) / real(2 * m + 2)),
+        Cvt = m * tu * wc1 - e * wtc,
+        Svt = m * tu * ws1 - e * wts;
       wtc = wtc1; wts = wts1;   // Save values of wt[cs]1 for next time
       if (m > 0) {
         // alpha[m], beta[m + 1]
-        T v,
-          alp = clam * sqrt((2 * T(2 * m + 3)) / (m + 1)) * uq,
-          bet = - sqrt((T(2 * m + 3) * (2 * m + 5)) /
-                       (4 * T(m + 1) * (m + 2))) * uq2;
+        real v,
+          alp = clam * sqrt((2 * real(2 * m + 3)) / (m + 1)) * uq,
+          bet = - sqrt((real(2 * m + 3) * (2 * m + 5)) /
+                       (4 * real(m + 1) * (m + 2))) * uq2;
         v = alp * vc1 + bet * vc2 + Cv; vc2 = vc1; vc1 = v;
         v = alp * vs1 + bet * vs2 + Sv; vs2 = vs1; vs1 = v;
         v = alp * vrc1 + bet * vrc2 + Cvr; vrc2 = vrc1; vrc1 = v;
@@ -304,9 +304,9 @@ namespace GeographicLib {
         v = alp * vtc1 + bet * vtc2 + Cvt; vtc2 = vtc1; vtc1 = v;
         v = alp * vts1 + bet * vts2 + Svt; vts2 = vts1; vts1 = v;
       } else {
-        T
-          alp = sqrt(T(3)) * uq,       // F[1]/(q*clam) or F[1]/(q*slam)
-          bet = - sqrt(T(15)/4) * uq2, // beta[1]/q
+        real
+          alp = sqrt(real(3)) * uq,       // F[1]/(q*clam) or F[1]/(q*slam)
+          bet = - sqrt(real(15)/4) * uq2, // beta[1]/q
           qs = q / scale_;
         vc1 = qs * (Cv +  alp * (clam * vc1 + slam * vs1) + bet * vc2);
         qs /= r;
@@ -318,16 +318,10 @@ namespace GeographicLib {
     if (k != 0)
       throw GeographicErr("Logic screw up");
 
-    if (false) {
-      gradx = work(vrc1);
-      gradz = work(vtc1);
-      grady = work(vlc1);
-    } else {
-      gradx = work(clam * (u * vrc1 + t * vtc1) - slam * vlc1);
-      grady = work(slam * (u * vrc1 + t * vtc1) + clam * vlc1);
-      gradz = work(        t * vrc1 - u * vtc1               );
-    }
-    return work(vc1);
+    gradx = clam * (u * vrc1 + t * vtc1) - slam * vlc1;
+    grady = slam * (u * vrc1 + t * vtc1) + clam * vlc1;
+    gradz =         t * vrc1 - u * vtc1               ;
+    return vc1;
   }
 
 } // namespace GeographicLib
