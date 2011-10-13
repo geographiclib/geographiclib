@@ -65,12 +65,10 @@ namespace GeographicLib {
     //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
     //
     // Let
-    //
     //    S = sum(c[k] * F[k](x), k = 0..N)
     //    F[n+1](x) = alpha[n](x) * F[n](x) + beta[n](x) * F[n-1](x)
     //
     // Evaluate S with
-    //
     //    y[N+2] = y[N+1] = 0
     //    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
     //    S = c[0] * F[0] + y[1] * F[1] + beta[1] * F[0] * y[2]
@@ -94,7 +92,7 @@ namespace GeographicLib {
     //   beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
     //                            ((n-m+2)*(n+m+2)*(2*n+1)))
     //
-    // In this F[0] = 1 and beta[0] = 0 so the Sc[m] = y[0].
+    // In this case, F[0] = 1 and beta[0] = 0 so the Sc[m] = y[0].
     // 
     // Outer sum...
     //
@@ -124,18 +122,18 @@ namespace GeographicLib {
       throw GeographicErr("N is too large");
     size_t k = (size_t(N + 1) * size_t(N + 2)) / 2;
     if (! (C.size() == k && S.size() == k) )
-      throw GeographicErr("Vectors C or S are the wrong size");
+      throw GeographicErr("Vector C or S is the wrong size");
     size_t kc = Cp.size(), ks = Sp.size();
     if (kc >= k || ks >= k)
-      throw GeographicErr("Vectors Cp or Sp are the wrong size");
+      throw GeographicErr("Vector Cp or Sp is too large");
 
     real
       p = Math::hypot(x, y),
-      cl = p ? x / p : 1,       // At pole, pick lambda = 0
-      sl = p ? y / p : 0,
+      cl = p ? x / p : 1,       // cos(lambda); at pole, pick lambda = 0
+      sl = p ? y / p : 0,       // sin(lambda)
       r = Math::hypot(z, p),
-      t = r ? z / r : 0,            // At origin, pick theta = pi/2 (equator)
-      u = r ? max(p / r, eps_) : 1, // Avoid the pole
+      t = r ? z / r : 0,            // cos(theta); at origin, pick theta = pi/2
+      u = r ? max(p / r, eps_) : 1, // sin(theta); but avoid the pole
       q = a / r;
     real
       q2 = Math::sq(q),
@@ -155,7 +153,7 @@ namespace GeographicLib {
           R = scale_ * (real(C[k]) - (k < kc ? Cp[k] : 0));
         w = A * wc + B * wc2 + R; wc2  = wc; wc  = w;
         if (m) {
-          R = scale_ * (real(S[k]) - (k < kc ? Sp[k] : 0));
+          R = scale_ * (real(S[k]) - (k < ks ? Sp[k] : 0));
           w = A * ws + B * ws2 + R; ws2  = ws; ws  = w;
         }
       }
@@ -186,6 +184,8 @@ namespace GeographicLib {
                                       real x, real y, real z,
                                       real a,
                                       real& gradx, real& grady, real& gradz) {
+    // Here is how the various components of the gradient are computed
+    //
     // differentiate wrt r:
     //   d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)
     // 
@@ -210,6 +210,10 @@ namespace GeographicLib {
     //    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
     // where alpha'[k] = alpha[k]/t, beta'[k] = c'[k] = 0.  Thus
     //    y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] + alpha[k]/t * y[k+1]
+    //
+    // Finally, given the derivatives of V, we can compute the components of
+    // the gradient in sphierical coordinates and transform the result into
+    // cartesian coordinates.
 
     // Check that N is plausible
     if (N < 0)
@@ -219,10 +223,10 @@ namespace GeographicLib {
       throw GeographicErr("N is too large");
     size_t k = (size_t(N + 1) * size_t(N + 2)) / 2;
     if (! (C.size() == k && S.size() == k) )
-      throw GeographicErr("Vectors C or S are the wrong size");
+      throw GeographicErr("Vector C or S is the wrong size");
     size_t kc = Cp.size(), ks = Sp.size();
     if (kc >= k || ks >= k)
-      throw GeographicErr("Vectors Cp or Sp are the wrong size");
+      throw GeographicErr("Vector Cp or Sp is too large");
 
     real
       p = Math::hypot(x, y),
@@ -230,7 +234,7 @@ namespace GeographicLib {
       sl = p ? y / p : 0,       // sin(lambda)
       r = Math::hypot(z, p),
       t = r ? z / r : 0,            // cos(theta); at origin, pick theta = pi/2
-      u = r ? max(p / r, eps_) : 1, // sin(theta); avoid the pole
+      u = r ? max(p / r, eps_) : 1, // sin(theta); but avoid the pole
       q = a / r;
     real
       q2 = Math::sq(q),
@@ -260,7 +264,7 @@ namespace GeographicLib {
         w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
         w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
         if (m) {
-          R = scale_ * (real(S[k]) - (k < kc ? Sp[k] : 0));
+          R = scale_ * (real(S[k]) - (k < ks ? Sp[k] : 0));
           w = A * ws  + B * ws2  +           R; ws2  = ws ; ws  = w;
           w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
           w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
@@ -300,7 +304,7 @@ namespace GeographicLib {
     // Rotate into cartesian (geocentric) coordinates
     gradx = cl * (u * vrc + t * vtc) - sl * vlc;
     grady = sl * (u * vrc + t * vtc) + cl * vlc;
-    gradz =       t * vrc - u * vtc               ;
+    gradz =       t * vrc - u * vtc            ;
     return vc;
   }
 
