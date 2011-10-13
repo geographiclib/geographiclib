@@ -53,7 +53,7 @@ namespace GeographicLib {
      * - \e q = <i>a</i>/<i>r</i>,
      * - \e theta = atan2(\e p, \e z) = the spherical \e colatitude,
      * - \e lambda = atan2(\e y, \e x) = the longitude.
-     * - Pbar<sub>\e nm</sub>(\e t) is the fully normalized associate
+     * - Pbar<sub>\e nm</sub>(\e t) is the fully normalized associated
      *   Legendre function of degree \e n and order \e m.
      *
      * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
@@ -74,7 +74,7 @@ namespace GeographicLib {
      *
      * The vectors \e Cp and \e Sp are correction coefficients which are \e
      * subtracted from an initial subset of \e C and \e S when forming the sum.
-     * The lengths of \e Cp and \e Sp should be less than or equal to the the
+     * The lengths of \e Cp and \e Sp should be less than or equal to the
      * length \e C (and \e S).  In typical applications \e Cp and \e Sp may be
      * empty.  Alternatively, \e Cp provides a \e zonal correction to the sum
      * (its length is less than or equal to \e N + 1) and \e Sp is empty.
@@ -88,7 +88,7 @@ namespace GeographicLib {
      *   Fransisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
      * - S. A. Holmes and W. E. Featherstone, A unified approach to the
      *   Clenshaw summation and the recursive computation of very high degree
-     *   and order normalized associates Legendre functions, J. Geod. 76(5),
+     *   and order normalised associated Legendre functions, J. Geod. 76(5),
      *   279-299 (2002)
      * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
      *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).

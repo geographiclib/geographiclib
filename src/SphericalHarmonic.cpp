@@ -8,8 +8,6 @@
  **********************************************************************/
 
 #include <GeographicLib/SphericalHarmonic.hpp>
-#include <iostream>
-#include <iomanip>
 #include <limits>
 
 #define GEOGRAPHICLIB_SPHERICALHARMONIC_CPP "$Id$"
@@ -22,8 +20,7 @@ namespace GeographicLib {
   using namespace std;
 
   const Math::real SphericalHarmonic::scale_ =
-    pow(real(numeric_limits<real>::radix),
-        -numeric_limits<real>::max_exponent/2);
+    pow(real(numeric_limits<real>::radix), -numeric_limits<real>::max_exponent/2);
   const Math::real SphericalHarmonic::eps_ =
     Math::sq(numeric_limits<real>::epsilon());
 
@@ -40,7 +37,7 @@ namespace GeographicLib {
     // write t = cos(theta), u = sin(theta), q = a/r.
     //
     // P[n,m] is the fully normalized associated Legendre function (usually
-    // denoted Pbar)
+    // denoted Pbar) of degree n and order m.
     //
     // Rewrite outer sum
     // V(r, theta, lambda) = sum(m,0,N) * P[m,m](t) * q^(m+1) *
