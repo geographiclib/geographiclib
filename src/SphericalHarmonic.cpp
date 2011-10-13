@@ -31,7 +31,7 @@ namespace GeographicLib {
                                       const std::vector<real>& Sp,
                                       real x, real y, real z, real a) {
     // General sum
-    // V(r, theta, lambda) = sum(n,0,N) sum(m,0,n)
+    // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
     //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
     //
     // write t = cos(theta), u = sin(theta), q = a/r.
@@ -40,13 +40,13 @@ namespace GeographicLib {
     // denoted Pbar) of degree n and order m.
     //
     // Rewrite outer sum
-    // V(r, theta, lambda) = sum(m,0,N) * P[m,m](t) * q^(m+1) *
+    // V(r, theta, lambda) = sum(m = 0..N) * P[m,m](t) * q^(m+1) *
     //    [Sc[m] * cos(m*lambda) + Ss[m] * sin(m*lambda)]
     // = "outer sum"
     //
     // where the inner sums are
-    //   Sc[m] = sum(n,m,N) q^(n-m) * C[n,m] * P[n,m](t)/P[m,m](t)
-    //   Ss[m] = sum(n,m,N) q^(n-m) * S[n,m] * P[n,m](t)/P[m,m](t)
+    //   Sc[m] = sum(n = m..N) q^(n-m) * C[n,m] * P[n,m](t)/P[m,m](t)
+    //   Ss[m] = sum(n = m..N) q^(n-m) * S[n,m] * P[n,m](t)/P[m,m](t)
     //
     // Evaluate sums via Clenshaw method.
     //
@@ -62,7 +62,7 @@ namespace GeographicLib {
     //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
     //
     // Let
-    //    S = sum(c[k] * F[k](x), k = 0..N)
+    //    S = sum(k = 0..N) c[k] * F[k](x)
     //    F[n+1](x) = alpha[n](x) * F[n](x) + beta[n](x) * F[n-1](x)
     //
     // Evaluate S with
@@ -77,7 +77,7 @@ namespace GeographicLib {
     // Inner sum...
     //
     // let l = n-m; n = l+m
-    // Sc[m] = sum(l,0,N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
+    // Sc[m] = sum(l = 0..N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
     // F[l] = q^l * P[l+m,m](t)/P[m,m](t)
     //
     // Holmes + Featherstone, Eq. (11):
@@ -85,7 +85,7 @@ namespace GeographicLib {
     //            sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
     // thus
     //   alpha[l] = t * q * sqrt(((2*n+1)*(2*n+3))/
-    //                                    ((n-m+1)*(n+m+1)))
+    //                           ((n-m+1)*(n+m+1)))
     //   beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
     //                            ((n-m+2)*(n+m+2)*(2*n+1)))
     //
@@ -93,8 +93,8 @@ namespace GeographicLib {
     // 
     // Outer sum...
     //
-    // V = sum(m,0,N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
-    //   + sum(m,0,N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+    // V = sum(m = 0..N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+    //   + sum(m = 0..N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
     // F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]
     //
     // Holmes + Featherstone, Eq. (13):

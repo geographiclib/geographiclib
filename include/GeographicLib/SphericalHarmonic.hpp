@@ -43,7 +43,7 @@ namespace GeographicLib {
      * @return \e V the spherical harmonic sum.
      *
      * Evaluate the spherical harmonic sum \verbatim
- V(x, y, z) = sum(n=0..N)[ q^(n+1) * sum(m=0..n)[
+ V(x, y, z) = sum(n = 0..N)[ q^(n+1) * sum(m = 0..n)[
    (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
    Pbar[n,m](cos(theta)) ] ]
 \endverbatim
@@ -83,13 +83,13 @@ namespace GeographicLib {
      * - C. W. Clenshaw, A note on the summation of Chebyshev series,
      *   %Math. Tables Aids Comput. 9(51), 118-120 (1955).
      * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
-     *   Research Australasia 68, 31-60, (June 1998)
+     *   Research Australasia 68, 31-60, (June 1998).
      * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
      *   Fransisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
      * - S. A. Holmes and W. E. Featherstone, A unified approach to the
      *   Clenshaw summation and the recursive computation of very high degree
      *   and order normalised associated Legendre functions, J. Geod. 76(5),
-     *   279-299 (2002)
+     *   279-299 (2002).
      * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
      *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).
      **********************************************************************/
