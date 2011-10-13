@@ -30,407 +30,278 @@ namespace GeographicLib {
   Math::real SphericalHarmonic::Value(int N,
                                       const std::vector<double>& C,
                                       const std::vector<double>& S,
+                                      const std::vector<real>& Cp,
+                                      const std::vector<real>& Sp,
                                       real x, real y, real z, real a) {
+    // General sum
+    // V(r, theta, lambda) = sum(n,0,N) sum(m,0,n)
+    //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
     //
-    // Evaluate sums via Clenshaw method.  See
+    // write t = cos(theta), u = sin(theta), q = a/r.
+    //
+    // P[n,m] is the fully normalized associated Legendre function (usually
+    // denoted Pbar)
+    //
+    // Rewrite outer sum
+    // V(r, theta, lambda) = sum(m,0,N) * P[m,m](t) * q^(m+1) *
+    //    [Sc[m] * cos(m*lambda) + Ss[m] * sin(m*lambda)]
+    // = "outer sum"
+    //
+    // where the inner sums are
+    //   Sc[m] = sum(n,m,N) q^(n-m) * C[n,m] * P[n,m](t)/P[m,m](t)
+    //   Ss[m] = sum(n,m,N) q^(n-m) * S[n,m] * P[n,m](t)/P[m,m](t)
+    //
+    // Evaluate sums via Clenshaw method.
+    //
+    // The overall framework is similar to Deakin with the following changes:
+    // * use fully normalized associated Legendre functions (instead of the
+    //   quasi-normalized ones)
+    // * Clenshaw summation is used to roll the computation of cos(m*lambda)
+    //   and sin(m*lambda) into the evaluation of the outer sum (rather than
+    //   independently computing an array of these trigonometric terms).
+    // * Scale the coefficients to guard against overflow when N is large.
+    //
+    // General framework of Clenshaw;   see
     //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
-    //
-    // R. E. Deakin, Derivatives of the earth's potentials, Geomatics Research
-    // Australasia (68), 31-60, (June 1998)
     //
     // Let
     //
     //    S = sum(c[k] * F[k](x), k = 0..N)
-    //    F[n+1](x) = alpha(n,x) * F[n](x) + beta(n,x) * F[n-1](x)
+    //    F[n+1](x) = alpha[n](x) * F[n](x) + beta[n](x) * F[n-1](x)
     //
     // Evaluate S with
     //
     //    y[N+2] = y[N+1] = 0
-    //    y[k] = alpha(k,x) * y[k+1] + beta(k+1,x) * y[k+2] + c[k]
-    //    S = c[0] * F[0](x) + y[1] * F[1](x) + beta(1,x) * F[0](x) * y[2]
+    //    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
+    //    S = c[0] * F[0] + y[1] * F[1] + beta[1] * F[0] * y[2]
     //
     // IF F[0](x) = 1 and beta(0,x) = 0, then F[1](x) = alpha(0,x) and
     // we can continue the recursion for y[k] until y[0]:
     //    S = y[0]
     //
-    // General sum
-    // V(r, theta, lambda) = sum(n,0,N) sum(m,0,n)
-    //   q^(n+1) * (Cnm * cos(m*lambda) + Snm * sin(m*lambda)) * P[n,m](theta)
-    //
-    // P[n,m] is the fully normalized associated Legendre function (usually
-    // denoted Pbar)
-    //
-    // Switch order of sums:
-    // V(r, theta, lambda)
-    // = sum(m,0,N) sum(n,m,N)
-    //   q^(n+1) * (Cnm * cos(m*lambda) + Snm * sin(m*lambda)) * P[n,m](theta)
-    //
-    // = sum(m,0,N) * [cos(m*lambda) (sum(n,m,N) q^(n+1) * Cnm * P[n,m](theta))
-    //               + sin(m*lambda) (sum(n,m,N) q^(n+1) * Snm * P[n,m](theta))]
-    //
-    // = sum(m,0,N) * P[m,m](theta) * q^(m+1) *
-    //  [cos(m*lambda) (sum(n,m,N) q^(n-m) * Cnm * P[n,m](theta)/P[m,m](theta))
-    //  +sin(m*lambda) (sum(n,m,N) q^(n-m) * Snm * P[n,m](theta)/P[m,m](theta))]
-    //
     // Inner sum...
     //
-    // Let
-    //   Sc[m] = (sum(n,m,N) q^(n-m) * Cnm * P[n,m](theta)/P[m,m](theta))
-    //   Ss[m] = (sum(n,m,N) q^(n-m) * Snm * P[n,m](theta)/P[m,m](theta))
-    //
     // let l = n-m; n = l+m
-    // Sc[m] = sum(l,0,N-m) C[l+m,m] * q^l * P[l+m,m](theta)/P[m,m](theta)
-    // F[l] = q^l * P[l+m,m](theta)/P[m,m](theta)
+    // Sc[m] = sum(l,0,N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
+    // F[l] = q^l * P[l+m,m](t)/P[m,m](t)
     //
-    // See Holmes + Featherstone, Eq. (11):
-    // P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * P[n-1,m] -
-    //          sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
-    // alpha[l] = cos(theta) * q * sqrt(((2*n+1)*(2*n+3))/
-    //                                  ((n-m+1)*(n+m+1)))
-    // beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
-    //                          ((n-m+2)*(n+m+2)*(2*n+1)))
+    // Holmes + Featherstone, Eq. (11):
+    //   P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * t * P[n-1,m] -
+    //            sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
+    // thus
+    //   alpha[l] = t * q * sqrt(((2*n+1)*(2*n+3))/
+    //                                    ((n-m+1)*(n+m+1)))
+    //   beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
+    //                            ((n-m+2)*(n+m+2)*(2*n+1)))
     //
-    // In this F[0] = 1 and beta[0] = 0 so the sum is given by y[0].
+    // In this F[0] = 1 and beta[0] = 0 so the Sc[m] = y[0].
     // 
-    // F[1] = q * P[m+1,m]/P[m,m] = cos(theta) * q * sqrt(2*m+3)
-    // beta[1] = - q^2 * sqrt((2*m+5)/(4*(m+1)))
-    //
     // Outer sum...
     //
-    // V(r, theta, lambda) = sum(m,0,N) * P[m,m](theta) * q^(m+1) *
-    //  [cos(m*lambda) * Sc[m] + sin(m*lambda) * Ss[m]]
+    // V = sum(m,0,N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+    //   + sum(m,0,N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+    // F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]
     //
-    // = sum(m,0,N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](theta)
-    // + sum(m,0,N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](theta)
-    //
-    // Let F[m] = q^(m+1) * cos(m*lambda) * P[m,m](theta) [or sin(m*lambda)]
-    //
-    // See Holmes + Featherstone, Eq. (13)
-    // P[m,m] = u * sqrt((2*m+1)/((m>1?2:1)*m)) * P[m-1,m-1]
+    // Holmes + Featherstone, Eq. (13):
+    //   P[m,m] = u * sqrt((2*m+1)/((m>1?2:1)*m)) * P[m-1,m-1]
     // and
-    // cos((m+1)*lambda) = 2*cos(lambda)*cos(m*lambda) - cos((m-1)*lambda)
-    // alpha[m] = 2*cos(lambda) * sqrt((2*m+3)/(2*(m+1))) * sin(theta) * q
-    //          =   cos(lambda) * sqrt( 2*(2*m+3)/(m+1) ) * sin(theta) * q
-    // beta[m+1] = - sqrt((2*m+3)*(2*m+5)/(4*(m+1)*(m+2))) * sin(theta)^2 * q^2
-    //             * (m == 0 ? sqrt(2) : 1)
+    //   cos((m+1)*lambda) = 2*cos(lambda)*cos(m*lambda) - cos((m-1)*lambda)
+    // thus
+    //   alpha[m] = 2*cos(lambda) * sqrt((2*m+3)/(2*(m+1))) * sin(theta) * q
+    //            =   cos(lambda) * sqrt( 2*(2*m+3)/(m+1) ) * sin(theta) * q
+    //   beta[m+1] = -sqrt((2*m+3)*(2*m+5)/(4*(m+1)*(m+2))) * sin(theta)^2 * q^2
+    //               * (m == 0 ? sqrt(2) : 1)
     //
-    // F[0] = q                                           [or 0]
+    // F[0] = q                                         [or 0]
     // F[1] = cos(lambda) * sqrt(3) * sin(theta) * q^2  [or sin(lambda)]
     // beta[1] = - sqrt(15/4) * sin(theta)^2 * q^2
 
-    // N is limited to 32766 by the requirement that the vectors C and S fit in
-    // the address space of 32-bit machines.
+    // Check that N is plausible
+    if (N < 0)
+      throw GeographicErr("N is negative");
     if (sizeof(double) * (N + 1.0) * (N + 2.0) / 2 >
         double(numeric_limits<size_t>::max()))
       throw GeographicErr("N is too large");
     size_t k = (size_t(N + 1) * size_t(N + 2)) / 2;
     if (! (C.size() == k && S.size() == k) )
-      throw GeographicErr("Vectors of coefficients  are the wrong size");
+      throw GeographicErr("Vectors C or S are the wrong size");
+    size_t kc = Cp.size(), ks = Sp.size();
+    if (kc >= k || ks >= k)
+      throw GeographicErr("Vectors Cp or Sp are the wrong size");
 
     real
       p = Math::hypot(x, y),
-      clam = p ? x/p : 1,    // At pole, pick lambda = 0
-      slam = p ? y/p : 0,
+      cl = p ? x / p : 1,       // At pole, pick lambda = 0
+      sl = p ? y / p : 0,
       r = Math::hypot(z, p),
-      t = r ? z/r : 0,         // At origin, pick theta = pi/2 (equator)
-      u = r ? max(p/r, eps_) : 1, // Avoid the pole
-      q = a/r;
+      t = r ? z / r : 0,            // At origin, pick theta = pi/2 (equator)
+      u = r ? max(p / r, eps_) : 1, // Avoid the pole
+      q = a / r;
     real
       q2 = Math::sq(q),
-      tq = t * q,
       uq = u * q,
       uq2 = Math::sq(uq);
-
     // Initialize outer sum
-    real vc1 = 0, vc2 = 0, vs1 = 0, vs2 = 0; // v[N + 1], v[N + 2]
-    real alp, bet, w, v = 0;       // alpha, beta, temporary values of w and v
-    for (int m = N; m >= 0; --m) { // m = N .. 0
+    real vc  = 0, vc2  = 0, vs  = 0, vs2  = 0;   // v[N + 1], v[N + 2]
+    for (int m = N; m >= 0; --m) {               // m = N .. 0
       // Initialize inner sum
-      real wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0; // w[N - m + 1], w[N - m + 2]
-      for (int n = N; n >= m; --n) {           // n = N .. m; l = N - m .. 0
+      real wc  = 0, wc2  = 0, ws  = 0, ws2  = 0; // w[N-m+1], w[N-m+2]
+      for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         --k;
         // alpha[l], beta[l + 1]
-        alp = tq * sqrt((real(2 * n + 1) * (2 * n + 3)) /
-                        (real(n - m + 1) * (n + m + 1)));
-        bet = - q2 * sqrt((real(n - m + 1) * (n + m + 1) * (2 * n + 5)) /
-                          (real(n - m + 2) * (n + m + 2) * (2 * n + 1)));
-        w = alp * wc1 + bet * wc2 + scale_ * real(C[k]); wc2 = wc1; wc1 = w;
-        w = alp * ws1 + bet * ws2 + scale_ * real(S[k]); ws2 = ws1; ws1 = w;
-        //        std::cerr << "C[" << n << "," << m << "]:" << C[k]
-        //                  << ",S[" << n << "," << m << "]:" << S[k] << ",\n";
+        real w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1)),
+          Ax = q * sqrt(w * (2 * n + 3)), A = t * Ax,
+          B = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2))),
+          R = scale_ * (real(C[k]) - (k < kc ? Cp[k] : 0));
+        w = A * wc + B * wc2 + R; wc2  = wc; wc  = w;
+        if (m) {
+          R = scale_ * (real(S[k]) - (k < kc ? Sp[k] : 0));
+          w = A * ws + B * ws2 + R; ws2  = ws; ws  = w;
+        }
       }
-      // Now w1 = w[0], w2 = w[1]
-      real Cv = wc1, Sv = ws1;
-      if (m > 0) {
+      if (m) {
         // alpha[m], beta[m + 1]
-        alp = clam * sqrt((2 * real(2 * m + 3)) / (m + 1)) * uq;
-        bet = - sqrt((real(2 * m + 3) * (2 * m + 5)) /
-                   (4 * real(m + 1) * (m + 2))) * uq2;
-        v = alp * vc1 + bet * vc2 + Cv; vc2 = vc1; vc1 = v;
-        v = alp * vs1 + bet * vs2 + Sv; vs2 = vs1; vs1 = v;
+        real v = 2 * real(2 * m + 3) / (m + 1),
+          A = cl * sqrt(v) * uq,
+          B = - sqrt((v * (2 * m + 5)) / (8 * (m + 2))) * uq2;
+        v = A * vc + B * vc2 + wc; vc2 = vc; vc  = v;
+        v = A * vs + B * vs2 + ws; vs2 = vs; vs  = v;
       } else {
-        alp = sqrt(real(3)) * uq;          // F[1]/(q*clam) or F[1]/(q*slam)
-        bet = - sqrt(real(15)/4) * uq2;    // beta[1]/q
-        v = q * (Cv +  alp * (clam * vc1 + slam * vs1) + bet * vc2);
+        real
+          A = sqrt(real(3)) * uq,       // F[1]/(q*cl) or F[1]/(q*sl)
+          B = - sqrt(real(15)/4) * uq2, // beta[1]/q
+          qs = q / scale_;
+        vc = qs * (wc +  A * (cl * vc  + sl * vs ) + B * vc2 );
       }
     }
-    if (k != 0)
-      throw GeographicErr("Logic screw up");
 
-    return v/scale_;
+    return vc;
   }
 
   Math::real SphericalHarmonic::Value(int N,
                                       const std::vector<double>& C,
                                       const std::vector<double>& S,
+                                      const std::vector<real>& Cp,
+                                      const std::vector<real>& Sp,
                                       real x, real y, real z,
                                       real a,
                                       real& gradx, real& grady, real& gradz) {
-    // V(x, y, z) = sum(n=0..N)[ q^(n+1) * sum(m=0..n)[
-    //   (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
-    //   Pbar[n,m](cos(theta)) ] ]
-    // V(x, y, z) = sum(n=0..N)[ q^(n+1) * sum(m=0..n)[
-    //   (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
-    //   Pbar[n,m](cos(theta)) ] ]
-    //
-    // differentiate wrt r
-    // dV/dr = sum(n=0..N)[ -(n+1)/a*q^(n+2) * sum(m=0..n)[
-    //   (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
-    //   Pbar[n,m](cos(theta)) ] ]
+    // differentiate wrt r:
+    //   d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)
+    // 
+    // so multiply C[n,m] by n+1 in inner sum and multiply the sum by -1/r.
     //
     // differentiate wrt lambda
-    // dV/dlambda = sum(n=0..N)[ q^(n+1) * sum(m=0..n)[
-    //   (-C[n,m] * m*sin(m*lambda) + S[n,m] * m*cos(m*lambda)) *
-    //   Pbar[n,m](cos(theta)) ] ]
+    //   d cos(m*lambda) = -m * sin(m*lambda)
+    //   d sin(m*lambda) =  m * cos(m*lambda)
+    //
+    // so multiply terms by m in outer sum and swap sin and cos variables.
     //
     // differentiate wrt theta
-    // dV/dlambda = sum(n=0..N)[ q^(n+1) * sum(m=0..n)[
-    //   (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) *
-    //   Pbar'[n,m](cos(theta)) ] ]
+    //  dV/dtheta = -u * dV/dt = -u * V'
+    // here ' denotes differentiation wrt to t.
+    //   d/dt (Sc[m] * P[m,m](t)) = Sc'[m] * P[m,m](t) + Sc[m] * P'[m,m](t)
     //
-    // Pbar' is derivative of Pbar w.r.t. theta
-    // Pbar'[n,m] = 1/u*(n*t*Pbar[n,m] - f[n,m]*Pbar[n-1,m])
-    // where f[n,m] = sqrt((n-m)*(n+m)*(2*n+1)/(2*n-1))
-    // Pbar'[m,m] = 1/u*(m*t*Pbar[m,m])
+    // Now P[m,m](t) = const * u^m, so P'[m,m](t) = -m * t/u^2 * P[m,m](t),
+    // thus
+    //   d/dt (Sc[m] * P[m,m](t)) = (Sc'[m] - m * t/u^2 Sc[m]) * P'[m,m](t)
     //
-    // Alt:
-    // Pbar'[n,m] = m*t/u*Pbar[n,m] - e[n,m]*Pbar[n,m+1])
-    // where e[n,m] = sqrt((n+m+1)*(n-m)/(m == 0 ? 2 : 1))
-    //
-    // sum(m,0,N) sum(n,m,N) q^(n-m)*C[n,m]*e[n,m]*Pbar[n,m+1]/P[m,m]
-    // (m' = m+1, m=m'-1)
-    // = sum(m',1,N+1) sum(n,m'-1,N)
-    //   q^(n-m'+1)*C[n,m'-1]*e[n,m'-1]*Pbar[n,m'] / P[m'-1,m'-1]
-    // = sum(m,1,N) * q * P[m,m]/P[m-1,m-1] *
-    //      sum(n,m,N) q^(n-m) C[n,m-1]*e[n,m-1]*Pbar[n,m]/P[m,m]
-    // e[n,m-1] = sqrt((n+m)*(n-m+1)/(m == 1 ? 2 : 1))
-    // P[m,m]/P[m-1,m-1] = u*sqrt((2*m+1)/(2*m)) for m > 1
-    // The differences in addresses C[n,m] - C[n,m-1] = N-m+1
-    //
-    // P'[m,m] = m/(m-1)*u*sqrt((2*m+1)/(2*m)) * P'[m-1,m-1]
-    //
-    // N is limited to 32766 by the requirement that the vectors C and S fit in
-    // the address space of 32-bit machines.
+    // Clenshaw recursion for Sc[m] reads
+    //    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
+    // where alpha'[k] = alpha[k]/t, beta'[k] = c'[k] = 0.  Thus
+    //    y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] + alpha[k]/t * y[k+1]
+
+    // Check that N is plausible
+    if (N < 0)
+      throw GeographicErr("N is negative");
     if (sizeof(double) * (N + 1.0) * (N + 2.0) / 2 >
         double(numeric_limits<size_t>::max()))
       throw GeographicErr("N is too large");
     size_t k = (size_t(N + 1) * size_t(N + 2)) / 2;
     if (! (C.size() == k && S.size() == k) )
-      throw GeographicErr("Vectors of coefficients  are the wrong size");
+      throw GeographicErr("Vectors C or S are the wrong size");
+    size_t kc = Cp.size(), ks = Sp.size();
+    if (kc >= k || ks >= k)
+      throw GeographicErr("Vectors Cp or Sp are the wrong size");
 
     real
       p = Math::hypot(x, y),
-      clam = p ? x/p : 1,    // At pole, pick lambda = 0
-      slam = p ? y/p : 0,
+      cl = p ? x / p : 1,       // cos(lambda); at pole, pick lambda = 0
+      sl = p ? y / p : 0,       // sin(lambda)
       r = Math::hypot(z, p),
-      t = r ? z/r : 0,         // At origin, pick theta = pi/2 (equator)
-      u = r ? max(p/r, eps_) : 1, // Avoid the pole
-      q = a/r;
+      t = r ? z / r : 0,            // cos(theta); at origin, pick theta = pi/2
+      u = r ? max(p / r, eps_) : 1, // sin(theta); avoid the pole
+      q = a / r;
     real
       q2 = Math::sq(q),
       uq = u * q,
       uq2 = Math::sq(uq),
-      tu = t / u,
       tu2 = t / Math::sq(u);
-    std::cerr << std::setprecision(16);// << t << "\n";
     // Initialize outer sum
-    real vc1 = 0, vc2 = 0, vs1 = 0, vs2 = 0;     // v[N + 1], v[N + 2]
-    real vrc1 = 0, vrc2 = 0, vrs1 = 0, vrs2 = 0; // vr[N + 1], vr[N + 2]
-    real vlc1 = 0, vlc2 = 0, vls1 = 0, vls2 = 0; // vl[N + 1], vl[N + 2]
-    real vtc1 = 0, vtc2 = 0, vts1 = 0, vts2 = 0; // vt[N + 1], vt[N + 2]
-    real wtc = 0, wts = 0;                     // previous Values of wtc1 wts1
-    real vtnc1 = 0, vtnc2 = 0, vtns1 = 0, vtns2 = 0; // vtn[N + 1], vtn[N + 2]
-    for (int m = N; m >= 0; --m) { // m = N .. 0
+    real vc  = 0, vc2  = 0, vs  = 0, vs2  = 0;   // v [N + 1], v [N + 2]
+    // vr, vt, vl and similar w variable accumulate the sums for the
+    // derivatives wrt r, theta, and lambda, respectively.
+    real vrc = 0, vrc2 = 0, vrs = 0, vrs2 = 0;   // vr[N + 1], vr[N + 2]
+    real vtc = 0, vtc2 = 0, vts = 0, vts2 = 0;   // vt[N + 1], vt[N + 2]
+    real vlc = 0, vlc2 = 0, vls = 0, vls2 = 0;   // vl[N + 1], vl[N + 2]
+    for (int m = N; m >= 0; --m) {               // m = N .. 0
       // Initialize inner sum
-      real wc1 = 0, wc2 = 0, ws1 = 0, ws2 = 0;     // w[N - m + 1], w[N - m + 2]
-      real wrc1 = 0, wrc2 = 0, wrs1 = 0, wrs2 = 0; // wr[N-m+1], wr[N-m+2]
-      // wt accumulates C[n,m-1]*e[n,m-1]*Pbar[n,m] (for m > 0)
-      real wtc1 = 0, wtc2 = 0, wts1 = 0, wts2 = 0; // wt[N-m+1], wt[N-m+2]
-      real wtnc1 = 0, wtnc2 = 0, wtns1 = 0, wtns2 = 0; // wtn[N-m+1], wtn[N-m+2]
-      for (int n = N; n >= m; --n) {            // n = N .. m; l = N - m .. 0
+      real wc  = 0, wc2  = 0, ws  = 0, ws2  = 0; // w [N - m + 1], w [N - m + 2]
+      real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
+      real wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
+      for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         --k;
         // alpha[l], beta[l + 1]
         real w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1)),
-          alpx = q * sqrt(w * (2 * n + 3)),
-          alp = t * alpx,
-          bet = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2))),
-          R = scale_ * real(C[k]);
-        w = alp * wc1  + bet * wc2  +           R; wc2  = wc1 ; wc1  = w;
-        w = alp * wrc1 + bet * wrc2 + (n + 1) * R; wrc2 = wrc1; wrc1 = w;
-        w = alp * wtnc1 + bet * wtnc2 + alpx * wc2; wtnc2 = wtnc1 ; wtnc1  = w;
+          Ax = q * sqrt(w * (2 * n + 3)), A = t * Ax,
+          B = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2))),
+          R = scale_ * (real(C[k]) - (k < kc ? Cp[k] : 0));
+        w = A * wc  + B * wc2  +           R; wc2  = wc ; wc  = w;
+        w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
+        w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
         if (m) {
-          R = scale_ * real(S[k]);
-          w = alp * ws1  + bet * ws2  +           R; ws2  = ws1 ; ws1  = w;
-          w = alp * wrs1 + bet * wrs2 + (n + 1) * R; wrs2 = wrs1; wrs1 = w;
-          w = alp * wtns1 + bet * wtns2 + alpx * ws2;
-          wtns2 = wtns1 ; wtns1  = w;
-          // e[n,m-1]
-          real e = sqrt((real(n + m) * (n - m + 1)) / real(m > 1 ? 1 : 2));
-          w = alp * wtc1 + bet * wtc2 + e * scale_ * real(C[k - (N - m + 1)]);
-          wtc2 = wtc1; wtc1 = w;
-          w = alp * wts1 + bet * wts2 + e * scale_ * real(S[k - (N - m + 1)]);
-          wts2 = wts1; wts1 = w;
+          R = scale_ * (real(S[k]) - (k < kc ? Sp[k] : 0));
+          w = A * ws  + B * ws2  +           R; ws2  = ws ; ws  = w;
+          w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
+          w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
         }
-        /*
-        std::cerr << m << " " << n << " "
-                  << wc1/scale_ << " " 
-                  << wtnc1/scale_ << "\n";
-        */
       }
-      // Now w1 = w[0], w2 = w[1]
-      real Cv = wc1, Sv = ws1;
-      real Cvr = wrc1, Svr = wrs1;
-      // Pbar'[n,m] = m*t/u*Pbar[n,m] - e[n,m]*Pbar[n,m+1])
-      real e = uq * sqrt(real(2 * m + 3) * (m ? 1 : 2) / real(2 * m + 2)),
-        Cvt = m * tu * wc1 - e * wtc,
-        Svt = m * tu * ws1 - e * wts;
-      wtc = wtc1; wts = wts1;   // Save values of wt[cs]1 for next time
-      real Cvtn = wtnc1 - m*Cv*tu2, Svtn = wtns1 - m*Sv*tu2;
-      if (m > 0) {
+      if (m) {
         // alpha[m], beta[m + 1]
-        real v,
-          alp = clam * sqrt((2 * real(2 * m + 3)) / (m + 1)) * uq,
-          bet = - sqrt((real(2 * m + 3) * (2 * m + 5)) /
-                       (4 * real(m + 1) * (m + 2))) * uq2;
-        v = alp * vc1 + bet * vc2 + Cv; vc2 = vc1; vc1 = v;
-        v = alp * vs1 + bet * vs2 + Sv; vs2 = vs1; vs1 = v;
-        v = alp * vrc1 + bet * vrc2 + Cvr; vrc2 = vrc1; vrc1 = v;
-        v = alp * vrs1 + bet * vrs2 + Svr; vrs2 = vrs1; vrs1 = v;
-        v = alp * vlc1 + bet * vlc2 + m * Sv; vlc2 = vlc1; vlc1 = v;
-        v = alp * vls1 + bet * vls2 - m * Cv; vls2 = vls1; vls1 = v;
-        v = alp * vtc1 + bet * vtc2 + Cvt; vtc2 = vtc1; vtc1 = v;
-        v = alp * vts1 + bet * vts2 + Svt; vts2 = vts1; vts1 = v;
-        v = alp * vtnc1 + bet * vtnc2 + Cvtn; vtnc2 = vtnc1; vtnc1 = v;
-        v = alp * vtns1 + bet * vtns2 + Svtn; vtns2 = vtns1; vtns1 = v;
+        real v = 2 * real(2 * m + 3) / (m + 1),
+          A = cl * sqrt(v) * uq,
+          B = - sqrt((v * (2 * m + 5)) / (8 * (m + 2))) * uq2;
+        wtc -= m * tu2 * wc; wts -= m * tu2 * ws;
+        v = A * vc  + B * vc2  +  wc ; vc2  = vc ; vc  = v;
+        v = A * vs  + B * vs2  +  ws ; vs2  = vs ; vs  = v;
+        v = A * vrc + B * vrc2 +  wrc; vrc2 = vrc; vrc = v;
+        v = A * vrs + B * vrs2 +  wrs; vrs2 = vrs; vrs = v;
+        v = A * vtc + B * vtc2 +  wtc; vtc2 = vtc; vtc = v;
+        v = A * vts + B * vts2 +  wts; vts2 = vts; vts = v;
+        v = A * vlc + B * vlc2 + m*ws; vlc2 = vlc; vlc = v;
+        v = A * vls + B * vls2 - m*wc; vls2 = vls; vls = v;
       } else {
         real
-          alp = sqrt(real(3)) * uq,       // F[1]/(q*clam) or F[1]/(q*slam)
-          bet = - sqrt(real(15)/4) * uq2, // beta[1]/q
+          A = sqrt(real(3)) * uq,       // F[1]/(q*cl) or F[1]/(q*sl)
+          B = - sqrt(real(15)/4) * uq2, // beta[1]/q
           qs = q / scale_;
-        vc1 = qs * (Cv +  alp * (clam * vc1 + slam * vs1) + bet * vc2);
+        vc  =       qs * (wc +  A * (cl * vc  + sl * vs ) + B * vc2 );
         qs /= r;
-        vrc1 = -qs * (Cvr +  alp * (clam * vrc1 + slam * vrs1) + bet * vrc2);
-        vlc1 = qs / u * (alp * (clam * vlc1 + slam * vls1) + bet * vlc2);
-        vtc1 = qs * (Cvt + alp * (clam * vtc1 + slam * vts1) + bet * vtc2);
-        vtnc1 = -u * qs * (Cvtn + alp * (clam * vtnc1 + slam * vtns1) + bet * vtnc2);
+        // The components of the gradient in spherical coordinates are
+        // r: dV/dr
+        // theta: 1/r * dV/dtheta
+        // lambda: 1/(r*u) * dV/dlambda
+        vrc =     - qs * (wrc + A * (cl * vrc + sl * vrs) + B * vrc2);
+        vtc = - u * qs * (wtc + A * (cl * vtc + sl * vts) + B * vtc2);
+        vlc =   qs / u * (      A * (cl * vlc + sl * vls) + B * vlc2);
       }
     }
-    if (k != 0)
-      throw GeographicErr("Logic screw up");
 
-    std::cerr << vrc1 << " " << vtc1 << " " << vlc1 << "\n";
-
-    std::cerr << vtc1 << " " << vtnc1 << "\n";
-    gradx = clam * (u * vrc1 + t * vtc1) - slam * vlc1;
-    grady = slam * (u * vrc1 + t * vtc1) + clam * vlc1;
-    gradz =         t * vrc1 - u * vtc1               ;
-    return vc1;
+    // Rotate into cartesian (geocentric) coordinates
+    gradx = cl * (u * vrc + t * vtc) - sl * vlc;
+    grady = sl * (u * vrc + t * vtc) + cl * vlc;
+    gradz =       t * vrc - u * vtc               ;
+    return vc;
   }
-
-  Math::real SphericalHarmonic::Value2(int N,
-                                      const std::vector<double>& C,
-                                      const std::vector<double>& S,
-                                      real X, real Y, real Z,
-                                      real a,
-                                      real& gradx, real& grady, real& gradz) {
-
-    real
-      r     = sqrt(X*X + Y*Y + Z*Z),
-      r2    = r*r,
-      q     = a/r,
-      q2    = q*q,
-      p     = sqrt(X*X + Y*Y),
-      t     = Z/r,             /* sin(psi)  */
-      u     = p/r;             /* cos(psi)  */
-    real lam = atan2(Y, X);
-    /*--- Compute disturbing potential T by Clenshaw summation technique.   */
-    /*    NOTE: When computing T, the coefficient C(n=0,m=0) must be 0.0    */
-    real T = 0, Tr = 0, Tt  = 0, Tl  = 0.0;
-    int k = (N+1)*(N+2)/2;
-    for(int m=N; m>=0; m--) {
-      real Sc = 0, Ss = 0, Sc1 = 0, Ss1 = 0.0;
-      real Src = 0, Srs = 0, Src1 = 0, Srs1  = 0.0;
-      real Stc = 0, Sts  =0, Stc1  =0, Sts1  = 0.0;
-      for (int n=N; n>=m; n--)  {
-        --k;
-        real
-          np1 = real(n+1),
-          x   = sqrt(real(n+m+1))*sqrt(real(n-m+1)),
-          y   = sqrt(real(n+m+2))*sqrt(real(n-m+2)),
-          a1  = q*(real(n+n+1))/x,
-          a1t = a1*t,
-          b2  = -q2*x/y,
-          Cnm = C[k] * sqrt(real(2*n+1)*(m?2:1)),
-          Snm = S[k] * sqrt(real(2*n+1)*(m?2:1));
-        /*--- sums for disturbing potential T   */
-        real Sc2 = Sc1;
-        Sc1 = Sc;
-        Sc  = (a1t*Sc1) + (b2*Sc2) + Cnm;
-        real Ss2 = Ss1;
-        Ss1 = Ss;
-        Ss  = (a1t*Ss1) + (b2*Ss2) + Snm;
-        /*--- sums for derivative Tr = dT/dr  */
-        real Src2 = Src1;
-        Src1 = Src;
-        Src  = (a1t*Src1) + (b2*Src2) - (np1*Cnm);
-        real Srs2 = Srs1;
-        Srs1 = Srs;
-        Srs  = (a1t*Srs1) + (b2*Srs2) - (np1*Snm);
-        /*--- sums for derivative Tt = dT/dt  */
-        real Stc2 = Stc1;
-        Stc1 = Stc;
-        Stc  = (a1*Sc1) + (a1t*Stc1) + (b2*Stc2);
-        real Sts2 = Sts1;
-        Sts1 = Sts;
-        Sts  = (a1*Ss1) + (a1t*Sts1) + (b2*Sts2);
-
-      } /*--- end of n loop in Clenshaw summation  */
-
-      real m1  = real(m),
-        x   = sqrt(real(m+m+1)),
-        y   = sqrt(real(m+m+2)),
-        a1  = q*x/y,
-        a1u = a1*u,
-        a1t = a1*t;
-      Tr  = (a1u*Tr)  + (Src*cos(m*lam)) + (Srs*sin(m*lam));
-      Tt  = (a1u*Tt)  + (Stc*cos(m*lam)) + (Sts*sin(m*lam)) - (a1t/u*T);
-      Tl  = (a1u*Tl)  + (m1*((Ss*cos(m*lam))-(Sc*sin(m*lam))));
-      T   = (a1u*T)   + (Sc*cos(m*lam))  + (Ss*sin(m*lam));
-    } /*--- end of m loop and Clenshaw summation */
-
-    T  = a/r*T;
-    Tr = a/r2*Tr;
-    Tt = -u*a/r2*Tt;
-    Tl = a/r2/u*Tl;
-
-    std::cerr << Tr << " " << Tt << " " << Tl << "\n";
-
-    gradx = 0;//clam * (u * vrc1 + t * vtc1) - slam * vlc1;
-    grady = 0;//slam * (u * vrc1 + t * vtc1) + clam * vlc1;
-    gradz = 0;//        t * vrc1 - u * vtc1               ;
-
-    return T;
-  }
-
 
 } // namespace GeographicLib

@@ -34,6 +34,8 @@ namespace GeographicLib {
      * @param[in] N the maximum order and degree of the sum.
      * @param[in] C vector of coefficients for cosine terms.
      * @param[in] S vector of coefficients for sine terms.
+     * @param[in] Cp vector of correction coefficients for cosine terms.
+     * @param[in] Sp vector of correction coefficients for sine terms.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -46,18 +48,18 @@ namespace GeographicLib {
    Pbar[n,m](cos(theta)) ] ]
 \endverbatim
      * where
-     * - <i>p</i><sup>2</sup> = <i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>.
-     * - <i>r</i><sup>2</sup> = <i>p</i><sup>2</sup> + <i>z</i><sup>2</sup>.
-     * - \e q = <i>a</i>/<i>r</i>.
-     * - \e theta = atan2(\e p, \e z).
-     * - \e lambda = atan2(\e y, \e x).
+     * - <i>p</i><sup>2</sup> = <i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>,
+     * - <i>r</i><sup>2</sup> = <i>p</i><sup>2</sup> + <i>z</i><sup>2</sup>,
+     * - \e q = <i>a</i>/<i>r</i>,
+     * - \e theta = atan2(\e p, \e z) = the spherical \e colatitude,
+     * - \e lambda = atan2(\e y, \e x) = the longitude.
      * - Pbar<sub>\e nm</sub>(\e t) is the fully normalized associate
      *   Legendre function of degree \e n and order \e m.
      *
-     * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub>
-     * are stored in the one-dimensional vectors \e C and \e S which must
-     * contain (at least) (\e N + 1)(\e N + 2)/2 elements, stored in
-     * "column-major" order.  Thus for \e N = 3, the order would be:
+     * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
+     * stored in the one-dimensional vectors \e C and \e S which must contain
+     * (\e N + 1)(\e N + 2)/2 elements, stored in "column-major" order.  Thus
+     * for \e N = 3, the order would be:
      * <i>C</i><sub>00</sub>,
      * <i>C</i><sub>10</sub>,
      * <i>C</i><sub>20</sub>,
@@ -69,10 +71,33 @@ namespace GeographicLib {
      * <i>C</i><sub>32</sub>,
      * <i>C</i><sub>33</sub>.
      * The first (\e N + 1) elements of \e S should be 0.
+     *
+     * The vectors \e Cp and \e Sp are correction coefficients which are \e
+     * subtracted from an initial subset of \e C and \e S when forming the sum.
+     * The lengths of \e Cp and \e Sp should be less than or equal to the the
+     * length \e C (and \e S).  In typical applications \e Cp and \e Sp may be
+     * empty.  Alternatively, \e Cp provides a \e zonal correction to the sum
+     * (its length is less than or equal to \e N + 1) and \e Sp is empty.
+     *
+     * References:
+     * - C. W. Clenshaw, A note on the summation of Chebyshev series,
+     *   %Math. Tables Aids Comput., 9(51), 118-120 (1955).
+     * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
+     *   Research Australasia 68, 31-60, (June 1998)
+     * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
+     *   Fransisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
+     * - S. A. Holmes and W. E. Featherstone, A unified approach to the
+     *   Clenshaw summation and the recursive computation of very high degree
+     *   and order normalized associates Legendre functions, J. Geod. 76,
+     *   279-299 (2002)
+     * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
+     *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).
      **********************************************************************/
     static Math::real Value(int N,
                             const std::vector<double>& C,
                             const std::vector<double>& S,
+                            const std::vector<real>& Cp,
+                            const std::vector<real>& Sp,
                             real x, real y, real z, real a);
     /**
      * Compute a spherical harmonic sum and its gradient.
@@ -80,6 +105,8 @@ namespace GeographicLib {
      * @param[in] N the maximum order and degree of the sum.
      * @param[in] C vector of coefficients for cosine terms.
      * @param[in] S vector of coefficients for sine terms.
+     * @param[in] Cp vector of correction coefficients for cosine terms.
+     * @param[in] Sp vector of correction coefficients for sine terms.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -89,15 +116,15 @@ namespace GeographicLib {
      * @param[out] gradz \e z component of the gradient
      * @return \e V the spherical harmonic sum.
      *
+     * This is the same as the previous function, except that the components of
+     * the gradients of the sum in the \e x, \e y, and \e z directions are
+     * computed.
      **********************************************************************/
     static Math::real Value(int N,
                             const std::vector<double>& C,
                             const std::vector<double>& S,
-                            real x, real y, real z, real a,
-                            real& gradx, real& grady, real& gradz);
-    static Math::real Value2(int N,
-                            const std::vector<double>& C,
-                            const std::vector<double>& S,
+                            const std::vector<real>& Cp,
+                            const std::vector<real>& Sp,
                             real x, real y, real z, real a,
                             real& gradx, real& grady, real& gradz);
   };

@@ -42,6 +42,7 @@ int main() {
     real lat, lon;
     std::cout << std::setprecision(17);
     real a(0.9L), r(1.2L);
+    std::vector<real> Z;
     while (std::cin >> lat >> lon) {
       real
         phi = Math::degree<real>() * lat,
@@ -51,16 +52,16 @@ int main() {
         z = r * sin(phi);
       real
         d = 1e-7L,
-        dx1 = (SphericalHarmonic::Value(N, C, S, x+d, y, z, a) -
-               SphericalHarmonic::Value(N, C, S, x-d, y, z, a))/(2*d),
-        dy1 = (SphericalHarmonic::Value(N, C, S, x, y+d, z, a) -
-               SphericalHarmonic::Value(N, C, S, x, y-d, z, a))/(2*d),
-        dz1 = (SphericalHarmonic::Value(N, C, S, x, y, z+d, a) -
-               SphericalHarmonic::Value(N, C, S, x, y, z-d, a))/(2*d),
+        dx1 = (SphericalHarmonic::Value(N, C, S, Z, Z, x+d, y, z, a) -
+               SphericalHarmonic::Value(N, C, S, Z, Z, x-d, y, z, a))/(2*d),
+        dy1 = (SphericalHarmonic::Value(N, C, S, Z, Z, x, y+d, z, a) -
+               SphericalHarmonic::Value(N, C, S, Z, Z, x, y-d, z, a))/(2*d),
+        dz1 = (SphericalHarmonic::Value(N, C, S, Z, Z, x, y, z+d, a) -
+               SphericalHarmonic::Value(N, C, S, Z, Z, x, y, z-d, a))/(2*d),
         dx2, dy2, dz2;
       real
-        v1 = SphericalHarmonic::Value(N, C, S, x, y, z, a),
-        v2 = SphericalHarmonic::Value(N, C, S, x, y, z, a, dx2, dy2, dz2);
+        v1 = SphericalHarmonic::Value(N, C, S, Z, Z, x, y, z, a),
+        v2 = SphericalHarmonic::Value(N, C, S, Z, Z, x, y, z, a, dx2, dy2, dz2);
       std::cout << v1 << " " << v2 << "\n";
       std::cout << dx1 << " " << dx2 << "\n"
                 << dy1 << " " << dy2 << "\n"

@@ -2302,6 +2302,9 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-mm-dd)</a>
+  - NEED TO IMPROVE PYTHON INSTALLATION ON LINUX
+
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a>
   - Ensure that geographiclib-config.cmake is relocatable.
   - Allow more unicode symbols to be used in GeographicLib::DMS::Decode.
