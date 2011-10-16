@@ -51,6 +51,9 @@ AC_SEARCH_LIBS([floor],[m])
 AC_SEARCH_LIBS([pow],[m])
 AC_SEARCH_LIBS([sqrt],[m])
 
+# Check endianness
+AC_C_BIGENDIAN
+
 dnl
 dnl Add here new file to be generated
 dnl

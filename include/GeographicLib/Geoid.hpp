@@ -169,7 +169,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Construct a Geoid.
+     * Construct a geoid.
      *
      * @param[in] name the name of the geoid.
      * @param[in] path (optional) directory for data file.

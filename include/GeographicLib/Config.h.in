@@ -6,3 +6,4 @@
 // These are macros which affect the building of the library
 #cmakedefine GEOGRAPHIC_SHARED_LIB 1
 #cmakedefine HAVE_LONG_DOUBLE 1
+#cmakedefine BIG_ENDIAN 1

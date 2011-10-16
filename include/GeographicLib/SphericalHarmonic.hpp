@@ -17,17 +17,34 @@ namespace GeographicLib {
 
   /**
    * \brief Spherical Harmonic series
+   *
+   * Sum a spherical harmonic series.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic {
   private:
     typedef Math::real real;
+    // Max number of contributions to coefficients (accommodates potential +
+    // its 1st, 2nd, 3rd time derivatives in magnetic field models).
+    static const int lmax = 4;
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static const real scale_;
     // Move latitudes near the pole off the axis by this amount.
     static const real eps_;
+
+    // The 1-d index of column major vector for max degree N, degree n, and
+    // order m
+    static inline int index(int N, int n, int m) throw()
+    { return m * N - m * (m - 1) / 2 + n; }
+
+    SphericalHarmonic();        // Disable constructor
   public:
+    enum normalization {
+      full = 0,
+      schmidt = 1,
+    };
+
     /**
      * Compute a spherical harmonic sum.
      *
@@ -36,6 +53,7 @@ namespace GeographicLib {
      * @param[in] S vector of coefficients for sine terms.
      * @param[in] Cp vector of correction coefficients for cosine terms.
      * @param[in] Sp vector of correction coefficients for sine terms.
+     * @param[in] tau multiplier for correction coefficients.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -70,14 +88,22 @@ namespace GeographicLib {
      * <i>C</i><sub>22</sub>,
      * <i>C</i><sub>32</sub>,
      * <i>C</i><sub>33</sub>.
-     * The first (\e N + 1) elements of \e S should be 0.
+     * In general the (\e n,\e m) element is at index \e m*\e N - \e m*(\e m -
+     * 1)/2 + \e n.  The first (\e N + 1) elements of \e S should be 0.
      *
-     * The vectors \e Cp and \e Sp are correction coefficients which are \e
-     * subtracted from an initial subset of \e C and \e S when forming the sum.
-     * The lengths of \e Cp and \e Sp should be less than or equal to the
-     * length \e C (and \e S).  In typical applications \e Cp and \e Sp may be
-     * empty.  Alternatively, \e Cp provides a \e zonal correction to the sum
-     * (its length is less than or equal to \e N + 1) and \e Sp is empty.
+     * If \e tau is non-zero, then \e tau \e Cp and \e tau \e Sp are added to
+     * the coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> in the
+     * definition of \e V.  \e Cp and \e Sp are stored in the same order as \e
+     * C and \e S, except that the vectors may be shorter (missing elements are
+     * assumed to be zero).  Typical usage of \e Cp and \e Sp:
+     * - They are both empty, and \e V is computed with \e C and \e S.
+     * - The first few even numbered elements of \e Cp (corresponding to \e n
+     *   even and \e m = 0) are defined, \e Sp is empty, and \e tau = -1.  This
+     *   allows the "normal" potential (the potential of the ellipsoid) to be
+     *   subtracted from \e V.
+     * - \e Cp and \e Sp represent the secular variation of the potential and
+     *   \e tau represents the time.  This allows a simple time varying field
+     *   to be modeled (e.g., the world magnetic model).
      *
      * References:
      * - C. W. Clenshaw, A note on the summation of Chebyshev series,
@@ -96,9 +122,9 @@ namespace GeographicLib {
     static Math::real Value(int N,
                             const std::vector<double>& C,
                             const std::vector<double>& S,
-                            const std::vector<real>& Cp,
-                            const std::vector<real>& Sp,
-                            real x, real y, real z, real a);
+                            const std::vector<double>& Cp,
+                            const std::vector<double>& Sp,
+                            real tau, real x, real y, real z, real a);
     /**
      * Compute a spherical harmonic sum and its gradient.
      *
@@ -107,6 +133,7 @@ namespace GeographicLib {
      * @param[in] S vector of coefficients for sine terms.
      * @param[in] Cp vector of correction coefficients for cosine terms.
      * @param[in] Sp vector of correction coefficients for sine terms.
+     * @param[in] tau multiplier for correction coefficients.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -123,11 +150,20 @@ namespace GeographicLib {
     static Math::real Value(int N,
                             const std::vector<double>& C,
                             const std::vector<double>& S,
-                            const std::vector<real>& Cp,
-                            const std::vector<real>& Sp,
-                            real x, real y, real z, real a,
+                            const std::vector<double>& Cp,
+                            const std::vector<double>& Sp,
+                            real tau, real x, real y, real z, real a,
                             real& gradx, real& grady, real& gradz);
+    template<bool gradp, normalization norm>
+      static Math::real TValue(int N,
+                               const std::vector<double>& C,
+                               const std::vector<double>& S,
+                               const std::vector<double>& Cp,
+                               const std::vector<double>& Sp,
+                               real tau, real x, real y, real z, real a,
+                               real& gradx, real& grady, real& gradz);
   };
+
 
 } // namespace GeographicLib
 

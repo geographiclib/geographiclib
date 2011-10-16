@@ -25,6 +25,10 @@
 #  endif
 #endif
 
+#if !defined(WORDS_BIGENDIAN)
+# define WORDS_BIGENDIAN 0
+#endif
+
 #if !defined(GEOGRAPHICLIB_PREC)
 /**
  * The precision of floating point numbers used in %GeographicLib.  0 means
@@ -92,6 +96,11 @@ namespace GeographicLib {
     typedef double real;
 #endif
 
+    /**
+     * true if the machine is big-endian
+     **********************************************************************/
+    static const bool bigendian = WORDS_BIGENDIAN;
+                                 
     /**
      * @return \e pi.
      **********************************************************************/
@@ -373,6 +382,25 @@ namespace GeographicLib {
      * A synonym for infinity<real>().
      **********************************************************************/
     static inline real infinity() throw() { return infinity<real>(); }
+
+    /**
+     * Swap the bytes of a quantity
+     *
+     * @param[in] x
+     * @return x with its bytes swapped.
+     **********************************************************************/
+    template<typename T>
+    static inline T swab(T x) {
+      union {
+        T r;
+        unsigned char c[sizeof(T)];
+      } b;
+      b.r = x;
+      for (int i = sizeof(T)/2; i--; )
+        std::swap(b.c[i], b.c[sizeof(T) - 1 - i]);
+      return b.r;
+    }
+
   };
 
 } // namespace GeographicLib

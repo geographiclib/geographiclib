@@ -30,6 +30,9 @@ endif (WIN32)
 include (CheckTypeSize)
 check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
 
+include (TestBigEndian)
+test_big_endian (WORDS_BIGENDIAN)
+
 configure_file (
     "${PROJECT_SOURCE_DIR}/include/GeographicLib/Config.h.in"
     "${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h" )
