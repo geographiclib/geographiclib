@@ -28,7 +28,8 @@ namespace GeographicLib {
     , _name("UNKNOWN")
     , _date("UNKNOWN")
     , _t0(Math::NaN<real>())
-    , _t1(Math::NaN<real>())
+    , _tmin(Math::NaN<real>())
+    , _tmax(Math::NaN<real>())
     , _a(Math::NaN<real>())
     , _minh(-10e3)
     , _maxh(1000e3)
@@ -60,10 +61,12 @@ namespace GeographicLib {
             is >> _name;
           else if (key == "ReleaseDate:")
             is >> _date;
-          else if (key == "ModelStartYear:")
+          else if (key == "Epoch:")
             is >> _t0;
+          else if (key == "ModelStartYear:")
+            is >> _tmin;
           else if (key == "ModelEndYear:")
-            is >> _t1;
+            is >> _tmax;
           else if (key == "IntStaticDeg:")
             is >> _N;
           else if (key == "IntSecVarDeg:")
@@ -93,9 +96,7 @@ namespace GeographicLib {
           if (!(_a > 0))
             throw GeographicErr("Reference radius not positive");
           if (Math::isnan(_t0))
-            throw GeographicErr("Starting time not specified");
-          if (Math::isnan(_t1))
-            throw GeographicErr("Ending time not specified");
+            throw GeographicErr("Epoch time not specified");
           int K = (_N + 1) * (_N + 2)/2;
           _G.resize(K, 0); _Gt.resize(K, 0);
           _H.resize(K, 0); _Ht.resize(K, 0);
@@ -130,19 +131,20 @@ namespace GeographicLib {
         throw GeographicErr("Bad initial character in " + _datafile);
       }
     }
+    /*
     for (int n = 0; n <= _N; ++n) {
       // Change from Schmidt normalization to fully normalized (P_bar) using
       // P_Schmidt = P_bar / sqrt(2*n + 1).  Also fold in the extra factor of
       // -a in the definition of the potential.
       //      real f = -_a / sqrt(real(2 * n + 1));
-      real f = -_a;
+      real f = 1;
       for (int m = 0, k = n; m <= n; k += _N - m++) {
         _G[k] *= f;
         _H[k] *= f;
         _Gt[k] *= f;
         _Ht[k] *= f;
       }
-    }
+      }*/
   }
 
   void MagneticModel::Field(real lat, real lon, real h, real t, bool diffp,
@@ -153,20 +155,20 @@ namespace GeographicLib {
     vector<real> M(9);
     _earth.Forward(lat, lon, h, x, y, z, M);
     real BX, BY, BZ;            // Components in geocentric basis
-    // SphericalHarmonic::Value(_N, _G, _H, _Gt, _Ht, t, x, y, z, _a, BX, BY, BZ);
-    SphericalHarmonic::TValue<true,SphericalHarmonic::schmidt>(_N, _G, _H, _Gt, _Ht, t, x, y, z, _a, BX, BY, BZ);
+    SphericalHarmonic::NValue(_N, _G, _H, _N, _Gt, _Ht, t, x, y, z, _a,
+                              BX, BY, BZ,
+                              SphericalHarmonic::schmidt);
     if (diffp) {
-      std::vector<double> Z(0);
       real BXt, BYt, BZt;
-      SphericalHarmonic::TValue<true,SphericalHarmonic::schmidt>(_N, _Gt, _Ht, Z, Z, 0, x, y, z, _a,
-                               BXt, BYt, BZt);
-      Bxt = M[0] * BXt + M[3] * BYt + M[6] * BZt;
-      Byt = M[1] * BXt + M[4] * BYt + M[7] * BZt;
-      Bzt = M[2] * BXt + M[5] * BYt + M[8] * BZt;
+      SphericalHarmonic::NValue
+        (_N, _Gt, _Ht, x, y, z, _a, BXt, BYt, BZt, SphericalHarmonic::schmidt);
+      Bxt = - _a * (M[0] * BXt + M[3] * BYt + M[6] * BZt);
+      Byt = - _a * (M[1] * BXt + M[4] * BYt + M[7] * BZt);
+      Bzt = - _a * (M[2] * BXt + M[5] * BYt + M[8] * BZt);
     }
-    Bx = M[0] * BX + M[3] * BY + M[6] * BZ;
-    By = M[1] * BX + M[4] * BY + M[7] * BZ;
-    Bz = M[2] * BX + M[5] * BY + M[8] * BZ;
+    Bx = - _a * (M[0] * BX + M[3] * BY + M[6] * BZ);
+    By = - _a * (M[1] * BX + M[4] * BY + M[7] * BZ);
+    Bz = - _a * (M[2] * BX + M[5] * BY + M[8] * BZ);
   }
 
 } // namespace GeographicLib

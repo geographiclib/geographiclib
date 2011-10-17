@@ -22,28 +22,86 @@ namespace GeographicLib {
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic {
+  public:
+    enum normalization {
+      full = 0,
+      schmidt = 1,
+    };
   private:
     typedef Math::real real;
-    // Max number of contributions to coefficients (accommodates potential +
-    // its 1st, 2nd, 3rd time derivatives in magnetic field models).
-    static const int lmax = 4;
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static const real scale_;
     // Move latitudes near the pole off the axis by this amount.
     static const real eps_;
 
-    // The 1-d index of column major vector for max degree N, degree n, and
-    // order m
-    static inline int index(int N, int n, int m) throw()
-    { return m * N - m * (m - 1) / 2 + n; }
+    class coeff {
+    public:
+      const std::vector<real>::const_iterator Cnm;
+      const std::vector<real>::const_iterator Snm;
+      const int N, nmx, mmx;
+      const real f;
+      // The 1-d index of column major vector for max degree N, degree n, and
+      // order m
+      inline int index(int n, int m) const throw()
+      { return m * N - m * (m - 1) / 2 + n; }
+      // Index  of element after m'th column
+      inline int rowind(int N1, int m) const throw()
+      { return index(std::min(nmx, N1) + 1, m); }
+      coeff(const std::vector<real>& C,
+            const std::vector<real>& S,
+            int N1, int nmx1, int mmx1, real f1)
+        : Cnm(C.begin())
+        , Snm(S.begin())
+        , N(N1)
+        , nmx(nmx1)
+        , mmx(mmx1)
+        , f(f1) {
+        if (!(N >= nmx && nmx >= mmx && mmx >= 0))
+          throw GeographicErr("Bad indices for coeff");
+        if (!(index(nmx, mmx) < int(C.size()) &&
+              index(nmx, mmx) < int(S.size())))
+          throw GeographicErr("Arrays too small in coeff");
+      }
+      coeff(const std::vector<real>& C,
+            const std::vector<real>& S,
+            int N1, real f1)
+        : Cnm(C.begin())
+        , Snm(S.begin())
+        , N(N1)
+        , nmx(N1)
+        , mmx(N1)
+        , f(f1) {
+        if (!(N >= nmx && nmx >= mmx && mmx >= 0))
+          throw GeographicErr("Bad indices for coeff");
+        if (!(index(nmx, mmx) < int(C.size()) &&
+              index(nmx, mmx) < int(S.size())))
+          throw GeographicErr("Arrays too small in coeff");
+      }
+      coeff(const std::vector<real>& C,
+            const std::vector<real>& S,
+            int N1, int mmx1, real f1)
+        : Cnm(C.begin())
+        , Snm(S.begin())
+        , N(N1)
+        , nmx(N1)
+        , mmx(mmx1)
+        , f(f1) {
+        if (!(N >= nmx && nmx >= mmx && mmx >= 0))
+          throw GeographicErr("Bad indices for coeff");
+        if (!(index(nmx, mmx) < int(C.size()) &&
+              index(nmx, mmx) < int(S.size())))
+          throw GeographicErr("Arrays too small in coeff");
+      }
+    };
+
+    template<bool gradp, normalization norm, int L>
+      static Math::real LValue(const coeff c[L],
+                               real x, real y, real z, real a,
+                               real& gradx, real& grady, real& gradz);
 
     SphericalHarmonic();        // Disable constructor
   public:
-    enum normalization {
-      full = 0,
-      schmidt = 1,
-    };
 
     /**
      * Compute a spherical harmonic sum.
@@ -154,14 +212,85 @@ namespace GeographicLib {
                             const std::vector<double>& Sp,
                             real tau, real x, real y, real z, real a,
                             real& gradx, real& grady, real& gradz);
-    template<bool gradp, normalization norm>
-      static Math::real TValue(int N,
-                               const std::vector<double>& C,
-                               const std::vector<double>& S,
-                               const std::vector<double>& Cp,
-                               const std::vector<double>& Sp,
-                               real tau, real x, real y, real z, real a,
-                               real& gradx, real& grady, real& gradz);
+    static Math::real NValue(int N,
+                             const std::vector<double>& C,
+                             const std::vector<double>& S,
+                             real x, real y, real z, real a,
+                             normalization norm = full) {
+      coeff c[] = {coeff(C, S, N, 1)};
+      real v = 0;
+      real dummy;
+      switch (norm) {
+      case full:
+        v = LValue<false, full, 1>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      case schmidt:
+        v = LValue<false, schmidt, 1>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      }
+      return v;
+    }
+    static Math::real NValue(int N,
+                             const std::vector<double>& C,
+                             const std::vector<double>& S,
+                             real x, real y, real z, real a,
+                             real& gradx, real& grady, real& gradz,
+                             normalization norm = full) {
+      coeff c[] = {coeff(C, S, N, 1)};
+      real v = 0;
+      switch (norm) {
+      case full:
+        v = LValue<true, full, 1>(c, x, y, z, a, gradx, grady, gradz);
+        break;
+      case schmidt:
+        v = LValue<true, schmidt, 1>(c, x, y, z, a, gradx, grady, gradz);
+        break;
+      }
+      return v;
+    }
+    static Math::real NValue(int N,
+                             const std::vector<double>& C,
+                             const std::vector<double>& S,
+                             int Np,
+                             const std::vector<double>& Cp,
+                             const std::vector<double>& Sp,
+                             real tau, real x, real y, real z, real a,
+                             normalization norm = full) {
+      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
+      real v = 0;
+      real dummy;
+      switch (norm) {
+      case full:
+        v =  LValue<false, full, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      case schmidt:
+        v = LValue<false, schmidt, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      }
+      return v;
+    }
+    static Math::real NValue(int N,
+                             const std::vector<double>& C,
+                             const std::vector<double>& S,
+                             int Np,
+                             const std::vector<double>& Cp,
+                             const std::vector<double>& Sp,
+                             real tau, real x, real y, real z, real a,
+                             real& gradx, real& grady, real& gradz,
+                             normalization norm = full) {
+      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
+      real v = 0;
+      switch (norm) {
+      case full:
+        v = LValue<true, full, 2>(c, x, y, z, a, gradx, grady, gradz);
+        break;
+      case schmidt:
+        v = LValue<true, schmidt, 2>(c, x, y, z, a, gradx, grady, gradz);
+        break;
+      }
+      return v;
+    }
+
   };
 
 

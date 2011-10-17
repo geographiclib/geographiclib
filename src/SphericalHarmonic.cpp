@@ -30,7 +30,8 @@ namespace GeographicLib {
                                       const std::vector<double>& S,
                                       const std::vector<double>& Cp,
                                       const std::vector<double>& Sp,
-                                      real tau, real x, real y, real z, real a) {
+                                      real tau, real x, real y, real z, real a)
+  {
     // General sum
     // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
     //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
@@ -310,14 +311,91 @@ namespace GeographicLib {
     return vc;
   }
 
-  template<bool gradp, SphericalHarmonic::normalization norm>
-  Math::real SphericalHarmonic::TValue(int N,
-                                       const std::vector<double>& C,
-                                       const std::vector<double>& S,
-                                       const std::vector<double>& Cp,
-                                       const std::vector<double>& Sp,
-                                       real tau, real x, real y, real z, real a,
+  template<bool gradp, SphericalHarmonic::normalization norm, int L>
+  Math::real SphericalHarmonic::LValue(const coeff c[L],
+                                       real x, real y, real z, real a,
                                        real& gradx, real& grady, real& gradz) {
+    // General sum
+    // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
+    //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
+    //
+    // write t = cos(theta), u = sin(theta), q = a/r.
+    //
+    // P[n,m] is the fully normalized associated Legendre function (usually
+    // denoted Pbar) of degree n and order m.
+    //
+    // Rewrite outer sum
+    // V(r, theta, lambda) = sum(m = 0..N) * P[m,m](t) * q^(m+1) *
+    //    [Sc[m] * cos(m*lambda) + Ss[m] * sin(m*lambda)]
+    // = "outer sum"
+    //
+    // where the inner sums are
+    //   Sc[m] = sum(n = m..N) q^(n-m) * C[n,m] * P[n,m](t)/P[m,m](t)
+    //   Ss[m] = sum(n = m..N) q^(n-m) * S[n,m] * P[n,m](t)/P[m,m](t)
+    //
+    // Evaluate sums via Clenshaw method.
+    //
+    // The overall framework is similar to Deakin with the following changes:
+    // * use fully normalized associated Legendre functions (instead of the
+    //   quasi-normalized ones)
+    // * Clenshaw summation is used to roll the computation of cos(m*lambda)
+    //   and sin(m*lambda) into the evaluation of the outer sum (rather than
+    //   independently computing an array of these trigonometric terms).
+    // * Scale the coefficients to guard against overflow when N is large.
+    //
+    // General framework of Clenshaw;   see
+    //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
+    //
+    // Let
+    //    S = sum(k = 0..N) c[k] * F[k](x)
+    //    F[n+1](x) = alpha[n](x) * F[n](x) + beta[n](x) * F[n-1](x)
+    //
+    // Evaluate S with
+    //    y[N+2] = y[N+1] = 0
+    //    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
+    //    S = c[0] * F[0] + y[1] * F[1] + beta[1] * F[0] * y[2]
+    //
+    // IF F[0](x) = 1 and beta(0,x) = 0, then F[1](x) = alpha(0,x) and
+    // we can continue the recursion for y[k] until y[0]:
+    //    S = y[0]
+    //
+    // Inner sum...
+    //
+    // let l = n-m; n = l+m
+    // Sc[m] = sum(l = 0..N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
+    // F[l] = q^l * P[l+m,m](t)/P[m,m](t)
+    //
+    // Holmes + Featherstone, Eq. (11):
+    //   P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * t * P[n-1,m] -
+    //            sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
+    // thus
+    //   alpha[l] = t * q * sqrt(((2*n+1)*(2*n+3))/
+    //                           ((n-m+1)*(n+m+1)))
+    //   beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
+    //                            ((n-m+2)*(n+m+2)*(2*n+1)))
+    //
+    // In this case, F[0] = 1 and beta[0] = 0 so the Sc[m] = y[0].
+    // 
+    // Outer sum...
+    //
+    // V = sum(m = 0..N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+    //   + sum(m = 0..N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+    // F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]
+    //
+    // Holmes + Featherstone, Eq. (13):
+    //   P[m,m] = u * sqrt((2*m+1)/((m>1?2:1)*m)) * P[m-1,m-1]
+    // and
+    //   cos((m+1)*lambda) = 2*cos(lambda)*cos(m*lambda) - cos((m-1)*lambda)
+    // thus
+    //   alpha[m] = 2*cos(lambda) * sqrt((2*m+3)/(2*(m+1))) * u * q
+    //            =   cos(lambda) * sqrt( 2*(2*m+3)/(m+1) ) * u * q
+    //   beta[m+1] = -sqrt((2*m+3)*(2*m+5)/(4*(m+1)*(m+2))) * u^2 * q^2
+    //               * (m == 0 ? sqrt(2) : 1)
+    //
+    // F[0] = q                                [or 0]
+    // F[1] = cos(lambda) * sqrt(3) * u * q^2  [or sin(lambda)]
+    // beta[1] = - sqrt(15/4) * u^2 * q^2
+    //
     // Here is how the various components of the gradient are computed
     //
     // differentiate wrt r:
@@ -349,21 +427,9 @@ namespace GeographicLib {
     // the gradient in sphierical coordinates and transform the result into
     // cartesian coordinates.
 
-    STATIC_ASSERT(norm == full || norm == schmidt,
-                  "Unknown value of normalization");
-    // Check that N is plausible
-    if (N < -1)                 // -1 corresponds to an empty sum
-      throw GeographicErr("N is negative");
-    if (sizeof(double) * (N + 1.0) * (N + 2.0) / 2 >
-        double(numeric_limits<size_t>::max()))
-      throw GeographicErr("N is too large");
-    size_t k = (size_t(N + 1) * size_t(N + 2)) / 2;
-    if (! (C.size() == k && S.size() == k) )
-      throw GeographicErr("Vector C or S is the wrong size");
-    size_t kc = Cp.size(), ks = Sp.size();
-    if (kc > k || ks > k) {
-      throw GeographicErr("Vector Cp or Sp is too large");
-    }
+    STATIC_ASSERT(L > 0, "L must be positive");
+    STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
+    int N = c[0].nmx, M = c[0].mmx;
 
     real
       p = Math::hypot(x, y),
@@ -385,13 +451,15 @@ namespace GeographicLib {
     real vrc = 0, vrc2 = 0, vrs = 0, vrs2 = 0;   // vr[N + 1], vr[N + 2]
     real vtc = 0, vtc2 = 0, vts = 0, vts2 = 0;   // vt[N + 1], vt[N + 2]
     real vlc = 0, vlc2 = 0, vls = 0, vls2 = 0;   // vl[N + 1], vl[N + 2]
-    for (int m = N; m >= 0; --m) {   // m = N .. 0
+    int k[L];
+    for (int m = M; m >= 0; --m) {   // m = N .. 0
       // Initialize inner sum
       real wc  = 0, wc2  = 0, ws  = 0, ws2  = 0; // w [N - m + 1], w [N - m + 2]
       real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
       real wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
+      for (int l = 0; l < L; ++l)
+        k[l] = c[l].rowind(N, m);
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
-        --k;
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
         case full:
@@ -407,14 +475,22 @@ namespace GeographicLib {
           B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
           break;
         }
-        R = scale_ * (real(C[k]) + (k < kc ? tau * Cp[k] : 0));
+        R = *(c[0].Cnm + --k[0]);
+        for (int l = 1; l < L; ++l)
+          R += m > c[l].mmx || n > c[l].nmx ? 0 :
+            *(c[l].Cnm + --k[l]) * c[l].f;
+        R *= scale_;
         w = A * wc  + B * wc2  +           R; wc2  = wc ; wc  = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
           w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
         }
         if (m) {
-          R = scale_ * (real(S[k]) + (k < ks ? tau * Sp[k] : 0));
+          R = *(c[0].Snm + k[0]);
+          for (int l = 1; l < L; ++l)
+            R += m > c[l].mmx || n > c[l].nmx ? 0 :
+              *(c[l].Snm + k[l]) * c[l].f;
+          R *= scale_;
           w = A * ws  + B * ws2  +           R; ws2  = ws ; ws  = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
@@ -487,23 +563,28 @@ namespace GeographicLib {
   }
 
   template
-  Math::real SphericalHarmonic::TValue<true, SphericalHarmonic::full>
-  (int,
-   const std::vector<double>&, const std::vector<double>&,
-   const std::vector<double>&, const std::vector<double>&,
-   real, real, real, real, real, real&, real&, real&);
-
+  Math::real SphericalHarmonic::LValue<true, SphericalHarmonic::full, 1>
+  (const coeff[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::TValue<true, SphericalHarmonic::schmidt>
-  (int,
-   const std::vector<double>&, const std::vector<double>&,
-   const std::vector<double>&, const std::vector<double>&,
-   real, real, real, real, real, real&, real&, real&);
-
+  Math::real SphericalHarmonic::LValue<true, SphericalHarmonic::full, 2>
+  (const coeff[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::TValue<false, SphericalHarmonic::full>
-  (int,
-   const std::vector<double>&, const std::vector<double>&,
-   const std::vector<double>&, const std::vector<double>&,
-   real, real, real, real, real, real&, real&, real&);
+  Math::real SphericalHarmonic::LValue<false, SphericalHarmonic::full, 1>
+  (const coeff[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalHarmonic::LValue<false, SphericalHarmonic::full, 2>
+  (const coeff[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalHarmonic::LValue<true, SphericalHarmonic::schmidt, 1>
+  (const coeff[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalHarmonic::LValue<true, SphericalHarmonic::schmidt, 2>
+  (const coeff[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalHarmonic::LValue<false, SphericalHarmonic::schmidt, 1>
+  (const coeff[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalHarmonic::LValue<false, SphericalHarmonic::schmidt, 2>
+  (const coeff[], real, real, real, real, real&, real&, real&);
+
 } // namespace GeographicLib
