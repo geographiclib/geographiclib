@@ -25,10 +25,13 @@ namespace GeographicLib {
   const Math::real SphericalHarmonic::eps_ =
     Math::sq(numeric_limits<real>::epsilon());
 
+  const std::vector<Math::real> SphericalHarmonic::Z_(0);
+
+
   template<bool gradp, SphericalHarmonic::normalization norm, int L>
-  Math::real SphericalHarmonic::GenValue(const coeff c[L],
-                                       real x, real y, real z, real a,
-                                       real& gradx, real& grady, real& gradz) {
+  Math::real SphericalHarmonic::GenValue(const coeff c[L], const real f[L],
+                                         real x, real y, real z, real a,
+                                         real& gradx, real& grady, real& gradz) {
     // General sum
     // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
     //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
@@ -192,7 +195,7 @@ namespace GeographicLib {
         R = *(c[0].Cnm + --k[0]);
         for (int l = 1; l < L; ++l)
           R += m > c[l].mmx || n > c[l].nmx ? 0 :
-            *(c[l].Cnm + --k[l]) * c[l].f;
+            *(c[l].Cnm + --k[l]) * f[l];
         R *= scale_;
         w = A * wc  + B * wc2  +           R; wc2  = wc ; wc  = w;
         if (gradp) {
@@ -203,7 +206,7 @@ namespace GeographicLib {
           R = *(c[0].Snm + k[0]);
           for (int l = 1; l < L; ++l)
             R += m > c[l].mmx || n > c[l].nmx ? 0 :
-              *(c[l].Snm + k[l]) * c[l].f;
+              *(c[l].Snm + k[l]) * f[l];
           R *= scale_;
           w = A * ws  + B * ws2  +           R; ws2  = ws ; ws  = w;
           if (gradp) {
@@ -278,27 +281,27 @@ namespace GeographicLib {
 
   template
   Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::full, 1>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
   Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::full, 2>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
   Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::full, 1>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
   Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::full, 2>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
   Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::schmidt, 1>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
   Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::schmidt, 2>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
   Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::schmidt, 1>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
   Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::schmidt, 2>
-  (const coeff[], real, real, real, real, real&, real&, real&);
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
 } // namespace GeographicLib

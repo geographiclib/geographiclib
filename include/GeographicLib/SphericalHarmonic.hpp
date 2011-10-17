@@ -34,13 +34,13 @@ namespace GeographicLib {
     static const real scale_;
     // Move latitudes near the pole off the axis by this amount.
     static const real eps_;
+    static const std::vector<real> Z_;
 
     class coeff {
     public:
       const std::vector<real>::const_iterator Cnm;
       const std::vector<real>::const_iterator Snm;
       const int N, nmx, mmx;
-      const real f;
       // The 1-d index of column major vector for max degree N, degree n, and
       // order m
       inline int index(int n, int m) const throw()
@@ -51,15 +51,20 @@ namespace GeographicLib {
         // starting degree is N1
         return index(std::min(nmx, N1) + 1, m);
       }
+      coeff()
+        : Cnm(Z_.begin())
+        , Snm(Z_.begin())
+        , N(-1)
+        , nmx(-1)
+        , mmx(-1) {}
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
-            int N1, int nmx1, int mmx1, real f1)
+            int N1, int nmx1, int mmx1)
         : Cnm(C.begin())
         , Snm(S.begin())
         , N(N1)
         , nmx(nmx1)
-        , mmx(mmx1)
-        , f(f1) {
+        , mmx(mmx1) {
         if (!(N >= nmx && nmx >= mmx && mmx >= 0))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(nmx, mmx) < int(C.size()) &&
@@ -68,13 +73,12 @@ namespace GeographicLib {
       }
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
-            int N1, real f1)
+            int N1)
         : Cnm(C.begin())
         , Snm(S.begin())
         , N(N1)
         , nmx(N1)
-        , mmx(N1)
-        , f(f1) {
+        , mmx(N1) {
         if (!(N >= nmx && nmx >= mmx && mmx >= 0))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(nmx, mmx) < int(C.size()) &&
@@ -83,13 +87,12 @@ namespace GeographicLib {
       }
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
-            int N1, int mmx1, real f1)
+            int N1, int mmx1)
         : Cnm(C.begin())
         , Snm(S.begin())
         , N(N1)
         , nmx(N1)
-        , mmx(mmx1)
-        , f(f1) {
+        , mmx(mmx1) {
         if (!(N >= nmx && nmx >= mmx && mmx >= 0))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(nmx, mmx) < int(C.size()) &&
@@ -99,9 +102,9 @@ namespace GeographicLib {
     };
 
     template<bool gradp, normalization norm, int L>
-      static Math::real GenValue(const coeff c[L],
-                               real x, real y, real z, real a,
-                               real& gradx, real& grady, real& gradz);
+      static Math::real GenValue(const coeff c[L], const real f[L],
+                                 real x, real y, real z, real a,
+                                 real& gradx, real& grady, real& gradz);
 
     SphericalHarmonic();        // Disable constructor
   public:
@@ -169,15 +172,16 @@ namespace GeographicLib {
                             const std::vector<double>& S,
                             real x, real y, real z, real a,
                             normalization norm = full) {
-      coeff c[] = {coeff(C, S, N, 1)};
+      coeff c[] = {coeff(C, S, N)};
+      real f[] = {1};
       real v = 0;
       real dummy;
       switch (norm) {
       case full:
-        v = GenValue<false, full, 1>(c, x, y, z, a, dummy, dummy, dummy);
+        v = GenValue<false, full, 1>(c, f, x, y, z, a, dummy, dummy, dummy);
         break;
       case schmidt:
-        v = GenValue<false, schmidt, 1>(c, x, y, z, a, dummy, dummy, dummy);
+        v = GenValue<false, schmidt, 1>(c, f, x, y, z, a, dummy, dummy, dummy);
         break;
       }
       return v;
@@ -208,14 +212,15 @@ namespace GeographicLib {
                                real x, real y, real z, real a,
                                real& gradx, real& grady, real& gradz,
                                normalization norm = full) {
-      coeff c[] = {coeff(C, S, N, 1)};
+      coeff c[] = {coeff(C, S, N)};
+      real f[] = {1};
       real v = 0;
       switch (norm) {
       case full:
-        v = GenValue<true, full, 1>(c, x, y, z, a, gradx, grady, gradz);
+        v = GenValue<true, full, 1>(c, f, x, y, z, a, gradx, grady, gradz);
         break;
       case schmidt:
-        v = GenValue<true, schmidt, 1>(c, x, y, z, a, gradx, grady, gradz);
+        v = GenValue<true, schmidt, 1>(c, f, x, y, z, a, gradx, grady, gradz);
         break;
       }
       return v;
@@ -260,15 +265,16 @@ namespace GeographicLib {
                              const std::vector<double>& Sp,
                              real x, real y, real z, real a,
                              normalization norm = full) {
-      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
+      coeff c[] = {coeff(C, S, N), coeff(Cp, Sp, Np)};
+      real f[] = {1, tau};
       real v = 0;
       real dummy;
       switch (norm) {
       case full:
-        v =  GenValue<false, full, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        v =  GenValue<false, full, 2>(c, f, x, y, z, a, dummy, dummy, dummy);
         break;
       case schmidt:
-        v = GenValue<false, schmidt, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        v = GenValue<false, schmidt, 2>(c, f, x, y, z, a, dummy, dummy, dummy);
         break;
       }
       return v;
@@ -306,14 +312,15 @@ namespace GeographicLib {
                                 real x, real y, real z, real a,
                                 real& gradx, real& grady, real& gradz,
                                 normalization norm = full) {
-      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
+      coeff c[] = {coeff(C, S, N), coeff(Cp, Sp, Np)};
+      real f[] = {1, tau};
       real v = 0;
       switch (norm) {
       case full:
-        v = GenValue<true, full, 2>(c, x, y, z, a, gradx, grady, gradz);
+        v = GenValue<true, full, 2>(c, f, x, y, z, a, gradx, grady, gradz);
         break;
       case schmidt:
-        v = GenValue<true, schmidt, 2>(c, x, y, z, a, gradx, grady, gradz);
+        v = GenValue<true, schmidt, 2>(c, f, x, y, z, a, gradx, grady, gradz);
         break;
       }
       return v;
@@ -343,15 +350,16 @@ namespace GeographicLib {
                               real x, real y, real z, real a,
                               normalization norm = full) {
       // There's no Sp because it doesn't contribute to the m = 0 term.
-      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Cp, Np, 0, tau)};
+      coeff c[] = {coeff(C, S, N), coeff(Cp, Cp, Np, 0)};
+      real f[] = {1, tau};
       real v = 0;
       real dummy;
       switch (norm) {
       case full:
-        v =  GenValue<false, full, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        v =  GenValue<false, full, 2>(c, f, x, y, z, a, dummy, dummy, dummy);
         break;
       case schmidt:
-        v = GenValue<false, schmidt, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        v = GenValue<false, schmidt, 2>(c, f, x, y, z, a, dummy, dummy, dummy);
         break;
       }
       return v;
