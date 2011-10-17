@@ -155,12 +155,12 @@ namespace GeographicLib {
     vector<real> M(9);
     _earth.Forward(lat, lon, h, x, y, z, M);
     real BX, BY, BZ;            // Components in geocentric basis
-    SphericalHarmonic::NValue(_N, _G, _H, _N, _Gt, _Ht, t, x, y, z, _a,
-                              BX, BY, BZ,
-                              SphericalHarmonic::schmidt);
+    SphericalHarmonic::Gradient1(_N, _G, _H, _N, _Gt, _Ht, t, x, y, z, _a,
+                                 BX, BY, BZ,
+                                 SphericalHarmonic::schmidt);
     if (diffp) {
       real BXt, BYt, BZt;
-      SphericalHarmonic::NValue
+      SphericalHarmonic::Gradient
         (_N, _Gt, _Ht, x, y, z, _a, BXt, BYt, BZt, SphericalHarmonic::schmidt);
       Bxt = - _a * (M[0] * BXt + M[3] * BYt + M[6] * BZt);
       Byt = - _a * (M[1] * BXt + M[4] * BYt + M[7] * BZt);

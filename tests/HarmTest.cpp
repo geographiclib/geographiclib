@@ -64,17 +64,17 @@ int main() {
         z = r * sin(phi);
       real
         d = 1e-7L,
-        dx1 = (SphericalHarmonic::NValue(N, C, S, x+d, y, z, a) -
-               SphericalHarmonic::NValue(N, C, S, x-d, y, z, a))/(2*d),
-        dy1 = (SphericalHarmonic::NValue(N, C, S, x, y+d, z, a) -
-               SphericalHarmonic::NValue(N, C, S, x, y-d, z, a))/(2*d),
-        dz1 = (SphericalHarmonic::NValue(N, C, S, x, y, z+d, a) -
-               SphericalHarmonic::NValue(N, C, S, x, y, z-d, a))/(2*d),
+        dx1 = (SphericalHarmonic::Value(N, C, S, x+d, y, z, a) -
+               SphericalHarmonic::Value(N, C, S, x-d, y, z, a))/(2*d),
+        dy1 = (SphericalHarmonic::Value(N, C, S, x, y+d, z, a) -
+               SphericalHarmonic::Value(N, C, S, x, y-d, z, a))/(2*d),
+        dz1 = (SphericalHarmonic::Value(N, C, S, x, y, z+d, a) -
+               SphericalHarmonic::Value(N, C, S, x, y, z-d, a))/(2*d),
         dx2, dy2, dz2;
       real
-        v1 = SphericalHarmonic::NValue(N, C, S, x, y, z, a);
+        v1 = SphericalHarmonic::Value(N, C, S, x, y, z, a);
       real
-        v2 = SphericalHarmonic::NValue(N, C, S, x, y, z, a, dx2, dy2, dz2);
+        v2 = SphericalHarmonic::Gradient(N, C, S, x, y, z, a, dx2, dy2, dz2);
       std::cout << v1 << " " << v2 << "\n";
       std::cout << dx1 << " " << dx2 << "\n"
                 << dy1 << " " << dy2 << "\n"

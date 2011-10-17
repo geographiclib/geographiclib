@@ -46,8 +46,11 @@ namespace GeographicLib {
       inline int index(int n, int m) const throw()
       { return m * N - m * (m - 1) / 2 + n; }
       // Index  of element after m'th column
-      inline int rowind(int N1, int m) const throw()
-      { return index(std::min(nmx, N1) + 1, m); }
+      inline int rowind(int N1, int m) const throw() {
+        // Normally use nmx, however, it may be used in a loop where the
+        // starting degree is N1
+        return index(std::min(nmx, N1) + 1, m);
+      }
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
             int N1, int nmx1, int mmx1, real f1)
@@ -96,7 +99,7 @@ namespace GeographicLib {
     };
 
     template<bool gradp, normalization norm, int L>
-      static Math::real LValue(const coeff c[L],
+      static Math::real GenValue(const coeff c[L],
                                real x, real y, real z, real a,
                                real& gradx, real& grady, real& gradz);
 
@@ -109,13 +112,11 @@ namespace GeographicLib {
      * @param[in] N the maximum order and degree of the sum.
      * @param[in] C vector of coefficients for cosine terms.
      * @param[in] S vector of coefficients for sine terms.
-     * @param[in] Cp vector of correction coefficients for cosine terms.
-     * @param[in] Sp vector of correction coefficients for sine terms.
-     * @param[in] tau multiplier for correction coefficients.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
      * @param[in] a the scaling radius for the coordinates.
+     * @param[in] norm the normalization of the Legendre functions.
      * @return \e V the spherical harmonic sum.
      *
      * Evaluate the spherical harmonic sum \verbatim
@@ -149,20 +150,6 @@ namespace GeographicLib {
      * In general the (\e n,\e m) element is at index \e m*\e N - \e m*(\e m -
      * 1)/2 + \e n.  The first (\e N + 1) elements of \e S should be 0.
      *
-     * If \e tau is non-zero, then \e tau \e Cp and \e tau \e Sp are added to
-     * the coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> in the
-     * definition of \e V.  \e Cp and \e Sp are stored in the same order as \e
-     * C and \e S, except that the vectors may be shorter (missing elements are
-     * assumed to be zero).  Typical usage of \e Cp and \e Sp:
-     * - They are both empty, and \e V is computed with \e C and \e S.
-     * - The first few even numbered elements of \e Cp (corresponding to \e n
-     *   even and \e m = 0) are defined, \e Sp is empty, and \e tau = -1.  This
-     *   allows the "normal" potential (the potential of the ellipsoid) to be
-     *   subtracted from \e V.
-     * - \e Cp and \e Sp represent the secular variation of the potential and
-     *   \e tau represents the time.  This allows a simple time varying field
-     *   to be modeled (e.g., the world magnetic model).
-     *
      * References:
      * - C. W. Clenshaw, A note on the summation of Chebyshev series,
      *   %Math. Tables Aids Comput. 9(51), 118-120 (1955).
@@ -180,15 +167,119 @@ namespace GeographicLib {
     static Math::real Value(int N,
                             const std::vector<double>& C,
                             const std::vector<double>& S,
-                            const std::vector<double>& Cp,
-                            const std::vector<double>& Sp,
-                            real tau, real x, real y, real z, real a);
+                            real x, real y, real z, real a,
+                            normalization norm = full) {
+      coeff c[] = {coeff(C, S, N, 1)};
+      real v = 0;
+      real dummy;
+      switch (norm) {
+      case full:
+        v = GenValue<false, full, 1>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      case schmidt:
+        v = GenValue<false, schmidt, 1>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      }
+      return v;
+    }
     /**
      * Compute a spherical harmonic sum and its gradient.
      *
      * @param[in] N the maximum order and degree of the sum.
      * @param[in] C vector of coefficients for cosine terms.
      * @param[in] S vector of coefficients for sine terms.
+     * @param[in] x cartesian coordinate.
+     * @param[in] y cartesian coordinate.
+     * @param[in] z cartesian coordinate.
+     * @param[in] a the scaling radius for the coordinates.
+     * @param[out] gradx \e x component of the gradient
+     * @param[out] grady \e y component of the gradient
+     * @param[out] gradz \e z component of the gradient
+     * @param[in] norm the normalization of the Legendre functions.
+     * @return \e V the spherical harmonic sum.
+     *
+     * This is the same as the previous function, except that the components of
+     * the gradients of the sum in the \e x, \e y, and \e z directions are
+     * computed.
+     **********************************************************************/
+    static Math::real Gradient(int N,
+                               const std::vector<double>& C,
+                               const std::vector<double>& S,
+                               real x, real y, real z, real a,
+                               real& gradx, real& grady, real& gradz,
+                               normalization norm = full) {
+      coeff c[] = {coeff(C, S, N, 1)};
+      real v = 0;
+      switch (norm) {
+      case full:
+        v = GenValue<true, full, 1>(c, x, y, z, a, gradx, grady, gradz);
+        break;
+      case schmidt:
+        v = GenValue<true, schmidt, 1>(c, x, y, z, a, gradx, grady, gradz);
+        break;
+      }
+      return v;
+    }
+    /**
+     * Compute a spherical harmonic sum with a correction term.
+     *
+     * @param[in] N the maximum order and degree of the sum.
+     * @param[in] C vector of coefficients for cosine terms.
+     * @param[in] S vector of coefficients for sine terms.
+     * @param[in] Np vector of correction coefficients for cosine terms.
+     * @param[in] Cp vector of correction coefficients for cosine terms.
+     * @param[in] Sp vector of correction coefficients for sine terms.
+     * @param[in] tau multiplier for correction coefficients.
+     * @param[in] x cartesian coordinate.
+     * @param[in] y cartesian coordinate.
+     * @param[in] z cartesian coordinate.
+     * @param[in] a the scaling radius for the coordinates.
+     * @param[in] norm the normalization of the Legendre functions.
+     * @return \e V the spherical harmonic sum.
+     *
+     * If \e tau is non-zero, then \e tau \e Cp and \e tau \e Sp are added to
+     * the coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> in the
+     * definition of \e V if the degree and order are less than or equal to \e
+     * Np.  \e Cp and \e Sp are stored in the same order as \e C and \e S,
+     * except that the vectors are shorter if \e Np < \e N.  Typical usage of
+     * \e Cp and \e Sp:
+     * - They are both empty, and \e V is computed with \e C and \e S.
+     * - The first few even numbered elements of \e Cp (corresponding to \e n
+     *   even and \e m = 0) are defined, \e Sp is empty, and \e tau = -1.  This
+     *   allows the "normal" potential (the potential of the ellipsoid) to be
+     *   subtracted from \e V.
+     * - \e Cp and \e Sp represent the secular variation of the potential and
+     *   \e tau represents the time.  This allows a simple time varying field
+     *   to be modeled (e.g., the world magnetic model).
+     **********************************************************************/
+    static Math::real Value1(int N,
+                             const std::vector<double>& C,
+                             const std::vector<double>& S,
+                             int Np,
+                             const std::vector<double>& Cp,
+                             const std::vector<double>& Sp,
+                             real tau, real x, real y, real z, real a,
+                             normalization norm = full) {
+      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
+      real v = 0;
+      real dummy;
+      switch (norm) {
+      case full:
+        v =  GenValue<false, full, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      case schmidt:
+        v = GenValue<false, schmidt, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      }
+      return v;
+    }
+    /**
+     * Compute a spherical harmonic sum with a correction and its gradient.
+     *
+     * @param[in] N the maximum order and degree of the sum.
+     * @param[in] C vector of coefficients for cosine terms.
+     * @param[in] S vector of coefficients for sine terms.
+     * @param[in] Np vector of correction coefficients for cosine terms.
      * @param[in] Cp vector of correction coefficients for cosine terms.
      * @param[in] Sp vector of correction coefficients for sine terms.
      * @param[in] tau multiplier for correction coefficients.
@@ -199,93 +290,68 @@ namespace GeographicLib {
      * @param[out] gradx \e x component of the gradient
      * @param[out] grady \e y component of the gradient
      * @param[out] gradz \e z component of the gradient
+     * @param[in] norm the normalization of the Legendre functions.
      * @return \e V the spherical harmonic sum.
      *
      * This is the same as the previous function, except that the components of
      * the gradients of the sum in the \e x, \e y, and \e z directions are
      * computed.
      **********************************************************************/
-    static Math::real Value(int N,
-                            const std::vector<double>& C,
-                            const std::vector<double>& S,
-                            const std::vector<double>& Cp,
-                            const std::vector<double>& Sp,
-                            real tau, real x, real y, real z, real a,
-                            real& gradx, real& grady, real& gradz);
-    static Math::real NValue(int N,
-                             const std::vector<double>& C,
-                             const std::vector<double>& S,
-                             real x, real y, real z, real a,
-                             normalization norm = full) {
-      coeff c[] = {coeff(C, S, N, 1)};
-      real v = 0;
-      real dummy;
-      switch (norm) {
-      case full:
-        v = LValue<false, full, 1>(c, x, y, z, a, dummy, dummy, dummy);
-        break;
-      case schmidt:
-        v = LValue<false, schmidt, 1>(c, x, y, z, a, dummy, dummy, dummy);
-        break;
-      }
-      return v;
-    }
-    static Math::real NValue(int N,
-                             const std::vector<double>& C,
-                             const std::vector<double>& S,
-                             real x, real y, real z, real a,
-                             real& gradx, real& grady, real& gradz,
-                             normalization norm = full) {
-      coeff c[] = {coeff(C, S, N, 1)};
-      real v = 0;
-      switch (norm) {
-      case full:
-        v = LValue<true, full, 1>(c, x, y, z, a, gradx, grady, gradz);
-        break;
-      case schmidt:
-        v = LValue<true, schmidt, 1>(c, x, y, z, a, gradx, grady, gradz);
-        break;
-      }
-      return v;
-    }
-    static Math::real NValue(int N,
-                             const std::vector<double>& C,
-                             const std::vector<double>& S,
-                             int Np,
-                             const std::vector<double>& Cp,
-                             const std::vector<double>& Sp,
-                             real tau, real x, real y, real z, real a,
-                             normalization norm = full) {
-      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
-      real v = 0;
-      real dummy;
-      switch (norm) {
-      case full:
-        v =  LValue<false, full, 2>(c, x, y, z, a, dummy, dummy, dummy);
-        break;
-      case schmidt:
-        v = LValue<false, schmidt, 2>(c, x, y, z, a, dummy, dummy, dummy);
-        break;
-      }
-      return v;
-    }
-    static Math::real NValue(int N,
-                             const std::vector<double>& C,
-                             const std::vector<double>& S,
-                             int Np,
-                             const std::vector<double>& Cp,
-                             const std::vector<double>& Sp,
-                             real tau, real x, real y, real z, real a,
-                             real& gradx, real& grady, real& gradz,
-                             normalization norm = full) {
+    static Math::real Gradient1(int N,
+                                const std::vector<double>& C,
+                                const std::vector<double>& S,
+                                int Np,
+                                const std::vector<double>& Cp,
+                                const std::vector<double>& Sp,
+                                real tau, real x, real y, real z, real a,
+                                real& gradx, real& grady, real& gradz,
+                                normalization norm = full) {
       coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
       real v = 0;
       switch (norm) {
       case full:
-        v = LValue<true, full, 2>(c, x, y, z, a, gradx, grady, gradz);
+        v = GenValue<true, full, 2>(c, x, y, z, a, gradx, grady, gradz);
         break;
       case schmidt:
-        v = LValue<true, schmidt, 2>(c, x, y, z, a, gradx, grady, gradz);
+        v = GenValue<true, schmidt, 2>(c, x, y, z, a, gradx, grady, gradz);
+        break;
+      }
+      return v;
+    }
+
+    /**
+     * Compute a spherical harmonic sum with a zonal correction term.
+     *
+     * @param[in] N the maximum order and degree of the sum.
+     * @param[in] C vector of coefficients for cosine terms.
+     * @param[in] S vector of coefficients for sine terms.
+     * @param[in] Np vector of correction coefficients for cosine terms.
+     * @param[in] Cp vector of correction coefficients for cosine terms.
+     * @param[in] tau multiplier for correction coefficients.
+     * @param[in] x cartesian coordinate.
+     * @param[in] y cartesian coordinate.
+     * @param[in] z cartesian coordinate.
+     * @param[in] a the scaling radius for the coordinates.
+     * @param[in] norm the normalization of the Legendre functions.
+     * @return \e V the spherical harmonic sum.
+     **********************************************************************/
+    static Math::real Value1Z(int N,
+                              const std::vector<double>& C,
+                              const std::vector<double>& S,
+                              int Np,
+                              const std::vector<double>& Cp,
+                              real tau, real x, real y, real z, real a,
+                              normalization norm = full) {
+      // There's no Sp because it doesn't contribute to the m = 0 term.
+      coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Cp, Np, 0, tau)};
+      real v = 0;
+      real dummy;
+      switch (norm) {
+      case full:
+        v =  GenValue<false, full, 2>(c, x, y, z, a, dummy, dummy, dummy);
+        break;
+      case schmidt:
+        v = GenValue<false, schmidt, 2>(c, x, y, z, a, dummy, dummy, dummy);
         break;
       }
       return v;
