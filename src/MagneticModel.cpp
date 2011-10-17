@@ -18,10 +18,13 @@
 RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_CPP)
 RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 
+#define MAGNETIC_DEFAULT_PATH "/home/ckarney/geographiclib/magnetic"
+
 namespace GeographicLib {
 
   using namespace std;
 
+  /*
   MagneticModel::MagneticModel(const std::string& datafile,
                                const Geocentric& earth)
     : _datafile(datafile)
@@ -98,8 +101,8 @@ namespace GeographicLib {
           if (Math::isnan(_t0))
             throw GeographicErr("Epoch time not specified");
           int K = (_N + 1) * (_N + 2)/2;
-          _G.resize(K, 0); _Gt.resize(K, 0);
-          _H.resize(K, 0); _Ht.resize(K, 0);
+          _G.resize(K, 0); _G1.resize(K, 0);
+          _H.resize(K, 0); _H1.resize(K, 0);
           header = false;
         }
         {
@@ -118,9 +121,9 @@ namespace GeographicLib {
           if (!(is >> d >> _H[k] || m == 0))
             throw GeographicErr("Short read on a coefficient line 3");
           is.clear();           // Clear error from missing _H
-          if (!(is >> d >> _Gt[k]))
+          if (!(is >> d >> _G1[k]))
             throw GeographicErr("Short read on a coefficient line 4");
-          if (!(is >> d >> _Ht[k] || m == 0))
+          if (!(is >> d >> _H1[k] || m == 0))
             throw GeographicErr("Short read on a coefficient line 5");
         }
         break;
@@ -131,20 +134,36 @@ namespace GeographicLib {
         throw GeographicErr("Bad initial character in " + _datafile);
       }
     }
-    /*
-    for (int n = 0; n <= _N; ++n) {
-      // Change from Schmidt normalization to fully normalized (P_bar) using
-      // P_Schmidt = P_bar / sqrt(2*n + 1).  Also fold in the extra factor of
-      // -a in the definition of the potential.
-      //      real f = -_a / sqrt(real(2 * n + 1));
-      real f = 1;
-      for (int m = 0, k = n; m <= n; k += _N - m++) {
-        _G[k] *= f;
-        _H[k] *= f;
-        _Gt[k] *= f;
-        _Ht[k] *= f;
-      }
-      }*/
+  }
+*/
+
+  MagneticModel::MagneticModel(const std::string& name,
+                               const Geocentric& earth)
+    : _name(name)
+    , _minh(-10e3)
+    , _maxh(1000e3)
+    , _earth(earth)
+  {
+    {    
+      std::string datfile = std::string(MAGNETIC_DEFAULT_PATH) + "/" + _name +
+        ".dat";
+      ifstream data(datfile.c_str());
+      data >> _t0 >> _N >> _N1 >> _a;
+    }
+    int
+      K = (_N + 1) * (_N + 2) / 2,
+      K1 = (_N1 + 1) * (_N1 + 2) / 2;
+    _G.resize(K); _H.resize(K);
+    _G1.resize(K1); _H1.resize(K1);
+    {
+      std::string binfile = std::string(MAGNETIC_DEFAULT_PATH) + "/" + _name +
+        ".bin";
+      ifstream bin(binfile.c_str(), ios::binary);
+      bin.read(reinterpret_cast<char *>(&_G[0]), K * sizeof(double));
+      bin.read(reinterpret_cast<char *>(&_H[0]), K * sizeof(double));
+      bin.read(reinterpret_cast<char *>(&_G1[0]), K1 * sizeof(double));
+      bin.read(reinterpret_cast<char *>(&_H1[0]), K1 * sizeof(double));
+    }
   }
 
   void MagneticModel::Field(real lat, real lon, real h, real t, bool diffp,
@@ -155,13 +174,13 @@ namespace GeographicLib {
     vector<real> M(9);
     _earth.Forward(lat, lon, h, x, y, z, M);
     real BX, BY, BZ;            // Components in geocentric basis
-    SphericalHarmonic::Gradient1(_N, _G, _H, _N, _Gt, _Ht, t, x, y, z, _a,
+    SphericalHarmonic::Gradient1(_N, _G, _H, _N1, t, _G1, _H1, x, y, z, _a,
                                  BX, BY, BZ,
                                  SphericalHarmonic::schmidt);
     if (diffp) {
       real BXt, BYt, BZt;
       SphericalHarmonic::Gradient
-        (_N, _Gt, _Ht, x, y, z, _a, BXt, BYt, BZt, SphericalHarmonic::schmidt);
+        (_N1, _G1, _H1, x, y, z, _a, BXt, BYt, BZt, SphericalHarmonic::schmidt);
       Bxt = - _a * (M[0] * BXt + M[3] * BYt + M[6] * BZt);
       Byt = - _a * (M[1] * BXt + M[4] * BYt + M[7] * BZt);
       Bzt = - _a * (M[2] * BXt + M[5] * BYt + M[8] * BZt);

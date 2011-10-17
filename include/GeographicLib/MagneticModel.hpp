@@ -32,9 +32,9 @@ namespace GeographicLib {
     typedef Math::real real;
     std::string _datafile, _name, _date;
     real _t0, _tmin, _tmax, _a, _minh, _maxh;
-    int _N;
+    int _N, _N1;
     Geocentric _earth;
-    std::vector<real> _G, _H, _Gt, _Ht;
+    std::vector<real> _G, _H, _G1, _H1;
     void Field(real lat, real lon, real h, real t, bool diffp,
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const;
@@ -42,12 +42,11 @@ namespace GeographicLib {
     /**
      * Construct a magnetic model.
      *
-     * @param[in] datafile the name of the datafile with the parameters of the
-     *   model.
+     * @param[in] name the name of the model.
      * @param[in] earth Geocentric object for converting coordinates; default
      *   Geocentric::WGS84.
      **********************************************************************/
-    MagneticModel(const std::string& datafile,
+    MagneticModel(const std::string& name,
                   const Geocentric& earth = Geocentric::WGS84);
 
     /**

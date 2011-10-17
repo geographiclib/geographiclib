@@ -10,11 +10,16 @@ int main() {
   typedef GeographicLib::Math::real real;
   try {
     if (true) {
-      MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
+      // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
+      MagneticModel mag1("wmm2010");
+      MagneticModel mag2("emm2010");
       real lat, lon, h, t, bx, by, bz, bxt, byt, bzt;
       std::cout << std::setprecision(16);
       while (std::cin >> lat >> lon >> h >> t) {
-        mag(lat, lon, h, t, bx, by, bz, bxt, byt, bzt);
+        mag1(lat, lon, h, t, bx, by, bz, bxt, byt, bzt);
+        std::cout << by << " " << bx << " " << -bz << " "
+                  << byt << " " << bxt << " " << -bzt << "\n";
+        mag2(lat, lon, h, t, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
       }

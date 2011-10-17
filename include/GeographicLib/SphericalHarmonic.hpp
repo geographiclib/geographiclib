@@ -255,10 +255,10 @@ namespace GeographicLib {
     static Math::real Value1(int N,
                              const std::vector<double>& C,
                              const std::vector<double>& S,
-                             int Np,
+                             int Np, real tau,
                              const std::vector<double>& Cp,
                              const std::vector<double>& Sp,
-                             real tau, real x, real y, real z, real a,
+                             real x, real y, real z, real a,
                              normalization norm = full) {
       coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
       real v = 0;
@@ -280,9 +280,9 @@ namespace GeographicLib {
      * @param[in] C vector of coefficients for cosine terms.
      * @param[in] S vector of coefficients for sine terms.
      * @param[in] Np vector of correction coefficients for cosine terms.
+     * @param[in] tau multiplier for correction coefficients.
      * @param[in] Cp vector of correction coefficients for cosine terms.
      * @param[in] Sp vector of correction coefficients for sine terms.
-     * @param[in] tau multiplier for correction coefficients.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -300,10 +300,10 @@ namespace GeographicLib {
     static Math::real Gradient1(int N,
                                 const std::vector<double>& C,
                                 const std::vector<double>& S,
-                                int Np,
+                                int Np, real tau,
                                 const std::vector<double>& Cp,
                                 const std::vector<double>& Sp,
-                                real tau, real x, real y, real z, real a,
+                                real x, real y, real z, real a,
                                 real& gradx, real& grady, real& gradz,
                                 normalization norm = full) {
       coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Sp, Np, tau)};
@@ -326,8 +326,8 @@ namespace GeographicLib {
      * @param[in] C vector of coefficients for cosine terms.
      * @param[in] S vector of coefficients for sine terms.
      * @param[in] Np vector of correction coefficients for cosine terms.
-     * @param[in] Cp vector of correction coefficients for cosine terms.
      * @param[in] tau multiplier for correction coefficients.
+     * @param[in] Cp vector of correction coefficients for cosine terms.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -338,9 +338,9 @@ namespace GeographicLib {
     static Math::real Value1Z(int N,
                               const std::vector<double>& C,
                               const std::vector<double>& S,
-                              int Np,
+                              int Np, real tau,
                               const std::vector<double>& Cp,
-                              real tau, real x, real y, real z, real a,
+                              real x, real y, real z, real a,
                               normalization norm = full) {
       // There's no Sp because it doesn't contribute to the m = 0 term.
       coeff c[] = {coeff(C, S, N, 1), coeff(Cp, Cp, Np, 0, tau)};
