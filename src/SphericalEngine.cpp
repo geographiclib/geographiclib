@@ -1,35 +1,35 @@
 /**
- * \file SphericalHarmonic.cpp
- * \brief Implementation for GeographicLib::SphericalHarmonic class
+ * \file SphericalEngine.cpp
+ * \brief Implementation for GeographicLib::SphericalEngine class
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#include <GeographicLib/SphericalHarmonic.hpp>
+#include <GeographicLib/SphericalEngine.hpp>
 #include <limits>
 #include <iostream>
 
-#define GEOGRAPHICLIB_SPHERICALHARMONIC_CPP "$Id$"
+#define GEOGRAPHICLIB_SPHERICALENGINE_CPP "$Id$"
 
-RCSID_DECL(GEOGRAPHICLIB_SPHERICALHARMONIC_CPP)
-RCSID_DECL(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
+RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_CPP)
+RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
 
 namespace GeographicLib {
 
   using namespace std;
 
-  const Math::real SphericalHarmonic::scale_ =
+  const Math::real SphericalEngine::scale_ =
     pow(real(numeric_limits<real>::radix), -numeric_limits<real>::max_exponent/2);
-  const Math::real SphericalHarmonic::eps_ =
+  const Math::real SphericalEngine::eps_ =
     Math::sq(numeric_limits<real>::epsilon());
 
-  const std::vector<Math::real> SphericalHarmonic::Z_(0);
+  const std::vector<Math::real> SphericalEngine::Z_(0);
 
 
-  template<bool gradp, SphericalHarmonic::normalization norm, int L>
-  Math::real SphericalHarmonic::GenValue(const coeff c[L], const real f[L],
+  template<bool gradp, SphericalEngine::normalization norm, int L>
+  Math::real SphericalEngine::GenValue(const coeff c[L], const real f[L],
                                          real x, real y, real z, real a,
                                          real& gradx, real& grady, real& gradz) {
     // General sum
@@ -280,28 +280,28 @@ namespace GeographicLib {
   }
 
   template
-  Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::full, 1>
+  Math::real SphericalEngine::GenValue<true, SphericalEngine::full, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::full, 2>
+  Math::real SphericalEngine::GenValue<true, SphericalEngine::full, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::full, 1>
+  Math::real SphericalEngine::GenValue<false, SphericalEngine::full, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::full, 2>
+  Math::real SphericalEngine::GenValue<false, SphericalEngine::full, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::schmidt, 1>
+  Math::real SphericalEngine::GenValue<true, SphericalEngine::schmidt, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::GenValue<true, SphericalHarmonic::schmidt, 2>
+  Math::real SphericalEngine::GenValue<true, SphericalEngine::schmidt, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::schmidt, 1>
+  Math::real SphericalEngine::GenValue<false, SphericalEngine::schmidt, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalHarmonic::GenValue<false, SphericalHarmonic::schmidt, 2>
+  Math::real SphericalEngine::GenValue<false, SphericalEngine::schmidt, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
 } // namespace GeographicLib

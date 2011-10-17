@@ -10,7 +10,7 @@
 #include <GeographicLib/MagneticModel.hpp>
 #include <fstream>
 #include <sstream>
-#include <GeographicLib/SphericalHarmonic.hpp>
+#include <GeographicLib/SphericalEngine.hpp>
 #include <iostream>
 
 #define GEOGRAPHICLIB_MAGNETICMODEL_CPP "$Id$"
@@ -174,13 +174,13 @@ namespace GeographicLib {
     vector<real> M(9);
     _earth.Forward(lat, lon, h, x, y, z, M);
     real BX, BY, BZ;            // Components in geocentric basis
-    SphericalHarmonic::Gradient1(_N, _G, _H, _N1, t, _G1, _H1, x, y, z, _a,
-                                 BX, BY, BZ,
-                                 SphericalHarmonic::schmidt);
+    SphericalEngine::Gradient1(_N, _G, _H, _N1, t, _G1, _H1, x, y, z, _a,
+                               BX, BY, BZ,
+                               SphericalEngine::schmidt);
     if (diffp) {
       real BXt, BYt, BZt;
-      SphericalHarmonic::Gradient
-        (_N1, _G1, _H1, x, y, z, _a, BXt, BYt, BZt, SphericalHarmonic::schmidt);
+      SphericalEngine::Gradient
+        (_N1, _G1, _H1, x, y, z, _a, BXt, BYt, BZt, SphericalEngine::schmidt);
       Bxt = - _a * (M[0] * BXt + M[3] * BYt + M[6] * BZt);
       Byt = - _a * (M[1] * BXt + M[4] * BYt + M[7] * BZt);
       Bzt = - _a * (M[2] * BXt + M[5] * BYt + M[8] * BZt);

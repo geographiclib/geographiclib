@@ -15,7 +15,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	LocalCartesian Geodesic GeodesicLine PolygonArea \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea \
-	SphericalHarmonic MagneticModel
+	SphericalEngine MagneticModel
 EXTRAHEADERS = Constants Math Accumulator
 
 HEADERS = Config.h $(addsuffix .hpp,$(EXTRAHEADERS) $(MODULES))
@@ -74,8 +74,8 @@ LambertConformalConic.o: LambertConformalConic.hpp Constants.hpp Math.hpp \
 Gnomonic.o: Gnomonic.hpp Constants.hpp Math.hpp Config.h Geodesic.hpp
 OSGB.o: OSGB.hpp Constants.hpp Math.hpp Config.h TransverseMercator.hpp
 AlbersEqualArea.o: AlbersEqualArea.hpp Constants.hpp Math.hpp Config.h
-SphericalHarmonic.o: SphericalHarmonic.hpp Constants.hpp Math.hpp Config.h
+SphericalEngine.o: SphericalEngine.hpp Constants.hpp Math.hpp Config.h
 MagneticModel.o: MagneticModel.hpp Constants.hpp Math.hpp Config.h \
-	SphericalHarmonic.hpp Geocentric.hpp
+	SphericalEngine.hpp Geocentric.hpp
 
 .PHONY: all install clean

@@ -1,14 +1,14 @@
 /**
- * \file SphericalHarmonic.hpp
- * \brief Header for GeographicLib::SphericalHarmonic class
+ * \file SphericalEngine.hpp
+ * \brief Header for GeographicLib::SphericalEngine class
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
-#define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP "$Id$"
+#if !defined(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
+#define GEOGRAPHICLIB_SPHERICALENGINE_HPP "$Id$"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -21,7 +21,7 @@ namespace GeographicLib {
    * Sum a spherical harmonic series.
    **********************************************************************/
 
-  class GEOGRAPHIC_EXPORT SphericalHarmonic {
+  class GEOGRAPHIC_EXPORT SphericalEngine {
   public:
     enum normalization {
       full = 0,
@@ -106,7 +106,7 @@ namespace GeographicLib {
                                  real x, real y, real z, real a,
                                  real& gradx, real& grady, real& gradz);
 
-    SphericalHarmonic();        // Disable constructor
+    SphericalEngine();        // Disable constructor
   public:
 
     /**
@@ -370,4 +370,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif  // GEOGRAPHICLIB_SPHERICALHARMONIC_HPP
+#endif  // GEOGRAPHICLIB_SPHERICALENGINE_HPP
