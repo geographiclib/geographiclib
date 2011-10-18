@@ -4,6 +4,7 @@
 #include <vector>
 #include <GeographicLib/MagneticModel.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
+#include <GeographicLib/SphericalHarmonic2.hpp>
 
 using namespace GeographicLib;
 int main() {

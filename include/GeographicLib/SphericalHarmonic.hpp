@@ -111,11 +111,11 @@ namespace GeographicLib {
       real dummy;
       switch (_norm) {
       case full:
-        v = SphericalEngine::GenValue<false, SphericalEngine::full, 1>
+        v = SphericalEngine::Value<false, SphericalEngine::full, 1>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
       case schmidt:
-        v = SphericalEngine::GenValue<false, SphericalEngine::schmidt, 1>
+        v = SphericalEngine::Value<false, SphericalEngine::schmidt, 1>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
       }
@@ -142,11 +142,11 @@ namespace GeographicLib {
       real v = 0;
       switch (_norm) {
       case full:
-        v = SphericalEngine::GenValue<true, SphericalEngine::full, 1>
+        v = SphericalEngine::Value<true, SphericalEngine::full, 1>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
       case schmidt:
-        v = SphericalEngine::GenValue<true, SphericalEngine::schmidt, 1>
+        v = SphericalEngine::Value<true, SphericalEngine::schmidt, 1>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
       }

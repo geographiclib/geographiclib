@@ -30,9 +30,9 @@ namespace GeographicLib {
 
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
-  Math::real SphericalEngine::GenValue(const coeff c[L], const real f[L],
-                                       real x, real y, real z, real a,
-                                       real& gradx, real& grady, real& gradz) {
+  Math::real SphericalEngine::Value(const coeff c[L], const real f[L],
+                                    real x, real y, real z, real a,
+                                    real& gradx, real& grady, real& gradz) {
     // General sum
     // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
     //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
@@ -281,28 +281,42 @@ namespace GeographicLib {
   }
 
   template
-  Math::real SphericalEngine::GenValue<true, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::full, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::GenValue<true, SphericalEngine::full, 2>
+  Math::real SphericalEngine::Value<false, SphericalEngine::full, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::GenValue<false, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::GenValue<false, SphericalEngine::full, 2>
+  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 1>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+
+  template
+  Math::real SphericalEngine::Value<true, SphericalEngine::full, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::GenValue<true, SphericalEngine::schmidt, 1>
+  Math::real SphericalEngine::Value<false, SphericalEngine::full, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::GenValue<true, SphericalEngine::schmidt, 2>
+  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::GenValue<false, SphericalEngine::schmidt, 1>
+  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 2>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+
+  template
+  Math::real SphericalEngine::Value<true, SphericalEngine::full, 3>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::GenValue<false, SphericalEngine::schmidt, 2>
+  Math::real SphericalEngine::Value<false, SphericalEngine::full, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 3>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
 } // namespace GeographicLib
