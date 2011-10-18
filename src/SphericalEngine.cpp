@@ -10,6 +10,7 @@
 #include <GeographicLib/SphericalEngine.hpp>
 #include <limits>
 #include <iostream>
+#include <GeographicLib/CircularEngine.hpp>
 
 #define GEOGRAPHICLIB_SPHERICALENGINE_CPP "$Id$"
 
@@ -27,7 +28,6 @@ namespace GeographicLib {
     Math::sq(numeric_limits<real>::epsilon());
 
   const std::vector<Math::real> SphericalEngine::Z_(0);
-
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
   Math::real SphericalEngine::Value(const coeff c[L], const real f[L],
@@ -170,7 +170,7 @@ namespace GeographicLib {
     real vtc = 0, vtc2 = 0, vts = 0, vts2 = 0;   // vt[N + 1], vt[N + 2]
     real vlc = 0, vlc2 = 0, vls = 0, vls2 = 0;   // vl[N + 1], vl[N + 2]
     int k[L];
-    for (int m = M; m >= 0; --m) {   // m = N .. 0
+    for (int m = M; m >= 0; --m) {   // m = M .. 0
       // Initialize inner sum
       real wc  = 0, wc2  = 0, ws  = 0, ws2  = 0; // w [N - m + 1], w [N - m + 2]
       real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
@@ -257,7 +257,7 @@ namespace GeographicLib {
           break;
         }
         qs = q / scale_;
-        vc  =       qs * (wc +  A * (cl * vc  + sl * vs ) + B * vc2 );
+        vc = qs * (wc + A * (cl * vc + sl * vs ) + B * vc2);
         if (gradp) {
           qs /= r;
           // The components of the gradient in spherical coordinates are
@@ -278,6 +278,82 @@ namespace GeographicLib {
       gradz =       t * vrc - u * vtc            ;
     }
     return vc;
+  }
+
+  template<bool gradp, SphericalEngine::normalization norm, int L>
+  CircularEngine SphericalEngine::Circle(const coeff c[L], const real f[L],
+                                         real p, real z, real a) {
+
+    STATIC_ASSERT(L > 0, "L must be positive");
+    STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
+    int N = c[0].nmx, M = c[0].mmx;
+
+    real
+      r = Math::hypot(z, p),
+      t = r ? z / r : 0,            // cos(theta); at origin, pick theta = pi/2
+      u = r ? max(p / r, eps_) : 1, // sin(theta); but avoid the pole
+      q = a / r;
+    real
+      q2 = Math::sq(q),
+      tu2 = t / Math::sq(u);
+    CircularEngine circ(M, gradp, norm, scale_, a, r, u, t);
+    int k[L];
+    for (int m = M; m >= 0; --m) {   // m = M .. 0
+      // Initialize inner sum
+      real wc  = 0, wc2  = 0, ws  = 0, ws2  = 0; // w [N - m + 1], w [N - m + 2]
+      real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
+      real wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
+      for (int l = 0; l < L; ++l)
+        k[l] = c[l].rowind(N, m);
+      for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
+        real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
+        switch (norm) {
+        case full:
+          w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1));
+          Ax = q * sqrt(w * (2 * n + 3));
+          A = t * Ax;
+          B = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2)));
+          break;
+        case schmidt:
+          w = real(n - m + 1) * (n + m + 1);
+          Ax = q * (2 * n + 1) / sqrt(w);
+          A = t * Ax;
+          B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
+          break;
+        }
+        R = *(c[0].Cnm + --k[0]);
+        for (int l = 1; l < L; ++l)
+          R += m > c[l].mmx || n > c[l].nmx ? 0 :
+            *(c[l].Cnm + --k[l]) * f[l];
+        R *= scale_;
+        w = A * wc  + B * wc2  +           R; wc2  = wc ; wc  = w;
+        if (gradp) {
+          w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
+          w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
+        }
+        if (m) {
+          R = *(c[0].Snm + k[0]);
+          for (int l = 1; l < L; ++l)
+            R += m > c[l].mmx || n > c[l].nmx ? 0 :
+              *(c[l].Snm + k[l]) * f[l];
+          R *= scale_;
+          w = A * ws  + B * ws2  +           R; ws2  = ws ; ws  = w;
+          if (gradp) {
+            w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
+            w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
+          }
+        }
+      }
+      if (!gradp)
+        circ.SetCoeff(m, wc, ws);
+      else {
+        // Include the terms Sc[m] * P'[m,m](t) and  Ss[m] * P'[m,m](t)
+        wtc -= m * tu2 * wc; wts -= m * tu2 * ws;
+        circ.SetCoeff(m, wc, ws, wrc, wrs, wtc, wts);
+      }
+    }
+
+    return circ;
   }
 
   template
@@ -318,5 +394,44 @@ namespace GeographicLib {
   template
   Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 3>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 1>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 1>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 1>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 1>
+  (const coeff[], const real[], real, real, real);
+
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 2>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 2>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 2>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 2>
+  (const coeff[], const real[], real, real, real);
+
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 3>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 3>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 3>
+  (const coeff[], const real[], real, real, real);
+  template
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 3>
+  (const coeff[], const real[], real, real, real);
 
 } // namespace GeographicLib

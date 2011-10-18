@@ -102,11 +102,11 @@ namespace GeographicLib {
       real dummy;
       switch (_norm) {
       case full:
-        v = SphericalEngine::Value<false, SphericalEngine::full, 2>
+        v = SphericalEngine::Value<false, SphericalEngine::full, 3>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
       case schmidt:
-        v = SphericalEngine::Value<false, SphericalEngine::schmidt, 2>
+        v = SphericalEngine::Value<false, SphericalEngine::schmidt, 3>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
       }
@@ -136,17 +136,37 @@ namespace GeographicLib {
       real v = 0;
       switch (_norm) {
       case full:
-        v = SphericalEngine::Value<true, SphericalEngine::full, 2>
+        v = SphericalEngine::Value<true, SphericalEngine::full, 3>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
       case schmidt:
-        v = SphericalEngine::Value<true, SphericalEngine::schmidt, 2>
+        v = SphericalEngine::Value<true, SphericalEngine::schmidt, 3>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
       }
       return v;
     }
-  };
+    CircularEngine Circle(real tau1, real tau2, real p, real z, bool gradp)
+      const {
+      real f[] = {1, tau1, tau2};
+      switch (_norm) {
+      case full:
+        return gradp ?
+           SphericalEngine::Circle<true, SphericalEngine::full, 3>
+          (_c, f, p, z, _a) :
+          SphericalEngine::Circle<false, SphericalEngine::full, 3>
+          (_c, f, p, z, _a);
+        break;
+      case schmidt:
+      default:                  // To avoid compiler warnings
+        return gradp ?
+           SphericalEngine::Circle<true, SphericalEngine::schmidt, 3>
+          (_c, f, p, z, _a) :
+          SphericalEngine::Circle<false, SphericalEngine::schmidt, 3>
+          (_c, f, p, z, _a);
+        break;
+      }
+    }  };
 
 } // namespace GeographicLib
 

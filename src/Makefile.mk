@@ -15,8 +15,9 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	LocalCartesian Geodesic GeodesicLine PolygonArea \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea \
-	SphericalEngine MagneticModel
-EXTRAHEADERS = Constants Math Accumulator
+	SphericalEngine CircularEngine MagneticModel
+EXTRAHEADERS = Constants Math Accumulator \
+	SphericalHarmonic SphericalHarmonic1 SphericalHarmonic2
 
 HEADERS = Config.h $(addsuffix .hpp,$(EXTRAHEADERS) $(MODULES))
 SOURCES = $(addsuffix .cpp,$(MODULES))

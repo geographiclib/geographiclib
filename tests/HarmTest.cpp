@@ -4,7 +4,7 @@
 #include <vector>
 #include <GeographicLib/MagneticModel.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
-#include <GeographicLib/SphericalHarmonic2.hpp>
+#include <GeographicLib/CircularEngine.hpp>
 
 using namespace GeographicLib;
 int main() {
@@ -83,7 +83,32 @@ int main() {
       std::cout << dx1 << " " << dx2 << "\n"
                 << dy1 << " " << dy2 << "\n"
                 << dz1 << " " << dz2 << "\n";
+      CircularEngine circ1 = harm.Circle(r * cos(phi), z, false);
+      CircularEngine circ2 = harm.Circle(r * cos(phi), z, true);
+      real v3, dx3, dy3, dz3;
+      v3 = circ2(lon, dx3, dy3, dz3);
+      std::cout << v3 << " " << dx3 << " " << dy3 << " " << dz3 << "\n";
     }
+    std::cout << "start timing" << std::endl;
+    real phi, lam, sum, z, p, dx, dy, dz;
+    lat = 33; phi = lat * Math::degree<real>();
+    z = r * sin(phi);
+    p = r * cos(phi);
+    sum = 0;
+    for (int i = 0; i < 100; ++i) {
+      lam = (44 + 0.01*i) * Math::degree<real>();
+      sum += harm(p * cos(lam), p * sin(lam), z, dx, dy, dz);
+    }
+    std::cout << "sum a " << sum << std::endl;
+    CircularEngine circ(harm.Circle(p, z, true));
+    sum = 0;
+    for (int i = 0; i < 100000; ++i) {
+      lon = (44 + 0.01*i);
+      sum += circ(lon, dx, dy, dz);
+    }
+    std::cout << "sum b " << sum << std::endl;
+      
+    
   }
   catch (const std::exception& e) {
     std::cerr << "Caught exception: " << e.what() << "\n";

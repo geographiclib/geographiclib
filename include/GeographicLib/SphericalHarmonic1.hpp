@@ -13,6 +13,7 @@
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/SphericalEngine.hpp>
+#include <GeographicLib/CircularEngine.hpp>
 
 namespace GeographicLib {
 
@@ -135,6 +136,26 @@ namespace GeographicLib {
         break;
       }
       return v;
+    }
+    CircularEngine Circle(real tau, real p, real z, bool gradp) const {
+      real f[] = {1, tau};
+      switch (_norm) {
+      case full:
+        return gradp ?
+           SphericalEngine::Circle<true, SphericalEngine::full, 2>
+          (_c, f, p, z, _a) :
+          SphericalEngine::Circle<false, SphericalEngine::full, 2>
+          (_c, f, p, z, _a);
+        break;
+      case schmidt:
+      default:                  // To avoid compiler warnings
+        return gradp ?
+           SphericalEngine::Circle<true, SphericalEngine::schmidt, 2>
+          (_c, f, p, z, _a) :
+          SphericalEngine::Circle<false, SphericalEngine::schmidt, 2>
+          (_c, f, p, z, _a);
+        break;
+      }
     }
   };
 

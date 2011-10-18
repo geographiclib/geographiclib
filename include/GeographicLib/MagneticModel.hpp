@@ -16,6 +16,7 @@
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
 #include <GeographicLib/SphericalHarmonic1.hpp>
+#include <GeographicLib/CircleEngine.hpp>
 
 namespace GeographicLib {
 
@@ -91,7 +92,6 @@ namespace GeographicLib {
                     real& Bxt, real& Byt, real& Bzt) const {
       Field(lat, lon, h, t, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
-
   };
 
 } // namespace GeographicLib

@@ -15,6 +15,8 @@
 
 namespace GeographicLib {
 
+  class CircularEngine;
+
   /**
    * \brief Spherical Harmonic series
    *
@@ -106,6 +108,10 @@ namespace GeographicLib {
       static Math::real Value(const coeff c[L], const real f[L],
                               real x, real y, real z, real a,
                               real& gradx, real& grady, real& gradz);
+
+    template<bool gradp, SphericalEngine::normalization norm, int L>
+      static CircularEngine Circle(const coeff c[L], const real f[L],
+                                   real p, real z, real a);
   };
 
 } // namespace GeographicLib
