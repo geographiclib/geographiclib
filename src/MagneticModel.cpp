@@ -11,7 +11,7 @@
 #include <fstream>
 #include <sstream>
 #include <GeographicLib/SphericalEngine.hpp>
-#include <iostream>
+#include <GeographicLib/MagneticCircle.hpp>
 
 #define GEOGRAPHICLIB_MAGNETICMODEL_CPP "$Id$"
 
@@ -193,6 +193,19 @@ namespace GeographicLib {
     Bx = - _a * (M[0] * BX + M[3] * BY + M[6] * BZ);
     By = - _a * (M[1] * BX + M[4] * BY + M[7] * BZ);
     Bz = - _a * (M[2] * BX + M[5] * BY + M[8] * BZ);
+  }
+
+  MagneticCircle MagneticModel::Circle(real lat, real h, real t)
+    const {
+    t -= _t0;
+    real x, y, z;
+    vector<real> M(9);
+    _earth.Forward(lat, 0, h, x, y, z, M);
+    // y = 0, cphi = M[7], sphi = M[8];
+
+    return MagneticCircle(_a, M[7], M[8],
+                          _harma.Circle(t, x, z, true),
+                          _harmb.Circle(x, z, true));
   }
 
 } // namespace GeographicLib

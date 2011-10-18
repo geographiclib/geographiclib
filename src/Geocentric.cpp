@@ -162,7 +162,7 @@ namespace GeographicLib {
   }
 
   void Geocentric::Rotation(real sphi, real cphi, real slam, real clam,
-                             real M[dim2_]) const throw() {
+                            real M[dim2_]) throw() {
     // This rotation matrix is given by the following quaternion operations
     // qrot(lam, [0,0,1]) * qrot(phi, [0,-1,0]) * [1,1,1,1]/2
     // or

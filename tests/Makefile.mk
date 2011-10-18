@@ -49,7 +49,8 @@ NaNTester.o: Constants.hpp Math.hpp EllipticFunction.hpp \
 PASouth.o: Constants.hpp Math.hpp LambertConformalConic.hpp DMS.hpp
 HarmTest.o: HarmTest.cpp Constants.hpp Math.hpp MagneticModel.hpp \
 	SphericalEngine.hpp CircularEngine.hpp \
-	SphericalHarmonic.hpp SphericalHarmonic1.hpp
+	SphericalHarmonic.hpp SphericalHarmonic1.hpp \
+	MagneticCircle.hpp
 
 INSTALL = install -b
 PREFIX = /usr/local

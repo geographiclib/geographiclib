@@ -16,9 +16,10 @@
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
 #include <GeographicLib/SphericalHarmonic1.hpp>
-#include <GeographicLib/CircleEngine.hpp>
 
 namespace GeographicLib {
+
+  class MagneticCircle;
 
   /**
    * \brief Magnetic model
@@ -92,6 +93,8 @@ namespace GeographicLib {
                     real& Bxt, real& Byt, real& Bzt) const {
       Field(lat, lon, h, t, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
+
+    MagneticCircle Circle(real lat, real h, real t) const;
   };
 
 } // namespace GeographicLib

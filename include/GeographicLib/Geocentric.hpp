@@ -59,14 +59,13 @@ namespace GeographicLib {
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
-    // Actually this can be static because it doesn't depend on the ellipsoid.
-    // But let's be more general than that.
-    void Rotation(real sphi, real cphi, real slam, real clam,
-                  real M[dim2_]) const throw();
+    static void Rotation(real sphi, real cphi, real slam, real clam,
+                         real M[dim2_]) throw();
     void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
                     real M[dim2_]) const throw();
     void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
                     real M[dim2_]) const throw();
+    friend class MagneticCircle;        // MagneticCircle uses Rotation
   public:
 
     /**

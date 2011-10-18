@@ -5,12 +5,13 @@
 #include <GeographicLib/MagneticModel.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
 #include <GeographicLib/CircularEngine.hpp>
+#include <GeographicLib/MagneticCircle.hpp>
 
 using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
-    if (false) {
+    if (true) {
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
       MagneticModel mag1("wmm2010");
       MagneticModel mag2("emm2010");
@@ -21,6 +22,10 @@ int main() {
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
         mag2(lat, lon, h, t, bx, by, bz, bxt, byt, bzt);
+        std::cout << by << " " << bx << " " << -bz << " "
+                  << byt << " " << bxt << " " << -bzt << "\n";
+        MagneticCircle circ(mag2.Circle(lat, h, t));
+        circ(lon, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
       }

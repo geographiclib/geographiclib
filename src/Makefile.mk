@@ -15,7 +15,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	LocalCartesian Geodesic GeodesicLine PolygonArea \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea \
-	SphericalEngine CircularEngine MagneticModel
+	SphericalEngine CircularEngine MagneticModel MagneticCircle
 EXTRAHEADERS = Constants Math Accumulator \
 	SphericalHarmonic SphericalHarmonic1 SphericalHarmonic2
 
