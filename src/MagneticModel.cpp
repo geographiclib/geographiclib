@@ -164,6 +164,9 @@ namespace GeographicLib {
       bin.read(reinterpret_cast<char *>(&_G1[0]), K1 * sizeof(double));
       bin.read(reinterpret_cast<char *>(&_H1[0]), K1 * sizeof(double));
     }
+    _harma = SphericalHarmonic1(_G, _H, _N, _G1, _H1, _N1,
+                                _a, SphericalHarmonic1::schmidt);
+    _harmb = SphericalHarmonic(_G1, _H1, _N1, _a, SphericalHarmonic::schmidt);
   }
 
   void MagneticModel::Field(real lat, real lon, real h, real t, bool diffp,
@@ -174,13 +177,15 @@ namespace GeographicLib {
     vector<real> M(9);
     _earth.Forward(lat, lon, h, x, y, z, M);
     real BX, BY, BZ;            // Components in geocentric basis
-    SphericalEngine::Gradient1(_N, _G, _H, _N1, t, _G1, _H1, x, y, z, _a,
-                               BX, BY, BZ,
-                               SphericalEngine::schmidt);
+    //    SphericalEngine::Gradient1(_N, _G, _H, _N1, t, _G1, _H1, x, y, z, _a,
+    //                               BX, BY, BZ,
+    //                               SphericalEngine::schmidt);
+    _harma(t, x, y, z, BX, BY, BZ);
     if (diffp) {
       real BXt, BYt, BZt;
-      SphericalEngine::Gradient
-        (_N1, _G1, _H1, x, y, z, _a, BXt, BYt, BZt, SphericalEngine::schmidt);
+      //      SphericalEngine::Gradient
+      //        (_N1, _G1, _H1, x, y, z, _a, BXt, BYt, BZt, SphericalEngine::schmidt);
+      _harmb(x, y, z, BXt, BYt, BZt);
       Bxt = - _a * (M[0] * BXt + M[3] * BYt + M[6] * BZt);
       Byt = - _a * (M[1] * BXt + M[4] * BYt + M[7] * BZt);
       Bzt = - _a * (M[2] * BXt + M[5] * BYt + M[8] * BZt);

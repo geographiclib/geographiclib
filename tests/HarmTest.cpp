@@ -2,14 +2,14 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/MagneticModel.hpp>
+#include <GeographicLib/SphericalHarmonic.hpp>
 
 using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
-    if (true) {
+    if (false) {
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
       MagneticModel mag1("wmm2010");
       MagneticModel mag2("emm2010");
@@ -59,6 +59,7 @@ int main() {
     real lat, lon;
     std::cout << std::setprecision(17);
     real a(0.9L), r(1.2L);
+    SphericalHarmonic harm(C, S, N, a, SphericalHarmonic::full);
     std::vector<real> Z;
     while (std::cin >> lat >> lon) {
       real
@@ -69,17 +70,14 @@ int main() {
         z = r * sin(phi);
       real
         d = 1e-7L,
-        dx1 = (SphericalEngine::Value(N, C, S, x+d, y, z, a) -
-               SphericalEngine::Value(N, C, S, x-d, y, z, a))/(2*d),
-        dy1 = (SphericalEngine::Value(N, C, S, x, y+d, z, a) -
-               SphericalEngine::Value(N, C, S, x, y-d, z, a))/(2*d),
-        dz1 = (SphericalEngine::Value(N, C, S, x, y, z+d, a) -
-               SphericalEngine::Value(N, C, S, x, y, z-d, a))/(2*d),
+        dx1 = (harm(x+d, y, z) - harm(x-d, y, z))/(2*d),
+        dy1 = (harm(x, y+d, z) - harm(x, y-d, z))/(2*d),
+        dz1 = (harm(x, y, z+d) - harm(x, y, z-d))/(2*d),
         dx2, dy2, dz2;
       real
-        v1 = SphericalEngine::Value(N, C, S, x, y, z, a);
+        v1 = harm(x, y, z);
       real
-        v2 = SphericalEngine::Gradient(N, C, S, x, y, z, a, dx2, dy2, dz2);
+        v2 = harm(x, y, z, dx2, dy2, dz2);
       std::cout << v1 << " " << v2 << "\n";
       std::cout << dx1 << " " << dx2 << "\n"
                 << dy1 << " " << dy2 << "\n"

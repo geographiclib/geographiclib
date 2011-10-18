@@ -14,6 +14,8 @@
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geocentric.hpp>
+#include <GeographicLib/SphericalHarmonic.hpp>
+#include <GeographicLib/SphericalHarmonic1.hpp>
 
 namespace GeographicLib {
 
@@ -38,6 +40,8 @@ namespace GeographicLib {
     void Field(real lat, real lon, real h, real t, bool diffp,
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const;
+    SphericalHarmonic1 _harma;
+    SphericalHarmonic _harmb;
   public:
     /**
      * Construct a magnetic model.

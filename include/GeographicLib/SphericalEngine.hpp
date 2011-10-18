@@ -22,11 +22,6 @@ namespace GeographicLib {
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalEngine {
-  public:
-    enum normalization {
-      full = 0,
-      schmidt = 1,
-    };
   private:
     typedef Math::real real;
     // An internal scaling of the coefficients to avoid overflow in
@@ -35,12 +30,18 @@ namespace GeographicLib {
     // Move latitudes near the pole off the axis by this amount.
     static const real eps_;
     static const std::vector<real> Z_;
+    SphericalEngine();        // Disable constructor
 
+  public:
+    enum normalization {
+      full = 0,
+      schmidt = 1,
+    };
     class coeff {
     public:
-      const std::vector<real>::const_iterator Cnm;
-      const std::vector<real>::const_iterator Snm;
-      const int N, nmx, mmx;
+      std::vector<real>::const_iterator Cnm;
+      std::vector<real>::const_iterator Snm;
+      int N, nmx, mmx;
       // The 1-d index of column major vector for max degree N, degree n, and
       // order m
       inline int index(int n, int m) const throw()
@@ -105,9 +106,6 @@ namespace GeographicLib {
       static Math::real GenValue(const coeff c[L], const real f[L],
                                  real x, real y, real z, real a,
                                  real& gradx, real& grady, real& gradz);
-
-    SphericalEngine();        // Disable constructor
-  public:
 
     /**
      * Compute a spherical harmonic sum.

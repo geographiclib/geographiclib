@@ -21,7 +21,8 @@ namespace GeographicLib {
   using namespace std;
 
   const Math::real SphericalEngine::scale_ =
-    pow(real(numeric_limits<real>::radix), -numeric_limits<real>::max_exponent/2);
+    pow(real(numeric_limits<real>::radix),
+        -numeric_limits<real>::max_exponent/2);
   const Math::real SphericalEngine::eps_ =
     Math::sq(numeric_limits<real>::epsilon());
 
@@ -30,8 +31,8 @@ namespace GeographicLib {
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
   Math::real SphericalEngine::GenValue(const coeff c[L], const real f[L],
-                                         real x, real y, real z, real a,
-                                         real& gradx, real& grady, real& gradz) {
+                                       real x, real y, real z, real a,
+                                       real& gradx, real& grady, real& gradz) {
     // General sum
     // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
     //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
