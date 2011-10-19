@@ -174,6 +174,11 @@ namespace GeographicLib {
      * @param[out] grady \e y component of the gradient
      * @param[out] gradz \e z component of the gradient
      * @return[in] \e V the value of the sum.
+     *
+     * The gradients will only be computed if the CircularEngine object was
+     * created with this capability (e.g., via \e gradp = true in
+     * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be
+     * touched.
      **********************************************************************/
     Math::real operator()(real lon,
                           real& gradx, real& grady, real& gradz) const {
