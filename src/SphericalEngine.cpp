@@ -30,7 +30,7 @@ namespace GeographicLib {
   const std::vector<Math::real> SphericalEngine::Z_(0);
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
-  Math::real SphericalEngine::Value(const coeff c[L], const real f[L],
+  Math::real SphericalEngine::Value(const coeff c[], const real f[],
                                     real x, real y, real z, real a,
                                     real& gradx, real& grady, real& gradz) {
     // General sum
@@ -281,7 +281,7 @@ namespace GeographicLib {
   }
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
-  CircularEngine SphericalEngine::Circle(const coeff c[L], const real f[L],
+  CircularEngine SphericalEngine::Circle(const coeff c[], const real f[],
                                          real p, real z, real a) {
 
     STATIC_ASSERT(L > 0, "L must be positive");

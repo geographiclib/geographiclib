@@ -20,7 +20,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Math::real CircularEngine::Value(bool gradp, real coslam, real sinlam,
+  Math::real CircularEngine::Value(bool gradp, real cl, real sl,
                                    real& gradx, real& grady, real& gradz) const
   {
     gradp = _gradp && gradp;
@@ -40,12 +40,12 @@ namespace GeographicLib {
         switch (_norm) {
         case full:
           v = 2 * real(2 * m + 3) / (m + 1);
-          A = coslam * sqrt(v) * _uq;
+          A = cl * sqrt(v) * _uq;
           B = - sqrt((v * (2 * m + 5)) / (8 * (m + 2))) * _uq2;
           break;
         case schmidt:
           v = 2 * real(2 * m + 1) / (m + 1);
-          A = coslam * sqrt(v) * _uq;
+          A = cl * sqrt(v) * _uq;
           B = - sqrt((v * (2 * m + 3)) / (8 * (m + 2))) * _uq2;
           break;
         default:
@@ -65,7 +65,7 @@ namespace GeographicLib {
         real A, B, qs;
         switch (_norm) {
         case full:
-          A = sqrt(real(3)) * _uq;       // F[1]/(q*coslam) or F[1]/(q*sinlam)
+          A = sqrt(real(3)) * _uq;       // F[1]/(q*cl) or F[1]/(q*sl)
           B = - sqrt(real(15)/4) * _uq2; // beta[1]/q
           break;
         case schmidt:
@@ -76,24 +76,24 @@ namespace GeographicLib {
           A = B = 0;
         }
         qs = _q / _scale;
-        vc = qs * (_wc[m] + A * (coslam * vc + sinlam * vs ) + B * vc2);
+        vc = qs * (_wc[m] + A * (cl * vc + sl * vs ) + B * vc2);
         if (gradp) {
           qs /= _r;
           // The components of the gradient in circular coordinates are
           // r: dV/dr
           // theta: 1/r * dV/dtheta
           // lambda: 1/(r*u) * dV/dlambda
-          vrc =    -qs*(_wrc[m] + A * (coslam * vrc + sinlam * vrs) + B * vrc2);
-          vtc = -_u*qs*(_wtc[m] + A * (coslam * vtc + sinlam * vts) + B * vtc2);
-          vlc =  qs/_u*(          A * (coslam * vlc + sinlam * vls) + B * vlc2);
+          vrc =      - qs * (_wrc[m] + A * (cl * vrc + sl * vrs) + B * vrc2);
+          vtc = - _u * qs * (_wtc[m] + A * (cl * vtc + sl * vts) + B * vtc2);
+          vlc =   qs / _u * (          A * (cl * vlc + sl * vls) + B * vlc2);
         }
       }
     }
 
     if (gradp) {
       // Rotate into cartesian (geocentric) coordinates
-      gradx = coslam * (_u * vrc + _t * vtc) - sinlam * vlc;
-      grady = sinlam * (_u * vrc + _t * vtc) + coslam * vlc;
+      gradx = cl * (_u * vrc + _t * vtc) - sl * vlc;
+      grady = sl * (_u * vrc + _t * vtc) + cl * vlc;
       gradz =           _t * vrc - _u * vtc                ;
     }
     return vc;

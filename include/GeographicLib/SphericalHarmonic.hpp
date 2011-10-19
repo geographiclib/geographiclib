@@ -155,11 +155,11 @@ namespace GeographicLib {
     }
 
     CircularEngine Circle(real p, real z, bool gradp) const {
-      real f[] = {};
+      real f[] = {1};
       switch (_norm) {
       case full:
         return gradp ?
-           SphericalEngine::Circle<true, SphericalEngine::full, 1>
+          SphericalEngine::Circle<true, SphericalEngine::full, 1>
           (_c, f, p, z, _a) :
           SphericalEngine::Circle<false, SphericalEngine::full, 1>
           (_c, f, p, z, _a);
@@ -167,7 +167,7 @@ namespace GeographicLib {
       case schmidt:
       default:                  // To avoid compiler warnings
         return gradp ?
-           SphericalEngine::Circle<true, SphericalEngine::schmidt, 1>
+          SphericalEngine::Circle<true, SphericalEngine::schmidt, 1>
           (_c, f, p, z, _a) :
           SphericalEngine::Circle<false, SphericalEngine::schmidt, 1>
           (_c, f, p, z, _a);

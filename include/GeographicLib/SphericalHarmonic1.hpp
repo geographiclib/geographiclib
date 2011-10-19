@@ -142,7 +142,7 @@ namespace GeographicLib {
       switch (_norm) {
       case full:
         return gradp ?
-           SphericalEngine::Circle<true, SphericalEngine::full, 2>
+          SphericalEngine::Circle<true, SphericalEngine::full, 2>
           (_c, f, p, z, _a) :
           SphericalEngine::Circle<false, SphericalEngine::full, 2>
           (_c, f, p, z, _a);
@@ -150,7 +150,7 @@ namespace GeographicLib {
       case schmidt:
       default:                  // To avoid compiler warnings
         return gradp ?
-           SphericalEngine::Circle<true, SphericalEngine::schmidt, 2>
+          SphericalEngine::Circle<true, SphericalEngine::schmidt, 2>
           (_c, f, p, z, _a) :
           SphericalEngine::Circle<false, SphericalEngine::schmidt, 2>
           (_c, f, p, z, _a);

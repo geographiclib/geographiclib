@@ -72,7 +72,7 @@ namespace GeographicLib {
     }
 
     /**
-     * Compute a spherical harmonic sum with a correction term.
+     * Compute a spherical harmonic sum with two correction terms.
      *
      * @param[in] tau1 multiplier for correction coefficients.
      * @param[in] tau2 multiplier for correction coefficients.
@@ -114,7 +114,8 @@ namespace GeographicLib {
     }
 
     /**
-     * Compute a spherical harmonic sum with a correction and its gradient.
+     * Compute a spherical harmonic sum with two correction terms and its
+     * gradient.
      *
      * @param[in] tau1 multiplier for correction coefficients.
      * @param[in] tau2 multiplier for correction coefficients.
@@ -152,7 +153,7 @@ namespace GeographicLib {
       switch (_norm) {
       case full:
         return gradp ?
-           SphericalEngine::Circle<true, SphericalEngine::full, 3>
+          SphericalEngine::Circle<true, SphericalEngine::full, 3>
           (_c, f, p, z, _a) :
           SphericalEngine::Circle<false, SphericalEngine::full, 3>
           (_c, f, p, z, _a);
@@ -160,7 +161,7 @@ namespace GeographicLib {
       case schmidt:
       default:                  // To avoid compiler warnings
         return gradp ?
-           SphericalEngine::Circle<true, SphericalEngine::schmidt, 3>
+          SphericalEngine::Circle<true, SphericalEngine::schmidt, 3>
           (_c, f, p, z, _a) :
           SphericalEngine::Circle<false, SphericalEngine::schmidt, 3>
           (_c, f, p, z, _a);

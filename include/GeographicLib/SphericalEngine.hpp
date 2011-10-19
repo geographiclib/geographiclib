@@ -105,12 +105,12 @@ namespace GeographicLib {
     };
 
     template<bool gradp, normalization norm, int L>
-      static Math::real Value(const coeff c[L], const real f[L],
+      static Math::real Value(const coeff c[], const real f[],
                               real x, real y, real z, real a,
                               real& gradx, real& grady, real& gradz);
 
     template<bool gradp, SphericalEngine::normalization norm, int L>
-      static CircularEngine Circle(const coeff c[L], const real f[L],
+      static CircularEngine Circle(const coeff c[], const real f[],
                                    real p, real z, real a);
   };
 
