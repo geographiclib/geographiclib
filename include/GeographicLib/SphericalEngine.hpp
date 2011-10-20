@@ -64,42 +64,42 @@ namespace GeographicLib {
             const std::vector<real>& S,
             int N1, int nmx1, int mmx1)
         : Cnm(C.begin())
-        , Snm(S.begin())
+        , Snm(S.begin()-(N1+1))
         , N(N1)
         , nmx(nmx1)
         , mmx(mmx1) {
-        if (!(N >= nmx && nmx >= mmx && mmx >= 0))
+        if (!(N >= nmx && nmx >= mmx && mmx >= -1))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(nmx, mmx) < int(C.size()) &&
-              index(nmx, mmx) < int(S.size())))
+              index(nmx, mmx) < int(S.size())+(N+1)))
           throw GeographicErr("Arrays too small in coeff");
       }
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
             int N1)
         : Cnm(C.begin())
-        , Snm(S.begin())
+        , Snm(S.begin()-(N1+1))
         , N(N1)
         , nmx(N1)
         , mmx(N1) {
-        if (!(N >= nmx && nmx >= mmx && mmx >= 0))
+        if (!(N >= nmx && nmx >= mmx && mmx >= -1))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(nmx, mmx) < int(C.size()) &&
-              index(nmx, mmx) < int(S.size())))
+              index(nmx, mmx) < int(S.size())+(N+1)))
           throw GeographicErr("Arrays too small in coeff");
       }
       coeff(const std::vector<real>& C,
             const std::vector<real>& S,
             int N1, int mmx1)
         : Cnm(C.begin())
-        , Snm(S.begin())
+        , Snm(S.begin()-(N1+1))
         , N(N1)
         , nmx(N1)
         , mmx(mmx1) {
-        if (!(N >= nmx && nmx >= mmx && mmx >= 0))
+        if (!(N >= nmx && nmx >= mmx && mmx >= -1))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(nmx, mmx) < int(C.size()) &&
-              index(nmx, mmx) < int(S.size())))
+              index(nmx, mmx) < int(S.size())+(N+1)))
           throw GeographicErr("Arrays too small in coeff");
       }
     };

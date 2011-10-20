@@ -247,24 +247,6 @@ namespace GeographicLib {
     ///@}
   };
 
-  /**
-   * \brief Exception handling for %GeographicLib
-   *
-   * A class to handle exceptions.  It's derived from std::runtime_error so it
-   * can be caught by the usual catch clauses.
-   **********************************************************************/
-  class GeographicErr : public std::runtime_error {
-  public:
-
-    /**
-     * Constructor
-     *
-     * @param[in] msg a string message, which is accessible in the catch
-     *   clause, via what().
-     **********************************************************************/
-    GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
-  };
-
 } // namespace GeographicLib
 
 #endif  // GEOGRAPHICLIB_CONSTANTS_HPP

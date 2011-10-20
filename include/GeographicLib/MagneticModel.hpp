@@ -36,7 +36,7 @@ namespace GeographicLib {
     typedef Math::real real;
     std::string _datafile, _name, _date;
     real _t0, _tmin, _tmax, _a, _minh, _maxh;
-    int _N, _N1;
+    int _N, _M, _N1, _M1;
     Geocentric _earth;
     std::vector<real> _G, _H, _G1, _H1;
     void Field(real lat, real lon, real h, real t, bool diffp,

@@ -102,8 +102,8 @@ namespace GeographicLib {
      * <i>C</i><sub>32</sub>,
      * <i>C</i><sub>33</sub>.
      * In general the (\e n,\e m) element is at index \e m*\e N - \e m*(\e m -
-     * 1)/2 + \e n.  The first (\e N + 1) elements of \e S are not referenced
-     * (they should be 0).
+     * 1)/2 + \e n.  The layout of \e S is the same except that the first
+     * column is omitted (since they never contribute to the sum).
      *
      * The class stores <i>pointers</i> to the first elements of \e C and \e S.
      * These arrays should not be altered or destroyed during the lifetime of a

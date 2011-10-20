@@ -148,25 +148,26 @@ namespace GeographicLib {
       std::string datfile = std::string(MAGNETIC_DEFAULT_PATH) + "/" + _name +
         ".dat";
       ifstream data(datfile.c_str());
-      data >> _t0 >> _N >> _N1 >> _a;
+      data >> _t0 >> _N >> _M >> _N1 >> _M1 >> _a;
     }
     int
-      K = (_N + 1) * (_N + 2) / 2,
-      K1 = (_N1 + 1) * (_N1 + 2) / 2;
-    _G.resize(K); _H.resize(K);
-    _G1.resize(K1); _H1.resize(K1);
+      K = (_M + 1) * (2*_N - _M + 2) / 2,
+      K1 = (_M1 + 1) * (2*_N1 - _M1 + 2) / 2;
+    _G.resize(K); _H.resize(K-(_N+1));
+    _G1.resize(K1); _H1.resize(K1-(_N1+1));
     {
       std::string binfile = std::string(MAGNETIC_DEFAULT_PATH) + "/" + _name +
         ".bin";
       ifstream bin(binfile.c_str(), ios::binary);
-      bin.read(reinterpret_cast<char *>(&_G[0]), K * sizeof(double));
-      bin.read(reinterpret_cast<char *>(&_H[0]), K * sizeof(double));
-      bin.read(reinterpret_cast<char *>(&_G1[0]), K1 * sizeof(double));
-      bin.read(reinterpret_cast<char *>(&_H1[0]), K1 * sizeof(double));
+      Math::readarray<double, real, false>(bin, _G);
+      Math::readarray<double, real, false>(bin, _H);
+      Math::readarray<double, real, false>(bin, _G1);
+      Math::readarray<double, real, false>(bin, _H1);
     }
-    _harma = SphericalHarmonic1(_G, _H, _N, _G1, _H1, _N1,
+    _harma = SphericalHarmonic1(_G, _H, _N, _N, _M, _G1, _H1, _N1, _N1, _M1,
                                 _a, SphericalHarmonic1::schmidt);
-    _harmb = SphericalHarmonic(_G1, _H1, _N1, _a, SphericalHarmonic::schmidt);
+    _harmb = SphericalHarmonic(_G1, _H1, _N1, _N1, _M1,
+                               _a, SphericalHarmonic::schmidt);
   }
 
   void MagneticModel::Field(real lat, real lon, real h, real t, bool diffp,
@@ -177,14 +178,9 @@ namespace GeographicLib {
     vector<real> M(9);
     _earth.Forward(lat, lon, h, x, y, z, M);
     real BX, BY, BZ;            // Components in geocentric basis
-    //    SphericalEngine::Gradient1(_N, _G, _H, _N1, t, _G1, _H1, x, y, z, _a,
-    //                               BX, BY, BZ,
-    //                               SphericalEngine::schmidt);
     _harma(t, x, y, z, BX, BY, BZ);
     if (diffp) {
       real BXt, BYt, BZt;
-      //      SphericalEngine::Gradient
-      //        (_N1, _G1, _H1, x, y, z, _a, BXt, BYt, BZt, SphericalEngine::schmidt);
       _harmb(x, y, z, BXt, BYt, BZt);
       Bxt = - _a * (M[0] * BXt + M[3] * BYt + M[6] * BZt);
       Byt = - _a * (M[1] * BXt + M[4] * BYt + M[7] * BZt);
