@@ -107,13 +107,6 @@ namespace GeographicLib {
 
   public:
     /**
-     * A default constructor so that the object can be created when the
-     * constructor for another object is initialized.  This default object can
-     * then be reset with the default copy assignment operator.
-     **********************************************************************/
-    SphericalHarmonic() {}
-
-    /**
      * Constructor with a full set of coefficients specified.
      *
      * @param[in] C the coefficients \e C<sub>\e nm</sub>.
@@ -141,7 +134,8 @@ namespace GeographicLib {
      * <i>C</i><sub>33</sub>.
      * In general the (\e n,\e m) element is at index \e m*\e N - \e m*(\e m -
      * 1)/2 + \e n.  The layout of \e S is the same except that the first
-     * column is omitted (since they never contribute to the sum).
+     * column is omitted (since the \e m = 0 terms never contribute to the sum)
+     * and the 0th element is <i>S</i><sub>11</sub>
      *
      * The class stores <i>pointers</i> to the first elements of \e C and \e S.
      * These arrays should not be altered or destroyed during the lifetime of a
@@ -181,6 +175,13 @@ namespace GeographicLib {
       : _a(a)
       , _norm(norm)
     { _c[0] = SphericalEngine::coeff(C, S, N, nmx, mmx); }
+
+    /**
+     * A default constructor so that the object can be created when the
+     * constructor for another object is initialized.  This default object can
+     * then be reset with the default copy assignment operator.
+     **********************************************************************/
+    SphericalHarmonic() {}
 
     /**
      * Compute the spherical harmonic sum.
@@ -240,7 +241,7 @@ namespace GeographicLib {
     }
 
     /**
-     * Compute CircularEngine to allow the efficient evaluation of several
+     * Create a CircularEngine to allow the efficient evaluation of several
      * points on a circle of latitude.
      *
      * @param[in] p the radius of the circle.
@@ -249,12 +250,12 @@ namespace GeographicLib {
      *   gradient of the sum.
      * @return the CircularEngine object.
      *
-     * SphericalHarmonic::operator() exchanges the order of the sums in the
+     * SphericalHarmonic::operator()() exchanges the order of the sums in the
      * definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m =
      * 0..N)[sum(n = m..N)[...]].  SphericalHarmonic::Circle performs the inner
      * sum over degree \e n (which entails about \e N<sup>2</sup> operations).
-     * This leaves the returned CircularEngine object with the outer sum over
-     * the order \e m to do (about \e N operations).
+     * Calling CircularEngine::operator()() on the returned object performs the
+     * outer sum over the order \e m (about \e N operations).
      *
      * Here's an example of computing the spherical sum at a sequence of
      * longitudes without using a CircularEngine object

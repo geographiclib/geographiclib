@@ -20,7 +20,9 @@ namespace GeographicLib {
   /**
    * \brief The evaluation engine for SphericalHarmonic
    *
-   * Sum a spherical harmonic series.
+   * This serves as the backend to SphericalHarmonic, SphericalHarmonic1, and
+   * SphericalHarmonic2.  Typically end-users will not have to access this
+   * class directly.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalEngine {
@@ -54,13 +56,18 @@ namespace GeographicLib {
        **********************************************************************/
       schmidt = 1,
     };
+
     /**
      * \brief Package up coefficients for SphericalEngine
      *
      * This packages up the \e C, \e S coefficients and information about how
      * the coefficients are stored into a single structure.  This allows a
-     * vector of coeffs to be passed to SphericalEngine::Value.  This class alo
-     * includes functions to aid indexing into \e C and \e S.
+     * vector of type SphericalEngine::coeff to be passed to
+     * SphericalEngine::Value.  This class also includes functions to aid
+     * indexing into \e C and \e S.
+     *
+     *  The storage layout of the coefficients is documented in
+     *  SphericalHarmonic and SphericalHarmonic::SphericalHarmonic.
      **********************************************************************/
     class coeff {
     private:
@@ -178,7 +185,7 @@ namespace GeographicLib {
       inline Math::real Cv(int k, int n, int m, real f) const
       { return m > _mmx || n > _nmx ? 0 : *(_Cnm + k) * f; }
       /**
-       * Aan element of \e S with checking.
+       * An element of \e S with checking.
        *
        * @param[in] k the one-dimensional index.
        * @param[in] n the requested degree.
@@ -208,7 +215,11 @@ namespace GeographicLib {
      * @param[out] gradz the \e z component of the gradient.
      * @result the spherical harmonic sum.
      *
-     * See the SphericalHarmonic class for the definition of the sum.
+     * See the SphericalHarmonic class for the definition of the sum.  The
+     * coefficients used by this function are, for example, c[0].Cv + f[1] *
+     * c[1].cv + ... + f[L] * c[L].Cv.  (Note that f[0] is \e not used.)  The
+     * parameters \e gradp, \e norm, and \e L are template parameters, to allow
+     * more optimization to be done at compile time.
      **********************************************************************/
     template<bool gradp, normalization norm, int L>
       static Math::real Value(const coeff c[], const real f[],
@@ -228,6 +239,12 @@ namespace GeographicLib {
      * @param[in] z the height of the circle.
      * @param[in] a the normalizing radius.
      * @result the CircularEngine object.
+     *
+     * If you need to evaluate the spherical harmonic sum for several points
+     * with constant \e f, \e p = sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>), \e
+     * z, and \e a, it is more efficient to construct call
+     * SphericalEngine::Circle to give a CircularEngine object and then call
+     * CircularEngine::operator()() with arguments \e x/\e p and \e y/\e p.
      **********************************************************************/
     template<bool gradp, SphericalEngine::normalization norm, int L>
       static CircularEngine Circle(const coeff c[], const real f[],

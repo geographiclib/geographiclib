@@ -23,15 +23,16 @@ namespace GeographicLib {
    * spherical harmonic sum are needed for several points on a circle of
    * constant latitude \e lat and height \e h, then SphericalEngine::Circle can
    * compute the inner sum, which is independent of longitude \e lon, and
-   * produce a CircularEngine object.  CircularEngine::operator()(real) can
+   * produce a CircularEngine object.  CircularEngine::operator()() can
    * then be used to perform the outer sum for particular vales of \e lon.
    * This can lead to substantial improvements in computational speed for high
    * degree sum (approximately by a factor of \e N / 2 where \e N is the
    * maximum degree).
    *
-   * The constructor for this class is private.  Use SphericalHarmonic::Circle,
-   * SphericalHarmonic1::Circle, and SphericalHarmonic2::Circle to create
-   * instances of this class.
+   * CircularEngine is tightly linked to the internals of SphericalEngine.  For
+   * that reason, the constructor for this class is private.  Use
+   * SphericalHarmonic::Circle, SphericalHarmonic1::Circle, and
+   * SphericalHarmonic2::Circle to create instances of this class.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT CircularEngine {
@@ -95,18 +96,6 @@ namespace GeographicLib {
 
   public:
     /**
-     * Evaluate the sum for a particular longitude.
-     *
-     * @param[in] lon the longitude (degrees).
-     * @return[in] \e V the value of the sum.
-     **********************************************************************/
-    Math::real operator()(real lon) const {
-      real coslon, sinlon;
-      cossin(lon, coslon, sinlon);
-      return (*this)(coslon, sinlon);
-    }
-
-    /**
      * Evaluate the sum for a particular longitude given in terms of its
      * cosine and sine.
      *
@@ -120,12 +109,45 @@ namespace GeographicLib {
     }
 
     /**
+     * Evaluate the sum for a particular longitude.
+     *
+     * @param[in] lon the longitude (degrees).
+     * @return[in] \e V the value of the sum.
+     **********************************************************************/
+    Math::real operator()(real lon) const {
+      real coslon, sinlon;
+      cossin(lon, coslon, sinlon);
+      return (*this)(coslon, sinlon);
+    }
+
+    /**
+     * Evaluate the sum and its gradient for a particular longitude given in
+     * terms of its cosine and sine.
+     *
+     * @param[in] coslon the cosine of the longitude.
+     * @param[in] sinlon the sine of the longitude.
+     * @param[out] gradx \e x component of the gradient.
+     * @param[out] grady \e y component of the gradient.
+     * @param[out] gradz \e z component of the gradient.
+     * @return[in] \e V the value of the sum.
+     *
+     * The gradients will only be computed if the CircularEngine object was
+     * created with this capability (e.g., via \e gradp = true in
+     * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be
+     * touched.
+     **********************************************************************/
+    Math::real operator()(real coslon, real sinlon,
+                          real& gradx, real& grady, real& gradz) const {
+      return Value(true, coslon, sinlon, gradx, grady, gradz);
+    }
+
+    /**
      * Evaluate the sum and its gradient for a particular longitude.
      *
      * @param[in] lon the longitude (degrees).
-     * @param[out] gradx \e x component of the gradient
-     * @param[out] grady \e y component of the gradient
-     * @param[out] gradz \e z component of the gradient
+     * @param[out] gradx \e x component of the gradient.
+     * @param[out] grady \e y component of the gradient.
+     * @param[out] gradz \e z component of the gradient.
      * @return[in] \e V the value of the sum.
      *
      * The gradients will only be computed if the CircularEngine object was
@@ -138,22 +160,6 @@ namespace GeographicLib {
       real coslon, sinlon;
       cossin(lon, coslon, sinlon);
       return (*this)(coslon, sinlon, gradx, grady, gradz);
-    }
-
-    /**
-     * Evaluate the sum and its gradient for a particular longitude given in
-     * terms of its cosine and sine.
-     *
-     * @param[in] coslon the cosine of the longitude.
-     * @param[in] sinlon the sine of the longitude.
-     * @param[out] gradx \e x component of the gradient
-     * @param[out] grady \e y component of the gradient
-     * @param[out] gradz \e z component of the gradient
-     * @return[in] \e V the value of the sum.
-     **********************************************************************/
-    Math::real operator()(real coslon, real sinlon,
-                          real& gradx, real& grady, real& gradz) const {
-      return Value(true, coslon, sinlon, gradx, grady, gradz);
     }
   };
 
