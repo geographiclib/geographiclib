@@ -27,8 +27,23 @@ namespace GeographicLib {
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic1 {
   public:
+    /**
+     * Supported normalizations for associate Legendre polynomials.
+     **********************************************************************/
     enum normalization {
+      /**
+       * Fully normalized associated Legendre polynomials.  See
+       * SphericalHarmonic::full for documentation.
+       *
+       * @hideinitializer
+       **********************************************************************/
       full = SphericalEngine::full,
+      /**
+       * Schmidt semi-normalized associated Legendre polynomials.  See
+       * SphericalHarmonic::schmidt for documentation.
+       *
+       * @hideinitializer
+       **********************************************************************/
       schmidt = SphericalEngine::schmidt,
     };
 
@@ -58,8 +73,8 @@ namespace GeographicLib {
      *   coefficients \e C'<sub>\e nm</sub> and \e S'<sub>\e nm</sub>.
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
-     * @param[in] norm the normalization for the associated Legrendre
-     *   functions, either SphericalHarmonic1::full (the default) or
+     * @param[in] norm the normalization for the associated Legendre
+     *   polynomials, either SphericalHarmonic1::full (the default) or
      *   SphericalHarmonic1::schmidt.
      *
      * See SphericalHarmonic for the way the coefficients should be stored.  \e
@@ -102,8 +117,8 @@ namespace GeographicLib {
      * @param[in] mmx1 the maximum order used for \e C' and \e S'.
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
-     * @param[in] norm the normalization for the associated Legrendre
-     *   functions, either SphericalHarmonic1::full (the default) or
+     * @param[in] norm the normalization for the associated Legendre
+     *   polynomials, either SphericalHarmonic1::full (the default) or
      *   SphericalHarmonic1::schmidt.
      *
      * The class stores <i>pointers</i> to the first elements of \e C, \e S, \e

@@ -17,6 +17,7 @@
 *~
 .#*
 .nfs*
+/gravity
 /magnetic
 BUILD*
 CMakeCache.txt

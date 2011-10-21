@@ -22,7 +22,7 @@ namespace GeographicLib {
   class MagneticCircle;
 
   /**
-   * \brief Magnetic model
+   * \brief Model of the earth's magnetic field
    *
    * Evaluate the earth's magnetic field according to a model.
    * See
@@ -85,8 +85,8 @@ namespace GeographicLib {
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      * @param[out] Bxt the rate of change of \e Bx (nT/yr).
-     * @param[out] Byt the rate of change of \e Bx (nT/yr).
-     * @param[out] Bzt the rate of change of \e Bx (nT/yr).
+     * @param[out] Byt the rate of change of \e By (nT/yr).
+     * @param[out] Bzt the rate of change of \e Bz (nT/yr).
      **********************************************************************/
     void operator()(real lat, real lon, real h, real t,
                     real& Bx, real& By, real& Bz,
@@ -94,6 +94,43 @@ namespace GeographicLib {
       Field(lat, lon, h, t, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
 
+    /**
+     * Create a MagneticCircle object to allow the magnetic field at many
+     * points with constant \e lat, \e h, and \e t and varying \e lon to be
+     * computed efficienty.
+     *
+     * @param[in] lat latitude of the point (degrees).
+     * @param[in] h the height of the point above the ellipsoid (meters).
+     * @param[in] t the time (years).
+     * @return a MagneticCircle object whose MagneticCircle::operator()(real
+     *   lon) member function computes the field at a particular \e lon.
+     *
+     * If the field at several points on a circle of latitude need to be
+     * calculated then instead of
+     \code
+  SphericalModel m(...);     // Create a magnetic model
+  double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
+  for (int i = 0; i <= 100; ++i) {
+    real
+      lon = lon0 + i * dlon, Bx, By, Bz;
+    m(lat, lon, h, t, Bx, By, Bz);
+    std::cout << lon << " " << Bx << " " << By << " " << Bz << "\n";
+  }
+     \endcode
+     * use a MagneticCircle as in
+     \code
+  SphericalModel m(...);     // Create a magnetic model
+  double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
+  MagneticCircle c(m.Circle(lat, h, t)); // the MagneticCircle object
+  for (int i = 0; i <= 100; ++i) {
+    real
+      lon = lon0 + i * dlon, Bx, By, Bz;
+    c(lon, Bx, By, Bz);
+    std::cout << lon << " " << Bx << " " << By << " " << Bz << "\n";
+  }
+     \endcode
+     * For high-degree models, this will be substantially faster.
+     **********************************************************************/
     MagneticCircle Circle(real lat, real h, real t) const;
   };
 

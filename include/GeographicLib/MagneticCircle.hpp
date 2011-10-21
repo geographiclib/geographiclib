@@ -18,13 +18,15 @@
 namespace GeographicLib {
 
   /**
-   * \brief Magnetic circle
+   * \brief Magnetic field on a circle of latitude
    *
-   * Evaluate the earth's magnetic field according to a circle.
-   * See
-   * - http://geomag.org/circles/index.html
-   * - http://ngdc.noaa.gov/geomag/EMM/emm.shtml
-   * - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   * Evaluate the earth's magnetic field according on a circle of constant
+   * height and latitude.  This uses a CircleEngine to pre-evaluate the inner
+   * sum of the spherical harmonic sum, allowing the values of the field at
+   * different latitude to be evaluated rapidly.
+   *
+   * Use MagneticModel::Circle to create a MagneticCircle object.  (The
+   * constructor for this class is private.)
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticCircle {
@@ -51,7 +53,7 @@ namespace GeographicLib {
   public:
 
     /**
-     * Evaluate the components of the magnetic field.
+     * Evaluate the components of the magnetic field at a particular longitude.
      *
      * @param[in] lon longitude of the point (degrees).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
@@ -66,6 +68,7 @@ namespace GeographicLib {
 
     /**
      * Evaluate the components of the magnetic field and their time derivatives
+     * at a particular longitude.
      *
      * @param[in] lon longitude of the point (degrees).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
@@ -73,8 +76,8 @@ namespace GeographicLib {
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      * @param[out] Bxt the rate of change of \e Bx (nT/yr).
-     * @param[out] Byt the rate of change of \e Bx (nT/yr).
-     * @param[out] Bzt the rate of change of \e Bx (nT/yr).
+     * @param[out] Byt the rate of change of \e By (nT/yr).
+     * @param[out] Bzt the rate of change of \e Bz (nT/yr).
      **********************************************************************/
     void operator()(real lon, real& Bx, real& By, real& Bz,
                     real& Bxt, real& Byt, real& Bzt) const {

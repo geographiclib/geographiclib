@@ -147,7 +147,7 @@ namespace GeographicLib {
 
     STATIC_ASSERT(L > 0, "L must be positive");
     STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
-    int N = c[0].nmx, M = c[0].mmx;
+    int N = c[0].nmx(), M = c[0].mmx();
 
     real
       p = Math::hypot(x, y),
@@ -176,7 +176,7 @@ namespace GeographicLib {
       real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
       real wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
       for (int l = 0; l < L; ++l)
-        k[l] = c[l].rowind(N, m);
+        k[l] = c[l].index(N, m) + 1;
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
@@ -193,23 +193,21 @@ namespace GeographicLib {
           B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
           break;
         }
-        R = *(c[0].Cnm + --k[0]);
+        R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)
-          R += m > c[l].mmx || n > c[l].nmx ? 0 :
-            *(c[l].Cnm + --k[l]) * f[l];
+          R += c[l].Cv(--k[l], n, m, f[l]);
         R *= scale_;
-        w = A * wc  + B * wc2  +           R; wc2  = wc ; wc  = w;
+        w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
           w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
         }
         if (m) {
-          R = *(c[0].Snm + k[0]);
+          R = c[0].Sv(k[0]);
           for (int l = 1; l < L; ++l)
-            R += m > c[l].mmx || n > c[l].nmx ? 0 :
-              *(c[l].Snm + k[l]) * f[l];
+            R += c[l].Sv(k[l], n, m, f[l]);
           R *= scale_;
-          w = A * ws  + B * ws2  +           R; ws2  = ws ; ws  = w;
+          w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
             w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
@@ -286,7 +284,7 @@ namespace GeographicLib {
 
     STATIC_ASSERT(L > 0, "L must be positive");
     STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
-    int N = c[0].nmx, M = c[0].mmx;
+    int N = c[0].nmx(), M = c[0].mmx();
 
     real
       r = Math::hypot(z, p),
@@ -304,7 +302,7 @@ namespace GeographicLib {
       real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
       real wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
       for (int l = 0; l < L; ++l)
-        k[l] = c[l].rowind(N, m);
+        k[l] = c[l].index(N, m) + 1;
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
@@ -321,23 +319,21 @@ namespace GeographicLib {
           B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
           break;
         }
-        R = *(c[0].Cnm + --k[0]);
+        R = c[0].Cv(--k[0]);
         for (int l = 1; l < L; ++l)
-          R += m > c[l].mmx || n > c[l].nmx ? 0 :
-            *(c[l].Cnm + --k[l]) * f[l];
+          R += c[l].Cv(--k[l], n, m, f[l]);
         R *= scale_;
-        w = A * wc  + B * wc2  +           R; wc2  = wc ; wc  = w;
+        w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
           w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
         }
         if (m) {
-          R = *(c[0].Snm + k[0]);
+          R = c[0].Sv(k[0]);
           for (int l = 1; l < L; ++l)
-            R += m > c[l].mmx || n > c[l].nmx ? 0 :
-              *(c[l].Snm + k[l]) * f[l];
+            R += c[l].Sv(k[l], n, m, f[l]);
           R *= scale_;
-          w = A * ws  + B * ws2  +           R; ws2  = ws ; ws  = w;
+          w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
             w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;

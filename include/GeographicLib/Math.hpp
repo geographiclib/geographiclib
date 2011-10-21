@@ -122,6 +122,7 @@ namespace GeographicLib {
     static const bool bigendian = WORDS_BIGENDIAN;
                                  
     /**
+     * @tparam T the type of the returned value.
      * @return \e pi.
      **********************************************************************/
     template<typename T>
@@ -132,6 +133,7 @@ namespace GeographicLib {
     static inline real pi() throw() { return pi<real>(); }
 
     /**
+     * @tparam T the type of the returned value.
      * @return the number of radians in a degree.
      **********************************************************************/
     template<typename T>
@@ -143,6 +145,8 @@ namespace GeographicLib {
 
     /**
      * Square a number.
+
+     * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return \e x<sup>2</sup>.
      **********************************************************************/
@@ -153,6 +157,7 @@ namespace GeographicLib {
     /**
      * The hypotenuse function avoiding underflow and overflow.
      *
+     * @tparam T the type of the arguments and the returned value.
      * @param[in] x
      * @param[in] y
      * @return sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>).
@@ -201,6 +206,7 @@ namespace GeographicLib {
      * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd
      * Edition (SIAM, 2002), Sec 1.14.1, p 19.
      *
+     * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return exp(\e x) - 1.
      **********************************************************************/
@@ -236,6 +242,7 @@ namespace GeographicLib {
      * scientist should know about floating-point arithmetic</a> (1991),
      * Theorem 4.  See also, Higham (op. cit.), Answer to Problem 1.5, p 528.
      *
+     * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return log(1 + \e x).
      **********************************************************************/
@@ -268,6 +275,7 @@ namespace GeographicLib {
      * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
      * addition, the odd parity of the function is enforced.
      *
+     * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return asinh(\e x).
      **********************************************************************/
@@ -295,6 +303,7 @@ namespace GeographicLib {
      * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
      * addition, the odd parity of the function is enforced.
      *
+     * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return atanh(\e x).
      **********************************************************************/
@@ -320,6 +329,7 @@ namespace GeographicLib {
     /**
      * The cube root function.
      *
+     * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return the real cube root of \e x.
      **********************************************************************/
@@ -342,6 +352,7 @@ namespace GeographicLib {
     /**
      * Test for finiteness.
      *
+     * @tparam T the type of the argument.
      * @param[in] x
      * @return true if number is finite, false if NaN or infinite.
      **********************************************************************/
@@ -359,6 +370,7 @@ namespace GeographicLib {
     /**
      * The NaN (not a number)
      *
+     * @tparam T the type of the returned value.
      * @return NaN if available, otherwise return the max real.
      **********************************************************************/
     template<typename T>
@@ -375,6 +387,7 @@ namespace GeographicLib {
     /**
      * Test for NaN.
      *
+     * @tparam T the type of the argument.
      * @param[in] x
      * @return true if argument is a NaN.
      **********************************************************************/
@@ -390,6 +403,7 @@ namespace GeographicLib {
     /**
      * Infinity
      *
+     * @tparam T the type of the returned value.
      * @return infinity if available, otherwise return the max real.
      **********************************************************************/
     template<typename T>
@@ -406,6 +420,7 @@ namespace GeographicLib {
     /**
      * Swap the bytes of a quantity
      *
+     * @tparam T the type of the argument and the returned value.
      * @param[in] x
      * @return x with its bytes swapped.
      **********************************************************************/
@@ -424,6 +439,9 @@ namespace GeographicLib {
      * Read data of type ExtT from a binary stream to an array of type IntT.
      * The data in the file is in (bigendp ? big : little)-endian format.
      *
+     * @tparam ExtT the type of the objects in the binary stream (external).
+     * @tparam IntT the type of the objects in the array (internal).
+     * @tparam bigendp true if the external storage format is big-endian.
      * @param[in] str the input stream containing the data of type ExtT
      *   (external).
      * @param[out] array the output array of type IntT (internal).

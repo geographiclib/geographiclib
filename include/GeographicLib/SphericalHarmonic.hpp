@@ -31,13 +31,12 @@ namespace GeographicLib {
    * - \e q = <i>a</i>/<i>r</i>,
    * - \e theta = atan2(\e p, \e z) = the spherical \e colatitude,
    * - \e lambda = atan2(\e y, \e x) = the longitude.
-   * - P<sub>\e nm</sub>(\e t) is the associated Legendre function of degree \e
-   *   n and order \e m.
+   * - P<sub>\e nm</sub>(\e t) is the associated Legendre polynomial of degree
+   *   \e n and order \e m.
    *
    * One of two normalizations are supported for P<sub>\e nm</sub>
-   * - fully normalized denoted by SphericalHarmonic::full; see Heiskanen and
-   *   Moritz, Sec. 1-14 for its definition.
-   * - Schmidt normalized denoted by SphericalHarmonic::schmidt.
+   * - fully normalized denoted by SphericalHarmonic::full.
+   * - Schmidt semi-normalized denoted by SphericalHarmonic::schmidt.
    *
    * References:
    * - C. W. Clenshaw, A note on the summation of Chebyshev series,
@@ -56,8 +55,47 @@ namespace GeographicLib {
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic {
   public:
+    /**
+     * Supported normalizations for the associated Legendre polynomials.
+     **********************************************************************/
     enum normalization {
+      /**
+       * Fully normalized associated Legendre polynomials.
+       *
+       * These are defined by <i>P</i><sub><i>nm</i></sub><sup>full</sup>(\e z)
+       * = (-1)<sup><i>m</i></sup> sqrt(\e k (2\e n + 1) (\e n - \e m)! / (\e n
+       * + \e m)!) <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
+       * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
+       * function (also known as the Legendre function on the cut or the
+       * associated Legendre polynomial) http://dlmf.nist.gov/14.7.E10 and \e k
+       * = 1 for \e m = 0 and \e k = 2 otherwise.
+       *
+       * The mean squared value of
+       * <i>P</i><sub><i>nm</i></sub><sup>full</sup>(cos \e theta) cos(\e m \e
+       * lambda) and <i>P</i><sub><i>nm</i></sub><sup>full</sup>(cos \e theta)
+       * sin(\e m \e lambda) over the sphere is 1.
+       *
+       * @hideinitializer
+       **********************************************************************/
       full = SphericalEngine::full,
+      /**
+       * Schmidt semi-normalized associated Legendre polynomials.
+       *
+       * These are defined by <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(\e
+       * z) = (-1)<sup><i>m</i></sup> sqrt(\e k (\e n - \e m)! / (\e n + \e
+       * m)!)  <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
+       * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
+       * function (also known as the Legendre function on the cut or the
+       * associated Legendre polynomial) http://dlmf.nist.gov/14.7.E10 and \e k
+       * = 1 for \e m = 0 and \e k = 2 otherwise.
+       *
+       * The mean squared value of
+       * <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(cos \e theta) cos(\e m
+       * \e lambda) and <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(cos \e
+       * theta) sin(\e m \e lambda) over the sphere is 1/(2\e n + 1).
+       *
+       * @hideinitializer
+       **********************************************************************/
       schmidt = SphericalEngine::schmidt,
     };
 
@@ -83,8 +121,8 @@ namespace GeographicLib {
      * @param[in] N the maximum degree and order of the sum
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
-     * @param[in] norm the normalization for the associated Legrendre
-     *   functions, either SphericalHarmonic::full (the default) or
+     * @param[in] norm the normalization for the associated Legendre
+     *   polynomials, either SphericalHarmonic::full (the default) or
      *   SphericalHarmonic::schmidt.
      *
      * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
@@ -128,8 +166,8 @@ namespace GeographicLib {
      *   from 0 thru min(\e n, \e mmx).
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
-     * @param[in] norm the normalization for the associated Legrendre
-     *   functions, either SphericalHarmonic::full (the default) or
+     * @param[in] norm the normalization for the associated Legendre
+     *   polynomials, either SphericalHarmonic::full (the default) or
      *   SphericalHarmonic::schmidt.
      *
      * The class stores <i>pointers</i> to the first elements of \e C and \e S.

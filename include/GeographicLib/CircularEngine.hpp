@@ -59,27 +59,6 @@ namespace GeographicLib {
     }
 
     friend class SphericalEngine;
-    /**
-     * Constructor for CircularEngine with
-     *
-     * @param[in] M the maximum order of the spherical harmonic sum.
-     * @param[in] gradp whether to include the coefficients of the series for
-     *   the gradient of the sum.
-     * @param[in] norm the normalization of the Legrendre functions (either
-     *   full or schmidt).
-     * @param[in] scale a scaling that is given to the coefficients to avoid
-     *   overflow.
-     * @param[in] a the reference radius for the sum.
-     * @param[in] r the (spherical) radius of points.
-     * @param[in] u the sine of the (spherical) colatiude.
-     * @param[in] t the cosine of the (spherical) colatiude.
-     *
-     * Thus the CircularEngine evaluates the harmonic sum (and its gradient)
-     * for points on the circle of radius \e u \e r which lies a distance \e t \e
-     * r above the equatorial plane.  The constructor allocates memory for the
-     * arrays used to store the coefficients and stores zero in them.  These
-     * coefficients are set with calls to CircularEngine::SetCoeff.
-     **********************************************************************/
     CircularEngine(int M, bool gradp, SphericalEngine::normalization norm,
                    real scale, real a, real r, real u, real t)
       : _M(M)
@@ -102,35 +81,9 @@ namespace GeographicLib {
         _uq2 = Math::sq(_uq);
       }
 
-    /**
-     * Store coefficients for the sum for the order \e m term.
-     *
-     * @param[in] m the order of the term.
-     * @param[in] wc the coefficient for the cos(\e m \e lam) term.
-     * @param[in] ws the coefficient for the sin(\e m \e lam) term.
-     *
-     * \e m must lie in [0, \e M].
-     **********************************************************************/
     void SetCoeff(int m, real wc, real ws)
     { _wc[m] = wc; _ws[m] = ws; }
 
-    /**
-     * Store coefficients for the sum and its gradient for the order \e m term.
-     *
-     * @param[in] m the order of the term
-     * @param[in] wc the coefficient for the cos(\e m \e lam) term.
-     * @param[in] ws the coefficient for the sin(\e m \e lam) term.
-     * @param[in] wrc the coefficient for the radial derivative of the cosine
-     *   term.
-     * @param[in] wrs the coefficient for the radial derivative of the sine
-     *   term.
-     * @param[in] wtc the coefficient for the \e theta derivative of the cosine
-     *   term.
-     * @param[in] wts the coefficient for the \e theta derivative of the sine
-     *   term.
-     *
-     * \e m must lie in [0, \e M].  Here \e theta is the spherical colatitude.
-     **********************************************************************/
     void SetCoeff(int m, real wc, real ws,
                   real wrc, real wrs, real wtc, real wts) {
       _wc[m] = wc; _ws[m] = ws;
