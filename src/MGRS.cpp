@@ -8,6 +8,7 @@
  **********************************************************************/
 
 #include <GeographicLib/MGRS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_MGRS_CPP "$Id$"
 
@@ -58,10 +59,11 @@ namespace GeographicLib {
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
     if (!(zone >= 0 || zone <= 60))
-      throw GeographicErr("Zone " + str(zone) + " not in [0,60]");
+      throw GeographicErr("Zone " + Utility::str(zone) + " not in [0,60]");
     if (!(prec >= 0 || prec <= maxprec_))
-      throw GeographicErr("MGRS precision " + str(prec) + " not in [0, "
-                          + str(int(maxprec_)) + "]");
+      throw GeographicErr("MGRS precision " + Utility::str(prec)
+                          + " not in [0, "
+                          + Utility::str(int(maxprec_)) + "]");
     // Fixed char array for accumulating string.  Allow space for zone, 3 block
     // letters, easting + northing.  Don't need to allow for terminating null.
     char mgrs1[2 + 3 + 2 * maxprec_];
@@ -88,7 +90,7 @@ namespace GeographicLib {
         icol = xh - minutmcol_,
         irow = UTMRow(iband, icol, yh % utmrowperiod_);
       if (irow != yh - (northp ? minutmNrow_ : maxutmSrow_))
-        throw GeographicErr("Latitude " + str(lat)
+        throw GeographicErr("Latitude " + Utility::str(lat)
                             + " is inconsistent with UTM coordinates");
       mgrs1[z++] = latband_[10 + iband];
       mgrs1[z++] = utmcols_[zone1 % 3][icol];
@@ -158,14 +160,14 @@ namespace GeographicLib {
     }
     int zone1 = 0;
     while (p < len) {
-      int i = lookup(digits_, mgrs[p]);
+      int i = Utility::lookup(digits_, mgrs[p]);
       if (i < 0)
         break;
       zone1 = 10 * zone1 + i;
       ++p;
     }
     if (p > 0 && (zone1 == 0 || zone1 > 60))
-      throw GeographicErr("Zone " + str(zone1) + " not in [1,60]");
+      throw GeographicErr("Zone " + Utility::str(zone1) + " not in [1,60]");
     if (p > 2)
       throw GeographicErr("More than 2 digits_ at start of MGRS "
                           + mgrs.substr(0, p));
@@ -174,24 +176,25 @@ namespace GeographicLib {
     bool utmp = zone1 != 0;
     int zonem1 = zone1 - 1;
     const string& band = utmp ? latband_ : upsband_;
-    int iband = lookup(band, mgrs[p++]);
+    int iband = Utility::lookup(band, mgrs[p++]);
     if (iband < 0)
-      throw GeographicErr("Band letter " + str(mgrs[p-1]) + " not in "
+      throw GeographicErr("Band letter " + Utility::str(mgrs[p-1]) + " not in "
                           + (utmp ? "UTM" : "UPS") + " set " + band);
     bool northp1 = iband >= (utmp ? 10 : 2);
     const string& col = utmp ? utmcols_[zonem1 % 3] : upscols_[iband];
     const string& row = utmp ? utmrow_ : upsrows_[northp1];
-    int icol = lookup(col, mgrs[p++]);
+    int icol = Utility::lookup(col, mgrs[p++]);
     if (icol < 0)
-      throw GeographicErr("Column letter " + str(mgrs[p-1]) + " not in "
+      throw GeographicErr("Column letter " + Utility::str(mgrs[p-1])
+                          + " not in "
                           + (utmp ? "zone " + mgrs.substr(0, p-2) :
-                             "UPS band " + str(mgrs[p-2]))
+                             "UPS band " + Utility::str(mgrs[p-2]))
                           + " set " + col );
-    int irow = lookup(row, mgrs[p++]);
+    int irow = Utility::lookup(row, mgrs[p++]);
     if (irow < 0)
-      throw GeographicErr("Row letter " + str(mgrs[p-1]) + " not in "
+      throw GeographicErr("Row letter " + Utility::str(mgrs[p-1]) + " not in "
                           + (utmp ? "UTM" :
-                             "UPS " + str(hemispheres_[northp1]))
+                             "UPS " + Utility::str(hemispheres_[northp1]))
                           + " set " + row);
     if (utmp) {
       if (zonem1 & 1)
@@ -217,22 +220,23 @@ namespace GeographicLib {
     for (int i = 0; i < prec1; ++i) {
       unit /= base_;
       int
-        ix = lookup(digits_, mgrs[p + i]),
-        iy = lookup(digits_, mgrs[p + i + prec1]);
+        ix = Utility::lookup(digits_, mgrs[p + i]),
+        iy = Utility::lookup(digits_, mgrs[p + i + prec1]);
       if (ix < 0 || iy < 0)
         throw GeographicErr("Encountered a non-digit in " + mgrs.substr(p));
       x1 += unit * ix;
       y1 += unit * iy;
     }
     if ((len - p) % 2) {
-      if (lookup(digits_, mgrs[len - 1]) < 0)
+      if (Utility::lookup(digits_, mgrs[len - 1]) < 0)
         throw GeographicErr("Encountered a non-digit in " + mgrs.substr(p));
       else
         throw GeographicErr("Not an even number of digits_ in "
                             + mgrs.substr(p));
     }
     if (prec1 > maxprec_)
-      throw GeographicErr("More than " + str(2*maxprec_) + " digits_ in "
+      throw GeographicErr("More than " + Utility::str(2*maxprec_)
+                          + " digits_ in "
                           + mgrs.substr(p));
     if (centerp) {
       x1 += unit/2;
@@ -259,23 +263,27 @@ namespace GeographicLib {
       if (ix == maxeasting_[ind] && x == maxeasting_[ind] * tile_)
         x -= eps_;
       else
-        throw GeographicErr("Easting " + str(int(floor(x/1000)))
+        throw GeographicErr("Easting " + Utility::str(int(floor(x/1000)))
                             + "km not in MGRS/"
                             + (utmp ? "UTM" : "UPS") + " range for "
                             + (northp ? "N" : "S" ) + " hemisphere ["
-                            + str(mineasting_[ind]*tile_/1000) + "km, "
-                            + str(maxeasting_[ind]*tile_/1000) + "km)");
+                            + Utility::str(mineasting_[ind]*tile_/1000)
+                            + "km, "
+                            + Utility::str(maxeasting_[ind]*tile_/1000)
+                            + "km)");
     }
     if (! (iy >= minnorthing_[ind] && iy < maxnorthing_[ind]) ) {
       if (iy == maxnorthing_[ind] && y == maxnorthing_[ind] * tile_)
         y -= eps_;
       else
-        throw GeographicErr("Northing " + str(int(floor(y/1000)))
+        throw GeographicErr("Northing " + Utility::str(int(floor(y/1000)))
                             + "km not in MGRS/"
                             + (utmp ? "UTM" : "UPS") + " range for "
                             + (northp ? "N" : "S" ) + " hemisphere ["
-                            + str(minnorthing_[ind]*tile_/1000) + "km, "
-                            + str(maxnorthing_[ind]*tile_/1000) + "km)");
+                            + Utility::str(minnorthing_[ind]*tile_/1000)
+                            + "km, "
+                            + Utility::str(maxnorthing_[ind]*tile_/1000)
+                            + "km)");
     }
 
     // Correct the UTM northing and hemisphere if necessary

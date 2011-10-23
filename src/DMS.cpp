@@ -9,6 +9,7 @@
 
 #include <GeographicLib/DMS.hpp>
 #include <algorithm>
+#include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_DMS_CPP "$Id$"
 
@@ -51,20 +52,22 @@ namespace GeographicLib {
         --end;
       flag ind1 = NONE;
       int k = -1;
-      if (end > beg && (k = lookup(hemispheres_, dmsa[beg])) >= 0) {
+      if (end > beg && (k = Utility::lookup(hemispheres_, dmsa[beg])) >= 0) {
         ind1 = (k / 2) ? LONGITUDE : LATITUDE;
         sign = k % 2 ? 1 : -1;
         ++beg;
       }
-      if (end > beg && (k = lookup(hemispheres_, dmsa[end-1])) >= 0) {
+      if (end > beg && (k = Utility::lookup(hemispheres_, dmsa[end-1])) >= 0) {
         if (k >= 0) {
           if (ind1 != NONE) {
             if (toupper(dmsa[beg - 1]) == toupper(dmsa[end - 1]))
-              errormsg = "Repeated hemisphere indicators " + str(dmsa[beg - 1])
+              errormsg = "Repeated hemisphere indicators "
+                + Utility::str(dmsa[beg - 1])
                 + " in " + dmsa.substr(beg - 1, end - beg + 1);
             else
               errormsg = "Contradictory hemisphere indicators "
-                + str(dmsa[beg - 1]) + " and " + str(dmsa[end - 1]) + " in "
+                + Utility::str(dmsa[beg - 1]) + " and "
+                + Utility::str(dmsa[end - 1]) + " in "
                 + dmsa.substr(beg - 1, end - beg + 1);
             break;
           }
@@ -73,7 +76,7 @@ namespace GeographicLib {
           --end;
         }
       }
-      if (end > beg && (k = lookup(signs_, dmsa[beg])) >= 0) {
+      if (end > beg && (k = Utility::lookup(signs_, dmsa[beg])) >= 0) {
         if (k >= 0) {
           sign *= k ? 1 : -1;
           ++beg;
@@ -93,7 +96,7 @@ namespace GeographicLib {
       unsigned digcount = 0;
       while (p < end) {
         char x = dmsa[p++];
-        if ((k = lookup(digits_, x)) >= 0) {
+        if ((k = Utility::lookup(digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0)
             ++digcount;         // Count of decimal digits
@@ -107,7 +110,7 @@ namespace GeographicLib {
           }
           pointseen = true;
           digcount = 1;
-        } else if ((k = lookup(dmsindicators_, x)) >= 0) {
+        } else if ((k = Utility::lookup(dmsindicators_, x)) >= 0) {
           if (k >= 3) {
             if (p == end) {
               errormsg = "Illegal for : to appear at the end of " +
@@ -142,19 +145,19 @@ namespace GeographicLib {
             icurrent = fcurrent = 0;
             ncurrent = digcount = 0;
           }
-        } else if (lookup(signs_, x) >= 0) {
+        } else if (Utility::lookup(signs_, x) >= 0) {
           errormsg = "Internal sign in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
         } else {
-          errormsg = "Illegal character " + str(x) + " in DMS string "
+          errormsg = "Illegal character " + Utility::str(x) + " in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
         }
       }
       if (!errormsg.empty())
         break;
-      if (lookup(dmsindicators_, dmsa[p - 1]) < 0) {
+      if (Utility::lookup(dmsindicators_, dmsa[p - 1]) < 0) {
         if (npiece >= 3) {
           errormsg = "Extra text following seconds in DMS string "
             + dmsa.substr(beg, end - beg);
@@ -179,11 +182,13 @@ namespace GeographicLib {
       }
       // Note that we accept 59.999999... even though it rounds to 60.
       if (ipieces[1] >= 60) {
-        errormsg = "Minutes " + str(fpieces[1]) + " not in range [0, 60)";
+        errormsg = "Minutes " + Utility::str(fpieces[1])
+          + " not in range [0, 60)";
         break;
       }
       if (ipieces[2] >= 60) {
-        errormsg = "Seconds " + str(fpieces[2]) + " not in range [0, 60)";
+        errormsg = "Seconds " + Utility::str(fpieces[2])
+          + " not in range [0, 60)";
         break;
       }
       ind = ind1;
@@ -280,9 +285,10 @@ namespace GeographicLib {
       lat1 = ia == LATITUDE ? a : b,
       lon1 = ia == LATITUDE ? b : a;
     if (lat1 < -90 || lat1 > 90)
-      throw GeographicErr("Latitude " + str(lat1) + "d not in [-90d, 90d]");
+      throw GeographicErr("Latitude " + Utility::str(lat1)
+                          + "d not in [-90d, 90d]");
     if (lon1 < -180 || lon1 > 360)
-      throw GeographicErr("Latitude " + str(lon1)
+      throw GeographicErr("Latitude " + Utility::str(lon1)
                           + "d not in [-180d, 360d]");
     if (lon1 >= 180)
       lon1 -= 360;

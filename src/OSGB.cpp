@@ -8,6 +8,7 @@
  **********************************************************************/
 
 #include <GeographicLib/OSGB.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_OSGB_CPP "$Id$"
 
@@ -35,8 +36,9 @@ namespace GeographicLib {
   void OSGB::GridReference(real x, real y, int prec, std::string& gridref) {
     CheckCoords(x, y);
     if (!(prec >= 0 || prec <= maxprec_))
-      throw GeographicErr("OSGB precision " + str(prec) + " not in [0, "
-                          + str(int(maxprec_)) + "]");
+      throw GeographicErr("OSGB precision " + Utility::str(prec)
+                          + " not in [0, "
+                          + Utility::str(int(maxprec_)) + "]");
     char grid[2 + 2 * maxprec_];
     int
       xh = int(floor(x)) / tile_,
@@ -104,7 +106,7 @@ namespace GeographicLib {
       xh = 0,
       yh = 0;
     while (p < 2) {
-      int i = lookup(letters_, grid[p++]);
+      int i = Utility::lookup(letters_, grid[p++]);
       if (i < 0)
         throw GeographicErr("Illegal prefix character " + gridref);
       yh = yh * tilegrid_ + tilegrid_ - (i / tilegrid_) - 1;
@@ -121,8 +123,8 @@ namespace GeographicLib {
     for (int i = 0; i < prec1; ++i) {
       unit /= base_;
       int
-        ix = lookup(digits_, grid[p + i]),
-        iy = lookup(digits_, grid[p + i + prec1]);
+        ix = Utility::lookup(digits_, grid[p + i]),
+        iy = Utility::lookup(digits_, grid[p + i + prec1]);
       if (ix < 0 || iy < 0)
         throw GeographicErr("Encountered a non-digit in " + gridref);
       x1 += unit * ix;
@@ -142,15 +144,15 @@ namespace GeographicLib {
     // and open on the upper end -- and this is reflected in the error
     // messages.
     if (! (x >= minx_ && x < maxx_) )
-      throw GeographicErr("Easting " + str(int(floor(x/1000)))
+      throw GeographicErr("Easting " + Utility::str(int(floor(x/1000)))
                           + "km not in OSGB range ["
-                          + str(minx_/1000) + "km, "
-                          + str(maxx_/1000) + "km)");
+                          + Utility::str(minx_/1000) + "km, "
+                          + Utility::str(maxx_/1000) + "km)");
     if (! (y >= miny_ && y < maxy_) )
-      throw GeographicErr("Northing " + str(int(floor(y/1000)))
+      throw GeographicErr("Northing " + Utility::str(int(floor(y/1000)))
                           + "km not in OSGB range ["
-                          + str(miny_/1000) + "km, "
-                          + str(maxy_/1000) + "km)");
+                          + Utility::str(miny_/1000) + "km, "
+                          + Utility::str(maxy_/1000) + "km)");
   }
 
 } // namespace GeographicLib

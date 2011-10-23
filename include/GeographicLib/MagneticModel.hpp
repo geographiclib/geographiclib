@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_MAGNETICMODEL_HPP "$Id$"
 
 #include <string>
+#include <sstream>
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geocentric.hpp>
@@ -34,8 +35,8 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT MagneticModel {
   private:
     typedef Math::real real;
-    std::string _datafile, _name, _date;
-    real _t0, _tmin, _tmax, _a, _minh, _maxh;
+    std::string _name, _description, _date, _coeff, _meta;
+    real _t0, _tmin, _tmax, _a, _hmin, _hmax;
     int _N, _M, _N1, _M1;
     Geocentric _earth;
     std::vector<real> _G, _H, _G1, _H1;
@@ -44,6 +45,9 @@ namespace GeographicLib {
                real& Bxt, real& Byt, real& Bzt) const;
     SphericalHarmonic1 _harma;
     SphericalHarmonic _harmb;
+    void ReadMetadata(const std::string& name);
+    static bool ParseLine(const std::string& line,
+                          std::string& key, std::string& val);
   public:
     /**
      * Construct a magnetic model.

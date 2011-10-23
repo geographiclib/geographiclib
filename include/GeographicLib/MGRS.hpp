@@ -89,13 +89,6 @@ namespace GeographicLib {
       maxprec_ = 5 + 6,
     };
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
-    static int lookup(const std::string& s, char c) throw() {
-      std::string::size_type r = s.find(toupper(c));
-      return r == std::string::npos ? -1 : int(r);
-    }
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
-    }
     static int UTMRow(int iband, int icol, int irow) throw();
 
     friend class UTMUPS;        // UTMUPS::StandardZone calls LatitudeBand

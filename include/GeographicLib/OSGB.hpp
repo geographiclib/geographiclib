@@ -63,13 +63,6 @@ namespace GeographicLib {
     };
     static real computenorthoffset() throw();
     static void CheckCoords(real x, real y);
-    static int lookup(const std::string& s, char c) throw() {
-      std::string::size_type r = s.find(toupper(c));
-      return r == std::string::npos ? -1 : int(r);
-    }
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
-    }
     OSGB();                     // Disable constructor
 
   public:

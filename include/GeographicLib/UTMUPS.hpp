@@ -67,9 +67,6 @@ namespace GeographicLib {
     static const real maxnorthing_[4];
     static real CentralMeridian(int zone) throw()
     { return real(6 * zone - 183); }
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
-    }
     static void CheckLatLon(real lat, real lon);
     // Throw an error if easting or northing are outside standard ranges.  If
     // throwp = false, return bool instead.

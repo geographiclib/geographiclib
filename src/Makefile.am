@@ -12,10 +12,11 @@ libGeographic_la_LDFLAGS = -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
+		CircularEngine.cpp \
 		DMS.cpp \
 		EllipticFunction.cpp \
-		Geocentric.cpp \
 		GeoCoords.cpp \
+		Geocentric.cpp \
 		Geodesic.cpp \
 		GeodesicLine.cpp \
 		Geoid.cpp \
@@ -23,9 +24,12 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
+		MagneticCircle.cpp \
+		MagneticModel.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
 		PolygonArea.cpp \
+		SphericalEngine.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
@@ -33,25 +37,33 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
 		../include/GeographicLib/CassiniSoldner.hpp \
+		../include/GeographicLib/CircularEngine.hpp \
 		../include/GeographicLib/Constants.hpp \
 		../include/GeographicLib/DMS.hpp \
 		../include/GeographicLib/EllipticFunction.hpp \
-		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/GeoCoords.hpp \
+		../include/GeographicLib/Geocentric.hpp \
 		../include/GeographicLib/Geodesic.hpp \
 		../include/GeographicLib/GeodesicLine.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
-		../include/GeographicLib/Math.hpp \
 		../include/GeographicLib/MGRS.hpp \
+		../include/GeographicLib/MagneticCircle.hpp \
+		../include/GeographicLib/MagneticModel.hpp \
+		../include/GeographicLib/Math.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/PolygonArea.hpp \
-		../include/GeographicLib/TransverseMercatorExact.hpp \
+		../include/GeographicLib/SphericalEngine.hpp \
+		../include/GeographicLib/SphericalHarmonic.hpp \
+		../include/GeographicLib/SphericalHarmonic1.hpp \
+		../include/GeographicLib/SphericalHarmonic2.hpp \
 		../include/GeographicLib/TransverseMercator.hpp \
+		../include/GeographicLib/TransverseMercatorExact.hpp \
 		../include/GeographicLib/UTMUPS.hpp \
+		../include/GeographicLib/Utility.hpp \
 		../include/GeographicLib/Config.h
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h

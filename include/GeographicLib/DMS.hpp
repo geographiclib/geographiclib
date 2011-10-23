@@ -32,13 +32,6 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT DMS {
   private:
     typedef Math::real real;
-    static int lookup(const std::string& s, char c) throw() {
-      std::string::size_type r = s.find(toupper(c));
-      return r == std::string::npos ? -1 : int(r);
-    }
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
-    }
     // Replace all occurrences of pat by c
     static void replace(std::string& s, const std::string& pat, char c) {
       std::string::size_type p = 0;

@@ -175,13 +175,13 @@ Then pick one of the first five options below:
 - \ref gnu.  This is a simple installation method that works with g++
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
-  Visual Studio 2005 and 2008 under Windows.  Use cmake if you use
-  Visual Studio 2010.
-- \ref windowsbin.  Use this installation method if you only need to the
+  Visual Studio 2005, 2008, and 2010 under Windows.
+- \ref windowsbin.  Use this installation method if you only need to use
   the utility programs supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
-- \ref qt.  This XXX
+- \ref qt.  There is a simple project file that compiles the %GeographicLib
+  library <i>only</i> to be compiled with the Qt compiler.
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -346,18 +346,16 @@ Here are the steps to compile and install %GeographicLib:
 
 \section windows Installation on Windows
 
-This method requires Visual Studio 2008 (or 2005).  This builds a static
-library and the examples.  If you only have Visual Studio 2010, use
-cmake to create the necessary solution file.  %GeographicLib does not
-compile correctly with Visual Studio 2003.
+This method requires Visual Studio 2005, 2008, or 2010.  This builds a
+static library and the utilities.  If you only have Visual Studio 2003,
+use cmake to create the necessary solution file, see \ref cmake.  (cmake
+is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-1.14.zip \endverbatim
-- Open GeographicLib-1.14/windows/GeographicLib-vc9.sln in Visual Studio
-  2008 (for Visual Studio 2005, replace -vc9 by -vc8).
-- Pick the build type (e.g., Release), and select "Build
-  Solution".
-- The library and the compiled examples are in the
-  windows/Release.
+- Open GeographicLib-1.14/windows/GeographicLib-vc10.sln in Visual Studio
+  2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
+- Pick the build type (e.g., Release), and select "Build Solution".
+- The library and the compiled examples are in the windows/Release.
 - Copy the library windows/Release/Geographic.lib and the
   headers in include/GeographicLib somewhere convenient.  The
   headers should remain in a directory named %GeographicLib.  If you
@@ -369,6 +367,10 @@ compile correctly with Visual Studio 2003.
   browser.
 
 \section windowsbin Using a binary installer for Windows.
+
+Use this method if you only need to use the %GeographicLib utilities.
+The header files and static library are provided, but can only be used
+by Visual Studio 2010 in release mode.
 
 Download and run
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14-win32.exe/download">
@@ -394,9 +396,10 @@ versions of Matlab (e.g., R2008a).
 
 \section qt Building the library under Qt
 
-This method requires builds the library (not the utility programs) under
-Qt.  This is useful if you need to link a Qt project with %GeographicLib
-to ensure that the library is compatible with your project.
+This method requires builds the library (<i>not</i> the utility
+programs) under Qt.  This is useful if you need to link a Qt project
+with %GeographicLib to ensure that the library is compatible with your
+project.
 
 Here are the steps to compile %GeographicLib with Qt:
 - Unpack the source, running \verbatim
@@ -480,7 +483,7 @@ C/C++ -> General -> Additional Include Directories = C:\Program Files\Geographic
   e.g.,
   \verbatim
 Linker -> Input -> Additional Dependencies = Geographic.lib
-Linker -> General -> Additional Library Directories = C:\Program Files\GeographicLib\include
+Linker -> General -> Additional Library Directories = C:\Program Files\GeographicLib\lib
 \endverbatim
   Note that the library name is <b>Geographic</b> and not %GeographicLib.
 - Tell the runtime environment where to find the shared library
@@ -1370,7 +1373,7 @@ heights.
  <td><center>0.025 m</center><td><center> 1 mm</center>
  <td><center>0.003 m</center><td><center> 1 mm</center>
 </table></center>
-The errors are with respect the the specific NGA earth gravity model
+The errors are with respect to the specific NGA earth gravity model
 (not to any "real" geoid).  The RMS values are obtained using 5 million
 uniformly distributed random points.  The maximum values are obtained by
 evaluating the errors using a different grid with points at or near the
@@ -1599,7 +1602,7 @@ In the formulas below ^ indicates exponentiation (\e f^3 = \e f*\e f*\e
 f) and / indicates real division (3/5 = 0.6).  The equations need to be
 converted to Horner form, but are here left in expanded form so that
 they can be easily truncated to lower order.  These expansions were
-obtained using the the Maxima code, <a href="geod.mac">geod.mac</a>.
+obtained using the Maxima code, <a href="geod.mac">geod.mac</a>.
 
 In the expansions below, we have
  - \e alpha is the azimuth
@@ -2304,6 +2307,11 @@ number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-mm-dd)</a>
   - NEED TO IMPROVE PYTHON INSTALLATION ON LINUX
+  - Add GeographicLib::Utility class.
+  - Add GeographicLib::SphericalEngine, GeographicLib::CircularEngine,
+    GeographicLib::SphericalHarmonic, GeographicLib::SphericalHarmonic1, and
+    GeographicLib::SphericalHarmonic2 classes.
+  - Add GeographicLib::MagneticModel and GeographicLib::MagneticCircle classes.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a>
   - Ensure that geographiclib-config.cmake is relocatable.

@@ -10,7 +10,6 @@
 // Constants.hpp includes Math.hpp.  Place this include outside Math.hpp's
 // include guard to enforce this ordering.
 #include <GeographicLib/Constants.hpp>
-#include <iostream>
 
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
 #define GEOGRAPHICLIB_MATH_HPP "$Id$"
@@ -55,24 +54,6 @@
  * minimizes the likelihood of conflicts with other packages.
  **********************************************************************/
 namespace GeographicLib {
-
-  /**
-   * \brief Exception handling for %GeographicLib
-   *
-   * A class to handle exceptions.  It's derived from std::runtime_error so it
-   * can be caught by the usual catch clauses.
-   **********************************************************************/
-  class GeographicErr : public std::runtime_error {
-  public:
-
-    /**
-     * Constructor
-     *
-     * @param[in] msg a string message, which is accessible in the catch
-     *   clause, via what().
-     **********************************************************************/
-    GeographicErr(const std::string& msg) : std::runtime_error(msg) {}
-  };
 
   /**
    * \brief Mathematical functions needed by %GeographicLib
@@ -433,52 +414,6 @@ namespace GeographicLib {
       for (int i = sizeof(T)/2; i--; )
         std::swap(b.c[i], b.c[sizeof(T) - 1 - i]);
       return b.r;
-    }
-
-    /**
-     * Read data of type ExtT from a binary stream to an array of type IntT.
-     * The data in the file is in (bigendp ? big : little)-endian format.
-     *
-     * @tparam ExtT the type of the objects in the binary stream (external).
-     * @tparam IntT the type of the objects in the array (internal).
-     * @tparam bigendp true if the external storage format is big-endian.
-     * @param[in] str the input stream containing the data of type ExtT
-     *   (external).
-     * @param[out] array the output array of type IntT (internal).
-     **********************************************************************/
-    template<typename ExtT, typename IntT, bool bigendp>
-      static inline void readarray(std::istream& str,
-                                   std::vector<IntT>& array) {
-      if (sizeof(IntT) == sizeof(ExtT) &&
-          std::numeric_limits<IntT>::is_integer ==
-          std::numeric_limits<ExtT>::is_integer) {
-        // Data is compatible (aside from the issue of endian-ness).
-        str.read(reinterpret_cast<char *>(&array[0]),
-                 array.size() * sizeof(IntT));
-        if (!str.good())
-          throw GeographicErr("Failure reading data");
-        if (bigendp != bigendian) { // endian mismatch -> swap bytes
-          for (int i = array.size(); i--;)
-            array[i] = swab<IntT>(array[i]);
-        }
-      } else {
-        const int bufsize = 1024; // read this many values at a time
-        ExtT buffer[bufsize];     // temporary buffer
-        int k = array.size();     // data values left to read
-        int i = 0;                // index into output array
-        while (k) {
-          int num = (std::min)(k, bufsize);
-          str.read(reinterpret_cast<char *>(buffer), num * sizeof(IntT));
-          if (!str.good())
-            throw GeographicErr("Failure reading data");
-          for (int j = 0; j < num; ++j)
-            // fix endian-ness and cast to IntT
-            array[i++] = IntT(bigendp == bigendian ? buffer[j] :
-                              swab<IntT>(buffer[j]));
-          k -= num;
-        }
-      }
-      return;
     }
   };
 
