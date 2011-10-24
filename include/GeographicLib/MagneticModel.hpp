@@ -35,9 +35,10 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT MagneticModel {
   private:
     typedef Math::real real;
-    std::string _name, _description, _date, _coeff, _meta;
+    std::string _name, _dir, _description, _date, _filename;
     real _t0, _tmin, _tmax, _a, _hmin, _hmax;
     int _N, _M, _N1, _M1;
+    SphericalHarmonic::normalization _norm;
     Geocentric _earth;
     std::vector<real> _G, _H, _G1, _H1;
     void Field(real lat, real lon, real h, real t, bool diffp,
@@ -56,7 +57,7 @@ namespace GeographicLib {
      * @param[in] earth Geocentric object for converting coordinates; default
      *   Geocentric::WGS84.
      **********************************************************************/
-    MagneticModel(const std::string& name,
+    MagneticModel(const std::string& name, const std::string& path = "",
                   const Geocentric& earth = Geocentric::WGS84);
 
     /**
@@ -136,6 +137,24 @@ namespace GeographicLib {
      * For high-degree models, this will be substantially faster.
      **********************************************************************/
     MagneticCircle Circle(real lat, real h, real t) const;
+
+    /**
+     * @return the default path for magnetic model data files.
+     *
+     * This is the value of the environment variable MAGNETIC_PATH, if set,
+     * otherwise, it is a compile-time default.
+     **********************************************************************/
+    static std::string DefaultMagneticPath();
+
+    /**
+     * @return the default name for the magnetic model.
+     *
+     * This is the value of the environment variable MAGNETIC_NAME, if set,
+     * otherwise, it is "wmm2010-16".  The MagneticModel class does not use
+     * this function; it is just provided as a convenience for a calling
+     * program when constructing a MagneticModel object.
+     **********************************************************************/
+    static std::string DefaultMagneticName();
   };
 
 } // namespace GeographicLib
