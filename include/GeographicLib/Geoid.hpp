@@ -183,12 +183,13 @@ namespace GeographicLib {
      * path.  Otherwise the path is given by the GEOID_PATH environment
      * variable.  If that is undefined, a compile-time default path is used
      * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
-     * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).
-     * This may throw an exception because the file does not exist, is
-     * unreadable, or is corrupt.  If the \e threadsafe parameter is true, the
-     * data set is read into memory (which this may also cause an exception to
-     * be thrown), the data file is closed, and single-cell caching is turned
-     * off; this results in a Geoid object which \e is thread safe.
+     * C:/Documents and Settings/All Users/Application
+     * Data/GeographicLib/geoids on Windows systems).  This may throw an
+     * exception because the file does not exist, is unreadable, or is corrupt.
+     * If the \e threadsafe parameter is true, the data set is read into memory
+     * (which this may also cause an exception to be thrown), the data file is
+     * closed, and single-cell caching is turned off; this results in a Geoid
+     * object which \e is thread safe.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
                    bool cubic = true, bool threadsafe = false);

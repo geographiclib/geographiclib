@@ -13,7 +13,7 @@ int main() {
   try {
     if (true) {
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
-      MagneticModel mag1("wmm2010-16");
+      MagneticModel mag1("wmm2010-12");
       MagneticModel mag2("emm2010-720");
       real lat, lon, h, t, bx, by, bz, bxt, byt, bzt;
       std::cout << std::setprecision(16);

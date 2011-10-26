@@ -33,7 +33,7 @@ RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 #endif
 #endif
 #if !defined(MAGNETIC_DEFAULT_NAME)
-#define MAGNETIC_DEFAULT_NAME "wmm2010-16"
+#define MAGNETIC_DEFAULT_NAME "wmm2010-12"
 #endif
 
 #if defined(_MSC_VER)
@@ -49,7 +49,7 @@ namespace GeographicLib {
                                const Geocentric& earth)
     : _name(name)
     , _dir(path)
-    , _description("UNKNOWN")
+    , _description("NONE")
     , _date("UNKNOWN")
     , _t0(Math::NaN<real>())
     , _tmin(Math::NaN<real>())
@@ -81,7 +81,7 @@ namespace GeographicLib {
       Utility::readarray<double, real, false>(coeffstr, _H);
       Utility::readarray<double, real, false>(coeffstr, _G1);
       Utility::readarray<double, real, false>(coeffstr, _H1);
-      int pos = coeffstr.tellg();
+      int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
       if (pos != coeffstr.tellg())
         throw GeographicErr("Extra data in  " + coeff);
@@ -118,6 +118,8 @@ namespace GeographicLib {
         _name = val;
       else if (key == "Description")
         _description = val;
+      else if (key == "ReleaseDate")
+        _date = val;
       else if (key == "Radius")
         _a = Utility::readstr<real>(val);
       else if (key == "Epoch")
@@ -154,6 +156,13 @@ namespace GeographicLib {
         else
           throw GeographicErr("Unknown normalization " + val);
       }
+      else if (key == "ByteOrder") {
+        if (val == "Big" || val == "big")
+          throw GeographicErr("Only little-endian ordering is supported");
+        else if (!(val == "Little" || val == "little"))
+          throw GeographicErr("Unknown byte ordering " + val);
+      }
+      // else unrecognized keywords are skipped
     }
     // Check values
     _M = _M == -1 ? _N : _M;

@@ -13,6 +13,12 @@
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs vector
+#pragma warning (push)
+#pragma warning (disable: 4251)
+#endif
+
 namespace GeographicLib {
 
   class CircularEngine;
@@ -69,7 +75,7 @@ namespace GeographicLib {
      *  The storage layout of the coefficients is documented in
      *  SphericalHarmonic and SphericalHarmonic::SphericalHarmonic.
      **********************************************************************/
-    class coeff {
+    class GEOGRAPHIC_EXPORT coeff {
     private:
       int _N, _nmx, _mmx;
       std::vector<real>::const_iterator _Cnm;
@@ -215,11 +221,14 @@ namespace GeographicLib {
      * @param[out] gradz the \e z component of the gradient.
      * @result the spherical harmonic sum.
      *
-     * See the SphericalHarmonic class for the definition of the sum.  The
-     * coefficients used by this function are, for example, c[0].Cv + f[1] *
-     * c[1].cv + ... + f[L] * c[L].Cv.  (Note that f[0] is \e not used.)  The
-     * parameters \e gradp, \e norm, and \e L are template parameters, to allow
-     * more optimization to be done at compile time.
+     * See the SphericalHarmonic class for the definition of the sum.
+     * The coefficients used by this function are, for example,
+     * c[0].Cv + f[1] * c[1].Cv + ... + f[L-1] * c[L-1].Cv.  (Note
+     * that f[0] is \e not used.)  The upper limits on the sum are
+     * determined by c[0].nmx() and c[0].mmx(); these limits apply to
+     * \e all the components of the coefficients.  The parameters \e
+     * gradp, \e norm, and \e L are template parameters, to allow more
+     * optimization to be done at compile time.
      **********************************************************************/
     template<bool gradp, normalization norm, int L>
       static Math::real Value(const coeff c[], const real f[],
@@ -252,5 +261,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_SPHERICALENGINE_HPP
