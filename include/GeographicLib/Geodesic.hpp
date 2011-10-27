@@ -322,6 +322,10 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
+     * \e lat1 should be in the range [-90, 90]; \e lon1 and \e azi1 should be
+     * in the range [-180, 360].  The values of \e lon2 and \e azi2 returned
+     * are in the range [-180, 180).
+     *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
      * taking the limit \e eps -> 0 from above.  An arc length greater that 180
@@ -430,6 +434,10 @@ namespace GeographicLib {
      * @param[out] M21 geodesic scale of point 1 relative to point 2
      *   (dimensionless).
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
+     *
+     * \e lat1 should be in the range [-90, 90]; \e lon1 and \e azi1 should be
+     * in the range [-180, 360].  The values of \e lon2 and \e azi2 returned
+     * are in the range [-180, 180).
      *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
@@ -600,6 +608,10 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>).
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
      *
+     * \e lat1 and \e lat2 should be in the range [-90, 90]; \e lon1 and \e
+     * lon2 should be in the range [-180, 360].  The values of \e azi1 and \e
+     * azi2 returned are in the range [-180, 180).
+     *
      * If either point is at a pole, the azimuth is defined by keeping the
      * longitude fixed and writing \e lat = 90 - \e eps or -90 + \e eps and
      * taking the limit \e eps -> 0 from above.  If the routine fails to
@@ -740,7 +752,7 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * Set up to do a series of ranges.
+     * Set up to compute several points on a singe geodesic.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
      * @param[in] lon1 longitude of point 1 (degrees).
@@ -749,6 +761,9 @@ namespace GeographicLib {
      *   specifying the capabilities the GeodesicLine object should possess,
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLib::Position.
+     *
+     * \e lat1 should be in the range [-90, 90]; \e lon1 and \e azi1 should be
+     * in the range [-180, 360].
      *
      * The Geodesic::mask values are
      * - \e caps |= Geodesic::LATITUDE for the latitude \e lat2; this is

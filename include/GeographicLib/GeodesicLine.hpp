@@ -196,6 +196,9 @@ namespace GeographicLib {
      *   i.e., which quantities can be returned in calls to
      *   GeodesicLib::Position.
      *
+     * \e lat1 should be in the range [-90, 90]; \e lon1 and \e azi1 should be
+     * in the range [-180, 360].
+     *
      * The GeodesicLine::mask values are
      * - \e caps |= GeodesicLine::LATITUDE for the latitude \e lat2; this is
      *   added automatically
@@ -259,6 +262,8 @@ namespace GeographicLib {
      *   that the GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::AREA.
      * @return \e a12 arc length of between point 1 and point 2 (degrees).
+     *
+     * The values of \e lon2 and \e azi2 returned are in the range [-180, 180).
      *
      * The GeodesicLine object \e must have been constructed with \e caps |=
      * GeodesicLine::DISTANCE_IN; otherwise Math::NaN() is returned and no
@@ -374,6 +379,8 @@ namespace GeographicLib {
      * @param[out] S12 area under the geodesic (meters<sup>2</sup>); requires
      *   that the GeodesicLine object was constructed with \e caps |=
      *   GeodesicLine::AREA.
+     *
+     * The values of \e lon2 and \e azi2 returned are in the range [-180, 180).
      *
      * Requesting a value which the GeodesicLine object is not capable of
      * computing is not an error; the corresponding argument will not be
