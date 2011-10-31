@@ -11,11 +11,12 @@
 #define GEOGRAPHICLIB_UTILITY_HPP "$Id$"
 
 #include <GeographicLib/Constants.hpp>
-#include <iostream>
 #include <iomanip>
 #include <vector>
 #include <string>
 #include <sstream>
+#include <algorithm>
+#include <cctype>
 
 namespace GeographicLib {
 
@@ -148,6 +149,49 @@ namespace GeographicLib {
     }
 
     /**
+     * Convert a string representing a date to a fractional year.
+     *
+     * @tparam T the type of the argument.
+     * @param[in] s the string to be converted.
+     * @return the fractional year.
+     *
+     * The string is first read as an ordinary number (e.g., 2010 or 2012.5);
+     * if this is successful, the value is returned.  Otherwise the string
+     * should be of the form yyyy-mm or yyyy-mm-dd and this is converted to a
+     * number with 2010-01-01 giving 2010.0 and 2012-07-03 giving 2012.5.
+     **********************************************************************/
+    template<typename T> static T fractionalyear(const std::string& s) {
+      try {
+        return num<T>(s);
+      }
+      catch (const std::exception&) {
+      }
+      int y, m = 1, d = 1;
+      const char* digits = "0123456789";
+      std::string::size_type p1 = s.find_first_not_of(digits);
+      if (p1 == std::string::npos || s[p1] != '-')
+        throw GeographicErr("Delimiter not hyphen in date " + s);
+      y = num<int>(s.substr(0, p1));
+      ++p1;
+      std::string::size_type p2 = s.find_first_not_of(digits, p1);
+      if (p2 == std::string::npos)
+        m = num<int>(s.substr(p1));
+      else if (s[p2] != '-')
+        throw GeographicErr("Delimiter not hyphen in date " + s);
+      else {
+        m = num<int>(s.substr(p1, p2 - p1));
+        ++p2;
+        d = num<int>(s.substr(p2));
+      }
+      int t = day(y, m, d);
+      int y1, m1, d1;
+      date(t, y1, m1, d1);
+      if (!(y1 == y && m1 == m))
+        throw GeographicErr("Unknown date " + s);
+      return T(y) + T(t - day(y)) / T(day(y + 1) - day(y));
+    }
+
+    /**
      * Convert a object of type T to a string.
      *
      * @tparam T the type of the argument.
@@ -208,6 +252,7 @@ namespace GeographicLib {
         return 0;
       std::string t;
       t.resize(s.length());
+      std::transform(s.begin(), s.end(), t.begin(), (int(*)(int))std::toupper);
       for (size_t i = s.length(); i--;)
         t[i] = std::toupper(s[i]);
       int sign = t[0] == '-' ? -1 : 1;
@@ -242,12 +287,15 @@ namespace GeographicLib {
     }
 
     /**
-     * Lookup up a character in a string
+     * Lookup up a character in a string.
      *
      * @param[in] s the string to be searched.
      * @param[in] c the character to look for.
      * @return the index of the first occurrence character in the string or -1
      *   is the character is not present.
+     *
+     * \e c is converted to upper case before search \e s.  Therefore, it is
+     * intended that \e s should not contain any lower case letters.
      **********************************************************************/
     static int lookup(const std::string& s, char c) throw() {
       std::string::size_type r = s.find(toupper(c));

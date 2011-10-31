@@ -189,6 +189,7 @@ namespace GeographicLib {
     { return d + (m + s/real(60))/real(60); }
 
     /**
+     * <b>DEPRECATED</b> (use Utility::num, instead).
      * Convert a string to a real number.
      *
      * @param[in] str string input.
@@ -199,6 +200,7 @@ namespace GeographicLib {
     }
 
     /**
+     * <b>DEPRECATED</b> (use Utility::fract, instead).
      * Convert a string to a real number treating the case where the string is
      * a simple fraction.
      *

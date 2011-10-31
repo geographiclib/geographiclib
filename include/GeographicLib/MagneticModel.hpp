@@ -186,20 +186,23 @@ namespace GeographicLib {
 
     /**
      * Compute various quantities dependent on B.
-     * @param[in] Bx
-     * @param[in] By
-     * @param[in] Bz
-     * @param[in] Bxt
-     * @param[in] Byt
-     * @param[in] Bzt
-     * @param[out] H
-     * @param[out] F
-     * @param[out] D
-     * @param[out] I
-     * @param[out] Ht
-     * @param[out] Ft
-     * @param[out] Dt
-     * @param[out] It
+     *
+     * @param[in] Bx the \e x (easterly) component of the magnetic field (nT).
+     * @param[in] By the \e y (northerly) component of the magnetic field (nT).
+     * @param[in] Bz the \e z (vertical, up positive) component of the magnetic
+     *   field (nT).
+     * @param[in] Bxt the rate of change of \e Bx (nT/yr).
+     * @param[in] Byt the rate of change of \e By (nT/yr).
+     * @param[in] Bzt the rate of change of \e Bz (nT/yr).
+     * @param[out] H the horizontal magnetic field (nT).
+     * @param[out] F the total magnetic field (nT).
+     * @param[out] D the declination of the field (degrees east of north).
+     * @param[out] I the inclination of the field (degrees down from
+     *   horizontal).
+     * @param[out] Ht the rate of change of \e H (nT/yr).
+     * @param[out] Ft the rate of change of \e F (nT/yr).
+     * @param[out] Dt the rate of change of \e D (degrees/yr).
+     * @param[out] It the rate of change of \e I (degrees/yr).
      **********************************************************************/
     static void FieldComponents(real Bx, real By, real Bz,
                                 real Bxt, real Byt, real Bzt,

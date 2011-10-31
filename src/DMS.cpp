@@ -196,34 +196,12 @@ namespace GeographicLib {
       // might be able to offer a better diagnostic).
       return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
     } while (false);
-    real val = NumMatch(dmsa);
+    real val = Utility::nummatch<real>(dmsa);
     if (val == 0)
       throw GeographicErr(errormsg);
     else
       ind = NONE;
     return val;
-  }
-
-  Math::real DMS::NumMatch(const std::string& s) {
-    if (s.length() < 3)
-      return 0;
-    string t;
-    t.resize(s.length());
-    for (size_t i = s.length(); i--;)
-      t[i] = toupper(s[i]);
-    int sign = t[0] == '-' ? -1 : 1;
-    string::size_type p0 = t[0] == '-' || t[0] == '+' ? 1 : 0;
-    string::size_type p1 = t.find_last_not_of('0');
-    if (p1 == string::npos || p1 + 1 < p0 + 3)
-      return 0;
-    // Strip off sign and trailing 0s
-    t = t.substr(p0, p1 + 1 - p0);  // Length at least 3
-    if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
-        t == "1.#R")
-      return sign * Math::NaN<real>();
-    else if (t == "INF" || t == "1.#INF")
-      return sign * Math::infinity<real>();
-    return 0;
   }
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,

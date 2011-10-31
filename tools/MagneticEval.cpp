@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-t") {
         if (++m == argc) return usage(1, true);
         try {
-          time = Utility::num<real>(std::string(argv[m]));
+          time = Utility::fractionalyear<real>(std::string(argv[m]));
           timeset = true;
         }
         catch (const std::exception& e) {
@@ -81,20 +81,6 @@ int main(int argc, char* argv[]) {
                    << "\"\n";
         return retval;
       }
-    }
-
-    if (time < 1000) {
-      const std::time_t tim = std::time(0);
-      const std::tm* gt = std::gmtime(&tim);
-      int iyear = 1900 + gt->tm_year;
-      double year = iyear +
-        (gt->tm_yday +
-         (gt->tm_hour +
-          (gt->tm_min +
-           gt->tm_sec / 60.0) / 60.0) / 24.0) /
-        (365.0 +
-         (iyear % 4 == 0 && (iyear % 100 != 0 || iyear % 400 == 0) ? 1 : 0));
-      time += year;
     }
 
     if (!ifile.empty() && !istring.empty()) {
@@ -148,8 +134,9 @@ int main(int argc, char* argv[]) {
         try {
           std::istringstream str(s);
           if (!timeset) {
-            if (!(str >> time))
+            if (!(str >> stra))
               throw GeographicErr("Incomplete input: " + s);
+            time = Utility::fractionalyear<real>(stra);
           }
           real h;
           if (!(str >> stra >> strb >> h))
@@ -164,11 +151,6 @@ int main(int argc, char* argv[]) {
           MagneticModel::FieldComponents(bx, by, bz, bxt, byt, bzt,
                                          H, F, D, I, Ht, Ft, Dt, It);
 
-          if (false)
-            std::cout << Utility::str<real>(time, 5) << " "
-                      << Utility::str<real>(lat, 6) << " "
-                      << Utility::str<real>(lon, 6) << " "
-                      << Utility::str<real>(h, 1) << " ";
           std::cout << Utility::str<real>(by, 2) << " "
                     << Utility::str<real>(bx, 2) << " "
                     << Utility::str<real>(-bz, 2) << " "
@@ -177,12 +159,12 @@ int main(int argc, char* argv[]) {
                     << Utility::str<real>(-bzt, 2) << "\n"
                     << Utility::str<real>(H, 2) << " "
                     << Utility::str<real>(F, 2) << " "
-                    << Utility::str<real>(D, 4) << " "
-                    << Utility::str<real>(I, 4) << " "
+                    << DMS::Encode(D, 3, DMS::NONE) << " "
+                    << DMS::Encode(I, 3, DMS::NONE) << " "
                     << Utility::str<real>(Ht, 2) << " "
                     << Utility::str<real>(Ft, 2) << " "
-                    << Utility::str<real>(Dt*60, 4) << " "
-                    << Utility::str<real>(It*60, 4) << "\n";
+                    << DMS::Encode(Dt, 3, DMS::NONE) << " "
+                    << DMS::Encode(It, 3, DMS::NONE) << "\n";
           
         }
         catch (const std::exception& e) {
