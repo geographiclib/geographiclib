@@ -2312,6 +2312,7 @@ number.)
     GeographicLib::SphericalHarmonic, GeographicLib::SphericalHarmonic1, and
     GeographicLib::SphericalHarmonic2 classes.
   - Add GeographicLib::MagneticModel and GeographicLib::MagneticCircle classes.
+  - Include Doxygen tag file in distribution as doc/html/Geographic.tag.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a>
   - Ensure that geographiclib-config.cmake is relocatable.

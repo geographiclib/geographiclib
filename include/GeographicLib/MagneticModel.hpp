@@ -39,8 +39,12 @@ namespace GeographicLib {
    *
    * See
    * - http://geomag.org/models/index.html
-   * - http://ngdc.noaa.gov/geomag/EMM/emm.shtml
+   * - http://ngdc.noaa.gov/geomag/EMM/index.html
+   *   http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
    * - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   *   http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
+   * - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
+   *   http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticModel {
@@ -52,7 +56,7 @@ namespace GeographicLib {
     SphericalHarmonic::normalization _norm;
     Geocentric _earth;
     std::vector<real> _G, _H, _G1, _H1;
-    void Field(real lat, real lon, real h, real t, bool diffp,
+    void Field(real t, real lat, real lon, real h, bool diffp,
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const;
     SphericalHarmonic1 _harma;
@@ -99,34 +103,34 @@ namespace GeographicLib {
                   const Geocentric& earth = Geocentric::WGS84);
     ///@}
 
-    /** \name Compute the magnetic fieldkgeoid heights
+    /** \name Compute the magnetic field
      **********************************************************************/
     ///@{
     /**
      * Evaluate the components of the magnetic field.
      *
+     * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).
      * @param[in] lon longitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
-     * @param[in] t the time (years).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
      * @param[out] By the northerly component of the magnetic field (nanotesla).
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      **********************************************************************/
-    void operator()(real lat, real lon, real h, real t,
+    void operator()(real t, real lat, real lon, real h,
                     real& Bx, real& By, real& Bz) const {
       real dummy;
-      Field(lat, lon, h, t, false, Bx, By, Bz, dummy, dummy, dummy);
+      Field(t, lat, lon, h, false, Bx, By, Bz, dummy, dummy, dummy);
     }
 
     /**
      * Evaluate the components of the magnetic field and their time derivatives
      *
+     * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).
      * @param[in] lon longitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
-     * @param[in] t the time (years).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
      * @param[out] By the northerly component of the magnetic field (nanotesla).
      * @param[out] Bz the vertical (up) component of the magnetic field
@@ -135,10 +139,10 @@ namespace GeographicLib {
      * @param[out] Byt the rate of change of \e By (nT/yr).
      * @param[out] Bzt the rate of change of \e Bz (nT/yr).
      **********************************************************************/
-    void operator()(real lat, real lon, real h, real t,
+    void operator()(real t, real lat, real lon, real h,
                     real& Bx, real& By, real& Bz,
                     real& Bxt, real& Byt, real& Bzt) const {
-      Field(lat, lon, h, t, true, Bx, By, Bz, Bxt, Byt, Bzt);
+      Field(t, lat, lon, h, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
 
     /**
@@ -179,6 +183,28 @@ namespace GeographicLib {
      * For high-degree models, this will be substantially faster.
      **********************************************************************/
     MagneticCircle Circle(real lat, real h, real t) const;
+
+    /**
+     * Compute various quantities dependent on B.
+     * @param[in] Bx
+     * @param[in] By
+     * @param[in] Bz
+     * @param[in] Bxt
+     * @param[in] Byt
+     * @param[in] Bzt
+     * @param[out] H
+     * @param[out] F
+     * @param[out] D
+     * @param[out] I
+     * @param[out] Ht
+     * @param[out] Ft
+     * @param[out] Dt
+     * @param[out] It
+     **********************************************************************/
+    static void FieldComponents(real Bx, real By, real Bz,
+                                real Bxt, real Byt, real Bzt,
+                                real& H, real& F, real& D, real& I,
+                                real& Ht, real& Ft, real& Dt, real& It);
     ///@}
 
     /** \name Inspector functions
@@ -196,9 +222,9 @@ namespace GeographicLib {
     const std::string& DateTime() const throw() { return _date; }
 
     /**
-     * @return full file name used to load the geoid data.
+     * @return full file name used to load the magnetic data.
      **********************************************************************/
-    const std::string& GeoidFile() const throw() { return _filename; }
+    const std::string& MagneticFile() const throw() { return _filename; }
 
     /**
      * @return "name" used to load the geoid data (from the first argument of

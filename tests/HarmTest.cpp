@@ -2,29 +2,49 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <ctime>
 #include <GeographicLib/MagneticModel.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/MagneticCircle.hpp>
+#include <GeographicLib/Utility.hpp>
 
 using namespace GeographicLib;
 int main() {
+  for (int s = 0; s < 2000*400; ++s) {
+    int y, m, d, s2;
+    Utility::date(s, y, m, d);
+    s2 = Utility::day(y, m, d);
+    std::cout << s2 - s << " " << s << " " << y << "-" << m << "-" << d << " " << "\n";
+  }
+  return 0;
   typedef GeographicLib::Math::real real;
   try {
     if (true) {
+      const std::time_t tim = std::time(0);
+      const std::tm* gt = std::gmtime(&tim);
+      int iyear = 1900 + gt->tm_year;
+      double year = iyear +
+        (gt->tm_yday +
+         (gt->tm_hour +
+          (gt->tm_min +
+           gt->tm_sec / 60.0) / 60.0) / 24.0) /
+        (365.0 +
+         (iyear % 4 == 0 && (iyear % 100 != 0 || iyear % 400 == 0) ? 1 : 0));
+      std::cout << std::setprecision(16);
+      std::cout << sizeof(std::time_t) << " " << year << "\n";
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
       MagneticModel mag1("wmm2010-12");
       MagneticModel mag2("emm2010-720");
       real lat, lon, h, t, bx, by, bz, bxt, byt, bzt;
-      std::cout << std::setprecision(16);
-      while (std::cin >> lat >> lon >> h >> t) {
-        mag1(lat, lon, h, t, bx, by, bz, bxt, byt, bzt);
+      while (std::cin >> t >> lat >> lon >> h) {
+        mag1(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
-        mag2(lat, lon, h, t, bx, by, bz, bxt, byt, bzt);
+        mag2(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
-        MagneticCircle circ(mag2.Circle(lat, h, t));
+        MagneticCircle circ(mag2.Circle(t, lat, h));
         circ(lon, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";

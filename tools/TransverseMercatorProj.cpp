@@ -22,6 +22,7 @@
 #include <GeographicLib/TransverseMercatorExact.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #include "TransverseMercatorProj.usage"
 
@@ -68,7 +69,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-k") {
         if (++m >= argc) return usage(1, true);
         try {
-          k0 = DMS::Decode(std::string(argv[m]));
+          k0 = Utility::num<real>(std::string(argv[m]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "
@@ -78,8 +79,8 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = DMS::Decode(std::string(argv[m + 1]));
-          f = DMS::DecodeFraction(std::string(argv[m + 2]));
+          a = Utility::num<real>(std::string(argv[m + 1]));
+          f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -160,8 +161,8 @@ int main(int argc, char* argv[]) {
         if (!(str >> stra >> strb))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
-          x = DMS::Decode(stra);
-          y = DMS::Decode(strb);
+          x = Utility::num<real>(stra);
+          y = Utility::num<real>(strb);
         } else
           DMS::DecodeLatLon(stra, strb, lat, lon);
         std::string strc;
@@ -173,19 +174,19 @@ int main(int argc, char* argv[]) {
             TMS.Reverse(lon0, x, y, lat, lon, gamma, k);
           else
             TME.Reverse(lon0, x, y, lat, lon, gamma, k);
-          *output << DMS::Encode(lat, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(lon, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(gamma, 16, DMS::NUMBER) << " "
-                  << DMS::Encode(k, 16, DMS::NUMBER) << "\n";
+          *output << Utility::str<real>(lat, 15) << " "
+                  << Utility::str<real>(lon, 15) << " "
+                  << Utility::str<real>(gamma, 16) << " "
+                  << Utility::str<real>(k, 16) << "\n";
         } else {
           if (series)
             TMS.Forward(lon0, lat, lon, x, y, gamma, k);
           else
             TME.Forward(lon0, lat, lon, x, y, gamma, k);
-          *output << DMS::Encode(x, 10, DMS::NUMBER) << " "
-                  << DMS::Encode(y, 10, DMS::NUMBER) << " "
-                  << DMS::Encode(gamma, 16, DMS::NUMBER) << " "
-                  << DMS::Encode(k, 16, DMS::NUMBER) << "\n";
+          *output << Utility::str<real>(x, 10) << " "
+                  << Utility::str<real>(y, 10) << " "
+                  << Utility::str<real>(gamma, 16) << " "
+                  << Utility::str<real>(k, 16) << "\n";
         }
       }
       catch (const std::exception& e) {

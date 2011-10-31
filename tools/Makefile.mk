@@ -6,6 +6,7 @@ PROGRAMS = GeoConvert \
 	Geod \
 	GeodesicProj \
 	GeoidEval \
+	MagneticEval \
 	Planimeter \
 	ConicProj
 SCRIPTS = geographiclib-get-geoids
@@ -45,6 +46,7 @@ CartConvert: CartConvert.o
 Geod: Geod.o
 GeodesicProj: GeodesicProj.o
 GeoidEval: GeoidEval.o
+MagneticEval: MagneticEval.o
 Planimeter: Planimeter.o
 ConicProj: ConicProj.o
 
@@ -62,6 +64,8 @@ GeodesicProj.o: GeodesicProj.usage AzimuthalEquidistant.hpp \
 	DMS.hpp Geodesic.hpp GeodesicLine.hpp
 GeoidEval.o: GeoidEval.usage Constants.hpp Math.hpp Config.h DMS.hpp \
 	GeoCoords.hpp Geoid.hpp
+MagneticEval.o: MagneticEval.usage Constants.hpp Math.hpp Config.h DMS.hpp \
+	MagneticModel.hpp
 Planimeter.o: Planimeter.usage Constants.hpp Math.hpp Config.h DMS.hpp \
 	GeoCoords.hpp PolygonArea.hpp Geodesic.hpp Accumulator.hpp
 ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \

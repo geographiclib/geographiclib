@@ -1,6 +1,6 @@
 /**
  * \file GeoidEval.cpp
- * \brief Command line utility for evaluation geoid heights
+ * \brief Command line utility for evaluating geoid heights
  *
  * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
  * and licensed under the MIT/X11 License.  For more information, see
@@ -13,12 +13,12 @@
  **********************************************************************/
 
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <GeographicLib/Geoid.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 #include <GeographicLib/GeoCoords.hpp>
 
 #include "GeoidEval.usage"
@@ -196,8 +196,8 @@ int main(int argc, char* argv[]) {
               // End of i'th token
               pb = s.find_first_of(spaces, pa);
               (i == 2 ? height : (i == 0 ? easting : northing)) =
-                DMS::Decode(s.substr(pa,
-                                     pb == std::string::npos ? pb : pb - pa));
+                Utility::num<real>(s.substr(pa, (pb == std::string::npos ?
+                                                 pb : pb - pa)));
             }
             p.Reset(zonenum, northp, easting, northing);
             if (heightmult) {
@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
               std::string::size_type pa = s.find_last_of(spaces, pb);
               if (pa == std::string::npos || pb == std::string::npos)
                 throw GeographicErr("Incomplete input: " + s);
-              height = DMS::Decode(s.substr(pa + 1, pb - pa));
+              height = Utility::num<real>(s.substr(pa + 1, pb - pa));
               s = s.substr(0, pa + 1);
             }
             p.Reset(s);
@@ -222,16 +222,15 @@ int main(int argc, char* argv[]) {
           if (heightmult) {
             real h = g(p.Latitude(), p.Longitude());
             *output << s
-                    << DMS::Encode(height + real(heightmult) * h,
-                                   4, DMS::NUMBER)
+                    << Utility::str<real>(height + real(heightmult) * h, 4)
                     << suff << "\n";
           } else {
             real gradn, grade;
             real h = g(p.Latitude(), p.Longitude(), gradn, grade);
-            *output << DMS::Encode(h, 4, DMS::NUMBER) << " "
-                    << DMS::Encode(gradn * 1e6, 2, DMS::NUMBER)
+            *output << Utility::str<real>(h, 4) << " "
+                    << Utility::str<real>(gradn * 1e6, 2)
                     << (Math::isnan(gradn) ? " " : "e-6 ")
-                    << DMS::Encode(grade * 1e6, 2, DMS::NUMBER)
+                    << Utility::str<real>(grade * 1e6, 2)
                     << (Math::isnan(grade) ? "\n" : "e-6\n");
           }
         }

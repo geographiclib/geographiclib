@@ -23,6 +23,7 @@
 #include <GeographicLib/CassiniSoldner.hpp>
 #include <GeographicLib/Gnomonic.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #include "GeodesicProj.usage"
 
@@ -59,8 +60,8 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = DMS::Decode(std::string(argv[m + 1]));
-          f = DMS::DecodeFraction(std::string(argv[m + 2]));
+          a = Utility::num<real>(std::string(argv[m + 1]));
+          f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -146,8 +147,8 @@ int main(int argc, char* argv[]) {
         if (!(str >> stra >> strb))
           throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
-          x = DMS::Decode(stra);
-          y = DMS::Decode(strb);
+          x = Utility::num<real>(stra);
+          y = Utility::num<real>(strb);
         } else
           DMS::DecodeLatLon(stra, strb, lat, lon);
         std::string strc;
@@ -160,10 +161,10 @@ int main(int argc, char* argv[]) {
             az.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
           else
             gn.Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-          *output << DMS::Encode(lat, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(lon, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(azi, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(rk, 16, DMS::NUMBER) << "\n";
+          *output << Utility::str<real>(lat, 15) << " "
+                  << Utility::str<real>(lon, 15) << " "
+                  << Utility::str<real>(azi, 15) << " "
+                  << Utility::str<real>(rk, 16) << "\n";
         } else {
           if (cassini)
             cs.Forward(lat, lon, x, y, azi, rk);
@@ -171,10 +172,10 @@ int main(int argc, char* argv[]) {
             az.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
           else
             gn.Forward(lat0, lon0, lat, lon, x, y, azi, rk);
-          *output << DMS::Encode(x, 10, DMS::NUMBER) << " "
-                  << DMS::Encode(y, 10, DMS::NUMBER) << " "
-                  << DMS::Encode(azi, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(rk, 16, DMS::NUMBER) << "\n";
+          *output << Utility::str<real>(x, 10) << " "
+                  << Utility::str<real>(y, 10) << " "
+                  << Utility::str<real>(azi, 15) << " "
+                  << Utility::str<real>(rk, 16) << "\n";
         }
       }
       catch (const std::exception& e) {

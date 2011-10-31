@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -22,41 +23,229 @@ namespace GeographicLib {
    * \brief Some utility routines for %GeographicLib
    **********************************************************************/
   class GEOGRAPHIC_EXPORT Utility {
+  private:
+    static bool gregorian(int y, int m, int d) {
+      // The original cut over to the Gregorian calendar in Pope Gregory XIII's
+      // time had 1582-10-04 followed by 1582-10-15. Here we implement the
+      // switch over used by the English-speaking world where 1752-09-02 was
+      // followed by 1752-09-14. We also assume that the year always begins
+      // with January 1, whereas in reality it often was reckoned to begin in
+      // March.
+      return 100 * (100 * y + m) + d > 17520902; // or 15821004
+    }
+    static bool gregorian(int s) {
+      return s > 639798;        // 1752-09-02
+    }
   public:
+    /**
+     * Convert a date to the day numbering sequentially starting with
+     * 0001-01-01 as day 1.
+     *
+     * @param[in] y the year (must be positive).
+     * @param[in] m the month, Jan = 1, etc. (must be positive).  Default = 1.
+     * @param[in] d the day of the month (must be positive).  Default = 1.
+     * @return the sequential day number.
+     **********************************************************************/
+    static int day(int y, int m = 1, int d = 1) throw() {
+      // Convert from date to sequential day and vice versa
+      //
+      // Here is some code to convert a date to sequential day and vice
+      // versa. The sequential day is numbered so that January 1, 1 AD is day 1
+      // (a Saturday). So this is offset from the “Julian” day which starts the
+      // numbering with 4713 BC.
+      //
+      // This is inspired by a talk by John Conway at the John von Neumann
+      // National Supercomputer Center when he described his Doomsday algorithm
+      // for figuring the day of the week. The code avoids explicitly doing ifs
+      // (except for the decision of whether to use the Julian or Gregorian
+      // calendar). Instead the equivalent result is achieved using integer
+      // arithmetic. I got this idea from the routine for the day of the week
+      // in MACLisp (I believe that that routine was written by Guy Steele).
+      //
+      // There are three issues to take care of
+      //
+      // 1. the rules for leap years,
+      // 2. the inconvenient placement of leap days at the end of February,
+      // 3. the irregular pattern of month lengths.
+      //
+      // We deal with these as follows:
+      //
+      // 1. Leap years are given by simple rules which are straightforward to
+      // accommodate.
+      //
+      // 2. We simplify the calculations by moving January and February to the
+      // previous year. Here we internally number the months March–December,
+      // January, February as 0–9, 10, 11.
+      //
+      // 3. The pattern of month lengths from March through January is regular
+      // with a 5-month period—31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31. The
+      // 5-month period is 153 days long. Since February is now at the end of
+      // the year, we don't need to include its length in this part of the
+      // calculation.
+      bool greg = gregorian(y, m, d);
+      y += (m + 9) / 12 - 1; // Move Jan and Feb to previous year,
+      m = (m + 9) % 12;      // making March month 0.
+      return
+        (1461 * y) / 4 // Julian years converted to days.  Julian year is 365 +
+                       // 1/4 = 1461/4 days.
+        // Gregorian leap year corrections.  The 2 offset with respect to the
+        // Julian calendar synchronizes the vernal equinox with that at the time
+        // of the Council of Nicea (325 AD).
+        + (greg ? (y / 100) / 4 - (y / 100) + 2 : 0)
+        + (153 * m + 2) / 5     // The zero-based start of the m'th month
+        + d - 1                 // The zero-based day
+        - 305; // The number of days between March 1 and December 31.
+               // This makes 0001-01-01 day 1
+    }
+
+    /**
+     * Given a day (counting from 0001-01-01 as day 1), return the date.
+     *
+     * @param[in] s the sequential day number (must be positive)
+     * @param[out] y the year.
+     * @param[out] m the month, Jan = 1, etc.
+     * @param[out] d the day of the month.
+     **********************************************************************/
+    static void date(int s, int& y, int& m, int& d) throw() {
+      int c = 0;
+      bool greg = gregorian(s);
+      s += 305;                 // s = 0 on March 1, 1BC
+      if (greg) {
+        s -= 2;                 // The 2 day Gregorian offset
+        // Determine century with the Gregorian rules for leap years.  The
+        // Gregorian year is 365 + 1/4 - 1/100 + 1/400 = 146097/400 days.
+        c = (4 * s + 3) / 146097;
+        s -= (c * 146097) / 4;  // s = 0 at beginning of century
+      }
+      y = (4 * s + 3) / 1461;   // Determine the year using Julian rules.
+      s -= (1461 * y) / 4;      // s = 0 at start of year, i.e., March 1
+      y += c * 100;             // Assemble full year
+      m = (5 * s + 2) / 153;    // Determine the month
+      s -= (153 * m + 2) / 5;   // s = 0 at beginning of month
+      d = s + 1;                // Determine day of month
+      y += (m + 2) / 12;        // Move Jan and Feb back to original year
+      m = (m + 2) % 12 + 1;     // Renumber the months so January = 1
+    }
+
+    /**
+     * Given the date, return the day of the week.
+     *
+     * @param[in] y the year (must be positive).
+     * @param[in] m the month, Jan = 1, etc. (must be positive).
+     * @param[in] d the day of the month (must be positive).
+     * @return the day of the week with Sunday, Monday - Saturday = 0, 1 - 6.
+     **********************************************************************/
+    static int dow(int y, int m, int d) throw() { return dow(day(y, m, d)); }
+
+    /**
+     * Given the sequential day, return the day of the week.
+     *
+     * @param[in] s the sequential day (must be positive).
+     * @return the day of the week with Sunday, Monday - Saturday = 0, 1 - 6.
+     **********************************************************************/
+    static int dow(int s) throw() {
+      return (s + 5) % 7;  // The 5 offset makes day 1 (0001-01-01) a Saturday.
+    }
+
     /**
      * Convert a object of type T to a string.
      *
      * @tparam T the type of the argument.
-     * @param x the value to be converted.
+     * @param[in] x the value to be converted.
+     * @param[in] p the precision used (default -1).
      * @return the string representation.
+     *
+     * If \e p >= 0, then the number fixed format is used with p bits of
+     * precision.  With p < 0, there is no manipulation of the format.
      **********************************************************************/
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
+    template<typename T> static std::string str(T x, int p = -1) {
+      if (!std::numeric_limits<T>::is_integer && !Math::isfinite<T>(x))
+        return x < 0 ? std::string("-inf") :
+          (x > 0 ? std::string("inf") : std::string("nan"));
+      std::ostringstream s;
+      if (p >= 0) s << std::fixed << std::setprecision(p);
+      s << x; return s.str();
     }
 
     /**
      * Convert a string to an object of type T.
      *
      * @tparam T the type of the return value.
-     * @param s the string to be converted.
+     * @param[in] s the string to be converted.
      * @return object of type T
      **********************************************************************/
-    template<typename T> static T readstr(const std::string& s) {
+    template<typename T> static T num(const std::string& s) {
       T x;
-      std::istringstream is(s);
-      if (!(is >> x))
-        throw GeographicErr("Cannot decode " + s);
-      int pos = int(is.tellg()); // Returns -1 at end of string?
-      if (!(pos < 0 || pos == int(s.size())))
-        throw GeographicErr("Extra text at end of " + s);
+      std::string errmsg;
+      do {                     // Executed once (provides the ability to break)
+        std::istringstream is(s);
+        if (!(is >> x)) {
+          errmsg = "Cannot decode " + s;
+          break;
+        }
+        int pos = int(is.tellg()); // Returns -1 at end of string?
+        if (!(pos < 0 || pos == int(s.size()))) {
+          errmsg = "Extra text " + s.substr(pos) + " at end of " + s;
+          break;
+        }
+        return x;
+      } while (false);
+      x = std::numeric_limits<T>::is_integer ? 0 : nummatch<T>(s);
+      if (x == 0)
+        throw GeographicErr("errormsg");
       return x;
+    }
+
+    /**
+     * Match "nan" and "inf" (and variants thereof) in a string.
+     *
+     * @tparam T the type of the return value.
+     * @param[in] s the string to be matched.
+     * @return appropriate special value (+/-inf, nan) or 0 is none is found.
+     **********************************************************************/
+    template<typename T> static T nummatch(const std::string& s) {
+      if (s.length() < 3)
+        return 0;
+      std::string t;
+      t.resize(s.length());
+      for (size_t i = s.length(); i--;)
+        t[i] = std::toupper(s[i]);
+      int sign = t[0] == '-' ? -1 : 1;
+      std::string::size_type p0 = t[0] == '-' || t[0] == '+' ? 1 : 0;
+      std::string::size_type p1 = t.find_last_not_of('0');
+      if (p1 == std::string::npos || p1 + 1 < p0 + 3)
+        return 0;
+      // Strip off sign and trailing 0s
+      t = t.substr(p0, p1 + 1 - p0);  // Length at least 3
+      if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
+          t == "1.#R")
+        return Math::NaN<T>();
+      else if (t == "INF" || t == "1.#INF")
+        return sign * Math::infinity<T>();
+      return 0;
+    }
+
+    /**
+     * Read a simple fraction, e.g., 3/4, from a string to an object of type T.
+     *
+     * @tparam T the type of the return value.
+     * @param[in] s the string to be converted.
+     * @return object of type T
+     **********************************************************************/
+    template<typename T> static T fract(const std::string& s) {
+      std::string::size_type delim = s.find('/');
+      return
+        !(delim != std::string::npos && delim >= 1 && delim + 2 <= s.size()) ?
+        num<T>(s) :
+        // delim in [1, size() - 2]
+        num<T>(s.substr(0, delim)) / num<T>(s.substr(delim + 1));
     }
 
     /**
      * Lookup up a character in a string
      *
-     * @param s the string to be searched.
-     * @param c the character to look for.
+     * @param[in] s the string to be searched.
+     * @param[in] c the character to look for.
      * @return the index of the first occurrence character in the string or -1
      *   is the character is not present.
      **********************************************************************/
@@ -75,26 +264,26 @@ namespace GeographicLib {
      * @param[in] str the input stream containing the data of type ExtT
      *   (external).
      * @param[out] array the output array of type IntT (internal).
+     * @param[in] num the size of the array.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static inline void readarray(std::istream& str,
-                                   std::vector<IntT>& array) {
+                                   IntT array[], size_t num) {
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
           std::numeric_limits<ExtT>::is_integer) {
         // Data is compatible (aside from the issue of endian-ness).
-        str.read(reinterpret_cast<char *>(&array[0]),
-                 array.size() * sizeof(IntT));
+        str.read(reinterpret_cast<char *>(array), num * sizeof(IntT));
         if (!str.good())
           throw GeographicErr("Failure reading data");
         if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
-          for (int i = array.size(); i--;)
+          for (int i = num; i--;)
             array[i] = Math::swab<IntT>(array[i]);
         }
       } else {
         const int bufsize = 1024; // read this many values at a time
         ExtT buffer[bufsize];     // temporary buffer
-        int k = array.size();     // data values left to read
+        int k = int(num);         // data values left to read
         int i = 0;                // index into output array
         while (k) {
           int num = (std::min)(k, bufsize);
@@ -109,6 +298,24 @@ namespace GeographicLib {
         }
       }
       return;
+    }
+
+    /**
+     * Read data of type ExtT from a binary stream to a vector array of type
+     * IntT.  The data in the file is in (bigendp ? big : little)-endian
+     * format.
+     *
+     * @tparam ExtT the type of the objects in the binary stream (external).
+     * @tparam IntT the type of the objects in the array (internal).
+     * @tparam bigendp true if the external storage format is big-endian.
+     * @param[in] str the input stream containing the data of type ExtT
+     *   (external).
+     * @param[out] array the output vector of type IntT (internal).
+     **********************************************************************/
+    template<typename ExtT, typename IntT, bool bigendp>
+      static inline void readarray(std::istream& str,
+                                   std::vector<IntT>& array) {
+      readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
   };
 

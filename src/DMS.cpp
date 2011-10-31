@@ -226,43 +226,6 @@ namespace GeographicLib {
     return 0;
   }
 
-  Math::real DMS::Decode(const std::string& str) {
-    istringstream is(str);
-    string errormsg;
-    real num;
-    do {                       // Executed once (provides the ability to break)
-      if (!(is >> num)) {
-        errormsg = "Could not read number: " + str;
-        break;
-      }
-      // On some platforms, is >> num gobbles final E in 1234E, so look for
-      // last character which is legal as the final character in a number
-      // (digit or period).
-      int pos = int(is.tellg()); // Returns -1 at end of string?
-      if (pos < 0)
-        pos = int(str.size());
-      pos = min(pos, int(str.find_last_of("0123456789.")) + 1);
-      if (pos != int(str.size())) {
-        errormsg = "Extra text " + str.substr(pos) + " in number " + str;
-        break;
-      }
-      return num;
-    } while (false);
-    num = NumMatch(str);
-    if (num == 0)
-      throw GeographicErr(errormsg);
-    return num;
-  }
-
-  Math::real DMS::DecodeFraction(const std::string& str) {
-    string::size_type delim = str.find('/');
-    if (!(delim != string::npos && delim >= 1 && delim + 2 <= str.size()))
-      return Decode(str);
-    else
-      // delim in [1, size() - 2]
-      return Decode(str.substr(0, delim)) / Decode(str.substr(delim + 1));
-  }
-
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
                          real& lat, real& lon, bool swaplatlong) {
     real a, b;

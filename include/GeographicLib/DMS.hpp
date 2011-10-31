@@ -13,6 +13,7 @@
 #include <sstream>
 #include <iomanip>
 #include <GeographicLib/Constants.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs string
@@ -193,7 +194,9 @@ namespace GeographicLib {
      * @param[in] str string input.
      * @return decoded number.
      **********************************************************************/
-    static Math::real Decode(const std::string& str);
+    static Math::real Decode(const std::string& str) {
+      return Utility::num<real>(str);
+    }
 
     /**
      * Convert a string to a real number treating the case where the string is
@@ -202,7 +205,9 @@ namespace GeographicLib {
      * @param[in] str string input.
      * @return decoded number.
      **********************************************************************/
-    static Math::real DecodeFraction(const std::string& str);
+    static Math::real DecodeFraction(const std::string& str) {
+      return Utility::fract<real>(str);
+    }
 
     /**
      * Convert a pair of strings to latitude and longitude.
@@ -289,22 +294,15 @@ namespace GeographicLib {
      * \e prec indicates the precision relative to 1 degree, e.g., \e prec = 3
      * gives a result accurate to 0.1' and \e prec = 4 gives a result accurate
      * to 1&quot;.  \e ind is interpreted as in DMS::Encode with the additional
-     * facility at DMS::NUMBER treats \e angle a number in fixed format with
-     * precision \e prec.
+     * facility that DMS::NUMBER represents \e angle as a number in fixed
+     * format with precision \e prec.
      **********************************************************************/
     static std::string Encode(real angle, unsigned prec, flag ind = NONE) {
-      if (ind == NUMBER) {
-        if (!Math::isfinite(angle))
-          return angle < 0 ? std::string("-inf") :
-            (angle > 0 ? std::string("inf") : std::string("nan"));
-        std::ostringstream s;
-        s << std::fixed << std::setprecision(prec) << angle;
-        return s.str();
-      } else
-        return Encode(angle,
-                      prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
-                      prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
-                      ind);
+      return ind == NUMBER ? Utility::str<real>(angle, int(prec)) :
+        Encode(angle,
+               prec < 2 ? DEGREE : (prec < 4 ? MINUTE : SECOND),
+               prec < 2 ? prec : (prec < 4 ? prec - 2 : prec - 4),
+               ind);
     }
 
     /**

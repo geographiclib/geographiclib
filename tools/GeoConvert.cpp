@@ -20,6 +20,7 @@
 #include <fstream>
 #include <GeographicLib/GeoCoords.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #include "GeoConvert.usage"
 
@@ -166,9 +167,9 @@ int main(int argc, char* argv[]) {
               gamma = p.AltConvergence(),
               k = p.AltScale();
             os =
-              DMS::Encode(gamma, std::max(-5,std::min(8,prec))+5, DMS::NUMBER)
+              Utility::str<real>(gamma, std::max(-5,std::min(8,prec))+5)
               + " " +
-              DMS::Encode(k, std::max(-5,std::min(8,prec))+7, DMS::NUMBER);
+              Utility::str<real>(k, std::max(-5,std::min(8,prec))+7);
           }
         }
       }

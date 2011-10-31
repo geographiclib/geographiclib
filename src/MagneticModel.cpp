@@ -121,33 +121,33 @@ namespace GeographicLib {
       else if (key == "ReleaseDate")
         _date = val;
       else if (key == "Radius")
-        _a = Utility::readstr<real>(val);
+        _a = Utility::num<real>(val);
       else if (key == "Epoch")
-        _t0 = Utility::readstr<real>(val);
+        _t0 = Utility::num<real>(val);
       else if (key == "StartTime")
-        _tmin = Utility::readstr<real>(val);
+        _tmin = Utility::num<real>(val);
       else if (key == "StopTime")
-        _tmax = Utility::readstr<real>(val);
+        _tmax = Utility::num<real>(val);
       else if (key == "MinHeight")
-        _hmin =  Utility::readstr<real>(val);
+        _hmin =  Utility::num<real>(val);
       else if (key == "MaxHeight")
-        _hmax =  Utility::readstr<real>(val);
+        _hmax =  Utility::num<real>(val);
       else if (key == "N")
-        _N =  Utility::readstr<int>(val);
+        _N =  Utility::num<int>(val);
       else if (key == "M")
-        _M =  Utility::readstr<int>(val);
+        _M =  Utility::num<int>(val);
       else if (key == "N1")
-        _N1 =  Utility::readstr<int>(val);
+        _N1 =  Utility::num<int>(val);
       else if (key == "M1")
-        _M1 =  Utility::readstr<int>(val);
+        _M1 =  Utility::num<int>(val);
       else if (key == "N2")
-        N2 =  Utility::readstr<int>(val);
+        N2 =  Utility::num<int>(val);
       else if (key == "M2")
-        M2 =  Utility::readstr<int>(val);
+        M2 =  Utility::num<int>(val);
       else if (key == "N3")
-        N3 =  Utility::readstr<int>(val);
+        N3 =  Utility::num<int>(val);
       else if (key == "M3")
-        M3 =  Utility::readstr<int>(val);
+        M3 =  Utility::num<int>(val);
       else if (key == "Normalization") {
         if (val == "Full" || val == "full")
           _norm = SphericalHarmonic::full;
@@ -177,6 +177,10 @@ namespace GeographicLib {
       throw GeographicErr("Reference radius must be positive");
     if (!(_t0 > 0))
       throw GeographicErr("Epoch time not defined");
+    if (_tmin >= _tmax)
+      throw GeographicErr("Min time exceeds max time");
+    if (_hmin >= _hmax)
+      throw GeographicErr("Min height exceeds max height");
   }
 
   bool MagneticModel::ParseLine(const std::string& line,
@@ -205,7 +209,7 @@ namespace GeographicLib {
     return true;
   }
 
-  void MagneticModel::Field(real lat, real lon, real h, real t, bool diffp,
+  void MagneticModel::Field(real t, real lat, real lon, real h, bool diffp,
                             real& Bx, real& By, real& Bz,
                             real& Bxt, real& Byt, real& Bzt) const {
     t -= _t0;
@@ -226,7 +230,7 @@ namespace GeographicLib {
     Bz = - _a * (M[2] * BX + M[5] * BY + M[8] * BZ);
   }
 
-  MagneticCircle MagneticModel::Circle(real lat, real h, real t)
+  MagneticCircle MagneticModel::Circle(real t, real lat, real h)
     const {
     t -= _t0;
     real x, y, z;
@@ -237,6 +241,21 @@ namespace GeographicLib {
     return MagneticCircle(_a, M[7], M[8],
                           _harma.Circle(t, x, z, true),
                           _harmb.Circle(x, z, true));
+  }
+
+  void MagneticModel::FieldComponents(real Bx, real By, real Bz,
+                                      real Bxt, real Byt, real Bzt,
+                                      real& H, real& F, real& D, real& I,
+                                      real& Ht, real& Ft,
+                                      real& Dt, real& It) {
+    H = Math::hypot(Bx, By);
+    Ht = H ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
+    D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree<real>();
+    Dt = (H ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree<real>();
+    F = Math::hypot(H, Bz);
+    Ft = F ? (H * Ht + Bz * Bzt) / F : Math::hypot(Ht, Bzt);
+    I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree<real>();
+    It = (F ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree<real>();
   }
 
   std::string MagneticModel::DefaultMagneticPath() {
