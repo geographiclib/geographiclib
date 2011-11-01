@@ -20,7 +20,10 @@ pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 install:
 	$(INSTALL) -d $(DESTDIR)$(pythondir)
 	$(INSTALL) -m 644 $(PYTHON_FILES) $(DESTDIR)$(pythondir)
-	$(INSTALL) -m 644 setup.py $(DESTDIR)$(pythondir)/../
+
+# Don't install setup.py because it ends up in e.g.,
+# /usr/local/lib/python/site-packages/setup.py
+#	$(INSTALL) -m 644 setup.py $(DESTDIR)$(pythondir)/../
 
 clean-local:
 	rm -rf *.pyc $(PACKAGE)/*.pyc

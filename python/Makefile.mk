@@ -14,7 +14,11 @@ all:
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(PYTHON_FILES) $(DEST)/
-	$(INSTALL) -m 644 setup.py $(DEST)/../
+
+# Don't install setup.py because it ends up in e.g.,
+# /usr/local/lib/python/site-packages/setup.py
+#	$(INSTALL) -m 644 setup.py $(DEST)/../
+
 clean:
 	rm -f *.pyc $(PACKAGE)/*.pyc
 

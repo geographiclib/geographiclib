@@ -4,7 +4,11 @@
 #
 #   python setup.py install
 #
-# in this directory.  The initial version of this file was provided by
+# in this directory.  To upload the latest version to the python reposity run
+#
+#   python setup.py sdist --formats gztar,zip upload
+#
+# The initial version of this file was provided by
 # Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au>.
 #
 # $Id$

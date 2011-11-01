@@ -27,6 +27,10 @@ else (WIN32)
     CACHE STRING "Location for geoid data")
 endif (WIN32)
 
+if (WIN32)
+  set (CMAKE_DEBUG_POSTFIX d)
+endif (WIN32)
+
 include (CheckTypeSize)
 check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
 

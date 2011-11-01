@@ -863,7 +863,7 @@ and then unpack the .tar.gz or .zip file.
 
 You can "install" these routines, so that they are in python's default
 path with, for example \verbatim
-  cd /usr/local/lib/python/site-packages
+  cd geographiclib-1.14
   python setup.py install
 \endverbatim
 (this will require root privileges).  Or else you can set the path
