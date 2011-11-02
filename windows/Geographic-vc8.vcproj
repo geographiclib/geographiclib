@@ -62,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -184,6 +185,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="$(OutDir)\$(ProjectName)d.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -271,19 +273,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\MGRS.cpp"
+				RelativePath="..\src\AlbersEqualArea.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\PolarStereographic.cpp"
+				RelativePath="..\src\AzimuthalEquidistant.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\TransverseMercator.cpp"
+				RelativePath="..\src\CassiniSoldner.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\UTMUPS.cpp"
+				RelativePath="..\src\CircularEngine.cpp"
 				>
 			</File>
 			<File
@@ -291,23 +293,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\GeoCoords.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\TransverseMercatorExact.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\EllipticFunction.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Geocentric.cpp"
+				RelativePath="..\src\GeoCoords.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\LocalCartesian.cpp"
+				RelativePath="..\src\Geocentric.cpp"
 				>
 			</File>
 			<File
@@ -319,11 +313,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\PolygonArea.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AzimuthalEquidistant.cpp"
+				RelativePath="..\src\Geoid.cpp"
 				>
 			</File>
 			<File
@@ -331,15 +321,23 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\CassiniSoldner.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Geoid.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\LambertConformalConic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\LocalCartesian.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MGRS.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MagneticCircle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MagneticModel.cpp"
 				>
 			</File>
 			<File
@@ -347,7 +345,27 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\AlbersEqualArea.cpp"
+				RelativePath="..\src\PolarStereographic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\PolygonArea.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\SphericalEngine.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TransverseMercator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\TransverseMercatorExact.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\UTMUPS.cpp"
 				>
 			</File>
 		</Filter>
@@ -357,31 +375,27 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="../include/GeographicLib/Constants.hpp"
-				>
-			</File>
-			<File
-				RelativePath="../include/GeographicLib/Math.hpp"
-				>
-			</File>
-			<File
 				RelativePath="../include/GeographicLib/Accumulator.hpp"
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/MGRS.hpp"
+				RelativePath="../include/GeographicLib/AlbersEqualArea.hpp"
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/PolarStereographic.hpp"
+				RelativePath="../include/GeographicLib/AzimuthalEquidistant.hpp"
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/TransverseMercator.hpp"
+				RelativePath="../include/GeographicLib/CassiniSoldner.hpp"
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/UTMUPS.hpp"
+				RelativePath="../include/GeographicLib/CircularEngine.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Constants.hpp"
 				>
 			</File>
 			<File
@@ -389,23 +403,15 @@
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/GeoCoords.hpp"
-				>
-			</File>
-			<File
-				RelativePath="../include/GeographicLib/TransverseMercatorExact.hpp"
-				>
-			</File>
-			<File
 				RelativePath="../include/GeographicLib/EllipticFunction.hpp"
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/Geocentric.hpp"
+				RelativePath="../include/GeographicLib/GeoCoords.hpp"
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/LocalCartesian.hpp"
+				RelativePath="../include/GeographicLib/Geocentric.hpp"
 				>
 			</File>
 			<File
@@ -417,11 +423,7 @@
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/PolygonArea.hpp"
-				>
-			</File>
-			<File
-				RelativePath="../include/GeographicLib/AzimuthalEquidistant.hpp"
+				RelativePath="../include/GeographicLib/Geoid.hpp"
 				>
 			</File>
 			<File
@@ -429,15 +431,27 @@
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/CassiniSoldner.hpp"
-				>
-			</File>
-			<File
-				RelativePath="../include/GeographicLib/Geoid.hpp"
-				>
-			</File>
-			<File
 				RelativePath="../include/GeographicLib/LambertConformalConic.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/LocalCartesian.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/MGRS.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/MagneticCircle.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/MagneticModel.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Math.hpp"
 				>
 			</File>
 			<File
@@ -445,7 +459,43 @@
 				>
 			</File>
 			<File
-				RelativePath="../include/GeographicLib/AlbersEqualArea.hpp"
+				RelativePath="../include/GeographicLib/PolarStereographic.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/PolygonArea.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/SphericalEngine.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/SphericalHarmonic.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/SphericalHarmonic1.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/SphericalHarmonic2.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/TransverseMercator.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/TransverseMercatorExact.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/UTMUPS.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/Utility.hpp"
 				>
 			</File>
 			<File

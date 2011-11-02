@@ -68,9 +68,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)d</TargetName>
     <OutDir>$(SolutionDir)$(Configuration)64\</OutDir>
     <IntDir>$(Configuration)64\</IntDir>
   </PropertyGroup>
@@ -141,11 +143,12 @@
     <ClInclude Include="../include/GeographicLib/AlbersEqualArea.hpp" />
     <ClInclude Include="../include/GeographicLib/AzimuthalEquidistant.hpp" />
     <ClInclude Include="../include/GeographicLib/CassiniSoldner.hpp" />
+    <ClInclude Include="../include/GeographicLib/CircularEngine.hpp" />
     <ClInclude Include="../include/GeographicLib/Constants.hpp" />
     <ClInclude Include="../include/GeographicLib/DMS.hpp" />
     <ClInclude Include="../include/GeographicLib/EllipticFunction.hpp" />
-    <ClInclude Include="../include/GeographicLib/Geocentric.hpp" />
     <ClInclude Include="../include/GeographicLib/GeoCoords.hpp" />
+    <ClInclude Include="../include/GeographicLib/Geocentric.hpp" />
     <ClInclude Include="../include/GeographicLib/Geodesic.hpp" />
     <ClInclude Include="../include/GeographicLib/GeodesicLine.hpp" />
     <ClInclude Include="../include/GeographicLib/Geoid.hpp" />
@@ -153,23 +156,31 @@
     <ClInclude Include="../include/GeographicLib/LambertConformalConic.hpp" />
     <ClInclude Include="../include/GeographicLib/LocalCartesian.hpp" />
     <ClInclude Include="../include/GeographicLib/MGRS.hpp" />
+    <ClInclude Include="../include/GeographicLib/MagneticCircle.hpp" />
+    <ClInclude Include="../include/GeographicLib/MagneticModel.hpp" />
     <ClInclude Include="../include/GeographicLib/Math.hpp" />
     <ClInclude Include="../include/GeographicLib/OSGB.hpp" />
     <ClInclude Include="../include/GeographicLib/PolarStereographic.hpp" />
     <ClInclude Include="../include/GeographicLib/PolygonArea.hpp" />
+    <ClInclude Include="../include/GeographicLib/SphericalEngine.hpp" />
+    <ClInclude Include="../include/GeographicLib/SphericalHarmonic.hpp" />
+    <ClInclude Include="../include/GeographicLib/SphericalHarmonic1.hpp" />
+    <ClInclude Include="../include/GeographicLib/SphericalHarmonic2.hpp" />
     <ClInclude Include="../include/GeographicLib/TransverseMercator.hpp" />
     <ClInclude Include="../include/GeographicLib/TransverseMercatorExact.hpp" />
     <ClInclude Include="../include/GeographicLib/UTMUPS.hpp" />
+    <ClInclude Include="../include/GeographicLib/Utility.hpp" />
     <ClInclude Include="../include/GeographicLib/Config.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="../src/AlbersEqualArea.cpp" />
     <ClCompile Include="../src/AzimuthalEquidistant.cpp" />
     <ClCompile Include="../src/CassiniSoldner.cpp" />
+    <ClCompile Include="../src/CircularEngine.cpp" />
     <ClCompile Include="../src/DMS.cpp" />
     <ClCompile Include="../src/EllipticFunction.cpp" />
-    <ClCompile Include="../src/Geocentric.cpp" />
     <ClCompile Include="../src/GeoCoords.cpp" />
+    <ClCompile Include="../src/Geocentric.cpp" />
     <ClCompile Include="../src/Geodesic.cpp" />
     <ClCompile Include="../src/GeodesicLine.cpp" />
     <ClCompile Include="../src/Geoid.cpp" />
@@ -177,9 +188,12 @@
     <ClCompile Include="../src/LambertConformalConic.cpp" />
     <ClCompile Include="../src/LocalCartesian.cpp" />
     <ClCompile Include="../src/MGRS.cpp" />
+    <ClCompile Include="../src/MagneticCircle.cpp" />
+    <ClCompile Include="../src/MagneticModel.cpp" />
     <ClCompile Include="../src/OSGB.cpp" />
     <ClCompile Include="../src/PolarStereographic.cpp" />
     <ClCompile Include="../src/PolygonArea.cpp" />
+    <ClCompile Include="../src/SphericalEngine.cpp" />
     <ClCompile Include="../src/TransverseMercator.cpp" />
     <ClCompile Include="../src/TransverseMercatorExact.cpp" />
     <ClCompile Include="../src/UTMUPS.cpp" />
@@ -188,3 +202,4 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+
