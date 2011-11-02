@@ -32,12 +32,13 @@ namespace GeographicLib {
       // followed by 1752-09-14. We also assume that the year always begins
       // with January 1, whereas in reality it often was reckoned to begin in
       // March.
-      return 100 * (100 * y + m) + d > 17520902; // or 15821004
+      return 100 * (100 * y + m) + d >= 17520914; // or 15821004
     }
     static bool gregorian(int s) {
-      return s > 639798;        // 1752-09-02
+      return s >= 639799;       // 1752-09-14
     }
   public:
+
     /**
      * Convert a date to the day numbering sequentially starting with
      * 0001-01-01 as day 1.
@@ -97,6 +98,33 @@ namespace GeographicLib {
         + d - 1                 // The zero-based day
         - 305; // The number of days between March 1 and December 31.
                // This makes 0001-01-01 day 1
+    }
+
+    /**
+     * Convert a date to the day numbering sequentially starting with
+     * 0001-01-01 as day 1.
+     *
+     * @param[in] y the year (must be positive).
+     * @param[in] m the month, Jan = 1, etc. (must be positive).  Default = 1.
+     * @param[in] d the day of the month (must be positive).  Default = 1.
+     * @param[in] check whether to check the date.
+     * @return the sequential day number.
+     *
+     * If \e check is true and the date is invalid an exception is thrown.
+     **********************************************************************/
+    static int day(int y, int m, int d, bool check) {
+      int s = day(y, m, d);
+      if (!check)
+        return s;
+      int y1, m1, d1;
+      date(s, y1, m1, d1);
+      if (!(s > 0 && y == y1 && m == m1 && d == d1))
+        throw GeographicErr("Invalid date " +
+                            str(y) + "-" + str(m) + "-" + str(d)
+                            + (s > 0 ? "; use " +
+                               str(y1) + "-" + str(m1) + "-" + str(d1) :
+                               " before 0001-01-01"));
+      return s;
     }
 
     /**
@@ -171,23 +199,25 @@ namespace GeographicLib {
       std::string::size_type p1 = s.find_first_not_of(digits);
       if (p1 == std::string::npos || s[p1] != '-')
         throw GeographicErr("Delimiter not hyphen in date " + s);
+      else if (p1 == 0)
+        throw GeographicErr("Empty year field in date " + s);
       y = num<int>(s.substr(0, p1));
-      ++p1;
+      if (++p1 == s.size())
+        throw GeographicErr("Empty month field in date " + s);
       std::string::size_type p2 = s.find_first_not_of(digits, p1);
       if (p2 == std::string::npos)
         m = num<int>(s.substr(p1));
       else if (s[p2] != '-')
         throw GeographicErr("Delimiter not hyphen in date " + s);
+      else if (p2 == p1)
+        throw GeographicErr("Empty month field in date " + s);
       else {
         m = num<int>(s.substr(p1, p2 - p1));
-        ++p2;
+        if (++p2 == s.size())
+          throw GeographicErr("Empty day field in date " + s);
         d = num<int>(s.substr(p2));
       }
-      int t = day(y, m, d);
-      int y1, m1, d1;
-      date(t, y1, m1, d1);
-      if (!(y1 == y && m1 == m))
-        throw GeographicErr("Unknown date " + s);
+      int t = day(y, m, d, true);
       return T(y) + T(t - day(y)) / T(day(y + 1) - day(y));
     }
 
@@ -236,7 +266,7 @@ namespace GeographicLib {
       } while (false);
       x = std::numeric_limits<T>::is_integer ? 0 : nummatch<T>(s);
       if (x == 0)
-        throw GeographicErr("errormsg");
+        throw GeographicErr(errmsg);
       return x;
     }
 
