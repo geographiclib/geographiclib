@@ -49,6 +49,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConicProj", "ConicProj-vc10
 		{AAA7F386-D98F-4E1C-BA16-628CEF1DB440} = {AAA7F386-D98F-4E1C-BA16-628CEF1DB440}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MagneticField", "MagneticField-vc10.vcxproj", "{3D185FB1-192C-457B-A327-27CFAEB82D8A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1} = {4CFBCD6C-956C-42BC-A863-3C60F3ED9CC1}
+		{62483C58-6125-4DB8-889D-23F5CB1D9744} = {62483C58-6125-4DB8-889D-23F5CB1D9744}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -129,6 +135,14 @@ Global
 		{62483C58-6125-4DB8-889D-23F5CB1D9744}.Release|Win32.Build.0 = Release|Win32
 		{62483C58-6125-4DB8-889D-23F5CB1D9744}.Release|x64.ActiveCfg = Release|x64
 		{62483C58-6125-4DB8-889D-23F5CB1D9744}.Release|x64.Build.0 = Release|x64
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Debug|Win32.Build.0 = Debug|Win32
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Debug|x64.ActiveCfg = Debug|x64
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Debug|x64.Build.0 = Debug|x64
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Release|Win32.ActiveCfg = Release|Win32
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Release|Win32.Build.0 = Release|Win32
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Release|x64.ActiveCfg = Release|x64
+		{3D185FB1-192C-457B-A327-27CFAEB82D8A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

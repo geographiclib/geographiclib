@@ -1,5 +1,5 @@
 /**
- * \file MagneticEval.cpp
+ * \file MagneticField.cpp
  * \brief Command line utility for evaluating magnetic fields
  *
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
@@ -9,7 +9,7 @@
  * Compile with -I../include and link with MagneticModel.o DMS.o
  * SphericalEngine.o
  *
- * See the <a href="MagneticEval.1.html">man page</a> for usage
+ * See the <a href="MagneticField.1.html">man page</a> for usage
  * information.
  **********************************************************************/
 
@@ -22,7 +22,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#include "MagneticEval.usage"
+#include "MagneticField.usage"
 
 int main(int argc, char* argv[]) {
   try {

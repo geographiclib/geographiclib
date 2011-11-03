@@ -16,7 +16,7 @@ bin_PROGRAMS = GeoConvert \
 	Geod \
 	GeodesicProj \
 	GeoidEval \
-	MagneticEval \
+	MagneticField \
 	Planimeter \
 	ConicProj
 
@@ -26,7 +26,7 @@ CartConvert.o: ../man/CartConvert.usage
 Geod.o: ../man/Geod.usage
 GeodesicProj.o: ../man/GeodesicProj.usage
 GeoidEval.o: ../man/GeoidEval.usage
-MagneticEval.o: ../man/MagneticEval.usage
+MagneticField.o: ../man/MagneticField.usage
 Planimeter.o: ../man/Planimeter.usage
 ConicProj.o: ../man/ConicProj.usage
 
@@ -76,7 +76,7 @@ GeoidEval_SOURCES = GeoidEval.cpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/Geoid.hpp
 
-MagneticEval_SOURCES = MagneticEval.cpp \
+MagneticField_SOURCES = MagneticField.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/DMS.hpp \

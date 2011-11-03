@@ -81,7 +81,7 @@ if (NOT WIN32)
 endif (NOT WIN32)
 
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
-  GeoidEval MagneticEval Planimeter TransverseMercatorProj)
+  GeoidEval MagneticField Planimeter TransverseMercatorProj)
 
 include_directories ("${PROJECT_BINARY_DIR}/include")
 include_directories (include)
