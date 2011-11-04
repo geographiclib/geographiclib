@@ -45,6 +45,7 @@ namespace GeographicLib {
    *   http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
    * - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
    *   http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
+   *   http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticModel {

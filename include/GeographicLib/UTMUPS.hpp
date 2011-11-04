@@ -166,7 +166,7 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      * @param[in] setzone zone override.
-     * @param[in] mgrslimits if true enforce the stricted MGRS limits on the
+     * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
      *
      * The prefered zone for the result can be specified with \e setzone, see
