@@ -202,6 +202,28 @@ namespace GeographicLib {
        **********************************************************************/
       inline Math::real Sv(int k, int n, int m, real f) const
       { return m > _mmx || n > _nmx ? 0 : *(_Snm + k) * f; }
+
+      /**
+       * The size of the coefficient vector for the cosine terms.
+       *
+       * @param[in] N the maximum degree.
+       * @param[in] M the maximum order.
+       * @return the size of the vector of cosine terms as stored in column
+       *   major order.
+       **********************************************************************/
+      static inline int Csize(int N, int M)
+      { return (M + 1) * (2 * N - M + 2) / 2; }
+
+      /**
+       * The size of the coefficient vector for the sine terms.
+       *
+       * @param[in] N the maximum degree.
+       * @param[in] M the maximum order.
+       * @return the size of the vector of cosine terms as stored in column
+       *   major order.
+       **********************************************************************/
+      static inline int Ssize(int N, int M)
+      { return Csize(N, M) - (N + 1); }
     };
 
     /**

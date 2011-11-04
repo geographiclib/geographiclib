@@ -16,8 +16,9 @@ int main() {
     if (true) {
       std::cout << std::setprecision(16);
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
-      MagneticModel mag1("wmm2010-12");
-      MagneticModel mag2("emm2010-720");
+      MagneticModel mag1("new-wmm2010-12");
+      MagneticModel mag2("new-emm2010-720");
+      MagneticModel mag3("new-igrf11-13");
       real lat, lon, h, t, bx, by, bz, bxt, byt, bzt;
       while (std::cin >> t >> lat >> lon >> h) {
         mag1(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
@@ -26,8 +27,15 @@ int main() {
         mag2(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
-        MagneticCircle circ(mag2.Circle(t, lat, h));
-        circ(lon, bx, by, bz, bxt, byt, bzt);
+        MagneticCircle circ2(mag2.Circle(t, lat, h));
+        circ2(lon, bx, by, bz, bxt, byt, bzt);
+        std::cout << by << " " << bx << " " << -bz << " "
+                  << byt << " " << bxt << " " << -bzt << "\n";
+        mag3(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
+        std::cout << by << " " << bx << " " << -bz << " "
+                  << byt << " " << bxt << " " << -bzt << "\n";
+        MagneticCircle circ3(mag3.Circle(t, lat, h));
+        circ3(lon, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
       }

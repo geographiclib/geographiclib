@@ -34,18 +34,25 @@ namespace GeographicLib {
       slam =          lam  == -180 ? 0 : sin(lam);
     real M[Geocentric::dim2_];
     Geocentric::Rotation(_sphi, _cphi, slam, clam, M);
-    real BX, BY, BZ;            // Components in geocentric basis
-    _circa(clam, slam, BX, BY, BZ);
-    if (diffp) {
-      real BXt, BYt, BZt;
-      _circb(clam, slam, BXt, BYt, BZt);
-      Bxt = - _a * (M[0] * BXt + M[3] * BYt + M[6] * BZt);
-      Byt = - _a * (M[1] * BXt + M[4] * BYt + M[7] * BZt);
-      Bzt = - _a * (M[2] * BXt + M[5] * BYt + M[8] * BZt);
+    real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis
+    _circ0(clam, slam, BX0, BY0, BZ0);
+    _circ1(clam, slam, BX1, BY1, BZ1);
+    if (_interpolate) {
+      BX1 = (BX1 - BX0) / _dt0;
+      BY1 = (BY1 - BY0) / _dt0;
+      BZ1 = (BZ1 - BZ0) / _dt0;
     }
-    Bx = - _a * (M[0] * BX + M[3] * BY + M[6] * BZ);
-    By = - _a * (M[1] * BX + M[4] * BY + M[7] * BZ);
-    Bz = - _a * (M[2] * BX + M[5] * BY + M[8] * BZ);
+    BX0 += _t * BX1;
+    BY0 += _t * BY1;
+    BZ0 += _t * BZ1;
+    if (diffp) {
+      Bxt = - _a * (M[0] * BX1 + M[3] * BY1 + M[6] * BZ1);
+      Byt = - _a * (M[1] * BX1 + M[4] * BY1 + M[7] * BZ1);
+      Bzt = - _a * (M[2] * BX1 + M[5] * BY1 + M[8] * BZ1);
+    }
+    Bx = - _a * (M[0] * BX0 + M[3] * BY0 + M[6] * BZ0);
+    By = - _a * (M[1] * BX0 + M[4] * BY0 + M[7] * BZ0);
+    Bz = - _a * (M[2] * BX0 + M[5] * BY0 + M[8] * BZ0);
   }
 
 } // namespace GeographicLib

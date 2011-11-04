@@ -33,15 +33,21 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
 
-    real _a, _cphi, _sphi;
-    CircularEngine _circa, _circb;
-    MagneticCircle(real a, real cphi, real sphi,
-                   const CircularEngine& circa, const CircularEngine& circb)
+    real _a, _cphi, _sphi, _t, _dt0;
+    bool _interpolate;
+    CircularEngine _circ0, _circ1;
+    
+    MagneticCircle(real a, real cphi, real sphi, real t, real dt0,
+                   bool interpolate,
+                   const CircularEngine& circ0, const CircularEngine& circ1)
       : _a(a)
       , _cphi(cphi)
       , _sphi(sphi)
-      , _circa(circa)
-      , _circb(circb)
+      , _t(t)
+      , _dt0(dt0)
+      , _interpolate(interpolate)
+      , _circ0(circ0)
+      , _circ1(circ1)
     {}
 
     void Field(real lon, bool diffp,

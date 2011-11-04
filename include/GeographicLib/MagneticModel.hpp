@@ -51,17 +51,21 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT MagneticModel {
   private:
     typedef Math::real real;
-    std::string _name, _dir, _description, _date, _filename;
-    real _t0, _tmin, _tmax, _a, _hmin, _hmax;
-    int _N, _M, _N1, _M1;
+    static const int idlength_ = 8;
+    std::string _name, _dir, _description, _date, _filename, _id;
+    real _t0, _dt0, _tmin, _tmax, _a, _hmin, _hmax;
+    int _Ncomps, _N, _M, _N1, _M1;
     SphericalHarmonic::normalization _norm;
     Geocentric _earth;
     std::vector<real> _G, _H, _G1, _H1;
+    std::vector< std::vector<real> > _Gx;
+    std::vector< std::vector<real> > _Hx;
+    std::vector<SphericalHarmonic> _harmx;
+    SphericalHarmonic1 _harma;
+    SphericalHarmonic _harmb;
     void Field(real t, real lat, real lon, real h, bool diffp,
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const;
-    SphericalHarmonic1 _harma;
-    SphericalHarmonic _harmb;
     void ReadMetadata(const std::string& name);
     static bool ParseLine(const std::string& line,
                           std::string& key, std::string& val);
