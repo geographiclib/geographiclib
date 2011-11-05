@@ -54,18 +54,15 @@ namespace GeographicLib {
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
     real _t0, _dt0, _tmin, _tmax, _a, _hmin, _hmax;
-    int _Ncomps, _N, _M, _N1, _M1;
+    int _Nmodels;
     SphericalHarmonic::normalization _norm;
     Geocentric _earth;
-    std::vector<real> _G, _H, _G1, _H1;
     std::vector< std::vector<real> > _Gx;
     std::vector< std::vector<real> > _Hx;
     std::vector<SphericalHarmonic> _harmx;
-    SphericalHarmonic1 _harma;
-    SphericalHarmonic _harmb;
     void Field(real t, real lat, real lon, real h, bool diffp,
                real& Bx, real& By, real& Bz,
-               real& Bxt, real& Byt, real& Bzt) const;
+               real& Bxt, real& Byt, real& Bzt) const throw();
     void ReadMetadata(const std::string& name);
     static bool ParseLine(const std::string& line,
                           std::string& key, std::string& val);
@@ -124,7 +121,7 @@ namespace GeographicLib {
      *   (nanotesla).
      **********************************************************************/
     void operator()(real t, real lat, real lon, real h,
-                    real& Bx, real& By, real& Bz) const {
+                    real& Bx, real& By, real& Bz) const throw() {
       real dummy;
       Field(t, lat, lon, h, false, Bx, By, Bz, dummy, dummy, dummy);
     }
@@ -146,7 +143,7 @@ namespace GeographicLib {
      **********************************************************************/
     void operator()(real t, real lat, real lon, real h,
                     real& Bx, real& By, real& Bz,
-                    real& Bxt, real& Byt, real& Bzt) const {
+                    real& Bxt, real& Byt, real& Bzt) const throw() {
       Field(t, lat, lon, h, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
 
@@ -196,6 +193,26 @@ namespace GeographicLib {
      * @param[in] By the \e y (northerly) component of the magnetic field (nT).
      * @param[in] Bz the \e z (vertical, up positive) component of the magnetic
      *   field (nT).
+     * @param[out] H the horizontal magnetic field (nT).
+     * @param[out] F the total magnetic field (nT).
+     * @param[out] D the declination of the field (degrees east of north).
+     * @param[out] I the inclination of the field (degrees down from
+     *   horizontal).
+     **********************************************************************/
+    static void FieldComponents(real Bx, real By, real Bz,
+                                real& H, real& F, real& D, real& I) throw() {
+      real Ht, Ft, Dt, It;
+      FieldComponents(Bx, By, Bz, real(0), real(1), real(0),
+                      H, F, D, I, Ht, Ft, Dt, It);
+    }
+
+    /**
+     * Compute various quantities dependent on B and its rate of change.
+     *
+     * @param[in] Bx the \e x (easterly) component of the magnetic field (nT).
+     * @param[in] By the \e y (northerly) component of the magnetic field (nT).
+     * @param[in] Bz the \e z (vertical, up positive) component of the magnetic
+     *   field (nT).
      * @param[in] Bxt the rate of change of \e Bx (nT/yr).
      * @param[in] Byt the rate of change of \e By (nT/yr).
      * @param[in] Bzt the rate of change of \e Bz (nT/yr).
@@ -212,7 +229,7 @@ namespace GeographicLib {
     static void FieldComponents(real Bx, real By, real Bz,
                                 real Bxt, real Byt, real Bzt,
                                 real& H, real& F, real& D, real& I,
-                                real& Ht, real& Ft, real& Dt, real& It);
+                                real& Ht, real& Ft, real& Dt, real& It) throw();
     ///@}
 
     /** \name Inspector functions

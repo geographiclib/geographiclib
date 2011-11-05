@@ -33,7 +33,9 @@ int main(int argc, char* argv[]) {
     std::string model = MagneticModel::DefaultMagneticName();
     std::string istring, ifile, ofile;
     real time = 0;
-    bool timeset = false;
+    bool timeset = false, rate = false;
+    real heightguard = 500000, timeguard = 500;
+    int prec = 1;
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -48,6 +50,37 @@ int main(int argc, char* argv[]) {
         try {
           time = Utility::fractionalyear<real>(std::string(argv[m]));
           timeset = true;
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding argument of " << arg << ": "
+                    << e.what() << "\n";
+          return 1;
+        }
+      } else if (arg == "-r")
+        rate = !rate;
+      else if (arg == "-p") {
+        if (++m == argc) return usage(1, true);
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
+      } else if (arg == "-T") {
+        if (++m == argc) return usage(1, true);
+        try {
+          timeguard = Utility::num<real>(std::string(argv[m]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding argument of " << arg << ": "
+                    << e.what() << "\n";
+          return 1;
+        }
+      } else if (arg == "-H") {
+        if (++m == argc) return usage(1, true);
+        try {
+          heightguard = Utility::num<real>(std::string(argv[m]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "
@@ -120,13 +153,29 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
+    timeguard = std::max(real(0), timeguard);
+    heightguard = std::max(real(0), heightguard);
+    prec = std::min(10, std::max(0, prec));
     int retval = 0;
     try {
       const MagneticModel m(model, dir);
+      if (timeset && !(time >= m.MinTime() - timeguard &&
+                       time <= m.MaxTime() + timeguard))
+        throw GeographicErr("Time " + Utility::str(time) +
+                            " too far outside allowed range [" +
+                            Utility::str(m.MinTime()) + "," +
+                            Utility::str(m.MaxTime()) + "]");
       if (verbose) {
-        std::cerr << "Magnetic file: " << m.MagneticFile()     << "\n"
-                  << "Description: "   << m.Description()   << "\n"
-                  << "Date & Time: "   << m.DateTime()      << "\n";
+        std::cerr << "Magnetic file: " << m.MagneticFile()      << "\n"
+                  << "Name: "          << m.MagneticModelName() << "\n"
+                  << "Description: "   << m.Description()       << "\n"
+                  << "Date & Time: "   << m.DateTime()          << "\n"
+                  << "Time range: ["
+                  << m.MinTime() << ","
+                  << m.MaxTime() << "]\n"
+                  << "Height range: ["
+                  << m.MinHeight()/1000 << "km,"
+                  << m.MaxHeight()/1000 << "km]\n";
       }
 
       std::string s, stra, strb;
@@ -137,12 +186,34 @@ int main(int argc, char* argv[]) {
             if (!(str >> stra))
               throw GeographicErr("Incomplete input: " + s);
             time = Utility::fractionalyear<real>(stra);
+            if (!(time >= m.MinTime() - timeguard &&
+                  time <= m.MaxTime() + timeguard))
+              throw GeographicErr("Time " + Utility::str(time) +
+                                  " too far outside allowed range [" +
+                                  Utility::str(m.MinTime()) + "," +
+                                  Utility::str(m.MaxTime()) +
+                                  "]");
+            if (!(time >= m.MinTime() && time <= m.MaxTime()))
+              std::cerr << "WARNING: Time " << time
+                        << " outside allowed range ["
+                        << m.MinTime() << "," << m.MaxTime() << "]\n";
           }
           real h;
           if (!(str >> stra >> strb >> h))
             throw GeographicErr("Incomplete input: " + s);
           real lat, lon;
           DMS::DecodeLatLon(stra, strb, lat, lon);
+          if (!(h >= m.MinHeight() - heightguard &&
+                h <= m.MaxHeight() + heightguard))
+            throw GeographicErr("Height " + Utility::str(h/1000) +
+                                "km too far outside allowed range [" +
+                                Utility::str(m.MinHeight()/1000) + "km," +
+                                Utility::str(m.MaxHeight()/1000) + "km]");
+          if (!(h >= m.MinHeight() && h <= m.MaxHeight()))
+            std::cerr << "WARNING: Height " << h/1000
+                      << "km outside allowed range ["
+                      << m.MinHeight()/1000 << "km,"
+                      << m.MaxHeight()/1000 << "km]\n";
           if (str >> stra)
             throw GeographicErr("Extra junk in input: " + s);
           real bx, by, bz, bxt, byt, bzt;
@@ -151,21 +222,21 @@ int main(int argc, char* argv[]) {
           MagneticModel::FieldComponents(bx, by, bz, bxt, byt, bzt,
                                          H, F, D, I, Ht, Ft, Dt, It);
 
-          std::cout << Utility::str<real>(by, 2) << " "
-                    << Utility::str<real>(bx, 2) << " "
-                    << Utility::str<real>(-bz, 2) << " "
-                    << Utility::str<real>(byt, 2) << " "
-                    << Utility::str<real>(bxt, 2) << " "
-                    << Utility::str<real>(-bzt, 2) << "\n"
-                    << Utility::str<real>(H, 2) << " "
-                    << Utility::str<real>(F, 2) << " "
-                    << DMS::Encode(D, 3, DMS::NONE) << " "
-                    << DMS::Encode(I, 3, DMS::NONE) << " "
-                    << Utility::str<real>(Ht, 2) << " "
-                    << Utility::str<real>(Ft, 2) << " "
-                    << DMS::Encode(Dt, 3, DMS::NONE) << " "
-                    << DMS::Encode(It, 3, DMS::NONE) << "\n";
-          
+          *output << DMS::Encode(D, prec + 1, DMS::NUMBER) << " "
+                  << DMS::Encode(I, prec + 1, DMS::NUMBER) << " "
+                  << Utility::str<real>(H, prec) << " "
+                  << Utility::str<real>(by, prec) << " "
+                  << Utility::str<real>(bx, prec) << " "
+                  << Utility::str<real>(-bz, prec) << " "
+                  << Utility::str<real>(F, prec) << "\n";
+          if (rate)
+            *output << DMS::Encode(Dt, prec + 1, DMS::NUMBER) << " "
+                    << DMS::Encode(It, prec + 1, DMS::NUMBER) << " "
+                    << Utility::str<real>(Ht, prec) << " "
+                    << Utility::str<real>(byt, prec) << " "
+                    << Utility::str<real>(bxt, prec) << " "
+                    << Utility::str<real>(-bzt, prec) << " "
+                    << Utility::str<real>(Ft, prec) << "\n";
         }
         catch (const std::exception& e) {
           *output << "ERROR: " << e.what() << "\n";

@@ -32,7 +32,8 @@ namespace GeographicLib {
   template<bool gradp, SphericalEngine::normalization norm, int L>
   Math::real SphericalEngine::Value(const coeff c[], const real f[],
                                     real x, real y, real z, real a,
-                                    real& gradx, real& grady, real& gradz) {
+                                    real& gradx, real& grady, real& gradz)
+    throw() {
     // General sum
     // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
     //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)

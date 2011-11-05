@@ -255,7 +255,7 @@ namespace GeographicLib {
     template<bool gradp, normalization norm, int L>
       static Math::real Value(const coeff c[], const real f[],
                               real x, real y, real z, real a,
-                              real& gradx, real& grady, real& gradz);
+                              real& gradx, real& grady, real& gradz) throw();
 
     /**
      * Create a CircularEngine object

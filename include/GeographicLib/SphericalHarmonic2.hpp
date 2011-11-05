@@ -170,7 +170,8 @@ namespace GeographicLib {
      * @param[in] z cartesian coordinate.
      * @return \e V the spherical harmonic sum.
      **********************************************************************/
-    Math::real operator()(real tau1, real tau2, real x, real y, real z) const {
+    Math::real operator()(real tau1, real tau2, real x, real y, real z)
+      const throw() {
       real f[] = {1, tau1, tau2};
       real v = 0;
       real dummy;
@@ -205,27 +206,8 @@ namespace GeographicLib {
      * the gradients of the sum in the \e x, \e y, and \e z directions are
      * computed.
      **********************************************************************/
-
-    /**
-     * Compute a spherical harmonic sum with two correction terms and its
-     * gradient.
-     *
-     * @param[in] tau1 multiplier for correction coefficients \e C' and \e S'.
-     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e S''.
-     * @param[in] x cartesian coordinate.
-     * @param[in] y cartesian coordinate.
-     * @param[in] z cartesian coordinate.
-     * @param[out] gradx \e x component of the gradient
-     * @param[out] grady \e y component of the gradient
-     * @param[out] gradz \e z component of the gradient
-     * @return \e V the spherical harmonic sum.
-     *
-     * This is the same as the previous function, except that the components of
-     * the gradients of the sum in the \e x, \e y, and \e z directions are
-     * computed.
-     **********************************************************************/
     Math::real operator()(real tau1, real tau2, real x, real y, real z,
-                          real& gradx, real& grady, real& gradz) const {
+                          real& gradx, real& grady, real& gradz) const throw() {
       real f[] = {1, tau1, tau2};
       real v = 0;
       switch (_norm) {

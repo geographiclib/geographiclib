@@ -151,7 +151,7 @@ namespace GeographicLib {
      * @param[in] z cartesian coordinate.
      * @return \e V the spherical harmonic sum.
      **********************************************************************/
-    Math::real operator()(real tau, real x, real y, real z) const {
+    Math::real operator()(real tau, real x, real y, real z) const throw() {
       real f[] = {1, tau};
       real v = 0;
       real dummy;
@@ -186,7 +186,7 @@ namespace GeographicLib {
      * computed.
      **********************************************************************/
     Math::real operator()(real tau, real x, real y, real z,
-                          real& gradx, real& grady, real& gradz) const {
+                          real& gradx, real& grady, real& gradz) const throw() {
       real f[] = {1, tau};
       real v = 0;
       switch (_norm) {

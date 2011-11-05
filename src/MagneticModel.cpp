@@ -9,7 +9,6 @@
 
 #include <GeographicLib/MagneticModel.hpp>
 #include <fstream>
-#include <iostream>
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/MagneticCircle.hpp>
 #include <GeographicLib/Utility.hpp>
@@ -28,13 +27,12 @@ RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 #define MAGNETIC_DEFAULT_PATH \
   "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
 #else
-//#define MAGNETIC_DEFAULT_PATH "/usr/local/share/GeographicLib/magnetic"
-#define MAGNETIC_DEFAULT_PATH "/home/ckarney/geographiclib/magnetic"
+#define MAGNETIC_DEFAULT_PATH "/usr/local/share/GeographicLib/magnetic"
 #endif
 #endif
 #endif
 #if !defined(MAGNETIC_DEFAULT_NAME)
-#define MAGNETIC_DEFAULT_NAME "wmm2010-12"
+#define MAGNETIC_DEFAULT_NAME "wmm2010"
 #endif
 
 #if defined(_MSC_VER)
@@ -53,25 +51,21 @@ namespace GeographicLib {
     , _description("NONE")
     , _date("UNKNOWN")
     , _t0(Math::NaN<real>())
-    , _dt0(Math::NaN<real>())
+    , _dt0(1)
     , _tmin(Math::NaN<real>())
     , _tmax(Math::NaN<real>())
     , _a(Math::NaN<real>())
     , _hmin(Math::NaN<real>())
     , _hmax(Math::NaN<real>())
-    , _Ncomps(1)
-    , _N(-1)
-    , _M(-1)
-    , _N1(-1)
-    , _M1(-1)
+    , _Nmodels(1)
     , _norm(SphericalHarmonic::schmidt)
     , _earth(earth)
   {
     if (_dir.empty())
       _dir = DefaultMagneticPath();
     ReadMetadata(_name);
-    _Gx.resize(_Ncomps + 1);
-    _Hx.resize(_Ncomps + 1);
+    _Gx.resize(_Nmodels + 1);
+    _Hx.resize(_Nmodels + 1);
     {
       std::string coeff = _filename + ".cof";
       ifstream coeffstr(coeff.c_str(), ios::binary);
@@ -84,7 +78,7 @@ namespace GeographicLib {
       id[idlength_] = '\0';
       if (_id != std::string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
-      for (int i = 0; i <= _Ncomps; ++i) {
+      for (int i = 0; i <= _Nmodels; ++i) {
         int nm[2];
         Utility::readarray<int, int, false>(coeffstr, nm, 2);
         int N = nm[0], M = nm[1];
@@ -133,12 +127,15 @@ namespace GeographicLib {
         _date = val;
       else if (key == "Radius")
         _a = Utility::num<real>(val);
-      else if (key == "Epoch")
+      else if (key == "Type") {
+        if (!(val == "Linear" || val == "linear"))
+          throw GeographicErr("Only linear models are supported");
+      } else if (key == "Epoch")
         _t0 = Utility::num<real>(val);
       else if (key == "DeltaEpoch")
         _dt0 = Utility::num<real>(val);
-      else if (key == "Components")
-        _Ncomps = Utility::num<int>(val);
+      else if (key == "NumModels")
+        _Nmodels = Utility::num<int>(val);
       else if (key == "StartTime")
         _tmin = Utility::num<real>(val);
       else if (key == "StopTime")
@@ -154,8 +151,7 @@ namespace GeographicLib {
           _norm = SphericalHarmonic::schmidt;
         else
           throw GeographicErr("Unknown normalization " + val);
-      }
-      else if (key == "ByteOrder") {
+      } else if (key == "ByteOrder") {
         if (val == "Big" || val == "big")
           throw GeographicErr("Only little-endian ordering is supported");
         else if (!(val == "Little" || val == "little"))
@@ -176,7 +172,7 @@ namespace GeographicLib {
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
     if (!(_dt0 > 0)) {
-      if (_Ncomps > 1)
+      if (_Nmodels > 1)
         throw GeographicErr("DeltaEpoch must be positive");
       else
         _dt0 = 1;
@@ -211,10 +207,10 @@ namespace GeographicLib {
 
   void MagneticModel::Field(real t, real lat, real lon, real h, bool diffp,
                             real& Bx, real& By, real& Bz,
-                            real& Bxt, real& Byt, real& Bzt) const {
+                            real& Bxt, real& Byt, real& Bzt) const throw() {
     t -= _t0;
-    int n = max(min(int(floor(t / _dt0)), _Ncomps - 1), 0);
-    bool interpolate = n + 1 < _Ncomps;
+    int n = max(min(int(floor(t / _dt0)), _Nmodels - 1), 0);
+    bool interpolate = n + 1 < _Nmodels;
     t -= n * _dt0;
     real x, y, z;
     real M[9];
@@ -222,7 +218,6 @@ namespace GeographicLib {
     real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis
     _harmx[n](x, y, z, BX0, BY0, BZ0);
     _harmx[n + 1](x, y, z, BX1, BY1, BZ1);
-    std::cerr << "Field inter " << interpolate << "\n";
     if (interpolate) {
       BX1 = (BX1 - BX0) / _dt0;
       BY1 = (BY1 - BY0) / _dt0;
@@ -241,17 +236,15 @@ namespace GeographicLib {
     Bz = - _a * (M[2] * BX0 + M[5] * BY0 + M[8] * BZ0);
   }
 
-  MagneticCircle MagneticModel::Circle(real t, real lat, real h)
-    const {
+  MagneticCircle MagneticModel::Circle(real t, real lat, real h) const {
     t -= _t0;
-    int n = max(min(int(floor(t / _dt0)), _Ncomps - 1), 0);
-    bool interpolate = n + 1 < _Ncomps;
+    int n = max(min(int(floor(t / _dt0)), _Nmodels - 1), 0);
+    bool interpolate = n + 1 < _Nmodels;
     t -= n * _dt0;
     real x, y, z;
     real M[Geocentric::dim2_];
     _earth.IntForward(lat, 0, h, x, y, z, M);
     // y = 0, cphi = M[7], sphi = M[8];
-    std::cerr << "Circle inter " << interpolate << "\n";
 
     return MagneticCircle(_a, M[7], M[8], t, _dt0, interpolate,
                           _harmx[n].Circle(x, z, true),
@@ -262,7 +255,7 @@ namespace GeographicLib {
                                       real Bxt, real Byt, real Bzt,
                                       real& H, real& F, real& D, real& I,
                                       real& Ht, real& Ft,
-                                      real& Dt, real& It) {
+                                      real& Dt, real& It) throw() {
     H = Math::hypot(Bx, By);
     Ht = H ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
     D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree<real>();

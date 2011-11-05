@@ -6,27 +6,36 @@ MagneticField -- look up magnetic heights
 
 =head1 SYNOPSIS
 
-B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
-[ B<-a> | B<-c> I<south> I<west> I<north> I<east> ]
-[ B<-z> I<zone> ] [ B<--msltohae> ] [ B<--haetomsl> ]
+B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-t> I<time> ]
+[ B<-r> ] [ B<-T> I<tguard> ] [ B<-H> I<hguard> ] [ B<-p> I<prec> ]
 [ B<-v> ] [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
 [ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
 
-B<MagneticField> in positions on standard input and print out the
-corresponding magnetic heights on standard output.  Also print the
-northerly and easterly gradients of the magnetic height (i.e., the rate at
-which the magnetic height changes per unit distance along the WGS84
-ellipsoid in the specified directions).
+B<MagneticField> in times and positions on standard input and prints out
+the magnetic field on standard output and its rate of change.
 
-Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any
-of the formats accepted by GeoConvert(1).  (MGRS coordinates signify the
-I<center> of the corresponing MGRS square.)  If the B<-z> option is
-specified then the specified zone is prepended to each line of input
-(which must be in UTM/UPS coordinates).  This allows a file with UTM
-eastings and northings in a single zone to be used as standard input.
+The input line is of the form I<time> I<lat> I<lon> I<h>. I<time> is a
+date of the form 2012-07-03 or a fractional year such as 2012.5.  I<lat>
+and I<lon> are the latitude and longitude expressed as decimal degrees
+or degrees, minutes, and seconds; see by GeoConvert(1).  I<h> is the
+height above the ellipsoid in meters.  I<time> can be given on the
+commend line as the argument to the I<-t> options, in which case it
+should not be included on the input lines.
+
+The output consists of the values declination (the direction of the
+horizontal component of the field measure clockwise from north),
+inclination (the direction of the magnetic field measured down from the
+horizontal), the horizontal field, the north component, the east
+component, the vertical component (down is positive), and the total
+field.  The declination and inclination are measured in degrees.  The
+components of the magnetic fields are given in nanotesla (nT).  If the
+B<-r> option is given a second line is printed giving the rates of
+change of these quantities in degrees/yr and nT/yr.
+
+The WGS84 ellipsoid is used, I<a> = 6378137 m, I<f> = 1/298.257223563.
 
 =head1 OPTIONS
 
@@ -34,47 +43,37 @@ eastings and northings in a single zone to be used as standard input.
 
 =item B<-n>
 
-use magnetic I<name> instead of the default C<egm96-5>.  See
-L<MAGNETICS|magnetics>.
+use magnetic field model I<name> instead of the default C<wmm2010>.  See
+L<MODELS|models>.
 
 =item B<-d>
 
 read magnetic data from I<dir> instead of the default.  See
-L<MAGNETICS|magnetics>.
+L<MODELS|models>.
 
-=item B<-l>
+=item B<-t>
 
-use bilinear interpolation instead of cubic.  See
-L<INTERPOLATION|interpolation>.
+evaluate the field at I<time> instead of expecting the time on the input
+lines.
 
-=item B<-a>
+=item B<-r>
 
-cache the entire data set in memory.  See L<CACHE|cache>.
+toggle whether to report the rates of change of the field.
 
-=item B<-c>
+=item B<-T>
 
-cache the data bounded by I<south> I<west> I<north> I<east> in memory.
-See L<CACHE|cache>.
+signal an error if I<time> lies I<tguard> years (default 100 yr) beyond
+the range for the model.
 
-=item B<-z>
+=item B<-H>
 
-prefix each line of input by I<zone>, e.g., C<38N>.  This should be used
-when the input consists of UTM/UPS eastings and northings.
+signal an error if I<h> lies I<hguard> meters (default 500000 m) beyond
+the range for the model.
 
-=item B<--msltohae>
+=item B<-p>
 
-standard input should include a final token on each line which is
-treated as a height (in meters) above the magnetic and the output echoes
-the input line with the height converted to height above ellipsoid
-(HAE).  If B<-z> I<zone> is specified then the I<third> token is treated
-as the height; this makes it possible to convert LIDAR data where each
-line consists of: easting northing height intensity.
-
-=item B<--haetomsl>
-
-this is similar to B<--msltohae> except that the height token is treated
-as a height (in meters) above the ellipsoid and the output echoes the
-input line with the height converted to height above the magnetic (MSL).
+set the precision to I<prec> (default 1).  Fields are printed with
+precision with I<prec> decimal places; angles use I<prec> + 1 places.
 
 =item B<-v>
 
@@ -111,30 +110,12 @@ file name of "-" stands for standard output.
 
 =back
 
-=head1 MAGNETICS
+=head1 MODELS
 
-B<MagneticField> computes magnetic heights by interpolating on the data in a
-regularly spaced table (see L<INTERPOLATION|interpolation>).  The
-following magnetic tables are available (however, some may not be
-installed):
+B<MagneticField> computes the magnetic field
 
-                                  bilinear error    cubic error
-   name         magnetic    grid     max      rms      max      rms
-   egm84-30     EGM84    30'      1.546 m  70 mm    0.274 m  14 mm
-   egm84-15     EGM84    15'      0.413 m  18 mm    0.020 m   1 mm
-   egm96-15     EGM96    15'      1.152 m  40 mm    0.169 m   7 mm
-   egm96-5      EGM96     5'      0.140 m   5 mm    0.003 m   1 mm
-   egm2008-5    EGM2008   5'      0.478 m  12 mm    0.294 m   5 mm
-   egm2008-2_5  EGM2008   2.5'    0.135 m   3 mm    0.031 m   1 mm
-   egm2008-1    EGM2008   1'      0.025 m   1 mm    0.003 m   1 mm
-
-By default, the C<egm96-5> magnetic is used.  This may changed by setting
-the environment variable C<MAGNETIC_NAME> or with the B<-n> option.  The
-errors listed here are estimates of the quantization and interpolation
-errors in the reported heights compared to the specified magnetic.  As a
-result of the way that the magnetic data is stored, the calculation of
-gradients can result in large quantization errors.  This is particularly
-acute at high latitudes and for the easterly gradient.
+By default, the C<wmm2010> magnetic is used.  This may changed by setting
+the environment variable C<MAGNETIC_NAME> or with the B<-n> option.
 
 The magnetic data will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variable
@@ -145,46 +126,6 @@ path name of the data file.
 Instructions for downloading and installing magnetic data are available at
 L<http://geographiclib.sf.net/html/magnetic.html#magneticinst>.
 
-B<NOTE>: all the magnetics above apply to the WGS84 ellipsoid (I<a> =
-6378137 m, I<f> = 1/298.257223563) only.
-
-=head1 INTERPOLATION
-
-Cubic interpolation is used to compute the magnetic height unless B<-l> is
-specified in which case bilinear interpolation is used.  The cubic
-interpolation is based on a least-squares fit of a cubic polynomial to a
-12-point stencil
-
-   . 1 1 .
-   1 2 2 1
-   1 2 2 1
-   . 1 1 .
-
-The cubic is constrained to be independent of longitude when evaluating
-the height at one of the poles.  Cubic interpolation is considerably
-more accurate than bilinear; however it results in small discontinuities
-in the returned height on cell boundaries.  The gradients are computed
-by differentiating the interpolated results.  As a result of the way
-that the magnetic data is stored, the calculation of gradients can result
-in large quantization errors.  This is particularly acute for fine
-grids, at high latitudes, and for the easterly gradient.
-
-=head1 CACHE
-
-By default, the data file is randomly read to compute the magnetic heights
-at the input positions.  Usually this is sufficient for interactive use.
-If many heights are to be computed, use B<-c> I<south> I<west> I<north>
-I<east> to notify B<MagneticField> to read a rectangle of data into memory;
-heights within the this rectangle can then be computed without any disk
-access.  If B<-a> is specified all the magnetic data is read; in the case
-of C<egm2008-1>, this requires about 0.5 GB of RAM.  The evaluation of
-heights outside the cached area causes the necessary data to be read
-from disk.  Use the B<-v> option to verify the size of the cache.
-
-Regardless of whether any cache is requested (with the B<-a> or B<-c>
-options), the data for the last grid cell in cached.  This allows
-the magnetic height along a continuous path to be returned with little
-disk overhead.
 
 =head1 ENVIRONMENT
 
@@ -192,7 +133,7 @@ disk overhead.
 
 =item B<MAGNETIC_NAME>
 
-Override the compile-time default magnetic name of C<egm96-5>.  The B<-h>
+Override the compile-time default magnetic name of C<wmm2010>.  The B<-h>
 option reports the value of B<MAGNETIC_NAME>, if defined, otherwise it
 reports the compile-time value.  If the B<-n> I<name> option is used,
 then I<name> takes precedence.
@@ -212,46 +153,29 @@ takes precedence.
 =head1 ERRORS
 
 An illegal line of input will print an error message to standard output
-beginning with C<ERROR:> and causes B<MagneticField> to return an exit code
-of 1.  However, an error does not cause B<MagneticField> to terminate;
-following lines will be converted.
+beginning with C<ERROR:> and causes B<MagneticField> to return an exit
+code of 1.  However, an error does not cause B<MagneticField> to
+terminate; following lines will be converted.  If I<time> or I<h> are
+outside the recommended ranges for the model (but inside the ranges
+increase by I<tguard> and I<hguard>), a warning is printed on standard
+error and the field (which may be inaccurate) is returned in the normal
+way.
 
 =head1 ABBREVIATIONS
 
-The magnetic is usually approximated by an "earth gravity model". The
-models published by the NGA are:
+The magnetic field is usually approximated by expansion in terms of
+spherical harmonics.
 
 =over
 
-=item B<EGM84>
+=item B<WMM2010>
 
-An earth gravity model published by the NGA in 1984,
-L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html>.
 
-=item B<EGM96>
+=item B<EMM2010>
 
-An earth gravity model published by the NGA in 1996,
-L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html>.
 
-=item B<EGM2008>
+=item B<IGRF11>
 
-An earth gravity model published by the NGA in 2008,
-L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008>.
-
-=item B<WGS84>
-
-World Geodetic System 1984,
-L<http://en.wikipedia.org/wiki/WGS84>.
-
-=item B<HAE>
-
-Height above the WGS84 ellipsoid.
-
-=item B<MSL>
-
-Mean sea level, used as a convenient short hand for the magnetic.
-(However, typically, the magnetic differs by a few meters from mean sea
-level.)
 
 =back
 
@@ -280,5 +204,5 @@ B<MagneticField> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<MagneticField> was added to GeographicLib, L<http://geographiclib.sf.net>,
-in 2011-11.
+B<MagneticField> was added to GeographicLib,
+L<http://geographiclib.sf.net>, in version 1.15.

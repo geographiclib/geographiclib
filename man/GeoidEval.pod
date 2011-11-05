@@ -15,8 +15,8 @@ B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
 
 =head1 DESCRIPTION
 
-B<GeoidEval> in positions on standard input and print out the
-corresponding geoid heights on standard output.  Also print the
+B<GeoidEval> reads in positions on standard input and prints out the
+corresponding geoid heights on standard output.  It also prints the
 northerly and easterly gradients of the geoid height (i.e., the rate at
 which the geoid height changes per unit distance along the WGS84
 ellipsoid in the specified directions).

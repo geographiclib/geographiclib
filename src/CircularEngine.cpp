@@ -21,8 +21,8 @@ namespace GeographicLib {
   using namespace std;
 
   Math::real CircularEngine::Value(bool gradp, real cl, real sl,
-                                   real& gradx, real& grady, real& gradz) const
-  {
+                                   real& gradx, real& grady, real& gradz)
+    const throw() {
     gradp = _gradp && gradp;
 
     // Initialize outer sum

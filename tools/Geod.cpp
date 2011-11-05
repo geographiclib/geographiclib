@@ -113,9 +113,10 @@ int main(int argc, char* argv[]) {
         full = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
-        std::istringstream str(argv[m]);
-        char c;
-        if (!(str >> prec) || (str >> c)) {
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
