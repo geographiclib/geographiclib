@@ -16,34 +16,35 @@ usage: $0 [-p parentdir] [-d] [-h] magneticmodel...
 
 This program downloads and installs the megnetic models used by the
 GeographicLib::MagneticModel class and the MagneticField tool to compute
-magnetic fields.  magneticmodel is one
-of more of the names from this table:
+magnetic fields.  magneticmodel is one of more of the names from this
+table:
 
                                   size (kB)
   name     degree    years      tar.bz2  disk
-  wmm2010    12    2010-2015     0.5       5
-  igrf11     13    1900-2015     0.5      26
-  emm2010   740    2010-2015     0.5    4400
+  wmm2010    12    2010-2015      2       3
+  igrf11     13    1900-2015      7      25
+  emm2010   740    2010-2015    3700    4400
 
 The size columns give the download and installed sizes of the models.
 In addition you can specify
 
-  all = all of the datasets
+  all = all of the supported magnetic models
+  minimal = wmm2010 igrf11
 
-If no name is specified then all is assumed.
+If no name is specified then minimal is assumed.
 
 -p parentdir (default $DEFAULTDIR) specifies where the
 datasets should be stored.  The "Default magnetic path" listed when running
 
   MagneticField -h
 
-should be parentdir/magnetic.  This script must
-be run by a user with write access to this directory.
+should be parentdir/magnetic.  This script must be run by a user with
+write access to this directory.
 
 If -d is provided, the temporary directory which holds the downloads,
 ${TMPDIR:-/tmp}/magnetic-XXXXXXXX, will be saved.  -h prints this help.
 
-For more information on the magnetic datasets, visit
+For more information on the magnetic models, visit
 
   http://geographiclib.sourceforge.net/html/magnetic.html
 
@@ -114,6 +115,9 @@ while test $# -gt 0; do
 	    all )
 		cat $TEMP/all
 		;;
+	    minimal )		# same as no argument
+		echo wmm2010; echo igrf11
+		;;
 	    * )
 		echo Unknown magnetic model $1 1>&2
 		exit 1
@@ -140,7 +144,7 @@ if test "$DEBUG"; then
 fi
 cat <<EOF
 
-Magnetic datasets `tr '\n' ' ' < $TEMP/todo`
+Magnetic models `tr '\n' ' ' < $TEMP/todo`
 downloaded and installed in $PARENTDIR/magnetic.
 
 EOF

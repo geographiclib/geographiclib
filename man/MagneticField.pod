@@ -26,15 +26,20 @@ height above the ellipsoid in meters.  I<time> can be given on the
 commend line as the argument to the I<-t> options, in which case it
 should not be included on the input lines.
 
-The output consists of the values declination (the direction of the
-horizontal component of the field measure clockwise from north),
-inclination (the direction of the magnetic field measured down from the
-horizontal), the horizontal field, the north component, the east
-component, the vertical component (down is positive), and the total
-field.  The declination and inclination are measured in degrees.  The
-components of the magnetic fields are given in nanotesla (nT).  If the
-B<-r> option is given a second line is printed giving the rates of
-change of these quantities in degrees/yr and nT/yr.
+The output consists of the following 7 items:
+
+  the declination (the direction of the horizontal component of
+    the field measure clockwise from north) in degrees,
+  the inclination (the direction of the magnetic field measured
+    down from the horizontal) in degrees,
+  the horizontal field in nanotesla (nT),
+  the north component for the field in nT,
+  the east component of the field in nT,
+  the vertical component of the field in nT (down is positive),
+  the total field in nT.
+
+If the B<-r> option is given a second line is printed giving the rates
+of change of these quantities in degrees/yr and nT/yr.
 
 The WGS84 ellipsoid is used, I<a> = 6378137 m, I<f> = 1/298.257223563.
 

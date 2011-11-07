@@ -159,8 +159,8 @@ int main(int argc, char* argv[]) {
     int retval = 0;
     try {
       const MagneticModel m(model, dir);
-      if (timeset && !(time >= m.MinTime() - tguard &&
-                       time <= m.MaxTime() + tguard))
+      if (timeset && (time < m.MinTime() - tguard ||
+                      time > m.MaxTime() + tguard))
         throw GeographicErr("Time " + Utility::str(time) +
                             " too far outside allowed range [" +
                             Utility::str(m.MinTime()) + "," +
@@ -177,6 +177,10 @@ int main(int argc, char* argv[]) {
                   << m.MinHeight()/1000 << "km,"
                   << m.MaxHeight()/1000 << "km]\n";
       }
+      if (timeset && (time < m.MinTime() || time > m.MaxTime()))
+        std::cerr << "WARNING: Time " << time
+                  << " outside allowed range ["
+                  << m.MinTime() << "," << m.MaxTime() << "]\n";
 
       std::string s, stra, strb;
       while (std::getline(*input, s)) {
@@ -186,14 +190,13 @@ int main(int argc, char* argv[]) {
             if (!(str >> stra))
               throw GeographicErr("Incomplete input: " + s);
             time = Utility::fractionalyear<real>(stra);
-            if (!(time >= m.MinTime() - tguard &&
-                  time <= m.MaxTime() + tguard))
+            if (time < m.MinTime() - tguard || time > m.MaxTime() + tguard)
               throw GeographicErr("Time " + Utility::str(time) +
                                   " too far outside allowed range [" +
                                   Utility::str(m.MinTime()) + "," +
                                   Utility::str(m.MaxTime()) +
                                   "]");
-            if (!(time >= m.MinTime() && time <= m.MaxTime()))
+            if (time < m.MinTime() || time > m.MaxTime())
               std::cerr << "WARNING: Time " << time
                         << " outside allowed range ["
                         << m.MinTime() << "," << m.MaxTime() << "]\n";
@@ -203,13 +206,12 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Incomplete input: " + s);
           real lat, lon;
           DMS::DecodeLatLon(stra, strb, lat, lon);
-          if (!(h >= m.MinHeight() - hguard &&
-                h <= m.MaxHeight() + hguard))
+          if (h < m.MinHeight() - hguard || h > m.MaxHeight() + hguard)
             throw GeographicErr("Height " + Utility::str(h/1000) +
                                 "km too far outside allowed range [" +
                                 Utility::str(m.MinHeight()/1000) + "km," +
                                 Utility::str(m.MaxHeight()/1000) + "km]");
-          if (!(h >= m.MinHeight() && h <= m.MaxHeight()))
+          if (h < m.MinHeight() || h > m.MaxHeight())
             std::cerr << "WARNING: Height " << h/1000
                       << "km outside allowed range ["
                       << m.MinHeight()/1000 << "km,"
