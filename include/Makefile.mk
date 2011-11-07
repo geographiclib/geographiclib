@@ -1,13 +1,5 @@
 # $Id$
 
-	AlbersEqualArea AzimuthalEquidistant CassiniSoldner \
-	CircularEngine DMS EllipticFunction GeoCoords Geocentric \
-	Geodesic GeodesicLine Geoid Gnomonic LambertConformalConic \
-	LocalCartesian MGRS MagneticCircle MagneticModel OSGB \
-	PolarStereographic PolygonArea SphericalEngine \
-	TransverseMercator TransverseMercatorExact \
-	UTMUPS
-
 MODULES = AlbersEqualArea AzimuthalEquidistant CassiniSoldner \
 	CircularEngine DMS EllipticFunction GeoCoords Geocentric \
 	Geodesic GeodesicLine Geoid Gnomonic LambertConformalConic \
