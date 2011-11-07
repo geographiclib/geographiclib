@@ -77,6 +77,7 @@ MANPAGES = \
 ../man/GeoConvert.1.html \
 ../man/Geod.1.html \
 ../man/GeoidEval.1.html \
+../man/MagneticField.1.html \
 ../man/Planimeter.1.html \
 ../man/TransverseMercatorProj.1.html
 

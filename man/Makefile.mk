@@ -1,12 +1,11 @@
 # $Id$
 PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval Planimeter ConicProj
+	GeoidEval MagneticField Planimeter ConicProj
 
 PODSRC = $(addsuffix .pod,$(PROGRAMS))
 MANPAGES = $(addsuffix .1,$(PROGRAMS))
 USAGE = $(addsuffix .usage,$(PROGRAMS))
 HTMLMAN = $(addsuffix .1.html,$(PROGRAMS))
-
 
 PREFIX = /usr/local
 
