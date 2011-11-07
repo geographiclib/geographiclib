@@ -1609,83 +1609,135 @@ MagneticField to report the full path name of the data file it uses.
 
 \section magneticformat The format of the magnetic model files
 
+The constructor Geographic::MagneticModel::Magnetic reads a file called
+NAME.wwm which specifies various properties for the magnetic model.  It
+then opens a binary file NAME.wwm.cof to obtain the coefficients of the
+spherical harmonic sum.
+
+The first line of the .wwm file must consist of "WMMF-v" where WMMF
+stands for "World Magnetic Model Format" and v is the version number of
+the format (currently "1").
+
+The rest of the File is read a line at a time.  A # character and
+everything after it is discarded.  If the result is just white space it
+is discarded.  The remaining lines are of the form "KEY WHITESPACE
+VALUE".  In general, the KEY and the VALUE are case-sensitive.
+
+GeographicLib::MagneticModel only pays attention to the following
+keywords
+ - keywords that affect the field calculation, namely:
+   - Radius (required), the reference radius of the earth in meters.
+   - NumModels (default 1), the number of models.  WMM2010 consists of a
+     single model giving the magnetic field and its time variation at
+     2010.  IGRF11 consists of 23 models for 1900 thru 2010 at 5 year
+     intervals.  The time variation is given only for the last model to
+     allow extrapolation beyong 2010.  For dates prior to 2010, linear
+     interpolation is used.
+   - Epoch (required), the time origin (in fractional years) for the
+     first model.
+   - DeltaEpoch (default 1), the interval between models in years (only
+     relevant for NumModels > 1).
+   - Normalization (default schmidt), the normalization used for the
+     associated Legendre functions (schmidt or full).
+   - ID (required), 8 printable characters which serve as a signature
+     for the .wmm.cof file (they must appear as the first 8 bytes of this
+     file).
+ - keywords that store data that the user can query:
+   - Name, the name of the model.
+   - Description, a more descriptive name of the model.
+   - ReleaseDate, when the model was created.
+   - MinTime, the minimum date at which the model should be used.
+   - MaxTime, the maximum date at which the model should be used.
+   - MinHeight, the minimum height above the ellipsoid for which the
+     model should be used.
+   - MaxHeight, the maximum height above the ellipsoid for which the
+     model should be used.
+   .
+   GeographicLib::MagneticModel does not enforce the restrictions
+   implied by last four quantities.  However,
+   <a href="MagneticField.1.html">MagneticField</a> issues a warning if
+   these limits are exceeded.
+ - keywords that are examined to verify that their values are valid:
+   - Type (default linear), the type of the model.  "linear" means that
+     the time variation is piece-wise linear (either using interpolation
+     between the field at two dates or using the field and its first
+     derivative with respect to time).  This is the only type of model
+     supported at present.
+   - ByteOrder (default little), the order of bytes in the .wmm.cof
+     file.  Only little endian is supported at present.
+ .
+Other keywords are ignored.
+
+The coefficient file NAME.wmm.cof is a binary file in little endian
+order.  The first 8 bytes of this file must match the ID given in
+NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
+coefficients.  The first NumModels of these model the magnetic field at
+Epoch + \e i * DeltaEpoch for 0 <= \e i < NumModels.  The last set of
+coeffecients model the rate of change of the magnetic field at Epoch +
+(NumModels - 1) * DeltaEpoch.  The format for each set of coefficients
+is:
+ - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
+   This must satisfy \e N >= -1.
+ - \e M, the maximum order of the sum stored as a 4-byte signed integer.
+   This must satisfy \e N >= \e M >= -1.
+ - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
+   the sum in column (i.e., \e m) major order.  There are (\e M + 1)
+   (2\e N - \e M + 2) / 2 elements which are stored as IEEE doubles (8
+   bytes).  For example for \e N = \e M = 3, there are 10 coefficients
+   arranged as
+   <i>C</i><sub>00</sub>,
+   <i>C</i><sub>10</sub>,
+   <i>C</i><sub>20</sub>,
+   <i>C</i><sub>30</sub>,
+   <i>C</i><sub>11</sub>,
+   <i>C</i><sub>21</sub>,
+   <i>C</i><sub>31</sub>,
+   <i>C</i><sub>22</sub>,
+   <i>C</i><sub>32</sub>,
+   <i>C</i><sub>33</sub>.
+ - \e S<sub>\e nm</sub>, the coefficients of the sine coefficients of
+   the sum in column (i.e., \e m) major order starting at \e m = 1.
+   There are \e M (2\e N - \e M + 1) / 2 elements which are stored as
+   IEEE doubles (8 bytes).  For example for \e N = \e M = 3, there are 6
+   coefficients arranged as
+   <i>S</i><sub>11</sub>,
+   <i>S</i><sub>21</sub>,
+   <i>S</i><sub>31</sub>,
+   <i>S</i><sub>22</sub>,
+   <i>S</i><sub>32</sub>,
+   <i>S</i><sub>33</sub>.
+ .
+Although the coefficient file is in little endian order, %GeographicLib
+can read it on big endian machines.  It can only be read on machines
+which store doubles in IEEE format.
+
+As an illustration, here is igrf11.wmm:
 \verbatim
 WMMF-1
-
-# First line must consist of "WMMF-v" where WMMF stands for "World
-# Magnetic Model Format" and v is the version number of the format.
-
-# File is read a line at a time.  A # character and everything after it
-# is discarded.  If the result is just white space it is discarded.  The
-# remaining lines are of the form "KEY WHITESPACE VALUE".  In general
-# the KEY and the VALUE are case-sensitive.
-
-# GeographicLib::MagneticModel only pays attention to the following
-# keywords
-#
-# (1) keywords that affect the field calculation
-# Radius NumModels Epoch DeltaEpoch Normalization ID
-# of these only Radius, Epoch, and ID are required
-#
-# (2) keywords that store data that the user can query
-# Name Description ReleaseDate MinTime MaxTime MinHeight MaxHeight
-#
-# (3) keywords that are examined to verify that their values are valid
-# ("linear" for Type and "little" for ByteOrder)
-# Type ByteOrder
-#
-# Other keywords are ignored.
-
-Name            wmm2010
-Description     World Magnetic Model 2010
-URL             http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+# A World Magnetic Model (Format 1) file.  For documentation on the
+# format of this file see
+# http://geographiclib.sf.net/html/magnetic.html#magneticformat
+Name            igrf11
+Description     International Geomagnetic Reference Field 11th Generation
+URL             http://ngdc.noaa.gov/IAGA/vmod/igrf.html
 Publisher       National Oceanic and Atmospheric Administration
 ReleaseDate     2009-12-15
 DataCutOff      2009-10-01
 ConversionDate  2011-11-04
 DataVersion     1
-
-# Type linear     # only linear is supported bey GeographicLib v1.15
-Radius 6371200    # reference radius of the earth in meters (required)
-# NumModels 1     # Number of models
-Epoch 2010        # the origin for time in years (required)
-# DeltaEpoch 1    # time between models
-MinTime 2010      # the earliest time the model should be used
-MaxTime 2015      # the latest time the model should be used
-MinHeight -10000  # the minimum height the model should be used
-MaxHeight 1000000 # the maximum height the model should be used
-
-
-# Normalization schmidt # or full
-# ByteOrder little      # or big, the format used for the coefficient file
-                        # (only little is supported by GeographicLib v1.15)
+Radius          6371200
+NumModels       23
+Epoch           1900
+DeltaEpoch      5
+MinTime         1900
+MaxTime         2015
+MinHeight       -1000
+MaxHeight       600000
 
 # The coefficicents are stored in a file obtained by appending ".cof" to
-# the name of this file.  This is binary file in little endian order
-# consisting of an 8-byte ID of printable characters to help associate
-# the .wmm file with its associated coefficient file.  This is followed
-# by NumModels + 1 sets of spherical harmonic coefficients in the
-# following format:
-#
-# The maximum degree N of the sum stored as a 4-byte signed integer
-# The maximum order M of the sum stored as a 4-byte signed integer
-# These must satisfy N >= M >= -1.
-#
-# The coefficients of the cosine coefficients Cnm of the sum in column
-# (i.e., m) major order.  There are (M + 1) * (2*N - M + 2) / 2 elements
-# which are stored as IEEE doubles (8 bytes).
-#
-# The coefficients of the sine coefficients Snm of the sum in column
-# (i.e., m) major order starting at m = 1.  There are M * (2*N - M + 1)
-# / 2 elements elements which are stored as IEEE doubles (8 bytes).
-#
-# Although the coefficient file is in little endian order, GeographicLib
-# can read it on big endian machines.  It can only be read on machines
-# which store doubles in IEEE format.
-
-# The coefficients were obtained from WMM2010.COF in the geomag70
-# distribution.
-ID WMM2010A             # The 8-byte identifier for the coefficient file
+# the name of this file.  The coefficients were obtained from IGRF11.COF
+# in the geomag70 distribution.
+ID              IGRF11-A
 \endverbatim
 
 <center>
@@ -2545,12 +2597,25 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-mm-dd)</a>
-  - NEED TO IMPROVE PYTHON INSTALLATION ON LINUX
-  - Add GeographicLib::Utility class.
-  - Add GeographicLib::SphericalEngine, GeographicLib::CircularEngine,
-    GeographicLib::SphericalHarmonic, GeographicLib::SphericalHarmonic1, and
-    GeographicLib::SphericalHarmonic2 classes.
-  - Add GeographicLib::MagneticModel and GeographicLib::MagneticCircle classes.
+  - Add ref calculation of the earth's magnetic field:
+    - add GeographicLib::MagneticModel and GeographicLib::MagneticCircle
+      classes,
+    - add command line utility
+      <a href="MagneticField.1.html">MagneticField</a>,
+    - add \ref magnetic,
+    - add \ref magneticinst,
+    - add \ref magneticformat,
+    - add classes GeographicLib::SphericalEngine,
+      GeographicLib::CircularEngine, GeographicLib::SphericalHarmonic,
+      GeographicLib::SphericalHarmonic1, and
+      GeographicLib::SphericalHarmonic2. which sum spherical harmonic
+      series.
+  - Add GeographicLib::Utility class to support I/O and date
+    manipulation.
+  - Cmake configuration includes a _d suffix on the library built in
+    debug mode.
+  - For the Python package, include manifest and readme files; don't
+    install setup.py for non-Windows systems.
   - Include Doxygen tag file in distribution as doc/html/Geographic.tag.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a>
