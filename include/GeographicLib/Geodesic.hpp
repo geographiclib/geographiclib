@@ -599,7 +599,7 @@ namespace GeographicLib {
      * @param[in] lon2 longitude of point 2 (degrees).
      * @param[out] s12 distance between point 1 and point 2 (meters).
      * @param[out] azi1 azimuth at point 1 (degrees).
-     * @param[out] azi2 (forward) azimuth at point 1 (degrees).
+     * @param[out] azi2 (forward) azimuth at point 2 (degrees).
      * @param[out] m12 reduced length of geodesic (meters).
      * @param[out] M12 geodesic scale of point 2 relative to point 1
      *   (dimensionless).
@@ -720,7 +720,7 @@ namespace GeographicLib {
      *   specifying which of the following parameters should be set.
      * @param[out] s12 distance between point 1 and point 2 (meters).
      * @param[out] azi1 azimuth at point 1 (degrees).
-     * @param[out] azi2 (forward) azimuth at point 1 (degrees).
+     * @param[out] azi2 (forward) azimuth at point 2 (degrees).
      * @param[out] m12 reduced length of geodesic (meters).
      * @param[out] M12 geodesic scale of point 2 relative to point 1
      *   (dimensionless).

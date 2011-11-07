@@ -11,6 +11,7 @@ GeodesicProj.1 \
 GeoConvert.1 \
 Geod.1 \
 GeoidEval.1 \
+MagneticField.1 \
 Planimeter.1 \
 TransverseMercatorProj.1
 
@@ -21,6 +22,7 @@ GeodesicProj.usage \
 GeoConvert.usage \
 Geod.usage \
 GeoidEval.usage \
+MagneticField.usage \
 Planimeter.usage \
 TransverseMercatorProj.usage
 
@@ -31,6 +33,7 @@ GeodesicProj.1.html \
 GeoConvert.1.html \
 Geod.1.html \
 GeoidEval.1.html \
+MagneticField.1.html \
 Planimeter.1.html \
 TransverseMercatorProj.1.html
 
@@ -67,6 +70,8 @@ Geod.1.html: Geod.pod
 	pod2html --noindex $^ | $(PODFIX) > $@
 GeoidEval.1.html: GeoidEval.pod
 	pod2html --noindex $^ | $(PODFIX) > $@
+MagneticField.1.html: MagneticField.pod
+	pod2html --noindex $^ | $(PODFIX) > $@
 Planimeter.1.html: Planimeter.pod
 	pod2html --noindex $^ | $(PODFIX) > $@
 TransverseMercatorProj.1.html: TransverseMercatorProj.pod
@@ -75,16 +80,16 @@ TransverseMercatorProj.1.html: TransverseMercatorProj.pod
 EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	GeoConvert.pod TransverseMercatorProj.pod \
 	CartConvert.pod ConicProj.pod Geod.pod GeodesicProj.pod \
-	GeoidEval.pod Planimeter.pod \
+	GeoidEval.pod MagneticField.pod Planimeter.pod \
 	GeoConvert.1 TransverseMercatorProj.1 \
 	CartConvert.1 ConicProj.1 Geod.1 GeodesicProj.1 \
-	GeoidEval.1 Planimeter.1 \
+	GeoidEval.1 MagneticField.1 Planimeter.1 \
 	GeoConvert.usage TransverseMercatorProj.usage \
 	CartConvert.usage ConicProj.usage Geod.usage GeodesicProj.usage \
-	GeoidEval.usage Planimeter.usage \
+	GeoidEval.usage MagneticField.usage Planimeter.usage \
 	GeoConvert.1.html TransverseMercatorProj.1.html \
 	CartConvert.1.html ConicProj.1.html Geod.1.html GeodesicProj.1.html \
-	GeoidEval.1.html Planimeter.1.html
+	GeoidEval.1.html MagneticField.1.html Planimeter.1.html
 
 distclean-local:
 	rm -rf *.usage *.1.html *.1

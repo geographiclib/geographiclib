@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     std::string istring, ifile, ofile;
     real time = 0;
     bool timeset = false, rate = false;
-    real heightguard = 500000, timeguard = 500;
+    real hguard = 500000, tguard = 50;
     int prec = 1;
 
     for (int m = 1; m < argc; ++m) {
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-T") {
         if (++m == argc) return usage(1, true);
         try {
-          timeguard = Utility::num<real>(std::string(argv[m]));
+          tguard = Utility::num<real>(std::string(argv[m]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-H") {
         if (++m == argc) return usage(1, true);
         try {
-          heightguard = Utility::num<real>(std::string(argv[m]));
+          hguard = Utility::num<real>(std::string(argv[m]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "
@@ -153,14 +153,14 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    timeguard = std::max(real(0), timeguard);
-    heightguard = std::max(real(0), heightguard);
+    tguard = std::max(real(0), tguard);
+    hguard = std::max(real(0), hguard);
     prec = std::min(10, std::max(0, prec));
     int retval = 0;
     try {
       const MagneticModel m(model, dir);
-      if (timeset && !(time >= m.MinTime() - timeguard &&
-                       time <= m.MaxTime() + timeguard))
+      if (timeset && !(time >= m.MinTime() - tguard &&
+                       time <= m.MaxTime() + tguard))
         throw GeographicErr("Time " + Utility::str(time) +
                             " too far outside allowed range [" +
                             Utility::str(m.MinTime()) + "," +
@@ -186,8 +186,8 @@ int main(int argc, char* argv[]) {
             if (!(str >> stra))
               throw GeographicErr("Incomplete input: " + s);
             time = Utility::fractionalyear<real>(stra);
-            if (!(time >= m.MinTime() - timeguard &&
-                  time <= m.MaxTime() + timeguard))
+            if (!(time >= m.MinTime() - tguard &&
+                  time <= m.MaxTime() + tguard))
               throw GeographicErr("Time " + Utility::str(time) +
                                   " too far outside allowed range [" +
                                   Utility::str(m.MinTime()) + "," +
@@ -203,8 +203,8 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Incomplete input: " + s);
           real lat, lon;
           DMS::DecodeLatLon(stra, strb, lat, lon);
-          if (!(h >= m.MinHeight() - heightguard &&
-                h <= m.MaxHeight() + heightguard))
+          if (!(h >= m.MinHeight() - hguard &&
+                h <= m.MaxHeight() + hguard))
             throw GeographicErr("Height " + Utility::str(h/1000) +
                                 "km too far outside allowed range [" +
                                 Utility::str(m.MinHeight()/1000) + "km," +

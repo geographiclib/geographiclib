@@ -157,6 +157,47 @@ namespace GeographicLib {
     }
 
     /**
+     * Given a date as a string in the format yyyy, yyyy-mm, or yyyy-mm-dd,
+     * return the numeric values for the year, month, and day.  No checking is
+     * done on these values.
+     *
+     * @param[in] s the date in string format.
+     * @param[out] y the year.
+     * @param[out] m the month, Jan = 1, etc.
+     * @param[out] d the day of the month.
+     **********************************************************************/
+    static void date(const std::string& s, int& y, int& m, int& d) {
+      int y1, m1 = 1, d1 = 1;
+      const char* digits = "0123456789";
+      std::string::size_type p1 = s.find_first_not_of(digits);
+      if (p1 == std::string::npos)
+        y1 = num<int>(s);
+      else if (s[p1] != '-')
+        throw GeographicErr("Delimiter not hyphen in date " + s);
+      else if (p1 == 0)
+        throw GeographicErr("Empty year field in date " + s);
+      else {
+        y1 = num<int>(s.substr(0, p1));
+        if (++p1 == s.size())
+          throw GeographicErr("Empty month field in date " + s);
+        std::string::size_type p2 = s.find_first_not_of(digits, p1);
+        if (p2 == std::string::npos)
+          m1 = num<int>(s.substr(p1));
+        else if (s[p2] != '-')
+          throw GeographicErr("Delimiter not hyphen in date " + s);
+        else if (p2 == p1)
+          throw GeographicErr("Empty month field in date " + s);
+        else {
+          m1 = num<int>(s.substr(p1, p2 - p1));
+          if (++p2 == s.size())
+            throw GeographicErr("Empty day field in date " + s);
+          d1 = num<int>(s.substr(p2));
+        }
+      }
+      y = y1; m = m1; d = d1;
+    }
+      
+    /**
      * Given the date, return the day of the week.
      *
      * @param[in] y the year (must be positive).
@@ -194,29 +235,8 @@ namespace GeographicLib {
       }
       catch (const std::exception&) {
       }
-      int y, m = 1, d = 1;
-      const char* digits = "0123456789";
-      std::string::size_type p1 = s.find_first_not_of(digits);
-      if (p1 == std::string::npos || s[p1] != '-')
-        throw GeographicErr("Delimiter not hyphen in date " + s);
-      else if (p1 == 0)
-        throw GeographicErr("Empty year field in date " + s);
-      y = num<int>(s.substr(0, p1));
-      if (++p1 == s.size())
-        throw GeographicErr("Empty month field in date " + s);
-      std::string::size_type p2 = s.find_first_not_of(digits, p1);
-      if (p2 == std::string::npos)
-        m = num<int>(s.substr(p1));
-      else if (s[p2] != '-')
-        throw GeographicErr("Delimiter not hyphen in date " + s);
-      else if (p2 == p1)
-        throw GeographicErr("Empty month field in date " + s);
-      else {
-        m = num<int>(s.substr(p1, p2 - p1));
-        if (++p2 == s.size())
-          throw GeographicErr("Empty day field in date " + s);
-        d = num<int>(s.substr(p2));
-      }
+      int y, m, d;
+      date(s, y, m, d);
       int t = day(y, m, d, true);
       return T(y) + T(t - day(y)) / T(day(y + 1) - day(y));
     }

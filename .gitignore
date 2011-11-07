@@ -34,6 +34,7 @@ Geod
 Geod2
 GeogTest
 GeoidEval
+MagneticField
 Makefile
 Makefile.in
 RandomExample
@@ -64,6 +65,7 @@ doc.log
 geodesic.gie
 geodesic.gie-2.0
 geoids-distrib
+magnetic-distrib
 html
 install-sh
 install_manifest.txt

@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Downloads geoid datasets for use by GeographicLib::Geoid.  This is
+# Download geoid datasets for use by GeographicLib::Geoid.  This is
 # modeled on a similar script geographiclib-datasets-download by
 # Francesco P. Lovergine <frankie@debian.org>
 #

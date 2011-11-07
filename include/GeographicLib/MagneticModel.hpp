@@ -38,14 +38,18 @@ namespace GeographicLib {
    * which have daily and annual variations.
    *
    * See
-   * - http://geomag.org/models/index.html
-   * - http://ngdc.noaa.gov/geomag/EMM/index.html
-   *   http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
-   * - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   * - General information
+   *   http://geomag.org/models/index.html
+   * - WMM2010
+   *   http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
    *   http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
-   * - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
+   * - IGRF11
+   *   http://ngdc.noaa.gov/IAGA/vmod/igrf.html
    *   http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
    *   http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
+   * - EMM2010
+   *   http://ngdc.noaa.gov/geomag/EMM/index.html
+   *   http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticModel {
@@ -57,9 +61,9 @@ namespace GeographicLib {
     int _Nmodels;
     SphericalHarmonic::normalization _norm;
     Geocentric _earth;
-    std::vector< std::vector<real> > _Gx;
-    std::vector< std::vector<real> > _Hx;
-    std::vector<SphericalHarmonic> _harmx;
+    std::vector< std::vector<real> > _G;
+    std::vector< std::vector<real> > _H;
+    std::vector<SphericalHarmonic> _harm;
     void Field(real t, real lat, real lon, real h, bool diffp,
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const throw();
@@ -263,8 +267,8 @@ namespace GeographicLib {
     const std::string& MagneticModelDirectory() const throw() { return _dir; }
 
     /**
-     * @return the minimum height (in meters) for this this MagneticModel
-     *   should be used.
+     * @return the minimum height above the ellipsoid (in meters) for this this
+     *   MagneticModel should be used.
      *
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t
@@ -274,8 +278,8 @@ namespace GeographicLib {
     Math::real MinHeight() const throw() { return _hmin; }
 
     /**
-     * @return the maximum height (in meters) for this this MagneticModel
-     *   should be used.
+     * @return the maximum height above the ellipsoid (in meters) for this this
+     *   MagneticModel should be used.
      *
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t

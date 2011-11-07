@@ -74,7 +74,9 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 $(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
 
 geoids_dir=$(datadir)/GeographicLib/geoids
+magnetic_dir=$(datadir)/GeographicLib/magnetic
 
-DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\"  @DEFS@
+DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\" \
+	-DMAGNETIC_DEFAULT_PATH=\"$(magnetic_dir)\" @DEFS@
 
 EXTRA_DIST = Makefile.mk CMakeLists.txt Geographic.pro

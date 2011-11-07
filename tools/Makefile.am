@@ -98,12 +98,18 @@ ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
 	../include/GeographicLib/LambertConformalConic.hpp
 
-sbin_SCRIPTS = geographiclib-get-geoids
+sbin_SCRIPTS = geographiclib-get-geoids geographiclib-get-magnetic
 
 geoids_dir = $(datadir)/GeographicLib/geoids
+magnetic_dir = $(datadir)/GeographicLib/magnetic
 geographiclib-get-geoids: geographiclib-get-geoids.sh
 	sed -e "s%@GEOID_DEFAULT_PATH@%$(geoids_dir)%" $< > $@
 	chmod +x $@
 
-CLEANFILES = geographiclib-get-geoids
-EXTRA_DIST = Makefile.mk CMakeLists.txt geographiclib-get-geoids.sh
+geographiclib-get-magnetic: geographiclib-get-magnetic.sh
+	sed -e "s%@MAGNETIC_DEFAULT_PATH@%$(magnetic_dir)%" $< > $@
+	chmod +x $@
+
+CLEANFILES = geographiclib-get-geoids geographiclib-get-magnetic
+EXTRA_DIST = Makefile.mk CMakeLists.txt \
+	geographiclib-get-geoids.sh geographiclib-get-magnetic.sh

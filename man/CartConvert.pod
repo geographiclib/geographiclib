@@ -24,9 +24,10 @@ I<h0>, I<z> normal to the ellipsoid and I<y> due north.
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude>, I<longitude> (decimal degrees
-or degrees, minutes and seconds), and I<height> (meters).  For each set
-of geodetic coordinates, the corresponding cartesian coordinates I<x>,
-I<y>, I<z> (meters) are printed on standard output.
+or degrees, minutes and seconds), and I<height> above the ellipsoid
+(meters).  For each set of geodetic coordinates, the corresponding
+cartesian coordinates I<x>, I<y>, I<z> (meters) are printed on standard
+output.
 
 =head1 OPTIONS
 

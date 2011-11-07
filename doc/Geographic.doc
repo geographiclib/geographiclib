@@ -12,8 +12,8 @@
 \mainpage Geographic library
 \author Charles Karney
 <charles@karney.com>
-\version 1.14
-\date 2011-09-30
+\version 1.15
+\date 2011-mm-dd
 
 \section abstract Abstract
 
@@ -44,10 +44,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">
-  GeographicLib-1.14.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.zip/download">
-  GeographicLib-1.14.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">
+  GeographicLib-1.15.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.zip/download">
+  GeographicLib-1.15.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
@@ -56,8 +56,8 @@ using git \verbatim
   cd geographiclib; git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14-win32.exe/download">
-  GeographicLib-1.14-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15-win32.exe/download">
+  GeographicLib-1.15-win32.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -72,12 +72,9 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref organization
  - \ref other
  - \ref geoid
+ - \ref magnetic
  - \ref geodesic
-   - \ref testgeod
-   - \ref geodseries
  - \ref transversemercator
-   - \ref testmerc
-   - \ref tmseries
  - \ref geocentric
  - \ref old
 
@@ -160,12 +157,12 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">
-GeographicLib-1.14.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14.zip/download">
-GeographicLib-1.14.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14-win32.exe/download">
-GeographicLib-1.14-win32.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">
+GeographicLib-1.15.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.15.zip/download">
+GeographicLib-1.15.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.15-win32.exe/download">
+GeographicLib-1.15-win32.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -215,11 +212,11 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.14.tar.gz
-  unzip -q GeographicLib-1.14.zip
+  tar xfpz GeographicLib-1.15.tar.gz
+  unzip -q GeographicLib-1.15.zip
   git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.14
+  cd GeographicLib-1.15
   cd geographiclib; git checkout stable \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
@@ -298,9 +295,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.14.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.15.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.14 \endverbatim
+  cd GeographicLib-1.15 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
 - By default %GeographlicLib will be installed under /usr/local.
@@ -325,9 +322,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.14.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.15.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.14 \endverbatim
+  cd GeographicLib-1.15 \endverbatim
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root \endverbatim
@@ -351,8 +348,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.14.zip \endverbatim
-- Open GeographicLib-1.14/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.15.zip \endverbatim
+- Open GeographicLib-1.15/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -373,19 +370,19 @@ The header files and static library are provided, but can only be used
 by Visual Studio 2010 in release mode.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.14-win32.exe/download">
-GeographicLib-1.14-win32.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.15-win32.exe/download">
+GeographicLib-1.15-win32.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
-   C:/Program Files/GeographicLib-1.14.
+   C:/Program Files/GeographicLib-1.15.
  - select the start menu folder,
  - and install.
  .
 The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
-C:/Program Files/GeographicLib-1.14/bin where the utilities are
+C:/Program Files/GeographicLib-1.15/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
@@ -403,9 +400,9 @@ project.
 
 Here are the steps to compile %GeographicLib with Qt:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.14.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.15.tar.gz \endverbatim
   then enter the src subdirectory \verbatim
-  cd GeographicLib-1.14/src \endverbatim
+  cd GeographicLib-1.15/src \endverbatim
 - Configure and build the library: \verbatim
   qmake Geographic.pro   # configure the project
   make                   # build the library \endverbatim
@@ -433,8 +430,8 @@ which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as
 \verbatim
-  GeographicLib-1.14.tar.gz
-  GeographicLib-1.14.zip \endverbatim
+  GeographicLib-1.15.tar.gz
+  GeographicLib-1.15.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -637,6 +634,9 @@ The utlilities are
  - <a href="GeoidEval.1.html">
    <b>GeoidEval</b></a>: look up geoid heights using
    GeographicLib::Geoid.
+ - <a href="MagneticField.1.html">
+   <b>MagneticField</b></a>: compute the earth's magnetic field using
+   GeographicLib::MagneticModel.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -755,13 +755,20 @@ utility to provide access to this class.  This class requires
 installation of data files for the various geoid models; see \ref
 geoidinst for details.
 
-GeographicLib::Constants, GeographicLib::Math, GeographicLib::DMS, and
-GeographicLib::EllipticFunction, GeographicLib::Accumulator are utility
-classes which are used internally by the library.  One important
-definition is GeographicLib::Math::real which is the type used for
-real numbers.  This allows the library to be easily switched to using
-floats, doubles, or long doubles.  However all the testing has been with
-real set to double and the library should be installed in this way.
+GeographicLib::Constants, GeographicLib::Math, GeographicLib::Utility,
+GeographicLib::DMS, are general utility class which are used internally
+by the library; in addition GeographicLib::EllipticFunction is used by
+GeographicLib::TransverseMercatorExact, GeographicLib::Accumulator is
+used by GeographicLib::PolygonArea, and GeographicLib::SphericalEngine,
+GeographicLib::CircularEngine, GeographicLib::SphericalHarmonic,
+GeographicLib::SphericalHarmonic1, and GeographicLib::SphericalHarmonic2
+facilitate the summation of spherical harmonic series which is needed by
+and GeographicLib::MagneticModel and GeographicLib::MagneticCircle.  One
+important definition is GeographicLib::Math::real which is the type used
+for real numbers.  This allows the library to be easily switched to
+using floats, doubles, or long doubles.  However all the testing has
+been with real set to double and the library should be installed in this
+way.
 
 In general, the constructors for the classes in %GeographicLib check
 their arguments and throw GeographicLib::GeographicErr exceptions with a
@@ -863,7 +870,7 @@ and then unpack the .tar.gz or .zip file.
 
 You can "install" these routines, so that they are in python's default
 path with, for example \verbatim
-  cd geographiclib-1.14
+  cd geographiclib-1.15
   python setup.py install
 \endverbatim
 (this will require root privileges).  Or else you can set the path
@@ -902,15 +909,15 @@ Similarly the binary installer for Windows includes the compiled
 interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
 either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.14/libexec/GeographicLib/matlab'
+  addpath 'C:/Program Files/GeographicLib-1.15/libexec/GeographicLib/matlab'
 \endverbatim
 in Matlab or Octave.  If you need to compile the interface or to
 recompile it for a different platform, start Matlab or Octave and run,
 e.g., \code
   mex -setup
-  cd 'C:/Program Files/GeographicLib-1.14/libexec/GeographicLib/matlab'
+  cd 'C:/Program Files/GeographicLib-1.15/libexec/GeographicLib/matlab'
   help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.14');
+  geographiclibinterface('C:/Program Files/GeographicLib-1.15');
   addpath(pwd);
 \endcode
 The first command allows you to select the compiler to use (which
@@ -964,7 +971,7 @@ Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 \page geoid Geoid height
 
 <center>
-Back to \ref other.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
 
 The gravitational equipotential surface approximately coinciding with
@@ -1452,14 +1459,246 @@ uninitialized variables in the program?), so the data was generated with
 the precompiled binary that NGA supplies for Windows.
 
 <center>
-Back to \ref other.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref magnetic.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page magnetic Magnetic models
+
+<center>
+Back to \ref geoid.  Forward to \ref geodesic.  Up to \ref contents.
+</center>
+
+%GeographicLib can compute the earth's magnetic field using a magnetic
+model.  These models expand the internal magnetic potential of the earth
+as sum of spherical harmonics.  They neglect magnetic fields due to
+currents in the ionosphere and magnetosphere.  They also, obviously,
+neglect magnetic fields due to very localized currents from electric
+machinery.  Users of GeographicLib::MagneticModel are advised to read
+the <a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">Health
+Warning"</a> this is provided with igrf11.  Although the advice is
+specific to igrf11, many of the comments apply to all magnetic field
+models.
+
+The supported models are
+ - wmm2010, the
+   <a href="http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
+   Magnetic Model 2010</a>, which approximates the main magnetic field
+   for the period 2010&ndash;2015.
+ - igrf11, the
+   <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   Geomagnetic Reference Field (11th generation)</a> which approximates
+   the main magnetic field for the period 1900&ndash;2015.
+ - emm2010, the
+   <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
+   Magnetic Model 2010</a>, which approximates the main and crustal
+   magnetic fields for the period 2010&ndash;2015.
+
+Go to
+ - \ref magneticinst
+ - \ref magneticformat
+
+\section magneticinst Installing the magnetic field models
+
+<center>
+<table>
+<caption>Available magnetic models</caption>
+<tr>
+ <th rowspan="2">name         <th rowspan="2">max\n degree
+<th rowspan="2">time\n interval
+ <th rowspan="2">size\n(kB)
+ <th colspan="3"><center>Download Links (size, kB)</center></th>
+<tr>
+ <th>tar file</th>
+ <th>Windows\n installer</th>
+ <th>zip file</th>
+<tr>
+ <td>wmm2010
+ <td><center>12</center>
+ <td><center>2010&ndash;2015</center>
+ <td><center>3</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.tar.bz2/download">
+ link</a> (2)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.exe/download">
+ link</a> (300)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/wmm2010.zip/download">
+ link</a> (2)</center>
+<tr>
+ <td>igrf11
+ <td><center>13</center>
+ <td><center>1900&ndash;2015</center>
+ <td><center>25</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.tar.bz2/download">
+ link</a> (8)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.exe/download">
+ link</a> (310)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/igrf11.zip/download">
+ link</a> (8)</center>
+<tr>
+ <td>emm2010
+ <td><center>739</center>
+ <td><center>2010&ndash;2015</center>
+ <td><center>4400</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.tar.bz2/download">
+ link</a> (4100)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.exe/download">
+ link</a> (3000)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/magnetic-distrib/emm2010.zip/download">
+ link</a> (4100)</center>
+</table>
+</center>
+The "size" column is the size of the uncompressed data.
+
+For Linux and Unix systems, %GeographicLib provides a shell script
+geographiclib-get-magnetic (typically installed in /usr/local/sbin) which
+automates the process of downloading and installing the geoid data.  For
+example
+\verbatim
+   geographiclib-get-geoids best # to install egm84-15, egm96-5, egm2008-1
+   geographiclib-get-geoids -h   # for help
+\endverbatim
+This script should be run as a user with write access to the
+installation directory, which is typically
+/usr/local/share/GeographicLib (this can be overridden with the -p
+flag), and the data will then be placed in the "magnetic" subdirectory.
+
+Windows users should download and run the Windows installers.  These
+will prompt for an installation directory with the default being
+\verbatim
+   C:/Documents and Settings/All Users/Application Data/GeographicLib
+\endverbatim
+(which you probably should not change) and the data is installed in the
+"magnetic" sub-directory.
+
+Otherwise download \e either the tar.bz2 file \e or the zip file (they
+have the same contents).  If possible use the tar.bz2 files, since these
+are compressed about 2 times better than the zip file.  To unpack these,
+run, for example
+\verbatim
+   mkdir -p /usr/local/share/GeographicLib
+   tar xofjC wmm2010.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC emm2010.tar.bz2 /usr/local/share/GeographicLib
+   etc.
+\endverbatim
+and, again, the data will be placed in the "magnetic" subdirectory.
+
+However you install the geoid data, all the datasets should
+be installed in the same directory.  GeographicLib::Geoid and
+<a href="GeoidEval.1.html">GeoidEval</a> uses a compile time default to
+locate the datasets.  This is
+- /usr/local/share/GeographicLib/geoids, for non-Windows systems
+- C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids,
+  for Windows systems
+.
+consistent with the examples above.  This may be overridden at run-time
+by defining the GEOID_PATH environment variable.  Finally, the path may
+be set using the optional second argument to the
+GeographicLib::Geoid constructor or with the "-d" flag to
+<a href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to
+<a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid
+path for that utility.  The "-v" flag causes GeoidEval to report the
+full path name of the data file it uses.
+
+\section magneticformat Installing the magnetic field models
+
+\verbatim
+WMMF-1
+
+# First line must consist of "WMMF-v" where WMMF stands for "World
+# Magnetic Model Format" and v is the version number of the format.
+
+# File is read a line at a time.  A # character and everything after it
+# is discarded.  If the result is just white space it is discarded.  The
+# remaining lines are of the form "KEY WHITESPACE VALUE".  In general
+# the KEY and the VALUE are case-sensitive.
+
+# GeographicLib::MagneticModel only pays attention to the following
+# keywords
+#
+# (1) keywords that affect the field calculation
+# Radius NumModels Epoch DeltaEpoch Normalization ID
+# of these only Radius, Epoch, and ID are required
+#
+# (2) keywords that store data that the user can query
+# Name Description ReleaseDate MinTime MaxTime MinHeight MaxHeight
+#
+# (3) keywords that are examined to verify that their values are valid
+# ("linear" for Type and "little" for ByteOrder)
+# Type ByteOrder
+#
+# Other keywords are ignored.
+
+Name            wmm2010
+Description     World Magnetic Model 2010
+URL             http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+Publisher       National Oceanic and Atmospheric Administration
+ReleaseDate     2009-12-15
+DataCutOff      2009-10-01
+ConversionDate  2011-11-04
+DataVersion     1
+
+# Type linear     # only linear is supported bey GeographicLib v1.15
+Radius 6371200    # reference radius of the earth in meters (required)
+# NumModels 1     # Number of models
+Epoch 2010        # the origin for time in years (required)
+# DeltaEpoch 1    # time between models
+MinTime 2010      # the earliest time the model should be used
+MaxTime 2015      # the latest time the model should be used
+MinHeight -10000  # the minimum height the model should be used
+MaxHeight 1000000 # the maximum height the model should be used
+
+
+# Normalization schmidt # or full
+# ByteOrder little      # or big, the format used for the coefficient file
+                        # (only little is supported by GeographicLib v1.15)
+
+# The coefficicents are stored in a file obtained by appending ".cof" to
+# the name of this file.  This is binary file in little endian order
+# consisting of an 8-byte ID of printable characters to help associate
+# the .wmm file with its associated coefficient file.  This is followed
+# by NumModels + 1 sets of spherical harmonic coefficients in the
+# following format:
+#
+# The maximum degree N of the sum stored as a 4-byte signed integer
+# The maximum order M of the sum stored as a 4-byte signed integer
+# These must satisfy N >= M >= -1.
+#
+# The coefficients of the cosine coefficients Cnm of the sum in column
+# (i.e., m) major order.  There are (M + 1) * (2*N - M + 2) / 2 elements
+# which are stored as IEEE doubles (8 bytes).
+#
+# The coefficients of the sine coefficients Snm of the sum in column
+# (i.e., m) major order starting at m = 1.  There are M * (2*N - M + 1)
+# / 2 elements elements which are stored as IEEE doubles (8 bytes).
+#
+# Although the coefficient file is in little endian order, GeographicLib
+# can read it on big endian machines.  It can only be read on machines
+# which store doubles in IEEE format.
+
+# The coefficients were obtained from WMM2010.COF in the geomag70
+# distribution.
+ID WMM2010A             # The 8-byte identifier for the coefficient file
+\endverbatim
+
+<center>
+Back to \ref geoid.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page geodesic Geodesics on the Ellipsoid
 
 <center>
-Back to \ref geoid.  Forward to \ref transversemercator.  Up to \ref contents.
+Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
+\ref contents.
 </center>
 
 GeographicLib::Geodesic and GeographicLib::GeodesicLine provide accurate
@@ -1926,7 +2165,8 @@ C4[9] = + 1/737176440 * k2^9;
 \endverbatim
 
 <center>
-Back to \ref geoid.  Forward to \ref transversemercator.  Up to \ref contents.
+Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
+\ref contents.
 </center>
 **********************************************************************/
 /**

@@ -9,7 +9,7 @@ PROGRAMS = GeoConvert \
 	MagneticField \
 	Planimeter \
 	ConicProj
-SCRIPTS = geographiclib-get-geoids
+SCRIPTS = geographiclib-get-geoids geographiclib-get-magnetic
 
 all: $(PROGRAMS) $(SCRIPTS)
 
@@ -73,6 +73,10 @@ ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
 
 geographiclib-get-geoids: geographiclib-get-geoids.sh
 	sed -e "s%@GEOID_DEFAULT_PATH@%$(GEOID_DEFAULT_PATH)%" $< > $@
+	chmod +x $@
+
+geographiclib-get-magnetic: geographiclib-get-magnetic.sh
+	sed -e "s%@MAGNETIC_DEFAULT_PATH@%$(MAGNETIC_DEFAULT_PATH)%" $< > $@
 	chmod +x $@
 
 INSTALL = install -b

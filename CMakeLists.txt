@@ -4,11 +4,11 @@ cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 14)
+set (GeographicLib_VERSION_MINOR 15)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.0.1)
+set (LIBVERSIONFULL 9.1.0)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -25,6 +25,16 @@ else (WIN32)
   set (GEOGRAPHICLIB_GEOID_PATH
     "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/geoids"
     CACHE STRING "Location for geoid data")
+endif (WIN32)
+
+if (WIN32)
+  set (GEOGRAPHICLIB_MAGNETIC_PATH
+    "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
+    CACHE STRING "Location for magnetic models")
+else (WIN32)
+  set (GEOGRAPHICLIB_MAGNETIC_PATH
+    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/magnetic"
+    CACHE STRING "Location for magnetic models")
 endif (WIN32)
 
 set (CMAKE_DEBUG_POSTFIX _d)
@@ -150,7 +160,9 @@ set (CPACK_SOURCE_IGNORE_FILES
   "#"
   "~\$"
   "${PROJECT_SOURCE_DIR}/(BUILD|WINDOWS|TAGS|geographiclib-[0-9])"
-  "${PROJECT_SOURCE_DIR}/(release-notes|geoids-distrib|geoids-installer)/"
+  "${PROJECT_SOURCE_DIR}/release-notes/"
+  "${PROJECT_SOURCE_DIR}/(geoids-distrib|geoids-installer)/"
+  "${PROJECT_SOURCE_DIR}/(magnetic-distrib|magnetic-installer)/"
   "${PROJECT_SOURCE_DIR}/(distrib|cgi-bin|scratch|srcL|workspace)/"
   "${PROJECT_SOURCE_DIR}/(tests|testdata)/"
   "${PROJECT_SOURCE_DIR}/(geodesic.*|makefile-admin|install_manifest.txt)"

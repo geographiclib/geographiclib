@@ -19,20 +19,20 @@ RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_CPP)
 RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 
 #if !defined(MAGNETIC_DEFAULT_PATH)
-#if defined(GEOGRAPHICLIB_MAGNETIC_PATH)
-// Use cmake supplied value is available
-#define MAGNETIC_DEFAULT_PATH GEOGRAPHICLIB_MAGNETIC_PATH
-#else
-#if defined(_MSC_VER)
-#define MAGNETIC_DEFAULT_PATH \
+#  if defined(GEOGRAPHICLIB_MAGNETIC_PATH)
+       // Use cmake supplied value is available
+#      define MAGNETIC_DEFAULT_PATH GEOGRAPHICLIB_MAGNETIC_PATH
+#  else
+#    if defined(_MSC_VER)
+#      define MAGNETIC_DEFAULT_PATH \
   "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
-#else
-#define MAGNETIC_DEFAULT_PATH "/usr/local/share/GeographicLib/magnetic"
-#endif
-#endif
+#    else
+#      define MAGNETIC_DEFAULT_PATH "/usr/local/share/GeographicLib/magnetic"
+#    endif
+#  endif
 #endif
 #if !defined(MAGNETIC_DEFAULT_NAME)
-#define MAGNETIC_DEFAULT_NAME "wmm2010"
+#  define MAGNETIC_DEFAULT_NAME "wmm2010"
 #endif
 
 #if defined(_MSC_VER)
@@ -64,8 +64,8 @@ namespace GeographicLib {
     if (_dir.empty())
       _dir = DefaultMagneticPath();
     ReadMetadata(_name);
-    _Gx.resize(_Nmodels + 1);
-    _Hx.resize(_Nmodels + 1);
+    _G.resize(_Nmodels + 1);
+    _H.resize(_Nmodels + 1);
     {
       std::string coeff = _filename + ".cof";
       ifstream coeffstr(coeff.c_str(), ios::binary);
@@ -85,11 +85,13 @@ namespace GeographicLib {
         if (!(N >= M && M >= -1))
           throw GeographicErr("Bad degree and order " +
                               Utility::str(N) + " " + Utility::str(M));
-        _Gx[i].resize(SphericalEngine::coeff::Csize(N, M));
-        _Hx[i].resize(SphericalEngine::coeff::Ssize(N, M));
-        Utility::readarray<double, real, false>(coeffstr, _Gx[i]);
-        Utility::readarray<double, real, false>(coeffstr, _Hx[i]);
-        _harmx.push_back(SphericalHarmonic(_Gx[i], _Hx[i], N, N, M, _a, _norm));
+        _G[i].resize(SphericalEngine::coeff::Csize(N, M));
+        _H[i].resize(SphericalEngine::coeff::Ssize(N, M));
+        Utility::readarray<double, real, false>(coeffstr, _G[i]);
+        if (!(_G[i][0] == 0))
+          throw GeographicErr("A degree 0 term is not permitted");
+        Utility::readarray<double, real, false>(coeffstr, _H[i]);
+        _harm.push_back(SphericalHarmonic(_G[i], _H[i], N, N, M, _a, _norm));
       }
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
@@ -136,9 +138,9 @@ namespace GeographicLib {
         _dt0 = Utility::num<real>(val);
       else if (key == "NumModels")
         _Nmodels = Utility::num<int>(val);
-      else if (key == "StartTime")
+      else if (key == "MinTime")
         _tmin = Utility::num<real>(val);
-      else if (key == "StopTime")
+      else if (key == "MaxTime")
         _tmax = Utility::num<real>(val);
       else if (key == "MinHeight")
         _hmin =  Utility::num<real>(val);
@@ -216,8 +218,8 @@ namespace GeographicLib {
     real M[9];
     _earth.IntForward(lat, lon, h, x, y, z, M);
     real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis
-    _harmx[n](x, y, z, BX0, BY0, BZ0);
-    _harmx[n + 1](x, y, z, BX1, BY1, BZ1);
+    _harm[n](x, y, z, BX0, BY0, BZ0);
+    _harm[n + 1](x, y, z, BX1, BY1, BZ1);
     if (interpolate) {
       BX1 = (BX1 - BX0) / _dt0;
       BY1 = (BY1 - BY0) / _dt0;
@@ -247,8 +249,8 @@ namespace GeographicLib {
     // y = 0, cphi = M[7], sphi = M[8];
 
     return MagneticCircle(_a, M[7], M[8], t, _dt0, interpolate,
-                          _harmx[n].Circle(x, z, true),
-                          _harmx[n + 1].Circle(x, z, true));
+                          _harm[n].Circle(x, z, true),
+                          _harm[n + 1].Circle(x, z, true));
   }
 
   void MagneticModel::FieldComponents(real Bx, real By, real Bz,

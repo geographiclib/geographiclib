@@ -18,20 +18,20 @@ RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 
 #if !defined(GEOID_DEFAULT_PATH)
-#if defined(GEOGRAPHICLIB_GEOID_PATH)
-// Use cmake supplied value is available
-#define GEOID_DEFAULT_PATH GEOGRAPHICLIB_GEOID_PATH
-#else
-#if defined(_MSC_VER)
-#define GEOID_DEFAULT_PATH \
+#  if defined(GEOGRAPHICLIB_GEOID_PATH)
+     // Use cmake supplied value is available
+#    define GEOID_DEFAULT_PATH GEOGRAPHICLIB_GEOID_PATH
+#  else
+#    if defined(_MSC_VER)
+#      define GEOID_DEFAULT_PATH \
   "C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids"
-#else
-#define GEOID_DEFAULT_PATH "/usr/local/share/GeographicLib/geoids"
-#endif
-#endif
+#    else
+#      define GEOID_DEFAULT_PATH "/usr/local/share/GeographicLib/geoids"
+#    endif
+#  endif
 #endif
 #if !defined(GEOID_DEFAULT_NAME)
-#define GEOID_DEFAULT_NAME "egm96-5"
+#  define GEOID_DEFAULT_NAME "egm96-5"
 #endif
 
 #if defined(_MSC_VER)

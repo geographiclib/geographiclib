@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-MagneticField -- look up magnetic heights
+MagneticField -- compute the earth's magnetic field
 
 =head1 SYNOPSIS
 
@@ -14,8 +14,9 @@ B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-t> I<time> ]
 
 =head1 DESCRIPTION
 
-B<MagneticField> in times and positions on standard input and prints out
-the magnetic field on standard output and its rate of change.
+B<MagneticField> reads in times and positions on standard input and
+prints out the magnetic field on standard output and, optionally, its
+rate of change.
 
 The input line is of the form I<time> I<lat> I<lon> I<h>. I<time> is a
 date of the form 2012-07-03 or a fractional year such as 2012.5.  I<lat>
@@ -62,7 +63,7 @@ toggle whether to report the rates of change of the field.
 
 =item B<-T>
 
-signal an error if I<time> lies I<tguard> years (default 100 yr) beyond
+signal an error if I<time> lies I<tguard> years (default 50 yr) beyond
 the range for the model.
 
 =item B<-H>
