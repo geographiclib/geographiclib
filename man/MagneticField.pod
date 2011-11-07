@@ -118,7 +118,24 @@ file name of "-" stands for standard output.
 
 =head1 MODELS
 
-B<MagneticField> computes the magnetic field
+B<MagneticField> computes the magnetic field using one of the following
+models
+
+    wmm2010, the World Magnetic Model 2010, which approximates the
+      main magnetic field for the period 2010–2015.  See
+      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+    igrf11, the International Geomagnetic Reference Field (11th
+      generation) which approximates the main magnetic field for
+      the period 1900–2015.  See
+      http://ngdc.noaa.gov/IAGA/vmod/igrf.html
+    emm2010, the Enhanced Magnetic Model 2010, which approximates the
+      main and crustal magnetic fields for the period 2010–2015.  See
+      http://ngdc.noaa.gov/geomag/EMM/index.html
+
+These models approximate the magnetic field due to the earth's core and
+(in the case of emm2010) its crust.  They neglect magnetic fields due to
+the ionosphere, the magnetosphere, nearby magnetized materials,
+electrical machinery, etc.
 
 By default, the C<wmm2010> magnetic is used.  This may changed by setting
 the environment variable C<MAGNETIC_NAME> or with the B<-n> option.
@@ -131,7 +148,6 @@ path name of the data file.
 
 Instructions for downloading and installing magnetic data are available at
 L<http://geographiclib.sf.net/html/magnetic.html#magneticinst>.
-
 
 =head1 ENVIRONMENT
 
@@ -167,38 +183,16 @@ increase by I<tguard> and I<hguard>), a warning is printed on standard
 error and the field (which may be inaccurate) is returned in the normal
 way.
 
-=head1 ABBREVIATIONS
-
-The magnetic field is usually approximated by expansion in terms of
-spherical harmonics.
-
-=over
-
-=item B<WMM2010>
-
-
-=item B<EMM2010>
-
-
-=item B<IGRF11>
-
-
-=back
-
 =head1 EXAMPLES
 
-The height of the EGM96 magnetic at Timbuktu
+The magnetic field from WMM2010 in Timbuktu on 2012-01-01
 
-    echo "16d46'33N" "3d00'34W" | MagneticField
-    => 28.7068 -0.02e-6 -1.73e-6
+    echo 2012-01-01 "16d46'33N" "3d00'34W" 300 | MagneticField -r
+    => -2.55 12.43 33771.0 33737.6 -1500.5 7446.0 34582.1
+       0.10 -0.07 34.3 36.8 54.4 -35.3 25.9
 
-The first number returned is the height of the magnetic and the 2nd and 3rd
-are its slopes in the northerly and easterly directions.
-
-Convert a point in UTM zone 18N from MSL to HAE
-
-   echo 531595 4468135 23 | MagneticField --msltohae -z 18N
-   => 531595 4468135 -10.842
+The first two numbers returned are the declination and inclination of
+the field.  The second line gives the annual change.
 
 =head1 SEE ALSO
 

@@ -119,16 +119,16 @@ covered by the data (assuming the edges of the image are geodesics).
    egrep '^((Upper|Lower) (Left|Right)|Center) ' |
    sed -e 's/d /d/g' -e "s/' /'/g" | tr -s '(),\r\t' ' ' | awk '{
        if ($1 $2 == "UpperLeft")
-	   ul = $6 " " $5;
+           ul = $6 " " $5;
        else if ($1 $2 == "LowerLeft")
-	   ll = $6 " " $5;
+           ll = $6 " " $5;
        else if ($1 $2 == "UpperRight")
-	   ur = $6 " " $5;
+           ur = $6 " " $5;
        else if ($1 $2 == "LowerRight")
-	   lr = $6 " " $5;
+           lr = $6 " " $5;
        else if ($1 == "Center") {
-	   printf "%s\n%s\n%s\n%s\n\n", ul, ll, lr, ur;
-	   ul = ll = ur = lr = "";
+           printf "%s\n%s\n%s\n%s\n\n", ul, ll, lr, ur;
+           ul = ll = ur = lr = "";
        }
    }
    ' | Planimeter | cut -f3 -d' '

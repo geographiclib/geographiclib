@@ -36,7 +36,7 @@ namespace GeographicLib {
     real _a, _cphi, _sphi, _t, _dt0;
     bool _interpolate;
     CircularEngine _circ0, _circ1;
-    
+
     MagneticCircle(real a, real cphi, real sphi, real t, real dt0,
                    bool interpolate,
                    const CircularEngine& circ0, const CircularEngine& circ1)

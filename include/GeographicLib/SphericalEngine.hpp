@@ -87,7 +87,7 @@ namespace GeographicLib {
       coeff()
         : _N(-1)
         , _nmx(-1)
-        , _mmx(-1) 
+        , _mmx(-1)
         , _Cnm(Z_.begin())
         , _Snm(Z_.begin()) {}
       /**

@@ -101,7 +101,7 @@ namespace GeographicLib {
      * true if the machine is big-endian
      **********************************************************************/
     static const bool bigendian = WORDS_BIGENDIAN;
-                                 
+
     /**
      * @tparam T the type of the returned value.
      * @return \e pi.

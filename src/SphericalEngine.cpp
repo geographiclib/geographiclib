@@ -94,7 +94,7 @@ namespace GeographicLib {
     //                            ((n-m+2)*(n+m+2)*(2*n+1)))
     //
     // In this case, F[0] = 1 and beta[0] = 0 so the Sc[m] = y[0].
-    // 
+    //
     // Outer sum...
     //
     // V = sum(m = 0..N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
@@ -119,7 +119,7 @@ namespace GeographicLib {
     //
     // differentiate wrt r:
     //   d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)
-    // 
+    //
     // so multiply C[n,m] by n+1 in inner sum and multiply the sum by -1/r.
     //
     // differentiate wrt lambda

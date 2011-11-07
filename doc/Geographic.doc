@@ -95,8 +95,8 @@ of geographic transformations.  It grew out of a desire to improve on
 the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
 present, %GeographicLib provides UTM, UPS, MGRS, geocentric, and local
-cartesian projections, geoid heights, and classes for geodesic
-calculations.
+cartesian projections, geoid heights, magnetic field models, and classes
+for geodesic calculations.
 
 The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
@@ -183,8 +183,9 @@ Then pick one of the first five options below:
   the maintainers of this code.
 .
 This section documents only how to install the software.  If you wish to
-use %GeographicLib to evaluate  geoid heights, then you must also
-install geoid data files.  See \ref geoidinst for instructions.
+use %GeographicLib to evaluate geoid heights or the earth's magnetic
+field, then you must also install the relevant data files.  See \ref
+geoidinst and \ref magneticinst for instructions.
 
 \section cmake Installation with cmake
 
@@ -605,6 +606,10 @@ corresponding Wikipedia articles:
    MGRS</a>, Military Grid Reference System.
  - <a href="http://en.wikipedia.org/wiki/Geoid">
    EGM</a>, Earth Gravity Model.
+ - <a href="http://en.wikipedia.org/wiki/World_Magnetic_Model">
+   WMM</a>, World Magnetic Model.
+ - <a href="http://en.wikipedia.org/wiki/IGRF">
+   IGRF</a>, International Geomagnetic Reference Field.
 
 <center>
 Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
@@ -840,7 +845,7 @@ compiler.  System dependencies come into
    files.  This assumes that floating point numbers are in IEEE format.
    It attempts to handled the "endianness" of the target platform using
    the WORDS_BIGENDIAN macro (which sets the compile-time constant
-   GeographicLib::Math::bigendian.
+   GeographicLib::Math::bigendian).
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
@@ -1507,11 +1512,11 @@ Back to \ref geoid.  Forward to \ref geodesic.  Up to \ref contents.
 
 %GeographicLib can compute the earth's magnetic field using a magnetic
 model.  These models expand the internal magnetic potential of the earth
-as sum of spherical harmonics.  They neglect magnetic fields due to
-currents in the ionosphere and magnetosphere.  They also, obviously,
-neglect magnetic fields due to very localized currents from electric
-machinery.  Users of GeographicLib::MagneticModel are advised to read
-the <a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
+as sum of spherical harmonics.  They neglect magnetic fields due to the
+ionosphere, the magnetosphere, nearby magnetized materials, electric
+machinery, etc..  Users of GeographicLib::MagneticModel are advised to
+read the
+<a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
 Warning"</a> this is provided with igrf11.  Although the advice is
 specific to igrf11, many of the comments apply to all magnetic field
 models.

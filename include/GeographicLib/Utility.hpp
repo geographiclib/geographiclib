@@ -196,7 +196,7 @@ namespace GeographicLib {
       }
       y = y1; m = m1; d = d1;
     }
-      
+
     /**
      * Given the date, return the day of the week.
      *
