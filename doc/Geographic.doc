@@ -19,14 +19,14 @@
 
 %GeographicLib is a small set of <a href="annotated.html">C++
 classes</a> for performing conversions between geographic, UTM, UPS,
-MGRS, geocentric, and local cartesian coordinates, for geoid height
-calculations, and for solving geodesic problems.  The emphasis is on
-returning accurate results with errors close to round-off (about
-5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
-transversemercator have been developed for this library.
-The functionality of the library can be accessed from user code, from
-the \ref utilities provided, or via the \ref other.  For a sample of
-the geodesic capabilities in Javascript, check out the
+MGRS, geocentric, and local cartesian coordinates, for geoid height and
+magnetic field calculations, and for solving geodesic problems.  The
+emphasis is on returning accurate results with errors close to round-off
+(about 5&ndash;15 nm).  New accurate algorithms for \ref geodesic and
+\ref transversemercator have been developed for this library.  The
+functionality of the library can be accessed from user code, from the
+\ref utilities provided, or via the \ref other.  For a sample of the
+geodesic capabilities in Javascript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -247,6 +247,13 @@ Here are the steps to compile and install %GeographicLib:
     Data/GeographicLib/geoids for Windows systems) specifies the default
     location for the geoid datasets for use by GeographicLib::Geoid.
     See \ref geoidinst for more information.
+  - <code>GEOGRAPHICLIB_MAGNETIC_PATH</code> (default:
+    /usr/local/share/GeographicLib/magnetic for non-Windows systems,
+    C:/Documents and Settings/All Users/Application
+    Data/GeographicLib/magnetic for Windows systems) specifies the
+    default location for the magnetic models for use by
+    GeographicLib::MagneticModel.  See \ref magneticinst for more
+    information.
   - <code>GEOGRAPHIC_SHARED_LIB</code> (default: ON for
     non-Windows systems, OFF for Windows systems)
     determines whether a shared or static library is built.  The default
@@ -325,6 +332,13 @@ Here are the steps to compile and install %GeographicLib:
   tar xfpz GeographicLib-1.15.tar.gz \endverbatim
   then enter the directory created \verbatim
   cd GeographicLib-1.15 \endverbatim
+- Edit \verbatim
+  include/GeographicLib/Config.h \endverbatim
+  If your C++ compiler does not recognize the long double type
+  (unlikely), insert \code
+  #undef HAVE_LONG_DOUBLE \endcode
+  If you machine using big endian ordering, then insert \code
+  #define WORDS_BIGENDIAN 1 \endcode
 - Build and install the software: \verbatim
   make             # compile the library and the examples
   make install     # as root \endverbatim
@@ -367,7 +381,9 @@ is needed to build the Matlab interface and to run the tests.)
 
 Use this method if you only need to use the %GeographicLib utilities.
 The header files and static library are provided, but can only be used
-by Visual Studio 2010 in release mode.
+by Visual Studio 2010 in release mode.   However, if you plan to use the
+library, it is advisable to build it with the compiler you are using for
+your own code using either \ref cmake or \ref windows.
 
 Download and run
 <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.15-win32.exe/download">
@@ -482,7 +498,9 @@ C/C++ -> General -> Additional Include Directories = C:\Program Files\Geographic
 Linker -> Input -> Additional Dependencies = Geographic.lib
 Linker -> General -> Additional Library Directories = C:\Program Files\GeographicLib\lib
 \endverbatim
-  Note that the library name is <b>Geographic</b> and not %GeographicLib.
+  Note that the library name is <b>Geographic</b> and not
+  %GeographicLib.  If the library was configured and built with cmake,
+  then the debug version of the library is called Geographic_d.lib.
 - Tell the runtime environment where to find the shared library
   (assuming you compiled %GeographicLib as a shared library).  With g++,
   this is accomplished by modifying the link line above to read \verbatim
@@ -755,6 +773,18 @@ utility to provide access to this class.  This class requires
 installation of data files for the various geoid models; see \ref
 geoidinst for details.
 
+GeographicLib::MagneticModel evaluates the earth's magnetic field using
+a particular magnetic model.  The field is provided by the operator()
+member function.  <a href="MagneticField.1.html">MagneticField</a> is a
+simple command line utility to provide access to this class.  If the
+field several points on a circle of latitude are sought then use
+GeographicLib::MagneticModel::Circle to return a
+GeographicLib::MagneticCircle object whose operator() member function
+performs the calculation efficiently.  (This is particularly important
+for high degree models such as emm2010.)  These classes requires
+installation of data files for the various magnetic models; see \ref
+magneticinst for details.
+
 GeographicLib::Constants, GeographicLib::Math, GeographicLib::Utility,
 GeographicLib::DMS, are general utility class which are used internally
 by the library; in addition GeographicLib::EllipticFunction is used by
@@ -802,9 +832,15 @@ compiler.  System dependencies come into
    which lack this data type the cmake and autoconf configuration
    methods should detect its absence and omit the code that depends on
    it.
- - GeographicLib::Geoid -- this class uses a system-dependent default
-   path for looking up geoid datasets.  It also relies on getenv to find
-   the value of the environment variables
+ - GeographicLib::Geoid and GeographicLib::MagneticModel -- these class
+   uses system-dependent default paths for looking up the respective
+   datasets.  It also relies on getenv to find the value of the
+   environment variables.
+ - GeographicLib::Utility::readarray reads numerical data from binary
+   files.  This assumes that floating point numbers are in IEEE format.
+   It attempts to handled the "endianness" of the target platform using
+   the WORDS_BIGENDIAN macro (which sets the compile-time constant
+   GeographicLib::Math::bigendian.
 
 <center>
 Back to \ref utilities.  Forward to \ref other.  Up to \ref contents.
