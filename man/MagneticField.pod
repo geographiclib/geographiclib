@@ -38,7 +38,7 @@ The output consists of the following 7 items:
   the vertical component of the field in nT (down is positive),
   the total field in nT.
 
-If the B<-r> option is given a second line is printed giving the rates
+If the B<-r> option is given, a second line is printed giving the rates
 of change of these quantities in degrees/yr and nT/yr.
 
 The WGS84 ellipsoid is used, I<a> = 6378137 m, I<f> = 1/298.257223563.

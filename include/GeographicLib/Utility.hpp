@@ -53,7 +53,7 @@ namespace GeographicLib {
       //
       // Here is some code to convert a date to sequential day and vice
       // versa. The sequential day is numbered so that January 1, 1 AD is day 1
-      // (a Saturday). So this is offset from the “Julian” day which starts the
+      // (a Saturday). So this is offset from the "Julian" day which starts the
       // numbering with 4713 BC.
       //
       // This is inspired by a talk by John Conway at the John von Neumann
