@@ -23,7 +23,7 @@ date of the form 2012-07-03 or a fractional year such as 2012.5.  I<lat>
 and I<lon> are the latitude and longitude expressed as decimal degrees
 or degrees, minutes, and seconds; see GeoConvert(1) for details.  I<h>
 is the height above the ellipsoid in meters.  Alternatively, I<time> can
-be given on the commend line as the argument to the I<-t> option, in
+be given on the command line as the argument to the I<-t> option, in
 which case it should not be included on the input lines.
 
 The output consists of the following 7 items:
