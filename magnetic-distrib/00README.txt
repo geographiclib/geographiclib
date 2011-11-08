@@ -1,13 +1,15 @@
-# $Id$d and instles give the data fory to download and inst to use th's
-necessary to download and inst to use the Magneticprovided ei if you
-want to use the Magneticprovided either as a file, or a he data is provided either as a file, or a windows in
-which one z2), a
-zip file, or a windows in
-which one to installn, see
+# $Id$
 
- htu're unsure
-which one to installn, see
+These files give the data for various geomagnetic models.  It's
+necessary to download and install at least one of these files if you
+want to use the MagneticModel class in GeographicLib.
 
- http://geographiclib.so information, see
+The data is provided either as a compressed tar (extension .tar.bz2), a
+zip file, or a windows installer (extension .exe).  If you're unsure
+which one to install, start with
+
+ wmm2010
+
+For more information, see
 
  http://geographiclib.sourceforge.net/html/magnetic.html#magneticinst
