@@ -39,6 +39,11 @@ namespace GeographicLib {
    * that reason, the constructor for this class is private.  Use
    * SphericalHarmonic::Circle, SphericalHarmonic1::Circle, and
    * SphericalHarmonic2::Circle to create instances of this class.
+   *
+   * CircularEngine stores the coefficients needed to allow the summation over
+   * order to be performed in 2 or 6 vectors of length \e M + 1 (depending on
+   * whether gradients are to be calculated).  For this reason the constructor
+   * may throw a bad_alloc exception.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT CircularEngine {

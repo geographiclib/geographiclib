@@ -72,8 +72,8 @@ namespace GeographicLib {
      * SphericalEngine::Value.  This class also includes functions to aid
      * indexing into \e C and \e S.
      *
-     *  The storage layout of the coefficients is documented in
-     *  SphericalHarmonic and SphericalHarmonic::SphericalHarmonic.
+     * The storage layout of the coefficients is documented in
+     * SphericalHarmonic and SphericalHarmonic::SphericalHarmonic.
      **********************************************************************/
     class GEOGRAPHIC_EXPORT coeff {
     private:
@@ -251,6 +251,10 @@ namespace GeographicLib {
      * \e all the components of the coefficients.  The parameters \e
      * gradp, \e norm, and \e L are template parameters, to allow more
      * optimization to be done at compile time.
+     *
+     * Clenshaw summation is used which permits the evaluation of the sum
+     * without the need to allocate temporary arrays.  Thus this function never
+     * throws an excpetion.
      **********************************************************************/
     template<bool gradp, normalization norm, int L>
       static Math::real Value(const coeff c[], const real f[],

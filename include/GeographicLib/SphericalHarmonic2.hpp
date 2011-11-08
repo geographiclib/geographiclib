@@ -169,6 +169,9 @@ namespace GeographicLib {
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
      * @return \e V the spherical harmonic sum.
+     *
+     * This routine requires constant memory and thus never throws an
+     * exception.
      **********************************************************************/
     Math::real operator()(real tau1, real tau2, real x, real y, real z)
       const throw() {
@@ -204,7 +207,8 @@ namespace GeographicLib {
      *
      * This is the same as the previous function, except that the components of
      * the gradients of the sum in the \e x, \e y, and \e z directions are
-     * computed.
+     * computed.  This routine requires constant memory and thus never throws
+     * an exception.
      **********************************************************************/
     Math::real operator()(real tau1, real tau2, real x, real y, real z,
                           real& gradx, real& grady, real& gradz) const throw() {
@@ -241,7 +245,8 @@ namespace GeographicLib {
      * inner sum over degree \e n (which entails about \e N<sup>2</sup>
      * operations).  Calling CircularEngine::operator()() on the returned
      * object performs the outer sum over the order \e m (about \e N
-     * operations).
+     * operations).  This routine may throw a bad_alloc exception in the
+     * GeographicLib::CircularEngine constructor.
      *
      * See SphericalHarmonic::Circle for an example of its use.
      **********************************************************************/

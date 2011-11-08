@@ -38,7 +38,9 @@ namespace GeographicLib {
    * - fully normalized denoted by SphericalHarmonic::full.
    * - Schmidt semi-normalized denoted by SphericalHarmonic::schmidt.
    *
-   * References:
+   * Clenshaw summation is used for the sums over both \e n and \e m.  This
+   * allows the computation to be carried out without the need for any
+   * temporary arrays.  References:
    * - C. W. Clenshaw, A note on the summation of Chebyshev series,
    *   %Math. Tables Aids Comput. 9(51), 118-120 (1955).
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
@@ -190,6 +192,9 @@ namespace GeographicLib {
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
      * @return \e V the spherical harmonic sum.
+     *
+     * This routine requires constant memory and thus never throws an
+     * exception.
      **********************************************************************/
     Math::real operator()(real x, real y, real z)  const throw() {
       real f[] = {1};
@@ -221,7 +226,8 @@ namespace GeographicLib {
      *
      * This is the same as the previous function, except that the components of
      * the gradients of the sum in the \e x, \e y, and \e z directions are
-     * computed.
+     * computed.  This routine requires constant memory and thus never throws
+     * an exception.
      **********************************************************************/
     Math::real operator()(real x, real y, real z,
                           real& gradx, real& grady, real& gradz) const throw() {
@@ -255,7 +261,9 @@ namespace GeographicLib {
      * 0..N)[sum(n = m..N)[...]].  SphericalHarmonic::Circle performs the inner
      * sum over degree \e n (which entails about \e N<sup>2</sup> operations).
      * Calling CircularEngine::operator()() on the returned object performs the
-     * outer sum over the order \e m (about \e N operations).
+     * outer sum over the order \e m (about \e N operations).  This routine may
+     * throw a bad_alloc exception in the GeographicLib::CircularEngine
+     * constructor.
      *
      * Here's an example of computing the spherical sum at a sequence of
      * longitudes without using a CircularEngine object
