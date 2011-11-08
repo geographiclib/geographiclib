@@ -2,31 +2,39 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: f9e4240a50daff78de8ec134787300c40594a8bd $
+# $Id: 7d6abe0b0fb7ed8cbdf00a80b06538a24e785b5c $
 
 nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
-				GeographicLib/AlbersEqualArea.hpp \
-				GeographicLib/AzimuthalEquidistant.hpp \
-				GeographicLib/CassiniSoldner.hpp \
-				GeographicLib/Constants.hpp \
-				GeographicLib/DMS.hpp \
-				GeographicLib/EllipticFunction.hpp \
-				GeographicLib/Geocentric.hpp \
-				GeographicLib/GeoCoords.hpp \
-				GeographicLib/Geodesic.hpp \
-				GeographicLib/GeodesicLine.hpp \
-				GeographicLib/PolygonArea.hpp \
-				GeographicLib/Geoid.hpp \
-				GeographicLib/Gnomonic.hpp \
-				GeographicLib/LambertConformalConic.hpp \
-				GeographicLib/LocalCartesian.hpp \
-				GeographicLib/MGRS.hpp \
-				GeographicLib/Math.hpp \
-				GeographicLib/OSGB.hpp \
-				GeographicLib/PolarStereographic.hpp \
-				GeographicLib/TransverseMercatorExact.hpp \
-				GeographicLib/TransverseMercator.hpp \
-				GeographicLib/UTMUPS.hpp \
+			GeographicLib/AlbersEqualArea.hpp \
+			GeographicLib/AzimuthalEquidistant.hpp \
+			GeographicLib/CassiniSoldner.hpp \
+			GeographicLib/CircularEngine.hpp \
+			GeographicLib/Constants.hpp \
+			GeographicLib/DMS.hpp \
+			GeographicLib/EllipticFunction.hpp \
+			GeographicLib/GeoCoords.hpp \
+			GeographicLib/Geocentric.hpp \
+			GeographicLib/Geodesic.hpp \
+			GeographicLib/GeodesicLine.hpp \
+			GeographicLib/Geoid.hpp \
+			GeographicLib/Gnomonic.hpp \
+			GeographicLib/LambertConformalConic.hpp \
+			GeographicLib/LocalCartesian.hpp \
+			GeographicLib/MGRS.hpp \
+			GeographicLib/MagneticCircle.hpp \
+			GeographicLib/MagneticModel.hpp \
+			GeographicLib/Math.hpp \
+			GeographicLib/OSGB.hpp \
+			GeographicLib/PolarStereographic.hpp \
+			GeographicLib/PolygonArea.hpp \
+			GeographicLib/SphericalEngine.hpp \
+			GeographicLib/SphericalHarmonic.hpp \
+			GeographicLib/SphericalHarmonic1.hpp \
+			GeographicLib/SphericalHarmonic2.hpp \
+			GeographicLib/TransverseMercator.hpp \
+			GeographicLib/TransverseMercatorExact.hpp \
+			GeographicLib/UTMUPS.hpp \
+			GeographicLib/Utility.hpp \
 				GeographicLib/Config.h
 
 geoids_dir=$(datadir)/GeographicLib/geoids

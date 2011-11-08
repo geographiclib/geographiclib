@@ -20,6 +20,7 @@
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/LocalCartesian.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #include "CartConvert.usage"
 
@@ -44,7 +45,7 @@ int main(int argc, char* argv[]) {
         try {
           DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
                             lat0, lon0);
-          h0 = DMS::Decode(std::string(argv[m + 3]));
+          h0 = Utility::num<real>(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -l: " << e.what() << "\n";
@@ -54,9 +55,8 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = DMS::Decode(std::string(argv[m + 1]));
-          f = DMS::DecodeFraction(std::string(argv[m + 2]));
-        std::cerr << f << "\n";
+          a = Utility::num<real>(std::string(argv[m + 1]));
+          f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: a152387afa0abd63c347d6984a8ccc1b58a5aa07 $\n"
+          << ": $Id: 46235e8fdca81e5c801865aa439085ae1f653505 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -132,12 +132,12 @@ int main(int argc, char* argv[]) {
         if (!(str >> stra >> strb >> strc))
           throw  GeographicErr("Incomplete input: " + s);
         if (reverse) {
-          x = DMS::Decode(stra);
-          y = DMS::Decode(strb);
-          z = DMS::Decode(strc);
+          x = Utility::num<real>(stra);
+          y = Utility::num<real>(strb);
+          z = Utility::num<real>(strc);
         } else {
           DMS::DecodeLatLon(stra, strb, lat, lon);
-          h = DMS::Decode(strc);
+          h = Utility::num<real>(strc);
         }
         std::string strd;
         if (str >> strd)
@@ -147,17 +147,17 @@ int main(int argc, char* argv[]) {
             lc.Reverse(x, y, z, lat, lon, h);
           else
             ec.Reverse(x, y, z, lat, lon, h);
-          *output << DMS::Encode(lat, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(lon, 15, DMS::NUMBER) << " "
-                  << DMS::Encode(h, 12, DMS::NUMBER) << "\n";
+          *output << Utility::str<real>(lat, 15) << " "
+                  << Utility::str<real>(lon, 15) << " "
+                  << Utility::str<real>(h, 12) << "\n";
         } else {
           if (localcartesian)
             lc.Forward(lat, lon, h, x, y, z);
           else
             ec.Forward(lat, lon, h, x, y, z);
-          *output << DMS::Encode(x, 10, DMS::NUMBER) << " "
-                  << DMS::Encode(y, 10, DMS::NUMBER) << " "
-                  << DMS::Encode(z, 10, DMS::NUMBER) << "\n";
+          *output << Utility::str<real>(x, 10) << " "
+                  << Utility::str<real>(y, 10) << " "
+                  << Utility::str<real>(z, 10) << "\n";
         }
       }
       catch (const std::exception& e) {

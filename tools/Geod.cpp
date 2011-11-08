@@ -20,6 +20,7 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #include "Geod.usage"
 
@@ -45,18 +46,17 @@ std::string DistanceStrings(real s12, real a12,
   using namespace GeographicLib;
   std::string s;
   if (full || !arcmode)
-    s += DMS::Encode(s12, prec, DMS::NUMBER);
+    s += Utility::str<real>(s12, prec);
   if (full)
     s += " ";
   if (full || arcmode)
-    s += dms ? DMS::Encode(a12, prec + 5, DMS::NONE) :
-      DMS::Encode(a12, prec + 5, DMS::NUMBER);
+    s += DMS::Encode(a12, prec + 5, dms ? DMS::NONE : DMS::NUMBER);
   return s;
 }
 
 real ReadDistance(const std::string& s, bool arcmode) {
   using namespace GeographicLib;
-  return arcmode ? DMS::DecodeAngle(s) : DMS::Decode(s);
+  return arcmode ? DMS::DecodeAngle(s) : Utility::num<real>(s);
 }
 
 int main(int argc, char* argv[]) {
@@ -96,8 +96,8 @@ int main(int argc, char* argv[]) {
       } else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = DMS::Decode(std::string(argv[m + 1]));
-          f = DMS::DecodeFraction(std::string(argv[m + 2]));
+          a = Utility::num<real>(std::string(argv[m + 1]));
+          f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -113,9 +113,10 @@ int main(int argc, char* argv[]) {
         full = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
-        std::istringstream str(argv[m]);
-        char c;
-        if (!(str >> prec) || (str >> c)) {
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
@@ -131,7 +132,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 84f4a6edc79ec7e5cca1af6a9639124ddc879eb6 $\n"
+          << ": $Id: 10e710b53d4cf05871f9082b744536d13dc58ef3 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -207,11 +208,10 @@ int main(int argc, char* argv[]) {
           *output << AzimuthString(azi2 + azi2sense, prec, dms) << " "
                   << DistanceStrings(s12, a12, full, arcmode, prec, dms);
           if (full)
-            *output << " " << DMS::Encode(m12, prec, DMS::NUMBER)
-                    << " " << DMS::Encode(M12, prec+7, DMS::NUMBER)
-                    << " " << DMS::Encode(M21, prec+7, DMS::NUMBER)
-                    << " " << DMS::Encode(S12, std::max(prec-7, 0),
-                                          DMS::NUMBER);
+            *output << " " << Utility::str<real>(m12, prec)
+                    << " " << Utility::str<real>(M12, prec+7)
+                    << " " << Utility::str<real>(M21, prec+7)
+                    << " " << Utility::str<real>(S12, std::max(prec-7, 0));
           *output << "\n";
         } else {
           if (linecalc) {
@@ -253,11 +253,10 @@ int main(int argc, char* argv[]) {
           if (full)
             *output << " "
                     << DistanceStrings(s12, a12, full, arcmode, prec, dms)
-                    << " " << DMS::Encode(m12, prec, DMS::NUMBER)
-                    << " " << DMS::Encode(M12, prec+7, DMS::NUMBER)
-                    << " " << DMS::Encode(M21, prec+7, DMS::NUMBER)
-                    << " " << DMS::Encode(S12, std::max(prec-7, 0),
-                                          DMS::NUMBER);
+                    << " " << Utility::str<real>(m12, prec)
+                    << " " << Utility::str<real>(M12, prec+7)
+                    << " " << Utility::str<real>(M21, prec+7)
+                    << " " << Utility::str<real>(S12, std::max(prec-7, 0));
           *output << "\n";
         }
       }

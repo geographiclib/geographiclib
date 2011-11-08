@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
-#define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id: be669ce9c6549259c44bc2047e890d368c09377f $"
+#define GEOGRAPHICLIB_GEOCENTRIC_HPP "$Id: 5e13a145df558737b41cb38be92d4e0103120e6d $"
 
 #include <vector>
 #include <algorithm>
@@ -56,17 +56,18 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class LocalCartesian;
+    friend class MagneticCircle; // MagneticCircle uses Rotation
+    friend class MagneticModel;  // MagneticModel uses IntForward
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
-    // Actually this can be static because it doesn't depend on the ellipsoid.
-    // But let's be more general than that.
-    void Rotation(real sphi, real cphi, real slam, real clam,
-                  real M[dim2_]) const throw();
+    static void Rotation(real sphi, real cphi, real slam, real clam,
+                         real M[dim2_]) throw();
     void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
                     real M[dim2_]) const throw();
     void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
                     real M[dim2_]) const throw();
+
   public:
 
     /**

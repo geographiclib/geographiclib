@@ -36,7 +36,7 @@
 <div class="title">Geodesics on the Ellipsoid </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="geoid.html">Geoid height</a>. Forward to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p><a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> and <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> provide accurate solutions to the direct and inverse geodesic problems. The <a href="Geod.1.html">Geod</a> utility provides an interface to these classes. <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> implements the azimuthal equidistant projection in terms of geodesics. <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> implements a transverse cylindrical equidistant projection in terms of geodesics. The <a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an interface to these projections.</p>
+<div class="textblock"><center> Back to <a class="el" href="magnetic.html">Magnetic models</a>. Forward to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p><a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> and <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> provide accurate solutions to the direct and inverse geodesic problems. The <a href="Geod.1.html">Geod</a> utility provides an interface to these classes. <a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">GeographicLib::AzimuthalEquidistant</a> implements the azimuthal equidistant projection in terms of geodesics. <a class="el" href="classGeographicLib_1_1CassiniSoldner.html" title="Cassini-Soldner Projection.">GeographicLib::CassiniSoldner</a> implements a transverse cylindrical equidistant projection in terms of geodesics. The <a href="GeodesicProj.1.html">GeodesicProj</a> utility provides an interface to these projections.</p>
 <p>References</p>
 <ul>
 <li>F. W. Bessel, <a href="http://dx.doi.org/10.1002/asna.201011352">The calculation of longitude and latitude from geodesic measurements (1825)</a>, Astron. Nachr. 331(8), 852-861 (2010); translated by C. F. F. Karney and R. E. Deakin. Preprint: <a href="http://arxiv.org/abs/0908.1824">arXiv:0908.1824</a>.</li>
@@ -101,7 +101,7 @@ Test data for geodesics</h2>
 <h2><a class="anchor" id="geodseries"></a>
 Expansions for geodesics</h2>
 <p>We give here the series expansions for the various geodesic integrals valid to order <em>f</em><sup>10</sup>. In this release of the code, we use a 6th-order expansions. This is sufficient to maintain accuracy for doubles for the SRMmax ellipsoid (<em>a</em> = 6400 km, <em>f</em> = 1/150). However, the preprocessor macro GEOD_ORD can be used to select any order up to 8. (If using long doubles, with a 64-bit fraction, the default order is 7.) The series expanded to order <em>f</em><sup>30</sup> are given in <a href="geodseries30.html">geodseries30.html</a>.</p>
-<p>In the formulas below ^ indicates exponentiation (<em>f^3</em> = <em>f*<em>f*<em>f</em>)</em> and</em> / indicates real division (3/5 = 0.6). The equations need to be converted to Horner form, but are here left in expanded form so that they can be easily truncated to lower order. These expansions were obtained using the the Maxima code, <a href="geod.mac">geod.mac</a>.</p>
+<p>In the formulas below ^ indicates exponentiation (<em>f^3</em> = <em>f*<em>f*<em>f</em>)</em> and</em> / indicates real division (3/5 = 0.6). The equations need to be converted to Horner form, but are here left in expanded form so that they can be easily truncated to lower order. These expansions were obtained using the Maxima code, <a href="geod.mac">geod.mac</a>.</p>
 <p>In the expansions below, we have</p>
 <ul>
 <li><em>alpha</em> is the azimuth</li>
@@ -365,8 +365,8 @@ C4[7] = + (1/26254800 - 1/31177575 * ep2 + 2/72747675 * ep2^2) * k2^7
 C4[8] = + (1/141338340 - 1/164894730 * ep2) * k2^8
         - 1/34714680 * k2^9;
 C4[9] = + 1/737176440 * k2^9;
-</pre></div><center> Back to <a class="el" href="geoid.html">Geoid height</a>. Forward to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+</pre></div><center> Back to <a class="el" href="magnetic.html">Magnetic models</a>. Forward to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

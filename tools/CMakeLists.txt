@@ -1,4 +1,4 @@
-# $Id: a40a617a58d28e3be937a82c07827240999dfbd5 $
+# $Id: abb1f6676f4b7a2356aea0661bb69dcf266aa3bc $
 
 if (MAINTAINER)
   set (MANDIR ${PROJECT_BINARY_DIR}/man)
@@ -42,6 +42,18 @@ if (NOT WIN32)
     COMMAND chmod +x ${GEOID_SCRIPT}
     DEPENDS ${GEOID_SCRIPT}.sh)
   install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOID_SCRIPT}
+    DESTINATION sbin)
+
+  set (MAGNETIC_SCRIPT geographiclib-get-magnetic)
+  add_custom_target (get-magnetic-script ALL DEPENDS ${MAGNETIC_SCRIPT})
+  add_custom_command (OUTPUT ${MAGNETIC_SCRIPT}
+    COMMAND
+      sed -e "s%@MAGNETIC_DEFAULT_PATH@%${GEOGRAPHICLIB_MAGNETIC_PATH}%"
+	${CMAKE_CURRENT_SOURCE_DIR}/${MAGNETIC_SCRIPT}.sh >
+	${MAGNETIC_SCRIPT}
+    COMMAND chmod +x ${MAGNETIC_SCRIPT}
+    DEPENDS ${MAGNETIC_SCRIPT}.sh)
+  install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${MAGNETIC_SCRIPT}
     DESTINATION sbin)
 endif (NOT WIN32)
 

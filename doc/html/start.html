@@ -52,8 +52,8 @@ C/C++ -&gt; General -&gt; Additional Include Directories = C:\Program Files\Geog
   g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
 </pre></div> With Visual Studio, you supply this information in the IDE via, e.g., <div class="fragment"><pre class="fragment">
 Linker -&gt; Input -&gt; Additional Dependencies = Geographic.lib
-Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\GeographicLib\include
-</pre></div> Note that the library name is <b>Geographic</b> and not GeographicLib.</li>
+Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\GeographicLib\lib
+</pre></div> Note that the library name is <b>Geographic</b> and not GeographicLib. If the library was configured and built with cmake, then the debug version of the library is called Geographic_d.lib.</li>
 <li>Tell the runtime environment where to find the shared library (assuming you compiled GeographicLib as a shared library). With g++, this is accomplished by modifying the link line above to read <div class="fragment"><pre class="fragment">
   g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
 </pre></div> (There are two other ways to specify the location of shared libraries at runtime: (1) define the environment variable <code>LD_LIBRARY_PATH</code> to be a colon-separated list of directories to search; (2) as <b>root</b>, specify /usr/local/lib as a directory searched by ldconfig(8).) On Windows, you need to ensure that Geographic.dll is in the same directory as your executable or else include the directory containing the dll in your <code>PATH</code>.</li>
@@ -124,9 +124,11 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\Geo
 <li><a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">UPS</a>, Universal Polar Stereographic coordinate system.</li>
 <li><a href="http://en.wikipedia.org/wiki/Military_grid_reference_system">MGRS</a>, Military Grid Reference System.</li>
 <li><a href="http://en.wikipedia.org/wiki/Geoid">EGM</a>, Earth Gravity Model.</li>
+<li><a href="http://en.wikipedia.org/wiki/World_Magnetic_Model">WMM</a>, World Magnetic Model.</li>
+<li><a href="http://en.wikipedia.org/wiki/IGRF">IGRF</a>, International Geomagnetic Reference Field.</li>
 </ul>
 <center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

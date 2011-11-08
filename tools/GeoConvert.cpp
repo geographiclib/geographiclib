@@ -20,6 +20,7 @@
 #include <fstream>
 #include <GeographicLib/GeoCoords.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #include "GeoConvert.usage"
 
@@ -52,9 +53,10 @@ int main(int argc, char* argv[]) {
         swaplatlong = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
-        std::istringstream str(argv[m]);
-        char c;
-        if (!(str >> prec) || (str >> c)) {
+        try {
+          prec = Utility::num<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
@@ -94,7 +96,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 5789b586571d9af9f5d4521a56bee4009dd22140 $\n"
+          << ": $Id: cbe770d45c2cf7b09b8555fcf4e3b0a7fc45879d $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -166,9 +168,9 @@ int main(int argc, char* argv[]) {
               gamma = p.AltConvergence(),
               k = p.AltScale();
             os =
-              DMS::Encode(gamma, std::max(-5,std::min(8,prec))+5, DMS::NUMBER)
+              Utility::str<real>(gamma, std::max(-5,std::min(8,prec))+5)
               + " " +
-              DMS::Encode(k, std::max(-5,std::min(8,prec))+7, DMS::NUMBER);
+              Utility::str<real>(k, std::max(-5,std::min(8,prec))+7);
           }
         }
       }

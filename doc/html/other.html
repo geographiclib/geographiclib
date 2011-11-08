@@ -78,9 +78,9 @@ Python interface</h2>
 <li><a href="http://pypi.python.org/pypi/geographiclib">http://pypi.python.org/pypi/geographiclib</a></li>
 </ul>
 <p>and then unpack the .tar.gz or .zip file.</p>
-<p>You can "install" these routines, so that they are in python's path with, for example </p>
+<p>You can "install" these routines, so that they are in python's default path with, for example </p>
 <div class="fragment"><pre class="fragment">
-  cd /usr/local/lib/python/site-packages
+  cd geographiclib-1.15
   python setup.py install
 </pre></div><p> (this will require root privileges). Or else you can set the path within python using </p>
 <div class="fragment"><pre class="fragment">&gt;&gt;&gt; <span class="keyword">import</span> sys
@@ -107,12 +107,12 @@ Matlab and Octave interfaces</h2>
 <p>The matlab directory contains interface code so that some GeographicLib classes can be accessed from Matlab or Octave. If you set ENABLE_MATLAB=ON when installing with cmake, this interface is built. Similarly the binary installer for Windows includes the compiled interface (compiled using Visual Studio 10 and Matlab R2010b). To use either of these, run one of (for example) </p>
 <div class="fragment"><pre class="fragment">
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.14/libexec/GeographicLib/matlab'
+  addpath 'C:/Program Files/GeographicLib-1.15/libexec/GeographicLib/matlab'
 </pre></div><p> in Matlab or Octave. If you need to compile the interface or to recompile it for a different platform, start Matlab or Octave and run, e.g., </p>
 <div class="fragment"><pre class="fragment">  mex -setup
-  cd <span class="stringliteral">&#39;C:/Program Files/GeographicLib-1.14/libexec/GeographicLib/matlab&#39;</span>
+  cd <span class="stringliteral">&#39;C:/Program Files/GeographicLib-1.15/libexec/GeographicLib/matlab&#39;</span>
   help geographiclibinterface
-  geographiclibinterface(<span class="stringliteral">&#39;C:/Program Files/GeographicLib-1.14&#39;</span>);
+  geographiclibinterface(<span class="stringliteral">&#39;C:/Program Files/GeographicLib-1.15&#39;</span>);
   addpath(pwd);
 </pre></div><p> The first command allows you to select the compiler to use (which probably should be the same as that used to compile GeographicLib). The available functions are:</p>
 <ul>
@@ -137,7 +137,7 @@ Matlab and Octave interfaces</h2>
 </pre></div><p> Other useful functions, e.g., to convert from geographic coordinates to MGRS can easily be written with Matlab code.</p>
 <p>Note that geoidheight, when compiled with Visual Studio 2008 causes Matlab to crash. (The problem does not occur with Visual Studio 2005 or Visual Studio 2010.)</p>
 <center> Back to <a class="el" href="organization.html">Code organization</a>. Forward to <a class="el" href="geoid.html">Geoid height</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

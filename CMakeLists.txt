@@ -1,14 +1,14 @@
-# $Id: 07e8f40b0a81881dd5a495cf14f89cfda4756ac7 $
+# $Id: 0bb0d5a17aea089545a55781a64a81af2c99934e $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 14)
+set (GeographicLib_VERSION_MINOR 15)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.0.1)
+set (LIBVERSIONFULL 9.1.0)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -27,8 +27,23 @@ else (WIN32)
     CACHE STRING "Location for geoid data")
 endif (WIN32)
 
+if (WIN32)
+  set (GEOGRAPHICLIB_MAGNETIC_PATH
+    "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
+    CACHE STRING "Location for magnetic models")
+else (WIN32)
+  set (GEOGRAPHICLIB_MAGNETIC_PATH
+    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/magnetic"
+    CACHE STRING "Location for magnetic models")
+endif (WIN32)
+
+set (CMAKE_DEBUG_POSTFIX _d)
+
 include (CheckTypeSize)
 check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
+
+include (TestBigEndian)
+test_big_endian (WORDS_BIGENDIAN)
 
 configure_file (
     "${PROJECT_SOURCE_DIR}/include/GeographicLib/Config.h.in"
@@ -74,7 +89,7 @@ if (NOT WIN32)
 endif (NOT WIN32)
 
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
-  GeoidEval Planimeter TransverseMercatorProj)
+  GeoidEval MagneticField Planimeter TransverseMercatorProj)
 
 include_directories ("${PROJECT_BINARY_DIR}/include")
 include_directories (include)
@@ -145,7 +160,9 @@ set (CPACK_SOURCE_IGNORE_FILES
   "#"
   "~\$"
   "${PROJECT_SOURCE_DIR}/(BUILD|WINDOWS|TAGS|geographiclib-[0-9])"
-  "${PROJECT_SOURCE_DIR}/(release-notes|geoids-distrib|geoids-installer)/"
+  "${PROJECT_SOURCE_DIR}/release-notes/"
+  "${PROJECT_SOURCE_DIR}/(geoids-distrib|geoids-installer)/"
+  "${PROJECT_SOURCE_DIR}/(magnetic-distrib|magnetic-installer)/"
   "${PROJECT_SOURCE_DIR}/(distrib|cgi-bin|scratch|srcL|workspace)/"
   "${PROJECT_SOURCE_DIR}/(tests|testdata)/"
   "${PROJECT_SOURCE_DIR}/(geodesic.*|makefile-admin|install_manifest.txt)"

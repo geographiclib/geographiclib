@@ -1,11 +1,14 @@
-# $Id: da35a9a983cd00affd326d1364381995512affde $
+# $Id: ec979342282a962800c89e288b1c308fd8c7c75d $
 
-MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
-	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
-	LocalCartesian Geodesic GeodesicLine PolygonArea \
-	AzimuthalEquidistant CassiniSoldner \
-	Geoid LambertConformalConic Gnomonic OSGB AlbersEqualArea
-EXTRAHEADERS = Constants Math Accumulator
+MODULES = AlbersEqualArea AzimuthalEquidistant CassiniSoldner \
+	CircularEngine DMS EllipticFunction GeoCoords Geocentric \
+	Geodesic GeodesicLine Geoid Gnomonic LambertConformalConic \
+	LocalCartesian MGRS MagneticCircle MagneticModel OSGB \
+	PolarStereographic PolygonArea SphericalEngine \
+	TransverseMercator TransverseMercatorExact \
+	UTMUPS
+EXTRAHEADERS = Accumulator Constants Math SphericalHarmonic \
+	SphericalHarmonic1 SphericalHarmonic2 Utility
 
 PREFIX = /usr/local
 LIBNAME = GeographicLib

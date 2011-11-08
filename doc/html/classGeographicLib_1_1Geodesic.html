@@ -238,7 +238,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="Geodesic_8cpp_source.html#l00053">53</a> of file <a class="el" href="Geodesic_8cpp_source.html">Geodesic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00319">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00341">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -339,10 +339,11 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a12</em> arc length of between point 1 and point 2 (degrees).</dd></dl>
+<p><em>lat1</em> should be in the range [-90, 90]; <em>lon1</em> and <em>azi1</em> should be in the range [-180, 360]. The values of <em>lon2</em> and <em>azi2</em> returned are in the range [-180, 180).</p>
 <p>If either point is at a pole, the azimuth is defined by keeping the longitude fixed and writing <em>lat</em> = 90 - <em>eps</em> or -90 + <em>eps</em> and taking the limit <em>eps</em> -&gt; 0 from above. An arc length greater that 180 degrees signifies a geodesic which is not a shortest path. (For a prolate ellipsoid, an additional condition is necessary for a shortest path: the longitudinal extent must not exceed of 180 degrees.)</p>
 <p>The following functions are overloaded versions of <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Geodesic::Direct</a> which omit some of the output parameters. Note, however, that the arc length is always computed and returned as the function value. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00336">336</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00340">340</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00062">main()</a>.</p>
 
@@ -398,7 +399,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Geodesic::Direct</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00350">350</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00354">354</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -458,7 +459,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Geodesic::Direct</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00362">362</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00366">366</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -524,7 +525,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Geodesic::Direct</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00374">374</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00378">378</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -596,7 +597,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Geodesic::Direct</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00386">386</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00390">390</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -674,7 +675,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Geodesic::Direct</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00399">399</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00403">403</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -780,10 +781,11 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
+<p><em>lat1</em> should be in the range [-90, 90]; <em>lon1</em> and <em>azi1</em> should be in the range [-180, 360]. The values of <em>lon2</em> and <em>azi2</em> returned are in the range [-180, 180).</p>
 <p>If either point is at a pole, the azimuth is defined by keeping the longitude fixed and writing <em>lat</em> = 90 - <em>eps</em> or -90 + <em>eps</em> and taking the limit <em>eps</em> -&gt; 0 from above. An arc length greater that 180 degrees signifies a geodesic which is not a shortest path. (For a prolate ellipsoid, an additional condition is necessary for a shortest path: the longitudinal extent must not exceed of 180 degrees.)</p>
 <p>The following functions are overloaded versions of <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">Geodesic::Direct</a> which omit some of the output parameters. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00444">444</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00452">452</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00062">main()</a>.</p>
 
@@ -839,7 +841,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">Geodesic::ArcDirect</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00457">457</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00465">465</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -899,7 +901,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">Geodesic::ArcDirect</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00468">468</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00476">476</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -965,7 +967,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">Geodesic::ArcDirect</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00479">479</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00487">487</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1037,7 +1039,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">Geodesic::ArcDirect</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00491">491</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00499">499</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1115,7 +1117,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">Geodesic::ArcDirect</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00504">504</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00512">512</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1199,7 +1201,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#abfb6553227e1534b451900240b39d058">Geodesic::ArcDirect</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00517">517</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00525">525</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1423,7 +1425,7 @@ Friends</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">lon2</td><td>longitude of point 2 (degrees). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">s12</td><td>distance between point 1 and point 2 (meters). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">azi1</td><td>azimuth at point 1 (degrees). </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">azi2</td><td>(forward) azimuth at point 1 (degrees). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">azi2</td><td>(forward) azimuth at point 2 (degrees). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">m12</td><td>reduced length of geodesic (meters). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">M12</td><td>geodesic scale of point 2 relative to point 1 (dimensionless). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">M21</td><td>geodesic scale of point 1 relative to point 2 (dimensionless). </td></tr>
@@ -1432,10 +1434,11 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a12</em> arc length of between point 1 and point 2 (degrees).</dd></dl>
+<p><em>lat1</em> and <em>lat2</em> should be in the range [-90, 90]; <em>lon1</em> and <em>lon2</em> should be in the range [-180, 360]. The values of <em>azi1</em> and <em>azi2</em> returned are in the range [-180, 180).</p>
 <p>If either point is at a pole, the azimuth is defined by keeping the longitude fixed and writing <em>lat</em> = 90 - <em>eps</em> or -90 + <em>eps</em> and taking the limit <em>eps</em> -&gt; 0 from above. If the routine fails to converge, then all the requested outputs are set to <a class="el" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">Math::NaN()</a>. (Test for such results with <a class="el" href="classGeographicLib_1_1Math.html#aa63d7a640d1126e47af65f782dd40bca">Math::isnan</a>.) This is not expected to happen with ellipsoidal models of the earth; please report all cases where this occurs.</p>
 <p>The following functions are overloaded versions of <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Geodesic::Inverse</a> which omit some of the output parameters. Note, however, that the arc length is always computed and returned as the function value. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00615">615</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00627">627</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Geod_8cpp_source.html#l00062">main()</a>.</p>
 
@@ -1485,7 +1488,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Geodesic::Inverse</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00627">627</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00639">639</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1539,7 +1542,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Geodesic::Inverse</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00638">638</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00650">650</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1599,7 +1602,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Geodesic::Inverse</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00649">649</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00661">661</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1665,7 +1668,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Geodesic::Inverse</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00661">661</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00673">673</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1737,7 +1740,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Geodesic::Inverse</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00673">673</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00685">685</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1815,7 +1818,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Geodesic::Inverse</a>. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00685">685</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00697">697</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -1913,7 +1916,7 @@ Friends</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">outmask</td><td>a bitor'ed combination of <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828">Geodesic::mask</a> values specifying which of the following parameters should be set. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">s12</td><td>distance between point 1 and point 2 (meters). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">azi1</td><td>azimuth at point 1 (degrees). </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">azi2</td><td>(forward) azimuth at point 1 (degrees). </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">azi2</td><td>(forward) azimuth at point 2 (degrees). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">m12</td><td>reduced length of geodesic (meters). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">M12</td><td>geodesic scale of point 2 relative to point 1 (dimensionless). </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">M21</td><td>geodesic scale of point 1 relative to point 2 (dimensionless). </td></tr>
@@ -1934,7 +1937,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="Geodesic_8cpp_source.html#l00121">121</a> of file <a class="el" href="Geodesic_8cpp_source.html">Geodesic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00131">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00120">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00147">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00135">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -1974,7 +1977,7 @@ Friends</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Set up to do a series of ranges.</p>
+<p>Set up to compute several points on a singe geodesic.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">lat1</td><td>latitude of point 1 (degrees). </td></tr>
@@ -1984,6 +1987,7 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
+<p><em>lat1</em> should be in the range [-90, 90]; <em>lon1</em> and <em>azi1</em> should be in the range [-180, 360].</p>
 <p>The <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828">Geodesic::mask</a> values are</p>
 <ul>
 <li><em>caps</em> |= <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828a7c1f4742e41ae5e75c8133ee7fb8fd90">Geodesic::LATITUDE</a> for the latitude <em>lat2</em>; this is added automatically</li>
@@ -2019,7 +2023,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00788">788</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00803">803</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -2038,7 +2042,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00794">794</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00809">809</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -2058,7 +2062,7 @@ Friends</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00800">800</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00815">815</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -2077,7 +2081,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>total area of ellipsoid in meters<sup>2</sup>. The area of a polygon encircling a pole can be found by adding <a class="el" href="classGeographicLib_1_1Geodesic.html#a0dde7d12d4bafedef63d371c5fe40f50">Geodesic::EllipsoidArea()</a>/2 to the sum of <em>S12</em> for each side of the polygon. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00808">808</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00823">823</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -2110,7 +2114,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> with the parameters for the WGS84 ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00816">816</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geodesic_8hpp_source.html#l00831">831</a> of file <a class="el" href="Geodesic_8hpp_source.html">Geodesic.hpp</a>.</p>
 
 </div>
 </div>
@@ -2119,7 +2123,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="Geodesic_8cpp_source.html">Geodesic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

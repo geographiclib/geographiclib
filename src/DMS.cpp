@@ -9,8 +9,9 @@
 
 #include <GeographicLib/DMS.hpp>
 #include <algorithm>
+#include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: 297517a7ec0449b347932ae97cd3d3914aa439e2 $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: d95c4a7b4bc289ce5dc1baef3fda818b89ac14ce $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -51,20 +52,22 @@ namespace GeographicLib {
         --end;
       flag ind1 = NONE;
       int k = -1;
-      if (end > beg && (k = lookup(hemispheres_, dmsa[beg])) >= 0) {
+      if (end > beg && (k = Utility::lookup(hemispheres_, dmsa[beg])) >= 0) {
         ind1 = (k / 2) ? LONGITUDE : LATITUDE;
         sign = k % 2 ? 1 : -1;
         ++beg;
       }
-      if (end > beg && (k = lookup(hemispheres_, dmsa[end-1])) >= 0) {
+      if (end > beg && (k = Utility::lookup(hemispheres_, dmsa[end-1])) >= 0) {
         if (k >= 0) {
           if (ind1 != NONE) {
             if (toupper(dmsa[beg - 1]) == toupper(dmsa[end - 1]))
-              errormsg = "Repeated hemisphere indicators " + str(dmsa[beg - 1])
+              errormsg = "Repeated hemisphere indicators "
+                + Utility::str(dmsa[beg - 1])
                 + " in " + dmsa.substr(beg - 1, end - beg + 1);
             else
               errormsg = "Contradictory hemisphere indicators "
-                + str(dmsa[beg - 1]) + " and " + str(dmsa[end - 1]) + " in "
+                + Utility::str(dmsa[beg - 1]) + " and "
+                + Utility::str(dmsa[end - 1]) + " in "
                 + dmsa.substr(beg - 1, end - beg + 1);
             break;
           }
@@ -73,7 +76,7 @@ namespace GeographicLib {
           --end;
         }
       }
-      if (end > beg && (k = lookup(signs_, dmsa[beg])) >= 0) {
+      if (end > beg && (k = Utility::lookup(signs_, dmsa[beg])) >= 0) {
         if (k >= 0) {
           sign *= k ? 1 : -1;
           ++beg;
@@ -93,7 +96,7 @@ namespace GeographicLib {
       unsigned digcount = 0;
       while (p < end) {
         char x = dmsa[p++];
-        if ((k = lookup(digits_, x)) >= 0) {
+        if ((k = Utility::lookup(digits_, x)) >= 0) {
           ++ncurrent;
           if (digcount > 0)
             ++digcount;         // Count of decimal digits
@@ -107,7 +110,7 @@ namespace GeographicLib {
           }
           pointseen = true;
           digcount = 1;
-        } else if ((k = lookup(dmsindicators_, x)) >= 0) {
+        } else if ((k = Utility::lookup(dmsindicators_, x)) >= 0) {
           if (k >= 3) {
             if (p == end) {
               errormsg = "Illegal for : to appear at the end of " +
@@ -142,19 +145,19 @@ namespace GeographicLib {
             icurrent = fcurrent = 0;
             ncurrent = digcount = 0;
           }
-        } else if (lookup(signs_, x) >= 0) {
+        } else if (Utility::lookup(signs_, x) >= 0) {
           errormsg = "Internal sign in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
         } else {
-          errormsg = "Illegal character " + str(x) + " in DMS string "
+          errormsg = "Illegal character " + Utility::str(x) + " in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
         }
       }
       if (!errormsg.empty())
         break;
-      if (lookup(dmsindicators_, dmsa[p - 1]) < 0) {
+      if (Utility::lookup(dmsindicators_, dmsa[p - 1]) < 0) {
         if (npiece >= 3) {
           errormsg = "Extra text following seconds in DMS string "
             + dmsa.substr(beg, end - beg);
@@ -179,11 +182,13 @@ namespace GeographicLib {
       }
       // Note that we accept 59.999999... even though it rounds to 60.
       if (ipieces[1] >= 60) {
-        errormsg = "Minutes " + str(fpieces[1]) + " not in range [0, 60)";
+        errormsg = "Minutes " + Utility::str(fpieces[1])
+          + " not in range [0, 60)";
         break;
       }
       if (ipieces[2] >= 60) {
-        errormsg = "Seconds " + str(fpieces[2]) + " not in range [0, 60)";
+        errormsg = "Seconds " + Utility::str(fpieces[2])
+          + " not in range [0, 60)";
         break;
       }
       ind = ind1;
@@ -191,71 +196,12 @@ namespace GeographicLib {
       // might be able to offer a better diagnostic).
       return real(sign) * (fpieces[0] + (fpieces[1] + fpieces[2] / 60) / 60);
     } while (false);
-    real val = NumMatch(dmsa);
+    real val = Utility::nummatch<real>(dmsa);
     if (val == 0)
       throw GeographicErr(errormsg);
     else
       ind = NONE;
     return val;
-  }
-
-  Math::real DMS::NumMatch(const std::string& s) {
-    if (s.length() < 3)
-      return 0;
-    string t;
-    t.resize(s.length());
-    for (size_t i = s.length(); i--;)
-      t[i] = toupper(s[i]);
-    int sign = t[0] == '-' ? -1 : 1;
-    string::size_type p0 = t[0] == '-' || t[0] == '+' ? 1 : 0;
-    string::size_type p1 = t.find_last_not_of('0');
-    if (p1 == string::npos || p1 + 1 < p0 + 3)
-      return 0;
-    // Strip off sign and trailing 0s
-    t = t.substr(p0, p1 + 1 - p0);  // Length at least 3
-    if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
-        t == "1.#R")
-      return sign * Math::NaN<real>();
-    else if (t == "INF" || t == "1.#INF")
-      return sign * Math::infinity<real>();
-    return 0;
-  }
-
-  Math::real DMS::Decode(const std::string& str) {
-    istringstream is(str);
-    string errormsg;
-    real num;
-    do {                       // Executed once (provides the ability to break)
-      if (!(is >> num)) {
-        errormsg = "Could not read number: " + str;
-        break;
-      }
-      // On some platforms, is >> num gobbles final E in 1234E, so look for
-      // last character which is legal as the final character in a number
-      // (digit or period).
-      int pos = int(is.tellg()); // Returns -1 at end of string?
-      if (pos < 0)
-        pos = int(str.size());
-      pos = min(pos, int(str.find_last_of("0123456789.")) + 1);
-      if (pos != int(str.size())) {
-        errormsg = "Extra text " + str.substr(pos) + " in number " + str;
-        break;
-      }
-      return num;
-    } while (false);
-    num = NumMatch(str);
-    if (num == 0)
-      throw GeographicErr(errormsg);
-    return num;
-  }
-
-  Math::real DMS::DecodeFraction(const std::string& str) {
-    string::size_type delim = str.find('/');
-    if (!(delim != string::npos && delim >= 1 && delim + 2 <= str.size()))
-      return Decode(str);
-    else
-      // delim in [1, size() - 2]
-      return Decode(str.substr(0, delim)) / Decode(str.substr(delim + 1));
   }
 
   void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
@@ -280,9 +226,10 @@ namespace GeographicLib {
       lat1 = ia == LATITUDE ? a : b,
       lon1 = ia == LATITUDE ? b : a;
     if (lat1 < -90 || lat1 > 90)
-      throw GeographicErr("Latitude " + str(lat1) + "d not in [-90d, 90d]");
+      throw GeographicErr("Latitude " + Utility::str(lat1)
+                          + "d not in [-90d, 90d]");
     if (lon1 < -180 || lon1 > 360)
-      throw GeographicErr("Latitude " + str(lon1)
+      throw GeographicErr("Latitude " + Utility::str(lon1)
                           + "d not in [-180d, 360d]");
     if (lon1 >= 180)
       lon1 -= 360;

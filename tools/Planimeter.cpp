@@ -18,6 +18,7 @@
 #include <fstream>
 #include <GeographicLib/PolygonArea.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Utility.hpp>
 #include <GeographicLib/GeoCoords.hpp>
 
 #include "Planimeter.usage"
@@ -43,8 +44,8 @@ int main(int argc, char* argv[]) {
       else if (arg == "-e") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          a = DMS::Decode(std::string(argv[m + 1]));
-          f = DMS::DecodeFraction(std::string(argv[m + 2]));
+          a = Utility::num<real>(std::string(argv[m + 1]));
+          f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -63,7 +64,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 5fd0c8bb5785c1d34cabff7cb3a135c237e6ef01 $\n"
+          << ": $Id: fbe6db3a9948186a2138ecdaa96f4efc39822838 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else
@@ -130,9 +131,9 @@ int main(int argc, char* argv[]) {
         num = poly.Compute(reverse, sign, perimeter, area);
         if (num > 0) {
           *output << num << " "
-                  << DMS::Encode(perimeter, 8, DMS::NUMBER);
+                  << Utility::str<real>(perimeter, 8);
           if (!polyline)
-            *output << " " << DMS::Encode(area, 3, DMS::NUMBER);
+            *output << " " << Utility::str<real>(area, 3);
           *output << "\n";
         }
         poly.Clear();
@@ -142,9 +143,9 @@ int main(int argc, char* argv[]) {
     num = poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
       *output << num << " "
-              << DMS::Encode(perimeter, 8, DMS::NUMBER);
+              << Utility::str<real>(perimeter, 8);
       if (!polyline)
-        *output << " " << DMS::Encode(area, 3, DMS::NUMBER);
+        *output << " " << Utility::str<real>(area, 3);
       *output << "\n";
     }
     poly.Clear();

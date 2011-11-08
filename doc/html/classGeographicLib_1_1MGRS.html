@@ -174,7 +174,7 @@ Friends</h2></td></tr>
 <p>If <em>x</em> or <em>y</em> is NaN or if <em>zone</em> is <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aeb6750fb82edce6e5b58178a38ee8bd0">UTMUPS::INVALID</a>, the returned <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string is "INVALID".</p>
 <p>Return the result via a reference argument to avoid the overhead of allocating a potentially large number of small strings. If an error is thrown, then <em>mgrs</em> is unchanged. </p>
 
-<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00132">132</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00134">134</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
 
 </div>
 </div>
@@ -247,7 +247,7 @@ Friends</h2></td></tr>
 </dl>
 <p>The latitude is ignored for <em>zone</em> = 0 (UPS); otherwise the latitude is used to determine the latitude band and this is checked for consistency using the same tests as Reverse. </p>
 
-<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00050">50</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00051">51</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
 
 </div>
 </div>
@@ -327,7 +327,7 @@ Friends</h2></td></tr>
 <p>The UTM/UPS selection and the UTM zone is preserved in the conversion from <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate. The conversion is exact for prec in [0, 5]. With centerp = true the conversion from <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> to geographic and back is stable. This is not assured if <em>centerp</em> = false.</p>
 <p>If an error is thrown, then the arguments are unchanged. </p>
 
-<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00143">143</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8cpp_source.html#l00145">145</a> of file <a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a>.</p>
 
 </div>
 </div>
@@ -347,9 +347,9 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the WGS84 ellipsoid (meters).</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00268">268</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00261">261</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00294">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00291">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
 
 </div>
 </div>
@@ -369,9 +369,9 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the WGS84 ellipsoid.</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00276">276</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00269">269</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00303">GeographicLib::UTMUPS::Flattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00300">GeographicLib::UTMUPS::Flattening()</a>.</p>
 
 </div>
 </div>
@@ -391,9 +391,9 @@ Friends</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the WGS84 ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00282">282</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00275">275</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00310">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00307">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
 
 </div>
 </div>
@@ -409,7 +409,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00101">101</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00094">94</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

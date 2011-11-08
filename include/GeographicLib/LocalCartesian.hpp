@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: 6504c3f72ff159d17ddbd6e5bb483f0945438b9a $"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id: 66ad3a5333b92c5ff6f373080e62c5392841afd3 $"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -216,8 +216,7 @@ namespace GeographicLib {
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geocentric object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw()
-    { return _earth.Flattening(); }
+    Math::real Flattening() const throw() { return _earth.Flattening(); }
 
     /**
      * <b>DEPRECATED</b>

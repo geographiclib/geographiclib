@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Downloads geoid datasets for use by GeographicLib::Geoid.  This is
+# Download geoid datasets for use by GeographicLib::Geoid.  This is
 # modeled on a similar script geographiclib-datasets-download by
 # Francesco P. Lovergine <frankie@debian.org>
 #
@@ -8,7 +8,7 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: d461681c29b1248b04717e1c3c2c7bdca2c7e5c6 $
+# $Id: 25348a1a3895b31af1a9816bae6d22c07273e981 $
 
 GEOID_DEFAULT_PATH="@GEOID_DEFAULT_PATH@"
 DEFAULTDIR=`dirname "$GEOID_DEFAULT_PATH"`

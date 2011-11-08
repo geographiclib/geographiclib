@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
-#define GEOGRAPHICLIB_GEOID_HPP "$Id: 57b427018406a7397153845cb919865d62263020 $"
+#define GEOGRAPHICLIB_GEOID_HPP "$Id: ea21a7ef2bf421621967b0c442da427106c8d6c2 $"
 
 #include <string>
 #include <vector>
@@ -169,7 +169,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Construct a Geoid.
+     * Construct a geoid.
      *
      * @param[in] name the name of the geoid.
      * @param[in] path (optional) directory for data file.
@@ -183,12 +183,13 @@ namespace GeographicLib {
      * path.  Otherwise the path is given by the GEOID_PATH environment
      * variable.  If that is undefined, a compile-time default path is used
      * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
-     * C:/cygwin/usr/local/share/GeographicLib/geoids on Windows systems).
-     * This may throw an exception because the file does not exist, is
-     * unreadable, or is corrupt.  If the \e threadsafe parameter is true, the
-     * data set is read into memory (which this may also cause an exception to
-     * be thrown), the data file is closed, and single-cell caching is turned
-     * off; this results in a Geoid object which \e is thread safe.
+     * C:/Documents and Settings/All Users/Application
+     * Data/GeographicLib/geoids on Windows systems).  This may throw an
+     * exception because the file does not exist, is unreadable, or is corrupt.
+     * If the \e threadsafe parameter is true, the data set is read into memory
+     * (which this may also cause an exception to be thrown), the data file is
+     * closed, and single-cell caching is turned off; this results in a Geoid
+     * object which \e is thread safe.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
                    bool cubic = true, bool threadsafe = false);

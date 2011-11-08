@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
-#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: 5d3bb175628985fddad7d67a028bffc0f049f515 $"
+#define GEOGRAPHICLIB_UTMUPS_HPP "$Id: 7973c2fa261a964b7ccdccd2057a08612c1d4cd5 $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>
@@ -67,9 +67,6 @@ namespace GeographicLib {
     static const real maxnorthing_[4];
     static real CentralMeridian(int zone) throw()
     { return real(6 * zone - 183); }
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
-    }
     static void CheckLatLon(real lat, real lon);
     // Throw an error if easting or northing are outside standard ranges.  If
     // throwp = false, return bool instead.
@@ -148,7 +145,7 @@ namespace GeographicLib {
      *
      * @param[in] lat latitude (degrees).
      * @param[in] lon longitude (degrees).
-     * @param[in] setzone zone override (optional)
+     * @param[in] setzone zone override (optional).
      *
      * This is exact.  If the optional argument \e setzone is given then use
      * that zone if it is non-negative, otherwise apply the rules given in
@@ -169,7 +166,7 @@ namespace GeographicLib {
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
      * @param[in] setzone zone override.
-     * @param[in] mgrslimits if true enforce the stricted MGRS limits on the
+     * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
      *
      * The prefered zone for the result can be specified with \e setzone, see

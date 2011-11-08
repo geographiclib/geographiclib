@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 199f3b1a85b240770f47ab44ded6f87b3f69f28e $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 6201f1cbf92bd8bf866f879fdd95a3cbf5e3780f $"
 
 #include <GeographicLib/Config.h>
 
@@ -90,6 +90,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
+     * @tparam T the type of the returned value.
      * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
     template<typename T>
@@ -99,6 +100,7 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_a() throw() { return WGS84_a<real>(); }
     /**
+     * @tparam T the type of the returned value.
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
     template<typename T>
@@ -121,6 +123,7 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
+     * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
     template<typename T>
@@ -130,6 +133,7 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real UTM_k0() throw() { return UTM_k0<real>(); }
     /**
+     * @tparam T the type of the returned value.
      * @return the central scale factor for UPS (0.994).
      **********************************************************************/
     template<typename T>
@@ -144,6 +148,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
+     * @tparam T the type of the returned value.
      * @return the number of meters in a meter.
      *
      * This is unity, but this lets the internal system of units be changed if
@@ -168,6 +173,7 @@ namespace GeographicLib {
     { return 1852 * meter<real>(); }
 
     /**
+     * @tparam T the type of the returned value.
      * @return the number of square meters in a square meter.
      *
      * This is unity, but this lets the internal system of units be changed if

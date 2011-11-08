@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 8412d5e30465ae7e645fb3386cc85947cea9a2da $
+# $Id: 1379f34ca5d900c1d31b41eb23bf1fea6437427f $
 
 AM_CPPFLAGS = -Wall -funroll-loops -finline-functions -fomit-frame-pointer
 INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/man
@@ -16,6 +16,7 @@ bin_PROGRAMS = GeoConvert \
 	Geod \
 	GeodesicProj \
 	GeoidEval \
+	MagneticField \
 	Planimeter \
 	ConicProj
 
@@ -25,6 +26,7 @@ CartConvert.o: ../man/CartConvert.usage
 Geod.o: ../man/Geod.usage
 GeodesicProj.o: ../man/GeodesicProj.usage
 GeoidEval.o: ../man/GeoidEval.usage
+MagneticField.o: ../man/MagneticField.usage
 Planimeter.o: ../man/Planimeter.usage
 ConicProj.o: ../man/ConicProj.usage
 
@@ -74,6 +76,12 @@ GeoidEval_SOURCES = GeoidEval.cpp \
 	../include/GeographicLib/GeoCoords.hpp \
 	../include/GeographicLib/Geoid.hpp
 
+MagneticField_SOURCES = MagneticField.cpp \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/MagneticModel.hpp
+
 Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/Math.hpp \
@@ -90,12 +98,18 @@ ConicProj_SOURCES = ConicProj.cpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
 	../include/GeographicLib/LambertConformalConic.hpp
 
-sbin_SCRIPTS = geographiclib-get-geoids
+sbin_SCRIPTS = geographiclib-get-geoids geographiclib-get-magnetic
 
 geoids_dir = $(datadir)/GeographicLib/geoids
+magnetic_dir = $(datadir)/GeographicLib/magnetic
 geographiclib-get-geoids: geographiclib-get-geoids.sh
 	sed -e "s%@GEOID_DEFAULT_PATH@%$(geoids_dir)%" $< > $@
 	chmod +x $@
 
-CLEANFILES = geographiclib-get-geoids
-EXTRA_DIST = Makefile.mk CMakeLists.txt geographiclib-get-geoids.sh
+geographiclib-get-magnetic: geographiclib-get-magnetic.sh
+	sed -e "s%@MAGNETIC_DEFAULT_PATH@%$(magnetic_dir)%" $< > $@
+	chmod +x $@
+
+CLEANFILES = geographiclib-get-geoids geographiclib-get-magnetic
+EXTRA_DIST = Makefile.mk CMakeLists.txt \
+	geographiclib-get-geoids.sh geographiclib-get-magnetic.sh

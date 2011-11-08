@@ -36,7 +36,7 @@
 <div class="title">Geoid height </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class and the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipsoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10 km this ambiguity is only 1 mm.</p>
+<div class="textblock"><center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="magnetic.html">Magnetic models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class and the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipsoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10 km this ambiguity is only 1 mm.</p>
 <p>The geoid is usually approximated by an "earth gravity model" (EGM). The models published by the NGA are:</p>
 <ul>
 <li>EGM84: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html</a></li>
@@ -207,7 +207,7 @@ Interpolating the geoid data</h2>
 <tr>
 <td>egm2008-1 </td><td>EGM2008</td><td><center> 1' </center> </td><td><center>0.025 m</center></td><td><center> 1 mm</center> </td><td><center>0.003 m</center></td><td><center> 1 mm</center> </td></tr>
 </table>
-</center><p> The errors are with respect the the specific NGA earth gravity model (not to any "real" geoid). The RMS values are obtained using 5 million uniformly distributed random points. The maximum values are obtained by evaluating the errors using a different grid with points at or near the centers of the original grid. (The RMS difference between EGM96 and EGM2008 is about 0.5 m. The RMS difference between EGM84 and EGM96 is about 1.5 m.)</p>
+</center><p> The errors are with respect to the specific NGA earth gravity model (not to any "real" geoid). The RMS values are obtained using 5 million uniformly distributed random points. The maximum values are obtained by evaluating the errors using a different grid with points at or near the centers of the original grid. (The RMS difference between EGM96 and EGM2008 is about 0.5 m. The RMS difference between EGM84 and EGM96 is about 1.5 m.)</p>
 <h2><a class="anchor" id="geoidcache"></a>
 Caching the geoid data</h2>
 <p>A simple way of calling Geoid is as follows </p>
@@ -242,8 +242,8 @@ Test data for geoids</h2>
 <li>EGM2008 height (meters, accurate to 1 mm)</li>
 </ul>
 <p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs. In the case of the EGM84 and EGM96, the programs were compiled (with gfortran) and run under Linux. In the case of EGM2008, the prescription results in NaNs (possibly because of uninitialized variables in the program?), so the data was generated with the precompiled binary that NGA supplies for Windows.</p>
-<center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="magnetic.html">Magnetic models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

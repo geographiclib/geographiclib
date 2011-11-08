@@ -59,6 +59,7 @@
 <code>#include &lt;cmath&gt;</code><br/>
 <code>#include &lt;limits&gt;</code><br/>
 <code>#include &lt;algorithm&gt;</code><br/>
+<code>#include &lt;vector&gt;</code><br/>
 </div>
 <p><a href="Math_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -75,8 +76,9 @@ Namespaces</h2></td></tr>
 </p>
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Math_8hpp.html#afb2818ef5e2f2bed96dcaa151b3edca4">GEOGRAPHICLIB_MATH_HPP</a>&#160;&#160;&#160;&quot;$Id: 30d442ca2b676500169652c4157fd2c263a19d6c $&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Math_8hpp.html#afb2818ef5e2f2bed96dcaa151b3edca4">GEOGRAPHICLIB_MATH_HPP</a>&#160;&#160;&#160;&quot;$Id: dd6afb3ee17e4c12342f7691e714c5f6dc78f012 $&quot;</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Math_8hpp.html#a6cdc2f4c764d4116788cc5c24625e75d">GEOGRAPHICLIB_CPLUSPLUS0X_MATH</a>&#160;&#160;&#160;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Math_8hpp.html#a82e69009d3cd108c8aad8afe44fb1132">WORDS_BIGENDIAN</a>&#160;&#160;&#160;0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="Math_8hpp.html#a8df061fdb3d6e90d150d4fdd749f96b1">GEOGRAPHICLIB_PREC</a>&#160;&#160;&#160;1</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
@@ -90,7 +92,7 @@ Defines</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GEOGRAPHICLIB_MATH_HPP&#160;&#160;&#160;&quot;$Id: 30d442ca2b676500169652c4157fd2c263a19d6c $&quot;</td>
+          <td class="memname">#define GEOGRAPHICLIB_MATH_HPP&#160;&#160;&#160;&quot;$Id: dd6afb3ee17e4c12342f7691e714c5f6dc78f012 $&quot;</td>
         </tr>
       </table>
 </div>
@@ -116,6 +118,21 @@ Defines</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a82e69009d3cd108c8aad8afe44fb1132"></a><!-- doxytag: member="Math.hpp::WORDS_BIGENDIAN" ref="a82e69009d3cd108c8aad8afe44fb1132" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define WORDS_BIGENDIAN&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00029">29</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a8df061fdb3d6e90d150d4fdd749f96b1"></a><!-- doxytag: member="Math.hpp::GEOGRAPHICLIB_PREC" ref="a8df061fdb3d6e90d150d4fdd749f96b1" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -128,12 +145,12 @@ Defines</h2></td></tr>
 <div class="memdoc">
 <p>The precision of floating point numbers used in GeographicLib. 0 means float; 1 (default) means double; 2 means long double. Nearly all the testing has been carried out with doubles and that's the recommended configuration. In order for long double to be used, HAVE_LONG_DOUBLE needs to be defined. Note that with Microsoft Visual Studio, long double is the same as double. </p>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00037">37</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00041">41</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

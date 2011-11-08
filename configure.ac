@@ -1,8 +1,8 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-dnl $Id: 65dabdf08b5c72005b554924056c91453fc2ed60 $
+dnl $Id: cda4e0ef7c90046dcc7d92f5e0b6554aef06a0c9 $
 
-AC_INIT([GeographicLib],[1.14],[charles@karney.com])
+AC_INIT([GeographicLib],[1.15],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -22,9 +22,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=9
-LT_REVISION=1
-LT_AGE=0
+LT_CURRENT=10
+LT_REVISION=0
+LT_AGE=1
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
@@ -50,6 +50,9 @@ AC_CHECK_FUNCS([strtol])
 AC_SEARCH_LIBS([floor],[m])
 AC_SEARCH_LIBS([pow],[m])
 AC_SEARCH_LIBS([sqrt],[m])
+
+# Check endianness
+AC_C_BIGENDIAN
 
 dnl
 dnl Add here new file to be generated

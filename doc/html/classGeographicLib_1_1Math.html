@@ -46,7 +46,8 @@
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a>  </div>
   <div class="headertitle">
 <div class="title">GeographicLib::Math Class Reference</div>  </div>
 </div>
@@ -95,12 +96,17 @@ Static Public Member Functions</h2></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">static T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#a4e8a86ff2039262e99b8e41070cc2223">infinity</a> ()  throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#a1606218c36b8d7c60a5ad5847a94ab9c">infinity</a> ()  throw ()</td></tr>
+<tr><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">static T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#aa81163e3148b2d45d903d23f5d8fb261">swab</a> (T x)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html#ab14e512a1867b98ecb38e9175426596c">bigendian</a> = WORDS_BIGENDIAN</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Mathematical functions needed by GeographicLib. </p>
 <p>Define mathematical functions in order to localize system dependencies and to provide generic versions of the functions. In addition define a real type to be used by GeographicLib. </p>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00060">60</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00065">65</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 </div><hr/><h2>Member Typedef Documentation</h2>
 <a class="anchor" id="a436f350a6a9539e176dda19d0e4811f8"></a><!-- doxytag: member="GeographicLib::Math::extended" ref="a436f350a6a9539e176dda19d0e4811f8" args="" -->
 <div class="memitem">
@@ -113,7 +119,7 @@ Static Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00076">76</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00081">81</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -127,9 +133,9 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The real type for GeographicLib. Nearly all the testing has been done with <em>real</em> = double. However, the algorithms should also work with float and long double (where available). </p>
+<p>The real type for GeographicLib. Nearly all the testing has been done with <em>real</em> = double. However, the algorithms should also work with float and long double (where available). (<b>CAUTION</b>: reasonable accuracy typically cannot be obtained using floats.) </p>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00085">85</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00091">91</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -149,9 +155,15 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>pi</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00098">98</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00110">110</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -170,7 +182,7 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>A synonym for <a class="el" href="classGeographicLib_1_1Math.html#a55d06bfccddf52b1c1066962af738b75">pi&lt;real&gt;()</a>. </p>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00102">102</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00114">114</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -189,9 +201,15 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the number of radians in a degree. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00108">108</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00121">121</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -210,7 +228,7 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>A synonym for <a class="el" href="classGeographicLib_1_1Math.html#a3d84677a4dfd6c2149c16426544eaf6c">degree&lt;real&gt;()</a>. </p>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00112">112</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00125">125</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -230,7 +248,13 @@ template&lt;typename T &gt; </div>
       </table>
 </div>
 <div class="memdoc">
-<p>Square a number. </p>
+<p>Square a number.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -239,9 +263,9 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>x<sup>2</sup></em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00120">120</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00135">135</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00071">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00323">GeographicLib::LambertConformalConic::Forward()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00378">GeographicLib::AlbersEqualArea::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00121">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00094">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00370">GeographicLib::LambertConformalConic::Reverse()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00408">GeographicLib::AlbersEqualArea::Reverse()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00438">GeographicLib::AlbersEqualArea::SetScale()</a>, and <a class="el" href="TransverseMercator_8cpp_source.html#l00059">GeographicLib::TransverseMercator::TransverseMercator()</a>.</p>
+<p>Referenced by <a class="el" href="MagneticModel_8cpp_source.html#l00256">GeographicLib::MagneticModel::FieldComponents()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00071">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00323">GeographicLib::LambertConformalConic::Forward()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00378">GeographicLib::AlbersEqualArea::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00121">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00094">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00370">GeographicLib::LambertConformalConic::Reverse()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00408">GeographicLib::AlbersEqualArea::Reverse()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00438">GeographicLib::AlbersEqualArea::SetScale()</a>, and <a class="el" href="TransverseMercator_8cpp_source.html#l00059">GeographicLib::TransverseMercator::TransverseMercator()</a>.</p>
 
 </div>
 </div>
@@ -272,6 +296,12 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>The hypotenuse function avoiding underflow and overflow.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the arguments and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -281,9 +311,9 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>sqrt(<em>x<sup>2</sup></em> + <em>y<sup>2</sup></em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00131">131</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00147">147</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00071">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00121">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00094">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00370">GeographicLib::LambertConformalConic::Reverse()</a>, and <a class="el" href="AlbersEqualArea_8cpp_source.html#l00408">GeographicLib::AlbersEqualArea::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="MagneticModel_8cpp_source.html#l00256">GeographicLib::MagneticModel::FieldComponents()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00071">GeographicLib::PolarStereographic::Forward()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00121">GeographicLib::Geodesic::GenInverse()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00386">GeographicLib::TransverseMercator::Reverse()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00094">GeographicLib::PolarStereographic::Reverse()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00370">GeographicLib::LambertConformalConic::Reverse()</a>, and <a class="el" href="AlbersEqualArea_8cpp_source.html#l00408">GeographicLib::AlbersEqualArea::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -304,6 +334,12 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>exp(<em>x</em>) - 1 accurate near <em>x</em> = 0. This is taken from N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd Edition (SIAM, 2002), Sec 1.14.1, p 19.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -312,7 +348,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>exp(<em>x</em>) - 1. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00178">178</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00195">195</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -334,6 +370,12 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>log(1 + <em>x</em>) accurate near <em>x</em> = 0.</p>
 <p>This is taken from D. Goldberg, <a href="http://dx.doi.org/10.1145/103162.103163">What every computer scientist should know about floating-point arithmetic</a> (1991), Theorem 4. See also, Higham (op. cit.), Answer to Problem 1.5, p 528.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -342,7 +384,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>log(1 + <em>x</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00213">213</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00231">231</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="LambertConformalConic_8cpp_source.html#l00370">GeographicLib::LambertConformalConic::Reverse()</a>.</p>
 
@@ -365,6 +407,12 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>The inverse hyperbolic sine function. This is defined in terms of <a class="el" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">Math::log1p</a>(<em>x</em>) in order to maintain accuracy near <em>x</em> = 0. In addition, the odd parity of the function is enforced.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -373,7 +421,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>asinh(<em>x</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00245">245</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00264">264</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="TransverseMercator_8cpp_source.html#l00216">GeographicLib::TransverseMercator::Forward()</a>, and <a class="el" href="LambertConformalConic_8cpp_source.html#l00323">GeographicLib::LambertConformalConic::Forward()</a>.</p>
 
@@ -396,6 +444,12 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>The inverse hyperbolic tangent function. This is defined in terms of <a class="el" href="classGeographicLib_1_1Math.html#ac84507dc4df09cf27e831620e8ad8880">Math::log1p</a>(<em>x</em>) in order to maintain accuracy near <em>x</em> = 0. In addition, the odd parity of the function is enforced.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -404,7 +458,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>atanh(<em>x</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00272">272</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00292">292</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -425,6 +479,12 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>The cube root function.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -433,7 +493,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the real cube root of <em>x</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00297">297</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00318">318</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -454,6 +514,12 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>Test for finiteness.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -462,9 +528,9 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if number is finite, false if NaN or infinite. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00319">319</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00341">341</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="AlbersEqualArea_8cpp_source.html#l00030">GeographicLib::AlbersEqualArea::AlbersEqualArea()</a>, <a class="el" href="DMS_8hpp_source.html#l00302">GeographicLib::DMS::Encode()</a>, <a class="el" href="Geocentric_8cpp_source.html#l00021">GeographicLib::Geocentric::Geocentric()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00053">GeographicLib::Geodesic::Geodesic()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00029">GeographicLib::LambertConformalConic::LambertConformalConic()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00027">GeographicLib::PolarStereographic::PolarStereographic()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00125">GeographicLib::PolarStereographic::SetScale()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00454">GeographicLib::LambertConformalConic::SetScale()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00438">GeographicLib::AlbersEqualArea::SetScale()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00059">GeographicLib::TransverseMercator::TransverseMercator()</a>, and <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00061">GeographicLib::TransverseMercatorExact::TransverseMercatorExact()</a>.</p>
+<p>Referenced by <a class="el" href="AlbersEqualArea_8cpp_source.html#l00030">GeographicLib::AlbersEqualArea::AlbersEqualArea()</a>, <a class="el" href="Geocentric_8cpp_source.html#l00021">GeographicLib::Geocentric::Geocentric()</a>, <a class="el" href="Geodesic_8cpp_source.html#l00053">GeographicLib::Geodesic::Geodesic()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00029">GeographicLib::LambertConformalConic::LambertConformalConic()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00027">GeographicLib::PolarStereographic::PolarStereographic()</a>, <a class="el" href="PolarStereographic_8cpp_source.html#l00125">GeographicLib::PolarStereographic::SetScale()</a>, <a class="el" href="LambertConformalConic_8cpp_source.html#l00454">GeographicLib::LambertConformalConic::SetScale()</a>, <a class="el" href="AlbersEqualArea_8cpp_source.html#l00438">GeographicLib::AlbersEqualArea::SetScale()</a>, <a class="el" href="TransverseMercator_8cpp_source.html#l00059">GeographicLib::TransverseMercator::TransverseMercator()</a>, and <a class="el" href="TransverseMercatorExact_8cpp_source.html#l00061">GeographicLib::TransverseMercatorExact::TransverseMercatorExact()</a>.</p>
 
 </div>
 </div>
@@ -484,9 +550,15 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>The NaN (not a number)</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>NaN if available, otherwise return the max real. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00335">335</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00358">358</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -505,7 +577,7 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>A synonym for <a class="el" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">NaN&lt;real&gt;()</a>. </p>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00343">343</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00366">366</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -526,6 +598,12 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>Test for NaN.</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
@@ -534,7 +612,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if argument is a NaN. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00352">352</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00376">376</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="GeoidEval_8cpp_source.html#l00026">main()</a>.</p>
 
@@ -556,9 +634,15 @@ template&lt;typename T &gt; </div>
 </div>
 <div class="memdoc">
 <p>Infinity</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>infinity if available, otherwise return the max real. </dd></dl>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00366">366</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00391">391</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
 
 </div>
 </div>
@@ -577,7 +661,61 @@ template&lt;typename T &gt; </div>
 <div class="memdoc">
 <p>A synonym for <a class="el" href="classGeographicLib_1_1Math.html#a4e8a86ff2039262e99b8e41070cc2223">infinity&lt;real&gt;()</a>. </p>
 
-<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00374">374</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00399">399</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa81163e3148b2d45d903d23f5d8fb261"></a><!-- doxytag: member="GeographicLib::Math::swab" ref="aa81163e3148b2d45d903d23f5d8fb261" args="(T x)" -->
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">static T GeographicLib::Math::swab </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>x</em></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Swap the bytes of a quantity</p>
+<dl><dt><b>Template Parameters:</b></dt><dd>
+  <table class="">
+    <tr><td class="paramname">T</td><td>the type of the argument and the returned value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">x</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>x with its bytes swapped. </dd></dl>
+
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00408">408</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Member Data Documentation</h2>
+<a class="anchor" id="ab14e512a1867b98ecb38e9175426596c"></a><!-- doxytag: member="GeographicLib::Math::bigendian" ref="ab14e512a1867b98ecb38e9175426596c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool <a class="el" href="classGeographicLib_1_1Math.html#ab14e512a1867b98ecb38e9175426596c">GeographicLib::Math::bigendian</a> = WORDS_BIGENDIAN<code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>true if the machine is big-endian </p>
+
+<p>Definition at line <a class="el" href="Math_8hpp_source.html#l00103">103</a> of file <a class="el" href="Math_8hpp_source.html">Math.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="Utility_8hpp_source.html#l00368">GeographicLib::Utility::readarray()</a>.</p>
 
 </div>
 </div>
@@ -585,7 +723,7 @@ template&lt;typename T &gt; </div>
 <li><a class="el" href="Math_8hpp_source.html">Math.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

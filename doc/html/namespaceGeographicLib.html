@@ -33,12 +33,14 @@
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="namespaces.html"><span>Namespace&#160;List</span></a></li>
+      <li><a href="namespacemembers.html"><span>Namespace&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">GeographicLib Namespace Reference</div>  </div>
 </div>
@@ -57,6 +59,8 @@ Classes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Azimuthal Equidistant Projection.  <a href="classGeographicLib_1_1AzimuthalEquidistant.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CassiniSoldner.html">CassiniSoldner</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Cassini-Soldner Projection.  <a href="classGeographicLib_1_1CassiniSoldner.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Spherical Harmonic sums for a circle.  <a href="classGeographicLib_1_1CircularEngine.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Constants.html">Constants</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constants needed by GeographicLib  <a href="classGeographicLib_1_1Constants.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1GeographicErr.html">GeographicErr</a></td></tr>
@@ -81,6 +85,10 @@ Classes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Lambert Conformal Conic Projection.  <a href="classGeographicLib_1_1LambertConformalConic.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1LocalCartesian.html">LocalCartesian</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Local Cartesian coordinates.  <a href="classGeographicLib_1_1LocalCartesian.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1MagneticCircle.html">MagneticCircle</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Geomagnetic field on a circle of latitude.  <a href="classGeographicLib_1_1MagneticCircle.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1MagneticModel.html">MagneticModel</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Model of the earth's magnetic field.  <a href="classGeographicLib_1_1MagneticModel.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Math.html">Math</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Mathematical functions needed by GeographicLib.  <a href="classGeographicLib_1_1Math.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1MGRS.html">MGRS</a></td></tr>
@@ -91,18 +99,1423 @@ Classes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Polar Stereographic Projection.  <a href="classGeographicLib_1_1PolarStereographic.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1PolygonArea.html">PolygonArea</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Polygon Areas.  <a href="classGeographicLib_1_1PolygonArea.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html">SphericalEngine</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">The evaluation engine for <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>.  <a href="classGeographicLib_1_1SphericalEngine.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html">SphericalHarmonic</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Spherical Harmonic series.  <a href="classGeographicLib_1_1SphericalHarmonic.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic1.html">SphericalHarmonic1</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Spherical Harmonic series with a correction to the coefficients.  <a href="classGeographicLib_1_1SphericalHarmonic1.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html">SphericalHarmonic2</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Spherical Harmonic series with two corrections to the coefficients.  <a href="classGeographicLib_1_1SphericalHarmonic2.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1TransverseMercator.html">TransverseMercator</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Transverse Mercator Projection.  <a href="classGeographicLib_1_1TransverseMercator.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html">TransverseMercatorExact</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">An exact implementation of the Transverse Mercator Projection.  <a href="classGeographicLib_1_1TransverseMercatorExact.html#details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1Utility.html">Utility</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Some utility routines for GeographicLib.  <a href="classGeographicLib_1_1Utility.html#details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1UTMUPS.html">UTMUPS</a></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert between Geographic coordinates and UTM/UPS.  <a href="classGeographicLib_1_1UTMUPS.html#details">More...</a><br/></td></tr>
+<tr><td colspan="2"><h2><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a68748d8cfa30027680cdc3472b763d1b">SphericalEngine::Value&lt; true, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a7667521ab246dc59c82f125803691f63">SphericalEngine::Value&lt; false, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#adc52e2d4f500db4b1c54eedce61b2762">SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a714ab28f3ad0b1e63cc5190b79169937">SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a92377d9df8d0c30360c51a281d78a815">SphericalEngine::Value&lt; true, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#accc6fdba5fa312f7752371f4350b6c32">SphericalEngine::Value&lt; false, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a7e98e1669b8666c736de6701e9daa28f">SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ad0a8740dce21166dfdc0bb70bf748263">SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a88fe74e4e84bdada6db2352b9700ce56">SphericalEngine::Value&lt; true, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#acae4a503848d9e956de0ff35e54d5f90">SphericalEngine::Value&lt; false, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ad8399e3da9c8c7380ca8f473cd07f466">SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a793c3a0a98ad885fac2253908df57762">SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ae65193da24c9d48cacb090ace14a4b4e">SphericalEngine::Circle&lt; true, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#aa419cc313bf7f0b5de3b38f3db01ea9d">SphericalEngine::Circle&lt; false, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ad25915d0fb7b6e41c2eae31b40bfef8a">SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a5307331629ac4dce51de7d514aeb14a3">SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a60ecc80be5de0fb745e31a9f509b7630">SphericalEngine::Circle&lt; true, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a7fd995f64338652cdcf42a6be03331ca">SphericalEngine::Circle&lt; false, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#af8512bb082899acbd2d7e0cdc69ca0e9">SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ab4f5bb73ac5c56edc304f78616e1c1e4">SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#aeacd55acdb4574de333257d30b155d97">SphericalEngine::Circle&lt; true, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ae57cd4390a35f01da2c2171926173940">SphericalEngine::Circle&lt; false, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a403dbd9068f7e39b36187e483e65a424">SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ae723aa5feca7a1d4514096ba2e6092a4">SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Namespace for GeographicLib. </p>
 <p>All of GeographicLib is defined within the <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a> namespace. In addtion all the header files are included via GeographicLib/filename. This minimizes the likelihood of conflicts with other packages. </p>
-</div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+</div><hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a68748d8cfa30027680cdc3472b763d1b"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 1 &gt;" ref="a68748d8cfa30027680cdc3472b763d1b" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7667521ab246dc59c82f125803691f63"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 1 &gt;" ref="a7667521ab246dc59c82f125803691f63" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="adc52e2d4f500db4b1c54eedce61b2762"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 1 &gt;" ref="adc52e2d4f500db4b1c54eedce61b2762" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a714ab28f3ad0b1e63cc5190b79169937"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 1 &gt;" ref="a714ab28f3ad0b1e63cc5190b79169937" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a92377d9df8d0c30360c51a281d78a815"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 2 &gt;" ref="a92377d9df8d0c30360c51a281d78a815" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="accc6fdba5fa312f7752371f4350b6c32"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 2 &gt;" ref="accc6fdba5fa312f7752371f4350b6c32" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7e98e1669b8666c736de6701e9daa28f"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 2 &gt;" ref="a7e98e1669b8666c736de6701e9daa28f" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad0a8740dce21166dfdc0bb70bf748263"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 2 &gt;" ref="ad0a8740dce21166dfdc0bb70bf748263" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a88fe74e4e84bdada6db2352b9700ce56"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 3 &gt;" ref="a88fe74e4e84bdada6db2352b9700ce56" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="acae4a503848d9e956de0ff35e54d5f90"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 3 &gt;" ref="acae4a503848d9e956de0ff35e54d5f90" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad8399e3da9c8c7380ca8f473cd07f466"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 3 &gt;" ref="ad8399e3da9c8c7380ca8f473cd07f466" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a793c3a0a98ad885fac2253908df57762"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 3 &gt;" ref="a793c3a0a98ad885fac2253908df57762" args="(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae65193da24c9d48cacb090ace14a4b4e"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 1 &gt;" ref="ae65193da24c9d48cacb090ace14a4b4e" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aa419cc313bf7f0b5de3b38f3db01ea9d"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 1 &gt;" ref="aa419cc313bf7f0b5de3b38f3db01ea9d" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ad25915d0fb7b6e41c2eae31b40bfef8a"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 1 &gt;" ref="ad25915d0fb7b6e41c2eae31b40bfef8a" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a5307331629ac4dce51de7d514aeb14a3"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 1 &gt;" ref="a5307331629ac4dce51de7d514aeb14a3" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 1 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a60ecc80be5de0fb745e31a9f509b7630"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 2 &gt;" ref="a60ecc80be5de0fb745e31a9f509b7630" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a7fd995f64338652cdcf42a6be03331ca"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 2 &gt;" ref="a7fd995f64338652cdcf42a6be03331ca" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="af8512bb082899acbd2d7e0cdc69ca0e9"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 2 &gt;" ref="af8512bb082899acbd2d7e0cdc69ca0e9" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ab4f5bb73ac5c56edc304f78616e1c1e4"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 2 &gt;" ref="ab4f5bb73ac5c56edc304f78616e1c1e4" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 2 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="aeacd55acdb4574de333257d30b155d97"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 3 &gt;" ref="aeacd55acdb4574de333257d30b155d97" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae57cd4390a35f01da2c2171926173940"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 3 &gt;" ref="ae57cd4390a35f01da2c2171926173940" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a403dbd9068f7e39b36187e483e65a424"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 3 &gt;" ref="a403dbd9068f7e39b36187e483e65a424" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="ae723aa5feca7a1d4514096ba2e6092a4"></a><!-- doxytag: member="GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 3 &gt;" ref="ae723aa5feca7a1d4514096ba2e6092a4" args="(const coeff[], const real[], real, real, real)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">template <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a> GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 3 &gt; </td>
+          <td>(</td>
+          <td class="paramtype">const coeff&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">[], </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
+</div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

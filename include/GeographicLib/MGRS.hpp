@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MGRS_HPP)
-#define GEOGRAPHICLIB_MGRS_HPP "$Id: b9b6a35bcdd5b270cdc3088be87e422efc9b3053 $"
+#define GEOGRAPHICLIB_MGRS_HPP "$Id: b15aa92f13463a8432dc6ff095cbb2650eb4a9a2 $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>
@@ -89,13 +89,6 @@ namespace GeographicLib {
       maxprec_ = 5 + 6,
     };
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
-    static int lookup(const std::string& s, char c) throw() {
-      std::string::size_type r = s.find(toupper(c));
-      return r == std::string::npos ? -1 : int(r);
-    }
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
-    }
     static int UTMRow(int iband, int icol, int irow) throw();
 
     friend class UTMUPS;        // UTMUPS::StandardZone calls LatitudeBand

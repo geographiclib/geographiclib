@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
-#define GEOGRAPHICLIB_OSGB_HPP "$Id: 3684ee43efad2de6271c94f210458913345a1087 $"
+#define GEOGRAPHICLIB_OSGB_HPP "$Id: 62fc66a3aeb0c2ac3e65b3de3606353099501420 $"
 
 #include <string>
 #include <sstream>
@@ -63,13 +63,6 @@ namespace GeographicLib {
     };
     static real computenorthoffset() throw();
     static void CheckCoords(real x, real y);
-    static int lookup(const std::string& s, char c) throw() {
-      std::string::size_type r = s.find(toupper(c));
-      return r == std::string::npos ? -1 : int(r);
-    }
-    template<typename T> static std::string str(T x) {
-      std::ostringstream s; s << x; return s.str();
-    }
     OSGB();                     // Disable constructor
 
   public:

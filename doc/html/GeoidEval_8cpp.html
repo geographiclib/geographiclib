@@ -50,15 +50,15 @@
 </div>
 <div class="contents">
 
-<p>Command line utility for evaluation geoid heights.  
+<p>Command line utility for evaluating geoid heights.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;iostream&gt;</code><br/>
-<code>#include &lt;iomanip&gt;</code><br/>
 <code>#include &lt;string&gt;</code><br/>
 <code>#include &lt;sstream&gt;</code><br/>
 <code>#include &lt;fstream&gt;</code><br/>
 <code>#include &lt;<a class="el" href="Geoid_8hpp_source.html">GeographicLib/Geoid.hpp</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="DMS_8hpp_source.html">GeographicLib/DMS.hpp</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="Utility_8hpp_source.html">GeographicLib/Utility.hpp</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="GeoCoords_8hpp_source.html">GeographicLib/GeoCoords.hpp</a>&gt;</code><br/>
 <code>#include &quot;GeoidEval.usage&quot;</code><br/>
 </div>
@@ -69,7 +69,7 @@ Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="GeoidEval_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>Command line utility for evaluation geoid heights. </p>
+<div class="textblock"><p>Command line utility for evaluating geoid heights. </p>
 <p>Copyright (c) Charles Karney (2009, 2010, 2011) &lt;<a href="mailto:charles@karney.com">charles@karney.com</a>&gt; and licensed under the MIT/X11 License. For more information, see <a href="http://geographiclib.sourceforge.net/">http://geographiclib.sourceforge.net/</a></p>
 <p>Compile with -I../include and link with Geoid.o DMS.o</p>
 <p>See the <a href="GeoidEval.1.html">man page</a> for usage information. </p>
@@ -103,12 +103,12 @@ Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="GeoidEval_8cpp_source.html#l00026">26</a> of file <a class="el" href="GeoidEval_8cpp_source.html">GeoidEval.cpp</a>.</p>
 
-<p>References <a class="el" href="Geoid_8hpp_source.html#l00375">GeographicLib::Geoid::Cache()</a>, <a class="el" href="Geoid_8hpp_source.html#l00227">GeographicLib::Geoid::CacheAll()</a>, <a class="el" href="Geoid_8cpp_source.html#l00449">GeographicLib::Geoid::CacheArea()</a>, <a class="el" href="Geoid_8hpp_source.html#l00389">GeographicLib::Geoid::CacheEast()</a>, <a class="el" href="Geoid_8hpp_source.html#l00399">GeographicLib::Geoid::CacheNorth()</a>, <a class="el" href="Geoid_8hpp_source.html#l00407">GeographicLib::Geoid::CacheSouth()</a>, <a class="el" href="Geoid_8hpp_source.html#l00380">GeographicLib::Geoid::CacheWest()</a>, <a class="el" href="Geoid_8hpp_source.html#l00309">GeographicLib::Geoid::DateTime()</a>, <a class="el" href="DMS_8cpp_source.html#l00030">GeographicLib::DMS::Decode()</a>, <a class="el" href="DMS_8cpp_source.html#l00261">GeographicLib::DMS::DecodeLatLon()</a>, <a class="el" href="UTMUPS_8cpp_source.html#l00175">GeographicLib::UTMUPS::DecodeZone()</a>, <a class="el" href="Geoid_8cpp_source.html#l00540">GeographicLib::Geoid::DefaultGeoidName()</a>, <a class="el" href="Geoid_8cpp_source.html#l00532">GeographicLib::Geoid::DefaultGeoidPath()</a>, <a class="el" href="Geoid_8hpp_source.html#l00304">GeographicLib::Geoid::Description()</a>, <a class="el" href="Geoid_8hpp_source.html#l00156">GeographicLib::Geoid::ELLIPSOIDTOGEOID</a>, <a class="el" href="DMS_8cpp_source.html#l00314">GeographicLib::DMS::Encode()</a>, <a class="el" href="Geoid_8hpp_source.html#l00314">GeographicLib::Geoid::GeoidFile()</a>, <a class="el" href="Geoid_8hpp_source.html#l00165">GeographicLib::Geoid::GEOIDTOELLIPSOID</a>, <a class="el" href="Geoid_8hpp_source.html#l00330">GeographicLib::Geoid::Interpolation()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00098">GeographicLib::UTMUPS::INVALID</a>, <a class="el" href="Math_8hpp_source.html#l00352">GeographicLib::Math::isnan()</a>, <a class="el" href="GeoCoords_8hpp_source.html#l00229">GeographicLib::GeoCoords::Latitude()</a>, <a class="el" href="GeoCoords_8hpp_source.html#l00234">GeographicLib::GeoCoords::Longitude()</a>, <a class="el" href="Geoid_8hpp_source.html#l00340">GeographicLib::Geoid::MaxError()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00143">GeographicLib::UTMUPS::MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00127">GeographicLib::UTMUPS::MINZONE</a>, <a class="el" href="Geoid_8hpp_source.html#l00160">GeographicLib::Geoid::NONE</a>, <a class="el" href="DMS_8hpp_source.html#l00092">GeographicLib::DMS::NUMBER</a>, <a class="el" href="Geoid_8hpp_source.html#l00357">GeographicLib::Geoid::Offset()</a>, <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, <a class="el" href="Geoid_8hpp_source.html#l00349">GeographicLib::Geoid::RMSError()</a>, and <a class="el" href="Geoid_8hpp_source.html#l00365">GeographicLib::Geoid::Scale()</a>.</p>
+<p>References <a class="el" href="Geoid_8hpp_source.html#l00376">GeographicLib::Geoid::Cache()</a>, <a class="el" href="Geoid_8hpp_source.html#l00228">GeographicLib::Geoid::CacheAll()</a>, <a class="el" href="Geoid_8cpp_source.html#l00449">GeographicLib::Geoid::CacheArea()</a>, <a class="el" href="Geoid_8hpp_source.html#l00390">GeographicLib::Geoid::CacheEast()</a>, <a class="el" href="Geoid_8hpp_source.html#l00400">GeographicLib::Geoid::CacheNorth()</a>, <a class="el" href="Geoid_8hpp_source.html#l00408">GeographicLib::Geoid::CacheSouth()</a>, <a class="el" href="Geoid_8hpp_source.html#l00381">GeographicLib::Geoid::CacheWest()</a>, <a class="el" href="Geoid_8hpp_source.html#l00310">GeographicLib::Geoid::DateTime()</a>, <a class="el" href="DMS_8cpp_source.html#l00207">GeographicLib::DMS::DecodeLatLon()</a>, <a class="el" href="UTMUPS_8cpp_source.html#l00185">GeographicLib::UTMUPS::DecodeZone()</a>, <a class="el" href="Geoid_8cpp_source.html#l00540">GeographicLib::Geoid::DefaultGeoidName()</a>, <a class="el" href="Geoid_8cpp_source.html#l00532">GeographicLib::Geoid::DefaultGeoidPath()</a>, <a class="el" href="Geoid_8hpp_source.html#l00305">GeographicLib::Geoid::Description()</a>, <a class="el" href="Geoid_8hpp_source.html#l00156">GeographicLib::Geoid::ELLIPSOIDTOGEOID</a>, <a class="el" href="Geoid_8hpp_source.html#l00315">GeographicLib::Geoid::GeoidFile()</a>, <a class="el" href="Geoid_8hpp_source.html#l00165">GeographicLib::Geoid::GEOIDTOELLIPSOID</a>, <a class="el" href="Geoid_8hpp_source.html#l00331">GeographicLib::Geoid::Interpolation()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00095">GeographicLib::UTMUPS::INVALID</a>, <a class="el" href="Math_8hpp_source.html#l00376">GeographicLib::Math::isnan()</a>, <a class="el" href="GeoCoords_8hpp_source.html#l00229">GeographicLib::GeoCoords::Latitude()</a>, <a class="el" href="GeoCoords_8hpp_source.html#l00234">GeographicLib::GeoCoords::Longitude()</a>, <a class="el" href="Geoid_8hpp_source.html#l00341">GeographicLib::Geoid::MaxError()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00140">GeographicLib::UTMUPS::MAXZONE</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00124">GeographicLib::UTMUPS::MINZONE</a>, <a class="el" href="Geoid_8hpp_source.html#l00160">GeographicLib::Geoid::NONE</a>, <a class="el" href="Geoid_8hpp_source.html#l00358">GeographicLib::Geoid::Offset()</a>, <a class="el" href="GeoCoords_8cpp_source.html#l00026">GeographicLib::GeoCoords::Reset()</a>, <a class="el" href="Geoid_8hpp_source.html#l00350">GeographicLib::Geoid::RMSError()</a>, and <a class="el" href="Geoid_8hpp_source.html#l00366">GeographicLib::Geoid::Scale()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

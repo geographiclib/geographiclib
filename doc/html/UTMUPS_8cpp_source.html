@@ -61,227 +61,239 @@
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;<a class="code" href="MGRS_8hpp.html" title="Header for GeographicLib::MGRS class.">GeographicLib/MGRS.hpp</a>&gt;</span>
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="PolarStereographic_8hpp.html" title="Header for GeographicLib::PolarStereographic class.">GeographicLib/PolarStereographic.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="TransverseMercator_8hpp.html" title="Header for GeographicLib::TransverseMercator class.">GeographicLib/TransverseMercator.hpp</a>&gt;</span>
-<a name="l00015"></a>00015 
-<a name="l00016"></a><a class="code" href="UTMUPS_8cpp.html#af7026e1ac5bb37428765d957f2f14a6b">00016</a> <span class="preprocessor">#define GEOGRAPHICLIB_UTMUPS_CPP &quot;$Id: 3c1fb210730eb1435b45850a22f2ae21175039be $&quot;</span>
-<a name="l00017"></a>00017 <span class="preprocessor"></span>
-<a name="l00018"></a>00018 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="UTMUPS_8cpp.html#af7026e1ac5bb37428765d957f2f14a6b">GEOGRAPHICLIB_UTMUPS_CPP</a>)
-<a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="UTMUPS_8hpp.html#aab4dce5d203c0d98ae740800332ed9d9">GEOGRAPHICLIB_UTMUPS_HPP</a>)
-<a name="l00020"></a>00020 
-<a name="l00021"></a>00021 namespace GeographicLib {
-<a name="l00022"></a>00022 
-<a name="l00023"></a>00023   <span class="keyword">using namespace </span>std;
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::falseeasting_[4] =
-<a name="l00026"></a>00026     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
-<a name="l00027"></a>00027       MGRS::utmeasting_ * MGRS::tile_, MGRS::utmeasting_ * MGRS::tile_ };
-<a name="l00028"></a>00028   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::falsenorthing_[4] =
-<a name="l00029"></a>00029     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
-<a name="l00030"></a>00030       MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
-<a name="l00031"></a>00031   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::mineasting_[4] =
-<a name="l00032"></a>00032     { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
-<a name="l00033"></a>00033       MGRS::minutmcol_ * MGRS::tile_,  MGRS::minutmcol_ * MGRS::tile_ };
-<a name="l00034"></a>00034   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::maxeasting_[4] =
-<a name="l00035"></a>00035     { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
-<a name="l00036"></a>00036       MGRS::maxutmcol_ * MGRS::tile_,  MGRS::maxutmcol_ * MGRS::tile_ };
-<a name="l00037"></a>00037   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::minnorthing_[4] =
-<a name="l00038"></a>00038     { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
-<a name="l00039"></a>00039       MGRS::minutmSrow_ * MGRS::tile_,
-<a name="l00040"></a>00040       (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
-<a name="l00041"></a>00041       * MGRS::tile_ };
-<a name="l00042"></a>00042   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::maxnorthing_[4] =
-<a name="l00043"></a>00043     { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
-<a name="l00044"></a>00044       (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
-<a name="l00045"></a>00045       MGRS::maxutmNrow_ * MGRS::tile_ };
-<a name="l00046"></a>00046 
-<a name="l00047"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a62623c295d1b43318a9fa762c3da94ea">00047</a>   <span class="keywordtype">int</span> UTMUPS::StandardZone(real lat, real lon, <span class="keywordtype">int</span> setzone) {
-<a name="l00048"></a>00048     <span class="keywordflow">if</span> (setzone &lt; MINPSEUDOZONE || setzone &gt; MAXZONE)
-<a name="l00049"></a>00049       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Illegal zone requested &quot;</span> + str(setzone));
-<a name="l00050"></a>00050     <span class="keywordflow">if</span> (setzone &gt;= MINZONE || setzone == INVALID)
-<a name="l00051"></a>00051       <span class="keywordflow">return</span> setzone;
-<a name="l00052"></a>00052     <span class="keywordflow">if</span> (Math::isnan(lat) || Math::isnan(lon)) <span class="comment">// Check if lat or lon is a NaN</span>
-<a name="l00053"></a>00053       <span class="keywordflow">return</span> INVALID;
-<a name="l00054"></a>00054     <span class="comment">// Assume lon is in [-180, 360].</span>
-<a name="l00055"></a>00055     <span class="keywordflow">if</span> (setzone == UTM || (lat &gt;= -80 &amp;&amp; lat &lt; 84)) {
-<a name="l00056"></a>00056       <span class="comment">// Assume lon is in [-180, 360].</span>
-<a name="l00057"></a>00057       <span class="keywordtype">int</span> ilon = int(floor(lon));
-<a name="l00058"></a>00058       <span class="keywordflow">if</span> (ilon &gt;= 180)
-<a name="l00059"></a>00059         ilon -= 360;
-<a name="l00060"></a>00060       <span class="keywordtype">int</span> zone = (ilon + 186)/6;
-<a name="l00061"></a>00061       <span class="keywordtype">int</span> band = MGRS::LatitudeBand(lat);
-<a name="l00062"></a>00062       <span class="keywordflow">if</span> (band == 7 &amp;&amp; zone == 31 &amp;&amp; ilon &gt;= 3)
-<a name="l00063"></a>00063         zone = 32;
-<a name="l00064"></a>00064       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (band == 9 &amp;&amp; ilon &gt;= 0 &amp;&amp; ilon &lt; 42)
-<a name="l00065"></a>00065         zone = 2 * ((ilon + 183)/12) + 1;
-<a name="l00066"></a>00066       <span class="keywordflow">return</span> zone;
-<a name="l00067"></a>00067     } <span class="keywordflow">else</span>
-<a name="l00068"></a>00068       <span class="keywordflow">return</span> UPS;
-<a name="l00069"></a>00069   }
-<a name="l00070"></a>00070 
-<a name="l00071"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">00071</a>   <span class="keywordtype">void</span> UTMUPS::Forward(real lat, real lon,
-<a name="l00072"></a>00072                        <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp, real&amp; x, real&amp; y,
-<a name="l00073"></a>00073                        real&amp; gamma, real&amp; k,
-<a name="l00074"></a>00074                        <span class="keywordtype">int</span> setzone, <span class="keywordtype">bool</span> mgrslimits) {
-<a name="l00075"></a>00075     CheckLatLon(lat, lon);
-<a name="l00076"></a>00076     <span class="keywordtype">bool</span> northp1 = lat &gt;= 0;
-<a name="l00077"></a>00077     <span class="keywordtype">int</span> zone1 = StandardZone(lat, lon, setzone);
-<a name="l00078"></a>00078     <span class="keywordflow">if</span> (zone1 == INVALID) {
-<a name="l00079"></a>00079       zone = zone1;
-<a name="l00080"></a>00080       northp = northp1;
-<a name="l00081"></a>00081       x = y = gamma = k = Math::NaN&lt;real&gt;();
-<a name="l00082"></a>00082       <span class="keywordflow">return</span>;
-<a name="l00083"></a>00083     }
-<a name="l00084"></a>00084     real x1, y1, gamma1, k1;
-<a name="l00085"></a>00085     <span class="keywordtype">bool</span> utmp = zone1 != UPS;
-<a name="l00086"></a>00086     <span class="keywordflow">if</span> (utmp) {
-<a name="l00087"></a>00087       real
-<a name="l00088"></a>00088         lon0 = CentralMeridian(zone1),
-<a name="l00089"></a>00089         dlon = lon - lon0;
-<a name="l00090"></a>00090       dlon = abs(dlon - 360 * floor((dlon + 180)/360));
-<a name="l00091"></a>00091       <span class="keywordflow">if</span> (dlon &gt; 60)
-<a name="l00092"></a>00092         <span class="comment">// Check isn&#39;t really necessary because CheckCoords catches this case.</span>
-<a name="l00093"></a>00093         <span class="comment">// But this allows a more meaningful error message to be given.</span>
-<a name="l00094"></a>00094         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Longitude &quot;</span> + str(lon)
-<a name="l00095"></a>00095                             + <span class="stringliteral">&quot;d more than 60d from center of UTM zone &quot;</span>
-<a name="l00096"></a>00096                             + str(zone1));
-<a name="l00097"></a>00097       TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma1, k1);
-<a name="l00098"></a>00098     } <span class="keywordflow">else</span> {
-<a name="l00099"></a>00099       <span class="keywordflow">if</span> (abs(lat) &lt; 70)
-<a name="l00100"></a>00100         <span class="comment">// Check isn&#39;t really necessary ... (see above).</span>
-<a name="l00101"></a>00101         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lat) + <span class="stringliteral">&quot;d more than 20d from &quot;</span>
-<a name="l00102"></a>00102                             + (northp1 ? <span class="stringliteral">&quot;N&quot;</span> : <span class="stringliteral">&quot;S&quot;</span>) + <span class="stringliteral">&quot; pole&quot;</span>);
-<a name="l00103"></a>00103       PolarStereographic::UPS.Forward(northp1, lat, lon, x1, y1, gamma1, k1);
-<a name="l00104"></a>00104     }
-<a name="l00105"></a>00105     <span class="keywordtype">int</span> ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
-<a name="l00106"></a>00106     x1 += falseeasting_[ind];
-<a name="l00107"></a>00107     y1 += falsenorthing_[ind];
-<a name="l00108"></a>00108     <span class="keywordflow">if</span> (! CheckCoords(zone1 != UPS, northp1, x1, y1, mgrslimits, <span class="keyword">false</span>) )
-<a name="l00109"></a>00109       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lat) + <span class="stringliteral">&quot;, longitude &quot;</span> + str(lon)
-<a name="l00110"></a>00110                           + <span class="stringliteral">&quot; out of legal range for &quot;</span>
-<a name="l00111"></a>00111                           + (utmp ? <span class="stringliteral">&quot;UTM zone &quot;</span> + str(zone1) : <span class="stringliteral">&quot;UPS&quot;</span>));
-<a name="l00112"></a>00112     zone = zone1;
-<a name="l00113"></a>00113     northp = northp1;
-<a name="l00114"></a>00114     x = x1;
-<a name="l00115"></a>00115     y = y1;
-<a name="l00116"></a>00116     gamma = gamma1;
-<a name="l00117"></a>00117     k = k1;
-<a name="l00118"></a>00118   }
-<a name="l00119"></a>00119 
-<a name="l00120"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">00120</a>   <span class="keywordtype">void</span> UTMUPS::Reverse(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, real x, real y,
-<a name="l00121"></a>00121                        real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k,
-<a name="l00122"></a>00122                        <span class="keywordtype">bool</span> mgrslimits) {
-<a name="l00123"></a>00123     <span class="keywordflow">if</span> (zone == INVALID || Math::isnan(x) || Math::isnan(y)) {
-<a name="l00124"></a>00124       lat = lon = gamma = k = Math::NaN&lt;real&gt;();
-<a name="l00125"></a>00125       <span class="keywordflow">return</span>;
-<a name="l00126"></a>00126     }
-<a name="l00127"></a>00127     <span class="keywordflow">if</span> (! (zone &gt;= MINZONE &amp;&amp; zone &lt;= MAXZONE))
-<a name="l00128"></a>00128       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + str(zone) + <span class="stringliteral">&quot; not in range [0, 60]&quot;</span>);
-<a name="l00129"></a>00129     <span class="keywordtype">bool</span> utmp = zone != UPS;
-<a name="l00130"></a>00130     CheckCoords(utmp, northp, x, y, mgrslimits);
-<a name="l00131"></a>00131     <span class="keywordtype">int</span> ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-<a name="l00132"></a>00132     x -= falseeasting_[ind];
-<a name="l00133"></a>00133     y -= falsenorthing_[ind];
-<a name="l00134"></a>00134     <span class="keywordflow">if</span> (utmp)
-<a name="l00135"></a>00135       TransverseMercator::UTM.Reverse(CentralMeridian(zone),
-<a name="l00136"></a>00136                                       x, y, lat, lon, gamma, k);
-<a name="l00137"></a>00137     <span class="keywordflow">else</span>
-<a name="l00138"></a>00138       PolarStereographic::UPS.Reverse(northp, x, y, lat, lon, gamma, k);
-<a name="l00139"></a>00139   }
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141   <span class="keywordtype">void</span> UTMUPS::CheckLatLon(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon) {
-<a name="l00142"></a>00142     <span class="keywordflow">if</span> (lat &lt; -90 || lat &gt; 90)
-<a name="l00143"></a>00143       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lat) + <span class="stringliteral">&quot;d not in [-90d, 90d]&quot;</span>);
-<a name="l00144"></a>00144     <span class="keywordflow">if</span> (lon &lt; -180 || lon &gt; 360)
-<a name="l00145"></a>00145       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + str(lon) + <span class="stringliteral">&quot;d not in [-180d, 360d]&quot;</span>);
-<a name="l00146"></a>00146     }
-<a name="l00147"></a>00147 
-<a name="l00148"></a>00148   <span class="keywordtype">bool</span> UTMUPS::CheckCoords(<span class="keywordtype">bool</span> utmp, <span class="keywordtype">bool</span> northp, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
-<a name="l00149"></a>00149                            <span class="keywordtype">bool</span> mgrslimits, <span class="keywordtype">bool</span> throwp) {
-<a name="l00150"></a>00150     <span class="comment">// Limits are all multiples of 100km and are all closed on the both ends.</span>
-<a name="l00151"></a>00151     <span class="comment">// Failure tests are such that NaNs succeed.</span>
-<a name="l00152"></a>00152     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> slop = mgrslimits ? 0 : MGRS::tile_;
-<a name="l00153"></a>00153     <span class="keywordtype">int</span> ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
-<a name="l00154"></a>00154     <span class="keywordflow">if</span> (x &lt; mineasting_[ind] - slop || x &gt; maxeasting_[ind] + slop) {
-<a name="l00155"></a>00155       <span class="keywordflow">if</span> (!throwp) <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00156"></a>00156       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Easting &quot;</span> + str(x/1000) + <span class="stringliteral">&quot;km not in &quot;</span>
-<a name="l00157"></a>00157                           + (mgrslimits ? <span class="stringliteral">&quot;MGRS/&quot;</span> : <span class="stringliteral">&quot;&quot;</span>)
-<a name="l00158"></a>00158                           + (utmp ? <span class="stringliteral">&quot;UTM&quot;</span> : <span class="stringliteral">&quot;UPS&quot;</span>) + <span class="stringliteral">&quot; range for &quot;</span>
-<a name="l00159"></a>00159                           + (northp ? <span class="stringliteral">&quot;N&quot;</span> : <span class="stringliteral">&quot;S&quot;</span> ) + <span class="stringliteral">&quot; hemisphere [&quot;</span>
-<a name="l00160"></a>00160                           + str((mineasting_[ind] - slop)/1000) + <span class="stringliteral">&quot;km, &quot;</span>
-<a name="l00161"></a>00161                           + str((maxeasting_[ind] + slop)/1000) + <span class="stringliteral">&quot;km]&quot;</span>);
-<a name="l00162"></a>00162     }
-<a name="l00163"></a>00163     <span class="keywordflow">if</span> (y &lt; minnorthing_[ind] - slop || y &gt; maxnorthing_[ind] + slop) {
-<a name="l00164"></a>00164       <span class="keywordflow">if</span> (!throwp) <span class="keywordflow">return</span> <span class="keyword">false</span>;
-<a name="l00165"></a>00165       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Northing &quot;</span> + str(y/1000) + <span class="stringliteral">&quot;km not in &quot;</span>
-<a name="l00166"></a>00166                           + (mgrslimits ? <span class="stringliteral">&quot;MGRS/&quot;</span> : <span class="stringliteral">&quot;&quot;</span>)
-<a name="l00167"></a>00167                           + (utmp ? <span class="stringliteral">&quot;UTM&quot;</span> : <span class="stringliteral">&quot;UPS&quot;</span>) + <span class="stringliteral">&quot; range for &quot;</span>
-<a name="l00168"></a>00168                           + (northp ? <span class="stringliteral">&quot;N&quot;</span> : <span class="stringliteral">&quot;S&quot;</span> ) + <span class="stringliteral">&quot; hemisphere [&quot;</span>
-<a name="l00169"></a>00169                           + str((minnorthing_[ind] - slop)/1000) + <span class="stringliteral">&quot;km, &quot;</span>
-<a name="l00170"></a>00170                           + str((maxnorthing_[ind] + slop)/1000) + <span class="stringliteral">&quot;km]&quot;</span>);
-<a name="l00171"></a>00171     }
-<a name="l00172"></a>00172     <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00173"></a>00173   }
-<a name="l00174"></a>00174 
-<a name="l00175"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">00175</a>   <span class="keywordtype">void</span> UTMUPS::DecodeZone(<span class="keyword">const</span> std::string&amp; zonestr, <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp) {
-<a name="l00176"></a>00176     <span class="keywordtype">unsigned</span> zlen = unsigned(zonestr.size());
-<a name="l00177"></a>00177     <span class="keywordflow">if</span> (zlen == 0)
-<a name="l00178"></a>00178       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Empty zone specification&quot;</span>);
-<a name="l00179"></a>00179     <span class="keywordflow">if</span> (zlen &gt; 3)
-<a name="l00180"></a>00180       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;More than 3 characters in zone specification &quot;</span>
-<a name="l00181"></a>00181                           + zonestr);
-<a name="l00182"></a>00182     <span class="keywordflow">if</span> (zlen == 3 &amp;&amp;
-<a name="l00183"></a>00183         toupper(zonestr[0]) == <span class="charliteral">&#39;I&#39;</span> &amp;&amp;
-<a name="l00184"></a>00184         toupper(zonestr[1]) == <span class="charliteral">&#39;N&#39;</span> &amp;&amp;
-<a name="l00185"></a>00185         toupper(zonestr[2]) == <span class="charliteral">&#39;V&#39;</span>) {
-<a name="l00186"></a>00186       zone = INVALID;
-<a name="l00187"></a>00187       northp = <span class="keyword">false</span>;
-<a name="l00188"></a>00188       <span class="keywordflow">return</span>;
-<a name="l00189"></a>00189     }
-<a name="l00190"></a>00190     <span class="keywordtype">char</span> hemi = toupper(zonestr[zlen - 1]);
-<a name="l00191"></a>00191     <span class="keywordtype">bool</span> northp1 = hemi == <span class="charliteral">&#39;N&#39;</span>;
-<a name="l00192"></a>00192     <span class="keywordflow">if</span> (! (northp1 || hemi == <span class="charliteral">&#39;S&#39;</span>))
-<a name="l00193"></a>00193       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="keywordtype">string</span>(<span class="stringliteral">&quot;Illegal hemisphere letter &quot;</span>) + hemi + <span class="stringliteral">&quot; in &quot;</span>
-<a name="l00194"></a>00194                           + zonestr + <span class="stringliteral">&quot;, specify N or S&quot;</span>);
-<a name="l00195"></a>00195     <span class="keywordflow">if</span> (zlen == 1)
-<a name="l00196"></a>00196       zone = UPS;
-<a name="l00197"></a>00197     <span class="keywordflow">else</span> {
-<a name="l00198"></a>00198       <span class="keyword">const</span> <span class="keywordtype">char</span>* c = zonestr.c_str();
-<a name="l00199"></a>00199       <span class="keywordtype">char</span>* q;
-<a name="l00200"></a>00200       <span class="keywordtype">int</span> zone1 = strtol(c, &amp;q, 10);
-<a name="l00201"></a>00201       <span class="keywordflow">if</span> (q == c)
-<a name="l00202"></a>00202         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;No zone number found in &quot;</span> + zonestr);
-<a name="l00203"></a>00203       <span class="keywordflow">if</span> (q - c != <span class="keywordtype">int</span>(zlen) - 1)
-<a name="l00204"></a>00204         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra text &quot;</span> +
-<a name="l00205"></a>00205                             zonestr.substr(q - c, <span class="keywordtype">int</span>(zlen) - 1 - (q - c)) +
-<a name="l00206"></a>00206                             <span class="stringliteral">&quot; in UTM/UPS zone &quot;</span> + zonestr);
-<a name="l00207"></a>00207       <span class="keywordflow">if</span> (zone1 == UPS)
-<a name="l00208"></a>00208         <span class="comment">// Don&#39;t allow 0N as an alternative to N for UPS coordinates</span>
-<a name="l00209"></a>00209         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Illegal zone 0 in &quot;</span> + zonestr +
-<a name="l00210"></a>00210                             <span class="stringliteral">&quot;, use just &quot;</span> + hemi + <span class="stringliteral">&quot; for UPS&quot;</span>);
-<a name="l00211"></a>00211       <span class="keywordflow">if</span> (!(zone1 &gt;= MINUTMZONE &amp;&amp; zone1 &lt;= MAXUTMZONE))
-<a name="l00212"></a>00212         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + str(zone1) + <span class="stringliteral">&quot; not in range [1, 60]&quot;</span>);
-<a name="l00213"></a>00213       zone = zone1;
-<a name="l00214"></a>00214     }
-<a name="l00215"></a>00215     northp = northp1;
-<a name="l00216"></a>00216   }
-<a name="l00217"></a>00217 
-<a name="l00218"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a3410e1e221158962f34147255653818f">00218</a>   std::string UTMUPS::EncodeZone(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp) {
-<a name="l00219"></a>00219     <span class="keywordflow">if</span> (zone == INVALID)
-<a name="l00220"></a>00220       <span class="keywordflow">return</span> string(<span class="stringliteral">&quot;INV&quot;</span>);
-<a name="l00221"></a>00221     <span class="keywordflow">if</span> (! (zone &gt;= MINZONE &amp;&amp; zone &lt;= MAXZONE))
-<a name="l00222"></a>00222         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + str(zone) + <span class="stringliteral">&quot; not in range [0, 60]&quot;</span>);
-<a name="l00223"></a>00223     ostringstream os;
-<a name="l00224"></a>00224     <span class="keywordflow">if</span> (zone != UPS)
-<a name="l00225"></a>00225       os &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; setw(2) &lt;&lt; zone;
-<a name="l00226"></a>00226     os &lt;&lt; (northp ? <span class="charliteral">&#39;N&#39;</span> : <span class="charliteral">&#39;S&#39;</span>);
-<a name="l00227"></a>00227     <span class="keywordflow">return</span> os.str();
-<a name="l00228"></a>00228   }
-<a name="l00229"></a>00229 
-<a name="l00230"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#abd70d3f90f5c79a09bdd217b67e6729b">00230</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> UTMUPS::UTMShift() throw() { <span class="keywordflow">return</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(MGRS::utmNshift_); }
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 
+<a name="l00017"></a><a class="code" href="UTMUPS_8cpp.html#af7026e1ac5bb37428765d957f2f14a6b">00017</a> <span class="preprocessor">#define GEOGRAPHICLIB_UTMUPS_CPP &quot;$Id: ed0068bb5b8d2003f84d658eaf7e569bb4bb13e2 $&quot;</span>
+<a name="l00018"></a>00018 <span class="preprocessor"></span>
+<a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="UTMUPS_8cpp.html#af7026e1ac5bb37428765d957f2f14a6b">GEOGRAPHICLIB_UTMUPS_CPP</a>)
+<a name="l00020"></a>00020 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="UTMUPS_8hpp.html#aab4dce5d203c0d98ae740800332ed9d9">GEOGRAPHICLIB_UTMUPS_HPP</a>)
+<a name="l00021"></a>00021 
+<a name="l00022"></a>00022 namespace GeographicLib {
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024   <span class="keyword">using namespace </span>std;
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::falseeasting_[4] =
+<a name="l00027"></a>00027     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
+<a name="l00028"></a>00028       MGRS::utmeasting_ * MGRS::tile_, MGRS::utmeasting_ * MGRS::tile_ };
+<a name="l00029"></a>00029   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::falsenorthing_[4] =
+<a name="l00030"></a>00030     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
+<a name="l00031"></a>00031       MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
+<a name="l00032"></a>00032   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::mineasting_[4] =
+<a name="l00033"></a>00033     { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
+<a name="l00034"></a>00034       MGRS::minutmcol_ * MGRS::tile_,  MGRS::minutmcol_ * MGRS::tile_ };
+<a name="l00035"></a>00035   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::maxeasting_[4] =
+<a name="l00036"></a>00036     { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
+<a name="l00037"></a>00037       MGRS::maxutmcol_ * MGRS::tile_,  MGRS::maxutmcol_ * MGRS::tile_ };
+<a name="l00038"></a>00038   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::minnorthing_[4] =
+<a name="l00039"></a>00039     { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
+<a name="l00040"></a>00040       MGRS::minutmSrow_ * MGRS::tile_,
+<a name="l00041"></a>00041       (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
+<a name="l00042"></a>00042       * MGRS::tile_ };
+<a name="l00043"></a>00043   <span class="keyword">const</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a> UTMUPS::maxnorthing_[4] =
+<a name="l00044"></a>00044     { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
+<a name="l00045"></a>00045       (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
+<a name="l00046"></a>00046       MGRS::maxutmNrow_ * MGRS::tile_ };
+<a name="l00047"></a>00047 
+<a name="l00048"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a62623c295d1b43318a9fa762c3da94ea">00048</a>   <span class="keywordtype">int</span> UTMUPS::StandardZone(real lat, real lon, <span class="keywordtype">int</span> setzone) {
+<a name="l00049"></a>00049     <span class="keywordflow">if</span> (setzone &lt; MINPSEUDOZONE || setzone &gt; MAXZONE)
+<a name="l00050"></a>00050       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Illegal zone requested &quot;</span> + Utility::str(setzone));
+<a name="l00051"></a>00051     <span class="keywordflow">if</span> (setzone &gt;= MINZONE || setzone == INVALID)
+<a name="l00052"></a>00052       <span class="keywordflow">return</span> setzone;
+<a name="l00053"></a>00053     <span class="keywordflow">if</span> (Math::isnan(lat) || Math::isnan(lon)) <span class="comment">// Check if lat or lon is a NaN</span>
+<a name="l00054"></a>00054       <span class="keywordflow">return</span> INVALID;
+<a name="l00055"></a>00055     <span class="comment">// Assume lon is in [-180, 360].</span>
+<a name="l00056"></a>00056     <span class="keywordflow">if</span> (setzone == UTM || (lat &gt;= -80 &amp;&amp; lat &lt; 84)) {
+<a name="l00057"></a>00057       <span class="comment">// Assume lon is in [-180, 360].</span>
+<a name="l00058"></a>00058       <span class="keywordtype">int</span> ilon = int(floor(lon));
+<a name="l00059"></a>00059       <span class="keywordflow">if</span> (ilon &gt;= 180)
+<a name="l00060"></a>00060         ilon -= 360;
+<a name="l00061"></a>00061       <span class="keywordtype">int</span> zone = (ilon + 186)/6;
+<a name="l00062"></a>00062       <span class="keywordtype">int</span> band = MGRS::LatitudeBand(lat);
+<a name="l00063"></a>00063       <span class="keywordflow">if</span> (band == 7 &amp;&amp; zone == 31 &amp;&amp; ilon &gt;= 3)
+<a name="l00064"></a>00064         zone = 32;
+<a name="l00065"></a>00065       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (band == 9 &amp;&amp; ilon &gt;= 0 &amp;&amp; ilon &lt; 42)
+<a name="l00066"></a>00066         zone = 2 * ((ilon + 183)/12) + 1;
+<a name="l00067"></a>00067       <span class="keywordflow">return</span> zone;
+<a name="l00068"></a>00068     } <span class="keywordflow">else</span>
+<a name="l00069"></a>00069       <span class="keywordflow">return</span> UPS;
+<a name="l00070"></a>00070   }
+<a name="l00071"></a>00071 
+<a name="l00072"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">00072</a>   <span class="keywordtype">void</span> UTMUPS::Forward(real lat, real lon,
+<a name="l00073"></a>00073                        <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp, real&amp; x, real&amp; y,
+<a name="l00074"></a>00074                        real&amp; gamma, real&amp; k,
+<a name="l00075"></a>00075                        <span class="keywordtype">int</span> setzone, <span class="keywordtype">bool</span> mgrslimits) {
+<a name="l00076"></a>00076     CheckLatLon(lat, lon);
+<a name="l00077"></a>00077     <span class="keywordtype">bool</span> northp1 = lat &gt;= 0;
+<a name="l00078"></a>00078     <span class="keywordtype">int</span> zone1 = StandardZone(lat, lon, setzone);
+<a name="l00079"></a>00079     <span class="keywordflow">if</span> (zone1 == INVALID) {
+<a name="l00080"></a>00080       zone = zone1;
+<a name="l00081"></a>00081       northp = northp1;
+<a name="l00082"></a>00082       x = y = gamma = k = Math::NaN&lt;real&gt;();
+<a name="l00083"></a>00083       <span class="keywordflow">return</span>;
+<a name="l00084"></a>00084     }
+<a name="l00085"></a>00085     real x1, y1, gamma1, k1;
+<a name="l00086"></a>00086     <span class="keywordtype">bool</span> utmp = zone1 != UPS;
+<a name="l00087"></a>00087     <span class="keywordflow">if</span> (utmp) {
+<a name="l00088"></a>00088       real
+<a name="l00089"></a>00089         lon0 = CentralMeridian(zone1),
+<a name="l00090"></a>00090         dlon = lon - lon0;
+<a name="l00091"></a>00091       dlon = abs(dlon - 360 * floor((dlon + 180)/360));
+<a name="l00092"></a>00092       <span class="keywordflow">if</span> (dlon &gt; 60)
+<a name="l00093"></a>00093         <span class="comment">// Check isn&#39;t really necessary because CheckCoords catches this case.</span>
+<a name="l00094"></a>00094         <span class="comment">// But this allows a more meaningful error message to be given.</span>
+<a name="l00095"></a>00095         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Longitude &quot;</span> + Utility::str(lon)
+<a name="l00096"></a>00096                             + <span class="stringliteral">&quot;d more than 60d from center of UTM zone &quot;</span>
+<a name="l00097"></a>00097                             + Utility::str(zone1));
+<a name="l00098"></a>00098       TransverseMercator::UTM.Forward(lon0, lat, lon, x1, y1, gamma1, k1);
+<a name="l00099"></a>00099     } <span class="keywordflow">else</span> {
+<a name="l00100"></a>00100       <span class="keywordflow">if</span> (abs(lat) &lt; 70)
+<a name="l00101"></a>00101         <span class="comment">// Check isn&#39;t really necessary ... (see above).</span>
+<a name="l00102"></a>00102         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + Utility::str(lat)
+<a name="l00103"></a>00103                             + <span class="stringliteral">&quot;d more than 20d from &quot;</span>
+<a name="l00104"></a>00104                             + (northp1 ? <span class="stringliteral">&quot;N&quot;</span> : <span class="stringliteral">&quot;S&quot;</span>) + <span class="stringliteral">&quot; pole&quot;</span>);
+<a name="l00105"></a>00105       PolarStereographic::UPS.Forward(northp1, lat, lon, x1, y1, gamma1, k1);
+<a name="l00106"></a>00106     }
+<a name="l00107"></a>00107     <span class="keywordtype">int</span> ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
+<a name="l00108"></a>00108     x1 += falseeasting_[ind];
+<a name="l00109"></a>00109     y1 += falsenorthing_[ind];
+<a name="l00110"></a>00110     <span class="keywordflow">if</span> (! CheckCoords(zone1 != UPS, northp1, x1, y1, mgrslimits, <span class="keyword">false</span>) )
+<a name="l00111"></a>00111       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + Utility::str(lat)
+<a name="l00112"></a>00112                           + <span class="stringliteral">&quot;, longitude &quot;</span> + Utility::str(lon)
+<a name="l00113"></a>00113                           + <span class="stringliteral">&quot; out of legal range for &quot;</span>
+<a name="l00114"></a>00114                           + (utmp ? <span class="stringliteral">&quot;UTM zone &quot;</span> + Utility::str(zone1) : <span class="stringliteral">&quot;UPS&quot;</span>));
+<a name="l00115"></a>00115     zone = zone1;
+<a name="l00116"></a>00116     northp = northp1;
+<a name="l00117"></a>00117     x = x1;
+<a name="l00118"></a>00118     y = y1;
+<a name="l00119"></a>00119     gamma = gamma1;
+<a name="l00120"></a>00120     k = k1;
+<a name="l00121"></a>00121   }
+<a name="l00122"></a>00122 
+<a name="l00123"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">00123</a>   <span class="keywordtype">void</span> UTMUPS::Reverse(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp, real x, real y,
+<a name="l00124"></a>00124                        real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k,
+<a name="l00125"></a>00125                        <span class="keywordtype">bool</span> mgrslimits) {
+<a name="l00126"></a>00126     <span class="keywordflow">if</span> (zone == INVALID || Math::isnan(x) || Math::isnan(y)) {
+<a name="l00127"></a>00127       lat = lon = gamma = k = Math::NaN&lt;real&gt;();
+<a name="l00128"></a>00128       <span class="keywordflow">return</span>;
+<a name="l00129"></a>00129     }
+<a name="l00130"></a>00130     <span class="keywordflow">if</span> (! (zone &gt;= MINZONE &amp;&amp; zone &lt;= MAXZONE))
+<a name="l00131"></a>00131       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + Utility::str(zone)
+<a name="l00132"></a>00132                           + <span class="stringliteral">&quot; not in range [0, 60]&quot;</span>);
+<a name="l00133"></a>00133     <span class="keywordtype">bool</span> utmp = zone != UPS;
+<a name="l00134"></a>00134     CheckCoords(utmp, northp, x, y, mgrslimits);
+<a name="l00135"></a>00135     <span class="keywordtype">int</span> ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
+<a name="l00136"></a>00136     x -= falseeasting_[ind];
+<a name="l00137"></a>00137     y -= falsenorthing_[ind];
+<a name="l00138"></a>00138     <span class="keywordflow">if</span> (utmp)
+<a name="l00139"></a>00139       TransverseMercator::UTM.Reverse(CentralMeridian(zone),
+<a name="l00140"></a>00140                                       x, y, lat, lon, gamma, k);
+<a name="l00141"></a>00141     <span class="keywordflow">else</span>
+<a name="l00142"></a>00142       PolarStereographic::UPS.Reverse(northp, x, y, lat, lon, gamma, k);
+<a name="l00143"></a>00143   }
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145   <span class="keywordtype">void</span> UTMUPS::CheckLatLon(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon) {
+<a name="l00146"></a>00146     <span class="keywordflow">if</span> (lat &lt; -90 || lat &gt; 90)
+<a name="l00147"></a>00147       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + Utility::str(lat)
+<a name="l00148"></a>00148                           + <span class="stringliteral">&quot;d not in [-90d, 90d]&quot;</span>);
+<a name="l00149"></a>00149     <span class="keywordflow">if</span> (lon &lt; -180 || lon &gt; 360)
+<a name="l00150"></a>00150       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + Utility::str(lon)
+<a name="l00151"></a>00151                           + <span class="stringliteral">&quot;d not in [-180d, 360d]&quot;</span>);
+<a name="l00152"></a>00152     }
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154   <span class="keywordtype">bool</span> UTMUPS::CheckCoords(<span class="keywordtype">bool</span> utmp, <span class="keywordtype">bool</span> northp, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
+<a name="l00155"></a>00155                            <span class="keywordtype">bool</span> mgrslimits, <span class="keywordtype">bool</span> throwp) {
+<a name="l00156"></a>00156     <span class="comment">// Limits are all multiples of 100km and are all closed on the both ends.</span>
+<a name="l00157"></a>00157     <span class="comment">// Failure tests are such that NaNs succeed.</span>
+<a name="l00158"></a>00158     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> slop = mgrslimits ? 0 : MGRS::tile_;
+<a name="l00159"></a>00159     <span class="keywordtype">int</span> ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
+<a name="l00160"></a>00160     <span class="keywordflow">if</span> (x &lt; mineasting_[ind] - slop || x &gt; maxeasting_[ind] + slop) {
+<a name="l00161"></a>00161       <span class="keywordflow">if</span> (!throwp) <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00162"></a>00162       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Easting &quot;</span> + Utility::str(x/1000) + <span class="stringliteral">&quot;km not in &quot;</span>
+<a name="l00163"></a>00163                           + (mgrslimits ? <span class="stringliteral">&quot;MGRS/&quot;</span> : <span class="stringliteral">&quot;&quot;</span>)
+<a name="l00164"></a>00164                           + (utmp ? <span class="stringliteral">&quot;UTM&quot;</span> : <span class="stringliteral">&quot;UPS&quot;</span>) + <span class="stringliteral">&quot; range for &quot;</span>
+<a name="l00165"></a>00165                           + (northp ? <span class="stringliteral">&quot;N&quot;</span> : <span class="stringliteral">&quot;S&quot;</span> ) + <span class="stringliteral">&quot; hemisphere [&quot;</span>
+<a name="l00166"></a>00166                           + Utility::str((mineasting_[ind] - slop)/1000)
+<a name="l00167"></a>00167                           + <span class="stringliteral">&quot;km, &quot;</span>
+<a name="l00168"></a>00168                           + Utility::str((maxeasting_[ind] + slop)/1000)
+<a name="l00169"></a>00169                           + <span class="stringliteral">&quot;km]&quot;</span>);
+<a name="l00170"></a>00170     }
+<a name="l00171"></a>00171     <span class="keywordflow">if</span> (y &lt; minnorthing_[ind] - slop || y &gt; maxnorthing_[ind] + slop) {
+<a name="l00172"></a>00172       <span class="keywordflow">if</span> (!throwp) <span class="keywordflow">return</span> <span class="keyword">false</span>;
+<a name="l00173"></a>00173       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Northing &quot;</span> + Utility::str(y/1000) + <span class="stringliteral">&quot;km not in &quot;</span>
+<a name="l00174"></a>00174                           + (mgrslimits ? <span class="stringliteral">&quot;MGRS/&quot;</span> : <span class="stringliteral">&quot;&quot;</span>)
+<a name="l00175"></a>00175                           + (utmp ? <span class="stringliteral">&quot;UTM&quot;</span> : <span class="stringliteral">&quot;UPS&quot;</span>) + <span class="stringliteral">&quot; range for &quot;</span>
+<a name="l00176"></a>00176                           + (northp ? <span class="stringliteral">&quot;N&quot;</span> : <span class="stringliteral">&quot;S&quot;</span> ) + <span class="stringliteral">&quot; hemisphere [&quot;</span>
+<a name="l00177"></a>00177                           + Utility::str((minnorthing_[ind] - slop)/1000)
+<a name="l00178"></a>00178                           + <span class="stringliteral">&quot;km, &quot;</span>
+<a name="l00179"></a>00179                           + Utility::str((maxnorthing_[ind] + slop)/1000)
+<a name="l00180"></a>00180                           + <span class="stringliteral">&quot;km]&quot;</span>);
+<a name="l00181"></a>00181     }
+<a name="l00182"></a>00182     <span class="keywordflow">return</span> <span class="keyword">true</span>;
+<a name="l00183"></a>00183   }
+<a name="l00184"></a>00184 
+<a name="l00185"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">00185</a>   <span class="keywordtype">void</span> UTMUPS::DecodeZone(<span class="keyword">const</span> std::string&amp; zonestr, <span class="keywordtype">int</span>&amp; zone, <span class="keywordtype">bool</span>&amp; northp) {
+<a name="l00186"></a>00186     <span class="keywordtype">unsigned</span> zlen = unsigned(zonestr.size());
+<a name="l00187"></a>00187     <span class="keywordflow">if</span> (zlen == 0)
+<a name="l00188"></a>00188       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Empty zone specification&quot;</span>);
+<a name="l00189"></a>00189     <span class="keywordflow">if</span> (zlen &gt; 3)
+<a name="l00190"></a>00190       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;More than 3 characters in zone specification &quot;</span>
+<a name="l00191"></a>00191                           + zonestr);
+<a name="l00192"></a>00192     <span class="keywordflow">if</span> (zlen == 3 &amp;&amp;
+<a name="l00193"></a>00193         toupper(zonestr[0]) == <span class="charliteral">&#39;I&#39;</span> &amp;&amp;
+<a name="l00194"></a>00194         toupper(zonestr[1]) == <span class="charliteral">&#39;N&#39;</span> &amp;&amp;
+<a name="l00195"></a>00195         toupper(zonestr[2]) == <span class="charliteral">&#39;V&#39;</span>) {
+<a name="l00196"></a>00196       zone = INVALID;
+<a name="l00197"></a>00197       northp = <span class="keyword">false</span>;
+<a name="l00198"></a>00198       <span class="keywordflow">return</span>;
+<a name="l00199"></a>00199     }
+<a name="l00200"></a>00200     <span class="keywordtype">char</span> hemi = toupper(zonestr[zlen - 1]);
+<a name="l00201"></a>00201     <span class="keywordtype">bool</span> northp1 = hemi == <span class="charliteral">&#39;N&#39;</span>;
+<a name="l00202"></a>00202     <span class="keywordflow">if</span> (! (northp1 || hemi == <span class="charliteral">&#39;S&#39;</span>))
+<a name="l00203"></a>00203       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="keywordtype">string</span>(<span class="stringliteral">&quot;Illegal hemisphere letter &quot;</span>) + hemi + <span class="stringliteral">&quot; in &quot;</span>
+<a name="l00204"></a>00204                           + zonestr + <span class="stringliteral">&quot;, specify N or S&quot;</span>);
+<a name="l00205"></a>00205     <span class="keywordflow">if</span> (zlen == 1)
+<a name="l00206"></a>00206       zone = UPS;
+<a name="l00207"></a>00207     <span class="keywordflow">else</span> {
+<a name="l00208"></a>00208       <span class="keyword">const</span> <span class="keywordtype">char</span>* c = zonestr.c_str();
+<a name="l00209"></a>00209       <span class="keywordtype">char</span>* q;
+<a name="l00210"></a>00210       <span class="keywordtype">int</span> zone1 = strtol(c, &amp;q, 10);
+<a name="l00211"></a>00211       <span class="keywordflow">if</span> (q == c)
+<a name="l00212"></a>00212         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;No zone number found in &quot;</span> + zonestr);
+<a name="l00213"></a>00213       <span class="keywordflow">if</span> (q - c != <span class="keywordtype">int</span>(zlen) - 1)
+<a name="l00214"></a>00214         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra text &quot;</span> +
+<a name="l00215"></a>00215                             zonestr.substr(q - c, <span class="keywordtype">int</span>(zlen) - 1 - (q - c)) +
+<a name="l00216"></a>00216                             <span class="stringliteral">&quot; in UTM/UPS zone &quot;</span> + zonestr);
+<a name="l00217"></a>00217       <span class="keywordflow">if</span> (zone1 == UPS)
+<a name="l00218"></a>00218         <span class="comment">// Don&#39;t allow 0N as an alternative to N for UPS coordinates</span>
+<a name="l00219"></a>00219         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Illegal zone 0 in &quot;</span> + zonestr +
+<a name="l00220"></a>00220                             <span class="stringliteral">&quot;, use just &quot;</span> + hemi + <span class="stringliteral">&quot; for UPS&quot;</span>);
+<a name="l00221"></a>00221       <span class="keywordflow">if</span> (!(zone1 &gt;= MINUTMZONE &amp;&amp; zone1 &lt;= MAXUTMZONE))
+<a name="l00222"></a>00222         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + Utility::str(zone1)
+<a name="l00223"></a>00223                             + <span class="stringliteral">&quot; not in range [1, 60]&quot;</span>);
+<a name="l00224"></a>00224       zone = zone1;
+<a name="l00225"></a>00225     }
+<a name="l00226"></a>00226     northp = northp1;
+<a name="l00227"></a>00227   }
+<a name="l00228"></a>00228 
+<a name="l00229"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#a3410e1e221158962f34147255653818f">00229</a>   std::string UTMUPS::EncodeZone(<span class="keywordtype">int</span> zone, <span class="keywordtype">bool</span> northp) {
+<a name="l00230"></a>00230     <span class="keywordflow">if</span> (zone == INVALID)
+<a name="l00231"></a>00231       <span class="keywordflow">return</span> string(<span class="stringliteral">&quot;INV&quot;</span>);
+<a name="l00232"></a>00232     <span class="keywordflow">if</span> (! (zone &gt;= MINZONE &amp;&amp; zone &lt;= MAXZONE))
+<a name="l00233"></a>00233         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + Utility::str(zone)
+<a name="l00234"></a>00234                             + <span class="stringliteral">&quot; not in range [0, 60]&quot;</span>);
+<a name="l00235"></a>00235     ostringstream os;
+<a name="l00236"></a>00236     <span class="keywordflow">if</span> (zone != UPS)
+<a name="l00237"></a>00237       os &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; setw(2) &lt;&lt; zone;
+<a name="l00238"></a>00238     os &lt;&lt; (northp ? <span class="charliteral">&#39;N&#39;</span> : <span class="charliteral">&#39;S&#39;</span>);
+<a name="l00239"></a>00239     <span class="keywordflow">return</span> os.str();
+<a name="l00240"></a>00240   }
+<a name="l00241"></a>00241 
+<a name="l00242"></a><a class="code" href="classGeographicLib_1_1UTMUPS.html#abd70d3f90f5c79a09bdd217b67e6729b">00242</a>   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> UTMUPS::UTMShift() throw() { <span class="keywordflow">return</span> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(MGRS::utmNshift_); }
+<a name="l00243"></a>00243 
+<a name="l00244"></a>00244 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

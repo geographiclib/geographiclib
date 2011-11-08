@@ -1,0 +1,267 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">
+<title>MagneticField -- compute the earth's magnetic field</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<li><a href="#description">DESCRIPTION</a></li>
+	<li><a href="#options">OPTIONS</a></li>
+	<li><a href="#models">MODELS</a></li>
+	<li><a href="#environment">ENVIRONMENT</a></li>
+	<li><a href="#errors">ERRORS</a></li>
+	<li><a href="#examples">EXAMPLES</a></li>
+	<li><a href="#see_also">SEE ALSO</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#history">HISTORY</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>MagneticField -- compute the earth's magnetic field</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p><strong>MagneticField</strong> [ <strong>-n</strong> <em>name</em> ] [ <strong>-d</strong> <em>dir</em> ] [ <strong>-t</strong> <em>time</em> ]
+[ <strong>-r</strong> ] [ <strong>-T</strong> <em>tguard</em> ] [ <strong>-H</strong> <em>hguard</em> ] [ <strong>-p</strong> <em>prec</em> ]
+[ <strong>-v</strong> ] [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
+[ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
+[ <strong>--output-file</strong> <em>outfile</em> ]</p>
+<p>
+</p>
+<hr />
+<h1><a name="description">DESCRIPTION</a></h1>
+<p><strong>MagneticField</strong> reads in times and positions on standard input and
+prints out the geomagnetic field on standard output and, optionally, its
+rate of change.</p>
+<p>The input line is of the form <em>time</em> <em>lat</em> <em>lon</em> <em>h</em>. <em>time</em> is a
+date of the form 2012-07-03 or a fractional year such as 2012.5.  <em>lat</em>
+and <em>lon</em> are the latitude and longitude expressed as decimal degrees
+or degrees, minutes, and seconds; see <a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a> for details.  <em>h</em>
+is the height above the ellipsoid in meters.  Alternatively, <em>time</em> can
+be given on the commend line as the argument to the <em>-t</em> option, in
+which case it should not be included on the input lines.</p>
+<p>The output consists of the following 7 items:</p>
+<pre>
+  the declination (the direction of the horizontal component of
+    the magnetic field measured clockwise from north) in degrees,
+  the inclination (the direction of the magnetic field measured
+    down from the horizontal) in degrees,
+  the horizontal field in nanotesla (nT),
+  the north component of the field in nT,
+  the east component of the field in nT,
+  the vertical component of the field in nT (down is positive),
+  the total field in nT.</pre>
+<p>If the <strong>-r</strong> option is given, a second line is printed giving the rates
+of change of these quantities in degrees/yr and nT/yr.</p>
+<p>The WGS84 ellipsoid is used, <em>a</em> = 6378137 m, <em>f</em> = 1/298.257223563.</p>
+<p>
+</p>
+<hr />
+<h1><a name="options">OPTIONS</a></h1>
+<dl>
+<dt><strong><a name="n" class="item"><strong>-n</strong></a></strong></dt>
+
+<dd>
+<p>use magnetic field model <em>name</em> instead of the default <code>wmm2010</code>.  See
+<a href="#models">MODELS</a>.</p>
+</dd>
+<dt><strong><a name="d" class="item"><strong>-d</strong></a></strong></dt>
+
+<dd>
+<p>read magnetic models from <em>dir</em> instead of the default.  See
+<a href="#models">MODELS</a>.</p>
+</dd>
+<dt><strong><a name="t" class="item"><strong>-t</strong></a></strong></dt>
+
+<dd>
+<p>evaluate the field at <em>time</em> instead of readig the time from the input
+lines.</p>
+</dd>
+<dt><strong><a name="r" class="item"><strong>-r</strong></a></strong></dt>
+
+<dd>
+<p>toggle whether to report the rates of change of the field.</p>
+</dd>
+<dt><strong><a name="t" class="item"><strong>-T</strong></a></strong></dt>
+
+<dd>
+<p>signal an error if <em>time</em> lies <em>tguard</em> years (default 50 yr) beyond
+the range for the model.</p>
+</dd>
+<dt><strong><a name="h" class="item"><strong>-H</strong></a></strong></dt>
+
+<dd>
+<p>signal an error if <em>h</em> lies <em>hguard</em> meters (default 500000 m) beyond
+the range for the model.</p>
+</dd>
+<dt><strong><a name="p" class="item"><strong>-p</strong></a></strong></dt>
+
+<dd>
+<p>set the precision to <em>prec</em> (default 1).  Fields are printed with
+precision with <em>prec</em> decimal places; angles use <em>prec</em> + 1 places.</p>
+</dd>
+<dt><strong><a name="v" class="item"><strong>-v</strong></a></strong></dt>
+
+<dd>
+<p>print information about the magnetic on standard error before processing
+the input.</p>
+</dd>
+<dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
+
+<dd>
+<p>print version and exit.</p>
+</dd>
+<dt><strong><a name="h" class="item"><strong>-h</strong></a></strong></dt>
+
+<dd>
+<p>print usage, the default magnetic path and name, and exit.</p>
+</dd>
+<dt><strong><a name="help" class="item"><strong>--help</strong></a></strong></dt>
+
+<dd>
+<p>print full documentation and exit.</p>
+</dd>
+<dt><strong><a name="input_file" class="item"><strong>--input-file</strong></a></strong></dt>
+
+<dd>
+<p>read input from the file <em>infile</em> instead of from standard input; a file
+name of &quot;-&quot; stands for standard input.</p>
+</dd>
+<dt><strong><a name="input_string" class="item"><strong>--input-string</strong></a></strong></dt>
+
+<dd>
+<p>read input from the string <em>instring</em> instead of from standard input.
+All the semicolons in <em>instring</em> are converted to newlines before the
+reading begins.</p>
+</dd>
+<dt><strong><a name="output_file" class="item"><strong>--output-file</strong></a></strong></dt>
+
+<dd>
+<p>write output to the file <em>outfile</em> instead of to standard output; a
+file name of &quot;-&quot; stands for standard output.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="models">MODELS</a></h1>
+<p><strong>MagneticField</strong> computes the geomagnetic field using one of the
+following models</p>
+<pre>
+    wmm2010, the World Magnetic Model 2010, which approximates the
+      main magnetic field for the period 2010–2015.  See
+      <a href="http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml">http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml</a>
+    igrf11, the International Geomagnetic Reference Field (11th
+      generation) which approximates the main magnetic field for
+      the period 1900–2015.  See
+      <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">http://ngdc.noaa.gov/IAGA/vmod/igrf.html</a>
+    emm2010, the Enhanced Magnetic Model 2010, which approximates the
+      main and crustal magnetic fields for the period 2010–2015.  See
+      <a href="http://ngdc.noaa.gov/geomag/EMM/index.html">http://ngdc.noaa.gov/geomag/EMM/index.html</a></pre>
+<p>These models approximate the magnetic field due to the earth's core and
+(in the case of emm2010) its crust.  They neglect magnetic fields due to
+the ionosphere, the magnetosphere, nearby magnetized materials,
+electrical machinery, etc.</p>
+<p>By default, the <code>wmm2010</code> magnetic model is used.  This may changed by
+setting the environment variable <a href="#magnetic_name"><code>MAGNETIC_NAME</code></a> or with the <strong>-n</strong>
+option.</p>
+<p>The magnetic models will be loaded from a directory specified at compile
+time.  This may changed by setting the environment variable
+<a href="#magnetic_path"><code>MAGNETIC_PATH</code></a> or with the <strong>-d</strong> option.  The <strong>-h</strong> option prints the
+default magnetic path and name.  Use the <strong>-v</strong> option to ascertain the
+full path name of the data file.</p>
+<p>Instructions for downloading and installing magnetic models are
+available at
+<a href="http://geographiclib.sf.net/html/magnetic.html#magneticinst">http://geographiclib.sf.net/html/magnetic.html#magneticinst</a>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="environment">ENVIRONMENT</a></h1>
+<dl>
+<dt><strong><a name="magnetic_name" class="item"><strong>MAGNETIC_NAME</strong></a></strong></dt>
+
+<dd>
+<p>Override the compile-time default magnetic name of <code>wmm2010</code>.  The <strong>-h</strong>
+option reports the value of <strong>MAGNETIC_NAME</strong>, if defined, otherwise it
+reports the compile-time value.  If the <strong>-n</strong> <em>name</em> option is used,
+then <em>name</em> takes precedence.</p>
+</dd>
+<dt><strong><a name="magnetic_path" class="item"><strong>MAGNETIC_PATH</strong></a></strong></dt>
+
+<dd>
+<p>Override the compile-time default magnetic path.  This is typically
+<code>/usr/local/share/GeographicLib/magnetics</code> on Unix-like systems and
+<code>C:/Documents and Settings/All Users/Application
+Data/GeographicLib/magnetics</code> on Windows systems.  The <strong>-h</strong> option reports
+the value of <strong>MAGNETIC_PATH</strong>, if defined, otherwise it reports the
+compile-time value.  If the <strong>-d</strong> <em>dir</em> option is used, then <em>dir</em>
+takes precedence.</p>
+</dd>
+</dl>
+<p>
+</p>
+<hr />
+<h1><a name="errors">ERRORS</a></h1>
+<p>An illegal line of input will print an error message to standard output
+beginning with <code>ERROR:</code> and causes <strong>MagneticField</strong> to return an exit
+code of 1.  However, an error does not cause <strong>MagneticField</strong> to
+terminate; following lines will be converted.  If <em>time</em> or <em>h</em> are
+outside the recommended ranges for the model (but inside the ranges
+increase by <em>tguard</em> and <em>hguard</em>), a warning is printed on standard
+error and the field (which may be inaccurate) is returned in the normal
+way.</p>
+<p>
+</p>
+<hr />
+<h1><a name="examples">EXAMPLES</a></h1>
+<p>The magnetic field from WMM2010 in Timbuktu on 2012-01-01</p>
+<pre>
+    echo 2012-01-01 &quot;16d46'33N&quot; &quot;3d00'34W&quot; 300 | MagneticField -r
+    =&gt; -2.55 12.43 33771.0 33737.6 -1500.5 7446.0 34582.1
+       0.10 -0.07 34.3 36.8 54.4 -35.3 25.9</pre>
+<p>The first two numbers returned are the declination and inclination of
+the field.  The second line gives the annual change.</p>
+<p>
+</p>
+<hr />
+<h1><a name="see_also">SEE ALSO</a></h1>
+<p><a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a>.</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p><strong>MagneticField</strong> was written by Charles Karney.</p>
+<p>
+</p>
+<hr />
+<h1><a name="history">HISTORY</a></h1>
+<p><strong>MagneticField</strong> was added to GeographicLib,
+<a href="http://geographiclib.sf.net">http://geographiclib.sf.net</a>, in version 1.15.</p>
+
+</body>
+
+</html>

@@ -1,12 +1,11 @@
-# $Id: ff73b99c6d6a25383cbd0b4848e0a5de4cab0432 $
+# $Id: 4036afaf7473621a5a2171ab6ec2d9ee374795d9 $
 PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval Planimeter ConicProj
+	GeoidEval MagneticField Planimeter ConicProj
 
 PODSRC = $(addsuffix .pod,$(PROGRAMS))
 MANPAGES = $(addsuffix .1,$(PROGRAMS))
 USAGE = $(addsuffix .usage,$(PROGRAMS))
 HTMLMAN = $(addsuffix .1.html,$(PROGRAMS))
-
 
 PREFIX = /usr/local
 

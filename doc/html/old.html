@@ -38,6 +38,24 @@
 <div class="contents">
 <div class="textblock"><center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
 <ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-11-08)</a><ul>
+<li>Add ref calculation of the earth's magnetic field:<ul>
+<li>add <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">GeographicLib::MagneticModel</a> and <a class="el" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">GeographicLib::MagneticCircle</a> classes,</li>
+<li>add command line utility <a href="MagneticField.1.html">MagneticField</a>,</li>
+<li>add <a class="el" href="magnetic.html">Magnetic models</a>,</li>
+<li>add <a class="el" href="magnetic.html#magneticinst">Installing the magnetic field models</a>,</li>
+<li>add <a class="el" href="magnetic.html#magneticformat">The format of the magnetic model files</a>,</li>
+<li>add classes <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">GeographicLib::SphericalEngine</a>, <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">GeographicLib::CircularEngine</a>, <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">GeographicLib::SphericalHarmonic</a>, <a class="el" href="classGeographicLib_1_1SphericalHarmonic1.html" title="Spherical Harmonic series with a correction to the coefficients.">GeographicLib::SphericalHarmonic1</a>, and <a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html" title="Spherical Harmonic series with two corrections to the coefficients.">GeographicLib::SphericalHarmonic2</a>. which sum spherical harmonic series.</li>
+</ul>
+</li>
+<li>Add <a class="el" href="classGeographicLib_1_1Utility.html" title="Some utility routines for GeographicLib.">GeographicLib::Utility</a> class to support I/O and date manipulation.</li>
+<li>Cmake configuration includes a _d suffix on the library built in debug mode.</li>
+<li>For the Python package, include manifest and readme files; don't install setup.py for non-Windows systems.</li>
+<li>Include Doxygen tag file in distribution as doc/html/Geographic.tag.</li>
+</ul>
+</li>
+</ul>
+<ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.14.tar.gz/download">1.14 (released 2011-09-30)</a><ul>
 <li>Ensure that geographiclib-config.cmake is relocatable.</li>
 <li>Allow more unicode symbols to be used in <a class="el" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">GeographicLib::DMS::Decode</a>.</li>
@@ -458,7 +476,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Thu Sep 29 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

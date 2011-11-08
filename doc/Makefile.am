@@ -1,4 +1,4 @@
-#  $Id: 3513515f549a6356c4e60722b50fb66082d2ed27 $
+#  $Id: f6788eb5b1b485af82a583bce2d45dbf7d98c637 $
 
 EXTRAFILES = tmseries30.html geodseries30.html
 
@@ -77,6 +77,7 @@ MANPAGES = \
 ../man/GeoConvert.1.html \
 ../man/Geod.1.html \
 ../man/GeoidEval.1.html \
+../man/MagneticField.1.html \
 ../man/Planimeter.1.html \
 ../man/TransverseMercatorProj.1.html
 

@@ -1,4 +1,4 @@
-# $Id: 0d173c64d38567dc806ace24a52bd09ebb61175d $
+# $Id: 7f55fc909eacd64eb5e86bc07a4035e61eed26a8 $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -6,9 +6,10 @@ PROGRAMS = GeoConvert \
 	Geod \
 	GeodesicProj \
 	GeoidEval \
+	MagneticField \
 	Planimeter \
 	ConicProj
-SCRIPTS = geographiclib-get-geoids
+SCRIPTS = geographiclib-get-geoids geographiclib-get-magnetic
 
 all: $(PROGRAMS) $(SCRIPTS)
 
@@ -45,6 +46,7 @@ CartConvert: CartConvert.o
 Geod: Geod.o
 GeodesicProj: GeodesicProj.o
 GeoidEval: GeoidEval.o
+MagneticField: MagneticField.o
 Planimeter: Planimeter.o
 ConicProj: ConicProj.o
 
@@ -62,6 +64,8 @@ GeodesicProj.o: GeodesicProj.usage AzimuthalEquidistant.hpp \
 	DMS.hpp Geodesic.hpp GeodesicLine.hpp
 GeoidEval.o: GeoidEval.usage Constants.hpp Math.hpp Config.h DMS.hpp \
 	GeoCoords.hpp Geoid.hpp
+MagneticField.o: MagneticField.usage Constants.hpp Math.hpp Config.h DMS.hpp \
+	MagneticModel.hpp
 Planimeter.o: Planimeter.usage Constants.hpp Math.hpp Config.h DMS.hpp \
 	GeoCoords.hpp PolygonArea.hpp Geodesic.hpp Accumulator.hpp
 ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
@@ -69,6 +73,10 @@ ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
 
 geographiclib-get-geoids: geographiclib-get-geoids.sh
 	sed -e "s%@GEOID_DEFAULT_PATH@%$(GEOID_DEFAULT_PATH)%" $< > $@
+	chmod +x $@
+
+geographiclib-get-magnetic: geographiclib-get-magnetic.sh
+	sed -e "s%@MAGNETIC_DEFAULT_PATH@%$(MAGNETIC_DEFAULT_PATH)%" $< > $@
 	chmod +x $@
 
 INSTALL = install -b

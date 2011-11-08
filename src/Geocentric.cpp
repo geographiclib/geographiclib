@@ -9,7 +9,7 @@
 
 #include <GeographicLib/Geocentric.hpp>
 
-#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: c883e179e267a6502d04a65bda7a5467aeb2367b $"
+#define GEOGRAPHICLIB_GEOCENTRIC_CPP "$Id: b0ff568567c01468c2238235842d09ab8be527fe $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -162,7 +162,7 @@ namespace GeographicLib {
   }
 
   void Geocentric::Rotation(real sphi, real cphi, real slam, real clam,
-                             real M[dim2_]) const throw() {
+                            real M[dim2_]) throw() {
     // This rotation matrix is given by the following quaternion operations
     // qrot(lam, [0,0,1]) * qrot(phi, [0,-1,0]) * [1,1,1,1]/2
     // or
