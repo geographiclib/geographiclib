@@ -32,24 +32,27 @@ namespace GeographicLib {
    * \brief Model of the earth's magnetic field
    *
    * Evaluate the earth's magnetic field according to a model.  At present only
-   * internal magnetic fields are handling.  These are due to currents and
-   * magnetized rocks in the earth; these vary slowly (over many years).
-   * Excluded are the effects of currents in the ionosphere and magnetosphere
-   * which have daily and annual variations.
+   * internal magnetic fields are handled.  These are due to the earth's code
+   * and crust; these vary slowly (over many years).  Excluded are the effects
+   * of currents in the ionosphere and magnetosphere which have daily and
+   * annual variations.
+   *
+   * See \ref magnetic for details of how to install the magnetic model and the
+   * data format.
    *
    * See
-   * - General information
-   *   http://geomag.org/models/index.html
-   * - WMM2010
-   *   http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
-   *   http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
-   * - IGRF11
-   *   http://ngdc.noaa.gov/IAGA/vmod/igrf.html
-   *   http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
-   *   http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
-   * - EMM2010
-   *   http://ngdc.noaa.gov/geomag/EMM/index.html
-   *   http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
+   * - General information:
+   *   - http://geomag.org/models/index.html
+   * - WMM2010:
+   *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2010/WMM2010COF.zip
+   * - IGRF11:
+   *   - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
+   *   - http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
+   *   - http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
+   * - EMM2010:
+   *   - http://ngdc.noaa.gov/geomag/EMM/index.html
+   *   - http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticModel {
@@ -90,15 +93,13 @@ namespace GeographicLib {
      * compile-time default path is used
      * (/usr/local/share/GeographicLib/magnetic on non-Windows systems and
      * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/geoids on Windows systems).  This may throw an
+     * Data/GeographicLib/magnetic on Windows systems).  This may throw an
      * exception because the file does not exist, is unreadable, or is corrupt.
      *
      * This file contains the metadata which specifies the properties of the
-     * model, it particular the degree and order of the spherical harmonic sums
-     * used to approximate the magnetic potential and its time dependency.  The
-     * coefficients for the spherical harmonic sums are obtained from a file
-     * obtained by appending ".cof" to metadata file (so the filename ends in
-     * ".wwm.cof").
+     * model.  The coefficients for the spherical harmonic sums are obtained
+     * from a file obtained by appending ".cof" to metadata file (so the
+     * filename ends in ".wwm.cof").
      *
      * The model is not tied to a particular ellipsoidal model of the earth.
      * The final earth argument to the constructor specify an ellipsoid to
@@ -113,7 +114,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Evaluate the components of the magnetic field.
+     * Evaluate the components of the geomagnetic field.
      *
      * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).
@@ -131,7 +132,8 @@ namespace GeographicLib {
     }
 
     /**
-     * Evaluate the components of the magnetic field and their time derivatives
+     * Evaluate the components of the geomagnetic field and their time
+     * derivatives
      *
      * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).
@@ -152,7 +154,7 @@ namespace GeographicLib {
     }
 
     /**
-     * Create a MagneticCircle object to allow the magnetic field at many
+     * Create a MagneticCircle object to allow the geomagnetic field at many
      * points with constant \e lat, \e h, and \e t and varying \e lon to be
      * computed efficienty.
      *
@@ -191,7 +193,7 @@ namespace GeographicLib {
     MagneticCircle Circle(real lat, real h, real t) const;
 
     /**
-     * Compute various quantities dependent on B.
+     * Compute various quantities dependent on the magnetic field.
      *
      * @param[in] Bx the \e x (easterly) component of the magnetic field (nT).
      * @param[in] By the \e y (northerly) component of the magnetic field (nT).
@@ -211,7 +213,8 @@ namespace GeographicLib {
     }
 
     /**
-     * Compute various quantities dependent on B and its rate of change.
+     * Compute various quantities dependent on the magnetic field and its rate
+     * of change.
      *
      * @param[in] Bx the \e x (easterly) component of the magnetic field (nT).
      * @param[in] By the \e y (northerly) component of the magnetic field (nT).
@@ -240,35 +243,35 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return geoid description, if available, in the data file; if
-     *   absent, return "NONE".
+     * @return the description of the magnetic model, if available, in the data
+     *   file; if absent, return "NONE".
      **********************************************************************/
     const std::string& Description() const throw() { return _description; }
 
     /**
-     * @return date of the data file; if absent, return "UNKNOWN".
+     * @return date of the model; if absent, return "UNKNOWN".
      **********************************************************************/
     const std::string& DateTime() const throw() { return _date; }
 
     /**
-     * @return full file name used to load the magnetic data.
+     * @return full file name used to load the magnetic model.
      **********************************************************************/
     const std::string& MagneticFile() const throw() { return _filename; }
 
     /**
-     * @return "name" used to load the geoid data (from the first argument of
-     *   the constructor).
+     * @return "name" used to load the magnetic model (from the first argument
+     *   of the constructor, but this may be overridden by the model file).
      **********************************************************************/
     const std::string& MagneticModelName() const throw() { return _name; }
 
     /**
-     * @return directory used to load the geoid data.
+     * @return directory used to load the magnetic model.
      **********************************************************************/
     const std::string& MagneticModelDirectory() const throw() { return _dir; }
 
     /**
-     * @return the minimum height above the ellipsoid (in meters) for this this
-     *   MagneticModel should be used.
+     * @return the minimum height above the ellipsoid (in meters) for which
+     *   this MagneticModel should be used.
      *
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t
@@ -278,8 +281,8 @@ namespace GeographicLib {
     Math::real MinHeight() const throw() { return _hmin; }
 
     /**
-     * @return the maximum height above the ellipsoid (in meters) for this this
-     *   MagneticModel should be used.
+     * @return the maximum height above the ellipsoid (in meters) for which
+     *   this MagneticModel should be used.
      *
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t
@@ -289,8 +292,8 @@ namespace GeographicLib {
     Math::real MaxHeight() const throw() { return _hmax; }
 
     /**
-     * @return the minimum time (in years) for this this MagneticModel
-     *   should be used.
+     * @return the minimum time (in years) for which this MagneticModel should
+     *   be used.
      *
      * Because the model will typically provide useful results
      * slightly outside the range of allowed times, no check of \e t
@@ -300,8 +303,8 @@ namespace GeographicLib {
     Math::real MinTime() const throw() { return _tmin; }
 
     /**
-     * @return the maximum time (in years) for this this MagneticModel
-     *   should be used.
+     * @return the maximum time (in years) for which this MagneticModel should
+     *   be used.
      *
      * Because the model will typically provide useful results
      * slightly outside the range of allowed times, no check of \e t

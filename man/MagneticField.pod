@@ -15,25 +15,25 @@ B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-t> I<time> ]
 =head1 DESCRIPTION
 
 B<MagneticField> reads in times and positions on standard input and
-prints out the magnetic field on standard output and, optionally, its
+prints out the geomagnetic field on standard output and, optionally, its
 rate of change.
 
 The input line is of the form I<time> I<lat> I<lon> I<h>. I<time> is a
 date of the form 2012-07-03 or a fractional year such as 2012.5.  I<lat>
 and I<lon> are the latitude and longitude expressed as decimal degrees
-or degrees, minutes, and seconds; see by GeoConvert(1).  I<h> is the
-height above the ellipsoid in meters.  I<time> can be given on the
-commend line as the argument to the I<-t> options, in which case it
-should not be included on the input lines.
+or degrees, minutes, and seconds; see GeoConvert(1) for details.  I<h>
+is the height above the ellipsoid in meters.  Alternatively, I<time> can
+be given on the commend line as the argument to the I<-t> option, in
+which case it should not be included on the input lines.
 
 The output consists of the following 7 items:
 
   the declination (the direction of the horizontal component of
-    the field measure clockwise from north) in degrees,
+    the magnetic field measured clockwise from north) in degrees,
   the inclination (the direction of the magnetic field measured
     down from the horizontal) in degrees,
   the horizontal field in nanotesla (nT),
-  the north component for the field in nT,
+  the north component of the field in nT,
   the east component of the field in nT,
   the vertical component of the field in nT (down is positive),
   the total field in nT.
@@ -54,12 +54,12 @@ L<MODELS|models>.
 
 =item B<-d>
 
-read magnetic data from I<dir> instead of the default.  See
+read magnetic models from I<dir> instead of the default.  See
 L<MODELS|models>.
 
 =item B<-t>
 
-evaluate the field at I<time> instead of expecting the time on the input
+evaluate the field at I<time> instead of readig the time from the input
 lines.
 
 =item B<-r>
@@ -118,8 +118,8 @@ file name of "-" stands for standard output.
 
 =head1 MODELS
 
-B<MagneticField> computes the magnetic field using one of the following
-models
+B<MagneticField> computes the geomagnetic field using one of the
+following models
 
     wmm2010, the World Magnetic Model 2010, which approximates the
       main magnetic field for the period 2010–2015.  See
@@ -137,16 +137,18 @@ These models approximate the magnetic field due to the earth's core and
 the ionosphere, the magnetosphere, nearby magnetized materials,
 electrical machinery, etc.
 
-By default, the C<wmm2010> magnetic is used.  This may changed by setting
-the environment variable C<MAGNETIC_NAME> or with the B<-n> option.
+By default, the C<wmm2010> magnetic model is used.  This may changed by
+setting the environment variable C<MAGNETIC_NAME> or with the B<-n>
+option.
 
-The magnetic data will be loaded from a directory specified at compile
+The magnetic models will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variable
 C<MAGNETIC_PATH> or with the B<-d> option.  The B<-h> option prints the
-default magnetic path and name.  Use the B<-v> option to ascertain the full
-path name of the data file.
+default magnetic path and name.  Use the B<-v> option to ascertain the
+full path name of the data file.
 
-Instructions for downloading and installing magnetic data are available at
+Instructions for downloading and installing magnetic models are
+available at
 L<http://geographiclib.sf.net/html/magnetic.html#magneticinst>.
 
 =head1 ENVIRONMENT

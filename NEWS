@@ -6,7 +6,25 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.14.
+The current version of the library is 1.15.
+
+Changes between 1.15 (released 2011-11-08) and 1.14 versions:
+
+  * Add ref calculation of the earth's magnetic field:
+    + add MagneticModel and MagneticCircle classes,
+    + add command line utility MagneticField,
+    + add Magnetic models,
+    + add Installing the magnetic field models,
+    + add The format of the magnetic model files,
+    + add classes SphericalEngine, CircularEngine, SphericalHarmonic,
+      SphericalHarmonic1, and SphericalHarmonic2. which sum spherical
+      harmonic series.
+  * Add Utility class to support I/O and date manipulation.
+  * Cmake configuration includes a _d suffix on the library built in
+    debug mode.
+  * For the Python package, include manifest and readme files; don't
+    install setup.py for non-Windows systems.
+  * Include Doxygen tag file in distribution as doc/html/Geographic.tag.
 
 Changes between 1.14 (released 2011-09-30) and 1.13 versions:
 

@@ -18,12 +18,12 @@
 namespace GeographicLib {
 
   /**
-   * \brief Magnetic field on a circle of latitude
+   * \brief Geomagnetic field on a circle of latitude
    *
-   * Evaluate the earth's magnetic field according on a circle of constant
-   * height and latitude.  This uses a CircleEngine to pre-evaluate the inner
-   * sum of the spherical harmonic sum, allowing the values of the field at
-   * different latitude to be evaluated rapidly.
+   * Evaluate the earth's magnetic field on a circle of constant height and
+   * latitude.  This uses a CircleEngine to pre-evaluate the inner sum of the
+   * spherical harmonic sum, allowing the values of the field at different
+   * latitude to be evaluated rapidly.
    *
    * Use MagneticModel::Circle to create a MagneticCircle object.  (The
    * constructor for this class is private.)
@@ -59,7 +59,8 @@ namespace GeographicLib {
   public:
 
     /**
-     * Evaluate the components of the magnetic field at a particular longitude.
+     * Evaluate the components of the geomagnetic field at a particular
+     * longitude.
      *
      * @param[in] lon longitude of the point (degrees).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).
@@ -73,8 +74,8 @@ namespace GeographicLib {
     }
 
     /**
-     * Evaluate the components of the magnetic field and their time derivatives
-     * at a particular longitude.
+     * Evaluate the components of the geomagnetic field and their time
+     * derivatives at a particular longitude.
      *
      * @param[in] lon longitude of the point (degrees).
      * @param[out] Bx the easterly component of the magnetic field (nanotesla).

@@ -13,14 +13,14 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.15
-\date 2011-mm-dd
+\date 2011-11-08
 
 \section abstract Abstract
 
 %GeographicLib is a small set of <a href="annotated.html">C++
 classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for geoid height and
-magnetic field calculations, and for solving geodesic problems.  The
+geomagnetic field calculations, and for solving geodesic problems.  The
 emphasis is on returning accurate results with errors close to round-off
 (about 5&ndash;15 nm).  New accurate algorithms for \ref geodesic and
 \ref transversemercator have been developed for this library.  The
@@ -95,7 +95,7 @@ of geographic transformations.  It grew out of a desire to improve on
 the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
 present, %GeographicLib provides UTM, UPS, MGRS, geocentric, and local
-cartesian projections, geoid heights, magnetic field models, and classes
+cartesian projections, geoid heights, geomagnetic field models, and classes
 for geodesic calculations.
 
 The goals of %GeographicLib are:
@@ -2637,7 +2637,7 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-11-08)</a>
   - Add ref calculation of the earth's magnetic field:
     - add GeographicLib::MagneticModel and GeographicLib::MagneticCircle
       classes,

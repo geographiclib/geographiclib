@@ -20,6 +20,7 @@ Files
       Constants.hpp -- WGS84 constants
       Math.hpp -- math routines
       Accumulator.hpp -- quad precision adder
+      Utility.hpp -- I/O and date routines
       PolarStereographic.[ch]pp -- polar stereographic projection
       TransverseMercator.[ch]pp -- transverse Mercator projection
       UTMUPS.[ch]pp -- UTM and UPS
@@ -37,6 +38,9 @@ Files
       Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
+      Magnetic{Model,Circle}.[ch]pp -- geomagentic models
+      {Spherical,Circular}Engine.[ch]pp -- spherical harmonic sums
+      SphericalHarmonic{,1,2}.hpp -- frontend for spherical harmonics
       LambertConformalConic.[ch]pp -- Lambert conformal conic projection
       AlbersEqualArea.[ch]pp -- Albers equal area projection
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
@@ -49,7 +53,10 @@ Files
       CartConvert.cpp -- convert to geocentric and local cartesian
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
+      MagneticField.cpp -- evaluate magnetic field
       Planimeter.cpp -- computer polygon areas
+      geographiclib-get-geoids -- download geoid datasets
+      geographiclib-get-magnetic -- download geomagnetic models
 
     windows/
       GeographicLib-vc9.sln -- MS Studio 2008 solution
@@ -61,6 +68,7 @@ Files
       CartConvert-vc9.vcproj -- project for CartConvert
       EquidistantTest-vc9.vcproj -- project for EquidistantTest
       GeoidEval-vc9.vcproj -- project for GeoidEval
+      MagneticField-vc9.vcproj -- project for MagneticField
       also files for MS Studio 2005 (with vc8)
       also files for MS Studio 2010 (with vc10)
 
@@ -97,7 +105,7 @@ Files
       *.1.html -- man pages in html format
       *.usage -- documentation for incorporation into executables
 
-    python/GeographicLib.py -- Python implementation of geodesics
+    python/GeographicLib/*.py -- Python implementation of geodesics
 
     Makefile.mk -- Unix/Linux makefiles
     configure -- autoconf configuration script
