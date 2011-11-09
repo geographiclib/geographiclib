@@ -2638,7 +2638,7 @@ style of numbering.  Now, the library uses a major and minor version
 number.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-11-08)</a>
-  - Add ref calculation of the earth's magnetic field:
+  - Add calculation of the earth's magnetic field:
     - add GeographicLib::MagneticModel and GeographicLib::MagneticCircle
       classes,
     - add command line utility
