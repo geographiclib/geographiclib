@@ -415,6 +415,23 @@ namespace GeographicLib {
                                    std::vector<IntT>& array) {
       readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
+
+    /**
+     * Parse a KEY VALUE line.
+     *
+     * @param[in] line the input line.
+     * @param[out] key the key.
+     * @param[out] val the value.
+     * @return whether a key was found.
+     *
+     * A # character and everything after it are discarded.  If the results is
+     * just white space, the routine returns false (and \e key and \e val are
+     * not set).  Otherwise the first token is taken to be the key and the rest
+     * of the line (trimmed of leading and trailing white space) is the value.
+     **********************************************************************/
+    static bool ParseLine(const std::string& line,
+                          std::string& key, std::string& val);
+
   };
 
 } // namespace GeographicLib
