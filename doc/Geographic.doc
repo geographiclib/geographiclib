@@ -1660,7 +1660,7 @@ stands for "World Magnetic Model Format" and v is the version number of
 the format (currently "1").
 
 The rest of the File is read a line at a time.  A # character and
-everything after it is discarded.  If the result is just white space it
+everything after it are discarded.  If the result is just white space it
 is discarded.  The remaining lines are of the form "KEY WHITESPACE
 VALUE".  In general, the KEY and the VALUE are case-sensitive.
 
