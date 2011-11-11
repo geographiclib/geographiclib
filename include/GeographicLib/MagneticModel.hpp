@@ -71,8 +71,6 @@ namespace GeographicLib {
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const throw();
     void ReadMetadata(const std::string& name);
-    static bool ParseLine(const std::string& line,
-                          std::string& key, std::string& val);
   public:
 
     /** \name Setting up the magnetic model
