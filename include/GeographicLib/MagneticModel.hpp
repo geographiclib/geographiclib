@@ -71,6 +71,8 @@ namespace GeographicLib {
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const throw();
     void ReadMetadata(const std::string& name);
+    MagneticModel(const MagneticModel&); // copy constructor not allowed
+    MagneticModel& operator=(const MagneticModel&); // nor copy assignment
   public:
 
     /** \name Setting up the magnetic model
@@ -104,8 +106,9 @@ namespace GeographicLib {
      * allow geodetic coordinates to the transformed into the spherical
      * coordinates used in the spherical harmonic sum.
      **********************************************************************/
-    MagneticModel(const std::string& name, const std::string& path = "",
-                  const Geocentric& earth = Geocentric::WGS84);
+    explicit MagneticModel(const std::string& name,
+                           const std::string& path = "",
+                           const Geocentric& earth = Geocentric::WGS84);
     ///@}
 
     /** \name Compute the magnetic field
