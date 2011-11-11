@@ -20,21 +20,21 @@ option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
 if (WIN32)
   set (GEOGRAPHICLIB_GEOID_PATH
     "C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids"
-    CACHE STRING "Location for geoid data")
+    CACHE PATH "Location for geoid data")
 else (WIN32)
   set (GEOGRAPHICLIB_GEOID_PATH
     "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/geoids"
-    CACHE STRING "Location for geoid data")
+    CACHE PATH "Location for geoid data")
 endif (WIN32)
 
 if (WIN32)
   set (GEOGRAPHICLIB_MAGNETIC_PATH
     "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
-    CACHE STRING "Location for magnetic models")
+    CACHE PATH "Location for magnetic models")
 else (WIN32)
   set (GEOGRAPHICLIB_MAGNETIC_PATH
     "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/magnetic"
-    CACHE STRING "Location for magnetic models")
+    CACHE PATH "Location for magnetic models")
 endif (WIN32)
 
 set (CMAKE_DEBUG_POSTFIX _d)
