@@ -93,8 +93,8 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
-    template<typename T>
-    static inline T WGS84_a() throw() { return T(6378137) * meter<T>(); }
+    template<typename T> static inline T WGS84_a() throw()
+    { return T(6378137) * meter<T>(); }
     /**
      * A synonym for WGS84_a<real>().
      **********************************************************************/
@@ -103,10 +103,8 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
-    template<typename T>
-    static inline T WGS84_f() throw() {
-      return T(1) / ( T(298) + T(257223563) / T(1000000000) );
-    }
+    template<typename T> static inline T WGS84_f() throw()
+    { return T(1) / ( T(298) + T(257223563) / T(1000000000) ); }
     /**
      * A synonym for WGS84_f<real>().
      **********************************************************************/
@@ -115,8 +113,8 @@ namespace GeographicLib {
      * <b>DEPRECATED</b>
      * @return the reciprocal flattening of WGS84 ellipsoid.
      **********************************************************************/
-    template<typename T>
-    static inline T WGS84_r() throw() { return 1/WGS84_f<T>(); }
+    template<typename T> static inline T WGS84_r() throw()
+    { return 1/WGS84_f<T>(); }
     /**
      * <b>DEPRECATED</b>
      * A synonym for WGS84_r<real>().
@@ -126,8 +124,8 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
-    template<typename T>
-    static inline T UTM_k0() throw() {return T(9996) / T(10000); }
+    template<typename T> static inline T UTM_k0() throw()
+    {return T(9996) / T(10000); }
     /**
      * A synonym for UTM_k0<real>().
      **********************************************************************/
@@ -136,8 +134,8 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the central scale factor for UPS (0.994).
      **********************************************************************/
-    template<typename T>
-    static inline T UPS_k0() throw() { return T(994) / T(1000); }
+    template<typename T> static inline T UPS_k0() throw()
+    { return T(994) / T(1000); }
     /**
      * A synonym for UPS_k0<real>().
      **********************************************************************/
@@ -154,8 +152,7 @@ namespace GeographicLib {
      * This is unity, but this lets the internal system of units be changed if
      * necessary.
      **********************************************************************/
-    template<typename T>
-    static inline T meter() throw() { return T(1); }
+    template<typename T> static inline T meter() throw() { return T(1); }
     /**
      * A synonym for meter<real>().
      **********************************************************************/
@@ -179,8 +176,7 @@ namespace GeographicLib {
      * This is unity, but this lets the internal system of units be changed if
      * necessary.
      **********************************************************************/
-    template<typename T>
-      static inline T square_meter() throw()
+    template<typename T> static inline T square_meter() throw()
     { return meter<real>() * meter<real>(); }
     /**
      * A synonym for square_meter<real>().
