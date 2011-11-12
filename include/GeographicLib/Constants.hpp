@@ -122,6 +122,33 @@ namespace GeographicLib {
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
      * @tparam T the type of the returned value.
+     * @return the equatorial radius of GRS80 ellipsoid, \e a, in m.
+     **********************************************************************/
+    template<typename T> static inline T GRS80_a() throw()
+    { return T(6378137); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the gravitational constant of the GRS80 ellipsoid, \e GM, in
+     *   m<sup>3</sup> s<sup>-2</sup>.
+     **********************************************************************/
+    template<typename T> static inline T GRS80_GM() throw()
+    { return T(3986005) * T(100000000); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the dynamtical form factor of the GRS80 ellipsoid,
+     *   <i>J</i><sub>2</sub>.
+     **********************************************************************/
+    template<typename T> static inline T GRS80_J2() throw()
+    { return T(108263) / T(100000000); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the angular velocity of the the GRS80 ellipsoid, \e omega, in
+     *   s<sup>-1</sup>.
+     **********************************************************************/
+    template<typename T> static inline T GRS80_omega() throw()
+    { return T(7292115) / (T(1000000) * T(100000)); }
+    /**
+     * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
     template<typename T> static inline T UTM_k0() throw()
