@@ -47,6 +47,7 @@ namespace GeographicLib {
         _e2 = _f * (2 - _f);
         _ep2 = _e2 / (1 - _e2);
         _q0 = qf(_ep2);
+        // H+M, Eq 2-90
         _J2 = _e2 * ( 1 - K * sqrt(_e2) / _q0);
       } else {
         _e2 = 3 * _J2;
@@ -94,12 +95,16 @@ namespace GeographicLib {
                        Constants::GRS80_omega<real>());
 
   Math::real NormalGravity::qf(real ep2) throw() {
+    // Compute
+    //
+    //  ((1 + 3/e'^2) * atan(e')  - 3/e')/2
+    //
     // See H+M, Eq 2-57, with E/u = ep
     real ep = sqrt(ep2);
     if (abs(ep2) >  real(0.25))
       return ((1 + 3 / ep2) * atan(ep)  - 3 / ep)/2;
     else {
-      // The series expansion of ((1 + 3/e'^2) * atan(e')  - 3/e')/2
+      // The series expansion H+M, Eq 2-86
       real
         ep2n = 1,
         q = 0;
@@ -118,12 +123,16 @@ namespace GeographicLib {
   }
 
   Math::real NormalGravity::qpf(real ep2) throw() {
+    // Compute
+    //
+    //  3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
+    //
     // See H+M, Eq 2-67, with E/u = ep
     if (abs(ep2) > real(0.25)) {
       real ep = sqrt(ep2);
       return 3 * (1 + 1 / ep2) * (1 - atan(ep) / ep) - 1;
     } else {
-      // The series expansion of 3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
+      // The series expansion H+M, Eq 2-101c
       real
         ep2n = 1,
         qp = 0;
@@ -149,7 +158,7 @@ namespace GeographicLib {
     real e2n = 1;            // Perhaps this should just be e2n = pow(-_e2, n);
     for (int j = n; j--;)
       e2n *= -_e2;
-    return
+    return                      // H+M, Eq 2-92
       -3 * e2n * (1 - n + 5 * n * _J2 / _e2) / ((2 * n + 1) * (2 * n + 3));
   }
 
@@ -157,6 +166,7 @@ namespace GeographicLib {
     real
       phi = lat * Math::degree<real>(),
       sphi2 = abs(lat) == 90 ? 1 : Math::sq(sin(phi));
+    // H+M, Eq 2-78
     return _gammae * (1 + _k * sphi2) / sqrt(1 - _e2 * sphi2);
   }
 

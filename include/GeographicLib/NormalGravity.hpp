@@ -20,6 +20,19 @@ namespace GeographicLib {
   /**
    * \brief The normal gravity of the earth
    *
+   * "Normal" gravity refers to an idealization of the earth which is modeled
+   * as an rotating ellipsoid.  The eccentricity of the ellipsoid, the rotation
+   * speed, and the distribution of mass within the ellipsoid are such that the
+   * surface of the ellipsoid is a surface of constant potential (gravitational
+   * plus centrifugal).  The acceleration due to gravity is therefore normal to
+   * the surface of the ellipsoid.
+   *
+   * There is a closed solution to this problem and this is implemented here.
+   * Series "approximations" are only used to evaluate certain combinations of
+   * elementary functions where using the closed expression results in a loss
+   * of accuracy due to cancellations.  However these series include sufficient
+   * terms to give full machine precision.
+   *
    * References:
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
    *   Fransisco, 1967), Secs. 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
@@ -55,7 +68,16 @@ namespace GeographicLib {
      *   the value of \e flatp).
      * @param[in] omega the angular velociry (rad s<sup>-1</sup>).
      * @param[in] flatp if true then the flattening \e f is specified as the
-     *   3rd argument instead of <i>J</i><sub>2</sub> (default = false)
+     *   3rd argument instead of <i>J</i><sub>2</sub> (default = false).
+     *
+     * The shape of the ellipsoid can be given in one of two ways:
+     * - geometrically (\e flatp = true), then the 3rd argument represents the
+     *   flattening \e f = (\e a - \e b) / \e a, where \e a and \e b are the
+     *   equatorial radius and the polar semi-axis.
+     * - physically (\e flatp = false, the default), then the 3rd argument
+     *   represents the dynamical form factor <i>J</i><sub>2</sub> = (\e C - \e
+     *   A) / <i>Ma</i><sup>2</sup>, where \e A and \e C are the equatorial and
+     *   polar moments of inertia and \e M is the mass of the earth.
      **********************************************************************/
     NormalGravity(real a, real GM, real J2, real omega, bool flatp = false);
     ///@}
@@ -76,7 +98,8 @@ namespace GeographicLib {
     Math::real SurfaceGravity(real lat) const throw();
 
     /**
-     * Evaluate the gravity at an arbitrary point above the ellipsoid.
+     * Evaluate the gravity at an arbitrary point above (or below) the
+     * ellipsoid.
      *
      * @param[in] lat the geographic latitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
@@ -110,6 +133,12 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real U(real x, real y, real z,
                  real& gx, real& gy, real& gz) const throw();
+    /**
+     * The same as NormalGravity::U, but evaluated with a finite set of
+     * spherical harmonics.
+     **********************************************************************/
+    Math::real Useries(real x, real y, real z,
+                       real& gx, real& gy, real& gz) const throw();
 
     /**
      * Evaluate the components of the acceleration due to gravity alone in
@@ -133,6 +162,13 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real V(real x, real y, real z,
                  real& gx, real& gy, real& gz) const throw();
+
+    /**
+     * The same as NormalGravity::V, but evaluated with a finite set of
+     * spherical harmonics.
+     **********************************************************************/
+    Math::real Vseries(real x, real y, real z,
+                       real& gx, real& gy, real& gz) const throw();
     /**
      * Evaluate the centrifugal acceleration in geocentric coordinates.
      *
@@ -149,10 +185,6 @@ namespace GeographicLib {
      * NormalGravity::Phi.
      **********************************************************************/
     Math::real Phi(real x, real y, real& gx, real& gy) const throw();
-    Math::real Useries(real x, real y, real z,
-                       real& gx, real& gy, real& gz) const throw();
-    Math::real Vseries(real x, real y, real z,
-                       real& gx, real& gy, real& gz) const throw();
     ///@}
 
     /** \name Inspector functions
