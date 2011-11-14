@@ -47,11 +47,9 @@ namespace GeographicLib {
         _e2 = _f * (2 - _f);
         _ep2 = _e2 / (1 - _e2);
         _q0 = qf(_ep2);
-        // H+M, Eq 2-90
-        _J2 = _e2 * ( 1 - K * sqrt(_e2) / _q0);
+        _J2 = _e2 * ( 1 - K * sqrt(_e2) / _q0); // H+M, Eq 2-90
       } else {
-        _e2 = 3 * _J2;
-        // See Moritz (1980), p 398.
+        _e2 = 3 * _J2;          // See Moritz (1980), p 398.
         for (int j = 0; j < maxit_; ++j) {
           real e2a = _e2;
           real q0 = qf(_e2 / (1 - _e2));
@@ -65,24 +63,20 @@ namespace GeographicLib {
         _earth = Geocentric(_a, _f);
       }
       _b = _a * (1 - _f);
-      _E = a * sqrt(_e2);
-      _U0 = _GM / _E * atan(sqrt(_ep2)) + _aomega2 / 3;
-      _m = _aomega2 * _b / _GM;
+      _E = a * sqrt(_e2);                               // H+M, Eq 2-54
+      _U0 = _GM / _E * atan(sqrt(_ep2)) + _aomega2 / 3; // H+M, Eq 2-61
+      _m = _aomega2 * _b / _GM;                         // H+M, Eq 2-70
       real
         Q = _m * sqrt(_ep2) * qpf(_ep2) / (3 * _q0),
         G = (1 - _m - Q / 2);
-      _gammae = _GM / (_a * _b) * G;
-      _gammap = _GM / (_a * _a) * (1 + Q);
+      _gammae = _GM / (_a * _b) * G;       // H+M, Eq 2-73
+      _gammap = _GM / (_a * _a) * (1 + Q); // H+M, Eq 2-74
       // k = b * gammap / (a * gammae) - 1
       _k = (_m + 3 * Q / 2 - _e2 * (1 + Q)) / G;
       // f* = (gammap - gammae) / gammae
       _fstar = (_m + 3 * Q / 2 - _f * (1 + Q)) / G;
-      cerr << "k " << setprecision(17) << _k << "\n";
-      cerr << "gammae " << _gammae << "\n";
-      cerr << "gammap " << _gammap << "\n";
-      cerr << "f* " << _fstar << "\n";
       for (int n = 0; n <= N_; n += 2)
-        // Jn(odd) is zero so only do even n
+        // Jn(odd) is zero so treat only even n
         _C[n] = - Jn(n) / sqrt(2 * n + real(1));
       _harm = SphericalHarmonic(_C, _C, N_, N_, 0, _a,
                                 SphericalHarmonic::full);
@@ -101,13 +95,10 @@ namespace GeographicLib {
     //
     // See H+M, Eq 2-57, with E/u = ep
     real ep = sqrt(ep2);
-    if (abs(ep2) >  real(0.25))
+    if (abs(ep2) >  real(0.25)) // Use the closed expression
       return ((1 + 3 / ep2) * atan(ep)  - 3 / ep)/2;
     else {
-      // The series expansion H+M, Eq 2-86
-      real
-        ep2n = 1,
-        q = 0;
+      real ep2n = 1, q = 0;     // The series expansion H+M, Eq 2-86
       for (int n = 1; ; ++n) {
         ep2n *= -ep2;
         real
@@ -128,14 +119,11 @@ namespace GeographicLib {
     //  3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
     //
     // See H+M, Eq 2-67, with E/u = ep
-    if (abs(ep2) > real(0.25)) {
+    if (abs(ep2) > real(0.25)) { // Use the closed expression
       real ep = sqrt(ep2);
       return 3 * (1 + 1 / ep2) * (1 - atan(ep) / ep) - 1;
     } else {
-      // The series expansion H+M, Eq 2-101c
-      real
-        ep2n = 1,
-        qp = 0;
+      real ep2n = 1, qp = 0;    // The series expansion H+M, Eq 2-101c
       for (int n = 1; ; ++n) {
         ep2n *= -ep2;
         real
