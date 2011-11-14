@@ -76,7 +76,7 @@ namespace GeographicLib {
       _fstar = (_m + 3 * Q / 2 - _f * (1 + Q)) / G;
       for (int n = 0; n <= N_; n += 2)
         // Jn(odd) is zero so treat only even n
-        _C[n] = - Jn(n) / sqrt(2 * n + real(1));
+        _C[n] = - Jn(n) / sqrt(real(2 * n + 1));
       _harm = SphericalHarmonic(_C, _C, N_, N_, 0, _a,
                                 SphericalHarmonic::full);
     }
@@ -91,9 +91,11 @@ namespace GeographicLib {
     //
     //  ((1 + 3/e'^2) * atan(e')  - 3/e')/2
     //
-    // See H+M, Eq 2-57, with E/u = ep
+    // See H+M, Eq 2-57, with E/u = e'.  This suffers from two levels of
+    // cancelation.  The e'^-1 and e'^1 terms drop out, so that the leading
+    // term is O(e'^3).
     real ep = sqrt(ep2);
-    if (abs(ep2) >  real(0.25)) // Use the closed expression
+    if (abs(ep2) >  real(0.5))  // Use the closed expression
       return ((1 + 3 / ep2) * atan(ep)  - 3 / ep)/2;
     else {
       real ep2n = 1, q = 0;     // The series expansion H+M, Eq 2-86
@@ -116,8 +118,10 @@ namespace GeographicLib {
     //
     //  3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
     //
-    // See H+M, Eq 2-67, with E/u = ep
-    if (abs(ep2) > real(0.25)) { // Use the closed expression
+    // See H+M, Eq 2-67, with E/u = e'.  This suffers from two levels of
+    // cancelation.  The e'^-2 and e'^0 terms drop out, so that the leading
+    // term is O(e'^2).
+    if (abs(ep2) > real(0.5)) { // Use the closed expression
       real ep = sqrt(ep2);
       return 3 * (1 + 1 / ep2) * (1 - atan(ep) / ep) - 1;
     } else {

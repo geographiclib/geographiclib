@@ -27,17 +27,18 @@ namespace GeographicLib {
    * plus centrifugal).  The acceleration due to gravity is therefore normal to
    * the surface of the ellipsoid.
    *
-   * There is a closed solution to this problem and this is implemented here.
+   * There is a closed solution to this problem which is implemented here.
    * Series "approximations" are only used to evaluate certain combinations of
-   * elementary functions where using the closed expression results in a loss
-   * of accuracy due to cancellations.  However these series include sufficient
-   * terms to give full machine precision.
+   * elementary functions where use of the closed expression results in a loss
+   * of accuracy for small arguments due to cancellation of the two leading
+   * terms.  However these series include sufficient terms to give full machine
+   * precision.
    *
    * References:
-   * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
+   * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Fransisco, 1967), Secs. 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
-   * - H. Moritz, Geodetic Reference System 1980, J. Geod. 54(3) 395-405 (1980)
-   *   http://dx.doi.org/10.1007/BF02521480
+   * - H. Moritz, Geodetic Reference System 1980, J. Geod. 54(3), 395-405
+   *   (1980) http://dx.doi.org/10.1007/BF02521480
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT NormalGravity {
@@ -221,32 +222,41 @@ namespace GeographicLib {
      *   (rad s<sup>-1</sup>).  This is the value used in the constructor.
      **********************************************************************/
     Math::real AngularVelocity() const throw() { return _omega; }
+
     /**
      * @return <i>f</i> the flattening of the ellipsoid (\e a - \e b)/\e a.
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }
+
     /**
      * @return <i>gamma</i><sub>e</sub> the normal gravity at equator
      *   (m s<sup>-2</sup>).
      **********************************************************************/
     Math::real EquatorialGravity() const throw() { return _gammae; }
+
     /**
      * @return <i>gamma</i><sub>p</sub> the normal gravity at poles
      *   (m s<sup>-2</sup>).
      **********************************************************************/
     Math::real PolarGravity() const throw() { return _gammap; }
+
     /**
      * @return <i>f*</i> the gravity flattening
      *   (<i>gamma</i><sub>p</sub> - <i>gamma</i><sub>e</sub>) /
      *   <i>gamma</i><sub>e</sub>.
      **********************************************************************/
     Math::real GravityFlattening() const throw() { return _fstar; }
+
     /**
-     * @return <i>U</i><sub>0</sub> the normal potential of the ellipsoid
-     * (m<sup>2</sup> s<sup>-2</sup>).
+     * @return <i>U</i><sub>0</sub> the constant normal potential for the
+     *   surface of the ellipsoid (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
-    Math::real NormalPotential() const throw() { return _U0; }
+    Math::real SurfacePotential() const throw() { return _U0; }
     
+    /**
+     * @return the GeographicLib::Geocentric object used by this instance.
+     **********************************************************************/
+    const Geocentric& Earth() const throw() { return _earth; }
     ///@}
 
     /**
