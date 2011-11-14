@@ -163,7 +163,7 @@ namespace GeographicLib {
     /**
      * Constructor with a single standard parallel.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
@@ -178,7 +178,7 @@ namespace GeographicLib {
     /**
      * Constructor with two standard parallels.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
@@ -196,7 +196,7 @@ namespace GeographicLib {
     /**
      * Constructor with two standard parallels specified by sines and cosines.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
