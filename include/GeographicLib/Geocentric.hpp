@@ -58,6 +58,9 @@ namespace GeographicLib {
     friend class LocalCartesian;
     friend class MagneticCircle; // MagneticCircle uses Rotation
     friend class MagneticModel;  // MagneticModel uses IntForward
+    friend class GravityCircle;  // GravityCircle uses Rotation
+    friend class GravityModel;   // GravityModel uses IntForward
+    friend class NormalGravity;  // NormalGravity uses IntForward
     static const size_t dim_ = 3;
     static const size_t dim2_ = dim_ * dim_;
     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;

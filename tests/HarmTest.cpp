@@ -7,12 +7,34 @@
 #include <GeographicLib/SphericalHarmonic.hpp>
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/MagneticCircle.hpp>
+#include <GeographicLib/NormalGravity.hpp>
 #include <GeographicLib/Utility.hpp>
 
 using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
+    {
+      std::cout << NormalGravity::GRS80.Flattening() << "\n";
+      real x = 4e6, y= -3e6, z = 5e6;
+      real U1, gx1, gy1, gz1, U2, gx2, gy2, gz2;
+      U1 = NormalGravity::GRS80.U(x, y, z, gx1, gy1, gz1);
+      U2 = NormalGravity::GRS80.Useries(x, y, z, gx2, gy2, gz2);
+      std::cout << std::setprecision(17);
+      std::cout << U1 << " " << gx1 << " " << gy1 << " " << gz1 << "\n";
+      std::cout << U2 << " " << gx2 << " " << gy2 << " " << gz2 << "\n";
+    }
+    {
+      NormalGravity egm96(6378137.0, 0.3986004418e15, 0.484165371736E-03*sqrt(5.0), 7292115e-11);
+      std::cout << "egm96 inverse flattening " << 1/egm96.Flattening() << "\n";
+      real lat = 24;
+      std::cout << "gamma " << egm96.gamma(lat) << "\n";
+      real gx, gy, gz;
+      egm96.Gravity(lat, 0, 0, gx, gy, gz);
+      std::cout << "g " << gx << " " << gy << " " << gz << "\n";
+    }
+      
+    return 0;
     if (true) {
       std::cout << std::setprecision(16);
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
