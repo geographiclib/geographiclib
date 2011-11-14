@@ -23,15 +23,27 @@ int main() {
       std::cout << std::setprecision(17);
       std::cout << U1 << " " << gx1 << " " << gy1 << " " << gz1 << "\n";
       std::cout << U2 << " " << gx2 << " " << gy2 << " " << gz2 << "\n";
+      std::cout << "inverse flattening " << 1/NormalGravity::GRS80.Flattening() << "\n";
+      std::cout << "J(2) " << NormalGravity::GRS80.DynamicalFormFactor(2) << "\n";
+      std::cout << "J(4) " << NormalGravity::GRS80.DynamicalFormFactor(4) << "\n";
+      std::cout << "J(6) " << NormalGravity::GRS80.DynamicalFormFactor(6) << "\n";
+      std::cout << "J(8) " << NormalGravity::GRS80.DynamicalFormFactor(8) << "\n";
+      std::cout << "J(10) " << NormalGravity::GRS80.DynamicalFormFactor(10) << "\n";
     }
     {
-      NormalGravity egm96(6378137.0, 0.3986004418e15, 0.484165371736E-03*sqrt(5.0), 7292115e-11);
+      NormalGravity egm96(6378137.0, 0.3986004418e15, 7292115e-11,
+                          1/298.257223563, true);
       std::cout << "egm96 inverse flattening " << 1/egm96.Flattening() << "\n";
+      std::cout << "J(2) " << egm96.DynamicalFormFactor(2) << "\n";
+      std::cout << "J(4) " << egm96.DynamicalFormFactor(4) << "\n";
+      std::cout << "J(6) " << egm96.DynamicalFormFactor(6) << "\n";
+      std::cout << "J(8) " << egm96.DynamicalFormFactor(8) << "\n";
+      std::cout << "J(10) " << egm96.DynamicalFormFactor(10) << "\n";
       real lat = 24;
-      std::cout << "gamma " << egm96.gamma(lat) << "\n";
+      std::cout << "gamma " << egm96.SurfaceGravity(lat) << "\n";
       real gx, gy, gz;
-      egm96.Gravity(lat, 0, 0, gx, gy, gz);
-      std::cout << "g " << gx << " " << gy << " " << gz << "\n";
+      egm96.Gravity(lat, 0, gy, gz);
+      std::cout << "g " << gy << " " << gz << "\n";
     }
       
     return 0;

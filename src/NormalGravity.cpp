@@ -21,12 +21,11 @@ namespace GeographicLib {
 
   using namespace std;
 
-  NormalGravity::NormalGravity(real a, real GM, real J2, real omega,
-                               bool flatp)
+  NormalGravity::NormalGravity(real a, real GM, real omega, real J2, bool flatp)
     : _a(a)
     , _GM(GM)
-    , _J2(J2)
     , _omega(omega)
+    , _J2(J2)
     , _omega2(Math::sq(_omega))
     , _aomega2(Math::sq(_omega * _a))
     , _C(N_ + 1, real(0))
@@ -47,7 +46,7 @@ namespace GeographicLib {
         _e2 = _f * (2 - _f);
         _ep2 = _e2 / (1 - _e2);
         _q0 = qf(_ep2);
-        _J2 = _e2 * ( 1 - K * sqrt(_e2) / _q0); // H+M, Eq 2-90
+        _J2 = _e2 * ( 1 - K * sqrt(_e2) / _q0) / 3; // H+M, Eq 2-90
       } else {
         _e2 = 3 * _J2;          // See Moritz (1980), p 398.
         for (int j = 0; j < maxit_; ++j) {
@@ -83,10 +82,9 @@ namespace GeographicLib {
     }
 
   const NormalGravity
-  NormalGravity::GRS80(Constants::GRS80_a<real>(),
-                       Constants::GRS80_GM<real>(),
-                       Constants::GRS80_J2<real>(),
-                       Constants::GRS80_omega<real>());
+  NormalGravity::GRS80(Constants::GRS80_a<real>(), Constants::GRS80_GM<real>(),
+                       Constants::GRS80_omega<real>(),
+                       Constants::GRS80_J2<real>(), false);
 
   Math::real NormalGravity::qf(real ep2) throw() {
     // Compute

@@ -45,7 +45,7 @@ namespace GeographicLib {
     static const int maxit_ = 10;
     static const int N_ = 14;
     typedef Math::real real;
-    real _a, _GM, _J2, _omega, _omega2, _aomega2;
+    real _a, _GM, _omega, _J2, _omega2, _aomega2;
     real _e2, _ep2, _f, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
     std::vector<real> _C;
     SphericalHarmonic _harm;
@@ -64,22 +64,22 @@ namespace GeographicLib {
      * @param[in] a equatorial radius (meters).
      * @param[in] GM gravitational constant radius
      *   (meters<sup>3</sup>/seconds<sup>2</sup>).
+     * @param[in] omega the angular velociry (rad s<sup>-1</sup>).
      * @param[in] J2 dynamical form factor or the flattening \e f (depending on
      *   the value of \e flatp).
-     * @param[in] omega the angular velociry (rad s<sup>-1</sup>).
-     * @param[in] flatp if true then the flattening \e f is specified as the
-     *   3rd argument instead of <i>J</i><sub>2</sub> (default = false).
+     * @param[in] flatp if true, then the flattening \e f is specified as the
+     *   4th argument instead of <i>J</i><sub>2</sub> (default = false).
      *
      * The shape of the ellipsoid can be given in one of two ways:
-     * - geometrically (\e flatp = true), then the 3rd argument represents the
+     * - geometrically (\e flatp = true), the 4th argument represents the
      *   flattening \e f = (\e a - \e b) / \e a, where \e a and \e b are the
      *   equatorial radius and the polar semi-axis.
-     * - physically (\e flatp = false, the default), then the 3rd argument
+     * - physically (\e flatp = false, the default), the 4th argument
      *   represents the dynamical form factor <i>J</i><sub>2</sub> = (\e C - \e
      *   A) / <i>Ma</i><sup>2</sup>, where \e A and \e C are the equatorial and
      *   polar moments of inertia and \e M is the mass of the earth.
      **********************************************************************/
-    NormalGravity(real a, real GM, real J2, real omega, bool flatp = false);
+    NormalGravity(real a, real GM, real omega, real J2, bool flatp = false);
     ///@}
 
     /** \name Compute the gravity
@@ -128,7 +128,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] gz the \e z component of the acceleration
      *   (m s<sup>-2</sup>).
-     * @return \e U the sum of the gravitional and centrifugal potentials
+     * @return \e U the sum of the gravitational and centrifugal potentials
      *   (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real U(real x, real y, real z,
@@ -153,7 +153,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] gz the \e z component of the acceleration due to gravity
      *   (m s<sup>-2</sup>).
-     * @return the gravitional potential (m<sup>2</sup> s<sup>-2</sup>).
+     * @return the gravitational potential (m<sup>2</sup> s<sup>-2</sup>).
      *
      * This function excludes the centrifugal acceleration and is appropriate
      * to use for space applications.  In terrestrial applications, the
