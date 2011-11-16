@@ -29,7 +29,6 @@ namespace GeographicLib {
     , _omega2(Math::sq(_omega))
     , _aomega2(Math::sq(_omega * _a))
     , _C(N_ + 1, real(0))
-    , _earth(_a, _J2)
     {
       if (!(Math::isfinite(_a) && _a > 0))
         throw GeographicErr("Major radius is not positive");
@@ -59,8 +58,8 @@ namespace GeographicLib {
         _f = _e2 / (1 + sqrt(1 - _e2));
         _ep2 = _e2 / (1 - _e2);
         _q0 = qf(_ep2);
-        _earth = Geocentric(_a, _f);
       }
+      _earth = Geocentric(_a, _f);
       _b = _a * (1 - _f);
       _E = a * sqrt(_e2);                               // H+M, Eq 2-54
       _U0 = _GM / _E * atan(sqrt(_ep2)) + _aomega2 / 3; // H+M, Eq 2-61
@@ -86,6 +85,11 @@ namespace GeographicLib {
                        Constants::GRS80_omega<real>(),
                        Constants::GRS80_J2<real>(), false);
 
+  const NormalGravity
+  NormalGravity::WGS84(Constants::WGS84_a<real>(), Constants::WGS84_GM<real>(),
+                       Constants::WGS84_omega<real>(),
+                       Constants::WGS84_f<real>(), true);
+
   Math::real NormalGravity::qf(real ep2) throw() {
     // Compute
     //
@@ -102,7 +106,7 @@ namespace GeographicLib {
       for (int n = 1; ; ++n) {
         ep2n *= -ep2;
         real
-          t = ep2n * n / ((2 * n + 1) * (2 * n + 3)),
+          t = (ep2n * n) / ((2 * n + 1) * (2 * n + 3)),
           qn = q + t;
         if (qn == q)
           break;
@@ -257,6 +261,36 @@ namespace GeographicLib {
     gy = M[1] * gX + M[4] * gY + M[7] * gZ;
     gz = M[2] * gX + M[5] * gY + M[8] * gZ;
     return Math::hypot(gy, gz);
+  }
+
+  void NormalGravity::DumpConstants() const {
+    cout << setprecision(16)
+         << "a=" << _a << "\n"
+         << "GM=" << _GM << "\n"
+         << "omega=" << _omega << "\n"
+         << "J(2)=" << _J2 << "\n"
+         << "J(4)=" << Jn(4) << "\n"
+         << "J(6)=" << Jn(6) << "\n"
+         << "J(8)=" << Jn(8) << "\n"
+         << "J(10)=" << Jn(10) << "\n"
+         << "omega2=" << _omega2 << "\n"
+         << "aomega2=" << _aomega2 << "\n"
+         << "e2=" << _e2 << "\n"
+         << "ep2=" << _ep2 << "\n"
+         << "f=" << _f << "\n"
+         << "1/f=" << 1/_f << "\n"
+         << "b=" << _b << "\n"
+         << "E=" << _E << "\n"
+         << "U0=" << _U0 << "\n"
+         << "gammae=" << _gammae << "\n"
+         << "gammap=" << _gammap << "\n"
+         << "q0=" << _q0 << "\n"
+         << "m=" << _m << "\n"
+         << "k=" << _k << "\n"
+         << "fstar=" << _fstar << "\n"
+         << "1/fstar=" << 1/_fstar << "\n";
+    for (int n = 2; n <= 20; n += 2)
+      cout << "C(" << n << ",0)=" << -Jn(n)/sqrt(2*n+1) << "\n";
   }
 
 } // namespace GeographicLib

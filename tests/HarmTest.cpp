@@ -15,35 +15,24 @@ int main() {
   typedef GeographicLib::Math::real real;
   try {
     {
-      std::cout << NormalGravity::GRS80.Flattening() << "\n";
-      real x = 4e6, y= -3e6, z = 5e6;
-      real U1, gx1, gy1, gz1, U2, gx2, gy2, gz2;
-      U1 = NormalGravity::GRS80.U(x, y, z, gx1, gy1, gz1);
-      U2 = NormalGravity::GRS80.Useries(x, y, z, gx2, gy2, gz2);
-      std::cout << std::setprecision(17);
-      std::cout << U1 << " " << gx1 << " " << gy1 << " " << gz1 << "\n";
-      std::cout << U2 << " " << gx2 << " " << gy2 << " " << gz2 << "\n";
-      std::cout << "inverse flattening " << 1/NormalGravity::GRS80.Flattening() << "\n";
-      std::cout << "J(2) " << NormalGravity::GRS80.DynamicalFormFactor(2) << "\n";
-      std::cout << "J(4) " << NormalGravity::GRS80.DynamicalFormFactor(4) << "\n";
-      std::cout << "J(6) " << NormalGravity::GRS80.DynamicalFormFactor(6) << "\n";
-      std::cout << "J(8) " << NormalGravity::GRS80.DynamicalFormFactor(8) << "\n";
-      std::cout << "J(10) " << NormalGravity::GRS80.DynamicalFormFactor(10) << "\n";
+      std::cout << "GRS90 constants\n";
+      NormalGravity::GRS80.DumpConstants();
     }
     {
-      NormalGravity egm96(6378137.0, 0.3986004418e15, 7292115e-11,
+      std::cout << "WGS84 constants\n";
+      NormalGravity::WGS84.DumpConstants();
+    }
+    {
+      NormalGravity egm84(6378137.0, 3.986005e14, 7292115e-11,
+                          484.16685e-6*sqrt(5.0), false);
+      std::cout << "EGM84-J2 constants\n";
+      egm84.DumpConstants();
+    }
+    {
+      NormalGravity egm84(6378137.0, 3.986005e14, 7292115e-11,
                           1/298.257223563, true);
-      std::cout << "egm96 inverse flattening " << 1/egm96.Flattening() << "\n";
-      std::cout << "J(2) " << egm96.DynamicalFormFactor(2) << "\n";
-      std::cout << "J(4) " << egm96.DynamicalFormFactor(4) << "\n";
-      std::cout << "J(6) " << egm96.DynamicalFormFactor(6) << "\n";
-      std::cout << "J(8) " << egm96.DynamicalFormFactor(8) << "\n";
-      std::cout << "J(10) " << egm96.DynamicalFormFactor(10) << "\n";
-      real lat = 24;
-      std::cout << "gamma " << egm96.SurfaceGravity(lat) << "\n";
-      real gx, gy, gz;
-      egm96.Gravity(lat, 0, gy, gz);
-      std::cout << "g " << gy << " " << gz << "\n";
+      std::cout << "EGM84-f constants\n";
+      egm84.DumpConstants();
     }
       
     return 0;

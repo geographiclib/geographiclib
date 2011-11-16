@@ -87,6 +87,11 @@ namespace GeographicLib {
     Geocentric(real a, real f);
 
     /**
+     * A default constructor for the normal gravity.
+     **********************************************************************/
+    Geocentric() : _a(-1) {};
+
+    /**
      * Convert from geodetic to geocentric coordinates.
      *
      * @param[in] lat latitude of point (degrees).
@@ -101,7 +106,8 @@ namespace GeographicLib {
      **********************************************************************/
     void Forward(real lat, real lon, real h, real& x, real& y, real& z)
       const throw() {
-      IntForward(lat, lon, h, x, y, z, NULL);
+      if (Init())
+        IntForward(lat, lon, h, x, y, z, NULL);
     }
 
     /**
@@ -130,6 +136,8 @@ namespace GeographicLib {
     void Forward(real lat, real lon, real h, real& x, real& y, real& z,
                  std::vector<real>& M)
       const throw() {
+      if (!Init())
+        return;
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
         IntForward(lat, lon, h, x, y, z, t);
@@ -159,7 +167,8 @@ namespace GeographicLib {
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const throw() {
-      IntReverse(x, y, z, lat, lon, h, NULL);
+      if (Init())
+        IntReverse(x, y, z, lat, lon, h, NULL);
     }
 
     /**
@@ -188,6 +197,8 @@ namespace GeographicLib {
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
       const throw() {
+      if (!Init())
+        return;
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
         IntReverse(x, y, z, lat, lon, h, t);
@@ -200,22 +211,29 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
+     * @return true if the object has been initialized.
+     **********************************************************************/
+    bool Init() const throw() { return _a > 0; }
+    /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _a; }
+    Math::real MajorRadius() const throw()
+    { return Init() ? _a : Math::NaN<real>(); }
 
     /**
      * @return \e f the  flattening of the ellipsoid.  This is the
      *   value used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _f; }
+    Math::real Flattening() const throw()
+    { return Init() ? _f : Math::NaN<real>(); }
 
     /**
      * <b>DEPRECATED</b>
      * @return \e r the inverse flattening of the ellipsoid.
      **********************************************************************/
-    Math::real InverseFlattening() const throw() { return 1/_f; }
+    Math::real InverseFlattening() const throw()
+    { return Init() ? 1/_f : Math::NaN<real>(); }
     ///@}
 
     /**

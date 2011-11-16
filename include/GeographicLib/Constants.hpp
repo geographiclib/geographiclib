@@ -110,6 +110,20 @@ namespace GeographicLib {
      **********************************************************************/
     static inline Math::real WGS84_f() throw() { return WGS84_f<real>(); }
     /**
+     * @tparam T the type of the returned value.
+     * @return the gravitational constant of the WGS84 ellipsoid, \e GM, in
+     *   m<sup>3</sup> s<sup>-2</sup>.
+     **********************************************************************/
+    template<typename T> static inline T WGS84_GM() throw()
+    { return T(3986004) * T(100000000) + T(41800000); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the angular velocity of the the WGS84 ellipsoid, \e omega, in
+     *   rad s<sup>-1</sup>.
+     **********************************************************************/
+    template<typename T> static inline T WGS84_omega() throw()
+    { return T(7292115) / (T(1000000) * T(100000)); }
+    /**
      * <b>DEPRECATED</b>
      * @return the reciprocal flattening of WGS84 ellipsoid.
      **********************************************************************/
@@ -135,18 +149,24 @@ namespace GeographicLib {
     { return T(3986005) * T(100000000); }
     /**
      * @tparam T the type of the returned value.
+     * @return the angular velocity of the the GRS80 ellipsoid, \e omega, in
+     *   rad s<sup>-1</sup>.
+     *
+     * This is about 2*pi*366.25 / (365.25*24*3600) rad s<sup>-1</sup>.  365.25
+     * is the number of days in a Julian year and 365.35/366.25 converts from
+     * solar days to sideral days.  Using the number of days in a Gregorian
+     * year (365.2425) results in a worse approximation (because the Gregorian
+     * year includes the precession of the earth's axis).
+     **********************************************************************/
+    template<typename T> static inline T GRS80_omega() throw()
+    { return T(7292115) / (T(1000000) * T(100000)); }
+    /**
+     * @tparam T the type of the returned value.
      * @return the dynamtical form factor of the GRS80 ellipsoid,
      *   <i>J</i><sub>2</sub>.
      **********************************************************************/
     template<typename T> static inline T GRS80_J2() throw()
     { return T(108263) / T(100000000); }
-    /**
-     * @tparam T the type of the returned value.
-     * @return the angular velocity of the the GRS80 ellipsoid, \e omega, in
-     *   s<sup>-1</sup>.
-     **********************************************************************/
-    template<typename T> static inline T GRS80_omega() throw()
-    { return T(7292115) / (T(1000000) * T(100000)); }
     /**
      * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).
