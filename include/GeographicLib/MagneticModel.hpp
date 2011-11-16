@@ -16,7 +16,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
-#include <GeographicLib/SphericalHarmonic1.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
