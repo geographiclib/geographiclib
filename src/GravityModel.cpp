@@ -10,7 +10,7 @@
 #include <GeographicLib/GravityModel.hpp>
 #include <fstream>
 #include <GeographicLib/SphericalEngine.hpp>
-#include <GeographicLib/GravityCircle.hpp>
+//#include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_GRAVITYMODEL_CPP "$Id$"
@@ -49,6 +49,10 @@ namespace GeographicLib {
     , _dir(path)
     , _description("NONE")
     , _date("UNKNOWN")
+    , _amodel(Math::NaN<real>())
+    , _GMmodel(Math::NaN<real>())
+    , _zeta0(0)
+    , _corrmult(1)
     , _norm(SphericalHarmonic::full)
   {
     if (_dir.empty())
@@ -108,6 +112,7 @@ namespace GeographicLib {
     if (version != "1")
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;
+    real a = Math::NaN<real>(), GM = a, omega = a, f = a, J2 = a;
     while (getline(metastr, line)) {
       if (!Utility::ParseLine(line, key, val))
         continue;
@@ -118,8 +123,20 @@ namespace GeographicLib {
         _description = val;
       else if (key == "ReleaseDate")
         _date = val;
-      else if (key == "Radius")
+      else if (key == "ModelRadius")
         _amodel = Utility::num<real>(val);
+      else if (key == "ModelGravity")
+        _GMmodel = Utility::num<real>(val);
+      else if (key == "AngularVelocity")
+        omega = Utility::num<real>(val);
+      else if (key == "ReferenceRadius")
+        a = Utility::num<real>(val);
+      else if (key == "ReferenceGravity")
+        GM = Utility::num<real>(val);
+      else if (key == "Flattening")
+        f = Utility::fract<real>(val);
+      else if (key == "DynamicalFormFactor")
+        J2 = Utility::fract<real>(val);
       else if (key == "Normalization") {
         if (val == "Full" || val == "full")
           _norm = SphericalHarmonic::full;
@@ -137,10 +154,17 @@ namespace GeographicLib {
       // else unrecognized keywords are skipped
     }
     // Check values
-    if (!(_amodel > 0))
-      throw GeographicErr("Reference radius must be positive");
+    if (!(Math::isfinite(_amodel) && _amodel > 0))
+      throw GeographicErr("Model radius must be positive");
+    if (!(Math::isfinite(_GMmodel) && _GMmodel > 0))
+      throw GeographicErr("Model gravitational constant must be positive");
+    bool flatp = Math::isfinite(f);
+    if (flatp && Math::isfinite(J2))
+      throw GeographicErr
+        ("Cannot specify both flattening and dynamical form factor");
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
+    _earth = NormalGravity(a, GM, omega, flatp ? f : J2, flatp);
   }
 
   Math::real GravityModel::Geoid(real /*lat*/, real /*lon*/) const throw()

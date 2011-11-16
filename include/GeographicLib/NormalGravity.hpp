@@ -98,8 +98,9 @@ namespace GeographicLib {
      * @return \e g the acceleration due to gravity, positive downwards
      *   (m s<sup>-2</sup>).
      *
-     * This acceleration is normal to the surface of the ellipsoid.  It
-     * includes the effects of the earth's rotation.
+     * Due to the axial symmetry of the ellipsoid, the result is independent of
+     * the value of the longitude.  This acceleration is normal to the surface
+     * of the ellipsoid.  It includes the effects of the earth's rotation.
      **********************************************************************/
     Math::real SurfaceGravity(real lat) const throw();
 
@@ -115,9 +116,11 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).  (This is usually negative.)
      * @return \e g the magnitude acceleration due to gravity
      *
-     * The function includes the effects of the earth's rotation.  When \e h =
-     * 0, this function gives \e gy = 0 and the returned value matches that of
-     * NormalGravity::SurfaceGravity.
+     * Due to the axial symmetry of the ellipsoid, the result is independent of
+     * the value of the longitude and the easterly component of the
+     * acceleration vanishes.  The function includes the effects of the earth's
+     * rotation.  When \e h = 0, this function gives \e gy = 0 and the returned
+     * value matches that of NormalGravity::SurfaceGravity.
      **********************************************************************/
     Math::real Gravity(real lat, real h, real& gy, real& gz) const throw();
 

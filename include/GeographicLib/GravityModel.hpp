@@ -26,7 +26,7 @@
 
 namespace GeographicLib {
 
-  class GravityCircle;
+  // class GravityCircle;
 
   /**
    * \brief Model of the earth's gravity field

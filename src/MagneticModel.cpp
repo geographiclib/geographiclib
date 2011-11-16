@@ -163,7 +163,7 @@ namespace GeographicLib {
       // else unrecognized keywords are skipped
     }
     // Check values
-    if (!(_a > 0))
+    if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Reference radius must be positive");
     if (!(_t0 > 0))
       throw GeographicErr("Epoch time not defined");
