@@ -21,9 +21,9 @@ namespace GeographicLib {
    *
    * Convert between geodetic coordinates latitude = \e lat, longitude = \e
    * lon, height = \e h (measured vertically from the surface of the ellipsoid)
-   * to geocentric coordinates (\e x, \e y, \e z).  The origin of geocentric
-   * coordinates is at the center of the earth.  The \e z axis goes thru the
-   * north pole, \e lat = 90<sup>o</sup>.  The \e x axis goes thru \e lat = 0,
+   * to geocentric coordinates (\e X, \e Y, \e Z).  The origin of geocentric
+   * coordinates is at the center of the earth.  The \e Z axis goes thru the
+   * north pole, \e lat = 90<sup>o</sup>.  The \e X axis goes thru \e lat = 0,
    * \e lon = 0.  %Geocentric coordinates are also known as earth centered,
    * earth fixed (ECEF) coordinates.
    *
@@ -66,9 +66,9 @@ namespace GeographicLib {
     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
     static void Rotation(real sphi, real cphi, real slam, real clam,
                          real M[dim2_]) throw();
-    void IntForward(real lat, real lon, real h, real& x, real& y, real& z,
+    void IntForward(real lat, real lon, real h, real& X, real& Y, real& Z,
                     real M[dim2_]) const throw();
-    void IntReverse(real x, real y, real z, real& lat, real& lon, real& h,
+    void IntReverse(real X, real Y, real Z, real& lat, real& lon, real& h,
                     real M[dim2_]) const throw();
 
   public:
@@ -97,17 +97,17 @@ namespace GeographicLib {
      * @param[in] lat latitude of point (degrees).
      * @param[in] lon longitude of point (degrees).
      * @param[in] h height of point above the ellipsoid (meters).
-     * @param[out] x geocentric coordinate (meters).
-     * @param[out] y geocentric coordinate (meters).
-     * @param[out] z geocentric coordinate (meters).
+     * @param[out] X geocentric coordinate (meters).
+     * @param[out] Y geocentric coordinate (meters).
+     * @param[out] Z geocentric coordinate (meters).
      *
      * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in
      * the range [-180, 360].
      **********************************************************************/
-    void Forward(real lat, real lon, real h, real& x, real& y, real& z)
+    void Forward(real lat, real lon, real h, real& X, real& Y, real& Z)
       const throw() {
       if (Init())
-        IntForward(lat, lon, h, x, y, z, NULL);
+        IntForward(lat, lon, h, X, Y, Z, NULL);
     }
 
     /**
@@ -117,9 +117,9 @@ namespace GeographicLib {
      * @param[in] lat latitude of point (degrees).
      * @param[in] lon longitude of point (degrees).
      * @param[in] h height of point above the ellipsoid (meters).
-     * @param[out] x geocentric coordinate (meters).
-     * @param[out] y geocentric coordinate (meters).
-     * @param[out] z geocentric coordinate (meters).
+     * @param[out] X geocentric coordinate (meters).
+     * @param[out] Y geocentric coordinate (meters).
+     * @param[out] Z geocentric coordinate (meters).
      * @param[out] M if the length of the vector is 9, fill with the rotation
      *   matrix in row-major order.
      *
@@ -128,55 +128,55 @@ namespace GeographicLib {
      * - in east, north, up coordinates (where the components are relative to a
      *   local coordinate system at (\e lat, \e lon, \e h)); call this
      *   representation \e v1.
-     * - in geocentric \e x, \e y, \e z coordinates; call this representation
+     * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
      *   \e v0.
      * .
      * Then we have \e v0 = \e M . \e v1.
      **********************************************************************/
-    void Forward(real lat, real lon, real h, real& x, real& y, real& z,
+    void Forward(real lat, real lon, real h, real& X, real& Y, real& Z,
                  std::vector<real>& M)
       const throw() {
       if (!Init())
         return;
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
-        IntForward(lat, lon, h, x, y, z, t);
+        IntForward(lat, lon, h, X, Y, Z, t);
         copy(t, t + dim2_, M.begin());
       } else
-        IntForward(lat, lon, h, x, y, z, NULL);
+        IntForward(lat, lon, h, X, Y, Z, NULL);
     }
 
     /**
      * Convert from geocentric to geodetic to coordinates.
      *
-     * @param[in] x geocentric coordinate (meters).
-     * @param[in] y geocentric coordinate (meters).
-     * @param[in] z geocentric coordinate (meters).
+     * @param[in] X geocentric coordinate (meters).
+     * @param[in] Y geocentric coordinate (meters).
+     * @param[in] Z geocentric coordinate (meters).
      * @param[out] lat latitude of point (degrees).
      * @param[out] lon longitude of point (degrees).
      * @param[out] h height of point above the ellipsoid (meters).
      *
      * In general there are multiple solutions and the result which maximizes
      * \e h is returned.  If there are still multiple solutions with different
-     * latitutes (applies only if \e z = 0), then the solution with \e lat > 0
+     * latitutes (applies only if \e Z = 0), then the solution with \e lat > 0
      * is returned.  If there are still multiple solutions with different
-     * longitudes (applies only if \e x = \e y = 0) then \e lon = 0 is
+     * longitudes (applies only if \e X = \e Y = 0) then \e lon = 0 is
      * returned.  The value of \e h returned satisfies \e h >= - \e a (1 - \e
      * e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e lat).  The
      * value of \e lon returned is in the range [-180, 180).
      **********************************************************************/
-    void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
+    void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h)
       const throw() {
       if (Init())
-        IntReverse(x, y, z, lat, lon, h, NULL);
+        IntReverse(X, Y, Z, lat, lon, h, NULL);
     }
 
     /**
      * Convert from geocentric to geodetic to coordinates.
      *
-     * @param[in] x geocentric coordinate (meters).
-     * @param[in] y geocentric coordinate (meters).
-     * @param[in] z geocentric coordinate (meters).
+     * @param[in] X geocentric coordinate (meters).
+     * @param[in] Y geocentric coordinate (meters).
+     * @param[in] Z geocentric coordinate (meters).
      * @param[out] lat latitude of point (degrees).
      * @param[out] lon longitude of point (degrees).
      * @param[out] h height of point above the ellipsoid (meters).
@@ -188,23 +188,23 @@ namespace GeographicLib {
      * - in east, north, up coordinates (where the components are relative to a
      *   local coordinate system at (\e lat, \e lon, \e h)); call this
      *   representation \e v1.
-     * - in geocentric \e x, \e y, \e z coordinates; call this representation
+     * - in geocentric \e X, \e Y, \e Z coordinates; call this representation
      *   \e v0.
      * .
      * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e
      * M.
      **********************************************************************/
-    void Reverse(real x, real y, real z, real& lat, real& lon, real& h,
+    void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h,
                  std::vector<real>& M)
       const throw() {
       if (!Init())
         return;
       if (M.end() == M.begin() + dim2_) {
         real t[dim2_];
-        IntReverse(x, y, z, lat, lon, h, t);
+        IntReverse(X, Y, Z, lat, lon, h, t);
         copy(t, t + dim2_, M.begin());
       } else
-        IntReverse(x, y, z, lat, lon, h, NULL);
+        IntReverse(X, Y, Z, lat, lon, h, NULL);
     }
 
     /** \name Inspector functions

@@ -81,14 +81,14 @@ namespace GeographicLib {
      * C', \e S', \e C'', and \e S''.  These arrays should not be altered or
      * destroyed during the lifetime of a SphericalHarmonic object.
      **********************************************************************/
-    SphericalHarmonic2(const std::vector<double>& C,
-                       const std::vector<double>& S,
+    SphericalHarmonic2(const std::vector<real>& C,
+                       const std::vector<real>& S,
                        int N,
-                       const std::vector<double>& C1,
-                       const std::vector<double>& S1,
+                       const std::vector<real>& C1,
+                       const std::vector<real>& S1,
                        int N1,
-                       const std::vector<double>& C2,
-                       const std::vector<double>& S2,
+                       const std::vector<real>& C2,
+                       const std::vector<real>& S2,
                        int N2,
                        real a, normalization norm = full)
       : _a(a)
@@ -132,14 +132,14 @@ namespace GeographicLib {
      * C', \e S', \e C'', and \e S''.  These arrays should not be altered or
      * destroyed during the lifetime of a SphericalHarmonic object.
      **********************************************************************/
-    SphericalHarmonic2(const std::vector<double>& C,
-                       const std::vector<double>& S,
+    SphericalHarmonic2(const std::vector<real>& C,
+                       const std::vector<real>& S,
                        int N, int nmx, int mmx,
-                       const std::vector<double>& C1,
-                       const std::vector<double>& S1,
+                       const std::vector<real>& C1,
+                       const std::vector<real>& S1,
                        int N1, int nmx1, int mmx1,
-                       const std::vector<double>& C2,
-                       const std::vector<double>& S2,
+                       const std::vector<real>& C2,
+                       const std::vector<real>& S2,
                        int N2, int nmx2, int mmx2,
                        real a, normalization norm = full)
       : _a(a)
@@ -270,7 +270,14 @@ namespace GeographicLib {
           (_c, f, p, z, _a);
         break;
       }
-    }  };
+    }
+    const SphericalEngine::coeff& Coefficients() const throw()
+    { return _c[0]; }
+    const SphericalEngine::coeff& Coefficients1() const throw()
+    { return _c[1]; }
+    const SphericalEngine::coeff& Coefficients2() const throw()
+    { return _c[2]; }
+  };
 
 } // namespace GeographicLib
 

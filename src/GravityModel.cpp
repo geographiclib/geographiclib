@@ -12,6 +12,7 @@
 #include <GeographicLib/SphericalEngine.hpp>
 //#include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
+#include <iostream>
 
 #define GEOGRAPHICLIB_GRAVITYMODEL_CPP "$Id$"
 
@@ -32,7 +33,7 @@ RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 #  endif
 #endif
 #if !defined(GRAVITY_DEFAULT_NAME)
-#  define GRAVITY_DEFAULT_NAME "wmm2010"
+#  define GRAVITY_DEFAULT_NAME "egm96"
 #endif
 
 #if defined(_MSC_VER)
@@ -70,7 +71,7 @@ namespace GeographicLib {
       id[idlength_] = '\0';
       if (_id != std::string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
-      for (int i = 0; i <= 2; ++i) {
+      for (int i = 0; i < 2; ++i) {
         int nm[2];
         Utility::readarray<int, int, false>(coeffstr, nm, 2);
         int N = nm[0], M = nm[1];
@@ -80,8 +81,11 @@ namespace GeographicLib {
         (i == 0 ? _C : _CC).resize(SphericalEngine::coeff::Csize(N, M));
         (i == 0 ? _S : _SC).resize(SphericalEngine::coeff::Ssize(N, M));
         Utility::readarray<double, real, false>(coeffstr, i == 0 ? _C : _CC);
-        if (i == 0 && !(_C[0] == 0))
-          throw GeographicErr("A degree 0 term should not be included");
+        if (i == 0) {
+          if (!(_C[0] == 0))
+            throw GeographicErr("A degree 0 term should not be included");
+          _C[0] = 1;            // Include the 1/r term in the sum
+        }
         Utility::readarray<double, real, false>(coeffstr, i == 0 ? _S : _SC);
         if (i == 0)
           _gravitational = SphericalHarmonic(_C, _S, N, N, M, _amodel, _norm);
@@ -93,18 +97,48 @@ namespace GeographicLib {
       if (pos != coeffstr.tellg())
         throw GeographicErr("Extra data in  " + coeff);
     }
+    int nmx = _gravitational.Coefficients().nmx();
+    // Adjust the normalization of the normal potential to match the model.
+    real mult = _earth._GM / _GMmodel;
+    real amult = Math::sq(_earth._a / _amodel);
+    // The 0th term in _zonal should be is 1 + _dzonal0.  Instead set it to 1
+    // to give exact cancelation with the (0,0) term in the model and account
+    // for _dzonal0 separately.
+    _zonal.resize(0); _zonal.push_back(1);
+    _dzonal0 = (_earth.GravitationalConstant() - _GMmodel) / _GMmodel;
+    _dzonal0 = 0;               // FOR COMPATIBILITY WITH NGA
+    for (int n = 2; n <= nmx; n += 2) {
+      mult *= amult;
+      real
+        r = _C[n],                                         // the model term
+        s = - mult * _earth.Jn(n) / sqrt(real(2 * n + 1)), // the normal term
+        t = r - s;                                         // the difference
+      if (t == r)               // the normal term is negligible
+        break;
+      _zonal.push_back(0);      // index = n - 1; the odd terms are 0
+      _zonal.push_back(s);
+    }
+    int nmx1 = int(_zonal.size()) - 1;
+    _disturbing = SphericalHarmonic1(_C, _S,
+                                     _gravitational.Coefficients().N(),
+                                     nmx, _gravitational.Coefficients().mmx(),
+                                     _zonal,
+                                     _zonal, // This is not accessed!
+                                     nmx1, nmx1, 0,
+                                     _amodel,
+                                     SphericalHarmonic1::normalization(_norm));
   }
 
   void GravityModel::ReadMetadata(const std::string& name) {
     const char* spaces = " \t\n\v\f\r";
-    _filename = _dir + "/" + name + ".wmm";
+    _filename = _dir + "/" + name + ".egm";
     ifstream metastr(_filename.c_str());
     if (!metastr.good())
       throw GeographicErr("Cannot open " + _filename);
     string line;
     getline(metastr, line);
-    if (!(line.size() >= 6 && line.substr(0,5) == "WMMF-"))
-      throw GeographicErr(_filename + " does not contain WMMF-n signature");
+    if (!(line.size() >= 6 && line.substr(0,5) == "EGMF-"))
+      throw GeographicErr(_filename + " does not contain EGMF-n signature");
     string::size_type n = line.find_first_of(spaces, 5);
     if (n != string::npos)
       n -= 5;
@@ -137,6 +171,10 @@ namespace GeographicLib {
         f = Utility::fract<real>(val);
       else if (key == "DynamicalFormFactor")
         J2 = Utility::fract<real>(val);
+      else if (key == "HeightOffset")
+        _zeta0 = Utility::fract<real>(val);
+      else if (key == "CorrectionMultiplier")
+        _corrmult = Utility::fract<real>(val);
       else if (key == "Normalization") {
         if (val == "Full" || val == "full")
           _norm = SphericalHarmonic::full;
@@ -167,8 +205,61 @@ namespace GeographicLib {
     _earth = NormalGravity(a, GM, omega, flatp ? f : J2, flatp);
   }
 
-  Math::real GravityModel::Geoid(real /*lat*/, real /*lon*/) const throw()
-  { return 0; }
+  Math::real GravityModel::InternalT(real X, real Y, real Z,
+                                     real& deltaX, real& deltaY, real& deltaZ,
+                                     bool gradp) const throw() {
+    real
+      invR = _dzonal0 ? 1 / Math::hypot(Math::hypot(X, Y),  Z) : 1,
+      T = (gradp
+           ? _disturbing(-1, X, Y, Z)
+           : _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ));
+    T = (T / _amodel - _dzonal0 * invR) * _GMmodel;
+    if (gradp) {
+      real f = _GMmodel / _amodel;
+      deltaX *= f;
+      deltaY *= f;
+      deltaZ *= f;
+      if (_dzonal0) {
+        invR = _GMmodel * _dzonal0 * invR * invR * invR;
+        deltaX += X * invR;
+        deltaY += Y * invR;
+        deltaZ += Z * invR;
+      }
+    }
+    return T;
+  }
+
+  Math::real GravityModel::InternalV(real X, real Y, real Z,
+                                     real& gX, real& gY, real& gZ,
+                                     bool gradp) const throw() {
+    real
+      V = (gradp
+           ? _gravitational(X, Y, Z)
+           : _gravitational(X, Y, Z, gX, gY, gZ)),
+      f = _GMmodel / _amodel;
+    V *= f;
+    if (gradp) {
+      gX *= f;
+      gY *= f;
+      gZ *= f;
+    }
+    return V;
+  }
+
+  Math::real GravityModel::Geoid(real lat, real lon) const throw()
+  {
+    real X, Y, Z;
+    _earth.Earth().IntForward(lat, lon, 0, X, Y, Z, NULL);
+    real
+      gamma = _earth.SurfaceGravity(lat),
+      dummy,
+      T = InternalT(X, Y, Z, dummy, dummy, dummy, false),
+      invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
+      correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
+    std::cerr << T/gamma << " " << _zeta0 << " " << correction << "\n";
+    return T/gamma + _zeta0 + correction;
+  }
+                                   
   Math::real GravityModel::Disturbing(real /*lat*/, real /*lon*/, real /*h*/) const throw()
   { return 0; }
   Math::real GravityModel::Disturbing(real /*lat*/, real /*lon*/, real /*h*/,

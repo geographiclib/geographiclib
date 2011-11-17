@@ -31,11 +31,7 @@ namespace GeographicLib {
   /**
    * \brief Model of the earth's gravity field
    *
-   * Evaluate the earth's gravity field according to a model.  At present only
-   * internal gravity fields are handled.  These are due to the earth's code
-   * and crust; these vary slowly (over many years).  Excluded are the effects
-   * of currents in the ionosphere and magnetosphere which have daily and
-   * annual variations.
+   * Evaluate the earth's gravity field according to a model.
    *
    * See xxref gravity for details of how to install the gravity model and the
    * data format.
@@ -49,11 +45,18 @@ namespace GeographicLib {
     real _amodel, _GMmodel, _zeta0, _corrmult;
     SphericalHarmonic::normalization _norm;
     NormalGravity _earth;
-    std::vector<real> _C, _S, _CC, _SC;
+    std::vector<real> _C, _S, _CC, _SC, _zonal;
+    real _dzonal0;              // A left over contribution to _zonal.
     SphericalHarmonic _gravitational;
     SphericalHarmonic1 _disturbing;
     SphericalHarmonic _correction;
     void ReadMetadata(const std::string& name);
+    Math::real InternalT(real X, real Y, real Z,
+                         real& deltaX, real& deltaY, real& deltaZ,
+                         bool gradp) const throw();
+    Math::real InternalV(real X, real Y, real Z,
+                         real& gX, real& gY, real& gZ,
+                         bool gradp) const throw();
   public:
 
     /** \name Setting up the gravity model
@@ -101,6 +104,14 @@ namespace GeographicLib {
                           real& gy, real& gz) const throw();
     Math::real Total(real lat, real lon, real h,
                      real& gx, real& gy, real& gz) const throw();
+    Math::real T(real X, real Y, real Z) const throw() {
+      real dummy;
+      return InternalT(X, Y, Z, dummy, dummy, dummy, false);
+    }
+    Math::real T(real X, real Y, real Z,
+                 real& deltaX, real& deltaY, real& deltaZ) const throw() {
+      return InternalT(X, Y, Z, deltaX, deltaY, deltaZ, true);
+    }
     ///@}
 
     /** \name Inspector functions
@@ -160,7 +171,7 @@ namespace GeographicLib {
      * @return the default name for the gravity model.
      *
      * This is the value of the environment variable GRAVITY_NAME, if set,
-     * otherwise, it is "wmm2010-12".  The GravityModel class does not use
+     * otherwise, it is "egm96".  The GravityModel class does not use
      * this function; it is just provided as a convenience for a calling
      * program when constructing a GravityModel object.
      **********************************************************************/

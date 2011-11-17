@@ -164,24 +164,24 @@ namespace GeographicLib {
     return _gammae * (1 + _k * sphi2) / sqrt(1 - _e2 * sphi2);
   }
 
-  Math::real NormalGravity::V(real x, real y, real z,
-                              real& gx, real& gy, real& gz)
+  Math::real NormalGravity::V(real X, real Y, real Z,
+                              real& gX, real& gY, real& gZ)
     const throw() {
     // See H+M, Sec 6-2
     real
-      p = Math::hypot(x, y),
-      clam = p ? x/p : 1,
-      slam = p ? y/p : 0,
-      r = Math::hypot(p, z),
+      p = Math::hypot(X, Y),
+      clam = p ? X/p : 1,
+      slam = p ? Y/p : 0,
+      r = Math::hypot(p, Z),
       Q = Math::sq(r) - Math::sq(_E),
-      t2 = Math::sq(2 * _E * z),
+      t2 = Math::sq(2 * _E * Z),
       disc = sqrt(Math::sq(Q) + t2),
       // This is H+M, Eq 6-8a, but generalized to deal with Q negative
       // accurately.
       u = sqrt((Q >= 0 ? (Q + disc) : t2 / (disc - Q)) / 2),
       uE = Math::hypot(u, _E),
       // H+M, Eq 6-8b
-      sbet = z * uE,
+      sbet = Z * uE,
       cbet = p * u,
       s = Math::hypot(cbet, sbet);
     cbet = s ? cbet/s : 0;
@@ -202,61 +202,61 @@ namespace GeographicLib {
       gamb = _aomega2 * q  * sbet * cbet * invw / uE,
       t = u * invw / uE;
     // H+M, Eq 6-12
-    gx = t * cbet * gamu - invw * sbet * gamb;
-    gy = gx * slam;
-    gx *= clam;
-    gz = invw * sbet * gamu + t * cbet * gamb;
+    gX = t * cbet * gamu - invw * sbet * gamb;
+    gY = gX * slam;
+    gX *= clam;
+    gZ = invw * sbet * gamu + t * cbet * gamb;
     return V;
   }
 
-  Math::real NormalGravity::Phi(real x, real y, real& gx, real& gy)
+  Math::real NormalGravity::Phi(real X, real Y, real& gX, real& gY)
     const throw() {
-    gx = _omega2 * x;
-    gy = _omega2 * y;
-    // N.B. gz = 0;
-    return _omega2 * (Math::sq(x) + Math::sq(y)) / 2;
+    gX = _omega2 * X;
+    gY = _omega2 * Y;
+    // N.B. gZ = 0;
+    return _omega2 * (Math::sq(X) + Math::sq(Y)) / 2;
   }
 
-  Math::real NormalGravity::U(real x, real y, real z,
-                              real& gx, real& gy, real& gz)
+  Math::real NormalGravity::U(real X, real Y, real Z,
+                              real& gX, real& gY, real& gZ)
     const throw() {
-    real gx1, gy1;
-    real U = V(x, y, z, gx, gy, gz) + Phi(x, y, gx1, gy1);
-    gx += gx1;
-    gy += gy1;
+    real gX1, gY1;
+    real U = V(X, Y, Z, gX, gY, gZ) + Phi(X, Y, gX1, gY1);
+    gX += gX1;
+    gY += gY1;
     return U;
   }
   
-  Math::real NormalGravity::Vseries(real x, real y, real z,
-                                    real& gx, real& gy, real& gz)
+  Math::real NormalGravity::Vseries(real X, real Y, real Z,
+                                    real& gX, real& gY, real& gZ)
     const throw() {
     real
       f = _GM / _a,
-      U = _harm(x, y, z, gx, gy, gz);
+      U = _harm(X, Y, Z, gX, gY, gZ);
     U = f * U;
-    gx *= f;
-    gy *= f;
-    gz *= f;
+    gX *= f;
+    gY *= f;
+    gZ *= f;
     return U;
   }
 
-  Math::real NormalGravity::Useries(real x, real y, real z,
-                                    real& gx, real& gy, real& gz)
+  Math::real NormalGravity::Useries(real X, real Y, real Z,
+                                    real& gX, real& gY, real& gZ)
     const throw() {
-    real gx1, gy1;
-    real U = Vseries(x, y, z, gx, gy, gz) + Phi(x, y, gx1, gy1);
-    gx += gx1;
-    gy += gy1;
+    real gX1, gY1;
+    real U = Vseries(X, Y, Z, gX, gY, gZ) + Phi(X, Y, gX1, gY1);
+    gX += gX1;
+    gY += gY1;
     return U;
   }
 
   Math::real NormalGravity::Gravity(real lat, real h, real& gy, real& gz)
     const throw() {
-    real x, y, z;
+    real X, Y, Z;
     real M[9];
-    _earth.IntForward(lat, 0, h, x, y, z, M);
+    _earth.IntForward(lat, 0, h, X, Y, Z, M);
     real gX, gY, gZ;
-    U(x, y, z, gX, gY, gZ);
+    U(X, Y, Z, gX, gY, gZ);
     // gx = M[0] * gX + M[3] * gY + M[6] * gZ;
     gy = M[1] * gX + M[4] * gY + M[7] * gZ;
     gz = M[2] * gX + M[5] * gY + M[8] * gZ;

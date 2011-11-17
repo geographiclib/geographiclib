@@ -188,12 +188,12 @@ namespace GeographicLib {
     int n = max(min(int(floor(t / _dt0)), _Nmodels - 1), 0);
     bool interpolate = n + 1 < _Nmodels;
     t -= n * _dt0;
-    real x, y, z;
+    real X, Y, Z;
     real M[9];
-    _earth.IntForward(lat, lon, h, x, y, z, M);
+    _earth.IntForward(lat, lon, h, X, Y, Z, M);
     real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis
-    _harm[n](x, y, z, BX0, BY0, BZ0);
-    _harm[n + 1](x, y, z, BX1, BY1, BZ1);
+    _harm[n](X, Y, Z, BX0, BY0, BZ0);
+    _harm[n + 1](X, Y, Z, BX1, BY1, BZ1);
     if (interpolate) {
       BX1 = (BX1 - BX0) / _dt0;
       BY1 = (BY1 - BY0) / _dt0;
@@ -217,14 +217,14 @@ namespace GeographicLib {
     int n = max(min(int(floor(t / _dt0)), _Nmodels - 1), 0);
     bool interpolate = n + 1 < _Nmodels;
     t -= n * _dt0;
-    real x, y, z;
+    real X, Y, Z;
     real M[Geocentric::dim2_];
-    _earth.IntForward(lat, 0, h, x, y, z, M);
-    // y = 0, cphi = M[7], sphi = M[8];
+    _earth.IntForward(lat, 0, h, X, Y, Z, M);
+    // Y = 0, cphi = M[7], sphi = M[8];
 
     return MagneticCircle(_a, M[7], M[8], t, _dt0, interpolate,
-                          _harm[n].Circle(x, z, true),
-                          _harm[n + 1].Circle(x, z, true));
+                          _harm[n].Circle(X, Z, true),
+                          _harm[n + 1].Circle(X, Z, true));
   }
 
   void MagneticModel::FieldComponents(real Bx, real By, real Bz,

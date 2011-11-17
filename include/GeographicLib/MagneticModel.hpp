@@ -85,7 +85,7 @@ namespace GeographicLib {
      * @param[in] earth (optional) Geocentric object for converting
      *   coordinates; default Geocentric::WGS84.
      *
-     * A filename is formed by appending ".wwm" (World Magnetic Model) to
+     * A filename is formed by appending ".wmm" (World Magnetic Model) to
      * the name.  If \e path is specified (and is non-empty), then the file is
      * loaded from directory, \e path.  Otherwise the path is given by the
      * MAGNETIC_PATH environment variable.  If that is undefined, a
@@ -340,9 +340,9 @@ namespace GeographicLib {
      * @return the default name for the magnetic model.
      *
      * This is the value of the environment variable MAGNETIC_NAME, if set,
-     * otherwise, it is "wmm2010-12".  The MagneticModel class does not use
-     * this function; it is just provided as a convenience for a calling
-     * program when constructing a MagneticModel object.
+     * otherwise, it is "wmm2010".  The MagneticModel class does not use this
+     * function; it is just provided as a convenience for a calling program
+     * when constructing a MagneticModel object.
      **********************************************************************/
     static std::string DefaultMagneticName();
   };

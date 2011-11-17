@@ -37,7 +37,7 @@ namespace GeographicLib {
                                      Constants::WGS84_f<real>());
 
   void Geocentric::IntForward(real lat, real lon, real h,
-                              real& x, real& y, real& z,
+                              real& X, real& Y, real& Z,
                               real M[dim2_]) const throw() {
     lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
     real
@@ -48,22 +48,22 @@ namespace GeographicLib {
       n = _a/sqrt(1 - _e2 * Math::sq(sphi)),
       slam = lon == -180 ? 0 : sin(lam),
       clam = abs(lon) == 90 ? 0 : cos(lam);
-    z = ( _e2m * n + h) * sphi;
-    x = (n + h) * cphi;
-    y = x * slam;
-    x *= clam;
+    Z = ( _e2m * n + h) * sphi;
+    X = (n + h) * cphi;
+    Y = X * slam;
+    X *= clam;
     if (M)
       Rotation(sphi, cphi, slam, clam, M);
   }
 
-  void Geocentric::IntReverse(real x, real y, real z,
+  void Geocentric::IntReverse(real X, real Y, real Z,
                               real& lat, real& lon, real& h,
                               real M[dim2_]) const throw() {
     real
-      R = Math::hypot(x, y),
-      slam = R ? y / R : 0,
-      clam = R ? x / R : 1;
-    h = Math::hypot(R, z);      // Distance to center of earth
+      R = Math::hypot(X, Y),
+      slam = R ? Y / R : 0,
+      clam = R ? X / R : 1;
+    h = Math::hypot(R, Z);      // Distance to center of earth
     real sphi, cphi;
     if (h > _maxrad) {
       // We really far away (> 12 million light years); treat the earth as a
@@ -71,27 +71,27 @@ namespace GeographicLib {
       // This avoids overflow, e.g., in the computation of disc below.  It's
       // possible that h has overflowed to inf; but that's OK.
       //
-      // Treat the case x, y finite, but R overflows to +inf by scaling by 2.
-      R = Math::hypot(x/2, y/2);
-      slam = R ? (y/2) / R : 0;
-      clam = R ? (x/2) / R : 1;
-      real H = Math::hypot(z/2, R);
-      sphi = (z/2) / H;
+      // Treat the case X, Y finite, but R overflows to +inf by scaling by 2.
+      R = Math::hypot(X/2, Y/2);
+      slam = R ? (Y/2) / R : 0;
+      clam = R ? (X/2) / R : 1;
+      real H = Math::hypot(Z/2, R);
+      sphi = (Z/2) / H;
       cphi = R / H;
     } else if (_e4a == 0) {
       // Treat the spherical case.  Dealing with underflow in the general case
       // with _e2 = 0 is difficult.  Origin maps to N pole same as with
       // ellipsoid.
-      real H = Math::hypot(h == 0 ? 1 : z, R);
-      sphi = (h == 0 ? 1 : z) / H;
+      real H = Math::hypot(h == 0 ? 1 : Z, R);
+      sphi = (h == 0 ? 1 : Z) / H;
       cphi = R / H;
       h -= _a;
     } else {
-      // Treat prolate spheroids by swapping R and z here and by switching
+      // Treat prolate spheroids by swapping R and Z here and by switching
       // the arguments to phi = atan2(...) at the end.
       real
         p = Math::sq(R / _a),
-        q = _e2m * Math::sq(z / _a),
+        q = _e2m * Math::sq(Z / _a),
         r = (p + q - _e4a) / 6;
       if (_f < 0) swap(p, q);
       if ( !(_e4a * q == 0 && r <= 0) ) {
@@ -133,10 +133,10 @@ namespace GeographicLib {
           k1 = _f >= 0 ? k : k - _e2,
           k2 = _f >= 0 ? k + _e2 : k,
           d = k1 * R / k2,
-          H = Math::hypot(z/k1, R/k2);
-        sphi = (z/k1) / H;
+          H = Math::hypot(Z/k1, R/k2);
+        sphi = (Z/k1) / H;
         cphi = (R/k2) / H;
-        h = (1 - _e2m/k1) * Math::hypot(d, z);
+        h = (1 - _e2m/k1) * Math::hypot(d, Z);
       } else {                  // e4 * q == 0 && r <= 0
         // This leads to k = 0 (oblate, equatorial plane) and k + e^2 = 0
         // (prolate, rotation axis) and the generation of 0/0 in the general
@@ -150,7 +150,7 @@ namespace GeographicLib {
           H = Math::hypot(zz, xx);
         sphi = zz / H;
         cphi = xx / H;
-        if (z < 0) sphi = -sphi; // for tiny negative z (not for prolate)
+        if (Z < 0) sphi = -sphi; // for tiny negative Z (not for prolate)
         h = - _a * (_f >= 0 ? _e2m : 1) * H / _e2a;
       }
     }
@@ -170,11 +170,11 @@ namespace GeographicLib {
     // where
     // qrot(t,v) = [cos(t/2), sin(t/2)*v[1], sin(t/2)*v[2], sin(t/2)*v[3]]
 
-    // Local x axis (east) in geocentric coords
+    // Local X axis (east) in geocentric coords
     M[0] = -slam;        M[3] =  clam;        M[6] = 0;
-    // Local y axis (north) in geocentric coords
+    // Local Y axis (north) in geocentric coords
     M[1] = -clam * sphi; M[4] = -slam * sphi; M[7] = cphi;
-    // Local z axis (up) in geocentric coords
+    // Local Z axis (up) in geocentric coords
     M[2] =  clam * cphi; M[5] =  slam * cphi; M[8] = sphi;
   }
 

@@ -143,8 +143,8 @@ namespace GeographicLib {
      * These arrays should not be altered or destroyed during the lifetime of a
      * SphericalHarmonic object.
      **********************************************************************/
-    SphericalHarmonic(const std::vector<double>& C,
-                      const std::vector<double>& S,
+    SphericalHarmonic(const std::vector<real>& C,
+                      const std::vector<real>& S,
                       int N, real a, normalization norm = full)
       : _a(a)
       , _norm(norm)
@@ -170,8 +170,8 @@ namespace GeographicLib {
      * These arrays should not be altered or destroyed during the lifetime of a
      * SphericalHarmonic object.
      **********************************************************************/
-    SphericalHarmonic(const std::vector<double>& C,
-                      const std::vector<double>& S,
+    SphericalHarmonic(const std::vector<real>& C,
+                      const std::vector<real>& S,
                       int N, int nmx, int mmx,
                       real a, normalization norm = full)
       : _a(a)
@@ -316,6 +316,9 @@ namespace GeographicLib {
         break;
       }
     }
+
+    const SphericalEngine::coeff& Coefficients() const throw()
+    { return _c[0]; }
   };
 
 } // namespace GeographicLib
