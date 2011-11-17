@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_SPHERICALENGINE_HPP "$Id$"
 
 #include <vector>
+#include <istream>
 #include <GeographicLib/Constants.hpp>
 
 #if defined(_MSC_VER)
@@ -224,6 +225,25 @@ namespace GeographicLib {
        **********************************************************************/
       static inline int Ssize(int N, int M)
       { return Csize(N, M) - (N + 1); }
+
+      /**
+       * Load coefficients from a binary stream.
+       *
+       * @param[in] stream the input stream.
+       * @param[out] N The maximum degree of the coefficients.
+       * @param[out] M The maximum order of the coefficients.
+       * @param[out] C The vector of cosine coefficients.
+       * @param[out] S The vector of sine coefficients.
+       *
+       * \e N and \e M are read as 4-byte ints.  \e C and \e S are resized to
+       * accommate all the coefficients (with the \e m = 0 coefficients for \e
+       * S excluded) and the data for these coefficients read as 8-byte
+       * doubles.  The coefficients are stored in column major order.  The
+       * bytes in the stream should use little-endian ordering.  IEEE floating
+       * point is assumed for the coefficients.
+       **********************************************************************/
+      static void readcoeffs(std::istream& stream, int& N, int& M,
+                             std::vector<real>& C, std::vector<real>& S);
     };
 
     /**

@@ -9,8 +9,8 @@
 
 #include <GeographicLib/SphericalEngine.hpp>
 #include <limits>
-#include <iostream>
 #include <GeographicLib/CircularEngine.hpp>
+#include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_SPHERICALENGINE_CPP "$Id$"
 
@@ -351,6 +351,22 @@ namespace GeographicLib {
     }
 
     return circ;
+  }
+
+  void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,
+                                          std::vector<real>& C,
+                                          std::vector<real>& S) {
+    int nm[2];
+    Utility::readarray<int, int, false>(stream, nm, 2);
+    N = nm[0]; M = nm[1];
+    if (!(N >= M && M >= -1))
+      throw GeographicErr("Bad degree and order " +
+                          Utility::str(N) + " " + Utility::str(M));
+    C.resize(SphericalEngine::coeff::Csize(N, M));
+    Utility::readarray<double, real, false>(stream, C);
+    S.resize(SphericalEngine::coeff::Ssize(N, M));
+    Utility::readarray<double, real, false>(stream, S);
+    return;
   }
 
   template

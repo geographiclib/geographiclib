@@ -71,27 +71,14 @@ namespace GeographicLib {
       id[idlength_] = '\0';
       if (_id != std::string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
-      for (int i = 0; i < 2; ++i) {
-        int nm[2];
-        Utility::readarray<int, int, false>(coeffstr, nm, 2);
-        int N = nm[0], M = nm[1];
-        if (!(N >= M && M >= -1))
-          throw GeographicErr("Bad degree and order " +
-                              Utility::str(N) + " " + Utility::str(M));
-        (i == 0 ? _C : _CC).resize(SphericalEngine::coeff::Csize(N, M));
-        (i == 0 ? _S : _CS).resize(SphericalEngine::coeff::Ssize(N, M));
-        Utility::readarray<double, real, false>(coeffstr, i == 0 ? _C : _CC);
-        if (i == 0) {
-          if (!(_C[0] == 0))
-            throw GeographicErr("A degree 0 term should not be included");
-          _C[0] = 1;            // Include the 1/r term in the sum
-        }
-        Utility::readarray<double, real, false>(coeffstr, i == 0 ? _S : _CS);
-        if (i == 0)
-          _gravitational = SphericalHarmonic(_C, _S, N, N, M, _amodel, _norm);
-        else
-          _correction = SphericalHarmonic(_CC, _CS, N, N, M, real(1), _norm);
-      }
+      int N, M;
+      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _C, _S);
+      if (!(M < 0 || _C[0] == 0))
+        throw GeographicErr("A degree 0 term should be zero");
+      _C[0] = 1;                // Include the 1/r term in the sum
+      _gravitational = SphericalHarmonic(_C, _S, N, N, M, _amodel, _norm);
+      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _CC, _CS);
+      _correction = SphericalHarmonic(_CC, _CS, N, N, M, real(1), _norm);
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
       if (pos != coeffstr.tellg())
@@ -210,9 +197,9 @@ namespace GeographicLib {
                                      bool gradp) const throw() {
     real
       invR = _dzonal0 ? 1 / Math::hypot(Math::hypot(X, Y),  Z) : 1,
-      T = (!gradp
-           ? _disturbing(-1, X, Y, Z)
-           : _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ));
+      T = (gradp
+           ? _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ)
+           : _disturbing(-1, X, Y, Z));
     T = (T / _amodel - _dzonal0 * invR) * _GMmodel;
     if (gradp) {
       real f = _GMmodel / _amodel;
@@ -234,8 +221,8 @@ namespace GeographicLib {
                                      bool gradp) const throw() {
     real
       V = (gradp
-           ? _gravitational(X, Y, Z)
-           : _gravitational(X, Y, Z, gX, gY, gZ)),
+           ? _gravitational(X, Y, Z, gX, gY, gZ)
+           : _gravitational(X, Y, Z)),
       f = _GMmodel / _amodel;
     V *= f;
     if (gradp) {

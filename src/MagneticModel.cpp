@@ -79,18 +79,10 @@ namespace GeographicLib {
       if (_id != std::string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       for (int i = 0; i <= _Nmodels; ++i) {
-        int nm[2];
-        Utility::readarray<int, int, false>(coeffstr, nm, 2);
-        int N = nm[0], M = nm[1];
-        if (!(N >= M && M >= -1))
-          throw GeographicErr("Bad degree and order " +
-                              Utility::str(N) + " " + Utility::str(M));
-        _G[i].resize(SphericalEngine::coeff::Csize(N, M));
-        _H[i].resize(SphericalEngine::coeff::Ssize(N, M));
-        Utility::readarray<double, real, false>(coeffstr, _G[i]);
-        if (!(_G[i][0] == 0))
+        int N, M;
+        SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _G[i], _H[i]);
+        if (!(M < 0 || _G[i][0] == 0))
           throw GeographicErr("A degree 0 term is not permitted");
-        Utility::readarray<double, real, false>(coeffstr, _H[i]);
         _harm.push_back(SphericalHarmonic(_G[i], _H[i], N, N, M, _a, _norm));
       }
       int pos = int(coeffstr.tellg());
