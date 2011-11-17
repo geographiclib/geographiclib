@@ -16,13 +16,15 @@ int main() {
   typedef GeographicLib::Math::real real;
   try {
     {
-      std::cout << std::setprecision(15);
-      GravityModel egm84("egm84","/home/ckarney/geographiclib/gravity");
-      std::cout << egm84.Geoid(-76.981466,34.17016) << "\n";
-      GravityModel egm96("egm96","/home/ckarney/geographiclib/gravity");
-      std::cout << egm96.Geoid(-76.981466,34.17016) << "\n";
-      GravityModel egm2008("egm2008","/home/ckarney/geographiclib/gravity");
-      std::cout << egm2008.Geoid(-76.981466,34.17016) << "\n";
+      std::cout << std::fixed;
+      GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
+      real lat, lon;
+      while (std::cin >> lat >> lon)
+        std::cout << std::setprecision(6)
+                  << std::setw(12) << lat
+                  << std::setw(12) << lon
+                  << std::setprecision(9) << std::setw(17)
+                  << egm.Geoid(lat, lon) << "\n";
     }
     return 0;
 

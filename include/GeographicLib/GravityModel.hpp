@@ -45,7 +45,7 @@ namespace GeographicLib {
     real _amodel, _GMmodel, _zeta0, _corrmult;
     SphericalHarmonic::normalization _norm;
     NormalGravity _earth;
-    std::vector<real> _C, _S, _CC, _SC, _zonal;
+    std::vector<real> _C, _S, _CC, _CS, _zonal;
     real _dzonal0;              // A left over contribution to _zonal.
     SphericalHarmonic _gravitational;
     SphericalHarmonic1 _disturbing;

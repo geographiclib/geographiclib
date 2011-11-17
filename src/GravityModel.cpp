@@ -79,18 +79,18 @@ namespace GeographicLib {
           throw GeographicErr("Bad degree and order " +
                               Utility::str(N) + " " + Utility::str(M));
         (i == 0 ? _C : _CC).resize(SphericalEngine::coeff::Csize(N, M));
-        (i == 0 ? _S : _SC).resize(SphericalEngine::coeff::Ssize(N, M));
+        (i == 0 ? _S : _CS).resize(SphericalEngine::coeff::Ssize(N, M));
         Utility::readarray<double, real, false>(coeffstr, i == 0 ? _C : _CC);
         if (i == 0) {
           if (!(_C[0] == 0))
             throw GeographicErr("A degree 0 term should not be included");
           _C[0] = 1;            // Include the 1/r term in the sum
         }
-        Utility::readarray<double, real, false>(coeffstr, i == 0 ? _S : _SC);
+        Utility::readarray<double, real, false>(coeffstr, i == 0 ? _S : _CS);
         if (i == 0)
           _gravitational = SphericalHarmonic(_C, _S, N, N, M, _amodel, _norm);
         else
-          _correction = SphericalHarmonic(_CC, _SC, N, N, M, real(1), _norm);
+          _correction = SphericalHarmonic(_CC, _CS, N, N, M, real(1), _norm);
       }
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
@@ -210,7 +210,7 @@ namespace GeographicLib {
                                      bool gradp) const throw() {
     real
       invR = _dzonal0 ? 1 / Math::hypot(Math::hypot(X, Y),  Z) : 1,
-      T = (gradp
+      T = (!gradp
            ? _disturbing(-1, X, Y, Z)
            : _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ));
     T = (T / _amodel - _dzonal0 * invR) * _GMmodel;
@@ -256,7 +256,6 @@ namespace GeographicLib {
       T = InternalT(X, Y, Z, dummy, dummy, dummy, false),
       invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
-    std::cerr << T/gamma << " " << _zeta0 << " " << correction << "\n";
     return T/gamma + _zeta0 + correction;
   }
                                    
