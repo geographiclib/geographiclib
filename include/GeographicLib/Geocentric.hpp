@@ -66,6 +66,22 @@ namespace GeographicLib {
     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
     static void Rotation(real sphi, real cphi, real slam, real clam,
                          real M[dim2_]) throw();
+    static void Rotate(real M[dim2_], real x, real y, real z,
+                       real& X, real& Y, real& Z) throw() {
+      // Perform [X,Y,Z]^t = M.[x,y,z]^t
+      // (typically local cartesian to geocentric)
+      X = M[0] * x + M[1] * y + M[2] * z;
+      Y = M[3] * x + M[4] * y + M[5] * z;
+      Z = M[6] * x + M[7] * y + M[8] * z;
+    }
+    static void Unrotate(real M[dim2_], real X, real Y, real Z,
+                         real& x, real& y, real& z) throw()  {
+      // Perform [x,y,z]^t = M^t.[X,Y,Z]^t
+      // (typically geocentric to local cartesian)
+      x = M[0] * X + M[3] * Y + M[6] * Z;
+      y = M[1] * X + M[4] * Y + M[7] * Z;
+      z = M[2] * X + M[5] * Y + M[8] * Z;
+    }
     void IntForward(real lat, real lon, real h, real& X, real& Y, real& Z,
                     real M[dim2_]) const throw();
     void IntReverse(real X, real Y, real Z, real& lat, real& lon, real& h,

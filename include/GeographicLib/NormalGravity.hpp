@@ -11,9 +11,7 @@
 #define GEOGRAPHICLIB_NORMALGRAVITY_HPP "$Id$"
 
 #include <GeographicLib/Constants.hpp>
-#include <GeographicLib/SphericalHarmonic.hpp>
 #include <GeographicLib/Geocentric.hpp>
-#include <vector>
 
 namespace GeographicLib {
 
@@ -34,6 +32,23 @@ namespace GeographicLib {
    * terms.  However these series include sufficient terms to give full machine
    * precision.
    *
+   * Definitions:
+
+
+   * - <i>V</i><sub>0</sub>, the gravitational contribution to the normal
+   *   potential.
+   * - \e Phi, the rotational contribution to the normal potential.
+   * - \e U = <i>V</i><sub>0</sub> + \e Phi, the total
+   *   potential.
+   * - <b>Gamma</b> = grad <i>V</i><sub>0</sub>, the acceleration due to mass of
+   *   the earth.
+   * - <b>f</b> = grad \e Phi, the centrifugal acceleration.
+   * - <b>gamma</b> = grad \e U = <b>Gamma</b> + <b>f</b>, the normal
+   *   acceleration.
+   * - \e X, \e Y, \e Z, geocentric coordinates.
+   * - \e x, \e y, \e z, local cartesian coordinates use to denote the east,
+   *   north and up directions.
+   *
    * References:
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Fransisco, 1967), Secs. 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
@@ -44,13 +59,10 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT NormalGravity {
   private:
     static const int maxit_ = 10;
-    static const int N_ = 14;
     typedef Math::real real;
     friend class GravityModel;
     real _a, _GM, _omega, _J2, _omega2, _aomega2;
     real _e2, _ep2, _f, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
-    std::vector<real> _C;
-    SphericalHarmonic _harm;
     GeographicLib::Geocentric _earth;
     static Math::real qf(real ep2) throw();
     static Math::real qpf(real ep2) throw();
@@ -96,7 +108,7 @@ namespace GeographicLib {
      * Evaluate the gravity on the surface of the ellipsoid.
      *
      * @param[in] lat the geographic latitude (degrees).
-     * @return \e g the acceleration due to gravity, positive downwards
+     * @return \e gamma the acceleration due to gravity, positive downwards
      *   (m s<sup>-2</sup>).
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
@@ -111,19 +123,19 @@ namespace GeographicLib {
      *
      * @param[in] lat the geographic latitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
-     * @param[out] gy the northerly component of the acceleration
+     * @param[out] gammay the northerly component of the acceleration
      *   (m s<sup>-2</sup>).
-     * @param[out] gz the upward component of the acceleration
+     * @param[out] gammaz the upward component of the acceleration
      *   (m s<sup>-2</sup>).  (This is usually negative.)
-     * @return \e g the magnitude acceleration due to gravity
+     * @return \e gamma the magnitude acceleration due to gravity
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
      * the value of the longitude and the easterly component of the
      * acceleration vanishes.  The function includes the effects of the earth's
-     * rotation.  When \e h = 0, this function gives \e gy = 0 and the returned
+     * rotation.  When \e h = 0, this function gives \e gammay = 0 and the returned
      * value matches that of NormalGravity::SurfaceGravity.
      **********************************************************************/
-    Math::real Gravity(real lat, real h, real& gy, real& gz) const throw();
+    Math::real Gravity(real lat, real h, real& gammay, real& gammaz) const throw();
 
     /**
      * Evaluate the components of the acceleration due to gravity and the
@@ -132,23 +144,21 @@ namespace GeographicLib {
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
-     * @param[out] gX the \e X component of the acceleration
+     * @param[out] gammaX the \e X component of the acceleration
      *   (m s<sup>-2</sup>).
-     * @param[out] gY the \e Y component of the acceleration
+     * @param[out] gammaY the \e Y component of the acceleration
      *   (m s<sup>-2</sup>).
-     * @param[out] gZ the \e Z component of the acceleration
+     * @param[out] gammaZ the \e Z component of the acceleration
      *   (m s<sup>-2</sup>).
-     * @return \e U the sum of the gravitational and centrifugal potentials
+     * @return \e U = <i>V</i><sub>0</sub> + \e Phi the sum of the
+     *   gravitational and centrifugal potentials
      *   (m<sup>2</sup> s<sup>-2</sup>).
+     *
+     * The acceleration \e gamma is given by \e gamma = grad \e U = grad
+     * <i>V</i><sub>0</sub> + grad \e Phi = \e Gamma + \e f.
      **********************************************************************/
     Math::real U(real X, real Y, real Z,
-                 real& gX, real& gY, real& gZ) const throw();
-    /**
-     * The same as NormalGravity::U, but evaluated with a finite set of
-     * spherical harmonics.
-     **********************************************************************/
-    Math::real Useries(real X, real Y, real Z,
-                       real& gX, real& gY, real& gZ) const throw();
+                 real& gammaX, real& gammaY, real& gammaZ) const throw();
 
     /**
      * Evaluate the components of the acceleration due to gravity alone in
@@ -157,44 +167,39 @@ namespace GeographicLib {
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
-     * @param[out] gX the \e X component of the acceleration due to gravity
+     * @param[out] GammaX the \e X component of the acceleration due to gravity
      *   (m s<sup>-2</sup>).
-     * @param[out] gY the \e Y component of the acceleration due to gravity
+     * @param[out] GammaY the \e Y component of the acceleration due to gravity
      *   (m s<sup>-2</sup>).
-     * @param[out] gZ the \e Z component of the acceleration due to gravity
+     * @param[out] GammaZ the \e Z component of the acceleration due to gravity
      *   (m s<sup>-2</sup>).
-     * @return the gravitational potential (m<sup>2</sup> s<sup>-2</sup>).
+     * @return \e V<sub>0</sub> the gravitational potential
+     *   (m<sup>2</sup> s<sup>-2</sup>).
      *
      * This function excludes the centrifugal acceleration and is appropriate
      * to use for space applications.  In terrestrial applications, the
      * function NormalGravity::U (which includes this effect) should usually be
      * used.
      **********************************************************************/
-    Math::real V(real X, real Y, real Z,
-                 real& gX, real& gY, real& gZ) const throw();
+    Math::real V0(real X, real Y, real Z,
+                  real& GammaX, real& GammaY, real& GammaZ) const throw();
 
-    /**
-     * The same as NormalGravity::V, but evaluated with a finite set of
-     * spherical harmonics.
-     **********************************************************************/
-    Math::real Vseries(real X, real Y, real Z,
-                       real& gX, real& gY, real& gZ) const throw();
     /**
      * Evaluate the centrifugal acceleration in geocentric coordinates.
      *
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
-     * @param[out] gX the \e X component of the centrifugal acceleration
+     * @param[out] fX the \e X component of the centrifugal acceleration
      *   (m s<sup>-2</sup>).
-     * @param[out] gY the \e Y component of the centrifugal acceleration
+     * @param[out] fY the \e Y component of the centrifugal acceleration
      *   (m s<sup>-2</sup>).
      * @return \e Phi the centrifugal potential (m<sup>2</sup> s<sup>-2</sup>).
      *
-     * \e Phi is independent of \e Z, thus \e gZ = 0.  This function
-     * NormalGravity::U sums the results of NormalGravity::V and
+     * \e Phi is independent of \e Z, thus \e fZ = 0.  This function
+     * NormalGravity::U sums the results of NormalGravity::V0 and
      * NormalGravity::Phi.
      **********************************************************************/
-    Math::real Phi(real X, real Y, real& gX, real& gY) const throw();
+    Math::real Phi(real X, real Y, real& fX, real& fY) const throw();
     ///@}
 
     /** \name Inspector functions

@@ -21,8 +21,8 @@ RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 
 #if !defined(GRAVITY_DEFAULT_PATH)
 #  if defined(GEOGRAPHICLIB_GRAVITY_PATH)
-       // Use cmake supplied value is available
-#      define GRAVITY_DEFAULT_PATH GEOGRAPHICLIB_GRAVITY_PATH
+     // Use cmake supplied value is available
+#    define GRAVITY_DEFAULT_PATH GEOGRAPHICLIB_GRAVITY_PATH
 #  else
 #    if defined(_MSC_VER)
 #      define GRAVITY_DEFAULT_PATH \
@@ -33,7 +33,7 @@ RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 #  endif
 #endif
 #if !defined(GRAVITY_DEFAULT_NAME)
-#  define GRAVITY_DEFAULT_NAME "egm96"
+#  define GRAVITY_DEFAULT_NAME "egm2008"
 #endif
 
 #if defined(_MSC_VER)
@@ -89,12 +89,13 @@ namespace GeographicLib {
     real mult = _earth._GM / _GMmodel;
     real amult = Math::sq(_earth._a / _amodel);
     // The 0th term in _zonal should be is 1 + _dzonal0.  Instead set it to 1
-    // to give exact cancelation with the (0,0) term in the model and account
+    // to give exact cancellation with the (0,0) term in the model and account
     // for _dzonal0 separately.
     _zonal.resize(0); _zonal.push_back(1);
     _dzonal0 = (_earth.GravitationalConstant() - _GMmodel) / _GMmodel;
-    _dzonal0 = 0;               // FOR COMPATIBILITY WITH NGA
     for (int n = 2; n <= nmx; n += 2) {
+      // Only include as many zonal terms as matter.  Typically this goes out
+      // to n = 18.
       mult *= amult;
       real
         r = _C[n],                                         // the model term
@@ -194,19 +195,25 @@ namespace GeographicLib {
 
   Math::real GravityModel::InternalT(real X, real Y, real Z,
                                      real& deltaX, real& deltaY, real& deltaZ,
-                                     bool gradp) const throw() {
+                                     bool gradp, bool correct) const throw() {
+    // If correct, then produce the correct T = W - U.  Otherwise, neglect the
+    // n = 0 term (which is proportial to the difference in the model and
+    // reference values of GM).
+    if (_dzonal0 == 0)
+      // No need to do the correction
+      correct = false;
     real
-      invR = _dzonal0 ? 1 / Math::hypot(Math::hypot(X, Y),  Z) : 1,
+      invR = correct ? 1 / Math::hypot(Math::hypot(X, Y),  Z) : 1,
       T = (gradp
            ? _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ)
            : _disturbing(-1, X, Y, Z));
-    T = (T / _amodel - _dzonal0 * invR) * _GMmodel;
+    T = (T / _amodel - (correct ? _dzonal0 : 0) * invR) * _GMmodel;
     if (gradp) {
       real f = _GMmodel / _amodel;
       deltaX *= f;
       deltaY *= f;
       deltaZ *= f;
-      if (_dzonal0) {
+      if (correct) {
         invR = _GMmodel * _dzonal0 * invR * invR * invR;
         deltaX += X * invR;
         deltaY += Y * invR;
@@ -216,21 +223,52 @@ namespace GeographicLib {
     return T;
   }
 
-  Math::real GravityModel::InternalV(real X, real Y, real Z,
-                                     real& gX, real& gY, real& gZ,
-                                     bool gradp) const throw() {
+  Math::real GravityModel::V(real X, real Y, real Z,
+                             real& GX, real& GY, real& GZ) const throw() {
     real
-      V = (gradp
-           ? _gravitational(X, Y, Z, gX, gY, gZ)
-           : _gravitational(X, Y, Z)),
+      Vres = _gravitational(X, Y, Z, GX, GY, GZ),
       f = _GMmodel / _amodel;
-    V *= f;
-    if (gradp) {
-      gX *= f;
-      gY *= f;
-      gZ *= f;
-    }
-    return V;
+    Vres *= f;
+    GX *= f;
+    GY *= f;
+    GZ *= f;
+    return Vres;
+  }
+
+  Math::real GravityModel::W(real X, real Y, real Z,
+                             real& gX, real& gY, real& gZ) const throw() {
+    real fX, fY,
+      Wres = V(X, Y, Z, gX, gY, gZ) + _earth.Phi(X, Y, fX, fY);
+    gX += fX;
+    gY += fY;
+    return Wres;
+  }
+
+  void GravityModel::Anomaly(real lat, real lon, real h,
+                             real& Dg01, real& xi, real& eta) const throw() {
+    real X, Y, Z, M[9];
+    _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
+    real
+      deltaX, deltaY, deltaZ,
+      T = InternalT(X, Y, Z, deltaX, deltaY, deltaZ, true, false),
+      clam = M[3], slam = -M[0],
+      P = Math::hypot(X, Y),
+      R = Math::hypot(P, Z),
+      // psi is geocentric latitude
+      cpsi = R ? P / R : M[7],
+      spsi = R ? Z / R : M[8];
+    // Rotate cartesian into spherical coordinates
+    real MC[9];
+    Geocentric::Rotation(spsi, cpsi, slam, clam, MC);
+    real deltax, deltay, deltaz;
+    Geocentric::Unrotate(MC, deltaX, deltaY, deltaZ, deltax, deltay, deltaz);
+    // H+M, Eq 2-151c
+    Dg01 = - deltaz - 2 * T / R;
+    real gammaX, gammaY, gammaZ;
+    _earth.U(X, Y, Z, gammaX, gammaY, gammaZ);
+    real gamma = Math::hypot( Math::hypot(gammaX, gammaY), gammaZ);
+    xi  = -(deltay/gamma) / Math::degree<real>();
+    eta = -(deltax/gamma) / Math::degree<real>();
   }
 
   Math::real GravityModel::Geoid(real lat, real lon) const throw()
@@ -240,7 +278,7 @@ namespace GeographicLib {
     real
       gamma = _earth.SurfaceGravity(lat),
       dummy,
-      T = InternalT(X, Y, Z, dummy, dummy, dummy, false),
+      T = InternalT(X, Y, Z, dummy, dummy, dummy, false, false),
       invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
     return T/gamma + _zeta0 + correction;

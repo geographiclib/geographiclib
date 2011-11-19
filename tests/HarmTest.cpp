@@ -18,13 +18,25 @@ int main() {
     {
       std::cout << std::fixed;
       GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
-      real lat, lon;
-      while (std::cin >> lat >> lon)
+      real lat, lon, h;
+      while (std::cin >> lat >> lon >> h) {
+        real
+          g = egm.Geoid(lat, lon),
+          Dg01, xi, eta;
+        egm.Anomaly(lat, lon, h, Dg01, xi, eta);
+        Dg01 *= 1e5;
+        xi *= 3600;
+        eta *= 3600;
+        /*
         std::cout << std::setprecision(6)
                   << std::setw(12) << lat
                   << std::setw(12) << lon
                   << std::setprecision(9) << std::setw(17)
                   << egm.Geoid(lat, lon) << "\n";
+        */
+        std::cout << std::setprecision(12) << g << " " << Dg01 << " "
+                  << xi << " " << eta << "\n";
+      }
     }
     return 0;
 

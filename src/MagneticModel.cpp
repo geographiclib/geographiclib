@@ -20,8 +20,8 @@ RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 
 #if !defined(MAGNETIC_DEFAULT_PATH)
 #  if defined(GEOGRAPHICLIB_MAGNETIC_PATH)
-       // Use cmake supplied value is available
-#      define MAGNETIC_DEFAULT_PATH GEOGRAPHICLIB_MAGNETIC_PATH
+     // Use cmake supplied value is available
+#    define MAGNETIC_DEFAULT_PATH GEOGRAPHICLIB_MAGNETIC_PATH
 #  else
 #    if defined(_MSC_VER)
 #      define MAGNETIC_DEFAULT_PATH \

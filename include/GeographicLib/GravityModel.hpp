@@ -53,10 +53,7 @@ namespace GeographicLib {
     void ReadMetadata(const std::string& name);
     Math::real InternalT(real X, real Y, real Z,
                          real& deltaX, real& deltaY, real& deltaZ,
-                         bool gradp) const throw();
-    Math::real InternalV(real X, real Y, real Z,
-                         real& gX, real& gY, real& gZ,
-                         bool gradp) const throw();
+                         bool gradp, bool correct) const throw();
   public:
 
     /** \name Setting up the gravity model
@@ -91,6 +88,25 @@ namespace GeographicLib {
     ///@{
     /**
      * Evaluate the components of the gravity.
+     * See H+M, Sec 2-13.
+     * - Phi = rotational potentail
+     * - V = normal gravitation potentail
+     * - U = V + Phi = total normal potential
+     * - T = anomalous or disturbing potential
+     * - W = U + T = total potential
+     * - V + T = gravitational potential
+     * - g = grad W
+     * - f = grad Phi
+     * - Gamma = grad V
+     * - gamma = grad U
+     * - delta = grad T = gravity disturbance vector = g(P) - gamma(P)
+     * - delta g = gravity disturbance = |g(P)| - |gamma(P)|
+     * - g = gamma + delta
+     * - Delta g = gravity anomaly vector = g(P) - gamma(Q)
+     *   (Q on ellispoid, PQ normal to ellipsoid)
+     * - Delta |g| = gravity anomaly = |g(P)| - |gamma(Q)|
+     * - (xi, eta) deflection of the vertical is difference in directions of
+     *   Q(P) and gamma(Q), xi = NS, eta = EW
      **********************************************************************/
     Math::real Geoid(real lat, real lon) const throw();
     Math::real Disturbing(real lat, real lon, real h) const throw();
@@ -106,12 +122,18 @@ namespace GeographicLib {
                      real& gx, real& gy, real& gz) const throw();
     Math::real T(real X, real Y, real Z) const throw() {
       real dummy;
-      return InternalT(X, Y, Z, dummy, dummy, dummy, false);
+      return InternalT(X, Y, Z, dummy, dummy, dummy, false, true);
     }
     Math::real T(real X, real Y, real Z,
                  real& deltaX, real& deltaY, real& deltaZ) const throw() {
-      return InternalT(X, Y, Z, deltaX, deltaY, deltaZ, true);
+      return InternalT(X, Y, Z, deltaX, deltaY, deltaZ, true, true);
     }
+    void Anomaly(real lat, real lon, real h,
+                 real& Dg01, real& xi, real& eta) const throw();
+    Math::real V(real X, real Y, real Z,
+                 real& GX, real& GY, real& GZ) const throw();
+    Math::real W(real X, real Y, real Z,
+                 real& gX, real& gY, real& gZ) const throw();
     ///@}
 
     /** \name Inspector functions
@@ -171,7 +193,7 @@ namespace GeographicLib {
      * @return the default name for the gravity model.
      *
      * This is the value of the environment variable GRAVITY_NAME, if set,
-     * otherwise, it is "egm96".  The GravityModel class does not use
+     * otherwise, it is "egm2008".  The GravityModel class does not use
      * this function; it is just provided as a convenience for a calling
      * program when constructing a GravityModel object.
      **********************************************************************/

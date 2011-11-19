@@ -28,7 +28,6 @@ namespace GeographicLib {
     , _J2(J2)
     , _omega2(Math::sq(_omega))
     , _aomega2(Math::sq(_omega * _a))
-    , _C(N_ + 1, real(0))
     {
       if (!(Math::isfinite(_a) && _a > 0))
         throw GeographicErr("Major radius is not positive");
@@ -73,11 +72,6 @@ namespace GeographicLib {
       _k = (_m + 3 * Q / 2 - _e2 * (1 + Q)) / G;
       // f* = (gammap - gammae) / gammae
       _fstar = (_m + 3 * Q / 2 - _f * (1 + Q)) / G;
-      for (int n = 0; n <= N_; n += 2)
-        // Jn(odd) is zero so treat only even n
-        _C[n] = - Jn(n) / sqrt(real(2 * n + 1));
-      _harm = SphericalHarmonic(_C, _C, N_, N_, 0, _a,
-                                SphericalHarmonic::full);
     }
 
   const NormalGravity
@@ -164,8 +158,8 @@ namespace GeographicLib {
     return _gammae * (1 + _k * sphi2) / sqrt(1 - _e2 * sphi2);
   }
 
-  Math::real NormalGravity::V(real X, real Y, real Z,
-                              real& gX, real& gY, real& gZ)
+  Math::real NormalGravity::V0(real X, real Y, real Z,
+                               real& GammaX, real& GammaY, real& GammaZ)
     const throw() {
     // See H+M, Sec 6-2
     real
@@ -193,8 +187,8 @@ namespace GeographicLib {
       q = qf(ep2) / _q0,
       qp = qpf(ep2) / _q0,
       // H+M, Eqs 2-62 + 6-9, but omitting last (rotational) term .
-      V = (_GM / _E * atan(_E / u)
-           + _aomega2 * q * (Math::sq(sbet) - 1/real(3)) / 2),
+      Vres = (_GM / _E * atan(_E / u)
+              + _aomega2 * q * (Math::sq(sbet) - 1/real(3)) / 2),
       // H+M, Eq 6-10
       gamu = - invw * (_GM
                        + (_aomega2 * _E * qp
@@ -202,65 +196,42 @@ namespace GeographicLib {
       gamb = _aomega2 * q  * sbet * cbet * invw / uE,
       t = u * invw / uE;
     // H+M, Eq 6-12
-    gX = t * cbet * gamu - invw * sbet * gamb;
-    gY = gX * slam;
-    gX *= clam;
-    gZ = invw * sbet * gamu + t * cbet * gamb;
-    return V;
+    GammaX = t * cbet * gamu - invw * sbet * gamb;
+    GammaY = GammaX * slam;
+    GammaX *= clam;
+    GammaZ = invw * sbet * gamu + t * cbet * gamb;
+    return Vres;
   }
 
-  Math::real NormalGravity::Phi(real X, real Y, real& gX, real& gY)
+  Math::real NormalGravity::Phi(real X, real Y, real& fX, real& fY)
     const throw() {
-    gX = _omega2 * X;
-    gY = _omega2 * Y;
-    // N.B. gZ = 0;
+    fX = _omega2 * X;
+    fY = _omega2 * Y;
+    // N.B. fZ = 0;
     return _omega2 * (Math::sq(X) + Math::sq(Y)) / 2;
   }
 
   Math::real NormalGravity::U(real X, real Y, real Z,
-                              real& gX, real& gY, real& gZ)
+                              real& gammaX, real& gammaY, real& gammaZ)
     const throw() {
-    real gX1, gY1;
-    real U = V(X, Y, Z, gX, gY, gZ) + Phi(X, Y, gX1, gY1);
-    gX += gX1;
-    gY += gY1;
-    return U;
+    real fX, fY;
+    real Ures = V0(X, Y, Z, gammaX, gammaY, gammaZ) + Phi(X, Y, fX, fY);
+    gammaX += fX;
+    gammaY += fY;
+    return Ures;
   }
   
-  Math::real NormalGravity::Vseries(real X, real Y, real Z,
-                                    real& gX, real& gY, real& gZ)
-    const throw() {
-    real
-      f = _GM / _a,
-      U = _harm(X, Y, Z, gX, gY, gZ);
-    U = f * U;
-    gX *= f;
-    gY *= f;
-    gZ *= f;
-    return U;
-  }
-
-  Math::real NormalGravity::Useries(real X, real Y, real Z,
-                                    real& gX, real& gY, real& gZ)
-    const throw() {
-    real gX1, gY1;
-    real U = Vseries(X, Y, Z, gX, gY, gZ) + Phi(X, Y, gX1, gY1);
-    gX += gX1;
-    gY += gY1;
-    return U;
-  }
-
-  Math::real NormalGravity::Gravity(real lat, real h, real& gy, real& gz)
+  Math::real NormalGravity::Gravity(real lat, real h, real& gammay, real& gammaz)
     const throw() {
     real X, Y, Z;
     real M[9];
     _earth.IntForward(lat, 0, h, X, Y, Z, M);
-    real gX, gY, gZ;
-    U(X, Y, Z, gX, gY, gZ);
-    // gx = M[0] * gX + M[3] * gY + M[6] * gZ;
-    gy = M[1] * gX + M[4] * gY + M[7] * gZ;
-    gz = M[2] * gX + M[5] * gY + M[8] * gZ;
-    return Math::hypot(gy, gz);
+    real gammaX, gammaY, gammaZ;
+    U(X, Y, Z, gammaX, gammaY, gammaZ);
+    // gammax = M[0] * gammaX + M[3] * gammaY + M[6] * gammaZ;
+    gammay = M[1] * gammaX + M[4] * gammaY + M[7] * gammaZ;
+    gammaz = M[2] * gammaX + M[5] * gammaY + M[8] * gammaZ;
+    return Math::hypot(gammay, gammaz);
   }
 
   void NormalGravity::DumpConstants() const {

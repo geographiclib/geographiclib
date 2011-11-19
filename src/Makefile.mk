@@ -87,9 +87,10 @@ MagneticModel.o: MagneticModel.hpp Constants.hpp Math.hpp Utility.hpp \
 MagneticCircle.o: MagneticCircle.hpp Constants.hpp Math.hpp Config.h \
 	CircularEngine.hpp Geocentric.hpp
 NormalGravity.o: NormalGravity.hpp Constants.hpp Math.hpp Config.h \
-	SphericalHarmonic.hpp
+	SphericalHarmonic.hpp Geocentric.hpp
 GravityModel.o: GravityModel.hpp Constants.hpp Math.hpp Config.h \
-	NormalGravity.hpp SphericalHarmonic.hpp SphericalHarmonic1.hpp
+	NormalGravity.hpp SphericalHarmonic.hpp SphericalHarmonic1.hpp \
+	Geocentric.hpp
 Utility.o: Utility.hpp Constants.hpp Math.hpp Config.h
 
 .PHONY: all install clean
