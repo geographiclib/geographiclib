@@ -35,6 +35,8 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT SphericalEngine {
   private:
     typedef Math::real real;
+    // A table of the square roots of integers
+    static std::vector<real> root_;
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static const real scale_;
@@ -304,6 +306,13 @@ namespace GeographicLib {
     template<bool gradp, SphericalEngine::normalization norm, int L>
       static CircularEngine Circle(const coeff c[], const real f[],
                                    real p, real z, real a);
+    /**
+     * Check that the static table of square roots it big enough and enlarge it
+     * if necessary.
+     *
+     * @param[in] N the maximume degree to be used in SphericalEngine.
+     **********************************************************************/
+    static void RootTable(int N);
   };
 
 } // namespace GeographicLib

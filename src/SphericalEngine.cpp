@@ -28,6 +28,7 @@ namespace GeographicLib {
     Math::sq(numeric_limits<real>::epsilon());
 
   const std::vector<Math::real> SphericalEngine::Z_(0);
+  std::vector<Math::real> SphericalEngine::root_(0);
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
   Math::real SphericalEngine::Value(const coeff c[], const real f[],
@@ -353,13 +354,24 @@ namespace GeographicLib {
     return circ;
   }
 
+  void SphericalEngine::RootTable(int N) {
+    // Need square roots up to 2 * N + 1.
+    int L = 2 * N + 2, oldL = int(root_.size());
+    if (oldL >= L)
+      return;
+    root_.resize(L);
+    for (int l = oldL; l < L; ++l)
+      root_[l] = sqrt(real(l));
+  }
+
   void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,
                                           std::vector<real>& C,
                                           std::vector<real>& S) {
     int nm[2];
     Utility::readarray<int, int, false>(stream, nm, 2);
     N = nm[0]; M = nm[1];
-    if (!(N >= M && M >= -1))
+    if (!(N >= M && M >= -1 && N * M >= 0))
+      // The last condition is that M = -1 implies N = -1 and vice versa.
       throw GeographicErr("Bad degree and order " +
                           Utility::str(N) + " " + Utility::str(M));
     C.resize(SphericalEngine::coeff::Csize(N, M));
