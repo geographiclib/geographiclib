@@ -243,13 +243,14 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return the description of the magnetic model, if available, in the data
-     *   file; if absent, return "NONE".
+     * @return the description of the magnetic model, if available, from the
+     *   Description file in the data file; if absent, return "NONE".
      **********************************************************************/
     const std::string& Description() const throw() { return _description; }
 
     /**
-     * @return date of the model; if absent, return "UNKNOWN".
+     * @return date of the model, if available, from the ReleaseDate field in
+     *   the data file; if absent, return "UNKNOWN".
      **********************************************************************/
     const std::string& DateTime() const throw() { return _date; }
 

@@ -22,8 +22,8 @@ namespace GeographicLib {
    * as an rotating ellipsoid.  The eccentricity of the ellipsoid, the rotation
    * speed, and the distribution of mass within the ellipsoid are such that the
    * surface of the ellipsoid is a surface of constant potential (gravitational
-   * plus centrifugal).  The acceleration due to gravity is therefore normal to
-   * the surface of the ellipsoid.
+   * plus centrifugal).  The acceleration due to gravity is therefore
+   * perpendicular to the surface of the ellipsoid.
    *
    * There is a closed solution to this problem which is implemented here.
    * Series "approximations" are only used to evaluate certain combinations of
@@ -33,25 +33,23 @@ namespace GeographicLib {
    * precision.
    *
    * Definitions:
-
-
    * - <i>V</i><sub>0</sub>, the gravitational contribution to the normal
-   *   potential.
-   * - \e Phi, the rotational contribution to the normal potential.
+   *   potential;
+   * - \e Phi, the rotational contribution to the normal potential;
    * - \e U = <i>V</i><sub>0</sub> + \e Phi, the total
-   *   potential.
-   * - <b>Gamma</b> = grad <i>V</i><sub>0</sub>, the acceleration due to mass of
-   *   the earth.
-   * - <b>f</b> = grad \e Phi, the centrifugal acceleration.
-   * - <b>gamma</b> = grad \e U = <b>Gamma</b> + <b>f</b>, the normal
-   *   acceleration.
-   * - \e X, \e Y, \e Z, geocentric coordinates.
+   *   potential;
+   * - <b>Gamma</b> = <b>grad</b> <i>V</i><sub>0</sub>, the acceleration due to
+   *   mass of the earth;
+   * - <b>f</b> = <b>grad</b> \e Phi, the centrifugal acceleration;
+   * - <b>gamma</b> = <b>grad</b> \e U = <b>Gamma</b> + <b>f</b>, the normal
+   *   acceleration;
+   * - \e X, \e Y, \e Z, geocentric coordinates;
    * - \e x, \e y, \e z, local cartesian coordinates use to denote the east,
    *   north and up directions.
    *
    * References:
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
-   *   Fransisco, 1967), Secs. 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
+   *   Fransisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
    * - H. Moritz, Geodetic Reference System 1980, J. Geod. 54(3), 395-405
    *   (1980) http://dx.doi.org/10.1007/BF02521480
    **********************************************************************/
@@ -76,7 +74,7 @@ namespace GeographicLib {
      * Constructor for the normal gravity.
      *
      * @param[in] a equatorial radius (meters).
-     * @param[in] GM gravitational constant radius
+     * @param[in] GM mass constant of the ellipsoide
      *   (meters<sup>3</sup>/seconds<sup>2</sup>).
      * @param[in] omega the angular velociry (rad s<sup>-1</sup>).
      * @param[in] J2 dynamical form factor or the flattening \e f (depending on
@@ -112,8 +110,9 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
-     * the value of the longitude.  This acceleration is normal to the surface
-     * of the ellipsoid.  It includes the effects of the earth's rotation.
+     * the value of the longitude.  This acceleration is perpendicular to the
+     * surface of the ellipsoid.  It includes the effects of the earth's
+     * rotation.
      **********************************************************************/
     Math::real SurfaceGravity(real lat) const throw();
 
@@ -154,8 +153,8 @@ namespace GeographicLib {
      *   gravitational and centrifugal potentials
      *   (m<sup>2</sup> s<sup>-2</sup>).
      *
-     * The acceleration \e gamma is given by \e gamma = grad \e U = grad
-     * <i>V</i><sub>0</sub> + grad \e Phi = \e Gamma + \e f.
+     * The acceleration \e gamma is given by \e gamma = <b>grad</b> \e U =
+     * <b>grad</b> <i>V</i><sub>0</sub> + <b>grad</b> \e Phi = \e Gamma + \e f.
      **********************************************************************/
     Math::real U(real X, real Y, real Z,
                  real& gammaX, real& gammaY, real& gammaZ) const throw();
@@ -218,11 +217,11 @@ namespace GeographicLib {
     { return Init() ? _a : Math::NaN<real>(); }
 
     /**
-     * @return \e GM the gravitational constation of the ellipsoid
+     * @return \e GM the mass constation of the ellipsoid
      *   (m<sup>3</sup> s<sup>-2</sup>).  This is the value used in the
      *   constructor.
      **********************************************************************/
-    Math::real GravitationalConstant() const throw()
+    Math::real MassConstant() const throw()
     { return Init() ? _GM : Math::NaN<real>(); }
 
     /**

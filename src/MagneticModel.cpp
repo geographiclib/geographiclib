@@ -181,7 +181,7 @@ namespace GeographicLib {
     bool interpolate = n + 1 < _Nmodels;
     t -= n * _dt0;
     real X, Y, Z;
-    real M[9];
+    real M[Geocentric::dim2_];
     _earth.IntForward(lat, lon, h, X, Y, Z, M);
     real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis
     _harm[n](X, Y, Z, BX0, BY0, BZ0);

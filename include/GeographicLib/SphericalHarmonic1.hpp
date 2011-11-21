@@ -249,8 +249,14 @@ namespace GeographicLib {
       }
     }
 
+    /**
+     * @return the zeroth GeographicLib::SphericalEngine::coeff object.
+     **********************************************************************/
     const SphericalEngine::coeff& Coefficients() const throw()
     { return _c[0]; }
+    /**
+     * @return the first GeographicLib::SphericalEngine::coeff object.
+     **********************************************************************/
     const SphericalEngine::coeff& Coefficients1() const throw()
     { return _c[1]; }
   };

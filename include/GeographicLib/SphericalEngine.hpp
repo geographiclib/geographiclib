@@ -37,6 +37,7 @@ namespace GeographicLib {
     typedef Math::real real;
     // A table of the square roots of integers
     static std::vector<real> root_;
+    friend class CircularEngine; // CircularEngine needs access to root_
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static const real scale_;
@@ -44,7 +45,6 @@ namespace GeographicLib {
     static const real eps_;
     static const std::vector<real> Z_;
     SphericalEngine();        // Disable constructor
-
   public:
     /**
      * Supported normalizations for associate Legendre polynomials.
@@ -120,6 +120,7 @@ namespace GeographicLib {
         if (!(index(_nmx, _mmx) < int(C.size()) &&
               index(_nmx, _mmx) < int(S.size()) + (_N + 1)))
           throw GeographicErr("Arrays too small in coeff");
+        SphericalEngine::RootTable(_nmx);
       }
       /**
        * The constructor for full coefficient vectors.
@@ -145,6 +146,7 @@ namespace GeographicLib {
         if (!(index(_nmx, _mmx) < int(C.size()) &&
               index(_nmx, _mmx) < int(S.size()) + (_N + 1)))
           throw GeographicErr("Arrays too small in coeff");
+        SphericalEngine::RootTable(_nmx);
       }
       /**
        * @return \e N the degree giving storage layout for \e C and \e S.

@@ -78,6 +78,11 @@ namespace GeographicLib {
       _C[0] = 1;                // Include the 1/r term in the sum
       _gravitational = SphericalHarmonic(_C, _S, N, N, M, _amodel, _norm);
       SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _CC, _CS);
+      if (N < 0) {
+        N = M = 0;
+        _CC.resize(1, real(0));
+      }
+      _CC[0] += _zeta0 / _corrmult;
       _correction = SphericalHarmonic(_CC, _CS, N, N, M, real(1), _norm);
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
@@ -92,10 +97,13 @@ namespace GeographicLib {
     // to give exact cancellation with the (0,0) term in the model and account
     // for _dzonal0 separately.
     _zonal.resize(0); _zonal.push_back(1);
-    _dzonal0 = (_earth.GravitationalConstant() - _GMmodel) / _GMmodel;
+    _dzonal0 = (_earth.MassConstant() - _GMmodel) / _GMmodel;
     for (int n = 2; n <= nmx; n += 2) {
-      // Only include as many zonal terms as matter.  Typically this goes out
-      // to n = 18.
+      // Only include as many normal zonal terms as matter.  Figuring the limit
+      // in this way works because the coefficients of the normal potential
+      // (which is smooth) decay much more rapidly that the corresponding
+      // coefficient of the model potential (which is bumpy).  Typically this
+      // goes out to n = 18.
       mult *= amult;
       real
         r = _C[n],                                         // the model term
@@ -147,13 +155,13 @@ namespace GeographicLib {
         _date = val;
       else if (key == "ModelRadius")
         _amodel = Utility::num<real>(val);
-      else if (key == "ModelGravity")
+      else if (key == "ModelMass")
         _GMmodel = Utility::num<real>(val);
       else if (key == "AngularVelocity")
         omega = Utility::num<real>(val);
       else if (key == "ReferenceRadius")
         a = Utility::num<real>(val);
-      else if (key == "ReferenceGravity")
+      else if (key == "ReferenceMass")
         GM = Utility::num<real>(val);
       else if (key == "Flattening")
         f = Utility::fract<real>(val);
@@ -183,11 +191,15 @@ namespace GeographicLib {
     if (!(Math::isfinite(_amodel) && _amodel > 0))
       throw GeographicErr("Model radius must be positive");
     if (!(Math::isfinite(_GMmodel) && _GMmodel > 0))
-      throw GeographicErr("Model gravitational constant must be positive");
+      throw GeographicErr("Model mass constant must be positive");
     bool flatp = Math::isfinite(f);
     if (flatp && Math::isfinite(J2))
       throw GeographicErr
         ("Cannot specify both flattening and dynamical form factor");
+    if (!(Math::isfinite(_corrmult) && _corrmult > 0))
+      throw GeographicErr("Correction multiplier must be positive");
+    if (!(Math::isfinite(_zeta0)))
+      throw GeographicErr("Height offset must be finite");
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
     _earth = NormalGravity(a, GM, omega, flatp ? f : J2, flatp);
@@ -246,7 +258,7 @@ namespace GeographicLib {
 
   void GravityModel::Anomaly(real lat, real lon, real h,
                              real& Dg01, real& xi, real& eta) const throw() {
-    real X, Y, Z, M[9];
+    real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real
       deltaX, deltaY, deltaZ,
@@ -258,7 +270,7 @@ namespace GeographicLib {
       cpsi = R ? P / R : M[7],
       spsi = R ? Z / R : M[8];
     // Rotate cartesian into spherical coordinates
-    real MC[9];
+    real MC[Geocentric::dim2_];
     Geocentric::Rotation(spsi, cpsi, slam, clam, MC);
     real deltax, deltay, deltaz;
     Geocentric::Unrotate(MC, deltaX, deltaY, deltaZ, deltax, deltay, deltaz);
@@ -281,7 +293,8 @@ namespace GeographicLib {
       T = InternalT(X, Y, Z, dummy, dummy, dummy, false, false),
       invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
-    return T/gamma + _zeta0 + correction;
+    // _zeta0 has been included in _correction
+    return T/gamma + correction;
   }
                                    
   Math::real GravityModel::Disturbing(real /*lat*/, real /*lon*/, real /*h*/) const throw()

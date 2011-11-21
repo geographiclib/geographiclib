@@ -24,6 +24,7 @@ namespace GeographicLib {
                                    real& gradx, real& grady, real& gradz)
     const throw() {
     gradp = _gradp && gradp;
+    const vector<real>& root_( SphericalEngine::root_ );
 
     // Initialize outer sum
     real vc  = 0, vc2  = 0, vs  = 0, vs2  = 0;   // v [N + 1], v [N + 2]
@@ -39,14 +40,14 @@ namespace GeographicLib {
         real v, A, B;           // alpha[m], beta[m + 1]
         switch (_norm) {
         case full:
-          v = 2 * real(2 * m + 3) / (m + 1);
-          A = cl * sqrt(v) * _uq;
-          B = - sqrt((v * (2 * m + 5)) / (8 * (m + 2))) * _uq2;
+          v = root_[2] * root_[2 * m + 3] / root_[m + 1];
+          A = cl * v * _uq;
+          B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * _uq2;
           break;
         case schmidt:
-          v = 2 * real(2 * m + 1) / (m + 1);
-          A = cl * sqrt(v) * _uq;
-          B = - sqrt((v * (2 * m + 3)) / (8 * (m + 2))) * _uq2;
+          v = root_[2] * root_[2 * m + 1] / root_[m + 1];
+          A = cl * v * _uq;
+          B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * _uq2;
           break;
         default:
           A = B = 0;
@@ -65,12 +66,12 @@ namespace GeographicLib {
         real A, B, qs;
         switch (_norm) {
         case full:
-          A = sqrt(real(3)) * _uq;       // F[1]/(q*cl) or F[1]/(q*sl)
-          B = - sqrt(real(15)/4) * _uq2; // beta[1]/q
+          A = root_[3] * _uq;       // F[1]/(q*cl) or F[1]/(q*sl)
+          B = - root_[15]/2 * _uq2; // beta[1]/q
           break;
         case schmidt:
           A = _uq;
-          B = - sqrt(real(3)/4) * _uq2;
+          B = - real(3)/2 * _uq2;
           break;
         default:
           A = B = 0;

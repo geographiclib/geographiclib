@@ -89,24 +89,29 @@ namespace GeographicLib {
     /**
      * Evaluate the components of the gravity.
      * See H+M, Sec 2-13.
-     * - Phi = rotational potentail
-     * - V = normal gravitation potentail
-     * - U = V + Phi = total normal potential
-     * - T = anomalous or disturbing potential
-     * - W = U + T = total potential
-     * - V + T = gravitational potential
-     * - g = grad W
-     * - f = grad Phi
-     * - Gamma = grad V
-     * - gamma = grad U
-     * - delta = grad T = gravity disturbance vector = g(P) - gamma(P)
-     * - delta g = gravity disturbance = |g(P)| - |gamma(P)|
-     * - g = gamma + delta
-     * - Delta g = gravity anomaly vector = g(P) - gamma(Q)
-     *   (Q on ellispoid, PQ normal to ellipsoid)
-     * - Delta |g| = gravity anomaly = |g(P)| - |gamma(Q)|
-     * - (xi, eta) deflection of the vertical is difference in directions of
-     *   Q(P) and gamma(Q), xi = NS, eta = EW
+     * - \e V = gravitational potential;
+     * - \e Phi = rotational potential;
+     * - \e W = \e V + \e Phi = \e T + \e U = total potential;
+     * - <i>V</i><sub>0</sub> = normal gravitation potential;
+     * - \e U = <i>V</i><sub>0</sub> + \e Phi = total normal potential;
+     * - \e T = \e W - \e U = \e V - <i>V</i><sub>0</sub> = anomalous or
+     *   disturbing potential;
+     * - <b>g</b> = <b>grad</b> \e W = <b>gamma</b> + <b>delta</b>;
+     * - <b>f</b> = <b>grad</b> \e Phi;
+     * - <b>Gamma</b> = <b>grad</b> <i>V</i><sub>0</sub>;
+     * - <b>gamma</b> = <b>grad</b> \e U;
+     * - <b>delta</b> = <b>grad</b> \e T = gravity disturbance vector
+     *   = <b>g</b><sub><i>P</i></sub> - <b>gamma</b><sub><i>P</i></sub>;
+     * - delta \e g = gravity disturbance = \e g<sub><i>P</i></sub> - \e
+     *   gamma<sub><i>P</i></sub>;
+     * - Delta <b>g</b> = gravity anomaly vector =
+     *   <b>g</b><sub><i>P</i></sub> - <b>gamma</b><sub><i>Q</i></sub>, (where
+     *   \e Q is on ellispoid and \e PQ is perpendicular to ellipsoid);
+     * - Delta \e g = gravity anomaly = \e g<sub><i>P</i></sub> - \e
+     *   gamma<sub><i>Q</i></sub>;
+     * - (\e xi, \e eta) deflection of the vertical, the difference in
+     *   directions of <b>g</b><sub><i>P</i></sub> and
+     *   <b>gamma</b><sub><i>Q</i></sub>, \e xi = NS, \e eta = EW.
      **********************************************************************/
     Math::real Geoid(real lat, real lon) const throw();
     Math::real Disturbing(real lat, real lon, real h) const throw();
@@ -139,6 +144,13 @@ namespace GeographicLib {
     /** \name Inspector functions
      **********************************************************************/
     ///@{
+
+    /**
+     * @return the GeographicLib::NormalGravity object for the reference
+     *   ellipsoid.
+     **********************************************************************/
+    const NormalGravity& ReferenceEllipsoid() const throw() { return _earth; }
+
     /**
      * @return the description of the gravity model, if available, in the data
      *   file; if absent, return "NONE".

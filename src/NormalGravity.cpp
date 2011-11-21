@@ -224,7 +224,7 @@ namespace GeographicLib {
   Math::real NormalGravity::Gravity(real lat, real h, real& gammay, real& gammaz)
     const throw() {
     real X, Y, Z;
-    real M[9];
+    real M[Geocentric::dim2_];
     _earth.IntForward(lat, 0, h, X, Y, Z, M);
     real gammaX, gammaY, gammaZ;
     U(X, Y, Z, gammaX, gammaY, gammaZ);

@@ -271,10 +271,20 @@ namespace GeographicLib {
         break;
       }
     }
+
+    /**
+     * @return the zeroth GeographicLib::SphericalEngine::coeff object.
+     **********************************************************************/
     const SphericalEngine::coeff& Coefficients() const throw()
     { return _c[0]; }
+    /**
+     * @return the first GeographicLib::SphericalEngine::coeff object.
+     **********************************************************************/
     const SphericalEngine::coeff& Coefficients1() const throw()
     { return _c[1]; }
+    /**
+     * @return the second GeographicLib::SphericalEngine::coeff object.
+     **********************************************************************/
     const SphericalEngine::coeff& Coefficients2() const throw()
     { return _c[2]; }
   };

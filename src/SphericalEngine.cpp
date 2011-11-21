@@ -9,6 +9,7 @@
 
 #include <GeographicLib/SphericalEngine.hpp>
 #include <limits>
+#include <algorithm>
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/Utility.hpp>
 
@@ -183,16 +184,16 @@ namespace GeographicLib {
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
         case full:
-          w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1));
-          Ax = q * sqrt(w * (2 * n + 3));
+          w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
+          Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
-          B = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2)));
+          B = - q2 * root_[2 * n + 5] / (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case schmidt:
-          w = real(n - m + 1) * (n + m + 1);
-          Ax = q * (2 * n + 1) / sqrt(w);
+          w = root_[n - m + 1] * root_[n + m + 1];
+          Ax = q * (2 * n + 1) / w;
           A = t * Ax;
-          B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
+          B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
         }
         R = c[0].Cv(--k[0]);
@@ -222,14 +223,14 @@ namespace GeographicLib {
         real v, A, B;           // alpha[m], beta[m + 1]
         switch (norm) {
         case full:
-          v = 2 * real(2 * m + 3) / (m + 1);
-          A = cl * sqrt(v) * uq;
-          B = - sqrt((v * (2 * m + 5)) / (8 * (m + 2))) * uq2;
+          v = root_[2] * root_[2 * m + 3] / root_[m + 1];
+          A = cl * v * uq;
+          B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * uq2;
           break;
         case schmidt:
-          v = 2 * real(2 * m + 1) / (m + 1);
-          A = cl * sqrt(v) * uq;
-          B = - sqrt((v * (2 * m + 3)) / (8 * (m + 2))) * uq2;
+          v = root_[2] * root_[2 * m + 1] / root_[m + 1];
+          A = cl * v * uq;
+          B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * uq2;
           break;
         }
         v = A * vc  + B * vc2  +  wc ; vc2  = vc ; vc  = v;
@@ -248,12 +249,12 @@ namespace GeographicLib {
         real A, B, qs;
         switch (norm) {
         case full:
-          A = sqrt(real(3)) * uq;       // F[1]/(q*cl) or F[1]/(q*sl)
-          B = - sqrt(real(15)/4) * uq2; // beta[1]/q
+          A = root_[3] * uq;       // F[1]/(q*cl) or F[1]/(q*sl)
+          B = - root_[15]/2 * uq2; // beta[1]/q
           break;
         case schmidt:
           A = uq;
-          B = - sqrt(real(3)/4) * uq2;
+          B = - root_[3]/2 * uq2;
           break;
         }
         qs = q / scale_;
@@ -309,16 +310,16 @@ namespace GeographicLib {
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
         case full:
-          w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1));
-          Ax = q * sqrt(w * (2 * n + 3));
+          w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
+          Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
-          B = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2)));
+          B = - q2 * root_[2 * n + 5] / (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case schmidt:
-          w = real(n - m + 1) * (n + m + 1);
-          Ax = q * (2 * n + 1) / sqrt(w);
+          w = root_[n - m + 1] * root_[n + m + 1];
+          Ax = q * (2 * n + 1) / w;
           A = t * Ax;
-          B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
+          B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
         }
         R = c[0].Cv(--k[0]);
@@ -355,8 +356,8 @@ namespace GeographicLib {
   }
 
   void SphericalEngine::RootTable(int N) {
-    // Need square roots up to 2 * N + 1.
-    int L = 2 * N + 2, oldL = int(root_.size());
+    // Need square roots up to max(2 * N + 5, 15).
+    int L = max(2 * N + 5, 15) + 1, oldL = int(root_.size());
     if (oldL >= L)
       return;
     root_.resize(L);
