@@ -67,7 +67,7 @@ namespace GeographicLib {
     _G.resize(_Nmodels + 1);
     _H.resize(_Nmodels + 1);
     {
-      std::string coeff = _filename + ".cof";
+      string coeff = _filename + ".cof";
       ifstream coeffstr(coeff.c_str(), ios::binary);
       if (!coeffstr.good())
         throw GeographicErr("Error opening " + coeff);
@@ -76,7 +76,7 @@ namespace GeographicLib {
       if (!coeffstr.good())
         throw GeographicErr("No header in " + coeff);
       id[idlength_] = '\0';
-      if (_id != std::string(id))
+      if (_id != string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       for (int i = 0; i <= _Nmodels; ++i) {
         int N, M;
@@ -187,6 +187,7 @@ namespace GeographicLib {
     _harm[n](X, Y, Z, BX0, BY0, BZ0);
     _harm[n + 1](X, Y, Z, BX1, BY1, BZ1);
     if (interpolate) {
+      // Convert to a time derivative
       BX1 = (BX1 - BX0) / _dt0;
       BY1 = (BY1 - BY0) / _dt0;
       BZ1 = (BZ1 - BZ0) / _dt0;
@@ -195,13 +196,15 @@ namespace GeographicLib {
     BY0 += t * BY1;
     BZ0 += t * BZ1;
     if (diffp) {
-      Bxt = - _a * (M[0] * BX1 + M[3] * BY1 + M[6] * BZ1);
-      Byt = - _a * (M[1] * BX1 + M[4] * BY1 + M[7] * BZ1);
-      Bzt = - _a * (M[2] * BX1 + M[5] * BY1 + M[8] * BZ1);
+      Geocentric::Unrotate(M, BX1, BY1, BZ1, Bxt, Byt, Bzt);
+      Bxt *= - _a;
+      Byt *= - _a;
+      Bzt *= - _a;
     }
-    Bx = - _a * (M[0] * BX0 + M[3] * BY0 + M[6] * BZ0);
-    By = - _a * (M[1] * BX0 + M[4] * BY0 + M[7] * BZ0);
-    Bz = - _a * (M[2] * BX0 + M[5] * BY0 + M[8] * BZ0);
+    Geocentric::Unrotate(M, BX0, BY0, BZ0, Bx, By, Bz);
+    Bx *= - _a;
+    By *= - _a;
+    Bz *= - _a;
   }
 
   MagneticCircle MagneticModel::Circle(real t, real lat, real h) const {

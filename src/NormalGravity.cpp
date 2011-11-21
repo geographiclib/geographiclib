@@ -75,11 +75,6 @@ namespace GeographicLib {
     }
 
   const NormalGravity
-  NormalGravity::GRS80(Constants::GRS80_a<real>(), Constants::GRS80_GM<real>(),
-                       Constants::GRS80_omega<real>(),
-                       Constants::GRS80_J2<real>(), false);
-
-  const NormalGravity
   NormalGravity::WGS84(Constants::WGS84_a<real>(), Constants::WGS84_GM<real>(),
                        Constants::WGS84_omega<real>(),
                        Constants::WGS84_f<real>(), true);

@@ -28,8 +28,8 @@ namespace GeographicLib {
   const Math::real SphericalEngine::eps_ =
     Math::sq(numeric_limits<real>::epsilon());
 
-  const std::vector<Math::real> SphericalEngine::Z_(0);
-  std::vector<Math::real> SphericalEngine::root_(0);
+  const vector<Math::real> SphericalEngine::Z_(0);
+  vector<Math::real> SphericalEngine::root_(0);
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
   Math::real SphericalEngine::Value(const coeff c[], const real f[],

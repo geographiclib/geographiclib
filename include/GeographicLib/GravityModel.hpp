@@ -139,6 +139,44 @@ namespace GeographicLib {
                  real& GX, real& GY, real& GZ) const throw();
     Math::real W(real X, real Y, real Z,
                  real& gX, real& gY, real& gZ) const throw();
+    /**
+     * Evaluate the components of the acceleration due to normal gravity and the
+     * centrifugal acceleration in geocentric coordinates.
+     *
+     * @param[in] X geocentric coordinate of point (meters).
+     * @param[in] Y geocentric coordinate of point (meters).
+     * @param[in] Z geocentric coordinate of point (meters).
+     * @param[out] gammaX the \e X component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] gammaY the \e Y component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] gammaZ the \e Z component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @return \e U = <i>V</i><sub>0</sub> + \e Phi the sum of the
+     *   normal gravitational and centrifugal potentials
+     *   (m<sup>2</sup> s<sup>-2</sup>).
+     *
+     * This calls NormalGravity::U for  ReferenceEllipsoid().
+     **********************************************************************/
+    Math::real U(real X, real Y, real Z,
+                 real& gammaX, real& gammaY, real& gammaZ) const throw()
+    { return _earth.U(X, Y, Z, gammaX, gammaY, gammaZ); }
+
+    /**
+     * Evaluate the centrifugal acceleration in geocentric coordinates.
+     *
+     * @param[in] X geocentric coordinate of point (meters).
+     * @param[in] Y geocentric coordinate of point (meters).
+     * @param[out] fX the \e X component of the centrifugal acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] fY the \e Y component of the centrifugal acceleration
+     *   (m s<sup>-2</sup>).
+     * @return \e Phi the centrifugal potential (m<sup>2</sup> s<sup>-2</sup>).
+     *
+     * This calls NormalGravity::Phi for  ReferenceEllipsoid().
+     **********************************************************************/
+    Math::real Phi(real X, real Y, real& fX, real& fY) const throw()
+    { return _earth.Phi(X, Y, fX, fY); }
     ///@}
 
     /** \name Inspector functions
@@ -146,8 +184,7 @@ namespace GeographicLib {
     ///@{
 
     /**
-     * @return the GeographicLib::NormalGravity object for the reference
-     *   ellipsoid.
+     * @return the NormalGravity object for the reference ellipsoid.
      **********************************************************************/
     const NormalGravity& ReferenceEllipsoid() const throw() { return _earth; }
 

@@ -43,10 +43,6 @@ int main() {
     return 0;
 
     {
-      std::cout << "GRS90 constants\n";
-      NormalGravity::GRS80.DumpConstants();
-    }
-    {
       std::cout << "WGS84 constants\n";
       NormalGravity::WGS84.DumpConstants();
     }

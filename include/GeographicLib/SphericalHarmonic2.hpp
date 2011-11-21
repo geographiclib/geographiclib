@@ -246,7 +246,7 @@ namespace GeographicLib {
      * operations).  Calling CircularEngine::operator()() on the returned
      * object performs the outer sum over the order \e m (about \e N
      * operations).  This routine may throw a bad_alloc exception in the
-     * GeographicLib::CircularEngine constructor.
+     * CircularEngine constructor.
      *
      * See SphericalHarmonic::Circle for an example of its use.
      **********************************************************************/
@@ -273,17 +273,17 @@ namespace GeographicLib {
     }
 
     /**
-     * @return the zeroth GeographicLib::SphericalEngine::coeff object.
+     * @return the zeroth SphericalEngine::coeff object.
      **********************************************************************/
     const SphericalEngine::coeff& Coefficients() const throw()
     { return _c[0]; }
     /**
-     * @return the first GeographicLib::SphericalEngine::coeff object.
+     * @return the first SphericalEngine::coeff object.
      **********************************************************************/
     const SphericalEngine::coeff& Coefficients1() const throw()
     { return _c[1]; }
     /**
-     * @return the second GeographicLib::SphericalEngine::coeff object.
+     * @return the second SphericalEngine::coeff object.
      **********************************************************************/
     const SphericalEngine::coeff& Coefficients2() const throw()
     { return _c[2]; }

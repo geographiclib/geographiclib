@@ -30,8 +30,8 @@ namespace GeographicLib {
     lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
     real
       lam = lon * Math::degree<real>(),
-      clam = std::abs(lam) ==   90 ? 0 : cos(lam),
-      slam =          lam  == -180 ? 0 : sin(lam);
+      clam = abs(lam) ==   90 ? 0 : cos(lam),
+      slam =     lam  == -180 ? 0 : sin(lam);
     real M[Geocentric::dim2_];
     Geocentric::Rotation(_sphi, _cphi, slam, clam, M);
     real BX0, BY0, BZ0, BX1, BY1, BZ1; // Components in geocentric basis
@@ -46,13 +46,15 @@ namespace GeographicLib {
     BY0 += _t * BY1;
     BZ0 += _t * BZ1;
     if (diffp) {
-      Bxt = - _a * (M[0] * BX1 + M[3] * BY1 + M[6] * BZ1);
-      Byt = - _a * (M[1] * BX1 + M[4] * BY1 + M[7] * BZ1);
-      Bzt = - _a * (M[2] * BX1 + M[5] * BY1 + M[8] * BZ1);
+      Geocentric::Unrotate(M, BX1, BY1, BZ1, Bxt, Byt, Bzt);
+      Bxt *= - _a;
+      Byt *= - _a;
+      Bzt *= - _a;
     }
-    Bx = - _a * (M[0] * BX0 + M[3] * BY0 + M[6] * BZ0);
-    By = - _a * (M[1] * BX0 + M[4] * BY0 + M[7] * BZ0);
-    Bz = - _a * (M[2] * BX0 + M[5] * BY0 + M[8] * BZ0);
+    Geocentric::Unrotate(M, BX0, BY0, BZ0, Bx, By, Bz);
+    Bx *= - _a;
+    By *= - _a;
+    Bz *= - _a;
   }
 
 } // namespace GeographicLib

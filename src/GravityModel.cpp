@@ -60,7 +60,7 @@ namespace GeographicLib {
       _dir = DefaultGravityPath();
     ReadMetadata(_name);
     {
-      std::string coeff = _filename + ".cof";
+      string coeff = _filename + ".cof";
       ifstream coeffstr(coeff.c_str(), ios::binary);
       if (!coeffstr.good())
         throw GeographicErr("Error opening " + coeff);
@@ -69,7 +69,7 @@ namespace GeographicLib {
       if (!coeffstr.good())
         throw GeographicErr("No header in " + coeff);
       id[idlength_] = '\0';
-      if (_id != std::string(id))
+      if (_id != string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       int N, M;
       SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _C, _S);

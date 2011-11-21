@@ -112,7 +112,7 @@ namespace GeographicLib {
      *
      * @param[in] coslon the cosine of the longitude.
      * @param[in] sinlon the sine of the longitude.
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      *
      * The arguments must satisfy \e coslon<sup>2</sup> + \e sinlon<sup>2</sup>
      * = 1.
@@ -126,7 +126,7 @@ namespace GeographicLib {
      * Evaluate the sum for a particular longitude.
      *
      * @param[in] lon the longitude (degrees).
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      **********************************************************************/
     Math::real operator()(real lon) const throw() {
       real coslon, sinlon;
@@ -143,7 +143,7 @@ namespace GeographicLib {
      * @param[out] gradx \e x component of the gradient.
      * @param[out] grady \e y component of the gradient.
      * @param[out] gradz \e z component of the gradient.
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      *
      * The gradients will only be computed if the CircularEngine object was
      * created with this capability (e.g., via \e gradp = true in
@@ -163,7 +163,7 @@ namespace GeographicLib {
      * @param[out] gradx \e x component of the gradient.
      * @param[out] grady \e y component of the gradient.
      * @param[out] gradz \e z component of the gradient.
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      *
      * The gradients will only be computed if the CircularEngine object was
      * created with this capability (e.g., via \e gradp = true in

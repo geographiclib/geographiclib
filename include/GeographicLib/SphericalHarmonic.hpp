@@ -248,52 +248,6 @@ namespace GeographicLib {
     }
 
     /**
-     * Compute the spherical harmonic sum in geodetic coordinates.
-     *
-     * @param[in] lat latitude of point (degrees).
-     * @param[in] lon longitude of point (degrees).
-     * @param[in] h height of point above the ellipsoid (meters).
-     * @param[in] earth a GeographicLib::Geocentric object
-     * @return \e V the spherical harmonic sum.
-     *
-     * This routine requires constant memory and thus never throws an
-     * exception.
-     **********************************************************************/
-    Math::real operator()(real lat, real lon, real h, const Geocentric& earth)
-      const throw() {
-      real x, y, z;
-      earth.IntForward(lat, lon, h, x, y, z, NULL);
-      return (*this)(x, y, z);
-    }
-
-    /**
-     * Compute a spherical harmonic sum and its gradient in geodetic
-     * coordinates.
-     *
-     * @param[in] lat latitude of point (degrees).
-     * @param[in] lon longitude of point (degrees).
-     * @param[in] h height of point above the ellipsoid (meters).
-     * @param[in] earth a GeographicLib::Geocentric object
-     * @param[out] gradx \e x component of the gradient
-     * @param[out] grady \e y component of the gradient
-     * @param[out] gradz \e z component of the gradient
-     * @return \e V the spherical harmonic sum.
-     *
-     * This is the same as the previous function, except that the components of
-     * the gradients of the sum in the \e x, \e y, and \e z directions are
-     * computed.  This routine requires constant memory and thus never throws
-     * an exception.
-     **********************************************************************/
-    Math::real operator()(real lat, real lon, real h, const Geocentric& earth,
-                          real& gradx, real& grady, real& gradz) const throw() {
-      real x, y, z, M[Geocentric::dim2_];
-      earth.IntForward(lat, lon, h, x, y, z, M);
-      real v = (*this)(x, y, z, gradx, grady, gradz);
-      Geocentric::Unrotate(M, gradx, grady, gradz, gradx, grady, gradz);
-      return v;
-    }
-
-    /**
      * Create a CircularEngine to allow the efficient evaluation of several
      * points on a circle of latitude.
      *
@@ -309,8 +263,7 @@ namespace GeographicLib {
      * sum over degree \e n (which entails about \e N<sup>2</sup> operations).
      * Calling CircularEngine::operator()() on the returned object performs the
      * outer sum over the order \e m (about \e N operations).  This routine may
-     * throw a bad_alloc exception in the GeographicLib::CircularEngine
-     * constructor.
+     * throw a bad_alloc exception in the CircularEngine constructor.
      *
      * Here's an example of computing the spherical sum at a sequence of
      * longitudes without using a CircularEngine object
@@ -365,7 +318,7 @@ namespace GeographicLib {
     }
 
     /**
-     * @return the zeroth GeographicLib::SphericalEngine::coeff object.
+     * @return the zeroth SphericalEngine::coeff object.
      **********************************************************************/
     const SphericalEngine::coeff& Coefficients() const throw()
     { return _c[0]; }

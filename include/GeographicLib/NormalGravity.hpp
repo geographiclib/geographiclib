@@ -61,7 +61,7 @@ namespace GeographicLib {
     friend class GravityModel;
     real _a, _GM, _omega, _J2, _omega2, _aomega2;
     real _e2, _ep2, _f, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
-    GeographicLib::Geocentric _earth;
+    Geocentric _earth;
     static Math::real qf(real ep2) throw();
     static Math::real qpf(real ep2) throw();
     Math::real Jn(int n) const throw();
@@ -279,7 +279,7 @@ namespace GeographicLib {
     { return Init() ? _U0 : Math::NaN<real>(); }
     
     /**
-     * @return the GeographicLib::Geocentric object used by this instance.
+     * @return the Geocentric object used by this instance.
      **********************************************************************/
     const Geocentric& Earth() const throw() { return _earth; }
     ///@}
@@ -289,10 +289,6 @@ namespace GeographicLib {
      **********************************************************************/
     static const NormalGravity WGS84;
 
-    /**
-     * A global instantiation of NormalGravity for the GRS80 ellipsoid.
-     **********************************************************************/
-    static const NormalGravity GRS80;
     void DumpConstants() const;
   };
 

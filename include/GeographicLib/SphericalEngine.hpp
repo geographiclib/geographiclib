@@ -309,12 +309,35 @@ namespace GeographicLib {
       static CircularEngine Circle(const coeff c[], const real f[],
                                    real p, real z, real a);
     /**
-     * Check that the static table of square roots it big enough and enlarge it
+     * Check that the static table of square roots is big enough and enlarge it
      * if necessary.
      *
      * @param[in] N the maximume degree to be used in SphericalEngine.
+     *
+     * Since this updates a static table, there's a possible race condition of
+     * this routine is called in a multi-threaded environment.  However, this
+     * route does nothing if the table is already large enought.  So one way to
+     * avoid race conditions is to call this routine as program start up (when
+     * it's still single threaded), supplying the largest degree tat your
+     * program will use.  E.g.,
+     \code
+  GeographicLib::SphericalEngine::RootTable(2190);
+     \endcode
+     * suffices to accomodate extant magnetic and gravity models.
      **********************************************************************/
     static void RootTable(int N);
+
+    /**
+     * Clear the static table of square roots and release the memory.  Call
+     * this only when you are sure you no longer will be using SphericalEngine.
+     * Your program will crash if you call SphericalEngine after calling this
+     * routine.  It's safest not to call this routine at all.  (The space used
+     * by the table is modest.)
+     **********************************************************************/
+    static void ClearRootTable() {
+      std::vector<real> temp(0);
+      root_.swap(temp);
+    }
   };
 
 } // namespace GeographicLib
