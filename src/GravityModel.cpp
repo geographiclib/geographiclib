@@ -261,8 +261,8 @@ namespace GeographicLib {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real
-      deltaX, deltaY, deltaZ,
-      T = InternalT(X, Y, Z, deltaX, deltaY, deltaZ, true, false),
+      deltax, deltay, deltaz,
+      T = InternalT(X, Y, Z, deltax, deltay, deltaz, true, false),
       clam = M[3], slam = -M[0],
       P = Math::hypot(X, Y),
       R = Math::hypot(P, Z),
@@ -272,8 +272,7 @@ namespace GeographicLib {
     // Rotate cartesian into spherical coordinates
     real MC[Geocentric::dim2_];
     Geocentric::Rotation(spsi, cpsi, slam, clam, MC);
-    real deltax, deltay, deltaz;
-    Geocentric::Unrotate(MC, deltaX, deltaY, deltaZ, deltax, deltay, deltaz);
+    Geocentric::Unrotate(MC, deltax, deltay, deltaz, deltax, deltay, deltaz);
     // H+M, Eq 2-151c
     Dg01 = - deltaz - 2 * T / R;
     real gammaX, gammaY, gammaZ;
@@ -283,7 +282,7 @@ namespace GeographicLib {
     eta = -(deltax/gamma) / Math::degree<real>();
   }
 
-  Math::real GravityModel::Geoid(real lat, real lon) const throw()
+  Math::real GravityModel::GeoidHeight(real lat, real lon) const throw()
   {
     real X, Y, Z;
     _earth.Earth().IntForward(lat, lon, 0, X, Y, Z, NULL);
@@ -296,24 +295,24 @@ namespace GeographicLib {
     // _zeta0 has been included in _correction
     return T/gamma + correction;
   }
-                                   
-  Math::real GravityModel::Disturbing(real /*lat*/, real /*lon*/, real /*h*/) const throw()
-  { return 0; }
-  Math::real GravityModel::Disturbing(real /*lat*/, real /*lon*/, real /*h*/,
-                                      real& /*gx*/, real& /*gy*/, real& /*gz*/) const throw()
-  { return 0; }
-  Math::real GravityModel::Gravitational(real /*lat*/, real /*lon*/, real /*h*/,
-                                         real& /*gx*/, real& /*gy*/, real& /*gz*/) const throw()
-  { return 0; }
-  Math::real GravityModel::Normal(real /*lat*/, real /*lon*/, real /*h*/,
-                                  real& /*gx*/, real& /*gy*/, real& /*gz*/) const throw()
-  { return 0; }
-  Math::real GravityModel::Rotational(real /*lat*/, real /*h*/,
-                                      real& /*gy*/, real& /*gz*/) const throw()
-  { return 0; }
-  Math::real GravityModel::Total(real /*lat*/, real /*lon*/, real /*h*/,
-                                 real& /*gx*/, real& /*gy*/, real& /*gz*/) const throw()
-  { return 0; }
+
+  Math::real GravityModel::Gravity(real lat, real lon, real h,
+                                   real& gx, real& gy, real& gz) const throw() {
+    real X, Y, Z, M[Geocentric::dim2_];
+    _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
+    real Wres = W(X, Y, Z, gx, gy, gz);
+    Geocentric::Unrotate(M, gx, gy, gz, gx, gy, gz);
+    return Wres;
+  }
+  Math::real GravityModel::Disturbance(real lat, real lon, real h,
+                                       real& deltax, real& deltay, real& deltaz)
+    const throw() {
+    real X, Y, Z, M[Geocentric::dim2_];
+    _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
+    real Tres = InternalT(X, Y, Z, deltax, deltay, deltaz, true, true);
+    Geocentric::Unrotate(M, deltax, deltay, deltaz, deltax, deltay, deltaz);
+    return Tres;
+  }
 
   std::string GravityModel::DefaultGravityPath() {
     string path;

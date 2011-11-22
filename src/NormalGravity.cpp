@@ -132,7 +132,7 @@ namespace GeographicLib {
       return qp;
     }
   }
-      
+
   Math::real NormalGravity::Jn(int n) const throw() {
     // Note Jn(0) = -1; Jn(2) = _J2; Jn(odd) = 0
     if (n & 1 || n < 0)
@@ -215,18 +215,19 @@ namespace GeographicLib {
     gammaY += fY;
     return Ures;
   }
-  
-  Math::real NormalGravity::Gravity(real lat, real h, real& gammay, real& gammaz)
+
+  Math::real NormalGravity::Gravity(real lat, real h,
+                                    real& gammay, real& gammaz)
     const throw() {
     real X, Y, Z;
     real M[Geocentric::dim2_];
     _earth.IntForward(lat, 0, h, X, Y, Z, M);
-    real gammaX, gammaY, gammaZ;
-    U(X, Y, Z, gammaX, gammaY, gammaZ);
+    real gammaX, gammaY, gammaZ,
+      Ures = U(X, Y, Z, gammaX, gammaY, gammaZ);
     // gammax = M[0] * gammaX + M[3] * gammaY + M[6] * gammaZ;
     gammay = M[1] * gammaX + M[4] * gammaY + M[7] * gammaZ;
     gammaz = M[2] * gammaX + M[5] * gammaY + M[8] * gammaZ;
-    return Math::hypot(gammay, gammaz);
+    return Ures;
   }
 
   void NormalGravity::DumpConstants() const {

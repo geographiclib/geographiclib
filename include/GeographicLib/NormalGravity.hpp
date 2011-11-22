@@ -94,7 +94,9 @@ namespace GeographicLib {
     NormalGravity(real a, real GM, real omega, real J2, bool flatp = false);
 
     /**
-     * A default constructor for the normal gravity.
+     * A default constructor for the normal gravity.  This sets up an
+     * uninitialized object and is used by GravityModel which constructs this
+     * object before it has read in the parameters for the reference ellipsoid.
      **********************************************************************/
     NormalGravity() : _a(-1) {};
     ///@}
@@ -126,15 +128,16 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] gammaz the upward component of the acceleration
      *   (m s<sup>-2</sup>).  (This is usually negative.)
-     * @return \e gamma the magnitude acceleration due to gravity
+     * @return \e U the corresponding normal potential.
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
      * the value of the longitude and the easterly component of the
      * acceleration vanishes.  The function includes the effects of the earth's
-     * rotation.  When \e h = 0, this function gives \e gammay = 0 and the returned
-     * value matches that of NormalGravity::SurfaceGravity.
+     * rotation.  When \e h = 0, this function gives \e gammay = 0 and the
+     * returned value matches that of NormalGravity::SurfaceGravity.
      **********************************************************************/
-    Math::real Gravity(real lat, real h, real& gammay, real& gammaz) const throw();
+    Math::real Gravity(real lat, real h, real& gammay, real& gammaz)
+      const throw();
 
     /**
      * Evaluate the components of the acceleration due to gravity and the
@@ -217,7 +220,7 @@ namespace GeographicLib {
     { return Init() ? _a : Math::NaN<real>(); }
 
     /**
-     * @return \e GM the mass constation of the ellipsoid
+     * @return \e GM the mass constant of the ellipsoid
      *   (m<sup>3</sup> s<sup>-2</sup>).  This is the value used in the
      *   constructor.
      **********************************************************************/
@@ -247,7 +250,8 @@ namespace GeographicLib {
     /**
      * @return <i>f</i> the flattening of the ellipsoid (\e a - \e b)/\e a.
      **********************************************************************/
-    Math::real Flattening() const throw() { return Init() ? _f : Math::NaN<real>(); }
+    Math::real Flattening() const throw()
+    { return Init() ? _f : Math::NaN<real>(); }
 
     /**
      * @return <i>gamma</i><sub>e</sub> the normal gravity at equator
@@ -277,7 +281,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real SurfacePotential() const throw()
     { return Init() ? _U0 : Math::NaN<real>(); }
-    
+
     /**
      * @return the Geocentric object used by this instance.
      **********************************************************************/
