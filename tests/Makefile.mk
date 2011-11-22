@@ -50,7 +50,7 @@ PASouth.o: Constants.hpp Math.hpp LambertConformalConic.hpp DMS.hpp
 HarmTest.o: HarmTest.cpp Constants.hpp Math.hpp MagneticModel.hpp \
 	SphericalEngine.hpp CircularEngine.hpp \
 	SphericalHarmonic.hpp SphericalHarmonic1.hpp \
-	MagneticCircle.hpp NormalGravity.hpp
+	MagneticCircle.hpp NormalGravity.hpp GravityModel.hpp GravityCircle.hpp
 
 INSTALL = install -b
 PREFIX = /usr/local

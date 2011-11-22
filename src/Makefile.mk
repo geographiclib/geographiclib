@@ -16,7 +16,7 @@ MODULES = AlbersEqualArea AzimuthalEquidistant CassiniSoldner \
 	LocalCartesian MGRS MagneticCircle MagneticModel OSGB \
 	PolarStereographic PolygonArea SphericalEngine \
 	TransverseMercator TransverseMercatorExact \
-	UTMUPS NormalGravity GravityModel Utility
+	UTMUPS NormalGravity GravityModel Utility GravityCircle
 EXTRAHEADERS = Accumulator Constants Math SphericalHarmonic \
 	SphericalHarmonic1 SphericalHarmonic2
 
@@ -91,6 +91,7 @@ NormalGravity.o: NormalGravity.hpp Constants.hpp Math.hpp Config.h \
 GravityModel.o: GravityModel.hpp Constants.hpp Math.hpp Config.h \
 	NormalGravity.hpp SphericalHarmonic.hpp SphericalHarmonic1.hpp \
 	Geocentric.hpp
+GravityCircle.o: GravityCircle.hpp Constants.hpp Math.hpp Config.h
 Utility.o: Utility.hpp Constants.hpp Math.hpp Config.h
 
 .PHONY: all install clean

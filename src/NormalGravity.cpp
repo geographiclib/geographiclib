@@ -62,6 +62,8 @@ namespace GeographicLib {
       _b = _a * (1 - _f);
       _E = a * sqrt(_e2);                               // H+M, Eq 2-54
       _U0 = _GM / _E * atan(sqrt(_ep2)) + _aomega2 / 3; // H+M, Eq 2-61
+      // The approximate ratio of the centrifugal acceleration (at the equator)
+      // to gravity.
       _m = _aomega2 * _b / _GM;                         // H+M, Eq 2-70
       real
         Q = _m * sqrt(_ep2) * qpf(_ep2) / (3 * _q0),
@@ -257,7 +259,7 @@ namespace GeographicLib {
          << "fstar=" << _fstar << "\n"
          << "1/fstar=" << 1/_fstar << "\n";
     for (int n = 2; n <= 20; n += 2)
-      cout << "C(" << n << ",0)=" << -Jn(n)/sqrt(2*n+1) << "\n";
+      cout << "C(" << n << ",0)=" << -Jn(n)/sqrt(real(2*n+1)) << "\n";
   }
 
 } // namespace GeographicLib

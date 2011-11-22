@@ -10,7 +10,7 @@
 #include <GeographicLib/GravityModel.hpp>
 #include <fstream>
 #include <GeographicLib/SphericalEngine.hpp>
-//#include <GeographicLib/GravityCircle.hpp>
+#include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <iostream>
 
@@ -312,6 +312,25 @@ namespace GeographicLib {
     real Tres = InternalT(X, Y, Z, deltax, deltay, deltaz, true, true);
     Geocentric::Unrotate(M, deltax, deltay, deltaz, deltax, deltay, deltaz);
     return Tres;
+  }
+
+  GravityCircle GravityModel::Circle(real lat, real h) const {
+    real X, Y, Z, M[Geocentric::dim2_];
+    _earth.Earth().IntForward(lat, 0, h, X, Y, Z, M);
+    // Y = 0, cphi = M[7], sphi = M[8];
+    real
+      invR = 1 / Math::hypot(X,  Z),
+      gamma0 = _earth.SurfaceGravity(lat),
+      fx, fy, fz;
+    _earth.U(X, Y, Z, fx, fy, fz); // fy = 0
+    real gamma = Math::hypot(fx, fz);
+    _earth.Phi(X, Y, fx, fy);
+    return GravityCircle(_earth._a, _earth._f, invR, lat, h, M[7], M[8],
+                         _amodel, _GMmodel, _dzonal0, _corrmult,
+                         gamma0, gamma, fx,
+                         _gravitational.Circle(X, Z, true),
+                         _disturbing.Circle(-1, X, Z, true),
+                         _correction.Circle(invR * X, invR * Z, false));
   }
 
   std::string GravityModel::DefaultGravityPath() {

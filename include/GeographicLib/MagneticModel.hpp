@@ -167,7 +167,7 @@ namespace GeographicLib {
      * If the field at several points on a circle of latitude need to be
      * calculated then instead of
      \code
-  SphericalModel m(...);     // Create a magnetic model
+  MagneticModel m(...);     // Create a magnetic model
   double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
   for (int i = 0; i <= 100; ++i) {
     real
@@ -178,7 +178,7 @@ namespace GeographicLib {
      \endcode
      * use a MagneticCircle as in
      \code
-  SphericalModel m(...);     // Create a magnetic model
+  MagneticModel m(...);     // Create a magnetic model
   double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
   MagneticCircle c(m.Circle(lat, h, t)); // the MagneticCircle object
   for (int i = 0; i <= 100; ++i) {

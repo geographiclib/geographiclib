@@ -26,7 +26,7 @@
 
 namespace GeographicLib {
 
-  // class GravityCircle;
+  class GravityCircle;
 
   /**
    * \brief Model of the earth's gravity field
@@ -297,6 +297,44 @@ namespace GeographicLib {
     { return _earth.Phi(X, Y, fX, fY); }
     ///@}
 
+    /**
+     * Create a GravityCircle object to allow the geogravity field at many
+     * points with constant \e lat and \e h and varying \e lon to be
+     * computed efficienty.
+     *
+     * @param[in] lat latitude of the point (degrees).
+     * @param[in] h the height of the point above the ellipsoid (meters).
+     * @return a GravityCircle object whose GravityCircle::operator()(real
+     *   lon) member function computes the field at a particular \e lon.
+     *
+     * If the field at several points on a circle of latitude need to be
+     * calculated then instead of
+     \code
+  GravityModel m(...);     // Create a gravity model
+  double lat = 33, lon0 = 44, dlon = 0.01;
+  for (int i = 0; i <= 100; ++i) {
+    real
+      lon = lon0 + i * dlon;
+    m.GeoidHeight(lat, lon);
+    std::cout << lon << " " << m.GeoidHeight(lat, lon) << "\n";
+  }
+     \endcode
+     * use a GravityCircle as in
+     \code
+  GravityModel m(...);     // Create a gravity model
+  double lat = 33, lon0 = 44, dlon = 0.01;
+  GravityCircle c(g.Circle(lat, 0)); // the GravityCircle object
+  for (int i = 0; i <= 100; ++i) {
+    real
+      lon = lon0 + i * dlon;
+    c.GeoidHeight(lon);
+    std::cout << lon << " " << c.GeoidHeight(lon) << "\n";
+  }
+     \endcode
+     * For high-degree models, this will be substantially faster.
+     **********************************************************************/
+    GravityCircle Circle(real lat, real h) const;
+
     /** \name Inspector functions
      **********************************************************************/
     ///@{
@@ -342,7 +380,9 @@ namespace GeographicLib {
 
     /**
      * @return \e GM the mass constant of the model
-     *   (m<sup>3</sup> s<sup>-2</sup>).
+     *   (m<sup>3</sup> s<sup>-2</sup>); this is the product of \e G the
+     *   gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
      **********************************************************************/
     Math::real MassConstant() const throw() { return _GMmodel; }
 

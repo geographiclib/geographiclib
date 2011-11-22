@@ -9,6 +9,7 @@
 #include <GeographicLib/MagneticCircle.hpp>
 #include <GeographicLib/NormalGravity.hpp>
 #include <GeographicLib/GravityModel.hpp>
+#include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
 
 using namespace GeographicLib;
@@ -18,10 +19,24 @@ int main() {
     {
       std::cout << std::fixed;
       GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
-      SphericalEngine::RootTable(2190);
+      real lat = 33, lon0 = 44, dlon = 0.001;
+      GravityCircle c = egm.Circle(lat, 0.0);
+      for (int i = 0; i < 100000; ++i) {
+        real lon = lon0 + i * dlon;
+        //        std::cout << std::setprecision(3) << lon << " "
+        //                  << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
+        std::cout << std::setprecision(3) << lon << " "
+                  << std::setprecision(12) << c.GeoidHeight(lon) << "\n";
+        
+      }
+      return 0;
+    }
+    {
+      std::cout << std::fixed;
+      GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
       real lat, lon;
       while (std::cin >> lat >> lon) {
-        real g = egm.Geoid(lat, lon);
+        real g = egm.GeoidHeight(lat, lon);
         std::cout << std::setprecision(6)
                   << std::setw(12) << lat
                   << std::setw(12) << lon

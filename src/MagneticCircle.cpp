@@ -26,7 +26,7 @@ namespace GeographicLib {
 
   void MagneticCircle::Field(real lon, bool diffp,
                              real& Bx, real& By, real& Bz,
-                             real& Bxt, real& Byt, real& Bzt) const {
+                             real& Bxt, real& Byt, real& Bzt) const throw() {
     lon = lon >= 180 ? lon - 360 : (lon < -180 ? lon + 360 : lon);
     real
       lam = lon * Math::degree<real>(),
@@ -42,9 +42,9 @@ namespace GeographicLib {
       BY1 = (BY1 - BY0) / _dt0;
       BZ1 = (BZ1 - BZ0) / _dt0;
     }
-    BX0 += _t * BX1;
-    BY0 += _t * BY1;
-    BZ0 += _t * BZ1;
+    BX0 += _t1 * BX1;
+    BY0 += _t1 * BY1;
+    BZ0 += _t1 * BZ1;
     if (diffp) {
       Geocentric::Unrotate(M, BX1, BY1, BZ1, Bxt, Byt, Bzt);
       Bxt *= - _a;

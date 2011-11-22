@@ -74,8 +74,10 @@ namespace GeographicLib {
      * Constructor for the normal gravity.
      *
      * @param[in] a equatorial radius (meters).
-     * @param[in] GM mass constant of the ellipsoide
-     *   (meters<sup>3</sup>/seconds<sup>2</sup>).
+     * @param[in] GM mass constant of the ellipsoid
+     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
+     *   the gravitational constant and \e M the mass of the earth (usually
+     *   including the mass of the earth's atmosphere).
      * @param[in] omega the angular velociry (rad s<sup>-1</sup>).
      * @param[in] J2 dynamical form factor or the flattening \e f (depending on
      *   the value of \e flatp).

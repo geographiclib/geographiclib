@@ -33,17 +33,22 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
 
-    real _a, _cphi, _sphi, _t, _dt0;
+    real _a, _f, _lat, _h, _t, _cphi, _sphi, _t1, _dt0;
     bool _interpolate;
     CircularEngine _circ0, _circ1;
 
-    MagneticCircle(real a, real cphi, real sphi, real t, real dt0,
+    MagneticCircle(real a, real f, real lat, real h, real t,
+                   real cphi, real sphi, real t1, real dt0,
                    bool interpolate,
                    const CircularEngine& circ0, const CircularEngine& circ1)
       : _a(a)
+      , _f(f)
+      , _lat(lat)
+      , _h(h)
+      , _t(t)
       , _cphi(cphi)
       , _sphi(sphi)
-      , _t(t)
+      , _t1(t1)
       , _dt0(dt0)
       , _interpolate(interpolate)
       , _circ0(circ0)
@@ -52,12 +57,15 @@ namespace GeographicLib {
 
     void Field(real lon, bool diffp,
                real& Bx, real& By, real& Bz,
-               real& Bxt, real& Byt, real& Bzt) const;
+               real& Bxt, real& Byt, real& Bzt) const throw();
 
     friend class MagneticModel; // MagneticModel calls the private constructor
 
   public:
 
+    /** \name Compute the magnetic field
+     **********************************************************************/
+    ///@{
     /**
      * Evaluate the components of the geomagnetic field at a particular
      * longitude.
@@ -68,7 +76,7 @@ namespace GeographicLib {
      * @param[out] Bz the vertical (up) component of the magnetic field
      *   (nanotesla).
      **********************************************************************/
-    void operator()(real lon, real& Bx, real& By, real& Bz) const {
+    void operator()(real lon, real& Bx, real& By, real& Bz) const throw() {
       real dummy;
       Field(lon, false, Bx, By, Bz, dummy, dummy, dummy);
     }
@@ -87,9 +95,39 @@ namespace GeographicLib {
      * @param[out] Bzt the rate of change of \e Bz (nT/yr).
      **********************************************************************/
     void operator()(real lon, real& Bx, real& By, real& Bz,
-                    real& Bxt, real& Byt, real& Bzt) const {
+                    real& Bxt, real& Byt, real& Bzt) const throw() {
       Field(lon, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
+    ///@}
+
+    /** \name Inspector functions
+     **********************************************************************/
+    ///@{
+    /**
+     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
+     *   the value inherited from the MagneticModel object used in the
+     *   constructor.
+     **********************************************************************/
+    Math::real MajorRadius() const throw() { return _a; }
+    /**
+     * @return \e f the flattening of the ellipsoid.  This is the value
+     *   inherited from the MagneticModel object used in the constructor.
+     **********************************************************************/
+    Math::real Flattening() const throw() { return _f; }
+    /**
+     * @return the latitude of the circle (degrees).
+     **********************************************************************/
+    Math::real Latitude() const throw() { return _lat; }
+    /**
+     * @return the height of the circle (meters).
+     **********************************************************************/
+    Math::real Height() const throw() { return _h; }
+    /**
+     * @return the time (fractional years).
+     **********************************************************************/
+    Math::real Time() const throw() { return _t; }
+
+    ///@}
   };
 
 } // namespace GeographicLib

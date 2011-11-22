@@ -208,16 +208,16 @@ namespace GeographicLib {
   }
 
   MagneticCircle MagneticModel::Circle(real t, real lat, real h) const {
-    t -= _t0;
-    int n = max(min(int(floor(t / _dt0)), _Nmodels - 1), 0);
+    real t1 = t - _t0;
+    int n = max(min(int(floor(t1 / _dt0)), _Nmodels - 1), 0);
     bool interpolate = n + 1 < _Nmodels;
-    t -= n * _dt0;
-    real X, Y, Z;
-    real M[Geocentric::dim2_];
+    t1 -= n * _dt0;
+    real X, Y, Z, M[Geocentric::dim2_];
     _earth.IntForward(lat, 0, h, X, Y, Z, M);
     // Y = 0, cphi = M[7], sphi = M[8];
 
-    return MagneticCircle(_a, M[7], M[8], t, _dt0, interpolate,
+    return MagneticCircle(_a, _earth._f, lat, h, t,
+                          M[7], M[8], t1, _dt0, interpolate,
                           _harm[n].Circle(X, Z, true),
                           _harm[n + 1].Circle(X, Z, true));
   }
