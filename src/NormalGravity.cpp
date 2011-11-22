@@ -81,6 +81,11 @@ namespace GeographicLib {
                        Constants::WGS84_omega<real>(),
                        Constants::WGS84_f<real>(), true);
 
+  const NormalGravity
+  NormalGravity::GRS80(Constants::GRS80_a<real>(), Constants::GRS80_GM<real>(),
+                       Constants::GRS80_omega<real>(),
+                       Constants::GRS80_J2<real>(), false);
+
   Math::real NormalGravity::qf(real ep2) throw() {
     // Compute
     //
