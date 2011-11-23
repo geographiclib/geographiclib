@@ -238,7 +238,7 @@ namespace GeographicLib {
   }
 
   void NormalGravity::DumpConstants() const {
-    cout << setprecision(16)
+    cout << setprecision(17)
          << "a=" << _a << "\n"
          << "GM=" << _GM << "\n"
          << "omega=" << _omega << "\n"
@@ -263,7 +263,7 @@ namespace GeographicLib {
          << "k=" << _k << "\n"
          << "fstar=" << _fstar << "\n"
          << "1/fstar=" << 1/_fstar << "\n";
-    for (int n = 2; n <= 20; n += 2)
+    for (int n = 0; n <= 40; n += 2)
       cout << "C(" << n << ",0)=" << -Jn(n)/sqrt(real(2*n+1)) << "\n";
   }
 

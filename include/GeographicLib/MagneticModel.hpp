@@ -167,18 +167,19 @@ namespace GeographicLib {
      * If the field at several points on a circle of latitude need to be
      * calculated then instead of
      \code
-  MagneticModel m(...);     // Create a magnetic model
+  MagneticModel m(...);         // Create a magnetic model
   double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
   for (int i = 0; i <= 100; ++i) {
     real
-      lon = lon0 + i * dlon, Bx, By, Bz;
+      lon = lon0 + i * dlon,
+      Bx, By, Bz;
     m(lat, lon, h, t, Bx, By, Bz);
     std::cout << lon << " " << Bx << " " << By << " " << Bz << "\n";
   }
      \endcode
      * use a MagneticCircle as in
      \code
-  MagneticModel m(...);     // Create a magnetic model
+  MagneticModel m(...);         // Create a magnetic model
   double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
   MagneticCircle c(m.Circle(lat, h, t)); // the MagneticCircle object
   for (int i = 0; i <= 100; ++i) {

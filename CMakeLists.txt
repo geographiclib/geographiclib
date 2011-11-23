@@ -37,6 +37,16 @@ else (WIN32)
     CACHE PATH "Location for magnetic models")
 endif (WIN32)
 
+if (WIN32)
+  set (GEOGRAPHICLIB_GRAVITY_PATH
+    "C:/Documents and Settings/All Users/Application Data/GeographicLib/gravity"
+    CACHE PATH "Location for gravity models")
+else (WIN32)
+  set (GEOGRAPHICLIB_GRAVITY_PATH
+    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/gravity"
+    CACHE PATH "Location for gravity models")
+endif (WIN32)
+
 set (CMAKE_DEBUG_POSTFIX _d)
 
 include (CheckTypeSize)

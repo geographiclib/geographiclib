@@ -310,24 +310,20 @@ namespace GeographicLib {
      * If the field at several points on a circle of latitude need to be
      * calculated then instead of
      \code
-  GravityModel m(...);     // Create a gravity model
+  GravityModel g(...);          // Create a gravity model
   double lat = 33, lon0 = 44, dlon = 0.01;
   for (int i = 0; i <= 100; ++i) {
-    real
-      lon = lon0 + i * dlon;
-    m.GeoidHeight(lat, lon);
-    std::cout << lon << " " << m.GeoidHeight(lat, lon) << "\n";
+    real lon = lon0 + i * dlon;
+    std::cout << lon << " " << g.GeoidHeight(lat, lon) << "\n";
   }
      \endcode
      * use a GravityCircle as in
      \code
-  GravityModel m(...);     // Create a gravity model
+  GravityModel g(...);          // Create a gravity model
   double lat = 33, lon0 = 44, dlon = 0.01;
   GravityCircle c(g.Circle(lat, 0)); // the GravityCircle object
   for (int i = 0; i <= 100; ++i) {
-    real
-      lon = lon0 + i * dlon;
-    c.GeoidHeight(lon);
+    real lon = lon0 + i * dlon;
     std::cout << lon << " " << c.GeoidHeight(lon) << "\n";
   }
      \endcode

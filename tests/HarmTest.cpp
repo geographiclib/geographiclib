@@ -11,11 +11,35 @@
 #include <GeographicLib/GravityModel.hpp>
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
+#include <GeographicLib/Geoid.hpp>
 
 using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
+    {
+      std::cout << "WGS84 constants\n";
+      NormalGravity::WGS84.DumpConstants();
+    }
+    return 0;
+    {
+      std::cout << std::fixed;
+      Geoid egm("egm2008-1");
+      real lat0 = 89.234412, lon0 = -179.234257, dl = 180/1123, h = 0;
+      for (int j = 0; j < 2000; ++j) {
+        real lat = lat0 - j*dl/2;
+        for (int i = 0; i < 4000; ++i) {
+          real lon = lon0 + i * dl/2;
+        //        std::cout << std::setprecision(3) << lon << " "
+        //                  << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
+          h+=egm(lat,lon);
+        }
+      }
+      std::cout << std::setprecision(3) << 0/*lon*/ << " "
+                << std::setprecision(12) << h/*c.GeoidHeight(lon)*/ << "\n";
+      return 0;
+    }
+
     {
       std::cout << std::fixed;
       GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
@@ -57,10 +81,6 @@ int main() {
     }
     return 0;
 
-    {
-      std::cout << "WGS84 constants\n";
-      NormalGravity::WGS84.DumpConstants();
-    }
     {
       NormalGravity egm84(6378137.0, 3.986005e14, 7292115e-11,
                           484.16685e-6*sqrt(5.0), false);

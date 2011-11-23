@@ -72,6 +72,7 @@ For more information, see http://geographiclib.sourceforge.net/.
  - \ref organization
  - \ref other
  - \ref geoid
+ - \ref gravity
  - \ref magnetic
  - \ref geodesic
  - \ref transversemercator
@@ -1012,7 +1013,7 @@ Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 \page geoid Geoid height
 
 <center>
-Back to \ref other.  Forward to \ref magnetic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
 </center>
 
 The gravitational equipotential surface approximately coinciding with
@@ -1495,26 +1496,302 @@ The latitude and longitude are all multiples of 10<sup>-6</sup> deg and
 should be regarded as exact.  The geoid heights are computed using the
 harmonic NGA synthesis programs.  In the case of the EGM84 and EGM96,
 the programs were compiled (with gfortran) and run under Linux.  In the
-case of EGM2008, the prescription results in NaNs (possibly because of
-uninitialized variables in the program?), so the data was generated with
-the precompiled binary that NGA supplies for Windows.
+case of EGM2008, the prescription results in NaNs ( because of an
+omitted SAVE statement in one of the subroutines), so the data was
+generated with the precompiled binary that NGA supplies for Windows.
 
 <center>
-Back to \ref other.  Forward to \ref magnetic.  Up to \ref contents.
+Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
+</center>
+**********************************************************************/
+/**
+\page gravity Gravity models
+
+<center>
+Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
+</center>
+
+%GeographicLib can compute the earth's gravitational field using a
+gravity model.  These models expand the gravitational potential of the
+earth as sum of spherical harmonics.
+
+The supported models are
+ - egm84, the
+   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
+   Earth Gravity Model 1984</a>, which includes terms up to degree 180.
+   The NGA code for this models uses a value for the mass of the earth
+   that excludes the atmosphere.  Here the mass of the atmosphere is
+   included for consistency with the other earth gravity models.
+ - egm96, the
+   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
+   Earth Gravity Model 1996</a>, which includes terms up to degree 360.
+ - egm2008, the
+   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
+   Earth Gravity Model 2008</a>, which includes terms up to degree 2190.
+ - wgs84, the
+   <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
+   WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
+   gravitational field for the reference ellipsoid.  Usually
+   NormalGravity::WGS84 should be used instead.
+
+The above models include the mass of the atmosphere and so strictly only
+apply above the earth's atmosphere.  Near the surface of the earth, the
+value of \e g will be less (in absolute value) than the value predicted
+by these models by about \e delta \e g = (4 \e pi \e G/\e g) \e A =
+8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the gravitational
+constant, \e g is the earth's gravity, and \e A is the pressure of the
+atmosphere.  At sea level we have \e A = 101.3 kPa, and \e delta \e g =
+8.7e-6 m s<sup>-2</sup>, approximately.  (In other words the effect is
+about 1 part in a million.)
+
+Go to
+ - \ref gravityinst
+ - \ref gravityformat
+
+\section gravityinst Installing the gravity models
+
+<center>
+<table>
+<caption>Available gravity models</caption>
+<tr>
+ <th rowspan="2">name         <th rowspan="2">max\n degree
+<th rowspan="2">time\n interval
+ <th rowspan="2">size\n(kB)
+ <th colspan="3"><center>Download Links (size, kB)</center></th>
+<tr>
+ <th>tar file</th>
+ <th>Windows\n installer</th>
+ <th>zip file</th>
+<tr>
+ <td>egm84
+ <td><center>180</center>
+ <td><center>2010&ndash;2015</center>
+ <td><center>3</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2/download">
+ link</a> (2)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe/download">
+ link</a> (300)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip/download">
+ link</a> (2)</center>
+<tr>
+ <td>egm96
+ <td><center>360</center>
+ <td><center>1900&ndash;2015</center>
+ <td><center>25</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2/download">
+ link</a> (7)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe/download">
+ link</a> (310)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip/download">
+ link</a> (8)</center>
+<tr>
+ <td>egm2008
+ <td><center>2190</center>
+ <td><center>2010&ndash;2015</center>
+ <td><center>4400</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2/download">
+ link</a> (3700)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe/download">
+ link</a> (3000)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip/download">
+ link</a> (4100)</center>
+<tr>
+ <td>wgs84
+ <td><center>20</center>
+ <td><center>2010&ndash;2015</center>
+ <td><center>4400</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2/download">
+ link</a> (3700)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe/download">
+ link</a> (3000)</center>
+ <td><center>
+ <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip/download">
+ link</a> (4100)</center>
+</table>
+</center>
+The "size" column is the size of the uncompressed data.
+
+For Linux and Unix systems, %GeographicLib provides a shell script
+geographiclib-get-gravity (typically installed in /usr/local/sbin)
+which automates the process of downloading and installing the gravity
+models.  For example
+\verbatim
+   geographiclib-get-gravity all  # to install egm84, egm96, egm2008, wgs84
+   geographiclib-get-gravity -h   # for help
+\endverbatim
+This script should be run as a user with write access to the
+installation directory, which is typically
+/usr/local/share/GeographicLib (this can be overridden with the -p
+flag), and the data will then be placed in the "gravity" subdirectory.
+
+Windows users should download and run the Windows installers.  These
+will prompt for an installation directory with the default being
+\verbatim
+   C:/Documents and Settings/All Users/Application Data/GeographicLib
+\endverbatim
+(which you probably should not change) and the data is installed in the
+"gravity" sub-directory.
+
+Otherwise download \e either the tar.bz2 file \e or the zip file (they
+have the same contents).  If possible use the tar.bz2 files, since these
+compress better than the zip file.  To unpack these, run, for example
+\verbatim
+   mkdir -p /usr/local/share/GeographicLib
+   tar xofjC egm96.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC egm2008.tar.bz2 /usr/local/share/GeographicLib
+   etc.
+\endverbatim
+and, again, the data will be placed in the "gravity" subdirectory.
+
+However you install the gravity models, all the datasets should be
+installed in the same directory.  GeographicLib::GravityModel and <a
+href="Gravity.1.html">Gravity</a> uses a compile time
+default to locate the datasets.  This is
+- /usr/local/share/GeographicLib/gravity, for non-Windows systems
+- C:/Documents and Settings/All Users/Application Data/GeographicLib/gravity,
+  for Windows systems
+.
+consistent with the examples above.  This may be overridden at run-time
+by defining the GRAVITY_PATH environment variable.  Finally, the path
+may be set using the optional second argument to the
+GeographicLib::GravityModel constructor or with the "-d" flag to
+<a href="Gravity.1.html">Gravity</a>.  Supplying the "-h" flag to
+<a href="Gravity.1.html">Gravity</a> reports the default path for
+gravity models for that utility.  The "-v" flag causes Gravity to report
+the full path name of the data file it uses.
+
+\section gravityformat The format of the gravity model files
+
+The constructor Geographic::GravityModel::Gravity reads a file called
+NAME.wwm which specifies various properties for the gravity model.  It
+then opens a binary file NAME.wwm.cof to obtain the coefficients of the
+spherical harmonic sum.
+
+The first line of the .wwm file must consist of "EGMF-v" where EGMF
+stands for "Earth Gravity Model Format" and v is the version number of
+the format (currently "1").
+
+The rest of the File is read a line at a time.  A # character and
+everything after it are discarded.  If the result is just white space it
+is discarded.  The remaining lines are of the form "KEY WHITESPACE
+VALUE".  In general, the KEY and the VALUE are case-sensitive.
+
+GeographicLib::GravityModel only pays attention to the following
+keywords
+ - keywords that affect the field calculation, namely:
+   - Radius (required), the reference radius of the earth in meters.
+   - Normalization (default schmidt), the normalization used for the
+     associated Legendre functions (schmidt or full).
+   - ID (required), 8 printable characters which serve as a signature
+     for the .egm.cof file (they must appear as the first 8 bytes of this
+     file).
+ - keywords that store data that the user can query:
+   - Name, the name of the model.
+   - Description, a more descriptive name of the model.
+   - ReleaseDate, when the model was created.
+ - keywords that are examined to verify that their values are valid:
+   - ByteOrder (default little), the order of bytes in the .egm.cof
+     file.  Only little endian is supported at present.
+ .
+Other keywords are ignored.
+
+The coefficient file NAME.egm.cof is a binary file in little endian
+order.  The first 8 bytes of this file must match the ID given in
+NAME.egm.  This is followed by NumModels + 1 sets of spherical harmonic
+coefficients.  The first NumModels of these model the gravity field at
+Epoch + \e i * DeltaEpoch for 0 <= \e i < NumModels.  The last set of
+coeffecients model the rate of change of the gravity field at Epoch +
+(NumModels - 1) * DeltaEpoch.  The format for each set of coefficients
+is:
+ - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
+   This must satisfy \e N >= -1.
+ - \e M, the maximum order of the sum stored as a 4-byte signed integer.
+   This must satisfy \e N >= \e M >= -1.
+ - \e C<sub>\e nm</sub>, the coefficients of the cosine coefficients of
+   the sum in column (i.e., \e m) major order.  There are (\e M + 1)
+   (2\e N - \e M + 2) / 2 elements which are stored as IEEE doubles (8
+   bytes).  For example for \e N = \e M = 3, there are 10 coefficients
+   arranged as
+   <i>C</i><sub>00</sub>,
+   <i>C</i><sub>10</sub>,
+   <i>C</i><sub>20</sub>,
+   <i>C</i><sub>30</sub>,
+   <i>C</i><sub>11</sub>,
+   <i>C</i><sub>21</sub>,
+   <i>C</i><sub>31</sub>,
+   <i>C</i><sub>22</sub>,
+   <i>C</i><sub>32</sub>,
+   <i>C</i><sub>33</sub>.
+ - \e S<sub>\e nm</sub>, the coefficients of the sine coefficients of
+   the sum in column (i.e., \e m) major order starting at \e m = 1.
+   There are \e M (2\e N - \e M + 1) / 2 elements which are stored as
+   IEEE doubles (8 bytes).  For example for \e N = \e M = 3, there are 6
+   coefficients arranged as
+   <i>S</i><sub>11</sub>,
+   <i>S</i><sub>21</sub>,
+   <i>S</i><sub>31</sub>,
+   <i>S</i><sub>22</sub>,
+   <i>S</i><sub>32</sub>,
+   <i>S</i><sub>33</sub>.
+ .
+Although the coefficient file is in little endian order, %GeographicLib
+can read it on big endian machines.  It can only be read on machines
+which store doubles in IEEE format.
+
+As an illustration, here is egm2008.egm:
+\verbatim
+EGMF-1
+# An Earth Gravity Model (Format 1) file.  For documentation on the
+# format of this file see
+# http://geographiclib.sf.net/html/gravity.html#gravityformat
+Name            egm2008
+Publisher       National Geospatial Intelligence Agency
+Description     Earth Gravity Model 2008
+URL             http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+ReleaseDate     2008-06-01
+ConversionDate  2011-11-19
+DataVersion     1
+ModelRadius     6378136.3
+ModelMass       3986004.415e8
+AngularVelocity 7292115e-11
+ReferenceRadius 6378137
+ReferenceMass   3986004.418e8
+Flattening      1/298.257223563
+HeightOffset    -0.41
+
+# Gravitational and correction coefficients taken from
+# EGM2008_to2190_TideFree and Zeta-to-N_to2160_egm2008 from egm2008
+# distribution.
+ID              EGM2008A
+\endverbatim
+
+<center>
+Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
 \page magnetic Magnetic models
 
 <center>
-Back to \ref geoid.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
 %GeographicLib can compute the earth's magnetic field using a magnetic
 model.  These models expand the internal magnetic potential of the earth
 as sum of spherical harmonics.  They neglect magnetic fields due to the
 ionosphere, the magnetosphere, nearby magnetized materials, electric
-machinery, etc..  Users of GeographicLib::MagneticModel are advised to
+machinery, etc.  Users of GeographicLib::MagneticModel are advised to
 read the
 <a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
 Warning"</a> this is provided with igrf11.  Although the advice is
@@ -1528,7 +1805,7 @@ The supported models are
    for the period 2010&ndash;2015.
  - igrf11, the
    <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
-   Geomagnetic Reference Field (11th generation)</a> which approximates
+   Geomagnetic Reference Field (11th generation)</a>, which approximates
    the main magnetic field for the period 1900&ndash;2015.
  - emm2010, the
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
@@ -1632,8 +1909,8 @@ compress better than the zip file.  To unpack these, run, for example
 and, again, the data will be placed in the "magnetic" subdirectory.
 
 However you install the magnetic models, all the datasets should be
-installed in the same directory.  GeographicLib::MagneticModel and <a
-href="MagneticField.1.html">MagneticField</a> uses a compile time
+installed in the same directory.  GeographicLib::MagneticModel and
+<a href="MagneticField.1.html">MagneticField</a> uses a compile time
 default to locate the datasets.  This is
 - /usr/local/share/GeographicLib/magnetic, for non-Windows systems
 - C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic,
@@ -1782,7 +2059,7 @@ ID              IGRF11-A
 \endverbatim
 
 <center>
-Back to \ref geoid.  Forward to \ref geodesic.  Up to \ref contents.
+Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**

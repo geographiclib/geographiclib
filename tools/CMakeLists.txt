@@ -44,6 +44,18 @@ if (NOT WIN32)
   install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOID_SCRIPT}
     DESTINATION sbin)
 
+  set (GRAVITY_SCRIPT geographiclib-get-gravity)
+  add_custom_target (get-gravity-script ALL DEPENDS ${GRAVITY_SCRIPT})
+  add_custom_command (OUTPUT ${GRAVITY_SCRIPT}
+    COMMAND
+      sed -e "s%@GRAVITY_DEFAULT_PATH@%${GEOGRAPHICLIB_GRAVITY_PATH}%"
+	${CMAKE_CURRENT_SOURCE_DIR}/${GRAVITY_SCRIPT}.sh >
+	${GRAVITY_SCRIPT}
+    COMMAND chmod +x ${GRAVITY_SCRIPT}
+    DEPENDS ${GRAVITY_SCRIPT}.sh)
+  install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GRAVITY_SCRIPT}
+    DESTINATION sbin)
+
   set (MAGNETIC_SCRIPT geographiclib-get-magnetic)
   add_custom_target (get-magnetic-script ALL DEPENDS ${MAGNETIC_SCRIPT})
   add_custom_command (OUTPUT ${MAGNETIC_SCRIPT}
