@@ -19,19 +19,15 @@
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 
-#if !defined(GRAVITY_DEFAULT_PATH)
-#  if defined(GEOGRAPHICLIB_GRAVITY_PATH)
-     // Use cmake supplied value is available
-#    define GRAVITY_DEFAULT_PATH GEOGRAPHICLIB_GRAVITY_PATH
+#if !defined(GEOGRAPHICLIB_DATA)
+#  if defined(_MSC_VER)
+#    define GEOGRAPHICLIB_DATA \
+  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
 #  else
-#    if defined(_MSC_VER)
-#      define GRAVITY_DEFAULT_PATH \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib/gravity"
-#    else
-#      define GRAVITY_DEFAULT_PATH "/usr/local/share/GeographicLib/gravity"
-#    endif
+#    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
 #endif
+
 #if !defined(GRAVITY_DEFAULT_NAME)
 #  define GRAVITY_DEFAULT_NAME "egm2008"
 #endif
@@ -338,7 +334,12 @@ namespace GeographicLib {
     char* gravitypath = getenv("GRAVITY_PATH");
     if (gravitypath)
       path = string(gravitypath);
-    return path.length() ? path : string(GRAVITY_DEFAULT_PATH);
+    if (path.length())
+      return path;
+    char* datapath = getenv("GEOGRAPHICLIB_DATA");
+    if (datapath)
+      path = string(datapath);
+    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/gravity";
   }
 
   std::string GravityModel::DefaultGravityName() {

@@ -8,8 +8,7 @@
 #
 # $Id$
 
-GRAVITY_DEFAULT_PATH="@GRAVITY_DEFAULT_PATH@"
-DEFAULTDIR=`dirname "$GRAVITY_DEFAULT_PATH"`
+DEFAULTDIR="@DEFAULTDIR@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] gravitymodel...

@@ -18,33 +18,13 @@ endif (WIN32)
 option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
 
 if (WIN32)
-  set (GEOGRAPHICLIB_GEOID_PATH
-    "C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids"
-    CACHE PATH "Location for geoid data")
+  set (GEOGRAPHICLIB_DATA
+    "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+    CACHE PATH "Location for data for GeographicLib")
 else (WIN32)
-  set (GEOGRAPHICLIB_GEOID_PATH
-    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/geoids"
-    CACHE PATH "Location for geoid data")
-endif (WIN32)
-
-if (WIN32)
-  set (GEOGRAPHICLIB_MAGNETIC_PATH
-    "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
-    CACHE PATH "Location for magnetic models")
-else (WIN32)
-  set (GEOGRAPHICLIB_MAGNETIC_PATH
-    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/magnetic"
-    CACHE PATH "Location for magnetic models")
-endif (WIN32)
-
-if (WIN32)
-  set (GEOGRAPHICLIB_GRAVITY_PATH
-    "C:/Documents and Settings/All Users/Application Data/GeographicLib/gravity"
-    CACHE PATH "Location for gravity models")
-else (WIN32)
-  set (GEOGRAPHICLIB_GRAVITY_PATH
-    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/gravity"
-    CACHE PATH "Location for gravity models")
+  set (GEOGRAPHICLIB_DATA
+    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib"
+    CACHE PATH "Location for data for GeographicLib")
 endif (WIN32)
 
 set (CMAKE_DEBUG_POSTFIX _d)
@@ -100,6 +80,8 @@ endif (NOT WIN32)
 
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
   GeoidEval MagneticField Planimeter TransverseMercatorProj)
+set (SCRIPTS
+  geographiclib-get-geoids geographiclib-get-magnetic geographiclib-get-gravity)
 
 include_directories ("${PROJECT_BINARY_DIR}/include")
 include_directories (include)
@@ -201,6 +183,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "lib.*\\\\.so"
   "tools/[A-Za-z]+\$"
   "tools/geographiclib-get-geoids\$"
+  "tools/geographiclib-get-magnetic\$"
+  "tools/geographiclib-get-gravity\$"
   "tools/.*\\\\.usage\$"
   "scripts/geographiclib.js\$"
   "/(fix-permissions|autogen|biblio|js-compress)\\\\.sh"

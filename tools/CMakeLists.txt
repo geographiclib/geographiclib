@@ -32,41 +32,18 @@ endif (NOT WIN32)
 install (TARGETS ${TOOLS} EXPORT GeographicLibDepends DESTINATION bin)
 
 if (NOT WIN32)
-  set (GEOID_SCRIPT geographiclib-get-geoids)
-  add_custom_target (get-geoids-script ALL DEPENDS ${GEOID_SCRIPT})
-  add_custom_command (OUTPUT ${GEOID_SCRIPT}
-    COMMAND
-      sed -e "s%@GEOID_DEFAULT_PATH@%${GEOGRAPHICLIB_GEOID_PATH}%"
-	${CMAKE_CURRENT_SOURCE_DIR}/${GEOID_SCRIPT}.sh >
-	${GEOID_SCRIPT}
-    COMMAND chmod +x ${GEOID_SCRIPT}
-    DEPENDS ${GEOID_SCRIPT}.sh)
-  install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOID_SCRIPT}
-    DESTINATION sbin)
-
-  set (GRAVITY_SCRIPT geographiclib-get-gravity)
-  add_custom_target (get-gravity-script ALL DEPENDS ${GRAVITY_SCRIPT})
-  add_custom_command (OUTPUT ${GRAVITY_SCRIPT}
-    COMMAND
-      sed -e "s%@GRAVITY_DEFAULT_PATH@%${GEOGRAPHICLIB_GRAVITY_PATH}%"
-	${CMAKE_CURRENT_SOURCE_DIR}/${GRAVITY_SCRIPT}.sh >
-	${GRAVITY_SCRIPT}
-    COMMAND chmod +x ${GRAVITY_SCRIPT}
-    DEPENDS ${GRAVITY_SCRIPT}.sh)
-  install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GRAVITY_SCRIPT}
-    DESTINATION sbin)
-
-  set (MAGNETIC_SCRIPT geographiclib-get-magnetic)
-  add_custom_target (get-magnetic-script ALL DEPENDS ${MAGNETIC_SCRIPT})
-  add_custom_command (OUTPUT ${MAGNETIC_SCRIPT}
-    COMMAND
-      sed -e "s%@MAGNETIC_DEFAULT_PATH@%${GEOGRAPHICLIB_MAGNETIC_PATH}%"
-	${CMAKE_CURRENT_SOURCE_DIR}/${MAGNETIC_SCRIPT}.sh >
-	${MAGNETIC_SCRIPT}
-    COMMAND chmod +x ${MAGNETIC_SCRIPT}
-    DEPENDS ${MAGNETIC_SCRIPT}.sh)
-  install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${MAGNETIC_SCRIPT}
-    DESTINATION sbin)
+  foreach (SCRIPT ${SCRIPTS})
+    add_custom_command (OUTPUT ${SCRIPT}
+      COMMAND
+	sed -e "s%@DEFAULTDIR@%${GEOGRAPHICLIB_DATA}%"
+	  ${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT}.sh >
+	  ${SCRIPT}
+      COMMAND chmod +x ${SCRIPT}
+      DEPENDS ${SCRIPT}.sh)
+    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}
+      DESTINATION sbin)
+  endforeach (SCRIPT)
+  add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif (NOT WIN32)
 
 if (WIN32 AND GEOGRAPHIC_SHARED_LIB)

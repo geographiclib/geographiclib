@@ -8,7 +8,7 @@ all: $(LIBRARY)
 INCLUDEPATH = ../include
 
 PREFIX = /usr/local
-GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
+GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
 MODULES = AlbersEqualArea AzimuthalEquidistant CassiniSoldner \
 	CircularEngine DMS EllipticFunction GeoCoords Geocentric \
@@ -28,7 +28,7 @@ CC = g++ -g
 CXXFLAGS = -g -Wall -Wextra -O3
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES) \
-	-DGEOID_DEFAULT_PATH=\"$(GEOID_DEFAULT_PATH)\"
+	-DGEOGRAPHICLIB_DATA=\"$(GEOGRAPHICLIB_DATA)\"
 LDFLAGS = $(LIBRARY)
 
 $(LIBRARY): $(OBJECTS)

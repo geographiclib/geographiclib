@@ -18,19 +18,15 @@
 RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_CPP)
 RCSID_DECL(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
 
-#if !defined(MAGNETIC_DEFAULT_PATH)
-#  if defined(GEOGRAPHICLIB_MAGNETIC_PATH)
-     // Use cmake supplied value is available
-#    define MAGNETIC_DEFAULT_PATH GEOGRAPHICLIB_MAGNETIC_PATH
+#if !defined(GEOGRAPHICLIB_DATA)
+#  if defined(_MSC_VER)
+#    define GEOGRAPHICLIB_DATA \
+  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
 #  else
-#    if defined(_MSC_VER)
-#      define MAGNETIC_DEFAULT_PATH \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
-#    else
-#      define MAGNETIC_DEFAULT_PATH "/usr/local/share/GeographicLib/magnetic"
-#    endif
+#    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
 #endif
+
 #if !defined(MAGNETIC_DEFAULT_NAME)
 #  define MAGNETIC_DEFAULT_NAME "wmm2010"
 #endif
@@ -242,7 +238,12 @@ namespace GeographicLib {
     char* magneticpath = getenv("MAGNETIC_PATH");
     if (magneticpath)
       path = string(magneticpath);
-    return path.length() ? path : string(MAGNETIC_DEFAULT_PATH);
+    if (path.length())
+      return path;
+    char* datapath = getenv("GEOGRAPHICLIB_DATA");
+    if (datapath)
+      path = string(datapath);
+    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/magnetic";
   }
 
   std::string MagneticModel::DefaultMagneticName() {

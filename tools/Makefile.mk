@@ -9,7 +9,9 @@ PROGRAMS = GeoConvert \
 	MagneticField \
 	Planimeter \
 	ConicProj
-SCRIPTS = geographiclib-get-geoids geographiclib-get-magnetic
+SCRIPTS = geographiclib-get-geoids \
+	geographiclib-get-gravity \
+	geographiclib-get-magnetic
 
 all: $(PROGRAMS) $(SCRIPTS)
 
@@ -24,7 +26,7 @@ LIBPATH = ../src
 # LIBPATH = $(PREFIX)/lib
 
 PREFIX = /usr/local
-GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
+GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
 CC = g++ -g
 CXXFLAGS = -g -Wall -Wextra -O3
@@ -71,12 +73,8 @@ Planimeter.o: Planimeter.usage Constants.hpp Math.hpp Config.h DMS.hpp \
 ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
 	Constants.hpp Math.hpp Config.h DMS.hpp LambertConformalConic.hpp
 
-geographiclib-get-geoids: geographiclib-get-geoids.sh
-	sed -e "s%@GEOID_DEFAULT_PATH@%$(GEOID_DEFAULT_PATH)%" $< > $@
-	chmod +x $@
-
-geographiclib-get-magnetic: geographiclib-get-magnetic.sh
-	sed -e "s%@MAGNETIC_DEFAULT_PATH@%$(MAGNETIC_DEFAULT_PATH)%" $< > $@
+%: %.sh
+	sed -e "s%@DEFAULTDIR@%$(GEOGRAPHICLIB_DATA)%" $< > $@
 	chmod +x $@
 
 INSTALL = install -b

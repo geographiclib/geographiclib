@@ -8,8 +8,7 @@
 #
 # $Id$
 
-MAGNETIC_DEFAULT_PATH="@MAGNETIC_DEFAULT_PATH@"
-DEFAULTDIR=`dirname "$MAGNETIC_DEFAULT_PATH"`
+DEFAULTDIR="@DEFAULTDIR@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] magneticmodel...

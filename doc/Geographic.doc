@@ -243,18 +243,13 @@ Here are the steps to compile and install %GeographicLib:
     want to try the library to see if it suits your needs, pick
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic, for example, and set
     <code>GEOGRAPHIC_SHARED_LIB</code>=OFF.
-  - <code>GEOGRAPHICLIB_GEOID_PATH</code> (default:
-    /usr/local/share/GeographicLib/geoids for non-Windows systems,
+  - <code>GEOGRAPHICLIB_DATA</code> (default:
+    /usr/local/share/GeographicLib for non-Windows systems,
     C:/Documents and Settings/All Users/Application
-    Data/GeographicLib/geoids for Windows systems) specifies the default
-    location for the geoid datasets for use by GeographicLib::Geoid.
-    See \ref geoidinst for more information.
-  - <code>GEOGRAPHICLIB_MAGNETIC_PATH</code> (default:
-    /usr/local/share/GeographicLib/magnetic for non-Windows systems,
-    C:/Documents and Settings/All Users/Application
-    Data/GeographicLib/magnetic for Windows systems) specifies the
-    default location for the magnetic models for use by
-    GeographicLib::MagneticModel.  See \ref magneticinst for more
+    Data/GeographicLib for Windows systems) specifies the default
+    location for the various datasets for use by GeographicLib::Geoid,
+    GeographicLib::GravityModel, and GeographicLib::MagneticModel.
+    See \ref geoidinst, \ref gravityinst, and \ref magneticinst for more
     information.
   - <code>GEOGRAPHIC_SHARED_LIB</code> (default: ON for
     non-Windows systems, OFF for Windows systems)

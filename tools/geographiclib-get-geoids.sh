@@ -10,8 +10,7 @@
 #
 # $Id$
 
-GEOID_DEFAULT_PATH="@GEOID_DEFAULT_PATH@"
-DEFAULTDIR=`dirname "$GEOID_DEFAULT_PATH"`
+DEFAULTDIR="@DEFAULTDIR@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] geoid...
