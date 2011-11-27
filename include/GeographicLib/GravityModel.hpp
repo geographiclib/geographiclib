@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
-#define GEOGRAPHICLIB_GRAVITYMODEL_HPP "$Id$"
+#define GEOGRAPHICLIB_GRAVITYMODEL_HPP \
+  "$Id$"
 
 #include <string>
 #include <sstream>
@@ -69,6 +70,7 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT GravityModel {
   private:
     typedef Math::real real;
+    friend class GravityCircle;
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
     real _amodel, _GMmodel, _zeta0, _corrmult;
@@ -83,8 +85,28 @@ namespace GeographicLib {
     Math::real InternalT(real X, real Y, real Z,
                          real& deltaX, real& deltaY, real& deltaZ,
                          bool gradp, bool correct) const throw();
+    enum captype {
+      CAP_NONE   = 0U,
+      CAP_G      = 1U<<0,       // implies potentials W and V
+      CAP_T      = 1U<<1,
+      CAP_DELTA  = 1U<<2 | CAP_T, // delta implies T?
+      CAP_C      = 1U<<3,
+      CAP_GAMMA0 = 1U<<4,
+      CAP_GAMMA  = 1U<<5,
+      CAP_ALL    = 0x3FU,
+    };
+
   public:
 
+    enum mask {
+      NONE          = 0U,
+      GRAVITY       = CAP_G,     // Also W and V
+      DISTURBANCE   = CAP_DELTA, // Also T with gradient
+      DISTPOTENTIAL = CAP_T,     // Also T without gradient
+      GEOIDHEIGHT   = CAP_T | CAP_C | CAP_GAMMA0,
+      ANOMALY       = CAP_DELTA | CAP_GAMMA,
+      ALL           = CAP_ALL,
+    };
     /** \name Setting up the gravity model
      **********************************************************************/
     ///@{
@@ -130,8 +152,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @return \e W the corresponding disturbing potential.
      *
-     * The function includes the effects of the earth's
-     * rotation. 
+     * The function includes the effects of the earth's rotation.
      **********************************************************************/
     Math::real Gravity(real lat, real lon, real h,
                        real& gx, real& gy, real& gz) const throw();
@@ -207,6 +228,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real W(real X, real Y, real Z,
                  real& gX, real& gY, real& gZ) const throw();
+
     /**
      * Evaluate the components of the acceleration due to gravity in geocentric
      * coordinates.
@@ -225,6 +247,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real V(real X, real Y, real Z,
                  real& GX, real& GY, real& GZ) const throw();
+
     /**
      * Evaluate the components of the gravity disturbance in geocentric
      * coordinates.
@@ -244,6 +267,7 @@ namespace GeographicLib {
     Math::real T(real X, real Y, real Z,
                  real& deltaX, real& deltaY, real& deltaZ) const throw()
     { return InternalT(X, Y, Z, deltaX, deltaY, deltaZ, true, true); }
+
     /**
      * Evaluate disturbing potentional in geocentric coordinates.
      *
@@ -257,6 +281,7 @@ namespace GeographicLib {
       real dummy;
       return InternalT(X, Y, Z, dummy, dummy, dummy, false, true);
     }
+
     /**
      * Evaluate the components of the acceleration due to normal gravity and the
      * centrifugal acceleration in geocentric coordinates.
@@ -304,6 +329,7 @@ namespace GeographicLib {
      *
      * @param[in] lat latitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
+     * @param[in] m mask specifying the capabilities of the resulting object.
      * @return a GravityCircle object whose GravityCircle::operator()(real
      *   lon) member function computes the field at a particular \e lon.
      *
@@ -329,7 +355,7 @@ namespace GeographicLib {
      \endcode
      * For high-degree models, this will be substantially faster.
      **********************************************************************/
-    GravityCircle Circle(real lat, real h) const;
+    GravityCircle Circle(real lat, real h, mask m = ALL) const;
 
     /** \name Inspector functions
      **********************************************************************/

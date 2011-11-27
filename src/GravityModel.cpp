@@ -14,7 +14,8 @@
 #include <GeographicLib/Utility.hpp>
 #include <iostream>
 
-#define GEOGRAPHICLIB_GRAVITYMODEL_CPP "$Id$"
+#define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
+  "$Id$"
 
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
@@ -283,13 +284,13 @@ namespace GeographicLib {
     real X, Y, Z;
     _earth.Earth().IntForward(lat, lon, 0, X, Y, Z, NULL);
     real
-      gamma = _earth.SurfaceGravity(lat),
+      gamma0 = _earth.SurfaceGravity(lat),
       dummy,
       T = InternalT(X, Y, Z, dummy, dummy, dummy, false, false),
       invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
     // _zeta0 has been included in _correction
-    return T/gamma + correction;
+    return T/gamma0 + correction;
   }
 
   Math::real GravityModel::Gravity(real lat, real lon, real h,
@@ -310,23 +311,35 @@ namespace GeographicLib {
     return Tres;
   }
 
-  GravityCircle GravityModel::Circle(real lat, real h) const {
+  GravityCircle GravityModel::Circle(real lat, real h, mask m) const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, 0, h, X, Y, Z, M);
     // Y = 0, cphi = M[7], sphi = M[8];
     real
       invR = 1 / Math::hypot(X,  Z),
-      gamma0 = _earth.SurfaceGravity(lat),
-      fx, fy, fz;
-    _earth.U(X, Y, Z, fx, fy, fz); // fy = 0
-    real gamma = Math::hypot(fx, fz);
+      gamma0 = (m & CAP_GAMMA0 ?_earth.SurfaceGravity(lat)
+                : Math::NaN<real>()),
+      fx, fy, fz, gamma;
+    if (m & CAP_GAMMA) {
+      _earth.U(X, Y, Z, fx, fy, fz); // fy = 0
+      gamma = Math::hypot(fx, fz);
+    } else
+      gamma = Math::NaN<real>();
     _earth.Phi(X, Y, fx, fy);
-    return GravityCircle(_earth._a, _earth._f, invR, lat, h, M[7], M[8],
+    return GravityCircle(GravityCircle::mask(m),
+                         _earth._a, _earth._f, lat, h, Z, X, M[7], M[8],
                          _amodel, _GMmodel, _dzonal0, _corrmult,
                          gamma0, gamma, fx,
-                         _gravitational.Circle(X, Z, true),
-                         _disturbing.Circle(-1, X, Z, true),
-                         _correction.Circle(invR * X, invR * Z, false));
+                         m & CAP_G ?
+                         _gravitational.Circle(X, Z, true) :
+                         CircularEngine(),
+                         // N.B. If CAP_DELTA is set then CAP_T should be too.
+                         m & CAP_T ?
+                         _disturbing.Circle(-1, X, Z, m & CAP_DELTA) :
+                         CircularEngine(),
+                         m & CAP_C ?
+                         _correction.Circle(invR * X, invR * Z, false) :
+                         CircularEngine());
   }
 
   std::string GravityModel::DefaultGravityPath() {

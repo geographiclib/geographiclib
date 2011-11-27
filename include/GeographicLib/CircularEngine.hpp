@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
-#define GEOGRAPHICLIB_CIRCULARENGINE_HPP "$Id$"
+#define GEOGRAPHICLIB_CIRCULARENGINE_HPP \
+  "$Id$"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -107,6 +108,17 @@ namespace GeographicLib {
     }
 
   public:
+
+    /**
+     * A default constructor.  CircularEngine::operator()() on the resulting
+     * object returns zero.  The resulting object can be assigned to the result
+     * of SphericalHarmonic::Circle.
+     **********************************************************************/
+    CircularEngine()
+      : _M(-1)
+      , _gradp(false)
+      {}
+
     /**
      * Evaluate the sum for a particular longitude given in terms of its
      * cosine and sine.

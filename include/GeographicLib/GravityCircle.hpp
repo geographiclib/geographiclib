@@ -8,12 +8,14 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GRAVITYCIRCLE_HPP)
-#define GEOGRAPHICLIB_GRAVITYCIRCLE_HPP "$Id$"
+#define GEOGRAPHICLIB_GRAVITYCIRCLE_HPP \
+  "$Id$"
 
 #include <string>
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/CircularEngine.hpp>
+#include <GeographicLib/GravityModel.hpp>
 
 namespace GeographicLib {
 
@@ -32,23 +34,51 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT GravityCircle {
   private:
     typedef Math::real real;
+    /*
+    enum captype {
+      CAP_NONE   = GravityModel::CAP_NONE,
+      CAP_G      = GravityModel::CAP_G,
+      CAP_T      = GravityModel::CAP_T,
+      CAP_DELTA  = GravityModel::CAP_DELTA,
+      CAP_C      = GravityModel::CAP_C,
+      CAP_GAMMA0 = GravityModel::CAP_GAMMA0,
+      CAP_GAMMA  = GravityModel::CAP_GAMMA,
+      CAP_ALL    = GravityModel::CAP_ALL,
+    };
+    */
+    enum mask {
+      NONE          = GravityModel::NONE,
+      GRAVITY       = GravityModel::GRAVITY,
+      DISTURBANCE   = GravityModel::DISTURBANCE,
+      DISTPOTENTIAL = GravityModel::DISTPOTENTIAL,
+      GEOIDHEIGHT   = GravityModel::GEOIDHEIGHT,
+      ANOMALY       = GravityModel::ANOMALY,
+      ALL           = GravityModel::ALL,
+    };
 
-    real _a, _f, _invR, _lat, _h, _cphi, _sphi, _amodel, _GMmodel, _dzonal0,
+    mask _caps;
+    real _a, _f, _lat, _h, _Z, _P, _invR, _cpsi, _spsi,
+      _cphi, _sphi, _amodel, _GMmodel, _dzonal0,
       _corrmult, _gamma0, _gamma, _frot;
-    CircularEngine _gravitation, _disturbing, _correction;
+    CircularEngine _gravitational, _disturbing, _correction;
 
-    GravityCircle(real a, real f, real invR, real lat, real h,
-                  real cphi, real sphi,
+    GravityCircle(mask caps, real a, real f, real lat, real h,
+                  real Z, real P, real cphi, real sphi,
                   real amodel, real GMmodel, real dzonal0, real corrmult,
                   real gamma0, real gamma, real frot,
-                  const CircularEngine& gravitation,
+                  const CircularEngine& gravitational,
                   const CircularEngine& disturbing,
                   const CircularEngine& correction)
-      : _a(a)
+      : _caps(caps)
+      , _a(a)
       , _f(f)
-      , _invR(invR)
       , _lat(lat)
       , _h(h)
+      , _Z(Z)
+      , _P(P)
+      , _invR(Math::hypot(_P, _Z))
+      , _cpsi(_P * _invR)
+      , _spsi(_Z * _invR)
       , _cphi(cphi)
       , _sphi(sphi)
       , _amodel(amodel)
@@ -58,26 +88,49 @@ namespace GeographicLib {
       , _gamma0(gamma0)
       , _gamma(gamma)
       , _frot(frot)
-      , _gravitation(gravitation)
+      , _gravitational(gravitational)
       , _disturbing(disturbing)
       , _correction(correction)
     {}
 
     friend class GravityModel; // GravityModel calls the private constructor
-
+    Math::real W(real clam, real slam,
+                 real& gX, real& gY, real& gZ) const throw();
+    Math::real V(real clam, real slam,
+                 real& gX, real& gY, real& gZ) const throw();
+    Math::real InternalT(real clam, real slam,
+                         real& deltaX, real& deltaY, real& deltaZ,
+                         bool gradp, bool correct) const throw();
   public:
-
     /** \name Compute the gravitational field
      **********************************************************************/
     ///@{
     /**
-     * Evaluate the components of the geogravity field at a particular
-     * longitude.
+     * Evaluate the gravity.
+     **********************************************************************/
+    Math::real Gravity(real lon, real& gx, real& gy, real& gz) const throw();
+    /**
+     * Evaluate the gravity disturbance vector.
+     **********************************************************************/
+    Math::real Disturbance(real lon, real& deltax, real& deltay, real& deltaz)
+      const throw();
+    /**
+     * Evaluate the geoid height.
      *
      * @param[in] lon longitude of the point (degrees).
      * @return the geoid height (meters).
      **********************************************************************/
     Math::real GeoidHeight(real lon) const throw();
+    /**
+     * Evaluate the components of the  gravity anomaly vector.
+     **********************************************************************/
+    void Anomaly(real lon, real& Dg01, real& xi, real& eta) const throw();
+    Math::real W(real lon, real& gX, real& gY, real& gZ) const throw();
+    Math::real V(real lon, real& GX, real& GY, real& GZ) const throw();
+    Math::real T(real lon, real& deltaX, real& deltaY, real& deltaZ)
+      const throw();
+    Math::real T(real lon) const throw();
+
     ///@}
 
     /** \name Inspector functions

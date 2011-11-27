@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id$"
+#define GEOGRAPHICLIB_GEODESICLINE_HPP \
+  "$Id$"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -113,11 +114,9 @@ namespace GeographicLib {
   public:
 
     /**
-     * Bit masks for what calculations to do.  These masks do double duty.
-     * They signify to the GeodesicLine::GeodesicLine constructor and to
-     * Geodesic::Line what capabilities should be included in the GeodesicLine
-     * object.  They also specify which results to return in the general
-     * routines Geodesic::GenDirect and Geodesic::GenInverse routines.  This is
+     * Bit masks for what calculations to do.  They signify to the
+     * GeodesicLine::GeodesicLine constructor and to Geodesic::Line what
+     * capabilities should be included in the GeodesicLine object.  This is
      * merely a duplication of Geodesic::mask.
      **********************************************************************/
     enum mask {

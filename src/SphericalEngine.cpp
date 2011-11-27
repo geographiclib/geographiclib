@@ -13,7 +13,8 @@
 #include <GeographicLib/CircularEngine.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_SPHERICALENGINE_CPP "$Id$"
+#define GEOGRAPHICLIB_SPHERICALENGINE_CPP \
+  "$Id$"
 
 RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_CPP)
 RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
@@ -187,7 +188,8 @@ namespace GeographicLib {
           w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
           Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
-          B = - q2 * root_[2 * n + 5] / (w * root_[n - m + 2] * root_[n + m + 2]);
+          B = - q2 * root_[2 * n + 5] /
+            (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case schmidt:
           w = root_[n - m + 1] * root_[n + m + 1];
@@ -313,7 +315,8 @@ namespace GeographicLib {
           w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
           Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
-          B = - q2 * root_[2 * n + 5] / (w * root_[n - m + 2] * root_[n + m + 2]);
+          B = - q2 * root_[2 * n + 5] /
+            (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
         case schmidt:
           w = root_[n - m + 1] * root_[n + m + 1];
