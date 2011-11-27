@@ -14,6 +14,8 @@ TAGS
 CMakeFiles
 cmake_install.cmake
 geographiclib-get-geoids
+geographiclib-get-gravity
+geographiclib-get-magnetic
 *.log
 ConicProj
 GeodesicProj
