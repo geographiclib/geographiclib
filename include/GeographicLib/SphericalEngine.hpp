@@ -31,6 +31,8 @@ namespace GeographicLib {
    * This serves as the backend to SphericalHarmonic, SphericalHarmonic1, and
    * SphericalHarmonic2.  Typically end-users will not have to access this
    * class directly.
+   *
+   * See SphericalEngine.cpp for more information on the implementation.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalEngine {

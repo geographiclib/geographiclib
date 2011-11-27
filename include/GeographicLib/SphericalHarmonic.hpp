@@ -42,7 +42,10 @@ namespace GeographicLib {
    *
    * Clenshaw summation is used for the sums over both \e n and \e m.  This
    * allows the computation to be carried out without the need for any
-   * temporary arrays.  References:
+   * temporary arrays.  See SphericalEngine.cpp for more information on the
+   * implementation.
+   *
+   * References:
    * - C. W. Clenshaw, A note on the summation of Chebyshev series,
    *   %Math. Tables Aids Comput. 9(51), 118-120 (1955).
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
