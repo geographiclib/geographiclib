@@ -50,7 +50,7 @@ namespace GeographicLib {
     SphericalEngine();        // Disable constructor
   public:
     /**
-     * Supported normalizations for associate Legendre polynomials.
+     * Supported normalizations for associated Legendre polynomials.
      **********************************************************************/
     enum normalization {
       /**

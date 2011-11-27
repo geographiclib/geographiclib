@@ -36,7 +36,7 @@ namespace GeographicLib {
    * - P<sub>\e nm</sub>(\e t) is the associated Legendre polynomial of degree
    *   \e n and order \e m.
    *
-   * One of two normalizations are supported for P<sub>\e nm</sub>
+   * Two normalizations are supported for P<sub>\e nm</sub>
    * - fully normalized denoted by SphericalHarmonic::full.
    * - Schmidt semi-normalized denoted by SphericalHarmonic::schmidt.
    *

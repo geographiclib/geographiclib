@@ -13,9 +13,9 @@
  * where <tt>t = cos(theta)</tt>, <tt>q = a/r</tt>.  In addition write <tt>u =
  * sin(theta)</tt>.
  *
- * <tt>P[n,m]</tt> is a normalized associated Legendre function of degree n and
- * order m.  Here the formulas are given for full normalized functions (usually
- * denoted <tt>Pbar</tt>).
+ * <tt>P[n,m]</tt> is a normalized associated Legendre function of degree
+ * <tt>n</tt> and order <tt>m</tt>.  Here the formulas are given for full
+ * normalized functions (usually denoted <tt>Pbar</tt>).
  *
  * Rewrite outer sum\verbatim
  V(r, theta, lambda) = sum(m = 0..N) * P[m,m](t) * q^(m+1) *
