@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
-#define GEOGRAPHICLIB_CASSINISOLDNER_HPP "$Id$"
+#define GEOGRAPHICLIB_CASSINISOLDNER_HPP \
+  "$Id$"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>

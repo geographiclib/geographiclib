@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id$"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP \
+  "$Id$"
 
 #include <GeographicLib/Constants.hpp>
 

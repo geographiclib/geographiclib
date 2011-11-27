@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id$"
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP \
+  "$Id$"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>

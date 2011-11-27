@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
-#define GEOGRAPHICLIB_UTMUPS_HPP "$Id$"
+#define GEOGRAPHICLIB_UTMUPS_HPP \
+  "$Id$"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>

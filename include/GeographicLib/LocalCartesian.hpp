@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
-#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP "$Id$"
+#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP \
+  "$Id$"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>

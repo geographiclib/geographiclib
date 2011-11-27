@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
-#define GEOGRAPHICLIB_GEOCOORDS_HPP "$Id$"
+#define GEOGRAPHICLIB_GEOCOORDS_HPP \
+  "$Id$"
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <GeographicLib/Constants.hpp>

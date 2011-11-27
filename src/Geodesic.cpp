@@ -29,7 +29,8 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESIC_CPP "$Id$"
+#define GEOGRAPHICLIB_GEODESIC_CPP \
+  "$Id$"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_HPP)

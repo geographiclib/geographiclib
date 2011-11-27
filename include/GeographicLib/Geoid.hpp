@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
-#define GEOGRAPHICLIB_GEOID_HPP "$Id$"
+#define GEOGRAPHICLIB_GEOID_HPP \
+  "$Id$"
 
 #include <string>
 #include <vector>

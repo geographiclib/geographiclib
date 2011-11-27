@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_NORMALGRAVITY_HPP)
-#define GEOGRAPHICLIB_NORMALGRAVITY_HPP "$Id$"
+#define GEOGRAPHICLIB_NORMALGRAVITY_HPP \
+  "$Id$"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geocentric.hpp>

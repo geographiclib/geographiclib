@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
-#define GEOGRAPHICLIB_GEODESIC_HPP "$Id$"
+#define GEOGRAPHICLIB_GEODESIC_HPP \
+  "$Id$"
 
 #include <GeographicLib/Constants.hpp>
 
