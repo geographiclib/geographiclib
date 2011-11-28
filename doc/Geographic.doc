@@ -1687,9 +1687,29 @@ VALUE".  In general, the KEY and the VALUE are case-sensitive.
 GeographicLib::GravityModel only pays attention to the following
 keywords
  - keywords that affect the field calculation, namely:
-   - Radius (required), the reference radius of the earth in meters.
-   - Normalization (default schmidt), the normalization used for the
-     associated Legendre functions (schmidt or full).
+   - ModelRadius (required), the normalizing radius for the model in
+     meters.
+   - ReferenceRadius (required), the equatorial radius for the reference
+     ellipsoid meters.
+   - ModelMass (required), the mass constant for the model in
+     meters<sup>3</sup>/seconds<sup>2</sup>.
+   - ReferenceMass (required), the mass constant for the reference
+     ellipsoid in meters<sup>3</sup>/seconds<sup>2</sup>.
+   - AngularVelociy (required), the angular velocity for the model \e
+     and the reference ellipsoid in rad seconds<sup>-1</sup>.
+   - Flattening, the flattening of the reference ellipsoid; this can be
+     given a fraction, e.g., 1/298.257223563.  One of Flattening and
+     DynamicalFormFactor is required.
+   - DynamicalFormFactor, the dynamical form factor <i>J</i><sub>2</sub>
+     for the reference ellipsoid.  One of Flattening and
+     DynamicalFormFactor is required.
+   - HeightOffset (default 0), the constant height offset (meters) added
+     to obtain the geoid height.
+   - CorrectionMultiplier (default 1), the multiplier for the
+     "zeta-to-N" correction terms for the geoid height to convert them
+     to meters.
+   - Normalization (default full), the normalization used for the
+     associated Legendre functions (full or schmidt).
    - ID (required), 8 printable characters which serve as a signature
      for the .egm.cof file (they must appear as the first 8 bytes of this
      file).

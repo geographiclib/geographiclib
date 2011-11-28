@@ -13,7 +13,7 @@ usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] magneticmodel...
 
-This program downloads and installs the megnetic models used by the
+This program downloads and installs the magnetic models used by the
 GeographicLib::MagneticModel class and the MagneticField tool to compute
 magnetic fields.  magneticmodel is one of more of the names from this
 table:

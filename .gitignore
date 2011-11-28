@@ -4,6 +4,7 @@
 *.bak
 *.exe
 *.gz
+*.bz2
 *.la
 *.lo
 *.log
@@ -66,6 +67,7 @@ geodesic.gie
 geodesic.gie-2.0
 geoids-distrib
 magnetic-distrib
+gravity-distrib
 html
 install-sh
 install_manifest.txt

@@ -13,7 +13,7 @@ usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] gravitymodel...
 
-This program downloads and installs the megnetic models used by the
+This program downloads and installs the gravity models used by the
 GeographicLib::GravityModel class and the Gravity tool to compute
 gravity fields.  gravitymodel is one of more of the names from this
 table:
@@ -28,7 +28,7 @@ The size columns give the download and installed sizes of the models.
 In addition you can specify
 
   all = all of the supported gravity models
-  minimal = wmm2010 igrf11
+  minimal = egm96 wgs84
 
 If no name is specified then minimal is assumed.
 
@@ -99,9 +99,10 @@ fi
 set -e
 
 cat > $TEMP/all <<EOF
-wmm2010
-emm2010
-igrf11
+egm84
+egm96
+egm2008
+wgs84
 EOF
 
 test $# -eq 0 && set -- minimal
@@ -115,7 +116,7 @@ while test $# -gt 0; do
 		cat $TEMP/all
 		;;
 	    minimal )		# same as no argument
-		echo wmm2010; echo igrf11
+		echo egm96; echo wgs84
 		;;
 	    * )
 		echo Unknown gravity model $1 1>&2
