@@ -338,7 +338,7 @@ namespace GeographicLib {
                          CircularEngine(),
                          // N.B. If CAP_DELTA is set then CAP_T should be too.
                          m & CAP_T ?
-                         _disturbing.Circle(-1, X, Z, m & CAP_DELTA) :
+                         _disturbing.Circle(-1, X, Z, (m & CAP_DELTA) != 0) :
                          CircularEngine(),
                          m & CAP_C ?
                          _correction.Circle(invR * X, invR * Z, false) :
