@@ -24,8 +24,8 @@ namespace GeographicLib {
    *
    * Evaluate the earth's gravity field on a circle of constant height and
    * latitude.  This uses a CircleEngine to pre-evaluate the inner sum of the
-   * spherical harmonic sum, allowing the values of the field at different
-   * latitude to be evaluated rapidly.
+   * spherical harmonic sum, allowing the values of the field at several
+   * different longitudes to be evaluated rapidly.
    *
    * Use GravityModel::Circle to create a GravityCircle object.  (The
    * constructor for this class is private.)
@@ -34,18 +34,6 @@ namespace GeographicLib {
   class GEOGRAPHIC_EXPORT GravityCircle {
   private:
     typedef Math::real real;
-    /*
-    enum captype {
-      CAP_NONE   = GravityModel::CAP_NONE,
-      CAP_G      = GravityModel::CAP_G,
-      CAP_T      = GravityModel::CAP_T,
-      CAP_DELTA  = GravityModel::CAP_DELTA,
-      CAP_C      = GravityModel::CAP_C,
-      CAP_GAMMA0 = GravityModel::CAP_GAMMA0,
-      CAP_GAMMA  = GravityModel::CAP_GAMMA,
-      CAP_ALL    = GravityModel::CAP_ALL,
-    };
-    */
     enum mask {
       NONE          = GravityModel::NONE,
       GRAVITY       = GravityModel::GRAVITY,
@@ -107,29 +95,127 @@ namespace GeographicLib {
     ///@{
     /**
      * Evaluate the gravity.
+     *
+     * @param[in] lon the geographic longitude (degrees).
+     * @param[out] gx the easterly component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] gy the northerly component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] gz the upward component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @return \e W the corresponding disturbing potential.
+     *
+     * The function includes the effects of the earth's rotation.
      **********************************************************************/
     Math::real Gravity(real lon, real& gx, real& gy, real& gz) const throw();
     /**
      * Evaluate the gravity disturbance vector.
+     *
+     * @param[in] lon the geographic longitude (degrees).
+     * @param[out] deltax the easterly component of the disturbance vector
+     *   (m s<sup>-2</sup>).
+     * @param[out] deltay the northerly component of the disturbance vector
+     *   (m s<sup>-2</sup>).
+     * @param[out] deltaz the upward component of the disturbance vector
+     *   (m s<sup>-2</sup>).
+     * @return \e T the corresponding disturbing potential.
      **********************************************************************/
     Math::real Disturbance(real lon, real& deltax, real& deltay, real& deltaz)
       const throw();
     /**
      * Evaluate the geoid height.
      *
-     * @param[in] lon longitude of the point (degrees).
-     * @return the geoid height (meters).
+     * @param[in] lon the geographic longitude (degrees).
+     * @return \e N the height of the geoid above the reference ellipsoid
+     *   (meters).
      **********************************************************************/
     Math::real GeoidHeight(real lon) const throw();
     /**
-     * Evaluate the components of the  gravity anomaly vector.
+     * Evaluate the components of the gravity anomaly vector.
+     *
+     * @param[in] lon the geographic longitude (degrees).
+     * @param[out] Dg01 the gravity anomaly (degrees).
+     * @param[out] xi the northerly component of the deflection of the vertical
+     *  (degrees).
+     * @param[out] eta the easterly component of the deflection of the vertical
+     *  (degrees).
      **********************************************************************/
     void Anomaly(real lon, real& Dg01, real& xi, real& eta) const throw();
-    Math::real W(real lon, real& gX, real& gY, real& gZ) const throw();
-    Math::real V(real lon, real& GX, real& GY, real& GZ) const throw();
+
+    /**
+     * Evaluate the components of the acceleration due to gravity and the
+     * centrifugal acceleration in geocentric coordinates.
+     *
+     * @param[in] lon the geographic longitude (degrees).
+     * @param[out] gX the \e X component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] gY the \e Y component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] gZ the \e Z component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @return \e W = \e V + \e Phi the sum of the gravitational and
+     *   centrifugal potentials (m<sup>2</sup> s<sup>-2</sup>).
+     **********************************************************************/
+    Math::real W(real lon, real& gX, real& gY, real& gZ) const throw() {
+      real clam, slam;
+      CircularEngine::cossin(lon, clam, slam);
+      return W(clam, slam, gX, gY, gZ);
+    }
+
+    /**
+     * Evaluate the components of the acceleration due to gravity in geocentric
+     * coordinates.
+     *
+     * @param[in] lon the geographic longitude (degrees).
+     * @param[out] GX the \e X component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] GY the \e Y component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @param[out] GZ the \e Z component of the acceleration
+     *   (m s<sup>-2</sup>).
+     * @return \e V = \e W - \e Phi the gravitational potential
+     *   (m<sup>2</sup> s<sup>-2</sup>).
+     **********************************************************************/
+    Math::real V(real lon, real& GX, real& GY, real& GZ) const throw() {
+      real clam, slam;
+      CircularEngine::cossin(lon, clam, slam);
+      return V(clam, slam, GX, GY, GZ);
+    }
+
+
+    /**
+     * Evaluate the components of the gravity disturbance in geocentric
+     * coordinates.
+     *
+     * @param[in] lon the geographic longitude (degrees).
+     * @param[out] deltaX the \e X component of the gravity disturbance
+     *   (m s<sup>-2</sup>).
+     * @param[out] deltaY the \e Y component of the gravity disturbance
+     *   (m s<sup>-2</sup>).
+     * @param[out] deltaZ the \e Z component of the gravity disturbance
+     *   (m s<sup>-2</sup>).
+     * @return \e T = \e W - \e U the disturbing potentional (also called the
+     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
+     **********************************************************************/
     Math::real T(real lon, real& deltaX, real& deltaY, real& deltaZ)
-      const throw();
-    Math::real T(real lon) const throw();
+      const throw() {
+      real clam, slam;
+      CircularEngine::cossin(lon, clam, slam);
+      return InternalT(clam, slam, deltaX, deltaY, deltaZ, true, true);
+    }
+
+    /**
+     * Evaluate disturbing potentional in geocentric coordinates.
+     *
+     * @param[in] lon the geographic longitude (degrees).
+     * @return \e T = \e W - \e U the disturbing potentional (also called the
+     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
+     **********************************************************************/
+    Math::real T(real lon) const throw() {
+      real clam, slam, dummy;
+      CircularEngine::cossin(lon, clam, slam);
+      return InternalT(clam, slam, dummy, dummy, dummy, false, true);
+    }
 
     ///@}
 

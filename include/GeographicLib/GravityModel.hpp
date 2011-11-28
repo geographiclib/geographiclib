@@ -113,18 +113,18 @@ namespace GeographicLib {
        * GravityCircle::V
        * @hideinitializer
        **********************************************************************/
-      GRAVITY       = CAP_G,     // Also W and V
+      GRAVITY       = CAP_G,
       /**
        * Allow call to GravityCircle::Disturbance and GravityCircle::T.
        * @hideinitializer
        **********************************************************************/
-      DISTURBANCE   = CAP_DELTA, // Also T with gradient
+      DISTURBANCE   = CAP_DELTA,
       /**
        * Allow call to GravityCircle::T(real lon) (i.e., computing the
        * disturbing potential and not the disturbing gravity vector).
        * @hideinitializer
        **********************************************************************/
-      DISTPOTENTIAL = CAP_T,     // Also T without gradient
+      DISTPOTENTIAL = CAP_T,
       /**
        * Allow call to GravityCircle::GeoidHeight.
        * @hideinitializer
@@ -172,7 +172,7 @@ namespace GeographicLib {
      * ellipsoid.
      *
      * @param[in] lat the geographic latitude (degrees).
-     * @param[in] lon the geographic latitude (degrees).
+     * @param[in] lon the geographic longitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
      * @param[out] gx the easterly component of the acceleration
      *   (m s<sup>-2</sup>).
@@ -192,7 +192,7 @@ namespace GeographicLib {
      * below) the ellipsoid.
      *
      * @param[in] lat the geographic latitude (degrees).
-     * @param[in] lon the geographic latitude (degrees).
+     * @param[in] lon the geographic longitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
      * @param[out] deltax the easterly component of the disturbance vector
      *   (m s<sup>-2</sup>).
@@ -210,11 +210,11 @@ namespace GeographicLib {
      * Evaluate the geoid height.
      *
      * @param[in] lat the geographic latitude (degrees).
-     * @param[in] lon the geographic latitude (degrees).
+     * @param[in] lon the geographic longitude (degrees).
      * @return \e N the height of the geoid above the ReferenceEllipsoid()
      *   (meters).
      *
-     * This calls NormalGravity::U for  ReferenceEllipsoid().
+     * This calls NormalGravity::U for ReferenceEllipsoid().
      **********************************************************************/
     Math::real GeoidHeight(real lat, real lon) const throw();
 
@@ -222,10 +222,9 @@ namespace GeographicLib {
      * Evaluate the components of the gravity anomaly vector.
      *
      * @param[in] lat the geographic latitude (degrees).
-     * @param[in] lon the geographic latitude (degrees).
+     * @param[in] lon the geographic longitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
      * @param[out] Dg01 the gravity anomaly (degrees).
-     * @param[out] lon the geographic latitude (m s<sup>-2</sup>).
      * @param[out] xi the northerly component of the deflection of the vertical
      *  (degrees).
      * @param[out] eta the easterly component of the deflection of the vertical
@@ -273,7 +272,7 @@ namespace GeographicLib {
      * @param[out] GZ the \e Z component of the acceleration
      *   (m s<sup>-2</sup>).
      * @return \e V = \e W - \e Phi the gravitational potential
-     *   (m<sup>2</sup> * s<sup>-2</sup>).
+     *   (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real V(real X, real Y, real Z,
                  real& GX, real& GY, real& GZ) const throw();
@@ -292,7 +291,7 @@ namespace GeographicLib {
      * @param[out] deltaZ the \e Z component of the gravity disturbance
      *   (m s<sup>-2</sup>).
      * @return \e T = \e W - \e U the disturbing potentional (also called the
-     *   anomalous potential) (m<sup>2</sup> * s<sup>-2</sup>).
+     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real T(real X, real Y, real Z,
                  real& deltaX, real& deltaY, real& deltaZ) const throw()
@@ -305,7 +304,7 @@ namespace GeographicLib {
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
      * @return \e T = \e W - \e U the disturbing potentional (also called the
-     *   anomalous potential) (m<sup>2</sup> * s<sup>-2</sup>).
+     *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real T(real X, real Y, real Z) const throw() {
       real dummy;

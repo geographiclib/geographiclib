@@ -116,7 +116,9 @@ namespace GeographicLib {
      **********************************************************************/
     CircularEngine()
       : _M(-1)
-      , _gradp(false)
+      , _gradp(true)
+      , _u(0)
+      , _t(1)
       {}
 
     /**

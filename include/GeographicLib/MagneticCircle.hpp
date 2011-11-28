@@ -23,8 +23,8 @@ namespace GeographicLib {
    *
    * Evaluate the earth's magnetic field on a circle of constant height and
    * latitude.  This uses a CircleEngine to pre-evaluate the inner sum of the
-   * spherical harmonic sum, allowing the values of the field at different
-   * latitude to be evaluated rapidly.
+   * spherical harmonic sum, allowing the values of the field at several
+   * different longitudes to be evaluated rapidly.
    *
    * Use MagneticModel::Circle to create a MagneticCircle object.  (The
    * constructor for this class is private.)

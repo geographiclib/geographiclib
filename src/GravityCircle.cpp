@@ -44,8 +44,10 @@ namespace GeographicLib {
     Geocentric::Unrotate(M, deltax, deltay, deltaz, deltax, deltay, deltaz);
     return Tres;
   }
-    
+
   Math::real GravityCircle::GeoidHeight(real lon) const throw() {
+    if ((_caps & GEOIDHEIGHT) != GEOIDHEIGHT)
+      return Math::NaN<real>();
     real clam, slam, dummy;
     CircularEngine::cossin(lon, clam, slam);
     real T = InternalT(clam, slam, dummy, dummy, dummy, false, false);
@@ -55,6 +57,10 @@ namespace GeographicLib {
 
   void GravityCircle::Anomaly(real lon, real& Dg01, real& xi, real& eta)
     const throw() {
+    if ((_caps & ANOMALY) != ANOMALY) {
+      Dg01 = xi = eta = Math::NaN<real>();
+      return;
+    }
     real clam, slam;
     CircularEngine::cossin(lon, clam, slam);
     real
@@ -75,19 +81,16 @@ namespace GeographicLib {
     real Wres = V(clam, slam, gX, gY, gZ) + _frot * _P / 2;
     gX += _frot * clam;
     gY += _frot * slam;
-    return Wres;    
-  }
-
-  Math::real GravityCircle::W(real lon, real& gX, real& gY, real& gZ)
-    const throw() {
-    real clam, slam;
-    CircularEngine::cossin(lon, clam, slam);
-    return W(clam, slam, gX, gY, gZ);
+    return Wres;
   }
 
   Math::real GravityCircle::V(real clam, real slam,
                               real& GX, real& GY, real& GZ)
     const throw() {
+    if ((_caps & GRAVITY) != GRAVITY) {
+      GX = GY = GZ = Math::NaN<real>();
+      return Math::NaN<real>();
+    }
     real
       Vres = _gravitational(clam, slam, GX, GY, GZ),
       f = _GMmodel / _amodel;
@@ -98,16 +101,18 @@ namespace GeographicLib {
     return Vres;
   }
 
-  Math::real GravityCircle::V(real lon, real& GX, real& GY, real& GZ)
-    const throw() {
-    real clam, slam;
-    CircularEngine::cossin(lon, clam, slam);
-    return V(clam, slam, GX, GY, GZ);
-  }
-
   Math::real GravityCircle::InternalT(real clam, real slam,
                                       real& deltaX, real& deltaY, real& deltaZ,
                                       bool gradp, bool correct) const throw() {
+    if (gradp) {
+      if ((_caps & DISTURBANCE) != DISTURBANCE) {
+        deltaX = deltaY = deltaZ = Math::NaN<real>();
+        return Math::NaN<real>();
+      }
+    } else {
+      if ((_caps & DISTPOTENTIAL) != DISTPOTENTIAL)
+        return Math::NaN<real>();
+    }
     if (_dzonal0 == 0)
       correct = false;
     real T = (gradp
@@ -127,20 +132,6 @@ namespace GeographicLib {
       }
     }
     return T;
-  }
-
-  Math::real GravityCircle::T(real lon,
-                              real& deltaX, real& deltaY, real& deltaZ)
-    const throw() {
-    real clam, slam;
-    CircularEngine::cossin(lon, clam, slam);
-    return InternalT(clam, slam, deltaX, deltaY, deltaZ, true, true);
-  }
-
-  Math::real GravityCircle::T(real lon) const throw() {
-    real clam, slam, dummy;
-    CircularEngine::cossin(lon, clam, slam);
-    return InternalT(clam, slam, dummy, dummy, dummy, false, true);
   }
 
 } // namespace GeographicLib
