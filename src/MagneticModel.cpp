@@ -55,7 +55,7 @@ namespace GeographicLib {
     , _hmin(Math::NaN<real>())
     , _hmax(Math::NaN<real>())
     , _Nmodels(1)
-    , _norm(SphericalHarmonic::schmidt)
+    , _norm(SphericalHarmonic::SCHMIDT)
     , _earth(earth)
   {
     if (_dir.empty())
@@ -136,10 +136,10 @@ namespace GeographicLib {
       else if (key == "MaxHeight")
         _hmax =  Utility::num<real>(val);
       else if (key == "Normalization") {
-        if (val == "Full" || val == "full")
-          _norm = SphericalHarmonic::full;
-        else if (val == "Schmidt" || val == "schmidt")
-          _norm = SphericalHarmonic::schmidt;
+        if (val == "FULL" || val == "Full" || val == "full")
+          _norm = SphericalHarmonic::FULL;
+        else if (val == "SCHMIDT" || val == "Schmidt" || val == "schmidt")
+          _norm = SphericalHarmonic::SCHMIDT;
         else
           throw GeographicErr("Unknown normalization " + val);
       } else if (key == "ByteOrder") {

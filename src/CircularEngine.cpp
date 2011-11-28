@@ -40,12 +40,12 @@ namespace GeographicLib {
       if (m) {
         real v, A, B;           // alpha[m], beta[m + 1]
         switch (_norm) {
-        case full:
+        case FULL:
           v = root_[2] * root_[2 * m + 3] / root_[m + 1];
           A = cl * v * _uq;
           B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * _uq2;
           break;
-        case schmidt:
+        case SCHMIDT:
           v = root_[2] * root_[2 * m + 1] / root_[m + 1];
           A = cl * v * _uq;
           B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * _uq2;
@@ -66,11 +66,11 @@ namespace GeographicLib {
       } else {
         real A, B, qs;
         switch (_norm) {
-        case full:
+        case FULL:
           A = root_[3] * _uq;       // F[1]/(q*cl) or F[1]/(q*sl)
           B = - root_[15]/2 * _uq2; // beta[1]/q
           break;
-        case schmidt:
+        case SCHMIDT:
           A = _uq;
           B = - real(3)/2 * _uq2;
           break;

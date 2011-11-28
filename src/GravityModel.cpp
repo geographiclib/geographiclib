@@ -51,7 +51,7 @@ namespace GeographicLib {
     , _GMmodel(Math::NaN<real>())
     , _zeta0(0)
     , _corrmult(1)
-    , _norm(SphericalHarmonic::full)
+    , _norm(SphericalHarmonic::FULL)
   {
     if (_dir.empty())
       _dir = DefaultGravityPath();
@@ -169,10 +169,10 @@ namespace GeographicLib {
       else if (key == "CorrectionMultiplier")
         _corrmult = Utility::fract<real>(val);
       else if (key == "Normalization") {
-        if (val == "Full" || val == "full")
-          _norm = SphericalHarmonic::full;
-        else if (val == "Schmidt" || val == "schmidt")
-          _norm = SphericalHarmonic::schmidt;
+        if (val == "FULL" || val == "Full" || val == "full")
+          _norm = SphericalHarmonic::FULL;
+        else if (val == "SCHMIDT" || val == "Schmidt" || val == "schmidt")
+          _norm = SphericalHarmonic::SCHMIDT;
         else
           throw GeographicErr("Unknown normalization " + val);
       } else if (key == "ByteOrder") {
@@ -311,7 +311,10 @@ namespace GeographicLib {
     return Tres;
   }
 
-  GravityCircle GravityModel::Circle(real lat, real h, mask m) const {
+  GravityCircle GravityModel::Circle(real lat, real h, unsigned m) const {
+    if (h != 0)
+      // Disallow invoking GeoidHeight unless h is zero.
+      m &= ~(CAP_GAMMA0 | CAP_C);
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, 0, h, X, Y, Z, M);
     // Y = 0, cphi = M[7], sphi = M[8];

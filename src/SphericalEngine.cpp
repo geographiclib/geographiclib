@@ -161,7 +161,7 @@ namespace GeographicLib {
                                     real& gradx, real& grady, real& gradz)
     throw() {
     STATIC_ASSERT(L > 0, "L must be positive");
-    STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
+    STATIC_ASSERT(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
@@ -195,14 +195,14 @@ namespace GeographicLib {
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
-        case full:
+        case FULL:
           w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
           Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
           B = - q2 * root_[2 * n + 5] /
             (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
-        case schmidt:
+        case SCHMIDT:
           w = root_[n - m + 1] * root_[n + m + 1];
           Ax = q * (2 * n + 1) / w;
           A = t * Ax;
@@ -235,12 +235,12 @@ namespace GeographicLib {
       if (m) {
         real v, A, B;           // alpha[m], beta[m + 1]
         switch (norm) {
-        case full:
+        case FULL:
           v = root_[2] * root_[2 * m + 3] / root_[m + 1];
           A = cl * v * uq;
           B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * uq2;
           break;
-        case schmidt:
+        case SCHMIDT:
           v = root_[2] * root_[2 * m + 1] / root_[m + 1];
           A = cl * v * uq;
           B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * uq2;
@@ -261,11 +261,11 @@ namespace GeographicLib {
       } else {
         real A, B, qs;
         switch (norm) {
-        case full:
+        case FULL:
           A = root_[3] * uq;       // F[1]/(q*cl) or F[1]/(q*sl)
           B = - root_[15]/2 * uq2; // beta[1]/q
           break;
-        case schmidt:
+        case SCHMIDT:
           A = uq;
           B = - root_[3]/2 * uq2;
           break;
@@ -299,7 +299,7 @@ namespace GeographicLib {
                                          real p, real z, real a) {
 
     STATIC_ASSERT(L > 0, "L must be positive");
-    STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
+    STATIC_ASSERT(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
@@ -322,14 +322,14 @@ namespace GeographicLib {
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
-        case full:
+        case FULL:
           w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
           Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
           B = - q2 * root_[2 * n + 5] /
             (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
-        case schmidt:
+        case SCHMIDT:
           w = root_[n - m + 1] * root_[n + m + 1];
           Ax = q * (2 * n + 1) / w;
           A = t * Ax;
@@ -398,81 +398,81 @@ namespace GeographicLib {
 
   /// \cond SKIP
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 1>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::full, 2>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::full, 2>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 2>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 2>
+  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::full, 3>
+  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::full, 3>
+  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 3>
+  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 3>
+  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 1>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 1>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 1>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real);
 
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 2>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 2>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 2>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 2>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real);
 
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 3>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 3>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 3>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 3>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 3>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 3>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 3>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 3>
   (const coeff[], const real[], real, real, real);
   /// \endcond
 

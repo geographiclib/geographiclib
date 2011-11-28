@@ -98,13 +98,47 @@ namespace GeographicLib {
 
   public:
 
+    /**
+     * Bit masks for the capabilities to be given to the GravityCircle object
+     * produced by Circle.
+     **********************************************************************/
     enum mask {
+      /**
+       * No capabilities.
+       * @hideinitializer
+       **********************************************************************/
       NONE          = 0U,
+      /**
+       * Allow call to GravityCircle::Gravity, GravityCircle::W and
+       * GravityCircle::V
+       * @hideinitializer
+       **********************************************************************/
       GRAVITY       = CAP_G,     // Also W and V
+      /**
+       * Allow call to GravityCircle::Disturbance and GravityCircle::T.
+       * @hideinitializer
+       **********************************************************************/
       DISTURBANCE   = CAP_DELTA, // Also T with gradient
+      /**
+       * Allow call to GravityCircle::T(real lon) (i.e., computing the
+       * disturbing potential and not the disturbing gravity vector).
+       * @hideinitializer
+       **********************************************************************/
       DISTPOTENTIAL = CAP_T,     // Also T without gradient
+      /**
+       * Allow call to GravityCircle::GeoidHeight.
+       * @hideinitializer
+       **********************************************************************/
       GEOIDHEIGHT   = CAP_T | CAP_C | CAP_GAMMA0,
+      /**
+       * Allow call to GravityCircle::Anomaly.
+       * @hideinitializer
+       **********************************************************************/
       ANOMALY       = CAP_DELTA | CAP_GAMMA,
+      /**
+       * All capabilities.
+       * @hideinitializer
+       **********************************************************************/
       ALL           = CAP_ALL,
     };
     /** \name Setting up the gravity model
@@ -116,15 +150,11 @@ namespace GeographicLib {
      * @param[in] name the name of the model.
      * @param[in] path (optional) directory for data file.
      *
-     * A filename is formed by appending ".egm" (World Gravity Model) to
-     * the name.  If \e path is specified (and is non-empty), then the file is
-     * loaded from directory, \e path.  Otherwise the path is given by the
-     * GRAVITY_PATH environment variable.  If that is undefined, a
-     * compile-time default path is used
-     * (/usr/local/share/GeographicLib/gravity on non-Windows systems and
-     * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/gravity on Windows systems).  This may throw an
-     * exception because the file does not exist, is unreadable, or is corrupt.
+     * A filename is formed by appending ".egm" (World Gravity Model) to the
+     * name.  If \e path is specified (and is non-empty), then the file is
+     * loaded from directory, \e path.  Otherwise the path is given by
+     * DefaultGravityPath().  This may throw an exception because the file does
+     * not exist, is unreadable, or is corrupt.
      *
      * This file contains the metadata which specifies the properties of the
      * model.  The coefficients for the spherical harmonic sums are obtained
@@ -322,6 +352,9 @@ namespace GeographicLib {
     { return _earth.Phi(X, Y, fX, fY); }
     ///@}
 
+    /** \name Compute gravity on a circle of constant latitude
+     **********************************************************************/
+    ///@{
     /**
      * Create a GravityCircle object to allow the geogravity field at many
      * points with constant \e lat and \e h and varying \e lon to be
@@ -355,7 +388,8 @@ namespace GeographicLib {
      \endcode
      * For high-degree models, this will be substantially faster.
      **********************************************************************/
-    GravityCircle Circle(real lat, real h, mask m = ALL) const;
+    GravityCircle Circle(real lat, real h, unsigned m = ALL) const;
+    ///@}
 
     /** \name Inspector functions
      **********************************************************************/
@@ -432,10 +466,13 @@ namespace GeographicLib {
     /**
      * @return the default path for gravity model data files.
      *
-     * This is the value of the environment variable GRAVITY_PATH, if set,
-     * otherwise, it is a compile-time default.
+     * This is the value of the environment variable GRAVITY_PATH, if set;
+     * otherwise, it is $GEOGRAPHICLIB_DATA/gravity if the environment variable
+     * GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time default
+     * (/usr/local/share/GeographicLib/gravity on non-Windows systems and
+     * C:/Documents and Settings/All Users/Application
+     * Data/GeographicLib/gravity on Windows systems).
      **********************************************************************/
-
     static std::string DefaultGravityPath();
 
     /**

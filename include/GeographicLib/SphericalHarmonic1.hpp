@@ -34,25 +34,25 @@ namespace GeographicLib {
     enum normalization {
       /**
        * Fully normalized associated Legendre polynomials.  See
-       * SphericalHarmonic::full for documentation.
+       * SphericalHarmonic::FULL for documentation.
        *
        * @hideinitializer
        **********************************************************************/
-      full = SphericalEngine::full,
+      FULL = SphericalEngine::FULL,
       /**
        * Schmidt semi-normalized associated Legendre polynomials.  See
-       * SphericalHarmonic::schmidt for documentation.
+       * SphericalHarmonic::SCHMIDT for documentation.
        *
        * @hideinitializer
        **********************************************************************/
-      schmidt = SphericalEngine::schmidt,
+      SCHMIDT = SphericalEngine::SCHMIDT,
     };
 
   private:
     typedef Math::real real;
     SphericalEngine::coeff _c[2];
     real _a;
-    normalization _norm;
+    unsigned _norm;
 
   public:
     /**
@@ -68,8 +68,8 @@ namespace GeographicLib {
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
      * @param[in] norm the normalization for the associated Legendre
-     *   polynomials, either SphericalHarmonic1::full (the default) or
-     *   SphericalHarmonic1::schmidt.
+     *   polynomials, either SphericalHarmonic1::FULL (the default) or
+     *   SphericalHarmonic1::SCHMIDT.
      *
      * See SphericalHarmonic for the way the coefficients should be stored.  \e
      * N1 should satisfy \e N1 <= \e N.
@@ -84,7 +84,7 @@ namespace GeographicLib {
                        const std::vector<real>& C1,
                        const std::vector<real>& S1,
                        int N1,
-                       real a, normalization norm = full)
+                       real a, unsigned norm = FULL)
       : _a(a)
       , _norm(norm) {
       if (!(N1 <= N))
@@ -112,8 +112,8 @@ namespace GeographicLib {
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
      * @param[in] norm the normalization for the associated Legendre
-     *   polynomials, either SphericalHarmonic1::full (the default) or
-     *   SphericalHarmonic1::schmidt.
+     *   polynomials, either SphericalHarmonic1::FULL (the default) or
+     *   SphericalHarmonic1::SCHMIDT.
      *
      * The class stores <i>pointers</i> to the first elements of \e C, \e S, \e
      * C', and \e S'.  These arrays should not be altered or destroyed during
@@ -125,7 +125,7 @@ namespace GeographicLib {
                        const std::vector<real>& C1,
                        const std::vector<real>& S1,
                        int N1, int nmx1, int mmx1,
-                       real a, normalization norm = full)
+                       real a, unsigned norm = FULL)
       : _a(a)
       , _norm(norm) {
       if (!(nmx1 <= nmx))
@@ -160,12 +160,12 @@ namespace GeographicLib {
       real v = 0;
       real dummy;
       switch (_norm) {
-      case full:
-        v = SphericalEngine::Value<false, SphericalEngine::full, 2>
+      case FULL:
+        v = SphericalEngine::Value<false, SphericalEngine::FULL, 2>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
-      case schmidt:
-        v = SphericalEngine::Value<false, SphericalEngine::schmidt, 2>
+      case SCHMIDT:
+        v = SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 2>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
       }
@@ -195,12 +195,12 @@ namespace GeographicLib {
       real f[] = {1, tau};
       real v = 0;
       switch (_norm) {
-      case full:
-        v = SphericalEngine::Value<true, SphericalEngine::full, 2>
+      case FULL:
+        v = SphericalEngine::Value<true, SphericalEngine::FULL, 2>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
-      case schmidt:
-        v = SphericalEngine::Value<true, SphericalEngine::schmidt, 2>
+      case SCHMIDT:
+        v = SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 2>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
       }
@@ -232,19 +232,19 @@ namespace GeographicLib {
     CircularEngine Circle(real tau, real p, real z, bool gradp) const {
       real f[] = {1, tau};
       switch (_norm) {
-      case full:
+      case FULL:
         return gradp ?
-          SphericalEngine::Circle<true, SphericalEngine::full, 2>
+          SphericalEngine::Circle<true, SphericalEngine::FULL, 2>
           (_c, f, p, z, _a) :
-          SphericalEngine::Circle<false, SphericalEngine::full, 2>
+          SphericalEngine::Circle<false, SphericalEngine::FULL, 2>
           (_c, f, p, z, _a);
         break;
-      case schmidt:
+      case SCHMIDT:
       default:                  // To avoid compiler warnings
         return gradp ?
-          SphericalEngine::Circle<true, SphericalEngine::schmidt, 2>
+          SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 2>
           (_c, f, p, z, _a) :
-          SphericalEngine::Circle<false, SphericalEngine::schmidt, 2>
+          SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 2>
           (_c, f, p, z, _a);
         break;
       }

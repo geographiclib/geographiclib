@@ -1218,13 +1218,14 @@ locate the datasets.  This is
   for Windows systems
 .
 consistent with the examples above.  This may be overridden at run-time
-by defining the GEOID_PATH environment variable.  Finally, the path may
-be set using the optional second argument to the GeographicLib::Geoid
-constructor or with the "-d" flag to
-<a href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to
-<a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path
-for that utility.  The "-v" flag causes GeoidEval to report the full
-path name of the data file it uses.
+by defining the GEOID_PATH or the GEOGRAPHIC_DATA environment variables;
+see GeographicLib::Geoid::DefaultGeoidPath() for details.  Finally, the
+path may be set using the optional second argument to the
+GeographicLib::Geoid constructor or with the "-d" flag to <a
+href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to <a
+href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path for
+that utility.  The "-v" flag causes GeoidEval to report the full path
+name of the data file it uses.
 
 \section geoidformat The format of the geoid data files
 
@@ -1658,8 +1659,9 @@ default to locate the datasets.  This is
   for Windows systems
 .
 consistent with the examples above.  This may be overridden at run-time
-by defining the GRAVITY_PATH environment variable.  Finally, the path
-may be set using the optional second argument to the
+by defining the GRAVITY_PATH or the GEOGRAPHIC_DATA environment
+variables; see GeographicLib::Geoid::DefaultGravityPath() for details.
+Finally, the path may be set using the optional second argument to the
 GeographicLib::GravityModel constructor or with the "-d" flag to
 <a href="Gravity.1.html">Gravity</a>.  Supplying the "-h" flag to
 <a href="Gravity.1.html">Gravity</a> reports the default path for
@@ -1912,12 +1914,13 @@ default to locate the datasets.  This is
   for Windows systems
 .
 consistent with the examples above.  This may be overridden at run-time
-by defining the MAGNETIC_PATH environment variable.  Finally, the path
-may be set using the optional second argument to the
-GeographicLib::MagneticModel constructor or with the "-d" flag to
-<a href="MagneticField.1.html">MagneticField</a>.  Supplying the "-h"
-flag to <a href="MagneticField.1.html">MagneticField</a> reports the
-default path for magnetic models for that utility.  The "-v" flag causes
+by defining the MAGNETIC_PATH  or the GEOGRAPHIC_DATA environment
+variables; see GeographicLib::Geoid::DefaultMagneticPath() for details.
+Finally, the path may be set using the optional second argument to the
+GeographicLib::MagneticModel constructor or with the "-d" flag to <a
+href="MagneticField.1.html">MagneticField</a>.  Supplying the "-h" flag
+to <a href="MagneticField.1.html">MagneticField</a> reports the default
+path for magnetic models for that utility.  The "-v" flag causes
 MagneticField to report the full path name of the data file it uses.
 
 \section magneticformat The format of the magnetic model files

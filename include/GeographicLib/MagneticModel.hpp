@@ -86,15 +86,11 @@ namespace GeographicLib {
      * @param[in] earth (optional) Geocentric object for converting
      *   coordinates; default Geocentric::WGS84.
      *
-     * A filename is formed by appending ".wmm" (World Magnetic Model) to
-     * the name.  If \e path is specified (and is non-empty), then the file is
+     * A filename is formed by appending ".wmm" (World Magnetic Model) to the
+     * name.  If \e path is specified (and is non-empty), then the file is
      * loaded from directory, \e path.  Otherwise the path is given by the
-     * MAGNETIC_PATH environment variable.  If that is undefined, a
-     * compile-time default path is used
-     * (/usr/local/share/GeographicLib/magnetic on non-Windows systems and
-     * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/magnetic on Windows systems).  This may throw an
-     * exception because the file does not exist, is unreadable, or is corrupt.
+     * DefaultMagneticPath().  This may throw an exception because the file
+     * does not exist, is unreadable, or is corrupt.
      *
      * This file contains the metadata which specifies the properties of the
      * model.  The coefficients for the spherical harmonic sums are obtained
@@ -333,10 +329,13 @@ namespace GeographicLib {
     /**
      * @return the default path for magnetic model data files.
      *
-     * This is the value of the environment variable MAGNETIC_PATH, if set,
-     * otherwise, it is a compile-time default.
+     * This is the value of the environment variable MAGNETIC_PATH, if set;
+     * otherwise, it is $GEOGRAPHICLIB_DATA/magnetic if the environment
+     * variable GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time
+     * default (/usr/local/share/GeographicLib/magnetic on non-Windows systems
+     * and C:/Documents and Settings/All Users/Application
+     * Data/GeographicLib/magnetic on Windows systems).
      **********************************************************************/
-
     static std::string DefaultMagneticPath();
 
     /**

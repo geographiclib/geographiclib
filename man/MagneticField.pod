@@ -142,10 +142,10 @@ setting the environment variable C<MAGNETIC_NAME> or with the B<-n>
 option.
 
 The magnetic models will be loaded from a directory specified at compile
-time.  This may changed by setting the environment variable
-C<MAGNETIC_PATH> or with the B<-d> option.  The B<-h> option prints the
-default magnetic path and name.  Use the B<-v> option to ascertain the
-full path name of the data file.
+time.  This may changed by setting the environment variables
+C<MAGNETIC_PATH> or C<GEOGRAPHICLIB_DATA>, or with the B<-d> option.
+The B<-h> option prints the default magnetic path and name.  Use the
+B<-v> option to ascertain the full path name of the data file.
 
 Instructions for downloading and installing magnetic models are
 available at
@@ -165,12 +165,18 @@ then I<name> takes precedence.
 =item B<MAGNETIC_PATH>
 
 Override the compile-time default magnetic path.  This is typically
-C</usr/local/share/GeographicLib/magnetics> on Unix-like systems and
+C</usr/local/share/GeographicLib/magnetic> on Unix-like systems and
 C<C:/Documents and Settings/All Users/Application
-Data/GeographicLib/magnetics> on Windows systems.  The B<-h> option reports
+Data/GeographicLib/magnetic> on Windows systems.  The B<-h> option reports
 the value of B<MAGNETIC_PATH>, if defined, otherwise it reports the
 compile-time value.  If the B<-d> I<dir> option is used, then I<dir>
 takes precedence.
+
+=item B<GEOGRAPHICLIB_DATA>
+
+Another way of overriding the compile-time default magnetic path.  If it
+is set (and if B<MAGNETIC_PATH> is not set), then
+$B<GEOGRAPHICLIB_DATA>/magnetic is used.
 
 =back
 

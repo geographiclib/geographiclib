@@ -55,18 +55,18 @@ namespace GeographicLib {
     enum normalization {
       /**
        * Fully normalized associated Legendre polynomials.  See
-       * SphericalHarmonic::full for documentation.
+       * SphericalHarmonic::FULL for documentation.
        *
        * @hideinitializer
        **********************************************************************/
-      full = 0,
+      FULL = 0,
       /**
        * Schmidt semi-normalized associated Legendre polynomials.  See
-       * SphericalHarmonic::schmidt for documentation.
+       * SphericalHarmonic::SCHMIDT for documentation.
        *
        * @hideinitializer
        **********************************************************************/
-      schmidt = 1,
+      SCHMIDT = 1,
     };
 
     /**

@@ -181,16 +181,12 @@ namespace GeographicLib {
      *
      * The data file is formed by appending ".pgm" to the name.  If \e path is
      * specified (and is non-empty), then the file is loaded from directory, \e
-     * path.  Otherwise the path is given by the GEOID_PATH environment
-     * variable.  If that is undefined, a compile-time default path is used
-     * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
-     * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/geoids on Windows systems).  This may throw an
-     * exception because the file does not exist, is unreadable, or is corrupt.
-     * If the \e threadsafe parameter is true, the data set is read into memory
-     * (which this may also cause an exception to be thrown), the data file is
-     * closed, and single-cell caching is turned off; this results in a Geoid
-     * object which \e is thread safe.
+     * path.  Otherwise the path is given by DefaultGeoidPath().  This may
+     * throw an exception because the file does not exist, is unreadable, or is
+     * corrupt.  If the \e threadsafe parameter is true, the data set is read
+     * into memory (which this may also cause an exception to be thrown), the
+     * data file is closed, and single-cell caching is turned off; this results
+     * in a Geoid object which \e is thread safe.
      **********************************************************************/
     explicit Geoid(const std::string& name, const std::string& path = "",
                    bool cubic = true, bool threadsafe = false);
@@ -438,8 +434,12 @@ namespace GeographicLib {
     /**
      * @return the default path for geoid data files.
      *
-     * This is the value of the environment variable GEOID_PATH, if set,
-     * otherwise, it is a compile-time default.
+     * This is the value of the environment variable GEOID_PATH, if set;
+     * otherwise, it is $GEOGRAPHICLIB_DATA/geoids if the environment variable
+     * GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time default
+     * (/usr/local/share/GeographicLib/geoids on non-Windows systems and
+     * C:/Documents and Settings/All Users/Application
+     * Data/GeographicLib/geoids on Windows systems).
      **********************************************************************/
     static std::string DefaultGeoidPath();
 
