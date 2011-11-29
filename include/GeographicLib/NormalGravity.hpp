@@ -300,8 +300,6 @@ namespace GeographicLib {
      * A global instantiation of NormalGravity for the GRS80 ellipsoid.
      **********************************************************************/
     static const NormalGravity GRS80;
-
-    void DumpConstants() const;
   };
 
 } // namespace GeographicLib

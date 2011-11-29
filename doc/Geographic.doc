@@ -1023,11 +1023,11 @@ is only 1 mm.
 
 The geoid is usually approximated by an "earth gravity model" (EGM).
 The models published by the NGA are:
-- EGM84:
+- <b>EGM84</b>:
   http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
-- EGM96:
+- <b>EGM96</b>:
   http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
-- EGM2008:
+- <b>EGM2008</b>:
   http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
 .
 GeographicLib::Geoid offers a uniform way to handle all 3 geoids at a
@@ -1512,19 +1512,19 @@ gravity model.  These models expand the gravitational potential of the
 earth as sum of spherical harmonics.
 
 The supported models are
- - egm84, the
+ - <b>egm84</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
    Earth Gravity Model 1984</a>, which includes terms up to degree 180.
    The NGA code for this models uses a value for the mass of the earth
    that excludes the atmosphere.  Here the mass of the atmosphere is
    included for consistency with the other earth gravity models.
- - egm96, the
+ - <b>egm96</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
    Earth Gravity Model 1996</a>, which includes terms up to degree 360.
- - egm2008, the
+ - <b>egm2008</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
    Earth Gravity Model 2008</a>, which includes terms up to degree 2190.
- - wgs84, the
+ - <b>wgs84</b>, the
    <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
    gravitational field for the reference ellipsoid.  Usually
@@ -1682,38 +1682,52 @@ VALUE".  In general, the KEY and the VALUE are case-sensitive.
 GeographicLib::GravityModel only pays attention to the following
 keywords
  - keywords that affect the field calculation, namely:
-   - ModelRadius (required), the normalizing radius for the model in
+   - <b>ModelRadius</b> (required), the normalizing radius for the model in
      meters.
-   - ReferenceRadius (required), the equatorial radius for the reference
+   - <b>ReferenceRadius</b> (required), the major radius for the reference
      ellipsoid meters.
-   - ModelMass (required), the mass constant for the model in
+   - <b>ModelMass</b> (required), the mass constant for the model in
      meters<sup>3</sup>/seconds<sup>2</sup>.
-   - ReferenceMass (required), the mass constant for the reference
+   - <b>ReferenceMass</b> (required), the mass constant for the reference
      ellipsoid in meters<sup>3</sup>/seconds<sup>2</sup>.
-   - AngularVelociy (required), the angular velocity for the model \e
+   - <b>AngularVelociy</b> (required), the angular velocity for the model \e
      and the reference ellipsoid in rad seconds<sup>-1</sup>.
-   - Flattening, the flattening of the reference ellipsoid; this can be
-     given a fraction, e.g., 1/298.257223563.  One of Flattening and
-     DynamicalFormFactor is required.
-   - DynamicalFormFactor, the dynamical form factor <i>J</i><sub>2</sub>
-     for the reference ellipsoid.  One of Flattening and
-     DynamicalFormFactor is required.
-   - HeightOffset (default 0), the constant height offset (meters) added
+   - <b>Flattening</b>, the flattening of the reference ellipsoid; this can be
+     given a fraction, e.g., 1/298.257223563.  One of <b>Flattening</b> and
+     <b>DynamicalFormFactor</b> is required.
+   - <b>DynamicalFormFactor</b>, the dynamical form factor <i>J</i><sub>2</sub>
+     for the reference ellipsoid.  One of <b>Flattening</b> and
+     <b>DynamicalFormFactor</b> is required.
+   - <b>HeightOffset</b> (default 0), the constant height offset (meters) added
      to obtain the geoid height.
-   - CorrectionMultiplier (default 1), the multiplier for the
+   - <b>CorrectionMultiplier</b> (default 1), the multiplier for the
      "zeta-to-N" correction terms for the geoid height to convert them
      to meters.
-   - Normalization (default full), the normalization used for the
+   - <b>Normalization</b> (default full), the normalization used for the
      associated Legendre functions (full or schmidt).
-   - ID (required), 8 printable characters which serve as a signature
+   - <b>ID</b> (required), 8 printable characters which serve as a signature
      for the .egm.cof file (they must appear as the first 8 bytes of this
      file).
+   .
+   The parameters <b>ModelRadius</b>, <b>ModelMass</b>, and
+   <b>AngularVelocity</b> apply to the gravity model, while
+   <b>ReferenceRadius</b>, <b>ReferenceMass</b>, <b>AngularVelocity</b>,
+   and either <b>Flattening</b> or <b>DynamicalFormFactor</b>
+   characterize the reference ellipsoid.  <b>AngularVelocity</b>
+   (because it can be measured precisely) is the same for the gravity
+   model and the reference ellipsoid.  <b>ModelRadius</b> is merely a
+   scaling parameter for the gravity model and there's no requirement
+   that it be close to the major radius of the earth (although that's
+   typically how it is chosen).  <b>ModelMass</b> and
+   <b>ReferenceMass</b> need not be the same and, indeed, they are
+   slightly difference for egm2008.  As a result the disturbing
+   potential has a 1/\e r dependence at large distances.
  - keywords that store data that the user can query:
-   - Name, the name of the model.
-   - Description, a more descriptive name of the model.
-   - ReleaseDate, when the model was created.
+   - <b>Name</b>, the name of the model.
+   - <b>Description</b>, a more descriptive name of the model.
+   - <b>ReleaseDate</b>, when the model was created.
  - keywords that are examined to verify that their values are valid:
-   - ByteOrder (default little), the order of bytes in the .egm.cof
+   - <b>ByteOrder</b> (default little), the order of bytes in the .egm.cof
      file.  Only little endian is supported at present.
  .
 Other keywords are ignored.
@@ -1809,15 +1823,15 @@ specific to igrf11, many of the comments apply to all magnetic field
 models.
 
 The supported models are
- - wmm2010, the
+ - <b>wmm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2010</a>, which approximates the main magnetic field
    for the period 2010&ndash;2015.
- - igrf11, the
+ - <b>igrf11</b>, the
    <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
    the main magnetic field for the period 1900&ndash;2015.
- - emm2010, the
+ - <b>emm2010</b>, the
    <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
    magnetic fields for the period 2010&ndash;2015.
@@ -1955,31 +1969,31 @@ VALUE".  In general, the KEY and the VALUE are case-sensitive.
 GeographicLib::MagneticModel only pays attention to the following
 keywords
  - keywords that affect the field calculation, namely:
-   - Radius (required), the reference radius of the earth in meters.
-   - NumModels (default 1), the number of models.  WMM2010 consists of a
+   - <b>Radius</b> (required), the reference radius of the earth in meters.
+   - <b>NumModels</b> (default 1), the number of models.  WMM2010 consists of a
      single model giving the magnetic field and its time variation at
      2010.  IGRF11 consists of 23 models for 1900 thru 2010 at 5 year
      intervals.  The time variation is given only for the last model to
      allow extrapolation beyong 2010.  For dates prior to 2010, linear
      interpolation is used.
-   - Epoch (required), the time origin (in fractional years) for the
+   - <b>Epoch</b> (required), the time origin (in fractional years) for the
      first model.
-   - DeltaEpoch (default 1), the interval between models in years (only
+   - <b>DeltaEpoch</b> (default 1), the interval between models in years (only
      relevant for NumModels > 1).
-   - Normalization (default schmidt), the normalization used for the
+   - <b>Normalization</b> (default schmidt), the normalization used for the
      associated Legendre functions (schmidt or full).
-   - ID (required), 8 printable characters which serve as a signature
+   - <b>ID</b> (required), 8 printable characters which serve as a signature
      for the .wmm.cof file (they must appear as the first 8 bytes of this
      file).
  - keywords that store data that the user can query:
-   - Name, the name of the model.
-   - Description, a more descriptive name of the model.
-   - ReleaseDate, when the model was created.
-   - MinTime, the minimum date at which the model should be used.
-   - MaxTime, the maximum date at which the model should be used.
-   - MinHeight, the minimum height above the ellipsoid for which the
+   - <b>Name</b>, the name of the model.
+   - <b>Description</b>, a more descriptive name of the model.
+   - <b>ReleaseDate</b>, when the model was created.
+   - <b>MinTime</b>, the minimum date at which the model should be used.
+   - <b>MaxTime</b>, the maximum date at which the model should be used.
+   - <b>MinHeight</b>, the minimum height above the ellipsoid for which the
      model should be used.
-   - MaxHeight, the maximum height above the ellipsoid for which the
+   - <b>MaxHeight</b>, the maximum height above the ellipsoid for which the
      model should be used.
    .
    GeographicLib::MagneticModel does not enforce the restrictions
@@ -1987,12 +2001,12 @@ keywords
    <a href="MagneticField.1.html">MagneticField</a> issues a warning if
    these limits are exceeded.
  - keywords that are examined to verify that their values are valid:
-   - Type (default linear), the type of the model.  "linear" means that
+   - <b>Type</b> (default linear), the type of the model.  "linear" means that
      the time variation is piece-wise linear (either using interpolation
      between the field at two dates or using the field and its first
      derivative with respect to time).  This is the only type of model
      supported at present.
-   - ByteOrder (default little), the order of bytes in the .wmm.cof
+   - <b>ByteOrder</b> (default little), the order of bytes in the .wmm.cof
      file.  Only little endian is supported at present.
  .
 Other keywords are ignored.

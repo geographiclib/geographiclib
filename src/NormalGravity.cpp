@@ -8,8 +8,6 @@
  **********************************************************************/
 
 #include <GeographicLib/NormalGravity.hpp>
-#include <iostream>
-#include <iomanip>
 
 #define GEOGRAPHICLIB_NORMALGRAVITY_CPP \
   "$Id$"
@@ -235,36 +233,6 @@ namespace GeographicLib {
     gammay = M[1] * gammaX + M[4] * gammaY + M[7] * gammaZ;
     gammaz = M[2] * gammaX + M[5] * gammaY + M[8] * gammaZ;
     return Ures;
-  }
-
-  void NormalGravity::DumpConstants() const {
-    cout << setprecision(17)
-         << "a=" << _a << "\n"
-         << "GM=" << _GM << "\n"
-         << "omega=" << _omega << "\n"
-         << "J(2)=" << _J2 << "\n"
-         << "J(4)=" << Jn(4) << "\n"
-         << "J(6)=" << Jn(6) << "\n"
-         << "J(8)=" << Jn(8) << "\n"
-         << "J(10)=" << Jn(10) << "\n"
-         << "omega2=" << _omega2 << "\n"
-         << "aomega2=" << _aomega2 << "\n"
-         << "e2=" << _e2 << "\n"
-         << "ep2=" << _ep2 << "\n"
-         << "f=" << _f << "\n"
-         << "1/f=" << 1/_f << "\n"
-         << "b=" << _b << "\n"
-         << "E=" << _E << "\n"
-         << "U0=" << _U0 << "\n"
-         << "gammae=" << _gammae << "\n"
-         << "gammap=" << _gammap << "\n"
-         << "q0=" << _q0 << "\n"
-         << "m=" << _m << "\n"
-         << "k=" << _k << "\n"
-         << "fstar=" << _fstar << "\n"
-         << "1/fstar=" << 1/_fstar << "\n";
-    for (int n = 0; n <= 40; n += 2)
-      cout << "C(" << n << ",0)=" << -Jn(n)/sqrt(real(2*n+1)) << "\n";
   }
 
 } // namespace GeographicLib

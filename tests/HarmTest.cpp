@@ -19,11 +19,6 @@ int main() {
   try {
     if (false) {
     {
-      std::cout << "WGS84 constants\n";
-      NormalGravity::WGS84.DumpConstants();
-    }
-    return 0;
-    {
       std::cout << std::fixed;
       Geoid egm("egm2008-1");
       real lat0 = 89.234412, lon0 = -179.234257, dl = 180/1123, h = 0;
@@ -80,20 +75,6 @@ int main() {
         */
       }
     }
-    return 0;
-    {
-      NormalGravity egm84(6378137.0, 3.986005e14, 7292115e-11,
-                          484.16685e-6*sqrt(5.0), false);
-      std::cout << "EGM84-J2 constants\n";
-      egm84.DumpConstants();
-    }
-    {
-      NormalGravity egm84(6378137.0, 3.986005e14, 7292115e-11,
-                          1/298.257223563, true);
-      std::cout << "EGM84-f constants\n";
-      egm84.DumpConstants();
-    }
-      
     return 0;
     }
     if (true) {
