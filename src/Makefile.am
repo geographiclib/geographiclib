@@ -21,11 +21,14 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		GeodesicLine.cpp \
 		Geoid.cpp \
 		Gnomonic.cpp \
+		GravityCircle.cpp \
+		GravityModel.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
 		MagneticCircle.cpp \
 		MagneticModel.cpp \
+		NormalGravity.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
 		PolygonArea.cpp \
@@ -33,6 +36,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		Utility.cpp \
 		../include/GeographicLib/Accumulator.hpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -47,12 +51,15 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/GeodesicLine.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
+		../include/GeographicLib/GravityCircle.hpp \
+		../include/GeographicLib/GravityModel.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
 		../include/GeographicLib/MagneticCircle.hpp \
 		../include/GeographicLib/MagneticModel.hpp \
 		../include/GeographicLib/Math.hpp \
+		../include/GeographicLib/NormalGravity.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/PolygonArea.hpp \

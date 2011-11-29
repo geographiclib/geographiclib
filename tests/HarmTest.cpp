@@ -17,6 +17,31 @@ using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
+    {
+      std::cout << std::fixed;
+      GravityModel egm("egm2008");
+      real lat, lon;
+      while (std::cin >> lat >> lon) {
+        real g = egm.GeoidHeight(lat, lon);
+        std::cout << std::setprecision(6)
+                  << std::setw(12) << lat
+                  << std::setw(12) << lon
+                  << std::setprecision(12) << std::setw(20)
+                  << g << "\n";
+        /*
+          real h;
+          std::cin >> h;
+        real Dg01, xi, eta;
+        egm.Anomaly(lat, lon, h, Dg01, xi, eta);
+        Dg01 *= 1e5;
+        xi *= 3600;
+        eta *= 3600;
+        std::cout << std::setprecision(12) << g << " " << Dg01 << " "
+                  << xi << " " << eta << "\n";
+        */
+      }
+    }
+    return 0;
     if (false) {
     {
       std::cout << std::fixed;
@@ -51,31 +76,6 @@ int main() {
       }
       return 0;
     }
-    {
-      std::cout << std::fixed;
-      GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
-      real lat, lon;
-      while (std::cin >> lat >> lon) {
-        real g = egm.GeoidHeight(lat, lon);
-        std::cout << std::setprecision(6)
-                  << std::setw(12) << lat
-                  << std::setw(12) << lon
-                  << std::setprecision(12) << std::setw(20)
-                  << g << "\n";
-        /*
-          real h;
-          std::cin >> h;
-        real Dg01, xi, eta;
-        egm.Anomaly(lat, lon, h, Dg01, xi, eta);
-        Dg01 *= 1e5;
-        xi *= 3600;
-        eta *= 3600;
-        std::cout << std::setprecision(12) << g << " " << Dg01 << " "
-                  << xi << " " << eta << "\n";
-        */
-      }
-    }
-    return 0;
     }
     if (true) {
       std::cout << std::setprecision(8);

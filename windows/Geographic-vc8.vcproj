@@ -309,6 +309,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\GravityCircle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\GravityModel.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\LambertConformalConic.cpp"
 				>
 			</File>
@@ -326,6 +334,10 @@
 			</File>
 			<File
 				RelativePath="..\src\MagneticModel.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\NormalGravity.cpp"
 				>
 			</File>
 			<File
@@ -354,6 +366,10 @@
 			</File>
 			<File
 				RelativePath="..\src\UTMUPS.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Utility.cpp"
 				>
 			</File>
 		</Filter>
@@ -423,6 +439,14 @@
 				>
 			</File>
 			<File
+				RelativePath="../include/GeographicLib/GravityCircle.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/GravityModel.hpp"
+				>
+			</File>
+			<File
 				RelativePath="../include/GeographicLib/LocalCartesian.hpp"
 				>
 			</File>
@@ -440,6 +464,10 @@
 			</File>
 			<File
 				RelativePath="../include/GeographicLib/Math.hpp"
+				>
+			</File>
+			<File
+				RelativePath="../include/GeographicLib/NormalGravity.hpp"
 				>
 			</File>
 			<File

@@ -23,4 +23,4 @@ run automake --add-missing --copy --force-missing --foreign
 run autoconf
 run autoreconf
 
-rm -f man/*.usage man/*.1
+rm -f man/*.usage man/*.1 include/GeographicLib/Config-ac.h

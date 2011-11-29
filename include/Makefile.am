@@ -18,12 +18,15 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/GeodesicLine.hpp \
 			GeographicLib/Geoid.hpp \
 			GeographicLib/Gnomonic.hpp \
+			GeographicLib/GravityCircle.hpp \
+			GeographicLib/GravityModel.hpp \
 			GeographicLib/LambertConformalConic.hpp \
 			GeographicLib/LocalCartesian.hpp \
 			GeographicLib/MGRS.hpp \
 			GeographicLib/MagneticCircle.hpp \
 			GeographicLib/MagneticModel.hpp \
 			GeographicLib/Math.hpp \
+			GeographicLib/NormalGravity.hpp \
 			GeographicLib/OSGB.hpp \
 			GeographicLib/PolarStereographic.hpp \
 			GeographicLib/PolygonArea.hpp \
@@ -35,7 +38,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/TransverseMercatorExact.hpp \
 			GeographicLib/UTMUPS.hpp \
 			GeographicLib/Utility.hpp \
-				GeographicLib/Config.h
+			GeographicLib/Config.h
 
 geoids_dir=$(datadir)/GeographicLib/geoids
 

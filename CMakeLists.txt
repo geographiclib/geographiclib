@@ -4,11 +4,11 @@ cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 15)
+set (GeographicLib_VERSION_MINOR 16)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.1.0)
+set (LIBVERSIONFULL 9.2.0)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -155,6 +155,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/release-notes/"
   "${PROJECT_SOURCE_DIR}/(geoids-distrib|geoids-installer)/"
   "${PROJECT_SOURCE_DIR}/(magnetic-distrib|magnetic-installer)/"
+  "${PROJECT_SOURCE_DIR}/(gravity-distrib|gravity-installer)/"
   "${PROJECT_SOURCE_DIR}/(magnetic|gravity)/"
   "${PROJECT_SOURCE_DIR}/(distrib|cgi-bin|scratch|srcL|workspace)/"
   "${PROJECT_SOURCE_DIR}/(tests|testdata)/"
