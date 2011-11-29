@@ -10,7 +10,6 @@
 #include <GeographicLib/GravityCircle.hpp>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <GeographicLib/Geocentric.hpp>
 
 #define GEOGRAPHICLIB_GRAVITYCIRCLE_CPP \

@@ -155,9 +155,9 @@ namespace GeographicLib {
      * points with constant \e lat, \e h, and \e t and varying \e lon to be
      * computed efficienty.
      *
+     * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
-     * @param[in] t the time (years).
      * @return a MagneticCircle object whose MagneticCircle::operator()(real
      *   lon) member function computes the field at a particular \e lon.
      *
@@ -170,7 +170,7 @@ namespace GeographicLib {
     real
       lon = lon0 + i * dlon,
       Bx, By, Bz;
-    m(lat, lon, h, t, Bx, By, Bz);
+    m(t, lat, lon, h, Bx, By, Bz);
     std::cout << lon << " " << Bx << " " << By << " " << Bz << "\n";
   }
      \endcode
@@ -178,7 +178,7 @@ namespace GeographicLib {
      \code
   MagneticModel m(...);         // Create a magnetic model
   double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
-  MagneticCircle c(m.Circle(lat, h, t)); // the MagneticCircle object
+  MagneticCircle c(m.Circle(t, lat, h)); // the MagneticCircle object
   for (int i = 0; i <= 100; ++i) {
     real
       lon = lon0 + i * dlon, Bx, By, Bz;
@@ -188,7 +188,7 @@ namespace GeographicLib {
      \endcode
      * For high-degree models, this will be substantially faster.
      **********************************************************************/
-    MagneticCircle Circle(real lat, real h, real t) const;
+    MagneticCircle Circle(real t, real lat, real h) const;
 
     /**
      * Compute various quantities dependent on the magnetic field.
@@ -275,7 +275,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MinHeight() const throw() { return _hmin; }
 
@@ -286,7 +286,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MaxHeight() const throw() { return _hmax; }
 
@@ -297,7 +297,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed times, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MinTime() const throw() { return _tmin; }
 
@@ -308,7 +308,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed times, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MaxTime() const throw() { return _tmax; }
 

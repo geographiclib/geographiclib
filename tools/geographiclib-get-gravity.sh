@@ -18,11 +18,12 @@ GeographicLib::GravityModel class and the Gravity tool to compute
 gravity fields.  gravitymodel is one of more of the names from this
 table:
 
-                                  size (kB)
-  name     degree    years      tar.bz2  disk
-  wmm2010    12    2010-2015      2       3
-  igrf11     13    1900-2015      7      25
-  emm2010   740    2010-2015    3700    4400
+                       size (kB)
+  name     degree    tar.bz2  disk
+  egm84      18       27      26   
+  egm96      360     2100    2100 
+  egm2008   2190    76000   75000
+  wgs84      20        1       1    
 
 The size columns give the download and installed sizes of the models.
 In addition you can specify

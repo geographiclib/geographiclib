@@ -1551,7 +1551,6 @@ Go to
 <caption>Available gravity models</caption>
 <tr>
  <th rowspan="2">name         <th rowspan="2">max\n degree
-<th rowspan="2">time\n interval
  <th rowspan="2">size\n(kB)
  <th colspan="3"><center>Download Links (size, kB)</center></th>
 <tr>
@@ -1561,59 +1560,55 @@ Go to
 <tr>
  <td>egm84
  <td><center>180</center>
- <td><center>2010&ndash;2015</center>
- <td><center>3</center>
+ <td><center>27</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.tar.bz2/download">
- link</a> (2)</center>
+ link</a> (26)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.exe/download">
- link</a> (300)</center>
+ link</a> (55)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm84.zip/download">
- link</a> (2)</center>
+ link</a> (26)</center>
 <tr>
  <td>egm96
  <td><center>360</center>
- <td><center>1900&ndash;2015</center>
- <td><center>25</center>
+ <td><center>2100</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.tar.bz2/download">
- link</a> (7)</center>
+ link</a> (2100)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.exe/download">
- link</a> (310)</center>
+ link</a> (2300)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm96.zip/download">
- link</a> (8)</center>
+ link</a> (2100)</center>
 <tr>
  <td>egm2008
  <td><center>2190</center>
- <td><center>2010&ndash;2015</center>
- <td><center>4400</center>
+ <td><center>76000</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.tar.bz2/download">
- link</a> (3700)</center>
+ link</a> (75000)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.exe/download">
- link</a> (3000)</center>
+ link</a> (72000)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/egm2008.zip/download">
- link</a> (4100)</center>
+ link</a> (73000)</center>
 <tr>
  <td>wgs84
  <td><center>20</center>
- <td><center>2010&ndash;2015</center>
- <td><center>4400</center>
+ <td><center>1</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.tar.bz2/download">
- link</a> (3700)</center>
+ link</a> (1)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.exe/download">
- link</a> (3000)</center>
+ link</a> (30)</center>
  <td><center>
  <a href="http://sf.net/projects/geographiclib/files/gravity-distrib/wgs84.zip/download">
- link</a> (4100)</center>
+ link</a> (1)</center>
 </table>
 </center>
 The "size" column is the size of the uncompressed data.
@@ -1725,12 +1720,10 @@ Other keywords are ignored.
 
 The coefficient file NAME.egm.cof is a binary file in little endian
 order.  The first 8 bytes of this file must match the ID given in
-NAME.egm.  This is followed by NumModels + 1 sets of spherical harmonic
-coefficients.  The first NumModels of these model the gravity field at
-Epoch + \e i * DeltaEpoch for 0 <= \e i < NumModels.  The last set of
-coeffecients model the rate of change of the gravity field at Epoch +
-(NumModels - 1) * DeltaEpoch.  The format for each set of coefficients
-is:
+NAME.egm.  This is followed by 2 sets of spherical harmonic
+coefficients.  The first of these gives the gravity potential and the
+second gives the zeta-to-N corrections to the geoid height.  The format
+for each set of coefficients is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
    This must satisfy \e N >= -1.
  - \e M, the maximum order of the sum stored as a 4-byte signed integer.
@@ -1840,7 +1833,7 @@ Go to
 <caption>Available magnetic models</caption>
 <tr>
  <th rowspan="2">name         <th rowspan="2">max\n degree
-<th rowspan="2">time\n interval
+ <th rowspan="2">time\n interval
  <th rowspan="2">size\n(kB)
  <th colspan="3"><center>Download Links (size, kB)</center></th>
 <tr>

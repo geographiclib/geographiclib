@@ -9,7 +9,6 @@
 
 #include <GeographicLib/CircularEngine.hpp>
 #include <limits>
-#include <iostream>
 
 #define GEOGRAPHICLIB_CIRCULARENGINE_CPP \
   "$Id$"
@@ -72,7 +71,7 @@ namespace GeographicLib {
           break;
         case SCHMIDT:
           A = _uq;
-          B = - real(3)/2 * _uq2;
+          B = - root_[3]/2 * _uq2;
           break;
         default:
           A = B = 0;

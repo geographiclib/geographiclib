@@ -17,6 +17,7 @@ using namespace GeographicLib;
 int main() {
   typedef GeographicLib::Math::real real;
   try {
+    if (false) {
     {
       std::cout << "WGS84 constants\n";
       NormalGravity::WGS84.DumpConstants();
@@ -80,7 +81,6 @@ int main() {
       }
     }
     return 0;
-
     {
       NormalGravity egm84(6378137.0, 3.986005e14, 7292115e-11,
                           484.16685e-6*sqrt(5.0), false);
@@ -95,17 +95,23 @@ int main() {
     }
       
     return 0;
+    }
     if (true) {
-      std::cout << std::setprecision(16);
+      std::cout << std::setprecision(8);
       // MagneticModel mag("/scratch/WMM2010NewLinux/WMM2010ISO.COF");
-      MagneticModel mag1("new-wmm2010-12");
-      MagneticModel mag2("new-emm2010-720");
-      MagneticModel mag3("new-igrf11-13");
+      MagneticModel mag1("wmm2010");
+      MagneticModel mag2("emm2010");
+      MagneticModel mag3("igrf11");
       real lat, lon, h, t, bx, by, bz, bxt, byt, bzt;
       while (std::cin >> t >> lat >> lon >> h) {
         mag1(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
+        MagneticCircle circ1(mag1.Circle(t, lat, h));
+        circ1(lon, bx, by, bz, bxt, byt, bzt);
+        std::cout << by << " " << bx << " " << -bz << " "
+                  << byt << " " << bxt << " " << -bzt << "\n";
+        /*
         mag2(t, lat, lon, h, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
@@ -120,6 +126,7 @@ int main() {
         circ3(lon, bx, by, bz, bxt, byt, bzt);
         std::cout << by << " " << bx << " " << -bz << " "
                   << byt << " " << bxt << " " << -bzt << "\n";
+        */
       }
       return 0;
     }
@@ -157,7 +164,7 @@ int main() {
     real lat, lon;
     std::cout << std::setprecision(17);
     real a(0.9L), r(1.2L);
-    SphericalHarmonic harm(C, S, N, a, SphericalHarmonic::full);
+    SphericalHarmonic harm(C, S, N, a, SphericalHarmonic::FULL);
     std::vector<real> Z;
     while (std::cin >> lat >> lon) {
       real

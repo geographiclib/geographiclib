@@ -12,7 +12,6 @@
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
-#include <iostream>
 
 #define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
   "$Id$"

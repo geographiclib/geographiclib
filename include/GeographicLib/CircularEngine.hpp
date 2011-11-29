@@ -73,6 +73,7 @@ namespace GeographicLib {
 
     friend class SphericalEngine;
     friend class GravityCircle;  // Access to cossin
+    friend class MagneticCircle; // Access to cossin
     CircularEngine(int M, bool gradp, unsigned norm,
                    real scale, real a, real r, real u, real t)
       : _M(M)

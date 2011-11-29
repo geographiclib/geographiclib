@@ -6,7 +6,8 @@ MagneticField -- compute the earth's magnetic field
 
 =head1 SYNOPSIS
 
-B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-t> I<time> ]
+B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ]
+[ B<-t> I<time> | B<-c> I<time> I<lat> I<h> ]
 [ B<-r> ] [ B<-T> I<tguard> ] [ B<-H> I<hguard> ] [ B<-p> I<prec> ]
 [ B<-v> ] [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -23,8 +24,11 @@ date of the form 2012-07-03 or a fractional year such as 2012.5.  I<lat>
 and I<lon> are the latitude and longitude expressed as decimal degrees
 or degrees, minutes, and seconds; see GeoConvert(1) for details.  I<h>
 is the height above the ellipsoid in meters.  Alternatively, I<time> can
-be given on the command line as the argument to the I<-t> option, in
-which case it should not be included on the input lines.
+be given on the command line as the argument to the B<-t> option, in
+which case it should not be included on the input lines.  Finally, the
+magnetic field can be computed at various points on a circle of latitude
+via the B<-c> option; in this case only the longitude should be given on
+the input lines.
 
 The output consists of the following 7 items:
 
@@ -59,8 +63,14 @@ L<MODELS|models>.
 
 =item B<-t>
 
-evaluate the field at I<time> instead of readig the time from the input
+evaluate the field at I<time> instead of reading the time from the input
 lines.
+
+=item B<-c>
+
+evaluate the field on a circle of latitude at I<time>, I<lat>, I<h>
+instead of reading these quantities from the input lines.  In this case,
+B<MagneticField> can calculate the field considerably quicker.
 
 =item B<-r>
 

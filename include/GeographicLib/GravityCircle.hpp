@@ -90,6 +90,13 @@ namespace GeographicLib {
                          real& deltaX, real& deltaY, real& deltaZ,
                          bool gradp, bool correct) const throw();
   public:
+    /**
+     * A default constructor for the normal gravity.  This sets up an
+     * uninitialized object which can be later replaced by the
+     * GravityModel::Circle.
+     **********************************************************************/
+    GravityCircle() : _a(-1) {};
+
     /** \name Compute the gravitational field
      **********************************************************************/
     ///@{
@@ -223,24 +230,32 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
+     * @return true if the object has been initialized.
+     **********************************************************************/
+    bool Init() const throw() { return _a > 0; }
+    /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the GravityModel object used in the
      *   constructor.
      **********************************************************************/
-    Math::real MajorRadius() const throw() { return _a; }
+    Math::real MajorRadius() const throw()
+    { return Init() ? _a : Math::NaN<real>(); }
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the GravityModel object used in the constructor.
      **********************************************************************/
-    Math::real Flattening() const throw() { return _f; }
+    Math::real Flattening() const throw()
+    { return Init() ? _f : Math::NaN<real>(); }
     /**
      * @return the latitude of the circle (degrees).
      **********************************************************************/
-    Math::real Latitude() const throw() { return _lat; }
+    Math::real Latitude() const throw()
+    { return Init() ? _lat : Math::NaN<real>(); }
     /**
      * @return the height of the circle (meters).
      **********************************************************************/
-    Math::real Height() const throw() { return _h; }
+    Math::real Height() const throw()
+    { return Init() ? _h : Math::NaN<real>(); }
     ///@}
   };
 

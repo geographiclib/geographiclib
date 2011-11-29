@@ -229,7 +229,7 @@ namespace GeographicLib {
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
     if (lon1 < -180 || lon1 > 360)
-      throw GeographicErr("Latitude " + Utility::str(lon1)
+      throw GeographicErr("Longitude " + Utility::str(lon1)
                           + "d not in [-180d, 360d]");
     if (lon1 >= 180)
       lon1 -= 360;
