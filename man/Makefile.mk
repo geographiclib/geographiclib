@@ -1,6 +1,14 @@
 # $Id$
-PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval MagneticField Planimeter ConicProj
+PROGRAMS = CartConvert \
+	ConicProj \
+	GeoConvert \
+	Geod \
+	GeodesicProj \
+	GeoidEval \
+	Gravity \
+	MagneticField \
+	Planimeter \
+	TransverseMercatorProj
 
 PODSRC = $(addsuffix .pod,$(PROGRAMS))
 MANPAGES = $(addsuffix .1,$(PROGRAMS))
