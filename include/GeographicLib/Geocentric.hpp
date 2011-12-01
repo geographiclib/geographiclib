@@ -107,7 +107,7 @@ namespace GeographicLib {
     Geocentric(real a, real f);
 
     /**
-     * A default constructor for the normal gravity.
+     * A default constructor (for use by NormalGravity).
      **********************************************************************/
     Geocentric() : _a(-1) {};
 

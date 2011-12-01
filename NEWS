@@ -11,11 +11,11 @@ The current version of the library is 1.15.
 Changes between 1.15 (released 2011-11-08) and 1.14 versions:
 
   * Add calculation of the earth's magnetic field:
-    + add MagneticModel and MagneticCircle classes,
-    + add command line utility MagneticField,
-    + add Magnetic models,
-    + add Installing the magnetic field models,
-    + add The format of the magnetic model files,
+    + add MagneticModel and MagneticCircle classes;
+    + add command line utility MagneticField;
+    + add Magnetic models;
+    + add Installing the magnetic field models;
+    + add The format of the magnetic model files;
     + add classes SphericalEngine, CircularEngine, SphericalHarmonic,
       SphericalHarmonic1, and SphericalHarmonic2. which sum spherical
       harmonic series.

@@ -1699,7 +1699,7 @@ keywords
      in meters<sup>3</sup>/seconds<sup>2</sup>.
    - <b>ReferenceMass</b> (required), the mass constant \e GM for the
      reference ellipsoid in meters<sup>3</sup>/seconds<sup>2</sup>.
-   - <b>AngularVelociy</b> (required), the angular velocity \e Omega for
+   - <b>AngularVelociy</b> (required), the angular velocity \e omega for
      the model \e and the reference ellipsoid in rad
      seconds<sup>-1</sup>.
    - <b>Flattening</b>, the flattening of the reference ellipsoid; this can be
@@ -1818,7 +1818,7 @@ has (see
 TR8350.2</a>, table 3.1)
  - \e a = 6378137 m
  - \e f = 1/298.257223563
- - \e Omega = 7292115e-11 rad s<sup>-1</sup>
+ - \e omega = 7292115e-11 rad s<sup>-1</sup>
  - \e GM = 3986004.418e8 m<sup>3</sup>/s<sup>2</sup>.
  .
 The value of \e GM includes the mass of the atmosphere and so strictly
@@ -3016,22 +3016,45 @@ number.)
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">1.16 (released 2011-mm-dd)</a>
   - Add calculation of the earth's gravitational field:
     - add GeographicLib::NormalGravity GeographicLib::GravityModel and
-      GeographicLib::GravityCircle classes,
+      GeographicLib::GravityCircle classes;
     - add command line utility
-      <a href="Gravity.1.html">Gravity</a>,
-    - add \ref gravity,
-    - add \ref gravityinst,
+      <a href="Gravity.1.html">Gravity</a>;
+    - add \ref gravity;
+    - add \ref gravityinst;
     - add \ref gravityformat.
+    - add GeographicLib::Constants::WGS84_GM(),
+       GeographicLib::Constants::WGS84_omega(), and similarly for GRS80.
+  - Build uses GEOGRAPHICLIB_DATA to specify a common parent directory
+     for geoid, gravity, and magnetic data.  Similarly,
+     <a href="GeoidEval.1.html">GeoidEval</a>,
+     <a href="Gravity.1.html">Gravity</a>, and
+     <a href="MagneticField.1.html">MagneticField</a>, look at the
+     environment variable GEOGRAPHICLIB_DATA to locate the data.
+  - Spherical harmonic software changes:
+     - capitalize enums GeographicLib::SphericalHarmonic::FULL and
+       GeographicLib::SphericalHarmonic::SCHMIDT (the lower case names
+       are retained but deprecated);
+     - optimize the sum by using a static table of square roots which is
+       updated by GeographicLib::SphericalEngine::RootTable.
+  - Magnetic software fixes:
+     - fix documentation BUG in GeographicLib::MagneticModel::Circle;
+     - make GeographicLib::MagneticModel constructor explicit;
+     - provide default GeographicLib::MagneticCircle constructor;
+     - add additional inspector functions to
+       GeographicLib::MagneticCircle;
+     - add -c option to <a href="MagneticField.1.html">MagneticField</a>;
+     - default height to zero in
+       <a href="MagneticField.1.html">MagneticField</a>.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.15.tar.gz/download">1.15 (released 2011-11-08)</a>
   - Add calculation of the earth's magnetic field:
     - add GeographicLib::MagneticModel and GeographicLib::MagneticCircle
-      classes,
+      classes;
     - add command line utility
-      <a href="MagneticField.1.html">MagneticField</a>,
-    - add \ref magnetic,
-    - add \ref magneticinst,
-    - add \ref magneticformat,
+      <a href="MagneticField.1.html">MagneticField</a>;
+    - add \ref magnetic;
+    - add \ref magneticinst;
+    - add \ref magneticformat;
     - add classes GeographicLib::SphericalEngine,
       GeographicLib::CircularEngine, GeographicLib::SphericalHarmonic,
       GeographicLib::SphericalHarmonic1, and
