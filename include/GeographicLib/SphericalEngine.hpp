@@ -322,16 +322,16 @@ namespace GeographicLib {
      *
      * @param[in] N the maximume degree to be used in SphericalEngine.
      *
-     * Since this updates a static table, there's a possible race condition of
+     * Since this updates a static table, there's a possible race condition if
      * this routine is called in a multi-threaded environment.  However, this
-     * route does nothing if the table is already large enought.  So one way to
+     * routine does nothing if the table is already large enough.  So one way to
      * avoid race conditions is to call this routine as program start up (when
-     * it's still single threaded), supplying the largest degree tat your
+     * it's still single threaded), supplying the largest degree that your
      * program will use.  E.g.,
      \code
   GeographicLib::SphericalEngine::RootTable(2190);
      \endcode
-     * suffices to accomodate extant magnetic and gravity models.
+     * suffices to accommodate extant magnetic and gravity models.
      **********************************************************************/
     static void RootTable(int N);
 
