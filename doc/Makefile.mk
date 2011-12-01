@@ -6,7 +6,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid Gnomonic OSGB AlbersEqualArea
 PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval Planimeter ConicProj
+	GeoidEval Gravity MagneticField Planimeter ConicProj
 
 HEADERS = $(patsubst %,../include/GeographicLib/%.hpp,Constants $(MODULES))
 SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \

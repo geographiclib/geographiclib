@@ -6,7 +6,12 @@
  * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geocentric.o LocalCartesian.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o CartConvert \
+ *       CartConvert.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/Geocentric.cpp \
+ *       ../src/LocalCartesian.cpp
  *
  * See the <a href="CartConvert.1.html">man page</a> for usage
  * information.

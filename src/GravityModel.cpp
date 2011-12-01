@@ -12,7 +12,8 @@
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
-
+#include <iostream>
+#include <iomanip>
 #define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
   "$Id$"
 
@@ -252,8 +253,9 @@ namespace GeographicLib {
     return Wres;
   }
 
-  void GravityModel::Anomaly(real lat, real lon, real h,
-                             real& Dg01, real& xi, real& eta) const throw() {
+  void GravityModel::SphericalAnomaly(real lat, real lon, real h,
+                                      real& Dg01, real& xi, real& eta)
+    const throw() {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real
@@ -289,6 +291,8 @@ namespace GeographicLib {
       invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
     // _zeta0 has been included in _correction
+    cout << fixed << setprecision(6)
+         << "Correction " << lat << " " << lon << " " << correction - _zeta0 << "\n";
     return T/gamma0 + correction;
   }
 

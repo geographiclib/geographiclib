@@ -6,8 +6,16 @@
  * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with MagneticModel.o DMS.o
- * SphericalEngine.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o MagneticField \
+ *       MagneticField.cpp \
+ *       ../src/CircularEngine.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/Geocentric.cpp \
+ *       ../src/MagneticCircle.cpp \
+ *       ../src/MagneticModel.cpp \
+ *       ../src/SphericalEngine.cpp \
+ *       ../src/Utility.cpp
  *
  * See the <a href="MagneticField.1.html">man page</a> for usage
  * information.
@@ -17,7 +25,6 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <ctime>
 #include <GeographicLib/MagneticModel.hpp>
 #include <GeographicLib/MagneticCircle.hpp>
 #include <GeographicLib/DMS.hpp>
@@ -217,8 +224,8 @@ int main(int argc, char* argv[]) {
                   << "km outside allowed range ["
                   << m.MinHeight()/1000 << "km,"
                   << m.MaxHeight()/1000 << "km]\n";
-      const MagneticCircle c = circle ? m.Circle(time, lat, h) :
-        MagneticCircle();
+      const MagneticCircle c(circle ? m.Circle(time, lat, h) :
+                             MagneticCircle());
       std::string s, stra, strb;
       while (std::getline(*input, s)) {
         try {
@@ -249,19 +256,24 @@ int main(int argc, char* argv[]) {
             if (lon < -180 || lon > 360)
               throw GeographicErr("Longitude " + strb + "not in [-180d, 360d]");
           } else {
-            if (!(str >> stra >> strb >> h))
+            if (!(str >> stra >> strb))
               throw GeographicErr("Incomplete input: " + s);
             DMS::DecodeLatLon(stra, strb, lat, lon);
-            if (h < m.MinHeight() - hguard || h > m.MaxHeight() + hguard)
-              throw GeographicErr("Height " + Utility::str(h/1000) +
-                                  "km too far outside allowed range [" +
-                                  Utility::str(m.MinHeight()/1000) + "km," +
-                                  Utility::str(m.MaxHeight()/1000) + "km]");
-            if (h < m.MinHeight() || h > m.MaxHeight())
-              std::cerr << "WARNING: Height " << h/1000
-                        << "km outside allowed range ["
-                        << m.MinHeight()/1000 << "km,"
-                        << m.MaxHeight()/1000 << "km]\n";
+            h = 0;              // h is optional
+            if (str >> h) {
+              if (h < m.MinHeight() - hguard || h > m.MaxHeight() + hguard)
+                throw GeographicErr("Height " + Utility::str(h/1000) +
+                                    "km too far outside allowed range [" +
+                                    Utility::str(m.MinHeight()/1000) + "km," +
+                                    Utility::str(m.MaxHeight()/1000) + "km]");
+              if (h < m.MinHeight() || h > m.MaxHeight())
+                std::cerr << "WARNING: Height " << h/1000
+                          << "km outside allowed range ["
+                          << m.MinHeight()/1000 << "km,"
+                          << m.MaxHeight()/1000 << "km]\n";
+            }
+            else
+              str.clear();
           }
           if (str >> stra)
             throw GeographicErr("Extra junk in input: " + s);

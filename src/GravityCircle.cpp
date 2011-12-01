@@ -45,7 +45,7 @@ namespace GeographicLib {
   }
 
   Math::real GravityCircle::GeoidHeight(real lon) const throw() {
-    if ((_caps & GEOIDHEIGHT) != GEOIDHEIGHT)
+    if ((_caps & GEOID_HEIGHT) != GEOID_HEIGHT)
       return Math::NaN<real>();
     real clam, slam, dummy;
     CircularEngine::cossin(lon, clam, slam);
@@ -54,9 +54,10 @@ namespace GeographicLib {
     return T/_gamma0 + correction;
   }
 
-  void GravityCircle::Anomaly(real lon, real& Dg01, real& xi, real& eta)
+  void GravityCircle::SphericalAnomaly(real lon,
+                                       real& Dg01, real& xi, real& eta)
     const throw() {
-    if ((_caps & ANOMALY) != ANOMALY) {
+    if ((_caps & SPHERICAL_ANOMALY) != SPHERICAL_ANOMALY) {
       Dg01 = xi = eta = Math::NaN<real>();
       return;
     }
@@ -109,7 +110,7 @@ namespace GeographicLib {
         return Math::NaN<real>();
       }
     } else {
-      if ((_caps & DISTPOTENTIAL) != DISTPOTENTIAL)
+      if ((_caps & DISTURBING_POTENTIAL) != DISTURBING_POTENTIAL)
         return Math::NaN<real>();
     }
     if (_dzonal0 == 0)

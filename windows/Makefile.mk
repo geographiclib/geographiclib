@@ -1,13 +1,15 @@
 # $Id$
 
-PROGRAMS = GeoConvert \
-	TransverseMercatorProj \
-	CartConvert \
+PROGRAMS = CartConvert \
+	ConicProj \
+	GeoConvert \
 	Geod \
 	GeodesicProj \
 	GeoidEval \
+	Gravity \
+	MagneticField \
 	Planimeter \
-	ConicProj
+	TransverseMercatorProj
 
 VSPROJECTS = $(addsuffix -vc8.vcproj,Geographic $(PROGRAMS)) \
 	$(addsuffix -vc9.vcproj,Geographic $(PROGRAMS)) \

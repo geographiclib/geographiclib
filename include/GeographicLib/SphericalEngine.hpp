@@ -67,6 +67,11 @@ namespace GeographicLib {
        * @hideinitializer
        **********************************************************************/
       SCHMIDT = 1,
+      /// \cond SKIP
+      // These are deprecated...
+      full = FULL,
+      schmidt = SCHMIDT,
+      /// \endcond
     };
 
     /**

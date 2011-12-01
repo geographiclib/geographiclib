@@ -1515,9 +1515,6 @@ The supported models are
  - <b>egm84</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
    Earth Gravity Model 1984</a>, which includes terms up to degree 180.
-   The NGA code for this models uses a value for the mass of the earth
-   that excludes the atmosphere.  Here the mass of the atmosphere is
-   included for consistency with the other earth gravity models.
  - <b>egm96</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
    Earth Gravity Model 1996</a>, which includes terms up to degree 360.
@@ -1528,21 +1525,17 @@ The supported models are
    <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
    gravitational field for the reference ellipsoid.  Usually
-   NormalGravity::WGS84 should be used instead.
+   GeographicLib::NormalGravity::WGS84 should be used instead.
 
-The above models include the mass of the atmosphere and so strictly only
-apply above the earth's atmosphere.  Near the surface of the earth, the
-value of \e g will be less (in absolute value) than the value predicted
-by these models by about \e delta \e g = (4 \e pi \e G/\e g) \e A =
-8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the gravitational
-constant, \e g is the earth's gravity, and \e A is the pressure of the
-atmosphere.  At sea level we have \e A = 101.3 kPa, and \e delta \e g =
-8.7e-6 m s<sup>-2</sup>, approximately.  (In other words the effect is
-about 1 part in a million.)
+See
+ - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
+   Fransisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
+ .
+for more information.
 
-Go to
  - \ref gravityinst
  - \ref gravityformat
+ - \ref gravitymisc
 
 \section gravityinst Installing the gravity models
 
@@ -1684,14 +1677,15 @@ keywords
  - keywords that affect the field calculation, namely:
    - <b>ModelRadius</b> (required), the normalizing radius for the model in
      meters.
-   - <b>ReferenceRadius</b> (required), the major radius for the reference
-     ellipsoid meters.
-   - <b>ModelMass</b> (required), the mass constant for the model in
-     meters<sup>3</sup>/seconds<sup>2</sup>.
-   - <b>ReferenceMass</b> (required), the mass constant for the reference
-     ellipsoid in meters<sup>3</sup>/seconds<sup>2</sup>.
-   - <b>AngularVelociy</b> (required), the angular velocity for the model \e
-     and the reference ellipsoid in rad seconds<sup>-1</sup>.
+   - <b>ReferenceRadius</b> (required), the major radius \e a for the
+     reference ellipsoid meters.
+   - <b>ModelMass</b> (required), the mass constant \e GM for the model
+     in meters<sup>3</sup>/seconds<sup>2</sup>.
+   - <b>ReferenceMass</b> (required), the mass constant \e GM for the
+     reference ellipsoid in meters<sup>3</sup>/seconds<sup>2</sup>.
+   - <b>AngularVelociy</b> (required), the angular velocity \e Omega for
+     the model \e and the reference ellipsoid in rad
+     seconds<sup>-1</sup>.
    - <b>Flattening</b>, the flattening of the reference ellipsoid; this can be
      given a fraction, e.g., 1/298.257223563.  One of <b>Flattening</b> and
      <b>DynamicalFormFactor</b> is required.
@@ -1799,6 +1793,70 @@ HeightOffset    -0.41
 # distribution.
 ID              EGM2008A
 \endverbatim
+
+\section gravitymisc Miscellaneous information about gravity models
+
+All of the supported models use WGS84 for the reference ellipsoid.  This
+has (see
+<a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf">
+TR8350.2</a>, table 3.1)
+ - \e a = 6378137 m
+ - \e f = 1/298.257223563
+ - \e Omega = 7292115e-11 rad s<sup>-1</sup>
+ - \e GM = 3986004.418e8 m<sup>3</sup>/s<sup>2</sup>.
+ .
+The value of \e GM includes the mass of the atmosphere and so strictly
+only applies above the earth's atmosphere.  Near the surface of the
+earth, the value of \e g will be less (in absolute value) than the value
+predicted by these models by about \e delta \e g = (4 \e pi \e G/\e g)
+\e A = 8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the gravitational
+constant, \e g is the earth's gravity, and \e A is the pressure of the
+atmosphere.  At sea level we have \e A = 101.3 kPa, and \e delta \e g =
+8.7e-6 m s<sup>-2</sup>, approximately.  (In other words the effect is
+about 1 part in a million.  By way of comparison, buoyancy effects are
+about 100 times larger.)
+
+GravityModel::GeoidHeight reproduces the results of the several NGA
+codes for harmonic synthesis with the following maximum discrepancies
+ - egm84 1.1mm.  This is probably due to inconsistent parameters for the
+   reference ellipsoid in the NGA code.  (In particular, the value of
+   mass constant excludes the atomsphere; however, it's not clear
+   whether the other parameters have been correspondingly adjusted.)
+   Note that geoid heights predicted by egm84 differ from those of more
+   recent gravity models by about 1 meter.
+ - egm96 23nm.
+ - egm2008 78pm (after some clean up of the NGA code, hsynth_WGS84, the
+   maximum discrepancy becomes 23pm).  The egm2008 model is the only one
+   where the mass constant for the model differs from the WGS84 value
+   (by about 1 part in 10<sup>9</sup>).  By rights, the disturbing
+   potential should include a term which decays as 1/\e r.  However, NGA
+   sets this term to zero.  GeographicLib::GravityModel::GeoidHeight and
+   GeographicLib::GravityModel::Anomaly does likewise in order to match
+   the results of the NGA code.  On the other hand,
+   GeographicLib::GravityModel::Disturbance and
+   GeographicLib::GravityModel::T <i>do</i> include this effect.  Note
+   that hsynth_WGS84 has a bug in routine radgrav which causes incorrect
+   results to be given for \e xi and \e eta when the height above the
+   ellipsoid is non-zero.  (This bug has been reported to the authors of
+   hsynth_WGS84.)
+
+The geoid height is computed using Bruns' formula which approximates the
+surface \e T = 0 by using \e T/\e gamma where \e T value of the
+disturbing potential on the ellipsoid (neglecting any 1/\e r term) and
+\e gamma is the magnitude of normal gravity on the ellipsoid.  (This is
+nearly equivalent to a single iteration of Newton's method.)  The error
+in using the formula is up to +/- 10 mm (s.d. 1.5 mm).  The resulting
+height is adjusted by a constant offset and a "zeta-to-N" correction
+terms which account for the terrain elevation.  The "zeta-to-N"
+correction accounts for the mass of the terrain above the ellipsoid.
+The correction lies in the range [-5.05 m, 0.05 m], however for 99.9% of
+the earth's surface the correction is less than 10 mm in magnitude.
+
+The terms computed by GeographicLib::GravityModel::Anomaly use the
+spherical approximation described by Heiskanen and Moritz, Sec. 2-14.
+
+Finally, I would like to thank Mathieu Peyr&eacute;ga for sharing his
+EGM_Geoid_CalculatorClass with me.
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.

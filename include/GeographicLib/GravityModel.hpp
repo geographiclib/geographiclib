@@ -107,39 +107,39 @@ namespace GeographicLib {
        * No capabilities.
        * @hideinitializer
        **********************************************************************/
-      NONE          = 0U,
+      NONE = 0U,
       /**
-       * Allow call to GravityCircle::Gravity, GravityCircle::W and
-       * GravityCircle::V
+       * Allow calls to GravityCircle::Gravity, GravityCircle::W, and
+       * GravityCircle::V.
        * @hideinitializer
        **********************************************************************/
-      GRAVITY       = CAP_G,
+      GRAVITY = CAP_G,
       /**
-       * Allow call to GravityCircle::Disturbance and GravityCircle::T.
+       * Allow calls to GravityCircle::Disturbance and GravityCircle::T.
        * @hideinitializer
        **********************************************************************/
-      DISTURBANCE   = CAP_DELTA,
+      DISTURBANCE = CAP_DELTA,
       /**
-       * Allow call to GravityCircle::T(real lon) (i.e., computing the
-       * disturbing potential and not the disturbing gravity vector).
+       * Allow calls to GravityCircle::T(real lon) (i.e., computing the
+       * disturbing potential and not the gravity disturbance vector).
        * @hideinitializer
        **********************************************************************/
-      DISTPOTENTIAL = CAP_T,
+      DISTURBING_POTENTIAL = CAP_T,
       /**
-       * Allow call to GravityCircle::GeoidHeight.
+       * Allow calls to GravityCircle::GeoidHeight.
        * @hideinitializer
        **********************************************************************/
-      GEOIDHEIGHT   = CAP_T | CAP_C | CAP_GAMMA0,
+      GEOID_HEIGHT = CAP_T | CAP_C | CAP_GAMMA0,
       /**
-       * Allow call to GravityCircle::Anomaly.
+       * Allow calls to GravityCircle::SphericalAnomaly.
        * @hideinitializer
        **********************************************************************/
-      ANOMALY       = CAP_DELTA | CAP_GAMMA,
+      SPHERICAL_ANOMALY = CAP_DELTA | CAP_GAMMA,
       /**
        * All capabilities.
        * @hideinitializer
        **********************************************************************/
-      ALL           = CAP_ALL,
+      ALL = CAP_ALL,
     };
     /** \name Setting up the gravity model
      **********************************************************************/
@@ -219,19 +219,20 @@ namespace GeographicLib {
     Math::real GeoidHeight(real lat, real lon) const throw();
 
     /**
-     * Evaluate the components of the gravity anomaly vector.
+     * Evaluate the components of the gravity anomaly vector using the
+     * spherical approximation.
      *
      * @param[in] lat the geographic latitude (degrees).
      * @param[in] lon the geographic longitude (degrees).
      * @param[in] h the height above the ellipsoid (meters).
-     * @param[out] Dg01 the gravity anomaly (degrees).
+     * @param[out] Dg01 the gravity anomaly (m s<sup>-2</sup>).
      * @param[out] xi the northerly component of the deflection of the vertical
      *  (degrees).
      * @param[out] eta the easterly component of the deflection of the vertical
      *  (degrees).
      **********************************************************************/
-    void Anomaly(real lat, real lon, real h,
-                 real& Dg01, real& xi, real& eta) const throw();
+    void SphericalAnomaly(real lat, real lon, real h,
+                          real& Dg01, real& xi, real& eta) const throw();
     ///@}
 
     /** \name Compute gravity in geocentric coordinates
@@ -364,6 +365,13 @@ namespace GeographicLib {
      * @param[in] m mask specifying the capabilities of the resulting object.
      * @return a GravityCircle object whose GravityCircle::operator()(real
      *   lon) member function computes the field at a particular \e lon.
+     *
+     * \e m should be a combination of mask values or'ed together, e.g.,
+     * GravityModel::GEOID_HEIGHT | GravityModel::GRAVITY; these specify what
+     * capabilities the resulting GravityCircle object will have.  If an
+     * unsupported function is invoked, it will return NaNs.  The default
+     * value, GravityModel::ALL turns on all capabilities.  Note that
+     * GravityModel::GEOID_HEIGHT only makes sense when \e h = 0.
      *
      * If the field at several points on a circle of latitude need to be
      * calculated then instead of

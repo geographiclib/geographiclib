@@ -79,9 +79,9 @@ if (NOT WIN32)
 endif (NOT WIN32)
 
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
-  GeoidEval MagneticField Planimeter TransverseMercatorProj)
+  GeoidEval Gravity MagneticField Planimeter TransverseMercatorProj)
 set (SCRIPTS
-  geographiclib-get-geoids geographiclib-get-magnetic geographiclib-get-gravity)
+  geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
 
 include_directories ("${PROJECT_BINARY_DIR}/include")
 include_directories (include)

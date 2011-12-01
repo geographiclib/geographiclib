@@ -35,13 +35,13 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     enum mask {
-      NONE          = GravityModel::NONE,
-      GRAVITY       = GravityModel::GRAVITY,
-      DISTURBANCE   = GravityModel::DISTURBANCE,
-      DISTPOTENTIAL = GravityModel::DISTPOTENTIAL,
-      GEOIDHEIGHT   = GravityModel::GEOIDHEIGHT,
-      ANOMALY       = GravityModel::ANOMALY,
-      ALL           = GravityModel::ALL,
+      NONE                 = GravityModel::NONE,
+      GRAVITY              = GravityModel::GRAVITY,
+      DISTURBANCE          = GravityModel::DISTURBANCE,
+      DISTURBING_POTENTIAL = GravityModel::DISTURBING_POTENTIAL,
+      GEOID_HEIGHT         = GravityModel::GEOID_HEIGHT,
+      SPHERICAL_ANOMALY    = GravityModel::SPHERICAL_ANOMALY,
+      ALL                  = GravityModel::ALL,
     };
 
     mask _caps;
@@ -115,6 +115,7 @@ namespace GeographicLib {
      * The function includes the effects of the earth's rotation.
      **********************************************************************/
     Math::real Gravity(real lon, real& gx, real& gy, real& gz) const throw();
+
     /**
      * Evaluate the gravity disturbance vector.
      *
@@ -129,6 +130,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Disturbance(real lon, real& deltax, real& deltay, real& deltaz)
       const throw();
+
     /**
      * Evaluate the geoid height.
      *
@@ -137,17 +139,20 @@ namespace GeographicLib {
      *   (meters).
      **********************************************************************/
     Math::real GeoidHeight(real lon) const throw();
+
     /**
-     * Evaluate the components of the gravity anomaly vector.
+     * Evaluate the components of the gravity anomaly vector using the
+     * spherical approximation.
      *
      * @param[in] lon the geographic longitude (degrees).
-     * @param[out] Dg01 the gravity anomaly (degrees).
+     * @param[out] Dg01 the gravity anomaly (m s<sup>-2</sup>).
      * @param[out] xi the northerly component of the deflection of the vertical
      *  (degrees).
      * @param[out] eta the easterly component of the deflection of the vertical
      *  (degrees).
      **********************************************************************/
-    void Anomaly(real lon, real& Dg01, real& xi, real& eta) const throw();
+    void SphericalAnomaly(real lon, real& Dg01, real& xi, real& eta)
+      const throw();
 
     /**
      * Evaluate the components of the acceleration due to gravity and the

@@ -19,6 +19,8 @@ int main() {
   try {
     {
       std::cout << std::fixed;
+      // GravityModel egm("egm2008");
+      // GravityModel egm("egm84-mod","/home/ckarney/geographiclib/gravity");
       GravityModel egm("egm2008");
       real lat, lon;
       while (std::cin >> lat >> lon) {
@@ -40,8 +42,32 @@ int main() {
                   << xi << " " << eta << "\n";
         */
       }
-    }
     return 0;
+    }
+    {
+      std::cout << std::fixed << std::setprecision(6);
+      GravityModel egm("egm2008");
+      real lat, lon;
+      while (std::cin >> lat >> lon) {
+        real
+          h = 0,
+          gamma = egm.ReferenceEllipsoid().SurfaceGravity(lat),
+          U0 = egm.ReferenceEllipsoid().SurfacePotential();
+        real deltax, deltay, deltaz;
+        real T = egm.Disturbance(lat, lon, h, deltax, deltay, deltaz);
+        h = T/gamma;
+        real h0 = h;
+        //        std::cout << "I " << U0 << " " << h << "\n";
+        for (int i = 0; i < 10; ++i) {
+          real gx, gy, gz;
+          real W = egm.Gravity(lat, lon, h, gx, gy, gz);
+          h += (W-U0)/gamma;
+          if (i == 9)
+          std::cout << i << " " << W << " " << h <<  " " << h - h0 << "\n";
+        }
+      }      
+      return 0;
+    }
     if (false) {
     {
       std::cout << std::fixed;

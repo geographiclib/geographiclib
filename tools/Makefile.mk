@@ -6,6 +6,7 @@ PROGRAMS = GeoConvert \
 	Geod \
 	GeodesicProj \
 	GeoidEval \
+	Gravity \
 	MagneticField \
 	Planimeter \
 	ConicProj
@@ -48,6 +49,7 @@ CartConvert: CartConvert.o
 Geod: Geod.o
 GeodesicProj: GeodesicProj.o
 GeoidEval: GeoidEval.o
+Gravity: Gravity.o
 MagneticField: MagneticField.o
 Planimeter: Planimeter.o
 ConicProj: ConicProj.o
@@ -65,9 +67,13 @@ GeodesicProj.o: GeodesicProj.usage AzimuthalEquidistant.hpp CassiniSoldner.hpp \
 	Gnomonic.hpp Math.hpp Utility.hpp
 GeoidEval.o: GeoidEval.usage Config.h Constants.hpp DMS.hpp GeoCoords.hpp \
 	Geoid.hpp Math.hpp UTMUPS.hpp Utility.hpp
+Gravity.o: Gravity.usage CircularEngine.hpp Config.h Constants.hpp DMS.hpp \
+	Geocentric.hpp GravityCircle.hpp GravityModel.hpp Math.hpp \
+	NormalGravity.hpp SphericalEngine.hpp SphericalHarmonic.hpp \
+	SphericalHarmonic1.hpp Utility.hpp
 MagneticField.o: MagneticField.usage CircularEngine.hpp Config.h Constants.hpp \
-	DMS.hpp Geocentric.hpp MagneticModel.hpp Math.hpp SphericalEngine.hpp \
-	SphericalHarmonic.hpp SphericalHarmonic1.hpp Utility.hpp
+	DMS.hpp Geocentric.hpp MagneticCircle.hpp MagneticModel.hpp Math.hpp \
+	SphericalEngine.hpp SphericalHarmonic.hpp Utility.hpp
 Planimeter.o: Planimeter.usage Accumulator.hpp Config.h Constants.hpp DMS.hpp \
 	GeoCoords.hpp Geodesic.hpp Math.hpp PolygonArea.hpp UTMUPS.hpp \
 	Utility.hpp
