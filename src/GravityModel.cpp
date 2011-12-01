@@ -12,8 +12,6 @@
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
-#include <iostream>
-#include <iomanip>
 #define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
   "$Id$"
 
@@ -291,8 +289,6 @@ namespace GeographicLib {
       invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
     // _zeta0 has been included in _correction
-    cout << fixed << setprecision(6)
-         << "Correction " << lat << " " << lon << " " << correction - _zeta0 << "\n";
     return T/gamma0 + correction;
   }
 

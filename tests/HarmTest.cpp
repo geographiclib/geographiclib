@@ -65,7 +65,7 @@ int main() {
           if (i == 9)
           std::cout << i << " " << W << " " << h <<  " " << h - h0 << "\n";
         }
-      }      
+      }
       return 0;
     }
     if (false) {
@@ -98,7 +98,6 @@ int main() {
         //                  << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
         std::cout << std::setprecision(3) << lon << " "
                   << std::setprecision(12) << c.GeoidHeight(lon) << "\n";
-        
       }
       return 0;
     }
@@ -218,8 +217,6 @@ int main() {
       sum += circ(lon, dx, dy, dz);
     }
     std::cout << "sum b " << sum << std::endl;
-      
-    
   }
   catch (const std::exception& e) {
     std::cerr << "Caught exception: " << e.what() << "\n";

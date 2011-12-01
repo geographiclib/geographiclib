@@ -26,9 +26,6 @@ namespace GeographicLib {
    * GeodesicLine.ArcPosition gives the position of point 2 an arc length \e
    * a12 along the geodesic.  An example of use of this class is:
    \code
-   #include <iostream>
-   #include <iomanip>
-   #include <cmath>
    #include <GeographicLib/Geodesic.hpp>
    #include <GeographicLib/GeodesicLine.hpp>
 
