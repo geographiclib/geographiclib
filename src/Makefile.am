@@ -79,7 +79,6 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 	  grep WORDS_BIGENDIAN $< | tail -1 ) > $@
 
 $(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
-dist-hook: ../include/GeographicLib/Config.h
 
 geographiclib_data=$(datadir)/GeographicLib
 

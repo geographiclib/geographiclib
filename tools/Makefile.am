@@ -32,8 +32,8 @@ CartConvert_SOURCES = CartConvert.cpp \
 	../include/GeographicLib/Utility.hpp
 ConicProj_SOURCES = ConicProj.cpp \
 	../man/ConicProj.usage \
-	../include/GeographicLib/\
-	../include/GeographicLib/AlbersEqualArea.hpp Config.h \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/AlbersEqualArea.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/LambertConformalConic.hpp \
@@ -59,9 +59,9 @@ Geod_SOURCES = Geod.cpp \
 	../include/GeographicLib/Utility.hpp
 GeodesicProj_SOURCES = GeodesicProj.cpp \
 	../man/GeodesicProj.usage \
-	../include/GeographicLib/\
+	../include/GeographicLib/Config.h \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
-	../include/GeographicLib/CassiniSoldner.hpp Config.h \
+	../include/GeographicLib/CassiniSoldner.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geodesic.hpp \
@@ -81,8 +81,8 @@ GeoidEval_SOURCES = GeoidEval.cpp \
 	../include/GeographicLib/Utility.hpp
 Gravity_SOURCES = Gravity.cpp \
 	../man/Gravity.usage \
-	../include/GeographicLib/\
-	../include/GeographicLib/CircularEngine.hpp Config.h \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/CircularEngine.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geocentric.hpp \
@@ -96,8 +96,8 @@ Gravity_SOURCES = Gravity.cpp \
 	../include/GeographicLib/Utility.hpp
 MagneticField_SOURCES = MagneticField.cpp \
 	../man/MagneticField.usage \
-	../include/GeographicLib/\
-	../include/GeographicLib/CircularEngine.hpp Config.h \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/CircularEngine.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Geocentric.hpp \
@@ -109,8 +109,8 @@ MagneticField_SOURCES = MagneticField.cpp \
 	../include/GeographicLib/Utility.hpp
 Planimeter_SOURCES = Planimeter.cpp \
 	../man/Planimeter.usage \
-	../include/GeographicLib/\
-	../include/GeographicLib/Accumulator.hpp Config.h \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/Constants.hpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/GeoCoords.hpp \
