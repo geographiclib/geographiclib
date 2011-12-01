@@ -653,6 +653,9 @@ The utlilities are
  - <a href="GeoidEval.1.html">
    <b>GeoidEval</b></a>: look up geoid heights using
    GeographicLib::Geoid.
+ - <a href="Gravity.1.html">
+   <b>Gravity</b></a>: compute the earth's gravitational field using
+   GeographicLib::GravityModel.
  - <a href="MagneticField.1.html">
    <b>MagneticField</b></a>: compute the earth's magnetic field using
    GeographicLib::MagneticModel.
@@ -773,6 +776,19 @@ provided by the operator() member function.
 utility to provide access to this class.  This class requires
 installation of data files for the various geoid models; see \ref
 geoidinst for details.
+
+GeographicLib::GravityModel evaluates the earth's gravitational field
+using a particular gravity model.  Various member functions return the
+gravitational field, the gravity disturbance, the gravity anomaly, and
+the geoid height <a href="GravityField.1.html">GravityField</a> is a
+simple command line utility to provide access to this class.  If the
+field several points on a circle of latitude are sought then use
+GeographicLib::GravityModel::Circle to return a
+GeographicLib::GravityCircle object whose member functions performs the
+calculations efficiently.  (This is particularly important for high
+degree models such as egm2008.)  These classes requires installation of
+data files for the various gravity models; see \ref gravityinst for
+details.
 
 GeographicLib::MagneticModel evaluates the earth's magnetic field using
 a particular magnetic model.  The field is provided by the operator()

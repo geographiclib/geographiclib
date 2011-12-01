@@ -30,8 +30,9 @@ longitude should be given on the input lines.
 
 =item B<-G>
 
-computes gravity and the gravity disturbance.  The output consists of 6
-items I<gx> I<gy> I<gz> I<deltax> I<deltay> I<deltaz> (all in m/s^2).
+computes gravity and the gravity disturbance.  The output consists of 5
+items I<gx> I<gy> I<gz> I<deltay> I<deltaz> (all in m/s^2).  (Note that
+I<deltax> = I<gx>.)
 
 =item B<-H>
 
@@ -51,7 +52,7 @@ and I<xi> and I<eta> are in arcseconds.
 
 =item B<-n>
 
-use gravity field model I<name> instead of the default C<wmm2010>.  See
+use gravity field model I<name> instead of the default C<egm96>.  See
 L<MODELS|models>.
 
 =item B<-d>
@@ -122,23 +123,16 @@ file name of "-" stands for standard output.
 B<Gravity> computes the gravity field using one of the
 following models
 
-    wmm2010, the World Gravity Model 2010, which approximates the
-      main gravity field for the period 2010–2015.  See
-      http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
-    igrf11, the International Gravity Reference Field (11th
-      generation) which approximates the main gravity field for
-      the period 1900–2015.  See
-      http://ngdc.noaa.gov/IAGA/vmod/igrf.html
-    emm2010, the Enhanced Gravity Model 2010, which approximates the
-      main and crustal gravity fields for the period 2010–2015.  See
-      http://ngdc.noaa.gov/geomag/EMM/index.html
+    egm84, earth gravity model 1984.  See
+      http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
+    egm96, earth gravity model 1996.  See
+      http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+    egm2008, earth gravity model 2008.  See
+      http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+    wgs2008, world geodetic system 1984.  For returns the gravity for
+      the WGS84 ellipsoid.
 
-These models approximate the gravity field due to the earth's core and
-(in the case of emm2010) its crust.  They neglect gravity fields due to
-the ionosphere, the magnetosphere, nearby magnetized materials,
-electrical machinery, etc.
-
-By default, the C<wmm2010> gravity model is used.  This may changed by
+By default, the C<egm96> gravity model is used.  This may changed by
 setting the environment variable C<GRAVITY_NAME> or with the B<-n>
 option.
 
@@ -186,19 +180,15 @@ $B<GEOGRAPHICLIB_DATA>/gravity is used.
 An illegal line of input will print an error message to standard output
 beginning with C<ERROR:> and causes B<Gravity> to return an exit
 code of 1.  However, an error does not cause B<Gravity> to
-terminate; following lines will be converted.  If I<time> or I<h> are
-outside the recommended ranges for the model (but inside the ranges
-increase by I<tguard> and I<hguard>), a warning is printed on standard
-error and the field (which may be inaccurate) is returned in the normal
-way.
+terminate; following lines will be converted.
 
 =head1 EXAMPLES
 
-The gravity field from WMM2010 in Timbuktu on 2012-01-01
+The gravity field from EGM96 in Timbuktu on 2012-01-01
 
-    echo 2012-01-01 "16d46'33N" "3d00'34W" 300 | Gravity -r
-    => -2.55 12.43 33771.0 33737.6 -1500.5 7446.0 34582.1
-       0.10 -0.07 34.3 36.8 54.4 -35.3 25.9
+    echo "16d46'33N" "3d00'34W" 300 | Gravity -p 9
+    => -0.000018463 -0.000008217 -9.783931398
+                    -0.000006866 -0.000229489
 
 The first two numbers returned are the declination and inclination of
 the field.  The second line gives the annual change.

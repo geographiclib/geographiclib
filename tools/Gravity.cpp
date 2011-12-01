@@ -222,7 +222,6 @@ int main(int argc, char* argv[]) {
               *output << Utility::str<real>(gx, prec) << " "
                       << Utility::str<real>(gy, prec) << " "
                       << Utility::str<real>(gz, prec) << " "
-                      << Utility::str<real>(deltax, prec) << " "
                       << Utility::str<real>(deltay, prec) << " "
                       << Utility::str<real>(deltaz, prec) << "\n";
             }
