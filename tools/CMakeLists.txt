@@ -214,5 +214,5 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
     Gravity -n egm2008 -p 6 --input-string "90 110 0")
   set_tests_properties (Gravity0
     PROPERTIES PASS_REGULAR_EXPRESSION
-    "-0\\.000146 0\\.000078 -9\\.832294 0\\.000078 -0\\.000109")
+    "-0\\.000146 0\\.000078 -9\\.832294")
 endif (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)

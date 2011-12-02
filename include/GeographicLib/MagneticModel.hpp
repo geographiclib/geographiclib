@@ -159,7 +159,8 @@ namespace GeographicLib {
      * @param[in] lat latitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
      * @return a MagneticCircle object whose MagneticCircle::operator()(real
-     *   lon) member function computes the field at a particular \e lon.
+     *   lon) member function computes the field at particular values of \e
+     *   lon.
      *
      * If the field at several points on a circle of latitude need to be
      * calculated then instead of

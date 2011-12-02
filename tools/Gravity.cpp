@@ -46,8 +46,9 @@ int main(int argc, char* argv[]) {
     int prec = 5;
     enum {
       GRAVITY = 0,
-      UNDULATION = 1,
+      DISTURBANCE = 1,
       ANOMALY = 2,
+      UNDULATION = 3,
     };
     unsigned mode = GRAVITY;
     for (int m = 1; m < argc; ++m) {
@@ -60,10 +61,12 @@ int main(int argc, char* argv[]) {
         dir = argv[m];
       } else if (arg == "-G")
         mode = GRAVITY;
-      else if (arg == "-H")
-        mode = UNDULATION;
+      else if (arg == "-D")
+        mode = DISTURBANCE;
       else if (arg == "-A")
         mode = ANOMALY;
+      else if (arg == "-H")
+        mode = UNDULATION;
       else if (arg == "-c") {
         if (m + 2 >= argc) return usage(1, true);
         try {
@@ -172,16 +175,11 @@ int main(int argc, char* argv[]) {
                   << "Description: "  << g.Description()      << "\n"
                   << "Date & Time: "  << g.DateTime()         << "\n";
       }
-      const GravityCircle c(circle ?
-                            g.Circle(lat, h,
-                                     (mode == GRAVITY ?
-                                      GravityModel::GRAVITY |
-                                      GravityModel::DISTURBANCE :
-                                      (mode == UNDULATION ?
-                                       GravityModel::GEOID_HEIGHT :
-                                       // mode == ANOMALY
-                                       GravityModel::SPHERICAL_ANOMALY))) :
-                            GravityCircle());
+      unsigned mask = (mode == GRAVITY ? GravityModel::GRAVITY :
+                       (mode == DISTURBANCE ? GravityModel::DISTURBANCE :
+                        (mode == ANOMALY ? GravityModel::SPHERICAL_ANOMALY :
+                         GravityModel::GEOID_HEIGHT))); // mode == UNDULATION
+      const GravityCircle c(circle ? g.Circle(lat, h, mask) : GravityCircle());
       std::string s, stra, strb;
       while (std::getline(*input, s)) {
         try {
@@ -211,30 +209,31 @@ int main(int argc, char* argv[]) {
           switch (mode) {
           case GRAVITY:
             {
-              real gx, gy, gz, deltax, deltay, deltaz;
+              real gx, gy, gz;
               if (circle) {
                 c.Gravity(lon, gx, gy, gz);
-                c.Disturbance(lon, deltax, deltay, deltaz);
               } else {
                 g.Gravity(lat, lon, h, gx, gy, gz);
-                g.Disturbance(lat, lon, h, deltax, deltay, deltaz);
               }
               *output << Utility::str<real>(gx, prec) << " "
                       << Utility::str<real>(gy, prec) << " "
-                      << Utility::str<real>(gz, prec) << " "
+                      << Utility::str<real>(gz, prec) << "\n";
+            }
+            break;
+          case DISTURBANCE:
+            {
+              real deltax, deltay, deltaz;
+              if (circle) {
+                c.Disturbance(lon, deltax, deltay, deltaz);
+              } else {
+                g.Disturbance(lat, lon, h, deltax, deltay, deltaz);
+              }
+              *output << Utility::str<real>(deltax, prec) << " "
                       << Utility::str<real>(deltay, prec) << " "
                       << Utility::str<real>(deltaz, prec) << "\n";
             }
             break;
-          case UNDULATION:
-            {
-              real N = circle ? c.GeoidHeight(lon) :
-                g.GeoidHeight(lat, lon);
-              *output << Utility::str<real>(N, prec) << "\n";
-            }
-            break;
           case ANOMALY:
-          default:
             {
               real Dg01, xi, eta;
               if (circle)
@@ -247,6 +246,13 @@ int main(int argc, char* argv[]) {
               *output << Utility::str<real>(Dg01, prec) << " "
                       << Utility::str<real>(xi, prec) << " "
                       << Utility::str<real>(eta, prec) << "\n";
+            }
+            break;
+          case UNDULATION:
+          default:
+            {
+              real N = circle ? c.GeoidHeight(lon) : g.GeoidHeight(lat, lon);
+              *output << Utility::str<real>(N, prec) << "\n";
             }
             break;
           }

@@ -45,7 +45,7 @@ namespace GeographicLib {
    * - <b>gamma</b> = <b>grad</b> \e U = <b>Gamma</b> + <b>f</b>, the normal
    *   acceleration;
    * - \e X, \e Y, \e Z, geocentric coordinates;
-   * - \e x, \e y, \e z, local cartesian coordinates use to denote the east,
+   * - \e x, \e y, \e z, local cartesian coordinates used to denote the east,
    *   north and up directions.
    *
    * References:
@@ -60,8 +60,8 @@ namespace GeographicLib {
     static const int maxit_ = 10;
     typedef Math::real real;
     friend class GravityModel;
-    real _a, _GM, _omega, _J2, _omega2, _aomega2;
-    real _e2, _ep2, _f, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
+    real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
+    real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _q0, _m, _k, _fstar;
     Geocentric _earth;
     static Math::real qf(real ep2) throw();
     static Math::real qpf(real ep2) throw();
@@ -79,22 +79,23 @@ namespace GeographicLib {
      *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
      *   the gravitational constant and \e M the mass of the earth (usually
      *   including the mass of the earth's atmosphere).
-     * @param[in] omega the angular velociry (rad s<sup>-1</sup>).
+     * @param[in] omega the angular velocity (rad s<sup>-1</sup>).
+     * @param[in] f the flattening of the ellipsoid.
      * @param[in] J2 dynamical form factor or the flattening \e f (depending on
      *   the value of \e flatp).
-     * @param[in] flatp if true, then the flattening \e f is specified as the
-     *   4th argument instead of <i>J</i><sub>2</sub> (default = false).
      *
-     * The shape of the ellipsoid can be given in one of two ways:
-     * - geometrically (\e flatp = true), the 4th argument represents the
-     *   flattening \e f = (\e a - \e b) / \e a, where \e a and \e b are the
-     *   equatorial radius and the polar semi-axis.
-     * - physically (\e flatp = false, the default), the 4th argument
-     *   represents the dynamical form factor <i>J</i><sub>2</sub> = (\e C - \e
-     *   A) / <i>Ma</i><sup>2</sup>, where \e A and \e C are the equatorial and
-     *   polar moments of inertia and \e M is the mass of the earth.
+     * Exactly one of \e f and \e J2 should be positive and this will be used
+     * to define the ellipsoid.  The shape of the ellipsoid can be given in one
+     * of two ways:
+     * - geometrically, the ellipsoid is defined by the flattening \e f =
+     *   (\e a - \e b) / \e a, where \e a and \e b are the equatorial radius
+     *   and the polar semi-axis.
+     * - physically, the ellipsoid is defined by the dynamical form factor
+     *   <i>J</i><sub>2</sub> = (\e C - \e A) / <i>Ma</i><sup>2</sup>, where \e
+     *   A and \e C are the equatorial and polar moments of inertia and \e M is
+     *   the mass of the earth.
      **********************************************************************/
-    NormalGravity(real a, real GM, real omega, real J2, bool flatp = false);
+    NormalGravity(real a, real GM, real omega, real f, real J2);
 
     /**
      * A default constructor for the normal gravity.  This sets up an
@@ -135,9 +136,9 @@ namespace GeographicLib {
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of
      * the value of the longitude and the easterly component of the
-     * acceleration vanishes.  The function includes the effects of the earth's
-     * rotation.  When \e h = 0, this function gives \e gammay = 0 and the
-     * returned value matches that of NormalGravity::SurfaceGravity.
+     * acceleration vanishes, \e gammax = 0.  The function includes the effects
+     * of the earth's rotation.  When \e h = 0, this function gives \e gammay =
+     * 0 and the returned value matches that of NormalGravity::SurfaceGravity.
      **********************************************************************/
     Math::real Gravity(real lat, real h, real& gammay, real& gammaz)
       const throw();
@@ -159,8 +160,8 @@ namespace GeographicLib {
      *   gravitational and centrifugal potentials
      *   (m<sup>2</sup> s<sup>-2</sup>).
      *
-     * The acceleration \e gamma is given by \e gamma = <b>grad</b> \e U =
-     * <b>grad</b> <i>V</i><sub>0</sub> + <b>grad</b> \e Phi = \e Gamma + \e f.
+     * The acceleration given by <b>gamma</b> = <b>grad</b> \e U = <b>grad</b>
+     * <i>V</i><sub>0</sub> + <b>grad</b> \e Phi = <b>Gamma</b> + <b>f</b>.
      **********************************************************************/
     Math::real U(real X, real Y, real Z,
                  real& gammaX, real& gammaY, real& gammaZ) const throw();

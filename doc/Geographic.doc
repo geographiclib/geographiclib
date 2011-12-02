@@ -1330,10 +1330,10 @@ bilinear interpolation.
    rm -f $TEMP
 \endverbatim
 
-Because the pgm files are uncompressed, they can take up a lot of room.
-Some compressed formats compress in tiles and so might be compatible
-with the requirement that the data can be randomly accessed.  In
-particular gdal_translate can be used to convert the pgm files to
+Because the pgm files are uncompressed, they can take up a lot of disk
+space.  Some compressed formats compress in tiles and so might be
+compatible with the requirement that the data can be randomly accessed.
+In particular gdal_translate can be used to convert the pgm files to
 compressed tiff files with
 \verbatim
 gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 \
@@ -1525,7 +1525,9 @@ Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 
 %GeographicLib can compute the earth's gravitational field using a
 gravity model.  These models expand the gravitational potential of the
-earth as sum of spherical harmonics.
+earth as sum of spherical harmonics.  The models also specify a
+reference ellipsoid, relative to which geoid heights and gravity
+disturbances are measured.
 
 The supported models are
  - <b>egm84</b>, the
@@ -1545,7 +1547,7 @@ The supported models are
 
 See
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
-   Fransisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
+   Fransisco, 1967).
  .
 for more information.
 
@@ -1644,8 +1646,7 @@ will prompt for an installation directory with the default being
 "gravity" sub-directory.
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
-have the same contents).  If possible use the tar.bz2 files, since these
-compress better than the zip file.  To unpack these, run, for example
+have the same contents).  To unpack these, run, for example
 \verbatim
    mkdir -p /usr/local/share/GeographicLib
    tar xofjC egm96.tar.bz2 /usr/local/share/GeographicLib
@@ -1675,12 +1676,12 @@ the full path name of the data file it uses.
 
 \section gravityformat The format of the gravity model files
 
-The constructor Geographic::GravityModel::Gravity reads a file called
-NAME.wwm which specifies various properties for the gravity model.  It
-then opens a binary file NAME.wwm.cof to obtain the coefficients of the
+The constructor for GeographicLib::GravityModel reads a file called
+NAME.egm which specifies various properties for the gravity model.  It
+then opens a binary file NAME.egm.cof to obtain the coefficients of the
 spherical harmonic sum.
 
-The first line of the .wwm file must consist of "EGMF-v" where EGMF
+The first line of the .egm file must consist of "EGMF-v" where EGMF
 stands for "Earth Gravity Model Format" and v is the version number of
 the format (currently "1").
 
@@ -1692,8 +1693,8 @@ VALUE".  In general, the KEY and the VALUE are case-sensitive.
 GeographicLib::GravityModel only pays attention to the following
 keywords
  - keywords that affect the field calculation, namely:
-   - <b>ModelRadius</b> (required), the normalizing radius for the model in
-     meters.
+   - <b>ModelRadius</b> (required), the normalizing radius for the model
+     in meters.
    - <b>ReferenceRadius</b> (required), the major radius \e a for the
      reference ellipsoid meters.
    - <b>ModelMass</b> (required), the mass constant \e GM for the model
@@ -1703,22 +1704,22 @@ keywords
    - <b>AngularVelociy</b> (required), the angular velocity \e omega for
      the model \e and the reference ellipsoid in rad
      seconds<sup>-1</sup>.
-   - <b>Flattening</b>, the flattening of the reference ellipsoid; this can be
-     given a fraction, e.g., 1/298.257223563.  One of <b>Flattening</b> and
-     <b>DynamicalFormFactor</b> is required.
-   - <b>DynamicalFormFactor</b>, the dynamical form factor <i>J</i><sub>2</sub>
-     for the reference ellipsoid.  One of <b>Flattening</b> and
-     <b>DynamicalFormFactor</b> is required.
-   - <b>HeightOffset</b> (default 0), the constant height offset (meters) added
-     to obtain the geoid height.
+   - <b>Flattening</b>, the flattening of the reference ellipsoid; this
+     can be given a fraction, e.g., 1/298.257223563.  One of
+     <b>Flattening</b> and <b>DynamicalFormFactor</b> is required.
+   - <b>DynamicalFormFactor</b>, the dynamical form factor
+     <i>J</i><sub>2</sub> for the reference ellipsoid.  One of
+     <b>Flattening</b> and <b>DynamicalFormFactor</b> is required.
+   - <b>HeightOffset</b> (default 0), the constant height offset
+     (meters) added to obtain the geoid height.
    - <b>CorrectionMultiplier</b> (default 1), the multiplier for the
      "zeta-to-N" correction terms for the geoid height to convert them
      to meters.
    - <b>Normalization</b> (default full), the normalization used for the
      associated Legendre functions (full or schmidt).
-   - <b>ID</b> (required), 8 printable characters which serve as a signature
-     for the .egm.cof file (they must appear as the first 8 bytes of this
-     file).
+   - <b>ID</b> (required), 8 printable characters which serve as a
+     signature for the .egm.cof file (they must appear as the first 8
+     bytes of this file).
    .
    The parameters <b>ModelRadius</b>, <b>ModelMass</b>, and
    <b>AngularVelocity</b> apply to the gravity model, while
@@ -1738,8 +1739,8 @@ keywords
    - <b>Description</b>, a more descriptive name of the model.
    - <b>ReleaseDate</b>, when the model was created.
  - keywords that are examined to verify that their values are valid:
-   - <b>ByteOrder</b> (default little), the order of bytes in the .egm.cof
-     file.  Only little endian is supported at present.
+   - <b>ByteOrder</b> (default little), the order of bytes in the
+     .egm.cof file.  Only little endian is supported at present.
  .
 Other keywords are ignored.
 
@@ -1997,8 +1998,7 @@ will prompt for an installation directory with the default being
 "magnetic" sub-directory.
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
-have the same contents).  If possible use the tar.bz2 files, since these
-compress better than the zip file.  To unpack these, run, for example
+have the same contents).  To unpack these, run, for example
 \verbatim
    mkdir -p /usr/local/share/GeographicLib
    tar xofjC wmm2010.tar.bz2 /usr/local/share/GeographicLib
@@ -2028,12 +2028,12 @@ MagneticField to report the full path name of the data file it uses.
 
 \section magneticformat The format of the magnetic model files
 
-The constructor Geographic::MagneticModel::Magnetic reads a file called
-NAME.wwm which specifies various properties for the magnetic model.  It
-then opens a binary file NAME.wwm.cof to obtain the coefficients of the
+The constructor for GeographicLib::MagneticModel reads a file called
+NAME.wmm which specifies various properties for the magnetic model.  It
+then opens a binary file NAME.wmm.cof to obtain the coefficients of the
 spherical harmonic sum.
 
-The first line of the .wwm file must consist of "WMMF-v" where WMMF
+The first line of the .wmm file must consist of "WMMF-v" where WMMF
 stands for "World Magnetic Model Format" and v is the version number of
 the format (currently "1").
 
@@ -2045,45 +2045,46 @@ VALUE".  In general, the KEY and the VALUE are case-sensitive.
 GeographicLib::MagneticModel only pays attention to the following
 keywords
  - keywords that affect the field calculation, namely:
-   - <b>Radius</b> (required), the reference radius of the earth in meters.
-   - <b>NumModels</b> (default 1), the number of models.  WMM2010 consists of a
-     single model giving the magnetic field and its time variation at
-     2010.  IGRF11 consists of 23 models for 1900 thru 2010 at 5 year
-     intervals.  The time variation is given only for the last model to
-     allow extrapolation beyong 2010.  For dates prior to 2010, linear
-     interpolation is used.
-   - <b>Epoch</b> (required), the time origin (in fractional years) for the
-     first model.
-   - <b>DeltaEpoch</b> (default 1), the interval between models in years (only
-     relevant for NumModels > 1).
-   - <b>Normalization</b> (default schmidt), the normalization used for the
-     associated Legendre functions (schmidt or full).
-   - <b>ID</b> (required), 8 printable characters which serve as a signature
-     for the .wmm.cof file (they must appear as the first 8 bytes of this
-     file).
+   - <b>Radius</b> (required), the normalizing radius of the model in
+     meters.
+   - <b>NumModels</b> (default 1), the number of models.  WMM2010
+     consists of a single model giving the magnetic field and its time
+     variation at 2010.  IGRF11 consists of 23 models for 1900 thru 2010
+     at 5 year intervals.  The time variation is given only for the last
+     model to allow extrapolation beyong 2010.  For dates prior to 2010,
+     linear interpolation is used.
+   - <b>Epoch</b> (required), the time origin (in fractional years) for
+     the first model.
+   - <b>DeltaEpoch</b> (default 1), the interval between models in years
+     (only relevant for NumModels > 1).
+   - <b>Normalization</b> (default schmidt), the normalization used for
+     the associated Legendre functions (schmidt or full).
+   - <b>ID</b> (required), 8 printable characters which serve as a
+     signature for the .wmm.cof file (they must appear as the first 8
+     bytes of this file).
  - keywords that store data that the user can query:
    - <b>Name</b>, the name of the model.
    - <b>Description</b>, a more descriptive name of the model.
    - <b>ReleaseDate</b>, when the model was created.
    - <b>MinTime</b>, the minimum date at which the model should be used.
    - <b>MaxTime</b>, the maximum date at which the model should be used.
-   - <b>MinHeight</b>, the minimum height above the ellipsoid for which the
-     model should be used.
-   - <b>MaxHeight</b>, the maximum height above the ellipsoid for which the
-     model should be used.
+   - <b>MinHeight</b>, the minimum height above the ellipsoid for which
+     the model should be used.
+   - <b>MaxHeight</b>, the maximum height above the ellipsoid for which
+     the model should be used.
    .
    GeographicLib::MagneticModel does not enforce the restrictions
    implied by last four quantities.  However,
    <a href="MagneticField.1.html">MagneticField</a> issues a warning if
    these limits are exceeded.
  - keywords that are examined to verify that their values are valid:
-   - <b>Type</b> (default linear), the type of the model.  "linear" means that
-     the time variation is piece-wise linear (either using interpolation
-     between the field at two dates or using the field and its first
-     derivative with respect to time).  This is the only type of model
-     supported at present.
-   - <b>ByteOrder</b> (default little), the order of bytes in the .wmm.cof
-     file.  Only little endian is supported at present.
+   - <b>Type</b> (default linear), the type of the model.  "linear"
+     means that the time variation is piece-wise linear (either using
+     interpolation between the field at two dates or using the field and
+     its first derivative with respect to time).  This is the only type
+     of model supported at present.
+   - <b>ByteOrder</b> (default little), the order of bytes in the
+     .wmm.cof file.  Only little endian is supported at present.
  .
 Other keywords are ignored.
 

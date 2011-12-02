@@ -52,18 +52,19 @@ namespace GeographicLib {
    * - delta \e g = gravity disturbance = \e g<sub><i>P</i></sub> - \e
    *   gamma<sub><i>P</i></sub>;
    * - Delta <b>g</b> = gravity anomaly vector =
-   *   <b>g</b><sub><i>P</i></sub> - <b>gamma</b><sub><i>Q</i></sub>, (where
-   *   \e Q is on ellispoid and \e PQ is perpendicular to ellipsoid);
+   *   <b>g</b><sub><i>P</i></sub> - <b>gamma</b><sub><i>Q</i></sub>; here the
+   *   line \e PQ is perpendicular to ellipsoid and the potential at \e P
+   *   equals the normal potential at \e Q;
    * - Delta \e g = gravity anomaly = \e g<sub><i>P</i></sub> - \e
    *   gamma<sub><i>Q</i></sub>;
    * - (\e xi, \e eta) deflection of the vertical, the difference in
    *   directions of <b>g</b><sub><i>P</i></sub> and
    *   <b>gamma</b><sub><i>Q</i></sub>, \e xi = NS, \e eta = EW.
    * - \e X, \e Y, \e Z, geocentric coordinates;
-   * - \e x, \e y, \e z, local cartesian coordinates use to denote the east,
+   * - \e x, \e y, \e z, local cartesian coordinates used to denote the east,
    *   north and up directions.
    *
-   * See xxref gravity for details of how to install the gravity model and the
+   * See \ref gravity for details of how to install the gravity model and the
    * data format.
    **********************************************************************/
 
@@ -126,15 +127,15 @@ namespace GeographicLib {
        **********************************************************************/
       DISTURBING_POTENTIAL = CAP_T,
       /**
-       * Allow calls to GravityCircle::GeoidHeight.
-       * @hideinitializer
-       **********************************************************************/
-      GEOID_HEIGHT = CAP_T | CAP_C | CAP_GAMMA0,
-      /**
        * Allow calls to GravityCircle::SphericalAnomaly.
        * @hideinitializer
        **********************************************************************/
       SPHERICAL_ANOMALY = CAP_DELTA | CAP_GAMMA,
+      /**
+       * Allow calls to GravityCircle::GeoidHeight.
+       * @hideinitializer
+       **********************************************************************/
+      GEOID_HEIGHT = CAP_T | CAP_C | CAP_GAMMA0,
       /**
        * All capabilities.
        * @hideinitializer
@@ -180,7 +181,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] gz the upward component of the acceleration
      *   (m s<sup>-2</sup>).
-     * @return \e W the corresponding disturbing potential.
+     * @return \e W the sum of the gravitational and centrifugal potentials.
      *
      * The function includes the effects of the earth's rotation.
      **********************************************************************/
@@ -356,22 +357,28 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Create a GravityCircle object to allow the geogravity field at many
-     * points with constant \e lat and \e h and varying \e lon to be
-     * computed efficienty.
+     * Create a GravityCircle object to allow the gravity field at many points
+     * with constant \e lat and \e h and varying \e lon to be computed
+     * efficienty.
      *
      * @param[in] lat latitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
-     * @param[in] m mask specifying the capabilities of the resulting object.
-     * @return a GravityCircle object whose GravityCircle::operator()(real
-     *   lon) member function computes the field at a particular \e lon.
+     * @param[in] caps bitor'ed combination of GravityModel::mask values
+     *   specifying the capabilities of the resulting GravityCircle object.
+     * @return a GravityCircle object whose member functions computes the
+     *   gravitational field at a particular values of \e lon.
      *
-     * \e m should be a combination of mask values or'ed together, e.g.,
-     * GravityModel::GEOID_HEIGHT | GravityModel::GRAVITY; these specify what
-     * capabilities the resulting GravityCircle object will have.  If an
-     * unsupported function is invoked, it will return NaNs.  The default
-     * value, GravityModel::ALL turns on all capabilities.  Note that
-     * GravityModel::GEOID_HEIGHT only makes sense when \e h = 0.
+     * The GravityModel::mask values are
+     * - \e caps |= GravityModel::GRAVITY
+     * - \e caps |= GravityModel::DISTURBANCE
+     * - \e caps |= GravityModel::DISTURBING_POTENTIAL
+     * - \e caps |= GravityModel::SPHERICAL_ANOMALY
+     * - \e caps |= GravityModel::GEOID_HEIGHT
+     * .
+     * The default value of \e caps is GravityModel::ALL which turns on all the
+     * capabilities.  If an unsupported function is invoked, it will return
+     * NaNs.  Note that GravityModel::GEOID_HEIGHT will only be honored if \e h
+     * = 0.
      *
      * If the field at several points on a circle of latitude need to be
      * calculated then instead of
@@ -395,7 +402,7 @@ namespace GeographicLib {
      \endcode
      * For high-degree models, this will be substantially faster.
      **********************************************************************/
-    GravityCircle Circle(real lat, real h, unsigned m = ALL) const;
+    GravityCircle Circle(real lat, real h, unsigned caps = ALL) const;
     ///@}
 
     /** \name Inspector functions
@@ -435,9 +442,7 @@ namespace GeographicLib {
     const std::string& GravityModelDirectory() const throw() { return _dir; }
 
     /**
-     * @return \e a the equatorial radius of the ellipsoid (meters).  This is
-     *   the value of \e a inherited from the Geocentric object used in the
-     *   constructor.
+     * @return \e a the equatorial radius of the ellipsoid (meters).
      **********************************************************************/
     Math::real MajorRadius() const throw() { return _earth.MajorRadius(); }
 
@@ -464,8 +469,7 @@ namespace GeographicLib {
     { return _earth.AngularVelocity(); }
 
     /**
-     * @return \e f the flattening of the ellipsoid.  This is the value
-     *   inherited from the Geocentric object used in the constructor.
+     * @return \e f the flattening of the ellipsoid.
      **********************************************************************/
     Math::real Flattening() const throw() { return _earth.Flattening(); }
     ///@}
@@ -486,7 +490,7 @@ namespace GeographicLib {
      * @return the default name for the gravity model.
      *
      * This is the value of the environment variable GRAVITY_NAME, if set,
-     * otherwise, it is "egm2008".  The GravityModel class does not use
+     * otherwise, it is "egm96".  The GravityModel class does not use
      * this function; it is just provided as a convenience for a calling
      * program when constructing a GravityModel object.
      **********************************************************************/

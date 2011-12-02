@@ -19,10 +19,11 @@ namespace GeographicLib {
 
   using namespace std;
 
-  NormalGravity::NormalGravity(real a, real GM, real omega, real J2, bool flatp)
+  NormalGravity::NormalGravity(real a, real GM, real omega, real f, real J2)
     : _a(a)
     , _GM(GM)
     , _omega(omega)
+    , _f(f)
     , _J2(J2)
     , _omega2(Math::sq(_omega))
     , _aomega2(Math::sq(_omega * _a))
@@ -31,14 +32,15 @@ namespace GeographicLib {
         throw GeographicErr("Major radius is not positive");
       if (!(Math::isfinite(_GM) && _GM > 0))
         throw GeographicErr("Gravitational constants is not positive");
-      if (!(Math::isfinite(_J2) && _J2 > 0))
-        throw GeographicErr(flatp ? "Flattening is not positive"
-                            : "Dynamical form factor is not positive");
+      bool flatp = _f > 0 && Math::isfinite(_f);
+      if (_J2 > 0 && Math::isfinite(_J2) && flatp)
+        throw GeographicErr("Cannot specify both f and J2");
+      if (!(_J2 > 0 && Math::isfinite(_J2)) && !flatp)
+        throw GeographicErr("Must specify one of f and J2");
       if (!(Math::isfinite(_omega) && _omega != 0))
         throw GeographicErr("Angular velocity is not non-zero");
       real K = 2 * _aomega2 * _a / (15 * _GM);
       if (flatp) {
-        _f = _J2;
         _e2 = _f * (2 - _f);
         _ep2 = _e2 / (1 - _e2);
         _q0 = qf(_ep2);
@@ -77,12 +79,12 @@ namespace GeographicLib {
   const NormalGravity
   NormalGravity::WGS84(Constants::WGS84_a<real>(), Constants::WGS84_GM<real>(),
                        Constants::WGS84_omega<real>(),
-                       Constants::WGS84_f<real>(), true);
+                       Constants::WGS84_f<real>(), 0);
 
   const NormalGravity
   NormalGravity::GRS80(Constants::GRS80_a<real>(), Constants::GRS80_GM<real>(),
                        Constants::GRS80_omega<real>(),
-                       Constants::GRS80_J2<real>(), false);
+                       0, Constants::GRS80_J2<real>());
 
   Math::real NormalGravity::qf(real ep2) throw() {
     // Compute

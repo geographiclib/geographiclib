@@ -187,17 +187,13 @@ namespace GeographicLib {
       throw GeographicErr("Model radius must be positive");
     if (!(Math::isfinite(_GMmodel) && _GMmodel > 0))
       throw GeographicErr("Model mass constant must be positive");
-    bool flatp = Math::isfinite(f);
-    if (flatp && Math::isfinite(J2))
-      throw GeographicErr
-        ("Cannot specify both flattening and dynamical form factor");
     if (!(Math::isfinite(_corrmult) && _corrmult > 0))
       throw GeographicErr("Correction multiplier must be positive");
     if (!(Math::isfinite(_zeta0)))
       throw GeographicErr("Height offset must be finite");
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
-    _earth = NormalGravity(a, GM, omega, flatp ? f : J2, flatp);
+    _earth = NormalGravity(a, GM, omega, f, J2);
   }
 
   Math::real GravityModel::InternalT(real X, real Y, real Z,
@@ -310,36 +306,36 @@ namespace GeographicLib {
     return Tres;
   }
 
-  GravityCircle GravityModel::Circle(real lat, real h, unsigned m) const {
+  GravityCircle GravityModel::Circle(real lat, real h, unsigned caps) const {
     if (h != 0)
       // Disallow invoking GeoidHeight unless h is zero.
-      m &= ~(CAP_GAMMA0 | CAP_C);
+      caps &= ~(CAP_GAMMA0 | CAP_C);
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, 0, h, X, Y, Z, M);
     // Y = 0, cphi = M[7], sphi = M[8];
     real
       invR = 1 / Math::hypot(X,  Z),
-      gamma0 = (m & CAP_GAMMA0 ?_earth.SurfaceGravity(lat)
+      gamma0 = (caps & CAP_GAMMA0 ?_earth.SurfaceGravity(lat)
                 : Math::NaN<real>()),
       fx, fy, fz, gamma;
-    if (m & CAP_GAMMA) {
+    if (caps & CAP_GAMMA) {
       _earth.U(X, Y, Z, fx, fy, fz); // fy = 0
       gamma = Math::hypot(fx, fz);
     } else
       gamma = Math::NaN<real>();
     _earth.Phi(X, Y, fx, fy);
-    return GravityCircle(GravityCircle::mask(m),
+    return GravityCircle(GravityCircle::mask(caps),
                          _earth._a, _earth._f, lat, h, Z, X, M[7], M[8],
                          _amodel, _GMmodel, _dzonal0, _corrmult,
                          gamma0, gamma, fx,
-                         m & CAP_G ?
+                         caps & CAP_G ?
                          _gravitational.Circle(X, Z, true) :
                          CircularEngine(),
                          // N.B. If CAP_DELTA is set then CAP_T should be too.
-                         m & CAP_T ?
-                         _disturbing.Circle(-1, X, Z, (m & CAP_DELTA) != 0) :
+                         caps & CAP_T ?
+                         _disturbing.Circle(-1, X, Z, (caps & CAP_DELTA) != 0) :
                          CircularEngine(),
-                         m & CAP_C ?
+                         caps & CAP_C ?
                          _correction.Circle(invR * X, invR * Z, false) :
                          CircularEngine());
   }

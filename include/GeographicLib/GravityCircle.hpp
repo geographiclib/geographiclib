@@ -110,7 +110,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] gz the upward component of the acceleration
      *   (m s<sup>-2</sup>).
-     * @return \e W the corresponding disturbing potential.
+     * @return \e W the sum of the gravitational and centrifugal potentials.
      *
      * The function includes the effects of the earth's rotation.
      **********************************************************************/
