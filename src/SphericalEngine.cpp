@@ -100,29 +100,29 @@
  * so multiply <tt>C[n,m]</tt> by <tt>n+1</tt> in inner sum and multiply the
  * sum by <tt>-1/r</tt>.
  *
- * differentiate wrt lambda\verbatim
+ * Differentiate wrt lambda\verbatim
    d cos(m*lambda) = -m * sin(m*lambda)
    d sin(m*lambda) =  m * cos(m*lambda)
 \endverbatim
  * so multiply terms by <tt>m</tt> in outer sum and swap sine and cosine
  * variables.
  *
- * differentiate wrt theta\verbatim
-  dV/dtheta = -u * dV/dt = -u * V'
+ * Differentiate wrt theta\verbatim
+  dV/dtheta = V' = -u * dV/dt = -u * V'
 \endverbatim
- * here <tt>'</tt> denotes differentiation wrt to <tt>t</tt>.\verbatim
-   d/dt (Sc[m] * P[m,m](t)) = Sc'[m] * P[m,m](t) + Sc[m] * P'[m,m](t)
+ * here <tt>'</tt> denotes differentiation wrt to <tt>theta</tt>.\verbatim
+   d/dtheta (Sc[m] * P[m,m](t)) = Sc'[m] * P[m,m](t) + Sc[m] * P'[m,m](t)
 \endverbatim
- * Now P[m,m](t) = const * u^m, so P'[m,m](t) = -m * t/u^2 * P[m,m](t),
+ * Now P[m,m](t) = const * u^m, so P'[m,m](t) = m * t/u * P[m,m](t),
  * thus\verbatim
-   d/dt (Sc[m] * P[m,m](t)) = (Sc'[m] - m * t/u^2 Sc[m]) * P'[m,m](t)
+   d/dtheta (Sc[m] * P[m,m](t)) = (Sc'[m] + m * t/u Sc[m]) * P[m,m](t)
 \endverbatim
  * Clenshaw recursion for <tt>Sc[m]</tt> reads\verbatim
     y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
 \endverbatim
- * Substituting <tt>alpha'[k] = alpha[k]/t</tt>, <tt>beta'[k] = c'[k] = 0</tt>
- * gives\verbatim
-    y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] + alpha[k]/t * y[k+1]
+ * Substituting <tt>alpha[k] = const * t</tt>, <tt>alpha'[k] = -u/t *
+ * alpha[k]</tt>, <tt>beta'[k] = c'[k] = 0</tt> gives\verbatim
+    y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] - u/t * alpha[k] * y[k+1]
 \endverbatim
  *
  * Finally, given the derivatives of <tt>V</tt>, we can compute the components
@@ -176,7 +176,7 @@ namespace GeographicLib {
       q2 = Math::sq(q),
       uq = u * q,
       uq2 = Math::sq(uq),
-      tu2 = t / Math::sq(u);
+      tu = t / u;
     // Initialize outer sum
     real vc  = 0, vc2  = 0, vs  = 0, vs2  = 0;   // v [N + 1], v [N + 2]
     // vr, vt, vl and similar w variable accumulate the sums for the
@@ -216,7 +216,7 @@ namespace GeographicLib {
         w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
-          w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
+          w = A * wtc + B * wtc2 -  u*Ax * wc2; wtc2 = wtc; wtc = w;
         }
         if (m) {
           R = c[0].Sv(k[0]);
@@ -226,7 +226,7 @@ namespace GeographicLib {
           w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
-            w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
+            w = A * wts + B * wts2 -  u*Ax * ws2; wts2 = wts; wts = w;
           }
         }
       }
@@ -250,7 +250,7 @@ namespace GeographicLib {
         v = A * vs  + B * vs2  +  ws ; vs2  = vs ; vs  = v;
         if (gradp) {
           // Include the terms Sc[m] * P'[m,m](t) and  Ss[m] * P'[m,m](t)
-          wtc -= m * tu2 * wc; wts -= m * tu2 * ws;
+          wtc += m * tu * wc; wts += m * tu * ws;
           v = A * vrc + B * vrc2 +  wrc; vrc2 = vrc; vrc = v;
           v = A * vrs + B * vrs2 +  wrs; vrs2 = vrs; vrs = v;
           v = A * vtc + B * vtc2 +  wtc; vtc2 = vtc; vtc = v;
@@ -278,9 +278,9 @@ namespace GeographicLib {
           // r: dV/dr
           // theta: 1/r * dV/dtheta
           // lambda: 1/(r*u) * dV/dlambda
-          vrc =     - qs * (wrc + A * (cl * vrc + sl * vrs) + B * vrc2);
-          vtc = - u * qs * (wtc + A * (cl * vtc + sl * vts) + B * vtc2);
-          vlc =   qs / u * (      A * (cl * vlc + sl * vls) + B * vlc2);
+          vrc =   - qs * (wrc + A * (cl * vrc + sl * vrs) + B * vrc2);
+          vtc =     qs * (wtc + A * (cl * vtc + sl * vts) + B * vtc2);
+          vlc = qs / u * (      A * (cl * vlc + sl * vls) + B * vlc2);
         }
       }
     }
@@ -309,7 +309,7 @@ namespace GeographicLib {
       q = a / r;
     real
       q2 = Math::sq(q),
-      tu2 = t / Math::sq(u);
+      tu = t / u;
     CircularEngine circ(M, gradp, norm, a, r, u, t);
     int k[L];
     for (int m = M; m >= 0; --m) {   // m = M .. 0
@@ -343,7 +343,7 @@ namespace GeographicLib {
         w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
-          w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
+          w = A * wtc + B * wtc2 -  u*Ax * wc2; wtc2 = wtc; wtc = w;
         }
         if (m) {
           R = c[0].Sv(k[0]);
@@ -353,7 +353,7 @@ namespace GeographicLib {
           w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
-            w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
+            w = A * wts + B * wts2 -  u*Ax * ws2; wts2 = wts; wts = w;
           }
         }
       }
@@ -361,7 +361,7 @@ namespace GeographicLib {
         circ.SetCoeff(m, wc, ws);
       else {
         // Include the terms Sc[m] * P'[m,m](t) and  Ss[m] * P'[m,m](t)
-        wtc -= m * tu2 * wc; wts -= m * tu2 * ws;
+        wtc += m * tu * wc; wts += m * tu * ws;
         circ.SetCoeff(m, wc, ws, wrc, wrs, wtc, wts);
       }
     }

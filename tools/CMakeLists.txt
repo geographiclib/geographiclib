@@ -179,7 +179,7 @@ set_tests_properties (CartConvert1
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   # Check fix for single-cell cache bug found 2010-11-23
-  add_test (GeoidEval0 GeoidEval --input-string "0d1 0d1;0d4 0d4")
+  add_test (GeoidEval0 GeoidEval -n egm96-5 --input-string "0d1 0d1;0d4 0d4")
   set_tests_properties (GeoidEval0
     PROPERTIES PASS_REGULAR_EXPRESSION "^17\\.1602 .*
 17\\.1511 ")
@@ -189,11 +189,11 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
   # Test case from WMM2010_Report.pdf, Sec 1.5, pp 14-15:
   # t = 2012.5, lat = -80, lon = 240, h = 100e3
   add_test (MagneticField0
-    MagneticField -p 10 -r --input-string "2012.5 -80 240 100e3")
+    MagneticField -n wmm2010 -p 10 -r --input-string "2012.5 -80 240 100e3")
   add_test (MagneticField1
-    MagneticField -p 10 -r -t 2012.5 --input-string "-80 240 100e3")
+    MagneticField -n wmm2010 -p 10 -r -t 2012.5 --input-string "-80 240 100e3")
   add_test (MagneticField2
-    MagneticField -p 10 -r -c 2012.5 -80 100e3 --input-string "240")
+    MagneticField -n wmm2010 -p 10 -r -c 2012.5 -80 100e3 --input-string "240")
   set_tests_properties (MagneticField0
     PROPERTIES PASS_REGULAR_EXPRESSION
     " 5535\\.5249148687 14765\\.3703243050 -50625\\.9305478794 .*
@@ -207,3 +207,12 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
     " 5535\\.5249148687 14765\\.3703243050 -50625\\.9305478794 .*
 .* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
 endif (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
+
+if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
+  # Verify no overflow at poles with high degree model
+  add_test (Gravity0
+    Gravity -n egm2008 -p 6 --input-string "90 110 0")
+  set_tests_properties (Gravity0
+    PROPERTIES PASS_REGULAR_EXPRESSION
+    "-0\\.000146 0\\.000078 -9\\.832294 0\\.000078 -0\\.000109")
+endif (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)

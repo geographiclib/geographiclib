@@ -84,9 +84,9 @@ namespace GeographicLib {
           // r: dV/dr
           // theta: 1/r * dV/dtheta
           // lambda: 1/(r*u) * dV/dlambda
-          vrc =      - qs * (_wrc[m] + A * (cl * vrc + sl * vrs) + B * vrc2);
-          vtc = - _u * qs * (_wtc[m] + A * (cl * vtc + sl * vts) + B * vtc2);
-          vlc =   qs / _u * (          A * (cl * vlc + sl * vls) + B * vlc2);
+          vrc =    - qs * (_wrc[m] + A * (cl * vrc + sl * vrs) + B * vrc2);
+          vtc =      qs * (_wtc[m] + A * (cl * vtc + sl * vts) + B * vtc2);
+          vlc = qs / _u * (          A * (cl * vlc + sl * vls) + B * vlc2);
         }
       }
     }
