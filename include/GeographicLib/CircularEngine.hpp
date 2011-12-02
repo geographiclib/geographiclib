@@ -57,7 +57,7 @@ namespace GeographicLib {
     int _M;
     bool _gradp;
     unsigned _norm;
-    real _scale, _a, _r, _u, _t;
+    real _a, _r, _u, _t;
     std::vector<real> _wc, _ws, _wrc, _wrs, _wtc, _wts;
     real _q, _uq, _uq2;
 
@@ -75,11 +75,10 @@ namespace GeographicLib {
     friend class GravityCircle;  // Access to cossin
     friend class MagneticCircle; // Access to cossin
     CircularEngine(int M, bool gradp, unsigned norm,
-                   real scale, real a, real r, real u, real t)
+                   real a, real r, real u, real t)
       : _M(M)
       , _gradp(gradp)
       , _norm(norm)
-      , _scale(scale)
       , _a(a)
       , _r(r)
       , _u(u)

@@ -27,8 +27,9 @@ is the height above the ellipsoid in meters; this is optional and
 defaults to zero.  Alternatively, I<time> can be given on the command
 line as the argument to the B<-t> option, in which case it should not be
 included on the input lines.  Finally, the magnetic field can be
-computed at various points on a circle of latitude via the B<-c> option;
-in this case only the longitude should be given on the input lines.
+computed at various points on a circle of latitude (constant I<time>,
+I<lat>, and I<h>) via the B<-c> option; in this case only the longitude
+should be given on the input lines.
 
 The output consists of the following 7 items:
 
@@ -68,9 +69,10 @@ lines.
 
 =item B<-c>
 
-evaluate the field on a circle of latitude at I<time>, I<lat>, I<h>
-instead of reading these quantities from the input lines.  In this case,
-B<MagneticField> can calculate the field considerably quicker.
+evaluate the field on a circle of latitude given by I<time>, I<lat>,
+I<h> instead of reading these quantities from the input lines.  In this
+case, B<MagneticField> can calculate the field considerably more
+quickly.
 
 =item B<-r>
 

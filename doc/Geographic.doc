@@ -1664,9 +1664,10 @@ default to locate the datasets.  This is
 .
 consistent with the examples above.  This may be overridden at run-time
 by defining the GRAVITY_PATH or the GEOGRAPHIC_DATA environment
-variables; see GeographicLib::Geoid::DefaultGravityPath() for details.
-Finally, the path may be set using the optional second argument to the
-GeographicLib::GravityModel constructor or with the "-d" flag to
+variables; see GeographicLib::GravityModel::DefaultGravityPath() for
+details.  Finally, the path may be set using the optional second
+argument to the GeographicLib::GravityModel constructor or with the "-d"
+flag to
 <a href="Gravity.1.html">Gravity</a>.  Supplying the "-h" flag to
 <a href="Gravity.1.html">Gravity</a> reports the default path for
 gravity models for that utility.  The "-v" flag causes Gravity to report
@@ -2016,11 +2017,12 @@ default to locate the datasets.  This is
 .
 consistent with the examples above.  This may be overridden at run-time
 by defining the MAGNETIC_PATH  or the GEOGRAPHIC_DATA environment
-variables; see GeographicLib::Geoid::DefaultMagneticPath() for details.
-Finally, the path may be set using the optional second argument to the
-GeographicLib::MagneticModel constructor or with the "-d" flag to <a
-href="MagneticField.1.html">MagneticField</a>.  Supplying the "-h" flag
-to <a href="MagneticField.1.html">MagneticField</a> reports the default
+variables; see GeographicLib::MagneticModel::DefaultMagneticPath() for
+details.  Finally, the path may be set using the optional second
+argument to the GeographicLib::MagneticModel constructor or with the
+"-d" flag to <a href="MagneticField.1.html">MagneticField</a>.
+Supplying the "-h" flag to
+<a href="MagneticField.1.html">MagneticField</a> reports the default
 path for magnetic models for that utility.  The "-v" flag causes
 MagneticField to report the full path name of the data file it uses.
 

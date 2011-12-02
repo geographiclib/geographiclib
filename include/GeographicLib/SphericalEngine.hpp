@@ -40,14 +40,14 @@ namespace GeographicLib {
     typedef Math::real real;
     // A table of the square roots of integers
     static std::vector<real> root_;
-    friend class CircularEngine; // CircularEngine needs access to root_
+    friend class CircularEngine; // CircularEngine needs access to root_, scale_
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static const real scale_;
     // Move latitudes near the pole off the axis by this amount.
     static const real eps_;
     static const std::vector<real> Z_;
-    SphericalEngine();        // Disable constructor
+    SphericalEngine();          // Disable constructor
   public:
     /**
      * Supported normalizations for associated Legendre polynomials.
@@ -322,12 +322,13 @@ namespace GeographicLib {
      *
      * @param[in] N the maximume degree to be used in SphericalEngine.
      *
-     * Since this updates a static table, there's a possible race condition if
-     * this routine is called in a multi-threaded environment.  However, this
-     * routine does nothing if the table is already large enough.  So one way to
-     * avoid race conditions is to call this routine as program start up (when
-     * it's still single threaded), supplying the largest degree that your
-     * program will use.  E.g.,
+     * Typically, there's no need for an end-user to call this routine, because
+     * the constructors for SphericalEngine::coeff do so.  However, since this
+     * updates a static table, there's a possible race condition in a
+     * multi-threaded environment.  Because this routine does nothing if the
+     * table is already large enough, one way to avoid race conditions is to
+     * call this routine at program start up (when it's still single threaded),
+     * supplying the largest degree that your program will use.  E.g.,
      \code
   GeographicLib::SphericalEngine::RootTable(2190);
      \endcode
@@ -339,8 +340,8 @@ namespace GeographicLib {
      * Clear the static table of square roots and release the memory.  Call
      * this only when you are sure you no longer will be using SphericalEngine.
      * Your program will crash if you call SphericalEngine after calling this
-     * routine.  It's safest not to call this routine at all.  (The space used
-     * by the table is modest.)
+     * routine.  <b>It's safest not to call this routine at all.</b> (The space
+     * used by the table is modest.)
      **********************************************************************/
     static void ClearRootTable() {
       std::vector<real> temp(0);

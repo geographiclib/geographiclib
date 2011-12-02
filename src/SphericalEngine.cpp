@@ -120,8 +120,8 @@
  * Clenshaw recursion for <tt>Sc[m]</tt> reads\verbatim
     y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
 \endverbatim
- * where <tt>alpha'[k] = alpha[k]/t</tt>, <tt>beta'[k] = c'[k] = 0</tt>.
- * Thus\verbatim
+ * Substituting <tt>alpha'[k] = alpha[k]/t</tt>, <tt>beta'[k] = c'[k] = 0</tt>
+ * gives\verbatim
     y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] + alpha[k]/t * y[k+1]
 \endverbatim
  *
@@ -148,9 +148,9 @@ namespace GeographicLib {
 
   const Math::real SphericalEngine::scale_ =
     pow(real(numeric_limits<real>::radix),
-        -numeric_limits<real>::max_exponent/2);
+        -3 * numeric_limits<real>::max_exponent / 5);
   const Math::real SphericalEngine::eps_ =
-    Math::sq(numeric_limits<real>::epsilon());
+    numeric_limits<real>::epsilon() * sqrt(numeric_limits<real>::epsilon());
 
   const vector<Math::real> SphericalEngine::Z_(0);
   vector<Math::real> SphericalEngine::root_(0);
@@ -310,7 +310,7 @@ namespace GeographicLib {
     real
       q2 = Math::sq(q),
       tu2 = t / Math::sq(u);
-    CircularEngine circ(M, gradp, norm, scale_, a, r, u, t);
+    CircularEngine circ(M, gradp, norm, a, r, u, t);
     int k[L];
     for (int m = M; m >= 0; --m) {   // m = M .. 0
       // Initialize inner sum

@@ -15,36 +15,22 @@ B<Gravity> [ B<-n> I<name> ] [ B<-d> I<dir> ]
 
 =head1 DESCRIPTION
 
-B<Gravity> reads and positions on standard input and prints out the
-gravity field on standard output.
+B<Gravity> reads in positions on standard input and prints out the
+gravitational field on standard output.
 
 The input line is of the form I<lat> I<lon> I<h>.  I<lat> and I<lon> are
 the latitude and longitude expressed as decimal degrees or degrees,
 minutes, and seconds; see GeoConvert(1) for details.  I<h> is the height
 above the ellipsoid in meters; this quantity is optional and defaults to
 0.  Alternatively, the gravity field can be computed at various points
-on a circle of latitude via the B<-c> option; in this case only the
-longitude should be given on the input lines.
+on a circle of latitude (constant I<lat> and I<h>) via the B<-c> option;
+in this case only the longitude should be given on the input lines.  The
+quantities printed out are governed by the B<-G> (default), B<-H>, or
+B<-A> options.
 
-=over
-
-=item B<-G>
-
-computes gravity and the gravity disturbance.  The output consists of 5
-items I<gx> I<gy> I<gz> I<deltay> I<deltaz> (all in m/s^2).  (Note that
-I<deltax> = I<gx>.)
-
-=item B<-H>
-
-return the geoid height (meters).  In this case the I<h> should be zero.
-
-=item B<-A>
-
-computes the gravitational anomaly.  The output consists of 3 items
-I<Dg01> I<xi> I<eta>, where I<Dg01> is in mGal (1 mGal = 10^-5 m/s^2)
-and I<xi> and I<eta> are in arcseconds.
-
-=back
+All the supported gravity models use WGS84 as the reference ellipsoid
+I<a> = 6378137 m, I<f> = 1/298.257223563, I<omega> = 7292115e-11 rad/s,
+and I<GM> = 3986004.418e8 m^3/s^2.
 
 =head1 OPTIONS
 
@@ -62,26 +48,47 @@ L<MODELS|models>.
 
 =item B<-G>
 
-compute the acceleration due to gravity.
+compute the acceleration due to gravity (including the centrifugal
+acceleration due the the earth's rotation) B<g> and the gravity
+disturbance <delta> = B<g> - B<gamma>, where B<gamma> is the "normal"
+gravity due to the reference ellipsoid .  The output consists of 5 items
+I<gx> I<gy> I<gz> I<deltay> I<deltaz> (all in m/s^2), where the I<x>,
+I<y>, and I<z> components are in easterly, northerly, and up directions,
+respectively.  Note that I<deltax> = I<gx>, because I<gammax> = 0.
 
 =item B<-H>
 
-compute the height of the geoid abover the reference ellipsoid.
+compute the height of the geoid above the reference ellipsoid (in
+meters).  In this case the I<h> should be zero.  The results accurately
+match the results of the NGA's synthesis programs.  GeoidEval(1) can
+compute geoid heights much more quickly by interpolating on a grid of
+precomputed results; however the results from GeoidEval(1) are only
+accurate to a few millimeters.
 
 =item B<-A>
 
-compute the gravity anomaly.
+computes the gravitational anomaly.  The output consists of 3 items
+I<Dg01> I<xi> I<eta>, where I<Dg01> is in mGal (1 mGal = 10^-5 m/s^2)
+and I<xi> and I<eta> are in arcseconds.  The gravitational anomaly
+compares the gravitational field B<g> at I<P> with the normal gravity
+B<gamma> at I<Q> where the I<P> is vertically above I<Q> and the
+gravitational potential at I<P> equals the normal potential at I<Q>.
+I<Dg01> gives the difference in the magnitudes of these two vectors and
+I<xi> and I<eta> give the difference in their directions (as northerly
+and easterly components).  The calculation uses a spherical
+approximation to match the results of the NGA's synthesis programs.
 
 =item B<-c>
 
-evaluate the field on a circle of latitude at I<lat>, I<h> instead of
-reading these quantities from the input lines.  In this case, B<Gravity>
-can calculate the field considerably quicker.  If geoid heights are
-being computed (the B<-H> option), then I<h> must be zero.
+evaluate the field on a circle of latitude given by I<lat> and I<h>
+instead of reading these quantities from the input lines.  In this case,
+B<Gravity> can calculate the field considerably more quickly.  If geoid
+heights are being computed (the B<-H> option), then I<h> must be zero.
 
 =item B<-p>
 
-set the precision to I<prec> (default 5).
+set the precision to I<prec> (default 5).  Not sure how best to treat
+this.
 
 =item B<-v>
 
@@ -129,7 +136,7 @@ following models
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
     egm2008, earth gravity model 2008.  See
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
-    wgs2008, world geodetic system 1984.  For returns the gravity for
+    wgs2008, world geodetic system 1984.  This returns the gravity for
       the WGS84 ellipsoid.
 
 By default, the C<egm96> gravity model is used.  This may changed by
@@ -184,11 +191,10 @@ terminate; following lines will be converted.
 
 =head1 EXAMPLES
 
-The gravity field from EGM96 in Timbuktu on 2012-01-01
+The gravity field from EGM96 in Timbuktu
 
-    echo "16d46'33N" "3d00'34W" 300 | Gravity -p 9
-    => -0.000018463 -0.000008217 -9.783931398
-                    -0.000006866 -0.000229489
+    echo "16d46'33N" "3d00'34W" 300 | Gravity -p 7 -n egm96
+    => -0.0000186 -0.0000022 -9.7839489 -0.0000009 -0.0002470
 
 The first two numbers returned are the declination and inclination of
 the field.  The second line gives the annual change.

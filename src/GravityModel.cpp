@@ -28,7 +28,7 @@ RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
 #endif
 
 #if !defined(GRAVITY_DEFAULT_NAME)
-#  define GRAVITY_DEFAULT_NAME "egm2008"
+#  define GRAVITY_DEFAULT_NAME "egm96"
 #endif
 
 #if defined(_MSC_VER)
