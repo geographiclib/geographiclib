@@ -131,7 +131,7 @@ namespace GeographicLib {
      * @param[out] gammay the northerly component of the acceleration
      *   (m s<sup>-2</sup>).
      * @param[out] gammaz the upward component of the acceleration
-     *   (m s<sup>-2</sup>).  (This is usually negative.)
+     *   (m s<sup>-2</sup>); this is usually negative.
      * @return \e U the corresponding normal potential.
      *
      * Due to the axial symmetry of the ellipsoid, the result is independent of

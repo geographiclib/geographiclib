@@ -372,7 +372,7 @@ namespace GeographicLib {
           std::numeric_limits<IntT>::is_integer ==
           std::numeric_limits<ExtT>::is_integer) {
         // Data is compatible (aside from the issue of endian-ness).
-        str.read(reinterpret_cast<char *>(array), num * sizeof(IntT));
+        str.read(reinterpret_cast<char *>(array), num * sizeof(ExtT));
         if (!str.good())
           throw GeographicErr("Failure reading data");
         if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
@@ -386,7 +386,7 @@ namespace GeographicLib {
         int i = 0;                // index into output array
         while (k) {
           int num = (std::min)(k, bufsize);
-          str.read(reinterpret_cast<char *>(buffer), num * sizeof(IntT));
+          str.read(reinterpret_cast<char *>(buffer), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
           for (int j = 0; j < num; ++j)

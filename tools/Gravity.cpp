@@ -159,7 +159,7 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    prec = std::min(12, std::max(0, prec));
+    prec = std::min(16, std::max(0, prec));
     int retval = 0;
     try {
       const GravityModel g(model, dir);

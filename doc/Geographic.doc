@@ -3038,7 +3038,8 @@ number.)
        GeographicLib::SphericalHarmonic::SCHMIDT (the lower case names
        are retained but deprecated);
      - optimize the sum by using a static table of square roots which is
-       updated by GeographicLib::SphericalEngine::RootTable.
+       updated by GeographicLib::SphericalEngine::RootTable;
+     - avoid overflow for high degree models.
   - Magnetic software fixes:
      - fix documentation BUG in GeographicLib::MagneticModel::Circle;
      - make GeographicLib::MagneticModel constructor explicit;
