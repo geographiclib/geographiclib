@@ -178,7 +178,7 @@ namespace GeographicLib {
      *
      * In general there are multiple solutions and the result which maximizes
      * \e h is returned.  If there are still multiple solutions with different
-     * latitutes (applies only if \e Z = 0), then the solution with \e lat > 0
+     * latitudes (applies only if \e Z = 0), then the solution with \e lat > 0
      * is returned.  If there are still multiple solutions with different
      * longitudes (applies only if \e X = \e Y = 0) then \e lon = 0 is
      * returned.  The value of \e h returned satisfies \e h >= - \e a (1 - \e

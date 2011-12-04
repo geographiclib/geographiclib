@@ -61,7 +61,7 @@ namespace GeographicLib {
    * <br>
    * where \e K is the Gaussian curvature.
    *
-   * This result applies for any surface.  For an allipsoid of revolution,
+   * This result applies for any surface.  For an ellipsoid of revolution,
    * consider all geodesics whose end points are within a distance \e r of \e
    * C.  For a given \e r, the deviation is maximum when the latitude of \e C
    * is 45<sup>o</sup>, when endpoints are a distance \e r away, and when their

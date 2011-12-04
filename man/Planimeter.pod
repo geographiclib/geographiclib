@@ -16,11 +16,12 @@ B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-l> ] [ B<-e> I<a> I<f> ]
 Measure the area of a geodesic polygon.  Reads polygon vertices from
 standard input, one per line.  Vertices may be given as latitude and
 longitude, UTM/UPS, or MGRS coordinates, interpreted in the same way as
-GeoConvert(1).  (MGRS coordinates signify the center of the corresponing
-MGRS square.)  The end of input, a blank line, or a line which can't be
-interpreted as a vertex signals the end of one polygon and the start of
-the next.  For each polygon print a summary line with the number of
-points, the perimeter (in meters), and the area (in meters^2).
+GeoConvert(1).  (MGRS coordinates signify the center of the
+corresponding MGRS square.)  The end of input, a blank line, or a line
+which can't be interpreted as a vertex signals the end of one polygon
+and the start of the next.  For each polygon print a summary line with
+the number of points, the perimeter (in meters), and the area (in
+meters^2).
 
 By default, polygons traversed in a counter-clockwise direction return a
 positive area and those traversed in a clockwise direction return a
@@ -45,7 +46,7 @@ may include one or both poles.  There is no need to close the polygon.
 
 =item B<-r>
 
-toggle whether counter-clockwise traveral of the polygon returns a
+toggle whether counter-clockwise traversal of the polygon returns a
 positive (the default) or negative result.
 
 =item B<-s>

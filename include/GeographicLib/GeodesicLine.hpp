@@ -179,7 +179,7 @@ namespace GeographicLib {
 
     /**
      * Constructor for a geodesic line staring at latitude \e lat1, longitude
-     * \e lon1, and aziumuth \e azi1 (all in degrees).
+     * \e lon1, and azimuth \e azi1 (all in degrees).
      *
      * @param[in] g A Geodesic object used to compute the necessary information
      *   about the GeodesicLine.

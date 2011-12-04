@@ -98,7 +98,7 @@ file name of "-" stands for standard output.
 =head1 EXTENDED DOMAIN
 
 The exact transverse Mercator projection has a I<branch point> on the
-equator at longitudes (relative to I<lon0>) of +/- (1 - I<e>) 90, whre
+equator at longitudes (relative to I<lon0>) of +/- (1 - I<e>) 90, where
 I<e> is the eccentricity of the ellipsoid.  The standard convention for
 handling this branch point is to map positive (negative) latitudes into
 positive (negative) northings I<y>; i.e., a branch cut is placed on the

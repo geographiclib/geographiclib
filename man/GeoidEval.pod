@@ -23,7 +23,7 @@ ellipsoid in the specified directions).
 
 Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any
 of the formats accepted by GeoConvert(1).  (MGRS coordinates signify the
-I<center> of the corresponing MGRS square.)  If the B<-z> option is
+I<center> of the corresponding MGRS square.)  If the B<-z> option is
 specified then the specified zone is prepended to each line of input
 (which must be in UTM/UPS coordinates).  This allows a file with UTM
 eastings and northings in a single zone to be used as standard input.

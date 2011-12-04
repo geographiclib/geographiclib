@@ -46,7 +46,7 @@ namespace GeographicLib {
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e
    * azi2, and \e s12.  This is the \e inverse geodesic problem, whose solution
    * is given by Geodesic::Inverse.  Usually, the solution to the inverse
-   * problem is unique.  In cases where there are muliple solutions (all with
+   * problem is unique.  In cases where there are multiple solutions (all with
    * the same \e s12, of course), all the solutions can be easily generated
    * once a particular solution is provided.
    *

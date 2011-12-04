@@ -292,7 +292,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] deltaZ the \e Z component of the gravity disturbance
      *   (m s<sup>-2</sup>).
-     * @return \e T = \e W - \e U the disturbing potentional (also called the
+     * @return \e T = \e W - \e U the disturbing potential (also called the
      *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real T(real X, real Y, real Z,
@@ -300,12 +300,12 @@ namespace GeographicLib {
     { return InternalT(X, Y, Z, deltaX, deltaY, deltaZ, true, true); }
 
     /**
-     * Evaluate disturbing potentional in geocentric coordinates.
+     * Evaluate disturbing potential in geocentric coordinates.
      *
      * @param[in] X geocentric coordinate of point (meters).
      * @param[in] Y geocentric coordinate of point (meters).
      * @param[in] Z geocentric coordinate of point (meters).
-     * @return \e T = \e W - \e U the disturbing potentional (also called the
+     * @return \e T = \e W - \e U the disturbing potential (also called the
      *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real T(real X, real Y, real Z) const throw() {
@@ -359,7 +359,7 @@ namespace GeographicLib {
     /**
      * Create a GravityCircle object to allow the gravity field at many points
      * with constant \e lat and \e h and varying \e lon to be computed
-     * efficienty.
+     * efficiently.
      *
      * @param[in] lat latitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).

@@ -57,7 +57,7 @@ namespace GeographicLib {
    * TransverseMercator::Reverse functions.  The latitude of origin is taken to
    * be the equator.  There is no provision in this class for specifying a
    * false easting or false northing or a different latitude of origin.
-   * However these are can be simply included by the calling funtcion.  For
+   * However these are can be simply included by the calling function.  For
    * example, the UTMUPS class applies the false easting and false northing for
    * the UTM projections.  A more complicated example is the British National
    * Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">

@@ -16,7 +16,7 @@ B<CartConvert> [ B<-r> ] [ B<-l> I<lat0> I<lon0> I<h0> ] [ B<-e> I<a> I<f> ]
 Convert geodetic coordinates to either geocentric or local cartesian
 coordinates.  Geocentric coordinates have the origin at the center of
 the earth, with the I<z> axis going thru the north pole, and the I<x>
-axis thru I<latitidude> = 0, I<longitude> = 0.  By default, the
+axis thru I<latitude> = 0, I<longitude> = 0.  By default, the
 conversion is to geocentric coordinates.  Specifying B<-l> I<lat0>
 I<lon0> I<h0> causes a local coordinate system to be used with the
 origin at I<latitude> = I<lat0>, I<longitude> = I<lon0>, I<height> =

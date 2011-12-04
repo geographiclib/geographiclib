@@ -30,7 +30,7 @@ is used (I<a> = 6378137 m, I<f> = 1/298.257223563).
 I<longitude> using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See L<QUOTING|quoting> for how to
-quote the charachers ' and " when entering coordinates on the command
+quote the characters ' and " when entering coordinates on the command
 line.)  Various unicode characters (encoded with UTF-8) may also be used
 to denote degrees, minutes, and seconds, e.g., the degree, prime, and
 double prime symbols.  Alternatively, : (colon) may be used to separate
@@ -175,7 +175,7 @@ MGRS coordinates represent a square patch of the earth, thus C<38SMB4488>
 is in zone C<38N> with 444km E<lt>= I<easting> E<lt> 445km and 3688km E<lt>=
 I<northing> E<lt> 3689km.  Consistent with this representation,
 coordinates are I<truncated> (instead of I<rounded>) to the requested
-precision.  Similiarly, on input an MGRS coordinate represents the
+precision.  Similarly, on input an MGRS coordinate represents the
 I<center> of the square (C<38N 444500 3688500> in the example above).
 However, if the B<-n> option is given then the south-west corner of the
 square is returned instead (C<38N 444000 3688000> in the example above).
@@ -185,7 +185,7 @@ square is returned instead (C<38N 444000 3688000> in the example above).
 If the input is B<geographic>, B<GeoConvert> uses the standard rules of
 selecting UTM vs UPS and for assigning the UTM zone (with the Norway and
 Svalbard exceptions).  If the input is B<UTM/UPS>, or B<MGRS>, then the
-choice beteen UTM and UPS and the UTM zone mirrors the input.  The B<-z>
+choice between UTM and UPS and the UTM zone mirrors the input.  The B<-z>
 I<zone>, B<-s>, B<-t> options allow these rules to be overridden with
 I<zone> = 0 being used to indicate UPS.  For example, the point
 
@@ -274,7 +274,7 @@ L<http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>.
 
 =item B<UPS>
 
-Univeral Polar Stereographic,
+Universal Polar Stereographic,
 L<http://en.wikipedia.org/wiki/Universal_Polar_Stereographic>.
 
 =item B<MGRS>

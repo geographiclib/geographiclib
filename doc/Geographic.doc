@@ -304,7 +304,7 @@ Here are the steps to compile and install %GeographicLib:
   cd GeographicLib-1.16 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
-- By default %GeographlicLib will be installed under /usr/local.
+- By default %GeographicLib will be installed under /usr/local.
   You can change this with, for example \verbatim
   ./configure --prefix=/tmp/geographic \endverbatim
 - Compile and install the software with \verbatim
@@ -515,9 +515,9 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   instead of the previous three steps, insert \verbatim
   # Put in your top-level CMakeLists.txt
   find_package (GeographicLib 1.9 REQUIRED)
-  # In the top-level CMakeList.txt or wherever your code is compiled
+  # In the top-level CMakeLists.txt or wherever your code is compiled
   include_directories (${GeographicLib_INCLUDE_DIRS})
-  # In the CMakeList.txt where you define your executable targets
+  # In the CMakeLists.txt where you define your executable targets
   target_link_libraries (program1 ${GeographicLib_LIBRARIES})
   target_link_libraries (program2 ${GeographicLib_LIBRARIES})
   if (NOT WIN32)
@@ -623,7 +623,7 @@ be installed in a directory included in your PATH (e.g.,
 /usr/local/bin).  These programs are wrapper programs that invoke
 the underlying functionality provided by the library.
 
-The utlilities are
+The utilities are
  - <a href="GeoConvert.1.html">
    <b>GeoConvert</b></a>: convert geographic coordinates using
    GeographicLib::GeoCoords.
@@ -780,9 +780,9 @@ geoidinst for details.
 GeographicLib::GravityModel evaluates the earth's gravitational field
 using a particular gravity model.  Various member functions return the
 gravitational field, the gravity disturbance, the gravity anomaly, and
-the geoid height <a href="GravityField.1.html">GravityField</a> is a
-simple command line utility to provide access to this class.  If the
-field several points on a circle of latitude are sought then use
+the geoid height <a href="Gravity.1.html">Gravity</a> is a simple
+command line utility to provide access to this class.  If the field
+several points on a circle of latitude are sought then use
 GeographicLib::GravityModel::Circle to return a
 GeographicLib::GravityCircle object whose member functions performs the
 calculations efficiently.  (This is particularly important for high
@@ -1838,7 +1838,7 @@ GravityModel::GeoidHeight reproduces the results of the several NGA
 codes for harmonic synthesis with the following maximum discrepancies
  - egm84 1.1mm.  This is probably due to inconsistent parameters for the
    reference ellipsoid in the NGA code.  (In particular, the value of
-   mass constant excludes the atomsphere; however, it's not clear
+   mass constant excludes the atmosphere; however, it's not clear
    whether the other parameters have been correspondingly adjusted.)
    Note that geoid heights predicted by egm84 differ from those of more
    recent gravity models by about 1 meter.
@@ -2051,7 +2051,7 @@ keywords
      consists of a single model giving the magnetic field and its time
      variation at 2010.  IGRF11 consists of 23 models for 1900 thru 2010
      at 5 year intervals.  The time variation is given only for the last
-     model to allow extrapolation beyong 2010.  For dates prior to 2010,
+     model to allow extrapolation beyond 2010.  For dates prior to 2010,
      linear interpolation is used.
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
@@ -2093,7 +2093,7 @@ order.  The first 8 bytes of this file must match the ID given in
 NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
 coefficients.  The first NumModels of these model the magnetic field at
 Epoch + \e i * DeltaEpoch for 0 <= \e i < NumModels.  The last set of
-coeffecients model the rate of change of the magnetic field at Epoch +
+coefficients model the rate of change of the magnetic field at Epoch +
 (NumModels - 1) * DeltaEpoch.  The format for each set of coefficients
 is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
@@ -2154,7 +2154,7 @@ MaxTime         2015
 MinHeight       -1000
 MaxHeight       600000
 
-# The coefficicents are stored in a file obtained by appending ".cof" to
+# The coefficients are stored in a file obtained by appending ".cof" to
 # the name of this file.  The coefficients were obtained from IGRF11.COF
 # in the geomag70 distribution.
 ID              IGRF11-A
@@ -3081,7 +3081,7 @@ number.)
   - Changes in python interface:
     - FIX BUG in transcription of Geodesic::Inverse;
     - include setup.py for easy installation;
-    - python only distibution is available at
+    - python only distribution is available at
       http://pypi.python.org/pypi/geographiclib
   - Supply a minimal Qt qmake project file for library
     src/Geographic.pro.
@@ -3102,7 +3102,7 @@ number.)
     latitude in terms of conformal latitude in TransverseMercator,
     TransverseMercatorExact, and LambertConformalConic.
   - For most classes, get rid of const member variables so that the
-    default copy assigment works.
+    default copy assignment works.
   - Put GeographicLib::Math and GeographicLib::Accumulator in their own
     header files.
   - Remove unused "fast" GeographicLib::Accumulator method.
@@ -3383,7 +3383,7 @@ number.)
     - Introduce Math class for common mathematical functions (in
       Constants.hpp).
     - Use Math::real as the type for all real quantities.  By default this
-      is typedefed to double; and the library should be installed this
+      is typedef'ed to double; and the library should be installed this
       way.
     - Eliminate const reference members of AzimuthalEquidistant,
       CassiniSoldner and LocalCartesian so that they may be copied.

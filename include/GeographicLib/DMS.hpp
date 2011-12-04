@@ -111,7 +111,7 @@ namespace GeographicLib {
      * Convert a string in DMS to an angle.
      *
      * @param[in] dms string input.
-     * @param[out] ind a DMS::flag value signalling the presence of a
+     * @param[out] ind a DMS::flag value signaling the presence of a
      *   hemisphere indicator.
      * @return angle (degrees).
      *
@@ -308,7 +308,7 @@ namespace GeographicLib {
     }
 
     /**
-     * Split angle into degrees and mintues
+     * Split angle into degrees and minutes
      *
      * @param[in] ang angle (degrees)
      * @param[out] d degrees (an integer returned as a real)
@@ -319,7 +319,7 @@ namespace GeographicLib {
     }
 
     /**
-     * Split angle into degrees and mintues and seconds.
+     * Split angle into degrees and minutes and seconds.
      *
      * @param[in] ang angle (degrees)
      * @param[out] d degrees (an integer returned as a real)

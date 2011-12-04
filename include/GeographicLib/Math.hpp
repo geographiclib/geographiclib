@@ -50,8 +50,8 @@
  * \brief Namespace for %GeographicLib
  *
  * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addtion all the header files are included via %GeographicLib/filename.  This
- * minimizes the likelihood of conflicts with other packages.
+ * addtiion all the header files are included via %GeographicLib/filename.
+ * This minimizes the likelihood of conflicts with other packages.
  **********************************************************************/
 namespace GeographicLib {
 

@@ -55,8 +55,8 @@
  * \brief Namespace for %GeographicLib
  *
  * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addtion all the header files are included via %GeographicLib/filename.  This
- * minimizes the likelihood of conflicts with other packages.
+ * addition all the header files are included via %GeographicLib/filename.
+ * This minimizes the likelihood of conflicts with other packages.
  **********************************************************************/
 namespace GeographicLib {
 
@@ -155,7 +155,7 @@ namespace GeographicLib {
      *
      * This is about 2*pi*366.25 / (365.25*24*3600) rad s<sup>-1</sup>.  365.25
      * is the number of days in a Julian year and 365.35/366.25 converts from
-     * solar days to sideral days.  Using the number of days in a Gregorian
+     * solar days to sidereal days.  Using the number of days in a Gregorian
      * year (365.2425) results in a worse approximation (because the Gregorian
      * year includes the precession of the earth's axis).
      **********************************************************************/
@@ -163,7 +163,7 @@ namespace GeographicLib {
     { return T(7292115) / (T(1000000) * T(100000)); }
     /**
      * @tparam T the type of the returned value.
-     * @return the dynamtical form factor of the GRS80 ellipsoid,
+     * @return the dynamical form factor of the GRS80 ellipsoid,
      *   <i>J</i><sub>2</sub>.
      **********************************************************************/
     template<typename T> static inline T GRS80_J2() throw()

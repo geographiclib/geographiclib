@@ -120,7 +120,7 @@ namespace GeographicLib {
      * @param[in] dn
      * @return int dn(\e w)<sup>2</sup> \e dw (A+S 17.2.10).
      *
-     * Instead of specifying the ampltiude \e phi, we provide \e sn = sin(\e
+     * Instead of specifying the amplitude \e phi, we provide \e sn = sin(\e
      * phi), \e cn = cos(\e phi), \e dn = sqrt(1 - \e m sin<sup>2</sup>(\e
      * phi)).
      **********************************************************************/

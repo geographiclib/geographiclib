@@ -44,7 +44,7 @@ Changes between 1.14 (released 2011-09-30) and 1.13 versions:
   * Changes in python interface:
     + FIX BUG in transcription of Geodesic::Inverse;
     + include setup.py for easy installation;
-    + python only distibution is available at
+    + python only distribution is available at
       http://pypi.python.org/pypi/geographiclib
 
   * Supply a minimal Qt qmake project file for library
@@ -67,7 +67,7 @@ Changes between 1.13 (released 2011-08-13) and 1.12 versions:
     TransverseMercatorExact, and LambertConformalConic.
 
   * For most classes, get rid of const member variables so that the
-    default copy assigment works.
+    default copy assignment works.
 
   * Put Math and Accumulator in their own header files.
 
@@ -410,7 +410,7 @@ Changes between 2009-11 and 2009-10 versions:
       arguments do not alter the arguments when an exception is thrown.
     + Improve accuracy of GeographicLib::MGRS::Forward.
     + Include more information in some error messages.
-    + Improve accuracy of inverse hypobolic functions.
+    + Improve accuracy of inverse hyperbolic functions.
     + Fix the way GeographicLib::Math functions handle different
       precisions.
 
@@ -424,7 +424,7 @@ Changes between 2009-10 and 2009-09 versions:
     + Introduce Math class for common mathematical functions (in
       Constants.hpp).
     + Use Math::real as the type for all real quantities.  By default this
-      is typedefed to double; and the library should be installed this
+      is typedef'ed to double; and the library should be installed this
       way.
     + Eliminate const reference members of AzimuthalEquidistant,
       CassiniSoldner and LocalCartesian so that they may be copied.

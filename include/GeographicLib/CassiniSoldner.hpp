@@ -55,7 +55,7 @@ namespace GeographicLib {
    * solving the inverse geodesic problem for (\e lat, \e lon) and its twin
    * obtained by reflection in the meridional plane.  The scale is found by
    * determining where two neighboring geodesics intersecting the central
-   * meridan at \e lat1 and \e lat1 + \e dlat1 intersect and taking the ratio
+   * meridian at \e lat1 and \e lat1 + \e dlat1 intersect and taking the ratio
    * of the reduced lengths for the two geodesics between that point and,
    * respectively, (\e lat1, \e lon1) and (\e lat, \e lon).
    **********************************************************************/
@@ -101,7 +101,7 @@ namespace GeographicLib {
      *   By default this uses the WGS84 ellipsoid.
      *
      * This constructor makes an "uninitialized" object.  Call Reset to set the
-     * central latitude and longuitude, prior to calling Forward and Reverse.
+     * central latitude and longitude, prior to calling Forward and Reverse.
      **********************************************************************/
     explicit CassiniSoldner(const Geodesic& earth = Geodesic::WGS84) throw()
       : _earth(earth) {}

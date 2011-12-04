@@ -14,7 +14,7 @@
  *   - omega = longitude on auxiliary sphere
  *   - lambda = longitude
  *   - alpha = azimuth of great circle
- *   - sigma = arc length along greate circle
+ *   - sigma = arc length along great circle
  *   - s = distance
  *   - tau = scaled distance (= sigma at multiples of pi/2)
  * - at northwards equator crossing

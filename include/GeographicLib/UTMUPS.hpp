@@ -170,7 +170,7 @@ namespace GeographicLib {
      * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
      *
-     * The prefered zone for the result can be specified with \e setzone, see
+     * The preferred zone for the result can be specified with \e setzone, see
      * UTMUPS::StandardZone.  Throw error if the resulting easting or northing
      * is outside the allowed range (see Reverse), in which case the arguments
      * are unchanged.  This also returns meridian convergence \e gamma
@@ -192,7 +192,7 @@ namespace GeographicLib {
      * @param[out] lon longitude of point (degrees).
      * @param[out] gamma meridian convergence at point (degrees).
      * @param[out] k scale of projection at point.
-     * @param[in] mgrslimits if true enforce the stricted MGRS limits on the
+     * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
      *   coordinates (default = false).
      *
      * Throw error if easting or northing is outside the allowed range (see
@@ -244,7 +244,7 @@ namespace GeographicLib {
     /**
      * Decode a UTM/UPS zone string.
      *
-     * @param[in] zonestr string represention of zone and hemisphere.
+     * @param[in] zonestr string representation of zone and hemisphere.
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
      *
@@ -264,7 +264,7 @@ namespace GeographicLib {
      *
      * @param[out] zone the UTM zone (zero means UPS).
      * @param[out] northp hemisphere (true means north, false means south).
-     * @return string represention of zone and hemisphere.
+     * @return string representation of zone and hemisphere.
      *
      * \e zone must be in the range [UTMUPS::MINZONE, UTMUPS::MAXZONE] = [0,
      * 60] with \e zone = UTMUPS::UPS, 0, indicating UPS (but the resulting

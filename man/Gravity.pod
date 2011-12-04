@@ -55,7 +55,7 @@ components are in easterly, northerly, and up directions, respectively.
 
 =item B<-D>
 
-compute the gravity disturbance <delta> = B<g> - B<gamma>, where
+compute the gravity disturbance B<delta> = B<g> - B<gamma>, where
 B<gamma> is the "normal" gravity due to the reference ellipsoid .  The
 output consists of I<deltax> I<deltay> I<deltaz> (all in m/s^2), where
 the I<x>, I<y>, and I<z> components are in easterly, northerly, and up
@@ -78,7 +78,7 @@ approximation to match the results of the NGA's synthesis programs.
 =item B<-H>
 
 compute the height of the geoid above the reference ellipsoid (in
-meters).  In this case the I<h> should be zero.  The results accurately
+meters).  In this case, I<h> should be zero.  The results accurately
 match the results of the NGA's synthesis programs.  GeoidEval(1) can
 compute geoid heights much more quickly by interpolating on a grid of
 precomputed results; however the results from GeoidEval(1) are only
@@ -142,8 +142,8 @@ following models
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
     egm2008, earth gravity model 2008.  See
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
-    wgs2008, world geodetic system 1984.  This returns the gravity for
-      the WGS84 ellipsoid.
+    wgs2008, world geodetic system 1984.  This returns the normal
+      gravity for the WGS84 ellipsoid.
 
 By default, the C<egm96> gravity model is used.  This may changed by
 setting the environment variable C<GRAVITY_NAME> or with the B<-n>
@@ -165,7 +165,7 @@ L<http://geographiclib.sf.net/html/gravity.html#gravityinst>.
 
 =item B<GRAVITY_NAME>
 
-Override the compile-time default gravity name of C<wmm2010>.  The B<-h>
+Override the compile-time default gravity name of C<egm96>.  The B<-h>
 option reports the value of B<GRAVITY_NAME>, if defined, otherwise it
 reports the compile-time value.  If the B<-n> I<name> option is used,
 then I<name> takes precedence.
@@ -201,9 +201,6 @@ The gravity field from EGM96 in Timbuktu
 
     echo "16d46'33N" "3d00'34W" 300 | Gravity -p 7 -n egm96
     => -0.0000186 -0.0000022 -9.7839489
-
-The first two numbers returned are the declination and inclination of
-the field.  The second line gives the annual change.
 
 =head1 SEE ALSO
 

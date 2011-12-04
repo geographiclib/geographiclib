@@ -149,7 +149,7 @@ B<-a> flag does I<not> affect the full output given by the B<-f> flag
 
 =head1 ADDITIONAL QUANTITIES
 
-The B<-f> flag reports four addtional quantities.
+The B<-f> flag reports four additional quantities.
 
 The reduced length of the geodesic, I<m12>, is defined such that if the
 initial azimuth is perturbed by dI<azi1> (radians) then the second point

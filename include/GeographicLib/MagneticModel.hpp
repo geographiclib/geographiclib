@@ -153,7 +153,7 @@ namespace GeographicLib {
     /**
      * Create a MagneticCircle object to allow the geomagnetic field at many
      * points with constant \e lat, \e h, and \e t and varying \e lon to be
-     * computed efficienty.
+     * computed efficiently.
      *
      * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).

@@ -159,10 +159,10 @@ namespace GeographicLib {
      * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
      * discussion of the treatment of the branch cut.
      *
-     * The method will work for all ellipsoids used in terrestial geodesy.  The
-     * method cannot be applied directly to the case of a sphere (\e f = 0)
+     * The method will work for all ellipsoids used in terrestrial geodesy.
+     * The method cannot be applied directly to the case of a sphere (\e f = 0)
      * because some the constants characterizing this method diverge in that
-     * limit, and in practise, \e f should be larger than about numeric_limits<
+     * limit, and in practice, \e f should be larger than about numeric_limits<
      * real >::%epsilon().  However, TransverseMercator treats the sphere
      * exactly.  An exception is thrown if either axis of the ellipsoid or \e
      * k0 is not positive or if \e f <= 0.

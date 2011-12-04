@@ -130,7 +130,7 @@ namespace GeographicLib {
      * @param[in] prec precision relative to 100 km.
      * @param[out] mgrs MGRS string.
      *
-     * \e prec specifies the precision of the MSGRS string as follows:
+     * \e prec specifies the precision of the MGRS string as follows:
      * - prec = 0 (min), 100 km
      * - prec = 1, 10 km
      * - prec = 2, 1 km
@@ -158,7 +158,7 @@ namespace GeographicLib {
      * and of 1000 km as the minimum northing for southern hemisphere provide
      * at least 0.5 degree extension into standard UPS zones.  The upper ends
      * of the ranges for the UPS coordinates is dictated by requiring symmetry
-     * about the meridans 0E and 90E.
+     * about the meridians 0E and 90E.
      *
      * All allowed UTM and UPS coordinates may now be converted to legal MGRS
      * coordinates with the proviso that eastings and northings on the upper

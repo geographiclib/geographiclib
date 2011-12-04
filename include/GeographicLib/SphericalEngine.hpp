@@ -248,8 +248,8 @@ namespace GeographicLib {
        * @param[out] S The vector of sine coefficients.
        *
        * \e N and \e M are read as 4-byte ints.  \e C and \e S are resized to
-       * accommate all the coefficients (with the \e m = 0 coefficients for \e
-       * S excluded) and the data for these coefficients read as 8-byte
+       * accommodate all the coefficients (with the \e m = 0 coefficients for
+       * \e S excluded) and the data for these coefficients read as 8-byte
        * doubles.  The coefficients are stored in column major order.  The
        * bytes in the stream should use little-endian ordering.  IEEE floating
        * point is assumed for the coefficients.
@@ -263,7 +263,7 @@ namespace GeographicLib {
      *
      * @tparam gradp should the gradient be calculated.
      * @tparam norm the normalization for the associated Legendre polynomials.
-     * @tparam L the number of terms in the coefficents.
+     * @tparam L the number of terms in the coefficients.
      * @param[in] c an array of coeff objects.
      * @param[in] f array of coefficient multipliers.  f[0] should be 1.
      * @param[in] x the \e x component of the cartesian position.
@@ -286,7 +286,7 @@ namespace GeographicLib {
      *
      * Clenshaw summation is used which permits the evaluation of the sum
      * without the need to allocate temporary arrays.  Thus this function never
-     * throws an excpetion.
+     * throws an exception.
      **********************************************************************/
     template<bool gradp, normalization norm, int L>
       static Math::real Value(const coeff c[], const real f[],
@@ -298,7 +298,7 @@ namespace GeographicLib {
      *
      * @tparam gradp should the gradient be calculated.
      * @tparam norm the normalization for the associated Legendre polynomials.
-     * @tparam L the number of terms in the coefficents.
+     * @tparam L the number of terms in the coefficients.
      * @param[in] c an array of coeff objects.
      * @param[in] f array of coefficient multipliers.  f[0] should be 1.
      * @param[in] p the radius of the circle = sqrt(\e x<sup>2</sup> + \e
@@ -320,7 +320,7 @@ namespace GeographicLib {
      * Check that the static table of square roots is big enough and enlarge it
      * if necessary.
      *
-     * @param[in] N the maximume degree to be used in SphericalEngine.
+     * @param[in] N the maximum degree to be used in SphericalEngine.
      *
      * Typically, there's no need for an end-user to call this routine, because
      * the constructors for SphericalEngine::coeff do so.  However, since this

@@ -23,7 +23,7 @@ namespace GeographicLib {
    * constructors or Reset via
    * - latitude and longitude
    * - UTM or UPS coordinates
-   * - a string represention of these or an MGRS coordinate string
+   * - a string representation of these or an MGRS coordinate string
    *
    * The state consists of the latitude and longitude and the supplied UTM or
    * UPS coordinates (possibly derived from the MGRS coordinates).  If latitude
@@ -66,8 +66,8 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * The default contructor is equivalent to \e latitude = 90<sup>o</sup>, \e
-     * longitude = 0<sup>o</sup>.
+     * The default constructor is equivalent to \e latitude = 90<sup>o</sup>,
+     * \e longitude = 0<sup>o</sup>.
      **********************************************************************/
     GeoCoords() throw()
       // This is the N pole
@@ -121,7 +121,7 @@ namespace GeographicLib {
      * - 75W 40N
      * - E-75 -40S
      * .
-     * are all the same position.  The coodinates may be given in decimal
+     * are all the same position.  The coordinates may be given in decimal
      * degrees, degrees and decimal minutes, degrees, minutes, seconds, etc.
      * Use d, ', and " to make off the degrees, minutes and seconds.  Thus
      * - 40d30'30"
@@ -316,12 +316,12 @@ namespace GeographicLib {
     Math::real AltNorthing() const throw() { return _alt_northing; }
 
     /**
-     * @return meridian convergence (degrees) for altermate zone.
+     * @return meridian convergence (degrees) for alternate zone.
      **********************************************************************/
     Math::real AltConvergence() const throw() { return _alt_gamma; }
 
     /**
-     * @return scale for altermate zone.
+     * @return scale for alternate zone.
      **********************************************************************/
     Math::real AltScale() const throw() { return _alt_k; }
     ///@}
@@ -374,7 +374,7 @@ namespace GeographicLib {
      * This gives the coordinates of the enclosing grid square with size given
      * by the precision.  Thus 38N 444180 3684790 converted to a MGRS
      * coordinate at precision -2 (100m) is 38SMB441847 and not 38SMB442848.
-     * \e prec specifies the precision of the MSGRS string as follows:
+     * \e prec specifies the precision of the MGRS string as follows:
      * - prec = -5 (min), 100km
      * - prec = -4, 10km
      * - prec = -3, 1km

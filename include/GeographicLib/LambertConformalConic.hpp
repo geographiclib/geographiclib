@@ -29,9 +29,9 @@ namespace GeographicLib {
    * differences have been used to transform the expressions into ones which
    * may be evaluated accurately and that Newton's method is used to invert the
    * projection.  In this implementation, the projection correctly becomes the
-   * Mercator projection or the polar sterographic projection when the standard
-   * latitude is the equator or a pole.  The accuracy of the projections is
-   * about 10 nm.
+   * Mercator projection or the polar stereographic projection when the
+   * standard latitude is the equator or a pole.  The accuracy of the
+   * projections is about 10 nm.
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with

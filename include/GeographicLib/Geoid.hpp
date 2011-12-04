@@ -39,7 +39,7 @@ namespace GeographicLib {
    *
    * The geoids are defined in terms of spherical harmonics.  However in order
    * to provide a quick and flexible method of evaluating the geoid heights,
-   * this class evaluates the height by interpolation inot a grid of
+   * this class evaluates the height by interpolation into a grid of
    * precomputed values.
    *
    * See \ref geoid for details of how to install the data sets, the data
@@ -59,7 +59,7 @@ namespace GeographicLib {
    * reads the data set and because it maintains a single-cell cache.  If
    * multiple threads need to calculate geoid heights they should all construct
    * thread-local instantiations.  Alternatively, set the optional \e
-   * threadsafe parameter to true in the constuctor.  This causes the
+   * threadsafe parameter to true in the constructor.  This causes the
    * constructor to read all the data into memory and to turn off the
    * single-cell caching which results in a Geoid object which \e is thread
    * safe.
@@ -203,7 +203,7 @@ namespace GeographicLib {
      * parallels \e south and \e north and the meridians \e west and \e east.
      * \e east is always interpreted as being east of \e west, if necessary by
      * adding 360<sup>o</sup> to its value.  This may throw an error because of
-     * insufficent memory or because of an error reading the data from the
+     * insufficient memory or because of an error reading the data from the
      * file.  In this case, you can catch the error and either do nothing (you
      * will have no cache in this case) or try again with a smaller area.  \e
      * south and \e north should be in the range [-90, 90]; \e west and \e east
@@ -216,7 +216,7 @@ namespace GeographicLib {
      * Cache all the data.  On most computers, this is fast for data sets with
      * grid resolution of 5' or coarser.  For a 1' grid, the required RAM is
      * 450MB; a 2.5' grid needs 72MB; and a 5' grid needs 18MB.  This may throw
-     * an error because of insufficent memory or because of an error reading
+     * an error because of insufficient memory or because of an error reading
      * the data from the file.  In this case, you can catch the error and
      * either do nothing (you will have no cache in this case) or try using
      * Geoid::CacheArea on a specific area.  An exception is thrown if this
@@ -243,7 +243,7 @@ namespace GeographicLib {
      * @param[in] lon longitude of the point (degrees).
      * @return geoid height (meters).
      *
-     * The latitude should be in [-90, 90] and longitude should bein
+     * The latitude should be in [-90, 90] and longitude should be in
      * [-180,360].  This may throw an error because of an error reading data
      * from disk.  However, it will not throw if (\e lat, \e lon) is within a
      * successfully cached area.

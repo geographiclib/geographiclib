@@ -44,7 +44,7 @@ namespace GeographicLib {
       ALL                  = GravityModel::ALL,
     };
 
-    mask _caps;
+    unsigned _caps;
     real _a, _f, _lat, _h, _Z, _P, _invR, _cpsi, _spsi,
       _cphi, _sphi, _amodel, _GMmodel, _dzonal0,
       _corrmult, _gamma0, _gamma, _frot;
@@ -206,7 +206,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] deltaZ the \e Z component of the gravity disturbance
      *   (m s<sup>-2</sup>).
-     * @return \e T = \e W - \e U the disturbing potentional (also called the
+     * @return \e T = \e W - \e U the disturbing potential (also called the
      *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real T(real lon, real& deltaX, real& deltaY, real& deltaZ)
@@ -217,10 +217,10 @@ namespace GeographicLib {
     }
 
     /**
-     * Evaluate disturbing potentional in geocentric coordinates.
+     * Evaluate disturbing potential in geocentric coordinates.
      *
      * @param[in] lon the geographic longitude (degrees).
-     * @return \e T = \e W - \e U the disturbing potentional (also called the
+     * @return \e T = \e W - \e U the disturbing potential (also called the
      *   anomalous potential) (m<sup>2</sup> s<sup>-2</sup>).
      **********************************************************************/
     Math::real T(real lon) const throw() {
@@ -238,6 +238,7 @@ namespace GeographicLib {
      * @return true if the object has been initialized.
      **********************************************************************/
     bool Init() const throw() { return _a > 0; }
+
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the GravityModel object used in the
@@ -245,22 +246,39 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real MajorRadius() const throw()
     { return Init() ? _a : Math::NaN<real>(); }
+
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the GravityModel object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw()
     { return Init() ? _f : Math::NaN<real>(); }
+
     /**
      * @return the latitude of the circle (degrees).
      **********************************************************************/
     Math::real Latitude() const throw()
     { return Init() ? _lat : Math::NaN<real>(); }
+
     /**
      * @return the height of the circle (meters).
      **********************************************************************/
     Math::real Height() const throw()
     { return Init() ? _h : Math::NaN<real>(); }
+
+    /**
+     * @return \e caps the computational capabilities that this object was
+     *   constructed with.
+     **********************************************************************/
+    unsigned Capabilities() const throw() { return _caps; }
+
+    /**
+     * @param[in] testcaps a set of bitor'ed GeodesicLine::mask values.
+     * @return true if the GeodesicLine object has all these capabilities.
+     **********************************************************************/
+    bool Capabilities(unsigned testcaps) const throw() {
+      return (_caps & testcaps) == testcaps;
+    }
     ///@}
   };
 
