@@ -36,10 +36,10 @@ namespace GeographicLib {
    * models treat only the gravitational field exterior to the mass of the
    * earth.  When computing the field at points near (but above) the surface of
    * the earth a small correction can be applied to account for the mass of the
-   * atomsphere above the point in question; see \ref gravitymisc.  Determining
-   * the geoid height entails correcting for the mass of the earth above the
-   * geoid.  The egm96 and egm2008 include separate correction terms to account
-   * for this mass.
+   * atomsphere above the point in question; see \ref gravityatmos.
+   * Determining the geoid height entails correcting for the mass of the earth
+   * above the geoid.  The egm96 and egm2008 include separate correction terms
+   * to account for this mass.
    *
    * Definitions and terminology (from Heiskanen and Moritz, Sec 2-13):
    * - \e V = gravitational potential;
@@ -225,7 +225,10 @@ namespace GeographicLib {
      * @return \e N the height of the geoid above the ReferenceEllipsoid()
      *   (meters).
      *
-     * This calls NormalGravity::U for ReferenceEllipsoid().
+     * This calls NormalGravity::U for ReferenceEllipsoid().  Some
+     * approximations are made in computing the geoid height so that the
+     * results of the NGA codes are reproduced accurately.  Details are given
+     * in \ref gravitygeoid.
      **********************************************************************/
     Math::real GeoidHeight(real lat, real lon) const throw();
 
@@ -241,6 +244,10 @@ namespace GeographicLib {
      *  (degrees).
      * @param[out] eta the easterly component of the deflection of the vertical
      *  (degrees).
+     *
+     * The spherical approximation (see Heiskanen and Moritz, Sec 2-14) is used
+     * so that the results of the NGA codes are reproduced accurately.
+     * approximations used here.  Details are given in \ref gravitygeoid.
      **********************************************************************/
     void SphericalAnomaly(real lat, real lon, real h,
                           real& Dg01, real& xi, real& eta) const throw();
