@@ -519,11 +519,7 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   include_directories (${GeographicLib_INCLUDE_DIRS})
   # In the CMakeLists.txt where you define your executable targets
   target_link_libraries (program1 ${GeographicLib_LIBRARIES})
-  target_link_libraries (program2 ${GeographicLib_LIBRARIES})
-  if (NOT WIN32)
-    set_target_properties (program1 program2 PROPERTIES
-      INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${GeographicLib_LIBRARY_DIRS}")
-  endif (NOT WIN32) \endverbatim
+  target_link_libraries (program2 ${GeographicLib_LIBRARIES}) \endverbatim
   in your CMakeLists.txt files (as noted).  Assuming that you configured
   and installed GeographicLib with cmake (or that you used the binary
   installer for Windows), then the find_package command should find the
@@ -1059,6 +1055,12 @@ results.  The class also returns the gradient of the geoid.  This can be
 used to estimate the direction of a plumb line relative to the WGS84
 ellipsoid.
 
+The GeographicLib::GravityModel class calculates geoid heights using the
+underlying gravity model.  This is slower then GeographicLib::Geoid but
+considerably more accurate.  This class also can accurately compute all
+the components of the acceleration due to gravity (and hence the
+direction of plumb line).
+
 Go to
  - \ref geoidinst
  - \ref geoidformat
@@ -1547,12 +1549,17 @@ The supported models are
 
 See
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
-   Fransisco, 1967).
+   Francisco, 1967).
  .
-for more information.
+for more information.  Finally, I would like to thank Mathieu
+Peyr&eacute;ga for sharing EGM_Geoid_CalculatorClass from his Geo
+library with me.
 
  - \ref gravityinst
  - \ref gravityformat
+ - \ref gravitynga
+ - \ref gravitygeoid
+ - \ref gravityparallel
  - \ref gravitymisc
 
 \section gravityinst Installing the gravity models
@@ -1701,7 +1708,7 @@ keywords
      in meters<sup>3</sup>/seconds<sup>2</sup>.
    - <b>ReferenceMass</b> (required), the mass constant \e GM for the
      reference ellipsoid in meters<sup>3</sup>/seconds<sup>2</sup>.
-   - <b>AngularVelociy</b> (required), the angular velocity \e omega for
+   - <b>AngularVelocity</b> (required), the angular velocity \e omega for
      the model \e and the reference ellipsoid in rad
      seconds<sup>-1</sup>.
    - <b>Flattening</b>, the flattening of the reference ellipsoid; this
@@ -1807,11 +1814,169 @@ Flattening      1/298.257223563
 HeightOffset    -0.41
 
 # Gravitational and correction coefficients taken from
-# EGM2008_to2190_TideFree and Zeta-to-N_to2160_egm2008 from egm2008
-# distribution.
+# EGM2008_to2190_TideFree and Zeta-to-N_to2160_egm2008 from
+# the egm2008 distribution.
 ID              EGM2008A
 \endverbatim
 
+\section gravitynga Comments on the NGA harmonic synthesis code
+
+GeographicLib::GravityModel attempts to reproduce the results of NGA's
+harmonic synthesis code for EGM2008, hsynth_WGS84.f.  Listed here are
+issues that I encountered using the NGA code:
+ -# A compiler which allocates local variables on the stack produces an
+    executable with just returns NaNs.  The problem here is a missing
+    "save" statement in subroutine latf.
+ -# Because the model and references masses for egm2008 differ (by about
+    1 part in 10<sup>9</sup>), there should be a 1/\e r contribution to
+    the disturbing potential.  However, this term is set to zero in
+    hsynth_WGS84 (effectively altering the normal potential).  This
+    shifts the surface \e W = <i>U</i><sub>0</sub> outward by about 5 mm.
+    Note too that the reference ellipsoid is no longer a level surface of
+    the effective normal potential.
+ -# Subroutine radgrav computes the ellipsoidal coordinate \e beta
+    incorrectly.  This leads to small errors in the deflection of the
+    vertical, \e xi and \e eta, when the height above the ellipsoid, \e
+    h, is non-zero (about 1e-7 arcsec at \e h = 400 km).
+ -# There are several expressions which will return inaccurate results
+    do to cancellation.  For example, subroutine grs computes the
+    flattening using \e f = 1 - sqrt(1 - <i>e</i><sup>2</sup>).  Much
+    better is to use \e f = <i>e</i><sup>2</sup>/(1 + sqrt(1 -
+    <i>e</i><sup>2</sup>)).  The expressions for \e q and \e q' in grs
+    and radgrav suffer from similar problems.  The resulting errors are
+    tiny (about 50 pm in the geoid height); however, given that's
+    there's essentially no cost to using more accurate expressions, it's
+    preferable to do so.
+ -# hsynth_WGS84 returns an "undefined" value for \e xi and \e eta at the
+    poles.  Better would be to return the value obtained by taking the
+    limit \e lat -> +/- 90<sup>o</sup>.
+ .
+Issues 1&ndash;4 have been reported to the authors of hsynth_WGS84.
+Issue 1 is peculiar to Fortran and is not encountered in C++ code and
+GeographicLib::GravityModel corrects issues 3&ndash;5.  On issue 2,
+GeographicLib::GravityModel neglects the 1/\e r term in the disturbing
+potential in GeographicLib::GravityModel::GeoidHeight and
+GeographicLib::GravityModel::SphericalAnomaly in order to produce
+results which match NGA's for these quantities.  On the other hand,
+GeographicLib::GravityModel::Disturbance and
+GeographicLib::GravityModel::T <i>do</i> include this term.
+
+\section gravitygeoid Details of the geoid height and anomaly calculations
+
+Band-limited, minimum wavelength is 10' = 10NM = 18.65km.
+Tidal effects.
+
+The geoid height is computed using Bruns' formula which approximates the
+surface \e W = <i>U</i><sub>0</sub> by using \e T/\e gamma where \e T
+value of the disturbing potential on the ellipsoid (neglecting any 1/\e
+r term) and \e gamma is the magnitude of normal gravity on the
+ellipsoid.  (This is nearly equivalent to a single iteration of Newton's
+method.)  The error in using the formula is up to +/- 10 mm (s.d. 1.5
+mm).  The resulting height is adjusted by a constant offset and a
+"zeta-to-N" correction terms which account for the terrain elevation.
+The "zeta-to-N" correction accounts for the mass of the terrain above
+the ellipsoid.  The correction lies in the range [-5.05 m, 0.05 m],
+however for 99.9% of the earth's surface the correction is less than 10
+mm in magnitude.
+
+The terms computed by GeographicLib::GravityModel::Anomaly use the
+spherical approximation described by Heiskanen and Moritz, Sec. 2-14.
+
+\section gravityparallel Geoid heights on a multi-processor system
+
+The egm2008 model includes many terms (over 2 million spherical
+harmonics).  For that reason computations using this model may be slow;
+for example it takes about 78 ms to compute the geoid height at a single
+point.  There are two ways to speed up this computation:
+ - Use a GeographicLib::GravityCircle to compute the geoid height at
+   several points on a circle of latitude.  This reduces the cost per
+   point to about 92 us (a reduction by a factor of over 800).
+ - Compute the values on several circles of latitude in parallel.  One
+   of the simplest ways of doing this is with
+   <a href="http://openmp.org"> OpenMP</a>.  On an 8-processor system,
+   this can speed up the computation by another factor of 8.
+ .
+Both of these techniques are illustrated by the following code,
+GeoidHeightTable.cpp, which computes a table of egm2008 geoid heights on
+a 1 minute grid.  On an 8-processor Intel 2.66 GHz machine using OpenMP
+(-DHAVE_OPENMP=1), this takes about 40 minutes of elapsed time.
+(Without these optimizations, the computation would have taken about 200
+days!)  \code
+// Compute a table of egm2008 geoid heights on a 1' grid.
+
+#include <vector>
+#include <fstream>
+#include <algorithm>
+
+#if HAVE_OPENMP
+#include <omp.h>
+#endif
+
+#include <GeographicLib/GravityModel.hpp>
+#include <GeographicLib/GravityCircle.hpp>
+
+using namespace std;
+using namespace GeographicLib;
+
+int main() {
+  GravityModel g("egm2008");
+  int
+    ndeg = 60,                  // Number of intervals per degree
+    nlat = 180 * ndeg + 1,
+    nlon = 360 * ndeg;
+  double delta = 1 / double(ndeg); // Grid spacing
+
+  // Write results as floats in binary mode
+  ofstream file("egm2008-geoid.dat", ios::binary);
+
+  // Compute and store results for nbatch latitudes at a time
+  const int nbatch = 64;
+  vector< vector<float> > N(nbatch, vector<float>(nlon));
+
+  for (int ilat0 = 0; ilat0 < nlat; ilat0 += nbatch) { // Loop over batches
+    int nlat0 = min(nlat, ilat0 + nbatch);
+
+#if HAVE_OPENMP
+#pragma omp parallel for
+#endif
+    for (int ilat = ilat0; ilat < nlat0; ++ilat) { // Loop over latitudes
+      double lat = 90 - ilat * delta, h = 0;
+      GravityCircle c(g.Circle(lat, h, GravityModel::GEOID_HEIGHT));
+      for (int ilon = 0; ilon < nlon; ++ilon) { // Loop over longitudes
+        double lon = ilon * delta;
+        N[ilat - ilat0][ilon] = float(c.GeoidHeight(lon));
+      } // longitude loop
+    }   // latitude loop
+    for (int ilat = ilat0; ilat < nlat0; ++ilat)
+      file.write(reinterpret_cast<char *>(N[ilat - ilat0].data()),
+                 nlon * sizeof(float));
+
+  } // batch loop
+}
+\endcode
+OpenMP is supported by g++ and Visual Studio but these compilers need to
+be instructed to honor the OpenMP directives.  The easiest way of doing
+this is with cmake using this CMakeLists.txt: \verbatim
+cmake_minimum_required (VERSION 2.6)
+project (GeoidHeightTable)
+# GravityModel was introduced in GeographicLib 1.16.
+find_package (GeographicLib 1.16 REQUIRED)
+find_package (OpenMP)
+
+include_directories (${GeographicLib_INCLUDE_DIRS})
+add_executable (GeoidHeightTable GeoidHeightTable.cpp)
+target_link_libraries (GeoidHeightTable ${GeographicLib_LIBRARIES})
+
+if (OPENMP_FOUND OR OpenMP_FOUND)
+  set_target_properties (GeoidHeightTable PROPERTIES
+    COMPILE_FLAGS ${OpenMP_CXX_FLAGS}
+    COMPILE_DEFINITIONS HAVE_OPENMP=1)
+  if (NOT WIN32)
+    set_target_properties (GeoidHeightTable PROPERTIES
+      LINK_FLAGS ${OpenMP_CXX_FLAGS})
+  endif (NOT WIN32)
+endif (OPENMP_FOUND OR OpenMP_FOUND)
+\endverbatim
 \section gravitymisc Miscellaneous information about gravity models
 
 All of the supported models use WGS84 for the reference ellipsoid.  This
@@ -1835,46 +2000,19 @@ about 1 part in a million.  By way of comparison, buoyancy effects are
 about 100 times larger.)
 
 GravityModel::GeoidHeight reproduces the results of the several NGA
-codes for harmonic synthesis with the following maximum discrepancies
- - egm84 1.1mm.  This is probably due to inconsistent parameters for the
+codes for harmonic synthesis with the following maximum discrepancies:
+ - egm84 = 1.1mm.  This is probably due to inconsistent parameters for the
    reference ellipsoid in the NGA code.  (In particular, the value of
    mass constant excludes the atmosphere; however, it's not clear
    whether the other parameters have been correspondingly adjusted.)
    Note that geoid heights predicted by egm84 differ from those of more
    recent gravity models by about 1 meter.
- - egm96 23nm.
- - egm2008 78pm (after some clean up of the NGA code, hsynth_WGS84, the
-   maximum discrepancy becomes 23pm).  The egm2008 model is the only one
-   where the mass constant for the model differs from the WGS84 value
-   (by about 1 part in 10<sup>9</sup>).  By rights, the disturbing
-   potential should include a term which decays as 1/\e r.  However, NGA
-   sets this term to zero.  GeographicLib::GravityModel::GeoidHeight and
-   GeographicLib::GravityModel::Anomaly does likewise in order to match
-   the results of the NGA code.  On the other hand,
-   GeographicLib::GravityModel::Disturbance and
-   GeographicLib::GravityModel::T <i>do</i> include this effect.  Note
-   that hsynth_WGS84 has a bug in routine radgrav which causes incorrect
-   results to be given for \e xi and \e eta when the height above the
-   ellipsoid is non-zero.  (This bug has been reported to the authors of
-   hsynth_WGS84.)
-
-The geoid height is computed using Bruns' formula which approximates the
-surface \e T = 0 by using \e T/\e gamma where \e T value of the
-disturbing potential on the ellipsoid (neglecting any 1/\e r term) and
-\e gamma is the magnitude of normal gravity on the ellipsoid.  (This is
-nearly equivalent to a single iteration of Newton's method.)  The error
-in using the formula is up to +/- 10 mm (s.d. 1.5 mm).  The resulting
-height is adjusted by a constant offset and a "zeta-to-N" correction
-terms which account for the terrain elevation.  The "zeta-to-N"
-correction accounts for the mass of the terrain above the ellipsoid.
-The correction lies in the range [-5.05 m, 0.05 m], however for 99.9% of
-the earth's surface the correction is less than 10 mm in magnitude.
-
-The terms computed by GeographicLib::GravityModel::Anomaly use the
-spherical approximation described by Heiskanen and Moritz, Sec. 2-14.
-
-Finally, I would like to thank Mathieu Peyr&eacute;ga for sharing his
-EGM_Geoid_CalculatorClass with me.
+ - egm96 = 23nm.
+ - egm2008 = 78pm.  After some addressing the issues alluded to in issue
+   4 in \ref gravitynga, the maximum discrepancy becomes 23pm.
+   GravityModel::GeoidHeight intentionally ignores the 1/\e r term in
+   the disturbing potention in order to mimic the NGA code (this is
+   issue 2).
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.

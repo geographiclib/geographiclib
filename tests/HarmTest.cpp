@@ -77,8 +77,8 @@ int main() {
         real lat = lat0 - j*dl/2;
         for (int i = 0; i < 4000; ++i) {
           real lon = lon0 + i * dl/2;
-        //        std::cout << std::setprecision(3) << lon << " "
-        //                  << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
+        // std::cout << std::setprecision(3) << lon << " "
+        // << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
           h+=egm(lat,lon);
         }
       }
@@ -94,8 +94,8 @@ int main() {
       GravityCircle c = egm.Circle(lat, 0.0);
       for (int i = 0; i < 100000; ++i) {
         real lon = lon0 + i * dlon;
-        //        std::cout << std::setprecision(3) << lon << " "
-        //                  << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
+        // std::cout << std::setprecision(3) << lon << " "
+        // << std::setprecision(12) << egm.GeoidHeight(lat,lon) << "\n";
         std::cout << std::setprecision(3) << lon << " "
                   << std::setprecision(12) << c.GeoidHeight(lon) << "\n";
       }

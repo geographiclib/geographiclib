@@ -9,9 +9,11 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic mgrsforward.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib \
+//    -lGeographic mgrsforward.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic mgrsforward.cpp
+// mex -I../include -L../windows/Release \
+//    -lGeographic mgrsforward.cpp
 
 // $Id$
 

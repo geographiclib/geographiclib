@@ -28,6 +28,9 @@ specified then the specified zone is prepended to each line of input
 (which must be in UTM/UPS coordinates).  This allows a file with UTM
 eastings and northings in a single zone to be used as standard input.
 
+More accurate results for the geoid height are provided by Gravity(1).
+This utility can also compute the direction of gravity accurately.
+
 =head1 OPTIONS
 
 =over
@@ -278,7 +281,7 @@ Convert a point in UTM zone 18N from MSL to HAE
 
 =head1 SEE ALSO
 
-GeoConvert(1).
+GeoConvert(1), Gravity(1).
 
 =head1 AUTHOR
 

@@ -52,6 +52,7 @@ compute the acceleration due to gravity (including the centrifugal
 acceleration due the the earth's rotation) B<g>.  The output consists of
 I<gx> I<gy> I<gz> (all in m/s^2), where the I<x>, I<y>, and I<z>
 components are in easterly, northerly, and up directions, respectively.
+Usually I<gz> is negative.
 
 =item B<-D>
 
@@ -204,7 +205,7 @@ The gravity field from EGM96 in Timbuktu
 
 =head1 SEE ALSO
 
-GeoConvert(1).
+GeoConvert(1), GeoidEval(1).
 
 =head1 AUTHOR
 
@@ -212,5 +213,5 @@ B<Gravity> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<Gravity> was added to GeographicLib,
-L<http://geographiclib.sf.net>, in version 1.16.
+B<Gravity> was added to GeographicLib, L<http://geographiclib.sf.net>,
+in version 1.16.

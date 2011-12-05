@@ -32,10 +32,16 @@ namespace GeographicLib {
   /**
    * \brief Model of the earth's gravity field
    *
-   * Evaluate the earth's gravity field according to a model.
+   * Evaluate the earth's gravity field according to a model.  The supported
+   * models treat only the gravitational field exterior to the mass of the
+   * earth.  When computing the field at points near (but above) the surface of
+   * the earth a small correction can be applied to account for the mass of the
+   * atomsphere above the point in question; see \ref gravitymisc.  Determining
+   * the geoid height entails correcting for the mass of the earth above the
+   * geoid.  The egm96 and egm2008 include separate correction terms to account
+   * for this mass.
    *
-   * Definitions and terminology:
-   * See H+M, Sec 2-13.
+   * Definitions and terminology (from Heiskanen and Moritz, Sec 2-13):
    * - \e V = gravitational potential;
    * - \e Phi = rotational potential;
    * - \e W = \e V + \e Phi = \e T + \e U = total potential;
@@ -66,6 +72,10 @@ namespace GeographicLib {
    *
    * See \ref gravity for details of how to install the gravity model and the
    * data format.
+   *
+   * References:
+   * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
+   *   Francisco, 1967).
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GravityModel {
