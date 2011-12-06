@@ -16,28 +16,31 @@
 VERSION=1.16
 BRANCH=master
 TEMP=/scratch/geographic-dist
+GITSOURCE=file:///home/ckarney/afs/geographiclib
+DEVELSOURCE=$HOME/geographiclib
+WINDOWSBUILD=$HOME/afs/temp
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
 mkdir $TEMP/gita
 cd $TEMP/gita
-git clone -b $BRANCH file:///home/ckarney/afs/geographiclib
+git clone -b $BRANCH $GITSOURCE
 cd geographiclib
 sh autogen.sh
 mkdir BUILD
 cd BUILD
 cmake ..
 make dist
-cp GeographicLib-$VERSION.{zip,tar.gz} $HOME/geographiclib
-rsync -a --delete doc/html/ $HOME/geographiclib/doc/html/
+cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
+rsync -a --delete doc/html/ $DEVELSOURCE/doc/html/
 mkdir $TEMP/rel{a,b,c,x,y}
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
-rm -rf ~/afs/temp/GeographicLib-$VERSION
-tar xfpzC GeographicLib-$VERSION.tar.gz ~/afs/temp
-mkdir $HOME/afs/temp/GeographicLib-$VERSION/BUILD-vc10
-echo cmake -G \'Visual Studio 10\' -D ENABLE_MATLAB=ON .. > ~/afs/temp/GeographicLib-$VERSION/BUILD-vc10/config
+rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
+tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
+mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
+echo cmake -G \'Visual Studio 10\' -D ENABLE_MATLAB=ON .. > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/config
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10
@@ -85,7 +88,7 @@ find . -type f | sort -u > ../files.e
 
 mkdir $TEMP/gitb
 cd $TEMP/gitb
-git clone -b $BRANCH file:///home/ckarney/afs/geographiclib
+git clone -b $BRANCH $GITSOURCE
 cd geographiclib
 sh autogen.sh
 ./configure
