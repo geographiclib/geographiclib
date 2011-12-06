@@ -58,10 +58,10 @@ Usually I<gz> is negative.
 
 compute the gravity disturbance B<delta> = B<g> - B<gamma>, where
 B<gamma> is the "normal" gravity due to the reference ellipsoid .  The
-output consists of I<deltax> I<deltay> I<deltaz> (all in m/s^2), where
-the I<x>, I<y>, and I<z> components are in easterly, northerly, and up
-directions, respectively.  Note that I<deltax> = I<gx>, because
-I<gammax> = 0.
+output consists of I<deltax> I<deltay> I<deltaz> (all in mGal, 1 mGal =
+10^-5 m/s^2), where the I<x>, I<y>, and I<z> components are in easterly,
+northerly, and up directions, respectively.  Note that I<deltax> =
+I<gx>, because I<gammax> = 0.
 
 =item B<-A>
 
@@ -94,8 +94,9 @@ heights are being computed (the B<-H> option), then I<h> must be zero.
 
 =item B<-p>
 
-set the precision to I<prec> (default 5).  Not sure how best to treat
-this.
+set the output precision to I<prec>.  By default I<prec> is 5 for
+acceleration due to gravity, 3 for the gravity disturbance and anomaly,
+and 4 for the geoid height.
 
 =item B<-v>
 

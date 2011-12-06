@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
     std::string istring, ifile, ofile;
     real lat = 0, h = 0;
     bool circle = false;
-    int prec = 5;
+    int prec = -1;
     enum {
       GRAVITY = 0,
       DISTURBANCE = 1,
@@ -159,7 +159,19 @@ int main(int argc, char* argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    prec = std::min(16, std::max(0, prec));
+    switch (mode) {
+    case GRAVITY:
+      prec = std::min(16, prec < 0 ? 5 : prec);
+      break;
+    case DISTURBANCE:
+    case ANOMALY:
+      prec = std::min(14, prec < 0 ? 3 : prec);
+      break;
+    case UNDULATION:
+    default:
+      prec = std::min(12, prec < 0 ? 4 : prec);
+      break;
+    }
     int retval = 0;
     try {
       const GravityModel g(model, dir);
@@ -228,9 +240,10 @@ int main(int argc, char* argv[]) {
               } else {
                 g.Disturbance(lat, lon, h, deltax, deltay, deltaz);
               }
-              *output << Utility::str<real>(deltax, prec) << " "
-                      << Utility::str<real>(deltay, prec) << " "
-                      << Utility::str<real>(deltaz, prec) << "\n";
+              // Convert to mGals
+              *output << Utility::str<real>(deltax * 1e5, prec) << " "
+                      << Utility::str<real>(deltay * 1e5, prec) << " "
+                      << Utility::str<real>(deltaz * 1e5, prec) << "\n";
             }
             break;
           case ANOMALY:

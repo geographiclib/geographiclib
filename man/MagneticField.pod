@@ -90,8 +90,9 @@ the range for the model.
 
 =item B<-p>
 
-set the precision to I<prec> (default 1).  Fields are printed with
-precision with I<prec> decimal places; angles use I<prec> + 1 places.
+set the output precision to I<prec> (default 1).  Fields are printed
+with precision with I<prec> decimal places; angles use I<prec> + 1
+places.
 
 =item B<-v>
 

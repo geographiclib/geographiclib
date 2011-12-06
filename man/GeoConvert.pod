@@ -95,8 +95,8 @@ degrees clockwise from true north.
 
 =item B<-p>
 
-set the precision to I<prec> (default 0); I<prec> is the precision
-relative to 1 m.  See L<PRECISION|precision>.
+set the output precision to I<prec> (default 0); I<prec> is the
+precision relative to 1 m.  See L<PRECISION|precision>.
 
 =item B<-z>
 

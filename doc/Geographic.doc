@@ -19,14 +19,14 @@
 
 %GeographicLib is a small set of <a href="annotated.html">C++
 classes</a> for performing conversions between geographic, UTM, UPS,
-MGRS, geocentric, and local cartesian coordinates, for geoid height and
-geomagnetic field calculations, and for solving geodesic problems.  The
-emphasis is on returning accurate results with errors close to round-off
-(about 5&ndash;15 nm).  New accurate algorithms for \ref geodesic and
-\ref transversemercator have been developed for this library.  The
-functionality of the library can be accessed from user code, from the
-\ref utilities provided, or via the \ref other.  For a sample of the
-geodesic capabilities in Javascript, check out the
+MGRS, geocentric, and local cartesian coordinates, for gravity, geoid
+height and geomagnetic field calculations, and for solving geodesic
+problems.  The emphasis is on returning accurate results with errors
+close to round-off (about 5&ndash;15 nm).  New accurate algorithms for
+\ref geodesic and \ref transversemercator have been developed for this
+library.  The functionality of the library can be accessed from user
+code, from the \ref utilities provided, or via the \ref other.  For a
+sample of the geodesic capabilities in Javascript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -96,8 +96,8 @@ of geographic transformations.  It grew out of a desire to improve on
 the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
 present, %GeographicLib provides UTM, UPS, MGRS, geocentric, and local
-cartesian projections, geoid heights, geomagnetic field models, and classes
-for geodesic calculations.
+cartesian projections, gravity and geomagnetic models, and classes for
+geodesic calculations.
 
 The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
@@ -184,9 +184,10 @@ Then pick one of the first five options below:
   the maintainers of this code.
 .
 This section documents only how to install the software.  If you wish to
-use %GeographicLib to evaluate geoid heights or the earth's magnetic
-field, then you must also install the relevant data files.  See \ref
-geoidinst and \ref magneticinst for instructions.
+use %GeographicLib to evaluate geoid heights or the earth's
+gravitational or magnetic field, then you must also install the relevant
+data files.  See \ref geoidinst, \ref gravityinst, and \ref magneticinst
+for instructions.
 
 \section cmake Installation with cmake
 
@@ -845,10 +846,10 @@ compiler.  System dependencies come into
    which lack this data type the cmake and autoconf configuration
    methods should detect its absence and omit the code that depends on
    it.
- - GeographicLib::Geoid and GeographicLib::MagneticModel -- these class
-   uses system-dependent default paths for looking up the respective
-   datasets.  It also relies on getenv to find the value of the
-   environment variables.
+ - GeographicLib::Geoid, GeographicLib::GravityModel, and
+   GeographicLib::MagneticModel -- these class uses system-dependent
+   default paths for looking up the respective datasets.  It also relies
+   on getenv to find the value of the environment variables.
  - GeographicLib::Utility::readarray reads numerical data from binary
    files.  This assumes that floating point numbers are in IEEE format.
    It attempts to handled the "endianness" of the target platform using
@@ -1551,16 +1552,20 @@ See
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    Francisco, 1967).
  .
-for more information.  Finally, I would like to thank Mathieu
-Peyr&eacute;ga for sharing EGM_Geoid_CalculatorClass from his Geo
-library with me.
+for more information.
+
+<b>Acknowledgment</b> I would like to thank Mathieu Peyr&eacute;ga for
+sharing EGM_Geoid_CalculatorClass from his Geo library with me.  His
+implementation was the first I could easily understand and he and I
+together worked through some of the issues with overflow and underflow
+while performing high-degree spherical harmonic sums.
 
  - \ref gravityinst
  - \ref gravityformat
  - \ref gravitynga
  - \ref gravitygeoid
- - \ref gravityparallel
  - \ref gravityatmos
+ - \ref gravityparallel
 
 \section gravityinst Installing the gravity models
 
@@ -1740,7 +1745,7 @@ keywords
    typically how it is chosen).  <b>ModelMass</b> and
    <b>ReferenceMass</b> need not be the same and, indeed, they are
    slightly difference for egm2008.  As a result the disturbing
-   potential has a 1/\e r dependence at large distances.
+   potential \e T has a 1/\e r dependence at large distances.
  - keywords that store data that the user can query:
    - <b>Name</b>, the name of the model.
    - <b>Description</b>, a more descriptive name of the model.
@@ -1829,7 +1834,7 @@ issues that I encountered using the NGA code:
     "save" statement in subroutine latf.
  -# Because the model and references masses for egm2008 differ (by about
     1 part in 10<sup>9</sup>), there should be a 1/\e r contribution to
-    the disturbing potential.  However, this term is set to zero in
+    the disturbing potential \e T.  However, this term is set to zero in
     hsynth_WGS84 (effectively altering the normal potential).  This
     shifts the surface \e W = <i>U</i><sub>0</sub> outward by about 5 mm.
     Note too that the reference ellipsoid is no longer a level surface of
@@ -1854,8 +1859,8 @@ issues that I encountered using the NGA code:
 Issues 1&ndash;4 have been reported to the authors of hsynth_WGS84.
 Issue 1 is peculiar to Fortran and is not encountered in C++ code and
 GeographicLib::GravityModel corrects issues 3&ndash;5.  On issue 2,
-GeographicLib::GravityModel neglects the 1/\e r term in the disturbing
-potential in GeographicLib::GravityModel::GeoidHeight and
+GeographicLib::GravityModel neglects the 1/\e r term in \e T in
+GeographicLib::GravityModel::GeoidHeight and
 GeographicLib::GravityModel::SphericalAnomaly in order to produce
 results which match NGA's for these quantities.  On the other hand,
 GeographicLib::GravityModel::Disturbance and
@@ -1875,9 +1880,8 @@ to use a consistent definition of the geoid height.
    model was derived from using ellipsoidal harmonics of degree and
    order 2160.  Thus the minimum wavelength that is represented is
    360deg/2160 = 10' (i.e., about 10NM).
- - The 1/\e r term is omitted from the disturbing potential (this is
-   issue 2 in \ref gravitynga).  This moves the equipotential surface by
-   about 5mm.
+ - The 1/\e r term is omitted from the \e T (this is issue 2 in \ref
+   gravitynga).  This moves the equipotential surface by about 5mm.
  - The surface \e W = <i>U</i><sub>0</sub> is determined by Bruns'
    formula, which is roughly equivalent to a single iteration of
    Newton's method.  The RMS error is about 1.5mm with a maximum error
@@ -1896,8 +1900,9 @@ to use a consistent definition of the geoid height.
    to define the geoid (but this would only change the result by about
    2mm).
 
-GravityModel::GeoidHeight reproduces the results of the several NGA
-codes for harmonic synthesis with the following maximum discrepancies:
+GeographicLib::GravityModel::GeoidHeight reproduces the results of the
+several NGA codes for harmonic synthesis with the following maximum
+discrepancies:
  - egm84 = 1.1mm.  This is probably due to inconsistent parameters for the
    reference ellipsoid in the NGA code.  (In particular, the value of
    mass constant excludes the atmosphere; however, it's not clear
@@ -1908,8 +1913,61 @@ codes for harmonic synthesis with the following maximum discrepancies:
  - egm2008 = 78pm.  After some addressing the issues alluded to in issue
    4 in \ref gravitynga, the maximum discrepancy becomes 23pm.
 
-The terms computed by GeographicLib::GravityModel::Anomaly use the
-spherical approximation described by Heiskanen and Moritz, Sec. 2-14.
+The formula for the gravity anomaly vector involves computing gravity
+and normal gravity at two different points (with the displacement
+between the points unknown <i>ab initio</i>).  Since the gravity anomaly
+is already a small quantity it is sometimes acceptable to employ
+approximations that change the quantities by \e O(\e f).  The NGA code
+uses the spherical approximation described by Heiskanen and Moritz,
+Sec. 2-14 and GeographicLib::GravityModel::SphericalAnomaly uses the
+same approximation for compatibility.  In this approximation, the
+gravity disturbance <b>delta</b> = <b>grad</b> \e T is calculated.  Here,
+\e T once again excludes the 1/\e r term (this is issue 2 in \ref
+gravitynga and is consistent with the computation of the geoid height).
+Note that <b>delta</b> compares the gravity and the normal gravity at
+the \e same point; the gravity anomaly vector is then found by
+estimating the gradient of the normal gravity in the limit that the
+earth is spherically symmetric.  <b>delta</b> is expressed in spherical
+coordinates \e deltax, \e deltay, \e deltaz where, for example, \e
+deltaz is the \e radial component of <b>delta</b> (not the component
+perpendicular to the ellipsoid) and \e deltay is similarly slighty
+different from the northerly component.  Then the components of the
+anomaly are given by
+ - gravity anomaly, \e Dg01 = \e deltaz - 2\e T/\e R, where \e R
+   distance to the center of the earth;
+ - northerly component of the deflection of the vertical, \e xi = - \e
+   deltay/\e gamma, where \e gamma is the magnitude of the normal
+   potential.
+ - easterly component of the deflection of the vertical, \e eta = - \e
+   deltax/\e gamma.
+ .
+GeographicLib::NormalGravity computes the normal gravity accurately and
+avoids issue 3 of \ref gravitynga.  Thus while
+GeographicLib::GravityModel::SphericalAnomaly reproduces the results for
+\e xi and \e eta at \e h = 0, there is a slight discrepancy if \e h is
+non-zero.
+
+\section gravityatmos The effect of the mass of the atmosphere
+
+All of the supported models use WGS84 for the reference ellipsoid.  This
+has (see
+<a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf">
+TR8350.2</a>, table 3.1)
+ - \e a = 6378137 m
+ - \e f = 1/298.257223563
+ - \e omega = 7292115e-11 rad s<sup>-1</sup>
+ - \e GM = 3986004.418e8 m<sup>3</sup>/s<sup>2</sup>.
+ .
+The value of \e GM includes the mass of the atmosphere and so strictly
+only applies above the earth's atmosphere.  Near the surface of the
+earth, the value of \e g will be less (in absolute value) than the value
+predicted by these models by about \e delta \e g = (4 \e pi \e G/\e g)
+\e A = 8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the gravitational
+constant, \e g is the earth's gravity, and \e A is the pressure of the
+atmosphere.  At sea level we have \e A = 101.3 kPa, and \e delta \e g =
+8.7e-6 m s<sup>-2</sup>, approximately.  (In other words the effect is
+about 1 part in a million.  By way of comparison, buoyancy effects are
+about 100 times larger.)
 
 \section gravityparallel Geoid heights on a multi-processor system
 
@@ -2006,29 +2064,6 @@ if (OPENMP_FOUND OR OpenMP_FOUND)
   endif (NOT WIN32)
 endif (OPENMP_FOUND OR OpenMP_FOUND)
 \endverbatim
-
-\section gravityatmos The effect of the mass of the atmosphere
-
-All of the supported models use WGS84 for the reference ellipsoid.  This
-has (see
-<a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf">
-TR8350.2</a>, table 3.1)
- - \e a = 6378137 m
- - \e f = 1/298.257223563
- - \e omega = 7292115e-11 rad s<sup>-1</sup>
- - \e GM = 3986004.418e8 m<sup>3</sup>/s<sup>2</sup>.
- .
-The value of \e GM includes the mass of the atmosphere and so strictly
-only applies above the earth's atmosphere.  Near the surface of the
-earth, the value of \e g will be less (in absolute value) than the value
-predicted by these models by about \e delta \e g = (4 \e pi \e G/\e g)
-\e A = 8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the gravitational
-constant, \e g is the earth's gravity, and \e A is the pressure of the
-atmosphere.  At sea level we have \e A = 101.3 kPa, and \e delta \e g =
-8.7e-6 m s<sup>-2</sup>, approximately.  (In other words the effect is
-about 1 part in a million.  By way of comparison, buoyancy effects are
-about 100 times larger.)
-
 
 <center>
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
