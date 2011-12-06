@@ -98,7 +98,7 @@ namespace GeographicLib {
      * uninitialized object which can be later replaced by the
      * GravityModel::Circle.
      **********************************************************************/
-    GravityCircle() : _a(-1) {};
+    GravityCircle() : _a(-1) {}
 
     /** \name Compute the gravitational field
      **********************************************************************/

@@ -143,7 +143,7 @@ B<Gravity> computes the gravity field using one of the following models
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
     egm2008, earth gravity model 2008.  See
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
-    wgs2008, world geodetic system 1984.  This returns the normal
+    wgs84, world geodetic system 1984.  This returns the normal
       gravity for the WGS84 ellipsoid.
 
 These models approximate the gravitation field above the surface of the

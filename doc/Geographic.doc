@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.16
-\date 2011-11-08
+\date 2011-12-07
 
 \section abstract Abstract
 
@@ -1240,11 +1240,11 @@ consistent with the examples above.  This may be overridden at run-time
 by defining the GEOID_PATH or the GEOGRAPHIC_DATA environment variables;
 see GeographicLib::Geoid::DefaultGeoidPath() for details.  Finally, the
 path may be set using the optional second argument to the
-GeographicLib::Geoid constructor or with the "-d" flag to <a
-href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to <a
-href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path for
-that utility.  The "-v" flag causes GeoidEval to report the full path
-name of the data file it uses.
+GeographicLib::Geoid constructor or with the "-d" flag to
+<a href="GeoidEval.1.html">GeoidEval</a>.  Supplying the "-h" flag to
+<a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path
+for that utility.  The "-v" flag causes GeoidEval to report the full
+path name of the data file it uses.
 
 \section geoidformat The format of the geoid data files
 
@@ -1526,11 +1526,13 @@ Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
 Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 </center>
 
-%GeographicLib can compute the earth's gravitational field using a
-gravity model.  These models expand the gravitational potential of the
-earth as sum of spherical harmonics.  The models also specify a
-reference ellipsoid, relative to which geoid heights and gravity
-disturbances are measured.
+%GeographicLib can compute the earth's gravitational field with an
+earth gravity model using the GeographicLib::GravityModel and
+GeographicLib::GravityCircle classes and with the
+<a href="Gravity.1.html">Gravity</a> utility.  These models expand the
+gravitational potential of the earth as sum of spherical harmonics.  The
+models also specify a reference ellipsoid, relative to which geoid
+heights and gravity disturbances are measured.
 
 The supported models are
  - <b>egm84</b>, the
@@ -1554,12 +1556,13 @@ See
  .
 for more information.
 
-<b>Acknowledgment</b> I would like to thank Mathieu Peyr&eacute;ga for
+<b>Acknowledgment:</b> I would like to thank Mathieu Peyr&eacute;ga for
 sharing EGM_Geoid_CalculatorClass from his Geo library with me.  His
 implementation was the first I could easily understand and he and I
 together worked through some of the issues with overflow and underflow
-while performing high-degree spherical harmonic sums.
+the occur while performing high-degree spherical harmonic sums.
 
+Go to
  - \ref gravityinst
  - \ref gravityformat
  - \ref gravitynga
@@ -1668,9 +1671,9 @@ have the same contents).  To unpack these, run, for example
 and, again, the data will be placed in the "gravity" subdirectory.
 
 However you install the gravity models, all the datasets should be
-installed in the same directory.  GeographicLib::GravityModel and <a
-href="Gravity.1.html">Gravity</a> uses a compile time
-default to locate the datasets.  This is
+installed in the same directory.  GeographicLib::GravityModel and
+<a href="Gravity.1.html">Gravity</a> uses a compile time default to
+locate the datasets.  This is
 - /usr/local/share/GeographicLib/gravity, for non-Windows systems
 - C:/Documents and Settings/All Users/Application Data/GeographicLib/gravity,
   for Windows systems
@@ -2086,12 +2089,14 @@ Back to \ref geoid.  Forward to \ref magnetic.  Up to \ref contents.
 Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 
-%GeographicLib can compute the earth's magnetic field using a magnetic
-model.  These models expand the internal magnetic potential of the earth
-as sum of spherical harmonics.  They neglect magnetic fields due to the
-ionosphere, the magnetosphere, nearby magnetized materials, electric
-machinery, etc.  Users of GeographicLib::MagneticModel are advised to
-read the
+%GeographicLib can compute the earth's magnetic field by a magnetic
+model using the GeographicLib::MagneticModel and
+GeographicLib::MagneticCircle classes and with the
+<a href="MagneticField.1.html">MagneticField</a> utility.  These models
+expand the internal magnetic potential of the earth as sum of spherical
+harmonics.  They neglect magnetic fields due to the ionosphere, the
+magnetosphere, nearby magnetized materials, electric machinery, etc.
+Users of GeographicLib::MagneticModel are advised to read the
 <a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
 Warning"</a> this is provided with igrf11.  Although the advice is
 specific to igrf11, many of the comments apply to all magnetic field
@@ -2853,8 +2858,8 @@ of the transverse Mercator projection.  The
 utility provides an interface to these classes.
 
 References
- - L. Kr&uuml;ger, <a
-   href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
+ - L. Kr&uuml;ger,
+   <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
    the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute,
    New Series 52, 172 pp. (1912).
@@ -3215,19 +3220,18 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">1.16 (released 2011-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">1.16 (released 2011-12-07)</a>
   - Add calculation of the earth's gravitational field:
     - add GeographicLib::NormalGravity GeographicLib::GravityModel and
       GeographicLib::GravityCircle classes;
     - add command line utility
       <a href="Gravity.1.html">Gravity</a>;
     - add \ref gravity;
-    - add \ref gravityinst;
-    - add \ref gravityformat.
     - add GeographicLib::Constants::WGS84_GM(),
        GeographicLib::Constants::WGS84_omega(), and similarly for GRS80.
   - Build uses GEOGRAPHICLIB_DATA to specify a common parent directory
-     for geoid, gravity, and magnetic data.  Similarly,
+     for geoid, gravity, and magnetic data (instead of
+     GEOGRAPHICLIB_GEOID_PATH, etc.); similarly,
      <a href="GeoidEval.1.html">GeoidEval</a>,
      <a href="Gravity.1.html">Gravity</a>, and
      <a href="MagneticField.1.html">MagneticField</a>, look at the

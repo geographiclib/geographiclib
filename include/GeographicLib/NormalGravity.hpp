@@ -102,7 +102,7 @@ namespace GeographicLib {
      * uninitialized object and is used by GravityModel which constructs this
      * object before it has read in the parameters for the reference ellipsoid.
      **********************************************************************/
-    NormalGravity() : _a(-1) {};
+    NormalGravity() : _a(-1) {}
     ///@}
 
     /** \name Compute the gravity

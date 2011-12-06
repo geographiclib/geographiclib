@@ -1,9 +1,10 @@
 #! /bin/sh
-# tar.gz and zip distrib files copied to $HOME/geographiclib
-# html documentation rsync'ed to  $HOME/geographiclib/doc/html/
+#
+# tar.gz and zip distrib files copied to $DEVELSOURCE
+# html documentation rsync'ed to  $DEVELSOURCE/doc/html/
 #
 # Windows version ready to build in
-# $HOME/afs/temp/GeographicLib-$VERSION/BUILD-vc10
+# $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 # after compile + package installer is GeographicLib-$VERSION-win32.exe
 #
 # Built version ready to install in /usr/local in
@@ -12,6 +13,8 @@
 # python update
 # in gita/geographiclib/python ...
 # python setup.py sdist --formats gztar,zip upload
+#
+# $Id$
 
 VERSION=1.16
 BRANCH=master

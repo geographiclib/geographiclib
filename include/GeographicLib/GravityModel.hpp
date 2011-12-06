@@ -172,7 +172,8 @@ namespace GeographicLib {
      * from a file obtained by appending ".cof" to metadata file (so the
      * filename ends in ".egm.cof").
      **********************************************************************/
-    GravityModel(const std::string& name, const std::string& path = "");
+    explicit GravityModel(const std::string& name,
+                          const std::string& path = "");
     ///@}
 
     /** \name Compute gravity in geodetic coordinates
