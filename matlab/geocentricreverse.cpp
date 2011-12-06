@@ -9,10 +9,10 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib \
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
 //    -lGeographic geocentricreverse.cpp
 // [Windows]
-// mex -I../include -L../windows/Release \
+// mex -I../include -L../windows/Release
 //    -lGeographic geocentricreverse.cpp
 
 // $Id$

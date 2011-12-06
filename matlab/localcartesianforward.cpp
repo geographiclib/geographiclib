@@ -9,10 +9,10 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib \
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
 //    -lGeographic localcartesianforward.cpp
 // [Windows]
-// mex -I../include -L../windows/Release \
+// mex -I../include -L../windows/Release
 //    -lGeographic localcartesianforward.cpp
 
 // $Id$
