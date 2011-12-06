@@ -179,7 +179,7 @@ namespace GeographicLib {
      *   (m s<sup>-2</sup>).
      * @param[out] GammaZ the \e Z component of the acceleration due to gravity
      *   (m s<sup>-2</sup>).
-     * @return \e V<sub>0</sub> the gravitational potential
+     * @return <i>V</i><sub>0</sub> the gravitational potential
      *   (m<sup>2</sup> s<sup>-2</sup>).
      *
      * This function excludes the centrifugal acceleration and is appropriate

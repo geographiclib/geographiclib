@@ -38,18 +38,19 @@ namespace GeographicLib {
    * .
    * The projection of \e P is defined as follows: compute the
    * geodesic line from \e C to \e P; compute the reduced length \e m12,
-   * geodesic scale \e M12, and \e rho = \e m12/\e M12; finally \e x = \e rho
-   * sin \e azi1; \e y = \e rho cos \e azi1, where \e azi1 is the azimuth of
-   * the geodesic at \e C.  The Gnomonic::Forward and Gnomonic::Reverse methods
-   * also return the azimuth \e azi of the geodesic at \e P and reciprocal
-   * scale \e rk in the azimuthal direction.  The scale in the radial direction
-   * if 1/\e rk<sup>2</sup>.
+   * geodesic scale \e M12, and \e rho = <i>m12</i>/\e M12; finally \e x = \e
+   * rho sin \e azi1; \e y = \e rho cos \e azi1, where \e azi1 is the azimuth
+   * of the geodesic at \e C.  The Gnomonic::Forward and Gnomonic::Reverse
+   * methods also return the azimuth \e azi of the geodesic at \e P and
+   * reciprocal scale \e rk in the azimuthal direction.  The scale in the
+   * radial direction if 1/<i>rk</i><sup>2</sup>.
    *
-   * For a sphere, \e rho is reduces to \e a tan(\e s12/\e a), where \e s12 is
-   * the length of the geodesic from \e C to \e P, and the gnomonic projection
-   * has the property that all geodesics appear as straight lines.  For an
-   * ellipsoid, this property holds only for geodesics interesting the centers.
-   * However geodesic segments close to the center are approximately straight.
+   * For a sphere, \e rho is reduces to \e a tan(<i>s12</i>/<i>a</i>), where \e
+   * s12 is the length of the geodesic from \e C to \e P, and the gnomonic
+   * projection has the property that all geodesics appear as straight lines.
+   * For an ellipsoid, this property holds only for geodesics interesting the
+   * centers.  However geodesic segments close to the center are approximately
+   * straight.
    *
    * Consider a geodesic segment of length \e l.  Let \e T be the point on the
    * geodesic (extended if necessary) closest to \e C the center of the
@@ -57,7 +58,8 @@ namespace GeographicLib {
    * deviation (as a true distance) of the corresponding gnomonic line segment
    * (i.e., with the same end points) from the geodesic is<br>
    * <br>
-   * (\e K(T) - \e K(C)) \e l<sup>2</sup> \e t / 32.<br>
+   * (<i>K</i>(<i>T</i>) - <i>K</i>(<i>C</i>))
+   * <i>l</i><sup>2</sup> \e t / 32.<br>
    * <br>
    * where \e K is the Gaussian curvature.
    *
@@ -67,7 +69,7 @@ namespace GeographicLib {
    * is 45<sup>o</sup>, when endpoints are a distance \e r away, and when their
    * azimuths from the center are +/- 45<sup>o</sup> or +/- 135<sup>o</sup>.
    * To lowest order in \e r and the flattening \e f, the deviation is \e f
-   * (\e r/2\e a)<sup>3</sup> \e r.
+   * (<i>r</i>/2<i>a</i>)<sup>3</sup> \e r.
    *
    * The conversions all take place using a Geodesic object (by default
    * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
@@ -132,7 +134,7 @@ namespace GeographicLib {
      *
      * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e
      * lon should be in the range [-180, 360].  The scale of the projection is
-     * 1/\e rk<sup>2</sup> in the "radial" direction, \e azi clockwise from
+     * 1/<i>rk</i><sup>2</sup> in the "radial" direction, \e azi clockwise from
      * true north, and is 1/\e rk in the direction perpendicular to this.  If
      * the point lies "over the horizon", i.e., if \e rk <= 0, then NaNs are
      * returned for \e x and \e y (the correct values are returned for \e azi

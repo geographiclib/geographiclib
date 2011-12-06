@@ -150,10 +150,10 @@ namespace GeographicLib {
      *   - \e lat in [0, 90] and \e lon - \e lon0 in [0, 90]
      *   - \e lat in (-90, 0] and \e lon - \e lon0 in [90 (1 - \e e), 90]
      * - the union of
-     *   - \e x/(\e k0 \e a) in [0, inf) and
-     *     \e y/(\e k0 \e a) in [0, E(\e e^2)]
-     *   - \e x/(\e k0 \e a) in [K(1 - \e e^2) - E(1 - \e e^2), inf) and
-     *     \e y/(\e k0 \e a) in (-inf, 0]
+     *   - <i>x</i>/(\e k0 \e a) in [0, inf) and
+     *     <i>y</i>/(\e k0 \e a) in [0, E(<i>e</i><sup>2</sup>)]
+     *   - <i>x</i>/(\e k0 \e a) in [K(1 - <i>e</i><sup>2</sup>) - E(1 -
+     *     <i>e</i><sup>2</sup>), inf) and <i>y</i>/(\e k0 \e a) in (-inf, 0]
      * .
      * See Sec. 5 of
      * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full

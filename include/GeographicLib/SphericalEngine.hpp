@@ -301,17 +301,18 @@ namespace GeographicLib {
      * @tparam L the number of terms in the coefficients.
      * @param[in] c an array of coeff objects.
      * @param[in] f array of coefficient multipliers.  f[0] should be 1.
-     * @param[in] p the radius of the circle = sqrt(\e x<sup>2</sup> + \e
-     *   y<sup>2</sup>).
+     * @param[in] p the radius of the circle = sqrt(<i>x</i><sup>2</sup> + 
+     *   <i>y</i><sup>2</sup>).
      * @param[in] z the height of the circle.
      * @param[in] a the normalizing radius.
      * @result the CircularEngine object.
      *
      * If you need to evaluate the spherical harmonic sum for several points
-     * with constant \e f, \e p = sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>), \e
-     * z, and \e a, it is more efficient to construct call
-     * SphericalEngine::Circle to give a CircularEngine object and then call
-     * CircularEngine::operator()() with arguments \e x/\e p and \e y/\e p.
+     * with constant \e f, \e p = sqrt(<i>x</i><sup>2</sup> +
+     * <i>y</i><sup>2</sup>), \e z, and \e a, it is more efficient to construct
+     * call SphericalEngine::Circle to give a CircularEngine object and then
+     * call CircularEngine::operator()() with arguments <i>x</i>/\e p and
+     * <i>y</i>/\e p.
      **********************************************************************/
     template<bool gradp, SphericalEngine::normalization norm, int L>
       static CircularEngine Circle(const coeff c[], const real f[],

@@ -68,8 +68,8 @@ namespace GeographicLib {
    *   called the "reduced length" and is symmetric under interchange of the
    *   two points.  On a curved surface the reduced length obeys a symmetry
    *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e
-   *   s12.  The ratio \e s12/\e m12 gives the azimuthal scale for an azimuthal
-   *   equidistant projection.
+   *   s12.  The ratio <i>s12</i>/\e m12 gives the azimuthal scale for an
+   *   azimuthal equidistant projection.
    * - <i>geodesic scale</i>.  Consider a reference geodesic and a second
    *   geodesic parallel to this one at point 1 and separated by a small
    *   distance \e dt.  The separation of the two geodesics at point 2 is \e

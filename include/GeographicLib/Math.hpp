@@ -129,7 +129,7 @@ namespace GeographicLib {
 
      * @tparam T the type of the argument and the returned value.
      * @param[in] x
-     * @return \e x<sup>2</sup>.
+     * @return <i>x</i><sup>2</sup>.
      **********************************************************************/
     template<typename T> static inline T sq(T x) throw()
     { return x * x; }
@@ -141,7 +141,7 @@ namespace GeographicLib {
      * @tparam T the type of the arguments and the returned value.
      * @param[in] x
      * @param[in] y
-     * @return sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>).
+     * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      **********************************************************************/
     template<typename T> static inline T hypot(T x, T y) throw() {
       x = std::abs(x);

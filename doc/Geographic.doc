@@ -1934,25 +1934,25 @@ approximations that change the quantities by \e O(\e f).  The NGA code
 uses the spherical approximation described by Heiskanen and Moritz,
 Sec. 2-14 and GeographicLib::GravityModel::SphericalAnomaly uses the
 same approximation for compatibility.  In this approximation, the
-gravity disturbance <b>delta</b> = <b>grad</b> \e T is calculated.  Here,
-\e T once again excludes the 1/\e r term (this is issue 2 in \ref
+gravity disturbance <b>delta</b> = <b>grad</b> \e T is calculated.
+Here, \e T once again excludes the 1/\e r term (this is issue 2 in \ref
 gravitynga and is consistent with the computation of the geoid height).
 Note that <b>delta</b> compares the gravity and the normal gravity at
 the \e same point; the gravity anomaly vector is then found by
 estimating the gradient of the normal gravity in the limit that the
-earth is spherically symmetric.  <b>delta</b> is expressed in spherical
-coordinates \e deltax, \e deltay, \e deltaz where, for example, \e
-deltaz is the \e radial component of <b>delta</b> (not the component
-perpendicular to the ellipsoid) and \e deltay is similarly slightly
-different from the northerly component.  Then the components of the
-anomaly are given by
- - gravity anomaly, \e Dg01 = \e deltaz - 2\e T/\e R, where \e R
+earth is spherically symmetric.  <b>delta</b> is expressed in \e
+spherical coordinates as \e deltax, \e deltay, \e deltaz where, for
+example, \e deltaz is the \e radial component of <b>delta</b> (not the
+component perpendicular to the ellipsoid) and \e deltay is similarly
+slightly different from the usual northerly component.  The components
+of the anomaly are then given by
+ - gravity anomaly, \e Dg01 = \e deltaz - 2<i>T</i>/\e R, where \e R
    distance to the center of the earth;
- - northerly component of the deflection of the vertical, \e xi = - \e
-   deltay/\e gamma, where \e gamma is the magnitude of the normal
-   potential.
- - easterly component of the deflection of the vertical, \e eta = - \e
-   deltax/\e gamma.
+ - northerly component of the deflection of the vertical, \e xi = -
+   <i>deltay</i>/\e gamma, where \e gamma is the magnitude of the normal
+   gravity;
+ - easterly component of the deflection of the vertical, \e eta = -
+   <i>deltax</i>/\e gamma.
  .
 GeographicLib::NormalGravity computes the normal gravity accurately and
 avoids issue 3 of \ref gravitynga.  Thus while
@@ -1974,13 +1974,13 @@ TR8350.2</a>, table 3.1)
 The value of \e GM includes the mass of the atmosphere and so strictly
 only applies above the earth's atmosphere.  Near the surface of the
 earth, the value of \e g will be less (in absolute value) than the value
-predicted by these models by about \e delta \e g = (4 \e pi \e G/\e g)
-\e A = 8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the gravitational
-constant, \e g is the earth's gravity, and \e A is the pressure of the
-atmosphere.  At sea level we have \e A = 101.3 kPa, and \e delta \e g =
-8.7e-6 m s<sup>-2</sup>, approximately.  (In other words the effect is
-about 1 part in a million.  By way of comparison, buoyancy effects are
-about 100 times larger.)
+predicted by these models by about \e delta \e g = (4 \e pi
+<i>G</i>/\e g) \e A = 8.552e-11 \e A m<sup>2</sup>/kg, where \e G is the
+gravitational constant, \e g is the earth's gravity, and \e A is the
+pressure of the atmosphere.  At sea level we have \e A = 101.3 kPa, and
+\e delta \e g = 8.7e-6 m s<sup>-2</sup>, approximately.  (In other words
+the effect is about 1 part in a million.  By way of comparison, buoyancy
+effects are about 100 times larger.)
 
 \section gravityparallel Geoid heights on a multi-processor system
 
@@ -2455,7 +2455,7 @@ in [0<sup>o</sup>, 180<sup>o</sup>] and \e azi2 in [0<sup>o</sup>,
 180<sup>o</sup>].
 
 The direct calculation uses an expansion of the geodesic equations
-accurate to \e f<sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
+accurate to <i>f</i><sup>30</sup> (approximately 1 part in 10<sup>50</sup>)
 and is computed with with
 <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s
 bfloats and fpprec set to 100 (so the errors in the data are probably
@@ -2520,26 +2520,26 @@ obtained using the Maxima code, <a href="geod.mac">geod.mac</a>.
 
 In the expansions below, we have
  - \e alpha is the azimuth
- - \e alpha<sub>0</sub> is the azimuth at the equator crossing
+ - <i>alpha</i><sub>0</sub> is the azimuth at the equator crossing
  - \e lambda is the longitude measured from the equator crossing
  - \e omega is the spherical longitude
  - \e sigma is the spherical arc length
  - \e a is the equatorial radius
  - \e b is the polar semi-axis
  - \e f is the flattening
- - \e e<sup>2</sup> = \e f (2 - \e f)
- - \e e'<sup>2</sup> = \e e<sup>2</sup>/(1 - \e e<sup>2</sup>)
- - \e k<sup>2</sup> = \e e'<sup>2</sup> cos<sup>2</sup> \e alpha<sub>0</sub>
-   = 4 \e eps / (1 - \e eps)<sup>2</sup>
+ - <i>e</i><sup>2</sup> = \e f (2 - \e f)
+ - <i>e'</i><sup>2</sup> = <i>e</i><sup>2</sup>/(1 - <i>e</i><sup>2</sup>)
+ - <i>k</i><sup>2</sup> = <i>e'</i><sup>2</sup> cos<sup>2</sup>
+   <i>alpha</i><sub>0</sub> = 4 \e eps / (1 - \e eps)<sup>2</sup>
  - \e n = \e f / (2 - \e f)
- - \e c<sup>2</sup> = \e a<sup>2</sup>/2 +
-   \e b<sup>2</sup>/2 (tanh<sup>-1</sup> \e e)/\e e
- - \e ep2 = \e e'<sup>2</sup>
- - \e k2 = \e k<sup>2</sup>
+ - <i>c</i><sup>2</sup> = <i>a</i><sup>2</sup>/2 +
+   <i>b</i><sup>2</sup>/2 (tanh<sup>-1</sup> \e e)/\e e
+ - \e ep2 = <i>e'</i><sup>2</sup>
+ - \e k2 = <i>k</i><sup>2</sup>
 
 The formula for distance is
 
-&nbsp; &nbsp; \e s/\e b = \e I1(\e sigma)
+&nbsp; &nbsp; <i>s</i>/\e b = \e I1(\e sigma)
 
 where
 
@@ -2590,7 +2590,7 @@ C1[9] = - 715/589824 * eps^9;
 C1[10] = - 2431/2621440 * eps^10;
 \endverbatim
 
-The function \e tau(\e sigma) = \e s/(\e b \e A1) = \e sigma + \e B1(\e
+The function \e tau(\e sigma) = <i>s</i>/(\e b \e A1) = \e sigma + \e B1(\e
 sigma) may be inverted by series reversion giving
 
 &nbsp; &nbsp; \e sigma(\e tau) =
@@ -2633,15 +2633,15 @@ C1'[10] = + 9303339907/2972712960 * eps^10;
 
 The reduced length is given by
 
-&nbsp; &nbsp; \e m/\e b =
-sqrt(1 + \e k<sup>2</sup> sin<sup>2</sup>\e sigma<sub>2</sub>)
-cos \e sigma<sub>1</sub> sin \e sigma<sub>2</sub><br>
+&nbsp; &nbsp; <i>m</i>/\e b =
+sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup><i>sigma</i><sub>2</sub>)
+cos <i>sigma</i><sub>1</sub> sin <i>sigma</i><sub>2</sub><br>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
-sqrt(1 + \e k<sup>2</sup> sin<sup>2</sup>\e sigma<sub>1</sub>)
-sin \e sigma<sub>1</sub> cos \e sigma<sub>2</sub><br>
+sqrt(1 + <i>k</i><sup>2</sup> sin<sup>2</sup><i>sigma</i><sub>1</sub>)
+sin <i>sigma</i><sub>1</sub> cos <i>sigma</i><sub>2</sub><br>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; -
-cos \e sigma<sub>1</sub>  cos \e sigma<sub>2</sub>
-(\e J(\e sigma<sub>2</sub>) - \e J(\e sigma<sub>1</sub>))
+cos <i>sigma</i><sub>1</sub>  cos <i>sigma</i><sub>2</sub>
+(\e J(<i>sigma</i><sub>2</sub>) - \e J(<i>sigma</i><sub>1</sub>))
 
 where
 
@@ -2695,7 +2695,7 @@ C2[10] = + 46189/2621440 * eps^10;
 The longitude is given in terms of the spherical longitude by
 
 &nbsp; &nbsp;
-\e lambda = \e omega - \e f sin \e alpha<sub>0</sub> \e I3(\e sigma)
+\e lambda = \e omega - \e f sin <i>alpha</i><sub>0</sub> \e I3(\e sigma)
 
 where
 
@@ -2771,8 +2771,9 @@ Sec. 15 of
 in terms of \e S,
 
 &nbsp; &nbsp;
-\e S = \e c<sup>2</sup> \e alpha + \e e<sup>2</sup> \e a<sup>2</sup>
-cos \e alpha<sub>0</sub> sin \e alpha<sub>0</sub> \e I4(\e sigma)
+\e S = <i>c</i><sup>2</sup> \e alpha + <i>e</i><sup>2</sup>
+<i>a</i><sup>2</sup> cos <i>alpha</i><sub>0</sub> sin
+<i>alpha</i><sub>0</sub> \e I4(\e sigma)
 
 where
 
@@ -3128,29 +3129,31 @@ described in Appendix B of
 The problems encountered near the center of the ellipsoid are:
  - There's a potential division by zero in the definition of \e s. The
    equations are easily reformulated to avoid this problem.
- - \e t<sup>3</sup> may be negative.  This is OK; we just take the real root.
+ - <i>t</i><sup>3</sup> may be negative.  This is OK; we just take the
+   real root.
  - The solution for \e t may be complex.  However this leads to 3 real roots
-   for \e u/\e r.  It's then just a matter of picking the one that computes
+   for <i>u</i>/\e r.  It's then just a matter of picking the one that computes
    the geodetic result which minimizes |\e h| and which avoids large
    round-off errors.
  - Some of the equations result in a large loss of accuracy due to
-   subtracting nearly equal quantities.  E.g., \e k= sqrt(\e u + \e v + \e
-   w<sup>2</sup>) - \e w is inaccurate if \e u + \e v is small; we can fix
-   this by writing \e k = (\e u + \e v)/(sqrt(\e u + \e v + \e w<sup>2</sup>)
-   + \e w).
+   subtracting nearly equal quantities.  E.g., \e k= sqrt(\e u + \e v +
+   <i>w</i><sup>2</sup>) - \e w is inaccurate if \e u + \e v is small;
+   we can fix this by writing \e k = (\e u + \e v)/(sqrt(\e u + \e v +
+   <i>w</i><sup>2</sup>) + \e w).
 
 The error is computed as follows.  Write a version of
 Geocentric::WGS84.Forward which uses long doubles (including using long
-doubles for the WGS84 parameters).  Generate random (long double) geodetic
-coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
+doubles for the WGS84 parameters).  Generate random (long double)
+geodetic coordinates (\e lat0, \e lon0, \e h0) and use the "long double"
 WGS84.Forward to obtain the corresponding (long double) geocentric
-coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that \e h0 >= - \e
-a (1 - \e e<sup>2</sup>) / sqrt(1 - \e e<sup>2</sup> sin<sup>2</sup>\e
-lat0), which ensures that (\e lat0, \e lon0, \e h0) is the principal
-geodetic inverse of (\e x0, \e y0, \e z0).]  Because the forward calculation
-is numerically stable and because long doubles (on Linux systems using g++)
-provide 11 bits additional accuracy (about 3.3 decimal digits), we regard
-this set of test data as exact.
+coordinates (\e x0, \e y0, \e z0).  [We restrict \e h0 so that
+\e h0 >= - \e a (1 - <i>e</i><sup>2</sup>) / sqrt(1 -
+<i>e</i><sup>2</sup> sin<sup>2</sup>\e lat0), which ensures that (\e
+lat0, \e lon0, \e h0) is the principal geodetic inverse of (\e x0, \e
+y0, \e z0).]  Because the forward calculation is numerically stable and
+because long doubles (on Linux systems using g++) provide 11 bits
+additional accuracy (about 3.3 decimal digits), we regard this set of
+test data as exact.
 
 Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
@@ -3159,18 +3162,18 @@ surface of the ellipsoid and define \e err = hypot(\e ds, \e h1 - \e h0).
 For |\e h0| < 5000 km, we have \e err < 7 nm.
 
 This methodology is not very useful very far from the globe, because the
-absolute errors in the approximate geodetic height become large, or within
-50 km of the center of the earth, because of errors in computing the
-approximate geodetic latitude.  To illustrate the second issue, the maximum
-value of \e err for \e h0 < 0 is about 80 mm.  The error is maximum close to
-the circle given by geocentric coordinates satisfying hypot(\e x, \e y) = \e
-a \e e<sup>2</sup> (= 42.7 km), \e z = 0.  (This is the center of meridional
-curvature for \e lat = 0.)  The geodetic latitude for these points is \e lat
-= 0.  However, if we move 1 nm towards the center of the earth, the geodetic
-latitude becomes 0.04", a distance of 1.4 m from the equator.  If, instead,
-we move 1 nm up, the geodetic latitude becomes 7.45", a distance of 229 m
-from the equator.  In light of this, Reverse does quite well in this
-vicinity.
+absolute errors in the approximate geodetic height become large, or
+within 50 km of the center of the earth, because of errors in computing
+the approximate geodetic latitude.  To illustrate the second issue, the
+maximum value of \e err for \e h0 < 0 is about 80 mm.  The error is
+maximum close to the circle given by geocentric coordinates satisfying
+hypot(\e x, \e y) = \e a <i>e</i><sup>2</sup> (= 42.7 km), \e z = 0.
+(This is the center of meridional curvature for \e lat = 0.)  The
+geodetic latitude for these points is \e lat = 0.  However, if we move 1
+nm towards the center of the earth, the geodetic latitude becomes 0.04",
+a distance of 1.4 m from the equator.  If, instead, we move 1 nm up, the
+geodetic latitude becomes 7.45", a distance of 229 m from the equator.
+In light of this, Reverse does quite well in this vicinity.
 
 To obtain a practical measure of the error for the general case we define
 - <i>err</i><sub>h</sub> = |\e h1 - \e h0| / max(1, \e h0 / \e a)

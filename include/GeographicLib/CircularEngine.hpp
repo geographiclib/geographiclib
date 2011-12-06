@@ -129,8 +129,8 @@ namespace GeographicLib {
      * @param[in] sinlon the sine of the longitude.
      * @return \e V the value of the sum.
      *
-     * The arguments must satisfy \e coslon<sup>2</sup> + \e sinlon<sup>2</sup>
-     * = 1.
+     * The arguments must satisfy <i>coslon</i><sup>2</sup> +
+     * <i>sinlon</i><sup>2</sup> = 1.
      **********************************************************************/
     Math::real operator()(real coslon, real sinlon) const throw() {
       real dummy;
@@ -163,8 +163,8 @@ namespace GeographicLib {
      * The gradients will only be computed if the CircularEngine object was
      * created with this capability (e.g., via \e gradp = true in
      * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be
-     * touched.  The arguments must satisfy \e coslon<sup>2</sup> + \e
-     * sinlon<sup>2</sup> = 1.
+     * touched.  The arguments must satisfy <i>coslon</i><sup>2</sup> +
+     * <i>sinlon</i><sup>2</sup> = 1.
      **********************************************************************/
     Math::real operator()(real coslon, real sinlon,
                           real& gradx, real& grady, real& gradz) const throw() {

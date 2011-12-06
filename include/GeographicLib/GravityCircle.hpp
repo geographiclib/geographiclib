@@ -140,6 +140,10 @@ namespace GeographicLib {
      * @param[in] lon the geographic longitude (degrees).
      * @return \e N the height of the geoid above the reference ellipsoid
      *   (meters).
+     *
+     * Some approximations are made in computing the geoid height so that the
+     * results of the NGA codes are reproduced accurately.  Details are given
+     * in \ref gravitygeoid.
      **********************************************************************/
     Math::real GeoidHeight(real lon) const throw();
 
@@ -153,6 +157,10 @@ namespace GeographicLib {
      *  (degrees).
      * @param[out] eta the easterly component of the deflection of the vertical
      *  (degrees).
+     *
+     * The spherical approximation (see Heiskanen and Moritz, Sec 2-14) is used
+     * so that the results of the NGA codes are reproduced accurately.
+     * approximations used here.  Details are given in \ref gravitygeoid.
      **********************************************************************/
     void SphericalAnomaly(real lon, real& Dg01, real& xi, real& eta)
       const throw();

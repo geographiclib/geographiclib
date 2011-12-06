@@ -269,10 +269,11 @@ namespace GeographicLib {
      * SphericalHarmonic::operator()() exchanges the order of the sums in the
      * definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m =
      * 0..N)[sum(n = m..N)[...]].  SphericalHarmonic::Circle performs the inner
-     * sum over degree \e n (which entails about \e N<sup>2</sup> operations).
-     * Calling CircularEngine::operator()() on the returned object performs the
-     * outer sum over the order \e m (about \e N operations).  This routine may
-     * throw a bad_alloc exception in the CircularEngine constructor.
+     * sum over degree \e n (which entails about <i>N</i><sup>2</sup>
+     * operations).  Calling CircularEngine::operator()() on the returned
+     * object performs the outer sum over the order \e m (about \e N
+     * operations).  This routine may throw a bad_alloc exception in the
+     * CircularEngine constructor.
      *
      * Here's an example of computing the spherical sum at a sequence of
      * longitudes without using a CircularEngine object
@@ -290,7 +291,7 @@ namespace GeographicLib {
   }
      \endcode
      * Here is the same calculation done using a CircularEngine object.  This
-     * will be about \e N/2 times faster.
+     * will be about <i>N</i>/2 times faster.
      \code
   SphericalHarmonic h(...);     // Create the SphericalHarmonic object
   double r = 2, lat = 33, lon0 = 44, dlon = 0.01;

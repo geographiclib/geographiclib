@@ -19,10 +19,10 @@ namespace GeographicLib {
    * \brief Elliptic functions needed for TransverseMercatorExact
    *
    * This provides the subset of elliptic functions needed for
-   * TransverseMercatorExact.  For a given ellipsoid, only parameters \e
-   * e<sup>2</sup> and 1 - \e e<sup>2</sup> are needed.  This class taken the
-   * parameter as a constructor parameters and caches the values of the
-   * required complete integrals.  A method is provided for Jacobi elliptic
+   * TransverseMercatorExact.  For a given ellipsoid, only parameters
+   * <i>e</i><sup>2</sup> and 1 - <i>e</i><sup>2</sup> are needed.  This class
+   * taken the parameter as a constructor parameters and caches the values of
+   * the required complete integrals.  A method is provided for Jacobi elliptic
    * functions and for the incomplete elliptic integral of the second kind in
    * terms of the amplitude.
    *
