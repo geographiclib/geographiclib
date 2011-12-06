@@ -417,7 +417,9 @@ namespace GeographicLib {
     std::cout << lon << " " << c.GeoidHeight(lon) << "\n";
   }
      \endcode
-     * For high-degree models, this will be substantially faster.
+     * For high-degree models, this will be substantially faster.  See \ref
+     * gravityparallel for an example of using GravityCircle (together with
+     * OpenMP) to speed up the computation of geoid heights.
      **********************************************************************/
     GravityCircle Circle(real lat, real h, unsigned caps = ALL) const;
     ///@}

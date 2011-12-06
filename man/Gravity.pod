@@ -135,8 +135,7 @@ file name of "-" stands for standard output.
 
 =head1 MODELS
 
-B<Gravity> computes the gravity field using one of the
-following models
+B<Gravity> computes the gravity field using one of the following models
 
     egm84, earth gravity model 1984.  See
       http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
@@ -147,9 +146,10 @@ following models
     wgs2008, world geodetic system 1984.  This returns the normal
       gravity for the WGS84 ellipsoid.
 
-By default, the C<egm96> gravity model is used.  This may changed by
-setting the environment variable C<GRAVITY_NAME> or with the B<-n>
-option.
+These models approximate the gravitation field above the surface of the
+earth.  By default, the C<egm96> gravity model is used.  This may
+changed by setting the environment variable C<GRAVITY_NAME> or with the
+B<-n> option.
 
 The gravity models will be loaded from a directory specified at compile
 time.  This may changed by setting the environment variables
@@ -199,10 +199,10 @@ terminate; following lines will be converted.
 
 =head1 EXAMPLES
 
-The gravity field from EGM96 in Timbuktu
+The gravity field from EGM2008 at the top of Mount Everest.
 
-    echo "16d46'33N" "3d00'34W" 300 | Gravity -p 7 -n egm96
-    => -0.0000186 -0.0000022 -9.7839489
+    echo "27d59'17N" "86d55'32E" 8820 | Gravity -n egm2008
+    => -0.00001 0.00103 -9.76782
 
 =head1 SEE ALSO
 

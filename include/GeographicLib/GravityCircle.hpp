@@ -29,6 +29,9 @@ namespace GeographicLib {
    *
    * Use GravityModel::Circle to create a GravityCircle object.  (The
    * constructor for this class is private.)
+   *
+   * See \ref gravityparallel for an example of using GravityCircle (together
+   * with OpenMP) to speed up the computation of geoid heights.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GravityCircle {
