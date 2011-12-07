@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2011-11-08" "GeographicLib 1.15" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2011-12-06" "GeographicLib 1.16" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -142,11 +142,12 @@ Planimeter \-\- compute the area of geodesic polygons
 Measure the area of a geodesic polygon.  Reads polygon vertices from
 standard input, one per line.  Vertices may be given as latitude and
 longitude, \s-1UTM/UPS\s0, or \s-1MGRS\s0 coordinates, interpreted in the same way as
-\&\fIGeoConvert\fR\|(1).  (\s-1MGRS\s0 coordinates signify the center of the corresponing
-\&\s-1MGRS\s0 square.)  The end of input, a blank line, or a line which can't be
-interpreted as a vertex signals the end of one polygon and the start of
-the next.  For each polygon print a summary line with the number of
-points, the perimeter (in meters), and the area (in meters^2).
+\&\fIGeoConvert\fR\|(1).  (\s-1MGRS\s0 coordinates signify the center of the
+corresponding \s-1MGRS\s0 square.)  The end of input, a blank line, or a line
+which can't be interpreted as a vertex signals the end of one polygon
+and the start of the next.  For each polygon print a summary line with
+the number of points, the perimeter (in meters), and the area (in
+meters^2).
 .PP
 By default, polygons traversed in a counter-clockwise direction return a
 positive area and those traversed in a clockwise direction return a
@@ -168,7 +169,7 @@ may include one or both poles.  There is no need to close the polygon.
 .IX Header "OPTIONS"
 .IP "\fB\-r\fR" 4
 .IX Item "-r"
-toggle whether counter-clockwise traveral of the polygon returns a
+toggle whether counter-clockwise traversal of the polygon returns a
 positive (the default) or negative result.
 .IP "\fB\-s\fR" 4
 .IX Item "-s"

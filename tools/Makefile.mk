@@ -1,4 +1,4 @@
-# $Id: 7f55fc909eacd64eb5e86bc07a4035e61eed26a8 $
+# $Id: f2db3b0aaaea655853962095ae51f7c160a211ec $
 
 PROGRAMS = GeoConvert \
 	TransverseMercatorProj \
@@ -6,10 +6,13 @@ PROGRAMS = GeoConvert \
 	Geod \
 	GeodesicProj \
 	GeoidEval \
+	Gravity \
 	MagneticField \
 	Planimeter \
 	ConicProj
-SCRIPTS = geographiclib-get-geoids geographiclib-get-magnetic
+SCRIPTS = geographiclib-get-geoids \
+	geographiclib-get-gravity \
+	geographiclib-get-magnetic
 
 all: $(PROGRAMS) $(SCRIPTS)
 
@@ -24,7 +27,7 @@ LIBPATH = ../src
 # LIBPATH = $(PREFIX)/lib
 
 PREFIX = /usr/local
-GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
+GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
 CC = g++ -g
 CXXFLAGS = -g -Wall -Wextra -O3
@@ -46,37 +49,40 @@ CartConvert: CartConvert.o
 Geod: Geod.o
 GeodesicProj: GeodesicProj.o
 GeoidEval: GeoidEval.o
+Gravity: Gravity.o
 MagneticField: MagneticField.o
 Planimeter: Planimeter.o
 ConicProj: ConicProj.o
 
-GeoConvert.o: GeoConvert.usage Constants.hpp Math.hpp Config.h DMS.hpp \
-	GeoCoords.hpp UTMUPS.hpp
-TransverseMercatorProj.o: TransverseMercatorProj.usage Constants.hpp Math.hpp \
-	Config.h DMS.hpp EllipticFunction.hpp TransverseMercator.hpp \
-	TransverseMercatorExact.hpp
-CartConvert.o: CartConvert.usage Constants.hpp Math.hpp Config.h DMS.hpp \
-	Geocentric.hpp LocalCartesian.hpp
-Geod.o: Geod.usage Constants.hpp Math.hpp Config.h DMS.hpp Geodesic.hpp \
-	GeodesicLine.hpp
-GeodesicProj.o: GeodesicProj.usage AzimuthalEquidistant.hpp \
-	CassiniSoldner.hpp Gnomonic.hpp Constants.hpp Math.hpp Config.h \
-	DMS.hpp Geodesic.hpp GeodesicLine.hpp
-GeoidEval.o: GeoidEval.usage Constants.hpp Math.hpp Config.h DMS.hpp \
-	GeoCoords.hpp Geoid.hpp
-MagneticField.o: MagneticField.usage Constants.hpp Math.hpp Config.h DMS.hpp \
-	MagneticModel.hpp
-Planimeter.o: Planimeter.usage Constants.hpp Math.hpp Config.h DMS.hpp \
-	GeoCoords.hpp PolygonArea.hpp Geodesic.hpp Accumulator.hpp
-ConicProj.o: ConicProj.usage AlbersEqualArea.hpp \
-	Constants.hpp Math.hpp Config.h DMS.hpp LambertConformalConic.hpp
+CartConvert.o: CartConvert.usage Config.h Constants.hpp DMS.hpp Geocentric.hpp \
+	LocalCartesian.hpp Math.hpp Utility.hpp
+ConicProj.o: ConicProj.usage Config.h AlbersEqualArea.hpp Constants.hpp \
+	DMS.hpp LambertConformalConic.hpp Math.hpp Utility.hpp
+GeoConvert.o: GeoConvert.usage Config.h Constants.hpp DMS.hpp GeoCoords.hpp \
+	Math.hpp UTMUPS.hpp Utility.hpp
+Geod.o: Geod.usage Config.h Constants.hpp DMS.hpp Geodesic.hpp \
+	GeodesicLine.hpp Math.hpp Utility.hpp
+GeodesicProj.o: GeodesicProj.usage Config.h AzimuthalEquidistant.hpp \
+	CassiniSoldner.hpp Constants.hpp DMS.hpp Geodesic.hpp GeodesicLine.hpp \
+	Gnomonic.hpp Math.hpp Utility.hpp
+GeoidEval.o: GeoidEval.usage Config.h Constants.hpp DMS.hpp GeoCoords.hpp \
+	Geoid.hpp Math.hpp UTMUPS.hpp Utility.hpp
+Gravity.o: Gravity.usage Config.h CircularEngine.hpp Constants.hpp DMS.hpp \
+	Geocentric.hpp GravityCircle.hpp GravityModel.hpp Math.hpp \
+	NormalGravity.hpp SphericalEngine.hpp SphericalHarmonic.hpp \
+	SphericalHarmonic1.hpp Utility.hpp
+MagneticField.o: MagneticField.usage Config.h CircularEngine.hpp Constants.hpp \
+	DMS.hpp Geocentric.hpp MagneticCircle.hpp MagneticModel.hpp Math.hpp \
+	SphericalEngine.hpp SphericalHarmonic.hpp Utility.hpp
+Planimeter.o: Planimeter.usage Config.h Accumulator.hpp Constants.hpp DMS.hpp \
+	GeoCoords.hpp Geodesic.hpp Math.hpp PolygonArea.hpp UTMUPS.hpp \
+	Utility.hpp
+TransverseMercatorProj.o: TransverseMercatorProj.usage Config.h Constants.hpp \
+	DMS.hpp EllipticFunction.hpp Math.hpp TransverseMercator.hpp \
+	TransverseMercatorExact.hpp Utility.hpp
 
-geographiclib-get-geoids: geographiclib-get-geoids.sh
-	sed -e "s%@GEOID_DEFAULT_PATH@%$(GEOID_DEFAULT_PATH)%" $< > $@
-	chmod +x $@
-
-geographiclib-get-magnetic: geographiclib-get-magnetic.sh
-	sed -e "s%@MAGNETIC_DEFAULT_PATH@%$(MAGNETIC_DEFAULT_PATH)%" $< > $@
+%: %.sh
+	sed -e "s%@DEFAULTDIR@%$(GEOGRAPHICLIB_DATA)%" $< > $@
 	chmod +x $@
 
 INSTALL = install -b

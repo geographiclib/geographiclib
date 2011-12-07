@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
-#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP "$Id: 48f5a84645ea5925a2e7826adb07a42fe091d09f $"
+#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP \
+  "$Id: 457b3566d14500cdc67b82e6422e0e621f136b3e $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>

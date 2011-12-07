@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
-#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP "$Id: 22e444fc38e3e8b49a56c7a22121ddeb78c230b9 $"
+#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP \
+  "$Id: 7975cff875e88fd42f81f9e1d7117c1dd36667d2 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -28,9 +29,9 @@ namespace GeographicLib {
    * differences have been used to transform the expressions into ones which
    * may be evaluated accurately and that Newton's method is used to invert the
    * projection.  In this implementation, the projection correctly becomes the
-   * Mercator projection or the polar sterographic projection when the standard
-   * latitude is the equator or a pole.  The accuracy of the projections is
-   * about 10 nm.
+   * Mercator projection or the polar stereographic projection when the
+   * standard latitude is the equator or a pole.  The accuracy of the
+   * projections is about 10 nm.
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
@@ -163,7 +164,7 @@ namespace GeographicLib {
     /**
      * Constructor with a single standard parallel.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
@@ -178,7 +179,7 @@ namespace GeographicLib {
     /**
      * Constructor with two standard parallels.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
@@ -196,7 +197,7 @@ namespace GeographicLib {
     /**
      * Constructor with two standard parallels specified by sines and cosines.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
@@ -211,7 +212,7 @@ namespace GeographicLib {
      * latitude.  In the case where \e lat1 and \e lat2 are different, the
      * errors in this routines are as follows: if \e dlat = abs(\e lat2 - \e
      * lat1) <= 160<sup>o</sup> and max(abs(\e lat1), abs(\e lat2)) <= 90 -
-     * min(0.0002, 2.2e-6(180 - \e dlat), 6e-8\e dlat<sup>2</sup>) (in
+     * min(0.0002, 2.2e-6(180 - \e dlat), 6e-8 <i>dlat</i><sup>2</sup>) (in
      * degrees), then the error in the latitude of origin is less than
      * 4.5e-14<sup>o</sup> and the relative error in the scale is less than
      * 7e-15.

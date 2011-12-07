@@ -79,7 +79,7 @@ int usage(int retval, bool brief) {
 "\n"
 "EXTENDED DOMAIN\n"
 "       The exact transverse Mercator projection has a branch point on the\n"
-"       equator at longitudes (relative to lon0) of +/- (1 - e) 90, whre e is\n"
+"       equator at longitudes (relative to lon0) of +/- (1 - e) 90, where e is\n"
 "       the eccentricity of the ellipsoid.  The standard convention for\n"
 "       handling this branch point is to map positive (negative) latitudes into\n"
 "       positive (negative) northings y; i.e., a branch cut is placed on the\n"

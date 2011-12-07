@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
-#define GEOGRAPHICLIB_CIRCULARENGINE_HPP "$Id: bc8b718e6ab4981abe34da1b8d112dc5f5037465 $"
+#define GEOGRAPHICLIB_CIRCULARENGINE_HPP \
+  "$Id: 6694dcc59d2fe64a0971fdb0d0d78ff084b0b484 $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -50,13 +51,13 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     enum normalization {
-      full = SphericalEngine::full,
-      schmidt = SphericalEngine::schmidt,
+      FULL = SphericalEngine::FULL,
+      SCHMIDT = SphericalEngine::SCHMIDT,
     };
     int _M;
     bool _gradp;
-    normalization _norm;
-    real _scale, _a, _r, _u, _t;
+    unsigned _norm;
+    real _a, _r, _u, _t;
     std::vector<real> _wc, _ws, _wrc, _wrs, _wtc, _wts;
     real _q, _uq, _uq2;
 
@@ -71,12 +72,13 @@ namespace GeographicLib {
     }
 
     friend class SphericalEngine;
-    CircularEngine(int M, bool gradp, SphericalEngine::normalization norm,
-                   real scale, real a, real r, real u, real t)
+    friend class GravityCircle;  // Access to cossin
+    friend class MagneticCircle; // Access to cossin
+    CircularEngine(int M, bool gradp, unsigned norm,
+                   real a, real r, real u, real t)
       : _M(M)
       , _gradp(gradp)
-      , _norm(normalization(norm))
-      , _scale(scale)
+      , _norm(norm)
       , _a(a)
       , _r(r)
       , _u(u)
@@ -106,16 +108,29 @@ namespace GeographicLib {
     }
 
   public:
+
+    /**
+     * A default constructor.  CircularEngine::operator()() on the resulting
+     * object returns zero.  The resulting object can be assigned to the result
+     * of SphericalHarmonic::Circle.
+     **********************************************************************/
+    CircularEngine()
+      : _M(-1)
+      , _gradp(true)
+      , _u(0)
+      , _t(1)
+      {}
+
     /**
      * Evaluate the sum for a particular longitude given in terms of its
      * cosine and sine.
      *
      * @param[in] coslon the cosine of the longitude.
      * @param[in] sinlon the sine of the longitude.
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      *
-     * The arguments must satisfy \e coslon<sup>2</sup> + \e sinlon<sup>2</sup>
-     * = 1.
+     * The arguments must satisfy <i>coslon</i><sup>2</sup> +
+     * <i>sinlon</i><sup>2</sup> = 1.
      **********************************************************************/
     Math::real operator()(real coslon, real sinlon) const throw() {
       real dummy;
@@ -126,7 +141,7 @@ namespace GeographicLib {
      * Evaluate the sum for a particular longitude.
      *
      * @param[in] lon the longitude (degrees).
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      **********************************************************************/
     Math::real operator()(real lon) const throw() {
       real coslon, sinlon;
@@ -143,13 +158,13 @@ namespace GeographicLib {
      * @param[out] gradx \e x component of the gradient.
      * @param[out] grady \e y component of the gradient.
      * @param[out] gradz \e z component of the gradient.
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      *
      * The gradients will only be computed if the CircularEngine object was
      * created with this capability (e.g., via \e gradp = true in
      * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be
-     * touched.  The arguments must satisfy \e coslon<sup>2</sup> + \e
-     * sinlon<sup>2</sup> = 1.
+     * touched.  The arguments must satisfy <i>coslon</i><sup>2</sup> +
+     * <i>sinlon</i><sup>2</sup> = 1.
      **********************************************************************/
     Math::real operator()(real coslon, real sinlon,
                           real& gradx, real& grady, real& gradz) const throw() {
@@ -163,7 +178,7 @@ namespace GeographicLib {
      * @param[out] gradx \e x component of the gradient.
      * @param[out] grady \e y component of the gradient.
      * @param[out] gradz \e z component of the gradient.
-     * @return[in] \e V the value of the sum.
+     * @return \e V the value of the sum.
      *
      * The gradients will only be computed if the CircularEngine object was
      * created with this capability (e.g., via \e gradp = true in

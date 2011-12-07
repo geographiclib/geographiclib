@@ -9,11 +9,13 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic geoidheight.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+//    -lGeographic geoidheight.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic geoidheight.cpp
+// mex -I../include -L../windows/Release
+//    -lGeographic geoidheight.cpp
 
-// $Id: 67f8444d872ca5dc82ea052c3f724ef99ea562e7 $
+// $Id: f57e9aa3c45ed9f63687fdba9bb6f79000895174 $
 
 #include <string>
 #include <algorithm>

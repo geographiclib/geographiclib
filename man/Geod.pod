@@ -1,4 +1,4 @@
-=for comment $Id: b01db766861a9ea4be3f25e45a0bb4e14a37fa99 $
+=for comment $Id: 4802ba8dc6d39a842775705796c8ac0e51a4069d $
 
 =head1 NAME
 
@@ -89,8 +89,8 @@ L<ADDITIONAL QUANTITIES>.
 
 =item B<-p>
 
-set the precision to I<prec> (default 3); I<prec> is the precision
-relative to 1 m.  See L<PRECISION|precision>.
+set the output precision to I<prec> (default 3); I<prec> is the
+precision relative to 1 m.  See L<PRECISION|precision>.
 
 =item B<--version>
 
@@ -149,7 +149,7 @@ B<-a> flag does I<not> affect the full output given by the B<-f> flag
 
 =head1 ADDITIONAL QUANTITIES
 
-The B<-f> flag reports four addtional quantities.
+The B<-f> flag reports four additional quantities.
 
 The reduced length of the geodesic, I<m12>, is defined such that if the
 initial azimuth is perturbed by dI<azi1> (radians) then the second point

@@ -9,11 +9,13 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic polygonarea.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+//    -lGeographic polygonarea.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic polygonarea.cpp
+// mex -I../include -L../windows/Release
+//    -lGeographic polygonarea.cpp
 
-// $Id: ac62243d666c5cadad8ba8b6c923224c8ae41e4a $
+// $Id: cbdd83aa0963df0a278c3c4254a8935c3d77828b $
 
 #include <algorithm>
 #include <GeographicLib/PolygonArea.hpp>

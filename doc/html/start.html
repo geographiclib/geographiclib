@@ -60,15 +60,11 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\Geo
 <li>If you're using cmake to configure and build your project, then instead of the previous three steps, insert <div class="fragment"><pre class="fragment">
   # Put in your top-level CMakeLists.txt
   find_package (GeographicLib 1.9 REQUIRED)
-  # In the top-level CMakeList.txt or wherever your code is compiled
+  # In the top-level CMakeLists.txt or wherever your code is compiled
   include_directories (${GeographicLib_INCLUDE_DIRS})
-  # In the CMakeList.txt where you define your executable targets
+  # In the CMakeLists.txt where you define your executable targets
   target_link_libraries (program1 ${GeographicLib_LIBRARIES})
-  target_link_libraries (program2 ${GeographicLib_LIBRARIES})
-  if (NOT WIN32)
-    set_target_properties (program1 program2 PROPERTIES
-      INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib;${GeographicLib_LIBRARY_DIRS}")
-  endif (NOT WIN32) </pre></div> in your CMakeLists.txt files (as noted). Assuming that you configured and installed <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a> with cmake (or that you used the binary installer for Windows), then the find_package command should find the library and set the required cmake variables (including <code>GEOGRAPHICLIB_FOUND = TRUE</code>). Otherwise, copy cmake/FindGeographicLib.cmake to somewhere in your <code>CMAKE_MODULE_PATH</code>.</li>
+  target_link_libraries (program2 ${GeographicLib_LIBRARIES}) </pre></div> in your CMakeLists.txt files (as noted). Assuming that you configured and installed <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a> with cmake (or that you used the binary installer for Windows), then the find_package command should find the library and set the required cmake variables (including <code>GEOGRAPHICLIB_FOUND = TRUE</code>). Otherwise, copy cmake/FindGeographicLib.cmake to somewhere in your <code>CMAKE_MODULE_PATH</code>.</li>
 <li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode.</li>
 </ul>
 <p>Here is a very simple test code, which convert the point 38.95N 75.17W (Philadelphia) to the Pennsylvania South coordinate system: </p>
@@ -128,7 +124,7 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\Geo
 <li><a href="http://en.wikipedia.org/wiki/IGRF">IGRF</a>, International Geomagnetic Reference Field.</li>
 </ul>
 <center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

@@ -61,17 +61,18 @@
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eb">normalization</a> { <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b">full</a>, 
-<a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3">schmidt</a>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eb">normalization</a> { <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782">FULL</a>, 
+<a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e">SCHMIDT</a>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a00914779e17f5de7f0379f59100c38b5">SphericalHarmonic</a> (const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, real a, <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eb">normalization</a> norm=full)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#acd8de1fb08a3064da0c811d198e4e19d">SphericalHarmonic</a> (const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, int nmx, int mmx, real a, <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eb">normalization</a> norm=full)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#adb71d28aa60a813ca3384f9c58ef8fa1">SphericalHarmonic</a> (const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, real a, unsigned norm=FULL)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2ed62c0ad8fb1ab36d5a331a3f33c3d7">SphericalHarmonic</a> (const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, int nmx, int mmx, real a, unsigned norm=FULL)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a6d97388f273d1511a8191d812e9bde3e">SphericalHarmonic</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a42480d85a81238f612a6178410bf97ff">operator()</a> (real x, real y, real z) const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a5046d787c241c5216cfeb0062673cbd7">operator()</a> (real x, real y, real z, real &amp;gradx, real &amp;grady, real &amp;gradz) const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">Circle</a> (real p, real z, bool gradp) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html">SphericalEngine::coeff</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#ac8886de1d1400ecf6482f6441c76a8a0">Coefficients</a> () const   throw ()</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Spherical Harmonic series. </p>
@@ -89,21 +90,22 @@ Public Member Functions</h2></td></tr>
 <li><em>lambda</em> = atan2(<em>y</em>, <em>x</em>) = the longitude.</li>
 <li>P<sub><em>nm</sub></em>(<em>t</em>) is the associated Legendre polynomial of degree <em>n</em> and order <em>m</em>.</li>
 </ul>
-<p>One of two normalizations are supported for P<sub><em>nm</sub></em> </p>
+<p>Two normalizations are supported for P<sub><em>nm</sub></em> </p>
 <ul>
-<li>fully normalized denoted by <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b">SphericalHarmonic::full</a>.</li>
-<li>Schmidt semi-normalized denoted by <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3">SphericalHarmonic::schmidt</a>.</li>
+<li>fully normalized denoted by <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782">SphericalHarmonic::FULL</a>.</li>
+<li>Schmidt semi-normalized denoted by <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e">SphericalHarmonic::SCHMIDT</a>.</li>
 </ul>
-<p>Clenshaw summation is used for the sums over both <em>n</em> and <em>m</em>. This allows the computation to be carried out without the need for any temporary arrays. References:</p>
+<p>Clenshaw summation is used for the sums over both <em>n</em> and <em>m</em>. This allows the computation to be carried out without the need for any temporary arrays. See <a class="el" href="SphericalEngine_8cpp.html" title="Implementation for GeographicLib::SphericalEngine class.">SphericalEngine.cpp</a> for more information on the implementation.</p>
+<p>References:</p>
 <ul>
 <li>C. W. Clenshaw, A note on the summation of Chebyshev series, Math. Tables Aids Comput. 9(51), 118-120 (1955).</li>
 <li>R. E. Deakin, Derivatives of the earth's potentials, Geomatics Research Australasia 68, 31-60, (June 1998).</li>
-<li>W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San Fransisco, 1967). (See Sec. 1-14, for a definition of Pbar.)</li>
+<li>W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San Francisco, 1967). (See Sec. 1-14, for a definition of Pbar.)</li>
 <li>S. A. Holmes and W. E. Featherstone, A unified approach to the Clenshaw summation and the recursive computation of very high degree and order normalised associated Legendre functions, J. Geod. 76(5), 279-299 (2002).</li>
 <li>C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982). </li>
 </ul>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00058">58</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00063">63</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="a889791c67edc32865996842c600104eb"></a><!-- doxytag: member="GeographicLib::SphericalHarmonic::normalization" ref="a889791c67edc32865996842c600104eb" args="" -->
 <div class="memitem">
@@ -117,12 +119,12 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Supported normalizations for the associated Legendre polynomials. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b"></a><!-- doxytag: member="full" ref="a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b" args="" -->full</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" id="a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782"></a><!-- doxytag: member="FULL" ref="a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782" args="" -->FULL</em>&nbsp;</td><td>
 <p>Fully normalized associated Legendre polynomials.</p>
 <p>These are defined by <em>P</em><sub><em>nm</em></sub><sup>full</sup>(<em>z</em>) = (-1)<sup><em>m</em></sup> sqrt(<em>k</em> (2<em>n</em> + 1) (<em>n</em> - <em>m</em>)! / (<em>n</em> + <em>m</em>)!) <b>P</b><sub><em>n</em></sub><sup><em>m</em></sup>(<em>z</em>), where <b>P</b><sub><em>n</em></sub><sup><em>m</em></sup>(<em>z</em>) is Ferrers function (also known as the Legendre function on the cut or the associated Legendre polynomial) <a href="http://dlmf.nist.gov/14.7.E10">http://dlmf.nist.gov/14.7.E10</a> and <em>k</em> = 1 for <em>m</em> = 0 and <em>k</em> = 2 otherwise.</p>
 <p>The mean squared value of <em>P</em><sub><em>nm</em></sub><sup>full</sup>(cos <em>theta</em>) cos(<em>m</em> <em>lambda</em>) and <em>P</em><sub><em>nm</em></sub><sup>full</sup>(cos <em>theta</em>) sin(<em>m</em> <em>lambda</em>) over the sphere is 1. </p>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3"></a><!-- doxytag: member="schmidt" ref="a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3" args="" -->schmidt</em>&nbsp;</td><td>
+<tr><td valign="top"><em><a class="anchor" id="a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e"></a><!-- doxytag: member="SCHMIDT" ref="a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e" args="" -->SCHMIDT</em>&nbsp;</td><td>
 <p>Schmidt semi-normalized associated Legendre polynomials.</p>
 <p>These are defined by <em>P</em><sub><em>nm</em></sub><sup>schmidt</sup>(<em>z</em>) = (-1)<sup><em>m</em></sup> sqrt(<em>k</em> (<em>n</em> - <em>m</em>)! / (<em>n</em> + <em>m</em>)!) <b>P</b><sub><em>n</em></sub><sup><em>m</em></sup>(<em>z</em>), where <b>P</b><sub><em>n</em></sub><sup><em>m</em></sup>(<em>z</em>) is Ferrers function (also known as the Legendre function on the cut or the associated Legendre polynomial) <a href="http://dlmf.nist.gov/14.7.E10">http://dlmf.nist.gov/14.7.E10</a> and <em>k</em> = 1 for <em>m</em> = 0 and <em>k</em> = 2 otherwise.</p>
 <p>The mean squared value of <em>P</em><sub><em>nm</em></sub><sup>schmidt</sup>(cos <em>theta</em>) cos(<em>m</em> <em>lambda</em>) and <em>P</em><sub><em>nm</em></sub><sup>schmidt</sup>(cos <em>theta</em>) sin(<em>m</em> <em>lambda</em>) over the sphere is 1/(2<em>n</em> + 1). </p>
@@ -131,25 +133,25 @@ Public Member Functions</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00063">63</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00068">68</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="a00914779e17f5de7f0379f59100c38b5"></a><!-- doxytag: member="GeographicLib::SphericalHarmonic::SphericalHarmonic" ref="a00914779e17f5de7f0379f59100c38b5" args="(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, real a, normalization norm=full)" -->
+<a class="anchor" id="adb71d28aa60a813ca3384f9c58ef8fa1"></a><!-- doxytag: member="GeographicLib::SphericalHarmonic::SphericalHarmonic" ref="adb71d28aa60a813ca3384f9c58ef8fa1" args="(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, real a, unsigned norm=FULL)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">GeographicLib::SphericalHarmonic::SphericalHarmonic </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; real &gt; &amp;&#160;</td>
           <td class="paramname"><em>C</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; real &gt; &amp;&#160;</td>
           <td class="paramname"><em>S</em>, </td>
         </tr>
         <tr>
@@ -167,8 +169,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eb">normalization</a>&#160;</td>
-          <td class="paramname"><em>norm</em> = <code>full</code>&#160;</td>
+          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramname"><em>norm</em> = <code>FULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -185,31 +187,31 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">S</td><td>the coefficients <em>S<sub><em>nm</sub></em>.</em> </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">N</td><td>the maximum degree and order of the sum </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">a</td><td>the reference radius appearing in the definition of the sum. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">norm</td><td>the normalization for the associated Legendre polynomials, either <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b">SphericalHarmonic::full</a> (the default) or <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3">SphericalHarmonic::schmidt</a>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">norm</td><td>the normalization for the associated Legendre polynomials, either SphericalHarmonic::full (the default) or SphericalHarmonic::schmidt.</td></tr>
   </table>
   </dd>
 </dl>
 <p>The coefficients <em>C<sub><em>nm</sub></em> and</em> <em>S<sub><em>nm</sub></em> are</em> stored in the one-dimensional vectors <em>C</em> and <em>S</em> which must contain (<em>N</em> + 1)(<em>N</em> + 2)/2 elements, stored in "column-major" order. Thus for <em>N</em> = 3, the order would be: <em>C</em><sub>00</sub>, <em>C</em><sub>10</sub>, <em>C</em><sub>20</sub>, <em>C</em><sub>30</sub>, <em>C</em><sub>11</sub>, <em>C</em><sub>21</sub>, <em>C</em><sub>31</sub>, <em>C</em><sub>22</sub>, <em>C</em><sub>32</sub>, <em>C</em><sub>33</sub>. In general the (<em>n</em>,<em>m</em>) element is at index <em>m*<em>N</em> -</em> <em>m*</em>(<em>m</em> - 1)/2 + <em>n</em>. The layout of <em>S</em> is the same except that the first column is omitted (since the <em>m</em> = 0 terms never contribute to the sum) and the 0th element is <em>S</em><sub>11</sub></p>
 <p>The class stores <em>pointers</em> to the first elements of <em>C</em> and <em>S</em>. These arrays should not be altered or destroyed during the lifetime of a <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> object. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00146">146</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00156">156</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="acd8de1fb08a3064da0c811d198e4e19d"></a><!-- doxytag: member="GeographicLib::SphericalHarmonic::SphericalHarmonic" ref="acd8de1fb08a3064da0c811d198e4e19d" args="(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, int nmx, int mmx, real a, normalization norm=full)" -->
+<a class="anchor" id="a2ed62c0ad8fb1ab36d5a331a3f33c3d7"></a><!-- doxytag: member="GeographicLib::SphericalHarmonic::SphericalHarmonic" ref="a2ed62c0ad8fb1ab36d5a331a3f33c3d7" args="(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, int nmx, int mmx, real a, unsigned norm=FULL)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">GeographicLib::SphericalHarmonic::SphericalHarmonic </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; real &gt; &amp;&#160;</td>
           <td class="paramname"><em>C</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; real &gt; &amp;&#160;</td>
           <td class="paramname"><em>S</em>, </td>
         </tr>
         <tr>
@@ -239,8 +241,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eb">normalization</a>&#160;</td>
-          <td class="paramname"><em>norm</em> = <code>full</code>&#160;</td>
+          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramname"><em>norm</em> = <code>FULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -259,13 +261,13 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">nmx</td><td>the maximum degree used in the sum. The sum over <em>n</em> is from 0 thru <em>nmx</em>. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">mmx</td><td>the maximum order used in the sum. The sum over <em>m</em> is from 0 thru min(<em>n</em>, <em>mmx</em>). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">a</td><td>the reference radius appearing in the definition of the sum. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">norm</td><td>the normalization for the associated Legendre polynomials, either <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b">SphericalHarmonic::full</a> (the default) or <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3">SphericalHarmonic::schmidt</a>.</td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">norm</td><td>the normalization for the associated Legendre polynomials, either <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782">SphericalHarmonic::FULL</a> (the default) or <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e">SphericalHarmonic::SCHMIDT</a>.</td></tr>
   </table>
   </dd>
 </dl>
 <p>The class stores <em>pointers</em> to the first elements of <em>C</em> and <em>S</em>. These arrays should not be altered or destroyed during the lifetime of a <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> object. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00173">173</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00183">183</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -284,7 +286,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>A default constructor so that the object can be created when the constructor for another object is initialized. This default object can then be reset with the default copy assignment operator. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00186">186</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00196">196</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -331,7 +333,7 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the spherical harmonic sum.</dd></dl>
 <p>This routine requires constant memory and thus never throws an exception. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00199">199</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00209">209</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -398,7 +400,7 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the spherical harmonic sum.</dd></dl>
 <p>This is the same as the previous function, except that the components of the gradients of the sum in the <em>x</em>, <em>y</em>, and <em>z</em> directions are computed. This routine requires constant memory and thus never throws an exception. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00232">232</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00242">242</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -442,7 +444,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object.</dd></dl>
-<p><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a42480d85a81238f612a6178410bf97ff">SphericalHarmonic::operator()()</a> exchanges the order of the sums in the definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m = 0..N)[sum(n = m..N)[...]]. <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a> performs the inner sum over degree <em>n</em> (which entails about <em>N<sup>2</sup></em> operations). Calling <a class="el" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">CircularEngine::operator()()</a> on the returned object performs the outer sum over the order <em>m</em> (about <em>N</em> operations). This routine may throw a bad_alloc exception in the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">GeographicLib::CircularEngine</a> constructor.</p>
+<p><a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a42480d85a81238f612a6178410bf97ff">SphericalHarmonic::operator()()</a> exchanges the order of the sums in the definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m = 0..N)[sum(n = m..N)[...]]. <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a> performs the inner sum over degree <em>n</em> (which entails about <em>N</em><sup>2</sup> operations). Calling <a class="el" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">CircularEngine::operator()()</a> on the returned object performs the outer sum over the order <em>m</em> (about <em>N</em> operations). This routine may throw a bad_alloc exception in the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> constructor.</p>
 <p>Here's an example of computing the spherical sum at a sequence of longitudes without using a <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object </p>
 <div class="fragment"><pre class="fragment">  <a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#a6d97388f273d1511a8191d812e9bde3e">SphericalHarmonic</a> h(...);     <span class="comment">// Create the SphericalHarmonic object</span>
   <span class="keywordtype">double</span> r = 2, lat = 33, lon0 = 44, dlon = 0.01;
@@ -455,7 +457,7 @@ Public Member Functions</h2></td></tr>
       lam = lon * Math::degree&lt;double&gt;();
     std::cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; h(p * cos(lam), p * sin(lam), z) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
   }
-</pre></div><p> Here is the same calculation done using a <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object. This will be about <em>N/2</em> times faster. </p>
+</pre></div><p> Here is the same calculation done using a <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object. This will be about <em>N</em>/2 times faster. </p>
 <div class="fragment"><pre class="fragment">  <a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#a6d97388f273d1511a8191d812e9bde3e">SphericalHarmonic</a> h(...);     <span class="comment">// Create the SphericalHarmonic object</span>
   <span class="keywordtype">double</span> r = 2, lat = 33, lon0 = 44, dlon = 0.01;
   <span class="keywordtype">double</span>
@@ -468,7 +470,30 @@ Public Member Functions</h2></td></tr>
     std::cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; c(lon) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
   }
 </pre></div> 
-<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00299">299</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00309">309</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00309">GeographicLib::GravityModel::Circle()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac8886de1d1400ecf6482f6441c76a8a0"></a><!-- doxytag: member="GeographicLib::SphericalHarmonic::Coefficients" ref="ac8886de1d1400ecf6482f6441c76a8a0" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html">SphericalEngine::coeff</a>&amp; GeographicLib::SphericalHarmonic::Coefficients </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const  throw ()<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="return"><dt><b>Returns:</b></dt><dd>the zeroth <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html" title="Package up coefficients for SphericalEngine.">SphericalEngine::coeff</a> object. </dd></dl>
+
+<p>Definition at line <a class="el" href="SphericalHarmonic_8hpp_source.html#l00333">333</a> of file <a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00043">GeographicLib::GravityModel::GravityModel()</a>.</p>
 
 </div>
 </div>
@@ -476,7 +501,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="SphericalHarmonic_8hpp_source.html">SphericalHarmonic.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

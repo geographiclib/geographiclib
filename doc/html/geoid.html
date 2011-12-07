@@ -36,15 +36,16 @@
 <div class="title">Geoid height </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="magnetic.html">Magnetic models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class and the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipsoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10 km this ambiguity is only 1 mm.</p>
+<div class="textblock"><center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="gravity.html">Gravity models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The gravitational equipotential surface approximately coinciding with mean sea level is called the geoid. The <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class and the <a href="GeoidEval.1.html">GeoidEval</a> utility evaluate the height of the geoid above the WGS84 ellipsoid. This can be used to convert heights above mean sea level to heights above the WGS84 ellipsoid. Because the normal to the ellipsoid differs from the normal to the geoid (the direction of a plumb line) there is a slight ambiguity in the measurement of heights; however for heights up to 10 km this ambiguity is only 1 mm.</p>
 <p>The geoid is usually approximated by an "earth gravity model" (EGM). The models published by the NGA are:</p>
 <ul>
-<li>EGM84: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html</a></li>
-<li>EGM96: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html</a></li>
-<li>EGM2008: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008</a></li>
+<li><b>EGM84</b>: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html</a></li>
+<li><b>EGM96</b>: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html</a></li>
+<li><b>EGM2008</b>: <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008</a></li>
 </ul>
 <p><a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> offers a uniform way to handle all 3 geoids at a variety of grid resolutions. (In contrast, the software tools that NGA offers are different for each geoid, and the interpolation programs are different for each grid resolution. In addition these tools are written in Fortran with is nowadays difficult to integrate with other software.)</p>
 <p>Unlike other components of GeographicLib, there is a appreciable error in the results obtained (at best, the RMS error is 1 mm). However the class provides methods to report the maximum and RMS errors in the results. The class also returns the gradient of the geoid. This can be used to estimate the direction of a plumb line relative to the WGS84 ellipsoid.</p>
+<p>The <a class="el" href="classGeographicLib_1_1GravityModel.html" title="Model of the earth&#39;s gravity field.">GeographicLib::GravityModel</a> class calculates geoid heights using the underlying gravity model. This is slower then <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> but considerably more accurate. This class also can accurately compute all the components of the acceleration due to gravity (and hence the direction of plumb line).</p>
 <p>Go to</p>
 <ul>
 <li><a class="el" href="geoid.html#geoidinst">Installing the geoid datasets</a></li>
@@ -55,7 +56,7 @@
 </ul>
 <h2><a class="anchor" id="geoidinst"></a>
 Installing the geoid datasets</h2>
-<p>The geoid heights are computed using interpolation into a rectangular grid. The grids are read from data files which have been are computed using the NGA synthesis programs in the case of the EGM84 and EGM96 models and using the NGA binary gridded data files in the case of EGM2008. These data files are available for download:</p>
+<p>The geoid heights are computed using interpolation into a rectangular grid. The grids are read from data files which have been are computed using the NGA synthesis programs in the case of the EGM84 and EGM96 models and using the NGA binary gridded data files in the case of EGM2008. These data files are available for download: </p>
 <center> <table class="doxtable">
 <caption align="bottom">Available geoid data files</caption>
 <tr>
@@ -101,7 +102,7 @@ Installing the geoid datasets</h2>
 <li>/usr/local/share/GeographicLib/geoids, for non-Windows systems</li>
 <li>C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids, for Windows systems</li>
 </ul>
-<p>consistent with the examples above. This may be overridden at run-time by defining the GEOID_PATH environment variable. Finally, the path may be set using the optional second argument to the <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> constructor or with the "-d" flag to <a href="GeoidEval.1.html">GeoidEval</a>. Supplying the "-h" flag to <a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path for that utility. The "-v" flag causes GeoidEval to report the full path name of the data file it uses.</p>
+<p>consistent with the examples above. This may be overridden at run-time by defining the GEOID_PATH or the GEOGRAPHIC_DATA environment variables; see <a class="el" href="classGeographicLib_1_1Geoid.html#a2daf81f5c648cf190a83981f441ab08f">GeographicLib::Geoid::DefaultGeoidPath()</a> for details. Finally, the path may be set using the optional second argument to the <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> constructor or with the "-d" flag to <a href="GeoidEval.1.html">GeoidEval</a>. Supplying the "-h" flag to <a href="GeoidEval.1.html">GeoidEval</a> reports the default geoid path for that utility. The "-v" flag causes GeoidEval to report the full path name of the data file it uses.</p>
 <h2><a class="anchor" id="geoidformat"></a>
 The format of the geoid data files</h2>
 <p>The gridded data used by the <a class="el" href="classGeographicLib_1_1Geoid.html" title="Looking up the height of the geoid.">GeographicLib::Geoid</a> class is stored in 16-bit PGM files. Thus the data for egm96-5 might be stored in the file</p>
@@ -157,7 +158,7 @@ The format of the geoid data files</h2>
        -mo Tie_Point_Location=pixel_corner \
        $TEMP e$lon-n$lat.tif
    rm -f $TEMP
-</pre></div><p>Because the pgm files are uncompressed, they can take up a lot of room. Some compressed formats compress in tiles and so might be compatible with the requirement that the data can be randomly accessed. In particular gdal_translate can be used to convert the pgm files to compressed tiff files with </p>
+</pre></div><p>Because the pgm files are uncompressed, they can take up a lot of disk space. Some compressed formats compress in tiles and so might be compatible with the requirement that the data can be randomly accessed. In particular gdal_translate can be used to convert the pgm files to compressed tiff files with </p>
 <div class="fragment"><pre class="fragment">
 gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 \
    -co TILED=YES -co BLOCKXSIZE=256 -co BLOCKYSIZE=256 \
@@ -232,18 +233,18 @@ Test data for geoids</h2>
 <ul>
 <li><a href="http://sf.net/projects/geographiclib/files/testdata/GeoidHeights.dat.gz/download">GeoidHeight.dat.gz</a></li>
 </ul>
-<p>This is about 10 MB (compressed). This test set consists of a set of 500000 geographic coordinates together with the corresponding geoid heights according to various earth gravity models.</p>
+<p>This is about 11 MB (compressed). This test set consists of a set of 500000 geographic coordinates together with the corresponding geoid heights according to various earth gravity models.</p>
 <p>Each line of the test set gives 6 space delimited numbers</p>
 <ul>
 <li>latitude (degrees, exact)</li>
 <li>longitude (degrees, exact)</li>
-<li>EGM84 height (meters, accurate to 1 mm)</li>
-<li>EGM96 height (meters, accurate to 0.1 mm)</li>
-<li>EGM2008 height (meters, accurate to 1 mm)</li>
+<li>EGM84 height (meters, accurate to 1 um)</li>
+<li>EGM96 height (meters, accurate to 1 um)</li>
+<li>EGM2008 height (meters, accurate to 1 um)</li>
 </ul>
-<p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs. In the case of the EGM84 and EGM96, the programs were compiled (with gfortran) and run under Linux. In the case of EGM2008, the prescription results in NaNs (possibly because of uninitialized variables in the program?), so the data was generated with the precompiled binary that NGA supplies for Windows.</p>
-<center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="magnetic.html">Magnetic models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs, where the programs were compiled (with gfortran) and run under Linux. In the case of EGM2008, a SAVE statement needed to be added to subroutine latf, in order for the program to compile correctly with a stack-based compiler. Similarly the EGM96 requires a SAVE statement in subroutine legfdn.</p>
+<center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="gravity.html">Gravity models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

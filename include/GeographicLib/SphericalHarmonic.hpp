@@ -8,12 +8,14 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
-#define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP "$Id: 772f453ae5c0c8f69164279b9f5eeae42b45b42c $"
+#define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP \
+  "$Id: 12b23c05ab8bae57213d6762e45189a7cb46b397 $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/CircularEngine.hpp>
+#include <GeographicLib/Geocentric.hpp>
 
 namespace GeographicLib {
 
@@ -34,19 +36,22 @@ namespace GeographicLib {
    * - P<sub>\e nm</sub>(\e t) is the associated Legendre polynomial of degree
    *   \e n and order \e m.
    *
-   * One of two normalizations are supported for P<sub>\e nm</sub>
-   * - fully normalized denoted by SphericalHarmonic::full.
-   * - Schmidt semi-normalized denoted by SphericalHarmonic::schmidt.
+   * Two normalizations are supported for P<sub>\e nm</sub>
+   * - fully normalized denoted by SphericalHarmonic::FULL.
+   * - Schmidt semi-normalized denoted by SphericalHarmonic::SCHMIDT.
    *
    * Clenshaw summation is used for the sums over both \e n and \e m.  This
    * allows the computation to be carried out without the need for any
-   * temporary arrays.  References:
+   * temporary arrays.  See SphericalEngine.cpp for more information on the
+   * implementation.
+   *
+   * References:
    * - C. W. Clenshaw, A note on the summation of Chebyshev series,
    *   %Math. Tables Aids Comput. 9(51), 118-120 (1955).
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
    *   Research Australasia 68, 31-60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
-   *   Fransisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
+   *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
    * - S. A. Holmes and W. E. Featherstone, A unified approach to the
    *   Clenshaw summation and the recursive computation of very high degree
    *   and order normalised associated Legendre functions, J. Geod. 76(5),
@@ -79,7 +84,7 @@ namespace GeographicLib {
        *
        * @hideinitializer
        **********************************************************************/
-      full = SphericalEngine::full,
+      FULL = SphericalEngine::FULL,
       /**
        * Schmidt semi-normalized associated Legendre polynomials.
        *
@@ -98,14 +103,19 @@ namespace GeographicLib {
        *
        * @hideinitializer
        **********************************************************************/
-      schmidt = SphericalEngine::schmidt,
+      SCHMIDT = SphericalEngine::SCHMIDT,
+      /// \cond SKIP
+      // These are deprecated...
+      full = FULL,
+      schmidt = SCHMIDT,
+      /// \endcond
     };
 
   private:
     typedef Math::real real;
     SphericalEngine::coeff _c[1];
     real _a;
-    normalization _norm;
+    unsigned _norm;
 
   public:
     /**
@@ -143,9 +153,9 @@ namespace GeographicLib {
      * These arrays should not be altered or destroyed during the lifetime of a
      * SphericalHarmonic object.
      **********************************************************************/
-    SphericalHarmonic(const std::vector<double>& C,
-                      const std::vector<double>& S,
-                      int N, real a, normalization norm = full)
+    SphericalHarmonic(const std::vector<real>& C,
+                      const std::vector<real>& S,
+                      int N, real a, unsigned norm = FULL)
       : _a(a)
       , _norm(norm)
     { _c[0] = SphericalEngine::coeff(C, S, N); }
@@ -163,17 +173,17 @@ namespace GeographicLib {
      * @param[in] a the reference radius appearing in the definition of the
      *   sum.
      * @param[in] norm the normalization for the associated Legendre
-     *   polynomials, either SphericalHarmonic::full (the default) or
-     *   SphericalHarmonic::schmidt.
+     *   polynomials, either SphericalHarmonic::FULL (the default) or
+     *   SphericalHarmonic::SCHMIDT.
      *
      * The class stores <i>pointers</i> to the first elements of \e C and \e S.
      * These arrays should not be altered or destroyed during the lifetime of a
      * SphericalHarmonic object.
      **********************************************************************/
-    SphericalHarmonic(const std::vector<double>& C,
-                      const std::vector<double>& S,
+    SphericalHarmonic(const std::vector<real>& C,
+                      const std::vector<real>& S,
                       int N, int nmx, int mmx,
-                      real a, normalization norm = full)
+                      real a, unsigned norm = FULL)
       : _a(a)
       , _norm(norm)
     { _c[0] = SphericalEngine::coeff(C, S, N, nmx, mmx); }
@@ -201,12 +211,12 @@ namespace GeographicLib {
       real v = 0;
       real dummy;
       switch (_norm) {
-      case full:
-        v = SphericalEngine::Value<false, SphericalEngine::full, 1>
+      case FULL:
+        v = SphericalEngine::Value<false, SphericalEngine::FULL, 1>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
-      case schmidt:
-        v = SphericalEngine::Value<false, SphericalEngine::schmidt, 1>
+      case SCHMIDT:
+        v = SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 1>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
       }
@@ -234,12 +244,12 @@ namespace GeographicLib {
       real f[] = {1};
       real v = 0;
       switch (_norm) {
-      case full:
-        v = SphericalEngine::Value<true, SphericalEngine::full, 1>
+      case FULL:
+        v = SphericalEngine::Value<true, SphericalEngine::FULL, 1>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
-      case schmidt:
-        v = SphericalEngine::Value<true, SphericalEngine::schmidt, 1>
+      case SCHMIDT:
+        v = SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 1>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
       }
@@ -259,11 +269,11 @@ namespace GeographicLib {
      * SphericalHarmonic::operator()() exchanges the order of the sums in the
      * definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m =
      * 0..N)[sum(n = m..N)[...]].  SphericalHarmonic::Circle performs the inner
-     * sum over degree \e n (which entails about \e N<sup>2</sup> operations).
-     * Calling CircularEngine::operator()() on the returned object performs the
-     * outer sum over the order \e m (about \e N operations).  This routine may
-     * throw a bad_alloc exception in the GeographicLib::CircularEngine
-     * constructor.
+     * sum over degree \e n (which entails about <i>N</i><sup>2</sup>
+     * operations).  Calling CircularEngine::operator()() on the returned
+     * object performs the outer sum over the order \e m (about \e N
+     * operations).  This routine may throw a bad_alloc exception in the
+     * CircularEngine constructor.
      *
      * Here's an example of computing the spherical sum at a sequence of
      * longitudes without using a CircularEngine object
@@ -281,7 +291,7 @@ namespace GeographicLib {
   }
      \endcode
      * Here is the same calculation done using a CircularEngine object.  This
-     * will be about \e N/2 times faster.
+     * will be about <i>N</i>/2 times faster.
      \code
   SphericalHarmonic h(...);     // Create the SphericalHarmonic object
   double r = 2, lat = 33, lon0 = 44, dlon = 0.01;
@@ -299,23 +309,29 @@ namespace GeographicLib {
     CircularEngine Circle(real p, real z, bool gradp) const {
       real f[] = {1};
       switch (_norm) {
-      case full:
+      case FULL:
         return gradp ?
-          SphericalEngine::Circle<true, SphericalEngine::full, 1>
+          SphericalEngine::Circle<true, SphericalEngine::FULL, 1>
           (_c, f, p, z, _a) :
-          SphericalEngine::Circle<false, SphericalEngine::full, 1>
+          SphericalEngine::Circle<false, SphericalEngine::FULL, 1>
           (_c, f, p, z, _a);
         break;
-      case schmidt:
+      case SCHMIDT:
       default:                  // To avoid compiler warnings
         return gradp ?
-          SphericalEngine::Circle<true, SphericalEngine::schmidt, 1>
+          SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 1>
           (_c, f, p, z, _a) :
-          SphericalEngine::Circle<false, SphericalEngine::schmidt, 1>
+          SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 1>
           (_c, f, p, z, _a);
         break;
       }
     }
+
+    /**
+     * @return the zeroth SphericalEngine::coeff object.
+     **********************************************************************/
+    const SphericalEngine::coeff& Coefficients() const throw()
+    { return _c[0]; }
   };
 
 } // namespace GeographicLib

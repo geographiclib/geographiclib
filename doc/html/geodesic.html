@@ -70,7 +70,7 @@ Test data for geodesics</h2>
 <li>the area under the geodesic, <em>S12</em> (m<sup>2</sup>, accurate to 1 mm<sup>2</sup>)</li>
 </ul>
 <p>These are computed using as direct geodesic calculations with the given <em>lat1</em>, <em>lon1</em>, <em>azi1</em>, and <em>s12</em>. The distance <em>s12</em> always corresponds to an arc length <em>a12</em> &lt;= 180<sup>o</sup>, so the given geodesics give the shortest paths from point 1 to point 2. For simplicity and without loss of generality, <em>lat1</em> is chosen in [0<sup>o</sup>, 90<sup>o</sup>], <em>lon1</em> is taken to be zero, <em>azi1</em> is chosen in [0<sup>o</sup>, 180<sup>o</sup>]. Furthermore, <em>lat1</em> and <em>azi1</em> are taken to be multiples of 10<sup>-12</sup> deg and <em>s12</em> is a multiple of 0.1 um in [0 m, 20003931.4586254 m]. This results <em>lon2</em> in [0<sup>o</sup>, 180<sup>o</sup>] and <em>azi2</em> in [0<sup>o</sup>, 180<sup>o</sup>].</p>
-<p>The direct calculation uses an expansion of the geodesic equations accurate to <em>f<sup>30</sup></em> (approximately 1 part in 10<sup>50</sup>) and is computed with with <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s bfloats and fpprec set to 100 (so the errors in the data are probably 1/2 of the values quoted above).</p>
+<p>The direct calculation uses an expansion of the geodesic equations accurate to <em>f</em><sup>30</sup> (approximately 1 part in 10<sup>50</sup>) and is computed with with <a href="http://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>'s bfloats and fpprec set to 100 (so the errors in the data are probably 1/2 of the values quoted above).</p>
 <p>The contents of the file are as follows:</p>
 <ul>
 <li>100000 entries randomly distributed</li>
@@ -105,23 +105,23 @@ Expansions for geodesics</h2>
 <p>In the expansions below, we have</p>
 <ul>
 <li><em>alpha</em> is the azimuth</li>
-<li><em>alpha<sub>0</sub></em> is the azimuth at the equator crossing</li>
+<li><em>alpha</em><sub>0</sub> is the azimuth at the equator crossing</li>
 <li><em>lambda</em> is the longitude measured from the equator crossing</li>
 <li><em>omega</em> is the spherical longitude</li>
 <li><em>sigma</em> is the spherical arc length</li>
 <li><em>a</em> is the equatorial radius</li>
 <li><em>b</em> is the polar semi-axis</li>
 <li><em>f</em> is the flattening</li>
-<li><em>e<sup>2</sup></em> = <em>f</em> (2 - <em>f</em>)</li>
-<li><em>e'<sup>2</sup></em> = <em>e<sup>2</sup>/</em>(1 - <em>e<sup>2</sup></em>)</li>
-<li><em>k<sup>2</sup></em> = <em>e'<sup>2</sup></em> cos<sup>2</sup> <em>alpha<sub>0</sub></em> = 4 <em>eps</em> / (1 - <em>eps</em>)<sup>2</sup></li>
+<li><em>e</em><sup>2</sup> = <em>f</em> (2 - <em>f</em>)</li>
+<li><em>e'</em><sup>2</sup> = <em>e</em><sup>2</sup>/(1 - <em>e</em><sup>2</sup>)</li>
+<li><em>k</em><sup>2</sup> = <em>e'</em><sup>2</sup> cos<sup>2</sup> <em>alpha</em><sub>0</sub> = 4 <em>eps</em> / (1 - <em>eps</em>)<sup>2</sup></li>
 <li><em>n</em> = <em>f</em> / (2 - <em>f</em>)</li>
-<li><em>c<sup>2</sup></em> = <em>a<sup>2</sup>/2</em> + <em>b<sup>2</sup>/2</em> (tanh<sup>-1</sup> <em>e</em>)/<em>e</em> </li>
-<li><em>ep2</em> = <em>e'<sup>2</sup></em> </li>
-<li><em>k2</em> = <em>k<sup>2</sup></em> </li>
+<li><em>c</em><sup>2</sup> = <em>a</em><sup>2</sup>/2 + <em>b</em><sup>2</sup>/2 (tanh<sup>-1</sup> <em>e</em>)/<em>e</em> </li>
+<li><em>ep2</em> = <em>e'</em><sup>2</sup></li>
+<li><em>k2</em> = <em>k</em><sup>2</sup></li>
 </ul>
 <p>The formula for distance is</p>
-<p>&#160; &#160; <em>s/<em>b</em> =</em> <em>I1</em>(<em>sigma</em>)</p>
+<p>&#160; &#160; <em>s</em>/<em>b</em> = <em>I1</em>(<em>sigma</em>)</p>
 <p>where</p>
 <p>&#160; &#160; <em>I1</em>(<em>sigma</em>) = <em>A1</em> (<em>sigma</em> + <em>B1</em>(<em>sigma</em>))<br/>
  &#160; &#160; <em>B1</em>(<em>sigma</em>) = sum<sub><em>j</em> = 1</sub> <em>C1<sub>j</sub></em> sin(2 <em>j</em> <em>sigma</em>)</p>
@@ -163,7 +163,7 @@ C1[8] = - 429/262144 * eps^8
         + 143/131072 * eps^10;
 C1[9] = - 715/589824 * eps^9;
 C1[10] = - 2431/2621440 * eps^10;
-</pre></div><p>The function <em>tau</em>(<em>sigma</em>) = <em>s/</em>(<em>b</em> <em>A1</em>) = <em>sigma</em> + <em>B1</em>(<em>sigma</em>) may be inverted by series reversion giving</p>
+</pre></div><p>The function <em>tau</em>(<em>sigma</em>) = <em>s</em>/(<em>b</em> <em>A1</em>) = <em>sigma</em> + <em>B1</em>(<em>sigma</em>) may be inverted by series reversion giving</p>
 <p>&#160; &#160; <em>sigma</em>(<em>tau</em>) = <em>tau</em> + sum<sub><em>j</em> = 1</sub> <em>C1'<sub>j</sub></em> sin(2 <em>j</em> <em>tau</em>)</p>
 <p>where</p>
 <div class="fragment"><pre class="fragment">
@@ -198,9 +198,9 @@ C1'[8] = + 109167851/82575360 * eps^8
 C1'[9] = + 83141299/41287680 * eps^9;
 C1'[10] = + 9303339907/2972712960 * eps^10;
 </pre></div><p>The reduced length is given by</p>
-<p>&#160; &#160; <em>m/<em>b</em> =</em> sqrt(1 + <em>k<sup>2</sup></em> sin<sup>2</sup><em>sigma<sub>2</sub></em>) cos <em>sigma<sub>1</sub></em> sin <em>sigma<sub>2</sub></em> <br/>
- &#160; &#160; &#160; &#160; &#160; &#160; - sqrt(1 + <em>k<sup>2</sup></em> sin<sup>2</sup><em>sigma<sub>1</sub></em>) sin <em>sigma<sub>1</sub></em> cos <em>sigma<sub>2</sub></em> <br/>
- &#160; &#160; &#160; &#160; &#160; &#160; - cos <em>sigma<sub>1</sub></em> cos <em>sigma<sub>2</sub></em> (<em>J</em>(<em>sigma<sub>2</sub></em>) - <em>J</em>(<em>sigma<sub>1</sub></em>))</p>
+<p>&#160; &#160; <em>m</em>/<em>b</em> = sqrt(1 + <em>k</em><sup>2</sup> sin<sup>2</sup><em>sigma</em><sub>2</sub>) cos <em>sigma</em><sub>1</sub> sin <em>sigma</em><sub>2</sub><br/>
+ &#160; &#160; &#160; &#160; &#160; &#160; - sqrt(1 + <em>k</em><sup>2</sup> sin<sup>2</sup><em>sigma</em><sub>1</sub>) sin <em>sigma</em><sub>1</sub> cos <em>sigma</em><sub>2</sub><br/>
+ &#160; &#160; &#160; &#160; &#160; &#160; - cos <em>sigma</em><sub>1</sub> cos <em>sigma</em><sub>2</sub> (<em>J</em>(<em>sigma</em><sub>2</sub>) - <em>J</em>(<em>sigma</em><sub>1</sub>))</p>
 <p>where</p>
 <p>&#160; &#160; <em>J</em>(<em>sigma</em>) = <em>I1</em>(<em>sigma</em>) - <em>I2</em>(<em>sigma</em>)<br/>
  &#160; &#160; <em>I2</em>(<em>sigma</em>) = <em>A2</em> (<em>sigma</em> + <em>B2</em>(<em>sigma</em>))<br/>
@@ -243,7 +243,7 @@ C2[8] = + 6435/262144 * eps^8
 C2[9] = + 12155/589824 * eps^9;
 C2[10] = + 46189/2621440 * eps^10;
 </pre></div><p>The longitude is given in terms of the spherical longitude by</p>
-<p>&#160; &#160; <em>lambda</em> = <em>omega</em> - <em>f</em> sin <em>alpha<sub>0</sub></em> <em>I3</em>(<em>sigma</em>)</p>
+<p>&#160; &#160; <em>lambda</em> = <em>omega</em> - <em>f</em> sin <em>alpha</em><sub>0</sub> <em>I3</em>(<em>sigma</em>)</p>
 <p>where</p>
 <p>&#160; &#160; <em>I3</em>(<em>sigma</em>) = <em>A3</em> (<em>sigma</em> + <em>B3</em>(<em>sigma</em>))<br/>
  &#160; &#160; <em>B3</em>(<em>sigma</em>) = sum<sub><em>j</em> = 1</sub> <em>C3<sub>j</sub></em> sin(2 <em>j</em> <em>sigma</em>)</p>
@@ -305,7 +305,7 @@ C3[8] = + (715/262144 - 429/65536 * n) * eps^8
         + 429/131072 * eps^9;
 C3[9] = + 2431/1179648 * eps^9;
 </pre></div><p>The formula for area between the geodesic and the equator is given in Sec. 15 of <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a> in terms of <em>S</em>,</p>
-<p>&#160; &#160; <em>S</em> = <em>c<sup>2</sup></em> <em>alpha</em> + <em>e<sup>2</sup></em> <em>a<sup>2</sup></em> cos <em>alpha<sub>0</sub></em> sin <em>alpha<sub>0</sub></em> <em>I4</em>(<em>sigma</em>)</p>
+<p>&#160; &#160; <em>S</em> = <em>c</em><sup>2</sup> <em>alpha</em> + <em>e</em><sup>2</sup> <em>a</em><sup>2</sup> cos <em>alpha</em><sub>0</sub> sin <em>alpha</em><sub>0</sub> <em>I4</em>(<em>sigma</em>)</p>
 <p>where</p>
 <p>&#160; &#160; <em>I4</em>(<em>sigma</em>) = sum<sub><em>j</em> = 0</sub> <em>C4<sub>j</sub></em> cos((2<em>j</em> + 1) <em>sigma</em>)</p>
 <p>with</p>
@@ -366,7 +366,7 @@ C4[8] = + (1/141338340 - 1/164894730 * ep2) * k2^8
         - 1/34714680 * k2^9;
 C4[9] = + 1/737176440 * k2^9;
 </pre></div><center> Back to <a class="el" href="magnetic.html">Magnetic models</a>. Forward to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

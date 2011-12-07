@@ -6,15 +6,14 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: 3d2379a3cc3d715de56a4274e0a0735d95ee749e $
+# $Id: bd05b3437908f70fbcc21d1a91e1fec586276a7b $
 
-MAGNETIC_DEFAULT_PATH="@MAGNETIC_DEFAULT_PATH@"
-DEFAULTDIR=`dirname "$MAGNETIC_DEFAULT_PATH"`
+DEFAULTDIR="@DEFAULTDIR@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] magneticmodel...
 
-This program downloads and installs the megnetic models used by the
+This program downloads and installs the magnetic models used by the
 GeographicLib::MagneticModel class and the MagneticField tool to compute
 magnetic fields.  magneticmodel is one of more of the names from this
 table:

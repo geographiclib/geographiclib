@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP "$Id: 779cb64ba88ff77e42e606e9b186649f78b73064 $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP \
+  "$Id: 85d1d4b68c9f3d093838ba3801adbf038c4a1391 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -122,7 +123,7 @@ namespace GeographicLib {
     /**
      * Constructor for a ellipsoid with
      *
-     * @param[in] a equatorial radius (meters)
+     * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
      * @param[in] k0 central scale factor.
@@ -149,19 +150,19 @@ namespace GeographicLib {
      *   - \e lat in [0, 90] and \e lon - \e lon0 in [0, 90]
      *   - \e lat in (-90, 0] and \e lon - \e lon0 in [90 (1 - \e e), 90]
      * - the union of
-     *   - \e x/(\e k0 \e a) in [0, inf) and
-     *     \e y/(\e k0 \e a) in [0, E(\e e^2)]
-     *   - \e x/(\e k0 \e a) in [K(1 - \e e^2) - E(1 - \e e^2), inf) and
-     *     \e y/(\e k0 \e a) in (-inf, 0]
+     *   - <i>x</i>/(\e k0 \e a) in [0, inf) and
+     *     <i>y</i>/(\e k0 \e a) in [0, E(<i>e</i><sup>2</sup>)]
+     *   - <i>x</i>/(\e k0 \e a) in [K(1 - <i>e</i><sup>2</sup>) - E(1 -
+     *     <i>e</i><sup>2</sup>), inf) and <i>y</i>/(\e k0 \e a) in (-inf, 0]
      * .
      * See Sec. 5 of
      * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for a full
      * discussion of the treatment of the branch cut.
      *
-     * The method will work for all ellipsoids used in terrestial geodesy.  The
-     * method cannot be applied directly to the case of a sphere (\e f = 0)
+     * The method will work for all ellipsoids used in terrestrial geodesy.
+     * The method cannot be applied directly to the case of a sphere (\e f = 0)
      * because some the constants characterizing this method diverge in that
-     * limit, and in practise, \e f should be larger than about numeric_limits<
+     * limit, and in practice, \e f should be larger than about numeric_limits<
      * real >::%epsilon().  However, TransverseMercator treats the sphere
      * exactly.  An exception is thrown if either axis of the ellipsoid or \e
      * k0 is not positive or if \e f <= 0.

@@ -6,8 +6,16 @@
  * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with MagneticModel.o DMS.o
- * SphericalEngine.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o MagneticField \
+ *       MagneticField.cpp \
+ *       ../src/CircularEngine.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/Geocentric.cpp \
+ *       ../src/MagneticCircle.cpp \
+ *       ../src/MagneticModel.cpp \
+ *       ../src/SphericalEngine.cpp \
+ *       ../src/Utility.cpp
  *
  * See the <a href="MagneticField.1.html">man page</a> for usage
  * information.
@@ -17,8 +25,8 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <ctime>
 #include <GeographicLib/MagneticModel.hpp>
+#include <GeographicLib/MagneticCircle.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 
@@ -32,8 +40,8 @@ int main(int argc, char* argv[]) {
     std::string dir;
     std::string model = MagneticModel::DefaultMagneticName();
     std::string istring, ifile, ofile;
-    real time = 0;
-    bool timeset = false, rate = false;
+    real time = 0, lat = 0, h = 0;
+    bool timeset = false, circle = false, rate = false;
     real hguard = 500000, tguard = 50;
     int prec = 1;
 
@@ -50,6 +58,26 @@ int main(int argc, char* argv[]) {
         try {
           time = Utility::fractionalyear<real>(std::string(argv[m]));
           timeset = true;
+          circle = false;
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding argument of " << arg << ": "
+                    << e.what() << "\n";
+          return 1;
+        }
+      } else if (arg == "-c") {
+        if (m + 3 >= argc) return usage(1, true);
+        try {
+          time = Utility::fractionalyear<real>(std::string(argv[++m]));
+          DMS::flag ind;
+          lat = DMS::Decode(std::string(argv[++m]), ind);
+          if (ind == DMS::LONGITUDE)
+            throw GeographicErr("Bad hemisphere letter on latitude");
+          if (!(std::abs(lat) <= 90))
+            throw GeographicErr("Latitude not in [-90d, 90d]");
+          h =  Utility::num<real>(std::string(argv[++m]));
+          timeset = false;
+          circle = true;
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding argument of " << arg << ": "
@@ -101,7 +129,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: a104971f07ce982fb114f550ddfa21b507116021 $\n"
+          << ": $Id: 9eed3e6df94c67923b1730fe0dae826a5a73163e $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else {
@@ -159,12 +187,22 @@ int main(int argc, char* argv[]) {
     int retval = 0;
     try {
       const MagneticModel m(model, dir);
-      if (timeset && (time < m.MinTime() - tguard ||
-                      time > m.MaxTime() + tguard))
+      if ((timeset || circle)
+          && (!Math::isfinite<real>(time) ||
+              time < m.MinTime() - tguard ||
+              time > m.MaxTime() + tguard))
         throw GeographicErr("Time " + Utility::str(time) +
                             " too far outside allowed range [" +
                             Utility::str(m.MinTime()) + "," +
                             Utility::str(m.MaxTime()) + "]");
+      if (circle
+          && (!Math::isfinite<real>(h) ||
+              h < m.MinHeight() - hguard ||
+              h > m.MaxHeight() + hguard))
+        throw GeographicErr("Height " + Utility::str(h/1000) +
+                            "km too far outside allowed range [" +
+                            Utility::str(m.MinHeight()/1000) + "km," +
+                            Utility::str(m.MaxHeight()/1000) + "km]");
       if (verbose) {
         std::cerr << "Magnetic file: " << m.MagneticFile()      << "\n"
                   << "Name: "          << m.MagneticModelName() << "\n"
@@ -177,16 +215,22 @@ int main(int argc, char* argv[]) {
                   << m.MinHeight()/1000 << "km,"
                   << m.MaxHeight()/1000 << "km]\n";
       }
-      if (timeset && (time < m.MinTime() || time > m.MaxTime()))
+      if ((timeset || circle) && (time < m.MinTime() || time > m.MaxTime()))
         std::cerr << "WARNING: Time " << time
                   << " outside allowed range ["
                   << m.MinTime() << "," << m.MaxTime() << "]\n";
-
+      if (circle && (h < m.MinHeight() || h > m.MaxHeight()))
+        std::cerr << "WARNING: Height " << h/1000
+                  << "km outside allowed range ["
+                  << m.MinHeight()/1000 << "km,"
+                  << m.MaxHeight()/1000 << "km]\n";
+      const MagneticCircle c(circle ? m.Circle(time, lat, h) :
+                             MagneticCircle());
       std::string s, stra, strb;
       while (std::getline(*input, s)) {
         try {
           std::istringstream str(s);
-          if (!timeset) {
+          if (!(timeset || circle)) {
             if (!(str >> stra))
               throw GeographicErr("Incomplete input: " + s);
             time = Utility::fractionalyear<real>(stra);
@@ -201,25 +245,43 @@ int main(int argc, char* argv[]) {
                         << " outside allowed range ["
                         << m.MinTime() << "," << m.MaxTime() << "]\n";
           }
-          real h;
-          if (!(str >> stra >> strb >> h))
-            throw GeographicErr("Incomplete input: " + s);
-          real lat, lon;
-          DMS::DecodeLatLon(stra, strb, lat, lon);
-          if (h < m.MinHeight() - hguard || h > m.MaxHeight() + hguard)
-            throw GeographicErr("Height " + Utility::str(h/1000) +
-                                "km too far outside allowed range [" +
-                                Utility::str(m.MinHeight()/1000) + "km," +
-                                Utility::str(m.MaxHeight()/1000) + "km]");
-          if (h < m.MinHeight() || h > m.MaxHeight())
-            std::cerr << "WARNING: Height " << h/1000
-                      << "km outside allowed range ["
-                      << m.MinHeight()/1000 << "km,"
-                      << m.MaxHeight()/1000 << "km]\n";
+          real lon;
+          if (circle) {
+            if (!(str >> strb))
+              throw GeographicErr("Incomplete input: " + s);
+            DMS::flag ind;
+            lon = DMS::Decode(strb, ind);
+            if (ind == DMS::LATITUDE)
+              throw GeographicErr("Bad hemisphere letter on " + strb);
+            if (lon < -180 || lon > 360)
+              throw GeographicErr("Longitude " + strb + "not in [-180d, 360d]");
+          } else {
+            if (!(str >> stra >> strb))
+              throw GeographicErr("Incomplete input: " + s);
+            DMS::DecodeLatLon(stra, strb, lat, lon);
+            h = 0;              // h is optional
+            if (str >> h) {
+              if (h < m.MinHeight() - hguard || h > m.MaxHeight() + hguard)
+                throw GeographicErr("Height " + Utility::str(h/1000) +
+                                    "km too far outside allowed range [" +
+                                    Utility::str(m.MinHeight()/1000) + "km," +
+                                    Utility::str(m.MaxHeight()/1000) + "km]");
+              if (h < m.MinHeight() || h > m.MaxHeight())
+                std::cerr << "WARNING: Height " << h/1000
+                          << "km outside allowed range ["
+                          << m.MinHeight()/1000 << "km,"
+                          << m.MaxHeight()/1000 << "km]\n";
+            }
+            else
+              str.clear();
+          }
           if (str >> stra)
             throw GeographicErr("Extra junk in input: " + s);
           real bx, by, bz, bxt, byt, bzt;
-          m(time, lat, lon, h, bx, by, bz, bxt, byt, bzt);
+          if (circle)
+            c(lon, bx, by, bz, bxt, byt, bzt);
+          else
+            m(time, lat, lon, h, bx, by, bz, bxt, byt, bzt);
           real H, F, D, I, Ht, Ft, Dt, It;
           MagneticModel::FieldComponents(bx, by, bz, bxt, byt, bzt,
                                          H, F, D, I, Ht, Ft, Dt, It);

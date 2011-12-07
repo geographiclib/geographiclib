@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_HPP)
-#define GEOGRAPHICLIB_GEODESIC_HPP "$Id: e8ec844ee6192e0fd4e0e4105664cc5362a1660b $"
+#define GEOGRAPHICLIB_GEODESIC_HPP \
+  "$Id: 81785396c1ad962e10595c8b81d9673658669591 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -45,7 +46,7 @@ namespace GeographicLib {
    * Given \e lat1, \e lon1, \e lat2, and \e lon2, we can determine \e azi1, \e
    * azi2, and \e s12.  This is the \e inverse geodesic problem, whose solution
    * is given by Geodesic::Inverse.  Usually, the solution to the inverse
-   * problem is unique.  In cases where there are muliple solutions (all with
+   * problem is unique.  In cases where there are multiple solutions (all with
    * the same \e s12, of course), all the solutions can be easily generated
    * once a particular solution is provided.
    *
@@ -67,8 +68,8 @@ namespace GeographicLib {
    *   called the "reduced length" and is symmetric under interchange of the
    *   two points.  On a curved surface the reduced length obeys a symmetry
    *   relation, \e m12 + \e m21 = 0.  On a flat surface, we have \e m12 = \e
-   *   s12.  The ratio \e s12/\e m12 gives the azimuthal scale for an azimuthal
-   *   equidistant projection.
+   *   s12.  The ratio <i>s12</i>/\e m12 gives the azimuthal scale for an
+   *   azimuthal equidistant projection.
    * - <i>geodesic scale</i>.  Consider a reference geodesic and a second
    *   geodesic parallel to this one at point 1 and separated by a small
    *   distance \e dt.  The separation of the two geodesics at point 2 is \e
@@ -288,7 +289,7 @@ namespace GeographicLib {
     /**
      * Constructor for a ellipsoid with
      *
-     * @param[in] a equatorial radius (meters)
+     * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.

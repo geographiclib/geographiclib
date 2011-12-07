@@ -6,8 +6,13 @@
  * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with TransverseMercatorExact.o
- * EllipticFunction.o TransverseMercator.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o TransverseMercatorProj \
+ *       TransverseMercatorProj.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/EllipticFunction.cpp \
+ *       ../src/TransverseMercator.cpp \
+ *       ../src/TransverseMercatorExact.cpp
  *
  * See the <a href="TransverseMercatorProj.1.html">man page</a> for usage
  * information.
@@ -99,7 +104,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 483642201e5566bc8ea25a82692adce0a9cbd40f $\n"
+          << ": $Id: 9b13c08c33190c03afbd6fbab75246eb16e249cb $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

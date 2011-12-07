@@ -72,7 +72,7 @@ is used (<em>a</em> = 6378137 m, <em>f</em> = 1/298.257223563).</p>
 <em>longitude</em> using decimal degrees or degrees minutes seconds.  d, ',
 and &quot; are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See <a href="#quoting">QUOTING</a> for how to
-quote the charachers ' and &quot; when entering coordinates on the command
+quote the characters ' and &quot; when entering coordinates on the command
 line.)  Various unicode characters (encoded with UTF-8) may also be used
 to denote degrees, minutes, and seconds, e.g., the degree, prime, and
 double prime symbols.  Alternatively, : (colon) may be used to separate
@@ -145,8 +145,8 @@ degrees clockwise from true north.</p>
 <dt><strong><a name="p" class="item"><strong>-p</strong></a></strong></dt>
 
 <dd>
-<p>set the precision to <em>prec</em> (default 0); <em>prec</em> is the precision
-relative to 1 m.  See <a href="#precision">PRECISION</a>.</p>
+<p>set the output precision to <em>prec</em> (default 0); <em>prec</em> is the
+precision relative to 1 m.  See <a href="#precision">PRECISION</a>.</p>
 </dd>
 <dt><strong><a name="z" class="item"><strong>-z</strong></a></strong></dt>
 
@@ -238,7 +238,7 @@ component.  Print convergence, resp. scale, with 5 + <em>prec</em>, resp. 7 +
 is in zone <code>38N</code> with 444km &lt;= <em>easting</em> &lt; 445km and 3688km &lt;=
 <em>northing</em> &lt; 3689km.  Consistent with this representation,
 coordinates are <em>truncated</em> (instead of <em>rounded</em>) to the requested
-precision.  Similiarly, on input an MGRS coordinate represents the
+precision.  Similarly, on input an MGRS coordinate represents the
 <em>center</em> of the square (<code>38N 444500 3688500</code> in the example above).
 However, if the <strong>-n</strong> option is given then the south-west corner of the
 square is returned instead (<code>38N 444000 3688000</code> in the example above).</p>
@@ -249,7 +249,7 @@ square is returned instead (<code>38N 444000 3688000</code> in the example above
 <p>If the input is <strong>geographic</strong>, <strong>GeoConvert</strong> uses the standard rules of
 selecting UTM vs UPS and for assigning the UTM zone (with the Norway and
 Svalbard exceptions).  If the input is <strong>UTM/UPS</strong>, or <strong>MGRS</strong>, then the
-choice beteen UTM and UPS and the UTM zone mirrors the input.  The <strong>-z</strong>
+choice between UTM and UPS and the UTM zone mirrors the input.  The <strong>-z</strong>
 <em>zone</em>, <strong>-s</strong>, <strong>-t</strong> options allow these rules to be overridden with
 <em>zone</em> = 0 being used to indicate UPS.  For example, the point</p>
 <pre>
@@ -340,7 +340,7 @@ following lines will be converted.</p>
 <dt><strong><a name="ups" class="item"><strong>UPS</strong></a></strong></dt>
 
 <dd>
-<p>Univeral Polar Stereographic,
+<p>Universal Polar Stereographic,
 <a href="http://en.wikipedia.org/wiki/Universal_Polar_Stereographic">http://en.wikipedia.org/wiki/Universal_Polar_Stereographic</a>.</p>
 </dd>
 <dt><strong><a name="mgrs" class="item"><strong>MGRS</strong></a></strong></dt>

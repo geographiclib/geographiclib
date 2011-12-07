@@ -56,8 +56,8 @@
 <code>#include &lt;string&gt;</code><br/>
 <code>#include &lt;sstream&gt;</code><br/>
 <code>#include &lt;fstream&gt;</code><br/>
-<code>#include &lt;ctime&gt;</code><br/>
 <code>#include &lt;<a class="el" href="MagneticModel_8hpp_source.html">GeographicLib/MagneticModel.hpp</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="MagneticCircle_8hpp_source.html">GeographicLib/MagneticCircle.hpp</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="DMS_8hpp_source.html">GeographicLib/DMS.hpp</a>&gt;</code><br/>
 <code>#include &lt;<a class="el" href="Utility_8hpp_source.html">GeographicLib/Utility.hpp</a>&gt;</code><br/>
 <code>#include &quot;MagneticField.usage&quot;</code><br/>
@@ -71,7 +71,7 @@ Functions</h2></td></tr>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Command line utility for evaluating magnetic fields. </p>
 <p>Copyright (c) Charles Karney (2011) &lt;<a href="mailto:charles@karney.com">charles@karney.com</a>&gt; and licensed under the MIT/X11 License. For more information, see <a href="http://geographiclib.sourceforge.net/">http://geographiclib.sourceforge.net/</a></p>
-<p>Compile with -I../include and link with MagneticModel.o DMS.o SphericalEngine.o</p>
+<p>Compile and link with g++ -g -O3 -I../include -I../man -o MagneticField \ <a class="el" href="MagneticField_8cpp.html" title="Command line utility for evaluating magnetic fields.">MagneticField.cpp</a> \ ../src/CircularEngine.cpp \ ../src/DMS.cpp \ ../src/Geocentric.cpp \ ../src/MagneticCircle.cpp \ ../src/MagneticModel.cpp \ ../src/SphericalEngine.cpp \ ../src/Utility.cpp</p>
 <p>See the <a href="MagneticField.1.html">man page</a> for usage information. </p>
 
 <p>Definition in file <a class="el" href="MagneticField_8cpp_source.html">MagneticField.cpp</a>.</p>
@@ -101,14 +101,14 @@ Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="MagneticField_8cpp_source.html#l00027">27</a> of file <a class="el" href="MagneticField_8cpp_source.html">MagneticField.cpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticField_8cpp_source.html#l00035">35</a> of file <a class="el" href="MagneticField_8cpp_source.html">MagneticField.cpp</a>.</p>
 
-<p>References <a class="el" href="MagneticModel_8hpp_source.html#l00254">GeographicLib::MagneticModel::DateTime()</a>, <a class="el" href="DMS_8cpp_source.html#l00207">GeographicLib::DMS::DecodeLatLon()</a>, <a class="el" href="MagneticModel_8cpp_source.html#l00279">GeographicLib::MagneticModel::DefaultMagneticName()</a>, <a class="el" href="MagneticModel_8cpp_source.html#l00271">GeographicLib::MagneticModel::DefaultMagneticPath()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00249">GeographicLib::MagneticModel::Description()</a>, <a class="el" href="DMS_8cpp_source.html#l00261">GeographicLib::DMS::Encode()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00208">GeographicLib::MagneticModel::FieldComponents()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00259">GeographicLib::MagneticModel::MagneticFile()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00265">GeographicLib::MagneticModel::MagneticModelName()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00292">GeographicLib::MagneticModel::MaxHeight()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00314">GeographicLib::MagneticModel::MaxTime()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00281">GeographicLib::MagneticModel::MinHeight()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00303">GeographicLib::MagneticModel::MinTime()</a>, <a class="el" href="DMS_8hpp_source.html#l00086">GeographicLib::DMS::NUMBER</a>, and <a class="el" href="Utility_8hpp_source.html#l00255">GeographicLib::Utility::str()</a>.</p>
+<p>References <a class="el" href="MagneticModel_8cpp_source.html#l00207">GeographicLib::MagneticModel::Circle()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00254">GeographicLib::MagneticModel::DateTime()</a>, <a class="el" href="DMS_8cpp_source.html#l00031">GeographicLib::DMS::Decode()</a>, <a class="el" href="DMS_8cpp_source.html#l00207">GeographicLib::DMS::DecodeLatLon()</a>, <a class="el" href="MagneticModel_8cpp_source.html#l00250">GeographicLib::MagneticModel::DefaultMagneticName()</a>, <a class="el" href="MagneticModel_8cpp_source.html#l00237">GeographicLib::MagneticModel::DefaultMagneticPath()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00248">GeographicLib::MagneticModel::Description()</a>, <a class="el" href="DMS_8cpp_source.html#l00261">GeographicLib::DMS::Encode()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00207">GeographicLib::MagneticModel::FieldComponents()</a>, <a class="el" href="DMS_8hpp_source.html#l00070">GeographicLib::DMS::LATITUDE</a>, <a class="el" href="DMS_8hpp_source.html#l00075">GeographicLib::DMS::LONGITUDE</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00259">GeographicLib::MagneticModel::MagneticFile()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00265">GeographicLib::MagneticModel::MagneticModelName()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00292">GeographicLib::MagneticModel::MaxHeight()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00314">GeographicLib::MagneticModel::MaxTime()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00281">GeographicLib::MagneticModel::MinHeight()</a>, <a class="el" href="MagneticModel_8hpp_source.html#l00303">GeographicLib::MagneticModel::MinTime()</a>, <a class="el" href="DMS_8hpp_source.html#l00086">GeographicLib::DMS::NUMBER</a>, and <a class="el" href="Utility_8hpp_source.html#l00256">GeographicLib::Utility::str()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

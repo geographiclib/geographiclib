@@ -9,11 +9,13 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic localcartesianreverse.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+//    -lGeographic localcartesianreverse.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic localcartesianreverse.cpp
+// mex -I../include -L../windows/Release
+//    -lGeographic localcartesianreverse.cpp
 
-// $Id: 0a761c46799fbf7b23af088c14147114b7d84848 $
+// $Id: 10fe61f546a91a36af5ce60d35bc9e13df21c769 $
 
 #include <GeographicLib/LocalCartesian.hpp>
 #include <mex.h>

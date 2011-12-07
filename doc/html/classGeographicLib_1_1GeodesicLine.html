@@ -117,10 +117,7 @@ Friends</h2></td></tr>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A geodesic line. </p>
 <p><a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> facilitates the determination of a series of points on a single geodesic. The starting point (<em>lat1</em>, <em>lon1</em>) and the azimuth <em>azi1</em> are specified in the constructor. <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine.Position</a> returns the location of point 2 a distance <em>s12</em> along the geodesic. Alternatively <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine.ArcPosition</a> gives the position of point 2 an arc length <em>a12</em> along the geodesic. An example of use of this class is: </p>
-<div class="fragment"><pre class="fragment"><span class="preprocessor">   #include &lt;iostream&gt;</span>
-<span class="preprocessor">   #include &lt;iomanip&gt;</span>
-<span class="preprocessor">   #include &lt;cmath&gt;</span>
-<span class="preprocessor">   #include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
+<div class="fragment"><pre class="fragment"><span class="preprocessor">   #include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
 <span class="preprocessor">   #include &lt;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&gt;</span>
 
    <span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
@@ -156,7 +153,7 @@ Friends</h2></td></tr>
 </ul>
 <p>For more information on geodesics see <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00084">84</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00082">82</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="adeec76cf92a8c30770e1199bdadacbcc"></a><!-- doxytag: member="GeographicLib::GeodesicLine::mask" ref="adeec76cf92a8c30770e1199bdadacbcc" args="" -->
 <div class="memitem">
@@ -168,7 +165,7 @@ Friends</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Bit masks for what calculations to do. These masks do double duty. They signify to the <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a5669be85b4a574258f4a136f12d3f1bb">GeodesicLine::GeodesicLine</a> constructor and to <a class="el" href="classGeographicLib_1_1Geodesic.html#a3ac241c18897bb9bec4b839d7e1a7c59">Geodesic::Line</a> what capabilities should be included in the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object. They also specify which results to return in the general routines <a class="el" href="classGeographicLib_1_1Geodesic.html#acaef3032846a71fc730e1ea26ea32d20">Geodesic::GenDirect</a> and <a class="el" href="classGeographicLib_1_1Geodesic.html#a84a3b9b457dd87b1059045b9d50303fd">Geodesic::GenInverse</a> routines. This is merely a duplication of <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828">Geodesic::mask</a>. </p>
+<p>Bit masks for what calculations to do. They signify to the <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a5669be85b4a574258f4a136f12d3f1bb">GeodesicLine::GeodesicLine</a> constructor and to <a class="el" href="classGeographicLib_1_1Geodesic.html#a3ac241c18897bb9bec4b839d7e1a7c59">Geodesic::Line</a> what capabilities should be included in the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object. This is merely a duplication of <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828">Geodesic::mask</a>. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="adeec76cf92a8c30770e1199bdadacbcca0f2ec05e56540d908a326a872b9aa68f"></a><!-- doxytag: member="NONE" ref="adeec76cf92a8c30770e1199bdadacbcca0f2ec05e56540d908a326a872b9aa68f" args="" -->NONE</em>&nbsp;</td><td>
 <p>No capabilities, no output. </p>
@@ -204,7 +201,7 @@ Friends</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00123">123</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00119">119</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -251,7 +248,7 @@ Friends</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Constructor for a geodesic line staring at latitude <em>lat1</em>, longitude <em>lon1</em>, and aziumuth <em>azi1</em> (all in degrees).</p>
+<p>Constructor for a geodesic line staring at latitude <em>lat1</em>, longitude <em>lon1</em>, and azimuth <em>azi1</em> (all in degrees).</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">g</td><td>A <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used to compute the necessary information about the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a>.</td></tr>
@@ -277,7 +274,7 @@ Friends</h2></td></tr>
 <p>The default value of <em>caps</em> is <a class="el" href="classGeographicLib_1_1GeodesicLine.html#adeec76cf92a8c30770e1199bdadacbccabf2df1a904dc1c546a122ac0ebe1acd6">GeodesicLine::ALL</a> which turns on all the capabilities.</p>
 <p>If the point is at a pole, the azimuth is defined by keeping the <em>lon1</em> fixed and writing <em>lat1</em> = 90 - <em>eps</em> or -90 + <em>eps</em> and taking the limit <em>eps</em> -&gt; 0 from above. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8cpp_source.html#l00040">40</a> of file <a class="el" href="GeodesicLine_8cpp_source.html">GeodesicLine.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8cpp_source.html#l00041">41</a> of file <a class="el" href="GeodesicLine_8cpp_source.html">GeodesicLine.cpp</a>.</p>
 
 </div>
 </div>
@@ -296,7 +293,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A default constructor. If <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine::Position</a> is called on the resulting object, it returns immediately (without doing any calculations). The object can be set with a call to <a class="el" href="classGeographicLib_1_1Geodesic.html#a3ac241c18897bb9bec4b839d7e1a7c59">Geodesic::Line</a>. Use <a class="el" href="classGeographicLib_1_1GeodesicLine.html#af7e248d7632f56cf7abc6eac4927a587">Init()</a> to test whether object is still in this uninitialized state. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00234">234</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00230">230</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -380,9 +377,9 @@ Friends</h2></td></tr>
 <p>The <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object <em>must</em> have been constructed with <em>caps</em> |= <a class="el" href="classGeographicLib_1_1GeodesicLine.html#adeec76cf92a8c30770e1199bdadacbcca7929baa71a65e8399073f67382e4d0bc">GeodesicLine::DISTANCE_IN</a>; otherwise <a class="el" href="classGeographicLib_1_1Math.html#a77c57c61f93d7ac3f6a5095489c36715">Math::NaN()</a> is returned and no parameters are set. Requesting a value which the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object is not capable of computing is not an error; the corresponding argument will not be altered.</p>
 <p>The following functions are overloaded versions of <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine::Position</a> which omit some of the output parameters. Note, however, that the arc length is always computed and returned as the function value. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00279">279</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00275">275</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Gnomonic_8cpp_source.html#l00043">GeographicLib::Gnomonic::Reverse()</a>.</p>
+<p>Referenced by <a class="el" href="Gnomonic_8cpp_source.html#l00044">GeographicLib::Gnomonic::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -418,7 +415,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine::Position</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00293">293</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00289">289</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -460,7 +457,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine::Position</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00303">303</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00299">299</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -508,7 +505,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine::Position</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00314">314</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00310">310</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -562,7 +559,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine::Position</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00326">326</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00322">322</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -622,7 +619,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#ac9843cbfff45e8163b78e184a3126d82">GeodesicLine::Position</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00339">339</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00335">335</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -711,7 +708,7 @@ Friends</h2></td></tr>
 <p>Requesting a value which the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object is not capable of computing is not an error; the corresponding argument will not be altered.</p>
 <p>The following functions are overloaded versions of <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine::ArcPosition</a> which omit some of the output parameters. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00392">392</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00388">388</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -747,7 +744,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine::ArcPosition</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00404">404</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00400">400</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -789,7 +786,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine::ArcPosition</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00415">415</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00411">411</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -837,7 +834,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine::ArcPosition</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00427">427</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00423">423</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -891,7 +888,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine::ArcPosition</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00438">438</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00434">434</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -951,7 +948,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine::ArcPosition</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00450">450</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00446">446</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1017,7 +1014,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>See the documentation for <a class="el" href="classGeographicLib_1_1GeodesicLine.html#a9270eecb58eaac3115a5f08879990482">GeodesicLine::ArcPosition</a>. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00463">463</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00459">459</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1129,9 +1126,9 @@ Friends</h2></td></tr>
 </ul>
 <p>Requesting a value which the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object is not capable of computing is not an error; the corresponding argument will not be altered. Note, however, that the arc length is always computed and returned as the function value. </p>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8cpp_source.html#l00128">128</a> of file <a class="el" href="GeodesicLine_8cpp_source.html">GeodesicLine.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8cpp_source.html#l00129">129</a> of file <a class="el" href="GeodesicLine_8cpp_source.html">GeodesicLine.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="CassiniSoldner_8cpp_source.html#l00038">GeographicLib::CassiniSoldner::Forward()</a>.</p>
+<p>Referenced by <a class="el" href="CassiniSoldner_8cpp_source.html#l00039">GeographicLib::CassiniSoldner::Forward()</a>.</p>
 
 </div>
 </div>
@@ -1150,7 +1147,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if the object has been initialized. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00542">542</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00538">538</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1169,7 +1166,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>lat1</em> the latitude of point 1 (degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00547">547</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00543">543</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1188,7 +1185,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>lon1</em> the longitude of point 1 (degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00553">553</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00549">549</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1207,7 +1204,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>azi1</em> the azimuth (degrees) of the geodesic line at point 1. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00559">559</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00555">555</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1226,7 +1223,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>azi0</em> the azimuth (degrees) of the geodesic line as it crosses the equator in a northward direction. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00566">566</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00562">562</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1245,7 +1242,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a1</em> the arc length (degrees) between the northward equatorial crossing and point 1. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00575">575</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00571">571</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1264,7 +1261,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00584">584</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00580">580</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1283,7 +1280,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00591">591</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00587">587</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1303,7 +1300,7 @@ Friends</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00598">598</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00594">594</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1322,7 +1319,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>caps</em> the computational capabilities that this object was constructed with. LATITUDE and AZIMUTH are always included. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00605">605</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00601">601</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1348,7 +1345,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object has all these capabilities. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00611">611</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00607">607</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1364,7 +1361,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00087">87</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeodesicLine_8hpp_source.html#l00085">85</a> of file <a class="el" href="GeodesicLine_8hpp_source.html">GeodesicLine.hpp</a>.</p>
 
 </div>
 </div>
@@ -1373,7 +1370,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="GeodesicLine_8cpp_source.html">GeodesicLine.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

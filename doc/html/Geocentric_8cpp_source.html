@@ -58,179 +58,180 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="Geocentric_8hpp.html" title="Header for GeographicLib::Geocentric class.">GeographicLib/Geocentric.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 
-<a name="l00012"></a><a class="code" href="Geocentric_8cpp.html#a290e33302d7c35b9465d73f33dcb0774">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_CPP &quot;$Id: b0ff568567c01468c2238235842d09ab8be527fe $&quot;</span>
-<a name="l00013"></a>00013 <span class="preprocessor"></span>
-<a name="l00014"></a>00014 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geocentric_8cpp.html#a290e33302d7c35b9465d73f33dcb0774">GEOGRAPHICLIB_GEOCENTRIC_CPP</a>)
-<a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">GEOGRAPHICLIB_GEOCENTRIC_HPP</a>)
-<a name="l00016"></a>00016 
-<a name="l00017"></a>00017 namespace GeographicLib {
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019   <span class="keyword">using namespace </span>std;
-<a name="l00020"></a>00020 
-<a name="l00021"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a6527d3ab1df78de8277122581dbcdaff">00021</a>   Geocentric::Geocentric(real a, real f)
-<a name="l00022"></a>00022     : _a(a)
-<a name="l00023"></a>00023     , _f(f &lt;= 1 ? f : 1/f)
-<a name="l00024"></a>00024     , _e2(_f * (2 - _f))
-<a name="l00025"></a>00025     , _e2m(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::sq(1 - _f))          <span class="comment">// 1 - _e2</span>
-<a name="l00026"></a>00026     , _e2a(abs(_e2))
-<a name="l00027"></a>00027     , _e4a(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::sq(_e2))
-<a name="l00028"></a>00028     , _maxrad(2 * _a / numeric_limits&lt;real&gt;::epsilon())
-<a name="l00029"></a>00029   {
-<a name="l00030"></a>00030     <span class="keywordflow">if</span> (!(<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(_a) &amp;&amp; _a &gt; 0))
-<a name="l00031"></a>00031       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Major radius is not positive&quot;</span>);
-<a name="l00032"></a>00032     <span class="keywordflow">if</span> (!(<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(_f) &amp;&amp; _f &lt; 1))
-<a name="l00033"></a>00033       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Minor radius is not positive&quot;</span>);
-<a name="l00034"></a>00034   }
-<a name="l00035"></a>00035 
-<a name="l00036"></a>00036   <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>(Constants::WGS84_a&lt;real&gt;(),
-<a name="l00037"></a>00037                                      Constants::WGS84_f&lt;real&gt;());
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039   <span class="keywordtype">void</span> Geocentric::IntForward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h,
-<a name="l00040"></a>00040                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; z,
-<a name="l00041"></a>00041                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00042"></a>00042     lon = lon &gt;= 180 ? lon - 360 : (lon &lt; -180 ? lon + 360 : lon);
-<a name="l00043"></a>00043     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00044"></a>00044       phi = lat * Math::degree&lt;real&gt;(),
-<a name="l00045"></a>00045       lam = lon * Math::degree&lt;real&gt;(),
-<a name="l00046"></a>00046       sphi = sin(phi),
-<a name="l00047"></a>00047       cphi = abs(lat) == 90 ? 0 : cos(phi),
-<a name="l00048"></a>00048       n = _a/sqrt(1 - _e2 * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(sphi)),
-<a name="l00049"></a>00049       slam = lon == -180 ? 0 : sin(lam),
-<a name="l00050"></a>00050       clam = abs(lon) == 90 ? 0 : cos(lam);
-<a name="l00051"></a>00051     z = ( _e2m * n + h) * sphi;
-<a name="l00052"></a>00052     x = (n + h) * cphi;
-<a name="l00053"></a>00053     y = x * slam;
-<a name="l00054"></a>00054     x *= clam;
-<a name="l00055"></a>00055     <span class="keywordflow">if</span> (M)
-<a name="l00056"></a>00056       Rotation(sphi, cphi, slam, clam, M);
-<a name="l00057"></a>00057   }
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059   <span class="keywordtype">void</span> Geocentric::IntReverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> z,
-<a name="l00060"></a>00060                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; h,
-<a name="l00061"></a>00061                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00062"></a>00062     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00063"></a>00063       R = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(x, y),
-<a name="l00064"></a>00064       slam = R ? y / R : 0,
-<a name="l00065"></a>00065       clam = R ? x / R : 1;
-<a name="l00066"></a>00066     h = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(R, z);      <span class="comment">// Distance to center of earth</span>
-<a name="l00067"></a>00067     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sphi, cphi;
-<a name="l00068"></a>00068     <span class="keywordflow">if</span> (h &gt; _maxrad) {
-<a name="l00069"></a>00069       <span class="comment">// We really far away (&gt; 12 million light years); treat the earth as a</span>
-<a name="l00070"></a>00070       <span class="comment">// point and h, above, is an acceptable approximation to the height.</span>
-<a name="l00071"></a>00071       <span class="comment">// This avoids overflow, e.g., in the computation of disc below.  It&#39;s</span>
-<a name="l00072"></a>00072       <span class="comment">// possible that h has overflowed to inf; but that&#39;s OK.</span>
-<a name="l00073"></a>00073       <span class="comment">//</span>
-<a name="l00074"></a>00074       <span class="comment">// Treat the case x, y finite, but R overflows to +inf by scaling by 2.</span>
-<a name="l00075"></a>00075       R = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(x/2, y/2);
-<a name="l00076"></a>00076       slam = R ? (y/2) / R : 0;
-<a name="l00077"></a>00077       clam = R ? (x/2) / R : 1;
-<a name="l00078"></a>00078       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(z/2, R);
-<a name="l00079"></a>00079       sphi = (z/2) / H;
-<a name="l00080"></a>00080       cphi = R / H;
-<a name="l00081"></a>00081     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (_e4a == 0) {
-<a name="l00082"></a>00082       <span class="comment">// Treat the spherical case.  Dealing with underflow in the general case</span>
-<a name="l00083"></a>00083       <span class="comment">// with _e2 = 0 is difficult.  Origin maps to N pole same as with</span>
-<a name="l00084"></a>00084       <span class="comment">// ellipsoid.</span>
-<a name="l00085"></a>00085       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(h == 0 ? 1 : z, R);
-<a name="l00086"></a>00086       sphi = (h == 0 ? 1 : z) / H;
-<a name="l00087"></a>00087       cphi = R / H;
-<a name="l00088"></a>00088       h -= _a;
-<a name="l00089"></a>00089     } <span class="keywordflow">else</span> {
-<a name="l00090"></a>00090       <span class="comment">// Treat prolate spheroids by swapping R and z here and by switching</span>
-<a name="l00091"></a>00091       <span class="comment">// the arguments to phi = atan2(...) at the end.</span>
-<a name="l00092"></a>00092       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00093"></a>00093         p = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(R / _a),
-<a name="l00094"></a>00094         q = _e2m * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(z / _a),
-<a name="l00095"></a>00095         r = (p + q - _e4a) / 6;
-<a name="l00096"></a>00096       <span class="keywordflow">if</span> (_f &lt; 0) swap(p, q);
-<a name="l00097"></a>00097       <span class="keywordflow">if</span> ( !(_e4a * q == 0 &amp;&amp; r &lt;= 0) ) {
-<a name="l00098"></a>00098         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00099"></a>00099           <span class="comment">// Avoid possible division by zero when r = 0 by multiplying</span>
-<a name="l00100"></a>00100           <span class="comment">// equations for s and t by r^3 and r, resp.</span>
-<a name="l00101"></a>00101           S = _e4a * p * q / 4, <span class="comment">// S = r^3 * s</span>
-<a name="l00102"></a>00102           r2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(r),
-<a name="l00103"></a>00103           r3 = r * r2,
-<a name="l00104"></a>00104           disc =  S * (2 * r3 + S);
-<a name="l00105"></a>00105         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> u = r;
-<a name="l00106"></a>00106         <span class="keywordflow">if</span> (disc &gt;= 0) {
-<a name="l00107"></a>00107           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> T3 = S + r3;
-<a name="l00108"></a>00108           <span class="comment">// Pick the sign on the sqrt to maximize abs(T3).  This minimizes</span>
-<a name="l00109"></a>00109           <span class="comment">// loss of precision due to cancellation.  The result is unchanged</span>
-<a name="l00110"></a>00110           <span class="comment">// because of the way the T is used in definition of u.</span>
-<a name="l00111"></a>00111           T3 += T3 &lt; 0 ? -sqrt(disc) : sqrt(disc); <span class="comment">// T3 = (r * t)^3</span>
-<a name="l00112"></a>00112           <span class="comment">// N.B. cbrt always returns the real root.  cbrt(-8) = -2.</span>
-<a name="l00113"></a>00113           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> T = <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">Math::cbrt</a>(T3); <span class="comment">// T = r * t</span>
-<a name="l00114"></a>00114           <span class="comment">// T can be zero; but then r2 / T -&gt; 0.</span>
-<a name="l00115"></a>00115           u += T + (T != 0 ? r2 / T : 0);
-<a name="l00116"></a>00116         } <span class="keywordflow">else</span> {
-<a name="l00117"></a>00117           <span class="comment">// T is complex, but the way u is defined the result is real.</span>
-<a name="l00118"></a>00118           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ang = atan2(sqrt(-disc), -(S + r3));
-<a name="l00119"></a>00119           <span class="comment">// There are three possible cube roots.  We choose the root which</span>
-<a name="l00120"></a>00120           <span class="comment">// avoids cancellation.  Note that disc &lt; 0 implies that r &lt; 0.</span>
-<a name="l00121"></a>00121           u += 2 * r * cos(ang / 3);
-<a name="l00122"></a>00122         }
-<a name="l00123"></a>00123         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00124"></a>00124           v = sqrt(<a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(u) + _e4a * q), <span class="comment">// guaranteed positive</span>
-<a name="l00125"></a>00125           <span class="comment">// Avoid loss of accuracy when u &lt; 0.  Underflow doesn&#39;t occur in</span>
-<a name="l00126"></a>00126           <span class="comment">// e4 * q / (v - u) because u ~ e^4 when q is small and u &lt; 0.</span>
-<a name="l00127"></a>00127           uv = u &lt; 0 ? _e4a * q / (v - u) : u + v, <span class="comment">// u+v, guaranteed positive</span>
-<a name="l00128"></a>00128           <span class="comment">// Need to guard against w going negative due to roundoff in uv - q.</span>
-<a name="l00129"></a>00129           w = max(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), _e2a * (uv - q) / (2 * v)),
-<a name="l00130"></a>00130           <span class="comment">// Rearrange expression for k to avoid loss of accuracy due to</span>
-<a name="l00131"></a>00131           <span class="comment">// subtraction.  Division by 0 not possible because uv &gt; 0, w &gt;= 0.</span>
-<a name="l00132"></a>00132           k = uv / (sqrt(uv + <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(w)) + w),
-<a name="l00133"></a>00133           k1 = _f &gt;= 0 ? k : k - _e2,
-<a name="l00134"></a>00134           k2 = _f &gt;= 0 ? k + _e2 : k,
-<a name="l00135"></a>00135           d = k1 * R / k2,
-<a name="l00136"></a>00136           H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(z/k1, R/k2);
-<a name="l00137"></a>00137         sphi = (z/k1) / H;
-<a name="l00138"></a>00138         cphi = (R/k2) / H;
-<a name="l00139"></a>00139         h = (1 - _e2m/k1) * <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(d, z);
-<a name="l00140"></a>00140       } <span class="keywordflow">else</span> {                  <span class="comment">// e4 * q == 0 &amp;&amp; r &lt;= 0</span>
-<a name="l00141"></a>00141         <span class="comment">// This leads to k = 0 (oblate, equatorial plane) and k + e^2 = 0</span>
-<a name="l00142"></a>00142         <span class="comment">// (prolate, rotation axis) and the generation of 0/0 in the general</span>
-<a name="l00143"></a>00143         <span class="comment">// formulas for phi and h.  using the general formula and division by 0</span>
-<a name="l00144"></a>00144         <span class="comment">// in formula for h.  So handle this case by taking the limits:</span>
-<a name="l00145"></a>00145         <span class="comment">// f &gt; 0: z -&gt; 0, k      -&gt;   e2 * sqrt(q)/sqrt(e4 - p)</span>
-<a name="l00146"></a>00146         <span class="comment">// f &lt; 0: R -&gt; 0, k + e2 -&gt; - e2 * sqrt(q)/sqrt(e4 - p)</span>
-<a name="l00147"></a>00147         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00148"></a>00148           zz = sqrt((_f &gt;= 0 ? _e4a - p : p) / _e2m),
-<a name="l00149"></a>00149           xx = sqrt( _f &lt;  0 ? _e4a - p : p        ),
-<a name="l00150"></a>00150           H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(zz, xx);
-<a name="l00151"></a>00151         sphi = zz / H;
-<a name="l00152"></a>00152         cphi = xx / H;
-<a name="l00153"></a>00153         <span class="keywordflow">if</span> (z &lt; 0) sphi = -sphi; <span class="comment">// for tiny negative z (not for prolate)</span>
-<a name="l00154"></a>00154         h = - _a * (_f &gt;= 0 ? _e2m : 1) * H / _e2a;
-<a name="l00155"></a>00155       }
-<a name="l00156"></a>00156     }
-<a name="l00157"></a>00157     lat = atan2(sphi, cphi) / Math::degree&lt;real&gt;();
-<a name="l00158"></a>00158     <span class="comment">// Negative signs return lon in [-180, 180).</span>
-<a name="l00159"></a>00159     lon = -atan2(-slam, clam) / Math::degree&lt;real&gt;();
-<a name="l00160"></a>00160     <span class="keywordflow">if</span> (M)
-<a name="l00161"></a>00161       Rotation(sphi, cphi, slam, clam, M);
-<a name="l00162"></a>00162   }
-<a name="l00163"></a>00163 
-<a name="l00164"></a>00164   <span class="keywordtype">void</span> Geocentric::Rotation(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sphi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> cphi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> slam, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> clam,
-<a name="l00165"></a>00165                             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keywordflow">throw</span>() {
-<a name="l00166"></a>00166     <span class="comment">// This rotation matrix is given by the following quaternion operations</span>
-<a name="l00167"></a>00167     <span class="comment">// qrot(lam, [0,0,1]) * qrot(phi, [0,-1,0]) * [1,1,1,1]/2</span>
-<a name="l00168"></a>00168     <span class="comment">// or</span>
-<a name="l00169"></a>00169     <span class="comment">// qrot(pi/2 + lam, [0,0,1]) * qrot(-pi/2 + phi , [-1,0,0])</span>
-<a name="l00170"></a>00170     <span class="comment">// where</span>
-<a name="l00171"></a>00171     <span class="comment">// qrot(t,v) = [cos(t/2), sin(t/2)*v[1], sin(t/2)*v[2], sin(t/2)*v[3]]</span>
-<a name="l00172"></a>00172 
-<a name="l00173"></a>00173     <span class="comment">// Local x axis (east) in geocentric coords</span>
-<a name="l00174"></a>00174     M[0] = -slam;        M[3] =  clam;        M[6] = 0;
-<a name="l00175"></a>00175     <span class="comment">// Local y axis (north) in geocentric coords</span>
-<a name="l00176"></a>00176     M[1] = -clam * sphi; M[4] = -slam * sphi; M[7] = cphi;
-<a name="l00177"></a>00177     <span class="comment">// Local z axis (up) in geocentric coords</span>
-<a name="l00178"></a>00178     M[2] =  clam * cphi; M[5] =  slam * cphi; M[8] = sphi;
-<a name="l00179"></a>00179   }
-<a name="l00180"></a>00180 
-<a name="l00181"></a>00181 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00012"></a><a class="code" href="Geocentric_8cpp.html#a290e33302d7c35b9465d73f33dcb0774">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_CPP \</span>
+<a name="l00013"></a>00013 <span class="preprocessor">  &quot;$Id: d237d2d9a4fe5fad3d4f13147cd4cba15130543f $&quot;</span>
+<a name="l00014"></a>00014 <span class="preprocessor"></span>
+<a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geocentric_8cpp.html#a290e33302d7c35b9465d73f33dcb0774">GEOGRAPHICLIB_GEOCENTRIC_CPP</a>)
+<a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">GEOGRAPHICLIB_GEOCENTRIC_HPP</a>)
+<a name="l00017"></a>00017 
+<a name="l00018"></a>00018 namespace GeographicLib {
+<a name="l00019"></a>00019 
+<a name="l00020"></a>00020   <span class="keyword">using namespace </span>std;
+<a name="l00021"></a>00021 
+<a name="l00022"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a6527d3ab1df78de8277122581dbcdaff">00022</a>   Geocentric::Geocentric(real a, real f)
+<a name="l00023"></a>00023     : _a(a)
+<a name="l00024"></a>00024     , _f(f &lt;= 1 ? f : 1/f)
+<a name="l00025"></a>00025     , _e2(_f * (2 - _f))
+<a name="l00026"></a>00026     , _e2m(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::sq(1 - _f))          <span class="comment">// 1 - _e2</span>
+<a name="l00027"></a>00027     , _e2a(abs(_e2))
+<a name="l00028"></a>00028     , _e4a(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::sq(_e2))
+<a name="l00029"></a>00029     , _maxrad(2 * _a / numeric_limits&lt;real&gt;::epsilon())
+<a name="l00030"></a>00030   {
+<a name="l00031"></a>00031     <span class="keywordflow">if</span> (!(<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(_a) &amp;&amp; _a &gt; 0))
+<a name="l00032"></a>00032       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Major radius is not positive&quot;</span>);
+<a name="l00033"></a>00033     <span class="keywordflow">if</span> (!(<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(_f) &amp;&amp; _f &lt; 1))
+<a name="l00034"></a>00034       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Minor radius is not positive&quot;</span>);
+<a name="l00035"></a>00035   }
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037   <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>(Constants::WGS84_a&lt;real&gt;(),
+<a name="l00038"></a>00038                                      Constants::WGS84_f&lt;real&gt;());
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040   <span class="keywordtype">void</span> Geocentric::IntForward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h,
+<a name="l00041"></a>00041                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; X, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Z,
+<a name="l00042"></a>00042                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00043"></a>00043     lon = lon &gt;= 180 ? lon - 360 : (lon &lt; -180 ? lon + 360 : lon);
+<a name="l00044"></a>00044     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00045"></a>00045       phi = lat * Math::degree&lt;real&gt;(),
+<a name="l00046"></a>00046       lam = lon * Math::degree&lt;real&gt;(),
+<a name="l00047"></a>00047       sphi = sin(phi),
+<a name="l00048"></a>00048       cphi = abs(lat) == 90 ? 0 : cos(phi),
+<a name="l00049"></a>00049       n = _a/sqrt(1 - _e2 * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(sphi)),
+<a name="l00050"></a>00050       slam = lon == -180 ? 0 : sin(lam),
+<a name="l00051"></a>00051       clam = abs(lon) == 90 ? 0 : cos(lam);
+<a name="l00052"></a>00052     Z = ( _e2m * n + h) * sphi;
+<a name="l00053"></a>00053     X = (n + h) * cphi;
+<a name="l00054"></a>00054     Y = X * slam;
+<a name="l00055"></a>00055     X *= clam;
+<a name="l00056"></a>00056     <span class="keywordflow">if</span> (M)
+<a name="l00057"></a>00057       Rotation(sphi, cphi, slam, clam, M);
+<a name="l00058"></a>00058   }
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060   <span class="keywordtype">void</span> Geocentric::IntReverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> X, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Z,
+<a name="l00061"></a>00061                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; h,
+<a name="l00062"></a>00062                               <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00063"></a>00063     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00064"></a>00064       R = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X, Y),
+<a name="l00065"></a>00065       slam = R ? Y / R : 0,
+<a name="l00066"></a>00066       clam = R ? X / R : 1;
+<a name="l00067"></a>00067     h = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(R, Z);      <span class="comment">// Distance to center of earth</span>
+<a name="l00068"></a>00068     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sphi, cphi;
+<a name="l00069"></a>00069     <span class="keywordflow">if</span> (h &gt; _maxrad) {
+<a name="l00070"></a>00070       <span class="comment">// We really far away (&gt; 12 million light years); treat the earth as a</span>
+<a name="l00071"></a>00071       <span class="comment">// point and h, above, is an acceptable approximation to the height.</span>
+<a name="l00072"></a>00072       <span class="comment">// This avoids overflow, e.g., in the computation of disc below.  It&#39;s</span>
+<a name="l00073"></a>00073       <span class="comment">// possible that h has overflowed to inf; but that&#39;s OK.</span>
+<a name="l00074"></a>00074       <span class="comment">//</span>
+<a name="l00075"></a>00075       <span class="comment">// Treat the case X, Y finite, but R overflows to +inf by scaling by 2.</span>
+<a name="l00076"></a>00076       R = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X/2, Y/2);
+<a name="l00077"></a>00077       slam = R ? (Y/2) / R : 0;
+<a name="l00078"></a>00078       clam = R ? (X/2) / R : 1;
+<a name="l00079"></a>00079       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Z/2, R);
+<a name="l00080"></a>00080       sphi = (Z/2) / H;
+<a name="l00081"></a>00081       cphi = R / H;
+<a name="l00082"></a>00082     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (_e4a == 0) {
+<a name="l00083"></a>00083       <span class="comment">// Treat the spherical case.  Dealing with underflow in the general case</span>
+<a name="l00084"></a>00084       <span class="comment">// with _e2 = 0 is difficult.  Origin maps to N pole same as with</span>
+<a name="l00085"></a>00085       <span class="comment">// ellipsoid.</span>
+<a name="l00086"></a>00086       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(h == 0 ? 1 : Z, R);
+<a name="l00087"></a>00087       sphi = (h == 0 ? 1 : Z) / H;
+<a name="l00088"></a>00088       cphi = R / H;
+<a name="l00089"></a>00089       h -= _a;
+<a name="l00090"></a>00090     } <span class="keywordflow">else</span> {
+<a name="l00091"></a>00091       <span class="comment">// Treat prolate spheroids by swapping R and Z here and by switching</span>
+<a name="l00092"></a>00092       <span class="comment">// the arguments to phi = atan2(...) at the end.</span>
+<a name="l00093"></a>00093       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00094"></a>00094         p = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(R / _a),
+<a name="l00095"></a>00095         q = _e2m * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(Z / _a),
+<a name="l00096"></a>00096         r = (p + q - _e4a) / 6;
+<a name="l00097"></a>00097       <span class="keywordflow">if</span> (_f &lt; 0) swap(p, q);
+<a name="l00098"></a>00098       <span class="keywordflow">if</span> ( !(_e4a * q == 0 &amp;&amp; r &lt;= 0) ) {
+<a name="l00099"></a>00099         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00100"></a>00100           <span class="comment">// Avoid possible division by zero when r = 0 by multiplying</span>
+<a name="l00101"></a>00101           <span class="comment">// equations for s and t by r^3 and r, resp.</span>
+<a name="l00102"></a>00102           S = _e4a * p * q / 4, <span class="comment">// S = r^3 * s</span>
+<a name="l00103"></a>00103           r2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(r),
+<a name="l00104"></a>00104           r3 = r * r2,
+<a name="l00105"></a>00105           disc =  S * (2 * r3 + S);
+<a name="l00106"></a>00106         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> u = r;
+<a name="l00107"></a>00107         <span class="keywordflow">if</span> (disc &gt;= 0) {
+<a name="l00108"></a>00108           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> T3 = S + r3;
+<a name="l00109"></a>00109           <span class="comment">// Pick the sign on the sqrt to maximize abs(T3).  This minimizes</span>
+<a name="l00110"></a>00110           <span class="comment">// loss of precision due to cancellation.  The result is unchanged</span>
+<a name="l00111"></a>00111           <span class="comment">// because of the way the T is used in definition of u.</span>
+<a name="l00112"></a>00112           T3 += T3 &lt; 0 ? -sqrt(disc) : sqrt(disc); <span class="comment">// T3 = (r * t)^3</span>
+<a name="l00113"></a>00113           <span class="comment">// N.B. cbrt always returns the real root.  cbrt(-8) = -2.</span>
+<a name="l00114"></a>00114           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> T = <a class="code" href="classGeographicLib_1_1Math.html#a21b33765456b50bf9e32ed0d57b441a6">Math::cbrt</a>(T3); <span class="comment">// T = r * t</span>
+<a name="l00115"></a>00115           <span class="comment">// T can be zero; but then r2 / T -&gt; 0.</span>
+<a name="l00116"></a>00116           u += T + (T != 0 ? r2 / T : 0);
+<a name="l00117"></a>00117         } <span class="keywordflow">else</span> {
+<a name="l00118"></a>00118           <span class="comment">// T is complex, but the way u is defined the result is real.</span>
+<a name="l00119"></a>00119           <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ang = atan2(sqrt(-disc), -(S + r3));
+<a name="l00120"></a>00120           <span class="comment">// There are three possible cube roots.  We choose the root which</span>
+<a name="l00121"></a>00121           <span class="comment">// avoids cancellation.  Note that disc &lt; 0 implies that r &lt; 0.</span>
+<a name="l00122"></a>00122           u += 2 * r * cos(ang / 3);
+<a name="l00123"></a>00123         }
+<a name="l00124"></a>00124         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00125"></a>00125           v = sqrt(<a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(u) + _e4a * q), <span class="comment">// guaranteed positive</span>
+<a name="l00126"></a>00126           <span class="comment">// Avoid loss of accuracy when u &lt; 0.  Underflow doesn&#39;t occur in</span>
+<a name="l00127"></a>00127           <span class="comment">// e4 * q / (v - u) because u ~ e^4 when q is small and u &lt; 0.</span>
+<a name="l00128"></a>00128           uv = u &lt; 0 ? _e4a * q / (v - u) : u + v, <span class="comment">// u+v, guaranteed positive</span>
+<a name="l00129"></a>00129           <span class="comment">// Need to guard against w going negative due to roundoff in uv - q.</span>
+<a name="l00130"></a>00130           w = max(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), _e2a * (uv - q) / (2 * v)),
+<a name="l00131"></a>00131           <span class="comment">// Rearrange expression for k to avoid loss of accuracy due to</span>
+<a name="l00132"></a>00132           <span class="comment">// subtraction.  Division by 0 not possible because uv &gt; 0, w &gt;= 0.</span>
+<a name="l00133"></a>00133           k = uv / (sqrt(uv + <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(w)) + w),
+<a name="l00134"></a>00134           k1 = _f &gt;= 0 ? k : k - _e2,
+<a name="l00135"></a>00135           k2 = _f &gt;= 0 ? k + _e2 : k,
+<a name="l00136"></a>00136           d = k1 * R / k2,
+<a name="l00137"></a>00137           H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Z/k1, R/k2);
+<a name="l00138"></a>00138         sphi = (Z/k1) / H;
+<a name="l00139"></a>00139         cphi = (R/k2) / H;
+<a name="l00140"></a>00140         h = (1 - _e2m/k1) * <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(d, Z);
+<a name="l00141"></a>00141       } <span class="keywordflow">else</span> {                  <span class="comment">// e4 * q == 0 &amp;&amp; r &lt;= 0</span>
+<a name="l00142"></a>00142         <span class="comment">// This leads to k = 0 (oblate, equatorial plane) and k + e^2 = 0</span>
+<a name="l00143"></a>00143         <span class="comment">// (prolate, rotation axis) and the generation of 0/0 in the general</span>
+<a name="l00144"></a>00144         <span class="comment">// formulas for phi and h.  using the general formula and division by 0</span>
+<a name="l00145"></a>00145         <span class="comment">// in formula for h.  So handle this case by taking the limits:</span>
+<a name="l00146"></a>00146         <span class="comment">// f &gt; 0: z -&gt; 0, k      -&gt;   e2 * sqrt(q)/sqrt(e4 - p)</span>
+<a name="l00147"></a>00147         <span class="comment">// f &lt; 0: R -&gt; 0, k + e2 -&gt; - e2 * sqrt(q)/sqrt(e4 - p)</span>
+<a name="l00148"></a>00148         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00149"></a>00149           zz = sqrt((_f &gt;= 0 ? _e4a - p : p) / _e2m),
+<a name="l00150"></a>00150           xx = sqrt( _f &lt;  0 ? _e4a - p : p        ),
+<a name="l00151"></a>00151           H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(zz, xx);
+<a name="l00152"></a>00152         sphi = zz / H;
+<a name="l00153"></a>00153         cphi = xx / H;
+<a name="l00154"></a>00154         <span class="keywordflow">if</span> (Z &lt; 0) sphi = -sphi; <span class="comment">// for tiny negative Z (not for prolate)</span>
+<a name="l00155"></a>00155         h = - _a * (_f &gt;= 0 ? _e2m : 1) * H / _e2a;
+<a name="l00156"></a>00156       }
+<a name="l00157"></a>00157     }
+<a name="l00158"></a>00158     lat = atan2(sphi, cphi) / Math::degree&lt;real&gt;();
+<a name="l00159"></a>00159     <span class="comment">// Negative signs return lon in [-180, 180).</span>
+<a name="l00160"></a>00160     lon = -atan2(-slam, clam) / Math::degree&lt;real&gt;();
+<a name="l00161"></a>00161     <span class="keywordflow">if</span> (M)
+<a name="l00162"></a>00162       Rotation(sphi, cphi, slam, clam, M);
+<a name="l00163"></a>00163   }
+<a name="l00164"></a>00164 
+<a name="l00165"></a>00165   <span class="keywordtype">void</span> Geocentric::Rotation(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> sphi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> cphi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> slam, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> clam,
+<a name="l00166"></a>00166                             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keywordflow">throw</span>() {
+<a name="l00167"></a>00167     <span class="comment">// This rotation matrix is given by the following quaternion operations</span>
+<a name="l00168"></a>00168     <span class="comment">// qrot(lam, [0,0,1]) * qrot(phi, [0,-1,0]) * [1,1,1,1]/2</span>
+<a name="l00169"></a>00169     <span class="comment">// or</span>
+<a name="l00170"></a>00170     <span class="comment">// qrot(pi/2 + lam, [0,0,1]) * qrot(-pi/2 + phi , [-1,0,0])</span>
+<a name="l00171"></a>00171     <span class="comment">// where</span>
+<a name="l00172"></a>00172     <span class="comment">// qrot(t,v) = [cos(t/2), sin(t/2)*v[1], sin(t/2)*v[2], sin(t/2)*v[3]]</span>
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174     <span class="comment">// Local X axis (east) in geocentric coords</span>
+<a name="l00175"></a>00175     M[0] = -slam;        M[3] =  clam;        M[6] = 0;
+<a name="l00176"></a>00176     <span class="comment">// Local Y axis (north) in geocentric coords</span>
+<a name="l00177"></a>00177     M[1] = -clam * sphi; M[4] = -slam * sphi; M[7] = cphi;
+<a name="l00178"></a>00178     <span class="comment">// Local Z axis (up) in geocentric coords</span>
+<a name="l00179"></a>00179     M[2] =  clam * cphi; M[5] =  slam * cphi; M[8] = sphi;
+<a name="l00180"></a>00180   }
+<a name="l00181"></a>00181 
+<a name="l00182"></a>00182 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

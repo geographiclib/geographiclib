@@ -154,7 +154,7 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p><em>prec</em> specifies the precision of the MSGRS string as follows:</p>
+<p><em>prec</em> specifies the precision of the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string as follows:</p>
 <ul>
 <li>prec = 0 (min), 100 km</li>
 <li>prec = 1, 10 km</li>
@@ -167,7 +167,7 @@ Friends</h2></td></tr>
 </ul>
 <p>UTM eastings are allowed to be in the range [100 km, 900 km], northings are allowed to be in in [0 km, 9500 km] for the northern hemisphere and in [1000 km, 10000 km] for the southern hemisphere. (However UTM northings can be continued across the equator. So the actual limits on the northings are [-9000 km, 9500 km] for the "northern" hemisphere and [1000 km, 19500 km] for the "southern" hemisphere.)</p>
 <p>UPS eastings/northings are allowed to be in the range [1300 km, 2700 km] in the northern hemisphere and in [800 km, 3200 km] in the southern hemisphere.</p>
-<p>The ranges are 100 km more restrictive that for the conversion between geographic coordinates and UTM and UPS given by <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>. These restrictions are dictated by the allowed letters in <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates. The choice of 9500 km for the maximum northing for northern hemisphere and of 1000 km as the minimum northing for southern hemisphere provide at least 0.5 degree extension into standard UPS zones. The upper ends of the ranges for the UPS coordinates is dictated by requiring symmetry about the meridans 0E and 90E.</p>
+<p>The ranges are 100 km more restrictive that for the conversion between geographic coordinates and UTM and UPS given by <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>. These restrictions are dictated by the allowed letters in <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates. The choice of 9500 km for the maximum northing for northern hemisphere and of 1000 km as the minimum northing for southern hemisphere provide at least 0.5 degree extension into standard UPS zones. The upper ends of the ranges for the UPS coordinates is dictated by requiring symmetry about the meridians 0E and 90E.</p>
 <p>All allowed UTM and UPS coordinates may now be converted to legal <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates with the proviso that eastings and northings on the upper boundaries are silently reduced by about 4 nm to place them <em>within</em> the allowed range. (This includes reducing a southern hemisphere northing of 10000 km by 4 nm so that it is placed in latitude band M.) The UTM or UPS coordinates are truncated to requested precision to determine the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate. Thus in UTM zone 38N, the square area with easting in [444 km, 445 km) and northing in [3688 km, 3689 km) maps to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate 38SMB4488 (at <em>prec</em> = 2, 1 km), Khulani Sq., Baghdad.</p>
 <p>The UTM/UPS selection and the UTM zone is preserved in the conversion to <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate. Thus for <em>zone</em> &gt; 0, the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate begins with the zone number followed by one of [C&ndash;M] for the southern hemisphere and [N&ndash;X] for the northern hemisphere. For <em>zone</em> = 0, the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates begins with one of [AB] for the southern hemisphere and [XY] for the northern hemisphere.</p>
 <p>The conversion to the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> is exact for prec in [0, 5] except that a neighboring latitude band letter may be given if the point is within 5nm of a band boundary. For prec in [6, 11], the conversion is accurate to roundoff.</p>
@@ -349,7 +349,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00261">261</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00291">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00292">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
 
 </div>
 </div>
@@ -371,7 +371,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00269">269</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00300">GeographicLib::UTMUPS::Flattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00301">GeographicLib::UTMUPS::Flattening()</a>.</p>
 
 </div>
 </div>
@@ -393,7 +393,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MGRS_8hpp_source.html#l00275">275</a> of file <a class="el" href="MGRS_8hpp_source.html">MGRS.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00307">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00308">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="MGRS_8cpp_source.html">MGRS.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

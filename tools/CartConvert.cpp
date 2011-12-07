@@ -6,7 +6,12 @@
  * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geocentric.o LocalCartesian.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o CartConvert \
+ *       CartConvert.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/Geocentric.cpp \
+ *       ../src/LocalCartesian.cpp
  *
  * See the <a href="CartConvert.1.html">man page</a> for usage
  * information.
@@ -75,7 +80,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 46235e8fdca81e5c801865aa439085ae1f653505 $\n"
+          << ": $Id: 990e4bdb8e7edc5c66bca635c284b696aa882956 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

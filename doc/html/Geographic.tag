@@ -504,9 +504,9 @@
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>GEOID_DEFAULT_PATH</name>
+      <name>GEOGRAPHICLIB_DATA</name>
       <anchorfile>Geoid_8cpp.html</anchorfile>
-      <anchor>a8cc288e6230cfd200ff38dcd2faeed69</anchor>
+      <anchor>a45687ef771d809c1c369daea074cc109</anchor>
       <arglist></arglist>
     </member>
     <member kind="define">
@@ -576,6 +576,110 @@
       <name>GEOGRAPHICLIB_GNOMONIC_HPP</name>
       <anchorfile>Gnomonic_8hpp.html</anchorfile>
       <anchor>af85f3f443620d568666f526ee193308a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>Gravity.cpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/tools/</path>
+    <filename>Gravity_8cpp</filename>
+    <includes id="GravityModel_8hpp" name="GravityModel.hpp" local="no" imported="no">GeographicLib/GravityModel.hpp</includes>
+    <includes id="GravityCircle_8hpp" name="GravityCircle.hpp" local="no" imported="no">GeographicLib/GravityCircle.hpp</includes>
+    <includes id="DMS_8hpp" name="DMS.hpp" local="no" imported="no">GeographicLib/DMS.hpp</includes>
+    <includes id="Utility_8hpp" name="Utility.hpp" local="no" imported="no">GeographicLib/Utility.hpp</includes>
+    <member kind="function">
+      <type>int</type>
+      <name>main</name>
+      <anchorfile>Gravity_8cpp.html</anchorfile>
+      <anchor>a0ddf1224851353fc92bfbff6f499fa97</anchor>
+      <arglist>(int argc, char *argv[])</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>GravityCircle.cpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
+    <filename>GravityCircle_8cpp</filename>
+    <includes id="GravityCircle_8hpp" name="GravityCircle.hpp" local="no" imported="no">GeographicLib/GravityCircle.hpp</includes>
+    <includes id="Geocentric_8hpp" name="Geocentric.hpp" local="no" imported="no">GeographicLib/Geocentric.hpp</includes>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_GRAVITYCIRCLE_CPP</name>
+      <anchorfile>GravityCircle_8cpp.html</anchorfile>
+      <anchor>a57d7b0412922810faed5fb35173f561c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>GRAVITY_DEFAULT_PATH</name>
+      <anchorfile>GravityCircle_8cpp.html</anchorfile>
+      <anchor>a21f239249a382b864294a231061d97d4</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>GravityCircle.hpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
+    <filename>GravityCircle_8hpp</filename>
+    <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
+    <includes id="CircularEngine_8hpp" name="CircularEngine.hpp" local="no" imported="no">GeographicLib/CircularEngine.hpp</includes>
+    <includes id="GravityModel_8hpp" name="GravityModel.hpp" local="no" imported="no">GeographicLib/GravityModel.hpp</includes>
+    <class kind="class">GeographicLib::GravityCircle</class>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_GRAVITYCIRCLE_HPP</name>
+      <anchorfile>GravityCircle_8hpp.html</anchorfile>
+      <anchor>a07d4fadabf913f2115556a6de80f6115</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>GravityModel.cpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
+    <filename>GravityModel_8cpp</filename>
+    <includes id="GravityModel_8hpp" name="GravityModel.hpp" local="no" imported="no">GeographicLib/GravityModel.hpp</includes>
+    <includes id="SphericalEngine_8hpp" name="SphericalEngine.hpp" local="no" imported="no">GeographicLib/SphericalEngine.hpp</includes>
+    <includes id="GravityCircle_8hpp" name="GravityCircle.hpp" local="no" imported="no">GeographicLib/GravityCircle.hpp</includes>
+    <includes id="Utility_8hpp" name="Utility.hpp" local="no" imported="no">GeographicLib/Utility.hpp</includes>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_GRAVITYMODEL_CPP</name>
+      <anchorfile>GravityModel_8cpp.html</anchorfile>
+      <anchor>a65e1bf85112eafa00622f95531afc180</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_DATA</name>
+      <anchorfile>GravityModel_8cpp.html</anchorfile>
+      <anchor>a45687ef771d809c1c369daea074cc109</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="define">
+      <type>#define</type>
+      <name>GRAVITY_DEFAULT_NAME</name>
+      <anchorfile>GravityModel_8cpp.html</anchorfile>
+      <anchor>a05d4f5b688275acf184933e85a0063bd</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>GravityModel.hpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
+    <filename>GravityModel_8hpp</filename>
+    <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
+    <includes id="NormalGravity_8hpp" name="NormalGravity.hpp" local="no" imported="no">GeographicLib/NormalGravity.hpp</includes>
+    <includes id="SphericalHarmonic_8hpp" name="SphericalHarmonic.hpp" local="no" imported="no">GeographicLib/SphericalHarmonic.hpp</includes>
+    <includes id="SphericalHarmonic1_8hpp" name="SphericalHarmonic1.hpp" local="no" imported="no">GeographicLib/SphericalHarmonic1.hpp</includes>
+    <class kind="class">GeographicLib::GravityModel</class>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_GRAVITYMODEL_HPP</name>
+      <anchorfile>GravityModel_8hpp.html</anchorfile>
+      <anchor>ace85f3a4d35d4657064e289e2bf57dab</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -681,6 +785,7 @@
     <path>/scratch/geographic-dist/gita/geographiclib/tools/</path>
     <filename>MagneticField_8cpp</filename>
     <includes id="MagneticModel_8hpp" name="MagneticModel.hpp" local="no" imported="no">GeographicLib/MagneticModel.hpp</includes>
+    <includes id="MagneticCircle_8hpp" name="MagneticCircle.hpp" local="no" imported="no">GeographicLib/MagneticCircle.hpp</includes>
     <includes id="DMS_8hpp" name="DMS.hpp" local="no" imported="no">GeographicLib/DMS.hpp</includes>
     <includes id="Utility_8hpp" name="Utility.hpp" local="no" imported="no">GeographicLib/Utility.hpp</includes>
     <member kind="function">
@@ -709,9 +814,9 @@
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>MAGNETIC_DEFAULT_PATH</name>
+      <name>GEOGRAPHICLIB_DATA</name>
       <anchorfile>MagneticModel_8cpp.html</anchorfile>
-      <anchor>adda468b8dc758dd6d082ccf33c5e1b75</anchor>
+      <anchor>a45687ef771d809c1c369daea074cc109</anchor>
       <arglist></arglist>
     </member>
     <member kind="define">
@@ -729,7 +834,6 @@
     <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
     <includes id="Geocentric_8hpp" name="Geocentric.hpp" local="no" imported="no">GeographicLib/Geocentric.hpp</includes>
     <includes id="SphericalHarmonic_8hpp" name="SphericalHarmonic.hpp" local="no" imported="no">GeographicLib/SphericalHarmonic.hpp</includes>
-    <includes id="SphericalHarmonic1_8hpp" name="SphericalHarmonic1.hpp" local="no" imported="no">GeographicLib/SphericalHarmonic1.hpp</includes>
     <class kind="class">GeographicLib::MagneticModel</class>
     <namespace>GeographicLib</namespace>
     <member kind="define">
@@ -804,6 +908,36 @@
       <name>GEOGRAPHICLIB_MGRS_HPP</name>
       <anchorfile>MGRS_8hpp.html</anchorfile>
       <anchor>a1c5e778121820c6ec16b6180ffab51ac</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>NormalGravity.cpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
+    <filename>NormalGravity_8cpp</filename>
+    <includes id="NormalGravity_8hpp" name="NormalGravity.hpp" local="no" imported="no">GeographicLib/NormalGravity.hpp</includes>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_NORMALGRAVITY_CPP</name>
+      <anchorfile>NormalGravity_8cpp.html</anchorfile>
+      <anchor>ae09694799ad8f72c9b216b9729848655</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>NormalGravity.hpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
+    <filename>NormalGravity_8hpp</filename>
+    <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
+    <includes id="Geocentric_8hpp" name="Geocentric.hpp" local="no" imported="no">GeographicLib/Geocentric.hpp</includes>
+    <class kind="class">GeographicLib::NormalGravity</class>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_NORMALGRAVITY_HPP</name>
+      <anchorfile>NormalGravity_8hpp.html</anchorfile>
+      <anchor>a3f83059dc418514a79fa4e6c94869b58</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -920,6 +1054,7 @@
     <filename>SphericalEngine_8cpp</filename>
     <includes id="SphericalEngine_8hpp" name="SphericalEngine.hpp" local="no" imported="no">GeographicLib/SphericalEngine.hpp</includes>
     <includes id="CircularEngine_8hpp" name="CircularEngine.hpp" local="no" imported="no">GeographicLib/CircularEngine.hpp</includes>
+    <includes id="Utility_8hpp" name="Utility.hpp" local="no" imported="no">GeographicLib/Utility.hpp</includes>
     <namespace>GeographicLib</namespace>
     <member kind="define">
       <type>#define</type>
@@ -927,174 +1062,6 @@
       <anchorfile>SphericalEngine_8cpp.html</anchorfile>
       <anchor>acbb0476075cd231855709ab48c95fa7e</anchor>
       <arglist></arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a68748d8cfa30027680cdc3472b763d1b</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a7667521ab246dc59c82f125803691f63</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>adc52e2d4f500db4b1c54eedce61b2762</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a714ab28f3ad0b1e63cc5190b79169937</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a92377d9df8d0c30360c51a281d78a815</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>accc6fdba5fa312f7752371f4350b6c32</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a7e98e1669b8666c736de6701e9daa28f</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ad0a8740dce21166dfdc0bb70bf748263</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a88fe74e4e84bdada6db2352b9700ce56</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>acae4a503848d9e956de0ff35e54d5f90</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ad8399e3da9c8c7380ca8f473cd07f466</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a793c3a0a98ad885fac2253908df57762</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ae65193da24c9d48cacb090ace14a4b4e</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>aa419cc313bf7f0b5de3b38f3db01ea9d</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ad25915d0fb7b6e41c2eae31b40bfef8a</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a5307331629ac4dce51de7d514aeb14a3</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a60ecc80be5de0fb745e31a9f509b7630</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a7fd995f64338652cdcf42a6be03331ca</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>af8512bb082899acbd2d7e0cdc69ca0e9</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ab4f5bb73ac5c56edc304f78616e1c1e4</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>aeacd55acdb4574de333257d30b155d97</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ae57cd4390a35f01da2c2171926173940</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a403dbd9068f7e39b36187e483e65a424</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ae723aa5feca7a1d4514096ba2e6092a4</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
     </member>
   </compound>
   <compound kind="file">
@@ -1120,6 +1087,7 @@
     <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
     <includes id="SphericalEngine_8hpp" name="SphericalEngine.hpp" local="no" imported="no">GeographicLib/SphericalEngine.hpp</includes>
     <includes id="CircularEngine_8hpp" name="CircularEngine.hpp" local="no" imported="no">GeographicLib/CircularEngine.hpp</includes>
+    <includes id="Geocentric_8hpp" name="Geocentric.hpp" local="no" imported="no">GeographicLib/Geocentric.hpp</includes>
     <class kind="class">GeographicLib::SphericalHarmonic</class>
     <namespace>GeographicLib</namespace>
     <member kind="define">
@@ -1247,6 +1215,20 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>Utility.cpp</name>
+    <path>/scratch/geographic-dist/gita/geographiclib/src/</path>
+    <filename>Utility_8cpp</filename>
+    <includes id="Utility_8hpp" name="Utility.hpp" local="no" imported="no">GeographicLib/Utility.hpp</includes>
+    <namespace>GeographicLib</namespace>
+    <member kind="define">
+      <type>#define</type>
+      <name>GEOGRAPHICLIB_UTILITY_CPP</name>
+      <anchorfile>Utility_8cpp.html</anchorfile>
+      <anchor>a572751ca8465c95b9e157dc20175f6bc</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>Utility.hpp</name>
     <path>/scratch/geographic-dist/gita/geographiclib/include/GeographicLib/</path>
     <filename>Utility_8hpp</filename>
@@ -1345,6 +1327,17 @@
     <docanchor file="geoid">testgeoid</docanchor>
   </compound>
   <compound kind="page">
+    <name>gravity</name>
+    <title>Gravity models</title>
+    <filename>gravity</filename>
+    <docanchor file="gravity">gravityatmos</docanchor>
+    <docanchor file="gravity">gravityformat</docanchor>
+    <docanchor file="gravity">gravityinst</docanchor>
+    <docanchor file="gravity">gravityparallel</docanchor>
+    <docanchor file="gravity">gravitygeoid</docanchor>
+    <docanchor file="gravity">gravitynga</docanchor>
+  </compound>
+  <compound kind="page">
     <name>magnetic</name>
     <title>Magnetic models</title>
     <filename>magnetic</filename>
@@ -1393,12 +1386,15 @@
     <class kind="class">GeographicLib::GeodesicLine</class>
     <class kind="class">GeographicLib::Geoid</class>
     <class kind="class">GeographicLib::Gnomonic</class>
+    <class kind="class">GeographicLib::GravityCircle</class>
+    <class kind="class">GeographicLib::GravityModel</class>
     <class kind="class">GeographicLib::LambertConformalConic</class>
     <class kind="class">GeographicLib::LocalCartesian</class>
     <class kind="class">GeographicLib::MagneticCircle</class>
     <class kind="class">GeographicLib::MagneticModel</class>
     <class kind="class">GeographicLib::Math</class>
     <class kind="class">GeographicLib::MGRS</class>
+    <class kind="class">GeographicLib::NormalGravity</class>
     <class kind="class">GeographicLib::OSGB</class>
     <class kind="class">GeographicLib::PolarStereographic</class>
     <class kind="class">GeographicLib::PolygonArea</class>
@@ -1410,174 +1406,6 @@
     <class kind="class">GeographicLib::TransverseMercatorExact</class>
     <class kind="class">GeographicLib::Utility</class>
     <class kind="class">GeographicLib::UTMUPS</class>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a68748d8cfa30027680cdc3472b763d1b</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a7667521ab246dc59c82f125803691f63</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>adc52e2d4f500db4b1c54eedce61b2762</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a714ab28f3ad0b1e63cc5190b79169937</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a92377d9df8d0c30360c51a281d78a815</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>accc6fdba5fa312f7752371f4350b6c32</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a7e98e1669b8666c736de6701e9daa28f</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ad0a8740dce21166dfdc0bb70bf748263</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a88fe74e4e84bdada6db2352b9700ce56</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>acae4a503848d9e956de0ff35e54d5f90</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ad8399e3da9c8c7380ca8f473cd07f466</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template Math::real</type>
-      <name>SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a793c3a0a98ad885fac2253908df57762</anchor>
-      <arglist>(const coeff[], const real[], real, real, real, real, real &amp;, real &amp;, real &amp;)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ae65193da24c9d48cacb090ace14a4b4e</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::full, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>aa419cc313bf7f0b5de3b38f3db01ea9d</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ad25915d0fb7b6e41c2eae31b40bfef8a</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 1 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a5307331629ac4dce51de7d514aeb14a3</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a60ecc80be5de0fb745e31a9f509b7630</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::full, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a7fd995f64338652cdcf42a6be03331ca</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>af8512bb082899acbd2d7e0cdc69ca0e9</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 2 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ab4f5bb73ac5c56edc304f78616e1c1e4</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>aeacd55acdb4574de333257d30b155d97</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::full, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ae57cd4390a35f01da2c2171926173940</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>a403dbd9068f7e39b36187e483e65a424</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
-    <member kind="function">
-      <type>template CircularEngine</type>
-      <name>SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 3 &gt;</name>
-      <anchorfile>namespaceGeographicLib.html</anchorfile>
-      <anchor>ae723aa5feca7a1d4514096ba2e6092a4</anchor>
-      <arglist>(const coeff[], const real[], real, real, real)</arglist>
-    </member>
   </compound>
   <compound kind="class">
     <name>GeographicLib::Accumulator</name>
@@ -1950,6 +1778,13 @@
     <name>GeographicLib::CircularEngine</name>
     <filename>classGeographicLib_1_1CircularEngine.html</filename>
     <member kind="function">
+      <type></type>
+      <name>CircularEngine</name>
+      <anchorfile>classGeographicLib_1_1CircularEngine.html</anchorfile>
+      <anchor>a91dd2b9cc408e35f8cb6482cdf3aadbf</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>Math::real</type>
       <name>operator()</name>
       <anchorfile>classGeographicLib_1_1CircularEngine.html</anchorfile>
@@ -1982,6 +1817,20 @@
       <name>SphericalEngine</name>
       <anchorfile>classGeographicLib_1_1CircularEngine.html</anchorfile>
       <anchor>ab89064f7f3c32a745c72d8c3188f7485</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>GravityCircle</name>
+      <anchorfile>classGeographicLib_1_1CircularEngine.html</anchorfile>
+      <anchor>a243c90a7f9bf3f7aa96877a4b0667a89</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>MagneticCircle</name>
+      <anchorfile>classGeographicLib_1_1CircularEngine.html</anchorfile>
+      <anchor>a7294f6a1cc932f8fd1562a15602e9e86</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -2039,6 +1888,20 @@
     </member>
     <member kind="function" static="yes">
       <type>static T</type>
+      <name>WGS84_GM</name>
+      <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
+      <anchor>aa6cbaa16e143ebbe8b2c226492c09fbc</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static T</type>
+      <name>WGS84_omega</name>
+      <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
+      <anchor>a60299d9299292f18312eee2870bdf9ba</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static T</type>
       <name>WGS84_r</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
       <anchor>aa886c9955848d0fe9204b1a14f7ae43f</anchor>
@@ -2049,6 +1912,34 @@
       <name>WGS84_r</name>
       <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
       <anchor>a199810de7ff3351be6473d20ef045789</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static T</type>
+      <name>GRS80_a</name>
+      <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
+      <anchor>ac0ae4c03001a7fb4dea386d7539d38d3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static T</type>
+      <name>GRS80_GM</name>
+      <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
+      <anchor>a436996122a60fde693eef527c74b3f05</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static T</type>
+      <name>GRS80_omega</name>
+      <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
+      <anchor>ae714c61fde82178814973c94038b9b41</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static T</type>
+      <name>GRS80_J2</name>
+      <anchorfile>classGeographicLib_1_1Constants.html</anchorfile>
+      <anchor>ae37450bc3e1137946cdf874affa2e44c</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="function" static="yes">
@@ -2436,32 +2327,46 @@
       <arglist>(real a, real f)</arglist>
     </member>
     <member kind="function">
-      <type>void</type>
-      <name>Forward</name>
+      <type></type>
+      <name>Geocentric</name>
       <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
-      <anchor>a6d144979a9c0a5d12f343736a0432a3a</anchor>
-      <arglist>(real lat, real lon, real h, real &amp;x, real &amp;y, real &amp;z) const </arglist>
+      <anchor>adc92d7214526b4cfcd0b9a0171fc8448</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>Forward</name>
       <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
-      <anchor>a63c5d08013e385a80fb1b9c0beee592a</anchor>
-      <arglist>(real lat, real lon, real h, real &amp;x, real &amp;y, real &amp;z, std::vector&lt; real &gt; &amp;M) const </arglist>
+      <anchor>a65320594cad8c03d28beaa409f3d6fae</anchor>
+      <arglist>(real lat, real lon, real h, real &amp;X, real &amp;Y, real &amp;Z) const </arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>Forward</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>a54e09e4673ddbf99feeba81036c81345</anchor>
+      <arglist>(real lat, real lon, real h, real &amp;X, real &amp;Y, real &amp;Z, std::vector&lt; real &gt; &amp;M) const </arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>Reverse</name>
       <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
-      <anchor>a7766e10bb3436647db9e2af896b05c51</anchor>
-      <arglist>(real x, real y, real z, real &amp;lat, real &amp;lon, real &amp;h) const </arglist>
+      <anchor>a1907735ce8f5f915a14a5f7a8b3adfea</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;lat, real &amp;lon, real &amp;h) const </arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>Reverse</name>
       <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
-      <anchor>a4ade6e9e0b6abf54d1628e89a461411e</anchor>
-      <arglist>(real x, real y, real z, real &amp;lat, real &amp;lon, real &amp;h, std::vector&lt; real &gt; &amp;M) const </arglist>
+      <anchor>aeddd854d52064bcb1f068052057edf2c</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;lat, real &amp;lon, real &amp;h, std::vector&lt; real &gt; &amp;M) const </arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>Init</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>a7d2e34d1be6009caf4576c6cc884a589</anchor>
+      <arglist>() const </arglist>
     </member>
     <member kind="function">
       <type>Math::real</type>
@@ -2510,6 +2415,48 @@
       <name>MagneticModel</name>
       <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
       <anchor>af6619ebe4c078705fc49a0d9f950b431</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>GravityCircle</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>a243c90a7f9bf3f7aa96877a4b0667a89</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>GravityModel</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>ada1db1d9f480d8044753ed869c995519</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>NormalGravity</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>ae7298549755c5982fe1be124d6631561</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>SphericalHarmonic</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>ae0383f6b1ce413d48e258750c3177f21</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>SphericalHarmonic1</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>accac7c5b7843a1e4fb2baf0c83cc24f0</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>SphericalHarmonic2</name>
+      <anchorfile>classGeographicLib_1_1Geocentric.html</anchorfile>
+      <anchor>a3eabc426b6edd718324c791ef3536360</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -3565,6 +3512,363 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>GeographicLib::GravityCircle</name>
+    <filename>classGeographicLib_1_1GravityCircle.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>GravityCircle</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a4a000e07f0856a130ab11f1b26c933ed</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Gravity</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a5d8053ee66ae22217ae0b61e96194b64</anchor>
+      <arglist>(real lon, real &amp;gx, real &amp;gy, real &amp;gz) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Disturbance</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a2c3bde01c9d822b0cdd935314193a466</anchor>
+      <arglist>(real lon, real &amp;deltax, real &amp;deltay, real &amp;deltaz) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>GeoidHeight</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a5d5a577c99cf4649d9286f1b4afacab5</anchor>
+      <arglist>(real lon) const </arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>SphericalAnomaly</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>ac94672db5e450f4394e6df69eda99e69</anchor>
+      <arglist>(real lon, real &amp;Dg01, real &amp;xi, real &amp;eta) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>W</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a04ae0659ec2eb766ae360d3bcbe332c4</anchor>
+      <arglist>(real lon, real &amp;gX, real &amp;gY, real &amp;gZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>V</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>aba5f3ec3cb7b620e13dafa6fa4e48ae0</anchor>
+      <arglist>(real lon, real &amp;GX, real &amp;GY, real &amp;GZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>T</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>afae12e4bbf17809f1dd6c32b41dfde03</anchor>
+      <arglist>(real lon, real &amp;deltaX, real &amp;deltaY, real &amp;deltaZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>T</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a408d52806d43fe61b53af3ffb306bec5</anchor>
+      <arglist>(real lon) const </arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>Init</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>aee7b6c92dc9264345048a8ad7c230e4c</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MajorRadius</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a19c5d003a9981cb3ece5b44ee836553a</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Flattening</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>ad9bfc60d802b662ffc1a41566882b743</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Latitude</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a9628e97c53a2532959c5c8af75e1c14b</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Height</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a026b2b79ff3ae70b4fee5d9c4d1ffb70</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>unsigned</type>
+      <name>Capabilities</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a08ecc2b31ca7d0ddc2d25950a6bc247f</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>Capabilities</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>a2fa608c25be9b8caa087102c4c311768</anchor>
+      <arglist>(unsigned testcaps) const </arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>GravityModel</name>
+      <anchorfile>classGeographicLib_1_1GravityCircle.html</anchorfile>
+      <anchor>ada1db1d9f480d8044753ed869c995519</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>GeographicLib::GravityModel</name>
+    <filename>classGeographicLib_1_1GravityModel.html</filename>
+    <member kind="enumeration">
+      <name>mask</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>NONE</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365add4ee1aa94e38a8283826704105dc2e1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>GRAVITY</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365ae6a4573c13b932c98ab95e7f9dbd0952</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>DISTURBANCE</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365a83daf366a2c7ab93495f0e6b4144d885</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>DISTURBING_POTENTIAL</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365abe1f6d891a721a4f544cd8a341abcb28</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>SPHERICAL_ANOMALY</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365ada02eebe918ebb3764a62b9323dceac9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>GEOID_HEIGHT</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365a0ac768bffe3f104069c3fd5af1ddaa69</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumvalue">
+      <name>ALL</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af8691d0f13d6d42278cd1e615903d365a8e0e6b9a6d629d05f22f41996fe98068</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>GravityModel</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>ac351170c1104f41754d5c0b8371d3e15</anchor>
+      <arglist>(const std::string &amp;name, const std::string &amp;path=&quot;&quot;)</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Gravity</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a2dc8bf4cfa3c1914f4c7e93a5a3b3eac</anchor>
+      <arglist>(real lat, real lon, real h, real &amp;gx, real &amp;gy, real &amp;gz) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Disturbance</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a75cf57146334d9ce0856222a6814ae6f</anchor>
+      <arglist>(real lat, real lon, real h, real &amp;deltax, real &amp;deltay, real &amp;deltaz) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>GeoidHeight</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a7e75bdba6b9c8e64cc64403335a6fba4</anchor>
+      <arglist>(real lat, real lon) const </arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>SphericalAnomaly</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>aaf89eb4a9b7266f0aa2ef2c341fc264e</anchor>
+      <arglist>(real lat, real lon, real h, real &amp;Dg01, real &amp;xi, real &amp;eta) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>W</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>ab6767f3833caa34095a7ef83c43a46f0</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;gX, real &amp;gY, real &amp;gZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>V</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a7aec9ecfa959b257dd0a965331598368</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;GX, real &amp;GY, real &amp;GZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>T</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a257022f1f125d88b0a6efdccfc5e7a41</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;deltaX, real &amp;deltaY, real &amp;deltaZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>T</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a690657dedac8ccea22052eda2829fea3</anchor>
+      <arglist>(real X, real Y, real Z) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>U</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af368d4f9015e076e5cc57ad87b8a185f</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;gammaX, real &amp;gammaY, real &amp;gammaZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Phi</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a80477ccafa1049964ee0cef40ae2eea6</anchor>
+      <arglist>(real X, real Y, real &amp;fX, real &amp;fY) const </arglist>
+    </member>
+    <member kind="function">
+      <type>GravityCircle</type>
+      <name>Circle</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>aadafafc09b9b707d47606da1e413d54f</anchor>
+      <arglist>(real lat, real h, unsigned caps=ALL) const </arglist>
+    </member>
+    <member kind="function">
+      <type>const NormalGravity &amp;</type>
+      <name>ReferenceEllipsoid</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a0467e44598b65fb403109ba0d0fbf182</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const std::string &amp;</type>
+      <name>Description</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>af2c1c74254e3193adb155987f6dd0a59</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const std::string &amp;</type>
+      <name>DateTime</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>acbed448c2423cd45e800d03fab059500</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const std::string &amp;</type>
+      <name>GravityFile</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a26a87d363713ba3d1aa1b16da2fc2f27</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const std::string &amp;</type>
+      <name>GravityModelName</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a9ca1191e449bf7c04595ebd8a299af78</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const std::string &amp;</type>
+      <name>GravityModelDirectory</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a17f2da4cd5abbb5f38f1b90d75975898</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MajorRadius</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a07f361e231e1725a4f8e3c37a06cf304</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MassConstant</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>aa63d1c6e71abfa9455df695f4a3e6bdd</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>ReferenceMassConstant</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a4e6b9d48f26544a45c5509a87eb334e7</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>AngularVelocity</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>aeb3d751ba7719e57e0266b65ee7d63d8</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Flattening</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>aa2316f6d328435417627d49046c45308</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::string</type>
+      <name>DefaultGravityPath</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a0fdf62e41828ae7ae183d9e876f37954</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static std::string</type>
+      <name>DefaultGravityName</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>ad4a776d68b60e85275c0e580d3c7caba</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>GravityCircle</name>
+      <anchorfile>classGeographicLib_1_1GravityModel.html</anchorfile>
+      <anchor>a243c90a7f9bf3f7aa96877a4b0667a89</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>GeographicLib::LambertConformalConic</name>
     <filename>classGeographicLib_1_1LambertConformalConic.html</filename>
     <member kind="function">
@@ -3765,6 +4069,13 @@
     <name>GeographicLib::MagneticCircle</name>
     <filename>classGeographicLib_1_1MagneticCircle.html</filename>
     <member kind="function">
+      <type></type>
+      <name>MagneticCircle</name>
+      <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
+      <anchor>a49170460b1833722ad9bc45b92c86e5a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>void</type>
       <name>operator()</name>
       <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
@@ -3777,6 +4088,48 @@
       <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
       <anchor>ac715ae0394bd7f8c23288f80c406e5bc</anchor>
       <arglist>(real lon, real &amp;Bx, real &amp;By, real &amp;Bz, real &amp;Bxt, real &amp;Byt, real &amp;Bzt) const </arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>Init</name>
+      <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
+      <anchor>a8ec84cd0b1d97b51464ec80d9e2dcf57</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MajorRadius</name>
+      <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
+      <anchor>a78721d381d21f676152394dd576f2e77</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Flattening</name>
+      <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
+      <anchor>a4c3fc40a49332ddcd042e5cb41c3cb2a</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Latitude</name>
+      <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
+      <anchor>aaf14e89275bffd8253acdbe4840b65d0</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Height</name>
+      <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
+      <anchor>aadd95eac0650f195e4d7acdc9819716b</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Time</name>
+      <anchorfile>classGeographicLib_1_1MagneticCircle.html</anchorfile>
+      <anchor>a44783c9e44f16bbd48cc5061b30ce8e9</anchor>
+      <arglist>() const </arglist>
     </member>
     <member kind="friend" protection="private">
       <type>friend class</type>
@@ -3905,8 +4258,8 @@
       <type>MagneticCircle</type>
       <name>Circle</name>
       <anchorfile>classGeographicLib_1_1MagneticModel.html</anchorfile>
-      <anchor>a768158c51d8911bdbf2eaa5a94a3fec2</anchor>
-      <arglist>(real lat, real h, real t) const </arglist>
+      <anchor>ae4275d73128fc2c6c62f53677ce70bd5</anchor>
+      <arglist>(real t, real lat, real h) const </arglist>
     </member>
     <member kind="function" static="yes">
       <type>static void</type>
@@ -4124,6 +4477,157 @@
       <name>UTMUPS</name>
       <anchorfile>classGeographicLib_1_1MGRS.html</anchorfile>
       <anchor>a6a0cfac496024eaf645c7a2f98a02a75</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>GeographicLib::NormalGravity</name>
+    <filename>classGeographicLib_1_1NormalGravity.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>NormalGravity</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>af625bbc7df2d36ba5c43c8f20f61c134</anchor>
+      <arglist>(real a, real GM, real omega, real f, real J2)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>NormalGravity</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a55f749c3bb3e9d19626105041bf1b6fb</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>SurfaceGravity</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a019541fea3712f8ca73aec8a0b29c71c</anchor>
+      <arglist>(real lat) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Gravity</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>acfca8d6e44778501b54cd0b38dbbddde</anchor>
+      <arglist>(real lat, real h, real &amp;gammay, real &amp;gammaz) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>U</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a258290ade5fd46c42fdc4199683cf563</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;gammaX, real &amp;gammaY, real &amp;gammaZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>V0</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>aa656e36306bc396ac6d32dcdfc2069a2</anchor>
+      <arglist>(real X, real Y, real Z, real &amp;GammaX, real &amp;GammaY, real &amp;GammaZ) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Phi</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>af0f50fd88d8b647a1b7bb209a4cfae0f</anchor>
+      <arglist>(real X, real Y, real &amp;fX, real &amp;fY) const </arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>Init</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a1d96cafc362959215eaa553a712b6908</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MajorRadius</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a9155d22c5a64a7ef346ce7f590a6264f</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>MassConstant</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a3c6693dc7efe04cdbed408b2510c69da</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>DynamicalFormFactor</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>aa52b03157eb0b199d331d6fca28a259a</anchor>
+      <arglist>(int n=2) const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>AngularVelocity</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>aefd6dfb7e6f806b63d099316dcc97f55</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>Flattening</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>aba396954f43e623e755bdff7db7d850b</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>EquatorialGravity</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a3610ec908c7b168b39f00946e2fc3fad</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>PolarGravity</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a3079310d3a7af97ccb50b91be01d5a50</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>GravityFlattening</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a7e9329f7b3120b7777a0c5be3ca424a7</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>Math::real</type>
+      <name>SurfacePotential</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a5bc3756dd7dbc82c07ef4afd1a182372</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const Geocentric &amp;</type>
+      <name>Earth</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>ab15ded1ab7ec9a30e8053fc330ed76ac</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static const NormalGravity</type>
+      <name>WGS84</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a70c328a95e05964180106d89c2583b78</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" static="yes">
+      <type>static const NormalGravity</type>
+      <name>GRS80</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>a78cf6878967ad52adadbe06b5f7c4146</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>GravityModel</name>
+      <anchorfile>classGeographicLib_1_1NormalGravity.html</anchorfile>
+      <anchor>ada1db1d9f480d8044753ed869c995519</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -4374,15 +4878,15 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>full</name>
+      <name>FULL</name>
       <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
-      <anchor>a5332d09191e018cbddc568c1fc71949fa122fd5f2768b18443e72dfafe7358ef5</anchor>
+      <anchor>a5332d09191e018cbddc568c1fc71949fac720ca87adfc478dbfc13a37f0cf8ba9</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>schmidt</name>
+      <name>SCHMIDT</name>
       <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
-      <anchor>a5332d09191e018cbddc568c1fc71949fa54fff33e5a2d8120fad78d3fb613c2a6</anchor>
+      <anchor>a5332d09191e018cbddc568c1fc71949fa2e3db3efd68d118e3f357a97eb77a131</anchor>
       <arglist></arglist>
     </member>
     <member kind="function" static="yes">
@@ -4398,6 +4902,27 @@
       <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
       <anchor>a7733e7913671b573042a2fcf8db089dd</anchor>
       <arglist>(const coeff c[], const real f[], real p, real z, real a)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>RootTable</name>
+      <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
+      <anchor>a7fac63262c0a8bb18aee8c962a08d429</anchor>
+      <arglist>(int N)</arglist>
+    </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>ClearRootTable</name>
+      <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
+      <anchor>ab3fb8f933adb257df6b7537268d55a75</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="friend" protection="private">
+      <type>friend class</type>
+      <name>CircularEngine</name>
+      <anchorfile>classGeographicLib_1_1SphericalEngine.html</anchorfile>
+      <anchor>a0c689dbf7b6bf2fb4cffb109085b1d3b</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -4494,6 +5019,13 @@
       <anchor>a98a75827d68247cf5ad1843d9d68b222</anchor>
       <arglist>(int N, int M)</arglist>
     </member>
+    <member kind="function" static="yes">
+      <type>static void</type>
+      <name>readcoeffs</name>
+      <anchorfile>classGeographicLib_1_1SphericalEngine_1_1coeff.html</anchorfile>
+      <anchor>a2d545f589894683e7de297c42b7c995a</anchor>
+      <arglist>(std::istream &amp;stream, int &amp;N, int &amp;M, std::vector&lt; real &gt; &amp;C, std::vector&lt; real &gt; &amp;S)</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>GeographicLib::SphericalHarmonic</name>
@@ -4505,30 +5037,30 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>full</name>
+      <name>FULL</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic.html</anchorfile>
-      <anchor>a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b</anchor>
+      <anchor>a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>schmidt</name>
+      <name>SCHMIDT</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic.html</anchorfile>
-      <anchor>a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3</anchor>
+      <anchor>a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SphericalHarmonic</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic.html</anchorfile>
-      <anchor>a00914779e17f5de7f0379f59100c38b5</anchor>
-      <arglist>(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, real a, normalization norm=full)</arglist>
+      <anchor>adb71d28aa60a813ca3384f9c58ef8fa1</anchor>
+      <arglist>(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, real a, unsigned norm=FULL)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SphericalHarmonic</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic.html</anchorfile>
-      <anchor>acd8de1fb08a3064da0c811d198e4e19d</anchor>
-      <arglist>(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, int nmx, int mmx, real a, normalization norm=full)</arglist>
+      <anchor>a2ed62c0ad8fb1ab36d5a331a3f33c3d7</anchor>
+      <arglist>(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, int nmx, int mmx, real a, unsigned norm=FULL)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -4558,6 +5090,13 @@
       <anchor>a2b2b2ad35bba090a4956693ba5ef0f32</anchor>
       <arglist>(real p, real z, bool gradp) const </arglist>
     </member>
+    <member kind="function">
+      <type>const SphericalEngine::coeff &amp;</type>
+      <name>Coefficients</name>
+      <anchorfile>classGeographicLib_1_1SphericalHarmonic.html</anchorfile>
+      <anchor>ac8886de1d1400ecf6482f6441c76a8a0</anchor>
+      <arglist>() const </arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>GeographicLib::SphericalHarmonic1</name>
@@ -4569,30 +5108,30 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>full</name>
+      <name>FULL</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic1.html</anchorfile>
-      <anchor>ac4aaa81e0f753894ecef173c4d667916a68b4860654d39b130060a01a4f08ad66</anchor>
+      <anchor>ac4aaa81e0f753894ecef173c4d667916aafd320d946e992459e0013da6b769638</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>schmidt</name>
+      <name>SCHMIDT</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic1.html</anchorfile>
-      <anchor>ac4aaa81e0f753894ecef173c4d667916a9f93fafa3831f0607dad70c8bbb3aa7a</anchor>
+      <anchor>ac4aaa81e0f753894ecef173c4d667916aa1959e3e2bdf7c01f596692757858231</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SphericalHarmonic1</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic1.html</anchorfile>
-      <anchor>a1236e289a974b301c5a4dee48ca522e1</anchor>
-      <arglist>(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, const std::vector&lt; double &gt; &amp;C1, const std::vector&lt; double &gt; &amp;S1, int N1, real a, normalization norm=full)</arglist>
+      <anchor>aeb3299ea40b0bedae55fd0a6f0c1fa40</anchor>
+      <arglist>(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, const std::vector&lt; real &gt; &amp;C1, const std::vector&lt; real &gt; &amp;S1, int N1, real a, unsigned norm=FULL)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SphericalHarmonic1</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic1.html</anchorfile>
-      <anchor>a5301e25e0df3ba321f8e51e26b6643f5</anchor>
-      <arglist>(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, int nmx, int mmx, const std::vector&lt; double &gt; &amp;C1, const std::vector&lt; double &gt; &amp;S1, int N1, int nmx1, int mmx1, real a, normalization norm=full)</arglist>
+      <anchor>aca472a143f7e000e232f4c261550b626</anchor>
+      <arglist>(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, int nmx, int mmx, const std::vector&lt; real &gt; &amp;C1, const std::vector&lt; real &gt; &amp;S1, int N1, int nmx1, int mmx1, real a, unsigned norm=FULL)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -4622,6 +5161,20 @@
       <anchor>a32dd4989c40181939d667298681625f6</anchor>
       <arglist>(real tau, real p, real z, bool gradp) const </arglist>
     </member>
+    <member kind="function">
+      <type>const SphericalEngine::coeff &amp;</type>
+      <name>Coefficients</name>
+      <anchorfile>classGeographicLib_1_1SphericalHarmonic1.html</anchorfile>
+      <anchor>a67fe3c8ab08be94a300d07c98814aab0</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const SphericalEngine::coeff &amp;</type>
+      <name>Coefficients1</name>
+      <anchorfile>classGeographicLib_1_1SphericalHarmonic1.html</anchorfile>
+      <anchor>ad200e309790cd6e41bb79529d9076274</anchor>
+      <arglist>() const </arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>GeographicLib::SphericalHarmonic2</name>
@@ -4633,30 +5186,30 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>full</name>
+      <name>FULL</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
-      <anchor>adbdc59ce4e6f1e4ce0fc7169c760f8beaada4a8e0c6c0a1c9a2cc7999883d7ff5</anchor>
+      <anchor>adbdc59ce4e6f1e4ce0fc7169c760f8bea4b8746ff0805a8a819130794c103e946</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>schmidt</name>
+      <name>SCHMIDT</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
-      <anchor>adbdc59ce4e6f1e4ce0fc7169c760f8bea0aa60d1108cc328692280cb7015bbfd5</anchor>
+      <anchor>adbdc59ce4e6f1e4ce0fc7169c760f8bea326a84d3094b558a1c43b4b61f9c2d58</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SphericalHarmonic2</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
-      <anchor>a75da0600fc5a6f5b9a7914ade6887dfc</anchor>
-      <arglist>(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, const std::vector&lt; double &gt; &amp;C1, const std::vector&lt; double &gt; &amp;S1, int N1, const std::vector&lt; double &gt; &amp;C2, const std::vector&lt; double &gt; &amp;S2, int N2, real a, normalization norm=full)</arglist>
+      <anchor>a897f6b15b82812e874a2b0927cfc3912</anchor>
+      <arglist>(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, const std::vector&lt; real &gt; &amp;C1, const std::vector&lt; real &gt; &amp;S1, int N1, const std::vector&lt; real &gt; &amp;C2, const std::vector&lt; real &gt; &amp;S2, int N2, real a, unsigned norm=FULL)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>SphericalHarmonic2</name>
       <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
-      <anchor>aa4967eeb0929d36ed35157aec2e20124</anchor>
-      <arglist>(const std::vector&lt; double &gt; &amp;C, const std::vector&lt; double &gt; &amp;S, int N, int nmx, int mmx, const std::vector&lt; double &gt; &amp;C1, const std::vector&lt; double &gt; &amp;S1, int N1, int nmx1, int mmx1, const std::vector&lt; double &gt; &amp;C2, const std::vector&lt; double &gt; &amp;S2, int N2, int nmx2, int mmx2, real a, normalization norm=full)</arglist>
+      <anchor>a19300de2d629c014883026bf0042b6f0</anchor>
+      <arglist>(const std::vector&lt; real &gt; &amp;C, const std::vector&lt; real &gt; &amp;S, int N, int nmx, int mmx, const std::vector&lt; real &gt; &amp;C1, const std::vector&lt; real &gt; &amp;S1, int N1, int nmx1, int mmx1, const std::vector&lt; real &gt; &amp;C2, const std::vector&lt; real &gt; &amp;S2, int N2, int nmx2, int mmx2, real a, unsigned norm=FULL)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -4685,6 +5238,27 @@
       <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
       <anchor>a3aa683a43a8e9232a16390b09c6be920</anchor>
       <arglist>(real tau1, real tau2, real p, real z, bool gradp) const </arglist>
+    </member>
+    <member kind="function">
+      <type>const SphericalEngine::coeff &amp;</type>
+      <name>Coefficients</name>
+      <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
+      <anchor>a166338f0b4ccf89c48278bb9514046f0</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const SphericalEngine::coeff &amp;</type>
+      <name>Coefficients1</name>
+      <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
+      <anchor>a51751279dc4e0b6e19886723f8e8b493</anchor>
+      <arglist>() const </arglist>
+    </member>
+    <member kind="function">
+      <type>const SphericalEngine::coeff &amp;</type>
+      <name>Coefficients2</name>
+      <anchorfile>classGeographicLib_1_1SphericalHarmonic2.html</anchorfile>
+      <anchor>a676b4c36923744bf5057b24484d9cf60</anchor>
+      <arglist>() const </arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -4936,6 +5510,13 @@
       <anchor>a3acad0c1faffcd87292776d1cae26290</anchor>
       <arglist>(std::istream &amp;str, std::vector&lt; IntT &gt; &amp;array)</arglist>
     </member>
+    <member kind="function" static="yes">
+      <type>static bool</type>
+      <name>ParseLine</name>
+      <anchorfile>classGeographicLib_1_1Utility.html</anchorfile>
+      <anchor>a96252f445a912b77517bff04d4d6ea74</anchor>
+      <arglist>(const std::string &amp;line, std::string &amp;key, std::string &amp;val)</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>GeographicLib::UTMUPS</name>
@@ -5108,12 +5689,15 @@
     <file>GeodesicLine.hpp</file>
     <file>Geoid.hpp</file>
     <file>Gnomonic.hpp</file>
+    <file>GravityCircle.hpp</file>
+    <file>GravityModel.hpp</file>
     <file>LambertConformalConic.hpp</file>
     <file>LocalCartesian.hpp</file>
     <file>MagneticCircle.hpp</file>
     <file>MagneticModel.hpp</file>
     <file>Math.hpp</file>
     <file>MGRS.hpp</file>
+    <file>NormalGravity.hpp</file>
     <file>OSGB.hpp</file>
     <file>PolarStereographic.hpp</file>
     <file>PolygonArea.hpp</file>
@@ -5148,17 +5732,21 @@
     <file>GeodesicLine.cpp</file>
     <file>Geoid.cpp</file>
     <file>Gnomonic.cpp</file>
+    <file>GravityCircle.cpp</file>
+    <file>GravityModel.cpp</file>
     <file>LambertConformalConic.cpp</file>
     <file>LocalCartesian.cpp</file>
     <file>MagneticCircle.cpp</file>
     <file>MagneticModel.cpp</file>
     <file>MGRS.cpp</file>
+    <file>NormalGravity.cpp</file>
     <file>OSGB.cpp</file>
     <file>PolarStereographic.cpp</file>
     <file>PolygonArea.cpp</file>
     <file>SphericalEngine.cpp</file>
     <file>TransverseMercator.cpp</file>
     <file>TransverseMercatorExact.cpp</file>
+    <file>Utility.cpp</file>
     <file>UTMUPS.cpp</file>
   </compound>
   <compound kind="dir">
@@ -5171,6 +5759,7 @@
     <file>Geod.cpp</file>
     <file>GeodesicProj.cpp</file>
     <file>GeoidEval.cpp</file>
+    <file>Gravity.cpp</file>
     <file>MagneticField.cpp</file>
     <file>Planimeter.cpp</file>
     <file>TransverseMercatorProj.cpp</file>

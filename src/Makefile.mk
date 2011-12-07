@@ -1,4 +1,4 @@
-# $Id: adbf96b5017c85bb7b2054645be5635eef288c73 $
+# $Id: fcc7381297d2c8de25e002260cfc217eb6448551 $
 
 LIBSTEM = Geographic
 LIBRARY = lib$(LIBSTEM).a
@@ -8,17 +8,42 @@ all: $(LIBRARY)
 INCLUDEPATH = ../include
 
 PREFIX = /usr/local
-GEOID_DEFAULT_PATH = $(PREFIX)/share/GeographicLib/geoids
+GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
-MODULES = AlbersEqualArea AzimuthalEquidistant CassiniSoldner \
-	CircularEngine DMS EllipticFunction GeoCoords Geocentric \
-	Geodesic GeodesicLine Geoid Gnomonic LambertConformalConic \
-	LocalCartesian MGRS MagneticCircle MagneticModel OSGB \
-	PolarStereographic PolygonArea SphericalEngine \
-	TransverseMercator TransverseMercatorExact \
-	UTMUPS
-EXTRAHEADERS = Accumulator Constants Math SphericalHarmonic \
-	SphericalHarmonic1 SphericalHarmonic2 Utility
+MODULES = AlbersEqualArea \
+	AzimuthalEquidistant \
+	CassiniSoldner \
+	CircularEngine \
+	DMS \
+	EllipticFunction \
+	GeoCoords \
+	Geocentric \
+	Geodesic \
+	GeodesicLine \
+	Geoid \
+	Gnomonic \
+	GravityCircle \
+	GravityModel \
+	LambertConformalConic \
+	LocalCartesian \
+	MGRS \
+	MagneticCircle \
+	MagneticModel \
+	NormalGravity \
+	OSGB \
+	PolarStereographic \
+	PolygonArea \
+	SphericalEngine \
+	TransverseMercator \
+	TransverseMercatorExact \
+	UTMUPS \
+	Utility
+EXTRAHEADERS = Accumulator \
+	Constants \
+	Math \
+	SphericalHarmonic \
+	SphericalHarmonic1 \
+	SphericalHarmonic2
 
 HEADERS = Config.h $(addsuffix .hpp,$(EXTRAHEADERS) $(MODULES))
 SOURCES = $(addsuffix .cpp,$(MODULES))
@@ -28,7 +53,7 @@ CC = g++ -g
 CXXFLAGS = -g -Wall -Wextra -O3
 
 CPPFLAGS = -I$(INCLUDEPATH) $(DEFINES) \
-	-DGEOID_DEFAULT_PATH=\"$(GEOID_DEFAULT_PATH)\"
+	-DGEOGRAPHICLIB_DATA=\"$(GEOGRAPHICLIB_DATA)\"
 LDFLAGS = $(LIBRARY)
 
 $(LIBRARY): $(OBJECTS)
@@ -48,43 +73,54 @@ clean:
 TAGS: $(HEADERS) $(SOURCES)
 	etags $^
 
-DMS.o: DMS.hpp Constants.hpp Math.hpp Utility.hpp Config.h
-EllipticFunction.o: EllipticFunction.hpp Constants.hpp Math.hpp Config.h
-GeoCoords.o: GeoCoords.hpp Constants.hpp Math.hpp Config.h DMS.hpp MGRS.hpp \
-	UTMUPS.hpp
-MGRS.o: MGRS.hpp Constants.hpp Math.hpp Utility.hpp Config.h UTMUPS.hpp
-PolarStereographic.o: PolarStereographic.hpp Constants.hpp Math.hpp Config.h
-TransverseMercator.o: TransverseMercator.hpp Constants.hpp Math.hpp Config.h
-TransverseMercatorExact.o: TransverseMercatorExact.hpp Constants.hpp Math.hpp \
-	Config.h EllipticFunction.hpp
-UTMUPS.o: UTMUPS.hpp Constants.hpp Math.hpp Utility.hpp Config.h MGRS.hpp \
-	PolarStereographic.hpp TransverseMercator.hpp
-Geocentric.o: Geocentric.hpp Constants.hpp Math.hpp Config.h
-LocalCartesian.o: LocalCartesian.hpp Constants.hpp Math.hpp Config.h \
-	Geocentric.hpp
-Geodesic.o: Geodesic.hpp Constants.hpp Math.hpp Config.h GeodesicLine.hpp
-GeodesicLine.o: GeodesicLine.hpp Constants.hpp Math.hpp Config.h Geodesic.hpp
-PolygonArea.o: PolygonArea.hpp Constants.hpp Math.hpp Config.h Geodesic.hpp \
-	Accumulator.hpp
-AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Constants.hpp Math.hpp \
-	Config.h Geodesic.hpp
-CassiniSoldner.o: CassiniSoldner.hpp Constants.hpp Math.hpp Config.h \
-	Geodesic.hpp
-Geoid.o: Geoid.hpp Constants.hpp Math.hpp Config.h
-LambertConformalConic.o: LambertConformalConic.hpp Constants.hpp Math.hpp \
-	Config.h
-Gnomonic.o: Gnomonic.hpp Constants.hpp Math.hpp Config.h Geodesic.hpp
-OSGB.o: OSGB.hpp Constants.hpp Math.hpp Utility.hpp Config.h \
-	TransverseMercator.hpp
-AlbersEqualArea.o: AlbersEqualArea.hpp Constants.hpp Math.hpp Config.h
-SphericalEngine.o: SphericalEngine.hpp Constants.hpp Math.hpp Config.h \
-	CircularEngine.hpp
-CircularEngine.o: CircularEngine.hpp Constants.hpp Math.hpp Config.h \
+AlbersEqualArea.o: AlbersEqualArea.hpp Config.h Constants.hpp Math.hpp
+AzimuthalEquidistant.o: AzimuthalEquidistant.hpp Config.h Constants.hpp \
+	Geodesic.hpp Math.hpp
+CassiniSoldner.o: CassiniSoldner.hpp Config.h Constants.hpp Geodesic.hpp \
+	GeodesicLine.hpp Math.hpp
+CircularEngine.o: CircularEngine.hpp Config.h Constants.hpp Math.hpp \
 	SphericalEngine.hpp
-MagneticModel.o: MagneticModel.hpp Constants.hpp Math.hpp Utility.hpp \
-	Config.h SphericalEngine.hpp Geocentric.hpp MagneticCircle.hpp \
-	SphericalHarmonic.hpp SphericalHarmonic1.hpp
-MagneticCircle.o: MagneticCircle.hpp Constants.hpp Math.hpp Config.h \
-	CircularEngine.hpp Geocentric.hpp
+DMS.o: Config.h Constants.hpp DMS.hpp Math.hpp Utility.hpp
+EllipticFunction.o: Config.h Constants.hpp EllipticFunction.hpp Math.hpp
+GeoCoords.o: Config.h Constants.hpp DMS.hpp GeoCoords.hpp MGRS.hpp Math.hpp \
+	UTMUPS.hpp Utility.hpp
+Geocentric.o: Config.h Constants.hpp Geocentric.hpp Math.hpp
+Geodesic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
+GeodesicLine.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Math.hpp
+Geoid.o: Config.h Constants.hpp Geoid.hpp Math.hpp
+Gnomonic.o: Config.h Constants.hpp Geodesic.hpp GeodesicLine.hpp Gnomonic.hpp \
+	Math.hpp
+GravityCircle.o: CircularEngine.hpp Config.h Constants.hpp Geocentric.hpp \
+	GravityCircle.hpp GravityModel.hpp Math.hpp NormalGravity.hpp \
+	SphericalEngine.hpp SphericalHarmonic.hpp SphericalHarmonic1.hpp
+GravityModel.o: CircularEngine.hpp Config.h Constants.hpp Geocentric.hpp \
+	GravityCircle.hpp GravityModel.hpp Math.hpp NormalGravity.hpp \
+	SphericalEngine.hpp SphericalHarmonic.hpp SphericalHarmonic1.hpp \
+	Utility.hpp
+LambertConformalConic.o: Config.h Constants.hpp LambertConformalConic.hpp \
+	Math.hpp
+LocalCartesian.o: Config.h Constants.hpp Geocentric.hpp LocalCartesian.hpp \
+	Math.hpp
+MGRS.o: Config.h Constants.hpp MGRS.hpp Math.hpp UTMUPS.hpp Utility.hpp
+MagneticCircle.o: CircularEngine.hpp Config.h Constants.hpp Geocentric.hpp \
+	MagneticCircle.hpp Math.hpp SphericalEngine.hpp
+MagneticModel.o: CircularEngine.hpp Config.h Constants.hpp Geocentric.hpp \
+	MagneticCircle.hpp MagneticModel.hpp Math.hpp SphericalEngine.hpp \
+	SphericalHarmonic.hpp Utility.hpp
+NormalGravity.o: Config.h Constants.hpp Geocentric.hpp Math.hpp \
+	NormalGravity.hpp
+OSGB.o: Config.h Constants.hpp Math.hpp OSGB.hpp TransverseMercator.hpp \
+	Utility.hpp
+PolarStereographic.o: Config.h Constants.hpp Math.hpp PolarStereographic.hpp
+PolygonArea.o: Accumulator.hpp Config.h Constants.hpp Geodesic.hpp Math.hpp \
+	PolygonArea.hpp
+SphericalEngine.o: CircularEngine.hpp Config.h Constants.hpp Math.hpp \
+	SphericalEngine.hpp Utility.hpp
+TransverseMercator.o: Config.h Constants.hpp Math.hpp TransverseMercator.hpp
+TransverseMercatorExact.o: Config.h Constants.hpp EllipticFunction.hpp \
+	Math.hpp TransverseMercatorExact.hpp
+UTMUPS.o: Config.h Constants.hpp MGRS.hpp Math.hpp PolarStereographic.hpp \
+	TransverseMercator.hpp UTMUPS.hpp Utility.hpp
+Utility.o: Config.h Constants.hpp Math.hpp Utility.hpp
 
 .PHONY: all install clean

@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MAGNETICFIELD 1"
-.TH MAGNETICFIELD 1 "2011-11-08" "GeographicLib 1.15" "GeographicLib Utilities"
+.TH MAGNETICFIELD 1 "2011-12-06" "GeographicLib 1.16" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -133,7 +133,8 @@
 MagneticField \-\- compute the earth's magnetic field
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-\&\fBMagneticField\fR [ \fB\-n\fR \fIname\fR ] [ \fB\-d\fR \fIdir\fR ] [ \fB\-t\fR \fItime\fR ]
+\&\fBMagneticField\fR [ \fB\-n\fR \fIname\fR ] [ \fB\-d\fR \fIdir\fR ]
+[ \fB\-t\fR \fItime\fR | \fB\-c\fR \fItime\fR \fIlat\fR \fIh\fR ]
 [ \fB\-r\fR ] [ \fB\-T\fR \fItguard\fR ] [ \fB\-H\fR \fIhguard\fR ] [ \fB\-p\fR \fIprec\fR ]
 [ \fB\-v\fR ] [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -148,9 +149,13 @@ The input line is of the form \fItime\fR \fIlat\fR \fIlon\fR \fIh\fR. \fItime\fR
 date of the form 2012\-07\-03 or a fractional year such as 2012.5.  \fIlat\fR
 and \fIlon\fR are the latitude and longitude expressed as decimal degrees
 or degrees, minutes, and seconds; see \fIGeoConvert\fR\|(1) for details.  \fIh\fR
-is the height above the ellipsoid in meters.  Alternatively, \fItime\fR can
-be given on the commend line as the argument to the \fI\-t\fR option, in
-which case it should not be included on the input lines.
+is the height above the ellipsoid in meters; this is optional and
+defaults to zero.  Alternatively, \fItime\fR can be given on the command
+line as the argument to the \fB\-t\fR option, in which case it should not be
+included on the input lines.  Finally, the magnetic field can be
+computed at various points on a circle of latitude (constant \fItime\fR,
+\&\fIlat\fR, and \fIh\fR) via the \fB\-c\fR option; in this case only the longitude
+should be given on the input lines.
 .PP
 The output consists of the following 7 items:
 .PP
@@ -182,8 +187,14 @@ read magnetic models from \fIdir\fR instead of the default.  See
 \&\s-1MODELS\s0.
 .IP "\fB\-t\fR" 4
 .IX Item "-t"
-evaluate the field at \fItime\fR instead of readig the time from the input
+evaluate the field at \fItime\fR instead of reading the time from the input
 lines.
+.IP "\fB\-c\fR" 4
+.IX Item "-c"
+evaluate the field on a circle of latitude given by \fItime\fR, \fIlat\fR,
+\&\fIh\fR instead of reading these quantities from the input lines.  In this
+case, \fBMagneticField\fR can calculate the field considerably more
+quickly.
 .IP "\fB\-r\fR" 4
 .IX Item "-r"
 toggle whether to report the rates of change of the field.
@@ -197,12 +208,13 @@ signal an error if \fIh\fR lies \fIhguard\fR meters (default 500000 m) beyond
 the range for the model.
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
-set the precision to \fIprec\fR (default 1).  Fields are printed with
-precision with \fIprec\fR decimal places; angles use \fIprec\fR + 1 places.
+set the output precision to \fIprec\fR (default 1).  Fields are printed
+with precision with \fIprec\fR decimal places; angles use \fIprec\fR + 1
+places.
 .IP "\fB\-v\fR" 4
 .IX Item "-v"
-print information about the magnetic on standard error before processing
-the input.
+print information about the magnetic model on standard error before
+processing the input.
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 print version and exit.
@@ -253,10 +265,10 @@ setting the environment variable \f(CW\*(C`MAGNETIC_NAME\*(C'\fR or with the \fB
 option.
 .PP
 The magnetic models will be loaded from a directory specified at compile
-time.  This may changed by setting the environment variable
-\&\f(CW\*(C`MAGNETIC_PATH\*(C'\fR or with the \fB\-d\fR option.  The \fB\-h\fR option prints the
-default magnetic path and name.  Use the \fB\-v\fR option to ascertain the
-full path name of the data file.
+time.  This may changed by setting the environment variables
+\&\f(CW\*(C`MAGNETIC_PATH\*(C'\fR or \f(CW\*(C`GEOGRAPHICLIB_DATA\*(C'\fR, or with the \fB\-d\fR option.
+The \fB\-h\fR option prints the default magnetic path and name.  Use the
+\&\fB\-v\fR option to ascertain the full path name of the data file.
 .PP
 Instructions for downloading and installing magnetic models are
 available at
@@ -272,12 +284,17 @@ then \fIname\fR takes precedence.
 .IP "\fB\s-1MAGNETIC_PATH\s0\fR" 4
 .IX Item "MAGNETIC_PATH"
 Override the compile-time default magnetic path.  This is typically
-\&\f(CW\*(C`/usr/local/share/GeographicLib/magnetics\*(C'\fR on Unix-like systems and
+\&\f(CW\*(C`/usr/local/share/GeographicLib/magnetic\*(C'\fR on Unix-like systems and
 \&\f(CW\*(C`C:/Documents and Settings/All Users/Application
-Data/GeographicLib/magnetics\*(C'\fR on Windows systems.  The \fB\-h\fR option reports
+Data/GeographicLib/magnetic\*(C'\fR on Windows systems.  The \fB\-h\fR option reports
 the value of \fB\s-1MAGNETIC_PATH\s0\fR, if defined, otherwise it reports the
 compile-time value.  If the \fB\-d\fR \fIdir\fR option is used, then \fIdir\fR
 takes precedence.
+.IP "\fB\s-1GEOGRAPHICLIB_DATA\s0\fR" 4
+.IX Item "GEOGRAPHICLIB_DATA"
+Another way of overriding the compile-time default magnetic path.  If it
+is set (and if \fB\s-1MAGNETIC_PATH\s0\fR is not set), then
+$\fB\s-1GEOGRAPHICLIB_DATA\s0\fR/magnetic is used.
 .SH "ERRORS"
 .IX Header "ERRORS"
 An illegal line of input will print an error message to standard output

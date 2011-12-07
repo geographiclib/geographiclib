@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2011-11-08" "GeographicLib 1.15" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2011-12-06" "GeographicLib 1.16" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -153,7 +153,7 @@ is used (\fIa\fR = 6378137 m, \fIf\fR = 1/298.257223563).
 \&\fIlongitude\fR using decimal degrees or degrees minutes seconds.  d, ',
 and " are used to denote degrees, minutes, and seconds, with the least
 significant designator optional.  (See \s-1QUOTING\s0 for how to
-quote the charachers ' and " when entering coordinates on the command
+quote the characters ' and " when entering coordinates on the command
 line.)  Various unicode characters (encoded with \s-1UTF\-8\s0) may also be used
 to denote degrees, minutes, and seconds, e.g., the degree, prime, and
 double prime symbols.  Alternatively, : (colon) may be used to separate
@@ -212,8 +212,8 @@ output meridian convergence and scale for the corresponding \s-1UTM\s0 or
 degrees clockwise from true north.
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
-set the precision to \fIprec\fR (default 0); \fIprec\fR is the precision
-relative to 1 m.  See \s-1PRECISION\s0.
+set the output precision to \fIprec\fR (default 0); \fIprec\fR is the
+precision relative to 1 m.  See \s-1PRECISION\s0.
 .IP "\fB\-z\fR" 4
 .IX Item "-z"
 set the zone to \fIzone\fR for output.  Use either 0 < \fIzone\fR <= 60
@@ -277,7 +277,7 @@ component.  Print convergence, resp. scale, with 5 + \fIprec\fR, resp. 7 +
 is in zone \f(CW\*(C`38N\*(C'\fR with 444km <= \fIeasting\fR < 445km and 3688km <=
 \&\fInorthing\fR < 3689km.  Consistent with this representation,
 coordinates are \fItruncated\fR (instead of \fIrounded\fR) to the requested
-precision.  Similiarly, on input an \s-1MGRS\s0 coordinate represents the
+precision.  Similarly, on input an \s-1MGRS\s0 coordinate represents the
 \&\fIcenter\fR of the square (\f(CW\*(C`38N 444500 3688500\*(C'\fR in the example above).
 However, if the \fB\-n\fR option is given then the south-west corner of the
 square is returned instead (\f(CW\*(C`38N 444000 3688000\*(C'\fR in the example above).
@@ -286,7 +286,7 @@ square is returned instead (\f(CW\*(C`38N 444000 3688000\*(C'\fR in the example 
 If the input is \fBgeographic\fR, \fBGeoConvert\fR uses the standard rules of
 selecting \s-1UTM\s0 vs \s-1UPS\s0 and for assigning the \s-1UTM\s0 zone (with the Norway and
 Svalbard exceptions).  If the input is \fB\s-1UTM/UPS\s0\fR, or \fB\s-1MGRS\s0\fR, then the
-choice beteen \s-1UTM\s0 and \s-1UPS\s0 and the \s-1UTM\s0 zone mirrors the input.  The \fB\-z\fR
+choice between \s-1UTM\s0 and \s-1UPS\s0 and the \s-1UTM\s0 zone mirrors the input.  The \fB\-z\fR
 \&\fIzone\fR, \fB\-s\fR, \fB\-t\fR options allow these rules to be overridden with
 \&\fIzone\fR = 0 being used to indicate \s-1UPS\s0.  For example, the point
 .PP
@@ -375,7 +375,7 @@ Universal Transverse Mercator,
 <http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>.
 .IP "\fB\s-1UPS\s0\fR" 4
 .IX Item "UPS"
-Univeral Polar Stereographic,
+Universal Polar Stereographic,
 <http://en.wikipedia.org/wiki/Universal_Polar_Stereographic>.
 .IP "\fB\s-1MGRS\s0\fR" 4
 .IX Item "MGRS"

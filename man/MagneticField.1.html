@@ -45,7 +45,8 @@
 </p>
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
-<p><strong>MagneticField</strong> [ <strong>-n</strong> <em>name</em> ] [ <strong>-d</strong> <em>dir</em> ] [ <strong>-t</strong> <em>time</em> ]
+<p><strong>MagneticField</strong> [ <strong>-n</strong> <em>name</em> ] [ <strong>-d</strong> <em>dir</em> ]
+[ <strong>-t</strong> <em>time</em> | <strong>-c</strong> <em>time</em> <em>lat</em> <em>h</em> ]
 [ <strong>-r</strong> ] [ <strong>-T</strong> <em>tguard</em> ] [ <strong>-H</strong> <em>hguard</em> ] [ <strong>-p</strong> <em>prec</em> ]
 [ <strong>-v</strong> ] [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
@@ -61,9 +62,13 @@ rate of change.</p>
 date of the form 2012-07-03 or a fractional year such as 2012.5.  <em>lat</em>
 and <em>lon</em> are the latitude and longitude expressed as decimal degrees
 or degrees, minutes, and seconds; see <a href="GeoConvert.1.html"><code>GeoConvert(1)</code></a> for details.  <em>h</em>
-is the height above the ellipsoid in meters.  Alternatively, <em>time</em> can
-be given on the commend line as the argument to the <em>-t</em> option, in
-which case it should not be included on the input lines.</p>
+is the height above the ellipsoid in meters; this is optional and
+defaults to zero.  Alternatively, <em>time</em> can be given on the command
+line as the argument to the <strong>-t</strong> option, in which case it should not be
+included on the input lines.  Finally, the magnetic field can be
+computed at various points on a circle of latitude (constant <em>time</em>,
+<em>lat</em>, and <em>h</em>) via the <strong>-c</strong> option; in this case only the longitude
+should be given on the input lines.</p>
 <p>The output consists of the following 7 items:</p>
 <pre>
   the declination (the direction of the horizontal component of
@@ -98,8 +103,16 @@ of change of these quantities in degrees/yr and nT/yr.</p>
 <dt><strong><a name="t" class="item"><strong>-t</strong></a></strong></dt>
 
 <dd>
-<p>evaluate the field at <em>time</em> instead of readig the time from the input
+<p>evaluate the field at <em>time</em> instead of reading the time from the input
 lines.</p>
+</dd>
+<dt><strong><a name="c" class="item"><strong>-c</strong></a></strong></dt>
+
+<dd>
+<p>evaluate the field on a circle of latitude given by <em>time</em>, <em>lat</em>,
+<em>h</em> instead of reading these quantities from the input lines.  In this
+case, <strong>MagneticField</strong> can calculate the field considerably more
+quickly.</p>
 </dd>
 <dt><strong><a name="r" class="item"><strong>-r</strong></a></strong></dt>
 
@@ -121,14 +134,15 @@ the range for the model.</p>
 <dt><strong><a name="p" class="item"><strong>-p</strong></a></strong></dt>
 
 <dd>
-<p>set the precision to <em>prec</em> (default 1).  Fields are printed with
-precision with <em>prec</em> decimal places; angles use <em>prec</em> + 1 places.</p>
+<p>set the output precision to <em>prec</em> (default 1).  Fields are printed
+with precision with <em>prec</em> decimal places; angles use <em>prec</em> + 1
+places.</p>
 </dd>
 <dt><strong><a name="v" class="item"><strong>-v</strong></a></strong></dt>
 
 <dd>
-<p>print information about the magnetic on standard error before processing
-the input.</p>
+<p>print information about the magnetic model on standard error before
+processing the input.</p>
 </dd>
 <dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
 
@@ -190,10 +204,10 @@ electrical machinery, etc.</p>
 setting the environment variable <a href="#magnetic_name"><code>MAGNETIC_NAME</code></a> or with the <strong>-n</strong>
 option.</p>
 <p>The magnetic models will be loaded from a directory specified at compile
-time.  This may changed by setting the environment variable
-<a href="#magnetic_path"><code>MAGNETIC_PATH</code></a> or with the <strong>-d</strong> option.  The <strong>-h</strong> option prints the
-default magnetic path and name.  Use the <strong>-v</strong> option to ascertain the
-full path name of the data file.</p>
+time.  This may changed by setting the environment variables
+<a href="#magnetic_path"><code>MAGNETIC_PATH</code></a> or <a href="#geographiclib_data"><code>GEOGRAPHICLIB_DATA</code></a>, or with the <strong>-d</strong> option.
+The <strong>-h</strong> option prints the default magnetic path and name.  Use the
+<strong>-v</strong> option to ascertain the full path name of the data file.</p>
 <p>Instructions for downloading and installing magnetic models are
 available at
 <a href="http://geographiclib.sf.net/html/magnetic.html#magneticinst">http://geographiclib.sf.net/html/magnetic.html#magneticinst</a>.</p>
@@ -214,12 +228,19 @@ then <em>name</em> takes precedence.</p>
 
 <dd>
 <p>Override the compile-time default magnetic path.  This is typically
-<code>/usr/local/share/GeographicLib/magnetics</code> on Unix-like systems and
+<code>/usr/local/share/GeographicLib/magnetic</code> on Unix-like systems and
 <code>C:/Documents and Settings/All Users/Application
-Data/GeographicLib/magnetics</code> on Windows systems.  The <strong>-h</strong> option reports
+Data/GeographicLib/magnetic</code> on Windows systems.  The <strong>-h</strong> option reports
 the value of <strong>MAGNETIC_PATH</strong>, if defined, otherwise it reports the
 compile-time value.  If the <strong>-d</strong> <em>dir</em> option is used, then <em>dir</em>
 takes precedence.</p>
+</dd>
+<dt><strong><a name="geographiclib_data" class="item"><strong>GEOGRAPHICLIB_DATA</strong></a></strong></dt>
+
+<dd>
+<p>Another way of overriding the compile-time default magnetic path.  If it
+is set (and if <strong>MAGNETIC_PATH</strong> is not set), then
+$<strong>GEOGRAPHICLIB_DATA</strong>/magnetic is used.</p>
 </dd>
 </dl>
 <p>

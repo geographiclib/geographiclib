@@ -9,7 +9,8 @@
 
 #include <GeographicLib/PolarStereographic.hpp>
 
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP "$Id: 3985d9122f00e7ca98b1eb81c15de5a281fbe0bb $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP \
+  "$Id: 272e10eb6406c817889a0e792fb9196893d85817 $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
@@ -74,7 +75,7 @@ namespace GeographicLib {
     lat *= northp ? 1 : -1;
     real
       phi = lat * Math::degree<real>(),
-      tau = lat != -90 ? tan(phi) : -overflow_,
+      tau = lat != -90 ? tanx(phi) : -overflow_,
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
       taup = Math::hypot(real(1), sig) * tau - sig * secphi,

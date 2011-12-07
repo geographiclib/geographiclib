@@ -1,6 +1,14 @@
-# $Id: 4036afaf7473621a5a2171ab6ec2d9ee374795d9 $
-PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval MagneticField Planimeter ConicProj
+# $Id: 6ff1f99e93e96bde6bd53462c0f4d9cfdc9588f7 $
+PROGRAMS = CartConvert \
+	ConicProj \
+	GeoConvert \
+	Geod \
+	GeodesicProj \
+	GeoidEval \
+	Gravity \
+	MagneticField \
+	Planimeter \
+	TransverseMercatorProj
 
 PODSRC = $(addsuffix .pod,$(PROGRAMS))
 MANPAGES = $(addsuffix .1,$(PROGRAMS))

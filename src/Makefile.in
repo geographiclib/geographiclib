@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 5b0349ca22161a369be4e1630b55aef3b034484b $
+# $Id: c2f89d8f5caed6d1f3f0a0752b24be4970f57caa $
 
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
@@ -82,10 +82,11 @@ am_libGeographic_la_OBJECTS = AlbersEqualArea.lo \
 	AzimuthalEquidistant.lo CassiniSoldner.lo CircularEngine.lo \
 	DMS.lo EllipticFunction.lo GeoCoords.lo Geocentric.lo \
 	Geodesic.lo GeodesicLine.lo Geoid.lo Gnomonic.lo \
-	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
-	MagneticCircle.lo MagneticModel.lo OSGB.lo \
-	PolarStereographic.lo PolygonArea.lo SphericalEngine.lo \
-	TransverseMercator.lo TransverseMercatorExact.lo UTMUPS.lo
+	GravityCircle.lo GravityModel.lo LambertConformalConic.lo \
+	LocalCartesian.lo MGRS.lo MagneticCircle.lo MagneticModel.lo \
+	NormalGravity.lo OSGB.lo PolarStereographic.lo PolygonArea.lo \
+	SphericalEngine.lo TransverseMercator.lo \
+	TransverseMercatorExact.lo UTMUPS.lo Utility.lo
 libGeographic_la_OBJECTS = $(am_libGeographic_la_OBJECTS)
 libGeographic_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
@@ -134,9 +135,7 @@ CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
-DEFS = -DGEOID_DEFAULT_PATH=\"$(geoids_dir)\" \
-	-DMAGNETIC_DEFAULT_PATH=\"$(magnetic_dir)\" @DEFS@
-
+DEFS = -DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
@@ -261,11 +260,14 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		GeodesicLine.cpp \
 		Geoid.cpp \
 		Gnomonic.cpp \
+		GravityCircle.cpp \
+		GravityModel.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
 		MagneticCircle.cpp \
 		MagneticModel.cpp \
+		NormalGravity.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
 		PolygonArea.cpp \
@@ -273,6 +275,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		Utility.cpp \
 		../include/GeographicLib/Accumulator.hpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -287,12 +290,15 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/GeodesicLine.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
+		../include/GeographicLib/GravityCircle.hpp \
+		../include/GeographicLib/GravityModel.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
 		../include/GeographicLib/MagneticCircle.hpp \
 		../include/GeographicLib/MagneticModel.hpp \
 		../include/GeographicLib/Math.hpp \
+		../include/GeographicLib/NormalGravity.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/PolygonArea.hpp \
@@ -306,8 +312,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/Utility.hpp \
 		../include/GeographicLib/Config.h
 
-geoids_dir = $(datadir)/GeographicLib/geoids
-magnetic_dir = $(datadir)/GeographicLib/magnetic
+geographiclib_data = $(datadir)/GeographicLib
 EXTRA_DIST = Makefile.mk CMakeLists.txt Geographic.pro
 all: all-am
 
@@ -395,11 +400,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicLine.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geoid.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Gnomonic.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GravityCircle.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GravityModel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LambertConformalConic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LocalCartesian.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MGRS.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MagneticCircle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MagneticModel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NormalGravity.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OSGB.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PolarStereographic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PolygonArea.Plo@am__quote@
@@ -407,6 +415,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercator.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercatorExact.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/UTMUPS.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Utility.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

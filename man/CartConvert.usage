@@ -24,7 +24,7 @@ int usage(int retval, bool brief) {
 "       Convert geodetic coordinates to either geocentric or local cartesian\n"
 "       coordinates.  Geocentric coordinates have the origin at the center of\n"
 "       the earth, with the z axis going thru the north pole, and the x axis\n"
-"       thru latitidude = 0, longitude = 0.  By default, the conversion is to\n"
+"       thru latitude = 0, longitude = 0.  By default, the conversion is to\n"
 "       geocentric coordinates.  Specifying -l lat0 lon0 h0 causes a local\n"
 "       coordinate system to be used with the origin at latitude = lat0,\n"
 "       longitude = lon0, height = h0, z normal to the ellipsoid and y due\n"

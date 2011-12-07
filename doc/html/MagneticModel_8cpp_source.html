@@ -62,281 +62,252 @@
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="MagneticCircle_8hpp.html" title="Header for GeographicLib::MagneticCircle class.">GeographicLib/MagneticCircle.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
 <a name="l00015"></a>00015 
-<a name="l00016"></a><a class="code" href="MagneticModel_8cpp.html#ac744ec56ccbc33cff2c75c204b4c7ae1">00016</a> <span class="preprocessor">#define GEOGRAPHICLIB_MAGNETICMODEL_CPP &quot;$Id: 02a619af2d29d3fd8b9d6da8e68adf72042f2cdb $&quot;</span>
-<a name="l00017"></a>00017 <span class="preprocessor"></span>
-<a name="l00018"></a>00018 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MagneticModel_8cpp.html#ac744ec56ccbc33cff2c75c204b4c7ae1">GEOGRAPHICLIB_MAGNETICMODEL_CPP</a>)
-<a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MagneticModel_8hpp.html#a8f9f091785b789fbe080c650bc0b8654">GEOGRAPHICLIB_MAGNETICMODEL_HPP</a>)
-<a name="l00020"></a>00020 
-<a name="l00021"></a>00021 <span class="preprocessor">#if !defined(MAGNETIC_DEFAULT_PATH)</span>
-<a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">#  if defined(GEOGRAPHICLIB_MAGNETIC_PATH)</span>
-<a name="l00023"></a>00023 <span class="preprocessor"></span>       <span class="comment">// Use cmake supplied value is available</span>
-<a name="l00024"></a>00024 <span class="preprocessor">#      define MAGNETIC_DEFAULT_PATH GEOGRAPHICLIB_MAGNETIC_PATH</span>
-<a name="l00025"></a>00025 <span class="preprocessor"></span><span class="preprocessor">#  else</span>
-<a name="l00026"></a>00026 <span class="preprocessor"></span><span class="preprocessor">#    if defined(_MSC_VER)</span>
-<a name="l00027"></a>00027 <span class="preprocessor"></span><span class="preprocessor">#      define MAGNETIC_DEFAULT_PATH \</span>
-<a name="l00028"></a>00028 <span class="preprocessor">  &quot;C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic&quot;</span>
-<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">#    else</span>
-<a name="l00030"></a><a class="code" href="MagneticModel_8cpp.html#adda468b8dc758dd6d082ccf33c5e1b75">00030</a> <span class="preprocessor"></span><span class="preprocessor">#      define MAGNETIC_DEFAULT_PATH &quot;/usr/local/share/GeographicLib/magnetic&quot;</span>
-<a name="l00031"></a>00031 <span class="preprocessor"></span><span class="preprocessor">#    endif</span>
-<a name="l00032"></a>00032 <span class="preprocessor"></span><span class="preprocessor">#  endif</span>
+<a name="l00016"></a><a class="code" href="MagneticModel_8cpp.html#ac744ec56ccbc33cff2c75c204b4c7ae1">00016</a> <span class="preprocessor">#define GEOGRAPHICLIB_MAGNETICMODEL_CPP \</span>
+<a name="l00017"></a>00017 <span class="preprocessor">  &quot;$Id: caa93d8d88501ae144eb69febc642ced9319995b $&quot;</span>
+<a name="l00018"></a>00018 <span class="preprocessor"></span>
+<a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MagneticModel_8cpp.html#ac744ec56ccbc33cff2c75c204b4c7ae1">GEOGRAPHICLIB_MAGNETICMODEL_CPP</a>)
+<a name="l00020"></a>00020 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MagneticModel_8hpp.html#a8f9f091785b789fbe080c650bc0b8654">GEOGRAPHICLIB_MAGNETICMODEL_HPP</a>)
+<a name="l00021"></a>00021 
+<a name="l00022"></a>00022 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_DATA)</span>
+<a name="l00023"></a>00023 <span class="preprocessor"></span><span class="preprocessor">#  if defined(_MSC_VER)</span>
+<a name="l00024"></a>00024 <span class="preprocessor"></span><span class="preprocessor">#    define GEOGRAPHICLIB_DATA \</span>
+<a name="l00025"></a>00025 <span class="preprocessor">  &quot;C:/Documents and Settings/All Users/Application Data/GeographicLib&quot;</span>
+<a name="l00026"></a>00026 <span class="preprocessor"></span><span class="preprocessor">#  else</span>
+<a name="l00027"></a><a class="code" href="MagneticModel_8cpp.html#a45687ef771d809c1c369daea074cc109">00027</a> <span class="preprocessor"></span><span class="preprocessor">#    define GEOGRAPHICLIB_DATA &quot;/usr/local/share/GeographicLib&quot;</span>
+<a name="l00028"></a>00028 <span class="preprocessor"></span><span class="preprocessor">#  endif</span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00030"></a>00030 <span class="preprocessor"></span>
+<a name="l00031"></a>00031 <span class="preprocessor">#if !defined(MAGNETIC_DEFAULT_NAME)</span>
+<a name="l00032"></a><a class="code" href="MagneticModel_8cpp.html#a302055ff69e445c8103c09913de840ff">00032</a> <span class="preprocessor"></span><span class="preprocessor">#  define MAGNETIC_DEFAULT_NAME &quot;wmm2010&quot;</span>
 <a name="l00033"></a>00033 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00034"></a>00034 <span class="preprocessor"></span><span class="preprocessor">#if !defined(MAGNETIC_DEFAULT_NAME)</span>
-<a name="l00035"></a><a class="code" href="MagneticModel_8cpp.html#a302055ff69e445c8103c09913de840ff">00035</a> <span class="preprocessor"></span><span class="preprocessor">#  define MAGNETIC_DEFAULT_NAME &quot;wmm2010&quot;</span>
-<a name="l00036"></a>00036 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00037"></a>00037 <span class="preprocessor"></span>
-<a name="l00038"></a>00038 <span class="preprocessor">#if defined(_MSC_VER)</span>
-<a name="l00039"></a>00039 <span class="preprocessor"></span><span class="comment">// Squelch warnings about unsafe use of getenv</span>
-<a name="l00040"></a>00040 <span class="preprocessor">#pragma warning (disable: 4996)</span>
-<a name="l00041"></a>00041 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00042"></a>00042 <span class="preprocessor"></span>
-<a name="l00043"></a>00043 <span class="keyword">namespace </span>GeographicLib {
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045   <span class="keyword">using namespace </span>std;
-<a name="l00046"></a>00046 
-<a name="l00047"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#a84a020586d58c4da61ec6ffbc7b4fa37">00047</a>   <a class="code" href="classGeographicLib_1_1MagneticModel.html#a84a020586d58c4da61ec6ffbc7b4fa37">MagneticModel::MagneticModel</a>(<span class="keyword">const</span> std::string&amp; name,<span class="keyword">const</span> std::string&amp; path,
-<a name="l00048"></a>00048                                <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>&amp; earth)
-<a name="l00049"></a>00049     : _name(name)
-<a name="l00050"></a>00050     , _dir(path)
-<a name="l00051"></a>00051     , _description(<span class="stringliteral">&quot;NONE&quot;</span>)
-<a name="l00052"></a>00052     , _date(<span class="stringliteral">&quot;UNKNOWN&quot;</span>)
-<a name="l00053"></a>00053     , _t0(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
-<a name="l00054"></a>00054     , _dt0(1)
-<a name="l00055"></a>00055     , _tmin(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
-<a name="l00056"></a>00056     , _tmax(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
-<a name="l00057"></a>00057     , _a(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
-<a name="l00058"></a>00058     , _hmin(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
-<a name="l00059"></a>00059     , _hmax(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
-<a name="l00060"></a>00060     , _Nmodels(1)
-<a name="l00061"></a>00061     , _norm(<a class="code" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>::schmidt)
-<a name="l00062"></a>00062     , _earth(earth)
-<a name="l00063"></a>00063   {
-<a name="l00064"></a>00064     <span class="keywordflow">if</span> (_dir.empty())
-<a name="l00065"></a>00065       _dir = <a class="code" href="classGeographicLib_1_1MagneticModel.html#a469db97d257876c1abafa3da3c5f0f7e">DefaultMagneticPath</a>();
-<a name="l00066"></a>00066     ReadMetadata(_name);
-<a name="l00067"></a>00067     _G.resize(_Nmodels + 1);
-<a name="l00068"></a>00068     _H.resize(_Nmodels + 1);
-<a name="l00069"></a>00069     {
-<a name="l00070"></a>00070       std::string coeff = _filename + <span class="stringliteral">&quot;.cof&quot;</span>;
-<a name="l00071"></a>00071       ifstream coeffstr(coeff.c_str(), ios::binary);
-<a name="l00072"></a>00072       <span class="keywordflow">if</span> (!coeffstr.good())
-<a name="l00073"></a>00073         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Error opening &quot;</span> + coeff);
-<a name="l00074"></a>00074       <span class="keywordtype">char</span> <span class="keywordtype">id</span>[idlength_ + 1];
-<a name="l00075"></a>00075       coeffstr.read(<span class="keywordtype">id</span>, idlength_);
-<a name="l00076"></a>00076       <span class="keywordflow">if</span> (!coeffstr.good())
-<a name="l00077"></a>00077         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;No header in &quot;</span> + coeff);
-<a name="l00078"></a>00078       <span class="keywordtype">id</span>[idlength_] = <span class="charliteral">&#39;\0&#39;</span>;
-<a name="l00079"></a>00079       <span class="keywordflow">if</span> (_id != std::string(<span class="keywordtype">id</span>))
-<a name="l00080"></a>00080         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;ID mismatch: &quot;</span> + _id + <span class="stringliteral">&quot; vs &quot;</span> + <span class="keywordtype">id</span>);
-<a name="l00081"></a>00081       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= _Nmodels; ++i) {
-<a name="l00082"></a>00082         <span class="keywordtype">int</span> nm[2];
-<a name="l00083"></a>00083         Utility::readarray&lt;int, int, false&gt;(coeffstr, nm, 2);
-<a name="l00084"></a>00084         <span class="keywordtype">int</span> N = nm[0], M = nm[1];
-<a name="l00085"></a>00085         <span class="keywordflow">if</span> (!(N &gt;= M &amp;&amp; M &gt;= -1))
-<a name="l00086"></a>00086           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Bad degree and order &quot;</span> +
-<a name="l00087"></a>00087                               <a class="code" href="classGeographicLib_1_1Utility.html#a53fbf616c74bab1cbbc9e8d4c7b6739f">Utility::str</a>(N) + <span class="stringliteral">&quot; &quot;</span> + <a class="code" href="classGeographicLib_1_1Utility.html#a53fbf616c74bab1cbbc9e8d4c7b6739f">Utility::str</a>(M));
-<a name="l00088"></a>00088         _G[i].resize(<a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a8a126c9790a7a1609046fbae7934e587">SphericalEngine::coeff::Csize</a>(N, M));
-<a name="l00089"></a>00089         _H[i].resize(<a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a98a75827d68247cf5ad1843d9d68b222">SphericalEngine::coeff::Ssize</a>(N, M));
-<a name="l00090"></a>00090         Utility::readarray&lt;double, real, false&gt;(coeffstr, _G[i]);
-<a name="l00091"></a>00091         <span class="keywordflow">if</span> (!(_G[i][0] == 0))
-<a name="l00092"></a>00092           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;A degree 0 term is not permitted&quot;</span>);
-<a name="l00093"></a>00093         Utility::readarray&lt;double, real, false&gt;(coeffstr, _H[i]);
-<a name="l00094"></a>00094         _harm.push_back(<a class="code" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>(_G[i], _H[i], N, N, M, _a, _norm));
-<a name="l00095"></a>00095       }
-<a name="l00096"></a>00096       <span class="keywordtype">int</span> pos = int(coeffstr.tellg());
-<a name="l00097"></a>00097       coeffstr.seekg(0, ios::end);
-<a name="l00098"></a>00098       <span class="keywordflow">if</span> (pos != coeffstr.tellg())
-<a name="l00099"></a>00099         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra data in  &quot;</span> + coeff);
-<a name="l00100"></a>00100     }
-<a name="l00101"></a>00101   }
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103   <span class="keywordtype">void</span> MagneticModel::ReadMetadata(<span class="keyword">const</span> std::string&amp; name) {
-<a name="l00104"></a>00104     <span class="keyword">const</span> <span class="keywordtype">char</span>* spaces = <span class="stringliteral">&quot; \t\n\v\f\r&quot;</span>;
-<a name="l00105"></a>00105     _filename = _dir + <span class="stringliteral">&quot;/&quot;</span> + name + <span class="stringliteral">&quot;.wmm&quot;</span>;
-<a name="l00106"></a>00106     ifstream metastr(_filename.c_str());
-<a name="l00107"></a>00107     <span class="keywordflow">if</span> (!metastr.good())
-<a name="l00108"></a>00108       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Cannot open &quot;</span> + _filename);
-<a name="l00109"></a>00109     <span class="keywordtype">string</span> line;
-<a name="l00110"></a>00110     getline(metastr, line);
-<a name="l00111"></a>00111     <span class="keywordflow">if</span> (!(line.size() &gt;= 6 &amp;&amp; line.substr(0,5) == <span class="stringliteral">&quot;WMMF-&quot;</span>))
-<a name="l00112"></a>00112       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(_filename + <span class="stringliteral">&quot; does not contain WMMF-n signature&quot;</span>);
-<a name="l00113"></a>00113     string::size_type n = line.find_first_of(spaces, 5);
-<a name="l00114"></a>00114     <span class="keywordflow">if</span> (n != string::npos)
-<a name="l00115"></a>00115       n -= 5;
-<a name="l00116"></a>00116     <span class="keywordtype">string</span> version = line.substr(5, n);
-<a name="l00117"></a>00117     <span class="keywordflow">if</span> (version != <span class="stringliteral">&quot;1&quot;</span>)
-<a name="l00118"></a>00118       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Unknown version in &quot;</span> + _filename + <span class="stringliteral">&quot;: &quot;</span> + version);
-<a name="l00119"></a>00119     <span class="keywordtype">string</span> key, val;
-<a name="l00120"></a>00120     <span class="keywordflow">while</span> (getline(metastr, line)) {
-<a name="l00121"></a>00121       <span class="keywordflow">if</span> (!ParseLine(line, key, val))
-<a name="l00122"></a>00122         <span class="keywordflow">continue</span>;
-<a name="l00123"></a>00123       <span class="comment">// Process key words</span>
-<a name="l00124"></a>00124       <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Name&quot;</span>)
-<a name="l00125"></a>00125         _name = val;
-<a name="l00126"></a>00126       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Description&quot;</span>)
-<a name="l00127"></a>00127         _description = val;
-<a name="l00128"></a>00128       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;ReleaseDate&quot;</span>)
-<a name="l00129"></a>00129         _date = val;
-<a name="l00130"></a>00130       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Radius&quot;</span>)
-<a name="l00131"></a>00131         _a = Utility::num&lt;real&gt;(val);
-<a name="l00132"></a>00132       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Type&quot;</span>) {
-<a name="l00133"></a>00133         <span class="keywordflow">if</span> (!(val == <span class="stringliteral">&quot;Linear&quot;</span> || val == <span class="stringliteral">&quot;linear&quot;</span>))
-<a name="l00134"></a>00134           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Only linear models are supported&quot;</span>);
-<a name="l00135"></a>00135       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Epoch&quot;</span>)
-<a name="l00136"></a>00136         _t0 = Utility::num&lt;real&gt;(val);
-<a name="l00137"></a>00137       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;DeltaEpoch&quot;</span>)
-<a name="l00138"></a>00138         _dt0 = Utility::num&lt;real&gt;(val);
-<a name="l00139"></a>00139       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;NumModels&quot;</span>)
-<a name="l00140"></a>00140         _Nmodels = Utility::num&lt;int&gt;(val);
-<a name="l00141"></a>00141       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MinTime&quot;</span>)
-<a name="l00142"></a>00142         _tmin = Utility::num&lt;real&gt;(val);
-<a name="l00143"></a>00143       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MaxTime&quot;</span>)
-<a name="l00144"></a>00144         _tmax = Utility::num&lt;real&gt;(val);
-<a name="l00145"></a>00145       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MinHeight&quot;</span>)
-<a name="l00146"></a>00146         _hmin =  Utility::num&lt;real&gt;(val);
-<a name="l00147"></a>00147       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MaxHeight&quot;</span>)
-<a name="l00148"></a>00148         _hmax =  Utility::num&lt;real&gt;(val);
-<a name="l00149"></a>00149       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Normalization&quot;</span>) {
-<a name="l00150"></a>00150         <span class="keywordflow">if</span> (val == <span class="stringliteral">&quot;Full&quot;</span> || val == <span class="stringliteral">&quot;full&quot;</span>)
-<a name="l00151"></a>00151           _norm = <a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b">SphericalHarmonic::full</a>;
-<a name="l00152"></a>00152         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (val == <span class="stringliteral">&quot;Schmidt&quot;</span> || val == <span class="stringliteral">&quot;schmidt&quot;</span>)
-<a name="l00153"></a>00153           _norm = <a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3">SphericalHarmonic::schmidt</a>;
-<a name="l00154"></a>00154         <span class="keywordflow">else</span>
-<a name="l00155"></a>00155           <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Unknown normalization &quot;</span> + val);
-<a name="l00156"></a>00156       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;ByteOrder&quot;</span>) {
-<a name="l00157"></a>00157         <span class="keywordflow">if</span> (val == <span class="stringliteral">&quot;Big&quot;</span> || val == <span class="stringliteral">&quot;big&quot;</span>)
-<a name="l00158"></a>00158           <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Only little-endian ordering is supported&quot;</span>);
-<a name="l00159"></a>00159         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!(val == <span class="stringliteral">&quot;Little&quot;</span> || val == <span class="stringliteral">&quot;little&quot;</span>))
-<a name="l00160"></a>00160           <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Unknown byte ordering &quot;</span> + val);
-<a name="l00161"></a>00161       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;ID&quot;</span>)
-<a name="l00162"></a>00162         _id = val;
-<a name="l00163"></a>00163       <span class="comment">// else unrecognized keywords are skipped</span>
-<a name="l00164"></a>00164     }
-<a name="l00165"></a>00165     <span class="comment">// Check values</span>
-<a name="l00166"></a>00166     <span class="keywordflow">if</span> (!(_a &gt; 0))
-<a name="l00167"></a>00167       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Reference radius must be positive&quot;</span>);
-<a name="l00168"></a>00168     <span class="keywordflow">if</span> (!(_t0 &gt; 0))
-<a name="l00169"></a>00169       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Epoch time not defined&quot;</span>);
-<a name="l00170"></a>00170     <span class="keywordflow">if</span> (_tmin &gt;= _tmax)
-<a name="l00171"></a>00171       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Min time exceeds max time&quot;</span>);
-<a name="l00172"></a>00172     <span class="keywordflow">if</span> (_hmin &gt;= _hmax)
-<a name="l00173"></a>00173       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Min height exceeds max height&quot;</span>);
-<a name="l00174"></a>00174     <span class="keywordflow">if</span> (<span class="keywordtype">int</span>(_id.size()) != idlength_)
-<a name="l00175"></a>00175       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Invalid ID&quot;</span>);
-<a name="l00176"></a>00176     <span class="keywordflow">if</span> (!(_dt0 &gt; 0)) {
-<a name="l00177"></a>00177       <span class="keywordflow">if</span> (_Nmodels &gt; 1)
-<a name="l00178"></a>00178         <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;DeltaEpoch must be positive&quot;</span>);
-<a name="l00179"></a>00179       <span class="keywordflow">else</span>
-<a name="l00180"></a>00180         _dt0 = 1;
-<a name="l00181"></a>00181     }
-<a name="l00182"></a>00182   }
-<a name="l00183"></a>00183 
-<a name="l00184"></a>00184   <span class="keywordtype">bool</span> MagneticModel::ParseLine(<span class="keyword">const</span> std::string&amp; line,
-<a name="l00185"></a>00185                                 std::string&amp; key, std::string&amp; val) {
-<a name="l00186"></a>00186     <span class="keyword">const</span> <span class="keywordtype">char</span>* spaces = <span class="stringliteral">&quot; \t\n\v\f\r&quot;</span>;
-<a name="l00187"></a>00187     string::size_type n0 = line.find_first_not_of(spaces);
-<a name="l00188"></a>00188     <span class="keywordflow">if</span> (n0 == string::npos)
-<a name="l00189"></a>00189       <span class="keywordflow">return</span> <span class="keyword">false</span>;             <span class="comment">// Blank line</span>
-<a name="l00190"></a>00190     string::size_type n1 = line.find_first_of(<span class="charliteral">&#39;#&#39;</span>, n0);
-<a name="l00191"></a>00191     <span class="keywordflow">if</span> (n0 == n1)
-<a name="l00192"></a>00192       <span class="keywordflow">return</span> <span class="keyword">false</span>;             <span class="comment">// Only a comment</span>
-<a name="l00193"></a>00193     val = line.substr(n0, n1 == string::npos ? n1 : n1 - n0);
-<a name="l00194"></a>00194     n0 = val.find_first_of(spaces);
-<a name="l00195"></a>00195     key = val.substr(0, n0);
-<a name="l00196"></a>00196     <span class="keywordflow">if</span> (n0 == string::npos) {
-<a name="l00197"></a>00197       val = <span class="stringliteral">&quot;&quot;</span>;
-<a name="l00198"></a>00198       <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00199"></a>00199     }
-<a name="l00200"></a>00200     n0 = val.find_first_not_of(spaces, n0);
-<a name="l00201"></a>00201     <span class="keywordflow">if</span> (n0 == string::npos) {
-<a name="l00202"></a>00202       val = <span class="stringliteral">&quot;&quot;</span>;
-<a name="l00203"></a>00203       <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00204"></a>00204     }
-<a name="l00205"></a>00205     n1 = val.find_last_not_of(spaces);
-<a name="l00206"></a>00206     val = val.substr(n0, n1 + 1 - n0);
-<a name="l00207"></a>00207     <span class="keywordflow">return</span> <span class="keyword">true</span>;
-<a name="l00208"></a>00208   }
-<a name="l00209"></a>00209 
-<a name="l00210"></a>00210   <span class="keywordtype">void</span> MagneticModel::Field(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h, <span class="keywordtype">bool</span> diffp,
-<a name="l00211"></a>00211                             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bx, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; By, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bz,
-<a name="l00212"></a>00212                             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bxt, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Byt, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bzt) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00213"></a>00213     t -= _t0;
-<a name="l00214"></a>00214     <span class="keywordtype">int</span> n = max(min(<span class="keywordtype">int</span>(floor(t / _dt0)), _Nmodels - 1), 0);
-<a name="l00215"></a>00215     <span class="keywordtype">bool</span> interpolate = n + 1 &lt; _Nmodels;
-<a name="l00216"></a>00216     t -= n * _dt0;
-<a name="l00217"></a>00217     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, y, z;
-<a name="l00218"></a>00218     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[9];
-<a name="l00219"></a>00219     _earth.IntForward(lat, lon, h, x, y, z, M);
-<a name="l00220"></a>00220     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> BX0, BY0, BZ0, BX1, BY1, BZ1; <span class="comment">// Components in geocentric basis</span>
-<a name="l00221"></a>00221     _harm[n](x, y, z, BX0, BY0, BZ0);
-<a name="l00222"></a>00222     _harm[n + 1](x, y, z, BX1, BY1, BZ1);
-<a name="l00223"></a>00223     <span class="keywordflow">if</span> (interpolate) {
-<a name="l00224"></a>00224       BX1 = (BX1 - BX0) / _dt0;
-<a name="l00225"></a>00225       BY1 = (BY1 - BY0) / _dt0;
-<a name="l00226"></a>00226       BZ1 = (BZ1 - BZ0) / _dt0;
-<a name="l00227"></a>00227     }
-<a name="l00228"></a>00228     BX0 += t * BX1;
-<a name="l00229"></a>00229     BY0 += t * BY1;
-<a name="l00230"></a>00230     BZ0 += t * BZ1;
-<a name="l00231"></a>00231     <span class="keywordflow">if</span> (diffp) {
-<a name="l00232"></a>00232       Bxt = - _a * (M[0] * BX1 + M[3] * BY1 + M[6] * BZ1);
-<a name="l00233"></a>00233       Byt = - _a * (M[1] * BX1 + M[4] * BY1 + M[7] * BZ1);
-<a name="l00234"></a>00234       Bzt = - _a * (M[2] * BX1 + M[5] * BY1 + M[8] * BZ1);
-<a name="l00235"></a>00235     }
-<a name="l00236"></a>00236     Bx = - _a * (M[0] * BX0 + M[3] * BY0 + M[6] * BZ0);
-<a name="l00237"></a>00237     By = - _a * (M[1] * BX0 + M[4] * BY0 + M[7] * BZ0);
-<a name="l00238"></a>00238     Bz = - _a * (M[2] * BX0 + M[5] * BY0 + M[8] * BZ0);
-<a name="l00239"></a>00239   }
-<a name="l00240"></a>00240 
-<a name="l00241"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#a768158c51d8911bdbf2eaa5a94a3fec2">00241</a>   <a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a> <a class="code" href="classGeographicLib_1_1MagneticModel.html#a768158c51d8911bdbf2eaa5a94a3fec2">MagneticModel::Circle</a>(real t, real lat, real h)<span class="keyword"> const </span>{
-<a name="l00242"></a>00242     t -= _t0;
-<a name="l00243"></a>00243     <span class="keywordtype">int</span> n = max(min(<span class="keywordtype">int</span>(floor(t / _dt0)), _Nmodels - 1), 0);
-<a name="l00244"></a>00244     <span class="keywordtype">bool</span> interpolate = n + 1 &lt; _Nmodels;
-<a name="l00245"></a>00245     t -= n * _dt0;
-<a name="l00246"></a>00246     real x, y, z;
-<a name="l00247"></a>00247     real M[Geocentric::dim2_];
-<a name="l00248"></a>00248     _earth.IntForward(lat, 0, h, x, y, z, M);
-<a name="l00249"></a>00249     <span class="comment">// y = 0, cphi = M[7], sphi = M[8];</span>
-<a name="l00250"></a>00250 
-<a name="l00251"></a>00251     <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a>(_a, M[7], M[8], t, _dt0, interpolate,
-<a name="l00252"></a>00252                           _harm[n].<a class="code" href="classGeographicLib_1_1MagneticModel.html#a768158c51d8911bdbf2eaa5a94a3fec2">Circle</a>(x, z, <span class="keyword">true</span>),
-<a name="l00253"></a>00253                           _harm[n + 1].<a class="code" href="classGeographicLib_1_1MagneticModel.html#a768158c51d8911bdbf2eaa5a94a3fec2">Circle</a>(x, z, <span class="keyword">true</span>));
-<a name="l00254"></a>00254   }
-<a name="l00255"></a>00255 
-<a name="l00256"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#a54aa849393ab2a7e37aa1f086e64cffb">00256</a>   <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1MagneticModel.html#af553c42337b9a9a1d51b81fea7083ea2">MagneticModel::FieldComponents</a>(real Bx, real By, real Bz,
-<a name="l00257"></a>00257                                       real Bxt, real Byt, real Bzt,
-<a name="l00258"></a>00258                                       real&amp; H, real&amp; F, real&amp; D, real&amp; I,
-<a name="l00259"></a>00259                                       real&amp; Ht, real&amp; Ft,
-<a name="l00260"></a>00260                                       real&amp; Dt, real&amp; It) <span class="keywordflow">throw</span>() {
-<a name="l00261"></a>00261     H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Bx, By);
-<a name="l00262"></a>00262     Ht = H ? (Bx * Bxt + By * Byt) / H : <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Bxt, Byt);
-<a name="l00263"></a>00263     D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree&lt;real&gt;();
-<a name="l00264"></a>00264     Dt = (H ? (By * Bxt - Bx * Byt) / <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(H) : 0) / Math::degree&lt;real&gt;();
-<a name="l00265"></a>00265     F = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(H, Bz);
-<a name="l00266"></a>00266     Ft = F ? (H * Ht + Bz * Bzt) / F : <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Ht, Bzt);
-<a name="l00267"></a>00267     I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree&lt;real&gt;();
-<a name="l00268"></a>00268     It = (F ? (Bz * Ht - H * Bzt) / <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(F) : 0) / Math::degree&lt;real&gt;();
-<a name="l00269"></a>00269   }
-<a name="l00270"></a>00270 
-<a name="l00271"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#a469db97d257876c1abafa3da3c5f0f7e">00271</a>   std::string <a class="code" href="classGeographicLib_1_1MagneticModel.html#a469db97d257876c1abafa3da3c5f0f7e">MagneticModel::DefaultMagneticPath</a>() {
-<a name="l00272"></a>00272     <span class="keywordtype">string</span> path;
-<a name="l00273"></a>00273     <span class="keywordtype">char</span>* magneticpath = getenv(<span class="stringliteral">&quot;MAGNETIC_PATH&quot;</span>);
-<a name="l00274"></a>00274     <span class="keywordflow">if</span> (magneticpath)
-<a name="l00275"></a>00275       path = string(magneticpath);
-<a name="l00276"></a>00276     <span class="keywordflow">return</span> path.length() ? path : string(<a class="code" href="MagneticModel_8cpp.html#adda468b8dc758dd6d082ccf33c5e1b75">MAGNETIC_DEFAULT_PATH</a>);
-<a name="l00277"></a>00277   }
-<a name="l00278"></a>00278 
-<a name="l00279"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#ab2ac8cc598c0d9a6b448c9a45e9642d9">00279</a>   std::string <a class="code" href="classGeographicLib_1_1MagneticModel.html#ab2ac8cc598c0d9a6b448c9a45e9642d9">MagneticModel::DefaultMagneticName</a>() {
-<a name="l00280"></a>00280     <span class="keywordtype">string</span> name;
-<a name="l00281"></a>00281     <span class="keywordtype">char</span>* magneticname = getenv(<span class="stringliteral">&quot;MAGNETIC_NAME&quot;</span>);
-<a name="l00282"></a>00282     <span class="keywordflow">if</span> (magneticname)
-<a name="l00283"></a>00283       name = string(magneticname);
-<a name="l00284"></a>00284     <span class="keywordflow">return</span> name.length() ? name : string(<a class="code" href="MagneticModel_8cpp.html#a302055ff69e445c8103c09913de840ff">MAGNETIC_DEFAULT_NAME</a>);
-<a name="l00285"></a>00285   }
-<a name="l00286"></a>00286 
-<a name="l00287"></a>00287 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00034"></a>00034 <span class="preprocessor"></span>
+<a name="l00035"></a>00035 <span class="preprocessor">#if defined(_MSC_VER)</span>
+<a name="l00036"></a>00036 <span class="preprocessor"></span><span class="comment">// Squelch warnings about unsafe use of getenv</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#pragma warning (disable: 4996)</span>
+<a name="l00038"></a>00038 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00039"></a>00039 <span class="preprocessor"></span>
+<a name="l00040"></a>00040 <span class="keyword">namespace </span>GeographicLib {
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042   <span class="keyword">using namespace </span>std;
+<a name="l00043"></a>00043 
+<a name="l00044"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#a84a020586d58c4da61ec6ffbc7b4fa37">00044</a>   MagneticModel::MagneticModel(<span class="keyword">const</span> std::string&amp; name,<span class="keyword">const</span> std::string&amp; path,
+<a name="l00045"></a>00045                                <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>&amp; earth)
+<a name="l00046"></a>00046     : _name(name)
+<a name="l00047"></a>00047     , _dir(path)
+<a name="l00048"></a>00048     , _description(<span class="stringliteral">&quot;NONE&quot;</span>)
+<a name="l00049"></a>00049     , _date(<span class="stringliteral">&quot;UNKNOWN&quot;</span>)
+<a name="l00050"></a>00050     , _t0(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
+<a name="l00051"></a>00051     , _dt0(1)
+<a name="l00052"></a>00052     , _tmin(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
+<a name="l00053"></a>00053     , _tmax(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
+<a name="l00054"></a>00054     , _a(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
+<a name="l00055"></a>00055     , _hmin(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
+<a name="l00056"></a>00056     , _hmax(<a class="code" href="classGeographicLib_1_1Math.html" title="Mathematical functions needed by GeographicLib.">Math</a>::NaN&lt;real&gt;())
+<a name="l00057"></a>00057     , _Nmodels(1)
+<a name="l00058"></a>00058     , _norm(<a class="code" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>::SCHMIDT)
+<a name="l00059"></a>00059     , _earth(earth)
+<a name="l00060"></a>00060   {
+<a name="l00061"></a>00061     <span class="keywordflow">if</span> (_dir.empty())
+<a name="l00062"></a>00062       _dir = <a class="code" href="classGeographicLib_1_1MagneticModel.html#a469db97d257876c1abafa3da3c5f0f7e">DefaultMagneticPath</a>();
+<a name="l00063"></a>00063     ReadMetadata(_name);
+<a name="l00064"></a>00064     _G.resize(_Nmodels + 1);
+<a name="l00065"></a>00065     _H.resize(_Nmodels + 1);
+<a name="l00066"></a>00066     {
+<a name="l00067"></a>00067       <span class="keywordtype">string</span> coeff = _filename + <span class="stringliteral">&quot;.cof&quot;</span>;
+<a name="l00068"></a>00068       ifstream coeffstr(coeff.c_str(), ios::binary);
+<a name="l00069"></a>00069       <span class="keywordflow">if</span> (!coeffstr.good())
+<a name="l00070"></a>00070         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Error opening &quot;</span> + coeff);
+<a name="l00071"></a>00071       <span class="keywordtype">char</span> <span class="keywordtype">id</span>[idlength_ + 1];
+<a name="l00072"></a>00072       coeffstr.read(<span class="keywordtype">id</span>, idlength_);
+<a name="l00073"></a>00073       <span class="keywordflow">if</span> (!coeffstr.good())
+<a name="l00074"></a>00074         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;No header in &quot;</span> + coeff);
+<a name="l00075"></a>00075       <span class="keywordtype">id</span>[idlength_] = <span class="charliteral">&#39;\0&#39;</span>;
+<a name="l00076"></a>00076       <span class="keywordflow">if</span> (_id != <span class="keywordtype">string</span>(<span class="keywordtype">id</span>))
+<a name="l00077"></a>00077         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;ID mismatch: &quot;</span> + _id + <span class="stringliteral">&quot; vs &quot;</span> + <span class="keywordtype">id</span>);
+<a name="l00078"></a>00078       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= _Nmodels; ++i) {
+<a name="l00079"></a>00079         <span class="keywordtype">int</span> N, M;
+<a name="l00080"></a>00080         <a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a2d545f589894683e7de297c42b7c995a">SphericalEngine::coeff::readcoeffs</a>(coeffstr, N, M, _G[i], _H[i]);
+<a name="l00081"></a>00081         <span class="keywordflow">if</span> (!(M &lt; 0 || _G[i][0] == 0))
+<a name="l00082"></a>00082           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;A degree 0 term is not permitted&quot;</span>);
+<a name="l00083"></a>00083         _harm.push_back(<a class="code" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>(_G[i], _H[i], N, N, M, _a, _norm));
+<a name="l00084"></a>00084       }
+<a name="l00085"></a>00085       <span class="keywordtype">int</span> pos = int(coeffstr.tellg());
+<a name="l00086"></a>00086       coeffstr.seekg(0, ios::end);
+<a name="l00087"></a>00087       <span class="keywordflow">if</span> (pos != coeffstr.tellg())
+<a name="l00088"></a>00088         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra data in  &quot;</span> + coeff);
+<a name="l00089"></a>00089     }
+<a name="l00090"></a>00090   }
+<a name="l00091"></a>00091 
+<a name="l00092"></a>00092   <span class="keywordtype">void</span> MagneticModel::ReadMetadata(<span class="keyword">const</span> std::string&amp; name) {
+<a name="l00093"></a>00093     <span class="keyword">const</span> <span class="keywordtype">char</span>* spaces = <span class="stringliteral">&quot; \t\n\v\f\r&quot;</span>;
+<a name="l00094"></a>00094     _filename = _dir + <span class="stringliteral">&quot;/&quot;</span> + name + <span class="stringliteral">&quot;.wmm&quot;</span>;
+<a name="l00095"></a>00095     ifstream metastr(_filename.c_str());
+<a name="l00096"></a>00096     <span class="keywordflow">if</span> (!metastr.good())
+<a name="l00097"></a>00097       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Cannot open &quot;</span> + _filename);
+<a name="l00098"></a>00098     <span class="keywordtype">string</span> line;
+<a name="l00099"></a>00099     getline(metastr, line);
+<a name="l00100"></a>00100     <span class="keywordflow">if</span> (!(line.size() &gt;= 6 &amp;&amp; line.substr(0,5) == <span class="stringliteral">&quot;WMMF-&quot;</span>))
+<a name="l00101"></a>00101       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(_filename + <span class="stringliteral">&quot; does not contain WMMF-n signature&quot;</span>);
+<a name="l00102"></a>00102     string::size_type n = line.find_first_of(spaces, 5);
+<a name="l00103"></a>00103     <span class="keywordflow">if</span> (n != string::npos)
+<a name="l00104"></a>00104       n -= 5;
+<a name="l00105"></a>00105     <span class="keywordtype">string</span> version = line.substr(5, n);
+<a name="l00106"></a>00106     <span class="keywordflow">if</span> (version != <span class="stringliteral">&quot;1&quot;</span>)
+<a name="l00107"></a>00107       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Unknown version in &quot;</span> + _filename + <span class="stringliteral">&quot;: &quot;</span> + version);
+<a name="l00108"></a>00108     <span class="keywordtype">string</span> key, val;
+<a name="l00109"></a>00109     <span class="keywordflow">while</span> (getline(metastr, line)) {
+<a name="l00110"></a>00110       <span class="keywordflow">if</span> (!<a class="code" href="classGeographicLib_1_1Utility.html#a96252f445a912b77517bff04d4d6ea74">Utility::ParseLine</a>(line, key, val))
+<a name="l00111"></a>00111         <span class="keywordflow">continue</span>;
+<a name="l00112"></a>00112       <span class="comment">// Process key words</span>
+<a name="l00113"></a>00113       <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Name&quot;</span>)
+<a name="l00114"></a>00114         _name = val;
+<a name="l00115"></a>00115       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Description&quot;</span>)
+<a name="l00116"></a>00116         _description = val;
+<a name="l00117"></a>00117       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;ReleaseDate&quot;</span>)
+<a name="l00118"></a>00118         _date = val;
+<a name="l00119"></a>00119       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Radius&quot;</span>)
+<a name="l00120"></a>00120         _a = Utility::num&lt;real&gt;(val);
+<a name="l00121"></a>00121       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Type&quot;</span>) {
+<a name="l00122"></a>00122         <span class="keywordflow">if</span> (!(val == <span class="stringliteral">&quot;Linear&quot;</span> || val == <span class="stringliteral">&quot;linear&quot;</span>))
+<a name="l00123"></a>00123           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Only linear models are supported&quot;</span>);
+<a name="l00124"></a>00124       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Epoch&quot;</span>)
+<a name="l00125"></a>00125         _t0 = Utility::num&lt;real&gt;(val);
+<a name="l00126"></a>00126       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;DeltaEpoch&quot;</span>)
+<a name="l00127"></a>00127         _dt0 = Utility::num&lt;real&gt;(val);
+<a name="l00128"></a>00128       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;NumModels&quot;</span>)
+<a name="l00129"></a>00129         _Nmodels = Utility::num&lt;int&gt;(val);
+<a name="l00130"></a>00130       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MinTime&quot;</span>)
+<a name="l00131"></a>00131         _tmin = Utility::num&lt;real&gt;(val);
+<a name="l00132"></a>00132       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MaxTime&quot;</span>)
+<a name="l00133"></a>00133         _tmax = Utility::num&lt;real&gt;(val);
+<a name="l00134"></a>00134       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MinHeight&quot;</span>)
+<a name="l00135"></a>00135         _hmin =  Utility::num&lt;real&gt;(val);
+<a name="l00136"></a>00136       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MaxHeight&quot;</span>)
+<a name="l00137"></a>00137         _hmax =  Utility::num&lt;real&gt;(val);
+<a name="l00138"></a>00138       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Normalization&quot;</span>) {
+<a name="l00139"></a>00139         <span class="keywordflow">if</span> (val == <span class="stringliteral">&quot;FULL&quot;</span> || val == <span class="stringliteral">&quot;Full&quot;</span> || val == <span class="stringliteral">&quot;full&quot;</span>)
+<a name="l00140"></a>00140           _norm = <a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782">SphericalHarmonic::FULL</a>;
+<a name="l00141"></a>00141         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (val == <span class="stringliteral">&quot;SCHMIDT&quot;</span> || val == <span class="stringliteral">&quot;Schmidt&quot;</span> || val == <span class="stringliteral">&quot;schmidt&quot;</span>)
+<a name="l00142"></a>00142           _norm = <a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e">SphericalHarmonic::SCHMIDT</a>;
+<a name="l00143"></a>00143         <span class="keywordflow">else</span>
+<a name="l00144"></a>00144           <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Unknown normalization &quot;</span> + val);
+<a name="l00145"></a>00145       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;ByteOrder&quot;</span>) {
+<a name="l00146"></a>00146         <span class="keywordflow">if</span> (val == <span class="stringliteral">&quot;Big&quot;</span> || val == <span class="stringliteral">&quot;big&quot;</span>)
+<a name="l00147"></a>00147           <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Only little-endian ordering is supported&quot;</span>);
+<a name="l00148"></a>00148         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!(val == <span class="stringliteral">&quot;Little&quot;</span> || val == <span class="stringliteral">&quot;little&quot;</span>))
+<a name="l00149"></a>00149           <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Unknown byte ordering &quot;</span> + val);
+<a name="l00150"></a>00150       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;ID&quot;</span>)
+<a name="l00151"></a>00151         _id = val;
+<a name="l00152"></a>00152       <span class="comment">// else unrecognized keywords are skipped</span>
+<a name="l00153"></a>00153     }
+<a name="l00154"></a>00154     <span class="comment">// Check values</span>
+<a name="l00155"></a>00155     <span class="keywordflow">if</span> (!(<a class="code" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">Math::isfinite</a>(_a) &amp;&amp; _a &gt; 0))
+<a name="l00156"></a>00156       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Reference radius must be positive&quot;</span>);
+<a name="l00157"></a>00157     <span class="keywordflow">if</span> (!(_t0 &gt; 0))
+<a name="l00158"></a>00158       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Epoch time not defined&quot;</span>);
+<a name="l00159"></a>00159     <span class="keywordflow">if</span> (_tmin &gt;= _tmax)
+<a name="l00160"></a>00160       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Min time exceeds max time&quot;</span>);
+<a name="l00161"></a>00161     <span class="keywordflow">if</span> (_hmin &gt;= _hmax)
+<a name="l00162"></a>00162       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Min height exceeds max height&quot;</span>);
+<a name="l00163"></a>00163     <span class="keywordflow">if</span> (<span class="keywordtype">int</span>(_id.size()) != idlength_)
+<a name="l00164"></a>00164       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Invalid ID&quot;</span>);
+<a name="l00165"></a>00165     <span class="keywordflow">if</span> (!(_dt0 &gt; 0)) {
+<a name="l00166"></a>00166       <span class="keywordflow">if</span> (_Nmodels &gt; 1)
+<a name="l00167"></a>00167         <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;DeltaEpoch must be positive&quot;</span>);
+<a name="l00168"></a>00168       <span class="keywordflow">else</span>
+<a name="l00169"></a>00169         _dt0 = 1;
+<a name="l00170"></a>00170     }
+<a name="l00171"></a>00171   }
+<a name="l00172"></a>00172 
+<a name="l00173"></a>00173   <span class="keywordtype">void</span> MagneticModel::Field(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> t, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h, <span class="keywordtype">bool</span> diffp,
+<a name="l00174"></a>00174                             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bx, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; By, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bz,
+<a name="l00175"></a>00175                             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bxt, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Byt, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Bzt) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00176"></a>00176     t -= _t0;
+<a name="l00177"></a>00177     <span class="keywordtype">int</span> n = max(min(<span class="keywordtype">int</span>(floor(t / _dt0)), _Nmodels - 1), 0);
+<a name="l00178"></a>00178     <span class="keywordtype">bool</span> interpolate = n + 1 &lt; _Nmodels;
+<a name="l00179"></a>00179     t -= n * _dt0;
+<a name="l00180"></a>00180     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> X, Y, Z;
+<a name="l00181"></a>00181     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[Geocentric::dim2_];
+<a name="l00182"></a>00182     _earth.IntForward(lat, lon, h, X, Y, Z, M);
+<a name="l00183"></a>00183     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> BX0, BY0, BZ0, BX1, BY1, BZ1; <span class="comment">// Components in geocentric basis</span>
+<a name="l00184"></a>00184     _harm[n](X, Y, Z, BX0, BY0, BZ0);
+<a name="l00185"></a>00185     _harm[n + 1](X, Y, Z, BX1, BY1, BZ1);
+<a name="l00186"></a>00186     <span class="keywordflow">if</span> (interpolate) {
+<a name="l00187"></a>00187       <span class="comment">// Convert to a time derivative</span>
+<a name="l00188"></a>00188       BX1 = (BX1 - BX0) / _dt0;
+<a name="l00189"></a>00189       BY1 = (BY1 - BY0) / _dt0;
+<a name="l00190"></a>00190       BZ1 = (BZ1 - BZ0) / _dt0;
+<a name="l00191"></a>00191     }
+<a name="l00192"></a>00192     BX0 += t * BX1;
+<a name="l00193"></a>00193     BY0 += t * BY1;
+<a name="l00194"></a>00194     BZ0 += t * BZ1;
+<a name="l00195"></a>00195     <span class="keywordflow">if</span> (diffp) {
+<a name="l00196"></a>00196       Geocentric::Unrotate(M, BX1, BY1, BZ1, Bxt, Byt, Bzt);
+<a name="l00197"></a>00197       Bxt *= - _a;
+<a name="l00198"></a>00198       Byt *= - _a;
+<a name="l00199"></a>00199       Bzt *= - _a;
+<a name="l00200"></a>00200     }
+<a name="l00201"></a>00201     Geocentric::Unrotate(M, BX0, BY0, BZ0, Bx, By, Bz);
+<a name="l00202"></a>00202     Bx *= - _a;
+<a name="l00203"></a>00203     By *= - _a;
+<a name="l00204"></a>00204     Bz *= - _a;
+<a name="l00205"></a>00205   }
+<a name="l00206"></a>00206 
+<a name="l00207"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#ae4275d73128fc2c6c62f53677ce70bd5">00207</a>   <a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a> <a class="code" href="classGeographicLib_1_1MagneticModel.html#ae4275d73128fc2c6c62f53677ce70bd5">MagneticModel::Circle</a>(real t, real lat, real h)<span class="keyword"> const </span>{
+<a name="l00208"></a>00208     real t1 = t - _t0;
+<a name="l00209"></a>00209     <span class="keywordtype">int</span> n = max(min(<span class="keywordtype">int</span>(floor(t1 / _dt0)), _Nmodels - 1), 0);
+<a name="l00210"></a>00210     <span class="keywordtype">bool</span> interpolate = n + 1 &lt; _Nmodels;
+<a name="l00211"></a>00211     t1 -= n * _dt0;
+<a name="l00212"></a>00212     real X, Y, Z, M[Geocentric::dim2_];
+<a name="l00213"></a>00213     _earth.IntForward(lat, 0, h, X, Y, Z, M);
+<a name="l00214"></a>00214     <span class="comment">// Y = 0, cphi = M[7], sphi = M[8];</span>
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216     <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a>(_a, _earth._f, lat, h, t,
+<a name="l00217"></a>00217                           M[7], M[8], t1, _dt0, interpolate,
+<a name="l00218"></a>00218                           _harm[n].Circle(X, Z, <span class="keyword">true</span>),
+<a name="l00219"></a>00219                           _harm[n + 1].Circle(X, Z, <span class="keyword">true</span>));
+<a name="l00220"></a>00220   }
+<a name="l00221"></a>00221 
+<a name="l00222"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#a54aa849393ab2a7e37aa1f086e64cffb">00222</a>   <span class="keywordtype">void</span> <a class="code" href="classGeographicLib_1_1MagneticModel.html#af553c42337b9a9a1d51b81fea7083ea2">MagneticModel::FieldComponents</a>(real Bx, real By, real Bz,
+<a name="l00223"></a>00223                                       real Bxt, real Byt, real Bzt,
+<a name="l00224"></a>00224                                       real&amp; H, real&amp; F, real&amp; D, real&amp; I,
+<a name="l00225"></a>00225                                       real&amp; Ht, real&amp; Ft,
+<a name="l00226"></a>00226                                       real&amp; Dt, real&amp; It) <span class="keywordflow">throw</span>() {
+<a name="l00227"></a>00227     H = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Bx, By);
+<a name="l00228"></a>00228     Ht = H ? (Bx * Bxt + By * Byt) / H : <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Bxt, Byt);
+<a name="l00229"></a>00229     D = (0 - (H ? atan2(-Bx, By) : atan2(-Bxt, Byt))) / Math::degree&lt;real&gt;();
+<a name="l00230"></a>00230     Dt = (H ? (By * Bxt - Bx * Byt) / <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(H) : 0) / Math::degree&lt;real&gt;();
+<a name="l00231"></a>00231     F = <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(H, Bz);
+<a name="l00232"></a>00232     Ft = F ? (H * Ht + Bz * Bzt) / F : <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(Ht, Bzt);
+<a name="l00233"></a>00233     I = (F ? atan2(-Bz, H) : atan2(-Bzt, Ht)) / Math::degree&lt;real&gt;();
+<a name="l00234"></a>00234     It = (F ? (Bz * Ht - H * Bzt) / <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(F) : 0) / Math::degree&lt;real&gt;();
+<a name="l00235"></a>00235   }
+<a name="l00236"></a>00236 
+<a name="l00237"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#a469db97d257876c1abafa3da3c5f0f7e">00237</a>   std::string <a class="code" href="classGeographicLib_1_1MagneticModel.html#a469db97d257876c1abafa3da3c5f0f7e">MagneticModel::DefaultMagneticPath</a>() {
+<a name="l00238"></a>00238     <span class="keywordtype">string</span> path;
+<a name="l00239"></a>00239     <span class="keywordtype">char</span>* magneticpath = getenv(<span class="stringliteral">&quot;MAGNETIC_PATH&quot;</span>);
+<a name="l00240"></a>00240     <span class="keywordflow">if</span> (magneticpath)
+<a name="l00241"></a>00241       path = string(magneticpath);
+<a name="l00242"></a>00242     <span class="keywordflow">if</span> (path.length())
+<a name="l00243"></a>00243       <span class="keywordflow">return</span> path;
+<a name="l00244"></a>00244     <span class="keywordtype">char</span>* datapath = getenv(<span class="stringliteral">&quot;GEOGRAPHICLIB_DATA&quot;</span>);
+<a name="l00245"></a>00245     <span class="keywordflow">if</span> (datapath)
+<a name="l00246"></a>00246       path = string(datapath);
+<a name="l00247"></a>00247     <span class="keywordflow">return</span> (path.length() ? path : string(<a class="code" href="MagneticModel_8cpp.html#a45687ef771d809c1c369daea074cc109">GEOGRAPHICLIB_DATA</a>)) + <span class="stringliteral">&quot;/magnetic&quot;</span>;
+<a name="l00248"></a>00248   }
+<a name="l00249"></a>00249 
+<a name="l00250"></a><a class="code" href="classGeographicLib_1_1MagneticModel.html#ab2ac8cc598c0d9a6b448c9a45e9642d9">00250</a>   std::string <a class="code" href="classGeographicLib_1_1MagneticModel.html#ab2ac8cc598c0d9a6b448c9a45e9642d9">MagneticModel::DefaultMagneticName</a>() {
+<a name="l00251"></a>00251     <span class="keywordtype">string</span> name;
+<a name="l00252"></a>00252     <span class="keywordtype">char</span>* magneticname = getenv(<span class="stringliteral">&quot;MAGNETIC_NAME&quot;</span>);
+<a name="l00253"></a>00253     <span class="keywordflow">if</span> (magneticname)
+<a name="l00254"></a>00254       name = string(magneticname);
+<a name="l00255"></a>00255     <span class="keywordflow">return</span> name.length() ? name : string(<a class="code" href="MagneticModel_8cpp.html#a302055ff69e445c8103c09913de840ff">MAGNETIC_DEFAULT_NAME</a>);
+<a name="l00256"></a>00256   }
+<a name="l00257"></a>00257 
+<a name="l00258"></a>00258 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

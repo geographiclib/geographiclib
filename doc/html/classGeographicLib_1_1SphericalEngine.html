@@ -47,7 +47,8 @@
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a>  </div>
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#friends">Friends</a>  </div>
   <div class="headertitle">
 <div class="title">GeographicLib::SphericalEngine Class Reference</div>  </div>
 </div>
@@ -66,8 +67,8 @@ Classes</h2></td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Package up coefficients for <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a>.  <a href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949f">normalization</a> { <a class="el" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fa122fd5f2768b18443e72dfafe7358ef5">full</a>, 
-<a class="el" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fa54fff33e5a2d8120fad78d3fb613c2a6">schmidt</a>
+<tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949f">normalization</a> { <a class="el" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fac720ca87adfc478dbfc13a37f0cf8ba9">FULL</a>, 
+<a class="el" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fa2e3db3efd68d118e3f357a97eb77a131">SCHMIDT</a>
  }</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -75,12 +76,18 @@ Static Public Member Functions</h2></td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html#a987cbe2cdb67410174a6e9594da92573">Value</a> (const <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html">coeff</a> c[], const real f[], real x, real y, real z, real a, real &amp;gradx, real &amp;grady, real &amp;gradz)  throw ()</td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;bool gradp, SphericalEngine::normalization norm, int L&gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top">static <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html#a7733e7913671b573042a2fcf8db089dd">Circle</a> (const <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html">coeff</a> c[], const real f[], real p, real z, real a)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html#a7fac63262c0a8bb18aee8c962a08d429">RootTable</a> (int N)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html#ab3fb8f933adb257df6b7537268d55a75">ClearRootTable</a> ()</td></tr>
+<tr><td colspan="2"><h2><a name="friends"></a>
+Friends</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine.html#a0c689dbf7b6bf2fb4cffb109085b1d3b">CircularEngine</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The evaluation engine for <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>. </p>
-<p>This serves as the backend to <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>, <a class="el" href="classGeographicLib_1_1SphericalHarmonic1.html" title="Spherical Harmonic series with a correction to the coefficients.">SphericalHarmonic1</a>, and <a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html" title="Spherical Harmonic series with two corrections to the coefficients.">SphericalHarmonic2</a>. Typically end-users will not have to access this class directly. </p>
+<p>This serves as the backend to <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>, <a class="el" href="classGeographicLib_1_1SphericalHarmonic1.html" title="Spherical Harmonic series with a correction to the coefficients.">SphericalHarmonic1</a>, and <a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html" title="Spherical Harmonic series with two corrections to the coefficients.">SphericalHarmonic2</a>. Typically end-users will not have to access this class directly.</p>
+<p>See <a class="el" href="SphericalEngine_8cpp.html" title="Implementation for GeographicLib::SphericalEngine class.">SphericalEngine.cpp</a> for more information on the implementation. </p>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00034">34</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00038">38</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="a5332d09191e018cbddc568c1fc71949f"></a><!-- doxytag: member="GeographicLib::SphericalEngine::normalization" ref="a5332d09191e018cbddc568c1fc71949f" args="" -->
 <div class="memitem">
@@ -92,19 +99,19 @@ Static Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>Supported normalizations for associate Legendre polynomials. </p>
+<p>Supported normalizations for associated Legendre polynomials. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
-<tr><td valign="top"><em><a class="anchor" id="a5332d09191e018cbddc568c1fc71949fa122fd5f2768b18443e72dfafe7358ef5"></a><!-- doxytag: member="full" ref="a5332d09191e018cbddc568c1fc71949fa122fd5f2768b18443e72dfafe7358ef5" args="" -->full</em>&nbsp;</td><td>
-<p>Fully normalized associated Legendre polynomials. See <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebad2da8aca5c23684064fc1c3719b7247b">SphericalHarmonic::full</a> for documentation. </p>
+<tr><td valign="top"><em><a class="anchor" id="a5332d09191e018cbddc568c1fc71949fac720ca87adfc478dbfc13a37f0cf8ba9"></a><!-- doxytag: member="FULL" ref="a5332d09191e018cbddc568c1fc71949fac720ca87adfc478dbfc13a37f0cf8ba9" args="" -->FULL</em>&nbsp;</td><td>
+<p>Fully normalized associated Legendre polynomials. See <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782">SphericalHarmonic::FULL</a> for documentation. </p>
 </td></tr>
-<tr><td valign="top"><em><a class="anchor" id="a5332d09191e018cbddc568c1fc71949fa54fff33e5a2d8120fad78d3fb613c2a6"></a><!-- doxytag: member="schmidt" ref="a5332d09191e018cbddc568c1fc71949fa54fff33e5a2d8120fad78d3fb613c2a6" args="" -->schmidt</em>&nbsp;</td><td>
-<p>Schmidt semi-normalized associated Legendre polynomials. See <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaea0a26f17758ee9da089f979bca1c0b3">SphericalHarmonic::schmidt</a> for documentation. </p>
+<tr><td valign="top"><em><a class="anchor" id="a5332d09191e018cbddc568c1fc71949fa2e3db3efd68d118e3f357a97eb77a131"></a><!-- doxytag: member="SCHMIDT" ref="a5332d09191e018cbddc568c1fc71949fa2e3db3efd68d118e3f357a97eb77a131" args="" -->SCHMIDT</em>&nbsp;</td><td>
+<p>Schmidt semi-normalized associated Legendre polynomials. See <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104eba014c2f3300abd50ff65ea8d73ef3c69e">SphericalHarmonic::SCHMIDT</a> for documentation. </p>
 </td></tr>
 </table>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00049">49</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00055">55</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -182,7 +189,7 @@ template&lt;bool gradp, SphericalEngine::normalization norm, int L&gt; </div>
   <table class="">
     <tr><td class="paramname">gradp</td><td>should the gradient be calculated. </td></tr>
     <tr><td class="paramname">norm</td><td>the normalization for the associated Legendre polynomials. </td></tr>
-    <tr><td class="paramname">L</td><td>the number of terms in the coefficents. </td></tr>
+    <tr><td class="paramname">L</td><td>the number of terms in the coefficients. </td></tr>
   </table>
   </dd>
 </dl>
@@ -202,11 +209,11 @@ template&lt;bool gradp, SphericalEngine::normalization norm, int L&gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the spherical harmonic sum.</dd></dl>
 <p>See the <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> class for the definition of the sum. The coefficients used by this function are, for example, c[0].Cv + f[1] * c[1].Cv + ... + f[L-1] * c[L-1].Cv. (Note that f[0] is <em>not</em> used.) The upper limits on the sum are determined by c[0].nmx() and c[0].mmx(); these limits apply to <em>all</em> the components of the coefficients. The parameters <em>gradp</em>, <em>norm</em>, and <em>L</em> are template parameters, to allow more optimization to be done at compile time.</p>
-<p>Clenshaw summation is used which permits the evaluation of the sum without the need to allocate temporary arrays. Thus this function never throws an excpetion. </p>
+<p>Clenshaw summation is used which permits the evaluation of the sum without the need to allocate temporary arrays. Thus this function never throws an exception. </p>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00033">33</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00159">159</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
 
-<p>References <a class="el" href="Constants_8hpp_source.html#l00024">STATIC_ASSERT</a>.</p>
+<p>References <a class="el" href="Constants_8hpp_source.html#l00025">STATIC_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -259,7 +266,7 @@ template&lt;bool gradp, SphericalEngine::normalization norm, int L&gt; </div>
   <table class="">
     <tr><td class="paramname">gradp</td><td>should the gradient be calculated. </td></tr>
     <tr><td class="paramname">norm</td><td>the normalization for the associated Legendre polynomials. </td></tr>
-    <tr><td class="paramname">L</td><td>the number of terms in the coefficents. </td></tr>
+    <tr><td class="paramname">L</td><td>the number of terms in the coefficients. </td></tr>
   </table>
   </dd>
 </dl>
@@ -267,18 +274,84 @@ template&lt;bool gradp, SphericalEngine::normalization norm, int L&gt; </div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">c</td><td>an array of coeff objects. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">f</td><td>array of coefficient multipliers. f[0] should be 1. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>the radius of the circle = sqrt(<em>x<sup>2</sup></em> + <em>y<sup>2</sup></em>). </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>the radius of the circle = sqrt(<em>x</em><sup>2</sup> + <em>y</em><sup>2</sup>). </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">z</td><td>the height of the circle. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">a</td><td>the normalizing radius. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object.</dd></dl>
-<p>If you need to evaluate the spherical harmonic sum for several points with constant <em>f</em>, <em>p</em> = sqrt(<em>x<sup>2</sup></em> + <em>y<sup>2</sup></em>), <em>z</em>, and <em>a</em>, it is more efficient to construct call <a class="el" href="classGeographicLib_1_1SphericalEngine.html#a7733e7913671b573042a2fcf8db089dd">SphericalEngine::Circle</a> to give a <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object and then call <a class="el" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">CircularEngine::operator()()</a> with arguments <em>x/<em>p</em> and</em> <em>y/<em>p</em>.</em> </p>
+<p>If you need to evaluate the spherical harmonic sum for several points with constant <em>f</em>, <em>p</em> = sqrt(<em>x</em><sup>2</sup> + <em>y</em><sup>2</sup>), <em>z</em>, and <em>a</em>, it is more efficient to construct call <a class="el" href="classGeographicLib_1_1SphericalEngine.html#a7733e7913671b573042a2fcf8db089dd">SphericalEngine::Circle</a> to give a <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object and then call <a class="el" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">CircularEngine::operator()()</a> with arguments <em>x</em>/<em>p</em> and <em>y</em>/<em>p</em>. </p>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00283">283</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00298">298</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
 
-<p>References <a class="el" href="SphericalEngine_8hpp_source.html#l00173">GeographicLib::SphericalEngine::coeff::Cv()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00157">GeographicLib::SphericalEngine::coeff::mmx()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00153">GeographicLib::SphericalEngine::coeff::nmx()</a>, <a class="el" href="Constants_8hpp_source.html#l00024">STATIC_ASSERT</a>, and <a class="el" href="SphericalEngine_8hpp_source.html#l00180">GeographicLib::SphericalEngine::coeff::Sv()</a>.</p>
+<p>References <a class="el" href="SphericalEngine_8hpp_source.html#l00186">GeographicLib::SphericalEngine::coeff::Cv()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00170">GeographicLib::SphericalEngine::coeff::mmx()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00166">GeographicLib::SphericalEngine::coeff::nmx()</a>, <a class="el" href="Constants_8hpp_source.html#l00025">STATIC_ASSERT</a>, and <a class="el" href="SphericalEngine_8hpp_source.html#l00193">GeographicLib::SphericalEngine::coeff::Sv()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7fac63262c0a8bb18aee8c962a08d429"></a><!-- doxytag: member="GeographicLib::SphericalEngine::RootTable" ref="a7fac63262c0a8bb18aee8c962a08d429" args="(int N)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GeographicLib::SphericalEngine::RootTable </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>N</em></td><td>)</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Check that the static table of square roots is big enough and enlarge it if necessary.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">N</td><td>the maximum degree to be used in <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Typically, there's no need for an end-user to call this routine, because the constructors for <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html" title="Package up coefficients for SphericalEngine.">SphericalEngine::coeff</a> do so. However, since this updates a static table, there's a possible race condition in a multi-threaded environment. Because this routine does nothing if the table is already large enough, one way to avoid race conditions is to call this routine at program start up (when it's still single threaded), supplying the largest degree that your program will use. E.g., </p>
+<div class="fragment"><pre class="fragment">  <a class="code" href="classGeographicLib_1_1SphericalEngine.html#a7fac63262c0a8bb18aee8c962a08d429">GeographicLib::SphericalEngine::RootTable</a>(2190);
+</pre></div><p> suffices to accommodate extant magnetic and gravity models. </p>
+
+<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00372">372</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="SphericalEngine_8hpp_source.html#l00117">GeographicLib::SphericalEngine::coeff::coeff()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab3fb8f933adb257df6b7537268d55a75"></a><!-- doxytag: member="GeographicLib::SphericalEngine::ClearRootTable" ref="ab3fb8f933adb257df6b7537268d55a75" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void GeographicLib::SphericalEngine::ClearRootTable </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Clear the static table of square roots and release the memory. Call this only when you are sure you no longer will be using <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a>. Your program will crash if you call <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a> after calling this routine. <b>It's safest not to call this routine at all.</b> (The space used by the table is modest.) </p>
+
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00347">347</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" id="a0c689dbf7b6bf2fb4cffb109085b1d3b"></a><!-- doxytag: member="GeographicLib::SphericalEngine::CircularEngine" ref="a0c689dbf7b6bf2fb4cffb109085b1d3b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classGeographicLib_1_1CircularEngine.html">CircularEngine</a><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00043">43</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -287,7 +360,7 @@ template&lt;bool gradp, SphericalEngine::normalization norm, int L&gt; </div>
 <li><a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

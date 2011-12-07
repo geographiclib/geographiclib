@@ -1,4 +1,4 @@
-# $Id: ca04369ade810c664f20b05fa507435731d25d71 $
+# $Id: a73f5b44ef34121aabca5037e847b0883c33a65d $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
@@ -6,7 +6,7 @@ MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	AzimuthalEquidistant CassiniSoldner \
 	Geoid Gnomonic OSGB AlbersEqualArea
 PROGRAMS = GeoConvert TransverseMercatorProj CartConvert Geod GeodesicProj \
-	GeoidEval Planimeter ConicProj
+	GeoidEval Gravity MagneticField Planimeter ConicProj
 
 HEADERS = $(patsubst %,../include/GeographicLib/%.hpp,Constants $(MODULES))
 SOURCES = $(patsubst %,../src/%.cpp,$(MODULES)) \

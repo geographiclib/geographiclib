@@ -83,14 +83,15 @@
 : <a class="el" href="classGeographicLib_1_1Utility.html#aa6955e745deebb79795b12ab139798e0">GeographicLib::Utility</a>
 </li>
 <li>DateTime()
-: <a class="el" href="classGeographicLib_1_1MagneticModel.html#a230648296f87ff6fc12a3e65ff01bc3b">GeographicLib::MagneticModel</a>
+: <a class="el" href="classGeographicLib_1_1GravityModel.html#acbed448c2423cd45e800d03fab059500">GeographicLib::GravityModel</a>
+, <a class="el" href="classGeographicLib_1_1MagneticModel.html#a230648296f87ff6fc12a3e65ff01bc3b">GeographicLib::MagneticModel</a>
 , <a class="el" href="classGeographicLib_1_1Geoid.html#a9cd7304b5df37001f4ad3c91cdbc56f4">GeographicLib::Geoid</a>
 </li>
 <li>day()
 : <a class="el" href="classGeographicLib_1_1Utility.html#a877a58000a56bc84c354cf42b4b1cd99">GeographicLib::Utility</a>
 </li>
 <li>Decode()
-: <a class="el" href="classGeographicLib_1_1DMS.html#a4987f8eb6c1ba5402eb25d6225ab58e1">GeographicLib::DMS</a>
+: <a class="el" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">GeographicLib::DMS</a>
 </li>
 <li>DecodeAngle()
 : <a class="el" href="classGeographicLib_1_1DMS.html#a868248d72f6b0bf2dae18a15d741ac43">GeographicLib::DMS</a>
@@ -113,6 +114,12 @@
 <li>DefaultGeoidPath()
 : <a class="el" href="classGeographicLib_1_1Geoid.html#a2daf81f5c648cf190a83981f441ab08f">GeographicLib::Geoid</a>
 </li>
+<li>DefaultGravityName()
+: <a class="el" href="classGeographicLib_1_1GravityModel.html#ad4a776d68b60e85275c0e580d3c7caba">GeographicLib::GravityModel</a>
+</li>
+<li>DefaultGravityPath()
+: <a class="el" href="classGeographicLib_1_1GravityModel.html#a0fdf62e41828ae7ae183d9e876f37954">GeographicLib::GravityModel</a>
+</li>
 <li>DefaultMagneticName()
 : <a class="el" href="classGeographicLib_1_1MagneticModel.html#ab2ac8cc598c0d9a6b448c9a45e9642d9">GeographicLib::MagneticModel</a>
 </li>
@@ -127,29 +134,43 @@
 , <a class="el" href="classGeographicLib_1_1Math.html#a3d84677a4dfd6c2149c16426544eaf6c">GeographicLib::Math</a>
 </li>
 <li>Description()
-: <a class="el" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">GeographicLib::Geoid</a>
+: <a class="el" href="classGeographicLib_1_1GravityModel.html#af2c1c74254e3193adb155987f6dd0a59">GeographicLib::GravityModel</a>
+, <a class="el" href="classGeographicLib_1_1Geoid.html#a37d76bcfe0ddf9b84042d701c312e941">GeographicLib::Geoid</a>
 , <a class="el" href="classGeographicLib_1_1MagneticModel.html#a204e8d3c4ebf6f8c13eb9e1817921ea2">GeographicLib::MagneticModel</a>
 </li>
 <li>Direct()
 : <a class="el" href="classGeographicLib_1_1Geodesic.html#a63f7681d1239902dc3f528ded0f90352">GeographicLib::Geodesic</a>
 </li>
 <li>DISTANCE
-: <a class="el" href="classGeographicLib_1_1GeodesicLine.html#adeec76cf92a8c30770e1199bdadacbcca6d8b294c13e0495120b9bfd6a9281184">GeographicLib::GeodesicLine</a>
-, <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828a0fe3400fb8dcc92274fbac2839cc4e0d">GeographicLib::Geodesic</a>
+: <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828a0fe3400fb8dcc92274fbac2839cc4e0d">GeographicLib::Geodesic</a>
+, <a class="el" href="classGeographicLib_1_1GeodesicLine.html#adeec76cf92a8c30770e1199bdadacbcca6d8b294c13e0495120b9bfd6a9281184">GeographicLib::GeodesicLine</a>
 </li>
 <li>DISTANCE_IN
-: <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828ae20140cdf788fa0497df59630d3211ef">GeographicLib::Geodesic</a>
-, <a class="el" href="classGeographicLib_1_1GeodesicLine.html#adeec76cf92a8c30770e1199bdadacbcca7929baa71a65e8399073f67382e4d0bc">GeographicLib::GeodesicLine</a>
+: <a class="el" href="classGeographicLib_1_1GeodesicLine.html#adeec76cf92a8c30770e1199bdadacbcca7929baa71a65e8399073f67382e4d0bc">GeographicLib::GeodesicLine</a>
+, <a class="el" href="classGeographicLib_1_1Geodesic.html#aab966190e69651b86661fc2628d20828ae20140cdf788fa0497df59630d3211ef">GeographicLib::Geodesic</a>
+</li>
+<li>DISTURBANCE
+: <a class="el" href="classGeographicLib_1_1GravityModel.html#af8691d0f13d6d42278cd1e615903d365a83daf366a2c7ab93495f0e6b4144d885">GeographicLib::GravityModel</a>
+</li>
+<li>Disturbance()
+: <a class="el" href="classGeographicLib_1_1GravityCircle.html#a2c3bde01c9d822b0cdd935314193a466">GeographicLib::GravityCircle</a>
+, <a class="el" href="classGeographicLib_1_1GravityModel.html#a75cf57146334d9ce0856222a6814ae6f">GeographicLib::GravityModel</a>
+</li>
+<li>DISTURBING_POTENTIAL
+: <a class="el" href="classGeographicLib_1_1GravityModel.html#af8691d0f13d6d42278cd1e615903d365abe1f6d891a721a4f544cd8a341abcb28">GeographicLib::GravityModel</a>
 </li>
 <li>DMSRepresentation()
 : <a class="el" href="classGeographicLib_1_1GeoCoords.html#ab37746606876eb77335268054589390a">GeographicLib::GeoCoords</a>
 </li>
 <li>dow()
-: <a class="el" href="classGeographicLib_1_1Utility.html#a4687c34e55dc7ccc135e31a72402f008">GeographicLib::Utility</a>
+: <a class="el" href="classGeographicLib_1_1Utility.html#a42a6f8679c068dcb06f1da26aa21dfb1">GeographicLib::Utility</a>
+</li>
+<li>DynamicalFormFactor()
+: <a class="el" href="classGeographicLib_1_1NormalGravity.html#aa52b03157eb0b199d331d6fca28a259a">GeographicLib::NormalGravity</a>
 </li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

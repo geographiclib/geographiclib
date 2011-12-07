@@ -6,7 +6,16 @@
  * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geoid.o DMS.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o GeoidEval \
+ *       GeoidEval.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/GeoCoords.cpp \
+ *       ../src/Geoid.cpp \
+ *       ../src/MGRS.cpp \
+ *       ../src/PolarStereographic.cpp \
+ *       ../src/TransverseMercator.cpp \
+ *       ../src/UTMUPS.cpp
  *
  * See the <a href="GeoidEval.1.html">man page</a> for usage
  * information.
@@ -97,7 +106,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: d892fda773ff07829de85aa5b4ee1e56c2d581b0 $\n"
+          << ": $Id: c241b424ccc91f1fa7e7f9cc74ef5f157023bc56 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else {

@@ -55,195 +55,202 @@
 <a name="l00006"></a>00006 <span class="comment"> * and licensed under the MIT/X11 License.  For more information, see</span>
 <a name="l00007"></a>00007 <span class="comment"> * http://geographiclib.sourceforge.net/</span>
 <a name="l00008"></a>00008 <span class="comment"> *</span>
-<a name="l00009"></a>00009 <span class="comment"> * Compile with -I../include and link with GeoCoords.o MGRS.o UTMUPS.o DMS.o</span>
-<a name="l00010"></a>00010 <span class="comment"> * TransverseMercator.o PolarStereographic.o</span>
-<a name="l00011"></a>00011 <span class="comment"> *</span>
-<a name="l00012"></a>00012 <span class="comment"> * See the &lt;a href=&quot;GeoConvert.1.html&quot;&gt;man page&lt;/a&gt; for usage</span>
-<a name="l00013"></a>00013 <span class="comment"> * information.</span>
-<a name="l00014"></a>00014 <span class="comment"> **********************************************************************/</span>
-<a name="l00015"></a>00015 
-<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;iostream&gt;</span>
-<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;sstream&gt;</span>
-<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;string&gt;</span>
-<a name="l00019"></a>00019 <span class="preprocessor">#include &lt;sstream&gt;</span>
-<a name="l00020"></a>00020 <span class="preprocessor">#include &lt;fstream&gt;</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include &lt;<a class="code" href="GeoCoords_8hpp.html" title="Header for GeographicLib::GeoCoords class.">GeographicLib/GeoCoords.hpp</a>&gt;</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include &lt;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&gt;</span>
-<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
-<a name="l00024"></a>00024 
-<a name="l00025"></a>00025 <span class="preprocessor">#include &quot;GeoConvert.usage&quot;</span>
-<a name="l00026"></a>00026 
-<a name="l00027"></a><a class="code" href="GeoConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">00027</a> <span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {
-<a name="l00028"></a>00028   <span class="keywordflow">try</span> {
-<a name="l00029"></a>00029     <span class="keyword">using namespace </span>GeographicLib;
-<a name="l00030"></a>00030     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00031"></a>00031     <span class="keyword">enum</span> { GEOGRAPHIC, <a class="code" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a>, <a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>, <a class="code" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>, CONVERGENCE };
-<a name="l00032"></a>00032     <span class="keywordtype">int</span> outputmode = GEOGRAPHIC;
-<a name="l00033"></a>00033     <span class="keywordtype">int</span> prec = 0;
-<a name="l00034"></a>00034     <span class="keywordtype">int</span> zone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320">UTMUPS::MATCH</a>;
-<a name="l00035"></a>00035     <span class="keywordtype">bool</span> centerp = <span class="keyword">true</span>, swaplatlong = <span class="keyword">false</span>;
-<a name="l00036"></a>00036     std::string istring, ifile, ofile;
-<a name="l00037"></a>00037 
-<a name="l00038"></a>00038     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> m = 1; m &lt; argc; ++m) {
-<a name="l00039"></a>00039       std::string arg(argv[m]);
-<a name="l00040"></a>00040       <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-g&quot;</span>)
-<a name="l00041"></a>00041         outputmode = GEOGRAPHIC;
-<a name="l00042"></a>00042       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-d&quot;</span>)
-<a name="l00043"></a>00043         outputmode = <a class="code" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a>;
-<a name="l00044"></a>00044       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-u&quot;</span>)
-<a name="l00045"></a>00045         outputmode = <a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>;
-<a name="l00046"></a>00046       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-m&quot;</span>)
-<a name="l00047"></a>00047         outputmode = <a class="code" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>;
-<a name="l00048"></a>00048       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-c&quot;</span>)
-<a name="l00049"></a>00049         outputmode = CONVERGENCE;
-<a name="l00050"></a>00050       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-n&quot;</span>)
-<a name="l00051"></a>00051         centerp = <span class="keyword">false</span>;
-<a name="l00052"></a>00052       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-w&quot;</span>)
-<a name="l00053"></a>00053         swaplatlong = <span class="keyword">true</span>;
-<a name="l00054"></a>00054       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-p&quot;</span>) {
-<a name="l00055"></a>00055         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
-<a name="l00056"></a>00056         <span class="keywordflow">try</span> {
-<a name="l00057"></a>00057           prec = Utility::num&lt;int&gt;(std::string(argv[m]));
-<a name="l00058"></a>00058         }
-<a name="l00059"></a>00059         <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp;) {
-<a name="l00060"></a>00060           std::cerr &lt;&lt; <span class="stringliteral">&quot;Precision &quot;</span> &lt;&lt; argv[m] &lt;&lt; <span class="stringliteral">&quot; is not a number\n&quot;</span>;
-<a name="l00061"></a>00061           <span class="keywordflow">return</span> 1;
-<a name="l00062"></a>00062         }
-<a name="l00063"></a>00063       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-z&quot;</span>) {
-<a name="l00064"></a>00064         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
-<a name="l00065"></a>00065         std::string zonestr(argv[m]);
-<a name="l00066"></a>00066         <span class="keywordflow">try</span> {
-<a name="l00067"></a>00067           <span class="keywordtype">bool</span> northp;
-<a name="l00068"></a>00068           <a class="code" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">UTMUPS::DecodeZone</a>(zonestr, zone, northp);
+<a name="l00009"></a>00009 <span class="comment"> * Compile and link with</span>
+<a name="l00010"></a>00010 <span class="comment"> *   g++ -g -O3 -I../include -I../man -o GeoConvert \</span>
+<a name="l00011"></a>00011 <span class="comment"> *       GeoConvert.cpp \</span>
+<a name="l00012"></a>00012 <span class="comment"> *       ../src/DMS.cpp \</span>
+<a name="l00013"></a>00013 <span class="comment"> *       ../src/GeoCoords.cpp \</span>
+<a name="l00014"></a>00014 <span class="comment"> *       ../src/MGRS.cpp \</span>
+<a name="l00015"></a>00015 <span class="comment"> *       ../src/PolarStereographic.cpp \</span>
+<a name="l00016"></a>00016 <span class="comment"> *       ../src/TransverseMercator.cpp \</span>
+<a name="l00017"></a>00017 <span class="comment"> *       ../src/UTMUPS.cpp</span>
+<a name="l00018"></a>00018 <span class="comment"> *</span>
+<a name="l00019"></a>00019 <span class="comment"> * See the &lt;a href=&quot;GeoConvert.1.html&quot;&gt;man page&lt;/a&gt; for usage</span>
+<a name="l00020"></a>00020 <span class="comment"> * information.</span>
+<a name="l00021"></a>00021 <span class="comment"> **********************************************************************/</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 <span class="preprocessor">#include &lt;iostream&gt;</span>
+<a name="l00024"></a>00024 <span class="preprocessor">#include &lt;sstream&gt;</span>
+<a name="l00025"></a>00025 <span class="preprocessor">#include &lt;string&gt;</span>
+<a name="l00026"></a>00026 <span class="preprocessor">#include &lt;sstream&gt;</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#include &lt;fstream&gt;</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include &lt;<a class="code" href="GeoCoords_8hpp.html" title="Header for GeographicLib::GeoCoords class.">GeographicLib/GeoCoords.hpp</a>&gt;</span>
+<a name="l00029"></a>00029 <span class="preprocessor">#include &lt;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&gt;</span>
+<a name="l00030"></a>00030 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
+<a name="l00031"></a>00031 
+<a name="l00032"></a>00032 <span class="preprocessor">#include &quot;GeoConvert.usage&quot;</span>
+<a name="l00033"></a>00033 
+<a name="l00034"></a><a class="code" href="GeoConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">00034</a> <span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {
+<a name="l00035"></a>00035   <span class="keywordflow">try</span> {
+<a name="l00036"></a>00036     <span class="keyword">using namespace </span>GeographicLib;
+<a name="l00037"></a>00037     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00038"></a>00038     <span class="keyword">enum</span> { GEOGRAPHIC, <a class="code" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a>, <a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>, <a class="code" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>, CONVERGENCE };
+<a name="l00039"></a>00039     <span class="keywordtype">int</span> outputmode = GEOGRAPHIC;
+<a name="l00040"></a>00040     <span class="keywordtype">int</span> prec = 0;
+<a name="l00041"></a>00041     <span class="keywordtype">int</span> zone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320">UTMUPS::MATCH</a>;
+<a name="l00042"></a>00042     <span class="keywordtype">bool</span> centerp = <span class="keyword">true</span>, swaplatlong = <span class="keyword">false</span>;
+<a name="l00043"></a>00043     std::string istring, ifile, ofile;
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045     <span class="keywordflow">for</span> (<span class="keywordtype">int</span> m = 1; m &lt; argc; ++m) {
+<a name="l00046"></a>00046       std::string arg(argv[m]);
+<a name="l00047"></a>00047       <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-g&quot;</span>)
+<a name="l00048"></a>00048         outputmode = GEOGRAPHIC;
+<a name="l00049"></a>00049       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-d&quot;</span>)
+<a name="l00050"></a>00050         outputmode = <a class="code" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a>;
+<a name="l00051"></a>00051       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-u&quot;</span>)
+<a name="l00052"></a>00052         outputmode = <a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>;
+<a name="l00053"></a>00053       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-m&quot;</span>)
+<a name="l00054"></a>00054         outputmode = <a class="code" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>;
+<a name="l00055"></a>00055       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-c&quot;</span>)
+<a name="l00056"></a>00056         outputmode = CONVERGENCE;
+<a name="l00057"></a>00057       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-n&quot;</span>)
+<a name="l00058"></a>00058         centerp = <span class="keyword">false</span>;
+<a name="l00059"></a>00059       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-w&quot;</span>)
+<a name="l00060"></a>00060         swaplatlong = <span class="keyword">true</span>;
+<a name="l00061"></a>00061       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-p&quot;</span>) {
+<a name="l00062"></a>00062         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
+<a name="l00063"></a>00063         <span class="keywordflow">try</span> {
+<a name="l00064"></a>00064           prec = Utility::num&lt;int&gt;(std::string(argv[m]));
+<a name="l00065"></a>00065         }
+<a name="l00066"></a>00066         <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp;) {
+<a name="l00067"></a>00067           std::cerr &lt;&lt; <span class="stringliteral">&quot;Precision &quot;</span> &lt;&lt; argv[m] &lt;&lt; <span class="stringliteral">&quot; is not a number\n&quot;</span>;
+<a name="l00068"></a>00068           <span class="keywordflow">return</span> 1;
 <a name="l00069"></a>00069         }
-<a name="l00070"></a>00070         <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp;) {
-<a name="l00071"></a>00071           std::istringstream str(zonestr);
-<a name="l00072"></a>00072           <span class="keywordtype">char</span> c;
-<a name="l00073"></a>00073           <span class="keywordflow">if</span> (!(str &gt;&gt; zone) || (str &gt;&gt; c)) {
-<a name="l00074"></a>00074             std::cerr &lt;&lt; <span class="stringliteral">&quot;Zone &quot;</span> &lt;&lt; zonestr
-<a name="l00075"></a>00075                       &lt;&lt; <span class="stringliteral">&quot; is not a number or zone+hemisphere\n&quot;</span>;
-<a name="l00076"></a>00076             <span class="keywordflow">return</span> 1;
-<a name="l00077"></a>00077           }
-<a name="l00078"></a>00078           <span class="keywordflow">if</span> (!(zone &gt;= <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">UTMUPS::MINZONE</a> &amp;&amp; zone &lt;= <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>)) {
-<a name="l00079"></a>00079             std::cerr &lt;&lt; <span class="stringliteral">&quot;Zone &quot;</span> &lt;&lt; zone &lt;&lt; <span class="stringliteral">&quot; not in [0, 60]\n&quot;</span>;
-<a name="l00080"></a>00080             <span class="keywordflow">return</span> 1;
-<a name="l00081"></a>00081           }
-<a name="l00082"></a>00082         }
-<a name="l00083"></a>00083       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-s&quot;</span>)
-<a name="l00084"></a>00084         zone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">UTMUPS::STANDARD</a>;
-<a name="l00085"></a>00085       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-t&quot;</span>)
-<a name="l00086"></a>00086         zone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aacc8f89ac6144b1e445ca21cbe9a2533">UTMUPS::UTM</a>;
-<a name="l00087"></a>00087       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--input-string&quot;</span>) {
-<a name="l00088"></a>00088         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
-<a name="l00089"></a>00089         istring = argv[m];
-<a name="l00090"></a>00090       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--input-file&quot;</span>) {
-<a name="l00091"></a>00091         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
-<a name="l00092"></a>00092         ifile = argv[m];
-<a name="l00093"></a>00093       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--output-file&quot;</span>) {
-<a name="l00094"></a>00094         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
-<a name="l00095"></a>00095         ofile = argv[m];
-<a name="l00096"></a>00096       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--version&quot;</span>) {
-<a name="l00097"></a>00097         std::cout
-<a name="l00098"></a>00098           &lt;&lt; argv[0]
-<a name="l00099"></a>00099           &lt;&lt; <span class="stringliteral">&quot;: $Id: cbe770d45c2cf7b09b8555fcf4e3b0a7fc45879d $\n&quot;</span>
-<a name="l00100"></a>00100           &lt;&lt; <span class="stringliteral">&quot;GeographicLib version &quot;</span> &lt;&lt; GEOGRAPHICLIB_VERSION_STRING &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-<a name="l00101"></a>00101         <span class="keywordflow">return</span> 0;
-<a name="l00102"></a>00102       } <span class="keywordflow">else</span>
-<a name="l00103"></a>00103         <span class="keywordflow">return</span> usage(!(arg == <span class="stringliteral">&quot;-h&quot;</span> || arg == <span class="stringliteral">&quot;--help&quot;</span>), arg != <span class="stringliteral">&quot;--help&quot;</span>);
-<a name="l00104"></a>00104     }
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106     <span class="keywordflow">if</span> (!ifile.empty() &amp;&amp; !istring.empty()) {
-<a name="l00107"></a>00107       std::cerr &lt;&lt; <span class="stringliteral">&quot;Cannot specify --input-string and --input-file together\n&quot;</span>;
-<a name="l00108"></a>00108       <span class="keywordflow">return</span> 1;
-<a name="l00109"></a>00109     }
-<a name="l00110"></a>00110     <span class="keywordflow">if</span> (ifile == <span class="stringliteral">&quot;-&quot;</span>) ifile.clear();
-<a name="l00111"></a>00111     std::ifstream infile;
-<a name="l00112"></a>00112     std::istringstream instring;
-<a name="l00113"></a>00113     <span class="keywordflow">if</span> (!ifile.empty()) {
-<a name="l00114"></a>00114       infile.open(ifile.c_str());
-<a name="l00115"></a>00115       <span class="keywordflow">if</span> (!infile.is_open()) {
-<a name="l00116"></a>00116         std::cerr &lt;&lt; <span class="stringliteral">&quot;Cannot open &quot;</span> &lt;&lt; ifile &lt;&lt; <span class="stringliteral">&quot; for reading\n&quot;</span>;
-<a name="l00117"></a>00117         <span class="keywordflow">return</span> 1;
-<a name="l00118"></a>00118       }
-<a name="l00119"></a>00119     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!istring.empty()) {
-<a name="l00120"></a>00120       std::string::size_type m = 0;
-<a name="l00121"></a>00121       <span class="keywordflow">while</span> (<span class="keyword">true</span>) {
-<a name="l00122"></a>00122         m = istring.find(<span class="charliteral">&#39;;&#39;</span>, m);
-<a name="l00123"></a>00123         <span class="keywordflow">if</span> (m == std::string::npos)
-<a name="l00124"></a>00124           <span class="keywordflow">break</span>;
-<a name="l00125"></a>00125         istring[m] = <span class="charliteral">&#39;\n&#39;</span>;
-<a name="l00126"></a>00126       }
-<a name="l00127"></a>00127       instring.str(istring);
-<a name="l00128"></a>00128     }
-<a name="l00129"></a>00129     std::istream* input = !ifile.empty() ? &amp;infile :
-<a name="l00130"></a>00130       (!istring.empty() ? &amp;instring : &amp;std::cin);
-<a name="l00131"></a>00131 
-<a name="l00132"></a>00132     std::ofstream outfile;
-<a name="l00133"></a>00133     <span class="keywordflow">if</span> (ofile == <span class="stringliteral">&quot;-&quot;</span>) ofile.clear();
-<a name="l00134"></a>00134     <span class="keywordflow">if</span> (!ofile.empty()) {
-<a name="l00135"></a>00135       outfile.open(ofile.c_str());
-<a name="l00136"></a>00136       <span class="keywordflow">if</span> (!outfile.is_open()) {
-<a name="l00137"></a>00137         std::cerr &lt;&lt; <span class="stringliteral">&quot;Cannot open &quot;</span> &lt;&lt; ofile &lt;&lt; <span class="stringliteral">&quot; for writing\n&quot;</span>;
-<a name="l00138"></a>00138         <span class="keywordflow">return</span> 1;
-<a name="l00139"></a>00139       }
-<a name="l00140"></a>00140     }
-<a name="l00141"></a>00141     std::ostream* output = !ofile.empty() ? &amp;outfile : &amp;std::cout;
-<a name="l00142"></a>00142 
-<a name="l00143"></a>00143     <a class="code" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeoCoords</a> p;
-<a name="l00144"></a>00144     std::string s;
-<a name="l00145"></a>00145     std::string os;
-<a name="l00146"></a>00146     <span class="keywordtype">int</span> retval = 0;
-<a name="l00147"></a>00147 
-<a name="l00148"></a>00148     <span class="keywordflow">while</span> (std::getline(*input, s)) {
-<a name="l00149"></a>00149       <span class="keywordflow">try</span> {
-<a name="l00150"></a>00150         p.<a class="code" href="classGeographicLib_1_1GeoCoords.html#a4a1e0a65a8a344dfe519fcbf25078e37">Reset</a>(s, centerp, swaplatlong);
-<a name="l00151"></a>00151         p.SetAltZone(zone);
-<a name="l00152"></a>00152         <span class="keywordflow">switch</span> (outputmode) {
-<a name="l00153"></a>00153         <span class="keywordflow">case</span> GEOGRAPHIC:
-<a name="l00154"></a>00154           os = p.GeoRepresentation(prec, swaplatlong);
-<a name="l00155"></a>00155           <span class="keywordflow">break</span>;
-<a name="l00156"></a>00156         <span class="keywordflow">case</span> <a class="code" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a>:
-<a name="l00157"></a>00157           os = p.DMSRepresentation(prec, swaplatlong);
-<a name="l00158"></a>00158           <span class="keywordflow">break</span>;
-<a name="l00159"></a>00159         <span class="keywordflow">case</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>:
-<a name="l00160"></a>00160           os = p.AltUTMUPSRepresentation(prec);
-<a name="l00161"></a>00161           <span class="keywordflow">break</span>;
-<a name="l00162"></a>00162         <span class="keywordflow">case</span> <a class="code" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>:
-<a name="l00163"></a>00163           os = p.AltMGRSRepresentation(prec);
-<a name="l00164"></a>00164           <span class="keywordflow">break</span>;
-<a name="l00165"></a>00165         <span class="keywordflow">case</span> CONVERGENCE:
-<a name="l00166"></a>00166           {
-<a name="l00167"></a>00167             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00168"></a>00168               gamma = p.AltConvergence(),
-<a name="l00169"></a>00169               k = p.AltScale();
-<a name="l00170"></a>00170             os =
-<a name="l00171"></a>00171               Utility::str&lt;real&gt;(gamma, std::max(-5,std::min(8,prec))+5)
-<a name="l00172"></a>00172               + <span class="stringliteral">&quot; &quot;</span> +
-<a name="l00173"></a>00173               Utility::str&lt;real&gt;(k, std::max(-5,std::min(8,prec))+7);
-<a name="l00174"></a>00174           }
-<a name="l00175"></a>00175         }
-<a name="l00176"></a>00176       }
-<a name="l00177"></a>00177       <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {
-<a name="l00178"></a>00178         <span class="comment">// Write error message to cout so output lines match input lines</span>
-<a name="l00179"></a>00179         os = std::string(<span class="stringliteral">&quot;ERROR: &quot;</span>) + e.what();
-<a name="l00180"></a>00180         retval = 1;
-<a name="l00181"></a>00181       }
-<a name="l00182"></a>00182       *output &lt;&lt; os &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-<a name="l00183"></a>00183     }
-<a name="l00184"></a>00184     <span class="keywordflow">return</span> retval;
-<a name="l00185"></a>00185   }
-<a name="l00186"></a>00186   <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {
-<a name="l00187"></a>00187     std::cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-<a name="l00188"></a>00188     <span class="keywordflow">return</span> 1;
-<a name="l00189"></a>00189   }
-<a name="l00190"></a>00190   <span class="keywordflow">catch</span> (...) {
-<a name="l00191"></a>00191     std::cerr &lt;&lt; <span class="stringliteral">&quot;Caught unknown exception\n&quot;</span>;
-<a name="l00192"></a>00192     <span class="keywordflow">return</span> 1;
-<a name="l00193"></a>00193   }
-<a name="l00194"></a>00194 }
+<a name="l00070"></a>00070       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-z&quot;</span>) {
+<a name="l00071"></a>00071         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
+<a name="l00072"></a>00072         std::string zonestr(argv[m]);
+<a name="l00073"></a>00073         <span class="keywordflow">try</span> {
+<a name="l00074"></a>00074           <span class="keywordtype">bool</span> northp;
+<a name="l00075"></a>00075           <a class="code" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">UTMUPS::DecodeZone</a>(zonestr, zone, northp);
+<a name="l00076"></a>00076         }
+<a name="l00077"></a>00077         <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp;) {
+<a name="l00078"></a>00078           std::istringstream str(zonestr);
+<a name="l00079"></a>00079           <span class="keywordtype">char</span> c;
+<a name="l00080"></a>00080           <span class="keywordflow">if</span> (!(str &gt;&gt; zone) || (str &gt;&gt; c)) {
+<a name="l00081"></a>00081             std::cerr &lt;&lt; <span class="stringliteral">&quot;Zone &quot;</span> &lt;&lt; zonestr
+<a name="l00082"></a>00082                       &lt;&lt; <span class="stringliteral">&quot; is not a number or zone+hemisphere\n&quot;</span>;
+<a name="l00083"></a>00083             <span class="keywordflow">return</span> 1;
+<a name="l00084"></a>00084           }
+<a name="l00085"></a>00085           <span class="keywordflow">if</span> (!(zone &gt;= <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7af91adc987ae7295bfb6d3786b23c58e1">UTMUPS::MINZONE</a> &amp;&amp; zone &lt;= <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a12dabceb6da15aa0fc94b9406aca921a">UTMUPS::MAXZONE</a>)) {
+<a name="l00086"></a>00086             std::cerr &lt;&lt; <span class="stringliteral">&quot;Zone &quot;</span> &lt;&lt; zone &lt;&lt; <span class="stringliteral">&quot; not in [0, 60]\n&quot;</span>;
+<a name="l00087"></a>00087             <span class="keywordflow">return</span> 1;
+<a name="l00088"></a>00088           }
+<a name="l00089"></a>00089         }
+<a name="l00090"></a>00090       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-s&quot;</span>)
+<a name="l00091"></a>00091         zone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">UTMUPS::STANDARD</a>;
+<a name="l00092"></a>00092       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;-t&quot;</span>)
+<a name="l00093"></a>00093         zone = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7aacc8f89ac6144b1e445ca21cbe9a2533">UTMUPS::UTM</a>;
+<a name="l00094"></a>00094       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--input-string&quot;</span>) {
+<a name="l00095"></a>00095         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
+<a name="l00096"></a>00096         istring = argv[m];
+<a name="l00097"></a>00097       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--input-file&quot;</span>) {
+<a name="l00098"></a>00098         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
+<a name="l00099"></a>00099         ifile = argv[m];
+<a name="l00100"></a>00100       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--output-file&quot;</span>) {
+<a name="l00101"></a>00101         <span class="keywordflow">if</span> (++m == argc) <span class="keywordflow">return</span> usage(1, <span class="keyword">true</span>);
+<a name="l00102"></a>00102         ofile = argv[m];
+<a name="l00103"></a>00103       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg == <span class="stringliteral">&quot;--version&quot;</span>) {
+<a name="l00104"></a>00104         std::cout
+<a name="l00105"></a>00105           &lt;&lt; argv[0]
+<a name="l00106"></a>00106           &lt;&lt; <span class="stringliteral">&quot;: $Id: e4d712327e515af5fc1f322b2bd55ddc3f91546a $\n&quot;</span>
+<a name="l00107"></a>00107           &lt;&lt; <span class="stringliteral">&quot;GeographicLib version &quot;</span> &lt;&lt; GEOGRAPHICLIB_VERSION_STRING &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+<a name="l00108"></a>00108         <span class="keywordflow">return</span> 0;
+<a name="l00109"></a>00109       } <span class="keywordflow">else</span>
+<a name="l00110"></a>00110         <span class="keywordflow">return</span> usage(!(arg == <span class="stringliteral">&quot;-h&quot;</span> || arg == <span class="stringliteral">&quot;--help&quot;</span>), arg != <span class="stringliteral">&quot;--help&quot;</span>);
+<a name="l00111"></a>00111     }
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113     <span class="keywordflow">if</span> (!ifile.empty() &amp;&amp; !istring.empty()) {
+<a name="l00114"></a>00114       std::cerr &lt;&lt; <span class="stringliteral">&quot;Cannot specify --input-string and --input-file together\n&quot;</span>;
+<a name="l00115"></a>00115       <span class="keywordflow">return</span> 1;
+<a name="l00116"></a>00116     }
+<a name="l00117"></a>00117     <span class="keywordflow">if</span> (ifile == <span class="stringliteral">&quot;-&quot;</span>) ifile.clear();
+<a name="l00118"></a>00118     std::ifstream infile;
+<a name="l00119"></a>00119     std::istringstream instring;
+<a name="l00120"></a>00120     <span class="keywordflow">if</span> (!ifile.empty()) {
+<a name="l00121"></a>00121       infile.open(ifile.c_str());
+<a name="l00122"></a>00122       <span class="keywordflow">if</span> (!infile.is_open()) {
+<a name="l00123"></a>00123         std::cerr &lt;&lt; <span class="stringliteral">&quot;Cannot open &quot;</span> &lt;&lt; ifile &lt;&lt; <span class="stringliteral">&quot; for reading\n&quot;</span>;
+<a name="l00124"></a>00124         <span class="keywordflow">return</span> 1;
+<a name="l00125"></a>00125       }
+<a name="l00126"></a>00126     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!istring.empty()) {
+<a name="l00127"></a>00127       std::string::size_type m = 0;
+<a name="l00128"></a>00128       <span class="keywordflow">while</span> (<span class="keyword">true</span>) {
+<a name="l00129"></a>00129         m = istring.find(<span class="charliteral">&#39;;&#39;</span>, m);
+<a name="l00130"></a>00130         <span class="keywordflow">if</span> (m == std::string::npos)
+<a name="l00131"></a>00131           <span class="keywordflow">break</span>;
+<a name="l00132"></a>00132         istring[m] = <span class="charliteral">&#39;\n&#39;</span>;
+<a name="l00133"></a>00133       }
+<a name="l00134"></a>00134       instring.str(istring);
+<a name="l00135"></a>00135     }
+<a name="l00136"></a>00136     std::istream* input = !ifile.empty() ? &amp;infile :
+<a name="l00137"></a>00137       (!istring.empty() ? &amp;instring : &amp;std::cin);
+<a name="l00138"></a>00138 
+<a name="l00139"></a>00139     std::ofstream outfile;
+<a name="l00140"></a>00140     <span class="keywordflow">if</span> (ofile == <span class="stringliteral">&quot;-&quot;</span>) ofile.clear();
+<a name="l00141"></a>00141     <span class="keywordflow">if</span> (!ofile.empty()) {
+<a name="l00142"></a>00142       outfile.open(ofile.c_str());
+<a name="l00143"></a>00143       <span class="keywordflow">if</span> (!outfile.is_open()) {
+<a name="l00144"></a>00144         std::cerr &lt;&lt; <span class="stringliteral">&quot;Cannot open &quot;</span> &lt;&lt; ofile &lt;&lt; <span class="stringliteral">&quot; for writing\n&quot;</span>;
+<a name="l00145"></a>00145         <span class="keywordflow">return</span> 1;
+<a name="l00146"></a>00146       }
+<a name="l00147"></a>00147     }
+<a name="l00148"></a>00148     std::ostream* output = !ofile.empty() ? &amp;outfile : &amp;std::cout;
+<a name="l00149"></a>00149 
+<a name="l00150"></a>00150     <a class="code" href="classGeographicLib_1_1GeoCoords.html" title="Conversion between geographic coordinates.">GeoCoords</a> p;
+<a name="l00151"></a>00151     std::string s;
+<a name="l00152"></a>00152     std::string os;
+<a name="l00153"></a>00153     <span class="keywordtype">int</span> retval = 0;
+<a name="l00154"></a>00154 
+<a name="l00155"></a>00155     <span class="keywordflow">while</span> (std::getline(*input, s)) {
+<a name="l00156"></a>00156       <span class="keywordflow">try</span> {
+<a name="l00157"></a>00157         p.<a class="code" href="classGeographicLib_1_1GeoCoords.html#a4a1e0a65a8a344dfe519fcbf25078e37">Reset</a>(s, centerp, swaplatlong);
+<a name="l00158"></a>00158         p.SetAltZone(zone);
+<a name="l00159"></a>00159         <span class="keywordflow">switch</span> (outputmode) {
+<a name="l00160"></a>00160         <span class="keywordflow">case</span> GEOGRAPHIC:
+<a name="l00161"></a>00161           os = p.GeoRepresentation(prec, swaplatlong);
+<a name="l00162"></a>00162           <span class="keywordflow">break</span>;
+<a name="l00163"></a>00163         <span class="keywordflow">case</span> <a class="code" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">DMS</a>:
+<a name="l00164"></a>00164           os = p.DMSRepresentation(prec, swaplatlong);
+<a name="l00165"></a>00165           <span class="keywordflow">break</span>;
+<a name="l00166"></a>00166         <span class="keywordflow">case</span> <a class="code" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a>:
+<a name="l00167"></a>00167           os = p.AltUTMUPSRepresentation(prec);
+<a name="l00168"></a>00168           <span class="keywordflow">break</span>;
+<a name="l00169"></a>00169         <span class="keywordflow">case</span> <a class="code" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>:
+<a name="l00170"></a>00170           os = p.AltMGRSRepresentation(prec);
+<a name="l00171"></a>00171           <span class="keywordflow">break</span>;
+<a name="l00172"></a>00172         <span class="keywordflow">case</span> CONVERGENCE:
+<a name="l00173"></a>00173           {
+<a name="l00174"></a>00174             <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
+<a name="l00175"></a>00175               gamma = p.AltConvergence(),
+<a name="l00176"></a>00176               k = p.AltScale();
+<a name="l00177"></a>00177             os =
+<a name="l00178"></a>00178               Utility::str&lt;real&gt;(gamma, std::max(-5,std::min(8,prec))+5)
+<a name="l00179"></a>00179               + <span class="stringliteral">&quot; &quot;</span> +
+<a name="l00180"></a>00180               Utility::str&lt;real&gt;(k, std::max(-5,std::min(8,prec))+7);
+<a name="l00181"></a>00181           }
+<a name="l00182"></a>00182         }
+<a name="l00183"></a>00183       }
+<a name="l00184"></a>00184       <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {
+<a name="l00185"></a>00185         <span class="comment">// Write error message to cout so output lines match input lines</span>
+<a name="l00186"></a>00186         os = std::string(<span class="stringliteral">&quot;ERROR: &quot;</span>) + e.what();
+<a name="l00187"></a>00187         retval = 1;
+<a name="l00188"></a>00188       }
+<a name="l00189"></a>00189       *output &lt;&lt; os &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+<a name="l00190"></a>00190     }
+<a name="l00191"></a>00191     <span class="keywordflow">return</span> retval;
+<a name="l00192"></a>00192   }
+<a name="l00193"></a>00193   <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; e) {
+<a name="l00194"></a>00194     std::cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+<a name="l00195"></a>00195     <span class="keywordflow">return</span> 1;
+<a name="l00196"></a>00196   }
+<a name="l00197"></a>00197   <span class="keywordflow">catch</span> (...) {
+<a name="l00198"></a>00198     std::cerr &lt;&lt; <span class="stringliteral">&quot;Caught unknown exception\n&quot;</span>;
+<a name="l00199"></a>00199     <span class="keywordflow">return</span> 1;
+<a name="l00200"></a>00200   }
+<a name="l00201"></a>00201 }
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

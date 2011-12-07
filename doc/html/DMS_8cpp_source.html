@@ -60,7 +60,7 @@
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
 <a name="l00013"></a>00013 
-<a name="l00014"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00014</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: d95c4a7b4bc289ce5dc1baef3fda818b89ac14ce $&quot;</span>
+<a name="l00014"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00014</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: 305c71f5be8c0adce9f70fe7d2f16b38dc14fb7d $&quot;</span>
 <a name="l00015"></a>00015 <span class="preprocessor"></span>
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">GEOGRAPHICLIB_DMS_CPP</a>)
 <a name="l00017"></a>00017 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8hpp.html#a844e4c8afc70c59c842f4553ce40b9c6">GEOGRAPHICLIB_DMS_HPP</a>)
@@ -278,7 +278,7 @@
 <a name="l00229"></a>00229       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + Utility::str(lat1)
 <a name="l00230"></a>00230                           + <span class="stringliteral">&quot;d not in [-90d, 90d]&quot;</span>);
 <a name="l00231"></a>00231     <span class="keywordflow">if</span> (lon1 &lt; -180 || lon1 &gt; 360)
-<a name="l00232"></a>00232       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Latitude &quot;</span> + Utility::str(lon1)
+<a name="l00232"></a>00232       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Longitude &quot;</span> + Utility::str(lon1)
 <a name="l00233"></a>00233                           + <span class="stringliteral">&quot;d not in [-180d, 360d]&quot;</span>);
 <a name="l00234"></a>00234     <span class="keywordflow">if</span> (lon1 &gt;= 180)
 <a name="l00235"></a>00235       lon1 -= 360;
@@ -382,7 +382,7 @@
 <a name="l00333"></a>00333 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

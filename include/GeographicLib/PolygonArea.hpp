@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLYGONAREA_HPP)
-#define GEOGRAPHICLIB_POLYGONAREA_HPP "$Id: 705d561a35fc61675a77d0d54d938c7690763bcf $"
+#define GEOGRAPHICLIB_POLYGONAREA_HPP \
+  "$Id: c6b922a70d4f5ea75580f4e2746a2148b288a03e $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>

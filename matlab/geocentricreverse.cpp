@@ -9,11 +9,13 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic geocentricreverse.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+//    -lGeographic geocentricreverse.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic geocentricreverse.cpp
+// mex -I../include -L../windows/Release
+//    -lGeographic geocentricreverse.cpp
 
-// $Id: e07cf8bd723b1549b92102586969cd612f42056f $
+// $Id: 9ae273ec91d65570bc2839b153f047ecfcf8c91f $
 
 #include <GeographicLib/Geocentric.hpp>
 #include <mex.h>

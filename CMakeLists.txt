@@ -1,14 +1,14 @@
-# $Id: 0bb0d5a17aea089545a55781a64a81af2c99934e $
+# $Id: b189a6833e6d47cf6112faa04b05c222ba957b50 $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 15)
+set (GeographicLib_VERSION_MINOR 16)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.1.0)
+set (LIBVERSIONFULL 9.2.0)
 
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
@@ -18,23 +18,13 @@ endif (WIN32)
 option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
 
 if (WIN32)
-  set (GEOGRAPHICLIB_GEOID_PATH
-    "C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids"
-    CACHE STRING "Location for geoid data")
+  set (GEOGRAPHICLIB_DATA
+    "C:/Documents and Settings/All Users/Application Data/GeographicLib"
+    CACHE PATH "Location for data for GeographicLib")
 else (WIN32)
-  set (GEOGRAPHICLIB_GEOID_PATH
-    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/geoids"
-    CACHE STRING "Location for geoid data")
-endif (WIN32)
-
-if (WIN32)
-  set (GEOGRAPHICLIB_MAGNETIC_PATH
-    "C:/Documents and Settings/All Users/Application Data/GeographicLib/magnetic"
-    CACHE STRING "Location for magnetic models")
-else (WIN32)
-  set (GEOGRAPHICLIB_MAGNETIC_PATH
-    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib/magnetic"
-    CACHE STRING "Location for magnetic models")
+  set (GEOGRAPHICLIB_DATA
+    "${CMAKE_INSTALL_PREFIX}/share/GeographicLib"
+    CACHE PATH "Location for data for GeographicLib")
 endif (WIN32)
 
 set (CMAKE_DEBUG_POSTFIX _d)
@@ -89,7 +79,9 @@ if (NOT WIN32)
 endif (NOT WIN32)
 
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
-  GeoidEval MagneticField Planimeter TransverseMercatorProj)
+  GeoidEval Gravity MagneticField Planimeter TransverseMercatorProj)
+set (SCRIPTS
+  geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
 
 include_directories ("${PROJECT_BINARY_DIR}/include")
 include_directories (include)
@@ -163,8 +155,11 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/release-notes/"
   "${PROJECT_SOURCE_DIR}/(geoids-distrib|geoids-installer)/"
   "${PROJECT_SOURCE_DIR}/(magnetic-distrib|magnetic-installer)/"
+  "${PROJECT_SOURCE_DIR}/(gravity-distrib|gravity-installer)/"
+  "${PROJECT_SOURCE_DIR}/(magnetic|gravity)/"
   "${PROJECT_SOURCE_DIR}/(distrib|cgi-bin|scratch|srcL|workspace)/"
   "${PROJECT_SOURCE_DIR}/(tests|testdata)/"
+  "${PROJECT_SOURCE_DIR}/python/(MANIFEST\$|build/)"
   "${PROJECT_SOURCE_DIR}/(geodesic.*|makefile-admin|install_manifest.txt)"
   "Makefile\$"
   "Config.h\$"
@@ -189,6 +184,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "lib.*\\\\.so"
   "tools/[A-Za-z]+\$"
   "tools/geographiclib-get-geoids\$"
+  "tools/geographiclib-get-magnetic\$"
+  "tools/geographiclib-get-gravity\$"
   "tools/.*\\\\.usage\$"
   "scripts/geographiclib.js\$"
   "/(fix-permissions|autogen|biblio|js-compress)\\\\.sh"

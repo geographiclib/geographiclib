@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 5b0349ca22161a369be4e1630b55aef3b034484b $
+# $Id: c2f89d8f5caed6d1f3f0a0752b24be4970f57caa $
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -Wall -Wextra
 
@@ -21,11 +21,14 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		GeodesicLine.cpp \
 		Geoid.cpp \
 		Gnomonic.cpp \
+		GravityCircle.cpp \
+		GravityModel.cpp \
 		LambertConformalConic.cpp \
 		LocalCartesian.cpp \
 		MGRS.cpp \
 		MagneticCircle.cpp \
 		MagneticModel.cpp \
+		NormalGravity.cpp \
 		OSGB.cpp \
 		PolarStereographic.cpp \
 		PolygonArea.cpp \
@@ -33,6 +36,7 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		TransverseMercator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
+		Utility.cpp \
 		../include/GeographicLib/Accumulator.hpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -47,12 +51,15 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 		../include/GeographicLib/GeodesicLine.hpp \
 		../include/GeographicLib/Geoid.hpp \
 		../include/GeographicLib/Gnomonic.hpp \
+		../include/GeographicLib/GravityCircle.hpp \
+		../include/GeographicLib/GravityModel.hpp \
 		../include/GeographicLib/LambertConformalConic.hpp \
 		../include/GeographicLib/LocalCartesian.hpp \
 		../include/GeographicLib/MGRS.hpp \
 		../include/GeographicLib/MagneticCircle.hpp \
 		../include/GeographicLib/MagneticModel.hpp \
 		../include/GeographicLib/Math.hpp \
+		../include/GeographicLib/NormalGravity.hpp \
 		../include/GeographicLib/OSGB.hpp \
 		../include/GeographicLib/PolarStereographic.hpp \
 		../include/GeographicLib/PolygonArea.hpp \
@@ -73,10 +80,8 @@ libGeographic_la_SOURCES = AlbersEqualArea.cpp \
 
 $(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
 
-geoids_dir=$(datadir)/GeographicLib/geoids
-magnetic_dir=$(datadir)/GeographicLib/magnetic
+geographiclib_data=$(datadir)/GeographicLib
 
-DEFS=-DGEOID_DEFAULT_PATH=\"$(geoids_dir)\" \
-	-DMAGNETIC_DEFAULT_PATH=\"$(magnetic_dir)\" @DEFS@
+DEFS=-DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 
 EXTRA_DIST = Makefile.mk CMakeLists.txt Geographic.pro

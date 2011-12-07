@@ -1,4 +1,4 @@
-=for comment $Id: 248f693fda581ab7d8c6fbefc2cfebb5b4aec9ef $
+=for comment $Id: 7728035d533dbf4d09a47aa8554f234c84e70721 $
 
 =head1 NAME
 
@@ -98,7 +98,7 @@ file name of "-" stands for standard output.
 =head1 EXTENDED DOMAIN
 
 The exact transverse Mercator projection has a I<branch point> on the
-equator at longitudes (relative to I<lon0>) of +/- (1 - I<e>) 90, whre
+equator at longitudes (relative to I<lon0>) of +/- (1 - I<e>) 90, where
 I<e> is the eccentricity of the ellipsoid.  The standard convention for
 handling this branch point is to map positive (negative) latitudes into
 positive (negative) northings I<y>; i.e., a branch cut is placed on the

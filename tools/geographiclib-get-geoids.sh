@@ -8,10 +8,9 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: 25348a1a3895b31af1a9816bae6d22c07273e981 $
+# $Id: 292585f16e1696fce69b211553723e5c0d03ac4b $
 
-GEOID_DEFAULT_PATH="@GEOID_DEFAULT_PATH@"
-DEFAULTDIR=`dirname "$GEOID_DEFAULT_PATH"`
+DEFAULTDIR="@DEFAULTDIR@"
 usage() {
     cat <<EOF
 usage: $0 [-p parentdir] [-d] [-h] geoid...

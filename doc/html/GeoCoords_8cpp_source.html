@@ -63,150 +63,151 @@
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="MGRS_8hpp.html" title="Header for GeographicLib::MGRS class.">GeographicLib/MGRS.hpp</a>&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&gt;</span>
 <a name="l00016"></a>00016 
-<a name="l00017"></a><a class="code" href="GeoCoords_8cpp.html#a8ca6643c26cc3909b0935409c1dbc403">00017</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCOORDS_CPP &quot;$Id: 709e3c7648a6c701ecbba0b5b0709fbc85715fa6 $&quot;</span>
-<a name="l00018"></a>00018 <span class="preprocessor"></span>
-<a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeoCoords_8cpp.html#a8ca6643c26cc3909b0935409c1dbc403">GEOGRAPHICLIB_GEOCOORDS_CPP</a>)
-<a name="l00020"></a>00020 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeoCoords_8hpp.html#a20841ff1ac217be34150ce32c5ad4bb8">GEOGRAPHICLIB_GEOCOORDS_HPP</a>)
-<a name="l00021"></a>00021 
-<a name="l00022"></a>00022 namespace GeographicLib {
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024   <span class="keyword">using namespace </span>std;
-<a name="l00025"></a>00025 
-<a name="l00026"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a4a1e0a65a8a344dfe519fcbf25078e37">00026</a>   <span class="keywordtype">void</span> GeoCoords::Reset(<span class="keyword">const</span> std::string&amp; s, <span class="keywordtype">bool</span> centerp, <span class="keywordtype">bool</span> swaplatlong) {
-<a name="l00027"></a>00027     vector&lt;string&gt; sa;
-<a name="l00028"></a>00028     <span class="keyword">const</span> <span class="keywordtype">char</span>* spaces = <span class="stringliteral">&quot; \t\n\v\f\r,&quot;</span>; <span class="comment">// Include comma as a space</span>
-<a name="l00029"></a>00029     <span class="keywordflow">for</span> (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
-<a name="l00030"></a>00030       pos1 = s.find_first_not_of(spaces, pos0);
-<a name="l00031"></a>00031       <span class="keywordflow">if</span> (pos1 == string::npos)
-<a name="l00032"></a>00032         <span class="keywordflow">break</span>;
-<a name="l00033"></a>00033       pos0 = s.find_first_of(spaces, pos1);
-<a name="l00034"></a>00034       sa.push_back(s.substr(pos1, pos0 == string::npos ? pos0 : pos0 - pos1));
-<a name="l00035"></a>00035     }
-<a name="l00036"></a>00036     <span class="keywordflow">if</span> (sa.size() == 1) {
-<a name="l00037"></a>00037       <span class="keywordtype">int</span> prec;
-<a name="l00038"></a>00038       MGRS::Reverse(sa[0], _zone, _northp, _easting, _northing, prec, centerp);
-<a name="l00039"></a>00039       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
-<a name="l00040"></a>00040                       _lat, _long, _gamma, _k);
-<a name="l00041"></a>00041     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sa.size() == 2) {
-<a name="l00042"></a>00042       DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, swaplatlong);
-<a name="l00043"></a>00043       UTMUPS::Forward( _lat, _long,
-<a name="l00044"></a>00044                        _zone, _northp, _easting, _northing, _gamma, _k);
-<a name="l00045"></a>00045     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sa.size() == 3) {
-<a name="l00046"></a>00046       <span class="keywordtype">unsigned</span> zoneind, coordind;
-<a name="l00047"></a>00047       <span class="keywordflow">if</span> (sa[0].size() &gt; 0 &amp;&amp; isalpha(sa[0][sa[0].size() - 1])) {
-<a name="l00048"></a>00048         zoneind = 0;
-<a name="l00049"></a>00049         coordind = 1;
-<a name="l00050"></a>00050       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sa[2].size() &gt; 0 &amp;&amp; isalpha(sa[2][sa[2].size() - 1])) {
-<a name="l00051"></a>00051         zoneind = 2;
-<a name="l00052"></a>00052         coordind = 0;
-<a name="l00053"></a>00053       } <span class="keywordflow">else</span>
-<a name="l00054"></a>00054         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Neither &quot;</span> + sa[0] + <span class="stringliteral">&quot; nor &quot;</span> + sa[2]
-<a name="l00055"></a>00055                             + <span class="stringliteral">&quot; of the form UTM/UPS Zone + Hemisphere&quot;</span>
-<a name="l00056"></a>00056                             + <span class="stringliteral">&quot; (ex: 38N, 09S, N)&quot;</span>);
-<a name="l00057"></a>00057       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
-<a name="l00058"></a>00058       <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; 2; ++i)
-<a name="l00059"></a>00059         (i ? _northing : _easting) = DMS::Decode(sa[coordind + i]);
-<a name="l00060"></a>00060       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
-<a name="l00061"></a>00061                       _lat, _long, _gamma, _k);
-<a name="l00062"></a>00062       FixHemisphere();
-<a name="l00063"></a>00063     } <span class="keywordflow">else</span>
-<a name="l00064"></a>00064       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Coordinate requires 1, 2, or 3 elements&quot;</span>);
-<a name="l00065"></a>00065     CopyToAlt();
-<a name="l00066"></a>00066   }
-<a name="l00067"></a>00067 
+<a name="l00017"></a><a class="code" href="GeoCoords_8cpp.html#a8ca6643c26cc3909b0935409c1dbc403">00017</a> <span class="preprocessor">#define GEOGRAPHICLIB_GEOCOORDS_CPP \</span>
+<a name="l00018"></a>00018 <span class="preprocessor">  &quot;$Id: c54c9573960066921839ad1a80350d4df86020d5 $&quot;</span>
+<a name="l00019"></a>00019 <span class="preprocessor"></span>
+<a name="l00020"></a>00020 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeoCoords_8cpp.html#a8ca6643c26cc3909b0935409c1dbc403">GEOGRAPHICLIB_GEOCOORDS_CPP</a>)
+<a name="l00021"></a>00021 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GeoCoords_8hpp.html#a20841ff1ac217be34150ce32c5ad4bb8">GEOGRAPHICLIB_GEOCOORDS_HPP</a>)
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023 namespace GeographicLib {
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025   <span class="keyword">using namespace </span>std;
+<a name="l00026"></a>00026 
+<a name="l00027"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a4a1e0a65a8a344dfe519fcbf25078e37">00027</a>   <span class="keywordtype">void</span> GeoCoords::Reset(<span class="keyword">const</span> std::string&amp; s, <span class="keywordtype">bool</span> centerp, <span class="keywordtype">bool</span> swaplatlong) {
+<a name="l00028"></a>00028     vector&lt;string&gt; sa;
+<a name="l00029"></a>00029     <span class="keyword">const</span> <span class="keywordtype">char</span>* spaces = <span class="stringliteral">&quot; \t\n\v\f\r,&quot;</span>; <span class="comment">// Include comma as a space</span>
+<a name="l00030"></a>00030     <span class="keywordflow">for</span> (string::size_type pos0 = 0, pos1; pos0 != string::npos;) {
+<a name="l00031"></a>00031       pos1 = s.find_first_not_of(spaces, pos0);
+<a name="l00032"></a>00032       <span class="keywordflow">if</span> (pos1 == string::npos)
+<a name="l00033"></a>00033         <span class="keywordflow">break</span>;
+<a name="l00034"></a>00034       pos0 = s.find_first_of(spaces, pos1);
+<a name="l00035"></a>00035       sa.push_back(s.substr(pos1, pos0 == string::npos ? pos0 : pos0 - pos1));
+<a name="l00036"></a>00036     }
+<a name="l00037"></a>00037     <span class="keywordflow">if</span> (sa.size() == 1) {
+<a name="l00038"></a>00038       <span class="keywordtype">int</span> prec;
+<a name="l00039"></a>00039       MGRS::Reverse(sa[0], _zone, _northp, _easting, _northing, prec, centerp);
+<a name="l00040"></a>00040       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
+<a name="l00041"></a>00041                       _lat, _long, _gamma, _k);
+<a name="l00042"></a>00042     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sa.size() == 2) {
+<a name="l00043"></a>00043       DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, swaplatlong);
+<a name="l00044"></a>00044       UTMUPS::Forward( _lat, _long,
+<a name="l00045"></a>00045                        _zone, _northp, _easting, _northing, _gamma, _k);
+<a name="l00046"></a>00046     } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sa.size() == 3) {
+<a name="l00047"></a>00047       <span class="keywordtype">unsigned</span> zoneind, coordind;
+<a name="l00048"></a>00048       <span class="keywordflow">if</span> (sa[0].size() &gt; 0 &amp;&amp; isalpha(sa[0][sa[0].size() - 1])) {
+<a name="l00049"></a>00049         zoneind = 0;
+<a name="l00050"></a>00050         coordind = 1;
+<a name="l00051"></a>00051       } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (sa[2].size() &gt; 0 &amp;&amp; isalpha(sa[2][sa[2].size() - 1])) {
+<a name="l00052"></a>00052         zoneind = 2;
+<a name="l00053"></a>00053         coordind = 0;
+<a name="l00054"></a>00054       } <span class="keywordflow">else</span>
+<a name="l00055"></a>00055         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Neither &quot;</span> + sa[0] + <span class="stringliteral">&quot; nor &quot;</span> + sa[2]
+<a name="l00056"></a>00056                             + <span class="stringliteral">&quot; of the form UTM/UPS Zone + Hemisphere&quot;</span>
+<a name="l00057"></a>00057                             + <span class="stringliteral">&quot; (ex: 38N, 09S, N)&quot;</span>);
+<a name="l00058"></a>00058       UTMUPS::DecodeZone(sa[zoneind], _zone, _northp);
+<a name="l00059"></a>00059       <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; 2; ++i)
+<a name="l00060"></a>00060         (i ? _northing : _easting) = DMS::Decode(sa[coordind + i]);
+<a name="l00061"></a>00061       UTMUPS::Reverse(_zone, _northp, _easting, _northing,
+<a name="l00062"></a>00062                       _lat, _long, _gamma, _k);
+<a name="l00063"></a>00063       FixHemisphere();
+<a name="l00064"></a>00064     } <span class="keywordflow">else</span>
+<a name="l00065"></a>00065       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Coordinate requires 1, 2, or 3 elements&quot;</span>);
+<a name="l00066"></a>00066     CopyToAlt();
+<a name="l00067"></a>00067   }
 <a name="l00068"></a>00068 
-<a name="l00069"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a79af2d72afdfeede78f2ba65b809d6b3">00069</a>   <span class="keywordtype">string</span> GeoCoords::GeoRepresentation(<span class="keywordtype">int</span> prec, <span class="keywordtype">bool</span> swaplatlong)<span class="keyword"> const </span>{
-<a name="l00070"></a>00070     prec = max(0, min(9, prec) + 5);
-<a name="l00071"></a>00071     ostringstream os;
-<a name="l00072"></a>00072     os &lt;&lt; fixed &lt;&lt; setprecision(prec);
-<a name="l00073"></a>00073     real a = swaplatlong ? _long : _lat;
-<a name="l00074"></a>00074     real b = swaplatlong ? _lat : _long;
-<a name="l00075"></a>00075     <span class="keywordflow">if</span> (!Math::isnan(a))
-<a name="l00076"></a>00076       os &lt;&lt; a;
-<a name="l00077"></a>00077     <span class="keywordflow">else</span>
-<a name="l00078"></a>00078       os &lt;&lt; <span class="stringliteral">&quot;nan&quot;</span>;
-<a name="l00079"></a>00079     os &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
-<a name="l00080"></a>00080     <span class="keywordflow">if</span> (!Math::isnan(b))
-<a name="l00081"></a>00081       os &lt;&lt; b;
-<a name="l00082"></a>00082     <span class="keywordflow">else</span>
-<a name="l00083"></a>00083       os &lt;&lt; <span class="stringliteral">&quot;nan&quot;</span>;
-<a name="l00084"></a>00084     <span class="keywordflow">return</span> os.str();
-<a name="l00085"></a>00085   }
-<a name="l00086"></a>00086 
-<a name="l00087"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#ab37746606876eb77335268054589390a">00087</a>   <span class="keywordtype">string</span> GeoCoords::DMSRepresentation(<span class="keywordtype">int</span> prec, <span class="keywordtype">bool</span> swaplatlong)<span class="keyword"> const </span>{
-<a name="l00088"></a>00088     prec = max(0, min(10, prec) + 5);
-<a name="l00089"></a>00089     <span class="keywordflow">return</span> DMS::Encode(swaplatlong ? _long : _lat, <span class="keywordtype">unsigned</span>(prec),
-<a name="l00090"></a>00090                        swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE) +
-<a name="l00091"></a>00091       <span class="stringliteral">&quot; &quot;</span> + DMS::Encode(swaplatlong ? _lat : _long, <span class="keywordtype">unsigned</span>(prec),
-<a name="l00092"></a>00092                         swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE);
-<a name="l00093"></a>00093   }
-<a name="l00094"></a>00094 
-<a name="l00095"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a36594aaa4f293b0ddf00b1c78bb04595">00095</a>   <span class="keywordtype">string</span> GeoCoords::MGRSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
-<a name="l00096"></a>00096     <span class="comment">// Max precision is um</span>
-<a name="l00097"></a>00097     prec = max(0, min(6, prec) + 5);
-<a name="l00098"></a>00098     <span class="keywordtype">string</span> mgrs;
-<a name="l00099"></a>00099     MGRS::Forward(_zone, _northp, _easting, _northing, _lat, prec, mgrs);
-<a name="l00100"></a>00100     <span class="keywordflow">return</span> mgrs;
-<a name="l00101"></a>00101   }
-<a name="l00102"></a>00102 
-<a name="l00103"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#ad602893cd4a81ccc511daff76b411413">00103</a>   <span class="keywordtype">string</span> GeoCoords::AltMGRSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
-<a name="l00104"></a>00104     <span class="comment">// Max precision is um</span>
-<a name="l00105"></a>00105     prec = max(0, min(6, prec) + 5);
-<a name="l00106"></a>00106     <span class="keywordtype">string</span> mgrs;
-<a name="l00107"></a>00107     MGRS::Forward(_alt_zone, _northp, _alt_easting, _alt_northing, _lat, prec,
-<a name="l00108"></a>00108                   mgrs);
-<a name="l00109"></a>00109     <span class="keywordflow">return</span> mgrs;
-<a name="l00110"></a>00110   }
-<a name="l00111"></a>00111 
-<a name="l00112"></a>00112   <span class="keywordtype">void</span> GeoCoords::UTMUPSString(<span class="keywordtype">int</span> zone, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> easting, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> northing, <span class="keywordtype">int</span> prec,
-<a name="l00113"></a>00113                                std::string&amp; utm)<span class="keyword"> const </span>{
-<a name="l00114"></a>00114     ostringstream os;
-<a name="l00115"></a>00115     prec = max(-5, min(9, prec));
-<a name="l00116"></a>00116     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> scale = prec &lt; 0 ? pow(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(10), -prec) : <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1);
-<a name="l00117"></a>00117     os &lt;&lt; UTMUPS::EncodeZone(zone, _northp) &lt;&lt; fixed &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>);
-<a name="l00118"></a>00118     <span class="keywordflow">if</span> (Math::isfinite(easting)) {
-<a name="l00119"></a>00119       os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; setprecision(max(0, prec)) &lt;&lt; easting / scale;
-<a name="l00120"></a>00120       <span class="keywordflow">if</span> (prec &lt; 0 &amp;&amp; abs(easting / scale) &gt; <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))
-<a name="l00121"></a>00121         os &lt;&lt; setw(-prec) &lt;&lt; 0;
-<a name="l00122"></a>00122     } <span class="keywordflow">else</span>
-<a name="l00123"></a>00123       os &lt;&lt; <span class="stringliteral">&quot; nan&quot;</span>;
-<a name="l00124"></a>00124     <span class="keywordflow">if</span> (Math::isfinite(northing)) {
-<a name="l00125"></a>00125       os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; setprecision(max(0, prec)) &lt;&lt; northing / scale;
-<a name="l00126"></a>00126       <span class="keywordflow">if</span> (prec &lt; 0 &amp;&amp; abs(northing / scale) &gt; <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))
-<a name="l00127"></a>00127         os &lt;&lt; setw(-prec) &lt;&lt; 0;
-<a name="l00128"></a>00128     } <span class="keywordflow">else</span>
-<a name="l00129"></a>00129       os &lt;&lt; <span class="stringliteral">&quot; nan&quot;</span>;
-<a name="l00130"></a>00130     utm = os.str();
-<a name="l00131"></a>00131   }
-<a name="l00132"></a>00132 
-<a name="l00133"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a056efc42fe4c653aad40be5d5b865ea3">00133</a>   <span class="keywordtype">string</span> GeoCoords::UTMUPSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
-<a name="l00134"></a>00134     <span class="keywordtype">string</span> utm;
-<a name="l00135"></a>00135     UTMUPSString(_zone, _easting, _northing, prec, utm);
-<a name="l00136"></a>00136     <span class="keywordflow">return</span> utm;
-<a name="l00137"></a>00137   }
-<a name="l00138"></a>00138 
-<a name="l00139"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a020732ccba257d7f5248692afd318b93">00139</a>   <span class="keywordtype">string</span> GeoCoords::AltUTMUPSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
-<a name="l00140"></a>00140     <span class="keywordtype">string</span> utm;
-<a name="l00141"></a>00141     UTMUPSString(_alt_zone, _alt_easting, _alt_northing, prec, utm);
-<a name="l00142"></a>00142     <span class="keywordflow">return</span> utm;
-<a name="l00143"></a>00143   }
-<a name="l00144"></a>00144 
-<a name="l00145"></a>00145   <span class="keywordtype">void</span> GeoCoords::FixHemisphere() {
-<a name="l00146"></a>00146     <span class="keywordflow">if</span> (_lat == 0 || (_northp &amp;&amp; _lat &gt;= 0) || (!_northp &amp;&amp; _lat &lt; 0) ||
-<a name="l00147"></a>00147         Math::isnan(_lat))
-<a name="l00148"></a>00148       <span class="comment">// Allow either hemisphere for equator</span>
-<a name="l00149"></a>00149       <span class="keywordflow">return</span>;
-<a name="l00150"></a>00150     <span class="keywordflow">if</span> (_zone != UTMUPS::UPS) {
-<a name="l00151"></a>00151       _northing += (_northp ? 1 : -1) * UTMUPS::UTMShift();
-<a name="l00152"></a>00152       _northp = !_northp;
-<a name="l00153"></a>00153     } <span class="keywordflow">else</span>
-<a name="l00154"></a>00154       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Hemisphere mixup&quot;</span>);
-<a name="l00155"></a>00155   }
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00069"></a>00069 
+<a name="l00070"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a79af2d72afdfeede78f2ba65b809d6b3">00070</a>   <span class="keywordtype">string</span> GeoCoords::GeoRepresentation(<span class="keywordtype">int</span> prec, <span class="keywordtype">bool</span> swaplatlong)<span class="keyword"> const </span>{
+<a name="l00071"></a>00071     prec = max(0, min(9, prec) + 5);
+<a name="l00072"></a>00072     ostringstream os;
+<a name="l00073"></a>00073     os &lt;&lt; fixed &lt;&lt; setprecision(prec);
+<a name="l00074"></a>00074     real a = swaplatlong ? _long : _lat;
+<a name="l00075"></a>00075     real b = swaplatlong ? _lat : _long;
+<a name="l00076"></a>00076     <span class="keywordflow">if</span> (!Math::isnan(a))
+<a name="l00077"></a>00077       os &lt;&lt; a;
+<a name="l00078"></a>00078     <span class="keywordflow">else</span>
+<a name="l00079"></a>00079       os &lt;&lt; <span class="stringliteral">&quot;nan&quot;</span>;
+<a name="l00080"></a>00080     os &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;
+<a name="l00081"></a>00081     <span class="keywordflow">if</span> (!Math::isnan(b))
+<a name="l00082"></a>00082       os &lt;&lt; b;
+<a name="l00083"></a>00083     <span class="keywordflow">else</span>
+<a name="l00084"></a>00084       os &lt;&lt; <span class="stringliteral">&quot;nan&quot;</span>;
+<a name="l00085"></a>00085     <span class="keywordflow">return</span> os.str();
+<a name="l00086"></a>00086   }
+<a name="l00087"></a>00087 
+<a name="l00088"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#ab37746606876eb77335268054589390a">00088</a>   <span class="keywordtype">string</span> GeoCoords::DMSRepresentation(<span class="keywordtype">int</span> prec, <span class="keywordtype">bool</span> swaplatlong)<span class="keyword"> const </span>{
+<a name="l00089"></a>00089     prec = max(0, min(10, prec) + 5);
+<a name="l00090"></a>00090     <span class="keywordflow">return</span> DMS::Encode(swaplatlong ? _long : _lat, <span class="keywordtype">unsigned</span>(prec),
+<a name="l00091"></a>00091                        swaplatlong ? DMS::LONGITUDE : DMS::LATITUDE) +
+<a name="l00092"></a>00092       <span class="stringliteral">&quot; &quot;</span> + DMS::Encode(swaplatlong ? _lat : _long, <span class="keywordtype">unsigned</span>(prec),
+<a name="l00093"></a>00093                         swaplatlong ? DMS::LATITUDE : DMS::LONGITUDE);
+<a name="l00094"></a>00094   }
+<a name="l00095"></a>00095 
+<a name="l00096"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a36594aaa4f293b0ddf00b1c78bb04595">00096</a>   <span class="keywordtype">string</span> GeoCoords::MGRSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
+<a name="l00097"></a>00097     <span class="comment">// Max precision is um</span>
+<a name="l00098"></a>00098     prec = max(0, min(6, prec) + 5);
+<a name="l00099"></a>00099     <span class="keywordtype">string</span> mgrs;
+<a name="l00100"></a>00100     MGRS::Forward(_zone, _northp, _easting, _northing, _lat, prec, mgrs);
+<a name="l00101"></a>00101     <span class="keywordflow">return</span> mgrs;
+<a name="l00102"></a>00102   }
+<a name="l00103"></a>00103 
+<a name="l00104"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#ad602893cd4a81ccc511daff76b411413">00104</a>   <span class="keywordtype">string</span> GeoCoords::AltMGRSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
+<a name="l00105"></a>00105     <span class="comment">// Max precision is um</span>
+<a name="l00106"></a>00106     prec = max(0, min(6, prec) + 5);
+<a name="l00107"></a>00107     <span class="keywordtype">string</span> mgrs;
+<a name="l00108"></a>00108     MGRS::Forward(_alt_zone, _northp, _alt_easting, _alt_northing, _lat, prec,
+<a name="l00109"></a>00109                   mgrs);
+<a name="l00110"></a>00110     <span class="keywordflow">return</span> mgrs;
+<a name="l00111"></a>00111   }
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113   <span class="keywordtype">void</span> GeoCoords::UTMUPSString(<span class="keywordtype">int</span> zone, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> easting, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> northing, <span class="keywordtype">int</span> prec,
+<a name="l00114"></a>00114                                std::string&amp; utm)<span class="keyword"> const </span>{
+<a name="l00115"></a>00115     ostringstream os;
+<a name="l00116"></a>00116     prec = max(-5, min(9, prec));
+<a name="l00117"></a>00117     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> scale = prec &lt; 0 ? pow(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(10), -prec) : <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1);
+<a name="l00118"></a>00118     os &lt;&lt; UTMUPS::EncodeZone(zone, _northp) &lt;&lt; fixed &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>);
+<a name="l00119"></a>00119     <span class="keywordflow">if</span> (Math::isfinite(easting)) {
+<a name="l00120"></a>00120       os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; setprecision(max(0, prec)) &lt;&lt; easting / scale;
+<a name="l00121"></a>00121       <span class="keywordflow">if</span> (prec &lt; 0 &amp;&amp; abs(easting / scale) &gt; <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))
+<a name="l00122"></a>00122         os &lt;&lt; setw(-prec) &lt;&lt; 0;
+<a name="l00123"></a>00123     } <span class="keywordflow">else</span>
+<a name="l00124"></a>00124       os &lt;&lt; <span class="stringliteral">&quot; nan&quot;</span>;
+<a name="l00125"></a>00125     <span class="keywordflow">if</span> (Math::isfinite(northing)) {
+<a name="l00126"></a>00126       os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; setprecision(max(0, prec)) &lt;&lt; northing / scale;
+<a name="l00127"></a>00127       <span class="keywordflow">if</span> (prec &lt; 0 &amp;&amp; abs(northing / scale) &gt; <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))
+<a name="l00128"></a>00128         os &lt;&lt; setw(-prec) &lt;&lt; 0;
+<a name="l00129"></a>00129     } <span class="keywordflow">else</span>
+<a name="l00130"></a>00130       os &lt;&lt; <span class="stringliteral">&quot; nan&quot;</span>;
+<a name="l00131"></a>00131     utm = os.str();
+<a name="l00132"></a>00132   }
+<a name="l00133"></a>00133 
+<a name="l00134"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a056efc42fe4c653aad40be5d5b865ea3">00134</a>   <span class="keywordtype">string</span> GeoCoords::UTMUPSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
+<a name="l00135"></a>00135     <span class="keywordtype">string</span> utm;
+<a name="l00136"></a>00136     UTMUPSString(_zone, _easting, _northing, prec, utm);
+<a name="l00137"></a>00137     <span class="keywordflow">return</span> utm;
+<a name="l00138"></a>00138   }
+<a name="l00139"></a>00139 
+<a name="l00140"></a><a class="code" href="classGeographicLib_1_1GeoCoords.html#a020732ccba257d7f5248692afd318b93">00140</a>   <span class="keywordtype">string</span> GeoCoords::AltUTMUPSRepresentation(<span class="keywordtype">int</span> prec)<span class="keyword"> const </span>{
+<a name="l00141"></a>00141     <span class="keywordtype">string</span> utm;
+<a name="l00142"></a>00142     UTMUPSString(_alt_zone, _alt_easting, _alt_northing, prec, utm);
+<a name="l00143"></a>00143     <span class="keywordflow">return</span> utm;
+<a name="l00144"></a>00144   }
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146   <span class="keywordtype">void</span> GeoCoords::FixHemisphere() {
+<a name="l00147"></a>00147     <span class="keywordflow">if</span> (_lat == 0 || (_northp &amp;&amp; _lat &gt;= 0) || (!_northp &amp;&amp; _lat &lt; 0) ||
+<a name="l00148"></a>00148         Math::isnan(_lat))
+<a name="l00149"></a>00149       <span class="comment">// Allow either hemisphere for equator</span>
+<a name="l00150"></a>00150       <span class="keywordflow">return</span>;
+<a name="l00151"></a>00151     <span class="keywordflow">if</span> (_zone != UTMUPS::UPS) {
+<a name="l00152"></a>00152       _northing += (_northp ? 1 : -1) * UTMUPS::UTMShift();
+<a name="l00153"></a>00153       _northp = !_northp;
+<a name="l00154"></a>00154     } <span class="keywordflow">else</span>
+<a name="l00155"></a>00155       <span class="keywordflow">throw</span> GeographicErr(<span class="stringliteral">&quot;Hemisphere mixup&quot;</span>);
+<a name="l00156"></a>00156   }
+<a name="l00157"></a>00157 
+<a name="l00158"></a>00158 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

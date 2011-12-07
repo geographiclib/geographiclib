@@ -5,14 +5,139 @@
  * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
+ *
+ * The general sum is\verbatim
+ V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
+   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
+\endverbatim
+ * where <tt>t = cos(theta)</tt>, <tt>q = a/r</tt>.  In addition write <tt>u =
+ * sin(theta)</tt>.
+ *
+ * <tt>P[n,m]</tt> is a normalized associated Legendre function of degree
+ * <tt>n</tt> and order <tt>m</tt>.  Here the formulas are given for full
+ * normalized functions (usually denoted <tt>Pbar</tt>).
+ *
+ * Rewrite outer sum\verbatim
+ V(r, theta, lambda) = sum(m = 0..N) * P[m,m](t) * q^(m+1) *
+    [Sc[m] * cos(m*lambda) + Ss[m] * sin(m*lambda)]
+\endverbatim
+ * where the inner sums are\verbatim
+   Sc[m] = sum(n = m..N) q^(n-m) * C[n,m] * P[n,m](t)/P[m,m](t)
+   Ss[m] = sum(n = m..N) q^(n-m) * S[n,m] * P[n,m](t)/P[m,m](t)
+\endverbatim
+ * Evaluate sums via Clenshaw method.  The overall framework is similar to
+ * Deakin with the following changes:
+ * - Clenshaw summation is used to roll the computation of
+ *   <tt>cos(m*lambda)</tt> and <tt>sin(m*lambda)</tt> into the evaluation of
+ *   the outer sum (rather than independently computing an array of these
+ *   trigonometric terms).
+ * - Scale the coefficients to guard against overflow when <tt>N</tt> is large.
+ * .
+ * For the general framework of Clenshaw, see
+ * http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
+ *
+ * Let\verbatim
+    S = sum(k = 0..N) c[k] * F[k](x)
+    F[n+1](x) = alpha[n](x) * F[n](x) + beta[n](x) * F[n-1](x)
+\endverbatim
+ * Evaluate <tt>S</tt> with\verbatim
+    y[N+2] = y[N+1] = 0
+    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
+    S = c[0] * F[0] + y[1] * F[1] + beta[1] * F[0] * y[2]
+\endverbatim
+ * \e IF <tt>F[0](x) = 1</tt> and <tt>beta(0,x) = 0</tt>, then <tt>F[1](x) =
+ * alpha(0,x)</tt> and we can continue the recursion for <tt>y[k]</tt> until
+ * <tt>y[0]</tt>, giving\verbatim
+    S = y[0]
+\endverbatim
+ *
+ * Evaluating the inner sum\verbatim
+ l = n-m; n = l+m
+ Sc[m] = sum(l = 0..N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
+ F[l] = q^l * P[l+m,m](t)/P[m,m](t)
+\endverbatim
+ * Holmes + Featherstone, Eq. (11), gives\verbatim
+   P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * t * P[n-1,m] -
+            sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
+\endverbatim
+ * thus\verbatim
+   alpha[l] = t * q * sqrt(((2*n+1)*(2*n+3))/
+                           ((n-m+1)*(n+m+1)))
+   beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
+                            ((n-m+2)*(n+m+2)*(2*n+1)))
+\endverbatim
+ * In this case, <tt>F[0] = 1</tt> and <tt>beta[0] = 0</tt>, so the <tt>Sc[m]
+ * = y[0]</tt>.
+ *
+ * Evaluating the outer sum\verbatim
+ V = sum(m = 0..N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+   + sum(m = 0..N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+ F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]
+\endverbatim
+ * Holmes + Featherstone, Eq. (13), gives\verbatim
+   P[m,m] = u * sqrt((2*m+1)/((m>1?2:1)*m)) * P[m-1,m-1]
+\endverbatim
+ * also, we have\verbatim
+   cos((m+1)*lambda) = 2*cos(lambda)*cos(m*lambda) - cos((m-1)*lambda)
+\endverbatim
+ * thus\verbatim
+   alpha[m] = 2*cos(lambda) * sqrt((2*m+3)/(2*(m+1))) * u * q
+            =   cos(lambda) * sqrt( 2*(2*m+3)/(m+1) ) * u * q
+   beta[m+1] = -sqrt((2*m+3)*(2*m+5)/(4*(m+1)*(m+2))) * u^2 * q^2
+               * (m == 0 ? sqrt(2) : 1)
+\endverbatim
+ * Thus\verbatim
+ F[0] = q                                [or 0]
+ F[1] = cos(lambda) * sqrt(3) * u * q^2  [or sin(lambda)]
+ beta[1] = - sqrt(15/4) * u^2 * q^2
+\endverbatim
+ *
+ * Here is how the various components of the gradient are computed
+ *
+ * Differentiate wrt r\verbatim
+   d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)
+\endverbatim
+ * so multiply <tt>C[n,m]</tt> by <tt>n+1</tt> in inner sum and multiply the
+ * sum by <tt>-1/r</tt>.
+ *
+ * Differentiate wrt lambda\verbatim
+   d cos(m*lambda) = -m * sin(m*lambda)
+   d sin(m*lambda) =  m * cos(m*lambda)
+\endverbatim
+ * so multiply terms by <tt>m</tt> in outer sum and swap sine and cosine
+ * variables.
+ *
+ * Differentiate wrt theta\verbatim
+  dV/dtheta = V' = -u * dV/dt = -u * V'
+\endverbatim
+ * here <tt>'</tt> denotes differentiation wrt to <tt>theta</tt>.\verbatim
+   d/dtheta (Sc[m] * P[m,m](t)) = Sc'[m] * P[m,m](t) + Sc[m] * P'[m,m](t)
+\endverbatim
+ * Now P[m,m](t) = const * u^m, so P'[m,m](t) = m * t/u * P[m,m](t),
+ * thus\verbatim
+   d/dtheta (Sc[m] * P[m,m](t)) = (Sc'[m] + m * t/u Sc[m]) * P[m,m](t)
+\endverbatim
+ * Clenshaw recursion for <tt>Sc[m]</tt> reads\verbatim
+    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
+\endverbatim
+ * Substituting <tt>alpha[k] = const * t</tt>, <tt>alpha'[k] = -u/t *
+ * alpha[k]</tt>, <tt>beta'[k] = c'[k] = 0</tt> gives\verbatim
+    y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] - u/t * alpha[k] * y[k+1]
+\endverbatim
+ *
+ * Finally, given the derivatives of <tt>V</tt>, we can compute the components
+ * of the gradient in spherical coordinates and transform the result into
+ * cartesian coordinates.
  **********************************************************************/
 
 #include <GeographicLib/SphericalEngine.hpp>
 #include <limits>
-#include <iostream>
+#include <algorithm>
 #include <GeographicLib/CircularEngine.hpp>
+#include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_SPHERICALENGINE_CPP "$Id: 7585ac388e23afc8cdee98d48b7f75ed3d4dfdd0 $"
+#define GEOGRAPHICLIB_SPHERICALENGINE_CPP \
+  "$Id: 270fafb974f76012ae3ebc504894a8af1fcea690 $"
 
 RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_CPP)
 RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
@@ -23,131 +148,20 @@ namespace GeographicLib {
 
   const Math::real SphericalEngine::scale_ =
     pow(real(numeric_limits<real>::radix),
-        -numeric_limits<real>::max_exponent/2);
+        -3 * numeric_limits<real>::max_exponent / 5);
   const Math::real SphericalEngine::eps_ =
-    Math::sq(numeric_limits<real>::epsilon());
+    numeric_limits<real>::epsilon() * sqrt(numeric_limits<real>::epsilon());
 
-  const std::vector<Math::real> SphericalEngine::Z_(0);
+  const vector<Math::real> SphericalEngine::Z_(0);
+  vector<Math::real> SphericalEngine::root_(0);
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
   Math::real SphericalEngine::Value(const coeff c[], const real f[],
                                     real x, real y, real z, real a,
                                     real& gradx, real& grady, real& gradz)
     throw() {
-    // General sum
-    // V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
-    //   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
-    //
-    // write t = cos(theta), u = sin(theta), q = a/r.
-    //
-    // P[n,m] is the fully normalized associated Legendre function (usually
-    // denoted Pbar) of degree n and order m.
-    //
-    // Rewrite outer sum
-    // V(r, theta, lambda) = sum(m = 0..N) * P[m,m](t) * q^(m+1) *
-    //    [Sc[m] * cos(m*lambda) + Ss[m] * sin(m*lambda)]
-    // = "outer sum"
-    //
-    // where the inner sums are
-    //   Sc[m] = sum(n = m..N) q^(n-m) * C[n,m] * P[n,m](t)/P[m,m](t)
-    //   Ss[m] = sum(n = m..N) q^(n-m) * S[n,m] * P[n,m](t)/P[m,m](t)
-    //
-    // Evaluate sums via Clenshaw method.
-    //
-    // The overall framework is similar to Deakin with the following changes:
-    // * use fully normalized associated Legendre functions (instead of the
-    //   quasi-normalized ones)
-    // * Clenshaw summation is used to roll the computation of cos(m*lambda)
-    //   and sin(m*lambda) into the evaluation of the outer sum (rather than
-    //   independently computing an array of these trigonometric terms).
-    // * Scale the coefficients to guard against overflow when N is large.
-    //
-    // General framework of Clenshaw;   see
-    //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
-    //
-    // Let
-    //    S = sum(k = 0..N) c[k] * F[k](x)
-    //    F[n+1](x) = alpha[n](x) * F[n](x) + beta[n](x) * F[n-1](x)
-    //
-    // Evaluate S with
-    //    y[N+2] = y[N+1] = 0
-    //    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
-    //    S = c[0] * F[0] + y[1] * F[1] + beta[1] * F[0] * y[2]
-    //
-    // IF F[0](x) = 1 and beta(0,x) = 0, then F[1](x) = alpha(0,x) and
-    // we can continue the recursion for y[k] until y[0]:
-    //    S = y[0]
-    //
-    // Inner sum...
-    //
-    // let l = n-m; n = l+m
-    // Sc[m] = sum(l = 0..N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
-    // F[l] = q^l * P[l+m,m](t)/P[m,m](t)
-    //
-    // Holmes + Featherstone, Eq. (11):
-    //   P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * t * P[n-1,m] -
-    //            sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
-    // thus
-    //   alpha[l] = t * q * sqrt(((2*n+1)*(2*n+3))/
-    //                           ((n-m+1)*(n+m+1)))
-    //   beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
-    //                            ((n-m+2)*(n+m+2)*(2*n+1)))
-    //
-    // In this case, F[0] = 1 and beta[0] = 0 so the Sc[m] = y[0].
-    //
-    // Outer sum...
-    //
-    // V = sum(m = 0..N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
-    //   + sum(m = 0..N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
-    // F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]
-    //
-    // Holmes + Featherstone, Eq. (13):
-    //   P[m,m] = u * sqrt((2*m+1)/((m>1?2:1)*m)) * P[m-1,m-1]
-    // and
-    //   cos((m+1)*lambda) = 2*cos(lambda)*cos(m*lambda) - cos((m-1)*lambda)
-    // thus
-    //   alpha[m] = 2*cos(lambda) * sqrt((2*m+3)/(2*(m+1))) * u * q
-    //            =   cos(lambda) * sqrt( 2*(2*m+3)/(m+1) ) * u * q
-    //   beta[m+1] = -sqrt((2*m+3)*(2*m+5)/(4*(m+1)*(m+2))) * u^2 * q^2
-    //               * (m == 0 ? sqrt(2) : 1)
-    //
-    // F[0] = q                                [or 0]
-    // F[1] = cos(lambda) * sqrt(3) * u * q^2  [or sin(lambda)]
-    // beta[1] = - sqrt(15/4) * u^2 * q^2
-    //
-    // Here is how the various components of the gradient are computed
-    //
-    // differentiate wrt r:
-    //   d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)
-    //
-    // so multiply C[n,m] by n+1 in inner sum and multiply the sum by -1/r.
-    //
-    // differentiate wrt lambda
-    //   d cos(m*lambda) = -m * sin(m*lambda)
-    //   d sin(m*lambda) =  m * cos(m*lambda)
-    //
-    // so multiply terms by m in outer sum and swap sin and cos variables.
-    //
-    // differentiate wrt theta
-    //  dV/dtheta = -u * dV/dt = -u * V'
-    // here ' denotes differentiation wrt to t.
-    //   d/dt (Sc[m] * P[m,m](t)) = Sc'[m] * P[m,m](t) + Sc[m] * P'[m,m](t)
-    //
-    // Now P[m,m](t) = const * u^m, so P'[m,m](t) = -m * t/u^2 * P[m,m](t),
-    // thus
-    //   d/dt (Sc[m] * P[m,m](t)) = (Sc'[m] - m * t/u^2 Sc[m]) * P'[m,m](t)
-    //
-    // Clenshaw recursion for Sc[m] reads
-    //    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
-    // where alpha'[k] = alpha[k]/t, beta'[k] = c'[k] = 0.  Thus
-    //    y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] + alpha[k]/t * y[k+1]
-    //
-    // Finally, given the derivatives of V, we can compute the components of
-    // the gradient in sphierical coordinates and transform the result into
-    // cartesian coordinates.
-
     STATIC_ASSERT(L > 0, "L must be positive");
-    STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
+    STATIC_ASSERT(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
@@ -162,7 +176,7 @@ namespace GeographicLib {
       q2 = Math::sq(q),
       uq = u * q,
       uq2 = Math::sq(uq),
-      tu2 = t / Math::sq(u);
+      tu = t / u;
     // Initialize outer sum
     real vc  = 0, vc2  = 0, vs  = 0, vs2  = 0;   // v [N + 1], v [N + 2]
     // vr, vt, vl and similar w variable accumulate the sums for the
@@ -181,17 +195,18 @@ namespace GeographicLib {
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
-        case full:
-          w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1));
-          Ax = q * sqrt(w * (2 * n + 3));
+        case FULL:
+          w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
+          Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
-          B = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2)));
+          B = - q2 * root_[2 * n + 5] /
+            (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
-        case schmidt:
-          w = real(n - m + 1) * (n + m + 1);
-          Ax = q * (2 * n + 1) / sqrt(w);
+        case SCHMIDT:
+          w = root_[n - m + 1] * root_[n + m + 1];
+          Ax = q * (2 * n + 1) / w;
           A = t * Ax;
-          B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
+          B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
         }
         R = c[0].Cv(--k[0]);
@@ -201,7 +216,7 @@ namespace GeographicLib {
         w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
-          w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
+          w = A * wtc + B * wtc2 -  u*Ax * wc2; wtc2 = wtc; wtc = w;
         }
         if (m) {
           R = c[0].Sv(k[0]);
@@ -211,7 +226,7 @@ namespace GeographicLib {
           w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
-            w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
+            w = A * wts + B * wts2 -  u*Ax * ws2; wts2 = wts; wts = w;
           }
         }
       }
@@ -220,22 +235,22 @@ namespace GeographicLib {
       if (m) {
         real v, A, B;           // alpha[m], beta[m + 1]
         switch (norm) {
-        case full:
-          v = 2 * real(2 * m + 3) / (m + 1);
-          A = cl * sqrt(v) * uq;
-          B = - sqrt((v * (2 * m + 5)) / (8 * (m + 2))) * uq2;
+        case FULL:
+          v = root_[2] * root_[2 * m + 3] / root_[m + 1];
+          A = cl * v * uq;
+          B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * uq2;
           break;
-        case schmidt:
-          v = 2 * real(2 * m + 1) / (m + 1);
-          A = cl * sqrt(v) * uq;
-          B = - sqrt((v * (2 * m + 3)) / (8 * (m + 2))) * uq2;
+        case SCHMIDT:
+          v = root_[2] * root_[2 * m + 1] / root_[m + 1];
+          A = cl * v * uq;
+          B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * uq2;
           break;
         }
         v = A * vc  + B * vc2  +  wc ; vc2  = vc ; vc  = v;
         v = A * vs  + B * vs2  +  ws ; vs2  = vs ; vs  = v;
         if (gradp) {
           // Include the terms Sc[m] * P'[m,m](t) and  Ss[m] * P'[m,m](t)
-          wtc -= m * tu2 * wc; wts -= m * tu2 * ws;
+          wtc += m * tu * wc; wts += m * tu * ws;
           v = A * vrc + B * vrc2 +  wrc; vrc2 = vrc; vrc = v;
           v = A * vrs + B * vrs2 +  wrs; vrs2 = vrs; vrs = v;
           v = A * vtc + B * vtc2 +  wtc; vtc2 = vtc; vtc = v;
@@ -246,13 +261,13 @@ namespace GeographicLib {
       } else {
         real A, B, qs;
         switch (norm) {
-        case full:
-          A = sqrt(real(3)) * uq;       // F[1]/(q*cl) or F[1]/(q*sl)
-          B = - sqrt(real(15)/4) * uq2; // beta[1]/q
+        case FULL:
+          A = root_[3] * uq;       // F[1]/(q*cl) or F[1]/(q*sl)
+          B = - root_[15]/2 * uq2; // beta[1]/q
           break;
-        case schmidt:
+        case SCHMIDT:
           A = uq;
-          B = - sqrt(real(3)/4) * uq2;
+          B = - root_[3]/2 * uq2;
           break;
         }
         qs = q / scale_;
@@ -263,9 +278,9 @@ namespace GeographicLib {
           // r: dV/dr
           // theta: 1/r * dV/dtheta
           // lambda: 1/(r*u) * dV/dlambda
-          vrc =     - qs * (wrc + A * (cl * vrc + sl * vrs) + B * vrc2);
-          vtc = - u * qs * (wtc + A * (cl * vtc + sl * vts) + B * vtc2);
-          vlc =   qs / u * (      A * (cl * vlc + sl * vls) + B * vlc2);
+          vrc =   - qs * (wrc + A * (cl * vrc + sl * vrs) + B * vrc2);
+          vtc =     qs * (wtc + A * (cl * vtc + sl * vts) + B * vtc2);
+          vlc = qs / u * (      A * (cl * vlc + sl * vls) + B * vlc2);
         }
       }
     }
@@ -284,7 +299,7 @@ namespace GeographicLib {
                                          real p, real z, real a) {
 
     STATIC_ASSERT(L > 0, "L must be positive");
-    STATIC_ASSERT(norm == full || norm == schmidt, "Unknown normalization");
+    STATIC_ASSERT(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
@@ -294,8 +309,8 @@ namespace GeographicLib {
       q = a / r;
     real
       q2 = Math::sq(q),
-      tu2 = t / Math::sq(u);
-    CircularEngine circ(M, gradp, norm, scale_, a, r, u, t);
+      tu = t / u;
+    CircularEngine circ(M, gradp, norm, a, r, u, t);
     int k[L];
     for (int m = M; m >= 0; --m) {   // m = M .. 0
       // Initialize inner sum
@@ -307,17 +322,18 @@ namespace GeographicLib {
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
         real w, A, Ax, B, R;    // alpha[l], beta[l + 1]
         switch (norm) {
-        case full:
-          w = real(2 * n + 1) / (real(n - m + 1) * (n + m + 1));
-          Ax = q * sqrt(w * (2 * n + 3));
+        case FULL:
+          w = root_[2 * n + 1] / (root_[n - m + 1] * root_[n + m + 1]);
+          Ax = q * w * root_[2 * n + 3];
           A = t * Ax;
-          B = - q2 * sqrt(real(2 * n + 5) / (w * (n - m + 2) * (n + m + 2)));
+          B = - q2 * root_[2 * n + 5] /
+            (w * root_[n - m + 2] * root_[n + m + 2]);
           break;
-        case schmidt:
-          w = real(n - m + 1) * (n + m + 1);
-          Ax = q * (2 * n + 1) / sqrt(w);
+        case SCHMIDT:
+          w = root_[n - m + 1] * root_[n + m + 1];
+          Ax = q * (2 * n + 1) / w;
           A = t * Ax;
-          B = - q2 * sqrt(w / (real(n - m + 2) * (n + m + 2)));
+          B = - q2 * w / (root_[n - m + 2] * root_[n + m + 2]);
           break;
         }
         R = c[0].Cv(--k[0]);
@@ -327,7 +343,7 @@ namespace GeographicLib {
         w = A * wc + B * wc2 + R; wc2 = wc; wc = w;
         if (gradp) {
           w = A * wrc + B * wrc2 + (n + 1) * R; wrc2 = wrc; wrc = w;
-          w = A * wtc + B * wtc2 +    Ax * wc2; wtc2 = wtc; wtc = w;
+          w = A * wtc + B * wtc2 -  u*Ax * wc2; wtc2 = wtc; wtc = w;
         }
         if (m) {
           R = c[0].Sv(k[0]);
@@ -337,7 +353,7 @@ namespace GeographicLib {
           w = A * ws + B * ws2 + R; ws2 = ws; ws = w;
           if (gradp) {
             w = A * wrs + B * wrs2 + (n + 1) * R; wrs2 = wrs; wrs = w;
-            w = A * wts + B * wts2 +    Ax * ws2; wts2 = wts; wts = w;
+            w = A * wts + B * wts2 -  u*Ax * ws2; wts2 = wts; wts = w;
           }
         }
       }
@@ -345,7 +361,7 @@ namespace GeographicLib {
         circ.SetCoeff(m, wc, ws);
       else {
         // Include the terms Sc[m] * P'[m,m](t) and  Ss[m] * P'[m,m](t)
-        wtc -= m * tu2 * wc; wts -= m * tu2 * ws;
+        wtc += m * tu * wc; wts += m * tu * ws;
         circ.SetCoeff(m, wc, ws, wrc, wrs, wtc, wts);
       }
     }
@@ -353,82 +369,111 @@ namespace GeographicLib {
     return circ;
   }
 
+  void SphericalEngine::RootTable(int N) {
+    // Need square roots up to max(2 * N + 5, 15).
+    int L = max(2 * N + 5, 15) + 1, oldL = int(root_.size());
+    if (oldL >= L)
+      return;
+    root_.resize(L);
+    for (int l = oldL; l < L; ++l)
+      root_[l] = sqrt(real(l));
+  }
+
+  void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,
+                                          std::vector<real>& C,
+                                          std::vector<real>& S) {
+    int nm[2];
+    Utility::readarray<int, int, false>(stream, nm, 2);
+    N = nm[0]; M = nm[1];
+    if (!(N >= M && M >= -1 && N * M >= 0))
+      // The last condition is that M = -1 implies N = -1 and vice versa.
+      throw GeographicErr("Bad degree and order " +
+                          Utility::str(N) + " " + Utility::str(M));
+    C.resize(SphericalEngine::coeff::Csize(N, M));
+    Utility::readarray<double, real, false>(stream, C);
+    S.resize(SphericalEngine::coeff::Ssize(N, M));
+    Utility::readarray<double, real, false>(stream, S);
+    return;
+  }
+
+  /// \cond SKIP
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 1>
+  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::full, 2>
+  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::full, 2>
+  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 2>
+  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
   template
-  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 2>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::full, 3>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::full, 3>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<true, SphericalEngine::schmidt, 3>
-  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
-  template
-  Math::real SphericalEngine::Value<false, SphericalEngine::schmidt, 3>
+  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real, real, real&, real&, real&);
 
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 1>
+  Math::real SphericalEngine::Value<true, SphericalEngine::FULL, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<false, SphericalEngine::FULL, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+  template
+  Math::real SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 3>
+  (const coeff[], const real[], real, real, real, real, real&, real&, real&);
+
+  template
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 1>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 1>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 1>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 1>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 1>
   (const coeff[], const real[], real, real, real);
 
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 2>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 2>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 2>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 2>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 2>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 2>
   (const coeff[], const real[], real, real, real);
 
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::full, 3>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::FULL, 3>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::full, 3>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::FULL, 3>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<true, SphericalEngine::schmidt, 3>
+  CircularEngine SphericalEngine::Circle<true, SphericalEngine::SCHMIDT, 3>
   (const coeff[], const real[], real, real, real);
   template
-  CircularEngine SphericalEngine::Circle<false, SphericalEngine::schmidt, 3>
+  CircularEngine SphericalEngine::Circle<false, SphericalEngine::SCHMIDT, 3>
   (const coeff[], const real[], real, real, real);
+  /// \endcond
 
 } // namespace GeographicLib

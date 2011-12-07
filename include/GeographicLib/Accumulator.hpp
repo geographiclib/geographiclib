@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ACCUMULATOR_HPP)
-#define GEOGRAPHICLIB_ACCUMULATOR_HPP "$Id: d84e4e2bc5c07f7956205da62656e9bbb3765968 $"
+#define GEOGRAPHICLIB_ACCUMULATOR_HPP \
+  "$Id: 39476b3fc8d7c5abcc980a7f434bb132d24f53ef $"
 
 #include <GeographicLib/Constants.hpp>
 

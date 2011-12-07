@@ -9,11 +9,13 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic geodesicline.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+//    -lGeographic geodesicline.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic geodesicline.cpp
+// mex -I../include -L../windows/Release
+//    -lGeographic geodesicline.cpp
 
-// $Id: b9fc11298e24782384ce62dacfa4c32995190d0f $
+// $Id: f9bab46d15d25940301b5b91f79ac9f610277f8c $
 
 #include <GeographicLib/GeodesicLine.hpp>
 #include <mex.h>

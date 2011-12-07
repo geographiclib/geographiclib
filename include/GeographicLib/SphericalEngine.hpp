@@ -8,9 +8,11 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
-#define GEOGRAPHICLIB_SPHERICALENGINE_HPP "$Id: 08b65902abf634bdf1a9d6685b0065e762190214 $"
+#define GEOGRAPHICLIB_SPHERICALENGINE_HPP \
+  "$Id: 3410576dbc0276f23077ba3662817e14981ab919 $"
 
 #include <vector>
+#include <istream>
 #include <GeographicLib/Constants.hpp>
 
 #if defined(_MSC_VER)
@@ -29,38 +31,47 @@ namespace GeographicLib {
    * This serves as the backend to SphericalHarmonic, SphericalHarmonic1, and
    * SphericalHarmonic2.  Typically end-users will not have to access this
    * class directly.
+   *
+   * See SphericalEngine.cpp for more information on the implementation.
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalEngine {
   private:
     typedef Math::real real;
+    // A table of the square roots of integers
+    static std::vector<real> root_;
+    friend class CircularEngine; // CircularEngine needs access to root_, scale_
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static const real scale_;
     // Move latitudes near the pole off the axis by this amount.
     static const real eps_;
     static const std::vector<real> Z_;
-    SphericalEngine();        // Disable constructor
-
+    SphericalEngine();          // Disable constructor
   public:
     /**
-     * Supported normalizations for associate Legendre polynomials.
+     * Supported normalizations for associated Legendre polynomials.
      **********************************************************************/
     enum normalization {
       /**
        * Fully normalized associated Legendre polynomials.  See
-       * SphericalHarmonic::full for documentation.
+       * SphericalHarmonic::FULL for documentation.
        *
        * @hideinitializer
        **********************************************************************/
-      full = 0,
+      FULL = 0,
       /**
        * Schmidt semi-normalized associated Legendre polynomials.  See
-       * SphericalHarmonic::schmidt for documentation.
+       * SphericalHarmonic::SCHMIDT for documentation.
        *
        * @hideinitializer
        **********************************************************************/
-      schmidt = 1,
+      SCHMIDT = 1,
+      /// \cond SKIP
+      // These are deprecated...
+      full = FULL,
+      schmidt = SCHMIDT,
+      /// \endcond
     };
 
     /**
@@ -117,6 +128,7 @@ namespace GeographicLib {
         if (!(index(_nmx, _mmx) < int(C.size()) &&
               index(_nmx, _mmx) < int(S.size()) + (_N + 1)))
           throw GeographicErr("Arrays too small in coeff");
+        SphericalEngine::RootTable(_nmx);
       }
       /**
        * The constructor for full coefficient vectors.
@@ -142,6 +154,7 @@ namespace GeographicLib {
         if (!(index(_nmx, _mmx) < int(C.size()) &&
               index(_nmx, _mmx) < int(S.size()) + (_N + 1)))
           throw GeographicErr("Arrays too small in coeff");
+        SphericalEngine::RootTable(_nmx);
       }
       /**
        * @return \e N the degree giving storage layout for \e C and \e S.
@@ -224,6 +237,25 @@ namespace GeographicLib {
        **********************************************************************/
       static inline int Ssize(int N, int M)
       { return Csize(N, M) - (N + 1); }
+
+      /**
+       * Load coefficients from a binary stream.
+       *
+       * @param[in] stream the input stream.
+       * @param[out] N The maximum degree of the coefficients.
+       * @param[out] M The maximum order of the coefficients.
+       * @param[out] C The vector of cosine coefficients.
+       * @param[out] S The vector of sine coefficients.
+       *
+       * \e N and \e M are read as 4-byte ints.  \e C and \e S are resized to
+       * accommodate all the coefficients (with the \e m = 0 coefficients for
+       * \e S excluded) and the data for these coefficients read as 8-byte
+       * doubles.  The coefficients are stored in column major order.  The
+       * bytes in the stream should use little-endian ordering.  IEEE floating
+       * point is assumed for the coefficients.
+       **********************************************************************/
+      static void readcoeffs(std::istream& stream, int& N, int& M,
+                             std::vector<real>& C, std::vector<real>& S);
     };
 
     /**
@@ -231,7 +263,7 @@ namespace GeographicLib {
      *
      * @tparam gradp should the gradient be calculated.
      * @tparam norm the normalization for the associated Legendre polynomials.
-     * @tparam L the number of terms in the coefficents.
+     * @tparam L the number of terms in the coefficients.
      * @param[in] c an array of coeff objects.
      * @param[in] f array of coefficient multipliers.  f[0] should be 1.
      * @param[in] x the \e x component of the cartesian position.
@@ -254,7 +286,7 @@ namespace GeographicLib {
      *
      * Clenshaw summation is used which permits the evaluation of the sum
      * without the need to allocate temporary arrays.  Thus this function never
-     * throws an excpetion.
+     * throws an exception.
      **********************************************************************/
     template<bool gradp, normalization norm, int L>
       static Math::real Value(const coeff c[], const real f[],
@@ -266,24 +298,56 @@ namespace GeographicLib {
      *
      * @tparam gradp should the gradient be calculated.
      * @tparam norm the normalization for the associated Legendre polynomials.
-     * @tparam L the number of terms in the coefficents.
+     * @tparam L the number of terms in the coefficients.
      * @param[in] c an array of coeff objects.
      * @param[in] f array of coefficient multipliers.  f[0] should be 1.
-     * @param[in] p the radius of the circle = sqrt(\e x<sup>2</sup> + \e
-     *   y<sup>2</sup>).
+     * @param[in] p the radius of the circle = sqrt(<i>x</i><sup>2</sup> + 
+     *   <i>y</i><sup>2</sup>).
      * @param[in] z the height of the circle.
      * @param[in] a the normalizing radius.
      * @result the CircularEngine object.
      *
      * If you need to evaluate the spherical harmonic sum for several points
-     * with constant \e f, \e p = sqrt(\e x<sup>2</sup> + \e y<sup>2</sup>), \e
-     * z, and \e a, it is more efficient to construct call
-     * SphericalEngine::Circle to give a CircularEngine object and then call
-     * CircularEngine::operator()() with arguments \e x/\e p and \e y/\e p.
+     * with constant \e f, \e p = sqrt(<i>x</i><sup>2</sup> +
+     * <i>y</i><sup>2</sup>), \e z, and \e a, it is more efficient to construct
+     * call SphericalEngine::Circle to give a CircularEngine object and then
+     * call CircularEngine::operator()() with arguments <i>x</i>/\e p and
+     * <i>y</i>/\e p.
      **********************************************************************/
     template<bool gradp, SphericalEngine::normalization norm, int L>
       static CircularEngine Circle(const coeff c[], const real f[],
                                    real p, real z, real a);
+    /**
+     * Check that the static table of square roots is big enough and enlarge it
+     * if necessary.
+     *
+     * @param[in] N the maximum degree to be used in SphericalEngine.
+     *
+     * Typically, there's no need for an end-user to call this routine, because
+     * the constructors for SphericalEngine::coeff do so.  However, since this
+     * updates a static table, there's a possible race condition in a
+     * multi-threaded environment.  Because this routine does nothing if the
+     * table is already large enough, one way to avoid race conditions is to
+     * call this routine at program start up (when it's still single threaded),
+     * supplying the largest degree that your program will use.  E.g.,
+     \code
+  GeographicLib::SphericalEngine::RootTable(2190);
+     \endcode
+     * suffices to accommodate extant magnetic and gravity models.
+     **********************************************************************/
+    static void RootTable(int N);
+
+    /**
+     * Clear the static table of square roots and release the memory.  Call
+     * this only when you are sure you no longer will be using SphericalEngine.
+     * Your program will crash if you call SphericalEngine after calling this
+     * routine.  <b>It's safest not to call this routine at all.</b> (The space
+     * used by the table is modest.)
+     **********************************************************************/
+    static void ClearRootTable() {
+      std::vector<real> temp(0);
+      root_.swap(temp);
+    }
   };
 
 } // namespace GeographicLib

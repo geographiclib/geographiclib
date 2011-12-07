@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTILITY_HPP)
-#define GEOGRAPHICLIB_UTILITY_HPP "$Id: 5930e0a4f55b8a9478bfca81bdc962c7f8e5d26f $"
+#define GEOGRAPHICLIB_UTILITY_HPP \
+  "$Id: a4a9a65ef1b4dc72579b2310257cde0d626480a5 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <iomanip>
@@ -371,7 +372,7 @@ namespace GeographicLib {
           std::numeric_limits<IntT>::is_integer ==
           std::numeric_limits<ExtT>::is_integer) {
         // Data is compatible (aside from the issue of endian-ness).
-        str.read(reinterpret_cast<char *>(array), num * sizeof(IntT));
+        str.read(reinterpret_cast<char *>(array), num * sizeof(ExtT));
         if (!str.good())
           throw GeographicErr("Failure reading data");
         if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
@@ -385,7 +386,7 @@ namespace GeographicLib {
         int i = 0;                // index into output array
         while (k) {
           int num = (std::min)(k, bufsize);
-          str.read(reinterpret_cast<char *>(buffer), num * sizeof(IntT));
+          str.read(reinterpret_cast<char *>(buffer), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
           for (int j = 0; j < num; ++j)
@@ -415,6 +416,23 @@ namespace GeographicLib {
                                    std::vector<IntT>& array) {
       readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
+
+    /**
+     * Parse a KEY VALUE line.
+     *
+     * @param[in] line the input line.
+     * @param[out] key the key.
+     * @param[out] val the value.
+     * @return whether a key was found.
+     *
+     * A # character and everything after it are discarded.  If the results is
+     * just white space, the routine returns false (and \e key and \e val are
+     * not set).  Otherwise the first token is taken to be the key and the rest
+     * of the line (trimmed of leading and trailing white space) is the value.
+     **********************************************************************/
+    static bool ParseLine(const std::string& line,
+                          std::string& key, std::string& val);
+
   };
 
 } // namespace GeographicLib

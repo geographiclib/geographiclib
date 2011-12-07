@@ -58,226 +58,267 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)</span>
-<a name="l00011"></a><a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_HPP &quot;$Id: 5e13a145df558737b41cb38be92d4e0103120e6d $&quot;</span>
-<a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;vector&gt;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;algorithm&gt;</span>
-<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
-<a name="l00016"></a>00016 
-<a name="l00017"></a>00017 <span class="keyword">namespace </span>GeographicLib {
-<a name="l00018"></a>00018 <span class="comment"></span>
-<a name="l00019"></a>00019 <span class="comment">  /**</span>
-<a name="l00020"></a>00020 <span class="comment">   * \brief %Geocentric coordinates</span>
-<a name="l00021"></a>00021 <span class="comment">   *</span>
-<a name="l00022"></a>00022 <span class="comment">   * Convert between geodetic coordinates latitude = \e lat, longitude = \e</span>
-<a name="l00023"></a>00023 <span class="comment">   * lon, height = \e h (measured vertically from the surface of the ellipsoid)</span>
-<a name="l00024"></a>00024 <span class="comment">   * to geocentric coordinates (\e x, \e y, \e z).  The origin of geocentric</span>
-<a name="l00025"></a>00025 <span class="comment">   * coordinates is at the center of the earth.  The \e z axis goes thru the</span>
-<a name="l00026"></a>00026 <span class="comment">   * north pole, \e lat = 90&lt;sup&gt;o&lt;/sup&gt;.  The \e x axis goes thru \e lat = 0,</span>
-<a name="l00027"></a>00027 <span class="comment">   * \e lon = 0.  %Geocentric coordinates are also known as earth centered,</span>
-<a name="l00028"></a>00028 <span class="comment">   * earth fixed (ECEF) coordinates.</span>
-<a name="l00029"></a>00029 <span class="comment">   *</span>
-<a name="l00030"></a>00030 <span class="comment">   * The conversion from geographic to geocentric coordinates is</span>
-<a name="l00031"></a>00031 <span class="comment">   * straightforward.  For the reverse transformation we use</span>
-<a name="l00032"></a>00032 <span class="comment">   * - H. Vermeille,</span>
-<a name="l00033"></a>00033 <span class="comment">   *   &lt;a href=&quot;http://dx.doi.org/10.1007/s00190-002-0273-6&quot;&gt; Direct</span>
-<a name="l00034"></a>00034 <span class="comment">   *   transformation from geocentric coordinates to geodetic coordinates&lt;/a&gt;,</span>
-<a name="l00035"></a>00035 <span class="comment">   *   J. Geodesy 76, 451&amp;ndash;454 (2002).</span>
-<a name="l00036"></a>00036 <span class="comment">   * .</span>
-<a name="l00037"></a>00037 <span class="comment">   * Several changes have been made to ensure that the method returns accurate</span>
-<a name="l00038"></a>00038 <span class="comment">   * results for all finite inputs (even if \e h is infinite).  The changes are</span>
-<a name="l00039"></a>00039 <span class="comment">   * described in Appendix B of</span>
-<a name="l00040"></a>00040 <span class="comment">   * - C. F. F. Karney,</span>
-<a name="l00041"></a>00041 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;Geodesics</span>
-<a name="l00042"></a>00042 <span class="comment">   *   on an ellipsoid of revolution&lt;/a&gt;,</span>
-<a name="l00043"></a>00043 <span class="comment">   *   Feb. 2011;</span>
-<a name="l00044"></a>00044 <span class="comment">   *   preprint</span>
-<a name="l00045"></a>00045 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;arxiv:1102.1215v1&lt;/a&gt;.</span>
-<a name="l00046"></a>00046 <span class="comment">   * .</span>
-<a name="l00047"></a>00047 <span class="comment">   * See \ref geocentric for more information.</span>
-<a name="l00048"></a>00048 <span class="comment">   *</span>
-<a name="l00049"></a>00049 <span class="comment">   * The errors in these routines are close to round-off.  Specifically, for</span>
-<a name="l00050"></a>00050 <span class="comment">   * points within 5000 km of the surface of the ellipsoid (either inside or</span>
-<a name="l00051"></a>00051 <span class="comment">   * outside the ellipsoid), the error is bounded by 7 nm for the WGS84</span>
-<a name="l00052"></a>00052 <span class="comment">   * ellipsoid.  See \ref geocentric for further information on the errors.</span>
-<a name="l00053"></a>00053 <span class="comment">   **********************************************************************/</span>
-<a name="l00054"></a>00054 
-<a name="l00055"></a><a class="code" href="classGeographicLib_1_1Geocentric.html">00055</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> {
-<a name="l00056"></a>00056   <span class="keyword">private</span>:
-<a name="l00057"></a>00057     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00058"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a8904c4eadcf94e3803743e8cd9ffbc1c">00058</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>;
-<a name="l00059"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a7294f6a1cc932f8fd1562a15602e9e86">00059</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a>; <span class="comment">// MagneticCircle uses Rotation</span>
-<a name="l00060"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#af6619ebe4c078705fc49a0d9f950b431">00060</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">MagneticModel</a>;  <span class="comment">// MagneticModel uses IntForward</span>
-<a name="l00061"></a>00061     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim_ = 3;
-<a name="l00062"></a>00062     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim2_ = dim_ * dim_;
-<a name="l00063"></a>00063     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
-<a name="l00064"></a>00064     <span class="keyword">static</span> <span class="keywordtype">void</span> Rotation(real sphi, real cphi, real slam, real clam,
-<a name="l00065"></a>00065                          real M[dim2_]) <span class="keywordflow">throw</span>();
-<a name="l00066"></a>00066     <span class="keywordtype">void</span> IntForward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
-<a name="l00067"></a>00067                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00068"></a>00068     <span class="keywordtype">void</span> IntReverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
-<a name="l00069"></a>00069                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071   <span class="keyword">public</span>:
-<a name="l00072"></a>00072 <span class="comment"></span>
-<a name="l00073"></a>00073 <span class="comment">    /**</span>
-<a name="l00074"></a>00074 <span class="comment">     * Constructor for a ellipsoid with</span>
-<a name="l00075"></a>00075 <span class="comment">     *</span>
-<a name="l00076"></a>00076 <span class="comment">     * @param[in] a equatorial radius (meters)</span>
-<a name="l00077"></a>00077 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
-<a name="l00078"></a>00078 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
-<a name="l00079"></a>00079 <span class="comment">     *   to 1/\e f.</span>
-<a name="l00080"></a>00080 <span class="comment">     *</span>
-<a name="l00081"></a>00081 <span class="comment">     * An exception is thrown if either of the axes of the ellipsoid is</span>
-<a name="l00082"></a>00082 <span class="comment">     * non-positive.</span>
-<a name="l00083"></a>00083 <span class="comment">     **********************************************************************/</span>
-<a name="l00084"></a>00084     <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>(real a, real f);
-<a name="l00085"></a>00085 <span class="comment"></span>
-<a name="l00086"></a>00086 <span class="comment">    /**</span>
-<a name="l00087"></a>00087 <span class="comment">     * Convert from geodetic to geocentric coordinates.</span>
-<a name="l00088"></a>00088 <span class="comment">     *</span>
-<a name="l00089"></a>00089 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00090"></a>00090 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00091"></a>00091 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
-<a name="l00092"></a>00092 <span class="comment">     * @param[out] x geocentric coordinate (meters).</span>
-<a name="l00093"></a>00093 <span class="comment">     * @param[out] y geocentric coordinate (meters).</span>
-<a name="l00094"></a>00094 <span class="comment">     * @param[out] z geocentric coordinate (meters).</span>
-<a name="l00095"></a>00095 <span class="comment">     *</span>
-<a name="l00096"></a>00096 <span class="comment">     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in</span>
-<a name="l00097"></a>00097 <span class="comment">     * the range [-180, 360].</span>
-<a name="l00098"></a>00098 <span class="comment">     **********************************************************************/</span>
-<a name="l00099"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a6d144979a9c0a5d12f343736a0432a3a">00099</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z)
-<a name="l00100"></a>00100       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00101"></a>00101       IntForward(lat, lon, h, x, y, z, NULL);
-<a name="l00102"></a>00102     }
-<a name="l00103"></a>00103 <span class="comment"></span>
-<a name="l00104"></a>00104 <span class="comment">    /**</span>
-<a name="l00105"></a>00105 <span class="comment">     * Convert from geodetic to geocentric coordinates and return rotation</span>
-<a name="l00106"></a>00106 <span class="comment">     * matrix.</span>
-<a name="l00107"></a>00107 <span class="comment">     *</span>
-<a name="l00108"></a>00108 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00109"></a>00109 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00110"></a>00110 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
-<a name="l00111"></a>00111 <span class="comment">     * @param[out] x geocentric coordinate (meters).</span>
-<a name="l00112"></a>00112 <span class="comment">     * @param[out] y geocentric coordinate (meters).</span>
-<a name="l00113"></a>00113 <span class="comment">     * @param[out] z geocentric coordinate (meters).</span>
-<a name="l00114"></a>00114 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
-<a name="l00115"></a>00115 <span class="comment">     *   matrix in row-major order.</span>
+<a name="l00011"></a><a class="code" href="Geocentric_8hpp.html#a29517663058dd79a39541248f58db55f">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GEOCENTRIC_HPP \</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 869e8cba7a96857eef318b2b02e4135d88bfbc75 $&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor"></span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;vector&gt;</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;algorithm&gt;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+<a name="l00017"></a>00017 
+<a name="l00018"></a>00018 <span class="keyword">namespace </span>GeographicLib {
+<a name="l00019"></a>00019 <span class="comment"></span>
+<a name="l00020"></a>00020 <span class="comment">  /**</span>
+<a name="l00021"></a>00021 <span class="comment">   * \brief %Geocentric coordinates</span>
+<a name="l00022"></a>00022 <span class="comment">   *</span>
+<a name="l00023"></a>00023 <span class="comment">   * Convert between geodetic coordinates latitude = \e lat, longitude = \e</span>
+<a name="l00024"></a>00024 <span class="comment">   * lon, height = \e h (measured vertically from the surface of the ellipsoid)</span>
+<a name="l00025"></a>00025 <span class="comment">   * to geocentric coordinates (\e X, \e Y, \e Z).  The origin of geocentric</span>
+<a name="l00026"></a>00026 <span class="comment">   * coordinates is at the center of the earth.  The \e Z axis goes thru the</span>
+<a name="l00027"></a>00027 <span class="comment">   * north pole, \e lat = 90&lt;sup&gt;o&lt;/sup&gt;.  The \e X axis goes thru \e lat = 0,</span>
+<a name="l00028"></a>00028 <span class="comment">   * \e lon = 0.  %Geocentric coordinates are also known as earth centered,</span>
+<a name="l00029"></a>00029 <span class="comment">   * earth fixed (ECEF) coordinates.</span>
+<a name="l00030"></a>00030 <span class="comment">   *</span>
+<a name="l00031"></a>00031 <span class="comment">   * The conversion from geographic to geocentric coordinates is</span>
+<a name="l00032"></a>00032 <span class="comment">   * straightforward.  For the reverse transformation we use</span>
+<a name="l00033"></a>00033 <span class="comment">   * - H. Vermeille,</span>
+<a name="l00034"></a>00034 <span class="comment">   *   &lt;a href=&quot;http://dx.doi.org/10.1007/s00190-002-0273-6&quot;&gt; Direct</span>
+<a name="l00035"></a>00035 <span class="comment">   *   transformation from geocentric coordinates to geodetic coordinates&lt;/a&gt;,</span>
+<a name="l00036"></a>00036 <span class="comment">   *   J. Geodesy 76, 451&amp;ndash;454 (2002).</span>
+<a name="l00037"></a>00037 <span class="comment">   * .</span>
+<a name="l00038"></a>00038 <span class="comment">   * Several changes have been made to ensure that the method returns accurate</span>
+<a name="l00039"></a>00039 <span class="comment">   * results for all finite inputs (even if \e h is infinite).  The changes are</span>
+<a name="l00040"></a>00040 <span class="comment">   * described in Appendix B of</span>
+<a name="l00041"></a>00041 <span class="comment">   * - C. F. F. Karney,</span>
+<a name="l00042"></a>00042 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;Geodesics</span>
+<a name="l00043"></a>00043 <span class="comment">   *   on an ellipsoid of revolution&lt;/a&gt;,</span>
+<a name="l00044"></a>00044 <span class="comment">   *   Feb. 2011;</span>
+<a name="l00045"></a>00045 <span class="comment">   *   preprint</span>
+<a name="l00046"></a>00046 <span class="comment">   *   &lt;a href=&quot;http://arxiv.org/abs/1102.1215v1&quot;&gt;arxiv:1102.1215v1&lt;/a&gt;.</span>
+<a name="l00047"></a>00047 <span class="comment">   * .</span>
+<a name="l00048"></a>00048 <span class="comment">   * See \ref geocentric for more information.</span>
+<a name="l00049"></a>00049 <span class="comment">   *</span>
+<a name="l00050"></a>00050 <span class="comment">   * The errors in these routines are close to round-off.  Specifically, for</span>
+<a name="l00051"></a>00051 <span class="comment">   * points within 5000 km of the surface of the ellipsoid (either inside or</span>
+<a name="l00052"></a>00052 <span class="comment">   * outside the ellipsoid), the error is bounded by 7 nm for the WGS84</span>
+<a name="l00053"></a>00053 <span class="comment">   * ellipsoid.  See \ref geocentric for further information on the errors.</span>
+<a name="l00054"></a>00054 <span class="comment">   **********************************************************************/</span>
+<a name="l00055"></a>00055 
+<a name="l00056"></a><a class="code" href="classGeographicLib_1_1Geocentric.html">00056</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> {
+<a name="l00057"></a>00057   <span class="keyword">private</span>:
+<a name="l00058"></a>00058     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00059"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a8904c4eadcf94e3803743e8cd9ffbc1c">00059</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>;
+<a name="l00060"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a7294f6a1cc932f8fd1562a15602e9e86">00060</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a>; <span class="comment">// MagneticCircle uses Rotation</span>
+<a name="l00061"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#af6619ebe4c078705fc49a0d9f950b431">00061</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">MagneticModel</a>;  <span class="comment">// MagneticModel uses IntForward</span>
+<a name="l00062"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a243c90a7f9bf3f7aa96877a4b0667a89">00062</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a>;  <span class="comment">// GravityCircle uses Rotation</span>
+<a name="l00063"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#ada1db1d9f480d8044753ed869c995519">00063</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GravityModel.html" title="Model of the earth&#39;s gravity field.">GravityModel</a>;   <span class="comment">// GravityModel uses IntForward</span>
+<a name="l00064"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#ae7298549755c5982fe1be124d6631561">00064</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1NormalGravity.html" title="The normal gravity of the earth.">NormalGravity</a>;  <span class="comment">// NormalGravity uses IntForward</span>
+<a name="l00065"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#ae0383f6b1ce413d48e258750c3177f21">00065</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>;
+<a name="l00066"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#accac7c5b7843a1e4fb2baf0c83cc24f0">00066</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1SphericalHarmonic1.html" title="Spherical Harmonic series with a correction to the coefficients.">SphericalHarmonic1</a>;
+<a name="l00067"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a3eabc426b6edd718324c791ef3536360">00067</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1SphericalHarmonic2.html" title="Spherical Harmonic series with two corrections to the coefficients.">SphericalHarmonic2</a>;
+<a name="l00068"></a>00068     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim_ = 3;
+<a name="l00069"></a>00069     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim2_ = dim_ * dim_;
+<a name="l00070"></a>00070     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
+<a name="l00071"></a>00071     <span class="keyword">static</span> <span class="keywordtype">void</span> Rotation(real sphi, real cphi, real slam, real clam,
+<a name="l00072"></a>00072                          real M[dim2_]) <span class="keywordflow">throw</span>();
+<a name="l00073"></a>00073     <span class="keyword">static</span> <span class="keywordtype">void</span> Rotate(real M[dim2_], real x, real y, real z,
+<a name="l00074"></a>00074                        real&amp; X, real&amp; Y, real&amp; Z) <span class="keywordflow">throw</span>() {
+<a name="l00075"></a>00075       <span class="comment">// Perform [X,Y,Z]^t = M.[x,y,z]^t</span>
+<a name="l00076"></a>00076       <span class="comment">// (typically local cartesian to geocentric)</span>
+<a name="l00077"></a>00077       X = M[0] * x + M[1] * y + M[2] * z;
+<a name="l00078"></a>00078       Y = M[3] * x + M[4] * y + M[5] * z;
+<a name="l00079"></a>00079       Z = M[6] * x + M[7] * y + M[8] * z;
+<a name="l00080"></a>00080     }
+<a name="l00081"></a>00081     <span class="keyword">static</span> <span class="keywordtype">void</span> Unrotate(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_], <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> X, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Z,
+<a name="l00082"></a>00082                          <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; z) <span class="keywordflow">throw</span>()  {
+<a name="l00083"></a>00083       <span class="comment">// Perform [x,y,z]^t = M^t.[X,Y,Z]^t</span>
+<a name="l00084"></a>00084       <span class="comment">// (typically geocentric to local cartesian)</span>
+<a name="l00085"></a>00085       x = M[0] * X + M[3] * Y + M[6] * Z;
+<a name="l00086"></a>00086       y = M[1] * X + M[4] * Y + M[7] * Z;
+<a name="l00087"></a>00087       z = M[2] * X + M[5] * Y + M[8] * Z;
+<a name="l00088"></a>00088     }
+<a name="l00089"></a>00089     <span class="keywordtype">void</span> IntForward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; X, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; Z,
+<a name="l00090"></a>00090                     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00091"></a>00091     <span class="keywordtype">void</span> IntReverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> X, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> Z, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; h,
+<a name="l00092"></a>00092                     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094   <span class="keyword">public</span>:
+<a name="l00095"></a>00095 <span class="comment"></span>
+<a name="l00096"></a>00096 <span class="comment">    /**</span>
+<a name="l00097"></a>00097 <span class="comment">     * Constructor for a ellipsoid with</span>
+<a name="l00098"></a>00098 <span class="comment">     *</span>
+<a name="l00099"></a>00099 <span class="comment">     * @param[in] a equatorial radius (meters).</span>
+<a name="l00100"></a>00100 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
+<a name="l00101"></a>00101 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
+<a name="l00102"></a>00102 <span class="comment">     *   to 1/\e f.</span>
+<a name="l00103"></a>00103 <span class="comment">     *</span>
+<a name="l00104"></a>00104 <span class="comment">     * An exception is thrown if either of the axes of the ellipsoid is</span>
+<a name="l00105"></a>00105 <span class="comment">     * non-positive.</span>
+<a name="l00106"></a>00106 <span class="comment">     **********************************************************************/</span>
+<a name="l00107"></a>00107     Geocentric(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> a, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> f);
+<a name="l00108"></a>00108 <span class="comment"></span>
+<a name="l00109"></a>00109 <span class="comment">    /**</span>
+<a name="l00110"></a>00110 <span class="comment">     * A default constructor (for use by NormalGravity).</span>
+<a name="l00111"></a>00111 <span class="comment">     **********************************************************************/</span>
+<a name="l00112"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#adc92d7214526b4cfcd0b9a0171fc8448">00112</a>     <a class="code" href="classGeographicLib_1_1Geocentric.html#adc92d7214526b4cfcd0b9a0171fc8448">Geocentric</a>() : _a(-1) {}
+<a name="l00113"></a>00113 <span class="comment"></span>
+<a name="l00114"></a>00114 <span class="comment">    /**</span>
+<a name="l00115"></a>00115 <span class="comment">     * Convert from geodetic to geocentric coordinates.</span>
 <a name="l00116"></a>00116 <span class="comment">     *</span>
-<a name="l00117"></a>00117 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
-<a name="l00118"></a>00118 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
-<a name="l00119"></a>00119 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
-<a name="l00120"></a>00120 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
-<a name="l00121"></a>00121 <span class="comment">     *   representation \e v1.</span>
-<a name="l00122"></a>00122 <span class="comment">     * - in geocentric \e x, \e y, \e z coordinates; call this representation</span>
-<a name="l00123"></a>00123 <span class="comment">     *   \e v0.</span>
-<a name="l00124"></a>00124 <span class="comment">     * .</span>
-<a name="l00125"></a>00125 <span class="comment">     * Then we have \e v0 = \e M . \e v1.</span>
+<a name="l00117"></a>00117 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00118"></a>00118 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00119"></a>00119 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
+<a name="l00120"></a>00120 <span class="comment">     * @param[out] X geocentric coordinate (meters).</span>
+<a name="l00121"></a>00121 <span class="comment">     * @param[out] Y geocentric coordinate (meters).</span>
+<a name="l00122"></a>00122 <span class="comment">     * @param[out] Z geocentric coordinate (meters).</span>
+<a name="l00123"></a>00123 <span class="comment">     *</span>
+<a name="l00124"></a>00124 <span class="comment">     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in</span>
+<a name="l00125"></a>00125 <span class="comment">     * the range [-180, 360].</span>
 <a name="l00126"></a>00126 <span class="comment">     **********************************************************************/</span>
-<a name="l00127"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a63c5d08013e385a80fb1b9c0beee592a">00127</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
-<a name="l00128"></a>00128                  std::vector&lt;real&gt;&amp; M)
-<a name="l00129"></a>00129       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00130"></a>00130       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
-<a name="l00131"></a>00131         real t[dim2_];
-<a name="l00132"></a>00132         IntForward(lat, lon, h, x, y, z, t);
-<a name="l00133"></a>00133         copy(t, t + dim2_, M.begin());
-<a name="l00134"></a>00134       } <span class="keywordflow">else</span>
-<a name="l00135"></a>00135         IntForward(lat, lon, h, x, y, z, NULL);
-<a name="l00136"></a>00136     }
-<a name="l00137"></a>00137 <span class="comment"></span>
-<a name="l00138"></a>00138 <span class="comment">    /**</span>
-<a name="l00139"></a>00139 <span class="comment">     * Convert from geocentric to geodetic to coordinates.</span>
-<a name="l00140"></a>00140 <span class="comment">     *</span>
-<a name="l00141"></a>00141 <span class="comment">     * @param[in] x geocentric coordinate (meters).</span>
-<a name="l00142"></a>00142 <span class="comment">     * @param[in] y geocentric coordinate (meters).</span>
-<a name="l00143"></a>00143 <span class="comment">     * @param[in] z geocentric coordinate (meters).</span>
-<a name="l00144"></a>00144 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00145"></a>00145 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00146"></a>00146 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
-<a name="l00147"></a>00147 <span class="comment">     *</span>
-<a name="l00148"></a>00148 <span class="comment">     * In general there are multiple solutions and the result which maximizes</span>
-<a name="l00149"></a>00149 <span class="comment">     * \e h is returned.  If there are still multiple solutions with different</span>
-<a name="l00150"></a>00150 <span class="comment">     * latitutes (applies only if \e z = 0), then the solution with \e lat &gt; 0</span>
-<a name="l00151"></a>00151 <span class="comment">     * is returned.  If there are still multiple solutions with different</span>
-<a name="l00152"></a>00152 <span class="comment">     * longitudes (applies only if \e x = \e y = 0) then \e lon = 0 is</span>
-<a name="l00153"></a>00153 <span class="comment">     * returned.  The value of \e h returned satisfies \e h &gt;= - \e a (1 - \e</span>
-<a name="l00154"></a>00154 <span class="comment">     * e&lt;sup&gt;2&lt;/sup&gt;) / sqrt(1 - \e e&lt;sup&gt;2&lt;/sup&gt; sin&lt;sup&gt;2&lt;/sup&gt;\e lat).  The</span>
-<a name="l00155"></a>00155 <span class="comment">     * value of \e lon returned is in the range [-180, 180).</span>
-<a name="l00156"></a>00156 <span class="comment">     **********************************************************************/</span>
-<a name="l00157"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">00157</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h)
+<a name="l00127"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a65320594cad8c03d28beaa409f3d6fae">00127</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; X, real&amp; Y, real&amp; Z)
+<a name="l00128"></a>00128       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00129"></a>00129       <span class="keywordflow">if</span> (Init())
+<a name="l00130"></a>00130         IntForward(lat, lon, h, X, Y, Z, NULL);
+<a name="l00131"></a>00131     }
+<a name="l00132"></a>00132 <span class="comment"></span>
+<a name="l00133"></a>00133 <span class="comment">    /**</span>
+<a name="l00134"></a>00134 <span class="comment">     * Convert from geodetic to geocentric coordinates and return rotation</span>
+<a name="l00135"></a>00135 <span class="comment">     * matrix.</span>
+<a name="l00136"></a>00136 <span class="comment">     *</span>
+<a name="l00137"></a>00137 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00138"></a>00138 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00139"></a>00139 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
+<a name="l00140"></a>00140 <span class="comment">     * @param[out] X geocentric coordinate (meters).</span>
+<a name="l00141"></a>00141 <span class="comment">     * @param[out] Y geocentric coordinate (meters).</span>
+<a name="l00142"></a>00142 <span class="comment">     * @param[out] Z geocentric coordinate (meters).</span>
+<a name="l00143"></a>00143 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
+<a name="l00144"></a>00144 <span class="comment">     *   matrix in row-major order.</span>
+<a name="l00145"></a>00145 <span class="comment">     *</span>
+<a name="l00146"></a>00146 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
+<a name="l00147"></a>00147 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
+<a name="l00148"></a>00148 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
+<a name="l00149"></a>00149 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
+<a name="l00150"></a>00150 <span class="comment">     *   representation \e v1.</span>
+<a name="l00151"></a>00151 <span class="comment">     * - in geocentric \e X, \e Y, \e Z coordinates; call this representation</span>
+<a name="l00152"></a>00152 <span class="comment">     *   \e v0.</span>
+<a name="l00153"></a>00153 <span class="comment">     * .</span>
+<a name="l00154"></a>00154 <span class="comment">     * Then we have \e v0 = \e M . \e v1.</span>
+<a name="l00155"></a>00155 <span class="comment">     **********************************************************************/</span>
+<a name="l00156"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a54e09e4673ddbf99feeba81036c81345">00156</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; X, real&amp; Y, real&amp; Z,
+<a name="l00157"></a>00157                  std::vector&lt;real&gt;&amp; M)
 <a name="l00158"></a>00158       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00159"></a>00159       IntReverse(x, y, z, lat, lon, h, NULL);
-<a name="l00160"></a>00160     }
-<a name="l00161"></a>00161 <span class="comment"></span>
-<a name="l00162"></a>00162 <span class="comment">    /**</span>
-<a name="l00163"></a>00163 <span class="comment">     * Convert from geocentric to geodetic to coordinates.</span>
-<a name="l00164"></a>00164 <span class="comment">     *</span>
-<a name="l00165"></a>00165 <span class="comment">     * @param[in] x geocentric coordinate (meters).</span>
-<a name="l00166"></a>00166 <span class="comment">     * @param[in] y geocentric coordinate (meters).</span>
-<a name="l00167"></a>00167 <span class="comment">     * @param[in] z geocentric coordinate (meters).</span>
-<a name="l00168"></a>00168 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00169"></a>00169 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00170"></a>00170 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
-<a name="l00171"></a>00171 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
-<a name="l00172"></a>00172 <span class="comment">     *   matrix in row-major order.</span>
-<a name="l00173"></a>00173 <span class="comment">     *</span>
-<a name="l00174"></a>00174 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
-<a name="l00175"></a>00175 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
-<a name="l00176"></a>00176 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
-<a name="l00177"></a>00177 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
-<a name="l00178"></a>00178 <span class="comment">     *   representation \e v1.</span>
-<a name="l00179"></a>00179 <span class="comment">     * - in geocentric \e x, \e y, \e z coordinates; call this representation</span>
-<a name="l00180"></a>00180 <span class="comment">     *   \e v0.</span>
-<a name="l00181"></a>00181 <span class="comment">     * .</span>
-<a name="l00182"></a>00182 <span class="comment">     * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e</span>
-<a name="l00183"></a>00183 <span class="comment">     * M.</span>
-<a name="l00184"></a>00184 <span class="comment">     **********************************************************************/</span>
-<a name="l00185"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a4ade6e9e0b6abf54d1628e89a461411e">00185</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
-<a name="l00186"></a>00186                  std::vector&lt;real&gt;&amp; M)
-<a name="l00187"></a>00187       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00188"></a>00188       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
-<a name="l00189"></a>00189         real t[dim2_];
-<a name="l00190"></a>00190         IntReverse(x, y, z, lat, lon, h, t);
-<a name="l00191"></a>00191         copy(t, t + dim2_, M.begin());
-<a name="l00192"></a>00192       } <span class="keywordflow">else</span>
-<a name="l00193"></a>00193         IntReverse(x, y, z, lat, lon, h, NULL);
-<a name="l00194"></a>00194     }
-<a name="l00195"></a>00195 <span class="comment"></span>
-<a name="l00196"></a>00196 <span class="comment">    /** \name Inspector functions</span>
-<a name="l00197"></a>00197 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00198"></a>00198 <span class="comment">    ///@{</span>
-<a name="l00199"></a>00199 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00200"></a>00200 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
-<a name="l00201"></a>00201 <span class="comment">     *   the value used in the constructor.</span>
-<a name="l00202"></a>00202 <span class="comment">     **********************************************************************/</span>
-<a name="l00203"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#ae20c62c298f1724412fec581285cf269">00203</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#ae20c62c298f1724412fec581285cf269">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
-<a name="l00204"></a>00204 <span class="comment"></span>
-<a name="l00205"></a>00205 <span class="comment">    /**</span>
-<a name="l00206"></a>00206 <span class="comment">     * @return \e f the  flattening of the ellipsoid.  This is the</span>
-<a name="l00207"></a>00207 <span class="comment">     *   value used in the constructor.</span>
-<a name="l00208"></a>00208 <span class="comment">     **********************************************************************/</span>
-<a name="l00209"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a30ba434524b5836c9852d454e61d795f">00209</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#a30ba434524b5836c9852d454e61d795f">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _f; }
-<a name="l00210"></a>00210 <span class="comment"></span>
-<a name="l00211"></a>00211 <span class="comment">    /**</span>
-<a name="l00212"></a>00212 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
-<a name="l00213"></a>00213 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
-<a name="l00214"></a>00214 <span class="comment">     **********************************************************************/</span>
-<a name="l00215"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#aa947dd7275c12692b03d6ff43d217d13">00215</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#aa947dd7275c12692b03d6ff43d217d13">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }<span class="comment"></span>
-<a name="l00216"></a>00216 <span class="comment">    ///@}</span>
-<a name="l00217"></a>00217 <span class="comment"></span><span class="comment"></span>
-<a name="l00218"></a>00218 <span class="comment">    /**</span>
-<a name="l00219"></a>00219 <span class="comment">     * A global instantiation of Geocentric with the parameters for the WGS84</span>
-<a name="l00220"></a>00220 <span class="comment">     * ellipsoid.</span>
-<a name="l00221"></a>00221 <span class="comment">     **********************************************************************/</span>
-<a name="l00222"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">00222</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">WGS84</a>;
-<a name="l00223"></a>00223   };
-<a name="l00224"></a>00224 
-<a name="l00225"></a>00225 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00226"></a>00226 
-<a name="l00227"></a>00227 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOCENTRIC_HPP</span>
+<a name="l00159"></a>00159       <span class="keywordflow">if</span> (!Init())
+<a name="l00160"></a>00160         <span class="keywordflow">return</span>;
+<a name="l00161"></a>00161       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
+<a name="l00162"></a>00162         real t[dim2_];
+<a name="l00163"></a>00163         IntForward(lat, lon, h, X, Y, Z, t);
+<a name="l00164"></a>00164         copy(t, t + dim2_, M.begin());
+<a name="l00165"></a>00165       } <span class="keywordflow">else</span>
+<a name="l00166"></a>00166         IntForward(lat, lon, h, X, Y, Z, NULL);
+<a name="l00167"></a>00167     }
+<a name="l00168"></a>00168 <span class="comment"></span>
+<a name="l00169"></a>00169 <span class="comment">    /**</span>
+<a name="l00170"></a>00170 <span class="comment">     * Convert from geocentric to geodetic to coordinates.</span>
+<a name="l00171"></a>00171 <span class="comment">     *</span>
+<a name="l00172"></a>00172 <span class="comment">     * @param[in] X geocentric coordinate (meters).</span>
+<a name="l00173"></a>00173 <span class="comment">     * @param[in] Y geocentric coordinate (meters).</span>
+<a name="l00174"></a>00174 <span class="comment">     * @param[in] Z geocentric coordinate (meters).</span>
+<a name="l00175"></a>00175 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00176"></a>00176 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00177"></a>00177 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
+<a name="l00178"></a>00178 <span class="comment">     *</span>
+<a name="l00179"></a>00179 <span class="comment">     * In general there are multiple solutions and the result which maximizes</span>
+<a name="l00180"></a>00180 <span class="comment">     * \e h is returned.  If there are still multiple solutions with different</span>
+<a name="l00181"></a>00181 <span class="comment">     * latitudes (applies only if \e Z = 0), then the solution with \e lat &gt; 0</span>
+<a name="l00182"></a>00182 <span class="comment">     * is returned.  If there are still multiple solutions with different</span>
+<a name="l00183"></a>00183 <span class="comment">     * longitudes (applies only if \e X = \e Y = 0) then \e lon = 0 is</span>
+<a name="l00184"></a>00184 <span class="comment">     * returned.  The value of \e h returned satisfies \e h &gt;= - \e a (1 -</span>
+<a name="l00185"></a>00185 <span class="comment">     * &lt;i&gt;e&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt;) / sqrt(1 - &lt;i&gt;e&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; sin&lt;sup&gt;2&lt;/sup&gt;\e</span>
+<a name="l00186"></a>00186 <span class="comment">     * lat).  The value of \e lon returned is in the range [-180, 180).</span>
+<a name="l00187"></a>00187 <span class="comment">     **********************************************************************/</span>
+<a name="l00188"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a1907735ce8f5f915a14a5f7a8b3adfea">00188</a>     <span class="keywordtype">void</span> Reverse(real X, real Y, real Z, real&amp; lat, real&amp; lon, real&amp; h)
+<a name="l00189"></a>00189       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00190"></a>00190       <span class="keywordflow">if</span> (Init())
+<a name="l00191"></a>00191         IntReverse(X, Y, Z, lat, lon, h, NULL);
+<a name="l00192"></a>00192     }
+<a name="l00193"></a>00193 <span class="comment"></span>
+<a name="l00194"></a>00194 <span class="comment">    /**</span>
+<a name="l00195"></a>00195 <span class="comment">     * Convert from geocentric to geodetic to coordinates.</span>
+<a name="l00196"></a>00196 <span class="comment">     *</span>
+<a name="l00197"></a>00197 <span class="comment">     * @param[in] X geocentric coordinate (meters).</span>
+<a name="l00198"></a>00198 <span class="comment">     * @param[in] Y geocentric coordinate (meters).</span>
+<a name="l00199"></a>00199 <span class="comment">     * @param[in] Z geocentric coordinate (meters).</span>
+<a name="l00200"></a>00200 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00201"></a>00201 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00202"></a>00202 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
+<a name="l00203"></a>00203 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
+<a name="l00204"></a>00204 <span class="comment">     *   matrix in row-major order.</span>
+<a name="l00205"></a>00205 <span class="comment">     *</span>
+<a name="l00206"></a>00206 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
+<a name="l00207"></a>00207 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
+<a name="l00208"></a>00208 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
+<a name="l00209"></a>00209 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
+<a name="l00210"></a>00210 <span class="comment">     *   representation \e v1.</span>
+<a name="l00211"></a>00211 <span class="comment">     * - in geocentric \e X, \e Y, \e Z coordinates; call this representation</span>
+<a name="l00212"></a>00212 <span class="comment">     *   \e v0.</span>
+<a name="l00213"></a>00213 <span class="comment">     * .</span>
+<a name="l00214"></a>00214 <span class="comment">     * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e</span>
+<a name="l00215"></a>00215 <span class="comment">     * M.</span>
+<a name="l00216"></a>00216 <span class="comment">     **********************************************************************/</span>
+<a name="l00217"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#aeddd854d52064bcb1f068052057edf2c">00217</a>     <span class="keywordtype">void</span> Reverse(real X, real Y, real Z, real&amp; lat, real&amp; lon, real&amp; h,
+<a name="l00218"></a>00218                  std::vector&lt;real&gt;&amp; M)
+<a name="l00219"></a>00219       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00220"></a>00220       <span class="keywordflow">if</span> (!Init())
+<a name="l00221"></a>00221         <span class="keywordflow">return</span>;
+<a name="l00222"></a>00222       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
+<a name="l00223"></a>00223         real t[dim2_];
+<a name="l00224"></a>00224         IntReverse(X, Y, Z, lat, lon, h, t);
+<a name="l00225"></a>00225         copy(t, t + dim2_, M.begin());
+<a name="l00226"></a>00226       } <span class="keywordflow">else</span>
+<a name="l00227"></a>00227         IntReverse(X, Y, Z, lat, lon, h, NULL);
+<a name="l00228"></a>00228     }
+<a name="l00229"></a>00229 <span class="comment"></span>
+<a name="l00230"></a>00230 <span class="comment">    /** \name Inspector functions</span>
+<a name="l00231"></a>00231 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00232"></a>00232 <span class="comment">    ///@{</span>
+<a name="l00233"></a>00233 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00234"></a>00234 <span class="comment">     * @return true if the object has been initialized.</span>
+<a name="l00235"></a>00235 <span class="comment">     **********************************************************************/</span>
+<a name="l00236"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a7d2e34d1be6009caf4576c6cc884a589">00236</a>     <span class="keywordtype">bool</span> <a class="code" href="classGeographicLib_1_1Geocentric.html#a7d2e34d1be6009caf4576c6cc884a589">Init</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a &gt; 0; }<span class="comment"></span>
+<a name="l00237"></a>00237 <span class="comment">    /**</span>
+<a name="l00238"></a>00238 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
+<a name="l00239"></a>00239 <span class="comment">     *   the value used in the constructor.</span>
+<a name="l00240"></a>00240 <span class="comment">     **********************************************************************/</span>
+<a name="l00241"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#ae20c62c298f1724412fec581285cf269">00241</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> MajorRadius() <span class="keyword">const</span> throw()
+<a name="l00242"></a>00242     { <span class="keywordflow">return</span> Init() ? _a : Math::NaN&lt;real&gt;(); }
+<a name="l00243"></a>00243 <span class="comment"></span>
+<a name="l00244"></a>00244 <span class="comment">    /**</span>
+<a name="l00245"></a>00245 <span class="comment">     * @return \e f the  flattening of the ellipsoid.  This is the</span>
+<a name="l00246"></a>00246 <span class="comment">     *   value used in the constructor.</span>
+<a name="l00247"></a>00247 <span class="comment">     **********************************************************************/</span>
+<a name="l00248"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a30ba434524b5836c9852d454e61d795f">00248</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Flattening() <span class="keyword">const</span> throw()
+<a name="l00249"></a>00249     { <span class="keywordflow">return</span> Init() ? _f : Math::NaN&lt;real&gt;(); }
+<a name="l00250"></a>00250 <span class="comment"></span>
+<a name="l00251"></a>00251 <span class="comment">    /**</span>
+<a name="l00252"></a>00252 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
+<a name="l00253"></a>00253 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
+<a name="l00254"></a>00254 <span class="comment">     **********************************************************************/</span>
+<a name="l00255"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#aa947dd7275c12692b03d6ff43d217d13">00255</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
+<a name="l00256"></a>00256     { <span class="keywordflow">return</span> Init() ? 1/_f : Math::NaN&lt;real&gt;(); }<span class="comment"></span>
+<a name="l00257"></a>00257 <span class="comment">    ///@}</span>
+<a name="l00258"></a>00258 <span class="comment"></span><span class="comment"></span>
+<a name="l00259"></a>00259 <span class="comment">    /**</span>
+<a name="l00260"></a>00260 <span class="comment">     * A global instantiation of Geocentric with the parameters for the WGS84</span>
+<a name="l00261"></a>00261 <span class="comment">     * ellipsoid.</span>
+<a name="l00262"></a>00262 <span class="comment">     **********************************************************************/</span>
+<a name="l00263"></a><a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">00263</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">WGS84</a>;
+<a name="l00264"></a>00264   };
+<a name="l00265"></a>00265 
+<a name="l00266"></a>00266 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00267"></a>00267 
+<a name="l00268"></a>00268 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GEOCENTRIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

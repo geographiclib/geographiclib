@@ -61,6 +61,7 @@
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html#a91dd2b9cc408e35f8cb6482cdf3aadbf">CircularEngine</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">operator()</a> (real coslon, real sinlon) const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html#a48d2327412e0c674285ff6bb85440054">operator()</a> (real lon) const   throw ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html#aa15c408a0ff4cf17575e62edfeae77a6">operator()</a> (real coslon, real sinlon, real &amp;gradx, real &amp;grady, real &amp;gradz) const   throw ()</td></tr>
@@ -68,6 +69,8 @@ Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><h2><a name="friends"></a>
 Friends</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html#ab89064f7f3c32a745c72d8c3188f7485">SphericalEngine</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html#a243c90a7f9bf3f7aa96877a4b0667a89">GravityCircle</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1CircularEngine.html#a7294f6a1cc932f8fd1562a15602e9e86">MagneticCircle</a></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Spherical Harmonic sums for a circle. </p>
@@ -75,8 +78,28 @@ Friends</h2></td></tr>
 <p><a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> is tightly linked to the internals of <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a>. For that reason, the constructor for this class is private. Use <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a>, <a class="el" href="classGeographicLib_1_1SphericalHarmonic1.html#a32dd4989c40181939d667298681625f6">SphericalHarmonic1::Circle</a>, and <a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html#a3aa683a43a8e9232a16390b09c6be920">SphericalHarmonic2::Circle</a> to create instances of this class.</p>
 <p><a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> stores the coefficients needed to allow the summation over order to be performed in 2 or 6 vectors of length <em>M</em> + 1 (depending on whether gradients are to be calculated). For this reason the constructor may throw a bad_alloc exception. </p>
 
-<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00049">49</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
-</div><hr/><h2>Member Function Documentation</h2>
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00050">50</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a91dd2b9cc408e35f8cb6482cdf3aadbf"></a><!-- doxytag: member="GeographicLib::CircularEngine::CircularEngine" ref="a91dd2b9cc408e35f8cb6482cdf3aadbf" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">GeographicLib::CircularEngine::CircularEngine </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>A default constructor. <a class="el" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">CircularEngine::operator()()</a> on the resulting object returns zero. The resulting object can be assigned to the result of <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a>. </p>
+
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00117">117</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a8e39d83fcbed23df36ef4fefe2a86420"></a><!-- doxytag: member="GeographicLib::CircularEngine::operator()" ref="a8e39d83fcbed23df36ef4fefe2a86420" args="(real coslon, real sinlon) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -109,10 +132,10 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>[in] <em>V</em> the value of the sum.</dd></dl>
-<p>The arguments must satisfy <em>coslon<sup>2</sup></em> + <em>sinlon<sup>2</sup></em> = 1. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the value of the sum.</dd></dl>
+<p>The arguments must satisfy <em>coslon</em><sup>2</sup> + <em>sinlon</em><sup>2</sup> = 1. </p>
 
-<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00120">120</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00135">135</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -137,9 +160,9 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>[in] <em>V</em> the value of the sum. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the value of the sum. </dd></dl>
 
-<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00131">131</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00146">146</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -196,10 +219,10 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>[in] <em>V</em> the value of the sum.</dd></dl>
-<p>The gradients will only be computed if the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object was created with this capability (e.g., via <em>gradp</em> = true in <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a>). If not, <em>gradx</em>, etc., will not be touched. The arguments must satisfy <em>coslon<sup>2</sup></em> + <em>sinlon<sup>2</sup></em> = 1. </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the value of the sum.</dd></dl>
+<p>The gradients will only be computed if the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object was created with this capability (e.g., via <em>gradp</em> = true in <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a>). If not, <em>gradx</em>, etc., will not be touched. The arguments must satisfy <em>coslon</em><sup>2</sup> + <em>sinlon</em><sup>2</sup> = 1. </p>
 
-<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00154">154</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00169">169</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -249,10 +272,10 @@ Friends</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>[in] <em>V</em> the value of the sum.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the value of the sum.</dd></dl>
 <p>The gradients will only be computed if the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> object was created with this capability (e.g., via <em>gradp</em> = true in <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a>). If not, <em>gradx</em>, etc., will not be touched. </p>
 
-<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00173">173</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00188">188</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -268,7 +291,37 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00073">73</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00074">74</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a243c90a7f9bf3f7aa96877a4b0667a89"></a><!-- doxytag: member="GeographicLib::CircularEngine::GravityCircle" ref="a243c90a7f9bf3f7aa96877a4b0667a89" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classGeographicLib_1_1GravityCircle.html">GravityCircle</a><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00075">75</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7294f6a1cc932f8fd1562a15602e9e86"></a><!-- doxytag: member="GeographicLib::CircularEngine::MagneticCircle" ref="a7294f6a1cc932f8fd1562a15602e9e86" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classGeographicLib_1_1MagneticCircle.html">MagneticCircle</a><code> [friend]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="CircularEngine_8hpp_source.html#l00076">76</a> of file <a class="el" href="CircularEngine_8hpp_source.html">CircularEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -277,7 +330,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="CircularEngine_8cpp_source.html">CircularEngine.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

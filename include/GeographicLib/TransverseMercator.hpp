@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
-#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP "$Id: c59b9988116b53613878bbe265ae9fb3afa1d62f $"
+#define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP \
+  "$Id: 532c4a657f0355a74397cee3b87ab8f686205526 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -56,7 +57,7 @@ namespace GeographicLib {
    * TransverseMercator::Reverse functions.  The latitude of origin is taken to
    * be the equator.  There is no provision in this class for specifying a
    * false easting or false northing or a different latitude of origin.
-   * However these are can be simply included by the calling funtcion.  For
+   * However these are can be simply included by the calling function.  For
    * example, the UTMUPS class applies the false easting and false northing for
    * the UTM projections.  A more complicated example is the British National
    * Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">
@@ -94,7 +95,7 @@ namespace GeographicLib {
     /**
      * Constructor for a ellipsoid with
      *
-     * @param[in] a equatorial radius (meters)
+     * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.

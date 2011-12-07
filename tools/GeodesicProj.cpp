@@ -6,8 +6,15 @@
  * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geodesic.o GeodesicLine.o
- * AzimuthalEquidistant.o Gnomonic.o CassiniSoldner.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o GeodesicProj \
+ *       GeodesicProj.cpp \
+ *       ../src/AzimuthalEquidistant.cpp \
+ *       ../src/CassiniSoldner.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/Geodesic.cpp \
+ *       ../src/GeodesicLine.cpp \
+ *       ../src/Gnomonic.cpp
  *
  * See the <a href="GeodesicProj.1.html">man page</a> for usage
  * information.
@@ -80,7 +87,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: a0e352d6ad04efa43749755044a9beba95b4dad3 $\n"
+          << ": $Id: add83c03428521dde4441cc0de01d5b8313549b6 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

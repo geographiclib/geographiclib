@@ -72,7 +72,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Elliptic functions needed for <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a>. </p>
-<p>This provides the subset of elliptic functions needed for <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a>. For a given ellipsoid, only parameters <em>e<sup>2</sup></em> and 1 - <em>e<sup>2</sup></em> are needed. This class taken the parameter as a constructor parameters and caches the values of the required complete integrals. A method is provided for Jacobi elliptic functions and for the incomplete elliptic integral of the second kind in terms of the amplitude.</p>
+<p>This provides the subset of elliptic functions needed for <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a>. For a given ellipsoid, only parameters <em>e</em><sup>2</sup> and 1 - <em>e</em><sup>2</sup> are needed. This class taken the parameter as a constructor parameters and caches the values of the required complete integrals. A method is provided for Jacobi elliptic functions and for the incomplete elliptic integral of the second kind in terms of the amplitude.</p>
 <p>The computation of the elliptic integrals uses the algorithms given in</p>
 <ul>
 <li>B. C. Carlson, <a href="http://dx.doi.org/10.1007/BF02198293">Computation of elliptic integrals</a>, Numerical Algorithms 10, 13&ndash;26 (1995).</li>
@@ -83,7 +83,7 @@ Public Member Functions</h2></td></tr>
 </ul>
 <p>The notation follows Abramowitz and Stegun, Chapters 16 and 17. </p>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00042">42</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00043">43</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ada122111b55eb0ab9c7b9fafb0a4b1e6"></a><!-- doxytag: member="GeographicLib::EllipticFunction::EllipticFunction" ref="ada122111b55eb0ab9c7b9fafb0a4b1e6" args="(real m)" -->
 <div class="memitem">
@@ -107,7 +107,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00124">124</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00125">125</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
 
 </div>
 </div>
@@ -127,7 +127,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the parameter <em>m</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00072">72</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00073">73</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -146,7 +146,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the complementary parameter <em>m'</em> = (1 - <em>m</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00077">77</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00078">78</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -165,7 +165,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the complete integral of first kind, <em>K</em>(<em>m</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00082">82</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00083">83</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -184,7 +184,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the complete integral of second kind, <em>E</em>(<em>m</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00087">87</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00088">88</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -203,7 +203,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the difference <em>K</em>(<em>m</em>) - <em>E</em>(<em>m</em>) (which can be computed directly). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00093">93</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00094">94</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -254,7 +254,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00150">150</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00151">151</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
 
 </div>
 </div>
@@ -281,7 +281,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>int sqrt(1 - <em>m</em> sin<sup>2</sup>(<em>phi</em>)) <em>dphi</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00212">212</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00213">213</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
 
 </div>
 </div>
@@ -325,9 +325,9 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>int dn(<em>w</em>)<sup>2</sup> <em>dw</em> (A+S 17.2.10).</dd></dl>
-<p>Instead of specifying the ampltiude <em>phi</em>, we provide <em>sn</em> = sin(<em>phi</em>), <em>cn</em> = cos(<em>phi</em>), <em>dn</em> = sqrt(1 - <em>m</em> sin<sup>2</sup>(<em>phi</em>)). </p>
+<p>Instead of specifying the amplitude <em>phi</em>, we provide <em>sn</em> = sin(<em>phi</em>), <em>cn</em> = cos(<em>phi</em>), <em>dn</em> = sqrt(1 - <em>m</em> sin<sup>2</sup>(<em>phi</em>)). </p>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00197">197</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8cpp_source.html#l00198">198</a> of file <a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a>.</p>
 
 </div>
 </div>
@@ -336,7 +336,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

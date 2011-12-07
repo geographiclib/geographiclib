@@ -9,11 +9,13 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic utmupsreverse.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+//    -lGeographic utmupsreverse.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic utmupsreverse.cpp
+// mex -I../include -L../windows/Release
+//    -lGeographic utmupsreverse.cpp
 
-// $Id: c43b75e4c8141f57c8da7aa1fd6d3df45213ab77 $
+// $Id: 097c8ccdb535c826583b1d640d08e79bd1ad6c38 $
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <mex.h>

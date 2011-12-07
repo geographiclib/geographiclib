@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOIDEVAL 1"
-.TH GEOIDEVAL 1 "2011-11-08" "GeographicLib 1.15" "GeographicLib Utilities"
+.TH GEOIDEVAL 1 "2011-12-06" "GeographicLib 1.16" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -149,10 +149,13 @@ ellipsoid in the specified directions).
 .PP
 Positions are given as latitude and longitude, \s-1UTM/UPS\s0, or \s-1MGRS\s0, in any
 of the formats accepted by \fIGeoConvert\fR\|(1).  (\s-1MGRS\s0 coordinates signify the
-\&\fIcenter\fR of the corresponing \s-1MGRS\s0 square.)  If the \fB\-z\fR option is
+\&\fIcenter\fR of the corresponding \s-1MGRS\s0 square.)  If the \fB\-z\fR option is
 specified then the specified zone is prepended to each line of input
 (which must be in \s-1UTM/UPS\s0 coordinates).  This allows a file with \s-1UTM\s0
 eastings and northings in a single zone to be used as standard input.
+.PP
+More accurate results for the geoid height are provided by \fIGravity\fR\|(1).
+This utility can also compute the direction of gravity accurately.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 .IP "\fB\-n\fR" 4
@@ -245,10 +248,10 @@ gradients can result in large quantization errors.  This is particularly
 acute at high latitudes and for the easterly gradient.
 .PP
 The geoid data will be loaded from a directory specified at compile
-time.  This may changed by setting the environment variable
-\&\f(CW\*(C`GEOID_PATH\*(C'\fR or with the \fB\-d\fR option.  The \fB\-h\fR option prints the
-default geoid path and name.  Use the \fB\-v\fR option to ascertain the full
-path name of the data file.
+time.  This may changed by setting the environment variables
+\&\f(CW\*(C`GEOID_PATH\*(C'\fR or \f(CW\*(C`GEOGRAPHICLIB_DATA\*(C'\fR, or with the \fB\-d\fR option.  The
+\&\fB\-h\fR option prints the default geoid path and name.  Use the \fB\-v\fR
+option to ascertain the full path name of the data file.
 .PP
 Instructions for downloading and installing geoid data are available at
 <http://geographiclib.sf.net/html/geoid.html#geoidinst>.
@@ -310,6 +313,11 @@ Data/GeographicLib/geoids\*(C'\fR on Windows systems.  The \fB\-h\fR option repo
 the value of \fB\s-1GEOID_PATH\s0\fR, if defined, otherwise it reports the
 compile-time value.  If the \fB\-d\fR \fIdir\fR option is used, then \fIdir\fR
 takes precedence.
+.IP "\fB\s-1GEOGRAPHICLIB_DATA\s0\fR" 4
+.IX Item "GEOGRAPHICLIB_DATA"
+Another way of overriding the compile-time default magnetic path.  If it
+is set (and if \fB\s-1MAGNETIC_PATH\s0\fR is not set), then
+$\fB\s-1GEOGRAPHICLIB_DATA\s0\fR/magnetic is used.
 .SH "ERRORS"
 .IX Header "ERRORS"
 An illegal line of input will print an error message to standard output
@@ -364,7 +372,7 @@ Convert a point in \s-1UTM\s0 zone 18N from \s-1MSL\s0 to \s-1HAE\s0
 .Ve
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
-\&\fIGeoConvert\fR\|(1).
+\&\fIGeoConvert\fR\|(1), \fIGravity\fR\|(1).
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 \&\fBGeoidEval\fR was written by Charles Karney.

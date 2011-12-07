@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
-#define GEOGRAPHICLIB_CONSTANTS_HPP "$Id: 6201f1cbf92bd8bf866f879fdd95a3cbf5e3780f $"
+#define GEOGRAPHICLIB_CONSTANTS_HPP \
+  "$Id: b5139b6cb944bbfb59ea89fef8ab7f60306057c6 $"
 
 #include <GeographicLib/Config.h>
 
@@ -54,8 +55,8 @@
  * \brief Namespace for %GeographicLib
  *
  * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addtion all the header files are included via %GeographicLib/filename.  This
- * minimizes the likelihood of conflicts with other packages.
+ * addition all the header files are included via %GeographicLib/filename.
+ * This minimizes the likelihood of conflicts with other packages.
  **********************************************************************/
 namespace GeographicLib {
 
@@ -93,8 +94,8 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the equatorial radius of WGS84 ellipsoid (6378137 m).
      **********************************************************************/
-    template<typename T>
-    static inline T WGS84_a() throw() { return T(6378137) * meter<T>(); }
+    template<typename T> static inline T WGS84_a() throw()
+    { return T(6378137) * meter<T>(); }
     /**
      * A synonym for WGS84_a<real>().
      **********************************************************************/
@@ -103,20 +104,32 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the flattening of WGS84 ellipsoid (1/298.257223563).
      **********************************************************************/
-    template<typename T>
-    static inline T WGS84_f() throw() {
-      return T(1) / ( T(298) + T(257223563) / T(1000000000) );
-    }
+    template<typename T> static inline T WGS84_f() throw()
+    { return T(1) / ( T(298) + T(257223563) / T(1000000000) ); }
     /**
      * A synonym for WGS84_f<real>().
      **********************************************************************/
     static inline Math::real WGS84_f() throw() { return WGS84_f<real>(); }
     /**
+     * @tparam T the type of the returned value.
+     * @return the gravitational constant of the WGS84 ellipsoid, \e GM, in
+     *   m<sup>3</sup> s<sup>-2</sup>.
+     **********************************************************************/
+    template<typename T> static inline T WGS84_GM() throw()
+    { return T(3986004) * T(100000000) + T(41800000); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the angular velocity of the the WGS84 ellipsoid, \e omega, in
+     *   rad s<sup>-1</sup>.
+     **********************************************************************/
+    template<typename T> static inline T WGS84_omega() throw()
+    { return T(7292115) / (T(1000000) * T(100000)); }
+    /**
      * <b>DEPRECATED</b>
      * @return the reciprocal flattening of WGS84 ellipsoid.
      **********************************************************************/
-    template<typename T>
-    static inline T WGS84_r() throw() { return 1/WGS84_f<T>(); }
+    template<typename T> static inline T WGS84_r() throw()
+    { return 1/WGS84_f<T>(); }
     /**
      * <b>DEPRECATED</b>
      * A synonym for WGS84_r<real>().
@@ -124,10 +137,43 @@ namespace GeographicLib {
     static inline Math::real WGS84_r() throw() { return WGS84_r<real>(); }
     /**
      * @tparam T the type of the returned value.
+     * @return the equatorial radius of GRS80 ellipsoid, \e a, in m.
+     **********************************************************************/
+    template<typename T> static inline T GRS80_a() throw()
+    { return T(6378137); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the gravitational constant of the GRS80 ellipsoid, \e GM, in
+     *   m<sup>3</sup> s<sup>-2</sup>.
+     **********************************************************************/
+    template<typename T> static inline T GRS80_GM() throw()
+    { return T(3986005) * T(100000000); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the angular velocity of the the GRS80 ellipsoid, \e omega, in
+     *   rad s<sup>-1</sup>.
+     *
+     * This is about 2*pi*366.25 / (365.25*24*3600) rad s<sup>-1</sup>.  365.25
+     * is the number of days in a Julian year and 365.35/366.25 converts from
+     * solar days to sidereal days.  Using the number of days in a Gregorian
+     * year (365.2425) results in a worse approximation (because the Gregorian
+     * year includes the precession of the earth's axis).
+     **********************************************************************/
+    template<typename T> static inline T GRS80_omega() throw()
+    { return T(7292115) / (T(1000000) * T(100000)); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the dynamical form factor of the GRS80 ellipsoid,
+     *   <i>J</i><sub>2</sub>.
+     **********************************************************************/
+    template<typename T> static inline T GRS80_J2() throw()
+    { return T(108263) / T(100000000); }
+    /**
+     * @tparam T the type of the returned value.
      * @return the central scale factor for UTM (0.9996).
      **********************************************************************/
-    template<typename T>
-    static inline T UTM_k0() throw() {return T(9996) / T(10000); }
+    template<typename T> static inline T UTM_k0() throw()
+    {return T(9996) / T(10000); }
     /**
      * A synonym for UTM_k0<real>().
      **********************************************************************/
@@ -136,8 +182,8 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return the central scale factor for UPS (0.994).
      **********************************************************************/
-    template<typename T>
-    static inline T UPS_k0() throw() { return T(994) / T(1000); }
+    template<typename T> static inline T UPS_k0() throw()
+    { return T(994) / T(1000); }
     /**
      * A synonym for UPS_k0<real>().
      **********************************************************************/
@@ -154,8 +200,7 @@ namespace GeographicLib {
      * This is unity, but this lets the internal system of units be changed if
      * necessary.
      **********************************************************************/
-    template<typename T>
-    static inline T meter() throw() { return T(1); }
+    template<typename T> static inline T meter() throw() { return T(1); }
     /**
      * A synonym for meter<real>().
      **********************************************************************/
@@ -179,8 +224,7 @@ namespace GeographicLib {
      * This is unity, but this lets the internal system of units be changed if
      * necessary.
      **********************************************************************/
-    template<typename T>
-      static inline T square_meter() throw()
+    template<typename T> static inline T square_meter() throw()
     { return meter<real>() * meter<real>(); }
     /**
      * A synonym for square_meter<real>().

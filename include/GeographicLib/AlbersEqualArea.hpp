@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
-#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP "$Id: eee2b79bf8f65888c9a3b75a6b5be04ada04e985 $"
+#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP \
+  "$Id: 554a5a83b2feb1f029cc7a7e3c94bdc86ccc36d1 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -111,7 +112,7 @@ namespace GeographicLib {
     /**
      * Constructor with a single standard parallel.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
@@ -126,7 +127,7 @@ namespace GeographicLib {
     /**
      * Constructor with two standard parallels.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.
@@ -143,7 +144,7 @@ namespace GeographicLib {
     /**
      * Constructor with two standard parallels specified by sines and cosines.
      *
-     * @param[in] a equatorial radius of ellipsoid (meters)
+     * @param[in] a equatorial radius of ellipsoid (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.

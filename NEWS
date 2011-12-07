@@ -1,4 +1,4 @@
-# $Id: a503373f5a21a82488d6fd032b0ea0912f823b20 $
+# $Id: 695f79e762aec383d8c4fcc2dc62a21de5bb317f $
 
 A reverse chronological list of changes to GeographicLib
 
@@ -6,24 +6,59 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.15.
+The current version of the library is 1.16.
+
+Changes between 1.16 (released 2011-12-07) and 1.15 versions:
+
+  * Add calculation of the earth's gravitational field:
+    + add NormalGravity GravityModel and GravityCircle classes;
+    + add command line utility Gravity;
+    + add Gravity models;
+    + add Constants::WGS84_GM(), Constants::WGS84_omega(), and similarly
+      for GRS80.
+
+  * Build uses GEOGRAPHICLIB_DATA to specify a common parent directory
+    for geoid, gravity, and magnetic data (instead of
+    GEOGRAPHICLIB_GEOID_PATH, etc.); similarly, GeoidEval, Gravity, and
+    MagneticField, look at the environment variable GEOGRAPHICLIB_DATA
+    to locate the data.
+
+  * Spherical harmonic software changes:
+    + capitalize enums SphericalHarmonic::FULL and
+      SphericalHarmonic::SCHMIDT (the lower case names are retained but
+      deprecated);
+    + optimize the sum by using a static table of square roots which is
+      updated by SphericalEngine::RootTable;
+    + avoid overflow for high degree models.
+
+  * Magnetic software fixes:
+    + fix documentation BUG in MagneticModel::Circle;
+    + make MagneticModel constructor explicit;
+    + provide default MagneticCircle constructor;
+    + add additional inspector functions to MagneticCircle;
+    + add -c option to MagneticField;
+    + default height to zero in MagneticField.
 
 Changes between 1.15 (released 2011-11-08) and 1.14 versions:
 
-  * Add ref calculation of the earth's magnetic field:
-    + add MagneticModel and MagneticCircle classes,
-    + add command line utility MagneticField,
-    + add Magnetic models,
-    + add Installing the magnetic field models,
-    + add The format of the magnetic model files,
+  * Add calculation of the earth's magnetic field:
+    + add MagneticModel and MagneticCircle classes;
+    + add command line utility MagneticField;
+    + add Magnetic models;
+    + add Installing the magnetic field models;
+    + add The format of the magnetic model files;
     + add classes SphericalEngine, CircularEngine, SphericalHarmonic,
       SphericalHarmonic1, and SphericalHarmonic2. which sum spherical
       harmonic series.
+
   * Add Utility class to support I/O and date manipulation.
+
   * Cmake configuration includes a _d suffix on the library built in
     debug mode.
+
   * For the Python package, include manifest and readme files; don't
     install setup.py for non-Windows systems.
+
   * Include Doxygen tag file in distribution as doc/html/Geographic.tag.
 
 Changes between 1.14 (released 2011-09-30) and 1.13 versions:
@@ -40,7 +75,7 @@ Changes between 1.14 (released 2011-09-30) and 1.13 versions:
   * Changes in python interface:
     + FIX BUG in transcription of Geodesic::Inverse;
     + include setup.py for easy installation;
-    + python only distibution is available at
+    + python only distribution is available at
       http://pypi.python.org/pypi/geographiclib
 
   * Supply a minimal Qt qmake project file for library
@@ -63,7 +98,7 @@ Changes between 1.13 (released 2011-08-13) and 1.12 versions:
     TransverseMercatorExact, and LambertConformalConic.
 
   * For most classes, get rid of const member variables so that the
-    default copy assigment works.
+    default copy assignment works.
 
   * Put Math and Accumulator in their own header files.
 
@@ -406,7 +441,7 @@ Changes between 2009-11 and 2009-10 versions:
       arguments do not alter the arguments when an exception is thrown.
     + Improve accuracy of GeographicLib::MGRS::Forward.
     + Include more information in some error messages.
-    + Improve accuracy of inverse hypobolic functions.
+    + Improve accuracy of inverse hyperbolic functions.
     + Fix the way GeographicLib::Math functions handle different
       precisions.
 
@@ -420,7 +455,7 @@ Changes between 2009-10 and 2009-09 versions:
     + Introduce Math class for common mathematical functions (in
       Constants.hpp).
     + Use Math::real as the type for all real quantities.  By default this
-      is typedefed to double; and the library should be installed this
+      is typedef'ed to double; and the library should be installed this
       way.
     + Eliminate const reference members of AzimuthalEquidistant,
       CassiniSoldner and LocalCartesian so that they may be copied.

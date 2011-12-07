@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
-#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP "$Id: babda3abc04257e799b84de8aaaec20082b960e0 $"
+#define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP \
+  "$Id: 53979440f6d23cf95aefe41a2b9ccb8eedf5b811 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -35,6 +36,12 @@ namespace GeographicLib {
     static const real tol_;
     static const real overflow_;
     static const int numit_ = 5;
+    // tan(x) for x in [-pi/2, pi/2] ensuring that the sign is right
+    static inline real tanx(real x) throw() {
+      real t = std::tan(x);
+      // Write the tests this way to ensure that tanx(NaN()) is NaN()
+      return x >= 0 ? (!(t < 0) ? t : overflow_) : (!(t >= 0) ? t : -overflow_);
+    }
     // Return e * atanh(e * x) for f >= 0, else return
     // - sqrt(-e2) * atan( sqrt(-e2) * x) for f < 0
     inline real eatanhe(real x) const throw() {
@@ -45,7 +52,7 @@ namespace GeographicLib {
     /**
      * Constructor for a ellipsoid with
      *
-     * @param[in] a equatorial radius (meters)
+     * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.  If \e f > 1, set flattening
      *   to 1/\e f.

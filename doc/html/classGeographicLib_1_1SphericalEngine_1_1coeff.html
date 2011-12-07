@@ -77,13 +77,14 @@ Public Member Functions</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a8a126c9790a7a1609046fbae7934e587">Csize</a> (int N, int M)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a98a75827d68247cf5ad1843d9d68b222">Ssize</a> (int N, int M)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a2d545f589894683e7de297c42b7c995a">readcoeffs</a> (std::istream &amp;stream, int &amp;N, int &amp;M, std::vector&lt; real &gt; &amp;C, std::vector&lt; real &gt; &amp;S)</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Package up coefficients for <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a>. </p>
 <p>This packages up the <em>C</em>, <em>S</em> coefficients and information about how the coefficients are stored into a single structure. This allows a vector of type <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html" title="Package up coefficients for SphericalEngine.">SphericalEngine::coeff</a> to be passed to <a class="el" href="classGeographicLib_1_1SphericalEngine.html#a987cbe2cdb67410174a6e9594da92573">SphericalEngine::Value</a>. This class also includes functions to aid indexing into <em>C</em> and <em>S</em>.</p>
-<p>The storage layout of the coefficients is documented in <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> and <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a00914779e17f5de7f0379f59100c38b5">SphericalHarmonic::SphericalHarmonic</a>. </p>
+<p>The storage layout of the coefficients is documented in <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> and <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#adb71d28aa60a813ca3384f9c58ef8fa1">SphericalHarmonic::SphericalHarmonic</a>. </p>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00078">78</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00089">89</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a98ee0fd797434667a8cb5093d7644af4"></a><!-- doxytag: member="GeographicLib::SphericalEngine::coeff::coeff" ref="a98ee0fd797434667a8cb5093d7644af4" args="()" -->
 <div class="memitem">
@@ -100,7 +101,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>A default constructor </p>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00087">87</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00098">98</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -159,7 +160,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <p>This requires <em>N</em> &gt;= <em>nmx</em> &gt;= <em>mmx</em> &gt;= -1. <em>C</em> and <em>S</em> must also be large enough to hold the coefficients. Otherwise an exception is thrown. </p>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00106">106</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00117">117</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+
+<p>References <a class="el" href="SphericalEngine_8cpp_source.html#l00372">GeographicLib::SphericalEngine::RootTable()</a>.</p>
 
 </div>
 </div>
@@ -204,7 +207,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <p>This requires <em>N</em> &gt;= -1. <em>C</em> and <em>S</em> must also be large enough to hold the coefficients. Otherwise an exception is thrown. </p>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00131">131</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00143">143</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+
+<p>References <a class="el" href="SphericalEngine_8cpp_source.html#l00372">GeographicLib::SphericalEngine::RootTable()</a>.</p>
 
 </div>
 </div>
@@ -224,7 +229,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>N</em> the degree giving storage layout for <em>C</em> and <em>S</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00149">149</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00162">162</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+
+<p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00043">GeographicLib::GravityModel::GravityModel()</a>.</p>
 
 </div>
 </div>
@@ -243,9 +250,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>nmx</em> the maximum degree to be used. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00153">153</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00166">166</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00283">GeographicLib::SphericalEngine::Circle()</a>.</p>
+<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00298">GeographicLib::SphericalEngine::Circle()</a>, and <a class="el" href="GravityModel_8cpp_source.html#l00043">GeographicLib::GravityModel::GravityModel()</a>.</p>
 
 </div>
 </div>
@@ -264,9 +271,9 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>mmx</em> the maximum order to be used. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00157">157</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00170">170</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00283">GeographicLib::SphericalEngine::Circle()</a>.</p>
+<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00298">GeographicLib::SphericalEngine::Circle()</a>, and <a class="el" href="GravityModel_8cpp_source.html#l00043">GeographicLib::GravityModel::GravityModel()</a>.</p>
 
 </div>
 </div>
@@ -304,7 +311,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the one-dimensional index. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00165">165</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00178">178</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -331,9 +338,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the value of the <em>C</em> coefficient. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00173">173</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00186">186</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00283">GeographicLib::SphericalEngine::Circle()</a>.</p>
+<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00298">GeographicLib::SphericalEngine::Circle()</a>.</p>
 
 </div>
 </div>
@@ -360,9 +367,9 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the value of the <em>S</em> coefficient. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00180">180</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00193">193</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00283">GeographicLib::SphericalEngine::Circle()</a>.</p>
+<p>Referenced by <a class="el" href="SphericalEngine_8cpp_source.html#l00298">GeographicLib::SphericalEngine::Circle()</a>.</p>
 
 </div>
 </div>
@@ -414,7 +421,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the value of the <em>C</em> coefficient multiplied by <em>f</em> in <em>n</em> and <em>m</em> are in range else 0. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00191">191</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00204">204</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -466,7 +473,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the value of the <em>S</em> coefficient multiplied by <em>f</em> in <em>n</em> and <em>m</em> are in range else 0. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00203">203</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00216">216</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -504,9 +511,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the size of the vector of cosine terms as stored in column major order. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00214">214</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="MagneticModel_8cpp_source.html#l00047">GeographicLib::MagneticModel::MagneticModel()</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00227">227</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
@@ -544,17 +549,77 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the size of the vector of cosine terms as stored in column major order. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00225">225</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
-
-<p>Referenced by <a class="el" href="MagneticModel_8cpp_source.html#l00047">GeographicLib::MagneticModel::MagneticModel()</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8hpp_source.html#l00238">238</a> of file <a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a class="anchor" id="a2d545f589894683e7de297c42b7c995a"></a><!-- doxytag: member="GeographicLib::SphericalEngine::coeff::readcoeffs" ref="a2d545f589894683e7de297c42b7c995a" args="(std::istream &amp;stream, int &amp;N, int &amp;M, std::vector&lt; real &gt; &amp;C, std::vector&lt; real &gt; &amp;S)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void GeographicLib::SphericalEngine::coeff::readcoeffs </td>
+          <td>(</td>
+          <td class="paramtype">std::istream &amp;&#160;</td>
+          <td class="paramname"><em>stream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>N</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>M</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; real &gt; &amp;&#160;</td>
+          <td class="paramname"><em>C</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; real &gt; &amp;&#160;</td>
+          <td class="paramname"><em>S</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Load coefficients from a binary stream.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">stream</td><td>the input stream. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">N</td><td>The maximum degree of the coefficients. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">M</td><td>The maximum order of the coefficients. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">C</td><td>The vector of cosine coefficients. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">S</td><td>The vector of sine coefficients.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p><em>N</em> and <em>M</em> are read as 4-byte ints. <em>C</em> and <em>S</em> are resized to accommodate all the coefficients (with the <em>m</em> = 0 coefficients for <em>S</em> excluded) and the data for these coefficients read as 8-byte doubles. The coefficients are stored in column major order. The bytes in the stream should use little-endian ordering. IEEE floating point is assumed for the coefficients. </p>
+
+<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00382">382</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
+
+<p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00043">GeographicLib::GravityModel::GravityModel()</a>, and <a class="el" href="MagneticModel_8cpp_source.html#l00044">GeographicLib::MagneticModel::MagneticModel()</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="SphericalEngine_8hpp_source.html">SphericalEngine.hpp</a></li>
+<li><a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

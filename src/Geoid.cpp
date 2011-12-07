@@ -12,24 +12,21 @@
 #include <cstdlib>
 #include <algorithm>
 
-#define GEOGRAPHICLIB_GEOID_CPP "$Id: abf980eb7f6d36a4cbeacbaa173cac8a54144344 $"
+#define GEOGRAPHICLIB_GEOID_CPP \
+  "$Id: e09552b0e1b520b1adda6ab58b3f5602d8e2311e $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
 
-#if !defined(GEOID_DEFAULT_PATH)
-#  if defined(GEOGRAPHICLIB_GEOID_PATH)
-     // Use cmake supplied value is available
-#    define GEOID_DEFAULT_PATH GEOGRAPHICLIB_GEOID_PATH
+#if !defined(GEOGRAPHICLIB_DATA)
+#  if defined(_MSC_VER)
+#    define GEOGRAPHICLIB_DATA \
+  "C:/Documents and Settings/All Users/Application Data/GeographicLib"
 #  else
-#    if defined(_MSC_VER)
-#      define GEOID_DEFAULT_PATH \
-  "C:/Documents and Settings/All Users/Application Data/GeographicLib/geoids"
-#    else
-#      define GEOID_DEFAULT_PATH "/usr/local/share/GeographicLib/geoids"
-#    endif
+#    define GEOGRAPHICLIB_DATA "/usr/local/share/GeographicLib"
 #  endif
 #endif
+
 #if !defined(GEOID_DEFAULT_NAME)
 #  define GEOID_DEFAULT_NAME "egm96-5"
 #endif
@@ -534,7 +531,12 @@ namespace GeographicLib {
     char* geoidpath = getenv("GEOID_PATH");
     if (geoidpath)
       path = string(geoidpath);
-    return path.length() ? path : string(GEOID_DEFAULT_PATH);
+    if (path.length())
+      return path;
+    char* datapath = getenv("GEOGRAPHICLIB_DATA");
+    if (datapath)
+      path = string(datapath);
+    return (path.length() ? path : string(GEOGRAPHICLIB_DATA)) + "/geoids";
   }
 
   std::string Geoid::DefaultGeoidName() {

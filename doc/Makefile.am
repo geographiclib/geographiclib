@@ -1,4 +1,4 @@
-#  $Id: f6788eb5b1b485af82a583bce2d45dbf7d98c637 $
+#  $Id: cfece0673e6f2ce525f3a520aa0030e89ad8f686 $
 
 EXTRAFILES = tmseries30.html geodseries30.html
 
@@ -67,6 +67,7 @@ $(top_srcdir)/tools/GeodesicProj.cpp \
 $(top_srcdir)/tools/GeoConvert.cpp \
 $(top_srcdir)/tools/Geod.cpp \
 $(top_srcdir)/tools/GeoidEval.cpp \
+$(top_srcdir)/tools/Gravity.cpp \
 $(top_srcdir)/tools/Planimeter.cpp \
 $(top_srcdir)/tools/TransverseMercatorProj.cpp
 
@@ -77,6 +78,7 @@ MANPAGES = \
 ../man/GeoConvert.1.html \
 ../man/Geod.1.html \
 ../man/GeoidEval.1.html \
+../man/Gravity.1.html \
 ../man/MagneticField.1.html \
 ../man/Planimeter.1.html \
 ../man/TransverseMercatorProj.1.html

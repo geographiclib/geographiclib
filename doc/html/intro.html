@@ -36,11 +36,11 @@
 <div class="title">Introduction </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Forward to <a class="el" href="install.html">Installing GeographicLib</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib offers a C++ interfaces to a small (but important!) set of geographic transformations. It grew out of a desire to improve on the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a> package for transforming between geographic and MGRS coordinates. At present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local cartesian projections, geoid heights, geomagnetic field models, and classes for geodesic calculations.</p>
+<div class="textblock"><center> Forward to <a class="el" href="install.html">Installing GeographicLib</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib offers a C++ interfaces to a small (but important!) set of geographic transformations. It grew out of a desire to improve on the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a> package for transforming between geographic and MGRS coordinates. At present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local cartesian projections, gravity and geomagnetic models, and classes for geodesic calculations.</p>
 <p>The goals of GeographicLib are:</p>
 <ul>
 <li>Accuracy. In most applications the accuracy is close to round-off, about 5 nm. Even though in many geographic applications 1 cm is considered "accurate enough", there is little penalty in providing much better accuracy. If situations where a faster approximate algorithm is necessary, GeographicLib offers an accurate benchmark to guide the development.</li>
-<li>Completeness. For each of the projections included, an attempt is made to provide a complete solution. For example, <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">GeographicLib::Geodesic::Inverse</a> works for anti-podal points. Similarly, <a class="el" href="classGeographicLib_1_1Geocentric.html#a7766e10bb3436647db9e2af896b05c51">GeographicLib::Geocentric.Reverse</a> will return accurate geodetic coordinates even for points close to the center of the earth.</li>
+<li>Completeness. For each of the projections included, an attempt is made to provide a complete solution. For example, <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">GeographicLib::Geodesic::Inverse</a> works for anti-podal points. Similarly, <a class="el" href="classGeographicLib_1_1Geocentric.html#a1907735ce8f5f915a14a5f7a8b3adfea">GeographicLib::Geocentric.Reverse</a> will return accurate geodetic coordinates even for points close to the center of the earth.</li>
 <li>C++ interface. For the projection methods, this allows encapsulation of the ellipsoid parameters.</li>
 <li>Emphasis on projections necessary for analyzing military data.</li>
 <li>Uniform treatment of UTM/UPS. The <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">GeographicLib::UTMUPS</a> class treats UPS as zone 0. This simplifies conversions between UTM and UPS coordinates, etc.</li>
@@ -53,7 +53,7 @@
 <p>The section <a class="el" href="transversemercator.html">Transverse Mercator Projection</a> documents various properties of this projection.</p>
 <p>Undoubtedly, bugs lurk in this code and in the documentation. Please report any you find to &lt;<a href="mailto:charles@karney.com">charles@karney.com</a>&gt;.</p>
 <center> Forward to <a class="el" href="install.html">Installing GeographicLib</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

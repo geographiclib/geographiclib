@@ -81,7 +81,7 @@ Public Member Functions</h2></td></tr>
 </ul>
 <p>This class lets you add vertices one at a time to the polygon. The area and perimeter are accumulated in two times the standard floating point precision to guard against the loss of accuracy with many-sided polygons. At any point you can ask for the perimeter and area so far. There's an option to treat the points as defining a polyline instead of a polygon; in that case, only the perimeter is computed. </p>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00046">46</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00047">47</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a060a1dc499bd079c62f62ed5cad929e5"></a><!-- doxytag: member="GeographicLib::PolygonArea::PolygonArea" ref="a060a1dc499bd079c62f62ed5cad929e5" args="(const Geodesic &amp;earth, bool polyline=false)" -->
 <div class="memitem">
@@ -116,7 +116,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00091">91</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00092">92</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -136,9 +136,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Clear <a class="el" href="classGeographicLib_1_1PolygonArea.html" title="Polygon Areas.">PolygonArea</a>, allowing a new polygon to be started. </p>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00103">103</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00104">104</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Planimeter_8cpp_source.html#l00026">main()</a>.</p>
+<p>Referenced by <a class="el" href="Planimeter_8cpp_source.html#l00037">main()</a>.</p>
 
 </div>
 </div>
@@ -176,9 +176,9 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p><em>lat</em> should be in the range [-90, 90] and <em>lon</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="PolygonArea_8cpp_source.html#l00022">22</a> of file <a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8cpp_source.html#l00023">23</a> of file <a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Planimeter_8cpp_source.html#l00026">main()</a>.</p>
+<p>Referenced by <a class="el" href="Planimeter_8cpp_source.html#l00037">main()</a>.</p>
 
 </div>
 </div>
@@ -230,9 +230,9 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the number of points. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolygonArea_8cpp_source.html#l00040">40</a> of file <a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8cpp_source.html#l00041">41</a> of file <a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="Planimeter_8cpp_source.html#l00026">main()</a>.</p>
+<p>Referenced by <a class="el" href="Planimeter_8cpp_source.html#l00037">main()</a>.</p>
 
 </div>
 </div>
@@ -299,7 +299,7 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the number of points.</dd></dl>
 <p><em>lat</em> should be in the range [-90, 90] and <em>lon</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="PolygonArea_8cpp_source.html#l00081">81</a> of file <a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8cpp_source.html#l00082">82</a> of file <a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a>.</p>
 
 </div>
 </div>
@@ -318,7 +318,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00174">174</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00175">175</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -337,7 +337,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00180">180</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00181">181</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -346,7 +346,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

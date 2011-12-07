@@ -58,139 +58,140 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)</span>
-<a name="l00011"></a><a class="code" href="AzimuthalEquidistant_8hpp.html#a70d20e83eaef9177a9dbc4503fae17b7">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP &quot;$Id: 48f5a84645ea5925a2e7826adb07a42fe091d09f $&quot;</span>
-<a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
-<a name="l00015"></a>00015 
-<a name="l00016"></a>00016 <span class="keyword">namespace </span>GeographicLib {
-<a name="l00017"></a>00017 <span class="comment"></span>
-<a name="l00018"></a>00018 <span class="comment">  /**</span>
-<a name="l00019"></a>00019 <span class="comment">   * \brief Azimuthal Equidistant Projection.</span>
-<a name="l00020"></a>00020 <span class="comment">   *</span>
-<a name="l00021"></a>00021 <span class="comment">   * Azimuthal equidistant projection centered at an arbitrary position on the</span>
-<a name="l00022"></a>00022 <span class="comment">   * ellipsoid.  For a point in projected space (\e x, \e y), the geodesic</span>
-<a name="l00023"></a>00023 <span class="comment">   * distance from the center position is hypot(\e x, \e y) and the azimuth of</span>
-<a name="l00024"></a>00024 <span class="comment">   * the geodesic from the center point is atan2(\e x, \e y).  The Forward and</span>
-<a name="l00025"></a>00025 <span class="comment">   * Reverse methods also return the azimuth \e azi of the geodesic at (\e x,</span>
-<a name="l00026"></a>00026 <span class="comment">   * \e y) and reciprocal scale \e rk in the azimuthal direction which,</span>
-<a name="l00027"></a>00027 <span class="comment">   * together with the basic properties of the projection, serve to specify</span>
-<a name="l00028"></a>00028 <span class="comment">   * completely the local affine transformation between geographic and</span>
-<a name="l00029"></a>00029 <span class="comment">   * projected coordinates.</span>
-<a name="l00030"></a>00030 <span class="comment">   *</span>
-<a name="l00031"></a>00031 <span class="comment">   * The conversions all take place using a Geodesic object (by default</span>
-<a name="l00032"></a>00032 <span class="comment">   * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.</span>
-<a name="l00033"></a>00033 <span class="comment">   **********************************************************************/</span>
-<a name="l00034"></a>00034 
-<a name="l00035"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html">00035</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">AzimuthalEquidistant</a> {
-<a name="l00036"></a>00036   <span class="keyword">private</span>:
-<a name="l00037"></a>00037     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00038"></a>00038     <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> _earth;
-<a name="l00039"></a>00039     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
-<a name="l00040"></a>00040   <span class="keyword">public</span>:
-<a name="l00041"></a>00041 <span class="comment"></span>
-<a name="l00042"></a>00042 <span class="comment">    /**</span>
-<a name="l00043"></a>00043 <span class="comment">     * Constructor for AzimuthalEquidistant.</span>
-<a name="l00044"></a>00044 <span class="comment">     *</span>
-<a name="l00045"></a>00045 <span class="comment">     * @param[in] earth the Geodesic object to use for geodesic calculations.</span>
-<a name="l00046"></a>00046 <span class="comment">     *   By default this uses the WGS84 ellipsoid.</span>
-<a name="l00047"></a>00047 <span class="comment">     **********************************************************************/</span>
-<a name="l00048"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a125571cdeed68d10192611cc12e221ce">00048</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">AzimuthalEquidistant</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">Geodesic::WGS84</a>)
-<a name="l00049"></a>00049       throw() : _earth(earth) {}
-<a name="l00050"></a>00050 <span class="comment"></span>
-<a name="l00051"></a>00051 <span class="comment">    /**</span>
-<a name="l00052"></a>00052 <span class="comment">     * Forward projection, from geographic to azimuthal equidistant.</span>
-<a name="l00053"></a>00053 <span class="comment">     *</span>
-<a name="l00054"></a>00054 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
-<a name="l00055"></a>00055 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
-<a name="l00056"></a>00056 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00057"></a>00057 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00058"></a>00058 <span class="comment">     * @param[out] x easting of point (meters).</span>
-<a name="l00059"></a>00059 <span class="comment">     * @param[out] y northing of point (meters).</span>
-<a name="l00060"></a>00060 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
-<a name="l00061"></a>00061 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
-<a name="l00062"></a>00062 <span class="comment">     *</span>
-<a name="l00063"></a>00063 <span class="comment">     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e</span>
-<a name="l00064"></a>00064 <span class="comment">     * lon should be in the range [-180, 360].  The scale of the projection is</span>
-<a name="l00065"></a>00065 <span class="comment">     * 1 in the &quot;radial&quot; direction, \e azi clockwise from true north, and is</span>
-<a name="l00066"></a>00066 <span class="comment">     * 1/\e rk in the direction perpendicular to this.  A call to Forward</span>
-<a name="l00067"></a>00067 <span class="comment">     * followed by a call to Reverse will return the original (\e lat, \e lon)</span>
-<a name="l00068"></a>00068 <span class="comment">     * (to within roundoff).</span>
-<a name="l00069"></a>00069 <span class="comment">     **********************************************************************/</span>
-<a name="l00070"></a>00070     <span class="keywordtype">void</span> Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon,
-<a name="l00071"></a>00071                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00072"></a>00072 <span class="comment"></span>
-<a name="l00073"></a>00073 <span class="comment">    /**</span>
-<a name="l00074"></a>00074 <span class="comment">     * Reverse projection, from azimuthal equidistant to geographic.</span>
-<a name="l00075"></a>00075 <span class="comment">     *</span>
-<a name="l00076"></a>00076 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
-<a name="l00077"></a>00077 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
-<a name="l00078"></a>00078 <span class="comment">     * @param[in] x easting of point (meters).</span>
-<a name="l00079"></a>00079 <span class="comment">     * @param[in] y northing of point (meters).</span>
-<a name="l00080"></a>00080 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00081"></a>00081 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00082"></a>00082 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
-<a name="l00083"></a>00083 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
-<a name="l00084"></a>00084 <span class="comment">     *</span>
-<a name="l00085"></a>00085 <span class="comment">     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the</span>
-<a name="l00086"></a>00086 <span class="comment">     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon</span>
-<a name="l00087"></a>00087 <span class="comment">     * will be in the range [-180, 180).  The scale of the projection is 1 in</span>
-<a name="l00088"></a>00088 <span class="comment">     * the &quot;radial&quot; direction, \e azi clockwise from true north, and is 1/\e rk</span>
-<a name="l00089"></a>00089 <span class="comment">     * in the direction perpendicular to this.  A call to Reverse followed by a</span>
-<a name="l00090"></a>00090 <span class="comment">     * call to Forward will return the original (\e x, \e y) (to roundoff) only</span>
-<a name="l00091"></a>00091 <span class="comment">     * if the geodesic to (\e x, \e y) is a shortest path.</span>
-<a name="l00092"></a>00092 <span class="comment">     **********************************************************************/</span>
-<a name="l00093"></a>00093     <span class="keywordtype">void</span> Reverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
-<a name="l00094"></a>00094                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00095"></a>00095 <span class="comment"></span>
-<a name="l00096"></a>00096 <span class="comment">    /**</span>
-<a name="l00097"></a>00097 <span class="comment">     * AzimuthalEquidistant::Forward without returning the azimuth and scale.</span>
-<a name="l00098"></a>00098 <span class="comment">     **********************************************************************/</span>
-<a name="l00099"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a950431c3d269fb82e9410f332c401786">00099</a>     <span class="keywordtype">void</span> Forward(real lat0, real lon0, real lat, real lon,
-<a name="l00100"></a>00100                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00101"></a>00101       real azi, rk;
-<a name="l00102"></a>00102       Forward(lat0, lon0, lat, lon, x, y, azi, rk);
-<a name="l00103"></a>00103     }
-<a name="l00104"></a>00104 <span class="comment"></span>
-<a name="l00105"></a>00105 <span class="comment">    /**</span>
-<a name="l00106"></a>00106 <span class="comment">     * AzimuthalEquidistant::Reverse without returning the azimuth and scale.</span>
-<a name="l00107"></a>00107 <span class="comment">     **********************************************************************/</span>
-<a name="l00108"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a6b86b19f2e1c773e028e386a0f5e00e0">00108</a>     <span class="keywordtype">void</span> Reverse(real lat0, real lon0, real x, real y,
-<a name="l00109"></a>00109                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00110"></a>00110       real azi, rk;
-<a name="l00111"></a>00111       Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-<a name="l00112"></a>00112     }
-<a name="l00113"></a>00113 <span class="comment"></span>
-<a name="l00114"></a>00114 <span class="comment">    /** \name Inspector functions</span>
-<a name="l00115"></a>00115 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00116"></a>00116 <span class="comment">    ///@{</span>
-<a name="l00117"></a>00117 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00118"></a>00118 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
-<a name="l00119"></a>00119 <span class="comment">     *   the value inherited from the Geodesic object used in the constructor.</span>
-<a name="l00120"></a>00120 <span class="comment">     **********************************************************************/</span>
-<a name="l00121"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a42c4103265af804395b8b5260a4c25e0">00121</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a42c4103265af804395b8b5260a4c25e0">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.MajorRadius(); }
-<a name="l00122"></a>00122 <span class="comment"></span>
-<a name="l00123"></a>00123 <span class="comment">    /**</span>
-<a name="l00124"></a>00124 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value</span>
-<a name="l00125"></a>00125 <span class="comment">     *   inherited from the Geodesic object used in the constructor.</span>
-<a name="l00126"></a>00126 <span class="comment">     **********************************************************************/</span>
-<a name="l00127"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a3f300fcc10aeee9dc88ff93fb991f191">00127</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a3f300fcc10aeee9dc88ff93fb991f191">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.Flattening(); }
-<a name="l00128"></a>00128 <span class="comment"></span>
-<a name="l00129"></a>00129 <span class="comment">    /**</span>
-<a name="l00130"></a>00130 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
-<a name="l00131"></a>00131 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
-<a name="l00132"></a>00132 <span class="comment">     **********************************************************************/</span>
-<a name="l00133"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#ac4ec606131221d3eb0acc1ae00a34c63">00133</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
-<a name="l00134"></a>00134     { <span class="keywordflow">return</span> _earth.InverseFlattening(); }<span class="comment"></span>
-<a name="l00135"></a>00135 <span class="comment">    ///@}</span>
-<a name="l00136"></a>00136 <span class="comment"></span>  };
-<a name="l00137"></a>00137 
-<a name="l00138"></a>00138 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00139"></a>00139 
-<a name="l00140"></a>00140 <span class="preprocessor">#endif  // GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP</span>
+<a name="l00011"></a><a class="code" href="AzimuthalEquidistant_8hpp.html#a70d20e83eaef9177a9dbc4503fae17b7">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP \</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 457b3566d14500cdc67b82e6422e0e621f136b3e $&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor"></span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 
+<a name="l00017"></a>00017 <span class="keyword">namespace </span>GeographicLib {
+<a name="l00018"></a>00018 <span class="comment"></span>
+<a name="l00019"></a>00019 <span class="comment">  /**</span>
+<a name="l00020"></a>00020 <span class="comment">   * \brief Azimuthal Equidistant Projection.</span>
+<a name="l00021"></a>00021 <span class="comment">   *</span>
+<a name="l00022"></a>00022 <span class="comment">   * Azimuthal equidistant projection centered at an arbitrary position on the</span>
+<a name="l00023"></a>00023 <span class="comment">   * ellipsoid.  For a point in projected space (\e x, \e y), the geodesic</span>
+<a name="l00024"></a>00024 <span class="comment">   * distance from the center position is hypot(\e x, \e y) and the azimuth of</span>
+<a name="l00025"></a>00025 <span class="comment">   * the geodesic from the center point is atan2(\e x, \e y).  The Forward and</span>
+<a name="l00026"></a>00026 <span class="comment">   * Reverse methods also return the azimuth \e azi of the geodesic at (\e x,</span>
+<a name="l00027"></a>00027 <span class="comment">   * \e y) and reciprocal scale \e rk in the azimuthal direction which,</span>
+<a name="l00028"></a>00028 <span class="comment">   * together with the basic properties of the projection, serve to specify</span>
+<a name="l00029"></a>00029 <span class="comment">   * completely the local affine transformation between geographic and</span>
+<a name="l00030"></a>00030 <span class="comment">   * projected coordinates.</span>
+<a name="l00031"></a>00031 <span class="comment">   *</span>
+<a name="l00032"></a>00032 <span class="comment">   * The conversions all take place using a Geodesic object (by default</span>
+<a name="l00033"></a>00033 <span class="comment">   * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.</span>
+<a name="l00034"></a>00034 <span class="comment">   **********************************************************************/</span>
+<a name="l00035"></a>00035 
+<a name="l00036"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html">00036</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">AzimuthalEquidistant</a> {
+<a name="l00037"></a>00037   <span class="keyword">private</span>:
+<a name="l00038"></a>00038     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00039"></a>00039     <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> _earth;
+<a name="l00040"></a>00040     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
+<a name="l00041"></a>00041   <span class="keyword">public</span>:
+<a name="l00042"></a>00042 <span class="comment"></span>
+<a name="l00043"></a>00043 <span class="comment">    /**</span>
+<a name="l00044"></a>00044 <span class="comment">     * Constructor for AzimuthalEquidistant.</span>
+<a name="l00045"></a>00045 <span class="comment">     *</span>
+<a name="l00046"></a>00046 <span class="comment">     * @param[in] earth the Geodesic object to use for geodesic calculations.</span>
+<a name="l00047"></a>00047 <span class="comment">     *   By default this uses the WGS84 ellipsoid.</span>
+<a name="l00048"></a>00048 <span class="comment">     **********************************************************************/</span>
+<a name="l00049"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a125571cdeed68d10192611cc12e221ce">00049</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">AzimuthalEquidistant</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">Geodesic::WGS84</a>)
+<a name="l00050"></a>00050       throw() : _earth(earth) {}
+<a name="l00051"></a>00051 <span class="comment"></span>
+<a name="l00052"></a>00052 <span class="comment">    /**</span>
+<a name="l00053"></a>00053 <span class="comment">     * Forward projection, from geographic to azimuthal equidistant.</span>
+<a name="l00054"></a>00054 <span class="comment">     *</span>
+<a name="l00055"></a>00055 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
+<a name="l00056"></a>00056 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
+<a name="l00057"></a>00057 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00058"></a>00058 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00059"></a>00059 <span class="comment">     * @param[out] x easting of point (meters).</span>
+<a name="l00060"></a>00060 <span class="comment">     * @param[out] y northing of point (meters).</span>
+<a name="l00061"></a>00061 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
+<a name="l00062"></a>00062 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
+<a name="l00063"></a>00063 <span class="comment">     *</span>
+<a name="l00064"></a>00064 <span class="comment">     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e</span>
+<a name="l00065"></a>00065 <span class="comment">     * lon should be in the range [-180, 360].  The scale of the projection is</span>
+<a name="l00066"></a>00066 <span class="comment">     * 1 in the &quot;radial&quot; direction, \e azi clockwise from true north, and is</span>
+<a name="l00067"></a>00067 <span class="comment">     * 1/\e rk in the direction perpendicular to this.  A call to Forward</span>
+<a name="l00068"></a>00068 <span class="comment">     * followed by a call to Reverse will return the original (\e lat, \e lon)</span>
+<a name="l00069"></a>00069 <span class="comment">     * (to within roundoff).</span>
+<a name="l00070"></a>00070 <span class="comment">     **********************************************************************/</span>
+<a name="l00071"></a>00071     <span class="keywordtype">void</span> Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon,
+<a name="l00072"></a>00072                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00073"></a>00073 <span class="comment"></span>
+<a name="l00074"></a>00074 <span class="comment">    /**</span>
+<a name="l00075"></a>00075 <span class="comment">     * Reverse projection, from azimuthal equidistant to geographic.</span>
+<a name="l00076"></a>00076 <span class="comment">     *</span>
+<a name="l00077"></a>00077 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
+<a name="l00078"></a>00078 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
+<a name="l00079"></a>00079 <span class="comment">     * @param[in] x easting of point (meters).</span>
+<a name="l00080"></a>00080 <span class="comment">     * @param[in] y northing of point (meters).</span>
+<a name="l00081"></a>00081 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00082"></a>00082 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00083"></a>00083 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
+<a name="l00084"></a>00084 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
+<a name="l00085"></a>00085 <span class="comment">     *</span>
+<a name="l00086"></a>00086 <span class="comment">     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the</span>
+<a name="l00087"></a>00087 <span class="comment">     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon</span>
+<a name="l00088"></a>00088 <span class="comment">     * will be in the range [-180, 180).  The scale of the projection is 1 in</span>
+<a name="l00089"></a>00089 <span class="comment">     * the &quot;radial&quot; direction, \e azi clockwise from true north, and is 1/\e rk</span>
+<a name="l00090"></a>00090 <span class="comment">     * in the direction perpendicular to this.  A call to Reverse followed by a</span>
+<a name="l00091"></a>00091 <span class="comment">     * call to Forward will return the original (\e x, \e y) (to roundoff) only</span>
+<a name="l00092"></a>00092 <span class="comment">     * if the geodesic to (\e x, \e y) is a shortest path.</span>
+<a name="l00093"></a>00093 <span class="comment">     **********************************************************************/</span>
+<a name="l00094"></a>00094     <span class="keywordtype">void</span> Reverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
+<a name="l00095"></a>00095                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00096"></a>00096 <span class="comment"></span>
+<a name="l00097"></a>00097 <span class="comment">    /**</span>
+<a name="l00098"></a>00098 <span class="comment">     * AzimuthalEquidistant::Forward without returning the azimuth and scale.</span>
+<a name="l00099"></a>00099 <span class="comment">     **********************************************************************/</span>
+<a name="l00100"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a950431c3d269fb82e9410f332c401786">00100</a>     <span class="keywordtype">void</span> Forward(real lat0, real lon0, real lat, real lon,
+<a name="l00101"></a>00101                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00102"></a>00102       real azi, rk;
+<a name="l00103"></a>00103       Forward(lat0, lon0, lat, lon, x, y, azi, rk);
+<a name="l00104"></a>00104     }
+<a name="l00105"></a>00105 <span class="comment"></span>
+<a name="l00106"></a>00106 <span class="comment">    /**</span>
+<a name="l00107"></a>00107 <span class="comment">     * AzimuthalEquidistant::Reverse without returning the azimuth and scale.</span>
+<a name="l00108"></a>00108 <span class="comment">     **********************************************************************/</span>
+<a name="l00109"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a6b86b19f2e1c773e028e386a0f5e00e0">00109</a>     <span class="keywordtype">void</span> Reverse(real lat0, real lon0, real x, real y,
+<a name="l00110"></a>00110                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00111"></a>00111       real azi, rk;
+<a name="l00112"></a>00112       Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
+<a name="l00113"></a>00113     }
+<a name="l00114"></a>00114 <span class="comment"></span>
+<a name="l00115"></a>00115 <span class="comment">    /** \name Inspector functions</span>
+<a name="l00116"></a>00116 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00117"></a>00117 <span class="comment">    ///@{</span>
+<a name="l00118"></a>00118 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00119"></a>00119 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
+<a name="l00120"></a>00120 <span class="comment">     *   the value inherited from the Geodesic object used in the constructor.</span>
+<a name="l00121"></a>00121 <span class="comment">     **********************************************************************/</span>
+<a name="l00122"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a42c4103265af804395b8b5260a4c25e0">00122</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a42c4103265af804395b8b5260a4c25e0">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.MajorRadius(); }
+<a name="l00123"></a>00123 <span class="comment"></span>
+<a name="l00124"></a>00124 <span class="comment">    /**</span>
+<a name="l00125"></a>00125 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value</span>
+<a name="l00126"></a>00126 <span class="comment">     *   inherited from the Geodesic object used in the constructor.</span>
+<a name="l00127"></a>00127 <span class="comment">     **********************************************************************/</span>
+<a name="l00128"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a3f300fcc10aeee9dc88ff93fb991f191">00128</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#a3f300fcc10aeee9dc88ff93fb991f191">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.Flattening(); }
+<a name="l00129"></a>00129 <span class="comment"></span>
+<a name="l00130"></a>00130 <span class="comment">    /**</span>
+<a name="l00131"></a>00131 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
+<a name="l00132"></a>00132 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
+<a name="l00133"></a>00133 <span class="comment">     **********************************************************************/</span>
+<a name="l00134"></a><a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html#ac4ec606131221d3eb0acc1ae00a34c63">00134</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
+<a name="l00135"></a>00135     { <span class="keywordflow">return</span> _earth.InverseFlattening(); }<span class="comment"></span>
+<a name="l00136"></a>00136 <span class="comment">    ///@}</span>
+<a name="l00137"></a>00137 <span class="comment"></span>  };
+<a name="l00138"></a>00138 
+<a name="l00139"></a>00139 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141 <span class="preprocessor">#endif  // GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

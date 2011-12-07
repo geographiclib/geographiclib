@@ -6,8 +6,12 @@
  * and licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * Compile with -I../include and link with Geodesic.o GeodesicLine.o
- * AzimuthalEquidistant.o Gnomonic.o CassiniSoldner.o
+ * Compile and link with
+ *   g++ -g -O3 -I../include -I../man -o ConicProj \
+ *       ConicProj.cpp \
+ *       ../src/AlbersEqualArea.cpp \
+ *       ../src/DMS.cpp \
+ *       ../src/LambertConformalConic.cpp
  *
  * See the <a href="ConicProj.1.html">man page</a> for usage
  * information.
@@ -106,7 +110,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 2aea874241c06b0123365f2e81b749bfa10198a7 $\n"
+          << ": $Id: 28e29944bd28097eaff577dad02e18ea927a1a87 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

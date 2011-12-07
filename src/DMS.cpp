@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: d95c4a7b4bc289ce5dc1baef3fda818b89ac14ce $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: 305c71f5be8c0adce9f70fe7d2f16b38dc14fb7d $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -229,7 +229,7 @@ namespace GeographicLib {
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
     if (lon1 < -180 || lon1 > 360)
-      throw GeographicErr("Latitude " + Utility::str(lon1)
+      throw GeographicErr("Longitude " + Utility::str(lon1)
                           + "d not in [-180d, 360d]");
     if (lon1 >= 180)
       lon1 -= 360;

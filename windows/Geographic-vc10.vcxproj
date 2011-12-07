@@ -153,12 +153,15 @@
     <ClInclude Include="../include/GeographicLib/GeodesicLine.hpp" />
     <ClInclude Include="../include/GeographicLib/Geoid.hpp" />
     <ClInclude Include="../include/GeographicLib/Gnomonic.hpp" />
+    <ClInclude Include="../include/GeographicLib/GravityCircle.hpp" />
+    <ClInclude Include="../include/GeographicLib/GravityModel.hpp" />
     <ClInclude Include="../include/GeographicLib/LambertConformalConic.hpp" />
     <ClInclude Include="../include/GeographicLib/LocalCartesian.hpp" />
     <ClInclude Include="../include/GeographicLib/MGRS.hpp" />
     <ClInclude Include="../include/GeographicLib/MagneticCircle.hpp" />
     <ClInclude Include="../include/GeographicLib/MagneticModel.hpp" />
     <ClInclude Include="../include/GeographicLib/Math.hpp" />
+    <ClInclude Include="../include/GeographicLib/NormalGravity.hpp" />
     <ClInclude Include="../include/GeographicLib/OSGB.hpp" />
     <ClInclude Include="../include/GeographicLib/PolarStereographic.hpp" />
     <ClInclude Include="../include/GeographicLib/PolygonArea.hpp" />
@@ -185,11 +188,14 @@
     <ClCompile Include="../src/GeodesicLine.cpp" />
     <ClCompile Include="../src/Geoid.cpp" />
     <ClCompile Include="../src/Gnomonic.cpp" />
+    <ClCompile Include="../src/GravityCircle.cpp" />
+    <ClCompile Include="../src/GravityModel.cpp" />
     <ClCompile Include="../src/LambertConformalConic.cpp" />
     <ClCompile Include="../src/LocalCartesian.cpp" />
     <ClCompile Include="../src/MGRS.cpp" />
     <ClCompile Include="../src/MagneticCircle.cpp" />
     <ClCompile Include="../src/MagneticModel.cpp" />
+    <ClCompile Include="../src/NormalGravity.cpp" />
     <ClCompile Include="../src/OSGB.cpp" />
     <ClCompile Include="../src/PolarStereographic.cpp" />
     <ClCompile Include="../src/PolygonArea.cpp" />
@@ -197,6 +203,7 @@
     <ClCompile Include="../src/TransverseMercator.cpp" />
     <ClCompile Include="../src/TransverseMercatorExact.cpp" />
     <ClCompile Include="../src/UTMUPS.cpp" />
+    <ClCompile Include="../src/Utility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

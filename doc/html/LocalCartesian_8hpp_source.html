@@ -58,231 +58,232 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)</span>
-<a name="l00011"></a><a class="code" href="LocalCartesian_8hpp.html#a628d4dcde137e8249cb7fdbcaab30acd">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP &quot;$Id: 66ad3a5333b92c5ff6f373080e62c5392841afd3 $&quot;</span>
-<a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="Geocentric_8hpp.html" title="Header for GeographicLib::Geocentric class.">GeographicLib/Geocentric.hpp</a>&gt;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
-<a name="l00015"></a>00015 
-<a name="l00016"></a>00016 <span class="keyword">namespace </span>GeographicLib {
-<a name="l00017"></a>00017 <span class="comment"></span>
-<a name="l00018"></a>00018 <span class="comment">  /**</span>
-<a name="l00019"></a>00019 <span class="comment">   * \brief Local Cartesian coordinates</span>
-<a name="l00020"></a>00020 <span class="comment">   *</span>
-<a name="l00021"></a>00021 <span class="comment">   * Convert between geodetic coordinates latitude = \e lat, longitude = \e</span>
-<a name="l00022"></a>00022 <span class="comment">   * lon, height = \e h (measured vertically from the surface of the ellipsoid)</span>
-<a name="l00023"></a>00023 <span class="comment">   * to local cartesian coordinates (\e x, \e y, \e z).  The origin of local</span>
-<a name="l00024"></a>00024 <span class="comment">   * cartesian coordinate system is at \e lat = \e lat0, \e lon = \e lon0, \e h</span>
-<a name="l00025"></a>00025 <span class="comment">   * = \e h0. The \e z axis is normal to the ellipsoid; the \e y axis points</span>
-<a name="l00026"></a>00026 <span class="comment">   * due north.  The plane \e z = - \e h0 is tangent to the ellipsoid.</span>
-<a name="l00027"></a>00027 <span class="comment">   *</span>
-<a name="l00028"></a>00028 <span class="comment">   * The conversions all take place via geocentric coordinates using a</span>
-<a name="l00029"></a>00029 <span class="comment">   * Geocentric object (by default Geocentric::WGS84).</span>
-<a name="l00030"></a>00030 <span class="comment">   **********************************************************************/</span>
-<a name="l00031"></a>00031 
-<a name="l00032"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html">00032</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a> {
-<a name="l00033"></a>00033   <span class="keyword">private</span>:
-<a name="l00034"></a>00034     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00035"></a>00035     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim_ = 3;
-<a name="l00036"></a>00036     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim2_ = dim_ * dim_;
-<a name="l00037"></a>00037     <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> _earth;
-<a name="l00038"></a>00038     real _lat0, _lon0, _h0;
-<a name="l00039"></a>00039     real _x0, _y0, _z0, _r[dim2_];
-<a name="l00040"></a>00040     <span class="keywordtype">void</span> IntForward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
-<a name="l00041"></a>00041                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00042"></a>00042     <span class="keywordtype">void</span> IntReverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
-<a name="l00043"></a>00043                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00044"></a>00044     <span class="keywordtype">void</span> MatrixMultiply(real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00045"></a>00045   <span class="keyword">public</span>:
-<a name="l00046"></a>00046 <span class="comment"></span>
-<a name="l00047"></a>00047 <span class="comment">    /**</span>
-<a name="l00048"></a>00048 <span class="comment">     * Constructor setting the origin.</span>
-<a name="l00049"></a>00049 <span class="comment">     *</span>
-<a name="l00050"></a>00050 <span class="comment">     * @param[in] lat0 latitude at origin (degrees).</span>
-<a name="l00051"></a>00051 <span class="comment">     * @param[in] lon0 longitude at origin (degrees).</span>
-<a name="l00052"></a>00052 <span class="comment">     * @param[in] h0 height above ellipsoid at origin (meters); default 0.</span>
-<a name="l00053"></a>00053 <span class="comment">     * @param[in] earth Geocentric object for the transformation; default</span>
-<a name="l00054"></a>00054 <span class="comment">     *   Geocentric::WGS84.</span>
-<a name="l00055"></a>00055 <span class="comment">     **********************************************************************/</span>
-<a name="l00056"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ad277a6798293d5d66168c3c1438d10a2">00056</a>     <a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>(real lat0, real lon0, real h0 = 0,
-<a name="l00057"></a>00057                    <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>) throw()
-<a name="l00058"></a>00058       : _earth(earth)
-<a name="l00059"></a>00059     { Reset(lat0, lon0, h0); }
-<a name="l00060"></a>00060 <span class="comment"></span>
-<a name="l00061"></a>00061 <span class="comment">    /**</span>
-<a name="l00062"></a>00062 <span class="comment">     * Default constructor.</span>
-<a name="l00063"></a>00063 <span class="comment">     *</span>
-<a name="l00064"></a>00064 <span class="comment">     * @param[in] earth Geocentric object for the transformation; default</span>
-<a name="l00065"></a>00065 <span class="comment">     *   Geocentric::WGS84.</span>
-<a name="l00066"></a>00066 <span class="comment">     *</span>
-<a name="l00067"></a>00067 <span class="comment">     * Sets \e lat0 = 0, \e lon0 = 0, \e h0 = 0.</span>
-<a name="l00068"></a>00068 <span class="comment">     **********************************************************************/</span>
-<a name="l00069"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a3474a0434b2ff8b258111fe6d8468f0d">00069</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>)
-<a name="l00070"></a>00070       throw()
-<a name="l00071"></a>00071       : _earth(earth)
-<a name="l00072"></a>00072     { Reset(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0)); }
-<a name="l00073"></a>00073 <span class="comment"></span>
-<a name="l00074"></a>00074 <span class="comment">    /**</span>
-<a name="l00075"></a>00075 <span class="comment">     * Reset the origin.</span>
-<a name="l00076"></a>00076 <span class="comment">     *</span>
-<a name="l00077"></a>00077 <span class="comment">     * @param[in] lat0 latitude at origin (degrees).</span>
-<a name="l00078"></a>00078 <span class="comment">     * @param[in] lon0 longitude at origin (degrees).</span>
-<a name="l00079"></a>00079 <span class="comment">     * @param[in] h0 height above ellipsoid at origin (meters); default 0.</span>
-<a name="l00080"></a>00080 <span class="comment">     **********************************************************************/</span>
-<a name="l00081"></a>00081     <span class="keywordtype">void</span> Reset(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h0 = 0)
-<a name="l00082"></a>00082       throw();
-<a name="l00083"></a>00083 <span class="comment"></span>
-<a name="l00084"></a>00084 <span class="comment">    /**</span>
-<a name="l00085"></a>00085 <span class="comment">     * Convert from geodetic to local cartesian coordinates.</span>
-<a name="l00086"></a>00086 <span class="comment">     *</span>
-<a name="l00087"></a>00087 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00088"></a>00088 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00089"></a>00089 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
-<a name="l00090"></a>00090 <span class="comment">     * @param[out] x local cartesian coordinate (meters).</span>
-<a name="l00091"></a>00091 <span class="comment">     * @param[out] y local cartesian coordinate (meters).</span>
-<a name="l00092"></a>00092 <span class="comment">     * @param[out] z local cartesian coordinate (meters).</span>
-<a name="l00093"></a>00093 <span class="comment">     *</span>
-<a name="l00094"></a>00094 <span class="comment">     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in</span>
-<a name="l00095"></a>00095 <span class="comment">     * the range [-180, 360].</span>
-<a name="l00096"></a>00096 <span class="comment">     **********************************************************************/</span>
-<a name="l00097"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a6426e95f904f224eabedb8fcd17fe537">00097</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z)
-<a name="l00098"></a>00098       const throw() {
-<a name="l00099"></a>00099       IntForward(lat, lon, h, x, y, z, NULL);
-<a name="l00100"></a>00100     }
-<a name="l00101"></a>00101 <span class="comment"></span>
-<a name="l00102"></a>00102 <span class="comment">    /**</span>
-<a name="l00103"></a>00103 <span class="comment">     * Convert from geodetic to local cartesian coordinates and return rotation</span>
-<a name="l00104"></a>00104 <span class="comment">     * matrix.</span>
-<a name="l00105"></a>00105 <span class="comment">     *</span>
-<a name="l00106"></a>00106 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00107"></a>00107 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00108"></a>00108 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
-<a name="l00109"></a>00109 <span class="comment">     * @param[out] x local cartesian coordinate (meters).</span>
-<a name="l00110"></a>00110 <span class="comment">     * @param[out] y local cartesian coordinate (meters).</span>
-<a name="l00111"></a>00111 <span class="comment">     * @param[out] z local cartesian coordinate (meters).</span>
-<a name="l00112"></a>00112 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
-<a name="l00113"></a>00113 <span class="comment">     *   matrix in row-major order.</span>
-<a name="l00114"></a>00114 <span class="comment">     *</span>
-<a name="l00115"></a>00115 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
-<a name="l00116"></a>00116 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
-<a name="l00117"></a>00117 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
-<a name="l00118"></a>00118 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
-<a name="l00119"></a>00119 <span class="comment">     *   representation \e v1.</span>
-<a name="l00120"></a>00120 <span class="comment">     * - in \e x, \e y, \e z coordinates (where the components are relative to</span>
-<a name="l00121"></a>00121 <span class="comment">     *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this</span>
-<a name="l00122"></a>00122 <span class="comment">     *   representation \e v0.</span>
-<a name="l00123"></a>00123 <span class="comment">     * .</span>
-<a name="l00124"></a>00124 <span class="comment">     * Then we have \e v0 = \e M . \e v1.</span>
-<a name="l00125"></a>00125 <span class="comment">     **********************************************************************/</span>
-<a name="l00126"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a774332be14e894536f13b3cc7a8323c7">00126</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
-<a name="l00127"></a>00127                  std::vector&lt;real&gt;&amp; M)
-<a name="l00128"></a>00128       <span class="keyword">const</span> <span class="keywordflow">throw</span>()  {
-<a name="l00129"></a>00129       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
-<a name="l00130"></a>00130         real t[dim2_];
-<a name="l00131"></a>00131         IntForward(lat, lon, h, x, y, z, t);
-<a name="l00132"></a>00132         copy(t, t + dim2_, M.begin());
-<a name="l00133"></a>00133       } <span class="keywordflow">else</span>
-<a name="l00134"></a>00134         IntForward(lat, lon, h, x, y, z, NULL);
-<a name="l00135"></a>00135     }
-<a name="l00136"></a>00136 <span class="comment"></span>
-<a name="l00137"></a>00137 <span class="comment">    /**</span>
-<a name="l00138"></a>00138 <span class="comment">     * Convert from local cartesian to geodetic coordinates.</span>
-<a name="l00139"></a>00139 <span class="comment">     *</span>
-<a name="l00140"></a>00140 <span class="comment">     * @param[in] x local cartesian coordinate (meters).</span>
-<a name="l00141"></a>00141 <span class="comment">     * @param[in] y local cartesian coordinate (meters).</span>
-<a name="l00142"></a>00142 <span class="comment">     * @param[in] z local cartesian coordinate (meters).</span>
-<a name="l00143"></a>00143 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00144"></a>00144 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00145"></a>00145 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
-<a name="l00146"></a>00146 <span class="comment">     *</span>
-<a name="l00147"></a>00147 <span class="comment">     * The value of \e lon returned is in the range [-180, 180).</span>
-<a name="l00148"></a>00148 <span class="comment">     **********************************************************************/</span>
-<a name="l00149"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ac34878de3ae995e7d54f0347a1f34118">00149</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h)
-<a name="l00150"></a>00150       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00151"></a>00151       IntReverse(x, y, z, lat, lon, h, NULL);
-<a name="l00152"></a>00152     }
-<a name="l00153"></a>00153 <span class="comment"></span>
-<a name="l00154"></a>00154 <span class="comment">    /**</span>
-<a name="l00155"></a>00155 <span class="comment">     * Convert from local cartesian to geodetic coordinates and return rotation</span>
-<a name="l00156"></a>00156 <span class="comment">     * matrix.</span>
-<a name="l00157"></a>00157 <span class="comment">     *</span>
-<a name="l00158"></a>00158 <span class="comment">     * @param[in] x local cartesian coordinate (meters).</span>
-<a name="l00159"></a>00159 <span class="comment">     * @param[in] y local cartesian coordinate (meters).</span>
-<a name="l00160"></a>00160 <span class="comment">     * @param[in] z local cartesian coordinate (meters).</span>
-<a name="l00161"></a>00161 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00162"></a>00162 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00163"></a>00163 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
-<a name="l00164"></a>00164 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
-<a name="l00165"></a>00165 <span class="comment">     *   matrix in row-major order.</span>
-<a name="l00166"></a>00166 <span class="comment">     *</span>
-<a name="l00167"></a>00167 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
-<a name="l00168"></a>00168 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
-<a name="l00169"></a>00169 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
-<a name="l00170"></a>00170 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
-<a name="l00171"></a>00171 <span class="comment">     *   representation \e v1.</span>
-<a name="l00172"></a>00172 <span class="comment">     * - in \e x, \e y, \e z coordinates (where the components are relative to</span>
-<a name="l00173"></a>00173 <span class="comment">     *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this</span>
-<a name="l00174"></a>00174 <span class="comment">     *   representation \e v0.</span>
-<a name="l00175"></a>00175 <span class="comment">     * .</span>
-<a name="l00176"></a>00176 <span class="comment">     * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e</span>
-<a name="l00177"></a>00177 <span class="comment">     * M.</span>
-<a name="l00178"></a>00178 <span class="comment">     **********************************************************************/</span>
-<a name="l00179"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a7baa88b38b320d763f6cba3ece4f518d">00179</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
-<a name="l00180"></a>00180                  std::vector&lt;real&gt;&amp; M)
-<a name="l00181"></a>00181       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00182"></a>00182       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
-<a name="l00183"></a>00183         real t[dim2_];
-<a name="l00184"></a>00184         IntReverse(x, y, z, lat, lon, h, t);
-<a name="l00185"></a>00185         copy(t, t + dim2_, M.begin());
-<a name="l00186"></a>00186       } <span class="keywordflow">else</span>
-<a name="l00187"></a>00187         IntReverse(x, y, z, lat, lon, h, NULL);
-<a name="l00188"></a>00188     }
-<a name="l00189"></a>00189 <span class="comment"></span>
-<a name="l00190"></a>00190 <span class="comment">    /** \name Inspector functions</span>
-<a name="l00191"></a>00191 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00192"></a>00192 <span class="comment">    ///@{</span>
-<a name="l00193"></a>00193 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00194"></a>00194 <span class="comment">     * @return latitude of the origin (degrees).</span>
-<a name="l00195"></a>00195 <span class="comment">     **********************************************************************/</span>
-<a name="l00196"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#af4905164de5157c7ae2678f7716cbad7">00196</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#af4905164de5157c7ae2678f7716cbad7">LatitudeOrigin</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lat0; }
-<a name="l00197"></a>00197 <span class="comment"></span>
-<a name="l00198"></a>00198 <span class="comment">    /**</span>
-<a name="l00199"></a>00199 <span class="comment">     * @return longitude of the origin (degrees).</span>
-<a name="l00200"></a>00200 <span class="comment">     **********************************************************************/</span>
-<a name="l00201"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a45656227b4fff45249f1844bc6d233ad">00201</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#a45656227b4fff45249f1844bc6d233ad">LongitudeOrigin</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lon0; }
-<a name="l00202"></a>00202 <span class="comment"></span>
-<a name="l00203"></a>00203 <span class="comment">    /**</span>
-<a name="l00204"></a>00204 <span class="comment">     * @return height of the origin (meters).</span>
-<a name="l00205"></a>00205 <span class="comment">     **********************************************************************/</span>
-<a name="l00206"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ac8e00f262d70da122f45afa15b9381e2">00206</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#ac8e00f262d70da122f45afa15b9381e2">HeightOrigin</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _h0; }
-<a name="l00207"></a>00207 <span class="comment"></span>
-<a name="l00208"></a>00208 <span class="comment">    /**</span>
-<a name="l00209"></a>00209 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
-<a name="l00210"></a>00210 <span class="comment">     *   the value of \e a inherited from the Geocentric object used in the</span>
-<a name="l00211"></a>00211 <span class="comment">     *   constructor.</span>
-<a name="l00212"></a>00212 <span class="comment">     **********************************************************************/</span>
-<a name="l00213"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a795356c736f1170fe5ef075ebbf34354">00213</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#a795356c736f1170fe5ef075ebbf34354">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.MajorRadius(); }
-<a name="l00214"></a>00214 <span class="comment"></span>
-<a name="l00215"></a>00215 <span class="comment">    /**</span>
-<a name="l00216"></a>00216 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value</span>
-<a name="l00217"></a>00217 <span class="comment">     *   inherited from the Geocentric object used in the constructor.</span>
-<a name="l00218"></a>00218 <span class="comment">     **********************************************************************/</span>
-<a name="l00219"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a99907eda4b863acbe8e7d159a6482abb">00219</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#a99907eda4b863acbe8e7d159a6482abb">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.Flattening(); }
-<a name="l00220"></a>00220 <span class="comment"></span>
-<a name="l00221"></a>00221 <span class="comment">    /**</span>
-<a name="l00222"></a>00222 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
-<a name="l00223"></a>00223 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
-<a name="l00224"></a>00224 <span class="comment">     **********************************************************************/</span>
-<a name="l00225"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ad6991a2dff56a460a650c757ffda8e94">00225</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
-<a name="l00226"></a>00226     { <span class="keywordflow">return</span> _earth.InverseFlattening(); }<span class="comment"></span>
-<a name="l00227"></a>00227 <span class="comment">    ///@}</span>
-<a name="l00228"></a>00228 <span class="comment"></span>  };
-<a name="l00229"></a>00229 
-<a name="l00230"></a>00230 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232 <span class="preprocessor">#endif  // GEOGRAPHICLIB_LOCALCARTESIAN_HPP</span>
+<a name="l00011"></a><a class="code" href="LocalCartesian_8hpp.html#a628d4dcde137e8249cb7fdbcaab30acd">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_LOCALCARTESIAN_HPP \</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 0200a2653b8473d3fbf1f1382291fbff5294821c $&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor"></span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Geocentric_8hpp.html" title="Header for GeographicLib::Geocentric class.">GeographicLib/Geocentric.hpp</a>&gt;</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 
+<a name="l00017"></a>00017 <span class="keyword">namespace </span>GeographicLib {
+<a name="l00018"></a>00018 <span class="comment"></span>
+<a name="l00019"></a>00019 <span class="comment">  /**</span>
+<a name="l00020"></a>00020 <span class="comment">   * \brief Local Cartesian coordinates</span>
+<a name="l00021"></a>00021 <span class="comment">   *</span>
+<a name="l00022"></a>00022 <span class="comment">   * Convert between geodetic coordinates latitude = \e lat, longitude = \e</span>
+<a name="l00023"></a>00023 <span class="comment">   * lon, height = \e h (measured vertically from the surface of the ellipsoid)</span>
+<a name="l00024"></a>00024 <span class="comment">   * to local cartesian coordinates (\e x, \e y, \e z).  The origin of local</span>
+<a name="l00025"></a>00025 <span class="comment">   * cartesian coordinate system is at \e lat = \e lat0, \e lon = \e lon0, \e h</span>
+<a name="l00026"></a>00026 <span class="comment">   * = \e h0. The \e z axis is normal to the ellipsoid; the \e y axis points</span>
+<a name="l00027"></a>00027 <span class="comment">   * due north.  The plane \e z = - \e h0 is tangent to the ellipsoid.</span>
+<a name="l00028"></a>00028 <span class="comment">   *</span>
+<a name="l00029"></a>00029 <span class="comment">   * The conversions all take place via geocentric coordinates using a</span>
+<a name="l00030"></a>00030 <span class="comment">   * Geocentric object (by default Geocentric::WGS84).</span>
+<a name="l00031"></a>00031 <span class="comment">   **********************************************************************/</span>
+<a name="l00032"></a>00032 
+<a name="l00033"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html">00033</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a> {
+<a name="l00034"></a>00034   <span class="keyword">private</span>:
+<a name="l00035"></a>00035     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00036"></a>00036     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim_ = 3;
+<a name="l00037"></a>00037     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">size_t</span> dim2_ = dim_ * dim_;
+<a name="l00038"></a>00038     <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> _earth;
+<a name="l00039"></a>00039     real _lat0, _lon0, _h0;
+<a name="l00040"></a>00040     real _x0, _y0, _z0, _r[dim2_];
+<a name="l00041"></a>00041     <span class="keywordtype">void</span> IntForward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
+<a name="l00042"></a>00042                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00043"></a>00043     <span class="keywordtype">void</span> IntReverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
+<a name="l00044"></a>00044                     real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00045"></a>00045     <span class="keywordtype">void</span> MatrixMultiply(real M[dim2_]) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00046"></a>00046   <span class="keyword">public</span>:
+<a name="l00047"></a>00047 <span class="comment"></span>
+<a name="l00048"></a>00048 <span class="comment">    /**</span>
+<a name="l00049"></a>00049 <span class="comment">     * Constructor setting the origin.</span>
+<a name="l00050"></a>00050 <span class="comment">     *</span>
+<a name="l00051"></a>00051 <span class="comment">     * @param[in] lat0 latitude at origin (degrees).</span>
+<a name="l00052"></a>00052 <span class="comment">     * @param[in] lon0 longitude at origin (degrees).</span>
+<a name="l00053"></a>00053 <span class="comment">     * @param[in] h0 height above ellipsoid at origin (meters); default 0.</span>
+<a name="l00054"></a>00054 <span class="comment">     * @param[in] earth Geocentric object for the transformation; default</span>
+<a name="l00055"></a>00055 <span class="comment">     *   Geocentric::WGS84.</span>
+<a name="l00056"></a>00056 <span class="comment">     **********************************************************************/</span>
+<a name="l00057"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ad277a6798293d5d66168c3c1438d10a2">00057</a>     <a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>(real lat0, real lon0, real h0 = 0,
+<a name="l00058"></a>00058                    <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>) throw()
+<a name="l00059"></a>00059       : _earth(earth)
+<a name="l00060"></a>00060     { Reset(lat0, lon0, h0); }
+<a name="l00061"></a>00061 <span class="comment"></span>
+<a name="l00062"></a>00062 <span class="comment">    /**</span>
+<a name="l00063"></a>00063 <span class="comment">     * Default constructor.</span>
+<a name="l00064"></a>00064 <span class="comment">     *</span>
+<a name="l00065"></a>00065 <span class="comment">     * @param[in] earth Geocentric object for the transformation; default</span>
+<a name="l00066"></a>00066 <span class="comment">     *   Geocentric::WGS84.</span>
+<a name="l00067"></a>00067 <span class="comment">     *</span>
+<a name="l00068"></a>00068 <span class="comment">     * Sets \e lat0 = 0, \e lon0 = 0, \e h0 = 0.</span>
+<a name="l00069"></a>00069 <span class="comment">     **********************************************************************/</span>
+<a name="l00070"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a3474a0434b2ff8b258111fe6d8468f0d">00070</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>)
+<a name="l00071"></a>00071       throw()
+<a name="l00072"></a>00072       : _earth(earth)
+<a name="l00073"></a>00073     { Reset(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0), <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0)); }
+<a name="l00074"></a>00074 <span class="comment"></span>
+<a name="l00075"></a>00075 <span class="comment">    /**</span>
+<a name="l00076"></a>00076 <span class="comment">     * Reset the origin.</span>
+<a name="l00077"></a>00077 <span class="comment">     *</span>
+<a name="l00078"></a>00078 <span class="comment">     * @param[in] lat0 latitude at origin (degrees).</span>
+<a name="l00079"></a>00079 <span class="comment">     * @param[in] lon0 longitude at origin (degrees).</span>
+<a name="l00080"></a>00080 <span class="comment">     * @param[in] h0 height above ellipsoid at origin (meters); default 0.</span>
+<a name="l00081"></a>00081 <span class="comment">     **********************************************************************/</span>
+<a name="l00082"></a>00082     <span class="keywordtype">void</span> Reset(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> h0 = 0)
+<a name="l00083"></a>00083       throw();
+<a name="l00084"></a>00084 <span class="comment"></span>
+<a name="l00085"></a>00085 <span class="comment">    /**</span>
+<a name="l00086"></a>00086 <span class="comment">     * Convert from geodetic to local cartesian coordinates.</span>
+<a name="l00087"></a>00087 <span class="comment">     *</span>
+<a name="l00088"></a>00088 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00089"></a>00089 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00090"></a>00090 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
+<a name="l00091"></a>00091 <span class="comment">     * @param[out] x local cartesian coordinate (meters).</span>
+<a name="l00092"></a>00092 <span class="comment">     * @param[out] y local cartesian coordinate (meters).</span>
+<a name="l00093"></a>00093 <span class="comment">     * @param[out] z local cartesian coordinate (meters).</span>
+<a name="l00094"></a>00094 <span class="comment">     *</span>
+<a name="l00095"></a>00095 <span class="comment">     * \e lat should be in the range [-90, 90]; \e lon and \e lon0 should be in</span>
+<a name="l00096"></a>00096 <span class="comment">     * the range [-180, 360].</span>
+<a name="l00097"></a>00097 <span class="comment">     **********************************************************************/</span>
+<a name="l00098"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a6426e95f904f224eabedb8fcd17fe537">00098</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z)
+<a name="l00099"></a>00099       const throw() {
+<a name="l00100"></a>00100       IntForward(lat, lon, h, x, y, z, NULL);
+<a name="l00101"></a>00101     }
+<a name="l00102"></a>00102 <span class="comment"></span>
+<a name="l00103"></a>00103 <span class="comment">    /**</span>
+<a name="l00104"></a>00104 <span class="comment">     * Convert from geodetic to local cartesian coordinates and return rotation</span>
+<a name="l00105"></a>00105 <span class="comment">     * matrix.</span>
+<a name="l00106"></a>00106 <span class="comment">     *</span>
+<a name="l00107"></a>00107 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00108"></a>00108 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00109"></a>00109 <span class="comment">     * @param[in] h height of point above the ellipsoid (meters).</span>
+<a name="l00110"></a>00110 <span class="comment">     * @param[out] x local cartesian coordinate (meters).</span>
+<a name="l00111"></a>00111 <span class="comment">     * @param[out] y local cartesian coordinate (meters).</span>
+<a name="l00112"></a>00112 <span class="comment">     * @param[out] z local cartesian coordinate (meters).</span>
+<a name="l00113"></a>00113 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
+<a name="l00114"></a>00114 <span class="comment">     *   matrix in row-major order.</span>
+<a name="l00115"></a>00115 <span class="comment">     *</span>
+<a name="l00116"></a>00116 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
+<a name="l00117"></a>00117 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
+<a name="l00118"></a>00118 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
+<a name="l00119"></a>00119 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
+<a name="l00120"></a>00120 <span class="comment">     *   representation \e v1.</span>
+<a name="l00121"></a>00121 <span class="comment">     * - in \e x, \e y, \e z coordinates (where the components are relative to</span>
+<a name="l00122"></a>00122 <span class="comment">     *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this</span>
+<a name="l00123"></a>00123 <span class="comment">     *   representation \e v0.</span>
+<a name="l00124"></a>00124 <span class="comment">     * .</span>
+<a name="l00125"></a>00125 <span class="comment">     * Then we have \e v0 = \e M . \e v1.</span>
+<a name="l00126"></a>00126 <span class="comment">     **********************************************************************/</span>
+<a name="l00127"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a774332be14e894536f13b3cc7a8323c7">00127</a>     <span class="keywordtype">void</span> Forward(real lat, real lon, real h, real&amp; x, real&amp; y, real&amp; z,
+<a name="l00128"></a>00128                  std::vector&lt;real&gt;&amp; M)
+<a name="l00129"></a>00129       <span class="keyword">const</span> <span class="keywordflow">throw</span>()  {
+<a name="l00130"></a>00130       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
+<a name="l00131"></a>00131         real t[dim2_];
+<a name="l00132"></a>00132         IntForward(lat, lon, h, x, y, z, t);
+<a name="l00133"></a>00133         copy(t, t + dim2_, M.begin());
+<a name="l00134"></a>00134       } <span class="keywordflow">else</span>
+<a name="l00135"></a>00135         IntForward(lat, lon, h, x, y, z, NULL);
+<a name="l00136"></a>00136     }
+<a name="l00137"></a>00137 <span class="comment"></span>
+<a name="l00138"></a>00138 <span class="comment">    /**</span>
+<a name="l00139"></a>00139 <span class="comment">     * Convert from local cartesian to geodetic coordinates.</span>
+<a name="l00140"></a>00140 <span class="comment">     *</span>
+<a name="l00141"></a>00141 <span class="comment">     * @param[in] x local cartesian coordinate (meters).</span>
+<a name="l00142"></a>00142 <span class="comment">     * @param[in] y local cartesian coordinate (meters).</span>
+<a name="l00143"></a>00143 <span class="comment">     * @param[in] z local cartesian coordinate (meters).</span>
+<a name="l00144"></a>00144 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00145"></a>00145 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00146"></a>00146 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
+<a name="l00147"></a>00147 <span class="comment">     *</span>
+<a name="l00148"></a>00148 <span class="comment">     * The value of \e lon returned is in the range [-180, 180).</span>
+<a name="l00149"></a>00149 <span class="comment">     **********************************************************************/</span>
+<a name="l00150"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ac34878de3ae995e7d54f0347a1f34118">00150</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h)
+<a name="l00151"></a>00151       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00152"></a>00152       IntReverse(x, y, z, lat, lon, h, NULL);
+<a name="l00153"></a>00153     }
+<a name="l00154"></a>00154 <span class="comment"></span>
+<a name="l00155"></a>00155 <span class="comment">    /**</span>
+<a name="l00156"></a>00156 <span class="comment">     * Convert from local cartesian to geodetic coordinates and return rotation</span>
+<a name="l00157"></a>00157 <span class="comment">     * matrix.</span>
+<a name="l00158"></a>00158 <span class="comment">     *</span>
+<a name="l00159"></a>00159 <span class="comment">     * @param[in] x local cartesian coordinate (meters).</span>
+<a name="l00160"></a>00160 <span class="comment">     * @param[in] y local cartesian coordinate (meters).</span>
+<a name="l00161"></a>00161 <span class="comment">     * @param[in] z local cartesian coordinate (meters).</span>
+<a name="l00162"></a>00162 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00163"></a>00163 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00164"></a>00164 <span class="comment">     * @param[out] h height of point above the ellipsoid (meters).</span>
+<a name="l00165"></a>00165 <span class="comment">     * @param[out] M if the length of the vector is 9, fill with the rotation</span>
+<a name="l00166"></a>00166 <span class="comment">     *   matrix in row-major order.</span>
+<a name="l00167"></a>00167 <span class="comment">     *</span>
+<a name="l00168"></a>00168 <span class="comment">     * Let \e v be a unit vector located at (\e lat, \e lon, \e h).  We can</span>
+<a name="l00169"></a>00169 <span class="comment">     * express \e v as \e column vectors in one of two ways</span>
+<a name="l00170"></a>00170 <span class="comment">     * - in east, north, up coordinates (where the components are relative to a</span>
+<a name="l00171"></a>00171 <span class="comment">     *   local coordinate system at (\e lat, \e lon, \e h)); call this</span>
+<a name="l00172"></a>00172 <span class="comment">     *   representation \e v1.</span>
+<a name="l00173"></a>00173 <span class="comment">     * - in \e x, \e y, \e z coordinates (where the components are relative to</span>
+<a name="l00174"></a>00174 <span class="comment">     *   the local coordinate system at (\e lat0, \e lon0, \e h0)); call this</span>
+<a name="l00175"></a>00175 <span class="comment">     *   representation \e v0.</span>
+<a name="l00176"></a>00176 <span class="comment">     * .</span>
+<a name="l00177"></a>00177 <span class="comment">     * Then we have \e v1 = \e M^T . \e v0, where \e M^T is the transpose of \e</span>
+<a name="l00178"></a>00178 <span class="comment">     * M.</span>
+<a name="l00179"></a>00179 <span class="comment">     **********************************************************************/</span>
+<a name="l00180"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a7baa88b38b320d763f6cba3ece4f518d">00180</a>     <span class="keywordtype">void</span> Reverse(real x, real y, real z, real&amp; lat, real&amp; lon, real&amp; h,
+<a name="l00181"></a>00181                  std::vector&lt;real&gt;&amp; M)
+<a name="l00182"></a>00182       <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00183"></a>00183       <span class="keywordflow">if</span> (M.end() == M.begin() + dim2_) {
+<a name="l00184"></a>00184         real t[dim2_];
+<a name="l00185"></a>00185         IntReverse(x, y, z, lat, lon, h, t);
+<a name="l00186"></a>00186         copy(t, t + dim2_, M.begin());
+<a name="l00187"></a>00187       } <span class="keywordflow">else</span>
+<a name="l00188"></a>00188         IntReverse(x, y, z, lat, lon, h, NULL);
+<a name="l00189"></a>00189     }
+<a name="l00190"></a>00190 <span class="comment"></span>
+<a name="l00191"></a>00191 <span class="comment">    /** \name Inspector functions</span>
+<a name="l00192"></a>00192 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00193"></a>00193 <span class="comment">    ///@{</span>
+<a name="l00194"></a>00194 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00195"></a>00195 <span class="comment">     * @return latitude of the origin (degrees).</span>
+<a name="l00196"></a>00196 <span class="comment">     **********************************************************************/</span>
+<a name="l00197"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#af4905164de5157c7ae2678f7716cbad7">00197</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#af4905164de5157c7ae2678f7716cbad7">LatitudeOrigin</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lat0; }
+<a name="l00198"></a>00198 <span class="comment"></span>
+<a name="l00199"></a>00199 <span class="comment">    /**</span>
+<a name="l00200"></a>00200 <span class="comment">     * @return longitude of the origin (degrees).</span>
+<a name="l00201"></a>00201 <span class="comment">     **********************************************************************/</span>
+<a name="l00202"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a45656227b4fff45249f1844bc6d233ad">00202</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#a45656227b4fff45249f1844bc6d233ad">LongitudeOrigin</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lon0; }
+<a name="l00203"></a>00203 <span class="comment"></span>
+<a name="l00204"></a>00204 <span class="comment">    /**</span>
+<a name="l00205"></a>00205 <span class="comment">     * @return height of the origin (meters).</span>
+<a name="l00206"></a>00206 <span class="comment">     **********************************************************************/</span>
+<a name="l00207"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ac8e00f262d70da122f45afa15b9381e2">00207</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#ac8e00f262d70da122f45afa15b9381e2">HeightOrigin</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _h0; }
+<a name="l00208"></a>00208 <span class="comment"></span>
+<a name="l00209"></a>00209 <span class="comment">    /**</span>
+<a name="l00210"></a>00210 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
+<a name="l00211"></a>00211 <span class="comment">     *   the value of \e a inherited from the Geocentric object used in the</span>
+<a name="l00212"></a>00212 <span class="comment">     *   constructor.</span>
+<a name="l00213"></a>00213 <span class="comment">     **********************************************************************/</span>
+<a name="l00214"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a795356c736f1170fe5ef075ebbf34354">00214</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#a795356c736f1170fe5ef075ebbf34354">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.MajorRadius(); }
+<a name="l00215"></a>00215 <span class="comment"></span>
+<a name="l00216"></a>00216 <span class="comment">    /**</span>
+<a name="l00217"></a>00217 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value</span>
+<a name="l00218"></a>00218 <span class="comment">     *   inherited from the Geocentric object used in the constructor.</span>
+<a name="l00219"></a>00219 <span class="comment">     **********************************************************************/</span>
+<a name="l00220"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#a99907eda4b863acbe8e7d159a6482abb">00220</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LocalCartesian.html#a99907eda4b863acbe8e7d159a6482abb">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.Flattening(); }
+<a name="l00221"></a>00221 <span class="comment"></span>
+<a name="l00222"></a>00222 <span class="comment">    /**</span>
+<a name="l00223"></a>00223 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
+<a name="l00224"></a>00224 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
+<a name="l00225"></a>00225 <span class="comment">     **********************************************************************/</span>
+<a name="l00226"></a><a class="code" href="classGeographicLib_1_1LocalCartesian.html#ad6991a2dff56a460a650c757ffda8e94">00226</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
+<a name="l00227"></a>00227     { <span class="keywordflow">return</span> _earth.InverseFlattening(); }<span class="comment"></span>
+<a name="l00228"></a>00228 <span class="comment">    ///@}</span>
+<a name="l00229"></a>00229 <span class="comment"></span>  };
+<a name="l00230"></a>00230 
+<a name="l00231"></a>00231 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00232"></a>00232 
+<a name="l00233"></a>00233 <span class="preprocessor">#endif  // GEOGRAPHICLIB_LOCALCARTESIAN_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

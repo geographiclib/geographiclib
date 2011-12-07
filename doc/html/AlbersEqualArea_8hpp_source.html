@@ -58,301 +58,302 @@
 <a name="l00008"></a>00008 <span class="comment"> **********************************************************************/</span>
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)</span>
-<a name="l00011"></a><a class="code" href="AlbersEqualArea_8hpp.html#aa9494d369d907d2b285fcb2f45b4689c">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP &quot;$Id: eee2b79bf8f65888c9a3b75a6b5be04ada04e985 $&quot;</span>
-<a name="l00012"></a>00012 <span class="preprocessor"></span>
-<a name="l00013"></a>00013 <span class="preprocessor">#include &lt;algorithm&gt;</span>
-<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
-<a name="l00015"></a>00015 
-<a name="l00016"></a>00016 <span class="keyword">namespace </span>GeographicLib {
-<a name="l00017"></a>00017 <span class="comment"></span>
-<a name="l00018"></a>00018 <span class="comment">  /**</span>
-<a name="l00019"></a>00019 <span class="comment">   * \brief Albers Equal Area Conic Projection</span>
-<a name="l00020"></a>00020 <span class="comment">   *</span>
-<a name="l00021"></a>00021 <span class="comment">   * Implementation taken from the report,</span>
-<a name="l00022"></a>00022 <span class="comment">   * - J. P. Snyder,</span>
-<a name="l00023"></a>00023 <span class="comment">   *   &lt;a href=&quot;http://pubs.er.usgs.gov/usgspubs/pp/pp1395&quot;&gt; Map Projections: A</span>
-<a name="l00024"></a>00024 <span class="comment">   *   Working Manual&lt;/a&gt;, USGS Professional Paper 1395 (1987),</span>
-<a name="l00025"></a>00025 <span class="comment">   *   pp. 101&amp;ndash;102.</span>
-<a name="l00026"></a>00026 <span class="comment">   *</span>
-<a name="l00027"></a>00027 <span class="comment">   * This is a implementation of the equations in Snyder except that divided</span>
-<a name="l00028"></a>00028 <span class="comment">   * differences will be [have been] used to transform the expressions into</span>
-<a name="l00029"></a>00029 <span class="comment">   * ones which may be evaluated accurately.  [In this implementation, the</span>
-<a name="l00030"></a>00030 <span class="comment">   * projection correctly becomes the cylindrical equal area or the azimuthal</span>
-<a name="l00031"></a>00031 <span class="comment">   * equal area projection when the standard latitude is the equator or a</span>
-<a name="l00032"></a>00032 <span class="comment">   * pole.]</span>
-<a name="l00033"></a>00033 <span class="comment">   *</span>
-<a name="l00034"></a>00034 <span class="comment">   * The ellipsoid parameters, the standard parallels, and the scale on the</span>
-<a name="l00035"></a>00035 <span class="comment">   * standard parallels are set in the constructor.  Internally, the case with</span>
-<a name="l00036"></a>00036 <span class="comment">   * two standard parallels is converted into a single standard parallel, the</span>
-<a name="l00037"></a>00037 <span class="comment">   * latitude of minimum azimuthal scale, with an azimuthal scale specified on</span>
-<a name="l00038"></a>00038 <span class="comment">   * this parallel.  This latitude is also used as the latitude of origin which</span>
-<a name="l00039"></a>00039 <span class="comment">   * is returned by AlbersEqualArea::OriginLatitude.  The azimuthal scale on</span>
-<a name="l00040"></a>00040 <span class="comment">   * the latitude of origin is given by AlbersEqualArea::CentralScale.  The</span>
-<a name="l00041"></a>00041 <span class="comment">   * case with two standard parallels at opposite poles is singular and is</span>
-<a name="l00042"></a>00042 <span class="comment">   * disallowed.  The central meridian (which is a trivial shift of the</span>
-<a name="l00043"></a>00043 <span class="comment">   * longitude) is specified as the \e lon0 argument of the</span>
-<a name="l00044"></a>00044 <span class="comment">   * AlbersEqualArea::Forward and AlbersEqualArea::Reverse functions.</span>
-<a name="l00045"></a>00045 <span class="comment">   * AlbersEqualArea::Forward and AlbersEqualArea::Reverse also return the</span>
-<a name="l00046"></a>00046 <span class="comment">   * meridian convergence, \e gamma, and azimuthal scale, \e k.  A small square</span>
-<a name="l00047"></a>00047 <span class="comment">   * aligned with the cardinal directions is projected to a rectangle with</span>
-<a name="l00048"></a>00048 <span class="comment">   * dimensions \e k (in the E-W direction) and 1/\e k (in the N-S direction).</span>
-<a name="l00049"></a>00049 <span class="comment">   * The E-W sides of the rectangle are oriented \e gamma degrees</span>
-<a name="l00050"></a>00050 <span class="comment">   * counter-clockwise from the \e x axis.  There is no provision in this class</span>
-<a name="l00051"></a>00051 <span class="comment">   * for specifying a false easting or false northing or a different latitude</span>
-<a name="l00052"></a>00052 <span class="comment">   * of origin.</span>
-<a name="l00053"></a>00053 <span class="comment">   **********************************************************************/</span>
-<a name="l00054"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html">00054</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> {
-<a name="l00055"></a>00055   <span class="keyword">private</span>:
-<a name="l00056"></a>00056     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00057"></a>00057     real _a, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
-<a name="l00058"></a>00058     real _sign, _lat0, _k0;
-<a name="l00059"></a>00059     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
-<a name="l00060"></a>00060     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
-<a name="l00061"></a>00061     <span class="keyword">static</span> <span class="keyword">const</span> real epsx_;
-<a name="l00062"></a>00062     <span class="keyword">static</span> <span class="keyword">const</span> real epsx2_;
-<a name="l00063"></a>00063     <span class="keyword">static</span> <span class="keyword">const</span> real tol_;
-<a name="l00064"></a>00064     <span class="keyword">static</span> <span class="keyword">const</span> real tol0_;
-<a name="l00065"></a>00065     <span class="keyword">static</span> <span class="keyword">const</span> real ahypover_;
-<a name="l00066"></a>00066     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 5;   <span class="comment">// Newton iterations in Reverse</span>
-<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit0_ = 20; <span class="comment">// Newton iterations in Init</span>
-<a name="l00068"></a>00068     <span class="keyword">static</span> <span class="keyword">inline</span> real hyp(real x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), x); }
-<a name="l00069"></a>00069     <span class="comment">// atanh(      e   * x)/      e   if f &gt; 0</span>
-<a name="l00070"></a>00070     <span class="comment">// atan (sqrt(-e2) * x)/sqrt(-e2) if f &lt; 0</span>
-<a name="l00071"></a>00071     <span class="comment">// x                              if f = 0</span>
-<a name="l00072"></a>00072     <span class="keyword">inline</span> real atanhee(real x) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00073"></a>00073       <span class="keywordflow">return</span> _f &gt; 0 ? <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">Math::atanh</a>(_e * x)/_e :
-<a name="l00074"></a>00074         (_f &lt; 0 ? std::atan(_e * x)/_e : x);
-<a name="l00075"></a>00075     }
-<a name="l00076"></a>00076     <span class="comment">// return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x</span>
-<a name="l00077"></a>00077     <span class="keyword">static</span> real atanhxm1(real x) <span class="keywordflow">throw</span>();
-<a name="l00078"></a>00078 
-<a name="l00079"></a>00079     <span class="comment">// Divided differences</span>
-<a name="l00080"></a>00080     <span class="comment">// Definition: Df(x,y) = (f(x)-f(y))/(x-y)</span>
-<a name="l00081"></a>00081     <span class="comment">// See: W. M. Kahan and R. J. Fateman,</span>
-<a name="l00082"></a>00082     <span class="comment">// Symbolic computation of divided differences,</span>
-<a name="l00083"></a>00083     <span class="comment">// SIGSAM Bull. 33(3), 7-28 (1999)</span>
-<a name="l00084"></a>00084     <span class="comment">// http://doi.acm.org/10.1145/334714.334716</span>
-<a name="l00085"></a>00085     <span class="comment">// http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf</span>
-<a name="l00086"></a>00086     <span class="comment">//</span>
-<a name="l00087"></a>00087     <span class="comment">// General rules</span>
-<a name="l00088"></a>00088     <span class="comment">// h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)</span>
-<a name="l00089"></a>00089     <span class="comment">// h(x) = f(x)*g(x):</span>
-<a name="l00090"></a>00090     <span class="comment">//        Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2</span>
-<a name="l00091"></a>00091     <span class="comment">//</span>
-<a name="l00092"></a>00092     <span class="comment">// sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))</span>
-<a name="l00093"></a>00093     <span class="keyword">static</span> <span class="keyword">inline</span> real Dsn(real x, real y, real sx, real sy) <span class="keywordflow">throw</span>() {
-<a name="l00094"></a>00094       <span class="comment">// sx = x/hyp(x)</span>
-<a name="l00095"></a>00095       real t = x * y;
-<a name="l00096"></a>00096       <span class="keywordflow">return</span> t &gt; 0 ? (x + y) * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>( (sx * sy)/t ) / (sx + sy) :
-<a name="l00097"></a>00097         (x - y != 0 ? (sx - sy) / (x - y) : 1);
-<a name="l00098"></a>00098     }
-<a name="l00099"></a>00099     <span class="comment">// Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)</span>
-<a name="l00100"></a>00100     <span class="keyword">inline</span> real Datanhee(real x, real y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00101"></a>00101       real t = x - y, d = 1 - _e2 * x * y;
-<a name="l00102"></a>00102       <span class="keywordflow">return</span> t != 0 ? atanhee(t / d) / t : 1 / d;
-<a name="l00103"></a>00103     }
-<a name="l00104"></a>00104     <span class="comment">// DDatanhee(x,y) = (Datanhee(1,y) - Datanhee(1,x))/(y-x)</span>
-<a name="l00105"></a>00105     real DDatanhee(real x, real y) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00106"></a>00106     <span class="keywordtype">void</span> Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) <span class="keywordflow">throw</span>();
-<a name="l00107"></a>00107     real txif(real tphi) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00108"></a>00108     real tphif(real txi) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00109"></a>00109   <span class="keyword">public</span>:
-<a name="l00110"></a>00110 <span class="comment"></span>
-<a name="l00111"></a>00111 <span class="comment">    /**</span>
-<a name="l00112"></a>00112 <span class="comment">     * Constructor with a single standard parallel.</span>
-<a name="l00113"></a>00113 <span class="comment">     *</span>
-<a name="l00114"></a>00114 <span class="comment">     * @param[in] a equatorial radius of ellipsoid (meters)</span>
-<a name="l00115"></a>00115 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
-<a name="l00116"></a>00116 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
-<a name="l00117"></a>00117 <span class="comment">     *   to 1/\e f.</span>
-<a name="l00118"></a>00118 <span class="comment">     * @param[in] stdlat standard parallel (degrees), the circle of tangency.</span>
-<a name="l00119"></a>00119 <span class="comment">     * @param[in] k0 azimuthal scale on the standard parallel.</span>
-<a name="l00120"></a>00120 <span class="comment">     *</span>
-<a name="l00121"></a>00121 <span class="comment">     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat</span>
-<a name="l00122"></a>00122 <span class="comment">     * is not in the range [-90, 90].</span>
-<a name="l00123"></a>00123 <span class="comment">     **********************************************************************/</span>
-<a name="l00124"></a>00124     <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a>(real a, real f, real stdlat, real k0);
-<a name="l00125"></a>00125 <span class="comment"></span>
-<a name="l00126"></a>00126 <span class="comment">    /**</span>
-<a name="l00127"></a>00127 <span class="comment">     * Constructor with two standard parallels.</span>
-<a name="l00128"></a>00128 <span class="comment">     *</span>
-<a name="l00129"></a>00129 <span class="comment">     * @param[in] a equatorial radius of ellipsoid (meters)</span>
-<a name="l00130"></a>00130 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
-<a name="l00131"></a>00131 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
-<a name="l00132"></a>00132 <span class="comment">     *   to 1/\e f.</span>
-<a name="l00133"></a>00133 <span class="comment">     * @param[in] stdlat1 first standard parallel (degrees).</span>
-<a name="l00134"></a>00134 <span class="comment">     * @param[in] stdlat2 second standard parallel (degrees).</span>
-<a name="l00135"></a>00135 <span class="comment">     * @param[in] k1 azimuthal scale on the standard parallels.</span>
-<a name="l00136"></a>00136 <span class="comment">     *</span>
-<a name="l00137"></a>00137 <span class="comment">     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1</span>
-<a name="l00138"></a>00138 <span class="comment">     * or \e stdlat2 is not in the range [-90, 90].  In addition, an exception</span>
-<a name="l00139"></a>00139 <span class="comment">     * is thrown if \e stdlat1 and \e stdlat2 are opposite poles.</span>
-<a name="l00140"></a>00140 <span class="comment">     **********************************************************************/</span>
-<a name="l00141"></a>00141     <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a>(real a, real f, real stdlat1, real stdlat2, real k1);
-<a name="l00142"></a>00142 <span class="comment"></span>
-<a name="l00143"></a>00143 <span class="comment">    /**</span>
-<a name="l00144"></a>00144 <span class="comment">     * Constructor with two standard parallels specified by sines and cosines.</span>
-<a name="l00145"></a>00145 <span class="comment">     *</span>
-<a name="l00146"></a>00146 <span class="comment">     * @param[in] a equatorial radius of ellipsoid (meters)</span>
-<a name="l00147"></a>00147 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
-<a name="l00148"></a>00148 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
-<a name="l00149"></a>00149 <span class="comment">     *   to 1/\e f.</span>
-<a name="l00150"></a>00150 <span class="comment">     * @param[in] sinlat1 sine of first standard parallel.</span>
-<a name="l00151"></a>00151 <span class="comment">     * @param[in] coslat1 cosine of first standard parallel.</span>
-<a name="l00152"></a>00152 <span class="comment">     * @param[in] sinlat2 sine of second standard parallel.</span>
-<a name="l00153"></a>00153 <span class="comment">     * @param[in] coslat2 cosine of second standard parallel.</span>
-<a name="l00154"></a>00154 <span class="comment">     * @param[in] k1 azimuthal scale on the standard parallels.</span>
-<a name="l00155"></a>00155 <span class="comment">     *</span>
-<a name="l00156"></a>00156 <span class="comment">     * This allows parallels close to the poles to be specified accurately.</span>
-<a name="l00157"></a>00157 <span class="comment">     * This routine computes the latitude of origin and the azimuthal scale at</span>
-<a name="l00158"></a>00158 <span class="comment">     * this latitude.  If \e dlat = abs(\e lat2 - \e lat1) &lt;= 160&lt;sup&gt;o&lt;/sup&gt;,</span>
-<a name="l00159"></a>00159 <span class="comment">     * then the error in the latitude of origin is less than</span>
-<a name="l00160"></a>00160 <span class="comment">     * 4.5e-14&lt;sup&gt;o&lt;/sup&gt;.</span>
-<a name="l00161"></a>00161 <span class="comment">     **********************************************************************/</span>
-<a name="l00162"></a>00162     <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a>(real a, real f,
-<a name="l00163"></a>00163                     real sinlat1, real coslat1,
-<a name="l00164"></a>00164                     real sinlat2, real coslat2,
-<a name="l00165"></a>00165                     real k1);
-<a name="l00166"></a>00166 <span class="comment"></span>
-<a name="l00167"></a>00167 <span class="comment">    /**</span>
-<a name="l00168"></a>00168 <span class="comment">     * Set the azimuthal scale for the projection.</span>
-<a name="l00169"></a>00169 <span class="comment">     *</span>
-<a name="l00170"></a>00170 <span class="comment">     * @param[in] lat (degrees).</span>
-<a name="l00171"></a>00171 <span class="comment">     * @param[in] k azimuthal scale at latitude \e lat (default 1).</span>
-<a name="l00172"></a>00172 <span class="comment">     *</span>
-<a name="l00173"></a>00173 <span class="comment">     * This allows a &quot;latitude of conformality&quot; to be specified.  An exception</span>
-<a name="l00174"></a>00174 <span class="comment">     * is thrown if \e k is not positive or if \e lat is not in the range (-90,</span>
-<a name="l00175"></a>00175 <span class="comment">     * 90).</span>
-<a name="l00176"></a>00176 <span class="comment">     **********************************************************************/</span>
-<a name="l00177"></a>00177     <span class="keywordtype">void</span> SetScale(real lat, real k = <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1));
-<a name="l00178"></a>00178 <span class="comment"></span>
-<a name="l00179"></a>00179 <span class="comment">    /**</span>
-<a name="l00180"></a>00180 <span class="comment">     * Forward projection, from geographic to Lambert conformal conic.</span>
-<a name="l00181"></a>00181 <span class="comment">     *</span>
-<a name="l00182"></a>00182 <span class="comment">     * @param[in] lon0 central meridian longitude (degrees).</span>
-<a name="l00183"></a>00183 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00184"></a>00184 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00185"></a>00185 <span class="comment">     * @param[out] x easting of point (meters).</span>
-<a name="l00186"></a>00186 <span class="comment">     * @param[out] y northing of point (meters).</span>
-<a name="l00187"></a>00187 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
-<a name="l00188"></a>00188 <span class="comment">     * @param[out] k azimuthal scale of projection at point; the radial</span>
-<a name="l00189"></a>00189 <span class="comment">     *   scale is the 1/\e k.</span>
-<a name="l00190"></a>00190 <span class="comment">     *</span>
-<a name="l00191"></a>00191 <span class="comment">     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No</span>
-<a name="l00192"></a>00192 <span class="comment">     * false easting or northing is added and \e lat should be in the range</span>
-<a name="l00193"></a>00193 <span class="comment">     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The</span>
-<a name="l00194"></a>00194 <span class="comment">     * values of \e x and \e y returned for points which project to infinity</span>
-<a name="l00195"></a>00195 <span class="comment">     * (i.e., one or both of the poles) will be large but finite.</span>
-<a name="l00196"></a>00196 <span class="comment">     **********************************************************************/</span>
-<a name="l00197"></a>00197     <span class="keywordtype">void</span> Forward(real lon0, real lat, real lon,
-<a name="l00198"></a>00198                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00199"></a>00199 <span class="comment"></span>
-<a name="l00200"></a>00200 <span class="comment">    /**</span>
-<a name="l00201"></a>00201 <span class="comment">     * Reverse projection, from Lambert conformal conic to geographic.</span>
-<a name="l00202"></a>00202 <span class="comment">     *</span>
-<a name="l00203"></a>00203 <span class="comment">     * @param[in] lon0 central meridian longitude (degrees).</span>
-<a name="l00204"></a>00204 <span class="comment">     * @param[in] x easting of point (meters).</span>
-<a name="l00205"></a>00205 <span class="comment">     * @param[in] y northing of point (meters).</span>
-<a name="l00206"></a>00206 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00207"></a>00207 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00208"></a>00208 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
-<a name="l00209"></a>00209 <span class="comment">     * @param[out] k azimuthal scale of projection at point; the radial</span>
-<a name="l00210"></a>00210 <span class="comment">     *   scale is the 1/\e k.</span>
-<a name="l00211"></a>00211 <span class="comment">     *</span>
-<a name="l00212"></a>00212 <span class="comment">     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No</span>
-<a name="l00213"></a>00213 <span class="comment">     * false easting or northing is added.  \e lon0 should be in the range</span>
-<a name="l00214"></a>00214 <span class="comment">     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).</span>
-<a name="l00215"></a>00215 <span class="comment">     * The value of \e lat returned is in the range [-90,90].  If the input</span>
-<a name="l00216"></a>00216 <span class="comment">     * point is outside the legal projected space the nearest pole is returned.</span>
-<a name="l00217"></a>00217 <span class="comment">     **********************************************************************/</span>
-<a name="l00218"></a>00218     <span class="keywordtype">void</span> Reverse(real lon0, real x, real y,
-<a name="l00219"></a>00219                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00220"></a>00220 <span class="comment"></span>
-<a name="l00221"></a>00221 <span class="comment">    /**</span>
-<a name="l00222"></a>00222 <span class="comment">     * AlbersEqualArea::Forward without returning the convergence and</span>
-<a name="l00223"></a>00223 <span class="comment">     * scale.</span>
-<a name="l00224"></a>00224 <span class="comment">     **********************************************************************/</span>
-<a name="l00225"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a68a13780a73bcf9c8e50a3ce4eae3086">00225</a>     <span class="keywordtype">void</span> Forward(real lon0, real lat, real lon,
-<a name="l00226"></a>00226                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00227"></a>00227       real gamma, k;
-<a name="l00228"></a>00228       Forward(lon0, lat, lon, x, y, gamma, k);
-<a name="l00229"></a>00229     }
-<a name="l00230"></a>00230 <span class="comment"></span>
-<a name="l00231"></a>00231 <span class="comment">    /**</span>
-<a name="l00232"></a>00232 <span class="comment">     * AlbersEqualArea::Reverse without returning the convergence and</span>
-<a name="l00233"></a>00233 <span class="comment">     * scale.</span>
-<a name="l00234"></a>00234 <span class="comment">     **********************************************************************/</span>
-<a name="l00235"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a871246cba03145512f3f12ceb3e3e3a8">00235</a>     <span class="keywordtype">void</span> Reverse(real lon0, real x, real y,
-<a name="l00236"></a>00236                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00237"></a>00237       real gamma, k;
-<a name="l00238"></a>00238       Reverse(lon0, x, y, lat, lon, gamma, k);
-<a name="l00239"></a>00239     }
-<a name="l00240"></a>00240 <span class="comment"></span>
-<a name="l00241"></a>00241 <span class="comment">    /** \name Inspector functions</span>
-<a name="l00242"></a>00242 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00243"></a>00243 <span class="comment">    ///@{</span>
-<a name="l00244"></a>00244 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00245"></a>00245 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
-<a name="l00246"></a>00246 <span class="comment">     *   the value used in the constructor.</span>
-<a name="l00247"></a>00247 <span class="comment">     **********************************************************************/</span>
-<a name="l00248"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a55d5ca45e7c80a96b3faf0094714ac59">00248</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a55d5ca45e7c80a96b3faf0094714ac59">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
-<a name="l00249"></a>00249 <span class="comment"></span>
-<a name="l00250"></a>00250 <span class="comment">    /**</span>
-<a name="l00251"></a>00251 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value used in</span>
-<a name="l00252"></a>00252 <span class="comment">     *   the constructor.</span>
-<a name="l00253"></a>00253 <span class="comment">     **********************************************************************/</span>
-<a name="l00254"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a565c63954715204781ae458db0d6b1f7">00254</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a565c63954715204781ae458db0d6b1f7">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _f; }
-<a name="l00255"></a>00255 <span class="comment"></span>
-<a name="l00256"></a>00256 <span class="comment">    /**</span>
-<a name="l00257"></a>00257 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
-<a name="l00258"></a>00258 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
-<a name="l00259"></a>00259 <span class="comment">     **********************************************************************/</span>
-<a name="l00260"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">00260</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
-<a name="l00261"></a>00261 <span class="comment"></span>
-<a name="l00262"></a>00262 <span class="comment">    /**</span>
-<a name="l00263"></a>00263 <span class="comment">     * @return latitude of the origin for the projection (degrees).</span>
-<a name="l00264"></a>00264 <span class="comment">     *</span>
-<a name="l00265"></a>00265 <span class="comment">     * This is the latitude of minimum azimuthal scale and equals the \e stdlat</span>
-<a name="l00266"></a>00266 <span class="comment">     * in the 1-parallel constructor and lies between \e stdlat1 and \e stdlat2</span>
-<a name="l00267"></a>00267 <span class="comment">     * in the 2-parallel constructors.</span>
-<a name="l00268"></a>00268 <span class="comment">     **********************************************************************/</span>
-<a name="l00269"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ad780e943e9a9ba168b350d809d0bfe08">00269</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ad780e943e9a9ba168b350d809d0bfe08">OriginLatitude</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lat0; }
-<a name="l00270"></a>00270 <span class="comment"></span>
-<a name="l00271"></a>00271 <span class="comment">    /**</span>
-<a name="l00272"></a>00272 <span class="comment">     * @return central scale for the projection.  This is the azimuthal scale</span>
-<a name="l00273"></a>00273 <span class="comment">     *   on the latitude of origin.</span>
-<a name="l00274"></a>00274 <span class="comment">     **********************************************************************/</span>
-<a name="l00275"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#af407e835eaf76895ee25ec9e7a9c090c">00275</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#af407e835eaf76895ee25ec9e7a9c090c">CentralScale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _k0; }<span class="comment"></span>
-<a name="l00276"></a>00276 <span class="comment">    ///@}</span>
-<a name="l00277"></a>00277 <span class="comment"></span><span class="comment"></span>
-<a name="l00278"></a>00278 <span class="comment">    /**</span>
-<a name="l00279"></a>00279 <span class="comment">     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e</span>
-<a name="l00280"></a>00280 <span class="comment">     * stdlat = 0, and \e k0 = 1.  This degenerates to the cylindrical equal</span>
-<a name="l00281"></a>00281 <span class="comment">     * area projection.</span>
-<a name="l00282"></a>00282 <span class="comment">     **********************************************************************/</span>
-<a name="l00283"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae643f7f82f5864f95da4cb14571ccf55">00283</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae643f7f82f5864f95da4cb14571ccf55">CylindricalEqualArea</a>;
-<a name="l00284"></a>00284 <span class="comment"></span>
-<a name="l00285"></a>00285 <span class="comment">    /**</span>
-<a name="l00286"></a>00286 <span class="comment">     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e</span>
-<a name="l00287"></a>00287 <span class="comment">     * stdlat = 90&lt;sup&gt;o&lt;/sup&gt;, and \e k0 = 1.  This degenerates to the</span>
-<a name="l00288"></a>00288 <span class="comment">     * Lambert azimuthal equal area projection.</span>
-<a name="l00289"></a>00289 <span class="comment">     **********************************************************************/</span>
-<a name="l00290"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae65fcb68843b36d206751527ebd08f44">00290</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae65fcb68843b36d206751527ebd08f44">AzimuthalEqualAreaNorth</a>;
-<a name="l00291"></a>00291 <span class="comment"></span>
-<a name="l00292"></a>00292 <span class="comment">    /**</span>
-<a name="l00293"></a>00293 <span class="comment">     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e</span>
-<a name="l00294"></a>00294 <span class="comment">     * stdlat = -90&lt;sup&gt;o&lt;/sup&gt;, and \e k0 = 1.  This degenerates to the</span>
-<a name="l00295"></a>00295 <span class="comment">     * Lambert azimuthal equal area projection.</span>
-<a name="l00296"></a>00296 <span class="comment">     **********************************************************************/</span>
-<a name="l00297"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#aff0ff4e2f162107bd136310b44444cc1">00297</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#aff0ff4e2f162107bd136310b44444cc1">AzimuthalEqualAreaSouth</a>;
-<a name="l00298"></a>00298   };
-<a name="l00299"></a>00299 
-<a name="l00300"></a>00300 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00301"></a>00301 
-<a name="l00302"></a>00302 <span class="preprocessor">#endif  // GEOGRAPHICLIB_ALBERSEQUALAREA_HPP</span>
+<a name="l00011"></a><a class="code" href="AlbersEqualArea_8hpp.html#aa9494d369d907d2b285fcb2f45b4689c">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP \</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 554a5a83b2feb1f029cc7a7e3c94bdc86ccc36d1 $&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor"></span>
+<a name="l00014"></a>00014 <span class="preprocessor">#include &lt;algorithm&gt;</span>
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+<a name="l00016"></a>00016 
+<a name="l00017"></a>00017 <span class="keyword">namespace </span>GeographicLib {
+<a name="l00018"></a>00018 <span class="comment"></span>
+<a name="l00019"></a>00019 <span class="comment">  /**</span>
+<a name="l00020"></a>00020 <span class="comment">   * \brief Albers Equal Area Conic Projection</span>
+<a name="l00021"></a>00021 <span class="comment">   *</span>
+<a name="l00022"></a>00022 <span class="comment">   * Implementation taken from the report,</span>
+<a name="l00023"></a>00023 <span class="comment">   * - J. P. Snyder,</span>
+<a name="l00024"></a>00024 <span class="comment">   *   &lt;a href=&quot;http://pubs.er.usgs.gov/usgspubs/pp/pp1395&quot;&gt; Map Projections: A</span>
+<a name="l00025"></a>00025 <span class="comment">   *   Working Manual&lt;/a&gt;, USGS Professional Paper 1395 (1987),</span>
+<a name="l00026"></a>00026 <span class="comment">   *   pp. 101&amp;ndash;102.</span>
+<a name="l00027"></a>00027 <span class="comment">   *</span>
+<a name="l00028"></a>00028 <span class="comment">   * This is a implementation of the equations in Snyder except that divided</span>
+<a name="l00029"></a>00029 <span class="comment">   * differences will be [have been] used to transform the expressions into</span>
+<a name="l00030"></a>00030 <span class="comment">   * ones which may be evaluated accurately.  [In this implementation, the</span>
+<a name="l00031"></a>00031 <span class="comment">   * projection correctly becomes the cylindrical equal area or the azimuthal</span>
+<a name="l00032"></a>00032 <span class="comment">   * equal area projection when the standard latitude is the equator or a</span>
+<a name="l00033"></a>00033 <span class="comment">   * pole.]</span>
+<a name="l00034"></a>00034 <span class="comment">   *</span>
+<a name="l00035"></a>00035 <span class="comment">   * The ellipsoid parameters, the standard parallels, and the scale on the</span>
+<a name="l00036"></a>00036 <span class="comment">   * standard parallels are set in the constructor.  Internally, the case with</span>
+<a name="l00037"></a>00037 <span class="comment">   * two standard parallels is converted into a single standard parallel, the</span>
+<a name="l00038"></a>00038 <span class="comment">   * latitude of minimum azimuthal scale, with an azimuthal scale specified on</span>
+<a name="l00039"></a>00039 <span class="comment">   * this parallel.  This latitude is also used as the latitude of origin which</span>
+<a name="l00040"></a>00040 <span class="comment">   * is returned by AlbersEqualArea::OriginLatitude.  The azimuthal scale on</span>
+<a name="l00041"></a>00041 <span class="comment">   * the latitude of origin is given by AlbersEqualArea::CentralScale.  The</span>
+<a name="l00042"></a>00042 <span class="comment">   * case with two standard parallels at opposite poles is singular and is</span>
+<a name="l00043"></a>00043 <span class="comment">   * disallowed.  The central meridian (which is a trivial shift of the</span>
+<a name="l00044"></a>00044 <span class="comment">   * longitude) is specified as the \e lon0 argument of the</span>
+<a name="l00045"></a>00045 <span class="comment">   * AlbersEqualArea::Forward and AlbersEqualArea::Reverse functions.</span>
+<a name="l00046"></a>00046 <span class="comment">   * AlbersEqualArea::Forward and AlbersEqualArea::Reverse also return the</span>
+<a name="l00047"></a>00047 <span class="comment">   * meridian convergence, \e gamma, and azimuthal scale, \e k.  A small square</span>
+<a name="l00048"></a>00048 <span class="comment">   * aligned with the cardinal directions is projected to a rectangle with</span>
+<a name="l00049"></a>00049 <span class="comment">   * dimensions \e k (in the E-W direction) and 1/\e k (in the N-S direction).</span>
+<a name="l00050"></a>00050 <span class="comment">   * The E-W sides of the rectangle are oriented \e gamma degrees</span>
+<a name="l00051"></a>00051 <span class="comment">   * counter-clockwise from the \e x axis.  There is no provision in this class</span>
+<a name="l00052"></a>00052 <span class="comment">   * for specifying a false easting or false northing or a different latitude</span>
+<a name="l00053"></a>00053 <span class="comment">   * of origin.</span>
+<a name="l00054"></a>00054 <span class="comment">   **********************************************************************/</span>
+<a name="l00055"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html">00055</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> {
+<a name="l00056"></a>00056   <span class="keyword">private</span>:
+<a name="l00057"></a>00057     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00058"></a>00058     real _a, _f, _fm, _e2, _e, _e2m, _qZ, _qx;
+<a name="l00059"></a>00059     real _sign, _lat0, _k0;
+<a name="l00060"></a>00060     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
+<a name="l00061"></a>00061     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
+<a name="l00062"></a>00062     <span class="keyword">static</span> <span class="keyword">const</span> real epsx_;
+<a name="l00063"></a>00063     <span class="keyword">static</span> <span class="keyword">const</span> real epsx2_;
+<a name="l00064"></a>00064     <span class="keyword">static</span> <span class="keyword">const</span> real tol_;
+<a name="l00065"></a>00065     <span class="keyword">static</span> <span class="keyword">const</span> real tol0_;
+<a name="l00066"></a>00066     <span class="keyword">static</span> <span class="keyword">const</span> real ahypover_;
+<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 5;   <span class="comment">// Newton iterations in Reverse</span>
+<a name="l00068"></a>00068     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit0_ = 20; <span class="comment">// Newton iterations in Init</span>
+<a name="l00069"></a>00069     <span class="keyword">static</span> <span class="keyword">inline</span> real hyp(real x) <span class="keywordflow">throw</span>() { <span class="keywordflow">return</span> <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1), x); }
+<a name="l00070"></a>00070     <span class="comment">// atanh(      e   * x)/      e   if f &gt; 0</span>
+<a name="l00071"></a>00071     <span class="comment">// atan (sqrt(-e2) * x)/sqrt(-e2) if f &lt; 0</span>
+<a name="l00072"></a>00072     <span class="comment">// x                              if f = 0</span>
+<a name="l00073"></a>00073     <span class="keyword">inline</span> real atanhee(real x) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00074"></a>00074       <span class="keywordflow">return</span> _f &gt; 0 ? <a class="code" href="classGeographicLib_1_1Math.html#a62ae372f983cb076561204be8de263bd">Math::atanh</a>(_e * x)/_e :
+<a name="l00075"></a>00075         (_f &lt; 0 ? std::atan(_e * x)/_e : x);
+<a name="l00076"></a>00076     }
+<a name="l00077"></a>00077     <span class="comment">// return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x</span>
+<a name="l00078"></a>00078     <span class="keyword">static</span> real atanhxm1(real x) <span class="keywordflow">throw</span>();
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080     <span class="comment">// Divided differences</span>
+<a name="l00081"></a>00081     <span class="comment">// Definition: Df(x,y) = (f(x)-f(y))/(x-y)</span>
+<a name="l00082"></a>00082     <span class="comment">// See: W. M. Kahan and R. J. Fateman,</span>
+<a name="l00083"></a>00083     <span class="comment">// Symbolic computation of divided differences,</span>
+<a name="l00084"></a>00084     <span class="comment">// SIGSAM Bull. 33(3), 7-28 (1999)</span>
+<a name="l00085"></a>00085     <span class="comment">// http://doi.acm.org/10.1145/334714.334716</span>
+<a name="l00086"></a>00086     <span class="comment">// http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf</span>
+<a name="l00087"></a>00087     <span class="comment">//</span>
+<a name="l00088"></a>00088     <span class="comment">// General rules</span>
+<a name="l00089"></a>00089     <span class="comment">// h(x) = f(g(x)): Dh(x,y) = Df(g(x),g(y))*Dg(x,y)</span>
+<a name="l00090"></a>00090     <span class="comment">// h(x) = f(x)*g(x):</span>
+<a name="l00091"></a>00091     <span class="comment">//        Dh(x,y) = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2</span>
+<a name="l00092"></a>00092     <span class="comment">//</span>
+<a name="l00093"></a>00093     <span class="comment">// sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))</span>
+<a name="l00094"></a>00094     <span class="keyword">static</span> <span class="keyword">inline</span> real Dsn(real x, real y, real sx, real sy) <span class="keywordflow">throw</span>() {
+<a name="l00095"></a>00095       <span class="comment">// sx = x/hyp(x)</span>
+<a name="l00096"></a>00096       real t = x * y;
+<a name="l00097"></a>00097       <span class="keywordflow">return</span> t &gt; 0 ? (x + y) * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>( (sx * sy)/t ) / (sx + sy) :
+<a name="l00098"></a>00098         (x - y != 0 ? (sx - sy) / (x - y) : 1);
+<a name="l00099"></a>00099     }
+<a name="l00100"></a>00100     <span class="comment">// Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)</span>
+<a name="l00101"></a>00101     <span class="keyword">inline</span> real Datanhee(real x, real y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00102"></a>00102       real t = x - y, d = 1 - _e2 * x * y;
+<a name="l00103"></a>00103       <span class="keywordflow">return</span> t != 0 ? atanhee(t / d) / t : 1 / d;
+<a name="l00104"></a>00104     }
+<a name="l00105"></a>00105     <span class="comment">// DDatanhee(x,y) = (Datanhee(1,y) - Datanhee(1,x))/(y-x)</span>
+<a name="l00106"></a>00106     real DDatanhee(real x, real y) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00107"></a>00107     <span class="keywordtype">void</span> Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1) <span class="keywordflow">throw</span>();
+<a name="l00108"></a>00108     real txif(real tphi) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00109"></a>00109     real tphif(real txi) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00110"></a>00110   <span class="keyword">public</span>:
+<a name="l00111"></a>00111 <span class="comment"></span>
+<a name="l00112"></a>00112 <span class="comment">    /**</span>
+<a name="l00113"></a>00113 <span class="comment">     * Constructor with a single standard parallel.</span>
+<a name="l00114"></a>00114 <span class="comment">     *</span>
+<a name="l00115"></a>00115 <span class="comment">     * @param[in] a equatorial radius of ellipsoid (meters).</span>
+<a name="l00116"></a>00116 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
+<a name="l00117"></a>00117 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
+<a name="l00118"></a>00118 <span class="comment">     *   to 1/\e f.</span>
+<a name="l00119"></a>00119 <span class="comment">     * @param[in] stdlat standard parallel (degrees), the circle of tangency.</span>
+<a name="l00120"></a>00120 <span class="comment">     * @param[in] k0 azimuthal scale on the standard parallel.</span>
+<a name="l00121"></a>00121 <span class="comment">     *</span>
+<a name="l00122"></a>00122 <span class="comment">     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat</span>
+<a name="l00123"></a>00123 <span class="comment">     * is not in the range [-90, 90].</span>
+<a name="l00124"></a>00124 <span class="comment">     **********************************************************************/</span>
+<a name="l00125"></a>00125     <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a>(real a, real f, real stdlat, real k0);
+<a name="l00126"></a>00126 <span class="comment"></span>
+<a name="l00127"></a>00127 <span class="comment">    /**</span>
+<a name="l00128"></a>00128 <span class="comment">     * Constructor with two standard parallels.</span>
+<a name="l00129"></a>00129 <span class="comment">     *</span>
+<a name="l00130"></a>00130 <span class="comment">     * @param[in] a equatorial radius of ellipsoid (meters).</span>
+<a name="l00131"></a>00131 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
+<a name="l00132"></a>00132 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
+<a name="l00133"></a>00133 <span class="comment">     *   to 1/\e f.</span>
+<a name="l00134"></a>00134 <span class="comment">     * @param[in] stdlat1 first standard parallel (degrees).</span>
+<a name="l00135"></a>00135 <span class="comment">     * @param[in] stdlat2 second standard parallel (degrees).</span>
+<a name="l00136"></a>00136 <span class="comment">     * @param[in] k1 azimuthal scale on the standard parallels.</span>
+<a name="l00137"></a>00137 <span class="comment">     *</span>
+<a name="l00138"></a>00138 <span class="comment">     * An exception is thrown if \e a or \e k0 is not positive or if \e stdlat1</span>
+<a name="l00139"></a>00139 <span class="comment">     * or \e stdlat2 is not in the range [-90, 90].  In addition, an exception</span>
+<a name="l00140"></a>00140 <span class="comment">     * is thrown if \e stdlat1 and \e stdlat2 are opposite poles.</span>
+<a name="l00141"></a>00141 <span class="comment">     **********************************************************************/</span>
+<a name="l00142"></a>00142     <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a>(real a, real f, real stdlat1, real stdlat2, real k1);
+<a name="l00143"></a>00143 <span class="comment"></span>
+<a name="l00144"></a>00144 <span class="comment">    /**</span>
+<a name="l00145"></a>00145 <span class="comment">     * Constructor with two standard parallels specified by sines and cosines.</span>
+<a name="l00146"></a>00146 <span class="comment">     *</span>
+<a name="l00147"></a>00147 <span class="comment">     * @param[in] a equatorial radius of ellipsoid (meters).</span>
+<a name="l00148"></a>00148 <span class="comment">     * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.</span>
+<a name="l00149"></a>00149 <span class="comment">     *   Negative \e f gives a prolate ellipsoid.  If \e f &gt; 1, set flattening</span>
+<a name="l00150"></a>00150 <span class="comment">     *   to 1/\e f.</span>
+<a name="l00151"></a>00151 <span class="comment">     * @param[in] sinlat1 sine of first standard parallel.</span>
+<a name="l00152"></a>00152 <span class="comment">     * @param[in] coslat1 cosine of first standard parallel.</span>
+<a name="l00153"></a>00153 <span class="comment">     * @param[in] sinlat2 sine of second standard parallel.</span>
+<a name="l00154"></a>00154 <span class="comment">     * @param[in] coslat2 cosine of second standard parallel.</span>
+<a name="l00155"></a>00155 <span class="comment">     * @param[in] k1 azimuthal scale on the standard parallels.</span>
+<a name="l00156"></a>00156 <span class="comment">     *</span>
+<a name="l00157"></a>00157 <span class="comment">     * This allows parallels close to the poles to be specified accurately.</span>
+<a name="l00158"></a>00158 <span class="comment">     * This routine computes the latitude of origin and the azimuthal scale at</span>
+<a name="l00159"></a>00159 <span class="comment">     * this latitude.  If \e dlat = abs(\e lat2 - \e lat1) &lt;= 160&lt;sup&gt;o&lt;/sup&gt;,</span>
+<a name="l00160"></a>00160 <span class="comment">     * then the error in the latitude of origin is less than</span>
+<a name="l00161"></a>00161 <span class="comment">     * 4.5e-14&lt;sup&gt;o&lt;/sup&gt;.</span>
+<a name="l00162"></a>00162 <span class="comment">     **********************************************************************/</span>
+<a name="l00163"></a>00163     <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a>(real a, real f,
+<a name="l00164"></a>00164                     real sinlat1, real coslat1,
+<a name="l00165"></a>00165                     real sinlat2, real coslat2,
+<a name="l00166"></a>00166                     real k1);
+<a name="l00167"></a>00167 <span class="comment"></span>
+<a name="l00168"></a>00168 <span class="comment">    /**</span>
+<a name="l00169"></a>00169 <span class="comment">     * Set the azimuthal scale for the projection.</span>
+<a name="l00170"></a>00170 <span class="comment">     *</span>
+<a name="l00171"></a>00171 <span class="comment">     * @param[in] lat (degrees).</span>
+<a name="l00172"></a>00172 <span class="comment">     * @param[in] k azimuthal scale at latitude \e lat (default 1).</span>
+<a name="l00173"></a>00173 <span class="comment">     *</span>
+<a name="l00174"></a>00174 <span class="comment">     * This allows a &quot;latitude of conformality&quot; to be specified.  An exception</span>
+<a name="l00175"></a>00175 <span class="comment">     * is thrown if \e k is not positive or if \e lat is not in the range (-90,</span>
+<a name="l00176"></a>00176 <span class="comment">     * 90).</span>
+<a name="l00177"></a>00177 <span class="comment">     **********************************************************************/</span>
+<a name="l00178"></a>00178     <span class="keywordtype">void</span> SetScale(real lat, real k = <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1));
+<a name="l00179"></a>00179 <span class="comment"></span>
+<a name="l00180"></a>00180 <span class="comment">    /**</span>
+<a name="l00181"></a>00181 <span class="comment">     * Forward projection, from geographic to Lambert conformal conic.</span>
+<a name="l00182"></a>00182 <span class="comment">     *</span>
+<a name="l00183"></a>00183 <span class="comment">     * @param[in] lon0 central meridian longitude (degrees).</span>
+<a name="l00184"></a>00184 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00185"></a>00185 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00186"></a>00186 <span class="comment">     * @param[out] x easting of point (meters).</span>
+<a name="l00187"></a>00187 <span class="comment">     * @param[out] y northing of point (meters).</span>
+<a name="l00188"></a>00188 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
+<a name="l00189"></a>00189 <span class="comment">     * @param[out] k azimuthal scale of projection at point; the radial</span>
+<a name="l00190"></a>00190 <span class="comment">     *   scale is the 1/\e k.</span>
+<a name="l00191"></a>00191 <span class="comment">     *</span>
+<a name="l00192"></a>00192 <span class="comment">     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No</span>
+<a name="l00193"></a>00193 <span class="comment">     * false easting or northing is added and \e lat should be in the range</span>
+<a name="l00194"></a>00194 <span class="comment">     * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The</span>
+<a name="l00195"></a>00195 <span class="comment">     * values of \e x and \e y returned for points which project to infinity</span>
+<a name="l00196"></a>00196 <span class="comment">     * (i.e., one or both of the poles) will be large but finite.</span>
+<a name="l00197"></a>00197 <span class="comment">     **********************************************************************/</span>
+<a name="l00198"></a>00198     <span class="keywordtype">void</span> Forward(real lon0, real lat, real lon,
+<a name="l00199"></a>00199                  real&amp; x, real&amp; y, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00200"></a>00200 <span class="comment"></span>
+<a name="l00201"></a>00201 <span class="comment">    /**</span>
+<a name="l00202"></a>00202 <span class="comment">     * Reverse projection, from Lambert conformal conic to geographic.</span>
+<a name="l00203"></a>00203 <span class="comment">     *</span>
+<a name="l00204"></a>00204 <span class="comment">     * @param[in] lon0 central meridian longitude (degrees).</span>
+<a name="l00205"></a>00205 <span class="comment">     * @param[in] x easting of point (meters).</span>
+<a name="l00206"></a>00206 <span class="comment">     * @param[in] y northing of point (meters).</span>
+<a name="l00207"></a>00207 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00208"></a>00208 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00209"></a>00209 <span class="comment">     * @param[out] gamma meridian convergence at point (degrees).</span>
+<a name="l00210"></a>00210 <span class="comment">     * @param[out] k azimuthal scale of projection at point; the radial</span>
+<a name="l00211"></a>00211 <span class="comment">     *   scale is the 1/\e k.</span>
+<a name="l00212"></a>00212 <span class="comment">     *</span>
+<a name="l00213"></a>00213 <span class="comment">     * The latitude origin is given by AlbersEqualArea::LatitudeOrigin().  No</span>
+<a name="l00214"></a>00214 <span class="comment">     * false easting or northing is added.  \e lon0 should be in the range</span>
+<a name="l00215"></a>00215 <span class="comment">     * [-180, 360].  The value of \e lon returned is in the range [-180, 180).</span>
+<a name="l00216"></a>00216 <span class="comment">     * The value of \e lat returned is in the range [-90,90].  If the input</span>
+<a name="l00217"></a>00217 <span class="comment">     * point is outside the legal projected space the nearest pole is returned.</span>
+<a name="l00218"></a>00218 <span class="comment">     **********************************************************************/</span>
+<a name="l00219"></a>00219     <span class="keywordtype">void</span> Reverse(real lon0, real x, real y,
+<a name="l00220"></a>00220                  real&amp; lat, real&amp; lon, real&amp; gamma, real&amp; k) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00221"></a>00221 <span class="comment"></span>
+<a name="l00222"></a>00222 <span class="comment">    /**</span>
+<a name="l00223"></a>00223 <span class="comment">     * AlbersEqualArea::Forward without returning the convergence and</span>
+<a name="l00224"></a>00224 <span class="comment">     * scale.</span>
+<a name="l00225"></a>00225 <span class="comment">     **********************************************************************/</span>
+<a name="l00226"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a68a13780a73bcf9c8e50a3ce4eae3086">00226</a>     <span class="keywordtype">void</span> Forward(real lon0, real lat, real lon,
+<a name="l00227"></a>00227                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00228"></a>00228       real gamma, k;
+<a name="l00229"></a>00229       Forward(lon0, lat, lon, x, y, gamma, k);
+<a name="l00230"></a>00230     }
+<a name="l00231"></a>00231 <span class="comment"></span>
+<a name="l00232"></a>00232 <span class="comment">    /**</span>
+<a name="l00233"></a>00233 <span class="comment">     * AlbersEqualArea::Reverse without returning the convergence and</span>
+<a name="l00234"></a>00234 <span class="comment">     * scale.</span>
+<a name="l00235"></a>00235 <span class="comment">     **********************************************************************/</span>
+<a name="l00236"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a871246cba03145512f3f12ceb3e3e3a8">00236</a>     <span class="keywordtype">void</span> Reverse(real lon0, real x, real y,
+<a name="l00237"></a>00237                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00238"></a>00238       real gamma, k;
+<a name="l00239"></a>00239       Reverse(lon0, x, y, lat, lon, gamma, k);
+<a name="l00240"></a>00240     }
+<a name="l00241"></a>00241 <span class="comment"></span>
+<a name="l00242"></a>00242 <span class="comment">    /** \name Inspector functions</span>
+<a name="l00243"></a>00243 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00244"></a>00244 <span class="comment">    ///@{</span>
+<a name="l00245"></a>00245 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00246"></a>00246 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
+<a name="l00247"></a>00247 <span class="comment">     *   the value used in the constructor.</span>
+<a name="l00248"></a>00248 <span class="comment">     **********************************************************************/</span>
+<a name="l00249"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a55d5ca45e7c80a96b3faf0094714ac59">00249</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a55d5ca45e7c80a96b3faf0094714ac59">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
+<a name="l00250"></a>00250 <span class="comment"></span>
+<a name="l00251"></a>00251 <span class="comment">    /**</span>
+<a name="l00252"></a>00252 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value used in</span>
+<a name="l00253"></a>00253 <span class="comment">     *   the constructor.</span>
+<a name="l00254"></a>00254 <span class="comment">     **********************************************************************/</span>
+<a name="l00255"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a565c63954715204781ae458db0d6b1f7">00255</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a565c63954715204781ae458db0d6b1f7">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _f; }
+<a name="l00256"></a>00256 <span class="comment"></span>
+<a name="l00257"></a>00257 <span class="comment">    /**</span>
+<a name="l00258"></a>00258 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
+<a name="l00259"></a>00259 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
+<a name="l00260"></a>00260 <span class="comment">     **********************************************************************/</span>
+<a name="l00261"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">00261</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#a1d0ad953a852d4cdb9faa731b5530d70">InverseFlattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> 1/_f; }
+<a name="l00262"></a>00262 <span class="comment"></span>
+<a name="l00263"></a>00263 <span class="comment">    /**</span>
+<a name="l00264"></a>00264 <span class="comment">     * @return latitude of the origin for the projection (degrees).</span>
+<a name="l00265"></a>00265 <span class="comment">     *</span>
+<a name="l00266"></a>00266 <span class="comment">     * This is the latitude of minimum azimuthal scale and equals the \e stdlat</span>
+<a name="l00267"></a>00267 <span class="comment">     * in the 1-parallel constructor and lies between \e stdlat1 and \e stdlat2</span>
+<a name="l00268"></a>00268 <span class="comment">     * in the 2-parallel constructors.</span>
+<a name="l00269"></a>00269 <span class="comment">     **********************************************************************/</span>
+<a name="l00270"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ad780e943e9a9ba168b350d809d0bfe08">00270</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ad780e943e9a9ba168b350d809d0bfe08">OriginLatitude</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _lat0; }
+<a name="l00271"></a>00271 <span class="comment"></span>
+<a name="l00272"></a>00272 <span class="comment">    /**</span>
+<a name="l00273"></a>00273 <span class="comment">     * @return central scale for the projection.  This is the azimuthal scale</span>
+<a name="l00274"></a>00274 <span class="comment">     *   on the latitude of origin.</span>
+<a name="l00275"></a>00275 <span class="comment">     **********************************************************************/</span>
+<a name="l00276"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#af407e835eaf76895ee25ec9e7a9c090c">00276</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#af407e835eaf76895ee25ec9e7a9c090c">CentralScale</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _k0; }<span class="comment"></span>
+<a name="l00277"></a>00277 <span class="comment">    ///@}</span>
+<a name="l00278"></a>00278 <span class="comment"></span><span class="comment"></span>
+<a name="l00279"></a>00279 <span class="comment">    /**</span>
+<a name="l00280"></a>00280 <span class="comment">     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e</span>
+<a name="l00281"></a>00281 <span class="comment">     * stdlat = 0, and \e k0 = 1.  This degenerates to the cylindrical equal</span>
+<a name="l00282"></a>00282 <span class="comment">     * area projection.</span>
+<a name="l00283"></a>00283 <span class="comment">     **********************************************************************/</span>
+<a name="l00284"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae643f7f82f5864f95da4cb14571ccf55">00284</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae643f7f82f5864f95da4cb14571ccf55">CylindricalEqualArea</a>;
+<a name="l00285"></a>00285 <span class="comment"></span>
+<a name="l00286"></a>00286 <span class="comment">    /**</span>
+<a name="l00287"></a>00287 <span class="comment">     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e</span>
+<a name="l00288"></a>00288 <span class="comment">     * stdlat = 90&lt;sup&gt;o&lt;/sup&gt;, and \e k0 = 1.  This degenerates to the</span>
+<a name="l00289"></a>00289 <span class="comment">     * Lambert azimuthal equal area projection.</span>
+<a name="l00290"></a>00290 <span class="comment">     **********************************************************************/</span>
+<a name="l00291"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae65fcb68843b36d206751527ebd08f44">00291</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#ae65fcb68843b36d206751527ebd08f44">AzimuthalEqualAreaNorth</a>;
+<a name="l00292"></a>00292 <span class="comment"></span>
+<a name="l00293"></a>00293 <span class="comment">    /**</span>
+<a name="l00294"></a>00294 <span class="comment">     * A global instantiation of AlbersEqualArea with the WGS84 ellipsoid, \e</span>
+<a name="l00295"></a>00295 <span class="comment">     * stdlat = -90&lt;sup&gt;o&lt;/sup&gt;, and \e k0 = 1.  This degenerates to the</span>
+<a name="l00296"></a>00296 <span class="comment">     * Lambert azimuthal equal area projection.</span>
+<a name="l00297"></a>00297 <span class="comment">     **********************************************************************/</span>
+<a name="l00298"></a><a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#aff0ff4e2f162107bd136310b44444cc1">00298</a>     <span class="keyword">static</span> <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html#aff0ff4e2f162107bd136310b44444cc1">AzimuthalEqualAreaSouth</a>;
+<a name="l00299"></a>00299   };
+<a name="l00300"></a>00300 
+<a name="l00301"></a>00301 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00302"></a>00302 
+<a name="l00303"></a>00303 <span class="preprocessor">#endif  // GEOGRAPHICLIB_ALBERSEQUALAREA_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

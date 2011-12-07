@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
-#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP "$Id: 1ed2e0020530f29db210a5816bd9990ce5cd05f5 $"
+#define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP \
+  "$Id: fcee9dee564eaf87b75e742f16d1954091a77dbf $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -18,10 +19,10 @@ namespace GeographicLib {
    * \brief Elliptic functions needed for TransverseMercatorExact
    *
    * This provides the subset of elliptic functions needed for
-   * TransverseMercatorExact.  For a given ellipsoid, only parameters \e
-   * e<sup>2</sup> and 1 - \e e<sup>2</sup> are needed.  This class taken the
-   * parameter as a constructor parameters and caches the values of the
-   * required complete integrals.  A method is provided for Jacobi elliptic
+   * TransverseMercatorExact.  For a given ellipsoid, only parameters
+   * <i>e</i><sup>2</sup> and 1 - <i>e</i><sup>2</sup> are needed.  This class
+   * taken the parameter as a constructor parameters and caches the values of
+   * the required complete integrals.  A method is provided for Jacobi elliptic
    * functions and for the incomplete elliptic integral of the second kind in
    * terms of the amplitude.
    *
@@ -119,7 +120,7 @@ namespace GeographicLib {
      * @param[in] dn
      * @return int dn(\e w)<sup>2</sup> \e dw (A+S 17.2.10).
      *
-     * Instead of specifying the ampltiude \e phi, we provide \e sn = sin(\e
+     * Instead of specifying the amplitude \e phi, we provide \e sn = sin(\e
      * phi), \e cn = cos(\e phi), \e dn = sqrt(1 - \e m sin<sup>2</sup>(\e
      * phi)).
      **********************************************************************/

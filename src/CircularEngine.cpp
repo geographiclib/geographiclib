@@ -9,9 +9,9 @@
 
 #include <GeographicLib/CircularEngine.hpp>
 #include <limits>
-#include <iostream>
 
-#define GEOGRAPHICLIB_CIRCULARENGINE_CPP "$Id: 50ba35b8ea568fdd476540745b0aceede4827de7 $"
+#define GEOGRAPHICLIB_CIRCULARENGINE_CPP \
+  "$Id: bdd0d21aa34063706e4042410f06bb0f7844fea9 $"
 
 RCSID_DECL(GEOGRAPHICLIB_CIRCULARENGINE_CPP)
 RCSID_DECL(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
@@ -24,6 +24,7 @@ namespace GeographicLib {
                                    real& gradx, real& grady, real& gradz)
     const throw() {
     gradp = _gradp && gradp;
+    const vector<real>& root_( SphericalEngine::root_ );
 
     // Initialize outer sum
     real vc  = 0, vc2  = 0, vs  = 0, vs2  = 0;   // v [N + 1], v [N + 2]
@@ -38,15 +39,15 @@ namespace GeographicLib {
       if (m) {
         real v, A, B;           // alpha[m], beta[m + 1]
         switch (_norm) {
-        case full:
-          v = 2 * real(2 * m + 3) / (m + 1);
-          A = cl * sqrt(v) * _uq;
-          B = - sqrt((v * (2 * m + 5)) / (8 * (m + 2))) * _uq2;
+        case FULL:
+          v = root_[2] * root_[2 * m + 3] / root_[m + 1];
+          A = cl * v * _uq;
+          B = - v * root_[2 * m + 5] / (root_[8] * root_[m + 2]) * _uq2;
           break;
-        case schmidt:
-          v = 2 * real(2 * m + 1) / (m + 1);
-          A = cl * sqrt(v) * _uq;
-          B = - sqrt((v * (2 * m + 3)) / (8 * (m + 2))) * _uq2;
+        case SCHMIDT:
+          v = root_[2] * root_[2 * m + 1] / root_[m + 1];
+          A = cl * v * _uq;
+          B = - v * root_[2 * m + 3] / (root_[8] * root_[m + 2]) * _uq2;
           break;
         default:
           A = B = 0;
@@ -64,18 +65,18 @@ namespace GeographicLib {
       } else {
         real A, B, qs;
         switch (_norm) {
-        case full:
-          A = sqrt(real(3)) * _uq;       // F[1]/(q*cl) or F[1]/(q*sl)
-          B = - sqrt(real(15)/4) * _uq2; // beta[1]/q
+        case FULL:
+          A = root_[3] * _uq;       // F[1]/(q*cl) or F[1]/(q*sl)
+          B = - root_[15]/2 * _uq2; // beta[1]/q
           break;
-        case schmidt:
+        case SCHMIDT:
           A = _uq;
-          B = - sqrt(real(3)/4) * _uq2;
+          B = - root_[3]/2 * _uq2;
           break;
         default:
           A = B = 0;
         }
-        qs = _q / _scale;
+        qs = _q / SphericalEngine::scale_;
         vc = qs * (_wc[m] + A * (cl * vc + sl * vs ) + B * vc2);
         if (gradp) {
           qs /= _r;
@@ -83,9 +84,9 @@ namespace GeographicLib {
           // r: dV/dr
           // theta: 1/r * dV/dtheta
           // lambda: 1/(r*u) * dV/dlambda
-          vrc =      - qs * (_wrc[m] + A * (cl * vrc + sl * vrs) + B * vrc2);
-          vtc = - _u * qs * (_wtc[m] + A * (cl * vtc + sl * vts) + B * vtc2);
-          vlc =   qs / _u * (          A * (cl * vlc + sl * vls) + B * vlc2);
+          vrc =    - qs * (_wrc[m] + A * (cl * vrc + sl * vrs) + B * vrc2);
+          vtc =      qs * (_wtc[m] + A * (cl * vtc + sl * vts) + B * vtc2);
+          vlc = qs / _u * (          A * (cl * vlc + sl * vls) + B * vlc2);
         }
       }
     }

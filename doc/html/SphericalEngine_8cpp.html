@@ -45,8 +45,7 @@
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Defines</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Defines</a>  </div>
   <div class="headertitle">
 <div class="title">SphericalEngine.cpp File Reference</div>  </div>
 </div>
@@ -56,8 +55,9 @@
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="SphericalEngine_8hpp_source.html">GeographicLib/SphericalEngine.hpp</a>&gt;</code><br/>
 <code>#include &lt;limits&gt;</code><br/>
-<code>#include &lt;iostream&gt;</code><br/>
+<code>#include &lt;algorithm&gt;</code><br/>
 <code>#include &lt;<a class="el" href="CircularEngine_8hpp_source.html">GeographicLib/CircularEngine.hpp</a>&gt;</code><br/>
+<code>#include &lt;<a class="el" href="Utility_8hpp_source.html">GeographicLib/Utility.hpp</a>&gt;</code><br/>
 </div>
 <p><a href="SphericalEngine_8cpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -70,37 +70,107 @@ Namespaces</h2></td></tr>
 </p>
 <tr><td colspan="2"><h2><a name="define-members"></a>
 Defines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SphericalEngine_8cpp.html#acbb0476075cd231855709ab48c95fa7e">GEOGRAPHICLIB_SPHERICALENGINE_CPP</a>&#160;&#160;&#160;&quot;$Id: 7585ac388e23afc8cdee98d48b7f75ed3d4dfdd0 $&quot;</td></tr>
-<tr><td colspan="2"><h2><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a68748d8cfa30027680cdc3472b763d1b">GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a7667521ab246dc59c82f125803691f63">GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#adc52e2d4f500db4b1c54eedce61b2762">GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a714ab28f3ad0b1e63cc5190b79169937">GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a92377d9df8d0c30360c51a281d78a815">GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#accc6fdba5fa312f7752371f4350b6c32">GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a7e98e1669b8666c736de6701e9daa28f">GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ad0a8740dce21166dfdc0bb70bf748263">GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a88fe74e4e84bdada6db2352b9700ce56">GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#acae4a503848d9e956de0ff35e54d5f90">GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ad8399e3da9c8c7380ca8f473cd07f466">GeographicLib::SphericalEngine::Value&lt; true, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">Math::real</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a793c3a0a98ad885fac2253908df57762">GeographicLib::SphericalEngine::Value&lt; false, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> &amp;)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ae65193da24c9d48cacb090ace14a4b4e">GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#aa419cc313bf7f0b5de3b38f3db01ea9d">GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ad25915d0fb7b6e41c2eae31b40bfef8a">GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a5307331629ac4dce51de7d514aeb14a3">GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 1 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a60ecc80be5de0fb745e31a9f509b7630">GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a7fd995f64338652cdcf42a6be03331ca">GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#af8512bb082899acbd2d7e0cdc69ca0e9">GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ab4f5bb73ac5c56edc304f78616e1c1e4">GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 2 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#aeacd55acdb4574de333257d30b155d97">GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ae57cd4390a35f01da2c2171926173940">GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::full, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#a403dbd9068f7e39b36187e483e65a424">GeographicLib::SphericalEngine::Circle&lt; true, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">template CircularEngine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceGeographicLib.html#ae723aa5feca7a1d4514096ba2e6092a4">GeographicLib::SphericalEngine::Circle&lt; false, SphericalEngine::schmidt, 3 &gt;</a> (const coeff[], const <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>[], <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>, <a class="el" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="SphericalEngine_8cpp.html#acbb0476075cd231855709ab48c95fa7e">GEOGRAPHICLIB_SPHERICALENGINE_CPP</a>&#160;&#160;&#160;&quot;$Id: 270fafb974f76012ae3ebc504894a8af1fcea690 $&quot;</td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Implementation for <a class="el" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">GeographicLib::SphericalEngine</a> class. </p>
-<p>Copyright (c) Charles Karney (2011) &lt;<a href="mailto:charles@karney.com">charles@karney.com</a>&gt; and licensed under the MIT/X11 License. For more information, see <a href="http://geographiclib.sourceforge.net/">http://geographiclib.sourceforge.net/</a> </p>
+<p>Copyright (c) Charles Karney (2011) &lt;<a href="mailto:charles@karney.com">charles@karney.com</a>&gt; and licensed under the MIT/X11 License. For more information, see <a href="http://geographiclib.sourceforge.net/">http://geographiclib.sourceforge.net/</a></p>
+<p>The general sum is </p>
+<div class="fragment"><pre class="fragment">
+ V(r, theta, lambda) = sum(n = 0..N) sum(m = 0..n)
+   q^(n+1) * (C[n,m] * cos(m*lambda) + S[n,m] * sin(m*lambda)) * P[n,m](t)
+</pre></div><p> where <code>t = cos(theta)</code>, <code>q = a/r</code>. In addition write <code>u = sin(theta)</code>.</p>
+<p><code>P[n,m]</code> is a normalized associated Legendre function of degree <code>n</code> and order <code>m</code>. Here the formulas are given for full normalized functions (usually denoted <code>Pbar</code>).</p>
+<p>Rewrite outer sum </p>
+<div class="fragment"><pre class="fragment">
+ V(r, theta, lambda) = sum(m = 0..N) * P[m,m](t) * q^(m+1) *
+    [Sc[m] * cos(m*lambda) + Ss[m] * sin(m*lambda)]
+</pre></div><p> where the inner sums are </p>
+<div class="fragment"><pre class="fragment">
+   Sc[m] = sum(n = m..N) q^(n-m) * C[n,m] * P[n,m](t)/P[m,m](t)
+   Ss[m] = sum(n = m..N) q^(n-m) * S[n,m] * P[n,m](t)/P[m,m](t)
+</pre></div><p> Evaluate sums via Clenshaw method. The overall framework is similar to Deakin with the following changes:</p>
+<ul>
+<li>Clenshaw summation is used to roll the computation of <code>cos(m*lambda)</code> and <code>sin(m*lambda)</code> into the evaluation of the outer sum (rather than independently computing an array of these trigonometric terms).</li>
+<li>Scale the coefficients to guard against overflow when <code>N</code> is large.</li>
+</ul>
+<p>For the general framework of Clenshaw, see <a href="http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html">http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html</a></p>
+<p>Let </p>
+<div class="fragment"><pre class="fragment">
+    S = sum(k = 0..N) c[k] * F[k](x)
+    F[n+1](x) = alpha[n](x) * F[n](x) + beta[n](x) * F[n-1](x)
+</pre></div><p> Evaluate <code>S</code> with </p>
+<div class="fragment"><pre class="fragment">
+    y[N+2] = y[N+1] = 0
+    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
+    S = c[0] * F[0] + y[1] * F[1] + beta[1] * F[0] * y[2]
+</pre></div><p> <em>IF</em> <code>F[0](x) = 1</code> and <code>beta(0,x) = 0</code>, then <code>F[1](x) = alpha(0,x)</code> and we can continue the recursion for <code>y[k]</code> until <code>y[0]</code>, giving </p>
+<div class="fragment"><pre class="fragment">
+    S = y[0]
+</pre></div><p>Evaluating the inner sum </p>
+<div class="fragment"><pre class="fragment">
+ l = n-m; n = l+m
+ Sc[m] = sum(l = 0..N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
+ F[l] = q^l * P[l+m,m](t)/P[m,m](t)
+</pre></div><p> Holmes + Featherstone, Eq. (11), gives </p>
+<div class="fragment"><pre class="fragment">
+   P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * t * P[n-1,m] -
+            sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
+</pre></div><p> thus </p>
+<div class="fragment"><pre class="fragment">
+   alpha[l] = t * q * sqrt(((2*n+1)*(2*n+3))/
+                           ((n-m+1)*(n+m+1)))
+   beta[l+1] = - q^2 * sqrt(((n-m+1)*(n+m+1)*(2*n+5))/
+                            ((n-m+2)*(n+m+2)*(2*n+1)))
+</pre></div><p> In this case, <code>F[0] = 1</code> and <code>beta[0] = 0</code>, so the <code>Sc[m] = y[0]</code>.</p>
+<p>Evaluating the outer sum </p>
+<div class="fragment"><pre class="fragment">
+ V = sum(m = 0..N) Sc[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+   + sum(m = 0..N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
+ F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]
+</pre></div><p> Holmes + Featherstone, Eq. (13), gives </p>
+<div class="fragment"><pre class="fragment">
+   P[m,m] = u * sqrt((2*m+1)/((m&gt;1?2:1)*m)) * P[m-1,m-1]
+</pre></div><p> also, we have </p>
+<div class="fragment"><pre class="fragment">
+   cos((m+1)*lambda) = 2*cos(lambda)*cos(m*lambda) - cos((m-1)*lambda)
+</pre></div><p> thus </p>
+<div class="fragment"><pre class="fragment">
+   alpha[m] = 2*cos(lambda) * sqrt((2*m+3)/(2*(m+1))) * u * q
+            =   cos(lambda) * sqrt( 2*(2*m+3)/(m+1) ) * u * q
+   beta[m+1] = -sqrt((2*m+3)*(2*m+5)/(4*(m+1)*(m+2))) * u^2 * q^2
+               * (m == 0 ? sqrt(2) : 1)
+</pre></div><p> Thus </p>
+<div class="fragment"><pre class="fragment">
+ F[0] = q                                [or 0]
+ F[1] = cos(lambda) * sqrt(3) * u * q^2  [or sin(lambda)]
+ beta[1] = - sqrt(15/4) * u^2 * q^2
+</pre></div><p>Here is how the various components of the gradient are computed</p>
+<p>Differentiate wrt r </p>
+<div class="fragment"><pre class="fragment">
+   d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)
+</pre></div><p> so multiply <code>C[n,m]</code> by <code>n+1</code> in inner sum and multiply the sum by <code>-1/r</code>.</p>
+<p>Differentiate wrt lambda </p>
+<div class="fragment"><pre class="fragment">
+   d cos(m*lambda) = -m * sin(m*lambda)
+   d sin(m*lambda) =  m * cos(m*lambda)
+</pre></div><p> so multiply terms by <code>m</code> in outer sum and swap sine and cosine variables.</p>
+<p>Differentiate wrt theta </p>
+<div class="fragment"><pre class="fragment">
+  dV/dtheta = V' = -u * dV/dt = -u * V'
+</pre></div><p> here <code>'</code> denotes differentiation wrt to <code>theta</code>. </p>
+<div class="fragment"><pre class="fragment">
+   d/dtheta (Sc[m] * P[m,m](t)) = Sc'[m] * P[m,m](t) + Sc[m] * P'[m,m](t)
+</pre></div><p> Now P[m,m](t) = const * u^m, so P'[m,m](t) = m * t/u * P[m,m](t), thus </p>
+<div class="fragment"><pre class="fragment">
+   d/dtheta (Sc[m] * P[m,m](t)) = (Sc'[m] + m * t/u Sc[m]) * P[m,m](t)
+</pre></div><p> Clenshaw recursion for <code>Sc[m]</code> reads </p>
+<div class="fragment"><pre class="fragment">
+    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]
+</pre></div><p> Substituting <code>alpha[k] = const * t</code>, <code>alpha'[k] = -u/t * alpha[k]</code>, <code>beta'[k] = c'[k] = 0</code> gives </p>
+<div class="fragment"><pre class="fragment">
+    y'[k] = alpha[k] * y'[k+1] + beta[k+1] * y'[k+2] - u/t * alpha[k] * y[k+1]
+</pre></div><p>Finally, given the derivatives of <code>V</code>, we can compute the components of the gradient in spherical coordinates and transform the result into cartesian coordinates. </p>
 
 <p>Definition in file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
 </div><hr/><h2>Define Documentation</h2>
@@ -109,18 +179,18 @@ Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define GEOGRAPHICLIB_SPHERICALENGINE_CPP&#160;&#160;&#160;&quot;$Id: 7585ac388e23afc8cdee98d48b7f75ed3d4dfdd0 $&quot;</td>
+          <td class="memname">#define GEOGRAPHICLIB_SPHERICALENGINE_CPP&#160;&#160;&#160;&quot;$Id: 270fafb974f76012ae3ebc504894a8af1fcea690 $&quot;</td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00015">15</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalEngine_8cpp_source.html#l00139">139</a> of file <a class="el" href="SphericalEngine_8cpp_source.html">SphericalEngine.cpp</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

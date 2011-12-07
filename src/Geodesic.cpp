@@ -14,7 +14,7 @@
  *   - omega = longitude on auxiliary sphere
  *   - lambda = longitude
  *   - alpha = azimuth of great circle
- *   - sigma = arc length along greate circle
+ *   - sigma = arc length along great circle
  *   - s = distance
  *   - tau = scaled distance (= sigma at multiples of pi/2)
  * - at northwards equator crossing
@@ -29,7 +29,8 @@
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
 
-#define GEOGRAPHICLIB_GEODESIC_CPP "$Id: bb7076fe49bd0464d48ec5bc77d97f5dcc79eedb $"
+#define GEOGRAPHICLIB_GEODESIC_CPP \
+  "$Id: 51b58a1339959a0cc93042364c95f6b41d959f41 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_HPP)

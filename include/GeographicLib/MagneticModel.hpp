@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_MAGNETICMODEL_HPP)
-#define GEOGRAPHICLIB_MAGNETICMODEL_HPP "$Id: fc3e51862699ad9f6cf56a3aa2c35883f0103820 $"
+#define GEOGRAPHICLIB_MAGNETICMODEL_HPP \
+  "$Id: 4da5b2c9d2a2ced31182528eb47b129520ae484b $"
 
 #include <string>
 #include <sstream>
@@ -16,7 +17,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/SphericalHarmonic.hpp>
-#include <GeographicLib/SphericalHarmonic1.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
@@ -71,8 +71,8 @@ namespace GeographicLib {
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const throw();
     void ReadMetadata(const std::string& name);
-    static bool ParseLine(const std::string& line,
-                          std::string& key, std::string& val);
+    MagneticModel(const MagneticModel&); // copy constructor not allowed
+    MagneticModel& operator=(const MagneticModel&); // nor copy assignment
   public:
 
     /** \name Setting up the magnetic model
@@ -86,15 +86,11 @@ namespace GeographicLib {
      * @param[in] earth (optional) Geocentric object for converting
      *   coordinates; default Geocentric::WGS84.
      *
-     * A filename is formed by appending ".wwm" (World Magnetic Model) to
-     * the name.  If \e path is specified (and is non-empty), then the file is
+     * A filename is formed by appending ".wmm" (World Magnetic Model) to the
+     * name.  If \e path is specified (and is non-empty), then the file is
      * loaded from directory, \e path.  Otherwise the path is given by the
-     * MAGNETIC_PATH environment variable.  If that is undefined, a
-     * compile-time default path is used
-     * (/usr/local/share/GeographicLib/magnetic on non-Windows systems and
-     * C:/Documents and Settings/All Users/Application
-     * Data/GeographicLib/magnetic on Windows systems).  This may throw an
-     * exception because the file does not exist, is unreadable, or is corrupt.
+     * DefaultMagneticPath().  This may throw an exception because the file
+     * does not exist, is unreadable, or is corrupt.
      *
      * This file contains the metadata which specifies the properties of the
      * model.  The coefficients for the spherical harmonic sums are obtained
@@ -106,8 +102,9 @@ namespace GeographicLib {
      * allow geodetic coordinates to the transformed into the spherical
      * coordinates used in the spherical harmonic sum.
      **********************************************************************/
-    MagneticModel(const std::string& name, const std::string& path = "",
-                  const Geocentric& earth = Geocentric::WGS84);
+    explicit MagneticModel(const std::string& name,
+                           const std::string& path = "",
+                           const Geocentric& earth = Geocentric::WGS84);
     ///@}
 
     /** \name Compute the magnetic field
@@ -156,31 +153,33 @@ namespace GeographicLib {
     /**
      * Create a MagneticCircle object to allow the geomagnetic field at many
      * points with constant \e lat, \e h, and \e t and varying \e lon to be
-     * computed efficienty.
+     * computed efficiently.
      *
+     * @param[in] t the time (years).
      * @param[in] lat latitude of the point (degrees).
      * @param[in] h the height of the point above the ellipsoid (meters).
-     * @param[in] t the time (years).
      * @return a MagneticCircle object whose MagneticCircle::operator()(real
-     *   lon) member function computes the field at a particular \e lon.
+     *   lon) member function computes the field at particular values of \e
+     *   lon.
      *
      * If the field at several points on a circle of latitude need to be
      * calculated then instead of
      \code
-  SphericalModel m(...);     // Create a magnetic model
+  MagneticModel m(...);         // Create a magnetic model
   double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
   for (int i = 0; i <= 100; ++i) {
     real
-      lon = lon0 + i * dlon, Bx, By, Bz;
-    m(lat, lon, h, t, Bx, By, Bz);
+      lon = lon0 + i * dlon,
+      Bx, By, Bz;
+    m(t, lat, lon, h, Bx, By, Bz);
     std::cout << lon << " " << Bx << " " << By << " " << Bz << "\n";
   }
      \endcode
      * use a MagneticCircle as in
      \code
-  SphericalModel m(...);     // Create a magnetic model
+  MagneticModel m(...);         // Create a magnetic model
   double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
-  MagneticCircle c(m.Circle(lat, h, t)); // the MagneticCircle object
+  MagneticCircle c(m.Circle(t, lat, h)); // the MagneticCircle object
   for (int i = 0; i <= 100; ++i) {
     real
       lon = lon0 + i * dlon, Bx, By, Bz;
@@ -190,7 +189,7 @@ namespace GeographicLib {
      \endcode
      * For high-degree models, this will be substantially faster.
      **********************************************************************/
-    MagneticCircle Circle(real lat, real h, real t) const;
+    MagneticCircle Circle(real t, real lat, real h) const;
 
     /**
      * Compute various quantities dependent on the magnetic field.
@@ -243,13 +242,14 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return the description of the magnetic model, if available, in the data
-     *   file; if absent, return "NONE".
+     * @return the description of the magnetic model, if available, from the
+     *   Description file in the data file; if absent, return "NONE".
      **********************************************************************/
     const std::string& Description() const throw() { return _description; }
 
     /**
-     * @return date of the model; if absent, return "UNKNOWN".
+     * @return date of the model, if available, from the ReleaseDate field in
+     *   the data file; if absent, return "UNKNOWN".
      **********************************************************************/
     const std::string& DateTime() const throw() { return _date; }
 
@@ -276,7 +276,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MinHeight() const throw() { return _hmin; }
 
@@ -287,7 +287,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed heights, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MaxHeight() const throw() { return _hmax; }
 
@@ -298,7 +298,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed times, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MinTime() const throw() { return _tmin; }
 
@@ -309,7 +309,7 @@ namespace GeographicLib {
      * Because the model will typically provide useful results
      * slightly outside the range of allowed times, no check of \e t
      * argument is made by MagneticModel::operator()() or
-     * MagnetgicModel::Circle.
+     * MagneticModel::Circle.
      **********************************************************************/
     Math::real MaxTime() const throw() { return _tmax; }
 
@@ -330,19 +330,22 @@ namespace GeographicLib {
     /**
      * @return the default path for magnetic model data files.
      *
-     * This is the value of the environment variable MAGNETIC_PATH, if set,
-     * otherwise, it is a compile-time default.
+     * This is the value of the environment variable MAGNETIC_PATH, if set;
+     * otherwise, it is $GEOGRAPHICLIB_DATA/magnetic if the environment
+     * variable GEOGRAPHICLIB_DATA is set; otherwise, it is a compile-time
+     * default (/usr/local/share/GeographicLib/magnetic on non-Windows systems
+     * and C:/Documents and Settings/All Users/Application
+     * Data/GeographicLib/magnetic on Windows systems).
      **********************************************************************/
-
     static std::string DefaultMagneticPath();
 
     /**
      * @return the default name for the magnetic model.
      *
      * This is the value of the environment variable MAGNETIC_NAME, if set,
-     * otherwise, it is "wmm2010-12".  The MagneticModel class does not use
-     * this function; it is just provided as a convenience for a calling
-     * program when constructing a MagneticModel object.
+     * otherwise, it is "wmm2010".  The MagneticModel class does not use this
+     * function; it is just provided as a convenience for a calling program
+     * when constructing a MagneticModel object.
      **********************************************************************/
     static std::string DefaultMagneticName();
   };

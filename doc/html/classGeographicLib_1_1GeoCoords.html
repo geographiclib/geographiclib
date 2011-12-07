@@ -101,14 +101,14 @@ Public Member Functions</h2></td></tr>
 <ul>
 <li>latitude and longitude</li>
 <li>UTM or UPS coordinates</li>
-<li>a string represention of these or an <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate string</li>
+<li>a string representation of these or an <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate string</li>
 </ul>
 <p>The state consists of the latitude and longitude and the supplied UTM or UPS coordinates (possibly derived from the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinates). If latitude and longitude were given then the UTM/UPS coordinates follows the standard conventions.</p>
 <p>The mutable state consists of the UTM or UPS coordinates for a alternate zone. A method SetAltZone is provided to set the alternate UPS/UTM zone.</p>
 <p>Methods are provided to return the geographic coordinates, the input UTM or UPS coordinates (and associated meridian convergence and scale), or alternate UTM or UPS coordinates (and their associated meridian convergence and scale).</p>
 <p>Once the input string has been parsed, you can print the result out in any of the formats, decimal degrees, degrees minutes seconds, <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a>, UTM/UPS. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00043">43</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00044">44</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a8b3f4a919ba4478c4fec0e7b01e84c57"></a><!-- doxytag: member="GeographicLib::GeoCoords::GeoCoords" ref="a8b3f4a919ba4478c4fec0e7b01e84c57" args="()" -->
 <div class="memitem">
@@ -123,9 +123,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<p>The default contructor is equivalent to <em>latitude</em> = 90<sup>o</sup>, <em>longitude</em> = 0<sup>o</sup>. </p>
+<p>The default constructor is equivalent to <em>latitude</em> = 90<sup>o</sup>, <em>longitude</em> = 0<sup>o</sup>. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00071">71</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00072">72</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -203,7 +203,7 @@ Public Member Functions</h2></td></tr>
 <li>75W 40N</li>
 <li>E-75 -40S</li>
 </ul>
-<p>are all the same position. The coodinates may be given in decimal degrees, degrees and decimal minutes, degrees, minutes, seconds, etc. Use d, ', and " to make off the degrees, minutes and seconds.  Thus
+<p>are all the same position. The coordinates may be given in decimal degrees, degrees and decimal minutes, degrees, minutes, seconds, etc. Use d, ', and " to make off the degrees, minutes and seconds.  Thus
  - 40d30'30"</p>
 <ul>
 <li>40d30'30</li>
@@ -226,7 +226,7 @@ Public Member Functions</h2></td></tr>
 <li>38SMB44148470 = 38N 444140 3684700 </li>
 </ul>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00157">157</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00158">158</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -270,7 +270,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00169">169</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00170">170</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -321,7 +321,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00181">181</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00182">182</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -358,9 +358,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Reset the location from a string. See <a class="el" href="classGeographicLib_1_1GeoCoords.html#acdfe641aaea6b68aee25cfee822f782a">GeoCoords(const std::string&amp; s, bool centerp, bool swaplatlong)</a>. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00026">26</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00027">27</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoConvert_8cpp_source.html#l00027">main()</a>.</p>
+<p>Referenced by <a class="el" href="GeoConvert_8cpp_source.html#l00034">main()</a>.</p>
 
 </div>
 </div>
@@ -396,9 +396,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Reset the location in terms of geographic coordinates. See <a class="el" href="classGeographicLib_1_1GeoCoords.html#a7bde6a5cba74adf66d831788e6be8e65">GeoCoords(real latitude, real longitude, int zone)</a>. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00196">196</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00197">197</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00072">GeographicLib::UTMUPS::Forward()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00073">GeographicLib::UTMUPS::Forward()</a>.</p>
 
 </div>
 </div>
@@ -440,9 +440,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Reset the location in terms of UPS/UPS coordinates. See <a class="el" href="classGeographicLib_1_1GeoCoords.html#aaab765054416e1243f2d7b36edc8e0d4">GeoCoords(int zone, bool northp, real easting, real northing)</a>. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00211">211</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00212">212</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00123">GeographicLib::UTMUPS::Reverse()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00124">GeographicLib::UTMUPS::Reverse()</a>.</p>
 
 </div>
 </div>
@@ -461,9 +461,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>latitude (degrees) </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00229">229</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00230">230</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoidEval_8cpp_source.html#l00026">main()</a>.</p>
+<p>Referenced by <a class="el" href="GeoidEval_8cpp_source.html#l00035">main()</a>.</p>
 
 </div>
 </div>
@@ -482,9 +482,9 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>longitude (degrees) </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00234">234</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00235">235</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoidEval_8cpp_source.html#l00026">main()</a>.</p>
+<p>Referenced by <a class="el" href="GeoidEval_8cpp_source.html#l00035">main()</a>.</p>
 
 </div>
 </div>
@@ -503,7 +503,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>easting (meters) </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00239">239</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00240">240</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -522,7 +522,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>northing (meters) </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00244">244</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00245">245</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -541,7 +541,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>meridian convergence (degrees) for the UTM/UPS projection. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00249">249</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00250">250</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -560,7 +560,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>scale for the UTM/UPS projection. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00254">254</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00255">255</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -579,7 +579,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>hemisphere (false means south, true means north). </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00259">259</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00260">260</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -598,7 +598,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>hemisphere letter N or S. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00264">264</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00265">265</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -617,7 +617,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the zone corresponding to the input (return 0 for UPS). </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00269">269</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00270">270</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -644,9 +644,9 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>See <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7">UTMUPS::zonespec</a> for more information on the interpretation of <em>zone</em>. Note that <em>zone</em> == <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7adf96495ab4bfbf495f1fe31aebb9e406">UTMUPS::STANDARD</a> (the default) use the standard UPS or UTM zone, <a class="el" href="classGeographicLib_1_1UTMUPS.html#a0c459615da18cc899a960bdc8c5b11b7a9059a8e3b4721e27869e99ed1ae3d320">UTMUPS::MATCH</a> does nothing retaining the existing alternate representation. Before this is called the alternate zone is the input zone. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00287">287</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00288">288</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00072">GeographicLib::UTMUPS::Forward()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00100">GeographicLib::UTMUPS::MATCH</a>, and <a class="el" href="UTMUPS_8cpp_source.html#l00048">GeographicLib::UTMUPS::StandardZone()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8cpp_source.html#l00073">GeographicLib::UTMUPS::Forward()</a>, <a class="el" href="UTMUPS_8hpp_source.html#l00101">GeographicLib::UTMUPS::MATCH</a>, and <a class="el" href="UTMUPS_8cpp_source.html#l00049">GeographicLib::UTMUPS::StandardZone()</a>.</p>
 
 </div>
 </div>
@@ -665,7 +665,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>current alternate zone (return 0 for UPS). </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00305">305</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00306">306</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -684,7 +684,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>easting (meters) for alternate zone. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00310">310</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00311">311</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -703,7 +703,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>northing (meters) for alternate zone. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00315">315</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00316">316</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -720,9 +720,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>meridian convergence (degrees) for altermate zone. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>meridian convergence (degrees) for alternate zone. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00320">320</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00321">321</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -739,9 +739,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
-<dl class="return"><dt><b>Returns:</b></dt><dd>scale for altermate zone. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>scale for alternate zone. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00325">325</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00326">326</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
 </div>
 </div>
@@ -786,7 +786,7 @@ Public Member Functions</h2></td></tr>
 <li>prec = 9 (max), 10<sup>-14</sup>d </li>
 </ul>
 
-<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00069">69</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00070">70</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
 
 </div>
 </div>
@@ -835,7 +835,7 @@ Public Member Functions</h2></td></tr>
  - prec = 10 (max), 10&lt;sup&gt;-11&lt;/sup&gt;" </li>
 </ul>
 
-<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00087">87</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00088">88</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
 
 </div>
 </div>
@@ -861,7 +861,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string.</dd></dl>
-<p>This gives the coordinates of the enclosing grid square with size given by the precision. Thus 38N 444180 3684790 converted to a <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate at precision -2 (100m) is 38SMB441847 and not 38SMB442848. <em>prec</em> specifies the precision of the MSGRS string as follows:</p>
+<p>This gives the coordinates of the enclosing grid square with size given by the precision. Thus 38N 444180 3684790 converted to a <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> coordinate at precision -2 (100m) is 38SMB441847 and not 38SMB442848. <em>prec</em> specifies the precision of the <a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string as follows:</p>
 <ul>
 <li>prec = -5 (min), 100km</li>
 <li>prec = -4, 10km</li>
@@ -873,7 +873,7 @@ Public Member Functions</h2></td></tr>
 <li>prec = 6 (max), 1um </li>
 </ul>
 
-<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00095">95</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00096">96</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
 
 </div>
 </div>
@@ -909,7 +909,7 @@ Public Member Functions</h2></td></tr>
 <li>prec = 9 (max), 1nm </li>
 </ul>
 
-<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00133">133</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00134">134</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
 
 </div>
 </div>
@@ -929,7 +929,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1MGRS.html" title="Convert between UTM/UPS and MGRS.">MGRS</a> string for the alternate zone. See <a class="el" href="classGeographicLib_1_1GeoCoords.html#a36594aaa4f293b0ddf00b1c78bb04595">GeoCoords::MGRSRepresentation</a>. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00103">103</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00104">104</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
 
 </div>
 </div>
@@ -949,7 +949,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>UTM/UPS string for the alternate zone. See <a class="el" href="classGeographicLib_1_1GeoCoords.html#a056efc42fe4c653aad40be5d5b865ea3">GeoCoords::UTMUPSRepresentation</a>. </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00139">139</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8cpp_source.html#l00140">140</a> of file <a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a>.</p>
 
 </div>
 </div>
@@ -969,9 +969,9 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the WGS84 ellipsoid (meters).</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00426">426</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00427">427</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00291">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00292">GeographicLib::UTMUPS::MajorRadius()</a>.</p>
 
 </div>
 </div>
@@ -991,9 +991,9 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the WGS84 ellipsoid.</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00434">434</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00435">435</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00300">GeographicLib::UTMUPS::Flattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00301">GeographicLib::UTMUPS::Flattening()</a>.</p>
 
 </div>
 </div>
@@ -1013,9 +1013,9 @@ Public Member Functions</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the WGS84 ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00440">440</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GeoCoords_8hpp_source.html#l00441">441</a> of file <a class="el" href="GeoCoords_8hpp_source.html">GeoCoords.hpp</a>.</p>
 
-<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00307">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
+<p>References <a class="el" href="UTMUPS_8hpp_source.html#l00308">GeographicLib::UTMUPS::InverseFlattening()</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +1024,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="GeoCoords_8cpp_source.html">GeoCoords.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Nov 8 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

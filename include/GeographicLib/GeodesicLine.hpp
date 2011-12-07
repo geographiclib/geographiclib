@@ -8,7 +8,8 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
-#define GEOGRAPHICLIB_GEODESICLINE_HPP "$Id: 24c298d5d343f35eaeeee27e3c65f22cae729faa $"
+#define GEOGRAPHICLIB_GEODESICLINE_HPP \
+  "$Id: b18e66a0299f857bf2d71c6debd98b7f14da8a64 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
@@ -25,9 +26,6 @@ namespace GeographicLib {
    * GeodesicLine.ArcPosition gives the position of point 2 an arc length \e
    * a12 along the geodesic.  An example of use of this class is:
    \code
-   #include <iostream>
-   #include <iomanip>
-   #include <cmath>
    #include <GeographicLib/Geodesic.hpp>
    #include <GeographicLib/GeodesicLine.hpp>
 
@@ -113,11 +111,9 @@ namespace GeographicLib {
   public:
 
     /**
-     * Bit masks for what calculations to do.  These masks do double duty.
-     * They signify to the GeodesicLine::GeodesicLine constructor and to
-     * Geodesic::Line what capabilities should be included in the GeodesicLine
-     * object.  They also specify which results to return in the general
-     * routines Geodesic::GenDirect and Geodesic::GenInverse routines.  This is
+     * Bit masks for what calculations to do.  They signify to the
+     * GeodesicLine::GeodesicLine constructor and to Geodesic::Line what
+     * capabilities should be included in the GeodesicLine object.  This is
      * merely a duplication of Geodesic::mask.
      **********************************************************************/
     enum mask {
@@ -183,7 +179,7 @@ namespace GeographicLib {
 
     /**
      * Constructor for a geodesic line staring at latitude \e lat1, longitude
-     * \e lon1, and aziumuth \e azi1 (all in degrees).
+     * \e lon1, and azimuth \e azi1 (all in degrees).
      *
      * @param[in] g A Geodesic object used to compute the necessary information
      *   about the GeodesicLine.

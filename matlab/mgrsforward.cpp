@@ -9,11 +9,13 @@
 
 // Compile in Matlab with
 // [Unix]
-// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib -lGeographic mgrsforward.cpp
+// mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+//    -lGeographic mgrsforward.cpp
 // [Windows]
-// mex -I../include -L../windows/Release -lGeographic mgrsforward.cpp
+// mex -I../include -L../windows/Release
+//    -lGeographic mgrsforward.cpp
 
-// $Id: e65dfe357f0de624928fd116087b1ca66e7fd186 $
+// $Id: 30421c0aa01eeec69a89f3332dfba997451204e9 $
 
 #include <GeographicLib/MGRS.hpp>
 #include <mex.h>

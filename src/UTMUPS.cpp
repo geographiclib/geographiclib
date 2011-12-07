@@ -14,7 +14,8 @@
 #include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_UTMUPS_CPP "$Id: ed0068bb5b8d2003f84d658eaf7e569bb4bb13e2 $"
+#define GEOGRAPHICLIB_UTMUPS_CPP \
+  "$Id: 7308a2a52885238b84816ff380b85c6f090aa1d2 $"
 
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)
