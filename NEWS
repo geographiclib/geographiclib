@@ -6,7 +6,38 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.15.
+The current version of the library is 1.16.
+
+Changes between 1.16 (released 2011-12-07) and 1.15 versions:
+
+  * Add calculation of the earth's gravitational field:
+    + add NormalGravity GravityModel and GravityCircle classes;
+    + add command line utility Gravity;
+    + add Gravity models;
+    + add Constants::WGS84_GM(), Constants::WGS84_omega(), and similarly
+      for GRS80.
+
+  * Build uses GEOGRAPHICLIB_DATA to specify a common parent directory
+    for geoid, gravity, and magnetic data (instead of
+    GEOGRAPHICLIB_GEOID_PATH, etc.); similarly, GeoidEval, Gravity, and
+    MagneticField, look at the environment variable GEOGRAPHICLIB_DATA
+    to locate the data.
+
+  * Spherical harmonic software changes:
+    + capitalize enums SphericalHarmonic::FULL and
+      SphericalHarmonic::SCHMIDT (the lower case names are retained but
+      deprecated);
+    + optimize the sum by using a static table of square roots which is
+      updated by SphericalEngine::RootTable;
+    + avoid overflow for high degree models.
+
+  * Magnetic software fixes:
+    + fix documentation BUG in MagneticModel::Circle;
+    + make MagneticModel constructor explicit;
+    + provide default MagneticCircle constructor;
+    + add additional inspector functions to MagneticCircle;
+    + add -c option to MagneticField;
+    + default height to zero in MagneticField.
 
 Changes between 1.15 (released 2011-11-08) and 1.14 versions:
 

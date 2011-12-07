@@ -109,7 +109,7 @@ namespace GeographicLib {
     /**
      * A default constructor (for use by NormalGravity).
      **********************************************************************/
-    Geocentric() : _a(-1) {};
+    Geocentric() : _a(-1) {}
 
     /**
      * Convert from geodetic to geocentric coordinates.

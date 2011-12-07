@@ -22,6 +22,9 @@
 		   inverse geodesic problem,
 		   geoid, EGM84, EGM96, EGM2008,
 		   earth gravity model,
+		   gravity disturbance,
+		   gravity anomaly,
+		   deflection of the vertical,
 		   geomagnetism, WMM2010, EMM2010, IGRF11,
 		   WGS84 ellipsoid,
 		   latitude and longitude,
@@ -34,21 +37,22 @@
     <p>
       GeographicLib is a small set of C++ classes for performing
       conversions between geographic, UTM, UPS, MGRS, geocentric, and
-      local cartesian coordinates, for geoid height and geomagnetic
-      calculations, and for solving geodesic problems.  It is a suitable
-      replacement for the core functionality provided by
+      local cartesian coordinates, for gravity (e.g., EGM2008), geoid
+      height, and geomagnetic field (e.g., WMM2010) calculations, and
+      for solving geodesic problems.  It is a suitable replacement for
+      the core functionality provided by
       <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>.
       The library is licensed under the
       <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
       see <a href="html/LICENSE.txt">LICENSE.txt</a> for the terms.
     </p>
     <ul>
-      <li><a href="http://sourceforge.net/projects/geographiclib/">
+      <li><a href="http://sf.net/projects/geographiclib/">
 	  Main project page</a>
       <li><a href="html">Library documentation</a>
-      <li><a href="http://sourceforge.net/projects/geographiclib/files/distrib">
+      <li><a href="http://sf.net/projects/geographiclib/files/distrib">
 	  Download the code</a>
-      <li><a href="http://sourceforge.net/projects/geographiclib/files/testdata">
+      <li><a href="http://sf.net/projects/geographiclib/files/testdata">
 	  Test data</a> for
 	<ul>
 	  <li>the <a href="html/geodesic.html#testgeod">
@@ -58,11 +62,15 @@
 	  <li><a href="html/geoid.html#testgeoid">
 	      geoid heights</a>
 	</ul>
-      <li><a href="http://sourceforge.net/projects/geographiclib/files/geoids-distrib">
-	  Earth gravity models</a>; see
+      <li><a href="http://sf.net/projects/geographiclib/files/geoid-distrib">
+	  Gridded geoid data</a>; see
 	<a href="html/geoid.html#geoidinst">here</a> for
 	documentation
-      <li><a href="http://sourceforge.net/projects/geographiclib/files/magnetic-distrib">
+      <li><a href="http://sf.net/projects/geographiclib/files/gravity-distrib">
+	  Earth gravity models</a>; see
+	<a href="html/geoid.html#gravityinst">here</a> for
+	documentation
+      <li><a href="http://sf.net/projects/geographiclib/files/magnetic-distrib">
 	  Geomagnetic models</a>; see
 	<a href="html/magnetic.html#magneticinst">here</a> for
 	documentation

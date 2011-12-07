@@ -199,7 +199,7 @@ terminate; following lines will be converted.
 
 =head1 EXAMPLES
 
-The gravity field from EGM2008 at the top of Mount Everest.
+The gravity field from EGM2008 at the top of Mount Everest
 
     echo "27d59'17N" "86d55'32E" 8820 | Gravity -n egm2008
     => -0.00001 0.00103 -9.76782

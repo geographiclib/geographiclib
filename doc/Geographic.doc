@@ -19,14 +19,15 @@
 
 %GeographicLib is a small set of <a href="annotated.html">C++
 classes</a> for performing conversions between geographic, UTM, UPS,
-MGRS, geocentric, and local cartesian coordinates, for gravity, geoid
-height and geomagnetic field calculations, and for solving geodesic
-problems.  The emphasis is on returning accurate results with errors
-close to round-off (about 5&ndash;15 nm).  New accurate algorithms for
-\ref geodesic and \ref transversemercator have been developed for this
-library.  The functionality of the library can be accessed from user
-code, from the \ref utilities provided, or via the \ref other.  For a
-sample of the geodesic capabilities in Javascript, check out the
+MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
+EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
+calculations, and for solving geodesic problems.  The emphasis is on
+returning accurate results with errors close to round-off (about
+5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
+transversemercator have been developed for this library.  The
+functionality of the library can be accessed from user code, from the
+\ref utilities provided, or via the \ref other.  For a sample of the
+geodesic capabilities in Javascript, check out the
 <a href="../scripts/geod-calc.html">online geodesic calculator</a> and
 the script for displaying
 <a href="../scripts/geod-google.html">geodesics in Google Maps</a>
@@ -185,9 +186,9 @@ Then pick one of the first five options below:
 .
 This section documents only how to install the software.  If you wish to
 use %GeographicLib to evaluate geoid heights or the earth's
-gravitational or magnetic field, then you must also install the relevant
-data files.  See \ref geoidinst, \ref gravityinst, and \ref magneticinst
-for instructions.
+gravitational or magnetic fields, then you must also install the
+relevant data files.  See \ref geoidinst, \ref gravityinst, and \ref
+magneticinst for instructions.
 
 \section cmake Installation with cmake
 
@@ -783,7 +784,7 @@ several points on a circle of latitude are sought then use
 GeographicLib::GravityModel::Circle to return a
 GeographicLib::GravityCircle object whose member functions performs the
 calculations efficiently.  (This is particularly important for high
-degree models such as egm2008.)  These classes requires installation of
+degree models such as EGM2008.)  These classes requires installation of
 data files for the various gravity models; see \ref gravityinst for
 details.
 
@@ -1076,7 +1077,6 @@ grid.  The grids are read from data files which have been are computed
 using the NGA synthesis programs in the case of the EGM84 and EGM96
 models and using the NGA binary gridded data files in the case of
 EGM2008.  These data files are available for download:
-
 <center>
 <table>
 <caption>Available geoid data files</caption>
@@ -1572,6 +1572,7 @@ Go to
 
 \section gravityinst Installing the gravity models
 
+These gravity models are available for download:
 <center>
 <table>
 <caption>Available gravity models</caption>
@@ -1979,7 +1980,7 @@ predicted by these models by about \e delta \e g = (4 \e pi
 gravitational constant, \e g is the earth's gravity, and \e A is the
 pressure of the atmosphere.  At sea level we have \e A = 101.3 kPa, and
 \e delta \e g = 8.7e-6 m s<sup>-2</sup>, approximately.  (In other words
-the effect is about 1 part in a million.  By way of comparison, buoyancy
+the effect is about 1 part in a million; by way of comparison, buoyancy
 effects are about 100 times larger.)
 
 \section gravityparallel Geoid heights on a multi-processor system
@@ -1993,7 +1994,7 @@ point.  There are two ways to speed up this computation:
    point to about 92 us (a reduction by a factor of over 800).
  - Compute the values on several circles of latitude in parallel.  One
    of the simplest ways of doing this is with
-   <a href="http://openmp.org"> OpenMP</a>.  On an 8-processor system,
+   <a href="http://openmp.org"> OpenMP</a>; on an 8-processor system,
    this can speed up the computation by another factor of 8.
  .
 Both of these techniques are illustrated by the following code,
@@ -2054,9 +2055,10 @@ int main() {
   } // batch loop
 }
 \endcode
+
 OpenMP is supported by g++ and Visual Studio but these compilers need to
-be instructed to honor the OpenMP directives.  The easiest way of doing
-this is with cmake using this CMakeLists.txt: \verbatim
+be instructed to honor the OpenMP directives.  CMake can do the
+necessary work with this CMakeLists.txt: \verbatim
 cmake_minimum_required (VERSION 2.6)
 project (GeoidHeightTable)
 # GravityModel was introduced in GeographicLib 1.16.
@@ -2122,6 +2124,7 @@ Go to
 
 \section magneticinst Installing the magnetic field models
 
+These magnetic models are available for download:
 <center>
 <table>
 <caption>Available magnetic models</caption>

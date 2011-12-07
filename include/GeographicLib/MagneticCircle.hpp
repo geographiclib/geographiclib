@@ -69,7 +69,7 @@ namespace GeographicLib {
      * uninitialized object which can be later replaced by the
      * MagneticModel::Circle.
      **********************************************************************/
-    MagneticCircle() : _a(-1) {};
+    MagneticCircle() : _a(-1) {}
 
     /** \name Compute the magnetic field
      **********************************************************************/
