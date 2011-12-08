@@ -56,7 +56,7 @@
  Sc[m] = sum(l = 0..N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)
  F[l] = q^l * P[l+m,m](t)/P[m,m](t)
 \endverbatim
- * Holmes + Featherstone, Eq. (11), gives\verbatim
+ * Holmes + Featherstone, Eq. (11), give\verbatim
    P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * t * P[n-1,m] -
             sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]
 \endverbatim
@@ -74,7 +74,7 @@
    + sum(m = 0..N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)
  F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]
 \endverbatim
- * Holmes + Featherstone, Eq. (13), gives\verbatim
+ * Holmes + Featherstone, Eq. (13), give\verbatim
    P[m,m] = u * sqrt((2*m+1)/((m>1?2:1)*m)) * P[m-1,m-1]
 \endverbatim
  * also, we have\verbatim
@@ -94,28 +94,28 @@
  *
  * Here is how the various components of the gradient are computed
  *
- * Differentiate wrt r\verbatim
+ * Differentiate wrt <tt>r</tt>\verbatim
    d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)
 \endverbatim
  * so multiply <tt>C[n,m]</tt> by <tt>n+1</tt> in inner sum and multiply the
  * sum by <tt>-1/r</tt>.
  *
- * Differentiate wrt lambda\verbatim
+ * Differentiate wrt <tt>lambda</tt>\verbatim
    d cos(m*lambda) = -m * sin(m*lambda)
    d sin(m*lambda) =  m * cos(m*lambda)
 \endverbatim
  * so multiply terms by <tt>m</tt> in outer sum and swap sine and cosine
  * variables.
  *
- * Differentiate wrt theta\verbatim
+ * Differentiate wrt <tt>theta</tt>\verbatim
   dV/dtheta = V' = -u * dV/dt = -u * V'
 \endverbatim
- * here <tt>'</tt> denotes differentiation wrt to <tt>theta</tt>.\verbatim
+ * here <tt>'</tt> denotes differentiation wrt <tt>theta</tt>.\verbatim
    d/dtheta (Sc[m] * P[m,m](t)) = Sc'[m] * P[m,m](t) + Sc[m] * P'[m,m](t)
 \endverbatim
- * Now P[m,m](t) = const * u^m, so P'[m,m](t) = m * t/u * P[m,m](t),
- * thus\verbatim
-   d/dtheta (Sc[m] * P[m,m](t)) = (Sc'[m] + m * t/u Sc[m]) * P[m,m](t)
+ * Now <tt>P[m,m](t) = const * u^m</tt>, so <tt>P'[m,m](t) = m * t/u *
+ * P[m,m](t)</tt>, thus\verbatim
+   d/dtheta (Sc[m] * P[m,m](t)) = (Sc'[m] + m * t/u * Sc[m]) * P[m,m](t)
 \endverbatim
  * Clenshaw recursion for <tt>Sc[m]</tt> reads\verbatim
     y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]

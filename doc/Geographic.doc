@@ -1510,10 +1510,11 @@ Each line of the test set gives 6 space delimited numbers
 The latitude and longitude are all multiples of 10<sup>-6</sup> deg and
 should be regarded as exact.  The geoid heights are computed using the
 harmonic NGA synthesis programs, where the programs were compiled (with
-gfortran) and run under Linux.  In the case of EGM2008, a SAVE statement
-needed to be added to subroutine latf, in order for the program to
-compile correctly with a stack-based compiler.  Similarly the EGM96
-requires a SAVE statement in subroutine legfdn.
+gfortran) and run under Linux.  In the case of the EGM2008 program, a
+<code>SAVE</code> statement needed to be added to subroutine
+<code>latf</code>, in order for the program to compile correctly with a
+stack-based compiler.  Similarly the EGM96 code requires a
+<code>SAVE</code> statement in subroutine <code>legfdn</code>.
 
 <center>
 Back to \ref other.  Forward to \ref gravity.  Up to \ref contents.
@@ -1835,7 +1836,7 @@ harmonic synthesis code for EGM2008, hsynth_WGS84.f.  Listed here are
 issues that I encountered using the NGA code:
  -# A compiler which allocates local variables on the stack produces an
     executable with just returns NaNs.  The problem here is a missing
-    "save" statement in subroutine latf.
+    <code>SAVE</code> statement in subroutine <code>latf</code>.
  -# Because the model and references masses for egm2008 differ (by about
     1 part in 10<sup>9</sup>), there should be a 1/\e r contribution to
     the disturbing potential \e T.  However, this term is set to zero in
@@ -1843,19 +1844,20 @@ issues that I encountered using the NGA code:
     shifts the surface \e W = <i>U</i><sub>0</sub> outward by about 5 mm.
     Note too that the reference ellipsoid is no longer a level surface of
     the effective normal potential.
- -# Subroutine radgrav computes the ellipsoidal coordinate \e beta
-    incorrectly.  This leads to small errors in the deflection of the
-    vertical, \e xi and \e eta, when the height above the ellipsoid, \e
-    h, is non-zero (about 1e-7 arcsec at \e h = 400 km).
+ -# Subroutine <code>radgrav</code> computes the ellipsoidal coordinate
+    \e beta incorrectly.  This leads to small errors in the deflection
+    of the vertical, \e xi and \e eta, when the height above the
+    ellipsoid, \e h, is non-zero (about 1e-7 arcsec at \e h = 400 km).
  -# There are several expressions which will return inaccurate results
-    do to cancellation.  For example, subroutine grs computes the
-    flattening using \e f = 1 - sqrt(1 - <i>e</i><sup>2</sup>).  Much
-    better is to use \e f = <i>e</i><sup>2</sup>/(1 + sqrt(1 -
-    <i>e</i><sup>2</sup>)).  The expressions for \e q and \e q' in grs
-    and radgrav suffer from similar problems.  The resulting errors are
-    tiny (about 50 pm in the geoid height); however, given that's
-    there's essentially no cost to using more accurate expressions, it's
-    preferable to do so.
+    due to cancellation.  For example, subroutine <code>grs</code>
+    computes the flattening using \e f = 1 - sqrt(1 -
+    <i>e</i><sup>2</sup>).  Much better is to use \e f =
+    <i>e</i><sup>2</sup>/(1 + sqrt(1 - <i>e</i><sup>2</sup>)).  The
+    expressions for \e q and \e q' in <code>grs</code> and
+    <code>radgrav</code> suffer from similar problems.  The resulting
+    errors are tiny (about 50 pm in the geoid height); however, given
+    that's there's essentially no cost to using more accurate
+    expressions, it's preferable to do so.
  -# hsynth_WGS84 returns an "undefined" value for \e xi and \e eta at the
     poles.  Better would be to return the value obtained by taking the
     limit \e lat -> +/- 90<sup>o</sup>.
