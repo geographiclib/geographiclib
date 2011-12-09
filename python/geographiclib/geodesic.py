@@ -178,7 +178,7 @@ class Geodesic(object):
         u += T + (r2 / T if T != 0 else 0)
       else:
         # T is complex, but the way u is defined the result is real.
-        ang = math.atan2(sqrt(-disc), -(S + r3))
+        ang = math.atan2(math.sqrt(-disc), -(S + r3))
         # There are three possible cube roots.  We choose the root which
         # avoids cancellation.  Note that disc < 0 implies that r < 0.
         u += 2 * r * math.cos(ang / 3)
