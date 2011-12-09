@@ -21,7 +21,7 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: 934455797175f95753028cff1f18013329149034 $
+# $Id: 0df741f8ec25f4cccd4f69e9e2bed2ee152d42d0 $
 ######################################################################
 
 import math
@@ -178,7 +178,7 @@ class Geodesic(object):
         u += T + (r2 / T if T != 0 else 0)
       else:
         # T is complex, but the way u is defined the result is real.
-        ang = math.atan2(sqrt(-disc), -(S + r3))
+        ang = math.atan2(math.sqrt(-disc), -(S + r3))
         # There are three possible cube roots.  We choose the root which
         # avoids cancellation.  Note that disc < 0 implies that r < 0.
         u += 2 * r * math.cos(ang / 3)

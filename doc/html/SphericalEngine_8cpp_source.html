@@ -105,7 +105,7 @@
 <a name="l00056"></a>00056 <span class="comment"> Sc[m] = sum(l = 0..N-m) C[l+m,m] * q^l * P[l+m,m](t)/P[m,m](t)</span>
 <a name="l00057"></a>00057 <span class="comment"> F[l] = q^l * P[l+m,m](t)/P[m,m](t)</span>
 <a name="l00058"></a>00058 <span class="comment">\endverbatim</span>
-<a name="l00059"></a>00059 <span class="comment"> * Holmes + Featherstone, Eq. (11), gives\verbatim</span>
+<a name="l00059"></a>00059 <span class="comment"> * Holmes + Featherstone, Eq. (11), give\verbatim</span>
 <a name="l00060"></a>00060 <span class="comment">   P[n,m] = sqrt((2*n-1)*(2*n+1)/((n-m)*(n+m))) * t * P[n-1,m] -</span>
 <a name="l00061"></a>00061 <span class="comment">            sqrt((2*n+1)*(n+m-1)*(n-m-1)/((n-m)*(n+m)*(2*n-3))) * P[n-2,m]</span>
 <a name="l00062"></a>00062 <span class="comment">\endverbatim</span>
@@ -123,7 +123,7 @@
 <a name="l00074"></a>00074 <span class="comment">   + sum(m = 0..N) Ss[m] * q^(m+1) * cos(m*lambda) * P[m,m](t)</span>
 <a name="l00075"></a>00075 <span class="comment"> F[m] = q^(m+1) * cos(m*lambda) * P[m,m](t) [or sin(m*lambda)]</span>
 <a name="l00076"></a>00076 <span class="comment">\endverbatim</span>
-<a name="l00077"></a>00077 <span class="comment"> * Holmes + Featherstone, Eq. (13), gives\verbatim</span>
+<a name="l00077"></a>00077 <span class="comment"> * Holmes + Featherstone, Eq. (13), give\verbatim</span>
 <a name="l00078"></a>00078 <span class="comment">   P[m,m] = u * sqrt((2*m+1)/((m&gt;1?2:1)*m)) * P[m-1,m-1]</span>
 <a name="l00079"></a>00079 <span class="comment">\endverbatim</span>
 <a name="l00080"></a>00080 <span class="comment"> * also, we have\verbatim</span>
@@ -143,28 +143,28 @@
 <a name="l00094"></a>00094 <span class="comment"> *</span>
 <a name="l00095"></a>00095 <span class="comment"> * Here is how the various components of the gradient are computed</span>
 <a name="l00096"></a>00096 <span class="comment"> *</span>
-<a name="l00097"></a>00097 <span class="comment"> * Differentiate wrt r\verbatim</span>
+<a name="l00097"></a>00097 <span class="comment"> * Differentiate wrt &lt;tt&gt;r&lt;/tt&gt;\verbatim</span>
 <a name="l00098"></a>00098 <span class="comment">   d q^(n+1) / dr = (-1/r) * (n+1) * q^(n+1)</span>
 <a name="l00099"></a>00099 <span class="comment">\endverbatim</span>
 <a name="l00100"></a>00100 <span class="comment"> * so multiply &lt;tt&gt;C[n,m]&lt;/tt&gt; by &lt;tt&gt;n+1&lt;/tt&gt; in inner sum and multiply the</span>
 <a name="l00101"></a>00101 <span class="comment"> * sum by &lt;tt&gt;-1/r&lt;/tt&gt;.</span>
 <a name="l00102"></a>00102 <span class="comment"> *</span>
-<a name="l00103"></a>00103 <span class="comment"> * Differentiate wrt lambda\verbatim</span>
+<a name="l00103"></a>00103 <span class="comment"> * Differentiate wrt &lt;tt&gt;lambda&lt;/tt&gt;\verbatim</span>
 <a name="l00104"></a>00104 <span class="comment">   d cos(m*lambda) = -m * sin(m*lambda)</span>
 <a name="l00105"></a>00105 <span class="comment">   d sin(m*lambda) =  m * cos(m*lambda)</span>
 <a name="l00106"></a>00106 <span class="comment">\endverbatim</span>
 <a name="l00107"></a>00107 <span class="comment"> * so multiply terms by &lt;tt&gt;m&lt;/tt&gt; in outer sum and swap sine and cosine</span>
 <a name="l00108"></a>00108 <span class="comment"> * variables.</span>
 <a name="l00109"></a>00109 <span class="comment"> *</span>
-<a name="l00110"></a>00110 <span class="comment"> * Differentiate wrt theta\verbatim</span>
+<a name="l00110"></a>00110 <span class="comment"> * Differentiate wrt &lt;tt&gt;theta&lt;/tt&gt;\verbatim</span>
 <a name="l00111"></a>00111 <span class="comment">  dV/dtheta = V&#39; = -u * dV/dt = -u * V&#39;</span>
 <a name="l00112"></a>00112 <span class="comment">\endverbatim</span>
-<a name="l00113"></a>00113 <span class="comment"> * here &lt;tt&gt;&#39;&lt;/tt&gt; denotes differentiation wrt to &lt;tt&gt;theta&lt;/tt&gt;.\verbatim</span>
+<a name="l00113"></a>00113 <span class="comment"> * here &lt;tt&gt;&#39;&lt;/tt&gt; denotes differentiation wrt &lt;tt&gt;theta&lt;/tt&gt;.\verbatim</span>
 <a name="l00114"></a>00114 <span class="comment">   d/dtheta (Sc[m] * P[m,m](t)) = Sc&#39;[m] * P[m,m](t) + Sc[m] * P&#39;[m,m](t)</span>
 <a name="l00115"></a>00115 <span class="comment">\endverbatim</span>
-<a name="l00116"></a>00116 <span class="comment"> * Now P[m,m](t) = const * u^m, so P&#39;[m,m](t) = m * t/u * P[m,m](t),</span>
-<a name="l00117"></a>00117 <span class="comment"> * thus\verbatim</span>
-<a name="l00118"></a>00118 <span class="comment">   d/dtheta (Sc[m] * P[m,m](t)) = (Sc&#39;[m] + m * t/u Sc[m]) * P[m,m](t)</span>
+<a name="l00116"></a>00116 <span class="comment"> * Now &lt;tt&gt;P[m,m](t) = const * u^m&lt;/tt&gt;, so &lt;tt&gt;P&#39;[m,m](t) = m * t/u *</span>
+<a name="l00117"></a>00117 <span class="comment"> * P[m,m](t)&lt;/tt&gt;, thus\verbatim</span>
+<a name="l00118"></a>00118 <span class="comment">   d/dtheta (Sc[m] * P[m,m](t)) = (Sc&#39;[m] + m * t/u * Sc[m]) * P[m,m](t)</span>
 <a name="l00119"></a>00119 <span class="comment">\endverbatim</span>
 <a name="l00120"></a>00120 <span class="comment"> * Clenshaw recursion for &lt;tt&gt;Sc[m]&lt;/tt&gt; reads\verbatim</span>
 <a name="l00121"></a>00121 <span class="comment">    y[k] = alpha[k] * y[k+1] + beta[k+1] * y[k+2] + c[k]</span>
@@ -186,7 +186,7 @@
 <a name="l00137"></a>00137 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
 <a name="l00138"></a>00138 
 <a name="l00139"></a><a class="code" href="SphericalEngine_8cpp.html#acbb0476075cd231855709ab48c95fa7e">00139</a> <span class="preprocessor">#define GEOGRAPHICLIB_SPHERICALENGINE_CPP \</span>
-<a name="l00140"></a>00140 <span class="preprocessor">  &quot;$Id: 270fafb974f76012ae3ebc504894a8af1fcea690 $&quot;</span>
+<a name="l00140"></a>00140 <span class="preprocessor">  &quot;$Id: e6444458fb284298889582ce5be3a9f201542e3a $&quot;</span>
 <a name="l00141"></a>00141 <span class="preprocessor"></span>
 <a name="l00142"></a>00142 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="SphericalEngine_8cpp.html#acbb0476075cd231855709ab48c95fa7e">GEOGRAPHICLIB_SPHERICALENGINE_CPP</a>)
 <a name="l00143"></a>00143 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="SphericalEngine_8hpp.html#a46e29e0e930e205c8f9a059ae458b44e">GEOGRAPHICLIB_SPHERICALENGINE_HPP</a>)
@@ -528,7 +528,7 @@
 <a name="l00479"></a>00479 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Dec 6 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
