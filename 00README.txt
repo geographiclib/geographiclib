@@ -38,6 +38,7 @@ Files
       Gnomonic.[ch]pp -- gnomonic projection
       CassiniSoldner.[ch]pp -- Cassini-Soldner equidistant projection
       Geoid.[ch]pp -- geoid heights
+      Gravity{Model,Circle}.[ch]pp -- gravity models
       Magnetic{Model,Circle}.[ch]pp -- geomagentic models
       {Spherical,Circular}Engine.[ch]pp -- spherical harmonic sums
       SphericalHarmonic{,1,2}.hpp -- frontend for spherical harmonics
@@ -53,6 +54,7 @@ Files
       CartConvert.cpp -- convert to geocentric and local cartesian
       EquidistantTest.cpp -- exercise AzimuthalEquidistant and CassiniSoldner
       GeoidEval.cpp -- evaluate geoid heights
+      Gravity.cpp -- evaluate gravity
       MagneticField.cpp -- evaluate magnetic field
       Planimeter.cpp -- computer polygon areas
       geographiclib-get-geoids -- download geoid datasets
@@ -68,6 +70,7 @@ Files
       CartConvert-vc9.vcproj -- project for CartConvert
       EquidistantTest-vc9.vcproj -- project for EquidistantTest
       GeoidEval-vc9.vcproj -- project for GeoidEval
+      Gravity-vc9.vcproj -- project for Gravity
       MagneticField-vc9.vcproj -- project for MagneticField
       also files for MS Studio 2005 (with vc8)
       also files for MS Studio 2010 (with vc10)
