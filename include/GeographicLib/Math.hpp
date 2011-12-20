@@ -46,13 +46,6 @@
 #include <algorithm>
 #include <vector>
 
-/**
- * \brief Namespace for %GeographicLib
- *
- * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addtiion all the header files are included via %GeographicLib/filename.
- * This minimizes the likelihood of conflicts with other packages.
- **********************************************************************/
 namespace GeographicLib {
 
   /**
