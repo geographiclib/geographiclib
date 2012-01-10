@@ -53,7 +53,7 @@ if (MAINTAINER)
   add_custom_command (TARGET distrib-man
     COMMAND
       for f in ${MANPAGES} ${USAGE} ${HTMLMAN}\; do
-        cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f"` > /dev/null 2>&1 ||
+        cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f"` >/dev/null 2>&1||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
 endif (MAINTAINER)

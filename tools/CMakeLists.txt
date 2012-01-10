@@ -40,8 +40,7 @@ if (NOT WIN32)
 	  ${SCRIPT}
       COMMAND chmod +x ${SCRIPT}
       DEPENDS ${SCRIPT}.sh)
-    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}
-      DESTINATION sbin)
+    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
   endforeach (SCRIPT)
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif (NOT WIN32)
