@@ -687,6 +687,10 @@ $Id$
    Spec. Pub. 251 (US Coast and Geodetic Survey, 1952), pp. 63--66.[[BR]]
    http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no2511952.pdf
  * P. D. Thomas,[[BR]]
+   ''Mathematical Models for Navigation Systems'',
+   TR-182 (U.S. Naval Oceanographic Office, 1965).[[BR]]
+   http://handle.dtic.mil/100.2/AD0627893
+ * P. D. Thomas,[[BR]]
    ''Spheroidal Geodesics, Reference Systems, and Local Geometry'',
    SP-138 (U.S. Naval Oceanographic Office, 1970).[[BR]]
    http://handle.dtic.mil/100.2/AD703541
