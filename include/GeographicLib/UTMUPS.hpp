@@ -56,6 +56,9 @@ namespace GeographicLib {
    * - Inconsistent rules are used to determine the whether a particular UTM or
    *   UPS coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
+   *
+   * Example of use:
+   * \include example-UTMUPS.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT UTMUPS {
   private:

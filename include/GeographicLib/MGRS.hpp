@@ -56,6 +56,9 @@ namespace GeographicLib {
    * - Inconsistent rules are used to determine the whether a particular MGRS
    *   coordinate is legal.  A more systematic approach is taken here.
    * - The underlying projections are not very accurately implemented.
+   *
+   * Example of use:
+   * \include example-MGRS.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT MGRS {
   private:

@@ -1,8 +1,8 @@
 # $Id$
 
-# Install the python files.   Probably full-time python users should get
-# the python package from http://pypi.python.org/pypi/geographiclib and
-# "install" this.
+# Install the python files.
+# Probably full-time python users should install the python package from
+# http://pypi.python.org/pypi/geographiclib
 file (GLOB PYTHON_FILES *.py)
 install (FILES ${PYTHON_FILES}
   DESTINATION lib/python/site-packages/geographiclib)

@@ -1,5 +1,6 @@
 // Example of using GeographicLib::Accumulator class
 // $Id$
+
 #include <iostream>
 #include <GeographicLib/Accumulator.hpp>
 
