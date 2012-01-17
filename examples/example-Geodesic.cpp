@@ -1,4 +1,5 @@
 // Example of using GeographicLib::Geodesic class
+// $Id$
 #include <iostream>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
