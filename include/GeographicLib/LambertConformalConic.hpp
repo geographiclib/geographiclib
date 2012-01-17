@@ -31,7 +31,7 @@ namespace GeographicLib {
    * projection.  In this implementation, the projection correctly becomes the
    * Mercator projection or the polar stereographic projection when the
    * standard latitude is the equator or a pole.  The accuracy of the
-   * projections is about 10 nm.
+   * projections is about 10 nm (10 nanometers).
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
@@ -248,10 +248,11 @@ namespace GeographicLib {
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added and \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
-     * error in the projection is less than about 10 nm (true distance) and the
-     * errors in the meridian convergence and scale are consistent with this.
-     * The values of \e x and \e y returned for points which project to
-     * infinity (i.e., one or both of the poles) will be large but finite.
+     * error in the projection is less than about 10 nm (10 nanometers), true
+     * distance, and the errors in the meridian convergence and scale are
+     * consistent with this.  The values of \e x and \e y returned for points
+     * which project to infinity (i.e., one or both of the poles) will be large
+     * but finite.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -270,9 +271,9 @@ namespace GeographicLib {
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added.  \e lon0 should be in the range
      * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
-     * The error in the projection is less than about 10 nm (true distance) and
-     * the errors in the meridian convergence and scale are consistent with
-     * this.
+     * The error in the projection is less than about 10 nm (10 nanometers),
+     * true distance, and the errors in the meridian convergence and scale are
+     * consistent with this.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

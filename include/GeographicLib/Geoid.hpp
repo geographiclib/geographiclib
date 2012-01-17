@@ -63,6 +63,9 @@ namespace GeographicLib {
    * constructor to read all the data into memory and to turn off the
    * single-cell caching which results in a Geoid object which \e is thread
    * safe.
+   *
+   * Example of use:
+   * \include example-Geoid.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geoid {

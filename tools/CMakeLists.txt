@@ -1,13 +1,18 @@
 # $Id$
 
+# Build the tools...
+
+# Where to find the *.usage files for the --help option.  For a
+# maintainer these are in the build tree; otherwise they are in the
+# source tree.
 if (MAINTAINER)
   set (MANDIR ${PROJECT_BINARY_DIR}/man)
 else (MAINTAINER)
   set (MANDIR ${PROJECT_SOURCE_DIR}/man)
 endif (MAINTAINER)
-
 include_directories (${MANDIR})
 
+# Loop over all the tools, specifying the source and library.
 add_custom_target (tools ALL)
 foreach (TOOL ${TOOLS})
 
@@ -24,13 +29,20 @@ foreach (TOOL ${TOOLS})
 
 endforeach (TOOL)
 
+# Set the run time path for shared libraries for non-Windows machines.
 if (NOT WIN32)
   set_target_properties (${TOOLS} PROPERTIES
     INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 endif (NOT WIN32)
 
+# Specify where the tools are installed, adding them to the export
+# GeographicLibDepends.
 install (TARGETS ${TOOLS} EXPORT GeographicLibDepends DESTINATION bin)
 
+# Create the scripts for downloading the data files on non-Windows
+# systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
+# default data directory.  These are installed under sbin, because it is
+# expected to be run with write access to /usr/local.
 if (NOT WIN32)
   foreach (SCRIPT ${SCRIPTS})
     add_custom_command (OUTPUT ${SCRIPT}
@@ -45,6 +57,8 @@ if (NOT WIN32)
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif (NOT WIN32)
 
+# Copy the share library on Windows systems to this directory (tools) so
+# that the tests can be run.
 if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
   get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic
     "LOCATION_${CMAKE_CFG_INTDIR}")
@@ -53,7 +67,11 @@ if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
     copy ${GEOGRAPHIC_LIBRARY_FILE} ${CMAKE_CFG_INTDIR}/)
 endif (WIN32 AND GEOGRAPHIC_SHARED_LIB)
 
+# Turn on testing
 enable_testing ()
+
+# Here are the tests.  They consists of calling the various tools with
+# --input-string and matching the output against regular expressions.
 
 add_test (GeoConvert0 GeoConvert -p -3 -m --input-string "33.3 44.4")
 set_tests_properties (GeoConvert0

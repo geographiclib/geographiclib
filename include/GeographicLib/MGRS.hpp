@@ -162,13 +162,14 @@ namespace GeographicLib {
      *
      * All allowed UTM and UPS coordinates may now be converted to legal MGRS
      * coordinates with the proviso that eastings and northings on the upper
-     * boundaries are silently reduced by about 4 nm to place them \e within the
-     * allowed range.  (This includes reducing a southern hemisphere northing
-     * of 10000 km by 4 nm so that it is placed in latitude band M.)  The UTM or
-     * UPS coordinates are truncated to requested precision to determine the
-     * MGRS coordinate.  Thus in UTM zone 38N, the square area with easting in
-     * [444 km, 445 km) and northing in [3688 km, 3689 km) maps to MGRS
-     * coordinate 38SMB4488 (at \e prec = 2, 1 km), Khulani Sq., Baghdad.
+     * boundaries are silently reduced by about 4 nm (4 nanometers) to place
+     * them \e within the allowed range.  (This includes reducing a southern
+     * hemisphere northing of 10000 km by 4 nm so that it is placed in latitude
+     * band M.)  The UTM or UPS coordinates are truncated to requested
+     * precision to determine the MGRS coordinate.  Thus in UTM zone 38N, the
+     * square area with easting in [444 km, 445 km) and northing in [3688 km,
+     * 3689 km) maps to MGRS coordinate 38SMB4488 (at \e prec = 2, 1 km),
+     * Khulani Sq., Baghdad.
      *
      * The UTM/UPS selection and the UTM zone is preserved in the conversion to
      * MGRS coordinate.  Thus for \e zone > 0, the MGRS coordinate begins with

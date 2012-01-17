@@ -99,7 +99,8 @@ namespace GeographicLib {
    * Additional functionality is provided by the GeodesicLine class, which
    * allows a sequence of points along a geodesic to be computed.
    *
-   * The calculations are accurate to better than 15 nm.  See Sec. 9 of
+   * The calculations are accurate to better than 15 nm (15 nanometers).  See
+   * Sec. 9 of
    * <a href="http://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a>
    * for details.
    *
@@ -117,6 +118,9 @@ namespace GeographicLib {
    *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
    * .
    * For more information on geodesics see \ref geodesic.
+   *
+   * Example of use:
+   * \include example-Geodesic.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geodesic {

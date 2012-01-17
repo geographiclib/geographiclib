@@ -3,20 +3,31 @@
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
+# Version information
 set (GeographicLib_VERSION_MAJOR 1)
 set (GeographicLib_VERSION_MINOR 16)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
+# The library version tracks the numbering given by libtool in the
+# autoconf set up.
 set (LIBVERSION 9)
 set (LIBVERSIONFULL 9.2.0)
 
+# User-settable cache variables
+
+# (1) Build as a shared library?  On Windows systems, this is typically
+# more trouble than it's worth.
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
 else (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
 endif (WIN32)
+
+# (2) Try to compile the Matlab interfaces?
 option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
 
+# (3) Where to look for data files.  Various classes look in the geoids,
+# gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
   set (GEOGRAPHICLIB_DATA
     "C:/Documents and Settings/All Users/Application Data/GeographicLib"
@@ -27,18 +38,27 @@ else (WIN32)
     CACHE PATH "Location for data for GeographicLib")
 endif (WIN32)
 
+# The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
 
+# Determine system properties
 include (CheckTypeSize)
 check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
-
 include (TestBigEndian)
 test_big_endian (WORDS_BIGENDIAN)
 
+# Create a Config.h to expose system information to the compiler
 configure_file (
     "${PROJECT_SOURCE_DIR}/include/GeographicLib/Config.h.in"
     "${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h" )
 
+# The documentation depends on doxygen.  In addition, the man pages are
+# written as pod files and converted to nroff format, C++ code, and
+# html.  These require tools which are typically only available on
+# non-Windows platforms.  The creation of the final documentation is
+# therefore only done in "MAINTAINER" mode.  To support other platforms,
+# the maintainer runs "make distrib-all" which installs the transformed
+# documentation files into the source tree.
 if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
@@ -49,7 +69,14 @@ if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
 else (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
   set (MAINTAINER OFF CACHE BOOL "Allow build of additional components")
 endif (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
+if (MAINTAINER)
+  add_custom_target (distrib-all)
+  add_dependencies (distrib-all distrib-man distrib-doc)
+endif (MAINTAINER)
 
+# Look for the tool to compile the Matlab interfaces.  On Linux systems,
+# octave is used, since I couldn't find a version of Matlab that
+# supported sufficiently recent versions of g++.
 if (ENABLE_MATLAB)
   if (NOT WIN32)
     find_program (HAVE_MEX mkoctfile)
@@ -68,23 +95,30 @@ else (ENABLE_MATLAB)
   set (HAVE_MEX OFF)
 endif (ENABLE_MATLAB)
 
-# Set a default build type for single-configuration
-# CMake generators if no build type is set.
+# Set a default build type for single-configuration cmake generators if
+# no build type is set.
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
+# On non-Windows machine, make the compiler more picky.
 if (NOT WIN32)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 endif (NOT WIN32)
 
+# The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
   GeoidEval Gravity MagneticField Planimeter TransverseMercatorProj)
+# The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS
   geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
 
+# Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
+# first because that's way Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include")
 include_directories (include)
+
+# The list of subdirectories to process
 add_subdirectory (src)
 add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
@@ -92,55 +126,69 @@ add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
+add_subdirectory (examples)
 
-if (WIN32)
-  set(INSTALL_CMAKE_DIR "cmake")
-else (WIN32)
-  set(INSTALL_CMAKE_DIR
-    "share/cmake/${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
-endif (WIN32)
+# config file support for find_package(GeographicLib).  This needs to
+# deal with two environments: (1) finding the build tree and (2) finding
+# the install tree.  geographiclib-config.cmake detects which situation
+# it is handing by looking at @GEOGRAPHICLIB_ROOT_DIR@.  If this is an
+# absolute path, it's in the build tree; otherwise, it's in the install
+# tree (incidentally, this allows the install tree to be relocated).
 
-export (TARGETS Geographic ${TOOLS}
-  FILE "${PROJECT_BINARY_DIR}/GeographicLibDepends.cmake")
-
-# Don't want cmake to look in build trees, so don't do
-# export (PACKAGE GeographicLib)
-
+# geographiclib-config.cmake for the build tree
 set (GEOGRAPHICLIB_ROOT_DIR "${PROJECT_BINARY_DIR}")
 set (GeographicLib_INCLUDE_DIRS
   "${PROJECT_BINARY_DIR}/include" "${PROJECT_SOURCE_DIR}/include" )
-set (GeographicLib_LIBRARY_DIRS "${PROJECT_BINARY_DIR}/src")
-set (GEOGRAPHICLIB_CMAKE_DIR "${PROJECT_BINARY_DIR}")
 configure_file (cmake/geographiclib-config.cmake.in
   "${PROJECT_BINARY_DIR}/geographiclib-config.cmake" @ONLY)
 configure_file (cmake/geographiclib-config-version.cmake.in
   "${PROJECT_BINARY_DIR}/geographiclib-config-version.cmake" @ONLY)
 
-install (EXPORT GeographicLibDepends DESTINATION "${INSTALL_CMAKE_DIR}")
-
+# geographiclib-config.cmake for the install tree.  It's installed in
+# ${INSTALL_CMAKE_DIR} and @GEOGRAPHICLIB_ROOT_DIR@ is the relative
+# path to the root from there.
 if (WIN32)
+  set (INSTALL_CMAKE_DIR "cmake")
   set (GEOGRAPHICLIB_ROOT_DIR "..")
 else (WIN32)
+  set (INSTALL_CMAKE_DIR
+    "share/cmake/${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
   set (GEOGRAPHICLIB_ROOT_DIR "../../..")
 endif (WIN32)
-set (GEOGRAPHICLIB_CMAKE_DIR "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}")
+# @GeographicLib_INCLUDE_DIRS@ is not used in the install tree;
+# reset it to prevent the source and build paths appearing in the
+# installed config files
+set (GeographicLib_INCLUDE_DIRS IGNORE)
 configure_file (cmake/geographiclib-config.cmake.in
   "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake" @ONLY)
 configure_file (cmake/geographiclib-config-version.cmake.in
   "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake" @ONLY)
 install (FILES
   "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake"
-  DESTINATION "${INSTALL_CMAKE_DIR}")
-install (FILES
   "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake"
   DESTINATION "${INSTALL_CMAKE_DIR}")
 
-if (MAINTAINER)
-  add_custom_target (distrib-all)
-  add_dependencies (distrib-all distrib-man distrib-doc)
-endif (MAINTAINER)
+# Make information about the cmake targets (the library and the tools)
+# available.
+export (TARGETS Geographic ${TOOLS}
+  FILE "${PROJECT_BINARY_DIR}/GeographicLibDepends.cmake")
+install (EXPORT GeographicLibDepends DESTINATION "${INSTALL_CMAKE_DIR}")
 
+# Don't want find_package to look in build trees, so don't do...
+# export (PACKAGE GeographicLib)
+
+# Packaging support; we deal with 
+# (1) a source distribution: cmake make a tar.gz file and the zip file
+# is created from this.  Only the maintainer can do this, because of
+# the need to generate additional documentation files.
+# (2) a binary distribution: code is included for Linux, Apple, and
+# Windows, but only the Windows distribution has been exercised.
+
+# Need to ensure that system dlls get included in a binary distribution
 include (InstallRequiredSystemLibraries)
+
+# The configuration of CPack is via variable that need to be set before
+# the include (CPack).
 set (CPACK_PACKAGE_VERSION_MAJOR ${GeographicLib_VERSION_MAJOR})
 set (CPACK_PACKAGE_VERSION_MINOR ${GeographicLib_VERSION_MINOR})
 set (CPACK_PACKAGE_VERSION_PATCH 0)
@@ -148,6 +196,8 @@ set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
   "Geographic library, utilities, and documentation")
+# It's necessary to specify a rather long list of files to be excluded
+# in the source distribution.
 set (CPACK_SOURCE_IGNORE_FILES
   "#"
   "~\$"
@@ -191,12 +241,15 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/(fix-permissions|autogen|biblio|js-compress)\\\\.sh"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.html" )
 set (CPACK_SOURCE_GENERATOR TGZ)
+
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
   "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
+  # The Windows binary packager is NSIS.  Set the necessary variables
+  # for this.
   set (CPACK_NSIS_CONTACT "charles@karney.com")
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
@@ -215,14 +268,27 @@ if (WIN32)
 ")
   set (CPACK_NSIS_MODIFY_PATH ON)
 elseif (APPLE)
+  # Not tested
   set (CPACK_GENERATOR DMG)
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
 else (WIN32)
+  # Not tested
   set (CPACK_GENERATOR TGZ)
 endif (WIN32)
 
 include (CPack)
 
+# Another maintainer-specific target is dist is building the source
+# distribution via the target dist.  This calls package_source to make a
+# tar.gz file.  However this needs to be touched up to support the
+# vanilla Makefiles provided with GeographicLib.  This entails
+# (1) creating Makefile (which includes Makefile.mk);
+# (2) creating a bare-bones Config.h (with just the version information);
+# (3) making sure that make thinks the generated documentation files are
+# up-to-date.
+# Then a new tar.gz file and zip file are created.  To avoid potential
+# problems with directory permissions, tar and zip are told only to
+# archive the files.
 if (MAINTAINER)
   add_custom_target (dist
     COMMAND ${CMAKE_MAKE_PROGRAM} package_source
@@ -247,4 +313,5 @@ if (MAINTAINER)
   add_dependencies (dist distrib-all)
 endif (MAINTAINER)
 
+# Add a test target; the tests are in tools.
 enable_testing ()

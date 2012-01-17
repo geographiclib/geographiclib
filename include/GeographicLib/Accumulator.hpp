@@ -35,6 +35,9 @@ namespace GeographicLib {
    *
    * In the documentation of the member functions, \e sum stands for the value
    * currently held in the accumulator.
+   *
+   * Example of use:
+   * \include example-Accumulator.cpp
    **********************************************************************/
   template<typename T = Math::real>
   class GEOGRAPHIC_EXPORT Accumulator {

@@ -1,20 +1,31 @@
 # $Id$
 
+# The man pages are maintained as .pod (plain old documentatoin) files.
+# In maintainer mode, there are used to create real man pages (extension
+# .1), usage files (extension .usage) for including in the tool itself,
+# and html versions of the man pages (extension .1.html) for use from
+# the doxygen generated documentation
+
+# Only the maintainer tries to generate the derived files and the .usage
+# files are in the build tree.  For non-maintainers, the .usages files
+# are in the source tree.
 if (MAINTAINER)
   add_custom_target (distrib-man)
   add_custom_target (man ALL)
+  set (MANDIR ${CMAKE_CURRENT_BINARY_DIR})
+else (MAINTAINER)
+  set (MANDIR ${CMAKE_CURRENT_SOURCE_DIR})
 endif (MAINTAINER)
 
 set (MANPAGES)
 set (USAGE)
 set (HTMLMAN)
 
-if (MAINTAINER)
-  set (MANDIR ${CMAKE_CURRENT_BINARY_DIR})
-else (MAINTAINER)
-  set (MANDIR ${CMAKE_CURRENT_SOURCE_DIR})
-endif (MAINTAINER)
-
+# Loop over the tools building up lists of the derived files.  Also in
+# maintainer mode, specify how the derived files are created.  The sed
+# replacements for the .1.html files glue in a style sheet and implement
+# cross-referencing between the tools.  The .usage files are generated
+# by a shell script makeusage.sh.
 foreach (TOOL ${TOOLS})
   set (MANPAGES ${MANPAGES} ${MANDIR}/${TOOL}.1)
   set (USAGE ${USAGE} ${MANDIR}/${TOOL}.usage)
@@ -41,6 +52,9 @@ foreach (TOOL ${TOOLS})
   endif (MAINTAINER)
 endforeach (TOOL)
 
+# Add the extra maintainer tasks into the dependency list.  The
+# distrib-man target copies the derived documentation files into the
+# source tree.
 if (MAINTAINER)
   add_custom_target (manpages ALL DEPENDS ${MANPAGES}
     COMMENT "Building all the man pages")
@@ -58,4 +72,5 @@ if (MAINTAINER)
     COMMENT "Installing man documentation page in source tree")
 endif (MAINTAINER)
 
+# Install the man pages.
 install (FILES ${MANPAGES} DESTINATION share/man/man1)

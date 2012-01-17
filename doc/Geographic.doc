@@ -23,8 +23,8 @@ MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
-5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
-transversemercator have been developed for this library.  The
+5&ndash;15 nanometers).  New accurate algorithms for \ref geodesic and
+\ref transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  For a sample of the
 geodesic capabilities in Javascript, check out the
@@ -102,11 +102,11 @@ geodesic calculations.
 
 The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
-   about 5 nm.  Even though in many geographic applications 1 cm is
-   considered "accurate enough", there is little penalty in providing
-   much better accuracy.  If situations where a faster approximate
-   algorithm is necessary, %GeographicLib offers an accurate benchmark to
-   guide the development.
+   about 5 nm (5 nanometers).  Even though in many geographic
+   applications 1 cm is considered "accurate enough", there is little
+   penalty in providing much better accuracy.  If situations where a
+   faster approximate algorithm is necessary, %GeographicLib offers an
+   accurate benchmark to guide the development.
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
    GeographicLib::Geodesic::Inverse works for anti-podal points.
@@ -179,8 +179,8 @@ Then pick one of the first five options below:
   the utility programs supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
-- \ref qt.  There is a simple project file that compiles the %GeographicLib
-  library <i>only</i> to be compiled with the Qt compiler.
+- \ref qt.  How to compile %GeographicLib so that it can be used by Qt
+  programs.
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -406,24 +406,34 @@ Visual Studio 10 (2010) for Win32 in Release mode.  The Matlab interface
 was compiled with Matlab R2010b, however it works with some other
 versions of Matlab (e.g., R2008a).
 
-\section qt Building the library under Qt
+\section qt Building the library for use with Qt
 
-This method requires builds the library (<i>not</i> the utility
-programs) under Qt.  This is useful if you need to link a Qt project
-with %GeographicLib to ensure that the library is compatible with your
-project.
+If Qt is using a standard compiler, then build %GeographicLib with that
+same compiler (and optimization flags) as Qt.
 
-Here are the steps to compile %GeographicLib with Qt:
-- Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.16.tar.gz \endverbatim
-  then enter the src subdirectory \verbatim
-  cd GeographicLib-1.16/src \endverbatim
-- Configure and build the library: \verbatim
+If you are using the mingw compiler on Windows for Qt, then you need to
+build %GeographicLib with mingw.  You can accomplish this with cmake
+under cygwin with, for example, \verbatim
+  export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
+  mkdir BUILD
+  cd BUILD
+  cmake -G "MinGW Makefiles" ..
+  mingw32-make
+  mingw32-make install \endverbatim
+If cmake complains that sh mustn't be in your path invoke cmake with
+\verbatim
+  env PATH="$( echo $PATH | tr : '\n' |
+  while read d; do test -f "$d/sh.exe" || echo -n "$d:"; done |
+  sed 's/:$//' )" cmake -G "MinGW Makefiles" .. \endverbatim
+
+If cmake is not available, there is a simple project file that compiles
+the %GeographicLib library <i>only</i> with the Qt compiler: \verbatim
+  cd src
   qmake Geographic.pro   # configure the project
   make                   # build the library \endverbatim
-- The library will be in the src directory (or the src/release or
-  src/debug directory under Windows).  The headers are in
-  include/GeographicLib.
+The library will be in the src directory (or the src/release or
+src/debug directory under Windows).  The headers are in
+include/GeographicLib.
 
 \section maintainer Maintainer tasks
 
@@ -2954,11 +2964,12 @@ implementations following the standard convention.
 \section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  This is accurate to about 200 nm within the UTM
-domain.  Here we present the series extended to 10th order.  By default,
-GeographicLib::TransverseMercator uses the 6th-order approximation. The
-preprocessor variable TM_TX_MAXPOW can be used to select an order from 4
-thru 8.  The series expanded to order <i>n</i><sup>30</sup> are given in
+Mercator projection.  This is accurate to about 200 nm (200 nanometers)
+within the UTM domain.  Here we present the series extended to 10th
+order.  By default, GeographicLib::TransverseMercator uses the 6th-order
+approximation. The preprocessor variable TM_TX_MAXPOW can be used to
+select an order from 4 thru 8.  The series expanded to order
+<i>n</i><sup>30</sup> are given in
 <a href="tmseries30.html"> tmseries30.html</a>.
 
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
@@ -3164,7 +3175,7 @@ Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
 Convert (\e lat1 - \e lat0, \e lon1 - \e lon0) to a distance, \e ds, on the
 surface of the ellipsoid and define \e err = hypot(\e ds, \e h1 - \e h0).
-For |\e h0| < 5000 km, we have \e err < 7 nm.
+For |\e h0| < 5000 km, we have \e err < 7 nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
 absolute errors in the approximate geodetic height become large, or
@@ -3189,7 +3200,7 @@ To obtain a practical measure of the error for the general case we define
   z0).
 .
 We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
-and <i>err</i><sub>in</sub> < 7 nm.
+and <i>err</i><sub>in</sub> < 7 nm.  (1 nm = 1 nanometer.)
 
 The testing has been confined to the WGS84 ellipsoid.  The method will work
 for all ellipsoids used in terrestrial geodesy.  However, the central region,

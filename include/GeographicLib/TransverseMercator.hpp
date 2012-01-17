@@ -42,9 +42,9 @@ namespace GeographicLib {
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
    * Kr&uuml;ger's method has been extended from 4th to 6th order.  The maximum
-   * errors is 5 nm (ground distance) for all positions within 35 degrees of
-   * the central meridian.  The error in the convergence is 2e-15&quot; and the
-   * relative error in the scale is 6e-12%%.  See Sec. 4 of
+   * error is 5 nm (5 nanometers), ground distance, for all positions within 35
+   * degrees of the central meridian.  The error in the convergence is
+   * 2e-15&quot; and the relative error in the scale is 6e-12%%.  See Sec. 4 of
    * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The speed penalty in going to 6th order is only about 1%.
    * TransverseMercatorExact is an alternative implementation of the projection
