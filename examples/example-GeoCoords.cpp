@@ -1,4 +1,4 @@
-// Example of using GeographicLib::MGRS class
+// Example of using GeographicLib::GeoCoords class
 // $Id$
 
 #include <iostream>

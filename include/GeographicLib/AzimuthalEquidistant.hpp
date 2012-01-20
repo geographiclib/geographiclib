@@ -31,6 +31,9 @@ namespace GeographicLib {
    *
    * The conversions all take place using a Geodesic object (by default
    * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
+   *
+   * Example of use:
+   * \include example-AzimuthalEquidistant.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT AzimuthalEquidistant {

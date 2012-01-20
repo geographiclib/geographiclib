@@ -1,4 +1,4 @@
-// Example of using GeographicLib::Accumulator class
+// Example of using GeographicLib::GeographicErr class
 // $Id$
 
 #include <iostream>

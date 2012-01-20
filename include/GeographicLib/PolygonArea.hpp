@@ -42,6 +42,9 @@ namespace GeographicLib {
    * At any point you can ask for the perimeter and area so far.  There's an
    * option to treat the points as defining a polyline instead of a polygon; in
    * that case, only the perimeter is computed.
+   *
+   * Example of use:
+   * \include example-PolygonArea.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT PolygonArea {

@@ -95,6 +95,9 @@ namespace GeographicLib {
    * - The projection given here.  This causes geodesics close to the center
    *   point to appear as straight lines in the projection; i.e., it
    *   generalizes the spherical great circle to a geodesic.
+   *
+   * Example of use:
+   * \include example-Gnomonic.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Gnomonic {

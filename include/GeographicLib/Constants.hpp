@@ -304,7 +304,7 @@ namespace GeographicLib {
    * can be caught by the usual catch clauses.
    *
    * Example of use:
-   * \include example-GeodesicErr.cpp
+   * \include example-GeographicErr.cpp
    **********************************************************************/
   class GeographicErr : public std::runtime_error {
   public:

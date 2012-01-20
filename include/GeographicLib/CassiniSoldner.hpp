@@ -58,6 +58,9 @@ namespace GeographicLib {
    * meridian at \e lat1 and \e lat1 + \e dlat1 intersect and taking the ratio
    * of the reduced lengths for the two geodesics between that point and,
    * respectively, (\e lat1, \e lon1) and (\e lat, \e lon).
+   *
+   * Example of use:
+   * \include example-CassiniSoldner.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT CassiniSoldner {
