@@ -33,6 +33,9 @@ namespace GeographicLib {
    * class directly.
    *
    * See SphericalEngine.cpp for more information on the implementation.
+   *
+   * Example of use:
+   * \include example-SphericalEngine.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalEngine {
@@ -314,7 +317,7 @@ namespace GeographicLib {
      * call CircularEngine::operator()() with arguments <i>x</i>/\e p and
      * <i>y</i>/\e p.
      **********************************************************************/
-    template<bool gradp, SphericalEngine::normalization norm, int L>
+    template<bool gradp, normalization norm, int L>
       static CircularEngine Circle(const coeff c[], const real f[],
                                    real p, real z, real a);
     /**

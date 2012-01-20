@@ -3,7 +3,7 @@
 # Compile (but don't install) a bunch of tiny example programs.  These
 # are mainly for including as examples within the doxygen documentation;
 # however, compiling them catches most obvious blunders.
-file (GLOB EXAMPLE_SOURCES *.cpp)
+file (GLOB EXAMPLE_SOURCES example-*.cpp)
 set (EXAMPLES)
 
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})

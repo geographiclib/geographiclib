@@ -132,8 +132,8 @@ namespace GeographicLib {
      *
      * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
      * stored in the one-dimensional vectors \e C and \e S which must contain
-     * (\e N + 1)(\e N + 2)/2 elements, stored in "column-major" order.  Thus
-     * for \e N = 3, the order would be:
+     * (\e N + 1)(\e N + 2)/2 and N (\e N + 1)/2 elements, respectively, stored
+     * in "column-major" order.  Thus for \e N = 3, the order would be:
      * <i>C</i><sub>00</sub>,
      * <i>C</i><sub>10</sub>,
      * <i>C</i><sub>20</sub>,

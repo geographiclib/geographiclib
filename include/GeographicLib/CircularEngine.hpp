@@ -45,6 +45,9 @@ namespace GeographicLib {
    * order to be performed in 2 or 6 vectors of length \e M + 1 (depending on
    * whether gradients are to be calculated).  For this reason the constructor
    * may throw a bad_alloc exception.
+   *
+   * Example of use:
+   * \include example-CircularEngine.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT CircularEngine {
