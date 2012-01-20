@@ -17,16 +17,20 @@ message (STATUS "GeographicLib configuration, version "
 # Tell the user project where to find our headers and libraries
 get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 if (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
+  # This is an uninstalled package (still in the build tree)
   set (GEOGRAPHICLIB_ROOT_DIR "@GEOGRAPHICLIB_ROOT_DIR@")
   set (GeographicLib_INCLUDE_DIRS "@GeographicLib_INCLUDE_DIRS@")
   set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/src")
 else (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
+  # This is an installed package; figure out the paths relative to the
+  # current directory.
   get_filename_component (GEOGRAPHICLIB_ROOT_DIR
     "${_DIR}/@GEOGRAPHICLIB_ROOT_DIR@" ABSOLUTE)
   set (GeographicLib_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
   set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/lib")
 endif (IS_ABSOLUTE "@GEOGRAPHICLIB_ROOT_DIR@")
 
+# Do a sanity check by looking for include/GeographicLib/Config.h
 foreach (p ${GeographicLib_INCLUDE_DIRS})
   # Only check first include dir
   if (NOT EXISTS "${p}/GeographicLib/Config.h")
@@ -37,11 +41,13 @@ foreach (p ${GeographicLib_INCLUDE_DIRS})
   break (p ${GeographicLib_INCLUDE_DIRS})
 endforeach (p ${GeographicLib_INCLUDE_DIRS})
 
+# Read in the exported definition of the library
 if (DEFINED GeographicLib_INCLUDE_DIRS)
   include ("${_DIR}/GeographicLibDepends.cmake")
   set (GeographicLib_LIBRARIES Geographic)
 endif (DEFINED GeographicLib_INCLUDE_DIRS)
 
+# Boiler plate check
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (GeographicLib DEFAULT_MSG
   GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES GeographicLib_INCLUDE_DIRS)

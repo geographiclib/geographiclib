@@ -54,11 +54,11 @@ configure_file (
 
 # The documentation depends on doxygen.  In addition, the man pages are
 # written as pod files and converted to nroff format, C++ code, and
-# html.  These require tools which are typically only available on
-# non-Windows platforms.  The creation of the final documentation is
-# therefore only done in "MAINTAINER" mode.  To support other platforms,
-# the maintainer runs "make distrib-all" which installs the transformed
-# documentation files into the source tree.
+# html.  Because this require tools that may not be available on an
+# end-user's system, the creation of the final documentation is
+# therefore only done in "MAINTAINER" mode.  The maintainer runs "make
+# distrib-all" which installs the transformed documentation files into
+# the source tree.
 if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
@@ -114,7 +114,7 @@ set (SCRIPTS
   geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
 
 # Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
-# first because that's way Config.h will be
+# first because that's where Config.h will be
 include_directories ("${PROJECT_BINARY_DIR}/include")
 include_directories (include)
 
@@ -278,10 +278,10 @@ endif (WIN32)
 
 include (CPack)
 
-# Another maintainer-specific target is dist is building the source
-# distribution via the target dist.  This calls package_source to make a
-# tar.gz file.  However this needs to be touched up to support the
-# vanilla Makefiles provided with GeographicLib.  This entails
+# Another maintainer-specific target is building the source distribution
+# via the target dist.  This calls package_source to make a tar.gz file.
+# However this needs to be touched up to support the vanilla Makefiles
+# provided with GeographicLib.  This entails
 # (1) creating Makefile (which includes Makefile.mk);
 # (2) creating a bare-bones Config.h (with just the version information);
 # (3) making sure that make thinks the generated documentation files are

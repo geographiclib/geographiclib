@@ -57,7 +57,7 @@ if (NOT WIN32)
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif (NOT WIN32)
 
-# Copy the share library on Windows systems to this directory (tools) so
+# Copy the shared library on Windows systems to this directory (tools) so
 # that the tests can be run.
 if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
   get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic
