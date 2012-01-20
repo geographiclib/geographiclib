@@ -376,7 +376,7 @@ namespace GeographicLib {
         if (!str.good())
           throw GeographicErr("Failure reading data");
         if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
-          for (int i = num; i--;)
+          for (size_t i = num; i--;)
             array[i] = Math::swab<IntT>(array[i]);
         }
       } else {
@@ -385,15 +385,15 @@ namespace GeographicLib {
         int k = int(num);         // data values left to read
         int i = 0;                // index into output array
         while (k) {
-          int num = (std::min)(k, bufsize);
-          str.read(reinterpret_cast<char *>(buffer), num * sizeof(ExtT));
+          int n = (std::min)(k, bufsize);
+          str.read(reinterpret_cast<char *>(buffer), n * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
-          for (int j = 0; j < num; ++j)
+          for (int j = 0; j < n; ++j)
             // fix endian-ness and cast to IntT
             array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
                               Math::swab<IntT>(buffer[j]));
-          k -= num;
+          k -= n;
         }
       }
       return;

@@ -35,7 +35,7 @@ namespace GeographicLib {
 
   void OSGB::GridReference(real x, real y, int prec, std::string& gridref) {
     CheckCoords(x, y);
-    if (!(prec >= 0 || prec <= maxprec_))
+    if (!(prec >= 0 && prec <= maxprec_))
       throw GeographicErr("OSGB precision " + Utility::str(prec)
                           + " not in [0, "
                           + Utility::str(int(maxprec_)) + "]");
