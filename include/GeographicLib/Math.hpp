@@ -54,6 +54,9 @@ namespace GeographicLib {
    * Define mathematical functions in order to localize system dependencies and
    * to provide generic versions of the functions.  In addition define a real
    * type to be used by %GeographicLib.
+   *
+   * Example of use:
+   * \include example-Math.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT Math {
   private:

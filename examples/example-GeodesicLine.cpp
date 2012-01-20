@@ -30,7 +30,7 @@ int main() {
     cout << fixed << setprecision(3);
     {
       // Use intervals of equal length
-      double ds = s12 / num; 
+      double ds = s12 / num;
       for (int i = 0; i <= num; ++i) {
         double lat, lon;
        line.Position(i * ds, lat, lon);
@@ -39,7 +39,7 @@ int main() {
     }
     {
       // Slightly faster, use intervals of equal arc length
-      double da = a12 / num; 
+      double da = a12 / num;
       for (int i = 0; i <= num; ++i) {
         double lat, lon;
        line.ArcPosition(i * da, lat, lon);

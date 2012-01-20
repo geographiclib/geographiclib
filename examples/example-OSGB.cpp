@@ -13,7 +13,7 @@ int main() {
   try {
     {
       // Sample forward calculation
-      double lat = 55.5, lon = -1.64;
+      double lat = 55.5, lon = -1.64; // Embleton, Northumberland
       double x, y;
       OSGB::Forward(lat, lon, x, y);
       string gridref;

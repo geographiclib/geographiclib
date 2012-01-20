@@ -28,6 +28,9 @@ namespace GeographicLib {
    *
    * The conversions all take place via geocentric coordinates using a
    * Geocentric object (by default Geocentric::WGS84).
+   *
+   * Example of use:
+   * \include example-LocalCartesian.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT LocalCartesian {

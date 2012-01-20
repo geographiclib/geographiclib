@@ -16,7 +16,7 @@ int main() {
     cout << ell.K() << " " << ell.E() << "\n";
     double phi = 20 * Math::degree();
     // See Abramowitz and Stegun, table 17.6 with
-    // alpha = asin(sqrt(m)) = // 18.43deg and phi = 20 deg
+    // alpha = asin(sqrt(m)) = 18.43 deg and phi = 20 deg
     cout << ell.E(phi) << " "
          << ell.E(sin(phi), cos(phi), sqrt(1 - ell.m() * Math::sq(sin(phi))))
          << "\n";

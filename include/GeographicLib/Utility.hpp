@@ -23,6 +23,9 @@ namespace GeographicLib {
 
   /**
    * \brief Some utility routines for %GeographicLib
+   *
+   * Example of use:
+   * \include example-Utility.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT Utility {
   private:

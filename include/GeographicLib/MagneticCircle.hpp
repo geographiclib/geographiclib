@@ -28,6 +28,9 @@ namespace GeographicLib {
    *
    * Use MagneticModel::Circle to create a MagneticCircle object.  (The
    * constructor for this class is private.)
+   *
+   * Example of use:
+   * \include example-MagneticCircle.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticCircle {

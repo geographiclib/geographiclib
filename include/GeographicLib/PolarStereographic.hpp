@@ -26,6 +26,9 @@ namespace GeographicLib {
    *
    * This is a straightforward implementation of the equations in Snyder except
    * that Newton's method is used to invert the projection.
+   *
+   * Example of use:
+   * \include example-PolarStereographic.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT PolarStereographic {
   private:

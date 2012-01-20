@@ -29,6 +29,9 @@ namespace GeographicLib {
    * Parse a string representing degree, minutes, and seconds and return the
    * angle in degrees and format an angle in degrees as degree, minutes, and
    * seconds.  In addition, handle NANs and infinities on input and output.
+   *
+   * Example of use:
+   * \include example-DMS.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT DMS {
   private:

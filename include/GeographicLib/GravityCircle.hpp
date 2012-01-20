@@ -32,6 +32,9 @@ namespace GeographicLib {
    *
    * See \ref gravityparallel for an example of using GravityCircle (together
    * with OpenMP) to speed up the computation of geoid heights.
+   *
+   * Example of use:
+   * \include example-GravityCircle.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GravityCircle {

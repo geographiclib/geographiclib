@@ -67,6 +67,9 @@ namespace GeographicLib {
    * implementation.
    *
    * See \ref transversemercator for a discussion of this projection.
+   *
+   * Example of use:
+   * \include example-TransverseMercatorExact.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT TransverseMercatorExact {

@@ -65,6 +65,9 @@ namespace GeographicLib {
    *
    * Define constants specifying the WGS84 ellipsoid, the UTM and UPS
    * projections, and various unit conversions.
+   *
+   * Example of use:
+   * \include example-Constants.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT Constants {
   private:

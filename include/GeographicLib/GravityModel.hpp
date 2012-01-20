@@ -76,6 +76,9 @@ namespace GeographicLib {
    * References:
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    *   Francisco, 1967).
+   *
+   * Example of use:
+   * \include example-GravityModel.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GravityModel {
@@ -399,28 +402,10 @@ namespace GeographicLib {
      * = 0.
      *
      * If the field at several points on a circle of latitude need to be
-     * calculated then instead of
-     \code
-  GravityModel g(...);          // Create a gravity model
-  double lat = 33, lon0 = 44, dlon = 0.01;
-  for (int i = 0; i <= 100; ++i) {
-    real lon = lon0 + i * dlon;
-    std::cout << lon << " " << g.GeoidHeight(lat, lon) << "\n";
-  }
-     \endcode
-     * use a GravityCircle as in
-     \code
-  GravityModel g(...);          // Create a gravity model
-  double lat = 33, lon0 = 44, dlon = 0.01;
-  GravityCircle c(g.Circle(lat, 0)); // the GravityCircle object
-  for (int i = 0; i <= 100; ++i) {
-    real lon = lon0 + i * dlon;
-    std::cout << lon << " " << c.GeoidHeight(lon) << "\n";
-  }
-     \endcode
-     * For high-degree models, this will be substantially faster.  See \ref
-     * gravityparallel for an example of using GravityCircle (together with
-     * OpenMP) to speed up the computation of geoid heights.
+     * calculated then creating a GravityCircle object and using its member
+     * functions will be substantially faster, especially for high-degree
+     * models.  See \ref gravityparallel for an example of using GravityCircle
+     * (together with OpenMP) to speed up the computation of geoid heights.
      **********************************************************************/
     GravityCircle Circle(real lat, real h, unsigned caps = ALL) const;
     ///@}

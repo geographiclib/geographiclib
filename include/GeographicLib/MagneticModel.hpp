@@ -53,6 +53,9 @@ namespace GeographicLib {
    * - EMM2010:
    *   - http://ngdc.noaa.gov/geomag/EMM/index.html
    *   - http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip
+   *
+   * Example of use:
+   * \include example-MagneticModel.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticModel {
@@ -163,31 +166,8 @@ namespace GeographicLib {
      *   lon.
      *
      * If the field at several points on a circle of latitude need to be
-     * calculated then instead of
-     \code
-  MagneticModel m(...);         // Create a magnetic model
-  double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
-  for (int i = 0; i <= 100; ++i) {
-    real
-      lon = lon0 + i * dlon,
-      Bx, By, Bz;
-    m(t, lat, lon, h, Bx, By, Bz);
-    std::cout << lon << " " << Bx << " " << By << " " << Bz << "\n";
-  }
-     \endcode
-     * use a MagneticCircle as in
-     \code
-  MagneticModel m(...);         // Create a magnetic model
-  double lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
-  MagneticCircle c(m.Circle(t, lat, h)); // the MagneticCircle object
-  for (int i = 0; i <= 100; ++i) {
-    real
-      lon = lon0 + i * dlon, Bx, By, Bz;
-    c(lon, Bx, By, Bz);
-    std::cout << lon << " " << Bx << " " << By << " " << Bz << "\n";
-  }
-     \endcode
-     * For high-degree models, this will be substantially faster.
+     * calculated then creating a MagneticCircle and using its member functions
+     * will be substantially faster, especially for high-degree models.
      **********************************************************************/
     MagneticCircle Circle(real t, real lat, real h) const;
 

@@ -15,7 +15,7 @@ int main() {
     // See also example-GeoCoords.cpp
     {
       // Sample forward calculation
-      double lat = 33.3, lon = 44.4;
+      double lat = 33.3, lon = 44.4; // Baghdad
       int zone;
       bool northp;
       double x, y;
