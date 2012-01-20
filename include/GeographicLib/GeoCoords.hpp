@@ -40,6 +40,9 @@ namespace GeographicLib {
    *
    * Once the input string has been parsed, you can print the result out in any
    * of the formats, decimal degrees, degrees minutes seconds, MGRS, UTM/UPS.
+   *
+   * Example of use:
+   * \include example-GeoCoords.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT GeoCoords {
   private:

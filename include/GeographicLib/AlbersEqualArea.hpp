@@ -51,6 +51,9 @@ namespace GeographicLib {
    * counter-clockwise from the \e x axis.  There is no provision in this class
    * for specifying a false easting or false northing or a different latitude
    * of origin.
+   *
+   * Example of use:
+   * \include example-AlbersEqualArea.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT AlbersEqualArea {
   private:

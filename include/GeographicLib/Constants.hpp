@@ -302,6 +302,9 @@ namespace GeographicLib {
    *
    * A class to handle exceptions.  It's derived from std::runtime_error so it
    * can be caught by the usual catch clauses.
+   *
+   * Example of use:
+   * \include example-GeodesicErr.cpp
    **********************************************************************/
   class GeographicErr : public std::runtime_error {
   public:

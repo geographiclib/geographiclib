@@ -39,6 +39,9 @@ namespace GeographicLib {
    * system do not use the WGS84 datum.  Do not use the values returned by this
    * class in the UTMUPS, MGRS, or Geoid classes without first converting the
    * datum (and vice versa).
+   *
+   * Example of use:
+   * \include example-OSGB.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT OSGB {
   private:

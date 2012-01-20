@@ -24,40 +24,10 @@ namespace GeographicLib {
    * azi1 are specified in the constructor.  GeodesicLine.Position returns the
    * location of point 2 a distance \e s12 along the geodesic.  Alternatively
    * GeodesicLine.ArcPosition gives the position of point 2 an arc length \e
-   * a12 along the geodesic.  An example of use of this class is:
-   \code
-   #include <GeographicLib/Geodesic.hpp>
-   #include <GeographicLib/GeodesicLine.hpp>
-
-   int main() {
-     // Print waypoints between JFK and SIN at approximately
-     // equal 100km intervals
-     double
-       lat1 = 40.640, lon1 = -73.779, // JFK
-       lat2 =  1.359, lon2 = 177.486; // SIN
-     const GeographicLib::Geodesic&
-       g = GeographicLib::Geodesic::WGS84;
-     double s12, azi1, azi2,
-       a12 = g.Inverse(lat1, lon1, lat2, lon2, s12, azi1, azi2);
-     double ds = 100e3;   // Nominal distance between points = 100 km
-     int num = std::ceil(s12 / ds); // Number of intervals
-     double da = a12/num;           // Arc length of each interval
-     const GeographicLib::GeodesicLine l(g, lat1, lon1, azi1);
-     std::cout << std::fixed << std::setprecision(3);
-     for (int i = 0; i <= num; ++i) {
-       double lat, lon;
-       l.ArcPosition(i * da, lat, lon);
-       std::cout << lat << " " << lon << "\n";
-     }
-   }
-   \endcode
+   * a12 along the geodesic.
+   *
    * The default copy constructor and assignment operators work with this
-   * class, so that, for example, the previous example could start
-   \code
-       GeographicLib::GeodesicLine l;
-       l = g.Line(lat1, lon1, azi1);
-   \endcode
-   * Similarly, a vector can be used to hold GeodesicLine objects.
+   * class.  Similarly, a vector can be used to hold GeodesicLine objects.
    *
    * The calculations are accurate to better than 15 nm (15 nanometers).  See
    * Sec. 9 of
@@ -78,6 +48,9 @@ namespace GeographicLib {
    *   <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.
    * .
    * For more information on geodesics see \ref geodesic.
+   *
+   * Example of use:
+   * \include example-GeodesicLine.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GeodesicLine {
