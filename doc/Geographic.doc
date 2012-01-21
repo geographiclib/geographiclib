@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.17
-\date 2012-mm-dd
+\date 2012-01-21
 
 \section abstract Abstract
 
@@ -899,7 +899,7 @@ and then unpack the .tar.gz or .zip file.
 
 You can "install" these routines, so that they are in python's default
 path with, for example \verbatim
-  cd geographiclib-1.17
+  cd geographiclib-1.16
   python setup.py install
 \endverbatim
 (this will require root privileges).  Or else you can set the path
@@ -3207,12 +3207,12 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17.tar.gz/download">1.17 (released 2012-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17.tar.gz/download">1.17 (released 2012-01-21)</a>
   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
     with g++ version 4.4.0 (mingw).
   - Fix BUG in argument checking with GeographicLib::OSGB::GridReference.
   - Fix missing include file in GeographicLib::SphericalHarmonic2.
-  - Add small examples of usage for each class.
+  - Add simple examples of usage for each class.
   - Add internal documenation to the cmake configuration files.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">1.16 (released 2011-12-07)</a>

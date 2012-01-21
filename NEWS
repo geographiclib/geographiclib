@@ -8,9 +8,18 @@ For more information, see
 
 The current version of the library is 1.17.
 
-Changes between 1.17 (released 2012-mm-dd) and 1.16 versions:
+Changes between 1.17 (released 2012-01-21) and 1.16 versions:
 
-  * To be filled in.
+  * Work around optimization BUG in Geodesic::Inverse with g++ version
+    4.4.0 (mingw).
+
+  * Fix BUG in argument checking with OSGB::GridReference.
+
+  * Fix missing include file in SphericalHarmonic2.
+
+  * Add simple examples of usage for each class.
+
+  * Add internal documenation to the cmake configuration files.
 
 Changes between 1.16 (released 2011-12-07) and 1.15 versions:
 
