@@ -3244,6 +3244,7 @@ number.)
     (mingw).
   - Fix BUG in argument checking with
     GeographicLib::OSGB::GridReference.
+  - Fix missing include file in GeographicLib::SphericalHarmonic2.
   - Add examples.
   - Document CMakeLists.txt.
 

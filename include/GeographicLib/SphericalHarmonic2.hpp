@@ -14,6 +14,7 @@
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/SphericalEngine.hpp>
+#include <GeographicLib/CircularEngine.hpp>
 
 namespace GeographicLib {
 
@@ -24,6 +25,9 @@ namespace GeographicLib {
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau'
    * C'<sub>\e nm</sub> + \e tau'' C''<sub>\e nm</sub> (and similarly for \e
    * S<sub>\e nm</sub>).
+   *
+   * Example of use:
+   * \include example-SphericalHarmonic2.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic2 {
@@ -57,7 +61,7 @@ namespace GeographicLib {
     typedef Math::real real;
     SphericalEngine::coeff _c[3];
     real _a;
-    normalization _norm;
+    unsigned _norm;
 
   public:
     /**

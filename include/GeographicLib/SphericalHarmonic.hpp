@@ -58,6 +58,9 @@ namespace GeographicLib {
    *   279-299 (2002).
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
    *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).
+   *
+   * Example of use:
+   * \include example-SphericalHarmonic.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic {

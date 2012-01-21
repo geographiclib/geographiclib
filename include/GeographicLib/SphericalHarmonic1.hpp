@@ -24,6 +24,9 @@ namespace GeographicLib {
    * This classes is similar to SphericalHarmonic, except that the coefficients
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau
    * C'<sub>\e nm</sub> (and similarly for \e S<sub>\e nm</sub>).
+   *
+   * Example of use:
+   * \include example-SphericalHarmonic1.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic1 {
