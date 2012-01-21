@@ -2,7 +2,7 @@
 
 MODULES = __init__ geomath constants accumulator geodesiccapability \
 	geodesic geodesicline polygonarea
-PACKAGE=geographiclib
+PACKAGE = geographiclib
 PYTHON_FILES = $(patsubst %,$(PACKAGE)/%.py,$(MODULES))
 
 DEST = $(PREFIX)/lib/python/site-packages/$(PACKAGE)

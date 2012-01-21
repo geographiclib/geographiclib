@@ -5,13 +5,13 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 16)
+set (GeographicLib_VERSION_MINOR 17)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.2.0)
+set (LIBVERSIONFULL 9.2.1)
 
 # User-settable cache variables
 
@@ -126,7 +126,9 @@ add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
-add_subdirectory (examples)
+if (MAINTAINER)
+  add_subdirectory (examples)
+endif (MAINTAINER)
 
 # config file support for find_package(GeographicLib).  This needs to
 # deal with two environments: (1) finding the build tree and (2) finding
