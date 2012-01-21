@@ -1,4 +1,4 @@
-// Example of using GeographicLib::CassiniSoldner class
+// Example of using the GeographicLib::CassiniSoldner class
 // $Id$
 
 #include <iostream>

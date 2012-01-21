@@ -1,4 +1,4 @@
-// Example of using GeographicLib::NormalGravity class
+// Example of using the GeographicLib::NormalGravity class
 // $Id$
 
 #include <iostream>

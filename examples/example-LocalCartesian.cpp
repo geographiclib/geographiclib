@@ -1,4 +1,4 @@
-// Example of using GeographicLib::LocalCartesian class
+// Example of using the GeographicLib::LocalCartesian class
 // $Id$
 
 #include <iostream>

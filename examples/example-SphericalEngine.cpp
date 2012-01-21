@@ -1,4 +1,4 @@
-// Example of using GeographicLib::SphericalEngine class
+// Example of using the GeographicLib::SphericalEngine class
 // $Id$
 
 #include <iostream>

@@ -1,4 +1,4 @@
-// Example of using GeographicLib::AlbersEqualArea class
+// Example of using the GeographicLib::AlbersEqualArea class
 // $Id$
 
 #include <iostream>

@@ -1,4 +1,4 @@
-// Example of using GeographicLib::MagneticCircle class
+// Example of using the GeographicLib::MagneticCircle class
 // $Id$
 
 #include <iostream>

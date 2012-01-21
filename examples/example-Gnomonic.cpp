@@ -1,4 +1,4 @@
-// Example of using GeographicLib::Gnomonic class
+// Example of using the GeographicLib::Gnomonic class
 // $Id$
 
 #include <iostream>

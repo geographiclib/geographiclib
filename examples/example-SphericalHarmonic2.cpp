@@ -1,4 +1,4 @@
-// Example of using GeographicLib::SphericalHarmonic2 class
+// Example of using the GeographicLib::SphericalHarmonic2 class
 // $Id$
 
 #include <iostream>

@@ -1,4 +1,4 @@
-// Example of using GeographicLib::UTMUPS class
+// Example of using the GeographicLib::UTMUPS class
 // $Id$
 
 #include <iostream>

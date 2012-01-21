@@ -1,4 +1,4 @@
-// Example of using GeographicLib::GeodesicLine class
+// Example of using the GeographicLib::GeodesicLine class
 // $Id$
 
 #include <iostream>

@@ -39,6 +39,9 @@ namespace GeographicLib {
    *   78&ndash;90 (1965).
    * .
    * The notation follows Abramowitz and Stegun, Chapters 16 and 17.
+   *
+   * Example of use:
+   * \include example-EllipticFunction.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT EllipticFunction {
   private:

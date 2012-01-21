@@ -1,4 +1,4 @@
-// Example of using GeographicLib::CircularEngine class
+// Example of using the GeographicLib::CircularEngine class
 // $Id$
 
 #include <iostream>

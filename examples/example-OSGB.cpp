@@ -1,4 +1,4 @@
-// Example of using GeographicLib::OSGB class
+// Example of using the GeographicLib::OSGB class
 // $Id$
 
 #include <iostream>

@@ -1,4 +1,4 @@
-// Example of using GeographicLib::MagneticModel class
+// Example of using the GeographicLib::MagneticModel class
 // $Id$
 
 #include <iostream>

@@ -1,4 +1,4 @@
-// Example of using GeographicLib::PolarStereographic class
+// Example of using the GeographicLib::PolarStereographic class
 // $Id$
 
 #include <iostream>

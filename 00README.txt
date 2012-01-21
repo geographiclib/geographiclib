@@ -47,6 +47,9 @@ Files
       Gnomonic.[ch]pp -- Ellipsoidal gnomonic projection
       OSGB.[ch]pp -- Ordnance Survey grid system
 
+    examples/
+      example-*.cpp -- simple usage examples for all the classes
+
     tools/
       GeoConvert.cpp -- geographic conversion utility
       TransverseMercatorTest.cpp -- TM tester

@@ -1,4 +1,4 @@
-// Example of using GeographicLib::DMS class
+// Example of using the GeographicLib::DMS class
 // $Id$
 
 #include <iostream>

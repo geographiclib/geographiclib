@@ -1,4 +1,4 @@
-// Example of using GeographicLib::Constants class
+// Example of using the GeographicLib::Constants class
 // $Id$
 
 #include <iostream>

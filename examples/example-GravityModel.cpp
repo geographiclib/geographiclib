@@ -1,4 +1,4 @@
-// Example of using GeographicLib::GravityModel class
+// Example of using the GeographicLib::GravityModel class
 // $Id$
 
 #include <iostream>

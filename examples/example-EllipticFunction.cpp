@@ -1,4 +1,4 @@
-// Example of using GeographicLib::EllipticFunction class
+// Example of using the GeographicLib::EllipticFunction class
 // $Id$
 
 #include <iostream>

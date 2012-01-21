@@ -1,4 +1,4 @@
-// Example of using GeographicLib::GravityCircle class
+// Example of using the GeographicLib::GravityCircle class
 // $Id$
 
 #include <iostream>

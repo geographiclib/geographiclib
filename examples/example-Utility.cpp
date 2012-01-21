@@ -1,4 +1,4 @@
-// Example of using GeographicLib::Utility class
+// Example of using the GeographicLib::Utility class
 // $Id$
 
 #include <iostream>

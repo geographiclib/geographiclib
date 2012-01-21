@@ -1,4 +1,4 @@
-// Example of using GeographicLib::Geocentric class
+// Example of using the GeographicLib::Geocentric class
 // $Id$
 
 #include <iostream>
