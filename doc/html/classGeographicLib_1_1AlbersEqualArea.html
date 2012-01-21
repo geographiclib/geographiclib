@@ -88,9 +88,51 @@ Static Public Attributes</h2></td></tr>
 <li>J. P. Snyder, <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395">Map Projections: A Working Manual</a>, USGS Professional Paper 1395 (1987), pp. 101&ndash;102.</li>
 </ul>
 <p>This is a implementation of the equations in Snyder except that divided differences will be [have been] used to transform the expressions into ones which may be evaluated accurately. [In this implementation, the projection correctly becomes the cylindrical equal area or the azimuthal equal area projection when the standard latitude is the equator or a pole.]</p>
-<p>The ellipsoid parameters, the standard parallels, and the scale on the standard parallels are set in the constructor. Internally, the case with two standard parallels is converted into a single standard parallel, the latitude of minimum azimuthal scale, with an azimuthal scale specified on this parallel. This latitude is also used as the latitude of origin which is returned by <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#ad780e943e9a9ba168b350d809d0bfe08">AlbersEqualArea::OriginLatitude</a>. The azimuthal scale on the latitude of origin is given by <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#af407e835eaf76895ee25ec9e7a9c090c">AlbersEqualArea::CentralScale</a>. The case with two standard parallels at opposite poles is singular and is disallowed. The central meridian (which is a trivial shift of the longitude) is specified as the <em>lon0</em> argument of the <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#aac57f3a9c0c08fb897a1e37034d127c1">AlbersEqualArea::Forward</a> and <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#a577a9f43be8c1e238a4d56158acf8625">AlbersEqualArea::Reverse</a> functions. <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#aac57f3a9c0c08fb897a1e37034d127c1">AlbersEqualArea::Forward</a> and <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#a577a9f43be8c1e238a4d56158acf8625">AlbersEqualArea::Reverse</a> also return the meridian convergence, <em>gamma</em>, and azimuthal scale, <em>k</em>. A small square aligned with the cardinal directions is projected to a rectangle with dimensions <em>k</em> (in the E-W direction) and 1/<em>k</em> (in the N-S direction). The E-W sides of the rectangle are oriented <em>gamma</em> degrees counter-clockwise from the <em>x</em> axis. There is no provision in this class for specifying a false easting or false northing or a different latitude of origin. </p>
+<p>The ellipsoid parameters, the standard parallels, and the scale on the standard parallels are set in the constructor. Internally, the case with two standard parallels is converted into a single standard parallel, the latitude of minimum azimuthal scale, with an azimuthal scale specified on this parallel. This latitude is also used as the latitude of origin which is returned by <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#ad780e943e9a9ba168b350d809d0bfe08">AlbersEqualArea::OriginLatitude</a>. The azimuthal scale on the latitude of origin is given by <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#af407e835eaf76895ee25ec9e7a9c090c">AlbersEqualArea::CentralScale</a>. The case with two standard parallels at opposite poles is singular and is disallowed. The central meridian (which is a trivial shift of the longitude) is specified as the <em>lon0</em> argument of the <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#aac57f3a9c0c08fb897a1e37034d127c1">AlbersEqualArea::Forward</a> and <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#a577a9f43be8c1e238a4d56158acf8625">AlbersEqualArea::Reverse</a> functions. <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#aac57f3a9c0c08fb897a1e37034d127c1">AlbersEqualArea::Forward</a> and <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#a577a9f43be8c1e238a4d56158acf8625">AlbersEqualArea::Reverse</a> also return the meridian convergence, <em>gamma</em>, and azimuthal scale, <em>k</em>. A small square aligned with the cardinal directions is projected to a rectangle with dimensions <em>k</em> (in the E-W direction) and 1/<em>k</em> (in the N-S direction). The E-W sides of the rectangle are oriented <em>gamma</em> degrees counter-clockwise from the <em>x</em> axis. There is no provision in this class for specifying a false easting or false northing or a different latitude of origin.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::AlbersEqualArea class</span>
+<span class="comment">// $Id: 230027b09ff2dfa7940202913a6d965281818b99 $</span>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00055">55</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="AlbersEqualArea_8hpp.html" title="Header for GeographicLib::AlbersEqualArea class.">GeographicLib/AlbersEqualArea.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+   <span class="keyword">const</span> <span class="keywordtype">double</span>
+     a = Constants::WGS84_a&lt;double&gt;(),
+     f = Constants::WGS84_f&lt;double&gt;(),
+     lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, <span class="comment">// standard parallels</span>
+     k1 = 1,                                   <span class="comment">// scale</span>
+     lon0 = -77 - 45/60.0;                     <span class="comment">// Central meridan</span>
+   <span class="comment">// Set up basic projection</span>
+   <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> albers(a, f, lat1, lat2, k1);
+   {
+     <span class="comment">// Sample conversion from geodetic to Albers Equal Area</span>
+     <span class="keywordtype">double</span> lat = 39.95, lon = -75.17;    <span class="comment">// Philadelphia</span>
+     <span class="keywordtype">double</span> x, y;
+     albers.Forward(lon0, lat, lon, x, y);
+     std::cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+   }
+   {
+     <span class="comment">// Sample conversion from Albers Equal Area grid to geodetic</span>
+     <span class="keywordtype">double</span> x = 220e3, y = -53e3;
+     <span class="keywordtype">double</span> lat, lon;
+     albers.Reverse(lon0, x, y, lat, lon);
+     std::cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+   }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00058">58</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a08edd228ba175a5ae71d783c4a712e50"></a><!-- doxytag: member="GeographicLib::AlbersEqualArea::AlbersEqualArea" ref="a08edd228ba175a5ae71d783c4a712e50" args="(real a, real f, real stdlat, real k0)" -->
 <div class="memitem">
@@ -142,7 +184,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00031">31</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -203,7 +245,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00056">56</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -278,7 +320,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00084">84</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -319,7 +361,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00439">439</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00379">Forward()</a>, <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="AlbersEqualArea_8cpp_source.html#l00379">Forward()</a>, <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -394,7 +436,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00379">379</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 <p>Referenced by <a class="el" href="AlbersEqualArea_8cpp_source.html#l00439">SetScale()</a>.</p>
 
@@ -471,7 +513,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="AlbersEqualArea_8cpp_source.html#l00409">409</a> of file <a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -519,7 +561,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#aac57f3a9c0c08fb897a1e37034d127c1">AlbersEqualArea::Forward</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00226">226</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00229">229</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -567,7 +609,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1AlbersEqualArea.html#a577a9f43be8c1e238a4d56158acf8625">AlbersEqualArea::Reverse</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00236">236</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00239">239</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -586,7 +628,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00249">249</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00252">252</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -605,7 +647,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00255">255</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00258">258</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -625,7 +667,7 @@ Static Public Attributes</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00261">261</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00264">264</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -645,7 +687,7 @@ Static Public Attributes</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>latitude of the origin for the projection (degrees).</dd></dl>
 <p>This is the latitude of minimum azimuthal scale and equals the <em>stdlat</em> in the 1-parallel constructor and lies between <em>stdlat1</em> and <em>stdlat2</em> in the 2-parallel constructors. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00270">270</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00273">273</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -664,7 +706,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>central scale for the projection. This is the azimuthal scale on the latitude of origin. </dd></dl>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00276">276</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00279">279</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -681,7 +723,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> with the WGS84 ellipsoid, <em>stdlat</em> = 0, and <em>k0</em> = 1. This degenerates to the cylindrical equal area projection. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00284">284</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00287">287</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -697,7 +739,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> with the WGS84 ellipsoid, <em>stdlat</em> = 90<sup>o</sup>, and <em>k0</em> = 1. This degenerates to the Lambert azimuthal equal area projection. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00291">291</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00294">294</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -713,7 +755,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1AlbersEqualArea.html" title="Albers Equal Area Conic Projection.">AlbersEqualArea</a> with the WGS84 ellipsoid, <em>stdlat</em> = -90<sup>o</sup>, and <em>k0</em> = 1. This degenerates to the Lambert azimuthal equal area projection. </p>
 
-<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00298">298</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AlbersEqualArea_8hpp_source.html#l00301">301</a> of file <a class="el" href="AlbersEqualArea_8hpp_source.html">AlbersEqualArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -722,7 +764,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="AlbersEqualArea_8cpp_source.html">AlbersEqualArea.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

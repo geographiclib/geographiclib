@@ -82,12 +82,52 @@ Static Public Attributes</h2></td></tr>
 <li>L. Kr&uuml;ger, <a href="http://dx.doi.org/10.2312/GFZ.b103-krueger28">Konforme Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of the ellipsoidal earth to the plane), Royal Prussian Geodetic Institute, New Series 52, 172 pp. (1912).</li>
 <li>C. F. F. Karney, <a href="http://dx.doi.org/10.1007/s00190-011-0445-3">Transverse Mercator with an accuracy of a few nanometers,</a> J. Geodesy 85(8), 475-485 (Aug. 2011); preprint <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.</li>
 </ul>
-<p>Kr&uuml;ger's method has been extended from 4th to 6th order. The maximum errors is 5 nm (ground distance) for all positions within 35 degrees of the central meridian. The error in the convergence is 2e-15" and the relative error in the scale is 6e-12%%. See Sec. 4 of <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details. The speed penalty in going to 6th order is only about 1%. <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a> is an alternative implementation of the projection using exact formulas which yield accurate (to 8 nm) results over the entire ellipsoid.</p>
+<p>Kr&uuml;ger's method has been extended from 4th to 6th order. The maximum error is 5 nm (5 nanometers), ground distance, for all positions within 35 degrees of the central meridian. The error in the convergence is 2e-15" and the relative error in the scale is 6e-12%%. See Sec. 4 of <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details. The speed penalty in going to 6th order is only about 1%. <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a> is an alternative implementation of the projection using exact formulas which yield accurate (to 8 nm) results over the entire ellipsoid.</p>
 <p>The ellipsoid parameters and the central scale are set in the constructor. The central meridian (which is a trivial shift of the longitude) is specified as the <em>lon0</em> argument of the <a class="el" href="classGeographicLib_1_1TransverseMercator.html#a07d73a6d94e2434cbb937978d61a5ae7">TransverseMercator::Forward</a> and <a class="el" href="classGeographicLib_1_1TransverseMercator.html#a15611aee4e3707e155278bab02403a07">TransverseMercator::Reverse</a> functions. The latitude of origin is taken to be the equator. There is no provision in this class for specifying a false easting or false northing or a different latitude of origin. However these are can be simply included by the calling function. For example, the <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a> class applies the false easting and false northing for the UTM projections. A more complicated example is the British National Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">EPSG:7405</a>) which requires the use of a latitude of origin. This is implemented by the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">GeographicLib::OSGB</a> class.</p>
 <p>See <a class="el" href="TransverseMercator_8cpp.html" title="Implementation for GeographicLib::TransverseMercator class.">TransverseMercator.cpp</a> for more information on the implementation.</p>
-<p>See <a class="el" href="transversemercator.html">Transverse Mercator Projection</a> for a discussion of this projection. </p>
+<p>See <a class="el" href="transversemercator.html">Transverse Mercator Projection</a> for a discussion of this projection.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::TransverseMercator class</span>
+<span class="comment">// $Id: c01651412c934220e2293c344258773ac3d7131c $</span>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00072">72</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;string&gt;</span>
+<span class="preprocessor">#include &lt;iomanip&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="TransverseMercator_8hpp.html" title="Header for GeographicLib::TransverseMercator class.">GeographicLib/TransverseMercator.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> proj(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>(),
+                            <a class="code" href="classGeographicLib_1_1Constants.html#a76c804fc143b26086a296d05ed09fe4f">Constants::UTM_k0</a>());
+    <span class="comment">// Alternatively: const TransverseMercator&amp; proj = TransverseMercator::UTM;</span>
+    <span class="keywordtype">double</span> lon0 = -75;          <span class="comment">// Central meridian for UTM zone 18</span>
+    {
+      <span class="comment">// Sample forward calculation</span>
+      <span class="keywordtype">double</span> lat = 40.3, lon = -74.7; <span class="comment">// Princeton, NJ</span>
+      <span class="keywordtype">double</span> x, y;
+      proj.Forward(lon0, lat, lon, x, y);
+      cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample reverse calculation</span>
+      <span class="keywordtype">double</span> x = 25e3, y = 4461e3;
+      <span class="keywordtype">double</span> lat, lon;
+      proj.Reverse(lon0, x, y, lat, lon);
+      cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00075">75</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a9a4074c9d0ea35f0ebfc9c9f73bd3183"></a><!-- doxytag: member="GeographicLib::TransverseMercator::TransverseMercator" ref="a9a4074c9d0ea35f0ebfc9c9f73bd3183" args="(real a, real f, real k0)" -->
 <div class="memitem">
@@ -132,7 +172,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00060">60</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>, <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>, and <a class="el" href="Constants_8hpp_source.html#l00025">STATIC_ASSERT</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>, <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>, and <a class="el" href="Constants_8hpp_source.html#l00025">STATIC_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -208,7 +248,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00217">217</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00260">GeographicLib::Math::asinh()</a>, <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00256">GeographicLib::Math::asinh()</a>, <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -283,7 +323,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="TransverseMercator_8cpp_source.html#l00387">387</a> of file <a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -331,7 +371,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1TransverseMercator.html#a07d73a6d94e2434cbb937978d61a5ae7">TransverseMercator::Forward</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00146">146</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00149">149</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div>
@@ -379,7 +419,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1TransverseMercator.html#a15611aee4e3707e155278bab02403a07">TransverseMercator::Reverse</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00155">155</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00158">158</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div>
@@ -398,7 +438,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00168">168</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00171">171</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div>
@@ -417,7 +457,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00174">174</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00177">177</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div>
@@ -437,7 +477,7 @@ Static Public Attributes</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00180">180</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00183">183</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div>
@@ -456,7 +496,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>k0</em> central scale for the projection. This is the value of <em>k0</em> used in the constructor and is the scale on the central meridian. </dd></dl>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00186">186</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00189">189</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div>
@@ -473,7 +513,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">TransverseMercator</a> with the WGS84 ellipsoid and the UTM scale factor. However, unlike UTM, no false easting or northing is added. </p>
 
-<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00194">194</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
+<p>Definition at line <a class="el" href="TransverseMercator_8hpp_source.html#l00197">197</a> of file <a class="el" href="TransverseMercator_8hpp_source.html">TransverseMercator.hpp</a>.</p>
 
 </div>
 </div>
@@ -482,7 +522,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

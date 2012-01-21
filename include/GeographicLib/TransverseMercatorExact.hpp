@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP \
-  "$Id: 85d1d4b68c9f3d093838ba3801adbf038c4a1391 $"
+  "$Id: 6e85377964a67cffd3f69758de39a7a1d9aae42a $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -35,12 +35,12 @@ namespace GeographicLib {
    *    preprint
    *    <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>.
    *
-   * Lee's gives the correct results for forward and reverse
-   * transformations subject to the branch cut rules (see the description of
-   * the \e extendp argument to the constructor).  The maximum error is about 8
-   * nm (ground distance) for the forward and reverse transformations.  The
-   * error in the convergence is 2e-15&quot;, the relative error in the scale
-   * is 7e-12%%.  See Sec. 3 of
+   * Lee gives the correct results for forward and reverse transformations
+   * subject to the branch cut rules (see the description of the \e extendp
+   * argument to the constructor).  The maximum error is about 8 nm (8
+   * nanometers), ground distance, for the forward and reverse transformations.
+   * The error in the convergence is 2e-15&quot;, the relative error in the
+   * scale is 7e-12%%.  See Sec. 3 of
    * <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details.
    * The method is "exact" in the sense that the errors are close to the
    * round-off limit and that no changes are needed in the algorithms for them
@@ -67,6 +67,9 @@ namespace GeographicLib {
    * implementation.
    *
    * See \ref transversemercator for a discussion of this projection.
+   *
+   * Example of use:
+   * \include example-TransverseMercatorExact.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT TransverseMercatorExact {

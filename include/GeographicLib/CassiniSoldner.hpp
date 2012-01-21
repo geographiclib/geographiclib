@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
 #define GEOGRAPHICLIB_CASSINISOLDNER_HPP \
-  "$Id: 5714da5714d03e293c707371c888faefb2bf5fd2 $"
+  "$Id: 5e164482237fc52a63dda3d7e4f287f6313fc79a $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -58,6 +58,9 @@ namespace GeographicLib {
    * meridian at \e lat1 and \e lat1 + \e dlat1 intersect and taking the ratio
    * of the reduced lengths for the two geodesics between that point and,
    * respectively, (\e lat1, \e lon1) and (\e lat, \e lon).
+   *
+   * Example of use:
+   * \include example-CassiniSoldner.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT CassiniSoldner {

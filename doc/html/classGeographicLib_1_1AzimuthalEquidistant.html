@@ -73,9 +73,48 @@ Public Member Functions</h2></td></tr>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Azimuthal Equidistant Projection. </p>
 <p>Azimuthal equidistant projection centered at an arbitrary position on the ellipsoid. For a point in projected space (<em>x</em>, <em>y</em>), the geodesic distance from the center position is hypot(<em>x</em>, <em>y</em>) and the azimuth of the geodesic from the center point is atan2(<em>x</em>, <em>y</em>). The Forward and Reverse methods also return the azimuth <em>azi</em> of the geodesic at (<em>x</em>, <em>y</em>) and reciprocal scale <em>rk</em> in the azimuthal direction which, together with the basic properties of the projection, serve to specify completely the local affine transformation between geographic and projected coordinates.</p>
-<p>The conversions all take place using a <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object (by default <a class="el" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">Geodesic::WGS84</a>). For more information on geodesics see <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. </p>
+<p>The conversions all take place using a <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object (by default <a class="el" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">Geodesic::WGS84</a>). For more information on geodesics see <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::AzimuthalEquidistant class</span>
+<span class="comment">// $Id: d018fda4dc3289b06b9e6fe8cda16638430d9213 $</span>
 
-<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00036">36</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="AzimuthalEquidistant_8hpp.html" title="Header for GeographicLib::AzimuthalEquidistant class.">GeographicLib/AzimuthalEquidistant.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> geod(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>());
+    <span class="comment">// Alternatively: const Geodesic&amp; geod = Geodesic::WGS84;</span>
+    <span class="keyword">const</span> <span class="keywordtype">double</span> lat0 = 48 + 50/60.0, lon0 = 2 + 20/60.0; <span class="comment">// Paris</span>
+    <a class="code" href="classGeographicLib_1_1AzimuthalEquidistant.html" title="Azimuthal Equidistant Projection.">AzimuthalEquidistant</a> proj(geod);
+    {
+      <span class="comment">// Sample forward calculation</span>
+      <span class="keywordtype">double</span> lat = 50.9, lon = 1.8; <span class="comment">// Calais</span>
+      <span class="keywordtype">double</span> x, y;
+      proj.Forward(lat0, lon0, lat, lon, x, y);
+      cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample reverse calculation</span>
+      <span class="keywordtype">double</span> x = -38e3, y = 230e3;
+      <span class="keywordtype">double</span> lat, lon;
+      proj.Reverse(lat0, lon0, x, y, lat, lon);
+      cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00039">39</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a125571cdeed68d10192611cc12e221ce"></a><!-- doxytag: member="GeographicLib::AzimuthalEquidistant::AzimuthalEquidistant" ref="a125571cdeed68d10192611cc12e221ce" args="(const Geodesic &amp;earth=Geodesic::WGS84)" -->
 <div class="memitem">
@@ -99,7 +138,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00049">49</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00052">52</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
 
 </div>
 </div>
@@ -318,7 +357,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html#a8b4951b7c732f97aedeb8e869c9349d2">AzimuthalEquidistant::Forward</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00100">100</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00103">103</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
 
 </div>
 </div>
@@ -372,7 +411,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1AzimuthalEquidistant.html#a26d1b6fe3af8750babaeb60efdfec062">AzimuthalEquidistant::Reverse</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00109">109</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00112">112</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
 
 </div>
 </div>
@@ -391,7 +430,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00122">122</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00125">125</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
 
 </div>
 </div>
@@ -410,7 +449,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00128">128</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00131">131</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
 
 </div>
 </div>
@@ -430,7 +469,7 @@ Public Member Functions</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00134">134</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
+<p>Definition at line <a class="el" href="AzimuthalEquidistant_8hpp_source.html#l00137">137</a> of file <a class="el" href="AzimuthalEquidistant_8hpp_source.html">AzimuthalEquidistant.hpp</a>.</p>
 
 </div>
 </div>
@@ -439,7 +478,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="AzimuthalEquidistant_8cpp_source.html">AzimuthalEquidistant.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

@@ -100,9 +100,48 @@ Friends</h2></td></tr>
 <li>C. F. F. Karney, <a href="http://arxiv.org/abs/1102.1215v1">Geodesics on an ellipsoid of revolution</a>, Feb. 2011; preprint <a href="http://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.</li>
 </ul>
 <p>See <a class="el" href="geocentric.html">Geocentric coordinates</a> for more information.</p>
-<p>The errors in these routines are close to round-off. Specifically, for points within 5000 km of the surface of the ellipsoid (either inside or outside the ellipsoid), the error is bounded by 7 nm for the WGS84 ellipsoid. See <a class="el" href="geocentric.html">Geocentric coordinates</a> for further information on the errors. </p>
+<p>The errors in these routines are close to round-off. Specifically, for points within 5000 km of the surface of the ellipsoid (either inside or outside the ellipsoid), the error is bounded by 7 nm (7 nanometers) for the WGS84 ellipsoid. See <a class="el" href="geocentric.html">Geocentric coordinates</a> for further information on the errors.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::Geocentric class</span>
+<span class="comment">// $Id: fea8cd4d5464b6029d6a135a25230892f52f318f $</span>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00056">56</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;cmath&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Geocentric_8hpp.html" title="Header for GeographicLib::Geocentric class.">GeographicLib/Geocentric.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> earth(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>());
+    <span class="comment">// Alternatively: const Geocentric&amp; earth = Geocentric::WGS84;</span>
+    {
+      <span class="comment">// Sample forward calculation</span>
+      <span class="keywordtype">double</span> lat = 27.99, lon = 86.93, h = 8820; <span class="comment">// Mt Everest</span>
+      <span class="keywordtype">double</span> X, Y, Z;
+      earth.Forward(lat, lon, h, X, Y, Z);
+      cout &lt;&lt; floor(X / 1000 + 0.5) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>
+           &lt;&lt; floor(Y / 1000 + 0.5) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>
+           &lt;&lt; floor(Z / 1000 + 0.5) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample reverse calculation</span>
+      <span class="keywordtype">double</span> X = 302e3, Y = 5636e3, Z = 2980e3;
+      <span class="keywordtype">double</span> lat, lon, h;
+      earth.Reverse(X, Y, Z, lat, lon, h);
+      cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; h &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00060">60</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a6527d3ab1df78de8277122581dbcdaff"></a><!-- doxytag: member="GeographicLib::Geocentric::Geocentric" ref="a6527d3ab1df78de8277122581dbcdaff" args="(real a, real f)" -->
 <div class="memitem">
@@ -140,7 +179,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="Geocentric_8cpp_source.html#l00022">22</a> of file <a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -159,7 +198,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A default constructor (for use by <a class="el" href="classGeographicLib_1_1NormalGravity.html" title="The normal gravity of the earth.">NormalGravity</a>). </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00112">112</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00116">116</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -226,7 +265,7 @@ Friends</h2></td></tr>
 </dl>
 <p><em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00127">127</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00131">131</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00032">main()</a>.</p>
 
@@ -306,7 +345,7 @@ Friends</h2></td></tr>
 </ul>
 <p>Then we have <em>v0</em> = <em>M</em> . <em>v1</em>. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00156">156</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00160">160</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -372,7 +411,7 @@ Friends</h2></td></tr>
 </dl>
 <p>In general there are multiple solutions and the result which maximizes <em>h</em> is returned. If there are still multiple solutions with different latitudes (applies only if <em>Z</em> = 0), then the solution with <em>lat</em> &gt; 0 is returned. If there are still multiple solutions with different longitudes (applies only if <em>X</em> = <em>Y</em> = 0) then <em>lon</em> = 0 is returned. The value of <em>h</em> returned satisfies <em>h</em> &gt;= - <em>a</em> (1 - <em>e</em><sup>2</sup>) / sqrt(1 - <em>e</em><sup>2</sup> sin<sup>2</sup><em>lat</em>). The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00188">188</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00192">192</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00032">main()</a>.</p>
 
@@ -452,7 +491,7 @@ Friends</h2></td></tr>
 </ul>
 <p>Then we have <em>v1</em> = <em>M^T</em> . <em>v0</em>, where <em>M^T</em> is the transpose of <em>M</em>. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00217">217</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00221">221</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -471,7 +510,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if the object has been initialized. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00236">236</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00240">240</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -490,7 +529,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00241">241</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00245">245</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -509,7 +548,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00248">248</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00252">252</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -529,7 +568,7 @@ Friends</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00255">255</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00259">259</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -545,7 +584,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00059">59</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00063">63</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -560,7 +599,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00060">60</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00064">64</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -575,7 +614,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00061">61</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00065">65</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -590,7 +629,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00062">62</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00066">66</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -605,7 +644,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00063">63</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00067">67</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -620,7 +659,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00064">64</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00068">68</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -635,7 +674,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00065">65</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00069">69</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -650,7 +689,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00066">66</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00070">70</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -665,7 +704,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00067">67</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00071">71</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -682,7 +721,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> with the parameters for the WGS84 ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00263">263</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Geocentric_8hpp_source.html#l00267">267</a> of file <a class="el" href="Geocentric_8hpp_source.html">Geocentric.hpp</a>.</p>
 
 </div>
 </div>
@@ -691,7 +730,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="Geocentric_8cpp_source.html">Geocentric.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

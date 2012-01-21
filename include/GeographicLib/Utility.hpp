@@ -2,14 +2,14 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTILITY_HPP)
 #define GEOGRAPHICLIB_UTILITY_HPP \
-  "$Id: a4a9a65ef1b4dc72579b2310257cde0d626480a5 $"
+  "$Id: 8a1cdf4f0de95da280d56bbf8ea299dad043f0b2 $"
 
 #include <GeographicLib/Constants.hpp>
 #include <iomanip>
@@ -23,6 +23,9 @@ namespace GeographicLib {
 
   /**
    * \brief Some utility routines for %GeographicLib
+   *
+   * Example of use:
+   * \include example-Utility.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT Utility {
   private:
@@ -376,7 +379,7 @@ namespace GeographicLib {
         if (!str.good())
           throw GeographicErr("Failure reading data");
         if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
-          for (int i = num; i--;)
+          for (size_t i = num; i--;)
             array[i] = Math::swab<IntT>(array[i]);
         }
       } else {
@@ -385,15 +388,15 @@ namespace GeographicLib {
         int k = int(num);         // data values left to read
         int i = 0;                // index into output array
         while (k) {
-          int num = (std::min)(k, bufsize);
-          str.read(reinterpret_cast<char *>(buffer), num * sizeof(ExtT));
+          int n = (std::min)(k, bufsize);
+          str.read(reinterpret_cast<char *>(buffer), n * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
-          for (int j = 0; j < num; ++j)
+          for (int j = 0; j < n; ++j)
             // fix endian-ness and cast to IntT
             array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
                               Math::swab<IntT>(buffer[j]));
-          k -= num;
+          k -= n;
         }
       }
       return;

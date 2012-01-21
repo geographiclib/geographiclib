@@ -78,9 +78,49 @@ Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Spherical Harmonic series with two corrections to the coefficients. </p>
-<p>This classes is similar to <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>, except that the coefficients <em>C<sub><em>nm</sub></em> are</em> replaced by <em>C<sub><em>nm</sub></em> +</em> <em>tau'</em> C'<sub><em>nm</sub></em> + <em>tau''</em> C''<sub><em>nm</sub></em> (and similarly for <em>S<sub><em>nm</sub></em>)</em>. </p>
+<p>This classes is similar to <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a>, except that the coefficients <em>C<sub><em>nm</sub></em> are</em> replaced by <em>C<sub><em>nm</sub></em> +</em> <em>tau'</em> C'<sub><em>nm</sub></em> + <em>tau''</em> C''<sub><em>nm</sub></em> (and similarly for <em>S<sub><em>nm</sub></em>)</em>.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::SphericalHarmonic2 class</span>
+<span class="comment">// $Id: 123fa26549f23444cf8b29d2381f2a6e5e672b5f $</span>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00029">29</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;vector&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="SphericalHarmonic2_8hpp.html" title="Header for GeographicLib::SphericalHarmonic2 class.">GeographicLib/SphericalHarmonic2.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <span class="keywordtype">int</span> N = 3, N1 = 2, N2 = 1;                     <span class="comment">// The maxium degrees</span>
+    <span class="keywordtype">double</span> ca[] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1}; <span class="comment">// cosine coefficients</span>
+    vector&lt;double&gt; C(ca, ca + (N + 1) * (N + 2) / 2);
+    <span class="keywordtype">double</span> sa[] = {6, 5, 4, 3, 2, 1}; <span class="comment">// sine coefficients</span>
+    vector&lt;double&gt; S(sa, sa + N * (N + 1) / 2);
+    <span class="keywordtype">double</span> cb[] = {1, 2, 3, 4, 5, 6};
+    vector&lt;double&gt; C1(cb, cb + (N1 + 1) * (N1 + 2) / 2);
+    <span class="keywordtype">double</span> sb[] = {3, 2, 1};
+    vector&lt;double&gt; S1(sb, sb + N1 * (N1 + 1) / 2);
+    <span class="keywordtype">double</span> cc[] = {2, 1};
+    vector&lt;double&gt; C2(cc, cc + (N2 + 1));
+    vector&lt;double&gt; S2;
+    <span class="keywordtype">double</span> a = 1;
+    <a class="code" href="classGeographicLib_1_1SphericalHarmonic2.html" title="Spherical Harmonic series with two corrections to the coefficients.">SphericalHarmonic2</a> h(C, S, N, N, N, C1, S1, N1, N1, N1,
+                         C2, S2, N2, N2, 0, a);
+    <span class="keywordtype">double</span> tau1 = 0.1, tau2 = 0.05, x = 2, y = 3, z = 1;
+    <span class="keywordtype">double</span> v, vx, vy, vz;
+    v = h(tau1, tau2, x, y, z, vx, vy, vz);
+    cout &lt;&lt; v &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; vx &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; vy &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; vz &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00033">33</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="adbdc59ce4e6f1e4ce0fc7169c760f8be"></a><!-- doxytag: member="GeographicLib::SphericalHarmonic2::normalization" ref="adbdc59ce4e6f1e4ce0fc7169c760f8be" args="" -->
 <div class="memitem">
@@ -104,7 +144,7 @@ Public Member Functions</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00034">34</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00038">38</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -207,7 +247,7 @@ Public Member Functions</h2></td></tr>
 <p>See <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> for the way the coefficients should be stored. <em>N1</em> and <em>N2</em> should satisfy <em>N1</em> &lt;= <em>N</em> and <em>N2</em> &lt;= <em>N</em>.</p>
 <p>The class stores <em>pointers</em> to the first elements of <em>C</em>, <em>S</em>, <em>C'</em>, <em>S'</em>, <em>C''</em>, and <em>S''</em>. These arrays should not be altered or destroyed during the lifetime of a <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> object. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00090">90</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00094">94</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -350,7 +390,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>The class stores <em>pointers</em> to the first elements of <em>C</em>, <em>S</em>, <em>C'</em>, <em>S'</em>, <em>C''</em>, and <em>S''</em>. These arrays should not be altered or destroyed during the lifetime of a <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html" title="Spherical Harmonic series.">SphericalHarmonic</a> object. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00141">141</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00145">145</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -369,7 +409,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>A default constructor so that the object can be created when the constructor for another object is initialized. This default object can then be reset with the default copy assignment operator. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00167">167</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00171">171</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -430,7 +470,7 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the spherical harmonic sum.</dd></dl>
 <p>This routine requires constant memory and thus never throws an exception. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00182">182</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00186">186</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -511,7 +551,7 @@ Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> the spherical harmonic sum.</dd></dl>
 <p>This is the same as the previous function, except that the components of the gradients of the sum in the <em>x</em>, <em>y</em>, and <em>z</em> directions are computed. This routine requires constant memory and thus never throws an exception. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00219">219</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00223">223</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -572,7 +612,7 @@ Public Member Functions</h2></td></tr>
 <p><a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html#a48f85ac41417815e6735ff5aa7d74155">SphericalHarmonic2::operator()()</a> exchanges the order of the sums in the definition, i.e., sum(n = 0..N)[sum(m = 0..n)[...]] becomes sum(m = 0..N)[sum(n = m..N)[...]]. <a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html#a3aa683a43a8e9232a16390b09c6be920">SphericalHarmonic2::Circle</a> performs the inner sum over degree <em>n</em> (which entails about <em>N</em><sup>2</sup> operations). Calling <a class="el" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">CircularEngine::operator()()</a> on the returned object performs the outer sum over the order <em>m</em> (about <em>N</em> operations). This routine may throw a bad_alloc exception in the <a class="el" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> constructor.</p>
 <p>See <a class="el" href="classGeographicLib_1_1SphericalHarmonic.html#a2b2b2ad35bba090a4956693ba5ef0f32">SphericalHarmonic::Circle</a> for an example of its use. </p>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00259">259</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00263">263</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -591,7 +631,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the zeroth <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html" title="Package up coefficients for SphericalEngine.">SphericalEngine::coeff</a> object. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00284">284</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00288">288</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -610,7 +650,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the first <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html" title="Package up coefficients for SphericalEngine.">SphericalEngine::coeff</a> object. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00289">289</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00293">293</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -629,7 +669,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the second <a class="el" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html" title="Package up coefficients for SphericalEngine.">SphericalEngine::coeff</a> object. </dd></dl>
 
-<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00294">294</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
+<p>Definition at line <a class="el" href="SphericalHarmonic2_8hpp_source.html#l00298">298</a> of file <a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a>.</p>
 
 </div>
 </div>
@@ -637,7 +677,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="SphericalHarmonic2_8hpp_source.html">SphericalHarmonic2.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

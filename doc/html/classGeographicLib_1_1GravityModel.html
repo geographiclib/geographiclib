@@ -137,10 +137,35 @@ Friends</h2></td></tr>
 <p>See <a class="el" href="gravity.html">Gravity models</a> for details of how to install the gravity model and the data format.</p>
 <p>References:</p>
 <ul>
-<li>W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San Francisco, 1967). </li>
+<li>W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San Francisco, 1967).</li>
 </ul>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::GravityModel class</span>
+<span class="comment">// $Id: fde4f431ed9c43e9e0ec797e302f32a373cdd219 $</span>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00081">81</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="GravityModel_8hpp.html" title="Header for GeographicLib::GravityModel class.">GeographicLib/GravityModel.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1GravityModel.html" title="Model of the earth&#39;s gravity field.">GravityModel</a> grav(<span class="stringliteral">&quot;egm96&quot;</span>);
+    <span class="keywordtype">double</span> lat = 27.99, lon = 86.93, h = 8820; <span class="comment">// Mt Everest</span>
+    <span class="keywordtype">double</span> gx, gy, gz;
+    grav.Gravity(lat,lon, h, gx, gy, gz);
+    cout &lt;&lt; gx &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gy &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gz &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00084">84</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="af8691d0f13d6d42278cd1e615903d365"></a><!-- doxytag: member="GeographicLib::GravityModel::mask" ref="af8691d0f13d6d42278cd1e615903d365" args="" -->
 <div class="memitem">
@@ -179,7 +204,7 @@ Friends</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00116">116</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00119">119</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -221,7 +246,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="GravityModel_8cpp_source.html#l00043">43</a> of file <a class="el" href="GravityModel_8cpp_source.html">GravityModel.cpp</a>.</p>
 
-<p>References <a class="el" href="SphericalHarmonic_8hpp_source.html#l00333">GeographicLib::SphericalHarmonic::Coefficients()</a>, <a class="el" href="GravityModel_8cpp_source.html#l00343">DefaultGravityPath()</a>, <a class="el" href="NormalGravity_8hpp_source.html#l00230">GeographicLib::NormalGravity::MassConstant()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00170">GeographicLib::SphericalEngine::coeff::mmx()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00162">GeographicLib::SphericalEngine::coeff::N()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00166">GeographicLib::SphericalEngine::coeff::nmx()</a>, <a class="el" href="SphericalEngine_8cpp_source.html#l00382">GeographicLib::SphericalEngine::coeff::readcoeffs()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="SphericalHarmonic_8hpp_source.html#l00336">GeographicLib::SphericalHarmonic::Coefficients()</a>, <a class="el" href="GravityModel_8cpp_source.html#l00343">DefaultGravityPath()</a>, <a class="el" href="NormalGravity_8hpp_source.html#l00233">GeographicLib::NormalGravity::MassConstant()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00173">GeographicLib::SphericalEngine::coeff::mmx()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00165">GeographicLib::SphericalEngine::coeff::N()</a>, <a class="el" href="SphericalEngine_8hpp_source.html#l00169">GeographicLib::SphericalEngine::coeff::nmx()</a>, <a class="el" href="SphericalEngine_8cpp_source.html#l00382">GeographicLib::SphericalEngine::coeff::readcoeffs()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -400,7 +425,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="GravityModel_8cpp_source.html#l00277">277</a> of file <a class="el" href="GravityModel_8cpp_source.html">GravityModel.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>.</p>
 
 <p>Referenced by <a class="el" href="Gravity_8cpp_source.html#l00036">main()</a>.</p>
 
@@ -470,7 +495,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="GravityModel_8cpp_source.html#l00250">250</a> of file <a class="el" href="GravityModel_8cpp_source.html">GravityModel.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>.</p>
 
 <p>Referenced by <a class="el" href="Gravity_8cpp_source.html#l00036">main()</a>.</p>
 
@@ -671,7 +696,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>T</em> = <em>W</em> - <em>U</em> the disturbing potential (also called the anomalous potential) (m<sup>2</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00316">316</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00319">319</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -716,7 +741,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>T</em> = <em>W</em> - <em>U</em> the disturbing potential (also called the anomalous potential) (m<sup>2</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00329">329</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00332">332</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -783,7 +808,7 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>U</em> = <em>V</em><sub>0</sub> + <em>Phi</em> the sum of the normal gravitational and centrifugal potentials (m<sup>2</sup> s<sup>-2</sup>).</dd></dl>
 <p>This calls <a class="el" href="classGeographicLib_1_1NormalGravity.html#a258290ade5fd46c42fdc4199683cf563">NormalGravity::U</a> for <a class="el" href="classGeographicLib_1_1GravityModel.html#a0467e44598b65fb403109ba0d0fbf182">ReferenceEllipsoid()</a>. </p>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00353">353</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00356">356</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -836,7 +861,7 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>Phi</em> the centrifugal potential (m<sup>2</sup> s<sup>-2</sup>).</dd></dl>
 <p>This calls <a class="el" href="classGeographicLib_1_1NormalGravity.html#af0f50fd88d8b647a1b7bb209a4cfae0f">NormalGravity::Phi</a> for <a class="el" href="classGeographicLib_1_1GravityModel.html#a0467e44598b65fb403109ba0d0fbf182">ReferenceEllipsoid()</a>. </p>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00370">370</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00373">373</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -889,26 +914,11 @@ Friends</h2></td></tr>
 <li><em>caps</em> |= <a class="el" href="classGeographicLib_1_1GravityModel.html#af8691d0f13d6d42278cd1e615903d365a0ac768bffe3f104069c3fd5af1ddaa69">GravityModel::GEOID_HEIGHT</a></li>
 </ul>
 <p>The default value of <em>caps</em> is <a class="el" href="classGeographicLib_1_1GravityModel.html#af8691d0f13d6d42278cd1e615903d365a8e0e6b9a6d629d05f22f41996fe98068">GravityModel::ALL</a> which turns on all the capabilities. If an unsupported function is invoked, it will return NaNs. Note that <a class="el" href="classGeographicLib_1_1GravityModel.html#af8691d0f13d6d42278cd1e615903d365a0ac768bffe3f104069c3fd5af1ddaa69">GravityModel::GEOID_HEIGHT</a> will only be honored if <em>h</em> = 0.</p>
-<p>If the field at several points on a circle of latitude need to be calculated then instead of </p>
-<div class="fragment"><pre class="fragment">  <a class="code" href="classGeographicLib_1_1GravityModel.html#ac351170c1104f41754d5c0b8371d3e15">GravityModel</a> g(...);          <span class="comment">// Create a gravity model</span>
-  <span class="keywordtype">double</span> lat = 33, lon0 = 44, dlon = 0.01;
-  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= 100; ++i) {
-    <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon = lon0 + i * dlon;
-    std::cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; g.GeoidHeight(lat, lon) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-  }
-</pre></div><p> use a <a class="el" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> as in </p>
-<div class="fragment"><pre class="fragment">  <a class="code" href="classGeographicLib_1_1GravityModel.html#ac351170c1104f41754d5c0b8371d3e15">GravityModel</a> g(...);          <span class="comment">// Create a gravity model</span>
-  <span class="keywordtype">double</span> lat = 33, lon0 = 44, dlon = 0.01;
-  <a class="code" href="classGeographicLib_1_1GravityModel.html#a243c90a7f9bf3f7aa96877a4b0667a89">GravityCircle</a> c(g.Circle(lat, 0)); <span class="comment">// the GravityCircle object</span>
-  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= 100; ++i) {
-    <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon = lon0 + i * dlon;
-    std::cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; c.GeoidHeight(lon) &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-  }
-</pre></div><p> For high-degree models, this will be substantially faster. See <a class="el" href="gravity.html#gravityparallel">Geoid heights on a multi-processor system</a> for an example of using <a class="el" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> (together with OpenMP) to speed up the computation of geoid heights. </p>
+<p>If the field at several points on a circle of latitude need to be calculated then creating a <a class="el" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> object and using its member functions will be substantially faster, especially for high-degree models. See <a class="el" href="gravity.html#gravityparallel">Geoid heights on a multi-processor system</a> for an example of using <a class="el" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> (together with OpenMP) to speed up the computation of geoid heights. </p>
 
 <p>Definition at line <a class="el" href="GravityModel_8cpp_source.html#l00309">309</a> of file <a class="el" href="GravityModel_8cpp_source.html">GravityModel.cpp</a>.</p>
 
-<p>References <a class="el" href="SphericalHarmonic1_8hpp_source.html#l00237">GeographicLib::SphericalHarmonic1::Circle()</a>, <a class="el" href="SphericalHarmonic_8hpp_source.html#l00309">GeographicLib::SphericalHarmonic::Circle()</a>, <a class="el" href="NormalGravity_8hpp_source.html#l00291">GeographicLib::NormalGravity::Earth()</a>, <a class="el" href="GravityModel_8hpp_source.html#l00084">GravityCircle</a>, <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, <a class="el" href="NormalGravity_8cpp_source.html#l00208">GeographicLib::NormalGravity::Phi()</a>, <a class="el" href="NormalGravity_8cpp_source.html#l00155">GeographicLib::NormalGravity::SurfaceGravity()</a>, and <a class="el" href="NormalGravity_8cpp_source.html#l00216">GeographicLib::NormalGravity::U()</a>.</p>
+<p>References <a class="el" href="SphericalHarmonic1_8hpp_source.html#l00240">GeographicLib::SphericalHarmonic1::Circle()</a>, <a class="el" href="SphericalHarmonic_8hpp_source.html#l00312">GeographicLib::SphericalHarmonic::Circle()</a>, <a class="el" href="NormalGravity_8hpp_source.html#l00294">GeographicLib::NormalGravity::Earth()</a>, <a class="el" href="GravityModel_8hpp_source.html#l00087">GravityCircle</a>, <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, <a class="el" href="NormalGravity_8cpp_source.html#l00208">GeographicLib::NormalGravity::Phi()</a>, <a class="el" href="NormalGravity_8cpp_source.html#l00155">GeographicLib::NormalGravity::SurfaceGravity()</a>, and <a class="el" href="NormalGravity_8cpp_source.html#l00216">GeographicLib::NormalGravity::U()</a>.</p>
 
 <p>Referenced by <a class="el" href="Gravity_8cpp_source.html#l00036">main()</a>.</p>
 
@@ -929,7 +939,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the <a class="el" href="classGeographicLib_1_1NormalGravity.html" title="The normal gravity of the earth.">NormalGravity</a> object for the reference ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00435">435</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00420">420</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -948,7 +958,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the description of the gravity model, if available, in the data file; if absent, return "NONE". </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00441">441</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00426">426</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Gravity_8cpp_source.html#l00036">main()</a>.</p>
 
@@ -969,7 +979,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>date of the model; if absent, return "UNKNOWN". </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00446">446</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00431">431</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Gravity_8cpp_source.html#l00036">main()</a>.</p>
 
@@ -990,7 +1000,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>full file name used to load the gravity model. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00451">451</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00436">436</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Gravity_8cpp_source.html#l00036">main()</a>.</p>
 
@@ -1011,7 +1021,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>"name" used to load the gravity model (from the first argument of the constructor, but this may be overridden by the model file). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00457">457</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00442">442</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Gravity_8cpp_source.html#l00036">main()</a>.</p>
 
@@ -1032,7 +1042,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>directory used to load the gravity model. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00462">462</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00447">447</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -1051,7 +1061,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00467">467</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00452">452</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -1070,7 +1080,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>GM</em> the mass constant of the model (m<sup>3</sup> s<sup>-2</sup>); this is the product of <em>G</em> the gravitational constant and <em>M</em> the mass of the earth (usually including the mass of the earth's atmosphere). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00475">475</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00460">460</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -1089,7 +1099,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>GM</em> the mass constant of the <a class="el" href="classGeographicLib_1_1GravityModel.html#a0467e44598b65fb403109ba0d0fbf182">ReferenceEllipsoid()</a> (m<sup>3</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00481">481</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00466">466</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -1108,7 +1118,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>omega</em> the angular velocity of the model and the <a class="el" href="classGeographicLib_1_1GravityModel.html#a0467e44598b65fb403109ba0d0fbf182">ReferenceEllipsoid()</a> (rad s<sup>-1</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00488">488</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00473">473</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -1127,7 +1137,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00494">494</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00479">479</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -1191,7 +1201,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00084">84</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityModel_8hpp_source.html#l00087">87</a> of file <a class="el" href="GravityModel_8hpp_source.html">GravityModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00309">Circle()</a>.</p>
 
@@ -1202,7 +1212,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="GravityModel_8cpp_source.html">GravityModel.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

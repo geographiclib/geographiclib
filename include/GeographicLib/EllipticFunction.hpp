@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
 #define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP \
-  "$Id: fcee9dee564eaf87b75e742f16d1954091a77dbf $"
+  "$Id: 1d42b41095ac447697a256ac7f71a4f969270ddd $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -39,6 +39,9 @@ namespace GeographicLib {
    *   78&ndash;90 (1965).
    * .
    * The notation follows Abramowitz and Stegun, Chapters 16 and 17.
+   *
+   * Example of use:
+   * \include example-EllipticFunction.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT EllipticFunction {
   private:

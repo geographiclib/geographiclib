@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_MAGNETICCIRCLE_HPP)
 #define GEOGRAPHICLIB_MAGNETICCIRCLE_HPP \
-  "$Id: 070a0f02ac2dae39473f225ebf9b827ac75c826d $"
+  "$Id: 3884656adfb278af41423d4df4826b1b928f55f1 $"
 
 #include <string>
 #include <vector>
@@ -28,6 +28,9 @@ namespace GeographicLib {
    *
    * Use MagneticModel::Circle to create a MagneticCircle object.  (The
    * constructor for this class is private.)
+   *
+   * Example of use:
+   * \include example-MagneticCircle.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT MagneticCircle {

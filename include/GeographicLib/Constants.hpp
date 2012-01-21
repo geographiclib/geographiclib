@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
 #define GEOGRAPHICLIB_CONSTANTS_HPP \
-  "$Id: b5139b6cb944bbfb59ea89fef8ab7f60306057c6 $"
+  "$Id: 58b3796803fd552851e800c63f8ee43f64bacd0c $"
 
 #include <GeographicLib/Config.h>
 
@@ -65,6 +65,9 @@ namespace GeographicLib {
    *
    * Define constants specifying the WGS84 ellipsoid, the UTM and UPS
    * projections, and various unit conversions.
+   *
+   * Example of use:
+   * \include example-Constants.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT Constants {
   private:
@@ -302,6 +305,9 @@ namespace GeographicLib {
    *
    * A class to handle exceptions.  It's derived from std::runtime_error so it
    * can be caught by the usual catch clauses.
+   *
+   * Example of use:
+   * \include example-GeographicErr.cpp
    **********************************************************************/
   class GeographicErr : public std::runtime_error {
   public:

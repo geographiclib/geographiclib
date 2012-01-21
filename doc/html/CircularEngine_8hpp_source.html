@@ -59,7 +59,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_CIRCULARENGINE_HPP)</span>
 <a name="l00011"></a><a class="code" href="CircularEngine_8hpp.html#abfcea264d0e3f7a45c8ff8de7f2e539f">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_CIRCULARENGINE_HPP \</span>
-<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 6694dcc59d2fe64a0971fdb0d0d78ff084b0b484 $&quot;</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: d0528f468369dbc1b7af11e02278ad7a361d398b $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;vector&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
@@ -95,164 +95,167 @@
 <a name="l00045"></a>00045 <span class="comment">   * order to be performed in 2 or 6 vectors of length \e M + 1 (depending on</span>
 <a name="l00046"></a>00046 <span class="comment">   * whether gradients are to be calculated).  For this reason the constructor</span>
 <a name="l00047"></a>00047 <span class="comment">   * may throw a bad_alloc exception.</span>
-<a name="l00048"></a>00048 <span class="comment">   **********************************************************************/</span>
-<a name="l00049"></a>00049 
-<a name="l00050"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html">00050</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> {
-<a name="l00051"></a>00051   <span class="keyword">private</span>:
-<a name="l00052"></a>00052     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00053"></a>00053     <span class="keyword">enum</span> normalization {
-<a name="l00054"></a>00054       FULL = <a class="code" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fac720ca87adfc478dbfc13a37f0cf8ba9">SphericalEngine::FULL</a>,
-<a name="l00055"></a>00055       SCHMIDT = <a class="code" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fa2e3db3efd68d118e3f357a97eb77a131">SphericalEngine::SCHMIDT</a>,
-<a name="l00056"></a>00056     };
-<a name="l00057"></a>00057     <span class="keywordtype">int</span> _M;
-<a name="l00058"></a>00058     <span class="keywordtype">bool</span> _gradp;
-<a name="l00059"></a>00059     <span class="keywordtype">unsigned</span> _norm;
-<a name="l00060"></a>00060     real _a, _r, _u, _t;
-<a name="l00061"></a>00061     std::vector&lt;real&gt; _wc, _ws, _wrc, _wrs, _wtc, _wts;
-<a name="l00062"></a>00062     real _q, _uq, _uq2;
-<a name="l00063"></a>00063 
-<a name="l00064"></a>00064     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Value(<span class="keywordtype">bool</span> gradp, real cl, real sl,
-<a name="l00065"></a>00065                      real&amp; gradx, real&amp; grady, real&amp; gradz) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00048"></a>00048 <span class="comment">   *</span>
+<a name="l00049"></a>00049 <span class="comment">   * Example of use:</span>
+<a name="l00050"></a>00050 <span class="comment">   * \include example-CircularEngine.cpp</span>
+<a name="l00051"></a>00051 <span class="comment">   **********************************************************************/</span>
+<a name="l00052"></a>00052 
+<a name="l00053"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html">00053</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a> {
+<a name="l00054"></a>00054   <span class="keyword">private</span>:
+<a name="l00055"></a>00055     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00056"></a>00056     <span class="keyword">enum</span> normalization {
+<a name="l00057"></a>00057       FULL = <a class="code" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fac720ca87adfc478dbfc13a37f0cf8ba9">SphericalEngine::FULL</a>,
+<a name="l00058"></a>00058       SCHMIDT = <a class="code" href="classGeographicLib_1_1SphericalEngine.html#a5332d09191e018cbddc568c1fc71949fa2e3db3efd68d118e3f357a97eb77a131">SphericalEngine::SCHMIDT</a>,
+<a name="l00059"></a>00059     };
+<a name="l00060"></a>00060     <span class="keywordtype">int</span> _M;
+<a name="l00061"></a>00061     <span class="keywordtype">bool</span> _gradp;
+<a name="l00062"></a>00062     <span class="keywordtype">unsigned</span> _norm;
+<a name="l00063"></a>00063     real _a, _r, _u, _t;
+<a name="l00064"></a>00064     std::vector&lt;real&gt; _wc, _ws, _wrc, _wrs, _wtc, _wts;
+<a name="l00065"></a>00065     real _q, _uq, _uq2;
 <a name="l00066"></a>00066 
-<a name="l00067"></a>00067     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> cossin(real x, real&amp; cosx, real&amp; sinx) {
-<a name="l00068"></a>00068       x = x &gt;= 180 ? x - 360 : (x &lt; -180 ? x + 360 : x);
-<a name="l00069"></a>00069       real xi = x * Math::degree&lt;real&gt;();
-<a name="l00070"></a>00070       cosx = std::abs(x) ==   90 ? 0 : cos(xi);
-<a name="l00071"></a>00071       sinx =          x  == -180 ? 0 : sin(xi);
-<a name="l00072"></a>00072     }
-<a name="l00073"></a>00073 
-<a name="l00074"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#ab89064f7f3c32a745c72d8c3188f7485">00074</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a>;
-<a name="l00075"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a243c90a7f9bf3f7aa96877a4b0667a89">00075</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a>;  <span class="comment">// Access to cossin</span>
-<a name="l00076"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a7294f6a1cc932f8fd1562a15602e9e86">00076</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a>; <span class="comment">// Access to cossin</span>
-<a name="l00077"></a>00077     <a class="code" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a>(<span class="keywordtype">int</span> M, <span class="keywordtype">bool</span> gradp, <span class="keywordtype">unsigned</span> norm,
-<a name="l00078"></a>00078                    real a, real r, real u, real t)
-<a name="l00079"></a>00079       : _M(M)
-<a name="l00080"></a>00080       , _gradp(gradp)
-<a name="l00081"></a>00081       , _norm(norm)
-<a name="l00082"></a>00082       , _a(a)
-<a name="l00083"></a>00083       , _r(r)
-<a name="l00084"></a>00084       , _u(u)
-<a name="l00085"></a>00085       , _t(t)
-<a name="l00086"></a>00086       , _wc(std::vector&lt;real&gt;(_M + 1, 0))
-<a name="l00087"></a>00087       , _ws(std::vector&lt;real&gt;(_M + 1, 0))
-<a name="l00088"></a>00088       , _wrc(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
-<a name="l00089"></a>00089       , _wrs(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
-<a name="l00090"></a>00090       , _wtc(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
-<a name="l00091"></a>00091       , _wts(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
-<a name="l00092"></a>00092       {
-<a name="l00093"></a>00093         _q = _a / _r;
-<a name="l00094"></a>00094         _uq = _u * _q;
-<a name="l00095"></a>00095         _uq2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(_uq);
-<a name="l00096"></a>00096       }
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098     <span class="keywordtype">void</span> SetCoeff(<span class="keywordtype">int</span> m, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ws)
-<a name="l00099"></a>00099     { _wc[m] = wc; _ws[m] = ws; }
+<a name="l00067"></a>00067     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Value(<span class="keywordtype">bool</span> gradp, real cl, real sl,
+<a name="l00068"></a>00068                      real&amp; gradx, real&amp; grady, real&amp; gradz) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00069"></a>00069 
+<a name="l00070"></a>00070     <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> cossin(real x, real&amp; cosx, real&amp; sinx) {
+<a name="l00071"></a>00071       x = x &gt;= 180 ? x - 360 : (x &lt; -180 ? x + 360 : x);
+<a name="l00072"></a>00072       real xi = x * Math::degree&lt;real&gt;();
+<a name="l00073"></a>00073       cosx = std::abs(x) ==   90 ? 0 : cos(xi);
+<a name="l00074"></a>00074       sinx =          x  == -180 ? 0 : sin(xi);
+<a name="l00075"></a>00075     }
+<a name="l00076"></a>00076 
+<a name="l00077"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#ab89064f7f3c32a745c72d8c3188f7485">00077</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1SphericalEngine.html" title="The evaluation engine for SphericalHarmonic.">SphericalEngine</a>;
+<a name="l00078"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a243c90a7f9bf3f7aa96877a4b0667a89">00078</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a>;  <span class="comment">// Access to cossin</span>
+<a name="l00079"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a7294f6a1cc932f8fd1562a15602e9e86">00079</a>     <span class="keyword">friend</span> <span class="keyword">class </span><a class="code" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a>; <span class="comment">// Access to cossin</span>
+<a name="l00080"></a>00080     <a class="code" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a>(<span class="keywordtype">int</span> M, <span class="keywordtype">bool</span> gradp, <span class="keywordtype">unsigned</span> norm,
+<a name="l00081"></a>00081                    real a, real r, real u, real t)
+<a name="l00082"></a>00082       : _M(M)
+<a name="l00083"></a>00083       , _gradp(gradp)
+<a name="l00084"></a>00084       , _norm(norm)
+<a name="l00085"></a>00085       , _a(a)
+<a name="l00086"></a>00086       , _r(r)
+<a name="l00087"></a>00087       , _u(u)
+<a name="l00088"></a>00088       , _t(t)
+<a name="l00089"></a>00089       , _wc(std::vector&lt;real&gt;(_M + 1, 0))
+<a name="l00090"></a>00090       , _ws(std::vector&lt;real&gt;(_M + 1, 0))
+<a name="l00091"></a>00091       , _wrc(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
+<a name="l00092"></a>00092       , _wrs(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
+<a name="l00093"></a>00093       , _wtc(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
+<a name="l00094"></a>00094       , _wts(std::vector&lt;real&gt;(_gradp ? _M + 1 : 0, 0))
+<a name="l00095"></a>00095       {
+<a name="l00096"></a>00096         _q = _a / _r;
+<a name="l00097"></a>00097         _uq = _u * _q;
+<a name="l00098"></a>00098         _uq2 = <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(_uq);
+<a name="l00099"></a>00099       }
 <a name="l00100"></a>00100 
-<a name="l00101"></a>00101     <span class="keywordtype">void</span> SetCoeff(<span class="keywordtype">int</span> m, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ws,
-<a name="l00102"></a>00102                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wrc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wrs, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wtc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wts) {
-<a name="l00103"></a>00103       _wc[m] = wc; _ws[m] = ws;
-<a name="l00104"></a>00104       <span class="keywordflow">if</span> (_gradp) {
-<a name="l00105"></a>00105         _wrc[m] = wrc; _wrs[m] = wrs;
-<a name="l00106"></a>00106         _wtc[m] = wtc; _wts[m] = wts;
-<a name="l00107"></a>00107       }
-<a name="l00108"></a>00108     }
-<a name="l00109"></a>00109 
-<a name="l00110"></a>00110   <span class="keyword">public</span>:
-<a name="l00111"></a>00111 <span class="comment"></span>
-<a name="l00112"></a>00112 <span class="comment">    /**</span>
-<a name="l00113"></a>00113 <span class="comment">     * A default constructor.  CircularEngine::operator()() on the resulting</span>
-<a name="l00114"></a>00114 <span class="comment">     * object returns zero.  The resulting object can be assigned to the result</span>
-<a name="l00115"></a>00115 <span class="comment">     * of SphericalHarmonic::Circle.</span>
-<a name="l00116"></a>00116 <span class="comment">     **********************************************************************/</span>
-<a name="l00117"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a91dd2b9cc408e35f8cb6482cdf3aadbf">00117</a>     <a class="code" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a>()
-<a name="l00118"></a>00118       : _M(-1)
-<a name="l00119"></a>00119       , _gradp(true)
-<a name="l00120"></a>00120       , _u(0)
-<a name="l00121"></a>00121       , _t(1)
-<a name="l00122"></a>00122       {}
-<a name="l00123"></a>00123 <span class="comment"></span>
-<a name="l00124"></a>00124 <span class="comment">    /**</span>
-<a name="l00125"></a>00125 <span class="comment">     * Evaluate the sum for a particular longitude given in terms of its</span>
-<a name="l00126"></a>00126 <span class="comment">     * cosine and sine.</span>
-<a name="l00127"></a>00127 <span class="comment">     *</span>
-<a name="l00128"></a>00128 <span class="comment">     * @param[in] coslon the cosine of the longitude.</span>
-<a name="l00129"></a>00129 <span class="comment">     * @param[in] sinlon the sine of the longitude.</span>
-<a name="l00130"></a>00130 <span class="comment">     * @return \e V the value of the sum.</span>
-<a name="l00131"></a>00131 <span class="comment">     *</span>
-<a name="l00132"></a>00132 <span class="comment">     * The arguments must satisfy &lt;i&gt;coslon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; +</span>
-<a name="l00133"></a>00133 <span class="comment">     * &lt;i&gt;sinlon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; = 1.</span>
-<a name="l00134"></a>00134 <span class="comment">     **********************************************************************/</span>
-<a name="l00135"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">00135</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">operator()</a>(real coslon, real sinlon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00136"></a>00136       real dummy;
-<a name="l00137"></a>00137       <span class="keywordflow">return</span> Value(<span class="keyword">false</span>, coslon, sinlon, dummy, dummy, dummy);
-<a name="l00138"></a>00138     }
-<a name="l00139"></a>00139 <span class="comment"></span>
-<a name="l00140"></a>00140 <span class="comment">    /**</span>
-<a name="l00141"></a>00141 <span class="comment">     * Evaluate the sum for a particular longitude.</span>
-<a name="l00142"></a>00142 <span class="comment">     *</span>
-<a name="l00143"></a>00143 <span class="comment">     * @param[in] lon the longitude (degrees).</span>
-<a name="l00144"></a>00144 <span class="comment">     * @return \e V the value of the sum.</span>
-<a name="l00145"></a>00145 <span class="comment">     **********************************************************************/</span>
-<a name="l00146"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a48d2327412e0c674285ff6bb85440054">00146</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1CircularEngine.html#a48d2327412e0c674285ff6bb85440054">operator()</a>(real lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00147"></a>00147       real coslon, sinlon;
-<a name="l00148"></a>00148       cossin(lon, coslon, sinlon);
-<a name="l00149"></a>00149       <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(coslon, sinlon);
-<a name="l00150"></a>00150     }
-<a name="l00151"></a>00151 <span class="comment"></span>
-<a name="l00152"></a>00152 <span class="comment">    /**</span>
-<a name="l00153"></a>00153 <span class="comment">     * Evaluate the sum and its gradient for a particular longitude given in</span>
-<a name="l00154"></a>00154 <span class="comment">     * terms of its cosine and sine.</span>
-<a name="l00155"></a>00155 <span class="comment">     *</span>
-<a name="l00156"></a>00156 <span class="comment">     * @param[in] coslon the cosine of the longitude.</span>
-<a name="l00157"></a>00157 <span class="comment">     * @param[in] sinlon the sine of the longitude.</span>
-<a name="l00158"></a>00158 <span class="comment">     * @param[out] gradx \e x component of the gradient.</span>
-<a name="l00159"></a>00159 <span class="comment">     * @param[out] grady \e y component of the gradient.</span>
-<a name="l00160"></a>00160 <span class="comment">     * @param[out] gradz \e z component of the gradient.</span>
-<a name="l00161"></a>00161 <span class="comment">     * @return \e V the value of the sum.</span>
-<a name="l00162"></a>00162 <span class="comment">     *</span>
-<a name="l00163"></a>00163 <span class="comment">     * The gradients will only be computed if the CircularEngine object was</span>
-<a name="l00164"></a>00164 <span class="comment">     * created with this capability (e.g., via \e gradp = true in</span>
-<a name="l00165"></a>00165 <span class="comment">     * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be</span>
-<a name="l00166"></a>00166 <span class="comment">     * touched.  The arguments must satisfy &lt;i&gt;coslon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; +</span>
-<a name="l00167"></a>00167 <span class="comment">     * &lt;i&gt;sinlon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; = 1.</span>
-<a name="l00168"></a>00168 <span class="comment">     **********************************************************************/</span>
-<a name="l00169"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#aa15c408a0ff4cf17575e62edfeae77a6">00169</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> operator()(real coslon, real sinlon,
-<a name="l00170"></a>00170                           real&amp; gradx, real&amp; grady, real&amp; gradz) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00171"></a>00171       <span class="keywordflow">return</span> Value(<span class="keyword">true</span>, coslon, sinlon, gradx, grady, gradz);
-<a name="l00172"></a>00172     }
-<a name="l00173"></a>00173 <span class="comment"></span>
-<a name="l00174"></a>00174 <span class="comment">    /**</span>
-<a name="l00175"></a>00175 <span class="comment">     * Evaluate the sum and its gradient for a particular longitude.</span>
-<a name="l00176"></a>00176 <span class="comment">     *</span>
-<a name="l00177"></a>00177 <span class="comment">     * @param[in] lon the longitude (degrees).</span>
-<a name="l00178"></a>00178 <span class="comment">     * @param[out] gradx \e x component of the gradient.</span>
-<a name="l00179"></a>00179 <span class="comment">     * @param[out] grady \e y component of the gradient.</span>
-<a name="l00180"></a>00180 <span class="comment">     * @param[out] gradz \e z component of the gradient.</span>
-<a name="l00181"></a>00181 <span class="comment">     * @return \e V the value of the sum.</span>
-<a name="l00182"></a>00182 <span class="comment">     *</span>
-<a name="l00183"></a>00183 <span class="comment">     * The gradients will only be computed if the CircularEngine object was</span>
-<a name="l00184"></a>00184 <span class="comment">     * created with this capability (e.g., via \e gradp = true in</span>
-<a name="l00185"></a>00185 <span class="comment">     * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be</span>
-<a name="l00186"></a>00186 <span class="comment">     * touched.</span>
-<a name="l00187"></a>00187 <span class="comment">     **********************************************************************/</span>
-<a name="l00188"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a88a0726718baa7b457c77b5681fabb0a">00188</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> operator()(real lon,
-<a name="l00189"></a>00189                           real&amp; gradx, real&amp; grady, real&amp; gradz) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00190"></a>00190       real coslon, sinlon;
-<a name="l00191"></a>00191       cossin(lon, coslon, sinlon);
-<a name="l00192"></a>00192       <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(coslon, sinlon, gradx, grady, gradz);
-<a name="l00193"></a>00193     }
-<a name="l00194"></a>00194   };
-<a name="l00195"></a>00195 
-<a name="l00196"></a>00196 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00197"></a>00197 
-<a name="l00198"></a>00198 <span class="preprocessor">#if defined(_MSC_VER)</span>
-<a name="l00199"></a>00199 <span class="preprocessor"></span><span class="preprocessor">#pragma warning (pop)</span>
-<a name="l00200"></a>00200 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
-<a name="l00201"></a>00201 <span class="preprocessor"></span>
-<a name="l00202"></a>00202 <span class="preprocessor">#endif  // GEOGRAPHICLIB_CIRCULARENGINE_HPP</span>
+<a name="l00101"></a>00101     <span class="keywordtype">void</span> SetCoeff(<span class="keywordtype">int</span> m, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ws)
+<a name="l00102"></a>00102     { _wc[m] = wc; _ws[m] = ws; }
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104     <span class="keywordtype">void</span> SetCoeff(<span class="keywordtype">int</span> m, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ws,
+<a name="l00105"></a>00105                   <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wrc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wrs, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wtc, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> wts) {
+<a name="l00106"></a>00106       _wc[m] = wc; _ws[m] = ws;
+<a name="l00107"></a>00107       <span class="keywordflow">if</span> (_gradp) {
+<a name="l00108"></a>00108         _wrc[m] = wrc; _wrs[m] = wrs;
+<a name="l00109"></a>00109         _wtc[m] = wtc; _wts[m] = wts;
+<a name="l00110"></a>00110       }
+<a name="l00111"></a>00111     }
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113   <span class="keyword">public</span>:
+<a name="l00114"></a>00114 <span class="comment"></span>
+<a name="l00115"></a>00115 <span class="comment">    /**</span>
+<a name="l00116"></a>00116 <span class="comment">     * A default constructor.  CircularEngine::operator()() on the resulting</span>
+<a name="l00117"></a>00117 <span class="comment">     * object returns zero.  The resulting object can be assigned to the result</span>
+<a name="l00118"></a>00118 <span class="comment">     * of SphericalHarmonic::Circle.</span>
+<a name="l00119"></a>00119 <span class="comment">     **********************************************************************/</span>
+<a name="l00120"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a91dd2b9cc408e35f8cb6482cdf3aadbf">00120</a>     <a class="code" href="classGeographicLib_1_1CircularEngine.html" title="Spherical Harmonic sums for a circle.">CircularEngine</a>()
+<a name="l00121"></a>00121       : _M(-1)
+<a name="l00122"></a>00122       , _gradp(true)
+<a name="l00123"></a>00123       , _u(0)
+<a name="l00124"></a>00124       , _t(1)
+<a name="l00125"></a>00125       {}
+<a name="l00126"></a>00126 <span class="comment"></span>
+<a name="l00127"></a>00127 <span class="comment">    /**</span>
+<a name="l00128"></a>00128 <span class="comment">     * Evaluate the sum for a particular longitude given in terms of its</span>
+<a name="l00129"></a>00129 <span class="comment">     * cosine and sine.</span>
+<a name="l00130"></a>00130 <span class="comment">     *</span>
+<a name="l00131"></a>00131 <span class="comment">     * @param[in] coslon the cosine of the longitude.</span>
+<a name="l00132"></a>00132 <span class="comment">     * @param[in] sinlon the sine of the longitude.</span>
+<a name="l00133"></a>00133 <span class="comment">     * @return \e V the value of the sum.</span>
+<a name="l00134"></a>00134 <span class="comment">     *</span>
+<a name="l00135"></a>00135 <span class="comment">     * The arguments must satisfy &lt;i&gt;coslon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; +</span>
+<a name="l00136"></a>00136 <span class="comment">     * &lt;i&gt;sinlon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; = 1.</span>
+<a name="l00137"></a>00137 <span class="comment">     **********************************************************************/</span>
+<a name="l00138"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">00138</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1CircularEngine.html#a8e39d83fcbed23df36ef4fefe2a86420">operator()</a>(real coslon, real sinlon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00139"></a>00139       real dummy;
+<a name="l00140"></a>00140       <span class="keywordflow">return</span> Value(<span class="keyword">false</span>, coslon, sinlon, dummy, dummy, dummy);
+<a name="l00141"></a>00141     }
+<a name="l00142"></a>00142 <span class="comment"></span>
+<a name="l00143"></a>00143 <span class="comment">    /**</span>
+<a name="l00144"></a>00144 <span class="comment">     * Evaluate the sum for a particular longitude.</span>
+<a name="l00145"></a>00145 <span class="comment">     *</span>
+<a name="l00146"></a>00146 <span class="comment">     * @param[in] lon the longitude (degrees).</span>
+<a name="l00147"></a>00147 <span class="comment">     * @return \e V the value of the sum.</span>
+<a name="l00148"></a>00148 <span class="comment">     **********************************************************************/</span>
+<a name="l00149"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a48d2327412e0c674285ff6bb85440054">00149</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1CircularEngine.html#a48d2327412e0c674285ff6bb85440054">operator()</a>(real lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00150"></a>00150       real coslon, sinlon;
+<a name="l00151"></a>00151       cossin(lon, coslon, sinlon);
+<a name="l00152"></a>00152       <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(coslon, sinlon);
+<a name="l00153"></a>00153     }
+<a name="l00154"></a>00154 <span class="comment"></span>
+<a name="l00155"></a>00155 <span class="comment">    /**</span>
+<a name="l00156"></a>00156 <span class="comment">     * Evaluate the sum and its gradient for a particular longitude given in</span>
+<a name="l00157"></a>00157 <span class="comment">     * terms of its cosine and sine.</span>
+<a name="l00158"></a>00158 <span class="comment">     *</span>
+<a name="l00159"></a>00159 <span class="comment">     * @param[in] coslon the cosine of the longitude.</span>
+<a name="l00160"></a>00160 <span class="comment">     * @param[in] sinlon the sine of the longitude.</span>
+<a name="l00161"></a>00161 <span class="comment">     * @param[out] gradx \e x component of the gradient.</span>
+<a name="l00162"></a>00162 <span class="comment">     * @param[out] grady \e y component of the gradient.</span>
+<a name="l00163"></a>00163 <span class="comment">     * @param[out] gradz \e z component of the gradient.</span>
+<a name="l00164"></a>00164 <span class="comment">     * @return \e V the value of the sum.</span>
+<a name="l00165"></a>00165 <span class="comment">     *</span>
+<a name="l00166"></a>00166 <span class="comment">     * The gradients will only be computed if the CircularEngine object was</span>
+<a name="l00167"></a>00167 <span class="comment">     * created with this capability (e.g., via \e gradp = true in</span>
+<a name="l00168"></a>00168 <span class="comment">     * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be</span>
+<a name="l00169"></a>00169 <span class="comment">     * touched.  The arguments must satisfy &lt;i&gt;coslon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; +</span>
+<a name="l00170"></a>00170 <span class="comment">     * &lt;i&gt;sinlon&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; = 1.</span>
+<a name="l00171"></a>00171 <span class="comment">     **********************************************************************/</span>
+<a name="l00172"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#aa15c408a0ff4cf17575e62edfeae77a6">00172</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> operator()(real coslon, real sinlon,
+<a name="l00173"></a>00173                           real&amp; gradx, real&amp; grady, real&amp; gradz) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00174"></a>00174       <span class="keywordflow">return</span> Value(<span class="keyword">true</span>, coslon, sinlon, gradx, grady, gradz);
+<a name="l00175"></a>00175     }
+<a name="l00176"></a>00176 <span class="comment"></span>
+<a name="l00177"></a>00177 <span class="comment">    /**</span>
+<a name="l00178"></a>00178 <span class="comment">     * Evaluate the sum and its gradient for a particular longitude.</span>
+<a name="l00179"></a>00179 <span class="comment">     *</span>
+<a name="l00180"></a>00180 <span class="comment">     * @param[in] lon the longitude (degrees).</span>
+<a name="l00181"></a>00181 <span class="comment">     * @param[out] gradx \e x component of the gradient.</span>
+<a name="l00182"></a>00182 <span class="comment">     * @param[out] grady \e y component of the gradient.</span>
+<a name="l00183"></a>00183 <span class="comment">     * @param[out] gradz \e z component of the gradient.</span>
+<a name="l00184"></a>00184 <span class="comment">     * @return \e V the value of the sum.</span>
+<a name="l00185"></a>00185 <span class="comment">     *</span>
+<a name="l00186"></a>00186 <span class="comment">     * The gradients will only be computed if the CircularEngine object was</span>
+<a name="l00187"></a>00187 <span class="comment">     * created with this capability (e.g., via \e gradp = true in</span>
+<a name="l00188"></a>00188 <span class="comment">     * SphericalHarmonic::Circle).  If not, \e gradx, etc., will not be</span>
+<a name="l00189"></a>00189 <span class="comment">     * touched.</span>
+<a name="l00190"></a>00190 <span class="comment">     **********************************************************************/</span>
+<a name="l00191"></a><a class="code" href="classGeographicLib_1_1CircularEngine.html#a88a0726718baa7b457c77b5681fabb0a">00191</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> operator()(real lon,
+<a name="l00192"></a>00192                           real&amp; gradx, real&amp; grady, real&amp; gradz) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00193"></a>00193       real coslon, sinlon;
+<a name="l00194"></a>00194       cossin(lon, coslon, sinlon);
+<a name="l00195"></a>00195       <span class="keywordflow">return</span> (*<span class="keyword">this</span>)(coslon, sinlon, gradx, grady, gradz);
+<a name="l00196"></a>00196     }
+<a name="l00197"></a>00197   };
+<a name="l00198"></a>00198 
+<a name="l00199"></a>00199 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201 <span class="preprocessor">#if defined(_MSC_VER)</span>
+<a name="l00202"></a>00202 <span class="preprocessor"></span><span class="preprocessor">#pragma warning (pop)</span>
+<a name="l00203"></a>00203 <span class="preprocessor"></span><span class="preprocessor">#endif</span>
+<a name="l00204"></a>00204 <span class="preprocessor"></span>
+<a name="l00205"></a>00205 <span class="preprocessor">#endif  // GEOGRAPHICLIB_CIRCULARENGINE_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

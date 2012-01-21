@@ -79,9 +79,41 @@ Public Member Functions</h2></td></tr>
 <ul>
 <li>C. F. F. Karney, <a href="http://arxiv.org/abs/1109.4448">Algorithms for geodesics</a>, Sept. 2011; preprint <a href="http://arxiv.org/abs/1109.4448">arxiv:1109.4448</a>.</li>
 </ul>
-<p>This class lets you add vertices one at a time to the polygon. The area and perimeter are accumulated in two times the standard floating point precision to guard against the loss of accuracy with many-sided polygons. At any point you can ask for the perimeter and area so far. There's an option to treat the points as defining a polyline instead of a polygon; in that case, only the perimeter is computed. </p>
+<p>This class lets you add vertices one at a time to the polygon. The area and perimeter are accumulated in two times the standard floating point precision to guard against the loss of accuracy with many-sided polygons. At any point you can ask for the perimeter and area so far. There's an option to treat the points as defining a polyline instead of a polygon; in that case, only the perimeter is computed.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::PolygonArea class</span>
+<span class="comment">// $Id: 103c4d2f060347fd499adc2e8487102c8b93d58f $</span>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00047">47</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="PolygonArea_8hpp.html" title="Header for GeographicLib::PolygonArea class.">GeographicLib/PolygonArea.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> geod(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>());
+    <span class="comment">// Alternatively: const Geodesic&amp; geod = Geodesic::WGS84;</span>
+    <a class="code" href="classGeographicLib_1_1PolygonArea.html" title="Polygon Areas.">PolygonArea</a> poly(geod);
+    poly.AddPoint( 52,  0);     <span class="comment">// London</span>
+    poly.AddPoint( 41,-74);     <span class="comment">// New York</span>
+    poly.AddPoint(-23,-43);     <span class="comment">// Rio de Janeiro</span>
+    poly.AddPoint(-26, 28);     <span class="comment">// Johannesburg</span>
+    <span class="keywordtype">double</span> perimeter, area;
+    <span class="keywordtype">unsigned</span> n = poly.Compute(<span class="keyword">false</span>, <span class="keyword">true</span>, perimeter, area);
+    cout &lt;&lt; n &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; perimeter &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; area &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00050">50</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a060a1dc499bd079c62f62ed5cad929e5"></a><!-- doxytag: member="GeographicLib::PolygonArea::PolygonArea" ref="a060a1dc499bd079c62f62ed5cad929e5" args="(const Geodesic &amp;earth, bool polyline=false)" -->
 <div class="memitem">
@@ -116,7 +148,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00092">92</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00095">95</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -136,7 +168,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p>Clear <a class="el" href="classGeographicLib_1_1PolygonArea.html" title="Polygon Areas.">PolygonArea</a>, allowing a new polygon to be started. </p>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00104">104</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00107">107</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="Planimeter_8cpp_source.html#l00037">main()</a>.</p>
 
@@ -318,7 +350,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00175">175</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00178">178</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -337,7 +369,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00181">181</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolygonArea_8hpp_source.html#l00184">184</a> of file <a class="el" href="PolygonArea_8hpp_source.html">PolygonArea.hpp</a>.</p>
 
 </div>
 </div>
@@ -346,7 +378,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="PolygonArea_8cpp_source.html">PolygonArea.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

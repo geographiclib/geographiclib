@@ -81,9 +81,38 @@ Public Member Functions</h2></td></tr>
 <ul>
 <li>R. Bulirsch, <a href="http://dx.doi.org/10.1007/BF01397975">Numerical Calculation of Elliptic Integrals and Elliptic Functions</a>, Numericshe Mathematik 7, 78&ndash;90 (1965).</li>
 </ul>
-<p>The notation follows Abramowitz and Stegun, Chapters 16 and 17. </p>
+<p>The notation follows Abramowitz and Stegun, Chapters 16 and 17.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::EllipticFunction class</span>
+<span class="comment">// $Id: 304e818254ce2fd366c2efa4f7ef93643e8c208c $</span>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00043">43</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;cmath&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Math_8hpp.html" title="Header for GeographicLib::Math class.">GeographicLib/Math.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="EllipticFunction_8hpp.html" title="Header for GeographicLib::EllipticFunction class.">GeographicLib/EllipticFunction.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1EllipticFunction.html" title="Elliptic functions needed for TransverseMercatorExact.">EllipticFunction</a> ell(0.1);  <span class="comment">// parameter m = 0.1</span>
+    <span class="comment">// See Abramowitz and Stegun, table 17.1</span>
+    cout &lt;&lt; ell.K() &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; ell.E() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordtype">double</span> phi = 20 * <a class="code" href="classGeographicLib_1_1Math.html#a3d84677a4dfd6c2149c16426544eaf6c">Math::degree</a>();
+    <span class="comment">// See Abramowitz and Stegun, table 17.6 with</span>
+    <span class="comment">// alpha = asin(sqrt(m)) = 18.43 deg and phi = 20 deg</span>
+    cout &lt;&lt; ell.E(phi) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>
+         &lt;&lt; ell.E(sin(phi), cos(phi), sqrt(1 - ell.m() * <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(sin(phi))))
+         &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>&amp; e) {
+    cout &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00046">46</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ada122111b55eb0ab9c7b9fafb0a4b1e6"></a><!-- doxytag: member="GeographicLib::EllipticFunction::EllipticFunction" ref="ada122111b55eb0ab9c7b9fafb0a4b1e6" args="(real m)" -->
 <div class="memitem">
@@ -127,7 +156,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the parameter <em>m</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00073">73</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00076">76</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -146,7 +175,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the complementary parameter <em>m'</em> = (1 - <em>m</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00078">78</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00081">81</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -165,7 +194,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the complete integral of first kind, <em>K</em>(<em>m</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00083">83</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00086">86</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -184,7 +213,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the complete integral of second kind, <em>E</em>(<em>m</em>). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00088">88</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00091">91</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -203,7 +232,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the difference <em>K</em>(<em>m</em>) - <em>E</em>(<em>m</em>) (which can be computed directly). </dd></dl>
 
-<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00094">94</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
+<p>Definition at line <a class="el" href="EllipticFunction_8hpp_source.html#l00097">97</a> of file <a class="el" href="EllipticFunction_8hpp_source.html">EllipticFunction.hpp</a>.</p>
 
 </div>
 </div>
@@ -336,7 +365,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="EllipticFunction_8cpp_source.html">EllipticFunction.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

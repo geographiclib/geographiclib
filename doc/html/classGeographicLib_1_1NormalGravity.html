@@ -108,10 +108,39 @@ Friends</h2></td></tr>
 <p>References:</p>
 <ul>
 <li>W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San Francisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).</li>
-<li>H. Moritz, Geodetic Reference System 1980, J. Geod. 54(3), 395-405 (1980) <a href="http://dx.doi.org/10.1007/BF02521480">http://dx.doi.org/10.1007/BF02521480</a> </li>
+<li>H. Moritz, Geodetic Reference System 1980, J. Geod. 54(3), 395-405 (1980) <a href="http://dx.doi.org/10.1007/BF02521480">http://dx.doi.org/10.1007/BF02521480</a></li>
 </ul>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::NormalGravity class</span>
+<span class="comment">// $Id: 8d0337072d40334e8147a50b1e6035d75d38c53c $</span>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00058">58</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="NormalGravity_8hpp.html" title="Header for GeographicLib::NormalGravity class.">GeographicLib/NormalGravity.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1NormalGravity.html" title="The normal gravity of the earth.">NormalGravity</a> grav(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), Constants::WGS84_GM&lt;double&gt;(),
+                       Constants::WGS84_omega&lt;double&gt;(),
+                       <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>(), 0);
+    <span class="comment">// Alternatively: const NormalGravity&amp; grav = NormalGravity::WGS84;</span>
+    <span class="keywordtype">double</span> lat = 27.99, h = 8820; <span class="comment">// Mt Everest</span>
+    <span class="keywordtype">double</span> gammay, gammaz;
+    grav.Gravity(lat, h, gammay, gammaz);
+    cout &lt;&lt; gammay &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gammaz &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00061">61</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="af625bbc7df2d36ba5c43c8f20f61c134"></a><!-- doxytag: member="GeographicLib::NormalGravity::NormalGravity" ref="af625bbc7df2d36ba5c43c8f20f61c134" args="(real a, real GM, real omega, real f, real J2)" -->
 <div class="memitem">
@@ -174,7 +203,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="NormalGravity_8cpp_source.html#l00022">22</a> of file <a class="el" href="NormalGravity_8cpp_source.html">NormalGravity.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -193,7 +222,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A default constructor for the normal gravity. This sets up an uninitialized object and is used by <a class="el" href="classGeographicLib_1_1GravityModel.html" title="Model of the earth&#39;s gravity field.">GravityModel</a> which constructs this object before it has read in the parameters for the reference ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00104">104</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00107">107</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -224,7 +253,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="NormalGravity_8cpp_source.html#l00155">155</a> of file <a class="el" href="NormalGravity_8cpp_source.html">NormalGravity.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 <p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00309">GeographicLib::GravityModel::Circle()</a>.</p>
 
@@ -417,7 +446,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="NormalGravity_8cpp_source.html#l00163">163</a> of file <a class="el" href="NormalGravity_8cpp_source.html">NormalGravity.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -472,7 +501,7 @@ Friends</h2></td></tr>
 
 <p>Definition at line <a class="el" href="NormalGravity_8cpp_source.html#l00208">208</a> of file <a class="el" href="NormalGravity_8cpp_source.html">NormalGravity.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 <p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00309">GeographicLib::GravityModel::Circle()</a>.</p>
 
@@ -493,7 +522,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if the object has been initialized. </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00216">216</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00219">219</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -512,7 +541,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00222">222</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00225">225</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -531,7 +560,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>GM</em> the mass constant of the ellipsoid (m<sup>3</sup> s<sup>-2</sup>). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00230">230</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00233">233</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00043">GeographicLib::GravityModel::GravityModel()</a>.</p>
 
@@ -554,7 +583,7 @@ Friends</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>J<sub>n</sub></em> the dynamical form factors of the ellipsoid.</dd></dl>
 <p>If <em>n</em> = 2 (the default), this is the value of <em>J</em><sub>2</sub> used in the constructor. Otherwise it is the zonal coefficient of the Legendre harmonic sum of the normal gravitational potential. Note that <em>J<sub>n</sub></em> = 0 if <em>is</em> odd. In most gravity applications, fully normalized Legendre functions are used and the corresponding coefficient is <em>C</em><sub><em>n</em>0</sub> = -<em>J<sub>n</sub></em> / sqrt(2 <em>n</em> + 1). </p>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00243">243</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00246">246</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -573,7 +602,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>omega</em> the angular velocity of the ellipsoid (rad s<sup>-1</sup>). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00250">250</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00253">253</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -592,7 +621,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid (<em>a</em> - <em>b</em>)/<em>a</em>. </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00256">256</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00259">259</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -611,7 +640,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>gamma</em><sub>e</sub> the normal gravity at equator (m s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00263">263</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00266">266</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -630,7 +659,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>gamma</em><sub>p</sub> the normal gravity at poles (m s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00270">270</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00273">273</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -649,7 +678,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f*</em> the gravity flattening (<em>gamma</em><sub>p</sub> - <em>gamma</em><sub>e</sub>) / <em>gamma</em><sub>e</sub>. </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00278">278</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00281">281</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -668,7 +697,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>U</em><sub>0</sub> the constant normal potential for the surface of the ellipsoid (m<sup>2</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00285">285</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00288">288</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -687,7 +716,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object used by this instance. </dd></dl>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00291">291</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00294">294</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="GravityModel_8cpp_source.html#l00309">GeographicLib::GravityModel::Circle()</a>.</p>
 
@@ -705,7 +734,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00062">62</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00065">65</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -722,7 +751,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1NormalGravity.html" title="The normal gravity of the earth.">NormalGravity</a> for the WGS84 ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00297">297</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00300">300</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -738,7 +767,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1NormalGravity.html" title="The normal gravity of the earth.">NormalGravity</a> for the GRS80 ellipsoid. </p>
 
-<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00302">302</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
+<p>Definition at line <a class="el" href="NormalGravity_8hpp_source.html#l00305">305</a> of file <a class="el" href="NormalGravity_8hpp_source.html">NormalGravity.hpp</a>.</p>
 
 </div>
 </div>
@@ -747,7 +776,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="NormalGravity_8cpp_source.html">NormalGravity.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

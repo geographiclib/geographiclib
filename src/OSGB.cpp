@@ -2,15 +2,15 @@
  * \file OSGB.cpp
  * \brief Implementation for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010, 2011) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2010, 2011, 2012) <charles@karney.com> and
+ * licensed under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/OSGB.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_OSGB_CPP "$Id: 6a13bcbf34ade98247757dd09bc3c6f7195b0120 $"
+#define GEOGRAPHICLIB_OSGB_CPP "$Id: 3412efffd5d1ac0d564ff4f6ae2094c2ca92649a $"
 
 RCSID_DECL(GEOGRAPHICLIB_OSGB_CPP)
 RCSID_DECL(GEOGRAPHICLIB_OSGB_HPP)
@@ -35,7 +35,7 @@ namespace GeographicLib {
 
   void OSGB::GridReference(real x, real y, int prec, std::string& gridref) {
     CheckCoords(x, y);
-    if (!(prec >= 0 || prec <= maxprec_))
+    if (!(prec >= 0 && prec <= maxprec_))
       throw GeographicErr("OSGB precision " + Utility::str(prec)
                           + " not in [0, "
                           + Utility::str(int(maxprec_)) + "]");

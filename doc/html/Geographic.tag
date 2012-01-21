@@ -1121,6 +1121,7 @@
     <filename>SphericalHarmonic2_8hpp</filename>
     <includes id="Constants_8hpp" name="Constants.hpp" local="no" imported="no">GeographicLib/Constants.hpp</includes>
     <includes id="SphericalEngine_8hpp" name="SphericalEngine.hpp" local="no" imported="no">GeographicLib/SphericalEngine.hpp</includes>
+    <includes id="CircularEngine_8hpp" name="CircularEngine.hpp" local="no" imported="no">GeographicLib/CircularEngine.hpp</includes>
     <class kind="class">GeographicLib::SphericalHarmonic2</class>
     <namespace>GeographicLib</namespace>
     <member kind="define">

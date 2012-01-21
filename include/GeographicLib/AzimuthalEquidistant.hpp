@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP \
-  "$Id: 457b3566d14500cdc67b82e6422e0e621f136b3e $"
+  "$Id: 8883d9b1d45bf4371550426398b39ee5f821ce90 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -31,6 +31,9 @@ namespace GeographicLib {
    *
    * The conversions all take place using a Geodesic object (by default
    * Geodesic::WGS84).  For more information on geodesics see \ref geodesic.
+   *
+   * Example of use:
+   * \include example-AzimuthalEquidistant.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT AzimuthalEquidistant {

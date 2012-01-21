@@ -2,18 +2,19 @@
  * \file SphericalHarmonic2.hpp
  * \brief Header for GeographicLib::SphericalHarmonic2 class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC2_HPP)
 #define GEOGRAPHICLIB_SPHERICALHARMONIC2_HPP \
-  "$Id: eb59f9ca6566eedfb06c24652873a69e4784f302 $"
+  "$Id: ce4cda614c1966dea65610bc73bc4db562677fa8 $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/SphericalEngine.hpp>
+#include <GeographicLib/CircularEngine.hpp>
 
 namespace GeographicLib {
 
@@ -24,6 +25,9 @@ namespace GeographicLib {
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau'
    * C'<sub>\e nm</sub> + \e tau'' C''<sub>\e nm</sub> (and similarly for \e
    * S<sub>\e nm</sub>).
+   *
+   * Example of use:
+   * \include example-SphericalHarmonic2.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic2 {
@@ -57,7 +61,7 @@ namespace GeographicLib {
     typedef Math::real real;
     SphericalEngine::coeff _c[3];
     real _a;
-    normalization _norm;
+    unsigned _norm;
 
   public:
     /**

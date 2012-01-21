@@ -85,36 +85,59 @@ Static Public Attributes</h2></td></tr>
 <ul>
 <li>J. P. Snyder, <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395">Map Projections: A Working Manual</a>, USGS Professional Paper 1395 (1987), pp. 107&ndash;109.</li>
 </ul>
-<p>This is a implementation of the equations in Snyder except that divided differences have been used to transform the expressions into ones which may be evaluated accurately and that Newton's method is used to invert the projection. In this implementation, the projection correctly becomes the Mercator projection or the polar stereographic projection when the standard latitude is the equator or a pole. The accuracy of the projections is about 10 nm.</p>
+<p>This is a implementation of the equations in Snyder except that divided differences have been used to transform the expressions into ones which may be evaluated accurately and that Newton's method is used to invert the projection. In this implementation, the projection correctly becomes the Mercator projection or the polar stereographic projection when the standard latitude is the equator or a pole. The accuracy of the projections is about 10 nm (10 nanometers).</p>
 <p>The ellipsoid parameters, the standard parallels, and the scale on the standard parallels are set in the constructor. Internally, the case with two standard parallels is converted into a single standard parallel, the latitude of tangency (also the latitude of minimum scale), with a scale specified on this parallel. This latitude is also used as the latitude of origin which is returned by <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a7c589335b43b2274d3a68c0f68f29d77">LambertConformalConic::OriginLatitude</a>. The scale on the latitude of origin is given by <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a2298a4e48e550cfd7346cf5f2dd175ad">LambertConformalConic::CentralScale</a>. The case with two distinct standard parallels where one is a pole is singular and is disallowed. The central meridian (which is a trivial shift of the longitude) is specified as the <em>lon0</em> argument of the <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a2bafb6c1a81d4b6cf04f172b9e96278c">LambertConformalConic::Forward</a> and <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a085d37693f5e95fd650b7f59f61ab744">LambertConformalConic::Reverse</a> functions. There is no provision in this class for specifying a false easting or false northing or a different latitude of origin. However these are can be simply included by the calling function. For example the Pennsylvania South state coordinate system (<a href="http://www.spatialreference.org/ref/epsg/3364/">EPSG:3364</a>) is obtained by: </p>
-<div class="fragment"><pre class="fragment">   <span class="keyword">const</span> <span class="keywordtype">double</span>
-     a = GeographicLib::Constants::WGS84_a&lt;double&gt;(),
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::LambertConformalConic class</span>
+<span class="comment">// $Id: fee4349167387dc01f6253ec8d9cbd0172a7392b $</span>
+
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="LambertConformalConic_8hpp.html" title="Header for GeographicLib::LambertConformalConic class.">GeographicLib/LambertConformalConic.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <span class="comment">// Define the Pennsylvania South state coordinate system EPSG:3364</span>
+   <span class="keyword">const</span> <span class="keywordtype">double</span>
+     a = Constants::WGS84_a&lt;double&gt;(),
      f = 1/298.257222101,                      <span class="comment">// GRS80</span>
      lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, <span class="comment">// standard parallels</span>
      k1 = 1,                                   <span class="comment">// scale</span>
      lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, <span class="comment">// origin</span>
      fe = 600000, fn = 0;                      <span class="comment">// false easting and northing</span>
    <span class="comment">// Set up basic projection</span>
-   <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">GeographicLib::LambertConformalConic</a> PASouth(a, f, lat1, lat2, k1);
+   <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> PASouth(a, f, lat1, lat2, k1);
    <span class="keywordtype">double</span> x0, y0;
+   <span class="comment">// Transform origin point</span>
+   PASouth.Forward(lon0, lat0, lon0, x0, y0);
+   x0 -= fe; y0 -= fn;
    {
-     <span class="comment">// Transform origin point</span>
-     PASouth.Forward(lon0, lat0, lon0, x0, y0);
-     x0 -= fe; y0 -= fn;         <span class="comment">// Combine result with false origin</span>
+     <span class="comment">// Sample conversion from geodetic to PASouth grid</span>
+     <span class="keywordtype">double</span> lat = 39.95, lon = -75.17;    <span class="comment">// Philadelphia</span>
+     <span class="keywordtype">double</span> x, y;
+     PASouth.Forward(lon0, lat, lon, x, y);
+     x -= x0; y -= y0;
+     std::cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
    }
-   <span class="keywordtype">double</span> lat, lon, x, y;
-   <span class="comment">// Sample conversion from geodetic to PASouth grid</span>
-   std::cin &gt;&gt; lat &gt;&gt; lon;
-   PASouth.Forward(lon0, lat, lon, x, y);
-   x -= x0; y -= y0;
-   std::cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-   <span class="comment">// Sample conversion from PASouth grid to geodetic</span>
-   std::cin &gt;&gt; x &gt;&gt; y;
-   x += x0; y += y0;
-   PASouth.Reverse(lon0, x, y, lat, lon);
-   std::cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+   {
+     <span class="comment">// Sample conversion from PASouth grid to geodetic</span>
+     <span class="keywordtype">double</span> x = 820e3, y = 72e3;
+     <span class="keywordtype">double</span> lat, lon;
+     x += x0; y += y0;
+     PASouth.Reverse(lon0, x, y, lat, lon);
+     std::cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+   }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
 </pre></div> 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00082">82</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00055">55</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a21dc9fa160a5b96a1c11ab30af0eb129"></a><!-- doxytag: member="GeographicLib::LambertConformalConic::LambertConformalConic" ref="a21dc9fa160a5b96a1c11ab30af0eb129" args="(real a, real f, real stdlat, real k0)" -->
 <div class="memitem">
@@ -166,7 +189,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="LambertConformalConic_8cpp_source.html#l00030">30</a> of file <a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -227,7 +250,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="LambertConformalConic_8cpp_source.html#l00054">54</a> of file <a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -302,7 +325,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="LambertConformalConic_8cpp_source.html#l00081">81</a> of file <a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -343,7 +366,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="LambertConformalConic_8cpp_source.html#l00455">455</a> of file <a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a>.</p>
 
-<p>References <a class="el" href="LambertConformalConic_8cpp_source.html#l00324">Forward()</a>, and <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="LambertConformalConic_8cpp_source.html#l00324">Forward()</a>, and <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -414,11 +437,11 @@ Static Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>The latitude origin is given by LambertConformalConic::LatitudeOrigin(). No false easting or northing is added and <em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. The error in the projection is less than about 10 nm (true distance) and the errors in the meridian convergence and scale are consistent with this. The values of <em>x</em> and <em>y</em> returned for points which project to infinity (i.e., one or both of the poles) will be large but finite. </p>
+<p>The latitude origin is given by LambertConformalConic::LatitudeOrigin(). No false easting or northing is added and <em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. The error in the projection is less than about 10 nm (10 nanometers), true distance, and the errors in the meridian convergence and scale are consistent with this. The values of <em>x</em> and <em>y</em> returned for points which project to infinity (i.e., one or both of the poles) will be large but finite. </p>
 
 <p>Definition at line <a class="el" href="LambertConformalConic_8cpp_source.html#l00324">324</a> of file <a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00260">GeographicLib::Math::asinh()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00256">GeographicLib::Math::asinh()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 <p>Referenced by <a class="el" href="LambertConformalConic_8cpp_source.html#l00455">SetScale()</a>.</p>
 
@@ -491,11 +514,11 @@ Static Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>The latitude origin is given by LambertConformalConic::LatitudeOrigin(). No false easting or northing is added. <em>lon0</em> should be in the range [-180, 360]. The value of <em>lon</em> returned is in the range [-180, 180). The error in the projection is less than about 10 nm (true distance) and the errors in the meridian convergence and scale are consistent with this. </p>
+<p>The latitude origin is given by LambertConformalConic::LatitudeOrigin(). No false easting or northing is added. <em>lon0</em> should be in the range [-180, 360]. The value of <em>lon</em> returned is in the range [-180, 180). The error in the projection is less than about 10 nm (10 nanometers), true distance, and the errors in the meridian convergence and scale are consistent with this. </p>
 
 <p>Definition at line <a class="el" href="LambertConformalConic_8cpp_source.html#l00371">371</a> of file <a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, <a class="el" href="Math_8hpp_source.html#l00228">GeographicLib::Math::log1p()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, <a class="el" href="Math_8hpp_source.html#l00224">GeographicLib::Math::log1p()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -543,7 +566,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a2bafb6c1a81d4b6cf04f172b9e96278c">LambertConformalConic::Forward</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00284">284</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00258">258</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -591,7 +614,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a085d37693f5e95fd650b7f59f61ab744">LambertConformalConic::Reverse</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00294">294</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00268">268</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -610,7 +633,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00307">307</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00281">281</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -629,7 +652,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00313">313</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00287">287</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -649,7 +672,7 @@ Static Public Attributes</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00319">319</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00293">293</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -669,7 +692,7 @@ Static Public Attributes</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>latitude of the origin for the projection (degrees).</dd></dl>
 <p>This is the latitude of minimum scale and equals the <em>stdlat</em> in the 1-parallel constructor and lies between <em>stdlat1</em> and <em>stdlat2</em> in the 2-parallel constructors. </p>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00328">328</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00302">302</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -688,7 +711,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>central scale for the projection. This is the scale on the latitude of origin. </dd></dl>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00334">334</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00308">308</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -705,7 +728,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> with the WGS84 ellipsoid, <em>stdlat</em> = 0, and <em>k0</em> = 1. This degenerates to the Mercator projection. </p>
 
-<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00342">342</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LambertConformalConic_8hpp_source.html#l00316">316</a> of file <a class="el" href="LambertConformalConic_8hpp_source.html">LambertConformalConic.hpp</a>.</p>
 
 </div>
 </div>
@@ -714,7 +737,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

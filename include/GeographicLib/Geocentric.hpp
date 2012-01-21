@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP \
-  "$Id: 869e8cba7a96857eef318b2b02e4135d88bfbc75 $"
+  "$Id: 3d26a1dd3b0e584cd935de138af65d0e577adfcd $"
 
 #include <vector>
 #include <algorithm>
@@ -49,8 +49,12 @@ namespace GeographicLib {
    *
    * The errors in these routines are close to round-off.  Specifically, for
    * points within 5000 km of the surface of the ellipsoid (either inside or
-   * outside the ellipsoid), the error is bounded by 7 nm for the WGS84
-   * ellipsoid.  See \ref geocentric for further information on the errors.
+   * outside the ellipsoid), the error is bounded by 7 nm (7 nanometers) for
+   * the WGS84 ellipsoid.  See \ref geocentric for further information on the
+   * errors.
+   *
+   * Example of use:
+   * \include example-Geocentric.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geocentric {

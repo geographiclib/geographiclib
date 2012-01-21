@@ -64,9 +64,28 @@ Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Exception handling for GeographicLib. </p>
-<p>A class to handle exceptions. It's derived from std::runtime_error so it can be caught by the usual catch clauses. </p>
+<p>A class to handle exceptions. It's derived from std::runtime_error so it can be caught by the usual catch clauses.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::GeographicErr class</span>
+<span class="comment">// $Id: aaa4cf5e9b5070f9a6307a59daabf578880b85d3 $</span>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00306">306</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html#ae0f338af58f073657b012c8a9a64b006">GeographicErr</a>(<span class="stringliteral">&quot;Test throwing an exception&quot;</span>);
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>&amp; e) {
+    cout &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00312">312</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ae0f338af58f073657b012c8a9a64b006"></a><!-- doxytag: member="GeographicLib::GeographicErr::GeographicErr" ref="ae0f338af58f073657b012c8a9a64b006" args="(const std::string &amp;msg)" -->
 <div class="memitem">
@@ -90,7 +109,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00315">315</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Constants_8hpp_source.html#l00321">321</a> of file <a class="el" href="Constants_8hpp_source.html">Constants.hpp</a>.</p>
 
 </div>
 </div>
@@ -98,7 +117,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="Constants_8hpp_source.html">Constants.hpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

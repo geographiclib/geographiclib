@@ -94,10 +94,49 @@ Public Member Functions</h2></td></tr>
 <li>Declare that the projection is undefined for an ellipsoid.</li>
 <li>Project to a tangent plane from the center of the ellipsoid. This causes great ellipses to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a great ellipse. This was proposed by independently by Bowring and Williams in 1997.</li>
 <li>Project to the conformal sphere with the constant of integration chosen so that the values of the latitude match for the center point and perform a central projection onto the plane tangent to the conformal sphere at the center point. This causes normal sections through the center point to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a normal section. This was proposed by I. G. Letoval'tsev, Generalization of the Gnomonic Projection for a Spheroid and the Principal Geodetic Problems Involved in the Alignment of Surface Routes, Geodesy and Aerophotography (5), 271-274 (1963).</li>
-<li>The projection given here. This causes geodesics close to the center point to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a geodesic. </li>
+<li>The projection given here. This causes geodesics close to the center point to appear as straight lines in the projection; i.e., it generalizes the spherical great circle to a geodesic.</li>
 </ul>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::Gnomonic class</span>
+<span class="comment">// $Id: 59ed16349fd55bdde98654feeb1225a046d85696 $</span>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00100">100</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Gnomonic_8hpp.html" title="Header for GeographicLib::Gnomonic class.">GeographicLib/Gnomonic.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> geod(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>());
+    <span class="comment">// Alternatively: const Geodesic&amp; geod = Geodesic::WGS84;</span>
+    <span class="keyword">const</span> <span class="keywordtype">double</span> lat0 = 48 + 50/60.0, lon0 = 2 + 20/60.0; <span class="comment">// Paris</span>
+    <a class="code" href="classGeographicLib_1_1Gnomonic.html" title="Gnomonic Projection.">Gnomonic</a> proj(geod);
+    {
+      <span class="comment">// Sample forward calculation</span>
+      <span class="keywordtype">double</span> lat = 50.9, lon = 1.8; <span class="comment">// Calais</span>
+      <span class="keywordtype">double</span> x, y;
+      proj.Forward(lat0, lon0, lat, lon, x, y);
+      cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample reverse calculation</span>
+      <span class="keywordtype">double</span> x = -38e3, y = 230e3;
+      <span class="keywordtype">double</span> lat, lon;
+      proj.Reverse(lat0, lon0, x, y, lat, lon);
+      cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00103">103</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a2ac973ebbd7aaf18c451b152cd92db99"></a><!-- doxytag: member="GeographicLib::Gnomonic::Gnomonic" ref="a2ac973ebbd7aaf18c451b152cd92db99" args="(const Geodesic &amp;earth=Geodesic::WGS84)" -->
 <div class="memitem">
@@ -121,7 +160,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00116">116</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00119">119</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -286,7 +325,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="Gnomonic_8cpp_source.html#l00044">44</a> of file <a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a>.</p>
 
-<p>References <a class="el" href="GeodesicLine_8hpp_source.html#l00275">GeographicLib::GeodesicLine::Position()</a>.</p>
+<p>References <a class="el" href="GeodesicLine_8hpp_source.html#l00249">GeographicLib::GeodesicLine::Position()</a>.</p>
 
 <p>Referenced by <a class="el" href="GeodesicProj_8cpp_source.html#l00037">main()</a>.</p>
 
@@ -342,7 +381,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#ab851ea19db5671f8d4a4151820bc6853">Gnomonic::Forward</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00177">177</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00180">180</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -396,7 +435,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1Gnomonic.html#afccbed660a482ef73d33ad16406ee626">Gnomonic::Reverse</a> without returning the azimuth and scale. </p>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00186">186</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00189">189</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -415,7 +454,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00199">199</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00202">202</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -434,7 +473,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00205">205</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00208">208</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -454,7 +493,7 @@ Public Member Functions</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00211">211</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Gnomonic_8hpp_source.html#l00214">214</a> of file <a class="el" href="Gnomonic_8hpp_source.html">Gnomonic.hpp</a>.</p>
 
 </div>
 </div>
@@ -463,7 +502,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="Gnomonic_8cpp_source.html">Gnomonic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

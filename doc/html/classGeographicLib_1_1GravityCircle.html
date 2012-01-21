@@ -87,9 +87,53 @@ Friends</h2></td></tr>
 <div class="textblock"><p>Gravity on a circle of latitude. </p>
 <p>Evaluate the earth's gravity field on a circle of constant height and latitude. This uses a CircleEngine to pre-evaluate the inner sum of the spherical harmonic sum, allowing the values of the field at several different longitudes to be evaluated rapidly.</p>
 <p>Use <a class="el" href="classGeographicLib_1_1GravityModel.html#aadafafc09b9b707d47606da1e413d54f">GravityModel::Circle</a> to create a <a class="el" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> object. (The constructor for this class is private.)</p>
-<p>See <a class="el" href="gravity.html#gravityparallel">Geoid heights on a multi-processor system</a> for an example of using <a class="el" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> (together with OpenMP) to speed up the computation of geoid heights. </p>
+<p>See <a class="el" href="gravity.html#gravityparallel">Geoid heights on a multi-processor system</a> for an example of using <a class="el" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> (together with OpenMP) to speed up the computation of geoid heights.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::GravityCircle class</span>
+<span class="comment">// $Id: dc7c895cc248cee01a434ea3df1b31771ffb6ad2 $</span>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00037">37</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="GravityModel_8hpp.html" title="Header for GeographicLib::GravityModel class.">GeographicLib/GravityModel.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="GravityCircle_8hpp.html" title="Header for GeographicLib::GravityCircle class.">GeographicLib/GravityCircle.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1GravityModel.html" title="Model of the earth&#39;s gravity field.">GravityModel</a> grav(<span class="stringliteral">&quot;egm96&quot;</span>);
+    <span class="keywordtype">double</span> lat = 27.99, lon0 = 86.93, h = 8820; <span class="comment">// Mt Everest</span>
+    {
+      <span class="comment">// Slow method of evaluating the values at several points on a circle of</span>
+      <span class="comment">// latitude.</span>
+      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = -5; i &lt;= 5; ++i) {
+        <span class="keywordtype">double</span> lon = lon0 + i * 0.2;
+        <span class="keywordtype">double</span> gx, gy, gz;
+        grav.Gravity(lat, lon, h, gx, gy, gz);
+        cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gx &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gy &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gz &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+      }
+    }
+    {
+      <span class="comment">// Fast method of evaluating the values at several points on a circle of</span>
+      <span class="comment">// latitude using GravityCircle.</span>
+      <a class="code" href="classGeographicLib_1_1GravityCircle.html" title="Gravity on a circle of latitude.">GravityCircle</a> circ = grav.Circle(lat, h);
+      <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = -5; i &lt;= 5; ++i) {
+        <span class="keywordtype">double</span> lon = lon0 + i * 0.2;
+        <span class="keywordtype">double</span> gx, gy, gz;
+        circ.<a class="code" href="classGeographicLib_1_1GravityCircle.html#a5d8053ee66ae22217ae0b61e96194b64">Gravity</a>(lon, gx, gy, gz);
+        cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gx &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gy &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; gz &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+      }
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00040">40</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a4a000e07f0856a130ab11f1b26c933ed"></a><!-- doxytag: member="GeographicLib::GravityCircle::GravityCircle" ref="a4a000e07f0856a130ab11f1b26c933ed" args="()" -->
 <div class="memitem">
@@ -106,7 +150,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <p>A default constructor for the normal gravity. This sets up an uninitialized object which can be later replaced by the <a class="el" href="classGeographicLib_1_1GravityModel.html#aadafafc09b9b707d47606da1e413d54f">GravityModel::Circle</a>. </p>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00101">101</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00104">104</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -344,7 +388,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>W</em> = <em>V</em> + <em>Phi</em> the sum of the gravitational and centrifugal potentials (m<sup>2</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00182">182</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00185">185</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -396,7 +440,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>V</em> = <em>W</em> - <em>Phi</em> the gravitational potential (m<sup>2</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00202">202</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00205">205</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -448,7 +492,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>T</em> = <em>W</em> - <em>U</em> the disturbing potential (also called the anomalous potential) (m<sup>2</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00223">223</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00226">226</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -475,7 +519,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>T</em> = <em>W</em> - <em>U</em> the disturbing potential (also called the anomalous potential) (m<sup>2</sup> s<sup>-2</sup>). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00237">237</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00240">240</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -494,7 +538,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if the object has been initialized. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00251">251</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00254">254</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -513,7 +557,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value inherited from the <a class="el" href="classGeographicLib_1_1GravityModel.html" title="Model of the earth&#39;s gravity field.">GravityModel</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00258">258</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00261">261</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -532,7 +576,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1GravityModel.html" title="Model of the earth&#39;s gravity field.">GravityModel</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00265">265</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00268">268</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -551,7 +595,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the latitude of the circle (degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00271">271</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00274">274</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -570,7 +614,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the height of the circle (meters). </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00277">277</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00280">280</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -589,7 +633,7 @@ Friends</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>caps</em> the computational capabilities that this object was constructed with. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00284">284</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00287">287</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -615,7 +659,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>true if the <a class="el" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeodesicLine</a> object has all these capabilities. </dd></dl>
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00290">290</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00293">293</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -631,7 +675,7 @@ Friends</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00087">87</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
+<p>Definition at line <a class="el" href="GravityCircle_8hpp_source.html#l00090">90</a> of file <a class="el" href="GravityCircle_8hpp_source.html">GravityCircle.hpp</a>.</p>
 
 </div>
 </div>
@@ -640,7 +684,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="GravityCircle_8cpp_source.html">GravityCircle.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

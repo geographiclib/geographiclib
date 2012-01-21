@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CIRCULARENGINE_HPP)
 #define GEOGRAPHICLIB_CIRCULARENGINE_HPP \
-  "$Id: 6694dcc59d2fe64a0971fdb0d0d78ff084b0b484 $"
+  "$Id: d0528f468369dbc1b7af11e02278ad7a361d398b $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -45,6 +45,9 @@ namespace GeographicLib {
    * order to be performed in 2 or 6 vectors of length \e M + 1 (depending on
    * whether gradients are to be calculated).  For this reason the constructor
    * may throw a bad_alloc exception.
+   *
+   * Example of use:
+   * \include example-CircularEngine.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT CircularEngine {

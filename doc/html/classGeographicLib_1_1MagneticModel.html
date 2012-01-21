@@ -109,12 +109,39 @@ Compute the magnetic field</h2></td></tr>
 </li>
 <li>EMM2010:<ul>
 <li><a href="http://ngdc.noaa.gov/geomag/EMM/index.html">http://ngdc.noaa.gov/geomag/EMM/index.html</a></li>
-<li><a href="http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip">http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip</a> </li>
+<li><a href="http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip">http://ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2010_Sph_Windows_Linux.zip</a></li>
 </ul>
 </li>
 </ul>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::MagneticModel class</span>
+<span class="comment">// $Id: ab27b155755e540d29e5e6bf550df8cdb00c74ba $</span>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00058">58</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="MagneticModel_8hpp.html" title="Header for GeographicLib::MagneticModel class.">GeographicLib/MagneticModel.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">MagneticModel</a> mag(<span class="stringliteral">&quot;wmm2010&quot;</span>);
+    <span class="keywordtype">double</span> lat = 27.99, lon = 86.93, h = 8820, t = 2012; <span class="comment">// Mt Everest</span>
+    <span class="keywordtype">double</span> Bx, By, Bz;
+    mag(t, lat,lon, h, Bx, By, Bz);
+    <span class="keywordtype">double</span> H, F, D, I;
+    <a class="code" href="classGeographicLib_1_1MagneticModel.html#af553c42337b9a9a1d51b81fea7083ea2">MagneticModel::FieldComponents</a>(Bx, By, Bz, H, F, D, I);
+    cout &lt;&lt; H &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; F &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; D &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; I &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00061">61</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a84a020586d58c4da61ec6ffbc7b4fa37"></a><!-- doxytag: member="GeographicLib::MagneticModel::MagneticModel" ref="a84a020586d58c4da61ec6ffbc7b4fa37" args="(const std::string &amp;name, const std::string &amp;path=&quot;&quot;, const Geocentric &amp;earth=Geocentric::WGS84)" -->
 <div class="memitem">
@@ -234,7 +261,7 @@ Compute the magnetic field</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00125">125</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00128">128</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -327,7 +354,7 @@ Compute the magnetic field</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00147">147</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00150">150</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -371,27 +398,7 @@ Compute the magnetic field</h2></td></tr>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>a <a class="el" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a> object whose MagneticCircle::operator()(real lon) member function computes the field at particular values of <em>lon</em>.</dd></dl>
-<p>If the field at several points on a circle of latitude need to be calculated then instead of </p>
-<div class="fragment"><pre class="fragment">  MagneticModel m(...);         <span class="comment">// Create a magnetic model</span>
-  <span class="keywordtype">double</span> lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
-  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= 100; ++i) {
-    <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-      lon = lon0 + i * dlon,
-      Bx, By, Bz;
-    m(t, lat, lon, h, Bx, By, Bz);
-    std::cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; Bx &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; By &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; Bz &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-  }
-</pre></div><p> use a <a class="el" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a> as in </p>
-<div class="fragment"><pre class="fragment">  MagneticModel m(...);         <span class="comment">// Create a magnetic model</span>
-  <span class="keywordtype">double</span> lat = 33, lon0 = 44, dlon = 0.01, h = 1000, t = 2012;
-  MagneticCircle c(m.Circle(t, lat, h)); <span class="comment">// the MagneticCircle object</span>
-  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt;= 100; ++i) {
-    <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-      lon = lon0 + i * dlon, Bx, By, Bz;
-    c(lon, Bx, By, Bz);
-    std::cout &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; Bx &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; By &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; Bz &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-  }
-</pre></div><p> For high-degree models, this will be substantially faster. </p>
+<p>If the field at several points on a circle of latitude need to be calculated then creating a <a class="el" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">MagneticCircle</a> and using its member functions will be substantially faster, especially for high-degree models. </p>
 
 <p>Definition at line <a class="el" href="MagneticModel_8cpp_source.html#l00207">207</a> of file <a class="el" href="MagneticModel_8cpp_source.html">MagneticModel.cpp</a>.</p>
 
@@ -467,7 +474,7 @@ Compute the magnetic field</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00207">207</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00187">187</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -592,7 +599,7 @@ Compute the magnetic field</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MagneticModel_8cpp_source.html#l00222">222</a> of file <a class="el" href="MagneticModel_8cpp_source.html">MagneticModel.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -611,7 +618,7 @@ Compute the magnetic field</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>the description of the magnetic model, if available, from the Description file in the data file; if absent, return "NONE". </dd></dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00248">248</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00228">228</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -632,7 +639,7 @@ Compute the magnetic field</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>date of the model, if available, from the ReleaseDate field in the data file; if absent, return "UNKNOWN". </dd></dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00254">254</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00234">234</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -653,7 +660,7 @@ Compute the magnetic field</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>full file name used to load the magnetic model. </dd></dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00259">259</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00239">239</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -674,7 +681,7 @@ Compute the magnetic field</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>"name" used to load the magnetic model (from the first argument of the constructor, but this may be overridden by the model file). </dd></dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00265">265</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00245">245</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -695,7 +702,7 @@ Compute the magnetic field</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>directory used to load the magnetic model. </dd></dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00270">270</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00250">250</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -715,7 +722,7 @@ Compute the magnetic field</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the minimum height above the ellipsoid (in meters) for which this <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">MagneticModel</a> should be used.</dd></dl>
 <p>Because the model will typically provide useful results slightly outside the range of allowed heights, no check of <em>t</em> argument is made by <a class="el" href="classGeographicLib_1_1MagneticModel.html#a550eb1739712fbbae1a167c2559d6dbc">MagneticModel::operator()()</a> or <a class="el" href="classGeographicLib_1_1MagneticModel.html#ae4275d73128fc2c6c62f53677ce70bd5">MagneticModel::Circle</a>. </p>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00281">281</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00261">261</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -737,7 +744,7 @@ Compute the magnetic field</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the maximum height above the ellipsoid (in meters) for which this <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">MagneticModel</a> should be used.</dd></dl>
 <p>Because the model will typically provide useful results slightly outside the range of allowed heights, no check of <em>t</em> argument is made by <a class="el" href="classGeographicLib_1_1MagneticModel.html#a550eb1739712fbbae1a167c2559d6dbc">MagneticModel::operator()()</a> or <a class="el" href="classGeographicLib_1_1MagneticModel.html#ae4275d73128fc2c6c62f53677ce70bd5">MagneticModel::Circle</a>. </p>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00292">292</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00272">272</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -759,7 +766,7 @@ Compute the magnetic field</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the minimum time (in years) for which this <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">MagneticModel</a> should be used.</dd></dl>
 <p>Because the model will typically provide useful results slightly outside the range of allowed times, no check of <em>t</em> argument is made by <a class="el" href="classGeographicLib_1_1MagneticModel.html#a550eb1739712fbbae1a167c2559d6dbc">MagneticModel::operator()()</a> or <a class="el" href="classGeographicLib_1_1MagneticModel.html#ae4275d73128fc2c6c62f53677ce70bd5">MagneticModel::Circle</a>. </p>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00303">303</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00283">283</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -781,7 +788,7 @@ Compute the magnetic field</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the maximum time (in years) for which this <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">MagneticModel</a> should be used.</dd></dl>
 <p>Because the model will typically provide useful results slightly outside the range of allowed times, no check of <em>t</em> argument is made by <a class="el" href="classGeographicLib_1_1MagneticModel.html#a550eb1739712fbbae1a167c2559d6dbc">MagneticModel::operator()()</a> or <a class="el" href="classGeographicLib_1_1MagneticModel.html#ae4275d73128fc2c6c62f53677ce70bd5">MagneticModel::Circle</a>. </p>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00314">314</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00294">294</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -802,7 +809,7 @@ Compute the magnetic field</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value of <em>a</em> inherited from the <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00321">321</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00301">301</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -821,7 +828,7 @@ Compute the magnetic field</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00327">327</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
+<p>Definition at line <a class="el" href="MagneticModel_8hpp_source.html#l00307">307</a> of file <a class="el" href="MagneticModel_8hpp_source.html">MagneticModel.hpp</a>.</p>
 
 </div>
 </div>
@@ -878,7 +885,7 @@ Compute the magnetic field</h2></td></tr>
 <li><a class="el" href="MagneticModel_8cpp_source.html">MagneticModel.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

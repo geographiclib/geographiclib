@@ -104,10 +104,55 @@ Static Public Member Functions</h2></td></tr>
 <p>The <a href="http://www.nga.mil">NGA</a> software package <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a> also provides conversions to and from UTM and UPS. Version 2.4.2 (and earlier) suffers from some drawbacks:</p>
 <ul>
 <li>Inconsistent rules are used to determine the whether a particular UTM or UPS coordinate is legal. A more systematic approach is taken here.</li>
-<li>The underlying projections are not very accurately implemented. </li>
+<li>The underlying projections are not very accurately implemented.</li>
 </ul>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::UTMUPS class</span>
+<span class="comment">// $Id: 83d5ba7eb8c9ce1963cb9499a6ee404329e74f3a $</span>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00060">60</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;string&gt;</span>
+<span class="preprocessor">#include &lt;iomanip&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="UTMUPS_8hpp.html" title="Header for GeographicLib::UTMUPS class.">GeographicLib/UTMUPS.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <span class="comment">// See also example-GeoCoords.cpp</span>
+    {
+      <span class="comment">// Sample forward calculation</span>
+      <span class="keywordtype">double</span> lat = 33.3, lon = 44.4; <span class="comment">// Baghdad</span>
+      <span class="keywordtype">int</span> zone;
+      <span class="keywordtype">bool</span> northp;
+      <span class="keywordtype">double</span> x, y;
+      <a class="code" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">UTMUPS::Forward</a>(lat, lon, zone, northp, x, y);
+      <span class="keywordtype">string</span> zonestr = <a class="code" href="classGeographicLib_1_1UTMUPS.html#a3410e1e221158962f34147255653818f">UTMUPS::EncodeZone</a>(zone, northp);
+      cout &lt;&lt; fixed &lt;&lt; setprecision(2)
+           &lt;&lt; zonestr &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample reverse calculation</span>
+      <span class="keywordtype">string</span> zonestr = <span class="stringliteral">&quot;38N&quot;</span>;
+      <span class="keywordtype">int</span> zone;
+      <span class="keywordtype">bool</span> northp;
+      <a class="code" href="classGeographicLib_1_1UTMUPS.html#ad74d52d7ebeff195019745f791f30562">UTMUPS::DecodeZone</a>(zonestr, zone, northp);
+      <span class="keywordtype">double</span> x = 444e3, y = 3688e3;
+      <span class="keywordtype">double</span> lat, lon;
+      <a class="code" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">UTMUPS::Reverse</a>(zone, northp, x, y, lat, lon);
+      cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00063">63</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 </div><hr/><h2>Member Enumeration Documentation</h2>
 <a class="anchor" id="a0c459615da18cc899a960bdc8c5b11b7"></a><!-- doxytag: member="GeographicLib::UTMUPS::zonespec" ref="a0c459615da18cc899a960bdc8c5b11b7" args="" -->
 <div class="memitem">
@@ -158,7 +203,7 @@ Static Public Member Functions</h2></td></tr>
 </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00088">88</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00091">91</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
 </div>
 </div>
@@ -206,7 +251,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00049">49</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoCoords_8hpp_source.html#l00288">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
+<p>Referenced by <a class="el" href="GeoCoords_8hpp_source.html#l00291">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
 
 </div>
 </div>
@@ -302,7 +347,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00073">73</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoCoords_8hpp_source.html#l00197">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00288">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
+<p>Referenced by <a class="el" href="GeoCoords_8hpp_source.html#l00200">GeographicLib::GeoCoords::Reset()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00291">GeographicLib::GeoCoords::SetAltZone()</a>.</p>
 
 </div>
 </div>
@@ -394,7 +439,7 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="UTMUPS_8cpp_source.html#l00124">124</a> of file <a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a>.</p>
 
-<p>Referenced by <a class="el" href="GeoCoords_8hpp_source.html#l00212">GeographicLib::GeoCoords::Reset()</a>.</p>
+<p>Referenced by <a class="el" href="GeoCoords_8hpp_source.html#l00215">GeographicLib::GeoCoords::Reset()</a>.</p>
 
 </div>
 </div>
@@ -460,7 +505,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1UTMUPS.html#a921d6c23e728e0b17651902d43fb56e8">UTMUPS::Forward</a> without returning convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00228">228</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00231">231</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
 </div>
 </div>
@@ -520,7 +565,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1UTMUPS.html#aaf417ae6bed6da324aa03fc96ee0dda4">UTMUPS::Reverse</a> without returning convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00238">238</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00241">241</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
 </div>
 </div>
@@ -645,9 +690,9 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the WGS84 ellipsoid (meters).</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00292">292</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00295">295</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="MGRS_8hpp_source.html#l00261">GeographicLib::MGRS::MajorRadius()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00427">GeographicLib::GeoCoords::MajorRadius()</a>.</p>
+<p>Referenced by <a class="el" href="MGRS_8hpp_source.html#l00265">GeographicLib::MGRS::MajorRadius()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00430">GeographicLib::GeoCoords::MajorRadius()</a>.</p>
 
 </div>
 </div>
@@ -667,9 +712,9 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the WGS84 ellipsoid.</dd></dl>
 <p>(The WGS84 value is returned because the UTM and UPS projections are based on this ellipsoid.) </p>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00301">301</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00304">304</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="MGRS_8hpp_source.html#l00269">GeographicLib::MGRS::Flattening()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00435">GeographicLib::GeoCoords::Flattening()</a>.</p>
+<p>Referenced by <a class="el" href="MGRS_8hpp_source.html#l00273">GeographicLib::MGRS::Flattening()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00438">GeographicLib::GeoCoords::Flattening()</a>.</p>
 
 </div>
 </div>
@@ -689,9 +734,9 @@ Static Public Member Functions</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the WGS84 ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00308">308</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
+<p>Definition at line <a class="el" href="UTMUPS_8hpp_source.html#l00311">311</a> of file <a class="el" href="UTMUPS_8hpp_source.html">UTMUPS.hpp</a>.</p>
 
-<p>Referenced by <a class="el" href="MGRS_8hpp_source.html#l00275">GeographicLib::MGRS::InverseFlattening()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00441">GeographicLib::GeoCoords::InverseFlattening()</a>.</p>
+<p>Referenced by <a class="el" href="MGRS_8hpp_source.html#l00279">GeographicLib::MGRS::InverseFlattening()</a>, and <a class="el" href="GeoCoords_8hpp_source.html#l00444">GeographicLib::GeoCoords::InverseFlattening()</a>.</p>
 
 </div>
 </div>
@@ -700,7 +745,7 @@ Static Public Member Functions</h2></td></tr>
 <li><a class="el" href="UTMUPS_8cpp_source.html">UTMUPS.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

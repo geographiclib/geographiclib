@@ -2,13 +2,13 @@
 # Makefile.am
 #
 # Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
-# $Id: 59616cc76cf8c94d028c1ecb234a0c99d0de9978 $
+# $Id: 9e9190d7a798cd96abe4d009adc10535e2fffe73 $
 
 AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc include matlab python cmake
+SUBDIRS = src man tools doc include matlab python cmake examples
 
 EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL \
 	Makefile.mk CMakeLists.txt windows maxima doc

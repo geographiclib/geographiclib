@@ -7,13 +7,13 @@
  * MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
-// $Id: ffc276afdabaf2e9a1fdc1b128bb7221124f5ec2 $
+// $Id: 68516fec2673a1606a9a8753d5f37cb2c6e78e4e $
 /**
 \mainpage Geographic library
 \author Charles Karney
 <charles@karney.com>
-\version 1.16
-\date 2011-12-07
+\version 1.17
+\date 2012-01-21
 
 \section abstract Abstract
 
@@ -23,8 +23,8 @@ MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
 EGM2008), geoid height and geomagnetic field (e.g., WMM2010)
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about
-5&ndash;15 nm).  New accurate algorithms for \ref geodesic and \ref
-transversemercator have been developed for this library.  The
+5&ndash;15 nanometers).  New accurate algorithms for \ref geodesic and
+\ref transversemercator have been developed for this library.  The
 functionality of the library can be accessed from user code, from the
 \ref utilities provided, or via the \ref other.  For a sample of the
 geodesic capabilities in Javascript, check out the
@@ -45,10 +45,10 @@ The main project page is at
   http://sourceforge.net/projects/geographiclib </a>
 .
 The code is available for download at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">
-  GeographicLib-1.16.tar.gz</a>
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.zip/download">
-  GeographicLib-1.16.zip</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17.tar.gz/download">
+  GeographicLib-1.17.tar.gz</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17.zip/download">
+  GeographicLib-1.17.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  (The two archives
 have identical contents.)  Alternatively you can get the latest stable release
@@ -57,8 +57,8 @@ using git \verbatim
   cd geographiclib; git checkout stable
 \endverbatim
 There is also a binary installer for Windows available at
-- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16-win32.exe/download">
-  GeographicLib-1.16-win32.exe</a>
+- <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17-win32.exe/download">
+  GeographicLib-1.17-win32.exe</a>
 .
 It is licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
@@ -102,11 +102,11 @@ geodesic calculations.
 
 The goals of %GeographicLib are:
  - Accuracy.  In most applications the accuracy is close to round-off,
-   about 5 nm.  Even though in many geographic applications 1 cm is
-   considered "accurate enough", there is little penalty in providing
-   much better accuracy.  If situations where a faster approximate
-   algorithm is necessary, %GeographicLib offers an accurate benchmark to
-   guide the development.
+   about 5 nm (5 nanometers).  Even though in many geographic
+   applications 1 cm is considered "accurate enough", there is little
+   penalty in providing much better accuracy.  If situations where a
+   faster approximate algorithm is necessary, %GeographicLib offers an
+   accurate benchmark to guide the development.
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
    GeographicLib::Geodesic::Inverse works for anti-podal points.
@@ -159,12 +159,12 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 2010.  Earlier versions were tested also under Darwin and Solaris.  It
 should compile on a wide range of other systems.  First
 download either
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">
-GeographicLib-1.16.tar.gz</a> or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.16.zip/download">
-GeographicLib-1.16.zip</a> (or
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.16-win32.exe/download">
-GeographicLib-1.16-win32.exe</a> for binary installation under Windows).
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.17.tar.gz/download">
+GeographicLib-1.17.tar.gz</a> or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.17.zip/download">
+GeographicLib-1.17.zip</a> (or
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.17-win32.exe/download">
+GeographicLib-1.17-win32.exe</a> for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
@@ -179,8 +179,8 @@ Then pick one of the first five options below:
   the utility programs supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
-- \ref qt.  There is a simple project file that compiles the %GeographicLib
-  library <i>only</i> to be compiled with the Qt compiler.
+- \ref qt.  How to compile %GeographicLib so that it can be used by Qt
+  programs.
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -216,11 +216,11 @@ Windows.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running one of \verbatim
-  tar xfpz GeographicLib-1.16.tar.gz
-  unzip -q GeographicLib-1.16.zip
+  tar xfpz GeographicLib-1.17.tar.gz
+  unzip -q GeographicLib-1.17.zip
   git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib \endverbatim
   then enter the directory created with one of \verbatim
-  cd GeographicLib-1.16
+  cd GeographicLib-1.17
   cd geographiclib; git checkout stable \endverbatim
 - Create a separate build directory and enter it, for example, \verbatim
   mkdir BUILD
@@ -301,9 +301,9 @@ Here are the steps to compile and install %GeographicLib:
 The method works on most Unix-like systems including Linux and Mac OS X.
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.16.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.17.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.16 \endverbatim
+  cd GeographicLib-1.17 \endverbatim
 - Configure the software with \verbatim
   ./configure \endverbatim
 - By default %GeographicLib will be installed under /usr/local.
@@ -328,9 +328,9 @@ and g++.  This builds a static library and the examples.
 
 Here are the steps to compile and install %GeographicLib:
 - Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.16.tar.gz \endverbatim
+  tar xfpz GeographicLib-1.17.tar.gz \endverbatim
   then enter the directory created \verbatim
-  cd GeographicLib-1.16 \endverbatim
+  cd GeographicLib-1.17 \endverbatim
 - Edit \verbatim
   include/GeographicLib/Config.h \endverbatim
   If your C++ compiler does not recognize the long double type
@@ -361,8 +361,8 @@ static library and the utilities.  If you only have Visual Studio 2003,
 use cmake to create the necessary solution file, see \ref cmake.  (cmake
 is needed to build the Matlab interface and to run the tests.)
 - Unpack the source, running \verbatim
-  unzip -q GeographicLib-1.16.zip \endverbatim
-- Open GeographicLib-1.16/windows/GeographicLib-vc10.sln in Visual Studio
+  unzip -q GeographicLib-1.17.zip \endverbatim
+- Open GeographicLib-1.17/windows/GeographicLib-vc10.sln in Visual Studio
   2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -385,19 +385,19 @@ library, it is advisable to build it with the compiler you are using for
 your own code using either \ref cmake or \ref windows.
 
 Download and run
-<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.16-win32.exe/download">
-GeographicLib-1.16-win32.exe</a>:
+<a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.17-win32.exe/download">
+GeographicLib-1.17-win32.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the destination folder, by default
-   C:/Program Files/GeographicLib-1.16.
+   C:/Program Files/GeographicLib-1.17.
  - select the start menu folder,
  - and install.
  .
 The start menu will now include links to the documentation for the
 library and for the utilities (and a link for uninstalling the library).
 If you ask for your PATH to be modified, it will include
-C:/Program Files/GeographicLib-1.16/bin where the utilities are
+C:/Program Files/GeographicLib-1.17/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
@@ -406,24 +406,34 @@ Visual Studio 10 (2010) for Win32 in Release mode.  The Matlab interface
 was compiled with Matlab R2010b, however it works with some other
 versions of Matlab (e.g., R2008a).
 
-\section qt Building the library under Qt
+\section qt Building the library for use with Qt
 
-This method requires builds the library (<i>not</i> the utility
-programs) under Qt.  This is useful if you need to link a Qt project
-with %GeographicLib to ensure that the library is compatible with your
-project.
+If Qt is using a standard compiler, then build %GeographicLib with that
+same compiler (and optimization flags) as Qt.
 
-Here are the steps to compile %GeographicLib with Qt:
-- Unpack the source, running \verbatim
-  tar xfpz GeographicLib-1.16.tar.gz \endverbatim
-  then enter the src subdirectory \verbatim
-  cd GeographicLib-1.16/src \endverbatim
-- Configure and build the library: \verbatim
+If you are using the mingw compiler on Windows for Qt, then you need to
+build %GeographicLib with mingw.  You can accomplish this with cmake
+under cygwin with, for example, \verbatim
+  export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
+  mkdir BUILD
+  cd BUILD
+  cmake -G "MinGW Makefiles" ..
+  mingw32-make
+  mingw32-make install \endverbatim
+If cmake complains that sh mustn't be in your path, invoke cmake with
+\verbatim
+  env PATH="$( echo $PATH | tr : '\n' |
+  while read d; do test -f "$d/sh.exe" || echo -n "$d:"; done |
+  sed 's/:$//' )" cmake -G "MinGW Makefiles" .. \endverbatim
+
+If cmake is not available, there is a simple project file that compiles
+the %GeographicLib library <i>only</i> with the Qt compiler: \verbatim
+  cd src
   qmake Geographic.pro   # configure the project
   make                   # build the library \endverbatim
-- The library will be in the src directory (or the src/release or
-  src/debug directory under Windows).  The headers are in
-  include/GeographicLib.
+The library will be in the src directory (or the src/release or
+src/debug directory under Windows).  The headers are in
+include/GeographicLib.
 
 \section maintainer Maintainer tasks
 
@@ -445,8 +455,8 @@ which will copy the documentation and man pages from the build directory
 back into the source tree and package the resulting source tree for
 distribution as
 \verbatim
-  GeographicLib-1.16.tar.gz
-  GeographicLib-1.16.zip \endverbatim
+  GeographicLib-1.17.tar.gz
+  GeographicLib-1.17.zip \endverbatim
 Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
@@ -534,48 +544,13 @@ Linker -> General -> Additional Library Directories = C:\Program Files\Geographi
   to build a separate debug version of the library when you can
   compiling your code in debug mode.
 
-Here is a very simple test code, which convert the point 38.95N 75.17W
-(Philadelphia) to the Pennsylvania South coordinate system:
-\code
-#include <iostream>
-#include <iomanip>
-
-#include <GeographicLib/Constants.hpp>
-#include <GeographicLib/DMS.hpp>
-#include <GeographicLib/LambertConformalConic.hpp>
-
-int main() {
-  using namespace GeographicLib;
-  double
-    // These are the constants for Pennsylvania South, EPSG:3364
-    // http://www.spatialreference.org/ref/epsg/3364/
-    a = Constants::WGS84_a(),   // major radius
-    f = 1/298.257222101,        // flattening (GRS80)
-    lat1 = DMS::Decode(40,58),  // standard parallel 1
-    lat2 = DMS::Decode(39,56),  // standard parallel 2
-    k1 = 1,                     // scale on std parallels
-    lat0 =  DMS::Decode(39,20), // latitude of origin
-    lon0 = -DMS::Decode(77,45), // longitude of origin
-    fe = 600000,                // false easting
-    fn = 0;                     // false northing
-  LambertConformalConic PASouth(a, f, lat1, lat2, k1);
-  double x0, y0;
-  PASouth.Forward(lon0, lat0, lon0, x0, y0); // Transform origin point
-  x0 -= fe; y0 -= fn;           // Combine result with false origin
-
-  double lat = 39.95, lon = -75.17;    // Philadelphia
-  double x, y;
-  PASouth.Forward(lon0, lat, lon, x, y);
-  x -= x0; y -= y0;             // Philadelphia in PA South coordinates
-
-  std::cout << std::fixed << std::setprecision(3)
-            << x << " " << y << "\n";
-  return 0;
-}
-\endcode
-If you copy this code to testprogram.cpp, and compile, link, and run it
-according to the instructions above, it should print out \verbatim
-  820444.831 71691.798
+Here is a very simple test code, which uses the GeographicLib::Geodesic
+class:
+\include example-Geodesic-small.cpp
+This example is <code>examples/example-Geodesic-small.cpp</code>.  If you
+compile, link, and run it according to the instructions above, it should
+print out \verbatim
+  5551.76 km
 \endverbatim
 
 The next steps are:
@@ -583,6 +558,9 @@ The next steps are:
  - Read the section, \ref organization, for an overview of the library.
  - Browse the <a href="annotated.html">Class List</a> for full documentation
    on the classes in the library.
+ - Look at the example code in the examples directory.  Each file
+   provides a very simple standalone example of using one %GeographicLib
+   class.  These are included in the descriptions of the classes.
  - Look at the source code for the utilities in the tools directory for
    more examples of using %GeographicLib from C++ code, e.g.,
    GeodesicProj.cpp is a program to performing various geodesic
@@ -960,15 +938,15 @@ Similarly the binary installer for Windows includes the compiled
 interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
 either of these, run one of (for example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/Program Files/GeographicLib-1.16/libexec/GeographicLib/matlab'
+  addpath 'C:/Program Files/GeographicLib-1.17/libexec/GeographicLib/matlab'
 \endverbatim
 in Matlab or Octave.  If you need to compile the interface or to
 recompile it for a different platform, start Matlab or Octave and run,
 e.g., \code
   mex -setup
-  cd 'C:/Program Files/GeographicLib-1.16/libexec/GeographicLib/matlab'
+  cd 'C:/Program Files/GeographicLib-1.17/libexec/GeographicLib/matlab'
   help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.16');
+  geographiclibinterface('C:/Program Files/GeographicLib-1.17');
   addpath(pwd);
 \endcode
 The first command allows you to select the compiler to use (which
@@ -2954,11 +2932,12 @@ implementations following the standard convention.
 \section tmseries Series approximation for transverse Mercator
 
 Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse
-Mercator projection.  This is accurate to about 200 nm within the UTM
-domain.  Here we present the series extended to 10th order.  By default,
-GeographicLib::TransverseMercator uses the 6th-order approximation. The
-preprocessor variable TM_TX_MAXPOW can be used to select an order from 4
-thru 8.  The series expanded to order <i>n</i><sup>30</sup> are given in
+Mercator projection.  This is accurate to about 200 nm (200 nanometers)
+within the UTM domain.  Here we present the series extended to 10th
+order.  By default, GeographicLib::TransverseMercator uses the 6th-order
+approximation. The preprocessor variable TM_TX_MAXPOW can be used to
+select an order from 4 thru 8.  The series expanded to order
+<i>n</i><sup>30</sup> are given in
 <a href="tmseries30.html"> tmseries30.html</a>.
 
 In the formulas below ^ indicates exponentiation (\e n^3 = \e n*\e n*\e
@@ -3164,7 +3143,7 @@ Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
 Convert (\e lat1 - \e lat0, \e lon1 - \e lon0) to a distance, \e ds, on the
 surface of the ellipsoid and define \e err = hypot(\e ds, \e h1 - \e h0).
-For |\e h0| < 5000 km, we have \e err < 7 nm.
+For |\e h0| < 5000 km, we have \e err < 7 nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
 absolute errors in the approximate geodetic height become large, or
@@ -3189,7 +3168,7 @@ To obtain a practical measure of the error for the general case we define
   z0).
 .
 We then find <i>err</i><sub>h</sub> < 8 nm, <i>err</i><sub>out</sub> < 4 nm,
-and <i>err</i><sub>in</sub> < 7 nm.
+and <i>err</i><sub>in</sub> < 7 nm.  (1 nm = 1 nanometer.)
 
 The testing has been confined to the WGS84 ellipsoid.  The method will work
 for all ellipsoids used in terrestrial geodesy.  However, the central region,
@@ -3227,6 +3206,14 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17.tar.gz/download">1.17 (released 2012-01-21)</a>
+  - Work around optimization BUG in GeographicLib::Geodesic::Inverse
+    with g++ version 4.4.0 (mingw).
+  - Fix BUG in argument checking with GeographicLib::OSGB::GridReference.
+  - Fix missing include file in GeographicLib::SphericalHarmonic2.
+  - Add simple examples of usage for each class.
+  - Add internal documenation to the cmake configuration files.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">1.16 (released 2011-12-07)</a>
   - Add calculation of the earth's gravitational field:

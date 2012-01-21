@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC1_HPP)
 #define GEOGRAPHICLIB_SPHERICALHARMONIC1_HPP \
-  "$Id: f873848926021872a17b732171bb0bbbba1bb520 $"
+  "$Id: 9dd895ded08db0f7fdd82159399da511f40a17e1 $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -24,6 +24,9 @@ namespace GeographicLib {
    * This classes is similar to SphericalHarmonic, except that the coefficients
    * \e C<sub>\e nm</sub> are replaced by \e C<sub>\e nm</sub> + \e tau
    * C'<sub>\e nm</sub> (and similarly for \e S<sub>\e nm</sub>).
+   *
+   * Example of use:
+   * \include example-SphericalHarmonic1.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic1 {

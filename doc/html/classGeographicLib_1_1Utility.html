@@ -85,8 +85,32 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Some utility routines for GeographicLib. </p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::Utility class</span>
+<span class="comment">// $Id: 34856fc274a1db91814bb96768a6c8feee03dacc $</span>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00027">27</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <span class="keywordtype">int</span>
+      d1 = <a class="code" href="classGeographicLib_1_1Utility.html#a877a58000a56bc84c354cf42b4b1cd99">Utility::day</a>(1939, 9, 3),  <span class="comment">// Britain declares war on Germany</span>
+      d2 = <a class="code" href="classGeographicLib_1_1Utility.html#a877a58000a56bc84c354cf42b4b1cd99">Utility::day</a>(1945, 8, 15); <span class="comment">// Japan surrenders</span>
+    cout &lt;&lt; d2 - d1 &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;          <span class="comment">// Length of Second World War for Britain</span>
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00030">30</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 </div><hr/><h2>Member Function Documentation</h2>
 <a class="anchor" id="a877a58000a56bc84c354cf42b4b1cd99"></a><!-- doxytag: member="GeographicLib::Utility::day" ref="a877a58000a56bc84c354cf42b4b1cd99" args="(int y, int m=1, int d=1)" -->
 <div class="memitem">
@@ -129,7 +153,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the sequential day number. </dd></dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00052">52</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00055">55</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -182,7 +206,7 @@ Static Public Member Functions</h2></td></tr>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the sequential day number.</dd></dl>
 <p>If <em>check</em> is true and the date is invalid an exception is thrown. </p>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00116">116</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00119">119</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -233,7 +257,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00139">139</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00142">142</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -284,7 +308,7 @@ Static Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00170">170</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00173">173</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -329,11 +353,11 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the day of the week with Sunday, Monday - Saturday = 0, 1 - 6. </dd></dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00209">209</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00212">212</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
-<p>References <a class="el" href="Utility_8hpp_source.html#l00209">dow()</a>.</p>
+<p>References <a class="el" href="Utility_8hpp_source.html#l00212">dow()</a>.</p>
 
-<p>Referenced by <a class="el" href="Utility_8hpp_source.html#l00209">dow()</a>.</p>
+<p>Referenced by <a class="el" href="Utility_8hpp_source.html#l00212">dow()</a>.</p>
 
 </div>
 </div>
@@ -360,7 +384,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the day of the week with Sunday, Monday - Saturday = 0, 1 - 6. </dd></dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00217">217</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00220">220</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -396,7 +420,7 @@ template&lt;typename T &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the fractional year.</dd></dl>
 <p>The string is first read as an ordinary number (e.g., 2010 or 2012.5); if this is successful, the value is returned. Otherwise the string should be of the form yyyy-mm or yyyy-mm-dd and this is converted to a number with 2010-01-01 giving 2010.0 and 2012-07-03 giving 2012.5. </p>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00233">233</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00236">236</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -443,7 +467,7 @@ template&lt;typename T &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the string representation.</dd></dl>
 <p>If <em>p</em> &gt;= 0, then the number fixed format is used with p bits of precision. With p &lt; 0, there is no manipulation of the format. </p>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00256">256</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00259">259</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="MagneticField_8cpp_source.html#l00035">main()</a>.</p>
 
@@ -480,7 +504,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>object of type T </dd></dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00272">272</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00275">275</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -515,7 +539,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>appropriate special value (+/-inf, nan) or 0 is none is found. </dd></dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00301">301</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00304">304</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -550,7 +574,7 @@ template&lt;typename T &gt; </div>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>object of type T </dd></dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00331">331</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00334">334</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -589,7 +613,7 @@ template&lt;typename T &gt; </div>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the index of the first occurrence character in the string or -1 is the character is not present.</dd></dl>
 <p><em>c</em> is converted to upper case before search <em>s</em>. Therefore, it is intended that <em>s</em> should not contain any lower case letters. </p>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00351">351</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00354">354</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -643,9 +667,9 @@ template&lt;typename ExtT , typename IntT , bool bigendp&gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00369">369</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00372">372</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00103">GeographicLib::Math::bigendian</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00099">GeographicLib::Math::bigendian</a>.</p>
 
 </div>
 </div>
@@ -692,7 +716,7 @@ template&lt;typename ExtT , typename IntT , bool bigendp&gt; </div>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00415">415</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
+<p>Definition at line <a class="el" href="Utility_8hpp_source.html#l00418">418</a> of file <a class="el" href="Utility_8hpp_source.html">Utility.hpp</a>.</p>
 
 </div>
 </div>
@@ -747,7 +771,7 @@ template&lt;typename ExtT , typename IntT , bool bigendp&gt; </div>
 <li><a class="el" href="Utility_8cpp_source.html">Utility.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

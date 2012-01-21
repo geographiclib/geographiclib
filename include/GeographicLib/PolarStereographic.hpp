@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP \
-  "$Id: 53979440f6d23cf95aefe41a2b9ccb8eedf5b811 $"
+  "$Id: 4bd816aed80f08d9369cd9fee96df0db2f9eedb6 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -26,6 +26,9 @@ namespace GeographicLib {
    *
    * This is a straightforward implementation of the equations in Snyder except
    * that Newton's method is used to invert the projection.
+   *
+   * Example of use:
+   * \include example-PolarStereographic.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT PolarStereographic {
   private:

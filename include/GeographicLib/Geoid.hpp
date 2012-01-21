@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOGRAPHICLIB_GEOID_HPP \
-  "$Id: 73a380e4dcfed4a6ec72c818622ec45f8daf3352 $"
+  "$Id: 8bb7b98423fb36c6e078363bf2b5fc851bd8b1fc $"
 
 #include <string>
 #include <vector>
@@ -63,6 +63,9 @@ namespace GeographicLib {
    * constructor to read all the data into memory and to turn off the
    * single-cell caching which results in a Geoid object which \e is thread
    * safe.
+   *
+   * Example of use:
+   * \include example-Geoid.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT Geoid {

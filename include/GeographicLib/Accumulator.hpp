@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_ACCUMULATOR_HPP)
 #define GEOGRAPHICLIB_ACCUMULATOR_HPP \
-  "$Id: 39476b3fc8d7c5abcc980a7f434bb132d24f53ef $"
+  "$Id: 03b7f4fdb9974c822f98d5f5aab1094b5a9ac8f2 $"
 
 #include <GeographicLib/Constants.hpp>
 
@@ -35,6 +35,9 @@ namespace GeographicLib {
    *
    * In the documentation of the member functions, \e sum stands for the value
    * currently held in the accumulator.
+   *
+   * Example of use:
+   * \include example-Accumulator.cpp
    **********************************************************************/
   template<typename T = Math::real>
   class GEOGRAPHIC_EXPORT Accumulator {

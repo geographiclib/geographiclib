@@ -67,50 +67,36 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\Geo
   target_link_libraries (program2 ${GeographicLib_LIBRARIES}) </pre></div> in your CMakeLists.txt files (as noted). Assuming that you configured and installed <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a> with cmake (or that you used the binary installer for Windows), then the find_package command should find the library and set the required cmake variables (including <code>GEOGRAPHICLIB_FOUND = TRUE</code>). Otherwise, copy cmake/FindGeographicLib.cmake to somewhere in your <code>CMAKE_MODULE_PATH</code>.</li>
 <li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode.</li>
 </ul>
-<p>Here is a very simple test code, which convert the point 38.95N 75.17W (Philadelphia) to the Pennsylvania South coordinate system: </p>
-<div class="fragment"><pre class="fragment"><span class="preprocessor">#include &lt;iostream&gt;</span>
-<span class="preprocessor">#include &lt;iomanip&gt;</span>
+<p>Here is a very simple test code, which uses the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> class: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Small example of using the GeographicLib::Geodesic class</span>
+<span class="comment">// $Id: 23959b26e8023e42f76afabf7a2d7b593666a71a $</span>
 
-<span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
-<span class="preprocessor">#include &lt;<a class="code" href="DMS_8hpp.html" title="Header for GeographicLib::DMS class.">GeographicLib/DMS.hpp</a>&gt;</span>
-<span class="preprocessor">#include &lt;<a class="code" href="LambertConformalConic_8hpp.html" title="Header for GeographicLib::LambertConformalConic class.">GeographicLib/LambertConformalConic.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
 
 <span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
-  <span class="keyword">using namespace </span>GeographicLib;
+  <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a>&amp; geod = Geodesic::WGS84;
+  <span class="comment">// Distance from JFK to LHR</span>
   <span class="keywordtype">double</span>
-    <span class="comment">// These are the constants for Pennsylvania South, EPSG:3364</span>
-    <span class="comment">// http://www.spatialreference.org/ref/epsg/3364/</span>
-    a = <a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(),   <span class="comment">// major radius</span>
-    f = 1/298.257222101,        <span class="comment">// flattening (GRS80)</span>
-    lat1 = <a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(40,58),  <span class="comment">// standard parallel 1</span>
-    lat2 = <a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(39,56),  <span class="comment">// standard parallel 2</span>
-    k1 = 1,                     <span class="comment">// scale on std parallels</span>
-    lat0 =  <a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(39,20), <span class="comment">// latitude of origin</span>
-    lon0 = -<a class="code" href="classGeographicLib_1_1DMS.html#ae802c666ad53884ce062281409bd78b4">DMS::Decode</a>(77,45), <span class="comment">// longitude of origin</span>
-    fe = 600000,                <span class="comment">// false easting</span>
-    fn = 0;                     <span class="comment">// false northing</span>
-  <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> PASouth(a, f, lat1, lat2, k1);
-  <span class="keywordtype">double</span> x0, y0;
-  PASouth.Forward(lon0, lat0, lon0, x0, y0); <span class="comment">// Transform origin point</span>
-  x0 -= fe; y0 -= fn;           <span class="comment">// Combine result with false origin</span>
-
-  <span class="keywordtype">double</span> lat = 39.95, lon = -75.17;    <span class="comment">// Philadelphia</span>
-  <span class="keywordtype">double</span> x, y;
-  PASouth.Forward(lon0, lat, lon, x, y);
-  x -= x0; y -= y0;             <span class="comment">// Philadelphia in PA South coordinates</span>
-
-  std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(3)
-            &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    lat1 = 40.6, lon1 = -73.8, <span class="comment">// JFK Airport</span>
+    lat2 = 51.6, lon2 = -0.5;  <span class="comment">// LHR Airport</span>
+  <span class="keywordtype">double</span> s12;
+  geod.<a class="code" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Inverse</a>(lat1, lon1, lat2, lon2, s12);
+  cout &lt;&lt; s12 / 1000 &lt;&lt; <span class="stringliteral">&quot; km\n&quot;</span>;
   <span class="keywordflow">return</span> 0;
 }
-</pre></div><p> If you copy this code to testprogram.cpp, and compile, link, and run it according to the instructions above, it should print out </p>
+</pre></div><p> This example is <code>examples/example-Geodesic-small.cpp</code>. If you compile, link, and run it according to the instructions above, it should print out </p>
 <div class="fragment"><pre class="fragment">
-  820444.831 71691.798
+  5551.76 km
 </pre></div><p>The next steps are:</p>
 <ul>
 <li>Learn about and run the <a class="el" href="utilities.html">Utility Programs</a>.</li>
 <li>Read the section, <a class="el" href="organization.html">Code organization</a>, for an overview of the library.</li>
 <li>Browse the <a href="annotated.html">Class List</a> for full documentation on the classes in the library.</li>
+<li>Look at the example code in the examples directory. Each file provides a very simple standalone example of using one GeographicLib class. These are included in the descriptions of the classes.</li>
 <li>Look at the source code for the utilities in the tools directory for more examples of using GeographicLib from C++ code, e.g., <a class="el" href="GeodesicProj_8cpp.html" title="Command line utility for geodesic projections.">GeodesicProj.cpp</a> is a program to performing various geodesic projections.</li>
 </ul>
 <p>Here's a list of some of the abbreviations used here with links to the corresponding Wikipedia articles:</p>
@@ -124,7 +110,7 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\Geo
 <li><a href="http://en.wikipedia.org/wiki/IGRF">IGRF</a>, International Geomagnetic Reference Field.</li>
 </ul>
 <center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

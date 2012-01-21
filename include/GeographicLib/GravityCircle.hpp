@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_GRAVITYCIRCLE_HPP)
 #define GEOGRAPHICLIB_GRAVITYCIRCLE_HPP \
-  "$Id: 96763a9084283054e15373a012242f1314b37abe $"
+  "$Id: e7a230fffb6fcb413694f2b4ece36ae44627ef33 $"
 
 #include <string>
 #include <vector>
@@ -32,6 +32,9 @@ namespace GeographicLib {
    *
    * See \ref gravityparallel for an example of using GravityCircle (together
    * with OpenMP) to speed up the computation of geoid heights.
+   *
+   * Example of use:
+   * \include example-GravityCircle.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT GravityCircle {

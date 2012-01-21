@@ -82,9 +82,50 @@ Static Public Attributes</h2></td></tr>
 <ul>
 <li>J. P. Snyder, <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395">Map Projections: A Working Manual</a>, USGS Professional Paper 1395 (1987), pp. 160&ndash;163.</li>
 </ul>
-<p>This is a straightforward implementation of the equations in Snyder except that Newton's method is used to invert the projection. </p>
+<p>This is a straightforward implementation of the equations in Snyder except that Newton's method is used to invert the projection.</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::PolarStereographic class</span>
+<span class="comment">// $Id: 76bd97693e4f711118164cc0cde1db7f5ca70e12 $</span>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00030">30</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;string&gt;</span>
+<span class="preprocessor">#include &lt;iomanip&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="PolarStereographic_8hpp.html" title="Header for GeographicLib::PolarStereographic class.">GeographicLib/PolarStereographic.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> proj(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>(),
+                            <a class="code" href="classGeographicLib_1_1Constants.html#ae48baa0a561e58acb2574f07e7acda1f">Constants::UPS_k0</a>());
+    <span class="comment">// Alternatively:</span>
+    <span class="comment">// const PolarStereographic&amp; proj = PolarStereographic::UPS;</span>
+    <span class="keywordtype">bool</span> northp = <span class="keyword">true</span>;
+    {
+      <span class="comment">// Sample forward calculation</span>
+      <span class="keywordtype">double</span> lat = 61.2, lon = -149.9; <span class="comment">// Anchorage</span>
+      <span class="keywordtype">double</span> x, y;
+      proj.Forward(northp, lat, lon, x, y);
+      cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample reverse calculation</span>
+      <span class="keywordtype">double</span> x = -1637e3, y = 2824e3;
+      <span class="keywordtype">double</span> lat, lon;
+      proj.Reverse(northp, x, y, lat, lon);
+      cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00033">33</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a170d21f9c7a2e922c57fc83a44ea3dfa"></a><!-- doxytag: member="GeographicLib::PolarStereographic::PolarStereographic" ref="a170d21f9c7a2e922c57fc83a44ea3dfa" args="(real a, real f, real k0)" -->
 <div class="memitem">
@@ -129,7 +170,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00028">28</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -170,7 +211,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00126">126</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
-<p>References <a class="el" href="PolarStereographic_8cpp_source.html#l00072">Forward()</a>, and <a class="el" href="Math_8hpp_source.html#l00334">GeographicLib::Math::isfinite()</a>.</p>
+<p>References <a class="el" href="PolarStereographic_8cpp_source.html#l00072">Forward()</a>, and <a class="el" href="Math_8hpp_source.html#l00330">GeographicLib::Math::isfinite()</a>.</p>
 
 </div>
 </div>
@@ -245,7 +286,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00072">72</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 <p>Referenced by <a class="el" href="PolarStereographic_8cpp_source.html#l00126">SetScale()</a>.</p>
 
@@ -322,7 +363,7 @@ Static Public Attributes</h2></td></tr>
 
 <p>Definition at line <a class="el" href="PolarStereographic_8cpp_source.html#l00095">95</a> of file <a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a>.</p>
 
-<p>References <a class="el" href="Math_8hpp_source.html#l00146">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00134">GeographicLib::Math::sq()</a>.</p>
+<p>References <a class="el" href="Math_8hpp_source.html#l00142">GeographicLib::Math::hypot()</a>, and <a class="el" href="Math_8hpp_source.html#l00130">GeographicLib::Math::sq()</a>.</p>
 
 </div>
 </div>
@@ -370,7 +411,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1PolarStereographic.html#a30ef1a1f906ee389e2a5f7e5fd7d8fa4">PolarStereographic::Forward</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00118">118</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00121">121</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 
 </div>
 </div>
@@ -418,7 +459,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p><a class="el" href="classGeographicLib_1_1PolarStereographic.html#a01302b8dba43c57e3c3849f94123a157">PolarStereographic::Reverse</a> without returning the convergence and scale. </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00127">127</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00130">130</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 
 </div>
 </div>
@@ -437,7 +478,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00140">140</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00143">143</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 
 </div>
 </div>
@@ -456,7 +497,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00146">146</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00149">149</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 
 </div>
 </div>
@@ -476,7 +517,7 @@ Static Public Attributes</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00152">152</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00155">155</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 
 </div>
 </div>
@@ -495,7 +536,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>The central scale for the projection. This is the value of <em>k0</em> used in the constructor and is the scale at the pole unless overridden by <a class="el" href="classGeographicLib_1_1PolarStereographic.html#a3f957214eb1d1248277a680e4c4ceed5">PolarStereographic::SetScale</a>. </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00159">159</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00162">162</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 
 </div>
 </div>
@@ -512,7 +553,7 @@ Static Public Attributes</h2></td></tr>
 <div class="memdoc">
 <p>A global instantiation of <a class="el" href="classGeographicLib_1_1PolarStereographic.html" title="Polar Stereographic Projection.">PolarStereographic</a> with the WGS84 ellipsoid and the UPS scale factor. However, unlike UPS, no false easting or northing is added. </p>
 
-<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00167">167</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
+<p>Definition at line <a class="el" href="PolarStereographic_8hpp_source.html#l00170">170</a> of file <a class="el" href="PolarStereographic_8hpp_source.html">PolarStereographic.hpp</a>.</p>
 
 </div>
 </div>
@@ -521,7 +562,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="PolarStereographic_8cpp_source.html">PolarStereographic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

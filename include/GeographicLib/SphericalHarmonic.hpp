@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
 #define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP \
-  "$Id: 12b23c05ab8bae57213d6762e45189a7cb46b397 $"
+  "$Id: cd1abfd4b08774a17c141bb6fbb07b04d4658791 $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -58,6 +58,9 @@ namespace GeographicLib {
    *   279-299 (2002).
    * - C. C. Tscherning and K. Poder, Some geodetic applications of Clenshaw
    *   summation, Boll. Geod. Sci. Aff. 41(4), 349-375 (1982).
+   *
+   * Example of use:
+   * \include example-SphericalHarmonic.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalHarmonic {
@@ -132,8 +135,8 @@ namespace GeographicLib {
      *
      * The coefficients \e C<sub>\e nm</sub> and \e S<sub>\e nm</sub> are
      * stored in the one-dimensional vectors \e C and \e S which must contain
-     * (\e N + 1)(\e N + 2)/2 elements, stored in "column-major" order.  Thus
-     * for \e N = 3, the order would be:
+     * (\e N + 1)(\e N + 2)/2 and N (\e N + 1)/2 elements, respectively, stored
+     * in "column-major" order.  Thus for \e N = 3, the order would be:
      * <i>C</i><sub>00</sub>,
      * <i>C</i><sub>10</sub>,
      * <i>C</i><sub>20</sub>,

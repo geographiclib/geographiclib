@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_POLYGONAREA_HPP)
 #define GEOGRAPHICLIB_POLYGONAREA_HPP \
-  "$Id: c6b922a70d4f5ea75580f4e2746a2148b288a03e $"
+  "$Id: 8c532d61c2cec114c7bf224b2f80a1c249748f1b $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -42,6 +42,9 @@ namespace GeographicLib {
    * At any point you can ask for the perimeter and area so far.  There's an
    * option to treat the points as defining a polyline instead of a polygon; in
    * that case, only the perimeter is computed.
+   *
+   * Example of use:
+   * \include example-PolygonArea.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT PolygonArea {

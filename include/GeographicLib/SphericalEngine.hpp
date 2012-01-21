@@ -2,14 +2,14 @@
  * \file SphericalEngine.hpp
  * \brief Header for GeographicLib::SphericalEngine class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
 #define GEOGRAPHICLIB_SPHERICALENGINE_HPP \
-  "$Id: 3410576dbc0276f23077ba3662817e14981ab919 $"
+  "$Id: dae9ba0d660c070c0f28715de87ed20f79808793 $"
 
 #include <vector>
 #include <istream>
@@ -33,6 +33,9 @@ namespace GeographicLib {
    * class directly.
    *
    * See SphericalEngine.cpp for more information on the implementation.
+   *
+   * Example of use:
+   * \include example-SphericalEngine.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT SphericalEngine {
@@ -314,7 +317,7 @@ namespace GeographicLib {
      * call CircularEngine::operator()() with arguments <i>x</i>/\e p and
      * <i>y</i>/\e p.
      **********************************************************************/
-    template<bool gradp, SphericalEngine::normalization norm, int L>
+    template<bool gradp, normalization norm, int L>
       static CircularEngine Circle(const coeff c[], const real f[],
                                    real p, real z, real a);
     /**

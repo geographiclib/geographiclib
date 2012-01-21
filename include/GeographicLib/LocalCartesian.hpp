@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_LOCALCARTESIAN_HPP)
 #define GEOGRAPHICLIB_LOCALCARTESIAN_HPP \
-  "$Id: 0200a2653b8473d3fbf1f1382291fbff5294821c $"
+  "$Id: f4bfc3dad6836b6107cf78e695349a9e9fa5530d $"
 
 #include <GeographicLib/Geocentric.hpp>
 #include <GeographicLib/Constants.hpp>
@@ -28,6 +28,9 @@ namespace GeographicLib {
    *
    * The conversions all take place via geocentric coordinates using a
    * Geocentric object (by default Geocentric::WGS84).
+   *
+   * Example of use:
+   * \include example-LocalCartesian.cpp
    **********************************************************************/
 
   class GEOGRAPHIC_EXPORT LocalCartesian {

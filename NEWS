@@ -1,4 +1,4 @@
-# $Id: 695f79e762aec383d8c4fcc2dc62a21de5bb317f $
+# $Id: 522efda58d4848d323bbe846d9c88a76e9a45ace $
 
 A reverse chronological list of changes to GeographicLib
 
@@ -6,7 +6,20 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.16.
+The current version of the library is 1.17.
+
+Changes between 1.17 (released 2012-01-21) and 1.16 versions:
+
+  * Work around optimization BUG in Geodesic::Inverse with g++ version
+    4.4.0 (mingw).
+
+  * Fix BUG in argument checking with OSGB::GridReference.
+
+  * Fix missing include file in SphericalHarmonic2.
+
+  * Add simple examples of usage for each class.
+
+  * Add internal documenation to the cmake configuration files.
 
 Changes between 1.16 (released 2011-12-07) and 1.15 versions:
 

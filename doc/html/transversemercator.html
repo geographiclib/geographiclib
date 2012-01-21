@@ -81,7 +81,7 @@ Test data for the transverse Mercator projection</h2>
 <p>(a total of 287000 entries). The entries for lat &lt; 0<sup>o</sup> and lon in [90<sup>o</sup> (1 - <em>e</em>), 90<sup>o</sup>] use the "extended" domain for the transverse Mercator projection explained in Sec. 5 of <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>. The first 258000 entries have lat &gt;= 0<sup>o</sup> and are suitable for testing implementations following the standard convention.</p>
 <h2><a class="anchor" id="tmseries"></a>
 Series approximation for transverse Mercator</h2>
-<p>Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse Mercator projection. This is accurate to about 200 nm within the UTM domain. Here we present the series extended to 10th order. By default, <a class="el" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">GeographicLib::TransverseMercator</a> uses the 6th-order approximation. The preprocessor variable TM_TX_MAXPOW can be used to select an order from 4 thru 8. The series expanded to order <em>n</em><sup>30</sup> are given in <a href="tmseries30.html">tmseries30.html</a>.</p>
+<p>Kr&uuml;ger (1912) gives a 4th-order approximation to the transverse Mercator projection. This is accurate to about 200 nm (200 nanometers) within the UTM domain. Here we present the series extended to 10th order. By default, <a class="el" href="classGeographicLib_1_1TransverseMercator.html" title="Transverse Mercator Projection.">GeographicLib::TransverseMercator</a> uses the 6th-order approximation. The preprocessor variable TM_TX_MAXPOW can be used to select an order from 4 thru 8. The series expanded to order <em>n</em><sup>30</sup> are given in <a href="tmseries30.html">tmseries30.html</a>.</p>
 <p>In the formulas below ^ indicates exponentiation (<em>n^3</em> = <em>n*<em>n*<em>n</em>)</em> and</em> / indicates real division (3/5 = 0.6). The equations need to be converted to Horner form, but are here left in expanded form so that they can be easily truncated to lower order in <em>n</em>. Some of the integers here are not representable as 32-bit integers and will need to be included as double literals.</p>
 <p><em>A</em> in Kr&uuml;ger, p. 12, eq. (5) </p>
 <div class="fragment"><pre class="fragment">
@@ -209,7 +209,7 @@ alpha[10]=   77911515623232821/12014330904576000 * n^10;
   load("tmseries.mac")$
 </pre></div><p> Further instructions are included at the top of the file.</p>
 <center> Back to <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. Forward to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

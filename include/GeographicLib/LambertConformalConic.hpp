@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)
 #define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP \
-  "$Id: 7975cff875e88fd42f81f9e1d7117c1dd36667d2 $"
+  "$Id: fcf9176f0a356995138754581297173aa3491693 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -31,7 +31,7 @@ namespace GeographicLib {
    * projection.  In this implementation, the projection correctly becomes the
    * Mercator projection or the polar stereographic projection when the
    * standard latitude is the equator or a pole.  The accuracy of the
-   * projections is about 10 nm.
+   * projections is about 10 nm (10 nanometers).
    *
    * The ellipsoid parameters, the standard parallels, and the scale on the
    * standard parallels are set in the constructor.  Internally, the case with
@@ -50,34 +50,7 @@ namespace GeographicLib {
    * calling function.  For example the Pennsylvania South state coordinate
    * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
    * EPSG:3364</a>) is obtained by:
-   \code
-   const double
-     a = GeographicLib::Constants::WGS84_a<double>(),
-     f = 1/298.257222101,                      // GRS80
-     lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, // standard parallels
-     k1 = 1,                                   // scale
-     lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, // origin
-     fe = 600000, fn = 0;                      // false easting and northing
-   // Set up basic projection
-   const GeographicLib::LambertConformalConic PASouth(a, f, lat1, lat2, k1);
-   double x0, y0;
-   {
-     // Transform origin point
-     PASouth.Forward(lon0, lat0, lon0, x0, y0);
-     x0 -= fe; y0 -= fn;         // Combine result with false origin
-   }
-   double lat, lon, x, y;
-   // Sample conversion from geodetic to PASouth grid
-   std::cin >> lat >> lon;
-   PASouth.Forward(lon0, lat, lon, x, y);
-   x -= x0; y -= y0;
-   std::cout << x << " " << y << "\n";
-   // Sample conversion from PASouth grid to geodetic
-   std::cin >> x >> y;
-   x += x0; y += y0;
-   PASouth.Reverse(lon0, x, y, lat, lon);
-   std::cout << lat << " " << lon << "\n";
-   \endcode
+   * \include example-LambertConformalConic.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT LambertConformalConic {
   private:
@@ -248,10 +221,11 @@ namespace GeographicLib {
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added and \e lat should be in the range
      * [-90, 90]; \e lon and \e lon0 should be in the range [-180, 360].  The
-     * error in the projection is less than about 10 nm (true distance) and the
-     * errors in the meridian convergence and scale are consistent with this.
-     * The values of \e x and \e y returned for points which project to
-     * infinity (i.e., one or both of the poles) will be large but finite.
+     * error in the projection is less than about 10 nm (10 nanometers), true
+     * distance, and the errors in the meridian convergence and scale are
+     * consistent with this.  The values of \e x and \e y returned for points
+     * which project to infinity (i.e., one or both of the poles) will be large
+     * but finite.
      **********************************************************************/
     void Forward(real lon0, real lat, real lon,
                  real& x, real& y, real& gamma, real& k) const throw();
@@ -270,9 +244,9 @@ namespace GeographicLib {
      * The latitude origin is given by LambertConformalConic::LatitudeOrigin().
      * No false easting or northing is added.  \e lon0 should be in the range
      * [-180, 360].  The value of \e lon returned is in the range [-180, 180).
-     * The error in the projection is less than about 10 nm (true distance) and
-     * the errors in the meridian convergence and scale are consistent with
-     * this.
+     * The error in the projection is less than about 10 nm (10 nanometers),
+     * true distance, and the errors in the meridian convergence and scale are
+     * consistent with this.
      **********************************************************************/
     void Reverse(real lon0, real x, real y,
                  real& lat, real& lon, real& gamma, real& k) const throw();

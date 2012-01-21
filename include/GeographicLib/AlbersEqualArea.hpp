@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_ALBERSEQUALAREA_HPP)
 #define GEOGRAPHICLIB_ALBERSEQUALAREA_HPP \
-  "$Id: 554a5a83b2feb1f029cc7a7e3c94bdc86ccc36d1 $"
+  "$Id: c9f194023273bee32876018a1f6a548e35303836 $"
 
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
@@ -51,6 +51,9 @@ namespace GeographicLib {
    * counter-clockwise from the \e x axis.  There is no provision in this class
    * for specifying a false easting or false northing or a different latitude
    * of origin.
+   *
+   * Example of use:
+   * \include example-AlbersEqualArea.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT AlbersEqualArea {
   private:

@@ -78,9 +78,49 @@ Public Member Functions</h2></td></tr>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Local Cartesian coordinates. </p>
 <p>Convert between geodetic coordinates latitude = <em>lat</em>, longitude = <em>lon</em>, height = <em>h</em> (measured vertically from the surface of the ellipsoid) to local cartesian coordinates (<em>x</em>, <em>y</em>, <em>z</em>). The origin of local cartesian coordinate system is at <em>lat</em> = <em>lat0</em>, <em>lon</em> = <em>lon0</em>, <em>h</em> = <em>h0</em>. The <em>z</em> axis is normal to the ellipsoid; the <em>y</em> axis points due north. The plane <em>z</em> = - <em>h0</em> is tangent to the ellipsoid.</p>
-<p>The conversions all take place via geocentric coordinates using a <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object (by default <a class="el" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>). </p>
+<p>The conversions all take place via geocentric coordinates using a <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object (by default <a class="el" href="classGeographicLib_1_1Geocentric.html#a4762989f3d1d30bca597f644e8b2b52e">Geocentric::WGS84</a>).</p>
+<p>Example of use: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::LocalCartesian class</span>
+<span class="comment">// $Id: 0fd182a359b17d3b76ccd55f405b272a327a42e8 $</span>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00033">33</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<span class="preprocessor">#include &lt;iostream&gt;</span>
+<span class="preprocessor">#include &lt;exception&gt;</span>
+<span class="preprocessor">#include &lt;cmath&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="Geocentric_8hpp.html" title="Header for GeographicLib::Geocentric class.">GeographicLib/Geocentric.hpp</a>&gt;</span>
+<span class="preprocessor">#include &lt;<a class="code" href="LocalCartesian_8hpp.html" title="Header for GeographicLib::LocalCartesian class.">GeographicLib/LocalCartesian.hpp</a>&gt;</span>
+
+<span class="keyword">using namespace </span>std;
+<span class="keyword">using namespace </span>GeographicLib;
+
+<span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
+  <span class="keywordflow">try</span> {
+    <a class="code" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> earth(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>());
+    <span class="comment">// Alternatively: const Geocentric&amp; earth = Geocentric::WGS84;</span>
+    <span class="keyword">const</span> <span class="keywordtype">double</span> lat0 = 48 + 50/60.0, lon0 = 2 + 20/60.0; <span class="comment">// Paris</span>
+    <a class="code" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">LocalCartesian</a> proj(lat0, lon0, 0, earth);
+    {
+      <span class="comment">// Sample forward calculation</span>
+      <span class="keywordtype">double</span> lat = 50.9, lon = 1.8, h = 0; <span class="comment">// Calais</span>
+      <span class="keywordtype">double</span> x, y, z;
+      proj.Forward(lat, lon, h, x, y, z);
+      cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; z &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample reverse calculation</span>
+      <span class="keywordtype">double</span> x = -38e3, y = 230e3, z = -4e3;
+      <span class="keywordtype">double</span> lat, lon, h;
+      proj.Reverse(x, y, z, lat, lon, h);
+      cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; h &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+  }
+  <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
+    cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    <span class="keywordflow">return</span> 1;
+  }
+  <span class="keywordflow">return</span> 0;
+}
+</pre></div> 
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00036">36</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 </div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ad277a6798293d5d66168c3c1438d10a2"></a><!-- doxytag: member="GeographicLib::LocalCartesian::LocalCartesian" ref="ad277a6798293d5d66168c3c1438d10a2" args="(real lat0, real lon0, real h0=0, const Geocentric &amp;earth=Geocentric::WGS84)" -->
 <div class="memitem">
@@ -129,7 +169,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00057">57</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00060">60</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -156,7 +196,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>Sets <em>lat0</em> = 0, <em>lon0</em> = 0, <em>h0</em> = 0. </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00070">70</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00073">73</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -267,7 +307,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p><em>lat</em> should be in the range [-90, 90]; <em>lon</em> and <em>lon0</em> should be in the range [-180, 360]. </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00098">98</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00101">101</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00032">main()</a>.</p>
 
@@ -347,7 +387,7 @@ Public Member Functions</h2></td></tr>
 </ul>
 <p>Then we have <em>v0</em> = <em>M</em> . <em>v1</em>. </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00127">127</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00130">130</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -413,7 +453,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>The value of <em>lon</em> returned is in the range [-180, 180). </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00150">150</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00153">153</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 <p>Referenced by <a class="el" href="CartConvert_8cpp_source.html#l00032">main()</a>.</p>
 
@@ -493,7 +533,7 @@ Public Member Functions</h2></td></tr>
 </ul>
 <p>Then we have <em>v1</em> = <em>M^T</em> . <em>v0</em>, where <em>M^T</em> is the transpose of <em>M</em>. </p>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00180">180</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00183">183</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -512,7 +552,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>latitude of the origin (degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00197">197</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00200">200</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -531,7 +571,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>longitude of the origin (degrees). </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00202">202</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00205">205</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -550,7 +590,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd>height of the origin (meters). </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00207">207</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00210">210</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -569,7 +609,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>a</em> the equatorial radius of the ellipsoid (meters). This is the value of <em>a</em> inherited from the <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00214">214</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00217">217</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -588,7 +628,7 @@ Public Member Functions</h2></td></tr>
 <div class="memdoc">
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>f</em> the flattening of the ellipsoid. This is the value inherited from the <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">Geocentric</a> object used in the constructor. </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00220">220</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00223">223</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -608,7 +648,7 @@ Public Member Functions</h2></td></tr>
 <p><b>DEPRECATED</b> </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><em>r</em> the inverse flattening of the ellipsoid. </dd></dl>
 
-<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00226">226</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
+<p>Definition at line <a class="el" href="LocalCartesian_8hpp_source.html#l00229">229</a> of file <a class="el" href="LocalCartesian_8hpp_source.html">LocalCartesian.hpp</a>.</p>
 
 </div>
 </div>
@@ -617,7 +657,7 @@ Public Member Functions</h2></td></tr>
 <li><a class="el" href="LocalCartesian_8cpp_source.html">LocalCartesian.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

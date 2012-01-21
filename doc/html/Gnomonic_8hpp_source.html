@@ -59,7 +59,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_GNOMONIC_HPP)</span>
 <a name="l00011"></a><a class="code" href="Gnomonic_8hpp.html#af85f3f443620d568666f526ee193308a">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_GNOMONIC_HPP \</span>
-<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 3ae0cfd77aad984813d955a03726248ac6b427a9 $&quot;</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 93b8247cb467dd7cbafbe10acd6b7c85f7aaf7d1 $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Geodesic_8hpp.html" title="Header for GeographicLib::Geodesic class.">GeographicLib/Geodesic.hpp</a>&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="GeodesicLine_8hpp.html" title="Header for GeographicLib::GeodesicLine class.">GeographicLib/GeodesicLine.hpp</a>&gt;</span>
@@ -145,130 +145,133 @@
 <a name="l00095"></a>00095 <span class="comment">   * - The projection given here.  This causes geodesics close to the center</span>
 <a name="l00096"></a>00096 <span class="comment">   *   point to appear as straight lines in the projection; i.e., it</span>
 <a name="l00097"></a>00097 <span class="comment">   *   generalizes the spherical great circle to a geodesic.</span>
-<a name="l00098"></a>00098 <span class="comment">   **********************************************************************/</span>
-<a name="l00099"></a>00099 
-<a name="l00100"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html">00100</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1Gnomonic.html" title="Gnomonic Projection.">Gnomonic</a> {
-<a name="l00101"></a>00101   <span class="keyword">private</span>:
-<a name="l00102"></a>00102     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
-<a name="l00103"></a>00103     <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> _earth;
-<a name="l00104"></a>00104     real _a, _f;
-<a name="l00105"></a>00105     <span class="keyword">static</span> <span class="keyword">const</span> real eps0_;
-<a name="l00106"></a>00106     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
-<a name="l00107"></a>00107     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 5;
-<a name="l00108"></a>00108   <span class="keyword">public</span>:
-<a name="l00109"></a>00109 <span class="comment"></span>
-<a name="l00110"></a>00110 <span class="comment">    /**</span>
-<a name="l00111"></a>00111 <span class="comment">     * Constructor for Gnomonic.</span>
-<a name="l00112"></a>00112 <span class="comment">     *</span>
-<a name="l00113"></a>00113 <span class="comment">     * @param[in] earth the Geodesic object to use for geodesic calculations.</span>
-<a name="l00114"></a>00114 <span class="comment">     *   By default this uses the WGS84 ellipsoid.</span>
-<a name="l00115"></a>00115 <span class="comment">     **********************************************************************/</span>
-<a name="l00116"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a2ac973ebbd7aaf18c451b152cd92db99">00116</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1Gnomonic.html" title="Gnomonic Projection.">Gnomonic</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">Geodesic::WGS84</a>)
-<a name="l00117"></a>00117       throw()
-<a name="l00118"></a>00118       : _earth(earth)
-<a name="l00119"></a>00119       , _a(_earth.MajorRadius())
-<a name="l00120"></a>00120       , _f(_earth.Flattening())
-<a name="l00121"></a>00121     {}
-<a name="l00122"></a>00122 <span class="comment"></span>
-<a name="l00123"></a>00123 <span class="comment">    /**</span>
-<a name="l00124"></a>00124 <span class="comment">     * Forward projection, from geographic to gnomonic.</span>
-<a name="l00125"></a>00125 <span class="comment">     *</span>
-<a name="l00126"></a>00126 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
-<a name="l00127"></a>00127 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
-<a name="l00128"></a>00128 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
-<a name="l00129"></a>00129 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
-<a name="l00130"></a>00130 <span class="comment">     * @param[out] x easting of point (meters).</span>
-<a name="l00131"></a>00131 <span class="comment">     * @param[out] y northing of point (meters).</span>
-<a name="l00132"></a>00132 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
-<a name="l00133"></a>00133 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
-<a name="l00134"></a>00134 <span class="comment">     *</span>
-<a name="l00135"></a>00135 <span class="comment">     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e</span>
-<a name="l00136"></a>00136 <span class="comment">     * lon should be in the range [-180, 360].  The scale of the projection is</span>
-<a name="l00137"></a>00137 <span class="comment">     * 1/&lt;i&gt;rk&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; in the &quot;radial&quot; direction, \e azi clockwise from</span>
-<a name="l00138"></a>00138 <span class="comment">     * true north, and is 1/\e rk in the direction perpendicular to this.  If</span>
-<a name="l00139"></a>00139 <span class="comment">     * the point lies &quot;over the horizon&quot;, i.e., if \e rk &lt;= 0, then NaNs are</span>
-<a name="l00140"></a>00140 <span class="comment">     * returned for \e x and \e y (the correct values are returned for \e azi</span>
-<a name="l00141"></a>00141 <span class="comment">     * and \e rk).  A call to Forward followed by a call to Reverse will return</span>
-<a name="l00142"></a>00142 <span class="comment">     * the original (\e lat, \e lon) (to within roundoff) provided the point in</span>
-<a name="l00143"></a>00143 <span class="comment">     * not over the horizon.</span>
-<a name="l00144"></a>00144 <span class="comment">     **********************************************************************/</span>
-<a name="l00145"></a>00145     <span class="keywordtype">void</span> Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon,
-<a name="l00146"></a>00146                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00147"></a>00147 <span class="comment"></span>
-<a name="l00148"></a>00148 <span class="comment">    /**</span>
-<a name="l00149"></a>00149 <span class="comment">     * Reverse projection, from gnomonic to geographic.</span>
-<a name="l00150"></a>00150 <span class="comment">     *</span>
-<a name="l00151"></a>00151 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
-<a name="l00152"></a>00152 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
-<a name="l00153"></a>00153 <span class="comment">     * @param[in] x easting of point (meters).</span>
-<a name="l00154"></a>00154 <span class="comment">     * @param[in] y northing of point (meters).</span>
-<a name="l00155"></a>00155 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
-<a name="l00156"></a>00156 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
-<a name="l00157"></a>00157 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
-<a name="l00158"></a>00158 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
-<a name="l00159"></a>00159 <span class="comment">     *</span>
-<a name="l00160"></a>00160 <span class="comment">     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the</span>
-<a name="l00161"></a>00161 <span class="comment">     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon</span>
-<a name="l00162"></a>00162 <span class="comment">     * will be in the range [-180, 180).  The scale of the projection is 1/\e</span>
-<a name="l00163"></a>00163 <span class="comment">     * rk&lt;sup&gt;2&lt;/sup&gt; in the &quot;radial&quot; direction, \e azi clockwise from true</span>
-<a name="l00164"></a>00164 <span class="comment">     * north, and is 1/\e rk in the direction perpendicular to this.  Even</span>
-<a name="l00165"></a>00165 <span class="comment">     * though all inputs should return a valid \e lat and \e lon, it&#39;s possible</span>
-<a name="l00166"></a>00166 <span class="comment">     * that the procedure fails to converge for very large \e x or \e y; in</span>
-<a name="l00167"></a>00167 <span class="comment">     * this case NaNs are returned for all the output arguments.  A call to</span>
-<a name="l00168"></a>00168 <span class="comment">     * Reverse followed by a call to Forward will return the original (\e x, \e</span>
-<a name="l00169"></a>00169 <span class="comment">     * y) (to roundoff).</span>
-<a name="l00170"></a>00170 <span class="comment">     **********************************************************************/</span>
-<a name="l00171"></a>00171     <span class="keywordtype">void</span> Reverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
-<a name="l00172"></a>00172                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
-<a name="l00173"></a>00173 <span class="comment"></span>
-<a name="l00174"></a>00174 <span class="comment">    /**</span>
-<a name="l00175"></a>00175 <span class="comment">     * Gnomonic::Forward without returning the azimuth and scale.</span>
-<a name="l00176"></a>00176 <span class="comment">     **********************************************************************/</span>
-<a name="l00177"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a2c08cf2bad190ee9ab88f7d877223208">00177</a>     <span class="keywordtype">void</span> Forward(real lat0, real lon0, real lat, real lon,
-<a name="l00178"></a>00178                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00179"></a>00179       real azi, rk;
-<a name="l00180"></a>00180       Forward(lat0, lon0, lat, lon, x, y, azi, rk);
-<a name="l00181"></a>00181     }
-<a name="l00182"></a>00182 <span class="comment"></span>
-<a name="l00183"></a>00183 <span class="comment">    /**</span>
-<a name="l00184"></a>00184 <span class="comment">     * Gnomonic::Reverse without returning the azimuth and scale.</span>
-<a name="l00185"></a>00185 <span class="comment">     **********************************************************************/</span>
-<a name="l00186"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a8700d59a1e244f8dd211e344587dfed3">00186</a>     <span class="keywordtype">void</span> Reverse(real lat0, real lon0, real x, real y,
-<a name="l00187"></a>00187                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
-<a name="l00188"></a>00188       real azi, rk;
-<a name="l00189"></a>00189       Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
-<a name="l00190"></a>00190     }
-<a name="l00191"></a>00191 <span class="comment"></span>
-<a name="l00192"></a>00192 <span class="comment">    /** \name Inspector functions</span>
-<a name="l00193"></a>00193 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
-<a name="l00194"></a>00194 <span class="comment">    ///@{</span>
-<a name="l00195"></a>00195 <span class="comment"></span><span class="comment">    /**</span>
-<a name="l00196"></a>00196 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
-<a name="l00197"></a>00197 <span class="comment">     *   the value inherited from the Geodesic object used in the constructor.</span>
-<a name="l00198"></a>00198 <span class="comment">     **********************************************************************/</span>
-<a name="l00199"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a8598fe6d8c3896fa3fd58d24023f78ee">00199</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Gnomonic.html#a8598fe6d8c3896fa3fd58d24023f78ee">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.MajorRadius(); }
-<a name="l00200"></a>00200 <span class="comment"></span>
-<a name="l00201"></a>00201 <span class="comment">    /**</span>
-<a name="l00202"></a>00202 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value</span>
-<a name="l00203"></a>00203 <span class="comment">     *   inherited from the Geodesic object used in the constructor.</span>
-<a name="l00204"></a>00204 <span class="comment">     **********************************************************************/</span>
-<a name="l00205"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a06b559fa72aa1e51da966c43d22b983d">00205</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Gnomonic.html#a06b559fa72aa1e51da966c43d22b983d">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.Flattening(); }
-<a name="l00206"></a>00206 <span class="comment"></span>
-<a name="l00207"></a>00207 <span class="comment">    /**</span>
-<a name="l00208"></a>00208 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
-<a name="l00209"></a>00209 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
-<a name="l00210"></a>00210 <span class="comment">     **********************************************************************/</span>
-<a name="l00211"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a655eff8ef95f92902899459e8a5efe63">00211</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
-<a name="l00212"></a>00212     { <span class="keywordflow">return</span> _earth.InverseFlattening(); }<span class="comment"></span>
-<a name="l00213"></a>00213 <span class="comment">    ///@}</span>
-<a name="l00214"></a>00214 <span class="comment"></span>  };
-<a name="l00215"></a>00215 
-<a name="l00216"></a>00216 } <span class="comment">// namespace GeographicLib</span>
-<a name="l00217"></a>00217 
-<a name="l00218"></a>00218 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GNOMONIC_HPP</span>
+<a name="l00098"></a>00098 <span class="comment">   *</span>
+<a name="l00099"></a>00099 <span class="comment">   * Example of use:</span>
+<a name="l00100"></a>00100 <span class="comment">   * \include example-Gnomonic.cpp</span>
+<a name="l00101"></a>00101 <span class="comment">   **********************************************************************/</span>
+<a name="l00102"></a>00102 
+<a name="l00103"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html">00103</a>   <span class="keyword">class </span><a class="code" href="Constants_8hpp.html#a59a204dcc2942f86d7b24b4233aad719">GEOGRAPHIC_EXPORT</a> <a class="code" href="classGeographicLib_1_1Gnomonic.html" title="Gnomonic Projection.">Gnomonic</a> {
+<a name="l00104"></a>00104   <span class="keyword">private</span>:
+<a name="l00105"></a>00105     <span class="keyword">typedef</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>;
+<a name="l00106"></a>00106     <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> _earth;
+<a name="l00107"></a>00107     real _a, _f;
+<a name="l00108"></a>00108     <span class="keyword">static</span> <span class="keyword">const</span> real eps0_;
+<a name="l00109"></a>00109     <span class="keyword">static</span> <span class="keyword">const</span> real eps_;
+<a name="l00110"></a>00110     <span class="keyword">static</span> <span class="keyword">const</span> <span class="keywordtype">int</span> numit_ = 5;
+<a name="l00111"></a>00111   <span class="keyword">public</span>:
+<a name="l00112"></a>00112 <span class="comment"></span>
+<a name="l00113"></a>00113 <span class="comment">    /**</span>
+<a name="l00114"></a>00114 <span class="comment">     * Constructor for Gnomonic.</span>
+<a name="l00115"></a>00115 <span class="comment">     *</span>
+<a name="l00116"></a>00116 <span class="comment">     * @param[in] earth the Geodesic object to use for geodesic calculations.</span>
+<a name="l00117"></a>00117 <span class="comment">     *   By default this uses the WGS84 ellipsoid.</span>
+<a name="l00118"></a>00118 <span class="comment">     **********************************************************************/</span>
+<a name="l00119"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a2ac973ebbd7aaf18c451b152cd92db99">00119</a>     <span class="keyword">explicit</span> <a class="code" href="classGeographicLib_1_1Gnomonic.html" title="Gnomonic Projection.">Gnomonic</a>(<span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a>&amp; earth = <a class="code" href="classGeographicLib_1_1Geodesic.html#ae918bb7e1555fba38483449cbbac0ca1">Geodesic::WGS84</a>)
+<a name="l00120"></a>00120       throw()
+<a name="l00121"></a>00121       : _earth(earth)
+<a name="l00122"></a>00122       , _a(_earth.MajorRadius())
+<a name="l00123"></a>00123       , _f(_earth.Flattening())
+<a name="l00124"></a>00124     {}
+<a name="l00125"></a>00125 <span class="comment"></span>
+<a name="l00126"></a>00126 <span class="comment">    /**</span>
+<a name="l00127"></a>00127 <span class="comment">     * Forward projection, from geographic to gnomonic.</span>
+<a name="l00128"></a>00128 <span class="comment">     *</span>
+<a name="l00129"></a>00129 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
+<a name="l00130"></a>00130 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
+<a name="l00131"></a>00131 <span class="comment">     * @param[in] lat latitude of point (degrees).</span>
+<a name="l00132"></a>00132 <span class="comment">     * @param[in] lon longitude of point (degrees).</span>
+<a name="l00133"></a>00133 <span class="comment">     * @param[out] x easting of point (meters).</span>
+<a name="l00134"></a>00134 <span class="comment">     * @param[out] y northing of point (meters).</span>
+<a name="l00135"></a>00135 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
+<a name="l00136"></a>00136 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
+<a name="l00137"></a>00137 <span class="comment">     *</span>
+<a name="l00138"></a>00138 <span class="comment">     * \e lat0 and \e lat should be in the range [-90, 90] and \e lon0 and \e</span>
+<a name="l00139"></a>00139 <span class="comment">     * lon should be in the range [-180, 360].  The scale of the projection is</span>
+<a name="l00140"></a>00140 <span class="comment">     * 1/&lt;i&gt;rk&lt;/i&gt;&lt;sup&gt;2&lt;/sup&gt; in the &quot;radial&quot; direction, \e azi clockwise from</span>
+<a name="l00141"></a>00141 <span class="comment">     * true north, and is 1/\e rk in the direction perpendicular to this.  If</span>
+<a name="l00142"></a>00142 <span class="comment">     * the point lies &quot;over the horizon&quot;, i.e., if \e rk &lt;= 0, then NaNs are</span>
+<a name="l00143"></a>00143 <span class="comment">     * returned for \e x and \e y (the correct values are returned for \e azi</span>
+<a name="l00144"></a>00144 <span class="comment">     * and \e rk).  A call to Forward followed by a call to Reverse will return</span>
+<a name="l00145"></a>00145 <span class="comment">     * the original (\e lat, \e lon) (to within roundoff) provided the point in</span>
+<a name="l00146"></a>00146 <span class="comment">     * not over the horizon.</span>
+<a name="l00147"></a>00147 <span class="comment">     **********************************************************************/</span>
+<a name="l00148"></a>00148     <span class="keywordtype">void</span> Forward(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon,
+<a name="l00149"></a>00149                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; y, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00150"></a>00150 <span class="comment"></span>
+<a name="l00151"></a>00151 <span class="comment">    /**</span>
+<a name="l00152"></a>00152 <span class="comment">     * Reverse projection, from gnomonic to geographic.</span>
+<a name="l00153"></a>00153 <span class="comment">     *</span>
+<a name="l00154"></a>00154 <span class="comment">     * @param[in] lat0 latitude of center point of projection (degrees).</span>
+<a name="l00155"></a>00155 <span class="comment">     * @param[in] lon0 longitude of center point of projection (degrees).</span>
+<a name="l00156"></a>00156 <span class="comment">     * @param[in] x easting of point (meters).</span>
+<a name="l00157"></a>00157 <span class="comment">     * @param[in] y northing of point (meters).</span>
+<a name="l00158"></a>00158 <span class="comment">     * @param[out] lat latitude of point (degrees).</span>
+<a name="l00159"></a>00159 <span class="comment">     * @param[out] lon longitude of point (degrees).</span>
+<a name="l00160"></a>00160 <span class="comment">     * @param[out] azi azimuth of geodesic at point (degrees).</span>
+<a name="l00161"></a>00161 <span class="comment">     * @param[out] rk reciprocal of azimuthal scale at point.</span>
+<a name="l00162"></a>00162 <span class="comment">     *</span>
+<a name="l00163"></a>00163 <span class="comment">     * \e lat0 should be in the range [-90, 90] and \e lon0 should be in the</span>
+<a name="l00164"></a>00164 <span class="comment">     * range [-180, 360].  \e lat will be in the range [-90, 90] and \e lon</span>
+<a name="l00165"></a>00165 <span class="comment">     * will be in the range [-180, 180).  The scale of the projection is 1/\e</span>
+<a name="l00166"></a>00166 <span class="comment">     * rk&lt;sup&gt;2&lt;/sup&gt; in the &quot;radial&quot; direction, \e azi clockwise from true</span>
+<a name="l00167"></a>00167 <span class="comment">     * north, and is 1/\e rk in the direction perpendicular to this.  Even</span>
+<a name="l00168"></a>00168 <span class="comment">     * though all inputs should return a valid \e lat and \e lon, it&#39;s possible</span>
+<a name="l00169"></a>00169 <span class="comment">     * that the procedure fails to converge for very large \e x or \e y; in</span>
+<a name="l00170"></a>00170 <span class="comment">     * this case NaNs are returned for all the output arguments.  A call to</span>
+<a name="l00171"></a>00171 <span class="comment">     * Reverse followed by a call to Forward will return the original (\e x, \e</span>
+<a name="l00172"></a>00172 <span class="comment">     * y) (to roundoff).</span>
+<a name="l00173"></a>00173 <span class="comment">     **********************************************************************/</span>
+<a name="l00174"></a>00174     <span class="keywordtype">void</span> Reverse(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lat0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> lon0, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> x, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> y,
+<a name="l00175"></a>00175                  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lat, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; lon, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; azi, <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>&amp; rk) <span class="keyword">const</span> <span class="keywordflow">throw</span>();
+<a name="l00176"></a>00176 <span class="comment"></span>
+<a name="l00177"></a>00177 <span class="comment">    /**</span>
+<a name="l00178"></a>00178 <span class="comment">     * Gnomonic::Forward without returning the azimuth and scale.</span>
+<a name="l00179"></a>00179 <span class="comment">     **********************************************************************/</span>
+<a name="l00180"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a2c08cf2bad190ee9ab88f7d877223208">00180</a>     <span class="keywordtype">void</span> Forward(real lat0, real lon0, real lat, real lon,
+<a name="l00181"></a>00181                  real&amp; x, real&amp; y) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00182"></a>00182       real azi, rk;
+<a name="l00183"></a>00183       Forward(lat0, lon0, lat, lon, x, y, azi, rk);
+<a name="l00184"></a>00184     }
+<a name="l00185"></a>00185 <span class="comment"></span>
+<a name="l00186"></a>00186 <span class="comment">    /**</span>
+<a name="l00187"></a>00187 <span class="comment">     * Gnomonic::Reverse without returning the azimuth and scale.</span>
+<a name="l00188"></a>00188 <span class="comment">     **********************************************************************/</span>
+<a name="l00189"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a8700d59a1e244f8dd211e344587dfed3">00189</a>     <span class="keywordtype">void</span> Reverse(real lat0, real lon0, real x, real y,
+<a name="l00190"></a>00190                  real&amp; lat, real&amp; lon) <span class="keyword">const</span> <span class="keywordflow">throw</span>() {
+<a name="l00191"></a>00191       real azi, rk;
+<a name="l00192"></a>00192       Reverse(lat0, lon0, x, y, lat, lon, azi, rk);
+<a name="l00193"></a>00193     }
+<a name="l00194"></a>00194 <span class="comment"></span>
+<a name="l00195"></a>00195 <span class="comment">    /** \name Inspector functions</span>
+<a name="l00196"></a>00196 <span class="comment">     **********************************************************************/</span><span class="comment"></span>
+<a name="l00197"></a>00197 <span class="comment">    ///@{</span>
+<a name="l00198"></a>00198 <span class="comment"></span><span class="comment">    /**</span>
+<a name="l00199"></a>00199 <span class="comment">     * @return \e a the equatorial radius of the ellipsoid (meters).  This is</span>
+<a name="l00200"></a>00200 <span class="comment">     *   the value inherited from the Geodesic object used in the constructor.</span>
+<a name="l00201"></a>00201 <span class="comment">     **********************************************************************/</span>
+<a name="l00202"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a8598fe6d8c3896fa3fd58d24023f78ee">00202</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Gnomonic.html#a8598fe6d8c3896fa3fd58d24023f78ee">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.MajorRadius(); }
+<a name="l00203"></a>00203 <span class="comment"></span>
+<a name="l00204"></a>00204 <span class="comment">    /**</span>
+<a name="l00205"></a>00205 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the value</span>
+<a name="l00206"></a>00206 <span class="comment">     *   inherited from the Geodesic object used in the constructor.</span>
+<a name="l00207"></a>00207 <span class="comment">     **********************************************************************/</span>
+<a name="l00208"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a06b559fa72aa1e51da966c43d22b983d">00208</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1Gnomonic.html#a06b559fa72aa1e51da966c43d22b983d">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _earth.Flattening(); }
+<a name="l00209"></a>00209 <span class="comment"></span>
+<a name="l00210"></a>00210 <span class="comment">    /**</span>
+<a name="l00211"></a>00211 <span class="comment">     * &lt;b&gt;DEPRECATED&lt;/b&gt;</span>
+<a name="l00212"></a>00212 <span class="comment">     * @return \e r the inverse flattening of the ellipsoid.</span>
+<a name="l00213"></a>00213 <span class="comment">     **********************************************************************/</span>
+<a name="l00214"></a><a class="code" href="classGeographicLib_1_1Gnomonic.html#a655eff8ef95f92902899459e8a5efe63">00214</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> InverseFlattening() <span class="keyword">const</span> throw()
+<a name="l00215"></a>00215     { <span class="keywordflow">return</span> _earth.InverseFlattening(); }<span class="comment"></span>
+<a name="l00216"></a>00216 <span class="comment">    ///@}</span>
+<a name="l00217"></a>00217 <span class="comment"></span>  };
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219 } <span class="comment">// namespace GeographicLib</span>
+<a name="l00220"></a>00220 
+<a name="l00221"></a>00221 <span class="preprocessor">#endif  // GEOGRAPHICLIB_GNOMONIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Dec 9 2011 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

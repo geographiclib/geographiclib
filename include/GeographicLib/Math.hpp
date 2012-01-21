@@ -12,7 +12,7 @@
 #include <GeographicLib/Constants.hpp>
 
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
-#define GEOGRAPHICLIB_MATH_HPP "$Id: 0bc5689770853cdf3c6dad20eb38980624ffcd61 $"
+#define GEOGRAPHICLIB_MATH_HPP "$Id: 045fb188fcc3fe808fed0c9d5fa965861d2735d1 $"
 
 /**
  * Are C++0X math functions available?
@@ -46,13 +46,6 @@
 #include <algorithm>
 #include <vector>
 
-/**
- * \brief Namespace for %GeographicLib
- *
- * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addtiion all the header files are included via %GeographicLib/filename.
- * This minimizes the likelihood of conflicts with other packages.
- **********************************************************************/
 namespace GeographicLib {
 
   /**
@@ -61,6 +54,9 @@ namespace GeographicLib {
    * Define mathematical functions in order to localize system dependencies and
    * to provide generic versions of the functions.  In addition define a real
    * type to be used by %GeographicLib.
+   *
+   * Example of use:
+   * \include example-Math.cpp
    **********************************************************************/
   class GEOGRAPHIC_EXPORT Math {
   private:
