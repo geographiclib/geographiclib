@@ -41,4 +41,4 @@ EXAMPLE_FILES = \
 	example-UTMUPS.cpp \
 	example-Utility.cpp
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt $(EXAMPLE_FILES)
+EXTRA_DIST = CMakeLists.txt $(EXAMPLE_FILES)
