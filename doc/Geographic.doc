@@ -425,15 +425,15 @@ under cygwin with, for example, \verbatim
   export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
   mkdir BUILD
   cd BUILD
-  cmake -G "MinGW Makefiles" ..
+  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
   mingw32-make
   mingw32-make install \endverbatim
 If cmake complains that sh mustn't be in your path, invoke cmake with
 \verbatim
   env PATH="$( echo $PATH | tr : '\n' |
   while read d; do test -f "$d/sh.exe" || echo -n "$d:"; done |
-  sed 's/:$//' )" cmake -G "MinGW Makefiles" .. \endverbatim
-
+  sed 's/:$//' )" cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
+\endverbatim
 If cmake is not available, there is a simple project file that compiles
 the %GeographicLib library <i>only</i> with the Qt compiler: \verbatim
   cd src
