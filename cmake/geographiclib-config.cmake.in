@@ -41,6 +41,15 @@ foreach (p ${GeographicLib_INCLUDE_DIRS})
   break (p ${GeographicLib_INCLUDE_DIRS})
 endforeach (p ${GeographicLib_INCLUDE_DIRS})
 
+# Verify that the compiler versions match
+if (DEFINED GeographicLib_INCLUDE_DIRS AND
+  NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
+    unset (GeographicLib_INCLUDE_DIRS)
+    unset (GeographicLib_LIBRARY_DIRS)
+    unset (GeographicLib_VERSION)
+endif (DEFINED GeographicLib_INCLUDE_DIRS AND
+  NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
+
 # Read in the exported definition of the library
 if (DEFINED GeographicLib_INCLUDE_DIRS)
   include ("${_DIR}/GeographicLibDepends.cmake")

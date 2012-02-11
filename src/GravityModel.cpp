@@ -91,7 +91,7 @@ namespace GeographicLib {
     // The 0th term in _zonal should be is 1 + _dzonal0.  Instead set it to 1
     // to give exact cancellation with the (0,0) term in the model and account
     // for _dzonal0 separately.
-    _zonal.resize(0); _zonal.push_back(1);
+    _zonal.clear(); _zonal.push_back(1);
     _dzonal0 = (_earth.MassConstant() - _GMmodel) / _GMmodel;
     for (int n = 2; n <= nmx; n += 2) {
       // Only include as many normal zonal terms as matter.  Figuring the limit
