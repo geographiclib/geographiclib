@@ -41,7 +41,7 @@ foreach (p ${GeographicLib_INCLUDE_DIRS})
   break (p ${GeographicLib_INCLUDE_DIRS})
 endforeach (p ${GeographicLib_INCLUDE_DIRS})
 
-# Verify that the compiler versions match
+# Verify that the compiler versions match on Windows
 if (DEFINED GeographicLib_INCLUDE_DIRS AND
   NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
     unset (GeographicLib_INCLUDE_DIRS)
