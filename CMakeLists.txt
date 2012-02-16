@@ -89,7 +89,7 @@ if (ENABLE_MATLAB)
     if (HAVE_MEX)
       set (MEX "mex")
       execute_process (COMMAND mexext.bat
-        OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE
+        OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
     endif (HAVE_MEX)
   endif (NOT WIN32)
 else (ENABLE_MATLAB)
@@ -230,7 +230,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/junk"
   "/octave-core"
   "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|log|exe|pyc)\$"
-  "\\\\.(mex|mexw32|mexa64|kml|kmz)\$"
+  "\\\\.(mex|mexw32|mexw64|mexa64|kml|kmz)\$"
   "/(Release|Debug|Win32)"
   "\\\\.cache/"
   "proj.*\\\\.user\$"
