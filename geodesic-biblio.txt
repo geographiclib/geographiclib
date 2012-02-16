@@ -702,6 +702,11 @@ $Id$
    http://handle.dtic.mil/100.2/AD650520 [[BR]]
    clean copy:
    http://geographiclib.sf.net/geodesic-papers/bagratuni67.pdf
+ * E. A. Lewis,[[BR]]
+   ''Parametric Formulas for Geodesic Curves and Distances on a
+   Slightly Oblate Earth'',
+   AFCRL-63-485 (US Air Force, Apr. 1963).[[BR]]
+   http://handle.dtic.mil/100.2/AD0412501 [[BR]]
  * W. Köhnlein,[[BR]]
    ''Geodesics on an Equipotential Surface of Revolution'',
    Special Report 144, Smithsonian Astrophysical Observatory (1964).[[BR]]

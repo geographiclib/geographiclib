@@ -88,7 +88,8 @@ if (ENABLE_MATLAB)
     find_program (HAVE_MEX mex.bat)
     if (HAVE_MEX)
       set (MEX "mex")
-      set (MEXEXT "mexw32")
+      execute_process (COMMAND mexext.bat
+        OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE
     endif (HAVE_MEX)
   endif (NOT WIN32)
 else (ENABLE_MATLAB)
