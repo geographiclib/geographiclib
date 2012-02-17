@@ -16,6 +16,7 @@ EXAMPLE_FILES = \
 	example-GeoCoords.cpp \
 	example-Geocentric.cpp \
 	example-Geodesic.cpp \
+	example-Geodesic-small.cpp \
 	example-GeodesicLine.cpp \
 	example-GeographicErr.cpp \
 	example-Geoid.cpp \

@@ -259,6 +259,7 @@ if (WIN32)
   set (CPACK_NSIS_PACKAGE_NAME
     "${CMAKE_PROJECT_NAME} ${GeographicLib_VERSION}")
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
+  set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\index.html\\\"

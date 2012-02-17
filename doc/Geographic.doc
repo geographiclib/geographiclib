@@ -397,15 +397,16 @@ Download and run
 GeographicLib-1.18-win32.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
- - select the destination folder, by default
-   C:/pkg-vc10/GeographicLib-1.18.
+ - select the installation folder, by default
+   C:\\pkg-vc10\\GeographicLib-1.18.
  - select the start menu folder,
  - and install.
  .
-The start menu will now include links to the documentation for the
-library and for the utilities (and a link for uninstalling the library).
-If you ask for your PATH to be modified, it will include
-C:/pkg-vc10/GeographicLib-1.18/bin where the utilities are
+(Note that the default installation folder adheres the the convention
+given in \ref cmake.)  The start menu will now include links to the
+documentation for the library and for the utilities (and a link for
+uninstalling the library).  If you ask for your PATH to be modified, it
+will include C:/pkg-vc10/GeographicLib-1.18/bin where the utilities are
 installed.  The headers and library are installed in the
 include/GeographicLib and lib folders.  The Matlab interface is
 installed in the libexec/GeographicLib/matlab folder.  Add this to your
