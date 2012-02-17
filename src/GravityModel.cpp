@@ -13,7 +13,7 @@
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
 #define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
-  "$Id: cb6292b68ee716fb47d8c33cba58798718d4108b $"
+  "$Id: 981871c55dc74dcd22153d4eeb5c07f8ec1e9525 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)
@@ -91,7 +91,7 @@ namespace GeographicLib {
     // The 0th term in _zonal should be is 1 + _dzonal0.  Instead set it to 1
     // to give exact cancellation with the (0,0) term in the model and account
     // for _dzonal0 separately.
-    _zonal.resize(0); _zonal.push_back(1);
+    _zonal.clear(); _zonal.push_back(1);
     _dzonal0 = (_earth.MassConstant() - _GMmodel) / _GMmodel;
     for (int n = 2; n <= nmx; n += 2) {
       // Only include as many normal zonal terms as matter.  Figuring the limit

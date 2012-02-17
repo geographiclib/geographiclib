@@ -1,17 +1,17 @@
-# $Id: 8ec22942083bde8e8758d24a2fa2c3264187ead8 $
+# $Id: 59c5ef60981a8c92e428ce2762b4f925abee2cfc $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 17)
+set (GeographicLib_VERSION_MINOR 18)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.2.1)
+set (LIBVERSIONFULL 9.2.2)
 
 # User-settable cache variables
 
@@ -88,7 +88,8 @@ if (ENABLE_MATLAB)
     find_program (HAVE_MEX mex.bat)
     if (HAVE_MEX)
       set (MEX "mex")
-      set (MEXEXT "mexw32")
+      execute_process (COMMAND mexext.bat
+        OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
     endif (HAVE_MEX)
   endif (NOT WIN32)
 else (ENABLE_MATLAB)
@@ -229,7 +230,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/junk"
   "/octave-core"
   "\\\\.(bak|BAK|patch|tmp|zip|gz|lo|o|ncb|suo|a|la|log|exe|pyc)\$"
-  "\\\\.(mex|mexw32|mexa64|kml|kmz)\$"
+  "\\\\.(mex|mexw32|mexw64|mexa64|kml|kmz)\$"
   "/(Release|Debug|Win32)"
   "\\\\.cache/"
   "proj.*\\\\.user\$"
@@ -258,6 +259,7 @@ if (WIN32)
   set (CPACK_NSIS_PACKAGE_NAME
     "${CMAKE_PROJECT_NAME} ${GeographicLib_VERSION}")
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
+  set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\index.html\\\"

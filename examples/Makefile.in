@@ -19,7 +19,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: bed4db1035a2f134a6ba619279be51668bca3d06 $
+# $Id: 88d7788930d32d562c5e4d9f73b5c0b541eb2b2b $
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -195,6 +195,7 @@ EXAMPLE_FILES = \
 	example-GeoCoords.cpp \
 	example-Geocentric.cpp \
 	example-Geodesic.cpp \
+	example-Geodesic-small.cpp \
 	example-GeodesicLine.cpp \
 	example-GeographicErr.cpp \
 	example-Geoid.cpp \

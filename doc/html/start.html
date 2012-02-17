@@ -46,13 +46,13 @@
 <li>Tell the compiler where to find the header files. With g++ and with /usr/local specified as the installation directory, this is accomplished with <div class="fragment"><pre class="fragment">
   g++ -c -g -O3 -I/usr/local/include testprogram.cpp
 </pre></div> With Visual Studio, specify the include directory in the IDE via, e.g., <div class="fragment"><pre class="fragment">
-C/C++ -&gt; General -&gt; Additional Include Directories = C:\Program Files\GeographicLib\include
+C/C++ -&gt; General -&gt; Additional Include Directories = C:\pkg-vc10\GeographicLib\include
 </pre></div></li>
 <li>Tell the linker the name, Geographic, and location of the library. Using g++ as the linker, you would use <div class="fragment"><pre class="fragment">
   g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
 </pre></div> With Visual Studio, you supply this information in the IDE via, e.g., <div class="fragment"><pre class="fragment">
 Linker -&gt; Input -&gt; Additional Dependencies = Geographic.lib
-Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\GeographicLib\lib
+Linker -&gt; General -&gt; Additional Library Directories = C:\pkg-vc10\GeographicLib\lib
 </pre></div> Note that the library name is <b>Geographic</b> and not GeographicLib. If the library was configured and built with cmake, then the debug version of the library is called Geographic_d.lib.</li>
 <li>Tell the runtime environment where to find the shared library (assuming you compiled GeographicLib as a shared library). With g++, this is accomplished by modifying the link line above to read <div class="fragment"><pre class="fragment">
   g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib -L/usr/local/lib -lGeographic
@@ -64,8 +64,10 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\Geo
   include_directories (${GeographicLib_INCLUDE_DIRS})
   # In the CMakeLists.txt where you define your executable targets
   target_link_libraries (program1 ${GeographicLib_LIBRARIES})
-  target_link_libraries (program2 ${GeographicLib_LIBRARIES}) </pre></div> in your CMakeLists.txt files (as noted). Assuming that you configured and installed <a class="el" href="namespaceGeographicLib.html" title="Namespace for GeographicLib.">GeographicLib</a> with cmake (or that you used the binary installer for Windows), then the find_package command should find the library and set the required cmake variables (including <code>GEOGRAPHICLIB_FOUND = TRUE</code>). Otherwise, copy cmake/FindGeographicLib.cmake to somewhere in your <code>CMAKE_MODULE_PATH</code>.</li>
-<li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode.</li>
+  target_link_libraries (program2 ${GeographicLib_LIBRARIES}) </pre></div> in your CMakeLists.txt files (as noted). find_package command should find the library and set the required cmake variables (including <code>GEOGRAPHICLIB_FOUND = TRUE</code>). For find_package to be able to locate GeographicLib, it may be necessary for GeographicLib to be built and installed with cmake (see <a class="el" href="install.html#cmake">Installation with cmake</a>) instead of using some other installation method. In addition, on Windows systems, you should specify <code>CMAKE_PREFIX_PATH</code> with, for example, <div class="fragment"><pre class="fragment">
+  cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/XYZProject ..
+</pre></div> (If you used some other method of installing GeographicLib, you can try copying cmake/FindGeographicLib.cmake to somewhere in your <code>CMAKE_MODULE_PATH</code> in order for find_package to work. However, this method has not been thoroughly tested.)</li>
+<li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode. The configuration of cmake described above ensure that the right version of the compiler is used and, assuming you built and installed GeographicLib in debug mode, the debug version of the library Geographic_d.lib will be used.</li>
 </ul>
 <p>Here is a very simple test code, which uses the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> class: </p>
 <div class="fragment"><pre class="fragment"><span class="comment">// Small example of using the GeographicLib::Geodesic class</span>
@@ -110,7 +112,7 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\Program Files\Geo
 <li><a href="http://en.wikipedia.org/wiki/IGRF">IGRF</a>, International Geomagnetic Reference Field.</li>
 </ul>
 <center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

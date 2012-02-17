@@ -1,4 +1,4 @@
-# $Id: 897c49b7f3d7fd172e64d9e1e929e73c1bb20b7d $
+# $Id: 5b8a75e3009521d99a88d4cd0ec9de00b14e2ab9 $
 #
 # Configure GeographicLib
 #
@@ -40,6 +40,15 @@ foreach (p ${GeographicLib_INCLUDE_DIRS})
   endif (NOT EXISTS "${p}/GeographicLib/Config.h")
   break (p ${GeographicLib_INCLUDE_DIRS})
 endforeach (p ${GeographicLib_INCLUDE_DIRS})
+
+# Verify that the compiler versions match on Windows
+if (DEFINED GeographicLib_INCLUDE_DIRS AND
+  NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
+    unset (GeographicLib_INCLUDE_DIRS)
+    unset (GeographicLib_LIBRARY_DIRS)
+    unset (GeographicLib_VERSION)
+endif (DEFINED GeographicLib_INCLUDE_DIRS AND
+  NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
 
 # Read in the exported definition of the library
 if (DEFINED GeographicLib_INCLUDE_DIRS)

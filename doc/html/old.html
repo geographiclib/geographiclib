@@ -38,12 +38,21 @@
 <div class="contents">
 <div class="textblock"><center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
 <ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a><ul>
+<li>Improve documentation on configuration with cmake.</li>
+<li>cmake's find_package ensures that the compiler versions match on Windows.</li>
+<li>Improve documentation on compiling Matlab interface.</li>
+<li>Binary installer for Windows installs under C:/pkg-vc10 by default.</li>
+</ul>
+</li>
+</ul>
+<ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17.tar.gz/download">1.17 (released 2012-01-21)</a><ul>
 <li>Work around optimization BUG in <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">GeographicLib::Geodesic::Inverse</a> with g++ version 4.4.0 (mingw).</li>
 <li>Fix BUG in argument checking with <a class="el" href="classGeographicLib_1_1OSGB.html#a0a79e8f2babae1eb0305a0e728fea8c8">GeographicLib::OSGB::GridReference</a>.</li>
 <li>Fix missing include file in <a class="el" href="classGeographicLib_1_1SphericalHarmonic2.html" title="Spherical Harmonic series with two corrections to the coefficients.">GeographicLib::SphericalHarmonic2</a>.</li>
 <li>Add simple examples of usage for each class.</li>
-<li>Add internal documenation to the cmake configuration files.</li>
+<li>Add internal documentation to the cmake configuration files.</li>
 </ul>
 </li>
 </ul>
@@ -514,7 +523,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Sat Jan 21 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
