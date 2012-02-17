@@ -11,7 +11,7 @@ set (GeographicLib_VERSION
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.2.1)
+set (LIBVERSIONFULL 9.2.2)
 
 # User-settable cache variables
 
