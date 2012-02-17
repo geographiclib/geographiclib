@@ -5,7 +5,7 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 17)
+set (GeographicLib_VERSION_MINOR 18)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 # The library version tracks the numbering given by libtool in the

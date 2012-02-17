@@ -16,7 +16,7 @@
 #
 # $Id$
 
-VERSION=1.17
+VERSION=1.18
 BRANCH=master
 TEMP=/scratch/geographic-dist
 GITSOURCE=file:///home/ckarney/afs/geographiclib
@@ -43,7 +43,7 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
-echo cmake -G \'Visual Studio 10\' -D ENABLE_MATLAB=ON .. > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/config
+echo cmake -G \'Visual Studio 10\' -D ENABLE_MATLAB=ON -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10 .. > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/config
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10
