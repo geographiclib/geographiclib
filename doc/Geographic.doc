@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.18
-\date 2012-01-21
+\date 2012-02-18
 
 \section abstract Abstract
 
@@ -3253,7 +3253,11 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a>
+  - Improve documentation on configuration with cmake.
+  - cmake's find_package ensures that the compiler versions match on Windows.
+  - Improve documentation on compiling Matlab interface.
+  - Binary installer for Windows installs under C:/pkg-vc10 by default.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.17.tar.gz/download">1.17 (released 2012-01-21)</a>
   - Work around optimization BUG in GeographicLib::Geodesic::Inverse
@@ -3261,7 +3265,7 @@ number.)
   - Fix BUG in argument checking with GeographicLib::OSGB::GridReference.
   - Fix missing include file in GeographicLib::SphericalHarmonic2.
   - Add simple examples of usage for each class.
-  - Add internal documenation to the cmake configuration files.
+  - Add internal documentation to the cmake configuration files.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.16.tar.gz/download">1.16 (released 2011-12-07)</a>
   - Add calculation of the earth's gravitational field:

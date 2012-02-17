@@ -6,7 +6,17 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.17.
+The current version of the library is 1.18.
+
+Changes between 1.18 (released 2012-02-18) and 1.17 versions
+
+  * Improve documentation on configuration with cmake.
+
+  * cmake's find_package ensures that the compiler versions match on Windows.
+
+  * Improve documentation on compiling Matlab interface.
+
+  * Binary installer for Windows installs under C:/pkg-vc10 by default.
 
 Changes between 1.17 (released 2012-01-21) and 1.16 versions:
 
