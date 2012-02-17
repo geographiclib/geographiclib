@@ -281,7 +281,7 @@ Here are the steps to compile and install %GeographicLib:
   - <code>ENABLE_MATLAB</code> (default: OFF).  Set this to ON to get
     cmake to try to compile and install the Matlab/Octave interface.  At
     present this is compiled for Matlab under Windows and for Octave
-    under Linux.
+    under Linux.  See \ref matlab for more information.
   - <code>MAINTAINER</code> (default: ON for non-Windows environments
     provided doxygen, pod2man, and pod2html are found).  This affects
     whether the targets for creating source packages are activated.
@@ -950,26 +950,53 @@ of the Australian Communications and Media Authority.)
 \section matlab Matlab and Octave interfaces
 
 The matlab directory contains interface code so that some %GeographicLib
-classes can be accessed from Matlab or Octave.  If you set
-ENABLE_MATLAB=ON when installing with cmake, this interface is built.
-Similarly the binary installer for Windows includes the compiled
-interface (compiled using Visual Studio 10 and Matlab R2010b).  To use
-either of these, run one of (for example) \verbatim
+classes can be accessed from Matlab or Octave.  There are two ways of
+compiling this code: (1) using cmake and (2) invoking the compiler from
+Matlab.
+ - <b>Using cmake:</b> Before running cmake, configure MATLAB on
+   Windows to use the same compiler that you're going to use for compiling
+   %GeographicLib.  For example \verbatim
+   mex.bat -setup
+
+   Please choose your compiler for building external interface (MEX) files:
+   Would you like mex to locate installed compilers [y]/n? y
+   Select a compiler:
+   [1] Lcc-win32 C 2.4.1 in C:\PROGRA~1\MATLAB\R2010b\sys\lcc
+   [2] Microsoft Visual C++ 2010 in C:\Program Files\Microsoft Visual Studio 10.0
+   [0] None
+
+   Compiler: 2
+   etc. \endverbatim
+   (This will require that mex.bat is in your PATH.)  Then configure cmake
+   with, for example \verbatim
+   cmake -G "Visual Studio 10" -D ENABLE_MATLAB=ON .. \endverbatim
+   If you are running a 64-bit version of Matlab, be sure to select a
+   64-bit generator with cmake, e.g., "Visual Studio 10 Win64".  Finally
+   compile %GeographicLib with Visual Studio.  (The binary installer for
+   Windows includes the compiled interface built with Visual Studio 10
+   and Matlab R2010b).<br>
+   On Linux systems, cmake is configured to use Octave instead of Matlab,
+   because Matlab typically supports out-of-date versions of gcc.  However
+   the steps are similar (use <code>mex -setup</code> instead of
+   <code>mex.bat -setup</code>).
+ - <b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or
+   Octave and run, e.g., \code
+   mex -setup
+   cd 'C:/Program Files/GeographicLib-1.17/libexec/GeographicLib/matlab'
+   help geographiclibinterface
+   geographiclibinterface('C:/Program Files/GeographicLib-1.17');
+   addpath(pwd);
+   \endcode
+   The first command allows you to select the compiler to use (which
+   should be the same as that used to compile %GeographicLib).
+
+
+To use the interface routines for %GeographicLib, run one of (for
+example) \verbatim
   addpath /usr/local/libexec/GeographicLib/matlab
   addpath 'C:/Program Files/GeographicLib-1.17/libexec/GeographicLib/matlab'
 \endverbatim
-in Matlab or Octave.  If you need to compile the interface or to
-recompile it for a different platform, start Matlab or Octave and run,
-e.g., \code
-  mex -setup
-  cd 'C:/Program Files/GeographicLib-1.17/libexec/GeographicLib/matlab'
-  help geographiclibinterface
-  geographiclibinterface('C:/Program Files/GeographicLib-1.17');
-  addpath(pwd);
-\endcode
-The first command allows you to select the compiler to use (which
-probably should be the same as that used to compile %GeographicLib).
-The available functions are:
+in Octave or Matlab.  The available functions are:
  - geodesicdirect: solve direct geodesic problem
    (see GeographicLib::Geodesic::Direct)
  - geodesicinverse: solve inverse geodesic problem
