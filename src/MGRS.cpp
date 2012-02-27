@@ -58,7 +58,7 @@ namespace GeographicLib {
     }
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
-    if (!(zone >= 0 && zone <= 60))
+    if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE))
       throw GeographicErr("Zone " + Utility::str(zone) + " not in [0,60]");
     if (!(prec >= 0 && prec <= maxprec_))
       throw GeographicErr("MGRS precision " + Utility::str(prec)
@@ -166,14 +166,14 @@ namespace GeographicLib {
       zone1 = 10 * zone1 + i;
       ++p;
     }
-    if (p > 0 && (zone1 == 0 || zone1 > 60))
+    if (p > 0 && !(zone1 >= UTMUPS::MINUTMZONE && zone1 <= UTMUPS::MAXUTMZONE))
       throw GeographicErr("Zone " + Utility::str(zone1) + " not in [1,60]");
     if (p > 2)
       throw GeographicErr("More than 2 digits_ at start of MGRS "
                           + mgrs.substr(0, p));
     if (len - p < 3)
       throw GeographicErr("MGRS string too short " + mgrs);
-    bool utmp = zone1 != 0;
+    bool utmp = zone1 != UTMUPS::UPS;
     int zonem1 = zone1 - 1;
     const string& band = utmp ? latband_ : upsband_;
     int iband = Utility::lookup(band, mgrs[p++]);

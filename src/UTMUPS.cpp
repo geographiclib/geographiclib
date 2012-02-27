@@ -47,7 +47,7 @@ namespace GeographicLib {
       MGRS::maxutmNrow_ * MGRS::tile_ };
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
-    if (setzone < MINPSEUDOZONE || setzone > MAXZONE)
+    if (!(setzone >= MINPSEUDOZONE && setzone <= MAXZONE))
       throw GeographicErr("Illegal zone requested " + Utility::str(setzone));
     if (setzone >= MINZONE || setzone == INVALID)
       return setzone;
@@ -128,7 +128,7 @@ namespace GeographicLib {
       lat = lon = gamma = k = Math::NaN<real>();
       return;
     }
-    if (! (zone >= MINZONE && zone <= MAXZONE))
+    if (!(zone >= MINZONE && zone <= MAXZONE))
       throw GeographicErr("Zone " + Utility::str(zone)
                           + " not in range [0, 60]");
     bool utmp = zone != UPS;
@@ -230,7 +230,7 @@ namespace GeographicLib {
   std::string UTMUPS::EncodeZone(int zone, bool northp) {
     if (zone == INVALID)
       return string("INV");
-    if (! (zone >= MINZONE && zone <= MAXZONE))
+    if (!(zone >= MINZONE && zone <= MAXZONE))
         throw GeographicErr("Zone " + Utility::str(zone)
                             + " not in range [0, 60]");
     ostringstream os;
