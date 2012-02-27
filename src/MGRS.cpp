@@ -58,9 +58,9 @@ namespace GeographicLib {
     }
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
-    if (!(zone >= 0 || zone <= 60))
+    if (!(zone >= 0 && zone <= 60))
       throw GeographicErr("Zone " + Utility::str(zone) + " not in [0,60]");
-    if (!(prec >= 0 || prec <= maxprec_))
+    if (!(prec >= 0 && prec <= maxprec_))
       throw GeographicErr("MGRS precision " + Utility::str(prec)
                           + " not in [0, "
                           + Utility::str(int(maxprec_)) + "]");
