@@ -3253,6 +3253,10 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.19.tar.gz/download">1.19 (released 2012-mm-dd)</a>
+  - Fix argument checking tests in GeographicLib::MGRS::Forward.
+  - Add --comment-delimiter and --line-separator options to the \ref utilities.
+
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a>
   - Improve documentation on configuration with cmake.
   - cmake's find_package ensures that the compiler versions match on Windows.
