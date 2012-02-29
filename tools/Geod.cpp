@@ -75,7 +75,8 @@ int main(int argc, char* argv[]) {
     real lat1, lon1, azi1, lat2, lon2, azi2, s12, m12, a12, M12, M21, S12;
     real azi2sense = 0;
     int prec = 3;
-    std::string istring, ifile, ofile;
+    std::string istring, ifile, ofile, cdelim;
+    char lsep = ';';
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -134,6 +135,16 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--output-file") {
         if (++m == argc) return usage(1, true);
         ofile = argv[m];
+      } else if (arg == "--line-separator") {
+        if (++m == argc) return usage(1, true);
+        if (std::string(argv[m]).size() != 1) {
+          std::cerr << "Line separator must be a single character\n";
+          return 1;
+        }
+        lsep = argv[m][0];
+      } else if (arg == "--comment-delimiter") {
+        if (++m == argc) return usage(1, true);
+        cdelim = argv[m];
       } else if (arg == "--version") {
         std::cout
           << argv[0]
@@ -160,7 +171,7 @@ int main(int argc, char* argv[]) {
     } else if (!istring.empty()) {
       std::string::size_type m = 0;
       while (true) {
-        m = istring.find(';', m);
+        m = istring.find(lsep, m);
         if (m == std::string::npos)
           break;
         istring[m] = '\n';
@@ -193,6 +204,14 @@ int main(int argc, char* argv[]) {
     int retval = 0;
     while (std::getline(*input, s)) {
       try {
+        std::string comment;
+        if (!cdelim.empty()) {
+          std::string::size_type m = s.find(cdelim);
+          if (m != std::string::npos) {
+            comment = " " + s.substr(m);
+            s = s.substr(0, m);
+          }
+        }
         std::istringstream str(s);
         if (inverse) {
           std::string slat1, slon1, slat2, slon2;
@@ -217,7 +236,7 @@ int main(int argc, char* argv[]) {
                     << " " << Utility::str<real>(M12, prec+7)
                     << " " << Utility::str<real>(M21, prec+7)
                     << " " << Utility::str<real>(S12, std::max(prec-7, 0));
-          *output << "\n";
+          *output << comment << "\n";
         } else {
           if (linecalc) {
             std::string ss12;
@@ -262,7 +281,7 @@ int main(int argc, char* argv[]) {
                     << " " << Utility::str<real>(M12, prec+7)
                     << " " << Utility::str<real>(M21, prec+7)
                     << " " << Utility::str<real>(S12, std::max(prec-7, 0));
-          *output << "\n";
+          *output << comment << "\n";
         }
       }
       catch (const std::exception& e) {
