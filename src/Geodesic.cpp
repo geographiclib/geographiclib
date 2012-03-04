@@ -63,7 +63,8 @@ namespace GeographicLib {
            (_e2 == 0 ? 1 :
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
-    , _etol2(tol2_ / max(real(0.1), sqrt(abs(_e2))))
+      // The sig12 threshold for "really short"
+    , _etol2(10 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -267,7 +268,7 @@ namespace GeographicLib {
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2)
-        real w1 = sqrt(1 - _e2 * Math::sq(cbet1));
+        real w1 = sqrt(1 - _e2 * (Math::sq(cbet1) + Math::sq(cbet2)) / 2);
         s12x = sig12 * _a * w1;
         m12x = Math::sq(w1) * _a / _f1 * sin(sig12 * _f1 / w1);
         if (outmask & GEODESICSCALE)
@@ -551,7 +552,8 @@ namespace GeographicLib {
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       lam12 <= Math::pi<real>() / 6;
     real
-      omg12 = shortline ? lam12 / sqrt(1 - _e2 * Math::sq(cbet1)) : lam12,
+      omg12 = (!shortline ? lam12 :
+               lam12 / sqrt(1 - _e2 * (Math::sq(cbet1) + Math::sq(cbet2)) / 2)),
       somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
