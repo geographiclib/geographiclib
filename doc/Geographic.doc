@@ -559,7 +559,7 @@ Linker -> General -> Additional Library Directories = C:\pkg-vc10\GeographicLib\
   of the compiler and you use for your code.  In addition, you have
   to build a separate debug version of the library when you can
   compiling your code in debug mode.  The configuration of cmake
-  described above ensure that the right version of the compiler is used
+  described above ensures that the right version of the compiler is used
   and, assuming you built and installed %GeographicLib in debug mode, the
   debug version of the library Geographic_d.lib will be used.
 
@@ -1233,12 +1233,14 @@ installation directory, which is typically
 flag), and the data will then be placed in the "geoids" subdirectory.
 
 Windows users should download and run the Windows installers.  These
-will prompt for an installation directory with the default being
+will prompt for an installation directory with the default being one of
 \verbatim
    C:/Documents and Settings/All Users/Application Data/GeographicLib
+   C:/ProgramData/GeographicLib
 \endverbatim
 (which you probably should not change) and the data is installed in the
-"geoids" sub-directory.
+"geoids" sub-directory.  (The second directory name is an alternate name
+that Windows 7 for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  If possible use the tar.bz2 files, since these
@@ -1679,12 +1681,14 @@ installation directory, which is typically
 flag), and the data will then be placed in the "gravity" subdirectory.
 
 Windows users should download and run the Windows installers.  These
-will prompt for an installation directory with the default being
+will prompt for an installation directory with the default being one of
 \verbatim
    C:/Documents and Settings/All Users/Application Data/GeographicLib
+   C:/ProgramData/GeographicLib
 \endverbatim
 (which you probably should not change) and the data is installed in the
-"gravity" sub-directory.
+"gravity" sub-directory.  (The second directory name is an alternate name
+that Windows 7 for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
@@ -2223,12 +2227,14 @@ installation directory, which is typically
 flag), and the data will then be placed in the "magnetic" subdirectory.
 
 Windows users should download and run the Windows installers.  These
-will prompt for an installation directory with the default being
+will prompt for an installation directory with the default being one of
 \verbatim
    C:/Documents and Settings/All Users/Application Data/GeographicLib
+   C:/ProgramData/GeographicLib
 \endverbatim
 (which you probably should not change) and the data is installed in the
-"magnetic" sub-directory.
+"magnetic" sub-directory.  (The second directory name is an alternate name
+that Windows 7 for the "Application Data" directory.)
 
 Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
@@ -3252,6 +3258,10 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
+
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.19.tar.gz/download">1.18 (released 2012-mm-dd)</a>
+  - Slight improvement in GegraphicLib::Geodesic::Inverse for very short
+    lines.  (STILL TO DO: port to Javascript and Python implementations.)
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a>
   - Improve documentation on configuration with cmake.
