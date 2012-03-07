@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
         albers = arg == "-a";
         if (m + 2 >= argc) return usage(1, true);
         try {
-          for (int i =  0; i < 2; ++i) {
+          for (int i = 0; i < 2; ++i) {
             DMS::flag ind;
             (i ? lat2 : lat1) = DMS::Decode(std::string(argv[++m]), ind);
             if (ind == DMS::LONGITUDE)

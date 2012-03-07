@@ -135,7 +135,7 @@ int main(int argc, char* argv[]) {
         real lat, lon, h, x, y, z;
         std::string stra, strb, strc;
         if (!(str >> stra >> strb >> strc))
-          throw  GeographicErr("Incomplete input: " + s);
+          throw GeographicErr("Incomplete input: " + s);
         if (reverse) {
           x = Utility::num<real>(stra);
           y = Utility::num<real>(strb);
