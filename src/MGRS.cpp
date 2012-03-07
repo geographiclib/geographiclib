@@ -43,7 +43,7 @@ namespace GeographicLib {
     { maxupsSind_, maxupsNind_, maxutmcol_, maxutmcol_ };
   const int MGRS::minnorthing_[4] =
     { minupsSind_, minupsNind_,
-      minutmSrow_,  minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
+      minutmSrow_, minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
   const int MGRS::maxnorthing_[4] =
     { maxupsSind_, maxupsNind_,
       maxutmNrow_ + (maxutmSrow_ - minutmNrow_), maxutmNrow_ };
@@ -326,7 +326,7 @@ namespace GeographicLib {
       // The following deals with these special cases.
       int
         // Fold [-10,-1] -> [9,0]
-        sband = iband >= 0 ? iband : - iband  - 1,
+        sband = iband >= 0 ? iband : -iband - 1,
         // Fold [-90,-1] -> [89,0]
         srow = irow >= 0 ? irow : -irow - 1,
         // Fold [4,7] -> [3,0]

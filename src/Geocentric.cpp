@@ -102,7 +102,7 @@ namespace GeographicLib {
           S = _e4a * p * q / 4, // S = r^3 * s
           r2 = Math::sq(r),
           r3 = r * r2,
-          disc =  S * (2 * r3 + S);
+          disc = S * (2 * r3 + S);
         real u = r;
         if (disc >= 0) {
           real T3 = S + r3;

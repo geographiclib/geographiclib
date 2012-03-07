@@ -112,9 +112,9 @@ namespace GeographicLib {
     static inline real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
       // sx = sinh(x), cx = cosh(x)
       throw() {
-      // real t = (x  - y)/2, c = sqrt((1 + cx) * (1 + cy));
+      // real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));
       // return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
-      real t = (x  - y)/2;
+      real t = (x - y)/2;
       return (t != 0 ? sinh(t)/t : real(1)) * sqrt((sx * sy + cx * cy + 1) /2);
     }
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
@@ -281,7 +281,7 @@ namespace GeographicLib {
     Math::real MajorRadius() const throw() { return _a; }
 
     /**
-     * @return \e f the  flattening of the ellipsoid.  This is the
+     * @return \e f the flattening of the ellipsoid.  This is the
      *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const throw() { return _f; }

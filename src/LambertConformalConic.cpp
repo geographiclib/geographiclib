@@ -166,7 +166,7 @@ namespace GeographicLib {
                         Math::sq(tbet1)/(1 + scbet1))
         * Dhyp(tbet2, tbet1, scbet2, scbet1) * _fm;
       // Dc(tphi2, tphi1)
-      real den =  Dasinh(tphi2, tphi1, scphi2, scphi1)
+      real den = Dasinh(tphi2, tphi1, scphi2, scphi1)
         - Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1);
       _n = num/den;
 
@@ -242,7 +242,7 @@ namespace GeographicLib {
         //    nu =   scphi * (shxiZ - shxi) - tphi * (chxiZ - chxi)
         //    mu = - scphi * (chxiZ - chxi) + tphi * (shxiZ - shxi)
         // then
-        // dchi = ((mu2 + mu1) - D(nu2, nu1) * (scphi2 +  scphi1)) /
+        // dchi = ((mu2 + mu1) - D(nu2, nu1) * (scphi2 + scphi1)) /
         //         D(tchi2, tchi1)
         real
           xiZ = eatanhe(real(1)), shxiZ = sinh(xiZ), chxiZ = hyp(shxiZ),

@@ -102,7 +102,7 @@ class Geodesic(object):
   AREA          = 1<<14 | CAP_C4
   ALL           = OUT_ALL| CAP_ALL
 
-  def SinCosSeries(sinp, sinx, cosx,  c, n):
+  def SinCosSeries(sinp, sinx, cosx, c, n):
     # Evaluate
     # y = sinp ? sum(c[i] * sin( 2*i    * x), i, 1, n) :
     #            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
@@ -141,7 +141,7 @@ class Geodesic(object):
     z = 0.0625                  # 1/16
     y = abs(x)
     # The compiler mustn't "simplify" z - (z - y) to y
-    y =  z - (z - y) if y < z else y
+    y = z - (z - y) if y < z else y
     return -y if x < 0 else y
   AngRound = staticmethod(AngRound)
 
@@ -164,7 +164,7 @@ class Geodesic(object):
       r3 = r * r2
       # The discrimant of the quadratic equation for T3.  This is zero on
       # the evolute curve p^(1/3)+q^(1/3) = 1
-      disc =  S * (S + 2 * r3)
+      disc = S * (S + 2 * r3)
       u = r
       if (disc >= 0):
         T3 = S + r3
@@ -182,7 +182,7 @@ class Geodesic(object):
         # There are three possible cube roots.  We choose the root which
         # avoids cancellation.  Note that disc < 0 implies that r < 0.
         u += 2 * r * math.cos(ang / 3)
-      v = math.sqrt(Math.sq(u) + q)  # guaranteed positive
+      v = math.sqrt(Math.sq(u) + q) # guaranteed positive
       # Avoid loss of accuracy when u < 0.
       uv = q / (v - u) if u < 0 else u + v # u+v, guaranteed positive
       w = (uv - q) / (2 * v)               # positive?
@@ -275,7 +275,8 @@ class Geodesic(object):
                  (Math.atanh(math.sqrt(self._e2)) if self._e2 > 0 else
                   math.atan(math.sqrt(-self._e2))) /
                  math.sqrt(abs(self._e2))))/2
-    self._etol2 = Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
+    # The sig12 threshold for "really short"
+    self._etol2 = 10 * Geodesic.tol2_ / max(0.1, math.sqrt(abs(self._e2)))
     if not(Math.isfinite(self._a) and self._a > 0):
       raise ValueError("Major radius is not positive")
     if not(Math.isfinite(self._b) and self._b > 0):
@@ -411,7 +412,7 @@ class Geodesic(object):
     m12a = ((w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
             - self._f1 * csig1 * csig2 * J12)
     # Missing a factor of _b
-    s12b =  (1 + A1m1) * sig12 + AB1
+    s12b = (1 + A1m1) * sig12 + AB1
     if scalep:
       csig12 = csig1 * csig2 + ssig1 * ssig2
       J12 *= self._f1
@@ -443,13 +444,14 @@ class Geodesic(object):
     sbet12a += cbet2 * sbet1
 
     shortline = cbet12 >= 0 and sbet12 < 0.5 and lam12 <= math.pi / 6
-    omg12 =  (lam12 / math.sqrt(1 - self._e2 * Math.sq(cbet1)) if shortline
-              else lam12)
+    omg12 = (lam12 if !shortline else
+             lam12 /
+             math.sqrt(1 - self._e2 * (Math.sq(cbet1) + Math.sq(cbet2) / 2)))
     somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
     salp1 = cbet2 * somg12
     calp1 = (
-      sbet12 + cbet2 * sbet1 * Math.sq(somg12) / (1 + comg12)  if comg12 >= 0
+      sbet12 + cbet2 * sbet1 * Math.sq(somg12) / (1 + comg12) if comg12 >= 0
       else sbet12a - cbet2 * sbet1 * Math.sq(somg12) / (1 - comg12))
 
     ssig12 = math.hypot(salp1, calp1)
@@ -497,12 +499,12 @@ class Geodesic(object):
         lamscale = betscale / cbet1
         y = (lam12 - math.pi) / lamscale
 
-      if y > -Geodesic.tol1_ and x >  -1 - Geodesic.xthresh_:
+      if y > -Geodesic.tol1_ and x > -1 - Geodesic.xthresh_:
         # strip near cut
         if self._f >= 0:
           salp1 = min(1.0, -x); calp1 = - math.sqrt(1 - Math.sq(salp1))
         else:
-          calp1 = max((0.0 if x > -Geodesic.tol1_ else -1.0),  x)
+          calp1 = max((0.0 if x > -Geodesic.tol1_ else -1.0), x)
           salp1 = math.sqrt(1 - Math.sq(calp1))
       else:
         # Estimate alp1, by solving the astroid problem.
@@ -764,7 +766,7 @@ class Geodesic(object):
 
       if sig12 >= 0:
         # Short lines (InverseStart sets salp2, calp2)
-        w1 = math.sqrt(1 - self._e2 * Math.sq(cbet1))
+        w1 = math.sqrt(1 - self._e2 * (Math.sq(cbet1) + Math.sq(cbet2)) / 2)
         s12x = sig12 * self._a * w1
         m12x = (Math.sq(w1) * self._a / self._f1 *
                 math.sin(sig12 * self._f1 / w1))

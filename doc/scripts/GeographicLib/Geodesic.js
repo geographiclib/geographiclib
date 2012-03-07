@@ -65,7 +65,7 @@ GeographicLib.GeodesicLine = {};
     //            sum(c[i] * cos((2*i+1) * x), i, 0, n-1) :
     // using Clenshaw summation.  N.B. c[0] is unused for sin series
     // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    var k  = n + (sinp ? 1 : 0); // Point to one beyond last element
+    var k = n + (sinp ? 1 : 0); // Point to one beyond last element
     var
     ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
     y0 = n & 1 ? c[--k] : 0, y1 = 0;        // accumulators for sum
@@ -115,7 +115,7 @@ GeographicLib.GeodesicLine = {};
       r3 = r * r2,
       // The discrimant of the quadratic equation for T3.  This is
       // zero on the evolute curve p^(1/3)+q^(1/3) = 1
-      disc =  S * (S + 2 * r3);
+      disc = S * (S + 2 * r3);
       var u = r;
       if (disc >= 0) {
         var T3 = S + r3;
@@ -232,7 +232,8 @@ GeographicLib.GeodesicLine = {};
                  (this._e2 > 0 ? m.atanh(Math.sqrt(this._e2)) :
                   Math.atan(Math.sqrt(-this._e2))) /
                  Math.sqrt(Math.abs(this._e2))))/2;
-    this._etol2 = g.tol2_ / Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
+    // The sig12 threshold for "really short"
+    this._etol2 = 10 * g.tol2_ / Math.max(0.1, Math.sqrt(Math.abs(this._e2)));
     if (!(isFinite(this._a) && this._a > 0))
       throw new Error("Major radius is not positive");
     if (!(isFinite(this._b) && this._b > 0))
@@ -302,7 +303,7 @@ GeographicLib.GeodesicLine = {};
 
   g.Geodesic.prototype.A3f = function(eps) {
     // Evaluation sum(_A3c[k] * eps^k, k, 0, nA3x_-1) by Horner's method
-    var  v = 0;
+    var v = 0;
     for (var i = g.nA3x_; i; )
       v = eps * v + this._A3x[--i];
     return v;
@@ -375,7 +376,7 @@ GeographicLib.GeodesicLine = {};
     vals.m12a = (w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
       - this._f1 * csig1 * csig2 * J12;
     // Missing a factor of _b
-    vals.s12b =  (1 + A1m1) * sig12 + AB1;
+    vals.s12b = (1 + A1m1) * sig12 + AB1;
     if (scalep) {
       var csig12 = csig1 * csig2 + ssig1 * ssig2;
       J12 *= this._f1;
@@ -414,8 +415,9 @@ GeographicLib.GeodesicLine = {};
     var shortline = cbet12 >= 0 && sbet12 < 0.5 &&
       lam12 <= Math.PI / 6;
     var
-    omg12 = shortline ?
-      lam12 / Math.sqrt(1 - this._e2 * m.sq(cbet1)) : lam12,
+    omg12 = (!shortline ? lam12
+             lam12 /
+             Math.sqrt(1 - this._e2 * (m.sq(cbet1) + m.sq(cbet2)) / 2)),
     somg12 = Math.sin(omg12), comg12 = Math.cos(omg12);
 
     vals.salp1 = cbet2 * somg12;
@@ -477,13 +479,13 @@ GeographicLib.GeodesicLine = {};
         y = (lam12 - Math.PI) / lamscale;
       }
 
-      if (y > -g.tol1_ && x >  -1 - g.xthresh_) {
+      if (y > -g.tol1_ && x > -1 - g.xthresh_) {
         // strip near cut
         if (this._f >= 0) {
           vals.salp1 = Math.min(1, -x);
           vals.calp1 = - Math.sqrt(1 - m.sq(vals.salp1));
         } else {
-          vals.calp1 = Math.max(x > -g.tol1_ ? 0 : -1,  x);
+          vals.calp1 = Math.max(x > -g.tol1_ ? 0 : -1, x);
           vals.salp1 = Math.sqrt(1 - m.sq(vals.calp1));
         }
       } else {
@@ -781,7 +783,7 @@ GeographicLib.GeodesicLine = {};
         salp2 = nvals.salp2;
         calp2 = nvals.calp2;
         // Short lines (InverseStart sets salp2, calp2)
-        var w1 = Math.sqrt(1 - this._e2 * m.sq(cbet1));
+        var w1 = Math.sqrt(1 - this._e2 * (m.sq(cbet1) + m.sq(cbet2)) / 2);
         s12x = sig12 * this._a * w1;
         m12x = m.sq(w1) * this._a / this._f1 *
           Math.sin(sig12 * this._f1 / w1);

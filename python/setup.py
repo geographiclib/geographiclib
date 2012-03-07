@@ -4,7 +4,7 @@
 #
 #   python setup.py install
 #
-# in this directory.  To upload the latest version to the python reposity run
+# in this directory.  To upload the latest version to the python repository run
 #
 #   python setup.py sdist --formats gztar,zip upload
 #
@@ -16,7 +16,7 @@
 from distutils.core import setup
 
 setup(name="geographiclib",
-      version="1.16",
+      version="1.19",
       description=
         "A translation of the GeographicLib::Geodesic class to Python",
       author="Charles Karney",

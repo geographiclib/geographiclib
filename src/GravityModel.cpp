@@ -82,7 +82,7 @@ namespace GeographicLib {
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
       if (pos != coeffstr.tellg())
-        throw GeographicErr("Extra data in  " + coeff);
+        throw GeographicErr("Extra data in " + coeff);
     }
     int nmx = _gravitational.Coefficients().nmx();
     // Adjust the normalization of the normal potential to match the model.
@@ -206,7 +206,7 @@ namespace GeographicLib {
       // No need to do the correction
       correct = false;
     real
-      invR = correct ? 1 / Math::hypot(Math::hypot(X, Y),  Z) : 1,
+      invR = correct ? 1 / Math::hypot(Math::hypot(X, Y), Z) : 1,
       T = (gradp
            ? _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ)
            : _disturbing(-1, X, Y, Z));
@@ -282,7 +282,7 @@ namespace GeographicLib {
       gamma0 = _earth.SurfaceGravity(lat),
       dummy,
       T = InternalT(X, Y, Z, dummy, dummy, dummy, false, false),
-      invR = 1 / Math::hypot(Math::hypot(X, Y),  Z),
+      invR = 1 / Math::hypot(Math::hypot(X, Y), Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
     // _zeta0 has been included in _correction
     return T/gamma0 + correction;
@@ -314,7 +314,7 @@ namespace GeographicLib {
     _earth.Earth().IntForward(lat, 0, h, X, Y, Z, M);
     // Y = 0, cphi = M[7], sphi = M[8];
     real
-      invR = 1 / Math::hypot(X,  Z),
+      invR = 1 / Math::hypot(X, Z),
       gamma0 = (caps & CAP_GAMMA0 ?_earth.SurfaceGravity(lat)
                 : Math::NaN<real>()),
       fx, fy, fz, gamma;

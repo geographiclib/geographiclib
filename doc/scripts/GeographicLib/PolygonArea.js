@@ -39,7 +39,7 @@ GeographicLib.PolygonArea = {};
     this._earth = earth;
     this._area0 = 4 * Math.PI * earth._c2;
     this._polyline = !polyline ? false : polyline;
-    this._mask =  g.DISTANCE | (this._polyline ? 0 : g.AREA);
+    this._mask = g.DISTANCE | (this._polyline ? 0 : g.AREA);
     if (!this._polyline)
       this._areasum = new a.Accumulator(0);
     this._perimetersum = new a.Accumulator(0);

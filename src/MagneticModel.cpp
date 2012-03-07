@@ -85,7 +85,7 @@ namespace GeographicLib {
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
       if (pos != coeffstr.tellg())
-        throw GeographicErr("Extra data in  " + coeff);
+        throw GeographicErr("Extra data in " + coeff);
     }
   }
 
@@ -132,9 +132,9 @@ namespace GeographicLib {
       else if (key == "MaxTime")
         _tmax = Utility::num<real>(val);
       else if (key == "MinHeight")
-        _hmin =  Utility::num<real>(val);
+        _hmin = Utility::num<real>(val);
       else if (key == "MaxHeight")
-        _hmax =  Utility::num<real>(val);
+        _hmax = Utility::num<real>(val);
       else if (key == "Normalization") {
         if (val == "FULL" || val == "Full" || val == "full")
           _norm = SphericalHarmonic::FULL;

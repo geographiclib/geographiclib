@@ -74,7 +74,7 @@ GeographicLib.Accumulator = {};
   // of the first two arguments.
   a.sum = function(u, v) {
     var
-    s =  s = u + v,
+    s = u + v,
     up = s - v,
     vpp = s - up;
     up -= u;
@@ -122,7 +122,7 @@ GeographicLib.Accumulator = {};
     if (this._s == 0)           // This implies t == 0,
       this._s = u;              // so result is u
     else
-      this._t += u;             //  otherwise just accumulate u to t.
+      this._t += u;             // otherwise just accumulate u to t.
   }
 
   a.Accumulator.prototype.Sum = function(y) {
