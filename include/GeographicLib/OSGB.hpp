@@ -192,7 +192,7 @@ namespace GeographicLib {
      * projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening() throw()
-    { return  real(20923713 - 20853810) / real(20923713); }
+    { return real(20923713 - 20853810) / real(20923713); }
 
     /**
      * <b>DEPRECATED</b>

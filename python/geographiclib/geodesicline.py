@@ -102,7 +102,7 @@ class GeodesicLine(object):
       Geodesic.C1pf(eps, self._C1pa)
 
     if self._caps & Geodesic.CAP_C2:
-      self._A2m1 =  Geodesic.A2m1f(eps)
+      self._A2m1 = Geodesic.A2m1f(eps)
       self._C2a = range(Geodesic.nC2_ + 1)
       Geodesic.C2f(eps, self._C2a)
       self._B21 = Geodesic.SinCosSeries(
@@ -172,7 +172,7 @@ class GeodesicLine(object):
       # I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
       cbet2 = csig2 = Geodesic.tiny_
     # tan(omg2) = sin(alp0) * tan(sig2)
-    somg2 = self._salp0 * ssig2; comg2 = csig2  # No need to normalize
+    somg2 = self._salp0 * ssig2; comg2 = csig2 # No need to normalize
     # tan(alp0) = cos(sig2)*tan(alp2)
     salp2 = self._salp0; calp2 = self._calp0 * csig2 # No need to normalize
     # omg12 = omg2 - omg1
@@ -215,7 +215,7 @@ class GeodesicLine(object):
                           w1 * (self._ssig1 * csig2))
                   - self._csig1 * csig2 * J12)
       if outmask & Geodesic.GEODESICSCALE:
-        M12 = csig12 + (self._k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
+        M12 = csig12 + (self._k2 * (ssig2sq - ssig1sq) * ssig2 / (w1 + w2)
                         - csig2 * J12) * self._ssig1 / w1
         M21 = csig12 - (self._k2 * (ssig2sq - ssig1sq) * self._ssig1 / (w1 + w2)
                         - self._csig1 * J12) * ssig2 / w2

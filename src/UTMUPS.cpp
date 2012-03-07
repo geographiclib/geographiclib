@@ -31,18 +31,18 @@ namespace GeographicLib {
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
   const Math::real UTMUPS::mineasting_[4] =
-    { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
-      MGRS::minutmcol_ * MGRS::tile_,  MGRS::minutmcol_ * MGRS::tile_ };
+    { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
+      MGRS::minutmcol_ * MGRS::tile_, MGRS::minutmcol_ * MGRS::tile_ };
   const Math::real UTMUPS::maxeasting_[4] =
-    { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
-      MGRS::maxutmcol_ * MGRS::tile_,  MGRS::maxutmcol_ * MGRS::tile_ };
+    { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
+      MGRS::maxutmcol_ * MGRS::tile_, MGRS::maxutmcol_ * MGRS::tile_ };
   const Math::real UTMUPS::minnorthing_[4] =
-    { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
+    { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmSrow_ * MGRS::tile_,
       (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
       * MGRS::tile_ };
   const Math::real UTMUPS::maxnorthing_[4] =
-    { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
+    { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
       (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
       MGRS::maxutmNrow_ * MGRS::tile_ };
 

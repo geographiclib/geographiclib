@@ -176,7 +176,7 @@ Then pick one of the first five options below:
 - \ref windows.  This is a simple installation method that works with
   Visual Studio 2005, 2008, and 2010 under Windows.
 - \ref windowsbin.  Use this installation method if you only need to use
-  the utility programs supplied with %GeographicLib.  (This method also
+  the \ref utilities supplied with %GeographicLib.  (This method also
   installs the header files and the static library for use by Visual
   Studio 2010.)
 - \ref qt.  How to compile %GeographicLib so that it can be used by Qt
@@ -607,7 +607,7 @@ Back to \ref install.  Forward to \ref utilities.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page utilities Utility Programs
+\page utilities Utility programs
 
 <center>
 Back to \ref start.  Forward to \ref organization.  Up to \ref contents.
@@ -2404,7 +2404,7 @@ Back to \ref gravity.  Forward to \ref geodesic.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page geodesic Geodesics on the Ellipsoid
+\page geodesic Geodesics on the ellipsoid
 
 <center>
 Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
@@ -2881,7 +2881,7 @@ Back to \ref magnetic.  Forward to \ref transversemercator.  Up to
 </center>
 **********************************************************************/
 /**
-\page transversemercator Transverse Mercator Projection
+\page transversemercator Transverse Mercator projection
 
 <center>
 Back to \ref geodesic.  Forward to \ref geocentric.  Up to \ref contents.
@@ -3248,7 +3248,7 @@ Back to \ref transversemercator.  Forward to \ref old.  Up to \ref contents.
 </center>
 **********************************************************************/
 /**
-\page old Old Versions
+\page old Old versions
 
 <center>
 Back to \ref geocentric.  Up to \ref contents.
@@ -3263,7 +3263,10 @@ number.)
   - Fix argument checking tests in GeographicLib::MGRS::Forward.
   - Add --comment-delimiter and --line-separator options to the \ref utilities.
   - Slight improvement in GegraphicLib::Geodesic::Inverse for very short
-    lines.  (STILL TO DO: port to Javascript and Python implementations.)
+    lines.
+  - STILL TO DO: move doc clean commands from distclean to
+    maintainer-clean target.
+  - STILL TO DO: document CMAKE_OSX_ARCHITECTURES.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a>
   - Improve documentation on configuration with cmake.
@@ -3726,7 +3729,7 @@ number.)
   - Use std versions of math functions.
   - Add GeographicLib::ECEF and GeographicLib::LocalCartesian classes
     and the ECEFConvert utility.
-  - Gather the documentation on the utility programs onto one page.
+  - Gather the documentation on the \ref utilities onto one page.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/Geographic-2009-01.tgz/download">2009-01</a>
   - First proper release of library.

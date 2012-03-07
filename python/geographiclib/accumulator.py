@@ -42,7 +42,7 @@ class Accumulator(object):
   def Add(self, y):
     # Here's Shewchuk's solution...
     # hold exact sum as [s, t, u]
-    y, u  = Accumulator.sum(y, self._t) # Accumulate starting at
+    y, u = Accumulator.sum(y, self._t) # Accumulate starting at
     self._s, self._t = Accumulator.sum(y, self._s) # least significant end
     # Start is _s, _t decreasing and non-adjacent.  Sum is now (s + t + u)
     # exactly with s, t, u non-adjacent and in decreasing order (except

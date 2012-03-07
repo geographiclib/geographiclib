@@ -454,7 +454,7 @@ namespace GeographicLib {
     m12a = (w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
       - _f1 * csig1 * csig2 * J12;
     // Missing a factor of _b
-    s12b =  (1 + A1m1) * sig12 + AB1;
+    s12b = (1 + A1m1) * sig12 + AB1;
     if (scalep) {
       real csig12 = csig1 * csig2 + ssig1 * ssig2;
       J12 *= _f1;
@@ -482,7 +482,7 @@ namespace GeographicLib {
         r3 = r * r2,
         // The discrimant of the quadratic equation for T3.  This is zero on
         // the evolute curve p^(1/3)+q^(1/3) = 1
-        disc =  S * (S + 2 * r3);
+        disc = S * (S + 2 * r3);
       real u = r;
       if (disc >= 0) {
         real T3 = S + r3;
@@ -553,7 +553,8 @@ namespace GeographicLib {
       lam12 <= Math::pi<real>() / 6;
     real
       omg12 = (!shortline ? lam12 :
-               lam12 / sqrt(1 - _e2 * (Math::sq(cbet1) + Math::sq(cbet2)) / 2)),
+               lam12 /
+               sqrt(1 - _e2 * (Math::sq(cbet1) + Math::sq(cbet2)) / 2)),
       somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
@@ -613,12 +614,12 @@ namespace GeographicLib {
         y = (lam12 - Math::pi<real>()) / lamscale;
       }
 
-      if (y > -tol1_ && x >  -1 - xthresh_) {
+      if (y > -tol1_ && x > -1 - xthresh_) {
         // strip near cut
         if (_f >= 0) {
           salp1 = min(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
         } else {
-          calp1 = max(real(x > -tol1_ ? 0 : -1),  real(x));
+          calp1 = max(real(x > -tol1_ ? 0 : -1), real(x));
           salp1 = sqrt(1 - Math::sq(calp1));
         }
       } else {
@@ -745,7 +746,7 @@ namespace GeographicLib {
         real dummy;
         Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, dummy, dlam12, dummy,
-                false, dummy, dummy,  C1a, C2a);
+                false, dummy, dummy, C1a, C2a);
         dlam12 /= calp2 * cbet2;
       }
     }

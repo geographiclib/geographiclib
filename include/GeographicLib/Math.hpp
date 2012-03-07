@@ -194,7 +194,7 @@ namespace GeographicLib {
       // mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -
       // 1)/log(y) is a slowly varying quantity near y = 1 and is accurately
       // computed.
-      return std::abs(x) > 1 ? z : (z == 0 ?  x : x * z / std::log(y));
+      return std::abs(x) > 1 ? z : (z == 0 ? x : x * z / std::log(y));
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
     template<typename T> static inline T expm1(T x) throw()

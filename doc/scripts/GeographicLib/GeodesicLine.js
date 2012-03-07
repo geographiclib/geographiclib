@@ -37,7 +37,7 @@
     var alp1 = azi1 * m.degree;
     // Enforce sin(pi) == 0 and cos(pi/2) == 0.  Better to face the ensuing
     // problems directly than to skirt them.
-    this._salp1 =     azi1  == -180 ? 0 : Math.sin(alp1);
+    this._salp1 =          azi1  == -180 ? 0 : Math.sin(alp1);
     this._calp1 = Math.abs(azi1) ==   90 ? 0 : Math.cos(alp1);
     var cbet1, sbet1, phi;
     phi = lat1 * m.degree;
@@ -216,7 +216,7 @@
                                w1 * (this._ssig1 * csig2))
                               - this._csig1 * csig2 * J12);
       if (outmask & g.GEODESICSCALE) {
-        vals.M12 = csig12 + (this._k2 * (ssig2sq - ssig1sq) *  ssig2 / (w1 + w2)
+        vals.M12 = csig12 + (this._k2 * (ssig2sq - ssig1sq) * ssig2 / (w1 + w2)
                              - csig2 * J12) * this._ssig1 / w1;
         vals.M21 = csig12 - (this._k2 * (ssig2sq - ssig1sq) * this._ssig1 /
                              (w1 + w2)

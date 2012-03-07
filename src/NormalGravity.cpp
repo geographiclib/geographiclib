@@ -89,14 +89,14 @@ namespace GeographicLib {
   Math::real NormalGravity::qf(real ep2) throw() {
     // Compute
     //
-    //  ((1 + 3/e'^2) * atan(e')  - 3/e')/2
+    //   ((1 + 3/e'^2) * atan(e') - 3/e')/2
     //
     // See H+M, Eq 2-57, with E/u = e'.  This suffers from two levels of
     // cancelation.  The e'^-1 and e'^1 terms drop out, so that the leading
     // term is O(e'^3).
     real ep = sqrt(ep2);
-    if (abs(ep2) >  real(0.5))  // Use the closed expression
-      return ((1 + 3 / ep2) * atan(ep)  - 3 / ep)/2;
+    if (abs(ep2) > real(0.5))  // Use the closed expression
+      return ((1 + 3 / ep2) * atan(ep) - 3 / ep)/2;
     else {
       real ep2n = 1, q = 0;     // The series expansion H+M, Eq 2-86
       for (int n = 1; ; ++n) {
@@ -116,7 +116,7 @@ namespace GeographicLib {
   Math::real NormalGravity::qpf(real ep2) throw() {
     // Compute
     //
-    //  3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
+    //   3*(1 + 1/e'^2) * (1 - atan(e')/e') - 1
     //
     // See H+M, Eq 2-67, with E/u = e'.  This suffers from two levels of
     // cancelation.  The e'^-2 and e'^0 terms drop out, so that the leading
@@ -195,7 +195,7 @@ namespace GeographicLib {
       gamu = - invw * (_GM
                        + (_aomega2 * _E * qp
                           * (Math::sq(sbet) - 1/real(3)) / 2)) / Math::sq(uE),
-      gamb = _aomega2 * q  * sbet * cbet * invw / uE,
+      gamb = _aomega2 * q * sbet * cbet * invw / uE,
       t = u * invw / uE;
     // H+M, Eq 6-12
     GammaX = t * cbet * gamu - invw * sbet * gamb;

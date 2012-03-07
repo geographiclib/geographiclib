@@ -209,7 +209,7 @@ namespace GeographicLib {
      * This routine requires constant memory and thus never throws an
      * exception.
      **********************************************************************/
-    Math::real operator()(real x, real y, real z)  const throw() {
+    Math::real operator()(real x, real y, real z) const throw() {
       real f[] = {1};
       real v = 0;
       real dummy;

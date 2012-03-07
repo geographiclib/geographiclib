@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
             throw GeographicErr("Bad hemisphere letter on latitude");
           if (!(std::abs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
-          h =  Utility::num<real>(std::string(argv[++m]));
+          h = Utility::num<real>(std::string(argv[++m]));
           timeset = false;
           circle = true;
         }

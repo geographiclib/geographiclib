@@ -297,7 +297,7 @@ namespace GeographicLib {
     }
     pieces[0] += idegree;
     ostringstream s;
-    s << fixed  << setfill('0');
+    s << fixed << setfill('0');
     if (ind == NONE && sign < 0)
       s << '-';
     switch (trailing) {
@@ -314,12 +314,12 @@ namespace GeographicLib {
       switch (trailing) {
       case MINUTE:
         s << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec)
-          << pieces[1] <<  char(tolower(dmsindicators_[1]));
+          << pieces[1] << char(tolower(dmsindicators_[1]));
         break;
       case SECOND:
-        s << setw(2) << pieces[1] <<  char(tolower(dmsindicators_[1]))
+        s << setw(2) << pieces[1] << char(tolower(dmsindicators_[1]))
           << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec)
-          << pieces[2] <<  char(tolower(dmsindicators_[2]));
+          << pieces[2] << char(tolower(dmsindicators_[2]));
         break;
       default:
         break;

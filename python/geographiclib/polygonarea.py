@@ -149,7 +149,7 @@ class PolygonArea(object):
     return num, perimeter, area
 
   def Area(earth, points, polyline):
-    poly =  PolygonArea(earth, polyline)
+    poly = PolygonArea(earth, polyline)
     for p in points:
       poly.AddPoint(p['lat'], p['lon'])
     return poly.Compute(False, True)

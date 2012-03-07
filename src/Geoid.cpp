@@ -408,7 +408,7 @@ namespace GeographicLib {
         lat = min(lat,  90 - 1/(100 * _rlatres));
         lat = max(lat, -90 + 1/(100 * _rlatres));
         fy = (90 - lat) * _rlatres;
-        fy -=  int(fy);
+        fy -= int(fy);
         real
           phi = lat * _degree,
           cosphi = cos(phi),
