@@ -71,7 +71,7 @@ namespace GeographicLib {
     real _sbet0, _cbet0;
     static const real eps1_;
     static const real tiny_;
-    static const unsigned maxit_ =  10;
+    static const unsigned maxit_ = 10;
 
     // The following private helper functions are copied from Geodesic.
     static inline real AngNormalize(real x) throw() {
