@@ -3264,7 +3264,9 @@ number.)
     lines.
   - STILL TO DO: move doc clean commands from distclean to
     maintainer-clean target.
-  - STILL TO DO: document CMAKE_OSX_ARCHITECTURES.
+  - STILL TO DO: document interaction between CMAKE_PREFIX_PATH and
+    CMAKE_INSTALL_PREFIX.
+  - Compiled Matlab in Windows 64-bit installer only.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a>
   - Improve documentation on configuration with cmake.

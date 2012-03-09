@@ -13,6 +13,18 @@ set (GeographicLib_VERSION
 set (LIBVERSION 9)
 set (LIBVERSIONFULL 9.2.2)
 
+# Set CMAKE_INSTALL_PREFIX from first element of CMAKE_PREFIX_PATH
+if (WIN32)
+  if (DEFINED CMAKE_PREFIX_PATH
+    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    list (GET CMAKE_PREFIX_PATH 0 CMAKE_INSTALL_PREFIX)
+    set (CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+      CACHE PATH "Installation directory for GeographicLib" FORCE)
+  endif (DEFINED CMAKE_PREFIX_PATH
+    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
+endif (WIN32)
+
 # User-settable cache variables
 
 # (1) Build as a shared library?  On Windows systems, this is typically
@@ -142,23 +154,23 @@ if (WIN32)
   set (GEOGRAPHICLIB_ROOT_DIR "..")
 else (WIN32)
   set (INSTALL_CMAKE_DIR
-    "share/cmake/${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
+    "share/cmake/${PROJECT_NAME}-${GeographicLib_VERSION}")
   set (GEOGRAPHICLIB_ROOT_DIR "../../..")
 endif (WIN32)
 configure_file (cmake/geographiclib-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake" @ONLY)
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake" @ONLY)
 configure_file (cmake/geographiclib-config-version.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake" @ONLY)
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config-version.cmake" @ONLY)
 install (FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake"
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake"
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config-version.cmake"
   DESTINATION "${INSTALL_CMAKE_DIR}")
 
 # Make information about the cmake targets (the library and the tools)
 # available.
-export (TARGETS Geographic ${TOOLS}
-  FILE "${PROJECT_BINARY_DIR}/GeographicLibDepends.cmake")
-install (EXPORT GeographicLibDepends DESTINATION "${INSTALL_CMAKE_DIR}")
+install (EXPORT DEPENDS
+  FILE geographiclib-depends.cmake
+  DESTINATION "${INSTALL_CMAKE_DIR}")
 
 # Packaging support; we deal with 
 # (1) a source distribution: cmake make a tar.gz file and the zip file
@@ -227,7 +239,7 @@ set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
-  "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
+  "${PROJECT_NAME}-${GeographicLib_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
@@ -237,10 +249,15 @@ if (WIN32)
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   set (CPACK_NSIS_PACKAGE_NAME
-    "${CMAKE_PROJECT_NAME} ${GeographicLib_VERSION}")
+    "${PROJECT_NAME} ${GeographicLib_VERSION}")
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
-  set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
-  set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
+  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
+    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
+  else (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
+    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
+  endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\index.html\\\"
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\utilities.html\\\"

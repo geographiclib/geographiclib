@@ -96,5 +96,5 @@ EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	CartConvert.1.html ConicProj.1.html Geod.1.html GeodesicProj.1.html \
 	GeoidEval.1.html Gravity.1.html MagneticField.1.html Planimeter.1.html
 
-distclean-local:
+maintainer-clean-local:
 	rm -rf *.usage *.1.html *.1

@@ -43,7 +43,8 @@ install: html/index.html
 	mkdir -p $(SCRIPTDEST)/GeographicLib
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(SCRIPTDEST)/
 	$(INSTALL) -m 644 $(JSSCRIPTS) $(SCRIPTDEST)/GeographicLib/
-distclean:
+
+maintainer-clean:
 	rm -rf html
 
 .PHONY: doc install clean

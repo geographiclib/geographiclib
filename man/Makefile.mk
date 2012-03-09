@@ -39,7 +39,8 @@ INSTALL = install -b
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(MANPAGES) $(DEST)/
-distclean:
+
+maintainer-clean:
 	rm -f *.1 *.usage *.1.html
 
 .PHONY: all install clean

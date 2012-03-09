@@ -23,7 +23,7 @@ endif (WIN32)
 # Specify where the library is installed, adding it to the export
 # GeographicLibDepends.
 install (TARGETS Geographic
-  EXPORT GeographicLibDepends
+  EXPORT DEPENDS
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
