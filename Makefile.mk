@@ -14,7 +14,7 @@ tools: src
 install: install-headers install-lib install-tools install-man install-cmake \
 	install-doc install-matlab install-python
 clean: clean-src clean-tools clean-doc clean-man clean-matlab clean-python
-distclean: clean distclean-doc distclean-man
+maintainer-clean: clean maintainer-clean-doc maintainer-clean-man
 install-headers:
 	$(MAKE) -C include install
 install-lib:
@@ -43,10 +43,10 @@ clean-matlab: matlab
 	$(MAKE) -C matlab clean
 clean-python: python
 	$(MAKE) -C python clean
-distclean-doc:
-	$(MAKE) -C doc distclean
-distclean-man:
-	$(MAKE) -C man distclean
+maintainer-clean-doc:
+	$(MAKE) -C doc maintainer-clean
+maintainer-clean-man:
+	$(MAKE) -C man maintainer-clean
 
 VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 
@@ -54,4 +54,4 @@ VERSION:=$(shell grep '\bVERSION=' configure | cut -f2 -d\' | head -1)
 	install-headers install-lib install-tools install-cmake install-man \
 	install-matlab install-python \
 	clean clean-src clean-tools clean-doc clean-man clean-matlab \
-	clean-python distclean distclean-doc distclean-man
+	clean-python maintainer-clean maintainer-clean-doc maintainer-clean-man

@@ -20,10 +20,9 @@ else (WIN32)
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
 endif (WIN32)
 
-# Specify where the library is installed, adding it to the export
-# GeographicLibDepends.
+# Specify where the library is installed, adding it to the export DEPENDS
 install (TARGETS Geographic
-  EXPORT GeographicLibDepends
+  EXPORT DEPENDS
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)

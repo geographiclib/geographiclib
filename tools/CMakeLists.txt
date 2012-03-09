@@ -35,9 +35,8 @@ if (NOT WIN32)
     INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 endif (NOT WIN32)
 
-# Specify where the tools are installed, adding them to the export
-# GeographicLibDepends.
-install (TARGETS ${TOOLS} EXPORT GeographicLibDepends DESTINATION bin)
+# Specify where the tools are installed, adding them to the export DEPENDS
+install (TARGETS ${TOOLS} EXPORT DEPENDS DESTINATION bin)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the

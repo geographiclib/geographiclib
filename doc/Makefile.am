@@ -92,7 +92,7 @@ html/index.html: Doxyfile Geographic.doc \
 	$(top_srcdir)/LICENSE.txt html/
 	doxygen
 
-distclean-local:
+maintainer-clean-local:
 	rm -rf html
 
 install-doc: doc
