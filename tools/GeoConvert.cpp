@@ -40,7 +40,8 @@ int main(int argc, char* argv[]) {
     int prec = 0;
     int zone = UTMUPS::MATCH;
     bool centerp = true, swaplatlong = false;
-    std::string istring, ifile, ofile;
+    std::string istring, ifile, ofile, cdelim;
+    char lsep = ';';
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -100,6 +101,16 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--output-file") {
         if (++m == argc) return usage(1, true);
         ofile = argv[m];
+      } else if (arg == "--line-separator") {
+        if (++m == argc) return usage(1, true);
+        if (std::string(argv[m]).size() != 1) {
+          std::cerr << "Line separator must be a single character\n";
+          return 1;
+        }
+        lsep = argv[m][0];
+      } else if (arg == "--comment-delimiter") {
+        if (++m == argc) return usage(1, true);
+        cdelim = argv[m];
       } else if (arg == "--version") {
         std::cout
           << argv[0]
@@ -126,7 +137,7 @@ int main(int argc, char* argv[]) {
     } else if (!istring.empty()) {
       std::string::size_type m = 0;
       while (true) {
-        m = istring.find(';', m);
+        m = istring.find(lsep, m);
         if (m == std::string::npos)
           break;
         istring[m] = '\n';
@@ -153,7 +164,15 @@ int main(int argc, char* argv[]) {
     int retval = 0;
 
     while (std::getline(*input, s)) {
+      std::string eol("\n");
       try {
+        if (!cdelim.empty()) {
+          std::string::size_type m = s.find(cdelim);
+          if (m != std::string::npos) {
+            eol = " " + s.substr(m) + "\n";;
+            s = s.substr(0, m);
+          }
+        }
         p.Reset(s, centerp, swaplatlong);
         p.SetAltZone(zone);
         switch (outputmode) {
@@ -186,7 +205,7 @@ int main(int argc, char* argv[]) {
         os = std::string("ERROR: ") + e.what();
         retval = 1;
       }
-      *output << os << "\n";
+      *output << os << eol;
     }
     return retval;
   }

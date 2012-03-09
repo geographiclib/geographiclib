@@ -42,7 +42,8 @@ int main(int argc, char* argv[]) {
       a = Constants::WGS84_a<real>(),
       f = Constants::WGS84_f<real>();
     bool reverse = false, sign = true, polyline = false;
-    std::string istring, ifile, ofile;
+    std::string istring, ifile, ofile, cdelim;
+    char lsep = ';';
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
@@ -72,6 +73,16 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--output-file") {
         if (++m == argc) return usage(1, true);
         ofile = argv[m];
+      } else if (arg == "--line-separator") {
+        if (++m == argc) return usage(1, true);
+        if (std::string(argv[m]).size() != 1) {
+          std::cerr << "Line separator must be a single character\n";
+          return 1;
+        }
+        lsep = argv[m][0];
+      } else if (arg == "--comment-delimiter") {
+        if (++m == argc) return usage(1, true);
+        cdelim = argv[m];
       } else if (arg == "--version") {
         std::cout
           << argv[0]
@@ -98,7 +109,7 @@ int main(int argc, char* argv[]) {
     } else if (!istring.empty()) {
       std::string::size_type m = 0;
       while (true) {
-        m = istring.find(';', m);
+        m = istring.find(lsep, m);
         if (m == std::string::npos)
           break;
         istring[m] = '\n';
@@ -126,7 +137,15 @@ int main(int argc, char* argv[]) {
     std::string s;
     real perimeter, area;
     unsigned num;
+    std::string eol("\n");
     while (std::getline(*input, s)) {
+      if (!cdelim.empty()) {
+        std::string::size_type m = s.find(cdelim);
+        if (m != std::string::npos) {
+          eol = " " + s.substr(m) + "\n";;
+          s = s.substr(0, m);
+        }
+      }
       bool endpoly = s.empty();
       if (!endpoly) {
         try {
@@ -145,9 +164,10 @@ int main(int argc, char* argv[]) {
                   << Utility::str<real>(perimeter, 8);
           if (!polyline)
             *output << " " << Utility::str<real>(area, 3);
-          *output << "\n";
+          *output << eol;
         }
         poly.Clear();
+        eol = "\n";
       } else
         poly.AddPoint(p.Latitude(), p.Longitude());
     }
@@ -157,9 +177,10 @@ int main(int argc, char* argv[]) {
               << Utility::str<real>(perimeter, 8);
       if (!polyline)
         *output << " " << Utility::str<real>(area, 3);
-      *output << "\n";
+      *output << eol;
     }
     poly.Clear();
+    eol = "\n";
     return 0;
   }
   catch (const std::exception& e) {

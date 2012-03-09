@@ -204,11 +204,11 @@ int main(int argc, char* argv[]) {
     int retval = 0;
     while (std::getline(*input, s)) {
       try {
-        std::string comment;
+        std::string eol("\n");
         if (!cdelim.empty()) {
           std::string::size_type m = s.find(cdelim);
           if (m != std::string::npos) {
-            comment = " " + s.substr(m);
+            eol = " " + s.substr(m) + "\n";;
             s = s.substr(0, m);
           }
         }
@@ -236,7 +236,7 @@ int main(int argc, char* argv[]) {
                     << " " << Utility::str<real>(M12, prec+7)
                     << " " << Utility::str<real>(M21, prec+7)
                     << " " << Utility::str<real>(S12, std::max(prec-7, 0));
-          *output << comment << "\n";
+          *output << eol;
         } else {
           if (linecalc) {
             std::string ss12;
@@ -281,7 +281,7 @@ int main(int argc, char* argv[]) {
                     << " " << Utility::str<real>(M12, prec+7)
                     << " " << Utility::str<real>(M21, prec+7)
                     << " " << Utility::str<real>(S12, std::max(prec-7, 0));
-          *output << comment << "\n";
+          *output << eol;
         }
       }
       catch (const std::exception& e) {

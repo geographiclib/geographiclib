@@ -41,7 +41,8 @@ int main(int argc, char* argv[]) {
     std::string dir;
     std::string geoid = Geoid::DefaultGeoidName();
     Geoid::convertflag heightmult = Geoid::NONE;
-    std::string istring, ifile, ofile;
+    std::string istring, ifile, ofile, cdelim;
+    char lsep = ';';
     bool northp = false;
     int zonenum = UTMUPS::INVALID;
 
@@ -103,6 +104,16 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--output-file") {
         if (++m == argc) return usage(1, true);
         ofile = argv[m];
+      } else if (arg == "--line-separator") {
+        if (++m == argc) return usage(1, true);
+        if (std::string(argv[m]).size() != 1) {
+          std::cerr << "Line separator must be a single character\n";
+          return 1;
+        }
+        lsep = argv[m][0];
+      } else if (arg == "--comment-delimiter") {
+        if (++m == argc) return usage(1, true);
+        cdelim = argv[m];
       } else if (arg == "--version") {
         std::cout
           << argv[0]
@@ -135,7 +146,7 @@ int main(int argc, char* argv[]) {
     } else if (!istring.empty()) {
       std::string::size_type m = 0;
       while (true) {
-        m = istring.find(';', m);
+        m = istring.find(lsep, m);
         if (m == std::string::npos)
           break;
         istring[m] = '\n';
@@ -189,6 +200,14 @@ int main(int argc, char* argv[]) {
       const char* spaces = " \t\n\v\f\r,"; // Include comma as space
       while (std::getline(*input, s)) {
         try {
+          std::string eol("\n");
+          if (!cdelim.empty()) {
+            std::string::size_type m = s.find(cdelim);
+            if (m != std::string::npos) {
+              eol = " " + s.substr(m) + "\n";;
+              s = s.substr(0, m);
+            }
+          }
           real height = 0;
           if (zonenum != UTMUPS::INVALID) {
             // Expect "easting northing" if heightmult == 0, or
@@ -232,7 +251,7 @@ int main(int argc, char* argv[]) {
             real h = g(p.Latitude(), p.Longitude());
             *output << s
                     << Utility::str<real>(height + real(heightmult) * h, 4)
-                    << suff << "\n";
+                    << suff << eol;
           } else {
             real gradn, grade;
             real h = g(p.Latitude(), p.Longitude(), gradn, grade);
@@ -240,7 +259,8 @@ int main(int argc, char* argv[]) {
                     << Utility::str<real>(gradn * 1e6, 2)
                     << (Math::isnan(gradn) ? " " : "e-6 ")
                     << Utility::str<real>(grade * 1e6, 2)
-                    << (Math::isnan(grade) ? "\n" : "e-6\n");
+                    << (Math::isnan(grade) ? "" : "e-6")
+                    << eol;
           }
         }
         catch (const std::exception& e) {

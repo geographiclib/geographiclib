@@ -40,7 +40,8 @@ int main(int argc, char* argv[]) {
     bool verbose = false;
     std::string dir;
     std::string model = GravityModel::DefaultGravityName();
-    std::string istring, ifile, ofile;
+    std::string istring, ifile, ofile, cdelim;
+    char lsep = ';';
     real lat = 0, h = 0;
     bool circle = false;
     int prec = -1;
@@ -104,6 +105,16 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--output-file") {
         if (++m == argc) return usage(1, true);
         ofile = argv[m];
+      } else if (arg == "--line-separator") {
+        if (++m == argc) return usage(1, true);
+        if (std::string(argv[m]).size() != 1) {
+          std::cerr << "Line separator must be a single character\n";
+          return 1;
+        }
+        lsep = argv[m][0];
+      } else if (arg == "--comment-delimiter") {
+        if (++m == argc) return usage(1, true);
+        cdelim = argv[m];
       } else if (arg == "--version") {
         std::cout
           << argv[0]
@@ -138,7 +149,7 @@ int main(int argc, char* argv[]) {
     } else if (!istring.empty()) {
       std::string::size_type m = 0;
       while (true) {
-        m = istring.find(';', m);
+        m = istring.find(lsep, m);
         if (m == std::string::npos)
           break;
         istring[m] = '\n';
@@ -195,6 +206,14 @@ int main(int argc, char* argv[]) {
       std::string s, stra, strb;
       while (std::getline(*input, s)) {
         try {
+          std::string eol("\n");
+          if (!cdelim.empty()) {
+            std::string::size_type m = s.find(cdelim);
+            if (m != std::string::npos) {
+              eol = " " + s.substr(m) + "\n";;
+              s = s.substr(0, m);
+            }
+          }
           std::istringstream str(s);
           real lon;
           if (circle) {
@@ -229,7 +248,7 @@ int main(int argc, char* argv[]) {
               }
               *output << Utility::str<real>(gx, prec) << " "
                       << Utility::str<real>(gy, prec) << " "
-                      << Utility::str<real>(gz, prec) << "\n";
+                      << Utility::str<real>(gz, prec) << eol;
             }
             break;
           case DISTURBANCE:
@@ -243,7 +262,8 @@ int main(int argc, char* argv[]) {
               // Convert to mGals
               *output << Utility::str<real>(deltax * 1e5, prec) << " "
                       << Utility::str<real>(deltay * 1e5, prec) << " "
-                      << Utility::str<real>(deltaz * 1e5, prec) << "\n";
+                      << Utility::str<real>(deltaz * 1e5, prec)
+                      << eol;
             }
             break;
           case ANOMALY:
@@ -258,14 +278,14 @@ int main(int argc, char* argv[]) {
               eta *= 3600;
               *output << Utility::str<real>(Dg01, prec) << " "
                       << Utility::str<real>(xi, prec) << " "
-                      << Utility::str<real>(eta, prec) << "\n";
+                      << Utility::str<real>(eta, prec) << eol;
             }
             break;
           case UNDULATION:
           default:
             {
               real N = circle ? c.GeoidHeight(lon) : g.GeoidHeight(lat, lon);
-              *output << Utility::str<real>(N, prec) << "\n";
+              *output << Utility::str<real>(N, prec) << eol;
             }
             break;
           }

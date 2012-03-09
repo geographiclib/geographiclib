@@ -8,7 +8,7 @@ Geod -- perform geodesic calculations
 
 B<Geod> [ B<-i> | B<-l> I<lat1> I<lon1> I<azi1> ] [ B<-a> ] [ B<-e> I<a> I<f> ]
 [ B<-d> ] [ B<-b> ] [ B<-f> ] [ B<-p> I<prec> ]
-[ B<--comment-delimiter I<commentdelim> ]
+[ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
 [ B<--line-separator I<linesep> ]

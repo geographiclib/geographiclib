@@ -39,7 +39,8 @@ int main(int argc, char* argv[]) {
     bool verbose = false;
     std::string dir;
     std::string model = MagneticModel::DefaultMagneticName();
-    std::string istring, ifile, ofile;
+    std::string istring, ifile, ofile, cdelim;
+    char lsep = ';';
     real time = 0, lat = 0, h = 0;
     bool timeset = false, circle = false, rate = false;
     real hguard = 500000, tguard = 50;
@@ -126,6 +127,16 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--output-file") {
         if (++m == argc) return usage(1, true);
         ofile = argv[m];
+      } else if (arg == "--line-separator") {
+        if (++m == argc) return usage(1, true);
+        if (std::string(argv[m]).size() != 1) {
+          std::cerr << "Line separator must be a single character\n";
+          return 1;
+        }
+        lsep = argv[m][0];
+      } else if (arg == "--comment-delimiter") {
+        if (++m == argc) return usage(1, true);
+        cdelim = argv[m];
       } else if (arg == "--version") {
         std::cout
           << argv[0]
@@ -160,7 +171,7 @@ int main(int argc, char* argv[]) {
     } else if (!istring.empty()) {
       std::string::size_type m = 0;
       while (true) {
-        m = istring.find(';', m);
+        m = istring.find(lsep, m);
         if (m == std::string::npos)
           break;
         istring[m] = '\n';
@@ -229,6 +240,14 @@ int main(int argc, char* argv[]) {
       std::string s, stra, strb;
       while (std::getline(*input, s)) {
         try {
+          std::string eol("\n");
+          if (!cdelim.empty()) {
+            std::string::size_type m = s.find(cdelim);
+            if (m != std::string::npos) {
+              eol = " " + s.substr(m) + "\n";;
+              s = s.substr(0, m);
+            }
+          }
           std::istringstream str(s);
           if (!(timeset || circle)) {
             if (!(str >> stra))
@@ -292,7 +311,7 @@ int main(int argc, char* argv[]) {
                   << Utility::str<real>(by, prec) << " "
                   << Utility::str<real>(bx, prec) << " "
                   << Utility::str<real>(-bz, prec) << " "
-                  << Utility::str<real>(F, prec) << "\n";
+                  << Utility::str<real>(F, prec) << eol;
           if (rate)
             *output << DMS::Encode(Dt, prec + 1, DMS::NUMBER) << " "
                     << DMS::Encode(It, prec + 1, DMS::NUMBER) << " "
@@ -300,7 +319,7 @@ int main(int argc, char* argv[]) {
                     << Utility::str<real>(byt, prec) << " "
                     << Utility::str<real>(bxt, prec) << " "
                     << Utility::str<real>(-bzt, prec) << " "
-                    << Utility::str<real>(Ft, prec) << "\n";
+                    << Utility::str<real>(Ft, prec) << eol;
         }
         catch (const std::exception& e) {
           *output << "ERROR: " << e.what() << "\n";
