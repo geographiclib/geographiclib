@@ -185,7 +185,7 @@ $Id$
    Monat. Corr. Zach '''11''', 551--560 (Gotha, 1805).[[BR]]
    http://books.google.com/books?id=454AAAAAMAAJ&pg=PA553
  * B. Oriani,[[BR]]
-   ''Elementi di trigonemetria sferoidica
+   ''Elementi di trigonometria sferoidica
    [Elements of spheroidal trigonometry]'',
    Part 1: Mem. dell'Ist. Naz. Ital. '''1'''(1), 118--198 (Bologna, 1806);
    Part 2: '''2'''(1), 1--58 (Bologna, 1808);

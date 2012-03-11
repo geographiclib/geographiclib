@@ -268,13 +268,13 @@ namespace GeographicLib {
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2)
-        real w1 = sqrt(1 - _e2 * (Math::sq(cbet1) + Math::sq(cbet2)) / 2);
-        s12x = sig12 * _a * w1;
-        m12x = Math::sq(w1) * _a / _f1 * sin(sig12 * _f1 / w1);
+        real wm = sqrt(1 - _e2 * Math::sq((cbet1 + cbet2) / 2));
+        s12x = sig12 * _a * wm;
+        m12x = Math::sq(wm) * _a / _f1 * sin(sig12 * _f1 / wm);
         if (outmask & GEODESICSCALE)
-          M12 = M21 = cos(sig12 * _f1 / w1);
+          M12 = M21 = cos(sig12 * _f1 / wm);
         a12 = sig12 / Math::degree<real>();
-        omg12 = lam12 / w1;
+        omg12 = lam12 / wm;
       } else {
 
         // Newton's method
@@ -553,8 +553,7 @@ namespace GeographicLib {
       lam12 <= Math::pi<real>() / 6;
     real
       omg12 = (!shortline ? lam12 :
-               lam12 /
-               sqrt(1 - _e2 * (Math::sq(cbet1) + Math::sq(cbet2)) / 2)),
+               lam12 / sqrt(1 - _e2 * Math::sq((cbet1 + cbet2) / 2))),
       somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;

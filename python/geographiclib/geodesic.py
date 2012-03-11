@@ -444,9 +444,8 @@ class Geodesic(object):
     sbet12a += cbet2 * sbet1
 
     shortline = cbet12 >= 0 and sbet12 < 0.5 and lam12 <= math.pi / 6
-    omg12 = (lam12 if !shortline else
-             lam12 /
-             math.sqrt(1 - self._e2 * (Math.sq(cbet1) + Math.sq(cbet2) / 2)))
+    omg12 = (lam12 if not shortline else
+             lam12 / math.sqrt(1 - self._e2 * Math.sq((cbet1 + cbet2) / 2)))
     somg12 = math.sin(omg12); comg12 = math.cos(omg12)
 
     salp1 = cbet2 * somg12
@@ -766,14 +765,14 @@ class Geodesic(object):
 
       if sig12 >= 0:
         # Short lines (InverseStart sets salp2, calp2)
-        w1 = math.sqrt(1 - self._e2 * (Math.sq(cbet1) + Math.sq(cbet2)) / 2)
-        s12x = sig12 * self._a * w1
-        m12x = (Math.sq(w1) * self._a / self._f1 *
-                math.sin(sig12 * self._f1 / w1))
+        wm = math.sqrt(1 - self._e2 * Math.sq((cbet1 + cbet2) / 2))
+        s12x = sig12 * self._a * wm
+        m12x = (Math.sq(wm) * self._a / self._f1 *
+                math.sin(sig12 * self._f1 / wm))
         if outmask & Geodesic.GEODESICSCALE:
-          M12 = M21 = math.cos(sig12 * self._f1 / w1)
+          M12 = M21 = math.cos(sig12 * self._f1 / wm)
         a12 = sig12 / Math.degree
-        omg12 = lam12 / w1
+        omg12 = lam12 / wm
       else:
 
         # Newton's method
