@@ -415,9 +415,8 @@ GeographicLib.GeodesicLine = {};
     var shortline = cbet12 >= 0 && sbet12 < 0.5 &&
       lam12 <= Math.PI / 6;
     var
-    omg12 = (!shortline ? lam12
-             lam12 /
-             Math.sqrt(1 - this._e2 * (m.sq(cbet1) + m.sq(cbet2)) / 2)),
+    omg12 = (!shortline ? lam12 :
+             lam12 / Math.sqrt(1 - this._e2 * m.sq((cbet1 + cbet2) / 2))),
     somg12 = Math.sin(omg12), comg12 = Math.cos(omg12);
 
     vals.salp1 = cbet2 * somg12;
@@ -783,14 +782,13 @@ GeographicLib.GeodesicLine = {};
         salp2 = nvals.salp2;
         calp2 = nvals.calp2;
         // Short lines (InverseStart sets salp2, calp2)
-        var w1 = Math.sqrt(1 - this._e2 * (m.sq(cbet1) + m.sq(cbet2)) / 2);
-        s12x = sig12 * this._a * w1;
-        m12x = m.sq(w1) * this._a / this._f1 *
-          Math.sin(sig12 * this._f1 / w1);
+        var wm = Math.sqrt(1 - this._e2 * m.sq((cbet1 + cbet2) / 2));
+        s12x = sig12 * this._a * wm;
+        m12x = m.sq(wm) * this._a / this._f1 * Math.sin(sig12 * this._f1 / wm);
         if (outmask & g.GEODESICSCALE)
-          vals.M12 = vals.M21 = Math.cos(sig12 * this._f1 / w1);
+          vals.M12 = vals.M21 = Math.cos(sig12 * this._f1 / wm);
         vals.a12 = sig12 / m.degree;
-        omg12 = lam12 / w1;
+        omg12 = lam12 / wm;
       } else {
 
         // Newton's method
