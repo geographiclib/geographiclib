@@ -10,7 +10,7 @@ B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-l> ] [ B<-e> I<a> I<f> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
-[ B<--line-separator I<linesep> ]
+[ B<--line-separator> I<linesep> ]
 [ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION

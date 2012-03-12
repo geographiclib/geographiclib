@@ -12,7 +12,7 @@ B<ConicProj> ( B<-c> | B<-a> ) I<lat1> I<lat2>
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
-[ B<--line-separator I<linesep> ]
+[ B<--line-separator> I<linesep> ]
 [ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION

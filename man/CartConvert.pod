@@ -10,7 +10,7 @@ B<CartConvert> [ B<-r> ] [ B<-l> I<lat0> I<lon0> I<h0> ] [ B<-e> I<a> I<f> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
-[ B<--line-separator I<linesep> ]
+[ B<--line-separator> I<linesep> ]
 [ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
