@@ -39,7 +39,7 @@ endif (DEFINED GeographicLib_INCLUDE_DIRS AND
 
 # Read in the exported definition of the library
 if (DEFINED GeographicLib_INCLUDE_DIRS)
-  include ("${_DIR}/GeographicLibDepends.cmake")
+  include ("${_DIR}/geographiclib-depends.cmake")
   set (GeographicLib_LIBRARIES Geographic)
 endif (DEFINED GeographicLib_INCLUDE_DIRS)
 
