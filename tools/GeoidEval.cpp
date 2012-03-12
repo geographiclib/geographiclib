@@ -204,8 +204,10 @@ int main(int argc, char* argv[]) {
           if (!cdelim.empty()) {
             std::string::size_type m = s.find(cdelim);
             if (m != std::string::npos) {
-              eol = " " + s.substr(m) + "\n";;
-              s = s.substr(0, m);
+              eol = " " + s.substr(m) + "\n";
+              std::string::size_type m1 =
+                m > 0 ? s.find_last_not_of(spaces, m - 1) : std::string::npos;
+              s = s.substr(0, m1 != std::string::npos ? m1 + 1 : m);
             }
           }
           real height = 0;

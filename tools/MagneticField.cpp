@@ -244,7 +244,7 @@ int main(int argc, char* argv[]) {
           if (!cdelim.empty()) {
             std::string::size_type m = s.find(cdelim);
             if (m != std::string::npos) {
-              eol = " " + s.substr(m) + "\n";;
+              eol = " " + s.substr(m) + "\n";
               s = s.substr(0, m);
             }
           }

@@ -7,8 +7,10 @@ Planimeter -- compute the area of geodesic polygons
 =head1 SYNOPSIS
 
 B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-l> ] [ B<-e> I<a> I<f> ]
+[ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--line-separator I<linesep> ]
 [ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
@@ -71,6 +73,14 @@ I<f> = 1/298.257223563.  If entering vertices as UTM/UPS or MGRS
 coordinates, use the default ellipsoid, since the conversion of these
 coordinates to latitude and longitude uses the WGS84 parameters.
 
+=item B<--comment-delimiter>
+
+set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing.  For a given polygon, the last such string found will be
+appended to the output line (separated by a space).
+
 =item B<--version>
 
 print version and exit.
@@ -91,8 +101,13 @@ name of "-" stands for standard input.
 =item B<--input-string>
 
 read input from the string I<instring> instead of from standard input.
-All the semicolons in I<instring> are converted to newlines before the
-reading begins.
+All occurrences of the line separator character (default is a semicolon)
+in I<instring> are converted to newlines before the reading begins.
+
+=item B<--line-separator>
+
+set the line separator character to I<linesep>.  By default this is a
+semicolon.
 
 =item B<--output-file>
 

@@ -7,8 +7,10 @@ CartConvert -- convert geodetic coordinates to geocentric or local cartesian
 =head1 SYNOPSIS
 
 B<CartConvert> [ B<-r> ] [ B<-l> I<lat0> I<lon0> I<h0> ] [ B<-e> I<a> I<f> ]
+[ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--line-separator I<linesep> ]
 [ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
@@ -48,6 +50,14 @@ is allowed for I<f>.  (Also, if I<f> E<gt> 1, the flattening is set to
 1/I<f>.)  By default, the WGS84 ellipsoid is used, I<a> = 6378137 m,
 I<f> = 1/298.257223563.
 
+=item B<--comment-delimiter>
+
+set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing and subsequently appended to the output line (separated by a
+space).
+
 =item B<--version>
 
 print version and exit.
@@ -68,8 +78,13 @@ name of "-" stands for standard input.
 =item B<--input-string>
 
 read input from the string I<instring> instead of from standard input.
-All the semicolons in I<instring> are converted to newlines before the
-reading begins.
+All occurrences of the line separator character (default is a semicolon)
+in I<instring> are converted to newlines before the reading begins.
+
+=item B<--line-separator>
+
+set the line separator character to I<linesep>.  By default this is a
+semicolon.
 
 =item B<--output-file>
 

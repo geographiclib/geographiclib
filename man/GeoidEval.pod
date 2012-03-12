@@ -9,8 +9,11 @@ GeoidEval -- look up geoid heights
 B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
 [ B<-a> | B<-c> I<south> I<west> I<north> I<east> ]
 [ B<-z> I<zone> ] [ B<--msltohae> ] [ B<--haetomsl> ]
-[ B<-v> ] [ B<--version> | B<-h> | B<--help> ]
+[ B<-v> ]
+[ B<--comment-delimiter> I<commentdelim> ]
+[ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--line-separator I<linesep> ]
 [ B<--output-file> I<outfile> ]
 
 =head1 DESCRIPTION
@@ -84,6 +87,14 @@ input line with the height converted to height above the geoid (MSL).
 print information about the geoid on standard error before processing
 the input.
 
+=item B<--comment-delimiter>
+
+set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing and subsequently appended to the output line (separated by a
+space).
+
 =item B<--version>
 
 print version and exit.
@@ -104,8 +115,13 @@ name of "-" stands for standard input.
 =item B<--input-string>
 
 read input from the string I<instring> instead of from standard input.
-All the semicolons in I<instring> are converted to newlines before the
-reading begins.
+All occurrences of the line separator character (default is a semicolon)
+in I<instring> are converted to newlines before the reading begins.
+
+=item B<--line-separator>
+
+set the line separator character to I<linesep>.  By default this is a
+semicolon.
 
 =item B<--output-file>
 
