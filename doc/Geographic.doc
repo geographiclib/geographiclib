@@ -13,7 +13,7 @@
 \author Charles Karney
 <charles@karney.com>
 \version 1.19
-\date 2012-mm-dd
+\date 2012-03-13
 
 \section abstract Abstract
 
@@ -392,7 +392,7 @@ is needed to build the Matlab interface and to run the tests.)
   <a href="index.html">doc/html/index.html</a> in a web
   browser.
 
-\section windowsbin Using a binary installer for Windows.
+\section windowsbin Using a binary installer for Windows
 
 Use this method if you only need to use the %GeographicLib utilities.
 The header files and static library are provided, but can only be used
@@ -418,12 +418,12 @@ documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
 will include C:/pkg-vc10/GeographicLib-1.19/bin where the utilities are
 installed.  The headers and library are installed in the
-include/GeographicLib and lib folders.  The Matlab interface is
-installed in the libexec/GeographicLib/matlab folder.  Add this to your
-path in Matlab to access this interface.  The binaries were built using
-Visual Studio 10 (2010) in Release mode.  The Matlab interface
-was compiled with Matlab R2010b 64-bit, however it works with some other
-64-bit versions of Matlab (e.g., R2008a).
+include/GeographicLib and lib folders.  With the 64-bit installer, the
+Matlab interface is installed in the libexec/GeographicLib/matlab
+folder.  Add this to your path in Matlab to access this interface.  The
+binaries were built using Visual Studio 10 (2010) in Release mode.  The
+Matlab interface was compiled with Matlab R2010b 64-bit, however it may
+work with some other 64-bit versions of Matlab.
 
 \section qt Building the library for use with Qt
 
@@ -3269,13 +3269,13 @@ list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)
 
- - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.19.tar.gz/download">1.19 (released 2012-mm-dd)</a>
+ - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.19.tar.gz/download">1.19 (released 2012-03-13)</a>
+  - Slight improvement in GeographicLib::Geodesic::Inverse for very
+    short lines.
   - Fix argument checking tests in GeographicLib::MGRS::Forward.
   - Add --comment-delimiter and --line-separator options to the \ref
     utilities.
-  - Slight improvement in GegraphicLib::Geodesic::Inverse for very short
-    lines.
-  - Add installer for Windows 64-bit; the compiled Matlab interface is
+  - Add installer for 64-bit Windows; the compiled Matlab interface is
     supplied with the Windows 64-bit installer only.
 
  - <a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a>

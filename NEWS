@@ -6,9 +6,21 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.18.
+The current version of the library is 1.19.
 
-Changes between 1.18 (released 2012-02-18) and 1.17 versions
+Changes between 1.19 (released 2012-03-13) and 1.18 versions:
+
+  * Slight improvement in Geodesic::Inverse for very short lines.
+
+  * Fix argument checking tests in MGRS::Forward.
+
+  * Add --comment-delimiter and --line-separator options to the utility
+    programs.
+
+  * Add installer for 64-bit Windows; the compiled Matlab interface is
+    supplied with the Windows 64-bit installer only.
+
+Changes between 1.18 (released 2012-02-18) and 1.17 versions:
 
   * Improve documentation on configuration with cmake.
 

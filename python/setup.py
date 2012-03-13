@@ -4,7 +4,8 @@
 #
 #   python setup.py install
 #
-# in this directory.  To upload the latest version to the python repository run
+# in this directory.  To upload the latest version to the python
+# repository run
 #
 #   python setup.py sdist --formats gztar,zip upload
 #
