@@ -59,7 +59,7 @@
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="LambertConformalConic_8hpp.html" title="Header for GeographicLib::LambertConformalConic class.">GeographicLib/LambertConformalConic.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 
 <a name="l00012"></a><a class="code" href="LambertConformalConic_8cpp.html#adf8d4ab2a5f0e2571915d27d31758930">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP \</span>
-<a name="l00013"></a>00013 <span class="preprocessor">  &quot;$Id: 2f32109c0193635dd5808a59d477b90959901eb6 $&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">  &quot;$Id: da8f6ce89092006a26946d671edca1a7836e7ce6 $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="LambertConformalConic_8cpp.html#adf8d4ab2a5f0e2571915d27d31758930">GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="LambertConformalConic_8hpp.html#aac2fbd995d5b75016781c58b97093c67">GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP</a>)
@@ -215,7 +215,7 @@
 <a name="l00166"></a>00166                         <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(tbet1)/(1 + scbet1))
 <a name="l00167"></a>00167         * Dhyp(tbet2, tbet1, scbet2, scbet1) * _fm;
 <a name="l00168"></a>00168       <span class="comment">// Dc(tphi2, tphi1)</span>
-<a name="l00169"></a>00169       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> den =  Dasinh(tphi2, tphi1, scphi2, scphi1)
+<a name="l00169"></a>00169       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> den = Dasinh(tphi2, tphi1, scphi2, scphi1)
 <a name="l00170"></a>00170         - Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1);
 <a name="l00171"></a>00171       _n = num/den;
 <a name="l00172"></a>00172 
@@ -291,7 +291,7 @@
 <a name="l00242"></a>00242         <span class="comment">//    nu =   scphi * (shxiZ - shxi) - tphi * (chxiZ - chxi)</span>
 <a name="l00243"></a>00243         <span class="comment">//    mu = - scphi * (chxiZ - chxi) + tphi * (shxiZ - shxi)</span>
 <a name="l00244"></a>00244         <span class="comment">// then</span>
-<a name="l00245"></a>00245         <span class="comment">// dchi = ((mu2 + mu1) - D(nu2, nu1) * (scphi2 +  scphi1)) /</span>
+<a name="l00245"></a>00245         <span class="comment">// dchi = ((mu2 + mu1) - D(nu2, nu1) * (scphi2 + scphi1)) /</span>
 <a name="l00246"></a>00246         <span class="comment">//         D(tchi2, tchi1)</span>
 <a name="l00247"></a>00247         <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
 <a name="l00248"></a>00248           xiZ = eatanhe(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1)), shxiZ = sinh(xiZ), chxiZ = hyp(shxiZ),
@@ -518,7 +518,7 @@
 <a name="l00469"></a>00469 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

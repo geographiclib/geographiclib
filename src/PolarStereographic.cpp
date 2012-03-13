@@ -10,7 +10,7 @@
 #include <GeographicLib/PolarStereographic.hpp>
 
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP \
-  "$Id: 272e10eb6406c817889a0e792fb9196893d85817 $"
+  "$Id: 1a2939c8e3bae1e4f17733db37349c1e14b0f48d $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)
@@ -79,7 +79,7 @@ namespace GeographicLib {
       secphi = Math::hypot(real(1), tau),
       sig = sinh( eatanhe(tau / secphi) ),
       taup = Math::hypot(real(1), sig) * tau - sig * secphi,
-      rho =  Math::hypot(real(1), taup) + abs(taup);
+      rho = Math::hypot(real(1), taup) + abs(taup);
     rho = taup >= 0 ? (lat != 90 ? 1/rho : 0) : rho;
     rho *= 2 * _k0 * _a / _c;
     k = lat != 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :

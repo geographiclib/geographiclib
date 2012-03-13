@@ -1,4 +1,4 @@
-# $Id: 6ff1f99e93e96bde6bd53462c0f4d9cfdc9588f7 $
+# $Id: 6d0f3921b8c739428669640b67932b7bf9f925d0 $
 PROGRAMS = CartConvert \
 	ConicProj \
 	GeoConvert \
@@ -39,7 +39,8 @@ INSTALL = install -b
 install:
 	test -d $(DEST) || mkdir -p $(DEST)
 	$(INSTALL) -m 644 $(MANPAGES) $(DEST)/
-distclean:
+
+maintainer-clean:
 	rm -f *.1 *.usage *.1.html
 
 .PHONY: all install clean

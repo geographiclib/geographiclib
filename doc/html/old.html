@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>GeographicLib: Old Versions</title>
+<title>GeographicLib: Old versions</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -33,10 +33,19 @@
 </div>
 <div class="header">
   <div class="headertitle">
-<div class="title">Old Versions </div>  </div>
+<div class="title">Old versions </div>  </div>
 </div>
 <div class="contents">
 <div class="textblock"><center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>List of versions in reverse chronological order together with a brief list of changes. (Note: Old versions of the library use a year-month style of numbering. Now, the library uses a major and minor version number.)</p>
+<ul>
+<li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.19.tar.gz/download">1.19 (released 2012-03-13)</a><ul>
+<li>Slight improvement in <a class="el" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">GeographicLib::Geodesic::Inverse</a> for very short lines.</li>
+<li>Fix argument checking tests in <a class="el" href="classGeographicLib_1_1MGRS.html#a91de10ebde478dbb85b3c7d057ff97b9">GeographicLib::MGRS::Forward</a>.</li>
+<li>Add --comment-delimiter and --line-separator options to the <a class="el" href="utilities.html">Utility programs</a>.</li>
+<li>Add installer for 64-bit Windows; the compiled Matlab interface is supplied with the Windows 64-bit installer only.</li>
+</ul>
+</li>
+</ul>
 <ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">1.18 (released 2012-02-18)</a><ul>
 <li>Improve documentation on configuration with cmake.</li>
@@ -168,7 +177,7 @@
 <li>FIX BUG: accommodate tellg() returning -1 at end of string.</li>
 <li>Change way flattening of the ellipsoid is specified:<ul>
 <li>constructors take <em>f</em> argument which is taken to be the flattening if <em>f</em> &lt; 1 and the inverse flattening otherwise (this is a compatible change for spheres and oblate ellipsoids, but it is an INCOMPATIBLE change for prolate ellipsoids);</li>
-<li>the -e arguments to the <a class="el" href="utilities.html">Utility Programs</a> are handled similarly; in addition, simple fractions, e.g., 1/297, can be used for the flattening;</li>
+<li>the -e arguments to the <a class="el" href="utilities.html">Utility programs</a> are handled similarly; in addition, simple fractions, e.g., 1/297, can be used for the flattening;</li>
 <li>introduce <a class="el" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">GeographicLib::Constants::WGS84_f()</a> for the WGS84 flattening (and deprecate Constants::WGS84_r() for the inverse flattening);</li>
 <li>most classes have a Flattening() member function;</li>
 <li>InverseFlattening() has been deprecated (and now returns inf for a sphere, instead of 0).</li>
@@ -201,7 +210,7 @@
 <li>FIX BUG in area returned by <a href="Planimeter.1.html">Planimeter</a> for pole encircling polygons.</li>
 <li>FIX BUG in error message reported when DMS::Decode reads the string "5d.".</li>
 <li>FIX BUG in AlbersEqualArea::Reverse (lon0 not being used).</li>
-<li>Ensure that all exceptions thrown in the <a class="el" href="utilities.html">Utility Programs</a> are caught.</li>
+<li>Ensure that all exceptions thrown in the <a class="el" href="utilities.html">Utility programs</a> are caught.</li>
 <li>Avoid using catch within <a class="el" href="classGeographicLib_1_1DMS.html" title="Convert between degrees and DMS representation.">GeographicLib::DMS</a>.</li>
 <li>Move <a class="el" href="classGeographicLib_1_1Accumulator.html" title="An accumulator for sums.">GeographicLib::Accumulator</a> class from <a class="el" href="Planimeter_8cpp.html" title="Command line utility for measuring the area of geodesic polygons.">Planimeter.cpp</a> to <a class="el" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">Constants.hpp</a>.</li>
 <li>Add <a class="el" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">GeographicLib::Math::sq&lt;T&gt;</a>.</li>
@@ -213,7 +222,7 @@
 <li>Provide cmake support:<ul>
 <li>build binary installer for Windows;</li>
 <li>include regression tests;</li>
-<li>add --input-string, --input-file, --output-file options to the <a class="el" href="utilities.html">Utility Programs</a> to support tests.</li>
+<li>add --input-string, --input-file, --output-file options to the <a class="el" href="utilities.html">Utility programs</a> to support tests.</li>
 </ul>
 </li>
 <li>Rename utility EquidistantTest as <a href="GeodesicProj.1.html">GeodesicProj</a> and TransverseMercatorTest as <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>.</li>
@@ -226,7 +235,7 @@
 <ul>
 <li><a href="http://sf.net/projects/geographiclib/files/distrib/geographiclib-1.8.tar.gz/download">1.8 (released 2011-02-22)</a><ul>
 <li>Optionally return rotation matrix from <a class="el" href="classGeographicLib_1_1Geocentric.html" title="Geocentric coordinates">GeographicLib::Geocentric</a> and <a class="el" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">GeographicLib::LocalCartesian</a>.</li>
-<li>For the <a class="el" href="utilities.html">Utility Programs</a>, supply man pages, -h prints the synopsis, --help prints the man page, --version prints the version.</li>
+<li>For the <a class="el" href="utilities.html">Utility programs</a>, supply man pages, -h prints the synopsis, --help prints the man page, --version prints the version.</li>
 <li>Use accurate summation in <a href="Planimeter.1.html">Planimeter</a>.</li>
 <li>Add 64-bit targets for Visual Studio 2010.</li>
 <li>Use templates for defining math functions and some constants.</li>
@@ -342,7 +351,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 <li>Increase order of series using in <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> to 6 (full accuracy maintained for ellipsoid flattening &lt; 0.01).</li>
 <li>Macro __NO_LONG_DOUBLE_MATH to disable use of long double.</li>
 <li>Correct declaration of <a class="el" href="classGeographicLib_1_1Math.html#adadc6f5069c0a5f75a7c5a5bf2720aa3">GeographicLib::Math::isfinite</a> to return a bool.</li>
-<li>Changes in the <a class="el" href="utilities.html">Utility Programs</a>,<ul>
+<li>Changes in the <a class="el" href="utilities.html">Utility programs</a>,<ul>
 <li>improve error reporting when parsing command line arguments;</li>
 <li>accept latitudes and longitudes in decimal degrees or degrees, minutes, and seconds, with optional hemisphere designators;</li>
 <li><a href="GeoConvert.1.html">GeoConvert</a> -z accepts zone or zone+hemisphere;</li>
@@ -495,7 +504,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 <li>Fix documentation of constructors (flattening -&gt; inverse flattening).</li>
 <li>Use std versions of math functions.</li>
 <li>Add GeographicLib::ECEF and <a class="el" href="classGeographicLib_1_1LocalCartesian.html" title="Local Cartesian coordinates.">GeographicLib::LocalCartesian</a> classes and the ECEFConvert utility.</li>
-<li>Gather the documentation on the utility programs onto one page.</li>
+<li>Gather the documentation on the <a class="el" href="utilities.html">Utility programs</a> onto one page.</li>
 </ul>
 </li>
 </ul>
@@ -523,7 +532,7 @@ WARNING: These changes may break binary compatibility with previous versions of 
 </li>
 </ul>
 <center> Back to <a class="el" href="geocentric.html">Geocentric coordinates</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

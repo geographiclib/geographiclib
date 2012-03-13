@@ -62,7 +62,7 @@
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
 <a name="l00013"></a>00013 
 <a name="l00014"></a>00014 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_MATH_HPP)</span>
-<a name="l00015"></a><a class="code" href="Math_8hpp.html#afb2818ef5e2f2bed96dcaa151b3edca4">00015</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_MATH_HPP &quot;$Id: 045fb188fcc3fe808fed0c9d5fa965861d2735d1 $&quot;</span>
+<a name="l00015"></a><a class="code" href="Math_8hpp.html#afb2818ef5e2f2bed96dcaa151b3edca4">00015</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_MATH_HPP &quot;$Id: f0c40ff3ed056d8a0a110725be4528be4a4a6a6e $&quot;</span>
 <a name="l00016"></a>00016 <span class="preprocessor"></span><span class="comment"></span>
 <a name="l00017"></a>00017 <span class="comment">/**</span>
 <a name="l00018"></a>00018 <span class="comment"> * Are C++0X math functions available?</span>
@@ -244,7 +244,7 @@
 <a name="l00194"></a>00194       <span class="comment">// mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -</span>
 <a name="l00195"></a>00195       <span class="comment">// 1)/log(y) is a slowly varying quantity near y = 1 and is accurately</span>
 <a name="l00196"></a>00196       <span class="comment">// computed.</span>
-<a name="l00197"></a>00197       <span class="keywordflow">return</span> std::abs(x) &gt; 1 ? z : (z == 0 ?  x : x * z / std::log(y));
+<a name="l00197"></a>00197       <span class="keywordflow">return</span> std::abs(x) &gt; 1 ? z : (z == 0 ? x : x * z / std::log(y));
 <a name="l00198"></a>00198     }
 <a name="l00199"></a>00199 <span class="preprocessor">#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH</span>
 <a name="l00200"></a>00200 <span class="preprocessor"></span>    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">static</span> <span class="keyword">inline</span> T expm1(T x) <span class="keywordflow">throw</span>()
@@ -458,7 +458,7 @@
 <a name="l00408"></a>00408 <span class="preprocessor">#endif  // GEOGRAPHICLIB_MATH_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

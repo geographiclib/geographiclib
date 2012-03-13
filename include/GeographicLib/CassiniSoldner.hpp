@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
 #define GEOGRAPHICLIB_CASSINISOLDNER_HPP \
-  "$Id: 5e164482237fc52a63dda3d7e4f287f6313fc79a $"
+  "$Id: 5bc26e8f1b01bf50e377db0d9c140721f13dc834 $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
@@ -71,7 +71,7 @@ namespace GeographicLib {
     real _sbet0, _cbet0;
     static const real eps1_;
     static const real tiny_;
-    static const unsigned maxit_ =  10;
+    static const unsigned maxit_ = 10;
 
     // The following private helper functions are copied from Geodesic.
     static inline real AngNormalize(real x) throw() {

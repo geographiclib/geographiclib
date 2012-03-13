@@ -36,7 +36,7 @@
 <div class="title">Getting started </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>Much (but not all!) of the useful functionality of GeographicLib is available via simple command line utilities. Interfaces to some of them are available via the web. See <a class="el" href="utilities.html">Utility Programs</a> for documentation on these.</p>
+<div class="textblock"><center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>Much (but not all!) of the useful functionality of GeographicLib is available via simple command line utilities. Interfaces to some of them are available via the web. See <a class="el" href="utilities.html">Utility programs</a> for documentation on these.</p>
 <p>In order to use GeographicLib from C++ code, you will need to</p>
 <ul>
 <li>Include the header files for the GeographicLib classes in your code. E.g., <div class="fragment"><pre class="fragment"><span class="preprocessor">  #include &lt;<a class="code" href="LambertConformalConic_8hpp.html" title="Header for GeographicLib::LambertConformalConic class.">GeographicLib/LambertConformalConic.hpp</a>&gt;</span> 
@@ -67,7 +67,7 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\pkg-vc10\Geograph
   target_link_libraries (program2 ${GeographicLib_LIBRARIES}) </pre></div> in your CMakeLists.txt files (as noted). find_package command should find the library and set the required cmake variables (including <code>GEOGRAPHICLIB_FOUND = TRUE</code>). For find_package to be able to locate GeographicLib, it may be necessary for GeographicLib to be built and installed with cmake (see <a class="el" href="install.html#cmake">Installation with cmake</a>) instead of using some other installation method. In addition, on Windows systems, you should specify <code>CMAKE_PREFIX_PATH</code> with, for example, <div class="fragment"><pre class="fragment">
   cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/XYZProject ..
 </pre></div> (If you used some other method of installing GeographicLib, you can try copying cmake/FindGeographicLib.cmake to somewhere in your <code>CMAKE_MODULE_PATH</code> in order for find_package to work. However, this method has not been thoroughly tested.)</li>
-<li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode. The configuration of cmake described above ensure that the right version of the compiler is used and, assuming you built and installed GeographicLib in debug mode, the debug version of the library Geographic_d.lib will be used.</li>
+<li>For Windows, ensure that you build the library with the same version of the compiler and you use for your code. In addition, you have to build a separate debug version of the library when you can compiling your code in debug mode. The configuration of cmake described above ensures that the right version of the compiler is used and, assuming you built and installed GeographicLib in debug mode, the debug version of the library Geographic_d.lib will be used.</li>
 </ul>
 <p>Here is a very simple test code, which uses the <a class="el" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">GeographicLib::Geodesic</a> class: </p>
 <div class="fragment"><pre class="fragment"><span class="comment">// Small example of using the GeographicLib::Geodesic class</span>
@@ -95,7 +95,7 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\pkg-vc10\Geograph
   5551.76 km
 </pre></div><p>The next steps are:</p>
 <ul>
-<li>Learn about and run the <a class="el" href="utilities.html">Utility Programs</a>.</li>
+<li>Learn about and run the <a class="el" href="utilities.html">Utility programs</a>.</li>
 <li>Read the section, <a class="el" href="organization.html">Code organization</a>, for an overview of the library.</li>
 <li>Browse the <a href="annotated.html">Class List</a> for full documentation on the classes in the library.</li>
 <li>Look at the example code in the examples directory. Each file provides a very simple standalone example of using one GeographicLib class. These are included in the descriptions of the classes.</li>
@@ -111,8 +111,8 @@ Linker -&gt; General -&gt; Additional Library Directories = C:\pkg-vc10\Geograph
 <li><a href="http://en.wikipedia.org/wiki/World_Magnetic_Model">WMM</a>, World Magnetic Model.</li>
 <li><a href="http://en.wikipedia.org/wiki/IGRF">IGRF</a>, International Geomagnetic Reference Field.</li>
 </ul>
-<center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility Programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<center> Back to <a class="el" href="install.html">Installing GeographicLib</a>. Forward to <a class="el" href="utilities.html">Utility programs</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

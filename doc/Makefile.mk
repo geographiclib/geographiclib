@@ -1,4 +1,4 @@
-# $Id: a73f5b44ef34121aabca5037e847b0883c33a65d $
+# $Id: cf92200e035004c008151dc430a83537b9d0ed55 $
 
 MODULES = DMS EllipticFunction GeoCoords MGRS PolarStereographic \
 	TransverseMercator TransverseMercatorExact UTMUPS Geocentric \
@@ -43,7 +43,8 @@ install: html/index.html
 	mkdir -p $(SCRIPTDEST)/GeographicLib
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(SCRIPTDEST)/
 	$(INSTALL) -m 644 $(JSSCRIPTS) $(SCRIPTDEST)/GeographicLib/
-distclean:
+
+maintainer-clean:
 	rm -rf html
 
 .PHONY: doc install clean

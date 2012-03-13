@@ -2,7 +2,7 @@
 # Makefile.am
 #
 # Copyright (C) 2011, Charles Karney <charles@karney.com>
-# $Id: 78a0c235fc4db6530faed372f0f78400573242d3 $
+# $Id: ca24d50603b0fe36941e8909ae996779a8cc860d $
 
 MANPAGES = \
 CartConvert.1 \
@@ -96,5 +96,5 @@ EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
 	CartConvert.1.html ConicProj.1.html Geod.1.html GeodesicProj.1.html \
 	GeoidEval.1.html Gravity.1.html MagneticField.1.html Planimeter.1.html
 
-distclean-local:
+maintainer-clean-local:
 	rm -rf *.usage *.1.html *.1

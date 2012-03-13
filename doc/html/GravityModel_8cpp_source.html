@@ -62,7 +62,7 @@
 <a name="l00013"></a>00013 <span class="preprocessor">#include &lt;<a class="code" href="GravityCircle_8hpp.html" title="Header for GeographicLib::GravityCircle class.">GeographicLib/GravityCircle.hpp</a>&gt;</span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
 <a name="l00015"></a><a class="code" href="GravityModel_8cpp.html#a65e1bf85112eafa00622f95531afc180">00015</a> <span class="preprocessor">#define GEOGRAPHICLIB_GRAVITYMODEL_CPP \</span>
-<a name="l00016"></a>00016 <span class="preprocessor">  &quot;$Id: 981871c55dc74dcd22153d4eeb5c07f8ec1e9525 $&quot;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">  &quot;$Id: 9f3bfcfde4bb901b8cd22e198601bda0c6f4a506 $&quot;</span>
 <a name="l00017"></a>00017 <span class="preprocessor"></span>
 <a name="l00018"></a>00018 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GravityModel_8cpp.html#a65e1bf85112eafa00622f95531afc180">GEOGRAPHICLIB_GRAVITYMODEL_CPP</a>)
 <a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="GravityModel_8hpp.html#ace85f3a4d35d4657064e289e2bf57dab">GEOGRAPHICLIB_GRAVITYMODEL_HPP</a>)
@@ -131,7 +131,7 @@
 <a name="l00082"></a>00082       <span class="keywordtype">int</span> pos = int(coeffstr.tellg());
 <a name="l00083"></a>00083       coeffstr.seekg(0, ios::end);
 <a name="l00084"></a>00084       <span class="keywordflow">if</span> (pos != coeffstr.tellg())
-<a name="l00085"></a>00085         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra data in  &quot;</span> + coeff);
+<a name="l00085"></a>00085         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra data in &quot;</span> + coeff);
 <a name="l00086"></a>00086     }
 <a name="l00087"></a>00087     <span class="keywordtype">int</span> nmx = _gravitational.<a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#ac8886de1d1400ecf6482f6441c76a8a0">Coefficients</a>().<a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a96467118f9c16c16259d4fbbed3917ff">nmx</a>();
 <a name="l00088"></a>00088     <span class="comment">// Adjust the normalization of the normal potential to match the model.</span>
@@ -255,7 +255,7 @@
 <a name="l00206"></a>00206       <span class="comment">// No need to do the correction</span>
 <a name="l00207"></a>00207       correct = <span class="keyword">false</span>;
 <a name="l00208"></a>00208     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>
-<a name="l00209"></a>00209       invR = correct ? 1 / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X, Y),  Z) : 1,
+<a name="l00209"></a>00209       invR = correct ? 1 / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X, Y), Z) : 1,
 <a name="l00210"></a>00210       T = (gradp
 <a name="l00211"></a>00211            ? _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ)
 <a name="l00212"></a>00212            : _disturbing(-1, X, Y, Z));
@@ -331,7 +331,7 @@
 <a name="l00282"></a>00282       gamma0 = _earth.SurfaceGravity(lat),
 <a name="l00283"></a>00283       dummy,
 <a name="l00284"></a>00284       T = InternalT(X, Y, Z, dummy, dummy, dummy, <span class="keyword">false</span>, <span class="keyword">false</span>),
-<a name="l00285"></a>00285       invR = 1 / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X, Y),  Z),
+<a name="l00285"></a>00285       invR = 1 / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(<a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X, Y), Z),
 <a name="l00286"></a>00286       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
 <a name="l00287"></a>00287     <span class="comment">// _zeta0 has been included in _correction</span>
 <a name="l00288"></a>00288     <span class="keywordflow">return</span> T/gamma0 + correction;
@@ -363,7 +363,7 @@
 <a name="l00314"></a>00314     _earth.<a class="code" href="classGeographicLib_1_1NormalGravity.html#ab15ded1ab7ec9a30e8053fc330ed76ac">Earth</a>().IntForward(lat, 0, h, X, Y, Z, M);
 <a name="l00315"></a>00315     <span class="comment">// Y = 0, cphi = M[7], sphi = M[8];</span>
 <a name="l00316"></a>00316     real
-<a name="l00317"></a>00317       invR = 1 / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X,  Z),
+<a name="l00317"></a>00317       invR = 1 / <a class="code" href="classGeographicLib_1_1Math.html#a0d422863198d4bec2aae6b187a60760c">Math::hypot</a>(X, Z),
 <a name="l00318"></a>00318       gamma0 = (caps &amp; CAP_GAMMA0 ?_earth.<a class="code" href="classGeographicLib_1_1NormalGravity.html#a019541fea3712f8ca73aec8a0b29c71c">SurfaceGravity</a>(lat)
 <a name="l00319"></a>00319                 : Math::NaN&lt;real&gt;()),
 <a name="l00320"></a>00320       fx, fy, fz, gamma;
@@ -413,7 +413,7 @@
 <a name="l00364"></a>00364 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

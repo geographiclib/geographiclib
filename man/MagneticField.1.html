@@ -48,8 +48,11 @@
 <p><strong>MagneticField</strong> [ <strong>-n</strong> <em>name</em> ] [ <strong>-d</strong> <em>dir</em> ]
 [ <strong>-t</strong> <em>time</em> | <strong>-c</strong> <em>time</em> <em>lat</em> <em>h</em> ]
 [ <strong>-r</strong> ] [ <strong>-T</strong> <em>tguard</em> ] [ <strong>-H</strong> <em>hguard</em> ] [ <strong>-p</strong> <em>prec</em> ]
-[ <strong>-v</strong> ] [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
+[ <strong>-v</strong> ]
+[ <strong>--comment-delimiter</strong> <em>commentdelim</em> ]
+[ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
+[ <strong>--line-separator</strong> <em>linesep</em> ]
 [ <strong>--output-file</strong> <em>outfile</em> ]</p>
 <p>
 </p>
@@ -144,6 +147,15 @@ places.</p>
 <p>print information about the magnetic model on standard error before
 processing the input.</p>
 </dd>
+<dt><strong><a name="comment_delimiter" class="item"><strong>--comment-delimiter</strong></a></strong></dt>
+
+<dd>
+<p>set the comment delimiter to <em>commentdelim</em> (e.g., &quot;#&quot; or &quot;//&quot;).  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing and subsequently appended to the output line (separated by a
+space).</p>
+</dd>
 <dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
 
 <dd>
@@ -169,8 +181,14 @@ name of &quot;-&quot; stands for standard input.</p>
 
 <dd>
 <p>read input from the string <em>instring</em> instead of from standard input.
-All the semicolons in <em>instring</em> are converted to newlines before the
-reading begins.</p>
+All occurrences of the line separator character (default is a semicolon)
+in <em>instring</em> are converted to newlines before the reading begins.</p>
+</dd>
+<dt><strong><a name="line_separator" class="item"><strong>--line-separator</strong></a></strong></dt>
+
+<dd>
+<p>set the line separator character to <em>linesep</em>.  By default this is a
+semicolon.</p>
 </dd>
 <dt><strong><a name="output_file" class="item"><strong>--output-file</strong></a></strong></dt>
 

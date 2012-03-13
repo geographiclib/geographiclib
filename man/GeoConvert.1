@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2012-02-17" "GeographicLib 1.18" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2012-03-13" "GeographicLib 1.19" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -135,8 +135,10 @@ GeoConvert \-\- convert geographic coordinates
 .IX Header "SYNOPSIS"
 \&\fBGeoConvert\fR [ \fB\-g\fR | \fB\-d\fR | \fB\-u\fR | \fB\-m\fR | \fB\-c\fR ] [ \fB\-p\fR \fIprec\fR ]
 [ \fB\-z\fR \fIzone\fR | \fB\-s\fR | \fB\-t\fR ] [ \fB\-n\fR ] [ \fB\-w\fR ]
+[ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
+[ \fB\-\-line\-separator\fR \fIlinesep\fR ]
 [ \fB\-\-output\-file\fR \fIoutfile\fR ]
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
@@ -235,6 +237,13 @@ square instead of the center; see \s-1MGRS\s0.
 on input and output, longitude precedes latitude (except that on input
 this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR,\fIE\fR,
 \&\fIW\fR).
+.IP "\fB\-\-comment\-delimiter\fR" 4
+.IX Item "--comment-delimiter"
+set the comment delimiter to \fIcommentdelim\fR (e.g., \*(L"#\*(R" or \*(L"//\*(R").  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing and subsequently appended to the output line (separated by a
+space).
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 print version and exit.
@@ -251,8 +260,12 @@ name of \*(L"\-\*(R" stands for standard input.
 .IP "\fB\-\-input\-string\fR" 4
 .IX Item "--input-string"
 read input from the string \fIinstring\fR instead of from standard input.
-All the semicolons in \fIinstring\fR are converted to newlines before the
-reading begins.
+All occurrences of the line separator character (default is a semicolon)
+in \fIinstring\fR are converted to newlines before the reading begins.
+.IP "\fB\-\-line\-separator\fR" 4
+.IX Item "--line-separator"
+set the line separator character to \fIlinesep\fR.  By default this is a
+semicolon.
 .IP "\fB\-\-output\-file\fR" 4
 .IX Item "--output-file"
 write output to the file \fIoutfile\fR instead of to standard output; a

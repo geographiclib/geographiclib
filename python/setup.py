@@ -4,19 +4,20 @@
 #
 #   python setup.py install
 #
-# in this directory.  To upload the latest version to the python reposity run
+# in this directory.  To upload the latest version to the python
+# repository run
 #
 #   python setup.py sdist --formats gztar,zip upload
 #
 # The initial version of this file was provided by
 # Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au>.
 #
-# $Id: 12bd54636c048825af9c9bfa33adc2eec4330a31 $
+# $Id: db0d0663ef120fa9378dea3b5ff1e9afd00df5c1 $
 
 from distutils.core import setup
 
 setup(name="geographiclib",
-      version="1.16",
+      version="1.19",
       description=
         "A translation of the GeographicLib::Geodesic class to Python",
       author="Charles Karney",

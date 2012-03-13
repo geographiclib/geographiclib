@@ -59,7 +59,7 @@
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="MGRS_8hpp.html" title="Header for GeographicLib::MGRS class.">GeographicLib/MGRS.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
 <a name="l00012"></a>00012 
-<a name="l00013"></a><a class="code" href="MGRS_8cpp.html#a7882927f72a62a7131868e387edd4dac">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_MGRS_CPP &quot;$Id: 563342c620510330e64ab87673b2d0f8e152adf6 $&quot;</span>
+<a name="l00013"></a><a class="code" href="MGRS_8cpp.html#a7882927f72a62a7131868e387edd4dac">00013</a> <span class="preprocessor">#define GEOGRAPHICLIB_MGRS_CPP &quot;$Id: 1a1807953f6aa661bbcb4208d231abec7ff46d71 $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MGRS_8cpp.html#a7882927f72a62a7131868e387edd4dac">GEOGRAPHICLIB_MGRS_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MGRS_8hpp.html#a1c5e778121820c6ec16b6180ffab51ac">GEOGRAPHICLIB_MGRS_HPP</a>)
@@ -92,7 +92,7 @@
 <a name="l00043"></a>00043     { maxupsSind_, maxupsNind_, maxutmcol_, maxutmcol_ };
 <a name="l00044"></a>00044   <span class="keyword">const</span> <span class="keywordtype">int</span> MGRS::minnorthing_[4] =
 <a name="l00045"></a>00045     { minupsSind_, minupsNind_,
-<a name="l00046"></a>00046       minutmSrow_,  minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
+<a name="l00046"></a>00046       minutmSrow_, minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
 <a name="l00047"></a>00047   <span class="keyword">const</span> <span class="keywordtype">int</span> MGRS::maxnorthing_[4] =
 <a name="l00048"></a>00048     { maxupsSind_, maxupsNind_,
 <a name="l00049"></a>00049       maxutmNrow_ + (maxutmSrow_ - minutmNrow_), maxutmNrow_ };
@@ -107,9 +107,9 @@
 <a name="l00058"></a>00058     }
 <a name="l00059"></a>00059     <span class="keywordtype">bool</span> utmp = zone != 0;
 <a name="l00060"></a>00060     CheckCoords(utmp, northp, x, y);
-<a name="l00061"></a>00061     <span class="keywordflow">if</span> (!(zone &gt;= 0 || zone &lt;= 60))
+<a name="l00061"></a>00061     <span class="keywordflow">if</span> (!(zone &gt;= UTMUPS::MINZONE &amp;&amp; zone &lt;= UTMUPS::MAXZONE))
 <a name="l00062"></a>00062       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + Utility::str(zone) + <span class="stringliteral">&quot; not in [0,60]&quot;</span>);
-<a name="l00063"></a>00063     <span class="keywordflow">if</span> (!(prec &gt;= 0 || prec &lt;= maxprec_))
+<a name="l00063"></a>00063     <span class="keywordflow">if</span> (!(prec &gt;= 0 &amp;&amp; prec &lt;= maxprec_))
 <a name="l00064"></a>00064       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;MGRS precision &quot;</span> + Utility::str(prec)
 <a name="l00065"></a>00065                           + <span class="stringliteral">&quot; not in [0, &quot;</span>
 <a name="l00066"></a>00066                           + Utility::str(<span class="keywordtype">int</span>(maxprec_)) + <span class="stringliteral">&quot;]&quot;</span>);
@@ -215,14 +215,14 @@
 <a name="l00166"></a>00166       zone1 = 10 * zone1 + i;
 <a name="l00167"></a>00167       ++p;
 <a name="l00168"></a>00168     }
-<a name="l00169"></a>00169     <span class="keywordflow">if</span> (p &gt; 0 &amp;&amp; (zone1 == 0 || zone1 &gt; 60))
+<a name="l00169"></a>00169     <span class="keywordflow">if</span> (p &gt; 0 &amp;&amp; !(zone1 &gt;= UTMUPS::MINUTMZONE &amp;&amp; zone1 &lt;= UTMUPS::MAXUTMZONE))
 <a name="l00170"></a>00170       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Zone &quot;</span> + Utility::str(zone1) + <span class="stringliteral">&quot; not in [1,60]&quot;</span>);
 <a name="l00171"></a>00171     <span class="keywordflow">if</span> (p &gt; 2)
 <a name="l00172"></a>00172       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;More than 2 digits_ at start of MGRS &quot;</span>
 <a name="l00173"></a>00173                           + mgrs.substr(0, p));
 <a name="l00174"></a>00174     <span class="keywordflow">if</span> (len - p &lt; 3)
 <a name="l00175"></a>00175       <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;MGRS string too short &quot;</span> + mgrs);
-<a name="l00176"></a>00176     <span class="keywordtype">bool</span> utmp = zone1 != 0;
+<a name="l00176"></a>00176     <span class="keywordtype">bool</span> utmp = zone1 != UTMUPS::UPS;
 <a name="l00177"></a>00177     <span class="keywordtype">int</span> zonem1 = zone1 - 1;
 <a name="l00178"></a>00178     <span class="keyword">const</span> <span class="keywordtype">string</span>&amp; band = utmp ? latband_ : upsband_;
 <a name="l00179"></a>00179     <span class="keywordtype">int</span> iband = Utility::lookup(band, mgrs[p++]);
@@ -375,7 +375,7 @@
 <a name="l00326"></a>00326       <span class="comment">// The following deals with these special cases.</span>
 <a name="l00327"></a>00327       <span class="keywordtype">int</span>
 <a name="l00328"></a>00328         <span class="comment">// Fold [-10,-1] -&gt; [9,0]</span>
-<a name="l00329"></a>00329         sband = iband &gt;= 0 ? iband : - iband  - 1,
+<a name="l00329"></a>00329         sband = iband &gt;= 0 ? iband : -iband - 1,
 <a name="l00330"></a>00330         <span class="comment">// Fold [-90,-1] -&gt; [89,0]</span>
 <a name="l00331"></a>00331         srow = irow &gt;= 0 ? irow : -irow - 1,
 <a name="l00332"></a>00332         <span class="comment">// Fold [4,7] -&gt; [3,0]</span>
@@ -392,7 +392,7 @@
 <a name="l00343"></a>00343 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

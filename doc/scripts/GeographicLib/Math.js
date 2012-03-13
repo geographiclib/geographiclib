@@ -7,7 +7,7 @@
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * $Id: ad34f614c4596f04cb5517daeff6fe9e46d9a0d8 $
+ * $Id: d8f72fdee7b661e6ba3f08bb7ecfe9f0673e8132 $
  **********************************************************************/
 
 var GeographicLib; if (!GeographicLib) GeographicLib = {};
@@ -74,7 +74,7 @@ GeographicLib.Accumulator = {};
   // of the first two arguments.
   a.sum = function(u, v) {
     var
-    s =  s = u + v,
+    s = u + v,
     up = s - v,
     vpp = s - up;
     up -= u;
@@ -122,7 +122,7 @@ GeographicLib.Accumulator = {};
     if (this._s == 0)           // This implies t == 0,
       this._s = u;              // so result is u
     else
-      this._t += u;             //  otherwise just accumulate u to t.
+      this._t += u;             // otherwise just accumulate u to t.
   }
 
   a.Accumulator.prototype.Sum = function(y) {

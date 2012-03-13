@@ -30,7 +30,7 @@
 #include <GeographicLib/GeodesicLine.hpp>
 
 #define GEOGRAPHICLIB_GEODESIC_CPP \
-  "$Id: ff2511fd7f024c20973838884776d929597eb044 $"
+  "$Id: df8146a290f7cf877d1f9cf86faf65c0def08db9 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESIC_HPP)
@@ -63,7 +63,8 @@ namespace GeographicLib {
            (_e2 == 0 ? 1 :
             (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
-    , _etol2(tol2_ / max(real(0.1), sqrt(abs(_e2))))
+      // The sig12 threshold for "really short"
+    , _etol2(10 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
     if (!(Math::isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
@@ -267,13 +268,13 @@ namespace GeographicLib {
 
       if (sig12 >= 0) {
         // Short lines (InverseStart sets salp2, calp2)
-        real w1 = sqrt(1 - _e2 * Math::sq(cbet1));
-        s12x = sig12 * _a * w1;
-        m12x = Math::sq(w1) * _a / _f1 * sin(sig12 * _f1 / w1);
+        real wm = sqrt(1 - _e2 * Math::sq((cbet1 + cbet2) / 2));
+        s12x = sig12 * _a * wm;
+        m12x = Math::sq(wm) * _a / _f1 * sin(sig12 * _f1 / wm);
         if (outmask & GEODESICSCALE)
-          M12 = M21 = cos(sig12 * _f1 / w1);
+          M12 = M21 = cos(sig12 * _f1 / wm);
         a12 = sig12 / Math::degree<real>();
-        omg12 = lam12 / w1;
+        omg12 = lam12 / wm;
       } else {
 
         // Newton's method
@@ -453,7 +454,7 @@ namespace GeographicLib {
     m12a = (w2 * (csig1 * ssig2) - w1 * (ssig1 * csig2))
       - _f1 * csig1 * csig2 * J12;
     // Missing a factor of _b
-    s12b =  (1 + A1m1) * sig12 + AB1;
+    s12b = (1 + A1m1) * sig12 + AB1;
     if (scalep) {
       real csig12 = csig1 * csig2 + ssig1 * ssig2;
       J12 *= _f1;
@@ -481,7 +482,7 @@ namespace GeographicLib {
         r3 = r * r2,
         // The discrimant of the quadratic equation for T3.  This is zero on
         // the evolute curve p^(1/3)+q^(1/3) = 1
-        disc =  S * (S + 2 * r3);
+        disc = S * (S + 2 * r3);
       real u = r;
       if (disc >= 0) {
         real T3 = S + r3;
@@ -551,7 +552,8 @@ namespace GeographicLib {
     bool shortline = cbet12 >= 0 && sbet12 < real(0.5) &&
       lam12 <= Math::pi<real>() / 6;
     real
-      omg12 = shortline ? lam12 / sqrt(1 - _e2 * Math::sq(cbet1)) : lam12,
+      omg12 = (!shortline ? lam12 :
+               lam12 / sqrt(1 - _e2 * Math::sq((cbet1 + cbet2) / 2))),
       somg12 = sin(omg12), comg12 = cos(omg12);
 
     salp1 = cbet2 * somg12;
@@ -611,12 +613,12 @@ namespace GeographicLib {
         y = (lam12 - Math::pi<real>()) / lamscale;
       }
 
-      if (y > -tol1_ && x >  -1 - xthresh_) {
+      if (y > -tol1_ && x > -1 - xthresh_) {
         // strip near cut
         if (_f >= 0) {
           salp1 = min(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
         } else {
-          calp1 = max(real(x > -tol1_ ? 0 : -1),  real(x));
+          calp1 = max(real(x > -tol1_ ? 0 : -1), real(x));
           salp1 = sqrt(1 - Math::sq(calp1));
         }
       } else {
@@ -743,7 +745,7 @@ namespace GeographicLib {
         real dummy;
         Lengths(eps, sig12, ssig1, csig1, ssig2, csig2,
                 cbet1, cbet2, dummy, dlam12, dummy,
-                false, dummy, dummy,  C1a, C2a);
+                false, dummy, dummy, C1a, C2a);
         dlam12 /= calp2 * cbet2;
       }
     }

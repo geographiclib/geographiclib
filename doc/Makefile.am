@@ -1,4 +1,4 @@
-#  $Id: cfece0673e6f2ce525f3a520aa0030e89ad8f686 $
+#  $Id: e579178aae21ecd2ad529b7ea0f75416b123243d $
 
 EXTRAFILES = tmseries30.html geodseries30.html
 
@@ -92,7 +92,7 @@ html/index.html: Doxyfile Geographic.doc \
 	$(top_srcdir)/LICENSE.txt html/
 	doxygen
 
-distclean-local:
+maintainer-clean-local:
 	rm -rf html
 
 install-doc: doc

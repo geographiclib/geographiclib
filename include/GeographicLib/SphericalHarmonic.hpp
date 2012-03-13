@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_SPHERICALHARMONIC_HPP)
 #define GEOGRAPHICLIB_SPHERICALHARMONIC_HPP \
-  "$Id: cd1abfd4b08774a17c141bb6fbb07b04d4658791 $"
+  "$Id: 6fa804c46efd01670cfb7835dd022791b60d2942 $"
 
 #include <vector>
 #include <GeographicLib/Constants.hpp>
@@ -209,7 +209,7 @@ namespace GeographicLib {
      * This routine requires constant memory and thus never throws an
      * exception.
      **********************************************************************/
-    Math::real operator()(real x, real y, real z)  const throw() {
+    Math::real operator()(real x, real y, real z) const throw() {
       real f[] = {1};
       real v = 0;
       real dummy;

@@ -10,7 +10,7 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: 994cf91b693942fc0efc2a9b1233d020015a7041 $
+# $Id: 4a2cf9d0cb7eeb7c9c3a2248f44e84a04e4e0b35 $
 ######################################################################
 
 import math
@@ -149,7 +149,7 @@ class PolygonArea(object):
     return num, perimeter, area
 
   def Area(earth, points, polyline):
-    poly =  PolygonArea(earth, polyline)
+    poly = PolygonArea(earth, polyline)
     for p in points:
       poly.AddPoint(p['lat'], p['lon'])
     return poly.Compute(False, True)

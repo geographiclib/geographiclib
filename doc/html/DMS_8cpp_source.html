@@ -60,7 +60,7 @@
 <a name="l00011"></a>00011 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00012"></a>00012 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
 <a name="l00013"></a>00013 
-<a name="l00014"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00014</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: 305c71f5be8c0adce9f70fe7d2f16b38dc14fb7d $&quot;</span>
+<a name="l00014"></a><a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">00014</a> <span class="preprocessor">#define GEOGRAPHICLIB_DMS_CPP &quot;$Id: 67d074e59f436ac6ad8ae6464436414d70d7e9be $&quot;</span>
 <a name="l00015"></a>00015 <span class="preprocessor"></span>
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8cpp.html#a6ef96ce6d2929e11dc6ec87433f4d7d1">GEOGRAPHICLIB_DMS_CPP</a>)
 <a name="l00017"></a>00017 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="DMS_8hpp.html#a844e4c8afc70c59c842f4553ce40b9c6">GEOGRAPHICLIB_DMS_HPP</a>)
@@ -346,7 +346,7 @@
 <a name="l00297"></a>00297     }
 <a name="l00298"></a>00298     pieces[0] += idegree;
 <a name="l00299"></a>00299     ostringstream s;
-<a name="l00300"></a>00300     s &lt;&lt; fixed  &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>);
+<a name="l00300"></a>00300     s &lt;&lt; fixed &lt;&lt; setfill(<span class="charliteral">&#39;0&#39;</span>);
 <a name="l00301"></a>00301     <span class="keywordflow">if</span> (ind == NONE &amp;&amp; sign &lt; 0)
 <a name="l00302"></a>00302       s &lt;&lt; <span class="charliteral">&#39;-&#39;</span>;
 <a name="l00303"></a>00303     <span class="keywordflow">switch</span> (trailing) {
@@ -363,12 +363,12 @@
 <a name="l00314"></a>00314       <span class="keywordflow">switch</span> (trailing) {
 <a name="l00315"></a>00315       <span class="keywordflow">case</span> MINUTE:
 <a name="l00316"></a>00316         s &lt;&lt; setw(2 + prec + (prec ? 1 : 0)) &lt;&lt; setprecision(prec)
-<a name="l00317"></a>00317           &lt;&lt; pieces[1] &lt;&lt;  char(tolower(dmsindicators_[1]));
+<a name="l00317"></a>00317           &lt;&lt; pieces[1] &lt;&lt; char(tolower(dmsindicators_[1]));
 <a name="l00318"></a>00318         <span class="keywordflow">break</span>;
 <a name="l00319"></a>00319       <span class="keywordflow">case</span> SECOND:
-<a name="l00320"></a>00320         s &lt;&lt; setw(2) &lt;&lt; pieces[1] &lt;&lt;  char(tolower(dmsindicators_[1]))
+<a name="l00320"></a>00320         s &lt;&lt; setw(2) &lt;&lt; pieces[1] &lt;&lt; char(tolower(dmsindicators_[1]))
 <a name="l00321"></a>00321           &lt;&lt; setw(2 + prec + (prec ? 1 : 0)) &lt;&lt; setprecision(prec)
-<a name="l00322"></a>00322           &lt;&lt; pieces[2] &lt;&lt;  char(tolower(dmsindicators_[2]));
+<a name="l00322"></a>00322           &lt;&lt; pieces[2] &lt;&lt; char(tolower(dmsindicators_[2]));
 <a name="l00323"></a>00323         <span class="keywordflow">break</span>;
 <a name="l00324"></a>00324       <span class="keywordflow">default</span>:
 <a name="l00325"></a>00325         <span class="keywordflow">break</span>;
@@ -382,7 +382,7 @@
 <a name="l00333"></a>00333 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

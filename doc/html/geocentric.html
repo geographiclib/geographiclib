@@ -36,7 +36,7 @@
 <div class="title">Geocentric coordinates </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="old.html">Old Versions</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The implementation of <a class="el" href="classGeographicLib_1_1Geocentric.html#a1907735ce8f5f915a14a5f7a8b3adfea">GeographicLib::Geocentric::Reverse</a> is adapted from</p>
+<div class="textblock"><center> Back to <a class="el" href="transversemercator.html">Transverse Mercator projection</a>. Forward to <a class="el" href="old.html">Old versions</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>The implementation of <a class="el" href="classGeographicLib_1_1Geocentric.html#a1907735ce8f5f915a14a5f7a8b3adfea">GeographicLib::Geocentric::Reverse</a> is adapted from</p>
 <ul>
 <li>H. Vermeille, <a href="http://dx.doi.org/10.1007/s00190-002-0273-6">Direct transformation from geocentric coordinates to geodetic coordinates</a>, J. Geodesy 76, 451&ndash;454 (2002).</li>
 </ul>
@@ -63,8 +63,8 @@
 <p>We then find <em>err</em><sub>h</sub> &lt; 8 nm, <em>err</em><sub>out</sub> &lt; 4 nm, and <em>err</em><sub>in</sub> &lt; 7 nm. (1 nm = 1 nanometer.)</p>
 <p>The testing has been confined to the WGS84 ellipsoid. The method will work for all ellipsoids used in terrestrial geodesy. However, the central region, which leads to multiple real roots for the cubic equation in Reverse, pokes outside the ellipsoid (at the poles) for ellipsoids with <em>e</em> &gt; 1/sqrt(2). Reverse has not been analyzed for this case. Similarly ellipsoids which are very nearly spherical near yield inaccurate results due to underflow; in the other hand, the case of the sphere, <em>f</em> = 0, is treated specially and gives accurate results.</p>
 <p>Other comparable methods are K. M. Borkowski, <a href="http://dx.doi.org/10.1007/BF00643807">Transformation of geocentric to geodetic coordinates without approximations</a>, Astrophys. Space Sci. 139, 1&ndash;4 (1987) (<a href="http://dx.doi.org/10.1007/BF00656995">erratum</a>) and T. Fukushima, <a href="http://dx.doi.org/10.1007/s001900050271">Fast transform from geocentric to geodetic coordinates</a>, J. Geodesy 73, 603&ndash;610 (2003). However the choice of independent variables in these methods leads to a loss of accuracy for points near the equatorial plane.</p>
-<center> Back to <a class="el" href="transversemercator.html">Transverse Mercator Projection</a>. Forward to <a class="el" href="old.html">Old Versions</a>. Up to <a class="el" href="index.html#contents">Contents</a>.</center><center></center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<center> Back to <a class="el" href="transversemercator.html">Transverse Mercator projection</a>. Forward to <a class="el" href="old.html">Old versions</a>. Up to <a class="el" href="index.html#contents">Contents</a>.</center><center></center> </div></div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

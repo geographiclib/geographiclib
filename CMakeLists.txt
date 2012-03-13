@@ -1,17 +1,29 @@
-# $Id: 59c5ef60981a8c92e428ce2762b4f925abee2cfc $
+# $Id: e48af79de99e159242f0a1ed786fce68f7c60987 $
 
 cmake_minimum_required (VERSION 2.6)
 project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 18)
+set (GeographicLib_VERSION_MINOR 19)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.2.2)
+set (LIBVERSIONFULL 9.2.3)
+
+# Set CMAKE_INSTALL_PREFIX from first element of CMAKE_PREFIX_PATH
+if (WIN32)
+  if (DEFINED CMAKE_PREFIX_PATH
+    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    list (GET CMAKE_PREFIX_PATH 0 CMAKE_INSTALL_PREFIX)
+    set (CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
+      CACHE PATH "Installation directory for GeographicLib" FORCE)
+  endif (DEFINED CMAKE_PREFIX_PATH
+    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
+endif (WIN32)
 
 # User-settable cache variables
 
@@ -131,54 +143,34 @@ if (MAINTAINER)
   add_subdirectory (examples)
 endif (MAINTAINER)
 
-# config file support for find_package(GeographicLib).  This needs to
-# deal with two environments: (1) finding the build tree and (2) finding
-# the install tree.  geographiclib-config.cmake detects which situation
-# it is handing by looking at @GEOGRAPHICLIB_ROOT_DIR@.  If this is an
-# absolute path, it's in the build tree; otherwise, it's in the install
-# tree (incidentally, this allows the install tree to be relocated).
-
-# geographiclib-config.cmake for the build tree
-set (GEOGRAPHICLIB_ROOT_DIR "${PROJECT_BINARY_DIR}")
-set (GeographicLib_INCLUDE_DIRS
-  "${PROJECT_BINARY_DIR}/include" "${PROJECT_SOURCE_DIR}/include" )
-configure_file (cmake/geographiclib-config.cmake.in
-  "${PROJECT_BINARY_DIR}/geographiclib-config.cmake" @ONLY)
-configure_file (cmake/geographiclib-config-version.cmake.in
-  "${PROJECT_BINARY_DIR}/geographiclib-config-version.cmake" @ONLY)
-
-# geographiclib-config.cmake for the install tree.  It's installed in
-# ${INSTALL_CMAKE_DIR} and @GEOGRAPHICLIB_ROOT_DIR@ is the relative
-# path to the root from there.
+# config file support for find_package(GeographicLib).  This only
+# supports finding GeographicLib in the "install" tree (as opposed to
+# the "build" tree).  The process installs geographiclib-config.cmake in
+# ${INSTALL_CMAKE_DIR} and @GEOGRAPHICLIB_ROOT_DIR@ is the relative path
+# to the root from there.  (Thus the whole install tree can be
+# relocated.)
 if (WIN32)
   set (INSTALL_CMAKE_DIR "cmake")
   set (GEOGRAPHICLIB_ROOT_DIR "..")
 else (WIN32)
   set (INSTALL_CMAKE_DIR
-    "share/cmake/${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
+    "share/cmake/${PROJECT_NAME}-${GeographicLib_VERSION}")
   set (GEOGRAPHICLIB_ROOT_DIR "../../..")
 endif (WIN32)
-# @GeographicLib_INCLUDE_DIRS@ is not used in the install tree;
-# reset it to prevent the source and build paths appearing in the
-# installed config files
-set (GeographicLib_INCLUDE_DIRS IGNORE)
 configure_file (cmake/geographiclib-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake" @ONLY)
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake" @ONLY)
 configure_file (cmake/geographiclib-config-version.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake" @ONLY)
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config-version.cmake" @ONLY)
 install (FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/geographiclib-config-version.cmake"
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake"
+  "${PROJECT_BINARY_DIR}/cmake/geographiclib-config-version.cmake"
   DESTINATION "${INSTALL_CMAKE_DIR}")
 
 # Make information about the cmake targets (the library and the tools)
 # available.
-export (TARGETS Geographic ${TOOLS}
-  FILE "${PROJECT_BINARY_DIR}/GeographicLibDepends.cmake")
-install (EXPORT GeographicLibDepends DESTINATION "${INSTALL_CMAKE_DIR}")
-
-# Don't want find_package to look in build trees, so don't do...
-# export (PACKAGE GeographicLib)
+install (EXPORT DEPENDS
+  FILE geographiclib-depends.cmake
+  DESTINATION "${INSTALL_CMAKE_DIR}")
 
 # Packaging support; we deal with 
 # (1) a source distribution: cmake make a tar.gz file and the zip file
@@ -247,7 +239,7 @@ set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
 set (CPACK_PACKAGE_INSTALL_DIRECTORY
-  "${CMAKE_PROJECT_NAME}-${GeographicLib_VERSION}")
+  "${PROJECT_NAME}-${GeographicLib_VERSION}")
 set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
 
 if (WIN32)
@@ -257,10 +249,15 @@ if (WIN32)
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   set (CPACK_NSIS_PACKAGE_NAME
-    "${CMAKE_PROJECT_NAME} ${GeographicLib_VERSION}")
+    "${PROJECT_NAME} ${GeographicLib_VERSION}")
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
-  set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
-  set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
+  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
+    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
+  else (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
+    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
+  endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\index.html\\\"
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\utilities.html\\\"

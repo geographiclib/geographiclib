@@ -10,7 +10,7 @@
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_MGRS_CPP "$Id: 563342c620510330e64ab87673b2d0f8e152adf6 $"
+#define GEOGRAPHICLIB_MGRS_CPP "$Id: 1a1807953f6aa661bbcb4208d231abec7ff46d71 $"
 
 RCSID_DECL(GEOGRAPHICLIB_MGRS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_MGRS_HPP)
@@ -43,7 +43,7 @@ namespace GeographicLib {
     { maxupsSind_, maxupsNind_, maxutmcol_, maxutmcol_ };
   const int MGRS::minnorthing_[4] =
     { minupsSind_, minupsNind_,
-      minutmSrow_,  minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
+      minutmSrow_, minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
   const int MGRS::maxnorthing_[4] =
     { maxupsSind_, maxupsNind_,
       maxutmNrow_ + (maxutmSrow_ - minutmNrow_), maxutmNrow_ };
@@ -58,9 +58,9 @@ namespace GeographicLib {
     }
     bool utmp = zone != 0;
     CheckCoords(utmp, northp, x, y);
-    if (!(zone >= 0 || zone <= 60))
+    if (!(zone >= UTMUPS::MINZONE && zone <= UTMUPS::MAXZONE))
       throw GeographicErr("Zone " + Utility::str(zone) + " not in [0,60]");
-    if (!(prec >= 0 || prec <= maxprec_))
+    if (!(prec >= 0 && prec <= maxprec_))
       throw GeographicErr("MGRS precision " + Utility::str(prec)
                           + " not in [0, "
                           + Utility::str(int(maxprec_)) + "]");
@@ -166,14 +166,14 @@ namespace GeographicLib {
       zone1 = 10 * zone1 + i;
       ++p;
     }
-    if (p > 0 && (zone1 == 0 || zone1 > 60))
+    if (p > 0 && !(zone1 >= UTMUPS::MINUTMZONE && zone1 <= UTMUPS::MAXUTMZONE))
       throw GeographicErr("Zone " + Utility::str(zone1) + " not in [1,60]");
     if (p > 2)
       throw GeographicErr("More than 2 digits_ at start of MGRS "
                           + mgrs.substr(0, p));
     if (len - p < 3)
       throw GeographicErr("MGRS string too short " + mgrs);
-    bool utmp = zone1 != 0;
+    bool utmp = zone1 != UTMUPS::UPS;
     int zonem1 = zone1 - 1;
     const string& band = utmp ? latband_ : upsband_;
     int iband = Utility::lookup(band, mgrs[p++]);
@@ -326,7 +326,7 @@ namespace GeographicLib {
       // The following deals with these special cases.
       int
         // Fold [-10,-1] -> [9,0]
-        sband = iband >= 0 ? iband : - iband  - 1,
+        sband = iband >= 0 ? iband : -iband - 1,
         // Fold [-90,-1] -> [89,0]
         srow = irow >= 0 ? irow : -irow - 1,
         // Fold [4,7] -> [3,0]

@@ -44,8 +44,10 @@
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
 <p><strong>CartConvert</strong> [ <strong>-r</strong> ] [ <strong>-l</strong> <em>lat0</em> <em>lon0</em> <em>h0</em> ] [ <strong>-e</strong> <em>a</em> <em>f</em> ]
+[ <strong>--comment-delimiter</strong> <em>commentdelim</em> ]
 [ <strong>--version</strong> | <strong>-h</strong> | <strong>--help</strong> ]
 [ <strong>--input-file</strong> <em>infile</em> | <strong>--input-string</strong> <em>instring</em> ]
+[ <strong>--line-separator</strong> <em>linesep</em> ]
 [ <strong>--output-file</strong> <em>outfile</em> ]</p>
 <p>
 </p>
@@ -87,6 +89,15 @@ is allowed for <em>f</em>.  (Also, if <em>f</em> &gt; 1, the flattening is set t
 1/<em>f</em>.)  By default, the WGS84 ellipsoid is used, <em>a</em> = 6378137 m,
 <em>f</em> = 1/298.257223563.</p>
 </dd>
+<dt><strong><a name="comment_delimiter" class="item"><strong>--comment-delimiter</strong></a></strong></dt>
+
+<dd>
+<p>set the comment delimiter to <em>commentdelim</em> (e.g., &quot;#&quot; or &quot;//&quot;).  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing and subsequently appended to the output line (separated by a
+space).</p>
+</dd>
 <dt><strong><a name="version" class="item"><strong>--version</strong></a></strong></dt>
 
 <dd>
@@ -112,8 +123,14 @@ name of &quot;-&quot; stands for standard input.</p>
 
 <dd>
 <p>read input from the string <em>instring</em> instead of from standard input.
-All the semicolons in <em>instring</em> are converted to newlines before the
-reading begins.</p>
+All occurrences of the line separator character (default is a semicolon)
+in <em>instring</em> are converted to newlines before the reading begins.</p>
+</dd>
+<dt><strong><a name="line_separator" class="item"><strong>--line-separator</strong></a></strong></dt>
+
+<dd>
+<p>set the line separator character to <em>linesep</em>.  By default this is a
+semicolon.</p>
 </dd>
 <dt><strong><a name="output_file" class="item"><strong>--output-file</strong></a></strong></dt>
 

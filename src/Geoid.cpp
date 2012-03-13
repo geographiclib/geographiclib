@@ -13,7 +13,7 @@
 #include <algorithm>
 
 #define GEOGRAPHICLIB_GEOID_CPP \
-  "$Id: e09552b0e1b520b1adda6ab58b3f5602d8e2311e $"
+  "$Id: fabd5c77d4e5dbceb9af6b235cc3d4bab46c9366 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)
@@ -408,7 +408,7 @@ namespace GeographicLib {
         lat = min(lat,  90 - 1/(100 * _rlatres));
         lat = max(lat, -90 + 1/(100 * _rlatres));
         fy = (90 - lat) * _rlatres;
-        fy -=  int(fy);
+        fy -= int(fy);
         real
           phi = lat * _degree,
           cosphi = cos(phi),

@@ -1,4 +1,4 @@
-# $Id: 81e6e3a15baf50e87a39f20a56aed38865987dc2 $
+# $Id: c317a003edaf8838c24bbe4519e36ee3b70e2c29 $
 
 # Build the library...
 
@@ -20,10 +20,9 @@ else (WIN32)
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
 endif (WIN32)
 
-# Specify where the library is installed, adding it to the export
-# GeographicLibDepends.
+# Specify where the library is installed, adding it to the export DEPENDS
 install (TARGETS Geographic
-  EXPORT GeographicLibDepends
+  EXPORT DEPENDS
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)

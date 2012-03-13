@@ -36,7 +36,7 @@
 <div class="title">Magnetic models </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="gravity.html">Gravity models</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib can compute the earth's magnetic field by a magnetic model using the <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">GeographicLib::MagneticModel</a> and <a class="el" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">GeographicLib::MagneticCircle</a> classes and with the <a href="MagneticField.1.html">MagneticField</a> utility. These models expand the internal magnetic potential of the earth as sum of spherical harmonics. They neglect magnetic fields due to the ionosphere, the magnetosphere, nearby magnetized materials, electric machinery, etc. Users of <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">GeographicLib::MagneticModel</a> are advised to read the <a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
+<div class="textblock"><center> Back to <a class="el" href="gravity.html">Gravity models</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib can compute the earth's magnetic field by a magnetic model using the <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">GeographicLib::MagneticModel</a> and <a class="el" href="classGeographicLib_1_1MagneticCircle.html" title="Geomagnetic field on a circle of latitude.">GeographicLib::MagneticCircle</a> classes and with the <a href="MagneticField.1.html">MagneticField</a> utility. These models expand the internal magnetic potential of the earth as sum of spherical harmonics. They neglect magnetic fields due to the ionosphere, the magnetosphere, nearby magnetized materials, electric machinery, etc. Users of <a class="el" href="classGeographicLib_1_1MagneticModel.html" title="Model of the earth&#39;s magnetic field.">GeographicLib::MagneticModel</a> are advised to read the <a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
 Warning"</a> this is provided with igrf11. Although the advice is specific to igrf11, many of the comments apply to all magnetic field models.</p>
 <p>The supported models are</p>
 <ul>
@@ -75,10 +75,11 @@ Installing the magnetic field models</h2>
    geographiclib-get-magnetic all  # to install wmm2010, igrf11, emm2010
    geographiclib-get-magnetic -h   # for help
 </pre></div><p> This script should be run as a user with write access to the installation directory, which is typically /usr/local/share/GeographicLib (this can be overridden with the -p flag), and the data will then be placed in the "magnetic" subdirectory.</p>
-<p>Windows users should download and run the Windows installers. These will prompt for an installation directory with the default being </p>
+<p>Windows users should download and run the Windows installers. These will prompt for an installation directory with the default being one of </p>
 <div class="fragment"><pre class="fragment">
    C:/Documents and Settings/All Users/Application Data/GeographicLib
-</pre></div><p> (which you probably should not change) and the data is installed in the "magnetic" sub-directory.</p>
+   C:/ProgramData/GeographicLib
+</pre></div><p> (which you probably should not change) and the data is installed in the "magnetic" sub-directory. (The second directory name is an alternate name that Windows 7 for the "Application Data" directory.)</p>
 <p>Otherwise download <em>either</em> the tar.bz2 file <em>or</em> the zip file (they have the same contents). To unpack these, run, for example </p>
 <div class="fragment"><pre class="fragment">
    mkdir -p /usr/local/share/GeographicLib
@@ -161,8 +162,8 @@ MaxHeight       600000
 # the name of this file.  The coefficients were obtained from IGRF11.COF
 # in the geomag70 distribution.
 ID              IGRF11-A
-</pre></div><center> Back to <a class="el" href="gravity.html">Gravity models</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the Ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+</pre></div><center> Back to <a class="el" href="gravity.html">Gravity models</a>. Forward to <a class="el" href="geodesic.html">Geodesics on the ellipsoid</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

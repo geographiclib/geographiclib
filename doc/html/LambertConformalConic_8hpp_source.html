@@ -59,7 +59,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP)</span>
 <a name="l00011"></a><a class="code" href="LambertConformalConic_8hpp.html#aac2fbd995d5b75016781c58b97093c67">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP \</span>
-<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: fcf9176f0a356995138754581297173aa3491693 $&quot;</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: 01a4aff302dde6b1dca687badd42f945f34b9bf7 $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;algorithm&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;<a class="code" href="Constants_8hpp.html" title="Header for GeographicLib::Constants class.">GeographicLib/Constants.hpp</a>&gt;</span>
@@ -162,9 +162,9 @@
 <a name="l00112"></a>00112     <span class="keyword">static</span> <span class="keyword">inline</span> real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
 <a name="l00113"></a>00113       <span class="comment">// sx = sinh(x), cx = cosh(x)</span>
 <a name="l00114"></a>00114       <span class="keywordflow">throw</span>() {
-<a name="l00115"></a>00115       <span class="comment">// real t = (x  - y)/2, c = sqrt((1 + cx) * (1 + cy));</span>
+<a name="l00115"></a>00115       <span class="comment">// real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));</span>
 <a name="l00116"></a>00116       <span class="comment">// return (t != 0 ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;</span>
-<a name="l00117"></a>00117       real t = (x  - y)/2;
+<a name="l00117"></a>00117       real t = (x - y)/2;
 <a name="l00118"></a>00118       <span class="keywordflow">return</span> (t != 0 ? sinh(t)/t : <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(1)) * sqrt((sx * sy + cx * cy + 1) /2);
 <a name="l00119"></a>00119     }
 <a name="l00120"></a>00120     <span class="comment">// Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)</span>
@@ -331,7 +331,7 @@
 <a name="l00281"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#a21f9bc21f3f40c56d2f5d12fb4b7f75a">00281</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#a21f9bc21f3f40c56d2f5d12fb4b7f75a">MajorRadius</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _a; }
 <a name="l00282"></a>00282 <span class="comment"></span>
 <a name="l00283"></a>00283 <span class="comment">    /**</span>
-<a name="l00284"></a>00284 <span class="comment">     * @return \e f the  flattening of the ellipsoid.  This is the</span>
+<a name="l00284"></a>00284 <span class="comment">     * @return \e f the flattening of the ellipsoid.  This is the</span>
 <a name="l00285"></a>00285 <span class="comment">     *   value used in the constructor.</span>
 <a name="l00286"></a>00286 <span class="comment">     **********************************************************************/</span>
 <a name="l00287"></a><a class="code" href="classGeographicLib_1_1LambertConformalConic.html#abd47e48c75ed958f5aa91bcaa80ddc8c">00287</a>     <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html#abd47e48c75ed958f5aa91bcaa80ddc8c">Flattening</a>() <span class="keyword">const</span> throw() { <span class="keywordflow">return</span> _f; }
@@ -371,7 +371,7 @@
 <a name="l00321"></a>00321 <span class="preprocessor">#endif  // GEOGRAPHICLIB_LAMBERTCONFORMALCONIC_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

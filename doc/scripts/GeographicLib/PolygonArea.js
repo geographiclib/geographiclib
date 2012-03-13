@@ -9,7 +9,7 @@
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * $Id: f6eebaf4c93ded5e1ddd5b1be38d3b9570b59fa8 $
+ * $Id: cefb3a6e48907fbda0f01e8ee7d549447f46e29a $
  **********************************************************************/
 
 // Load AFTER GeographicLib/Math.js and GeographicLib/Geodesic.js
@@ -39,7 +39,7 @@ GeographicLib.PolygonArea = {};
     this._earth = earth;
     this._area0 = 4 * Math.PI * earth._c2;
     this._polyline = !polyline ? false : polyline;
-    this._mask =  g.DISTANCE | (this._polyline ? 0 : g.AREA);
+    this._mask = g.DISTANCE | (this._polyline ? 0 : g.AREA);
     if (!this._polyline)
       this._areasum = new a.Accumulator(0);
     this._perimetersum = new a.Accumulator(0);

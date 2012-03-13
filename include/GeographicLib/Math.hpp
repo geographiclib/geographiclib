@@ -12,7 +12,7 @@
 #include <GeographicLib/Constants.hpp>
 
 #if !defined(GEOGRAPHICLIB_MATH_HPP)
-#define GEOGRAPHICLIB_MATH_HPP "$Id: 045fb188fcc3fe808fed0c9d5fa965861d2735d1 $"
+#define GEOGRAPHICLIB_MATH_HPP "$Id: f0c40ff3ed056d8a0a110725be4528be4a4a6a6e $"
 
 /**
  * Are C++0X math functions available?
@@ -194,7 +194,7 @@ namespace GeographicLib {
       // mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -
       // 1)/log(y) is a slowly varying quantity near y = 1 and is accurately
       // computed.
-      return std::abs(x) > 1 ? z : (z == 0 ?  x : x * z / std::log(y));
+      return std::abs(x) > 1 ? z : (z == 0 ? x : x * z / std::log(y));
     }
 #elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
     template<typename T> static inline T expm1(T x) throw()

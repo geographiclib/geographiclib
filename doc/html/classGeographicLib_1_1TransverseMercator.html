@@ -85,7 +85,7 @@ Static Public Attributes</h2></td></tr>
 <p>Kr&uuml;ger's method has been extended from 4th to 6th order. The maximum error is 5 nm (5 nanometers), ground distance, for all positions within 35 degrees of the central meridian. The error in the convergence is 2e-15" and the relative error in the scale is 6e-12%%. See Sec. 4 of <a href="http://arxiv.org/abs/1002.1417">arXiv:1002.1417</a> for details. The speed penalty in going to 6th order is only about 1%. <a class="el" href="classGeographicLib_1_1TransverseMercatorExact.html" title="An exact implementation of the Transverse Mercator Projection.">TransverseMercatorExact</a> is an alternative implementation of the projection using exact formulas which yield accurate (to 8 nm) results over the entire ellipsoid.</p>
 <p>The ellipsoid parameters and the central scale are set in the constructor. The central meridian (which is a trivial shift of the longitude) is specified as the <em>lon0</em> argument of the <a class="el" href="classGeographicLib_1_1TransverseMercator.html#a07d73a6d94e2434cbb937978d61a5ae7">TransverseMercator::Forward</a> and <a class="el" href="classGeographicLib_1_1TransverseMercator.html#a15611aee4e3707e155278bab02403a07">TransverseMercator::Reverse</a> functions. The latitude of origin is taken to be the equator. There is no provision in this class for specifying a false easting or false northing or a different latitude of origin. However these are can be simply included by the calling function. For example, the <a class="el" href="classGeographicLib_1_1UTMUPS.html" title="Convert between Geographic coordinates and UTM/UPS.">UTMUPS</a> class applies the false easting and false northing for the UTM projections. A more complicated example is the British National Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">EPSG:7405</a>) which requires the use of a latitude of origin. This is implemented by the <a class="el" href="classGeographicLib_1_1OSGB.html" title="Ordnance Survey grid system for Great Britain.">GeographicLib::OSGB</a> class.</p>
 <p>See <a class="el" href="TransverseMercator_8cpp.html" title="Implementation for GeographicLib::TransverseMercator class.">TransverseMercator.cpp</a> for more information on the implementation.</p>
-<p>See <a class="el" href="transversemercator.html">Transverse Mercator Projection</a> for a discussion of this projection.</p>
+<p>See <a class="el" href="transversemercator.html">Transverse Mercator projection</a> for a discussion of this projection.</p>
 <p>Example of use: </p>
 <div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::TransverseMercator class</span>
 <span class="comment">// $Id: c01651412c934220e2293c344258773ac3d7131c $</span>
@@ -522,7 +522,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="TransverseMercator_8cpp_source.html">TransverseMercator.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

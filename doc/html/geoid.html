@@ -86,10 +86,11 @@ Installing the geoid datasets</h2>
    geographiclib-get-geoids best # to install egm84-15, egm96-5, egm2008-1
    geographiclib-get-geoids -h   # for help
 </pre></div><p> This script should be run as a user with write access to the installation directory, which is typically /usr/local/share/GeographicLib (this can be overridden with the -p flag), and the data will then be placed in the "geoids" subdirectory.</p>
-<p>Windows users should download and run the Windows installers. These will prompt for an installation directory with the default being </p>
+<p>Windows users should download and run the Windows installers. These will prompt for an installation directory with the default being one of </p>
 <div class="fragment"><pre class="fragment">
    C:/Documents and Settings/All Users/Application Data/GeographicLib
-</pre></div><p> (which you probably should not change) and the data is installed in the "geoids" sub-directory.</p>
+   C:/ProgramData/GeographicLib
+</pre></div><p> (which you probably should not change) and the data is installed in the "geoids" sub-directory. (The second directory name is an alternate name that Windows 7 for the "Application Data" directory.)</p>
 <p>Otherwise download <em>either</em> the tar.bz2 file <em>or</em> the zip file (they have the same contents). If possible use the tar.bz2 files, since these are compressed about 2 times better than the zip file. To unpack these, run, for example </p>
 <div class="fragment"><pre class="fragment">
    mkdir -p /usr/local/share/GeographicLib
@@ -244,7 +245,7 @@ Test data for geoids</h2>
 </ul>
 <p>The latitude and longitude are all multiples of 10<sup>-6</sup> deg and should be regarded as exact. The geoid heights are computed using the harmonic NGA synthesis programs, where the programs were compiled (with gfortran) and run under Linux. In the case of the EGM2008 program, a <code>SAVE</code> statement needed to be added to subroutine <code>latf</code>, in order for the program to compile correctly with a stack-based compiler. Similarly the EGM96 code requires a <code>SAVE</code> statement in subroutine <code>legfdn</code>.</p>
 <center> Back to <a class="el" href="other.html">Other interfaces (Javascript, Python, Matlab, Octave)</a>. Forward to <a class="el" href="gravity.html">Gravity models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

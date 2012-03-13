@@ -63,7 +63,7 @@
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;<a class="code" href="Utility_8hpp.html" title="Header for GeographicLib::Utility class.">GeographicLib/Utility.hpp</a>&gt;</span>
 <a name="l00015"></a>00015 
 <a name="l00016"></a><a class="code" href="MagneticModel_8cpp.html#ac744ec56ccbc33cff2c75c204b4c7ae1">00016</a> <span class="preprocessor">#define GEOGRAPHICLIB_MAGNETICMODEL_CPP \</span>
-<a name="l00017"></a>00017 <span class="preprocessor">  &quot;$Id: caa93d8d88501ae144eb69febc642ced9319995b $&quot;</span>
+<a name="l00017"></a>00017 <span class="preprocessor">  &quot;$Id: b0287ac014f10e4c6656b67f21c764432a47559a $&quot;</span>
 <a name="l00018"></a>00018 <span class="preprocessor"></span>
 <a name="l00019"></a>00019 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MagneticModel_8cpp.html#ac744ec56ccbc33cff2c75c204b4c7ae1">GEOGRAPHICLIB_MAGNETICMODEL_CPP</a>)
 <a name="l00020"></a>00020 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="MagneticModel_8hpp.html#a8f9f091785b789fbe080c650bc0b8654">GEOGRAPHICLIB_MAGNETICMODEL_HPP</a>)
@@ -134,7 +134,7 @@
 <a name="l00085"></a>00085       <span class="keywordtype">int</span> pos = int(coeffstr.tellg());
 <a name="l00086"></a>00086       coeffstr.seekg(0, ios::end);
 <a name="l00087"></a>00087       <span class="keywordflow">if</span> (pos != coeffstr.tellg())
-<a name="l00088"></a>00088         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra data in  &quot;</span> + coeff);
+<a name="l00088"></a>00088         <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Extra data in &quot;</span> + coeff);
 <a name="l00089"></a>00089     }
 <a name="l00090"></a>00090   }
 <a name="l00091"></a>00091 
@@ -181,9 +181,9 @@
 <a name="l00132"></a>00132       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MaxTime&quot;</span>)
 <a name="l00133"></a>00133         _tmax = Utility::num&lt;real&gt;(val);
 <a name="l00134"></a>00134       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MinHeight&quot;</span>)
-<a name="l00135"></a>00135         _hmin =  Utility::num&lt;real&gt;(val);
+<a name="l00135"></a>00135         _hmin = Utility::num&lt;real&gt;(val);
 <a name="l00136"></a>00136       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;MaxHeight&quot;</span>)
-<a name="l00137"></a>00137         _hmax =  Utility::num&lt;real&gt;(val);
+<a name="l00137"></a>00137         _hmax = Utility::num&lt;real&gt;(val);
 <a name="l00138"></a>00138       <span class="keywordflow">else</span> <span class="keywordflow">if</span> (key == <span class="stringliteral">&quot;Normalization&quot;</span>) {
 <a name="l00139"></a>00139         <span class="keywordflow">if</span> (val == <span class="stringliteral">&quot;FULL&quot;</span> || val == <span class="stringliteral">&quot;Full&quot;</span> || val == <span class="stringliteral">&quot;full&quot;</span>)
 <a name="l00140"></a>00140           _norm = <a class="code" href="classGeographicLib_1_1SphericalHarmonic.html#a889791c67edc32865996842c600104ebaee7040963f955b45b5a8ab0ea325c782">SphericalHarmonic::FULL</a>;
@@ -307,7 +307,7 @@
 <a name="l00258"></a>00258 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

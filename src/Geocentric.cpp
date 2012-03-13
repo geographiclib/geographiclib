@@ -10,7 +10,7 @@
 #include <GeographicLib/Geocentric.hpp>
 
 #define GEOGRAPHICLIB_GEOCENTRIC_CPP \
-  "$Id: d237d2d9a4fe5fad3d4f13147cd4cba15130543f $"
+  "$Id: 1d3c4e082e2cc6528927614ffdaa023b5d9320a9 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)
@@ -102,7 +102,7 @@ namespace GeographicLib {
           S = _e4a * p * q / 4, // S = r^3 * s
           r2 = Math::sq(r),
           r3 = r * r2,
-          disc =  S * (2 * r3 + S);
+          disc = S * (2 * r3 + S);
         real u = r;
         if (disc >= 0) {
           real T3 = S + r3;

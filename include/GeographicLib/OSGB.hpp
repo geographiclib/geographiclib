@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_OSGB_HPP)
-#define GEOGRAPHICLIB_OSGB_HPP "$Id: a8dbde4065691daa15563ea55c23eab4b7d8e967 $"
+#define GEOGRAPHICLIB_OSGB_HPP "$Id: 8d8f45bf479e7191b7dae5f8dd2f43ede9e934d2 $"
 
 #include <string>
 #include <sstream>
@@ -192,7 +192,7 @@ namespace GeographicLib {
      * projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening() throw()
-    { return  real(20923713 - 20853810) / real(20923713); }
+    { return real(20923713 - 20853810) / real(20923713); }
 
     /**
      * <b>DEPRECATED</b>

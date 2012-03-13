@@ -86,10 +86,11 @@ Installing the gravity models</h2>
    geographiclib-get-gravity all  # to install egm84, egm96, egm2008, wgs84
    geographiclib-get-gravity -h   # for help
 </pre></div><p> This script should be run as a user with write access to the installation directory, which is typically /usr/local/share/GeographicLib (this can be overridden with the -p flag), and the data will then be placed in the "gravity" subdirectory.</p>
-<p>Windows users should download and run the Windows installers. These will prompt for an installation directory with the default being </p>
+<p>Windows users should download and run the Windows installers. These will prompt for an installation directory with the default being one of </p>
 <div class="fragment"><pre class="fragment">
    C:/Documents and Settings/All Users/Application Data/GeographicLib
-</pre></div><p> (which you probably should not change) and the data is installed in the "gravity" sub-directory.</p>
+   C:/ProgramData/GeographicLib
+</pre></div><p> (which you probably should not change) and the data is installed in the "gravity" sub-directory. (The second directory name is an alternate name that Windows 7 for the "Application Data" directory.)</p>
 <p>Otherwise download <em>either</em> the tar.bz2 file <em>or</em> the zip file (they have the same contents). To unpack these, run, for example </p>
 <div class="fragment"><pre class="fragment">
    mkdir -p /usr/local/share/GeographicLib
@@ -296,7 +297,7 @@ if (OPENMP_FOUND OR OpenMP_FOUND)
   endif (NOT WIN32)
 endif (OPENMP_FOUND OR OpenMP_FOUND)
 </pre></div><center> Back to <a class="el" href="geoid.html">Geoid height</a>. Forward to <a class="el" href="magnetic.html">Magnetic models</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

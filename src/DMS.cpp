@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_DMS_CPP "$Id: 305c71f5be8c0adce9f70fe7d2f16b38dc14fb7d $"
+#define GEOGRAPHICLIB_DMS_CPP "$Id: 67d074e59f436ac6ad8ae6464436414d70d7e9be $"
 
 RCSID_DECL(GEOGRAPHICLIB_DMS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_DMS_HPP)
@@ -297,7 +297,7 @@ namespace GeographicLib {
     }
     pieces[0] += idegree;
     ostringstream s;
-    s << fixed  << setfill('0');
+    s << fixed << setfill('0');
     if (ind == NONE && sign < 0)
       s << '-';
     switch (trailing) {
@@ -314,12 +314,12 @@ namespace GeographicLib {
       switch (trailing) {
       case MINUTE:
         s << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec)
-          << pieces[1] <<  char(tolower(dmsindicators_[1]));
+          << pieces[1] << char(tolower(dmsindicators_[1]));
         break;
       case SECOND:
-        s << setw(2) << pieces[1] <<  char(tolower(dmsindicators_[1]))
+        s << setw(2) << pieces[1] << char(tolower(dmsindicators_[1]))
           << setw(2 + prec + (prec ? 1 : 0)) << setprecision(prec)
-          << pieces[2] <<  char(tolower(dmsindicators_[2]));
+          << pieces[2] << char(tolower(dmsindicators_[2]));
         break;
       default:
         break;

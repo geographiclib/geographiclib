@@ -137,7 +137,7 @@
 #include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_SPHERICALENGINE_CPP \
-  "$Id: e6444458fb284298889582ce5be3a9f201542e3a $"
+  "$Id: 861a718d09c83cdd9bf58939d938a25797b9f306 $"
 
 RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_CPP)
 RCSID_DECL(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
@@ -249,7 +249,7 @@ namespace GeographicLib {
         v = A * vc  + B * vc2  +  wc ; vc2  = vc ; vc  = v;
         v = A * vs  + B * vs2  +  ws ; vs2  = vs ; vs  = v;
         if (gradp) {
-          // Include the terms Sc[m] * P'[m,m](t) and  Ss[m] * P'[m,m](t)
+          // Include the terms Sc[m] * P'[m,m](t) and Ss[m] * P'[m,m](t)
           wtc += m * tu * wc; wts += m * tu * ws;
           v = A * vrc + B * vrc2 +  wrc; vrc2 = vrc; vrc = v;
           v = A * vrs + B * vrs2 +  wrs; vrs2 = vrs; vrs = v;

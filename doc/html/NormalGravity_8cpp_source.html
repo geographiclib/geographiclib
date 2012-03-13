@@ -59,7 +59,7 @@
 <a name="l00010"></a>00010 <span class="preprocessor">#include &lt;<a class="code" href="NormalGravity_8hpp.html" title="Header for GeographicLib::NormalGravity class.">GeographicLib/NormalGravity.hpp</a>&gt;</span>
 <a name="l00011"></a>00011 
 <a name="l00012"></a><a class="code" href="NormalGravity_8cpp.html#ae09694799ad8f72c9b216b9729848655">00012</a> <span class="preprocessor">#define GEOGRAPHICLIB_NORMALGRAVITY_CPP \</span>
-<a name="l00013"></a>00013 <span class="preprocessor">  &quot;$Id: a12ddd4a6c44a5760e9590781099532fbed53cac $&quot;</span>
+<a name="l00013"></a>00013 <span class="preprocessor">  &quot;$Id: ccd3d6bd4bddefb0b40cbce0006d863f08d64db4 $&quot;</span>
 <a name="l00014"></a>00014 <span class="preprocessor"></span>
 <a name="l00015"></a>00015 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="NormalGravity_8cpp.html#ae09694799ad8f72c9b216b9729848655">GEOGRAPHICLIB_NORMALGRAVITY_CPP</a>)
 <a name="l00016"></a>00016 <a class="code" href="Constants_8hpp.html#af90fa899707a2ac513d5e4c76853bbf5">RCSID_DECL</a>(<a class="code" href="NormalGravity_8hpp.html#a3f83059dc418514a79fa4e6c94869b58">GEOGRAPHICLIB_NORMALGRAVITY_HPP</a>)
@@ -138,14 +138,14 @@
 <a name="l00089"></a>00089   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> NormalGravity::qf(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ep2) <span class="keywordflow">throw</span>() {
 <a name="l00090"></a>00090     <span class="comment">// Compute</span>
 <a name="l00091"></a>00091     <span class="comment">//</span>
-<a name="l00092"></a>00092     <span class="comment">//  ((1 + 3/e&#39;^2) * atan(e&#39;)  - 3/e&#39;)/2</span>
+<a name="l00092"></a>00092     <span class="comment">//   ((1 + 3/e&#39;^2) * atan(e&#39;) - 3/e&#39;)/2</span>
 <a name="l00093"></a>00093     <span class="comment">//</span>
 <a name="l00094"></a>00094     <span class="comment">// See H+M, Eq 2-57, with E/u = e&#39;.  This suffers from two levels of</span>
 <a name="l00095"></a>00095     <span class="comment">// cancelation.  The e&#39;^-1 and e&#39;^1 terms drop out, so that the leading</span>
 <a name="l00096"></a>00096     <span class="comment">// term is O(e&#39;^3).</span>
 <a name="l00097"></a>00097     <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ep = sqrt(ep2);
-<a name="l00098"></a>00098     <span class="keywordflow">if</span> (abs(ep2) &gt;  <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))  <span class="comment">// Use the closed expression</span>
-<a name="l00099"></a>00099       <span class="keywordflow">return</span> ((1 + 3 / ep2) * atan(ep)  - 3 / ep)/2;
+<a name="l00098"></a>00098     <span class="keywordflow">if</span> (abs(ep2) &gt; <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(0.5))  <span class="comment">// Use the closed expression</span>
+<a name="l00099"></a>00099       <span class="keywordflow">return</span> ((1 + 3 / ep2) * atan(ep) - 3 / ep)/2;
 <a name="l00100"></a>00100     <span class="keywordflow">else</span> {
 <a name="l00101"></a>00101       <a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ep2n = 1, q = 0;     <span class="comment">// The series expansion H+M, Eq 2-86</span>
 <a name="l00102"></a>00102       <span class="keywordflow">for</span> (<span class="keywordtype">int</span> n = 1; ; ++n) {
@@ -165,7 +165,7 @@
 <a name="l00116"></a>00116   <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> NormalGravity::qpf(<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a> ep2) <span class="keywordflow">throw</span>() {
 <a name="l00117"></a>00117     <span class="comment">// Compute</span>
 <a name="l00118"></a>00118     <span class="comment">//</span>
-<a name="l00119"></a>00119     <span class="comment">//  3*(1 + 1/e&#39;^2) * (1 - atan(e&#39;)/e&#39;) - 1</span>
+<a name="l00119"></a>00119     <span class="comment">//   3*(1 + 1/e&#39;^2) * (1 - atan(e&#39;)/e&#39;) - 1</span>
 <a name="l00120"></a>00120     <span class="comment">//</span>
 <a name="l00121"></a>00121     <span class="comment">// See H+M, Eq 2-67, with E/u = e&#39;.  This suffers from two levels of</span>
 <a name="l00122"></a>00122     <span class="comment">// cancelation.  The e&#39;^-2 and e&#39;^0 terms drop out, so that the leading</span>
@@ -244,7 +244,7 @@
 <a name="l00195"></a>00195       gamu = - invw * (_GM
 <a name="l00196"></a>00196                        + (_aomega2 * _E * qp
 <a name="l00197"></a>00197                           * (<a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(sbet) - 1/<a class="code" href="Geod_8cpp.html#a5caf95d46b184d9ca1d3764b3781b3c9">real</a>(3)) / 2)) / <a class="code" href="classGeographicLib_1_1Math.html#a8a952f405e2ff2cbe079ba5687c40327">Math::sq</a>(uE),
-<a name="l00198"></a>00198       gamb = _aomega2 * q  * sbet * cbet * invw / uE,
+<a name="l00198"></a>00198       gamb = _aomega2 * q * sbet * cbet * invw / uE,
 <a name="l00199"></a>00199       t = u * invw / uE;
 <a name="l00200"></a>00200     <span class="comment">// H+M, Eq 6-12</span>
 <a name="l00201"></a>00201     GammaX = t * cbet * gamu - invw * sbet * gamb;
@@ -289,7 +289,7 @@
 <a name="l00240"></a>00240 } <span class="comment">// namespace GeographicLib</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

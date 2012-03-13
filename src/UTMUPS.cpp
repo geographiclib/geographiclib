@@ -15,7 +15,7 @@
 #include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_UTMUPS_CPP \
-  "$Id: 7308a2a52885238b84816ff380b85c6f090aa1d2 $"
+  "$Id: 308d2f0776c0c84fdfe6de94c6a8000ead9a0345 $"
 
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)
@@ -31,23 +31,23 @@ namespace GeographicLib {
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
   const Math::real UTMUPS::mineasting_[4] =
-    { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
-      MGRS::minutmcol_ * MGRS::tile_,  MGRS::minutmcol_ * MGRS::tile_ };
+    { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
+      MGRS::minutmcol_ * MGRS::tile_, MGRS::minutmcol_ * MGRS::tile_ };
   const Math::real UTMUPS::maxeasting_[4] =
-    { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
-      MGRS::maxutmcol_ * MGRS::tile_,  MGRS::maxutmcol_ * MGRS::tile_ };
+    { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
+      MGRS::maxutmcol_ * MGRS::tile_, MGRS::maxutmcol_ * MGRS::tile_ };
   const Math::real UTMUPS::minnorthing_[4] =
-    { MGRS::minupsSind_ * MGRS::tile_,  MGRS::minupsNind_ * MGRS::tile_,
+    { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmSrow_ * MGRS::tile_,
       (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
       * MGRS::tile_ };
   const Math::real UTMUPS::maxnorthing_[4] =
-    { MGRS::maxupsSind_ * MGRS::tile_,  MGRS::maxupsNind_ * MGRS::tile_,
+    { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
       (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
       MGRS::maxutmNrow_ * MGRS::tile_ };
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
-    if (setzone < MINPSEUDOZONE || setzone > MAXZONE)
+    if (!(setzone >= MINPSEUDOZONE && setzone <= MAXZONE))
       throw GeographicErr("Illegal zone requested " + Utility::str(setzone));
     if (setzone >= MINZONE || setzone == INVALID)
       return setzone;
@@ -128,7 +128,7 @@ namespace GeographicLib {
       lat = lon = gamma = k = Math::NaN<real>();
       return;
     }
-    if (! (zone >= MINZONE && zone <= MAXZONE))
+    if (!(zone >= MINZONE && zone <= MAXZONE))
       throw GeographicErr("Zone " + Utility::str(zone)
                           + " not in range [0, 60]");
     bool utmp = zone != UPS;
@@ -230,7 +230,7 @@ namespace GeographicLib {
   std::string UTMUPS::EncodeZone(int zone, bool northp) {
     if (zone == INVALID)
       return string("INV");
-    if (! (zone >= MINZONE && zone <= MAXZONE))
+    if (!(zone >= MINZONE && zone <= MAXZONE))
         throw GeographicErr("Zone " + Utility::str(zone)
                             + " not in range [0, 60]");
     ostringstream os;

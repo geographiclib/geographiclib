@@ -10,7 +10,7 @@
 # under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: 057b47320e60c424502f17f822629d5107c6f80d $
+# $Id: bbf905e5f404f97b10497ac32fa02b4203cb0c7d $
 ######################################################################
 
 class Accumulator(object):
@@ -42,7 +42,7 @@ class Accumulator(object):
   def Add(self, y):
     # Here's Shewchuk's solution...
     # hold exact sum as [s, t, u]
-    y, u  = Accumulator.sum(y, self._t) # Accumulate starting at
+    y, u = Accumulator.sum(y, self._t) # Accumulate starting at
     self._s, self._t = Accumulator.sum(y, self._s) # least significant end
     # Start is _s, _t decreasing and non-adjacent.  Sum is now (s + t + u)
     # exactly with s, t, u non-adjacent and in decreasing order (except

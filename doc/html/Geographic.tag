@@ -1301,7 +1301,7 @@
   </compound>
   <compound kind="page">
     <name>utilities</name>
-    <title>Utility Programs</title>
+    <title>Utility programs</title>
     <filename>utilities</filename>
   </compound>
   <compound kind="page">
@@ -1347,14 +1347,14 @@
   </compound>
   <compound kind="page">
     <name>geodesic</name>
-    <title>Geodesics on the Ellipsoid</title>
+    <title>Geodesics on the ellipsoid</title>
     <filename>geodesic</filename>
     <docanchor file="geodesic">testgeod</docanchor>
     <docanchor file="geodesic">geodseries</docanchor>
   </compound>
   <compound kind="page">
     <name>transversemercator</name>
-    <title>Transverse Mercator Projection</title>
+    <title>Transverse Mercator projection</title>
     <filename>transversemercator</filename>
     <docanchor file="transversemercator">tmseries</docanchor>
     <docanchor file="transversemercator">testmerc</docanchor>
@@ -1366,7 +1366,7 @@
   </compound>
   <compound kind="page">
     <name>old</name>
-    <title>Old Versions</title>
+    <title>Old versions</title>
     <filename>old</filename>
   </compound>
   <compound kind="namespace">

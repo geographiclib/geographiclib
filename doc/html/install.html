@@ -36,13 +36,13 @@
 <div class="title">Installing GeographicLib </div>  </div>
 </div>
 <div class="contents">
-<div class="textblock"><center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="start.html">Getting started</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib has been developed under Linux with the g++ compiler (versions 4.0 and later) and under Windows with Visual Studio 2005, 2008, and 2010. Earlier versions were tested also under Darwin and Solaris. It should compile on a wide range of other systems. First download either <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.18.tar.gz/download">GeographicLib-1.18.tar.gz</a> or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.18.zip/download">GeographicLib-1.18.zip</a> (or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.18-win32.exe/download">GeographicLib-1.18-win32.exe</a> for binary installation under Windows). Then pick one of the first five options below:</p>
+<div class="textblock"><center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="start.html">Getting started</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center><p>GeographicLib has been developed under Linux with the g++ compiler (versions 4.0 and later) and under Windows with Visual Studio 2005, 2008, and 2010. Earlier versions were tested also under Darwin and Solaris. It should compile on a wide range of other systems. First download either <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.19.tar.gz/download">GeographicLib-1.19.tar.gz</a> or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.19.zip/download">GeographicLib-1.19.zip</a> (or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.19-win32.exe/download">GeographicLib-1.19-win32.exe</a> or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.19-win64.exe/download">GeographicLib-1.19-win64.exe</a> for binary installation under Windows). Then pick one of the first five options below:</p>
 <ul>
 <li><a class="el" href="install.html#cmake">Installation with cmake</a>. This is the preferred installation method as it will work on the widest range of platforms. However it requires that you have <a href="http://www.cmake.org">cmake</a> installed.</li>
 <li><a class="el" href="install.html#autoconf">Installation using the autoconfigure tools</a>. This method works for most Unix-like systems, including Linux and Mac OS X.</li>
 <li><a class="el" href="install.html#gnu">Installation with GNU compiler and Make</a>. This is a simple installation method that works with g++ and GNU make on Linux and many Unix platforms.</li>
 <li><a class="el" href="install.html#windows">Installation on Windows</a>. This is a simple installation method that works with Visual Studio 2005, 2008, and 2010 under Windows.</li>
-<li><a class="el" href="install.html#windowsbin">Using a binary installer for Windows.</a>. Use this installation method if you only need to use the utility programs supplied with GeographicLib. (This method also installs the header files and the static library for use by Visual Studio 2010.)</li>
+<li><a class="el" href="install.html#windowsbin">Using a binary installer for Windows</a>. Use this installation method if you only need to use the <a class="el" href="utilities.html">Utility programs</a> supplied with GeographicLib. (This method also installs the header files and the static library for use by Visual Studio 2010.)</li>
 <li><a class="el" href="install.html#qt">Building the library for use with Qt</a>. How to compile GeographicLib so that it can be used by Qt programs.</li>
 <li><a class="el" href="install.html#maintainer">Maintainer tasks</a>. This describes addition tasks of interest only to the maintainers of this code.</li>
 </ul>
@@ -56,10 +56,10 @@ Installation with cmake</h2>
 <p>Here are the steps to compile and install GeographicLib:</p>
 <ul>
 <li>Unpack the source, running one of <div class="fragment"><pre class="fragment">
-  tar xfpz GeographicLib-1.18.tar.gz
-  unzip -q GeographicLib-1.18.zip
+  tar xfpz GeographicLib-1.19.tar.gz
+  unzip -q GeographicLib-1.19.zip
   git clone git://geographiclib.git.sf.net/gitroot/geographiclib/geographiclib-release geographiclib </pre></div> then enter the directory created with one of <div class="fragment"><pre class="fragment">
-  cd GeographicLib-1.18
+  cd GeographicLib-1.19
   cd geographiclib; git checkout stable </pre></div></li>
 <li>Create a separate build directory and enter it, for example, <div class="fragment"><pre class="fragment">
   mkdir BUILD
@@ -69,6 +69,8 @@ Installation with cmake</h2>
   cmake -G "Visual Studio 10" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib ..
   cmake -G "Visual Studio 9 2008" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc9/GeographicLib ..
   cmake -G "Visual Studio 8 2005" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc8/GeographicLib ..
+</pre></div> Instead of setting CMAKE_INSTALL_PREFIX, you can (on Windows) set CMAKE_PREFIX_PATH to point to the parent directory, e.g., <div class="fragment"><pre class="fragment">
+  cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 ..
 </pre></div> The definitions of CMAKE_INSTALL_PREFIX are optional (see below). The settings given above are recommended to ensure that packages that use GeographicLib use the version compiled with the right compiler. If you need to rerun cmake, use <div class="fragment"><pre class="fragment">
   cmake . </pre></div> possibly including some options via <code>-D</code> (see the next step).</li>
 <li>cmake allows you to configure how GeographicLib is built and installed by supplying options, for example <div class="fragment"><pre class="fragment">
@@ -99,8 +101,8 @@ Installation using the autoconfigure tools</h2>
 <p>The method works on most Unix-like systems including Linux and Mac OS X. Here are the steps to compile and install GeographicLib:</p>
 <ul>
 <li>Unpack the source, running <div class="fragment"><pre class="fragment">
-  tar xfpz GeographicLib-1.18.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
-  cd GeographicLib-1.18 </pre></div></li>
+  tar xfpz GeographicLib-1.19.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
+  cd GeographicLib-1.19 </pre></div></li>
 <li>Configure the software with <div class="fragment"><pre class="fragment">
   ./configure </pre></div></li>
 <li>By default GeographicLib will be installed under /usr/local. You can change this with, for example <div class="fragment"><pre class="fragment">
@@ -116,8 +118,8 @@ Installation with GNU compiler and Make</h2>
 <p>Here are the steps to compile and install GeographicLib:</p>
 <ul>
 <li>Unpack the source, running <div class="fragment"><pre class="fragment">
-  tar xfpz GeographicLib-1.18.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
-  cd GeographicLib-1.18 </pre></div></li>
+  tar xfpz GeographicLib-1.19.tar.gz </pre></div> then enter the directory created <div class="fragment"><pre class="fragment">
+  cd GeographicLib-1.19 </pre></div></li>
 <li>Edit <div class="fragment"><pre class="fragment">
   include/GeographicLib/Config.h </pre></div> If your C++ compiler does not recognize the long double type (unlikely), insert <div class="fragment"><pre class="fragment"><span class="preprocessor">  #undef HAVE_LONG_DOUBLE </span>
 </pre></div> If you machine using big endian ordering, then insert <div class="fragment"><pre class="fragment"><span class="preprocessor">  #define WORDS_BIGENDIAN 1 </span>
@@ -133,24 +135,24 @@ Installation on Windows</h2>
 <p>This method requires Visual Studio 2005, 2008, or 2010. This builds a static library and the utilities. If you only have Visual Studio 2003, use cmake to create the necessary solution file, see <a class="el" href="install.html#cmake">Installation with cmake</a>. (cmake is needed to build the Matlab interface and to run the tests.)</p>
 <ul>
 <li>Unpack the source, running <div class="fragment"><pre class="fragment">
-  unzip -q GeographicLib-1.18.zip </pre></div></li>
-<li>Open GeographicLib-1.18/windows/GeographicLib-vc10.sln in Visual Studio 2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).</li>
+  unzip -q GeographicLib-1.19.zip </pre></div></li>
+<li>Open GeographicLib-1.19/windows/GeographicLib-vc10.sln in Visual Studio 2010 (for Visual Studio 2005 and 2008, replace -vc10 by -vc8 or -vc9).</li>
 <li>Pick the build type (e.g., Release), and select "Build Solution".</li>
 <li>The library and the compiled examples are in the windows/Release.</li>
 <li>Copy the library windows/Release/Geographic.lib and the headers in include/GeographicLib somewhere convenient. The headers should remain in a directory named GeographicLib. If you expect to use the Matlab/Octave interface, copy matlab/*.m and matlab/*.cpp to a directory in your matlab/octave path, see <a class="el" href="other.html#matlab">Matlab and Octave interfaces</a> for instructions on compiling the interface. For documentation, open <a href="index.html">doc/html/index.html</a> in a web browser.</li>
 </ul>
 <h2><a class="anchor" id="windowsbin"></a>
-Using a binary installer for Windows.</h2>
+Using a binary installer for Windows</h2>
 <p>Use this method if you only need to use the GeographicLib utilities. The header files and static library are provided, but can only be used by Visual Studio 2010 in release mode. However, if you plan to use the library, it is advisable to build it with the compiler you are using for your own code using either <a class="el" href="install.html#cmake">Installation with cmake</a> or <a class="el" href="install.html#windows">Installation on Windows</a>.</p>
-<p>Download and run <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.18-win32.exe/download">GeographicLib-1.18-win32.exe</a>:</p>
+<p>Download and run <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.19-win32.exe/download">GeographicLib-1.19-win32.exe</a> or <a href="http://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.19-win64.exe/download">GeographicLib-1.19-win64.exe</a>:</p>
 <ul>
 <li>read the MIT/X11 License agreement,</li>
 <li>select whether you want your PATH modified,</li>
-<li>select the installation folder, by default C:\pkg-vc10\GeographicLib-1.18.</li>
+<li>select the installation folder, by default C:\pkg-vc10\GeographicLib-1.19 or C:\pkg-vc10-x64\GeographicLib-1.19,</li>
 <li>select the start menu folder,</li>
 <li>and install.</li>
 </ul>
-<p>(Note that the default installation folder adheres the the convention given in <a class="el" href="install.html#cmake">Installation with cmake</a>.) The start menu will now include links to the documentation for the library and for the utilities (and a link for uninstalling the library). If you ask for your PATH to be modified, it will include C:/pkg-vc10/GeographicLib-1.18/bin where the utilities are installed. The headers and library are installed in the include/GeographicLib and lib folders. The Matlab interface is installed in the libexec/GeographicLib/matlab folder. Add this to your path in Matlab to access this interface. The binaries were built using Visual Studio 10 (2010) for Win32 in Release mode. The Matlab interface was compiled with Matlab R2010b, however it works with some other versions of Matlab (e.g., R2008a).</p>
+<p>(Note that the default installation folder adheres the the convention given in <a class="el" href="install.html#cmake">Installation with cmake</a>.) The start menu will now include links to the documentation for the library and for the utilities (and a link for uninstalling the library). If you ask for your PATH to be modified, it will include C:/pkg-vc10/GeographicLib-1.19/bin where the utilities are installed. The headers and library are installed in the include/GeographicLib and lib folders. With the 64-bit installer, the Matlab interface is installed in the libexec/GeographicLib/matlab folder. Add this to your path in Matlab to access this interface. The binaries were built using Visual Studio 10 (2010) in Release mode. The Matlab interface was compiled with Matlab R2010b 64-bit, however it may work with some other 64-bit versions of Matlab.</p>
 <h2><a class="anchor" id="qt"></a>
 Building the library for use with Qt</h2>
 <p>If Qt is using a standard compiler, then build GeographicLib with that same compiler (and optimization flags) as Qt.</p>
@@ -182,12 +184,12 @@ Maintainer tasks</h2>
 <div class="fragment"><pre class="fragment">
   make dist </pre></div><p> which will copy the documentation and man pages from the build directory back into the source tree and package the resulting source tree for distribution as </p>
 <div class="fragment"><pre class="fragment">
-  GeographicLib-1.18.tar.gz
-  GeographicLib-1.18.zip </pre></div><p> Finally, </p>
+  GeographicLib-1.19.tar.gz
+  GeographicLib-1.19.zip </pre></div><p> Finally, </p>
 <div class="fragment"><pre class="fragment">
   make package </pre></div><p> or building PACKAGE in Visual Studio will create a binary installer for GeographicLib. For Windows, this requires in the installation of <a href="http://nsis.sourceforge.net">NSIS</a>.</p>
 <center> Back to <a class="el" href="intro.html">Introduction</a>. Forward to <a class="el" href="start.html">Getting started</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Feb 17 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
