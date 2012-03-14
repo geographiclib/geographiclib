@@ -180,6 +180,11 @@ install (EXPORT DEPENDS
 # Windows, but only the Windows distribution has been exercised.
 
 # Need to ensure that system dlls get included in a binary distribution
+if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
+  # Visual Studio Express does include redistributable components so
+  # squelch the warning.
+  set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
+endif (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
 include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variable that need to be set before
