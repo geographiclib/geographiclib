@@ -672,7 +672,7 @@ GeographicLib.GeodesicLine = {};
     phi = lat2 * m.degree;
     // Ensure cbet2 = +epsilon at poles
     sbet2 = this._f1 * Math.sin(phi);
-    cbet2 = Math.abs(lat2) == 90 ? tiny_ : Math.cos(phi);
+    cbet2 = Math.abs(lat2) == 90 ? g.tiny_ : Math.cos(phi);
     // SinCosNorm(sbet2, cbet2);
     var t = m.hypot(sbet2, cbet2); sbet2 /= t; cbet2 /= t;
 
