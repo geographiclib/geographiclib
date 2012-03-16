@@ -16,7 +16,7 @@
 #
 # $Id$
 
-VERSION=1.19
+VERSION=1.20
 BRANCH=master
 TEMP=/scratch/geographic-dist
 GITSOURCE=file:///home/ckarney/afs/geographiclib
