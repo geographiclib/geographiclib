@@ -257,7 +257,7 @@ if (WIN32)
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
     set (CPACK_NSIS_PACKAGE_NAME
-      "${PROJECT_NAME} ${GeographicLib_VERSION} x64")
+      "${PROJECT_NAME} x64 ${GeographicLib_VERSION}")
   else ()
     # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
