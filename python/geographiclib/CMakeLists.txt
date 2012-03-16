@@ -14,4 +14,4 @@ install (FILES ${PYTHON_FILES}
 # conflicts.
 if (WIN32)
   install (FILES ../setup.py DESTINATION lib/python/site-packages)
-endif (WIN32)
+endif ()

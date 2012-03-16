@@ -26,22 +26,13 @@ if (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
   unset (GeographicLib_INCLUDE_DIRS)
   unset (GeographicLib_LIBRARY_DIRS)
   unset (GeographicLib_VERSION)
-endif (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
-
-# Verify that the compiler versions match on Windows
-if (DEFINED GeographicLib_INCLUDE_DIRS AND
-  NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
-    unset (GeographicLib_INCLUDE_DIRS)
-    unset (GeographicLib_LIBRARY_DIRS)
-    unset (GeographicLib_VERSION)
-endif (DEFINED GeographicLib_INCLUDE_DIRS AND
-  NOT "${CMAKE_GENERATOR}" STREQUAL "@CMAKE_GENERATOR@")
+endif ()
 
 # Read in the exported definition of the library
 if (DEFINED GeographicLib_INCLUDE_DIRS)
   include ("${_DIR}/geographiclib-depends.cmake")
   set (GeographicLib_LIBRARIES Geographic)
-endif (DEFINED GeographicLib_INCLUDE_DIRS)
+endif ()
 
 # Boiler plate check
 include (FindPackageHandleStandardArgs)

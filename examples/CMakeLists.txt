@@ -11,7 +11,7 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
   add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
   target_link_libraries (${EXAMPLE} Geographic)
-endforeach (EXAMPLE_SOURCE)
+endforeach ()
 
 add_custom_target (examples DEPENDS ${EXAMPLES})
 add_dependencies (examples Geographic)

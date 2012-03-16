@@ -20,10 +20,9 @@ if (WIN32)
     list (GET CMAKE_PREFIX_PATH 0 CMAKE_INSTALL_PREFIX)
     set (CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}
       CACHE PATH "Installation directory for GeographicLib" FORCE)
-  endif (DEFINED CMAKE_PREFIX_PATH
-    AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  endif ()
   message (STATUS "CMAKE_INSTALL_PREFIX set to ${CMAKE_INSTALL_PREFIX}")
-endif (WIN32)
+endif ()
 
 # User-settable cache variables
 
@@ -31,9 +30,9 @@ endif (WIN32)
 # more trouble than it's worth.
 if (WIN32)
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" OFF)
-else (WIN32)
+else ()
   option (GEOGRAPHIC_SHARED_LIB "Build GeographicLib as a shared library" ON)
-endif (WIN32)
+endif ()
 
 # (2) Try to compile the Matlab interfaces?
 option (ENABLE_MATLAB "Try to compile matlab/octave interface" OFF)
@@ -44,11 +43,11 @@ if (WIN32)
   set (GEOGRAPHICLIB_DATA
     "C:/Documents and Settings/All Users/Application Data/GeographicLib"
     CACHE PATH "Location for data for GeographicLib")
-else (WIN32)
+else ()
   set (GEOGRAPHICLIB_DATA
     "${CMAKE_INSTALL_PREFIX}/share/GeographicLib"
     CACHE PATH "Location for data for GeographicLib")
-endif (WIN32)
+endif ()
 
 # The debug version of the library is called Geographic_d.
 set (CMAKE_DEBUG_POSTFIX _d)
@@ -75,16 +74,16 @@ if (NOT WIN32)
   find_program (HAVE_POD2MAN pod2man)
   find_program (HAVE_POD2HTML pod2html)
   find_program (HAVE_DOXYGEN doxygen)
-endif (NOT WIN32)
+endif ()
 if (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
   set (MAINTAINER ON CACHE BOOL "Allow build of additional components")
-else (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
+else ()
   set (MAINTAINER OFF CACHE BOOL "Allow build of additional components")
-endif (NOT WIN32 AND HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_DOXYGEN)
+endif ()
 if (MAINTAINER)
   add_custom_target (distrib-all)
   add_dependencies (distrib-all distrib-man distrib-doc)
-endif (MAINTAINER)
+endif ()
 
 # Look for the tool to compile the Matlab interfaces.  On Linux systems,
 # octave is used, since I couldn't find a version of Matlab that
@@ -95,29 +94,29 @@ if (ENABLE_MATLAB)
     if (HAVE_MEX)
       set (MEX "mkoctfile")
       set (MEXEXT "mex")
-    endif (HAVE_MEX)
-  else (NOT WIN32)
+    endif ()
+  else ()
     find_program (HAVE_MEX mex.bat)
     if (HAVE_MEX)
       set (MEX "mex")
       execute_process (COMMAND mexext.bat
         OUTPUT_VARIABLE MEXEXT OUTPUT_STRIP_TRAILING_WHITESPACE)
-    endif (HAVE_MEX)
-  endif (NOT WIN32)
-else (ENABLE_MATLAB)
+    endif ()
+  endif ()
+else ()
   set (HAVE_MEX OFF)
-endif (ENABLE_MATLAB)
+endif ()
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
-endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+endif ()
 
 # On non-Windows machine, make the compiler more picky.
 if (NOT WIN32)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-endif (NOT WIN32)
+endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert Geod
@@ -141,7 +140,7 @@ add_subdirectory (matlab)
 add_subdirectory (python/geographiclib)
 if (MAINTAINER)
   add_subdirectory (examples)
-endif (MAINTAINER)
+endif ()
 
 # config file support for find_package(GeographicLib).  This only
 # supports finding GeographicLib in the "install" tree (as opposed to
@@ -152,11 +151,11 @@ endif (MAINTAINER)
 if (WIN32)
   set (INSTALL_CMAKE_DIR "cmake")
   set (GEOGRAPHICLIB_ROOT_DIR "..")
-else (WIN32)
+else ()
   set (INSTALL_CMAKE_DIR
     "share/cmake/${PROJECT_NAME}-${GeographicLib_VERSION}")
   set (GEOGRAPHICLIB_ROOT_DIR "../../..")
-endif (WIN32)
+endif ()
 configure_file (cmake/geographiclib-config.cmake.in
   "${PROJECT_BINARY_DIR}/cmake/geographiclib-config.cmake" @ONLY)
 configure_file (cmake/geographiclib-config-version.cmake.in
@@ -184,7 +183,7 @@ if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
   # Visual Studio Express does include redistributable components so
   # squelch the warning.
   set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
-endif (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
+endif ()
 include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variable that need to be set before
@@ -253,16 +252,18 @@ if (WIN32)
   set (CPACK_NSIS_CONTACT "charles@karney.com")
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
-  set (CPACK_NSIS_PACKAGE_NAME
-    "${PROJECT_NAME} ${GeographicLib_VERSION}")
-  set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
-  else (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set (CPACK_NSIS_PACKAGE_NAME
+      "${PROJECT_NAME} ${GeographicLib_VERSION}")
+  else ()
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
-  endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set (CPACK_NSIS_PACKAGE_NAME
+      "${PROJECT_NAME} ${GeographicLib_VERSION} x64")
+  endif ()
+  set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Library Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\index.html\\\"
   CreateShortCut \\\"$SMPROGRAMS\\\\$STARTMENU_FOLDER\\\\Utility Documentation.lnk\\\" \\\"$INSTDIR\\\\share\\\\doc\\\\GeographicLib\\\\html\\\\utilities.html\\\"
@@ -273,14 +274,14 @@ if (WIN32)
   Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Utility Documentation.lnk\\\"
 ")
   set (CPACK_NSIS_MODIFY_PATH ON)
-elseif (APPLE)
+elseif ()
   # Not tested
   set (CPACK_GENERATOR DMG)
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
-else (WIN32)
+else ()
   # Not tested
   set (CPACK_GENERATOR TGZ)
-endif (WIN32)
+endif ()
 
 include (CPack)
 
@@ -317,7 +318,7 @@ if (MAINTAINER)
       zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
   )
   add_dependencies (dist distrib-all)
-endif (MAINTAINER)
+endif ()
 
 # Add a test target; the tests are in tools.
 enable_testing ()

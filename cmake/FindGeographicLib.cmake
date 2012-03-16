@@ -22,8 +22,8 @@ if (GeographicLib_LIBRARIES)
     unset (GeographicLib_INCLUDE_DIRS)
     unset (GeographicLib_LIBRARIES)
     unset (GeographicLib_LIBRARY_DIRS)
-  endif (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
-endif (GeographicLib_LIBRARIES)
+  endif ()
+endif ()
 
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (GeographicLib DEFAULT_MSG

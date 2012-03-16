@@ -13,9 +13,9 @@ if (MAINTAINER)
   add_custom_target (distrib-man)
   add_custom_target (man ALL)
   set (MANDIR ${CMAKE_CURRENT_BINARY_DIR})
-else (MAINTAINER)
+else ()
   set (MANDIR ${CMAKE_CURRENT_SOURCE_DIR})
-endif (MAINTAINER)
+endif ()
 
 set (MANPAGES)
 set (USAGE)
@@ -49,8 +49,8 @@ foreach (TOOL ${TOOLS})
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.usage
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
-  endif (MAINTAINER)
-endforeach (TOOL)
+  endif ()
+endforeach ()
 
 # Add the extra maintainer tasks into the dependency list.  The
 # distrib-man target copies the derived documentation files into the
@@ -70,7 +70,7 @@ if (MAINTAINER)
         cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f"` >/dev/null 2>&1||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
-endif (MAINTAINER)
+endif ()
 
 # Install the man pages.
 install (FILES ${MANPAGES} DESTINATION share/man/man1)

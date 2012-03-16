@@ -7,9 +7,9 @@
 # source tree.
 if (MAINTAINER)
   set (MANDIR ${PROJECT_BINARY_DIR}/man)
-else (MAINTAINER)
+else ()
   set (MANDIR ${PROJECT_SOURCE_DIR}/man)
-endif (MAINTAINER)
+endif ()
 include_directories (${MANDIR})
 
 # Loop over all the tools, specifying the source and library.
@@ -19,7 +19,7 @@ foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.cpp)
   if (MAINTAINER)
     add_dependencies (${TOOL} usage)
-  endif (MAINTAINER)
+  endif ()
   add_dependencies (tools ${TOOL})
 
   set_source_files_properties (${TOOL}.cpp PROPERTIES
@@ -27,13 +27,13 @@ foreach (TOOL ${TOOLS})
 
   target_link_libraries (${TOOL} Geographic)
 
-endforeach (TOOL)
+endforeach ()
 
 # Set the run time path for shared libraries for non-Windows machines.
 if (NOT WIN32)
   set_target_properties (${TOOLS} PROPERTIES
     INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
-endif (NOT WIN32)
+endif ()
 
 # Specify where the tools are installed, adding them to the export DEPENDS
 install (TARGETS ${TOOLS} EXPORT DEPENDS DESTINATION bin)
@@ -52,9 +52,9 @@ if (NOT WIN32)
       COMMAND chmod +x ${SCRIPT}
       DEPENDS ${SCRIPT}.sh)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
-  endforeach (SCRIPT)
+  endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
-endif (NOT WIN32)
+endif ()
 
 # Copy the shared library on Windows systems to this directory (tools) so
 # that the tests can be run.
@@ -64,7 +64,7 @@ if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
   add_custom_command (TARGET tools POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E
     copy ${GEOGRAPHIC_LIBRARY_FILE} ${CMAKE_CFG_INTDIR}/)
-endif (WIN32 AND GEOGRAPHIC_SHARED_LIB)
+endif ()
 
 # Turn on testing
 enable_testing ()
@@ -199,7 +199,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
   set_tests_properties (GeoidEval0
     PROPERTIES PASS_REGULAR_EXPRESSION "^17\\.1602 .*
 17\\.1511 ")
-endif (EXISTS ${GEOGRAPHICLIB_DATA}/geoids/egm96-5.pgm)
+endif ()
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
   # Test case from WMM2010_Report.pdf, Sec 1.5, pp 14-15:
@@ -222,7 +222,7 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
     PROPERTIES PASS_REGULAR_EXPRESSION
     " 5535\\.5249148687 14765\\.3703243050 -50625\\.9305478794 .*
 .* 20\\.4904268023 1\\.0272592716 83\\.5313962281 ")
-endif (EXISTS ${GEOGRAPHICLIB_DATA}/magnetic/wmm2010.wmm)
+endif ()
 
 if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
   # Verify no overflow at poles with high degree model
@@ -231,4 +231,4 @@ if (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
   set_tests_properties (Gravity0
     PROPERTIES PASS_REGULAR_EXPRESSION
     "-0\\.000146 0\\.000078 -9\\.832294")
-endif (EXISTS ${GEOGRAPHICLIB_DATA}/gravity/egm2008.egm)
+endif ()

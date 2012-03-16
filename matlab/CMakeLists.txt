@@ -19,9 +19,9 @@ if (HAVE_MEX)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION libexec/GeographicLib/matlab)
     add_custom_target (matlab-all)
-  else (WIN32)
+  else ()
     set (INTERFACE_LIST)
-  endif (WIN32)
+  endif ()
   foreach (INTERFACE ${MATLAB_INTERFACES})
     get_filename_component (TARGET ${INTERFACE} NAME_WE)
     set (TARGET_INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.${MEXEXT})
@@ -39,7 +39,7 @@ if (HAVE_MEX)
       add_dependencies (matlab-all matlab-${TARGET})
       install (PROGRAMS ${TARGET_INTERFACE}
 	DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
-    else (WIN32)
+    else ()
       set (INTERFACE_LIST ${INTERFACE_LIST} ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
 	COMMAND
@@ -50,14 +50,14 @@ if (HAVE_MEX)
 	    ${INTERFACE}
 	COMMENT "Building matlab interface for ${TARGET}"
 	DEPENDS ${INTERFACE} Geographic)
-    endif (WIN32)
-  endforeach (INTERFACE)
+    endif ()
+  endforeach ()
   if (NOT WIN32)
     add_custom_target (matlab-all DEPENDS ${INTERFACE_LIST})
     add_dependencies (matlab-all Geographic)
     install (PROGRAMS ${INTERFACE_LIST}
       DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
-  endif (NOT WIN32)
+  endif ()
   if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
     get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic LOCATION_RELEASE)
     add_custom_command (TARGET matlab-all POST_BUILD
@@ -66,5 +66,5 @@ if (HAVE_MEX)
       ${GEOGRAPHIC_LIBRARY_FILE} NAME)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOGRAPHIC_LIBRARY_NAME}
       DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
-  endif (WIN32 AND GEOGRAPHIC_SHARED_LIB)
-endif (HAVE_MEX)
+  endif ()
+endif ()
