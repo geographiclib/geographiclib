@@ -5,13 +5,13 @@ project (GeographicLib)
 
 # Version information
 set (GeographicLib_VERSION_MAJOR 1)
-set (GeographicLib_VERSION_MINOR 19)
+set (GeographicLib_VERSION_MINOR 20)
 set (GeographicLib_VERSION
      "${GeographicLib_VERSION_MAJOR}.${GeographicLib_VERSION_MINOR}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION 9)
-set (LIBVERSIONFULL 9.2.3)
+set (LIBVERSIONFULL 9.2.4)
 
 # Set CMAKE_INSTALL_PREFIX from first element of CMAKE_PREFIX_PATH
 if (WIN32)
@@ -253,15 +253,17 @@ if (WIN32)
   set (CPACK_NSIS_URL_INFO_ABOUT "http://geographiclib.sf.net")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
     set (CPACK_NSIS_PACKAGE_NAME
-      "${PROJECT_NAME} ${GeographicLib_VERSION}")
+      "${PROJECT_NAME} ${GeographicLib_VERSION} x64")
   else ()
+    # Hardcode the prefix for Visual Studio 10
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc10")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
     set (CPACK_NSIS_PACKAGE_NAME
-      "${PROJECT_NAME} ${GeographicLib_VERSION} x64")
+      "${PROJECT_NAME} ${GeographicLib_VERSION}")
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "

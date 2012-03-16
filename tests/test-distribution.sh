@@ -43,9 +43,9 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
-echo cmake -G \'Visual Studio 10\' -D CMAKE_PREFIX_PATH=C:/pkg-vc10 .. > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/config
+(echo vcmake ..; echo vmake all test install package) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/config
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
-echo cmake -G \'Visual Studio 10 Win64\' -D CMAKE_PREFIX_PATH=C:/pkg-vc10-x64 -D ENABLE_MATLAB=on .. > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/config
+(echo vcmake -D ENABLE_MATLAB=on ..; echo vmake all test install package) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/config
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10

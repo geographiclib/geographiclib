@@ -46,9 +46,9 @@ if (NOT WIN32)
   foreach (SCRIPT ${SCRIPTS})
     add_custom_command (OUTPUT ${SCRIPT}
       COMMAND
-	sed -e "s%@DEFAULTDIR@%${GEOGRAPHICLIB_DATA}%"
-	  ${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT}.sh >
-	  ${SCRIPT}
+        sed -e "s%@DEFAULTDIR@%${GEOGRAPHICLIB_DATA}%"
+          ${CMAKE_CURRENT_SOURCE_DIR}/${SCRIPT}.sh >
+          ${SCRIPT}
       COMMAND chmod +x ${SCRIPT}
       DEPENDS ${SCRIPT}.sh)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)

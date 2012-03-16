@@ -3274,6 +3274,16 @@ Older versions are in
 <a href="http://sf.net/projects/geographiclib/files/distrib/archive/">
 http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
+ - Version 1.20 (released 2012-mm-dd)
+  - Cmake tweaks:
+    - improve find_package's matching of compiler versions;
+    - CMAKE_INSTALL_PREFIX set from CMAKE_PREFIX_PATH if available;
+    - add "x64" to the package name for the 64-bit binary installer;
+    - fix cmake warning with Visual Studio Express.
+  - Fix BUG(?) in GeographicLib::SphericalEngine; some compiler disallow
+    iterators to point outside the bounds of the associated container.
+  - Fix transcript BUG is Geodesic.js.
+
  - Version 1.19 (released 2012-03-13)
   - Slight improvement in GeographicLib::Geodesic::Inverse for very
     short lines.
