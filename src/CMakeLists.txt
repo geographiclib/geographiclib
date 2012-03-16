@@ -5,7 +5,7 @@
 # Include all the .cpp files in the library.
 file (GLOB SOURCES *.cpp)
 file (GLOB HEADERS
-  ${CMAKE_CURRENT_BINRARY_DIR}/../include/GeographicLib/Config.h
+  ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
   ../include/GeographicLib/*.hpp)
 
 # Define the library and specify whether it is shared or not.
