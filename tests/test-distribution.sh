@@ -45,7 +45,7 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
 (echo vcmake ..; echo vmake all test install package) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/config
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
-(echo vcmake -D ENABLE_MATLAB=on ..; echo vmake all test install package) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/config
+(echo vcmake -D ENABLE_MATLAB=on ..; echo vmake all matlab-all test install package) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/config
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10
