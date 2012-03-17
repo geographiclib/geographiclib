@@ -280,7 +280,7 @@ if (WIN32)
   Delete \\\"$SMPROGRAMS\\\\$MUI_TEMP\\\\Utility Documentation.lnk\\\"
 ")
   set (CPACK_NSIS_MODIFY_PATH ON)
-elseif ()
+elseif (APPLE)
   # Not tested
   set (CPACK_GENERATOR DMG)
   set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")

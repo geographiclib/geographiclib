@@ -6,3 +6,4 @@ Makefile
 TAGS
 CMakeFiles
 cmake_install.cmake
+*.pro.user*
