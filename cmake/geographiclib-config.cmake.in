@@ -21,22 +21,8 @@ get_filename_component (GEOGRAPHICLIB_ROOT_DIR
 set (GeographicLib_INCLUDE_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/include")
 set (GeographicLib_LIBRARY_DIRS "${GEOGRAPHICLIB_ROOT_DIR}/lib")
 
-# Do a sanity check by looking for include/GeographicLib/Config.h
-if (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
-  unset (GeographicLib_INCLUDE_DIRS)
-  unset (GeographicLib_LIBRARY_DIRS)
-  unset (GeographicLib_VERSION)
-endif ()
-
 # Read in the exported definition of the library
-if (DEFINED GeographicLib_INCLUDE_DIRS)
-  include ("${_DIR}/geographiclib-depends.cmake")
-  set (GeographicLib_LIBRARIES Geographic)
-endif ()
+include ("${_DIR}/geographiclib-depends.cmake")
+set (GeographicLib_LIBRARIES Geographic)
 
-# Boiler plate check
-include (FindPackageHandleStandardArgs)
-find_package_handle_standard_args (GeographicLib DEFAULT_MSG
-  GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES GeographicLib_INCLUDE_DIRS)
-mark_as_advanced (GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES
-  GeographicLib_INCLUDE_DIRS)
+set (GEOGRAPHICLIB_FOUND TRUE)
