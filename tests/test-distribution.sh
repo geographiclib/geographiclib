@@ -4,8 +4,9 @@
 # html documentation rsync'ed to  $DEVELSOURCE/doc/html/
 #
 # Windows version ready to build in
-# $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
-# after compile + package installer is GeographicLib-$VERSION-win32.exe
+# $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10{,-x64}
+# after ./build installer is copied to
+# $DEVELSOURCE/GeographicLib-$VERSION-win{32,64}.exe
 #
 # Built version ready to install in /usr/local in
 # relc/GeographicLib-$VERSION/BUILD-system
@@ -19,9 +20,10 @@
 VERSION=1.20
 BRANCH=master
 TEMP=/scratch/geographic-dist
-GITSOURCE=file:///home/ckarney/afs/geographiclib
-DEVELSOURCE=$HOME/geographiclib
-WINDOWSBUILD=$HOME/afs/temp
+DEVELSOURCE=/u/geographiclib
+GITSOURCE=file://$DEVELSOURCE
+WINDOWSBUILD=/u/temp
+
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
 mkdir $TEMP/gita
@@ -43,9 +45,19 @@ tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10
-(echo vcmake ..; echo vmake all test install package) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/config
+(
+    echo vcmake ..
+    echo vmake all test install package
+    echo cp GeographicLib-$VERSION-win32.exe $DEVELSOURCE/
+) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
+chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10/build
 mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64
-(echo vcmake -D ENABLE_MATLAB=on ..; echo vmake all matlab-all test install package) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/config
+(
+    echo vcmake -D ENABLE_MATLAB=on ..
+    echo vmake all matlab-all test install package
+    echo cp GeographicLib-$VERSION-win64.exe $DEVELSOURCE/
+) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
+chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10-x64/build
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j10
