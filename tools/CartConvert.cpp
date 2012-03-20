@@ -2,8 +2,8 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011, 2012) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile and link with

@@ -2,9 +2,9 @@
  * \file MGRS.cpp
  * \brief Implementation for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011, 2012)
- * <charles@karney.com> and licensed under the MIT/X11 License.  For more
- * information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/MGRS.hpp>

@@ -2,9 +2,9 @@
  * \file GeoConvert.cpp
  * \brief Command line utility for geographic coordinate conversions
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011, 2012)
- * <charles@karney.com> and licensed under the MIT/X11 License.  For more
- * information, see http://geographiclib.sourceforge.net/
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * http://geographiclib.sourceforge.net/
  *
  * Compile and link with
  *   g++ -g -O3 -I../include -I../man -o GeoConvert \
