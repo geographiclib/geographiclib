@@ -15,13 +15,13 @@
 #define GEOGRAPHICLIB_MATH_HPP "$Id$"
 
 /**
- * Are C++0X math functions available?
+ * Are C++11 math functions available?
  **********************************************************************/
-#if !defined(GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#if !defined(GEOGRAPHICLIB_CPLUSPLUS11_MATH)
 #  if defined(__GXX_EXPERIMENTAL_CXX0X__)
-#    define GEOGRAPHICLIB_CPLUSPLUS0X_MATH 1
+#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 1
 #  else
-#    define GEOGRAPHICLIB_CPLUSPLUS0X_MATH 0
+#    define GEOGRAPHICLIB_CPLUSPLUS11_MATH 0
 #  endif
 #endif
 
@@ -146,7 +146,7 @@ namespace GeographicLib {
         b = (std::min)(x, y) / (a ? a : 1);
       return a * std::sqrt(1 + b * b);
     }
-#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
+#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T hypot(T x, T y) throw()
     { return std::hypot(x, y); }
 #elif defined(_MSC_VER)
@@ -176,7 +176,7 @@ namespace GeographicLib {
 #endif
 #endif
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
      * exp(\e x) - 1 accurate near \e x = 0.  This is taken from
      * N. J. Higham, Accuracy and Stability of Numerical Algorithms, 2nd
@@ -196,7 +196,7 @@ namespace GeographicLib {
       // computed.
       return std::abs(x) > 1 ? z : (z == 0 ? x : x * z / std::log(y));
     }
-#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
+#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T expm1(T x) throw()
     { return std::expm1(x); }
 #else
@@ -208,7 +208,7 @@ namespace GeographicLib {
 #endif
 #endif
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
      * log(1 + \e x) accurate near \e x = 0.
      *
@@ -231,7 +231,7 @@ namespace GeographicLib {
       // (log(y)/z) introduces little additional error.
       return z == 0 ? x : x * std::log(y) / z;
     }
-#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
+#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T log1p(T x) throw()
     { return std::log1p(x); }
 #else
@@ -243,7 +243,7 @@ namespace GeographicLib {
 #endif
 #endif
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
      * The inverse hyperbolic sine function.  This is defined in terms of
      * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
@@ -258,7 +258,7 @@ namespace GeographicLib {
       y = log1p(y * (1 + y/(hypot(T(1), y) + 1)));
       return x < 0 ? -y : y;
     }
-#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
+#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T asinh(T x) throw()
     { return std::asinh(x); }
 #else
@@ -270,7 +270,7 @@ namespace GeographicLib {
 #endif
 #endif
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
      * The inverse hyperbolic tangent function.  This is defined in terms of
      * Math::log1p(\e x) in order to maintain accuracy near \e x = 0.  In
@@ -285,7 +285,7 @@ namespace GeographicLib {
       y = log1p(2 * y/(1 - y))/2;
       return x < 0 ? -y : y;
     }
-#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
+#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T atanh(T x) throw()
     { return std::atanh(x); }
 #else
@@ -297,7 +297,7 @@ namespace GeographicLib {
 #endif
 #endif
 
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
     /**
      * The cube root function.
      *
@@ -309,7 +309,7 @@ namespace GeographicLib {
       T y = std::pow(std::abs(x), 1/T(3)); // Return the real cube root
       return x < 0 ? -y : y;
     }
-#elif GEOGRAPHICLIB_CPLUSPLUS0X_MATH
+#elif GEOGRAPHICLIB_CPLUSPLUS11_MATH
     template<typename T> static inline T cbrt(T x) throw()
     { return std::cbrt(x); }
 #else
@@ -330,7 +330,7 @@ namespace GeographicLib {
     template<typename T> static inline bool isfinite(T x) throw() {
 #if defined(DOXYGEN)
       return std::abs(x) <= (std::numeric_limits<T>::max)();
-#elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#elif (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
       return _finite(x) != 0;
 #else
       return std::isfinite(x);
@@ -361,7 +361,7 @@ namespace GeographicLib {
      * @return true if argument is a NaN.
      **********************************************************************/
     template<typename T> static inline bool isnan(T x) throw() {
-#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS0X_MATH)
+#if defined(DOXYGEN) || (defined(_MSC_VER) && !GEOGRAPHICLIB_CPLUSPLUS11_MATH)
       return x != x;
 #else
       return std::isnan(x);

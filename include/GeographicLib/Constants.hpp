@@ -14,7 +14,7 @@
 #include <GeographicLib/Config.h>
 
 /**
- * A compile-time assert.  Use C++0X static_assert, if available.
+ * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
 #if !defined(STATIC_ASSERT)
 #  if defined(__GXX_EXPERIMENTAL_CXX0X__)

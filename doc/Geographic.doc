@@ -846,7 +846,7 @@ and should be able to be deployed on any system with a modern C++
 compiler.  System dependencies come into
  - GeographicLib::Math -- GeographicLib needs to define functions such
    as atanh for systems that lack them.  The system dependence will
-   disappear with the adoption of C++0x because the needed functions are
+   disappear with the adoption of C++11 because the needed functions are
    part of that standard.
  - use of long double -- the type is used only for testing.  On systems
    which lack this data type the cmake and autoconf configuration
@@ -3507,7 +3507,7 @@ http://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
   - Make classes NaN aware.
   - Use cell arrays for MGRS strings in Matlab.
   - Add solution/project files for Visual Studio 2010 (32-bit only).
-  - Use C++0x static_assert and math functions, if available.
+  - Use C++11 static_assert and math functions, if available.
 
  - Version 1.6 (released 2010-11-23)
   - FIX BUG introduced in GeographicLib::Geoid in version 1.5 (found by

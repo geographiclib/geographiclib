@@ -25,7 +25,7 @@ distrib-doc:
 
 distrib-files:
 	rsync -av --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib gravity-distrib magnetic-distrib $(DATASTAGE)/
-	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER),geographiclib@frs.sourceforge.net:/home/frs/project/g/ge/geographiclib/
+	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
 
 distrib-cgi:
 	for f in GeoConvert Geod GeoidEval Planimeter printlogs; do \
