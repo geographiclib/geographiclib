@@ -17,8 +17,8 @@
 #    Algorithms for geodesics, Sept. 2011,
 #    http://arxiv.org/abs/1109.4448
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
 # $Id$
