@@ -2,15 +2,15 @@
  * \file CassiniSoldner.cpp
  * \brief Implementation for GeographicLib::CassiniSoldner class
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/CassiniSoldner.hpp>
 
 #define GEOGRAPHICLIB_CASSINISOLDNER_CPP \
-  "$Id: f267ed9f1d5af5f602a8997a7705efda7fc34395 $"
+  "$Id: 2823df38f3e31fd8b882e2f55ad72d6419b03246 $"
 
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_CPP)
 RCSID_DECL(GEOGRAPHICLIB_CASSINISOLDNER_HPP)

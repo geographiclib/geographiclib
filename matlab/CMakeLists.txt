@@ -1,4 +1,4 @@
-# $Id: e21a8f0e68ba8c9c30728f895f631a00d842bbf1 $
+# $Id: e9ae358f1980455604e6c06cf48e50537a57eb0c $
 
 # Set up the matlab interface.  The .m files just contain the
 # documentation.  The .cpp files implement the interface.
@@ -19,45 +19,45 @@ if (HAVE_MEX)
     install (PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
       DESTINATION libexec/GeographicLib/matlab)
     add_custom_target (matlab-all)
-  else (WIN32)
+  else ()
     set (INTERFACE_LIST)
-  endif (WIN32)
+  endif ()
   foreach (INTERFACE ${MATLAB_INTERFACES})
     get_filename_component (TARGET ${INTERFACE} NAME_WE)
     set (TARGET_INTERFACE ${CMAKE_CURRENT_BINARY_DIR}/${TARGET}.${MEXEXT})
     if (WIN32)
       add_custom_target (matlab-${TARGET} DEPENDS ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
-	COMMAND
-	  ${MEX}
-	    -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
-	    -L${PROJECT_BINARY_DIR}/src/Release -lGeographic
-	    ${INTERFACE}
-	COMMENT "Building matlab interface for ${TARGET}"
-	DEPENDS ${INTERFACE} Geographic)
+        COMMAND
+          ${MEX}
+            -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
+            -L${PROJECT_BINARY_DIR}/src/Release -lGeographic
+            ${INTERFACE}
+        COMMENT "Building matlab interface for ${TARGET}"
+        DEPENDS ${INTERFACE} Geographic)
       add_dependencies (matlab-${TARGET} Geographic)
       add_dependencies (matlab-all matlab-${TARGET})
       install (PROGRAMS ${TARGET_INTERFACE}
-	DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
-    else (WIN32)
+        DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
+    else ()
       set (INTERFACE_LIST ${INTERFACE_LIST} ${TARGET_INTERFACE})
       add_custom_command (OUTPUT ${TARGET_INTERFACE}
-	COMMAND
-	  ${MEX} --mex
-	    -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
-	    -L${PROJECT_BINARY_DIR}/src -lGeographic
-	    -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib
-	    ${INTERFACE}
-	COMMENT "Building matlab interface for ${TARGET}"
-	DEPENDS ${INTERFACE} Geographic)
-    endif (WIN32)
-  endforeach (INTERFACE)
+        COMMAND
+          ${MEX} --mex
+            -I${PROJECT_BINARY_DIR}/include -I${PROJECT_SOURCE_DIR}/include
+            -L${PROJECT_BINARY_DIR}/src -lGeographic
+            -Wl,-rpath=${CMAKE_INSTALL_PREFIX}/lib
+            ${INTERFACE}
+        COMMENT "Building matlab interface for ${TARGET}"
+        DEPENDS ${INTERFACE} Geographic)
+    endif ()
+  endforeach ()
   if (NOT WIN32)
     add_custom_target (matlab-all DEPENDS ${INTERFACE_LIST})
     add_dependencies (matlab-all Geographic)
     install (PROGRAMS ${INTERFACE_LIST}
       DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
-  endif (NOT WIN32)
+  endif ()
   if (WIN32 AND GEOGRAPHIC_SHARED_LIB)
     get_target_property (GEOGRAPHIC_LIBRARY_FILE Geographic LOCATION_RELEASE)
     add_custom_command (TARGET matlab-all POST_BUILD
@@ -66,5 +66,5 @@ if (HAVE_MEX)
       ${GEOGRAPHIC_LIBRARY_FILE} NAME)
     install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${GEOGRAPHIC_LIBRARY_NAME}
       DESTINATION libexec/GeographicLib/matlab CONFIGURATIONS Release)
-  endif (WIN32 AND GEOGRAPHIC_SHARED_LIB)
-endif (HAVE_MEX)
+  endif ()
+endif ()

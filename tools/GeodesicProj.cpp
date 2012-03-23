@@ -2,8 +2,8 @@
  * \file GeodesicProj.cpp
  * \brief Command line utility for geodesic projections
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile and link with
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: b823e99ccb607dc081475a05c6a5eff96b0aeaa0 $\n"
+          << ": $Id: d6745c19af3da288a8f95b4c6a9003906409800c $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

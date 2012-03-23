@@ -2,14 +2,14 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
 #define GEOGRAPHICLIB_GEODESICLINE_HPP \
-  "$Id: 40b72a48fbb1bb9f62f50561529d5809071ffe52 $"
+  "$Id: dd046d5105df4193d2448aeb383b2888f971866b $"
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>

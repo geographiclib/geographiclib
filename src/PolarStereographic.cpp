@@ -2,15 +2,15 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/PolarStereographic.hpp>
 
 #define GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP \
-  "$Id: 1a2939c8e3bae1e4f17733db37349c1e14b0f48d $"
+  "$Id: 3a2dee07e6ef1c55ddcdc2178d818c8edd4d1cd4 $"
 
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_POLARSTEREOGRAPHIC_HPP)

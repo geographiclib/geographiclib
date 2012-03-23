@@ -2,15 +2,15 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/Geocentric.hpp>
 
 #define GEOGRAPHICLIB_GEOCENTRIC_CPP \
-  "$Id: 1d3c4e082e2cc6528927614ffdaa023b5d9320a9 $"
+  "$Id: b5135e8042dbbbcddfd5894c66b729bf5c43cab9 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOCENTRIC_HPP)

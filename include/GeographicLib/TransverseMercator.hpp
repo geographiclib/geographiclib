@@ -2,14 +2,14 @@
  * \file TransverseMercator.hpp
  * \brief Header for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP \
-  "$Id: 565dc83110421e3bc14d7f402359c850c6649c57 $"
+  "$Id: 7c6d8e85b2934c95879f73512fd1d57a65e9f99c $"
 
 #include <GeographicLib/Constants.hpp>
 

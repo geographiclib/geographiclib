@@ -2,8 +2,8 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -15,7 +15,7 @@
 #include <GeographicLib/Utility.hpp>
 
 #define GEOGRAPHICLIB_UTMUPS_CPP \
-  "$Id: 308d2f0776c0c84fdfe6de94c6a8000ead9a0345 $"
+  "$Id: 5672b003ee47cd660377c111e3fca2b81da86323 $"
 
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_UTMUPS_HPP)

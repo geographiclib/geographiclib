@@ -2,14 +2,14 @@
  * \file CassiniSoldner.hpp
  * \brief Header for GeographicLib::CassiniSoldner class
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CASSINISOLDNER_HPP)
 #define GEOGRAPHICLIB_CASSINISOLDNER_HPP \
-  "$Id: 5bc26e8f1b01bf50e377db0d9c140721f13dc834 $"
+  "$Id: 91fb2cee323a1f955e28352ca6f67bd8700747ec $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>

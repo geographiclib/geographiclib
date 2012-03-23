@@ -2,14 +2,14 @@
  * \file GeoCoords.hpp
  * \brief Header for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #ifndef GEOGRAPHICLIB_GEOCOORDS_HPP
 #define GEOGRAPHICLIB_GEOCOORDS_HPP \
-  "$Id: fc52421e0cbb368e60f7ac14a3eac25e5e9c0ca6 $"
+  "$Id: 0e3e97086e04d9bf0f3c6154d97645fc17f9133d $"
 
 #include <GeographicLib/UTMUPS.hpp>
 #include <GeographicLib/Constants.hpp>

@@ -1,4 +1,4 @@
-# $Id: 19e15da16267903c945c4163b24be13e4e4b6ddc $
+# $Id: 68ad590f505a0fc2f5419b6abf59d457d7901fc7 $
 #
 # Look for GeographicLib
 #
@@ -22,8 +22,8 @@ if (GeographicLib_LIBRARIES)
     unset (GeographicLib_INCLUDE_DIRS)
     unset (GeographicLib_LIBRARIES)
     unset (GeographicLib_LIBRARY_DIRS)
-  endif (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
-endif (GeographicLib_LIBRARIES)
+  endif ()
+endif ()
 
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (GeographicLib DEFAULT_MSG

@@ -2,14 +2,14 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOID_HPP)
 #define GEOGRAPHICLIB_GEOID_HPP \
-  "$Id: 8bb7b98423fb36c6e078363bf2b5fc851bd8b1fc $"
+  "$Id: ab4318594c7b3edb747999d1b07822a8ae262bd3 $"
 
 #include <string>
 #include <vector>

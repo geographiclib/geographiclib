@@ -2,8 +2,8 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * The relevant section of Lee's paper is part V, pp 67&ndash;101,
@@ -42,7 +42,7 @@
 #include <GeographicLib/TransverseMercatorExact.hpp>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP \
-  "$Id: 6f1cf279b6f0c3fa2b05877d73a3f9260844fdf5 $"
+  "$Id: 125a2d11919018a84fb0c09ea2e77011a35a4a2d $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOREXACT_HPP)

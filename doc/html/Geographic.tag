@@ -860,9 +860,9 @@
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>GEOGRAPHICLIB_CPLUSPLUS0X_MATH</name>
+      <name>GEOGRAPHICLIB_CPLUSPLUS11_MATH</name>
       <anchorfile>Math_8hpp.html</anchorfile>
-      <anchor>a6cdc2f4c764d4116788cc5c24625e75d</anchor>
+      <anchor>a2769cdfa2277e2728e4e157ec3f6318b</anchor>
       <arglist></arglist>
     </member>
     <member kind="define">

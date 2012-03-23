@@ -2,14 +2,14 @@
  * \file AzimuthalEquidistant.hpp
  * \brief Header for GeographicLib::AzimuthalEquidistant class
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP)
 #define GEOGRAPHICLIB_AZIMUTHALEQUIDISTANT_HPP \
-  "$Id: 8883d9b1d45bf4371550426398b39ee5f821ce90 $"
+  "$Id: 6b31d0e0568e56df40aca98af1cffc101b9819ca $"
 
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Constants.hpp>

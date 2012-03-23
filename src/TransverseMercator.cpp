@@ -2,8 +2,8 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This implementation follows closely
@@ -42,7 +42,7 @@
 #include <GeographicLib/TransverseMercator.hpp>
 
 #define GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP \
-  "$Id: 07ae5b935a611df70b64c57bd6b171ce2a380436 $"
+  "$Id: 7b5a1854a015da061b8fdad0a4b35be7e06fcb9a $"
 
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_CPP)
 RCSID_DECL(GEOGRAPHICLIB_TRANSVERSEMERCATOR_HPP)

@@ -127,7 +127,7 @@ Friends</h2></td></tr>
 <p>For more information on geodesics see <a class="el" href="geodesic.html">Geodesics on the ellipsoid</a>.</p>
 <p>Example of use: </p>
 <div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::GeodesicLine class</span>
-<span class="comment">// $Id: 89118a11e5334de7be20d26aa9eaa7da48ae463c $</span>
+<span class="comment">// $Id: 8105576ed7fb1946223d89d7394ada3ef06e7a93 $</span>
 
 <span class="preprocessor">#include &lt;iostream&gt;</span>
 <span class="preprocessor">#include &lt;exception&gt;</span>
@@ -144,10 +144,10 @@ Friends</h2></td></tr>
   <span class="keywordflow">try</span> {
     <span class="comment">// Print waypoints between JFK and SIN</span>
     <a class="code" href="classGeographicLib_1_1Geodesic.html" title="Geodesic calculations">Geodesic</a> geod(<a class="code" href="classGeographicLib_1_1Constants.html#af7abfdedede7d8180d0c2c4015b72194">Constants::WGS84_a</a>(), <a class="code" href="classGeographicLib_1_1Constants.html#a2e95ed8ac2738590348f9f3bbaa3fa41">Constants::WGS84_f</a>());
-    <span class="comment">// Alternatively: const Geodesic&amp; geodesic = Geodesic::WGS84;</span>
+    <span class="comment">// Alternatively: const Geodesic&amp; geod = Geodesic::WGS84;</span>
     <span class="keywordtype">double</span>
       lat1 = 40.640, lon1 = -73.779, <span class="comment">// JFK</span>
-      lat2 =  1.359, lon2 = 177.486; <span class="comment">// SIN</span>
+      lat2 =  1.359, lon2 = 103.989; <span class="comment">// SIN</span>
     <span class="keywordtype">double</span> s12, azi1, azi2,
       a12 = geod.<a class="code" href="classGeographicLib_1_1Geodesic.html#ad7e59a242125a35a95c96cdb20573081">Inverse</a>(lat1, lon1, lat2, lon2, s12, azi1, azi2);
     <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1GeodesicLine.html" title="A geodesic line.">GeographicLib::GeodesicLine</a> line(geod, lat1, lon1, azi1);
@@ -1399,7 +1399,7 @@ Friends</h2></td></tr>
 <li><a class="el" href="GeodesicLine_8cpp_source.html">GeodesicLine.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Mar 23 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

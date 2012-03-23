@@ -2,8 +2,8 @@
  * \file TransverseMercatorProj.cpp
  * \brief Command line utility for transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile and link with
@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: ed2d8e96945f4e945ddd9c9aebdf31c08a8d8ef6 $\n"
+          << ": $Id: dd2a53288a82171129091d16bec6d1457568eb4d $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

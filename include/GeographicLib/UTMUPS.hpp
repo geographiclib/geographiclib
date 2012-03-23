@@ -2,14 +2,14 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_UTMUPS_HPP)
 #define GEOGRAPHICLIB_UTMUPS_HPP \
-  "$Id: 617b521c07044fd4d88b74e716ba7751fb1fdfdc $"
+  "$Id: abe46ba34b3f962dcb212cc086eaf753a671030f $"
 
 #include <sstream>
 #include <GeographicLib/Constants.hpp>

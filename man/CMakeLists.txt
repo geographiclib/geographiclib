@@ -1,4 +1,4 @@
-# $Id: 239e16a5c5199ee854f180c8774aaa1b48c5017f $
+# $Id: c8cbcc51270dab8273fb82cf8944118b40cea1fa $
 
 # The man pages are maintained as .pod (plain old documentatoin) files.
 # In maintainer mode, there are used to create real man pages (extension
@@ -13,9 +13,9 @@ if (MAINTAINER)
   add_custom_target (distrib-man)
   add_custom_target (man ALL)
   set (MANDIR ${CMAKE_CURRENT_BINARY_DIR})
-else (MAINTAINER)
+else ()
   set (MANDIR ${CMAKE_CURRENT_SOURCE_DIR})
-endif (MAINTAINER)
+endif ()
 
 set (MANPAGES)
 set (USAGE)
@@ -33,15 +33,15 @@ foreach (TOOL ${TOOLS})
   if (MAINTAINER)
     add_custom_command (OUTPUT ${TOOL}.1
       COMMAND pod2man --center=\"GeographicLib Utilities\"
-	--release=\"GeographicLib ${GeographicLib_VERSION}\"
+        --release=\"GeographicLib ${GeographicLib_VERSION}\"
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.1
       COMMENT "Building man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.1.html
       COMMAND
         pod2html --noindex ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod |
-	sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
-	  -e 's%<code>\\\([^<>]*\\\)\(\\\(.\\\)\)</code>%<a href="\\1.\\2.html">&</a>%'g > ${TOOL}.1.html
+        sed -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
+          -e 's%<code>\\\([^<>]*\\\)\(\\\(.\\\)\)</code>%<a href="\\1.\\2.html">&</a>%'g > ${TOOL}.1.html
       COMMENT "Building html version of man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.usage
@@ -49,8 +49,8 @@ foreach (TOOL ${TOOLS})
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.usage
       COMMENT "Building usage code for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
-  endif (MAINTAINER)
-endforeach (TOOL)
+  endif ()
+endforeach ()
 
 # Add the extra maintainer tasks into the dependency list.  The
 # distrib-man target copies the derived documentation files into the
@@ -70,7 +70,7 @@ if (MAINTAINER)
         cmp "$$f" ${CMAKE_CURRENT_SOURCE_DIR}/`basename "$$f"` >/dev/null 2>&1||
         install -m 644 "$$f" ${CMAKE_CURRENT_SOURCE_DIR}\; done
     COMMENT "Installing man documentation page in source tree")
-endif (MAINTAINER)
+endif ()
 
 # Install the man pages.
 install (FILES ${MANPAGES} DESTINATION share/man/man1)

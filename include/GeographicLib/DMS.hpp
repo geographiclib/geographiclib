@@ -2,13 +2,13 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_DMS_HPP)
-#define GEOGRAPHICLIB_DMS_HPP "$Id: ace0c24b4f8b290b6ec49fb0f5e9aba47b6b996a $"
+#define GEOGRAPHICLIB_DMS_HPP "$Id: a4b640a5a1717ba5a969b8e28c3e3bb1b1d22c12 $"
 
 #include <sstream>
 #include <iomanip>

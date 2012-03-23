@@ -2,8 +2,8 @@
  * \file GeodesicLine.cpp
  * \brief Implementation for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com> and
- * licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * This is a reformulation of the geodesic problem.  The notation is as
@@ -29,7 +29,7 @@
 #include <GeographicLib/GeodesicLine.hpp>
 
 #define GEOGRAPHICLIB_GEODESICLINE_CPP \
-  "$Id: da385beb21c040e161c0d8acb4acb974d94000b3 $"
+  "$Id: d95fea8e73fd86fdc558e5b0397a97241cfe40c2 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEODESICLINE_HPP)

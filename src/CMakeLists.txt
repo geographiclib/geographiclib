@@ -1,24 +1,27 @@
-# $Id: c317a003edaf8838c24bbe4519e36ee3b70e2c29 $
+# $Id: a91621fc0ef115f483a16effdeaa117fe68b7470 $
 
 # Build the library...
 
 # Include all the .cpp files in the library.
 file (GLOB SOURCES *.cpp)
+file (GLOB HEADERS
+  ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
+  ../include/GeographicLib/*.hpp)
 
 # Define the library and specify whether it is shared or not.
 if (GEOGRAPHIC_SHARED_LIB)
-  add_library (Geographic SHARED ${SOURCES})
-else (GEOGRAPHIC_SHARED_LIB)
-  add_library (Geographic STATIC ${SOURCES})
-endif (GEOGRAPHIC_SHARED_LIB)
+  add_library (Geographic SHARED ${SOURCES} ${HEADERS})
+else ()
+  add_library (Geographic STATIC ${SOURCES} ${HEADERS})
+endif ()
 
 # Set the version number on the library
 if (WIN32)
   set_target_properties (Geographic PROPERTIES VERSION "${LIBVERSIONFULL}" )
-else (WIN32)
+else ()
   set_target_properties (Geographic PROPERTIES
     VERSION "${LIBVERSIONFULL}" SOVERSION "${LIBVERSION}" )
-endif (WIN32)
+endif ()
 
 # Specify where the library is installed, adding it to the export DEPENDS
 install (TARGETS Geographic

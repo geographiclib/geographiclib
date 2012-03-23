@@ -2,19 +2,19 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
 #define GEOGRAPHICLIB_CONSTANTS_HPP \
-  "$Id: 58b3796803fd552851e800c63f8ee43f64bacd0c $"
+  "$Id: 8e3be453716fd6f8a03fa6308f958f95cbafef31 $"
 
 #include <GeographicLib/Config.h>
 
 /**
- * A compile-time assert.  Use C++0X static_assert, if available.
+ * A compile-time assert.  Use C++11 static_assert, if available.
  **********************************************************************/
 #if !defined(STATIC_ASSERT)
 #  if defined(__GXX_EXPERIMENTAL_CXX0X__)

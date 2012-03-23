@@ -1,4 +1,4 @@
-# $Id: ce6e326cf6d78591a97d07abf7f12fd4a568298d $
+# $Id: cb44812164031ac1042d5739e45196bafe5f2029 $
 
 A reverse chronological list of changes to GeographicLib
 
@@ -6,7 +6,20 @@ For more information, see
 
     http://geographiclib.sourceforge.net/
 
-The current version of the library is 1.19.
+The current version of the library is 1.20.
+
+Changes between 1.20 (released 2012-03-23) and 1.19 versions:
+
+  * cmake tweaks:
+    + improve find_package's matching of compiler versions;
+    + CMAKE_INSTALL_PREFIX set from CMAKE_PREFIX_PATH if available;
+    + add "x64" to the package name for the 64-bit binary installer;
+    + fix cmake warning with Visual Studio Express.
+
+  * Fix SphericalEngine to deal with aggessive iterator checking by
+    Visual Studio.
+
+  * Fix transcription BUG is Geodesic.js.
 
 Changes between 1.19 (released 2012-03-13) and 1.18 versions:
 
@@ -287,7 +300,7 @@ Changes between 1.7 (released 2010-12-21) and 1.6 versions:
 
   * Add solution/project files for Visual Studio 2010 (32-bit only).
 
-  * Use C++0X static_assert and math functions, if available.
+  * Use C++11 static_assert and math functions, if available.
 
 Change between 1.6 (released 2010-11-23) and 1.5 versions:
 

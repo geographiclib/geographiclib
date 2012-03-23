@@ -59,7 +59,7 @@
 <a name="l00009"></a>00009 
 <a name="l00010"></a>00010 <span class="preprocessor">#if !defined(GEOGRAPHICLIB_SPHERICALENGINE_HPP)</span>
 <a name="l00011"></a><a class="code" href="SphericalEngine_8hpp.html#a46e29e0e930e205c8f9a059ae458b44e">00011</a> <span class="preprocessor"></span><span class="preprocessor">#define GEOGRAPHICLIB_SPHERICALENGINE_HPP \</span>
-<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: dae9ba0d660c070c0f28715de87ed20f79808793 $&quot;</span>
+<a name="l00012"></a>00012 <span class="preprocessor">  &quot;$Id: f48320a694ecf901d997b23d32ea625e589f9534 $&quot;</span>
 <a name="l00013"></a>00013 <span class="preprocessor"></span>
 <a name="l00014"></a>00014 <span class="preprocessor">#include &lt;vector&gt;</span>
 <a name="l00015"></a>00015 <span class="preprocessor">#include &lt;istream&gt;</span>
@@ -174,7 +174,7 @@
 <a name="l00124"></a>00124         , _nmx(nmx)
 <a name="l00125"></a>00125         , _mmx(mmx)
 <a name="l00126"></a>00126         , _Cnm(C.begin())
-<a name="l00127"></a>00127         , _Snm(S.begin() - (_N + 1))
+<a name="l00127"></a>00127         , _Snm(S.begin())
 <a name="l00128"></a>00128       {
 <a name="l00129"></a>00129         <span class="keywordflow">if</span> (!(_N &gt;= _nmx &amp;&amp; _nmx &gt;= _mmx &amp;&amp; _mmx &gt;= -1))
 <a name="l00130"></a>00130           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Bad indices for coeff&quot;</span>);
@@ -200,7 +200,7 @@
 <a name="l00150"></a>00150         , _nmx(N)
 <a name="l00151"></a>00151         , _mmx(N)
 <a name="l00152"></a>00152         , _Cnm(C.begin())
-<a name="l00153"></a>00153         , _Snm(S.begin() - (_N + 1))
+<a name="l00153"></a>00153         , _Snm(S.begin())
 <a name="l00154"></a>00154       {
 <a name="l00155"></a>00155         <span class="keywordflow">if</span> (!(_N &gt;= -1))
 <a name="l00156"></a>00156           <span class="keywordflow">throw</span> <a class="code" href="classGeographicLib_1_1GeographicErr.html" title="Exception handling for GeographicLib.">GeographicErr</a>(<span class="stringliteral">&quot;Bad indices for coeff&quot;</span>);
@@ -243,7 +243,7 @@
 <a name="l00193"></a>00193 <span class="comment">       * @param[in] k the one-dimensional index.</span>
 <a name="l00194"></a>00194 <span class="comment">       * @return the value of the \e S coefficient.</span>
 <a name="l00195"></a>00195 <span class="comment">       **********************************************************************/</span>
-<a name="l00196"></a><a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#ac93aaebb09086ab14330aafc0f105a17">00196</a>       <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#ac93aaebb09086ab14330aafc0f105a17">Sv</a>(<span class="keywordtype">int</span> k)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *(_Snm + k); }<span class="comment"></span>
+<a name="l00196"></a><a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#ac93aaebb09086ab14330aafc0f105a17">00196</a>       <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> <a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#ac93aaebb09086ab14330aafc0f105a17">Sv</a>(<span class="keywordtype">int</span> k)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> *(_Snm + (k - (_N + 1))); }<span class="comment"></span>
 <a name="l00197"></a>00197 <span class="comment">      /**</span>
 <a name="l00198"></a>00198 <span class="comment">       * An element of \e C with checking.</span>
 <a name="l00199"></a>00199 <span class="comment">       *</span>
@@ -267,7 +267,7 @@
 <a name="l00217"></a>00217 <span class="comment">       *   and \e m are in range else 0.</span>
 <a name="l00218"></a>00218 <span class="comment">       **********************************************************************/</span>
 <a name="l00219"></a><a class="code" href="classGeographicLib_1_1SphericalEngine_1_1coeff.html#a4fc7e6c7faf3f5940ee8f3ab28216897">00219</a>       <span class="keyword">inline</span> <a class="code" href="classGeographicLib_1_1Math.html#aeee4778d7cf2f9fb9648efe4911da59d">Math::real</a> Sv(<span class="keywordtype">int</span> k, <span class="keywordtype">int</span> n, <span class="keywordtype">int</span> m, real f)<span class="keyword"> const</span>
-<a name="l00220"></a>00220 <span class="keyword">      </span>{ <span class="keywordflow">return</span> m &gt; _mmx || n &gt; _nmx ? 0 : *(_Snm + k) * f; }
+<a name="l00220"></a>00220 <span class="keyword">      </span>{ <span class="keywordflow">return</span> m &gt; _mmx || n &gt; _nmx ? 0 : *(_Snm + (k - (_N + 1))) * f; }
 <a name="l00221"></a>00221 <span class="comment"></span>
 <a name="l00222"></a>00222 <span class="comment">      /**</span>
 <a name="l00223"></a>00223 <span class="comment">       * The size of the coefficient vector for the cosine terms.</span>
@@ -412,7 +412,7 @@
 <a name="l00362"></a>00362 <span class="preprocessor">#endif  // GEOGRAPHICLIB_SPHERICALENGINE_HPP</span>
 </pre></div></div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Mar 23 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

@@ -2,8 +2,8 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -13,7 +13,7 @@
 #include <algorithm>
 
 #define GEOGRAPHICLIB_GEOID_CPP \
-  "$Id: fabd5c77d4e5dbceb9af6b235cc3d4bab46c9366 $"
+  "$Id: fe09ee06e01e2fd69cfbc2153387a57c3487b40e $"
 
 RCSID_DECL(GEOGRAPHICLIB_GEOID_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GEOID_HPP)

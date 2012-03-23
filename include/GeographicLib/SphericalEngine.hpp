@@ -9,7 +9,7 @@
 
 #if !defined(GEOGRAPHICLIB_SPHERICALENGINE_HPP)
 #define GEOGRAPHICLIB_SPHERICALENGINE_HPP \
-  "$Id: dae9ba0d660c070c0f28715de87ed20f79808793 $"
+  "$Id: f48320a694ecf901d997b23d32ea625e589f9534 $"
 
 #include <vector>
 #include <istream>
@@ -124,7 +124,7 @@ namespace GeographicLib {
         , _nmx(nmx)
         , _mmx(mmx)
         , _Cnm(C.begin())
-        , _Snm(S.begin() - (_N + 1))
+        , _Snm(S.begin())
       {
         if (!(_N >= _nmx && _nmx >= _mmx && _mmx >= -1))
           throw GeographicErr("Bad indices for coeff");
@@ -150,7 +150,7 @@ namespace GeographicLib {
         , _nmx(N)
         , _mmx(N)
         , _Cnm(C.begin())
-        , _Snm(S.begin() - (_N + 1))
+        , _Snm(S.begin())
       {
         if (!(_N >= -1))
           throw GeographicErr("Bad indices for coeff");
@@ -193,7 +193,7 @@ namespace GeographicLib {
        * @param[in] k the one-dimensional index.
        * @return the value of the \e S coefficient.
        **********************************************************************/
-      inline Math::real Sv(int k) const { return *(_Snm + k); }
+      inline Math::real Sv(int k) const { return *(_Snm + (k - (_N + 1))); }
       /**
        * An element of \e C with checking.
        *
@@ -217,7 +217,7 @@ namespace GeographicLib {
        *   and \e m are in range else 0.
        **********************************************************************/
       inline Math::real Sv(int k, int n, int m, real f) const
-      { return m > _mmx || n > _nmx ? 0 : *(_Snm + k) * f; }
+      { return m > _mmx || n > _nmx ? 0 : *(_Snm + (k - (_N + 1))) * f; }
 
       /**
        * The size of the coefficient vector for the cosine terms.

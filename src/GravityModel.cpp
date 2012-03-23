@@ -2,8 +2,8 @@
  * \file GravityModel.cpp
  * \brief Implementation for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
@@ -13,7 +13,7 @@
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
 #define GEOGRAPHICLIB_GRAVITYMODEL_CPP \
-  "$Id: 9f3bfcfde4bb901b8cd22e198601bda0c6f4a506 $"
+  "$Id: 1897d0d53c7339ecdf20b1348637340e9f687f30 $"
 
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_CPP)
 RCSID_DECL(GEOGRAPHICLIB_GRAVITYMODEL_HPP)

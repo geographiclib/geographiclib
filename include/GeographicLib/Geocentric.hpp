@@ -2,14 +2,14 @@
  * \file Geocentric.hpp
  * \brief Header for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2011) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP \
-  "$Id: 3d26a1dd3b0e584cd935de138af65d0e577adfcd $"
+  "$Id: d0b4b35254aca989b27e033bd6f2546dec69890a $"
 
 #include <vector>
 #include <algorithm>

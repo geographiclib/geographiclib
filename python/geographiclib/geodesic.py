@@ -17,11 +17,11 @@
 #    Algorithms for geodesics, Sept. 2011,
 #    http://arxiv.org/abs/1109.4448
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # http://geographiclib.sourceforge.net/
 #
-# $Id: 3002b5659f7eda0d12f4094fe076d67e11374818 $
+# $Id: 95edebf1ac240458e1ba8a63577c589f330f849d $
 ######################################################################
 
 import math

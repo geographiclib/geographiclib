@@ -2,8 +2,8 @@
  * \file ConicProj.cpp
  * \brief Command line utility for conical projections
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile and link with
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 10d8a4dff9af74ffbfe7aa5f8f55e7e6353e901e $\n"
+          << ": $Id: 8efb8dcae1b8e8f1abac4d5d6f60e8730ecaa81c $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

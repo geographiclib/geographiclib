@@ -2,8 +2,8 @@
  * \file GeoidEval.cpp
  * \brief Command line utility for evaluating geoid heights
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile and link with
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
       } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: cf3378cc9e381d87d1364b401f86c668b4fde679 $\n"
+          << ": $Id: 9d5d73118f902bce6be96aeeac12081b039ded11 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else {

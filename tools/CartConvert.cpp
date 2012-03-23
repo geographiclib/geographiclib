@@ -2,8 +2,8 @@
  * \file CartConvert.cpp
  * \brief Command line utility for geodetic to cartesian coordinate conversions
  *
- * Copyright (c) Charles Karney (2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2009-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
  * Compile and link with
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
      } else if (arg == "--version") {
         std::cout
           << argv[0]
-          << ": $Id: 54d1772601202d343cbf51922ad60b277540097a $\n"
+          << ": $Id: b9e53a72ea7d026978678f3ab9d726a2d8485079 $\n"
           << "GeographicLib version " << GEOGRAPHICLIB_VERSION_STRING << "\n";
         return 0;
       } else

@@ -2,15 +2,15 @@
  * \file MGRS.cpp
  * \brief Implementation for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008, 2009, 2010, 2011) <charles@karney.com>
- * and licensed under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2008-2012) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  **********************************************************************/
 
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define GEOGRAPHICLIB_MGRS_CPP "$Id: 1a1807953f6aa661bbcb4208d231abec7ff46d71 $"
+#define GEOGRAPHICLIB_MGRS_CPP "$Id: e4e6b419c8cd8544b3edab85b3352add0d1dd7cb $"
 
 RCSID_DECL(GEOGRAPHICLIB_MGRS_CPP)
 RCSID_DECL(GEOGRAPHICLIB_MGRS_HPP)

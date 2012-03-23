@@ -88,7 +88,7 @@ Static Public Attributes</h2></td></tr>
 <p>This is a implementation of the equations in Snyder except that divided differences have been used to transform the expressions into ones which may be evaluated accurately and that Newton's method is used to invert the projection. In this implementation, the projection correctly becomes the Mercator projection or the polar stereographic projection when the standard latitude is the equator or a pole. The accuracy of the projections is about 10 nm (10 nanometers).</p>
 <p>The ellipsoid parameters, the standard parallels, and the scale on the standard parallels are set in the constructor. Internally, the case with two standard parallels is converted into a single standard parallel, the latitude of tangency (also the latitude of minimum scale), with a scale specified on this parallel. This latitude is also used as the latitude of origin which is returned by <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a7c589335b43b2274d3a68c0f68f29d77">LambertConformalConic::OriginLatitude</a>. The scale on the latitude of origin is given by <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a2298a4e48e550cfd7346cf5f2dd175ad">LambertConformalConic::CentralScale</a>. The case with two distinct standard parallels where one is a pole is singular and is disallowed. The central meridian (which is a trivial shift of the longitude) is specified as the <em>lon0</em> argument of the <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a2bafb6c1a81d4b6cf04f172b9e96278c">LambertConformalConic::Forward</a> and <a class="el" href="classGeographicLib_1_1LambertConformalConic.html#a085d37693f5e95fd650b7f59f61ab744">LambertConformalConic::Reverse</a> functions. There is no provision in this class for specifying a false easting or false northing or a different latitude of origin. However these are can be simply included by the calling function. For example the Pennsylvania South state coordinate system (<a href="http://www.spatialreference.org/ref/epsg/3364/">EPSG:3364</a>) is obtained by: </p>
 <div class="fragment"><pre class="fragment"><span class="comment">// Example of using the GeographicLib::LambertConformalConic class</span>
-<span class="comment">// $Id: fee4349167387dc01f6253ec8d9cbd0172a7392b $</span>
+<span class="comment">// $Id: 5cb2532e2709bcafee50974307836930069b0cff $</span>
 
 <span class="preprocessor">#include &lt;iostream&gt;</span>
 <span class="preprocessor">#include &lt;exception&gt;</span>
@@ -100,35 +100,35 @@ Static Public Attributes</h2></td></tr>
 <span class="keywordtype">int</span> <a class="code" href="CartConvert_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>() {
   <span class="keywordflow">try</span> {
     <span class="comment">// Define the Pennsylvania South state coordinate system EPSG:3364</span>
-   <span class="keyword">const</span> <span class="keywordtype">double</span>
-     a = Constants::WGS84_a&lt;double&gt;(),
-     f = 1/298.257222101,                      <span class="comment">// GRS80</span>
-     lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, <span class="comment">// standard parallels</span>
-     k1 = 1,                                   <span class="comment">// scale</span>
-     lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, <span class="comment">// origin</span>
-     fe = 600000, fn = 0;                      <span class="comment">// false easting and northing</span>
-   <span class="comment">// Set up basic projection</span>
-   <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> PASouth(a, f, lat1, lat2, k1);
-   <span class="keywordtype">double</span> x0, y0;
-   <span class="comment">// Transform origin point</span>
-   PASouth.Forward(lon0, lat0, lon0, x0, y0);
-   x0 -= fe; y0 -= fn;
-   {
-     <span class="comment">// Sample conversion from geodetic to PASouth grid</span>
-     <span class="keywordtype">double</span> lat = 39.95, lon = -75.17;    <span class="comment">// Philadelphia</span>
-     <span class="keywordtype">double</span> x, y;
-     PASouth.Forward(lon0, lat, lon, x, y);
-     x -= x0; y -= y0;
-     std::cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-   }
-   {
-     <span class="comment">// Sample conversion from PASouth grid to geodetic</span>
-     <span class="keywordtype">double</span> x = 820e3, y = 72e3;
-     <span class="keywordtype">double</span> lat, lon;
-     x += x0; y += y0;
-     PASouth.Reverse(lon0, x, y, lat, lon);
-     std::cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
-   }
+    <span class="keyword">const</span> <span class="keywordtype">double</span>
+      a = Constants::WGS84_a&lt;double&gt;(),
+      f = 1/298.257222101,                      <span class="comment">// GRS80</span>
+      lat1 = 40 + 58/60.0, lat2 = 39 + 56/60.0, <span class="comment">// standard parallels</span>
+      k1 = 1,                                   <span class="comment">// scale</span>
+      lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, <span class="comment">// origin</span>
+      fe = 600000, fn = 0;                      <span class="comment">// false easting and northing</span>
+    <span class="comment">// Set up basic projection</span>
+    <span class="keyword">const</span> <a class="code" href="classGeographicLib_1_1LambertConformalConic.html" title="Lambert Conformal Conic Projection.">LambertConformalConic</a> PASouth(a, f, lat1, lat2, k1);
+    <span class="keywordtype">double</span> x0, y0;
+    <span class="comment">// Transform origin point</span>
+    PASouth.Forward(lon0, lat0, lon0, x0, y0);
+    x0 -= fe; y0 -= fn;
+    {
+      <span class="comment">// Sample conversion from geodetic to PASouth grid</span>
+      <span class="keywordtype">double</span> lat = 39.95, lon = -75.17;    <span class="comment">// Philadelphia</span>
+      <span class="keywordtype">double</span> x, y;
+      PASouth.Forward(lon0, lat, lon, x, y);
+      x -= x0; y -= y0;
+      std::cout &lt;&lt; x &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
+    {
+      <span class="comment">// Sample conversion from PASouth grid to geodetic</span>
+      <span class="keywordtype">double</span> x = 820e3, y = 72e3;
+      <span class="keywordtype">double</span> lat, lon;
+      x += x0; y += y0;
+      PASouth.Reverse(lon0, x, y, lat, lon);
+      std::cout &lt;&lt; lat &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; lon &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
+    }
   }
   <span class="keywordflow">catch</span> (<span class="keyword">const</span> exception&amp; e) {
     cerr &lt;&lt; <span class="stringliteral">&quot;Caught exception: &quot;</span> &lt;&lt; e.what() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;
@@ -737,7 +737,7 @@ Static Public Attributes</h2></td></tr>
 <li><a class="el" href="LambertConformalConic_8cpp_source.html">LambertConformalConic.cpp</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Mar 23 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

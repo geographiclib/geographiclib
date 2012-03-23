@@ -5,11 +5,11 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011, 2012) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * http://geographiclib.sourceforge.net/
  *
- * $Id: 6c672d5c6f1baa02a1b51e8806e919dd820a58df $
+ * $Id: d9a7879a3ff27db0b34f6c9fe3d8eaf8f90d1e29 $
  **********************************************************************/
 
 // Load AFTER Math.js
@@ -672,7 +672,7 @@ GeographicLib.GeodesicLine = {};
     phi = lat2 * m.degree;
     // Ensure cbet2 = +epsilon at poles
     sbet2 = this._f1 * Math.sin(phi);
-    cbet2 = Math.abs(lat2) == 90 ? tiny_ : Math.cos(phi);
+    cbet2 = Math.abs(lat2) == 90 ? g.tiny_ : Math.cos(phi);
     // SinCosNorm(sbet2, cbet2);
     var t = m.hypot(sbet2, cbet2); sbet2 /= t; cbet2 /= t;
 

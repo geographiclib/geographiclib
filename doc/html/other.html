@@ -121,16 +121,16 @@ Matlab and Octave interfaces</h2>
    cmake -G "Visual Studio 10" -D ENABLE_MATLAB=ON .. </pre></div> If you are running a 64-bit version of Matlab, be sure to select a 64-bit generator with cmake, e.g., "Visual Studio 10 Win64". Finally compile GeographicLib with Visual Studio. (The binary installer for 64-bit Windows includes the compiled interface built with Visual Studio 10 and Matlab R2010b 64-bit).<br/>
  On Linux systems, cmake is configured to use Octave instead of Matlab, because Matlab typically supports out-of-date versions of gcc. However the steps are similar (use <code>mex -setup</code> instead of <code>mex.bat -setup</code>).</li>
 <li><b>Invoking the compiler from Matlab or Octave:</b> Start Matlab or Octave and run, e.g., <div class="fragment"><pre class="fragment">   mex -setup
-   cd <span class="stringliteral">&#39;C:/pkg-vc10-x64/GeographicLib-1.19/libexec/GeographicLib/matlab&#39;</span>
+   cd <span class="stringliteral">&#39;C:/pkg-vc10-x64/GeographicLib-1.20/libexec/GeographicLib/matlab&#39;</span>
    help geographiclibinterface
-   geographiclibinterface(<span class="stringliteral">&#39;C:/pkg-vc10/GeographicLib-1.19&#39;</span>);
+   geographiclibinterface(<span class="stringliteral">&#39;C:/pkg-vc10/GeographicLib-1.20&#39;</span>);
    addpath(pwd);
 </pre></div> The first command allows you to select the compiler to use (which should be the same as that used to compile GeographicLib).</li>
 </ul>
 <p>To use the interface routines for GeographicLib, run one of (for example) </p>
 <div class="fragment"><pre class="fragment">
   addpath /usr/local/libexec/GeographicLib/matlab
-  addpath 'C:/pkg-vc10-x64/GeographicLib-1.19/libexec/GeographicLib/matlab'
+  addpath 'C:/pkg-vc10-x64/GeographicLib-1.20/libexec/GeographicLib/matlab'
 </pre></div><p> in Octave or Matlab. The available functions are:</p>
 <ul>
 <li>geodesicdirect: solve direct geodesic problem (see <a class="el" href="classGeographicLib_1_1Geodesic.html#a6e31d7655895a61a49258de00fd14603">GeographicLib::Geodesic::Direct</a>)</li>
@@ -154,7 +154,7 @@ Matlab and Octave interfaces</h2>
 </pre></div><p> Other useful functions, e.g., to convert from geographic coordinates to MGRS can easily be written with Matlab code.</p>
 <p>Note that geoidheight, when compiled with Visual Studio 2008 causes Matlab to crash. (The problem does not occur with Visual Studio 2005 or Visual Studio 2010.)</p>
 <center> Back to <a class="el" href="organization.html">Code organization</a>. Forward to <a class="el" href="geoid.html">Geoid height</a>. Up to <a class="el" href="index.html#contents">Contents</a>. </center> </div></div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 13 2012 for GeographicLib by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Fri Mar 23 2012 for GeographicLib by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

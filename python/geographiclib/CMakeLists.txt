@@ -1,4 +1,4 @@
-# $Id: a459320200767bbb246edbb873525ecacdc04246 $
+# $Id: 1cd13969a90a73112ab8c4bd44fc2194ff0af9ff $
 
 # Install the python files.
 # Probably full-time python users should install the python package from
@@ -14,4 +14,4 @@ install (FILES ${PYTHON_FILES}
 # conflicts.
 if (WIN32)
   install (FILES ../setup.py DESTINATION lib/python/site-packages)
-endif (WIN32)
+endif ()

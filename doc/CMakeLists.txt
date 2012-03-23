@@ -1,18 +1,18 @@
-# $Id: 523a98c95381ee97f883ae5edca309cc5510817d $
+# $Id: adb1c452897202c0b508305e58f389651e1f34ce $
 
 # Where the html versions of the man pages (extension .1.html) are
 # found.
 if (MAINTAINER)
   set (MANDIR ${PROJECT_BINARY_DIR}/man)
-else (MAINTAINER)
+else ()
   set (MANDIR ${PROJECT_SOURCE_DIR}/man)
-endif (MAINTAINER)
+endif ()
 
 # BUILD UP A LIST OF THE .1.HTML FILES.
 set (HTMLMAN)
 foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)
-endforeach (TOOL)
+endforeach ()
 
 # The maintainer runs doxygen...
 
@@ -55,9 +55,9 @@ if (MAINTAINER)
     COMMAND touch ${CMAKE_CURRENT_SOURCE_DIR}/html/index.html
     COMMENT "Installing html documentation tree in source tree")
 
-else (MAINTAINER)
+else ()
   install (DIRECTORY html DESTINATION share/doc/GeographicLib)
-endif (MAINTAINER)
+endif ()
 
 # Finally install the Javascript files
 file (GLOB SCRIPTDRIVERS scripts/*.html)

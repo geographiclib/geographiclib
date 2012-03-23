@@ -1,4 +1,4 @@
-# $Id: d5febf7abcb473b048d3bfa2db5c7de1f9a8fbc9 $
+# $Id: 7397343b3ec2ad16cc27229794a1fc697b50c517 $
 
 # Compile (but don't install) a bunch of tiny example programs.  These
 # are mainly for including as examples within the doxygen documentation;
@@ -11,7 +11,7 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
   add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
   target_link_libraries (${EXAMPLE} Geographic)
-endforeach (EXAMPLE_SOURCE)
+endforeach ()
 
 add_custom_target (examples DEPENDS ${EXAMPLES})
 add_dependencies (examples Geographic)
