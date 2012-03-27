@@ -118,6 +118,7 @@ set_tests_properties (Geod5
   "90\\.00000 -150\\.00000 -180\\.00000;90\\.00000 30\\.00000 0\\.00000")
 
 # Check fix for volatile sbet12a bug found 2011-06-25 (gcc 4.4.4 x86 -O3)
+# Found again on 2012-03-27 with tdm-mingw32 (g++ 4.6.1).
 add_test (Geod6 Geod -i --input-string
   "88.202499451857 0 -88.202499451857 179.981022032992859592")
 add_test (Geod7 Geod -i --input-string

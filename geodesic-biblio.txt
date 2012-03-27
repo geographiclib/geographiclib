@@ -296,9 +296,17 @@ $Id$
    http://dx.doi.org/10.1002/asna.201011352 [[BR]]
    preprint: http://arxiv.org/abs/0908.1824
  * F. W. Bessel,[[BR]]
+   ''Ueber den Einfluss der Unregelmässigkeiten der Figur der Erde auf
+   geodätische Arbeiten und ihre Vergleichung mit den astronomischen
+   Bestimmungen [The effect of irregularities in the shape of the earth
+   on geodetic work and their comparison with the astronomical
+   measurements]'',
+   Astron. Nachr. '''14'''(329), 269--312 (1837).[[BR]]
+   http://articles.adsabs.harvard.edu/full/1837AN.....14..269B [[BR]]
+ * F. W. Bessel,[[BR]]
    ''Abhandlungen von Friedrich Wilhelm Bessel [The Works of Bessel]'',
    Vol. 3 (W. Engelmann, Leipzig, 1876), Part 6 contains the previous
-   3 papers.[[BR]]
+   4 papers.[[BR]]
    http://books.google.com/books?id=vX4EAAAAYAAJ&pg=PR6
  * J. Ivory,[[BR]]
    ''Solution of a geodetical problem'',

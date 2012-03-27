@@ -533,13 +533,14 @@ namespace GeographicLib {
       // bet12 = bet2 - bet1 in [0, pi); bet12a = bet2 + bet1 in (-pi, 0]
       sbet12 = sbet2 * cbet1 - cbet2 * sbet1,
       cbet12 = cbet2 * cbet1 + sbet2 * sbet1;
-#if defined(__GNUC__) && __GNUC__ == 4 && __GNUC_MINOR__ < 6
+#if defined(__GNUC__) && __GNUC__ == 4 && \
+  (__GNUC_MINOR__ < 6 || defined(__MINGW32__))
     // Volatile declaration needed to fix inverse cases
     // 88.202499451857 0 -88.202499451857 179.981022032992859592
     // 89.262080389218 0 -89.262080389218 179.992207982775375662
     // 89.333123580033 0 -89.333123580032997687 179.99295812360148422
     // which otherwise fail with g++ 4.4.4 x86 -O3 (Linux)
-    // and g++ 4.4.0 (mingw).
+    // and g++ 4.4.0 (mingw) and g++ 4.6.1 (tdm mingw).
     real sbet12a;
     {
       volatile real xx1 = sbet2 * cbet1;
