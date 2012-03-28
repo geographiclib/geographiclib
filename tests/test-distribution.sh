@@ -15,9 +15,25 @@
 # in gita/geographiclib/python ...
 # python setup.py sdist --formats gztar,zip upload
 #
+# gita - check out from git, create package with cmake
+# gita - check out from git, create package with autoconf
+# rela - release package, build with make
+# relb - release package, build with autoconf
+# relc - release package, build with cmake
+# relx - cmake release package inventory
+# rely - autoconf release package inventory
+# insta - installed files, make
+# instb - installed files, autoconf
+# instc - installed files, cmake maintainer=off
+# instd - installed files, cmake maintainer=on
+# inste - installed files, cmake maintainer=off matlab=on
+# instf - installed files, autoconf direct from git repository
+
 # $Id$
 
-VERSION=1.20
+set -e
+
+VERSION=1.21
 BRANCH=master
 TEMP=/scratch/geographic-dist
 DEVELSOURCE=/u/geographiclib
@@ -26,10 +42,11 @@ WINDOWSBUILD=/u/temp
 
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
-mkdir $TEMP/gita
-cd $TEMP/gita
-git clone -b $BRANCH $GITSOURCE
-cd geographiclib
+mkdir $TEMP/gita # Package creation via cmake
+mkdir $TEMP/gitb # Package creation via autoconf
+(cd $TEMP/gita; git clone -b $BRANCH $GITSOURCE)
+(cd $TEMP/gitb; git clone -b $BRANCH $GITSOURCE)
+cd $TEMP/gita/geographiclib
 sh autogen.sh
 mkdir BUILD
 cd BUILD
@@ -37,10 +54,11 @@ cmake ..
 make dist
 cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 rsync -a --delete doc/html/ $DEVELSOURCE/doc/html/
+
 mkdir $TEMP/rel{a,b,c,x,y}
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc
+tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
+tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
+tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake
 tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 tar xfpzC GeographicLib-$VERSION.tar.gz $WINDOWSBUILD
@@ -66,7 +84,9 @@ cd $TEMP/insta
 find . -type f | sort -u > ../files.a
 
 cd $TEMP/relb/GeographicLib-$VERSION
-./configure --prefix=$TEMP/instb
+mkdir BUILD-config
+cd BUILD-config
+../configure --prefix=$TEMP/instb
 make -j10
 make install
 mv $TEMP/instb/share/doc/{geographiclib,GeographicLib}
@@ -103,19 +123,24 @@ find . -type f | sort -u > ../files.d
 cd $TEMP/inste
 find . -type f | sort -u > ../files.e
 
-mkdir $TEMP/gitb
-cd $TEMP/gitb
-git clone -b $BRANCH $GITSOURCE
-cd geographiclib
+cd $TEMP/gitb/geographiclib
 sh autogen.sh
-./configure
+mkdir BUILD-config
+cd BUILD-config
+../configure --prefix=$TEMP/instf
 make dist-gzip
+make install
 tar xfpzC geographiclib-$VERSION.tar.gz $TEMP/rely
 mv $TEMP/rely/{geographiclib,GeographicLib}-$VERSION
 cd $TEMP/rely
 find . -type f | sort -u > ../files.y
 cd $TEMP/relx
 find . -type f | sort -u > ../files.x
+
+mv $TEMP/instf/share/doc/{geographiclib,GeographicLib}
+cd $TEMP/instf
+find . -type f | sort -u > ../files.f
+
 
 cd $TEMP
 cat > testprogram.cpp <<EOF
@@ -155,7 +180,7 @@ int main() {
   return 0;
 }
 EOF
-for i in a b c d e; do
+for i in a b c d e f; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
     g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographic
