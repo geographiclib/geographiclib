@@ -95,9 +95,9 @@ html/index.html: Doxyfile Geographic.doc \
 maintainer-clean-local:
 	rm -rf html
 
-install-doc: doc
+install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
-	$(INSTALL) -m 644 html/* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -m 644 $(dir $^)* $(DESTDIR)$(docdir)/html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib
