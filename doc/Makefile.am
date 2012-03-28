@@ -97,7 +97,7 @@ maintainer-clean-local:
 
 install-doc: html/index.html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/html
-	$(INSTALL) -m 644 $(dir $^)* $(DESTDIR)$(docdir)/html
+	$(INSTALL) -m 644 `dirname $<`/* $(DESTDIR)$(docdir)/html
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -m 644 $(SCRIPTDRIVERS) $(DESTDIR)$(docdir)/scripts
 	$(INSTALL) -d $(DESTDIR)$(docdir)/scripts/GeographicLib
