@@ -6,14 +6,14 @@
 
 PACKAGE=geographiclib
 PYTHON_FILES = \
-	$(PACKAGE)/__init__.py \
-	$(PACKAGE)/geomath.py \
-	$(PACKAGE)/constants.py \
-	$(PACKAGE)/accumulator.py \
-	$(PACKAGE)/geodesiccapability.py \
-	$(PACKAGE)/geodesic.py \
-	$(PACKAGE)/geodesicline.py \
-	$(PACKAGE)/polygonarea.py
+	$(srcdir)/$(PACKAGE)/__init__.py \
+	$(srcdir)/$(PACKAGE)/geomath.py \
+	$(srcdir)/$(PACKAGE)/constants.py \
+	$(srcdir)/$(PACKAGE)/accumulator.py \
+	$(srcdir)/$(PACKAGE)/geodesiccapability.py \
+	$(srcdir)/$(PACKAGE)/geodesic.py \
+	$(srcdir)/$(PACKAGE)/geodesicline.py \
+	$(srcdir)/$(PACKAGE)/polygonarea.py
 
 pythondir=$(libdir)/python/site-packages/$(PACKAGE)
 
