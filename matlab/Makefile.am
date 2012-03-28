@@ -34,7 +34,7 @@ $(srcdir)/localcartesianforward.m \
 $(srcdir)/localcartesianreverse.m \
 $(srcdir)/polygonarea.m
 
-MATLAB_COMPILESCRIPT = geographiclibinterface.m
+MATLAB_COMPILESCRIPT = $(srcdir)/geographiclibinterface.m
 
 MATLAB_ALL = $(MATLAB_INTERFACE) $(MATLAB_DOC) $(MATLAB_COMPILESCRIPT)
 
